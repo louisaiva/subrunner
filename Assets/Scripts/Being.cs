@@ -39,30 +39,7 @@ public class Being : MonoBehaviour
 
     public virtual void Events()
     {
-
-        // circular input
-        // -> fait gauche droite etc
-
-        if (inputs.x >= 0f && inputs.x < 1f){
-            inputs.x *= 1.01f;
-
-            if (inputs.x > 1f){
-                inputs.x = 1f;
-            }
-        }
-        else if (inputs.x >= 1f){
-            inputs.x = -0.1f;
-        }
-        else if (inputs.x < 0f && inputs.x > -1f){
-            inputs.x *= 1.01f;
-
-            if (inputs.x < -1f){
-                inputs.x = -1f;
-            }
-        }
-        else if (inputs.x <= -1f){
-            inputs.x = 0.1f;
-        }
+        inputs = simulate_circular_input_on_x(inputs);
     }
 
     protected void Update()
@@ -184,4 +161,38 @@ public class Being : MonoBehaviour
 
     }
 
+    protected Vector2 simulate_circular_input_on_x(Vector2 input_vecteur)
+    {
+        // circular input
+        // -> fait gauche droite etc
+
+        if (input_vecteur.x >= 0f && input_vecteur.x < 1f)
+        {
+            input_vecteur.x *= 1.01f;
+
+            if (input_vecteur.x > 1f)
+            {
+                input_vecteur.x = 1f;
+            }
+        }
+        else if (input_vecteur.x >= 1f)
+        {
+            input_vecteur.x = -0.1f;
+        }
+        else if (input_vecteur.x < 0f && input_vecteur.x > -1f)
+        {
+            input_vecteur.x *= 1.01f;
+
+            if (input_vecteur.x < -1f)
+            {
+                input_vecteur.x = -1f;
+            }
+        }
+        else if (input_vecteur.x <= -1f)
+        {
+            input_vecteur.x = 0.1f;
+        }
+
+        return input_vecteur;
+    }
 }

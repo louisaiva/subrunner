@@ -10,8 +10,6 @@ public class Perso : Being
     private int max_exploits = 3;
     private float regen_exploits = 0.1f; // exploits par seconde
 
-
-
     /*
 
 
@@ -25,17 +23,13 @@ public class Perso : Being
 
     public override void Events()
     {
-        print("waaaa4");
-
         // Z,S,Q,D
         inputs = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        print("inputs : " + inputs);
     }
 
     // update de d'habitude
     new void Update()
     {
-        print("waaaa");
 
         // régèn des exploits
         if (exploits < max_exploits)
