@@ -5,10 +5,15 @@ using UnityEngine;
 public class Perso : Being
 {
 
-    // EXPLOITS
-    private float exploits = 3f; // exploits = mana (lance des sorts de hacks)
-    private int max_exploits = 3;
-    private float regen_exploits = 0.1f; // exploits par seconde
+    // exploits (xp)
+    public int level = 1;
+    public int xp = 92;
+    public int xp_to_next_level = 100;
+
+    // bits (mana)
+    public float bits = 3f; // bits = mana (lance des sorts de hacks)
+    public int max_bits = 8;
+    private float regen_bits = 0.1f; // bits par seconde
 
     /*
 
@@ -31,10 +36,10 @@ public class Perso : Being
     new void Update()
     {
 
-        // régèn des exploits
-        if (exploits < max_exploits)
+        // régèn des bits
+        if (bits < max_bits)
         {
-            exploits += regen_exploits * Time.deltaTime;
+            bits += regen_bits * Time.deltaTime;
         }
 
         // update de d'habitude

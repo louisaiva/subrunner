@@ -8,8 +8,8 @@ public class Being : MonoBehaviour
     // a BEING is a character that can move, attack, etc.
 
     // VIE
-    private float vie = 100f;
-    private int max_vie = 100;
+    public float vie = 100f;
+    public int max_vie = 100;
     private float regen_vie = 0.1f; // vie par seconde
 
     // DEPLACEMENT
