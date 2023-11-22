@@ -18,6 +18,12 @@ public class Being : MonoBehaviour
     private Rect feet_collider; // collider des pieds (pour les collisions)
     private float offset_perso_y_to_feet = 0.45f;
 
+    // ANIMATIONS
+    public bool has_extended_animation = false;
+    private Vector2 lookin_at = new Vector2(0f, -1f);
+
+
+
     // GAMEOBJECTS
     public Animator animator;
 
@@ -27,6 +33,12 @@ public class Being : MonoBehaviour
 
         // on récupère les composants
         animator = GetComponent<Animator>();
+
+        // on vérifie si l'animation est étendue
+        if (HasParameter(animator, "direction"))
+        {
+            has_extended_animation = true;
+        }
 
         // on crée notre collider_box des pieds
         feet_collider = Rect.zero;
@@ -52,6 +64,9 @@ public class Being : MonoBehaviour
 
         // on récupère les inputs
         Events();
+
+        // on calcule la direction du regard
+        calculate_lookin_at(inputs);
 
         // maj des animations
         maj_animations(inputs);
@@ -142,25 +157,6 @@ public class Being : MonoBehaviour
 
     }
 
-    protected void maj_animations(Vector2 direction)
-    {
-
-        // sens du sprite
-        if (direction.x != 0f) { GetComponent<SpriteRenderer>().flipX = (direction.x > 0f); }
-
-        // animation de déplacement
-        var input_tresh = 0.1f;
-        if (Mathf.Abs(direction.x) > input_tresh || Mathf.Abs(direction.y) > input_tresh)
-        {
-            animator.SetBool("isMoving", true);
-        }
-        else
-        {
-            animator.SetBool("isMoving", false);
-        }
-
-    }
-
     protected Vector2 simulate_circular_input_on_x(Vector2 input_vecteur)
     {
         // circular input
@@ -194,5 +190,56 @@ public class Being : MonoBehaviour
         }
 
         return input_vecteur;
+    }
+
+    // ANIMATIONS
+
+    protected void maj_animations(Vector2 direction)
+    {
+
+        // animation de déplacement (en fonction des inputs)
+        var input_tresh = 0.1f;
+        animator.SetBool("isMoving", (Mathf.Abs(direction.x) > input_tresh || Mathf.Abs(direction.y) > input_tresh));
+
+        // animation de direction (en fonction du regard)
+        if (has_extended_animation)
+        {
+            // on calcule la direction qu'on doit envoyer à l'animator
+            int anim_direction = 0;
+
+            // si le vecteur direction pointe vers le bas, on envoie -1
+            // s'il pointe vers le haut on envoie 1
+            // sinon on envoie 0
+
+            if (lookin_at.y < -Mathf.Abs(lookin_at.x))
+            {
+                anim_direction = -1;
+            }
+            else if (lookin_at.y > Mathf.Abs(lookin_at.x))
+            {
+                anim_direction = 1;
+            }
+
+            // on envoie la direction à l'animator
+            animator.SetInteger("direction", anim_direction);
+        }
+
+        // sens du sprite (en fonction du regard)
+        if (Mathf.Abs(lookin_at.x) > Mathf.Abs(lookin_at.y)) { GetComponent<SpriteRenderer>().flipX = (lookin_at.x > 0f); }
+
+    }
+
+    protected void calculate_lookin_at(Vector2 direction)
+    {
+        // on calcule la direction du regard
+        if (direction != Vector2.zero)
+        {
+            lookin_at = direction.normalized;
+        }
+    }
+
+    public static bool HasParameter(Animator animator, string paramName)
+    {
+        return System.Array.Exists(animator.parameters, p => p.name == paramName);
     }
 }
