@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-
+[RequireComponent(typeof(AnimationHandler))]
 public class Being : MonoBehaviour
 {
 
@@ -40,7 +40,7 @@ public class Being : MonoBehaviour
     {
 
         // on récupère les composants
-        gameObject.AddComponent<AnimationHandler>();
+        // gameObject.AddComponent<AnimationHandler>();
         anim_handler = GetComponent<AnimationHandler>();
 
         // on crée notre collider_box des pieds
