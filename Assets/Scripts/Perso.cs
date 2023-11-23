@@ -55,6 +55,8 @@ public class Perso : Attacker
     // update de d'habitude
     new void Update()
     {
+        // ! à mettre tjrs au début de la fonction update
+        if (!isAlive()) { return; }
 
         // régèn des bits
         if (bits < max_bits)
@@ -72,7 +74,6 @@ public class Perso : Attacker
     protected override void die()
     {
         Debug.Log("YOU DIED");
-        
         base.die();
     }
 

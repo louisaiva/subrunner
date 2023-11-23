@@ -63416,7 +63416,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7457679554815042043, guid: a8f44335e71979949bf40753e07ac534, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -63695,6 +63695,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vie: 100
   max_vie: 100
+  weight: 1
   inputs: {x: 0, y: 0}
   vitesse: 3
   world_layers:
@@ -63702,12 +63703,12 @@ MonoBehaviour:
     m_Bits: 0
   damage: 10
   attack_point: {fileID: 0}
-  attack_range: 0.5
+  attack_range: 0.3
   damage_range: 0.5
   enemy_layers:
     serializedVersion: 2
     m_Bits: 0
-  cooldown_attack: 0.6
+  cooldown_attack: 0
   level: 1
   xp: 90
   xp_to_next_level: 100
@@ -68683,7 +68684,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7457679554815042043, guid: a8f44335e71979949bf40753e07ac534, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -112957,7 +112958,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7457679554815042043, guid: a8f44335e71979949bf40753e07ac534, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -113320,7 +113321,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7457679554815042043, guid: a8f44335e71979949bf40753e07ac534, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

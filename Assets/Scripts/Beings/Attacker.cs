@@ -33,6 +33,10 @@ public class Attacker : Being
 
     protected new void Update()
     {
+        // ! à mettre tjrs au début de la fonction update
+        if (!isAlive()) { return; }
+
+
         base.Update();
 
         // met à jour l'attack point en fonction du regard du being
@@ -48,6 +52,7 @@ public class Attacker : Being
     {
         // check if we can attack
         if (Time.time - last_attack_time < cooldown_attack){ return; }
+        if (anim_handler.IsForcing()){ return; }
 
         // update last attack time
         last_attack_time = Time.time;
@@ -63,10 +68,14 @@ public class Attacker : Being
         // deal damage to target
         foreach (Collider2D enemy in hit_enemies)
         {
-            // calculate knockback force
-            Vector3 direction_enemy = enemy.transform.position - transform.position;
+            // get direction and weight of enemy
+            float dx = enemy.transform.position.x - transform.position.x;
+            float dy = enemy.transform.position.y - transform.position.y;
+            Vector2 direction_enemy = new Vector2(dx, dy);
             float enemy_weight = enemy.GetComponent<Being>().weight;
-            Vector3 knockback_force = (knockback_per_damage_per_weight * damage / enemy_weight) * direction_enemy.normalized;
+
+            // calculate knockback force
+            Vector2 knockback_force = (knockback_per_damage_per_weight * damage / enemy_weight) * direction_enemy.normalized;
 
             // apply damage and knockback
             enemy.GetComponent<Being>().take_damage(damage, knockback_force);
@@ -74,11 +83,14 @@ public class Attacker : Being
     }
 
     // draw gizmos
-    void OnDrawGizmosSelected()
+    protected new void OnDrawGizmosSelected()
     {
+        base.OnDrawGizmosSelected();
+
         if (attack_point == null)
             return;
 
+        Gizmos.color = Color.white;
         Gizmos.DrawWireSphere(attack_point.position, damage_range);
     }
 

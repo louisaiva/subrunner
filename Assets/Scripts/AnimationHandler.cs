@@ -66,4 +66,14 @@ public class AnimationHandler : MonoBehaviour
         return animator.GetCurrentAnimatorStateInfo(0).length;
     }
 
+    public string GetCurrentAnimName()
+    {
+        return current_anim;
+    }
+
+    public bool IsForcing()
+    {
+        return is_forcing;
+    }
+
 }

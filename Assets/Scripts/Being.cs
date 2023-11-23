@@ -15,6 +15,9 @@ public class Being : MonoBehaviour
     private float regen_vie = 0.01f; // pourcentage de vie_max par seconde
     public float weight = 1f; // poids du perso (pour le knockback)
 
+    // HURTED
+    // private float last_hurted_time = 0f; // temps de la dernière attaque subie
+
     // DEPLACEMENT
     public Vector2 inputs;
     public float vitesse = 3f; // vitesse de déplacement
@@ -26,12 +29,10 @@ public class Being : MonoBehaviour
     // ANIMATIONS
     protected AnimationHandler anim_handler;
     protected Vector2 lookin_at = new Vector2(0f, -1f);
+    protected float lookin_at_angle = 40f; // angle du regard du perso en degrés
 
     protected Anims anims = new Anims();
 
-
-    // GAMEOBJECTS
-    // public Animator animator;
 
 
     // unity functions
@@ -39,11 +40,6 @@ public class Being : MonoBehaviour
     {
 
         // on récupère les composants
-        // animator = GetComponent<Animator>();
-        /* if (!HasComponent<AnimationHandler>(gameObject))
-        {
-            gameObject.AddComponent<AnimationHandler>();
-        } */
         gameObject.AddComponent<AnimationHandler>();
         anim_handler = GetComponent<AnimationHandler>();
 
@@ -66,6 +62,9 @@ public class Being : MonoBehaviour
 
     protected void Update()
     {
+        // on vérifie si le perso est mort
+        if (!isAlive()) { return; }
+
         // régèn de la vie
         if (vie < max_vie)
         {
@@ -85,6 +84,23 @@ public class Being : MonoBehaviour
         move_perso(inputs);
     }
 
+    protected void OnDrawGizmosSelected()
+    {
+
+        // calculate lookin_at vector base position
+        Vector3 lookin_at_pos = transform.position + new Vector3(lookin_at.x, lookin_at.y, 0f);
+        
+        // draw lookin_at angle
+        Vector3[] points = new Vector3[3]
+        {
+            transform.position,
+            transform.position + Quaternion.Euler(0f, 0f, lookin_at_angle/2f) * (lookin_at_pos - transform.position),
+            transform.position + Quaternion.Euler(0f, 0f, -lookin_at_angle/2f) * (lookin_at_pos - transform.position)
+        };
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawLineStrip(points, true);
+    }
 
 
     // DEPLACEMENT
@@ -203,6 +219,87 @@ public class Being : MonoBehaviour
         return input_vecteur;
     }
 
+    protected void apply_force(Vector2 force)
+    {
+
+        // ******************************
+        // * MOUVEMENT EN X
+        // ******************************
+
+        // on calcule le mouvement sur X
+        float x_movement = force.x;
+
+        // on maj notre collider_box        
+        float y_center = transform.position.y - offset_perso_y_to_feet + feet_collider.size.y / 2f;
+        feet_collider.center = new Vector2(transform.position.x, y_center);
+
+        // on lance le raycast
+        Vector2 raycast_direction = new Vector2((x_movement > 0f) ? 1f : -1f, 0f);
+        RaycastHit2D hit = Physics2D.BoxCast(feet_collider.center, feet_collider.size, 0f, raycast_direction, Mathf.Abs(x_movement), world_layers);
+
+        // on vérifie si le mouvement touche un collider
+        if (hit.collider != null)
+        {
+
+            float hit_treshold = 0.05f;
+            if (hit.distance < hit_treshold && hit.normal.x * x_movement < 0f)
+            {
+                // on annule le movement parce qu'on est trop proche du collider
+                // et qu'on essaie de renter dedans
+                x_movement = 0f;
+            }
+            else
+            {
+                // on ajuste le vecteur de déplacement
+                x_movement = hit.distance + hit.normal.x * hit_treshold;
+            }
+
+        }
+
+        // on déplace le perso
+        transform.position += new Vector3(x_movement, 0f, 0f);
+
+
+
+
+        // ******************************
+        // * MOUVEMENT EN Y
+        // ******************************
+
+        // on calcule le mouvement sur Y
+        float y_movement = force.y;
+
+        // on maj notre collider_box
+        feet_collider.x += x_movement;
+
+        // on lance le raycast
+        raycast_direction = new Vector2(0f, (y_movement > 0f) ? 1f : -1f);
+        hit = Physics2D.BoxCast(feet_collider.center, feet_collider.size, 0f, raycast_direction, Mathf.Abs(y_movement), world_layers);
+
+        // on vérifie si le mouvement touche un collider
+        if (hit.collider != null)
+        {
+            float hit_treshold = 0.02f;
+            if (hit.distance < hit_treshold && hit.normal.y * y_movement < 0f)
+            {
+                // on annule le movement parce qu'on est trop proche du collider
+                // et qu'on essaie de renter dedans
+                y_movement = 0f;
+            }
+            else
+            {
+                // on ajuste le vecteur de déplacement
+                y_movement = hit.distance + hit.normal.y * hit_treshold;
+            }
+
+        }
+
+        // on déplace le perso
+        transform.position += new Vector3(0f, y_movement, 0f);
+
+        // on applique une force au perso
+        // transform.position += new Vector3(force.x, force.y, 0f);
+    }
 
     // ANIMATIONS
     protected void maj_animations(Vector2 direction)
@@ -211,7 +308,6 @@ public class Being : MonoBehaviour
         // animation de déplacement (en fonction des inputs)
         var input_tresh = 0.1f;
         isMoving = (direction.magnitude > input_tresh);
-        // animator.SetBool("isMoving", (Mathf.Abs(direction.x) > input_tresh || Mathf.Abs(direction.y) > input_tresh));
 
         // animation de direction (en fonction du regard)
         if (anims.has_extended_animation)
@@ -277,7 +373,11 @@ public class Being : MonoBehaviour
         }
 
         // sens du sprite (en fonction du regard)
-        if (Mathf.Abs(lookin_at.x) > Mathf.Abs(lookin_at.y)) { GetComponent<SpriteRenderer>().flipX = (lookin_at.x > 0f); }
+        // on change seulement si on ne subit pas de knockback
+        if (anim_handler.GetCurrentAnimName() != anims.hurted)
+        {
+            if (Mathf.Abs(lookin_at.x) > Mathf.Abs(lookin_at.y)) { GetComponent<SpriteRenderer>().flipX = (lookin_at.x > 0f); }
+        }
 
     }
 
@@ -290,23 +390,26 @@ public class Being : MonoBehaviour
         }
     }
 
-    /* public static bool HasParameter(Animator animator, string paramName)
-    {
-        return System.Array.Exists(animator.parameters, p => p.name == paramName);
-    } */
-
-
 
     // DAMAGE
-    public void take_damage(float damage, Vector3 knockback)
+    public void take_damage(float damage, Vector2 knockback)
     {
+        // ! à mettre tjrs au début de la fonction update
+        if (!isAlive()) { return; }
+
         vie -= damage;
 
         // play hurt animation
+        anim_handler.ChangeAnimTilEnd(anims.hurted);
 
         // knockback
-        // on déplace le perso
-        transform.position += knockback;
+        apply_force(knockback);
+        
+        // change the flipX of the sprite if needed
+        if (knockback.x != 0f)
+        {
+            GetComponent<SpriteRenderer>().flipX = (knockback.x < 0f);
+        }
 
         // check if dead
         if (vie <= 0f)
@@ -321,15 +424,24 @@ public class Being : MonoBehaviour
         anim_handler.ForcedChangeAnim(anims.die);
 
         // destroy object
-        GetComponent<Collider2D>().enabled = false;
-        this.enabled = false;
+        // GetComponent<Collider2D>().enabled = false;
+        // this.enabled = false;
         
-        Invoke("DestroyObject", 5f);
+        Invoke("DestroyObject", 60f);
     }
 
     protected void DestroyObject()
     {
-        Destroy(gameObject);
+        if (!isAlive()){
+            Destroy(gameObject);
+        }
+    }
+
+
+    // GETTERS
+    public bool isAlive()
+    {
+        return vie > 0f;
     }
 }
 
@@ -347,6 +459,7 @@ public class Anims
     public string run_side = "runnin_RL";
     public string attack = "attack_RL";
     public string die = "die";
+    public string hurted = "hurted_RL";
 
     public void init(string name)
     {
@@ -363,5 +476,6 @@ public class Anims
         run_side = name + "_" + run_side;
         attack = name + "_" + attack;
         die = name + "_" + die;
+        hurted = name + "_" + hurted;
     }
 }
