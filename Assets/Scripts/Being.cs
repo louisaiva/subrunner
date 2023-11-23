@@ -12,7 +12,8 @@ public class Being : MonoBehaviour
     // VIE
     public float vie = 100f;
     public int max_vie = 100;
-    private float regen_vie = 0.1f; // vie par seconde
+    private float regen_vie = 0.01f; // pourcentage de vie_max par seconde
+    public float weight = 1f; // poids du perso (pour le knockback)
 
     // DEPLACEMENT
     public Vector2 inputs;
@@ -68,7 +69,7 @@ public class Being : MonoBehaviour
         // régèn de la vie
         if (vie < max_vie)
         {
-            vie += regen_vie * Time.deltaTime;
+            vie += regen_vie * max_vie * Time.deltaTime;
         }
 
         // on récupère les inputs
@@ -297,11 +298,15 @@ public class Being : MonoBehaviour
 
 
     // DAMAGE
-    public void take_damage(float damage)
+    public void take_damage(float damage, Vector3 knockback)
     {
         vie -= damage;
 
         // play hurt animation
+
+        // knockback
+        // on déplace le perso
+        transform.position += knockback;
 
         // check if dead
         if (vie <= 0f)
@@ -313,11 +318,18 @@ public class Being : MonoBehaviour
     protected virtual void die()
     {
         // play death animation
+        anim_handler.ForcedChangeAnim(anims.die);
 
         // destroy object
         GetComponent<Collider2D>().enabled = false;
         this.enabled = false;
-        // Destroy(gameObject);
+        
+        Invoke("DestroyObject", 5f);
+    }
+
+    protected void DestroyObject()
+    {
+        Destroy(gameObject);
     }
 }
 
@@ -334,6 +346,7 @@ public class Anims
     public string run_up = "runnin_U";
     public string run_side = "runnin_RL";
     public string attack = "attack_RL";
+    public string die = "die";
 
     public void init(string name)
     {
@@ -349,5 +362,6 @@ public class Anims
         run_up = name + "_" + run_up;
         run_side = name + "_" + run_side;
         attack = name + "_" + attack;
+        die = name + "_" + die;
     }
 }

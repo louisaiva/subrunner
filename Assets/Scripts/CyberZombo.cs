@@ -27,16 +27,17 @@ public class CyberZombo : Attacker
         // on start de d'habitude
         base.Start();
 
-        // on donne une vitesse de déplacement
-        vitesse = 1f;
-
         // on défini les layers des ennemis
         enemy_layers = LayerMask.GetMask("Player");
 
         // on met à jour les différentes variables d'attaques pour le zombo
-        damage = 1f;
+        max_vie = 25;
+        vie = (float) max_vie;
+        vitesse = 1f;
+        damage = 20f;
         attack_range = 0.25f;
         damage_range = 0.25f;
+        cooldown_attack = 0.6f;
 
         // on met les bonnes animations
         anims.init("zombo");

@@ -5,9 +5,17 @@
 - [x] - mettre une barre de hacker (xp)
 
 - [x] - faire des attaques cac des monstres
-- [ ] - faire attaque cac de perso
+- [x] - faire attaque cac de perso
+
+- [ ] - faire un fichier json qui stocke les paramètres des différents beings
+- [ ] - faire un drop d'xp (avec anim) à la mort d'un being -> pour le perso
+
 - [ ] - faire attaque à distance du perso (utilise des bits de hacker)
 - [ ] - faire des animations de hack
 
 - [ ] - mettre des portes
 - [ ] - faire zones hackables (portes)
+
+
+- [ ] - mettre en place le TK algorithm pour créer le world
+- [ ] - créer une classe Room qui remplit les salles avec les tiles

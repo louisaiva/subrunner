@@ -13,7 +13,7 @@ public class Perso : Attacker
     // bits (mana)
     public float bits = 3f; // bits = mana (lance des sorts de hacks)
     public int max_bits = 8;
-    private float regen_bits = 0.1f; // bits par seconde
+    private float regen_bits = 0.1f; // pourcentage de max_bits par seconde 
 
     /*
 
@@ -23,7 +23,20 @@ public class Perso : Attacker
     // unity functions
     new void Start(){
 
+        // on start de d'habitude
         base.Start();
+
+        // on met les differents paramètres du perso
+        max_vie = 100;
+        vie = (float) max_vie;
+        vitesse = 3f;
+        damage = 24f;
+        attack_range = 0.3f;
+        damage_range = 0.5f;
+        cooldown_attack = 0.5f;
+
+
+        // on met à jour les animations
         anims.init("perso");
     }
 
@@ -31,6 +44,12 @@ public class Perso : Attacker
     {
         // Z,S,Q,D
         inputs = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+
+        // attaque
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            attack();
+        }
     }
 
     // update de d'habitude
@@ -40,7 +59,7 @@ public class Perso : Attacker
         // régèn des bits
         if (bits < max_bits)
         {
-            bits += regen_bits * Time.deltaTime;
+            bits += regen_bits * max_bits * Time.deltaTime;
         }
 
         // update de d'habitude

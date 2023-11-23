@@ -14,6 +14,7 @@ public class Attacker : Being
 
     public float cooldown_attack = 0.6f; // temps entre chaque attaque (en secondes)
     private float last_attack_time = 0f; // temps de la dernière attaque
+    public const float knockback_per_damage_per_weight = 1/30f; // knockback par point de damage (1/30 corresspond à 1 unité de knockback pour 30 points de damage)
 
     // ANIMATIONS
     // protected bool isAttacking = false;
@@ -57,13 +58,18 @@ public class Attacker : Being
         anim_handler.ChangeAnimTilEnd(anims.attack);
 
         // check if there is a target
-        Collider2D[] hit_enemies = Physics2D.OverlapCircleAll(attack_point.position, damage_range, enemy_layers);        
+        Collider2D[] hit_enemies = Physics2D.OverlapCircleAll(attack_point.position, damage_range, enemy_layers);
 
         // deal damage to target
         foreach (Collider2D enemy in hit_enemies)
         {
-            enemy.GetComponent<Being>().take_damage(damage);
-            // print("hit " + enemy.name);
+            // calculate knockback force
+            Vector3 direction_enemy = enemy.transform.position - transform.position;
+            float enemy_weight = enemy.GetComponent<Being>().weight;
+            Vector3 knockback_force = (knockback_per_damage_per_weight * damage / enemy_weight) * direction_enemy.normalized;
+
+            // apply damage and knockback
+            enemy.GetComponent<Being>().take_damage(damage, knockback_force);
         }
     }
 

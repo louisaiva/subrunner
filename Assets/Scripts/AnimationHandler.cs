@@ -47,6 +47,17 @@ public class AnimationHandler : MonoBehaviour
         is_forcing = false;
     }
 
+    public void ForcedChangeAnim(string next_anim)
+    {
+        // ! attention ne pas utiliser h24
+        // ! seulement pour la mort
+        // ! overpass tous les checks
+        // * utiliser ChangeAnim or ChangeAnimTilEnd à la place
+
+        StopForcing();
+        ChangeAnim(next_anim);
+    }
+
     // GETTERS
 
     public float GetCurrentAnimLength()
