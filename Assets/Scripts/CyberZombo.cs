@@ -34,9 +34,12 @@ public class CyberZombo : Attacker
         enemy_layers = LayerMask.GetMask("Player");
 
         // on met à jour les différentes variables d'attaques pour le zombo
-        damage = 10f;
+        damage = 1f;
         attack_range = 0.25f;
         damage_range = 0.25f;
+
+        // on met les bonnes animations
+        anims.init("zombo");
     }
 
     public override void Events()

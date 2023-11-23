@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class Being : MonoBehaviour
 {
 
@@ -16,30 +18,33 @@ public class Being : MonoBehaviour
     public Vector2 inputs;
     public float vitesse = 3f; // vitesse de déplacement
     private Rect feet_collider; // collider des pieds (pour les collisions)
-    private float offset_perso_y_to_feet = 0.45f;
-    public LayerMask world_layers;
+    private float offset_perso_y_to_feet = 0.45f; // offset entre le perso et le collider des pieds
+    public LayerMask world_layers; // layers du monde
+    private bool isMoving = false;
 
     // ANIMATIONS
-    public bool has_extended_animation = false;
+    protected AnimationHandler anim_handler;
     protected Vector2 lookin_at = new Vector2(0f, -1f);
 
+    protected Anims anims = new Anims();
 
 
     // GAMEOBJECTS
-    public Animator animator;
+    // public Animator animator;
+
 
     // unity functions
     protected void Start()
     {
 
         // on récupère les composants
-        animator = GetComponent<Animator>();
-
-        // on vérifie si l'animation est étendue
-        if (HasParameter(animator, "direction"))
+        // animator = GetComponent<Animator>();
+        /* if (!HasComponent<AnimationHandler>(gameObject))
         {
-            has_extended_animation = true;
-        }
+            gameObject.AddComponent<AnimationHandler>();
+        } */
+        gameObject.AddComponent<AnimationHandler>();
+        anim_handler = GetComponent<AnimationHandler>();
 
         // on crée notre collider_box des pieds
         feet_collider = Rect.zero;
@@ -204,13 +209,14 @@ public class Being : MonoBehaviour
 
         // animation de déplacement (en fonction des inputs)
         var input_tresh = 0.1f;
-        animator.SetBool("isMoving", (Mathf.Abs(direction.x) > input_tresh || Mathf.Abs(direction.y) > input_tresh));
+        isMoving = (direction.magnitude > input_tresh);
+        // animator.SetBool("isMoving", (Mathf.Abs(direction.x) > input_tresh || Mathf.Abs(direction.y) > input_tresh));
 
         // animation de direction (en fonction du regard)
-        if (has_extended_animation)
+        if (anims.has_extended_animation)
         {
             // on calcule la direction qu'on doit envoyer à l'animator
-            int anim_direction = 0;
+            // int anim_direction = 0;
 
             // si le vecteur direction pointe vers le bas, on envoie -1
             // s'il pointe vers le haut on envoie 1
@@ -218,15 +224,55 @@ public class Being : MonoBehaviour
 
             if (lookin_at.y < -Mathf.Abs(lookin_at.x))
             {
-                anim_direction = -1;
+                // on regarde en bas
+                if (isMoving)
+                {
+                    anim_handler.ChangeAnim(anims.run_down);
+                }
+                else
+                {
+                    anim_handler.ChangeAnim(anims.idle_down);
+                }
             }
             else if (lookin_at.y > Mathf.Abs(lookin_at.x))
             {
-                anim_direction = 1;
+                // on regarde en haut
+                if (isMoving)
+                {
+                    anim_handler.ChangeAnim(anims.run_up);
+                }
+                else
+                {
+                    anim_handler.ChangeAnim(anims.idle_up);
+                }
+            }
+            else
+            {
+                // on regarde à gauche ou à droite
+                if (isMoving)
+                {
+                    anim_handler.ChangeAnim(anims.run_side);
+                }
+                else
+                {
+                    anim_handler.ChangeAnim(anims.idle_side);
+                }
             }
 
-            // on envoie la direction à l'animator
-            animator.SetInteger("direction", anim_direction);
+            // on joue la bonne animation
+            // anim_handler.ChangeAnim(anim_direction);
+        }
+        else
+        {
+            // on est obligé de regarder à gauche ou à droite (pas d'anim haut ou bas)
+            if (isMoving)
+            {
+                anim_handler.ChangeAnim(anims.run_side);
+            }
+            else
+            {
+                anim_handler.ChangeAnim(anims.idle_side);
+            }
         }
 
         // sens du sprite (en fonction du regard)
@@ -243,10 +289,10 @@ public class Being : MonoBehaviour
         }
     }
 
-    public static bool HasParameter(Animator animator, string paramName)
+    /* public static bool HasParameter(Animator animator, string paramName)
     {
         return System.Array.Exists(animator.parameters, p => p.name == paramName);
-    }
+    } */
 
 
 
@@ -269,6 +315,39 @@ public class Being : MonoBehaviour
         // play death animation
 
         // destroy object
-        Destroy(gameObject);
+        GetComponent<Collider2D>().enabled = false;
+        this.enabled = false;
+        // Destroy(gameObject);
+    }
+}
+
+public class Anims
+{
+    public bool has_extended_animation = false;
+
+
+    // ANIMATIONS
+    public string idle_down = "idle_D";
+    public string idle_up = "idle_U";
+    public string idle_side = "idle_RL";
+    public string run_down = "runnin_D";
+    public string run_up = "runnin_U";
+    public string run_side = "runnin_RL";
+    public string attack = "attack_RL";
+
+    public void init(string name)
+    {
+        if (name == "perso")
+        {
+            has_extended_animation = true;
+        }
+
+        idle_down = name + "_" + idle_down;
+        idle_up = name + "_" + idle_up;
+        idle_side = name + "_" + idle_side;
+        run_down = name + "_" + run_down;
+        run_up = name + "_" + run_up;
+        run_side = name + "_" + run_side;
+        attack = name + "_" + attack;
     }
 }

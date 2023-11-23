@@ -24,6 +24,7 @@ public class Perso : Attacker
     new void Start(){
 
         base.Start();
+        anims.init("perso");
     }
 
     public override void Events()
@@ -52,8 +53,8 @@ public class Perso : Attacker
     protected override void die()
     {
         Debug.Log("YOU DIED");
-
-        vitesse = 0f;
+        
+        base.die();
     }
 
 }

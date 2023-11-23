@@ -15,6 +15,8 @@ public class Attacker : Being
     public float cooldown_attack = 0.6f; // temps entre chaque attaque (en secondes)
     private float last_attack_time = 0f; // temps de la dernière attaque
 
+    // ANIMATIONS
+    // protected bool isAttacking = false;
 
     // unity functions
     protected new void Start()
@@ -44,20 +46,15 @@ public class Attacker : Being
     protected virtual void attack()
     {
         // check if we can attack
-        if (Time.time - last_attack_time < cooldown_attack)
-        {
-            return;
-        }
+        if (Time.time - last_attack_time < cooldown_attack){ return; }
+
         // update last attack time
         last_attack_time = Time.time;
 
-        print(gameObject.name + " attacks");
+        // print(gameObject.name + " attacks");
 
         // play attack animation
-        if (HasParameter(animator, "attack"))
-        {
-            animator.SetTrigger("attack");
-        }
+        anim_handler.ChangeAnimTilEnd(anims.attack);
 
         // check if there is a target
         Collider2D[] hit_enemies = Physics2D.OverlapCircleAll(attack_point.position, damage_range, enemy_layers);        

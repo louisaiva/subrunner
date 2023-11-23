@@ -63697,8 +63697,9 @@ MonoBehaviour:
   max_vie: 100
   inputs: {x: 0, y: 0}
   vitesse: 3
-  has_extended_animation: 0
-  animator: {fileID: 0}
+  world_layers:
+    serializedVersion: 2
+    m_Bits: 0
   damage: 10
   attack_point: {fileID: 0}
   attack_range: 0.5
@@ -112878,9 +112879,9 @@ RectTransform:
   m_Father: {fileID: 1513995956}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -944, y: 468}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 16, y: -72}
   m_SizeDelta: {x: 200, y: 140}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1219329192
@@ -118213,9 +118214,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3883242260699128306, guid: ddae133967ced6a4ea186d9cf71717ea, type: 3}
+      propertyPath: m_FlipX
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8251907093500023076, guid: ddae133967ced6a4ea186d9cf71717ea, type: 3}
       propertyPath: m_Name
       value: zombo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8251907093500023076, guid: ddae133967ced6a4ea186d9cf71717ea, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
