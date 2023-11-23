@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Perso : Being
+public class Perso : Attacker
 {
 
     // exploits (xp)
@@ -45,6 +45,15 @@ public class Perso : Being
         // update de d'habitude
         base.Update();
 
+    }
+
+
+    // DAMAGE
+    protected override void die()
+    {
+        Debug.Log("YOU DIED");
+
+        vitesse = 0f;
     }
 
 }

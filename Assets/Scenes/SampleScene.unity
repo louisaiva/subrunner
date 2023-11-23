@@ -189,7 +189,7 @@ GameObject:
   - component: {fileID: 202852037}
   - component: {fileID: 202852036}
   - component: {fileID: 202852038}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: fg_tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63414,6 +63414,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: zombSpawner (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 7457679554815042043, guid: a8f44335e71979949bf40753e07ac534, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -63580,7 +63584,8 @@ GameObject:
   - component: {fileID: 476759734}
   - component: {fileID: 476759736}
   - component: {fileID: 476759739}
-  m_Layer: 0
+  - component: {fileID: 476759740}
+  m_Layer: 7
   m_Name: perso
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63650,7 +63655,8 @@ Transform:
   m_LocalPosition: {x: 1.73, y: -2.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1057694895}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -63693,11 +63699,54 @@ MonoBehaviour:
   vitesse: 3
   has_extended_animation: 0
   animator: {fileID: 0}
+  damage: 10
+  attack_point: {fileID: 0}
+  attack_range: 0.5
+  damage_range: 0.5
+  enemy_layers:
+    serializedVersion: 2
+    m_Bits: 0
+  cooldown_attack: 0.6
   level: 1
   xp: 90
   xp_to_next_level: 100
   bits: 3
   max_bits: 8
+--- !u!70 &476759740
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 476759733}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.003658533, y: -0.07804954}
+  m_Size: {x: 0.41218972, y: 0.7024362}
+  m_Direction: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -63863,7 +63912,7 @@ GameObject:
   - component: {fileID: 599744615}
   - component: {fileID: 599744614}
   - component: {fileID: 599744616}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: fg_tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68631,6 +68680,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: zombSpawner (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 7457679554815042043, guid: a8f44335e71979949bf40753e07ac534, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -68688,7 +68741,7 @@ GameObject:
   - component: {fileID: 800731068}
   - component: {fileID: 800731070}
   - component: {fileID: 800731069}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: gd_tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -112601,7 +112654,7 @@ GameObject:
   m_Component:
   - component: {fileID: 845393351}
   - component: {fileID: 845393350}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: sector_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -112648,7 +112701,7 @@ GameObject:
   m_Component:
   - component: {fileID: 973817124}
   - component: {fileID: 973817125}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: sector_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -112685,6 +112738,37 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
+--- !u!1 &1057694894
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1057694895}
+  m_Layer: 7
+  m_Name: attack_point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1057694895
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1057694894}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 476759735}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1120142742
 GameObject:
   m_ObjectHideFlags: 0
@@ -112870,6 +112954,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: zombSpawner (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 7457679554815042043, guid: a8f44335e71979949bf40753e07ac534, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -112892,7 +112980,7 @@ GameObject:
   - component: {fileID: 1290388069}
   - component: {fileID: 1290388068}
   - component: {fileID: 1290388070}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: bg_tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113229,6 +113317,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: zombSpawner
       objectReference: {fileID: 0}
+    - target: {fileID: 7457679554815042043, guid: a8f44335e71979949bf40753e07ac534, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -113431,7 +113523,7 @@ GameObject:
   - component: {fileID: 1566058747}
   - component: {fileID: 1566058749}
   - component: {fileID: 1566058748}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: gd_tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -115568,7 +115660,7 @@ GameObject:
   - component: {fileID: 1629946341}
   - component: {fileID: 1629946340}
   - component: {fileID: 1629946342}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: bg_tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -118069,6 +118161,67 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
+--- !u!1001 &1783422149
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 879227892035812723, guid: ddae133967ced6a4ea186d9cf71717ea, type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 879227892035812723, guid: ddae133967ced6a4ea186d9cf71717ea, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 879227892035812723, guid: ddae133967ced6a4ea186d9cf71717ea, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 879227892035812723, guid: ddae133967ced6a4ea186d9cf71717ea, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 879227892035812723, guid: ddae133967ced6a4ea186d9cf71717ea, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 879227892035812723, guid: ddae133967ced6a4ea186d9cf71717ea, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 879227892035812723, guid: ddae133967ced6a4ea186d9cf71717ea, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 879227892035812723, guid: ddae133967ced6a4ea186d9cf71717ea, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 879227892035812723, guid: ddae133967ced6a4ea186d9cf71717ea, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 879227892035812723, guid: ddae133967ced6a4ea186d9cf71717ea, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 879227892035812723, guid: ddae133967ced6a4ea186d9cf71717ea, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8251907093500023076, guid: ddae133967ced6a4ea186d9cf71717ea, type: 3}
+      propertyPath: m_Name
+      value: zombo
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ddae133967ced6a4ea186d9cf71717ea, type: 3}
 --- !u!1 &1805520237
 GameObject:
   m_ObjectHideFlags: 0
@@ -118079,7 +118232,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1805520238}
   - component: {fileID: 1805520239}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: world
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -118258,6 +118411,10 @@ PrefabInstance:
     - target: {fileID: 7457679554815042043, guid: a8f44335e71979949bf40753e07ac534, type: 3}
       propertyPath: m_Name
       value: spawner1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7457679554815042043, guid: a8f44335e71979949bf40753e07ac534, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

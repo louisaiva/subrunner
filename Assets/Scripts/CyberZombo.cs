@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CyberZombo : Being
+public class CyberZombo : Attacker
 {
 
     // player detection
     private float detection_radius = 10f;
     public bool player_detected = false;
     GameObject player;
+
+    // player attacking
+    // public float attack_radius = 1f; // attaque automatiquement si le joueur est dans ce rayon
 
     /*
 
@@ -26,6 +29,14 @@ public class CyberZombo : Being
 
         // on donne une vitesse de déplacement
         vitesse = 1f;
+
+        // on défini les layers des ennemis
+        enemy_layers = LayerMask.GetMask("Player");
+
+        // on met à jour les différentes variables d'attaques pour le zombo
+        damage = 10f;
+        attack_range = 0.25f;
+        damage_range = 0.25f;
     }
 
     public override void Events()
@@ -59,6 +70,13 @@ public class CyberZombo : Being
 
         // on récupère la distance entre le joueur et le zombo
         float distance = Vector2.Distance(player.transform.position, transform.position);
+
+        // on regarde si le joueur est dans le cercle d'attaque + une marge
+        float marge = Random.Range(-damage_range-0.2f, damage_range+0.2f);
+        if (distance < attack_range + marge)
+        {
+            attack();
+        }
 
         // on regarde si le joueur est dans le rayon de détection
         if (distance < radius){

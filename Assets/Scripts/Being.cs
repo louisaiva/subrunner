@@ -17,10 +17,11 @@ public class Being : MonoBehaviour
     public float vitesse = 3f; // vitesse de déplacement
     private Rect feet_collider; // collider des pieds (pour les collisions)
     private float offset_perso_y_to_feet = 0.45f;
+    public LayerMask world_layers;
 
     // ANIMATIONS
     public bool has_extended_animation = false;
-    private Vector2 lookin_at = new Vector2(0f, -1f);
+    protected Vector2 lookin_at = new Vector2(0f, -1f);
 
 
 
@@ -47,6 +48,9 @@ public class Being : MonoBehaviour
         feet_collider.center = new Vector2(transform.position.x, y_center);
 
         inputs = new Vector2(0.1f,0f);
+
+        // on défini les layers du monde
+        world_layers = LayerMask.GetMask("World");
     }
 
     public virtual void Events()
@@ -76,6 +80,7 @@ public class Being : MonoBehaviour
     }
 
 
+
     // DEPLACEMENT
     protected void move_perso(Vector2 direction)
     {
@@ -93,7 +98,7 @@ public class Being : MonoBehaviour
 
         // on lance le raycast
         Vector2 raycast_direction = new Vector2((x_movement > 0f) ? 1f : -1f, 0f);
-        RaycastHit2D hit = Physics2D.BoxCast(feet_collider.center, feet_collider.size, 0f, raycast_direction, Mathf.Abs(x_movement));
+        RaycastHit2D hit = Physics2D.BoxCast(feet_collider.center, feet_collider.size, 0f, raycast_direction, Mathf.Abs(x_movement), world_layers);
 
         // on vérifie si le mouvement touche un collider
         if (hit.collider != null)
@@ -132,7 +137,7 @@ public class Being : MonoBehaviour
 
         // on lance le raycast
         raycast_direction = new Vector2(0f, (y_movement > 0f) ? 1f : -1f);
-        hit = Physics2D.BoxCast(feet_collider.center, feet_collider.size, 0f, raycast_direction, Mathf.Abs(y_movement));
+        hit = Physics2D.BoxCast(feet_collider.center, feet_collider.size, 0f, raycast_direction, Mathf.Abs(y_movement), world_layers);
 
         // on vérifie si le mouvement touche un collider
         if (hit.collider != null)
@@ -192,8 +197,8 @@ public class Being : MonoBehaviour
         return input_vecteur;
     }
 
-    // ANIMATIONS
 
+    // ANIMATIONS
     protected void maj_animations(Vector2 direction)
     {
 
@@ -241,5 +246,29 @@ public class Being : MonoBehaviour
     public static bool HasParameter(Animator animator, string paramName)
     {
         return System.Array.Exists(animator.parameters, p => p.name == paramName);
+    }
+
+
+
+    // DAMAGE
+    public void take_damage(float damage)
+    {
+        vie -= damage;
+
+        // play hurt animation
+
+        // check if dead
+        if (vie <= 0f)
+        {
+            die();
+        }
+    }
+
+    protected virtual void die()
+    {
+        // play death animation
+
+        // destroy object
+        Destroy(gameObject);
     }
 }
