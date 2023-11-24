@@ -80,14 +80,9 @@ public class CyberZombo : Attacker
         // update de d'habitude
         base.Update();
 
-        print("target detected : " + target_detected);
 
         // on essaye d'attaquer le joueur si on le détecte
         if (target_detected){
-
-            print(target);
-            print("target is alive : " + target.GetComponent<Perso>().isAlive());
-
             if (target.GetComponent<Being>().isAlive())
             {
 
@@ -107,7 +102,6 @@ public class CyberZombo : Attacker
         target_detected = (targetCollider != null);
         if (target_detected){
             target = targetCollider.gameObject;
-            print("assigned target " + target.name);
         }
         else{
             target = null;

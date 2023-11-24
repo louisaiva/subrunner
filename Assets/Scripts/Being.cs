@@ -17,6 +17,8 @@ public class Being : MonoBehaviour
 
     // HURTED
     // private float last_hurted_time = 0f; // temps de la dernière attaque subie
+    public GameObject xp_provider;
+    private int xp_gift = 10;
 
     // DEPLACEMENT
     public Vector2 inputs;
@@ -30,7 +32,6 @@ public class Being : MonoBehaviour
     protected AnimationHandler anim_handler;
     protected Vector2 lookin_at = new Vector2(0f, -1f);
     protected float lookin_at_angle = 40f; // angle du regard du perso en degrés
-
     protected Anims anims = new Anims();
 
 
@@ -53,6 +54,9 @@ public class Being : MonoBehaviour
 
         // on défini les layers du monde
         world_layers = LayerMask.GetMask("World");
+
+        // on récupère le provider d'xp
+        xp_provider = GameObject.Find("/world/xp_provider");
     }
 
     public virtual void Events()
@@ -423,11 +427,11 @@ public class Being : MonoBehaviour
         // play death animation
         anim_handler.ForcedChangeAnim(anims.die);
 
-        // destroy object
-        // GetComponent<Collider2D>().enabled = false;
-        // this.enabled = false;
-        
+        // destroy object        
         Invoke("DestroyObject", 60f);
+
+        // on donne de l'xp
+        xp_provider.GetComponent<XPProvider>().EmitXP(xp_gift, transform.position);
     }
 
     protected void DestroyObject()

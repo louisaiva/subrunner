@@ -53,6 +53,9 @@ public class UI_BitHandler : MonoBehaviour
     void Update()
     {
 
+        // ! on check si le perso est mort
+        if (!perso || !perso.GetComponent<Perso>().isAlive()) { return; }
+
         // on met à jour le fill des bits
         update_bits_fill();
 

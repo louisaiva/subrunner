@@ -37,6 +37,9 @@ public class UI_LifeXPHandler : MonoBehaviour
     void Update()
     {
 
+        // ! on check si le perso est mort
+        if (!perso || !perso.GetComponent<Perso>().isAlive()) { return; }
+
         // on met à jour le fill de vie
         update_life_fill();
 

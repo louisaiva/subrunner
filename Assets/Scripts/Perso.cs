@@ -7,8 +7,9 @@ public class Perso : Attacker
 
     // exploits (xp)
     public int level = 1;
-    public int xp = 92;
-    public int xp_to_next_level = 100;
+    public int xp = 0;
+    public int total_xp = 0;
+    public int xp_to_next_level = 10;
 
     // bits (mana)
     public float bits = 3f; // bits = mana (lance des sorts de hacks)
@@ -69,6 +70,33 @@ public class Perso : Attacker
 
     }
 
+
+    // XP
+    public void addXP(int count)
+    {
+        xp += count;
+        total_xp += count;
+        if (xp >= xp_to_next_level)
+        {
+            levelUp();
+        }
+    }
+
+    private void levelUp()
+    {
+        level += 1;
+        xp = 0;
+        xp_to_next_level = (int)(xp_to_next_level * 1.5f);
+        // max_bits += 1;
+        // bits = max_bits;
+        Debug.Log("LEVEL UP ! level " + level);
+
+        // on augmente les stats
+        max_vie += 10*level;
+        damage += 2*level;
+        cooldown_attack -= 0.05f;
+        vitesse += 0.1f;
+    }
 
     // DAMAGE
     protected override void die()

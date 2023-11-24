@@ -10,6 +10,8 @@
 - [ ] - faire un fichier json qui stocke les paramètres des différents beings
 - [ ] - faire un drop d'xp (avec anim) à la mort d'un being -> pour le perso
 - [ ] - mettre un sprint de vitesse
+- [ ] - changer le système d'inputs pour pas qu'on ait de la latence
+
 
 - [ ] - faire attaque à distance du perso (utilise des bits de hacker)
 - [ ] - faire des animations de hack
