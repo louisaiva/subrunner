@@ -53,7 +53,7 @@ public class Being : MonoBehaviour
         inputs = new Vector2(0.1f,0f);
 
         // on défini les layers du monde
-        world_layers = LayerMask.GetMask("World");
+        world_layers = LayerMask.GetMask("World","Doors");
 
         // on récupère le provider d'xp
         xp_provider = GameObject.Find("/world/xp_provider");
@@ -380,7 +380,7 @@ public class Being : MonoBehaviour
         // on change seulement si on ne subit pas de knockback
         if (anim_handler.GetCurrentAnimName() != anims.hurted)
         {
-            if (Mathf.Abs(lookin_at.x) > Mathf.Abs(lookin_at.y)) { GetComponent<SpriteRenderer>().flipX = (lookin_at.x > 0f); }
+            if (Mathf.Abs(lookin_at.x) >= Mathf.Abs(lookin_at.y)) { GetComponent<SpriteRenderer>().flipX = (lookin_at.x > 0f); }
         }
 
     }

@@ -14,7 +14,7 @@ public class Attacker : Being
 
     public float cooldown_attack = 0.6f; // temps entre chaque attaque (en secondes)
     private float last_attack_time = 0f; // temps de la dernière attaque
-    public const float knockback_per_damage_per_weight = 1/30f; // knockback par point de damage (1/30 corresspond à 1 unité de knockback pour 30 points de damage)
+    public const float knockback_per_damage_per_weight = 1/100f; // knockback par point de damage (1/30 corresspond à 1 unité de knockback pour 30 points de damage)
 
     // ANIMATIONS
     // protected bool isAttacking = false;

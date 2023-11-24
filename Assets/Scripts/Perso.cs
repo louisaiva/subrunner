@@ -16,6 +16,10 @@ public class Perso : Attacker
     public int max_bits = 8;
     private float regen_bits = 0.1f; // pourcentage de max_bits par seconde 
 
+    // hack
+    public float hack_range = 1f; // distance entre le perso et la porte pour hacker
+    private LayerMask hack_layer;
+
     /*
 
 
@@ -36,20 +40,28 @@ public class Perso : Attacker
         damage_range = 0.5f;
         cooldown_attack = 0.5f;
 
-
         // on met à jour les animations
         anims.init("perso");
+
+        // on met à jour les layers du hack
+        hack_layer = LayerMask.GetMask("Doors");
     }
 
     public override void Events()
     {
         // Z,S,Q,D
-        inputs = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        inputs = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
         // attaque
         if (Input.GetKeyDown(KeyCode.Space))
         {
             attack();
+        }
+
+        // hack de porte
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            hack();
         }
     }
 
@@ -105,4 +117,21 @@ public class Perso : Attacker
         base.die();
     }
 
+
+    // HACK
+    private void hack()
+    {
+        // on regarde si on a assez de bits
+        if (bits < 1) { return; }
+
+        // on regarde si on peut hacker une porte
+        Collider2D[] hit_hackable = Physics2D.OverlapCircleAll(transform.position, hack_range, hack_layer);
+        if (hit_hackable.Length == 0) { return; }
+
+        // on hack la porte
+        hit_hackable[0].GetComponent<Door>().hack(level);
+
+        // on enlève des bits
+        bits -= 1;
+    }
 }

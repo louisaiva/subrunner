@@ -16,14 +16,12 @@ public class XPProvider : MonoBehaviour
 
     private void Start()
     {
-        // on récupère le player
-        // player = GameObject.Find("/world/perso");
-
         // on récupère le particle system
         generator = GetComponent<ParticleSystem>();
 
         // on emet une particule
-        generator.Emit(1);
+        // EmitXP(500, new Vector3(0, -1, 0),10f);
+        // EmitXP(500, new Vector3(-30, -12, 0), 10f);
     }
 
     private void OnParticleTrigger()
