@@ -53,7 +53,7 @@ public class Being : MonoBehaviour
         inputs = new Vector2(0.1f,0f);
 
         // on défini les layers du monde
-        world_layers = LayerMask.GetMask("World","Doors");
+        world_layers = LayerMask.GetMask("Ground","Walls","Ceiling","Doors");
 
         // on récupère le provider d'xp
         xp_provider = GameObject.Find("/world/xp_provider");
@@ -129,7 +129,6 @@ public class Being : MonoBehaviour
         // on vérifie si le mouvement touche un collider
         if (hit.collider != null)
         {
-
             float hit_treshold = 0.05f;
             if (hit.distance < hit_treshold && hit.normal.x * x_movement < 0f)
             {

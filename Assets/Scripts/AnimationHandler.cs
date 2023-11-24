@@ -38,7 +38,6 @@ public class AnimationHandler : MonoBehaviour
 
         // si on a changé d'animation, on force l'animation à se jouer jusqu'à la fin
         is_forcing = true;
-        // Invoke("StopForcing", 0.35f);
         Invoke("ForceTilEnd", 0.05f);
         // ForceTilEnd();
         return true;

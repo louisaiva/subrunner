@@ -22,3 +22,6 @@
 
 - [ ] - mettre en place le TK algorithm pour créer le world
 - [ ] - créer une classe Room qui remplit les salles avec les tiles
+
+- [ ] - faire des plafonds qu'on peut passer dessous avec notre perso
+parce que ça rend bien ! genre dans les couloirs
