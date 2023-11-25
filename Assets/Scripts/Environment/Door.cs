@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(AnimationHandler))]
-public class Door : MonoBehaviour
+public class Door : MonoBehaviour, I_Hackable
 {
     // La classe DOOR sert à créer des portes et à les ouvrir
     // comme elle n'est pas alignée avec les tiles, il faut faire attention à la position de la porte
@@ -19,7 +19,8 @@ public class Door : MonoBehaviour
     private float auto_closin_delay = 8f;
 
     // HACKIN
-    private int required_hack_lvl = 1;
+    public int required_hack_lvl { get; } 
+    // bool I_Hackable.is_hacked { get;}
 
 
     // UNITY FUNCTIONS
@@ -76,22 +77,30 @@ public class Door : MonoBehaviour
         is_open = false;
     }
 
-    public void hack(int lvl)
+
+    // HACKIN
+    bool I_Hackable.beHacked(int lvl)
     {
 
         // on regarde si on a le bon niveau de hack
-        if (lvl < required_hack_lvl) { return; }
+        if (lvl < required_hack_lvl) { return false; }
 
         // on met à jour les animations
-        if (!anim_handler.ChangeAnimTilEnd(anims.hackin)) { return; }
+        if (!anim_handler.ChangeAnimTilEnd(anims.hackin)) { return false; }
 
         // on hack la porte
         is_open = true;
 
         // on ferme la porte après un certain temps
         Invoke("close", auto_closin_delay);
+
+        return true;
     }
 
+    bool I_Hackable.IsGettingHacked()
+    {
+        return anim_handler.current_anim == anims.hackin;
+    }
 
 }
 

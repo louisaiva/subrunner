@@ -19,6 +19,9 @@ public class Perso : Attacker
     // hack
     public float hack_range = 1f; // distance entre le perso et la porte pour hacker
     private LayerMask hack_layer;
+    private List<GameObject> current_hackin_targets = new List<GameObject>(); // liste d'objets hackés en ce moment
+    private Transform hacks_path; // le parent des hackin_rays
+
 
     /*
 
@@ -45,6 +48,9 @@ public class Perso : Attacker
 
         // on met à jour les layers du hack
         hack_layer = LayerMask.GetMask("Doors");
+
+        // on récupère le parent des hackin_rays
+        hacks_path = transform.Find("hacks");
     }
 
     public override void Events()
@@ -80,6 +86,9 @@ public class Perso : Attacker
         // update de d'habitude
         base.Update();
 
+
+        // on update les hacks
+        update_hacks();
     }
 
 
@@ -124,14 +133,80 @@ public class Perso : Attacker
         // on regarde si on a assez de bits
         if (bits < 1) { return; }
 
-        // on regarde si on peut hacker une porte
+        // on regarde si on peut hacker qqch
         Collider2D[] hit_hackable = Physics2D.OverlapCircleAll(transform.position, hack_range, hack_layer);
         if (hit_hackable.Length == 0) { return; }
 
-        // on hack la porte
-        hit_hackable[0].GetComponent<Door>().hack(level);
+        Collider2D target = null;
+
+        // on hacke le 1er objet qu'on est pas en train de hacker
+        foreach (Collider2D hit in hit_hackable)
+        {
+            if (!current_hackin_targets.Contains(hit.gameObject))
+            {
+                target = hit;
+                break;
+            }
+        }
+
+        // si on a rien trouvé, on quitte
+        if (target == null) { return; }
+
+        // on hack l'objet
+        target.GetComponent<I_Hackable>().beHacked(level);
 
         // on enlève des bits
         bits -= 1;
+
+        // on ajoute la porte à la liste des portes hackées
+        current_hackin_targets.Add(target.gameObject);
+
+        // on crée un hackin_ray
+        GameObject hackin_ray = Instantiate(Resources.Load("prefabs/hacks/hackin_ray"), hacks_path) as GameObject;
+        
+        // on met à jour le hackin_ray avec le nom
+        hackin_ray.name = "hackin_ray_" + target.gameObject.name;
+
+        return;
+        
+    }
+
+    private void update_hacks(){
+
+        // on vérifie si les objets hackés sont toujours hackés
+        List<GameObject> new_hackin_targets = new List<GameObject>();
+        foreach (GameObject target in current_hackin_targets)
+        {
+            if (target.GetComponent<I_Hackable>().IsGettingHacked())
+            {
+                new_hackin_targets.Add(target);
+            }
+        }
+
+        // on supprime les anciens rayons de hack qui ne sont plus hackés
+        foreach (GameObject target in current_hackin_targets)
+        {
+            if (!new_hackin_targets.Contains(target))
+            {
+                // on supprime le hackin_ray
+                GameObject hackin_ray = hacks_path.Find("hackin_ray_" + target.gameObject.name).gameObject;
+                Destroy(hackin_ray);
+            }
+        }
+
+
+        // on met à jour la liste des objets hackés
+        current_hackin_targets = new_hackin_targets;
+
+        // affiche des rayons de hack entre le perso et les objets actuellement hackés
+        foreach (GameObject target in current_hackin_targets)
+        {
+            // on vérifie si on a pas déjà un hackin_ray avec le target
+            GameObject hackin_ray = hacks_path.Find("hackin_ray_" + target.gameObject.name).gameObject;
+
+            // on met à jour le hackin_ray
+            hackin_ray.GetComponent<LineRenderer>().SetPosition(0, transform.position);
+            hackin_ray.GetComponent<LineRenderer>().SetPosition(1, target.transform.position);
+        }
     }
 }
