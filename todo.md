@@ -15,6 +15,10 @@ parce que ça rend bien ! genre dans les couloirs
 - [ ] - faire un fichier json qui stocke les paramètres des différents beings
 
 
+- [ ] - mettre des coffres pour des items physiques
+- [ ] - mettre des disques durs pour des hacks (sortilèges)
+- [ ] - mettre des ordis pour sauvegarder la partie
+
 
 # BUGS
 

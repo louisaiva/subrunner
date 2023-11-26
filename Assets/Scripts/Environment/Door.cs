@@ -19,8 +19,11 @@ public class Door : MonoBehaviour, I_Hackable
     private float auto_closin_delay = 8f;
 
     // HACKIN
-    public int required_hack_lvl { get; } 
-    // bool I_Hackable.is_hacked { get;}
+    public int required_hack_lvl { get; set;}
+    public string hack_type_self { get; set;}
+    public bool is_getting_hacked { get; set; }
+    public float hacking_duration_base { get; set;}
+    public float hacking_end_time { get; set;}
 
 
     // UNITY FUNCTIONS
@@ -31,10 +34,33 @@ public class Door : MonoBehaviour, I_Hackable
 
         // on récupère le box_collider
         box_collider = GetComponent<BoxCollider2D>();
+
+        // on initialise le hackin
+        required_hack_lvl = 1;
+        hack_type_self = "door";
+        hacking_end_time = -1;
+        hacking_duration_base = 2f;
+        is_getting_hacked = false;
     }
 
     void Update()
     {
+
+        // on met à jour le collider
+        box_collider.enabled = !is_open;
+        
+        // on met à jour le hackin
+        if (is_getting_hacked)
+        {
+            // on regarde si on a fini le hack
+            if (Time.time > hacking_end_time)
+            {
+                is_getting_hacked = false;
+                hacking_end_time = -1;
+            }
+        }
+
+        // on met à jour les animations
         if (is_open)
         {
             // on regarde si on a fini l'animation
@@ -51,9 +77,6 @@ public class Door : MonoBehaviour, I_Hackable
             // on met à jour les animations
             anim_handler.ChangeAnim(anims.idle_closed);
         }
-
-        // on met à jour le collider
-        box_collider.enabled = !is_open;
     }
 
     public void open()
@@ -85,11 +108,24 @@ public class Door : MonoBehaviour, I_Hackable
         // on regarde si on a le bon niveau de hack
         if (lvl < required_hack_lvl) { return false; }
 
+        // on calcule la durée du hack
+        // chaque niveau de hack en plus réduit le temps de hack de 5% par rapport au niveau précédent
+        // fonction qui tend vers 0 quand le niveau de hack augmente MAIS qui ne peut pas être négative
+        // * FONCTIONNE JUSQU'AU NIVEAU 60 !! c super
+
+        float hackin_duration = hacking_duration_base * Mathf.Pow(0.95f, lvl - required_hack_lvl);
+        float hackin_speed = hacking_duration_base / hackin_duration;
+        if (hackin_duration < 0.1f) { hackin_duration = 0.1f; }
+
         // on met à jour les animations
-        if (!anim_handler.ChangeAnimTilEnd(anims.hackin)) { return false; }
+        if (!anim_handler.ChangeAnimTilEnd(anims.hackin,hackin_speed)) { return false; }
 
         // on hack la porte
         is_open = true;
+        is_getting_hacked = true;
+        hacking_end_time = Time.time + hackin_duration;
+
+        // print("je vais me faire hacker pendant " + hackin_duration + " secondes");
 
         // on ferme la porte après un certain temps
         Invoke("close", auto_closin_delay);
@@ -99,7 +135,18 @@ public class Door : MonoBehaviour, I_Hackable
 
     bool I_Hackable.IsGettingHacked()
     {
-        return anim_handler.current_anim == anims.hackin;
+        return is_getting_hacked;
+    }
+
+    public bool IsHackable(string hack_type, int lvl=1000){
+
+        // on regarde si on a le bon type de hack
+        if (hack_type != hack_type_self) { return false; }
+
+        // on regarde si on a le bon niveau de hack
+        if (lvl < required_hack_lvl) { return false; }
+
+        return true;
     }
 
 }

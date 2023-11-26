@@ -22,6 +22,8 @@ public class Perso : Attacker
     private List<GameObject> current_hackin_targets = new List<GameObject>(); // liste d'objets hackés en ce moment
     private Transform hacks_path; // le parent des hackin_rays
 
+    // inventory
+    public Inventory inventory = new Inventory();
 
     /*
 
@@ -51,6 +53,10 @@ public class Perso : Attacker
 
         // on récupère le parent des hackin_rays
         hacks_path = transform.Find("hacks");
+
+
+        // on ajoute un hack de door après 2 secondes
+        Invoke("add_door_hack", 2f);
     }
 
     public override void Events()
@@ -139,13 +145,22 @@ public class Perso : Attacker
 
         Collider2D target = null;
 
-        // on hacke le 1er objet qu'on est pas en train de hacker
+        // on hacke le 1er objet qu'on est pas en train de hacker et qui est hackable
         foreach (Collider2D hit in hit_hackable)
         {
             if (!current_hackin_targets.Contains(hit.gameObject))
             {
-                target = hit;
-                break;
+
+                // on parcourt tous nos hacks pour voir si on peut hacker l'objet
+                foreach (Hack hack in inventory.getHacks())
+                {
+                    // on regarde si on peut hacker l'objet
+                    if (hit.gameObject.GetComponent<I_Hackable>().IsHackable(hack.hack_type_target, level))
+                    {
+                        target = hit;
+                        break;
+                    }
+                }
             }
         }
 
@@ -204,9 +219,153 @@ public class Perso : Attacker
             // on vérifie si on a pas déjà un hackin_ray avec le target
             GameObject hackin_ray = hacks_path.Find("hackin_ray_" + target.gameObject.name).gameObject;
 
+            print("je hacke " + target.gameObject.name);
+
             // on met à jour le hackin_ray
             hackin_ray.GetComponent<LineRenderer>().SetPosition(0, transform.position);
             hackin_ray.GetComponent<LineRenderer>().SetPosition(1, target.transform.position);
         }
     }
+
+    private void add_door_hack(){
+
+        print("j'ajoute un hack de porte");
+        Hack door_hack = new Hack("door_hack", "door");
+        inventory.addHack(door_hack);
+    }
+}
+
+
+public class Inventory
+{
+
+    // items
+    public List<Item> items = new List<Item>();
+
+    // hacks
+    public List<Hack> hacks = new List<Hack>();
+
+    // constructor
+    public Inventory()
+    {
+        // on ajoute des items de test
+        items.Add(new Item());
+
+        // on ajoute des hacks de test
+        hacks.Add(new Hack());
+
+    }
+
+    // special functions
+
+    // functions
+    public void addItem(Item item)
+    {
+        items.Add(item);
+    }
+
+    public void addHack(Hack hack)
+    {
+        hacks.Add(hack);
+    }
+
+    public void removeItem(Item item)
+    {
+        items.Remove(item);
+    }
+
+    public void removeHack(Hack hack)
+    {
+        hacks.Remove(hack);
+    }
+
+    // getters
+
+    public List<Item> getItems()
+    {
+        return items;
+    }
+
+    public List<Hack> getHacks()
+    {
+        return hacks;
+    }
+
+    public Item getItem(string item_name)
+    {
+        foreach (Item item in items)
+        {
+            if (item.item_name == item_name)
+            {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public Hack getHack(string hack_name)
+    {
+        foreach (Hack hack in hacks)
+        {
+            if (hack.item_name == hack_name)
+            {
+                return hack;
+            }
+        }
+        return null;
+    }
+
+}
+
+public class Hack : Item
+{
+    // hack target
+    public string hack_type_target = "nothin";
+
+    // constructor
+    public Hack()
+    {
+        // do nothing
+        this.item_type = "hack";
+    }
+
+    public Hack(string item_name, string hack_type_target)
+    {
+        // item
+        // this.init(item_name, item_description, item_icon);
+        this.item_name = item_name;
+
+        // hack
+        this.item_type = "hack";
+        this.hack_type_target = hack_type_target;
+    }
+
+}
+
+public class Item
+{
+    
+        // item basics
+        public string item_type = "item";
+        public string item_name = "item";
+        public string item_description = "item description";
+        public string item_icon = "item icon";
+    
+        // constructor
+        public Item()
+        {
+            // do nothing
+        }
+        
+        public Item(string item_name, string item_description, string item_icon)
+        {
+            init(item_name, item_description, item_icon);
+        }
+
+        public void init(string item_name, string item_description, string item_icon)
+        {
+            this.item_name = item_name;
+            this.item_description = item_description;
+            this.item_icon = item_icon;
+        }
 }

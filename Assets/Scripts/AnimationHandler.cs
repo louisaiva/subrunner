@@ -19,21 +19,22 @@ public class AnimationHandler : MonoBehaviour
 
     // MAIN FUNCTIONS
 
-    public bool ChangeAnim(string next_anim)
+    public bool ChangeAnim(string next_anim, float speed = 1f)
     {
         if (current_anim == next_anim || is_forcing) { return false; }
         
+        animator.speed = speed;
         animator.Play(next_anim);
         current_anim = next_anim;
         
         return true;
     }
 
-    public bool ChangeAnimTilEnd(string next_anim)
+    public bool ChangeAnimTilEnd(string next_anim, float speed = 1f)
     {
         // print("jveux attaquer !!");
 
-        bool changed = ChangeAnim(next_anim);
+        bool changed = ChangeAnim(next_anim, speed);
         if (!changed) { return false; }
 
         // si on a changé d'animation, on force l'animation à se jouer jusqu'à la fin
@@ -66,7 +67,7 @@ public class AnimationHandler : MonoBehaviour
         Invoke("StopForcing", remaining_time-0.05f);
     }
 
-    public void ForcedChangeAnim(string next_anim)
+    public void ForcedChangeAnim(string next_anim, float speed = 1f)
     {
         // ! attention ne pas utiliser h24
         // ! seulement pour la mort
@@ -74,7 +75,7 @@ public class AnimationHandler : MonoBehaviour
         // * utiliser ChangeAnim or ChangeAnimTilEnd à la place
 
         StopForcing();
-        ChangeAnim(next_anim);
+        ChangeAnim(next_anim, speed);
     }
 
     // GETTERS
