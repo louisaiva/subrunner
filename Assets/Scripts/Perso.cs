@@ -11,6 +11,9 @@ public class Perso : Attacker
     public int total_xp = 0;
     public int xp_to_next_level = 300;
 
+    private GameObject floating_text_prefab;
+
+
     // bits (mana)
     public float bits = 8f; // bits = mana (lance des sorts de hacks)
     public int max_bits = 8;
@@ -63,6 +66,9 @@ public class Perso : Attacker
 
         // on ajoute un hack de door après 2 secondes
         Invoke("add_door_hack", 2f);
+
+        //
+        floating_text_prefab = Resources.Load("prefabs/ui/floating_text") as GameObject;
     }
 
     public override void Events()
@@ -129,6 +135,13 @@ public class Perso : Attacker
         damage += 4 + ((int) 0.1*level);
         cooldown_attack -= 0.05f;
         vitesse += 0.1f;
+
+        // on affiche un floating text
+        Vector3 position = transform.position + new Vector3(0, 0.5f, 0);
+        GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
+        floating_text.GetComponent<FloatingText>().init("LEVEL "+level.ToString(), Color.yellow, 30f, 0.1f, 0.2f, 6f);
+        floating_text.transform.SetParent(floating_dmg_provider.transform);
+
     }
 
     // DAMAGE
@@ -201,12 +214,12 @@ public class Perso : Attacker
     private void update_hacks()
     {
         // on affiche les noms des objets hackés
-        string hackin_targets_names = "HACKS : ";
+        /* string hackin_targets_names = "HACKS : ";
         foreach (GameObject target in current_hackin_targets.Keys)
         {
             hackin_targets_names += target.gameObject.name + " ";
         }
-        print(hackin_targets_names);
+        print(hackin_targets_names); */
 
         // on vérifie si les objets hackés sont toujours hackés et toujours à portée
         Dictionary<GameObject,Hack> new_hackin_targets = new Dictionary<GameObject,Hack>();

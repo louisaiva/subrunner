@@ -61,7 +61,6 @@ public class Being : MonoBehaviour
 
         // on récupère le provider de floating dmg
         floating_dmg_provider = GameObject.Find("/particles/dmgs_provider");
-        print(floating_dmg_provider);
     }
 
     public virtual void Events()
@@ -481,8 +480,6 @@ public class Being : MonoBehaviour
 
     public void heal(int nb_heal)
     {
-        print("WESH JE HEAL");
-        
         // each heal gives 10% of max life
         float heal = max_vie * 0.1f * nb_heal;
         addLife(heal);

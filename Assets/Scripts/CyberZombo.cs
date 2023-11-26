@@ -247,7 +247,6 @@ public class CyberZombo : Attacker, I_Hackable
 
     public void cancelHack()
     {
-        print("cancel hack");
         // on arrête le hack
         is_getting_hacked = false;
         hacking_end_time = -1;
