@@ -38,7 +38,12 @@ public class UI_LifeXPHandler : MonoBehaviour
     {
 
         // ! on check si le perso est mort
-        if (!perso || !perso.GetComponent<Perso>().isAlive()) { return; }
+        if (!perso || !perso.GetComponent<Perso>().isAlive())
+        {
+            // on met à zero
+            life_fill.GetComponent<RectTransform>().sizeDelta = new Vector2(0, life_fill_height);
+            return;
+        }
 
         // on met à jour le fill de vie
         update_life_fill();

@@ -11,11 +11,10 @@ public interface I_Hackable
 
 
     // fonctions
-
     void initHack();
     bool beHacked(int lvl);
-
-    bool IsGettingHacked();
-
-    bool IsHackable(string hack_type, int lvl = 1000);
+    bool isGettingHacked();
+    bool isHackable(string hack_type, int lvl = 1000);
+    void updateHack();
+    void cancelHack();
 }

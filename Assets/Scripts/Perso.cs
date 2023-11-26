@@ -12,15 +12,18 @@ public class Perso : Attacker
     public int xp_to_next_level = 10;
 
     // bits (mana)
-    public float bits = 3f; // bits = mana (lance des sorts de hacks)
+    public float bits = 8f; // bits = mana (lance des sorts de hacks)
     public int max_bits = 8;
-    private float regen_bits = 0.1f; // pourcentage de max_bits par seconde 
+    private float regen_bits = 0.1f; // regen (en bits par seconde)
 
     // hack
-    public float hack_range = 1f; // distance entre le perso et la porte pour hacker
+    // public float hack_range = 2f; // distance entre le perso et la porte pour hacker
+    private CircleCollider2D hack_collider;
+    private ContactFilter2D hack_contact_filter = new ContactFilter2D();
     private LayerMask hack_layer;
-    private List<GameObject> current_hackin_targets = new List<GameObject>(); // liste d'objets hackés en ce moment
+    private Dictionary<GameObject,Hack> current_hackin_targets = new Dictionary<GameObject, Hack>(); // liste d'objets hackés en ce moment
     private Transform hacks_path; // le parent des hackin_rays
+
 
     // inventory
     public Inventory inventory = new Inventory();
@@ -40,7 +43,7 @@ public class Perso : Attacker
         max_vie = 100;
         vie = (float) max_vie;
         vitesse = 3f;
-        damage = 24f;
+        damage = 10f;
         attack_range = 0.3f;
         damage_range = 0.5f;
         cooldown_attack = 0.5f;
@@ -54,6 +57,9 @@ public class Perso : Attacker
         // on récupère le parent des hackin_rays
         hacks_path = transform.Find("hacks");
 
+        // on récupère le collider de hack
+        hack_collider = transform.Find("hack_range").GetComponent<CircleCollider2D>();
+        hack_contact_filter.SetLayerMask(hack_layer);
 
         // on ajoute un hack de door après 2 secondes
         Invoke("add_door_hack", 2f);
@@ -86,7 +92,7 @@ public class Perso : Attacker
         // régèn des bits
         if (bits < max_bits)
         {
-            bits += regen_bits * max_bits * Time.deltaTime;
+            bits += regen_bits * Time.deltaTime;
         }
 
         // update de d'habitude
@@ -140,24 +146,30 @@ public class Perso : Attacker
         if (bits < 1) { return; }
 
         // on regarde si on peut hacker qqch
-        Collider2D[] hit_hackable = Physics2D.OverlapCircleAll(transform.position, hack_range, hack_layer);
-        if (hit_hackable.Length == 0) { return; }
+        // Collider2D[] hit_hackable = Physics2D.OverlapCircleAll(transform.position, hack_range, hack_layer);
+        Collider2D[] hit_hackable = new Collider2D[30];
+        int nb_hackables = hack_collider.OverlapCollider(hack_contact_filter,hit_hackable);
+        if (nb_hackables == 0) { return; }
 
         Collider2D target = null;
+        Hack used_hack = null;
 
-        // on hacke le 1er objet qu'on est pas en train de hacker et qui est hackable
+        // on hacke le 1er objet qu'on trouve
         foreach (Collider2D hit in hit_hackable)
         {
-            print("je regarde si je peux hacker " + hit.gameObject.name);
-            if (!current_hackin_targets.Contains(hit.gameObject))
+            if (hit == null) { continue; }
+
+            // on regarde si on est pas déjà en train de hacker l'objet
+            if (!current_hackin_targets.ContainsKey(hit.gameObject))
             {
                 // on parcourt tous nos hacks pour voir si on peut hacker l'objet
                 foreach (Hack hack in inventory.getHacks())
                 {
                     // on regarde si on peut hacker l'objet
-                    if (hit.gameObject.GetComponent<I_Hackable>().IsHackable(hack.hack_type_target, level))
+                    if (hit.gameObject.GetComponent<I_Hackable>().isHackable(hack.hack_type_target, level))
                     {
                         target = hit;
+                        used_hack = hack;
                         break;
                     }
                 }
@@ -173,57 +185,88 @@ public class Perso : Attacker
         // on enlève des bits
         bits -= 1;
 
-        // on ajoute la porte à la liste des portes hackées
-        current_hackin_targets.Add(target.gameObject);
+        // on ajoute la porte au dict des objets hackés
+        current_hackin_targets.Add(target.gameObject, used_hack);
 
         // on crée un hackin_ray
         GameObject hackin_ray = Instantiate(Resources.Load("prefabs/hacks/hackin_ray"), hacks_path) as GameObject;
         
         // on met à jour le hackin_ray avec le nom
-        hackin_ray.name = "hackin_ray_" + target.gameObject.name;
+        hackin_ray.name = "hackin_ray_" + target.gameObject.name + "_" + target.gameObject.GetInstanceID();
 
         return;
         
     }
 
-    private void update_hacks(){
-
-        // on vérifie si les objets hackés sont toujours hackés
-        List<GameObject> new_hackin_targets = new List<GameObject>();
-        foreach (GameObject target in current_hackin_targets)
+    private void update_hacks()
+    {
+        // on affiche les noms des objets hackés
+        string hackin_targets_names = "HACKS : ";
+        foreach (GameObject target in current_hackin_targets.Keys)
         {
-            if (target.GetComponent<I_Hackable>().IsGettingHacked())
+            hackin_targets_names += target.gameObject.name + " ";
+        }
+        print(hackin_targets_names);
+
+        // on vérifie si les objets hackés sont toujours hackés et toujours à portée
+        Dictionary<GameObject,Hack> new_hackin_targets = new Dictionary<GameObject,Hack>();
+        Collider2D[] hit_hackable = new Collider2D[30];
+        hack_collider.OverlapCollider(hack_contact_filter, hit_hackable);
+        foreach (GameObject target in current_hackin_targets.Keys)
+        {
+            if (target.GetComponent<I_Hackable>().isGettingHacked())
             {
-                new_hackin_targets.Add(target);
+                bool still_hackable = false;
+                foreach (Collider2D hackable in hit_hackable)
+                {
+                    if (hackable == target.GetComponent<Collider2D>())
+                    {
+                        // si l'objet est toujours hackable, on l'ajoute au dict des nouveaux objets hackés
+                        new_hackin_targets.Add(target, current_hackin_targets[target]);
+                        still_hackable = true;
+                        break;
+                    }
+                }
+
+                // si l'objet n'est plus hackable, on cancel le hack
+                if (!still_hackable){
+                    target.GetComponent<I_Hackable>().cancelHack();
+                }
             }
         }
 
         // on supprime les anciens rayons de hack qui ne sont plus hackés
-        foreach (GameObject target in current_hackin_targets)
+        foreach (GameObject target in current_hackin_targets.Keys)
         {
-            if (!new_hackin_targets.Contains(target))
+            if (!new_hackin_targets.ContainsKey(target))
             {
                 // on supprime le hackin_ray
-                GameObject hackin_ray = hacks_path.Find("hackin_ray_" + target.gameObject.name).gameObject;
+                ;
+                GameObject hackin_ray = hacks_path.Find("hackin_ray_" + target.gameObject.name + "_" + target.gameObject.GetInstanceID()).gameObject;
                 Destroy(hackin_ray);
             }
         }
 
 
-        // on met à jour la liste des objets hackés
+        // on met à jour le dict des objets hackés
         current_hackin_targets = new_hackin_targets;
 
         // affiche des rayons de hack entre le perso et les objets actuellement hackés
-        foreach (GameObject target in current_hackin_targets)
+        foreach (GameObject target in current_hackin_targets.Keys)
         {
             // on vérifie si on a pas déjà un hackin_ray avec le target
-            GameObject hackin_ray = hacks_path.Find("hackin_ray_" + target.gameObject.name).gameObject;
-
-            print("je hacke " + target.gameObject.name);
+            GameObject hackin_ray = hacks_path.Find("hackin_ray_" + target.gameObject.name + "_" + target.gameObject.GetInstanceID()).gameObject;
 
             // on met à jour le hackin_ray
             hackin_ray.GetComponent<LineRenderer>().SetPosition(0, transform.position);
             hackin_ray.GetComponent<LineRenderer>().SetPosition(1, target.transform.position);
+
+            // on inflige des dégats à l'objet si c'est un hack de dégats
+            if (current_hackin_targets[target].item_type == "hack.dmg")
+            {
+                float damage = ((DmgHack)current_hackin_targets[target]).damage * Time.deltaTime;
+                target.GetComponent<Being>().take_damage(damage, Vector2.zero);
+            }
         }
     }
 
@@ -233,6 +276,7 @@ public class Perso : Attacker
         Hack door_hack = new Hack("door_hack", "door");
         inventory.addHack(door_hack);
     }
+
 }
 
 
@@ -252,7 +296,7 @@ public class Inventory
         items.Add(new Item());
 
         // on ajoute des hacks de test
-        hacks.Add(new Hack("zombo_hack", "zombo"));
+        hacks.Add(new DmgHack("zombo_hack", "zombo",15f));
 
     }
 
@@ -317,10 +361,39 @@ public class Inventory
 
 }
 
+public class DmgHack : Hack
+{
+    // damage
+    public float damage = 0f; // damage infligés par le hack par seconde
+
+    // constructor
+    public DmgHack()
+    {
+        // do nothing
+        this.item_type = "hack.dmg";
+    }
+
+    public DmgHack(string item_name, string hack_type_target, float damage)
+    {
+        // item
+        // this.init(item_name, item_description, item_icon);
+        this.item_name = item_name;
+
+        // hack
+        this.item_type = "hack.dmg";
+        this.hack_type_target = hack_type_target;
+
+        // damage
+        this.damage = damage;
+    }
+
+}
+
 public class Hack : Item
 {
     // hack target
     public string hack_type_target = "nothin";
+
 
     // constructor
     public Hack()

@@ -6,9 +6,15 @@ public class CyberZombo : Attacker, I_Hackable
 {
 
     // player detection
-    private float detection_radius = 10f;
+    private float player_detection_radius = 3f;
     public bool target_detected = false;
     GameObject target;
+
+    // meat detection
+    private float meat_detection_radius = 10f;
+    public bool meat_detected = false;
+    GameObject meat_target;
+    private LayerMask meat_layers;
 
     // player attacking
     // public float attack_radius = 1f; // attaque automatiquement si le joueur est dans ce rayon
@@ -37,6 +43,7 @@ public class CyberZombo : Attacker, I_Hackable
 
         // on défini les layers des ennemis
         enemy_layers = LayerMask.GetMask("Player");
+        meat_layers = LayerMask.GetMask("Meat");
 
         // on met à jour les différentes variables d'attaques pour le zombo
         max_vie = 25;
@@ -57,9 +64,11 @@ public class CyberZombo : Attacker, I_Hackable
 
     public override void Events()
     {
-        // treshold distance
+        // treshold distance "trop proche"
         float treshold_distance = 0.1f;
 
+
+        // 1 - on essaye de détecter le joueur
         if (target_detected){
             // on se dirige vers le joueur
             inputs = new Vector2(target.transform.position.x - transform.position.x, target.transform.position.y - transform.position.y);
@@ -71,12 +80,29 @@ public class CyberZombo : Attacker, I_Hackable
 
             // on normalise les inputs
             inputs.Normalize();
+
+            return;
         }
-        else{
-            // on fait un mouvement circulaire sur x
-            inputs = simulate_circular_input_on_x(inputs);
-            // inputs = new Vector2(0, 0);
+        
+        // 2 - on essaye de détecter de la viande
+        if (meat_detected){
+            // on se dirige vers la viande
+            inputs = new Vector2(meat_target.transform.position.x - transform.position.x, meat_target.transform.position.y - transform.position.y);
+
+            // on regarde si on est pas TROP proche de la viande
+            if (inputs.magnitude < treshold_distance){
+                inputs = new Vector2(0, 0);
+            }
+
+            // on normalise les inputs
+            inputs.Normalize();
+
+            return;
         }
+
+        // 3 - on se déplace aléatoirement circulairement en x
+        inputs = simulate_circular_input_on_x(inputs);
+
     }
 
     // update de d'habitude
@@ -85,8 +111,14 @@ public class CyberZombo : Attacker, I_Hackable
         // ! à mettre tjrs au début de la fonction update
         if (!isAlive()) { return; }
 
+        // update des hacks
+        updateHack();
+
         // on essaye de détecter le joueur
-        detect_target(detection_radius);
+        detect_target(player_detection_radius);
+
+        // on essaye de détecter de la viande
+        detect_meat(meat_detection_radius);
 
         // update de d'habitude
         base.Update();
@@ -96,9 +128,7 @@ public class CyberZombo : Attacker, I_Hackable
         if (target_detected){
             if (target.GetComponent<Being>().isAlive())
             {
-
                 try_to_attack_target();
-
             }
         }
 
@@ -135,6 +165,21 @@ public class CyberZombo : Attacker, I_Hackable
 
     }
 
+    // MEAT DETECTION
+
+    private void detect_meat(float radius){
+
+        // on essaie de trouver le premier gameobject meat dans le rayon de détection
+        Collider2D meatCollider = Physics2D.OverlapCircle(transform.position, radius, meat_layers);
+        meat_detected = (meatCollider != null);
+        if (meat_detected){
+            meat_target = meatCollider.gameObject;
+        }
+        else{
+            meat_target = null;
+        }
+    }
+    
 
     // HACKIN
     public void initHack(){
@@ -171,11 +216,50 @@ public class CyberZombo : Attacker, I_Hackable
         return true;
     }
 
-    bool I_Hackable.IsGettingHacked(){
+    bool I_Hackable.isGettingHacked(){
         return is_getting_hacked;
     }
 
-    public bool IsHackable(string hack_type, int lvl = 1000){
-        return (hack_type == hack_type_self);
+    public bool isHackable(string hack_type, int lvl = 1000)
+    {
+        // on regarde si on a le bon type de hack
+        if (hack_type != hack_type_self) { return false; }
+
+        // on regarde si on a le bon niveau de hack
+        if (lvl < required_hack_lvl) { return false; }
+
+        return true;
     }
+
+    public void updateHack()
+    {
+        // on met à jour le hackin
+        if (is_getting_hacked)
+        {
+            // on regarde si on a fini le hack
+            if (Time.time > hacking_end_time)
+            {
+                is_getting_hacked = false;
+                hacking_end_time = -1;
+            }
+        }
+    }
+
+    public void cancelHack()
+    {
+        // on arrête le hack
+        is_getting_hacked = false;
+        hacking_end_time = -1;
+    }
+    // DIE
+
+    protected override void die(){
+        // on arrête le hackin
+        is_getting_hacked = false;
+        hacking_end_time = -1;
+
+        // on meurt
+        base.die();
+    }
+
 }

@@ -56,7 +56,7 @@ public class Being : MonoBehaviour
         world_layers = LayerMask.GetMask("Ground","Walls","Ceiling","Doors");
 
         // on récupère le provider d'xp
-        xp_provider = GameObject.Find("/world/xp_provider");
+        xp_provider = GameObject.Find("/particles/xp_provider");
     }
 
     public virtual void Events()
@@ -426,11 +426,14 @@ public class Being : MonoBehaviour
         // play death animation
         anim_handler.ForcedChangeAnim(anims.die);
 
+        // on donne de l'xp
+        xp_provider.GetComponent<XPProvider>().EmitXP(xp_gift, transform.position);
+
         // destroy object        
         Invoke("DestroyObject", 60f);
 
-        // on donne de l'xp
-        xp_provider.GetComponent<XPProvider>().EmitXP(xp_gift, transform.position);
+        // on change le layer du perso en "meat"
+        gameObject.layer = LayerMask.NameToLayer("Meat");
     }
 
     protected void DestroyObject()
@@ -446,6 +449,12 @@ public class Being : MonoBehaviour
     {
         return vie > 0f;
     }
+
+    public float GetHeight()
+    {
+        return GetComponent<SpriteRenderer>().bounds.size.y;
+    }
+
 }
 
 public class Anims

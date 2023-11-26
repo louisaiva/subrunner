@@ -42,19 +42,8 @@ public class Door : MonoBehaviour, I_Hackable
     void Update()
     {
 
-        // on met à jour le collider
-        box_collider.enabled = !is_open;
-        
         // on met à jour le hackin
-        if (is_getting_hacked)
-        {
-            // on regarde si on a fini le hack
-            if (Time.time > hacking_end_time)
-            {
-                is_getting_hacked = false;
-                hacking_end_time = -1;
-            }
-        }
+        updateHack();
 
         // on met à jour les animations
         if (is_open)
@@ -73,6 +62,9 @@ public class Door : MonoBehaviour, I_Hackable
             // on met à jour les animations
             anim_handler.ChangeAnim(anims.idle_closed);
         }
+
+        // on met à jour le collider
+        box_collider.enabled = !is_open;
     }
 
     public void open()
@@ -95,7 +87,6 @@ public class Door : MonoBehaviour, I_Hackable
         // on ferme la porte
         is_open = false;
     }
-
 
     // HACKIN
     public void initHack()
@@ -139,12 +130,12 @@ public class Door : MonoBehaviour, I_Hackable
         return true;
     }
 
-    bool I_Hackable.IsGettingHacked()
+    bool I_Hackable.isGettingHacked()
     {
         return is_getting_hacked;
     }
 
-    public bool IsHackable(string hack_type, int lvl=1000){
+    public bool isHackable(string hack_type, int lvl=1000){
 
         // on regarde si on a le bon type de hack
         if (hack_type != hack_type_self) { return false; }
@@ -155,6 +146,51 @@ public class Door : MonoBehaviour, I_Hackable
         return true;
     }
 
+    public void updateHack()
+    {
+        // on met à jour le hackin
+        if (is_getting_hacked)
+        {
+            // on regarde si on a fini le hack
+            if (Time.time > hacking_end_time)
+            {
+                is_getting_hacked = false;
+                hacking_end_time = -1;
+            }
+        }
+    }
+
+    public void cancelHack()
+    {
+        // on arrête le hack
+        is_getting_hacked = false;
+        hacking_end_time = -1;
+
+        // on ferme la porte
+        anim_handler.StopForcing();
+        anim_handler.ChangeAnimTilEnd(anims.idle_closed);
+        is_open = false;
+    }
+
+
+    /* // GETTERS
+
+    public float GetHeight()
+    {
+        return GetComponent<SpriteRenderer>().bounds.size.y;
+    }
+
+    public float getWidth()
+    {
+        return GetComponent<SpriteRenderer>().bounds.size.x;
+    }
+
+    public float getRadius()
+    {
+        return Mathf.Max(GetHeight(), getWidth()) / 2f;
+    }
+
+    */
 }
 
 
