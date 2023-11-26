@@ -183,7 +183,7 @@ public class CyberZombo : Attacker, I_Hackable
 
     // HACKIN
     public void initHack(){
-        required_hack_lvl = 2;
+        required_hack_lvl = 1;
         hack_type_self = "zombo";
         is_getting_hacked = false;
         hacking_duration_base = 3f;
@@ -247,6 +247,7 @@ public class CyberZombo : Attacker, I_Hackable
 
     public void cancelHack()
     {
+        print("cancel hack");
         // on arrête le hack
         is_getting_hacked = false;
         hacking_end_time = -1;

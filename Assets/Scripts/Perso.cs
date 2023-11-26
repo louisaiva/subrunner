@@ -9,7 +9,7 @@ public class Perso : Attacker
     public int level = 1;
     public int xp = 0;
     public int total_xp = 0;
-    public int xp_to_next_level = 10;
+    public int xp_to_next_level = 300;
 
     // bits (mana)
     public float bits = 8f; // bits = mana (lance des sorts de hacks)
@@ -119,14 +119,14 @@ public class Perso : Attacker
     {
         level += 1;
         xp = 0;
-        xp_to_next_level = (int)(xp_to_next_level * 1.5f);
+        xp_to_next_level = (int)(xp_to_next_level * 2f);
         // max_bits += 1;
         // bits = max_bits;
         Debug.Log("LEVEL UP ! level " + level);
 
         // on augmente les stats
-        max_vie += 10*level;
-        damage += 2*level;
+        max_vie += 5 + ((int) 0.2*level);
+        damage += 4 + ((int) 0.1*level);
         cooldown_attack -= 0.05f;
         vitesse += 0.1f;
     }
@@ -277,6 +277,11 @@ public class Perso : Attacker
         inventory.addHack(door_hack);
     }
 
+    public void addBits(int count)
+    {
+        bits += count;
+        if (bits > max_bits) { bits = max_bits; }
+    }
 }
 
 

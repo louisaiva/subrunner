@@ -92,7 +92,7 @@ public class Door : MonoBehaviour, I_Hackable
     public void initHack()
     {
         // on initialise le hackin
-        required_hack_lvl = 1;
+        required_hack_lvl = 2;
         hack_type_self = "door";
         hacking_end_time = -1;
         hacking_duration_base = 2f;

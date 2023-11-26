@@ -18,6 +18,7 @@ public class Being : MonoBehaviour
     // HURTED
     // private float last_hurted_time = 0f; // temps de la dernière attaque subie
     public GameObject xp_provider;
+    public GameObject floating_dmg_provider;
     private int xp_gift = 10;
 
     // DEPLACEMENT
@@ -57,6 +58,10 @@ public class Being : MonoBehaviour
 
         // on récupère le provider d'xp
         xp_provider = GameObject.Find("/particles/xp_provider");
+
+        // on récupère le provider de floating dmg
+        floating_dmg_provider = GameObject.Find("/particles/dmgs_provider");
+        print(floating_dmg_provider);
     }
 
     public virtual void Events()
@@ -414,6 +419,9 @@ public class Being : MonoBehaviour
             GetComponent<SpriteRenderer>().flipX = (knockback.x < 0f);
         }
 
+        // floating dmg
+        floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddFloatingDmg(this.gameObject,-1f * damage, transform.position);
+
         // check if dead
         if (vie <= 0f)
         {
@@ -453,6 +461,31 @@ public class Being : MonoBehaviour
     public float GetHeight()
     {
         return GetComponent<SpriteRenderer>().bounds.size.y;
+    }
+
+    // SETTERS
+    public void addLife(float life)
+    {
+        vie += life;
+        if (vie > max_vie) { vie = max_vie; }
+
+        // floating dmg
+        floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddFloatingDmg(this.gameObject, life, transform.position);
+    }
+
+    public void addBonusLife(float bonus_life)
+    {
+        max_vie += (int) bonus_life;
+        vie += bonus_life;
+    }
+
+    public void heal(int nb_heal)
+    {
+        print("WESH JE HEAL");
+        
+        // each heal gives 10% of max life
+        float heal = max_vie * 0.1f * nb_heal;
+        addLife(heal);
     }
 
 }

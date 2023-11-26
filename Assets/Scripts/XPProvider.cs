@@ -11,6 +11,12 @@ public class XPProvider : MonoBehaviour
     // PARTICLES RADIUS GENERATION
     public float radius = 0.5f;
 
+    // heal and bits generation
+    private float life_percent = 0.01f; // 1% des particules sont des vies
+    private float bit_percent = 0.01f; // 1% des particules sont des bits
+    private Color life_color = new Color(226f / 255f, 144f / 255f, 144f / 255f);
+    private Color bit_color = new Color(106f / 255f, 190f / 255f, 48f / 255f);
+
     // PLAYER
     public GameObject player;
 
@@ -32,10 +38,34 @@ public class XPProvider : MonoBehaviour
 
         // print("we just collided with " + triggeredParticles+" particles");
 
+        int life_bonus = 0;
+        int xp_bonus = 0;
+        int bit_bonus = 0;
+
         // on change la vie des particules
         for (int i = 0; i < triggeredParticles; i++)
         {
             ParticleSystem.Particle p = particles[i];
+
+            // on regarde la couleur de la particule
+            Color color = p.GetCurrentColor(generator);
+            if (color == life_color)
+            {
+                // on ajoute de la vie
+                life_bonus += 1;
+            }
+            else if (color == bit_color)
+            {
+                // on ajoute des bits
+                bit_bonus += 1;
+            }
+            else
+            {
+                // on ajoute de l'xp
+                xp_bonus += 1;
+            }
+
+            // on change la vie de la particule
             p.remainingLifetime = 0;
             particles[i] = p;
         }
@@ -43,9 +73,15 @@ public class XPProvider : MonoBehaviour
         // on applique les changements
         generator.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles);
 
-        // on ajoute l'xp au player
-        player.GetComponent<Perso>().addXP(triggeredParticles);
 
+        // on ajoute l'xp au player
+        if (xp_bonus > 0) { player.GetComponent<Perso>().addXP(xp_bonus); }
+        
+        // on ajoute des bits au player
+        if (bit_bonus > 0) { player.GetComponent<Perso>().addBits(bit_bonus); }
+
+        // on ajoute de la vie au player
+        if (life_bonus > 0) { player.GetComponent<Perso>().heal(life_bonus); }
     }
 
     public void EmitXP(int count, Vector3 position,float strengh = 1f)
@@ -64,6 +100,20 @@ public class XPProvider : MonoBehaviour
             // dans une direction 2D aléatoire en x et y
             Vector2 direction = Random.insideUnitCircle;
             emitParams.velocity = strengh * new Vector3(direction.x, direction.y, 0);
+
+            // on change la couleur de l'émission
+            float rand = Random.Range(0f, 1f);
+            emitParams.startColor = Color.white;
+            if (rand < life_percent)
+            {
+                // on change la couleur de la particule
+                emitParams.startColor = life_color;
+            }
+            else if (rand > 1f - bit_percent)
+            {
+                // on change la couleur de la particule
+                emitParams.startColor = bit_color;
+            }
 
             // on emet les particules
             generator.Emit(emitParams, 1);
