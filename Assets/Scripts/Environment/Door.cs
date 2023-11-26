@@ -36,11 +36,7 @@ public class Door : MonoBehaviour, I_Hackable
         box_collider = GetComponent<BoxCollider2D>();
 
         // on initialise le hackin
-        required_hack_lvl = 1;
-        hack_type_self = "door";
-        hacking_end_time = -1;
-        hacking_duration_base = 2f;
-        is_getting_hacked = false;
+        initHack();
     }
 
     void Update()
@@ -102,6 +98,16 @@ public class Door : MonoBehaviour, I_Hackable
 
 
     // HACKIN
+    public void initHack()
+    {
+        // on initialise le hackin
+        required_hack_lvl = 1;
+        hack_type_self = "door";
+        hacking_end_time = -1;
+        hacking_duration_base = 2f;
+        is_getting_hacked = false;
+    }
+
     bool I_Hackable.beHacked(int lvl)
     {
 

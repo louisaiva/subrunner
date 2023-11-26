@@ -94,4 +94,5 @@ public class Attacker : Being
         Gizmos.DrawWireSphere(attack_point.position, damage_range);
     }
 
+
 }

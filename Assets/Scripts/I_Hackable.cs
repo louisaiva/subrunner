@@ -11,6 +11,8 @@ public interface I_Hackable
 
 
     // fonctions
+
+    void initHack();
     bool beHacked(int lvl);
 
     bool IsGettingHacked();

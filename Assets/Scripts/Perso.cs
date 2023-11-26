@@ -49,7 +49,7 @@ public class Perso : Attacker
         anims.init("perso");
 
         // on met à jour les layers du hack
-        hack_layer = LayerMask.GetMask("Doors");
+        hack_layer = LayerMask.GetMask("Doors","Enemies");
 
         // on récupère le parent des hackin_rays
         hacks_path = transform.Find("hacks");
@@ -148,9 +148,9 @@ public class Perso : Attacker
         // on hacke le 1er objet qu'on est pas en train de hacker et qui est hackable
         foreach (Collider2D hit in hit_hackable)
         {
+            print("je regarde si je peux hacker " + hit.gameObject.name);
             if (!current_hackin_targets.Contains(hit.gameObject))
             {
-
                 // on parcourt tous nos hacks pour voir si on peut hacker l'objet
                 foreach (Hack hack in inventory.getHacks())
                 {
@@ -252,7 +252,7 @@ public class Inventory
         items.Add(new Item());
 
         // on ajoute des hacks de test
-        hacks.Add(new Hack());
+        hacks.Add(new Hack("zombo_hack", "zombo"));
 
     }
 
