@@ -29,6 +29,9 @@ public class Perso : Attacker
     private GameObject hackin_ray_prefab; // le prefab du hackin_ray
 
 
+    // global light
+    private GameObject global_light;
+
     // inventory
     public Inventory inventory = new Inventory();
 
@@ -73,6 +76,9 @@ public class Perso : Attacker
 
         //
         floating_text_prefab = Resources.Load("prefabs/ui/floating_text") as GameObject;
+
+        // on récupère le global_light
+        global_light = GameObject.Find("/world/global_light").gameObject;
     }
 
     public override void Events()
@@ -90,6 +96,12 @@ public class Perso : Attacker
         if (Input.GetKeyDown(KeyCode.E))
         {
             hack();
+        }
+
+        // changement de mode de lumière
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            global_light.GetComponent<GlobalLight>().roll();
         }
     }
 

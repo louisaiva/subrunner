@@ -2,7 +2,7 @@
 
 
 
-- [x] - bring some more light !
+- [ ] - bring some more light !
     - [x] - faire un shader full bloom qui applique à nos hacks, particles, etc
     - [x] - faire un shadergraph qui illumine certaines parties du sprite
             avec emission map
@@ -14,10 +14,26 @@
     - [ ] - et qu'on peut améliorer
     - [ ] - au niv 2, ce drone sert de relai de hack
 
-- [ ] - mettre des objets dans le niveau
+- [ ] - mettre des objets interactifs dans le niveau
     - [ ] - mettre des coffres pour des items physiques
     - [ ] - mettre des disques durs pour des hacks (sortilèges)
     - [ ] - mettre des ordis pour sauvegarder la partie
+
+- [ ] - mettre des visus
+    - [ ] - des déchets
+    - [ ] - des murs ventilateurs
+    - [ ] - des flaques
+    - [ ] - des posters sur les murs
+    - [ ] - des poubelles
+    - [ ] - des vieilles machines (type distributeur) cassées
+    - [ ] - des déchets electroniques
+    - [ ] - des vieux sacs de couchage
+    - [ ] - des bornes electriques
+    - [ ] - des rails désaffectés
+    - [ ] - des roues de metros
+    - [ ] - des vieux bureaux pétés
+
+    
 
 - [ ] - améliorer gameplay
     - [ ] - mettre un sprint de vitesse

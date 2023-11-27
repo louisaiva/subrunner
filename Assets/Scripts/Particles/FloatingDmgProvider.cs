@@ -103,6 +103,9 @@ public class FloatingDmgProvider : MonoBehaviour {
             floating_dmg.GetComponent<TextMeshPro>().color = Color.red;
         }
 
+        // on applique le material
+        floating_dmg.GetComponent<FloatingText>().ajustMaterial();
+
         // on met à jour le texte
         floating_dmg.GetComponent<TextMeshPro>().text = dmg.ToString();
     }
