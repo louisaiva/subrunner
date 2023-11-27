@@ -26,6 +26,7 @@ public class Perso : Attacker
     private LayerMask hack_layer;
     private Dictionary<GameObject,Hack> current_hackin_targets = new Dictionary<GameObject, Hack>(); // liste d'objets hackés en ce moment
     private Transform hacks_path; // le parent des hackin_rays
+    private GameObject hackin_ray_prefab; // le prefab du hackin_ray
 
 
     // inventory
@@ -59,6 +60,9 @@ public class Perso : Attacker
 
         // on récupère le parent des hackin_rays
         hacks_path = transform.Find("hacks");
+
+        // on récupère le prefab du hackin_ray
+        hackin_ray_prefab = Resources.Load("prefabs/hacks/hackin_ray2") as GameObject;
 
         // on récupère le collider de hack
         hack_collider = transform.Find("hack_range").GetComponent<CircleCollider2D>();
@@ -148,6 +152,13 @@ public class Perso : Attacker
     protected override void die()
     {
         Debug.Log("YOU DIED");
+
+        // on affiche un floating text
+        Vector3 position = transform.position + new Vector3(0, 0.5f, 0);
+        GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
+        floating_text.GetComponent<FloatingText>().init("YOU DIED", Color.red, 30f, 0.1f, 0.2f, 6f);
+        floating_text.transform.SetParent(floating_dmg_provider.transform);
+
         base.die();
     }
 
@@ -202,7 +213,7 @@ public class Perso : Attacker
         current_hackin_targets.Add(target.gameObject, used_hack);
 
         // on crée un hackin_ray
-        GameObject hackin_ray = Instantiate(Resources.Load("prefabs/hacks/hackin_ray"), hacks_path) as GameObject;
+        GameObject hackin_ray = Instantiate(hackin_ray_prefab, hacks_path) as GameObject;
         
         // on met à jour le hackin_ray avec le nom
         hackin_ray.name = "hackin_ray_" + target.gameObject.name + "_" + target.gameObject.GetInstanceID();

@@ -2,10 +2,10 @@
 
 
 
-- [ ] - bring some more light !
-    - [ ] - faire un shader full bloom qui applique à nos hacks, particles, etc
-    - [ ] - faire un shadergraph qui illumine certaines parties du sprite
-            avec bright map
+- [x] - bring some more light !
+    - [x] - faire un shader full bloom qui applique à nos hacks, particles, etc
+    - [x] - faire un shadergraph qui illumine certaines parties du sprite
+            avec emission map
     - [ ] - auto generer des lights à nos lumières
 
 - [ ] - mettre un drone de soutien qui est notre compagnie
@@ -36,6 +36,7 @@
 
 # BUGS
 
+- [ ] - quand on est loin de xp-provider ça arrete de générer de l'xp ?
 
 
 # DONE

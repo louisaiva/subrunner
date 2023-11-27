@@ -14,8 +14,15 @@ public class XPProvider : MonoBehaviour
     // heal and bits generation
     private float life_percent = 0.01f; // 1% des particules sont des vies
     private float bit_percent = 0.01f; // 1% des particules sont des bits
-    private Color life_color = new Color(226f / 255f, 144f / 255f, 144f / 255f);
-    private Color bit_color = new Color(106f / 255f, 190f / 255f, 48f / 255f);
+    // private Color life_color = new Color(226f / 255f, 144f / 255f, 144f / 255f);
+    private Color life_color = new Color(1f, 0f, 0f);
+    // private Color bit_color = new Color(106f / 255f, 190f / 255f, 48f / 255f);
+    private Color bit_color = new Color(9f / 255f, 1f, 0f);
+
+    // materials
+    public Material life_material;
+    public Material bit_material;
+    public Material xp_material;
 
     // PLAYER
     public GameObject player;
@@ -24,10 +31,14 @@ public class XPProvider : MonoBehaviour
     {
         // on récupère le particle system
         generator = GetComponent<ParticleSystem>();
-
         // on emet une particule
         // EmitXP(500, new Vector3(0, -1, 0),10f);
         // EmitXP(500, new Vector3(-30, -12, 0), 10f);
+    }
+
+    void Update()
+    {
+        //emitEndlessly();
     }
 
     private void OnParticleTrigger()
@@ -115,9 +126,20 @@ public class XPProvider : MonoBehaviour
                 emitParams.startColor = bit_color;
             }
 
+
             // on emet les particules
             generator.Emit(emitParams, 1);
         }
+    }
+
+    private void emitEndlessly()
+    {
+        // génère une particule toutes les 0.1 secondes
+        if (Time.frameCount % 10 == 0)
+        {
+            EmitXP(1, new Vector3(0, -1, 0));
+        }
+
     }
 
 }
