@@ -28,14 +28,24 @@ public class Room : MonoBehaviour {
     public Transform light_parent;
     private Vector3 light_offset = new Vector3(0.25f, 1f, 0f);
 
+    // doors
+    public Transform doors_parent;
+    public GameObject door_prefab;
+
+    // objects
+    public Transform objects_parent;
+
     // unity functions
     void Start()
     {
         // on récupère les prefabs
         light_prefab = Resources.Load<GameObject>("prefabs/objects/small_light");
+        door_prefab = Resources.Load<GameObject>("prefabs/objects/door");
 
-        // on récupère le parent des lights
+        // on récupère les parents
         light_parent = transform.Find("lights");
+        objects_parent = transform.Find("objects");
+        doors_parent = transform.Find("doors");
 
         // on récupère les tilemaps
         fg = transform.Find("fg_tilemap").gameObject;

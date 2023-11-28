@@ -102,6 +102,9 @@ public class Door : MonoBehaviour, I_Hackable
     bool I_Hackable.beHacked(int lvl)
     {
 
+        // on regarde si on est déjà en train de se faire hacker
+        if (is_getting_hacked) { return false; }
+
         // on regarde si on a le bon niveau de hack
         if (lvl < required_hack_lvl) { return false; }
 
@@ -171,26 +174,6 @@ public class Door : MonoBehaviour, I_Hackable
         anim_handler.ChangeAnimTilEnd(anims.idle_closed);
         is_open = false;
     }
-
-
-    /* // GETTERS
-
-    public float GetHeight()
-    {
-        return GetComponent<SpriteRenderer>().bounds.size.y;
-    }
-
-    public float getWidth()
-    {
-        return GetComponent<SpriteRenderer>().bounds.size.x;
-    }
-
-    public float getRadius()
-    {
-        return Mathf.Max(GetHeight(), getWidth()) / 2f;
-    }
-
-    */
 }
 
 

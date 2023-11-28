@@ -35,6 +35,11 @@ public class Perso : Attacker
     // inventory
     public Inventory inventory = new Inventory();
 
+    // interactions
+    private float interact_range = 1f;
+    private LayerMask interact_layers;
+    public GameObject current_interactable = null;
+
     /*
 
 
@@ -79,6 +84,9 @@ public class Perso : Attacker
 
         // on récupère le global_light
         global_light = GameObject.Find("/world/global_light").gameObject;
+
+        // on met à jour les interactions
+        interact_layers = LayerMask.GetMask("Chests");
     }
 
     public override void Events()
@@ -93,9 +101,15 @@ public class Perso : Attacker
         }
 
         // hack de porte
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             hack();
+        }
+
+        // interactions
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            interact();
         }
 
         // changement de mode de lumière
@@ -123,6 +137,9 @@ public class Perso : Attacker
 
         // on update les hacks
         update_hacks();
+
+        // on update les interactions
+        update_interactions();
     }
 
 
@@ -318,6 +335,68 @@ public class Perso : Attacker
         bits += count;
         if (bits > max_bits) { bits = max_bits; }
     }
+
+
+    // INTERACTIONS
+    private void interact()
+    {
+        // on regarde si on peut interagir avec qqch
+        Collider2D[] hit_interactables = Physics2D.OverlapCircleAll(transform.position, interact_range, interact_layers);
+        if (hit_interactables.Length == 0) { return; }
+
+        Collider2D target = null;
+
+        // on interagit avec le 1er objet qu'on trouve
+        foreach (Collider2D hit in hit_interactables)
+        {
+            if (hit == null) { continue; }
+
+            // on regarde si on est pas déjà en train d'interagir avec l'objet
+            if (hit.gameObject != current_interactable)
+            {
+                target = hit;
+                break;
+            }
+        }
+
+        // on interagit avec le 1er objet qu'on trouve
+        if (target != null)
+        {
+            // on met à jour l'objet avec lequel on interagit
+            current_interactable = target.gameObject;
+
+            // on regarde si c'est un coffre
+            if (current_interactable.GetComponent<Chest>() != null)
+            {
+                current_interactable.GetComponent<Chest>().open();
+            }
+        }
+
+    }
+
+    private void update_interactions()
+    {
+
+        // on vérifie si l'objet avec lequel on interagit est toujours à portée
+        if (current_interactable != null)
+        {
+            // on regarde si on est toujours à portée de l'objet
+            float distance = Vector2.Distance(transform.position, current_interactable.transform.position);
+            if (distance > interact_range*1.5f)
+            {
+                // on referme le coffre
+                if (current_interactable.GetComponent<Chest>() != null)
+                {
+                    current_interactable.GetComponent<Chest>().close();
+                }
+
+                // on arrête d'interagir avec l'objet
+                current_interactable = null;
+            }
+        }
+
+    }
+
 }
 
 
