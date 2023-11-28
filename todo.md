@@ -29,8 +29,9 @@
     - [ ] - des vieux bureaux pétés
 
 - [ ] - transformer Item en Monobievor
-    - [ ] - l'inventory du perso est un canva fils de perso et parent des Items
-    - [ ] - meme principie pour les coffres
+    - [x] - l'inventory du perso est un canva fils de perso et parent des Items
+    - [x] - meme principie pour les coffres
+    - [ ] - faire un InventoryManager qui repère le nombre d'inventaires affichés et ajuste leurs positions + sert à basculer les items d'un inventaire à l'autre
 
 
 - [ ] - améliorer gameplay

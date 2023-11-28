@@ -26,4 +26,11 @@ public class Item : MonoBehaviour {
         sprite_renderer.enabled = is_showed;
     }
 
+    // functions
+    public void changeShow(bool is_showed)
+    {
+        // on met à jour l'affichage
+        this.is_showed = is_showed;
+    }
+
 }

@@ -20,9 +20,8 @@ public class Chest : MonoBehaviour
     // OPENING
     public bool is_open = false;
 
-    // STOCKAGE
-    private int max_items = 4;
-    List<Item> items = new List<Item>();
+    // inventory
+    public Inventory inventory;
 
 
     // UI
@@ -34,7 +33,8 @@ public class Chest : MonoBehaviour
         // on récupère l'animation handler
         anim_handler = GetComponent<AnimationHandler>();
 
-        // on récupère l'ui
+        // on récupère l'inventaire
+        inventory = transform.Find("inventory").GetComponent<Inventory>();
     }
 
     void Update()
@@ -47,9 +47,15 @@ public class Chest : MonoBehaviour
 
             // on met à jour les animations
             anim_handler.ChangeAnim(anims.idle_open);
+
+            // on met à jour l'inventaire
+            inventory.setShow(true);
         }
         else
         {
+            // on met à jour l'inventaire
+            inventory.setShow(false);
+
             // on regarde si on a fini l'animation
             if (anim_handler.IsForcing()) { return; }
 
@@ -81,48 +87,6 @@ public class Chest : MonoBehaviour
         is_open = false;
     }
 
-
-    // STOCKAGE
-
-    public bool addItem(Item item)
-    {
-        // on regarde si on peut ajouter l'item
-        if (items.Count >= max_items) { return false; }
-
-        // on ajoute l'item au coffre
-        items.Add(item);
-
-        // on met à jour l'UI
-        // updateUI();
-
-        return true;
-    }
-
-    public bool removeItem(Item item)
-    {
-        // on regarde si on peut retirer l'item
-        if (!items.Contains(item)) { return false; }
-
-        // on retire l'item du coffre
-        items.Remove(item);
-
-        // on met à jour l'UI
-        // updateUI();
-
-        return true;
-    }
-
-    // GETTERS
-
-    public int getMaxItems()
-    {
-        return max_items;
-    }
-
-    public List<Item> getItems()
-    {
-        return items;
-    }
 }
 
 public class ChestAnims

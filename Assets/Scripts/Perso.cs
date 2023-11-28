@@ -78,6 +78,7 @@ public class Perso : Attacker
 
         // on récupère l'inventaire
         inventory = transform.Find("inventory").GetComponent<Inventory>();
+        inventory.scalable = true;
 
         //
         floating_text_prefab = Resources.Load("prefabs/ui/floating_text") as GameObject;
@@ -113,9 +114,15 @@ public class Perso : Attacker
         }
 
         // changement de mode de lumière
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.L))
         {
             global_light.GetComponent<GlobalLight>().roll();
+        }
+
+        // ouverture de l'inventaire
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            inventory.rollShow();
         }
     }
 
@@ -392,167 +399,3 @@ public class Perso : Attacker
     }
 
 }
-
-
-// public class Inventory
-// {
-
-//     // items
-//     public List<Item> items = new List<Item>();
-
-//     // hacks
-//     public List<Hack> hacks = new List<Hack>();
-
-//     // constructor
-//     public Inventory()
-//     {
-//         // on ajoute des items de test
-//         // items.Add(new Item());
-
-//         // on ajoute des hacks de test
-//         // hacks.Add(new DmgHack("zombo_hack", "zombo",15f));
-
-//     }
-
-//     // special functions
-
-//     // functions
-//     public void addItem(Item item)
-//     {
-//         items.Add(item);
-//     }
-
-//     public void addHack(Hack hack)
-//     {
-//         hacks.Add(hack);
-//     }
-
-//     public void removeItem(Item item)
-//     {
-//         items.Remove(item);
-//     }
-
-//     public void removeHack(Hack hack)
-//     {
-//         hacks.Remove(hack);
-//     }
-
-//     // getters
-
-//     public List<Item> getItems()
-//     {
-//         return items;
-//     }
-
-//     public List<Hack> getHacks()
-//     {
-//         return hacks;
-//     }
-
-//     public Item getItem(string item_name)
-//     {
-//         foreach (Item item in items)
-//         {
-//             if (item.item_name == item_name)
-//             {
-//                 return item;
-//             }
-//         }
-//         return null;
-//     }
-
-//     public Hack getHack(string hack_name)
-//     {
-//         foreach (Hack hack in hacks)
-//         {
-//             if (hack.item_name == hack_name)
-//             {
-//                 return hack;
-//             }
-//         }
-//         return null;
-//     }
-
-// }
-
-// public class DmgHack : Hack
-// {
-//     // damage
-//     public float damage = 0f; // damage infligés par le hack par seconde
-
-//     // constructor
-//     public DmgHack()
-//     {
-//         // do nothing
-//         this.item_type = "hack.dmg";
-//     }
-
-//     public DmgHack(string item_name, string hack_type_target, float damage)
-//     {
-//         // item
-//         // this.init(item_name, item_description, item_icon);
-//         this.item_name = item_name;
-
-//         // hack
-//         this.item_type = "hack.dmg";
-//         this.hack_type_target = hack_type_target;
-
-//         // damage
-//         this.damage = damage;
-//     }
-
-// }
-
-// public class Hack : Item
-// {
-//     // hack target
-//     public string hack_type_target = "nothin";
-
-
-//     // constructor
-//     public Hack()
-//     {
-//         // do nothing
-//         this.item_type = "hack";
-//     }
-
-//     public Hack(string item_name, string hack_type_target)
-//     {
-//         // item
-//         // this.init(item_name, item_description, item_icon);
-//         this.item_name = item_name;
-
-//         // hack
-//         this.item_type = "hack";
-//         this.hack_type_target = hack_type_target;
-//     }
-
-// }
-
-// public class Item
-// {
-    
-//         // item basics
-//         public string item_type = "item";
-//         public string item_name = "item";
-//         public string item_description = "item description";
-//         public string item_icon = "item icon";
-    
-//         // constructor
-//         public Item()
-//         {
-//             // do nothing
-//         }
-        
-//         public Item(string item_name, string item_description, string item_icon)
-//         {
-//             init(item_name, item_description, item_icon);
-//         }
-
-//         public void init(string item_name, string item_description, string item_icon)
-//         {
-//             this.item_name = item_name;
-//             this.item_description = item_description;
-//             this.item_icon = item_icon;
-//         }
-// }
