@@ -33,7 +33,7 @@ public class Perso : Attacker
     private GameObject global_light;
 
     // inventory
-    public Inventory inventory = new Inventory();
+    public Inventory inventory;
 
     // interactions
     private float interact_range = 1f;
@@ -76,8 +76,8 @@ public class Perso : Attacker
         hack_collider = transform.Find("hack_range").GetComponent<CircleCollider2D>();
         hack_contact_filter.SetLayerMask(hack_layer);
 
-        // on ajoute un hack de door après 2 secondes
-        Invoke("add_door_hack", 2f);
+        // on récupère l'inventaire
+        inventory = transform.Find("inventory").GetComponent<Inventory>();
 
         //
         floating_text_prefab = Resources.Load("prefabs/ui/floating_text") as GameObject;
@@ -199,7 +199,6 @@ public class Perso : Attacker
         if (bits < 1) { return; }
 
         // on regarde si on peut hacker qqch
-        // Collider2D[] hit_hackable = Physics2D.OverlapCircleAll(transform.position, hack_range, hack_layer);
         Collider2D[] hit_hackable = new Collider2D[30];
         int nb_hackables = hack_collider.OverlapCollider(hack_contact_filter,hit_hackable);
         if (nb_hackables == 0) { return; }
@@ -315,19 +314,14 @@ public class Perso : Attacker
             hackin_ray.GetComponent<LineRenderer>().SetPosition(1, target.transform.position);
 
             // on inflige des dégats à l'objet si c'est un hack de dégats
-            if (current_hackin_targets[target].item_type == "hack.dmg")
+            print("hackin target : " + target.name + " " + current_hackin_targets[target]);
+            if (current_hackin_targets[target] is DmgHack)
             {
+                print("on fait des dégats : " + ((DmgHack)current_hackin_targets[target]).damage);
                 float damage = ((DmgHack)current_hackin_targets[target]).damage * Time.deltaTime;
                 target.GetComponent<Being>().take_damage(damage, Vector2.zero);
             }
         }
-    }
-
-    private void add_door_hack(){
-
-        print("j'ajoute un hack de porte");
-        Hack door_hack = new Hack("door_hack", "door");
-        inventory.addHack(door_hack);
     }
 
     public void addBits(int count)
@@ -400,165 +394,165 @@ public class Perso : Attacker
 }
 
 
-public class Inventory
-{
+// public class Inventory
+// {
 
-    // items
-    public List<Item> items = new List<Item>();
+//     // items
+//     public List<Item> items = new List<Item>();
 
-    // hacks
-    public List<Hack> hacks = new List<Hack>();
+//     // hacks
+//     public List<Hack> hacks = new List<Hack>();
 
-    // constructor
-    public Inventory()
-    {
-        // on ajoute des items de test
-        items.Add(new Item());
+//     // constructor
+//     public Inventory()
+//     {
+//         // on ajoute des items de test
+//         // items.Add(new Item());
 
-        // on ajoute des hacks de test
-        hacks.Add(new DmgHack("zombo_hack", "zombo",15f));
+//         // on ajoute des hacks de test
+//         // hacks.Add(new DmgHack("zombo_hack", "zombo",15f));
 
-    }
+//     }
 
-    // special functions
+//     // special functions
 
-    // functions
-    public void addItem(Item item)
-    {
-        items.Add(item);
-    }
+//     // functions
+//     public void addItem(Item item)
+//     {
+//         items.Add(item);
+//     }
 
-    public void addHack(Hack hack)
-    {
-        hacks.Add(hack);
-    }
+//     public void addHack(Hack hack)
+//     {
+//         hacks.Add(hack);
+//     }
 
-    public void removeItem(Item item)
-    {
-        items.Remove(item);
-    }
+//     public void removeItem(Item item)
+//     {
+//         items.Remove(item);
+//     }
 
-    public void removeHack(Hack hack)
-    {
-        hacks.Remove(hack);
-    }
+//     public void removeHack(Hack hack)
+//     {
+//         hacks.Remove(hack);
+//     }
 
-    // getters
+//     // getters
 
-    public List<Item> getItems()
-    {
-        return items;
-    }
+//     public List<Item> getItems()
+//     {
+//         return items;
+//     }
 
-    public List<Hack> getHacks()
-    {
-        return hacks;
-    }
+//     public List<Hack> getHacks()
+//     {
+//         return hacks;
+//     }
 
-    public Item getItem(string item_name)
-    {
-        foreach (Item item in items)
-        {
-            if (item.item_name == item_name)
-            {
-                return item;
-            }
-        }
-        return null;
-    }
+//     public Item getItem(string item_name)
+//     {
+//         foreach (Item item in items)
+//         {
+//             if (item.item_name == item_name)
+//             {
+//                 return item;
+//             }
+//         }
+//         return null;
+//     }
 
-    public Hack getHack(string hack_name)
-    {
-        foreach (Hack hack in hacks)
-        {
-            if (hack.item_name == hack_name)
-            {
-                return hack;
-            }
-        }
-        return null;
-    }
+//     public Hack getHack(string hack_name)
+//     {
+//         foreach (Hack hack in hacks)
+//         {
+//             if (hack.item_name == hack_name)
+//             {
+//                 return hack;
+//             }
+//         }
+//         return null;
+//     }
 
-}
+// }
 
-public class DmgHack : Hack
-{
-    // damage
-    public float damage = 0f; // damage infligés par le hack par seconde
+// public class DmgHack : Hack
+// {
+//     // damage
+//     public float damage = 0f; // damage infligés par le hack par seconde
 
-    // constructor
-    public DmgHack()
-    {
-        // do nothing
-        this.item_type = "hack.dmg";
-    }
+//     // constructor
+//     public DmgHack()
+//     {
+//         // do nothing
+//         this.item_type = "hack.dmg";
+//     }
 
-    public DmgHack(string item_name, string hack_type_target, float damage)
-    {
-        // item
-        // this.init(item_name, item_description, item_icon);
-        this.item_name = item_name;
+//     public DmgHack(string item_name, string hack_type_target, float damage)
+//     {
+//         // item
+//         // this.init(item_name, item_description, item_icon);
+//         this.item_name = item_name;
 
-        // hack
-        this.item_type = "hack.dmg";
-        this.hack_type_target = hack_type_target;
+//         // hack
+//         this.item_type = "hack.dmg";
+//         this.hack_type_target = hack_type_target;
 
-        // damage
-        this.damage = damage;
-    }
+//         // damage
+//         this.damage = damage;
+//     }
 
-}
+// }
 
-public class Hack : Item
-{
-    // hack target
-    public string hack_type_target = "nothin";
+// public class Hack : Item
+// {
+//     // hack target
+//     public string hack_type_target = "nothin";
 
 
-    // constructor
-    public Hack()
-    {
-        // do nothing
-        this.item_type = "hack";
-    }
+//     // constructor
+//     public Hack()
+//     {
+//         // do nothing
+//         this.item_type = "hack";
+//     }
 
-    public Hack(string item_name, string hack_type_target)
-    {
-        // item
-        // this.init(item_name, item_description, item_icon);
-        this.item_name = item_name;
+//     public Hack(string item_name, string hack_type_target)
+//     {
+//         // item
+//         // this.init(item_name, item_description, item_icon);
+//         this.item_name = item_name;
 
-        // hack
-        this.item_type = "hack";
-        this.hack_type_target = hack_type_target;
-    }
+//         // hack
+//         this.item_type = "hack";
+//         this.hack_type_target = hack_type_target;
+//     }
 
-}
+// }
 
-public class Item
-{
+// public class Item
+// {
     
-        // item basics
-        public string item_type = "item";
-        public string item_name = "item";
-        public string item_description = "item description";
-        public string item_icon = "item icon";
+//         // item basics
+//         public string item_type = "item";
+//         public string item_name = "item";
+//         public string item_description = "item description";
+//         public string item_icon = "item icon";
     
-        // constructor
-        public Item()
-        {
-            // do nothing
-        }
+//         // constructor
+//         public Item()
+//         {
+//             // do nothing
+//         }
         
-        public Item(string item_name, string item_description, string item_icon)
-        {
-            init(item_name, item_description, item_icon);
-        }
+//         public Item(string item_name, string item_description, string item_icon)
+//         {
+//             init(item_name, item_description, item_icon);
+//         }
 
-        public void init(string item_name, string item_description, string item_icon)
-        {
-            this.item_name = item_name;
-            this.item_description = item_description;
-            this.item_icon = item_icon;
-        }
-}
+//         public void init(string item_name, string item_description, string item_icon)
+//         {
+//             this.item_name = item_name;
+//             this.item_description = item_description;
+//             this.item_icon = item_icon;
+//         }
+// }

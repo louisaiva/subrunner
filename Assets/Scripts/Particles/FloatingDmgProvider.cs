@@ -17,6 +17,7 @@ public class FloatingDmgProvider : MonoBehaviour {
 
     // show damages once a while if there are too many
     private float show_dmg_delay = 0.1f;
+    private float free_dmg_delay = 10f; // on supprime les dégats si on a pas fait de dégats depuis ce temps
     private Dictionary<GameObject,float> dmg_last_time_showed = new Dictionary<GameObject, float>();
     private Dictionary<GameObject, float> dmg_compteur = new Dictionary<GameObject, float>();
     private List<GameObject> go = new List<GameObject>();
@@ -43,6 +44,20 @@ public class FloatingDmgProvider : MonoBehaviour {
             if (dmg_compteur[obj] == 0f)
             {
                 obj_to_del.Add(obj);
+                continue;
+            }
+
+            // on vérfie si on fait au moins 1 dégat
+            if (Mathf.Abs(dmg_compteur[obj]) < 1f)
+            {
+                // * il se peut que l'objet ait reçu des dégats inférieurs à 1
+                // * mais pas depuis hyper longtemps -> on stocke le dégat pour "rien"
+                // * donc on le supprime si on a pas fait de dégats depuis un moment
+                if (dmg_last_time_showed[obj] != -1 && Time.time - dmg_last_time_showed[obj] > free_dmg_delay)
+                {
+                    obj_to_del.Add(obj);
+                }
+
                 continue;
             }
 
