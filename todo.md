@@ -9,7 +9,7 @@
     - [ ] - au niv 2, ce drone sert de relai de hack
 
 - [ ] - mettre des objets interactifs dans le niveau
-    - [ ] - mettre des coffres pour des items physiques
+    - [x] - mettre des coffres pour des items physiques
     - [ ] - mettre des disques durs pour des hacks (sortilèges)
     - [ ] - mettre des ordis pour sauvegarder la partie
 
@@ -27,6 +27,10 @@
     - [ ] - des rails désaffectés
     - [ ] - des roues de metros
     - [ ] - des vieux bureaux pétés
+
+- [ ] - transformer Item en Monobievor
+    - [ ] - l'inventory du perso est un canva fils de perso et parent des Items
+    - [ ] - meme principie pour les coffres
 
 
 - [ ] - améliorer gameplay
