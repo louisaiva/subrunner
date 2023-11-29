@@ -28,16 +28,17 @@
     - [ ] - des roues de metros
     - [ ] - des vieux bureaux pétés
 
-- [ ] - transformer Item en Monobievor
-    - [x] - l'inventory du perso est un canva fils de perso et parent des Items
-    - [x] - meme principie pour les coffres
-    - [ ] - faire un InventoryManager qui repère le nombre d'inventaires affichés et ajuste leurs positions + sert à basculer les items d'un inventaire à l'autre
 
 
 - [ ] - améliorer gameplay
     - [ ] - mettre un sprint de vitesse
     - [ ] - faire des "avancements souples", que le joueur puisse avancer
             meme si y'a colliding si c un peu
+
+- [ ] - ajouter items
+    - [ ] - lunettes de vitesse : permettent de voir dans le noir
+    - [ ] - puce de hacking : permet de sélectionner un hack parmi plusieurs en maintenant la souris
+    
 
 
 - [ ] - faire un génération aléatoire des niveaux
@@ -79,3 +80,9 @@
     - [x] - faire un shadergraph qui illumine certaines parties du sprite
             avec emission map
     - [x] - auto generer des lights à nos lumières
+
+- [x] - transformer Item en Monobievor
+    - [x] - l'inventory du perso est un canva fils de perso et parent des Items
+    - [x] - meme principie pour les coffres
+    - [ ] - faire un InventoryManager qui repère le nombre d'inventaires affichés et ajuste leurs positions + sert à basculer les items d'un inventaire à l'autre
+    - [x] - (g pa fait mdr mais g fait autrement ça marche mm mieux)

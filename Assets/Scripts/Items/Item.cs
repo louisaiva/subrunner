@@ -8,6 +8,7 @@ public class Item : MonoBehaviour
 
     // item basics
     public string item_type = "physical";
+    public string action_type = "active";
     public string item_name = "heal_potion";
     public string item_description = "this is a heal potion";
 
@@ -89,6 +90,9 @@ public class Item : MonoBehaviour
 
         // on change la scale
         // transform.localScale = new Vector3(scale_on_ground, scale_on_ground, scale_on_ground);
+
+        // on change le material
+        sprite_renderer.material = Resources.Load<Material>("materials/sprite_lit_default");
     }
 
     // transfer to inv
@@ -106,5 +110,8 @@ public class Item : MonoBehaviour
 
         // on change la scale
         // transform.localScale = new Vector3(1, 1, 1);
+
+        // on change le material
+        sprite_renderer.material = Resources.Load<Material>("materials/sprite_unlit_default");
     }
 }

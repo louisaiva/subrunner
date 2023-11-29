@@ -97,6 +97,8 @@ public class GlobalLight : MonoBehaviour {
 
     public void setMode(string mode)
     {
+        if (mode == mode_current) { return; }
+
         // on met à jour le mode
         mode_current = mode;
         update_mode();

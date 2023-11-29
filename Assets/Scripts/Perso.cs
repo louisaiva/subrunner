@@ -88,7 +88,88 @@ public class Perso : Attacker
 
         // on met à jour les interactions
         interact_layers = LayerMask.GetMask("Chests");
+
+
+
+
+        // on affiche un texte de début
+        Invoke("showWelcome", 5f);
     }
+
+    // welcoming
+    void showWelcome()
+    {
+        // on affiche un texte de début
+
+        // WELCOME TO
+        Vector3 position = transform.position + new Vector3(0, 1f, 0);
+        string text = "welcome to";
+        GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
+        floating_text.GetComponent<FloatingText>().init(text, Color.yellow, 30f, 0.1f, 0.2f, 6f);
+        floating_text.transform.SetParent(floating_dmg_provider.transform);
+
+        // SUBRUNNER
+        position = transform.position + new Vector3(0, 0.5f, 0);
+        text = "SUBRUNNER";
+        GameObject floating_text2 = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
+        floating_text2.GetComponent<FloatingText>().init(text, Color.green, 30f, 0.1f, 0.2f, 6f);
+        floating_text2.transform.SetParent(floating_dmg_provider.transform);
+
+
+        // on affiche la quete 5sec après
+        Invoke("showQuest", 5f);
+    }
+
+    void showQuest()
+    {
+        // on affiche un texte de début
+        Vector3 position = transform.position + new Vector3(0, 1f, 0);
+        string text = "you need to";
+        GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
+        floating_text.GetComponent<FloatingText>().init(text, Color.yellow, 30f, 0.1f, 0.2f, 6f);
+        floating_text.transform.SetParent(floating_dmg_provider.transform);
+
+
+        position = transform.position + new Vector3(0, 0.5f, 0);
+        text = "HACK THE DOOR";
+        GameObject floating_text2 = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
+        floating_text2.GetComponent<FloatingText>().init(text, Color.red, 30f, 0.1f, 0.2f, 6f);
+        floating_text2.transform.SetParent(floating_dmg_provider.transform);
+
+        // on affiche la suite de la quete 5sec après
+        Invoke("showQuest2", 5f);
+    }
+
+    void showQuest2()
+    {
+        // on affiche un texte de début
+        Vector3 position = transform.position + new Vector3(0, 1f, 0);
+        string text = "find the usb key to hack it";
+        GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
+        floating_text.GetComponent<FloatingText>().init(text, Color.green, 30f, 0.1f, 0.2f, 6f);
+        floating_text.transform.SetParent(floating_dmg_provider.transform);
+
+        // on affiche la suite de la quete 5sec après
+        Invoke("showQuest3", 5f);
+    }
+
+    void showQuest3()
+    {
+        // on affiche un texte de début
+        Vector3 position = transform.position + new Vector3(0, 1f, 0);
+        string text = "but beware of";
+        GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
+        floating_text.GetComponent<FloatingText>().init(text, Color.yellow, 30f, 0.1f, 0.2f, 6f);
+        floating_text.transform.SetParent(floating_dmg_provider.transform);
+
+        // on affiche la suite de la quete 5sec après
+        position = transform.position + new Vector3(0, 0.5f, 0);
+        text = "ZOMBIES";
+        GameObject floating_text2 = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
+        floating_text2.GetComponent<FloatingText>().init(text, Color.red, 30f, 0.1f, 0.2f, 6f);
+        floating_text2.transform.SetParent(floating_dmg_provider.transform);
+    }
+
 
     public override void Events()
     {
@@ -147,6 +228,22 @@ public class Perso : Attacker
 
         // on update les interactions
         update_interactions();
+
+        // on applique les capacités passives des items
+        bool has_speed_glasses = false;
+        foreach (Item item in inventory.getItems())
+        {
+            if (item.action_type == "passive")
+            {
+                if (item.item_name == "speed_glasses")
+                {
+                    has_speed_glasses = true;
+                }
+            }
+        }
+
+        global_light.GetComponent<GlobalLight>().setMode(has_speed_glasses ? "on" : "off");
+
     }
 
 
