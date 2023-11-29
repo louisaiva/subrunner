@@ -11,7 +11,7 @@ public class Inventory : MonoBehaviour {
     public bool scalable = false;
 
     // prefabs
-    public GameObject item_prefab;
+    public string prefabs_path = "prefabs/items/";
 
     // perso
     public GameObject perso;
@@ -31,7 +31,6 @@ public class Inventory : MonoBehaviour {
         perso = GameObject.Find("/perso");
 
         // on récupère le prefab
-        item_prefab = Resources.Load("prefabs/ui/item") as GameObject;
         empty_slot_prefab = Resources.Load("prefabs/ui/empty_slot") as GameObject;
 
         // on récupère le canvas
@@ -189,7 +188,7 @@ public class Inventory : MonoBehaviour {
         
     }
 
-    void updateSize()
+    /* void updateSize()
     {
 
         int size = max_items;
@@ -211,10 +210,10 @@ public class Inventory : MonoBehaviour {
         // qui donne la plus petite diagonale
         int min_diag = 5000;
         int max_div = 1;
-        for (int i = 1; i <= size/2; i++)
+        for (int i = 1; i <= size / 2; i++)
         {
             int div = size / i;
-            
+
             if (size % i == 0)
             {
                 // on calcule la diagonale
@@ -230,7 +229,8 @@ public class Inventory : MonoBehaviour {
         }
 
         // on calcule la taille de l'inventaire
-        if (max_div > 1){
+        if (max_div > 1)
+        {
             width = max_div;
             height = size / max_div;
         }
@@ -238,6 +238,58 @@ public class Inventory : MonoBehaviour {
         {
             width = size;
             height = 1;
+        }
+
+        // on met à jour la taille de l'inventaire
+        GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
+
+        // on met à jour la taille du box collider
+        GetComponent<BoxCollider2D>().size = new Vector2(width, height);
+
+        // on met à jour l'offset du box collider
+        float x_offset = (GetComponent<RectTransform>().pivot.x - 0.5f) * width * -1;
+        GetComponent<BoxCollider2D>().offset = new Vector2(x_offset, height / 2f);
+
+
+        // on met à jour l'offset de l'inventaire en fonction de l'offset du canvas
+        updateOffset();
+    } */
+
+    void updateSize()
+    {
+
+        int size = max_items;
+        if (scalable) { size = getItems().Count; }
+
+        // nouvelle version on veut afficher "size" items avec l'inventaire le plus petit possible
+        // pour ça on veut trouver le nb le plus petit "n" tel que "n*n" >= "size"
+
+        // on vérifie qu'on a pas déjà la bonne taille
+        if (GetComponent<RectTransform>().sizeDelta.x * GetComponent<RectTransform>().sizeDelta.y >= size) { return; }
+
+
+        // on calcule la taille de l'inventaire
+        int width = 0;
+        int height = 0;
+
+        if (size == 3)
+        {
+            // cas particulier pour size == 3
+            width = 3;
+            height = 1;
+        }
+        else
+        {
+            // on cherche le plus petit carré >= size
+            for (int i = 1; i <= size; i++)
+            {
+                if (i * i >= size)
+                {
+                    width = i;
+                    height = i;
+                    break;
+                }
+            }
         }
 
         // on met à jour la taille de l'inventaire
@@ -292,19 +344,47 @@ public class Inventory : MonoBehaviour {
         }
     }
 
-
-    /* public void createItem(string item_name)
+    public void randomize()
     {
-        // on crée l'item
-        GameObject item_go = Instantiate(item_prefab, transform.position, Quaternion.identity) as GameObject;
-        Item item = item_go.GetComponent<Item>();
+        // on randomize les items de l'inventaire
+        // si on en a déjà, on les conserve
+        List<Item> items = getItems();
+        
+        // le nombre d'items après la randomization
+        int nb_items = Random.Range(items.Count, max_items + 1);
 
-        // on change le nom de l'item
-        item.item_name = item_name;
+        // on récupère les prefabs
+        Object[] prefabs = Resources.LoadAll(prefabs_path);
+        // print(prefabs + " " + prefabs.Length);
+
+        // on ajoute des items random
+        for (int i = items.Count; i < nb_items; i++)
+        {
+            // on choisit un prefab random
+            int nb = Random.Range(0, prefabs.Length);
+
+            // on crée un item random
+            GameObject item_go = Instantiate(prefabs[nb], transform.position, Quaternion.identity) as GameObject;
+
+            // on ajoute l'item
+            addItem(item_go.GetComponent<Item>());
+        }
+    }
+
+    public bool addItem(Item item)
+    {
+        // on ajoute un item à l'inventaire
+        // on vérifie qu'on est pas déjà plein
+        if (!scalable && getItems().Count >= max_items) { return false; }
 
         // on ajoute l'item
-        addItem(item);
-    } */
+        item.transform.SetParent(transform);
+
+        // on règle la scale à 1
+        item.transform.localScale = new Vector3(1, 1, 1);
+
+        return true;
+    }
 
     // getters
     public List<Item> getItems()

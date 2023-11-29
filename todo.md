@@ -36,9 +36,13 @@
             meme si y'a colliding si c un peu
 
 - [ ] - ajouter items
-    - [ ] - lunettes de vitesse : permettent de voir dans le noir
+    - [x] - lunettes de vitesse : permettent de voir dans le noir
     - [ ] - puce de hacking : permet de sélectionner un hack parmi plusieurs en maintenant la souris
     
+- [ ] - mettre des modifieurs d'items
+    - [ ] - pour les hacks : stat de propagation automatique à un ennemi proche
+    - [ ] - acceleration de la vitesse de hack
+    - [ ] - 
 
 
 - [ ] - faire un génération aléatoire des niveaux

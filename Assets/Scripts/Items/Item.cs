@@ -35,15 +35,21 @@ public class Item : MonoBehaviour
         ui_bg = transform.Find("ui_bg").gameObject;
 
         // on met à jour le sprite du ui_bg en fonction de legendary_item
-        Sprite[] sprites = Resources.LoadAll<Sprite>("spritesheets/items");
+        Sprite[] sprites = Resources.LoadAll<Sprite>("spritesheets/item_slots");
         if (legendary_item)
         {
-            ui_bg.GetComponent<SpriteRenderer>().sprite = sprites[2];
+            // on met un fond jaune
+            ui_bg.GetComponent<SpriteRenderer>().sprite = sprites[3];
+        }
+        else if (this is DmgHack)
+        {
+            // on met un fond vert
+            ui_bg.GetComponent<SpriteRenderer>().sprite = sprites[1];
         }
         else
         {
-            // print("item "+ item_name.ToString() +" is type of " +this.GetType().ToString() + " " + (this is Hack).ToString());
-            ui_bg.GetComponent<SpriteRenderer>().sprite = sprites[this is Hack ? 1 : 0];
+            // on met un fond rouge (2) ou bleu (0)
+            ui_bg.GetComponent<SpriteRenderer>().sprite = sprites[this is Hack ? 2 : 0];
         }
 
         // on récupère le perso

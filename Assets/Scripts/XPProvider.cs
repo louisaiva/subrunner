@@ -27,6 +27,11 @@ public class XPProvider : MonoBehaviour
     // PLAYER
     public GameObject player;
 
+    // generator continue
+    public bool generate_continuously = false;
+    public Vector3 generator_position = new Vector3(-47, -9, 0);
+    public float generator_strengh = 1f;
+
     private void Start()
     {
         // on récupère le particle system
@@ -38,7 +43,10 @@ public class XPProvider : MonoBehaviour
 
     void Update()
     {
-        //emitEndlessly();
+        if (generate_continuously)
+        {
+            emitEndlessly();
+        }
     }
 
     private void OnParticleTrigger()
@@ -134,12 +142,7 @@ public class XPProvider : MonoBehaviour
 
     private void emitEndlessly()
     {
-        // génère une particule toutes les 0.1 secondes
-        if (Time.frameCount % 10 == 0)
-        {
-            EmitXP(1, new Vector3(0, -1, 0));
-        }
-
+        EmitXP((int) generator_strengh, generator_position);
     }
 
 }

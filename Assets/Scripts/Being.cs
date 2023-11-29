@@ -12,14 +12,14 @@ public class Being : MonoBehaviour
     // VIE
     public float vie = 100f;
     public int max_vie = 100;
-    private float regen_vie = 0.01f; // pourcentage de vie_max par seconde
+    public float regen_vie = 1f; // en point de vie par seconde
     public float weight = 1f; // poids du perso (pour le knockback)
 
     // HURTED
     // private float last_hurted_time = 0f; // temps de la dernière attaque subie
     public GameObject xp_provider;
     public GameObject floating_dmg_provider;
-    private int xp_gift = 10;
+    protected int xp_gift = 10;
 
     // DEPLACEMENT
     public Vector2 inputs;
@@ -76,7 +76,7 @@ public class Being : MonoBehaviour
         // régèn de la vie
         if (vie < max_vie)
         {
-            vie += regen_vie * max_vie * Time.deltaTime;
+            vie += regen_vie * Time.deltaTime;
         }
 
         // on récupère les inputs

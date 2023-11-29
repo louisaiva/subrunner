@@ -17,7 +17,7 @@ public class Perso : Attacker
     // bits (mana)
     public float bits = 8f; // bits = mana (lance des sorts de hacks)
     public int max_bits = 8;
-    private float regen_bits = 0.1f; // regen (en bits par seconde)
+    public float regen_bits = 0.1f; // regen (en bits par seconde)
 
     // hack
     // public float hack_range = 2f; // distance entre le perso et la porte pour hacker
@@ -35,6 +35,9 @@ public class Perso : Attacker
     // inventory
     public Inventory inventory;
 
+    // skill tree
+    public SkillTree skills_tree;
+
     // interactions
     private float interact_range = 1f;
     private LayerMask interact_layers;
@@ -51,30 +54,21 @@ public class Perso : Attacker
         // on start de d'habitude
         base.Start();
 
-        // on met les differents paramètres du perso
-        max_vie = 100;
-        vie = (float) max_vie;
-        vitesse = 3f;
-        damage = 10f;
-        attack_range = 0.3f;
-        damage_range = 0.5f;
-        cooldown_attack = 0.5f;
+        // ON RECUP DES TRUCS
 
-        // on met à jour les animations
-        anims.init("perso");
 
         // on met à jour les layers du hack
-        hack_layer = LayerMask.GetMask("Doors","Enemies");
+        hack_layer = LayerMask.GetMask("Doors", "Enemies");
+
+        // on récupère le collider de hack
+        hack_collider = transform.Find("hack_range").GetComponent<CircleCollider2D>();
+        hack_contact_filter.SetLayerMask(hack_layer);
 
         // on récupère le parent des hackin_rays
         hacks_path = transform.Find("hacks");
 
         // on récupère le prefab du hackin_ray
         hackin_ray_prefab = Resources.Load("prefabs/hacks/hackin_ray2") as GameObject;
-
-        // on récupère le collider de hack
-        hack_collider = transform.Find("hack_range").GetComponent<CircleCollider2D>();
-        hack_contact_filter.SetLayerMask(hack_layer);
 
         // on récupère l'inventaire
         inventory = transform.Find("inventory").GetComponent<Inventory>();
@@ -89,6 +83,30 @@ public class Perso : Attacker
         // on met à jour les interactions
         interact_layers = LayerMask.GetMask("Chests");
 
+
+
+        // ON MET A JOUR DES TRUCS
+
+
+        // on met les differents paramètres du perso
+        skills_tree = transform.Find("skills_tree").GetComponent<SkillTree>();
+        skills_tree.init();
+        // max_vie = 100;
+        vie = (float) max_vie;
+        vitesse = 3f;
+        // damage = 10f;
+        attack_range = 0.3f; // defini par l'item
+        damage_range = 0.5f; // defini par l'item
+        cooldown_attack = 0.5f; // defini par l'item
+
+        xp_gift = 0; // on ne donne pas d'xp quand on tue un perso
+
+        // on met à jour les animations
+        anims.init("perso");
+
+
+
+        // ON AFFICHE DES TRUCS
 
 
 
@@ -173,6 +191,10 @@ public class Perso : Attacker
 
     public override void Events()
     {
+
+        // on vérifie que le temps est pas en pause
+        if (Time.timeScale == 0f) { return; }
+
         // Z,S,Q,D
         inputs = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
@@ -262,22 +284,25 @@ public class Perso : Attacker
     {
         level += 1;
         xp = 0;
-        xp_to_next_level = (int)(xp_to_next_level * 2f);
-        // max_bits += 1;
-        // bits = max_bits;
+        // xp_to_next_level = (int)(xp_to_next_level * 2f);
+        xp_to_next_level = (int)(xp_to_next_level * 1.1f);
+
         Debug.Log("LEVEL UP ! level " + level);
 
         // on augmente les stats
-        max_vie += 5 + ((int) 0.2*level);
-        damage += 4 + ((int) 0.1*level);
-        cooldown_attack -= 0.05f;
-        vitesse += 0.1f;
+        // max_vie += 5 + ((int) 0.2*level);
+        // damage += 4 + ((int) 0.1*level);
+        // cooldown_attack -= 0.05f;
+        // vitesse += 0.1f;
 
         // on affiche un floating text
-        Vector3 position = transform.position + new Vector3(0, 0.5f, 0);
+        /* Vector3 position = transform.position + new Vector3(0, 1f, 0);
         GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
         floating_text.GetComponent<FloatingText>().init("LEVEL "+level.ToString(), Color.yellow, 30f, 0.1f, 0.2f, 6f);
-        floating_text.transform.SetParent(floating_dmg_provider.transform);
+        floating_text.transform.SetParent(floating_dmg_provider.transform); */
+
+        // on ouvre le physical tree
+        skills_tree.physicalLevelUp();
 
     }
 
@@ -302,6 +327,7 @@ public class Perso : Attacker
     // HACK
     private void hack()
     {
+
         // on regarde si on a assez de bits
         if (bits < 1) { return; }
 
@@ -435,6 +461,11 @@ public class Perso : Attacker
         if (bits > max_bits) { bits = max_bits; }
     }
 
+    public void setHackinRange(float range)
+    {
+        hack_collider.radius = range;
+    }
+
 
     // INTERACTIONS
     private void interact()
@@ -506,8 +537,7 @@ public class Perso : Attacker
         {
             if (current_interactable.GetComponent<Chest>() != null)
             {
-                current_interactable.GetComponent<Chest>().grab(item);
-                return;
+                if (current_interactable.GetComponent<Chest>().grab(item)) { return; }
             }
         }
 

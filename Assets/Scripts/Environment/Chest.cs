@@ -35,6 +35,9 @@ public class Chest : MonoBehaviour
 
         // on récupère l'inventaire
         inventory = transform.Find("inventory").GetComponent<Inventory>();
+
+        // randomize
+        inventory.randomize();
     }
 
     void Update()
@@ -65,7 +68,6 @@ public class Chest : MonoBehaviour
     }
 
     // MAIN FUNCTIONS
-
     public void open()
     {
         // on met à jour les animations
@@ -88,9 +90,10 @@ public class Chest : MonoBehaviour
     }
 
     // INVENTORY FUNCTIONS
-    public void grab(Item item)
+    public bool grab(Item item)
     {
-        item.transform.SetParent(inventory.transform);
+        // item.transform.SetParent(inventory.transform);
+        return inventory.addItem(item);
     }
 
 }
