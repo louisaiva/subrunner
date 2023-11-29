@@ -42,7 +42,6 @@
 - [ ] - mettre des modifieurs d'items
     - [ ] - pour les hacks : stat de propagation automatique à un ennemi proche
     - [ ] - acceleration de la vitesse de hack
-    - [ ] - 
 
 
 - [ ] - faire un génération aléatoire des niveaux
@@ -52,10 +51,17 @@
             parce que ça rend bien ! genre dans les couloirs
 
 
+- [ ] - UX
+    - [ ] - ajouter des descriptions qui s'affichent au hoover de la souris sur
+    les items & les skills
+    - [ ] - basculer le controle du hacking à la souris : on peut cliquer sur les zombis
+    qui allument leur contour lors d'un hoover
+
 # BUGS
 
 - [ ] - quand on est loin de xp-provider ça arrete de générer de l'xp ?
 - [ ] - bug graphique d'animations : les zombos n'attaquent pas
+- [ ] - bug ordi freeze à la fin de l'animation idle_on
 
 # DO IT LATER
 

@@ -58,7 +58,7 @@ public class Perso : Attacker
 
 
         // on met à jour les layers du hack
-        hack_layer = LayerMask.GetMask("Doors", "Enemies");
+        hack_layer = LayerMask.GetMask("Doors", "Enemies","Computers");
 
         // on récupère le collider de hack
         hack_collider = transform.Find("hack_range").GetComponent<CircleCollider2D>();
@@ -81,7 +81,7 @@ public class Perso : Attacker
         global_light = GameObject.Find("/world/global_light").gameObject;
 
         // on met à jour les interactions
-        interact_layers = LayerMask.GetMask("Chests");
+        interact_layers = LayerMask.GetMask("Chests", "Computers");
 
 
 
@@ -339,6 +339,8 @@ public class Perso : Attacker
         Collider2D target = null;
         Hack used_hack = null;
 
+        print("HACKING " + nb_hackables + " OBJECTS");
+
         // on hacke le 1er objet qu'on trouve
         foreach (Collider2D hit in hit_hackable)
         {
@@ -361,6 +363,8 @@ public class Perso : Attacker
             }
         }
 
+        print("HACKING " + target + " WITH " + used_hack);
+
         // si on a rien trouvé, on quitte
         if (target == null) { return; }
 
@@ -372,6 +376,8 @@ public class Perso : Attacker
 
         // on ajoute la porte au dict des objets hackés
         current_hackin_targets.Add(target.gameObject, used_hack);
+
+        print("CREATING HACKIN RAY");
 
         // on crée un hackin_ray
         GameObject hackin_ray = Instantiate(hackin_ray_prefab, hacks_path) as GameObject;
@@ -489,9 +495,13 @@ public class Perso : Attacker
             }
         }
 
+        print("INTERACTING WITH " + target);
+
         // on interagit avec le 1er objet qu'on trouve
         if (target != null)
         {
+
+
             // on met à jour l'objet avec lequel on interagit
             current_interactable = target.gameObject;
 
@@ -499,6 +509,12 @@ public class Perso : Attacker
             if (current_interactable.GetComponent<Chest>() != null)
             {
                 current_interactable.GetComponent<Chest>().open();
+            }
+            else if (current_interactable.GetComponent<Computer>() != null)
+            {
+                // on regarde si c'est un ordi et on l'allume
+                current_interactable.GetComponent<Computer>().turnOn();
+                current_interactable = null;
             }
         }
 

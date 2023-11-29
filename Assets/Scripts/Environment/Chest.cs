@@ -22,10 +22,6 @@ public class Chest : MonoBehaviour
 
     // inventory
     public Inventory inventory;
-
-
-    // UI
-
     
     // unity functions
     void Start()
