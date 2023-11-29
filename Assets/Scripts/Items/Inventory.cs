@@ -18,9 +18,11 @@ public class Inventory : MonoBehaviour {
 
     // ui
     public Canvas canvas;
-    public GameObject inv_bg;
+    // public GameObject inv_bg;
     public bool is_showed = false;
     public Vector2 inv_offset = new Vector2(0.5f, 0.5f);
+    List<GameObject> empty_slots = new List<GameObject>();
+    GameObject empty_slot_prefab;
 
     // unity functions
     void Start()
@@ -30,12 +32,13 @@ public class Inventory : MonoBehaviour {
 
         // on récupère le prefab
         item_prefab = Resources.Load("prefabs/ui/item") as GameObject;
+        empty_slot_prefab = Resources.Load("prefabs/ui/empty_slot") as GameObject;
 
         // on récupère le canvas
         canvas = GetComponent<Canvas>();
 
         // on récupère le bg
-        inv_bg = transform.Find("bg").gameObject;
+        // inv_bg = transform.Find("bg").gameObject;
 
         // on met à jour la taille du canvas
         updateSize();
@@ -82,6 +85,61 @@ public class Inventory : MonoBehaviour {
             // on met à jour la position de l'item
             item.transform.localPosition = pos;
         }
+
+        // si on est pas scalable, on ajoute/supprime des items vides pour remplir l'inventaire
+        if (!scalable && items.Count + empty_slots.Count < max_items)
+        {
+            int nb_empty_slots_a_creer = max_items - items.Count - empty_slots.Count;
+
+            // on ajoute des empty slots
+            for (int i = 0; i < nb_empty_slots_a_creer; i++)
+            {
+                // on crée des empty slots
+                GameObject empty_slot = Instantiate(empty_slot_prefab, transform.position, Quaternion.identity) as GameObject;
+                empty_slot.transform.SetParent(transform);
+
+                // on règle la scale à 1
+                empty_slot.transform.localScale = new Vector3(1, 1, 1);
+
+                // on ajoute l'empty slot à la liste
+                empty_slots.Add(empty_slot);
+            }
+        }
+        else if (!scalable && items.Count + empty_slots.Count > max_items)
+        {
+            // on supprime les empty slots en trop
+            int nb_empty_slots_a_supprimer = items.Count + empty_slots.Count - max_items;
+
+            // on supprime les empty slots
+            for (int i = 0; i < nb_empty_slots_a_supprimer; i++)
+            {
+                // on récupère le dernier empty slot
+                GameObject empty_slot = empty_slots[empty_slots.Count - 1];
+
+                // on le supprime
+                Destroy(empty_slot);
+
+                // on le supprime de la liste
+                empty_slots.Remove(empty_slot);
+            }
+        }
+
+        // on met à jour les positions des empty slots
+        for (int i = 0; i < empty_slots.Count; i++)
+        {
+            // on récupère l'empty slot
+            GameObject empty_slot = empty_slots[i];
+
+            int pos_dans_linv = items.Count + i;
+
+            // on récupère la position de l'empty slot
+            Vector2 pos = new Vector2(0, 0);
+            pos.x = inv_offset.x + (pos_dans_linv % w);
+            pos.y = inv_offset.y + (pos_dans_linv / w);
+
+            // on met à jour la position de l'empty slot
+            empty_slot.transform.localPosition = pos;
+        }
     }
 
     void updateShow()
@@ -101,6 +159,13 @@ public class Inventory : MonoBehaviour {
 
             // on met à jour l'affichage
             item.changeShow(is_showed);
+        }
+
+        // on met à jour les empty slots
+        foreach (GameObject empty_slot in empty_slots)
+        {
+            // on met à jour l'affichage
+            empty_slot.SetActive(is_showed);
         }
     }
 
@@ -226,6 +291,7 @@ public class Inventory : MonoBehaviour {
             perso.GetComponent<Perso>().grab(item);
         }
     }
+
 
     /* public void createItem(string item_name)
     {

@@ -12,10 +12,13 @@ public class Item : MonoBehaviour
     public string item_name = "heal_potion";
     public string item_description = "this is a heal potion";
 
+    public bool legendary_item = false;
+
 
     // UI
     public bool is_showed = false;
     private SpriteRenderer sprite_renderer;
+    private GameObject ui_bg;
 
     // on the ground
     public bool is_on_ground = false;
@@ -28,6 +31,21 @@ public class Item : MonoBehaviour
         // on récupère le sprite renderer
         sprite_renderer = GetComponent<SpriteRenderer>();
 
+        // on récupère le ui_bg
+        ui_bg = transform.Find("ui_bg").gameObject;
+
+        // on met à jour le sprite du ui_bg en fonction de legendary_item
+        Sprite[] sprites = Resources.LoadAll<Sprite>("spritesheets/items");
+        if (legendary_item)
+        {
+            ui_bg.GetComponent<SpriteRenderer>().sprite = sprites[2];
+        }
+        else
+        {
+            // print("item "+ item_name.ToString() +" is type of " +this.GetType().ToString() + " " + (this is Hack).ToString());
+            ui_bg.GetComponent<SpriteRenderer>().sprite = sprites[this is Hack ? 1 : 0];
+        }
+
         // on récupère le perso
         perso = GameObject.Find("/perso");
     }
@@ -36,6 +54,9 @@ public class Item : MonoBehaviour
     {
         // on met à jour l'affichage
         sprite_renderer.enabled = is_showed;
+
+        // on met à jour l'affichage du ui_bg
+        ui_bg.SetActive(is_showed && !is_on_ground);
 
         // on check les events
         Events();
@@ -73,6 +94,9 @@ public class Item : MonoBehaviour
     {
         // on met à jour l'affichage
         this.is_showed = is_showed;
+
+        // on met à jour l'affichage du ui_bg
+        ui_bg.SetActive(is_showed && !is_on_ground);
     }
 
     // transfer to ground
