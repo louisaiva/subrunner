@@ -404,8 +404,6 @@ public class Being : MonoBehaviour
         // ! à mettre tjrs au début de la fonction update
         if (!isAlive()) { return; }
 
-        print(this.gameObject.name + " took " + damage + " damage");
-
         vie -= damage;
 
         // play hurt animation

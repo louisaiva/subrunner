@@ -87,6 +87,12 @@ public class Chest : MonoBehaviour
         is_open = false;
     }
 
+    // INVENTORY FUNCTIONS
+    public void grab(Item item)
+    {
+        item.transform.SetParent(inventory.transform);
+    }
+
 }
 
 public class ChestAnims

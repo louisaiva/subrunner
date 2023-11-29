@@ -13,15 +13,21 @@ public class Inventory : MonoBehaviour {
     // prefabs
     public GameObject item_prefab;
 
+    // perso
+    public GameObject perso;
+
     // ui
     public Canvas canvas;
     public GameObject inv_bg;
     public bool is_showed = false;
-    private Vector2 inv_offset = new Vector2(0.5f, 0.5f);
+    public Vector2 inv_offset = new Vector2(0.5f, 0.5f);
 
     // unity functions
     void Start()
     {
+        // on récupère le perso
+        perso = GameObject.Find("/perso");
+
         // on récupère le prefab
         item_prefab = Resources.Load("prefabs/ui/item") as GameObject;
 
@@ -49,6 +55,9 @@ public class Inventory : MonoBehaviour {
 
         // on met à jour les positions des items
         updateUI();
+
+        // on check les events
+        // Events();
     }
 
     // UI
@@ -106,10 +115,13 @@ public class Inventory : MonoBehaviour {
         {
             inv_offset.x = -GetComponent<RectTransform>().sizeDelta.x + 0.5f;
         }
-        else
+        else if (GetComponent<RectTransform>().pivot.x == 0.5f)
         {
             inv_offset.x = -GetComponent<RectTransform>().sizeDelta.x / 2 + 0.5f;
         }
+
+        // on met a jour l'offset du box collider
+        
     }
 
     void updateSize()
@@ -132,25 +144,24 @@ public class Inventory : MonoBehaviour {
 
         // on cherche le plus grand diviseur de "max_items"
         // qui donne la plus petite diagonale
-        int min_diag = 0;
+        int min_diag = 5000;
         int max_div = 1;
         for (int i = 1; i <= size/2; i++)
         {
             int div = size / i;
-            max_div = div;
-            /* if (size % i == 0)
+            
+            if (size % i == 0)
             {
                 // on calcule la diagonale
                 int w = div;
                 int h = size / div;
                 int diag = (int)Mathf.Sqrt(w * w + h * h);
-
                 if (diag < min_diag)
                 {
                     min_diag = diag;
                     max_div = div;
                 }
-            } */
+            }
         }
 
         // on calcule la taille de l'inventaire
@@ -166,6 +177,14 @@ public class Inventory : MonoBehaviour {
 
         // on met à jour la taille de l'inventaire
         GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
+
+        // on met à jour la taille du box collider
+        GetComponent<BoxCollider2D>().size = new Vector2(width, height);
+
+        // on met à jour l'offset du box collider
+        float x_offset = (GetComponent<RectTransform>().pivot.x - 0.5f) * width * -1;
+        GetComponent<BoxCollider2D>().offset = new Vector2(x_offset, height / 2f);
+
 
         // on met à jour l'offset de l'inventaire en fonction de l'offset du canvas
         updateOffset();
@@ -186,33 +205,29 @@ public class Inventory : MonoBehaviour {
     }
 
     // functions
-    public void addItem(Item item)
+    public void dropItem(Item item)
     {
-        // on regarde si on peut ajouter l'item (on enlève 1 car on compte le bg de l'inventaire)
-        if (transform.childCount-1 >= max_items) { return; }
-
         // on récupère le gameobject de l'item
         GameObject item_go = item.gameObject;
 
-        // on ajoute l'item a l'inventaire
-        item_go.transform.SetParent(transform);
-    }
-
-    public void removeItem(Item item)
-    {
-        GameObject item_go = item.gameObject;
-
         // on regarde si l'item est dans l'inventaire
-        if (!item.transform.parent == this.transform) { return; }
+        // if (!item.transform.parent == this.transform) { return; }
+        // print("on essaye de drop " + item.item_name + " de " + item.transform.parent.name);
 
-        // on lache l'item
-
-        // ! temporaire
-        // items.Remove(item);
-        item_go.SetActive(false);
+        // on vérifie si notre inventaire est un inventaire de perso
+        if (transform.parent == perso.transform)
+        {
+            // on drop l'item via le perso
+            perso.GetComponent<Perso>().drop(item);
+        }
+        else
+        {
+            // si on est un coffre, on drop l'item dans le perso
+            perso.GetComponent<Perso>().grab(item);
+        }
     }
 
-    public void createItem(string item_name)
+    /* public void createItem(string item_name)
     {
         // on crée l'item
         GameObject item_go = Instantiate(item_prefab, transform.position, Quaternion.identity) as GameObject;
@@ -223,7 +238,7 @@ public class Inventory : MonoBehaviour {
 
         // on ajoute l'item
         addItem(item);
-    }
+    } */
 
     // getters
     public List<Item> getItems()

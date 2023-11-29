@@ -195,6 +195,9 @@ public class Perso : Attacker
         floating_text.GetComponent<FloatingText>().init("YOU DIED", Color.red, 30f, 0.1f, 0.2f, 6f);
         floating_text.transform.SetParent(floating_dmg_provider.transform);
 
+        // on desactive l'inventaire
+        inventory.setShow(false);
+
         base.die();
     }
 
@@ -321,10 +324,8 @@ public class Perso : Attacker
             hackin_ray.GetComponent<LineRenderer>().SetPosition(1, target.transform.position);
 
             // on inflige des dégats à l'objet si c'est un hack de dégats
-            print("hackin target : " + target.name + " " + current_hackin_targets[target]);
             if (current_hackin_targets[target] is DmgHack)
             {
-                print("on fait des dégats : " + ((DmgHack)current_hackin_targets[target]).damage);
                 float damage = ((DmgHack)current_hackin_targets[target]).damage * Time.deltaTime;
                 target.GetComponent<Being>().take_damage(damage, Vector2.zero);
             }
@@ -396,6 +397,32 @@ public class Perso : Attacker
             }
         }
 
+    }
+
+
+    // INVENTORY
+    public void drop(Item item)
+    {
+
+        // si on est en train d'ouvrir un coffre, on drop l'item dedans
+        if (current_interactable != null)
+        {
+            if (current_interactable.GetComponent<Chest>() != null)
+            {
+                current_interactable.GetComponent<Chest>().grab(item);
+                return;
+            }
+        }
+
+        // on drop l'item par terre
+        item.transform.SetParent(null);
+        item.transform.position = transform.position;
+        item.fromInvToGround();
+    }
+
+    public void grab(Item item)
+    {
+        item.transform.SetParent(inventory.transform);
     }
 
 }
