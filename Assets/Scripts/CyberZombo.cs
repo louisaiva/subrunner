@@ -17,15 +17,18 @@ public class CyberZombo : Attacker, I_Hackable
     private LayerMask meat_layers;
 
     // player attacking
-    // public float attack_radius = 1f; // attaque automatiquement si le joueur est dans ce rayon
 
-    // hackin
-    public int required_hack_lvl { get; set;}
-    public string hack_type_self { get; set;}
+    public string hack_type_self { get; set; }
+    public int required_bits { get; set; }
+    public int required_bits_base { get; set; }
+    public int security_lvl { get; set; }
     public bool is_getting_hacked { get; set; }
-    public float hacking_duration_base { get; set;}
-    public float hacking_end_time { get; set;}
+    public float hacking_duration_base { get; set; }
+    public float hacking_end_time { get; set; }
+    public float hacking_current_duration { get; set; } // temps de hack actuel
 
+    // xp_provider
+    public GameObject bit_provider { get; set; }
 
     /*
 
@@ -112,7 +115,9 @@ public class CyberZombo : Attacker, I_Hackable
         if (!isAlive()) { return; }
 
         // update des hacks
-        updateHack();
+        if (is_getting_hacked) {
+            updateHack();
+        }
 
         // on essaye de détecter le joueur
         detect_target(player_detection_radius);
@@ -182,75 +187,103 @@ public class CyberZombo : Attacker, I_Hackable
     
 
     // HACKIN
-    public void initHack(){
-        required_hack_lvl = 1;
+    public void initHack()
+    {
+
+        // on récupère le xp_provider
+        bit_provider = GameObject.Find("/particles/xp_provider");
+
+        // on initialise le hackin
         hack_type_self = "zombo";
         is_getting_hacked = false;
         hacking_duration_base = 3f;
         hacking_end_time = -1;
+        hacking_current_duration = 0f;
+
+        // bits necessaires pour hacker
+        security_lvl = 1;
+        required_bits_base = 1;
+        required_bits = (int) (required_bits_base * Mathf.Pow(2, security_lvl - 1));
+
     }
 
-    bool I_Hackable.beHacked(int lvl){
-        // on regarde si on est déjà en train de se faire hacker
-        if (is_getting_hacked) { return false; }
+    public bool isHackable(string hack_type, int bits)
+    {
+        // on regarde si on a le bon type de hack
+        if (hack_type != hack_type_self) { return false; }
 
-        // on regarde si le hack est assez puissant
-        if (lvl < required_hack_lvl) { return false; }
+        // on regarde si on a assez de bits
+        if (bits < required_bits) { return false; }
+
+        return true;
+    }
+
+    int I_Hackable.beHacked()
+    {
+        // on regarde si on est déjà en train de se faire hacker
+        if (is_getting_hacked) { return 0; }
 
         // on calcule la durée du hack
-        // chaque niveau de hack en plus réduit le temps de hack de 5% par rapport au niveau précédent
-        // fonction qui tend vers 0 quand le niveau de hack augmente MAIS qui ne peut pas être négative
-        // * FONCTIONNE JUSQU'AU NIVEAU 60 !! c super
+        // todo voir Computer.cs
 
-        float hackin_duration = hacking_duration_base * Mathf.Pow(0.95f, lvl - required_hack_lvl);
-        float hackin_speed = hacking_duration_base / hackin_duration;
-        if (hackin_duration < 0.1f) { hackin_duration = 0.1f; }
+        hacking_current_duration = hacking_duration_base;
+        float hackin_speed = hacking_duration_base / hacking_current_duration;
+        if (hacking_current_duration < 0.1f) { hacking_current_duration = 0.1f; }
+
+        // on met à jour les animations
+        anim_handler.StopForcing();
+        anim_handler.ChangeAnimTilEnd(anims.hurted, hackin_speed);
 
         // on commence le hack
         is_getting_hacked = true;
-        hacking_end_time = Time.time + hackin_duration;
+        hacking_end_time = Time.time + hacking_current_duration;
 
-        // on lance l'animation de hack
-        anim_handler.ChangeAnimTilEnd(anims.hurted, hackin_speed);
 
-        return true;
+        return required_bits;
     }
 
     bool I_Hackable.isGettingHacked(){
         return is_getting_hacked;
     }
 
-    public bool isHackable(string hack_type, int lvl = 1000)
-    {
-        // on regarde si on a le bon type de hack
-        if (hack_type != hack_type_self) { return false; }
-
-        // on regarde si on a le bon niveau de hack
-        if (lvl < required_hack_lvl) { return false; }
-
-        return true;
-    }
-
     public void updateHack()
     {
-        // on met à jour le hackin
-        if (is_getting_hacked)
+        // on regarde si on a fini le hack
+        if (Time.time > hacking_end_time)
         {
-            // on regarde si on a fini le hack
-            if (Time.time > hacking_end_time)
-            {
-                is_getting_hacked = false;
-                hacking_end_time = -1;
-            }
+            // on reussit le hack
+            succeedHack();
         }
     }
 
     public void cancelHack()
     {
+        // on calcule le temps restant
+        float time_left = hacking_end_time - Time.time;
+
+        // on calcule le nombre de bits restants et on en drop la moitié
+        int bits_left = Mathf.RoundToInt((required_bits * time_left / hacking_duration_base) / 2);
+
         // on arrête le hack
         is_getting_hacked = false;
         hacking_end_time = -1;
+        hacking_current_duration = 0f;
+
+        // on drop les bits restants
+        xp_provider.GetComponent<XPProvider>().EmitBits(bits_left, transform.position, 0.5f);
+
+        // on met à jour les animations
+        anim_handler.StopForcing();
     }
+
+    public void succeedHack(){
+
+        // on arrête le hack
+        is_getting_hacked = false;
+        hacking_end_time = -1;
+        hacking_current_duration = 0f;
+    }
+    
     // DIE
 
     protected override void die(){

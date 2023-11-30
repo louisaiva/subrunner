@@ -140,6 +140,31 @@ public class XPProvider : MonoBehaviour
         }
     }
 
+    public void EmitBits(int count, Vector3 position, float strengh = 1f)
+    {
+        // on crée un EmitParams pour pouvoir changer la position de l'émission
+        ParticleSystem.EmitParams emitParams = new ParticleSystem.EmitParams();
+
+        for (int i = 0; i < count; i++)
+        {
+            // on change la position de l'émission
+            // dans un rayon de radius autour de la position
+            Vector2 position2D = Random.insideUnitCircle;
+            emitParams.position = position + radius * new Vector3(position2D.x, position2D.y, 0);
+
+            // on change la vitesse de l'émission en fonction de la strengh
+            // dans une direction 2D aléatoire en x et y
+            Vector2 direction = Random.insideUnitCircle;
+            emitParams.velocity = strengh * new Vector3(direction.x, direction.y, 0);
+
+            // on change la couleur de l'émission
+            emitParams.startColor = bit_color;
+    
+            // on emet les particules
+            generator.Emit(emitParams, 1);
+        }
+    }
+
     private void emitEndlessly()
     {
         EmitXP((int) generator_strengh, generator_position);

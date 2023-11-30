@@ -329,9 +329,6 @@ public class Perso : Attacker
     private void hack()
     {
 
-        // on regarde si on a assez de bits
-        if (bits < 1) { return; }
-
         // on regarde si on peut hacker qqch
         Collider2D[] hit_hackable = new Collider2D[30];
         int nb_hackables = hack_collider.OverlapCollider(hack_contact_filter,hit_hackable);
@@ -355,7 +352,7 @@ public class Perso : Attacker
                 foreach (Hack hack in inventory.getHacks())
                 {
                     // on regarde si on peut hacker l'objet
-                    if (hit.gameObject.GetComponent<I_Hackable>().isHackable(hack.hack_type_target, level))
+                    if (hit.gameObject.GetComponent<I_Hackable>().isHackable(hack.hack_type_target, (int) bits))
                     {
                         if (Vector2.Distance(transform.position, hit.transform.position) < min_distance)
                         {
@@ -374,12 +371,9 @@ public class Perso : Attacker
         if (target == null) { return; }
 
         // on hack l'objet
-        target.GetComponent<I_Hackable>().beHacked(level);
+        bits -= target.GetComponent<I_Hackable>().beHacked();
 
-        // on enlève des bits
-        bits -= 1;
-
-        // on ajoute la porte au dict des objets hackés
+        // on ajoute le hackable au dict des objets hackés
         current_hackin_targets.Add(target.gameObject, used_hack);
 
         // print("CREATING HACKIN RAY");
@@ -500,12 +494,12 @@ public class Perso : Attacker
             }
         }
 
-        print("INTERACTING WITH " + target);
-
         // on interagit avec le 1er objet qu'on trouve
         if (target != null)
         {
 
+
+            print("INTERACTING WITH " + target);
 
             // on met à jour l'objet avec lequel on interagit
             current_interactable = target.gameObject;

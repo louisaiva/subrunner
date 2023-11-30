@@ -35,6 +35,9 @@
     - [ ] - faire des "avancements souples", que le joueur puisse avancer
             meme si y'a colliding si c un peu
 
+- [ ] - recalibrage : quand on attaque, on divise le nombre de dégats fait a
+        chaque ennemis touchés par le nb d'ennemis touchés (logique)
+
 - [ ] - ajouter items
     - [x] - lunettes de vitesse : permettent de voir dans le noir
     - [ ] - puce de hacking : permet de sélectionner un hack parmi plusieurs en maintenant la souris
