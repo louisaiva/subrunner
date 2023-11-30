@@ -21,6 +21,8 @@ public class Computer : MonoBehaviour, I_Hackable
     public float time_to_live = 0f; // si on ne l'utilise pas pendant ce temps, il s'éteint
     public float time_to_live_base = 60f; // si on ne l'utilise pas pendant ce temps, il s'éteint
 
+    public int niveau = 1;
+
     // ANIMATION
     private AnimationHandler anim_handler;
     private ComputerAnims anims = new ComputerAnims();
@@ -55,8 +57,6 @@ public class Computer : MonoBehaviour, I_Hackable
         // on met à jour les animations
         if (is_on)
         {
-            print("is on, current anim: " + anim_handler.current_anim + ", is forcing: " + anim_handler.IsForcing());
-
             // on regarde si on a fini l'animation
             if (anim_handler.IsForcing()) { return; }
 
@@ -154,6 +154,8 @@ public class Computer : MonoBehaviour, I_Hackable
 
     public bool isHackable(string hack_type, int lvl = 1000)
     {
+        // on regarde si l'ordi est allumé
+        if (!is_on) { return false; }
 
         // on regarde si on a le bon type de hack
         if (hack_type != hack_type_self) { return false; }
@@ -195,8 +197,11 @@ public class Computer : MonoBehaviour, I_Hackable
 
     private void succeedHack()
     {
-        // on affiche le physical tree du perso
-        tree.physicalLevelUp();
+        // on affiche le virtual tree du perso
+        tree.virtualLevelUp(this);
+
+        niveau++;
+        required_hack_lvl = niveau;
     }
 }
 

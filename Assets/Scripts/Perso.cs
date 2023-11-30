@@ -91,6 +91,7 @@ public class Perso : Attacker
         // on met les differents paramètres du perso
         skills_tree = transform.Find("skills_tree").GetComponent<SkillTree>();
         skills_tree.init();
+
         // max_vie = 100;
         vie = (float) max_vie;
         vitesse = 3f;
@@ -339,9 +340,10 @@ public class Perso : Attacker
         Collider2D target = null;
         Hack used_hack = null;
 
-        print("HACKING " + nb_hackables + " OBJECTS");
+        // print("HACKING " + nb_hackables + " OBJECTS");
 
-        // on hacke le 1er objet qu'on trouve
+        // on hacke l'objet le plus proche
+        float min_distance = 10000f;
         foreach (Collider2D hit in hit_hackable)
         {
             if (hit == null) { continue; }
@@ -355,15 +357,18 @@ public class Perso : Attacker
                     // on regarde si on peut hacker l'objet
                     if (hit.gameObject.GetComponent<I_Hackable>().isHackable(hack.hack_type_target, level))
                     {
-                        target = hit;
-                        used_hack = hack;
-                        break;
+                        if (Vector2.Distance(transform.position, hit.transform.position) < min_distance)
+                        {
+                            min_distance = Vector2.Distance(transform.position, hit.transform.position);
+                            target = hit;
+                            used_hack = hack;
+                        }
                     }
                 }
             }
         }
 
-        print("HACKING " + target + " WITH " + used_hack);
+        // print("HACKING " + target + " WITH " + used_hack);
 
         // si on a rien trouvé, on quitte
         if (target == null) { return; }
@@ -377,7 +382,7 @@ public class Perso : Attacker
         // on ajoute la porte au dict des objets hackés
         current_hackin_targets.Add(target.gameObject, used_hack);
 
-        print("CREATING HACKIN RAY");
+        // print("CREATING HACKIN RAY");
 
         // on crée un hackin_ray
         GameObject hackin_ray = Instantiate(hackin_ray_prefab, hacks_path) as GameObject;

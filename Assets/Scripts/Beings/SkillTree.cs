@@ -51,7 +51,8 @@ public class SkillTree : MonoBehaviour {
 
 
     // VIRTUAL SKILLS
-    // private GameObject ui_virtual_tree;
+    private GameObject ui_virtual_tree;
+    public Computer computer;
     // private bool is_virtual_tree_open = false;
     public int virtual_points = 0; // points à dépenser
 
@@ -88,7 +89,7 @@ public class SkillTree : MonoBehaviour {
 
         // on récupère le ui_skill_tree
         ui_physical_tree = transform.Find("physical_tree").gameObject;
-        // ui_virtual_tree = transform.Find("ui_virtual_tree").gameObject;
+        ui_virtual_tree = transform.Find("virtual_tree").gameObject;
 
         // on cache les skill trees
         ui_physical_tree.SetActive(false);
@@ -96,6 +97,9 @@ public class SkillTree : MonoBehaviour {
 
     public void init()
     {
+        // on s'assure qu'on a bien start
+        Start();
+
         // on met à jour les valeurs du perso
         perso.GetComponent<Perso>().max_vie = (int) calculateX("max_vie");
         perso.GetComponent<Perso>().regen_vie = calculateX("regen_vie");
@@ -106,6 +110,8 @@ public class SkillTree : MonoBehaviour {
     }
 
     // OUVERTURE DES SKILL TREES
+
+    // physical
 
     public void physicalLevelUp()
     {
@@ -148,6 +154,38 @@ public class SkillTree : MonoBehaviour {
         levelUpSkill(skill);
     }
 
+
+    // virtuel
+
+    public void virtualLevelUp(Computer comp)
+    {
+        // on récupère le computer
+        computer = comp;
+
+        // on calcule les points à distribuer en fonction du niveau de l'ordi
+        virtual_points += 1 + (comp.niveau -1) / 5;
+
+        // on stoppe le temps
+        Time.timeScale = 0f;
+
+        // on desactive le main ui
+        main_ui.SetActive(false);
+
+        // on affiche le skill tree
+        ui_virtual_tree.SetActive(true);
+    }
+
+    private void closeVirtualTree()
+    {
+        // on cache le skill tree
+        ui_virtual_tree.SetActive(false);
+        Time.timeScale = 1f;
+        // is_virtual_tree_open = false;
+
+        // on reactive le main ui
+        main_ui.SetActive(true);
+    }
+
     // AUGMENTATION DES SKILLS
     // le choix d'augmenter un skill particulier ne se fait pas dans cette classe mais dans les classes des skills
     // via le mouse click event
@@ -158,7 +196,8 @@ public class SkillTree : MonoBehaviour {
         print("level up " + skill);
 
         // on regarde si on a des points à dépenser
-        if (physical_points <= 0) { return; }
+        if (isPhysicalSkill(skill) && physical_points <= 0) { return; }
+        else if (!isPhysicalSkill(skill) && virtual_points <= 0) { return; }
 
         // on regarde quel skill on augmente
         if (skill == "max_vie")
@@ -231,14 +270,29 @@ public class SkillTree : MonoBehaviour {
 
 
         // on met à jour les points
-        physical_points--;
-
-        // si on a plus de points, on ferme le skill tree
-        if (physical_points <= 0)
+        if (isPhysicalSkill(skill))
         {
-            // Invoke("closePhysicalTree", 1f);
-            closePhysicalTree();
+            physical_points--;
+            // si on a plus de points, on ferme le skill tree
+            if (physical_points <= 0)
+            {
+                // Invoke("closePhysicalTree", 1f);
+                closePhysicalTree();
+            }
         }
+        else
+        {
+            virtual_points--;
+            // si on a plus de points, on ferme le skill tree
+            if (virtual_points <= 0)
+            {
+                // Invoke("closePhysicalTree", 1f);
+                closeVirtualTree();
+            }
+        }
+        
+
+        
     }
 
     private float calculateX(string skill){
@@ -325,4 +379,19 @@ public class SkillTree : MonoBehaviour {
         }
     }
 
+    private bool isPhysicalSkill(string skill)
+    {
+        // on regarde quel skill on augmente
+        switch (skill)
+        {
+            case "max_vie":
+                return true;
+            case "regen_vie":
+                return true;
+            case "degats":
+                return true;
+            default:
+                return false;
+        }
+    }
 }
