@@ -15,7 +15,7 @@
 
 - [ ] - faire des visus
     - [x] - des déchets
-    - [ ] - des murs ventilateurs
+    - [x] - des murs ventilateurs
     - [x] - des flaques
     - [x] - des posters sur les murs
     - [x] - des poubelles
