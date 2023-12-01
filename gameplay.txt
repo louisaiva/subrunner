@@ -80,3 +80,19 @@ TYPE DE ROOMS :
     QG - notre QG. aussi la salle de spawn. début de chaque run
 
     HA - grand Hall vide avec des trucs et beaucoup de zombooooos
+
+
+GENERATION PROCEDURALE :
+
+    la génération du monde se fait en plusieurs étapes :
+
+        - génération des rooms par World.cs
+        - gestion des connections inter rooms (couloirs)
+        - création des coffres, ordi, portes par World.cs
+        - création des zones de spawn de zombies
+
+        - "pavage" des tilemaps par Room.cs
+        - "emblissement" des rooms par Room.cs (disposition d'objets poubelle dechets etc)
+        - disposition d'items nécessaires dans les coffres
+        - disposition d'items randoms cachés en mode clé usb dans les poubelles et tout
+        

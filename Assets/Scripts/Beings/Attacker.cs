@@ -65,6 +65,12 @@ public class Attacker : Being
         // check if there is a target
         Collider2D[] hit_enemies = Physics2D.OverlapCircleAll(attack_point.position, damage_range, enemy_layers);
 
+        // if no target, return
+        if (hit_enemies.Length == 0) { return; }
+
+        // calculate damage dealt to single target
+        float damage_dealt_to_single_target = damage / hit_enemies.Length;
+
         // deal damage to target
         foreach (Collider2D enemy in hit_enemies)
         {
@@ -75,10 +81,10 @@ public class Attacker : Being
             float enemy_weight = enemy.GetComponent<Being>().weight;
 
             // calculate knockback force
-            Vector2 knockback_force = (knockback_per_damage_per_weight * damage / enemy_weight) * direction_enemy.normalized;
+            Vector2 knockback_force = (knockback_per_damage_per_weight * damage_dealt_to_single_target / enemy_weight) * direction_enemy.normalized;
 
             // apply damage and knockback
-            enemy.GetComponent<Being>().take_damage(damage, knockback_force);
+            enemy.GetComponent<Being>().take_damage(damage_dealt_to_single_target, knockback_force);
         }
     }
 

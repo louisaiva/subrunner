@@ -10,6 +10,10 @@ public class Door : MonoBehaviour, I_Hackable
     // ANIMATION
     private AnimationHandler anim_handler;
     private DoorAnims anims = new DoorAnims();
+    
+
+    // secu de départ
+    public int secu = 1;
 
     // OPENING
     public bool is_open = false;
@@ -112,7 +116,7 @@ public class Door : MonoBehaviour, I_Hackable
         hacking_current_duration = 0f;
 
         // bits necessaires pour hacker
-        security_lvl = 1;
+        security_lvl = secu;
         required_bits_base = 2;
         required_bits = (int) (required_bits_base * Mathf.Pow(2, security_lvl - 1));
     }
@@ -142,14 +146,12 @@ public class Door : MonoBehaviour, I_Hackable
         if (hacking_current_duration < 0.1f) { hacking_current_duration = 0.1f; }
 
         // on met à jour les animations
-        if (!anim_handler.ChangeAnimTilEnd(anims.hackin,hackin_speed)) { return 0; }
+        anim_handler.StopForcing();
+        anim_handler.ChangeAnimTilEnd(anims.hackin,hackin_speed);
 
         // on hack la porte
         is_getting_hacked = true;
         hacking_end_time = Time.time + hacking_current_duration;
-
-        // on ferme la porte après un certain temps
-        Invoke("close", auto_closin_delay);
 
         return required_bits;
     }
@@ -201,6 +203,9 @@ public class Door : MonoBehaviour, I_Hackable
 
         // on ouvre la porte
         is_open = true;
+
+        // on ferme la porte après un certain temps
+        Invoke("close", auto_closin_delay);
     }
 
 }

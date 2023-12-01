@@ -54,6 +54,24 @@ public class Item : MonoBehaviour
 
         // on récupère le perso
         perso = GameObject.Find("/perso");
+
+
+        // on vérifie si on est sur le sol
+        if (is_on_ground)
+        {
+            // on met à jour l'affichage
+            changeShow(true);
+
+            // on change le sorting layer pour devenir un objet du sol
+            sprite_renderer.sortingLayerName = "main";
+            sprite_renderer.sortingOrder = 0;
+
+            // on change la scale
+            transform.localScale = new Vector3(scale_on_ground, scale_on_ground, scale_on_ground);
+
+            // on change le material
+            sprite_renderer.material = Resources.Load<Material>("materials/sprite_lit_default");
+        }
     }
 
     protected void Update()
