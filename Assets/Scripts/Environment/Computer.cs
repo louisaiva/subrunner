@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 
 [RequireComponent(typeof(AnimationHandler))]
-public class Computer : MonoBehaviour, I_Hackable
+public class Computer : MonoBehaviour, I_Hackable, I_Interactable
 {
 
     // la classe CHEST sert à créer des coffres
@@ -19,7 +19,7 @@ public class Computer : MonoBehaviour, I_Hackable
     // ORDI
     public bool is_on = false;
     public float time_to_live = 0f; // si on ne l'utilise pas pendant ce temps, il s'éteint
-    public float time_to_live_base = 60f; // si on ne l'utilise pas pendant ce temps, il s'éteint
+    private float time_to_live_base = 5f; // si on ne l'utilise pas pendant ce temps, il s'éteint
 
     public int niveau = 1;
 
@@ -41,6 +41,10 @@ public class Computer : MonoBehaviour, I_Hackable
     public GameObject bit_provider { get; set; }
 
 
+    // interactions
+    public bool is_interacting { get; set; } // est en train d'interagir
+
+
     // UNITY FUNCTIONS
     void Start()
     {
@@ -57,19 +61,11 @@ public class Computer : MonoBehaviour, I_Hackable
     void Update()
     {
 
-        if (is_getting_hacked)
-        {
-            // on met à jour le hackin
-            updateHack();
-
-            // on se fait hacker donc on est utilisé -> on reset le temps de vie
-            time_to_live = time_to_live_base;
-        }
-
         // on met à jour les bits nécessaires pour hacker
         required_bits = (int) (required_bits_base * Mathf.Pow(2, security_lvl - 1));
 
-        // on met à jour les animations
+
+        // on update selon si l'ordi est allumé ou pas
         if (is_on)
         {
             // on regarde si on a fini l'animation
@@ -77,6 +73,33 @@ public class Computer : MonoBehaviour, I_Hackable
 
             // on met à jour les animations
             anim_handler.ChangeAnim(anims.idle_on);
+
+            // on update le hackin
+            if (is_getting_hacked)
+            {
+                // on met à jour le hackin
+                updateHack();
+            }
+
+            // on update le ttl
+            if (is_interacting || is_getting_hacked)
+            {
+                // on est utilisé -> on reset le temps de vie
+                time_to_live = time_to_live_base;
+            }
+
+            // on regarde si on doit s'éteindre
+            if (time_to_live >= 0f)
+            {
+                time_to_live -= Time.deltaTime;
+                if (time_to_live <= 0f)
+                {
+                    is_on = false;
+                }
+            }
+            
+            print("yo i am " + gameObject.name + " and i have still " + time_to_live + " seconds to live");
+
         }
         else
         {
@@ -86,24 +109,11 @@ public class Computer : MonoBehaviour, I_Hackable
             // on met à jour les animations
             anim_handler.ChangeAnim(anims.idle_off);
         }
-
-        // on regarde si on doit s'éteindre
-        if (is_on && time_to_live >= 0f)
-        {
-            time_to_live -= Time.deltaTime;
-            if (time_to_live <= 0f)
-            {
-                is_on = false;
-            }
-        }
     }
 
     // MAIN FUNCTIONS
     public void turnOn()
     {
-        // on calcule le temps de vie
-        time_to_live = time_to_live_base;
-
         // on regarde si on est déjà allumé
         if (is_on) { return; }
         
@@ -232,6 +242,36 @@ public class Computer : MonoBehaviour, I_Hackable
         hacking_end_time = -1;
         hacking_current_duration = 0f;
 
+    }
+
+
+
+    // INTERACTIONS
+    public bool isInteractable()
+    {
+        // l'interaction porte juste sur l'allumage de l'ordi,
+        // donc on return false si l'ordi est déjà allumé
+        if (is_on) { return false; }
+
+        // si on est déjà en train d'interagir, on return false
+        if (is_interacting) { return false; }
+
+        return true;
+    }
+    public void interact(){
+        // on allume l'ordi
+        turnOn();
+
+        // on commence l'interaction
+        is_interacting = true;
+
+        // on lance le timer d'exctinction automatique
+        time_to_live = time_to_live_base;
+    }
+    public void stopInteract()
+    {
+        // on arrête l'interaction
+        is_interacting = false;
     }
 }
 

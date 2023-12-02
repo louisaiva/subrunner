@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 
 [RequireComponent(typeof(AnimationHandler))]
-public class Chest : MonoBehaviour
+public class Chest : MonoBehaviour, I_Interactable
 {
 
     // la classe CHEST sert à créer des coffres
@@ -22,6 +22,9 @@ public class Chest : MonoBehaviour
 
     // inventory
     public Inventory inventory;
+
+    // interactions
+    public bool is_interacting { get; set; } // est en train d'interagir
     
     // unity functions
     void Start()
@@ -92,6 +95,23 @@ public class Chest : MonoBehaviour
         return inventory.addItem(item);
     }
 
+    // INTERACTIONS
+    public bool isInteractable()
+    {
+        return !is_interacting;
+    }
+
+    public void interact()
+    {
+        // on ouvre le coffre
+        open();
+    }
+
+    public void stopInteract()
+    {
+        // on ferme le coffre
+        close();
+    }
 }
 
 public class ChestAnims

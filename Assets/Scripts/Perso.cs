@@ -481,7 +481,8 @@ public class Perso : Attacker
 
         Collider2D target = null;
 
-        // on interagit avec le 1er objet qu'on trouve
+        // on interagit avec l'objet le plus proche
+        float min_distance = 10000f;
         foreach (Collider2D hit in hit_interactables)
         {
             if (hit == null) { continue; }
@@ -489,32 +490,33 @@ public class Perso : Attacker
             // on regarde si on est pas déjà en train d'interagir avec l'objet
             if (hit.gameObject != current_interactable)
             {
-                target = hit;
-                break;
+                // on regarde si on peut interagir avec l'objet
+                if (hit.gameObject.GetComponent<I_Interactable>().isInteractable())
+                {
+                    // on regarde si l'objet est plus proche que le précédent
+                    if (Vector2.Distance(transform.position, hit.transform.position) < min_distance)
+                    {
+                        min_distance = Vector2.Distance(transform.position, hit.transform.position);
+                        target = hit;
+                    }
+                }
             }
         }
 
-        // on interagit avec le 1er objet qu'on trouve
+        // on interagit avec l'ojet
         if (target != null)
         {
-
-
             print("INTERACTING WITH " + target);
 
             // on met à jour l'objet avec lequel on interagit
+            if (current_interactable != null)
+            {
+                current_interactable.GetComponent<I_Interactable>().stopInteract();
+            }
             current_interactable = target.gameObject;
 
-            // on regarde si c'est un coffre
-            if (current_interactable.GetComponent<Chest>() != null)
-            {
-                current_interactable.GetComponent<Chest>().open();
-            }
-            else if (current_interactable.GetComponent<Computer>() != null)
-            {
-                // on regarde si c'est un ordi et on l'allume
-                current_interactable.GetComponent<Computer>().turnOn();
-                current_interactable = null;
-            }
+            // on interagit avec l'objet
+            current_interactable.GetComponent<I_Interactable>().interact();
         }
 
     }
@@ -529,13 +531,9 @@ public class Perso : Attacker
             float distance = Vector2.Distance(transform.position, current_interactable.transform.position);
             if (distance > interact_range*1.5f)
             {
-                // on referme le coffre
-                if (current_interactable.GetComponent<Chest>() != null)
-                {
-                    current_interactable.GetComponent<Chest>().close();
-                }
 
                 // on arrête d'interagir avec l'objet
+                current_interactable.GetComponent<I_Interactable>().stopInteract();
                 current_interactable = null;
             }
         }

@@ -10,8 +10,8 @@
 
 - [ ] - mettre des objets interactifs dans le niveau
     - [x] - mettre des coffres pour des items physiques
-    - [ ] - mettre des disques durs pour des hacks (sortilèges)
-    - [ ] - mettre des ordis pour sauvegarder la partie
+    - [ ] - mettre des disques durs pour des hacks
+    - [ ] - mettre des lit pour sauvegarder la partie
 
 - [ ] - faire des visus
     - [x] - des déchets

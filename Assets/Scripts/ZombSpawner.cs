@@ -12,20 +12,25 @@ public class ZombSpawner : MonoBehaviour
     public float spawn_rate = 1f; // zombos per second
     public float spawn_timer = 0f;
     public float spawn_radius = 2f;
+    public int max_zombies_in_absence_of_player = 4;
+    public bool perso_is_in_range = false;
+    public float perso_range = 10f;
 
     // ZOMBO
     public GameObject zombo_prefab;
 
-    /*
+    // PERSO
+    public GameObject perso;
 
-
-    */
 
     // unity functions
     void Start(){
 
         // on récupère le prefab du zombo
         zombo_prefab = Resources.Load("prefabs/zombo") as GameObject;
+
+        // on récupère le perso
+        perso = GameObject.Find("/perso");
 
     }
 
@@ -35,6 +40,15 @@ public class ZombSpawner : MonoBehaviour
         
         // on update le timer
         spawn_timer += Time.deltaTime;
+
+        // on vérifie si le perso est dans le range
+        perso_is_in_range = Vector2.Distance(transform.position, perso.transform.position) < perso_range;
+
+        // si le perso n'est pas dans le range et qu'il y a trop de zombos, on quitte
+        if (!perso_is_in_range && transform.childCount >= max_zombies_in_absence_of_player)
+        {
+            return;
+        }
 
         // on spawn des zombos
         if (spawn_timer > 1f / spawn_rate)
