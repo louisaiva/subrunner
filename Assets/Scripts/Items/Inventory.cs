@@ -15,6 +15,7 @@ public class Inventory : MonoBehaviour {
 
     // perso
     public GameObject perso;
+    public bool is_perso_inventory = false;
 
     // ui
     public Canvas canvas;
@@ -52,14 +53,40 @@ public class Inventory : MonoBehaviour {
         // on met à jour la taille du canvas si c'est scalable
         if (scalable) { updateSize(); }
 
+        // si on est un inventaire de perso, on change la position de l'inventaire si on affiche un autre inventaire
+        if (is_perso_inventory)
+        {
+            bool is_offseted = false;
+            // on regarde si on affiche un autre inventaire
+            if (perso.GetComponent<Perso>().current_interactable != null)
+            {
+                // on regarde si c'est un coffre
+                if (perso.GetComponent<Perso>().current_interactable.GetComponent<Chest>() != null &&
+                perso.GetComponent<Perso>().current_interactable.GetComponent<Chest>().inventory.is_showed)
+                {
+                    // on calcule la position de l'inventaire
+                    Vector3 position = perso.GetComponent<Perso>().current_interactable.GetComponent<Chest>().inventory.getSidePos();
+                    
+                    // on met à jour la position de l'inventaire
+                    transform.position = position;
+
+                    // on met à jour l'offset
+                    is_offseted = true;
+                }
+            }
+
+            if (!is_offseted)
+            {
+                // on met à jour la position de l'inventaire
+                transform.position = perso.transform.position + new Vector3(inv_offset.x, inv_offset.y, 0);
+            }
+        }
+
         // on met à jour l'affichage
         updateShow();
 
         // on met à jour les positions des items
         updateUI();
-
-        // on check les events
-        // Events();
     }
 
     // UI
@@ -188,73 +215,6 @@ public class Inventory : MonoBehaviour {
         
     }
 
-    /* void updateSize()
-    {
-
-        int size = max_items;
-        if (scalable) { size = getItems().Count; }
-
-        // on veut pouvoir afficher "size" items de manière carrée
-        // on veut que l'inventaire soit un rectangle pouvant contenir EXACTEMENT "size" items
-        // on veut que l'inventaire soit le plus petit possible
-
-        // on vérifie qu'on a pas déjà la bonne taille
-        if (GetComponent<RectTransform>().sizeDelta.x * GetComponent<RectTransform>().sizeDelta.y == size) { return; }
-
-
-        // on calcule la taille de l'inventaire
-        int width = 0;
-        int height = 0;
-
-        // on cherche le plus grand diviseur de "max_items"
-        // qui donne la plus petite diagonale
-        int min_diag = 5000;
-        int max_div = 1;
-        for (int i = 1; i <= size / 2; i++)
-        {
-            int div = size / i;
-
-            if (size % i == 0)
-            {
-                // on calcule la diagonale
-                int w = div;
-                int h = size / div;
-                int diag = (int)Mathf.Sqrt(w * w + h * h);
-                if (diag < min_diag)
-                {
-                    min_diag = diag;
-                    max_div = div;
-                }
-            }
-        }
-
-        // on calcule la taille de l'inventaire
-        if (max_div > 1)
-        {
-            width = max_div;
-            height = size / max_div;
-        }
-        else
-        {
-            width = size;
-            height = 1;
-        }
-
-        // on met à jour la taille de l'inventaire
-        GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
-
-        // on met à jour la taille du box collider
-        GetComponent<BoxCollider2D>().size = new Vector2(width, height);
-
-        // on met à jour l'offset du box collider
-        float x_offset = (GetComponent<RectTransform>().pivot.x - 0.5f) * width * -1;
-        GetComponent<BoxCollider2D>().offset = new Vector2(x_offset, height / 2f);
-
-
-        // on met à jour l'offset de l'inventaire en fonction de l'offset du canvas
-        updateOffset();
-    } */
-
     void updateSize()
     {
 
@@ -321,6 +281,8 @@ public class Inventory : MonoBehaviour {
         updateShow();
     }
 
+
+
     // functions
     public void dropItem(Item item)
     {
@@ -332,7 +294,7 @@ public class Inventory : MonoBehaviour {
         // print("on essaye de drop " + item.item_name + " de " + item.transform.parent.name);
 
         // on vérifie si notre inventaire est un inventaire de perso
-        if (transform.parent == perso.transform)
+        if (is_perso_inventory)
         {
             // on drop l'item via le perso
             perso.GetComponent<Perso>().drop(item);
@@ -386,6 +348,8 @@ public class Inventory : MonoBehaviour {
         return true;
     }
 
+
+
     // getters
     public List<Item> getItems()
     {
@@ -425,5 +389,36 @@ public class Inventory : MonoBehaviour {
         // on récupère les hacks
         List<Hack> hacks = getItems().OfType<Hack>().ToList();
         return hacks;
+    }
+
+    public Vector3 getSidePos()
+    {
+        // returns a side position outside the bounds of the inventory
+        // returns the position of the bottom right corner of the inventory
+        // with a little x offset
+
+        // on récupère la position de l'inventaire
+        Vector3 pos = transform.position;
+        
+        // on récupère la taille de l'inventaire
+        Vector2 size = GetComponent<RectTransform>().sizeDelta * GetComponent<RectTransform>().localScale;
+
+        // on calcule la position
+        pos.x += size.x/2 + 0.1f;
+
+        return pos;
+    }
+
+
+    // gizmos
+
+    void OnDrawGizmos()
+    {
+        // on récupère la position de l'inventaire
+        Vector3 pos = getSidePos();
+
+        // on dessine un gizmo
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(pos, 0.1f);
     }
 }

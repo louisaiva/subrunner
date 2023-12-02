@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class Item : MonoBehaviour
+public class Item : MonoBehaviour, I_Descriptable
 {
 
 
@@ -24,6 +24,10 @@ public class Item : MonoBehaviour
     public bool is_on_ground = false;
     public float scale_on_ground = 0.5f;
     public GameObject perso;
+
+    // description
+    public bool is_hoovered { get; set; }
+    public GameObject description_ui;
 
     // unity functions
     protected void Start()
@@ -54,6 +58,9 @@ public class Item : MonoBehaviour
 
         // on récupère le perso
         perso = GameObject.Find("/perso");
+
+        // on récupère le description_ui
+        description_ui = GameObject.Find("/ui/hoover_description");
 
 
         // on vérifie si on est sur le sol
@@ -88,13 +95,38 @@ public class Item : MonoBehaviour
 
     void Events()
     {
-        
-        // on vérifie si on se fait cliquer dessus
-        if (Input.GetMouseButtonDown(0) && is_showed && GetComponent<BoxCollider2D>() != null)
+
+        // on vérifie si on se fait survoler par la souris
+        Vector3 mouse_pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if (is_showed && !is_on_ground)
         {
-            // on récupère la position de la souris
-            Vector3 mouse_pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            
+            if (GetComponent<BoxCollider2D>().OverlapPoint(mouse_pos))
+            {
+                if (!is_hoovered)
+                {
+                    // on met à jour l'affichage
+                    description_ui.GetComponent<UI_HooverDescriptionHandler>().changeDescription(this);
+
+                    // on met à jour le fait qu'on est survolé
+                    is_hoovered = true;
+                }
+            }
+            else
+            {
+                if (is_hoovered)
+                {
+                    // on met à jour l'affichage
+                    description_ui.GetComponent<UI_HooverDescriptionHandler>().removeDescription(this);
+
+                    // on met à jour le fait qu'on est survolé
+                    is_hoovered = false;
+                }
+            }
+        }
+
+        // on vérifie si on se fait cliquer dessus
+        if (Input.GetMouseButtonDown(0) && is_showed)
+        {            
             // on regarde si ça overlap avec notre box collider
             if (GetComponent<BoxCollider2D>().OverlapPoint(mouse_pos))
             {
@@ -162,4 +194,30 @@ public class Item : MonoBehaviour
         // on change le material
         sprite_renderer.material = Resources.Load<Material>("materials/sprite_unlit_default");
     }
+
+    // description
+    public string getDescription()
+    {
+
+        string s = item_name + "\n\n" + item_description;
+        return s;
+    }
+
+    public bool shouldDescriptionBeShown()
+    {
+        return is_showed && !is_on_ground;
+    }
+
+    // events
+    /* public void OnMouseEnter()
+    {
+        // on met à jour l'affichage
+        description_ui.GetComponent<UI_HooverDescriptionHandler>().changeDescription(this);
+        // description_ui.GetComponent<UI_HooverDescriptionHandler>().changeShow(true);
+    }
+    public void OnMouseExit()
+    {
+        // on met à jour l'affichage
+        description_ui.GetComponent<UI_HooverDescriptionHandler>().removeDescription(this);
+    } */
 }

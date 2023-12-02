@@ -98,8 +98,6 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
                 }
             }
             
-            print("yo i am " + gameObject.name + " and i have still " + time_to_live + " seconds to live");
-
         }
         else
         {

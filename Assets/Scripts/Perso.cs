@@ -32,8 +32,9 @@ public class Perso : Attacker
     // global light
     private GameObject global_light;
 
-    // inventory
+    // inventory & items
     public Inventory inventory;
+    public Transform items_parent;
 
     // skill tree
     public SkillTree skills_tree;
@@ -71,8 +72,11 @@ public class Perso : Attacker
         hackin_ray_prefab = Resources.Load("prefabs/hacks/hackin_ray2") as GameObject;
 
         // on récupère l'inventaire
-        inventory = transform.Find("inventory").GetComponent<Inventory>();
+        inventory = GameObject.Find("/inventory").GetComponent<Inventory>();
         inventory.scalable = true;
+
+        // on récupère le parent des items
+        items_parent = GameObject.Find("/world/sector_2/items").transform;
 
         //
         floating_text_prefab = Resources.Load("prefabs/ui/floating_text") as GameObject;
@@ -555,7 +559,7 @@ public class Perso : Attacker
         }
 
         // on drop l'item par terre
-        item.transform.SetParent(null);
+        item.transform.SetParent(items_parent);
         item.transform.position = transform.position;
         item.fromInvToGround();
     }
