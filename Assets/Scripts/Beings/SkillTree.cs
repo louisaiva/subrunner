@@ -92,7 +92,7 @@ public class SkillTree : MonoBehaviour {
         ui_virtual_tree = transform.Find("virtual_tree").gameObject;
 
         // on cache les skill trees
-        ui_physical_tree.SetActive(false);
+        ui_physical_tree.GetComponent<Canvas>().enabled = false ;
     }
 
     public void init()
@@ -122,10 +122,10 @@ public class SkillTree : MonoBehaviour {
         Time.timeScale = 0f;
 
         // on desactive le main ui
-        main_ui.SetActive(false);
+        // main_ui.GetComponent<Canvas>().enabled = false ;
 
         // on affiche le skill tree
-        ui_physical_tree.SetActive(true);
+        ui_physical_tree.GetComponent<Canvas>().enabled = true;
         // is_physical_tree_open = true;
 
         // on choisit un skill au hasard après 3 secondes
@@ -136,12 +136,12 @@ public class SkillTree : MonoBehaviour {
     private void closePhysicalTree()
     {
         // on cache le skill tree
-        ui_physical_tree.SetActive(false);
+        ui_physical_tree.GetComponent<Canvas>().enabled = false ;
         Time.timeScale = 1f;
         // is_physical_tree_open = false;
 
         // on reactive le main ui
-        main_ui.SetActive(true);
+        // main_ui.GetComponent<Canvas>().enabled = true;
     }
 
     public void randomPhysicalLevelUp()
@@ -169,21 +169,21 @@ public class SkillTree : MonoBehaviour {
         Time.timeScale = 0f;
 
         // on desactive le main ui
-        main_ui.SetActive(false);
+        // main_ui.GetComponent<Canvas>().enabled = false ;
 
         // on affiche le skill tree
-        ui_virtual_tree.SetActive(true);
+        ui_virtual_tree.GetComponent<Canvas>().enabled = true;
     }
 
     private void closeVirtualTree()
     {
         // on cache le skill tree
-        ui_virtual_tree.SetActive(false);
+        ui_virtual_tree.GetComponent<Canvas>().enabled = false ;
         Time.timeScale = 1f;
         // is_virtual_tree_open = false;
 
         // on reactive le main ui
-        main_ui.SetActive(true);
+        // main_ui.GetComponent<Canvas>().enabled = true;
     }
 
     // AUGMENTATION DES SKILLS
@@ -295,7 +295,8 @@ public class SkillTree : MonoBehaviour {
         
     }
 
-    private float calculateX(string skill){
+    private float calculateX(string skill)
+    {
 
         float x = 0f;
 
@@ -351,7 +352,71 @@ public class SkillTree : MonoBehaviour {
         // on calcule x
         x = K + l * (b + l * m * K);
 
-        return x;        
+        return x;
+
+    }
+    private float calculateXP1(string skill)
+    {
+
+        // calcul de x pour le niveau suivant
+        // l2 = l + 1
+
+        float x = 0f;
+
+        // cas spécial de max_bits
+        if (skill == "max_bits")
+        {
+            return max_bits_K * (max_bits_level + 2);
+        }
+
+        float l = 0f;
+        float b = 0f;
+        float m = 0f;
+        float K = 0f;
+
+        // on regarde quel skill on augmente
+        switch (skill)
+        {
+            case "max_vie":
+                l = max_vie_level;
+                b = max_vie_base;
+                m = max_vie_modifier;
+                K = max_vie_K;
+                break;
+            case "regen_vie":
+                l = regen_vie_level;
+                b = regen_vie_base;
+                m = regen_vie_modifier;
+                K = regen_vie_K;
+                break;
+            case "degats":
+                l = degats_level;
+                b = degats_base;
+                m = degats_modifier;
+                K = degats_K;
+                break;
+            case "regen_bits":
+                l = regen_bits_level;
+                b = regen_bits_base;
+                m = regen_bits_modifier;
+                K = regen_bits_K;
+                break;
+            case "portee_hack":
+                l = portee_hack_level;
+                b = portee_hack_base;
+                m = portee_hack_modifier;
+                K = portee_hack_K;
+                break;
+            default:
+                Debug.Log("skill " + skill + " not found");
+                break;
+        }
+
+        // on calcule x
+        int l2 = (int) l + 1;
+        x = K + l2 * (b + l2 * m * K);
+
+        return x;
 
     }
 
@@ -377,6 +442,17 @@ public class SkillTree : MonoBehaviour {
                 Debug.Log("skill " + skill + " not found");
                 return -1;
         }
+    }
+
+    public float getSkillValue(string skill)
+    {
+        return (float) calculateX(skill);
+    }
+
+    public float getNextLevelSkillValue(string skill)
+    {
+        // on regarde quel skill on augmente
+        return (float) calculateXP1(skill);
     }
 
     private bool isPhysicalSkill(string skill)

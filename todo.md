@@ -33,7 +33,7 @@
 - [ ] - améliorer gameplay
     - [ ] - mettre un sprint de vitesse
     - [ ] - faire des "avancements souples", que le joueur puisse avancer
-            meme si y'a colliding si c un peu
+            meme si y'a colliding si c un peu (tah dead cells)
 
 - [ ] - ajouter items
     - [x] - lunettes de vitesse : permettent de voir dans le noir
@@ -44,7 +44,7 @@
     - [ ] - acceleration de la vitesse de hack
 
 
-- [ ] - faire un génération aléatoire des niveaux
+- [ ] - faire une génération aléatoire des niveaux
     - [ ] - mettre en place le TK algorithm pour créer les salles
     - [ ] - créer une classe Room qui remplit les salles avec les tiles
     - [ ] - faire des plafonds qu'on peut passer dessous avec notre perso
@@ -52,7 +52,7 @@
 
 
 - [ ] - UX
-    - [ ] - ajouter des descriptions qui s'affichent au hoover de la souris sur
+    - [x] - ajouter des descriptions qui s'affichent au hoover de la souris sur
     les items & les skills
     - [ ] - basculer le controle du hacking à la souris : on peut cliquer sur les zombis
     qui allument leur contour lors d'un hoover

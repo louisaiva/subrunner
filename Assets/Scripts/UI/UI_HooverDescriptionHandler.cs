@@ -9,6 +9,7 @@ public class UI_HooverDescriptionHandler : MonoBehaviour {
     // affichage
     private bool is_showed = false;
     private GameObject ui_bg;
+    public Vector3 offset_vector = new Vector3(0, 0, 0);
 
     // perso
     private GameObject perso;
@@ -28,6 +29,7 @@ public class UI_HooverDescriptionHandler : MonoBehaviour {
 
     void Update()
     {
+        print(current_descriptable);
         // on regarde si on est en train de survoler un objet
         if (current_descriptable != null && current_descriptable.shouldDescriptionBeShown())
         {
@@ -50,7 +52,7 @@ public class UI_HooverDescriptionHandler : MonoBehaviour {
         if (is_showed)
         {
             // on met à jour la position à la position de la souris
-            transform.position = Input.mousePosition;
+            transform.position = Input.mousePosition + offset_vector;
         }
     }
 
