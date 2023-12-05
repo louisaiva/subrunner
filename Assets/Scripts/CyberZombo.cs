@@ -16,7 +16,7 @@ public class CyberZombo : Attacker, I_Hackable
     GameObject meat_target;
     private LayerMask meat_layers;
 
-    // player attacking
+    // HACKING
 
     public string hack_type_self { get; set; }
     public int required_bits { get; set; }
@@ -29,6 +29,10 @@ public class CyberZombo : Attacker, I_Hackable
 
     // xp_provider
     public GameObject bit_provider { get; set; }
+
+    // hackable outline
+    public Material outline_material { get; set; }
+    public Material default_material { get; set; }
 
     /*
 
@@ -205,6 +209,10 @@ public class CyberZombo : Attacker, I_Hackable
         required_bits_base = 1;
         required_bits = (int) (required_bits_base * Mathf.Pow(2, security_lvl - 1));
 
+        // on met à jour le material
+        default_material = GetComponent<SpriteRenderer>().material;
+        outline_material = Resources.Load<Material>("materials/outlined/outlined_unlit_enemy");
+
     }
 
     public bool isHackable(string hack_type, int bits)
@@ -283,7 +291,20 @@ public class CyberZombo : Attacker, I_Hackable
         hacking_end_time = -1;
         hacking_current_duration = 0f;
     }
-    
+
+    // outlines
+    public void outlineMe()
+    {
+        // on change le material
+        GetComponent<SpriteRenderer>().material = outline_material;
+        print(gameObject.name + " just got outlined");
+    }
+    public void unOutlineMe()
+    {
+        // on change le material
+        GetComponent<SpriteRenderer>().material = default_material;
+    }
+
     // DIE
 
     protected override void die(){
@@ -295,4 +316,17 @@ public class CyberZombo : Attacker, I_Hackable
         base.die();
     }
 
+
+    // EVENTS
+    /* void OnMouseEnter()
+    {
+        // on change le material
+        GetComponent<SpriteRenderer>().material = outline_material;
+    }
+
+    void OnMouseExit()
+    {
+        // on change le material
+        GetComponent<SpriteRenderer>().material = default_material;
+    } */
 }

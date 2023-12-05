@@ -35,6 +35,10 @@ public class Door : MonoBehaviour, I_Hackable
     // bit_provider
     public GameObject bit_provider { get; set; }
 
+    // hackable outline
+    public Material outline_material { get; set; }
+    public Material default_material { get; set; }
+
     // UNITY FUNCTIONS
     void Start()
     {
@@ -119,6 +123,10 @@ public class Door : MonoBehaviour, I_Hackable
         security_lvl = secu;
         required_bits_base = 2;
         required_bits = (int) (required_bits_base * Mathf.Pow(2, security_lvl - 1));
+
+        // on met à jour le material
+        default_material = GetComponent<SpriteRenderer>().material;
+        outline_material = Resources.Load<Material>("materials/outlined/outlined_unlit");
     }
 
     public bool isHackable(string hack_type, int bits)
@@ -208,6 +216,17 @@ public class Door : MonoBehaviour, I_Hackable
         Invoke("close", auto_closin_delay);
     }
 
+    // outlines
+    public void outlineMe()
+    {
+        // on change le material
+        GetComponent<SpriteRenderer>().material = outline_material;
+    }
+    public void unOutlineMe()
+    {
+        // on change le material
+        GetComponent<SpriteRenderer>().material = default_material;
+    }
 }
 
 

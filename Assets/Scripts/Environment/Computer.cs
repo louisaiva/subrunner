@@ -40,6 +40,9 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
     // bit_provider
     public GameObject bit_provider { get; set; }
 
+    // hackable outline
+    public Material outline_material { get; set; }
+    public Material default_material { get; set; }
 
     // interactions
     public bool is_interacting { get; set; } // est en train d'interagir
@@ -140,6 +143,10 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
         security_lvl = niveau;
         required_bits_base = 4;
         required_bits = (int) (required_bits_base * Mathf.Pow(2, security_lvl - 1));
+
+        // on met à jour le material
+        default_material = GetComponent<SpriteRenderer>().material;
+        outline_material = Resources.Load<Material>("materials/outlined/outlined_unlit");
     }
 
     public bool isHackable(string hack_type, int bits)
@@ -243,6 +250,17 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
     }
 
 
+    // outlines
+    public void outlineMe()
+    {
+        // on change le material
+        GetComponent<SpriteRenderer>().material = outline_material;
+    }
+    public void unOutlineMe()
+    {
+        // on change le material
+        GetComponent<SpriteRenderer>().material = default_material;
+    }
 
     // INTERACTIONS
     public bool isInteractable()

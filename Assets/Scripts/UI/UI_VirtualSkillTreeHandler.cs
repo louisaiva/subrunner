@@ -33,6 +33,9 @@ public class UI_VirtualSkillTreeHandler : MonoBehaviour {
 
         void Update()
         {
+            // on update seulement si le skill tree est actif
+            if (!tree.is_virtual_tree_open) { return; }
+
             // on met à jour les labels
             max_bits_lvl_label.GetComponent<TextMeshProUGUI>().text = "level " + tree.max_bits_level.ToString();
             regen_bits_lvl_label.GetComponent<TextMeshProUGUI>().text = "level " + tree.regen_bits_level.ToString();

@@ -29,7 +29,6 @@ public class UI_HooverDescriptionHandler : MonoBehaviour {
 
     void Update()
     {
-        print(current_descriptable);
         // on regarde si on est en train de survoler un objet
         if (current_descriptable != null && current_descriptable.shouldDescriptionBeShown())
         {

@@ -95,4 +95,30 @@ GENERATION PROCEDURALE :
         - "emblissement" des rooms par Room.cs (disposition d'objets poubelle dechets etc)
         - disposition d'items nécessaires dans les coffres
         - disposition d'items randoms cachés en mode clé usb dans les poubelles et tout
+    
+
+    1er choix d'algo :
+
+        une generation full procedurale, qui crée des salles de tailles
+        aléatoires et d'agencements aléatoires :
+
+        avantages :
+            -augmente la rejouabilité (donjon VR2MENT random)
+            -moins de planification nécessaire
         
+        inconvenients :
+            -Rooms.cs hyper conséquente
+            -possibilité de bugs de map plus grande
+            -moins de salles et plus de couloirs ?
+        
+    2e choix d'algo :
+
+        generation procédurale de salles, mais pas procédurale dans les salles
+
+        avantages :
+            -meilleur contrôle du level design
+        
+        inconvenients :
+            -pré création de salles longue
+            -configuration du World.cs personnalisé
+            -peut-etre des salles repetitives

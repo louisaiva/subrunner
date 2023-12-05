@@ -33,6 +33,9 @@ public class UI_PhysicalSkillTreeHandler : MonoBehaviour {
 
         void Update()
         {
+            // on update seulement si le skill tree est actif
+            if (!tree.is_physical_tree_open) { return; }
+            
             // on met à jour les labels
             max_vie_lvl_label.GetComponent<TextMeshProUGUI>().text = "level " + tree.max_vie_level.ToString();
             regen_vie_lvl_label.GetComponent<TextMeshProUGUI>().text = "level " + tree.regen_vie_level.ToString();

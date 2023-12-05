@@ -12,7 +12,7 @@ public class SkillTree : MonoBehaviour {
 
     // PHYSICAL SKILLS
     private GameObject ui_physical_tree;
-    // private bool is_physical_tree_open = false;
+    public bool is_physical_tree_open = false;
     public int physical_points = 0; // points à dépenser
 
     /*
@@ -53,7 +53,7 @@ public class SkillTree : MonoBehaviour {
     // VIRTUAL SKILLS
     private GameObject ui_virtual_tree;
     public Computer computer;
-    // private bool is_virtual_tree_open = false;
+    public bool is_virtual_tree_open = false;
     public int virtual_points = 0; // points à dépenser
 
     // max bits (en bits)
@@ -126,7 +126,7 @@ public class SkillTree : MonoBehaviour {
 
         // on affiche le skill tree
         ui_physical_tree.GetComponent<Canvas>().enabled = true;
-        // is_physical_tree_open = true;
+        is_physical_tree_open = true;
 
         // on choisit un skill au hasard après 3 secondes
         // Invoke("randomPhysicalLevelUp", 3f);
@@ -138,7 +138,7 @@ public class SkillTree : MonoBehaviour {
         // on cache le skill tree
         ui_physical_tree.GetComponent<Canvas>().enabled = false ;
         Time.timeScale = 1f;
-        // is_physical_tree_open = false;
+        is_physical_tree_open = false;
 
         // on reactive le main ui
         // main_ui.GetComponent<Canvas>().enabled = true;
@@ -173,6 +173,7 @@ public class SkillTree : MonoBehaviour {
 
         // on affiche le skill tree
         ui_virtual_tree.GetComponent<Canvas>().enabled = true;
+        is_virtual_tree_open = true;
     }
 
     private void closeVirtualTree()
@@ -180,7 +181,7 @@ public class SkillTree : MonoBehaviour {
         // on cache le skill tree
         ui_virtual_tree.GetComponent<Canvas>().enabled = false ;
         Time.timeScale = 1f;
-        // is_virtual_tree_open = false;
+        is_virtual_tree_open = false;
 
         // on reactive le main ui
         // main_ui.GetComponent<Canvas>().enabled = true;
@@ -193,7 +194,7 @@ public class SkillTree : MonoBehaviour {
 
     public void levelUpSkill(string skill)
     {
-        print("level up " + skill);
+        // print("level up " + skill);
 
         // on regarde si on a des points à dépenser
         if (isPhysicalSkill(skill) && physical_points <= 0) { return; }
@@ -258,7 +259,7 @@ public class SkillTree : MonoBehaviour {
             Debug.Log("skill " + skill + " not found");
         }
 
-        print("level up " + skill + " to " + calculateX(skill) + " (level " + getLevel(skill) + ")");
+        // print("level up " + skill + " to " + calculateX(skill) + " (level " + getLevel(skill) + ")");
 
 
         // on affiche un floating text

@@ -28,6 +28,10 @@ public class Perso : Attacker
     private Transform hacks_path; // le parent des hackin_rays
     private GameObject hackin_ray_prefab; // le prefab du hackin_ray
 
+    // hoover hackable
+    private GameObject current_hoover_hackable = null;
+    private Hack current_hoover_hack = null;
+
 
     // global light
     private GameObject global_light;
@@ -209,11 +213,13 @@ public class Perso : Attacker
             attack();
         }
 
-        // hack de porte
-        if (Input.GetKeyDown(KeyCode.Q))
+        // hack
+        HackinHooverEvents();
+        /* if (Input.GetKeyDown(KeyCode.Q))
         {
             hack();
-        }
+        } */
+        HackinClickEvents();
 
         // interactions
         if (Input.GetKeyDown(KeyCode.E))
@@ -231,6 +237,100 @@ public class Perso : Attacker
         if (Input.GetKeyDown(KeyCode.F))
         {
             inventory.rollShow();
+        }
+    }
+
+    void HackinHooverEvents()
+    {
+        // le but de cette fonction est de repérer les objets hackables
+        // que la souris survole
+        
+        // 1 - on regarde si la souris est dans le range de hack
+        Vector2 mouse_pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        float distance = Vector2.Distance(transform.position, mouse_pos);
+        if (distance > hack_collider.radius) {
+            if (current_hoover_hackable != null)
+            {
+                current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
+                current_hoover_hackable = null;
+                current_hoover_hack = null;
+            }
+            return;
+        }
+
+        // 2 - on récupère tous les objets dans le layermask que la souris survole
+        Collider2D[] hits = Physics2D.OverlapCircleAll(mouse_pos, 0.1f, hack_layer);
+
+        print("POTENTIAL HACKIN " + hits.Length + " OBJECTS");
+
+        // 3 - on regarde si on peut hacker qqch
+        for (int i = 0; i < hits.Length; i++)
+        {
+            Collider2D hit = hits[i];
+
+            // on regarde si on est pas déjà en train de hacker l'objet
+            if (!current_hackin_targets.ContainsKey(hit.gameObject))
+            {
+                // on parcourt tous nos hacks pour voir si on peut hacker l'objet
+                foreach (Hack hack in inventory.getHacks())
+                {
+                    // on regarde si on peut hacker l'objet
+                    if (hit.gameObject.GetComponent<I_Hackable>().isHackable(hack.hack_type_target, (int) bits))
+                    {
+                        // on peut hacker l'objet !!
+                        // on met à jour le current_hoover_hackable.gameObject.GetComponent<I_Hackable>()
+                        if (current_hoover_hackable != null && current_hoover_hackable != hit.gameObject)
+                        {
+                            current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
+                        }
+                        current_hoover_hackable = hit.gameObject;
+                        current_hoover_hack = hack;
+
+                        // on change le material de l'objet
+                        current_hoover_hackable.gameObject.GetComponent<I_Hackable>().outlineMe();
+
+                        // on sort de la boucle
+                        return;
+                    }
+                }
+            }
+        }
+
+        // si on arrive ici, c'est qu'on a rien trouvé
+        // on met à jour le current_hoover_hackable.gameObject.GetComponent<I_Hackable>()
+        if (current_hoover_hackable != null)
+        {
+            current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
+            current_hoover_hackable = null;
+            current_hoover_hack = null;
+        }
+    }
+
+    void HackinClickEvents()
+    {
+        // le but de cette fonction est de hacker l'objet sur lequel on clique
+
+        // on regarde si on a cliqué
+        if (Input.GetMouseButtonDown(0))
+        {
+            // on regarde si on a un hackable en hoover
+            if (current_hoover_hackable != null)
+            {
+                // on hack l'objet
+                bits -= current_hoover_hackable.GetComponent<I_Hackable>().beHacked();
+
+                // on ajoute le hackable au dict des objets hackés
+                current_hackin_targets.Add(current_hoover_hackable, current_hoover_hack);
+
+                // on crée un hackin_ray
+                GameObject hackin_ray = Instantiate(hackin_ray_prefab, hacks_path) as GameObject;
+                
+                // on met à jour le hackin_ray avec le nom
+                hackin_ray.name = "hackin_ray_" + current_hoover_hackable.name + "_" + current_hoover_hackable.GetInstanceID();
+
+                // on sort de la fonction
+                return;
+            }
         }
     }
 

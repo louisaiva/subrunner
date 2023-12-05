@@ -20,6 +20,9 @@ public interface I_Hackable
     float hacking_end_time { get; set;} // temps de fin du hack
     float hacking_current_duration { get; set;} // temps de hack actuel
 
+    // outline
+    Material outline_material { get; set; }
+    Material default_material { get; set; }
 
 
     // fonctions
@@ -30,4 +33,8 @@ public interface I_Hackable
     void updateHack();
     void cancelHack(); // annule le hack et drop les bits restants (non utilisés par le hack) (en fonction du temps de hack restant)
     void succeedHack(); // réussit le hack
+
+    // outlines
+    void outlineMe();
+    void unOutlineMe();
 }
