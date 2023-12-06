@@ -421,6 +421,25 @@ public class SkillTree : MonoBehaviour {
 
     }
 
+    public void setGlobalLevel(int lvl)
+    {
+        // met tous les skills au niveau lvl
+        max_vie_level = lvl;
+        regen_vie_level = lvl;
+        degats_level = lvl;
+        max_bits_level = lvl;
+        regen_bits_level = lvl;
+        portee_hack_level = lvl;
+
+        // on met à jour les stats
+        perso.GetComponent<Perso>().max_vie = (int) calculateX("max_vie");
+        perso.GetComponent<Perso>().regen_vie = calculateX("regen_vie");
+        perso.GetComponent<Perso>().damage = calculateX("degats");
+        perso.GetComponent<Perso>().max_bits = (int) calculateX("max_bits");
+        perso.GetComponent<Perso>().regen_bits = calculateX("regen_bits");
+        perso.GetComponent<Perso>().setHackinRange(calculateX("portee_hack"));
+    }
+
     // GETTERS
     private int getLevel(string skill)
     {

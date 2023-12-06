@@ -5,6 +5,9 @@ using UnityEngine;
 public class Perso : Attacker
 {
 
+    // DEBUG
+    public bool CHEAT = true;
+
     // exploits (xp)
     public int level = 1;
     public int xp = 0;
@@ -31,6 +34,7 @@ public class Perso : Attacker
     // hoover hackable
     private GameObject current_hoover_hackable = null;
     private Hack current_hoover_hack = null;
+    public float aide_a_la_visee = 0.5f; // aide à la visée, rayon autour de la souris pour les objets hackables
 
 
     // global light
@@ -114,9 +118,25 @@ public class Perso : Attacker
         anims.init("perso");
 
 
+        // on CHEAT
+        if (CHEAT)
+        {
+            // on se met lvl 10 sur le skill tree
+            skills_tree.setGlobalLevel(10);
+
+            // on met à jour les paramètres du perso
+            vie = (float) max_vie;
+            vitesse = 5f;
+
+            // on rajoute hacks, lunettes etc
+            inventory.createItem("speed_glasses");
+            inventory.createItem("electrochoc");
+            inventory.createItem("door_hack");
+            inventory.createItem("ordi_hack");
+        }
+
 
         // ON AFFICHE DES TRUCS
-
 
 
         // on affiche un texte de début
@@ -259,7 +279,7 @@ public class Perso : Attacker
         }
 
         // 2 - on récupère tous les objets dans le layermask que la souris survole
-        Collider2D[] hits = Physics2D.OverlapCircleAll(mouse_pos, 0.1f, hack_layer);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(mouse_pos, aide_a_la_visee, hack_layer);
 
         print("POTENTIAL HACKIN " + hits.Length + " OBJECTS");
 

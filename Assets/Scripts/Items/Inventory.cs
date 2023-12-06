@@ -348,7 +348,16 @@ public class Inventory : MonoBehaviour {
         return true;
     }
 
+    public void createItem(string item_name)
+    {
+        // on crée un item
 
+        // on crée l'item
+        GameObject item_go = Instantiate(Resources.Load(prefabs_path + item_name), transform.position, Quaternion.identity) as GameObject;
+
+        // on ajoute l'item
+        addItem(item_go.GetComponent<Item>());
+    }
 
     // getters
     public List<Item> getItems()
