@@ -28,6 +28,13 @@ public class Room : MonoBehaviour {
     public Transform light_parent;
     private Vector3 light_offset = new Vector3(0.25f, 1f, 0f);
 
+    // posters tiles
+    private List<string> walls_tiles = new List<string> {"bg_2_7","walls_1_7","walls_2_7"};
+    public float density_posters = 0.5f;
+
+    // tags
+    public float density_tags = 0.5f;
+
     // doors
     public Transform doors_parent;
     public GameObject door_prefab;
@@ -52,15 +59,36 @@ public class Room : MonoBehaviour {
         bg = transform.Find("bg_tilemap").gameObject;
         gd = transform.Find("gd_tilemap").gameObject;
 
-        // on met les bonnes dimensions (pour l'instant)
-        // ! à changer lorsque les salles seront générées
-        bg.GetComponent<Tilemap>().CompressBounds();
-        width = bg.GetComponent<Tilemap>().size.x;
-        height = bg.GetComponent<Tilemap>().size.y;
+        // on cherche les bonnes dimensions
+        width = 0;
+        height = 0;
+        x = 50000;
+        y = 50000;
 
-        x = (int) bg.GetComponent<Tilemap>().cellBounds.xMin;
-        y = (int) bg.GetComponent<Tilemap>().cellBounds.yMin;
-        print("tilemap dimensions : " + width + " " + height + " " + x + " " + y);
+        // on parcourt les 3 tilemaps
+
+        // fg
+        fg.GetComponent<Tilemap>().CompressBounds();
+        if (fg.GetComponent<Tilemap>().size.x > width) { width = (int) fg.GetComponent<Tilemap>().size.x; }
+        if (fg.GetComponent<Tilemap>().size.y > height) { height = (int) fg.GetComponent<Tilemap>().size.y; }
+        if ((int) fg.GetComponent<Tilemap>().cellBounds.xMin < x) { x = (int) fg.GetComponent<Tilemap>().cellBounds.xMin; }
+        if ((int) fg.GetComponent<Tilemap>().cellBounds.yMin < y) { y = (int) fg.GetComponent<Tilemap>().cellBounds.yMin; }
+
+        // gd
+        gd.GetComponent<Tilemap>().CompressBounds();
+        if (gd.GetComponent<Tilemap>().size.x > width) { width = (int) gd.GetComponent<Tilemap>().size.x; }
+        if (gd.GetComponent<Tilemap>().size.y > height) { height = (int) gd.GetComponent<Tilemap>().size.y; }
+        if ((int) gd.GetComponent<Tilemap>().cellBounds.xMin < x) { x = (int) gd.GetComponent<Tilemap>().cellBounds.xMin; }
+        if ((int) gd.GetComponent<Tilemap>().cellBounds.yMin < y) { y = (int) gd.GetComponent<Tilemap>().cellBounds.yMin; }
+
+        // bg
+        bg.GetComponent<Tilemap>().CompressBounds();
+        if (bg.GetComponent<Tilemap>().size.x > width) { width = (int) bg.GetComponent<Tilemap>().size.x; }
+        if (bg.GetComponent<Tilemap>().size.y > height) { height = (int) bg.GetComponent<Tilemap>().size.y; }
+        if ((int) bg.GetComponent<Tilemap>().cellBounds.xMin < x) { x = (int) bg.GetComponent<Tilemap>().cellBounds.xMin; }
+        if ((int) bg.GetComponent<Tilemap>().cellBounds.yMin < y) { y = (int) bg.GetComponent<Tilemap>().cellBounds.yMin; }
+
+        print(gameObject.name + " : tilemap dimensions : " + width + " " + height + " " + x + " " + y);
 
         // on initialise la salle
         init();
@@ -74,6 +102,9 @@ public class Room : MonoBehaviour {
         // on met des lumieres sur les murs
         // là où les tiles correspondent à tile_bg_light
         place_lights();
+
+        // on met des posters sur les murs
+        // là où les tiles correspondent à tile_bg_poster
     }
 
     private void place_lights()

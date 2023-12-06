@@ -58,7 +58,8 @@ public class Perso : Attacker
     */
 
     // unity functions
-    new void Start(){
+    new void Start()
+    {
 
         // on start de d'habitude
         base.Start();
@@ -84,7 +85,8 @@ public class Perso : Attacker
         inventory.scalable = true;
 
         // on récupère le parent des items
-        items_parent = GameObject.Find("/world/sector_2/items").transform;
+        // items_parent = GameObject.Find("/world/sector_2/items").transform;
+        items_parent = null;
 
         //
         floating_text_prefab = Resources.Load("prefabs/ui/floating_text") as GameObject;
@@ -281,7 +283,7 @@ public class Perso : Attacker
         // 2 - on récupère tous les objets dans le layermask que la souris survole
         Collider2D[] hits = Physics2D.OverlapCircleAll(mouse_pos, aide_a_la_visee, hack_layer);
 
-        print("POTENTIAL HACKIN " + hits.Length + " OBJECTS");
+        // print("POTENTIAL HACKIN " + hits.Length + " OBJECTS");
 
         // 3 - on regarde si on peut hacker qqch
         for (int i = 0; i < hits.Length; i++)
