@@ -1633,7 +1633,7 @@ Transform:
   - {fileID: 472001360850661388}
   - {fileID: 7543495051739455195}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!156049354 &4413038570644400622
 Grid:
@@ -1668,6 +1668,8 @@ MonoBehaviour:
   y: 0
   light_prefab: {fileID: 0}
   light_parent: {fileID: 0}
+  density_posters: 0.5
+  density_tags: 0.5
   doors_parent: {fileID: 0}
   door_prefab: {fileID: 0}
   objects_parent: {fileID: 0}
