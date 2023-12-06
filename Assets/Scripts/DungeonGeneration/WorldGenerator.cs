@@ -10,11 +10,11 @@ public class WorldGenerator : MonoBehaviour
     protected Vector2Int startPosition = new Vector2Int(0, 0);
 
     [SerializeField]
-    private int iterations = 10;
+    private int iterations = 20;
     [SerializeField]
-    public int walkLength = 10;
+    public int walkLength = 5;
     [SerializeField]
-    public bool startRandomlyEachIteration = true;
+    public bool startRandomlyEachIteration = false;
 
 
     [Header("ROOMS PARAMETERS")]
@@ -230,7 +230,7 @@ public class WorldGenerator : MonoBehaviour
         // on récupère la salle
         GameObject room = Resources.Load<GameObject>("prefabs/rooms/" + roomName);
 
-        print("chosen room name : " + roomName + " " + room);
+        // print("chosen room name : " + roomName + " " + room);
 
         return room;
     }
@@ -283,7 +283,7 @@ public class WorldGenerator : MonoBehaviour
         // on récupère la salle
         GameObject corr = Resources.Load<GameObject>("prefabs/rooms/" + corrName);
 
-        print("chosen corr name : " + corrName + " " + corr);
+        // print("chosen corr name : " + corrName + " " + corr);
 
         return corr;
     }

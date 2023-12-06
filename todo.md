@@ -43,19 +43,13 @@
     - [ ] - pour les hacks : stat de propagation automatique à un ennemi proche
     - [ ] - acceleration de la vitesse de hack
 
+- [ ] - génération procédurale
+    - [ ] - World.cs génère différents secteurs et les relie entre eux
+    - [ ] - Sector.cs applique les bonnes textures (tiles) aux tilemaps de chaque Room
+    - [ ] - Sector.cs génère aussi coffres, doors, computers, zombies dans les Room adéquates
+        (pour le moment on le fait dans Room.cs)
+    - [ ] - Room.cs génère les éléments de décor : objects, posters, tags, lights
 
-- [ ] - faire une génération aléatoire des niveaux
-    - [ ] - mettre en place le TK algorithm pour créer les salles
-    - [ ] - créer une classe Room qui remplit les salles avec les tiles
-    - [ ] - faire des plafonds qu'on peut passer dessous avec notre perso
-            parce que ça rend bien ! genre dans les couloirs
-
-
-- [ ] - UX
-    - [x] - ajouter des descriptions qui s'affichent au hoover de la souris sur
-    les items & les skills
-    - [ ] - basculer le controle du hacking à la souris : on peut cliquer sur les zombis
-    qui allument leur contour lors d'un hoover
 
 # BUGS
 
@@ -66,6 +60,12 @@
 # DO IT LATER
 
 - [-] - faire un fichier json qui stocke les paramètres des différents beings
+
+- [ ] - faire une génération aléatoire des niveaux
+    - [ ] - mettre en place le TK algorithm pour créer les salles
+    - [ ] - créer une classe Room qui remplit les salles avec les tiles
+    - [ ] - faire des plafonds qu'on peut passer dessous avec notre perso
+            parce que ça rend bien ! genre dans les couloirs
 
 # DONE
 
@@ -100,3 +100,9 @@
 
 - [x] - recalibrage : quand on attaque, on divise le nombre de dégats fait a
         chaque ennemis touchés par le nb d'ennemis touchés (logique)
+
+- [x] - UX
+    - [x] - ajouter des descriptions qui s'affichent au hoover de la souris sur
+    les items & les skills
+    - [x] - basculer le controle du hacking à la souris : on peut cliquer sur les zombis
+    qui allument leur contour lors d'un hoover
