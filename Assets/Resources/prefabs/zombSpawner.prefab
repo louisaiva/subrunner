@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3338060889664877309}
-  - component: {fileID: 5235620728438737532}
+  - component: {fileID: 1115800120795614168}
   m_Layer: 0
   m_Name: zombSpawner
   m_TagString: Untagged
@@ -30,9 +30,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5235620728438737532
+--- !u!114 &1115800120795614168
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,10 +41,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 7457679554815042043}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fdca0cc70053cb4fa918d3c61b14f30, type: 3}
+  m_Script: {fileID: 11500000, guid: 5666001dac36df042a61529ab1ac9efa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawn_rate: 0.1
+  spawn_rate: 1
   spawn_timer: 0
-  spawn_radius: 1
+  spawn_radius: 2
+  max_zombies_in_absence_of_player: 4
+  perso_is_in_range: 0
+  perso_range: 10
   zombo_prefab: {fileID: 0}
+  perso: {fileID: 0}

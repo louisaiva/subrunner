@@ -23,7 +23,7 @@ public class Room : MonoBehaviour {
     public int y;
 
     // light tiles
-    private string tile_bg_light_sprite_name = "bg_2_7";
+    private List<string> walls_light_tiles = new List<string> {"bg_2_7","walls_1_7","walls_2_7"};
     public GameObject light_prefab;
     public Transform light_parent;
     private Vector3 light_offset = new Vector3(0.25f, 1f, 0f);
@@ -96,7 +96,7 @@ public class Room : MonoBehaviour {
                 tile.GetTileData(pos, bg_tilemap, ref tile_data);
 
                 // on regarde si c une tile de lumiere
-                if (tile_data.sprite.name == tile_bg_light_sprite_name)
+                if (walls_light_tiles.Contains(tile_data.sprite.name))
                 {
 
                     // on récupère la position globale de la tile

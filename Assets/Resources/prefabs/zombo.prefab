@@ -153,9 +153,9 @@ GameObject:
   - component: {fileID: 879227892035812723}
   - component: {fileID: 3883242260699128306}
   - component: {fileID: 5864249208791642632}
-  - component: {fileID: 3772022173512709724}
   - component: {fileID: 1348946314214484562}
   - component: {fileID: 4983707700266989384}
+  - component: {fileID: 5754811362346391166}
   m_Layer: 8
   m_Name: zombo
   m_TagString: Untagged
@@ -178,7 +178,7 @@ Transform:
   - {fileID: 2720543572456685308}
   - {fileID: 8405253595851947303}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3883242260699128306
 SpriteRenderer:
@@ -253,39 +253,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3772022173512709724
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8251907093500023076}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0bb6b1a4cd5363441b209fd16aa11e3d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  vie: 100
-  max_vie: 100
-  regen_vie: 1
-  weight: 1
-  xp_provider: {fileID: 0}
-  floating_dmg_provider: {fileID: 0}
-  inputs: {x: 0, y: 0}
-  vitesse: 3
-  world_layers:
-    serializedVersion: 2
-    m_Bits: 0
-  damage: 10
-  attack_point: {fileID: 0}
-  attack_range: 0.5
-  damage_range: 0.25
-  enemy_layers:
-    serializedVersion: 2
-    m_Bits: 0
-  cooldown_attack: 0.6
-  target_detected: 0
-  meat_detected: 0
 --- !u!70 &1348946314214484562
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -335,3 +302,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   current_anim: 
   is_forcing: 0
+--- !u!114 &5754811362346391166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8251907093500023076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8c864e1ad6aafb4f91e4d7abe6f5e1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vie: 100
+  max_vie: 100
+  regen_vie: 1
+  weight: 1
+  xp_provider: {fileID: 0}
+  floating_dmg_provider: {fileID: 0}
+  inputs: {x: 0, y: 0}
+  vitesse: 3
+  world_layers:
+    serializedVersion: 2
+    m_Bits: 0
+  damage: 10
+  attack_point: {fileID: 0}
+  attack_range: 0.25
+  damage_range: 0.25
+  enemy_layers:
+    serializedVersion: 2
+    m_Bits: 0
+  cooldown_attack: 0.6
+  target_detected: 0
+  meat_detected: 0
