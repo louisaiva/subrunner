@@ -244,7 +244,7 @@ public class Being : MonoBehaviour
                     RaycastHit2D hit_up = Physics2D.BoxCast(center_hit_up, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.x), world_layers);
 
                     // on regarde si l'un des 2 raycast a touché un collider
-                    print("coll X - D : " + hit_down.normal + " / U : " + hit_up.normal);
+                    // print("coll X - D : " + hit_down.normal + " / U : " + hit_up.normal);
 
                     // on regarde si sur l'axe y on peut se déplacer
                     if (hit_down.collider == null && movement.y <= 0f)
@@ -325,7 +325,7 @@ public class Being : MonoBehaviour
                     RaycastHit2D hit_R = Physics2D.BoxCast(center_hit_R, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.y), world_layers);
 
                     // on regarde si l'un des 2 raycast a touché un collider
-                    print("coll Y - L : " + hit_L.normal + " / R : " + hit_R.normal);
+                    // print("coll Y - L : " + hit_L.normal + " / R : " + hit_R.normal);
 
                     // on regarde si sur l'axe y on peut se déplacer
                     if (hit_L.collider == null && movement_save.x <= 0f)
@@ -361,8 +361,8 @@ public class Being : MonoBehaviour
 
     }
 
-    // INPUTS SIMULATION
 
+    // INPUTS SIMULATION
     protected Vector2 simulate_circular_input_on_x(Vector2 input_vecteur)
     {
         // circular input
@@ -415,7 +415,6 @@ public class Being : MonoBehaviour
         return new_input_vecteur;
 
     }
-
 
 
     // ANIMATIONS
@@ -607,7 +606,6 @@ public class Anims
 {
     public bool has_extended_animation = false;
 
-
     // ANIMATIONS
     public string idle_down = "idle_D";
     public string idle_up = "idle_U";
@@ -652,6 +650,4 @@ public class Force
         this.magnitude = magnitude;
         this.attenuation = attenuation;
     }
-
-
 }

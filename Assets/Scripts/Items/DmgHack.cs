@@ -8,9 +8,9 @@ public class DmgHack : Hack
 
     // unity functions
 
-    new void Start()
+    new void Awake()
     {
-        base.Start();
+        base.Awake();
         
         // on change le type de l'item
         item_type = "virtual";

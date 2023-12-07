@@ -33,15 +33,12 @@ public class Room : MonoBehaviour {
                                                         , "walls_1_7", "walls_1_8", "walls_1_9",
                                                         "walls_2_2", "walls_2_3", "walls_2_4", "walls_2_5", "walls_2_6"
                                                         , "walls_2_7", "walls_2_8", "walls_2_9" };
-    // [SerializeField]
     private float density_posters = 0.3f; // 0.5 = 1 poster tous les 2 tiles compatibles
-    // [SerializeField]
     private Vector2 max_offset_posters = new Vector2(0.25f, 0.25f);
     public GameObject poster_prefab;
     public Sprite[] poster_sprites;
 
     // tags
-    // [SerializeField]
     private float density_tags = 0.5f;  // 1 = 1 tag tous les 2 tiles compatibles (un tag prend 2 tiles donc c normal)
     // 0.5 = 1 tag tous les 4 tiles compatibles
 
@@ -52,19 +49,33 @@ public class Room : MonoBehaviour {
     // objects
     public Transform objects_parent;
 
+    // emplacements prédéfinis
+    public Transform emplacement_handler;
+    public Transform chest_parent;
+    public GameObject chest_prefab;
+    public Transform computer_parent;
+    public GameObject computer_prefab;
+
     // unity functions
-    void Start()
+    void Awake()
     {
         // on récupère les prefabs
         light_prefab = Resources.Load<GameObject>("prefabs/objects/small_light");
         door_prefab = Resources.Load<GameObject>("prefabs/objects/door");
         poster_prefab = Resources.Load<GameObject>("prefabs/objects/poster");
         poster_sprites = Resources.LoadAll<Sprite>("spritesheets/environments/objects/posters");
+        chest_prefab = Resources.Load<GameObject>("prefabs/objects/chest");
+        computer_prefab = Resources.Load<GameObject>("prefabs/objects/computer");
 
         // on récupère les parents
         light_parent = transform.Find("lights");
         objects_parent = transform.Find("objects");
         doors_parent = transform.Find("doors");
+        chest_parent = transform.Find("chests");
+        computer_parent = transform.Find("computers");
+
+        // on récupère l'emplacement handler
+        emplacement_handler = transform.Find("emplacements");
 
         // on récupère les tilemaps
         fg = transform.Find("fg_tilemap").gameObject;
@@ -103,7 +114,7 @@ public class Room : MonoBehaviour {
         print(gameObject.name + " : tilemap dimensions : " + width + " " + height + " " + x + " " + y);
 
         // on initialise la salle
-        init();
+        // init();
 
     }
 
@@ -207,6 +218,92 @@ public class Room : MonoBehaviour {
                 }
             }
         }
+    }
+
+
+    // interactives objects
+    public int GetNbEmplacementsInteractifs()
+    {
+        if (emplacement_handler == null) { return 0; }
+
+        int nb_emplacements_interactifs = 0;
+
+        // on parcourt les enfants de emplacement_handler
+        foreach (Transform child in emplacement_handler)
+        {
+            // on regarde si c'est un emplacement interactif
+            if (child.gameObject.activeSelf && child.gameObject.name.Contains("interactive"))
+            {
+                nb_emplacements_interactifs++;
+            }
+        }
+
+        return nb_emplacements_interactifs;
+    }
+
+    private List<GameObject> get_interactive_emplacements()
+    {
+        if (emplacement_handler == null) { return new List<GameObject>(); }
+
+        List<GameObject> emplacements_interactifs = new List<GameObject>();
+
+        // on parcourt les enfants de emplacement_handler
+        foreach (Transform child in emplacement_handler)
+        {
+            // on regarde si c'est un emplacement interactif
+            if (child.gameObject.activeSelf && child.gameObject.name.Contains("interactive"))
+            {
+                emplacements_interactifs.Add(child.gameObject);
+            }
+        }
+
+        return emplacements_interactifs;
+    }
+
+    private Vector3 use_interactive_position()
+    {
+        // on récupère les emplacements interactifs
+        List<GameObject> emplacements_interactifs = get_interactive_emplacements();
+
+        if (emplacements_interactifs.Count == 0) {
+            Debug.LogError("no interactive emplacement in room " + gameObject.name);
+            return new Vector3(0, 0, 0);
+        }
+
+        // on récupère un emplacement interactif au hasard
+        GameObject emplacement_interactif = emplacements_interactifs[Random.Range(0, emplacements_interactifs.Count)];
+
+        // on récupère la position de l'emplacement interactif
+        Vector3 position_interactive = emplacement_interactif.transform.position;
+
+        // on désactive l'emplacement interactif
+        emplacement_interactif.SetActive(false);
+
+        return position_interactive;
+    }
+
+    public void PlaceChest()
+    {
+        // on récupère la position de l'emplacement interactif
+        Vector3 position_interactive = use_interactive_position();
+
+        // on instancie le chest
+        GameObject chest = Instantiate(chest_prefab, position_interactive, Quaternion.identity);
+
+        // on met le bon parent
+        chest.transform.SetParent(chest_parent);
+    }
+
+    public void PlaceComputer()
+    {
+        // on récupère la position de l'emplacement interactif
+        Vector3 position_interactive = use_interactive_position();
+
+        // on instancie le computer
+        GameObject computer = Instantiate(computer_prefab, position_interactive, Quaternion.identity);
+
+        // on met le bon parent
+        computer.transform.SetParent(computer_parent);
     }
 
 }

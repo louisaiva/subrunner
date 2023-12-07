@@ -8,9 +8,9 @@ public class Hack : Item
 
     // unity functions
 
-    protected new void Start()
+    protected new void Awake()
     {
-        base.Start();
+        base.Awake();
 
         // on change le type de l'item
         item_type = "virtual";

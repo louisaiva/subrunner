@@ -30,7 +30,7 @@ public class Item : MonoBehaviour, I_Descriptable
     public GameObject description_ui;
 
     // unity functions
-    protected void Start()
+    protected void Awake()
     {
         // on récupère le sprite renderer
         sprite_renderer = GetComponent<SpriteRenderer>();
@@ -208,16 +208,4 @@ public class Item : MonoBehaviour, I_Descriptable
         return is_showed && !is_on_ground;
     }
 
-    // events
-    /* public void OnMouseEnter()
-    {
-        // on met à jour l'affichage
-        description_ui.GetComponent<UI_HooverDescriptionHandler>().changeDescription(this);
-        // description_ui.GetComponent<UI_HooverDescriptionHandler>().changeShow(true);
-    }
-    public void OnMouseExit()
-    {
-        // on met à jour l'affichage
-        description_ui.GetComponent<UI_HooverDescriptionHandler>().removeDescription(this);
-    } */
 }
