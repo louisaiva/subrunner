@@ -306,4 +306,47 @@ public class Room : MonoBehaviour {
         computer.transform.SetParent(computer_parent);
     }
 
+
+    // ennemies
+    private List<GameObject> get_enemy_emplacements()
+    {
+        if (emplacement_handler == null) { return new List<GameObject>(); }
+
+        List<GameObject> emplacements_enemies = new List<GameObject>();
+
+        // on parcourt les enfants de emplacement_handler
+        foreach (Transform child in emplacement_handler)
+        {
+            // on regarde si c'est un emplacement ennemi
+            if (child.gameObject.activeSelf && child.gameObject.name.Contains("enemy"))
+            {
+                emplacements_enemies.Add(child.gameObject);
+            }
+        }
+
+        return emplacements_enemies;
+    }
+
+    public Vector3 GetEnemySpawnEmplacement()
+    {
+        // retourne un emplacement de spawn au hasard
+
+        // on récupère les emplacements ennemis
+        List<GameObject> emplacements_enemies = get_enemy_emplacements();
+
+        if (emplacements_enemies.Count == 0) {
+            Debug.LogError("no enemy emplacement in room " + gameObject.name);
+            return new Vector3(0, 0, 0);
+        }
+
+        // on récupère un emplacement ennemi au hasard
+        GameObject emplacement_ennemi = emplacements_enemies[Random.Range(0, emplacements_enemies.Count)];
+
+        // on récupère la position GLOBALE de l'emplacement ennemi
+        Vector3 position_ennemi = emplacement_ennemi.transform.position;
+
+        return position_ennemi;
+        
+    }
+
 }

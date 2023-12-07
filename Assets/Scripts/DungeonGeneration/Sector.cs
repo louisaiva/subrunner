@@ -25,6 +25,10 @@ public class Sector : MonoBehaviour
     [Header("SECTOR ENEMIES")]
     [SerializeField] private bool isSafe = false; // si true, pas d'ennemis dans le secteur
     [SerializeField] private int nb_enemies = 10;
+    private GameObject enemy_prefab;
+    private Transform enemy_parent;
+    [SerializeField] private float enemy_spawn_radius = 1f;
+
 
     [Header("SECTOR OBJECTS")]
     [SerializeField] private int nb_chests = 2;
@@ -39,9 +43,33 @@ public class Sector : MonoBehaviour
         GameObject generator = GameObject.Find("/generator");
         sectorGenerator = generator.GetComponent<SectorGenerator>();
 
-        // on récupère les prefabs
-        // chest_prefab = Resources.Load<GameObject>("prefabs/objects/chest");
-        // computer_prefab = Resources.Load<GameObject>("prefabs/objects/computer");
+        // on récupère le parent des ennemis
+        enemy_parent = transform.Find("enemies");
+
+        // on récupère le prefab des ennemis
+        enemy_prefab = Resources.Load<GameObject>("prefabs/beings/enemies/zombo");
+    }
+
+    void Update()
+    {
+        if (!isSafe)
+        {
+            // on compte le nombre d'ennemis vivants
+            int nb_enemies_alive = 0;
+            foreach (Transform child in enemy_parent.transform)
+            {
+                if (child.GetComponent<Being>().isAlive())
+                {
+                    nb_enemies_alive++;
+                }
+            }
+
+            // on vérifie si on doit générer un nouvel ennemi
+            if (nb_enemies_alive < nb_enemies)
+            {
+                GenerateSingleEnemy();
+            }
+        }
     }
 
     // génère le secteur
@@ -59,6 +87,13 @@ public class Sector : MonoBehaviour
         // on lance l'initialisation des salles
         foreach (Transform child in transform)
         {
+            // on vérifie que ce n'est pas le parent des ennemis
+            if (child.gameObject.name == "enemies")
+            {
+                continue;
+            }
+
+            // on récupère la salle
             Room room = child.GetComponent<Room>();
             room.init();
             emplacements_interactifs[room.gameObject.name] = room.GetNbEmplacementsInteractifs();
@@ -66,6 +101,14 @@ public class Sector : MonoBehaviour
 
         // on génère les objets interactifs
         GenerateInteractifs(emplacements_interactifs);
+
+
+        // on génère les ennemis
+        if (!isSafe)
+        {
+            GenerateEnemies();
+        }
+
     }
 
     // génère les objets interactifs
@@ -139,6 +182,44 @@ public class Sector : MonoBehaviour
         }
     }
 
+
+    // génère les ennemis
+    public void GenerateEnemies()
+    {
+        // on place les ennemis
+        for (int i = 0; i < nb_enemies; i++)
+        {
+            GenerateSingleEnemy();
+        }
+    }
+
+    // ONCE FONCTIONS
+    public void GenerateSingleEnemy()
+    {
+        // on choisit une salle au hasard dans les enfants du secteur
+        GameObject room = transform.GetChild(Random.Range(0, transform.childCount)).gameObject;
+
+        // on vérifie que c'est une room
+        while (room.GetComponent<Room>() == null)
+        {
+            // on cherche une autre salle
+            room = transform.GetChild(Random.Range(0, transform.childCount)).gameObject;
+        }
+        
+        // on récupère la position de spawn
+        Vector3 spawn_position = new Vector3();
+
+        // on ajoute un offset aléatoire dans un cercle de rayon enemy_spawn_radius
+        spawn_position = Random.insideUnitCircle.normalized * enemy_spawn_radius;
+        spawn_position += room.GetComponent<Room>().GetEnemySpawnEmplacement();
+
+        // on instancie l'ennemi
+        GameObject enemy = Instantiate(enemy_prefab, spawn_position, Quaternion.identity, enemy_parent.transform);
+
+        // on met à jour le parent de l'ennemi
+        enemy.transform.SetParent(enemy_parent);
+    }
+
     // USEFUL FUNCTIONS
 
     void Clear()
@@ -146,7 +227,18 @@ public class Sector : MonoBehaviour
         // on détruit tous les enfants du secteur
         foreach (Transform child in transform)
         {
-            Destroy(child.gameObject);
+            if (child.gameObject.name == "enemies")
+            {
+                // on détruit tous les enfants du parent des ennemis
+                foreach (Transform child2 in child)
+                {
+                    Destroy(child2.gameObject);
+                }
+            }
+            else
+            {
+                Destroy(child.gameObject);
+            }
         }
     }
 
