@@ -440,6 +440,41 @@ public class SkillTree : MonoBehaviour {
         perso.GetComponent<Perso>().setHackinRange(calculateX("portee_hack"));
     }
 
+    public void setLevel(string skill, int lvl)
+    {
+        // on regarde quel skill on augmente
+        switch (skill)
+        {
+            case "max_vie":
+                max_vie_level = lvl;
+                perso.GetComponent<Perso>().max_vie = (int)calculateX("max_vie");
+                return;
+            case "regen_vie":
+                regen_vie_level = lvl;
+                perso.GetComponent<Perso>().regen_vie = calculateX("regen_vie");
+                return;
+            case "degats":
+                degats_level = lvl;
+                perso.GetComponent<Perso>().damage = calculateX("degats");
+                return;
+            case "max_bits":
+                max_bits_level = lvl;
+                perso.GetComponent<Perso>().max_bits = (int)calculateX("max_bits");
+                return;
+            case "regen_bits":
+                regen_bits_level = lvl;
+                perso.GetComponent<Perso>().regen_bits = calculateX("regen_bits");
+                return;
+            case "portee_hack":
+                portee_hack_level = lvl;
+                perso.GetComponent<Perso>().setHackinRange(calculateX("portee_hack"));
+                return;
+            default:
+                Debug.Log("skill " + skill + " not found");
+                return;
+        }
+    }
+
     // GETTERS
     private int getLevel(string skill)
     {

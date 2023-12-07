@@ -108,11 +108,13 @@ public class Perso : Attacker
 
         // max_vie = 100;
         vie = (float) max_vie;
-        vitesse = 3f;
+        speed = 3f;
+        running_speed = 5f;
         // damage = 10f;
         attack_range = 0.3f; // defini par l'item
         damage_range = 0.5f; // defini par l'item
         cooldown_attack = 0.5f; // defini par l'item
+        knockback_base = 10f;
 
         xp_gift = 0; // on ne donne pas d'xp quand on tue un perso
 
@@ -123,12 +125,16 @@ public class Perso : Attacker
         // on CHEAT
         if (CHEAT)
         {
+            // on met l'attaque à 0.1
+            damage = 0.1f;
+
             // on se met lvl 10 sur le skill tree
-            skills_tree.setGlobalLevel(10);
+            // skills_tree.setGlobalLevel(10);
+            skills_tree.setLevel("max_vie", 30);
 
             // on met à jour les paramètres du perso
             vie = (float) max_vie;
-            vitesse = 5f;
+            // speed = 5f;
 
             // on rajoute hacks, lunettes etc
             inventory.createItem("speed_glasses");
@@ -229,6 +235,16 @@ public class Perso : Attacker
         // Z,S,Q,D
         inputs = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
+        // runnin
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            isRunning = true;
+        }
+        else
+        {
+            isRunning = false;
+        }
+
         // attaque
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -237,10 +253,6 @@ public class Perso : Attacker
 
         // hack
         HackinHooverEvents();
-        /* if (Input.GetKeyDown(KeyCode.Q))
-        {
-            hack();
-        } */
         HackinClickEvents();
 
         // interactions
@@ -420,7 +432,7 @@ public class Perso : Attacker
         // max_vie += 5 + ((int) 0.2*level);
         // damage += 4 + ((int) 0.1*level);
         // cooldown_attack -= 0.05f;
-        // vitesse += 0.1f;
+        // speed += 0.1f;
 
         // on affiche un floating text
         /* Vector3 position = transform.position + new Vector3(0, 1f, 0);
@@ -581,7 +593,7 @@ public class Perso : Attacker
             if (current_hackin_targets[target] is DmgHack)
             {
                 float damage = ((DmgHack)current_hackin_targets[target]).damage * Time.deltaTime;
-                target.GetComponent<Being>().take_damage(damage, Vector2.zero);
+                target.GetComponent<Being>().take_damage(damage);
             }
         }
     }

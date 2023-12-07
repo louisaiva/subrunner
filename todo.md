@@ -30,10 +30,6 @@
 
 
 
-- [ ] - améliorer gameplay
-    - [ ] - mettre un sprint de vitesse
-    - [ ] - faire des "avancements souples", que le joueur puisse avancer
-            meme si y'a colliding si c un peu (tah dead cells)
 
 - [ ] - ajouter items
     - [x] - lunettes de vitesse : permettent de voir dans le noir
@@ -106,3 +102,9 @@
     les items & les skills
     - [x] - basculer le controle du hacking à la souris : on peut cliquer sur les zombis
     qui allument leur contour lors d'un hoover
+
+- [x] - améliorer gameplay
+    - [x] - mettre un sprint de vitesse
+    - [x] - faire des "avancements souples", que le joueur puisse avancer
+            meme si y'a colliding si c un peu (tah dead cells)
+    - [x] - appliquer des forces (knockback etc)

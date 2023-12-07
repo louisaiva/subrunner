@@ -55,7 +55,8 @@ public class CyberZombo : Attacker, I_Hackable
         // on met à jour les différentes variables d'attaques pour le zombo
         max_vie = 25;
         vie = (float) max_vie;
-        vitesse = 1f;
+        speed = 1f;
+        running_speed = 2f;
         damage = 20f;
         attack_range = 0.25f;
         damage_range = 0.25f;
@@ -316,17 +317,4 @@ public class CyberZombo : Attacker, I_Hackable
         base.die();
     }
 
-
-    // EVENTS
-    /* void OnMouseEnter()
-    {
-        // on change le material
-        GetComponent<SpriteRenderer>().material = outline_material;
-    }
-
-    void OnMouseExit()
-    {
-        // on change le material
-        GetComponent<SpriteRenderer>().material = default_material;
-    } */
 }

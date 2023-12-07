@@ -21,9 +21,14 @@ public class Being : MonoBehaviour
     public GameObject floating_dmg_provider;
     protected int xp_gift = 10;
 
+    // FORCES
+    public List<Force> forces = new List<Force>();
+
     // DEPLACEMENT
     public Vector2 inputs;
-    public float vitesse = 3f; // vitesse de déplacement
+    public float speed = 3f; // speed de déplacement
+    public float running_speed = 5f; // speed de déplacement
+    protected bool isRunning = false;
     private Rect feet_collider; // collider des pieds (pour les collisions)
     private float offset_perso_y_to_feet = 0.45f; // offset entre le perso et le collider des pieds
     public LayerMask world_layers; // layers du monde
@@ -65,7 +70,7 @@ public class Being : MonoBehaviour
 
     public virtual void Events()
     {
-        inputs = simulate_circular_input_on_x(inputs);
+        inputs = randomly_circulate(inputs);
     }
 
     protected void Update()
@@ -88,8 +93,19 @@ public class Being : MonoBehaviour
         // maj des animations
         maj_animations(inputs);
 
+
         // déplacement
-        move_perso(inputs);
+        if (isRunning)
+        {
+            run(inputs);
+        }
+        else
+        {
+            walk(inputs);
+        }
+
+        // update forces
+        update_forces();
     }
 
     protected void OnDrawGizmosSelected()
@@ -112,84 +128,240 @@ public class Being : MonoBehaviour
 
 
     // DEPLACEMENT
-    protected void move_perso(Vector2 direction)
+    protected void walk(Vector2 direction)
     {
 
-        // ******************************
-        // * MOUVEMENT EN X
-        // ******************************
+        // on calcule le mouvement sur X
+        float x_movement = direction.normalized.x * speed * Time.deltaTime;
+
+        // on calcule le mouvement sur Y
+        float y_movement = direction.normalized.y * speed * Time.deltaTime;
+
+        // on applique le mouvement au perso
+        move_perso(new Vector2(x_movement, y_movement));
+
+    }
+    protected void run(Vector2 direction)
+    {
 
         // on calcule le mouvement sur X
-        float x_movement = direction.normalized.x * vitesse * Time.deltaTime;
+        float x_movement = direction.normalized.x * running_speed * Time.deltaTime;
+
+        // on calcule le mouvement sur Y
+        float y_movement = direction.normalized.y * running_speed * Time.deltaTime;
+
+        // on applique le mouvement au perso
+        move_perso(new Vector2(x_movement, y_movement));
+
+    }
+
+    protected void update_forces()
+    {
+        // on parcourt les forces
+        for (int i = 0; i < forces.Count; i++)
+        {
+            // on récupère la force
+            Force force = forces[i];
+
+            // on applique la force si elle est assez forte
+            if (force.magnitude > 0.5f)
+            {
+                apply_force(force.direction * force.magnitude * Time.deltaTime);
+
+                // on diminue la force
+                force.magnitude = Mathf.Lerp(force.magnitude, 0, Time.deltaTime * 10f * force.attenuation);
+
+                // on met à jour la force
+                forces[i] = force;
+            }
+            else
+            {
+                // on supprime la force si elle est trop faible
+                forces.RemoveAt(i);
+                i--;
+            }
+        }
+    }
+
+    protected void apply_force(Vector2 force)
+    {
+        // on déplace le perso
+        move_perso(force);
+    }
+
+    protected void move_perso(Vector2 movement)
+    {
+        // fonction mère de toutes les fonctions de déplacement :
+        // applique le mouvement au perso en fonction des collisions
 
         // on maj notre collider_box        
         float y_center = transform.position.y - offset_perso_y_to_feet + feet_collider.size.y / 2f;
         feet_collider.center = new Vector2(transform.position.x, y_center);
 
-        // on lance le raycast
-        Vector2 raycast_direction = new Vector2((x_movement > 0f) ? 1f : -1f, 0f);
-        RaycastHit2D hit = Physics2D.BoxCast(feet_collider.center, feet_collider.size, 0f, raycast_direction, Mathf.Abs(x_movement), world_layers);
+        // on sauvegarde le mouvement
+        Vector2 movement_save = movement;
 
-        // on vérifie si le mouvement touche un collider
-        if (hit.collider != null)
+        // ******************************
+        // * MOUVEMENT EN X
+        // ******************************
+
+        if (movement.x != 0f)
         {
-            float hit_treshold = 0.05f;
-            if (hit.distance < hit_treshold && hit.normal.x * x_movement < 0f)
+
+            // on lance le raycast
+            Vector2 raycast_direction = new Vector2((movement.x > 0f) ? 1f : -1f, 0f);
+            RaycastHit2D hit = Physics2D.BoxCast(feet_collider.center, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.x), world_layers);
+
+            // on prépare un mouvement subsidiare en y
+            float subsidiar_movement_y = 0f;
+
+            // on vérifie si le mouvement touche un collider
+            if (hit.collider != null)
             {
-                // on annule le movement parce qu'on est trop proche du collider
-                // et qu'on essaie de renter dedans
-                x_movement = 0f;
-            }
-            else
-            {
-                // on ajuste le vecteur de déplacement
-                x_movement = hit.distance + hit.normal.x * hit_treshold;
+                float hit_treshold = 0.05f;
+                if (hit.distance < hit_treshold)
+                {
+                    // si on collisionne de trop proche,
+                    // il y a plusieurs cas
+
+                    // soit on se trouve contre un mur penché (et on peut se déplacer en y)
+
+                    // on se trouve soit contre un mur (et on ne peut pas se déplacer en y)
+                    // soit à la jonction de 2 murs potentiellement penchés (et on peut se déplacer en y)
+
+                    // on envoie 2 raycasts en direction du mur sur x
+                    // avec 2 boxs de y différents (un en haut et un en bas)
+
+                    float y_offset = feet_collider.size.y;
+
+
+                    // 1er raycast
+                    Vector2 center_hit_down = new Vector2(feet_collider.center.x, feet_collider.center.y - y_offset);
+                    RaycastHit2D hit_down = Physics2D.BoxCast(center_hit_down, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.x), world_layers);
+                    
+                    // 2eme raycast
+                    Vector2 center_hit_up = new Vector2(feet_collider.center.x, feet_collider.center.y + y_offset);
+                    RaycastHit2D hit_up = Physics2D.BoxCast(center_hit_up, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.x), world_layers);
+
+                    // on regarde si l'un des 2 raycast a touché un collider
+                    print("coll X - D : " + hit_down.normal + " / U : " + hit_up.normal);
+
+                    // on regarde si sur l'axe y on peut se déplacer
+                    if (hit_down.collider == null && movement.y <= 0f)
+                    {
+                        // on peut se déplacer vers le bas
+                        subsidiar_movement_y = -y_offset/2f;
+                        movement.x/=2f;
+                    }
+                    else if (hit_up.collider == null && movement.y >= 0f)
+                    {
+                        // on peut se déplacer vers le haut
+                        subsidiar_movement_y = y_offset/2f;
+                        movement.x /= 2f;
+                    }
+
+                    // on annule le mouvement en x
+                    if (subsidiar_movement_y == 0f)
+                    {
+                        movement.x = 0f;
+                    }
+
+                }
+                else
+                {
+                    // on ajuste le vecteur de déplacement
+                    movement.x = hit.distance + hit.normal.x * hit_treshold;
+                }
             }
 
+            // on déplace le perso
+            transform.position += new Vector3(movement.x, subsidiar_movement_y, 0f);
+
+            // on maj notre collider_box
+            feet_collider.x += movement.x;
+            feet_collider.y += subsidiar_movement_y;
         }
-
-        // on déplace le perso
-        transform.position += new Vector3(x_movement, 0f, 0f);
-
-
-
 
         // ******************************
         // * MOUVEMENT EN Y
         // ******************************
 
-        // on calcule le mouvement sur Y
-        float y_movement = direction.normalized.y * vitesse * Time.deltaTime;
-
-        // on maj notre collider_box
-        feet_collider.x += x_movement;
-
-        // on lance le raycast
-        raycast_direction = new Vector2(0f, (y_movement > 0f) ? 1f : -1f);
-        hit = Physics2D.BoxCast(feet_collider.center, feet_collider.size, 0f, raycast_direction, Mathf.Abs(y_movement), world_layers);
-
-        // on vérifie si le mouvement touche un collider
-        if (hit.collider != null)
+        if (movement.y != 0f)
         {
-            float hit_treshold = 0.02f;
-            if (hit.distance < hit_treshold && hit.normal.y * y_movement < 0f)
+
+            // on lance le raycast
+            Vector2 raycast_direction = new Vector2(0f, (movement.y > 0f) ? 1f : -1f);
+            RaycastHit2D hit = Physics2D.BoxCast(feet_collider.center, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.y), world_layers);
+
+            // on prépare un mouvement subsidiare en x
+            float subsidiar_movement_x = 0f;
+
+            // on vérifie si le mouvement touche un collider
+            if (hit.collider != null)
             {
-                // on annule le movement parce qu'on est trop proche du collider
-                // et qu'on essaie de renter dedans
-                y_movement = 0f;
-            }
-            else
-            {
-                // on ajuste le vecteur de déplacement
-                y_movement = hit.distance + hit.normal.y * hit_treshold;
+                float hit_treshold = 0.02f;
+                if (hit.distance < hit_treshold)
+                {
+                    // si on collisionne de trop proche,
+                    // il y a plusieurs cas
+
+                    // soit on se trouve contre un mur penché (et on peut se déplacer en x)
+
+                    // on se trouve soit contre un mur (et on ne peut pas se déplacer en x)
+                    // soit à la jonction de 2 murs potentiellement penchés (et on peut se déplacer en x)
+
+                    // on envoie 2 raycasts en direction du mur sur x
+                    // avec 2 boxs de x différents (un à gauche et un à droite)
+
+                    float x_offset = feet_collider.size.x;
+
+
+                    // 1er raycast
+                    Vector2 center_hit_L = new Vector2(feet_collider.center.x - x_offset, feet_collider.center.y);
+                    RaycastHit2D hit_L = Physics2D.BoxCast(center_hit_L, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.y), world_layers);
+
+                    // 2eme raycast
+                    Vector2 center_hit_R = new Vector2(feet_collider.center.x + x_offset, feet_collider.center.y);
+                    RaycastHit2D hit_R = Physics2D.BoxCast(center_hit_R, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.y), world_layers);
+
+                    // on regarde si l'un des 2 raycast a touché un collider
+                    print("coll Y - L : " + hit_L.normal + " / R : " + hit_R.normal);
+
+                    // on regarde si sur l'axe y on peut se déplacer
+                    if (hit_L.collider == null && movement_save.x <= 0f)
+                    {
+                        // on peut se déplacer vers le bas
+                        subsidiar_movement_x = -x_offset / 8f;
+                        movement.y /= 8f;
+                    }
+                    else if (hit_R.collider == null && movement_save.x >= 0f)
+                    {
+                        // on peut se déplacer vers le haut
+                        subsidiar_movement_x = x_offset / 8f;
+                        movement.y /= 8f;
+                    }
+
+                    // on annule le mouvement en x
+                    if (subsidiar_movement_x == 0f)
+                    {
+                        movement.y = 0f;
+                    }
+
+                }
+                else
+                {
+                    // on ajuste le vecteur de déplacement
+                    movement.y = hit.distance + hit.normal.y * hit_treshold;
+                }
             }
 
+            // on déplace le perso
+            transform.position += new Vector3(subsidiar_movement_x, movement.y, 0f);
         }
 
-        // on déplace le perso
-        transform.position += new Vector3(0f, y_movement, 0f);
-
     }
+
+    // INPUTS SIMULATION
 
     protected Vector2 simulate_circular_input_on_x(Vector2 input_vecteur)
     {
@@ -226,87 +398,25 @@ public class Being : MonoBehaviour
         return input_vecteur;
     }
 
-    protected void apply_force(Vector2 force)
+    protected Vector2 randomly_circulate(Vector2 input_vecteur)
     {
+        // simulate circular input on x
+        // et change de direction sur y de temps en temps
 
-        // ******************************
-        // * MOUVEMENT EN X
-        // ******************************
+        // circular input
+        Vector2 new_input_vecteur = simulate_circular_input_on_x(input_vecteur);
 
-        // on calcule le mouvement sur X
-        float x_movement = force.x;
-
-        // on maj notre collider_box        
-        float y_center = transform.position.y - offset_perso_y_to_feet + feet_collider.size.y / 2f;
-        feet_collider.center = new Vector2(transform.position.x, y_center);
-
-        // on lance le raycast
-        Vector2 raycast_direction = new Vector2((x_movement > 0f) ? 1f : -1f, 0f);
-        RaycastHit2D hit = Physics2D.BoxCast(feet_collider.center, feet_collider.size, 0f, raycast_direction, Mathf.Abs(x_movement), world_layers);
-
-        // on vérifie si le mouvement touche un collider
-        if (hit.collider != null)
+        // change direction on y
+        if (Random.Range(0f, 1f) < 0.01f)
         {
-
-            float hit_treshold = 0.05f;
-            if (hit.distance < hit_treshold && hit.normal.x * x_movement < 0f)
-            {
-                // on annule le movement parce qu'on est trop proche du collider
-                // et qu'on essaie de renter dedans
-                x_movement = 0f;
-            }
-            else
-            {
-                // on ajuste le vecteur de déplacement
-                x_movement = hit.distance + hit.normal.x * hit_treshold;
-            }
-
+            new_input_vecteur.y = Random.Range(-1f, 1f);
         }
 
-        // on déplace le perso
-        transform.position += new Vector3(x_movement, 0f, 0f);
+        return new_input_vecteur;
 
-
-
-
-        // ******************************
-        // * MOUVEMENT EN Y
-        // ******************************
-
-        // on calcule le mouvement sur Y
-        float y_movement = force.y;
-
-        // on maj notre collider_box
-        feet_collider.x += x_movement;
-
-        // on lance le raycast
-        raycast_direction = new Vector2(0f, (y_movement > 0f) ? 1f : -1f);
-        hit = Physics2D.BoxCast(feet_collider.center, feet_collider.size, 0f, raycast_direction, Mathf.Abs(y_movement), world_layers);
-
-        // on vérifie si le mouvement touche un collider
-        if (hit.collider != null)
-        {
-            float hit_treshold = 0.02f;
-            if (hit.distance < hit_treshold && hit.normal.y * y_movement < 0f)
-            {
-                // on annule le movement parce qu'on est trop proche du collider
-                // et qu'on essaie de renter dedans
-                y_movement = 0f;
-            }
-            else
-            {
-                // on ajuste le vecteur de déplacement
-                y_movement = hit.distance + hit.normal.y * hit_treshold;
-            }
-
-        }
-
-        // on déplace le perso
-        transform.position += new Vector3(0f, y_movement, 0f);
-
-        // on applique une force au perso
-        // transform.position += new Vector3(force.x, force.y, 0f);
     }
+
+
 
     // ANIMATIONS
     protected void maj_animations(Vector2 direction)
@@ -399,7 +509,7 @@ public class Being : MonoBehaviour
 
 
     // DAMAGE
-    public void take_damage(float damage, Vector2 knockback)
+    public void take_damage(float damage, Force knockback=null)
     {
         // ! à mettre tjrs au début de la fonction update
         if (!isAlive()) { return; }
@@ -410,12 +520,18 @@ public class Being : MonoBehaviour
         anim_handler.ChangeAnimTilEnd(anims.hurted);
 
         // knockback
-        apply_force(knockback);
-        
-        // change the flipX of the sprite if needed
-        if (knockback.x != 0f)
+        // apply_force(knockback);
+        if (knockback != null)
         {
-            GetComponent<SpriteRenderer>().flipX = (knockback.x < 0f);
+            forces.Add(knockback);
+
+            print("knockback : " + knockback.direction + " " + knockback.magnitude);
+
+            // change the flipX of the sprite if needed
+            if (knockback.direction.x != 0f)
+            {
+                GetComponent<SpriteRenderer>().flipX = (knockback.direction.x < 0f);
+            }
         }
 
         // floating dmg
@@ -520,4 +636,22 @@ public class Anims
         die = name + "_" + die;
         hurted = name + "_" + hurted;
     }
+}
+
+public class Force
+{
+    public Vector2 direction;
+    public float magnitude;
+    public float attenuation;
+
+    public static Force Zero = new Force(Vector2.zero, 0f, 1f);
+
+    public Force(Vector2 direction, float magnitude, float attenuation=1f)
+    {
+        this.direction = direction;
+        this.magnitude = magnitude;
+        this.attenuation = attenuation;
+    }
+
+
 }
