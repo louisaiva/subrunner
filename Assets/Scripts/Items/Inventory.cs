@@ -26,7 +26,7 @@ public class Inventory : MonoBehaviour {
     GameObject empty_slot_prefab;
 
     // unity functions
-    void Start()
+    void Awake()
     {
         // on récupère le perso
         perso = GameObject.Find("/perso");
@@ -306,6 +306,12 @@ public class Inventory : MonoBehaviour {
         }
     }
 
+    public void removeRandomItem()
+    {
+        // on supprime un gameobject de l'inventaire
+        Destroy(getItems()[Random.Range(0, getItems().Count)].gameObject);
+    }
+
     public void randomize()
     {
         // on randomize les items de l'inventaire
@@ -338,6 +344,8 @@ public class Inventory : MonoBehaviour {
         // on ajoute un item à l'inventaire
         // on vérifie qu'on est pas déjà plein
         if (!scalable && getItems().Count >= max_items) { return false; }
+
+        print("on ajoute " + item.item_name + " à " + gameObject.name);
 
         // on ajoute l'item
         item.transform.SetParent(transform);

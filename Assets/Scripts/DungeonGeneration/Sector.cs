@@ -147,6 +147,22 @@ public class Sector : MonoBehaviour
             // on place le chest
             room.PlaceChest();
 
+            // si on est dans la dernière itération, on place un item légendaire
+            if (i == nb_chests - 1)
+            {
+                Item hackin_os = Resources.Load<Item>("prefabs/items/legendary/hackin_os");
+                hackin_os = Instantiate(hackin_os);
+                // print(hackin_os + " " + hackin_os.item_name);
+                Chest chest = transform.Find(room_name).transform.Find("chests").transform.GetChild(0).GetComponent<Chest>();
+                bool success = chest.grab(hackin_os);
+                while (!success)
+                {
+                    // on supprime un item du chest
+                    chest.inventory.removeRandomItem();
+                    success = chest.grab(hackin_os); 
+                }
+            }
+
             // on décrémente le nombre d'emplacements interactifs disponibles
             emplacements_interactifs[room.gameObject.name]--;
             if (emplacements_interactifs[room.gameObject.name] == 0)

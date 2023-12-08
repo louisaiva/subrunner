@@ -12,12 +12,13 @@ public class Perso : Attacker
     public int level = 1;
     public int xp = 0;
     public int total_xp = 0;
-    public int xp_to_next_level = 300;
+    public int xp_to_next_level = 100;
 
     private GameObject floating_text_prefab;
 
 
     // bits (mana)
+    public bool has_hackin_os = false;
     public float bits = 8f; // bits = mana (lance des sorts de hacks)
     public int max_bits = 8;
     public float regen_bits = 0.1f; // regen (en bits par seconde)
@@ -252,8 +253,11 @@ public class Perso : Attacker
         }
 
         // hack
-        HackinHooverEvents();
-        HackinClickEvents();
+        if (has_hackin_os)
+        {
+            HackinHooverEvents();
+            HackinClickEvents();
+        }
 
         // interactions
         if (Input.GetKeyDown(KeyCode.E))
@@ -383,9 +387,23 @@ public class Perso : Attacker
         // update de d'habitude
         base.Update();
 
-
-        // on update les hacks
-        update_hacks();
+        // on update le hackin
+        has_hackin_os = false;
+        foreach (Item item in inventory.getItems())
+        {
+            if (item.action_type == "passive")
+            {
+                if (item.item_name == "hackin_os")
+                {
+                    has_hackin_os = true;
+                }
+            }
+        }
+        if (has_hackin_os)
+        {
+            // on update les hacks
+            update_hacks();
+        }
 
         // on update les interactions
         update_interactions();
@@ -423,8 +441,8 @@ public class Perso : Attacker
     {
         level += 1;
         xp = 0;
-        // xp_to_next_level = (int)(xp_to_next_level * 2f);
-        xp_to_next_level = (int)(xp_to_next_level * 1.1f);
+        xp_to_next_level = (int)(xp_to_next_level * 2f);
+        // xp_to_next_level = (int)(xp_to_next_level * 1.5f);
 
         Debug.Log("LEVEL UP ! level " + level);
 

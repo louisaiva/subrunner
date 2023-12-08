@@ -27,7 +27,7 @@ public class Chest : MonoBehaviour, I_Interactable
     public bool is_interacting { get; set; } // est en train d'interagir
     
     // unity functions
-    void Start()
+    void Awake()
     {
         // on récupère l'animation handler
         anim_handler = GetComponent<AnimationHandler>();

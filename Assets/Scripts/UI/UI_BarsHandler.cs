@@ -8,25 +8,56 @@ public class UI_BarsHandler : MonoBehaviour {
 
     // sprites
     private string bars_sprites_path = "spritesheets/ui/ui_bars";
+    private Sprite[] sprites;
 
     // bars_affichee
     private int nb_bits_affiches = 0;
     private int nb_octets_max = 0;
 
+    // UI_BitsHandler
+    public GameObject ui_bits_handler;
+
     // unity functions
-    void Start()
+    void Awake()
     {
         // on récupère le perso
         perso = GameObject.Find("/perso").GetComponent<Perso>();
 
         // on met à jour le nb d'octets max
         nb_octets_max = 13;
+
+        // on récupère le UI_BitsHandler
+        ui_bits_handler = transform.parent.transform.Find("bits_handler").gameObject;
+
+        // on recup les sprites
+        // sprites = new Sprite[14];
+        sprites = Resources.LoadAll<Sprite>(bars_sprites_path);
+        print(sprites);
     }
 
     void Update()
     {
-        // on met à jour les barres
-        updateBars();
+        // print(sprites);
+
+        if (perso.has_hackin_os)
+        {
+            // on active le UI_BitsHandler
+            ui_bits_handler.SetActive(true);
+
+            // on met à jour les barres
+            updateBars();
+        }
+        else
+        {
+            // on désactive le UI_BitsHandler
+            ui_bits_handler.SetActive(false);
+
+            // on met à jour avec le sprite 0
+            GetComponent<Image>().sprite = sprites[0];
+
+            // on met à jour le nombre de bits affichés
+            nb_bits_affiches = 0;
+        }
     }
 
     // functions
@@ -34,9 +65,6 @@ public class UI_BarsHandler : MonoBehaviour {
     {
         // on verifie si on a besoin de mettre à jour les barres
         if (nb_bits_affiches == perso.max_bits || nb_octets_max <= nb_bits_affiches/8) { return; }
-
-        // on met à jour le nombre de bits affichés
-        Sprite[] sprites = Resources.LoadAll<Sprite>(bars_sprites_path);
 
         // on met à jour le nb max de bits affichés
         // nb_octets_max = sprites.Length - 1;
@@ -46,6 +74,8 @@ public class UI_BarsHandler : MonoBehaviour {
         // max_bits == 8 => sprites[1]
         // max_bits == 16 => sprites[2]
         // ...
+
+        print(sprites);
 
         int nb_octets = perso.max_bits / 8;
         if (perso.max_bits % 8 != 0) { nb_octets++; }
