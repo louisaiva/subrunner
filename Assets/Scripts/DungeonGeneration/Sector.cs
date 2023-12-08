@@ -155,7 +155,7 @@ public class Sector : MonoBehaviour
                 // print(hackin_os + " " + hackin_os.item_name);
                 Chest chest = transform.Find(room_name).transform.Find("chests").transform.GetChild(0).GetComponent<Chest>();
                 bool success = chest.grab(hackin_os);
-                while (!success)
+                for (int j = 0; j < 100 && !success; j++) 
                 {
                     // on supprime un item du chest
                     chest.inventory.removeRandomItem();

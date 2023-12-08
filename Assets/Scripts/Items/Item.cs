@@ -29,6 +29,9 @@ public class Item : MonoBehaviour, I_Descriptable
     public bool is_hoovered { get; set; }
     public GameObject description_ui;
 
+    // cursor
+    public CursorHandler cursor_handler;
+
     // unity functions
     protected void Awake()
     {
@@ -61,6 +64,9 @@ public class Item : MonoBehaviour, I_Descriptable
 
         // on récupère le description_ui
         description_ui = GameObject.Find("/ui/hoover_description");
+
+        // on récupère le cursor_handler
+        cursor_handler = GameObject.Find("/utils").GetComponent<CursorHandler>();
 
 
         // on vérifie si on est sur le sol
@@ -98,28 +104,41 @@ public class Item : MonoBehaviour, I_Descriptable
 
         // on vérifie si on se fait survoler par la souris
         Vector3 mouse_pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (is_showed && !is_on_ground)
+
+        if (is_showed)
         {
             if (GetComponent<BoxCollider2D>().OverlapPoint(mouse_pos))
             {
                 if (!is_hoovered)
                 {
-                    // on met à jour l'affichage
-                    description_ui.GetComponent<UI_HooverDescriptionHandler>().changeDescription(this);
+                    if (!is_on_ground)
+                    {
+                        // on met à jour la description
+                        description_ui.GetComponent<UI_HooverDescriptionHandler>().changeDescription(this);
+                    }
 
                     // on met à jour le fait qu'on est survolé
                     is_hoovered = true;
+
+                    // on change le cursor
+                    cursor_handler.SetCursor("hand");
                 }
             }
             else
             {
                 if (is_hoovered)
                 {
-                    // on met à jour l'affichage
-                    description_ui.GetComponent<UI_HooverDescriptionHandler>().removeDescription(this);
+                    if (!is_on_ground)
+                    {
+                        // on met à jour l'affichage
+                        description_ui.GetComponent<UI_HooverDescriptionHandler>().removeDescription(this);
+                    }
 
                     // on met à jour le fait qu'on est survolé
                     is_hoovered = false;
+
+                    // on change le cursor
+                    cursor_handler.SetCursor("arrow");
                 }
             }
         }
@@ -141,6 +160,9 @@ public class Item : MonoBehaviour, I_Descriptable
                     // on se fait drop par notre inventaire
                     transform.parent.GetComponent<Inventory>().dropItem(this);
                 }
+
+                // on change le cursor
+                cursor_handler.SetCursor("arrow");
             }
         }
     }
@@ -153,6 +175,12 @@ public class Item : MonoBehaviour, I_Descriptable
 
         // on met à jour l'affichage du ui_bg
         ui_bg.SetActive(is_showed && !is_on_ground);
+
+        // on met à jour is_hoovered
+        if (!is_showed && is_hoovered)
+        {
+            is_hoovered = false;
+        }
     }
 
     // transfer to ground

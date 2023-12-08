@@ -29,11 +29,9 @@
     - [ ] - des vieux bureaux pétés
 
 
+- [ ] - améliorer l'ia des ennemis
+    - [ ] - faire ennemi intelligent cac comme ça https://www.youtube.com/watch?v=6BrZryMz-ac
 
-
-- [ ] - ajouter items
-    - [x] - lunettes de vitesse : permettent de voir dans le noir
-    - [ ] - puce de hacking : permet de sélectionner un hack parmi plusieurs en maintenant la souris
 
 - [ ] - mettre des modifieurs d'items
     - [ ] - pour les hacks : stat de propagation automatique à un ennemi proche
@@ -42,8 +40,8 @@
 - [ ] - génération procédurale
     - [ ] - World.cs génère différents secteurs et les relie entre eux
     - [ ] - Sector.cs applique les bonnes textures (tiles) aux tilemaps de chaque Room
-    - [ ] - Sector.cs dit aux Rooms adequates de generer coffres, doors, computers, zombies
-    - [ ] - Room.cs génère les éléments de décor : objects, posters, tags, lights
+    - [ ] - Sector.cs dit aux Rooms adequates de generer *coffres*, doors, *computers*, *zombies*
+    - [ ] - Room.cs génère les éléments de décor : objects, *posters*, tags, *lights*
 
 
 # BUGS
@@ -107,3 +105,8 @@
     - [x] - faire des "avancements souples", que le joueur puisse avancer
             meme si y'a colliding si c un peu (tah dead cells)
     - [x] - appliquer des forces (knockback etc)
+
+
+- [x] - ajouter items
+    - [x] - lunettes de vitesse : permettent de voir dans le noir
+    - [x] - puce de hacking : permet de sélectionner un hack parmi plusieurs en maintenant la souris

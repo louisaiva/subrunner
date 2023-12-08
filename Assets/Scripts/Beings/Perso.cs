@@ -36,6 +36,7 @@ public class Perso : Attacker
     private GameObject current_hoover_hackable = null;
     private Hack current_hoover_hack = null;
     public float aide_a_la_visee = 0.5f; // aide à la visée, rayon autour de la souris pour les objets hackables
+    private CursorHandler cursor_handler;
 
 
     // global light
@@ -97,6 +98,9 @@ public class Perso : Attacker
 
         // on met à jour les interactions
         interact_layers = LayerMask.GetMask("Chests", "Computers");
+
+        // on récupère le cursor_handler
+        cursor_handler = GameObject.Find("/utils").GetComponent<CursorHandler>();
 
 
 
@@ -327,6 +331,9 @@ public class Perso : Attacker
                         // on change le material de l'objet
                         current_hoover_hackable.gameObject.GetComponent<I_Hackable>().outlineMe();
 
+                        // on change le cursor
+                        cursor_handler.SetCursor("target");
+
                         // on sort de la boucle
                         return;
                     }
@@ -338,9 +345,13 @@ public class Perso : Attacker
         // on met à jour le current_hoover_hackable.gameObject.GetComponent<I_Hackable>()
         if (current_hoover_hackable != null)
         {
+            // on change le material de l'objet
             current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
             current_hoover_hackable = null;
             current_hoover_hack = null;
+
+            // on remet le cursor à la normale
+            cursor_handler.SetCursor("arrow");
         }
     }
 
