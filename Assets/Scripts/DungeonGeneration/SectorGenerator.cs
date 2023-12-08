@@ -8,13 +8,13 @@ public class SectorGenerator : MonoBehaviour
     [Header("GENERATION PARAMETERS")]
     protected Vector2Int startPosition = new Vector2Int(0, 0);
 
-    private int iterations = 20;
-    public int walkLength = 5;
-    public bool startRandomlyEachIteration = false;
+    [SerializeField] private int iterations = 20;
+    [SerializeField] private int walkLength = 5;
+    [SerializeField] private bool startRandomlyEachIteration = false;
 
 
     [Header("ROOMS PARAMETERS")]
-    protected int nb_rooms = 5; // ! cela ne veut pas dire qu'on aura 5 salles, mais qu'on va essayer d'en avoir 5, il peut y avoir des doublons
+    [SerializeField] protected int nb_rooms = 5; // ! cela ne veut pas dire qu'on aura 5 salles, mais qu'on va essayer d'en avoir 5, il peut y avoir des doublons
     // [SerializeField]
     protected Vector2 roomDimensions = new Vector2(8f, 7.5f);
 
@@ -37,97 +37,26 @@ public class SectorGenerator : MonoBehaviour
 
         // on récupère le world
         world = GameObject.Find("/world");
-
-        // on lance la génération procédurale
-        // RunProceduralGeneration();
     }
 
-
-    /* public void RunProceduralGeneration()
+    
+    public void GenerateSectorHashSets(ref HashSet<Vector2Int> roomsPositions, ref HashSet<Vector2Int> corridorsPositions)
     {
-
-        if (already_generated)
-        {
-            // on clean le world
-            foreach (Transform child in world.transform)
-            {
-                // on vérifie qu'on supprime pas la global light
-                if (child.gameObject.name == "global_light") { continue; }
-
-                // on supprime les objets qui ont setactive(true)
-                if (child.gameObject.activeSelf)
-                {
-                    Destroy(child.gameObject);
-                }
-            }
-        }
-
-
         // on génère un premier brouillon
         HashSet<Vector2Int> floorPositions = RandomWalkWorldGeneration();
 
         // on séléctionne N positions aléatoires -> les salles
-        HashSet<Vector2Int> roomsPositions = RandomlyChooseRooms(floorPositions);
+        roomsPositions = RandomlyChooseRooms(floorPositions);
         floorPositions.ExceptWith(roomsPositions);
 
         // on séléctionne les corridors
-        HashSet<Vector2Int> corridorsPositions = BuildCorridors(floorPositions, roomsPositions);
+        corridorsPositions = BuildCorridors(floorPositions, roomsPositions);
         floorPositions.ExceptWith(corridorsPositions);
         corridorsPositions.ExceptWith(roomsPositions);
-
-
-        if (visualise)
-        {
-            // on supprime le dernier chemin visualisé
-            tilemapVisualiser.Clear();
-
-            // on affiche le chemin
-            // tilemapVisualiser.PaintFloorTiles(floorPositions);
-            tilemapVisualiser.PaintRoomsTiles(roomsPositions);
-            tilemapVisualiser.PaintCorridorsTiles(corridorsPositions);
-        }
-
-        // on génère les salles
-        GenerateRooms(roomsPositions, corridorsPositions);
-
-        // on génère les corridors
-        GenerateCorridors(corridorsPositions, roomsPositions);
-
-        // on met à jour already_generated
-        already_generated = true;
-
-    } */
-
-    public void GenerateRoomsAndCorridors(GameObject parent)
-    {
-        // on génère la même chose que dans RunProceduralGeneration
-        // sans l'affichage
-        // et en mettant le parent
-
-        // on récupère les variables du parent
-        iterations = parent.GetComponent<Sector>().GetIterations();
-        walkLength = parent.GetComponent<Sector>().GetWalkLength();
-        startRandomlyEachIteration = parent.GetComponent<Sector>().GetStartRandomlyEachIteration();
-        nb_rooms = parent.GetComponent<Sector>().GetMaxNbRooms();
-
-        // on génère un premier brouillon
-        HashSet<Vector2Int> floorPositions = RandomWalkWorldGeneration();
-
-        // on séléctionne N positions aléatoires -> les salles
-        HashSet<Vector2Int> roomsPositions = RandomlyChooseRooms(floorPositions);
-        floorPositions.ExceptWith(roomsPositions);
-
-        // on séléctionne les corridors
-        HashSet<Vector2Int> corridorsPositions = BuildCorridors(floorPositions, roomsPositions);
-        floorPositions.ExceptWith(corridorsPositions);
-        corridorsPositions.ExceptWith(roomsPositions);
-
-        // on génère les salles
-        GenerateRooms(roomsPositions, corridorsPositions, parent);
-
-        // on génère les corridors
-        GenerateCorridors(corridorsPositions, roomsPositions, parent);
     }
+
+
+
 
     // GENERATION FUNCTIONS
     protected HashSet<Vector2Int> RandomWalkWorldGeneration()
@@ -185,10 +114,37 @@ public class SectorGenerator : MonoBehaviour
         // on crée un hashset de positions de corridors
         HashSet<Vector2Int> corridorsPositions = new HashSet<Vector2Int>();
 
-        // le but est de relier les salles entre elles avec le moins de corridors possible
-        // on va donc relier chaque salle à la salle la plus proche
+        // le but est de relier les salles entre elles
+        
 
-        // on parcourt les salles
+        // on crée une List de positions de salles
+        List<Vector2Int> roomsPositionsList = roomsPositions.ToList();
+
+        // on choisit une salle au hasard
+        Vector2Int current_room = roomsPositionsList[Random.Range(0, roomsPositionsList.Count)];
+
+        // on supprime la salle de la liste
+        roomsPositionsList.Remove(current_room);
+
+        while (roomsPositionsList.Count > 0)
+        {
+            // on récupère la salle la plus proche
+            Vector2Int closest_room = GetClosestRoomPosition(current_room, roomsPositionsList);
+
+            // on génère le chemin entre les deux salles
+            HashSet<Vector2Int> path = ProceduralGenerationAlgo.WalkFromAToB(current_room, closest_room);
+
+            // on ajoute le chemin à corridorsPositions
+            corridorsPositions.UnionWith(path);
+
+            // on met à jour la salle courante
+            current_room = closest_room;
+
+            // on supprime la salle de la liste
+            roomsPositionsList.Remove(current_room);
+        }
+
+        /* // on parcourt les salles
         foreach (var roomPosition in roomsPositions)
         {
             // on récupère la salle la plus proche
@@ -199,7 +155,7 @@ public class SectorGenerator : MonoBehaviour
 
             // on ajoute le chemin à corridorsPositions
             corridorsPositions.UnionWith(path);
-        }
+        } */
 
         return corridorsPositions;
 
@@ -207,7 +163,7 @@ public class SectorGenerator : MonoBehaviour
 
     // ROOMS FUNCTIONS
 
-    protected void GenerateRooms(HashSet<Vector2Int> roomsPositions, HashSet<Vector2Int> corridorsPositions, GameObject parent = null)
+    public void GenerateRooms(HashSet<Vector2Int> roomsPositions, HashSet<Vector2Int> corridorsPositions, GameObject parent = null)
     {
         // on parcourt les positions de salles
         foreach (var position in roomsPositions)
@@ -266,7 +222,7 @@ public class SectorGenerator : MonoBehaviour
 
     // CORRIDORS FUNCTIONS
 
-    protected void GenerateCorridors(HashSet<Vector2Int> corridorsPositions, HashSet<Vector2Int> roomsPositions, GameObject parent = null)
+    public void GenerateCorridors(HashSet<Vector2Int> corridorsPositions, HashSet<Vector2Int> roomsPositions, GameObject parent = null)
     {
         // on parcourt les positions des corridors
         foreach (var position in corridorsPositions)
@@ -377,7 +333,7 @@ public class SectorGenerator : MonoBehaviour
 
     // HELPERS
 
-    protected Vector2Int GetClosestRoomPosition(Vector2Int position, HashSet<Vector2Int> roomsPositions)
+    protected Vector2Int GetClosestRoomPosition(Vector2Int position, List<Vector2Int> roomsPositions)
     {
         // on initialise la position la plus proche
         Vector2Int closestRoomPosition = new Vector2Int(0, 0);

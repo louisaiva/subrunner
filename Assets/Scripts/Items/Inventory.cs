@@ -356,6 +356,24 @@ public class Inventory : MonoBehaviour {
         return true;
     }
 
+    public void forceAddItem(Item item)
+    {
+        // on ajoute de force un item à l'inventaire
+
+        // on vérifie qu'on est pas déjà plein
+        if (!scalable && getItems().Count >= max_items) {
+            // on supprime le dernier item
+            Destroy(getItems()[getItems().Count - 1].gameObject);
+            print("dernier item supprimé, nb items = " + getItems().Count);
+        }
+
+        // on ajoute l'item
+        item.transform.SetParent(transform);
+
+        // on règle la scale à 1
+        item.transform.localScale = new Vector3(1, 1, 1);
+    }
+
     public void createItem(string item_name)
     {
         // on crée un item

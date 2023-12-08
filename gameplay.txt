@@ -1,3 +1,7 @@
+# projet créé le 19 nov 2023
+
+
+
 SCENARIO :
 
     notre perso est un hacker qui vit dans les souterrains d'une ville apocalyptique zombiesque dystopiak
@@ -59,7 +63,7 @@ SKILLTREES :
     les ordinateurs doivent être hackés pour accéder à la récompense.
 
 
-TYPE DE ROOMS :
+TYPE DE SECTEURS :
 
     CC - controle center. salle centrale où toutes les sécurités sont appliquées. boss
     
@@ -82,7 +86,7 @@ TYPE DE ROOMS :
     HA - grand Hall vide avec des trucs et beaucoup de zombooooos
 
 
-GENERATION PROCEDURALE :
+GENERATION PROCEDURALE 1E EBAUCHE :
 
     la génération du monde se fait en plusieurs étapes :
 
@@ -122,3 +126,22 @@ GENERATION PROCEDURALE :
             -pré création de salles longue
             -configuration du World.cs personnalisé
             -peut-etre des salles repetitives
+
+
+GENERATION PROCEDURALE 2E EBAUCHE :
+
+    on crée des secteurs avant de créer les rooms.
+    World.cs crée et organise les secteurs (cf types de secteurs plus haut)
+    Sector.cs crée et organise ses propres rooms, items, etc
+    Room.cs gère ses propres éléments décoratifs (posters, lights)
+
+    algo :
+        -World crée des Sector.
+            -Il récup une List de Hashset obtenue via SectorGenerator (WalkMan algo)
+            -On vérifie qu'un secteur relie toutes ses salles
+        -World récupère les tailles des Sectors générés et créé un Schéma global du monde (TK Algo)
+        -World définit quels sectors sont de quel type.
+        -World lance la création finale en passant a chaque Sector son Hashset et sa position globale
+            -Chaque Sector applique son type -> change les tiles de ses rooms
+            -Chaque Sector applique son type -> gère les ennemis
+            -Chaque Sector applique son type -> place des coffres, etc

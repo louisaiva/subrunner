@@ -13,10 +13,10 @@ public class Sector : MonoBehaviour
     // mise en place des bonnes tiles sur les tilemaps en fonction du skin du secteur
 
     [Header("SECTOR GENERATION")]
-    [SerializeField] private int iterations = 20;
-    [SerializeField] private int walkLength = 5;
-    [SerializeField] private bool startRandomlyEachIteration = false;
-    [SerializeField] private int max_nb_rooms = 10;
+    // [SerializeField] private int iterations = 20;
+    // [SerializeField] private int walkLength = 5;
+    // [SerializeField] private bool startRandomlyEachIteration = false;
+    // [SerializeField] private int max_nb_rooms = 10;
     [SerializeField] private SectorGenerator sectorGenerator;
 
     // [Header("SECTOR TILES")]
@@ -73,7 +73,7 @@ public class Sector : MonoBehaviour
     }
 
     // génère le secteur
-    public void GenerateSector()
+    /* public void GenerateSector()
     {
 
         // on vide le secteur
@@ -109,6 +109,43 @@ public class Sector : MonoBehaviour
             GenerateEnemies();
         }
 
+    } */
+
+    public void GenerateSelf(HashSet<Vector2Int> roomPositions, HashSet<Vector2Int> corrPositions)
+    {
+        // on vide le secteur
+        Clear();
+
+        // on génère les salles et les couloirs
+        sectorGenerator.GenerateRooms(roomPositions, corrPositions,this.gameObject);
+        sectorGenerator.GenerateCorridors(corrPositions, roomPositions, this.gameObject);
+
+        Dictionary<string, int> emplacements_interactifs = new Dictionary<string, int>();
+
+        // on lance l'initialisation des salles
+        foreach (Transform child in transform)
+        {
+            // on vérifie que ce n'est pas le parent des ennemis
+            if (child.gameObject.name == "enemies")
+            {
+                continue;
+            }
+
+            // on récupère la salle
+            Room room = child.GetComponent<Room>();
+            room.init();
+            emplacements_interactifs[room.gameObject.name] = room.GetNbEmplacementsInteractifs();
+        }
+
+        // on génère les objets interactifs
+        GenerateInteractifs(emplacements_interactifs);
+
+
+        // on génère les ennemis
+        if (!isSafe)
+        {
+            GenerateEnemies();
+        }
     }
 
     // génère les objets interactifs
@@ -151,16 +188,10 @@ public class Sector : MonoBehaviour
             if (i == nb_chests - 1)
             {
                 Item hackin_os = Resources.Load<Item>("prefabs/items/legendary/hackin_os");
-                hackin_os = Instantiate(hackin_os);
+                hackin_os = Instantiate(hackin_os, new Vector3(0,0,1000), Quaternion.identity);
                 // print(hackin_os + " " + hackin_os.item_name);
                 Chest chest = transform.Find(room_name).transform.Find("chests").transform.GetChild(0).GetComponent<Chest>();
-                bool success = chest.grab(hackin_os);
-                for (int j = 0; j < 100 && !success; j++) 
-                {
-                    // on supprime un item du chest
-                    chest.inventory.removeRandomItem();
-                    success = chest.grab(hackin_os); 
-                }
+                chest.forceGrab(hackin_os);
             }
 
             // on décrémente le nombre d'emplacements interactifs disponibles
@@ -258,22 +289,4 @@ public class Sector : MonoBehaviour
         }
     }
 
-
-    // GETTERS
-    public int GetIterations()
-    {
-        return iterations;
-    }
-    public int GetWalkLength()
-    {
-        return walkLength;
-    }
-    public bool GetStartRandomlyEachIteration()
-    {
-        return startRandomlyEachIteration;
-    }
-    public int GetMaxNbRooms()
-    {
-        return max_nb_rooms;
-    }
 }

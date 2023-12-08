@@ -35,11 +35,19 @@ public class WorldGenerator : MonoBehaviour
         // on génère les secteurs
         for (int i = 0; i < nb_sectors; i++)
         {
+
+            // on crée 2 HashSets par secteur (rooms et corridors)
+            HashSet<Vector2Int> rooms = new HashSet<Vector2Int>();
+            HashSet<Vector2Int> corridors = new HashSet<Vector2Int>();
+
+            // on remplit les hashsets via sector generator
+            GetComponent<SectorGenerator>().GenerateSectorHashSets(ref rooms, ref corridors);
+
             // on instancie le secteur
             GameObject sector = Instantiate(sector_prefab, world.transform);
 
             // on génère le secteur
-            sector.GetComponent<Sector>().GenerateSector();
+            sector.GetComponent<Sector>().GenerateSelf(rooms, corridors);
 
             // on l'ajoute à la liste des secteurs
             sectors.Add(sector);

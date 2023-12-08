@@ -95,6 +95,11 @@ public class Chest : MonoBehaviour, I_Interactable
         return inventory.addItem(item);
     }
 
+    public void forceGrab(Item item)
+    {
+        inventory.forceAddItem(item);
+    }
+
     // INTERACTIONS
     public bool isInteractable()
     {
