@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.Tilemaps;
 
 public class Sector : MonoBehaviour
 {
@@ -12,8 +13,10 @@ public class Sector : MonoBehaviour
     // répartition des objets interactifs dans les salles (ennemis, chests, computers, etc)
     // mise en place des bonnes tiles sur les tilemaps en fonction du skin du secteur
 
-    [Header("SECTOR GENERATION")]
+    [Header("SECTOR")]
     [SerializeField] private SectorGenerator sectorGenerator;
+
+    
 
     // [Header("SECTOR TILES")]
     // [SerializeField] private string sectorSkin = "sector_1";
@@ -31,6 +34,16 @@ public class Sector : MonoBehaviour
     // private GameObject chest_prefab;
     [SerializeField] private int nb_computers = 3;
     // private GameObject computer_prefab;
+
+
+    [Header("SECTOR TUYAUX")]
+    [SerializeField] private bool hasTuyaux = true;
+    [SerializeField] private HashSet<Vector2Int> tuyaux_grey = new HashSet<Vector2Int>();
+    [SerializeField] private HashSet<Vector2Int> tuyaux_blue = new HashSet<Vector2Int>();
+    [SerializeField] private int iterations = 30;
+    [SerializeField] private int walkLength = 20;
+    [SerializeField] private bool startRandom = false;
+
 
     // functions
     void Awake()
@@ -122,7 +135,7 @@ public class Sector : MonoBehaviour
         foreach (Transform child in transform)
         {
             // on vérifie que ce n'est pas le parent des ennemis
-            if (child.gameObject.name == "enemies")
+            if (child.gameObject.name == "enemies" || child.gameObject.name == "tm")
             {
                 continue;
             }
@@ -141,6 +154,12 @@ public class Sector : MonoBehaviour
         if (!isSafe)
         {
             GenerateEnemies();
+        }
+
+        // on génère les tuyaux
+        if (hasTuyaux)
+        {
+            GenerateTuyaux();
         }
     }
 
@@ -236,6 +255,80 @@ public class Sector : MonoBehaviour
         }
     }
 
+
+    // génère les tuyaux
+    private void GenerateTuyaux()
+    {
+        // on déclare le path des tiles
+        string[] tuyaux_tiles_path = new string[2] {"tilesets/tuyau_grey","tilesets/tuyau_blue"};
+        string[] tuyaux_tm_path = new string[2] {"tm/tuyaux_grey","tm/tuyaux_blue"};
+
+        // liste des réseaux de tuyaux
+        List<HashSet<Vector2Int>> tuyaux_total = new List<HashSet<Vector2Int>>();
+        tuyaux_total.Add(tuyaux_grey);
+        tuyaux_total.Add(tuyaux_blue);
+
+        for (int i = 0; i < tuyaux_total.Count; i++)
+        {
+
+            // on récup le réseau de tuyau
+            HashSet<Vector2Int> tuyau = tuyaux_total[i];
+
+            // on génère les tiles
+            tuyau = GenerateTuyauPath();
+
+            // on récupère le tilemap
+            Tilemap tuyau_tm = transform.Find(tuyaux_tm_path[i]).GetComponent<Tilemap>();
+
+            // on récupère la tilebase
+            TileBase tuyau_tile = Resources.Load<TileBase>(tuyaux_tiles_path[i]);
+
+            // on peint la tilemap avec notre tilebase et les positions du hashset
+            foreach (Vector2Int position in tuyau)
+            {
+                tuyau_tm.SetTile(new Vector3Int(position.x, position.y, 0), tuyau_tile);
+            }
+        }
+
+    }
+
+    private HashSet<Vector2Int> GenerateTuyauPath()
+    {
+
+        // on définit les paramètres de la génération des tuyaux
+        // on utilise le walkinMan
+
+        // on génère n fois le chemin (n = iterations) pour avoir un gros réseau
+        // de tuyaux
+
+        // on définit la position de départ
+        Vector2Int currentPosition = new Vector2Int(0,0);
+
+
+        // on génère le chemin total
+        HashSet<Vector2Int> tuyaux = new HashSet<Vector2Int>();
+        for (int i = 0; i < iterations; i++)
+        {
+            // on récupère le seed
+            int seed = Random.Range(0, 1000000);
+
+            // on génère le chemin
+            var path = ProceduralGenerationAlgo.SimpleRandomWalk(currentPosition, walkLength, seed);
+
+            // on ajoute le chemin a tuyaux
+            tuyaux.UnionWith(path);
+
+            // on choisit une position de départ (si on veut démarrer aléatoirement)
+            if (startRandom)
+            {
+                currentPosition = tuyaux.ElementAt(Random.Range(0, tuyaux.Count));
+            }
+        }
+
+        return tuyaux;
+    }
+
+
     // ONCE FONCTIONS
     public void GenerateSingleEnemy()
     {
@@ -276,6 +369,14 @@ public class Sector : MonoBehaviour
                 foreach (Transform child2 in child)
                 {
                     Destroy(child2.gameObject);
+                }
+            }
+            else if (child.gameObject.name == "tm")
+            {
+                // on vide les tilemaps
+                foreach (Transform child2 in child)
+                {
+                    child2.GetComponent<Tilemap>().ClearAllTiles();
                 }
             }
             else

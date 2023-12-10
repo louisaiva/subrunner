@@ -119,6 +119,10 @@ public class Room : MonoBehaviour {
     }
 
     // functions
+    void Start()
+    {
+        // init();
+    }
 
     public void init()
     {
