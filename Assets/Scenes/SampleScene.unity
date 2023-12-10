@@ -484,7 +484,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad3ad34ccf8ecd5419d907d7f4054826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nb_sectors: 1
+  nb_sectors: 2
   sectors: []
 --- !u!4 &45230417
 Transform:
@@ -515,8 +515,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbae77a97eda30942bd4b1eccd740e17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  iterations: 20
   walkLength: 5
   startRandomlyEachIteration: 0
+  nb_rooms: 10
 --- !u!1001 &112840431
 PrefabInstance:
   m_ObjectHideFlags: 0

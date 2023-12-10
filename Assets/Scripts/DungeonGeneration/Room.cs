@@ -111,7 +111,7 @@ public class Room : MonoBehaviour {
         if ((int) bg.GetComponent<Tilemap>().cellBounds.xMin < x) { x = (int) bg.GetComponent<Tilemap>().cellBounds.xMin; }
         if ((int) bg.GetComponent<Tilemap>().cellBounds.yMin < y) { y = (int) bg.GetComponent<Tilemap>().cellBounds.yMin; }
 
-        print(gameObject.name + " : tilemap dimensions : " + width + " " + height + " " + x + " " + y);
+        // print(gameObject.name + " : tilemap dimensions : " + width + " " + height + " " + x + " " + y);
 
         // on initialise la salle
         // init();

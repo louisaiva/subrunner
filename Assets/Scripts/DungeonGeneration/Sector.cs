@@ -13,10 +13,6 @@ public class Sector : MonoBehaviour
     // mise en place des bonnes tiles sur les tilemaps en fonction du skin du secteur
 
     [Header("SECTOR GENERATION")]
-    // [SerializeField] private int iterations = 20;
-    // [SerializeField] private int walkLength = 5;
-    // [SerializeField] private bool startRandomlyEachIteration = false;
-    // [SerializeField] private int max_nb_rooms = 10;
     [SerializeField] private SectorGenerator sectorGenerator;
 
     // [Header("SECTOR TILES")]
