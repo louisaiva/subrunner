@@ -1,11 +1,14 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using System.Linq;
 
 
 public static class ProceduralGenerationAlgo
 {
     
+    // room functions
+
     public static HashSet<Vector2Int> SimpleRandomWalk(Vector2Int startPosition, int walkLength, int seed=0)
     {
         HashSet<Vector2Int> path = new HashSet<Vector2Int>();
@@ -57,6 +60,66 @@ public static class ProceduralGenerationAlgo
         return path;
     }
 
+
+    // corridor functions
+
+    public static HashSet<Vector2Int> RandomWalkCorridorNetwork(Vector2Int start, int corridor_nb, Vector2Int corridors_length_bounds,float corr_random_start=0f)
+    {
+        // génère un réseau de corridors aléatoires
+        HashSet<Vector2Int> corridors = new HashSet<Vector2Int>();
+
+        // on ajoute les corridors
+        for (int i = 0; i < corridor_nb; i++)
+        {
+            // on vérifie si on a un random start
+            if (Random.Range(0f, 1f) < corr_random_start && corridors.Count > 0)
+            {
+                // on génère une nouvelle position de départ
+                // Random randomizer = new Random();
+                // Vector2Int[] asArray = corridors.ToList();
+                // start = asArray[Random.Next(asArray.length)];
+                start = corridors.ElementAt(Random.Range(0, corridors.Count));
+            }
+
+            // on génère un corridor
+            var corridor = RandomSingleWalkCorridor(start, Random.Range(corridors_length_bounds.x, corridors_length_bounds.y));
+
+            // on ajoute le corridor
+            corridors.UnionWith(corridor);
+
+            // on met à jour la position de départ
+            start = corridor[corridor.Count - 1];
+        }
+
+        return corridors;
+    }
+
+    public static List<Vector2Int> RandomSingleWalkCorridor(Vector2Int start, int corridor_length)
+    {
+        List<Vector2Int> path = new List<Vector2Int>();
+
+        // on ajoute la position de départ
+        path.Add(start);
+        var previousPosition = start;
+        
+        // on choisit une direction aléatoire
+        var direction = GetRandomDirection(new System.Random());
+
+        // on génère le chemin
+        for (int i = 0; i < corridor_length; i++)
+        {
+            // on génère une nouvelle position
+            var newPosition = previousPosition + direction;
+
+            // on ajoute la nouvelle position
+            path.Add(newPosition);
+
+            // on met à jour la position précédente
+            previousPosition = newPosition;
+        }
+
+        return path;
+    }
 
     // direction functions
 

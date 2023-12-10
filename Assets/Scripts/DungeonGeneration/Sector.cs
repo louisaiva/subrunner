@@ -15,6 +15,7 @@ public class Sector : MonoBehaviour
 
     [Header("SECTOR")]
     [SerializeField] private SectorGenerator sectorGenerator;
+    [SerializeField] private PreSector preSec;
 
     
 
@@ -40,9 +41,13 @@ public class Sector : MonoBehaviour
     [SerializeField] private bool hasTuyaux = true;
     [SerializeField] private HashSet<Vector2Int> tuyaux_grey = new HashSet<Vector2Int>();
     [SerializeField] private HashSet<Vector2Int> tuyaux_blue = new HashSet<Vector2Int>();
-    [SerializeField] private int iterations = 30;
-    [SerializeField] private int walkLength = 20;
-    [SerializeField] private bool startRandom = false;
+    [SerializeField] private int corr_number = 30;
+    [SerializeField] private Vector2Int corr_length_min_max = new Vector2Int(5, 30);
+    [SerializeField] private float corr_random_start_chance = 0.5f;
+
+    [Header("SECTOR CEILING")]
+    [SerializeField] private GameObject ceiling_prefab;
+    private Transform ceiling_parent;
 
 
     // functions
@@ -57,6 +62,12 @@ public class Sector : MonoBehaviour
 
         // on récupère le prefab des ennemis
         enemy_prefab = Resources.Load<GameObject>("prefabs/beings/enemies/zombo");
+
+        // on récupère le prefab du plafond
+        ceiling_prefab = Resources.Load<GameObject>("prefabs/sectors/ceiling");
+
+        // on récupère le parent du plafond
+        ceiling_parent = transform.Find("ceiling");
     }
 
     void Update()
@@ -120,10 +131,17 @@ public class Sector : MonoBehaviour
 
     } */
 
-    public void GenerateSelf(HashSet<Vector2Int> roomPositions, HashSet<Vector2Int> corrPositions)
+    public void GenerateSelf(PreSector preSec)
     {
         // on vide le secteur
         Clear();
+
+        // on intègre le pre-secteur
+        this.preSec = preSec;
+
+        // on récupère les hashsets des positions des salles et des couloirs
+        HashSet<Vector2Int> roomPositions = preSec.rooms;
+        HashSet<Vector2Int> corrPositions = preSec.corridors;
 
         // on génère les salles et les couloirs
         sectorGenerator.GenerateRooms(roomPositions, corrPositions,this.gameObject);
@@ -135,10 +153,7 @@ public class Sector : MonoBehaviour
         foreach (Transform child in transform)
         {
             // on vérifie que ce n'est pas le parent des ennemis
-            if (child.gameObject.name == "enemies" || child.gameObject.name == "tm")
-            {
-                continue;
-            }
+            if (child.GetComponent<Room>() == null) { continue;}
 
             // on récupère la salle
             Room room = child.GetComponent<Room>();
@@ -161,6 +176,9 @@ public class Sector : MonoBehaviour
         {
             GenerateTuyaux();
         }
+
+        // on génère le plafond
+        GenerateCeiling();
     }
 
     // génère les objets interactifs
@@ -301,33 +319,36 @@ public class Sector : MonoBehaviour
         // on génère n fois le chemin (n = iterations) pour avoir un gros réseau
         // de tuyaux
 
-        // on définit la position de départ
-        Vector2Int currentPosition = new Vector2Int(0,0);
-
+        // on définit la position de départ (prendre la position du milieu du secteur)
+        Vector2 currentPosition = preSec.GetCentralWorldPos();
+        Vector2Int start = new Vector2Int((int)currentPosition.x, (int)currentPosition.y);
 
         // on génère le chemin total
-        HashSet<Vector2Int> tuyaux = new HashSet<Vector2Int>();
-        for (int i = 0; i < iterations; i++)
-        {
-            // on récupère le seed
-            int seed = Random.Range(0, 1000000);
-
-            // on génère le chemin
-            var path = ProceduralGenerationAlgo.SimpleRandomWalk(currentPosition, walkLength, seed);
-
-            // on ajoute le chemin a tuyaux
-            tuyaux.UnionWith(path);
-
-            // on choisit une position de départ (si on veut démarrer aléatoirement)
-            if (startRandom)
-            {
-                currentPosition = tuyaux.ElementAt(Random.Range(0, tuyaux.Count));
-            }
-        }
+        HashSet<Vector2Int> tuyaux = ProceduralGenerationAlgo.RandomWalkCorridorNetwork(start, corr_number, corr_length_min_max, corr_random_start_chance);
 
         return tuyaux;
     }
 
+
+    // génère le plafond (pour cacher les tuyaux etc)
+    public void GenerateCeiling()
+    {
+        // on récupère le HashSet du plafond
+        HashSet<Vector2Int> ceiling = preSec.ceiling;
+
+        // on parcourt le hashset et on place les tiles
+        foreach (Vector2Int position in ceiling)
+        {
+            // on instancie le plafond
+            GameObject ceiling_tile = Instantiate(ceiling_prefab, ceiling_parent);
+
+            // on met à jour le parent du plafond
+            ceiling_tile.transform.SetParent(ceiling_parent);
+
+            // on met à jour la position du plafond
+            ceiling_tile.transform.localPosition = new Vector3(position.x*8f, position.y*7.5f, 0);
+        }
+    }
 
     // ONCE FONCTIONS
     public void GenerateSingleEnemy()
@@ -363,7 +384,7 @@ public class Sector : MonoBehaviour
         // on détruit tous les enfants du secteur
         foreach (Transform child in transform)
         {
-            if (child.gameObject.name == "enemies")
+            if (child.gameObject.name == "enemies" || child.gameObject.name == "ceiling")
             {
                 // on détruit tous les enfants du parent des ennemis
                 foreach (Transform child2 in child)

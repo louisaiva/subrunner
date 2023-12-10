@@ -16,7 +16,7 @@ public class WorldGenerator : MonoBehaviour
     [Header("pre-sectors")]
     [SerializeField] private List<PreSector> preSecteurs = new List<PreSector>();
     // private Dictionary<PreSector,Vector2Int> sectors_pos = new Dictionary<PreSector, Vector2Int>();
-    protected Vector2 roomDimensions = new Vector2(8f, 8f);
+    protected Vector2 roomDimensions = new Vector2(8f, 7.5f);
 
     // unity functions
     void Start()
@@ -64,11 +64,11 @@ public class WorldGenerator : MonoBehaviour
 
 
             // on récupère les hashsets
-            HashSet<Vector2Int> rooms = preSecteurs[i].rooms;
-            HashSet<Vector2Int> corridors = preSecteurs[i].corridors;
+            // HashSet<Vector2Int> rooms = preSecteurs[i].rooms;
+            // HashSet<Vector2Int> corridors = preSecteurs[i].corridors;
 
             // on génère le secteur
-            sector.GetComponent<Sector>().GenerateSelf(rooms, corridors);
+            sector.GetComponent<Sector>().GenerateSelf(preSecteurs[i]);
 
             // on l'ajoute à la liste des secteurs
             sectors.Add(sector);
@@ -215,12 +215,18 @@ public class PreSector
     public HashSet<Vector2Int> tiles = new HashSet<Vector2Int>();
     public HashSet<Vector2Int> rooms = new HashSet<Vector2Int>();
     public HashSet<Vector2Int> corridors = new HashSet<Vector2Int>();
+    public HashSet<Vector2Int> ceiling = new HashSet<Vector2Int>();
+
+
 
     public int x;
     public int y;
 
     public int w;
     public int h;
+
+    // dimensions d'une salle
+    protected Vector2 roomDimensions = new Vector2(8f, 7.5f);
 
     // constructor
     public PreSector(HashSet<Vector2Int> rooms, HashSet<Vector2Int> corridors)
@@ -240,6 +246,9 @@ public class PreSector
         // on calcule la taille du pre-secteur
         w = tiles.Max(x => x.x) - x + 1;
         h = tiles.Max(x => x.y) - y + 1;
+
+        // on calcule le plafond
+        ceiling = CreateCeiling();
     }
 
     // functions
@@ -282,4 +291,34 @@ public class PreSector
         // on retourne le centre y
         return y + h / 2f;
     }
+
+    public Vector2 GetCentralWorldPos()
+    {
+        // on retourne la position centrale à l'échelle du monde
+        return new Vector2((cx() * roomDimensions.x), (cy() * roomDimensions.y));
+    }
+
+
+    // utils
+    private HashSet<Vector2Int> CreateCeiling()
+    {
+        // on récupère le plafond
+        HashSet<Vector2Int> ceiling = new HashSet<Vector2Int>();
+
+        // renvoit un hashet qui est l'inverse des tiles, de dimension w*h
+        for (int i = 0; i < w; i++)
+        {
+            for (int j = 0; j < h; j++)
+            {
+                ceiling.Add(new Vector2Int(x + i, y + j));
+            }
+        }
+
+        // on enlève les tiles
+        ceiling.ExceptWith(tiles);
+
+        // on retourne le plafond
+        return ceiling;
+    }
+
 }
