@@ -50,7 +50,10 @@ public class WorldGenerator : MonoBehaviour
         visualizePreSectors();
 
         // 4 - on sépare les pré-secteurs
-        StartCoroutine(separatePreSectors());
+        separatePreSectors();
+
+        // 5 - on génère les secteurs
+        generateSectors();
     }
 
     public void ConstructWorld()
@@ -104,7 +107,7 @@ public class WorldGenerator : MonoBehaviour
 
 
     // STEERING SEPARATION BEHAVIOUR
-    private IEnumerator separatePreSectors()
+    private IEnumerator visibleSeparatePreSectors()
     {
         int max_iterations = 500;
 
@@ -115,13 +118,28 @@ public class WorldGenerator : MonoBehaviour
             int nb_collisions = separateIteration();
 
             // on affiche dans la console le nombre de collisions
-            print("iteration " + iteration + " : " + nb_collisions + " collisions");
+            // print("iteration " + iteration + " : " + nb_collisions + " collisions");
 
             // on vérifie qu'on a pas de collisions
             if (nb_collisions == 0) { break; }
 
             // on attend une demiseconde
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.02f);
+        }
+
+    }
+    private void separatePreSectors()
+    {
+        int max_iterations = 500;
+
+        // on sépare les secteurs
+        for (int iteration = 0; iteration < max_iterations; iteration++)
+        {
+            // on sépare les secteurs
+            int nb_collisions = separateIteration();
+
+            // on vérifie qu'on a pas de collisions
+            if (nb_collisions == 0) { break; }
         }
 
     }
@@ -136,7 +154,7 @@ public class WorldGenerator : MonoBehaviour
         {
             for (int j=i+1; j<preSecteurs.Count;j++)
             {
-                print("on teste la collision entre "+i+" et "+j);
+                // print("on teste la collision entre "+i+" et "+j);
 
                 // on récupère les pre-secteurs
                 PreSector preSec1 = preSecteurs[i];
@@ -145,7 +163,7 @@ public class WorldGenerator : MonoBehaviour
                 // on vérifie si les secteurs collident
                 if (preSec1.isColliding(preSec2))
                 {
-                    print("collision entre "+i+" et "+j);
+                    // print("collision entre "+i+" et "+j);
 
                     // on récupère la séparation
                     Vector2 separation = findSeparationVector(preSec1, preSec2);
@@ -264,18 +282,11 @@ public class WorldGenerator : MonoBehaviour
             sectors.Add(sector);
 
             // on récupère la position
-            Vector3 pos = new Vector3(preSecteurs[i].x, preSecteurs[i].y, 0);
-
-            // on multiplie par la taille des salles
-            pos.x *= roomDimensions.x;
-            pos.y *= roomDimensions.y;
+            Vector3 pos = new Vector3( preSecteurs[i].x * roomDimensions.x, preSecteurs[i].y * roomDimensions.y, 0f);
 
             // on déplace le secteur
             sector.transform.localPosition = pos;
             print("on deplace le secteur en " + pos);
-
-            // * temporaire * on déplace le secteur
-            // sector.transform.position = new Vector3(i * 100, 0, 0);
         }
     }
 
@@ -321,8 +332,50 @@ public class PreSector
         w = tiles.Max(x => x.x) - x + 1;
         h = tiles.Max(x => x.y) - y + 1;
 
+        // on recale les tiles pour que le min soit en 0,0
+        recalibrateTiles();
+
         // on calcule le plafond
         ceiling = CreateCeiling();
+    }
+
+    private void recalibrateTiles()
+    {
+        // ROOMS
+
+        // on crée un hashset temporaire
+        HashSet<Vector2Int> temp = new HashSet<Vector2Int>();
+
+        // on parcourt les rooms
+        foreach (Vector2Int room in rooms)
+        {
+            // on ajoute le room recalibré
+            temp.Add(new Vector2Int(room.x - x, room.y - y));
+        }
+
+        // on remplace les rooms
+        rooms = temp;
+
+        // CORRIDORS
+
+        // on crée un hashset temporaire
+        temp = new HashSet<Vector2Int>();
+
+        // on parcourt les corridors
+        foreach (Vector2Int corr in corridors)
+        {
+            // on ajoute le corr recalibré
+            temp.Add(new Vector2Int(corr.x - x, corr.y - y));
+        }
+
+        // on remplace les corridors
+        corridors = temp;
+
+        // TILES
+        tiles = new HashSet<Vector2Int>();
+        tiles.UnionWith(rooms);
+        tiles.UnionWith(corridors);
+
     }
 
     // functions
@@ -366,7 +419,9 @@ public class PreSector
     public Vector2 GetCentralWorldPos()
     {
         // on retourne la position centrale à l'échelle du monde
-        return new Vector2((cx() * roomDimensions.x), (cy() * roomDimensions.y));
+        // return new Vector2((cx() * roomDimensions.x), (cy() * roomDimensions.y));
+        return new Vector2(x*roomDimensions.x, y*roomDimensions.y);
+        // return new Vector2(0,0);
     }
 
     public float L()
@@ -404,7 +459,7 @@ public class PreSector
         {
             for (int j = 0; j < h; j++)
             {
-                ceiling.Add(new Vector2Int(x + i, y + j));
+                ceiling.Add(new Vector2Int(i, j));
             }
         }
 
