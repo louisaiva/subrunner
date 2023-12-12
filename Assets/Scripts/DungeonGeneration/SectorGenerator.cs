@@ -22,7 +22,7 @@ public class SectorGenerator : MonoBehaviour
 
     [Header("TILEMAPS VISUALISATION")]
     protected TilemapVisualiser tilemapVisualiser;
-    private bool visualise = false;
+    // private bool visualise = false;
 
     [Header("WORLD")]
     protected GameObject world;

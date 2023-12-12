@@ -153,7 +153,7 @@ public class Perso : Attacker
 
 
         // on affiche un texte de début
-        Invoke("showWelcome", 5f);
+        // Invoke("showWelcome", 5f);
     }
 
     // welcoming

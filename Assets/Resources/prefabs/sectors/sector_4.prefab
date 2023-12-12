@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3702304104984867074}
   - component: {fileID: 1841494338004230623}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: sector_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53,10 +53,11 @@ MonoBehaviour:
   enemy_spawn_radius: 1
   nb_chests: 2
   nb_computers: 3
-  hasTuyaux: 1
+  hasTuyaux: 0
   corr_number: 20
   corr_length_min_max: {x: 5, y: 12}
   corr_random_start_chance: 0.2
+  ceiling_prefab: {fileID: 0}
 --- !u!1 &7779412267224521049
 GameObject:
   m_ObjectHideFlags: 0
@@ -112,7 +113,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8043150608043073165}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: enemies
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -143,7 +144,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5884567387410147931}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: ceiling
   m_TagString: Untagged
   m_Icon: {fileID: 0}

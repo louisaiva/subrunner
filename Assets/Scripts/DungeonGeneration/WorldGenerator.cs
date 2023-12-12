@@ -18,14 +18,20 @@ public class WorldGenerator : MonoBehaviour
     // private Dictionary<PreSector,Vector2Int> sectors_pos = new Dictionary<PreSector, Vector2Int>();
     protected Vector2 roomDimensions = new Vector2(8f, 7.5f);
 
+    [Header("visualisation")]
+    [SerializeField] private Transform visu_parent;
+
     // unity functions
-    void Start()
+    void Awake()
     {
         // on récupère le sector prefab
         sector_prefab = Resources.Load<GameObject>("prefabs/sectors/sector_4");
 
         // on récupère le world
         world = GameObject.Find("/world");
+
+        // on récupère le parent des visualisations
+        visu_parent = transform.Find("visu");
 
         // on génère le monde
         GenerateWorld();
@@ -37,8 +43,50 @@ public class WorldGenerator : MonoBehaviour
         // 1 - on vide le monde
         Clear();
 
-
         // 2 - on génère les pré-secteurs
+        generatePreSectors();
+
+        // 3 - on crée les visus
+        visualizePreSectors();
+
+        // 4 - on sépare les pré-secteurs
+        StartCoroutine(separatePreSectors());
+    }
+
+    public void ConstructWorld()
+    {
+        // 5 - on génère les secteurs
+        print("GENERATIONNNNNNNNNNNNNNNNNNNNNNNNNN");
+        // generateSectors();
+    }
+
+    // vide le monde
+    public void Clear()
+    {
+
+        // on détruit tous les enfants du world
+        foreach (GameObject sector in sectors)
+        {
+            Destroy(sector);
+        }
+
+        // on vide la liste des secteurs
+        sectors.Clear();
+
+        // on vide la liste des pre-secteurs
+        preSecteurs.Clear();
+
+        // on détruit tous les enfants du parent des visualisations
+        foreach (Transform child in visu_parent)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
+
+    // RANDOM WALK GENERATION
+    private void generatePreSectors()
+    {
         for (int i = 0; i < nb_sectors; i++)
         {
             // on crée 2 HashSets par secteur (rooms et corridors)
@@ -51,11 +99,153 @@ public class WorldGenerator : MonoBehaviour
             // on ajoute le pre-secteur à la liste
             preSecteurs.Add(new PreSector(rooms, corridors));
         }
+    }
 
-        // 3 - on sépare les secteurs (calcule les positions des futurs secteurs)
-        separateSectors();
 
-        // on génère les secteurs
+
+    // STEERING SEPARATION BEHAVIOUR
+    private IEnumerator separatePreSectors()
+    {
+        int max_iterations = 500;
+
+        // on sépare les secteurs
+        for (int iteration = 0; iteration < max_iterations; iteration++)
+        {
+            // on sépare les secteurs
+            int nb_collisions = separateIteration();
+
+            // on affiche dans la console le nombre de collisions
+            print("iteration " + iteration + " : " + nb_collisions + " collisions");
+
+            // on vérifie qu'on a pas de collisions
+            if (nb_collisions == 0) { break; }
+
+            // on attend une demiseconde
+            yield return new WaitForSeconds(0.05f);
+        }
+
+    }
+
+    private int separateIteration()
+    {
+        // on récupère le nombre de collisions avant séparation
+        int coll = 0;
+        
+        // on parcourt les pre-secteurs par paire
+        for (int i=0;i<preSecteurs.Count-1;i++)
+        {
+            for (int j=i+1; j<preSecteurs.Count;j++)
+            {
+                print("on teste la collision entre "+i+" et "+j);
+
+                // on récupère les pre-secteurs
+                PreSector preSec1 = preSecteurs[i];
+                PreSector preSec2 = preSecteurs[j];
+
+                // on vérifie si les secteurs collident
+                if (preSec1.isColliding(preSec2))
+                {
+                    print("collision entre "+i+" et "+j);
+
+                    // on récupère la séparation
+                    Vector2 separation = findSeparationVector(preSec1, preSec2);
+
+                    // on incrémente le nombre total de collisions
+                    coll += 1;
+
+                    // on divise la séparation par 2 et on arrondit pour preSec1
+                    Vector2Int separation_int = new Vector2Int(Mathf.CeilToInt(separation.x/2), Mathf.CeilToInt(separation.y/2));
+                    // on déplace le pre-secteur
+                    preSec1.move(separation_int);
+
+                    // on divise la séparation par 2 et on arrondit pour preSec2 (on inverse la séparation)
+                    separation_int = new Vector2Int(Mathf.CeilToInt(-separation.x / 2), Mathf.CeilToInt(-separation.y / 2));
+                    // on déplace le pre-secteur
+                    preSec2.move(separation_int);
+                }
+            }
+        }
+
+
+
+        return coll;
+    }
+
+    private Vector2 findSeparationVector(PreSector agent, PreSector other)
+    {
+        Vector2 separation = new Vector2();
+
+        // ON CHERCHE LE VECTEUR DE SEPARATION
+        // le plus petit possible (que sur un axe du coup !!)
+
+        // en X
+        float x_centers_diff = agent.cx() - other.cx();
+        if (x_centers_diff > 0)
+        {
+            separation.x = other.R() - agent.L();
+        }
+        else
+        {
+            separation.x = other.L() - agent.R();
+        }
+
+        // en Y
+        float y_centers_diff = agent.cy() - other.cy();
+        if (y_centers_diff > 0)
+        {
+            separation.y = other.U() - agent.D();
+        }
+        else
+        {
+            separation.y = other.D() - agent.U();
+        }
+
+        // on compare quel axe est le plus petit
+        if (Mathf.Abs(separation.x) < Mathf.Abs(separation.y))
+        {
+            separation.y = 0;
+        }
+        else
+        {
+            separation.x = 0;
+        }
+
+        return separation;
+
+    }
+
+    // VISUALISATION
+    private void visualizePreSectors()
+    {
+        // on défini la couleur de base
+        Color base_color = new Color(0.5f, 0.5f, 0.5f, 1f);
+        Color done_color = new Color(0.5f, 1f, 0.5f, 1f);
+
+        // on parcourt les pre-secteurs
+        for (int i = 0; i < preSecteurs.Count; i++)
+        {
+            // on récupère le pre-secteur
+            PreSector preSec = preSecteurs[i];
+
+            // on créé un visu vide
+            GameObject preSecVisu = new GameObject("visu_sector_" + i);
+
+            // on lui ajoute un PreSectorVisualiser
+            preSecVisu.AddComponent<PreSectorVisualiser>();
+
+            // on applique les paramètres
+            preSecVisu.GetComponent<PreSectorVisualiser>().init(preSec, base_color, done_color);
+
+            // on l'ajoute au parent
+            preSecVisu.transform.SetParent(visu_parent);
+        }
+    }
+
+
+
+    // FINAL GENERATION
+    private void generateSectors()
+    {
         for (int i = 0; i < preSecteurs.Count; i++)
         {
 
@@ -87,122 +277,6 @@ public class WorldGenerator : MonoBehaviour
             // * temporaire * on déplace le secteur
             // sector.transform.position = new Vector3(i * 100, 0, 0);
         }
-    }
-
-    // vide le monde
-    public void Clear()
-    {
-
-        // on détruit tous les enfants du world
-        foreach (GameObject sector in sectors)
-        {
-            Destroy(sector);
-        }
-
-        // on vide la liste des secteurs
-        sectors.Clear();
-
-        // on vide la liste des pre-secteurs
-        preSecteurs.Clear();
-    }
-
-
-
-    // TINY KEEP GENERATION
-    private void separateSectors()
-    {
-        // on affiche dans la console les positions et tailles des pre-secteurs
-        foreach (PreSector preSec in preSecteurs)
-        {
-            print("avant sepa : " + preSec.x + " " + preSec.y + " " + preSec.w + " " + preSec.h);
-        }
-
-        
-        int max_iterations = 10;
-
-        
-
-        // on sépare les secteurs
-        for (int iteration = 0; iteration < max_iterations; iteration++)
-        {
-            int total_collisions = 0;
-
-            foreach (PreSector preSec in preSecteurs)
-            {
-                // on récupère la séparation
-                Vector2Int separation = computeSeparation(preSec,out int nb_collisions);
-
-                print("separation : " + separation);
-
-                // on incrémente le nombre total de collisions
-                total_collisions += nb_collisions;
-
-                // on vérifie qu'on a une séparation
-                if (separation == new Vector2Int(0, 0)) { continue; }
-
-                // on 
-
-
-                // on déplace le pre-secteur
-                preSec.move(separation);
-            }
-
-            print("iteration " + iteration + " : " + total_collisions + " collisions");
-
-            // on vérifie qu'on a pas de collisions
-            if (total_collisions == 0) { break; }
-            // total_collisions = 0;
-        }
-
-
-        // on affiche dans la console les positions et tailles des pre-secteurs
-        foreach (PreSector preSec in preSecteurs)
-        {
-            print("apres sepa : " + preSec.x + " " + preSec.y + " " + preSec.w + " " + preSec.h);
-        }
-    }
-
-    private Vector2Int computeSeparation(PreSector agent,out int nb_collisions)
-    {
-        Vector2 separation = new Vector2();
-        nb_collisions = 0;
-
-        // on récupère les secteurs adjacents
-        foreach (PreSector sec in preSecteurs)
-        {
-            // on vérifie que ce n'est pas le même secteur
-            if (agent == sec) { continue; }
-
-            // on regarde si les secteurs sont adjacents
-            if (agent.isColliding(sec))
-            {
-                // on ajoute la séparation
-                separation.x += agent.cx() - sec.cx();
-                separation.y += agent.cy() - sec.cy();
-
-                // on incrémente le nombre d'adjacents
-                nb_collisions++;
-            }
-        }
-
-        // on vérifie qu'on a des adjacents
-        if (nb_collisions == 0) { return new Vector2Int(0, 0); }
-
-        // on divise la séparation par le nombre d'adjacents
-        separation.x /= nb_collisions;
-        separation.y /= nb_collisions;
-
-        // on multiplie la séparation par -1
-        separation *= -1;
-
-        // on normalise la séparation
-        separation.Normalize();
-
-        // on incrémente le nombre total de collisions
-        // total_collisions += nb_collisions;
-
-        // on retourne la séparation
-        return new Vector2Int((int) separation.x, (int) separation.y);
     }
 
 }
@@ -260,17 +334,14 @@ public class PreSector
 
     public bool isColliding(PreSector other)
     {
-        // on vérifie si les secteurs overlappés
-        if (x < other.x + other.w &&
-            x + w > other.x &&
-            y < other.y + other.h &&
-            y + h > other.y)
-        {
-            return true;
-        }
+        // on vérifie si les secteurs collident
+        if (other.L() >= R()) { return false; }
+        if (other.R() <= L()) { return false; }
+        if (other.D() >= U()) { return false; }
+        if (other.U() <= D()) { return false; }
 
-        // sinon, ils ne sont pas overlappés
-        return false;
+        // si aucun des tests n'a renvoyé false, c'est que les secteurs collident
+        return true;
     }
 
     // getters
@@ -298,6 +369,29 @@ public class PreSector
         return new Vector2((cx() * roomDimensions.x), (cy() * roomDimensions.y));
     }
 
+    public float L()
+    {
+        // on retourne la position la plus à gauche
+        return x;
+    }
+
+    public float R()
+    {
+        // on retourne la position la plus à droite
+        return x + w;
+    }
+
+    public float D()
+    {
+        // on retourne la position la plus en bas
+        return y;
+    }
+
+    public float U()
+    {
+        // on retourne la position la plus en haut
+        return y + h;
+    }
 
     // utils
     private HashSet<Vector2Int> CreateCeiling()
