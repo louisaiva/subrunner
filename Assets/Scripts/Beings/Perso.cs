@@ -42,6 +42,9 @@ public class Perso : Attacker
     // global light
     private GameObject global_light;
 
+    // minimap
+    public bool has_gyroscope = false;
+
     // inventory & items
     public Inventory inventory;
     public Transform items_parent;
@@ -414,6 +417,19 @@ public class Perso : Attacker
         {
             // on update les hacks
             update_hacks();
+        }
+
+        // on regarde si on a le gyroscope
+        has_gyroscope = false;
+        foreach (Item item in inventory.getItems())
+        {
+            if (item.action_type == "passive")
+            {
+                if (item.item_name == "gyroscope")
+                {
+                    has_gyroscope = true;
+                }
+            }
         }
 
         // on update les interactions

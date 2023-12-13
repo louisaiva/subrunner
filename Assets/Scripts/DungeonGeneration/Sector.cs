@@ -131,7 +131,7 @@ public class Sector : MonoBehaviour
 
     } */
 
-    public void GenerateSelf(PreSector preSec)
+    public void GenerateSelf(PreSector preSec, bool extended_rooms=false)
     {
         // on vide le secteur
         Clear();
@@ -144,7 +144,7 @@ public class Sector : MonoBehaviour
         HashSet<Vector2Int> corrPositions = preSec.corridors;
 
         // on génère les salles et les couloirs
-        sectorGenerator.GenerateRooms(roomPositions, corrPositions,this.gameObject);
+        sectorGenerator.GenerateRooms(roomPositions, corrPositions,this.gameObject, extended_rooms);
         sectorGenerator.GenerateCorridors(corrPositions, roomPositions, this.gameObject);
 
         Dictionary<string, int> emplacements_interactifs = new Dictionary<string, int>();

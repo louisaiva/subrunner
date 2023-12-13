@@ -7,6 +7,7 @@ public class WorldGenerator : MonoBehaviour
 {
     [Header("WORLD GENERATION")]
     [SerializeField] private int nb_sectors = 1;
+    [SerializeField] private bool extended_rooms = false;
     GameObject sector_prefab;
     GameObject world;
 
@@ -276,7 +277,7 @@ public class WorldGenerator : MonoBehaviour
             // HashSet<Vector2Int> corridors = preSecteurs[i].corridors;
 
             // on génère le secteur
-            sector.GetComponent<Sector>().GenerateSelf(preSecteurs[i]);
+            sector.GetComponent<Sector>().GenerateSelf(preSecteurs[i], extended_rooms);
 
             // on l'ajoute à la liste des secteurs
             sectors.Add(sector);

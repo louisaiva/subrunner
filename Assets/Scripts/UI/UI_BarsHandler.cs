@@ -30,9 +30,7 @@ public class UI_BarsHandler : MonoBehaviour {
         ui_bits_handler = transform.parent.transform.Find("bits_handler").gameObject;
 
         // on recup les sprites
-        // sprites = new Sprite[14];
         sprites = Resources.LoadAll<Sprite>(bars_sprites_path);
-        print(sprites);
     }
 
     void Update()
