@@ -169,19 +169,19 @@ public class SectorGenerator : MonoBehaviour
         foreach (var position in roomsPositions)
         {
             // on récupère les directions vers les salles/corridors adjacent.e.s
-            HashSet<Vector2Int> openinDirections = GetRoomOpeninDirections(position, roomsPositions);
+            HashSet<Vector2Int> openinRoomsDirections = GetRoomOpeninDirections(position, roomsPositions);
             HashSet<Vector2Int> openinCorridorsDirections = GetRoomOpeninDirections(position, corridorsPositions);
-            openinDirections.UnionWith(openinCorridorsDirections);
+            // openinRoomsDirections.UnionWith(openinCorridorsDirections);
 
             // on génère la salle
-            GenerateRoom(position, openinDirections, parent);
+            GenerateRoom(position, openinCorridorsDirections, openinRoomsDirections, parent);
         }
     }
 
-    protected void GenerateRoom(Vector2Int position, HashSet<Vector2Int> openinDirections, GameObject parent = null)
+    protected void GenerateRoom(Vector2Int position, HashSet<Vector2Int> corrDirections, HashSet<Vector2Int> roomDirections, GameObject parent = null)
     {
         // on choisit la bonne salle en fonctions des ouvertures
-        GameObject room = ChooseRoom(openinDirections);
+        GameObject room = ChooseRoom(corrDirections, roomDirections);
 
         // on récupère la position du monde
         Vector3 worldPosition = GetWorldPositionFromTileworldPosition(position);
@@ -200,19 +200,29 @@ public class SectorGenerator : MonoBehaviour
         }
     }
 
-    protected GameObject ChooseRoom(HashSet<Vector2Int> openinDirections)
+    protected GameObject ChooseRoom(HashSet<Vector2Int> corrDirections, HashSet<Vector2Int> roomDirections)
     {
         // on récupère les noms des salles
         string roomName = "room_";
 
         // on parcourt les directions ouvertes puis on ajoute le nom de la direction
-        if (openinDirections.Contains(Vector2Int.up)) { roomName += "U"; }
-        if (openinDirections.Contains(Vector2Int.down)) { roomName += "D"; }
-        if (openinDirections.Contains(Vector2Int.left)) { roomName += "L"; }
-        if (openinDirections.Contains(Vector2Int.right)) { roomName += "R"; }
+        if (corrDirections.Contains(Vector2Int.up)) { roomName += "U"; }
+        else if (roomDirections.Contains(Vector2Int.up)) { roomName += "N"; }
+        if (corrDirections.Contains(Vector2Int.down)) { roomName += "D"; }
+        else if (roomDirections.Contains(Vector2Int.down)) { roomName += "S"; }
+        if (corrDirections.Contains(Vector2Int.left)) { roomName += "L"; }
+        else if (roomDirections.Contains(Vector2Int.left)) { roomName += "W"; }
+        if (corrDirections.Contains(Vector2Int.right)) { roomName += "R"; }
+        else if (roomDirections.Contains(Vector2Int.right)) { roomName += "E"; }
 
         // on récupère la salle
         GameObject room = Resources.Load<GameObject>("prefabs/rooms/" + roomName);
+
+        // on vérifie que la salle existe
+        if (room == null)
+        {
+            Debug.LogError("room " + roomName + " doesn't exist");
+        }
 
         // print("chosen room name : " + roomName + " " + room);
 

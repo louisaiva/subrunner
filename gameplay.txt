@@ -141,7 +141,10 @@ GENERATION PROCEDURALE 2E EBAUCHE :
             -On vérifie qu'un secteur relie toutes ses salles
         -World récupère les tailles des Sectors générés et créé un Schéma global du monde (TK Algo)
         -World définit quels sectors sont de quel type.
+        -World retravaille les HashSet pour relier les secteurs (en ajoutant des corridors)
         -World lance la création finale en passant a chaque Sector son Hashset et sa position globale
+            -si des rooms sont adjacentes -> ça fait une big room
             -Chaque Sector applique son type -> change les tiles de ses rooms
             -Chaque Sector applique son type -> gère les ennemis
             -Chaque Sector applique son type -> place des coffres, etc
+
