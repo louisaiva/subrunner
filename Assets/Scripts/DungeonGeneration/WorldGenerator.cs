@@ -18,9 +18,14 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] private List<PreSector> preSecteurs = new List<PreSector>();
     // private Dictionary<PreSector,Vector2Int> sectors_pos = new Dictionary<PreSector, Vector2Int>();
     protected Vector2 roomDimensions = new Vector2(8f, 7.5f);
+    protected Vector2Int roomDimensionsInTiles = new Vector2Int(16,16);
 
     [Header("visualisation")]
     [SerializeField] private Transform visu_parent;
+
+    [Header("minimap")]
+    [SerializeField] private GameObject minimap;
+    [SerializeField] private HashSet<Vector2Int> global_tiles = new HashSet<Vector2Int>();
 
     // unity functions
     void Awake()
@@ -33,6 +38,9 @@ public class WorldGenerator : MonoBehaviour
 
         // on récupère le parent des visualisations
         visu_parent = transform.Find("visu");
+
+        // on récupère la minimap
+        minimap = GameObject.Find("/perso/minicam");
 
         // on génère le monde
         GenerateWorld();
@@ -55,6 +63,9 @@ public class WorldGenerator : MonoBehaviour
 
         // 5 - on génère les secteurs
         generateSectors();
+
+        // 6 - on génère le Hashset global des tiles
+        generateGlobalTilesHashSet();
     }
 
     public void ConstructWorld()
@@ -291,6 +302,78 @@ public class WorldGenerator : MonoBehaviour
         }
     }
 
+
+    // HASHSET GLOBAL DES TILES
+    private void generateGlobalTilesHashSet()
+    {
+        // on vide le hashset
+        global_tiles.Clear();
+
+        // on parcourt les secteurs
+        foreach (GameObject sector in sectors)
+        {
+            // on récupère les tiles du secteur
+            HashSet<Vector2Int> tiles = sector.GetComponent<Sector>().GetGlobalTiles();
+
+            // on ajoute les tiles au hashset global
+            global_tiles.UnionWith(tiles);
+        }
+
+        // on met à jour la minimap
+        minimap.GetComponent<Minimap>().init(global_tiles);
+    }
+
+
+    // getters
+    public string getTileType(Vector2Int globalTilePos)
+    {
+        // on récupère le secteur
+        GameObject sector = getSector(globalTilePos);
+
+        // on vérifie qu'on a bien un secteur
+        if (sector == null) { return "not found"; }
+
+        // on récupère le type de tile
+        string type = sector.GetComponent<Sector>().GetTileType(globalTilePos);
+
+        // on retourne le type
+        return type;
+    }
+
+    public GameObject getSector(Vector2Int globalTilePos)//,out Vector2Int localTilePos)
+    {
+
+        // on initialise le secteur
+        GameObject sector = null;
+        // localTilePos = new Vector2Int();
+
+        // on récupère la position de la room
+        Vector2Int roomPos = new Vector2Int(globalTilePos.x / roomDimensionsInTiles.x, globalTilePos.y / roomDimensionsInTiles.y);
+        Vector2Int tilePos = new Vector2Int(globalTilePos.x % roomDimensionsInTiles.x, globalTilePos.y % roomDimensionsInTiles.y);
+
+        // on récupère la position du secteur
+        foreach (PreSector preSec in preSecteurs)
+        {
+            // on vérifie si ça collide
+            if (preSec.collidesWithRoomPoint(roomPos))
+            {
+                // on récupère la position locale de la room
+                roomPos -= new Vector2Int(preSec.x, preSec.y);
+
+                // on récupère la position locale de la tile
+                // localTilePos = roomPos * roomDimensionsInTiles + tilePos;
+
+                // on récupère le secteur
+                sector = sectors.Find(x => x.GetComponent<Sector>().GetPreSector() == preSec);
+
+                // on break
+                break;
+            }
+        }
+        // on retourne le secteur
+        return sector;
+    }
+
 }
 
 
@@ -398,11 +481,29 @@ public class PreSector
         return true;
     }
 
+    public bool collidesWithRoomPoint(Vector2Int roomPoint)
+    {
+        // on vérifie si les secteurs collident
+        if (roomPoint.x > R()) { return false; }
+        if (roomPoint.x <= L()) { return false; }
+        if (roomPoint.y > U()) { return false; }
+        if (roomPoint.y <= D()) { return false; }
+
+        // si aucun des tests n'a renvoyé false, c'est que les secteurs collident
+        return true;
+    }
+
     // getters
     public Vector2Int getSize()
     {
         // on retourne la taille
         return new Vector2Int(w, h);
+    }
+
+    public Vector2Int xy()
+    {
+        // on retourne la position
+        return new Vector2Int(x, y);
     }
 
     public float cx()
@@ -447,6 +548,42 @@ public class PreSector
     {
         // on retourne la position la plus en haut
         return y + h;
+    }
+
+    public string getRoomType(Vector2Int roomPos)
+    {
+        // on vérifie qu'elle est dans les tiles
+        if (tiles.Contains(roomPos))
+        {
+            // on vérifie si c'est une room
+            if (rooms.Contains(roomPos))
+            {
+                // on retourne le type de room
+                return "room";
+            }
+            else
+            {
+                // on retourne le type de corridor
+                return "corridor";
+            }
+        }
+        else if (ceiling.Contains(roomPos))
+        {
+            // on retourne le type de ceiling
+            return "ceiling";
+        }
+        else
+        {
+            // on retourne le type de tile
+            return "not found";
+        }
+    }
+
+    public string getGlobalRoomType(Vector2Int roomPos)
+    {
+        // on prend la local room pos
+        roomPos -= xy();
+        return getRoomType(roomPos);
     }
 
     // utils

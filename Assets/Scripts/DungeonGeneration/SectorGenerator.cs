@@ -163,8 +163,11 @@ public class SectorGenerator : MonoBehaviour
 
     // ROOMS FUNCTIONS
 
-    public void GenerateRooms(HashSet<Vector2Int> roomsPositions, HashSet<Vector2Int> corridorsPositions, GameObject parent = null, bool extended_rooms=false )
+    public Dictionary<Vector2Int,Room> GenerateRooms(HashSet<Vector2Int> roomsPositions, HashSet<Vector2Int> corridorsPositions, Vector2Int sectorPos, GameObject parent = null, bool extended_rooms=false )
     {
+        // on crée un dictionnaire de salles
+        Dictionary<Vector2Int,Room> areas = new Dictionary<Vector2Int,Room>();
+
         // on parcourt les positions de salles
         foreach (var position in roomsPositions)
         {
@@ -174,11 +177,16 @@ public class SectorGenerator : MonoBehaviour
             // openinRoomsDirections.UnionWith(openinCorridorsDirections);
 
             // on génère la salle
-            GenerateRoom(position, openinCorridorsDirections, openinRoomsDirections, parent);
+            Room area = GenerateRoom(position, openinCorridorsDirections, openinRoomsDirections, parent);
+
+            // on ajoute la salle au dictionnaire
+            areas.Add(position+sectorPos, area);
         }
+
+        return areas;
     }
 
-    protected void GenerateRoom(Vector2Int position, HashSet<Vector2Int> corrDirections, HashSet<Vector2Int> roomDirections, GameObject parent = null, bool extended_room=false)
+    protected Room GenerateRoom(Vector2Int position, HashSet<Vector2Int> corrDirections, HashSet<Vector2Int> roomDirections, GameObject parent = null, bool extended_room=false)
     {
         // on choisit la bonne salle en fonctions des ouvertures
         GameObject room = ChooseRoom(corrDirections, roomDirections, extended_room);
@@ -198,6 +206,8 @@ public class SectorGenerator : MonoBehaviour
         {
             roomInstance.transform.parent = world.transform;
         }
+        
+        return roomInstance.GetComponent<Room>();
     }
 
     protected GameObject ChooseRoom(HashSet<Vector2Int> corrDirections, HashSet<Vector2Int> roomDirections, bool extended_room=false)
@@ -232,8 +242,11 @@ public class SectorGenerator : MonoBehaviour
 
     // CORRIDORS FUNCTIONS
 
-    public void GenerateCorridors(HashSet<Vector2Int> corridorsPositions, HashSet<Vector2Int> roomsPositions, GameObject parent = null)
+    public Dictionary<Vector2Int, Room> GenerateCorridors(HashSet<Vector2Int> corridorsPositions, HashSet<Vector2Int> roomsPositions, Vector2Int sectorPos, GameObject parent = null)
     {
+        // on crée un dictionnaire de salles
+        Dictionary<Vector2Int, Room> areas = new Dictionary<Vector2Int, Room>();
+
         // on parcourt les positions des corridors
         foreach (var position in corridorsPositions)
         {
@@ -243,11 +256,16 @@ public class SectorGenerator : MonoBehaviour
             openinDirections.UnionWith(openinCorridorsDirections);
 
             // on génère la salle
-            GenerateCorridor(position, openinDirections, parent);
+            Room area = GenerateCorridor(position, openinDirections, parent);
+
+            // on ajoute la salle au dictionnaire
+            areas.Add(position+sectorPos, area);
         }
+
+        return areas;
     }
 
-    protected void GenerateCorridor(Vector2Int position, HashSet<Vector2Int> openinDirections, GameObject parent = null)
+    protected Room GenerateCorridor(Vector2Int position, HashSet<Vector2Int> openinDirections, GameObject parent = null)
     {
         // on choisit la bonne salle en fonctions des ouvertures
         GameObject corr = ChooseCorridor(openinDirections);
@@ -267,6 +285,8 @@ public class SectorGenerator : MonoBehaviour
         {
             corrInstance.transform.parent = world.transform;
         }
+
+        return corrInstance.GetComponent<Room>();
     }
 
     protected GameObject ChooseCorridor(HashSet<Vector2Int> openinDirections)

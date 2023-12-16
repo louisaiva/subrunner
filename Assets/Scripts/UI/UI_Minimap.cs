@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class UI_Minimap : MonoBehaviour {
 
     private Perso perso;
+    private Minimap minimap;
 
     // sprites
     private string mini_map_sprites_path = "spritesheets/ui/ui_minimap";
@@ -19,12 +20,39 @@ public class UI_Minimap : MonoBehaviour {
         // on récupère le perso
         perso = GameObject.Find("/perso").GetComponent<Perso>();
 
+        // on récupère la minimap
+        minimap = GameObject.Find("/perso/minicam").GetComponent<Minimap>();
+
         // on recup les sprites
         sprites = Resources.LoadAll<Sprite>(mini_map_sprites_path);
     }
 
     void Update()
     {
+        if (!minimap.is_init) return;
+        else if (transform.Find("map").GetComponent<RawImage>().texture == null)
+        {
+            // on récupère la texture
+            transform.Find("map").GetComponent<RawImage>().texture = minimap.mapTexture;
+
+            // on parcourt la texture pour voir ce qu'il y a
+            string str = "";
+            for (int y = 0; y < minimap.mapTexture.height; y++)
+            {
+                for (int x = 0; x < minimap.mapTexture.width; x++)
+                {
+                    // on récupère la couleur
+                    Color color = minimap.mapTexture.GetPixel(x, y);
+
+                    // on ajoute le type
+                    str += x.ToString() + " " + y.ToString() + " " + color + "\n";
+                }
+                str += "\n\n";
+            }
+
+            print("texture récupérée\n\n" + str);
+        }
+
         // on vérifie si on a le gyroscope
         if (perso.has_gyroscope && !is_map_shown)
         {

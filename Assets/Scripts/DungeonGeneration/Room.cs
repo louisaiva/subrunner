@@ -29,12 +29,12 @@ public class Room : MonoBehaviour {
     private Vector3 light_offset = new Vector3(0.25f, 1f, 0f);
 
     // posters tiles
-    private List<string> walls_tiles = new List<string> {"walls_1_2", "walls_1_3", "walls_1_4", "walls_1_5", "walls_1_6"
-                                                        , "walls_1_7", "walls_1_8", "walls_1_9",
-                                                        "walls_2_2", "walls_2_3", "walls_2_4", "walls_2_5", "walls_2_6"
-                                                        , "walls_2_7", "walls_2_8", "walls_2_9" };
-    private float density_posters = 0.3f; // 0.5 = 1 poster tous les 2 tiles compatibles
-    private Vector2 max_offset_posters = new Vector2(0.25f, 0.25f);
+    private List<string> full_walls_tiles = new List<string> {"walls_1_3", "walls_1_4", "walls_1_5", "walls_1_6"
+                                                        , "walls_1_7", "walls_1_8",
+                                                        "walls_2_3", "walls_2_4", "walls_2_5", "walls_2_6"
+                                                        , "walls_2_7", "walls_2_8"};
+    [SerializeField] private float density_posters = 0.3f; // 0.5 = 1 poster tous les 2 tiles compatibles
+    // private Vector2 max_offset_posters = new Vector2(0f, 0.25f);
     public GameObject poster_prefab;
     public Sprite[] poster_sprites;
 
@@ -55,6 +55,10 @@ public class Room : MonoBehaviour {
     public GameObject chest_prefab;
     public Transform computer_parent;
     public GameObject computer_prefab;
+
+    // auto start
+    [SerializeField] private bool auto_start = false;
+
 
     // unity functions
     void Awake()
@@ -114,14 +118,7 @@ public class Room : MonoBehaviour {
         // print(gameObject.name + " : tilemap dimensions : " + width + " " + height + " " + x + " " + y);
 
         // on initialise la salle
-        // init();
-
-    }
-
-    // functions
-    void Start()
-    {
-        // init();
+        if (auto_start) { init(); }
     }
 
     public void init()
@@ -191,32 +188,38 @@ public class Room : MonoBehaviour {
                 tile.GetTileData(pos, bg_tilemap, ref tile_data);
 
                 // on regarde si c une tile de lumiere
-                if (walls_tiles.Contains(tile_data.sprite.name))
+                if (full_walls_tiles.Contains(tile_data.sprite.name))
                 {
 
                     // on lance un random pour savoir si on met un poster
                     if (Random.Range(0f, 1f) > density_posters) { continue; }
 
-                    // on calcule un offset véritable qui advient à chaque fois
-                    float OFFSET_Y = 0.75f;
 
-                    // on calcule un offset aléatoire
-                    Vector2 offset = new Vector2(Random.Range(-max_offset_posters.x, max_offset_posters.x), OFFSET_Y + Random.Range(0f, max_offset_posters.y));
-
-                    // on récupère la position globale de la tile
+                    // on instancie un poster aleatoire dans une premiere position
                     Vector3 tile_pos = bg_tilemap.CellToWorld(pos);
-                    
-                    // on instancie le poster
-                    GameObject poster = Instantiate(poster_prefab, tile_pos + (Vector3) offset, Quaternion.identity);
-
-                    // on choisit un sprite au hasard
+                    GameObject poster = Instantiate(poster_prefab, tile_pos, Quaternion.identity);
                     poster.GetComponent<SpriteRenderer>().sprite = poster_sprites[Random.Range(0, poster_sprites.Length)];
+
+
+                    // on calcule un offset plus ou moins aléatoire
+                    float OFFSET_Y = 0.2f;
+                    float OFFSET_RANGE_Y = 0.3f;
+                    float OFFSET_X = -poster.GetComponent<SpriteRenderer>().bounds.size.x / 2;
+                    float OFFSET_RANGE_X = 0f;
+
+                    Vector3 offset = new Vector3(Random.Range(-OFFSET_RANGE_X, OFFSET_RANGE_X), OFFSET_Y + Random.Range(0f, OFFSET_RANGE_Y), 0f);
+                    offset += new Vector3(OFFSET_X, OFFSET_Y, 0f);
+
+                    // on déplace le poster
+                    poster.transform.position += offset;
+                    print("on ajoute un poster en " + poster.transform.position + " avec un offset de " + offset);
+
 
                     // on met le bon parent
                     poster.transform.SetParent(objects_parent);
 
                     // on relance un random pour savoir si on remet un poster
-                    if (Random.Range(0f, 1f) < density_posters*density_posters) {
+                    if (Random.Range(0f, 1f) < 0.1f) {
                         i--;                        
                     }
                 }
@@ -353,4 +356,50 @@ public class Room : MonoBehaviour {
         
     }
 
+    // tiles
+    public string GetTileType(Vector2Int tilePos)
+    {
+        
+        string tile_type = "not found";
+
+
+        // tile pos 0;0 -> tile en bas à gauche
+
+        // on convertit tilePos en Vector3Int
+        tilePos = new Vector2Int(tilePos.x +x, tilePos.y+y);
+
+        // on parcourt les tilemaps
+        if (fg.GetComponent<Tilemap>().HasTile((Vector3Int) tilePos)) { tile_type = "ceiling"; }
+        else if (bg.GetComponent<Tilemap>().HasTile((Vector3Int) tilePos)) { tile_type = "wall"; }
+        else if (gd.GetComponent<Tilemap>().HasTile((Vector3Int) tilePos)) { tile_type = "ground"; }
+
+        //
+        print("get tile type " + (Vector3Int) tilePos + " : " + tile_type);
+
+        // si on a rien trouvé
+        return tile_type;
+    }
+
+    public HashSet<Vector2Int> GetTiles()
+    {
+        HashSet<Vector2Int> tiles = new HashSet<Vector2Int>();
+
+        // on parcourt les tilemaps
+        for (int j=y; j<y+height; j++)
+        {
+            for (int i=x; i<x+width; i++)
+            {
+                // on récupère la tile
+                Vector2Int tile = new Vector2Int(i, j);
+
+                // on regarde si la tile existe
+                if (GetTileType(tile) != "not found")
+                {
+                    tiles.Add(tile);
+                }
+            }
+        }
+
+        return tiles;
+    }
 }

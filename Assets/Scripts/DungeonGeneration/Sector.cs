@@ -16,7 +16,8 @@ public class Sector : MonoBehaviour
     [Header("SECTOR")]
     [SerializeField] private SectorGenerator sectorGenerator;
     [SerializeField] private PreSector preSec;
-
+    [SerializeField] private Dictionary<Vector2Int, Room> areas = new Dictionary<Vector2Int, Room>();
+    // stocke les salles et les couloirs du secteur via leur POSITION GLOBALE
     
 
     // [Header("SECTOR TILES")]
@@ -24,7 +25,7 @@ public class Sector : MonoBehaviour
 
     [Header("SECTOR ENEMIES")]
     [SerializeField] private bool isSafe = false; // si true, pas d'ennemis dans le secteur
-    [SerializeField] private int nb_enemies = 10;
+    [SerializeField] private int nb_enemies = 5;
     private GameObject enemy_prefab;
     private Transform enemy_parent;
     [SerializeField] private float enemy_spawn_radius = 1f;
@@ -142,21 +143,23 @@ public class Sector : MonoBehaviour
         // on récupère les hashsets des positions des salles et des couloirs
         HashSet<Vector2Int> roomPositions = preSec.rooms;
         HashSet<Vector2Int> corrPositions = preSec.corridors;
+        Vector2Int sectorGlobalPos = preSec.xy();
 
         // on génère les salles et les couloirs
-        sectorGenerator.GenerateRooms(roomPositions, corrPositions,this.gameObject, extended_rooms);
-        sectorGenerator.GenerateCorridors(corrPositions, roomPositions, this.gameObject);
+        areas = sectorGenerator.GenerateRooms(roomPositions, corrPositions, sectorGlobalPos,this.gameObject, extended_rooms);
+        Dictionary<Vector2Int, Room> corridors = sectorGenerator.GenerateCorridors(corrPositions, roomPositions, sectorGlobalPos, this.gameObject);
+        // areas.UnionWith(sectorGenerator.GenerateCorridors(corrPositions, roomPositions, sectorGlobalPos, this.gameObject));
+        for (int i = 0; i < corridors.Count; i++)
+        {
+            areas[corridors.Keys.ToList()[i]] = corridors.Values.ToList()[i];
+        }
+
 
         Dictionary<string, int> emplacements_interactifs = new Dictionary<string, int>();
 
         // on lance l'initialisation des salles
-        foreach (Transform child in transform)
+        foreach (Room room in GetRooms())
         {
-            // on vérifie que ce n'est pas le parent des ennemis
-            if (child.GetComponent<Room>() == null) { continue;}
-
-            // on récupère la salle
-            Room room = child.GetComponent<Room>();
             room.init();
             emplacements_interactifs[room.gameObject.name] = room.GetNbEmplacementsInteractifs();
         }
@@ -405,6 +408,112 @@ public class Sector : MonoBehaviour
                 Destroy(child.gameObject);
             }
         }
+    }
+
+    List<Room> GetRooms()
+    {
+        // on récupère les salles
+        /* List<Room> rooms = new List<Room>();
+        foreach (Transform child in transform)
+        {
+            if (child.GetComponent<Room>() != null)
+            {
+                rooms.Add(child.GetComponent<Room>());
+            }
+        }
+        return rooms; */
+        return areas.Values.ToList();
+    }
+
+    // GETTERS
+
+    public bool IsSafe()
+    {
+        return isSafe;
+    }
+
+    public PreSector GetPreSector()
+    {
+        return preSec;
+    }
+
+
+    public HashSet<Vector2Int> GetGlobalTiles()
+    {
+        // returns the global tiles of the sector (not the ceiling, only the above tile of each tile in each room)
+
+        // on récupère les tiles de chaque salle
+        HashSet<Vector2Int> tiles = new HashSet<Vector2Int>();
+        
+        // on parcout les salles via le dict
+        for (int i=0; i<areas.Count; i++)
+        {
+            // on récupère la salle
+            Room area = areas.Values.ToList()[i];
+            Vector2Int global_area_pos = areas.Keys.ToList()[i] * 16;
+
+            // on récupère les tiles de la salle
+            HashSet<Vector2Int> room_tiles = area.GetTiles();
+
+            // on déplace les tiles de la salle
+            foreach (Vector2Int tile in room_tiles)
+            {
+                tiles.Add(tile + global_area_pos);
+            }
+        }
+
+
+        return tiles;
+    }
+
+    public string GetTileType(Vector2Int globalTilePos)
+    {
+        // on récupère la position de la room
+        Vector2Int roomPos = globalTilePos / 16;
+
+        // on vérifie ce qu'on touche
+        string room_type = preSec.getGlobalRoomType(roomPos);
+        print("room " + roomPos + " : " + room_type);
+
+        if (new string[2] {"ceiling", "not found"}.Contains(room_type))
+        {
+            return room_type;
+        }
+
+        // on récupère la room
+        Room room = GetRoomWithGlobalRoomPos(globalTilePos, out Vector2Int localTilePos);
+
+        // on récupère le type de tile
+        string type = room.GetTileType(localTilePos);
+
+        return type;
+    }
+
+    public Room GetRoomWithGlobalRoomPos(Vector2Int globalTilePos, out Vector2Int localTilePos)
+    {
+        // on récupère la position de la room
+        Vector2Int roomPos = globalTilePos / 16;
+
+        // on récupère la position locale
+        localTilePos = globalTilePos - roomPos * 16;
+
+        // on vérifie que la room existe
+        if (!areas.ContainsKey(roomPos))
+        {
+            print("room " + roomPos + " not found in " + this.gameObject.name);
+            print("global tile pos: " + globalTilePos);
+
+            string s = "";
+            foreach (Vector2Int key in areas.Keys)
+            {
+                s += key + "\n";
+            }
+            print("rooms: " + s);
+            return null;
+        }
+
+        // on retourne la room
+        return areas[roomPos];
     }
 
 }
