@@ -19,22 +19,34 @@ public class AnimationHandler : MonoBehaviour
 
     // MAIN FUNCTIONS
 
-    public bool ChangeAnim(string next_anim, float speed = 1f)
+    public bool ChangeAnim(string next_anim, float duration =0f)
     {
         if (current_anim == next_anim || is_forcing) { return false; }
         
-        animator.speed = speed;
         animator.Play(next_anim);
+
+        if (duration != 0f)
+        {
+            // on change la vitesse de l'animation
+            float speed = animator.GetCurrentAnimatorStateInfo(0).length / duration;
+            animator.speed = speed;
+        }
+        else
+        {
+            // on remet la vitesse de l'animation à 1
+            animator.speed = 1f;
+        }
+        
         current_anim = next_anim;
         
         return true;
     }
 
-    public bool ChangeAnimTilEnd(string next_anim, float speed = 1f)
+    public bool ChangeAnimTilEnd(string next_anim, float duration =0f)
     {
         // print("jveux attaquer !!");
 
-        bool changed = ChangeAnim(next_anim, speed);
+        bool changed = ChangeAnim(next_anim, duration);
         if (!changed) { return false; }
 
         // si on a changé d'animation, on force l'animation à se jouer jusqu'à la fin
@@ -67,7 +79,7 @@ public class AnimationHandler : MonoBehaviour
         Invoke("StopForcing", remaining_time-0.05f);
     }
 
-    public void ForcedChangeAnim(string next_anim, float speed = 1f)
+    public void ForcedChangeAnim(string next_anim, float duration =0f)
     {
         // ! attention ne pas utiliser h24
         // ! seulement pour la mort
@@ -75,7 +87,29 @@ public class AnimationHandler : MonoBehaviour
         // * utiliser ChangeAnim or ChangeAnimTilEnd à la place
 
         StopForcing();
-        ChangeAnim(next_anim, speed);
+        ChangeAnim(next_anim, duration);
+    }
+
+    // SWAP FUNCTIONS
+
+    public void ForceSwapAnimTilEnd(string next_anim, float duration =0f)
+    {
+        // swap l'animation en commençant par la position de l'animation actuelle
+        StopForcing();
+
+        // on regarde à quel moment on est dans l'animation
+        float anim_time = GetCurrentAnimTime();
+        float next_anim_time = 1f - anim_time;
+
+        print("swap anim at time : " + anim_time + " next_anim_time : " + next_anim_time);
+
+        // on change l'animation
+        animator.Play(next_anim, -1, next_anim_time);
+        current_anim = next_anim;
+
+        // on force l'animation à se jouer jusqu'à la fin
+        ForceTilEnd();
+
     }
 
     // GETTERS

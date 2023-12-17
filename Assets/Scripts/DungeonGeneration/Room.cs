@@ -313,6 +313,17 @@ public class Room : MonoBehaviour {
         computer.transform.SetParent(computer_parent);
     }
 
+    public void PlaceBed()
+    {
+        // on récupère la position de l'emplacement interactif
+        Vector3 position_interactive = use_interactive_position();
+
+        // on instancie le bed
+        GameObject bed = Instantiate(Resources.Load<GameObject>("prefabs/objects/bed"), position_interactive, Quaternion.identity);
+
+        // on met le bon parent
+        bed.transform.SetParent(transform);
+    }
 
     // ennemies
     private List<GameObject> get_enemy_emplacements()

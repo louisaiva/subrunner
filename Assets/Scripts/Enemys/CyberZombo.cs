@@ -236,12 +236,12 @@ public class CyberZombo : Attacker, I_Hackable
         // todo voir Computer.cs
 
         hacking_current_duration = hacking_duration_base;
-        float hackin_speed = hacking_duration_base / hacking_current_duration;
+        // float hackin_speed = hacking_duration_base / hacking_current_duration;
         if (hacking_current_duration < 0.1f) { hacking_current_duration = 0.1f; }
 
         // on met à jour les animations
         anim_handler.StopForcing();
-        anim_handler.ChangeAnimTilEnd(anims.hurted, hackin_speed);
+        anim_handler.ChangeAnimTilEnd(anims.hurted, hacking_current_duration);
 
         // on commence le hack
         is_getting_hacked = true;
