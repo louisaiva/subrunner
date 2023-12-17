@@ -7,7 +7,6 @@ public class WorldGenerator : MonoBehaviour
 {
     [Header("WORLD GENERATION")]
     [SerializeField] private int nb_sectors = 1;
-    [SerializeField] private bool extended_rooms = false;
     GameObject sector_prefab;
     GameObject world;
 
@@ -26,6 +25,7 @@ public class WorldGenerator : MonoBehaviour
     [Header("minimap")]
     [SerializeField] private GameObject minimap;
     [SerializeField] private HashSet<Vector2Int> global_tiles = new HashSet<Vector2Int>();
+
 
     // unity functions
     void Awake()
@@ -49,6 +49,10 @@ public class WorldGenerator : MonoBehaviour
     // génère le monde
     public void GenerateWorld()
     {
+        Debug.Log("<color=blue>on génère le monde</color>");
+        // cmd("on génère le monde");
+        // "<color=red>Error: </color>AssetBundle not found"
+
         // 1 - on vide le monde
         Clear();
 
@@ -288,7 +292,7 @@ public class WorldGenerator : MonoBehaviour
             // HashSet<Vector2Int> corridors = preSecteurs[i].corridors;
 
             // on génère le secteur
-            sector.GetComponent<Sector>().GenerateSelf(preSecteurs[i], extended_rooms);
+            sector.GetComponent<Sector>().GenerateSelf(preSecteurs[i]);
 
             // on l'ajoute à la liste des secteurs
             sectors.Add(sector);
@@ -320,7 +324,7 @@ public class WorldGenerator : MonoBehaviour
         }
 
         // on met à jour la minimap
-        minimap.GetComponent<Minimap>().init(global_tiles);
+        // minimap.GetComponent<Minimap>().init(global_tiles);
     }
 
 

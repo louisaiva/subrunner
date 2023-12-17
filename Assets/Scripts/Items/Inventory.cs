@@ -13,6 +13,9 @@ public class Inventory : MonoBehaviour {
     // prefabs
     public string prefabs_path = "prefabs/items/";
 
+    //bed
+    [SerializeField] private bool is_bed = false;
+
     // perso
     public GameObject perso;
     public bool is_perso_inventory = false;
@@ -32,7 +35,7 @@ public class Inventory : MonoBehaviour {
         perso = GameObject.Find("/perso");
 
         // on récupère le prefab
-        empty_slot_prefab = Resources.Load("prefabs/ui/empty_slot") as GameObject;
+        empty_slot_prefab = Resources.Load("prefabs/ui/empty_legendary_slot") as GameObject;
 
         // on récupère le canvas
         canvas = GetComponent<Canvas>();
@@ -227,29 +230,37 @@ public class Inventory : MonoBehaviour {
         // on vérifie qu'on a pas déjà la bonne taille
         if (GetComponent<RectTransform>().sizeDelta.x * GetComponent<RectTransform>().sizeDelta.y >= size) { return; }
 
-
         // on calcule la taille de l'inventaire
         int width = 0;
         int height = 0;
 
-        if (size == 3)
+        if (!is_bed)
         {
-            // cas particulier pour size == 3
-            width = 3;
-            height = 1;
+            if (size == 3)
+            {
+                // cas particulier pour size == 3
+                width = 3;
+                height = 1;
+            }
+            else
+            {
+                // on cherche le plus petit carré >= size
+                for (int i = 1; i <= size; i++)
+                {
+                    if (i * i >= size)
+                    {
+                        width = i;
+                        height = i;
+                        break;
+                    }
+                }
+            }
         }
         else
         {
-            // on cherche le plus petit carré >= size
-            for (int i = 1; i <= size; i++)
-            {
-                if (i * i >= size)
-                {
-                    width = i;
-                    height = i;
-                    break;
-                }
-            }
+            // on met une seule ligne
+            width = size;
+            height = 1;
         }
 
         // on met à jour la taille de l'inventaire

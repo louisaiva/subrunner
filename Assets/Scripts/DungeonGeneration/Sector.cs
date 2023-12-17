@@ -132,7 +132,7 @@ public class Sector : MonoBehaviour
 
     } */
 
-    public void GenerateSelf(PreSector preSec, bool extended_rooms=false)
+    public void GenerateSelf(PreSector preSec)
     {
         // on vide le secteur
         Clear();
@@ -146,7 +146,7 @@ public class Sector : MonoBehaviour
         Vector2Int sectorGlobalPos = preSec.xy();
 
         // on génère les salles et les couloirs
-        areas = sectorGenerator.GenerateRooms(roomPositions, corrPositions, sectorGlobalPos,this.gameObject, extended_rooms);
+        areas = sectorGenerator.GenerateRooms(roomPositions, corrPositions, sectorGlobalPos,this.gameObject);
         Dictionary<Vector2Int, Room> corridors = sectorGenerator.GenerateCorridors(corrPositions, roomPositions, sectorGlobalPos, this.gameObject);
         // areas.UnionWith(sectorGenerator.GenerateCorridors(corrPositions, roomPositions, sectorGlobalPos, this.gameObject));
         for (int i = 0; i < corridors.Count; i++)

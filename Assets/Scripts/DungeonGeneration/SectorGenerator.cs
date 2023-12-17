@@ -17,6 +17,7 @@ public class SectorGenerator : MonoBehaviour
     [SerializeField] protected int nb_rooms = 5; // ! cela ne veut pas dire qu'on aura 5 salles, mais qu'on va essayer d'en avoir 5, il peut y avoir des doublons
     // [SerializeField]
     protected Vector2 roomDimensions = new Vector2(8f, 7.5f);
+    [SerializeField] protected bool extended_room = false;
 
 
 
@@ -163,8 +164,10 @@ public class SectorGenerator : MonoBehaviour
 
     // ROOMS FUNCTIONS
 
-    public Dictionary<Vector2Int,Room> GenerateRooms(HashSet<Vector2Int> roomsPositions, HashSet<Vector2Int> corridorsPositions, Vector2Int sectorPos, GameObject parent = null, bool extended_rooms=false )
+    public Dictionary<Vector2Int,Room> GenerateRooms(HashSet<Vector2Int> roomsPositions, HashSet<Vector2Int> corridorsPositions, Vector2Int sectorPos, GameObject parent = null )
     {
+        print("ext rooms" + extended_room);
+
         // on crée un dictionnaire de salles
         Dictionary<Vector2Int,Room> areas = new Dictionary<Vector2Int,Room>();
 
@@ -186,10 +189,10 @@ public class SectorGenerator : MonoBehaviour
         return areas;
     }
 
-    protected Room GenerateRoom(Vector2Int position, HashSet<Vector2Int> corrDirections, HashSet<Vector2Int> roomDirections, GameObject parent = null, bool extended_room=false)
+    protected Room GenerateRoom(Vector2Int position, HashSet<Vector2Int> corrDirections, HashSet<Vector2Int> roomDirections, GameObject parent = null)
     {
         // on choisit la bonne salle en fonctions des ouvertures
-        GameObject room = ChooseRoom(corrDirections, roomDirections, extended_room);
+        GameObject room = ChooseRoom(corrDirections, roomDirections);
 
         // on récupère la position du monde
         Vector3 worldPosition = GetWorldPositionFromTileworldPosition(position);
@@ -210,7 +213,7 @@ public class SectorGenerator : MonoBehaviour
         return roomInstance.GetComponent<Room>();
     }
 
-    protected GameObject ChooseRoom(HashSet<Vector2Int> corrDirections, HashSet<Vector2Int> roomDirections, bool extended_room=false)
+    protected GameObject ChooseRoom(HashSet<Vector2Int> corrDirections, HashSet<Vector2Int> roomDirections)
     {
         // on récupère les noms des salles
         string roomName = "room_";
@@ -224,6 +227,8 @@ public class SectorGenerator : MonoBehaviour
         else if (roomDirections.Contains(Vector2Int.left)) { roomName += (extended_room?"W":"L"); }
         if (corrDirections.Contains(Vector2Int.right)) { roomName += "R"; }
         else if (roomDirections.Contains(Vector2Int.right)) { roomName += (extended_room?"E":"R"); }
+
+        print("chosen room name : " + roomName + " / ext rooms" + extended_room);
 
         // on récupère la salle
         GameObject room = Resources.Load<GameObject>("prefabs/rooms/" + roomName);
