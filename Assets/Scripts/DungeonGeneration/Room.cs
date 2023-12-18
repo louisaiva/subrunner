@@ -212,7 +212,7 @@ public class Room : MonoBehaviour {
 
                     // on déplace le poster
                     poster.transform.position += offset;
-                    print("on ajoute un poster en " + poster.transform.position + " avec un offset de " + offset);
+                    // print("on ajoute un poster en " + poster.transform.position + " avec un offset de " + offset);
 
 
                     // on met le bon parent

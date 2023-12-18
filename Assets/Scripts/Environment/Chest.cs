@@ -19,6 +19,7 @@ public class Chest : MonoBehaviour, I_Interactable
 
     // OPENING
     public bool is_open = false;
+    private float openin_time = 1f;
 
     // inventory
     public Inventory inventory;
@@ -31,6 +32,7 @@ public class Chest : MonoBehaviour, I_Interactable
     {
         // on récupère l'animation handler
         anim_handler = GetComponent<AnimationHandler>();
+        anim_handler.debug = true;
 
         // on récupère l'inventaire
         inventory = transform.Find("inventory").GetComponent<Inventory>();
@@ -41,52 +43,71 @@ public class Chest : MonoBehaviour, I_Interactable
 
     void Update()
     {
+        // on check les events
+        Events();
+
         // on met à jour les animations
-        if (is_open)
-        {
-            // on regarde si on a fini l'animation
-            if (anim_handler.IsForcing()) { return; }
-
-            // on met à jour les animations
-            anim_handler.ChangeAnim(anims.idle_open);
-
-            // on met à jour l'inventaire
-            inventory.setShow(true);
-        }
-        else
+        if (!is_open)
         {
             // on met à jour l'inventaire
             inventory.setShow(false);
 
-            // on regarde si on a fini l'animation
-            if (anim_handler.IsForcing()) { return; }
+            if (!is_interacting)
+            {
+                // on regarde si on a fini l'animation
+                if (anim_handler.IsForcing()) { return; }
 
-            // on met à jour les animations
-            anim_handler.ChangeAnim(anims.idle_closed);
+                // on met à jour les animations
+                anim_handler.ChangeAnim(anims.idle_closed);
+            }
+        }
+    }
+
+    void Events()
+    {
+        // print("chest : " + is_open + " " + is_interacting);
+        // on regarde si on appuie sur la touche d'interaction (E)
+        // lorsqu'on est déjà ouvert
+        if (Input.GetButtonDown("Interact") && is_open)
+        {
+            // on transvase tous les objets dans l'inventaire du perso
+            foreach (Item item in inventory.getItems())
+            {
+                // on ajoute l'item au perso
+                // perso.GetComponent<Inventory>().addItem(item);
+                inventory.dropItem(item);
+            }
         }
     }
 
     // MAIN FUNCTIONS
     public void open()
     {
-        // on met à jour les animations
-        if (!anim_handler.ChangeAnimTilEnd(anims.openin)) { return; }
-
-        // on ouvre le coffre
+        print("open chest");
         is_open = true;
+
+        // on met à jour les animations
+        anim_handler.StopForcing();
+        anim_handler.ChangeAnim(anims.idle_open);
+
+        // on met à jour l'inventaire
+        inventory.setShow(true);
     }
 
     public void close()
     {
+        print("close chest");
+
         // on arrête de forcer l'animation -> pour être sûr qu'on puisse fermer le coffre
         anim_handler.StopForcing();
 
         // on met à jour les animations
-        if (!anim_handler.ChangeAnimTilEnd(anims.closin)) { return; }
+        anim_handler.ChangeAnimTilEnd(anims.closin);
 
         // on ferme le coffre
         is_open = false;
     }
+
 
     // INVENTORY FUNCTIONS
     public bool grab(Item item)
@@ -108,14 +129,32 @@ public class Chest : MonoBehaviour, I_Interactable
 
     public void interact()
     {
-        // on ouvre le coffre
-        open();
+        // on met à jour les animations
+        if (!anim_handler.ChangeAnimTilEnd(anims.openin, openin_time)) { return; }
+
+        print("interact chest");
+
+        // interaction
+        is_interacting = true;
+
+        // on ouvre le coffre dans openin_time
+        Invoke("open", openin_time);
     }
 
     public void stopInteract()
     {
-        // on ferme le coffre
-        close();
+        print("stop interact chest");
+
+        if (is_open) { close(); }
+
+        if (is_interacting)
+        {
+            // on arrête l'invocation de "open"
+            CancelInvoke("open");
+
+            // on arrête l'interaction
+            is_interacting = false;
+        }
     }
 }
 

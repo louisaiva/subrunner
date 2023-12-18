@@ -268,7 +268,7 @@ public class Perso : Attacker
         }
 
         // interactions
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetButtonDown("Interact"))
         {
             interact();
         }
@@ -280,7 +280,7 @@ public class Perso : Attacker
         }
 
         // ouverture de l'inventaire
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetButtonDown("Inventory"))
         {
             inventory.rollShow();
         }
@@ -756,6 +756,10 @@ public class Perso : Attacker
             if (current_interactable.GetComponent<Chest>() != null)
             {
                 if (current_interactable.GetComponent<Chest>().grab(item)) { return; }
+            }
+            else if (current_interactable.GetComponent<Bed>() != null)
+            {
+                if (current_interactable.GetComponent<Bed>().grab(item)) { return; }
             }
         }
 

@@ -105,7 +105,6 @@ public class Bed : MonoBehaviour, I_LongInteractable
 
     public bool grab(Item item)
     {
-        // item.transform.SetParent(inventory.transform);
         return inventory.addItem(item);
     }
 
