@@ -190,16 +190,16 @@ public class Sector : MonoBehaviour
         int max_emplacements = emplacements_interactifs.Values.ToList().Sum();
 
         // on vériie que le nombre d'emplacements interactifs disponibles est suffisant
-        if (max_emplacements < nb_chests + nb_computers)
+        if (max_emplacements < nb_chests + nb_computers + 1)
         {
             // on récupère la proportion de chests et de computers
-            float proportion_chests = (float)nb_chests / (float)(nb_chests + nb_computers);
+            float proportion_chests = (float)nb_chests / (float)(nb_chests + nb_computers + 1);
 
             // on calcule le nombre de chests
             nb_chests = (int)(proportion_chests * max_emplacements);
 
             // on calcule le nombre de computers
-            nb_computers = max_emplacements - nb_chests;
+            nb_computers = max_emplacements - nb_chests - 1;
         }
 
         // on place les chests au hasard
@@ -263,6 +263,37 @@ public class Sector : MonoBehaviour
                 emplacements_interactifs.Remove(room.gameObject.name);
             }
         }
+    
+        // on place le bed
+        Room bedroom = GetRandomRoomWithInteractif(emplacements_interactifs);
+        bedroom.PlaceBed();
+    }
+
+    private Room GetRandomRoomWithInteractif(Dictionary<string, int> emplacements_interactifs)
+    {
+        // on vérifie qu'il reste des emplacements interactifs
+        if (emplacements_interactifs.Count == 0) { return null; }
+
+        // on récupère une salle au hasard
+        string room_name = emplacements_interactifs.Keys.ToList()[Random.Range(0, emplacements_interactifs.Keys.Count)];
+        Room room = transform.Find(room_name).GetComponent<Room>();
+
+        // on vérifie qu'il reste des emplacements interactifs dans la salle
+        while (emplacements_interactifs[room.gameObject.name] == 0)
+        {
+            // on cherche une autre salle
+            room_name = emplacements_interactifs.Keys.ToList()[Random.Range(0, emplacements_interactifs.Keys.Count)];
+            room = transform.Find(room_name).GetComponent<Room>();
+        }
+
+        // on décrémente le nombre d'emplacements interactifs disponibles
+        emplacements_interactifs[room.gameObject.name]--;
+        if (emplacements_interactifs[room.gameObject.name] == 0)
+        {
+            emplacements_interactifs.Remove(room.gameObject.name);
+        }
+
+        return room;
     }
 
 

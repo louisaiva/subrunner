@@ -56,6 +56,7 @@ public class Perso : Attacker
     private float interact_range = 1f;
     private LayerMask interact_layers;
     public GameObject current_interactable = null;
+    public Bed respawn_bed = null;
 
     /*
 
@@ -267,7 +268,7 @@ public class Perso : Attacker
         }
 
         // interactions
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetButtonDown("Interact"))
         {
             interact();
         }
@@ -279,7 +280,7 @@ public class Perso : Attacker
         }
 
         // ouverture de l'inventaire
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetButtonDown("Inventory"))
         {
             inventory.rollShow();
         }
@@ -392,14 +393,14 @@ public class Perso : Attacker
         // ! à mettre tjrs au début de la fonction update
         if (!isAlive()) { return; }
 
+        // update de d'habitude
+        base.Update();
+
         // régèn des bits
         if (bits < max_bits)
         {
             bits += regen_bits * Time.deltaTime;
         }
-
-        // update de d'habitude
-        base.Update();
 
         // on update le hackin
         has_hackin_os = false;
@@ -719,10 +720,31 @@ public class Perso : Attacker
                 current_interactable.GetComponent<I_Interactable>().stopInteract();
                 current_interactable = null;
             }
+            else if (current_interactable.GetComponent<I_LongInteractable>() != null)
+            {
+                I_LongInteractable long_interactable = current_interactable.GetComponent<I_LongInteractable>();
+                // on regarde si cet objet interagit encore avec nous
+                if (!(long_interactable.is_interacting || long_interactable.is_being_activated))
+                {
+                    // on arrête d'interagir avec l'objet
+                    current_interactable = null;
+                }
+            }
         }
 
     }
 
+    public void setRespawnBed(Bed bed)
+    {
+        respawn_bed = bed;
+
+        // on affiche un texte de début
+        Vector3 position = transform.position + new Vector3(0, 1.2f, 0);
+        string text = "your respawn point has been set";
+        GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
+        floating_text.GetComponent<FloatingText>().init(text, Color.yellow, 30f, 0.1f, 0.2f, 6f);
+        floating_text.transform.SetParent(floating_dmg_provider.transform);
+    }
 
     // INVENTORY
     public void drop(Item item)
@@ -734,6 +756,10 @@ public class Perso : Attacker
             if (current_interactable.GetComponent<Chest>() != null)
             {
                 if (current_interactable.GetComponent<Chest>().grab(item)) { return; }
+            }
+            else if (current_interactable.GetComponent<Bed>() != null)
+            {
+                if (current_interactable.GetComponent<Bed>().grab(item)) { return; }
             }
         }
 

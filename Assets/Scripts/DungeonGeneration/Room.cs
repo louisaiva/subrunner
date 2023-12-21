@@ -212,7 +212,7 @@ public class Room : MonoBehaviour {
 
                     // on déplace le poster
                     poster.transform.position += offset;
-                    print("on ajoute un poster en " + poster.transform.position + " avec un offset de " + offset);
+                    // print("on ajoute un poster en " + poster.transform.position + " avec un offset de " + offset);
 
 
                     // on met le bon parent
@@ -313,6 +313,17 @@ public class Room : MonoBehaviour {
         computer.transform.SetParent(computer_parent);
     }
 
+    public void PlaceBed()
+    {
+        // on récupère la position de l'emplacement interactif
+        Vector3 position_interactive = use_interactive_position();
+
+        // on instancie le bed
+        GameObject bed = Instantiate(Resources.Load<GameObject>("prefabs/objects/bed"), position_interactive, Quaternion.identity);
+
+        // on met le bon parent
+        bed.transform.SetParent(transform);
+    }
 
     // ennemies
     private List<GameObject> get_enemy_emplacements()

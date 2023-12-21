@@ -183,11 +183,11 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
         /* float hackin_duration = hacking_duration_base * Mathf.Pow(0.95f, lvl - required_hack_lvl); */
 
         hacking_current_duration = hacking_duration_base;
-        float hackin_speed = hacking_duration_base / hacking_current_duration;
+        // float hackin_speed = hacking_duration_base / hacking_current_duration;
         if (hacking_current_duration < 0.1f) { hacking_current_duration = 0.1f; }
 
         // on met à jour les animations
-        if (!anim_handler.ChangeAnimTilEnd(anims.hackin, hackin_speed)) { return 0; }
+        if (!anim_handler.ChangeAnimTilEnd(anims.hackin, hacking_current_duration)) { return 0; }
 
         // on commence le hack
         is_getting_hacked = true;

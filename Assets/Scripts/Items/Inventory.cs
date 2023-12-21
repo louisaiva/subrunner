@@ -35,7 +35,14 @@ public class Inventory : MonoBehaviour {
         perso = GameObject.Find("/perso");
 
         // on récupère le prefab
-        empty_slot_prefab = Resources.Load("prefabs/ui/empty_legendary_slot") as GameObject;
+        if (is_bed)
+        {
+            empty_slot_prefab = Resources.Load("prefabs/ui/empty_legendary_slot") as GameObject;
+        }
+        else
+        {
+            empty_slot_prefab = Resources.Load("prefabs/ui/empty_slot") as GameObject;
+        }
 
         // on récupère le canvas
         canvas = GetComponent<Canvas>();
@@ -53,6 +60,7 @@ public class Inventory : MonoBehaviour {
 
     void Update()
     {
+
         // on met à jour la taille du canvas si c'est scalable
         if (scalable) { updateSize(); }
 
@@ -293,7 +301,6 @@ public class Inventory : MonoBehaviour {
     }
 
 
-
     // functions
     public void dropItem(Item item)
     {
@@ -352,6 +359,16 @@ public class Inventory : MonoBehaviour {
 
     public bool addItem(Item item)
     {
+        // on vérifie si on est un inventaire de lit
+        if (is_bed)
+        {
+            // on vérifie si c'est un item légendaire
+            if (!item.legendary_item) { return false;}
+
+            // on vérifie qu'on a pas déjà cet item légendaire
+            if (getItem(item.item_name) != null) { return false; }
+        }
+
         // on ajoute un item à l'inventaire
         // on vérifie qu'on est pas déjà plein
         if (!scalable && getItems().Count >= max_items) { return false; }
