@@ -1,111 +1,162 @@
 # projet créé le 19 nov 2023
 
+#
+QUETES
+#
+    QUETE PRINCIPALE :
+
+        notre perso est un hacker qui vit dans les souterrains d'une ville apocalyptique zombiesque dystopiak
+        il voit une pub à la télé de super pates et a envie de manger des pates
+
+        il se lève donc et va acheter des pates, sauf que ça lui prend mille ans de remonter à la surface lol
+
+        dès qu'il croise une forme de vie il demande si iel a pas des pates
+
+    QUETES PERIPETIES :
+
+        HK - Quete du hackeur
+            lorsqu'on arrive dans le secteur HK, un petit hackeur vient à notre rencontre
+            il est tout petit et mignon et il a l'air trop cool
+            mais il nous mène directement vers un endroit en nous disant l'amener chez lui
+            et nous demande d'entrer dans une cuve etrange jaunatre
+            si on accepte il nous hacke tous nos bits et nous laisse dans la cuve
+            puis il se tire en courant
+            on doit ensuite hacker la cuve pour esperer en sortir
+            si on y arrive on doit retrouver la planque du hacker dans le secteur
+            quand on arrive devant chez lui il sort à l'instant et est étonné de nous voir
+            il nous dit "oh ! t'as reussi à sortir ! t cho, viens j'allais m'acheter des nouilles"
+            on va s'acheter des nouilles avec lui et on lui dmd si ils vendent des pates
+            il nous rit à la gueule et nous dit bon courage mdr
+            il nous laisse son ordi en disant qu'on trouvera des trucs intéressants si on le hacke
 
 
-SCENARIO :
 
-    notre perso est un hacker qui vit dans les souterrains d'une ville apocalyptique zombiesque dystopiak
-    il voit une pub à la télé de super pates et a envie de manger des pates
+#
+PERSO
+#
 
-    il se lève donc et va acheter des pates, sauf que ça lui prend mille ans de remonter à la surface lol
+    HACKIN :
 
-    dès qu'il croise une forme de vie il demande si iel a pas des pates
+        différentes bases de bits nécessaires pour hacker
+        
+        - zombo   : 2 bits
+        - porte   : 4 bits
+        - ordi    : 6 bits
+        - parefeu : 8 bits
 
+        ces bits nécessaires augmentent exponentiellement en fonction du niveau
+        (required_bits = base_bits * 2^(level-1))
 
+        exemple :
+        - ordi  niv 2 : 12 bits
+        - ordi  niv 3 : 24 bits nécessaires
+        - zombo niv 2 : 4 bits
+        - zombo niv 3 : 8 bits
 
-HACKIN :
+        rayons de hack :
+            prennent différentes couleurs selon les personnages qui la pratiquent
+                perso principal : green
+                crs du futur : red
+                (zombies : black)
+                hackeurs plus ou moins alliés : 
+                    violet
+                    bleu-vert
+                    rose
 
-    différentes bases de bits nécessaires pour hacker
-    
-    - zombo   : 2 bits
-    - porte   : 4 bits
-    - ordi    : 6 bits
-    - parefeu : 8 bits
+    SKILLTREES :
 
-    ces bits nécessaires augmentent exponentiellement en fonction du niveau
-    (required_bits = base_bits * 2^(level-1))
+        notre perso progresse petit à petit.
+        au fur et à mesure de sa progression, plusieurs stats vont se modifier pour
+        caractériser la montée de niveau du perso.
 
-    exemple :
-    - ordi  niv 2 : 12 bits
-    - ordi  niv 3 : 24 bits nécessaires
-    - zombo niv 2 : 4 bits
-    - zombo niv 3 : 8 bits
+        ces stats sont réparties en plusieurs catégories et
+        s'améliorent via différents systèmes de jeu :
 
+        notamment :
 
-SKILLTREES :
+        catégorie physique :
+            - max_vie
+            - regen_vie
+            - degats
+            - vitesse de déplacement
 
-    notre perso progresse petit à petit.
-    au fur et à mesure de sa progression, plusieurs stats vont se modifier pour
-    caractériser la montée de niveau du perso.
-
-    ces stats sont réparties en plusieurs catégories et
-    s'améliorent via différents systèmes de jeu :
-
-    notamment :
-
-    catégorie physique :
-        - max_vie
-        - regen_vie
-        - degats
-        - vitesse de déplacement
-
-    catégorie virtuelle :
-        - max_bits
-        - regen_bits
-        - portée de hack
-
-
-    ces stats sont augmentées via 2 arbres de compétences séparés :
-
-    - à chaque montée de niveau on peut augmenter une stat physique
-    - dès qu'on trouve un ordinateur on peut augmenter n stats virtuelles où n est le niveau de l'ordi.
-
-    les ordinateurs doivent être hackés pour accéder à la récompense.
+        catégorie virtuelle :
+            - max_bits
+            - regen_bits
+            - portée de hack
 
 
-TYPE DE SECTEURS :
+        ces stats sont augmentées via 2 arbres de compétences séparés :
 
-    CC - controle center. salle centrale où toutes les sécurités sont appliquées. boss
-    
-    F  - salle Firewall contenant un parefeu à désactiver pour baisser la sécurité informatique de la CC
-         désactiver un parefeu augmente cependant le nombre d'ennemis et le niveau du boss final
+        - à chaque montée de niveau on peut augmenter une stat physique
+        - dès qu'on trouve un ordinateur on peut augmenter n stats virtuelles où n est le niveau de l'ordi.
 
-    CO  - salle Computer. Contient un ordi et nous permet d'augmenter nos skills virtuels
+        les ordinateurs doivent être hackés pour accéder à la récompense.
 
-    CH - salle Chest. contient des items physiques
+#
+SECTEURS
+#
 
-    SE - salle Serveur. contient des serveurs, et donc des items virtuels
+    SECTEURS UNIQUES
 
-    HK - salle Hacker. Permet de rencontrer un petit hacker comme nous qui augmente le niveau de nos hacks
+        QG - notre QG. aussi la salle de spawn. début de chaque run
 
-    A  - salle Anarchy. Lieu sans zombie où y'a une communauté de gens qui vivent. Tu peux leur acheter des items
-        (mais pas de pates), et augmenter le niveau de tes items physiques
-    
-    QG - notre QG. aussi la salle de spawn. début de chaque run
+        CC - controle center. secteur centrale où toutes les sécurités sont appliquées. bosse de fin
 
-    HA - grand Hall vide avec des trucs et beaucoup de zombooooos
+        HK - secteur Hacker.  un petit hacker comme nous qui augmente le niveau de nos hacks
+            (voir Quetes Peripeties HK)
 
-SECTEURS ADITIONNELS
+        A  - secteur Anarchy. Lieu sans zombie où y'a une communauté de gens qui vivent. Tu peux leur acheter des items
+            (mais pas de pates), et augmenter le niveau de tes items physiques
+        
+        HA - grand Hall avec des trucs et beaucoup de zombooooos
+            le hall est d'un coté contrôlé par des zombies qui arrivent des profondeurs via un ascenceur
+            (point principal de spawn)
 
-    DOG - sector avec des animaux cybernetiques abandonnés
-    BIB - secteur bibliothèque. amène vers l'océan
+            et de l'autre par les crs du futur (les main ennemis)
 
-PETITS SECTEURS UNIQUES ADITIONNELS
+        KAT - KATANA guy. forgeron complètement fou des profondeurs
+            vend des katanas et des shurikens.
 
-    404 - 404 room
-        boss post-final
-        débloque un boss postgénérique qui nous attaque avec des erreurs de code
-        le boss de l'internet
-        permet de passer dans la matrice si ouverte
-        la porte apparait après avoir achevé le dernier boss
-        puis elle disparait ensuite
-        et le but c'est de trouver sa position au bon moment pour pouvoir l'ouvrir
-    
+    SECTEURS RECURRENTS
+
+        IT - secteur internet qui sert aussi de voyage rapide
+            grandes couloirs isothermes parcourut uniquement par des informations qui circulent par internet
+            des fois des zombies passent dedans on les voit passer dans les vitres mdr
+            on peut hacker les entrées et on arrive dans le couloir
+            quand on entre les murs sont des miroirs et toute la map se transforme en miroirs
+            une force constante nous pousse dans un sens
+            qui est exactement notre vitesse
+            c'est à dire que si on va avance dans le sens opposé de la force bah on bouge pas c cool
+            dans ces secteurs on peut installer des stackeurs de bits qui attrapent des bits pour nous
+
+            (en soit c un secteur unique mais qu'on est obligé de recroiser plusieurs fois à différents endroits)
+        
+        F  - secteur Firewall contenant un parefeu à désactiver pour baisser la sécurité informatique de la CC
+            désactiver un parefeu augmente cependant le nombre d'ennemis et le niveau du boss final
+
+        SE - secteur Serveur. contient des serveurs, et donc des items virtuels
+
+    SECTEURS UNIQUES OPTIONNELS
+
+        DOG - sector avec des animaux cybernetiques abandonnés
+        BIB - secteur bibliothèque. amène vers l'océan
 
 
-GENERATION PROCEDURALE 1E EBAUCHE :
+    PETITS SECTEURS EASTER EGGS
 
-    la génération du monde se fait en plusieurs étapes :
+        404 - 404 room
+            boss post-final
+            débloque un boss postgénérique qui nous attaque avec des erreurs de code
+            le boss de l'internet
+            permet de passer dans la matrice si ouverte
+            la porte apparait après avoir achevé le dernier boss
+            puis elle disparait ensuite
+            et le but c'est de trouver sa position au bon moment pour pouvoir l'ouvrir
+
+#
+generation
+    1.X algo principal :
 
         - génération des rooms par World.cs
         - gestion des connections inter rooms (couloirs)
@@ -117,8 +168,7 @@ GENERATION PROCEDURALE 1E EBAUCHE :
         - disposition d'items nécessaires dans les coffres
         - disposition d'items randoms cachés en mode clé usb dans les poubelles et tout
     
-
-    1er choix d'algo :
+    1.0 algo :
 
         une generation full procedurale, qui crée des salles de tailles
         aléatoires et d'agencements aléatoires :
@@ -132,7 +182,7 @@ GENERATION PROCEDURALE 1E EBAUCHE :
             -possibilité de bugs de map plus grande
             -moins de salles et plus de couloirs ?
         
-    2e choix d'algo :
+    1.1 algo :
 
         generation procédurale de salles, mais pas procédurale dans les salles
 
@@ -145,45 +195,95 @@ GENERATION PROCEDURALE 1E EBAUCHE :
             -peut-etre des salles repetitives
 
 
-GENERATION PROCEDURALE 2E EBAUCHE :
+    2.0 algo :
 
-    on crée des secteurs avant de créer les rooms.
-    World.cs crée et organise les secteurs (cf types de secteurs plus haut)
-    Sector.cs crée et organise ses propres rooms, items, etc
-    Room.cs gère ses propres éléments décoratifs (posters, lights)
+        on crée des secteurs avant de créer les rooms.
+        World.cs crée et organise les secteurs (cf types de secteurs plus haut)
+        Sector.cs crée et organise ses propres rooms, items, etc
+        Room.cs gère ses propres éléments décoratifs (posters, lights)
 
-    algo :
-        -World crée des Sector.
-            -Il récup une List de Hashset obtenue via SectorGenerator (WalkMan algo)
-            -On vérifie qu'un secteur relie toutes ses salles
-        -World récupère les tailles des Sectors générés et créé un Schéma global du monde (TK Algo)
-        -World définit quels sectors sont de quel type.
-        -World retravaille les HashSet pour relier les secteurs (en ajoutant des corridors)
-        -World lance la création finale en passant a chaque Sector son Hashset et sa position globale
-            -si des rooms sont adjacentes -> ça fait une big room
-            -Chaque Sector applique son type -> change les tiles de ses rooms
-            -Chaque Sector applique son type -> gère les ennemis
-            -Chaque Sector applique son type -> place des coffres, etc
+        algo :
+            -World crée des Sector.
+                -Il récup une List de Hashset obtenue via SectorGenerator (WalkMan algo)
+                -On vérifie qu'un secteur relie toutes ses salles
+            -World récupère les tailles des Sectors générés et créé un Schéma global du monde (TK Algo)
+            -World définit quels sectors sont de quel type.
+            -World retravaille les HashSet pour relier les secteurs (en ajoutant des corridors)
+            -World lance la création finale en passant a chaque Sector son Hashset et sa position globale
+                -si des rooms sont adjacentes -> ça fait une big room
+                -Chaque Sector applique son type -> change les tiles de ses rooms
+                -Chaque Sector applique son type -> gère les ennemis
+                -Chaque Sector applique son type -> place des coffres, etc
 
-MAP :
+    3.0 algo :
 
-    voir les ranges
+        il faut que toute la map soit sur seulement 3 tilemaps (gd,wall,fg)
 
-ARMES :
+        pavé par des cubes de 16x16 tiles -> Areas (Room & Corridor)
 
-    katana
-    shurikens
-        tu peux les recup sur les zombies apres
+        on sépare ensuite les rooms en différents secteurs (comme des biomes)
+        on applique les skins directement aux rooms
 
-ITEMS A RAJOUTER :
+        /!\ les prefabs Room ne contiennent donc pas 3 tilemaps différentes mais seulement leur hashset spécifique en direct
 
-    item pour voir les zombies sur la map
-    item pour voir l'ami drone
+        avantages :
+
+            -donjon aléatoire mais cohérent
+            -un seul HashSet central en read
+            -meilleur accès aux tiles spécifiques
+            -meilleur accès aux tiles des areas spécifiques
+        
+        inconvenients :
+        
+            -génération CONS2QUENTE mais plus organisée dc ça va, c juste long a faire (flemme)
+            -on doit tout refaire les prefabs des rooms (peut-etre transformer ça en fichier txt ?)
+#
 
 
-    lecteur mp3 vieux venus d'une autre epoque :
-        rajoute une interface en bas à gauche
-        qui te permet de choisir la musique que tu veux
-        chaque musique apporte un petit boost en mode motivation techno
-        les cds peuvent se trouver au camp des anar
+#
+ITEMS
+#
 
+    ARMES :
+
+        katana
+        shurikens
+            tu peux les recup sur les zombies apres
+
+    ITEMS A RAJOUTER :
+
+        item pour voir les zombies sur la map
+        item pour voir l'ami drone
+
+
+        lecteur mp3 vieux venus d'une autre epoque :
+            rajoute une interface en bas à gauche
+            qui te permet de choisir la musique que tu veux
+            chaque musique apporte un petit boost en mode motivation techno
+            les cds peuvent se trouver au camp des anar
+
+
+#
+UI
+#
+    l'UI est composé de différents écrans distinctifs :
+
+    HUD :
+        canva superposé à l'écran du jeu contenant différentes zones :
+
+        haut à gauche - barres de vie, barre de bits (RGB)
+        
+        haut à droite - minimap (Violet jaune)
+
+        bas à gauche  - lecteur cd (blanc bleu noir)
+
+        bas à droite  - barre du drone ?
+
+    Menu Pause :
+
+        canva affichant en bg le jeu en pause flouté assombri
+        et différentes zones:
+
+        Cotés : comme le HUD mais en plus grands
+
+        Milieu : options du mode pause
