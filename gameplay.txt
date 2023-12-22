@@ -96,7 +96,6 @@ PERSO
 #
 SECTEURS
 #
-
     SECTEURS UNIQUES
 
         QG - notre QG. aussi la salle de spawn. début de chaque run
@@ -118,6 +117,8 @@ SECTEURS
         KAT - KATANA guy. forgeron complètement fou des profondeurs
             vend des katanas et des shurikens.
 
+        DB - secteur base de données. Comme un serveur avec des coffres en plus et la blinde d'équipement. Compliqué à hacker
+
     SECTEURS RECURRENTS
 
         IT - secteur internet qui sert aussi de voyage rapide
@@ -135,12 +136,18 @@ SECTEURS
         F  - secteur Firewall contenant un parefeu à désactiver pour baisser la sécurité informatique de la CC
             désactiver un parefeu augmente cependant le nombre d'ennemis et le niveau du boss final
 
+            les parefeux ont toujours un "lien" vers le secteur internet et y possèdent une barrière qui filtre internet.
+            lorsque cette barrière est en marche elle nous empêchent d'y passer (et donc d'aller plus loin)
+            une fois le parefeu hacké, la barrière s'ouvre et on peut donc aller plus loin dans internet
+
         SE - secteur Serveur. contient des serveurs, et donc des items virtuels
+            relié à internet aussi avec des cables sur le fg
 
     SECTEURS UNIQUES OPTIONNELS
 
         DOG - sector avec des animaux cybernetiques abandonnés
         BIB - secteur bibliothèque. amène vers l'océan
+        C   - secteur chest
 
 
     PETITS SECTEURS EASTER EGGS
@@ -156,6 +163,7 @@ SECTEURS
 
 #
 generation
+#
     1.X algo principal :
 
         - génération des rooms par World.cs
@@ -237,7 +245,36 @@ generation
         
             -génération CONS2QUENTE mais plus organisée dc ça va, c juste long a faire (flemme)
             -on doit tout refaire les prefabs des rooms (peut-etre transformer ça en fichier txt ?)
-#
+
+        algo détaillé :
+
+            (1) Area HashSet generator
+
+            -on génère les hashset de chaque secteurs pour avoir des secteurs cohérents (sector generator)
+            -on positionne certains secteurs spécifiques type boss, area de départ, grand hall (sector seter)
+            -on sépare comme on veut les secteurs pour pouvoir les assembler (sector separator)
+                écarter plus que nécessaire les secteurs ?
+            -ensuite on rajoute sur ce hashset global certains secteurs particuliers du type internet
+                est-ce qu'on doit refaire une étape de séparation ?
+            -on trace un graph pour relier les secteurs entre eux et ajouter 2 boucles
+
+            (2) Tile HashSet translator
+
+            -on multiplie le area_hashset par les dimensions d'une area en tiles. -> on obtient un hashset enorme en tiles
+            -on place les portes sur le tile_hashset global.
+            (-placer des portes d'accès à internet ? + tile_cable internet dans fg pour relier les portes et serveurs)
+            (-on créé un hashet specifique pour les coffres / ordis / parefeu / lit?)
+            -on récupère les positions tilique SW de chaque area
+
+            (3) Area translator
+
+            -on crée des rooms et corridors à partir du tile_hashset, de l'area_hashset et des positions des areas
+                -> récuperation des prefabs d'areas et application des bons area
+            -on applique les skins des secteurs aux areas
+            -on crée les objets decoratifs (posters, lampes, dechets)
+            -on ajoute des objets interactifs (coffres, lit, ordis, parefeu) en fonction du secteur
+            (-on ajoute d'autres objets deco-interactifs type trou de rat, cadavres qui puent)
+            -on génère les pnj en fonction du secteur (zombos, crf, cyberdogs, forgeron, hackers)
 
 
 #
