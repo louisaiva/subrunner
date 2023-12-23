@@ -497,7 +497,7 @@ public class Sector : MonoBehaviour
         return tiles;
     }
 
-    public string GetTileType(Vector2Int globalTilePos)
+    /* public string GetTileType(Vector2Int globalTilePos)
     {
         // on récupère la position de la room
         Vector2Int roomPos = globalTilePos / 16;
@@ -519,7 +519,7 @@ public class Sector : MonoBehaviour
 
         return type;
     }
-
+ */
     public Room GetRoomWithGlobalRoomPos(Vector2Int globalTilePos, out Vector2Int localTilePos)
     {
         // on récupère la position de la room

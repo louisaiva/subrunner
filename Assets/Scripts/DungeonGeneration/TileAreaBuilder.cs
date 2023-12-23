@@ -68,6 +68,39 @@ public class TileAreaBuilder : MonoBehaviour
         }
     }
 
+    public void FlipX(ref Tilemap fg_tm, ref Tilemap bg_tm, ref Tilemap gd_tm)
+    {
+        // on crée 3 listes de tiles
+        Tilemap fg_tiles = new Tilemap();
+        Tilemap bg_tiles = new Tilemap();
+        Tilemap gd_tiles = new Tilemap();
+
+        for (int y = -8; y < 8; y++)
+        {
+            for (int x = 0; x < 16; x++)
+            {
+                int tm_x = 15-x;
+                tm_x -= 8;
+                x -= 8;
+
+                // on récupère les tiles
+                TileBase fg_tile = fg_tm.GetTile(new Vector3Int(tm_x, y, 0));
+                TileBase bg_tile = bg_tm.GetTile(new Vector3Int(tm_x, y, 0));
+                TileBase gd_tile = gd_tm.GetTile(new Vector3Int(tm_x, y, 0));
+
+                // on ajoute les tiles aux tilemaps
+                fg_tiles.SetTile(new Vector3Int(x, y, 0), fg_tile);
+                bg_tiles.SetTile(new Vector3Int(x, y, 0), bg_tile);
+                gd_tiles.SetTile(new Vector3Int(x, y, 0), gd_tile);
+            }
+        }
+
+        // on remplace les tilemaps
+        fg_tm = fg_tiles;
+        bg_tm = bg_tiles;
+        gd_tm = gd_tiles;
+    }
+
     // SAVING SELECTED AREAS
 
     public void SaveJson(GameObject area)
@@ -113,16 +146,20 @@ public class TileAreaBuilder : MonoBehaviour
         Tilemap gdTilemap = area.transform.Find("gd_tilemap").GetComponent<Tilemap>();
 
         // on applique des changements à nos tilemaps !!
-        ApplyChanges(ref fgTilemap, ref bgTilemap, ref gdTilemap);
+        // ApplyChanges(ref fgTilemap, ref bgTilemap, ref gdTilemap);
+        // FlipX(ref fgTilemap, ref bgTilemap, ref gdTilemap);
+
+        bool flip_x = false;
+        if (area.transform.localScale.x < 0) { flip_x = true; }
 
         // on récupère les dimensions de l'area
-        GetAreaDimensions(new List<Tilemap> { fgTilemap, bgTilemap, gdTilemap }, out Vector2Int position, out Vector2Int size);
+        // GetAreaDimensions(new List<Tilemap> { fgTilemap, bgTilemap, gdTilemap }, out Vector2Int position, out Vector2Int size);
         string json_fg = "\"fg\" : [\n";
         string json_bg = "\"bg\" : [\n";
         string json_gd = "\"gd\" : [\n";
 
         // on parcourt les tiles
-        for (int y = position.y; y < position.y + size.y; y++)
+        for (int y = -8; y < 8; y++)
         {
             // on ajoute une ligne à chaque liste
             fg.Add(new List<int>());
@@ -134,12 +171,16 @@ public class TileAreaBuilder : MonoBehaviour
             json_bg += "[";
             json_gd += "[";
 
-            for (int x = position.x; x < position.x + size.x; x++)
+            for (int x = -8; x < 8; x++)
             {
+                // on flip les tiles
+                int fx = x;
+                if (flip_x) { fx = (15-(x+8))-8; }
+
                 // on récupère les tiles
-                TileBase fgTile = fgTilemap.GetTile(new Vector3Int(x, y, 0));
-                TileBase bgTile = bgTilemap.GetTile(new Vector3Int(x, y, 0));
-                TileBase gdTile = gdTilemap.GetTile(new Vector3Int(x, y, 0));
+                TileBase fgTile = fgTilemap.GetTile(new Vector3Int(fx, y, 0));
+                TileBase bgTile = bgTilemap.GetTile(new Vector3Int(fx, y, 0));
+                TileBase gdTile = gdTilemap.GetTile(new Vector3Int(fx, y, 0));
 
                 // on ajoute les tiles à la liste
                 fg[fg.Count - 1].Add(fgTile == null ? 0 : 1);
@@ -224,7 +265,6 @@ public class TileAreaBuilder : MonoBehaviour
     }
 
     // LOADING
-
     public void LoadArea()
     {
         if (area_to_load == "") { return; }
@@ -234,21 +274,8 @@ public class TileAreaBuilder : MonoBehaviour
     public GameObject LoadFromJson(string name)
     {
 
-        // on récupère le type d'aera (corr, room, room ext)
-        string area_type = "";
-        if (name.Contains("corridor_"))
-            area_type = "corridors/";
-        else if (name.Contains("room_"))
-            if (name.Contains("S") || name.Contains("N") || name.Contains("E") || name.Contains("W"))
-                area_type = "rooms_ext/";
-            else
-                area_type = "rooms/";
-
-        // on en déduit le path du fichier json
-        string path = tile_areas_path + area_type + name + ".json";
-
         // on récupère le json
-        string json = System.IO.File.ReadAllText(path);
+        string json = GetAreaJson(name);
 
         // on le parse
         Dictionary<string, List<List<int>>> dict = JsonConvert.DeserializeObject<Dictionary<string, List<List<int>>>>(json);
@@ -285,5 +312,38 @@ public class TileAreaBuilder : MonoBehaviour
         // on retourne l'area
         return area;
 
+    }
+
+    public string GetRandomAreaJson()
+    {
+        // on récupère un fichier json aléatoire
+        string[] files = System.IO.Directory.GetFiles(tile_areas_path, "*.json", System.IO.SearchOption.AllDirectories);
+        string file = files[Random.Range(0, files.Length)];
+        string json = System.IO.File.ReadAllText(file);
+
+        // on retourne le json
+        return json;
+    }
+
+    public string GetAreaJson(string name)
+    {
+        // on récupère le type d'aera (corr, room, room ext)
+        string area_type = "";
+        if (name.Contains("corridor_"))
+            area_type = "corridors/";
+        else if (name.Contains("room_"))
+            if (name.Contains("S") || name.Contains("N") || name.Contains("E") || name.Contains("W"))
+                area_type = "rooms_ext/";
+            else
+                area_type = "rooms/";
+
+        // on en déduit le path du fichier json
+        string path = tile_areas_path + area_type + name + ".json";
+
+        // on récupère le json
+        string json = System.IO.File.ReadAllText(path);
+
+        // on retourne le json
+        return json;
     }
 }

@@ -66,10 +66,11 @@ public class WorldGenerator : MonoBehaviour
         separatePreSectors();
 
         // 5 - on génère les secteurs
-        generateSectors();
+        // generateSectors();
+        generateAreas();
 
         // 6 - on génère le Hashset global des tiles
-        generateGlobalTilesHashSet();
+        // generateGlobalTilesHashSet();
     }
 
     public void ConstructWorld()
@@ -286,7 +287,6 @@ public class WorldGenerator : MonoBehaviour
             // on instancie le secteur
             GameObject sector = Instantiate(sector_prefab, world.transform);
 
-
             // on récupère les hashsets
             // HashSet<Vector2Int> rooms = preSecteurs[i].rooms;
             // HashSet<Vector2Int> corridors = preSecteurs[i].corridors;
@@ -306,6 +306,26 @@ public class WorldGenerator : MonoBehaviour
         }
     }
 
+    private void generateAreas()
+    {
+        // on parcourt toutes les areas des secteurs et on les place sur le monde
+
+        // on parcourt les secteurs
+        for (int i = 0; i < preSecteurs.Count; i++)
+        {
+            Vector2Int sector_pos = preSecteurs[i].xy();
+
+            // on parcourt les areas
+            foreach (Vector2Int roomPos in preSecteurs[i].tiles)
+            {
+                // on récupère le nom de l'area
+                string area_name = preSecteurs[i].getAreaName(roomPos);
+
+                // on place l'area
+                world.GetComponent<World>().PlaceArea(sector_pos.x + roomPos.x, sector_pos.y + roomPos.y, area_name);
+            }
+        }
+    }
 
     // HASHSET GLOBAL DES TILES
     private void generateGlobalTilesHashSet()
@@ -338,10 +358,10 @@ public class WorldGenerator : MonoBehaviour
         if (sector == null) { return "not found"; }
 
         // on récupère le type de tile
-        string type = sector.GetComponent<Sector>().GetTileType(globalTilePos);
+        // string type = sector.GetComponent<Sector>().GetTileType(globalTilePos);
 
         // on retourne le type
-        return type;
+        return "not found";
     }
 
     public GameObject getSector(Vector2Int globalTilePos)//,out Vector2Int localTilePos)
@@ -554,13 +574,13 @@ public class PreSector
         return y + h;
     }
 
-    public string getRoomType(Vector2Int roomPos)
+    public string getAreaType(Vector2Int pos)
     {
         // on vérifie qu'elle est dans les tiles
-        if (tiles.Contains(roomPos))
+        if (tiles.Contains(pos))
         {
             // on vérifie si c'est une room
-            if (rooms.Contains(roomPos))
+            if (rooms.Contains(pos))
             {
                 // on retourne le type de room
                 return "room";
@@ -571,7 +591,7 @@ public class PreSector
                 return "corridor";
             }
         }
-        else if (ceiling.Contains(roomPos))
+        else if (ceiling.Contains(pos))
         {
             // on retourne le type de ceiling
             return "ceiling";
@@ -583,11 +603,79 @@ public class PreSector
         }
     }
 
-    public string getGlobalRoomType(Vector2Int roomPos)
+    public string getAreaName(Vector2Int pos)
     {
-        // on prend la local room pos
-        roomPos -= xy();
-        return getRoomType(roomPos);
+        string type = getAreaType(pos);
+        if (type == "ceiling") { return "ceiling"; }
+
+        // on récupère les noms des salles
+        string name = type + "_";
+
+        // on récupère le voisinage
+        HashSet<Vector2Int> room_directions;
+        HashSet<Vector2Int> corr_directions;
+        getAreaNeighbors(pos, out room_directions, out corr_directions);
+
+        if (type == "room")
+        {
+            // on concatène les directions
+            HashSet<Vector2Int> directions = new HashSet<Vector2Int>();
+            directions.UnionWith(room_directions);
+            directions.UnionWith(corr_directions);
+
+            // on parcourt les directions des rooms puis on ajoute le nom de la direction
+            if (directions.Contains(Vector2Int.up)) { name += "U"; }
+            if (directions.Contains(Vector2Int.down)) { name += "D"; }
+            if (directions.Contains(Vector2Int.left)) { name += "L"; }
+            if (directions.Contains(Vector2Int.right)) { name += "R"; }
+        }
+        else if (type == "corridor")
+        {
+            // on concatène les directions
+            HashSet<Vector2Int> directions = new HashSet<Vector2Int>();
+            directions.UnionWith(room_directions);
+            directions.UnionWith(corr_directions);
+
+            // on parcourt les directions des rooms puis on ajoute le nom de la direction
+            if (directions.Contains(Vector2Int.up)) { name += "U"; }
+            if (directions.Contains(Vector2Int.down)) { name += "D"; }
+            if (directions.Contains(Vector2Int.left)) { name += "L"; }
+            if (directions.Contains(Vector2Int.right)) { name += "R"; }
+        }
+
+        // on retourne le nom
+        return name;
+    }
+
+    // ROOMS HELPERS
+
+    public void getAreaNeighbors(Vector2Int pos, out HashSet<Vector2Int> room_directions, out HashSet<Vector2Int> corr_directions)
+    {
+        // on crée un hashset d'areas similaires adjacentes
+        room_directions = new HashSet<Vector2Int>();
+        corr_directions = new HashSet<Vector2Int>();
+
+        List<Vector2Int> directions = new List<Vector2Int> { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+
+        // on parcourt les directions
+        foreach (var direction in directions)
+        {
+            // on récupère la position adjacente
+            Vector2Int adjacentPosition = pos + direction;
+
+            // on vérifie que la position adjacente est une salle
+            if (rooms.Contains(adjacentPosition))
+            {
+                // on ajoute la direction de la room
+                room_directions.Add(direction);
+            }
+            else if (corridors.Contains(adjacentPosition))
+            {
+                // on ajoute la direction du corridor
+                corr_directions.Add(direction);
+            }
+        }
+
     }
 
     // utils

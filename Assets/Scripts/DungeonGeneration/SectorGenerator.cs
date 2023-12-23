@@ -317,7 +317,7 @@ public class SectorGenerator : MonoBehaviour
 
     // ROOMS HELPERS
 
-    protected HashSet<Vector2Int> GetRoomAdjacentPositions(Vector2Int position, HashSet<Vector2Int> positions)
+    public HashSet<Vector2Int> GetRoomAdjacentPositions(Vector2Int position, HashSet<Vector2Int> positions)
     {
         // on crée un hashset de positions adjacentes
         HashSet<Vector2Int> adjacentPositions = new HashSet<Vector2Int>();
@@ -341,7 +341,7 @@ public class SectorGenerator : MonoBehaviour
         return adjacentPositions;
     }
 
-    protected HashSet<Vector2Int> GetRoomOpeninDirections(Vector2Int position, HashSet<Vector2Int> positions)
+    public HashSet<Vector2Int> GetRoomOpeninDirections(Vector2Int position, HashSet<Vector2Int> positions)
     {
         // on crée un hashset de positions adjacentes
         HashSet<Vector2Int> openinDirections = new HashSet<Vector2Int>();
