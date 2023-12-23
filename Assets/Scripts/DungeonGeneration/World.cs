@@ -234,7 +234,7 @@ public class World : MonoBehaviour
 
         if (psec == null)
         {
-            print("no presector found for " + pos);
+            // print("no presector found for " + pos);
 
             return "null";
         }
@@ -258,4 +258,40 @@ public class World : MonoBehaviour
     {
         return new Vector2Int(pos.x % area_size.x, pos.y % area_size.y);
     }
+
+    public string getTileType(Vector2Int tile)
+    {
+        // on récupère l'area
+        string area_name = getAreaName(tile);
+        if (area_name == "ceiling") { return "ceiling";}
+        else if (area_name == "null") { return "ceiling";}
+
+        // on récupère la position locale de la tile dans l'area
+        Vector2Int local_tile_pos = getLocalTilePos(tile);
+
+        // on récupère le json de l'area
+        string json = builder.GetAreaJson(area_name);
+
+        // on parse le json
+        Dictionary<string, List<List<int>>> dict = JsonConvert.DeserializeObject<Dictionary<string, List<List<int>>>>(json);
+
+        // on vérifie quelle tile est à la position
+        if (dict["fg"][local_tile_pos.y][local_tile_pos.x] != 0)
+        {
+            return "ceiling";
+        }
+        else if (dict["bg"][local_tile_pos.y][local_tile_pos.x] != 0)
+        {
+            return "wall";
+        }
+        else if (dict["gd"][local_tile_pos.y][local_tile_pos.x] != 0)
+        {
+            return "ground";
+        }
+        else
+        {
+            return "not found";
+        }
+    }
+
 }

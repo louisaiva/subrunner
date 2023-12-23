@@ -38,10 +38,10 @@ public class Minimap : MonoBehaviour {
         colorMap.Clear();
 
         // on met les couleurs dans le dictionnaire
-        colorMap.Add("wall", Color.white);
+        colorMap.Add("wall", Color.grey);
         colorMap.Add("ground", Color.grey);
         colorMap.Add("ceiling", Color.black);
-        colorMap.Add("not found", Color.red);
+        colorMap.Add("not found", Color.grey);
 
         // on récupère le perso
         player = GameObject.Find("/perso").transform;
@@ -52,6 +52,10 @@ public class Minimap : MonoBehaviour {
         // on récupère le world et les tilemaps
         world = GameObject.Find("/world").GetComponent<World>();
         world.GetTilemaps(out fg_tm, out bg_tm, out gd_tm);
+
+
+        // on crée la texture
+        createTexture();
     }
 
     /* public void init(HashSet<Vector2Int> tiles)
@@ -144,8 +148,53 @@ public class Minimap : MonoBehaviour {
                 mapTexture.SetPixel(x, y, undiscoveredColor);
             }
         }
+
+        // on change le mode de filtre
+        mapTexture.filterMode = FilterMode.Point;
+        mapTexture.Apply();
+
+        // on applique les changements
+        is_init = true;
     }
 
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (is_discovering)
+        {
+            // on récupère la position du perso
+            Vector2Int pos = getPersoPos();
+
+            // on parcourt toutes les tiles dans le rayon de découverte
+            for (int x = pos.x - (int)discorveryRadius; x <= pos.x + (int)discorveryRadius; x++)
+            {
+                for (int y = pos.y - (int)discorveryRadius; y <= pos.y + (int)discorveryRadius; y++)
+                {
+                    // on vérifie qu'on est positifs
+                    if (x < 0 || y < 0) continue;
+
+                    // on vérifie si on est dans le rayon
+                    if (Vector2.Distance(pos, new Vector2(x, y)) <= discorveryRadius)
+                    {
+                        // on récupère le type de tile
+                        string type = world.getTileType(new Vector2Int(x, y));
+
+                        // on met la couleur
+                        mapTexture.SetPixel(x, y, colorMap[type]);
+
+                        // on ajoute la tile aux tiles découvertes
+                        // discoveredTiles.Add(new Vector2Int(x, y));
+
+                        // on applique les changements
+                        mapTexture.Apply();
+                    }
+                }
+            }
+        }
+    }
+
+    // GETTERS
     public string getPersoAreaName()
     {
         // on récupère la position du perso
