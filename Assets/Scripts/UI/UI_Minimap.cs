@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using TMPro;
 
 public class UI_Minimap : MonoBehaviour {
 
@@ -29,7 +30,24 @@ public class UI_Minimap : MonoBehaviour {
 
     void Update()
     {
-        if (!minimap.is_init) return;
+    
+        // on récupère l'area_name au niveau du perso
+        string area_name = minimap.getPersoAreaName();
+
+        // on met à jour le texte de l'area
+        transform.Find("area_name").GetComponent<TextMeshProUGUI>().text = area_name;
+
+        // on met à jour la local tile pos
+        transform.Find("tile_pos").GetComponent<TextMeshProUGUI>().text = minimap.getPersoAreaPos() + " " + minimap.getPersoTilePos();
+
+
+        // on vérifie si on a la minimap
+        if (!minimap.is_init)
+        {
+            // on cache la map
+            disableMiniMap();
+            return;
+        }
         else if (transform.Find("map").GetComponent<RawImage>().texture == null)
         {
             // on récupère la texture
@@ -70,6 +88,8 @@ public class UI_Minimap : MonoBehaviour {
             // on anime l'image
             GetComponent<Image>().sprite = sprites[(int)(Time.time * 10) % 2];
         }
+
+
     }
 
     // functions

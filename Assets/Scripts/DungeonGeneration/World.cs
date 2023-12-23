@@ -1,17 +1,22 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 public class World : MonoBehaviour
 {
 
     [Header("Builder")]
-    [SerializeField] private TileAreaBuilder builder;
+    [SerializeField] private AreaJsonHandler builder;
+    // [SerializeField] private WorldGenerator generator;
+    
+    [Header("Sectors")]
+    [SerializeField] private List<PreSector> pre_sectors = new List<PreSector>();
 
-    [Header("World")]
-    [SerializeField] private int width;
-    [SerializeField] private int height;
+    // [Header("World")]
+    // [SerializeField] private int width;
+    // [SerializeField] private int height;
     
     [Header("Tilemaps")]
     [SerializeField] private Tilemap fg_tm;
@@ -40,23 +45,48 @@ public class World : MonoBehaviour
         gd_tile = Resources.Load<TileBase>("tilesets/gd_2_rule");
 
         // on récupère le builder
-        builder = GameObject.Find("generator").transform.Find("builder").GetComponent<TileAreaBuilder>();
+        builder = GameObject.Find("generator").transform.Find("builder").GetComponent<AreaJsonHandler>();
 
-        // on génère le monde
-        // Generate();
+        // on récupère le world generator
+        // generator = GameObject.Find("generator").GetComponent<WorldGenerator>();
     }
+
+
 
     // GENERATION
-    public void Generate()
+    public void GENERATE(List<PreSector> psec)
     {
-        // on choisit un fichier json d'area aléatoire
-        string area_json = builder.GetAreaJson("corridor_LR");
+        // on clear les tilemaps
+        Clear();
 
-        // on set les tiles de l'area
-        SetAreaTiles(0, 0, area_json);
+        // on récupère les pre_sectors
+        pre_sectors = psec;
+
+        // on parcourt les secteurs
+        for (int i = 0; i < psec.Count; i++)
+        {
+            Vector2Int sector_pos = psec[i].xy();
+
+            // on parcourt les areas
+            foreach (Vector2Int areaPos in psec[i].tiles)
+            {
+                // on récupère le nom de l'area
+                string area_name = psec[i].getAreaName(areaPos);
+
+                // on place l'area
+                PlaceArea(sector_pos.x + areaPos.x, sector_pos.y + areaPos.y, area_name);
+            }
+        }
+
+        // on récupère la position de départ du perso
+        Vector2Int room = psec[0].rooms.ElementAt(Random.Range(0, psec[0].rooms.Count));
+        Vector2Int pos = room*area_size + new Vector2Int(area_size.x / 2, area_size.y / 2);
+
+        // on place le perso
+        GameObject.Find("/perso").transform.position = new Vector3(pos.x / 2f, pos.y / 2f, 0f);
     }
 
-    public void PlaceArea(int x, int y, string area_name)
+    private void PlaceArea(int x, int y, string area_name)
     {
         // on choisit un fichier json d'area aléatoire
         string area_json = builder.GetAreaJson(area_name);
@@ -64,6 +94,22 @@ public class World : MonoBehaviour
         // on set les tiles de l'area
         SetAreaTiles(x, y, area_json);
     }
+
+    private void Clear()
+    {
+        // on vérifie que les tilemaps existent
+        if (fg_tm == null || bg_tm == null || gd_tm == null)
+        {
+            Awake();
+        }
+
+        // on clear les tilemaps
+        fg_tm.ClearAllTiles();
+        bg_tm.ClearAllTiles();
+        gd_tm.ClearAllTiles();
+    }
+
+
 
     // SETTERS
     public void SetLayerTile(int x, int y, int tile=0, string layer="bg")
@@ -101,8 +147,6 @@ public class World : MonoBehaviour
         List<List<int>> bg = dict["bg"];
         List<List<int>> gd = dict["gd"];
 
-        print(fg.Count);
-
         // on ajoute des tiles aux tilemaps
         for (int j = 0; j < area_size.y; j++)
         {
@@ -124,6 +168,8 @@ public class World : MonoBehaviour
         gd_tm.RefreshAllTiles();
     }
 
+
+
     // GETTERS
     public Sprite GetSprite(int x, int y, string layer="bg")
     {
@@ -140,5 +186,76 @@ public class World : MonoBehaviour
             return gd_tm.GetSprite(new Vector3Int(x, y, 0));
         }
         return null;
+    }
+
+    public void GetTilemaps(out Tilemap fg, out Tilemap bg, out Tilemap gd)
+    {
+        fg = fg_tm;
+        bg = bg_tm;
+        gd = gd_tm;
+    }
+
+    public Vector2Int GetSize()
+    {
+        // on récupère la taille max des tilemaps
+        Vector2Int size = new Vector2Int(0, 0);
+        foreach (Tilemap tm in new Tilemap[] { fg_tm, bg_tm, gd_tm })
+        {
+            tm.CompressBounds();
+            if (tm.size.x > size.x) size.x = tm.size.x;
+            if (tm.size.y > size.y) size.y = tm.size.y;
+        }
+        return size;
+    }
+
+    public PreSector getSector(Vector2Int pos)
+    {
+        // renvoie le presector correspondant à la position de la tile
+
+        // on récupère le areaPos
+        Vector2Int areaPos = getAreaPos(pos);
+
+        // on parcourt tous les pre_sectors pour trouver celui qui correspond
+        foreach (PreSector psec in pre_sectors)
+        {
+            // on vérifie si le psec correspond
+            if (psec.collidesWithRoomPoint(areaPos))
+            {
+                return psec;
+            }
+        }
+        return null;
+    }
+
+    public string getAreaName(Vector2Int pos)
+    {
+        // on récupère le presector
+        PreSector psec = getSector(pos);
+
+        if (psec == null)
+        {
+            print("no presector found for " + pos);
+
+            return "null";
+        }
+
+        // on récupère la position locale de l'area dans le presector
+        Vector2Int areaPos = getAreaPos(pos) - psec.xy();
+
+        // on récupère le nom de l'area
+        return psec.getAreaName(areaPos);
+    }
+
+    public Vector2Int getAreaPos(Vector2Int tile_pos)
+    {
+        // on récupère le areaPos
+        Vector2Int areaPos = new Vector2Int(tile_pos.x / area_size.x, tile_pos.y / area_size.y);
+
+        return areaPos;
+    }
+
+    public Vector2Int getLocalTilePos(Vector2Int pos)
+    {
+        return new Vector2Int(pos.x % area_size.x, pos.y % area_size.y);
     }
 }

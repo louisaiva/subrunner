@@ -1,11 +1,11 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(TileAreaBuilder))]
+[CustomEditor(typeof(AreaJsonHandler))]
 public class TileAreaEditor : Editor {
     public override void OnInspectorGUI() {
 
-        TileAreaBuilder areaBuilder = (TileAreaBuilder)target;
+        AreaJsonHandler areaBuilder = (AreaJsonHandler)target;
         if (GUILayout.Button("Save Json"))
         {
             areaBuilder.SaveTileAreas();

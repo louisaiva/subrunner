@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 using Newtonsoft.Json;
 
-public class TileAreaBuilder : MonoBehaviour
+public class AreaJsonHandler : MonoBehaviour
 {
     [Header("Loading")]
-    [SerializeField] private string area_to_load = "...";
+    [SerializeField] private string area_to_load = "";
 
     [Header("Saving")]
     [SerializeField] private string rooms_path = "prefabs/rooms/";
@@ -28,7 +28,7 @@ public class TileAreaBuilder : MonoBehaviour
 
     // CHANGING TILEMAPS
 
-    public void ApplyChanges(ref Tilemap fg_tm, ref Tilemap bg_tm, ref Tilemap gd_tm)
+    public void MoveUpBg(ref Tilemap fg_tm, ref Tilemap bg_tm, ref Tilemap gd_tm)
     {
         // ici on applique différentes modifications aux tilemaps
         // tout d'abord on veut remonter les tiles de 1 unité
@@ -68,37 +68,55 @@ public class TileAreaBuilder : MonoBehaviour
         }
     }
 
-    public void FlipX(ref Tilemap fg_tm, ref Tilemap bg_tm, ref Tilemap gd_tm)
+    public void FillEmptyBottomLines(ref Tilemap fg_tm, ref Tilemap gd_tm)
     {
-        // on crée 3 listes de tiles
-        Tilemap fg_tiles = new Tilemap();
-        Tilemap bg_tiles = new Tilemap();
-        Tilemap gd_tiles = new Tilemap();
+        // on vérifie si on a une ligne de zéros dans fg_tm tout en bas
+        // si oui on la remplit de tiles sauf au milieu
 
-        for (int y = -8; y < 8; y++)
+        // on vérifie si on a 2 ligne de zéros dans gd_tm tout en bas
+        // si oui on remplit le milieu de tiles
+
+        if (fg_tm == null || gd_tm == null) { return; }
+        
+        bool is_fg_affected = true;
+        bool is_gd_affected = true;
+
+        for (int x = -8; x < 8; x++)
         {
-            for (int x = 0; x < 16; x++)
+            if (fg_tm.GetTile(new Vector3Int(x, 7, 0)) != null)
             {
-                int tm_x = 15-x;
-                tm_x -= 8;
-                x -= 8;
-
-                // on récupère les tiles
-                TileBase fg_tile = fg_tm.GetTile(new Vector3Int(tm_x, y, 0));
-                TileBase bg_tile = bg_tm.GetTile(new Vector3Int(tm_x, y, 0));
-                TileBase gd_tile = gd_tm.GetTile(new Vector3Int(tm_x, y, 0));
-
-                // on ajoute les tiles aux tilemaps
-                fg_tiles.SetTile(new Vector3Int(x, y, 0), fg_tile);
-                bg_tiles.SetTile(new Vector3Int(x, y, 0), bg_tile);
-                gd_tiles.SetTile(new Vector3Int(x, y, 0), gd_tile);
+                is_fg_affected = false;
+            }
+            if (gd_tm.GetTile(new Vector3Int(x, 7, 0)) != null)
+            {
+                is_gd_affected = false;
+            }
+            else if (gd_tm.GetTile(new Vector3Int(x, 6, 0)) != null)
+            {
+                is_gd_affected = false;
             }
         }
 
-        // on remplace les tilemaps
-        fg_tm = fg_tiles;
-        bg_tm = bg_tiles;
-        gd_tm = gd_tiles;
+        print("filling empty bottom lines : " + is_fg_affected + " " + is_gd_affected);
+
+        if (is_fg_affected)
+        {
+            for (int x = -8; x < 8; x++)
+            {
+                if (x == 0 || x == -1) { continue; }
+
+                fg_tm.SetTile(new Vector3Int(x, 7, 0), Resources.Load<TileBase>("tilesets/fg_2_rule"));
+            }
+        }
+
+        if (is_gd_affected)
+        {
+            gd_tm.SetTile(new Vector3Int(-1,7, 0), Resources.Load<TileBase>("tilesets/gd_2_rule"));
+            gd_tm.SetTile(new Vector3Int(0, 7, 0), Resources.Load<TileBase>("tilesets/gd_2_rule"));
+            gd_tm.SetTile(new Vector3Int(-1, 6, 0), Resources.Load<TileBase>("tilesets/gd_2_rule"));
+            gd_tm.SetTile(new Vector3Int(0, 6, 0), Resources.Load<TileBase>("tilesets/gd_2_rule"));
+        }
+
     }
 
     // SAVING SELECTED AREAS
@@ -146,8 +164,7 @@ public class TileAreaBuilder : MonoBehaviour
         Tilemap gdTilemap = area.transform.Find("gd_tilemap").GetComponent<Tilemap>();
 
         // on applique des changements à nos tilemaps !!
-        // ApplyChanges(ref fgTilemap, ref bgTilemap, ref gdTilemap);
-        // FlipX(ref fgTilemap, ref bgTilemap, ref gdTilemap);
+        FillEmptyBottomLines(ref fgTilemap, ref gdTilemap);
 
         bool flip_x = false;
         if (area.transform.localScale.x < 0) { flip_x = true; }

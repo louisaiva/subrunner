@@ -65,19 +65,16 @@ public class WorldGenerator : MonoBehaviour
         // 4 - on sépare les pré-secteurs
         separatePreSectors();
 
+        // on les bascule en full positive
+        makeSectorsAllPositives();
+
         // 5 - on génère les secteurs
         // generateSectors();
-        generateAreas();
+        // generateAreas();
+        world.GetComponent<World>().GENERATE(preSecteurs);
 
         // 6 - on génère le Hashset global des tiles
         // generateGlobalTilesHashSet();
-    }
-
-    public void ConstructWorld()
-    {
-        // 5 - on génère les secteurs
-        print("GENERATIONNNNNNNNNNNNNNNNNNNNNNNNNN");
-        // generateSectors();
     }
 
     // vide le monde
@@ -306,9 +303,12 @@ public class WorldGenerator : MonoBehaviour
         }
     }
 
-    private void generateAreas()
+    /* private void generateAreas()
     {
         // on parcourt toutes les areas des secteurs et on les place sur le monde
+
+        // on clear le monde
+        world.GetComponent<World>().Clear();
 
         // on parcourt les secteurs
         for (int i = 0; i < preSecteurs.Count; i++)
@@ -324,6 +324,31 @@ public class WorldGenerator : MonoBehaviour
                 // on place l'area
                 world.GetComponent<World>().PlaceArea(sector_pos.x + roomPos.x, sector_pos.y + roomPos.y, area_name);
             }
+        }
+    } */
+
+    private void makeSectorsAllPositives()
+    {
+        // on récupère le min
+        Vector2Int min = new Vector2Int(100000, 100000);
+        foreach (PreSector preSec in preSecteurs)
+        {
+            // on récupère la position
+            Vector2Int pos = preSec.xy();
+
+            // on met à jour le min
+            if (pos.x < min.x) { min.x = pos.x; }
+            if (pos.y < min.y) { min.y = pos.y; }
+        }
+
+        // on déplace tous les secteurs
+        foreach (PreSector preSec in preSecteurs)
+        {
+            // on récupère la position
+            Vector2Int pos = preSec.xy();
+
+            // on déplace le secteur
+            preSec.move(-min);
         }
     }
 
@@ -397,6 +422,7 @@ public class WorldGenerator : MonoBehaviour
         // on retourne le secteur
         return sector;
     }
+    
 
 }
 
@@ -508,10 +534,10 @@ public class PreSector
     public bool collidesWithRoomPoint(Vector2Int roomPoint)
     {
         // on vérifie si les secteurs collident
-        if (roomPoint.x > R()) { return false; }
-        if (roomPoint.x <= L()) { return false; }
-        if (roomPoint.y > U()) { return false; }
-        if (roomPoint.y <= D()) { return false; }
+        if (roomPoint.x >= R()) { return false; }
+        if (roomPoint.x < L()) { return false; }
+        if (roomPoint.y >= U()) { return false; }
+        if (roomPoint.y < D()) { return false; }
 
         // si aucun des tests n'a renvoyé false, c'est que les secteurs collident
         return true;
