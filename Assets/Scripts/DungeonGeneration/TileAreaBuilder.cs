@@ -28,13 +28,18 @@ public class TileAreaBuilder : MonoBehaviour
 
     // CHANGING TILEMAPS
 
-    public void ApplyChanges(ref Tilemap tm)
+    public void ApplyChanges(ref Tilemap fg_tm, ref Tilemap bg_tm, ref Tilemap gd_tm)
     {
         // ici on applique différentes modifications aux tilemaps
         // tout d'abord on veut remonter les tiles de 1 unité
 
+        // on reset l'anchor des tilemaps
+        fg_tm.tileAnchor = new Vector3(0.5f, 0.5f, 0);
+        bg_tm.tileAnchor = new Vector3(0.5f, 2f, 0);
+        gd_tm.tileAnchor = new Vector3(0.5f, 0.5f, 0);
+
         // on récupère les dimensions de l'area
-        GetAreaDimensions(new List<Tilemap> { tm }, out Vector2Int position, out Vector2Int size);
+        GetAreaDimensions(new List<Tilemap> { bg_tm }, out Vector2Int position, out Vector2Int size);
 
         // on crée une liste de tiles à remonter
         List<Vector2Int> tiles_to_move = new List<Vector2Int>();
@@ -45,7 +50,7 @@ public class TileAreaBuilder : MonoBehaviour
             for (int x = position.x; x < position.x + size.x; x++)
             {
                 // on récupère les tiles
-                TileBase tile = tm.GetTile(new Vector3Int(x, y, 0));
+                TileBase tile = bg_tm.GetTile(new Vector3Int(x, y, 0));
 
                 // on remonte les tiles
                 if (tile != null)
@@ -58,8 +63,8 @@ public class TileAreaBuilder : MonoBehaviour
         // on remonte les tiles
         foreach (Vector2Int tile in tiles_to_move)
         {
-            tm.SetTile(new Vector3Int(tile.x, tile.y, 0), null);
-            tm.SetTile(new Vector3Int(tile.x, tile.y + 1, 0), Resources.Load<TileBase>("tilesets/walls_1_rule"));
+            bg_tm.SetTile(new Vector3Int(tile.x, tile.y, 0), null);
+            bg_tm.SetTile(new Vector3Int(tile.x, tile.y + 1, 0), Resources.Load<TileBase>("tilesets/walls_1_rule"));
         }
     }
 
@@ -108,7 +113,7 @@ public class TileAreaBuilder : MonoBehaviour
         Tilemap gdTilemap = area.transform.Find("gd_tilemap").GetComponent<Tilemap>();
 
         // on applique des changements à nos tilemaps !!
-        ApplyChanges(ref bgTilemap);
+        ApplyChanges(ref fgTilemap, ref bgTilemap, ref gdTilemap);
 
         // on récupère les dimensions de l'area
         GetAreaDimensions(new List<Tilemap> { fgTilemap, bgTilemap, gdTilemap }, out Vector2Int position, out Vector2Int size);
