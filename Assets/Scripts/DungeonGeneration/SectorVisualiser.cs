@@ -4,10 +4,10 @@ using System.Collections;
 using System.Linq;
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class PreSectorVisualiser : MonoBehaviour
+public class SectorVisualiser : MonoBehaviour
 {
     [Header("pre-sectors")]
-    private PreSector preSector;
+    private Sector sector;
     [SerializeField] private int x;
     [SerializeField] private int y;
     [SerializeField] private int w;
@@ -24,10 +24,10 @@ public class PreSectorVisualiser : MonoBehaviour
         GetComponent<SpriteRenderer>().color = base_color;
 
         // on applique les dimensions du pre-sector
-        transform.localScale = new Vector3(preSector.w, preSector.h, 0.1f);
+        transform.localScale = new Vector3(sector.w, sector.h, 0.1f);
 
         // on applique la position du pre-sector
-        transform.position = new Vector3(preSector.x, preSector.y, 3f);
+        transform.position = new Vector3(sector.x, sector.y, 3f);
 
         // on met un sprite
         GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("sprites/utils/white");
@@ -40,9 +40,9 @@ public class PreSectorVisualiser : MonoBehaviour
 
     }
 
-    public void init(PreSector preSector, Color base_color, Color done_color)
+    public void init(Sector sector, Color base_color, Color done_color)
     {
-        this.preSector = preSector;
+        this.sector = sector;
         this.base_color = base_color;
         this.done_color = done_color;
     }
@@ -50,11 +50,11 @@ public class PreSectorVisualiser : MonoBehaviour
     void Update()
     {
         // on met à jour la position du pre-sector
-        transform.position = new Vector3(preSector.cx(), preSector.cy(), 3f);
-        x = preSector.x;
-        y = preSector.y;
-        w = preSector.w;
-        h = preSector.h;
+        transform.position = new Vector3(sector.cx(), sector.cy(), 3f);
+        x = sector.x;
+        y = sector.y;
+        w = sector.w;
+        h = sector.h;
     }
 
 }

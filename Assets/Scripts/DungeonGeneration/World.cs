@@ -12,7 +12,7 @@ public class World : MonoBehaviour
     [SerializeField] private Perso perso;
     
     [Header("Sectors")]
-    [SerializeField] private List<PreSector> pre_sectors = new List<PreSector>();
+    [SerializeField] private List<Sector> sectors = new List<Sector>();
 
     // [Header("World")]
     // [SerializeField] private int width;
@@ -54,24 +54,24 @@ public class World : MonoBehaviour
 
 
     // GENERATION
-    public void GENERATE(List<PreSector> psec)
+    public void GENERATE(List<Sector> sect)
     {
         // on clear les tilemaps
         Clear();
 
-        // on récupère les pre_sectors
-        pre_sectors = psec;
+        // on récupère les sectors
+        sectors = sect;
 
         // on parcourt les secteurs
-        for (int i = 0; i < psec.Count; i++)
+        for (int i = 0; i < sect.Count; i++)
         {
-            Vector2Int sector_pos = psec[i].xy();
+            Vector2Int sector_pos = sect[i].xy();
 
             // on parcourt les areas
-            foreach (Vector2Int areaPos in psec[i].tiles)
+            foreach (Vector2Int areaPos in sect[i].tiles)
             {
                 // on récupère le nom de l'area
-                string area_name = psec[i].getAreaName(areaPos);
+                string area_name = sect[i].getAreaName(areaPos);
 
                 // on place l'area
                 PlaceArea(sector_pos.x + areaPos.x, sector_pos.y + areaPos.y, area_name);
@@ -79,7 +79,7 @@ public class World : MonoBehaviour
         }
 
         // on récupère la position de départ du perso
-        Vector2Int room = psec[0].rooms.ElementAt(Random.Range(0, psec[0].rooms.Count));
+        Vector2Int room = sect[0].rooms.ElementAt(Random.Range(0, sect[0].rooms.Count));
         Vector2Int pos = room*area_size + new Vector2Int(area_size.x / 2, area_size.y / 2);
 
         // on place le perso
@@ -210,20 +210,20 @@ public class World : MonoBehaviour
         return size;
     }
 
-    public PreSector getSector(Vector2Int pos)
+    public Sector getSector(Vector2Int pos)
     {
         // renvoie le presector correspondant à la position de la tile
 
         // on récupère le areaPos
         Vector2Int areaPos = getAreaPos(pos);
 
-        // on parcourt tous les pre_sectors pour trouver celui qui correspond
-        foreach (PreSector psec in pre_sectors)
+        // on parcourt tous les sectors pour trouver celui qui correspond
+        foreach (Sector sect in sectors)
         {
-            // on vérifie si le psec correspond
-            if (psec.collidesWithRoomPoint(areaPos))
+            // on vérifie si le sect correspond
+            if (sect.collidesWithRoomPoint(areaPos))
             {
-                return psec;
+                return sect;
             }
         }
         return null;
@@ -232,9 +232,9 @@ public class World : MonoBehaviour
     public string getAreaName(Vector2Int pos)
     {
         // on récupère le presector
-        PreSector psec = getSector(pos);
+        Sector sect = getSector(pos);
 
-        if (psec == null)
+        if (sect == null)
         {
             // print("no presector found for " + pos);
 
@@ -242,10 +242,10 @@ public class World : MonoBehaviour
         }
 
         // on récupère la position locale de l'area dans le presector
-        Vector2Int areaPos = getAreaPos(pos) - psec.xy();
+        Vector2Int areaPos = getAreaPos(pos) - sect.xy();
 
         // on récupère le nom de l'area
-        return psec.getAreaName(areaPos);
+        return sect.getAreaName(areaPos);
     }
 
     public Vector2Int getAreaPos(Vector2Int tile_pos)

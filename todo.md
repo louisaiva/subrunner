@@ -44,6 +44,11 @@
     - [ ] - Room.cs génère les éléments de décor : objects, *posters*, tags, *lights*
 
 
+- [ ] - am&liorer l'UI
+    - [ ] - faire un menu pause qui grossi les différents HUD (map, barre de vie)
+    - [ ] - ajouter lecteur CD en bas à gauche ?
+    - [ ] - ajouter visu clés RSA / HASH en bas à droite ?
+
 # BUGS
 
 - [ ] - quand on est loin de xp-provider ça arrete de générer de l'xp ?
