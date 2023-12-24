@@ -25,12 +25,21 @@ public class Sector : MonoBehaviour
     public int w;
     public int h;
 
+    [Header("Objects")]
+    [SerializeField] private Dictionary<string, GameObject> prefabs = new Dictionary<string, GameObject>();
+    [SerializeField] private Dictionary<string, Transform> parents = new Dictionary<string, Transform>();
+
     [Header("Lights")]
     [SerializeField] private List<string> walls_light_tiles = new List<string> { "bg_2_7", "walls_1_7", "walls_2_7" };
-    [SerializeField] private GameObject light_prefab;
-    [SerializeField] private Transform light_parent;
     [SerializeField] private Vector3 light_offset = new Vector3(0.25f, 1f, 0f);
 
+    [Header("Posters")]
+    [SerializeField] private Sprite[] poster_sprites;
+    private List<string> full_walls_tiles = new List<string> {"walls_1_3", "walls_1_4", "walls_1_5", "walls_1_6"
+                                                        , "walls_1_7", "walls_1_8",
+                                                        "walls_2_3", "walls_2_4", "walls_2_5", "walls_2_6"
+                                                        , "walls_2_7", "walls_2_8"};
+    [SerializeField] private float density_posters = 0.3f; // 0.5 = 1 poster tous les 2 tiles compatibles
 
 
     // UNITY METHODS
@@ -39,9 +48,15 @@ public class Sector : MonoBehaviour
         // on récupère le world
         world = GameObject.Find("/world").GetComponent<World>();
 
-        // on récupère le prefab de lumiere
-        light_prefab = Resources.Load<GameObject>("prefabs/objects/small_light");
-        light_parent = transform.Find("decoratives/lights");
+        // on récupère les prefabs
+        prefabs.Add("light", Resources.Load<GameObject>("prefabs/objects/small_light"));
+        prefabs.Add("poster", Resources.Load<GameObject>("prefabs/objects/poster"));
+
+        // on récupère les parents
+        parents.Add("light", transform.Find("decoratives/lights"));
+        parents.Add("poster", transform.Find("decoratives/posters"));
+
+        poster_sprites = Resources.LoadAll<Sprite>("spritesheets/environments/objects/posters");
     }
     
 
@@ -136,6 +151,9 @@ public class Sector : MonoBehaviour
     {
         // on génère les objets
         PlaceLights();
+
+        // on génère les posters
+        PlacePosters();
     }
 
     // OBJETS GENERATION
@@ -144,58 +162,88 @@ public class Sector : MonoBehaviour
         BoundsInt bounds = getBounds();
         TileBase[] tiles = world.getTiles(bounds);
 
-        for (int x = 0; x < bounds.size.x; x++)
+        for (int i = 0; i < bounds.size.x; i++)
         {
-            for (int y = 0; y < bounds.size.y; y++)
+            for (int j = 0; j < bounds.size.y; j++)
             {
+                int x_ = bounds.x + i;
+                int y_ = bounds.y + j;
                 
                 // on récupère le sprite
-                Sprite sprite = world.GetSprite(x, y);
+                Sprite sprite = world.GetSprite(x_, y_);
                 if (sprite == null) { continue; }
 
                 if (walls_light_tiles.Contains(sprite.name))
                 {
                     // on récupère la position globale de la tile
-                    Vector3 tile_pos = world.CellToWorld(new Vector3Int(x, y, 0));
+                    Vector3 tile_pos = world.CellToWorld(new Vector3Int(x_, y_, 0));
 
                     // on met une lumiere
-                    GameObject light = Instantiate(light_prefab, tile_pos + light_offset, Quaternion.identity);
+                    GameObject light = Instantiate(prefabs["light"], tile_pos + light_offset, Quaternion.identity);
 
                     // on met le bon parent
-                    light.transform.SetParent(light_parent);
+                    light.transform.SetParent(parents["light"]);
                 }
-
-
-                /* // on récupère la tile
-                TileBase tile = tiles[x + y * bounds.size.x];
-                if (tile == null) { continue; }
-
-                // position de la tile
-                Vector3Int pos = new Vector3Int(x, y, 0);
-
-                // on vérifie si c'est une tile de mur
-                TileData tile_data = new TileData();
-                tile.GetTileData(pos, bg_tm, ref tile_data);
-
-                // on regarde si c une tile de lumiere
-                if (walls_light_tiles.Contains(tile_data.sprite.name))
-                {
-                    // on récupère la position globale de la tile
-                    Vector3 tile_pos = world.CellToWorld(pos);
-
-                    // on met une lumiere
-                    GameObject light = Instantiate(light_prefab, tile_pos + light_offset, Quaternion.identity);
-
-                    // on récupère le parent
-                    // Transform parent = getSector(new Vector2Int(x, y)).transform.Find("decoratives/lights");
-
-                    // on met le bon parent
-                    light.transform.SetParent(light_parent);
-                } */
             }
         }
     }
 
+    private void PlacePosters()
+    {
+
+        BoundsInt bounds = getBounds();
+        TileBase[] tiles = world.getTiles(bounds);
+
+        for (int i = 0; i < bounds.size.x; i++)
+        {
+            for (int j = 0; j < bounds.size.y; j++)
+            {
+                // on récupère la position globale de la tile
+                int x_ = bounds.x + i;
+                int y_ = bounds.y + j;
+
+                // on récupère le sprite
+                Sprite sprite = world.GetSprite(x_, y_);
+                if (sprite == null) { continue; }
+
+                if (full_walls_tiles.Contains(sprite.name))
+                {
+                    // on lance un random pour savoir si on met un poster
+                    if (Random.Range(0f, 1f) > density_posters) { continue; }
+
+                    // on instancie un poster aleatoire dans une premiere position
+                    Vector3 tile_pos = world.CellToWorld(new Vector3Int(x_, y_, 0));
+                    GameObject poster = Instantiate(prefabs["poster"], tile_pos, Quaternion.identity);
+                    poster.GetComponent<SpriteRenderer>().sprite = poster_sprites[Random.Range(0, poster_sprites.Length)];
+
+
+                    // on calcule un offset plus ou moins aléatoire
+                    float OFFSET_Y = 0.2f;
+                    float OFFSET_RANGE_Y = 0.3f;
+                    float OFFSET_X = -poster.GetComponent<SpriteRenderer>().bounds.size.x / 2;
+                    float OFFSET_RANGE_X = 0f;
+
+                    Vector3 offset = Vector3.zero;
+                    // offset += new Vector3(OFFSET_X, OFFSET_Y, 0f);
+                    // offset += new Vector3(Random.Range(-OFFSET_RANGE_X, OFFSET_RANGE_X), OFFSET_Y + Random.Range(0f, OFFSET_RANGE_Y), 0f);
+                    // offset.x += OFFSET_X;
+                    offset.y += 3*OFFSET_Y;
+
+                    // on déplace le poster
+                    poster.transform.position += offset;
+
+                    // on met le bon parent
+                    poster.transform.SetParent(parents["poster"]);
+
+                    // on relance un random pour savoir si on remet un poster
+                    if (Random.Range(0f, 1f) < 0.1f)
+                    {
+                        i--;
+                    }
+                }
+            }
+        }
+    }
 
     // MAIN FUNCTIONS
     public void move(Vector2Int movement)
