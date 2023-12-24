@@ -7,16 +7,11 @@ public class WorldGenerator : MonoBehaviour
 {
     [Header("WORLD GENERATION")]
     [SerializeField] private int nb_sectors = 1;
-    GameObject world;
+    [SerializeField] private GameObject world;
 
     [Header("sectors")]
     [SerializeField] private GameObject sector_prefab;
     [SerializeField] private List<Sector> sectors = new List<Sector>();
-
-    [Header("pre-sectors")]
-    // [SerializeField] private List<PreSector> sectors = new List<PreSector>();
-    // protected Vector2 roomDimensions = new Vector2(8f, 7.5f);
-    protected Vector2Int roomDimensionsInTiles = new Vector2Int(16,16);
 
     [Header("visualisation")]
     [SerializeField] private Transform visu_parent;
@@ -55,25 +50,20 @@ public class WorldGenerator : MonoBehaviour
         // 1 - on vide le monde
         Clear();
 
-        // 2 - on génère les pré-secteurs
+        // 2 - on génère les secteurs
         generateSectors();
 
         // 3 - on crée les visus
         visualizeSectors();
 
-        // 4 - on sépare les pré-secteurs
+        // 4 - on sépare les secteurs
         separateSectors();
 
         // on les bascule en full positive
         makeSectorsAllPositives();
 
-        // 5 - on génère les secteurs
-        // generateSectors();
-        // generateAreas();
+        // 5 - on lance la génération du monde
         world.GetComponent<World>().GENERATE(sectors);
-
-        // 6 - on génère le Hashset global des tiles
-        // generateGlobalTilesHashSet();
     }
 
     // vide le monde

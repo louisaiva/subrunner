@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(AreaJsonHandler))]
-public class TileAreaEditor : Editor {
+public class AreaJsonEditor: Editor {
     public override void OnInspectorGUI() {
 
         AreaJsonHandler areaBuilder = (AreaJsonHandler)target;
@@ -17,6 +17,10 @@ public class TileAreaEditor : Editor {
         else if (GUILayout.Button("Load Area"))
         {
             areaBuilder.LoadArea();
+        }
+        else if (GUILayout.Button("Save all Areas"))
+        {
+            areaBuilder.SaveAllAreas();
         }
 
         DrawDefaultInspector();

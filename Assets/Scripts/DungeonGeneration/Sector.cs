@@ -7,11 +7,17 @@ using Newtonsoft.Json;
 
 public class Sector : MonoBehaviour
 {
+    [Header("World")]
+    public World world;
+    private Vector2Int area_size = new Vector2Int(16, 16);
+
+
     [Header("HashSet")]
     public HashSet<Vector2Int> tiles = new HashSet<Vector2Int>();
     public HashSet<Vector2Int> rooms = new HashSet<Vector2Int>();
     public HashSet<Vector2Int> corridors = new HashSet<Vector2Int>();
     public HashSet<Vector2Int> ceiling = new HashSet<Vector2Int>();
+
 
     [Header("Position")]
     public int x;
@@ -19,8 +25,24 @@ public class Sector : MonoBehaviour
     public int w;
     public int h;
 
+    [Header("Lights")]
+    [SerializeField] private List<string> walls_light_tiles = new List<string> { "bg_2_7", "walls_1_7", "walls_2_7" };
+    [SerializeField] private GameObject light_prefab;
+    [SerializeField] private Transform light_parent;
+    [SerializeField] private Vector3 light_offset = new Vector3(0.25f, 1f, 0f);
+
+
 
     // UNITY METHODS
+    void Awake()
+    {
+        // on récupère le world
+        world = GameObject.Find("/world").GetComponent<World>();
+
+        // on récupère le prefab de lumiere
+        light_prefab = Resources.Load<GameObject>("prefabs/objects/small_light");
+        light_parent = transform.Find("decoratives/lights");
+    }
     
 
     // INIT
@@ -87,6 +109,7 @@ public class Sector : MonoBehaviour
         tiles.UnionWith(corridors);
 
     }
+
     private HashSet<Vector2Int> CreateCeiling()
     {
         // on récupère le plafond
@@ -106,6 +129,71 @@ public class Sector : MonoBehaviour
 
         // on retourne le plafond
         return ceiling;
+    }
+
+    // GENERATION
+    public void GENERATE()
+    {
+        // on génère les objets
+        PlaceLights();
+    }
+
+    // OBJETS GENERATION
+    private void PlaceLights()
+    {
+        BoundsInt bounds = getBounds();
+        TileBase[] tiles = world.getTiles(bounds);
+
+        for (int x = 0; x < bounds.size.x; x++)
+        {
+            for (int y = 0; y < bounds.size.y; y++)
+            {
+                
+                // on récupère le sprite
+                Sprite sprite = world.GetSprite(x, y);
+                if (sprite == null) { continue; }
+
+                if (walls_light_tiles.Contains(sprite.name))
+                {
+                    // on récupère la position globale de la tile
+                    Vector3 tile_pos = world.CellToWorld(new Vector3Int(x, y, 0));
+
+                    // on met une lumiere
+                    GameObject light = Instantiate(light_prefab, tile_pos + light_offset, Quaternion.identity);
+
+                    // on met le bon parent
+                    light.transform.SetParent(light_parent);
+                }
+
+
+                /* // on récupère la tile
+                TileBase tile = tiles[x + y * bounds.size.x];
+                if (tile == null) { continue; }
+
+                // position de la tile
+                Vector3Int pos = new Vector3Int(x, y, 0);
+
+                // on vérifie si c'est une tile de mur
+                TileData tile_data = new TileData();
+                tile.GetTileData(pos, bg_tm, ref tile_data);
+
+                // on regarde si c une tile de lumiere
+                if (walls_light_tiles.Contains(tile_data.sprite.name))
+                {
+                    // on récupère la position globale de la tile
+                    Vector3 tile_pos = world.CellToWorld(pos);
+
+                    // on met une lumiere
+                    GameObject light = Instantiate(light_prefab, tile_pos + light_offset, Quaternion.identity);
+
+                    // on récupère le parent
+                    // Transform parent = getSector(new Vector2Int(x, y)).transform.Find("decoratives/lights");
+
+                    // on met le bon parent
+                    light.transform.SetParent(light_parent);
+                } */
+            }
+        }
     }
 
 
@@ -295,4 +383,9 @@ public class Sector : MonoBehaviour
 
     }
 
+    public BoundsInt getBounds()
+    {
+        // on retourne les bounds
+        return new BoundsInt(x * area_size.x, y * area_size.y, 0, w * area_size.x, h * area_size.y, 1);
+    }
 }

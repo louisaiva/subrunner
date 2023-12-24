@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 using Newtonsoft.Json;
+using UnityEditor;
 
 public class AreaJsonHandler : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class AreaJsonHandler : MonoBehaviour
 
     [Header("Saving")]
     [SerializeField] private string rooms_path = "prefabs/rooms/";
-    [SerializeField] private string areas_path = "prefabs/areas/";
+    [SerializeField] private string areas_path = "Assets/Resources/prefabs/areas/";
     [SerializeField] private string tile_areas_path = "Assets/Resources/prefabs/tileareas/";
     [SerializeField] private List<GameObject> areas;
 
@@ -362,5 +363,70 @@ public class AreaJsonHandler : MonoBehaviour
 
         // on retourne le json
         return json;
+    }
+
+
+    // LOADING THEN SAVING TO PREFABS
+    public void SaveAllAreas()
+    {
+        foreach (string directory in System.IO.Directory.GetDirectories(tile_areas_path))
+        {
+
+            string dir = directory.Split('/')[directory.Split('/').Length - 1] + "\\";
+            print("saving areas prefabs to" + dir);
+            SaveDirAreas(dir);
+        }
+    }
+
+    public void SaveDirAreas(string directory)
+    {
+        // we load all areas from json
+        foreach (string area_name in System.IO.Directory.GetFiles(tile_areas_path + directory, "*.json"))
+        {
+            // print("loading " + area_name);
+            string name = area_name.Split('/')[area_name.Split('/').Length - 1].Split('.')[0];
+            name = area_name.Split('\\')[area_name.Split('\\').Length - 1].Split('.')[0];
+
+            // on récupère le json
+            string json = System.IO.File.ReadAllText(area_name);
+
+            // on le parse
+            Dictionary<string, List<List<int>>> dict = JsonConvert.DeserializeObject<Dictionary<string, List<List<int>>>>(json);
+
+            // on récupère les listes
+            List<List<int>> fg = dict["fg"];
+            List<List<int>> bg = dict["bg"];
+            List<List<int>> gd = dict["gd"];
+
+            // on instancie une empty area
+            GameObject area = Resources.Load<GameObject>(rooms_path + "empty");
+            area = Instantiate(area);
+            // area.name = area_name.Split('/')[area_name.Split('/').Length - 1].Split('.')[0];
+
+            // on ajoute des tiles aux tilemaps
+            for (int y = 0; y < fg.Count; y++)
+            {
+                for (int x = 0; x < fg[y].Count; x++)
+                {
+                    // on récupère les tiles
+                    TileBase fgTile = fg[y][x] == 0 ? null : Resources.Load<TileBase>("tilesets/fg_2_rule");
+                    TileBase bgTile = bg[y][x] == 0 ? null : Resources.Load<TileBase>("tilesets/walls_1_rule");
+                    TileBase gdTile = gd[y][x] == 0 ? null : Resources.Load<TileBase>("tilesets/gd_2_rule");
+
+                    // on ajoute les tiles aux tilemaps
+                    area.transform.Find("fg_tilemap").GetComponent<Tilemap>().SetTile(new Vector3Int(x, y, 0), fgTile);
+                    area.transform.Find("bg_tilemap").GetComponent<Tilemap>().SetTile(new Vector3Int(x, y, 0), bgTile);
+                    area.transform.Find("gd_tilemap").GetComponent<Tilemap>().SetTile(new Vector3Int(x, y, 0), gdTile);
+                }
+            }
+
+            // on sauvegarde l'area
+            string path = areas_path + directory + name + ".prefab";
+            // print("saving " + name + " to " + path);
+            PrefabUtility.SaveAsPrefabAsset(area, path);
+
+            // on détruit l'area
+            DestroyImmediate(area);
+        }
     }
 }

@@ -31,7 +31,6 @@ public class World : MonoBehaviour
     [Header("Areas")]
     private Vector2Int area_size = new Vector2Int(16, 16);
 
-
     void Awake()
     {
         // on récupère les tilemaps
@@ -56,6 +55,7 @@ public class World : MonoBehaviour
     // GENERATION
     public void GENERATE(List<Sector> sect)
     {
+
         // on clear les tilemaps
         Clear();
 
@@ -85,6 +85,12 @@ public class World : MonoBehaviour
         // on place le perso
         perso.transform.position = new Vector3(pos.x / 2f, pos.y / 2f, 0f);
         perso.transform.Find("minicam").GetComponent<Minimap>().Clear();
+
+        // on lance la génération des secteurs
+        foreach (Sector sector in sectors)
+        {
+            sector.GENERATE();
+        }
 
     }
 
@@ -188,6 +194,63 @@ public class World : MonoBehaviour
             return gd_tm.GetSprite(new Vector3Int(x, y, 0));
         }
         return null;
+    }
+
+    public TileBase GetTile(int x, int y, string layer="bg")
+    {
+        if (layer == "bg")
+        {
+            return bg_tm.GetTile(new Vector3Int(x, y, 0));
+        }
+        else if (layer == "fg")
+        {
+            return fg_tm.GetTile(new Vector3Int(x, y, 0));
+        }
+        else if (layer == "gd")
+        {
+            return gd_tm.GetTile(new Vector3Int(x, y, 0));
+        }
+        return null;
+    }
+
+    public TileData GetTileData(int x, int y, string layer="bg")
+    {
+        TileBase tile = GetTile(x, y, layer);
+        TileData tile_data = new TileData();
+
+        if (tile == null) { return tile_data; }
+
+        if (layer == "bg")
+        {
+            tile.GetTileData(new Vector3Int(x, y, 0), bg_tm, ref tile_data);
+        }
+        else if (layer == "fg")
+        {
+            tile.GetTileData(new Vector3Int(x, y, 0), fg_tm, ref tile_data);
+        }
+        else if (layer == "gd")
+        {
+            tile.GetTileData(new Vector3Int(x, y, 0), gd_tm, ref tile_data);
+        }
+
+        return tile_data;
+    }
+
+    public Vector3 CellToWorld(Vector3Int cellPos, string layer="bg")
+    {
+        if (layer == "bg")
+        {
+            return bg_tm.CellToWorld(cellPos);
+        }
+        else if (layer == "fg")
+        {
+            return fg_tm.CellToWorld(cellPos);
+        }
+        else if (layer == "gd")
+        {
+            return gd_tm.CellToWorld(cellPos);
+        }
+        return Vector3.zero;
     }
 
     public void GetTilemaps(out Tilemap fg, out Tilemap bg, out Tilemap gd)
@@ -294,6 +357,25 @@ public class World : MonoBehaviour
         {
             return "not found";
         }
+    }
+
+    public TileBase[] getTiles(BoundsInt bounds,string tm="bg")
+    {
+        // on récupère les tiles
+        if (tm == "bg")
+        {
+            return bg_tm.GetTilesBlock(bounds);
+        }
+        else if (tm == "fg")
+        {
+            return fg_tm.GetTilesBlock(bounds);
+        }
+        else if (tm == "gd")
+        {
+            return gd_tm.GetTilesBlock(bounds);
+        }
+
+        return null;
     }
 
 }
