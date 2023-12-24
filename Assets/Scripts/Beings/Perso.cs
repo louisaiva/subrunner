@@ -157,7 +157,7 @@ public class Perso : Attacker
 
 
         // on affiche un texte de début
-        // Invoke("showWelcome", 5f);
+        Invoke("showWelcome", 5f);
     }
 
     // welcoming
@@ -169,19 +169,19 @@ public class Perso : Attacker
         Vector3 position = transform.position + new Vector3(0, 1f, 0);
         string text = "welcome to";
         GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
-        floating_text.GetComponent<FloatingText>().init(text, Color.yellow, 30f, 0.1f, 0.2f, 6f);
+        floating_text.GetComponent<FloatingText>().init(text, Color.yellow, 30f, 0.1f, 0.2f, 16f);
         floating_text.transform.SetParent(floating_dmg_provider.transform);
 
         // SUBRUNNER
         position = transform.position + new Vector3(0, 0.5f, 0);
         text = "SUBRUNNER";
         GameObject floating_text2 = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
-        floating_text2.GetComponent<FloatingText>().init(text, Color.green, 30f, 0.1f, 0.2f, 6f);
+        floating_text2.GetComponent<FloatingText>().init(text, Color.green, 30f, 0.1f, 0.2f, 16f);
         floating_text2.transform.SetParent(floating_dmg_provider.transform);
 
 
         // on affiche la quete 5sec après
-        Invoke("showQuest", 5f);
+        // Invoke("showQuest", 5f);
     }
 
     void showQuest()

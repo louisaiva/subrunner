@@ -21,6 +21,8 @@ public class UI_Minimap : MonoBehaviour {
     private GameObject ui_map;
     private GameObject ui_mask;
 
+    private GameObject uis;
+
     // unity functions
     void Awake()
     {
@@ -36,6 +38,7 @@ public class UI_Minimap : MonoBehaviour {
         // on récupère la map
         ui_map = transform.Find("mask/map").gameObject;
         ui_mask = transform.Find("mask/map_mask").gameObject;
+        uis = transform.Find("mask").gameObject;
     }
 
     void Update()
@@ -124,8 +127,9 @@ public class UI_Minimap : MonoBehaviour {
         GetComponent<Image>().sprite = sprites[2];
 
         // on met à jour la minimap
-        ui_map.GetComponent<RawImage>().enabled = true;
-        ui_mask.GetComponent<RawImage>().enabled = true;
+        // ui_map.GetComponent<RawImage>().enabled = true;
+        // ui_mask.GetComponent<RawImage>().enabled = true;
+        uis.SetActive(true);
     }
 
     public void disableMiniMap()
@@ -137,8 +141,9 @@ public class UI_Minimap : MonoBehaviour {
         GetComponent<Image>().sprite = sprites[0];
 
         // on met à jour la minimap
-        ui_map.GetComponent<RawImage>().enabled = false;
-        ui_mask.GetComponent<RawImage>().enabled = false;
+        // ui_map.GetComponent<RawImage>().enabled = false;
+        // ui_mask.GetComponent<RawImage>().enabled = false;
+        uis.SetActive(false);
 
         // on désactive la map
         Invoke("turnOffMap", 0.5f);
