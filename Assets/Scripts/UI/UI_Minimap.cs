@@ -14,6 +14,12 @@ public class UI_Minimap : MonoBehaviour {
 
     // is map shown
     private bool is_map_shown = false;
+    [SerializeField] private Vector2 OFFSET = new Vector2(0f, 0f);
+
+
+    // 
+    private GameObject ui_map;
+    private GameObject ui_mask;
 
     // unity functions
     void Awake()
@@ -26,19 +32,23 @@ public class UI_Minimap : MonoBehaviour {
 
         // on recup les sprites
         sprites = Resources.LoadAll<Sprite>(mini_map_sprites_path);
+
+        // on récupère la map
+        ui_map = transform.Find("mask/map").gameObject;
+        ui_mask = transform.Find("mask/map_mask").gameObject;
     }
 
     void Update()
     {
     
         // on récupère l'area_name au niveau du perso
-        string area_name = minimap.getPersoAreaName();
+        // string area_name = minimap.getPersoAreaName();
 
         // on met à jour le texte de l'area
-        transform.Find("area_name").GetComponent<TextMeshProUGUI>().text = area_name;
+        // transform.Find("area_name").GetComponent<TextMeshProUGUI>().text = area_name;
 
         // on met à jour la local tile pos
-        transform.Find("tile_pos").GetComponent<TextMeshProUGUI>().text = minimap.getPersoAreaPos() + " " + minimap.getPersoTilePos();
+        // transform.Find("tile_pos").GetComponent<TextMeshProUGUI>().text = minimap.getPersoAreaPos() + " " + minimap.getPersoTilePos();
 
 
         // on vérifie si on a la minimap
@@ -48,28 +58,12 @@ public class UI_Minimap : MonoBehaviour {
             disableMiniMap();
             return;
         }
-        else if (transform.Find("map").GetComponent<RawImage>().texture == null)
+        else if (ui_map.GetComponent<RawImage>().texture == null)
         {
-            // on récupère la texture
-            transform.Find("map").GetComponent<RawImage>().texture = minimap.mapTexture;
-
-            // on parcourt la texture pour voir ce qu'il y a
-            string str = "";
-            for (int y = 0; y < minimap.mapTexture.height; y++)
-            {
-                for (int x = 0; x < minimap.mapTexture.width; x++)
-                {
-                    // on récupère la couleur
-                    Color color = minimap.mapTexture.GetPixel(x, y);
-
-                    // on ajoute le type
-                    str += x.ToString() + " " + y.ToString() + " " + color + "\n";
-                }
-                str += "\n\n";
-            }
-
-            print("texture récupérée\n\n" + str);
+            // on init la minimap
+            init_minimap();
         }
+
 
         // on vérifie si on a le gyroscope
         if (perso.has_gyroscope && !is_map_shown)
@@ -88,8 +82,32 @@ public class UI_Minimap : MonoBehaviour {
             // on anime l'image
             GetComponent<Image>().sprite = sprites[(int)(Time.time * 10) % 2];
         }
+        else
+        {
+            // on met à jour la position
+            update_position();
+        }
 
 
+    }
+
+    void update_position()
+    {
+
+        // update la position de la minimap
+        Vector2 perso_tile_pos = minimap.getPersoPosFloat();
+
+        Vector2 map_size = new Vector2(minimap.mapTexture.width, minimap.mapTexture.height);
+
+        // on met à jour l'offset
+        OFFSET = new Vector2(12,12);
+
+        // on calcule la différence entre le milieu de la map et le perso
+        Vector2 pos = perso_tile_pos * ui_map.GetComponent<RawImage>().rectTransform.localScale.x;
+
+        // on met à jour la position
+        ui_map.GetComponent<RectTransform>().anchoredPosition = -pos + OFFSET;
+        ui_mask.GetComponent<RectTransform>().anchoredPosition = -pos + OFFSET;
     }
 
     // functions
@@ -106,20 +124,21 @@ public class UI_Minimap : MonoBehaviour {
         GetComponent<Image>().sprite = sprites[2];
 
         // on met à jour la minimap
-        transform.Find("map").GetComponent<RawImage>().enabled = true;
+        ui_map.GetComponent<RawImage>().enabled = true;
+        ui_mask.GetComponent<RawImage>().enabled = true;
     }
 
     public void disableMiniMap()
     {
         // on désactive la map
-        // GetComponent<Image>().enabled = false;
         is_map_shown = false;
 
         // on met à jour le sprite
         GetComponent<Image>().sprite = sprites[0];
 
         // on met à jour la minimap
-        transform.Find("map").GetComponent<RawImage>().enabled = false;
+        ui_map.GetComponent<RawImage>().enabled = false;
+        ui_mask.GetComponent<RawImage>().enabled = false;
 
         // on désactive la map
         Invoke("turnOffMap", 0.5f);
@@ -133,4 +152,19 @@ public class UI_Minimap : MonoBehaviour {
         }
     }
 
+    // init
+    public void init_minimap()
+    {
+        // on récupère la texture
+        ui_map.GetComponent<RawImage>().texture = minimap.mapTexture;
+        // on met les bonnes dimensions
+        ui_map.GetComponent<RawImage>().rectTransform.sizeDelta = new Vector2(minimap.mapTexture.width, minimap.mapTexture.height);
+
+        // on récupère la texture
+        ui_mask.GetComponent<RawImage>().texture = minimap.maskTexture;
+        // on met les bonnes dimensions
+        ui_mask.GetComponent<RawImage>().rectTransform.sizeDelta = new Vector2(minimap.maskTexture.width, minimap.maskTexture.height);
+
+        print("textures récupérées");
+    }
 }

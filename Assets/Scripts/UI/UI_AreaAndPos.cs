@@ -1,0 +1,31 @@
+using UnityEngine;
+using TMPro;
+
+public class UI_AreaAndPos : MonoBehaviour {
+
+    // private Perso perso;
+    private Minimap minimap;
+
+    // unity functions
+    void Awake()
+    {
+        // on récupère le perso
+        // perso = GameObject.Find("/perso").GetComponent<Perso>();
+
+        // on récupère la minimap
+        minimap = GameObject.Find("/perso/minicam").GetComponent<Minimap>();
+    }
+
+    void Update()
+    {
+    
+        // on récupère l'area_name au niveau du perso
+        string area_name = minimap.getPersoAreaName();
+
+        // on met à jour le texte de l'area
+        transform.Find("area_name").GetComponent<TextMeshProUGUI>().text = area_name;
+
+        // on met à jour la local tile pos
+        transform.Find("tile_pos").GetComponent<TextMeshProUGUI>().text = minimap.getPersoAreaPos() + " " + minimap.getPersoTilePos();
+    }
+}

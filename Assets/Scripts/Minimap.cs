@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UI;
 
 public class Minimap : MonoBehaviour {
     public Transform player;
@@ -9,18 +10,14 @@ public class Minimap : MonoBehaviour {
     private World world;
     
     [Header("Map Settings")]
-    // [SerializeField] private float mapScale = 0.2f;
     public bool is_init = false;
     [SerializeField] private bool is_discovering = true;
     [SerializeField] private float discorveryRadius = 1f;
 
 
     [Header("Map data")]
-    [SerializeField] private Vector2Int mapOffset;
-    // [SerializeField] private Vector2Int mapSize;
     public Texture2D mapTexture;
-    // [SerializeField] private Dictionary<Vector2Int, string> tiles = new Dictionary<Vector2Int, string>();
-    // [SerializeField] private List<Vector2Int> discoveredTiles = new List<Vector2Int>();
+    public Texture2D maskTexture;
 
     [Header("Tilemaps")]
     [SerializeField] private Tilemap fg_tm;
@@ -42,6 +39,7 @@ public class Minimap : MonoBehaviour {
         colorMap.Add("ground", Color.grey);
         colorMap.Add("ceiling", Color.black);
         colorMap.Add("not found", Color.grey);
+        colorMap.Add("void", new Color(1f, 0f, 1f, 0f));
 
         // on récupère le perso
         player = GameObject.Find("/perso").transform;
@@ -55,113 +53,60 @@ public class Minimap : MonoBehaviour {
 
 
         // on crée la texture
-        createTexture();
+        createTextures();
     }
 
-    /* public void init(HashSet<Vector2Int> tiles)
+    public void createTextures()
     {
-        Awake();
+        print("creating textures");
 
-        // on récupère la taille de la map
-        int min_x = 100000;
-        int min_y = 100000;
-        int max_x = -100000;
-        int max_y = -100000;
-
-        // on parcourt les tiles
-        foreach (Vector2Int tile in tiles)
-        {
-            // on récupère les coordonnées
-            int x = tile.x;
-            int y = tile.y;
-
-            // on met à jour les min et max
-            if (x < min_x) min_x = x;
-            if (y < min_y) min_y = y;
-            if (x > max_x) max_x = x;
-            if (y > max_y) max_y = y;
-
-
-            // on récupère le type de tile
-            string type = generator.getTileType(tile);
-
-            // print("tile " + tile + " is " + type);
-
-            // on ajoute la tile au dictionnaire
-            this.tiles.Add(tile, type);
-        }
-
-        // on calcule l'offset
-        mapOffset = new Vector2Int(min_x, min_y);
-
-        // on calcule la taille de la map
-        mapSize = new Vector2Int(max_x - min_x + 1, max_y - min_y + 1);
-
-        // on crée la texture
-        mapTexture = new Texture2D(mapSize.x, mapSize.y);
-
-        // on met la couleur de fond
-        for (int x = 0; x < mapSize.x; x++)
-        {
-            for (int y = 0; y < mapSize.y; y++)
-            {
-                mapTexture.SetPixel(x, y, undiscoveredColor);
-            }
-        }
-
-        // on met les couleurs des tiles
-        foreach (KeyValuePair<Vector2Int, string> tile in this.tiles)
-        {
-            // on récupère les coordonnées
-            int x = tile.Key.x - mapOffset.x;
-            int y = tile.Key.y - mapOffset.y;
-
-            // on récupère le type de tile
-            string type = tile.Value;
-            print("tile " + tile.Key + " is " + colorMap[type]);
-
-            // on met la couleur
-            mapTexture.SetPixel(x, y, colorMap[type]);
-        }
-
-        // on change le mode de filtre
-        mapTexture.filterMode = FilterMode.Point;
-
-
-        // on applique les changements
-        is_init = true;
-    } */
-
-    public void createTexture()
-    {
         // on récupère les dimensions de la map
         Vector2Int mapSize = world.GetSize();
 
-        // on crée la texture
+        // on crée les textures
         mapTexture = new Texture2D(mapSize.x, mapSize.y);
+        maskTexture = new Texture2D(mapSize.x, mapSize.y);
 
-        // on met la couleur de fond
+        // on remplit les textures
         for (int x = 0; x < mapSize.x; x++)
         {
             for (int y = 0; y < mapSize.y; y++)
             {
-                mapTexture.SetPixel(x, y, undiscoveredColor);
+                // mask
+                maskTexture.SetPixel(x, y, undiscoveredColor);
+
+                // map
+                // on récupère le type de tile
+                string type = world.getTileType(new Vector2Int(x, y));
+
+                // on met la couleur
+                mapTexture.SetPixel(x, y, colorMap[type]);
             }
         }
 
         // on change le mode de filtre
         mapTexture.filterMode = FilterMode.Point;
         mapTexture.Apply();
+        maskTexture.filterMode = FilterMode.Point;
+        maskTexture.Apply();
 
         // on applique les changements
         is_init = true;
     }
 
+    public void Clear()
+    {
+        if (!is_init) return;
+
+        createTextures();
+
+        GameObject.Find("/ui/minimap/mask/map").GetComponent<RawImage>().texture = null;
+    }
 
     // Update is called once per frame
     void Update()
     {
-        if (is_discovering)
+        if (is_discovering && player.GetComponent<Perso>().has_gyroscope)
         {
             // on récupère la position du perso
             Vector2Int pos = getPersoPos();
@@ -177,22 +122,15 @@ public class Minimap : MonoBehaviour {
                     // on vérifie si on est dans le rayon
                     if (Vector2.Distance(pos, new Vector2(x, y)) <= discorveryRadius)
                     {
-                        // on récupère le type de tile
-                        string type = world.getTileType(new Vector2Int(x, y));
-
                         // on met la couleur
-                        mapTexture.SetPixel(x, y, colorMap[type]);
-
-                        // on ajoute la tile aux tiles découvertes
-                        // discoveredTiles.Add(new Vector2Int(x, y));
-
-                        // on applique les changements
-                        mapTexture.Apply();
+                        maskTexture.SetPixel(x, y, colorMap["void"]);
                     }
                 }
             }
+            maskTexture.Apply();
         }
     }
+
 
     // GETTERS
     public string getPersoAreaName()
@@ -230,6 +168,14 @@ public class Minimap : MonoBehaviour {
     {
         // on récupère la position du perso
         Vector2Int pos = new Vector2Int((int)(player.position.x * 2), (int)(player.position.y * 2));
+
+        return pos;
+    }
+
+    public Vector2 getPersoPosFloat()
+    {
+        // on récupère la position du perso
+        Vector2 pos = new Vector2(player.position.x * 2, player.position.y * 2);
 
         return pos;
     }

@@ -9,7 +9,7 @@ public class World : MonoBehaviour
 
     [Header("Builder")]
     [SerializeField] private AreaJsonHandler builder;
-    // [SerializeField] private WorldGenerator generator;
+    [SerializeField] private Perso perso;
     
     [Header("Sectors")]
     [SerializeField] private List<PreSector> pre_sectors = new List<PreSector>();
@@ -47,8 +47,8 @@ public class World : MonoBehaviour
         // on récupère le builder
         builder = GameObject.Find("generator").transform.Find("builder").GetComponent<AreaJsonHandler>();
 
-        // on récupère le world generator
-        // generator = GameObject.Find("generator").GetComponent<WorldGenerator>();
+        // on récupère le perso
+        perso = GameObject.Find("/perso").GetComponent<Perso>();
     }
 
 
@@ -83,7 +83,9 @@ public class World : MonoBehaviour
         Vector2Int pos = room*area_size + new Vector2Int(area_size.x / 2, area_size.y / 2);
 
         // on place le perso
-        GameObject.Find("/perso").transform.position = new Vector3(pos.x / 2f, pos.y / 2f, 0f);
+        perso.transform.position = new Vector3(pos.x / 2f, pos.y / 2f, 0f);
+        perso.transform.Find("minicam").GetComponent<Minimap>().Clear();
+
     }
 
     private void PlaceArea(int x, int y, string area_name)
