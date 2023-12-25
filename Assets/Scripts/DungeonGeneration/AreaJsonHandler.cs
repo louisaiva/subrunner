@@ -129,9 +129,17 @@ public class AreaJsonHandler : MonoBehaviour
         /*
             fichier json contenant
 
-            "fg" : [...],
-            "bg" : [...],
-            "gd" : [...]
+            {
+                "fg" : [...],
+                "bg" : [...],
+                "gd" : [...],
+
+                "emplacements" : {
+                    "type1" : [{"x":-1.25,"y":0.0},...],
+                    "type2" : [{"x":-1.25,"y":0.0},...],
+                    ...
+                }
+            }
 
             où [...] est une liste de liste d'entiers définit par :
             - 0 : tile vide
@@ -171,7 +179,6 @@ public class AreaJsonHandler : MonoBehaviour
         if (area.transform.localScale.x < 0) { flip_x = true; }
 
         // on récupère les dimensions de l'area
-        // GetAreaDimensions(new List<Tilemap> { fgTilemap, bgTilemap, gdTilemap }, out Vector2Int position, out Vector2Int size);
         string json_fg = "\"fg\" : [\n";
         string json_bg = "\"bg\" : [\n";
         string json_gd = "\"gd\" : [\n";
@@ -236,14 +243,56 @@ public class AreaJsonHandler : MonoBehaviour
         json_gd += "]";
 
         // on crée un dict contenant les listes
-        Dictionary<string, List<List<int>>> dict = new Dictionary<string, List<List<int>>>();
-        dict.Add("fg", fg);
-        dict.Add("bg", bg);
-        dict.Add("gd", gd);
+        // Dictionary<string, List<List<int>>> dict = new Dictionary<string, List<List<int>>>();
+        // dict.Add("fg", fg);
+        // dict.Add("bg", bg);
+        // dict.Add("gd", gd);
+
+        // on cherche les emplacements
+        Dictionary<string, HashSet<Vector2>> emplacements = new Dictionary<string, HashSet<Vector2>>();
+        if (area.transform.Find("emplacements") != null)
+        {
+            foreach (Transform emplacement in area.transform.Find("emplacements"))
+            {
+                string type = emplacement.name.Split('_')[0];
+                Vector2 pos = emplacement.position;
+                if (!emplacements.ContainsKey(type))
+                {
+                    emplacements.Add(type, new HashSet<Vector2>());
+                }
+                emplacements[type].Add(pos);
+
+                print("adding " + type + " at " + pos);
+            }
+        }
+
+
+
+        // on convertit les emplacements en json
+        string json_empl = "\"emplacements\":{\n";
+        foreach (string type in emplacements.Keys)
+        {
+            json_empl += "\"" + type + "\" : [";
+            foreach (Vector2 pos in emplacements[type])
+            {
+                json_empl += "{\"x\":" + pos.x.ToString().Replace(',', '.') + ",\"y\":" + pos.y.ToString().Replace(',', '.') + "},\n";
+            }
+            json_empl = json_empl.Remove(json_empl.Length - 1);
+            json_empl = json_empl.Remove(json_empl.Length - 1);
+            json_empl += "],\n";
+        }
+        json_empl = json_empl.Remove(json_empl.Length - 1);
+        json_empl = json_empl.Remove(json_empl.Length - 1);
+        json_empl += "}";
+
+
+
+
 
         // on sauvegarde les listes dans un fichier json
-        string json = "{\n\n" + json_fg + ",\n\n" + json_bg + ",\n\n" + json_gd + "\n\n}";
-        // string json = JsonConvert.SerializeObject(dict);
+        string json = "{\n\n" + json_fg + ",\n\n" + json_bg + ",\n\n" + json_gd + ",\n\n" + json_empl + "\n\n}";
+        // AreaJson area_json = new AreaJson(fg, bg, gd, emplacements);
+        // string json = JsonConvert.SerializeObject(area_json, Formatting.None);
         print("saving " + area.name + " to " + path);
         System.IO.File.WriteAllText(path, json);
     }
@@ -332,6 +381,18 @@ public class AreaJsonHandler : MonoBehaviour
 
     }
 
+    public AreaJson LoadAreaJson(string name)
+    {
+        // on récupère le json
+        string json = GetAreaJson(name);
+
+        // on le parse
+        AreaJson area_json = JsonConvert.DeserializeObject<AreaJson>(json);
+
+        // on retourne l'area
+        return area_json;
+    }
+
     public string GetRandomAreaJson()
     {
         // on récupère un fichier json aléatoire
@@ -390,13 +451,50 @@ public class AreaJsonHandler : MonoBehaviour
             // on récupère le json
             string json = System.IO.File.ReadAllText(area_name);
 
-            // on le parse
-            Dictionary<string, List<List<int>>> dict = JsonConvert.DeserializeObject<Dictionary<string, List<List<int>>>>(json);
 
             // on récupère les listes
-            List<List<int>> fg = dict["fg"];
-            List<List<int>> bg = dict["bg"];
-            List<List<int>> gd = dict["gd"];
+            List<List<int>> fg = new List<List<int>>();
+            List<List<int>> bg = new List<List<int>>();
+            List<List<int>> gd = new List<List<int>>();
+
+            // et les emplacements
+            Dictionary<string, HashSet<Vector2>> emplacements = new Dictionary<string, HashSet<Vector2>>();
+
+            // on regarde si on a un dictionnaire ou un areajson
+            bool deserialise_dict = false;
+            /* foreach (char c in json)
+            {
+                if (c == '{')
+                {
+                    deserialise_dict = true;
+                    break;
+                }
+            } */
+
+            // on deserialise le json
+            if (deserialise_dict)
+            {
+                // on le parse
+                Dictionary<string, List<List<int>>> dict = JsonConvert.DeserializeObject<Dictionary<string, List<List<int>>>>(json);
+
+                // on récupère les listes
+                fg = dict["fg"];
+                bg = dict["bg"];
+                gd = dict["gd"];
+            }
+            else
+            {
+                // on le parse
+                AreaJson area_json = JsonConvert.DeserializeObject<AreaJson>(json);
+
+                // on récupère les listes
+                fg = area_json.fg;
+                bg = area_json.bg;
+                gd = area_json.gd;
+
+                // et les emplacements
+                emplacements = area_json.GetEmplacements();
+            }
 
             // on instancie une empty area
             GameObject area = Resources.Load<GameObject>(rooms_path + "empty");
@@ -420,6 +518,17 @@ public class AreaJsonHandler : MonoBehaviour
                 }
             }
 
+            // on ajoute les emplacements
+            foreach (string type in emplacements.Keys)
+            {
+                foreach (Vector2 pos in emplacements[type])
+                {
+                    GameObject emplacement = new GameObject(type);
+                    emplacement.transform.position = pos;
+                    emplacement.transform.parent = area.transform.Find("emplacements");
+                }
+            }
+
             // on sauvegarde l'area
             string path = areas_path + directory + name + ".prefab";
             // print("saving " + name + " to " + path);
@@ -428,5 +537,99 @@ public class AreaJsonHandler : MonoBehaviour
             // on détruit l'area
             DestroyImmediate(area);
         }
+    }
+}
+
+public class AreaJson
+{
+    public List<List<int>> fg;
+    public List<List<int>> bg;
+    public List<List<int>> gd;
+
+    public Dictionary<string, HashSet<Point>> emplacements;
+
+
+    public AreaJson()
+    {
+        // on positionne les tm
+        this.fg = new List<List<int>>();
+        this.bg = new List<List<int>>();
+        this.gd = new List<List<int>>();
+
+        // on ajoute les emplacements
+        this.emplacements = new Dictionary<string, HashSet<Point>>();
+    }
+
+    public AreaJson(List<List<int>> fg, List<List<int>> bg, List<List<int>> gd, Dictionary<string, HashSet<Vector2>> emplacements)
+    {
+        // on positionne les tm
+        this.fg = fg;
+        this.bg = bg;
+        this.gd = gd;
+
+        // on ajoute les emplacements
+        this.emplacements = new Dictionary<string, HashSet<Point>>();
+        foreach (string type in emplacements.Keys)
+        {
+            this.emplacements.Add(type, new HashSet<Point>());
+            foreach (Vector2 pos in emplacements[type])
+            {
+                this.emplacements[type].Add(new Point(pos));
+            }
+        }
+    }
+
+    public AreaJson(Dictionary<string, List<List<int>>> dict)
+    {
+        // on positionne les tm
+        this.fg = dict["fg"];
+        this.bg = dict["bg"];
+        this.gd = dict["gd"];
+
+        // on ajoute les emplacements
+        this.emplacements = new Dictionary<string, HashSet<Point>>();
+    }
+
+    public Dictionary<string, HashSet<Vector2>> GetEmplacements()
+    {
+        Dictionary<string, HashSet<Vector2>> empl = new Dictionary<string, HashSet<Vector2>>();
+        foreach (string type in this.emplacements.Keys)
+        {
+            empl.Add(type, new HashSet<Vector2>());
+            foreach (Point pos in this.emplacements[type])
+            {
+                empl[type].Add(pos.vec2());
+            }
+        }
+        return empl;
+    }
+}
+
+public class Point
+{
+    public float x;
+    public float y;
+
+    public Point()
+    {
+        this.x = 0;
+        this.y = 0;
+    }
+    
+    public Point(float x, float y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+
+    public Point(Vector2 xy)
+    {
+        this.x = xy.x;
+        this.y = xy.y;
+    }
+
+    public Vector2 vec2()
+    {
+        return new Vector2(x, y);
     }
 }

@@ -13,10 +13,6 @@ public class World : MonoBehaviour
     
     [Header("Sectors")]
     [SerializeField] private List<Sector> sectors = new List<Sector>();
-
-    // [Header("World")]
-    // [SerializeField] private int width;
-    // [SerializeField] private int height;
     
     [Header("Tilemaps")]
     [SerializeField] private Tilemap fg_tm;
@@ -89,7 +85,13 @@ public class World : MonoBehaviour
         // on lance la génération des secteurs
         foreach (Sector sector in sectors)
         {
-            sector.GENERATE();
+            print("getting emplacements for sector");
+
+            GetEmplacements(sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives);
+            print("empl enemies: " + empl_enemies.Count);
+
+            // on génère le secteur
+            sector.GENERATE(empl_enemies, empl_interactives);
         }
 
     }
@@ -97,7 +99,8 @@ public class World : MonoBehaviour
     private void PlaceArea(int x, int y, string area_name)
     {
         // on choisit un fichier json d'area aléatoire
-        string area_json = builder.GetAreaJson(area_name);
+        // string area_json = builder.GetAreaJson(area_name);
+        AreaJson area_json = builder.LoadAreaJson(area_name);
 
         // on set les tiles de l'area
         SetAreaTiles(x, y, area_json);
@@ -117,7 +120,65 @@ public class World : MonoBehaviour
         gd_tm.ClearAllTiles();
     }
 
+    // EMPLACEMENTS
+    private void GetEmplacements(Sector sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives)
+    {
+        // on créé les emplacements
+        empl_enemies = new List<Vector2>();
+        empl_interactives = new List<Vector2>();
 
+        // on parcourt les rooms
+        foreach (Vector2Int area in sector.tiles)
+        {
+            // on récupère la position de l'area
+            Vector2Int area_pos = (area + sector.xy()) * area_size + new Vector2Int(area_size.x / 2, area_size.y / 2);
+
+            print("getting emplacements for area " + (area + sector.xy()) + " at " + area_pos);
+
+            // on récupère les emplacements de la room
+            List<Vector2> empl_e, empl_i;
+            GetAreaEmplacements(area_pos, out empl_e, out empl_i);
+
+            // on ajoute les emplacements à la liste
+            empl_enemies.AddRange(empl_e);
+            empl_interactives.AddRange(empl_i);
+        }
+    }
+
+    private void GetAreaEmplacements(Vector2Int area_pos, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives)
+    {
+        // on créé les emplacements
+        empl_enemies = new List<Vector2>();
+        empl_interactives = new List<Vector2>();
+
+        // on convertit l'area_pos en tile_pos
+        Vector2Int tile_pos = area_pos * area_size;
+
+        // on récupère l'area
+        string area_name = getAreaName(tile_pos);
+
+        // on récupère le json de l'area
+        AreaJson area = builder.LoadAreaJson(area_name);
+
+        // on récupère les emplacements
+        Dictionary<string, HashSet<Vector2>> empl = area.GetEmplacements();
+
+        if (empl.ContainsKey("enemies"))
+        {
+            foreach (Vector2 pos in empl["enemies"])
+            {
+                empl_enemies.Add(new Vector2(pos.x + tile_pos.x, pos.y + tile_pos.y));
+            }
+        }
+        if (empl.ContainsKey("interactives"))
+        {
+            foreach (Vector2 pos in empl["interactives"])
+            {
+                empl_interactives.Add(new Vector2(pos.x + tile_pos.x, pos.y + tile_pos.y));
+            }
+        }
+
+    }
 
     // SETTERS
     public void SetLayerTile(int x, int y, int tile=0, string layer="bg")
@@ -143,17 +204,9 @@ public class World : MonoBehaviour
         SetLayerTile(x, y, gd, "gd");
     }
 
-    public void SetAreaTiles(int x, int y, string json)
+    public void SetAreaTiles(int x, int y, AreaJson area)
     {
         // loads the json to the tilemaps
-
-        // on parse le json
-        Dictionary<string, List<List<int>>> dict = JsonConvert.DeserializeObject<Dictionary<string, List<List<int>>>>(json);
-
-        // on récupère les listes
-        List<List<int>> fg = dict["fg"];
-        List<List<int>> bg = dict["bg"];
-        List<List<int>> gd = dict["gd"];
 
         // on ajoute des tiles aux tilemaps
         for (int j = 0; j < area_size.y; j++)
@@ -162,11 +215,9 @@ public class World : MonoBehaviour
             for (int i = 0; i < area_size.x; i++)
             {
                 int x_tile = x * area_size.x + i;
-
-                // print(x_tile + " " + y_tile + " " + gd[j][i]);
                 
                 // on set les tiles
-                SetTile(x_tile, y_tile, fg[j][i], bg[j][i], gd[j][i]);
+                SetTile(x_tile, y_tile, area.fg[j][i], area.bg[j][i], area.gd[j][i]);
             }
         }
 
@@ -334,22 +385,18 @@ public class World : MonoBehaviour
         // on récupère la position locale de la tile dans l'area
         Vector2Int local_tile_pos = getLocalTilePos(tile);
 
-        // on récupère le json de l'area
-        string json = builder.GetAreaJson(area_name);
-
-        // on parse le json
-        Dictionary<string, List<List<int>>> dict = JsonConvert.DeserializeObject<Dictionary<string, List<List<int>>>>(json);
+        AreaJson area = builder.LoadAreaJson(area_name);
 
         // on vérifie quelle tile est à la position
-        if (dict["fg"][local_tile_pos.y][local_tile_pos.x] != 0)
+        if (area.fg[local_tile_pos.y][local_tile_pos.x] != 0)
         {
             return "ceiling";
         }
-        else if (dict["bg"][local_tile_pos.y][local_tile_pos.x] != 0)
+        else if (area.bg[local_tile_pos.y][local_tile_pos.x] != 0)
         {
             return "wall";
         }
-        else if (dict["gd"][local_tile_pos.y][local_tile_pos.x] != 0)
+        else if (area.gd[local_tile_pos.y][local_tile_pos.x] != 0)
         {
             return "ground";
         }

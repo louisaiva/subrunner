@@ -41,6 +41,14 @@ public class Sector : MonoBehaviour
                                                         , "walls_2_7", "walls_2_8"};
     [SerializeField] private float density_posters = 0.3f; // 0.5 = 1 poster tous les 2 tiles compatibles
 
+    [Header("Emplacements")]
+    [SerializeField] private List<Vector2> empl_enemies = new List<Vector2>();
+    [SerializeField] private List<Vector2> empl_interactives = new List<Vector2>();
+
+    [Header("Enemies")]
+    [SerializeField] private List<Being> enemies = new List<Being>();
+    [SerializeField] private int nb_enemies = 5;
+    [SerializeField] private bool is_safe = false;
 
     // UNITY METHODS
     void Awake()
@@ -51,10 +59,14 @@ public class Sector : MonoBehaviour
         // on récupère les prefabs
         prefabs.Add("light", Resources.Load<GameObject>("prefabs/objects/small_light"));
         prefabs.Add("poster", Resources.Load<GameObject>("prefabs/objects/poster"));
+        prefabs.Add("enemy", Resources.Load<GameObject>("prefabs/beings/enemies/zombo"));
+        prefabs.Add("chest", Resources.Load<GameObject>("prefabs/objects/chest"));
 
         // on récupère les parents
         parents.Add("light", transform.Find("decoratives/lights"));
         parents.Add("poster", transform.Find("decoratives/posters"));
+        parents.Add("enemy", GameObject.Find("/world/enemies").transform);
+        parents.Add("chest", transform.Find("interactives"));
 
         poster_sprites = Resources.LoadAll<Sprite>("spritesheets/environments/objects/posters");
     }
@@ -147,13 +159,22 @@ public class Sector : MonoBehaviour
     }
 
     // GENERATION
-    public void GENERATE()
+    public void GENERATE(List<Vector2> empl_enemies, List<Vector2> empl_interactives)
     {
+        // on récupère les emplacements
+        this.empl_enemies = empl_enemies;
+        this.empl_interactives = empl_interactives;
+
         // on génère les objets
         PlaceLights();
 
         // on génère les posters
         PlacePosters();
+
+        // on place les ennemis
+        if (!is_safe) {
+            PlaceEnemies();
+        }
     }
 
     // OBJETS GENERATION
@@ -242,6 +263,26 @@ public class Sector : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    private void PlaceEnemies()
+    {
+        for (int i = 0; i < nb_enemies; i++)
+        {
+            // on récupère un emplacement
+            Vector2 empl = empl_enemies[Random.Range(0, empl_enemies.Count)];
+
+            // on instancie un enemy
+            // Vector3 pos = world.CellToWorld(new Vector3(empl.x, empl.y, 0));
+            Vector3 pos = new Vector3(empl.x, empl.y, 0);
+            GameObject enemy = Instantiate(prefabs["enemy"], pos, Quaternion.identity);
+
+            // on met le bon parent
+            enemy.transform.SetParent(parents["enemy"]);
+
+            // on ajoute l'enemy à la liste
+            enemies.Add(enemy.GetComponent<Being>());
         }
     }
 

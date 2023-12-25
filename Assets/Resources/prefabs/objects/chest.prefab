@@ -89,7 +89,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!95 &9151653795288606723
 Animator:
   serializedVersion: 5
@@ -125,6 +125,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   current_anim: 
   is_forcing: 0
+  debug: 0
 --- !u!114 &554493533941469845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,7 +172,7 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.27}
+  m_Offset: {x: 0, y: 0.22}
   m_Size: {x: 1, y: 0.45}
   m_Direction: 1
 --- !u!1001 &2439711390788624142
