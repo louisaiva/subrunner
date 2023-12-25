@@ -178,7 +178,7 @@ Transform:
   - {fileID: 2720543572456685308}
   - {fileID: 8405253595851947303}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3883242260699128306
 SpriteRenderer:
@@ -221,17 +221,17 @@ SpriteRenderer:
   m_SortingLayerID: -667374433
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 694190847, guid: f9237ae249b9154449739cd9e18333db, type: 3}
+  m_Sprite: {fileID: 1529054912, guid: f9237ae249b9154449739cd9e18333db, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 2.4, y: 2.4}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!95 &5864249208791642632
 Animator:
   serializedVersion: 5
@@ -302,6 +302,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   current_anim: 
   is_forcing: 0
+  debug: 0
 --- !u!114 &5754811362346391166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -321,7 +322,8 @@ MonoBehaviour:
   xp_provider: {fileID: 0}
   floating_dmg_provider: {fileID: 0}
   inputs: {x: 0, y: 0}
-  vitesse: 3
+  speed: 3
+  running_speed: 5
   world_layers:
     serializedVersion: 2
     m_Bits: 0
@@ -333,5 +335,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   cooldown_attack: 0.6
+  knockback_base: 6
   target_detected: 0
   meat_detected: 0

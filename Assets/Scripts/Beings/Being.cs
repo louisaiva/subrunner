@@ -30,7 +30,7 @@ public class Being : MonoBehaviour
     public float running_speed = 5f; // speed de déplacement
     protected bool isRunning = false;
     private Rect feet_collider; // collider des pieds (pour les collisions)
-    private float offset_perso_y_to_feet = 0.45f; // offset entre le perso et le collider des pieds
+    private float offset_perso_y_to_feet = 0f; // offset entre le perso et le collider des pieds
     public LayerMask world_layers; // layers du monde
     private bool isMoving = false;
 
