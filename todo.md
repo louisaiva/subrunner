@@ -49,6 +49,9 @@
     - [ ] - ajouter lecteur CD en bas à gauche ?
     - [ ] - ajouter visu clés RSA / HASH en bas à droite ?
 
+- [ ] - améliorer UX
+    - [ ] - ne pas changer material pour hoover de hack
+    - [ ] - afficher hack_ray blanc et faded qui devient actif quand on appuie
 # BUGS
 
 - [ ] - quand on est loin de xp-provider ça arrete de générer de l'xp ?

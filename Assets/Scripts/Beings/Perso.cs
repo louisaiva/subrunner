@@ -77,7 +77,7 @@ public class Perso : Attacker
         hack_layer = LayerMask.GetMask("Doors", "Enemies","Computers");
 
         // on récupère le collider de hack
-        hack_collider = transform.Find("hack_range").GetComponent<CircleCollider2D>();
+        hack_collider = transform.Find("center").GetComponent<CircleCollider2D>();
         hack_contact_filter.SetLayerMask(hack_layer);
 
         // on récupère le parent des hackin_rays
