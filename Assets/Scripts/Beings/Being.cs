@@ -34,6 +34,10 @@ public class Being : MonoBehaviour
     public LayerMask world_layers; // layers du monde
     private bool isMoving = false;
 
+    // CURRENT VELOCITY
+    private Vector3 last_position = Vector3.zero;
+    public Vector2 velocity = Vector2.zero;
+
     // ANIMATIONS
     protected AnimationHandler anim_handler;
     protected Vector2 lookin_at = new Vector2(0f, -1f);
@@ -84,6 +88,9 @@ public class Being : MonoBehaviour
             vie += regen_vie * Time.deltaTime;
         }
 
+        // on sauvegarde la position du perso
+        last_position = transform.position;
+
         // on récupère les inputs
         Events();
 
@@ -106,6 +113,10 @@ public class Being : MonoBehaviour
 
         // update forces
         update_forces();
+
+        // on calcule la current velocity
+        Vector3 vel = (transform.position - last_position) / Time.deltaTime;
+        velocity = new Vector2(vel.x, vel.y);
     }
 
     protected void OnDrawGizmosSelected()
