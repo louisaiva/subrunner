@@ -12,6 +12,7 @@ public class WorldGenerator : MonoBehaviour
     [Header("sectors")]
     [SerializeField] private GameObject sector_prefab;
     [SerializeField] private List<Sector> sectors = new List<Sector>();
+    [SerializeField] private bool is_world_safe = false;
 
     [Header("visualisation")]
     [SerializeField] private Transform visu_parent;
@@ -107,6 +108,9 @@ public class WorldGenerator : MonoBehaviour
             GameObject sect = Instantiate(sector_prefab, world.transform);
             sect.name = "sector_" + i;
             sect.GetComponent<Sector>().init(rooms, corridors);
+
+            // on met safe à jour
+            sect.GetComponent<Sector>().is_safe = is_world_safe;
 
             // on ajoute le pre-secteur à la liste
             sectors.Add(sect.GetComponent<Sector>());

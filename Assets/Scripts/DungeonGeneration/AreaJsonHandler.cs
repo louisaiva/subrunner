@@ -260,9 +260,14 @@ public class AreaJsonHandler : MonoBehaviour
                 {
                     emplacements.Add(type, new HashSet<Vector2>());
                 }
+
+                // on déplace la pos en Y de -0.25
+                pos.y -= 0.25f;
+
+                // on ajoute
                 emplacements[type].Add(pos);
 
-                print("adding " + type + " at " + pos);
+                // print("adding " + type + " at " + pos);
             }
         }
 

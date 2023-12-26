@@ -48,7 +48,12 @@ public class Sector : MonoBehaviour
     [Header("Enemies")]
     [SerializeField] private List<Being> enemies = new List<Being>();
     [SerializeField] private int nb_enemies = 5;
-    [SerializeField] private bool is_safe = false;
+    public bool is_safe = false;
+
+    [Header("Interactives")]
+    [SerializeField] private int nb_chests = 5;
+    [SerializeField] private int nb_comp = 3;
+
 
     // UNITY METHODS
     void Awake()
@@ -61,12 +66,14 @@ public class Sector : MonoBehaviour
         prefabs.Add("poster", Resources.Load<GameObject>("prefabs/objects/poster"));
         prefabs.Add("enemy", Resources.Load<GameObject>("prefabs/beings/enemies/zombo"));
         prefabs.Add("chest", Resources.Load<GameObject>("prefabs/objects/chest"));
+        prefabs.Add("computer", Resources.Load<GameObject>("prefabs/objects/computer"));
 
         // on récupère les parents
         parents.Add("light", transform.Find("decoratives/lights"));
         parents.Add("poster", transform.Find("decoratives/posters"));
         parents.Add("enemy", GameObject.Find("/world/enemies").transform);
         parents.Add("chest", transform.Find("interactives"));
+        parents.Add("computer", transform.Find("interactives"));
 
         poster_sprites = Resources.LoadAll<Sprite>("spritesheets/environments/objects/posters");
     }
@@ -196,6 +203,18 @@ public class Sector : MonoBehaviour
         if (!is_safe) {
             PlaceEnemies();
         }
+
+        // on place les coffres
+        for (int i = 0; i < nb_chests; i++)
+        {
+            PlaceChest();
+        }
+
+        // on place les ordinateurs
+        for (int i = 0; i < nb_comp; i++)
+        {
+            PlaceComputer();
+        }
     }
 
     // OBJETS GENERATION
@@ -312,6 +331,31 @@ public class Sector : MonoBehaviour
         enemies.Add(enemy.GetComponent<Being>());
     }
 
+    private void PlaceChest()
+    {
+        // on récupère un emplacement
+        Vector2 empl = consumeRandomEmplacement("interactives");
+
+        // on instancie un coffre
+        Vector3 pos = new Vector3(empl.x, empl.y, 0);
+        GameObject chest = Instantiate(prefabs["chest"], pos, Quaternion.identity);
+
+        // on met le bon parent
+        chest.transform.SetParent(parents["chest"]);
+    }
+    private void PlaceComputer()
+    {
+        // on récupère un emplacement
+        Vector2 empl = consumeRandomEmplacement("interactives");
+
+        // on instancie un computer
+        Vector3 pos = new Vector3(empl.x, empl.y, 0);
+        GameObject computer = Instantiate(prefabs["computer"], pos, Quaternion.identity);
+
+        // on met le bon parent
+        computer.transform.SetParent(parents["computer"]);
+    }
+
     // MAIN FUNCTIONS
     public void move(Vector2Int movement)
     {
@@ -345,6 +389,30 @@ public class Sector : MonoBehaviour
         return true;
     }
 
+    // EMPLACEMENTS
+    private Vector2 consumeRandomEmplacement(string type)
+    {
+
+        // on récupère la liste d'emplacements du type
+        List<Vector2> empl = new List<Vector2>();
+        if (type == "enemies") { empl = empl_enemies; }
+        else if (type == "interactives") { empl = empl_interactives; }
+
+        // on vérifie qu'il reste des emplacements
+        if (empl.Count == 0) {
+            Debug.LogError("Il n'y a plus d'emplacement de type "+type+" dans le secteur "+x+"_"+y);
+            return new Vector2(20000, 0);
+        }
+
+        // on récupère un emplacement aléatoire
+        Vector2 emplacement = empl[Random.Range(0, empl.Count)];
+
+        // on le supprime de la liste
+        empl.Remove(emplacement);
+
+        // on retourne l'emplacement
+        return emplacement;
+    }
 
 
     // GETTERS

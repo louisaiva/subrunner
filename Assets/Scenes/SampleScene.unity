@@ -1649,6 +1649,7 @@ MonoBehaviour:
   world: {fileID: 0}
   sector_prefab: {fileID: 0}
   sectors: []
+  is_world_safe: 0
   visu_parent: {fileID: 0}
   minimap: {fileID: 0}
 --- !u!1 &99539639
@@ -3942,6 +3943,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1353416090}
   timeOffset: 0.2
+  dynamic_cam: 0
   Y_OFF: 0
   min_velocity: 2
   Y_OFF_MAX: 3

@@ -632,8 +632,8 @@ public class Perso : Attacker
             GameObject hackin_ray = hacks_path.Find("hackin_ray_" + target.gameObject.name + "_" + target.gameObject.GetInstanceID()).gameObject;
 
             // on met à jour le hackin_ray
-            hackin_ray.GetComponent<LineRenderer>().SetPosition(0, transform.position);
-            hackin_ray.GetComponent<LineRenderer>().SetPosition(1, target.transform.position);
+            hackin_ray.GetComponent<LineRenderer>().SetPosition(0, transform.Find("center").position);
+            hackin_ray.GetComponent<LineRenderer>().SetPosition(1, target.transform.Find("hack_point").position);
 
             // on inflige des dégats à l'objet si c'est un hack de dégats
             if (current_hackin_targets[target] is DmgHack)
