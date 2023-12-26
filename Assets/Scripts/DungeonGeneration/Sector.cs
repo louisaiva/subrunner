@@ -70,7 +70,28 @@ public class Sector : MonoBehaviour
 
         poster_sprites = Resources.LoadAll<Sprite>("spritesheets/environments/objects/posters");
     }
-    
+
+    void Update()
+    {
+        // on génère des zombO TANT QUE le nombre d'ennemis est inférieur à nb_enemies
+        if (enemies.Count < nb_enemies)
+        {
+            PlaceEnemy();
+        }
+
+        // on vérifie si les ennemis sont tous morts
+        if (enemies.Count > 0)
+        {
+            // on récupère les ennemis morts
+            List<Being> dead_enemies = enemies.Where(x => !x.isAlive()).ToList();
+
+            // on les supprime de la liste
+            foreach (Being enemy in dead_enemies)
+            {
+                enemies.Remove(enemy);
+            }
+        }
+    }    
 
     // INIT
     public void init(HashSet<Vector2Int> rooms, HashSet<Vector2Int> corridors)
@@ -270,20 +291,25 @@ public class Sector : MonoBehaviour
     {
         for (int i = 0; i < nb_enemies; i++)
         {
-            // on récupère un emplacement
-            Vector2 empl = empl_enemies[Random.Range(0, empl_enemies.Count)];
-
-            // on instancie un enemy
-            // Vector3 pos = world.CellToWorld(new Vector3(empl.x, empl.y, 0));
-            Vector3 pos = new Vector3(empl.x, empl.y, 0);
-            GameObject enemy = Instantiate(prefabs["enemy"], pos, Quaternion.identity);
-
-            // on met le bon parent
-            enemy.transform.SetParent(parents["enemy"]);
-
-            // on ajoute l'enemy à la liste
-            enemies.Add(enemy.GetComponent<Being>());
+            PlaceEnemy();
         }
+    }
+
+    private void PlaceEnemy()
+    {
+        // on récupère un emplacement
+        Vector2 empl = empl_enemies[Random.Range(0, empl_enemies.Count)];
+
+        // on instancie un enemy
+        // Vector3 pos = world.CellToWorld(new Vector3Int(empl.x, empl.y, 0));
+        Vector3 pos = new Vector3(empl.x, empl.y, 0);
+        GameObject enemy = Instantiate(prefabs["enemy"], pos, Quaternion.identity);
+
+        // on met le bon parent
+        enemy.transform.SetParent(parents["enemy"]);
+
+        // on ajoute l'enemy à la liste
+        enemies.Add(enemy.GetComponent<Being>());
     }
 
     // MAIN FUNCTIONS

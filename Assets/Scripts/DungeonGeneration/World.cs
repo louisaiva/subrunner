@@ -85,7 +85,7 @@ public class World : MonoBehaviour
         // on lance la génération des secteurs
         foreach (Sector sector in sectors)
         {
-            print("getting emplacements for sector");
+            // print("getting emplacements for sector");
 
             GetEmplacements(sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives);
             print("empl enemies: " + empl_enemies.Count);
@@ -118,6 +118,12 @@ public class World : MonoBehaviour
         fg_tm.ClearAllTiles();
         bg_tm.ClearAllTiles();
         gd_tm.ClearAllTiles();
+
+        // on clear les enemis
+        foreach (Transform child in transform.Find("enemies"))
+        {
+            Destroy(child.gameObject);
+        }
     }
 
     // EMPLACEMENTS
@@ -131,9 +137,8 @@ public class World : MonoBehaviour
         foreach (Vector2Int area in sector.tiles)
         {
             // on récupère la position de l'area
-            Vector2Int area_pos = (area + sector.xy()) * area_size + new Vector2Int(area_size.x / 2, area_size.y / 2);
+            Vector2Int area_pos = (area + sector.xy());
 
-            print("getting emplacements for area " + (area + sector.xy()) + " at " + area_pos);
 
             // on récupère les emplacements de la room
             List<Vector2> empl_e, empl_i;
@@ -152,29 +157,41 @@ public class World : MonoBehaviour
         empl_interactives = new List<Vector2>();
 
         // on convertit l'area_pos en tile_pos
-        Vector2Int tile_pos = area_pos * area_size;
+        Vector2Int tile_pos = area_pos * area_size + new Vector2Int(area_size.x / 2, area_size.y / 2);
+
 
         // on récupère l'area
         string area_name = getAreaName(tile_pos);
+
+        // print("getting emplacements for area " + area_name + " at " + area_pos + "("+ tile_pos + ")");
 
         // on récupère le json de l'area
         AreaJson area = builder.LoadAreaJson(area_name);
 
         // on récupère les emplacements
         Dictionary<string, HashSet<Vector2>> empl = area.GetEmplacements();
-
-        if (empl.ContainsKey("enemies"))
+        string s= "empl enemies: ";
+        foreach (string key in empl.Keys)
         {
-            foreach (Vector2 pos in empl["enemies"])
+            s += key + ": " + empl[key].Count + ", ";
+        }
+        // print(s);
+
+        if (empl.ContainsKey("enemy"))
+        {
+            foreach (Vector2 emp in empl["enemy"])
             {
-                empl_enemies.Add(new Vector2(pos.x + tile_pos.x, pos.y + tile_pos.y));
+                // print("adding enemy at " + (pos.x + tile_pos.x) + ", " + (pos.y + tile_pos.y));
+                Vector3 pos = CellToWorld(new Vector3Int(tile_pos.x, tile_pos.y, 0));
+                empl_enemies.Add(new Vector2(pos.x + emp.x, pos.y + emp.y));
             }
         }
-        if (empl.ContainsKey("interactives"))
+        if (empl.ContainsKey("interactive"))
         {
-            foreach (Vector2 pos in empl["interactives"])
+            foreach (Vector2 emp in empl["interactive"])
             {
-                empl_interactives.Add(new Vector2(pos.x + tile_pos.x, pos.y + tile_pos.y));
+                Vector3 pos = CellToWorld(new Vector3Int(tile_pos.x, tile_pos.y, 0));
+                empl_interactives.Add(new Vector2(pos.x + emp.x, pos.y + emp.y));
             }
         }
 
