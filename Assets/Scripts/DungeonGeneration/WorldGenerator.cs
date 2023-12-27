@@ -261,6 +261,7 @@ public class WorldGenerator : MonoBehaviour
 
     }
 
+
     // DELAUNAY TRIANGULATION
     private List<Edge> createDelanauyTriangulation(List<Vector2> positions)
     {
@@ -468,6 +469,8 @@ public class WorldGenerator : MonoBehaviour
         return loops;
     }
 
+
+
     // VISUALISATION
     private void visualizeSectors()
     {
@@ -514,9 +517,13 @@ public class WorldGenerator : MonoBehaviour
     }
 
 
+    // SECTOR CONNECTION
+    private void connectSectors(List<Edge> mst, List<Edge> loops)
+    {
+        // connects the sectors together as defined by the MST and the loops
+    }
 
     // FINAL GENERATION
-
     private void makeSectorsAllPositives()
     {
         // on récupère le min

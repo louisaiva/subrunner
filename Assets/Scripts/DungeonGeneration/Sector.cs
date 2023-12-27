@@ -174,27 +174,6 @@ public class Sector : MonoBehaviour
 
     }
 
-    /* private HashSet<Vector2Int> CreateCeiling()
-    {
-        // on récupère le plafond
-        HashSet<Vector2Int> ceiling = new HashSet<Vector2Int>();
-
-        // renvoit un hashet qui est l'inverse des tiles, de dimension w*h
-        for (int i = 0; i < w; i++)
-        {
-            for (int j = 0; j < h; j++)
-            {
-                ceiling.Add(new Vector2Int(i, j));
-            }
-        }
-
-        // on enlève les tiles
-        ceiling.ExceptWith(tiles);
-
-        // on retourne le plafond
-        return ceiling;
-    } */
-
     // GENERATION
     public void GENERATE(List<Vector2> empl_enemies, List<Vector2> empl_interactives)
     {

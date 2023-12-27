@@ -94,6 +94,9 @@ public class World : MonoBehaviour
             sector.GENERATE(empl_enemies, empl_interactives);
         }
 
+        // on créé le plafond
+        CreateCeiling();
+
     }
 
     private void PlaceArea(int x, int y, string area_name)
@@ -104,6 +107,30 @@ public class World : MonoBehaviour
 
         // on set les tiles de l'area
         SetAreaTiles(x, y, area_json);
+    }
+
+    private void CreateCeiling()
+    {
+        // crée un enorme sprite de "plafond" pour éviter de voir le vide
+        // on récupère la taille max des tilemaps
+        Vector2Int size = GetSize();
+
+        // on créé le sprite
+        GameObject ceiling = new GameObject("ceiling");
+        ceiling.transform.parent = transform;
+        ceiling.transform.position = new Vector3(size.x / 4f, size.y / 4f, 0f);
+
+        // on ajoute une marge
+        size += new Vector2Int(20, 20);
+
+        // on créé le sprite renderer
+        SpriteRenderer sr = ceiling.AddComponent<SpriteRenderer>();
+        sr.sprite = Resources.Load<Sprite>("sprites/utils/almost_black");
+        sr.drawMode = SpriteDrawMode.Tiled;
+        sr.size = new Vector2(size.x/2f, size.y/2f);
+        sr.sortingLayerName = "ground";
+        sr.sortingOrder = -1;
+
     }
 
     private void Clear()
@@ -124,7 +151,15 @@ public class World : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+
+        // on clear le plafond
+        if (transform.Find("ceiling") != null)
+        {
+            Destroy(transform.Find("ceiling").gameObject);
+        }
     }
+
+
 
     // EMPLACEMENTS
     private void GetEmplacements(Sector sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives)
@@ -196,6 +231,7 @@ public class World : MonoBehaviour
         }
 
     }
+
 
     // SETTERS
     public void SetLayerTile(int x, int y, int tile=0, string layer="bg")
