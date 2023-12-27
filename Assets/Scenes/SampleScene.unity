@@ -1645,7 +1645,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad3ad34ccf8ecd5419d907d7f4054826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nb_sectors: 1
+  generate_world: 0
+  nb_sectors: 10
   world: {fileID: 0}
   sector_prefab: {fileID: 0}
   sectors: []
@@ -1984,7 +1985,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &178721811
 Transform:
   m_ObjectHideFlags: 0

@@ -559,8 +559,11 @@ public class Being : MonoBehaviour
         // play death animation
         anim_handler.ForcedChangeAnim(anims.die);
 
+        // calcule notre position centrale du sprite
+        Vector3 sprite_center = new Vector3(transform.position.x, transform.position.y + GetComponent<SpriteRenderer>().bounds.size.y / 2f,0);
+
         // on donne de l'xp
-        xp_provider.GetComponent<XPProvider>().EmitXP(xp_gift, transform.position);
+        xp_provider.GetComponent<XPProvider>().EmitXP(xp_gift, sprite_center);
 
         // destroy object        
         Invoke("DestroyObject", 60f);

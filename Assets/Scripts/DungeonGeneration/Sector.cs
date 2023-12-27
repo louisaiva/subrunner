@@ -9,14 +9,16 @@ public class Sector : MonoBehaviour
 {
     [Header("World")]
     public World world;
+    private WorldGenerator world_generator;
     private Vector2Int area_size = new Vector2Int(16, 16);
 
 
     [Header("HashSet")]
     public HashSet<Vector2Int> tiles = new HashSet<Vector2Int>();
     public HashSet<Vector2Int> rooms = new HashSet<Vector2Int>();
+    public HashSet<Vector2Int> sas = new HashSet<Vector2Int>();
     public HashSet<Vector2Int> corridors = new HashSet<Vector2Int>();
-    public HashSet<Vector2Int> ceiling = new HashSet<Vector2Int>();
+    // public HashSet<Vector2Int> ceiling = new HashSet<Vector2Int>();
 
 
     [Header("Position")]
@@ -60,6 +62,7 @@ public class Sector : MonoBehaviour
     {
         // on récupère le world
         world = GameObject.Find("/world").GetComponent<World>();
+        world_generator = GameObject.Find("/generator").GetComponent<WorldGenerator>();
 
         // on récupère les prefabs
         prefabs.Add("light", Resources.Load<GameObject>("prefabs/objects/small_light"));
@@ -80,6 +83,8 @@ public class Sector : MonoBehaviour
 
     void Update()
     {
+        if (!world_generator.generate_world) { return; }
+
         // on génère des zombO TANT QUE le nombre d'ennemis est inférieur à nb_enemies
         if (enemies.Count < nb_enemies)
         {
@@ -119,11 +124,15 @@ public class Sector : MonoBehaviour
         w = tiles.Max(x => x.x) - x + 1;
         h = tiles.Max(x => x.y) - y + 1;
 
+        // on ajoute une tile de marge
+        w += 1;
+        h += 1;
+
         // on recale les tiles pour que le min soit en 0,0
         recalibrateTiles();
 
         // on calcule le plafond
-        ceiling = CreateCeiling();
+        // ceiling = CreateCeiling();
     }
 
     private void recalibrateTiles()
@@ -165,7 +174,7 @@ public class Sector : MonoBehaviour
 
     }
 
-    private HashSet<Vector2Int> CreateCeiling()
+    /* private HashSet<Vector2Int> CreateCeiling()
     {
         // on récupère le plafond
         HashSet<Vector2Int> ceiling = new HashSet<Vector2Int>();
@@ -184,7 +193,7 @@ public class Sector : MonoBehaviour
 
         // on retourne le plafond
         return ceiling;
-    }
+    } */
 
     // GENERATION
     public void GENERATE(List<Vector2> empl_enemies, List<Vector2> empl_interactives)
@@ -363,7 +372,18 @@ public class Sector : MonoBehaviour
         y += movement.y;
     }
 
-    
+    public void addDoorArea(Vector2Int pos)
+    {
+        // on ajoute la tile
+        tiles.Add(pos);
+
+        // on ajoute la room
+        sas.Add(pos);
+
+        // on enlève du plafond
+        // ceiling.Remove(pos);
+    }
+
     // COLLISIONS
     public bool isColliding(Sector other)
     {
@@ -440,6 +460,12 @@ public class Sector : MonoBehaviour
         return y + h / 2f;
     }
 
+    public Vector2 center()
+    {
+        // on retourne le centre
+        return new Vector2(cx(), cy());
+    }
+
     public float L()
     {
         // on retourne la position la plus à gauche
@@ -475,22 +501,18 @@ public class Sector : MonoBehaviour
                 // on retourne le type de room
                 return "room";
             }
+            else if (sas.Contains(pos))
+            {
+                return "sas";
+            }
             else
             {
                 // on retourne le type de corridor
                 return "corridor";
             }
+
         }
-        else if (ceiling.Contains(pos))
-        {
-            // on retourne le type de ceiling
-            return "ceiling";
-        }
-        else
-        {
-            // on retourne le type de tile
-            return "not found";
-        }
+        return "ceiling";
     }
 
     public string getAreaName(Vector2Int pos)
@@ -571,4 +593,30 @@ public class Sector : MonoBehaviour
         // on retourne les bounds
         return new BoundsInt(x * area_size.x, y * area_size.y, 0, w * area_size.x, h * area_size.y, 1);
     }
+
+    public float findClosestAreas(Sector other, out Vector2Int area_sec, out Vector2Int area_oth)
+    {
+        // finds the smallest path between two sectors
+        float min_dist = 100000;
+
+        area_sec = new Vector2Int(0, 0);
+        area_oth = new Vector2Int(0, 0);
+
+        foreach (Vector2Int sec in tiles)
+        {
+            foreach (Vector2Int oth in other.tiles)
+            {
+                float dist = Vector2Int.Distance(sec, oth);
+                if (dist < min_dist)
+                {
+                    min_dist = dist;
+                    area_sec = sec;
+                    area_oth = oth;
+                }
+            }
+        }
+
+        return min_dist;
+    }
+
 }
