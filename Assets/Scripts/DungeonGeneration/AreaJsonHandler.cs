@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 using Newtonsoft.Json;
 using UnityEditor;
+using System.Linq;
 
 public class AreaJsonHandler : MonoBehaviour
 {
@@ -261,13 +262,17 @@ public class AreaJsonHandler : MonoBehaviour
                     emplacements.Add(type, new HashSet<Vector2>());
                 }
 
-                // on déplace la pos en Y de -0.25
-                pos.y -= 0.25f;
+                if (new string[] {"enemy","interactive"}.Contains(type))
+                {
+                    // on déplace la pos en Y de -0.25
+                    pos.y -= 0.25f;
+                }
+
 
                 // on ajoute
                 emplacements[type].Add(pos);
 
-                // print("adding " + type + " at " + pos);
+                print("adding " + type + " at " + pos);
             }
         }
 
@@ -607,6 +612,31 @@ public class AreaJson
             }
         }
         return empl;
+    }
+
+    public Vector2 GetDoorEmplacement(Vector2Int direction)
+    {
+
+        string dir = "";
+        if (direction == new Vector2Int(1,0)) {dir = "R";}
+        else if (direction == new Vector2Int(-1, 0)) { dir = "L"; }
+        else if (direction == new Vector2Int(0, 1)) { dir = "U"; }
+        else if (direction == new Vector2Int(0, -1)) { dir = "D"; }
+
+        string type = "door" + dir;
+
+        if (!this.emplacements.ContainsKey(type))
+        {
+            // on retourne la position du centre
+            return new Vector2(0, 0);
+        }
+
+        // on récupère la position de la porte
+        Point door_pos = this.emplacements[type].ElementAt(0);
+
+        // on retourne la position de la porte
+        return door_pos.vec2();
+    
     }
 }
 

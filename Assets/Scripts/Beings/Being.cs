@@ -535,8 +535,6 @@ public class Being : MonoBehaviour
         {
             forces.Add(knockback);
 
-            print("knockback : " + knockback.direction + " " + knockback.magnitude);
-
             // change the flipX of the sprite if needed
             if (knockback.direction.x != 0f)
             {

@@ -8,7 +8,7 @@ public class Minimap : MonoBehaviour {
     public Transform player;
     private WorldGenerator generator;
     private World world;
-    
+
     [Header("Map Settings")]
     public bool is_init = false;
     [SerializeField] private bool is_discovering = true;
@@ -106,6 +106,9 @@ public class Minimap : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        // si on a pas généré le monde, on return
+        if (!generator.generate_world) return;
+
         if (is_discovering && player.GetComponent<Perso>().has_gyroscope)
         {
             // on récupère la position du perso

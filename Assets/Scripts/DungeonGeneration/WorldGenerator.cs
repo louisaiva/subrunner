@@ -30,7 +30,7 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] private HashSet<Vector2Int> global_tiles = new HashSet<Vector2Int>();
 
 
-    // unity     functions
+    // unity functions
     void Awake()
     {
         // on récupère le sector prefab
@@ -62,17 +62,14 @@ public class WorldGenerator : MonoBehaviour
         // 2 - on génère les secteurs
         generateSectors();
 
-        // 3 - on crée les visus
-
-        // 4 - on sépare les secteurs
+        // 3 - on sépare les secteurs
         separateSectors();
 
-        // on les bascule en full positive
+        // 4 - on les bascule en full positive
         makeSectorsAllPositives();
 
         if (sectors.Count > 1)
         {
-
             // 5 - on créé un delaunay triangulation
             List<Vector2> vertices = new List<Vector2>();
             foreach (Sector sect in sectors)
@@ -93,6 +90,9 @@ public class WorldGenerator : MonoBehaviour
 
             // 7 - on ajoute quelques loops
             loops = addSomeLoops(MST, DT);
+
+            // 8 - on connecte les secteurs
+            connectSectors(MST, loops);
         }
 
         // on crée des visus
@@ -118,14 +118,16 @@ public class WorldGenerator : MonoBehaviour
         // on vide la liste des secteurs
         sectors.Clear();
 
-        // on vide la liste des pre-secteurs
-        sectors.Clear();
-
         // on détruit tous les enfants du parent des visualisations
         foreach (Transform child in visu_parent)
         {
             Destroy(child.gameObject);
         }
+
+        // on vide les listes
+        DT.Clear();
+        MST.Clear();
+        loops.Clear();
     }
 
 
@@ -521,6 +523,32 @@ public class WorldGenerator : MonoBehaviour
     private void connectSectors(List<Edge> mst, List<Edge> loops)
     {
         // connects the sectors together as defined by the MST and the loops
+
+        print(Vector2Int.up + " / " + Vector2Int.down + " / " + Vector2Int.left + " / " + Vector2Int.right);
+
+        // for now we only do the MST
+        foreach (Edge edge in mst)
+        {
+            // on récupère les secteurs
+            Sector sect1 = getSectorByCenter(edge.p1);
+            Sector sect2 = getSectorByCenter(edge.p2);
+
+            // on vérifie sur quel axe s'effectue la frontière
+            string border = sect1.getBorder(sect2);
+            print(sect1.gameObject.name + " and " + sect2.gameObject.name + " are connecting via border : " + border);
+
+            if (!(new string[] {"no border","collision"}.Contains(border)))
+            {
+                if (new string[] { "R", "U" }.Contains(border))
+                {
+                    sect1.connectWithSector(sect2);
+                }
+                else
+                {
+                    sect2.connectWithSector(sect1);
+                }
+            }
+        }
     }
 
     // FINAL GENERATION
@@ -550,6 +578,20 @@ public class WorldGenerator : MonoBehaviour
     }
 
 
+    // GETTERS
+    public Sector getSectorByCenter(Vector2 pos)
+    {
+        // on parcourt tous les sectors pour trouver celui qui correspond
+        foreach (Sector sect in sectors)
+        {
+            // on vérifie si le sect correspond
+            if (sect.center() == pos)
+            {
+                return sect;
+            }
+        }
+        return null;
+    }
 }
 
 public class Edge
