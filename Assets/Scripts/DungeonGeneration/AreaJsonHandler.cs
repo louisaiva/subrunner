@@ -396,6 +396,8 @@ public class AreaJsonHandler : MonoBehaviour
         // on récupère le json
         string json = GetAreaJson(name);
 
+        if (json == "") {return null;}
+
         // on le parse
         AreaJson area_json = JsonConvert.DeserializeObject<AreaJson>(json);
 
@@ -429,8 +431,18 @@ public class AreaJsonHandler : MonoBehaviour
         // on en déduit le path du fichier json
         string path = tile_areas_path + area_type + name + ".json";
 
-        // on récupère le json
-        string json = System.IO.File.ReadAllText(path);
+        string json = "";
+
+        try
+        {
+            // on récupère le json
+            json = System.IO.File.ReadAllText(path);
+        }
+        catch
+        {
+            Debug.LogError("no json found for " + name);
+        }
+            
 
         // on retourne le json
         return json;

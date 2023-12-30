@@ -136,6 +136,12 @@ public class World : MonoBehaviour
         // string area_json = builder.GetAreaJson(area_name);
         AreaJson area_json = builder.LoadAreaJson(area_name);
 
+        if (area_json == null)
+        {
+            Debug.LogError("area " + area_name + " on position " + x + "/" + y + " not found");
+            return;
+        }
+
         // on set les tiles de l'area
         SetAreaTiles(x, y, area_json);
     }
