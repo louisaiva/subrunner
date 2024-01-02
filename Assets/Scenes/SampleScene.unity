@@ -1646,7 +1646,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generate_world: 1
-  nb_sectors: 7
+  nb_sectors: 5
   world: {fileID: 0}
   sector_prefab: {fileID: 0}
   sectors: []
@@ -1985,7 +1985,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &178721811
 Transform:
   m_ObjectHideFlags: 0
@@ -18254,10 +18254,14 @@ MonoBehaviour:
   areas_path: Assets/Resources/prefabs/areas/
   tile_areas_path: Assets/Resources/prefabs/tileareas/
   areas:
+  - {fileID: 4448907022124578336, guid: 0292359ddd2d7a540b4719ed5ae8d992, type: 3}
   - {fileID: 4448907022124578336, guid: 18617c113d07cfb4db2e48b7800a6e84, type: 3}
   - {fileID: 4448907022124578336, guid: 686bb8ee66574594a896e566974855a7, type: 3}
   - {fileID: 4448907022124578336, guid: 547a06e9aba90c34bb68395d0b4a9062, type: 3}
+  - {fileID: 4448907022124578336, guid: 50791b6eab3feef42a650e46a94cc95e, type: 3}
   - {fileID: 4448907022124578336, guid: 36b07537361a32848a54f059336ba190, type: 3}
+  - {fileID: 4448907022124578336, guid: 05b20908cba3dc2489cd0e3bca501775, type: 3}
+  - {fileID: 4448907022124578336, guid: effb9658ee8e3e24b8971e50a3a320f4, type: 3}
   - {fileID: 4448907022124578336, guid: dcacee126d9d92c43819ca5095bda425, type: 3}
   - {fileID: 4448907022124578336, guid: a1099df9cfc245d4c8e03bea2dd2f578, type: 3}
   - {fileID: 4448907022124578336, guid: 0ce10aa7dcae62548be8676a0a5c0b7a, type: 3}
