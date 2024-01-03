@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1180315892945734718}
   - component: {fileID: 3845646378405068767}
   m_Layer: 16
-  m_Name: speed_glasses
+  m_Name: carbon_shoes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 22406999
   m_SortingLayer: 5
   m_SortingOrder: 1
-  m_Sprite: {fileID: 1273129635, guid: 3663b626bd9323741bb906f9681d3bc7, type: 3}
+  m_Sprite: {fileID: -1127070691, guid: 3663b626bd9323741bb906f9681d3bc7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -101,8 +101,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item_type: physical
   action_type: passive
-  item_name: speed_glasses
-  item_description: the only GV speed glasses. allows you to sprint. very cool design
+  item_name: carbon_shoes
+  item_description: Allows you to angle jump. change direction at the right time
+    to get a boost
   legendary_item: 1
   is_showed: 0
   is_on_ground: 0
