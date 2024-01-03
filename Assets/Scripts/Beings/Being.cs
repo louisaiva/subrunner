@@ -30,9 +30,13 @@ public class Being : MonoBehaviour
     public float running_speed = 5f; // speed de déplacement
     protected bool isRunning = false;
     private Rect feet_collider; // collider des pieds (pour les collisions)
-    private float offset_perso_y_to_feet = 0.45f; // offset entre le perso et le collider des pieds
+    private float offset_perso_y_to_feet = 0f; // offset entre le perso et le collider des pieds
     public LayerMask world_layers; // layers du monde
     private bool isMoving = false;
+
+    // CURRENT VELOCITY
+    private Vector3 last_position = Vector3.zero;
+    public Vector2 velocity = Vector2.zero;
 
     // ANIMATIONS
     protected AnimationHandler anim_handler;
@@ -84,6 +88,9 @@ public class Being : MonoBehaviour
             vie += regen_vie * Time.deltaTime;
         }
 
+        // on sauvegarde la position du perso
+        last_position = transform.position;
+
         // on récupère les inputs
         Events();
 
@@ -106,6 +113,10 @@ public class Being : MonoBehaviour
 
         // update forces
         update_forces();
+
+        // on calcule la current velocity
+        Vector3 vel = (transform.position - last_position) / Time.deltaTime;
+        velocity = new Vector2(vel.x, vel.y);
     }
 
     protected void OnDrawGizmosSelected()
@@ -524,8 +535,6 @@ public class Being : MonoBehaviour
         {
             forces.Add(knockback);
 
-            print("knockback : " + knockback.direction + " " + knockback.magnitude);
-
             // change the flipX of the sprite if needed
             if (knockback.direction.x != 0f)
             {
@@ -548,8 +557,11 @@ public class Being : MonoBehaviour
         // play death animation
         anim_handler.ForcedChangeAnim(anims.die);
 
+        // calcule notre position centrale du sprite
+        Vector3 sprite_center = new Vector3(transform.position.x, transform.position.y + GetComponent<SpriteRenderer>().bounds.size.y / 2f,0);
+
         // on donne de l'xp
-        xp_provider.GetComponent<XPProvider>().EmitXP(xp_gift, transform.position);
+        xp_provider.GetComponent<XPProvider>().EmitXP(xp_gift, sprite_center);
 
         // destroy object        
         Invoke("DestroyObject", 60f);

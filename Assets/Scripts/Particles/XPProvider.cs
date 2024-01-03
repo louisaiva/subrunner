@@ -34,6 +34,9 @@ public class XPProvider : MonoBehaviour
 
     private void Start()
     {
+        // on récupère le player
+        player = GameObject.Find("/perso");
+
         // on récupère le particle system
         generator = GetComponent<ParticleSystem>();
         // on emet une particule

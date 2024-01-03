@@ -257,7 +257,7 @@ generation
 
             (1) Area HashSet generator
 
-            -on génère les hashset de chaque secteurs pour avoir des secteurs cohérents (sector generator)
+            -on génère les hashset de chaque secteur pour avoir des secteurs cohérents (sector generator)
             -on positionne certains secteurs spécifiques type boss, area de départ, grand hall (sector seter)
             -on sépare comme on veut les secteurs pour pouvoir les assembler (sector separator)
                 écarter plus que nécessaire les secteurs ?
@@ -265,7 +265,7 @@ generation
                 est-ce qu'on doit refaire une étape de séparation ?
             -on trace un graph pour relier les secteurs entre eux et ajouter 2 boucles
 
-            (2) Tile HashSet translator
+            (2) Tilemap translator
 
             -on multiplie le area_hashset par les dimensions d'une area en tiles. -> on obtient un hashset enorme en tiles
             -on place les portes sur le tile_hashset global.

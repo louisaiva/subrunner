@@ -77,7 +77,7 @@ public class Perso : Attacker
         hack_layer = LayerMask.GetMask("Doors", "Enemies","Computers");
 
         // on récupère le collider de hack
-        hack_collider = transform.Find("hack_range").GetComponent<CircleCollider2D>();
+        hack_collider = transform.Find("center").GetComponent<CircleCollider2D>();
         hack_contact_filter.SetLayerMask(hack_layer);
 
         // on récupère le parent des hackin_rays
@@ -157,7 +157,7 @@ public class Perso : Attacker
 
 
         // on affiche un texte de début
-        // Invoke("showWelcome", 5f);
+        Invoke("showWelcome", 5f);
     }
 
     // welcoming
@@ -169,19 +169,19 @@ public class Perso : Attacker
         Vector3 position = transform.position + new Vector3(0, 1f, 0);
         string text = "welcome to";
         GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
-        floating_text.GetComponent<FloatingText>().init(text, Color.yellow, 30f, 0.1f, 0.2f, 6f);
+        floating_text.GetComponent<FloatingText>().init(text, Color.yellow, 30f, 0.1f, 0.2f, 16f);
         floating_text.transform.SetParent(floating_dmg_provider.transform);
 
         // SUBRUNNER
         position = transform.position + new Vector3(0, 0.5f, 0);
         text = "SUBRUNNER";
         GameObject floating_text2 = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
-        floating_text2.GetComponent<FloatingText>().init(text, Color.green, 30f, 0.1f, 0.2f, 6f);
+        floating_text2.GetComponent<FloatingText>().init(text, Color.green, 30f, 0.1f, 0.2f, 16f);
         floating_text2.transform.SetParent(floating_dmg_provider.transform);
 
 
         // on affiche la quete 5sec après
-        Invoke("showQuest", 5f);
+        // Invoke("showQuest", 5f);
     }
 
     void showQuest()
@@ -632,8 +632,8 @@ public class Perso : Attacker
             GameObject hackin_ray = hacks_path.Find("hackin_ray_" + target.gameObject.name + "_" + target.gameObject.GetInstanceID()).gameObject;
 
             // on met à jour le hackin_ray
-            hackin_ray.GetComponent<LineRenderer>().SetPosition(0, transform.position);
-            hackin_ray.GetComponent<LineRenderer>().SetPosition(1, target.transform.position);
+            hackin_ray.GetComponent<LineRenderer>().SetPosition(0, transform.Find("center").position);
+            hackin_ray.GetComponent<LineRenderer>().SetPosition(1, target.transform.Find("hack_point").position);
 
             // on inflige des dégats à l'objet si c'est un hack de dégats
             if (current_hackin_targets[target] is DmgHack)

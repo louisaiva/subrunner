@@ -32,7 +32,7 @@ public class Chest : MonoBehaviour, I_Interactable
     {
         // on récupère l'animation handler
         anim_handler = GetComponent<AnimationHandler>();
-        anim_handler.debug = true;
+        // anim_handler.debug = true;
 
         // on récupère l'inventaire
         inventory = transform.Find("inventory").GetComponent<Inventory>();
