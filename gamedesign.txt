@@ -1,0 +1,190 @@
+# gamedesign du jeu
+
+
+#
+EXPLORATION
+#
+    L'exploration est un élément central du jeu
+    cependant elle ne doit pas DECEVOIR le joueur
+    en devenant répétitive ou inutile
+
+    pour éviter cela,
+
+
+
+
+
+
+
+
+
+    -on RECOMPENSE UTILEMENT le joueur d'explorer la map :
+
+
+        -on donne des items/compétences/elements de gameplay utiles qui débloquent les portes bloquées. notamment :
+
+            (item *) hacking os
+            -- QG --
+
+                LEGENDAIRE -- possède un HUD, un UI et des items complémentaires
+
+                premier item légendaire qu'on trouve.
+                permet de hacker des trucs.
+                débloque les bits.
+
+                possède une mémoire où l'on peut caler qu'un certain nombre de hack à la fois.
+
+                on se retouve directement face à un coffre à expérience qu'on doit hacker
+
+                se trouve dans nos vieux tiroirs dans le QG après que notre ordinateur crame parce qu'on a envie de pates.
+                en face de la porte de sortie.
+
+                on franchit la porte de notre base, puis on sort et on se retrouve dans un couloir puis une pièce avec 4 coffres à XP
+                qui nous permettent de passer PRESQUE exactement au niveau 1.
+                on doit pour les ouvrir hacker un pylone central qui ouvre les coffres à distance.
+                -> enseigne ce qu'est l'XP
+                puis on croise un zombie et on apprend qu'il en lache aussi, pile poil ce qu'il nous manquait.
+                -> enseigne le fonctionnement des niveaux
+
+
+            (item *) lunettes - GigaViolet (GV) glasses:
+            -- HUB --
+
+                LEGENDAIRE -- possède un ui et des améliorations d'item
+
+
+
+                permettent de voir dans le noir. créent une lumière bleue environnante
+                et plus forte autour de l'éclairage faiblissant des lumières
+
+
+                mettre un miroir juste après l'avoir trouvé et proposer:
+                    "regarder ses lunettes"
+                ce miroir est l'un des seuls miroirs du jeu et cache derrière lui la room 404
+                qui débouche sur la matrix et amène directement vers un autre miroir plus loin dans le jeu.
+
+                
+                permettent de voir les murs internet murs en miroirs
+
+                les lunettes sont un objet légendaire possédant son propre ui d'évolution.
+                les lunettes trouvées par la suite sont seulement des améliorations techniques aux lunettes.
+            (amélioration item) lunettes - speed GV glasses :
+            -- METRO -- ?
+                se trouve dans un vieux métro désaffecté et abandonné
+
+                permet de courir. (compétence activable en continu lors de l'appui sur shift)
+            (amélioration item) lunettes - 3D speed GV glasses :
+            -- SE -- ?
+
+
+                sert à voir une porte d'accès cryptée au secteur suivant dans un secteur.
+
+                sert plus tard à voir les lumières d'internet et donc des indices vers les zones connectées.
+
+                dévoilent aussi la vision des portes cryptées dans les miroirs,
+                notamment la room 404 et les portes internet en général (voyages rapide)
+
+                permet de voir les wifi ?
+
+
+            (item) TV Hack :
+            -- SE -- ?
+
+                allume l'écran central du secteur où il est caché, ce qui dévoile une porte dans la télé.
+
+                sert plus tard à obtenir des indices sur le secteur, genre des loca de parefeu et de serveurs intéressants.
+                parfois des éléments de story.
+
+
+            (gameplay) Ami drone :
+            -- D --
+
+
+            (item) Dynamite anarcho :
+            -- A --
+
+                débloque des rooms bloquées par des décombres ou des portes en bois.
+
+
+            (item) Ascenceur Hack :
+            -- SE , HUB --
+
+
+                débloque les accès aux ascenceurs.
+                les ascenceurs peuvent notamment nous donner accès à des zones cachées sur les plafonds.
+
+                se trouve dans des vieux servers ou dans un disque dur corrompu sur une console abandonnée.
+
+
+            (item *) Lecteur de cd :
+            -- HK , K --
+
+                LEGENDAIRE -- possède un HUD et des items complémentaires
+
+
+
+                lecteur de cd qui permet de rec et de jouer des enregistrements mp3
+                -> permettent de dévérouiller les portes en recopiant leur signature sonore.
+                -> permet d'écouter des cd qu'on trouve
+
+                donné par le hacker à la batterie qui dit
+                "tiens, c'est important d'écouter de la musique"
+
+                /!\ le jeu avant l'accès au lecteur cd doit déjà comporter de la musique
+                (au moins par moment -> Minecraft)
+
+
+            (item) Light hack :
+            -- DB , F --
+
+                allume la lumière, ce qui est très utile avant d'avoir les lunettes 
+                et lorsqu'un brouilleur de lunettes bloque la porte du secteur.
+                cependant cela allume la lumière ce qui attire les zombies vers vous.
+                les lumières s'allument en partant de vous.
+
+                se trouve dans une room remplie de cyborg désactivés qui se mettent en marche à l'allumage de la lumière.
+
+                premiers cyborgs qu'on rencontre. Ont des sabres lasers mais sont lents. Détruisent les parades.
+                Seul les éviter est possible.
+
+
+            (item *) shoes - helium shoes :
+            -- HUB --
+
+                LEGENDAIRE -- possède un ui et des améliorations d'item
+
+                débloquent le DASH - compétence active qui permet de se propulser dans une direction voulue à un moment
+                permet de franchir des obstacles physiques (portes de laser ?)
+                compétence lente à recharger
+            (amélioration item) shoes - carbonelium shoes :
+            -- HUB , K --
+                
+                débloquent le ANGLE JUMP - compétence passive qui permet de se propulser des angles de rooms.
+                -> appuyer au bon moment augmente la vitesse du perso
+                -> vitesse reset lors d'un contact avec un mur
+                -> en enchainer 2 à la suite redonne un dash
+
+
+
+
+
+
+    -on GUIDE le joueur vers les endroits intéressants :
+
+
+
+        -on guide avec les lumières d'internet sur les plafonds
+        
+
+        -on donne des indices en hackant des télés si on a passé longtemps dans le secteur
+
+
+
+
+
+
+
+
+
+
+#
