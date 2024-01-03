@@ -306,6 +306,102 @@ ITEMS
             chaque musique apporte un petit boost en mode motivation techno
             les cds peuvent se trouver au camp des anar
 
+#
+OBJECTS
+#
+    Door :
+
+
+
+        SimpleDoor :
+
+            s'ouvre automatiquement
+            se referme après votre passage
+
+            souvent dans les secteurs.
+
+
+
+
+        HackableDoor :
+            peut être hacké avec door_hack
+            se referme après votre passage
+
+            inter secteur puis dans les secteurs pour protéger des parefeu par exemple.
+
+
+
+
+
+        DynamitableDoor :
+            s'explose avec de la Dynamite
+
+            dans les secteurs pour cacher des coffres ou des endroits cachés.
+
+
+
+
+        LaserDoor :
+            peut être passée avec le dash
+
+            inter secteur et dans les secteurs pour protéger des parefeu par exemple.
+            accompagné d'un SuperButton
+            
+
+
+
+        EncryptedDoor :
+            visible seulement avec les 3D glasses
+
+
+        MusicDoor :
+            s'ouvre avec un son signature particulier
+            pas très protégé car il suffit d'enregistrer sa signature
+            au moment où elle s'ouvre
+
+            protège une zone d'où déferle des ennemis capables d'ouvrir la porte
+
+            intersecteur ou dans le secteur derrière un spawn
+
+
+
+
+        TV_Door :
+            juste avant le boss final
+            visible et ouverte avec un tv_hack
+
+
+
+
+    computer
+
+
+    chest :
+
+
+        item chest :
+
+            s'ouvre via pression sur E
+            stocke des items physiques.
+            peut cacher des items utiles pour quitter le secteur.
+        
+        
+        xp chest & button :
+
+            stocke uniquement de l'xp
+            s'ouvre via pression sur un button. 
+
+
+
+
+        software chest :
+
+
+
+
+
+
+
 
 #
 UI

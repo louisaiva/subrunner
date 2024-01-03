@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Hack : Item
+public class Hack : ActiveItem
 {
 
     public string hack_type_target = "nothin";
@@ -17,5 +17,13 @@ public class Hack : Item
 
     }
 
+    // activation
+
+    public void use(I_Hackable target)
+    {
+        base.use();
+
+        // on lance le hack
+    }
 }
 

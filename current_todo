@@ -1,0 +1,177 @@
+
+
+plan d'action après algo 3.0 (3/1/2024)
+
+
+    but : génerer une démo avec 3 secteurs différents
+
+    les secteurs sont -- QG -- puis -- HUB -- puis -- TV --
+
+
+    1e étape : coder les secteurs différents
+
+        QG :
+            desc :          notre QG
+            taille :        1
+            skin :          qg (2)
+            safe :          oui
+            difficulté :    0
+
+            deco :          tags, posters
+                            1 Carton
+            lights :        plein
+            objects :       /
+
+            items :         1 linuxack (key)
+
+            doors :         1 - SimpleDoor -> HUB
+
+
+        
+        HUB :
+            desc :          hub de transition
+            taille :        5
+            skin :          de base (0)
+            safe :          non
+            difficulté :    1
+
+            deco :          tags, posters
+            lights :        normal
+            objects :       1 Chest
+                            1 Computer
+                            4 XP_chest
+                            1 Button
+                            
+            items :         1 door_hack (key)
+
+            doors :         1 - HackableDoor -> TV
+                            1 - SimpleDoor -> QG
+
+        
+        TV :
+            desc :          zone finale de la démo 2
+            taille :        10
+            skin :          server (1)
+            safe :          non
+            difficulté :    2
+
+            deco :          tags, posters
+            lights :        normal
+            objects :       2 Chest
+                            2 Computer
+                            
+            items :         1 tv_hack (key)
+                            1 zombo_hack
+
+            doors :         1 - HackableDoor -> HUB
+                            1 - TV_Door -> FIN DU JEU
+
+
+    2e étape : coder le systeme d'Item
+
+        1e possibilité :
+            tous les items sont dans l'inventaire du perso
+            simple basique comme on a déjà
+
+            On crée des PersoCapabilites pour chaque item
+
+            le perso check dans ses Events pour voir
+            si un event de capacité est activé
+            puis il check si il a l'item dans son inventaire
+            ou si il a déjà la capacité de l'item
+
+            Events :
+
+                before activating a -- capacity -- , check
+
+                -if event_key is pressed by the IRL player
+                -if the player already has the capacity
+                (-if the player has the item in his inventory)
+
+
+                -if -- capacity -- == hoover_hacking :
+                    -if the player can hack it
+
+
+                -if the capacity is not on cooldown
+
+
+                if one of these is false, cancel the event
+                else, activate the PersoCapability
+                
+
+
+            PersoCapability en cascade :
+                -walk
+                -hit
+                -run
+                -gv_vision
+                    -3D_vision
+
+                -gyroscope
+                -hoover_hacking
+                    -zombo_hacking          1 bit
+                    -door_hacking           2 bits
+                    -tv_hacking             4 bits
+
+                -hoover_interaction
+                    -interaction
+
+                [exemples d'autre capacités :
+                    -dash
+                        -angle dash
+                    -dynamit
+                    -record
+                ]
+
+            PersoCapability complexes :
+
+                les systèmes de hoovers.
+                    on doit stocker l'objet hooveré
+                
+                les systèmes de hacking.
+                    on doit update le hack
+                
+
+
+
+            avantages :
+                -pas besoin de changer beaucoup de choses
+                -on gère les capacités dans le perso
+                -on peut facilement ajouter des capacités
+                -on peut gérer les capacités en cascade
+
+            inconvénients :
+                -ne règle pas le problème de l'ui
+                -potentiellement fouilli si on gère mal les capacités complexes
+
+
+    3e étape : coder un système de zones
+
+        créer des zones qu'on assigne à une area d'un secteur
+        lors de la création du secteur afin
+        de lui affecter skin, objets, items, deco, light
+
+
+        QG_Zone :
+            skin :          qg (2)
+            deco :          tags, posters
+                            1 Carton
+            lights :        plein
+            items :         1 linuxack
+
+        Spawn_Zone :
+            deco :          tags, posters
+            ennemies :      1 SpawnZombo
+
+        XP_Zone :
+            objects :       4 XP_chest
+                            1 Button
+
+        Chest_Zone :
+            objects :       1 Chest
+
+        Computer_Zone :
+            objects :       1 Computer
+
+        

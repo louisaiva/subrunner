@@ -510,7 +510,7 @@ public class Perso : Attacker
 
 
     // HACK
-    private void hack()
+    /* private void hack()
     {
 
         // on regarde si on peut hacker qqch
@@ -570,7 +570,7 @@ public class Perso : Attacker
 
         return;
         
-    }
+    } */
 
     private void update_hacks()
     {

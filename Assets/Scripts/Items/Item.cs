@@ -18,7 +18,7 @@ public class Item : MonoBehaviour, I_Descriptable
     // UI
     public bool is_showed = false;
     private SpriteRenderer sprite_renderer;
-    private GameObject ui_bg;
+    protected GameObject ui_bg;
 
     // on the ground
     public bool is_on_ground = false;

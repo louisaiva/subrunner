@@ -227,7 +227,7 @@ public class CyberZombo : Attacker, I_Hackable
         return true;
     }
 
-    int I_Hackable.beHacked()
+    int I_Hackable.beHacked(Hack hack)
     {
         // on regarde si on est déjà en train de se faire hacker
         if (is_getting_hacked) { return 0; }
@@ -236,7 +236,6 @@ public class CyberZombo : Attacker, I_Hackable
         // todo voir Computer.cs
 
         hacking_current_duration = hacking_duration_base;
-        // float hackin_speed = hacking_duration_base / hacking_current_duration;
         if (hacking_current_duration < 0.1f) { hacking_current_duration = 0.1f; }
 
         // on met à jour les animations
@@ -298,7 +297,7 @@ public class CyberZombo : Attacker, I_Hackable
     {
         // on change le material
         GetComponent<SpriteRenderer>().material = outline_material;
-        print(gameObject.name + " just got outlined");
+        // print(gameObject.name + " just got outlined");
     }
     public void unOutlineMe()
     {
