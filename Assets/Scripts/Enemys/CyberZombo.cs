@@ -227,7 +227,7 @@ public class CyberZombo : Attacker, I_Hackable
         return true;
     }
 
-    int I_Hackable.beHacked(Hack hack)
+    int I_Hackable.beHacked()
     {
         // on regarde si on est déjà en train de se faire hacker
         if (is_getting_hacked) { return 0; }
