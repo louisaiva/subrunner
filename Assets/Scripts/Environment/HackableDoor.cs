@@ -1,23 +1,11 @@
 using UnityEngine;
 
 [RequireComponent(typeof(AnimationHandler))]
-public class HackableDoor : MonoBehaviour, I_Hackable
+public class HackableDoor : Door, I_Hackable
 {
-    // La classe DOOR sert à créer des portes et à les ouvrir
-    // comme elle n'est pas alignée avec les tiles, il faut faire attention à la position de la porte
-    // elle doit être alignée avec les tiles
-
-    // ANIMATION
-    private AnimationHandler anim_handler;
-    private DoorAnims anims = new DoorAnims();
-    
 
     // secu de départ
     public int secu = 1;
-
-    // OPENING
-    public bool is_open = false;
-    private BoxCollider2D box_collider;
 
     // closing
     private float auto_closin_delay = 8f;
@@ -40,13 +28,9 @@ public class HackableDoor : MonoBehaviour, I_Hackable
     public Material default_material { get; set; }
 
     // UNITY FUNCTIONS
-    void Start()
+    protected new void Start()
     {
-        // on récupère l'animation handler
-        anim_handler = GetComponent<AnimationHandler>();
-
-        // on récupère le box_collider
-        box_collider = GetComponent<BoxCollider2D>();
+        base.Start();
 
         // on initialise le hackin
         initHack();
@@ -54,55 +38,12 @@ public class HackableDoor : MonoBehaviour, I_Hackable
 
     void Update()
     {
-
         // on met à jour le hackin
         if (is_getting_hacked)
         {
             // on met à jour le hackin
             updateHack();
         }
-
-        // on met à jour les animations
-        if (is_open)
-        {
-            // on regarde si on a fini l'animation
-            if (anim_handler.IsForcing()) { return; }
-
-            // on met à jour les animations
-            anim_handler.ChangeAnim(anims.idle_open);
-        }
-        else
-        {
-            // on regarde si on a fini l'animation
-            if (anim_handler.IsForcing()) { return; }
-
-            // on met à jour les animations
-            anim_handler.ChangeAnim(anims.idle_closed);
-        }
-
-        // on met à jour le collider
-        box_collider.enabled = !is_open;
-    }
-
-    public void open()
-    {
-        // on met à jour les animations
-        if (!anim_handler.ChangeAnimTilEnd(anims.openin)) { return; }
-
-        // on ouvre la porte
-        is_open = true;
-
-        // on ferme la porte après un certain temps
-        Invoke("close", auto_closin_delay);
-    }
-
-    public void close()
-    {
-        // on met à jour les animations
-        if (!anim_handler.ChangeAnimTilEnd(anims.closin)) { return; }
-
-        // on ferme la porte
-        is_open = false;
     }
 
     // HACKIN
@@ -146,16 +87,11 @@ public class HackableDoor : MonoBehaviour, I_Hackable
         // on regarde si on est déjà en train de se faire hacker
         if (is_getting_hacked) { return 0; }
 
-        // on calcule la durée du hack
-        // todo voir Computer.cs
-
         hacking_current_duration = hacking_duration_base;
-        float hackin_speed = hacking_duration_base / hacking_current_duration;
         if (hacking_current_duration < 0.1f) { hacking_current_duration = 0.1f; }
 
         // on met à jour les animations
-        anim_handler.StopForcing();
-        anim_handler.ChangeAnimTilEnd(anims.hackin,hackin_speed);
+        anim_handler.ChangeAnim(anims.hackin, hacking_current_duration);
 
         // on hack la porte
         is_getting_hacked = true;
@@ -197,9 +133,7 @@ public class HackableDoor : MonoBehaviour, I_Hackable
         bit_provider.GetComponent<XPProvider>().EmitBits(bits_left, transform.position, 0.5f);
 
         // on ferme la porte
-        anim_handler.StopForcing();
-        anim_handler.ChangeAnimTilEnd(anims.idle_closed);
-        is_open = false;
+        success_close();
     }
 
     public void succeedHack()
@@ -209,8 +143,11 @@ public class HackableDoor : MonoBehaviour, I_Hackable
         hacking_end_time = -1;
         hacking_current_duration = 0f;
 
+        // on met à jour le box_collider
+        box_collider.enabled = false;
+        
         // on ouvre la porte
-        is_open = true;
+        success_open();
 
         // on ferme la porte après un certain temps
         Invoke("close", auto_closin_delay);

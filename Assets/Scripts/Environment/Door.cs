@@ -8,7 +8,7 @@ public class Door : MonoBehaviour
 
 
     // ANIMATION
-    private AnimationHandler anim_handler;
+    protected AnimationHandler anim_handler;
     protected DoorAnims anims = new DoorAnims();
 
 
@@ -38,6 +38,9 @@ public class Door : MonoBehaviour
 
         // on récupère le ceiling
         ceiling = transform.Find("ceiling").gameObject;
+
+        // on close
+        close();
     }
 
     // MAIN FUNCTIONS

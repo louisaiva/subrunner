@@ -75,7 +75,7 @@ public class Sector : MonoBehaviour
         prefabs.Add("enemy", Resources.Load<GameObject>("prefabs/beings/enemies/zombo"));
         prefabs.Add("chest", Resources.Load<GameObject>("prefabs/objects/chest"));
         prefabs.Add("computer", Resources.Load<GameObject>("prefabs/objects/computer"));
-        prefabs.Add("doorUD", Resources.Load<GameObject>("prefabs/objects/door"));
+        prefabs.Add("doorUD", Resources.Load<GameObject>("prefabs/objects/door_hackbl"));
         prefabs.Add("doorLR", Resources.Load<GameObject>("prefabs/objects/door_L"));
 
         // on récupère les parents

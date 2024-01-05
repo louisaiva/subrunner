@@ -15,15 +15,12 @@ public class SimpleDoor : Door
     [SerializeField] protected float auto_openin_radius = 2f;
 
     // UNITY FUNCTIONS
-    protected void Start()
+    protected new void Start()
     {
-        base.Start();
-
         // on récupère le perso
         perso = GameObject.Find("/perso");
 
-        // on ferme la porte
-        close();
+        base.Start();
     }
 
     protected void Update()

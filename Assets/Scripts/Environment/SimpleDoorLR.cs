@@ -9,7 +9,7 @@ public class SimpleDoorLR : SimpleDoor
     // [SerializeField] private float openin_duration = 1f;
 
     // UNITY FUNCTIONS
-    protected void Start()
+    protected new void Start()
     {
         // on change les bonnes animations
         anims.addGlobalModif("ss");
