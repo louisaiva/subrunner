@@ -102,20 +102,23 @@ plan d'action après algo 3.0 (3/1/2024)
 
 
             PersoCapability en cascade :
+                -life_regen
                 -walk
                 -hit
-                -run
+                -drink
                 -gv_vision
+                    -run
                     -3D_vision
 
                 -gyroscope
-                -hoover_hacking
-                    -zombo_hacking          1 bit
-                    -door_hacking           2 bits
-                    -tv_hacking             4 bits
+                -hoover_hack
+                    -bit_regen
+                    -zombo_hack          1 bit
+                    -door_hack           2 bits
+                    -tv_hack             4 bits
 
-                -hoover_interaction
-                    -interaction
+                -hoover_interact
+                    -interact
 
                 [exemples d'autre capacités :
                     -dash

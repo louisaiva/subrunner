@@ -68,7 +68,7 @@ public class Chest : MonoBehaviour, I_Interactable
         // print("chest : " + is_open + " " + is_interacting);
         // on regarde si on appuie sur la touche d'interaction (E)
         // lorsqu'on est déjà ouvert
-        if (Input.GetButtonDown("Interact") && is_open)
+        if (Input.GetButtonDown("interact") && is_open)
         {
             // on transvase tous les objets dans l'inventaire du perso
             foreach (Item item in inventory.getItems())

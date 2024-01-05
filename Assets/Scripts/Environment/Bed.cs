@@ -73,7 +73,7 @@ public class Bed : MonoBehaviour, I_LongInteractable
 
     void Events()
     {
-        if (is_being_activated && Input.GetButtonUp("Interact"))
+        if (is_being_activated && Input.GetButtonUp("interact"))
         {
             // on arrête l'activation
             quitActivating();

@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
+using System.Linq;
 
 [RequireComponent(typeof(BoxCollider2D))]
 public class Item : MonoBehaviour, I_Descriptable
@@ -14,6 +16,11 @@ public class Item : MonoBehaviour, I_Descriptable
 
     public bool legendary_item = false;
 
+
+    // capacity
+    public List<string> capacities = new List<string>();
+    public Dictionary<string,float> cooldowns = new Dictionary<string,float>();
+ 
 
     // UI
     public bool is_showed = false;
@@ -234,6 +241,21 @@ public class Item : MonoBehaviour, I_Descriptable
     public bool shouldDescriptionBeShown()
     {
         return is_showed && !is_on_ground;
+    }
+
+
+    // end of life
+    public void destruct()
+    {
+        if (!is_on_ground)
+        {
+            // on enlève l'item de l'inventaire
+            transform.parent.GetComponent<Inventory>().removeItem(this);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
 }

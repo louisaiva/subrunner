@@ -18,7 +18,7 @@ public class Perso : Attacker
 
 
     // bits (mana)
-    public bool has_hackin_os = false;
+    // public bool has_hackin_os = false;
     public float bits = 8f; // bits = mana (lance des sorts de hacks)
     public int max_bits = 8;
     public float regen_bits = 0.1f; // regen (en bits par seconde)
@@ -43,7 +43,7 @@ public class Perso : Attacker
     private GameObject global_light;
 
     // minimap
-    public bool has_gyroscope = false;
+    // public bool has_gyroscope = false;
 
     // inventory & items
     public Inventory inventory;
@@ -109,6 +109,17 @@ public class Perso : Attacker
 
 
         // ON MET A JOUR DES TRUCS
+
+        // on ajoute des capacités
+        addCapacity("hoover_interact");
+        addCapacity("interact");
+        addCapacity("debug_capacities");
+
+        // on met à jour les capacités deja dans notre inventaire
+        foreach (Item item in inventory.getItems())
+        {
+            grab(item);
+        }
 
 
         // on met les differents paramètres du perso
@@ -234,8 +245,133 @@ public class Perso : Attacker
         floating_text2.transform.SetParent(floating_dmg_provider.transform);
     }
 
-
+    // CAPACITES
     public override void Events()
+    {
+
+        // on vérifie que le temps est pas en pause
+        if (Time.timeScale == 0f) { return; }
+
+        // on check toutes les capacities dans le bon ordre pour voir comment on peut agir etc.
+        base.Events();
+
+        // walk
+        if (hasCapacity("walk"))
+        {
+            inputs = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        }
+
+        // run
+        if (hasCapacity("run"))
+        {
+            if (Input.GetButtonDown("run"))
+            {
+                isRunning = true;
+            }
+            else if (Input.GetButtonUp("run"))
+            {
+                isRunning = false;
+            }
+        }
+
+        // drink
+        if (hasCapacity("drink"))
+        {
+            if (Input.GetButtonDown("drink"))
+            {
+                drink();
+            }
+        }
+
+        // hit
+        if (hasCapacity("hit"))
+        {
+            if (Input.GetButtonDown("hit"))
+            {
+                attack();
+            }
+        }
+
+        // hoover interactions
+        if (hasCapacity("hoover_interact"))
+        {
+            // todo ici on highlight les objets avec lesquels on peut interagir
+
+            // interacts
+            if (hasCapacity("interact"))
+            {
+                if (Input.GetButtonDown("interact"))
+                {
+                    interact();
+                }
+            }
+
+            // on update les interactions
+            update_interactions();
+        }
+
+        // gv vision
+        if (capacities.ContainsKey("gv_vision") && capacities["gv_vision"])
+        {
+            global_light.GetComponent<GlobalLight>().setMode("on");
+        }
+        else
+        {
+            global_light.GetComponent<GlobalLight>().setMode("off");
+        }
+
+        // hoover hack
+        if (hasCapacity("hoover_hack"))
+        {
+            HackinHooverEvents();
+
+            // bit regen
+            if (hasCapacity("bit_regen"))
+            {
+                if (bits < max_bits)
+                {
+                    bits += regen_bits * Time.deltaTime;
+                }
+            }
+
+            // hacks
+            if (hasCapacity("hack"))
+            {
+                if (Input.GetButtonDown("hack"))
+                {
+                    HackinClickEvents();
+                }
+            }
+
+            // update hacks
+            update_hacks();
+        }
+
+
+
+        // todo DEBUG
+        if (hasCapacity("debug_capacities"))
+        {
+            if (Input.GetButtonDown("debug_capacities"))
+            {
+                string s = "<color=green>DEBUG CAPACITIES : </color>\n";
+                foreach (string capacity in capacities.Keys)
+                {
+                    s += capacity + " : " + capacities[capacity] + "\n";
+                }
+                print(s);
+            }
+        }
+
+
+        // ouverture de l'inventaire
+        if (Input.GetButtonDown("Inventory"))
+        {
+            inventory.rollShow();
+        }
+    }
+
+    /* public override void Events()
     {
 
         // on vérifie que le temps est pas en pause
@@ -284,7 +420,7 @@ public class Perso : Attacker
         {
             inventory.rollShow();
         }
-    }
+    } */
 
     void HackinHooverEvents()
     {
@@ -363,27 +499,23 @@ public class Perso : Attacker
     {
         // le but de cette fonction est de hacker l'objet sur lequel on clique
 
-        // on regarde si on a cliqué
-        if (Input.GetMouseButtonDown(0))
+        // on regarde si on a un hackable en hoover
+        if (current_hoover_hackable != null)
         {
-            // on regarde si on a un hackable en hoover
-            if (current_hoover_hackable != null)
-            {
-                // on hack l'objet
-                bits -= current_hoover_hackable.GetComponent<I_Hackable>().beHacked();
+            // on hack l'objet
+            bits -= current_hoover_hackable.GetComponent<I_Hackable>().beHacked();
 
-                // on ajoute le hackable au dict des objets hackés
-                current_hackin_targets.Add(current_hoover_hackable, current_hoover_hack);
+            // on ajoute le hackable au dict des objets hackés
+            current_hackin_targets.Add(current_hoover_hackable, current_hoover_hack);
 
-                // on crée un hackin_ray
-                GameObject hackin_ray = Instantiate(hackin_ray_prefab, hacks_path) as GameObject;
-                
-                // on met à jour le hackin_ray avec le nom
-                hackin_ray.name = "hackin_ray_" + current_hoover_hackable.name + "_" + current_hoover_hackable.GetInstanceID();
+            // on crée un hackin_ray
+            GameObject hackin_ray = Instantiate(hackin_ray_prefab, hacks_path) as GameObject;
+            
+            // on met à jour le hackin_ray avec le nom
+            hackin_ray.name = "hackin_ray_" + current_hoover_hackable.name + "_" + current_hoover_hackable.GetInstanceID();
 
-                // on sort de la fonction
-                return;
-            }
+            // on sort de la fonction
+            return;
         }
     }
 
@@ -396,13 +528,7 @@ public class Perso : Attacker
         // update de d'habitude
         base.Update();
 
-        // régèn des bits
-        if (bits < max_bits)
-        {
-            bits += regen_bits * Time.deltaTime;
-        }
-
-        // on update le hackin
+        /* // on update le hackin
         has_hackin_os = false;
         foreach (Item item in inventory.getItems())
         {
@@ -413,11 +539,6 @@ public class Perso : Attacker
                     has_hackin_os = true;
                 }
             }
-        }
-        if (has_hackin_os)
-        {
-            // on update les hacks
-            update_hacks();
         }
 
         // on regarde si on a le gyroscope
@@ -433,9 +554,6 @@ public class Perso : Attacker
             }
         }
 
-        // on update les interactions
-        update_interactions();
-
         // on applique les capacités passives des items
         bool has_speed_glasses = false;
         foreach (Item item in inventory.getItems())
@@ -449,9 +567,10 @@ public class Perso : Attacker
             }
         }
 
-        global_light.GetComponent<GlobalLight>().setMode(has_speed_glasses ? "on" : "off");
+        global_light.GetComponent<GlobalLight>().setMode(has_speed_glasses ? "on" : "off"); */
 
     }
+
 
 
     // XP
@@ -749,7 +868,6 @@ public class Perso : Attacker
     // INVENTORY
     public void drop(Item item)
     {
-
         // si on est en train d'ouvrir un coffre, on drop l'item dedans
         if (current_interactable != null)
         {
@@ -767,11 +885,89 @@ public class Perso : Attacker
         item.transform.SetParent(items_parent);
         item.transform.position = transform.position;
         item.fromInvToGround();
+
+
+        // on enlève la capacité de l'item si on a plus l'item dans notre inventaire
+        if (item.action_type == "capacity")
+        {
+            foreach (string capa in item.capacities)
+            {
+                removeCapaIfNotInInv(capa);
+            }
+        }
     }
 
     public void grab(Item item)
     {
         item.transform.SetParent(inventory.transform);
+
+        // on ajoute la capacité de l'item
+        if (item.action_type == "capacity")
+        {
+            for (int i = 0; i < item.capacities.Count; i++)
+            {
+                string capa = item.capacities[i];
+                
+                // on récupère le cooldown de l'item
+                float cooldown = 0f;
+                if (item.cooldowns.ContainsKey(capa))
+                {
+                    cooldown = item.cooldowns[capa];
+                }
+
+                addCapacity(capa, cooldown);
+            }
+        }
+    }
+
+    private void removeCapaIfNotInInv(string capa)
+    {
+        // on regarde si on a encore un item avec cette capacité
+        bool has_capa = false;
+        foreach (Item item in inventory.getItems())
+        {
+            if (item.action_type == "capacity")
+            {
+                foreach (string capa_item in item.capacities)
+                {
+                    if (capa_item == capa)
+                    {
+                        has_capa = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // si on a plus de capacité, on la supprime
+        if (!has_capa)
+        {
+            removeCapacity(capa);
+        }
+    }
+
+    // DRINK
+    private void drink()
+    {
+        // on boit la première boisson de notre inventaire
+        foreach (Item item in inventory.getItems())
+        {
+            // on vérifie si c'est bien une boisson
+            if (!(item is Drink)) { continue; }
+
+            Drink drink = (Drink) item;
+
+            // on boit la boisson
+            drink.drink();
+
+            // on enlève la capacité de l'item si on a plus l'item dans notre inventaire
+            removeCapaIfNotInInv("drink");
+
+            // on sort de la fonction
+            return;
+        }
     }
 
 }
+
+

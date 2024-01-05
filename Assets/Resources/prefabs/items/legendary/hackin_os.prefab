@@ -100,11 +100,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item_type: physical
-  action_type: passive
+  action_type: capacity
   item_name: hackin_os
   item_description: a handmade hackin system to hack things. can not hack your grandma
     bank account, unfortunately
   legendary_item: 1
+  capacities:
+  - hoover_hack
+  - bit_regen
   is_showed: 0
   is_on_ground: 0
   scale_on_ground: 0.5

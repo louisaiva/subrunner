@@ -100,10 +100,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item_type: physical
-  action_type: active
+  action_type: capacity
   item_name: dynamite
   item_description: from an anonymous anarcho friend. explodes (lol)
   legendary_item: 0
+  capacities:
+  - dynamit
   is_showed: 0
   is_on_ground: 0
   scale_on_ground: 0.5

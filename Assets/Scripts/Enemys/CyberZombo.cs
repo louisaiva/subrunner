@@ -44,6 +44,7 @@ public class CyberZombo : Attacker, I_Hackable
 
         // on récupère le joueur
         // tar = GameObject.Find("/perso");
+        cooldown_attack = 0.6f;
 
         // on start de d'habitude
         base.Start();
@@ -60,7 +61,6 @@ public class CyberZombo : Attacker, I_Hackable
         damage = 20f;
         attack_range = 0.25f;
         damage_range = 0.25f;
-        cooldown_attack = 0.6f;
         weight = 1.4f + Random.Range(-0.2f, 0.2f);
 
         // on met les bonnes animations

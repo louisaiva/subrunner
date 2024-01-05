@@ -305,7 +305,7 @@ public class Inventory : MonoBehaviour {
     public void dropItem(Item item)
     {
         // on récupère le gameobject de l'item
-        GameObject item_go = item.gameObject;
+        // GameObject item_go = item.gameObject;
 
         // on regarde si l'item est dans l'inventaire
         // if (!item.transform.parent == this.transform) { return; }
@@ -322,6 +322,16 @@ public class Inventory : MonoBehaviour {
             // si on est un coffre, on drop l'item dans le perso
             perso.GetComponent<Perso>().grab(item);
         }
+    }
+
+    public void removeItem(Item item)
+    {
+        // on supprime un item de l'inventaire
+        // on vérifie si l'item est dans l'inventaire
+        if (!item.transform.parent == this.transform) { return; }
+
+        // on supprime l'item
+        Destroy(item.gameObject);
     }
 
     public void removeRandomItem()

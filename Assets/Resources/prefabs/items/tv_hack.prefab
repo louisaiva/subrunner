@@ -100,10 +100,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item_type: virtual
-  action_type: active
+  action_type: capacity
   item_name: tv_hack
   item_description: hack TVs in order to get your dose of bad news !
   legendary_item: 0
+  capacities:
+  - hack
   is_showed: 0
   is_on_ground: 0
   scale_on_ground: 0.5

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 
 [RequireComponent(typeof(AnimationHandler))]
@@ -44,11 +45,18 @@ public class Being : MonoBehaviour
     protected float lookin_at_angle = 40f; // angle du regard du perso en degrés
     protected Anims anims = new Anims();
 
-
+    // CAPACITES
+    protected Dictionary<string, bool> capacities = new Dictionary<string, bool>();
+    protected Dictionary<string, float> capacities_cooldowns = new Dictionary<string, float>();
+    protected Dictionary<string, float> capacities_cooldowns_base = new Dictionary<string, float>();
 
     // unity functions
     protected void Start()
     {
+
+        // on initialise les capacités
+        capacities.Add("life_regen", true);
+        capacities.Add("walk", true);
 
         // on récupère les composants
         // gameObject.AddComponent<AnimationHandler>();
@@ -74,7 +82,21 @@ public class Being : MonoBehaviour
 
     public virtual void Events()
     {
-        inputs = randomly_circulate(inputs);
+        // life regen
+        if (hasCapacity("life_regen"))
+        {
+            if (vie < max_vie)
+            {
+                vie += regen_vie * Time.deltaTime;
+            }
+        }
+
+        // walk
+        if (hasCapacity("walk"))
+        {
+            inputs = randomly_circulate(inputs);
+        }
+        
     }
 
     protected void Update()
@@ -82,14 +104,11 @@ public class Being : MonoBehaviour
         // on vérifie si le perso est mort
         if (!isAlive()) { return; }
 
-        // régèn de la vie
-        if (vie < max_vie)
-        {
-            vie += regen_vie * Time.deltaTime;
-        }
-
         // on sauvegarde la position du perso
         last_position = transform.position;
+
+        // update capacities cooldowns
+        UpdateCapacities();
 
         // on récupère les inputs
         Events();
@@ -137,6 +156,92 @@ public class Being : MonoBehaviour
         Gizmos.DrawLineStrip(points, true);
     }
 
+    // CAPACITES
+    protected virtual void UpdateCapacities()
+    {
+        // update capacities cooldowns
+        for (int i = 0; i < capacities_cooldowns.Count; i++)
+        {
+            KeyValuePair<string, float> entry = capacities_cooldowns.ElementAt(i);
+            if (entry.Value > 0f)
+            {
+                // on désactive la capacité
+                if (capacities[entry.Key] == true)
+                {
+                    capacities[entry.Key] = false;
+                }
+
+                // on diminue le cooldown
+                capacities_cooldowns[entry.Key] -= Time.deltaTime;
+
+                // on remet la capacité si le cooldown est fini
+                if (capacities_cooldowns[entry.Key] < 0f)
+                {
+                    capacities_cooldowns[entry.Key] = 0f;
+                    capacities[entry.Key] = true;
+                }
+            }
+        }
+    }
+
+    protected void removeCapacity(string capacity)
+    {
+        if (!capacities.ContainsKey(capacity)) { return; }
+        
+        // on enlève la capacité
+        capacities.Remove(capacity);
+
+        if (capacities_cooldowns.ContainsKey(capacity))
+        {
+            // on enlève le cooldown
+            capacities_cooldowns.Remove(capacity);
+        }
+
+        if (capacities_cooldowns_base.ContainsKey(capacity))
+        {
+            // on enlève le cooldown de base
+            capacities_cooldowns_base.Remove(capacity);
+        }
+    }
+
+    protected void addCapacity(string capacity, float cooldown=0f)
+    {
+        if (!capacities.ContainsKey(capacity))
+        {
+            // on ajoute la capacité
+            capacities.Add(capacity, true);
+        }
+        else
+        {
+            // on active la capacité
+            capacities[capacity] = true;
+        }
+
+        if (cooldown == 0f) { return; }
+
+
+        // on ajoute les cooldowns
+        if (!capacities_cooldowns.ContainsKey(capacity))
+        {
+            capacities_cooldowns.Add(capacity, 0f);
+        }
+        if (!capacities_cooldowns_base.ContainsKey(capacity))
+        {
+            capacities_cooldowns_base.Add(capacity, cooldown);
+        }
+        else
+        {
+            capacities_cooldowns_base[capacity] = cooldown;
+        }
+    }
+
+    protected void startCapacityCooldown(string capacity)
+    {
+        if (!capacities_cooldowns_base.ContainsKey(capacity)) { return; }
+
+        // on met le cooldown à jour
+        capacities_cooldowns[capacity] = capacities_cooldowns_base[capacity];
+    }
 
     // DEPLACEMENT
     protected void walk(Vector2 direction)
@@ -584,9 +689,14 @@ public class Being : MonoBehaviour
         return vie > 0f;
     }
 
-    public float GetHeight()
+    public float getHeight()
     {
         return GetComponent<SpriteRenderer>().bounds.size.y;
+    }
+
+    public bool hasCapacity(string capacity)
+    {
+        return capacities.ContainsKey(capacity) && capacities[capacity];
     }
 
     // SETTERS
@@ -605,7 +715,7 @@ public class Being : MonoBehaviour
         vie += bonus_life;
     }
 
-    public void heal(int nb_heal)
+    public void heal(int nb_heal=2)
     {
         // each heal gives 10% of max life
         float heal = max_vie * 0.1f * nb_heal;

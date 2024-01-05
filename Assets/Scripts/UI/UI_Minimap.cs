@@ -68,19 +68,21 @@ public class UI_Minimap : MonoBehaviour {
         }
 
 
+        bool gyro = perso.hasCapacity("gyroscope");
+
         // on vérifie si on a le gyroscope
-        if (perso.has_gyroscope && !is_map_shown)
+        if (gyro && !is_map_shown)
         {
             // on active la map
             enableMiniMap();
         }
-        else if (!perso.has_gyroscope && is_map_shown)
+        else if (!gyro && is_map_shown)
         {
             disableMiniMap();
         }
 
         // si on a pas de gyroscope, on anime l'image
-        if (!perso.has_gyroscope)
+        if (!gyro)
         {
             // on anime l'image
             GetComponent<Image>().sprite = sprites[(int)(Time.time * 10) % 2];

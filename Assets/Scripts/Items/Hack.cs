@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Hack : ActiveItem
+public class Hack : Item
 {
 
     public string hack_type_target = "nothin";
@@ -15,15 +15,6 @@ public class Hack : ActiveItem
         // on change le type de l'item
         item_type = "virtual";
 
-    }
-
-    // activation
-
-    public void use(I_Hackable target)
-    {
-        base.use();
-
-        // on lance le hack
     }
 }
 

@@ -1646,7 +1646,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generate_world: 1
-  nb_sectors: 5
+  nb_sectors: 2
   world: {fileID: 0}
   sector_prefab: {fileID: 0}
   sectors: []
@@ -10904,12 +10904,10 @@ MonoBehaviour:
   xp: 0
   total_xp: 0
   xp_to_next_level: 100
-  has_hackin_os: 0
   bits: 8
   max_bits: 8
   regen_bits: 0.1
   aide_a_la_visee: 0.5
-  has_gyroscope: 0
   inventory: {fileID: 549595395}
   items_parent: {fileID: 0}
   skills_tree: {fileID: 0}

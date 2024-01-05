@@ -13,7 +13,7 @@ public class Attacker : Being
     public LayerMask enemy_layers;
 
     public float cooldown_attack = 0.6f; // temps entre chaque attaque (en secondes)
-    private float last_attack_time = 0f; // temps de la dernière attaque
+    // private float last_attack_time = 0f; // temps de la dernière attaque
     // public const float knockback_per_damage_per_weight = 1/100f; // knockback par point de damage (1/30 corresspond à 1 unité de knockback pour 30 points de damage)
     public float knockback_base = 6f; // knockback de base pour un poids de 1 (si le poids de la cible est de 2, elle recevra 2 fois moins de knockback 1/2)
 
@@ -24,6 +24,9 @@ public class Attacker : Being
     protected new void Start()
     {
         base.Start();
+
+        // on ajoute les capacités
+        addCapacity("hit", cooldown_attack);
 
         // on récupère le point d'attaque
         attack_point = transform.Find("attack_point");
@@ -52,13 +55,16 @@ public class Attacker : Being
     protected virtual void attack()
     {
         // check if we can attack
-        if (Time.time - last_attack_time < cooldown_attack){ return; }
-        if (anim_handler.IsForcing()){ return; }
+        // if (Time.time - last_attack_time < cooldown_attack){ return; }
+        // if (anim_handler.IsForcing()){ return; }
 
         // update last attack time
-        last_attack_time = Time.time;
+        // last_attack_time = Time.time;
 
         // print(gameObject.name + " attacks");
+
+        // start cooldown
+        startCapacityCooldown("hit");
 
         // play attack animation
         anim_handler.ChangeAnimTilEnd(anims.attack);

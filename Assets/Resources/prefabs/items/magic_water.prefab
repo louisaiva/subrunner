@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 991999328008795163}
   - component: {fileID: 2748573037149330120}
-  - component: {fileID: 1180315892945734718}
   - component: {fileID: 3845646378405068767}
+  - component: {fileID: -4450100998131758397}
   m_Layer: 16
   m_Name: magic_water
   m_TagString: Untagged
@@ -87,29 +87,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!114 &1180315892945734718
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2038104776426337295}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1550ad94fd538a44850ed358fa44feb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  item_type: physical
-  action_type: active
-  item_name: magic_water
-  item_description: is it alcohol ? not sure about it i found it in the garbage
-  legendary_item: 0
-  is_showed: 0
-  is_on_ground: 0
-  scale_on_ground: 0.5
-  perso: {fileID: 0}
-  description_ui: {fileID: 0}
-  cursor_handler: {fileID: 0}
 --- !u!61 &3845646378405068767
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -155,6 +132,31 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &-4450100998131758397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2038104776426337295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb64ca02868ef3e479e45942ce1293cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item_type: physical
+  action_type: capacity
+  item_name: magic_water
+  item_description: is it alcohol ? not sure about it i found it in the garbage
+  legendary_item: 0
+  capacities:
+  - drink
+  is_showed: 0
+  is_on_ground: 0
+  scale_on_ground: 0.5
+  perso: {fileID: 0}
+  description_ui: {fileID: 0}
+  cursor_handler: {fileID: 0}
 --- !u!1001 &6920210891771781007
 PrefabInstance:
   m_ObjectHideFlags: 0
