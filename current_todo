@@ -8,66 +8,8 @@ plan d'action après algo 3.0 (3/1/2024)
     les secteurs sont -- QG -- puis -- HUB -- puis -- TV --
 
 
-    1e étape : coder les secteurs différents
 
-        QG :
-            desc :          notre QG
-            taille :        1
-            skin :          qg (2)
-            safe :          oui
-            difficulté :    0
-
-            deco :          tags, posters
-                            1 Carton
-            lights :        plein
-            objects :       /
-
-            items :         1 linuxack (key)
-
-            doors :         1 - SimpleDoor -> HUB
-
-
-        
-        HUB :
-            desc :          hub de transition
-            taille :        5
-            skin :          de base (0)
-            safe :          non
-            difficulté :    1
-
-            deco :          tags, posters
-            lights :        normal
-            objects :       1 Chest
-                            1 Computer
-                            4 XP_chest
-                            1 Button
-                            
-            items :         1 door_hack (key)
-
-            doors :         1 - HackableDoor -> TV
-                            1 - SimpleDoor -> QG
-
-        
-        TV :
-            desc :          zone finale de la démo 2
-            taille :        10
-            skin :          server (1)
-            safe :          non
-            difficulté :    2
-
-            deco :          tags, posters
-            lights :        normal
-            objects :       2 Chest
-                            2 Computer
-                            
-            items :         1 tv_hack (key)
-                            1 zombo_hack
-
-            doors :         1 - HackableDoor -> HUB
-                            1 - TV_Door -> FIN DU JEU
-
-
-    2e étape : coder le systeme d'Item
+    [x] - 1e étape : coder le systeme d'Item
 
         1e possibilité :
             tous les items sont dans l'inventaire du perso
@@ -148,8 +90,12 @@ plan d'action après algo 3.0 (3/1/2024)
                 -ne règle pas le problème de l'ui
                 -potentiellement fouilli si on gère mal les capacités complexes
 
+    [ ] - 2e étape : régler bugs
+        
+        -bugs d'animation des portes, coffres, etc
+        
 
-    3e étape : coder un système de zones
+    [ ] - 3e étape : coder un système de zones
 
         créer des zones qu'on assigne à une area d'un secteur
         lors de la création du secteur afin
@@ -178,3 +124,60 @@ plan d'action après algo 3.0 (3/1/2024)
             objects :       1 Computer
 
         
+    [ ] - 4e étape : coder les secteurs différents
+
+        QG :
+            desc :          notre QG
+            taille :        1
+            skin :          qg (2)
+            safe :          oui
+            difficulté :    0
+
+            deco :          tags, posters
+                            1 Carton
+            lights :        plein
+            objects :       /
+
+            items :         1 linuxack (key)
+
+            doors :         1 - SimpleDoor -> HUB
+
+        
+        HUB :
+            desc :          hub de transition
+            taille :        5
+            skin :          de base (0)
+            safe :          non
+            difficulté :    1
+
+            deco :          tags, posters
+            lights :        normal
+            objects :       1 Chest
+                            1 Computer
+                            4 XP_chest
+                            1 Button
+                            
+            items :         1 door_hack (key)
+
+            doors :         1 - HackableDoor -> TV
+                            1 - SimpleDoor -> QG
+
+        
+        TV :
+            desc :          zone finale de la démo 2
+            taille :        10
+            skin :          server (1)
+            safe :          non
+            difficulté :    2
+
+            deco :          tags, posters
+            lights :        normal
+            objects :       2 Chest
+                            2 Computer
+                            
+            items :         1 tv_hack (key)
+                            1 zombo_hack
+
+            doors :         1 - HackableDoor -> HUB
+                            1 - TV_Door -> FIN DU JEU
+

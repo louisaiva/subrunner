@@ -450,6 +450,9 @@ public class Perso : Attacker
         {
             Collider2D hit = hits[i];
 
+            // on regarde si c'est un hackable
+            if (hit.gameObject.GetComponent<I_Hackable>() == null) { continue; }
+
             // on regarde si on est pas déjà en train de hacker l'objet
             if (!current_hackin_targets.ContainsKey(hit.gameObject))
             {

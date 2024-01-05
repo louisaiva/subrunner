@@ -372,7 +372,7 @@ public class Sector : MonoBehaviour
 
             // on instancie une porte
             Vector3 pos = new Vector3(empl.Key.x, empl.Key.y, 0);
-            GameObject door = new GameObject("door_"+i);
+            GameObject door = null;
 
 
             if (new Vector2Int[] { Vector2Int.up, Vector2Int.down }.Contains(empl.Value))

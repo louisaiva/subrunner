@@ -135,10 +135,14 @@ public class CyberZombo : Attacker, I_Hackable
 
 
         // on essaye d'attaquer le joueur si on le détecte
-        if (target_detected){
-            if (target.GetComponent<Being>().isAlive())
+        if(hasCapacity("hit"))
+        {
+            if (target_detected)
             {
-                try_to_attack_target();
+                if (target.GetComponent<Being>().isAlive())
+                {
+                    try_to_attack_target();
+                }
             }
         }
 

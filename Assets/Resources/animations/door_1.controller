@@ -14,7 +14,7 @@ AnimatorStateMachine:
     m_Position: {x: 210, y: -70, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3348484740721907012}
-    m_Position: {x: 245, y: -5, z: 0}
+    m_Position: {x: 240, y: -10, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 8859017364734599790}
     m_Position: {x: 280, y: 60, z: 0}
@@ -41,7 +41,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: door_open_idle
+  m_Name: door_idle_open
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -141,7 +141,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: door_closed_idle
+  m_Name: door_idle_closed
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
