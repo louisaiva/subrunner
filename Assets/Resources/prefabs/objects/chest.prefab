@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 1087337404748540792}
   - component: {fileID: 9151653795288606723}
   - component: {fileID: 7510258064662425853}
-  - component: {fileID: 554493533941469845}
   - component: {fileID: 2666567988912397183}
+  - component: {fileID: 3125551019439280288}
   m_Layer: 15
   m_Name: chest
   m_TagString: Untagged
@@ -77,7 +77,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -667374433
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -5250477, guid: fdc2eba81649cce4a8c0561d576c0476, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -126,20 +126,6 @@ MonoBehaviour:
   current_anim: 
   is_forcing: 0
   debug: 0
---- !u!114 &554493533941469845
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5145456041456219900}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 063d64197c8f2ba47a02fa9e66e2bbfe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  is_open: 0
-  inventory: {fileID: 0}
 --- !u!70 &2666567988912397183
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -175,6 +161,22 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.22}
   m_Size: {x: 1, y: 0.45}
   m_Direction: 1
+--- !u!114 &3125551019439280288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5145456041456219900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 786ece952098fc3419d6c7760f9c9fba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  is_open: 0
+  is_moving: 0
+  openin_duration: 0.5
+  inventory: {fileID: 0}
 --- !u!1001 &2439711390788624142
 PrefabInstance:
   m_ObjectHideFlags: 0
