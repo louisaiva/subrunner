@@ -32,6 +32,8 @@ public class InteractChest : InventoryChest, I_Interactable
 
     public void interact()
     {
+        if (is_interacting) { return;}
+
         print("interact with "+gameObject.name);
 
         // interaction

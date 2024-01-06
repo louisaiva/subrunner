@@ -74,6 +74,7 @@ public class Sector : MonoBehaviour
         prefabs.Add("poster", Resources.Load<GameObject>("prefabs/objects/poster"));
         prefabs.Add("enemy", Resources.Load<GameObject>("prefabs/beings/enemies/zombo"));
         prefabs.Add("chest", Resources.Load<GameObject>("prefabs/objects/chest"));
+        prefabs.Add("xp_chest", Resources.Load<GameObject>("prefabs/objects/xp_chest"));
         prefabs.Add("computer", Resources.Load<GameObject>("prefabs/objects/computer"));
         prefabs.Add("doorUD", Resources.Load<GameObject>("prefabs/objects/door_hackbl"));
         prefabs.Add("doorLR", Resources.Load<GameObject>("prefabs/objects/door_L"));
@@ -344,7 +345,17 @@ public class Sector : MonoBehaviour
 
         // on instancie un coffre
         Vector3 pos = new Vector3(empl.x, empl.y, 0);
-        GameObject chest = Instantiate(prefabs["chest"], pos, Quaternion.identity);
+
+        // on choisit un coffre random
+        GameObject chest = null;
+        if (Random.Range(0f, 1f) < 0.5f)
+        {
+            chest = Instantiate(prefabs["chest"], pos, Quaternion.identity);
+        }
+        else
+        {
+            chest = Instantiate(prefabs["xp_chest"], pos, Quaternion.identity);
+        }
 
         // on met le bon parent
         chest.transform.SetParent(parents["chest"]);

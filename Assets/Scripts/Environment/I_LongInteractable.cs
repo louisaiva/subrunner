@@ -5,6 +5,7 @@ public interface I_LongInteractable : I_Interactable
 
 
     // interactions
+    bool is_interacting { get; set; } // est en train d'interagir
     bool is_being_activated { get; set; } // est en train de se faire activer
     float activation_time { get; set; } // temps d'activation
 

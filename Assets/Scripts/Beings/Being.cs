@@ -71,7 +71,7 @@ public class Being : MonoBehaviour
         inputs = new Vector2(0.1f,0f);
 
         // on défini les layers du monde
-        world_layers = LayerMask.GetMask("Ground","Walls","Ceiling","Doors","Chests","Computers");
+        world_layers = LayerMask.GetMask("Ground","Walls","Ceiling","Doors","Chests","Computers","Buttons");
 
         // on récupère le provider d'xp
         xp_provider = GameObject.Find("/particles/xp_provider");

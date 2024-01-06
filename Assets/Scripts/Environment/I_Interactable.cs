@@ -5,7 +5,7 @@ public interface I_Interactable
 
 
     // interactions
-    bool is_interacting { get; set; } // est en train d'interagir
+    // bool is_interacting { get; set; } // est en train d'interagir
 
 
     // fonctions

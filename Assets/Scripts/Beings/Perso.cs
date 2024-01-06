@@ -101,7 +101,7 @@ public class Perso : Attacker
         global_light = GameObject.Find("/world/global_light").gameObject;
 
         // on met à jour les interactions
-        interact_layers = LayerMask.GetMask("Chests", "Computers");
+        interact_layers = LayerMask.GetMask("Chests", "Computers","Buttons");
 
         // on récupère le cursor_handler
         cursor_handler = GameObject.Find("/utils").GetComponent<CursorHandler>();
@@ -791,20 +791,18 @@ public class Perso : Attacker
         float min_distance = 10000f;
         foreach (Collider2D hit in hit_interactables)
         {
+            // on regarde si c'est un interactable
             if (hit == null) { continue; }
+            if (hit.gameObject.GetComponent<I_Interactable>() == null) { continue; }
 
-            // on regarde si on est pas déjà en train d'interagir avec l'objet
-            if (hit.gameObject != current_interactable)
+            // on regarde si on peut interagir avec l'objet
+            if (hit.gameObject.GetComponent<I_Interactable>().isInteractable())
             {
-                // on regarde si on peut interagir avec l'objet
-                if (hit.gameObject.GetComponent<I_Interactable>().isInteractable())
+                // on regarde si l'objet est plus proche que le précédent
+                if (Vector2.Distance(transform.position, hit.transform.position) < min_distance)
                 {
-                    // on regarde si l'objet est plus proche que le précédent
-                    if (Vector2.Distance(transform.position, hit.transform.position) < min_distance)
-                    {
-                        min_distance = Vector2.Distance(transform.position, hit.transform.position);
-                        target = hit;
-                    }
+                    min_distance = Vector2.Distance(transform.position, hit.transform.position);
+                    target = hit;
                 }
             }
         }
@@ -815,7 +813,7 @@ public class Perso : Attacker
             print("INTERACTING WITH " + target);
 
             // on met à jour l'objet avec lequel on interagit
-            if (current_interactable != null)
+            if (current_interactable != null && current_interactable != target.gameObject)
             {
                 current_interactable.GetComponent<I_Interactable>().stopInteract();
             }
@@ -871,6 +869,8 @@ public class Perso : Attacker
     // INVENTORY
     public void drop(Item item)
     {
+        removeCapaOfItem(item);
+
         // si on est en train d'ouvrir un coffre, on drop l'item dedans
         if (current_interactable != null)
         {
@@ -889,15 +889,6 @@ public class Perso : Attacker
         item.transform.position = transform.position;
         item.fromInvToGround();
 
-
-        // on enlève la capacité de l'item si on a plus l'item dans notre inventaire
-        if (item.action_type == "capacity")
-        {
-            foreach (string capa in item.capacities)
-            {
-                removeCapaIfNotInInv(capa);
-            }
-        }
     }
 
     public void grab(Item item)
@@ -905,30 +896,17 @@ public class Perso : Attacker
         item.transform.SetParent(inventory.transform);
 
         // on ajoute la capacité de l'item
-        if (item.action_type == "capacity")
-        {
-            for (int i = 0; i < item.capacities.Count; i++)
-            {
-                string capa = item.capacities[i];
-                
-                // on récupère le cooldown de l'item
-                float cooldown = 0f;
-                if (item.cooldowns.ContainsKey(capa))
-                {
-                    cooldown = item.cooldowns[capa];
-                }
-
-                addCapacity(capa, cooldown);
-            }
-        }
+        addCapaOfItem(item);
     }
 
-    private void removeCapaIfNotInInv(string capa)
+    private void removeCapaIfNotInInv(string capa, Item item_capa=null)
     {
         // on regarde si on a encore un item avec cette capacité
         bool has_capa = false;
         foreach (Item item in inventory.getItems())
         {
+            if (item == item_capa) { continue; }
+
             if (item.action_type == "capacity")
             {
                 foreach (string capa_item in item.capacities)
@@ -946,6 +924,39 @@ public class Perso : Attacker
         if (!has_capa)
         {
             removeCapacity(capa);
+        }
+    }
+
+    private void removeCapaOfItem(Item item)
+    {
+        // on enlève la capacité de l'item si on a plus l'item dans notre inventaire
+        if (item.action_type == "capacity")
+        {
+            foreach (string capa in item.capacities)
+            {
+                removeCapaIfNotInInv(capa, item);
+            }
+        }
+    }
+
+    private void addCapaOfItem(Item item)
+    {
+        // on ajoute la capacité de l'item
+        if (item.action_type == "capacity")
+        {
+            for (int i = 0; i < item.capacities.Count; i++)
+            {
+                string capa = item.capacities[i];
+
+                // on récupère le cooldown de l'item
+                float cooldown = 0f;
+                if (item.cooldowns.ContainsKey(capa))
+                {
+                    cooldown = item.cooldowns[capa];
+                }
+
+                addCapacity(capa, cooldown);
+            }
         }
     }
 
