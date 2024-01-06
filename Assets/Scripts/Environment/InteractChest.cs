@@ -3,13 +3,13 @@ using System.Collections;
 
 
 [RequireComponent(typeof(AnimationHandler))]
-public class InteractChest : Chest, I_Interactable
+public class InteractChest : InventoryChest, I_Interactable
 {
 
     public bool is_interacting { get; set; } // est en train d'interagir
 
-    // EVENTS
-    protected override void Events()
+    // Update
+    void Update()
     {
         // on regarde si on appuie sur la touche d'interaction (E)
         // lorsqu'on est déjà ouvert

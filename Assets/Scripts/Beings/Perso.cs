@@ -874,9 +874,9 @@ public class Perso : Attacker
         // si on est en train d'ouvrir un coffre, on drop l'item dedans
         if (current_interactable != null)
         {
-            if (current_interactable.GetComponent<Chest>() != null)
+            if (current_interactable.GetComponent<InventoryChest>() != null)
             {
-                if (current_interactable.GetComponent<Chest>().grab(item)) { return; }
+                if (current_interactable.GetComponent<InventoryChest>().grab(item)) { return; }
             }
             else if (current_interactable.GetComponent<Bed>() != null)
             {

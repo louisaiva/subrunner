@@ -72,11 +72,11 @@ public class Inventory : MonoBehaviour {
             if (perso.GetComponent<Perso>().current_interactable != null)
             {
                 // on regarde si c'est un coffre
-                if (perso.GetComponent<Perso>().current_interactable.GetComponent<Chest>() != null &&
-                perso.GetComponent<Perso>().current_interactable.GetComponent<Chest>().inventory.is_showed)
+                if (perso.GetComponent<Perso>().current_interactable.GetComponent<InventoryChest>() != null &&
+                perso.GetComponent<Perso>().current_interactable.GetComponent<InventoryChest>().inventory.is_showed)
                 {
                     // on calcule la position de l'inventaire
-                    Vector3 position = perso.GetComponent<Perso>().current_interactable.GetComponent<Chest>().inventory.getSidePos();
+                    Vector3 position = perso.GetComponent<Perso>().current_interactable.GetComponent<InventoryChest>().inventory.getSidePos();
                     
                     // on met à jour la position de l'inventaire
                     transform.position = position;

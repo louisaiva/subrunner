@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-
 [RequireComponent(typeof(AnimationHandler))]
 public class Chest : MonoBehaviour
 {
@@ -15,39 +14,14 @@ public class Chest : MonoBehaviour
     [SerializeField] protected bool is_moving = false;
     [SerializeField] protected float openin_duration = 0.5f;
 
- 
-    // inventory
-    public Inventory inventory;
-
     // unity functions
-    void Awake()
+    protected virtual void Awake()
     {
         // on récupère l'animation handler
         anim_handler = GetComponent<AnimationHandler>();
-
-        // on récupère l'inventaire
-        inventory = transform.Find("inventory").GetComponent<Inventory>();
-
-        // randomize
-        inventory.randomize();
     }
 
-    protected virtual void Events() {}
-
-    void Update()
-    {
-        // on check les events
-        Events();
-        
-        // on met à jour l'inventaire
-        if (!is_open)
-        {
-            inventory.setShow(false);
-        }
-    }
-
-
-    // MAIN FUNCTIONS
+    // OPENING
     protected void open()
     {
         CancelInvoke();
@@ -61,7 +35,7 @@ public class Chest : MonoBehaviour
         is_moving = true;
     }
 
-    protected void success_open()
+    protected virtual void success_open()
     {
         // on ouvre le coffre
         is_open = true;
@@ -69,17 +43,11 @@ public class Chest : MonoBehaviour
 
         // on joue l'animation
         anim_handler.ChangeAnim(anims.idle_open);
-
-        // on met à jour l'inventaire
-        inventory.setShow(true);
     }
 
-    protected void close()
+    protected virtual void close()
     {
         CancelInvoke();
-
-        // on met à jour l'inventaire
-        inventory.setShow(false);
 
         // on ferme le coffre
         is_moving = true;
@@ -87,7 +55,7 @@ public class Chest : MonoBehaviour
         // on joue l'animation
         anim_handler.ChangeAnim(anims.closin, openin_duration);
         Invoke("success_close", openin_duration);
-        
+
     }
 
     protected void success_close()
@@ -98,19 +66,6 @@ public class Chest : MonoBehaviour
         // on ferme le coffre
         is_open = false;
         is_moving = false;
-    }
-
-
-    // INVENTORY FUNCTIONS
-    public bool grab(Item item)
-    {
-        // item.transform.SetParent(inventory.transform);
-        return inventory.addItem(item);
-    }
-
-    public void forceGrab(Item item)
-    {
-        inventory.forceAddItem(item);
     }
 
 }
