@@ -9,9 +9,9 @@ public class Item : MonoBehaviour, I_Descriptable
 
 
     // item basics
-    public string item_type = "physical";
-    public string action_type = "active";
-    public string item_name = "heal_potion";
+    public string item_type = "physical"; // is it a drink ? is it a glasses ? is it a hack ?
+    public string action_type = "active"; // is it a capacity item ?
+    public string item_name = "heal_potion"; // name of the item
     public string item_description = "this is a heal potion";
 
     public bool legendary_item = false;

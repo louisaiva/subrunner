@@ -47,6 +47,7 @@ public class Perso : Attacker
 
     // inventory & items
     public Inventory inventory;
+    public UI_Inventory big_inventory;
     public Transform items_parent;
 
     // skill tree
@@ -89,6 +90,7 @@ public class Perso : Attacker
         // on récupère l'inventaire
         inventory = GameObject.Find("/inventory").GetComponent<Inventory>();
         inventory.scalable = true;
+        big_inventory = GameObject.Find("/ui/inventory").GetComponent<UI_Inventory>();
 
         // on récupère le parent des items
         // items_parent = GameObject.Find("/world/sector_2/items").transform;
@@ -161,6 +163,14 @@ public class Perso : Attacker
             inventory.createItem("electrochoc");
             inventory.createItem("door_hack");
             inventory.createItem("ordi_hack");
+        }
+
+
+        // on MAJ les items
+        List<Item> perso_items = inventory.getItems();
+        foreach (Item item in perso_items)
+        {
+            grab(item);
         }
 
 
@@ -367,7 +377,7 @@ public class Perso : Attacker
         // ouverture de l'inventaire
         if (Input.GetButtonDown("Inventory"))
         {
-            inventory.rollShow();
+            big_inventory.rollShow();
         }
     }
 
@@ -889,6 +899,8 @@ public class Perso : Attacker
         item.transform.position = transform.position;
         item.fromInvToGround();
 
+        // on met à jour l'inventaire
+        big_inventory.updateItems(inventory.getItems());
     }
 
     public void grab(Item item)
@@ -897,6 +909,9 @@ public class Perso : Attacker
 
         // on ajoute la capacité de l'item
         addCapaOfItem(item);
+
+        // on met à jour l'inventaire
+        big_inventory.updateItems(inventory.getItems());
     }
 
     private void removeCapaIfNotInInv(string capa, Item item_capa=null)

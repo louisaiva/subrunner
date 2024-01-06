@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1180315892945734718}
   - component: {fileID: 3845646378405068767}
   m_Layer: 16
-  m_Name: tape_recorder
+  m_Name: katana
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 22406999
   m_SortingLayer: 5
   m_SortingOrder: 1
-  m_Sprite: {fileID: -456955881, guid: 3663b626bd9323741bb906f9681d3bc7, type: 3}
+  m_Sprite: {fileID: -1200178448, guid: 3663b626bd9323741bb906f9681d3bc7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -99,13 +99,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1550ad94fd538a44850ed358fa44feb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item_type: recorder
+  item_type: weapon
   action_type: capacity
-  item_name: tape_recorder
-  item_description: play and record sounds. looks very old. does it even work ?
+  item_name: katana
+  item_description: cut stuff
   legendary_item: 1
   capacities:
-  - record
+  - hit
   is_showed: 0
   is_on_ground: 0
   scale_on_ground: 0.5

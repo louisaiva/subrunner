@@ -65,7 +65,6 @@ public class XP_Chest : Chest, I_Buttonable
 
 public class XPChestAnims : ChestAnims
 {
-
     // constructor
     public XPChestAnims()
     {
