@@ -54,9 +54,14 @@ public class Item : MonoBehaviour, I_Descriptable
         if (legendary_item)
         {
             // on met un fond jaune
-            ui_bg.GetComponent<SpriteRenderer>().sprite = sprites[3];
+            ui_bg.GetComponent<SpriteRenderer>().sprite = sprites[2];
         }
-        else if (this is DmgHack)
+        else
+        {
+            // on met un fond bleu de base
+            ui_bg.GetComponent<SpriteRenderer>().sprite = sprites[0];
+        }
+        /* else if (this is DmgHack)
         {
             // on met un fond vert
             ui_bg.GetComponent<SpriteRenderer>().sprite = sprites[1];
@@ -65,7 +70,7 @@ public class Item : MonoBehaviour, I_Descriptable
         {
             // on met un fond rouge (2) ou bleu (0)
             ui_bg.GetComponent<SpriteRenderer>().sprite = sprites[this is Hack ? 2 : 0];
-        }
+        } */
 
         // on récupère le perso
         perso = GameObject.Find("/perso");

@@ -75,7 +75,7 @@ public class UI_Inventory : MonoBehaviour
     {
         // on affiche l'inventaire
         is_showed = true;
-        GetComponent<Image>().enabled = true;
+        // GetComponent<Image>().enabled = true;
 
         // on affiche les slots des légendaires
         leg_slots.SetActive(true);
@@ -95,7 +95,7 @@ public class UI_Inventory : MonoBehaviour
     {
         // on cache l'inventaire
         is_showed = false;
-        GetComponent<Image>().enabled = false;
+        // GetComponent<Image>().enabled = false;
 
         // on cache les slots des légendaires
         leg_slots.SetActive(false);
@@ -226,7 +226,7 @@ public class UI_Inventory : MonoBehaviour
         GameObject item_obj = leg_slots.transform.Find(slot).Find("ui_leg_item").gameObject;
 
         // on maj le sprite
-        item_obj.GetComponent<Image>().sprite = bank.getSprite(item.item_name);
+        item_obj.transform.Find("item").GetComponent<Image>().sprite = bank.getSprite(item.item_name);
 
         // on maj l'ui_item
         item_obj.GetComponent<UI_Item>().setItem(item);

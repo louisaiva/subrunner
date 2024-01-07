@@ -377,6 +377,14 @@ public class Perso : Attacker
         // ouverture de l'inventaire
         if (Input.GetButtonDown("Inventory"))
         {
+            // on regarde si on a pas un coffre ou un ordi en train d'être ouvert
+            if (current_interactable != null && !big_inventory.isShowed())
+            {
+                current_interactable.GetComponent<I_Interactable>().stopInteract();
+                current_interactable = null;
+            }
+
+            // on ouvre l'inventaire
             big_inventory.rollShow();
         }
     }

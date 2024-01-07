@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UI_Item : MonoBehaviour, I_Descriptable, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
@@ -15,12 +16,21 @@ public class UI_Item : MonoBehaviour, I_Descriptable, IPointerEnterHandler, IPoi
     // ui_inventory
     public GameObject ui_inventory;
 
+    // slot sprite
+    public Sprite base_sprite;
+    public Sprite hoover_sprite;
+
 
     // unity functions
     protected void Start()
     {
         // on récupère le description_ui
         description_ui = GameObject.Find("/ui/hoover_description");
+
+        // on récupère les sprites
+        Sprite[] sprites = Resources.LoadAll<Sprite>("spritesheets/item_slots");
+        base_sprite = sprites[0];
+        hoover_sprite = sprites[1];
     }
 
     // main functions
@@ -48,6 +58,9 @@ public class UI_Item : MonoBehaviour, I_Descriptable, IPointerEnterHandler, IPoi
         // on met à jour l'affichage
         description_ui.GetComponent<UI_HooverDescriptionHandler>().changeDescription(this);
 
+        // on change le sprite du slot
+        GetComponent<Image>().sprite = hoover_sprite;
+
         // on met à jour le fait qu'on est survolé
         is_hoovered = true;
     }
@@ -57,6 +70,9 @@ public class UI_Item : MonoBehaviour, I_Descriptable, IPointerEnterHandler, IPoi
         // on met à jour l'affichage
         description_ui.GetComponent<UI_HooverDescriptionHandler>().removeDescription(this);
 
+        // on change le sprite du slot
+        GetComponent<Image>().sprite = base_sprite;
+
         // on met à jour le fait qu'on est survolé
         is_hoovered = false;
     }
@@ -65,6 +81,9 @@ public class UI_Item : MonoBehaviour, I_Descriptable, IPointerEnterHandler, IPoi
     {
         // on met à jour l'affichage
         description_ui.GetComponent<UI_HooverDescriptionHandler>().removeDescription(this);
+
+        // on change le sprite du slot
+        GetComponent<Image>().sprite = base_sprite;
 
         // on click
         ui_inventory.GetComponent<UI_Inventory>().clickOnItem(item);
