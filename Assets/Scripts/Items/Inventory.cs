@@ -441,6 +441,13 @@ public class Inventory : MonoBehaviour {
         return items;
     }
 
+    public List<Item> getLegendaryItems()
+    {
+        // on récupère les items
+        List<Item> items = getItems();
+        return items.Where(x => x.legendary_item).ToList();
+    }
+
     public Item getItem(string item_name)
     {
         // on cherche l'item

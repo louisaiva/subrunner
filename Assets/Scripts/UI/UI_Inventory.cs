@@ -61,10 +61,12 @@ public class UI_Inventory : MonoBehaviour
         // on récupère les slots des items
         item_slots.Add("hack", transform.Find("hack_slot").gameObject);
         item_slots.Add("item", transform.Find("item_slot").gameObject);
-        
+
+        // on cache l'inventaire
+        hide();        
     }
     
-    public void updateItems(List<Item> perso_items)
+    /* public void updateItems(List<Item> perso_items)
     {
         // on rajoute les nouveaux items
         for (int i = 0; i < perso_items.Count; i++)
@@ -151,8 +153,45 @@ public class UI_Inventory : MonoBehaviour
         {
             items.Remove(type);
         }
-    }
+    } */
 
+    /* public void updateLegendaryItems()
+    {
+        // on récupère les items légendaires du perso
+        List<Item> perso_leg_items = perso.GetComponent<Perso>().inventory.getLegendaryItems();
+
+        // on supprime les anciens items légendaires
+        List<Item> to_del = new List<Item>();
+        foreach (KeyValuePair<string, Item> entry in leg_items)
+        {
+            string type = entry.Key;
+            Item item = entry.Value;
+
+            if (!perso_leg_items.Contains(item))
+            {
+                to_del.Add(item);
+            }
+        }
+        foreach (Item item in to_del)
+        {
+            delLeg(item);
+        }
+
+        // on ajoute les nouveaux items légendaires
+        for (int i = 0; i < perso_leg_items.Count; i++)
+        {
+            Item item = perso_leg_items[i];
+            if (!leg_items.ContainsKey(item.item_type))
+            {
+                addLeg(item);
+            }
+            else if (leg_items[item.item_type].capacity_level < item.capacity_level)
+            {
+                replaceLeg(item, item.item_type);
+            }
+        }
+
+    } */
 
     // SHOWING
     private void show()
@@ -196,6 +235,52 @@ public class UI_Inventory : MonoBehaviour
 
 
     // LEGENDARY ITEMS
+
+    public void grabLeg(Item item)
+    {
+        // on vérifie si on a déjà un item de ce type
+        if (!leg_items.ContainsKey(item.item_type))
+        {
+            // on ajoute l'item
+            addLeg(item);
+        }
+        else if (leg_items[item.item_type].capacity_level < item.capacity_level)
+        {
+            // on remplace l'item
+            replaceLeg(item, item.item_type);
+        }
+    }
+
+    public void dropLeg(Item item)
+    {
+        // on regarde dans l'inventaire du perso si on a un item de ce type
+
+        // on récupère les items légendaires du perso
+        List<Item> perso_leg_items = perso.GetComponent<Perso>().inventory.getLegendaryItems();
+        List<Item> same_type_items = perso_leg_items.FindAll(x => x.item_type == item.item_type);
+
+        if (same_type_items.Count > 0)
+        {
+            // on récupère le meilleur item
+            Item best_item = same_type_items[0];
+            foreach (Item same_type_item in same_type_items)
+            {
+                if (same_type_item.capacity_level > best_item.capacity_level)
+                {
+                    best_item = same_type_item;
+                }
+            }
+
+            // on remplace l'item
+            replaceLeg(best_item, item.item_type);
+        }
+        else
+        {
+            // on supprime l'item
+            delLeg(item);
+        }
+    }
+
     private void addLeg(Item item)
     {
         string type = item.item_type;

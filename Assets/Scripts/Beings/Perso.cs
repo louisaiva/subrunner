@@ -772,21 +772,27 @@ public class Perso : Attacker
         {
             if (current_interactable.GetComponent<InventoryChest>() != null)
             {
-                if (current_interactable.GetComponent<InventoryChest>().grab(item)) { return; }
+                current_interactable.GetComponent<InventoryChest>().grab(item);
             }
             else if (current_interactable.GetComponent<Bed>() != null)
             {
-                if (current_interactable.GetComponent<Bed>().grab(item)) { return; }
+                current_interactable.GetComponent<Bed>().grab(item);
             }
         }
+        else
+        {
+            // on drop l'item par terre
+            item.transform.SetParent(items_parent);
+            item.transform.position = transform.position;
+            item.fromInvToGround();
+        }
 
-        // on drop l'item par terre
-        item.transform.SetParent(items_parent);
-        item.transform.position = transform.position;
-        item.fromInvToGround();
 
         // on met à jour l'inventaire
-        big_inventory.updateItems(inventory.getItems());
+        if (item.legendary_item)
+        {
+            big_inventory.dropLeg(item);
+        }
     }
 
     public void grab(Item item)
@@ -797,7 +803,10 @@ public class Perso : Attacker
         addCapaOfItem(item);
 
         // on met à jour l'inventaire
-        big_inventory.updateItems(inventory.getItems());
+        if (item.legendary_item)
+        {
+            big_inventory.grabLeg(item);
+        }
     }
 
     private void removeCapaIfNotInInv(string capa, Item item_capa=null)
