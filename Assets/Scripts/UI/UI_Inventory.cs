@@ -12,12 +12,17 @@ public class UI_Inventory : MonoBehaviour
 
     // AFFICHAGE
     [SerializeField] private bool is_showed = false;
+    private GameObject ui_bg;
+
+    // DESCRIPTION
+    public UI_HooverDescriptionHandler description_ui;
 
     // ITEMS
-    public ItemEnum bank = new ItemEnum();
+    public EnumItem bank = new EnumItem();
 
     // LEGENDARY SPOTS
     private GameObject leg_slots;
+    protected GameObject ui_leg_item_prefab;
 
     // CURRENT ITEMS
     protected Dictionary<string, Item> leg_items = new Dictionary<string, Item>();
@@ -37,11 +42,20 @@ public class UI_Inventory : MonoBehaviour
         // on récupère le perso
         perso = GameObject.Find("/perso");
 
+        // on récupère le ui_bg
+        ui_bg = transform.Find("bg").gameObject;
+
+        // on récupère le description_ui
+        description_ui = GameObject.Find("/ui/hoover_description").GetComponent<UI_HooverDescriptionHandler>();
+
         // on initialise les items
         bank.init(Resources.LoadAll<Sprite>("spritesheets/items"));
 
         // on récupère les slots des items légendaires
         leg_slots = transform.Find("leg_slots").gameObject;
+
+        // on récupère le prefab des items légendaires
+        ui_leg_item_prefab = Resources.Load("prefabs/ui/ui_leg_item") as GameObject;
 
         // on récupère les slots des items
         item_slots.Add("hack", transform.Find("hack_slots").Find("slots").gameObject);
@@ -56,133 +70,6 @@ public class UI_Inventory : MonoBehaviour
         hide();        
     }
     
-    /* public void updateItems(List<Item> perso_items)
-    {
-        // on rajoute les nouveaux items
-        for (int i = 0; i < perso_items.Count; i++)
-        {
-            Item item = perso_items[i];
-            if (item.legendary_item)
-            {
-                // on regarde les items légendaires qu'on a rajouté
-
-                if (!leg_items.ContainsKey(item.item_type))
-                {
-                    addLeg(item);
-                }
-                else if (leg_items[item.item_type].capacity_level < item.capacity_level)
-                {
-                    replaceLeg(item, item.item_type);
-                }
-            }
-            else
-            {
-                // on regarde les items qu'on a rajouté
-                if (!items.ContainsKey(item.item_type))
-                {
-                    addItem(item);
-                }
-                else if (!items[item.item_type].Contains(item))
-                {
-                    addItem(item);
-                }
-            }
-        }
-
-        // on supprime les anciens items légendaires
-        List<Item> to_del = new List<Item>();
-        foreach (KeyValuePair<string, Item> entry in leg_items)
-        {
-            string type = entry.Key;
-            Item item = entry.Value;
-
-            if (!perso_items.Contains(item))
-            {
-                // delLeg(item);
-                to_del.Add(item);
-            }
-        }
-        foreach (Item item in to_del)
-        {
-            delLeg(item);
-        }
-
-        // on supprime les anciens items
-        foreach (KeyValuePair<string, List<Item>> entry in items)
-        {
-            string type = entry.Key;
-            List<Item> subtype_items = entry.Value;
-
-            List<Item> to_del_items = new List<Item>();
-            foreach (Item item in subtype_items)
-            {
-                if (!perso_items.Contains(item))
-                {
-                    to_del_items.Add(item);
-                }
-            }
-            foreach (Item item in to_del_items)
-            {
-                delItem(item);
-            }
-        }
-
-        // on fait un dernier nettoyage pour supprimer les liste vides
-        List<string> to_del_types = new List<string>();
-        foreach (KeyValuePair<string, List<Item>> entry in items)
-        {
-            string type = entry.Key;
-            List<Item> subtype_items = entry.Value;
-
-            if (subtype_items.Count == 0)
-            {
-                to_del_types.Add(type);
-            }
-        }
-        foreach (string type in to_del_types)
-        {
-            items.Remove(type);
-        }
-    } */
-
-    /* public void updateLegendaryItems()
-    {
-        // on récupère les items légendaires du perso
-        List<Item> perso_leg_items = perso.GetComponent<Perso>().inventory.getLegendaryItems();
-
-        // on supprime les anciens items légendaires
-        List<Item> to_del = new List<Item>();
-        foreach (KeyValuePair<string, Item> entry in leg_items)
-        {
-            string type = entry.Key;
-            Item item = entry.Value;
-
-            if (!perso_leg_items.Contains(item))
-            {
-                to_del.Add(item);
-            }
-        }
-        foreach (Item item in to_del)
-        {
-            delLeg(item);
-        }
-
-        // on ajoute les nouveaux items légendaires
-        for (int i = 0; i < perso_leg_items.Count; i++)
-        {
-            Item item = perso_leg_items[i];
-            if (!leg_items.ContainsKey(item.item_type))
-            {
-                addLeg(item);
-            }
-            else if (leg_items[item.item_type].capacity_level < item.capacity_level)
-            {
-                replaceLeg(item, item.item_type);
-            }
-        }
-
-    } */
-
     // SHOWING
     private void show()
     {
@@ -199,7 +86,11 @@ public class UI_Inventory : MonoBehaviour
             if (!item_slots_showed[entry.Key]) { continue; }
             entry.Value.transform.parent.gameObject.SetActive(true);
         }
+
+        // on affiche le bg
+        ui_bg.SetActive(true);
     }
+
 
     private void hide()
     {
@@ -215,6 +106,12 @@ public class UI_Inventory : MonoBehaviour
         {
             entry.Value.transform.parent.gameObject.SetActive(false);
         }
+
+        // on cache la description
+        description_ui.removeAllDescriptions();
+
+        // on cache le bg
+        ui_bg.SetActive(false);
     }
 
     public void rollShow()
@@ -279,7 +176,7 @@ public class UI_Inventory : MonoBehaviour
         print("on ajoute un item légendaire : " + item.item_type + " -> " + item.item_name);
 
         // on met à jour le sprite de l'item
-        setSpriteToLegSlot(type, bank.getSprite(item.item_name));
+        setSpriteToLegSlot(type, item);
 
         // on affiche le slot
         GameObject slot = leg_slots.transform.Find(type).gameObject;
@@ -313,20 +210,24 @@ public class UI_Inventory : MonoBehaviour
 
         print("on remplace un item légendaire : " + item.item_type + " -> " + item.item_name);
 
-        // on met à jour le sprite
-        setSpriteToLegSlot(slot, bank.getSprite(item.item_name));
+        // on met à jour l'ui
+        setSpriteToLegSlot(slot, item);
 
         // on remplace l'item
         leg_items[slot] = item;
     }
 
-    private void setSpriteToLegSlot(string slot,Sprite sprite)
+    private void setSpriteToLegSlot(string slot,Item item)
     {
         // on récupère le slot de l'item
-        GameObject item_obj = leg_slots.transform.Find(slot).Find("item").gameObject;
+        GameObject item_obj = leg_slots.transform.Find(slot).Find("ui_leg_item").gameObject;
 
         // on maj le sprite
-        item_obj.GetComponent<Image>().sprite = sprite;
+        item_obj.GetComponent<Image>().sprite = bank.getSprite(item.item_name);
+
+        // on maj l'ui_item
+        item_obj.GetComponent<UI_Item>().setItem(item);
+        item_obj.GetComponent<UI_Item>().setUIInventory(gameObject);
     }
 
 
@@ -373,6 +274,10 @@ public class UI_Inventory : MonoBehaviour
         // on met à jour le sprite
         ui_item.transform.Find("item").GetComponent<Image>().sprite = bank.getSprite(item.item_name);
 
+        // on met à jour ui_item
+        ui_item.GetComponent<UI_Item>().setItem(item);
+        ui_item.GetComponent<UI_Item>().setUIInventory(gameObject);
+
         // on ajoute l'item
         item_ui.Add(item, ui_item);
 
@@ -407,16 +312,23 @@ public class UI_Inventory : MonoBehaviour
         }
     }
 
+
+    // CLICKS
+    public void clickOnItem(Item item)
+    {
+        perso.GetComponent<Perso>().inventory.dropItem(item);
+    }
+
 }
 
-public class ItemEnum
+public class EnumItem
 {
 
     public Dictionary<string, Sprite> item_sprites = new Dictionary<string, Sprite>();
     public Dictionary<string, string> item_prefabs = new Dictionary<string, string>();
 
     // constructor
-    public ItemEnum()
+    public EnumItem()
     {
 
         // on ajoute les prefabs des items
@@ -484,7 +396,7 @@ public class ItemEnum
     {
         if (!item_sprites.ContainsKey(item_name))
         {
-            Debug.LogWarning("(ItemEnum) cannot find sprite " + item_name);
+            Debug.LogWarning("(EnumItem) cannot find sprite " + item_name);
             return null;
         }
 

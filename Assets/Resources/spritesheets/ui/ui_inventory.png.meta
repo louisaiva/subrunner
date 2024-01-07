@@ -113,10 +113,10 @@ TextureImporter:
       name: ui_inventory_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 256
-        height: 128
+        x: 101
+        y: 25
+        width: 54
+        height: 78
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -134,10 +134,10 @@ TextureImporter:
       name: ui_inventory_1
       rect:
         serializedVersion: 2
-        x: 256
-        y: 0
-        width: 256
-        height: 128
+        x: 328
+        y: 52
+        width: 30
+        height: 26
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -155,10 +155,10 @@ TextureImporter:
       name: ui_inventory_2
       rect:
         serializedVersion: 2
-        x: 512
-        y: 0
-        width: 256
-        height: 128
+        x: 594
+        y: 14
+        width: 24
+        height: 49
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -176,10 +176,10 @@ TextureImporter:
       name: ui_inventory_3
       rect:
         serializedVersion: 2
-        x: 768
-        y: 0
-        width: 256
-        height: 128
+        x: 850
+        y: 65
+        width: 24
+        height: 49
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -197,10 +197,10 @@ TextureImporter:
       name: ui_inventory_4
       rect:
         serializedVersion: 2
-        x: 1024
-        y: 0
-        width: 256
-        height: 128
+        x: 1174
+        y: 14
+        width: 24
+        height: 49
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -218,10 +218,10 @@ TextureImporter:
       name: ui_inventory_5
       rect:
         serializedVersion: 2
-        x: 1280
-        y: 0
-        width: 256
-        height: 128
+        x: 1430
+        y: 65
+        width: 24
+        height: 49
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -239,10 +239,10 @@ TextureImporter:
       name: ui_inventory_6
       rect:
         serializedVersion: 2
-        x: 1536
-        y: 0
-        width: 256
-        height: 128
+        x: 1690
+        y: 52
+        width: 30
+        height: 24
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -260,10 +260,10 @@ TextureImporter:
       name: ui_inventory_7
       rect:
         serializedVersion: 2
-        x: 1792
-        y: 0
-        width: 256
-        height: 128
+        x: 1977
+        y: 22
+        width: 47
+        height: 88
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -281,10 +281,10 @@ TextureImporter:
       name: ui_inventory_8
       rect:
         serializedVersion: 2
-        x: 2048
-        y: 0
-        width: 256
-        height: 128
+        x: 2074
+        y: 22
+        width: 46
+        height: 88
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -294,6 +294,27 @@ TextureImporter:
       bones: []
       spriteID: 39ff6246ed6b23e4089eda862b314dd0
       internalID: -1403450077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ui_inventory_9
+      rect:
+        serializedVersion: 2
+        x: 2405
+        y: 25
+        width: 54
+        height: 78
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 643084b50b5506b4fbe896d57a2d1090
+      internalID: -559931422
       vertices: []
       indices: 
       edges: []
@@ -318,6 +339,7 @@ TextureImporter:
       ui_inventory_6: 1077834905
       ui_inventory_7: -1143400438
       ui_inventory_8: -1403450077
+      ui_inventory_9: -559931422
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

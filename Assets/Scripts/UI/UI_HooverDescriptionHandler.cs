@@ -80,4 +80,10 @@ public class UI_HooverDescriptionHandler : MonoBehaviour {
             current_descriptable = null;
         }
     }
+
+    public void removeAllDescriptions()
+    {
+        // on cache la description
+        current_descriptable = null;
+    }
 }
