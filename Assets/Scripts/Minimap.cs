@@ -58,7 +58,7 @@ public class Minimap : MonoBehaviour {
 
     public void createTextures()
     {
-        print("creating textures");
+        print("(Minimap) creating textures");
 
         // on récupère les dimensions de la map
         Vector2Int mapSize = world.GetSize();

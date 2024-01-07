@@ -30,7 +30,10 @@ public class Perso : Attacker
     private LayerMask hack_layer;
     private Dictionary<GameObject,Hack> current_hackin_targets = new Dictionary<GameObject, Hack>(); // liste d'objets hackés en ce moment
     private Transform hacks_path; // le parent des hackin_rays
+
+    // HACKIN RAY
     private GameObject hackin_ray_prefab; // le prefab du hackin_ray
+    private HackinrayHooverManager hackin_ray_hoover;
 
     // hoover hackable
     private GameObject current_hoover_hackable = null;
@@ -38,6 +41,8 @@ public class Perso : Attacker
     public float aide_a_la_visee = 0.5f; // aide à la visée, rayon autour de la souris pour les objets hackables
     private CursorHandler cursor_handler;
 
+    // DASH
+    public float dash_distance = 1.2f;
 
     // global light
     private GameObject global_light;
@@ -83,9 +88,10 @@ public class Perso : Attacker
 
         // on récupère le parent des hackin_rays
         hacks_path = transform.Find("hacks");
+        hackin_ray_hoover = hacks_path.GetComponent<HackinrayHooverManager>();
 
-        // on récupère le prefab du hackin_ray
-        hackin_ray_prefab = Resources.Load("prefabs/hacks/hackin_ray2") as GameObject;
+        // on récupère les hackin_ray
+        hackin_ray_prefab = Resources.Load("prefabs/hacks/hackin_ray") as GameObject;
 
         // on récupère l'inventaire
         inventory = GameObject.Find("/inventory").GetComponent<Inventory>();
@@ -255,6 +261,7 @@ public class Perso : Attacker
         floating_text2.transform.SetParent(floating_dmg_provider.transform);
     }
 
+
     // CAPACITES
     public override void Events()
     {
@@ -357,7 +364,14 @@ public class Perso : Attacker
             update_hacks();
         }
 
-
+        // dash
+        if (hasCapacity("dash"))
+        {
+            if (Input.GetButtonDown("dash"))
+            {
+                dash();
+            }
+        }
 
         // todo DEBUG
         if (hasCapacity("debug_capacities"))
@@ -400,9 +414,11 @@ public class Perso : Attacker
         if (distance > hack_collider.radius) {
             if (current_hoover_hackable != null)
             {
-                current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
+                // current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
                 current_hoover_hackable = null;
                 current_hoover_hack = null;
+
+                hackin_ray_hoover.hide();
             }
             return;
         }
@@ -431,7 +447,8 @@ public class Perso : Attacker
                     {
                         // on peut hacker l'objet !!
                         // on met à jour le current_hoover_hackable.gameObject.GetComponent<I_Hackable>()
-                        if (current_hoover_hackable != null && current_hoover_hackable != hit.gameObject)
+                        updateHooverHackable(hit.gameObject, hack);
+                        /* if (current_hoover_hackable != null && current_hoover_hackable != hit.gameObject)
                         {
                             current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
                         }
@@ -439,7 +456,7 @@ public class Perso : Attacker
                         current_hoover_hack = hack;
 
                         // on change le material de l'objet
-                        current_hoover_hackable.gameObject.GetComponent<I_Hackable>().outlineMe();
+                        current_hoover_hackable.gameObject.GetComponent<I_Hackable>().outlineMe(); */
 
                         // on change le cursor
                         cursor_handler.SetCursor("target");
@@ -456,9 +473,11 @@ public class Perso : Attacker
         if (current_hoover_hackable != null)
         {
             // on change le material de l'objet
-            current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
+            // current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
             current_hoover_hackable = null;
             current_hoover_hack = null;
+
+            hackin_ray_hoover.hide();
 
             // on remet le cursor à la normale
             cursor_handler.SetCursor("arrow");
@@ -682,6 +701,24 @@ public class Perso : Attacker
         hack_collider.radius = range;
     }
 
+    private void updateHooverHackable(GameObject hackable, Hack hack)
+    {
+        // on met à jour le current_hoover_hackable.gameObject.GetComponent<I_Hackable>()
+        if (current_hoover_hackable != null && current_hoover_hackable != hackable)
+        {
+            // current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
+
+            // on met à jour le hackin_ray_hoover sur l'objet
+        }
+        current_hoover_hackable = hackable;
+        current_hoover_hack = hack;
+
+        hackin_ray_hoover.setTarget(hackable);
+        hackin_ray_hoover.show();
+
+        // on change le material de l'objet
+        // current_hoover_hackable.gameObject.GetComponent<I_Hackable>().outlineMe();
+    }
 
     // INTERACTIONS
     private void interact()
@@ -769,6 +806,7 @@ public class Perso : Attacker
         floating_text.GetComponent<FloatingText>().init(text, Color.yellow, 30f, 0.1f, 0.2f, 6f);
         floating_text.transform.SetParent(floating_dmg_provider.transform);
     }
+
 
     // INVENTORY
     public void drop(Item item)
@@ -886,6 +924,7 @@ public class Perso : Attacker
         }
     }
 
+
     // DRINK
     private void drink()
     {
@@ -909,6 +948,17 @@ public class Perso : Attacker
             // on sort de la fonction
             return;
         }
+    }
+
+    // DASH
+    private void dash()
+    {
+        // on fait un dash dans la direction du look_at du being
+        // Vector2 direction = inputs;
+        
+        Vector2 movement = inputs.normalized * dash_distance;
+
+        move_perso(movement);
     }
 
 }

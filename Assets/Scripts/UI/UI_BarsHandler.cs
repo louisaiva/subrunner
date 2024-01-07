@@ -73,8 +73,6 @@ public class UI_BarsHandler : MonoBehaviour {
         // max_bits == 16 => sprites[2]
         // ...
 
-        print(sprites);
-
         int nb_octets = perso.max_bits / 8;
         if (perso.max_bits % 8 != 0) { nb_octets++; }
 

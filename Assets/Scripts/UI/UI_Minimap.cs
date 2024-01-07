@@ -172,6 +172,6 @@ public class UI_Minimap : MonoBehaviour {
         // on met les bonnes dimensions
         ui_mask.GetComponent<RawImage>().rectTransform.sizeDelta = new Vector2(minimap.maskTexture.width, minimap.maskTexture.height);
 
-        print("textures récupérées");
+        print("(UI_Minimap) textures récupérées");
     }
 }

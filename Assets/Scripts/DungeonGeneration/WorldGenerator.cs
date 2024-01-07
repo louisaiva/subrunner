@@ -52,6 +52,8 @@ public class WorldGenerator : MonoBehaviour
     // génère le monde
     public void GenerateWorld()
     {
+        float creation_time = Time.time;
+
         Debug.Log("<color=blue>on génère le monde</color>");
         // cmd("on génère le monde");
         // "<color=red>Error: </color>AssetBundle not found"
@@ -103,6 +105,8 @@ public class WorldGenerator : MonoBehaviour
             // on lance la génération du monde
             world.GetComponent<World>().GENERATE(sectors);
         }
+
+        Debug.Log("<color=blue>world generated in </color>" + (Time.time-creation_time) + " <color=blue>seconds</color>");
     }
 
     // vide le monde

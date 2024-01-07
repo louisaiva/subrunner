@@ -90,9 +90,16 @@ plan d'action après algo 3.0 (3/1/2024)
                 -ne règle pas le problème de l'ui
                 -potentiellement fouilli si on gère mal les capacités complexes
 
-    [ ] - 2e étape : régler bugs
+    [x] - 2e étape : régler bugs
         
         -bugs d'animation des portes, coffres, etc
+        -changer le système d'hoover de hack en créant des hacks_rays_hoover blanc
+        -régler le problème des hack_rays qui passent par dessus les objets
+
+    [ ] - 3e etape : faire un meilleur inventory system
+
+        [x] - faire un big inventory avec tous les items séparés en slots
+        [ ] - coder les inventaires de contexte
         
 
     [ ] - 3e étape : coder un système de zones

@@ -233,6 +233,7 @@ public class UI_Inventory : MonoBehaviour
         // on vérifie si on a déjà un item de ce type
         string slot = item.item_type;
         if (!item_slots.ContainsKey(slot)) { return; }
+        if (item_ui.ContainsKey(item)) { return; }
 
         // on récupère le slot
         GameObject slot_obj = item_slots[slot];
@@ -323,6 +324,7 @@ public class EnumItem
         item_prefabs.Add("zombo_explosion", "prefabs/items/zombo_explosion");
         item_prefabs.Add("zombo_electrochoc", "prefabs/items/zombo_electrochoc");
         item_prefabs.Add("zombo_control", "prefabs/items/zombo_control");
+        item_prefabs.Add("slow_damage", "prefabs/items/slow_damage");
         item_prefabs.Add("light_hack", "prefabs/items/light_hack");
         item_prefabs.Add("tv_hack", "prefabs/items/tv_hack");
         item_prefabs.Add("katana", "prefabs/items/legendary/katana");
@@ -354,6 +356,7 @@ public class EnumItem
         item_sprites.Add("zombo_explosion", sprites[19]);
         item_sprites.Add("zombo_electrochoc", sprites[20]);
         item_sprites.Add("zombo_control", sprites[21]);
+        item_sprites.Add("slow_damage", sprites[21]);
         item_sprites.Add("light_hack", sprites[22]);
         item_sprites.Add("tv_hack", sprites[23]);
         item_sprites.Add("katana", sprites[24]);
