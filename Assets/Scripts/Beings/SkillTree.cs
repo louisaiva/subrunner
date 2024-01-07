@@ -8,7 +8,7 @@ public class SkillTree : MonoBehaviour {
     private GameObject floating_text_prefab;
 
     // autre ui à désactiver
-    private GameObject main_ui;
+    private UI_MainUI main_ui;
 
     // PHYSICAL SKILLS
     private GameObject ui_physical_tree;
@@ -84,7 +84,7 @@ public class SkillTree : MonoBehaviour {
         floating_text_prefab = Resources.Load("prefabs/ui/floating_text") as GameObject;
 
         // on récupère le main_ui
-        main_ui = GameObject.Find("/ui").gameObject;
+        main_ui = GameObject.Find("/ui").GetComponent<UI_MainUI>();
 
 
         // on récupère le ui_skill_tree
@@ -122,7 +122,7 @@ public class SkillTree : MonoBehaviour {
         Time.timeScale = 0f;
 
         // on desactive le main ui
-        // main_ui.GetComponent<Canvas>().enabled = false ;
+        main_ui.hide();
 
         // on affiche le skill tree
         ui_physical_tree.GetComponent<Canvas>().enabled = true;
@@ -141,7 +141,7 @@ public class SkillTree : MonoBehaviour {
         is_physical_tree_open = false;
 
         // on reactive le main ui
-        // main_ui.GetComponent<Canvas>().enabled = true;
+        main_ui.show();
     }
 
     public void randomPhysicalLevelUp()
@@ -156,7 +156,6 @@ public class SkillTree : MonoBehaviour {
 
 
     // virtuel
-
     public void virtualLevelUp(Computer comp)
     {
         // on récupère le computer
@@ -169,7 +168,7 @@ public class SkillTree : MonoBehaviour {
         Time.timeScale = 0f;
 
         // on desactive le main ui
-        // main_ui.GetComponent<Canvas>().enabled = false ;
+        main_ui.hide();
 
         // on affiche le skill tree
         ui_virtual_tree.GetComponent<Canvas>().enabled = true;
@@ -184,7 +183,7 @@ public class SkillTree : MonoBehaviour {
         is_virtual_tree_open = false;
 
         // on reactive le main ui
-        // main_ui.GetComponent<Canvas>().enabled = true;
+        main_ui.show();
     }
 
     // AUGMENTATION DES SKILLS

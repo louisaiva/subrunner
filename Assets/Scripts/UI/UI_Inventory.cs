@@ -71,7 +71,7 @@ public class UI_Inventory : MonoBehaviour
     }
     
     // SHOWING
-    private void show()
+    public void show()
     {
         // on affiche l'inventaire
         is_showed = true;
@@ -91,8 +91,7 @@ public class UI_Inventory : MonoBehaviour
         ui_bg.SetActive(true);
     }
 
-
-    private void hide()
+    public void hide()
     {
         // on cache l'inventaire
         is_showed = false;
@@ -121,6 +120,10 @@ public class UI_Inventory : MonoBehaviour
         else { show(); }
     }
 
+    public bool isShowed()
+    {
+        return is_showed;
+    }
 
     // LEGENDARY ITEMS
     public void grabLeg(Item item)

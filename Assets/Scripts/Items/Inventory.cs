@@ -19,6 +19,7 @@ public class Inventory : MonoBehaviour {
     // perso
     public GameObject perso;
     public bool is_perso_inventory = false;
+    public bool big_inventory_was_showed = false;
 
     // ui
     public Canvas canvas;
@@ -301,6 +302,21 @@ public class Inventory : MonoBehaviour {
 
     public void setShow(bool is_showed)
     {
+        // on désactive le big inventory si c'est un inventaire de perso
+        if (is_showed && is_perso_inventory)
+        {
+            if (perso.GetComponent<Perso>().big_inventory.isShowed())
+            {
+                perso.GetComponent<Perso>().big_inventory.hide();
+                big_inventory_was_showed = true;
+            }
+        }
+        else if (!is_showed && is_perso_inventory && big_inventory_was_showed)
+        {
+            perso.GetComponent<Perso>().big_inventory.show();
+            big_inventory_was_showed = false;
+        }
+
         // on met à jour l'affichage
         this.is_showed = is_showed;
         updateShow();
