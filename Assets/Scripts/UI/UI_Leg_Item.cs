@@ -4,7 +4,7 @@ public class UI_Leg_Item : UI_Item
 {
 
     // unity functions
-    protected void Start()
+    protected new void Start()
     {
         base.Start();
 

@@ -174,9 +174,6 @@ public class UI_Inventory : MonoBehaviour
     private void addLeg(Item item)
     {
         string type = item.item_type;
-        // if (!leg_item_positions.ContainsKey(type)) { return; }
-
-        print("on ajoute un item légendaire : " + item.item_type + " -> " + item.item_name);
 
         // on met à jour le sprite de l'item
         setSpriteToLegSlot(type, item);
@@ -194,8 +191,6 @@ public class UI_Inventory : MonoBehaviour
         string type = item.item_type;
         if (!leg_items.ContainsKey(type)) { return; }
 
-        print("on supprime un item légendaire : " + item.item_type + " -> " + item.item_name);
-
         // on récupère le slot de l'item
         GameObject slot = leg_slots.transform.Find(type).gameObject;
 
@@ -210,8 +205,6 @@ public class UI_Inventory : MonoBehaviour
     {
         // on supprime l'ancien item
         if (!leg_items.ContainsKey(slot)) { return; }
-
-        print("on remplace un item légendaire : " + item.item_type + " -> " + item.item_name);
 
         // on met à jour l'ui
         setSpriteToLegSlot(slot, item);
@@ -235,35 +228,8 @@ public class UI_Inventory : MonoBehaviour
 
 
     // ITEMS
-    /* private void addItem(Item item)
-    {
-        string type = item.item_type;
-        if (!items.ContainsKey(type))
-        {
-            // on ajoute le type
-            items.Add(type, new List<Item>());
-        }
-
-        print("on ajoute un item : " + item.item_type + " -> " + item.item_name);
-
-        // on ajoute l'item
-        items[type].Add(item);
-    }
-
-    private void delItem(Item item)
-    {
-        string type = item.item_type;
-        if (!items.ContainsKey(type)) { return; }
-
-        print("on supprime un item : " + item.item_type + " -> " + item.item_name);
-
-        // on supprime l'item
-        items[type].Remove(item);
-    } */
-
     public void grabItem(Item item)
     {
-        print("on essaie de grab un item : " + item.item_type + " -> " + item.item_name);
         // on vérifie si on a déjà un item de ce type
         string slot = item.item_type;
         if (!item_slots.ContainsKey(slot)) { return; }
