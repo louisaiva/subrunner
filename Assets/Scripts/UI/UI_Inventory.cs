@@ -18,15 +18,17 @@ public class UI_Inventory : MonoBehaviour
 
     // LEGENDARY SPOTS
     private GameObject leg_slots;
-    // protected Dictionary<string, Vector2> leg_item_positions = new Dictionary<string, Vector2>();
-    // protected Dictionary<string, Sprite> leg_item_slot_sprites = new Dictionary<string, Sprite>();
 
     // CURRENT ITEMS
     protected Dictionary<string, Item> leg_items = new Dictionary<string, Item>();
-    protected Dictionary<string,List<Item>> items = new Dictionary<string, List<Item>>();
+    // protected Dictionary<string,List<Item>> items = new Dictionary<string, List<Item>>();
 
     // ITEMS SLOTS
     protected Dictionary<string, GameObject> item_slots = new Dictionary<string, GameObject>();
+    protected Dictionary<string,bool> item_slots_showed = new Dictionary<string, bool>();
+
+    protected Dictionary<Item, GameObject> item_ui = new Dictionary<Item, GameObject>();
+    protected GameObject ui_item_prefab;
 
 
     // unity functions
@@ -41,26 +43,14 @@ public class UI_Inventory : MonoBehaviour
         // on récupère les slots des items légendaires
         leg_slots = transform.Find("leg_slots").gameObject;
 
-        // on récupère les positions des items légendaires
-        /* leg_item_positions.Add("gyroscope", new Vector2(-34, 38));
-        leg_item_positions.Add("noodle_os", new Vector2(-44, 0));
-        leg_item_positions.Add("recorder", new Vector2(-34, -38));
-        leg_item_positions.Add("glasses", new Vector2(34, 38));
-        leg_item_positions.Add("weapon", new Vector2(44, 0));
-        leg_item_positions.Add("shoes", new Vector2(34, -38));
-
-        // on récupère les sprites des slots des items légendaires
-        Sprite[] sprites = Resources.LoadAll<Sprite>("spritesheets/ui/ui_inventory");
-        leg_item_slot_sprites.Add("gyroscope", sprites[3]);
-        leg_item_slot_sprites.Add("noodle_os", sprites[1]);
-        leg_item_slot_sprites.Add("recorder", sprites[2]);
-        leg_item_slot_sprites.Add("glasses", sprites[5]);
-        leg_item_slot_sprites.Add("weapon", sprites[6]);
-        leg_item_slot_sprites.Add("shoes", sprites[4]); */
-
         // on récupère les slots des items
-        item_slots.Add("hack", transform.Find("hack_slot").gameObject);
-        item_slots.Add("item", transform.Find("item_slot").gameObject);
+        item_slots.Add("hack", transform.Find("hack_slots").Find("slots").gameObject);
+        item_slots.Add("item", transform.Find("item_slots").Find("slots").gameObject);
+        item_slots_showed.Add("hack", false);
+        item_slots_showed.Add("item", false);
+
+        // on récupère le prefab des items
+        ui_item_prefab = Resources.Load("prefabs/ui/ui_item") as GameObject;
 
         // on cache l'inventaire
         hide();        
@@ -206,7 +196,8 @@ public class UI_Inventory : MonoBehaviour
         // on affiche les slots des items
         foreach (KeyValuePair<string, GameObject> entry in item_slots)
         {
-            entry.Value.SetActive(true);
+            if (!item_slots_showed[entry.Key]) { continue; }
+            entry.Value.transform.parent.gameObject.SetActive(true);
         }
     }
 
@@ -222,7 +213,7 @@ public class UI_Inventory : MonoBehaviour
         // on cache les slots des items
         foreach (KeyValuePair<string, GameObject> entry in item_slots)
         {
-            entry.Value.SetActive(false);
+            entry.Value.transform.parent.gameObject.SetActive(false);
         }
     }
 
@@ -235,7 +226,6 @@ public class UI_Inventory : MonoBehaviour
 
 
     // LEGENDARY ITEMS
-
     public void grabLeg(Item item)
     {
         // on vérifie si on a déjà un item de ce type
@@ -341,7 +331,7 @@ public class UI_Inventory : MonoBehaviour
 
 
     // ITEMS
-    private void addItem(Item item)
+    /* private void addItem(Item item)
     {
         string type = item.item_type;
         if (!items.ContainsKey(type))
@@ -365,6 +355,56 @@ public class UI_Inventory : MonoBehaviour
 
         // on supprime l'item
         items[type].Remove(item);
+    } */
+
+    public void grabItem(Item item)
+    {
+        print("on essaie de grab un item : " + item.item_type + " -> " + item.item_name);
+        // on vérifie si on a déjà un item de ce type
+        string slot = item.item_type;
+        if (!item_slots.ContainsKey(slot)) { return; }
+
+        // on récupère le slot
+        GameObject slot_obj = item_slots[slot];
+
+        // on instancie un ui_item
+        GameObject ui_item = Instantiate(ui_item_prefab, slot_obj.transform);
+
+        // on met à jour le sprite
+        ui_item.transform.Find("item").GetComponent<Image>().sprite = bank.getSprite(item.item_name);
+
+        // on ajoute l'item
+        item_ui.Add(item, ui_item);
+
+        // on affiche le slot
+        item_slots_showed[slot] = true;
+        slot_obj.transform.parent.gameObject.SetActive(is_showed);
+    }
+
+    public void dropItem(Item item)
+    {
+        // on vérifie si on a déjà un item de ce type
+        if (!item_ui.ContainsKey(item)) { return; }
+
+        // on récupère le ui_item
+        GameObject ui_item = item_ui[item];
+
+        // on supprime l'item
+        item_ui.Remove(item);
+
+        // on vérifie le nombre d'items restants
+        int nb_items = ui_item.transform.parent.childCount;
+
+        // on supprime le ui_item
+        Destroy(ui_item);
+
+        // on cache le slot
+        if (nb_items == 1)
+        {
+            // on cache le slot
+            item_slots_showed[item.item_type] = false;
+            ui_item.transform.parent.parent.gameObject.SetActive(false);
+        }
     }
 
 }

@@ -13,7 +13,7 @@ public class Hack : Item
         base.Awake();
 
         // on change le type de l'item
-        item_type = "virtual";
+        // item_type = "virtual";
 
     }
 }

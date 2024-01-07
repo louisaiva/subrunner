@@ -10,7 +10,7 @@ public class Drink : Item
         base.Awake();
 
         // on change le type de l'item
-        item_type = "drink";
+        // item_type = "drink";
     }
     
     public void drink()

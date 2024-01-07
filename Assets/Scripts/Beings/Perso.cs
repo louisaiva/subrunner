@@ -793,6 +793,10 @@ public class Perso : Attacker
         {
             big_inventory.dropLeg(item);
         }
+        else
+        {
+            big_inventory.dropItem(item);
+        }
     }
 
     public void grab(Item item)
@@ -806,6 +810,10 @@ public class Perso : Attacker
         if (item.legendary_item)
         {
             big_inventory.grabLeg(item);
+        }
+        else
+        {
+            big_inventory.grabItem(item);
         }
     }
 
@@ -886,6 +894,9 @@ public class Perso : Attacker
 
             // on enlève la capacité de l'item si on a plus l'item dans notre inventaire
             removeCapaIfNotInInv("drink");
+
+            // on met à jour l'inventaire
+            big_inventory.dropItem(item);
 
             // on sort de la fonction
             return;

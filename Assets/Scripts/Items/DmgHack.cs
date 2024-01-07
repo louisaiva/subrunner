@@ -13,7 +13,7 @@ public class DmgHack : Hack
         base.Awake();
         
         // on change le type de l'item
-        item_type = "virtual";
+        // item_type = "virtual";
 
     }
 

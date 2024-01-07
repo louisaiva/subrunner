@@ -419,6 +419,42 @@ UI
 
         bas à droite  - barre du drone ?
 
+    Inventaire :
+
+        l'inventaire est séparé en 2 UI distincts :
+
+            - l'inventaire général (big inventory) :
+
+                accessible via pression d'une touche (F ?)
+                montre tous les inventaires différents, notamment :
+
+                    -l'inventaire des items légendaires (noodle_os; shoes; glasses; gyroscope; katana; recorder)
+                        (ajouter drone ? shuriken ?)
+
+                    -le sous inventaire virtuel contenant :
+
+                        -les hacks d'objets connectés
+                        -les hacks de cyborgs (zombos, anicyborgs, cyborgs, drones)
+                        -fichiers virtuels annexes ?
+
+                    -le sous inventaire physique contenant :
+
+                        -consommables (drink, food, ..)
+                        -weapons (fleches, shurikens, ..)
+                        -vrac du reste (améliorations d'items, matières premières, ..)
+
+            - l'inventaire de contexte (quick inventory) :
+
+                l'inventaire de contexte est accessible uniquement lors d'interactions avec
+                les différents éléments du jeu, notamment via les coffres, ordinateurs,
+                pnj parfois, etc.
+
+                l'inventaire de contexte n'affiche que la ou les sous partie.s concernée.s
+                en fonction du CONTEXTE (lol)
+
+                permet au joueur de facilement échanger des items avec les différents commercants,
+                coffres etc.
+
     Menu Pause :
 
         canva affichant en bg le jeu en pause flouté assombri
