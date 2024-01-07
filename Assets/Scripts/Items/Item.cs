@@ -20,6 +20,7 @@ public class Item : MonoBehaviour, I_Descriptable
     // capacity
     public List<string> capacities = new List<string>();
     public Dictionary<string,float> cooldowns = new Dictionary<string,float>();
+    public int capacity_level = 1;
  
 
     // UI

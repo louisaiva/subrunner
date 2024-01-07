@@ -83,11 +83,17 @@ public class Inventory : MonoBehaviour {
 
                     // on met à jour l'offset
                     is_offseted = true;
+
+                    // on met à jour l'affichage
+                    setShow(true);
                 }
             }
 
             if (!is_offseted)
             {
+                // on met à jour l'affichage
+                setShow(false);
+                
                 // on met à jour la position de l'inventaire
                 transform.position = perso.transform.position + new Vector3(inv_offset.x, inv_offset.y, 0);
             }
@@ -304,13 +310,6 @@ public class Inventory : MonoBehaviour {
     // functions
     public void dropItem(Item item)
     {
-        // on récupère le gameobject de l'item
-        // GameObject item_go = item.gameObject;
-
-        // on regarde si l'item est dans l'inventaire
-        // if (!item.transform.parent == this.transform) { return; }
-        // print("on essaye de drop " + item.item_name + " de " + item.transform.parent.name);
-
         // on vérifie si notre inventaire est un inventaire de perso
         if (is_perso_inventory)
         {
@@ -390,6 +389,9 @@ public class Inventory : MonoBehaviour {
 
         // on règle la scale à 1
         item.transform.localScale = new Vector3(1, 1, 1);
+
+        // on affiche ou pas l'item
+        item.changeShow(is_showed);
 
         return true;
     }

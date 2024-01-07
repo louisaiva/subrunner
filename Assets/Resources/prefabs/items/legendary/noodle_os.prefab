@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 991999328008795163}
   - component: {fileID: 2748573037149330120}
-  - component: {fileID: 4622775810696720909}
+  - component: {fileID: 1180315892945734718}
   - component: {fileID: 3845646378405068767}
   m_Layer: 16
-  m_Name: explosion
+  m_Name: noodle_os
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +31,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5997094674358416435}
+  - {fileID: 8091023111931474518}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 22406999
   m_SortingLayer: 5
   m_SortingOrder: 1
-  m_Sprite: {fileID: -978227904, guid: 3663b626bd9323741bb906f9681d3bc7, type: 3}
+  m_Sprite: {fileID: 1174007893, guid: 3663b626bd9323741bb906f9681d3bc7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -87,7 +87,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!114 &4622775810696720909
+--- !u!114 &1180315892945734718
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -96,24 +96,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 2038104776426337295}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: abf1d707d89bd9c418c69a1235ef02ed, type: 3}
+  m_Script: {fileID: 11500000, guid: b1550ad94fd538a44850ed358fa44feb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item_type: virtual
+  item_type: noodle_os
   action_type: capacity
-  item_name: zombo_explosion
-  item_description: explodes the selected zombo
-  legendary_item: 0
+  item_name: noodle_os
+  item_description: a handmade hackin system to hack things. can not hack your grandma
+    bank account, unfortunately
+  legendary_item: 1
   capacities:
-  - hack
+  - hoover_hack
+  - bit_regen
+  capacity_level: 1
   is_showed: 0
   is_on_ground: 0
   scale_on_ground: 0.5
   perso: {fileID: 0}
   description_ui: {fileID: 0}
   cursor_handler: {fileID: 0}
-  hack_type_target: zombo
-  damage: 20
 --- !u!61 &3845646378405068767
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -159,7 +160,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!1001 &4862027600961935850
+--- !u!1001 &6920210891771781007
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -220,8 +221,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ed4cbaf57cb4a4408ce193df894f5f6, type: 3}
---- !u!4 &5997094674358416435 stripped
+--- !u!4 &8091023111931474518 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1171095894389304793, guid: 0ed4cbaf57cb4a4408ce193df894f5f6, type: 3}
-  m_PrefabInstance: {fileID: 4862027600961935850}
+  m_PrefabInstance: {fileID: 6920210891771781007}
   m_PrefabAsset: {fileID: 0}

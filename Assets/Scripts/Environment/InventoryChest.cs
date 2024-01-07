@@ -22,7 +22,6 @@ public class InventoryChest : Chest
 
 
     // OPENING
-
     protected override void success_open()
     {
         base.success_open();

@@ -381,57 +381,6 @@ public class Perso : Attacker
         }
     }
 
-    /* public override void Events()
-    {
-
-        // on vérifie que le temps est pas en pause
-        if (Time.timeScale == 0f) { return; }
-
-        // Z,S,Q,D
-        inputs = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-
-        // runnin
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            isRunning = true;
-        }
-        else
-        {
-            isRunning = false;
-        }
-
-        // attaque
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            attack();
-        }
-
-        // hack
-        if (has_hackin_os)
-        {
-            HackinHooverEvents();
-            HackinClickEvents();
-        }
-
-        // interactions
-        if (Input.GetButtonDown("Interact"))
-        {
-            interact();
-        }
-
-        // changement de mode de lumière
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            global_light.GetComponent<GlobalLight>().roll();
-        }
-
-        // ouverture de l'inventaire
-        if (Input.GetButtonDown("Inventory"))
-        {
-            inventory.rollShow();
-        }
-    } */
-
     void HackinHooverEvents()
     {
         // le but de cette fonction est de repérer les objets hackables
@@ -642,68 +591,6 @@ public class Perso : Attacker
 
 
     // HACK
-    /* private void hack()
-    {
-
-        // on regarde si on peut hacker qqch
-        Collider2D[] hit_hackable = new Collider2D[30];
-        int nb_hackables = hack_collider.OverlapCollider(hack_contact_filter,hit_hackable);
-        if (nb_hackables == 0) { return; }
-
-        Collider2D target = null;
-        Hack used_hack = null;
-
-        // print("HACKING " + nb_hackables + " OBJECTS");
-
-        // on hacke l'objet le plus proche
-        float min_distance = 10000f;
-        foreach (Collider2D hit in hit_hackable)
-        {
-            if (hit == null) { continue; }
-
-            // on regarde si on est pas déjà en train de hacker l'objet
-            if (!current_hackin_targets.ContainsKey(hit.gameObject))
-            {
-                // on parcourt tous nos hacks pour voir si on peut hacker l'objet
-                foreach (Hack hack in inventory.getHacks())
-                {
-                    // on regarde si on peut hacker l'objet
-                    if (hit.gameObject.GetComponent<I_Hackable>().isHackable(hack.hack_type_target, (int) bits))
-                    {
-                        if (Vector2.Distance(transform.position, hit.transform.position) < min_distance)
-                        {
-                            min_distance = Vector2.Distance(transform.position, hit.transform.position);
-                            target = hit;
-                            used_hack = hack;
-                        }
-                    }
-                }
-            }
-        }
-
-        // print("HACKING " + target + " WITH " + used_hack);
-
-        // si on a rien trouvé, on quitte
-        if (target == null) { return; }
-
-        // on hack l'objet
-        bits -= target.GetComponent<I_Hackable>().beHacked();
-
-        // on ajoute le hackable au dict des objets hackés
-        current_hackin_targets.Add(target.gameObject, used_hack);
-
-        // print("CREATING HACKIN RAY");
-
-        // on crée un hackin_ray
-        GameObject hackin_ray = Instantiate(hackin_ray_prefab, hacks_path) as GameObject;
-        
-        // on met à jour le hackin_ray avec le nom
-        hackin_ray.name = "hackin_ray_" + target.gameObject.name + "_" + target.gameObject.GetInstanceID();
-
-        return;
-        
-    } */
-
     private void update_hacks()
     {
         // on affiche les noms des objets hackés
@@ -845,7 +732,6 @@ public class Perso : Attacker
             float distance = Vector2.Distance(transform.position, current_interactable.transform.position);
             if (distance > interact_range*1.5f)
             {
-
                 // on arrête d'interagir avec l'objet
                 current_interactable.GetComponent<I_Interactable>().stopInteract();
                 current_interactable = null;

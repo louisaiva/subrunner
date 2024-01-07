@@ -348,7 +348,7 @@ public class Sector : MonoBehaviour
 
         // on choisit un coffre random
         GameObject chest = null;
-        if (Random.Range(0f, 1f) < 0.5f)
+        if (Random.Range(0f, 1f) < 2f)
         {
             chest = Instantiate(prefabs["chest"], pos, Quaternion.identity);
         }
