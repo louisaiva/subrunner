@@ -751,6 +751,7 @@ public class Anims
     public string hurted = "hurted_RL";
     public string dash_side = "dash_RL";
     public string dash_up = "dash_U";
+    public string dash_down = "dash_D";
 
     public void init(string name)
     {
@@ -770,6 +771,7 @@ public class Anims
         hurted = name + "_" + hurted;
         dash_side = name + "_" + dash_side;
         dash_up = name + "_" + dash_up;
+        dash_down = name + "_" + dash_down;
     }
 }
 

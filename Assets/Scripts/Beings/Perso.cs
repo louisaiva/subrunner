@@ -957,25 +957,29 @@ public class Perso : Attacker
         // on fait un dash dans la direction du look_at du being
         // Vector2 direction = inputs;
 
+        float ajout = 0f;
+
+        anim_handler.StopForcing();
         // on joue l'animation
         if (Mathf.Abs(inputs.x) > Mathf.Abs(inputs.y))
         {
             anim_handler.ChangeAnimTilEnd(anims.dash_side);
         }
-        /* else if (inputs.y < 0)
-        {
-            anim_handler.ChangeAnimTilEnd(anims.dash_down);
-        } */
-        else
+        else if (inputs.y > 0)
         {
             anim_handler.ChangeAnimTilEnd(anims.dash_up);
+        }
+        else
+        {
+            anim_handler.ChangeAnimTilEnd(anims.dash_down);
+            ajout = 0.25f;
         }
 
         // on se met invicible
         beInvicible(dash_duration);
 
         // on met à jour le cooldown
-        Vector2 movement = inputs.normalized * dash_distance;
+        Vector2 movement = inputs.normalized * (dash_distance + ajout);
         move_perso(movement);
     }
 

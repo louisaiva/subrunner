@@ -41,7 +41,8 @@ public class AnimationHandler : MonoBehaviour
 
     public bool ChangeAnim(string next_anim, float duration =0f)
     {
-        if (current_anim == next_anim || is_forcing) { return false; }
+        // if (current_anim == next_anim || is_forcing) { return false; }
+        if (is_forcing) { return false; }
 
         if (duration != 0f)
         {
