@@ -750,6 +750,7 @@ public class Anims
     public string die = "die";
     public string hurted = "hurted_RL";
     public string dash_side = "dash_RL";
+    public string dash_up = "dash_U";
 
     public void init(string name)
     {
@@ -768,6 +769,7 @@ public class Anims
         die = name + "_" + die;
         hurted = name + "_" + hurted;
         dash_side = name + "_" + dash_side;
+        dash_up = name + "_" + dash_up;
     }
 }
 

@@ -958,7 +958,18 @@ public class Perso : Attacker
         // Vector2 direction = inputs;
 
         // on joue l'animation
-        anim_handler.ChangeAnimTilEnd(anims.dash_side);
+        if (Mathf.Abs(inputs.x) > Mathf.Abs(inputs.y))
+        {
+            anim_handler.ChangeAnimTilEnd(anims.dash_side);
+        }
+        /* else if (inputs.y < 0)
+        {
+            anim_handler.ChangeAnimTilEnd(anims.dash_down);
+        } */
+        else
+        {
+            anim_handler.ChangeAnimTilEnd(anims.dash_up);
+        }
 
         // on se met invicible
         beInvicible(dash_duration);

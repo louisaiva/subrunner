@@ -52,7 +52,7 @@ public class WorldGenerator : MonoBehaviour
     // génère le monde
     public void GenerateWorld()
     {
-        float creation_time = Time.time;
+        double creation_time = Time.realtimeSinceStartup;
 
         Debug.Log("<color=blue>on génère le monde</color>");
         // cmd("on génère le monde");
@@ -106,7 +106,7 @@ public class WorldGenerator : MonoBehaviour
             world.GetComponent<World>().GENERATE(sectors);
         }
 
-        Debug.Log("<color=blue>world generated in </color>" + (Time.time-creation_time) + " <color=blue>seconds</color>");
+        Debug.Log("<color=blue>world generated in </color>" + (Time.realtimeSinceStartup - creation_time) + " <color=blue>seconds</color>");
     }
 
     // vide le monde
