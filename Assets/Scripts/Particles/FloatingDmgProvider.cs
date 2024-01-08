@@ -125,4 +125,30 @@ public class FloatingDmgProvider : MonoBehaviour {
         floating_dmg.GetComponent<TextMeshPro>().text = dmg.ToString();
     }
 
+    // SECONDARY FUNCTIONS
+
+    public void AddMissed(GameObject obj, Vector3 position)
+    {
+        // on ajoute un texte "missed"
+
+        // on met un peu d'aléatoire dans la position
+        position.y += offset_y;
+        position.x += Random.Range(-random_position_range, random_position_range);
+
+        // on génère un floating dmg
+        GameObject floating_dmg = Instantiate(floating_dmg_prefab, position, Quaternion.identity);
+
+        // on le met en enfant de l'objet
+        floating_dmg.transform.SetParent(transform);
+
+        // on ajuste la couleur en fonction des dégats
+        floating_dmg.GetComponent<TextMeshPro>().color = Color.yellow;
+
+        // on applique le material
+        floating_dmg.GetComponent<FloatingText>().ajustMaterial();
+
+        // on met à jour le texte
+        floating_dmg.GetComponent<TextMeshPro>().text = "missed";
+    }
+
 }

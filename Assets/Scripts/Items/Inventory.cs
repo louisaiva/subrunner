@@ -420,12 +420,23 @@ public class Inventory : MonoBehaviour {
         item.transform.localScale = new Vector3(1, 1, 1);
     }
 
-    public void createItem(string item_name)
+    public void createItem(string item_name, bool is_legendary = false)
     {
         // on crée un item
+        GameObject item_go = null;
 
-        // on crée l'item
-        GameObject item_go = Instantiate(Resources.Load(prefabs_path + item_name), transform.position, Quaternion.identity) as GameObject;
+        if (is_legendary)
+        {
+            // on crée un item légendaire
+            item_go = Instantiate(Resources.Load(prefabs_path + "legendary/" + item_name), transform.position, Quaternion.identity) as GameObject;
+        }
+        else
+        {
+            // on crée un item normal
+            item_go = Instantiate(Resources.Load(prefabs_path + item_name), transform.position, Quaternion.identity) as GameObject;
+        }
+
+        if (item_go == null) { return; }
 
         // on ajoute l'item
         addItem(item_go.GetComponent<Item>());

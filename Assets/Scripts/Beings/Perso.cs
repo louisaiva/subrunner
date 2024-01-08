@@ -42,7 +42,8 @@ public class Perso : Attacker
     private CursorHandler cursor_handler;
 
     // DASH
-    public float dash_distance = 1.2f;
+    [SerializeField] private float dash_distance = 1.2f;
+    [SerializeField] private float dash_duration = 0.5f;
 
     // global light
     private GameObject global_light;
@@ -165,10 +166,10 @@ public class Perso : Attacker
             // speed = 5f;
 
             // on rajoute hacks, lunettes etc
-            inventory.createItem("speed_glasses");
-            inventory.createItem("electrochoc");
+            inventory.createItem("carbon_shoes",true);
+            inventory.createItem("zombo_electrochoc");
             inventory.createItem("door_hack");
-            inventory.createItem("ordi_hack");
+            inventory.createItem("computer_hack");
         }
 
 
@@ -955,10 +956,28 @@ public class Perso : Attacker
     {
         // on fait un dash dans la direction du look_at du being
         // Vector2 direction = inputs;
-        
-        Vector2 movement = inputs.normalized * dash_distance;
 
+        // on joue l'animation
+        anim_handler.ChangeAnimTilEnd(anims.dash_side);
+
+        // on se met invicible
+        beInvicible(dash_duration);
+
+        // on met à jour le cooldown
+        Vector2 movement = inputs.normalized * dash_distance;
         move_perso(movement);
+    }
+
+    private void beInvicible(float duration=0.5f)
+    {
+        capacities["invicible"] = true;
+        Invoke("stopInvicibility", duration);
+    }
+
+    private void stopInvicibility()
+    {
+        capacities["invicible"] = false;
+        capacities.Remove("invicible");
     }
 
 }

@@ -629,6 +629,17 @@ public class Being : MonoBehaviour
         // ! à mettre tjrs au début de la fonction update
         if (!isAlive()) { return; }
 
+        // on vérifie si on est invincible
+        if (hasCapacity("invicible"))
+        {
+            // floating missing text
+            // floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddFloatingDmg(this.gameObject, 0, transform.position);
+            floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddMissed(this.gameObject, transform.position);
+            return;
+        }
+
+        // si on est ici on prend des dégats
+
         vie -= damage;
 
         // play hurt animation
@@ -738,6 +749,7 @@ public class Anims
     public string attack = "attack_RL";
     public string die = "die";
     public string hurted = "hurted_RL";
+    public string dash_side = "dash_RL";
 
     public void init(string name)
     {
@@ -755,6 +767,7 @@ public class Anims
         attack = name + "_" + attack;
         die = name + "_" + die;
         hurted = name + "_" + hurted;
+        dash_side = name + "_" + dash_side;
     }
 }
 
