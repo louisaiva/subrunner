@@ -33,7 +33,7 @@ public class Perso : Attacker
 
     // HACKIN RAY
     private GameObject hackin_ray_prefab; // le prefab du hackin_ray
-    private HackinrayHooverManager hackin_ray_hoover;
+    private HackrayHoover hackray_hoover;
 
     // hoover hackable
     private GameObject current_hoover_hackable = null;
@@ -89,10 +89,10 @@ public class Perso : Attacker
 
         // on récupère le parent des hackin_rays
         hacks_path = transform.Find("hacks");
-        hackin_ray_hoover = hacks_path.GetComponent<HackinrayHooverManager>();
+        hackray_hoover = hacks_path.GetComponent<HackrayHoover>();
 
         // on récupère les hackin_ray
-        hackin_ray_prefab = Resources.Load("prefabs/hacks/hackin_ray") as GameObject;
+        hackin_ray_prefab = Resources.Load("prefabs/hacks/hackray") as GameObject;
 
         // on récupère l'inventaire
         inventory = GameObject.Find("/inventory").GetComponent<Inventory>();
@@ -166,7 +166,8 @@ public class Perso : Attacker
             // speed = 5f;
 
             // on rajoute hacks, lunettes etc
-            inventory.createItem("carbon_shoes",true);
+            inventory.createItem("carbon_shoes", true);
+            inventory.createItem("noodle_os", true);
             inventory.createItem("zombo_electrochoc");
             inventory.createItem("door_hack");
             inventory.createItem("computer_hack");
@@ -419,7 +420,7 @@ public class Perso : Attacker
                 current_hoover_hackable = null;
                 current_hoover_hack = null;
 
-                hackin_ray_hoover.hide();
+                hackray_hoover.hide();
             }
             return;
         }
@@ -478,7 +479,7 @@ public class Perso : Attacker
             current_hoover_hackable = null;
             current_hoover_hack = null;
 
-            hackin_ray_hoover.hide();
+            hackray_hoover.hide();
 
             // on remet le cursor à la normale
             cursor_handler.SetCursor("arrow");
@@ -502,7 +503,11 @@ public class Perso : Attacker
             GameObject hackin_ray = Instantiate(hackin_ray_prefab, hacks_path) as GameObject;
             
             // on met à jour le hackin_ray avec le nom
-            hackin_ray.name = "hackin_ray_" + current_hoover_hackable.name + "_" + current_hoover_hackable.GetInstanceID();
+            hackin_ray.name = "hackray_" + current_hoover_hackable.name + "_" + current_hoover_hackable.GetInstanceID();
+
+            // on met à jour le hackin_ray
+            hackin_ray.GetComponent<Hackray>().SetHackerAndTarget(gameObject, current_hoover_hackable);
+
 
             // on sort de la fonction
             return;
@@ -663,7 +668,7 @@ public class Perso : Attacker
             {
                 // on supprime le hackin_ray
                 ;
-                GameObject hackin_ray = hacks_path.Find("hackin_ray_" + target.gameObject.name + "_" + target.gameObject.GetInstanceID()).gameObject;
+                GameObject hackin_ray = hacks_path.Find("hackray_" + target.gameObject.name + "_" + target.gameObject.GetInstanceID()).gameObject;
                 Destroy(hackin_ray);
             }
         }
@@ -676,11 +681,11 @@ public class Perso : Attacker
         foreach (GameObject target in current_hackin_targets.Keys)
         {
             // on vérifie si on a pas déjà un hackin_ray avec le target
-            GameObject hackin_ray = hacks_path.Find("hackin_ray_" + target.gameObject.name + "_" + target.gameObject.GetInstanceID()).gameObject;
+            // GameObject hackin_ray = hacks_path.Find("hackin_ray_" + target.gameObject.name + "_" + target.gameObject.GetInstanceID()).gameObject;
 
             // on met à jour le hackin_ray
-            hackin_ray.GetComponent<LineRenderer>().SetPosition(0, transform.Find("center").position);
-            hackin_ray.GetComponent<LineRenderer>().SetPosition(1, target.transform.Find("hack_point").position);
+            // hackin_ray.GetComponent<LineRenderer>().SetPosition(0, transform.Find("center").position);
+            // hackin_ray.GetComponent<LineRenderer>().SetPosition(1, target.transform.Find("hack_point").position);
 
             // on inflige des dégats à l'objet si c'est un hack de dégats
             if (current_hackin_targets[target] is DmgHack)
@@ -709,13 +714,13 @@ public class Perso : Attacker
         {
             // current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
 
-            // on met à jour le hackin_ray_hoover sur l'objet
+            // on met à jour le hackray_hoover sur l'objet
         }
         current_hoover_hackable = hackable;
         current_hoover_hack = hack;
 
-        hackin_ray_hoover.setTarget(hackable);
-        hackin_ray_hoover.show();
+        hackray_hoover.setTarget(hackable);
+        hackray_hoover.show();
 
         // on change le material de l'objet
         // current_hoover_hackable.gameObject.GetComponent<I_Hackable>().outlineMe();

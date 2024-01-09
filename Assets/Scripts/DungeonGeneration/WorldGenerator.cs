@@ -45,6 +45,12 @@ public class WorldGenerator : MonoBehaviour
         // on récupère la minimap
         minimap = GameObject.Find("/perso/minicam");
 
+        // on vérifie si PLAYTEST est activé -> si oui on ne génère pas le monde (le playtest est déjà généré)
+        if (GameObject.Find("/PLAYTEST").activeSelf)
+        {
+            generate_world = false;
+        }
+
         // on génère le monde
         GenerateWorld();
     }
