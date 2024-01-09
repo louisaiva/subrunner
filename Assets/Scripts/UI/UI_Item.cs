@@ -88,4 +88,12 @@ public class UI_Item : MonoBehaviour, I_Descriptable, IPointerEnterHandler, IPoi
         // on click
         ui_inventory.GetComponent<UI_Inventory>().clickOnItem(item);
     }
+
+    // reset hoover
+    public void resetHoover()
+    {
+        if (!is_hoovered) return;
+
+        OnPointerExit(null);
+    }
 }

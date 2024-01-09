@@ -95,7 +95,9 @@ public class UI_Inventory : MonoBehaviour
     {
         // on cache l'inventaire
         is_showed = false;
-        // GetComponent<Image>().enabled = false;
+        
+        // on reset le hoover de tous les slots
+        resetAllSlotsHoover();
 
         // on cache les slots des légendaires
         leg_slots.SetActive(false);
@@ -283,11 +285,29 @@ public class UI_Inventory : MonoBehaviour
     }
 
 
+    // HOVER
+    private void resetAllSlotsHoover()
+    {
+        // on reset le hoover de tous les slots
+        foreach (KeyValuePair<Item, GameObject> entry in item_ui)
+        {
+            entry.Value.GetComponent<UI_Item>().resetHoover();
+        }
+
+        // on reset le hoover des slots légendaires
+        foreach (KeyValuePair<string, Item> entry in leg_items)
+        {
+            GameObject slot = leg_slots.transform.Find(entry.Key).Find("ui_leg_item").gameObject;
+            slot.GetComponent<UI_Item>().resetHoover();
+        }
+    }
+
     // CLICKS
     public void clickOnItem(Item item)
     {
         perso.GetComponent<Perso>().inventory.dropItem(item);
     }
+
 
 }
 

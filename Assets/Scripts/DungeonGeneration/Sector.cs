@@ -70,7 +70,7 @@ public class Sector : MonoBehaviour
         world_generator = GameObject.Find("/generator").GetComponent<WorldGenerator>();
 
         // on récupère les prefabs
-        prefabs.Add("light", Resources.Load<GameObject>("prefabs/objects/small_light"));
+        prefabs.Add("light", Resources.Load<GameObject>("prefabs/objects/lights/small_light"));
         prefabs.Add("poster", Resources.Load<GameObject>("prefabs/objects/poster"));
         prefabs.Add("enemy", Resources.Load<GameObject>("prefabs/beings/enemies/zombo"));
         prefabs.Add("chest", Resources.Load<GameObject>("prefabs/objects/chest"));

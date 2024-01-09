@@ -64,7 +64,7 @@ public class Room : MonoBehaviour {
     void Awake()
     {
         // on récupère les prefabs
-        light_prefab = Resources.Load<GameObject>("prefabs/objects/small_light");
+        light_prefab = Resources.Load<GameObject>("prefabs/objects/lights/small_light");
         door_prefab = Resources.Load<GameObject>("prefabs/objects/door");
         poster_prefab = Resources.Load<GameObject>("prefabs/objects/poster");
         poster_sprites = Resources.LoadAll<Sprite>("spritesheets/environments/objects/posters");
