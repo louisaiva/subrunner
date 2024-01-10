@@ -9,7 +9,7 @@ plan d'action après algo 3.0 (3/1/2024)
 
 
 
-    [x] - 1e étape : coder le systeme d'Item
+    [x] - coder le systeme d'Item :
 
         1e possibilité :
             tous les items sont dans l'inventaire du perso
@@ -90,19 +90,26 @@ plan d'action après algo 3.0 (3/1/2024)
                 -ne règle pas le problème de l'ui
                 -potentiellement fouilli si on gère mal les capacités complexes
 
-    [x] - 2e étape : régler bugs
+    [x] - régler bugs :
         
         -bugs d'animation des portes, coffres, etc
         -changer le système d'hoover de hack en créant des hacks_rays_hoover blanc
         -régler le problème des hack_rays qui passent par dessus les objets
 
-    [ ] - 3e etape : faire un meilleur inventory system
+    [ ] - faire un meilleur inventory system :
 
         [x] - faire un big inventory avec tous les items séparés en slots
         [ ] - coder les inventaires de contexte
+
+    [ ] - faire une meilleure UI :
+
+        [ ] - indiquer au dessus des hackables s'ils sont hackables ou non
+        [ ] - indiquer le nombre de bits nécessaire pour hacker
+
+
         
 
-    [ ] - 3e étape : coder un système de zones
+    [ ] - coder un système de zones :
 
         créer des zones qu'on assigne à une area d'un secteur
         lors de la création du secteur afin
@@ -131,7 +138,7 @@ plan d'action après algo 3.0 (3/1/2024)
             objects :       1 Computer
 
         
-    [ ] - 4e étape : coder les secteurs différents
+    [ ] - coder les secteurs différents :
 
         QG :
             desc :          notre QG
