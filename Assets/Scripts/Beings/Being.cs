@@ -8,6 +8,8 @@ using System.Linq;
 public class Being : MonoBehaviour
 {
 
+
+    [Header("BEING")]
     // a BEING is a character that can move, attack, etc.
 
     // VIE

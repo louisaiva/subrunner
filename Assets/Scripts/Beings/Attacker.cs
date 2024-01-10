@@ -5,6 +5,8 @@ using UnityEngine;
 public class Attacker : Being
 {
 
+
+    [Header("ATTACKER")]
     // DAMAGE DONE
     public float damage = 10f;
     public Transform attack_point;

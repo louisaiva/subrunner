@@ -46,10 +46,18 @@ public class WorldGenerator : MonoBehaviour
         minimap = GameObject.Find("/perso/minicam");
 
         // on vérifie si PLAYTEST est activé -> si oui on ne génère pas le monde (le playtest est déjà généré)
-        if (GameObject.Find("/PLAYTEST").activeSelf)
+        GameObject playtest = GameObject.Find("/playtest");
+        try
         {
-            generate_world = false;
+            bool generate = !playtest.activeSelf;
+            if (!generate)
+            {
+                print("PLAYTEST is active -> we don't generate the world");
+                generate_world = false;
+            }
         }
+        catch {}
+        
 
         // on génère le monde
         GenerateWorld();

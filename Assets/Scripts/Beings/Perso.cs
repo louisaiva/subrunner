@@ -6,8 +6,10 @@ public class Perso : Attacker
 {
 
     // DEBUG
+    [Header("CHEAT")]
     public bool CHEAT = true;
 
+    [Header("PERSO")]
     // exploits (xp)
     public int level = 1;
     public int xp = 0;
@@ -17,6 +19,7 @@ public class Perso : Attacker
     private GameObject floating_text_prefab;
 
 
+    [Header("HACKIN")]
     // bits (mana)
     // public bool has_hackin_os = false;
     public float bits = 8f; // bits = mana (lance des sorts de hacks)
@@ -29,10 +32,10 @@ public class Perso : Attacker
     private ContactFilter2D hack_contact_filter = new ContactFilter2D();
     private LayerMask hack_layer;
     private Dictionary<GameObject,Hack> current_hackin_targets = new Dictionary<GameObject, Hack>(); // liste d'objets hackés en ce moment
-    private Transform hacks_path; // le parent des hackin_rays
+    private Transform hacks_path; // le parent des hackrays
 
     // HACKIN RAY
-    private GameObject hackin_ray_prefab; // le prefab du hackin_ray
+    private GameObject hackray_prefab; // le prefab du hackray
     private HackrayHoover hackray_hoover;
 
     // hoover hackable
@@ -41,6 +44,7 @@ public class Perso : Attacker
     public float aide_a_la_visee = 0.5f; // aide à la visée, rayon autour de la souris pour les objets hackables
     private CursorHandler cursor_handler;
 
+    [Header("DASH")]
     // DASH
     [SerializeField] private float dash_distance = 1.2f;
     [SerializeField] private float dash_duration = 0.5f;
@@ -48,6 +52,8 @@ public class Perso : Attacker
     // global light
     private GameObject global_light;
 
+
+    [Header("INVENTORY")]
     // minimap
     // public bool has_gyroscope = false;
 
@@ -56,9 +62,11 @@ public class Perso : Attacker
     public UI_Inventory big_inventory;
     public Transform items_parent;
 
+    [Header("SKILLTREE")]
     // skill tree
     public SkillTree skills_tree;
 
+    [Header("INTERACTIONS")]
     // interactions
     private float interact_range = 1f;
     private LayerMask interact_layers;
@@ -87,12 +95,12 @@ public class Perso : Attacker
         hack_collider = transform.Find("center").GetComponent<CircleCollider2D>();
         hack_contact_filter.SetLayerMask(hack_layer);
 
-        // on récupère le parent des hackin_rays
+        // on récupère le parent des hackrays
         hacks_path = transform.Find("hacks");
-        hackray_hoover = hacks_path.GetComponent<HackrayHoover>();
+        hackray_hoover = hacks_path.transform.Find("hoover").GetComponent<HackrayHoover>();
 
-        // on récupère les hackin_ray
-        hackin_ray_prefab = Resources.Load("prefabs/hacks/hackray") as GameObject;
+        // on récupère les hackray
+        hackray_prefab = Resources.Load("prefabs/hacks/hackray") as GameObject;
 
         // on récupère l'inventaire
         inventory = GameObject.Find("/inventory").GetComponent<Inventory>();
@@ -407,6 +415,16 @@ public class Perso : Attacker
 
     void HackinHooverEvents()
     {
+
+        // todo : changer cette fonction
+        // todo : pour le moment on compare la distance entre le perso et la souris
+        // todo : mais il faudrait comparer la distance entre le perso et l'objet
+        // todo : pour ça il faudrait que les objets hackables aient un collider
+        // todo : 
+        // todo : là, même si l'objet est dans le range, si la souris est trop loin, on peut pas le hacker
+        // todo : il faut d'abord récupérer tous les objets dans le range, puis regarder si la souris est sur un de ces objets
+
+
         // le but de cette fonction est de repérer les objets hackables
         // que la souris survole
         
@@ -438,6 +456,22 @@ public class Perso : Attacker
             // on regarde si c'est un hackable
             if (hit.gameObject.GetComponent<I_Hackable>() == null) { continue; }
 
+            // on regarde si il est pas déjà hooveré
+            if (hit.gameObject == current_hoover_hackable)
+            {
+                // on vérifie qu'on peut toujours hacker l'objet
+                if (!hit.gameObject.GetComponent<I_Hackable>().isHackable(current_hoover_hack.hack_type_target, (int) bits))
+                {
+                    // on peut plus le hacker, on continue
+                    continue;
+                }
+                else
+                {
+                    // on peut le hacker, on sort de la fonction
+                    return;
+                }
+            }
+
             // on regarde si on est pas déjà en train de hacker l'objet
             if (!current_hackin_targets.ContainsKey(hit.gameObject))
             {
@@ -448,17 +482,10 @@ public class Perso : Attacker
                     if (hit.gameObject.GetComponent<I_Hackable>().isHackable(hack.hack_type_target, (int) bits))
                     {
                         // on peut hacker l'objet !!
-                        // on met à jour le current_hoover_hackable.gameObject.GetComponent<I_Hackable>()
                         updateHooverHackable(hit.gameObject, hack);
-                        /* if (current_hoover_hackable != null && current_hoover_hackable != hit.gameObject)
-                        {
-                            current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
-                        }
-                        current_hoover_hackable = hit.gameObject;
-                        current_hoover_hack = hack;
 
                         // on change le material de l'objet
-                        current_hoover_hackable.gameObject.GetComponent<I_Hackable>().outlineMe(); */
+                        // current_hoover_hackable.gameObject.GetComponent<I_Hackable>().outlineMe();
 
                         // on change le cursor
                         cursor_handler.SetCursor("target");
@@ -499,15 +526,14 @@ public class Perso : Attacker
             // on ajoute le hackable au dict des objets hackés
             current_hackin_targets.Add(current_hoover_hackable, current_hoover_hack);
 
-            // on crée un hackin_ray
-            GameObject hackin_ray = Instantiate(hackin_ray_prefab, hacks_path) as GameObject;
+            // on crée un hackray
+            GameObject hackray = Instantiate(hackray_prefab, hacks_path) as GameObject;
             
-            // on met à jour le hackin_ray avec le nom
-            hackin_ray.name = "hackray_" + current_hoover_hackable.name + "_" + current_hoover_hackable.GetInstanceID();
+            // on met à jour le hackray avec le nom
+            hackray.name = "hackray_" + current_hoover_hackable.name + "_" + current_hoover_hackable.GetInstanceID();
 
-            // on met à jour le hackin_ray
-            hackin_ray.GetComponent<Hackray>().SetHackerAndTarget(gameObject, current_hoover_hackable);
-
+            // on met à jour le hackray
+            hackray.GetComponent<Hackray>().SetHackerAndTarget(gameObject, current_hoover_hackable);
 
             // on sort de la fonction
             return;
@@ -666,27 +692,20 @@ public class Perso : Attacker
         {
             if (!new_hackin_targets.ContainsKey(target))
             {
-                // on supprime le hackin_ray
+                // on supprime le hackray
                 ;
-                GameObject hackin_ray = hacks_path.Find("hackray_" + target.gameObject.name + "_" + target.gameObject.GetInstanceID()).gameObject;
-                Destroy(hackin_ray);
+                GameObject hackray = hacks_path.Find("hackray_" + target.gameObject.name + "_" + target.gameObject.GetInstanceID()).gameObject;
+                Destroy(hackray);
             }
         }
-
 
         // on met à jour le dict des objets hackés
         current_hackin_targets = new_hackin_targets;
 
-        // affiche des rayons de hack entre le perso et les objets actuellement hackés
+        // todo / ça devrait être dans le update de l'objet hacké ?
+        // todo / ou dans le noodle_os ?
         foreach (GameObject target in current_hackin_targets.Keys)
         {
-            // on vérifie si on a pas déjà un hackin_ray avec le target
-            // GameObject hackin_ray = hacks_path.Find("hackin_ray_" + target.gameObject.name + "_" + target.gameObject.GetInstanceID()).gameObject;
-
-            // on met à jour le hackin_ray
-            // hackin_ray.GetComponent<LineRenderer>().SetPosition(0, transform.Find("center").position);
-            // hackin_ray.GetComponent<LineRenderer>().SetPosition(1, target.transform.Find("hack_point").position);
-
             // on inflige des dégats à l'objet si c'est un hack de dégats
             if (current_hackin_targets[target] is DmgHack)
             {
@@ -722,6 +741,7 @@ public class Perso : Attacker
         hackray_hoover.setTarget(hackable);
         hackray_hoover.show();
 
+        print("HOVERING " + current_hoover_hackable.gameObject.name);
         // on change le material de l'objet
         // current_hoover_hackable.gameObject.GetComponent<I_Hackable>().outlineMe();
     }

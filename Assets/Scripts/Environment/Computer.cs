@@ -153,6 +153,7 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
     {
         // on regarde si l'ordi est allumé
         if (!is_on) { return false; }
+        if (anim_handler.IsForcing()) { return false; }
 
         // on regarde si on a le bon type de hack
         if (hack_type != hack_type_self) { return false; }

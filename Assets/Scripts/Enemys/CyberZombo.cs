@@ -54,13 +54,13 @@ public class CyberZombo : Attacker, I_Hackable
         meat_layers = LayerMask.GetMask("Meat");
 
         // on met à jour les différentes variables d'attaques pour le zombo
-        max_vie = 25;
+        max_vie = 25 + Random.Range(-5, 5);
         vie = (float) max_vie;
-        speed = 1f;
+        speed = 1f + Random.Range(-0.2f, 0.2f);
         running_speed = 2f;
-        damage = 20f;
-        attack_range = 0.25f;
-        damage_range = 0.25f;
+        damage = 20f + Random.Range(-5f, 5f);
+        attack_range = 0.25f + Random.Range(-0.05f, 0.05f);
+        damage_range = 0.25f + Random.Range(-0.05f, 0.05f);
         weight = 1.4f + Random.Range(-0.2f, 0.2f);
 
         // on met les bonnes animations
