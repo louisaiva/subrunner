@@ -1,13 +1,6 @@
 # TODO
 
 
-
-- [ ] - mettre un drone de soutien qui est notre compagnie
-    - [ ] - qui peut nous parler
-    - [ ] - nous faire les tutos
-    - [ ] - et qu'on peut améliorer
-    - [ ] - au niv 2, ce drone sert de relai de hack
-
 - [ ] - mettre des objets interactifs dans le niveau
     - [x] - mettre des coffres pour des items physiques
     - [ ] - mettre des disques durs pour des hacks
@@ -37,38 +30,43 @@
     - [ ] - pour les hacks : stat de propagation automatique à un ennemi proche
     - [ ] - acceleration de la vitesse de hack
 
-- [ ] - génération procédurale
-    - [ ] - World.cs génère différents secteurs et les relie entre eux
-    - [ ] - Sector.cs applique les bonnes textures (tiles) aux tilemaps de chaque Room
-    - [ ] - Sector.cs dit aux Rooms adequates de generer *coffres*, doors, *computers*, *zombies*
-    - [ ] - Room.cs génère les éléments de décor : objects, *posters*, tags, *lights*
-
-
-- [ ] - am&liorer l'UI
+- [ ] - améliorer l'UI
     - [ ] - faire un menu pause qui grossi les différents HUD (map, barre de vie)
     - [ ] - ajouter lecteur CD en bas à gauche ?
     - [ ] - ajouter visu clés RSA / HASH en bas à droite ?
 
-- [ ] - améliorer UX
-    - [ ] - ne pas changer material pour hoover de hack
-    - [ ] - afficher hack_ray blanc et faded qui devient actif quand on appuie
+
 # BUGS
 
 - [ ] - quand on est loin de xp-provider ça arrete de générer de l'xp ?
 - [ ] - bug graphique d'animations : les zombos n'attaquent pas
-- [ ] - bug ordi freeze à la fin de l'animation idle_on
 
 # DO IT LATER
 
 - [-] - faire un fichier json qui stocke les paramètres des différents beings
 
-- [ ] - faire une génération aléatoire des niveaux
+- [x] - faire une génération aléatoire des niveaux
     - [ ] - mettre en place le TK algorithm pour créer les salles
     - [ ] - créer une classe Room qui remplit les salles avec les tiles
     - [ ] - faire des plafonds qu'on peut passer dessous avec notre perso
             parce que ça rend bien ! genre dans les couloirs
 
+- [x] - génération procédurale
+    - [ ] - World.cs génère différents secteurs et les relie entre eux
+    - [ ] - Sector.cs applique les bonnes textures (tiles) aux tilemaps de chaque Room
+    - [ ] - Sector.cs dit aux Rooms adequates de generer *coffres*, doors, *computers*, *zombies*
+    - [ ] - Room.cs génère les éléments de décor : objects, *posters*, tags, *lights*
+    -> CF. gameplay.txt
+
+- [ ] - mettre un drone de soutien qui est notre compagnie
+    - [ ] - qui peut nous parler
+    - [ ] - nous faire les tutos
+    - [ ] - et qu'on peut améliorer
+    - [ ] - au niv 2, ce drone sert de relai de hack
+
 # DONE
+
+- [x] - bug ordi freeze à la fin de l'animation idle_on
 
 - [x] - old
     - [x] - mettre une barre de vie de perso
@@ -118,3 +116,7 @@
 - [x] - ajouter items
     - [x] - lunettes de vitesse : permettent de voir dans le noir
     - [x] - puce de hacking : permet de sélectionner un hack parmi plusieurs en maintenant la souris
+
+- [x] - améliorer UX
+    - [x] - ne pas changer material pour hoover de hack
+    - [x] - afficher hack_ray blanc et faded qui devient actif quand on appuie
