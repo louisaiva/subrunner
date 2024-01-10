@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer))]
 public class Hackray : MonoBehaviour
 {
     
@@ -13,17 +12,34 @@ public class Hackray : MonoBehaviour
 
     protected bool isHacking = false;
 
+    // SR
+    protected GameObject sr;
+
+    // unity functions
+    void Start()
+    {
+        // on récupère le sprite renderer
+        sr = transform.Find("sr").gameObject;
+    }
+
     // unity functions
     void Update()
     {
+
         updateTransform();
     }
 
     protected void updateTransform()
     {
+        if (sr == null)
+        {
+            // on récupère le sprite renderer
+            sr = transform.Find("sr").gameObject;
+        }
+        
         if (!isHacking || hacker == null || target == null)
         {
-            GetComponent<SpriteRenderer>().enabled = false;
+            sr.GetComponent<SpriteRenderer>().enabled = false;
             return;
         }
 
@@ -35,22 +51,30 @@ public class Hackray : MonoBehaviour
         }
 
         // set position
-        transform.position = hacker.transform.position + hacker_offset;
+        transform.position = hacker.transform.position;
+        sr.transform.localPosition = hacker_offset;
+
         Vector3 target_pos = target.transform.position + target_offset;
 
         // set scale
-        float distance = Vector3.Distance(transform.position, target_pos);
-        transform.localScale = new Vector3(transform.localScale.x, distance * GetComponent<SpriteRenderer>().sprite.pixelsPerUnit, transform.localScale.z);
+        float distance = Vector3.Distance(sr.transform.position, target_pos);
+        sr.transform.localScale = new Vector3(sr.transform.localScale.x, distance * sr.GetComponent<SpriteRenderer>().sprite.pixelsPerUnit, sr.transform.localScale.z);
 
         // set rotation (from hacker to target)
-        Vector3 dir = target_pos - transform.position;
+        Vector3 dir = target_pos - sr.transform.position;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
+        sr.transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
     }
 
     // main functions
     public void SetHackerAndTarget(GameObject hacker, GameObject target)
     {
+        if (sr == null)
+        {
+            // on récupère le sprite renderer
+            sr = transform.Find("sr").gameObject;
+        }
+
         // set hacker and target
         this.hacker = hacker;
         this.target = target;
@@ -63,7 +87,7 @@ public class Hackray : MonoBehaviour
         isHacking = true;
 
         // enable sprite renderer
-        GetComponent<SpriteRenderer>().enabled = true;
+        sr.GetComponent<SpriteRenderer>().enabled = true;
 
         // update transform
         updateTransform();

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer))]
+
 public class HackrayHoover : Hackray
 {
 
@@ -30,12 +30,12 @@ public class HackrayHoover : Hackray
     public void show()
     {
         // on active le sprite rrenderer
-        GetComponent<SpriteRenderer>().enabled = true;
+        sr.GetComponent<SpriteRenderer>().enabled = true;
     }
 
     public void hide()
     {
         // on désactive le sprite rrenderer
-        GetComponent<SpriteRenderer>().enabled = false;
+        sr.GetComponent<SpriteRenderer>().enabled = false;
     }
 }

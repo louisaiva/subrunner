@@ -88,7 +88,14 @@ MonoBehaviour:
   - walls_2_7
   light_offset: {x: 0.25, y: 1, z: 0}
   poster_sprites: []
-  density_posters: 0.3
+  density_posters: 0.7
+  empl_enemies: []
+  empl_interactives: []
+  enemies: []
+  nb_enemies: 5
+  is_safe: 0
+  nb_chests: 5
+  nb_comp: 3
 --- !u!1 &4233084577228351592
 GameObject:
   m_ObjectHideFlags: 0

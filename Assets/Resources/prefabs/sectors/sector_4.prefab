@@ -47,17 +47,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1ec893d93a3adb4ca04e6e8e13a734b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sectorGenerator: {fileID: 0}
-  isSafe: 0
+  world: {fileID: 0}
+  x: 0
+  y: 0
+  w: 0
+  h: 0
+  walls_light_tiles:
+  - bg_2_7
+  - walls_1_7
+  - walls_2_7
+  light_offset: {x: 0.25, y: 1, z: 0}
+  poster_sprites: []
+  density_posters: 0.7
+  empl_enemies: []
+  empl_interactives: []
+  enemies: []
   nb_enemies: 5
-  enemy_spawn_radius: 1
+  is_safe: 0
   nb_chests: 1
-  nb_computers: 3
-  hasTuyaux: 0
-  corr_number: 20
-  corr_length_min_max: {x: 5, y: 12}
-  corr_random_start_chance: 0.2
-  ceiling_prefab: {fileID: 0}
+  nb_comp: 3
 --- !u!1 &7779412267224521049
 GameObject:
   m_ObjectHideFlags: 0
