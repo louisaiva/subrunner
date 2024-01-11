@@ -413,7 +413,7 @@ public class Perso : Attacker
         }
     }
 
-    void HackinHooverEvents()
+    /* void HackinHooverEvents2()
     {
 
         // todo : changer cette fonction
@@ -511,6 +511,94 @@ public class Perso : Attacker
             // on remet le cursor à la normale
             cursor_handler.SetCursor("arrow");
         }
+    } */
+
+    void HackinHooverEvents()
+    {
+
+        // le but de cette fonction est de repérer les objets hackables
+        // dans le range de hack et que la souris survole
+
+        // on récup d'abord tous les objets dans le range, puis on regarde si la souris est sur un de ces objets
+        // et si on peut hacker l'objet
+
+        // 1 - on récupère tous les objets dans le range de hack
+        Collider2D[] hits = new Collider2D[30];
+        hack_collider.OverlapCollider(hack_contact_filter, hits);
+
+        // 2 - on récupère l'objet hackable le plus proche de la souris dans le range aide_a_la_visee
+        Vector2 mouse_pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        // on prépare l'objet hackable le plus proche
+        float distance = 10000f;
+        GameObject hackable = null;
+        Hack used_hack = null;
+
+        // on parcourt tous les objets dans le range
+        for (int i=0;i<hits.Length;i++)
+        {
+
+            // on regarde si c'est un objet
+            if (hits[i] == null) { continue; }
+
+            // on regarde si c'est un hackable
+            GameObject hit = hits[i].gameObject;
+            if (hit.GetComponent<I_Hackable>() == null) { continue; }
+
+            // on regarde si la distance entre la souris et l'objet est plus petite que la distance précédente
+            float new_distance = Vector2.Distance(mouse_pos, hit.transform.Find("hack_point").position);
+            if (new_distance < aide_a_la_visee && new_distance < distance)
+            {
+
+                // on parcourt tous nos hacks pour voir si on peut hacker l'objet
+                foreach (Hack hack in inventory.getHacks())
+                {
+                    // on regarde si on peut hacker l'objet
+                    if (hit.GetComponent<I_Hackable>().isHackable(hack.hack_type_target, (int)bits))
+                    {
+                        // on peut hacker l'objet !!
+                        hackable = hit;
+                        distance = new_distance;
+                        used_hack = hack;
+
+                        // on sort de la boucle
+                        break;
+                    }
+                }
+            }
+        }
+
+        // 3 - on vérifie ce qu'on fait avec l'objet hackable
+        if (hackable != null)
+        {
+            // on regarde si c'est le même objet que le précédent
+            if (current_hoover_hackable != null && current_hoover_hackable == hackable)
+            {
+                return;
+            }
+
+            // on peut hacker l'objet !!
+            updateHooverHackable(hackable, used_hack);
+
+            // on change le cursor
+            cursor_handler.SetCursor("target");
+
+            // on sort de la fonction
+            return;
+        }
+        else if (current_hoover_hackable != null)
+        {
+            // on reset le current_hoover_hackable.gameObject.GetComponent<I_Hackable>()
+            current_hoover_hackable = null;
+            current_hoover_hack = null;
+
+            hackray_hoover.hide();
+        }
+
+        // on remet le cursor à la normale
+        cursor_handler.SetCursor("arrow");
+
+
     }
 
     void HackinClickEvents()
@@ -539,59 +627,6 @@ public class Perso : Attacker
             return;
         }
     }
-
-    // update de d'habitude
-    new void Update()
-    {
-        // ! à mettre tjrs au début de la fonction update
-        if (!isAlive()) { return; }
-
-        // update de d'habitude
-        base.Update();
-
-        /* // on update le hackin
-        has_hackin_os = false;
-        foreach (Item item in inventory.getItems())
-        {
-            if (item.action_type == "passive")
-            {
-                if (item.item_name == "hackin_os")
-                {
-                    has_hackin_os = true;
-                }
-            }
-        }
-
-        // on regarde si on a le gyroscope
-        has_gyroscope = false;
-        foreach (Item item in inventory.getItems())
-        {
-            if (item.action_type == "passive")
-            {
-                if (item.item_name == "gyroscope")
-                {
-                    has_gyroscope = true;
-                }
-            }
-        }
-
-        // on applique les capacités passives des items
-        bool has_speed_glasses = false;
-        foreach (Item item in inventory.getItems())
-        {
-            if (item.action_type == "passive")
-            {
-                if (item.item_name == "speed_glasses")
-                {
-                    has_speed_glasses = true;
-                }
-            }
-        }
-
-        global_light.GetComponent<GlobalLight>().setMode(has_speed_glasses ? "on" : "off"); */
-
-    }
-
 
 
     // XP
