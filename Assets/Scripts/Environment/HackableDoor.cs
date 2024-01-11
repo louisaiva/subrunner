@@ -27,6 +27,9 @@ public class HackableDoor : Door, I_Hackable
     public Material outline_material { get; set; }
     public Material default_material { get; set; }
 
+    // HackUI
+    public HackUI hack_ui { get; set; }
+
     // UNITY FUNCTIONS
     protected new void Start()
     {
@@ -68,15 +71,24 @@ public class HackableDoor : Door, I_Hackable
         // on met à jour le material
         default_material = GetComponent<SpriteRenderer>().material;
         outline_material = Resources.Load<Material>("materials/outlined/outlined_unlit");
+
+        // on récupère le // hack_ui
+        // hack_ui = transform.Find("// hack_ui").GetComponent<HackUI>();
     }
 
     public bool isHackable(string hack_type, int bits)
     {
+        // on change le mode de l'UI
+        // hack_ui.setMode("unhackable");
+
         // on regarde si on a le bon type de hack
         if (hack_type != hack_type_self) { return false; }
 
         // on regarde si on a le bon niveau de hack
         if (bits < required_bits) { return false; }
+
+        // on change le mode de l'UI
+        // hack_ui.setMode("hackable");
 
         return true;
     }
@@ -92,6 +104,9 @@ public class HackableDoor : Door, I_Hackable
 
         // on met à jour les animations
         anim_handler.ChangeAnim(anims.hackin, hacking_current_duration);
+
+        // on change le mode de l'UI
+        // hack_ui.setMode("hacked");
 
         // on hack la porte
         is_getting_hacked = true;
@@ -129,6 +144,9 @@ public class HackableDoor : Door, I_Hackable
         hacking_end_time = -1;
         hacking_current_duration = 0f;
 
+        // on change le mode de l'UI
+        // hack_ui.setMode("unhackable");
+
         // on drop les bits restants
         bit_provider.GetComponent<XPProvider>().EmitBits(bits_left, transform.position, 0.5f);
 
@@ -142,6 +160,9 @@ public class HackableDoor : Door, I_Hackable
         is_getting_hacked = false;
         hacking_end_time = -1;
         hacking_current_duration = 0f;
+
+        // on change le mode de l'UI
+        // hack_ui.setMode("unhackable");
 
         // on met à jour le box_collider
         box_collider.enabled = false;
@@ -164,5 +185,20 @@ public class HackableDoor : Door, I_Hackable
         // on change le material
         GetComponent<SpriteRenderer>().material = default_material;
     }
+
+
+    // HackUI
+    public void showHackUI()
+    {
+        // on le montre
+        // // hack_ui.show();
+    }
+    public void hideHackUI()
+    {
+
+        // on le montre
+        // hack_ui.hide();
+    }
+
 }
 

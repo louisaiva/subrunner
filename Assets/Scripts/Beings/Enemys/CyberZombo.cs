@@ -34,6 +34,9 @@ public class CyberZombo : Attacker, I_Hackable
     public Material outline_material { get; set; }
     public Material default_material { get; set; }
 
+    // HackUI
+    public HackUI hack_ui { get; set; }
+
     /*
 
 
@@ -218,15 +221,23 @@ public class CyberZombo : Attacker, I_Hackable
         default_material = GetComponent<SpriteRenderer>().material;
         outline_material = Resources.Load<Material>("materials/outlined/outlined_unlit_enemy");
 
+        // on récupère le // hack_ui
+        // hack_ui = transform.Find("// hack_ui").GetComponent<HackUI>();
     }
 
     public bool isHackable(string hack_type, int bits)
     {
+        // on met à jour HackUI
+        // hack_ui.setMode("unhackable");
+
         // on regarde si on a le bon type de hack
         if (hack_type != hack_type_self) { return false; }
 
         // on regarde si on a assez de bits
         if (bits < required_bits) { return false; }
+
+        // on met à jour HackUI
+        // hack_ui.setMode("hackable");
 
         return true;
     }
@@ -249,6 +260,9 @@ public class CyberZombo : Attacker, I_Hackable
         // on commence le hack
         is_getting_hacked = true;
         hacking_end_time = Time.time + hacking_current_duration;
+
+        // on met à jour HackUI
+        // hack_ui.setMode("hacked");
 
 
         return required_bits;
@@ -281,6 +295,9 @@ public class CyberZombo : Attacker, I_Hackable
         hacking_end_time = -1;
         hacking_current_duration = 0f;
 
+        // on met à jour HackUI
+        // hack_ui.setMode("unhackable");
+
         // on drop les bits restants
         xp_provider.GetComponent<XPProvider>().EmitBits(bits_left, transform.position, 0.5f);
 
@@ -294,6 +311,9 @@ public class CyberZombo : Attacker, I_Hackable
         is_getting_hacked = false;
         hacking_end_time = -1;
         hacking_current_duration = 0f;
+
+        // on met à jour HackUI
+        // hack_ui.setMode("unhackable");
     }
 
     // outlines
@@ -309,8 +329,20 @@ public class CyberZombo : Attacker, I_Hackable
         GetComponent<SpriteRenderer>().material = default_material;
     }
 
-    // DIE
+    // HackUI
+    public void showHackUI()
+    {
+        // on le montre
+        // // hack_ui.show();
+    }
+    public void hideHackUI()
+    {
 
+        // on le montre
+        // // hack_ui.hide();
+    }
+
+    // DIE
     protected override void die(){
         // on arrête le hackin
         is_getting_hacked = false;

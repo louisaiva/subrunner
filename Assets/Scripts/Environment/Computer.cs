@@ -44,6 +44,9 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
     public Material outline_material { get; set; }
     public Material default_material { get; set; }
 
+    // HackUI
+    public HackUI hack_ui { get; set; }
+
     // interactions
     public bool is_interacting { get; set; } // est en train d'interagir
 
@@ -147,10 +150,16 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
         // on met à jour le material
         default_material = GetComponent<SpriteRenderer>().material;
         outline_material = Resources.Load<Material>("materials/outlined/outlined_unlit");
+
+        // on récupère le // hack_ui
+        // hack_ui = transform.Find("// hack_ui").GetComponent<HackUI>();
     }
 
     public bool isHackable(string hack_type, int bits)
     {
+        // on change le mode de l'UI
+        // hack_ui.setMode("unhackable");
+
         // on regarde si l'ordi est allumé
         if (!is_on) { return false; }
         if (anim_handler.IsForcing()) { return false; }
@@ -160,6 +169,9 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
 
         // on regarde si on a assez de bits
         if (bits < required_bits) { return false; }
+
+        // on change le mode de l'UI
+        // hack_ui.setMode("hackable");
 
         return true;
     }
@@ -189,6 +201,9 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
 
         // on met à jour les animations
         if (!anim_handler.ChangeAnimTilEnd(anims.hackin, hacking_current_duration)) { return 0; }
+
+        // on change le mode de l'UI
+        // hack_ui.setMode("hacked");
 
         // on commence le hack
         is_getting_hacked = true;
@@ -231,6 +246,9 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
         // on met à jour les animations
         anim_handler.StopForcing();
         anim_handler.ChangeAnimTilEnd(is_on ? anims.idle_on : anims.idle_off);
+
+        // on met à jour HackUI
+        // hack_ui.setMode("unhackable");
     }
 
     public void succeedHack()
@@ -248,6 +266,8 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
         hacking_end_time = -1;
         hacking_current_duration = 0f;
 
+        // on met à jour HackUI
+        // hack_ui.setMode("unhackable");
     }
 
 
@@ -261,6 +281,19 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
     {
         // on change le material
         GetComponent<SpriteRenderer>().material = default_material;
+    }
+
+    // HackUI
+    public void showHackUI()
+    {
+        // on le montre
+        // hack_ui.show();
+    }
+    public void hideHackUI()
+    {
+
+        // on le montre
+        // hack_ui.hide();
     }
 
     // INTERACTIONS

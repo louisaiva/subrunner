@@ -545,11 +545,13 @@ public class Perso : Attacker
             GameObject hit = hits[i].gameObject;
             if (hit.GetComponent<I_Hackable>() == null) { continue; }
 
+            // on affiche le HackUI
+            hit.GetComponent<I_Hackable>().showHackUI();
+
             // on regarde si la distance entre la souris et l'objet est plus petite que la distance précédente
             float new_distance = Vector2.Distance(mouse_pos, hit.transform.Find("hack_point").position);
             if (new_distance < aide_a_la_visee && new_distance < distance)
             {
-
                 // on parcourt tous nos hacks pour voir si on peut hacker l'objet
                 foreach (Hack hack in inventory.getHacks())
                 {
@@ -593,10 +595,10 @@ public class Perso : Attacker
             current_hoover_hack = null;
 
             hackray_hoover.hide();
-        }
 
-        // on remet le cursor à la normale
-        cursor_handler.SetCursor("arrow");
+            // on remet le cursor à la normale
+            cursor_handler.SetCursor("arrow");
+        }
 
 
     }
