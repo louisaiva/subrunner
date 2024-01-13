@@ -10,8 +10,6 @@ public class Hackray : MonoBehaviour
     protected Vector3 hacker_offset;
     protected Vector3 target_offset;
 
-    // protected bool isHacking = false;
-
     // SR
     protected GameObject sr;
 
@@ -83,9 +81,6 @@ public class Hackray : MonoBehaviour
         hacker_offset = hacker.transform.Find("center").transform.localPosition;
         target_offset = target.transform.Find("hack_point").transform.localPosition;
 
-        // lesgo
-        // isHacking = true;
-
         // enable sprite renderer
         sr.GetComponent<SpriteRenderer>().enabled = true;
 
@@ -107,8 +102,6 @@ public class Hackray : MonoBehaviour
         hacker_offset = Vector3.zero;
         target_offset = Vector3.zero;
 
-        // on arrête le hack
-        // isHacking = false;
     }
 
     protected void switchTargetAndHacker()

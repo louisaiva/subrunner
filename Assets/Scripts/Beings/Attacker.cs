@@ -53,6 +53,7 @@ public class Attacker : Being
         }
 
     }
+    
     // DEAL DAMAGE
     protected virtual void attack()
     {

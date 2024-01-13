@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: perso
-  m_Shader: {fileID: -6465566751694194690, guid: bddffaa008264e344981b00c03e7af8c, type: 3}
+  m_Name: hackray
+  m_Shader: {fileID: -6465566751694194690, guid: 72af05fc8ba77084d9283f5fbb3bebf2, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -24,11 +24,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Emission:
-        m_Texture: {fileID: 2800000, guid: 4d89018df6100ff4f96c370787a6584c, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: d2c799372925e18469612a8661563491, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -45,8 +45,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _GlobalIntensity: 1
-    - _Intensity: 10
+    - _Intensity: 0
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:

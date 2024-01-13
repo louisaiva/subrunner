@@ -8449,6 +8449,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1020029541}
   - component: {fileID: 1020029542}
+  - component: {fileID: 1020029543}
   m_Layer: 7
   m_Name: hacks
   m_TagString: Untagged
@@ -8507,6 +8508,25 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 2
+--- !u!114 &1020029543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1020029540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6046db3d046cb5c44964c3b7364ed848, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  perso: {fileID: 0}
+  perso_material: {fileID: 0}
+  hackrays: []
+  hackray_material: {fileID: 0}
+  intensity_variation: 0
+  max_intensity_variation: 20
+  max_delay: 0.35
 --- !u!1 &1025543748
 GameObject:
   m_ObjectHideFlags: 0
@@ -14296,7 +14316,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ed3df6ebc424a1a46939a2e9fbb8ab0b, type: 2}
+  - {fileID: 2100000, guid: 7ba35f4ea2db0d840a4b6b2115bd4f88, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

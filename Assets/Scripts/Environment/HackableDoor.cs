@@ -81,6 +81,9 @@ public class HackableDoor : Door, I_Hackable
         // on change le mode de l'UI
         hack_ui.setMode("unhackable");
 
+        // on regarde si la porte n'est pas déjà ouverte
+        if (is_open || is_moving) { return false; }
+
         // on regarde si on a le bon type de hack
         if (hack_type != hack_type_self) { return false; }
 
