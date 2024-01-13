@@ -16,7 +16,7 @@ public class AnimationHandler : MonoBehaviour
 
     // UNITY FUNCTIONS
 
-    void Start()
+    void Awake()
     {
         animator = GetComponent<Animator>();
 

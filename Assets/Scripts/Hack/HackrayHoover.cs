@@ -22,11 +22,46 @@ public class HackrayHoover : Hackray
     // functions
     public void setTarget(GameObject target)
     {
+        // on vérifie si on a pas déjà un target
+        if (this.target != null)
+        {
+            if (this.target != perso)
+            {
+                // on désactive l'outline
+                this.target.GetComponent<I_Hackable>().unOutlineMe();
+            }
+            else
+            {
+                // on désactive l'outline
+                this.hacker.GetComponent<I_Hackable>().unOutlineMe();
+            }
+        }
+
+        // on active l'outline
+        target.GetComponent<I_Hackable>().outlineMe();
+
+        // on set le nouveau target
         SetHackerAndTarget(perso, target);
     }
 
     public void removeTarget()
     {
+        // on désactive l'outline
+        if (this.target != null)
+        {
+            if (this.target != perso)
+            {
+                // on désactive l'outline
+                this.target.GetComponent<I_Hackable>().unOutlineMe();
+            }
+            else
+            {
+                // on désactive l'outline
+                this.hacker.GetComponent<I_Hackable>().unOutlineMe();
+            }
+        }
+
+        // on set le nouveau target
         RemoveHackerAndTarget();
     }
 

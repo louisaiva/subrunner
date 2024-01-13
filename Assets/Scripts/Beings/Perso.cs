@@ -110,15 +110,16 @@ public class Perso : Attacker
 
 
         // on met à jour les layers du hack
-        hack_layer = LayerMask.GetMask("Doors", "Enemies","Computers");
-
-        // on récupère le collider de hack
-        hack_collider = transform.Find("center").GetComponent<CircleCollider2D>();
-        hack_contact_filter.SetLayerMask(hack_layer);
+        // hack_layer = LayerMask.GetMask("Doors", "Enemies", "Computers");
+        hack_layer = LayerMask.GetMask("Hackables");
 
         // on récupère le parent des hackrays
         hacks_path = transform.Find("hacks");
         hackray_hoover = hacks_path.transform.Find("hoover").GetComponent<HackrayHoover>();
+
+        // on récupère le collider de hack
+        hack_collider = hacks_path.GetComponent<CircleCollider2D>();
+        hack_contact_filter.SetLayerMask(hack_layer);
 
         // on récupère les hackray
         hackray_prefab = Resources.Load("prefabs/hacks/hackray") as GameObject;
@@ -588,7 +589,7 @@ public class Perso : Attacker
             if (hits[i] == null) { continue; }
 
             // on regarde si c'est un hackable
-            GameObject hit = hits[i].gameObject;
+            GameObject hit = hits[i].transform.parent.gameObject;
             if (hit.GetComponent<I_Hackable>() == null) { continue; }
 
             // on affiche le HackUI
@@ -637,13 +638,13 @@ public class Perso : Attacker
         else if (current_hoover_hackable != null)
         {
             // on change le material de l'objet
-            current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
+            // current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
 
             // on reset le current_hoover_hackable.gameObject.GetComponent<I_Hackable>()
             current_hoover_hackable = null;
             current_hoover_hack = null;
 
-            hackray_hoover.hide();
+            hackray_hoover.removeTarget();
 
 
             // on remet le cursor à la normale
@@ -668,7 +669,7 @@ public class Perso : Attacker
             foreach (Collider2D hit in hits)
             {
                 if (hit == null) { continue; }
-                if (hit.gameObject == current_hoover_hackable)
+                if (hit.transform.parent.gameObject == current_hoover_hackable)
                 {
                     is_touching = true;
                     break;
@@ -681,13 +682,13 @@ public class Perso : Attacker
             {
 
                 // on change le material de l'objet
-                current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
+                // current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
 
                 // on reset le current_hoover_hackable.gameObject.GetComponent<I_Hackable>()
                 current_hoover_hackable = null;
                 current_hoover_hack = null;
 
-                hackray_hoover.hide();
+                hackray_hoover.removeTarget();
 
                 // on remet le cursor à la normale
                 cursor_handler.SetCursor("arrow");
@@ -696,13 +697,13 @@ public class Perso : Attacker
             {
 
                 // on change le material de l'objet
-                current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
+                // current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
 
                 // on reset le current_hoover_hackable.gameObject.GetComponent<I_Hackable>()
                 current_hoover_hackable = null;
                 current_hoover_hack = null;
 
-                hackray_hoover.hide();
+                hackray_hoover.removeTarget();
 
                 // on remet le cursor à la normale
                 cursor_handler.SetCursor("arrow");
@@ -766,7 +767,7 @@ public class Perso : Attacker
             if (hits[i] == null) { continue; }
 
             // on regarde si c'est un hackable
-            GameObject hit = hits[i].gameObject;
+            GameObject hit = hits[i].transform.parent.gameObject;
             if (hit.GetComponent<I_Hackable>() == null) { continue; }
 
             // on calcule l'angle entre le perso et l'objet
@@ -821,13 +822,13 @@ public class Perso : Attacker
         else if (current_hoover_hackable != null)
         {
             // on change le material de l'objet
-            current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
+            // current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
 
             // on reset le current_hoover_hackable.gameObject.GetComponent<I_Hackable>()
             current_hoover_hackable = null;
             current_hoover_hack = null;
 
-            hackray_hoover.hide();
+            hackray_hoover.removeTarget();
 
 
             // on remet le cursor à la normale
@@ -894,25 +895,32 @@ public class Perso : Attacker
     private void update_hacks()
     {
         // on affiche les noms des objets hackés
-        /* string hackin_targets_names = "HACKS : ";
+        string hackin_targets_names = "HACKS : ";
         foreach (GameObject target in current_hackin_targets.Keys)
         {
             hackin_targets_names += target.gameObject.name + " ";
         }
-        print(hackin_targets_names); */
+        print(hackin_targets_names);
 
-        // on vérifie si les objets hackés sont toujours hackés et toujours à portée
         Dictionary<GameObject,Hack> new_hackin_targets = new Dictionary<GameObject,Hack>();
-        Collider2D[] hit_hackable = new Collider2D[30];
-        hack_collider.OverlapCollider(hack_contact_filter, hit_hackable);
+
+        // on récupère tous les objets hackables dans le range
+        Collider2D[] hackables = new Collider2D[30];
+        hack_collider.OverlapCollider(hack_contact_filter, hackables);
+
+        // on regarde si les objets hackés sont toujours hackables
         foreach (GameObject target in current_hackin_targets.Keys)
         {
+            // on regarde si l'objet est toujours hackable
             if (target.GetComponent<I_Hackable>().isGettingHacked())
             {
                 bool still_hackable = false;
-                foreach (Collider2D hackable in hit_hackable)
+                foreach (Collider2D hackable in hackables)
                 {
-                    if (hackable == target.GetComponent<Collider2D>())
+                    // on vérifie qu'on a un hit
+                    if (hackable == null) { continue; }
+
+                    if (hackable.transform.parent.gameObject == target)
                     {
                         // si l'objet est toujours hackable, on l'ajoute au dict des nouveaux objets hackés
                         new_hackin_targets.Add(target, current_hackin_targets[target]);
@@ -934,7 +942,6 @@ public class Perso : Attacker
             if (!new_hackin_targets.ContainsKey(target))
             {
                 // on supprime le hackray
-                ;
                 GameObject hackray = hacks_path.Find("hackray_" + target.gameObject.name + "_" + target.gameObject.GetInstanceID()).gameObject;
                 Destroy(hackray);
             }
@@ -972,7 +979,7 @@ public class Perso : Attacker
         // on met à jour le current_hoover_hackable.gameObject.GetComponent<I_Hackable>()
         if (current_hoover_hackable != null && current_hoover_hackable != hackable)
         {
-            current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
+            // current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
 
             // on met à jour le hackray_hoover sur l'objet
         }
@@ -984,7 +991,7 @@ public class Perso : Attacker
 
         print("HOVERING " + current_hoover_hackable.gameObject.name);
         // on change le material de l'objet
-        current_hoover_hackable.gameObject.GetComponent<I_Hackable>().outlineMe();
+        // current_hoover_hackable.gameObject.GetComponent<I_Hackable>().outlineMe();
     }
 
     // INTERACTIONS
