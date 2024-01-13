@@ -94,7 +94,7 @@ public class Being : MonoBehaviour
         }
 
         // walk
-        if (hasCapacity("walk"))
+        if (hasCapacity("walk") && !(this is Perso))
         {
             inputs = randomly_circulate(inputs);
         }

@@ -94,6 +94,23 @@ public class Hackray : MonoBehaviour
 
     }
 
+    public void RemoveHackerAndTarget()
+    {
+        // on désactive le sprite rrenderer
+        sr.GetComponent<SpriteRenderer>().enabled = false;
+
+        // on enlève le hacker et la target
+        hacker = null;
+        target = null;
+
+        // on enlève les offsets
+        hacker_offset = Vector3.zero;
+        target_offset = Vector3.zero;
+
+        // on arrête le hack
+        isHacking = false;
+    }
+
     protected void switchTargetAndHacker()
     {
         // switch hacker and target

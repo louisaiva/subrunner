@@ -68,7 +68,7 @@ Transform:
   - {fileID: 3641977595302509621}
   - {fileID: 1815294641837453809}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1042926850382534581
 SpriteRenderer:
@@ -281,38 +281,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4061256158519124310, guid: f52d26f4dd7fdf5409ceb14ab0451f53, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1480027876288508123}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f52d26f4dd7fdf5409ceb14ab0451f53, type: 3}
 --- !u!4 &1815294641837453809 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4525295521538888657, guid: f52d26f4dd7fdf5409ceb14ab0451f53, type: 3}
   m_PrefabInstance: {fileID: 2881226888151949856}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2278916397067109238 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4061256158519124310, guid: f52d26f4dd7fdf5409ceb14ab0451f53, type: 3}
-  m_PrefabInstance: {fileID: 2881226888151949856}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1480027876288508123
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2278916397067109238}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a237138fea15e9f4dad3a90a93a74cbc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mode: unhackable
-  sprite_hackable: {fileID: 0}
-  sprite_unhackable: {fileID: 0}
-  color_base: {r: 0, g: 0, b: 0, a: 0}
-  color_hacked: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &9095390673949678647
 PrefabInstance:
   m_ObjectHideFlags: 0

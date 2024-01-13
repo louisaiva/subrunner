@@ -16,7 +16,7 @@ public class HackUI : MonoBehaviour
     private float auto_hide_delay = 0.5f;
     
     // unity functions
-    void Start()
+    void Awake()
     {
         if (sprite_hackable == null) {
             sprite_hackable = Resources.LoadAll<Sprite>("spritesheets/ui/ui_hackables")[0];

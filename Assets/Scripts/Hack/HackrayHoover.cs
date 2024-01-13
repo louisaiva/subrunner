@@ -22,8 +22,12 @@ public class HackrayHoover : Hackray
     // functions
     public void setTarget(GameObject target)
     {
-        print("set target");
         SetHackerAndTarget(perso, target);
+    }
+
+    public void removeTarget()
+    {
+        RemoveHackerAndTarget();
     }
 
     // showing

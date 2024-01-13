@@ -1,0 +1,314 @@
+{
+    "name": "PlayerInputActions",
+    "maps": [
+        {
+            "name": "perso",
+            "id": "0b618132-4be4-4b59-a576-51538f00d6ab",
+            "actions": [
+                {
+                    "name": "move",
+                    "type": "PassThrough",
+                    "id": "e3286fd1-c991-4227-bd74-d6aad86a17ec",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "dash",
+                    "type": "Button",
+                    "id": "accb593b-fa1f-45d1-a583-3ffbf250f047",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "interact",
+                    "type": "Button",
+                    "id": "d0048e6d-9883-434b-b045-c6fa71aea51d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "inventory",
+                    "type": "Button",
+                    "id": "fbfa0ea4-b180-4324-8049-589af83809b1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "map",
+                    "type": "Button",
+                    "id": "2009546e-be2f-4aec-89d1-3576c067877c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "hit",
+                    "type": "Button",
+                    "id": "a71c9118-1699-4f9c-96b6-f90a0e6134e5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "run",
+                    "type": "Value",
+                    "id": "0948f1ba-942c-47be-b02f-249a908482fc",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "useConso",
+                    "type": "Button",
+                    "id": "af9057fb-3fd3-4bb3-bb36-27d0f1b16911",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "hack",
+                    "type": "Button",
+                    "id": "4ccbf631-dd20-4327-bd3b-c1b7c8a1506d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "hackDirection",
+                    "type": "PassThrough",
+                    "id": "b3a199ca-b0b5-4d60-b9a1-9f06eee85935",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "main",
+                    "id": "7da63991-cb3c-430b-977c-698b30b90db7",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "cd5cb580-e676-4ba8-80e1-d63578a65114",
+                    "path": "<XInputController>/leftStick/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "6760f575-c485-4c4d-8260-6622ba5c842e",
+                    "path": "<XInputController>/leftStick/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "3a3703c7-05a4-441b-97e5-e552adca641d",
+                    "path": "<XInputController>/leftStick/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "16c3713d-c67f-4acf-b510-8b7f38817b07",
+                    "path": "<XInputController>/leftStick/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "4ce89410-35a6-4fc2-a5f1-577db6a2f960",
+                    "path": "<XInputController>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5262e0cd-f070-46ed-9583-016bd2b1d03f",
+                    "path": "<XInputController>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "96585a0b-19a0-4a12-b30c-ee5c5664ed8c",
+                    "path": "<XInputController>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "inventory",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a78382af-fd0b-4b13-a37d-a064cac28d6f",
+                    "path": "<XInputController>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "map",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "93b1a724-d3ff-4856-88c9-ac6ce6414518",
+                    "path": "<XInputController>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "hit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8e26258b-b4ea-4ef6-a1eb-9a22f3f02dcf",
+                    "path": "<XInputController>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "75dfc87d-e548-4042-8a15-def507bbd239",
+                    "path": "<XInputController>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "useConso",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d63eb17d-eb99-4563-8789-006ea5d0662d",
+                    "path": "<XInputController>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "hack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "main",
+                    "id": "34d12e2d-18a6-445a-99fa-1429f1d9c490",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "hackDirection",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "4bca6e0b-3f7b-451e-b704-82945e3d1ea3",
+                    "path": "<XInputController>/rightStick/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "hackDirection",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "cf090caa-da71-47f3-b247-af6810818aa0",
+                    "path": "<XInputController>/rightStick/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "hackDirection",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "32a20702-86bd-4511-8b77-df52e1bab559",
+                    "path": "<XInputController>/rightStick/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "hackDirection",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "7bbd0b55-f935-40b3-b5c6-d24264fd0d50",
+                    "path": "<XInputController>/rightStick/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "hackDirection",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "xbox",
+            "bindingGroup": "xbox",
+            "devices": [
+                {
+                    "devicePath": "<XInputController>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}

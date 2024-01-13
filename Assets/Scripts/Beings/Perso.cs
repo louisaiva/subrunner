@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Perso : Attacker
 {
@@ -73,10 +74,30 @@ public class Perso : Attacker
     public GameObject current_interactable = null;
     public Bed respawn_bed = null;
 
-    /*
+    [Header("INPUTS")]
+    private PlayerInputActions playerInputs;
 
+    // inputs
 
-    */
+    private void Awake()
+    {
+        // on récupère les inputs
+        playerInputs = new PlayerInputActions();
+        /* playerInputs.perso.move.performed += ctx => inputs = ctx.ReadValue<Vector2>();
+        playerInputs.perso.move.canceled += ctx => inputs = Vector2.zero;
+        playerInputs.perso.run.performed += ctx => isRunning = true;
+        playerInputs.perso.run.canceled += ctx => isRunning = false; */
+    }
+
+    private void OnEnable()
+    {
+        playerInputs.perso.Enable();
+    }
+
+    private void OnDisable()
+    {
+        playerInputs.perso.Disable();
+    }
 
     // unity functions
     new void Start()
@@ -286,16 +307,20 @@ public class Perso : Attacker
         if (hasCapacity("walk"))
         {
             inputs = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            if (inputs == Vector2.zero)
+            {
+                inputs = new Vector2(playerInputs.perso.move.ReadValue<Vector2>().x, playerInputs.perso.move.ReadValue<Vector2>().y);
+            }
         }
 
         // run
         if (hasCapacity("run"))
         {
-            if (Input.GetButtonDown("run"))
+            if (Input.GetButtonDown("run") || playerInputs.perso.run.ReadValue<float>() == 1f)
             {
                 isRunning = true;
             }
-            else if (Input.GetButtonUp("run"))
+            else if (Input.GetButtonUp("run") || playerInputs.perso.run.ReadValue<float>() == 0f)
             {
                 isRunning = false;
             }
@@ -304,7 +329,7 @@ public class Perso : Attacker
         // drink
         if (hasCapacity("drink"))
         {
-            if (Input.GetButtonDown("drink"))
+            if (Input.GetButtonDown("drink"))// || playerInputs.perso.use_conso.ReadValue<float>() == 1f)
             {
                 drink();
             }
@@ -313,7 +338,7 @@ public class Perso : Attacker
         // hit
         if (hasCapacity("hit"))
         {
-            if (Input.GetButtonDown("hit"))
+            if (Input.GetButtonDown("hit") || playerInputs.perso.hit.ReadValue<float>() == 1f)
             {
                 attack();
             }
@@ -327,7 +352,7 @@ public class Perso : Attacker
             // interacts
             if (hasCapacity("interact"))
             {
-                if (Input.GetButtonDown("interact"))
+                if (Input.GetButtonDown("interact") || playerInputs.perso.interact.ReadValue<float>() == 1f)
                 {
                     interact();
                 }
@@ -350,7 +375,11 @@ public class Perso : Attacker
         // hoover hack
         if (hasCapacity("hoover_hack"))
         {
-            HackinHooverEvents();
+            if (Input.GetButtonDown("Mouse X") || Input.GetButtonDown("Mouse Y"))
+            {
+                HackinHooverEvents();
+            }
+            updateHackinHoover();
 
             // bit regen
             if (hasCapacity("bit_regen"))
@@ -364,7 +393,7 @@ public class Perso : Attacker
             // hacks
             if (hasCapacity("hack"))
             {
-                if (Input.GetButtonDown("hack"))
+                if (Input.GetButtonDown("hack") || playerInputs.perso.hack.ReadValue<float>() == 1f)
                 {
                     HackinClickEvents();
                 }
@@ -377,7 +406,7 @@ public class Perso : Attacker
         // dash
         if (hasCapacity("dash"))
         {
-            if (Input.GetButtonDown("dash"))
+            if (Input.GetButtonDown("dash"))// || playerInputs.perso.dash.ReadValue<float>() == 1f)
             {
                 dash();
             }
@@ -410,6 +439,23 @@ public class Perso : Attacker
 
             // on ouvre l'inventaire
             big_inventory.rollShow();
+        }
+        else if (playerInputs.perso.inventory.ReadValue<float>() > 0f && !big_inventory.isShowed())
+        {
+            // on regarde si on a pas un coffre ou un ordi en train d'être ouvert
+            if (current_interactable != null && !big_inventory.isShowed())
+            {
+                current_interactable.GetComponent<I_Interactable>().stopInteract();
+                current_interactable = null;
+            }
+
+            // on ouvre l'inventaire
+            big_inventory.show();
+        }
+        else if (playerInputs.perso.inventory.ReadValue<float>() == 0f && big_inventory.isShowed())
+        {
+            // on ferme l'inventaire
+            big_inventory.hide();
         }
     }
 
@@ -482,7 +528,7 @@ public class Perso : Attacker
                     if (hit.gameObject.GetComponent<I_Hackable>().isHackable(hack.hack_type_target, (int) bits))
                     {
                         // on peut hacker l'objet !!
-                        updateHooverHackable(hit.gameObject, hack);
+                        setHooverHackable(hit.gameObject, hack);
 
                         // on change le material de l'objet
                         // current_hoover_hackable.gameObject.GetComponent<I_Hackable>().outlineMe();
@@ -580,7 +626,7 @@ public class Perso : Attacker
             }
 
             // on peut hacker l'objet !!
-            updateHooverHackable(hackable, used_hack);
+            setHooverHackable(hackable, used_hack);
 
             // on change le cursor
             cursor_handler.SetCursor("target");
@@ -590,17 +636,79 @@ public class Perso : Attacker
         }
         else if (current_hoover_hackable != null)
         {
+            // on change le material de l'objet
+            current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
+
             // on reset le current_hoover_hackable.gameObject.GetComponent<I_Hackable>()
             current_hoover_hackable = null;
             current_hoover_hack = null;
 
             hackray_hoover.hide();
 
+
             // on remet le cursor à la normale
             cursor_handler.SetCursor("arrow");
         }
 
 
+    }
+
+    void updateHackinHoover()
+    {
+        // on regarde si on a un hackable en hoover
+        if (current_hoover_hackable != null)
+        {
+            Collider2D target_collider = current_hoover_hackable.GetComponent<Collider2D>();
+            // bool is_touching = hack_collider.IsTouching(current_hoover_hackable.GetComponent<Collider2D>(), hack_contact_filter);
+            bool is_touching = false;
+
+            // 1 - on récupère tous les objets dans le range de hack
+            Collider2D[] hits = new Collider2D[30];
+            hack_collider.OverlapCollider(hack_contact_filter, hits);
+            foreach (Collider2D hit in hits)
+            {
+                if (hit == null) { continue; }
+                if (hit.gameObject == current_hoover_hackable)
+                {
+                    is_touching = true;
+                    break;
+                }
+            }
+
+
+            // on regarde si le hackable est toujours à portee
+            if (!is_touching)
+            {
+
+                // on change le material de l'objet
+                current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
+
+                // on reset le current_hoover_hackable.gameObject.GetComponent<I_Hackable>()
+                current_hoover_hackable = null;
+                current_hoover_hack = null;
+
+                hackray_hoover.hide();
+
+                // on remet le cursor à la normale
+                cursor_handler.SetCursor("arrow");
+            }
+            else if (!current_hoover_hackable.gameObject.GetComponent<I_Hackable>().isHackable(current_hoover_hack.hack_type_target, (int)bits))
+            {
+
+                // on change le material de l'objet
+                current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
+
+                // on reset le current_hoover_hackable.gameObject.GetComponent<I_Hackable>()
+                current_hoover_hackable = null;
+                current_hoover_hack = null;
+
+                hackray_hoover.hide();
+
+                // on remet le cursor à la normale
+                cursor_handler.SetCursor("arrow");
+            }
+
+        }
     }
 
     void HackinClickEvents()
@@ -610,6 +718,12 @@ public class Perso : Attacker
         // on regarde si on a un hackable en hoover
         if (current_hoover_hackable != null)
         {
+            if (current_hackin_targets.ContainsKey(current_hoover_hackable) && current_hackin_targets[current_hoover_hackable] == current_hoover_hack)
+            {
+                // on a déjà hacké l'objet, on sort de la fonction
+                return;
+            }
+
             // on hack l'objet
             bits -= current_hoover_hackable.GetComponent<I_Hackable>().beHacked();
 
@@ -625,11 +739,101 @@ public class Perso : Attacker
             // on met à jour le hackray
             hackray.GetComponent<Hackray>().SetHackerAndTarget(gameObject, current_hoover_hackable);
 
-            // on sort de la fonction
+            // on met à jour le hackray_hoover
+            hackray_hoover.removeTarget();
+
             return;
         }
     }
 
+    void HooverNextHackableInDirection(Vector2 direction)
+    {
+
+        // 1 - on récupère tous les objets dans le range de hack
+        Collider2D[] hits = new Collider2D[30];
+        hack_collider.OverlapCollider(hack_contact_filter, hits);
+        if (hits.Length == 0) { return; }
+
+        // 2 - on parcourt tous les hackable et on trouve celui avec le plus petit angle
+        float min_angle = 1000f;
+        GameObject hackable = null;
+        Hack used_hack = null;
+
+        // on parcourt tous les objets dans le range
+        for (int i = 0; i < hits.Length; i++)
+        {
+            // on regarde si c'est un objet
+            if (hits[i] == null) { continue; }
+
+            // on regarde si c'est un hackable
+            GameObject hit = hits[i].gameObject;
+            if (hit.GetComponent<I_Hackable>() == null) { continue; }
+
+            // on calcule l'angle entre le perso et l'objet
+            Vector2 direction_to_hit = (hit.transform.position - transform.position).normalized;
+            float angle = Vector2.Angle(direction, direction_to_hit);
+            if (angle < min_angle)
+            {
+                // on parcourt tous nos hacks pour voir si on peut hacker l'objet
+                foreach (Hack hack in inventory.getHacks())
+                {
+                    // on regarde si on peut hacker l'objet
+                    if (hit.GetComponent<I_Hackable>().isHackable(hack.hack_type_target, (int)bits))
+                    {
+                        
+                        // et si on est pas déjà en train de hacker l'objet
+                        if (current_hackin_targets.ContainsKey(hit.gameObject) && current_hackin_targets[hit.gameObject] == hack)
+                        {
+                            // on peut plus hacker l'objet, on continue
+                            continue;
+                        }
+
+                        // on peut hacker l'objet !!
+                        hackable = hit;
+                        min_angle = angle;
+                        used_hack = hack;
+
+                        // on sort de la boucle
+                        break;
+                    }
+                }
+            }
+        }
+
+        // 3 - on vérifie ce qu'on fait avec l'objet hackable
+        if (hackable != null)
+        {
+            // on regarde si c'est le même objet que le précédent
+            if (current_hoover_hackable != null && current_hoover_hackable == hackable)
+            {
+                return;
+            }
+
+            // on peut hacker l'objet !!
+            setHooverHackable(hackable, used_hack);
+
+            // on change le cursor
+            // cursor_handler.SetCursor("target");
+
+            // on sort de la fonction
+            return;
+        }
+        else if (current_hoover_hackable != null)
+        {
+            // on change le material de l'objet
+            current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
+
+            // on reset le current_hoover_hackable.gameObject.GetComponent<I_Hackable>()
+            current_hoover_hackable = null;
+            current_hoover_hack = null;
+
+            hackray_hoover.hide();
+
+
+            // on remet le cursor à la normale
+            // cursor_handler.SetCursor("arrow");
+        }
+    }
 
     // XP
     public void addXP(int count)
@@ -763,12 +967,12 @@ public class Perso : Attacker
         hack_collider.radius = range;
     }
 
-    private void updateHooverHackable(GameObject hackable, Hack hack)
+    private void setHooverHackable(GameObject hackable, Hack hack)
     {
         // on met à jour le current_hoover_hackable.gameObject.GetComponent<I_Hackable>()
         if (current_hoover_hackable != null && current_hoover_hackable != hackable)
         {
-            // current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
+            current_hoover_hackable.gameObject.GetComponent<I_Hackable>().unOutlineMe();
 
             // on met à jour le hackray_hoover sur l'objet
         }
@@ -780,12 +984,18 @@ public class Perso : Attacker
 
         print("HOVERING " + current_hoover_hackable.gameObject.name);
         // on change le material de l'objet
-        // current_hoover_hackable.gameObject.GetComponent<I_Hackable>().outlineMe();
+        current_hoover_hackable.gameObject.GetComponent<I_Hackable>().outlineMe();
     }
 
     // INTERACTIONS
     private void interact()
     {
+
+        // todo on fait des collider d'interactions pour les boutons, les ordi, les coffres etc
+        // todo qui active une fonction pour donner la capacité "interact" au perso quand il est dans le collider
+        // todo du coup pas besoin de regarder si on peut interagir avec qqch ça veut dire qu'on peut tout le temps
+        // todo si on arrive dans cette fonction
+
         // on regarde si on peut interagir avec qqch
         Collider2D[] hit_interactables = Physics2D.OverlapCircleAll(transform.position, interact_range, interact_layers);
         if (hit_interactables.Length == 0) { return; }
@@ -1055,6 +1265,44 @@ public class Perso : Attacker
     {
         capacities["invicible"] = false;
         capacities.Remove("invicible");
+    }
+
+
+    // INPUTS
+    public void OnUseConso()
+    {
+        if (hasCapacity("drink"))
+        {
+            drink();
+        }
+    }
+
+    public void OnDash()
+    {
+        if (hasCapacity("dash"))
+        {
+            dash();
+        }
+    }
+
+    private void OnHackDirection(InputValue value)
+    {
+        if (value.Get<Vector2>() == Vector2.zero) { return; }
+
+        if (hasCapacity("hoover_hack"))
+        {
+            // on met à jour la direction du hack
+            // print("HOVER HACKING IN DIRECTION " + value.Get<Vector2>());
+            HooverNextHackableInDirection(value.Get<Vector2>());
+        }
+    }
+
+    public void OnHack()
+    {
+        if (hasCapacity("hack"))
+        {
+            HackinClickEvents();
+        }
     }
 
 }

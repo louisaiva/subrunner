@@ -149,16 +149,16 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
 
         // on met à jour le material
         default_material = GetComponent<SpriteRenderer>().material;
-        outline_material = Resources.Load<Material>("materials/outlined/outlined_unlit");
+        outline_material = Resources.Load<Material>("materials/targeted/hack_computer");
 
-        // on récupère le // hack_ui
-        // hack_ui = transform.Find("// hack_ui").GetComponent<HackUI>();
+        // on récupère le hack_ui
+        hack_ui = transform.Find("hack_ui").GetComponent<HackUI>();
     }
 
     public bool isHackable(string hack_type, int bits)
     {
         // on change le mode de l'UI
-        // hack_ui.setMode("unhackable");
+        hack_ui.setMode("unhackable");
 
         // on regarde si l'ordi est allumé
         if (!is_on) { return false; }
@@ -171,7 +171,7 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
         if (bits < required_bits) { return false; }
 
         // on change le mode de l'UI
-        // hack_ui.setMode("hackable");
+        hack_ui.setMode("hackable");
 
         return true;
     }
@@ -203,7 +203,7 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
         if (!anim_handler.ChangeAnimTilEnd(anims.hackin, hacking_current_duration)) { return 0; }
 
         // on change le mode de l'UI
-        // hack_ui.setMode("hacked");
+        hack_ui.setMode("hacked");
 
         // on commence le hack
         is_getting_hacked = true;
@@ -248,7 +248,7 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
         anim_handler.ChangeAnimTilEnd(is_on ? anims.idle_on : anims.idle_off);
 
         // on met à jour HackUI
-        // hack_ui.setMode("unhackable");
+        hack_ui.setMode("unhackable");
     }
 
     public void succeedHack()
@@ -267,7 +267,7 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
         hacking_current_duration = 0f;
 
         // on met à jour HackUI
-        // hack_ui.setMode("unhackable");
+        hack_ui.setMode("unhackable");
     }
 
 
@@ -287,13 +287,13 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
     public void showHackUI()
     {
         // on le montre
-        // hack_ui.show();
+        hack_ui.show();
     }
     public void hideHackUI()
     {
 
         // on le montre
-        // hack_ui.hide();
+        hack_ui.hide();
     }
 
     // INTERACTIONS
