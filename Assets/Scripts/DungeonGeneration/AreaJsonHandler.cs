@@ -29,7 +29,6 @@ public class AreaJsonHandler : MonoBehaviour
     }
 
     // CHANGING TILEMAPS
-
     public void MoveUpBg(ref Tilemap fg_tm, ref Tilemap bg_tm, ref Tilemap gd_tm)
     {
         // ici on applique différentes modifications aux tilemaps
@@ -122,7 +121,6 @@ public class AreaJsonHandler : MonoBehaviour
     }
 
     // SAVING SELECTED AREAS
-
     public void SaveJson(GameObject area)
     {
         
@@ -266,6 +264,12 @@ public class AreaJsonHandler : MonoBehaviour
                 {
                     // on déplace la pos en Y de -0.25
                     pos.y -= 0.25f;
+                }
+
+                if (new string[] { "doorU", "doorD" }.Contains(type))
+                {
+                    // on déplace la pos en X de -0.25
+                    pos.y -= 1f;
                 }
 
 
@@ -484,14 +488,6 @@ public class AreaJsonHandler : MonoBehaviour
 
             // on regarde si on a un dictionnaire ou un areajson
             bool deserialise_dict = false;
-            /* foreach (char c in json)
-            {
-                if (c == '{')
-                {
-                    deserialise_dict = true;
-                    break;
-                }
-            } */
 
             // on deserialise le json
             if (deserialise_dict)

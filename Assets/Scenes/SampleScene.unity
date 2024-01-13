@@ -8450,7 +8450,7 @@ GameObject:
   - component: {fileID: 1020029541}
   - component: {fileID: 1020029542}
   - component: {fileID: 1020029543}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: hacks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8522,11 +8522,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perso: {fileID: 0}
   perso_material: {fileID: 0}
+  perso_base_material: {fileID: 0}
   hackrays: []
   hackray_material: {fileID: 0}
   intensity_variation: 0
-  max_intensity_variation: 20
-  max_delay: 0.35
+  max_intensity_variation: 40
+  max_delay: 0.2
 --- !u!1 &1025543748
 GameObject:
   m_ObjectHideFlags: 0
@@ -22594,7 +22595,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2093539359
 MonoBehaviour:
   m_ObjectHideFlags: 0

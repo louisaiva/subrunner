@@ -230,6 +230,9 @@ public class CyberZombo : Attacker, I_Hackable
         // on met à jour HackUI
         hack_ui.setMode("unhackable");
 
+        // on regarde si on est pas mort
+        if (!isAlive()) { return false; }
+
         // on regarde si on a le bon type de hack
         if (hack_type != hack_type_self) { return false; }
 
