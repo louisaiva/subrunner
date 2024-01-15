@@ -318,6 +318,118 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""UI"",
+            ""id"": ""eabb19b5-c974-4c9a-ba69-71b4bad173e5"",
+            ""actions"": [
+                {
+                    ""name"": ""navigate"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""6081c15c-8c3f-4213-beb2-816695cc650c"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""activate"",
+                    ""type"": ""Button"",
+                    ""id"": ""bfb0aa0c-6049-4ece-a264-cceaa2a55caa"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""close"",
+                    ""type"": ""Button"",
+                    ""id"": ""df6b9bf3-aee1-4184-abc3-7153ec7e1a6f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""main"",
+                    ""id"": ""33ef89ea-5a45-430e-ac93-d53dfee50cbf"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""navigate"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""81755a8d-61be-48a9-8fbf-1f5d6e2789cd"",
+                    ""path"": ""<XInputController>/rightStick/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""navigate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""2c5c333e-9484-4f0c-a652-e3385fe00ce5"",
+                    ""path"": ""<XInputController>/rightStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""navigate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""59adbb4a-f239-4404-ba67-9bcb5b0f0bdd"",
+                    ""path"": ""<XInputController>/rightStick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""navigate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""8bcedef8-4a78-4d85-ad3f-14f5835063d0"",
+                    ""path"": ""<XInputController>/rightStick/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""navigate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5bbfd291-7f88-4772-9484-02def75ea68a"",
+                    ""path"": ""<XInputController>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""activate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2ec2c4ba-8c51-42d3-b555-e85958480e1f"",
+                    ""path"": ""<XInputController>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""close"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -346,6 +458,11 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_perso_useConso = m_perso.FindAction("useConso", throwIfNotFound: true);
         m_perso_hack = m_perso.FindAction("hack", throwIfNotFound: true);
         m_perso_hackDirection = m_perso.FindAction("hackDirection", throwIfNotFound: true);
+        // UI
+        m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
+        m_UI_navigate = m_UI.FindAction("navigate", throwIfNotFound: true);
+        m_UI_activate = m_UI.FindAction("activate", throwIfNotFound: true);
+        m_UI_close = m_UI.FindAction("close", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -521,6 +638,68 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         }
     }
     public PersoActions @perso => new PersoActions(this);
+
+    // UI
+    private readonly InputActionMap m_UI;
+    private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
+    private readonly InputAction m_UI_navigate;
+    private readonly InputAction m_UI_activate;
+    private readonly InputAction m_UI_close;
+    public struct UIActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public UIActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @navigate => m_Wrapper.m_UI_navigate;
+        public InputAction @activate => m_Wrapper.m_UI_activate;
+        public InputAction @close => m_Wrapper.m_UI_close;
+        public InputActionMap Get() { return m_Wrapper.m_UI; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
+        public void AddCallbacks(IUIActions instance)
+        {
+            if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
+            @navigate.started += instance.OnNavigate;
+            @navigate.performed += instance.OnNavigate;
+            @navigate.canceled += instance.OnNavigate;
+            @activate.started += instance.OnActivate;
+            @activate.performed += instance.OnActivate;
+            @activate.canceled += instance.OnActivate;
+            @close.started += instance.OnClose;
+            @close.performed += instance.OnClose;
+            @close.canceled += instance.OnClose;
+        }
+
+        private void UnregisterCallbacks(IUIActions instance)
+        {
+            @navigate.started -= instance.OnNavigate;
+            @navigate.performed -= instance.OnNavigate;
+            @navigate.canceled -= instance.OnNavigate;
+            @activate.started -= instance.OnActivate;
+            @activate.performed -= instance.OnActivate;
+            @activate.canceled -= instance.OnActivate;
+            @close.started -= instance.OnClose;
+            @close.performed -= instance.OnClose;
+            @close.canceled -= instance.OnClose;
+        }
+
+        public void RemoveCallbacks(IUIActions instance)
+        {
+            if (m_Wrapper.m_UIActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IUIActions instance)
+        {
+            foreach (var item in m_Wrapper.m_UIActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_UIActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public UIActions @UI => new UIActions(this);
     private int m_xboxSchemeIndex = -1;
     public InputControlScheme xboxScheme
     {
@@ -542,5 +721,11 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnUseConso(InputAction.CallbackContext context);
         void OnHack(InputAction.CallbackContext context);
         void OnHackDirection(InputAction.CallbackContext context);
+    }
+    public interface IUIActions
+    {
+        void OnNavigate(InputAction.CallbackContext context);
+        void OnActivate(InputAction.CallbackContext context);
+        void OnClose(InputAction.CallbackContext context);
     }
 }

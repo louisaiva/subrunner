@@ -75,7 +75,8 @@ public class Perso : Attacker
     public Bed respawn_bed = null;
 
     [Header("INPUTS")]
-    private PlayerInputActions playerInputs;
+    public PlayerInputActions playerInputs;
+    // private UI_XboxManager ui_inputs;
 
     // inputs
 
@@ -83,10 +84,9 @@ public class Perso : Attacker
     {
         // on récupère les inputs
         playerInputs = new PlayerInputActions();
-        /* playerInputs.perso.move.performed += ctx => inputs = ctx.ReadValue<Vector2>();
-        playerInputs.perso.move.canceled += ctx => inputs = Vector2.zero;
-        playerInputs.perso.run.performed += ctx => isRunning = true;
-        playerInputs.perso.run.canceled += ctx => isRunning = false; */
+
+        // on récupère le UI_XboxManager
+        // ui_inputs = GameObject.Find("/ui").GetComponent<UI_XboxManager>();
     }
 
     private void OnEnable()

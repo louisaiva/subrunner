@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class UI_Inventory : MonoBehaviour
+public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 {
 
     // PERSO
@@ -35,6 +35,8 @@ public class UI_Inventory : MonoBehaviour
     protected Dictionary<Item, GameObject> item_ui = new Dictionary<Item, GameObject>();
     protected GameObject ui_item_prefab;
 
+    [Header("Inputs")]
+    [SerializeField] private UI_XboxManager xbox_manager;
 
     // unity functions
     void Start()
@@ -66,6 +68,9 @@ public class UI_Inventory : MonoBehaviour
         // on récupère le prefab des items
         ui_item_prefab = Resources.Load("prefabs/ui/ui_item") as GameObject;
 
+        // on récupère le xbox_manager
+        xbox_manager = GameObject.Find("/ui").GetComponent<UI_XboxManager>();
+
         // on cache l'inventaire
         hide();        
     }
@@ -75,7 +80,6 @@ public class UI_Inventory : MonoBehaviour
     {
         // on affiche l'inventaire
         is_showed = true;
-        // GetComponent<Image>().enabled = true;
 
         // on affiche les slots des légendaires
         leg_slots.SetActive(true);
@@ -89,6 +93,9 @@ public class UI_Inventory : MonoBehaviour
 
         // on affiche le bg
         ui_bg.SetActive(true);
+
+        // on active le xbox_manager
+        xbox_manager.enable(this);
     }
 
     public void hide()
@@ -113,6 +120,9 @@ public class UI_Inventory : MonoBehaviour
 
         // on cache le bg
         ui_bg.SetActive(false);
+
+        // on désactive le xbox_manager
+        xbox_manager.disable();
     }
 
     public void rollShow()
@@ -308,6 +318,34 @@ public class UI_Inventory : MonoBehaviour
         perso.GetComponent<Perso>().inventory.dropItem(item);
     }
 
+    // GETTERS
+    public List<GameObject> GetSlots(ref float angle_threshold, ref float angle_multiplicator)
+    {
+        List<GameObject> slots = new List<GameObject>();
+
+        // on récupère les slots des items légendaires
+        foreach (KeyValuePair<string, Item> entry in leg_items)
+        {
+            GameObject slot = leg_slots.transform.Find(entry.Key).Find("ui_leg_item").gameObject;
+            slots.Add(slot);
+        }
+
+        // on récupère les slots des items
+        foreach (KeyValuePair<string, GameObject> entry in item_slots)
+        {
+            if (!item_slots_showed[entry.Key]) { continue; }
+            foreach (Transform child in entry.Value.transform)
+            {
+                slots.Add(child.gameObject);
+            }
+        }
+
+        // on met à jour les seuils
+        angle_threshold = 45f;
+        angle_multiplicator = 100f;
+
+        return slots;
+    }
 
 }
 
