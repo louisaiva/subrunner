@@ -49,6 +49,7 @@ public class Perso : Attacker
     // DASH
     [SerializeField] private float dash_distance = 1.2f;
     [SerializeField] private float dash_duration = 0.5f;
+    [SerializeField] private float dash_cooldown = 1f;
 
     // global light
     private GameObject global_light;
@@ -92,11 +93,13 @@ public class Perso : Attacker
     private void OnEnable()
     {
         playerInputs.perso.Enable();
+        playerInputs.enhanced_perso.Enable();
     }
 
     private void OnDisable()
     {
         playerInputs.perso.Disable();
+        playerInputs.enhanced_perso.Disable();
     }
 
     // unity functions
@@ -380,6 +383,11 @@ public class Perso : Attacker
             {
                 HackinHooverEvents();
             }
+            else if (playerInputs.enhanced_perso.hackDirection.ReadValue<Vector2>() != Vector2.zero)
+            {
+                Vector2 direction = playerInputs.enhanced_perso.hackDirection.ReadValue<Vector2>();
+                HooverNextHackableInDirection(direction);
+            }
             updateHackinHoover();
 
             // bit regen
@@ -394,7 +402,7 @@ public class Perso : Attacker
             // hacks
             if (hasCapacity("hack"))
             {
-                if (Input.GetButtonDown("hack") || playerInputs.perso.hack.ReadValue<float>() == 1f)
+                if (Input.GetButtonDown("hack") || playerInputs.enhanced_perso.hack.ReadValue<float>() == 1f)
                 {
                     HackinClickEvents();
                 }
@@ -407,7 +415,7 @@ public class Perso : Attacker
         // dash
         if (hasCapacity("dash"))
         {
-            if (Input.GetButtonDown("dash"))// || playerInputs.perso.dash.ReadValue<float>() == 1f)
+            if (Input.GetButtonDown("dash") || playerInputs.enhanced_perso.dash.ReadValue<float>() == 1f)
             {
                 dash();
             }
@@ -948,21 +956,27 @@ public class Perso : Attacker
     {
         removeCapaOfItem(item);
 
+        bool drop_on_ground = true;
+
         // si on est en train d'ouvrir un coffre, on drop l'item dedans
         if (current_interactable != null)
         {
             if (current_interactable.GetComponent<InventoryChest>() != null)
             {
                 current_interactable.GetComponent<InventoryChest>().grab(item);
+                drop_on_ground = false;
             }
             else if (current_interactable.GetComponent<Bed>() != null)
             {
                 current_interactable.GetComponent<Bed>().grab(item);
+                drop_on_ground = false;
             }
         }
-        else
+
+
+        // sinon on drop l'item par terre
+        if (drop_on_ground)
         {
-            // on drop l'item par terre
             item.transform.SetParent(items_parent);
             item.transform.position = transform.position;
             item.fromInvToGround();
@@ -1051,6 +1065,7 @@ public class Perso : Attacker
                 float cooldown = 0f;
                 if (item.cooldowns.ContainsKey(capa))
                 {
+                    print("added cooldown " + item.cooldowns[capa] + " to " + capa);
                     cooldown = item.cooldowns[capa];
                 }
 
@@ -1088,9 +1103,11 @@ public class Perso : Attacker
     // DASH
     private void dash()
     {
-        // on fait un dash dans la direction du look_at du being
-        // Vector2 direction = inputs;
+        // start cooldown
+        startCapacityCooldown("dash");
 
+
+        // on fait un dash dans la direction du look_at du being
         float ajout = 0f;
 
         anim_handler.StopForcing();
@@ -1112,9 +1129,10 @@ public class Perso : Attacker
         // on se met invicible
         beInvicible(dash_duration);
 
-        // on met à jour le cooldown
+        // on fait le dash
         Vector2 movement = inputs.normalized * (dash_distance + ajout);
         move_perso(movement);
+
     }
 
     private void beInvicible(float duration=0.5f)
@@ -1139,7 +1157,7 @@ public class Perso : Attacker
         }
     }
 
-    public void OnDash()
+    /* public void OnDash()
     {
         if (hasCapacity("dash"))
         {
@@ -1166,7 +1184,7 @@ public class Perso : Attacker
             HackinClickEvents();
         }
     }
-
+    */
 }
 
 

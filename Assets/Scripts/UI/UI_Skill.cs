@@ -1,10 +1,10 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+// using UnityEngine.UIElements;
+using UnityEngine.UI;
 
-public class UI_Skill : MonoBehaviour, I_Descriptable, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class UI_Skill : MonoBehaviour, I_UI_Slot
 {
-
-
     // hoover
     public bool is_hoovered { get; set; }
     public GameObject description_ui;
@@ -16,8 +16,16 @@ public class UI_Skill : MonoBehaviour, I_Descriptable, IPointerEnterHandler, IPo
     public string current_value = "/";
     public string next_value = "/";
 
+    [Header("skill tree")]
+
     // skill tree
     public SkillTree skilltree;
+
+    [Header("UI")]
+    [SerializeField] private GameObject ui_bg;
+    [SerializeField] private Color base_color = Color.white;
+    [SerializeField] private Color hoover_color = Color.white;
+    [SerializeField] private Color clicked_color = Color.white;
 
 
     // unity functions
@@ -32,6 +40,14 @@ public class UI_Skill : MonoBehaviour, I_Descriptable, IPointerEnterHandler, IPo
         // on met à jour les valeurs
         current_value = skilltree.getSkillValue(skill_name).ToString();
         next_value = skilltree.getNextLevelSkillValue(skill_name).ToString();
+
+        // on récupère le bg
+        ui_bg = transform.Find("ui_bg").gameObject;
+
+        // on met à jour les events du button
+        // GetComponent<UnityEngine.UI.Button>().RegisterCallback<PointerEnterEvent>(OnPointerEnter);
+        // GetComponent<UnityEngine.UI.Button>().RegisterCallback<PointerExitEvent>(OnPointerExit);
+        // GetComponent<UnityEngine.UI.Button>().RegisterCallback<PointerClickEvent>(OnPointerClick);
     }
     // getters
     public string getDescription()
@@ -58,6 +74,9 @@ public class UI_Skill : MonoBehaviour, I_Descriptable, IPointerEnterHandler, IPo
 
         // on met à jour le fait qu'on est survolé
         is_hoovered = true;
+        
+        // on met à jour l'ui_bg
+        ui_bg.GetComponent<Image>().color = hoover_color;
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -67,6 +86,9 @@ public class UI_Skill : MonoBehaviour, I_Descriptable, IPointerEnterHandler, IPo
 
         // on met à jour le fait qu'on est survolé
         is_hoovered = false;
+
+        // on met à jour l'ui_bg
+        ui_bg.GetComponent<Image>().color = base_color;
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -74,11 +96,17 @@ public class UI_Skill : MonoBehaviour, I_Descriptable, IPointerEnterHandler, IPo
         // on met à jour l'affichage
         description_ui.GetComponent<UI_HooverDescriptionHandler>().removeDescription(this);
 
+        // on clique sur le button
+        skilltree.levelUpSkill(skill_name);
+
         // on met à jour les valeurs
         current_value = skilltree.getSkillValue(skill_name).ToString();
         next_value = skilltree.getNextLevelSkillValue(skill_name).ToString();
 
         // on met à jour l'affichage
         description_ui.GetComponent<UI_HooverDescriptionHandler>().changeDescription(this);
+
+        // on met à jour l'ui_bg
+        ui_bg.GetComponent<Image>().color = base_color;
     }
 }

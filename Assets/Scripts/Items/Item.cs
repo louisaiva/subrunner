@@ -71,6 +71,13 @@ public class Item : MonoBehaviour, I_Descriptable, I_Interactable
         // on récupère le cursor_handler
         cursor_handler = GameObject.Find("/utils").GetComponent<CursorHandler>();
 
+        if (capacities.Contains("dash"))
+        {
+            // print("adding dash cooldown to " + gameObject.name);
+            // on ajoute le cooldown
+            cooldowns.Add("dash", 1f);
+        }
+
 
         // on vérifie si on est sur le sol
         if (is_on_ground)

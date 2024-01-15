@@ -2229,7 +2229,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generate_world: 1
-  nb_sectors: 1
+  nb_sectors: 3
   world: {fileID: 0}
   sector_prefab: {fileID: 0}
   sectors: []
@@ -2375,6 +2375,10 @@ MonoBehaviour:
   current_value: /
   next_value: /
   skilltree: {fileID: 0}
+  ui_bg: {fileID: 0}
+  base_color: {r: 1, g: 1, b: 1, a: 1}
+  hoover_color: {r: 0.41568628, g: 0.74509805, b: 0.18823522, a: 1}
+  clicked_color: {r: 0.03529412, g: 1, b: 0, a: 1}
 --- !u!114 &99539642
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2382,7 +2386,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 99539639}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -5146,6 +5150,7 @@ MonoBehaviour:
   max_bits_level: 0
   regen_bits_level: 0
   portee_hack_level: 0
+  xbox_manager: {fileID: 0}
 --- !u!1 &590672197
 GameObject:
   m_ObjectHideFlags: 0
@@ -8591,6 +8596,10 @@ MonoBehaviour:
   current_value: /
   next_value: /
   skilltree: {fileID: 0}
+  ui_bg: {fileID: 0}
+  base_color: {r: 1, g: 1, b: 1, a: 1}
+  hoover_color: {r: 1, g: 0.74113095, b: 0, a: 1}
+  clicked_color: {r: 0.9056604, g: 0.89089453, b: 0.4229263, a: 1}
 --- !u!114 &1025543751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8598,7 +8607,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1025543748}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -9163,6 +9172,10 @@ MonoBehaviour:
   current_value: /
   next_value: /
   skilltree: {fileID: 0}
+  ui_bg: {fileID: 0}
+  base_color: {r: 1, g: 1, b: 1, a: 1}
+  hoover_color: {r: 1, g: 0.74113095, b: 0, a: 1}
+  clicked_color: {r: 0.9056604, g: 0.89089453, b: 0.4229263, a: 1}
 --- !u!114 &1139419527
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9170,7 +9183,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1139419524}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -14221,6 +14234,7 @@ MonoBehaviour:
   aide_a_la_visee: 0.5
   dash_distance: 1.2
   dash_duration: 0.5
+  dash_cooldown: 1
   inventory: {fileID: 549595395}
   big_inventory: {fileID: 0}
   items_parent: {fileID: 0}
@@ -14768,6 +14782,10 @@ MonoBehaviour:
   current_value: /
   next_value: /
   skilltree: {fileID: 0}
+  ui_bg: {fileID: 0}
+  base_color: {r: 1, g: 1, b: 1, a: 1}
+  hoover_color: {r: 0.41568628, g: 0.74509805, b: 0.18823522, a: 1}
+  clicked_color: {r: 0.03529412, g: 1, b: 0, a: 1}
 --- !u!114 &1410956095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14775,7 +14793,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1410956092}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -15682,8 +15700,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slots: []
   current_slot_index: 0
+  base_position: {x: 0, y: 0}
   angle_threshold: 45
   angle_multiplicator: 100
+  fast_navigation_time_first_threshold: 0.5
+  fast_navigation_time_cooldown: 0.2
+  fast_navigation_time: 0
   is_enabled: 0
   can_navigate: 1
 --- !u!1 &1558800887
@@ -15960,6 +15982,10 @@ MonoBehaviour:
   current_value: /
   next_value: /
   skilltree: {fileID: 0}
+  ui_bg: {fileID: 0}
+  base_color: {r: 1, g: 1, b: 1, a: 1}
+  hoover_color: {r: 1, g: 0.74113095, b: 0, a: 1}
+  clicked_color: {r: 0.9056604, g: 0.89089453, b: 0.4229263, a: 1}
 --- !u!114 &1654138421
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15967,7 +15993,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1654138418}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -22203,6 +22229,10 @@ MonoBehaviour:
   current_value: /
   next_value: /
   skilltree: {fileID: 0}
+  ui_bg: {fileID: 0}
+  base_color: {r: 1, g: 1, b: 1, a: 1}
+  hoover_color: {r: 0.41568628, g: 0.74509805, b: 0.18823522, a: 1}
+  clicked_color: {r: 0.03529412, g: 1, b: 0, a: 1}
 --- !u!114 &1979505241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22210,7 +22240,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1979505238}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 

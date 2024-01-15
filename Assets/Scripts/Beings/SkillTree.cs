@@ -74,6 +74,8 @@ public class SkillTree : MonoBehaviour {
     private float portee_hack_modifier = 0.2f;
     private float portee_hack_K = 2f;
 
+    [Header("Inputs")]
+    [SerializeField] private UI_XboxManager xbox_manager;
 
     // unity functions
 
@@ -92,7 +94,10 @@ public class SkillTree : MonoBehaviour {
         ui_virtual_tree = transform.Find("virtual_tree").gameObject;
 
         // on cache les skill trees
-        ui_physical_tree.GetComponent<Canvas>().enabled = false ;
+        ui_physical_tree.GetComponent<Canvas>().enabled = false;
+
+        // on récupère le xbox_manager
+        xbox_manager = GameObject.Find("/ui").GetComponent<UI_XboxManager>();
     }
 
     public void init()
@@ -130,6 +135,9 @@ public class SkillTree : MonoBehaviour {
 
         // on choisit un skill au hasard après 3 secondes
         // Invoke("randomPhysicalLevelUp", 3f);
+
+        // on active le xbox manager
+        xbox_manager.enable(ui_physical_tree.GetComponent<I_UI_Slottable>());
         
     }
 
@@ -142,6 +150,9 @@ public class SkillTree : MonoBehaviour {
 
         // on reactive le main ui
         main_ui.show();
+
+        // on désactive le xbox manager
+        xbox_manager.disable();
     }
 
     public void randomPhysicalLevelUp()
@@ -173,6 +184,9 @@ public class SkillTree : MonoBehaviour {
         // on affiche le skill tree
         ui_virtual_tree.GetComponent<Canvas>().enabled = true;
         is_virtual_tree_open = true;
+
+        // on active le xbox manager
+        xbox_manager.enable(ui_virtual_tree.GetComponent<I_UI_Slottable>());
     }
 
     private void closeVirtualTree()
@@ -184,6 +198,9 @@ public class SkillTree : MonoBehaviour {
 
         // on reactive le main ui
         main_ui.show();
+
+        // on désactive le xbox manager
+        xbox_manager.disable();
     }
 
     // AUGMENTATION DES SKILLS

@@ -9,7 +9,6 @@ public class UI_XboxManager : MonoBehaviour
     
     // this class handles how the UI reacts to the xbox controller
 
-
     [Header("Slots")]
     [SerializeField] private I_UI_Slottable slottable;
     [SerializeField] private List<GameObject> slots;
@@ -19,6 +18,12 @@ public class UI_XboxManager : MonoBehaviour
     [SerializeField] private Vector2 base_position = Vector2.zero;
     [SerializeField] private float angle_threshold = 45f;
     [SerializeField] private float angle_multiplicator = 100f;
+
+    [Header("Fast Navigation")]
+    [SerializeField] private float fast_navigation_time_first_threshold = 0.5f; // temps avant activation du fast navigation
+    [SerializeField] private float fast_navigation_time_cooldown = 0.2f; // temps entre chaque activation du fast navigation
+    [SerializeField] private float fast_navigation_time = 0f; // temps depuis la dernière activation du fast navigation
+
 
     [Header("Inputs")]
     [SerializeField] private PlayerInputActions inputs;
@@ -41,13 +46,16 @@ public class UI_XboxManager : MonoBehaviour
         inputs.UI.navigate.performed += ctx => navigate(ctx.ReadValue<Vector2>());
         inputs.UI.activate.performed += ctx => activate();
 
+        // on désactive les perso inputs
+        inputs.enhanced_perso.Disable();
+
         // on récupère les slots & tresholds
         this.slottable = slottable;
         slots = slottable.GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator);
 
         // on active le premier slot
         current_slot_index = -1;
-        // slots[current_slot_index].GetComponent<UI_Item>().OnPointerEnter(null);
+        // slots[current_slot_index].GetComponent<I_UI_Slot>().OnPointerEnter(null);
 
         is_enabled = true;
     }
@@ -61,10 +69,13 @@ public class UI_XboxManager : MonoBehaviour
         inputs.UI.navigate.performed -= ctx => navigate(ctx.ReadValue<Vector2>());
         inputs.UI.activate.performed -= ctx => activate();
 
+        // on active les perso inputs
+        inputs.enhanced_perso.Enable();
+
         // on désactive le slot
         if (current_slot_index != -1)
         {
-            slots[current_slot_index].GetComponent<UI_Item>().OnPointerExit(null);
+            slots[current_slot_index].GetComponent<I_UI_Slot>().OnPointerExit(null);
         }
 
         // on reset les variables
@@ -124,7 +135,7 @@ public class UI_XboxManager : MonoBehaviour
         }
         if (slots_in_angle.Count == 0) {return;}
 
-        string s = "SLOTS: \n\n";
+        // string s = "SLOTS: \n\n";
 
         // on récupère le slot le plus proche
         int next_index = -1;
@@ -137,7 +148,7 @@ public class UI_XboxManager : MonoBehaviour
             float angle = Vector2.Angle(direction, (slot_position - current_slot_position).normalized);
             float distance = Vector2.Distance(current_slot_position, slot_position - direction * angle_multiplicator);
 
-            s += slot.GetComponent<UI_Item>().item.item_name + " : " + slot_position + " / angle : " + angle + " /  distance : " + distance + "\n";
+            // s += slot.GetComponent<I_UI_Slot>().item.item_name + " : " + slot_position + " / angle : " + angle + " /  distance : " + distance + "\n";
 
             if (distance < closest_distance)
             {
@@ -153,9 +164,9 @@ public class UI_XboxManager : MonoBehaviour
         // on met à jour l'affichage
         if (current_slot_index != -1)
         {
-            slots[current_slot_index].GetComponent<UI_Item>().OnPointerExit(null);
+            slots[current_slot_index].GetComponent<I_UI_Slot>().OnPointerExit(null);
         }
-        slots[next_index].GetComponent<UI_Item>().OnPointerEnter(null);
+        slots[next_index].GetComponent<I_UI_Slot>().OnPointerEnter(null);
         
 
         
@@ -171,36 +182,11 @@ public class UI_XboxManager : MonoBehaviour
         GameObject slot = slots[current_slot_index];
 
         // on clique sur le slot
-        slottable.clickOnItem(slot.GetComponent<UI_Item>().item);
+        // slottable.clickOnItem(slot.GetComponent<I_UI_Slot>().item);
+        slot.GetComponent<I_UI_Slot>().OnPointerClick(null);
 
         // on update les slots
-        slots = slottable.GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator);
+        // slots = slottable.GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator);
         current_slot_index = -1;
     }
-
-    /* // GIZMOS
-    private void OnDrawGizmos()
-    {
-        if (slots == null) {return;}
-
-        // on dessine les slots
-        foreach (GameObject slot in slots)
-        {
-            Vector3 world_pos = slot.GetComponent<RectTransform>().TransformPoint(slot.GetComponent<RectTransform>().rect.center);
-            Vector3 slot_position = Camera.main.WorldToScreenPoint(world_pos);
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(slot_position, 10);
-
-            if (slots.IndexOf(slot) == current_slot_index)
-            {
-                // on dessine la direction avec une ligne
-                Vector2 direction = inputs.UI.navigate.ReadValue<Vector2>();
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(slot_position, slot_position + (Vector3) direction * 100);
-            }
-        }
-
-    } */
-
-
 }
