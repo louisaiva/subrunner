@@ -438,6 +438,111 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""dead_perso"",
+            ""id"": ""3c773e63-2b52-4744-844d-922cc5c58b7a"",
+            ""actions"": [
+                {
+                    ""name"": ""revive"",
+                    ""type"": ""Button"",
+                    ""id"": ""a3921c8e-6aa7-43d1-993e-eb9544973c3e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""903462bb-7fac-4129-a165-ddb6a2241c9a"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""revive"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4b5af530-baeb-49fc-9d8f-7bfa1ba93a37"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""revive"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b701690c-00b5-4f24-9405-ea881d2d0759"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""revive"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b309b744-a9db-4b0b-90e6-5189016e34b9"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""revive"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9469c814-4ee1-4bc3-8cf7-a9bc38e9fbae"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""revive"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b92e939c-156f-4cf5-ac78-e765ad893eef"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""revive"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""997a2735-98a3-4c49-bc24-3950526e5ef6"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""revive"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5914de72-bd2c-43b0-805d-db5f951de793"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""revive"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -473,6 +578,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_enhanced_perso_dash = m_enhanced_perso.FindAction("dash", throwIfNotFound: true);
         m_enhanced_perso_hack = m_enhanced_perso.FindAction("hack", throwIfNotFound: true);
         m_enhanced_perso_hackDirection = m_enhanced_perso.FindAction("hackDirection", throwIfNotFound: true);
+        // dead_perso
+        m_dead_perso = asset.FindActionMap("dead_perso", throwIfNotFound: true);
+        m_dead_perso_revive = m_dead_perso.FindAction("revive", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -748,6 +856,52 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         }
     }
     public Enhanced_persoActions @enhanced_perso => new Enhanced_persoActions(this);
+
+    // dead_perso
+    private readonly InputActionMap m_dead_perso;
+    private List<IDead_persoActions> m_Dead_persoActionsCallbackInterfaces = new List<IDead_persoActions>();
+    private readonly InputAction m_dead_perso_revive;
+    public struct Dead_persoActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public Dead_persoActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @revive => m_Wrapper.m_dead_perso_revive;
+        public InputActionMap Get() { return m_Wrapper.m_dead_perso; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(Dead_persoActions set) { return set.Get(); }
+        public void AddCallbacks(IDead_persoActions instance)
+        {
+            if (instance == null || m_Wrapper.m_Dead_persoActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_Dead_persoActionsCallbackInterfaces.Add(instance);
+            @revive.started += instance.OnRevive;
+            @revive.performed += instance.OnRevive;
+            @revive.canceled += instance.OnRevive;
+        }
+
+        private void UnregisterCallbacks(IDead_persoActions instance)
+        {
+            @revive.started -= instance.OnRevive;
+            @revive.performed -= instance.OnRevive;
+            @revive.canceled -= instance.OnRevive;
+        }
+
+        public void RemoveCallbacks(IDead_persoActions instance)
+        {
+            if (m_Wrapper.m_Dead_persoActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IDead_persoActions instance)
+        {
+            foreach (var item in m_Wrapper.m_Dead_persoActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_Dead_persoActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public Dead_persoActions @dead_perso => new Dead_persoActions(this);
     private int m_xboxSchemeIndex = -1;
     public InputControlScheme xboxScheme
     {
@@ -778,5 +932,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnDash(InputAction.CallbackContext context);
         void OnHack(InputAction.CallbackContext context);
         void OnHackDirection(InputAction.CallbackContext context);
+    }
+    public interface IDead_persoActions
+    {
+        void OnRevive(InputAction.CallbackContext context);
     }
 }

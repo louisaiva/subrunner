@@ -416,6 +416,111 @@
                     "isPartOfComposite": true
                 }
             ]
+        },
+        {
+            "name": "dead_perso",
+            "id": "3c773e63-2b52-4744-844d-922cc5c58b7a",
+            "actions": [
+                {
+                    "name": "revive",
+                    "type": "Button",
+                    "id": "a3921c8e-6aa7-43d1-993e-eb9544973c3e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "903462bb-7fac-4129-a165-ddb6a2241c9a",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "revive",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4b5af530-baeb-49fc-9d8f-7bfa1ba93a37",
+                    "path": "<Gamepad>/dpad/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "revive",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b701690c-00b5-4f24-9405-ea881d2d0759",
+                    "path": "<Gamepad>/dpad/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "revive",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b309b744-a9db-4b0b-90e6-5189016e34b9",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "revive",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9469c814-4ee1-4bc3-8cf7-a9bc38e9fbae",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "revive",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b92e939c-156f-4cf5-ac78-e765ad893eef",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "revive",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "997a2735-98a3-4c49-bc24-3950526e5ef6",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "revive",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5914de72-bd2c-43b0-805d-db5f951de793",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "revive",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

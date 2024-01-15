@@ -675,17 +675,27 @@ public class Being : MonoBehaviour
         // play death animation
         anim_handler.ForcedChangeAnim(anims.die);
 
-        // calcule notre position centrale du sprite
-        Vector3 sprite_center = new Vector3(transform.position.x, transform.position.y + GetComponent<SpriteRenderer>().bounds.size.y / 2f,0);
-
         // on donne de l'xp
+        Vector3 sprite_center = new Vector3(transform.position.x, transform.position.y + GetComponent<SpriteRenderer>().bounds.size.y / 2f,0);
         xp_provider.GetComponent<XPProvider>().EmitXP(xp_gift, sprite_center);
 
-        // destroy object        
+        // destroy object
         Invoke("DestroyObject", 60f);
 
         // on change le layer du perso en "meat"
         gameObject.layer = LayerMask.NameToLayer("Meat");
+    }
+
+    protected virtual void comeback_from_death()
+    {
+        CancelInvoke("DestroyObject");
+        
+        // on remet la vie au max
+        vie = max_vie;
+
+        // on remet l'animation de base
+        anim_handler.StopForcing();
+        anim_handler.ChangeAnim(anims.idle_side);
     }
 
     protected void DestroyObject()

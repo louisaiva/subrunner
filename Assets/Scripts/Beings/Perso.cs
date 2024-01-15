@@ -87,6 +87,8 @@ public class Perso : Attacker
 
         // on récupère le UI_XboxNavigator
         // ui_inputs = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
+
+        playerInputs.dead_perso.revive.performed += ctx => comeback_from_death();
     }
 
     private void OnEnable()
@@ -744,6 +746,25 @@ public class Perso : Attacker
         inventory.setShow(false);
 
         base.die();
+        CancelInvoke("DestroyObject");
+
+        // on désactive les touches
+        playerInputs.perso.Disable();
+        playerInputs.enhanced_perso.Disable();
+        playerInputs.dead_perso.Enable();
+    }
+
+    protected override void comeback_from_death()
+    {
+        base.comeback_from_death();
+
+        // on change le layer du perso en "perso"
+        gameObject.layer = LayerMask.NameToLayer("Player");
+
+        // on reactive les touches
+        playerInputs.dead_perso.Disable();
+        playerInputs.perso.Enable();
+        playerInputs.enhanced_perso.Enable();
     }
 
 

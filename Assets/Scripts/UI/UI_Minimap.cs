@@ -39,6 +39,9 @@ public class UI_Minimap : MonoBehaviour {
         ui_map = transform.Find("mask/map").gameObject;
         ui_mask = transform.Find("mask/map_mask").gameObject;
         uis = transform.Find("mask").gameObject;
+
+        // on désactive la map
+        disableMiniMap(0f);
     }
 
     void Update()
@@ -134,7 +137,7 @@ public class UI_Minimap : MonoBehaviour {
         uis.SetActive(true);
     }
 
-    public void disableMiniMap()
+    public void disableMiniMap(float delay = 0.5f)
     {
         // on désactive la map
         is_map_shown = false;
@@ -148,7 +151,14 @@ public class UI_Minimap : MonoBehaviour {
         uis.SetActive(false);
 
         // on désactive la map
-        Invoke("turnOffMap", 0.5f);
+        if (delay > 0)
+        {
+            Invoke("turnOffMap", delay);
+        }
+        else
+        {
+            turnOffMap();
+        }
     }
 
     private void turnOffMap()
