@@ -49,7 +49,6 @@ public class Perso : Attacker
     // DASH
     [SerializeField] private float dash_distance = 1.2f;
     [SerializeField] private float dash_duration = 0.5f;
-    [SerializeField] private float dash_cooldown = 1f;
 
     // global light
     private GameObject global_light;
@@ -77,7 +76,7 @@ public class Perso : Attacker
 
     [Header("INPUTS")]
     public PlayerInputActions playerInputs;
-    // private UI_XboxManager ui_inputs;
+    // private UI_XboxNavigator ui_inputs;
 
     // inputs
 
@@ -86,8 +85,8 @@ public class Perso : Attacker
         // on récupère les inputs
         playerInputs = new PlayerInputActions();
 
-        // on récupère le UI_XboxManager
-        // ui_inputs = GameObject.Find("/ui").GetComponent<UI_XboxManager>();
+        // on récupère le UI_XboxNavigator
+        // ui_inputs = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
     }
 
     private void OnEnable()
@@ -1156,35 +1155,6 @@ public class Perso : Attacker
             drink();
         }
     }
-
-    /* public void OnDash()
-    {
-        if (hasCapacity("dash"))
-        {
-            dash();
-        }
-    }
-
-    private void OnHackDirection(InputValue value)
-    {
-        if (value.Get<Vector2>() == Vector2.zero) { return; }
-
-        if (hasCapacity("hoover_hack"))
-        {
-            // on met à jour la direction du hack
-            // print("HOVER HACKING IN DIRECTION " + value.Get<Vector2>());
-            HooverNextHackableInDirection(value.Get<Vector2>());
-        }
-    }
-
-    public void OnHack()
-    {
-        if (hasCapacity("hack"))
-        {
-            HackinClickEvents();
-        }
-    }
-    */
 }
 
 

@@ -26,7 +26,6 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 
     // CURRENT ITEMS
     protected Dictionary<string, Item> leg_items = new Dictionary<string, Item>();
-    // protected Dictionary<string,List<Item>> items = new Dictionary<string, List<Item>>();
 
     // ITEMS SLOTS
     protected Dictionary<string, GameObject> item_slots = new Dictionary<string, GameObject>();
@@ -36,7 +35,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     protected GameObject ui_item_prefab;
 
     [Header("Inputs")]
-    [SerializeField] private UI_XboxManager xbox_manager;
+    [SerializeField] private UI_XboxNavigator xbox_manager;
 
     // unity functions
     void Start()
@@ -69,7 +68,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         ui_item_prefab = Resources.Load("prefabs/ui/ui_item") as GameObject;
 
         // on récupère le xbox_manager
-        xbox_manager = GameObject.Find("/ui").GetComponent<UI_XboxManager>();
+        xbox_manager = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
 
         // on cache l'inventaire
         hide();        

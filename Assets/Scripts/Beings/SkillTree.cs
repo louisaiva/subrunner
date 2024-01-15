@@ -75,7 +75,7 @@ public class SkillTree : MonoBehaviour {
     private float portee_hack_K = 2f;
 
     [Header("Inputs")]
-    [SerializeField] private UI_XboxManager xbox_manager;
+    [SerializeField] private UI_XboxNavigator xbox_manager;
 
     // unity functions
 
@@ -97,7 +97,7 @@ public class SkillTree : MonoBehaviour {
         ui_physical_tree.GetComponent<Canvas>().enabled = false;
 
         // on récupère le xbox_manager
-        xbox_manager = GameObject.Find("/ui").GetComponent<UI_XboxManager>();
+        xbox_manager = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
     }
 
     public void init()

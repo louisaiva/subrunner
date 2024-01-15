@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 
-public class UI_XboxManager : MonoBehaviour
+public class UI_XboxNavigator : MonoBehaviour
 {
     
     // this class handles how the UI reacts to the xbox controller
@@ -22,13 +22,13 @@ public class UI_XboxManager : MonoBehaviour
     [Header("Fast Navigation")]
     [SerializeField] private float fast_navigation_time_first_threshold = 0.5f; // temps avant activation du fast navigation
     [SerializeField] private float fast_navigation_time_cooldown = 0.2f; // temps entre chaque activation du fast navigation
-    [SerializeField] private float fast_navigation_time = 0f; // temps depuis la dernière activation du fast navigation
+    [SerializeField] private float fast_navigation_time = -1f; // temps depuis le dernier mouvement
+    [SerializeField] private bool fast_navigation = false; // est-ce que l'on est en fast navigation
 
 
     [Header("Inputs")]
     [SerializeField] private PlayerInputActions inputs;
-    [SerializeField] private bool is_enabled = false;
-    [SerializeField] private bool can_navigate = true;
+    [SerializeField] private bool first_navigation = true;
 
     // unity functions
     protected void Start()
@@ -37,7 +37,7 @@ public class UI_XboxManager : MonoBehaviour
         inputs = GameObject.Find("/perso").GetComponent<Perso>().playerInputs;
     }
 
-
+ 
     // enable/disable
     public void enable(I_UI_Slottable slottable)
     {
@@ -55,9 +55,6 @@ public class UI_XboxManager : MonoBehaviour
 
         // on active le premier slot
         current_slot_index = -1;
-        // slots[current_slot_index].GetComponent<I_UI_Slot>().OnPointerEnter(null);
-
-        is_enabled = true;
     }
 
     public void disable()
@@ -82,8 +79,6 @@ public class UI_XboxManager : MonoBehaviour
         slottable = null;
         slots = null;
         current_slot_index = -1;
-
-        is_enabled = false;
     }
 
 
@@ -93,16 +88,32 @@ public class UI_XboxManager : MonoBehaviour
         // on vérifie que l'on peut naviguer
         if (direction == Vector2.zero || slottable == null)
         {
-            can_navigate = true;
+            // on reset la navigation
+            first_navigation = true;
+            fast_navigation = false;
+            fast_navigation_time = -1f;
             return;
         }
-        else if (can_navigate)
+        else if (!first_navigation)
         {
-            can_navigate = false;
+            if (fast_navigation)
+            {
+                // on vérifie que l'on peut naviguer
+                if (Time.time - fast_navigation_time < fast_navigation_time_cooldown) {return;}
+                fast_navigation_time = Time.time;
+            }
+            else
+            {
+                // on vérifie que l'on peut naviguer
+                if (Time.time - fast_navigation_time < fast_navigation_time_first_threshold) {return;}
+                fast_navigation_time = Time.time;
+                fast_navigation = true;
+            }
         }
-        else
+        else if (first_navigation)
         {
-            return;
+            first_navigation = false;
+            fast_navigation_time = Time.time;
         }
 
         // on récupère les slots
@@ -182,11 +193,9 @@ public class UI_XboxManager : MonoBehaviour
         GameObject slot = slots[current_slot_index];
 
         // on clique sur le slot
-        // slottable.clickOnItem(slot.GetComponent<I_UI_Slot>().item);
         slot.GetComponent<I_UI_Slot>().OnPointerClick(null);
 
         // on update les slots
-        // slots = slottable.GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator);
         current_slot_index = -1;
     }
 }

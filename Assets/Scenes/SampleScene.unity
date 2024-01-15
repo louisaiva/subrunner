@@ -2229,7 +2229,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generate_world: 1
-  nb_sectors: 3
+  nb_sectors: 4
   world: {fileID: 0}
   sector_prefab: {fileID: 0}
   sectors: []
@@ -14223,7 +14223,7 @@ MonoBehaviour:
     m_Bits: 0
   cooldown_attack: 0.6
   knockback_base: 4
-  CHEAT: 1
+  CHEAT: 0
   level: 1
   xp: 0
   total_xp: 0
@@ -14234,7 +14234,6 @@ MonoBehaviour:
   aide_a_la_visee: 0.5
   dash_distance: 1.2
   dash_duration: 0.5
-  dash_cooldown: 1
   inventory: {fileID: 549595395}
   big_inventory: {fileID: 0}
   items_parent: {fileID: 0}
@@ -15695,7 +15694,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1513995952}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f855ad63e2b15a46a98f9d333271222, type: 3}
+  m_Script: {fileID: 11500000, guid: 90af7a77457103344a06837e80a045fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   slots: []
@@ -15705,9 +15704,9 @@ MonoBehaviour:
   angle_multiplicator: 100
   fast_navigation_time_first_threshold: 0.5
   fast_navigation_time_cooldown: 0.2
-  fast_navigation_time: 0
-  is_enabled: 0
-  can_navigate: 1
+  fast_navigation_time: -1
+  fast_navigation: 0
+  first_navigation: 1
 --- !u!1 &1558800887
 GameObject:
   m_ObjectHideFlags: 0
