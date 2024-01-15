@@ -2229,7 +2229,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generate_world: 1
-  nb_sectors: 4
+  nb_sectors: 1
   world: {fileID: 0}
   sector_prefab: {fileID: 0}
   sectors: []
@@ -8294,6 +8294,7 @@ MonoBehaviour:
   perso: {fileID: 0}
   is_showed: 0
   description_ui: {fileID: 0}
+  xbox_manager: {fileID: 0}
 --- !u!4 &981986735 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2211143499693932515, guid: bf77b4d450875a543af448e38321731f, type: 3}
@@ -15554,6 +15555,7 @@ GameObject:
   - component: {fileID: 1513995954}
   - component: {fileID: 1513995953}
   - component: {fileID: 1513995957}
+  - component: {fileID: 1513995958}
   m_Layer: 5
   m_Name: ui
   m_TagString: Untagged
@@ -15666,6 +15668,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ui_elements: []
+--- !u!114 &1513995958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1513995952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f855ad63e2b15a46a98f9d333271222, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slots: []
+  current_slot_index: 0
+  angle_threshold: 45
+  angle_multiplicator: 100
+  is_enabled: 0
+  can_navigate: 1
 --- !u!1 &1558800887
 GameObject:
   m_ObjectHideFlags: 0

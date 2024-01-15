@@ -14,7 +14,7 @@ public class HackrayHoover : Hackray
         perso = GameObject.Find("/perso");
     }
 
-    new void Update()
+    void Update()
     {
         updateTransform();
     }

@@ -319,7 +319,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     }
 
     // GETTERS
-    public List<GameObject> GetSlots(ref float angle_threshold, ref float angle_multiplicator)
+    public List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator)
     {
         List<GameObject> slots = new List<GameObject>();
 
@@ -343,6 +343,9 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         // on met à jour les seuils
         angle_threshold = 45f;
         angle_multiplicator = 100f;
+
+        // on met à jour la position de base
+        base_position = GetComponent<RectTransform>().TransformPoint(GetComponent<RectTransform>().rect.center);
 
         return slots;
     }

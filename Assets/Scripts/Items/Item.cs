@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class Item : MonoBehaviour, I_Descriptable
+public class Item : MonoBehaviour, I_Descriptable, I_Interactable
 {
 
 
@@ -238,6 +238,22 @@ public class Item : MonoBehaviour, I_Descriptable
     {
         return is_showed && !is_on_ground;
     }
+
+    // interactions
+    public bool isInteractable()
+    {
+        return is_on_ground;
+    }
+
+    public void interact()
+    {
+        // on se fait ramasser par le perso
+        fromGroundToInv();
+        perso.GetComponent<Perso>().grab(this);
+    }
+
+    public void stopInteract() {}
+
 
 
     // end of life

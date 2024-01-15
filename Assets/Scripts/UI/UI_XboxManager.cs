@@ -16,6 +16,7 @@ public class UI_XboxManager : MonoBehaviour
     [SerializeField] private int current_slot_index;
 
     [Header("Navigation")]
+    [SerializeField] private Vector2 base_position = Vector2.zero;
     [SerializeField] private float angle_threshold = 45f;
     [SerializeField] private float angle_multiplicator = 100f;
 
@@ -42,7 +43,7 @@ public class UI_XboxManager : MonoBehaviour
 
         // on récupère les slots & tresholds
         this.slottable = slottable;
-        slots = slottable.GetSlots(ref angle_threshold, ref angle_multiplicator);
+        slots = slottable.GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator);
 
         // on active le premier slot
         current_slot_index = -1;
@@ -94,10 +95,10 @@ public class UI_XboxManager : MonoBehaviour
         }
 
         // on récupère les slots
-        slots = slottable.GetSlots(ref angle_threshold, ref angle_multiplicator);
+        slots = slottable.GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator);
 
         // on récupère la position du slot actuel
-        Vector2 current_slot_position = Vector2.zero;
+        Vector2 current_slot_position = base_position;
         if (current_slot_index != -1)
         {
             GameObject slot = slots[current_slot_index];
@@ -173,7 +174,7 @@ public class UI_XboxManager : MonoBehaviour
         slottable.clickOnItem(slot.GetComponent<UI_Item>().item);
 
         // on update les slots
-        slots = slottable.GetSlots(ref angle_threshold, ref angle_multiplicator);
+        slots = slottable.GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator);
         current_slot_index = -1;
     }
 

@@ -140,7 +140,7 @@ public class Perso : Attacker
         global_light = GameObject.Find("/world/global_light").gameObject;
 
         // on met à jour les interactions
-        interact_layers = LayerMask.GetMask("Chests", "Computers","Buttons");
+        interact_layers = LayerMask.GetMask("Chests", "Computers","Buttons","Items");
 
         // on récupère le cursor_handler
         cursor_handler = GameObject.Find("/utils").GetComponent<CursorHandler>();
@@ -645,12 +645,11 @@ public class Perso : Attacker
                     // on regarde si on peut hacker l'objet
                     if (hit.GetComponent<I_Hackable>().isHackable(hack.hack_type_target, (int)bits))
                     {
-                        
                         // et si on est pas déjà en train de hacker l'objet
-                        if (current_hackin_targets.ContainsKey(hit.gameObject) && current_hackin_targets[hit.gameObject] == hack)
+                        if (current_hackin_targets.ContainsKey(hit.gameObject))// && current_hackin_targets[hit.gameObject] == hack)
                         {
                             // on peut plus hacker l'objet, on continue
-                            continue;
+                            break;
                         }
 
                         // on peut hacker l'objet !!
@@ -893,6 +892,12 @@ public class Perso : Attacker
 
             // on interagit avec l'objet
             current_interactable.GetComponent<I_Interactable>().interact();
+
+            // si c'est un item on arrête d'interagir avec l'objet
+            if (current_interactable.GetComponent<Item>() != null)
+            {
+                current_interactable = null;
+            }
         }
 
     }
