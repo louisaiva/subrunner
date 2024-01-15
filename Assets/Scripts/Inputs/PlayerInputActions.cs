@@ -543,6 +543,334 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""TUTO"",
+            ""id"": ""b2285970-addb-4bbe-8b39-036d4b5f8503"",
+            ""actions"": [
+                {
+                    ""name"": ""x"",
+                    ""type"": ""Button"",
+                    ""id"": ""3fa4aa54-42f9-4f46-8ba5-51922aea7ea8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""y"",
+                    ""type"": ""Button"",
+                    ""id"": ""748d5238-3221-458a-ad8c-12b20106b4b5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""a"",
+                    ""type"": ""Button"",
+                    ""id"": ""2cae99cb-2369-4590-864a-9aea7736e770"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""b"",
+                    ""type"": ""Button"",
+                    ""id"": ""4089c349-58b5-47e9-a9ae-390c5274bd13"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""L"",
+                    ""type"": ""Button"",
+                    ""id"": ""bfbeefa5-af3f-4543-859c-0ecee1b65d0e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""U"",
+                    ""type"": ""Button"",
+                    ""id"": ""036d6778-b422-49d8-830d-fb7a631dd0e1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""R"",
+                    ""type"": ""Button"",
+                    ""id"": ""f1770552-cefd-4ea5-a55d-3c04b157ef0a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""D"",
+                    ""type"": ""Button"",
+                    ""id"": ""bc0cb389-702b-48f6-9817-ff0cdadf8d53"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LT"",
+                    ""type"": ""Button"",
+                    ""id"": ""3c18c56f-e08b-4c38-bb90-2d917b6e5a93"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LB"",
+                    ""type"": ""Button"",
+                    ""id"": ""f5309ec1-9fd9-40fe-ad07-be08e66b2de4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RT"",
+                    ""type"": ""Button"",
+                    ""id"": ""4360ab02-908d-43d1-abc0-985266572be1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RB"",
+                    ""type"": ""Button"",
+                    ""id"": ""a1c34d5f-5954-4132-88da-34a759e57a7a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""joyL"",
+                    ""type"": ""Value"",
+                    ""id"": ""7e37ac68-53bd-4534-80eb-3d219c220781"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""joyR"",
+                    ""type"": ""Value"",
+                    ""id"": ""6603d592-853a-46d4-8778-5e13242b2f9f"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""start"",
+                    ""type"": ""Button"",
+                    ""id"": ""81884b72-71e2-4f11-bffe-3d0bac4fd642"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""select"",
+                    ""type"": ""Button"",
+                    ""id"": ""64bebda7-26ba-4446-a830-feaca808a66b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""4cf395e2-b614-45ab-af7d-2db2cc999bc9"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""x"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dede0bff-a30a-4090-b07d-69ad099edd94"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""y"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4cf4d73f-9067-4256-a5e2-5cb48cd31be6"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""a"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""041da26d-e71d-442f-9742-e9d183b7f043"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""b"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6e00ce5f-76c7-47ea-8b0d-66f35abda169"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""L"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5fddbfba-b736-47be-8e03-9d9f475582dd"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""U"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e67b0883-44c0-443f-b09c-1d8cf6b7efb4"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""R"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""53b73443-e153-4aac-b938-af3993a5c750"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""D"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e24eedb3-aa00-42f2-9113-3a3a9aed51b1"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""LT"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""052d8dda-b034-4d82-a3d6-1b172a12e226"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""LB"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cf7ffc06-e006-42be-a1e4-38eb42eadc2f"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""RT"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bd96359a-beeb-4750-9176-57b20eaea477"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""RB"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6e0321f1-5692-4659-beb4-b4292bcbeac3"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""joyL"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0c2c120e-f764-47d7-8cf1-046e5e882fb6"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""joyR"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""30ea39ed-5b15-4568-9fd3-dc148cfb0905"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""start"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""16a111ea-416b-44e2-ac6d-6f8bba894939"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -581,6 +909,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         // dead_perso
         m_dead_perso = asset.FindActionMap("dead_perso", throwIfNotFound: true);
         m_dead_perso_revive = m_dead_perso.FindAction("revive", throwIfNotFound: true);
+        // TUTO
+        m_TUTO = asset.FindActionMap("TUTO", throwIfNotFound: true);
+        m_TUTO_x = m_TUTO.FindAction("x", throwIfNotFound: true);
+        m_TUTO_y = m_TUTO.FindAction("y", throwIfNotFound: true);
+        m_TUTO_a = m_TUTO.FindAction("a", throwIfNotFound: true);
+        m_TUTO_b = m_TUTO.FindAction("b", throwIfNotFound: true);
+        m_TUTO_L = m_TUTO.FindAction("L", throwIfNotFound: true);
+        m_TUTO_U = m_TUTO.FindAction("U", throwIfNotFound: true);
+        m_TUTO_R = m_TUTO.FindAction("R", throwIfNotFound: true);
+        m_TUTO_D = m_TUTO.FindAction("D", throwIfNotFound: true);
+        m_TUTO_LT = m_TUTO.FindAction("LT", throwIfNotFound: true);
+        m_TUTO_LB = m_TUTO.FindAction("LB", throwIfNotFound: true);
+        m_TUTO_RT = m_TUTO.FindAction("RT", throwIfNotFound: true);
+        m_TUTO_RB = m_TUTO.FindAction("RB", throwIfNotFound: true);
+        m_TUTO_joyL = m_TUTO.FindAction("joyL", throwIfNotFound: true);
+        m_TUTO_joyR = m_TUTO.FindAction("joyR", throwIfNotFound: true);
+        m_TUTO_start = m_TUTO.FindAction("start", throwIfNotFound: true);
+        m_TUTO_select = m_TUTO.FindAction("select", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -902,6 +1248,172 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         }
     }
     public Dead_persoActions @dead_perso => new Dead_persoActions(this);
+
+    // TUTO
+    private readonly InputActionMap m_TUTO;
+    private List<ITUTOActions> m_TUTOActionsCallbackInterfaces = new List<ITUTOActions>();
+    private readonly InputAction m_TUTO_x;
+    private readonly InputAction m_TUTO_y;
+    private readonly InputAction m_TUTO_a;
+    private readonly InputAction m_TUTO_b;
+    private readonly InputAction m_TUTO_L;
+    private readonly InputAction m_TUTO_U;
+    private readonly InputAction m_TUTO_R;
+    private readonly InputAction m_TUTO_D;
+    private readonly InputAction m_TUTO_LT;
+    private readonly InputAction m_TUTO_LB;
+    private readonly InputAction m_TUTO_RT;
+    private readonly InputAction m_TUTO_RB;
+    private readonly InputAction m_TUTO_joyL;
+    private readonly InputAction m_TUTO_joyR;
+    private readonly InputAction m_TUTO_start;
+    private readonly InputAction m_TUTO_select;
+    public struct TUTOActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public TUTOActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @x => m_Wrapper.m_TUTO_x;
+        public InputAction @y => m_Wrapper.m_TUTO_y;
+        public InputAction @a => m_Wrapper.m_TUTO_a;
+        public InputAction @b => m_Wrapper.m_TUTO_b;
+        public InputAction @L => m_Wrapper.m_TUTO_L;
+        public InputAction @U => m_Wrapper.m_TUTO_U;
+        public InputAction @R => m_Wrapper.m_TUTO_R;
+        public InputAction @D => m_Wrapper.m_TUTO_D;
+        public InputAction @LT => m_Wrapper.m_TUTO_LT;
+        public InputAction @LB => m_Wrapper.m_TUTO_LB;
+        public InputAction @RT => m_Wrapper.m_TUTO_RT;
+        public InputAction @RB => m_Wrapper.m_TUTO_RB;
+        public InputAction @joyL => m_Wrapper.m_TUTO_joyL;
+        public InputAction @joyR => m_Wrapper.m_TUTO_joyR;
+        public InputAction @start => m_Wrapper.m_TUTO_start;
+        public InputAction @select => m_Wrapper.m_TUTO_select;
+        public InputActionMap Get() { return m_Wrapper.m_TUTO; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(TUTOActions set) { return set.Get(); }
+        public void AddCallbacks(ITUTOActions instance)
+        {
+            if (instance == null || m_Wrapper.m_TUTOActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_TUTOActionsCallbackInterfaces.Add(instance);
+            @x.started += instance.OnX;
+            @x.performed += instance.OnX;
+            @x.canceled += instance.OnX;
+            @y.started += instance.OnY;
+            @y.performed += instance.OnY;
+            @y.canceled += instance.OnY;
+            @a.started += instance.OnA;
+            @a.performed += instance.OnA;
+            @a.canceled += instance.OnA;
+            @b.started += instance.OnB;
+            @b.performed += instance.OnB;
+            @b.canceled += instance.OnB;
+            @L.started += instance.OnL;
+            @L.performed += instance.OnL;
+            @L.canceled += instance.OnL;
+            @U.started += instance.OnU;
+            @U.performed += instance.OnU;
+            @U.canceled += instance.OnU;
+            @R.started += instance.OnR;
+            @R.performed += instance.OnR;
+            @R.canceled += instance.OnR;
+            @D.started += instance.OnD;
+            @D.performed += instance.OnD;
+            @D.canceled += instance.OnD;
+            @LT.started += instance.OnLT;
+            @LT.performed += instance.OnLT;
+            @LT.canceled += instance.OnLT;
+            @LB.started += instance.OnLB;
+            @LB.performed += instance.OnLB;
+            @LB.canceled += instance.OnLB;
+            @RT.started += instance.OnRT;
+            @RT.performed += instance.OnRT;
+            @RT.canceled += instance.OnRT;
+            @RB.started += instance.OnRB;
+            @RB.performed += instance.OnRB;
+            @RB.canceled += instance.OnRB;
+            @joyL.started += instance.OnJoyL;
+            @joyL.performed += instance.OnJoyL;
+            @joyL.canceled += instance.OnJoyL;
+            @joyR.started += instance.OnJoyR;
+            @joyR.performed += instance.OnJoyR;
+            @joyR.canceled += instance.OnJoyR;
+            @start.started += instance.OnStart;
+            @start.performed += instance.OnStart;
+            @start.canceled += instance.OnStart;
+            @select.started += instance.OnSelect;
+            @select.performed += instance.OnSelect;
+            @select.canceled += instance.OnSelect;
+        }
+
+        private void UnregisterCallbacks(ITUTOActions instance)
+        {
+            @x.started -= instance.OnX;
+            @x.performed -= instance.OnX;
+            @x.canceled -= instance.OnX;
+            @y.started -= instance.OnY;
+            @y.performed -= instance.OnY;
+            @y.canceled -= instance.OnY;
+            @a.started -= instance.OnA;
+            @a.performed -= instance.OnA;
+            @a.canceled -= instance.OnA;
+            @b.started -= instance.OnB;
+            @b.performed -= instance.OnB;
+            @b.canceled -= instance.OnB;
+            @L.started -= instance.OnL;
+            @L.performed -= instance.OnL;
+            @L.canceled -= instance.OnL;
+            @U.started -= instance.OnU;
+            @U.performed -= instance.OnU;
+            @U.canceled -= instance.OnU;
+            @R.started -= instance.OnR;
+            @R.performed -= instance.OnR;
+            @R.canceled -= instance.OnR;
+            @D.started -= instance.OnD;
+            @D.performed -= instance.OnD;
+            @D.canceled -= instance.OnD;
+            @LT.started -= instance.OnLT;
+            @LT.performed -= instance.OnLT;
+            @LT.canceled -= instance.OnLT;
+            @LB.started -= instance.OnLB;
+            @LB.performed -= instance.OnLB;
+            @LB.canceled -= instance.OnLB;
+            @RT.started -= instance.OnRT;
+            @RT.performed -= instance.OnRT;
+            @RT.canceled -= instance.OnRT;
+            @RB.started -= instance.OnRB;
+            @RB.performed -= instance.OnRB;
+            @RB.canceled -= instance.OnRB;
+            @joyL.started -= instance.OnJoyL;
+            @joyL.performed -= instance.OnJoyL;
+            @joyL.canceled -= instance.OnJoyL;
+            @joyR.started -= instance.OnJoyR;
+            @joyR.performed -= instance.OnJoyR;
+            @joyR.canceled -= instance.OnJoyR;
+            @start.started -= instance.OnStart;
+            @start.performed -= instance.OnStart;
+            @start.canceled -= instance.OnStart;
+            @select.started -= instance.OnSelect;
+            @select.performed -= instance.OnSelect;
+            @select.canceled -= instance.OnSelect;
+        }
+
+        public void RemoveCallbacks(ITUTOActions instance)
+        {
+            if (m_Wrapper.m_TUTOActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ITUTOActions instance)
+        {
+            foreach (var item in m_Wrapper.m_TUTOActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_TUTOActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public TUTOActions @TUTO => new TUTOActions(this);
     private int m_xboxSchemeIndex = -1;
     public InputControlScheme xboxScheme
     {
@@ -936,5 +1448,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     public interface IDead_persoActions
     {
         void OnRevive(InputAction.CallbackContext context);
+    }
+    public interface ITUTOActions
+    {
+        void OnX(InputAction.CallbackContext context);
+        void OnY(InputAction.CallbackContext context);
+        void OnA(InputAction.CallbackContext context);
+        void OnB(InputAction.CallbackContext context);
+        void OnL(InputAction.CallbackContext context);
+        void OnU(InputAction.CallbackContext context);
+        void OnR(InputAction.CallbackContext context);
+        void OnD(InputAction.CallbackContext context);
+        void OnLT(InputAction.CallbackContext context);
+        void OnLB(InputAction.CallbackContext context);
+        void OnRT(InputAction.CallbackContext context);
+        void OnRB(InputAction.CallbackContext context);
+        void OnJoyL(InputAction.CallbackContext context);
+        void OnJoyR(InputAction.CallbackContext context);
+        void OnStart(InputAction.CallbackContext context);
+        void OnSelect(InputAction.CallbackContext context);
     }
 }

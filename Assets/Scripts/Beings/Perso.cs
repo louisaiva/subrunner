@@ -69,14 +69,20 @@ public class Perso : Attacker
 
     [Header("INTERACTIONS")]
     // interactions
-    private float interact_range = 1f;
-    private LayerMask interact_layers;
+    [SerializeField] private float interact_range = 1f;
+    [SerializeField] private LayerMask interact_layers;
     public GameObject current_interactable = null;
     public Bed respawn_bed = null;
 
+    // hoover interactions
+    [SerializeField] private GameObject current_hoover_interactable = null;
+
+
     [Header("INPUTS")]
     public PlayerInputActions playerInputs;
-    // private UI_XboxNavigator ui_inputs;
+
+    [Header("HINTS")]
+    private UI_HintControlsManager hints_controls;
 
     // inputs
 
@@ -149,6 +155,8 @@ public class Perso : Attacker
         // on récupère le cursor_handler
         cursor_handler = GameObject.Find("/utils").GetComponent<CursorHandler>();
 
+        // on récupère le hints_controls
+        hints_controls = transform.Find("hint_controls").GetComponent<UI_HintControlsManager>();
 
 
         // ON MET A JOUR DES TRUCS
@@ -353,11 +361,12 @@ public class Perso : Attacker
         if (hasCapacity("hoover_interact"))
         {
             // todo ici on highlight les objets avec lesquels on peut interagir
+            InteractHooverEvents();
 
             // interacts
             if (hasCapacity("interact"))
             {
-                if (Input.GetButtonDown("interact") || playerInputs.perso.interact.ReadValue<float>() == 1f)
+                if (Input.GetButtonDown("interact"))// || playerInputs.perso.interact.ReadValue<float>() == 1f)
                 {
                     interact();
                 }
@@ -872,9 +881,93 @@ public class Perso : Attacker
     }
 
     // INTERACTIONS
+    private void InteractHooverEvents()
+    {
+        // on regarde si on peut interagir avec qqch
+        // si oui on donne la capacité "interact" au perso
+        // et on active le hint_controls d'interaction
+
+        // on regarde tout d'abord si on a pas des hackables en hoover
+        if (current_hoover_hackable != null)
+        {
+            // on arrête d'interagir avec l'objet si on a
+            if (current_interactable != null)
+            {
+                current_interactable.GetComponent<I_Interactable>().stopInteract();
+                current_interactable = null;
+            }
+            current_hoover_interactable = null;
+        }
+        else
+        {
+            // on regarde si on peut interagir avec qqch
+            Collider2D[] hit_interactables = Physics2D.OverlapCircleAll(transform.position, interact_range, interact_layers);
+            if (hit_interactables.Length != 0)
+            {
+                Collider2D target = null;
+
+                // on hoover l'objet le plus proche
+                float min_distance = 10000f;
+                foreach (Collider2D hit in hit_interactables)
+                {
+                    // on regarde si c'est un interactable
+                    if (hit == null) { continue; }
+                    if (hit.gameObject.GetComponent<I_Interactable>() == null) { continue; }
+
+                    // on vérifie que l'interactable n'est pas déjà en train d'être interagit
+                    // if (hit.gameObject == current_interactable) { continue; }
+
+                    // on regarde si on peut interagir avec l'objet
+                    if (hit.gameObject.GetComponent<I_Interactable>().isInteractable())
+                    {
+                        // on regarde si l'objet est plus proche que le précédent
+                        if (Vector2.Distance(transform.position, hit.transform.position) < min_distance)
+                        {
+                            min_distance = Vector2.Distance(transform.position, hit.transform.position);
+                            target = hit;
+                        }
+                    }
+                }
+
+                // on met à jour l'objet avec lequel on peut interagir
+                /* if (current_hoover_interactable != null && current_hoover_interactable != target.gameObject)
+                {
+                    current_hoover_interactable.GetComponent<I_Interactable>().stopHoover();
+                } */
+                if (target != null)
+                {
+                    current_hoover_interactable = target.gameObject;
+                }
+                else
+                {
+                    current_hoover_interactable = null;
+                }
+            }
+            else
+            {
+                current_hoover_interactable = null;
+            }
+        }
+
+
+        // on regarde si on a un objet avec lequel on peut interagir
+        if (current_hoover_interactable != null)
+        {
+            hints_controls.addHint("b");
+            addCapacity("interact");
+        }
+        else
+        {
+            hints_controls.removeHint("b");
+            removeCapacity("interact");
+        }
+
+    }
+
     private void interact()
     {
 
+        /*
         // todo on fait des collider d'interactions pour les boutons, les ordi, les coffres etc
         // todo qui active une fonction pour donner la capacité "interact" au perso quand il est dans le collider
         // todo du coup pas besoin de regarder si on peut interagir avec qqch ça veut dire qu'on peut tout le temps
@@ -904,19 +997,19 @@ public class Perso : Attacker
                     target = hit;
                 }
             }
-        }
+        } */
 
         // on interagit avec l'ojet
-        if (target != null)
+        if (current_hoover_interactable != null)
         {
-            print("INTERACTING WITH " + target);
+            print("INTERACTING WITH " + current_hoover_interactable);
 
             // on met à jour l'objet avec lequel on interagit
-            if (current_interactable != null && current_interactable != target.gameObject)
+            if (current_interactable != null && current_interactable != current_hoover_interactable)
             {
                 current_interactable.GetComponent<I_Interactable>().stopInteract();
             }
-            current_interactable = target.gameObject;
+            current_interactable = current_hoover_interactable;
 
             // on interagit avec l'objet
             current_interactable.GetComponent<I_Interactable>().interact();
@@ -1174,6 +1267,14 @@ public class Perso : Attacker
         if (hasCapacity("drink"))
         {
             drink();
+        }
+    }
+
+    public void OnInteract()
+    {
+        if (hasCapacity("interact"))
+        {
+            interact();
         }
     }
 }
