@@ -56,13 +56,11 @@ public class HackMaterialVariationHandler : MonoBehaviour
         // on met à jour le perso
         if (hackrays.Count > 0 && perso.GetComponent<SpriteRenderer>().sharedMaterial == perso_base_material)
         {
-            print("switch to hack material");
             // on applique le material au perso
             perso.GetComponent<SpriteRenderer>().material = perso_material;
         }
         else if (hackrays.Count == 0 && perso.GetComponent<SpriteRenderer>().sharedMaterial != perso_base_material)
         {
-            print("switch to base material");
             // on applique le material au perso
             perso.GetComponent<SpriteRenderer>().material = perso_base_material;
         }

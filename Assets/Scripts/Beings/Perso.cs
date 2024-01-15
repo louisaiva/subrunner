@@ -914,8 +914,8 @@ public class Perso : Attacker
                     if (hit == null) { continue; }
                     if (hit.gameObject.GetComponent<I_Interactable>() == null) { continue; }
 
-                    // on vérifie que l'interactable n'est pas déjà en train d'être interagit
-                    // if (hit.gameObject == current_interactable) { continue; }
+                    // * cas spécial : si c'est un coffre et que le big inventory est ouvert, on ne peut pas interagir avec
+                    if (hit.gameObject.GetComponent<InventoryChest>() != null && big_inventory.isShowed()) { continue; }
 
                     // on regarde si on peut interagir avec l'objet
                     if (hit.gameObject.GetComponent<I_Interactable>().isInteractable())
@@ -966,39 +966,6 @@ public class Perso : Attacker
 
     private void interact()
     {
-
-        /*
-        // todo on fait des collider d'interactions pour les boutons, les ordi, les coffres etc
-        // todo qui active une fonction pour donner la capacité "interact" au perso quand il est dans le collider
-        // todo du coup pas besoin de regarder si on peut interagir avec qqch ça veut dire qu'on peut tout le temps
-        // todo si on arrive dans cette fonction
-
-        // on regarde si on peut interagir avec qqch
-        Collider2D[] hit_interactables = Physics2D.OverlapCircleAll(transform.position, interact_range, interact_layers);
-        if (hit_interactables.Length == 0) { return; }
-
-        Collider2D target = null;
-
-        // on interagit avec l'objet le plus proche
-        float min_distance = 10000f;
-        foreach (Collider2D hit in hit_interactables)
-        {
-            // on regarde si c'est un interactable
-            if (hit == null) { continue; }
-            if (hit.gameObject.GetComponent<I_Interactable>() == null) { continue; }
-
-            // on regarde si on peut interagir avec l'objet
-            if (hit.gameObject.GetComponent<I_Interactable>().isInteractable())
-            {
-                // on regarde si l'objet est plus proche que le précédent
-                if (Vector2.Distance(transform.position, hit.transform.position) < min_distance)
-                {
-                    min_distance = Vector2.Distance(transform.position, hit.transform.position);
-                    target = hit;
-                }
-            }
-        } */
-
         // on interagit avec l'ojet
         if (current_hoover_interactable != null)
         {
@@ -1020,7 +987,6 @@ public class Perso : Attacker
                 current_interactable = null;
             }
         }
-
     }
 
     private void update_interactions()
@@ -1029,17 +995,42 @@ public class Perso : Attacker
         // on vérifie si l'objet avec lequel on interagit est toujours à portée
         if (current_interactable != null)
         {
+
             // on regarde si on est toujours à portée de l'objet
-            float distance = Vector2.Distance(transform.position, current_interactable.transform.position);
-            if (distance > interact_range*1.5f)
+            bool is_in_range = false;
+
+            // on récupère tous les objets dans le range
+            Collider2D[] hit_interactables = Physics2D.OverlapCircleAll(transform.position, interact_range, interact_layers);
+            if (hit_interactables.Length != 0)
             {
-                // on arrête d'interagir avec l'objet
+                Collider2D target = null;
+
+                // on vérifie si l'objet est dans la liste des objets avec lesquels on peut interagir
+                foreach (Collider2D hit in hit_interactables)
+                {
+                    // on regarde si c'est un interactable
+                    if (hit == null) { continue; }
+                    if (hit.gameObject.GetComponent<I_Interactable>() == null) { continue; }
+
+                    // et si c'est l'objet avec lequel on interagit
+                    if (hit.gameObject == current_interactable)
+                    {
+                        is_in_range = true;
+                        break;
+                    }
+                }
+            }
+
+            // on arrête d'interagir avec l'objet si on est plus à portée
+            if (!is_in_range)
+            {
                 current_interactable.GetComponent<I_Interactable>().stopInteract();
                 current_interactable = null;
             }
             else if (current_interactable.GetComponent<I_LongInteractable>() != null)
             {
                 I_LongInteractable long_interactable = current_interactable.GetComponent<I_LongInteractable>();
+
                 // on regarde si cet objet interagit encore avec nous
                 if (!(long_interactable.is_interacting || long_interactable.is_being_activated))
                 {
