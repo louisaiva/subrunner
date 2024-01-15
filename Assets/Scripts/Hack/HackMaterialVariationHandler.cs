@@ -66,6 +66,20 @@ public class HackMaterialVariationHandler : MonoBehaviour
             // on applique le material au perso
             perso.GetComponent<SpriteRenderer>().material = perso_base_material;
         }
+
+        // on vérifie le nombre de bits du perso
+        if (perso.GetComponent<Perso>().bits < 1f)
+        {
+            // on met à jour le material du perso
+            perso_material.SetFloat("_Intensity", -1f);
+            perso_base_material.SetFloat("_Intensity", -1f);
+        }
+        else
+        {
+            // on met à jour le material du perso
+            perso_material.SetFloat("_Intensity", perso_base_intensity + intensity_variation);
+            perso_base_material.SetFloat("_Intensity", perso_base_intensity);
+        }
     }
 
     void updateHackrays()

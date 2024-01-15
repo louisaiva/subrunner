@@ -14223,7 +14223,7 @@ MonoBehaviour:
     m_Bits: 0
   cooldown_attack: 0.6
   knockback_base: 4
-  CHEAT: 0
+  CHEAT: 1
   level: 1
   xp: 0
   total_xp: 0
@@ -15702,8 +15702,8 @@ MonoBehaviour:
   base_position: {x: 0, y: 0}
   angle_threshold: 45
   angle_multiplicator: 100
-  fast_navigation_time_first_threshold: 0.5
-  fast_navigation_time_cooldown: 0.2
+  fast_navigation_time_first_threshold: 0.25
+  fast_navigation_time_cooldown: 0.05
   fast_navigation_time: -1
   fast_navigation: 0
   first_navigation: 1
@@ -22644,7 +22644,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2093539359
 MonoBehaviour:
   m_ObjectHideFlags: 0
