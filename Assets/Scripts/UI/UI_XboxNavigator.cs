@@ -244,6 +244,9 @@ public class UI_XboxNavigator : MonoBehaviour
             position = getPosition(current_slot_index);
         }
 
+        //
+        string s = "SLOTS: \n\n";
+
         // on récupère le slot le plus proche
         int next_index = -1;
         float closest_distance = float.MaxValue;
@@ -255,6 +258,14 @@ public class UI_XboxNavigator : MonoBehaviour
             // on récupère la position du slot
             Vector2 slot_position = getPosition(slot);
             float distance = Vector2.Distance(position, slot_position);
+
+            // on vérifie si c'est un item
+            if (slot.GetComponent<UI_Item>() != null)
+            {
+                s += slot.GetComponent<UI_Item>().item.item_name + " : " + slot_position + " / distance : " + distance + "\n";
+            }
+
+
             if (distance < closest_distance)
             {
                 closest_distance = distance;
@@ -262,6 +273,8 @@ public class UI_XboxNavigator : MonoBehaviour
             }
         }
         if (next_index == -1) { return; }
+
+        print(s);
 
         // on met à jour l'affichage
         if (!a_position_is_given && current_slot_index != -1)

@@ -324,9 +324,19 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         perso.GetComponent<Perso>().inventory.dropItem(item);
     }
 
-    // GETTERS
+    // SLOTTABLE
     public List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator)
     {
+
+        // on met à jour nos LayoutGroup
+        foreach (KeyValuePair<string, GameObject> entry in item_slots)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(entry.Value.GetComponent<RectTransform>());
+        }
+
+
+
+        // on récupère les slots
         List<GameObject> slots = new List<GameObject>();
 
         // on récupère les slots des items légendaires
