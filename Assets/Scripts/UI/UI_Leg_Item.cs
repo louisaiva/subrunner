@@ -2,11 +2,10 @@ using UnityEngine;
 
 public class UI_Leg_Item : UI_Item
 {
-
     // unity functions
-    protected new void Start()
+    protected new void Awake()
     {
-        base.Start();
+        base.Awake();
 
         // on récupère les sprites
         Sprite[] sprites = Resources.LoadAll<Sprite>("spritesheets/item_slots");

@@ -1,6 +1,60 @@
 # TODO
 
 
+- [ ] - faire les inventory context
+- [ ] - régler l'hoover description pour qu'il ne sorte pas de l'écran
+- [ ] - et qu'il aille avec l'xbox controller
+- [ ] - UI_XboxNavigator faire reselectionner automatiqement le plus proche quand on appuie sur un item
+- [ ] - faire une classe Movable parent de Being et de Item afin d'appliquer des forces aux items
+
+
+
+
+
+
+
+
+
+
+
+
+# BUGS
+
+- [ ] - quand on est loin de xp-provider ça arrete de générer de l'xp ?
+- [ ] - bug graphique d'animations : les zombos n'attaquent pas
+
+
+
+
+
+
+
+
+
+
+# LONG TERME
+
+- [-] - faire un fichier json qui stocke les paramètres des différents beings
+
+- [x] - faire une génération aléatoire des niveaux
+    - [ ] - mettre en place le TK algorithm pour créer les salles
+    - [ ] - créer une classe Room qui remplit les salles avec les tiles
+    - [ ] - faire des plafonds qu'on peut passer dessous avec notre perso
+            parce que ça rend bien ! genre dans les couloirs
+
+- [x] - génération procédurale
+    - [ ] - World.cs génère différents secteurs et les relie entre eux
+    - [ ] - Sector.cs applique les bonnes textures (tiles) aux tilemaps de chaque Room
+    - [ ] - Sector.cs dit aux Rooms adequates de generer *coffres*, doors, *computers*, *zombies*
+    - [ ] - Room.cs génère les éléments de décor : objects, *posters*, tags, *lights*
+    -> CF. gameplay.txt
+
+- [ ] - mettre un drone de soutien qui est notre compagnie
+    - [ ] - qui peut nous parler
+    - [ ] - nous faire les tutos
+    - [ ] - et qu'on peut améliorer
+    - [ ] - au niv 2, ce drone sert de relai de hack
+
 - [ ] - mettre des objets interactifs dans le niveau
     - [x] - mettre des coffres pour des items physiques
     - [ ] - mettre des disques durs pour des hacks
@@ -36,33 +90,24 @@
     - [ ] - ajouter visu clés RSA / HASH en bas à droite ?
 
 
-# BUGS
 
-- [ ] - quand on est loin de xp-provider ça arrete de générer de l'xp ?
-- [ ] - bug graphique d'animations : les zombos n'attaquent pas
 
-# DO IT LATER
 
-- [-] - faire un fichier json qui stocke les paramètres des différents beings
 
-- [x] - faire une génération aléatoire des niveaux
-    - [ ] - mettre en place le TK algorithm pour créer les salles
-    - [ ] - créer une classe Room qui remplit les salles avec les tiles
-    - [ ] - faire des plafonds qu'on peut passer dessous avec notre perso
-            parce que ça rend bien ! genre dans les couloirs
 
-- [x] - génération procédurale
-    - [ ] - World.cs génère différents secteurs et les relie entre eux
-    - [ ] - Sector.cs applique les bonnes textures (tiles) aux tilemaps de chaque Room
-    - [ ] - Sector.cs dit aux Rooms adequates de generer *coffres*, doors, *computers*, *zombies*
-    - [ ] - Room.cs génère les éléments de décor : objects, *posters*, tags, *lights*
-    -> CF. gameplay.txt
 
-- [ ] - mettre un drone de soutien qui est notre compagnie
-    - [ ] - qui peut nous parler
-    - [ ] - nous faire les tutos
-    - [ ] - et qu'on peut améliorer
-    - [ ] - au niv 2, ce drone sert de relai de hack
+
+
+
+
+
+
+
+
+
+
+
+
 
 # DONE
 

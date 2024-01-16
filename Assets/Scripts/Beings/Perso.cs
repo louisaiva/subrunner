@@ -1002,8 +1002,6 @@ public class Perso : Attacker
             Collider2D[] hit_interactables = Physics2D.OverlapCircleAll(transform.position, interact_range, interact_layers);
             if (hit_interactables.Length != 0)
             {
-                Collider2D target = null;
-
                 // on vérifie si l'objet est dans la liste des objets avec lesquels on peut interagir
                 foreach (Collider2D hit in hit_interactables)
                 {

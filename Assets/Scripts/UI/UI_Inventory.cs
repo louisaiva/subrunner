@@ -195,6 +195,9 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 
         // on ajoute l'item
         leg_items.Add(type, item);
+
+        // on met à jour le xbox_manager si on est show
+        if (is_showed) { xbox_manager.updateWhileShowed(); }
     }
 
     private void delLeg(Item item)
@@ -265,6 +268,9 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         // on affiche le slot
         item_slots_showed[slot] = true;
         slot_obj.transform.parent.gameObject.SetActive(is_showed);
+
+        // on met à jour le xbox_manager si on est show
+        if (is_showed) { xbox_manager.updateWhileShowed(); }
     }
 
     public void dropItem(Item item)
@@ -281,9 +287,6 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         // on vérifie le nombre d'items restants
         int nb_items = ui_item.transform.parent.childCount;
 
-        // on supprime le ui_item
-        Destroy(ui_item);
-
         // on cache le slot
         if (nb_items == 1)
         {
@@ -291,6 +294,10 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
             item_slots_showed[item.item_type] = false;
             ui_item.transform.parent.parent.gameObject.SetActive(false);
         }
+
+        // on supprime le ui_item
+        ui_item.transform.SetParent(null);
+        Destroy(ui_item);
     }
 
 
@@ -338,6 +345,8 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
                 slots.Add(child.gameObject);
             }
         }
+
+        // print("nb slots : " + slots.Count);
 
         // on met à jour les seuils
         angle_threshold = 45f;

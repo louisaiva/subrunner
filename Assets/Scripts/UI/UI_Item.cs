@@ -22,7 +22,7 @@ public class UI_Item : MonoBehaviour, I_UI_Slot
 
 
     // unity functions
-    protected void Start()
+    protected void Awake()
     {
         // on récupère le description_ui
         description_ui = GameObject.Find("/ui/hoover_description");
