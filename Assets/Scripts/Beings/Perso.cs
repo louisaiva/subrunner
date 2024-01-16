@@ -85,7 +85,6 @@ public class Perso : Attacker
     private UI_HintControlsManager hints_controls;
 
     // inputs
-
     private void Awake()
     {
         // on récupère les inputs
@@ -1082,7 +1081,13 @@ public class Perso : Attacker
         if (drop_on_ground)
         {
             item.transform.SetParent(items_parent);
-            item.transform.position = transform.position;
+
+            // calcule une position aléatoire autour du perso -> dans la direction du look_at
+            float angle = Random.Range(0f, 360f);
+            Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+            Vector2 position = (Vector2)transform.position + direction * 0.5f;
+            
+            item.transform.position = position;
             item.fromInvToGround();
         }
 
