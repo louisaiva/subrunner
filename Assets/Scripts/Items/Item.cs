@@ -77,6 +77,12 @@ public class Item : MonoBehaviour, I_Descriptable, I_Interactable
             // on ajoute le cooldown
             cooldowns.Add("dash", 1f);
         }
+        if (capacities.Contains("hit"))
+        {
+            // print("adding hit cooldown to " + gameObject.name);
+            // on ajoute le cooldown
+            cooldowns.Add("hit", 0.6f);
+        }
 
 
         // on vérifie si on est sur le sol
