@@ -19,7 +19,7 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
     // ORDI
     public bool is_on = false;
     public float time_to_live = 0f; // si on ne l'utilise pas pendant ce temps, il s'éteint
-    private float time_to_live_base = 5f; // si on ne l'utilise pas pendant ce temps, il s'éteint
+    [SerializeField] private float time_to_live_base = 30f; // si on ne l'utilise pas pendant ce temps, il s'éteint
 
     public int niveau = 1;
 
