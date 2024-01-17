@@ -162,15 +162,8 @@ public class Perso : Attacker
 
         // on ajoute des capacités
         addCapacity("hoover_interact");
-        addCapacity("interact");
+        // addCapacity("interact");
         addCapacity("debug_capacities");
-
-        // on met à jour les capacités deja dans notre inventaire
-        foreach (Item item in inventory.getItems())
-        {
-            grab(item);
-        }
-
 
         // on met les differents paramètres du perso
         skills_tree = transform.Find("skills_tree").GetComponent<SkillTree>();
@@ -196,7 +189,7 @@ public class Perso : Attacker
         if (CHEAT)
         {
             // on met l'attaque à 0.1
-            damage = 0.1f;
+            // damage = 0.1f;
 
             // on se met lvl 10 sur le skill tree
             // skills_tree.setGlobalLevel(10);
@@ -214,13 +207,10 @@ public class Perso : Attacker
             inventory.createItem("computer_hack");
         }
 
-
         // on MAJ les items
-        List<Item> perso_items = inventory.getItems();
-        foreach (Item item in perso_items)
-        {
-            grab(item);
-        }
+        inventory.getItems().ForEach(item => grab(item));
+
+
 
 
         // ON AFFICHE DES TRUCS

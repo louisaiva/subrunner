@@ -15,7 +15,7 @@ public class Being : MonoBehaviour
     // VIE
     public float vie = 100f;
     public int max_vie = 100;
-    public float regen_vie = 1f; // en point de vie par seconde
+    public float regen_vie = 0f; // en point de vie par seconde
     public float weight = 1f; // poids du perso (pour le knockback)
 
     // HURTED

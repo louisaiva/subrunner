@@ -41,7 +41,7 @@ public class SkillTree : MonoBehaviour {
     public int regen_vie_level = 0;
     private float regen_vie_base = 0.15f;
     private float regen_vie_modifier = 0.1f;
-    private float regen_vie_K = 1f;
+    private float regen_vie_K = 0f;
 
     // degats
     public int degats_level = 0;
@@ -70,8 +70,8 @@ public class SkillTree : MonoBehaviour {
 
     // portee hack
     public int portee_hack_level = 0;
-    private float portee_hack_base = 0.3f;
-    private float portee_hack_modifier = 0.2f;
+    private float portee_hack_base = 0.1f;
+    private float portee_hack_modifier = 0.1f;
     private float portee_hack_K = 2f;
 
     [Header("Inputs")]
@@ -367,7 +367,15 @@ public class SkillTree : MonoBehaviour {
         }
 
         // on calcule x
-        x = K + l * (b + l * m * K);
+        if (K == 0f)
+        {
+            // cas particulier de regen_vie
+            x = l * (b + l * m);
+        }
+        else
+        {
+            x = K + l * (b + l * m * K);
+        }
 
         return x;
 
@@ -431,7 +439,15 @@ public class SkillTree : MonoBehaviour {
 
         // on calcule x
         int l2 = (int) l + 1;
-        x = K + l2 * (b + l2 * m * K);
+        if (K == 0f)
+        {
+            // cas particulier de regen_vie
+            x = l2 * (b + l2 * m);
+        }
+        else
+        {
+            x = K + l2 * (b + l2 * m * K);
+        }
 
         return x;
 

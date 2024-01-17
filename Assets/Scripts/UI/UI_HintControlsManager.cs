@@ -5,6 +5,9 @@ using System.Linq;
 
 public class UI_HintControlsManager : MonoBehaviour
 {
+
+    [Header("HintsControls")]
+    [SerializeField] private bool show_full_hints = false;
     
     [Header("Joystick")]
     [SerializeField] private GameObject xyab;
@@ -130,12 +133,15 @@ public class UI_HintControlsManager : MonoBehaviour
 
     void init()
     {
+        if (!show_full_hints) { return; }
+
         // on affiche les boutons
-        /* addHint("joyL");
+        showCat(joyL);
         showCat(joyR);
         showCat(arrows);
         showCat(triggers);
-        showCat(start_select); */
+        showCat(start_select);
+        showCat(xyab);
     }
 
     /* void Update()
