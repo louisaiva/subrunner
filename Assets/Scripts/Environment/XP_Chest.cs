@@ -8,6 +8,7 @@ public class XP_Chest : Chest, I_Buttonable
     // XP Provider
     public GameObject xp_provider;
     [SerializeField] protected int xp_amount = 100;
+    [SerializeField] protected float xp_speed = 1f;
 
     // unity functions
     protected override void Awake()
@@ -53,7 +54,7 @@ public class XP_Chest : Chest, I_Buttonable
         Vector3 sprite_center = new Vector3(transform.position.x, transform.position.y + GetComponent<SpriteRenderer>().bounds.size.y / 2f, 0);
 
         // on fait apparaitre les bits
-        xp_provider.GetComponent<XPProvider>().EmitXP(xp_amount, sprite_center, 2f);
+        xp_provider.GetComponent<XPProvider>().EmitXP(xp_amount, sprite_center, xp_speed);
 
         // on détruit le coffre
         xp_amount = 0;

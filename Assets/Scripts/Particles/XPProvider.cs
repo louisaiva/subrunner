@@ -116,7 +116,7 @@ public class XPProvider : MonoBehaviour
             // on change la position de l'émission
             // dans un rayon de radius autour de la position
             Vector2 position2D = Random.insideUnitCircle;
-            emitParams.position = position + radius * new Vector3(position2D.x, position2D.y, 0);
+            emitParams.position = -transform.position + position + radius * new Vector3(position2D.x, position2D.y, 0);
 
             // on change la vitesse de l'émission en fonction de la strengh
             // dans une direction 2D aléatoire en x et y
@@ -153,7 +153,7 @@ public class XPProvider : MonoBehaviour
             // on change la position de l'émission
             // dans un rayon de radius autour de la position
             Vector2 position2D = Random.insideUnitCircle;
-            emitParams.position = position + radius * new Vector3(position2D.x, position2D.y, 0);
+            emitParams.position = -transform.position + position + radius * new Vector3(position2D.x, position2D.y, 0);
 
             // on change la vitesse de l'émission en fonction de la strengh
             // dans une direction 2D aléatoire en x et y
