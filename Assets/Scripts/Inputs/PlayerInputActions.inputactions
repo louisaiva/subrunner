@@ -126,12 +126,78 @@
                     "isPartOfComposite": true
                 },
                 {
+                    "name": "main",
+                    "id": "d48d2582-0d80-4f60-b3bc-261e78d34df8",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "107ac6e0-71c5-4cfd-ade8-fec0502fa4b9",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "652468ed-c509-44f6-a039-792b1f96fd05",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "15671eb5-ea23-489a-a65a-4c96b3b848d3",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "308568db-d22c-4c7f-ba99-6365f86071f0",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "",
                     "id": "96585a0b-19a0-4a12-b30c-ee5c5664ed8c",
                     "path": "<XInputController>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "xbox",
+                    "action": "inventory",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5dec4aeb-67cc-4e7d-8d4d-74dfc9ec75df",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
                     "action": "inventory",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -149,11 +215,33 @@
                 },
                 {
                     "name": "",
+                    "id": "8b8675a6-6cd9-4cf1-8743-ce77cb1bd10d",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "map",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "93b1a724-d3ff-4856-88c9-ac6ce6414518",
                     "path": "<XInputController>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "xbox",
+                    "action": "hit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "db59ca6f-ab5b-4fbc-a6f9-60c0feb7cddd",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
                     "action": "hit",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -171,6 +259,17 @@
                 },
                 {
                     "name": "",
+                    "id": "493cb05f-36e7-4cc6-bca3-c7aa1148e65c",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "75dfc87d-e548-4042-8a15-def507bbd239",
                     "path": "<XInputController>/buttonNorth",
                     "interactions": "",
@@ -182,11 +281,33 @@
                 },
                 {
                     "name": "",
+                    "id": "9302c95f-072e-4189-9646-1b7b70d17571",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "useConso",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "c733c319-9b13-4a35-970c-ef0700b874a0",
                     "path": "<XInputController>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "xbox",
+                    "action": "interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f045da71-1f36-4421-b579-e1f39b4e2fc8",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
                     "action": "interact",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -210,15 +331,6 @@
                     "name": "activate",
                     "type": "Button",
                     "id": "bfb0aa0c-6049-4ece-a264-cceaa2a55caa",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "close",
-                    "type": "Button",
-                    "id": "df6b9bf3-aee1-4184-abc3-7153ec7e1a6f",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -283,6 +395,17 @@
                 },
                 {
                     "name": "",
+                    "id": "3572067e-9738-49b0-b697-7f44a8028c52",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "5bbfd291-7f88-4772-9484-02def75ea68a",
                     "path": "<XInputController>/buttonSouth",
                     "interactions": "",
@@ -294,12 +417,12 @@
                 },
                 {
                     "name": "",
-                    "id": "2ec2c4ba-8c51-42d3-b555-e85958480e1f",
-                    "path": "<XInputController>/buttonEast",
+                    "id": "1f98d722-89bc-4fb1-aa77-d39c92400099",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": "xbox",
-                    "action": "close",
+                    "groups": "keyboard",
+                    "action": "activate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -351,11 +474,33 @@
                 },
                 {
                     "name": "",
+                    "id": "8187f5de-b6f0-4f6e-a814-a1124df965f2",
+                    "path": "<Keyboard>/leftAlt",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "30be72d1-30ce-48e3-aa76-32f91b036399",
                     "path": "<XInputController>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "xbox",
+                    "action": "hack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3454cd75-ad46-4aa5-9531-800fc03b3ee8",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
                     "action": "hack",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -414,6 +559,17 @@
                     "action": "hackDirection",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "f9f1a2ee-e589-4195-88f3-118d8282c227",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "hackDirection",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -516,6 +672,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "xbox",
+                    "action": "revive",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f0c3bf8b-b9de-4ce3-bb50-b0b6fbd8d6b7",
+                    "path": "<Keyboard>/anyKey",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
                     "action": "revive",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -858,6 +1025,22 @@
             "devices": [
                 {
                     "devicePath": "<XInputController>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "keyboard",
+            "bindingGroup": "keyboard",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Mouse>",
                     "isOptional": false,
                     "isOR": false
                 }

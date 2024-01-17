@@ -84,7 +84,7 @@ public class UI_HintControlsManager : MonoBehaviour
         hint_sprites.Add("select", sprites[37]);
 
         // on récupère les inputs
-        player_input_actions = GameObject.Find("/perso").GetComponent<Perso>().playerInputs;
+        player_input_actions = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().inputs;
         player_input_actions.TUTO.Enable();
 
         // on ajoute les listeners

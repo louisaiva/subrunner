@@ -11,15 +11,21 @@ public class InputManager : MonoBehaviour
     [Header("KEYBOARD")]
 
     [Header("GAMEPAD")]
-    private PlayerInputActions gamepad_inputs;
+    public PlayerInputActions inputs;
+    private InputControlScheme keyboard_scheme;
+    private InputControlScheme gamepad_scheme;
 
     // unity functions
-    void Start()
+    void Awake()
     {
+        inputs = new PlayerInputActions();
+
         // on récupère le type d'input
-        // current_input_type = PlayerPrefs.GetString("current_input_type", "keyboard");
-        gamepad_inputs = GameObject.Find("/perso").GetComponent<Perso>().playerInputs;
-        // gamepad_inputs.performed += ctx => setInputType("gamepad");
+        gamepad_scheme = inputs.asset.controlSchemes[0];
+        keyboard_scheme = inputs.asset.controlSchemes[1];
+
+        print("(InputManager) gamepad scheme: " + gamepad_scheme.name);
+        print("(InputManager) keyboard scheme: " + keyboard_scheme.name);
 
     }
 

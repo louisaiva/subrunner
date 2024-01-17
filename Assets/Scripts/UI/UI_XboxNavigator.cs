@@ -34,7 +34,7 @@ public class UI_XboxNavigator : MonoBehaviour
     protected void Start()
     {
         // on récupère les inputs
-        inputs = GameObject.Find("/perso").GetComponent<Perso>().playerInputs;
+        inputs = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().inputs;
     }
 
  

@@ -79,38 +79,19 @@ public class Perso : Attacker
 
 
     [Header("INPUTS")]
+    [SerializeField] private InputManager input_manager;
     public PlayerInputActions playerInputs;
 
     [Header("HINTS")]
     private UI_HintControlsManager hints_controls;
 
-    // inputs
-    private void Awake()
-    {
-        // on récupère les inputs
-        playerInputs = new PlayerInputActions();
-
-        // on récupère le UI_XboxNavigator
-        // ui_inputs = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
-
-        playerInputs.dead_perso.revive.performed += ctx => comeback_from_death();
-    }
-
-    private void OnEnable()
-    {
-        playerInputs.perso.Enable();
-        playerInputs.enhanced_perso.Enable();
-    }
-
-    private void OnDisable()
-    {
-        playerInputs.perso.Disable();
-        playerInputs.enhanced_perso.Disable();
-    }
 
     // unity functions
     new void Start()
     {
+
+        // on récupère les inputs
+        initInputs();
 
         // on start de d'habitude
         base.Start();
@@ -294,6 +275,20 @@ public class Perso : Attacker
         floating_text2.transform.SetParent(floating_dmg_provider.transform);
     }
 
+    // INPUTS
+    private void initInputs()
+    {
+        // on récupère les inputs
+        input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
+        playerInputs = input_manager.inputs;
+
+        // on active les inputs
+        playerInputs.perso.Enable();
+        playerInputs.enhanced_perso.Enable();
+
+        // on set les callbacks
+        playerInputs.dead_perso.revive.performed += ctx => comeback_from_death();
+    }
 
     // CAPACITES
     public override void Events()
