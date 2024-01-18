@@ -53,6 +53,22 @@ public class UI_MainUI : MonoBehaviour
         }
     }
 
+    public void showOnly(GameObject ui_element)
+    {
+        // on sauvegarde les states
+        saveStates();
+
+        // on cache tout
+        // is_showed = false;
+        foreach (GameObject ui_element_ in ui_elements)
+        {
+            ui_element_.SetActive(false);
+        }
+
+        // on affiche l'ui_element
+        ui_element.SetActive(true);
+    }
+
     // STATES
     private void saveStates()
     {
@@ -61,12 +77,6 @@ public class UI_MainUI : MonoBehaviour
         {
             ui_elements_states.Add(ui_element, ui_element.activeSelf);
         }
-    }
-
-    // GETTERS
-    public Vector2 getScreenSize()
-    {
-        return new Vector2(GetComponent<RectTransform>().rect.width, GetComponent<RectTransform>().rect.height);
     }
 
 }

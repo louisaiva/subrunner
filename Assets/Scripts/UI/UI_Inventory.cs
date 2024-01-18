@@ -13,6 +13,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     // AFFICHAGE
     [SerializeField] private bool is_showed = false;
     private GameObject ui_bg;
+    private UI_MainUI main_ui;
 
     // DESCRIPTION
     public UI_HooverDescriptionHandler description_ui;
@@ -46,6 +47,9 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 
         // on récupère le ui_bg
         ui_bg = transform.Find("bg").gameObject;
+
+        // on récupère le main_ui
+        main_ui = GameObject.Find("/ui").GetComponent<UI_MainUI>();
 
         // on récupère le description_ui
         description_ui = GameObject.Find("/ui/hoover_description").GetComponent<UI_HooverDescriptionHandler>();
@@ -81,6 +85,9 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     // SHOWING
     public void show()
     {
+        // on cache le main_ui
+        main_ui.showOnly(gameObject);
+
         // on affiche l'inventaire
         is_showed = true;
 
@@ -96,6 +103,11 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 
         // on affiche le bg
         ui_bg.SetActive(true);
+
+        // on affiche le texte au bon emplacement
+        Vector3 text_position = new Vector3(Screen.width/2f, Screen.height, 0f);
+        transform.Find("text").gameObject.SetActive(true);
+        transform.Find("text").GetComponent<RectTransform>().position = text_position;
 
         // on active le xbox_manager
         if (input_manager.isUsingGamepad()) { xbox_manager.enable(this); }
@@ -124,8 +136,14 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         // on cache le bg
         ui_bg.SetActive(false);
 
+        // on cache le texte
+        transform.Find("text").gameObject.SetActive(false);
+
         // on désactive le xbox_manager
         xbox_manager.disable();
+
+        // on affiche le main_ui
+        main_ui.show();
     }
 
     public void rollShow()

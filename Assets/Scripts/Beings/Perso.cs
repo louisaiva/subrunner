@@ -395,24 +395,27 @@ public class Perso : Attacker
         } */
 
         // ouverture de l'inventaire
-        if (input_manager.isUsingGamepad())
+        if (!skills_tree.isShowed())
         {
-            if (playerInputs.perso.inventory.ReadValue<float>() > 0f && !big_inventory.isShowed())
+            if (input_manager.isUsingGamepad())
             {
-                // on regarde si on a pas un coffre ou un ordi en train d'être ouvert
-                if (current_interactable != null && !big_inventory.isShowed())
+                if (playerInputs.perso.inventory.ReadValue<float>() > 0f && !big_inventory.isShowed())
                 {
-                    current_interactable.GetComponent<I_Interactable>().stopInteract();
-                    current_interactable = null;
-                }
+                    // on regarde si on a pas un coffre ou un ordi en train d'être ouvert
+                    if (current_interactable != null && !big_inventory.isShowed())
+                    {
+                        current_interactable.GetComponent<I_Interactable>().stopInteract();
+                        current_interactable = null;
+                    }
 
-                // on ouvre l'inventaire
-                big_inventory.show();
-            }
-            else if (playerInputs.perso.inventory.ReadValue<float>() == 0f && big_inventory.isShowed())
-            {
-                // on ferme l'inventaire
-                big_inventory.hide();
+                    // on ouvre l'inventaire
+                    big_inventory.show();
+                }
+                else if (playerInputs.perso.inventory.ReadValue<float>() == 0f && big_inventory.isShowed())
+                {
+                    // on ferme l'inventaire
+                    big_inventory.hide();
+                }
             }
         }
     }
@@ -1214,17 +1217,20 @@ public class Perso : Attacker
 
     public void OnInventory()
     {
-        if (!input_manager.isUsingGamepad())
+        if (!skills_tree.isShowed())
         {
-            // on regarde si on a pas un coffre ou un ordi en train d'être ouvert
-            if (current_interactable != null && !big_inventory.isShowed())
+            if (!input_manager.isUsingGamepad())
             {
-                current_interactable.GetComponent<I_Interactable>().stopInteract();
-                current_interactable = null;
-            }
+                // on regarde si on a pas un coffre ou un ordi en train d'être ouvert
+                if (current_interactable != null && !big_inventory.isShowed())
+                {
+                    current_interactable.GetComponent<I_Interactable>().stopInteract();
+                    current_interactable = null;
+                }
 
-            // on ouvre l'inventaire
-            big_inventory.rollShow();
+                // on ouvre l'inventaire
+                big_inventory.rollShow();
+            }
         }
     }
 

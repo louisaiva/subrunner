@@ -8,22 +8,6 @@ public class InteractChest : InventoryChest, I_Interactable
 
     public bool is_interacting { get; set; } // est en train d'interagir
 
-    // Update
-    /* void Update()
-    {
-        // on regarde si on appuie sur la touche d'interaction (E)
-        // lorsqu'on est déjà ouvert
-        if (is_open && !is_moving && Input.GetButtonDown("interact"))
-        {
-            // on transvase tous les objets dans l'inventaire du perso
-            foreach (Item item in inventory.getItems())
-            {
-                // on ajoute l'item au perso
-                inventory.dropItem(item);
-            }
-        }
-    } */
-
     // INTERACTIONS
     public bool isInteractable()
     {

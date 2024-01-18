@@ -2,8 +2,6 @@
 
 
 - [ ] - faire les inventory context + Xbox compatibility
-- [ ] - régler l'hoover description pour qu'il ne sorte pas de l'écran
-- [ ] - et qu'il aille avec l'xbox controller
 - [ ] - faire une classe Movable parent de Being et de Item afin d'appliquer des forces aux items
 
 
@@ -109,6 +107,8 @@
 
 # DONE
 
+- [x] - régler l'hoover description pour qu'il ne sorte pas de l'écran
+- [x] - et qu'il aille avec l'xbox controller
 - [x] - UI_XboxNavigator faire reselectionner automatiqement le plus proche quand on appuie sur un item
 
 - [x] - bug ordi freeze à la fin de l'animation idle_on

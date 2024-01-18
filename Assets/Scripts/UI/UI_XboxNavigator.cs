@@ -10,7 +10,6 @@ public class UI_XboxNavigator : MonoBehaviour
     // this class handles how the UI reacts to the xbox controller
 
     [Header("IsUsed")]
-    [SerializeField] private bool is_used = false;
     [SerializeField] private I_UI_Slottable saved_slottable;
 
     [Header("Slots")]
@@ -40,49 +39,6 @@ public class UI_XboxNavigator : MonoBehaviour
         // on récupère les inputs
         inputs = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().inputs;
     }
-
-    /* void Update()
-    {
-        // on vérifie si on sert à qqch ou pas
-        if (inputs.isUsingGamepad() != is_used)
-        {
-            is_used = inputs.isUsingGamepad();
-
-            if (is_used)
-            {
-                // on active le slot
-                use();
-            }
-            else
-            {
-                // on désactive le slot
-                disable();
-            }
-        }
-    } */
- 
-    // use
-    /* public void use()
-    {
-        // on récupère le slottable
-        if (saved_slottable != null)
-        {
-            enable(slottable);
-        }
-        else
-        {
-            disable();
-        }        
-    }
-
-    public void unuse()
-    {
-        if (slottable != null)
-        {
-            saved_slottable = slottable;
-        }
-        disable();
-    } */
 
     // enable/disable
     public void enable(I_UI_Slottable slottable)

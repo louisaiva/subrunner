@@ -119,7 +119,7 @@ public class Item : MonoBehaviour, I_Descriptable, I_Interactable
     {
 
         // on vérifie si on se fait survoler par la souris
-        Vector3 mouse_pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        /* Vector3 mouse_pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         if (is_showed)
         {
@@ -157,10 +157,10 @@ public class Item : MonoBehaviour, I_Descriptable, I_Interactable
                     cursor_handler.SetCursor("arrow");
                 }
             }
-        }
+        } */
 
         // on vérifie si on se fait cliquer dessus
-        if (Input.GetMouseButtonDown(0) && is_showed)
+        /* if (Input.GetMouseButtonDown(0) && is_showed)
         {            
             // on regarde si ça overlap avec notre box collider
             if (GetComponent<BoxCollider2D>().OverlapPoint(mouse_pos))
@@ -180,7 +180,7 @@ public class Item : MonoBehaviour, I_Descriptable, I_Interactable
                 // on change le cursor
                 cursor_handler.SetCursor("arrow");
             }
-        }
+        } */
     }
 
     // functions

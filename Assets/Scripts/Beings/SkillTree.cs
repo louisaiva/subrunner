@@ -561,4 +561,10 @@ public class SkillTree : MonoBehaviour {
                 return false;
         }
     }
+
+    public bool isShowed()
+    {
+        return is_physical_tree_open || is_virtual_tree_open;
+    }
+
 }
