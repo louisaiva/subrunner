@@ -36,6 +36,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 
     [Header("Inputs")]
     [SerializeField] private UI_XboxNavigator xbox_manager;
+    [SerializeField] private InputManager input_manager;
 
     // unity functions
     void Start()
@@ -70,6 +71,9 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         // on récupère le xbox_manager
         xbox_manager = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
 
+        // on récupère l'input_manager
+        input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
+
         // on cache l'inventaire
         hide();        
     }
@@ -94,7 +98,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         ui_bg.SetActive(true);
 
         // on active le xbox_manager
-        xbox_manager.enable(this);
+        if (input_manager.isUsingGamepad()) { xbox_manager.enable(this); }
     }
 
     public void hide()

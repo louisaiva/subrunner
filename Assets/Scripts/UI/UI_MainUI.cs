@@ -63,4 +63,10 @@ public class UI_MainUI : MonoBehaviour
         }
     }
 
+    // GETTERS
+    public Vector2 getScreenSize()
+    {
+        return new Vector2(GetComponent<RectTransform>().rect.width, GetComponent<RectTransform>().rect.height);
+    }
+
 }

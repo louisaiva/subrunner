@@ -288,6 +288,7 @@ public class Perso : Attacker
 
         // on set les callbacks
         playerInputs.dead_perso.revive.performed += ctx => comeback_from_death();
+        playerInputs.enhanced_perso.dash.performed += ctx => OnDash();
     }
 
     // CAPACITES
@@ -303,41 +304,19 @@ public class Perso : Attacker
         // walk
         if (hasCapacity("walk"))
         {
-            inputs = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-            if (inputs == Vector2.zero)
-            {
-                inputs = new Vector2(playerInputs.perso.move.ReadValue<Vector2>().x, playerInputs.perso.move.ReadValue<Vector2>().y);
-            }
+            inputs = new Vector2(playerInputs.perso.move.ReadValue<Vector2>().x, playerInputs.perso.move.ReadValue<Vector2>().y);
         }
 
         // run
         if (hasCapacity("run"))
         {
-            if (Input.GetButtonDown("run") || playerInputs.perso.run.ReadValue<float>() == 1f)
+            if (playerInputs.perso.run.ReadValue<float>() == 1f)
             {
                 isRunning = true;
             }
-            else if (Input.GetButtonUp("run") || playerInputs.perso.run.ReadValue<float>() == 0f)
+            else if (playerInputs.perso.run.ReadValue<float>() == 0f)
             {
                 isRunning = false;
-            }
-        }
-
-        // drink
-        if (hasCapacity("drink"))
-        {
-            if (Input.GetButtonDown("drink"))// || playerInputs.perso.use_conso.ReadValue<float>() == 1f)
-            {
-                drink();
-            }
-        }
-
-        // hit
-        if (hasCapacity("hit"))
-        {
-            if (Input.GetButtonDown("hit") || playerInputs.perso.hit.ReadValue<float>() == 1f)
-            {
-                attack();
             }
         }
 
@@ -346,15 +325,6 @@ public class Perso : Attacker
         {
             // todo ici on highlight les objets avec lesquels on peut interagir
             InteractHooverEvents();
-
-            // interacts
-            if (hasCapacity("interact"))
-            {
-                if (Input.GetButtonDown("interact"))// || playerInputs.perso.interact.ReadValue<float>() == 1f)
-                {
-                    interact();
-                }
-            }
 
             // on update les interactions
             update_interactions();
@@ -373,14 +343,18 @@ public class Perso : Attacker
         // hoover hack
         if (hasCapacity("hoover_hack"))
         {
-            if (Input.GetButtonDown("Mouse X") || Input.GetButtonDown("Mouse Y"))
+            if (playerInputs.enhanced_perso.hackDirection.ReadValue<Vector2>() != Vector2.zero)
             {
-                HackinHooverEvents();
-            }
-            else if (playerInputs.enhanced_perso.hackDirection.ReadValue<Vector2>() != Vector2.zero)
-            {
-                Vector2 direction = playerInputs.enhanced_perso.hackDirection.ReadValue<Vector2>();
-                HooverNextHackableInDirection(direction);
+                if (input_manager.isUsingGamepad())
+                {
+                    Vector2 direction = playerInputs.enhanced_perso.hackDirection.ReadValue<Vector2>();
+                    HooverNextHackableInDirection(direction);
+                }
+                else
+                {
+                    Vector2 mouse_position = playerInputs.enhanced_perso.hackDirection.ReadValue<Vector2>();
+                    HackinHooverEvents(mouse_position);
+                }
             }
             updateHackinHoover();
 
@@ -396,7 +370,7 @@ public class Perso : Attacker
             // hacks
             if (hasCapacity("hack"))
             {
-                if (Input.GetButtonDown("hack") || playerInputs.enhanced_perso.hack.ReadValue<float>() == 1f)
+                if (playerInputs.enhanced_perso.hack.ReadValue<float>() == 1f)
                 {
                     HackinClickEvents();
                 }
@@ -406,17 +380,8 @@ public class Perso : Attacker
             update_hacks();
         }
 
-        // dash
-        if (hasCapacity("dash"))
-        {
-            if (Input.GetButtonDown("dash") || playerInputs.enhanced_perso.dash.ReadValue<float>() == 1f)
-            {
-                dash();
-            }
-        }
-
-        // todo DEBUG
-        if (hasCapacity("debug_capacities"))
+        // DEBUG
+        /* if (hasCapacity("debug_capacities"))
         {
             if (Input.GetButtonDown("debug_capacities"))
             {
@@ -427,42 +392,32 @@ public class Perso : Attacker
                 }
                 print(s);
             }
-        }
-
+        } */
 
         // ouverture de l'inventaire
-        if (Input.GetButtonDown("Inventory"))
+        if (input_manager.isUsingGamepad())
         {
-            // on regarde si on a pas un coffre ou un ordi en train d'être ouvert
-            if (current_interactable != null && !big_inventory.isShowed())
+            if (playerInputs.perso.inventory.ReadValue<float>() > 0f && !big_inventory.isShowed())
             {
-                current_interactable.GetComponent<I_Interactable>().stopInteract();
-                current_interactable = null;
-            }
+                // on regarde si on a pas un coffre ou un ordi en train d'être ouvert
+                if (current_interactable != null && !big_inventory.isShowed())
+                {
+                    current_interactable.GetComponent<I_Interactable>().stopInteract();
+                    current_interactable = null;
+                }
 
-            // on ouvre l'inventaire
-            big_inventory.rollShow();
-        }
-        else if (playerInputs.perso.inventory.ReadValue<float>() > 0f && !big_inventory.isShowed())
-        {
-            // on regarde si on a pas un coffre ou un ordi en train d'être ouvert
-            if (current_interactable != null && !big_inventory.isShowed())
+                // on ouvre l'inventaire
+                big_inventory.show();
+            }
+            else if (playerInputs.perso.inventory.ReadValue<float>() == 0f && big_inventory.isShowed())
             {
-                current_interactable.GetComponent<I_Interactable>().stopInteract();
-                current_interactable = null;
+                // on ferme l'inventaire
+                big_inventory.hide();
             }
-
-            // on ouvre l'inventaire
-            big_inventory.show();
-        }
-        else if (playerInputs.perso.inventory.ReadValue<float>() == 0f && big_inventory.isShowed())
-        {
-            // on ferme l'inventaire
-            big_inventory.hide();
         }
     }
 
-    void HackinHooverEvents()
+    void HackinHooverEvents(Vector2 mouse_position)
     {
 
         // le but de cette fonction est de repérer les objets hackables
@@ -476,7 +431,7 @@ public class Perso : Attacker
         hack_collider.OverlapCollider(hack_contact_filter, hits);
 
         // 2 - on récupère l'objet hackable le plus proche de la souris dans le range aide_a_la_visee
-        Vector2 mouse_pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 mouse_pos = Camera.main.ScreenToWorldPoint(mouse_position);
 
         // on prépare l'objet hackable le plus proche
         float distance = 10000f;
@@ -1256,6 +1211,40 @@ public class Perso : Attacker
             interact();
         }
     }
+
+    public void OnInventory()
+    {
+        if (!input_manager.isUsingGamepad())
+        {
+            // on regarde si on a pas un coffre ou un ordi en train d'être ouvert
+            if (current_interactable != null && !big_inventory.isShowed())
+            {
+                current_interactable.GetComponent<I_Interactable>().stopInteract();
+                current_interactable = null;
+            }
+
+            // on ouvre l'inventaire
+            big_inventory.rollShow();
+        }
+    }
+
+    public void OnHit()
+    {
+        if (hasCapacity("hit"))
+        {
+            attack();
+        }
+    }
+
+    public void OnDash()
+    {
+        if (hasCapacity("dash"))
+        {
+            dash();
+        }
+    }
+
+
 }
 
 

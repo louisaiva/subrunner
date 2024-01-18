@@ -76,6 +76,8 @@ public class SkillTree : MonoBehaviour {
 
     [Header("Inputs")]
     [SerializeField] private UI_XboxNavigator xbox_manager;
+    [SerializeField] private InputManager input_manager;
+
 
     // unity functions
 
@@ -98,6 +100,8 @@ public class SkillTree : MonoBehaviour {
 
         // on récupère le xbox_manager
         xbox_manager = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
+        // on récupère l'input_manager
+        input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
     }
 
     public void init()
@@ -137,7 +141,7 @@ public class SkillTree : MonoBehaviour {
         // Invoke("randomPhysicalLevelUp", 3f);
 
         // on active le xbox manager
-        xbox_manager.enable(ui_physical_tree.GetComponent<I_UI_Slottable>());
+        if (input_manager.isUsingGamepad()) {xbox_manager.enable(ui_physical_tree.GetComponent<I_UI_Slottable>());}
         
     }
 
@@ -186,7 +190,7 @@ public class SkillTree : MonoBehaviour {
         is_virtual_tree_open = true;
 
         // on active le xbox manager
-        xbox_manager.enable(ui_virtual_tree.GetComponent<I_UI_Slottable>());
+        if (input_manager.isUsingGamepad()) {xbox_manager.enable(ui_virtual_tree.GetComponent<I_UI_Slottable>());}
     }
 
     private void closeVirtualTree()

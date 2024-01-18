@@ -9,7 +9,7 @@ public class InteractChest : InventoryChest, I_Interactable
     public bool is_interacting { get; set; } // est en train d'interagir
 
     // Update
-    void Update()
+    /* void Update()
     {
         // on regarde si on appuie sur la touche d'interaction (E)
         // lorsqu'on est déjà ouvert
@@ -22,7 +22,7 @@ public class InteractChest : InventoryChest, I_Interactable
                 inventory.dropItem(item);
             }
         }
-    }
+    } */
 
     // INTERACTIONS
     public bool isInteractable()
