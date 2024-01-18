@@ -1038,6 +1038,406 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""any"",
+            ""id"": ""b1da777d-2f34-478e-a36e-cbf8e11ead69"",
+            ""actions"": [
+                {
+                    ""name"": ""keyboard"",
+                    ""type"": ""Button"",
+                    ""id"": ""6e57fb60-629f-48f4-bdf3-7f45b10dc40c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""gamepad"",
+                    ""type"": ""Button"",
+                    ""id"": ""dbd36913-9d8c-4b0f-8abf-e0807a05608e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""1d5b2ca5-9020-4d69-b8cc-22be0fd6a5e6"",
+                    ""path"": ""<Keyboard>/anyKey"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""keyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3c96d260-1a5e-4d2e-9e03-0185e5622064"",
+                    ""path"": ""<Keyboard>/anyKey"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""keyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6160e4d3-f089-4f6c-9438-7abd69ccfc31"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b8e4fcf1-bad4-4b5f-8e63-1ac1eeef3327"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c3f9e357-7a48-44aa-95af-d357d05c2df0"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""561714bc-c23f-4a9b-8dc6-7a8a99ba80f6"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3d45d388-4bd1-4565-8ad1-449cde8eab58"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bdcf5022-a51c-451f-810c-75272545fb8e"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c66983f9-09ea-450d-aee9-e90c857a47a2"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ba978914-6a53-4ea5-8a51-5df86ba9132e"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ea21c2c4-cb2c-4d5f-a7b0-3d0815197173"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""148efc5d-3697-49f9-82ae-78d16b5cb058"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""aca169ff-c178-4d33-8ce5-bccc0482ee68"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""294eda9d-98e3-4c12-a59f-71789739f982"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ce8d2aed-6244-4fa3-98e0-6d96ca10e94d"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b1d74cc3-1089-48f1-b2ac-caa63ed16cf0"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c86cfd5f-4355-448a-844e-a889ff3be460"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ab4b4545-a3d0-46dc-8531-273b5a52d23c"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c1058e1c-2813-41f5-8db7-5f917e01ca5f"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bda0c4d8-aef0-433a-9aec-75814f3bd370"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""09bab292-7f47-4cfe-914c-1e522dd0a368"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""633c244f-16bc-45f4-837c-9ec75aaf4099"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d91f3136-86d0-4012-825b-1e0263b46e1a"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f4a53adb-d1fc-4e1f-b599-bfb95736ab5b"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2fce0293-509b-4908-b938-e8d90cf4b3be"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d006b759-b75f-42b0-baaa-ef9df26daad2"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""285c888d-efa7-4ced-9ee0-8dbb6463d43f"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b5e6230f-8733-4125-aa5f-7ab8129cb90b"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""365de825-265c-49d4-a60a-416612c66f10"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f50780fd-ab1c-43cb-b8fd-0c241c5b1dbd"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""62c82b2e-da86-4c0d-b84f-3f38e32a7c68"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""41f78594-5454-42a1-b25f-04e178aa3f4f"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""beac541a-11b5-4daf-b4bc-6a472bd9de4e"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c4919853-a48f-484b-a35a-b5bc234368ce"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""gamepad"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -1048,6 +1448,11 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""devicePath"": ""<XInputController>"",
                     ""isOptional"": false,
+                    ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<Keyboard>"",
+                    ""isOptional"": true,
                     ""isOR"": false
                 }
             ]
@@ -1109,6 +1514,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_TUTO_joyR = m_TUTO.FindAction("joyR", throwIfNotFound: true);
         m_TUTO_start = m_TUTO.FindAction("start", throwIfNotFound: true);
         m_TUTO_select = m_TUTO.FindAction("select", throwIfNotFound: true);
+        // any
+        m_any = asset.FindActionMap("any", throwIfNotFound: true);
+        m_any_keyboard = m_any.FindAction("keyboard", throwIfNotFound: true);
+        m_any_gamepad = m_any.FindAction("gamepad", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1588,6 +1997,60 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         }
     }
     public TUTOActions @TUTO => new TUTOActions(this);
+
+    // any
+    private readonly InputActionMap m_any;
+    private List<IAnyActions> m_AnyActionsCallbackInterfaces = new List<IAnyActions>();
+    private readonly InputAction m_any_keyboard;
+    private readonly InputAction m_any_gamepad;
+    public struct AnyActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public AnyActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @keyboard => m_Wrapper.m_any_keyboard;
+        public InputAction @gamepad => m_Wrapper.m_any_gamepad;
+        public InputActionMap Get() { return m_Wrapper.m_any; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(AnyActions set) { return set.Get(); }
+        public void AddCallbacks(IAnyActions instance)
+        {
+            if (instance == null || m_Wrapper.m_AnyActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_AnyActionsCallbackInterfaces.Add(instance);
+            @keyboard.started += instance.OnKeyboard;
+            @keyboard.performed += instance.OnKeyboard;
+            @keyboard.canceled += instance.OnKeyboard;
+            @gamepad.started += instance.OnGamepad;
+            @gamepad.performed += instance.OnGamepad;
+            @gamepad.canceled += instance.OnGamepad;
+        }
+
+        private void UnregisterCallbacks(IAnyActions instance)
+        {
+            @keyboard.started -= instance.OnKeyboard;
+            @keyboard.performed -= instance.OnKeyboard;
+            @keyboard.canceled -= instance.OnKeyboard;
+            @gamepad.started -= instance.OnGamepad;
+            @gamepad.performed -= instance.OnGamepad;
+            @gamepad.canceled -= instance.OnGamepad;
+        }
+
+        public void RemoveCallbacks(IAnyActions instance)
+        {
+            if (m_Wrapper.m_AnyActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IAnyActions instance)
+        {
+            foreach (var item in m_Wrapper.m_AnyActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_AnyActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public AnyActions @any => new AnyActions(this);
     private int m_xboxSchemeIndex = -1;
     public InputControlScheme xboxScheme
     {
@@ -1649,5 +2112,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnJoyR(InputAction.CallbackContext context);
         void OnStart(InputAction.CallbackContext context);
         void OnSelect(InputAction.CallbackContext context);
+    }
+    public interface IAnyActions
+    {
+        void OnKeyboard(InputAction.CallbackContext context);
+        void OnGamepad(InputAction.CallbackContext context);
     }
 }

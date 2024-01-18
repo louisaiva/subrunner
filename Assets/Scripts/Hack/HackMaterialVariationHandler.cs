@@ -31,12 +31,12 @@ public class HackMaterialVariationHandler : MonoBehaviour
         perso = GameObject.Find("/perso");
 
         // on duplique le material du perso
-        perso_base_material = perso.GetComponent<SpriteRenderer>().sharedMaterial;
+        perso_base_material = new Material(perso.GetComponent<SpriteRenderer>().sharedMaterial);
         perso_material = new Material(perso_base_material);
         perso_base_intensity = perso_material.GetFloat("_Intensity");
 
         // on applique le material au perso
-        // perso.GetComponent<SpriteRenderer>().material = perso_material;
+        perso.GetComponent<SpriteRenderer>().sharedMaterial = perso_base_material;
 
         // on duplique le material des hackrays
         GameObject hk = Instantiate(Resources.Load("prefabs/hacks/hackray") as GameObject, transform.parent);
