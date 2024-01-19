@@ -58,6 +58,8 @@ public class World : MonoBehaviour
         // on récupère les sectors
         sectors = sect;
 
+        HandMadeSector spawn_sector = null;
+
         // on parcourt les secteurs
         for (int i = 0; i < sect.Count; i++)
         {
@@ -65,6 +67,13 @@ public class World : MonoBehaviour
             if (sect[i].GetType() == typeof(HandMadeSector))
             {
                 MergeSector((HandMadeSector) sect[i]);
+
+                // on récupère le secteur de spawn
+                if (((HandMadeSector) sect[i]).isSpawnSector())
+                {
+                    spawn_sector = (HandMadeSector) sect[i];
+                }
+
                 continue;
             }
 
@@ -87,22 +96,14 @@ public class World : MonoBehaviour
         bg_tm.RefreshAllTiles();
         gd_tm.RefreshAllTiles();
 
-        // on récupère la position de départ du perso
-        Vector2Int room = sect[0].rooms.ElementAt(Random.Range(0, sect[0].rooms.Count));
-        room.x += sect[0].x;
-        room.y += sect[0].y;
-        Vector2Int pos = room*area_size + new Vector2Int(area_size.x / 2, area_size.y / 2);
-
-        // on place le perso
-        perso.transform.position = new Vector3(pos.x / 2f, pos.y / 2f, 0f);
-        perso.transform.Find("minicam").GetComponent<Minimap>().Clear();
-
         // on lance la génération interne des secteurs
         for (int i = 0; i < sect.Count; i++)
         {
             // on regarde si le secteur est un hand made sector
             if (sect[i].GetType() == typeof(HandMadeSector))
             {
+                // on lance la génération du secteur
+                ((HandMadeSector) sect[i]).LAUNCH();
                 continue;
             }
 
@@ -149,6 +150,29 @@ public class World : MonoBehaviour
         // on créé le plafond
         CreateCeiling();
 
+        // on récupère la position de départ du perso
+        Vector2 spawn_pos;
+        if (spawn_sector == null)
+        {
+            // on choisit une room au hasard dans le premier secteur
+            Vector2Int room = sect[0].rooms.ElementAt(Random.Range(0, sect[0].rooms.Count));
+            room.x += sect[0].x;
+            room.y += sect[0].y;
+            // spawn_pos = room * area_size + new Vector2Int(area_size.x / 2, area_size.y / 2);
+
+            // on place le spawn au milieu de la room
+            spawn_pos = new Vector2((room.x * area_size.x + area_size.x / 2)/2f, (room.y * area_size.y + area_size.y / 2)/2f);
+        }
+        else
+        {
+            // on récupère la position de spawn du secteur
+            spawn_pos = spawn_sector.getSpawnPos();
+        }
+
+        // on place le perso
+        perso.transform.position = new Vector3(spawn_pos.x, spawn_pos.y, 0f);
+        perso.transform.Find("minicam").GetComponent<Minimap>().Clear();
+
     }
 
     private void PlaceArea(int x, int y, string area_name)
@@ -168,54 +192,18 @@ public class World : MonoBehaviour
 
     private void MergeSector(HandMadeSector sector)
     {
-        // on récupère les tilemaps
-        // List<Tilemap> sector_tm = sector.GetTilemaps();
-
-        // récupère la position en tiles en bas à gauche du secteur positionné
-        // Vector2Int sector_pos = sector.xy() * area_size;
-
-        // récupère la taille du secteur en tiles
-        // Vector2Int sector_size = sector.wh() * area_size;
-
-        // Vector2Int sector_start = new Vector2Int((int) sector.GetStartTile().x, (int) sector.GetStartTile().y);
-
-        // print("(World - MergeSector) merging sector at sector_start: " + sector_start + " sector_pos: " + sector_pos + " sector_size: " + sector_size);
-
         // on récupère les TileBase[] des tilemaps initiales
-        TileBase[] fg_tiles = sector.getTiles("fg");
-        TileBase[] bg_tiles = sector.getTiles("bg");
-        TileBase[] gd_tiles = sector.getTiles("gd");
+        TileBase[] fg_tiles = sector.getHandmadeTiles("fg");
+        TileBase[] bg_tiles = sector.getHandmadeTiles("bg");
+        TileBase[] gd_tiles = sector.getHandmadeTiles("gd");
 
         // on récupère le BoundsInt final
-        BoundsInt final_bounds = sector.getBounds();
+        BoundsInt final_bounds = sector.getHandmadeBounds();
 
         // on set les tiles
         setTiles(final_bounds, fg_tiles, "fg");
         setTiles(final_bounds, bg_tiles, "bg");
         setTiles(final_bounds, gd_tiles, "gd");
-
-
-        /* // on ajoute les tiles aux tilemaps
-        for (int j = 0; j < sector_size.y; j++)
-        {
-            int y_tile = sector_pos.y * area_size.y + j;
-            for (int i = 0; i < sector_size.x; i++)
-            {
-                int x_tile = sector_pos.x * area_size.x + i;
-
-                // on co
-
-                // on récupère les tiles du secteur
-                TileBase fg_tile = sector_tm[0].GetComponent<Tilemap>().GetTile(new Vector3Int(i+ sector_start.x, j+ sector_start.y, 0));
-                TileBase bg_tile = sector_tm[1].GetComponent<Tilemap>().GetTile(new Vector3Int(i+ sector_start.x, j+ sector_start.y, 0));
-                TileBase gd_tile = sector_tm[2].GetComponent<Tilemap>().GetTile(new Vector3Int(i+ sector_start.x, j+ sector_start.y, 0));
-
-                // on set les tiles
-                fg_tm.SetTile(new Vector3Int(x_tile, y_tile, 0), fg_tile);
-                bg_tm.SetTile(new Vector3Int(x_tile, y_tile, 0), bg_tile);
-                gd_tm.SetTile(new Vector3Int(x_tile, y_tile, 0), gd_tile);
-            }
-        } */
 
     }
 
@@ -549,8 +537,9 @@ public class World : MonoBehaviour
     {
         // on récupère l'area
         string area_name = getAreaName(tile);
-        if (area_name == "ceiling") { return "ceiling";}
-        else if (area_name == "null") { return "ceiling";}
+        if (area_name == "ceiling") { return "ceiling"; }
+        else if (area_name == "null") { return "ceiling"; }
+        else if (area_name == "handmade") { return getActualTileType(tile,"handmade"); }
 
         // on récupère la position locale de la tile dans l'area
         Vector2Int local_tile_pos = getLocalTilePos(tile);
@@ -572,8 +561,30 @@ public class World : MonoBehaviour
         }
         else
         {
-            return "not found";
+            return getActualTileType(tile);
         }
+    }
+
+    public string getActualTileType(Vector2Int tile,string not_found="not found")
+    {
+        // récupère directement le type de tile dans les tilemaps
+        TileBase fg = fg_tm.GetTile(new Vector3Int(tile.x, tile.y, 0));
+        if (fg != null) { return "ceiling"; }
+        TileBase bg = bg_tm.GetTile(new Vector3Int(tile.x, tile.y, 0));
+        if (bg != null) { return "wall"; }
+        TileBase gd = gd_tm.GetTile(new Vector3Int(tile.x, tile.y, 0));
+        if (gd != null) { return "ground"; }
+        
+        // on regarde si il n'y a pas un wall dans les 3 cases dessous
+        TileBase bg1 = bg_tm.GetTile(new Vector3Int(tile.x, tile.y-1, 0));
+        if (bg1 != null) { return "wall"; }
+        TileBase bg2 = bg_tm.GetTile(new Vector3Int(tile.x, tile.y-2, 0));
+        if (bg2 != null) { return "wall"; }
+        TileBase bg3 = bg_tm.GetTile(new Vector3Int(tile.x, tile.y-3, 0));
+        if (bg3 != null) { return "wall"; }
+
+        // sinon on renvoie null
+        return not_found;
     }
 
     public TileBase[] getTiles(BoundsInt bounds,string tm="bg")

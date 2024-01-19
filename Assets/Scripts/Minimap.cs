@@ -38,7 +38,8 @@ public class Minimap : MonoBehaviour {
         colorMap.Add("wall", Color.grey);
         colorMap.Add("ground", Color.grey);
         colorMap.Add("ceiling", Color.black);
-        colorMap.Add("not found", Color.grey);
+        colorMap.Add("handmade", Color.black);
+        colorMap.Add("not found", Color.red);
         colorMap.Add("void", new Color(1f, 0f, 1f, 0f));
 
         // on récupère le perso
@@ -78,6 +79,8 @@ public class Minimap : MonoBehaviour {
                 // map
                 // on récupère le type de tile
                 string type = world.getTileType(new Vector2Int(x, y));
+
+                if (type == "void") print("(Minimap) void detected at " + x + ", " + y);
 
                 // on met la couleur
                 mapTexture.SetPixel(x, y, colorMap[type]);

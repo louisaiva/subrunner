@@ -443,8 +443,10 @@ public class Sector : MonoBehaviour
         return y + h;
     }
 
-    public string getAreaType(Vector2Int pos)
+    public virtual string getAreaType(Vector2Int pos)
     {
+        // pos en area
+
         // on vérifie qu'elle est dans les tiles
         if (tiles.Contains(pos))
         {
@@ -470,8 +472,11 @@ public class Sector : MonoBehaviour
 
     public string getAreaName(Vector2Int pos)
     {
+        // pos en area
+
         string type = getAreaType(pos);
         if (type == "ceiling") { return "ceiling"; }
+        if (type == "handmade") { return "handmade"; }
 
         // on récupère les noms des salles
         string name = type + "_";
