@@ -147,17 +147,17 @@ public class Sector : MonoBehaviour
         }
         else if (border == "collision")
         {
-            Debug.LogError("Les secteurs collisionnent");
+            Debug.LogError("(Sector - connectWithSector) Les secteurs collisionnent");
             return;
         }
         else if (border == "no border")
         {
-            Debug.LogError("Les secteurs ne sont pas voisins");
+            Debug.LogError("(Sector - connectWithSector) Les secteurs ne sont pas voisins");
             return;
         }
         else
         {
-            Debug.LogError("Erreur dans la recherche de la frontière entre les secteurs");
+            Debug.LogError("(Sector - connectWithSector) Erreur dans la recherche de la frontière entre les secteurs");
             return;
         }
 
@@ -197,7 +197,7 @@ public class Sector : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Erreur dans la recherche des sas entre les secteurs");
+            Debug.LogError("(Sector - connectWithSector) Erreur dans la recherche des sas entre les secteurs");
             return;
         }
 
@@ -235,7 +235,7 @@ public class Sector : MonoBehaviour
         other.addConnection(other_sas, sas);
     }
 
-    public Vector2Int findClosestArea(Vector2Int area)
+    public virtual Vector2Int findClosestArea(Vector2Int area)
     {
         // on trouve l'area la plus proche de l'autre secteur
         float min_dist = 100000;
@@ -261,7 +261,7 @@ public class Sector : MonoBehaviour
         return closest_area;
     }
 
-    private List<Vector2Int> createPath(Vector2Int start, Vector2Int end)
+    protected virtual List<Vector2Int> createPath(Vector2Int start, Vector2Int end)
     {
         // on crée un path entre deux areas dans le secteur
         List<Vector2Int> directions = new List<Vector2Int> { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
@@ -281,7 +281,7 @@ public class Sector : MonoBehaviour
             Vector2Int last_pos = path.Last();
             if (last_pos == last_last_pos)
             {
-                Debug.LogError("Erreur dans la création du path");
+                Debug.LogError("(Sector - createPath) Erreur dans la création du path");
                 break;
             }
             last_last_pos = last_pos;

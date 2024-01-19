@@ -74,6 +74,8 @@ public class World : MonoBehaviour
                     spawn_sector = (HandMadeSector) sect[i];
                 }
 
+                PlaceHandMadeAreas((HandMadeSector) sect[i]);
+
                 continue;
             }
 
@@ -205,6 +207,22 @@ public class World : MonoBehaviour
         setTiles(final_bounds, bg_tiles, "bg");
         setTiles(final_bounds, gd_tiles, "gd");
 
+    }
+
+    private void PlaceHandMadeAreas(HandMadeSector sector)
+    {
+        // on génère les areas
+        Vector2Int sector_pos = sector.xy();
+
+        // on parcourt les areas
+        foreach (Vector2Int areaPos in sector.getGeneratedAreas())
+        {
+            // on récupère le nom de l'area
+            string area_name = sector.getAreaName(areaPos);
+
+            // on place l'area
+            PlaceArea(sector_pos.x + areaPos.x, sector_pos.y + areaPos.y, area_name);
+        }
     }
 
     private void CreateCeiling()
