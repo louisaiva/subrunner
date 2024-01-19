@@ -61,6 +61,14 @@ public class World : MonoBehaviour
         // on parcourt les secteurs
         for (int i = 0; i < sect.Count; i++)
         {
+            // on vérifie si le secteur est un hand made sector
+            if (sect[i].GetType() == typeof(HandMadeSector))
+            {
+                MergeSector((HandMadeSector) sect[i]);
+                continue;
+            }
+
+            // on génère les areas
             Vector2Int sector_pos = sect[i].xy();
 
             // on parcourt les areas
@@ -74,6 +82,11 @@ public class World : MonoBehaviour
             }
         }
 
+        // on refresh les tilemaps
+        fg_tm.RefreshAllTiles();
+        bg_tm.RefreshAllTiles();
+        gd_tm.RefreshAllTiles();
+
         // on récupère la position de départ du perso
         Vector2Int room = sect[0].rooms.ElementAt(Random.Range(0, sect[0].rooms.Count));
         room.x += sect[0].x;
@@ -84,11 +97,18 @@ public class World : MonoBehaviour
         perso.transform.position = new Vector3(pos.x / 2f, pos.y / 2f, 0f);
         perso.transform.Find("minicam").GetComponent<Minimap>().Clear();
 
-        // on récupère les emplacements des portes
-
-        // on lance la génération des secteurs
-        foreach (Sector sector in sectors)
+        // on lance la génération interne des secteurs
+        for (int i = 0; i < sect.Count; i++)
         {
+            // on regarde si le secteur est un hand made sector
+            if (sect[i].GetType() == typeof(HandMadeSector))
+            {
+                continue;
+            }
+
+            // on récupère le secteur
+            ProceduralSector sector = (ProceduralSector) sect[i];
+
             // on récup les emplacements interactifs et ennemis
             GetEmplacements(sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives);
 
@@ -115,7 +135,8 @@ public class World : MonoBehaviour
                     Vector3 door_pos = CellToWorld(new Vector3Int(tile_pos.x, tile_pos.y, 0));
 
                     // on ajoute la position de la porte à la liste
-                    empl_doors.Add(new Vector2(door_pos.x + emp.x, door_pos.y + emp.y), direction);                }
+                    empl_doors.Add(new Vector2(door_pos.x + emp.x, door_pos.y + emp.y), direction);                
+                }
             }
 
 
@@ -132,8 +153,7 @@ public class World : MonoBehaviour
 
     private void PlaceArea(int x, int y, string area_name)
     {
-        // on choisit un fichier json d'area aléatoire
-        // string area_json = builder.GetAreaJson(area_name);
+        // on récupère le json de l'area
         AreaJson area_json = builder.LoadAreaJson(area_name);
 
         if (area_json == null)
@@ -144,6 +164,59 @@ public class World : MonoBehaviour
 
         // on set les tiles de l'area
         SetAreaTiles(x, y, area_json);
+    }
+
+    private void MergeSector(HandMadeSector sector)
+    {
+        // on récupère les tilemaps
+        // List<Tilemap> sector_tm = sector.GetTilemaps();
+
+        // récupère la position en tiles en bas à gauche du secteur positionné
+        // Vector2Int sector_pos = sector.xy() * area_size;
+
+        // récupère la taille du secteur en tiles
+        // Vector2Int sector_size = sector.wh() * area_size;
+
+        // Vector2Int sector_start = new Vector2Int((int) sector.GetStartTile().x, (int) sector.GetStartTile().y);
+
+        // print("(World - MergeSector) merging sector at sector_start: " + sector_start + " sector_pos: " + sector_pos + " sector_size: " + sector_size);
+
+        // on récupère les TileBase[] des tilemaps initiales
+        TileBase[] fg_tiles = sector.getTiles("fg");
+        TileBase[] bg_tiles = sector.getTiles("bg");
+        TileBase[] gd_tiles = sector.getTiles("gd");
+
+        // on récupère le BoundsInt final
+        BoundsInt final_bounds = sector.getBounds();
+
+        // on set les tiles
+        setTiles(final_bounds, fg_tiles, "fg");
+        setTiles(final_bounds, bg_tiles, "bg");
+        setTiles(final_bounds, gd_tiles, "gd");
+
+
+        /* // on ajoute les tiles aux tilemaps
+        for (int j = 0; j < sector_size.y; j++)
+        {
+            int y_tile = sector_pos.y * area_size.y + j;
+            for (int i = 0; i < sector_size.x; i++)
+            {
+                int x_tile = sector_pos.x * area_size.x + i;
+
+                // on co
+
+                // on récupère les tiles du secteur
+                TileBase fg_tile = sector_tm[0].GetComponent<Tilemap>().GetTile(new Vector3Int(i+ sector_start.x, j+ sector_start.y, 0));
+                TileBase bg_tile = sector_tm[1].GetComponent<Tilemap>().GetTile(new Vector3Int(i+ sector_start.x, j+ sector_start.y, 0));
+                TileBase gd_tile = sector_tm[2].GetComponent<Tilemap>().GetTile(new Vector3Int(i+ sector_start.x, j+ sector_start.y, 0));
+
+                // on set les tiles
+                fg_tm.SetTile(new Vector3Int(x_tile, y_tile, 0), fg_tile);
+                bg_tm.SetTile(new Vector3Int(x_tile, y_tile, 0), bg_tile);
+                gd_tm.SetTile(new Vector3Int(x_tile, y_tile, 0), gd_tile);
+            }
+        } */
+
     }
 
     private void CreateCeiling()
@@ -318,10 +391,10 @@ public class World : MonoBehaviour
             }
         }
 
-        // on refresh les tilemaps
+        /* // on refresh les tilemaps
         fg_tm.RefreshAllTiles();
         bg_tm.RefreshAllTiles();
-        gd_tm.RefreshAllTiles();
+        gd_tm.RefreshAllTiles(); */
     }
 
 
@@ -520,6 +593,23 @@ public class World : MonoBehaviour
         }
 
         return null;
+    }
+
+    public void setTiles(BoundsInt bounds,TileBase[] tiles, string tm="bg")
+    {
+        // on set les tiles
+        if (tm == "bg")
+        {
+            bg_tm.SetTilesBlock(bounds, tiles);
+        }
+        else if (tm == "fg")
+        {
+            fg_tm.SetTilesBlock(bounds, tiles);
+        }
+        else if (tm == "gd")
+        {
+            gd_tm.SetTilesBlock(bounds, tiles);
+        }
     }
 
 }

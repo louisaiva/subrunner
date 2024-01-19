@@ -20,7 +20,11 @@ public class WorldGenerator : MonoBehaviour
     [Header("sectors")]
     [SerializeField] private GameObject sector_prefab;
     [SerializeField] private List<Sector> sectors = new List<Sector>();
+    // [SerializeField] private List<string> hand_made_sectors_names= new List<string>();
     [SerializeField] private bool is_world_safe = false;
+
+    [Header("hand-made sectors")]
+    [SerializeField] private List<GameObject> hand_made_sectors = new List<GameObject>();
 
     [Header("visualisation")]
     [SerializeField] private Transform visu_parent;
@@ -44,6 +48,9 @@ public class WorldGenerator : MonoBehaviour
 
         // on récupère la minimap
         minimap = GameObject.Find("/perso/minicam");
+
+        // on récupère les hand made sectors
+        hand_made_sectors = Resources.LoadAll<GameObject>("prefabs/sectors/hand_made").ToList();
 
         // on vérifie si PLAYTEST est activé -> si oui on ne génère pas le monde (le playtest est déjà généré)
         GameObject playtest = GameObject.Find("/playtest");
@@ -152,9 +159,9 @@ public class WorldGenerator : MonoBehaviour
     // RANDOM WALK GENERATION
     private void generateSectors()
     {
+        // on génère les secteurs random
         for (int i = 0; i < nb_sectors; i++)
         {
-
             // on crée des hashsets vides
             HashSet<Vector2Int> rooms = new HashSet<Vector2Int>();
             HashSet<Vector2Int> corridors = new HashSet<Vector2Int>();
@@ -165,13 +172,28 @@ public class WorldGenerator : MonoBehaviour
             // on crée le secteur
             GameObject sect = Instantiate(sector_prefab, world.transform);
             sect.name = "sector_" + i;
-            sect.GetComponent<Sector>().init(rooms, corridors);
+            sect.GetComponent<ProceduralSector>().init(rooms, corridors);
 
             // on met safe à jour
-            sect.GetComponent<Sector>().is_safe = is_world_safe;
+            sect.GetComponent<ProceduralSector>().is_safe = is_world_safe;
 
-            // on ajoute le pre-secteur à la liste
+            // on ajoute le secteur à la liste
             sectors.Add(sect.GetComponent<Sector>());
+        }
+
+        // on ajoute les secteurs hand made
+        for (int i = 0; i < hand_made_sectors.Count; i++)
+        {
+            // on récupère le secteur
+            GameObject sect = hand_made_sectors[i];
+
+            // on crée le secteur
+            GameObject sect2 = Instantiate(sect, world.transform);
+            sect2.name = "sector_" + (i + nb_sectors) + "_" + sect.name;
+            sect2.GetComponent<HandMadeSector>().initHashets();
+
+            // on ajoute le secteur à la liste
+            sectors.Add(sect2.GetComponent<Sector>());
         }
     }
 

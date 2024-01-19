@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3702304104984867074}
-  - component: {fileID: 1804440421785137842}
+  - component: {fileID: 8892230729650144733}
   m_Layer: 20
   m_Name: base_sector
   m_TagString: Untagged
@@ -65,7 +65,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1804440421785137842
+--- !u!114 &8892230729650144733
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -74,7 +74,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3536604030604803009}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1ec893d93a3adb4ca04e6e8e13a734b, type: 3}
+  m_Script: {fileID: 11500000, guid: 2c90434459a273a4bad7b32ff7d9348b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   world: {fileID: 0}
@@ -88,7 +88,7 @@ MonoBehaviour:
   - walls_2_7
   light_offset: {x: 0.25, y: 1, z: 0}
   poster_sprites: []
-  density_posters: 0.7
+  density_posters: 0.3
   empl_enemies: []
   empl_interactives: []
   enemies: []
