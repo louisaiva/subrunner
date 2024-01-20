@@ -458,6 +458,8 @@ public class AreaJsonHandler : MonoBehaviour
                 area_type = "rooms_ext/";
             else
                 area_type = "rooms/";
+        else if (name.Contains("sas_"))
+            area_type = "sas/";
 
         // on en déduit le path du fichier json
         string path = tile_areas_path + area_type + name + ".json";

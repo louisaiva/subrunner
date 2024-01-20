@@ -757,7 +757,7 @@ public class Sector : MonoBehaviour
         Vector2Int tile = new Vector2Int(start.x - x, start.y - y);
 
         // on ajoute un sas
-        // addSas(tile);
+        addSas(tile);
 
         // on ajoute une connection
         if (!connections.ContainsKey(tile))
