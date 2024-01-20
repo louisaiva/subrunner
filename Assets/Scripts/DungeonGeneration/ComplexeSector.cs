@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 public class ComplexeSector : Sector
 {
     [Header("Hand Made Sector")]
-    // [SerializeField] private Vector2 tile_start_pos;
     [SerializeField] private Tilemap fg_tm;
     [SerializeField] private Tilemap bg_tm;
     [SerializeField] private Tilemap gd_tm; 
@@ -247,67 +246,6 @@ public class ComplexeSector : Sector
         // print("(ComplexeSector - getAreaType) area_type : " + area_type);
         return area_type;
     }
-   
-    /* public override void getAreaNeighbors(Vector2Int pos, out HashSet<Vector2Int> room_directions, out HashSet<Vector2Int> corr_directions)
-    {
-        // on crée un hashset d'areas similaires adjacentes
-        room_directions = new HashSet<Vector2Int>();
-        corr_directions = new HashSet<Vector2Int>();
-
-        List<Vector2Int> directions = new List<Vector2Int> { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
-
-        // on parcourt les directions dans le secteur
-        foreach (var direction in directions)
-        {
-            // on récupère la position adjacente
-            Vector2Int adjacentPosition = pos + direction;
-
-            // on vérifie que la position adjacente est une salle
-            if (rooms.Contains(adjacentPosition))
-            {
-                if (isLocalHandmadeArea(adjacentPosition))
-                {
-                    // on vérifie que la position adjacente ne soit pas une handmade area non connectable
-                    if (!handmade_connectors_pos.Contains(adjacentPosition)) { continue; }
-
-                    Vector2Int connector_pos = handmade_connectors_pos[handmade_connectors_pos.IndexOf(adjacentPosition)];
-                    Vector2Int connector_dir = handmade_connectors_direction[handmade_connectors_pos.IndexOf(adjacentPosition)];
-
-                    // on l'ajoute si "pos" est le corridor qui connecte la handmade area dans la bonne direction
-                    if (connector_pos + connector_dir == pos)
-                    {
-                        // on ajoute la direction de la room
-                        room_directions.Add(direction);
-
-                        // print("(ComplexeSector) connecting corridor found : " + pos + " / " + connector_pos);
-                    }
-                }
-                else
-                {
-                    // on ajoute la direction de la room
-                    room_directions.Add(direction);
-                }
-            }
-            else if (corridors.Contains(adjacentPosition))
-            {
-                // on ajoute la direction du corridor
-                corr_directions.Add(direction);
-            }
-        }
-
-        // on vérifie les connections
-        if (connections.ContainsKey(pos))
-        {
-            // on ajoute toutes les directions de la connection
-            foreach (Vector2Int direction in connections[pos])
-            {
-                corr_directions.Add(direction);
-                // print("(ComplexeSector) connection found : " + pos + " / " + (pos + direction));
-            }
-
-        }
-
-    } */
 
     public override Dictionary<Vector2Int, string> getAreaNeighborsType(Vector2Int pos)
     {
