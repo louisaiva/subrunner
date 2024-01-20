@@ -73,6 +73,8 @@ public class WorldGenerator : MonoBehaviour
     // génère le monde
     public void GenerateWorld()
     {
+        if (!generate_world) { return; }
+        
         double creation_time = Time.realtimeSinceStartup;
 
         Debug.Log("<color=blue>on génère le monde</color>");
