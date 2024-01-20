@@ -190,7 +190,7 @@ public class WorldGenerator : MonoBehaviour
             // on crée le secteur
             GameObject sect2 = Instantiate(sect, world.transform);
             sect2.name = "sector_" + (i + nb_sectors) + "_" + sect.name;
-            sect2.GetComponent<HandMadeSector>().initHashets();
+            sect2.GetComponent<ComplexeSector>().initHashets();
 
             // on ajoute le secteur à la liste
             sectors.Add(sect2.GetComponent<Sector>());
@@ -575,7 +575,7 @@ public class WorldGenerator : MonoBehaviour
 
             // on vérifie sur quel axe s'effectue la frontière
             string border = sect1.getBorder(sect2);
-            print(sect1.gameObject.name + " and " + sect2.gameObject.name + " are connecting via border : " + border);
+            print("(WorldGenerator - connectSectors)" + sect1.gameObject.name + " and " + sect2.gameObject.name + " are connecting via border : " + border);
 
             if (!(new string[] {"no border","collision"}.Contains(border)))
             {

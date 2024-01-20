@@ -94,76 +94,29 @@ public class Sector : MonoBehaviour
     {
         // créé le plus petit chemin entre les deux secteurs
 
-        // trouve l'area la plus proche de l'autre secteur
-        Vector2Int closest_area = new Vector2Int(0, 0);
+        print("(Sector - connectWithSector) connecting " + gameObject.name + (this is ComplexeSector? "(ComplexeSector)": "") + " with " + other.gameObject.name + (other is ComplexeSector ? "(ComplexeSector)" : ""));
 
         // on trouve la frontière entre les secteurs
         string border = getBorder(other);
 
-        // on vérifie si les secteurs sont collés
-        if (border == "R")
+        // on trouve l'area la plus proche de l'autre secteur
+        Vector2Int closest_area = findClosestInsideConnectingArea(other,border);
+        if (closest_area == new Vector2Int(-1, -1))
         {
-            // on trouve l'area la plus proche de l'autre secteur par la droite
-            float min_dist = 100000;
-            for (int y_area = D(); y_area < U(); y_area++)
-            {
-                Vector2Int tile = new Vector2Int(R()-2, y_area);
-
-                // on vérifie que la tile est dans le secteur
-                if (!tiles.Contains(new Vector2Int(tile.x - x, tile.y - y))) { continue; }
-
-                // on calcule la distance
-                float dist = Vector2.Distance(tile, other.center());
-
-                // on vérifie si c'est la plus petite distance
-                if (dist < min_dist)
-                {
-                    min_dist = dist;
-                    closest_area = tile;
-                }
-            }
-        }
-        else if (border == "U")
-        {
-            // on trouve l'area la plus proche de l'autre secteur par le haut
-            float min_dist = 100000;
-            for (int x_area = L(); x_area < R(); x_area++)
-            {
-                Vector2Int tile = new Vector2Int(x_area, U()-2);
-
-                // on vérifie que la tile est dans le secteur
-                if (!tiles.Contains(new Vector2Int(tile.x - x, tile.y - y))) { continue; }
-
-                // on calcule la distance
-                float dist = Vector2.Distance(tile, other.center());
-
-                // on vérifie si c'est la plus petite distance
-                if (dist < min_dist)
-                {
-                    min_dist = dist;
-                    closest_area = tile;
-                }
-            }
-        }
-        else if (border == "collision")
-        {
-            Debug.LogError("(Sector - connectWithSector) Les secteurs collisionnent");
+            Debug.LogError("(Sector - connectWithSector) Erreur dans la recherche de l'area la plus proche");
             return;
         }
-        else if (border == "no border")
+
+        // on récupère la tile de l'autre secteur la plus proche de l'area
+        Vector2Int closest_area_other = new Vector2Int(0, 0);
+        /* if (other is ComplexeSector)
         {
-            Debug.LogError("(Sector - connectWithSector) Les secteurs ne sont pas voisins");
-            return;
+            closest_area_other = ((ComplexeSector)other).findClosestConnectingArea(closest_area);
         }
         else
         {
-            Debug.LogError("(Sector - connectWithSector) Erreur dans la recherche de la frontière entre les secteurs");
-            return;
-        }
-
-
-        // on récupère la tile de l'autre secteur la plus proche de l'area
-        Vector2Int closest_area_other = other.findClosestArea(closest_area);
+        } */
+        closest_area_other = other.findClosestConnectingArea(closest_area);
 
         print(gameObject.name + " : " + closest_area + " / " + other.gameObject.name + " : " + closest_area_other);
 
@@ -204,14 +157,22 @@ public class Sector : MonoBehaviour
 
         // on crée un path entre les deux areas qui est obligatoirement compris dans les 2 secteurs
         List<Vector2Int> path = createPath(closest_area, sas);
-        List<Vector2Int> other_path = other.createPath(other_sas, closest_area_other);
+        List<Vector2Int> other_path = new List<Vector2Int>();
+        /* if (other is ComplexeSector)
+        {
+            other_path = ((ComplexeSector)other).createPath(other_sas, closest_area_other);
+        }
+        else
+        {
+        } */
+        other_path = other.createPath(other_sas, closest_area_other);
 
         // on ajoute les paths
         addPath(path);
         other.addPath(other_path);
 
         
-        string s= "path :";
+        string s= "(Sector - connectWithSector) path :";
         foreach (Vector2Int pos in path)
         {
             s += " " + pos;
@@ -235,7 +196,81 @@ public class Sector : MonoBehaviour
         other.addConnection(other_sas, sas);
     }
 
-    public virtual Vector2Int findClosestArea(Vector2Int area)
+
+    public virtual Vector2Int findClosestInsideConnectingArea(Sector other, string border="")
+    {
+        // trouve l'area la plus proche de l'autre secteur
+        Vector2Int closest_area = new Vector2Int(0, 0);
+
+        // on trouve la frontière entre les secteurs
+        if (border == "") {border = getBorder(other);}
+
+        // on vérifie si les secteurs sont collés
+        if (border == "R")
+        {
+            // on trouve l'area la plus proche de l'autre secteur par la droite
+            float min_dist = 100000;
+            for (int y_area = D(); y_area < U(); y_area++)
+            {
+                Vector2Int tile = new Vector2Int(R() - 2, y_area);
+
+                // on vérifie que la tile est dans le secteur
+                if (!tiles.Contains(new Vector2Int(tile.x - x, tile.y - y))) { continue; }
+
+                // on calcule la distance
+                float dist = Vector2.Distance(tile, other.center());
+
+                // on vérifie si c'est la plus petite distance
+                if (dist < min_dist)
+                {
+                    min_dist = dist;
+                    closest_area = tile;
+                }
+            }
+        }
+        else if (border == "U")
+        {
+            // on trouve l'area la plus proche de l'autre secteur par le haut
+            float min_dist = 100000;
+            for (int x_area = L(); x_area < R(); x_area++)
+            {
+                Vector2Int tile = new Vector2Int(x_area, U() - 2);
+
+                // on vérifie que la tile est dans le secteur
+                if (!tiles.Contains(new Vector2Int(tile.x - x, tile.y - y))) { continue; }
+
+                // on calcule la distance
+                float dist = Vector2.Distance(tile, other.center());
+
+                // on vérifie si c'est la plus petite distance
+                if (dist < min_dist)
+                {
+                    min_dist = dist;
+                    closest_area = tile;
+                }
+            }
+        }
+        else if (border == "collision")
+        {
+            Debug.LogError("(Sector - connectWithSector) Les secteurs collisionnent");
+            return new Vector2Int(-1,-1);
+        }
+        else if (border == "no border")
+        {
+            Debug.LogError("(Sector - connectWithSector) Les secteurs ne sont pas voisins");
+            return new Vector2Int(-1,-1);
+        }
+        else
+        {
+            Debug.LogError("(Sector - connectWithSector) Erreur dans la recherche de la frontière entre les secteurs");
+            return new Vector2Int(-1,-1);
+        }
+
+        return closest_area;
+
+    }
+
+    public virtual Vector2Int findClosestConnectingArea(Vector2Int area)
     {
         // on trouve l'area la plus proche de l'autre secteur
         float min_dist = 100000;
@@ -260,6 +295,7 @@ public class Sector : MonoBehaviour
         // on retourne l'area la plus proche
         return closest_area;
     }
+
 
     protected virtual List<Vector2Int> createPath(Vector2Int start, Vector2Int end)
     {
@@ -345,11 +381,12 @@ public class Sector : MonoBehaviour
 
             if (!is_start && sas == new Vector2Int(-1000, -1000))
             {
-                // la position actuelle est notre sas
+                // la première position actuelle est notre sas
                 sas = path[i];
             }
-            else if (is_start)
+            else if (is_start && i == path.Count - 1)
             {
+                // la dernière position actuelle est notre sas
                 sas = path[i];
             }
 
@@ -506,6 +543,8 @@ public class Sector : MonoBehaviour
             directions.UnionWith(room_directions);
             directions.UnionWith(corr_directions);
 
+            // print("(Sector - getAreaName) corridor at " + pos + " is connecting with " + room_directions.Count + " rooms and " + corr_directions.Count + " corridors");
+
             // on parcourt les directions des rooms puis on ajoute le nom de la direction
             if (directions.Contains(Vector2Int.up)) { name += "U"; }
             if (directions.Contains(Vector2Int.down)) { name += "D"; }
@@ -517,7 +556,7 @@ public class Sector : MonoBehaviour
         return name;
     }
 
-    public void getAreaNeighbors(Vector2Int pos, out HashSet<Vector2Int> room_directions, out HashSet<Vector2Int> corr_directions)
+    public virtual void getAreaNeighbors(Vector2Int pos, out HashSet<Vector2Int> room_directions, out HashSet<Vector2Int> corr_directions)
     {
         // on crée un hashset d'areas similaires adjacentes
         room_directions = new HashSet<Vector2Int>();

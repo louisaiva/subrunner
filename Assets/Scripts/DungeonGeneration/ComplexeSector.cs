@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
-public class HandMadeSector : Sector
+public class ComplexeSector : Sector
 {
     [Header("Hand Made Sector")]
     // [SerializeField] private Vector2 tile_start_pos;
@@ -53,20 +53,20 @@ public class HandMadeSector : Sector
         float max_x = Mathf.Max(bg_max_x, fg_max_x, gd_max_x);
         float max_y = Mathf.Max(bg_max_y, fg_max_y, gd_max_y);
 
-        // print("(HandMadeSector) max_x : " + max_x + " max_y : " + max_y);
+        // print("(ComplexeSector) max_x : " + max_x + " max_y : " + max_y);
 
         // on multiplie par 2 pour avoir la taille du secteur en tiles (chaque tile fait 0.5 unité)
         float w_tiles = max_x*2;
         float h_tiles = max_y*2;
 
-        // print("(HandMadeSector) w_tiles : " + w_tiles + " h_tiles : " + h_tiles);
+        // print("(ComplexeSector) w_tiles : " + w_tiles + " h_tiles : " + h_tiles);
 
         // on divise par area_size pour avoir le nombre d'area
         int w_area = Mathf.CeilToInt(w_tiles / area_size.x);
         int h_area = Mathf.CeilToInt(h_tiles / area_size.y);
         wh_handmade = new Vector2Int(w_area, h_area);
 
-        // print("(HandMadeSector) w_area : " + w_area + " h_area : " + h_area + " / w_area : " + w_tiles / area_size.x + " h_area : " + h_tiles / area_size.y);
+        // print("(ComplexeSector) w_area : " + w_area + " h_area : " + h_area + " / w_area : " + w_tiles / area_size.x + " h_area : " + h_tiles / area_size.y);
 
         // on ajoute les tiles dans le hashset en partant de 1,1
         // -> comme ça on a un hashet avec un contour de 1 tile dans toutes les directions
@@ -110,13 +110,20 @@ public class HandMadeSector : Sector
 
 
     // SECTOR CONNECTIONS
-    public override Vector2Int findClosestArea(Vector2Int area)
+    public override Vector2Int findClosestInsideConnectingArea(Sector other, string border = "")
+    {
+        // on récupère la position la plus proche de la handmade area
+        Vector2Int other_center = new Vector2Int((int) other.cx(), (int) other.cy());
+        return findClosestConnectingArea(other_center);
+    }
+
+    public override Vector2Int findClosestConnectingArea(Vector2Int area)
     {
         // verify is there is a handmade area
         if (handmade_connectors_pos.Count == 0)
         {
-            Debug.LogError("(HandmadeSector - findClosestArea) Erreur : pas de handmade area");
-            return base.findClosestArea(area);
+            Debug.LogError("(ComplexeSector - findClosestConnectingArea) Erreur : pas de handmade area");
+            return base.findClosestConnectingArea(area);
         }
 
         // returns the closest corridor connected to the handmade area
@@ -145,6 +152,8 @@ public class HandMadeSector : Sector
             }
         }
 
+        print("(ComplexeSector - findClosestConnectingArea) on a trouvé la position " + closest_area + " avec une distance de " + min_dist);
+
         // on retourne l'area la plus proche
         return closest_area;
     }
@@ -164,10 +173,15 @@ public class HandMadeSector : Sector
         // on crée un path
         List<Vector2Int> path = new List<Vector2Int>();
 
+        // on vérifie si le start est dans le secteur
+        bool is_start = collidesWithRoomPoint(start);
+
         // on ajoute le start
         path.Add(start);
 
         Vector2Int last_last_pos = new Vector2Int(-1, -1);
+
+        print("(ComplexeSector - createPath) on crée un path entre " + start + " et " + end + " / start appartient au secteur : " + is_start);
 
         // on boucle tant qu'on a pas atteint la fin
         while (path.Last() != end)
@@ -176,7 +190,7 @@ public class HandMadeSector : Sector
             Vector2Int last_pos = path.Last();
             if (last_pos == last_last_pos)
             {
-                Debug.LogError("(HandmadeSector - createPath) Erreur dans la création du path");
+                Debug.LogError("(ComplexeSector - createPath) Erreur dans la création du path");
                 break;
             }
             last_last_pos = last_pos;
@@ -195,11 +209,12 @@ public class HandMadeSector : Sector
                 {
                     // on ajoute la direction au path
                     best_direction = direction;
+                    print("(ComplexeSector - createPath) on a atteint la fin en " + path.Count + " tours et à la position " + adjacentPosition + " avec la direction " + best_direction);
                     break;
                 }
 
                 // on vérifie si la position adjacente n'est pas une handmade area
-                if (isHandmadeArea(adjacentPosition))
+                if (isGlobalHandmadeArea(adjacentPosition))
                 {
                     continue;
                 }
@@ -228,9 +243,72 @@ public class HandMadeSector : Sector
         {
             return "handmade";
         }
-        return base.getAreaType(pos);
+        string area_type = base.getAreaType(pos);
+        // print("(ComplexeSector - getAreaType) area_type : " + area_type);
+        return area_type;
     }
+   
+    public override void getAreaNeighbors(Vector2Int pos, out HashSet<Vector2Int> room_directions, out HashSet<Vector2Int> corr_directions)
+    {
+        // on crée un hashset d'areas similaires adjacentes
+        room_directions = new HashSet<Vector2Int>();
+        corr_directions = new HashSet<Vector2Int>();
 
+        List<Vector2Int> directions = new List<Vector2Int> { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+
+        // on parcourt les directions dans le secteur
+        foreach (var direction in directions)
+        {
+            // on récupère la position adjacente
+            Vector2Int adjacentPosition = pos + direction;
+
+            // on vérifie que la position adjacente est une salle
+            if (rooms.Contains(adjacentPosition))
+            {
+                if (isLocalHandmadeArea(adjacentPosition))
+                {
+                    // on vérifie que la position adjacente ne soit pas une handmade area non connectable
+                    if (!handmade_connectors_pos.Contains(adjacentPosition)) { continue; }
+
+                    Vector2Int connector_pos = handmade_connectors_pos[handmade_connectors_pos.IndexOf(adjacentPosition)];
+                    Vector2Int connector_dir = handmade_connectors_direction[handmade_connectors_pos.IndexOf(adjacentPosition)];
+
+                    // on l'ajoute si "pos" est le corridor qui connecte la handmade area dans la bonne direction
+                    if (connector_pos + connector_dir == pos)
+                    {
+                        // on ajoute la direction de la room
+                        room_directions.Add(direction);
+
+                        // print("(ComplexeSector) connecting corridor found : " + pos + " / " + connector_pos);
+                    }
+                }
+                else
+                {
+                    // on ajoute la direction de la room
+                    room_directions.Add(direction);
+                }
+            }
+            else if (corridors.Contains(adjacentPosition))
+            {
+                // on ajoute la direction du corridor
+                corr_directions.Add(direction);
+            }
+        }
+
+        // on vérifie les connections
+        if (connections.ContainsKey(pos))
+        {
+            // on ajoute toutes les directions de la connection
+            foreach (Vector2Int direction in connections[pos])
+            {
+                corr_directions.Add(direction);
+                // print("(ComplexeSector) connection found : " + pos + " / " + (pos + direction));
+            }
+
+        }
+
+    }
+   
     // GETTERS
     public List<Tilemap> GetTilemaps()
     {
@@ -300,7 +378,17 @@ public class HandMadeSector : Sector
         return new BoundsInt((x + area_start.x) * area_size.x, (y + area_start.y) * area_size.y, 0, wh_handmade.x * area_size.x, wh_handmade.y * area_size.y, 1);
     }
 
-    public bool isHandmadeArea(Vector2Int pos)
+    public bool isGlobalHandmadeArea(Vector2Int pos)
+    {
+        // on vérifie si on est dans la handmade area
+        if (pos.x >= area_start.x + x && pos.x < area_start.x + x + wh_handmade.x && pos.y >= area_start.y + y && pos.y < area_start.y + y + wh_handmade.y)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public bool isLocalHandmadeArea(Vector2Int pos)
     {
         // on vérifie si on est dans la handmade area
         if (pos.x >= area_start.x && pos.x < area_start.x + wh_handmade.x && pos.y >= area_start.y && pos.y < area_start.y + wh_handmade.y)
@@ -316,7 +404,7 @@ public class HandMadeSector : Sector
         HashSet<Vector2Int> generated_areas = new HashSet<Vector2Int>();
         foreach (Vector2Int pos in tiles)
         {
-            if (!isHandmadeArea(pos))
+            if (!isLocalHandmadeArea(pos))
             {
                 generated_areas.Add(pos);
             }

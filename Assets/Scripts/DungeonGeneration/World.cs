@@ -58,23 +58,23 @@ public class World : MonoBehaviour
         // on récupère les sectors
         sectors = sect;
 
-        HandMadeSector spawn_sector = null;
+        ComplexeSector spawn_sector = null;
 
         // on parcourt les secteurs
         for (int i = 0; i < sect.Count; i++)
         {
             // on vérifie si le secteur est un hand made sector
-            if (sect[i].GetType() == typeof(HandMadeSector))
+            if (sect[i] is ComplexeSector)
             {
-                MergeSector((HandMadeSector) sect[i]);
+                MergeSector((ComplexeSector) sect[i]);
 
                 // on récupère le secteur de spawn
-                if (((HandMadeSector) sect[i]).isSpawnSector())
+                if (((ComplexeSector) sect[i]).isSpawnSector())
                 {
-                    spawn_sector = (HandMadeSector) sect[i];
+                    spawn_sector = (ComplexeSector) sect[i];
                 }
 
-                PlaceHandMadeAreas((HandMadeSector) sect[i]);
+                PlaceHandMadeAreas((ComplexeSector) sect[i]);
 
                 continue;
             }
@@ -102,10 +102,10 @@ public class World : MonoBehaviour
         for (int i = 0; i < sect.Count; i++)
         {
             // on regarde si le secteur est un hand made sector
-            if (sect[i].GetType() == typeof(HandMadeSector))
+            if (sect[i] is ComplexeSector)
             {
                 // on lance la génération du secteur
-                ((HandMadeSector) sect[i]).LAUNCH();
+                ((ComplexeSector) sect[i]).LAUNCH();
                 continue;
             }
 
@@ -192,7 +192,7 @@ public class World : MonoBehaviour
         SetAreaTiles(x, y, area_json);
     }
 
-    private void MergeSector(HandMadeSector sector)
+    private void MergeSector(ComplexeSector sector)
     {
         // on récupère les TileBase[] des tilemaps initiales
         TileBase[] fg_tiles = sector.getHandmadeTiles("fg");
@@ -209,7 +209,7 @@ public class World : MonoBehaviour
 
     }
 
-    private void PlaceHandMadeAreas(HandMadeSector sector)
+    private void PlaceHandMadeAreas(ComplexeSector sector)
     {
         // on génère les areas
         Vector2Int sector_pos = sector.xy();
@@ -219,6 +219,7 @@ public class World : MonoBehaviour
         {
             // on récupère le nom de l'area
             string area_name = sector.getAreaName(areaPos);
+            // print("placing handmade generated area at " + area_name + " at " + areaPos);
 
             // on place l'area
             PlaceArea(sector_pos.x + areaPos.x, sector_pos.y + areaPos.y, area_name);
