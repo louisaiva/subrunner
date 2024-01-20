@@ -8,8 +8,6 @@ public class InputManager : MonoBehaviour
     [SerializeField] private string current_input_type = "keyboard"; // keyboard or gamepad
     [SerializeField] private GameObject perso;
     public PlayerInputActions inputs;
-    // private InputControlScheme keyboard_scheme;
-    // private InputControlScheme gamepad_scheme;
 
     // unity functions
     void Awake()
@@ -20,16 +18,8 @@ public class InputManager : MonoBehaviour
         // on récupère les inputs
         inputs = new PlayerInputActions();
 
-        // on récupère le type d'input
-        // gamepad_scheme = inputs.asset.controlSchemes[0];
-        // keyboard_scheme = inputs.asset.controlSchemes[1];
-
-        // print("(InputManager) gamepad scheme: " + gamepad_scheme.name);
-        // print("(InputManager) keyboard scheme: " + keyboard_scheme.name);
-
         // on ajoute les listeners
         inputs.any.Enable();
-        // inputs.any.Enable();
         inputs.any.keyboard.performed += ctx => setInputType("keyboard");
         inputs.any.gamepad.performed += ctx => setInputType("gamepad");
 

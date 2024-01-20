@@ -13,7 +13,7 @@ public class AreaJsonHandler : MonoBehaviour
     [Header("Saving")]
     [SerializeField] private string rooms_path = "prefabs/rooms/";
     [SerializeField] private string areas_path = "Assets/Resources/prefabs/areas/";
-    [SerializeField] private string tile_areas_path = "Assets/Resources/prefabs/tileareas/";
+    [SerializeField] private string tile_areas_path = "Assets/Resources/prefabs/area_json/";
     [SerializeField] private List<GameObject> areas;
 
     // SELECTING AREAS
@@ -121,7 +121,7 @@ public class AreaJsonHandler : MonoBehaviour
     }
 
     // SAVING SELECTED AREAS
-    public void SaveJson(GameObject area)
+    public void SaveAreaToJson(GameObject area)
     {
         
         // * format de sauvegarde
@@ -157,6 +157,8 @@ public class AreaJsonHandler : MonoBehaviour
                 area_type = "rooms_ext/";
             else
                 area_type = "rooms/";
+        else if (area.name.Contains("sas_"))
+            area_type = "sas/";
 
         // on en déduit le path du fichier json
         string path = tile_areas_path + area_type + area.name + ".json";
@@ -172,18 +174,40 @@ public class AreaJsonHandler : MonoBehaviour
         Tilemap gdTilemap = area.transform.Find("gd_tilemap").GetComponent<Tilemap>();
 
         // on applique des changements à nos tilemaps !!
-        FillEmptyBottomLines(ref fgTilemap, ref gdTilemap);
+        // FillEmptyBottomLines(ref fgTilemap, ref gdTilemap);
 
+
+        // on récupère les bounds des tilemaps
+        fgTilemap.CompressBounds();
+        bgTilemap.CompressBounds();
+        gdTilemap.CompressBounds();
+        BoundsInt fg_bounds = fgTilemap.cellBounds;
+        BoundsInt bg_bounds = bgTilemap.cellBounds;
+        BoundsInt gd_bounds = gdTilemap.cellBounds;
+
+        // on récupère les positions des tilemaps
+        int min_x = Mathf.Min(fg_bounds.xMin, bg_bounds.xMin, gd_bounds.xMin);
+        int min_y = Mathf.Min(fg_bounds.yMin, bg_bounds.yMin, gd_bounds.yMin);
+        int max_x = Mathf.Max(fg_bounds.xMax, bg_bounds.xMax, gd_bounds.xMax);
+        int max_y = Mathf.Max(fg_bounds.yMax, bg_bounds.yMax, gd_bounds.yMax);
+
+        if (max_x - min_x > 16 || max_y - min_y > 16)
+        {
+            Debug.LogError("(AreaJsonHandler - save to json) loaded area " + area.name + " is too big : " + (max_x - min_x) + "x" + (max_y - min_y));
+            return;
+        }
+
+        // on flip l'area si besoin
         bool flip_x = false;
         if (area.transform.localScale.x < 0) { flip_x = true; }
 
-        // on récupère les dimensions de l'area
+        // on prépare le json
         string json_fg = "\"fg\" : [\n";
         string json_bg = "\"bg\" : [\n";
         string json_gd = "\"gd\" : [\n";
 
         // on parcourt les tiles
-        for (int y = -8; y < 8; y++)
+        for (int y = min_y; y < max_y; y++)
         {
             // on ajoute une ligne à chaque liste
             fg.Add(new List<int>());
@@ -195,7 +219,7 @@ public class AreaJsonHandler : MonoBehaviour
             json_bg += "[";
             json_gd += "[";
 
-            for (int x = -8; x < 8; x++)
+            for (int x = min_x; x < max_x; x++)
             {
                 // on flip les tiles
                 int fx = x;
@@ -260,16 +284,19 @@ public class AreaJsonHandler : MonoBehaviour
                     emplacements.Add(type, new HashSet<Vector2>());
                 }
 
-                if (new string[] {"enemy","interactive"}.Contains(type))
+                if (area_type != "sas/")
                 {
-                    // on déplace la pos en Y de -0.25
-                    pos.y -= 0.25f;
-                }
+                    if (new string[] {"enemy","interactive"}.Contains(type))
+                    {
+                        // on déplace la pos en Y de -0.25
+                        pos.y -= 0.25f;
+                    }
 
-                if (new string[] { "doorU", "doorD" }.Contains(type))
-                {
-                    // on déplace la pos en X de -0.25
-                    pos.y -= 1f;
+                    if (new string[] { "doorU", "doorD" }.Contains(type))
+                    {
+                        // on déplace la pos en X de -0.25
+                        pos.y -= 1f;
+                    }
                 }
 
 
@@ -337,11 +364,11 @@ public class AreaJsonHandler : MonoBehaviour
         size = new Vector2Int(width, height);
     }
 
-    public void SaveTileAreas()
+    public void SaveAreasToJson()
     {
         foreach (GameObject area in areas)
         {
-            SaveJson(area);
+            SaveAreaToJson(area);
         }
     }
 
@@ -454,18 +481,17 @@ public class AreaJsonHandler : MonoBehaviour
 
 
     // LOADING THEN SAVING TO PREFABS
-    public void SaveAllAreas()
+    public void SaveAreasToPrefab()
     {
         foreach (string directory in System.IO.Directory.GetDirectories(tile_areas_path))
         {
-
             string dir = directory.Split('/')[directory.Split('/').Length - 1] + "\\";
             print("saving areas prefabs to" + dir);
-            SaveDirAreas(dir);
+            SaveDirAreasToPrefab(dir);
         }
     }
 
-    public void SaveDirAreas(string directory)
+    public void SaveDirAreasToPrefab(string directory)
     {
         // we load all areas from json
         foreach (string area_name in System.IO.Directory.GetFiles(tile_areas_path + directory, "*.json"))

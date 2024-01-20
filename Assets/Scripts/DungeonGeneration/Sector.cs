@@ -660,11 +660,11 @@ public class Sector : MonoBehaviour
         return path;
     }
 
-    public Vector2Int addPath(List<Vector2Int> path)
+    public void addPath(List<Vector2Int> path)
     {
 
-        // on renvoit la position du sas
-        Vector2Int sas = new Vector2Int(-1000, -1000);
+        // on cherche la position du sas
+        // Vector2Int sas_position = new Vector2Int(-1000, -1000);
 
         // on regarde si c'est un path de départ (start dans le secteur)
         // ou un path d'arrivée (end dans le secteur)
@@ -679,42 +679,85 @@ public class Sector : MonoBehaviour
                 continue;
             }
 
-            if (!is_start && sas == new Vector2Int(-1000, -1000))
-            {
-                // la première position actuelle est notre sas
-                sas = path[i];
-            }
-            else if (is_start && i == path.Count - 1)
-            {
-                // la dernière position actuelle est notre sas
-                sas = path[i];
-            }
-
             // on modifie la tile
             Vector2Int tile = path[i];
             tile.x -= x;
             tile.y -= y;
 
-            // on ajoute un corridor si ce n'est pas déjà une room
+            // on ajoute l'area_tile aux tiles
+            /* if (!is_start && sas_position == new Vector2Int(-1000, -1000))
+            {
+                // la première position actuelle est notre sas_position
+                if (tiles.Contains(path[i]))
+                {
+                    // on l'enlève des rooms et des corridors
+                    rooms.Remove(path[i]);
+                    corridors.Remove(path[i]);
+                    tiles.Remove(path[i]);
+                }
+
+                sas_position = path[i];
+                sas.Add(sas_position);
+                tiles.Add(sas_position);
+            }
+            else if (is_start && i == path.Count - 1)
+            {
+                // la dernière position actuelle est notre sas
+                if (tiles.Contains(path[i]))
+                {
+                    // on l'enlève des rooms et des corridors
+                    rooms.Remove(path[i]);
+                    corridors.Remove(path[i]);
+                    tiles.Remove(path[i]);
+                }
+
+                sas_position = path[i];
+                sas.Add(sas_position);
+                tiles.Add(sas_position);
+            } */
             if (!rooms.Contains(tile))
             {
+                // on ajoute un corridor si ce n'est pas déjà une room
                 corridors.Add(tile);
                 tiles.Add(tile);
-            }
+            }/* 
             else if (i == 0 || i == path.Count - 1)
             {
                 // on ajoute un sas
                 rooms.Remove(tile);
                 corridors.Add(tile);
-            }
+            } */
+
         }
 
-        return sas;
+        // return sas;
+    }
+
+    public void addSas(Vector2Int sas_position)
+    {
+        // on ajoute un sas
+        sas.Add(sas_position);
+
+        // on vérifie que la tile n'est pas déjà dans les tiles
+        if (tiles.Contains(sas_position))
+        {
+            // on l'enlève des rooms et des corridors
+            rooms.Remove(sas_position);
+            corridors.Remove(sas_position);
+        }
+        else
+        {
+            tiles.Add(sas_position);
+        }
+
     }
 
     public void addConnection(Vector2Int start, Vector2Int end)
     {
         Vector2Int tile = new Vector2Int(start.x - x, start.y - y);
+
+        // on ajoute un sas
+        // addSas(tile);
 
         // on ajoute une connection
         if (!connections.ContainsKey(tile))
@@ -827,11 +870,43 @@ public class Sector : MonoBehaviour
         string name = type + "_";
 
         // on récupère le voisinage
-        HashSet<Vector2Int> room_directions;
-        HashSet<Vector2Int> corr_directions;
-        getAreaNeighbors(pos, out room_directions, out corr_directions);
+        // HashSet<Vector2Int> room_directions;
+        // HashSet<Vector2Int> corr_directions;
+        // getAreaNeighbors(pos, out room_directions, out corr_directions);
+        Dictionary<Vector2Int, string> neighbors = getAreaNeighborsType(pos);
+        List<Vector2Int> directions = new List<Vector2Int> { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
 
-        if (type == "room")
+        // on ajoute le nom de la direction
+        if (neighbors.ContainsKey(Vector2Int.up))
+        {
+            if (type == "sas" && neighbors[Vector2Int.up] == "connection")
+                name += "N";
+            else
+                name += "U";
+        }
+        if (neighbors.ContainsKey(Vector2Int.down))
+        {
+            if (type == "sas" && neighbors[Vector2Int.down] == "connection")
+                name += "S";
+            else
+                name += "D";
+        }
+        if (neighbors.ContainsKey(Vector2Int.left))
+        {
+            if (type == "sas" && neighbors[Vector2Int.left] == "connection")
+                name += "W";
+            else
+                name += "L";
+        }
+        if (neighbors.ContainsKey(Vector2Int.right))
+        {
+            if (type == "sas" && neighbors[Vector2Int.right] == "connection")
+                name += "E";
+            else
+                name += "R";
+        }
+
+        /* if (type == "room")
         {
             // on concatène les directions
             HashSet<Vector2Int> directions = new HashSet<Vector2Int>();
@@ -859,12 +934,16 @@ public class Sector : MonoBehaviour
             if (directions.Contains(Vector2Int.left)) { name += "L"; }
             if (directions.Contains(Vector2Int.right)) { name += "R"; }
         }
+        else if (type == "sas")
+        {
+
+        } */
 
         // on retourne le nom
         return name;
     }
 
-    public virtual void getAreaNeighbors(Vector2Int pos, out HashSet<Vector2Int> room_directions, out HashSet<Vector2Int> corr_directions)
+    /* public virtual void getAreaNeighbors(Vector2Int pos, out HashSet<Vector2Int> room_directions, out HashSet<Vector2Int> corr_directions)
     {
         // on crée un hashset d'areas similaires adjacentes
         room_directions = new HashSet<Vector2Int>();
@@ -884,6 +963,11 @@ public class Sector : MonoBehaviour
                 // on ajoute la direction de la room
                 room_directions.Add(direction);
             }
+            else if (sas.Contains(adjacentPosition))
+            {
+                // on ajoute la direction du sas
+                corr_directions.Add(direction);
+            }
             else if (corridors.Contains(adjacentPosition))
             {
                 // on ajoute la direction du corridor
@@ -902,6 +986,43 @@ public class Sector : MonoBehaviour
 
             // print("connection found : " + pos + " / " + connections[pos]);
         }
+
+    } */
+
+    public virtual Dictionary<Vector2Int, string> getAreaNeighborsType(Vector2Int pos)
+    {
+        // on regarde les types des voisins
+        Dictionary<Vector2Int, string> neighbors = new Dictionary<Vector2Int, string>();
+
+        List<Vector2Int> directions = new List<Vector2Int> { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+
+        // on parcourt les directions dans le secteur
+        foreach (Vector2Int direction in directions)
+        {
+            // on récupère la position adjacente
+            Vector2Int adjacentPosition = pos + direction;
+
+            // on récupère le type de l'area
+            string type = getAreaType(adjacentPosition);
+
+            if (type != "ceiling")
+            {
+                // on ajoute l'area à la liste
+                neighbors.Add(direction, type);
+            }
+        }
+
+        // on regarde si c'est une position de connection
+        if (connections.ContainsKey(pos))
+        {
+            // on ajoute toutes les directions de la connection
+            foreach (Vector2Int dir in connections[pos])
+            {
+                neighbors.Add(dir, "connection");
+            }
+        }
+
+        return neighbors;
 
     }
 

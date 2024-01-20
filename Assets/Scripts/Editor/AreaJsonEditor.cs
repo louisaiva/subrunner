@@ -6,9 +6,13 @@ public class AreaJsonEditor: Editor {
     public override void OnInspectorGUI() {
 
         AreaJsonHandler areaBuilder = (AreaJsonHandler)target;
-        if (GUILayout.Button("Save Json"))
+        if (GUILayout.Button("Save Areas to Json"))
         {
-            areaBuilder.SaveTileAreas();
+            areaBuilder.SaveAreasToJson();
+        }
+        else if (GUILayout.Button("Save Areas to Prefabs"))
+        {
+            areaBuilder.SaveAreasToPrefab();
         }
         else if (GUILayout.Button("Select all Areas"))
         {
@@ -17,10 +21,6 @@ public class AreaJsonEditor: Editor {
         else if (GUILayout.Button("Load Area"))
         {
             areaBuilder.LoadArea();
-        }
-        else if (GUILayout.Button("Save all Areas"))
-        {
-            areaBuilder.SaveAllAreas();
         }
 
         DrawDefaultInspector();
