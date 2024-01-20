@@ -20,9 +20,13 @@ public class World : MonoBehaviour
     [SerializeField] private Tilemap gd_tm;
 
     [Header("Tiles")]
-    [SerializeField] private TileBase fg_tile;
+    /* [SerializeField] private TileBase fg_tile;
     [SerializeField] private TileBase bg_tile;
-    [SerializeField] private TileBase gd_tile;
+    [SerializeField] private TileBase gd_tile; */
+    [SerializeField] private Dictionary<string, TileBase> fg_tiles = new Dictionary<string, TileBase>();
+    [SerializeField] private Dictionary<string, TileBase> bg_tiles = new Dictionary<string, TileBase>();
+    [SerializeField] private Dictionary<string, TileBase> gd_tiles = new Dictionary<string, TileBase>();
+
 
     [Header("Areas")]
     public Vector2Int area_size = new Vector2Int(16, 16);
@@ -35,9 +39,18 @@ public class World : MonoBehaviour
         gd_tm = transform.Find("gd").GetComponent<Tilemap>();
 
         // on récupère les tiles
-        fg_tile = Resources.Load<TileBase>("tilesets/fg_2_rule");
-        bg_tile = Resources.Load<TileBase>("tilesets/walls_1_rule");
-        gd_tile = Resources.Load<TileBase>("tilesets/gd_2_rule");
+        fg_tiles.Clear();
+        bg_tiles.Clear();
+        gd_tiles.Clear();
+        fg_tiles.Add("base_sector", Resources.Load<TileBase>("tilesets/fg_2_rule"));
+        bg_tiles.Add("base_sector", Resources.Load<TileBase>("tilesets/walls_1_rule"));
+        gd_tiles.Add("base_sector", Resources.Load<TileBase>("tilesets/gd_2_rule"));
+        fg_tiles.Add("server", Resources.Load<TileBase>("tilesets/fg_2_rule"));
+        bg_tiles.Add("server", Resources.Load<TileBase>("tilesets/walls_2_rule"));
+        gd_tiles.Add("server", Resources.Load<TileBase>("tilesets/gd_2_rule"));
+        // fg_tile = Resources.Load<TileBase>("tilesets/fg_2_rule");
+        // bg_tile = Resources.Load<TileBase>("tilesets/walls_1_rule");
+        // gd_tile = Resources.Load<TileBase>("tilesets/gd_2_rule");
 
         // on récupère le builder
         builder = GameObject.Find("generator").transform.Find("builder").GetComponent<AreaJsonHandler>();
@@ -87,9 +100,10 @@ public class World : MonoBehaviour
             {
                 // on récupère le nom de l'area
                 string area_name = sect[i].getAreaName(areaPos);
+                string skin = sect[i].getAreaSkin(areaPos);
 
                 // on place l'area
-                PlaceArea(sector_pos.x + areaPos.x, sector_pos.y + areaPos.y, area_name);
+                PlaceArea(sector_pos.x + areaPos.x, sector_pos.y + areaPos.y, area_name, skin);
             }
         }
 
@@ -106,6 +120,11 @@ public class World : MonoBehaviour
             {
                 // on lance la génération du secteur
                 ((ComplexeSector) sect[i]).LAUNCH();
+
+                // on récup les emplacements interactifs et ennemis
+                GetEmplacements(((ComplexeSector) sect[i]), out List<Vector2> complexe_empl_enemies, out List<Vector2> complexe_empl_interactives);
+                sect[i].GENERATE(complexe_empl_enemies, complexe_empl_interactives);
+
                 continue;
             }
 
@@ -113,7 +132,7 @@ public class World : MonoBehaviour
             ProceduralSector sector = (ProceduralSector) sect[i];
 
             // on récup les emplacements interactifs et ennemis
-            GetEmplacements(sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives);
+            GetEmplacements((ProceduralSector) sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives);
 
             // on récup les positions des portes
             Dictionary<Vector2,Vector2Int> empl_doors = new Dictionary<Vector2, Vector2Int>();
@@ -177,7 +196,7 @@ public class World : MonoBehaviour
 
     }
 
-    private void PlaceArea(int x, int y, string area_name)
+    private void PlaceArea(int x, int y, string area_name, string skin="base_sector")
     {
         // on récupère le json de l'area
         AreaJson area_json = builder.LoadAreaJson(area_name);
@@ -189,23 +208,23 @@ public class World : MonoBehaviour
         }
 
         // on set les tiles de l'area
-        SetAreaTiles(x, y, area_json);
+        SetAreaTiles(x, y, area_json, skin);
     }
 
     private void MergeSector(ComplexeSector sector)
     {
         // on récupère les TileBase[] des tilemaps initiales
-        TileBase[] fg_tiles = sector.getHandmadeTiles("fg");
-        TileBase[] bg_tiles = sector.getHandmadeTiles("bg");
-        TileBase[] gd_tiles = sector.getHandmadeTiles("gd");
+        TileBase[] init_fg_tiles = sector.getHandmadeTiles("fg");
+        TileBase[] init_bg_tiles = sector.getHandmadeTiles("bg");
+        TileBase[] init_gd_tiles = sector.getHandmadeTiles("gd");
 
         // on récupère le BoundsInt final
         BoundsInt final_bounds = sector.getHandmadeBounds();
 
         // on set les tiles
-        setTiles(final_bounds, fg_tiles, "fg");
-        setTiles(final_bounds, bg_tiles, "bg");
-        setTiles(final_bounds, gd_tiles, "gd");
+        setTiles(final_bounds, init_fg_tiles, "fg");
+        setTiles(final_bounds, init_bg_tiles, "bg");
+        setTiles(final_bounds, init_gd_tiles, "gd");
 
     }
 
@@ -219,10 +238,11 @@ public class World : MonoBehaviour
         {
             // on récupère le nom de l'area
             string area_name = sector.getAreaName(areaPos);
+            string skin = sector.getAreaSkin(areaPos);
             // print("placing handmade generated area at " + area_name + " at " + areaPos);
 
             // on place l'area
-            PlaceArea(sector_pos.x + areaPos.x, sector_pos.y + areaPos.y, area_name);
+            PlaceArea(sector_pos.x + areaPos.x, sector_pos.y + areaPos.y, area_name, skin);
         }
     }
 
@@ -286,7 +306,7 @@ public class World : MonoBehaviour
 
 
     // EMPLACEMENTS
-    private void GetEmplacements(Sector sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives)
+    private void GetEmplacements(ProceduralSector sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives)
     {
         // on créé les emplacements
         empl_enemies = new List<Vector2>();
@@ -298,6 +318,27 @@ public class World : MonoBehaviour
             // on récupère la position de l'area
             Vector2Int area_pos = (area + sector.xy());
 
+
+            // on récupère les emplacements de la room
+            List<Vector2> empl_e, empl_i;
+            GetAreaEmplacements(area_pos, out empl_e, out empl_i);
+
+            // on ajoute les emplacements à la liste
+            empl_enemies.AddRange(empl_e);
+            empl_interactives.AddRange(empl_i);
+        }
+    }
+    private void GetEmplacements(ComplexeSector sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives)
+    {
+        // on créé les emplacements
+        empl_enemies = new List<Vector2>();
+        empl_interactives = new List<Vector2>();
+
+        // on parcourt les rooms
+        foreach (Vector2Int area in sector.getGeneratedAreas())
+        {
+            // on récupère la position de l'area
+            Vector2Int area_pos = (area + sector.xy());
 
             // on récupère les emplacements de la room
             List<Vector2> empl_e, empl_i;
@@ -358,30 +399,30 @@ public class World : MonoBehaviour
 
 
     // SETTERS
-    public void SetLayerTile(int x, int y, int tile=0, string layer="bg")
+    public void SetLayerTile(int x, int y, int tile=0, string layer="bg",string skin="base_sector")
     {
         if (layer == "bg")
         {
-            bg_tm.SetTile(new Vector3Int(x, y, 0), tile == 0 ? null : bg_tile);
+            bg_tm.SetTile(new Vector3Int(x, y, 0), tile == 0 ? null : bg_tiles[skin]);
         }
         else if (layer == "fg")
         {
-            fg_tm.SetTile(new Vector3Int(x, y, 0), tile == 0 ? null : fg_tile);
+            fg_tm.SetTile(new Vector3Int(x, y, 0), tile == 0 ? null : fg_tiles[skin]);
         }
         else if (layer == "gd")
         {
-            gd_tm.SetTile(new Vector3Int(x, y, 0), tile == 0 ? null : gd_tile);
+            gd_tm.SetTile(new Vector3Int(x, y, 0), tile == 0 ? null : gd_tiles[skin]);
         }
     }
 
-    public void SetTile(int x, int y, int fg, int bg, int gd)
+    public void SetTile(int x, int y, int fg, int bg, int gd, string skin="base_sector")
     {
-        SetLayerTile(x, y, fg, "fg");
-        SetLayerTile(x, y, bg, "bg");
-        SetLayerTile(x, y, gd, "gd");
+        SetLayerTile(x, y, fg, "fg", skin);
+        SetLayerTile(x, y, bg, "bg", skin);
+        SetLayerTile(x, y, gd, "gd", skin);
     }
 
-    public void SetAreaTiles(int x, int y, AreaJson area)
+    public void SetAreaTiles(int x, int y, AreaJson area, string skin="base_sector")
     {
         // loads the json to the tilemaps
 
@@ -394,7 +435,7 @@ public class World : MonoBehaviour
                 int x_tile = x * area_size.x + i;
                 
                 // on set les tiles
-                SetTile(x_tile, y_tile, area.fg[j][i], area.bg[j][i], area.gd[j][i]);
+                SetTile(x_tile, y_tile, area.fg[j][i], area.bg[j][i], area.gd[j][i], skin);
             }
         }
 

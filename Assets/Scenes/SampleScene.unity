@@ -402,7 +402,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generate_world: 1
-  nb_sectors: 4
+  nb_sectors: 5
   world: {fileID: 0}
   sector_prefab: {fileID: 0}
   sectors: []
@@ -887,7 +887,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &178721811
 Transform:
   m_ObjectHideFlags: 0
@@ -7678,7 +7678,7 @@ MonoBehaviour:
     m_Bits: 0
   cooldown_attack: 0.6
   knockback_base: 4
-  CHEAT: 1
+  CHEAT: 0
   level: 1
   xp: 0
   total_xp: 0
@@ -7832,7 +7832,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1353416090}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.49, y: 0.5, z: 0}
+  m_LocalPosition: {x: 3.48, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -14906,9 +14906,6 @@ MonoBehaviour:
   fg_tm: {fileID: 0}
   bg_tm: {fileID: 0}
   gd_tm: {fileID: 0}
-  fg_tile: {fileID: 0}
-  bg_tile: {fileID: 0}
-  gd_tile: {fileID: 0}
   area_size: {x: 16, y: 16}
 --- !u!156049354 &1805520240
 Grid:

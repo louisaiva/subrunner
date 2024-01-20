@@ -74,7 +74,7 @@ public class WorldGenerator : MonoBehaviour
     public void GenerateWorld()
     {
         if (!generate_world) { return; }
-        
+
         double creation_time = Time.realtimeSinceStartup;
 
         Debug.Log("<color=blue>on génère le monde</color>");
@@ -179,6 +179,10 @@ public class WorldGenerator : MonoBehaviour
             // on met safe à jour
             sect.GetComponent<ProceduralSector>().is_safe = is_world_safe;
 
+            // on met un skin aléatoire
+            string skin = (Random.Range(0, 2) == 0) ? "base_sector" : "server";
+            sect.GetComponent<ProceduralSector>().setSkin(skin);
+
             // on ajoute le secteur à la liste
             sectors.Add(sect.GetComponent<Sector>());
         }
@@ -193,6 +197,10 @@ public class WorldGenerator : MonoBehaviour
             GameObject sect2 = Instantiate(sect, world.transform);
             sect2.name = "sector_" + (i + nb_sectors) + "_" + sect.name;
             sect2.GetComponent<ComplexeSector>().initHashets();
+
+            // on met un skin aléatoire
+            string skin = (Random.Range(0, 2) == 0) ? "base_sector" : "server";
+            sect.GetComponent<ComplexeSector>().setSkin(skin);
 
             // on ajoute le secteur à la liste
             sectors.Add(sect2.GetComponent<Sector>());
