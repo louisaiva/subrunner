@@ -15849,6 +15849,22 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 8570373338400943152, guid: c60dc2e81142dff44a9a4129c805e59b, type: 2}
+    - target: {fileID: 1814877745708755697, guid: 9f258837f3030a4458946c11c06f1b1f, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1814877745708755697, guid: 9f258837f3030a4458946c11c06f1b1f, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1814877745708755697, guid: 9f258837f3030a4458946c11c06f1b1f, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3895307400392172919, guid: 9f258837f3030a4458946c11c06f1b1f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5208939285485572580, guid: 9f258837f3030a4458946c11c06f1b1f, type: 3}
       propertyPath: m_RootOrder
       value: -1
@@ -15899,7 +15915,7 @@ PrefabInstance:
       objectReference: {fileID: 8570373338400943152, guid: c60dc2e81142dff44a9a4129c805e59b, type: 2}
     - target: {fileID: 7102692376086270309, guid: 9f258837f3030a4458946c11c06f1b1f, type: 3}
       propertyPath: m_text
-      value: basement
+      value: home
       objectReference: {fileID: 0}
     - target: {fileID: 7102692376086270309, guid: 9f258837f3030a4458946c11c06f1b1f, type: 3}
       propertyPath: m_fontColor.a
@@ -15952,13 +15968,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8767277542052347151, guid: 9f258837f3030a4458946c11c06f1b1f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 2170387698064804237, guid: 9f258837f3030a4458946c11c06f1b1f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9f258837f3030a4458946c11c06f1b1f, type: 3}
 --- !u!4 &513934121762203186 stripped
 Transform:
@@ -16977,7 +16987,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 299467254294187729, guid: b839c0f7ba96bf84295bc08932fa7dfd, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 953039446567095052, guid: b839c0f7ba96bf84295bc08932fa7dfd, type: 3}
       propertyPath: m_TileSpriteArray.Array.data[23].m_RefCount

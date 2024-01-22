@@ -41,13 +41,16 @@ public class Sector : MonoBehaviour
     [SerializeField] protected List<string> walls_light_tiles = new List<string> { "bg_2_7", "walls_1_7", "walls_2_7" };
     [SerializeField] protected Vector3 light_offset = new Vector3(0.25f, 1f, 0f);
 
-    [Header("Posters")]
+    [Header("Posters & Tags")]
     [SerializeField] protected Sprite[] poster_sprites;
     protected List<string> full_walls_tiles = new List<string> {"walls_1_3", "walls_1_4", "walls_1_5", "walls_1_6"
                                                         , "walls_1_7", "walls_1_8",
                                                         "walls_2_3", "walls_2_4", "walls_2_5", "walls_2_6"
                                                         , "walls_2_7", "walls_2_8"};
     [SerializeField] protected float density_posters = 0.3f; // 0.5 = 1 poster tous les 2 tiles compatibles
+    [SerializeField] protected Sprite[] tags_sprites;
+    [SerializeField] protected Vector3 tag_offset = new Vector3(2.5f, 0.75f, 0f);
+    [SerializeField] protected float density_tags = 0.5f;
 
     [Header("Emplacements")]
     [SerializeField] protected List<Vector2> empl_enemies = new List<Vector2>();
@@ -86,6 +89,7 @@ public class Sector : MonoBehaviour
         prefabs.Add("doorUD", Resources.Load<GameObject>("prefabs/objects/door_hackbl"));
         prefabs.Add("doorLR", Resources.Load<GameObject>("prefabs/objects/door_L"));
         prefabs.Add("sector_label", Resources.Load<GameObject>("prefabs/objects/sector_label"));
+        prefabs.Add("tag", Resources.Load<GameObject>("prefabs/objects/tag"));
 
         // on récupère les parents
         parents.Add("light", transform.Find("decoratives/lights"));
@@ -95,8 +99,11 @@ public class Sector : MonoBehaviour
         parents.Add("computer", transform.Find("interactives"));
         parents.Add("doors", transform.Find("interactives"));
         parents.Add("sector_label", transform.Find("decoratives"));
+        parents.Add("tag", transform.Find("decoratives/posters"));
 
         poster_sprites = Resources.LoadAll<Sprite>("spritesheets/environments/objects/posters");
+        tags_sprites = Resources.LoadAll<Sprite>("spritesheets/environments/objects/tags");
+
     }
 
     void Update()
@@ -170,6 +177,9 @@ public class Sector : MonoBehaviour
         // on génère les posters
         PlacePosters();
 
+        // on génère les tags
+        PlaceTags();
+
         // on place les ennemis
         if (!is_safe)
         {
@@ -234,6 +244,7 @@ public class Sector : MonoBehaviour
         BoundsInt bounds = getBounds();
         TileBase[] tiles = world.getTiles(bounds);
 
+
         for (int i = 0; i < bounds.size.x; i++)
         {
             for (int j = 0; j < bounds.size.y; j++)
@@ -279,6 +290,73 @@ public class Sector : MonoBehaviour
                     if (Random.Range(0f, 1f) < 0.1f)
                     {
                         i--;
+                    }
+                }
+            }
+        }
+    }
+
+    protected void PlaceTags()
+    {
+        // on récupère les tiles
+        BoundsInt bounds = getBounds();
+        TileBase[] tiles = world.getTiles(bounds);
+
+
+        // we need to find 5 tiles in a row to place a tag
+        int tags_width_in_tiles = 5;
+
+        // on parcourt les tiles
+        for (int i = 0; i < bounds.size.x; i++)
+        {
+            for (int j = 0; j < bounds.size.y; j++)
+            {
+                // on récupère la position globale de la tile
+                int x_ = bounds.x + i;
+                int y_ = bounds.y + j;
+
+                // on récupère le sprite
+                Sprite sprite = world.GetSprite(x_, y_);
+                if (sprite == null) { continue; }
+
+                if (full_walls_tiles.Contains(sprite.name))
+                {
+                    // on vérifie qu'il y a assez de place pour mettre un tag
+                    int nb_tiles_in_a_row = 1;
+                    for (int ii=1; ii<tags_width_in_tiles; ii++)
+                    {
+                        // on récupère la position globale de la tile
+                        int x__ = bounds.x + i + ii;
+                        int y__ = bounds.y + j;
+
+                        // on récupère le sprite
+                        Sprite sprite__ = world.GetSprite(x__, y__);
+                        if (sprite__ == null) { break; }
+
+                        if (full_walls_tiles.Contains(sprite__.name))
+                        {
+                            nb_tiles_in_a_row++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    if (nb_tiles_in_a_row == tags_width_in_tiles && Random.Range(0f, 1f) < density_tags)
+                    {
+                        // on instancie un tag
+                        Vector3 tile_pos = world.CellToWorld(new Vector3Int(x_, y_, 0)) + tag_offset;
+                        GameObject tag = Instantiate(prefabs["tag"], tile_pos, Quaternion.identity);
+
+                        // on choisit un sprite random
+                        tag.GetComponent<SpriteRenderer>().sprite = tags_sprites[Random.Range(0, tags_sprites.Length)];
+
+                        // on met le bon parent
+                        tag.transform.SetParent(parents["tag"]);
+
+                        // on décale le i
+                        i += tags_width_in_tiles;
                     }
                 }
             }

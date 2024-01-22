@@ -119,16 +119,7 @@ public class World : MonoBehaviour
             {
                 // on lance la génération du secteur
                 ((ComplexeSector) sector).LAUNCH();
-
-                // on récup les emplacements interactifs et ennemis
-                // GetEmplacements(((ComplexeSector) sect[i]), out List<Vector2> complexe_empl_enemies, out List<Vector2> complexe_empl_interactives);
-                // sect[i].GENERATE(complexe_empl_enemies, complexe_empl_interactives);
-
-                // continue;
             }
-
-            // on récupère le secteur
-            // ProceduralSector sector = (ProceduralSector) sect[i];
 
             // on récup les emplacements interactifs et ennemis
             GetEmplacements(sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives, out Dictionary<Vector2, string> empl_doors, out List<Vector2> empl_labels);
