@@ -293,7 +293,11 @@ public class AreaJsonHandler : MonoBehaviour
         {
             foreach (Transform emplacement in area.transform.Find("emplacements"))
             {
-                string type = emplacement.name.Split('_')[0];
+                string type = emplacement.name;
+                if (!type.Contains("door"))
+                {
+                    type = type.Split('_')[0];
+                }
                 Vector2 pos = emplacement.position;
                 if (!emplacements.ContainsKey(type))
                 {
@@ -316,7 +320,7 @@ public class AreaJsonHandler : MonoBehaviour
                 }
 
                 // on applique le milieu à l'emplacement
-                pos -= middle;
+                pos -= middle/2;
 
 
                 // on ajoute
@@ -669,7 +673,7 @@ public class AreaJson
         return empl;
     }
 
-    public Vector2 GetDoorEmplacement(Vector2Int direction)
+    public Vector2 GetDoorEmplacement(Vector2Int direction, out string door_type)
     {
 
         string dir = "";
@@ -679,10 +683,28 @@ public class AreaJson
         else if (direction == new Vector2Int(0, -1)) { dir = "D"; }
 
         string type = "door" + dir;
+        door_type = "";
 
-        if (!this.emplacements.ContainsKey(type))
+        foreach (string t in this.emplacements.Keys)
         {
-            // on retourne la position du centre
+            if (t.Contains(type))
+            {
+                if (t.Contains("_LR"))
+                {
+                    door_type = "simple_side";
+                    type += "_LR";
+                }
+                else
+                {
+                    door_type = "hackable_vertical";
+                }
+                break;
+            }
+        }
+
+        if (door_type == "")
+        {
+            Debug.LogError("(AreaJson - GetDoorEmplacement) no door found for " + type);
             return new Vector2(0, 0);
         }
 

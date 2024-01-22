@@ -10,7 +10,7 @@ public class ProceduralSector : Sector
 
 
     [Header("Doors")]
-    [SerializeField] private Dictionary<Vector2, Vector2Int> doors = new Dictionary<Vector2, Vector2Int>();
+    [SerializeField] private Dictionary<Vector2, string> doors = new Dictionary<Vector2, string>();
 
     // unity functions
 
@@ -71,7 +71,7 @@ public class ProceduralSector : Sector
     }
 
     // OBJETC GENERATION
-    public void GENERATE(List<Vector2> empl_enemies, List<Vector2> empl_interactives, Dictionary<Vector2, Vector2Int> empl_doors)
+    public void GENERATE(List<Vector2> empl_enemies, List<Vector2> empl_interactives, Dictionary<Vector2, string> empl_doors)
     {
         base.GENERATE(empl_enemies, empl_interactives);
 
@@ -83,7 +83,7 @@ public class ProceduralSector : Sector
         int i = 0;
 
         // on parcourt les connections
-        foreach (KeyValuePair<Vector2, Vector2Int> empl in doors)
+        foreach (KeyValuePair<Vector2, string> empl in doors)
         {
 
             // on instancie une porte
@@ -91,13 +91,13 @@ public class ProceduralSector : Sector
             GameObject door = null;
 
 
-            if (new Vector2Int[] { Vector2Int.up, Vector2Int.down }.Contains(empl.Value))
+            if ("hackable_vertical" == empl.Value)
             {
                 print("instantiate a UD door at " + empl.Key);
                 // on instancie une porte verticale (up ou down)
                 door = Instantiate(prefabs["doorUD"], pos, Quaternion.identity);
             }
-            else if (new Vector2Int[] { Vector2Int.left, Vector2Int.right }.Contains(empl.Value))
+            else if ("simple_side" == empl.Value)
             {
                 print("instantiate a LR door at " + empl.Key);
                 // on instancie une porte horizontale (left ou right

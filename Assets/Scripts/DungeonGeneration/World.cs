@@ -135,7 +135,7 @@ public class World : MonoBehaviour
             GetEmplacements((ProceduralSector) sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives);
 
             // on récup les positions des portes
-            Dictionary<Vector2,Vector2Int> empl_doors = new Dictionary<Vector2, Vector2Int>();
+            Dictionary<Vector2,string> empl_doors = new Dictionary<Vector2, string>();
             foreach (KeyValuePair<Vector2Int, List<Vector2Int>> door in sector.connections)
             {
                 
@@ -145,7 +145,7 @@ public class World : MonoBehaviour
                 foreach (Vector2Int direction in door.Value)
                 {
                     // on récupère la position de la porte dans l'area
-                    Vector2 emp = area.GetDoorEmplacement(direction);
+                    Vector2 emp = area.GetDoorEmplacement(direction, out string door_type);
 
                     // on récupère la position de l'area
                     Vector2Int area_pos = (door.Key + sector.xy());
@@ -157,7 +157,7 @@ public class World : MonoBehaviour
                     Vector3 door_pos = CellToWorld(new Vector3Int(tile_pos.x, tile_pos.y, 0));
 
                     // on ajoute la position de la porte à la liste
-                    empl_doors.Add(new Vector2(door_pos.x + emp.x, door_pos.y + emp.y), direction);                
+                    empl_doors.Add(new Vector2(door_pos.x + emp.x, door_pos.y + emp.y), door_type);                
                 }
             }
 
