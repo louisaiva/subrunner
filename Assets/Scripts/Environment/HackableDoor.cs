@@ -39,8 +39,10 @@ public class HackableDoor : Door, I_Hackable
         initHack();
     }
 
-    void Update()
+    protected new void Update()
     {
+        base.Update();
+
         // on met à jour le hackin
         if (is_getting_hacked)
         {

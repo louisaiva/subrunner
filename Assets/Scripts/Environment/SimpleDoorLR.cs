@@ -15,6 +15,9 @@ public class SimpleDoorLR : SimpleDoor
         anims.addGlobalModif("ss");
 
         base.Start();
+
+        // on change la direction de la porte
+        door_axis = "horizontal";
     }
 
 }

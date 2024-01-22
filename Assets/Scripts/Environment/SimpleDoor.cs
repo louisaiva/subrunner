@@ -8,23 +8,12 @@ public class SimpleDoor : Door
 
     // [SerializeField] private float openin_duration = 1f;
 
-    // PERSO
-    protected GameObject perso;
-
     [Header("OPENING")]
     [SerializeField] protected float auto_openin_radius = 2f;
 
-    // UNITY FUNCTIONS
-    protected new void Start()
+    protected new void Update()
     {
-        // on récupère le perso
-        perso = GameObject.Find("/perso");
-
-        base.Start();
-    }
-
-    protected void Update()
-    {
+        base.Update();
 
         // on check si le perso est dans le rayon d'ouverture
         if (!is_open && !is_moving)

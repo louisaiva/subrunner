@@ -19,17 +19,27 @@ public class Door : MonoBehaviour
     [SerializeField] protected BoxCollider2D box_collider;
 
 
-
     [Header("CEILING")]
     [SerializeField] protected GameObject ceiling;
 
 
-    // todo -> label qui indique la direction de la porte
-    // todo [Header("LABEL")]
+    [Header ("LABELS")]
+    [SerializeField] protected GameObject label1;
+    [SerializeField] protected GameObject label2;
+    [SerializeField] protected float label_apparition_radius = 2f;
+    [SerializeField] protected float offset_up_radius = 1f;
+    [SerializeField] protected string door_axis = "vertical";
+
+
+    // PERSO
+    protected GameObject perso;
 
     // UNITY FUNCTIONS
     protected void Start()
     {
+        // on récupère le perso
+        perso = GameObject.Find("/perso");
+
         // on récupère l'animation handler
         anim_handler = GetComponent<AnimationHandler>();
 
@@ -39,8 +49,18 @@ public class Door : MonoBehaviour
         // on récupère le ceiling
         ceiling = transform.Find("ceiling").gameObject;
 
+        // on récupère les labels
+        label1 = transform.Find("labels/label1").gameObject;
+        label2 = transform.Find("labels/label2").gameObject;
+
         // on close
         close();
+    }
+
+    protected void Update()
+    {
+        // met à jour les labels
+        updateLabels();
     }
 
     // MAIN FUNCTIONS
@@ -95,6 +115,74 @@ public class Door : MonoBehaviour
         // on met à jour le box_collider
         box_collider.enabled = true;
         // ceiling.SetActive(true);
+    }
+
+
+    // LABELS
+    protected void updateLabels()
+    {
+        // on check si le perso est dans le rayon d'ouverture
+        if (Vector2.Distance(transform.position, perso.transform.position) > label_apparition_radius + offset_up_radius)
+        {
+            // on désactive les labels
+            label1.SetActive(false);
+            label2.SetActive(false);
+
+            return;
+        }
+
+        if (Vector2.Distance(transform.position, perso.transform.position) > label_apparition_radius)
+        {
+            // si on est ici on est dans le rayon d'apparition du label up
+            if (door_axis == "vertical" && perso.transform.position.y > transform.position.y)
+            {
+                // on active le label 2 (en haut)
+                label1.SetActive(false);
+                label2.SetActive(true);
+            }
+            else
+            {
+                // on désactive les labels
+                label1.SetActive(false);
+                label2.SetActive(false);
+            }
+            return;
+        }
+
+        // si on est ici, c'est qu'on est dans le rayon d'ouverture de tous les labels
+        print("(door " + gameObject.name + ") active ses labels !");
+
+        // on récupère la direction du perso
+        if (door_axis == "vertical")
+        {
+            if (perso.transform.position.y <= transform.position.y)
+            {
+                // on active le label 1 (en bas)
+                label1.SetActive(true);
+                label2.SetActive(false);
+            }
+            else
+            {
+                // on active le label 2 (en haut)
+                label1.SetActive(false);
+                label2.SetActive(true);
+            }
+        }
+        else
+        {
+            if (perso.transform.position.x <= transform.position.x)
+            {
+                // on active le label 1 (à gauche)
+                label1.SetActive(true);
+                label2.SetActive(false);
+            }
+            else
+            {
+                // on active le label 2 (à droite)
+                label1.SetActive(false);
+                label2.SetActive(true);
+            }
+        }
     }
 
 }
