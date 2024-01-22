@@ -294,7 +294,7 @@ public class AreaJsonHandler : MonoBehaviour
             foreach (Transform emplacement in area.transform.Find("emplacements"))
             {
                 string type = emplacement.name;
-                if (!type.Contains("door"))
+                if (!type.Contains("door") && !type.Contains("sector_label"))
                 {
                     type = type.Split('_')[0];
                 }

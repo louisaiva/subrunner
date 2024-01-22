@@ -3,6 +3,7 @@ using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using TMPro;
 
 
 public class Sector : MonoBehaviour
@@ -84,6 +85,7 @@ public class Sector : MonoBehaviour
         prefabs.Add("computer", Resources.Load<GameObject>("prefabs/objects/computer"));
         prefabs.Add("doorUD", Resources.Load<GameObject>("prefabs/objects/door_hackbl"));
         prefabs.Add("doorLR", Resources.Load<GameObject>("prefabs/objects/door_L"));
+        prefabs.Add("sector_label", Resources.Load<GameObject>("prefabs/objects/sector_label"));
 
         // on récupère les parents
         parents.Add("light", transform.Find("decoratives/lights"));
@@ -92,6 +94,7 @@ public class Sector : MonoBehaviour
         parents.Add("chest", transform.Find("interactives"));
         parents.Add("computer", transform.Find("interactives"));
         parents.Add("doors", transform.Find("interactives"));
+        parents.Add("sector_label", transform.Find("decoratives"));
 
         poster_sprites = Resources.LoadAll<Sprite>("spritesheets/environments/objects/posters");
     }
@@ -155,7 +158,7 @@ public class Sector : MonoBehaviour
 
 
     // GENERATION
-    public void GENERATE(List<Vector2> empl_enemies, List<Vector2> empl_interactives, Dictionary<Vector2, string> empl_doors)
+    public void GENERATE(List<Vector2> empl_enemies, List<Vector2> empl_interactives, Dictionary<Vector2, string> empl_doors, List<Vector2> empl_labels)
     {
         // on récupère les emplacements
         this.empl_enemies = empl_enemies;
@@ -188,6 +191,9 @@ public class Sector : MonoBehaviour
         // on place les portes
         this.doors = empl_doors;
         PlaceDoors();
+
+        // on place les labels
+        PlaceLabels(empl_labels);
     }
     
     // OBJETS GENERATION
@@ -373,6 +379,24 @@ public class Sector : MonoBehaviour
         }
     }
 
+    private void PlaceLabels(List<Vector2> empl_labels)
+    {
+        string sector_number = gameObject.name.Split('_')[1];
+
+        // place les labels de secteur dans les sas
+        foreach (Vector2 empl in empl_labels)
+        {
+            // on instancie un label
+            Vector3 pos = new Vector3(empl.x, empl.y, 0);
+            GameObject label = Instantiate(prefabs["sector_label"], pos, Quaternion.identity);
+
+            // on change le texte
+            label.transform.Find("sector_number").GetComponent<TextMeshPro>().text = sector_number;
+
+            // on met le bon parent
+            label.transform.SetParent(parents["sector_label"]);
+        }
+    }
 
     // EMPLACEMENTS
     private Vector2 consumeRandomEmplacement(string type)

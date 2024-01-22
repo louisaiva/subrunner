@@ -131,12 +131,12 @@ public class World : MonoBehaviour
             // ProceduralSector sector = (ProceduralSector) sect[i];
 
             // on récup les emplacements interactifs et ennemis
-            GetEmplacements(sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives, out Dictionary<Vector2, string> empl_doors);
+            GetEmplacements(sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives, out Dictionary<Vector2, string> empl_doors, out List<Vector2> empl_labels);
 
             print("empl doors: " + empl_doors.Count);
 
             // on génère le secteur
-            sector.GENERATE(empl_enemies, empl_interactives, empl_doors);
+            sector.GENERATE(empl_enemies, empl_interactives, empl_doors, empl_labels);
         }
 
         // on créé le plafond
@@ -277,11 +277,12 @@ public class World : MonoBehaviour
 
 
     // EMPLACEMENTS
-    private void GetEmplacements(Sector sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives, out Dictionary<Vector2, string> empl_doors)
+    private void GetEmplacements(Sector sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives, out Dictionary<Vector2, string> empl_doors, out List<Vector2> empl_labels)
     {
         // on créé les emplacements
         empl_enemies = new List<Vector2>();
         empl_interactives = new List<Vector2>();
+        empl_labels = new List<Vector2>();
 
         // on récupère les tiles
         HashSet<Vector2Int> tiles = new HashSet<Vector2Int>();
@@ -302,12 +303,13 @@ public class World : MonoBehaviour
 
 
             // on récupère les emplacements de la room
-            List<Vector2> empl_e, empl_i;
-            GetAreaEmplacements(area_pos, out empl_e, out empl_i);
+            List<Vector2> empl_e, empl_i, empl_l;
+            GetAreaEmplacements(area_pos, out empl_e, out empl_i, out empl_l);
 
             // on ajoute les emplacements à la liste
             empl_enemies.AddRange(empl_e);
             empl_interactives.AddRange(empl_i);
+            empl_labels.AddRange(empl_l);
         }
 
         // on récup les positions des portes
@@ -338,11 +340,12 @@ public class World : MonoBehaviour
         }
     }
 
-    private void GetAreaEmplacements(Vector2Int area_pos, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives)
+    private void GetAreaEmplacements(Vector2Int area_pos, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives, out List<Vector2> empl_labels)
     {
         // on créé les emplacements
         empl_enemies = new List<Vector2>();
         empl_interactives = new List<Vector2>();
+        empl_labels = new List<Vector2>();
 
         // on convertit l'area_pos en tile_pos
         Vector2Int tile_pos = area_pos * area_size + new Vector2Int(area_size.x / 2, area_size.y / 2);
@@ -380,6 +383,14 @@ public class World : MonoBehaviour
             {
                 Vector3 pos = CellToWorld(new Vector3Int(tile_pos.x, tile_pos.y, 0));
                 empl_interactives.Add(new Vector2(pos.x + emp.x, pos.y + emp.y));
+            }
+        }
+        if (empl.ContainsKey("sector_label"))
+        {
+            foreach (Vector2 emp in empl["sector_label"])
+            {
+                Vector3 pos = CellToWorld(new Vector3Int(tile_pos.x, tile_pos.y, 0));
+                empl_labels.Add(new Vector2(pos.x + emp.x, pos.y + emp.y));
             }
         }
 
