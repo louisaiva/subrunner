@@ -9,9 +9,6 @@ public class ProceduralSector : Sector
 
 
 
-    [Header("Doors")]
-    [SerializeField] private Dictionary<Vector2, string> doors = new Dictionary<Vector2, string>();
-
     // unity functions
 
     // INIT
@@ -68,47 +65,6 @@ public class ProceduralSector : Sector
         tiles.UnionWith(rooms);
         tiles.UnionWith(corridors);
 
-    }
-
-    // OBJETC GENERATION
-    public void GENERATE(List<Vector2> empl_enemies, List<Vector2> empl_interactives, Dictionary<Vector2, string> empl_doors)
-    {
-        base.GENERATE(empl_enemies, empl_interactives);
-
-        this.doors = empl_doors;
-        PlaceDoors();
-    }
-    private void PlaceDoors()
-    {
-        int i = 0;
-
-        // on parcourt les connections
-        foreach (KeyValuePair<Vector2, string> empl in doors)
-        {
-
-            // on instancie une porte
-            Vector3 pos = new Vector3(empl.Key.x, empl.Key.y, 0);
-            GameObject door = null;
-
-
-            if ("hackable_vertical" == empl.Value)
-            {
-                print("instantiate a UD door at " + empl.Key);
-                // on instancie une porte verticale (up ou down)
-                door = Instantiate(prefabs["doorUD"], pos, Quaternion.identity);
-            }
-            else if ("simple_side" == empl.Value)
-            {
-                print("instantiate a LR door at " + empl.Key);
-                // on instancie une porte horizontale (left ou right
-                door = Instantiate(prefabs["doorLR"], pos, Quaternion.identity);
-            }
-
-            // on met le bon parent
-            door.transform.SetParent(parents["doors"]);
-
-            i++;
-        }
     }
 
 

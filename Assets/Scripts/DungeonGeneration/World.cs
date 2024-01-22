@@ -20,9 +20,6 @@ public class World : MonoBehaviour
     [SerializeField] private Tilemap gd_tm;
 
     [Header("Tiles")]
-    /* [SerializeField] private TileBase fg_tile;
-    [SerializeField] private TileBase bg_tile;
-    [SerializeField] private TileBase gd_tile; */
     [SerializeField] private Dictionary<string, TileBase> fg_tiles = new Dictionary<string, TileBase>();
     [SerializeField] private Dictionary<string, TileBase> bg_tiles = new Dictionary<string, TileBase>();
     [SerializeField] private Dictionary<string, TileBase> gd_tiles = new Dictionary<string, TileBase>();
@@ -115,52 +112,26 @@ public class World : MonoBehaviour
         // on lance la génération interne des secteurs
         for (int i = 0; i < sect.Count; i++)
         {
+            Sector sector = sect[i];
+
             // on regarde si le secteur est un hand made sector
-            if (sect[i] is ComplexeSector)
+            if (sector is ComplexeSector)
             {
                 // on lance la génération du secteur
-                ((ComplexeSector) sect[i]).LAUNCH();
+                ((ComplexeSector) sector).LAUNCH();
 
                 // on récup les emplacements interactifs et ennemis
-                GetEmplacements(((ComplexeSector) sect[i]), out List<Vector2> complexe_empl_enemies, out List<Vector2> complexe_empl_interactives);
-                sect[i].GENERATE(complexe_empl_enemies, complexe_empl_interactives);
+                // GetEmplacements(((ComplexeSector) sect[i]), out List<Vector2> complexe_empl_enemies, out List<Vector2> complexe_empl_interactives);
+                // sect[i].GENERATE(complexe_empl_enemies, complexe_empl_interactives);
 
-                continue;
+                // continue;
             }
 
             // on récupère le secteur
-            ProceduralSector sector = (ProceduralSector) sect[i];
+            // ProceduralSector sector = (ProceduralSector) sect[i];
 
             // on récup les emplacements interactifs et ennemis
-            GetEmplacements((ProceduralSector) sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives);
-
-            // on récup les positions des portes
-            Dictionary<Vector2,string> empl_doors = new Dictionary<Vector2, string>();
-            foreach (KeyValuePair<Vector2Int, List<Vector2Int>> door in sector.connections)
-            {
-                
-                // on récupère l'areajson de l'area où se trouve la porte
-                AreaJson area = builder.LoadAreaJson(sector.getAreaName(door.Key));
-
-                foreach (Vector2Int direction in door.Value)
-                {
-                    // on récupère la position de la porte dans l'area
-                    Vector2 emp = area.GetDoorEmplacement(direction, out string door_type);
-
-                    // on récupère la position de l'area
-                    Vector2Int area_pos = (door.Key + sector.xy());
-
-                    // on convertit l'area_pos en tile_pos
-                    Vector2Int tile_pos = area_pos * area_size + new Vector2Int(area_size.x / 2, area_size.y / 2);
-
-                    // on récupère la position de la porte dans le secteur
-                    Vector3 door_pos = CellToWorld(new Vector3Int(tile_pos.x, tile_pos.y, 0));
-
-                    // on ajoute la position de la porte à la liste
-                    empl_doors.Add(new Vector2(door_pos.x + emp.x, door_pos.y + emp.y), door_type);                
-                }
-            }
-
+            GetEmplacements(sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives, out Dictionary<Vector2, string> empl_doors);
 
             print("empl doors: " + empl_doors.Count);
 
@@ -306,14 +277,25 @@ public class World : MonoBehaviour
 
 
     // EMPLACEMENTS
-    private void GetEmplacements(ProceduralSector sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives)
+    private void GetEmplacements(Sector sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives, out Dictionary<Vector2, string> empl_doors)
     {
         // on créé les emplacements
         empl_enemies = new List<Vector2>();
         empl_interactives = new List<Vector2>();
 
+        // on récupère les tiles
+        HashSet<Vector2Int> tiles = new HashSet<Vector2Int>();
+        if (sector is ProceduralSector)
+        {
+            tiles = sector.tiles;
+        }
+        else if (sector is ComplexeSector)
+        {
+            tiles = ((ComplexeSector) sector).getGeneratedAreas();
+        }
+
         // on parcourt les rooms
-        foreach (Vector2Int area in sector.tiles)
+        foreach (Vector2Int area in tiles)
         {
             // on récupère la position de l'area
             Vector2Int area_pos = (area + sector.xy());
@@ -327,26 +309,32 @@ public class World : MonoBehaviour
             empl_enemies.AddRange(empl_e);
             empl_interactives.AddRange(empl_i);
         }
-    }
-    private void GetEmplacements(ComplexeSector sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives)
-    {
-        // on créé les emplacements
-        empl_enemies = new List<Vector2>();
-        empl_interactives = new List<Vector2>();
 
-        // on parcourt les rooms
-        foreach (Vector2Int area in sector.getGeneratedAreas())
+        // on récup les positions des portes
+        empl_doors = new Dictionary<Vector2, string>();
+        foreach (KeyValuePair<Vector2Int, List<Vector2Int>> door in sector.connections)
         {
-            // on récupère la position de l'area
-            Vector2Int area_pos = (area + sector.xy());
 
-            // on récupère les emplacements de la room
-            List<Vector2> empl_e, empl_i;
-            GetAreaEmplacements(area_pos, out empl_e, out empl_i);
+            // on récupère l'areajson de l'area où se trouve la porte
+            AreaJson area = builder.LoadAreaJson(sector.getAreaName(door.Key));
 
-            // on ajoute les emplacements à la liste
-            empl_enemies.AddRange(empl_e);
-            empl_interactives.AddRange(empl_i);
+            foreach (Vector2Int direction in door.Value)
+            {
+                // on récupère la position de la porte dans l'area
+                Vector2 emp = area.GetDoorEmplacement(direction, out string door_type);
+
+                // on récupère la position de l'area
+                Vector2Int area_pos = (door.Key + sector.xy());
+
+                // on convertit l'area_pos en tile_pos
+                Vector2Int tile_pos = area_pos * area_size + new Vector2Int(area_size.x / 2, area_size.y / 2);
+
+                // on récupère la position de la porte dans le secteur
+                Vector3 door_pos = CellToWorld(new Vector3Int(tile_pos.x, tile_pos.y, 0));
+
+                // on ajoute la position de la porte à la liste
+                empl_doors.Add(new Vector2(door_pos.x + emp.x, door_pos.y + emp.y), door_type);
+            }
         }
     }
 

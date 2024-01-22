@@ -61,6 +61,13 @@ public class Sector : MonoBehaviour
     [Header("Interactives")]
     [SerializeField] protected int nb_chests = 5;
     [SerializeField] protected int nb_comp = 3;
+
+
+    [Header("Doors")]
+    [SerializeField] private Dictionary<Vector2, string> doors = new Dictionary<Vector2, string>();
+
+
+
     // UNITY METHODS
     protected void Awake()
     {
@@ -148,7 +155,7 @@ public class Sector : MonoBehaviour
 
 
     // GENERATION
-    public void GENERATE(List<Vector2> empl_enemies, List<Vector2> empl_interactives)
+    public void GENERATE(List<Vector2> empl_enemies, List<Vector2> empl_interactives, Dictionary<Vector2, string> empl_doors)
     {
         // on récupère les emplacements
         this.empl_enemies = empl_enemies;
@@ -177,6 +184,10 @@ public class Sector : MonoBehaviour
         {
             PlaceComputer();
         }
+
+        // on place les portes
+        this.doors = empl_doors;
+        PlaceDoors();
     }
     
     // OBJETS GENERATION
@@ -328,7 +339,39 @@ public class Sector : MonoBehaviour
         // on met le bon parent
         computer.transform.SetParent(parents["computer"]);
     }
+  
+    private void PlaceDoors()
+    {
+        int i = 0;
 
+        // on parcourt les connections
+        foreach (KeyValuePair<Vector2, string> empl in doors)
+        {
+
+            // on instancie une porte
+            Vector3 pos = new Vector3(empl.Key.x, empl.Key.y, 0);
+            GameObject door = null;
+
+
+            if ("hackable_vertical" == empl.Value)
+            {
+                print("instantiate a UD door at " + empl.Key);
+                // on instancie une porte verticale (up ou down)
+                door = Instantiate(prefabs["doorUD"], pos, Quaternion.identity);
+            }
+            else if ("simple_side" == empl.Value)
+            {
+                print("instantiate a LR door at " + empl.Key);
+                // on instancie une porte horizontale (left ou right
+                door = Instantiate(prefabs["doorLR"], pos, Quaternion.identity);
+            }
+
+            // on met le bon parent
+            door.transform.SetParent(parents["doors"]);
+
+            i++;
+        }
+    }
 
 
     // EMPLACEMENTS
