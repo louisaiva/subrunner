@@ -28,6 +28,19 @@ public class AreaJsonHandler : MonoBehaviour
         }
     }
 
+    public void SelectAllSasAreas()
+    {
+        areas = new List<GameObject>();
+        foreach (GameObject area in Resources.LoadAll<GameObject>(rooms_path+ "sas/"))
+        {
+            if (area.name == "empty") { continue; }
+            if (area.name.Contains("sas_"))
+            {
+                areas.Add(area);
+            }
+        }
+    }
+
     // CHANGING TILEMAPS
     public void MoveUpBg(ref Tilemap fg_tm, ref Tilemap bg_tm, ref Tilemap gd_tm)
     {
@@ -271,6 +284,9 @@ public class AreaJsonHandler : MonoBehaviour
         // dict.Add("bg", bg);
         // dict.Add("gd", gd);
 
+        // on cherche le milieu de l'area
+        Vector2 middle = new Vector2((max_x + min_x) / 2f, (max_y + min_y) / 2f);
+
         // on cherche les emplacements
         Dictionary<string, HashSet<Vector2>> emplacements = new Dictionary<string, HashSet<Vector2>>();
         if (area.transform.Find("emplacements") != null)
@@ -298,6 +314,9 @@ public class AreaJsonHandler : MonoBehaviour
                         pos.y -= 1f;
                     }
                 }
+
+                // on applique le milieu à l'emplacement
+                pos -= middle;
 
 
                 // on ajoute

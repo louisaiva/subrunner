@@ -18,6 +18,10 @@ public class AreaJsonEditor: Editor {
         {
             areaBuilder.SelectAllAreas();
         }
+        else if (GUILayout.Button("Select all Sas areas"))
+        {
+            areaBuilder.SelectAllSasAreas();
+        }
         else if (GUILayout.Button("Load Area"))
         {
             areaBuilder.LoadArea();
