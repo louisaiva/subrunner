@@ -99,8 +99,10 @@ public class Perso : Attacker
         // ON RECUP DES TRUCS
 
 
+        // on met à jour le layer des ennemis
+        enemy_layers = LayerMask.GetMask("Enemies","Beings");
+
         // on met à jour les layers du hack
-        // hack_layer = LayerMask.GetMask("Doors", "Enemies", "Computers");
         hack_layer = LayerMask.GetMask("Hackables");
 
         // on récupère le parent des hackrays

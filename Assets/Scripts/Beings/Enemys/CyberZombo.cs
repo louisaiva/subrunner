@@ -54,7 +54,7 @@ public class CyberZombo : Attacker, I_Hackable
 
         // on défini les layers des ennemis
         enemy_layers = LayerMask.GetMask("Player");
-        meat_layers = LayerMask.GetMask("Meat");
+        meat_layers = LayerMask.GetMask("Meat","Beings");
 
         // on met à jour les différentes variables d'attaques pour le zombo
         max_vie = 25 + Random.Range(-5, 5);

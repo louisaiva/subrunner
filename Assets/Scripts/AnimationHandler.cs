@@ -59,7 +59,15 @@ public class AnimationHandler : MonoBehaviour
         if (debug) { print("changing anim to " + next_anim + " for " + duration + " seconds, with animator speed set to" + animator.speed ); }
         
         current_anim = next_anim;
-        animator.Play(next_anim);
+        try
+        {
+            animator.Play(next_anim);
+        }
+        catch (System.Exception)
+        {
+            Debug.LogError("(AnimationHandler) Error : animation " + next_anim + " doesn't exist");
+            return false;
+        }
         
         return true;
     }

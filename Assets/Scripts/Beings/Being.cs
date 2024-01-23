@@ -590,8 +590,13 @@ public class Being : MonoBehaviour
                 }
             }
 
-            // on joue la bonne animation
-            // anim_handler.ChangeAnim(anim_direction);
+
+            // sens du sprite (en fonction du regard)
+            // on change seulement si on ne subit pas de knockback
+            if (anim_handler.GetCurrentAnimName() != anims.hurted)
+            {
+                if (Mathf.Abs(lookin_at.x) >= Mathf.Abs(lookin_at.y)) { GetComponent<SpriteRenderer>().flipX = (lookin_at.x > 0f); }
+            }
         }
         else
         {
@@ -604,13 +609,11 @@ public class Being : MonoBehaviour
             {
                 anim_handler.ChangeAnim(anims.idle_side);
             }
-        }
 
-        // sens du sprite (en fonction du regard)
-        // on change seulement si on ne subit pas de knockback
-        if (anim_handler.GetCurrentAnimName() != anims.hurted)
-        {
-            if (Mathf.Abs(lookin_at.x) >= Mathf.Abs(lookin_at.y)) { GetComponent<SpriteRenderer>().flipX = (lookin_at.x > 0f); }
+            if (anim_handler.GetCurrentAnimName() != anims.hurted)
+            {
+                GetComponent<SpriteRenderer>().flipX = (lookin_at.x > 0f);
+            }
         }
 
     }
