@@ -307,7 +307,11 @@ public class Perso : Attacker
         // walk
         if (hasCapacity("walk"))
         {
-            inputs = new Vector2(playerInputs.perso.move.ReadValue<Vector2>().x, playerInputs.perso.move.ReadValue<Vector2>().y);
+            Vector2 raw_inputs = new Vector2(playerInputs.perso.move.ReadValue<Vector2>().x, playerInputs.perso.move.ReadValue<Vector2>().y);
+            inputs = raw_inputs.normalized;
+            inputs_magnitude = raw_inputs.magnitude;
+
+            print("inputs : " + inputs);
         }
 
         // run
@@ -1161,7 +1165,7 @@ public class Perso : Attacker
 
 
         // on fait un dash dans la direction du look_at du being
-        float ajout = 0f;
+        // float ajout = 0f;
 
         anim_handler.StopForcing();
         // on joue l'animation
@@ -1176,7 +1180,7 @@ public class Perso : Attacker
         else
         {
             anim_handler.ChangeAnimTilEnd(((PersoAnims) anims).dash_down);
-            ajout = 0.25f;
+            // ajout = 0.25f;
         }
 
         // on se met invicible

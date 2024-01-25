@@ -29,6 +29,7 @@ public class Being : MonoBehaviour
 
     // DEPLACEMENT
     public Vector2 inputs;
+    public float inputs_magnitude=1f;
     public float speed = 3f; // speed de déplacement
     public float running_speed = 5f; // speed de déplacement
     protected bool isRunning = false;
@@ -125,11 +126,11 @@ public class Being : MonoBehaviour
         // déplacement
         if (isRunning)
         {
-            run(inputs);
+            run(inputs, inputs_magnitude);
         }
         else
         {
-            walk(inputs);
+            walk(inputs, inputs_magnitude);
         }
 
         // update forces
@@ -246,27 +247,27 @@ public class Being : MonoBehaviour
     }
 
     // DEPLACEMENT
-    protected void walk(Vector2 direction)
+    protected void walk(Vector2 direction, float inputs_magnitude=1f)
     {
 
         // on calcule le mouvement sur X
-        float x_movement = direction.normalized.x * speed * Time.deltaTime;
+        float x_movement = direction.normalized.x * speed * Time.deltaTime * inputs_magnitude;
 
         // on calcule le mouvement sur Y
-        float y_movement = direction.normalized.y * speed * Time.deltaTime;
+        float y_movement = direction.normalized.y * speed * Time.deltaTime * inputs_magnitude;
 
         // on applique le mouvement au perso
         move_perso(new Vector2(x_movement, y_movement));
 
     }
-    protected void run(Vector2 direction)
+    protected void run(Vector2 direction, float inputs_magnitude=1f)
     {
 
         // on calcule le mouvement sur X
-        float x_movement = direction.normalized.x * running_speed * Time.deltaTime;
+        float x_movement = direction.normalized.x * running_speed * Time.deltaTime * inputs_magnitude;
 
         // on calcule le mouvement sur Y
-        float y_movement = direction.normalized.y * running_speed * Time.deltaTime;
+        float y_movement = direction.normalized.y * running_speed * Time.deltaTime * inputs_magnitude;
 
         // on applique le mouvement au perso
         move_perso(new Vector2(x_movement, y_movement));

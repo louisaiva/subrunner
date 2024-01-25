@@ -5,7 +5,9 @@
 - [ ] - faire une classe Movable parent de Being et de Item afin d'appliquer des forces aux items
 - [ ] - faire des plafonds respectifs à chaque area afin de pouvoir cacher les zones non découvertes
 - [x] - (ui) faire des descriptions au sol qui indiquent la position d'une porte
-- [ ] - faire des distributeurs de vie/bits et des coffres spéciaux à choix pour les sas
+- [ ] - faire des distributeurs de vie/bits
+- [ ] - faire des coffres spéciaux à choix pour les sas
+- [ ] - améliorer le dash : changer le sprite en fonction de la direction
 
 
 

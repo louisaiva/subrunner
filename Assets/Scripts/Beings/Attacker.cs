@@ -16,9 +16,6 @@ public class Attacker : Being
     public LayerMask enemy_layers;
 
     public float cooldown_attack = 0.6f; // temps entre chaque attaque (en secondes)
-    // private float last_attack_time = 0f; // temps de la dernière attaque
-    // public const float knockback_per_damage_per_weight = 1/100f; // knockback par point de damage (1/30 corresspond à 1 unité de knockback pour 30 points de damage)
-    // public float knockback_base = 6f; // knockback de base pour un poids de 1 (si le poids de la cible est de 2, elle recevra 2 fois moins de knockback 1/2)
     public float knockback_base = 10f; // une attaque répartit le knockb
     public float attackant_advantage = 3f;
 

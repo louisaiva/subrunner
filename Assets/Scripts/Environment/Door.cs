@@ -150,7 +150,7 @@ public class Door : MonoBehaviour
         }
 
         // si on est ici, c'est qu'on est dans le rayon d'ouverture de tous les labels
-        print("(door " + gameObject.name + ") active ses labels !");
+        // print("(door " + gameObject.name + ") active ses labels !");
 
         // on récupère la direction du perso
         if (door_axis == "vertical")

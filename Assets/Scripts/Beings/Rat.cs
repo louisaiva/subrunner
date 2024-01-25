@@ -62,7 +62,7 @@ public class Rat : Being
         // on vérifie si on est pas trop loin du perso
         if (Vector2.Distance(transform.position, perso.transform.position) > 3f && state != "follow_perso")
         {
-            print("(rat) nooo don't run away human !!");
+            // print("(rat) nooo don't run away human !!");
 
             // on passe en mode sprint pour se rapprocher
             state = "follow_perso";
