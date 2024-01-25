@@ -47,7 +47,7 @@ public class Perso : Attacker
 
     [Header("DASH")]
     // DASH
-    [SerializeField] private float dash_distance = 1.2f;
+    [SerializeField] private float dash_magnitude = 25f;
     [SerializeField] private float dash_duration = 0.5f;
 
     // global light
@@ -1183,7 +1183,7 @@ public class Perso : Attacker
         beInvicible(dash_duration);
 
         // on fait le dash
-        Force dash_force = new Force(inputs.normalized, 25f,1f);
+        Force dash_force = new Force(inputs.normalized, dash_magnitude);
         forces.Add(dash_force);
         // Vector2 movement = inputs.normalized * (dash_distance + ajout);
         // move_perso(movement);

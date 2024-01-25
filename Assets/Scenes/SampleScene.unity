@@ -7683,6 +7683,7 @@ MonoBehaviour:
     m_Bits: 0
   cooldown_attack: 0.6
   knockback_base: 4
+  attackant_advantage: 3
   CHEAT: 0
   level: 1
   xp: 0
@@ -7692,7 +7693,7 @@ MonoBehaviour:
   max_bits: 8
   regen_bits: 0.1
   aide_a_la_visee: 0.5
-  dash_distance: 1.2
+  dash_magnitude: 25
   dash_duration: 0.5
   inventory: {fileID: 549595395}
   big_inventory: {fileID: 0}

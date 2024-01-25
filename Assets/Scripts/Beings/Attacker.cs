@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Attacker : Being
@@ -17,7 +18,9 @@ public class Attacker : Being
     public float cooldown_attack = 0.6f; // temps entre chaque attaque (en secondes)
     // private float last_attack_time = 0f; // temps de la dernière attaque
     // public const float knockback_per_damage_per_weight = 1/100f; // knockback par point de damage (1/30 corresspond à 1 unité de knockback pour 30 points de damage)
-    public float knockback_base = 6f; // knockback de base pour un poids de 1 (si le poids de la cible est de 2, elle recevra 2 fois moins de knockback 1/2)
+    // public float knockback_base = 6f; // knockback de base pour un poids de 1 (si le poids de la cible est de 2, elle recevra 2 fois moins de knockback 1/2)
+    public float knockback_base = 10f; // une attaque répartit le knockb
+    public float attackant_advantage = 3f;
 
     // ANIMATIONS
     // protected bool isAttacking = false;
@@ -58,15 +61,6 @@ public class Attacker : Being
     // DEAL DAMAGE
     protected virtual void attack()
     {
-        // check if we can attack
-        // if (Time.time - last_attack_time < cooldown_attack){ return; }
-        // if (anim_handler.IsForcing()){ return; }
-
-        // update last attack time
-        // last_attack_time = Time.time;
-
-        // print(gameObject.name + " attacks");
-
         // start cooldown
         startCapacityCooldown("hit");
 
@@ -82,6 +76,12 @@ public class Attacker : Being
         // calculate damage dealt to single target
         float damage_dealt_to_single_target = damage / hit_enemies.Length;
 
+
+        // calculate knockback
+        float advantage_attacker_weight = weight* attackant_advantage; // l'attaquant a un avantage de poids afin de recevoir moins de knockback
+        float total_knockback_weight = hit_enemies.Select(enemy => enemy.GetComponent<Being>().weight).Sum() + advantage_attacker_weight;
+        Vector2 attacker_knockback_direction = Vector2.zero;
+
         // deal damage to target
         foreach (Collider2D enemy in hit_enemies)
         {
@@ -91,18 +91,21 @@ public class Attacker : Being
             Vector2 direction_enemy = new Vector2(dx, dy);
             float enemy_weight = enemy.GetComponent<Being>().weight;
 
-            // calculate knockback force
-            // Vector2 knockback_force = () * direction_enemy.normalized;
-
-            Force knockback = new Force(direction_enemy.normalized, knockback_base / enemy_weight);
+            // calculate knockback magnitude proportionnal to weight
+            float knockback_magnitude = knockback_base * ( total_knockback_weight - enemy_weight )
+                                         / total_knockback_weight;
+            Force knockback = new Force(direction_enemy.normalized, knockback_magnitude);
+            attacker_knockback_direction += -direction_enemy.normalized * knockback_magnitude;
 
             // apply damage and knockback
             enemy.GetComponent<Being>().take_damage(damage_dealt_to_single_target, knockback);
-
-            // on recoit un knockback inverse
-            Force knockback_inverse = new Force(-knockback.direction, knockback.magnitude/10f);
-            forces.Add(knockback_inverse);
         }
+
+        // on recoit un knockback inverse
+        float knockback_magnitude_inverse = knockback_base * ( total_knockback_weight - weight )
+                                             / (total_knockback_weight * attackant_advantage);
+        Force knockback_inverse = new Force(attacker_knockback_direction.normalized, knockback_magnitude_inverse);
+        forces.Add(knockback_inverse);
     }
 
     // draw gizmos
