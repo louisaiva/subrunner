@@ -26,6 +26,7 @@ public class Attacker : Being
     protected new void Start()
     {
         base.Start();
+        anims = new AttackerAnims();
 
         // on ajoute les capacités
         addCapacity("hit", cooldown_attack);
@@ -70,7 +71,7 @@ public class Attacker : Being
         startCapacityCooldown("hit");
 
         // play attack animation
-        anim_handler.ChangeAnimTilEnd(anims.attack);
+        anim_handler.ChangeAnimTilEnd(((AttackerAnims) anims).attack);
 
         // check if there is a target
         Collider2D[] hit_enemies = Physics2D.OverlapCircleAll(attack_point.position, damage_range, enemy_layers);
@@ -97,6 +98,10 @@ public class Attacker : Being
 
             // apply damage and knockback
             enemy.GetComponent<Being>().take_damage(damage_dealt_to_single_target, knockback);
+
+            // on recoit un knockback inverse
+            Force knockback_inverse = new Force(-knockback.direction, knockback.magnitude/10f);
+            forces.Add(knockback_inverse);
         }
     }
 
@@ -113,4 +118,20 @@ public class Attacker : Being
     }
 
 
+}
+
+
+public class AttackerAnims : BeingAnims
+{
+
+    public bool has_up_down_attack = false;
+
+    // ANIMATIONS
+    public string attack = "attack_RL";
+
+    public override void init(string name)
+    {
+        base.init(name);
+        attack = name + "_" + attack;
+    }
 }

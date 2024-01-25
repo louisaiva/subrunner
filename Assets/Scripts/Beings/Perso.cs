@@ -165,7 +165,8 @@ public class Perso : Attacker
         xp_gift = 0; // on ne donne pas d'xp quand on tue un perso
 
         // on met à jour les animations
-        anims.init("perso");
+        // anims.init("perso");
+        anims = new PersoAnims();
 
 
         // on CHEAT
@@ -1166,15 +1167,15 @@ public class Perso : Attacker
         // on joue l'animation
         if (Mathf.Abs(inputs.x) > Mathf.Abs(inputs.y))
         {
-            anim_handler.ChangeAnimTilEnd(anims.dash_side);
+            anim_handler.ChangeAnimTilEnd(((PersoAnims) anims).dash_side);
         }
         else if (inputs.y > 0)
         {
-            anim_handler.ChangeAnimTilEnd(anims.dash_up);
+            anim_handler.ChangeAnimTilEnd(((PersoAnims) anims).dash_up);
         }
         else
         {
-            anim_handler.ChangeAnimTilEnd(anims.dash_down);
+            anim_handler.ChangeAnimTilEnd(((PersoAnims) anims).dash_down);
             ajout = 0.25f;
         }
 
@@ -1182,8 +1183,10 @@ public class Perso : Attacker
         beInvicible(dash_duration);
 
         // on fait le dash
-        Vector2 movement = inputs.normalized * (dash_distance + ajout);
-        move_perso(movement);
+        Force dash_force = new Force(inputs.normalized, 25f,1f);
+        forces.Add(dash_force);
+        // Vector2 movement = inputs.normalized * (dash_distance + ajout);
+        // move_perso(movement);
 
     }
 
@@ -1256,3 +1259,16 @@ public class Perso : Attacker
 }
 
 
+public class PersoAnims : AttackerAnims
+{
+    public string dash_side = "perso_dash_RL";
+    public string dash_up = "perso_dash_U";
+    public string dash_down = "perso_dash_D";
+
+    public PersoAnims()
+    {
+        base.init("perso");
+        has_up_down_runnin = true;
+        has_up_down_idle = true;
+    }
+}

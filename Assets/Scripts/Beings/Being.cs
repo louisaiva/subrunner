@@ -45,7 +45,7 @@ public class Being : MonoBehaviour
     protected AnimationHandler anim_handler;
     protected Vector2 lookin_at = new Vector2(0f, -1f);
     protected float lookin_at_angle = 40f; // angle du regard du perso en degrés
-    protected Anims anims = new Anims();
+    protected BeingAnims anims = new BeingAnims();
 
     // CAPACITES
     protected Dictionary<string, bool> capacities = new Dictionary<string, bool>();
@@ -544,7 +544,7 @@ public class Being : MonoBehaviour
         isMoving = (direction.magnitude > input_tresh);
 
         // animation de direction (en fonction du regard)
-        if (anims.has_extended_animation)
+        if (anims.has_up_down_runnin)
         {
             // on calcule la direction qu'on doit envoyer à l'animator
             // int anim_direction = 0;
@@ -562,7 +562,7 @@ public class Being : MonoBehaviour
                 }
                 else
                 {
-                    anim_handler.ChangeAnim(anims.idle_down);
+                    anim_handler.ChangeAnim( anims.has_up_down_idle ? anims.idle_down : anims.idle_side);
                 }
             }
             else if (lookin_at.y > Mathf.Abs(lookin_at.x))
@@ -574,7 +574,7 @@ public class Being : MonoBehaviour
                 }
                 else
                 {
-                    anim_handler.ChangeAnim(anims.idle_up);
+                    anim_handler.ChangeAnim( anims.has_up_down_idle ? anims.idle_up : anims.idle_side);
                 }
             }
             else
@@ -644,7 +644,6 @@ public class Being : MonoBehaviour
         }
 
         // si on est ici on prend des dégats
-
         vie -= damage;
 
         // play hurt animation
@@ -750,9 +749,10 @@ public class Being : MonoBehaviour
 
 }
 
-public class Anims
+public class BeingAnims
 {
-    public bool has_extended_animation = false;
+    public bool has_up_down_runnin = false;
+    public bool has_up_down_idle = false;
 
     // ANIMATIONS
     public string idle_down = "idle_D";
@@ -761,32 +761,19 @@ public class Anims
     public string run_down = "runnin_D";
     public string run_up = "runnin_U";
     public string run_side = "runnin_RL";
-    public string attack = "attack_RL";
     public string die = "die";
     public string hurted = "hurted_RL";
-    public string dash_side = "dash_RL";
-    public string dash_up = "dash_U";
-    public string dash_down = "dash_D";
 
-    public void init(string name)
+    public virtual void init(string name)
     {
-        if (name == "perso")
-        {
-            has_extended_animation = true;
-        }
-
         idle_down = name + "_" + idle_down;
         idle_up = name + "_" + idle_up;
         idle_side = name + "_" + idle_side;
         run_down = name + "_" + run_down;
         run_up = name + "_" + run_up;
         run_side = name + "_" + run_side;
-        attack = name + "_" + attack;
         die = name + "_" + die;
         hurted = name + "_" + hurted;
-        dash_side = name + "_" + dash_side;
-        dash_up = name + "_" + dash_up;
-        dash_down = name + "_" + dash_down;
     }
 }
 
@@ -804,4 +791,5 @@ public class Force
         this.magnitude = magnitude;
         this.attenuation = attenuation;
     }
+
 }
