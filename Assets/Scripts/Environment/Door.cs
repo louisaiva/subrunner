@@ -15,7 +15,7 @@ public class Door : MonoBehaviour
     [Header("OPENING")]
     [SerializeField] protected bool is_open = false;
     [SerializeField] protected bool is_moving = false;
-    [SerializeField] protected float openin_duration = 1f;
+    [SerializeField] protected float openin_duration = 0.5f;
     [SerializeField] protected BoxCollider2D box_collider;
 
 
@@ -64,7 +64,7 @@ public class Door : MonoBehaviour
     }
 
     // MAIN FUNCTIONS
-    protected void open()
+    protected virtual void open()
     {
         CancelInvoke();
 
@@ -81,7 +81,7 @@ public class Door : MonoBehaviour
         // ceiling.SetActive(false);
     }
 
-    protected void success_open()
+    protected virtual void success_open()
     {
         // on ouvre la porte
         is_open = true;
@@ -91,7 +91,7 @@ public class Door : MonoBehaviour
         anim_handler.ChangeAnim(anims.idle_open);
     }
 
-    protected void close()
+    protected virtual void close()
     {
         CancelInvoke();
 

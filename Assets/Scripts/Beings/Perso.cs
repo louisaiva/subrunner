@@ -311,7 +311,7 @@ public class Perso : Attacker
             inputs = raw_inputs.normalized;
             inputs_magnitude = raw_inputs.magnitude;
 
-            print("inputs : " + inputs);
+            // print("inputs : " + inputs);
         }
 
         // run

@@ -18,18 +18,21 @@ public class Button : MonoBehaviour, I_Interactable
     [SerializeField] protected GameObject buttonable = null;
 
     // unity functions
-    protected virtual void Awake()
+    /* protected virtual void Awake()
     {
-        // on récupère l'animation handler
-        anim_handler = GetComponent<AnimationHandler>();
-        
-        // on ferme le bouton
-        is_pressed = false;
-    }
+    } */
 
     void Start()
     {
-        success_switch_off();
+        // on récupère l'animation handler
+        anim_handler = GetComponent<AnimationHandler>();
+
+        // on joue l'animation
+        anim_handler.ChangeAnim(anims.idle_off);
+
+        // on appuie sur le bouton
+        is_pressed = false;
+        is_pressing = false;
     }
 
     // PRESSING
