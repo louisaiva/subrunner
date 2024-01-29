@@ -1115,7 +1115,6 @@ GameObject:
   m_Component:
   - component: {fileID: 9013040333361049683}
   - component: {fileID: 8547559372008655009}
-  - component: {fileID: 5341581550972124093}
   m_Layer: 6
   m_Name: sas_DWR
   m_TagString: Untagged
@@ -1154,39 +1153,6 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
---- !u!114 &5341581550972124093
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1509301705381201319}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 150ee58c708a4b04f94751164965944d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fg: {fileID: 0}
-  bg: {fileID: 0}
-  gd: {fileID: 0}
-  width: 0
-  height: 0
-  x: 0
-  y: 0
-  light_prefab: {fileID: 0}
-  light_parent: {fileID: 0}
-  density_posters: 0.3
-  poster_prefab: {fileID: 0}
-  poster_sprites: []
-  doors_parent: {fileID: 0}
-  door_prefab: {fileID: 0}
-  objects_parent: {fileID: 0}
-  emplacement_handler: {fileID: 0}
-  chest_parent: {fileID: 0}
-  chest_prefab: {fileID: 0}
-  computer_parent: {fileID: 0}
-  computer_prefab: {fileID: 0}
-  auto_start: 0
 --- !u!1 &2775578654793725891
 GameObject:
   m_ObjectHideFlags: 0

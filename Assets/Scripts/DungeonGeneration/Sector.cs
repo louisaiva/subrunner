@@ -71,6 +71,10 @@ public class Sector : MonoBehaviour
     [SerializeField] private Dictionary<Vector2, string> doors = new Dictionary<Vector2, string>();
 
 
+    [Header("Ceilings")]
+    public Dictionary<Vector2Int,Dictionary<string, GameObject>> ceilings = new Dictionary<Vector2Int,Dictionary<string, GameObject>>();
+    private Dictionary<Vector2Int, List<string>> hidden_ceilings = new Dictionary<Vector2Int, List<string>>();
+
 
     // UNITY METHODS
     protected void Awake()
@@ -86,10 +90,11 @@ public class Sector : MonoBehaviour
         prefabs.Add("chest", Resources.Load<GameObject>("prefabs/objects/chest"));
         prefabs.Add("xp_chest", Resources.Load<GameObject>("prefabs/objects/xp_chest"));
         prefabs.Add("computer", Resources.Load<GameObject>("prefabs/objects/computer"));
-        prefabs.Add("doorUD", Resources.Load<GameObject>("prefabs/objects/door_hackbl"));
+        prefabs.Add("doorUD", Resources.Load<GameObject>("prefabs/objects/door"));
         prefabs.Add("doorLR", Resources.Load<GameObject>("prefabs/objects/door_L"));
         prefabs.Add("sector_label", Resources.Load<GameObject>("prefabs/objects/sector_label"));
         prefabs.Add("tag", Resources.Load<GameObject>("prefabs/objects/tag"));
+        prefabs.Add("base_ceiling", Resources.Load<GameObject>("prefabs/sectors/ceiling"));
 
         // on récupère les parents
         parents.Add("light", transform.Find("decoratives/lights"));
@@ -100,9 +105,15 @@ public class Sector : MonoBehaviour
         parents.Add("doors", transform.Find("interactives"));
         parents.Add("sector_label", transform.Find("decoratives"));
         parents.Add("tag", transform.Find("decoratives/posters"));
+        parents.Add("ceiling", transform.Find("ceilings"));
 
         poster_sprites = Resources.LoadAll<Sprite>("spritesheets/environments/objects/posters");
         tags_sprites = Resources.LoadAll<Sprite>("spritesheets/environments/objects/tags");
+
+        // on récupère les ceilings
+        // ceilings.Add("base", transform.Find("ceilings/base").gameObject);
+        // ceilings.Add("secret", transform.Find("ceilings/secret").gameObject);
+        // ceilings.Add("sas", transform.Find("ceilings/sas").gameObject);
 
     }
 
@@ -134,6 +145,65 @@ public class Sector : MonoBehaviour
 
     }
 
+    public void UpdateCeilings(Vector2Int perso_area)
+    {
+        Dictionary<Vector2Int, List<string>> new_hidden_ceilings = new Dictionary<Vector2Int, List<string>>();
+
+        // on affiche les ceilings autour de l'area du perso
+        List<Vector2Int> directions = new List<Vector2Int>() { new Vector2Int(0, 0),
+                                         new Vector2Int(0, 1), new Vector2Int(0, -1), new Vector2Int(1, 0), new Vector2Int(-1, 0),
+                                         new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, 1), new Vector2Int(-1, -1)};
+        foreach (Vector2Int dir in directions)
+        {
+            Vector2Int area = perso_area + dir;
+
+            // on vérifie que l'area existe
+            if (!ceilings.ContainsKey(area)) { continue; }
+
+            // on l'ajoute aux ceilings à cacher
+            string ceiling_type = "base";
+            if (!new_hidden_ceilings.ContainsKey(area))
+            {
+                new_hidden_ceilings[area] = new List<string>() { ceiling_type };
+            }
+            else
+            {
+                new_hidden_ceilings[area].Add(ceiling_type);
+            }
+        }
+
+        // on cache les nouveaux ceilings
+        foreach (KeyValuePair<Vector2Int, List<string>> ceiling_area in new_hidden_ceilings)
+        {
+            Vector2Int area = ceiling_area.Key;
+            foreach (string ceiling_type in ceiling_area.Value)
+            {
+                // si le ceiling est déjà caché c good
+                if (hidden_ceilings.ContainsKey(area) && hidden_ceilings[area].Contains(ceiling_type)) { continue; }
+
+                // sinon on le cache
+                ceilings[area][ceiling_type].SetActive(false);
+            }
+        }
+
+        // on affiche les ceilings qui ne sont plus cachés
+        foreach (KeyValuePair<Vector2Int, List<string>> ceiling_area in hidden_ceilings)
+        {
+            Vector2Int area = ceiling_area.Key;
+            foreach (string ceiling_type in ceiling_area.Value)
+            {
+                // si le ceiling doit être caché c good
+                if (new_hidden_ceilings.ContainsKey(area) && new_hidden_ceilings[area].Contains(ceiling_type)) { continue; }
+
+                // sinon on l'affiche
+                ceilings[area][ceiling_type].SetActive(true);
+            }
+        }
+
+        // on met à jour les hidden_ceilings
+        hidden_ceilings = new_hidden_ceilings;
+
+    }
 
     // INIT FUNCTIONS
     public void init()
@@ -167,6 +237,7 @@ public class Sector : MonoBehaviour
     // GENERATION
     public void GENERATE(List<Vector2> empl_enemies, List<Vector2> empl_interactives, Dictionary<Vector2, string> empl_doors, List<Vector2> empl_labels)
     {
+
         // on récupère les emplacements
         this.empl_enemies = empl_enemies;
         this.empl_interactives = empl_interactives;
@@ -204,8 +275,27 @@ public class Sector : MonoBehaviour
 
         // on place les labels
         PlaceLabels(empl_labels);
+
+        // on génère les ceilings
+        // GenerateCeilings();
     }
-    
+
+    public void GenerateCeiling(Vector2Int area)
+    {
+        // on génère les ceilings de l'area spécifique
+        string type = getAreaType(area);
+        if (type == "ceiling" || type == "sas") { return; }
+        
+        // si c'est une area normale on génère un ceiling carré : sprite qui fait exactement la taille de l'area
+
+        Vector3 pos = new Vector3((x + area.x)*area_size.x/2 + area_size.x / 4, (y + area.y)*area_size.y/2 + area_size.y / 4, 0f);
+        GameObject ceiling = Instantiate(prefabs["base_ceiling"], pos, Quaternion.identity);
+        ceiling.transform.SetParent(parents["ceiling"]);
+
+        ceilings[area] = new Dictionary<string, GameObject>();
+        ceilings[area]["base"] = ceiling;
+    }
+
     // OBJETS GENERATION
     protected void PlaceLights()
     {

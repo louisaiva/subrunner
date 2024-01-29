@@ -402,7 +402,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generate_world: 1
-  nb_sectors: 4
+  nb_sectors: 2
   world: {fileID: 0}
   sector_prefab: {fileID: 0}
   sectors: []
@@ -16050,13 +16050,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8767277542052347151, guid: 9f258837f3030a4458946c11c06f1b1f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 2170387698064804237, guid: 9f258837f3030a4458946c11c06f1b1f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9f258837f3030a4458946c11c06f1b1f, type: 3}
 --- !u!4 &513934121762203186 stripped
 Transform:

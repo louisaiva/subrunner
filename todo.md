@@ -3,10 +3,11 @@
 
 - [ ] - faire les inventory context + Xbox compatibility
 - [ ] - faire une classe Movable parent de Being et de Item afin d'appliquer des forces aux items
+
 - [ ] - faire des plafonds respectifs à chaque area afin de pouvoir cacher les zones non découvertes
-- [x] - (ui) faire des descriptions au sol qui indiquent la position d'une porte
 - [ ] - faire des distributeurs de vie/bits
 - [ ] - faire des coffres spéciaux à choix pour les sas
+- [ ] - marquer les coffres d'un skin différent après qu'on les ait ouverts
 - [ ] - améliorer le dash : changer le sprite en fonction de la direction
 
 
@@ -115,6 +116,7 @@
 - [x] - régler l'hoover description pour qu'il ne sorte pas de l'écran
 - [x] - et qu'il aille avec l'xbox controller
 - [x] - UI_XboxNavigator faire reselectionner automatiqement le plus proche quand on appuie sur un item
+- [x] - (ui) faire des descriptions au sol qui indiquent la position d'une porte
 
 - [x] - bug ordi freeze à la fin de l'animation idle_on
 

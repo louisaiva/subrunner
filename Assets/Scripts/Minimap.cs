@@ -115,7 +115,7 @@ public class Minimap : MonoBehaviour {
         if (is_discovering && player.GetComponent<Perso>().hasCapacity("gyroscope"))
         {
             // on récupère la position du perso
-            Vector2Int pos = getPersoPos();
+            Vector2Int pos = world.getPersoPos();
 
             // on parcourt toutes les tiles dans le rayon de découverte
             for (int x = pos.x - (int)discorveryRadius; x <= pos.x + (int)discorveryRadius; x++)
@@ -137,53 +137,5 @@ public class Minimap : MonoBehaviour {
         }
     }
 
-
-    // GETTERS
-    public string getPersoAreaName()
-    {
-        // on récupère la position du perso
-        Vector2Int pos = getPersoPos();
-
-        // on récupère le nom de la zone
-        return world.getAreaName(pos);
-    }
-
-    public string getPersoTilePos()
-    {
-        // on récupère la position du perso
-        Vector2Int pos = getPersoPos();
-
-        // on récup la position locale
-        Vector2Int local_pos = world.getLocalTilePos(pos);
-
-        return "(" + local_pos.x + ", " + local_pos.y + ")";
-    }
-
-    public string getPersoAreaPos()
-    {
-        // on récupère la position du perso
-        Vector2Int pos = getPersoPos();
-
-        // on récupère la position de l'area
-        Vector2Int area_pos = world.getAreaPos(pos);
-
-        return "(" + area_pos.x + ", " + area_pos.y + ")";
-    }
-
-    public Vector2Int getPersoPos()
-    {
-        // on récupère la position du perso
-        Vector2Int pos = new Vector2Int((int)(player.position.x * 2), (int)(player.position.y * 2));
-
-        return pos;
-    }
-
-    public Vector2 getPersoPosFloat()
-    {
-        // on récupère la position du perso
-        Vector2 pos = new Vector2(player.position.x * 2, player.position.y * 2);
-
-        return pos;
-    }
 
 }

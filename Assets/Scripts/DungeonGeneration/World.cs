@@ -57,6 +57,23 @@ public class World : MonoBehaviour
     }
 
 
+    void Update()
+    {
+        // affiche ou cache les ceilings en fonction de la position du joueur
+        UpdateCeilings();
+    }
+
+    void UpdateCeilings()
+    {
+        // récupère l'area du perso
+        Vector2Int area_pos = getLocalAreaPos(getPersoPos());
+        Sector area_sector = getSector(getPersoPos());
+
+        print("(world) updating ceilings for area " + area_sector.getAreaName(getPersoPos()) + " at " + area_pos + " in sector " + area_sector.name);
+
+        area_sector.UpdateCeilings(area_pos);
+    }
+
 
     // GENERATION
     public void GENERATE(List<Sector> sect)
@@ -101,6 +118,12 @@ public class World : MonoBehaviour
 
                 // on place l'area
                 PlaceArea(sector_pos.x + areaPos.x, sector_pos.y + areaPos.y, area_name, skin);
+
+                // on crée les plafonds de l'area en fonction du type d'area
+                if (area_name != "ceiling")
+                {
+                    sect[i].GenerateCeiling(areaPos);
+                }
             }
         }
 
@@ -131,7 +154,7 @@ public class World : MonoBehaviour
         }
 
         // on créé le plafond
-        CreateCeiling();
+        CreateVirtualCeiling();
 
         // on récupère la position de départ du perso
         Vector2 spawn_pos;
@@ -208,9 +231,11 @@ public class World : MonoBehaviour
         }
     }
 
-    private void CreateCeiling()
+    private void CreateVirtualCeiling()
     {
         // crée un enorme sprite de "plafond" pour éviter de voir le vide
+        // plafond virtuel car en réalité placé au niveau du sol
+
         // on récupère la taille max des tilemaps
         Vector2Int size = GetSize();
 
@@ -532,12 +557,12 @@ public class World : MonoBehaviour
         return size;
     }
 
-    public Sector getSector(Vector2Int pos)
+    public Sector getSector(Vector2Int tile_pos)
     {
-        // renvoie le presector correspondant à la position de la tile
+        // renvoie le sector correspondant à la tile_position de la tile
 
         // on récupère le areaPos
-        Vector2Int areaPos = getAreaPos(pos);
+        Vector2Int areaPos = getAreaPos(tile_pos);
 
         // on parcourt tous les sectors pour trouver celui qui correspond
         foreach (Sector sect in sectors)
@@ -551,20 +576,19 @@ public class World : MonoBehaviour
         return null;
     }
 
-    public string getAreaName(Vector2Int pos)
+    public string getAreaName(Vector2Int tile_pos)
     {
         // on récupère le presector
-        Sector sect = getSector(pos);
+        Sector sect = getSector(tile_pos);
 
         if (sect == null)
         {
-            // print("no presector found for " + pos);
-
+            Debug.LogError("(world - getAreaName) no sector found for " + tile_pos);
             return "null";
         }
 
         // on récupère la position locale de l'area dans le presector
-        Vector2Int areaPos = getAreaPos(pos) - sect.xy();
+        Vector2Int areaPos = getAreaPos(tile_pos) - sect.xy();
 
         // on récupère le nom de l'area
         return sect.getAreaName(areaPos);
@@ -576,6 +600,23 @@ public class World : MonoBehaviour
         Vector2Int areaPos = new Vector2Int(tile_pos.x / area_size.x, tile_pos.y / area_size.y);
 
         return areaPos;
+    }
+
+    public Vector2Int getLocalAreaPos(Vector2Int tile_pos)
+    {
+        // on récupère le sector
+        Sector sect = getSector(tile_pos);
+
+        if (sect == null)
+        {
+            Debug.LogError("(world - getLocalAreaPos) no sector found for " + tile_pos);
+            return new Vector2Int(-1, -1);
+        }
+
+        // on récupère la position locale de l'area dans le sector
+        Vector2Int local_area_pos = getAreaPos(tile_pos) - sect.xy();
+
+        return local_area_pos;
     }
 
     public Vector2Int getLocalTilePos(Vector2Int pos)
@@ -671,6 +712,48 @@ public class World : MonoBehaviour
         {
             gd_tm.SetTilesBlock(bounds, tiles);
         }
+    }
+
+
+
+    // PERSO GETTERS
+    public string getPersoAreaName()
+    {
+        // on récupère la position du perso
+        Vector2Int pos = getPersoPos();
+
+        // on récupère le nom de la zone
+        return getAreaName(pos);
+    }
+
+    public string getPersoTilePos()
+    {
+        // on récupère la position du perso
+        Vector2Int pos = getPersoPos();
+
+        // on récup la position locale
+        Vector2Int local_pos = getLocalTilePos(pos);
+
+        return "(" + local_pos.x + ", " + local_pos.y + ")";
+    }
+
+    public string getPersoAreaPos()
+    {
+        // on récupère la position du perso
+        Vector2Int pos = getPersoPos();
+
+        // on récupère la position de l'area
+        Vector2Int area_pos = getAreaPos(pos);
+
+        return "(" + area_pos.x + ", " + area_pos.y + ")";
+    }
+
+    public Vector2Int getPersoPos()
+    {
+        // on récupère la position du perso
+        Vector2Int pos = new Vector2Int((int)(perso.transform.position.x * 2), (int)(perso.transform.position.y * 2));
+
+        return pos;
     }
 
 }

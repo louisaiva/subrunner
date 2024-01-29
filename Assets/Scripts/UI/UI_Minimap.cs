@@ -103,7 +103,7 @@ public class UI_Minimap : MonoBehaviour {
     {
 
         // update la position de la minimap
-        Vector2 perso_tile_pos = minimap.getPersoPosFloat();
+        Vector2 perso_tile_pos = getPersoPosFloat();
 
         Vector2 map_size = new Vector2(minimap.mapTexture.width, minimap.mapTexture.height);
 
@@ -183,5 +183,13 @@ public class UI_Minimap : MonoBehaviour {
         ui_mask.GetComponent<RawImage>().rectTransform.sizeDelta = new Vector2(minimap.maskTexture.width, minimap.maskTexture.height);
 
         print("(UI_Minimap) textures récupérées");
+    }
+
+
+    // GETTERS
+    public Vector2 getPersoPosFloat()
+    {
+        // on récupère la position du perso
+        return new Vector2(perso.transform.position.x * 2, perso.transform.position.y * 2);
     }
 }
