@@ -69,7 +69,7 @@ public class World : MonoBehaviour
         Vector2Int area_pos = getLocalAreaPos(getPersoPos());
         Sector area_sector = getSector(getPersoPos());
 
-        print("(world) updating ceilings for area " + area_sector.getAreaName(getPersoPos()) + " at " + area_pos + " in sector " + area_sector.name);
+        // print("(world) updating ceilings for area " + area_sector.getAreaName(getPersoPos()) + " at " + area_pos + " in sector " + area_sector.name);
 
         area_sector.UpdateCeilings(area_pos);
     }
@@ -94,6 +94,7 @@ public class World : MonoBehaviour
             if (sect[i] is ComplexeSector)
             {
                 MergeSector((ComplexeSector) sect[i]);
+                // ((ComplexeSector) sect[i]).LAUNCH();
 
                 // on récupère le secteur de spawn
                 if (((ComplexeSector) sect[i]).isSpawnSector())
@@ -120,10 +121,7 @@ public class World : MonoBehaviour
                 PlaceArea(sector_pos.x + areaPos.x, sector_pos.y + areaPos.y, area_name, skin);
 
                 // on crée les plafonds de l'area en fonction du type d'area
-                if (area_name != "ceiling")
-                {
-                    sect[i].GenerateCeiling(areaPos);
-                }
+                sect[i].GenerateCeiling(areaPos);
             }
         }
 
@@ -138,11 +136,11 @@ public class World : MonoBehaviour
             Sector sector = sect[i];
 
             // on regarde si le secteur est un hand made sector
-            if (sector is ComplexeSector)
+            /* if (sector is ComplexeSector)
             {
                 // on lance la génération du secteur
                 ((ComplexeSector) sector).LAUNCH();
-            }
+            } */
 
             // on récup les emplacements interactifs et ennemis
             GetEmplacements(sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives, out Dictionary<Vector2, string> empl_doors, out List<Vector2> empl_labels);
@@ -211,6 +209,8 @@ public class World : MonoBehaviour
         setTiles(final_bounds, init_bg_tiles, "bg");
         setTiles(final_bounds, init_gd_tiles, "gd");
 
+        // on launch le secteur
+        sector.LAUNCH();
     }
 
     private void PlaceHandMadeAreas(ComplexeSector sector)
@@ -228,6 +228,10 @@ public class World : MonoBehaviour
 
             // on place l'area
             PlaceArea(sector_pos.x + areaPos.x, sector_pos.y + areaPos.y, area_name, skin);
+
+            // on crée les plafonds de l'area en fonction du type d'area
+            print("generating ceiling for handmade area " + area_name + " at " + areaPos + " in sector " + sector.name);
+            sector.GenerateCeiling(areaPos);
         }
     }
 
@@ -583,7 +587,7 @@ public class World : MonoBehaviour
 
         if (sect == null)
         {
-            Debug.LogError("(world - getAreaName) no sector found for " + tile_pos);
+            // Debug.LogError("(world - getAreaName) no sector found for " + tile_pos);
             return "null";
         }
 

@@ -55,7 +55,7 @@ public class Sector : MonoBehaviour
     [Header("Emplacements")]
     [SerializeField] protected List<Vector2> empl_enemies = new List<Vector2>();
     [SerializeField] protected List<Vector2> empl_interactives = new List<Vector2>();
-    [SerializeField] protected Dictionary<string, Vector2> empl_doors = new Dictionary<string, Vector2>();
+    // [SerializeField] protected Dictionary<string, Vector2> empl_doors = new Dictionary<string, Vector2>();
 
     [Header("Enemies")]
     [SerializeField] protected List<Being> enemies = new List<Being>();
@@ -68,12 +68,13 @@ public class Sector : MonoBehaviour
 
 
     [Header("Doors")]
-    [SerializeField] private Dictionary<Vector2, string> doors = new Dictionary<Vector2, string>();
+    [SerializeField] private Dictionary<Vector2, string> sas_doors = new Dictionary<Vector2, string>();
 
 
     [Header("Ceilings")]
     public Dictionary<Vector2Int,Dictionary<string, GameObject>> ceilings = new Dictionary<Vector2Int,Dictionary<string, GameObject>>();
     private Dictionary<Vector2Int, List<string>> hidden_ceilings = new Dictionary<Vector2Int, List<string>>();
+    private string ceiling_sas_prefabs_path = "prefabs/rooms/sas";
 
 
     // UNITY METHODS
@@ -102,7 +103,7 @@ public class Sector : MonoBehaviour
         parents.Add("enemy", GameObject.Find("/world/enemies").transform);
         parents.Add("chest", transform.Find("interactives"));
         parents.Add("computer", transform.Find("interactives"));
-        parents.Add("doors", transform.Find("interactives"));
+        parents.Add("sas_doors", transform.Find("interactives"));
         parents.Add("sector_label", transform.Find("decoratives"));
         parents.Add("tag", transform.Find("decoratives/posters"));
         parents.Add("ceiling", transform.Find("ceilings"));
@@ -270,7 +271,7 @@ public class Sector : MonoBehaviour
         }
 
         // on place les portes
-        this.doors = empl_doors;
+        this.sas_doors = empl_doors;
         PlaceDoors();
 
         // on place les labels
@@ -284,16 +285,66 @@ public class Sector : MonoBehaviour
     {
         // on génère les ceilings de l'area spécifique
         string type = getAreaType(area);
-        if (type == "ceiling" || type == "sas") { return; }
-        
-        // si c'est une area normale on génère un ceiling carré : sprite qui fait exactement la taille de l'area
+        if (type == "ceiling") { return; }
 
-        Vector3 pos = new Vector3((x + area.x)*area_size.x/2 + area_size.x / 4, (y + area.y)*area_size.y/2 + area_size.y / 4, 0f);
-        GameObject ceiling = Instantiate(prefabs["base_ceiling"], pos, Quaternion.identity);
-        ceiling.transform.SetParent(parents["ceiling"]);
+        else if (type == "sas")
+        {
 
-        ceilings[area] = new Dictionary<string, GameObject>();
-        ceilings[area]["base"] = ceiling;
+            // si c'est un sas : on a 2 ceilings : base et sas
+            // on récupère les objets dans le dossier ceiling_sas_prefabs_path
+            GameObject area_go = Instantiate(Resources.Load<GameObject>(ceiling_sas_prefabs_path + "/" + getAreaName(area)), Vector3.zero, Quaternion.identity);
+            GameObject base_ceiling = area_go.transform.Find("ceilings/base").gameObject;
+            GameObject sas_ceiling = area_go.transform.Find("ceilings/sas").gameObject;
+
+            // on les met à la bonne position
+            Vector3 translation = new Vector3((x+area.x) * area_size.x / 2, (y+area.y) * area_size.y / 2, 0f);
+            Vector3 base_pos = base_ceiling.transform.position + translation;
+            Vector3 sas_pos = sas_ceiling.transform.position + translation;
+            // base_ceiling.transform.position = new Vector3(area.x * area_size.x / 2, area.y * area_size.y / 2, 0f);
+            // sas_ceiling.transform.position = new Vector3(area.x * area_size.x / 2, area.y * area_size.y / 2, 0f);
+            base_ceiling.transform.position = base_pos;
+            sas_ceiling.transform.position = sas_pos;
+
+            // on les met dans le bon parent
+            base_ceiling.transform.SetParent(parents["ceiling"]);
+            sas_ceiling.transform.SetParent(parents["ceiling"]);
+
+            // on les ajoute au dictionnaire
+            ceilings[area] = new Dictionary<string, GameObject>();
+            ceilings[area]["base"] = base_ceiling;
+            ceilings[area]["sas"] = sas_ceiling;
+
+            // on affiche les ceilings
+            base_ceiling.SetActive(true);
+            foreach (Transform child in sas_ceiling.transform)
+            {
+                child.gameObject.SetActive(true);
+            }
+            sas_ceiling.SetActive(true);
+            foreach (Transform child in base_ceiling.transform)
+            {
+                child.gameObject.SetActive(true);
+            }
+
+            // on supprime l'oject area_go
+            Destroy(area_go);
+        }
+        /* else if (type == "secret")
+        {
+            GenerateCeilingSecret(area);
+        } */
+        else
+        {
+            // si c'est une area normale on génère un ceiling carré : sprite qui fait exactement la taille de l'area
+            Vector3 pos = new Vector3((x + area.x)*area_size.x/2 + area_size.x / 4, (y + area.y)*area_size.y/2 + area_size.y / 4, 0f);
+            print("placing ceiling at " + pos +" because x,y = " + x + "," + y + " and area.x,area.y = " + area.x + "," + area.y);
+            GameObject ceiling = Instantiate(prefabs["base_ceiling"], pos, Quaternion.identity);
+            ceiling.transform.SetParent(parents["ceiling"]);
+
+            ceilings[area] = new Dictionary<string, GameObject>();
+            ceilings[area]["base"] = ceiling;
+
+        }
     }
 
     // OBJETS GENERATION
@@ -519,7 +570,7 @@ public class Sector : MonoBehaviour
         int i = 0;
 
         // on parcourt les connections
-        foreach (KeyValuePair<Vector2, string> empl in doors)
+        foreach (KeyValuePair<Vector2, string> empl in sas_doors)
         {
 
             // on instancie une porte
@@ -536,12 +587,12 @@ public class Sector : MonoBehaviour
             else if ("simple_side" == empl.Value)
             {
                 print("instantiate a LR door at " + empl.Key);
-                // on instancie une porte horizontale (left ou right
+                // on instancie une porte horizontale (left ou right)
                 door = Instantiate(prefabs["doorLR"], pos, Quaternion.identity);
             }
 
             // on met le bon parent
-            door.transform.SetParent(parents["doors"]);
+            door.transform.SetParent(parents["sas_doors"]);
 
             i++;
         }

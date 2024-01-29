@@ -360,6 +360,25 @@ public class AreaJsonHandler : MonoBehaviour
 
 
 
+        // todo - un peu schlag, comment mieux faire ?
+        // on crée des ceilings qu'on sauvegarde en gameobjects dans les prefabs/areas/ceilings
+
+        if (area.transform.Find("ceilings") != null)
+        {
+            foreach (Transform ceiling in area.transform.Find("ceilings"))
+            {
+                // on sauvegarde le gameobject sous forme de prefab avec le nom : area_name + "_" + ceiling_name
+                string ceiling_name = ceiling.name;
+                string ceiling_path = "Assets/Resources/prefabs/areas/ceilings/" + area.name + "_" + ceiling_name + ".prefab";
+
+                // on déplace le gameobject de -middle
+                // ceiling.position -= new Vector3(middle.x, middle.y, 0);
+
+                // on sauvegarde le prefab
+                PrefabUtility.SaveAsPrefabAsset(ceiling.gameObject, ceiling_path);
+            }
+        }
+
 
 
         // on sauvegarde les listes dans un fichier json
