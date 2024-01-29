@@ -318,6 +318,15 @@ public class AreaJsonHandler : MonoBehaviour
                         pos.y -= 1f;
                     }
                 }
+                else
+                {
+                    if (type.Contains("door") && type.Contains("_LR"))
+                    {
+                        // on déplace la pos en Y de +0.25
+                        pos.y += 0.25f;
+                    }
+
+                }
 
                 // on applique le milieu à l'emplacement
                 pos -= middle/2;
