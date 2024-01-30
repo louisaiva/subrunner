@@ -14,7 +14,7 @@ public class Inventory : MonoBehaviour {
     public string prefabs_path = "prefabs/items/";
 
     //bed
-    [SerializeField] private bool is_bed = false;
+    // [SerializeField] private bool is_bed = false;
 
     // perso
     public GameObject perso;
@@ -35,14 +35,14 @@ public class Inventory : MonoBehaviour {
         perso = GameObject.Find("/perso");
 
         // on récupère le prefab
-        if (is_bed)
+        /* if (is_bed)
         {
             empty_slot_prefab = Resources.Load("prefabs/ui/empty_legendary_slot") as GameObject;
         }
         else
         {
-            empty_slot_prefab = Resources.Load("prefabs/ui/empty_slot") as GameObject;
-        }
+        } */
+        empty_slot_prefab = Resources.Load("prefabs/ui/empty_slot") as GameObject;
 
         // on récupère le canvas
         canvas = GetComponent<Canvas>();
@@ -248,34 +248,34 @@ public class Inventory : MonoBehaviour {
         int width = 0;
         int height = 0;
 
-        if (!is_bed)
+        /* if (!is_bed)
+        { */
+        if (size == 3)
         {
-            if (size == 3)
+            // cas particulier pour size == 3
+            width = 3;
+            height = 1;
+        }
+        else
+        {
+            // on cherche le plus petit carré >= size
+            for (int i = 1; i <= size; i++)
             {
-                // cas particulier pour size == 3
-                width = 3;
-                height = 1;
-            }
-            else
-            {
-                // on cherche le plus petit carré >= size
-                for (int i = 1; i <= size; i++)
+                if (i * i >= size)
                 {
-                    if (i * i >= size)
-                    {
-                        width = i;
-                        height = i;
-                        break;
-                    }
+                    width = i;
+                    height = i;
+                    break;
                 }
             }
         }
-        else
+        // }
+        /* else
         {
             // on met une seule ligne
             width = size;
             height = 1;
-        }
+        } */
 
         // on met à jour la taille de l'inventaire
         GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
@@ -345,21 +345,30 @@ public class Inventory : MonoBehaviour {
         Destroy(getItems()[Random.Range(0, getItems().Count)].gameObject);
     }
 
-    public void randomize()
+    public void randomize(string cat = "all")
     {
         // on randomize les items de l'inventaire
         // si on en a déjà, on les conserve
-        List<Item> items = getItems();
+        // List<Item> items = getItems();
         
         // le nombre d'items après la randomization
-        int nb_items = Random.Range(items.Count, max_items + 1);
+        int nb_items = Random.Range(1, max_items + 1);
 
         // on récupère les prefabs
-        Object[] prefabs = Resources.LoadAll(prefabs_path);
+        GameObject[] prefabs = Resources.LoadAll<GameObject>(prefabs_path);
+
+
+        // on les trie par catégorie
+        if (cat != "all")
+        {
+            // on récupère les prefabs de la catégorie
+            prefabs = prefabs.Where(x => cat.Contains(x.GetComponent<Item>().category)).ToArray();
+        }
+
         // print(prefabs + " " + prefabs.Length);
 
         // on ajoute des items random
-        for (int i = items.Count; i < nb_items; i++)
+        for (int i = 0; i < nb_items; i++)
         {
             // on choisit un prefab random
             int nb = Random.Range(0, prefabs.Length);
@@ -375,14 +384,14 @@ public class Inventory : MonoBehaviour {
     public bool addItem(Item item)
     {
         // on vérifie si on est un inventaire de lit
-        if (is_bed)
+        /* if (is_bed)
         {
             // on vérifie si c'est un item légendaire
             if (!item.legendary_item) { return false;}
 
             // on vérifie qu'on a pas déjà cet item légendaire
             if (getItem(item.item_name) != null) { return false; }
-        }
+        } */
 
         // on ajoute un item à l'inventaire
         // on vérifie qu'on est pas déjà plein

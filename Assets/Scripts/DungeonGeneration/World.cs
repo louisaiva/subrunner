@@ -69,6 +69,8 @@ public class World : MonoBehaviour
         Vector2Int area_pos = getLocalAreaPos(getPersoPos());
         Sector area_sector = getSector(getPersoPos());
 
+        if (area_sector == null) { return; }
+
         // print("(world) updating ceilings for area " + area_sector.getAreaName(getPersoPos()) + " at " + area_pos + " in sector " + area_sector.name);
 
         area_sector.UpdateCeilings(area_pos);
@@ -613,7 +615,7 @@ public class World : MonoBehaviour
 
         if (sect == null)
         {
-            Debug.LogError("(world - getLocalAreaPos) no sector found for " + tile_pos);
+            // Debug.LogError("(world - getLocalAreaPos) no sector found for " + tile_pos);
             return new Vector2Int(-1, -1);
         }
 

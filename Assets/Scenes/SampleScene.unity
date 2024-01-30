@@ -16050,7 +16050,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8767277542052347151, guid: 9f258837f3030a4458946c11c06f1b1f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 2170387698064804237, guid: 9f258837f3030a4458946c11c06f1b1f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 9f258837f3030a4458946c11c06f1b1f, type: 3}
 --- !u!4 &513934121762203186 stripped
 Transform:
@@ -17069,7 +17075,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 299467254294187729, guid: b839c0f7ba96bf84295bc08932fa7dfd, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 953039446567095052, guid: b839c0f7ba96bf84295bc08932fa7dfd, type: 3}
       propertyPath: m_TileSpriteArray.Array.data[23].m_RefCount

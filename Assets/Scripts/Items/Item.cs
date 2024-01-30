@@ -10,6 +10,7 @@ public class Item : MonoBehaviour, I_Descriptable, I_Interactable
 
     // item basics
     public string item_type = "item"; // is it a drink ? is it a glasses ? is it a hack ?
+    public string category = "object"; // OBJECT / FOOD / DRINK / GLASSES / HACK
     public string action_type = "active"; // is it a capacity item ?
     public string item_name = "heal_potion"; // name of the item
     public string item_description = "this is a heal potion";

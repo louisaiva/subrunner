@@ -9,7 +9,8 @@ public class InventoryChest : Chest
     public Inventory inventory;
 
     [Header("INVENTORY CHEST")]
-    [SerializeField] private bool randomize_on_start = true;
+    [SerializeField] protected bool randomize_on_start = true;
+    [SerializeField] protected string randomize_cat = "all";
 
     // unity functions
     protected override void Awake()
@@ -20,7 +21,7 @@ public class InventoryChest : Chest
         inventory = transform.Find("inventory").GetComponent<Inventory>();
 
         // randomize
-        if (randomize_on_start) { inventory.randomize(); }
+        if (randomize_on_start) { inventory.randomize(randomize_cat); }
     }
 
 

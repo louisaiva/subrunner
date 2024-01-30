@@ -100,12 +100,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item_type: shoes
+  category: clothes
   action_type: capacity
   item_name: helium_shoes
   item_description: Allows you to dash. do not dash into walls stupid you !
   legendary_item: 1
   capacities:
   - dash
+  capacity_level: 1
   is_showed: 0
   is_on_ground: 0
   scale_on_ground: 0.5
