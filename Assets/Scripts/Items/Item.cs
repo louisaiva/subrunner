@@ -191,7 +191,7 @@ public class Item : MonoBehaviour, I_Descriptable, I_Interactable
         return is_on_ground;
     }
 
-    public void interact()
+    public void interact(GameObject target)
     {
         // on se fait ramasser par le perso
         fromGroundToInv();

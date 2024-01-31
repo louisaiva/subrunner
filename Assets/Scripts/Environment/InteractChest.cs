@@ -14,7 +14,7 @@ public class InteractChest : InventoryChest, I_Interactable
         return !is_interacting || is_open;
     }
 
-    public void interact()
+    public void interact(GameObject target)
     {
         if (!is_interacting)
         {

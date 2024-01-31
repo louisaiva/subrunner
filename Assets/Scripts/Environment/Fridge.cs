@@ -12,8 +12,6 @@ public class Fridge : InteractChest
         anims = new FridgeAnims();
         randomize_cat = "food_drink";
         base.Awake();
-
-        close();
     }
 
 }

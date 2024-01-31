@@ -132,7 +132,7 @@ public class Perso : Attacker
         global_light = GameObject.Find("/world/global_light").gameObject;
 
         // on met à jour les interactions
-        interact_layers = LayerMask.GetMask("Chests", "Computers","Buttons","Items");
+        interact_layers = LayerMask.GetMask("Chests", "Computers","Buttons","Items","Interactives");
 
         // on récupère le cursor_handler
         cursor_handler = GameObject.Find("/utils").GetComponent<CursorHandler>();
@@ -301,6 +301,19 @@ public class Perso : Attacker
         // on vérifie que le temps est pas en pause
         if (Time.timeScale == 0f) { return; }
 
+        // hoover interactions
+        if (hasCapacity("hoover_interact"))
+        {
+            // todo ici on highlight les objets avec lesquels on peut interagir
+            InteractHooverEvents();
+
+            // on update les interactions
+            update_interactions();
+        }
+
+        // on vérifie qu'on est pas KO
+        if (hasCapacity("knocked_out")) { return; }
+
         // on check toutes les capacities dans le bon ordre pour voir comment on peut agir etc.
         base.Events();
 
@@ -327,15 +340,6 @@ public class Perso : Attacker
             }
         }
 
-        // hoover interactions
-        if (hasCapacity("hoover_interact"))
-        {
-            // todo ici on highlight les objets avec lesquels on peut interagir
-            InteractHooverEvents();
-
-            // on update les interactions
-            update_interactions();
-        }
 
         // gv vision
         if (capacities.ContainsKey("gv_vision") && capacities["gv_vision"])
@@ -928,7 +932,7 @@ public class Perso : Attacker
             current_interactable = current_hoover_interactable;
 
             // on interagit avec l'objet
-            current_interactable.GetComponent<I_Interactable>().interact();
+            current_interactable.GetComponent<I_Interactable>().interact(gameObject);
 
             // si c'est un item on arrête d'interagir avec l'objet
             if (current_interactable.GetComponent<Item>() != null)
@@ -1189,28 +1193,15 @@ public class Perso : Attacker
         // on fait le dash
         Force dash_force = new Force(inputs.normalized, dash_magnitude);
         forces.Add(dash_force);
-        // Vector2 movement = inputs.normalized * (dash_distance + ajout);
-        // move_perso(movement);
-
     }
 
-    private void beInvicible(float duration=0.5f)
-    {
-        capacities["invicible"] = true;
-        Invoke("stopInvicibility", duration);
-    }
-
-    private void stopInvicibility()
-    {
-        capacities["invicible"] = false;
-        capacities.Remove("invicible");
-    }
+    
 
 
     // INPUTS
     public void OnUseConso()
     {
-        if (hasCapacity("drink"))
+        if (!hasCapacity("knocked_out") && hasCapacity("drink"))
         {
             drink();
         }
@@ -1218,6 +1209,8 @@ public class Perso : Attacker
 
     public void OnInteract()
     {
+        if (hasCapacity("knocked_out")) { return; }
+        
         if (hasCapacity("interact"))
         {
             interact();
@@ -1226,6 +1219,8 @@ public class Perso : Attacker
 
     public void OnInventory()
     {
+        if (hasCapacity("knocked_out")) { return; }
+
         if (!skills_tree.isShowed())
         {
             if (!input_manager.isUsingGamepad())
@@ -1245,7 +1240,7 @@ public class Perso : Attacker
 
     public void OnHit()
     {
-        if (hasCapacity("hit"))
+        if (!hasCapacity("knocked_out") && hasCapacity("hit"))
         {
             attack();
         }
@@ -1253,7 +1248,7 @@ public class Perso : Attacker
 
     public void OnDash()
     {
-        if (hasCapacity("dash"))
+        if (!hasCapacity("knocked_out") && hasCapacity("dash"))
         {
             dash();
         }

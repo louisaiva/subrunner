@@ -102,7 +102,7 @@ public class Button : MonoBehaviour, I_Interactable
         return !is_pressing;
     }
 
-    public void interact()
+    public void interact(GameObject target)
     {
         if (!isInteractable()) { return; }
         

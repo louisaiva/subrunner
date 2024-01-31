@@ -308,7 +308,8 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
 
         return true;
     }
-    public void interact(){
+    public void interact(GameObject target)
+    {
         // on allume l'ordi
         turnOn();
 

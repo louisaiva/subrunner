@@ -74,7 +74,7 @@ public class Being : MonoBehaviour
         inputs = new Vector2(0.1f,0f);
 
         // on défini les layers du monde
-        world_layers = LayerMask.GetMask("Ground","Walls","Ceiling","Doors","Chests","Computers","Buttons","Decoratives");
+        world_layers = LayerMask.GetMask("Ground","Walls","Ceiling","Doors","Chests","Computers","Buttons","Decoratives", "Interactives");
 
         // on récupère le provider d'xp
         xp_provider = GameObject.Find("/particles/xp_provider");
@@ -85,6 +85,10 @@ public class Being : MonoBehaviour
 
     public virtual void Events()
     {
+
+        // on vérifie qu'on est pas KO
+        if (hasCapacity("knocked_out")) { return; }
+
         // life regen
         if (hasCapacity("life_regen"))
         {
@@ -187,7 +191,7 @@ public class Being : MonoBehaviour
         }
     }
 
-    protected void removeCapacity(string capacity)
+    public void removeCapacity(string capacity)
     {
         if (!capacities.ContainsKey(capacity)) { return; }
         
@@ -207,7 +211,7 @@ public class Being : MonoBehaviour
         }
     }
 
-    protected void addCapacity(string capacity, float cooldown=0f)
+    public void addCapacity(string capacity, float cooldown=0f)
     {
         if (!capacities.ContainsKey(capacity))
         {
@@ -244,6 +248,19 @@ public class Being : MonoBehaviour
 
         // on met le cooldown à jour
         capacities_cooldowns[capacity] = capacities_cooldowns_base[capacity];
+    }
+
+    protected void beInvicible(float duration = 0.5f)
+    {
+        // capacities["invicible"] = true;
+        addCapacity("invicible");
+        Invoke("stopInvicibility", duration);
+    }
+    protected void stopInvicibility()
+    {
+        // capacities["invicible"] = false;
+        // capacities.Remove("invicible");
+        removeCapacity("invicible");
     }
 
     // DEPLACEMENT
@@ -480,6 +497,19 @@ public class Being : MonoBehaviour
 
     }
 
+    public void MOVE(Vector3 position)
+    {
+        // on FORCE le déplacement du perso
+        // ! à utiliser seulement pour des animations
+        // ! ne prend pas en compte les collisions
+        // ! -> obliger le Being à être en knock out pour utiliser cette fonction
+
+        if (!hasCapacity("knocked_out")) { return; }
+
+        // on déplace le perso
+        // transform.position += new Vector3(movement.x, movement.y, 0f);
+        transform.position = position;
+    }
 
     // INPUTS SIMULATION
     protected Vector2 simulate_circular_input_on_x(Vector2 input_vecteur)
@@ -746,6 +776,12 @@ public class Being : MonoBehaviour
         // each heal gives 10% of max life
         float heal = max_vie * 0.1f * nb_heal;
         addLife(heal);
+    }
+
+    public void healMax()
+    {
+        // restore max life
+        vie = max_vie;
     }
 
 }

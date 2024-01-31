@@ -122,7 +122,7 @@ public class Bed : MonoBehaviour, I_LongInteractable
         return !(is_interacting || is_being_activated);
     }
 
-    public void interact()
+    public void interact(GameObject target)
     {
         // on ouvre le coffre
         startActivating();
