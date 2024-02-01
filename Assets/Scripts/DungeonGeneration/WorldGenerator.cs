@@ -10,7 +10,10 @@ public class WorldGenerator : MonoBehaviour
     [Header("WORLD GENERATION")]
     public bool generate_world = true;
     [SerializeField] private int nb_sectors = 1;
-    [SerializeField] private GameObject world;
+    public bool generate_ceilings = true;
+    [SerializeField] private bool is_world_safe = false;
+    [SerializeField] private int generation_radius = 5;
+    private GameObject world;
     
 
     List<Edge> DT = new List<Edge>();
@@ -18,10 +21,10 @@ public class WorldGenerator : MonoBehaviour
     List<Edge> loops = new List<Edge>();
 
     [Header("sectors")]
-    [SerializeField] private GameObject sector_prefab;
+    private GameObject sector_prefab;
+    private GameObject connector_sector_prefab;
     [SerializeField] private List<Sector> sectors = new List<Sector>();
     // [SerializeField] private List<string> hand_made_sectors_names= new List<string>();
-    [SerializeField] private bool is_world_safe = false;
 
     [Header("hand-made sectors")]
     [SerializeField] private List<GameObject> hand_made_sectors = new List<GameObject>();
@@ -29,25 +32,19 @@ public class WorldGenerator : MonoBehaviour
     [Header("visualisation")]
     [SerializeField] private Transform visu_parent;
 
-    [Header("minimap")]
-    [SerializeField] private GameObject minimap;
-    [SerializeField] private HashSet<Vector2Int> global_tiles = new HashSet<Vector2Int>();
-
 
     // unity functions
     void Awake()
     {
         // on récupère le sector prefab
         sector_prefab = Resources.Load<GameObject>("prefabs/sectors/base_sector");
+        connector_sector_prefab = Resources.Load<GameObject>("prefabs/sectors/base_connector_sector");
 
         // on récupère le world
         world = GameObject.Find("/world");
 
         // on récupère le parent des visualisations
         visu_parent = transform.Find("visu");
-
-        // on récupère la minimap
-        minimap = GameObject.Find("/perso/minicam");
 
         // on récupère les hand made sectors
         hand_made_sectors = Resources.LoadAll<GameObject>("prefabs/sectors/hand_made").ToList();
@@ -73,7 +70,7 @@ public class WorldGenerator : MonoBehaviour
     // génère le monde
     public void GenerateWorld()
     {
-        if (!generate_world) { return; }
+        // if (!generate_world) { return; }
 
         double creation_time = Time.realtimeSinceStartup;
 
@@ -114,10 +111,20 @@ public class WorldGenerator : MonoBehaviour
             MST = calculateMinimumSpanningTree(vertices, DT);
 
             // 7 - on ajoute quelques loops
-            loops = addSomeLoops(MST, DT);
+            // loops = addSomeLoops(MST, DT);
+            loops = new List<Edge>();
 
             // 8 - on connecte les secteurs
             connectSectors(MST, loops);
+
+            // 9 - on met à jour les sectors complexes pour ajouter les extensions si pas de voisin
+            foreach (Sector sect in sectors)
+            {
+                if (sect is ComplexeSector)
+                {
+                    ((ComplexeSector)sect).updateExtensions();
+                }
+            }
         }
 
         // on crée des visus
@@ -127,6 +134,14 @@ public class WorldGenerator : MonoBehaviour
         {
             // on lance la génération du monde
             world.GetComponent<World>().GENERATE(sectors);
+        }
+        else
+        {
+            // on cache les secteurs déjà générés
+            foreach (Sector sect in sectors)
+            {
+                sect.gameObject.SetActive(false);
+            }
         }
 
         Debug.Log("<color=blue>world generated in </color>" + (Time.realtimeSinceStartup - creation_time) + " <color=blue>seconds</color>");
@@ -183,6 +198,11 @@ public class WorldGenerator : MonoBehaviour
             string skin = (Random.Range(0, 2) == 0) ? "base_sector" : "server";
             sect.GetComponent<ProceduralSector>().setSkin(skin);
 
+            // on donne une position aléatoire au secteur
+            // Vector2Int random_center_pos = new Vector2Int(Random.Range(-generation_radius, generation_radius), Random.Range(-generation_radius, generation_radius));
+            sect.GetComponent<Sector>().MoveToSetCenterTo(new Vector2(0,0));
+
+
             // on ajoute le secteur à la liste
             sectors.Add(sect.GetComponent<Sector>());
         }
@@ -201,6 +221,10 @@ public class WorldGenerator : MonoBehaviour
             // on met un skin aléatoire
             string skin = (Random.Range(0, 2) == 0) ? "base_sector" : "server";
             sect.GetComponent<ComplexeSector>().setSkin(skin);
+
+            // on donne une position aléatoire au secteur
+            // Vector2Int random_center_pos = new Vector2Int(Random.Range(-generation_radius, generation_radius), Random.Range(-generation_radius, generation_radius));
+            sect.GetComponent<Sector>().MoveToSetCenterTo(new Vector2(0,0));
 
             // on ajoute le secteur à la liste
             sectors.Add(sect2.GetComponent<Sector>());
@@ -598,8 +622,81 @@ public class WorldGenerator : MonoBehaviour
                     sect2.connectWithSector(sect1);
                 }
             }
+            else if (border == "no border")
+            {
+                // cela signifie que les secteurs sont séparés par du vide
+                // on rajoute un petit ConnectorSector entre les deux
+                
+                // on récupère la frontière (qui contient du vide)
+                // string border = "";
+
+
+                /* if ((sect1.L() > sect2.R() || sect2.L() > sect1.R()) && (sect1.D() > sect2.U() || sect2.D() > sect1.U()))
+                {
+                    // dans ce cas on a une frontière en diagonale
+                    // -> COMPLEXE -> il faut créer 2 ConnectorSectors
+                    // risque d'empieter sur un autre secteur existant -> on ne fait rien
+                    Debug.LogWarning("(WorldGenerator - connectSectors) diagonal border between " + sect1.gameObject.name + " and " + sect2.gameObject.name + " -> COMPLEXE -> we do nothing");
+                }
+                else  */
+                if (sect1.L() > sect2.R() || sect2.L() > sect1.R())
+                {
+                    // dans ce cas on a une frontière horizontale
+                    Sector gauche = (sect1.L() > sect2.R()) ? sect2 : sect1;
+                    Sector droite = (sect1.L() > sect2.R()) ? sect1 : sect2;
+
+                    // on récup la hauteur où on va créer le ConnectorSector
+                    int max_y = Mathf.Min(gauche.U(), droite.U());
+                    int min_y = Mathf.Max(gauche.D(), droite.D());
+                    int y = Random.Range(min_y, max_y);
+
+                    // on crée le ConnectorSector
+                    GameObject sect = Instantiate(connector_sector_prefab, world.transform);
+                    sect.name = "connector_sector_" + sect1.gameObject.name + "_" + sect2.gameObject.name;
+                    sect.GetComponent<ConnectorSector>().init(gauche.R(), y, droite.L() - gauche.R(), 1);
+
+                    // on ajoute le secteur à la liste
+                    sectors.Add(sect.GetComponent<Sector>());
+
+                    // on connecte les secteurs
+                    gauche.connectWithSector(sect.GetComponent<Sector>());
+                    sect.GetComponent<Sector>().connectWithSector(droite);
+                }
+                else if (sect1.D() > sect2.U() || sect2.D() > sect1.U())
+                {
+                    // dans ce cas on a une frontière verticale
+                    Sector bas = (sect1.D() > sect2.U()) ? sect2 : sect1;
+                    Sector haut = (sect1.D() > sect2.U()) ? sect1 : sect2;
+
+                    // on récup la largeur où on va créer le ConnectorSector
+                    int max_x = Mathf.Min(bas.R(), haut.R());
+                    int min_x = Mathf.Max(bas.L(), haut.L());
+                    int x = Random.Range(min_x, max_x);
+
+                    // on crée le ConnectorSector
+                    GameObject sect = Instantiate(connector_sector_prefab, world.transform);
+                    sect.name = "connector_sector_" + sect1.gameObject.name + "_" + sect2.gameObject.name;
+                    sect.GetComponent<ConnectorSector>().init(x, bas.U(), 1, haut.D() - bas.U());
+
+                    // on ajoute le secteur à la liste
+                    sectors.Add(sect.GetComponent<Sector>());
+
+                    // on connecte les secteurs
+                    bas.connectWithSector(sect.GetComponent<Sector>());
+                    sect.GetComponent<Sector>().connectWithSector(haut);
+                }
+                else
+                {
+                    // dans ce cas on a une frontière en diagonale
+                    // -> COMPLEXE -> il faut créer 2 ConnectorSectors
+                    // risque d'empieter sur un autre secteur existant -> on ne fait rien
+                    Debug.LogWarning("(WorldGenerator - connectSectors) diagonal border between " + sect1.gameObject.name + " and " + sect2.gameObject.name + " -> COMPLEXE -> we do nothing");
+                }
+                    
+            }
         }
     }
+
 
     // FINAL GENERATION
     private void makeSectorsAllPositives()

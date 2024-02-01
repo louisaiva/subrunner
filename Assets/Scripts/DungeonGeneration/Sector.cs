@@ -233,7 +233,16 @@ public class Sector : MonoBehaviour
         y += movement.y;
     }
 
+    public void MoveToSetCenterTo(Vector2 c)
+    {
+        // on calcule le mouvement à faire
+        float closest_x = c.x - w/2f;
+        float closest_y = c.y - h/2f;
 
+        // on bouge le secteur
+        x = Mathf.RoundToInt(closest_x);
+        y = Mathf.RoundToInt(closest_y);
+    }
 
     // GENERATION
     public void GENERATE(List<Vector2> empl_enemies, List<Vector2> empl_interactives, Dictionary<Vector2, string> empl_doors, List<Vector2> empl_labels)
@@ -629,7 +638,7 @@ public class Sector : MonoBehaviour
         // on vérifie qu'il reste des emplacements
         if (empl.Count == 0)
         {
-            Debug.LogError("Il n'y a plus d'emplacement de type " + type + " dans le secteur " + x + "_" + y);
+            Debug.LogError("Il n'y a plus d'emplacement de type " + type + " dans le secteur " + gameObject.name);
             return new Vector2(20000, 0);
         }
 
@@ -1214,6 +1223,12 @@ public class Sector : MonoBehaviour
         // si aucun des tests n'a renvoyé false, c'est que les secteurs sont voisins
         return "no border";
     }
+
+    /* public string getVoidBorder(Sector other)
+    {
+        // trouve quelle est la frontière vide entre les deux secteurs,
+        // malgré le vide qui sépare les deux secteurs
+    } */
 
     public string getAreaSkin(Vector2Int pos)
     {

@@ -126,19 +126,21 @@ public class Being : MonoBehaviour
         // maj des animations
         maj_animations(inputs);
 
-
-        // déplacement
-        if (isRunning)
+        if (!hasCapacity("knocked_out"))
         {
-            run(inputs, inputs_magnitude);
-        }
-        else
-        {
-            walk(inputs, inputs_magnitude);
-        }
+            // déplacement
+            if (isRunning)
+            {
+                run(inputs, inputs_magnitude);
+            }
+            else
+            {
+                walk(inputs, inputs_magnitude);
+            }
 
-        // update forces
-        update_forces();
+            // update forces
+            update_forces();
+        }
 
         // on calcule la current velocity
         Vector3 vel = (transform.position - last_position) / Time.deltaTime;

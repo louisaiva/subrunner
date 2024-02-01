@@ -106,6 +106,33 @@ public class ComplexeSector : Sector
         transform.position = new Vector3(((x +area_start.x)* area_size.x)/2, ((y +area_start.y)* area_size.y)/2, 0);
     }
 
+    public void updateExtensions()
+    {
+        // ici on vérifie si les connections internes sont bien connectées
+        // si une connection interne n'est pas connectée, on ajoute l'extension appropriée
+
+        // on récupère les positions des connections internes
+        for (int i=0;i<handmade_connectors_pos.Count;i++)
+        {
+            Vector2Int connector_pos = handmade_connectors_pos[i];
+            Vector2Int connector_dir = handmade_connectors_direction[i];
+
+            // on vérifie si une tile est présente à la position de la connection
+            Vector2Int tile_pos = connector_pos + connector_dir;
+            if (tiles.Contains(tile_pos)) { continue; }
+
+            // on ajoute une extension
+            addExtension(tile_pos);
+        }
+    }
+
+    protected void addExtension(Vector2Int pos)
+    {
+        // dans un premier temps on ajoute juste une salle de 1x1
+        // -> on verra plus tard pour ajouter des salles déjà générées (extension)
+        corridors.Add(pos);
+        tiles.Add(pos);
+    }
 
 
     // SECTOR CONNECTIONS
@@ -270,11 +297,32 @@ public class ComplexeSector : Sector
             {
                 if (!handmade_connectors_pos.Contains(adjacentPosition)) { continue; }
 
+                // si on est ici, alors adjacentPosition est une handmade area connectable
+                // on vérifie si les connections de cette handmade area sont dans la bonne direction
+                bool found_connection = false;
+                for (int i=0;i<handmade_connectors_pos.Count;i++)
+                {
+                    Vector2Int connector_pos = handmade_connectors_pos[i];
+
+                    // on vérifie qu'on regarde bien adjacentPosition
+                    if (connector_pos != adjacentPosition) { continue; }
+                    
+                    Vector2Int connector_dir = handmade_connectors_direction[i];
+
+                    // on l'ajoute si "pos" est le corridor qui connecte la handmade area dans la bonne direction
+                    if (connector_pos + connector_dir == pos)
+                    {
+                        found_connection = true;
+                        break;
+                    }
+
+                }/* 
+
                 Vector2Int connector_pos = handmade_connectors_pos[handmade_connectors_pos.IndexOf(adjacentPosition)];
-                Vector2Int connector_dir = handmade_connectors_direction[handmade_connectors_pos.IndexOf(adjacentPosition)];
+                Vector2Int connector_dir = handmade_connectors_direction[handmade_connectors_pos.IndexOf(adjacentPosition)]; */
 
                 // on l'ajoute si "pos" est le corridor qui connecte la handmade area dans la bonne direction
-                if (!(connector_pos + connector_dir == pos)) { continue; }
+                if (!found_connection) { continue; }
             }
 
             // on ajoute la direction de la room

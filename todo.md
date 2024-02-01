@@ -9,7 +9,9 @@
 - [ ] - faire des coffres spéciaux à choix pour les sas
 - [ ] - marquer les coffres d'un skin différent après qu'on les ait ouverts
 - [ ] - améliorer le dash : changer le sprite en fonction de la direction
-
+- [ ] - mettre message level 1
+- [ ] - enlever le random des positions de sas dans connect sector
+- [x] - diminuer la taille des coffres
 
 
 

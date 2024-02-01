@@ -177,6 +177,8 @@ MonoBehaviour:
   is_moving: 0
   openin_duration: 0.5
   inventory: {fileID: 0}
+  randomize_on_start: 1
+  randomize_cat: all
 --- !u!1001 &2439711390788624142
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -271,7 +273,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 929796589151448986, guid: 8e7e9a149c83d7548b238a9835f265bd, type: 3}
       propertyPath: max_items
-      value: 9
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8445420609596331146, guid: 8e7e9a149c83d7548b238a9835f265bd, type: 3}
       propertyPath: m_Name

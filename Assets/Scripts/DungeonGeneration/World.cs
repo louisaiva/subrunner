@@ -123,7 +123,10 @@ public class World : MonoBehaviour
                 PlaceArea(sector_pos.x + areaPos.x, sector_pos.y + areaPos.y, area_name, skin);
 
                 // on crée les plafonds de l'area en fonction du type d'area
-                sect[i].GenerateCeiling(areaPos);
+                if (GameObject.Find("generator").GetComponent<WorldGenerator>().generate_ceilings)
+                {
+                    sect[i].GenerateCeiling(areaPos);
+                }
             }
         }
 
@@ -137,17 +140,13 @@ public class World : MonoBehaviour
         {
             Sector sector = sect[i];
 
-            // on regarde si le secteur est un hand made sector
-            /* if (sector is ComplexeSector)
-            {
-                // on lance la génération du secteur
-                ((ComplexeSector) sector).LAUNCH();
-            } */
-
             // on récup les emplacements interactifs et ennemis
             GetEmplacements(sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives, out Dictionary<Vector2, string> empl_doors, out List<Vector2> empl_labels);
 
-            print("empl doors: " + empl_doors.Count);
+            if (sector is ConnectorSector)
+            {
+                print("empl interactives: " + empl_interactives.Count);
+            }
 
             // on génère le secteur
             sector.GENERATE(empl_enemies, empl_interactives, empl_doors, empl_labels);
@@ -232,8 +231,11 @@ public class World : MonoBehaviour
             PlaceArea(sector_pos.x + areaPos.x, sector_pos.y + areaPos.y, area_name, skin);
 
             // on crée les plafonds de l'area en fonction du type d'area
-            print("generating ceiling for handmade area " + area_name + " at " + areaPos + " in sector " + sector.name);
-            sector.GenerateCeiling(areaPos);
+            // print("generating ceiling for handmade area " + area_name + " at " + areaPos + " in sector " + sector.name);
+            if (GameObject.Find("generator").GetComponent<WorldGenerator>().generate_ceilings)
+            {
+                sector.GenerateCeiling(areaPos);
+            }
         }
     }
 
@@ -308,13 +310,13 @@ public class World : MonoBehaviour
 
         // on récupère les tiles
         HashSet<Vector2Int> tiles = new HashSet<Vector2Int>();
-        if (sector is ProceduralSector)
-        {
-            tiles = sector.tiles;
-        }
-        else if (sector is ComplexeSector)
+        if (sector is ComplexeSector)
         {
             tiles = ((ComplexeSector) sector).getGeneratedAreas();
+        }
+        else
+        {
+            tiles = sector.tiles;
         }
 
         // on parcourt les rooms
