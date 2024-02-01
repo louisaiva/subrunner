@@ -187,8 +187,8 @@ public class World : MonoBehaviour
 
         if (area_json == null)
         {
-            Debug.LogError("area " + area_name + " on position " + x + "/" + y + " not found");
-            return;
+
+            if (area_json == null) { return; }
         }
 
         // on set les tiles de l'area
@@ -340,7 +340,6 @@ public class World : MonoBehaviour
         empl_doors = new Dictionary<Vector2, string>();
         foreach (KeyValuePair<Vector2Int, List<Vector2Int>> door in sector.connections)
         {
-
             // on récupère l'areajson de l'area où se trouve la porte
             AreaJson area = builder.LoadAreaJson(sector.getAreaName(door.Key));
 
@@ -348,6 +347,8 @@ public class World : MonoBehaviour
             {
                 // on récupère la position de la porte dans l'area
                 Vector2 emp = area.GetDoorEmplacement(direction, out string door_type);
+
+                if (emp == Vector2.zero) { continue; }
 
                 // on récupère la position de l'area
                 Vector2Int area_pos = (door.Key + sector.xy());
@@ -378,10 +379,16 @@ public class World : MonoBehaviour
         // on récupère l'area
         string area_name = getAreaName(tile_pos);
 
-        // print("getting emplacements for area " + area_name + " at " + area_pos + "("+ tile_pos + ")");
+        // print("getting emplacements for area " + area_name + " 
 
         // on récupère le json de l'area
         AreaJson area = builder.LoadAreaJson(area_name);
+
+        if (area == null)
+        {
+            Debug.LogError("(world - GetAreaEmplacements) area " + area_name + "at " + area_pos + "(" + tile_pos + ") not found");
+            return;
+        }
 
         // on récupère les emplacements
         Dictionary<string, HashSet<Vector2>> empl = area.GetEmplacements();

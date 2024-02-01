@@ -638,7 +638,7 @@ public class Sector : MonoBehaviour
         // on vérifie qu'il reste des emplacements
         if (empl.Count == 0)
         {
-            Debug.LogError("Il n'y a plus d'emplacement de type " + type + " dans le secteur " + gameObject.name);
+            Debug.LogWarning("Il n'y a plus d'emplacement de type " + type + " dans le secteur " + gameObject.name);
             return new Vector2(20000, 0);
         }
 

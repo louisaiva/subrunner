@@ -209,8 +209,9 @@ public class ComplexeSector : Sector
 
         print("(ComplexeSector - createPath) on crée un path entre " + start + " et " + end + " / start appartient au secteur : " + is_start);
 
+        int nb_tours = 100;
         // on boucle tant qu'on a pas atteint la fin
-        while (path.Last() != end)
+        while (path.Last() != end && nb_tours > 0)
         {
             // on vérifie qu'on fait pas inlassablement des tours de boucle
             Vector2Int last_pos = path.Last();
@@ -245,6 +246,13 @@ public class ComplexeSector : Sector
                     continue;
                 }
 
+                // on vérifie que la position trouvée n'est pas déjà dans le path
+                if (path.Contains(adjacentPosition))
+                {
+                    continue;
+                }
+
+
                 // on calcule la distance
                 float dist = Vector2Int.Distance(adjacentPosition, end);
                 if (dist < min_dist)
@@ -253,8 +261,24 @@ public class ComplexeSector : Sector
                     best_direction = direction;
                 }
             }
+
+            // on vérifie que la position trouvée n'est pas déjà dans le path
+            /* if (path.Contains(last_pos + best_direction))
+            {
+                Debug.LogError("(ComplexeSector - createPath) Erreur : on a déjà cette position dans le path");
+                break;
+            } */
+
             // on ajoute la direction au path
             path.Add(last_pos + best_direction);
+
+            // on décrémente le nombre de tours
+            nb_tours--;
+        }
+
+        if (nb_tours <= 0)
+        {
+            Debug.LogWarning("(ComplexeSector - createPath) Erreur : on a pas atteint la fin du path");
         }
 
         // on retourne le path

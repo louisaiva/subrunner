@@ -524,7 +524,23 @@ public class AreaJsonHandler : MonoBehaviour
         }
         catch
         {
-            Debug.LogError("no json found for " + name);
+            // Debug.LogError("no json found for " + name);
+            if (name.Contains("sas_"))
+            {
+                // on met une room à la place
+                string room_name = name.Replace("sas_", "room_");
+                room_name = room_name.Replace("N", "U");
+                room_name = room_name.Replace("S", "D");
+                room_name = room_name.Replace("E", "R");
+                room_name = room_name.Replace("W", "L");
+                // area_json = builder.LoadAreaJson(room_name);
+                Debug.LogWarning("no json found for " + name + " -> replaced by room " + room_name);
+                json = GetAreaJson(room_name);
+                if (json == "")
+                {
+                    Debug.LogError("no json found for " + room_name);
+                }
+            }
         }
             
 
@@ -732,8 +748,8 @@ public class AreaJson
 
         if (door_type == "")
         {
-            Debug.LogError("(AreaJson - GetDoorEmplacement) no door found for " + type);
-            return new Vector2(0, 0);
+            Debug.LogWarning("(AreaJson - GetDoorEmplacement) no door found for " + type);
+            return Vector2.zero;
         }
 
         // on récupère la position de la porte
