@@ -12,9 +12,11 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] private int nb_sectors = 1;
     public bool generate_ceilings = true;
     [SerializeField] private bool is_world_safe = false;
-    [SerializeField] private int generation_radius = 5;
+    [SerializeField] private Vector2 generation_radius = new Vector2(5, 5);
     private GameObject world;
-    
+    private double creation_time;
+
+
 
     List<Edge> DT = new List<Edge>();
     List<Edge> MST = new List<Edge>();
@@ -72,7 +74,7 @@ public class WorldGenerator : MonoBehaviour
     {
         // if (!generate_world) { return; }
 
-        double creation_time = Time.realtimeSinceStartup;
+        creation_time = Time.realtimeSinceStartup;
 
         Debug.Log("<color=blue>on génère le monde</color>");
         // cmd("on génère le monde");
@@ -83,6 +85,15 @@ public class WorldGenerator : MonoBehaviour
 
         // 2 - on génère les secteurs
         generateSectors();
+
+        // on crée des visus
+        visualizeSectors();
+
+        Invoke("keepGeneratingWorld", 0f);
+    }
+
+    private void keepGeneratingWorld()
+    {
 
         // 3 - on sépare les secteurs
         separateSectors();
@@ -127,8 +138,9 @@ public class WorldGenerator : MonoBehaviour
             }
         }
 
-        // on crée des visus
-        visualizeSectors();
+        // on attend 5 secondes puis on recrée des visus
+        // Invoke("visualizeSectors", 5f);
+        // visualizeSectors();
 
         if (generate_world)
         {
@@ -199,8 +211,8 @@ public class WorldGenerator : MonoBehaviour
             sect.GetComponent<ProceduralSector>().setSkin(skin);
 
             // on donne une position aléatoire au secteur
-            // Vector2Int random_center_pos = new Vector2Int(Random.Range(-generation_radius, generation_radius), Random.Range(-generation_radius, generation_radius));
-            sect.GetComponent<Sector>().MoveToSetCenterTo(new Vector2(0,0));
+            Vector2 random_center_pos = new Vector2(Random.Range(-generation_radius.x, generation_radius.x), Random.Range(-generation_radius.y, generation_radius.y));
+            sect.GetComponent<Sector>().MoveToSetCenterTo(random_center_pos);
 
 
             // on ajoute le secteur à la liste
@@ -220,11 +232,12 @@ public class WorldGenerator : MonoBehaviour
 
             // on met un skin aléatoire
             string skin = (Random.Range(0, 2) == 0) ? "base_sector" : "server";
-            sect.GetComponent<ComplexeSector>().setSkin(skin);
+            sect2.GetComponent<ComplexeSector>().setSkin(skin);
 
             // on donne une position aléatoire au secteur
             // Vector2Int random_center_pos = new Vector2Int(Random.Range(-generation_radius, generation_radius), Random.Range(-generation_radius, generation_radius));
-            sect.GetComponent<Sector>().MoveToSetCenterTo(new Vector2(0,0));
+            Vector2 random_center_pos = new Vector2(Random.Range(-generation_radius.x, generation_radius.x), Random.Range(-generation_radius.y, generation_radius.y));
+            sect2.GetComponent<Sector>().MoveToSetCenterTo(random_center_pos);
 
             // on ajoute le secteur à la liste
             sectors.Add(sect2.GetComponent<Sector>());
@@ -550,9 +563,16 @@ public class WorldGenerator : MonoBehaviour
     // VISUALISATION
     private void visualizeSectors()
     {
+        // on clear le parent des visualisations
+        foreach (Transform child in visu_parent)
+        {
+            Destroy(child.gameObject);
+        }
+
         // on défini la couleur de base
         Color base_color = new Color(0.5f, 0.5f, 0.5f, 1f);
         Color done_color = new Color(0.5f, 1f, 0.5f, 1f);
+        Color complexe_color = new Color(0.5f, 0.5f, 1f, 1f);
 
         // on parcourt les pre-secteurs
         for (int i = 0; i < sectors.Count; i++)
@@ -567,7 +587,14 @@ public class WorldGenerator : MonoBehaviour
             sectVisu.AddComponent<SectorVisualiser>();
 
             // on applique les paramètres
-            sectVisu.GetComponent<SectorVisualiser>().init(sect, base_color, done_color);
+            if (sectors[i] is ComplexeSector)
+            {
+                sectVisu.GetComponent<SectorVisualiser>().init(sect, complexe_color, done_color);
+            }
+            else
+            {
+                sectVisu.GetComponent<SectorVisualiser>().init(sect, base_color, done_color);
+            }
 
             // on l'ajoute au parent
             sectVisu.transform.SetParent(visu_parent);
@@ -581,6 +608,8 @@ public class WorldGenerator : MonoBehaviour
         {
             positions.Add(sect.center());
         } */
+
+        if (MST.Count == 0) { return; }
 
         // on instancie un MST_visu
         GameObject MST_visu = new GameObject("MST_visu");
@@ -628,17 +657,6 @@ public class WorldGenerator : MonoBehaviour
                 // on rajoute un petit ConnectorSector entre les deux
                 
                 // on récupère la frontière (qui contient du vide)
-                // string border = "";
-
-
-                /* if ((sect1.L() > sect2.R() || sect2.L() > sect1.R()) && (sect1.D() > sect2.U() || sect2.D() > sect1.U()))
-                {
-                    // dans ce cas on a une frontière en diagonale
-                    // -> COMPLEXE -> il faut créer 2 ConnectorSectors
-                    // risque d'empieter sur un autre secteur existant -> on ne fait rien
-                    Debug.LogWarning("(WorldGenerator - connectSectors) diagonal border between " + sect1.gameObject.name + " and " + sect2.gameObject.name + " -> COMPLEXE -> we do nothing");
-                }
-                else  */
                 if (sect1.L() > sect2.R() || sect2.L() > sect1.R())
                 {
                     // dans ce cas on a une frontière horizontale

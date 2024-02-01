@@ -401,11 +401,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad3ad34ccf8ecd5419d907d7f4054826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  generate_world: 1
-  nb_sectors: 5
+  generate_world: 0
+  nb_sectors: 50
   generate_ceilings: 0
   is_world_safe: 0
-  generation_radius: 5
+  generation_radius: {x: 5, y: 5}
   sectors: []
   hand_made_sectors: []
   visu_parent: {fileID: 0}
