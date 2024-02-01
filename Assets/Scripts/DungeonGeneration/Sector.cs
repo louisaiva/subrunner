@@ -719,8 +719,24 @@ public class Sector : MonoBehaviour
             int border_D = Mathf.Max(D(), other.D());
             int border_U = Mathf.Min(U(), other.U());
 
-            // on choisit un sas random dans la frontière
-            sas = new Vector2Int(R()-1, Random.Range(border_D, border_U));
+            // on choisit le sas le plus proche de closest_area
+            if (closest_area.y < border_U && closest_area.y >= border_D)
+            {
+                sas = new Vector2Int(R()-1, closest_area.y);
+            }
+            else if (closest_area.y < border_D)
+            {
+                sas = new Vector2Int(R()-1, border_D);
+            }
+            else if (closest_area.y >= border_U)
+            {
+                sas = new Vector2Int(R()-1, border_U-1);
+            }
+            else
+            {
+                // on choisit un sas aléatoire dans la frontière
+                sas = new Vector2Int(R()-1, Random.Range(border_D, border_U));
+            }
 
             // on choisit un sas dans l'autre secteur
             other_sas = new Vector2Int(other.L(), sas.y);
@@ -731,8 +747,24 @@ public class Sector : MonoBehaviour
             int border_L = Mathf.Max(L(), other.L());
             int border_R = Mathf.Min(R(), other.R());
 
-            // on choisit un sas random dans la frontière
-            sas = new Vector2Int(Random.Range(border_L, border_R), U()-1);
+            // on choisit le sas le plus proche de closest_area
+            if (closest_area.x >= border_L && closest_area.x < border_R)
+            {
+                sas = new Vector2Int(closest_area.x , U() - 1);
+            }
+            else if (closest_area.x < border_L)
+            {
+                sas = new Vector2Int(border_L, U() - 1);
+            }
+            else if (closest_area.x >= border_R)
+            {
+                sas = new Vector2Int(border_R-1 , U() - 1);
+            }
+            else
+            {
+                // on choisit un sas random dans la frontière
+                sas = new Vector2Int(Random.Range(border_L, border_R), U() - 1);
+            }
 
             // on choisit un sas dans l'autre secteur
             other_sas = new Vector2Int(sas.x, other.D());
