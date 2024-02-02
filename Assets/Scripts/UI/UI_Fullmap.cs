@@ -173,4 +173,12 @@ public class UI_Fullmap : MonoBehaviour {
             uis.transform.localScale = new Vector3(zoom_limits.y, zoom_limits.y, 0);
         }
     }
+
+
+    // getters
+
+    public bool isShowed()
+    {
+        return is_map_shown;
+    }
 }

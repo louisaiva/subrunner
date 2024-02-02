@@ -494,11 +494,11 @@ public class Perso : Attacker
         } */
 
         // ouverture de l'inventaire
-        if (!skills_tree.isShowed())
+        if (!skills_tree.isShowed() && !big_map.isShowed())
         {
             if (input_manager.isUsingGamepad())
             {
-                if (playerInputs.perso.inventory.ReadValue<float>() > 0f && !big_inventory.isShowed())
+                if (playerInputs.perso.inventory.ReadValue<float>() >= 1f && !big_inventory.isShowed())
                 {
                     // on regarde si on a pas un coffre ou un ordi en train d'être ouvert
                     if (current_interactable != null && !big_inventory.isShowed())
@@ -510,7 +510,7 @@ public class Perso : Attacker
                     // on ouvre l'inventaire
                     big_inventory.show();
                 }
-                else if (playerInputs.perso.inventory.ReadValue<float>() == 0f && big_inventory.isShowed())
+                else if (playerInputs.perso.inventory.ReadValue<float>() < 1f && big_inventory.isShowed())
                 {
                     // on ferme l'inventaire
                     big_inventory.hide();
@@ -759,25 +759,17 @@ public class Perso : Attacker
     {
         level += 1;
         xp = 0;
-        xp_to_next_level = (int)(xp_to_next_level * 2f);
+        xp_to_next_level = (int)(xp_to_next_level * 1.5f);
         // xp_to_next_level = (int)(xp_to_next_level * 1.5f);
 
         Debug.Log("LEVEL UP ! level " + level);
 
-        // on augmente les stats
-        // max_vie += 5 + ((int) 0.2*level);
-        // damage += 4 + ((int) 0.1*level);
-        // cooldown_attack -= 0.05f;
-        // speed += 0.1f;
-
-        // on affiche un floating text
-        /* Vector3 position = transform.position + new Vector3(0, 1f, 0);
-        GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
-        floating_text.GetComponent<FloatingText>().init("LEVEL "+level.ToString(), Color.yellow, 30f, 0.1f, 0.2f, 6f);
-        floating_text.transform.SetParent(floating_dmg_provider.transform); */
 
         // on ouvre le physical tree
         skills_tree.physicalLevelUp();
+
+        // on affiche un texte de level up
+        floating_dmg_provider.GetComponent<TextManager>().addFloatingText("LEVEL "+level.ToString(), transform.position + new Vector3(0, 0.5f, 0), "yellow");
 
     }
 
@@ -787,10 +779,6 @@ public class Perso : Attacker
         Debug.Log("YOU DIED");
 
         // on affiche un floating text
-        /* Vector3 position = transform.position + new Vector3(0, 0.5f, 0);
-        GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
-        floating_text.GetComponent<FloatingText>().init("YOU DIED", Color.red, 30f, 0.1f, 0.2f, 6f);
-        floating_text.transform.SetParent(floating_dmg_provider.transform); */
         floating_dmg_provider.GetComponent<TextManager>().addFloatingText("YOU DIED", transform.position + new Vector3(0, 0.5f, 0), "red");
 
         // on desactive l'inventaire
