@@ -89,6 +89,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""randomTalk"",
+                    ""type"": ""Button"",
+                    ""id"": ""9ba0cfaf-4138-4dc5-9ba2-7ec2dbfdd46f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -331,6 +340,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""keyboard"",
                     ""action"": ""interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9c3a8f46-555c-4048-9390-4eff923ebcc7"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""randomTalk"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""caed2b77-a8cc-4ff6-a9c9-259965ac1618"",
+                    ""path"": ""<Gamepad>/leftStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""randomTalk"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1484,6 +1515,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_perso_hit = m_perso.FindAction("hit", throwIfNotFound: true);
         m_perso_run = m_perso.FindAction("run", throwIfNotFound: true);
         m_perso_useConso = m_perso.FindAction("useConso", throwIfNotFound: true);
+        m_perso_randomTalk = m_perso.FindAction("randomTalk", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_navigate = m_UI.FindAction("navigate", throwIfNotFound: true);
@@ -1586,6 +1618,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_perso_hit;
     private readonly InputAction m_perso_run;
     private readonly InputAction m_perso_useConso;
+    private readonly InputAction m_perso_randomTalk;
     public struct PersoActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -1597,6 +1630,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @hit => m_Wrapper.m_perso_hit;
         public InputAction @run => m_Wrapper.m_perso_run;
         public InputAction @useConso => m_Wrapper.m_perso_useConso;
+        public InputAction @randomTalk => m_Wrapper.m_perso_randomTalk;
         public InputActionMap Get() { return m_Wrapper.m_perso; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1627,6 +1661,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @useConso.started += instance.OnUseConso;
             @useConso.performed += instance.OnUseConso;
             @useConso.canceled += instance.OnUseConso;
+            @randomTalk.started += instance.OnRandomTalk;
+            @randomTalk.performed += instance.OnRandomTalk;
+            @randomTalk.canceled += instance.OnRandomTalk;
         }
 
         private void UnregisterCallbacks(IPersoActions instance)
@@ -1652,6 +1689,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @useConso.started -= instance.OnUseConso;
             @useConso.performed -= instance.OnUseConso;
             @useConso.canceled -= instance.OnUseConso;
+            @randomTalk.started -= instance.OnRandomTalk;
+            @randomTalk.performed -= instance.OnRandomTalk;
+            @randomTalk.canceled -= instance.OnRandomTalk;
         }
 
         public void RemoveCallbacks(IPersoActions instance)
@@ -2078,6 +2118,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnHit(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
         void OnUseConso(InputAction.CallbackContext context);
+        void OnRandomTalk(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

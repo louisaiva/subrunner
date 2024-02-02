@@ -38,7 +38,7 @@ public class Attacker : Being
         enemy_layers = LayerMask.GetMask("Enemies");
     }
 
-    protected new void Update()
+    protected override void Update()
     {
         // ! à mettre tjrs au début de la fonction update
         if (!isAlive()) { return; }

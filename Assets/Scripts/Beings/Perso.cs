@@ -86,6 +86,70 @@ public class Perso : Attacker
     private UI_HintControlsManager hints_controls;
 
 
+    [Header("Speach")]
+    private List<string> lyrics = new List<string>()
+                        {
+                            "here we go again/.",
+                            "well/.i'm not dead yet :D/lthat's a good start",
+                            "give me some noodles !/l/.anyone ?",
+                            "still not dead/./lbut am i alive ?",
+                            "let's decrypt\nthe chaos, babyy",
+                            "fuck this shit/.\ni'm HUNGRY !",
+                            "is all of this\nsh*t even real ?",
+                            "ARGHHH/.ZOMBOS !",
+                            "those posters reminds\nme of the pixel war/./lwait/.wtf is the pixel war ?",
+                            "looks like life has/./lno meaning after all",
+                            "let's ctrl+alt+suppr\nall those cyberzombies",
+                            "do you feel the\nbreath of the city ?",
+                            "i'm talking alone/./las always..",
+                            "bits & bytes are\nmy only love, honey",
+                            "404: noodles not found :/",
+                            "feel like the labyrinth\nkeeps moving/.is it ?",
+                            "omg i almost glitched oO",
+                            "what if i could pass\nthrough those walls ?/lwell/.I can't",
+                            "this city is full of bugs/./llooks like a game actually",
+                            "ahh, the smell of the city,/lso/.digital",
+                            "i'm a pixel runner/.i'm a pixel runner",
+                            "let's hack the world, baby !",
+                            "running in da\nunderground,/lagain/.and again/.n agn",
+                            "i'm so tired/./lwhen was the last\ntime i slept ?",
+                            "why do i keep\nrunning, really ?",
+                            "this wall looks suspicious/. O.o",
+                            "feels good to run after/./l502420h of debugging",
+                            "here i dash/.here i slash 8P",
+                            "where is my old\nfriend Marco ?",
+                            "ayy, 9 years without\nseeing the sun,/lwho can beat that ?",
+                            "i need to find the exit/./lis there even an exit ?",
+                            "ahhh what if I\ncould ctrl-Z irl ?",
+                            "alright./ltime to remember passwords/./ls7j3k9../lwell/.not this time apparently",
+                            "what's my name again ?",
+                            "ahh orangina I love that/l/.f*ck capitalism\nperchance",
+                            "fuck Google I'm gonna hack them",
+                            "ahh/./lI love feeing the\nbytes flowing in my veins..",
+                            "where is the internet again ?",
+                            "zombos, zombos\neverywhere/./lWelcome to the\napocalypse",
+                            "noodles,/lthe ultimate cure\nfor existential hunger !",
+                            "starving and debugging/./la perfect combo, really",
+                            "is this reality or just\na cyberpunk illusion ?",
+                            "zombos & hacking/./lno way it's real/./lit's so/.mainstream",
+                            "OH MY GOD,/ljust found the bug\nI was struggling with/./lToo bad my computer\npassed away..",
+                            "line 475,car. 45 :\n(WorldError)\nhere's comes the \"déjà vu\"",
+                            "looks like the matrix/./lugh ?/lwhat did I just say ?",
+                            "i could use a jetpack/./lwell no that's\nanother game./lwait/.a game ?",
+                            "ohhh, cuty rat !",
+                            "why do I keep\ntalking alone ?/l;-;",
+                            "i'm so tired of\nrunning/l/.looks like\nI can't stop",
+                            "how many times\nI've been here ?",
+                            "mmmmh/./lhow many zombos lives is\nworth some noodles ?",
+                            "pff !/lthose zombos are\nso annoying",
+                            "ahh/./lloneliness is almost\nas scary as\nthe deep web",
+                            "maybe I'll find\nsome friends/./l/. but I want noodles !",
+
+
+                        };
+    // private float talk_probability = 0.002f;
+    [SerializeField] private Vector2 talking_delay_range = new Vector2(10f, 30f);
+
     // unity functions
     new void Start()
     {
@@ -147,6 +211,7 @@ public class Perso : Attacker
         addCapacity("hoover_interact");
         // addCapacity("interact");
         addCapacity("debug_capacities");
+        addCapacity("talk");
 
         // on met les differents paramètres du perso
         skills_tree = transform.Find("skills_tree").GetComponent<SkillTree>();
@@ -202,7 +267,25 @@ public class Perso : Attacker
 
         // on affiche un texte de début
         Invoke("showWelcome", 5f);
+        Invoke("randomTalk", Random.Range(talking_delay_range.x, talking_delay_range.y));
     }
+
+    /* protected override void Update()
+    {
+        base.Update();
+
+        // on fait parler le perso
+        float proba = Random.value;
+        // print("proba : " + proba + " talk_probability : " + talk_probability);
+        if (proba < talk_probability)
+        {
+            int index = Random.Range(0, lyrics.Count);
+            string text = lyrics[index];
+            // addFloatingText(text, transform.position + new Vector3(0, 1f, 0), Color.yellow);
+            // floating_dmg_provider.GetComponent<TextManager>().addStaticText(text, transform.position);
+            floating_dmg_provider.GetComponent<TextManager>().talk(text, this);
+        }
+    } */
 
     // welcoming
     void showWelcome()
@@ -210,25 +293,27 @@ public class Perso : Attacker
         // on affiche un texte de début
 
         // WELCOME TO
-        Vector3 position = transform.position + new Vector3(0, 1f, 0);
+        /* Vector3 position = transform.position + new Vector3(0, 1f, 0);
         string text = "welcome to";
         GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
         floating_text.GetComponent<FloatingText>().init(text, Color.yellow, 30f, 0.1f, 0.2f, 16f);
-        floating_text.transform.SetParent(floating_dmg_provider.transform);
+        floating_text.transform.SetParent(floating_dmg_provider.transform); */
+        floating_dmg_provider.GetComponent<TextManager>().addFloatingText("WELCOME TO", transform.position + new Vector3(0, 1f, 0), "yellow");
 
         // SUBRUNNER
-        position = transform.position + new Vector3(0, 0.5f, 0);
+        /* position = transform.position + new Vector3(0, 0.5f, 0);
         text = "SUBRUNNER";
         GameObject floating_text2 = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
         floating_text2.GetComponent<FloatingText>().init(text, Color.green, 30f, 0.1f, 0.2f, 16f);
-        floating_text2.transform.SetParent(floating_dmg_provider.transform);
+        floating_text2.transform.SetParent(floating_dmg_provider.transform); */
+        floating_dmg_provider.GetComponent<TextManager>().addFloatingText("SUBRUNNER", transform.position + new Vector3(0, 0.5f, 0), "green");
 
 
         // on affiche la quete 5sec après
         // Invoke("showQuest", 5f);
     }
 
-    void showQuest()
+    /* void showQuest()
     {
         // on affiche un texte de début
         Vector3 position = transform.position + new Vector3(0, 1f, 0);
@@ -276,6 +361,16 @@ public class Perso : Attacker
         GameObject floating_text2 = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
         floating_text2.GetComponent<FloatingText>().init(text, Color.red, 30f, 0.1f, 0.2f, 6f);
         floating_text2.transform.SetParent(floating_dmg_provider.transform);
+    } */
+
+    void randomTalk()
+    {
+        // on fait parler le perso
+        int index = Random.Range(0, lyrics.Count);
+        floating_dmg_provider.GetComponent<TextManager>().talk(lyrics[index], this);
+
+        // on relance
+        Invoke("randomTalk", Random.Range(talking_delay_range.x, talking_delay_range.y));
     }
 
     // INPUTS
@@ -699,10 +794,11 @@ public class Perso : Attacker
         Debug.Log("YOU DIED");
 
         // on affiche un floating text
-        Vector3 position = transform.position + new Vector3(0, 0.5f, 0);
+        /* Vector3 position = transform.position + new Vector3(0, 0.5f, 0);
         GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
         floating_text.GetComponent<FloatingText>().init("YOU DIED", Color.red, 30f, 0.1f, 0.2f, 6f);
-        floating_text.transform.SetParent(floating_dmg_provider.transform);
+        floating_text.transform.SetParent(floating_dmg_provider.transform); */
+        floating_dmg_provider.GetComponent<TextManager>().addFloatingText("YOU DIED", transform.position + new Vector3(0, 0.5f, 0), "red");
 
         // on desactive l'inventaire
         inventory.setShow(false);
@@ -998,11 +1094,11 @@ public class Perso : Attacker
         respawn_bed = bed;
 
         // on affiche un texte de début
-        Vector3 position = transform.position + new Vector3(0, 1.2f, 0);
+        /* Vector3 position = transform.position + new Vector3(0, 1.2f, 0);
         string text = "your respawn point has been set";
         GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
         floating_text.GetComponent<FloatingText>().init(text, Color.yellow, 30f, 0.1f, 0.2f, 6f);
-        floating_text.transform.SetParent(floating_dmg_provider.transform);
+        floating_text.transform.SetParent(floating_dmg_provider.transform); */
     }
 
 
@@ -1254,6 +1350,21 @@ public class Perso : Attacker
         }
     }
 
+    public void OnRandomTalk()
+    {
+        if (!hasCapacity("knocked_out"))
+        {
+            if (hasCapacity("talk"))
+            {
+                CancelInvoke("randomTalk");
+                randomTalk();
+            }
+            else
+            {
+                floating_dmg_provider.GetComponent<TextManager>().talk("./.@.~@#", this);
+            }
+        }
+    }
 
 }
 

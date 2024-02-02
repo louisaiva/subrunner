@@ -67,6 +67,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "randomTalk",
+                    "type": "Button",
+                    "id": "9ba0cfaf-4138-4dc5-9ba2-7ec2dbfdd46f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -309,6 +318,28 @@
                     "processors": "",
                     "groups": "keyboard",
                     "action": "interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9c3a8f46-555c-4048-9390-4eff923ebcc7",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "randomTalk",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "caed2b77-a8cc-4ff6-a9c9-259965ac1618",
+                    "path": "<Gamepad>/leftStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "randomTalk",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

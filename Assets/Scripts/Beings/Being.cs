@@ -80,7 +80,7 @@ public class Being : MonoBehaviour
         xp_provider = GameObject.Find("/particles/xp_provider");
 
         // on récupère le provider de floating dmg
-        floating_dmg_provider = GameObject.Find("/particles/dmgs_provider");
+        floating_dmg_provider = GameObject.Find("/utils/dmgs_provider");
     }
 
     public virtual void Events()
@@ -106,7 +106,7 @@ public class Being : MonoBehaviour
         
     }
 
-    protected void Update()
+    protected virtual void Update()
     {
         // on vérifie si le perso est mort
         if (!isAlive()) { return; }

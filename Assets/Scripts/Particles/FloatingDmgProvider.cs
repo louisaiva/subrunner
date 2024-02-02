@@ -9,18 +9,19 @@ public class FloatingDmgProvider : MonoBehaviour {
     // elle est utilisée par les beings pour afficher les dégats qu'ils reçoivent
 
     // PREFABS
-    public GameObject floating_dmg_prefab;
+    private GameObject floating_dmg_prefab;
+    [SerializeField] private float dmg_size = 20f;
 
     // position aléatoire
-    public float random_position_range = 0.1f;
-    public float offset_y = 0.5f;
+    [SerializeField] private float random_position_range = 0.1f;
+    [SerializeField] private float offset_y = 0.5f;
 
     // show damages once a while if there are too many
     private float show_dmg_delay = 0.1f;
     private float free_dmg_delay = 10f; // on supprime les dégats si on a pas fait de dégats depuis ce temps
     private Dictionary<GameObject,float> dmg_last_time_showed = new Dictionary<GameObject, float>();
     private Dictionary<GameObject, float> dmg_compteur = new Dictionary<GameObject, float>();
-    private List<GameObject> go = new List<GameObject>();
+    private List<GameObject> floating_dmg_gameObjects = new List<GameObject>();
 
     // UNITY FUNCTIONS
     void Start()
@@ -35,7 +36,7 @@ public class FloatingDmgProvider : MonoBehaviour {
         List<GameObject> obj_to_del = new List<GameObject>();
 
         // on parcourt les objets
-        foreach (GameObject obj in go)
+        foreach (GameObject obj in floating_dmg_gameObjects)
         {
             // on regarde si on doit afficher les dégats
             if (Time.time - dmg_last_time_showed[obj] < show_dmg_delay) { continue; }
@@ -74,7 +75,7 @@ public class FloatingDmgProvider : MonoBehaviour {
         {
             dmg_compteur.Remove(obj);
             dmg_last_time_showed.Remove(obj);
-            go.Remove(obj);
+            floating_dmg_gameObjects.Remove(obj);
         }
     }
 
@@ -82,7 +83,7 @@ public class FloatingDmgProvider : MonoBehaviour {
 
     public void AddFloatingDmg(GameObject obj, float dmg, Vector3 position)
     {
-        if (go.Contains(obj))
+        if (floating_dmg_gameObjects.Contains(obj))
         {
             dmg_compteur[obj] += dmg;
         }
@@ -90,7 +91,7 @@ public class FloatingDmgProvider : MonoBehaviour {
         {
             dmg_last_time_showed[obj] = -1;
             dmg_compteur[obj] = dmg;
-            go.Add(obj);
+            floating_dmg_gameObjects.Add(obj);
         }
     }
 
@@ -105,24 +106,28 @@ public class FloatingDmgProvider : MonoBehaviour {
         // on génère un floating dmg
         GameObject floating_dmg = Instantiate(floating_dmg_prefab, position, Quaternion.identity);
 
-        // on le met en enfant de l'objet
-        floating_dmg.transform.SetParent(transform);
-
         // on ajuste la couleur en fonction des dégats
+        string color = "yellow";
         if (dmg > 0)
         {
-            floating_dmg.GetComponent<TextMeshPro>().color = Color.green;
+            color = "green";
         }
         else
         {
-            floating_dmg.GetComponent<TextMeshPro>().color = Color.red;
+            color = "red";
         }
 
+        floating_dmg.GetComponent<FloatingText>().init(dmg.ToString(), color, dmg_size);
+
+        // on le met en enfant de l'objet
+        floating_dmg.transform.SetParent(transform);
+
+
         // on applique le material
-        floating_dmg.GetComponent<FloatingText>().ajustMaterial();
+        // floating_dmg.GetComponent<FloatingText>().ajustMaterial();
 
         // on met à jour le texte
-        floating_dmg.GetComponent<TextMeshPro>().text = dmg.ToString();
+        // floating_dmg.GetComponent<TextMeshPro>().text = ;
     }
 
     // SECONDARY FUNCTIONS
@@ -137,18 +142,19 @@ public class FloatingDmgProvider : MonoBehaviour {
 
         // on génère un floating dmg
         GameObject floating_dmg = Instantiate(floating_dmg_prefab, position, Quaternion.identity);
+        floating_dmg.GetComponent<FloatingText>().init("missed", "yellow",dmg_size);
 
         // on le met en enfant de l'objet
         floating_dmg.transform.SetParent(transform);
 
         // on ajuste la couleur en fonction des dégats
-        floating_dmg.GetComponent<TextMeshPro>().color = Color.yellow;
+        /* floating_dmg.GetComponent<TextMeshPro>().color = Color.yellow;
 
         // on applique le material
         floating_dmg.GetComponent<FloatingText>().ajustMaterial();
 
         // on met à jour le texte
-        floating_dmg.GetComponent<TextMeshPro>().text = "missed";
+        floating_dmg.GetComponent<TextMeshPro>().text = "missed"; */
     }
 
 }

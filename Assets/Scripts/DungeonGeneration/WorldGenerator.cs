@@ -94,7 +94,7 @@ public class WorldGenerator : MonoBehaviour
 
     private void keepGeneratingWorld()
     {
-
+ 
         // 3 - on sépare les secteurs
         separateSectors();
 
