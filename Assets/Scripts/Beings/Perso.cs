@@ -87,15 +87,13 @@ public class Perso : Attacker
 
 
     [Header("Speach")]
-    private List<string> lyrics = new List<string>()
+    private List<string> talks_random = new List<string>()
                         {
                             "here we go again/.",
                             "well/.i'm not dead yet :D/lthat's a good start",
                             "give me some noodles !/l/.anyone ?",
                             "still not dead/./lbut am i alive ?",
                             "let's decrypt\nthe chaos, babyy",
-                            "fuck this shit/.\ni'm HUNGRY !",
-                            "is all of this\nsh*t even real ?",
                             "ARGHHH/.ZOMBOS !",
                             "those posters reminds\nme of the pixel war/./lwait/.wtf is the pixel war ?",
                             "looks like life has/./lno meaning after all",
@@ -116,21 +114,19 @@ public class Perso : Attacker
                             "why do i keep\nrunning, really ?",
                             "this wall looks suspicious/. O.o",
                             "feels good to run after/./l502420h of debugging",
-                            "here i dash/.here i slash 8P",
+                            "here i dash/.here i slash",
                             "where is my old\nfriend Marco ?",
                             "ayy, 9 years without\nseeing the sun,/lwho can beat that ?",
                             "i need to find the exit/./lis there even an exit ?",
                             "ahhh what if I\ncould ctrl-Z irl ?",
                             "alright./ltime to remember passwords/./ls7j3k9../lwell/.not this time apparently",
                             "what's my name again ?",
-                            "ahh orangina I love that/l/.f*ck capitalism\nperchance",
-                            "fuck Google I'm gonna hack them",
-                            "ahh/./lI love feeing the\nbytes flowing in my veins..",
+                            "ahh/./lI love feeling the\nbytes flowing in my veins..",
                             "where is the internet again ?",
-                            "zombos, zombos\neverywhere/./lWelcome to the\napocalypse",
+                            "zombos, zombos\neverywhere/./lwelcome to the\nzapocalypse",
                             "noodles,/lthe ultimate cure\nfor existential hunger !",
                             "starving and debugging/./la perfect combo, really",
-                            "is this reality or just\na cyberpunk illusion ?",
+                            "is this reality or just\na weird illusion ?",
                             "zombos & hacking/./lno way it's real/./lit's so/.mainstream",
                             "OH MY GOD,/ljust found the bug\nI was struggling with/./lToo bad my computer\npassed away..",
                             "line 475,car. 45 :\n(WorldError)\nhere's comes the \"déjà vu\"",
@@ -144,10 +140,16 @@ public class Perso : Attacker
                             "pff !/lthose zombos are\nso annoying",
                             "ahh/./lloneliness is almost\nas scary as\nthe deep web",
                             "maybe I'll find\nsome friends/./l/. but I want noodles !",
-
-
                         };
-    // private float talk_probability = 0.002f;
+
+    private List<string> talks_random_nsfw = new List<string>()
+                        {
+                            "fuck this shit/.\ni'm HUNGRY !",
+                            "is all of this\nsh*t even real ?",
+                            "ahh orangina I love that/l/.f*ck capitalism\nperchance",
+                            "fuck Google I'm gonna hack them",
+                        };
+    [SerializeField] private bool allow_nsfw = true;
     [SerializeField] private Vector2 talking_delay_range = new Vector2(10f, 30f);
 
     // unity functions
@@ -270,23 +272,6 @@ public class Perso : Attacker
         Invoke("randomTalk", Random.Range(talking_delay_range.x, talking_delay_range.y));
     }
 
-    /* protected override void Update()
-    {
-        base.Update();
-
-        // on fait parler le perso
-        float proba = Random.value;
-        // print("proba : " + proba + " talk_probability : " + talk_probability);
-        if (proba < talk_probability)
-        {
-            int index = Random.Range(0, lyrics.Count);
-            string text = lyrics[index];
-            // addFloatingText(text, transform.position + new Vector3(0, 1f, 0), Color.yellow);
-            // floating_dmg_provider.GetComponent<TextManager>().addStaticText(text, transform.position);
-            floating_dmg_provider.GetComponent<TextManager>().talk(text, this);
-        }
-    } */
-
     // welcoming
     void showWelcome()
     {
@@ -366,8 +351,15 @@ public class Perso : Attacker
     void randomTalk()
     {
         // on fait parler le perso
-        int index = Random.Range(0, lyrics.Count);
-        floating_dmg_provider.GetComponent<TextManager>().talk(lyrics[index], this);
+        int index = Random.Range(0, talks_random.Count + (allow_nsfw ? talks_random_nsfw.Count : 0));
+        if (index >= talks_random.Count)
+        {
+            floating_dmg_provider.GetComponent<TextManager>().talk(talks_random_nsfw[index - talks_random.Count], this);
+        }
+        else
+        {
+            floating_dmg_provider.GetComponent<TextManager>().talk(talks_random[index], this);
+        }
 
         // on relance
         Invoke("randomTalk", Random.Range(talking_delay_range.x, talking_delay_range.y));

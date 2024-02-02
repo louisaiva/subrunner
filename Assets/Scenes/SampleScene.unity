@@ -1550,6 +1550,7 @@ MonoBehaviour:
   line_offset: 0.3
   line_delay: 1
   caractere_delay: 0.005
+  slow_caractere_delay: 0.2
   ttl_sentence: 3
 --- !u!1 &314932340
 GameObject:
@@ -7826,6 +7827,7 @@ MonoBehaviour:
   respawn_bed: {fileID: 0}
   current_hoover_interactable: {fileID: 0}
   input_manager: {fileID: 0}
+  allow_nsfw: 1
   talking_delay_range: {x: 10, y: 30}
 --- !u!114 &1353416093
 MonoBehaviour:
