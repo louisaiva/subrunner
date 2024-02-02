@@ -55,17 +55,15 @@ public class Perso : Attacker
 
 
     [Header("INVENTORY")]
-    // minimap
-    // public bool has_gyroscope = false;
-
-    // inventory & items
     public Inventory inventory;
     public UI_Inventory big_inventory;
     public Transform items_parent;
 
     [Header("SKILLTREE")]
-    // skill tree
     public SkillTree skills_tree;
+
+    [Header("MAP")]
+    public UI_Fullmap big_map;
 
     [Header("INTERACTIONS")]
     // interactions
@@ -186,6 +184,9 @@ public class Perso : Attacker
         inventory = GameObject.Find("/inventory").GetComponent<Inventory>();
         inventory.scalable = true;
         big_inventory = GameObject.Find("/ui/inventory").GetComponent<UI_Inventory>();
+
+        // on récupère la map
+        big_map = GameObject.Find("/ui/fullmap").GetComponent<UI_Fullmap>();
 
         // on récupère le parent des items
         // items_parent = GameObject.Find("/world/sector_2/items").transform;
@@ -1354,6 +1355,17 @@ public class Perso : Attacker
             else
             {
                 floating_dmg_provider.GetComponent<TextManager>().talk("./.@.~@#", this);
+            }
+        }
+    }
+
+    public void OnMap()
+    {
+        if (!hasCapacity("knocked_out"))
+        {
+            if (hasCapacity("gyroscope"))
+            {
+                big_map.rollShow();
             }
         }
     }

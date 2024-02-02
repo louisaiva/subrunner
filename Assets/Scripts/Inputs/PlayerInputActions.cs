@@ -236,7 +236,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""a78382af-fd0b-4b13-a37d-a064cac28d6f"",
-                    ""path"": ""<XInputController>/select"",
+                    ""path"": ""<Gamepad>/select"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
@@ -1469,6 +1469,142 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""map"",
+            ""id"": ""1d12c9ec-53fc-4e76-b747-b101fc6248f5"",
+            ""actions"": [
+                {
+                    ""name"": ""zoom"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""570598f1-aa91-4935-88c9-2061e1b4b03d"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""move"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""9b77e55f-aa18-46b1-b854-d1b234d4f1fd"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""eda0786b-1aab-4770-bd26-6917598ae6b7"",
+                    ""path"": ""<Gamepad>/leftStick/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""sz"",
+                    ""id"": ""d0271d57-e021-42e0-861a-7b9ed3fa8b4c"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""zoom"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""3a571c8b-cccc-41da-a555-f9bb35c30907"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""18938bc7-5323-40ab-926c-4fc238a92e8f"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ac8bbae2-e325-491a-b0b3-f9bdeca80991"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""zqsd"",
+                    ""id"": ""646cb3e8-373f-495b-85aa-1a6afe85b733"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""5d5d198c-2b3a-4960-a169-458a21ba1893"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""6a8d9c7e-9e25-41a1-a568-4b6c5d4d3acc"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""e380b820-b995-4096-8b78-f5cbc71edf43"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""978a842d-8858-48b4-8f9d-faf82e56072f"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -1550,6 +1686,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_any = asset.FindActionMap("any", throwIfNotFound: true);
         m_any_keyboard = m_any.FindAction("keyboard", throwIfNotFound: true);
         m_any_gamepad = m_any.FindAction("gamepad", throwIfNotFound: true);
+        // map
+        m_map = asset.FindActionMap("map", throwIfNotFound: true);
+        m_map_zoom = m_map.FindAction("zoom", throwIfNotFound: true);
+        m_map_move = m_map.FindAction("move", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -2091,6 +2231,60 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         }
     }
     public AnyActions @any => new AnyActions(this);
+
+    // map
+    private readonly InputActionMap m_map;
+    private List<IMapActions> m_MapActionsCallbackInterfaces = new List<IMapActions>();
+    private readonly InputAction m_map_zoom;
+    private readonly InputAction m_map_move;
+    public struct MapActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public MapActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @zoom => m_Wrapper.m_map_zoom;
+        public InputAction @move => m_Wrapper.m_map_move;
+        public InputActionMap Get() { return m_Wrapper.m_map; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MapActions set) { return set.Get(); }
+        public void AddCallbacks(IMapActions instance)
+        {
+            if (instance == null || m_Wrapper.m_MapActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_MapActionsCallbackInterfaces.Add(instance);
+            @zoom.started += instance.OnZoom;
+            @zoom.performed += instance.OnZoom;
+            @zoom.canceled += instance.OnZoom;
+            @move.started += instance.OnMove;
+            @move.performed += instance.OnMove;
+            @move.canceled += instance.OnMove;
+        }
+
+        private void UnregisterCallbacks(IMapActions instance)
+        {
+            @zoom.started -= instance.OnZoom;
+            @zoom.performed -= instance.OnZoom;
+            @zoom.canceled -= instance.OnZoom;
+            @move.started -= instance.OnMove;
+            @move.performed -= instance.OnMove;
+            @move.canceled -= instance.OnMove;
+        }
+
+        public void RemoveCallbacks(IMapActions instance)
+        {
+            if (m_Wrapper.m_MapActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IMapActions instance)
+        {
+            foreach (var item in m_Wrapper.m_MapActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_MapActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public MapActions @map => new MapActions(this);
     private int m_xboxSchemeIndex = -1;
     public InputControlScheme xboxScheme
     {
@@ -2158,5 +2352,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     {
         void OnKeyboard(InputAction.CallbackContext context);
         void OnGamepad(InputAction.CallbackContext context);
+    }
+    public interface IMapActions
+    {
+        void OnZoom(InputAction.CallbackContext context);
+        void OnMove(InputAction.CallbackContext context);
     }
 }

@@ -104,6 +104,7 @@ public class Minimap : MonoBehaviour {
         createTextures();
 
         GameObject.Find("/ui/minimap/mask/map").GetComponent<RawImage>().texture = null;
+        GameObject.Find("/ui/fullmap/mask/map").GetComponent<RawImage>().texture = null;
     }
 
     // Update is called once per frame
