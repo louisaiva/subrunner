@@ -72,28 +72,15 @@ public class WorldGenerator : MonoBehaviour
     // génère le monde
     public void GenerateWorld()
     {
-        // if (!generate_world) { return; }
-
+        // on récupère le temps de création
         creation_time = Time.realtimeSinceStartup;
-
         Debug.Log("<color=blue>on génère le monde</color>");
-        // cmd("on génère le monde");
-        // "<color=red>Error: </color>AssetBundle not found"
 
         // 1 - on vide le monde
         Clear();
 
         // 2 - on génère les secteurs
         generateSectors();
-
-        // on crée des visus
-        visualizeSectors();
-
-        Invoke("keepGeneratingWorld", 0f);
-    }
-
-    private void keepGeneratingWorld()
-    {
  
         // 3 - on sépare les secteurs
         separateSectors();
@@ -138,9 +125,8 @@ public class WorldGenerator : MonoBehaviour
             }
         }
 
-        // on attend 5 secondes puis on recrée des visus
-        // Invoke("visualizeSectors", 5f);
-        // visualizeSectors();
+        // on crée des visus
+        visualizeSectors();
 
         if (generate_world)
         {

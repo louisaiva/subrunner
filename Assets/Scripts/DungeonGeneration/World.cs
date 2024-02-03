@@ -92,11 +92,13 @@ public class World : MonoBehaviour
         // on parcourt les secteurs
         for (int i = 0; i < sect.Count; i++)
         {
+            // on initialise les areas des secteurs
+            sect[i].initAreas();
+
             // on vérifie si le secteur est un hand made sector
             if (sect[i] is ComplexeSector)
             {
                 MergeSector((ComplexeSector) sect[i]);
-                // ((ComplexeSector) sect[i]).LAUNCH();
 
                 // on récupère le secteur de spawn
                 if (((ComplexeSector) sect[i]).isSpawnSector())

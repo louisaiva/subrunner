@@ -76,6 +76,10 @@ public class Sector : MonoBehaviour
     private Dictionary<Vector2Int, List<string>> hidden_ceilings = new Dictionary<Vector2Int, List<string>>();
     private string ceiling_sas_prefabs_path = "prefabs/rooms/sas";
 
+    [Header("Areas")]
+    public GameObject area_prefab;
+    public Dictionary<Vector2Int, Area> areas = new Dictionary<Vector2Int, Area>();
+
 
     // UNITY METHODS
     protected void Awake()
@@ -83,6 +87,7 @@ public class Sector : MonoBehaviour
         // on récupère le world
         world = GameObject.Find("/world").GetComponent<World>();
         world_generator = GameObject.Find("/generator").GetComponent<WorldGenerator>();
+        area_prefab = Resources.Load<GameObject>("prefabs/sectors/base_area");
 
         // on récupère les prefabs
         prefabs.Add("light", Resources.Load<GameObject>("prefabs/objects/lights/small_light"));
@@ -224,6 +229,24 @@ public class Sector : MonoBehaviour
         // on ajoute une tile de marge
         w += 1;
         h += 1;
+    }
+
+    public virtual void initAreas()
+    {
+        // on crée des areas pour chaque tile
+        foreach (Vector2Int tile in tiles)
+        {
+            // on récup le type de l'area
+            string type = getAreaName(tile);
+
+            // on crée l'area
+            GameObject area_go = Instantiate(area_prefab, Vector3.zero, Quaternion.identity);
+            Area area = area_go.GetComponent<Area>();
+            area.init(tile.x, tile.y, area_size.x, area_size.y, type, this);
+
+            // on ajoute l'area au dictionnaire
+            areas[tile] = area;
+        }
     }
 
     // MAIN FUNCTIONS
@@ -1036,6 +1059,27 @@ public class Sector : MonoBehaviour
     }
 
 
+    // AREA GETTERS
+    public Area getArea(Vector2Int area)
+    {
+        // on récupère l'area
+        if (hasArea(area))
+        {
+            return areas[area];
+        }
+        else
+        {
+            Debug.LogError("(Sector - getArea) Erreur dans la récupération de l'area");
+            return null;
+        }
+    }
+
+    public bool hasArea(Vector2Int area)
+    {
+        // on vérifie si le secteur a l'area
+        return areas.ContainsKey(area);
+    }
+
     // GETTERS
     public Vector2Int wh()
     {
@@ -1094,6 +1138,10 @@ public class Sector : MonoBehaviour
     public virtual string getAreaType(Vector2Int pos)
     {
         // pos en area
+        if (hasArea(pos))
+        {
+            return areas[pos].type.Split('_')[0];
+        }
 
         // on vérifie qu'elle est dans les tiles
         if (tiles.Contains(pos))
@@ -1120,8 +1168,12 @@ public class Sector : MonoBehaviour
 
     public string getAreaName(Vector2Int pos)
     {
-        // pos en area
+        if (hasArea(pos))
+        {
+            return areas[pos].type;
+        }
 
+        // pos en area
         string type = getAreaType(pos);
         if (type == "ceiling") { return "ceiling"; }
         if (type == "handmade") { return "handmade"; }
@@ -1255,12 +1307,6 @@ public class Sector : MonoBehaviour
         // si aucun des tests n'a renvoyé false, c'est que les secteurs sont voisins
         return "no border";
     }
-
-    /* public string getVoidBorder(Sector other)
-    {
-        // trouve quelle est la frontière vide entre les deux secteurs,
-        // malgré le vide qui sépare les deux secteurs
-    } */
 
     public string getAreaSkin(Vector2Int pos)
     {
