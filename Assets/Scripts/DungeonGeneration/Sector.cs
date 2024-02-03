@@ -32,39 +32,42 @@ public class Sector : MonoBehaviour
     [Header("Skin")]
     [SerializeField] protected string sector_skin = "base_sector";
 
-
     [Header("Objects")]
     [SerializeField] protected Dictionary<string, GameObject> prefabs = new Dictionary<string, GameObject>();
     [SerializeField] protected Dictionary<string, Transform> parents = new Dictionary<string, Transform>();
 
-    [Header("Lights")]
-    [SerializeField] protected List<string> walls_light_tiles = new List<string> { "bg_2_7", "walls_1_7", "walls_2_7" };
-    [SerializeField] protected Vector3 light_offset = new Vector3(0.25f, 1f, 0f);
+    // [Header("Lights")]
+    // [SerializeField] protected List<string> walls_light_tiles = new List<string> { "bg_2_7", "walls_1_7", "walls_2_7" };
+    // [SerializeField] protected Vector3 light_offset = new Vector3(0.25f, 1f, 0f);
 
-    [Header("Posters & Tags")]
-    [SerializeField] protected Sprite[] poster_sprites;
-    protected List<string> full_walls_tiles = new List<string> {"walls_1_3", "walls_1_4", "walls_1_5", "walls_1_6"
-                                                        , "walls_1_7", "walls_1_8",
-                                                        "walls_2_3", "walls_2_4", "walls_2_5", "walls_2_6"
-                                                        , "walls_2_7", "walls_2_8"};
-    [SerializeField] protected float density_posters = 0.3f; // 0.5 = 1 poster tous les 2 tiles compatibles
-    [SerializeField] protected Sprite[] tags_sprites;
-    [SerializeField] protected Vector3 tag_offset = new Vector3(2.5f, 0.75f, 0f);
-    [SerializeField] protected float density_tags = 0.5f;
+    // [Header("Posters & Tags")]
+    // [SerializeField] protected Sprite[] poster_sprites;
+    // protected List<string> full_walls_tiles = new List<string> {"walls_1_3", "walls_1_4", "walls_1_5", "walls_1_6"
+    //                                                     , "walls_1_7", "walls_1_8",
+    //                                                     "walls_2_3", "walls_2_4", "walls_2_5", "walls_2_6"
+    //                                                     , "walls_2_7", "walls_2_8"};
+    // [SerializeField] protected float density_posters = 0.3f; // 0.5 = 1 poster tous les 2 tiles compatibles
+    // [SerializeField] protected Sprite[] tags_sprites;
+    // [SerializeField] protected Vector3 tag_offset = new Vector3(2.5f, 0.75f, 0f);
+    // [SerializeField] protected float density_tags = 0.5f;
 
-    [Header("Emplacements")]
-    [SerializeField] protected List<Vector2> empl_enemies = new List<Vector2>();
-    [SerializeField] protected List<Vector2> empl_interactives = new List<Vector2>();
+    // [Header("Emplacements")]
+    // [SerializeField] protected List<Vector2> empl_enemies = new List<Vector2>();
+    // [SerializeField] protected List<Vector2> empl_interactives = new List<Vector2>();
     // [SerializeField] protected Dictionary<string, Vector2> empl_doors = new Dictionary<string, Vector2>();
 
     [Header("Enemies")]
+    protected List<Area> enemies_spawn_areas = new List<Area>();
     [SerializeField] protected List<Being> enemies = new List<Being>();
     [SerializeField] protected int nb_enemies = 5;
     public bool is_safe = false;
 
     [Header("Interactives")]
-    [SerializeField] protected int nb_chests = 5;
-    [SerializeField] protected int nb_comp = 3;
+    // [SerializeField] protected int nb_chests = 5;
+    // [SerializeField] protected int nb_comp = 3;
+    [SerializeField] protected float density_interactives = 0.5f;
+    [SerializeField] protected int planned_nb_interactives = 10;
+    protected int nb_interactives = 0;
 
 
     [Header("Doors")]
@@ -113,8 +116,8 @@ public class Sector : MonoBehaviour
         parents.Add("tag", transform.Find("decoratives/posters"));
         parents.Add("ceiling", transform.Find("ceilings"));
 
-        poster_sprites = Resources.LoadAll<Sprite>("spritesheets/environments/objects/posters");
-        tags_sprites = Resources.LoadAll<Sprite>("spritesheets/environments/objects/tags");
+        // poster_sprites = Resources.LoadAll<Sprite>("spritesheets/environments/objects/posters");
+        // tags_sprites = Resources.LoadAll<Sprite>("spritesheets/environments/objects/tags");
 
         // on récupère les ceilings
         // ceilings.Add("base", transform.Find("ceilings/base").gameObject);
@@ -268,21 +271,17 @@ public class Sector : MonoBehaviour
     }
 
     // GENERATION
-    public void GENERATE(List<Vector2> empl_enemies, List<Vector2> empl_interactives, Dictionary<Vector2, string> empl_doors, List<Vector2> empl_labels)
+    public void GENERATE(/* List<Vector2> empl_enemies, List<Vector2> empl_interactives, Dictionary<Vector2, string> empl_doors, List<Vector2> empl_labels */)
     {
 
-        // on récupère les emplacements
-        this.empl_enemies = empl_enemies;
-        this.empl_interactives = empl_interactives;
+        // on génère les areas
+        foreach (KeyValuePair<Vector2Int, Area> area in areas)
+        {
+            area.Value.GENERATE();
+        }
 
-        // on génère les objets
-        PlaceLights();
-
-        // on génère les posters
-        PlacePosters();
-
-        // on génère les tags
-        PlaceTags();
+        // on récupère les areas spawn
+        enemies_spawn_areas = areas.Values.Where(x => x.hasEnemyEmplacement()).ToList();
 
         // on place les ennemis
         if (!is_safe)
@@ -290,8 +289,27 @@ public class Sector : MonoBehaviour
             PlaceEnemies();
         }
 
+        // on récupère les emplacements
+        // this.empl_enemies = empl_enemies;
+        // this.empl_interactives = empl_interactives;
+
+        // on génère les objets
+        // PlaceLights();
+
+        // on génère les posters
+        // PlacePosters();
+
+        // on génère les tags
+        // PlaceTags();
+
+        // on place les ennemis
+        /* if (!is_safe)
+        {
+            PlaceEnemies();
+        } */
+
         // on place les coffres
-        for (int i = 0; i < nb_chests; i++)
+        /* for (int i = 0; i < nb_chests; i++)
         {
             PlaceChest();
         }
@@ -300,17 +318,14 @@ public class Sector : MonoBehaviour
         for (int i = 0; i < nb_comp; i++)
         {
             PlaceComputer();
-        }
+        } */
 
         // on place les portes
-        this.sas_doors = empl_doors;
-        PlaceDoors();
+        // this.sas_doors = empl_doors;
+        // PlaceDoors();
 
         // on place les labels
-        PlaceLabels(empl_labels);
-
-        // on génère les ceilings
-        // GenerateCeilings();
+        // PlaceLabels(empl_labels);
     }
 
     public void GenerateCeiling(Vector2Int area)
@@ -380,7 +395,7 @@ public class Sector : MonoBehaviour
     }
 
     // OBJETS GENERATION
-    protected void PlaceLights()
+    /* protected void PlaceLights()
     {
         BoundsInt bounds = getBounds();
         TileBase[] tiles = world.getTiles(bounds);
@@ -409,9 +424,9 @@ public class Sector : MonoBehaviour
                 }
             }
         }
-    }
+    } */
 
-    protected void PlacePosters()
+    /* protected void PlacePosters()
     {
 
         BoundsInt bounds = getBounds();
@@ -535,7 +550,8 @@ public class Sector : MonoBehaviour
             }
         }
     }
-
+ */
+    
     protected void PlaceEnemies()
     {
         for (int i = 0; i < nb_enemies; i++)
@@ -547,21 +563,28 @@ public class Sector : MonoBehaviour
     protected void PlaceEnemy()
     {
         // on récupère un emplacement
-        Vector2 empl = empl_enemies[Random.Range(0, empl_enemies.Count)];
+        // Vector2 empl = empl_enemies[Random.Range(0, empl_enemies.Count)];
 
         // on instancie un enemy
         // Vector3 pos = world.CellToWorld(new Vector3Int(empl.x, empl.y, 0));
-        Vector3 pos = new Vector3(empl.x, empl.y, 0);
-        GameObject enemy = Instantiate(prefabs["enemy"], pos, Quaternion.identity);
+        // Vector3 pos = new Vector3(empl.x, empl.y, 0);
+        // GameObject enemy = Instantiate(prefabs["enemy"], pos, Quaternion.identity);
 
         // on met le bon parent
-        enemy.transform.SetParent(parents["enemy"]);
+        // enemy.transform.SetParent(parents["enemy"]);
+        if (enemies_spawn_areas.Count == 0) { return; }
+
+        // on choisi un spawn area random
+        Area spawn_area = enemies_spawn_areas[Random.Range(0, enemies_spawn_areas.Count)];
+
+        // on place l'enemy
+        GameObject enemy = spawn_area.PlaceEnemy();
 
         // on ajoute l'enemy à la liste
         enemies.Add(enemy.GetComponent<Being>());
     }
 
-    protected void PlaceChest()
+    /* protected void PlaceChest()
     {
         // on récupère un emplacement
         Vector2 empl = consumeRandomEmplacement("interactives");
@@ -596,7 +619,8 @@ public class Sector : MonoBehaviour
         // on met le bon parent
         computer.transform.SetParent(parents["computer"]);
     }
-  
+   */
+    
     private void PlaceDoors()
     {
         int i = 0;
@@ -630,7 +654,7 @@ public class Sector : MonoBehaviour
         }
     }
 
-    private void PlaceLabels(List<Vector2> empl_labels)
+    /* private void PlaceLabels(List<Vector2> empl_labels)
     {
         string sector_number = gameObject.name.Split('_')[1];
 
@@ -648,9 +672,9 @@ public class Sector : MonoBehaviour
             label.transform.SetParent(parents["sector_label"]);
         }
     }
-
+ */
     // EMPLACEMENTS
-    private Vector2 consumeRandomEmplacement(string type)
+    /* private Vector2 consumeRandomEmplacement(string type)
     {
 
         // on récupère la liste d'emplacements du type
@@ -673,8 +697,62 @@ public class Sector : MonoBehaviour
 
         // on retourne l'emplacement
         return emplacement;
+    } */
+
+    public string consumeEmplacement(Area area)
+    {
+        // on vérifie quel type d'area c'est
+        if (area.type.Split('_')[1].Length == 1)
+        {
+            // cul de sac, on est obligé de mettre un emplacement
+            return consumeInteractiveEmplacement(area);
+        }
+
+        // si ce n'est pas un cul de sac, on lance les probas
+        if (nb_interactives < planned_nb_interactives && Random.Range(0f, 1f) < density_interactives)
+        {
+            // on consomme un emplacement interactif
+            return consumeInteractiveEmplacement(area);
+        }
+        else
+        {
+            // on consomme un emplacement décoratif
+            // return consumeDecorativeEmplacement(area);
+            return "";
+        }
     }
 
+    private string consumeInteractiveEmplacement(Area area)
+    {
+        // on doit donner un emplacement interactif
+        // soit un coffre, soit un ordinateur, soit un xp_chest
+        string type = "";
+        float random = Random.Range(0f, 1f);
+        if (random > .75f)
+        {
+            type = "chest";
+        }
+        else if (random > .5f)
+        {
+            type = "computer";
+        }
+        else if (random > .25f)
+        {
+            type = "xp_chest";
+        }
+        else if (random > .05f)
+        {
+            type = "fridge";
+        }
+        else
+        {
+            type = "healing_tube";
+        }
+
+        // on consomme un emplacement
+        nb_interactives++;
+        return type;
+    }
 
 
     // COLLISIONS
