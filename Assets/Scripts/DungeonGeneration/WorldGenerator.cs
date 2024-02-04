@@ -9,6 +9,7 @@ public class WorldGenerator : MonoBehaviour
 {
     [Header("WORLD GENERATION")]
     public bool generate_world = true;
+    private bool playtest_enabled = false;
     [SerializeField] private int nb_sectors = 1;
     public bool generate_ceilings = true;
     [SerializeField] private bool is_world_safe = false;
@@ -60,6 +61,7 @@ public class WorldGenerator : MonoBehaviour
             {
                 print("PLAYTEST is active -> we don't generate the world");
                 generate_world = false;
+                playtest_enabled = true;
             }
         }
         catch {}
@@ -126,7 +128,7 @@ public class WorldGenerator : MonoBehaviour
         }
 
         // on crée des visus
-        visualizeSectors();
+        if (!playtest_enabled) { visualizeSectors(); }
 
         if (generate_world)
         {

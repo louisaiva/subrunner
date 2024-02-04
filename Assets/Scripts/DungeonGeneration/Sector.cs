@@ -289,37 +289,6 @@ public class Sector : MonoBehaviour
             PlaceEnemies();
         }
 
-        // on récupère les emplacements
-        // this.empl_enemies = empl_enemies;
-        // this.empl_interactives = empl_interactives;
-
-        // on génère les objets
-        // PlaceLights();
-
-        // on génère les posters
-        // PlacePosters();
-
-        // on génère les tags
-        // PlaceTags();
-
-        // on place les ennemis
-        /* if (!is_safe)
-        {
-            PlaceEnemies();
-        } */
-
-        // on place les coffres
-        /* for (int i = 0; i < nb_chests; i++)
-        {
-            PlaceChest();
-        }
-
-        // on place les ordinateurs
-        for (int i = 0; i < nb_comp; i++)
-        {
-            PlaceComputer();
-        } */
-
         // on place les portes
         // this.sas_doors = empl_doors;
         // PlaceDoors();
@@ -562,16 +531,6 @@ public class Sector : MonoBehaviour
 
     protected void PlaceEnemy()
     {
-        // on récupère un emplacement
-        // Vector2 empl = empl_enemies[Random.Range(0, empl_enemies.Count)];
-
-        // on instancie un enemy
-        // Vector3 pos = world.CellToWorld(new Vector3Int(empl.x, empl.y, 0));
-        // Vector3 pos = new Vector3(empl.x, empl.y, 0);
-        // GameObject enemy = Instantiate(prefabs["enemy"], pos, Quaternion.identity);
-
-        // on met le bon parent
-        // enemy.transform.SetParent(parents["enemy"]);
         if (enemies_spawn_areas.Count == 0) { return; }
 
         // on choisi un spawn area random
@@ -782,6 +741,35 @@ public class Sector : MonoBehaviour
 
 
 
+    // BORDERS
+    public string getBorder(Sector other)
+    {
+        // check if the sectors are colliding
+        if (isColliding(other)) { return "collision"; }
+
+
+        // check if the sectors are bordering
+        if (other.L() > R()) { return "no border"; }
+        else if (other.R() < L()) { return "no border"; }
+        else if (other.D() > U()) { return "no border"; }
+        else if (other.U() < D()) { return "no border"; }
+
+        /* string s = "self / other : \n";
+        s += "L : " + L() + " / " + other.L() + "\n";
+        s += "R : " + R() + " / " + other.R() + "\n";
+        s += "U : " + U() + " / " + other.U() + "\n";
+        s += "D : " + D() + " / " + other.D() + "\n"; */
+        // Debug.Log(s);
+
+        // check which border is shared
+        if (other.L() == R()) { return "R"; }
+        if (other.R() == L()) { return "L"; }
+        if (other.U() == D()) { return "D"; }
+        if (other.D() == U()) { return "U"; }
+
+        // si aucun des tests n'a renvoyé false, c'est que les secteurs sont voisins
+        return "no border";
+    }
 
 
 
@@ -1363,27 +1351,6 @@ public class Sector : MonoBehaviour
         }
 
         return min_dist;
-    }
-
-    public string getBorder(Sector other)
-    {
-        if (isColliding(other)) { return "collision"; }
-
-        string s = "self / other : \n";
-        s += "L : " + L() + " / " + other.L() + "\n";
-        s += "R : " + R() + " / " + other.R() + "\n";
-        s += "U : " + U() + " / " + other.U() + "\n";
-        s += "D : " + D() + " / " + other.D() + "\n";
-        // Debug.Log(s);
-
-        // on vérifie si les secteurs sont voisins
-        if (other.L() == R()) { return "R"; }
-        if (other.R() == L()) { return "L"; }
-        if (other.U() == D()) { return "D"; }
-        if (other.D() == U()) { return "U"; }
-
-        // si aucun des tests n'a renvoyé false, c'est que les secteurs sont voisins
-        return "no border";
     }
 
     public string getAreaSkin(Vector2Int pos)

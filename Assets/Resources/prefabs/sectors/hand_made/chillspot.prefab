@@ -1157,23 +1157,11 @@ MonoBehaviour:
   w: 0
   h: 0
   sector_skin: base_sector
-  walls_light_tiles:
-  - bg_2_7
-  - walls_1_7
-  - walls_2_7
-  light_offset: {x: 0.25, y: 1, z: 0}
-  poster_sprites: []
-  density_posters: 0.9
-  tags_sprites: []
-  tag_offset: {x: 2.5, y: 0.75, z: 0}
-  density_tags: 0.8
-  empl_enemies: []
-  empl_interactives: []
   enemies: []
   nb_enemies: 0
   is_safe: 1
-  nb_chests: 2
-  nb_comp: 0
+  density_interactives: 0.5
+  planned_nb_interactives: 10
   area_prefab: {fileID: 0}
   fg_tm: {fileID: 0}
   bg_tm: {fileID: 0}

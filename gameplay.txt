@@ -307,6 +307,105 @@ ITEMS
             chaque musique apporte un petit boost en mode motivation techno
             les cds peuvent se trouver au camp des anar
 
+
+
+    ITEMS LEGENDAIRES :
+
+        les items légendaire forment les items les plus important et impactants sur le gameplay
+        ils possèdent des améliorations diverses qui modifient la manière de jouer du joueur.
+        chaque amélioration d'item légendaire a son propre système de niveaux.
+
+        les améliorations d'items sont accessibles directement dans l'inventaire en appuyant sur Y.
+
+        au tout début d'une partie on ne possède aucun de ces items, ils sont UNIQUES et sont répartis aléatoirement dans leur Zone correspondante
+        sur toute la map.
+        La partie doit pouvoir se jouer SANS AVOIR BESOIN D AUCUN ITEM LEGENDAIRE.
+        cad même sans rien sans arme etc tu dois pouvoir te déplacer et trouver ton chemin dans le labyrinthe jusqu'à meme arriver au boss.
+        
+        MECANISME DE GAMEDESIGN POUR NE JAMAIS ETRE BLOQUE :
+
+            les items légendaires sont placés alétoirement en premier lieu dans les endroits accessibles.
+            ensuite, lorsqu'on trouve notre 1er item, les 5 autres sont redistribués dans les zones que l'accès au 1er item débloque.
+            exemple :
+
+                tu te balades tu trouves le dash.
+                les items légendaires se trouvent donc désormais derrière des portes à dash.
+                hop tu arrives et dans un secteur accessible via porte à dash tu trouves le gyroscope. le gyroscope t'indique les conduits d'aération.
+                les 4 items restants sont donc répartis dans les secteurs accessibles via conduit d'aeration.
+
+
+
+
+        ils sont au nombre de 6 :
+        
+        KATANA :
+
+            le katana est l'arme de base de corps à corps de notre perso.
+            il permet de faire de gros dégats mais à un range d'attaque assez court
+
+            il peut être refondu en l'arme de votre choix à la forge, et amélioré en trouvant du métal,
+            qui sert aussi de monnaie universelle.
+
+            l'arme de mélée est la seule amélioration que le perso retrouve après sa mort.
+            en fin de jeu il est intéressant d'avoir une bonne arme qui vaut beaucoup de métal,
+            ce qui fait qu'au début du jeu vous pouvez reforger directement votre bete d'arme en katana
+            simple + grave du métal pour échanger avec d'autres stores ou forger d'autres trucs. (acheter des hacks, ...)
+
+            en plus de l'arme principale, d'autres choses peuvent être forgées, notamment des shurikens.
+            on peut aussi.
+
+
+        NOOD_OS :
+
+            NOOD_OS est l'os de notre ordinateur portable de hack.
+            l'item agit comme une dorsale connectée au système nerveux du perso
+            et nous permet d'enclencher les hacks par la pensée
+
+
+
+        GLASSES :
+        
+        GYROSCOPE :
+
+        SHOES :
+
+        RECORDER :
+
+            le recorder est un item légendaire de fin de jeu 
+            permet d'écouter des sons récupérables en trouvant des CDs.
+            permet d'enregistrer les bruits sonores
+
+            permet d'accéder à des salles de fin de jeux renfermant des coffres d'amélioration.
+
+            CDs :
+
+                les CDs sont des items qu'on trouve dans des ordis, vieux cartons de vinyles ou piles dans les étagères.
+                vieux cartons à bricoles.
+
+                ils contiennent une musique, et quand on en trouve plus ça ajoute des modifications sonores dans la musique.
+
+                écouter des musiques dans le recorder permet de changer certains paramètres du gameplay.
+                notamment :
+
+                    la longueur du dash.
+                    la vitesse de course.
+                    déblocage de certaines portes.
+                    repoussage de certains ennemis.
+
+
+
+
+
+            améliorations :
+
+                glitch :
+                    amélioration random qui crée un glitch dans le recorder qui fait glitcher la musique dans les temps.
+                    insère à des moments randoms (dans les temps) une version glitchée de ce qu'on a enregistré.
+
+
+
+
+
 #
 OBJECTS
 #

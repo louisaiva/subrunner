@@ -105,31 +105,7 @@ public class World : MonoBehaviour
                 {
                     spawn_sector = (ComplexeSector) sect[i];
                 }
-
-                // PlaceHandMadeAreas((ComplexeSector) sect[i]);
-
-                continue;
             }
-
-            // on génère les areas
-           /*  Vector2Int sector_pos = sect[i].xy();
-
-            // on parcourt les areas
-            foreach (Vector2Int areaPos in sect[i].tiles)
-            {
-                // on récupère le nom de l'area
-                string area_name = sect[i].getAreaName(areaPos);
-                string skin = sect[i].getAreaSkin(areaPos);
-
-                // on place l'area
-                PlaceArea(sector_pos.x + areaPos.x, sector_pos.y + areaPos.y, area_name, skin);
-
-                // on crée les plafonds de l'area en fonction du type d'area
-                if (GameObject.Find("generator").GetComponent<WorldGenerator>().generate_ceilings)
-                {
-                    sect[i].GenerateCeiling(areaPos);
-                }
-            } */
         }
 
         // on refresh les tilemaps
@@ -141,9 +117,6 @@ public class World : MonoBehaviour
         for (int i = 0; i < sect.Count; i++)
         {
             Sector sector = sect[i];
-
-            // on récup les emplacements interactifs et ennemis
-            // GetEmplacements(sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives, out Dictionary<Vector2, string> empl_doors, out List<Vector2> empl_labels);
 
             // on génère le secteur
             sector.GENERATE();
@@ -177,36 +150,6 @@ public class World : MonoBehaviour
 
     }
 
-    /* private void PlaceArea(int x, int y, string area_name, string skin="base_sector")
-    {
-        // on récupère le json de l'area
-        AreaJson area_json = builder.LoadAreaJson(area_name);
-
-        if (area_json == null)
-        {
-
-            if (area_json == null) { return; }
-        }
-
-        // on set les tiles de l'area
-        SetAreaTiles(x, y, area_json, skin);
-    } */
-
-    /* public void PlaceArea(Area area)
-    {
-        // on récupère la position de l'area
-        int x_area = area.x + area.sector.x;
-        int y_area = area.y + area.sector.y;
-
-        if (area.json == null)
-        {
-            Debug.LogError("(world - PlaceArea) area " + area.type + " not found");
-            return;
-        }
-
-        // on set les tiles de l'area
-        SetAreaTiles(x_area, y_area, area.json,area.skin);
-    } */
 
     private void MergeSector(ComplexeSector sector)
     {
@@ -226,31 +169,6 @@ public class World : MonoBehaviour
         // on launch le secteur
         sector.LAUNCH();
     }
-
-    /* private void PlaceHandMadeAreas(ComplexeSector sector)
-    {
-        // on génère les areas
-        Vector2Int sector_pos = sector.xy();
-
-        // on parcourt les areas
-        foreach (Vector2Int areaPos in sector.getGeneratedAreas())
-        {
-            // on récupère le nom de l'area
-            string area_name = sector.getAreaName(areaPos);
-            string skin = sector.getAreaSkin(areaPos);
-            // print("placing handmade generated area at " + area_name + " at " + areaPos);
-
-            // on place l'area
-            PlaceArea(sector_pos.x + areaPos.x, sector_pos.y + areaPos.y, area_name, skin);
-
-            // on crée les plafonds de l'area en fonction du type d'area
-            // print("generating ceiling for handmade area " + area_name + " at " + areaPos + " in sector " + sector.name);
-            if (GameObject.Find("generator").GetComponent<WorldGenerator>().generate_ceilings)
-            {
-                sector.GenerateCeiling(areaPos);
-            }
-        }
-    } */
 
     private void CreateVirtualCeiling()
     {

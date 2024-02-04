@@ -95,6 +95,7 @@ public class UI_Fullmap : MonoBehaviour {
     public void show()
     {
         // on cache le main_ui
+        main_ui.show();
         main_ui.showOnly(gameObject);
 
         // on affiche la map
