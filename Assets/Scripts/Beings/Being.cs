@@ -295,6 +295,10 @@ public class Being : MonoBehaviour
 
     protected void update_forces()
     {
+        // on sauvegarde la position du perso
+        // Vector3 position_before_apply_forces = transform.position;
+        // float forces_magnitude = 0f;
+
         // on parcourt les forces
         for (int i = 0; i < forces.Count; i++)
         {
@@ -304,6 +308,10 @@ public class Being : MonoBehaviour
             // on applique la force si elle est assez forte
             if (force.magnitude > 0.5f)
             {
+                // on sauvegarde la magnitude des forces
+                // forces_magnitude += force.magnitude;
+
+                // on applique la force
                 apply_force(force.direction * force.magnitude * Time.deltaTime);
 
                 // on diminue la force
@@ -319,18 +327,71 @@ public class Being : MonoBehaviour
                 i--;
             }
         }
+
+        // on regarde si on a bougé ou pas (si on a hurté un mur ou pas)
+        /* if (this is Perso && position_before_apply_forces == transform.position)
+        {
+            // on est rentré dans un mur, on fait shaker la caméra si la force est assez forte
+            if (forces_magnitude > 1f)
+            {
+                Camera.main.GetComponent<CameraShaker>().shake(forces_magnitude/2f);
+            }
+        } */
+
     }
 
     protected void apply_force(Vector2 force)
     {
         // on déplace le perso
-        move_perso(force);
+        int moved_code = move_perso(force);
+        
+
+        if (this is Perso)
+        {
+
+            if (force.magnitude < 0.05f) { return; }
+            // Debug.Log("moved_code : " + moved_code + " / force : " + force.magnitude);
+
+            // on regarde si on a collisionné
+            if (moved_code == 0 || moved_code == 1) { return; }
+
+            if (moved_code == 2 || moved_code == 4 || moved_code == -1)
+            {
+                // on a collisionné fort
+                Camera.main.GetComponent<CameraShaker>().shake(force.magnitude);
+                Debug.Log("shake : " + force.magnitude);
+            }
+            else if (moved_code == 3 || moved_code == 5)
+            {
+                // on a collisionné moins fort
+                Camera.main.GetComponent<CameraShaker>().shake(force.magnitude/2f);
+                Debug.Log("shake w glissement : " + force.magnitude);
+            }
+        }
     }
 
-    protected void move_perso(Vector2 movement)
+    protected int move_perso(Vector2 movement)
     {
         // fonction mère de toutes les fonctions de déplacement :
         // applique le mouvement au perso en fonction des collisions
+
+        if (movement == Vector2.zero) { return 0; }
+
+        bool hit_wall_x = false;
+        bool glissed_x = false;
+        bool hit_wall_y = false;
+        bool glissed_y = false;
+
+        // codes de retour
+        // 0 : pas de mouvement de base
+        // 1 : mouvement effectué sans collision
+        // 2 : collision sur x
+        // 3 : collision sur x + glissement en x
+        // 4 : collision sur y
+        // 5 : collision sur y + glissement en y
+        // -1 : collision sur x et y
+        // -2 : collision sur x et y + glissement en x et y
+
 
         // on maj notre collider_box        
         float y_center = transform.position.y - offset_perso_y_to_feet + feet_collider.size.y / 2f;
@@ -411,6 +472,10 @@ public class Being : MonoBehaviour
                     movement.x = hit.distance + hit.normal.x * hit_treshold;
                 }
             }
+
+            if (movement.x == 0f) { hit_wall_x = true; }
+            if (subsidiar_movement_y != 0f) { glissed_x = true; }
+
 
             // on déplace le perso
             transform.position += new Vector3(movement.x, subsidiar_movement_y, 0f);
@@ -493,9 +558,30 @@ public class Being : MonoBehaviour
                 }
             }
 
+            if (movement.y == 0f) { hit_wall_y = true; }
+            if (subsidiar_movement_x != 0f) { glissed_y = true; }
+
             // on déplace le perso
             transform.position += new Vector3(subsidiar_movement_x, movement.y, 0f);
         }
+
+        // on regarde si on a collisionné
+        if (hit_wall_x && hit_wall_y)
+        {
+            if (glissed_x && glissed_y) { return -2; }
+            return -1;
+        }
+        else if (hit_wall_x)
+        {
+            if (glissed_x) { return 3; }
+            return 2;
+        }
+        else if (hit_wall_y)
+        {
+            if (glissed_y) { return 5; }
+            return 4;
+        }
+        return 1;
 
     }
 

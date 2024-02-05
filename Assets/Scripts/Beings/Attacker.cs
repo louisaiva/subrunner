@@ -56,7 +56,7 @@ public class Attacker : Being
     }
     
     // DEAL DAMAGE
-    protected virtual bool attack()
+    protected virtual int attack()
     {
         // start cooldown
         startCapacityCooldown("hit");
@@ -68,7 +68,7 @@ public class Attacker : Being
         Collider2D[] hit_enemies = Physics2D.OverlapCircleAll(attack_point.position, damage_range, enemy_layers);
 
         // if no target, return
-        if (hit_enemies.Length == 0) { return false; }
+        if (hit_enemies.Length == 0) { return 0; }
 
         // calculate damage dealt to single target
         float damage_dealt_to_single_target = damage / hit_enemies.Length;
@@ -78,6 +78,8 @@ public class Attacker : Being
         float advantage_attacker_weight = weight* attackant_advantage; // l'attaquant a un avantage de poids afin de recevoir moins de knockback
         float total_knockback_weight = hit_enemies.Select(enemy => enemy.GetComponent<Being>().weight).Sum() + advantage_attacker_weight;
         Vector2 attacker_knockback_direction = Vector2.zero;
+
+        bool killed_an_enemy = false;
 
         // deal damage to target
         foreach (Collider2D enemy in hit_enemies)
@@ -98,7 +100,13 @@ public class Attacker : Being
             if (!enemy.GetComponent<Being>().take_damage(damage_dealt_to_single_target, knockback))
             {
                 Debug.Log("Error : enemy " + enemy.name + " didn't take damage");
-                return false;
+                return 0;
+            }
+
+            // check if enemy is dead
+            if (!enemy.GetComponent<Being>().isAlive())
+            {
+                killed_an_enemy = true;
             }
         }
 
@@ -108,7 +116,7 @@ public class Attacker : Being
         Force knockback_inverse = new Force(attacker_knockback_direction.normalized, knockback_magnitude_inverse);
         forces.Add(knockback_inverse);
 
-        return true;
+        return killed_an_enemy ? 2 : 1;
     }
 
     // draw gizmos

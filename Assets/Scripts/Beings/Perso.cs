@@ -778,15 +778,15 @@ public class Perso : Attacker
     }
 
     // DAMAGE
-    protected override bool attack()
+    protected override int attack()
     {
-        if (base.attack())
-        {
-            // on fait shake la caméra
-            cam.GetComponent<CameraShaker>().shake();
-            return true;
-        }
-        return false;
+        int attack_status = base.attack();
+
+        if (attack_status == 0) { return 0; }
+
+        cam.GetComponent<CameraShaker>().shake((float) attack_status);
+
+        return attack_status;
     }
 
     protected override void die()
@@ -1192,7 +1192,7 @@ public class Perso : Attacker
             removeCapacity(capa);
         }
     }
-
+ 
     private void removeCapaOfItem(Item item)
     {
         // on enlève la capacité de l'item si on a plus l'item dans notre inventaire
