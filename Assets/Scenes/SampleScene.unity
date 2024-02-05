@@ -3059,9 +3059,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shake_duration: 0.1
-  shake_anims:
+  basic_shake_anims:
   - camera_shake01
   - camera_shake02
+  big_shake_anims:
+  - camera_shake03
+  - camera_shake04
 --- !u!114 &519420035
 MonoBehaviour:
   m_ObjectHideFlags: 0

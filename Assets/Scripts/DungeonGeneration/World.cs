@@ -45,6 +45,9 @@ public class World : MonoBehaviour
         fg_tiles.Add("server", Resources.Load<TileBase>("tilesets/fg_2_rule"));
         bg_tiles.Add("server", Resources.Load<TileBase>("tilesets/walls_2_rule"));
         gd_tiles.Add("server", Resources.Load<TileBase>("tilesets/gd_2_rule"));
+        gd_tiles.Add("matrix", Resources.Load<TileBase>("tilesets/gd_matrix_rule"));
+        gd_tiles.Add("red", Resources.Load<TileBase>("tilesets/gd_red"));
+        gd_tiles.Add("white", Resources.Load<TileBase>("tilesets/gd_white"));
         // fg_tile = Resources.Load<TileBase>("tilesets/fg_2_rule");
         // bg_tile = Resources.Load<TileBase>("tilesets/walls_1_rule");
         // gd_tile = Resources.Load<TileBase>("tilesets/gd_2_rule");
@@ -406,6 +409,22 @@ public class World : MonoBehaviour
         gd_tm.RefreshAllTiles(); */
     }
 
+    public void PlaceTile(TileBase tile, Vector2Int pos, string layer="bg")
+    {
+        // on place une tile dans le monde
+        if (layer == "bg")
+        {
+            bg_tm.SetTile(new Vector3Int(pos.x, pos.y, 0), tile);
+        }
+        else if (layer == "fg")
+        {
+            fg_tm.SetTile(new Vector3Int(pos.x, pos.y, 0), tile);
+        }
+        else if (layer == "gd")
+        {
+            gd_tm.SetTile(new Vector3Int(pos.x, pos.y, 0), tile);
+        }
+    }
 
 
     // GETTERS

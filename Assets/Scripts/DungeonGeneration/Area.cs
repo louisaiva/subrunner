@@ -18,7 +18,8 @@ public class Area : MonoBehaviour
 
 
     [Header("Zone")]
-    public GameObject zone_prefab;
+    private GameObject zone_prefab;
+    private Vector2 zone_pos = new Vector3(4, 4, 0); // position par défaut de la zone (au milieu de l'area)
 
 
 
@@ -157,9 +158,14 @@ public class Area : MonoBehaviour
         }
     }
 
-    public void setZone(GameObject zone_prefab)
+    public void setZone(GameObject zone_prefab, Vector2 pos = default(Vector2))
     {
         this.zone_prefab = zone_prefab;
+        
+        if (pos != default(Vector2))
+        {
+            zone_pos = pos;
+        }
     }
 
     public void GENERATE()
@@ -250,14 +256,14 @@ public class Area : MonoBehaviour
         }
     }
 
-    public void PlaceObject(GameObject obj, Vector3 pos, string parent="decorative")
+    public void PlaceZoneObject(GameObject obj, Vector3 pos, string parent="decorative")
     {
         // on créee l'objet
         GameObject interactive = Instantiate(obj, pos, Quaternion.identity);
 
         // on met le bon parent
         interactive.transform.SetParent(parents[parent]);
-        interactive.transform.localPosition = pos + new Vector3(area_size.x / 4, area_size.y / 4, 0);
+        interactive.transform.localPosition = pos + new Vector3(zone_pos.x, zone_pos.y, 0);
     }
 
 
@@ -370,6 +376,11 @@ public class Area : MonoBehaviour
     public BoundsInt getBounds()
     {
         return bounds;
+    }
+
+    public Vector2Int getZoneOrigin()
+    {
+        return (getGlobalPosition() + new Vector2Int((int) zone_pos.x, (int) zone_pos.y))*2;
     }
 
     public Vector2Int getGlobalPosition()
