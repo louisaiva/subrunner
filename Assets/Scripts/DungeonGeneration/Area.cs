@@ -17,6 +17,9 @@ public class Area : MonoBehaviour
     public string type; // exemple : room_U, corridor_LR, sas_ND, ...
 
 
+    [Header("Zone")]
+    public GameObject zone_prefab;
+
 
 
     // SECTOR & NEIGHBORS
@@ -154,15 +157,27 @@ public class Area : MonoBehaviour
         }
     }
 
+    public void setZone(GameObject zone_prefab)
+    {
+        this.zone_prefab = zone_prefab;
+    }
+
     public void GENERATE()
     {
+
+        // on place les zones
+        if (zone_prefab != null)
+        {
+            GameObject zone = Instantiate(zone_prefab, Vector3.zero, Quaternion.identity);
+            zone.GetComponent<Zone>().PlaceZone(this);
+            Destroy(zone);
+        }
 
 
         // we need to find 5 tiles in a row to place a tag
         int tags_width_in_tiles = 5;
         int compter_tags = 0;
-
-
+ 
         // on parcourt les tiles et on place les objets
         for (int j = 0; j < bounds.size.y; j++)
         {
@@ -220,10 +235,11 @@ public class Area : MonoBehaviour
             }
         }
     
-    
         // on parcourt les emplacements et on place les objets
         foreach (KeyValuePair<string, HashSet<Vector2>> emplacement in emplacements)
         {
+            if (zone_prefab != null ) { continue; }
+
             if (emplacement.Key == "interactive")
             {
                 foreach (Vector2 pos in emplacement.Value)

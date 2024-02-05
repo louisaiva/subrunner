@@ -28,7 +28,7 @@ public class Zone : MonoBehaviour
     public void PlaceZone(Area area)
     {
         // on place la zone dans l'Area
-        foreach (Transform child in objects_parent)
+        foreach (Transform child in transform.Find("obj"))
         {
             area.PlaceObject(child.gameObject,child.position);
         }

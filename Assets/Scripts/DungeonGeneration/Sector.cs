@@ -36,26 +36,6 @@ public class Sector : MonoBehaviour
     [SerializeField] protected Dictionary<string, GameObject> prefabs = new Dictionary<string, GameObject>();
     [SerializeField] protected Dictionary<string, Transform> parents = new Dictionary<string, Transform>();
 
-    // [Header("Lights")]
-    // [SerializeField] protected List<string> walls_light_tiles = new List<string> { "bg_2_7", "walls_1_7", "walls_2_7" };
-    // [SerializeField] protected Vector3 light_offset = new Vector3(0.25f, 1f, 0f);
-
-    // [Header("Posters & Tags")]
-    // [SerializeField] protected Sprite[] poster_sprites;
-    // protected List<string> full_walls_tiles = new List<string> {"walls_1_3", "walls_1_4", "walls_1_5", "walls_1_6"
-    //                                                     , "walls_1_7", "walls_1_8",
-    //                                                     "walls_2_3", "walls_2_4", "walls_2_5", "walls_2_6"
-    //                                                     , "walls_2_7", "walls_2_8"};
-    // [SerializeField] protected float density_posters = 0.3f; // 0.5 = 1 poster tous les 2 tiles compatibles
-    // [SerializeField] protected Sprite[] tags_sprites;
-    // [SerializeField] protected Vector3 tag_offset = new Vector3(2.5f, 0.75f, 0f);
-    // [SerializeField] protected float density_tags = 0.5f;
-
-    // [Header("Emplacements")]
-    // [SerializeField] protected List<Vector2> empl_enemies = new List<Vector2>();
-    // [SerializeField] protected List<Vector2> empl_interactives = new List<Vector2>();
-    // [SerializeField] protected Dictionary<string, Vector2> empl_doors = new Dictionary<string, Vector2>();
-
     [Header("Enemies")]
     protected List<Area> enemies_spawn_areas = new List<Area>();
     [SerializeField] protected List<Being> enemies = new List<Being>();
@@ -63,8 +43,6 @@ public class Sector : MonoBehaviour
     public bool is_safe = false;
 
     [Header("Interactives")]
-    // [SerializeField] protected int nb_chests = 5;
-    // [SerializeField] protected int nb_comp = 3;
     [SerializeField] protected float density_interactives = 0.5f;
     [SerializeField] protected int planned_nb_interactives = 10;
     protected int nb_interactives = 0;
@@ -82,6 +60,10 @@ public class Sector : MonoBehaviour
     [Header("Areas")]
     public GameObject area_prefab;
     public Dictionary<Vector2Int, Area> areas = new Dictionary<Vector2Int, Area>();
+
+    [Header("Zones")]
+    public List<GameObject> zones = new List<GameObject>();
+
 
 
     // UNITY METHODS
@@ -123,6 +105,9 @@ public class Sector : MonoBehaviour
         // ceilings.Add("base", transform.Find("ceilings/base").gameObject);
         // ceilings.Add("secret", transform.Find("ceilings/secret").gameObject);
         // ceilings.Add("sas", transform.Find("ceilings/sas").gameObject);
+
+        // on charge les zones
+        zones = Resources.LoadAll<GameObject>("prefabs/zones").ToList();
 
     }
 
@@ -246,6 +231,16 @@ public class Sector : MonoBehaviour
             GameObject area_go = Instantiate(area_prefab, Vector3.zero, Quaternion.identity);
             Area area = area_go.GetComponent<Area>();
             area.init(tile.x, tile.y, area_size.x, area_size.y, type, this);
+
+
+            // on lui donne une zone ou pas
+            if (Random.Range(0f, 1f) < .1f)
+            {
+                // on lui donne une zone aléatoire
+                area.setZone(zones[Random.Range(0, zones.Count)]);
+            }
+
+
 
             // on ajoute l'area au dictionnaire
             areas[tile] = area;
