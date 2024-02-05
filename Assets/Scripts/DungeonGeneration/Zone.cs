@@ -60,6 +60,9 @@ public class Zone : MonoBehaviour
         // on parcourt les tiles du tilemap
         for (int x = tm_bounds.xMin; x < tm_bounds.xMax; x++)
         {
+            bool destroyed_bg_tile = false;
+            bool destroyed_fg_tile = false;
+
             for (int y = tm_bounds.yMin; y < tm_bounds.yMax; y++)
             {
                 TileBase tile = tm.GetTile(new Vector3Int(x, y, 0));
@@ -68,10 +71,34 @@ public class Zone : MonoBehaviour
                 if (tile != null)
                 {
                     Vector2Int tile_position = new Vector2Int(tm_origin.x + x, tm_origin.y + y);
-                    world.PlaceTile(null, tile_position, "fg");
-                    world.PlaceTile(null, tile_position, "bg");
                     world.PlaceTile(tile, tile_position, "gd");
+
+                    // on regarde si on a une tile sur bg
+                    if (world.GetTile(tile_position.x,tile_position.y, "bg") != null)
+                    {
+                        world.PlaceTile(null, tile_position, "bg");
+                        destroyed_bg_tile = true;
+                    }
+                    if (world.GetTile(tile_position.x,tile_position.y, "fg") != null)
+                    {
+                        world.PlaceTile(null, tile_position, "fg");
+                        destroyed_fg_tile = true;
+                    }
                 }
+            }
+
+            if (destroyed_bg_tile)
+            {
+                // on place une tile sur bg en yMax
+                Vector2Int tile_position = new Vector2Int(tm_origin.x + x, tm_origin.y + tm_bounds.yMax);
+                world.SetLayerTile(tile_position.x,tile_position.y,1, "bg");
+            }
+
+            if (destroyed_fg_tile)
+            {
+                // on place une tile sur fg en yMin
+                Vector2Int tile_position = new Vector2Int(tm_origin.x + x, tm_origin.y + tm_bounds.yMin -1);
+                world.SetLayerTile(tile_position.x,tile_position.y,1, "fg");
             }
         }
     }
