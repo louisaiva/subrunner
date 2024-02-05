@@ -662,10 +662,10 @@ public class Being : MonoBehaviour
 
 
     // DAMAGE
-    public void take_damage(float damage, Force knockback=null)
+    public bool take_damage(float damage, Force knockback=null)
     {
         // ! à mettre tjrs au début de la fonction update
-        if (!isAlive()) { return; }
+        if (!isAlive()) { return false; }
 
         // on vérifie si on est invincible
         if (hasCapacity("invicible"))
@@ -673,7 +673,7 @@ public class Being : MonoBehaviour
             // floating missing text
             // floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddFloatingDmg(this.gameObject, 0, transform.position);
             floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddMissed(this.gameObject, transform.position);
-            return;
+            return false;
         }
 
         // si on est ici on prend des dégats
@@ -703,6 +703,9 @@ public class Being : MonoBehaviour
         {
             die();
         }
+
+        Debug.Log(gameObject.name + " took " + damage + " dmg and has " + vie + " hp left");
+        return true;
     }
 
     protected virtual void die()

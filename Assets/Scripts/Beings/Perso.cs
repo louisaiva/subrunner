@@ -18,6 +18,7 @@ public class Perso : Attacker
     public int xp_to_next_level = 100;
 
     private GameObject floating_text_prefab;
+    private GameObject cam;
 
 
     [Header("HACKIN")]
@@ -161,6 +162,9 @@ public class Perso : Attacker
         base.Start();
 
         // ON RECUP DES TRUCS
+
+        // on récup la camera
+        cam = GameObject.Find("/cam_follow/cam");
 
 
         // on met à jour le layer des ennemis
@@ -774,6 +778,17 @@ public class Perso : Attacker
     }
 
     // DAMAGE
+    protected override bool attack()
+    {
+        if (base.attack())
+        {
+            // on fait shake la caméra
+            cam.GetComponent<CameraShaker>().shake();
+            return true;
+        }
+        return false;
+    }
+
     protected override void die()
     {
         Debug.Log("YOU DIED");

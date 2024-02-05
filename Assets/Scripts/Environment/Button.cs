@@ -16,12 +16,9 @@ public class Button : MonoBehaviour, I_Interactable
 
     // BUTTONABLE
     [SerializeField] protected GameObject buttonable = null;
+    [SerializeField] protected bool verbose = false;
 
     // unity functions
-    /* protected virtual void Awake()
-    {
-    } */
-
     void Start()
     {
         // on récupère l'animation handler
@@ -33,6 +30,11 @@ public class Button : MonoBehaviour, I_Interactable
         // on appuie sur le bouton
         is_pressed = false;
         is_pressing = false;
+
+        if (verbose)
+        {
+            Debug.Log("Button: " + gameObject.name + " has buttonable: " + buttonable);
+        }
     }
 
     // PRESSING

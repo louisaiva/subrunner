@@ -749,6 +749,16 @@ public class Sector : MonoBehaviour
         else if (other.D() > U()) { return "no border"; }
         else if (other.U() < D()) { return "no border"; }
 
+        // check the particular case of the corners
+        if (other.L() == R())
+        {
+            if (other.D() == U() || other.U() == D()) { return "no border"; }
+        }
+        if (other.R() == L())
+        {
+            if (other.D() == U() || other.U() == D()) { return "no border"; }
+        }
+
         /* string s = "self / other : \n";
         s += "L : " + L() + " / " + other.L() + "\n";
         s += "R : " + R() + " / " + other.R() + "\n";
