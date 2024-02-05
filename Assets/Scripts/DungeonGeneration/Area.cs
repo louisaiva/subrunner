@@ -101,6 +101,9 @@ public class Area : MonoBehaviour
         parents.Add("sector_label", transform.Find("decoratives"));
         parents.Add("tag", transform.Find("decoratives/posters"));
         parents.Add("ceiling", transform.Find("ceilings"));
+        parents.Add("decorative", transform.Find("decoratives"));
+        parents.Add("interactive", transform.Find("interactives"));
+
 
         poster_sprites = Resources.LoadAll<Sprite>("spritesheets/environments/objects/posters");
         tags_sprites = Resources.LoadAll<Sprite>("spritesheets/environments/objects/tags");
@@ -229,6 +232,16 @@ public class Area : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void PlaceObject(GameObject obj, Vector3 pos, string parent="decorative")
+    {
+        // on créee l'objet
+        GameObject interactive = Instantiate(obj, pos, Quaternion.identity);
+
+        // on met le bon parent
+        interactive.transform.SetParent(parents[parent]);
+        interactive.transform.localPosition = pos + new Vector3(area_size.x / 4, area_size.y / 4, 0);
     }
 
 
