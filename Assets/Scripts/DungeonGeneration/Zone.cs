@@ -35,6 +35,8 @@ public class Zone : MonoBehaviour
         // on place la zone dans l'Area
         foreach (Transform child in objects_parent)
         {
+            // if (!isInsideRoom(child.position, area)) {continue;}
+
             area.PlaceZoneObject(child.gameObject,child.position);
         }
     }
@@ -56,8 +58,9 @@ public class Zone : MonoBehaviour
         {
             Debug.LogWarning("(Zone) Tilemap is bigger than the area. It will be cropped.");
         }
+        
 
-        // on parcourt les tiles du tilemap
+        // on place le sol
         for (int x = tm_bounds.xMin; x < tm_bounds.xMax; x++)
         {
             bool destroyed_bg_tile = false;
@@ -77,13 +80,70 @@ public class Zone : MonoBehaviour
                     if (world.GetTile(tile_position.x,tile_position.y, "bg") != null)
                     {
                         world.PlaceTile(null, tile_position, "bg");
-                        destroyed_bg_tile = true;
+
+                        // on détruit les tiles de fg qui sont au dessus
+                        Vector2Int tile_position_fg = tile_position + new Vector2Int(0, 4);
+                        world.PlaceTile(null, tile_position_fg, "fg");
+                        tile_position_fg = tile_position + new Vector2Int(0, 5);
+                        world.PlaceTile(null, tile_position_fg, "fg");
+
+                        // on vérifie si c'est bien une tile de mur externe (pas de tile de sol en y+1) ou de mur interne (tile de sol en y+1)
+                        if (world.GetTile(tile_position.x,tile_position.y+1, "gd") == null)
+                        {
+                            destroyed_bg_tile = true;
+                        }
                     }
                     if (world.GetTile(tile_position.x,tile_position.y, "fg") != null)
                     {
                         world.PlaceTile(null, tile_position, "fg");
-                        destroyed_fg_tile = true;
+
+                        if (world.GetTile(tile_position.x,tile_position.y-3, "fg") != null)
+                        {
+                            destroyed_fg_tile = true;
+                        }
+
+                        // on détruit les tiles de bg qui sont en dessous
+                        Vector2Int tile_position_bg = tile_position + new Vector2Int(0, -4);
+                        world.PlaceTile(null, tile_position_bg, "bg");
+
                     }
+                }
+                else
+                {
+                    if (x == tm_bounds.xMin)
+                    {
+                        // on met une tile de sol en x-1
+                        Vector2Int tile_position = new Vector2Int(tm_origin.x + x-1, tm_origin.y + y);
+                        world.SetLayerTile(tile_position.x,tile_position.y,1, "gd");
+
+                        if (y == tm_bounds.yMin)
+                        {
+                            // on met une tile de sol en x-1 et y-1
+                            world.SetLayerTile(tile_position.x,tile_position.y+1,1, "gd");
+                        }
+                        else if (y == tm_bounds.yMax-1)
+                        {
+                            // on met une tile de sol en x-1 et y+1
+                            world.SetLayerTile(tile_position.x,tile_position.y-1,1, "gd");
+                        }
+                    }
+                    else if (x == tm_bounds.xMax-1)
+                    {
+                        Vector2Int tile_position = new Vector2Int(tm_origin.x + x+1, tm_origin.y + y);
+                        world.SetLayerTile(tile_position.x,tile_position.y,1, "gd");
+                        
+                        if (y == tm_bounds.yMin)
+                        {
+                            // on met une tile de sol en x+1 et y-1
+                            world.SetLayerTile(tile_position.x,tile_position.y+1,1, "gd");
+                        }
+                        else if (y == tm_bounds.yMax-1)
+                        {
+                            // on met une tile de sol en x+1 et y+1
+                            world.SetLayerTile(tile_position.x,tile_position.y-1,1, "gd");
+                        }
+                    }
+                    world.SetLayerTile(tm_origin.x + x,tm_origin.y + y,1, "gd");
                 }
             }
 
@@ -92,15 +152,34 @@ public class Zone : MonoBehaviour
                 // on place une tile sur bg en yMax
                 Vector2Int tile_position = new Vector2Int(tm_origin.x + x, tm_origin.y + tm_bounds.yMax);
                 world.SetLayerTile(tile_position.x,tile_position.y,1, "bg");
+
+                // on met une tile de gd
+                world.SetLayerTile(tile_position.x,tile_position.y,1, "gd");
+
+                // on détruit les tiles de fg qui sont au dessus et on en met une à y+4
+                for (int y = tm_bounds.yMax; y < tm_bounds.yMax + 4; y++)
+                {
+                    Vector2Int tile_position_fg = new Vector2Int(tm_origin.x + x, tm_origin.y + y);
+                    world.PlaceTile(null, tile_position_fg, "fg");
+                }
+                world.SetLayerTile(tile_position.x,tile_position.y+4,1, "fg");
             }
 
             if (destroyed_fg_tile)
             {
                 // on place une tile sur fg en yMin
-                Vector2Int tile_position = new Vector2Int(tm_origin.x + x, tm_origin.y + tm_bounds.yMin -1);
+                Vector2Int tile_position = new Vector2Int(tm_origin.x + x, tm_origin.y + tm_bounds.yMin-1);
                 world.SetLayerTile(tile_position.x,tile_position.y,1, "fg");
+
+                // on met une tile de gd
+                world.SetLayerTile(tile_position.x,tile_position.y,1, "gd");
             }
         }
     }
+
+    /* private bool isInsideRoom(Vector3 position, Area area)
+    {
+        return area.getBounds().Contains(position);
+    } */
 
 }

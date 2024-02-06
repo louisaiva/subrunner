@@ -234,7 +234,7 @@ public class Sector : MonoBehaviour
 
 
             // on lui donne une zone ou pas
-            if (Random.Range(0f, 1f) < .1f)
+            if (rooms.Contains(tile) && Random.Range(0f, 1f) < .5f)
             {
                 // on lui donne une zone aléatoire
                 area.setZone(zones[Random.Range(0, zones.Count)]);
