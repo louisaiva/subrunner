@@ -95,6 +95,33 @@ public class ComplexeSector : Sector
 
     }
 
+    public override void initAreas()
+    {
+        // on crée des areas pour chaque tile
+        foreach (Vector2Int tile in getGeneratedAreas())
+        {
+            // on récup le type de l'area
+            string type = getAreaName(tile);
+
+            // on crée l'area
+            GameObject area_go = Instantiate(area_prefab, Vector3.zero, Quaternion.identity);
+            Area area = area_go.GetComponent<Area>();
+            area.init(tile.x, tile.y, area_size.x, area_size.y, type, this);
+
+
+            // on lui donne une zone ou pas
+            if (Random.Range(0f, 1f) < .1f)
+            {
+                // on lui donne une zone aléatoire
+                area.setZone(zones[Random.Range(0, zones.Count)]);
+            }
+
+            // on ajoute l'area au dictionnaire
+            areas[tile] = area;
+        }
+    }
+
+
     public void LAUNCH()
     {
         // we delete our tilemaps

@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d1514134bc4fbd41bb739b1b9a49231, type: 3}
-  m_Name: walls_1_rule
+  m_Script: {fileID: 11500000, guid: 98d4e8613a02b18489b78391ae48a327, type: 3}
+  m_Name: bg_base
   m_EditorClassIdentifier: 
   m_DefaultSprite: {fileID: 967993192, guid: 1ae13d2ff38da3e4d9aba221a39499bb, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
-  m_TilingRules:
+  m_TilingRules: 
   - m_Id: 0
     m_Sprites:
     - {fileID: -1508511997, guid: 1ae13d2ff38da3e4d9aba221a39499bb, type: 3}
@@ -304,3 +304,5 @@ MonoBehaviour:
     - {x: 1, y: 0, z: 0}
     - {x: -1, y: 0, z: 0}
     m_RuleTransform: 0
+
+  siblingGroup: 0

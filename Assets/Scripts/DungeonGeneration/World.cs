@@ -40,10 +40,10 @@ public class World : MonoBehaviour
         bg_tiles.Clear();
         gd_tiles.Clear();
         fg_tiles.Add("base_sector", Resources.Load<TileBase>("tilesets/fg_2_rule"));
-        bg_tiles.Add("base_sector", Resources.Load<TileBase>("tilesets/walls_1_rule"));
+        bg_tiles.Add("base_sector", Resources.Load<TileBase>("tilesets/bg_base"));
         gd_tiles.Add("base_sector", Resources.Load<TileBase>("tilesets/gd_2_rule"));
         fg_tiles.Add("server", Resources.Load<TileBase>("tilesets/fg_2_rule"));
-        bg_tiles.Add("server", Resources.Load<TileBase>("tilesets/walls_2_rule"));
+        bg_tiles.Add("server", Resources.Load<TileBase>("tilesets/bg_server"));
         gd_tiles.Add("server", Resources.Load<TileBase>("tilesets/gd_2_rule"));
         gd_tiles.Add("matrix", Resources.Load<TileBase>("tilesets/gd_matrix_rule"));
         gd_tiles.Add("red", Resources.Load<TileBase>("tilesets/gd_red"));
