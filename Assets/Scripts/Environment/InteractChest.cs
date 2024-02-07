@@ -11,7 +11,7 @@ public class InteractChest : InventoryChest, I_Interactable
     // INTERACTIONS
     public bool isInteractable()
     {
-        return !is_interacting || is_open;
+        return !is_interacting/*  || is_open */;
     }
 
     public void interact(GameObject target)
@@ -25,7 +25,7 @@ public class InteractChest : InventoryChest, I_Interactable
 
             open();
         }
-        else if (is_open)
+        /* else if (is_open)
         {
             // on récupère tous les objets
             foreach (Item item in inventory.getItems())
@@ -33,9 +33,7 @@ public class InteractChest : InventoryChest, I_Interactable
                 // on ajoute l'item au perso
                 inventory.dropItem(item);
             }
-        }
-
-        
+        } */
     }
 
     public void stopInteract()

@@ -169,12 +169,11 @@ public class UI_XboxNavigator : MonoBehaviour
         }
         if (slots_in_angle.Count == 0) {return;}
 
-        // string s = "SLOTS: \n\n";
+        string s = "SLOTS: \n\n";
 
         // on récupère le slot le plus proche
         int next_index = -1;
         float closest_distance = float.MaxValue;
-        // float angle_multiplicator = 100f;
         foreach (GameObject slot in slots_in_angle)
         {
             // on récupère la position du slot
@@ -182,7 +181,7 @@ public class UI_XboxNavigator : MonoBehaviour
             float angle = Vector2.Angle(direction, (slot_position - current_slot_position).normalized);
             float distance = Vector2.Distance(current_slot_position, slot_position - direction * angle_multiplicator);
 
-            // s += slot.GetComponent<I_UI_Slot>().item.item_name + " : " + slot_position + " / angle : " + angle + " /  distance : " + distance + "\n";
+            s += slot.name + " : " + slot_position + " / angle : " + angle + " /  distance : " + distance + "\n";
 
             if (distance < closest_distance)
             {
@@ -192,7 +191,7 @@ public class UI_XboxNavigator : MonoBehaviour
         }
         if (next_index == -1) {return;}
 
-        // print(s);
+        print(s);
 
 
         // on met à jour l'affichage

@@ -23,9 +23,12 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
     public EnumItem bank = new EnumItem();
 
 
-    [Header("Inputs")]
-    [SerializeField] private UI_XboxNavigator xbox_manager;
-    [SerializeField] private InputManager input_manager;
+    [Header("Slottable")]
+    private UI_XboxNavigator xbox_manager;
+    private InputManager input_manager;
+    // [SerializeField] private Vector2 base_position;
+    [SerializeField] private float angle_threshold = 45f;
+    [SerializeField] private float angle_multiplicator = 0f;
 
 
     // unity functions
@@ -33,9 +36,6 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
     {
         // on récupère le perso
         perso = GameObject.Find("/perso");
-
-        // on récupère le ui_bg
-        // ui_bg = transform.Find("bg").gameObject;
 
         // on récupère le description_ui
         description_ui = GameObject.Find("/ui/hoover_description").GetComponent<UI_HooverDescriptionHandler>();
@@ -70,7 +70,7 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
         slot.SetActive(true);
 
         // on active le xbox_manager
-        // if (input_manager.isUsingGamepad()) { xbox_manager.enable(this); }
+        if (input_manager.isUsingGamepad()) { xbox_manager.enable(this); }
     }
 
     public void hide()
@@ -88,7 +88,7 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
         description_ui.removeAllDescriptions();
 
         // on désactive le xbox_manager
-        // xbox_manager.disable();
+        xbox_manager.disable();
 
     }
 
@@ -197,13 +197,18 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
         // print("nb slots : " + slots.Count);
 
         // on met à jour les seuils
-        angle_threshold = 45f;
-        angle_multiplicator = 100f;
+        angle_threshold = this.angle_threshold;
+        angle_multiplicator = this.angle_multiplicator;
 
         // on met à jour la position de base
         base_position = GetComponent<RectTransform>().TransformPoint(GetComponent<RectTransform>().rect.center);
 
         return slots;
+    }
+
+    public void clickOnItem(Item item)
+    {
+        dropItem(item);
     }
 
 

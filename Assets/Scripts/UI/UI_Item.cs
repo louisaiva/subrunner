@@ -87,7 +87,18 @@ public class UI_Item : MonoBehaviour, I_UI_Slot
         GetComponent<Image>().sprite = base_sprite;
 
         // on click
-        ui_inventory.GetComponent<UI_Inventory>().clickOnItem(item);
+        if (ui_inventory.GetComponent<UI_Inventory>() != null)
+        {
+            ui_inventory.GetComponent<UI_Inventory>().clickOnItem(item);
+        }
+        else if (ui_inventory.GetComponent<UI_ChestInventory>() != null)
+        {
+            ui_inventory.GetComponent<UI_ChestInventory>().clickOnItem(item);
+        }
+        else
+        {
+            Debug.LogWarning("UI_Item : no UI_Inventory or UI_ChestInventory found on " + ui_inventory.name);
+        }
     }
 
     // reset hoover
