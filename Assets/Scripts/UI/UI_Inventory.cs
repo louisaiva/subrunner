@@ -412,11 +412,11 @@ public class EnumItem
         item_prefabs.Add("speed_glasses", "prefabs/items/legendary/speed_glasses");
         item_prefabs.Add("3d_glasses", "prefabs/items/legendary/3d_glasses");
         item_prefabs.Add("dynamite", "prefabs/items/dynamite");
-        item_prefabs.Add("tape_recorder", "prefabs/items/legendary/tape_recorder");
+        item_prefabs.Add("recorder", "prefabs/items/legendary/recorder");
         item_prefabs.Add("helium_shoes", "prefabs/items/legendary/helium_shoes");
         item_prefabs.Add("carbon_shoes", "prefabs/items/legendary/carbon_shoes");
         item_prefabs.Add("orangina", "prefabs/items/orangina");
-        item_prefabs.Add("noodle_os", "prefabs/items/legendary/noodle_os");
+        item_prefabs.Add("nood_os", "prefabs/items/legendary/nood_os");
         item_prefabs.Add("gyroscope", "prefabs/items/legendary/gyroscope");
         item_prefabs.Add("door_hack", "prefabs/items/door_hack");
         item_prefabs.Add("computer_hack", "prefabs/items/computer_hack");
@@ -444,11 +444,11 @@ public class EnumItem
         item_sprites.Add("speed_glasses", sprites[5]);
         item_sprites.Add("3d_glasses", sprites[6]);
         item_sprites.Add("dynamite", sprites[7]);
-        item_sprites.Add("tape_recorder", sprites[8]);
+        item_sprites.Add("recorder", sprites[8]);
         item_sprites.Add("helium_shoes", sprites[9]);
         item_sprites.Add("carbon_shoes", sprites[10]);
         item_sprites.Add("orangina", sprites[11]);
-        item_sprites.Add("noodle_os", sprites[12]);
+        item_sprites.Add("NOOD_OS", sprites[12]);
         item_sprites.Add("gyroscope", sprites[13]);
         item_sprites.Add("door_hack", sprites[14]);
         item_sprites.Add("computer_hack", sprites[15]);

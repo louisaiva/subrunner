@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 991999328008795163}
   - component: {fileID: 2748573037149330120}
-  - component: {fileID: 5989990578838116304}
   - component: {fileID: 3845646378405068767}
+  - component: {fileID: 5989990578838116304}
   m_Layer: 16
   m_Name: tv_hack
   m_TagString: Untagged
@@ -30,8 +30,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 7119276142586481698}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -55,7 +54,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -73,9 +72,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 22406999
-  m_SortingLayer: 5
-  m_SortingOrder: 1
+  m_SortingLayerID: -667374433
+  m_SortingLayer: 3
+  m_SortingOrder: 0
   m_Sprite: {fileID: 390170262, guid: 3663b626bd9323741bb906f9681d3bc7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -87,34 +86,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!114 &5989990578838116304
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2038104776426337295}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4462e78dda8b60a42b0ad9fd588a7a76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  item_type: hack
-  category: hack
-  action_type: capacity
-  item_name: tv_hack
-  item_description: hack TVs in order to get your dose of bad news !
-  legendary_item: 0
-  capacities:
-  - hack
-  capacity_level: 1
-  is_showed: 0
-  is_on_ground: 0
-  scale_on_ground: 0.5
-  perso: {fileID: 0}
-  description_ui: {fileID: 0}
-  cursor_handler: {fileID: 0}
-  hack_type_target: tv
 --- !u!61 &3845646378405068767
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -160,69 +131,25 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!1001 &8254023260572344827
-PrefabInstance:
+--- !u!114 &5989990578838116304
+MonoBehaviour:
   m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 991999328008795163}
-    m_Modifications:
-    - target: {fileID: 1171095894389304793, guid: 0ed4cbaf57cb4a4408ce193df894f5f6, type: 3}
-      propertyPath: m_RootOrder
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1171095894389304793, guid: 0ed4cbaf57cb4a4408ce193df894f5f6, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1171095894389304793, guid: 0ed4cbaf57cb4a4408ce193df894f5f6, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1171095894389304793, guid: 0ed4cbaf57cb4a4408ce193df894f5f6, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1171095894389304793, guid: 0ed4cbaf57cb4a4408ce193df894f5f6, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1171095894389304793, guid: 0ed4cbaf57cb4a4408ce193df894f5f6, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1171095894389304793, guid: 0ed4cbaf57cb4a4408ce193df894f5f6, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1171095894389304793, guid: 0ed4cbaf57cb4a4408ce193df894f5f6, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1171095894389304793, guid: 0ed4cbaf57cb4a4408ce193df894f5f6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1171095894389304793, guid: 0ed4cbaf57cb4a4408ce193df894f5f6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1171095894389304793, guid: 0ed4cbaf57cb4a4408ce193df894f5f6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1386314385081963378, guid: 0ed4cbaf57cb4a4408ce193df894f5f6, type: 3}
-      propertyPath: m_Name
-      value: ui_bg
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 0ed4cbaf57cb4a4408ce193df894f5f6, type: 3}
---- !u!4 &7119276142586481698 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1171095894389304793, guid: 0ed4cbaf57cb4a4408ce193df894f5f6, type: 3}
-  m_PrefabInstance: {fileID: 8254023260572344827}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2038104776426337295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4462e78dda8b60a42b0ad9fd588a7a76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item_type: hack
+  category: hack
+  action_type: capacity
+  item_name: tv_hack
+  item_description: hack TVs in order to get your dose of bad news !
+  capacities:
+  - hack
+  capacity_level: 1
+  perso: {fileID: 0}
+  hack_type_target: tv

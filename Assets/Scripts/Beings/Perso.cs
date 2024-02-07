@@ -257,7 +257,7 @@ public class Perso : Attacker
 
             // on rajoute hacks, lunettes etc
             inventory.createItem("carbon_shoes", true);
-            inventory.createItem("noodle_os", true);
+            inventory.createItem("nood_os", true);
             inventory.createItem("zombo_electrochoc");
             inventory.createItem("door_hack");
             inventory.createItem("computer_hack");
@@ -1132,12 +1132,12 @@ public class Perso : Attacker
             Vector2 position = (Vector2)transform.position + direction * 0.5f;
             
             item.transform.position = position;
-            item.fromInvToGround();
+            // item.fromInvToGround();
         }
 
 
         // on met à jour l'inventaire
-        if (item.legendary_item)
+        if (item is LegendaryItem)
         {
             big_inventory.dropLeg(item);
         }
@@ -1145,6 +1145,9 @@ public class Perso : Attacker
         {
             big_inventory.dropItem(item);
         }
+
+        // on active l'item
+        item.gameObject.SetActive(true);
     }
 
     public void grab(Item item)
@@ -1155,7 +1158,7 @@ public class Perso : Attacker
         addCapaOfItem(item);
 
         // on met à jour l'inventaire
-        if (item.legendary_item)
+        if (item is LegendaryItem)
         {
             big_inventory.grabLeg(item);
         }
@@ -1163,6 +1166,9 @@ public class Perso : Attacker
         {
             big_inventory.grabItem(item);
         }
+    
+        // on désactive l'item
+        item.gameObject.SetActive(false);
     }
 
     private void removeCapaIfNotInInv(string capa, Item item_capa=null)

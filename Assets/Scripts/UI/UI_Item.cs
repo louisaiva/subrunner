@@ -47,7 +47,8 @@ public class UI_Item : MonoBehaviour, I_UI_Slot
     // getters
     public string getDescription()
     {
-        return item.getDescription();
+        string s = item.item_name + "\n\n" + item.item_description;
+        return s;
     }
 
     public bool shouldDescriptionBeShown() {return true;}

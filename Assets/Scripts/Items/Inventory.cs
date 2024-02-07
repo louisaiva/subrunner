@@ -58,7 +58,7 @@ public class Inventory : MonoBehaviour {
 
     }
 
-    void Update()
+    /* void Update()
     {
 
         // on met à jour la taille du canvas si c'est scalable
@@ -104,7 +104,7 @@ public class Inventory : MonoBehaviour {
 
         // on met à jour les positions des items
         updateUI();
-    }
+    } */
 
     // UI
     void updateUI()
@@ -201,7 +201,7 @@ public class Inventory : MonoBehaviour {
             Item item = child.GetComponent<Item>();
 
             // on met à jour l'affichage
-            item.changeShow(is_showed);
+            // item.changeShow(is_showed);
         }
 
         // on met à jour les empty slots
@@ -406,7 +406,7 @@ public class Inventory : MonoBehaviour {
         item.transform.localScale = new Vector3(1, 1, 1);
 
         // on affiche ou pas l'item
-        item.changeShow(is_showed);
+        // item.changeShow(is_showed);
 
         return true;
     }
@@ -471,7 +471,7 @@ public class Inventory : MonoBehaviour {
     {
         // on récupère les items
         List<Item> items = getItems();
-        return items.Where(x => x.legendary_item).ToList();
+        return items.Where(x => x is LegendaryItem).ToList();
     }
 
     public Item getItem(string item_name)
