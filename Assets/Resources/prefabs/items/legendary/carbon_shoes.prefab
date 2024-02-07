@@ -12,8 +12,10 @@ GameObject:
   - component: {fileID: 7087582611124513642}
   - component: {fileID: 1729354377337993282}
   - component: {fileID: 7321614701010125876}
+  - component: {fileID: 5073075742303038142}
+  - component: {fileID: 244331130787610102}
   m_Layer: 16
-  m_Name: part2
+  m_Name: glowing_particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75,7 +77,7 @@ SpriteRenderer:
   m_SortingLayerID: -143297611
   m_SortingLayer: 6
   m_SortingOrder: 1
-  m_Sprite: {fileID: -2083915442, guid: 2005ea2a5c8e4ed48a471cdfa63be9df, type: 3}
+  m_Sprite: {fileID: 1528938012, guid: 2005ea2a5c8e4ed48a471cdfa63be9df, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -83,7 +85,7 @@ SpriteRenderer:
   m_Size: {x: 3, y: 3}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &1729354377337993282
@@ -119,6 +121,36 @@ SortingGroup:
   m_SortingLayer: 6
   m_SortingOrder: 1
   m_SortAtRoot: 1
+--- !u!114 &5073075742303038142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 33473005869554987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 756aff6b08d5b144b88ed37051d71594, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  current_anim: 
+  is_forcing: 0
+  debug: 0
+--- !u!114 &244331130787610102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 33473005869554987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46e87a136d4e22b47a481d44251278ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  apparition_radius: 3
+  glowing_radius: 1
+  is_glowing: 0
 --- !u!1 &1320423196889637340
 GameObject:
   m_ObjectHideFlags: 0
@@ -4982,7 +5014,7 @@ Transform:
   - {fileID: 8413091309957863283}
   - {fileID: 5500451804658881400}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2748573037149330120
 SpriteRenderer:
