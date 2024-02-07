@@ -402,7 +402,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generate_world: 1
-  nb_sectors: 6
+  nb_sectors: 3
   generate_ceilings: 0
   is_world_safe: 0
   generation_radius: {x: 10, y: 1}
@@ -17511,7 +17511,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 299467254294187729, guid: b839c0f7ba96bf84295bc08932fa7dfd, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 953039446567095052, guid: b839c0f7ba96bf84295bc08932fa7dfd, type: 3}
       propertyPath: m_TileColorArray.Array.size
