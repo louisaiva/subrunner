@@ -6,7 +6,7 @@ using System.Collections;
 public class InventoryChest : Chest
 { 
     // inventory
-    public Inventory inventory;
+    public UI_ChestInventory inventory;
 
     [Header("INVENTORY CHEST")]
     [SerializeField] protected bool randomize_on_start = true;
@@ -18,12 +18,16 @@ public class InventoryChest : Chest
         base.Awake();
 
         // on récupère l'inventaire
-        inventory = transform.Find("inventory").GetComponent<Inventory>();
+        inventory = transform.Find("inventory").GetComponent<UI_ChestInventory>();
 
-        // randomize
-        if (randomize_on_start) { inventory.randomize(randomize_cat); }
     }
 
+    void Start()
+    {
+        // randomize
+        if (inventory == null) {return;}
+        if (randomize_on_start) { inventory.randomize(randomize_cat); }
+    }
 
     // OPENING
     protected override void success_open()
@@ -31,13 +35,15 @@ public class InventoryChest : Chest
         base.success_open();
 
         // on met à jour l'inventaire
-        inventory.setShow(true);
+        // inventory.setShow(true);
+        inventory.show();
     }
 
     protected override void close()
     {
         // on met à jour l'inventaire
-        inventory.setShow(false);
+        // inventory.setShow(false);
+        inventory.hide();
 
         base.close();
     }
@@ -47,12 +53,14 @@ public class InventoryChest : Chest
     public bool grab(Item item)
     {
         // item.transform.SetParent(inventory.transform);
-        return inventory.addItem(item);
+        // return inventory.addItem(item);
+        inventory.grabItem(item);
+        return true;
     }
 
     public void forceGrab(Item item)
     {
-        inventory.forceAddItem(item);
+        // inventory.forceAddItem(item);
     }
 
 }

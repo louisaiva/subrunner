@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -425,7 +426,7 @@ public class EnumItem
         item_prefabs.Add("zombo_damage", "prefabs/items/zombo_damage");
         item_prefabs.Add("zombo_explosion", "prefabs/items/zombo_explosion");
         item_prefabs.Add("zombo_electrochoc", "prefabs/items/zombo_electrochoc");
-        item_prefabs.Add("zombo_control", "prefabs/items/zombo_control");
+        // item_prefabs.Add("zombo_control", "prefabs/items/zombo_control");
         item_prefabs.Add("slow_damage", "prefabs/items/slow_damage");
         item_prefabs.Add("light_hack", "prefabs/items/light_hack");
         item_prefabs.Add("tv_hack", "prefabs/items/tv_hack");
@@ -475,5 +476,52 @@ public class EnumItem
         }
 
         return item_sprites[item_name];
+    }
+
+    public Item getRandomItem(string cat="all",bool use_leg=false)
+    {
+        List<string> prefabs = new List<string>();
+
+        // on les trie par catégorie
+        if (cat != "all")
+        {
+            // on récupère les prefabs de la catégorie
+            prefabs = item_prefabs.Where(x => cat.Contains(getCategory(x.Key))).Select(x => x.Value).ToList();
+        }
+        else
+        {
+            prefabs = item_prefabs.Select(x => x.Value).ToList();
+        }
+
+        // on enlève les items légendaires si on ne veut pas les utiliser
+        if (!use_leg)
+        {
+            prefabs = prefabs.Where(x => !x.Contains("legendary")).ToList();
+        }
+
+        // on choisit un prefab random
+        int nb = Random.Range(0, prefabs.Count);
+        GameObject item = Resources.Load(prefabs[nb]) as GameObject;
+
+        if (item == null || item.GetComponent<Item>() == null)
+        {
+            Debug.LogWarning("(EnumItem) cannot find item component in " + prefabs[nb]);
+            return null;
+        }
+
+        return item.GetComponent<Item>();
+    }
+
+    private string getCategory(string item_name)
+    {
+        if (!item_prefabs.ContainsKey(item_name))
+        {
+            Debug.LogWarning("(EnumItem) cannot find category " + item_name);
+            return null;
+        }
+        
+        // on instancie l'item
+        GameObject item = Resources.Load(item_prefabs[item_name]) as GameObject;
+        return item.GetComponent<Item>().category;
     }
 }

@@ -295,10 +295,6 @@ public class Being : MonoBehaviour
 
     protected void update_forces()
     {
-        // on sauvegarde la position du perso
-        // Vector3 position_before_apply_forces = transform.position;
-        // float forces_magnitude = 0f;
-
         // on parcourt les forces
         for (int i = 0; i < forces.Count; i++)
         {
@@ -308,8 +304,6 @@ public class Being : MonoBehaviour
             // on applique la force si elle est assez forte
             if (force.magnitude > 0.5f)
             {
-                // on sauvegarde la magnitude des forces
-                // forces_magnitude += force.magnitude;
 
                 // on applique la force
                 apply_force(force.direction * force.magnitude * Time.deltaTime);
@@ -327,17 +321,6 @@ public class Being : MonoBehaviour
                 i--;
             }
         }
-
-        // on regarde si on a bougé ou pas (si on a hurté un mur ou pas)
-        /* if (this is Perso && position_before_apply_forces == transform.position)
-        {
-            // on est rentré dans un mur, on fait shaker la caméra si la force est assez forte
-            if (forces_magnitude > 1f)
-            {
-                Camera.main.GetComponent<CameraShaker>().shake(forces_magnitude/2f);
-            }
-        } */
-
     }
 
     protected void apply_force(Vector2 force)
@@ -350,7 +333,6 @@ public class Being : MonoBehaviour
         {
 
             if (force.magnitude < 0.05f) { return; }
-            // Debug.Log("moved_code : " + moved_code + " / force : " + force.magnitude);
 
             // on regarde si on a collisionné
             if (moved_code == 0 || moved_code == 1) { return; }
@@ -359,13 +341,13 @@ public class Being : MonoBehaviour
             {
                 // on a collisionné fort
                 Camera.main.GetComponent<CameraShaker>().shake(force.magnitude);
-                Debug.Log("shake : " + force.magnitude);
+                // Debug.Log("shake : " + force.magnitude);
             }
             else if (moved_code == 3 || moved_code == 5)
             {
                 // on a collisionné moins fort
                 Camera.main.GetComponent<CameraShaker>().shake(force.magnitude/2f);
-                Debug.Log("shake w glissement : " + force.magnitude);
+                // Debug.Log("shake w glissement : " + force.magnitude);
             }
         }
     }

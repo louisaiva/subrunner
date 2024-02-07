@@ -1152,7 +1152,21 @@ public class Perso : Attacker
 
     public void grab(Item item)
     {
+
+        // Debug.Log("GRABBING " + item.gameObject.name + " prefab scene ? " + item.gameObject.scene.name);
+
+        // on vérifie si on a affaire à un item déjà instancié ou pas
+        if (item.gameObject.scene.name == null)
+        {
+            // on instancie l'item
+            item = Instantiate(item, transform.position, Quaternion.identity) as Item;
+
+            // on met le zoom à 0.5
+            item.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
+        }
         item.transform.SetParent(inventory.transform);
+
+
 
         // on ajoute la capacité de l'item
         addCapaOfItem(item);
