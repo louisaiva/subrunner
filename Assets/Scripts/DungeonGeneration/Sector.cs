@@ -247,6 +247,14 @@ public class Sector : MonoBehaviour
         }
     }
 
+    public virtual void setZone(GameObject zone, Vector2Int global_area_pos)
+    {
+        // on set la zone de chaque area
+        Vector2Int area_pos = new Vector2Int(global_area_pos.x - x, global_area_pos.y - y);
+        Debug.Log("(Sector) setZone : " + zone.name + " at " + area_pos + " in " + gameObject.name + " at " + x + "," + y);
+        areas[area_pos].setZone(zone);
+    }
+
     // MAIN FUNCTIONS
     public void move(Vector2Int movement)
     {
@@ -1149,6 +1157,38 @@ public class Sector : MonoBehaviour
     {
         // on vérifie si le secteur a l'area
         return areas.ContainsKey(area);
+    }
+
+    public Vector2Int getGlobalRandomRoomPosition()
+    {
+        // on print les tiles et les rooms
+        string s = "tiles : \n\n";
+        foreach (Vector2Int tile in tiles)
+        {
+            s += " " + tile + "\n";
+        }
+        s += "\n\n   rooms : \n\n";
+        foreach (Vector2Int room in rooms)
+        {
+            s += " " + room + "\n";
+        }
+        print(s);
+
+        try
+        {
+            // on récupère une room aléatoire
+            Vector2Int pos = rooms.ElementAt(Random.Range(0, rooms.Count));
+
+            Debug.Log("(Sector - getGlobalRandomRoomPosition) pos : " + pos + " / x,y : " + x + "," + y);
+
+            // on retourne la position globale
+            return new Vector2Int(pos.x + x, pos.y + y);
+        }
+        catch
+        {
+            Debug.LogError("(Sector - getGlobalRandomRoomPosition) Erreur pas de room dans le secteur " + gameObject.name);
+            return new Vector2Int(-1, -1);
+        }
     }
 
     // GETTERS

@@ -779,7 +779,7 @@ GameObject:
   - component: {fileID: 1510291699598343353}
   - component: {fileID: 689683769064904383}
   m_Layer: 6
-  m_Name: playtest
+  m_Name: QG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1209,6 +1209,7 @@ MonoBehaviour:
   is_moving: 0
   openin_duration: 0.5
   inventory: {fileID: 0}
+  go_parent: {fileID: 0}
   randomize_on_start: 1
   randomize_cat: all
 --- !u!1 &7109835344248094303

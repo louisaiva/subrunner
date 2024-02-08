@@ -30,6 +30,7 @@ public class GlowingItemEffect : MonoBehaviour
     [Header("Distance")]
     private float apparition_radius = 2f;
     private float glowing_radius = 0.5f;
+    [SerializeField] public Vector2 offset = new Vector2(0, 0);
 
 
     void Start()
@@ -41,7 +42,7 @@ public class GlowingItemEffect : MonoBehaviour
     void Update()
     {
         // on check la distance entre le perso et l'item
-        float distance = Vector2.Distance(perso.transform.position, transform.position);
+        float distance = Vector2.Distance(perso.transform.position, transform.position+new Vector3(offset.x,offset.y,0));
 
         // on vérifie déjà si on est pas méga loin
         if (distance > apparition_radius)

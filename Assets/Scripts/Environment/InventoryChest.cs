@@ -3,10 +3,11 @@ using System.Collections;
 
 
 [RequireComponent(typeof(AnimationHandler))]
-public class InventoryChest : Chest
+public class InventoryChest : Chest, I_Grabber
 { 
     // inventory
     public UI_ChestInventory inventory;
+    public Transform go_parent;
 
     [Header("INVENTORY CHEST")]
     [SerializeField] protected bool randomize_on_start = true;
@@ -19,6 +20,9 @@ public class InventoryChest : Chest
 
         // on récupère l'inventaire
         inventory = transform.Find("inventory").GetComponent<UI_ChestInventory>();
+
+        // on récupère le parent
+        go_parent = transform.Find("gameobjects");
 
     }
 
@@ -49,13 +53,44 @@ public class InventoryChest : Chest
     }
 
 
+    // GRABBER
+    public bool canGrab()
+    {
+        return inventory.canGrab();
+    }
+
+    public void grab(GameObject target)
+    {
+        if (target.GetComponent<Item>())
+        {
+            if (grab(target.GetComponent<Item>()))
+            {
+                // on le met dans l'inventaire
+                target.transform.SetParent(go_parent);
+
+                // on désactive l'item
+                target.SetActive(false);
+                Debug.Log("grab " + target.name + " in " + gameObject.name +" & applied setactive : "+target.activeSelf);
+            }
+        }
+    }
+
     // INVENTORY FUNCTIONS
     public bool grab(Item item)
     {
-        // item.transform.SetParent(inventory.transform);
-        // return inventory.addItem(item);
-        inventory.grabItem(item);
-        return true;
+        // on vérifie si on a affaire à un item déjà instancié ou pas
+        if (item.gameObject.scene.name == null)
+        {
+            // on instancie l'item
+            item = Instantiate(item, transform.position, Quaternion.identity) as Item;
+
+            // on met le zoom à 0.5
+            item.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
+        }
+        item.transform.SetParent(go_parent);
+
+        // on ajoute l'item à l'inventaire
+        return inventory.grabItem(item);
     }
 
     public void forceGrab(Item item)

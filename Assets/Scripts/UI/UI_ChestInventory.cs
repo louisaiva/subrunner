@@ -106,10 +106,13 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
 
 
     // ITEMS
-    public void grabItem(Item item)
+    public bool grabItem(Item item)
     {
         // on vérifie si on a déjà un item de ce type
-        if (item_ui.ContainsKey(item)) { return; }
+        if (item_ui.ContainsKey(item)) { return false; }
+
+        // on vérifie si on a de la place
+        if (!canGrab()) { return false; }
 
         Debug.Log("ui_prefab : " + ui_item_prefab);
         Debug.Log("slot : " + slot);
@@ -129,6 +132,8 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
 
         // on met à jour le xbox_manager si on est show
         // if (is_showed) { xbox_manager.updateWhileShowed(); }
+
+        return true;
     }
 
     public void dropItem(Item item)
@@ -205,7 +210,6 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
 
         return slots;
     }
-
     public void clickOnItem(Item item)
     {
         dropItem(item);
@@ -214,11 +218,17 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
 
 
     // GETTERS
-
     public List<Item> getItems()
     {
         // on récupère les items
         return item_ui.Keys.ToList();
     }
+
+    public bool canGrab()
+    {
+        // on vérifie si on a de la place
+        return item_ui.Count < max_items;
+    }
+
 
 }

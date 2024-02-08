@@ -59,6 +59,7 @@ public class Perso : Attacker
     public Inventory inventory;
     public UI_Inventory big_inventory;
     public Transform items_parent;
+    private LayerMask grabber_layer;
 
     [Header("SKILLTREE")]
     public SkillTree skills_tree;
@@ -195,6 +196,9 @@ public class Perso : Attacker
         // on récupère le parent des items
         // items_parent = GameObject.Find("/world/sector_2/items").transform;
         items_parent = null;
+
+        // on récupère le grabber_layer
+        grabber_layer = LayerMask.GetMask("Chests");
 
         //
         floating_text_prefab = Resources.Load("prefabs/ui/floating_text") as GameObject;
@@ -1121,18 +1125,44 @@ public class Perso : Attacker
         }
 
 
+
         // sinon on drop l'item par terre
         if (drop_on_ground)
         {
-            item.transform.SetParent(items_parent);
 
-            // calcule une position aléatoire autour du perso -> dans la direction du look_at
-            float angle = Random.Range(0f, 360f);
-            Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-            Vector2 position = (Vector2)transform.position + direction * 0.5f;
-            
-            item.transform.position = position;
-            // item.fromInvToGround();
+            I_Grabber grabber = null;
+
+            // on cherche si on a un grabber dans le rayon
+            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 1f, grabber_layer);
+            foreach (Collider2D hit in hits)
+            {
+                if (hit == null) { continue; }
+                if (hit.gameObject.GetComponent<I_Grabber>() != null && hit.gameObject.GetComponent<I_Grabber>().canGrab())
+                {
+                    grabber = hit.gameObject.GetComponent<I_Grabber>();
+                    break;
+                }
+            }
+
+
+            if (grabber != null)
+            {
+                grabber.grab(item.gameObject);
+            }
+            else
+            {
+                // on drop sur le sol
+
+                item.transform.SetParent(items_parent);
+
+                // calcule une position aléatoire autour du perso -> dans la direction du look_at
+                float angle = Random.Range(0f, 360f);
+                Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                Vector2 position = (Vector2)transform.position + direction * 0.5f;
+                
+                item.transform.position = position;
+                // item.fromInvToGround();
+            }
         }
 
 
@@ -1165,6 +1195,12 @@ public class Perso : Attacker
             item.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
         }
         item.transform.SetParent(inventory.transform);
+
+        // on vérifie si l'item a un component collider activé
+        if (item.GetComponent<Collider2D>() != null && !item.GetComponent<Collider2D>().enabled)
+        {
+            item.GetComponent<Collider2D>().enabled = true;
+        }
 
 
 
