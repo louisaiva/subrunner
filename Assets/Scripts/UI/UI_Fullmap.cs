@@ -12,6 +12,7 @@ public class UI_Fullmap : MonoBehaviour {
 
     private GameObject ui_map;
     private GameObject ui_mask;
+    private GameObject hc;
     private GameObject uis;
     private UI_MainUI main_ui;
 
@@ -39,6 +40,7 @@ public class UI_Fullmap : MonoBehaviour {
         ui_map = transform.Find("mask/map").gameObject;
         ui_mask = transform.Find("mask/map_mask").gameObject;
         uis = transform.Find("mask").gameObject;
+        hc = transform.Find("hc").gameObject;
 
         // on cache la map
         hide();
@@ -103,6 +105,7 @@ public class UI_Fullmap : MonoBehaviour {
         uis.SetActive(true);
         transform.Find("black").gameObject.SetActive(true);
         transform.Find("text").gameObject.SetActive(true);
+        hc.SetActive(true);
 
         // on arrête le temps
         Time.timeScale = 0;
@@ -129,6 +132,7 @@ public class UI_Fullmap : MonoBehaviour {
         uis.SetActive(false);
         transform.Find("black").gameObject.SetActive(false);
         transform.Find("text").gameObject.SetActive(false);
+        hc.SetActive(false);
 
         // on remet le temps
         Time.timeScale = 1;

@@ -519,6 +519,11 @@ MonoBehaviour:
   - {x: 1, y: 0}
   is_spawn_sector: 0
   spawn_pos: {x: 0, y: 0}
+  walls_light_tiles:
+  - bg_2_7
+  - walls_1_7
+  - walls_2_7
+  light_offset: {x: 0.25, y: 1, z: 0}
 --- !u!1 &1126766742148242979
 GameObject:
   m_ObjectHideFlags: 0

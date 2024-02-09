@@ -169,7 +169,7 @@ public class UI_SmallHC : MonoBehaviour
         Image img = joystick.GetComponent<Image>();
 
         // we set the sprite
-        if (distance > 0.5f)
+        if (distance > 0f)
         {
             // we find the right sprite
             string sprite_name = "joy";
