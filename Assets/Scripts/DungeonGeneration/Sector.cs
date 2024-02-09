@@ -274,7 +274,7 @@ public class Sector : MonoBehaviour
     }
 
     // GENERATION
-    public void GENERATE(/* List<Vector2> empl_enemies, List<Vector2> empl_interactives, Dictionary<Vector2, string> empl_doors, List<Vector2> empl_labels */)
+    public virtual void GENERATE(/* List<Vector2> empl_enemies, List<Vector2> empl_interactives, Dictionary<Vector2, string> empl_doors, List<Vector2> empl_labels */)
     {
 
         // on génère les areas

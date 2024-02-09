@@ -854,7 +854,7 @@ public class Being : MonoBehaviour
     public void healMax()
     {
         // restore max life
-        vie = max_vie;
+        addLife(max_vie-vie);
     }
 
 }

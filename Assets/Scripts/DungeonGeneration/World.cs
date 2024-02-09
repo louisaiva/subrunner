@@ -102,9 +102,6 @@ public class World : MonoBehaviour
         // on parcourt les secteurs
         for (int i = 0; i < sect.Count; i++)
         {
-            // on initialise les areas des secteurs
-            sect[i].initAreas();
-
             // on vérifie si le secteur est un hand made sector
             if (sect[i] is ComplexeSector)
             {
@@ -116,6 +113,9 @@ public class World : MonoBehaviour
                     spawn_sector = (ComplexeSector) sect[i];
                 }
             }
+
+            // on initialise les areas des secteurs
+            sect[i].initAreas();
         }
 
         // on place 1 fois chaque zone légendaire
