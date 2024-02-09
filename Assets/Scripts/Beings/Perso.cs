@@ -191,7 +191,7 @@ public class Perso : Attacker
         // on récupère l'inventaire
         inventory = GameObject.Find("/inventory").GetComponent<Inventory>();
         inventory.scalable = true;
-        big_inventory = GameObject.Find("/ui/inventory").GetComponent<UI_Inventory>();
+        big_inventory = GameObject.Find("/ui/inventory/ui_inventory").GetComponent<UI_Inventory>();
 
         // on récupère la map
         big_map = GameObject.Find("/ui/fullmap").GetComponent<UI_Fullmap>();

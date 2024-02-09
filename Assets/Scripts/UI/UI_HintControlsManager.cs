@@ -18,8 +18,10 @@ public class UI_HintControlsManager : MonoBehaviour
     [SerializeField] private GameObject start_select;
 
     [Header("Sprites")]
-    [SerializeField] private Dictionary<string, Sprite> empty_sprites = new Dictionary<string, Sprite>();
-    [SerializeField] private Dictionary<string, Sprite> hint_sprites = new Dictionary<string, Sprite>();
+    // [SerializeField] private Dictionary<string, Sprite> empty_sprites = new Dictionary<string, Sprite>();
+    // [SerializeField] private Dictionary<string, Sprite> hint_sprites = new Dictionary<string, Sprite>();
+
+    private EnumHCI bank;
     [SerializeField] private Color empty_color = new Color(1f, 1f, 1f, 0.5f);
     [SerializeField] private Color hint_color = new Color(1f, 1f, 1f, 1f);
     [SerializeField] private Color clicked_color = new Color(1f, 1f, 0f, 1f);
@@ -36,52 +38,54 @@ public class UI_HintControlsManager : MonoBehaviour
         // on désactive tout
         // hide();
 
-        // on récupère les sprites
-        Sprite[] sprites = Resources.LoadAll<Sprite>("spritesheets/ui/ui_interactables");
+        // // on récupère les sprites
+        // Sprite[] sprites = Resources.LoadAll<Sprite>("spritesheets/ui/ui_interactables");
 
-        // on les ajoute aux dictionnaires
-        empty_sprites.Add("y", sprites[0]);
-        hint_sprites.Add("y", sprites[1]);
-        empty_sprites.Add("b", sprites[2]);
-        hint_sprites.Add("b", sprites[3]);
-        empty_sprites.Add("a", sprites[4]);
-        hint_sprites.Add("a", sprites[5]);
-        empty_sprites.Add("x", sprites[6]);
-        hint_sprites.Add("x", sprites[7]);
+        // // on les ajoute aux dictionnaires
+        // empty_sprites.Add("y", sprites[0]);
+        // hint_sprites.Add("y", sprites[1]);
+        // empty_sprites.Add("b", sprites[2]);
+        // hint_sprites.Add("b", sprites[3]);
+        // empty_sprites.Add("a", sprites[4]);
+        // hint_sprites.Add("a", sprites[5]);
+        // empty_sprites.Add("x", sprites[6]);
+        // hint_sprites.Add("x", sprites[7]);
 
-        // empty_sprites.Add("joy", sprites[8]);
-        empty_sprites.Add("joy", sprites[9]);
-        hint_sprites.Add("joyU", sprites[10]);
-        hint_sprites.Add("joyUR", sprites[11]);
-        hint_sprites.Add("joyR", sprites[12]);
-        hint_sprites.Add("joyDR", sprites[13]);
-        hint_sprites.Add("joyD", sprites[14]);
-        hint_sprites.Add("joyDL", sprites[15]);
-        hint_sprites.Add("joyL", sprites[16]);
-        hint_sprites.Add("joyUL", sprites[17]);
+        // // empty_sprites.Add("joy", sprites[8]);
+        // empty_sprites.Add("joy", sprites[9]);
+        // hint_sprites.Add("joyU", sprites[10]);
+        // hint_sprites.Add("joyUR", sprites[11]);
+        // hint_sprites.Add("joyR", sprites[12]);
+        // hint_sprites.Add("joyDR", sprites[13]);
+        // hint_sprites.Add("joyD", sprites[14]);
+        // hint_sprites.Add("joyDL", sprites[15]);
+        // hint_sprites.Add("joyL", sprites[16]);
+        // hint_sprites.Add("joyUL", sprites[17]);
 
-        empty_sprites.Add("U", sprites[18]);
-        hint_sprites.Add("U", sprites[19]);
-        empty_sprites.Add("R", sprites[20]);
-        hint_sprites.Add("R", sprites[21]);
-        empty_sprites.Add("D", sprites[22]);
-        hint_sprites.Add("D", sprites[23]);
-        empty_sprites.Add("L", sprites[24]);
-        hint_sprites.Add("L", sprites[25]);
+        // empty_sprites.Add("U", sprites[18]);
+        // hint_sprites.Add("U", sprites[19]);
+        // empty_sprites.Add("R", sprites[20]);
+        // hint_sprites.Add("R", sprites[21]);
+        // empty_sprites.Add("D", sprites[22]);
+        // hint_sprites.Add("D", sprites[23]);
+        // empty_sprites.Add("L", sprites[24]);
+        // hint_sprites.Add("L", sprites[25]);
 
-        empty_sprites.Add("LT", sprites[26]);
-        hint_sprites.Add("LT", sprites[27]);
-        empty_sprites.Add("RT", sprites[28]);
-        hint_sprites.Add("RT", sprites[29]);
-        empty_sprites.Add("RB", sprites[30]);
-        hint_sprites.Add("RB", sprites[31]);
-        empty_sprites.Add("LB", sprites[32]);
-        hint_sprites.Add("LB", sprites[33]);
+        // empty_sprites.Add("LT", sprites[26]);
+        // hint_sprites.Add("LT", sprites[27]);
+        // empty_sprites.Add("RT", sprites[28]);
+        // hint_sprites.Add("RT", sprites[29]);
+        // empty_sprites.Add("RB", sprites[30]);
+        // hint_sprites.Add("RB", sprites[31]);
+        // empty_sprites.Add("LB", sprites[32]);
+        // hint_sprites.Add("LB", sprites[33]);
 
-        empty_sprites.Add("start", sprites[34]);
-        hint_sprites.Add("start", sprites[35]);
-        empty_sprites.Add("select", sprites[36]);
-        hint_sprites.Add("select", sprites[37]);
+        // empty_sprites.Add("start", sprites[34]);
+        // hint_sprites.Add("start", sprites[35]);
+        // empty_sprites.Add("select", sprites[36]);
+        // hint_sprites.Add("select", sprites[37]);
+
+        bank = new EnumHCI();
 
         // on récupère les inputs
         player_input_actions = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().inputs;
@@ -292,12 +296,12 @@ public class UI_HintControlsManager : MonoBehaviour
             if (hints.Keys.Contains(button_name))
             {
                 button.GetComponent<SpriteRenderer>().color = hint_color;
-                button.GetComponent<SpriteRenderer>().sprite = hint_sprites[button_name];
+                button.GetComponent<SpriteRenderer>().sprite = bank.hint_sprites[button_name];
             }
             else
             {
                 button.GetComponent<SpriteRenderer>().color = empty_color;
-                button.GetComponent<SpriteRenderer>().sprite = empty_sprites[button_name];
+                button.GetComponent<SpriteRenderer>().sprite = bank.empty_sprites[button_name];
             }
         }
     }
@@ -362,7 +366,7 @@ public class UI_HintControlsManager : MonoBehaviour
                 sprite_name += "R";
             }
             // we set the sprite
-            sprite_renderer.sprite = hint_sprites[sprite_name];
+            sprite_renderer.sprite = bank.hint_sprites[sprite_name];
 
             // we set the color
             sprite_renderer.color = clicked_color;
@@ -371,7 +375,7 @@ public class UI_HintControlsManager : MonoBehaviour
         else
         {
             // we set the sprite
-            sprite_renderer.sprite = empty_sprites["joy"];
+            sprite_renderer.sprite = bank.empty_sprites["joy"];
 
             // we set the color
             if (hints.Keys.Contains(joystick_name))
@@ -445,5 +449,62 @@ public class UI_HintControlsManager : MonoBehaviour
             return null;
         }
         return getCatObject(category_name);
+    }
+}
+
+class EnumHCI
+{
+    public Dictionary<string, Sprite> empty_sprites = new Dictionary<string, Sprite>();
+    public Dictionary<string, Sprite> hint_sprites = new Dictionary<string, Sprite>();
+
+
+    public EnumHCI()
+    {
+        // on récupère les sprites
+        Sprite[] sprites = Resources.LoadAll<Sprite>("spritesheets/ui/ui_interactables");
+
+        // on les ajoute aux dictionnaires
+        empty_sprites.Add("y", sprites[0]);
+        hint_sprites.Add("y", sprites[1]);
+        empty_sprites.Add("b", sprites[2]);
+        hint_sprites.Add("b", sprites[3]);
+        empty_sprites.Add("a", sprites[4]);
+        hint_sprites.Add("a", sprites[5]);
+        empty_sprites.Add("x", sprites[6]);
+        hint_sprites.Add("x", sprites[7]);
+
+        // empty_sprites.Add("joy", sprites[8]);
+        empty_sprites.Add("joy", sprites[9]);
+        hint_sprites.Add("joyU", sprites[10]);
+        hint_sprites.Add("joyUR", sprites[11]);
+        hint_sprites.Add("joyR", sprites[12]);
+        hint_sprites.Add("joyDR", sprites[13]);
+        hint_sprites.Add("joyD", sprites[14]);
+        hint_sprites.Add("joyDL", sprites[15]);
+        hint_sprites.Add("joyL", sprites[16]);
+        hint_sprites.Add("joyUL", sprites[17]);
+
+        empty_sprites.Add("U", sprites[18]);
+        hint_sprites.Add("U", sprites[19]);
+        empty_sprites.Add("R", sprites[20]);
+        hint_sprites.Add("R", sprites[21]);
+        empty_sprites.Add("D", sprites[22]);
+        hint_sprites.Add("D", sprites[23]);
+        empty_sprites.Add("L", sprites[24]);
+        hint_sprites.Add("L", sprites[25]);
+
+        empty_sprites.Add("LT", sprites[26]);
+        hint_sprites.Add("LT", sprites[27]);
+        empty_sprites.Add("RT", sprites[28]);
+        hint_sprites.Add("RT", sprites[29]);
+        empty_sprites.Add("RB", sprites[30]);
+        hint_sprites.Add("RB", sprites[31]);
+        empty_sprites.Add("LB", sprites[32]);
+        hint_sprites.Add("LB", sprites[33]);
+
+        empty_sprites.Add("start", sprites[34]);
+        hint_sprites.Add("start", sprites[35]);
+        empty_sprites.Add("select", sprites[36]);
+        hint_sprites.Add("select", sprites[37]);
     }
 }

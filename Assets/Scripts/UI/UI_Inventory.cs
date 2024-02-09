@@ -14,6 +14,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     // AFFICHAGE
     [SerializeField] private bool is_showed = false;
     private GameObject ui_bg;
+    private GameObject hc;
     private UI_MainUI main_ui;
 
     // DESCRIPTION
@@ -47,7 +48,8 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         perso = GameObject.Find("/perso");
 
         // on récupère le ui_bg
-        ui_bg = transform.Find("bg").gameObject;
+        ui_bg = transform.parent.Find("bg").gameObject;
+        hc = transform.parent.Find("hc").gameObject;
 
         // on récupère le main_ui
         main_ui = GameObject.Find("/ui").GetComponent<UI_MainUI>();
@@ -80,7 +82,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
 
         // on cache l'inventaire
-        hide();        
+        hide();
     }
     
     // SHOWING
@@ -88,7 +90,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     {
         // on cache le main_ui
         main_ui.show();
-        main_ui.showOnly(gameObject);
+        main_ui.showOnly(transform.parent.gameObject);
 
         // on affiche l'inventaire
         is_showed = true;
@@ -105,11 +107,12 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 
         // on affiche le bg
         ui_bg.SetActive(true);
+        hc.SetActive(true);
 
         // on affiche le texte au bon emplacement
-        Vector3 text_position = new Vector3(Screen.width/2f, Screen.height, 0f);
-        transform.Find("text").gameObject.SetActive(true);
-        transform.Find("text").GetComponent<RectTransform>().position = text_position;
+        // Vector3 text_position = new Vector3(Screen.width/2f, Screen.height, 0f);
+        transform.parent.Find("text").gameObject.SetActive(true);
+        // transform.Find("text").GetComponent<RectTransform>().position = text_position;
 
         // on active le xbox_manager
         if (input_manager.isUsingGamepad()) { xbox_manager.enable(this); }
@@ -137,9 +140,10 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 
         // on cache le bg
         ui_bg.SetActive(false);
+        hc.SetActive(false);
 
         // on cache le texte
-        transform.Find("text").gameObject.SetActive(false);
+        transform.parent.Find("text").gameObject.SetActive(false);
 
         // on désactive le xbox_manager
         xbox_manager.disable();
