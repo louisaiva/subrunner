@@ -772,7 +772,7 @@ public class Being : MonoBehaviour
             die();
         }
 
-        Debug.Log(gameObject.name + " took " + damage + " dmg and has " + vie + " hp left");
+        // Debug.Log(gameObject.name + " took " + damage + " dmg and has " + vie + " hp left");
         return true;
     }
 

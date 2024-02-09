@@ -14,6 +14,7 @@ public class UI_MainUI : MonoBehaviour
         foreach (Transform child in transform)
         {
             if (child.gameObject.name == "hoover_description") { continue; }
+            if (child.gameObject.name == "pause_menu") { continue; }
             ui_elements.Add(child.gameObject);
         }
 

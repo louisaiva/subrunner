@@ -67,6 +67,9 @@ public class Perso : Attacker
     [Header("MAP")]
     public UI_Fullmap big_map;
 
+    [Header("PauseMenu")]
+    public UI_PauseMenu pause_menu;
+
     [Header("INTERACTIONS")]
     // interactions
     [SerializeField] private float interact_range = 1f;
@@ -193,6 +196,9 @@ public class Perso : Attacker
         // on récupère la map
         big_map = GameObject.Find("/ui/fullmap").GetComponent<UI_Fullmap>();
 
+        // on récupère le pause_menu
+        pause_menu = GameObject.Find("/ui/pause_menu").GetComponent<UI_PauseMenu>();
+
         // on récupère le parent des items
         // items_parent = GameObject.Find("/world/sector_2/items").transform;
         items_parent = null;
@@ -248,23 +254,7 @@ public class Perso : Attacker
         // on CHEAT
         if (CHEAT)
         {
-            // on met l'attaque à 0.1
-            // damage = 0.1f;
-
-            // on se met lvl 10 sur le skill tree
-            // skills_tree.setGlobalLevel(10);
-            skills_tree.setLevel("max_vie", 30);
-
-            // on met à jour les paramètres du perso
-            vie = (float) max_vie;
-            // speed = 5f;
-
-            // on rajoute hacks, lunettes etc
-            inventory.createItem("carbon_shoes", true);
-            inventory.createItem("nood_os", true);
-            inventory.createItem("zombo_electrochoc");
-            inventory.createItem("door_hack");
-            inventory.createItem("computer_hack");
+            cheat();
         }
 
         // on MAJ les items
@@ -750,6 +740,31 @@ public class Perso : Attacker
         {
             unsetHooverHackable();
         }
+    }
+
+    // CHEAT
+    public void cheat()
+    {
+        // on met l'attaque à 0.1
+        // damage = 0.1f;
+
+        // on se met lvl 10 sur le skill tree
+        // skills_tree.setGlobalLevel(10);
+        skills_tree.setLevel("max_vie", 30);
+
+        // on met à jour les paramètres du perso
+        vie = (float)max_vie;
+        // speed = 5f;
+
+        // on rajoute hacks, lunettes etc
+        grab(inventory.createItem("carbon_shoes", true));
+        grab(inventory.createItem("nood_os", true));
+        grab(inventory.createItem("gyroscope", true));
+        grab(inventory.createItem("zombo_electrochoc"));
+        grab(inventory.createItem("door_hack"));
+        grab(inventory.createItem("computer_hack"));
+
+        Debug.Log("OMGGG R U CHEATING ?!");
     }
 
     // XP
@@ -1427,6 +1442,11 @@ public class Perso : Attacker
                 big_map.rollShow();
             }
         }
+    }
+
+    public void OnPause()
+    {
+        pause_menu.rollShow();
     }
 
 }

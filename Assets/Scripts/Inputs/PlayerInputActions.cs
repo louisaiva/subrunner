@@ -98,6 +98,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""21976488-dcb9-4123-ba3d-4f078f4ab76c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -362,6 +371,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""xbox"",
                     ""action"": ""randomTalk"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""834bd7bf-a313-4665-92f7-06e07653766b"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ac9d0505-9602-4253-9908-c99691b89d78"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1652,6 +1683,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_perso_run = m_perso.FindAction("run", throwIfNotFound: true);
         m_perso_useConso = m_perso.FindAction("useConso", throwIfNotFound: true);
         m_perso_randomTalk = m_perso.FindAction("randomTalk", throwIfNotFound: true);
+        m_perso_pause = m_perso.FindAction("pause", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_navigate = m_UI.FindAction("navigate", throwIfNotFound: true);
@@ -1759,6 +1791,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_perso_run;
     private readonly InputAction m_perso_useConso;
     private readonly InputAction m_perso_randomTalk;
+    private readonly InputAction m_perso_pause;
     public struct PersoActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -1771,6 +1804,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @run => m_Wrapper.m_perso_run;
         public InputAction @useConso => m_Wrapper.m_perso_useConso;
         public InputAction @randomTalk => m_Wrapper.m_perso_randomTalk;
+        public InputAction @pause => m_Wrapper.m_perso_pause;
         public InputActionMap Get() { return m_Wrapper.m_perso; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1804,6 +1838,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @randomTalk.started += instance.OnRandomTalk;
             @randomTalk.performed += instance.OnRandomTalk;
             @randomTalk.canceled += instance.OnRandomTalk;
+            @pause.started += instance.OnPause;
+            @pause.performed += instance.OnPause;
+            @pause.canceled += instance.OnPause;
         }
 
         private void UnregisterCallbacks(IPersoActions instance)
@@ -1832,6 +1869,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @randomTalk.started -= instance.OnRandomTalk;
             @randomTalk.performed -= instance.OnRandomTalk;
             @randomTalk.canceled -= instance.OnRandomTalk;
+            @pause.started -= instance.OnPause;
+            @pause.performed -= instance.OnPause;
+            @pause.canceled -= instance.OnPause;
         }
 
         public void RemoveCallbacks(IPersoActions instance)
@@ -2313,6 +2353,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnRun(InputAction.CallbackContext context);
         void OnUseConso(InputAction.CallbackContext context);
         void OnRandomTalk(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

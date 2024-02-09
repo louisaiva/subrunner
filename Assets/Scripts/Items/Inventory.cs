@@ -429,7 +429,7 @@ public class Inventory : MonoBehaviour {
         item.transform.localScale = new Vector3(1, 1, 1);
     }
 
-    public void createItem(string item_name, bool is_legendary = false)
+    public Item createItem(string item_name, bool is_legendary = false)
     {
         // on crée un item
         GameObject item_go = null;
@@ -445,10 +445,16 @@ public class Inventory : MonoBehaviour {
             item_go = Instantiate(Resources.Load(prefabs_path + item_name), transform.position, Quaternion.identity) as GameObject;
         }
 
-        if (item_go == null) { return; }
+        if (item_go == null)
+        {
+            Debug.LogWarning("(Inventory) createItem : item " + item_name + " not found in " + prefabs_path);
+            return null;
+        }
 
         // on ajoute l'item
         addItem(item_go.GetComponent<Item>());
+
+        return item_go.GetComponent<Item>();
     }
 
     // getters

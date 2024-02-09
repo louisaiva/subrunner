@@ -123,7 +123,7 @@ public class World : MonoBehaviour
         foreach (GameObject zone in legendary_zones)
         {
             // on choisit une room au hasard
-            List<Sector> leg_sects = sectors.Where(s => !(s is ComplexeSector)).ToList();
+            List<Sector> leg_sects = sectors.Where(s => s is ProceduralSector).ToList();
             Sector leg_sect = leg_sects[Random.Range(0, leg_sects.Count)];
             Vector2Int room = leg_sect.getGlobalRandomRoomPosition();
 
