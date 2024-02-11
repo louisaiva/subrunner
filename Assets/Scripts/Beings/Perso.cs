@@ -61,13 +61,9 @@ public class Perso : Attacker
     public Transform items_parent;
     private LayerMask grabber_layer;
 
-    [Header("SKILLTREE")]
+    [Header("UI - MENUS")]
     public SkillTree skills_tree;
-
-    [Header("MAP")]
     public UI_Fullmap big_map;
-
-    [Header("PauseMenu")]
     public UI_PauseMenu pause_menu;
 
     [Header("INTERACTIONS")]
@@ -85,11 +81,10 @@ public class Perso : Attacker
     [SerializeField] private InputManager input_manager;
     public PlayerInputActions playerInputs;
 
-    [Header("HINTS")]
+    // [Header("HINTS")]
     private UI_HintControlsManager hints_controls;
 
-
-    [Header("Speach")]
+    // TALKING
     private List<string> talks_random = new List<string>()
                         {
                             "here we go again/.",
@@ -152,6 +147,7 @@ public class Perso : Attacker
                             "ahh orangina I love that/l/.f*ck capitalism\nperchance",
                             "fuck Google I'm gonna hack them",
                         };
+    [Header("TALKING")]
     [SerializeField] private bool allow_nsfw = true;
     [SerializeField] private Vector2 talking_delay_range = new Vector2(10f, 30f);
 
@@ -349,6 +345,7 @@ public class Perso : Attacker
 
     void randomTalk()
     {
+        if (!isAlive()) { return; }
         // on fait parler le perso
         int index = Random.Range(0, talks_random.Count + (allow_nsfw ? talks_random_nsfw.Count : 0));
         if (index >= talks_random.Count)

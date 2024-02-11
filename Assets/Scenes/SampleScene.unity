@@ -407,7 +407,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generate_world: 1
-  nb_sectors: 3
+  nb_sectors: 5
   generate_ceilings: 0
   is_world_safe: 0
   generation_radius: {x: 10, y: 1}
@@ -9161,8 +9161,8 @@ MonoBehaviour:
   respawn_bed: {fileID: 0}
   current_hoover_interactable: {fileID: 0}
   input_manager: {fileID: 0}
-  allow_nsfw: 1
-  talking_delay_range: {x: 10, y: 30}
+  allow_nsfw: 0
+  talking_delay_range: {x: 30, y: 60}
 --- !u!114 &1353416093
 MonoBehaviour:
   m_ObjectHideFlags: 0
