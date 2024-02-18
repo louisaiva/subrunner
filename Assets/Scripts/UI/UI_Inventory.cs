@@ -409,9 +409,9 @@ public class EnumItem
     {
 
         // on ajoute les prefabs des items
-        item_prefabs.Add("holy_water", "prefabs/items/holy_water");
-        item_prefabs.Add("heal_potion", "prefabs/items/heal_potion");
-        item_prefabs.Add("magic_water", "prefabs/items/magic_water");
+        item_prefabs.Add("dirty_water", "prefabs/items/dirty_water");
+        item_prefabs.Add("clean_water", "prefabs/items/clean_water");
+        item_prefabs.Add("orange_juice", "prefabs/items/orange_juice");
         item_prefabs.Add("usb_key", "prefabs/items/usb_key");
         item_prefabs.Add("gv_glasses", "prefabs/items/legendary/gv_glasses");
         item_prefabs.Add("speed_glasses", "prefabs/items/legendary/speed_glasses");
@@ -441,9 +441,9 @@ public class EnumItem
     public void init(Sprite[] sprites)
     {
         // on ajoute les sprites des items
-        item_sprites.Add("holy_water", sprites[0]);
-        item_sprites.Add("heal_potion", sprites[1]);
-        item_sprites.Add("magic_water", sprites[2]);
+        item_sprites.Add("dirty_water", sprites[0]);
+        item_sprites.Add("clean_water", sprites[1]);
+        item_sprites.Add("orange_juice", sprites[2]);
         item_sprites.Add("usb_key", sprites[3]);
         item_sprites.Add("gv_glasses", sprites[4]);
         item_sprites.Add("speed_glasses", sprites[5]);

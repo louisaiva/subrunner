@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 991999328008795163}
   - component: {fileID: 2748573037149330120}
   - component: {fileID: 3845646378405068767}
-  - component: {fileID: 1858458323915002217}
+  - component: {fileID: 320755347535218043}
   m_Layer: 16
-  m_Name: heal_potion
+  m_Name: dirty_water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1353672330, guid: 3663b626bd9323741bb906f9681d3bc7, type: 3}
+  m_Sprite: {fileID: -432466723, guid: 3663b626bd9323741bb906f9681d3bc7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -131,7 +131,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &1858458323915002217
+--- !u!114 &320755347535218043
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -146,8 +146,8 @@ MonoBehaviour:
   item_type: item
   category: drink
   action_type: capacity
-  item_name: heal_potion
-  item_description: oh wow i found a healing potion ! is it really gonna heal ?
+  item_name: dirty_water
+  item_description: wtf is this disguting water ? drink it carefully, maybe it explodes..
   capacities:
   - drink
   capacity_level: 1

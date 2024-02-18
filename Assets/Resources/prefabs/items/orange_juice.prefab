@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 991999328008795163}
   - component: {fileID: 2748573037149330120}
   - component: {fileID: 3845646378405068767}
-  - component: {fileID: 320755347535218043}
+  - component: {fileID: -4450100998131758397}
   m_Layer: 16
-  m_Name: holy_water
+  m_Name: orange_juice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75,9 +75,9 @@ SpriteRenderer:
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: -432466723, guid: 3663b626bd9323741bb906f9681d3bc7, type: 3}
+  m_Sprite: {fileID: -727753119, guid: 3663b626bd9323741bb906f9681d3bc7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 1
+  m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1, y: 1}
@@ -131,7 +131,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &320755347535218043
+--- !u!114 &-4450100998131758397
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -146,8 +146,8 @@ MonoBehaviour:
   item_type: item
   category: drink
   action_type: capacity
-  item_name: holy_water
-  item_description: wtf is this disguting water ? well at least it hydrates
+  item_name: orange_juice
+  item_description: 60% chemical orange flour based soda. 40% vodka. abject smell.
   capacities:
   - drink
   capacity_level: 1

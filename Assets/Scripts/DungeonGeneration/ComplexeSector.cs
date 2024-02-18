@@ -171,7 +171,7 @@ public class ComplexeSector : Sector
     }
 
     [Header("Lights")]
-    [SerializeField] protected List<string> walls_light_tiles = new List<string> { "bg_2_7", "walls_1_7", "walls_2_7" };
+    [SerializeField] protected List<string> walls_light_tiles = new List<string> { "bg_2_7", "walls_1_7", "walls_2_7", "walls_3_7" };
     [SerializeField] protected Vector3 light_offset = new Vector3(0.25f, 1f, 0f);
     
     protected void PlaceLights()

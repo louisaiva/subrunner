@@ -55,7 +55,7 @@ public class Area : MonoBehaviour
     [SerializeField] protected Dictionary<string, HashSet<Vector2>> emplacements = new Dictionary<string, HashSet<Vector2>>();
 
     [Header("Lights")]
-    [SerializeField] protected List<string> walls_light_tiles = new List<string> { "bg_2_7", "walls_1_7", "walls_2_7" };
+    [SerializeField] protected List<string> walls_light_tiles = new List<string> { "bg_2_7", "walls_1_7", "walls_2_7", "walls_3_7" };
     [SerializeField] protected Vector3 light_offset = new Vector3(0.25f, 1f, 0f);
 
     [Header("Posters & Tags")]
@@ -63,7 +63,9 @@ public class Area : MonoBehaviour
     protected List<string> full_walls_tiles = new List<string> {"walls_1_3", "walls_1_4", "walls_1_5", "walls_1_6"
                                                         , "walls_1_7", "walls_1_8",
                                                         "walls_2_3", "walls_2_4", "walls_2_5", "walls_2_6"
-                                                        , "walls_2_7", "walls_2_8"};
+                                                        , "walls_2_7", "walls_2_8",
+                                                        "walls_3_3", "walls_3_5", "walls_3_6"
+                                                        , "walls_3_7", "walls_3_8"};
     [SerializeField] protected float density_posters = 0.3f; // 0.5 = 1 poster tous les 2 tiles compatibles
     [SerializeField] protected Sprite[] tags_sprites;
     [SerializeField] protected Vector3 tag_offset = new Vector3(2.5f, 0.75f, 0f);
@@ -179,68 +181,73 @@ public class Area : MonoBehaviour
             Destroy(zone);
         }
 
-
-        // we need to find 5 tiles in a row to place a tag
-        int tags_width_in_tiles = 5;
-        int compter_tags = 0;
- 
-        // on parcourt les tiles et on place les objets
-        for (int j = 0; j < bounds.size.y; j++)
+        // on regarde si on a un skin qui permet de placer des posters & tags
+        if (skin != "server")
         {
-            for (int i = 0; i < bounds.size.x; i++)
+            // we need to find 5 tiles in a row to place a tag
+            int tags_width_in_tiles = 5;
+            int compter_tags = 0;
+    
+            // on parcourt les tiles et on place les objets
+            for (int j = 0; j < bounds.size.y; j++)
             {
-                // on récupère la position globale de la tile
-                int x_ = bounds.x + i;
-                int y_ = bounds.y + j;
-
-                // on récupère le sprite
-                Sprite sprite = world.GetSprite(x_, y_);
-                if (sprite == null)
+                for (int i = 0; i < bounds.size.x; i++)
                 {
-                    compter_tags = 0;
-                    continue;
-                }
+                    // on récupère la position globale de la tile
+                    int x_ = bounds.x + i;
+                    int y_ = bounds.y + j;
 
-                // on place les objets
-                Vector3 tile_pos = world.CellToWorld(new Vector3Int(x_, y_, 0));
-
-
-                // on place les lumières
-                if (walls_light_tiles.Contains(sprite.name))
-                {
-                    PlaceLight(tile_pos);
-                }
-
-                // on place les posters et les tags
-                if (full_walls_tiles.Contains(sprite.name))
-                {
-                    PlacePoster(tile_pos);
-
-                    // on vérifie qu'il y a assez de place pour mettre un tag
-                    if (compter_tags == 0)
+                    // on récupère le sprite
+                    Sprite sprite = world.GetSprite(x_, y_);
+                    if (sprite == null)
                     {
-                        compter_tags = 1;
+                        compter_tags = 0;
+                        continue;
+                    }
+
+                    // on place les objets
+                    Vector3 tile_pos = world.CellToWorld(new Vector3Int(x_, y_, 0));
+
+
+
+                    // on place les lumières
+                    string[] sprite_name = sprite.name.Split('_');
+                    if (sprite_name[0] == "walls" && sprite_name[2] == "7")
+                    {
+                        PlaceLight(tile_pos);
+                    }
+
+                    // on place les posters et les tags
+                    if (full_walls_tiles.Contains(sprite.name))
+                    {
+                        PlacePoster(tile_pos);
+
+                        // on vérifie qu'il y a assez de place pour mettre un tag
+                        if (compter_tags == 0)
+                        {
+                            compter_tags = 1;
+                        }
+                        else
+                        {
+                            compter_tags++;
+                        }
+
+                        if (compter_tags >= tags_width_in_tiles)
+                        {
+                            PlaceTag(world.CellToWorld(new Vector3Int(x_-tags_width_in_tiles, y_, 0)));
+                            compter_tags = 0;
+                        }
                     }
                     else
                     {
-                        compter_tags++;
-                    }
-
-                    if (compter_tags >= tags_width_in_tiles)
-                    {
-                        PlaceTag(world.CellToWorld(new Vector3Int(x_-tags_width_in_tiles, y_, 0)));
                         compter_tags = 0;
                     }
-                }
-                else
-                {
-                    compter_tags = 0;
-                }
 
 
+                }
             }
         }
-    
+
         // on parcourt les emplacements et on place les objets
         foreach (KeyValuePair<string, HashSet<Vector2>> emplacement in emplacements)
         {
