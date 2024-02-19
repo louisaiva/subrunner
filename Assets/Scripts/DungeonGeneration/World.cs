@@ -54,6 +54,9 @@ public class World : MonoBehaviour
         fg_tiles.Add("labo", Resources.Load<TileBase>("tilesets/fg_2_rule"));
         bg_tiles.Add("labo", Resources.Load<TileBase>("tilesets/bg_labo"));
         gd_tiles.Add("labo", Resources.Load<TileBase>("tilesets/gd_white"));
+        fg_tiles.Add("mecha", Resources.Load<TileBase>("tilesets/fg_2_rule"));
+        bg_tiles.Add("mecha", Resources.Load<TileBase>("tilesets/bg_mecha"));
+        gd_tiles.Add("mecha", Resources.Load<TileBase>("tilesets/gd_dark"));
         // fg_tile = Resources.Load<TileBase>("tilesets/fg_2_rule");
         // bg_tile = Resources.Load<TileBase>("tilesets/walls_1_rule");
         // gd_tile = Resources.Load<TileBase>("tilesets/gd_2_rule");

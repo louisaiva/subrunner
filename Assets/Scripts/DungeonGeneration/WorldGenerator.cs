@@ -195,7 +195,7 @@ public class WorldGenerator : MonoBehaviour
             sect.GetComponent<ProceduralSector>().is_safe = is_world_safe;
 
             // on met un skin aléatoire
-            string skin = new string[] { "base_sector", "server", "labo" }[Random.Range(0, 3)];
+            string skin = new string[] { "base_sector", "server", "labo","mecha" }[Random.Range(0, 4)];
             sect.GetComponent<ProceduralSector>().setSkin(skin);
 
             // on donne une position aléatoire au secteur
@@ -219,7 +219,7 @@ public class WorldGenerator : MonoBehaviour
             sect2.GetComponent<ComplexeSector>().initHashets();
 
             // on met un skin aléatoire
-            string skin = new string[] { "base_sector", "server", "labo" }[Random.Range(0, 3)];
+            string skin = new string[] { "base_sector", "server", "labo","mecha" }[Random.Range(0, 4)];
             sect2.GetComponent<ComplexeSector>().setSkin(skin);
 
             // on donne une position aléatoire au secteur
