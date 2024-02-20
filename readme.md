@@ -55,6 +55,7 @@ To make the game more interesting, the rooms are skinned with different skins. H
 ![labo skin](https://github.com/louisaiva/subrunner/blob/master/Assets/Resources/exports/skin_3.png?raw=true)
 ![mecha skin](https://github.com/louisaiva/subrunner/blob/master/Assets/Resources/exports/skin_4.png?raw=true)
 
+The differents skins will be applied to the rooms according to the sector they are in, and the type of the room. If the room is a server room with servers objects in it, it will have the server skin, and so on.
 
 #### Zones
 
