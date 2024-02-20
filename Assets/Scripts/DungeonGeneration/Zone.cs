@@ -30,7 +30,7 @@ public class Zone : MonoBehaviour
     {
         if (world == null) { Start(); }
         
-        PlaceTilemaps(area);
+        // PlaceTilemaps(area);
 
         // on place la zone dans l'Area
         foreach (Transform child in objects_parent)
