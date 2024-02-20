@@ -124,6 +124,9 @@ You need to find the NOOD_OS to use them.
 The consumables are items that can be used to heal (water), to explode doors (dynamite), to attack (shurikens)...
 They can be equipped and used with the *R* key.
 
+One example of where to find a consumable in the game is fridges :
+![legendary zone](https://github.com/louisaiva/subrunner/blob/master/Assets/Resources/exports/items.png?raw=true)
+
 
 ### HACKING
 
