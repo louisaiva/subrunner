@@ -375,7 +375,7 @@ public class AreaJsonHandler : MonoBehaviour
                 // ceiling.position -= new Vector3(middle.x, middle.y, 0);
 
                 // on sauvegarde le prefab
-                PrefabUtility.SaveAsPrefabAsset(ceiling.gameObject, ceiling_path);
+                // PrefabUtility.SaveAsPrefabAsset(ceiling.gameObject, ceiling_path);
             }
         }
 
@@ -645,7 +645,7 @@ public class AreaJsonHandler : MonoBehaviour
             // on sauvegarde l'area
             string path = areas_path + directory + name + ".prefab";
             // print("saving " + name + " to " + path);
-            PrefabUtility.SaveAsPrefabAsset(area, path);
+            // PrefabUtility.SaveAsPrefabAsset(area, path);
 
             // on détruit l'area
             DestroyImmediate(area);

@@ -1,0 +1,309 @@
+# level design du jeu
+
+
+#
+SECTEURS
+#
+
+
+    QG  - unique
+    
+        notre QG. aussi la salle de spawn. début de chaque run
+
+    CC  - unique
+    
+        controle center. secteur centrale où toutes les sécurités sont appliquées. boss de fin
+
+    HK  - unique 
+    
+        secteur Hacker.  un petit hacker comme nous qui augmente le niveau de nos hacks
+        (voir Quetes Peripeties HK)
+
+    A   - unique
+        
+        ville des anar.
+        secteur Anarchy. Lieu sans zombie où y'a une communauté de gens qui vivent. Tu peux leur acheter des items
+        (mais pas de pates), et augmenter le niveau de tes items physiques
+    
+    HA  - unique
+    
+        grand Hall avec des trucs et beaucoup de zombooooos
+        le hall est d'un coté contrôlé par des zombies qui arrivent des profondeurs via un "metro vertical"
+        et via un "metro horizontal" (comme nos metros normaux)
+        (point principal de spawn)
+
+        et de l'autre par les crs du futur (les main ennemis)
+
+    KAT - unique 
+    
+        KATANA guy. forgeron complètement fou des profondeurs
+
+        on peut y reforger notre katana afin d'améliorer notre arme de corps à corps.
+        on peut y acheter des shurikens contre des boissons d'orangina
+
+    DB  - multiple
+    
+        secteur base de données. Comme un serveur avec des coffres en plus et la blinde d'équipement. Compliqué à hacker
+
+    HUB - multiple, secteur par défaut.
+
+        un peu vide
+        généralement petit avec 2 portes
+        
+    IT  - multiple
+    
+        secteur internet qui sert aussi de voyage rapide
+        grandes couloirs isothermes parcourut uniquement par des informations qui circulent par internet
+        des fois des zombies passent dedans on les voit passer dans les vitres mdr
+        on peut hacker les entrées et on arrive dans le couloir
+        quand on entre les murs sont des miroirs et toute la map se transforme en miroirs
+        une force constante nous pousse dans un sens
+        qui est exactement notre vitesse
+        c'est à dire que si on va avance dans le sens opposé de la force bah on bouge pas c cool
+        dans ces secteurs on peut installer des stackeurs de bits qui attrapent des bits pour nous
+
+        (en soit c un secteur unique mais qu'on est obligé de recroiser plusieurs fois à différents endroits)
+    
+    F   - multiple
+    
+        secteur Firewall contenant un parefeu à désactiver pour baisser la sécurité informatique de la CC
+        désactiver un parefeu augmente cependant le nombre d'ennemis et le niveau du boss final
+
+        les parefeux ont toujours un "lien" vers le secteur internet et y possèdent une barrière qui filtre internet.
+        lorsque cette barrière est en marche elle nous empêchent d'y passer (et donc d'aller plus loin)
+        une fois le parefeu hacké, la barrière s'ouvre et on peut donc aller plus loin dans internet
+
+    SE  - multiple
+    
+        secteur Serveur. contient des serveurs, et donc des items virtuels
+        relié à internet aussi avec des cables sur le fg
+
+    C   - multiple
+    
+        secteur chest
+        contient au moins une salle avec un coffre
+
+
+    LAB - multiple
+
+        vieux labo abandonné
+        contient des bornes d'amélioration pour améliorer notre NOOD_OS
+
+        plein de cuves chelou
+
+        des vieilles potions
+
+
+    DOG - sector avec des animaux cybernetiques abandonnés
+    BIB - secteur bibliothèque. amène vers l'océan
+
+
+    PETITS SECTEURS EASTER EGGS
+
+        404 - 404 room
+            boss post-final
+            débloque un boss postgénérique qui nous attaque avec des erreurs de code
+            le boss de l'internet
+            permet de passer dans la matrice si ouverte
+            la porte apparait après avoir achevé le dernier boss
+            puis elle disparait ensuite
+            et le but c'est de trouver sa position au bon moment pour pouvoir l'ouvrir
+
+#
+generation
+#
+    1.X algo principal :
+
+        - génération des rooms par World.cs
+        - gestion des connections inter rooms (couloirs)
+        - création des coffres, ordi, portes par World.cs
+        - création des zones de spawn de zombies
+
+        - "pavage" des tilemaps par Room.cs
+        - "emblissement" des rooms par Room.cs (disposition d'objets poubelle dechets etc)
+        - disposition d'items nécessaires dans les coffres
+        - disposition d'items randoms cachés en mode clé usb dans les poubelles et tout
+    
+    1.0 algo :
+
+        une generation full procedurale, qui crée des salles de tailles
+        aléatoires et d'agencements aléatoires :
+
+        avantages :
+            -augmente la rejouabilité (donjon VR2MENT random)
+            -moins de planification nécessaire
+        
+        inconvenients :
+            -Rooms.cs hyper conséquente
+            -possibilité de bugs de map plus grande
+            -moins de salles et plus de couloirs ?
+        
+    1.1 algo :
+
+        generation procédurale de salles, mais pas procédurale dans les salles
+
+        avantages :
+            -meilleur contrôle du level design
+        
+        inconvenients :
+            -pré création de salles longue
+            -configuration du World.cs personnalisé
+            -peut-etre des salles repetitives
+
+
+    2.0 algo :
+
+        on crée des secteurs avant de créer les rooms.
+        World.cs crée et organise les secteurs (cf types de secteurs plus haut)
+        Sector.cs crée et organise ses propres rooms, items, etc
+        Room.cs gère ses propres éléments décoratifs (posters, lights)
+
+        algo :
+            -World crée des Sector.
+                -Il récup une List de Hashset obtenue via SectorGenerator (WalkMan algo)
+                -On vérifie qu'un secteur relie toutes ses salles
+            -World récupère les tailles des Sectors générés et créé un Schéma global du monde (TK Algo)
+            -World définit quels sectors sont de quel type.
+            -World retravaille les HashSet pour relier les secteurs (en ajoutant des corridors)
+            -World lance la création finale en passant a chaque Sector son Hashset et sa position globale
+                -si des rooms sont adjacentes -> ça fait une big room
+                -Chaque Sector applique son type -> change les tiles de ses rooms
+                -Chaque Sector applique son type -> gère les ennemis
+                -Chaque Sector applique son type -> place des coffres, etc
+
+    3.0 algo :
+
+        il faut que toute la map soit sur seulement 3 tilemaps (gd,wall,fg)
+
+        pavé par des cubes de 16x16 tiles -> Areas (Room & Corridor)
+
+        on sépare ensuite les rooms en différents secteurs (comme des biomes)
+        on applique les skins directement aux rooms
+
+        /!\ les prefabs Room ne contiennent donc pas 3 tilemaps différentes mais seulement leur hashset spécifique en direct
+
+        avantages :
+
+            -donjon aléatoire mais cohérent
+            -un seul HashSet central en read
+            -meilleur accès aux tiles spécifiques
+            -meilleur accès aux tiles des areas spécifiques
+        
+        inconvenients :
+        
+            -génération CONS2QUENTE mais plus organisée dc ça va, c juste long a faire (flemme)
+            -on doit tout refaire les prefabs des rooms (peut-etre transformer ça en fichier txt ?)
+
+        algo détaillé :
+
+            (1) Area HashSet generator
+
+            -on génère les hashset de chaque secteur pour avoir des secteurs cohérents (sector generator)
+            -on positionne certains secteurs spécifiques type boss, area de départ, grand hall (sector seter)
+            -on sépare comme on veut les secteurs pour pouvoir les assembler (sector separator)
+                écarter plus que nécessaire les secteurs ?
+            -ensuite on rajoute sur ce hashset global certains secteurs particuliers du type internet
+                est-ce qu'on doit refaire une étape de séparation ?
+            -on trace un graph pour relier les secteurs entre eux et ajouter 2 boucles
+
+            (2) Tilemap translator
+
+            -on multiplie le area_hashset par les dimensions d'une area en tiles. -> on obtient un hashset enorme en tiles
+            -on place les portes sur le tile_hashset global.
+            (-placer des portes d'accès à internet ? + tile_cable internet dans fg pour relier les portes et serveurs)
+            (-on créé un hashet specifique pour les coffres / ordis / parefeu / lit?)
+            -on récupère les positions tilique SW de chaque area
+
+            (3) Area translator
+
+            -on crée des rooms et corridors à partir du tile_hashset, de l'area_hashset et des positions des areas
+                -> récuperation des prefabs d'areas et application des bons area
+            -on applique les skins des secteurs aux areas
+            -on crée les objets decoratifs (posters, lampes, dechets)
+            -on ajoute des objets interactifs (coffres, lit, ordis, parefeu) en fonction du secteur
+            (-on ajoute d'autres objets deco-interactifs type trou de rat, cadavres qui puent)
+            -on génère les pnj en fonction du secteur (zombos, crf, cyberdogs, forgeron, hackers)
+
+
+#
+FACTIONS
+#
+    
+    le world est séparé en secteurs.
+    ces secteurs sont répartis en plusieurs zones de secteurs contrôlés par les différentes factions.
+    
+    les factions sont au nombre de 3 :
+
+    # POLICE
+
+        la police de l'upground. recherche et tracke les hackeurs et les anarcho de l'underground.
+        se bat activement contre les zombies.
+
+        les secteurs correspondant à cette zone possèdent des avis de recherche avec les noms et les primes correspondantes des ennemis de la police.
+        on y voit notamment le leader des anarcho, l'autre hackeur de l'underground et, lorsqu'on progresse dans le jeu, on voit finalement arriver notre nom
+
+        les portes de ces secteurs sont bien protégées et sécurisées. si on en casse une elle se répare au bout d'un moment.
+        on y trouve des portes lasers
+
+        on y trouve essentiellement des humains & des cyborgs, et drones etc.
+
+        on y trouve l'ascenceur principal et le boss final, ainsi que le HALL
+
+
+        secteurs présents :
+
+            - CC
+            - HA
+            - SE
+            - DB
+            - IT
+            - F
+            - HUB
+            - C
+            - LAB
+
+
+    
+    # ZOMBIELAND
+
+        les secteurs "normaux", peuplés de zombies qui attaquent tous les êtres vivants sans distinction.
+        les portes y sont la plupart cassées ou non sécurisées.
+
+        on y trouve surtout des ennemis zombies, cyberzombies ou chauve souris zombies, rats zombies
+
+        on y trouve le HALL, ainsi que le QG, et les autres petits secteurs
+
+        
+        secteurs présents :
+
+            - HA
+            - QG
+            - SE
+            - IT
+            - F
+            - HUB
+            - C
+            - KAT
+            - LAB
+
+
+    # ANARCITY
+
+        la zone contrôlée par les anarcho
+        se battent contre les zombies et contre la police, friendly avec nous sauf si on attaque des anarchos.
+
+        les portes y sont pas particulièrement sécurisées, ou alors ce sont des portes à sons.
+        on y trouve des hackeurs, et la ville des anar.
+        
+        secteurs présents :
+
+            - A
+            - SE
+            - IT
+            - HUB
+            - C
+            - HK
+            - LAB
+
+
+

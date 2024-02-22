@@ -53,19 +53,21 @@ public class WorldGenerator : MonoBehaviour
         hand_made_sectors = Resources.LoadAll<GameObject>("prefabs/sectors/hand_made").ToList();
 
         // on vérifie si PLAYTEST est activé -> si oui on ne génère pas le monde (le playtest est déjà généré)
-        GameObject playtest = GameObject.Find("/playtest");
-        try
-        {
-            bool generate = !playtest.activeSelf;
-            if (!generate)
+
+        /* #if UNITY_EDITOR
+            GameObject playtest = GameObject.Find("/playtest");
+            try
             {
-                print("PLAYTEST is active -> we don't generate the world");
-                generate_world = false;
-                playtest_enabled = true;
+                bool generate = !playtest.activeSelf;
+                if (!generate)
+                {
+                    print("PLAYTEST is active -> we don't generate the world");
+                    generate_world = false;
+                    playtest_enabled = true;
+                }
             }
-        }
-        catch {}
-        
+            catch {}
+        #endif */
 
         // on génère le monde
         GenerateWorld();
