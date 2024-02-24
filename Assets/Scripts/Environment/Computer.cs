@@ -135,12 +135,21 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
         // on regarde si on est déjà éteint
         if (!is_on) { return; }
 
-        // on éteint l'ordi
-        is_on = false;
+        // on met à jour les animations
+        anim_handler.ChangeAnim(anims.offin, turnin_on_duration);
 
+        // on allume l'ordi
+        Invoke("succeedTurnOff", turnin_on_duration);
+    }	
+
+    public virtual void succeedTurnOff()
+    {
         // on met à jour les animations
         anim_handler.ChangeAnim(anims.idle_off);
-    }	
+
+        // on allume l'ordi
+        is_on = false;
+    }
 
     // HACKIN
     public void initHack()
@@ -347,6 +356,7 @@ public class ComputerAnims
     public string idle_on = "computer_idle_on";
     public string idle_off = "computer_idle_off";
     public string onin = "computer_powerin_on";
+    public string offin = "computer_powerin_off";
     public string hackin = "computer_hacked";
 
 }

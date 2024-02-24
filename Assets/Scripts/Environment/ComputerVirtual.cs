@@ -25,11 +25,11 @@ public class ComputerVirtual : Computer
 
     public override void turnOff()
     {
-        base.turnOff();
-
         // on éteint les lumières
         transform.Find("screen_light").gameObject.SetActive(false);
         transform.Find("kb_light").gameObject.SetActive(false);
+    
+        base.turnOff();
     }
 }
 
@@ -41,6 +41,7 @@ public class ComputerVirtualAnims : ComputerAnims
         idle_on = "new" + idle_on;
         idle_off = "new" + idle_off;
         onin = "new" + onin;
+        offin = "new" + offin;
         hackin = "new" + hackin;
     }
 }
