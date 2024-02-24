@@ -196,3 +196,54 @@ plan d'action après algo 3.0 (3/1/2024)
             doors :         1 - HackableDoor -> HUB
                             1 - TV_Door -> FIN DU JEU
 
+
+plan d'action après réflection sur gamedesign (24/02/2024)
+
+    but : améliorer le gamedesign pour finir la démo
+
+    
+    [ ] - on met des poubelles à la place des coffres
+            -> les poubelles attirent les items
+
+    [ ] - on met une bombe à tag
+            -> le joueur tage les murs avec les numéros des secteurs qu'il trouve
+            -> item légendaire ?
+
+    [ ] - les cds sont des items importants permettant d'atteindre le boss final
+    [ ] - on peut target le hack même si on peut pas le hacker  -> rayon glitch rouge et vibre si on peut pas hacker
+                                                                -> on a un hud bien intégré au jeu qui affiche qu'on peut pas le hacker et les détails du hack non interactible
+    [ ] - mettre une borne de customization de l'interface avec possibilité de changer les huds de place et les disposer dans les 4 coins de l'écrans
+    [ ] - faire défiler les huds du bas de l'écran avec LB et RB
+
+    [ ] - mettre des ordis et serveurs qui projettent un écran et ou un clavier en laser dans l'air pour écrire
+
+    [ ] - repenser le système des items légendaire :
+            -> seulement 6 ?
+            -> mettre les lunettes de base
+            -> pourquoi pas une multitude (genre 16) comme ça le joueur peut vraiment jouer comme il veut
+            -> chaque item est une clé pour un type de porte
+            -> à chaque mort on perd un emplacement d'item légendaire
+            -> au moins 5 items légendaires sont accessibles directement dans les zones accessible de base
+            
+    [ ] - repenser le level design    
+            [ ] - mettre en place un système de quartiers :
+                    -> un quartier anarcho
+                    -> un quartier zombieland
+                    -> un quartier babylone
+                    -> mettre un boss dans chaque quartier
+                    -> battre un boss débloque une clé spéciale de l'ascenceur central qui amène en haut de la noodle tower
+                    -> l'ascenceur central au milieu de la map
+                    -> les quartiers sont séparés de la map par un angle de 120° -> chaque secteur touche les 2 autres
+            -> faire des secteurs plus petits et thématiques
+            -> appliquer le TK aux areas
+            -> faire des secteurs par étoiles de rooms sur la grid du TK (type MST)
+            -> faire que les zones ne cassent jamais l'handmade des rooms
+    
+    [ ] - mettre des reste de zombies par terre qui empoisonnent ?
+            -> pourrait faire des portes à dash
+    
+    [ ] - mettre une méchanique de tutoriel simple :
+            -> dès qu'on approche d'un objet auprès duquel on a jamais intéragit, écrit en dessous de l'objet l'interaction possible et la touche
+            -> typiquement, on approche d'une poubelle :
+                    [E] dig through the trash
+            -> et hop, une fois qu'on a appuyé sur [E] après on a plus jamais le texte en dessous juste le [E] ?

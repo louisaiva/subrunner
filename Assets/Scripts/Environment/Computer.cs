@@ -25,7 +25,8 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
 
     // ANIMATION
     private AnimationHandler anim_handler;
-    private ComputerAnims anims = new ComputerAnims();
+    protected ComputerAnims anims = new ComputerAnims();
+    [SerializeField] private float turnin_on_duration = 1f;
 
     // HACKIN
     public string hack_type_self { get; set; }
@@ -52,7 +53,7 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
 
 
     // UNITY FUNCTIONS
-    void Start()
+    protected void Start()
     {
         // on récupère l'animation handler
         anim_handler = GetComponent<AnimationHandler>();
@@ -64,7 +65,7 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
         initHack();
     }
 
-    void Update()
+    protected void Update()
     {
 
         // on met à jour les bits nécessaires pour hacker
@@ -75,10 +76,10 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
         if (is_on)
         {
             // on regarde si on a fini l'animation
-            if (anim_handler.IsForcing()) { return; }
+            // if (anim_handler.IsForcing()) { return; }
 
             // on met à jour les animations
-            anim_handler.ChangeAnim(anims.idle_on);
+            // anim_handler.ChangeAnim(anims.idle_on);
 
             // on update le hackin
             if (is_getting_hacked)
@@ -100,18 +101,10 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
                 time_to_live -= Time.deltaTime;
                 if (time_to_live <= 0f)
                 {
-                    is_on = false;
+                    turnOff();
                 }
             }
             
-        }
-        else
-        {
-            // on regarde si on a fini l'animation
-            if (anim_handler.IsForcing()) { return; }
-
-            // on met à jour les animations
-            anim_handler.ChangeAnim(anims.idle_off);
         }
     }
 
@@ -122,11 +115,32 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
         if (is_on) { return; }
         
         // on met à jour les animations
-        if (!anim_handler.ChangeAnimTilEnd(anims.onin)) { return; }
+        anim_handler.ChangeAnim(anims.onin, turnin_on_duration);
+
+        // on allume l'ordi
+        Invoke("succeedTurnOn", turnin_on_duration);
+    }
+
+    public virtual void succeedTurnOn()
+    {
+        // on met à jour les animations
+        anim_handler.ChangeAnim(anims.idle_on);
 
         // on allume l'ordi
         is_on = true;
     }
+
+    public virtual void turnOff()
+    {
+        // on regarde si on est déjà éteint
+        if (!is_on) { return; }
+
+        // on éteint l'ordi
+        is_on = false;
+
+        // on met à jour les animations
+        anim_handler.ChangeAnim(anims.idle_off);
+    }	
 
     // HACKIN
     public void initHack()

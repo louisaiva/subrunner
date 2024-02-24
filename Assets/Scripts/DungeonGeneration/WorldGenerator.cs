@@ -54,7 +54,7 @@ public class WorldGenerator : MonoBehaviour
 
         // on vérifie si PLAYTEST est activé -> si oui on ne génère pas le monde (le playtest est déjà généré)
 
-        /* #if UNITY_EDITOR
+        #if UNITY_EDITOR
             GameObject playtest = GameObject.Find("/playtest");
             try
             {
@@ -67,7 +67,7 @@ public class WorldGenerator : MonoBehaviour
                 }
             }
             catch {}
-        #endif */
+        #endif
 
         // on génère le monde
         GenerateWorld();
