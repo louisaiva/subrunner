@@ -216,7 +216,7 @@ Transform:
   - {fileID: 5760077417875949047}
   - {fileID: 5807856056690653658}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1042926850382534581
 SpriteRenderer:
@@ -322,7 +322,7 @@ MonoBehaviour:
   time_to_live: 0
   time_to_live_base: 30
   niveau: 1
-  turnin_on_duration: 1
+  turnin_on_duration: 3
 --- !u!60 &7871065049515305775
 PolygonCollider2D:
   m_ObjectHideFlags: 0

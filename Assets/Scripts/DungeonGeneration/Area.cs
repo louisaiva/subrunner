@@ -87,10 +87,12 @@ public class Area : MonoBehaviour
         prefabs.Add("xp_chest", Resources.Load<GameObject>("prefabs/objects/xp_chest"));
         prefabs.Add("computer", Resources.Load<GameObject>("prefabs/objects/computer"));
         prefabs.Add("fridge", Resources.Load<GameObject>("prefabs/objects/fridge"));
+        prefabs.Add("bin", Resources.Load<GameObject>("prefabs/objects/deco/bin"));
         prefabs.Add("healing_tube", Resources.Load<GameObject>("prefabs/objects/tube_healing"));
         prefabs.Add("doorUD", Resources.Load<GameObject>("prefabs/objects/door"));
         prefabs.Add("doorLR", Resources.Load<GameObject>("prefabs/objects/door_L"));
         prefabs.Add("sector_label", Resources.Load<GameObject>("prefabs/objects/sector_label"));
+        prefabs.Add("server_rack", Resources.Load<GameObject>("prefabs/objects/server_rack"));
         prefabs.Add("tag", Resources.Load<GameObject>("prefabs/objects/tag"));
         prefabs.Add("base_ceiling", Resources.Load<GameObject>("prefabs/sectors/ceiling"));
 
@@ -103,8 +105,10 @@ public class Area : MonoBehaviour
         parents.Add("computer", transform.Find("interactives"));
         parents.Add("fridge", transform.Find("interactives"));
         parents.Add("healing_tube", transform.Find("interactives"));
+        parents.Add("server_rack", transform.Find("interactives"));
         parents.Add("sas_doors", transform.Find("interactives"));
         parents.Add("sector_label", transform.Find("decoratives"));
+        parents.Add("bin", transform.Find("decoratives"));
         parents.Add("tag", transform.Find("decoratives/posters"));
         parents.Add("ceiling", transform.Find("ceilings"));
         parents.Add("decorative", transform.Find("decoratives"));

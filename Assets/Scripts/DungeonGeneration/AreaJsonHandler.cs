@@ -375,7 +375,7 @@ public class AreaJsonHandler : MonoBehaviour
                 // ceiling.position -= new Vector3(middle.x, middle.y, 0);
 
                 // on sauvegarde le prefab
-                // PrefabUtility.SaveAsPrefabAsset(ceiling.gameObject, ceiling_path);
+                PrefabUtility.SaveAsPrefabAsset(ceiling.gameObject, ceiling_path);
             }
         }
 
