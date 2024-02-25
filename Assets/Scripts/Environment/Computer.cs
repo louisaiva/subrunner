@@ -151,6 +151,7 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
         is_on = false;
     }
 
+
     // HACKIN
     public void initHack()
     {
@@ -272,6 +273,9 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
 
         // on met à jour HackUI
         hack_ui.setMode("unhackable");
+
+        // on met à jour les animations
+        succeedTurnOn();
     }
 
     public void succeedHack()
@@ -291,6 +295,9 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
 
         // on met à jour HackUI
         hack_ui.setMode("unhackable");
+
+        // on met à jour les animations
+        succeedTurnOn();
     }
 
 
