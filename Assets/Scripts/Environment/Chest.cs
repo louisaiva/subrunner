@@ -68,6 +68,12 @@ public class Chest : MonoBehaviour
         is_moving = false;
     }
 
+    // GETTERS
+    public bool is_opened()
+    {
+        return is_open;
+    }
+
 }
 
 

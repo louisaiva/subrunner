@@ -25,15 +25,6 @@ public class InteractChest : InventoryChest, I_Interactable
 
             open();
         }
-        /* else if (is_open)
-        {
-            // on récupère tous les objets
-            foreach (Item item in inventory.getItems())
-            {
-                // on ajoute l'item au perso
-                inventory.dropItem(item);
-            }
-        } */
     }
 
     public void stopInteract()
