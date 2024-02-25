@@ -191,3 +191,109 @@ EXPLORATION
 
 
 
+
+
+
+
+#
+UI
+#
+    l'UI est composé de différents écrans distinctifs :
+
+    HUD :
+        canva superposé à l'écran du jeu contenant différents éléments d'ui  :
+
+
+        BARRE DE VIE et d'XP :
+
+            la barre de vie et d'xp est fixe et située en haut centré de l'écran.
+            la barre de vie est rouge et celle d'XP bleue claire.
+
+        
+        les éléments suivants d'ui sont déblocables via des items
+        et interchangeables lorsque'on trouve une borne de modification du hud
+
+
+        MINIMAP :
+            par défaut en haut à droite.
+            besoin du gyroscope pour débloquer le hud
+        
+
+        HACKSCREEN :
+            par défaut en bas à gauche.
+            besoin du NOOD_OS pour débloquer le hackscreen
+
+            écran qui affiche les détails des hacks en cours et des détails sur les cibles (hackable ou non)
+            ainsi que les contenus des fichiers qu'on trouve sur les ordis et serveurs
+            (pour pouvoir lire des fichiers sans les prendre dans notre inventaire)
+            
+            écrit généralement toutes les actions du joueur, même lorsqu'on change la musique "> play Atlantis (1min30s)"
+            stylisé sous forme de terminal (commandes montent)
+
+            accompagné d'une barre de bits / octets disponibles en vert / rouge.
+
+        
+        RECORDER :
+            par défaut en bas central
+            besoin du recorder pour débloquer
+
+            lecteur de cd
+            barre de boutons contenant : lecture, pause, rec, shuffle
+            affiche le nom de la musique en cours
+            affiche un petit cd qui tourne quand ça joue.
+            on doit pouvoir naviguer facilement en un click les musiques qu'on veut (L3 + mouvement joystick?)
+
+            peut lire des fichiers mp3 trouvés sur les ordis et serveurs etc
+
+
+        idée barre du drone ?
+
+    Inventaire :
+
+        l'inventaire est séparé en 2 UI distincts :
+
+            - l'inventaire général (big inventory) :
+
+                accessible via pression d'une touche (F ?)
+                montre tous les inventaires différents, notamment :
+
+                    -l'inventaire des items légendaires (noodle_os; shoes; glasses; gyroscope; katana; recorder)
+                        (ajouter drone ? shuriken ?)
+
+                    -le sous inventaire virtuel contenant :
+
+                        -les hacks d'objets connectés
+                        -les hacks de cyborgs (zombos, anicyborgs, cyborgs, drones)
+                        -fichiers virtuels annexes ?
+
+                    -le sous inventaire physique contenant :
+
+                        -consommables (drink, food, ..)
+                        -weapons (fleches, shurikens, ..)
+                        -vrac du reste (améliorations d'items, matières premières, ..)
+
+            - l'inventaire de contexte (quick inventory) :
+
+                l'inventaire de contexte est accessible uniquement lors d'interactions avec
+                les différents éléments du jeu, notamment via les coffres, ordinateurs,
+                pnj parfois, etc.
+
+                l'inventaire de contexte n'affiche que la ou les sous partie.s concernée.s
+                en fonction du CONTEXTE (lol)
+
+                permet au joueur de facilement échanger des items avec les différents commercants,
+                coffres etc.
+
+    Menu Pause :
+
+
+
+        canva affichant en bg le jeu en pause flouté assombri
+        et différentes zones:
+
+        Cotés : comme le HUD mais en plus grands
+
+        Milieu : options du mode pause
+
+
+

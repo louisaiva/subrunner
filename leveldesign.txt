@@ -330,3 +330,53 @@ FACTIONS
 
 
 
+#
+PHENOMENE CLIMATIQUES
+#
+    plusieurs phenomenes physiques modifient la jouabilité dans certaines zones du level.
+
+    ces zones doivent être générées via différentes perlin noise.
+
+
+    - OBSCURITE :
+
+        l'obscurité est normalement omniprésente dans les souterrains.
+        cepêndant, subcity est squattée de partout et est donc plutôt habitée, la plupart des couloirs que nous empruntons
+        est donc remplie de néons et autres luminaires artificiels qui éclairent les souterrains.
+
+        ils éclairent parfois bien, parfois faiblement, parfois en clignotant, parfois pas du tout.
+
+        cet éclairage est défini par un perlin noise qui change 
+
+        dans les pires zones du perlin noise cela donne lieu à des tempêtes de GigaViolet qui brouillent nos lunettes et nous laissent dans un noir violet
+        un peu creepy flippant dans lequel toutes les lumières sont coupées.
+
+        ce perlin noise bouge doucement mais surement au fil du temps.
+
+
+    - BROUILLARD :
+
+        le brouillard est un autre perlin noise qui donne lieu à des zones un peu floutées
+        dans les pires zones le brouillard est vraiment dense et nous etouffe limite.
+
+        pareil ça bouge doucement mais surement.
+
+
+    - PLANTES :
+        
+        un autre perlin noise qui se déplace.
+
+        des plantes vertes un peu cheloues envahissent certains coins de la map.
+        si ça atterit chez la police ils essayeront de les couper des fois.
+
+        affecte visuellement les rooms et corridors :
+        -mousse sur les murs
+        -racines dans les coins
+        -amas d'herbe et de plantes sur le sol, débuts d'arbustres
+
+        dans la pire zone il y a un arbre gigantesque qui se déplace et qui bloque des rooms.
+        souvent accompagné de nid de rats.
+        on peut le dynamiter mais faut pas niquer un nid de rat sinon on se fait full attaquer.
+
+        le perlin noise ne se déplace pas.
+

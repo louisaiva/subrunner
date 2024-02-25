@@ -118,6 +118,19 @@ ITEMS
 
         - bombe de tag : (item legendaire ?)
 
+        - vieux morceau de carte physique à trouver dans les poubelles (des fois si c rare ça affiche même les objets dans la zone)
+        - vieux morceau de carte virtuel à trouver sur des ordis, des fois des cartes pas du tout de notre monde (d'anciennes parties ou autre ?)
+        - schéma de forge pour fabriquer le gyroscope chez le katana guy.
+
+        - fichiers de texte virtuels contenant des indices sur des clés du secteurs
+        (mot de passe d'un ordi, coordonnées d'un item légendaire, ou d'un objet/zone/sas, mot de passe de porte ou indice)
+
+        - fichiers mp3 de musiques ou de sons randoms (youtube poop).
+
+        - amélioration du gyroscope pour enregistrer les objets intéressants
+        - amélioration du gyroscope pour afficher les ennemis qui bougent (radar)
+
+
 
     ITEMS LEGENDAIRES :
 
@@ -307,6 +320,12 @@ OBJECTS
 
     
 
+    Enceinte :
+        permet de lire des fichiers mp3.
+
+
+        existe aussi en version améliorée Lecteur CD qui permet de stocker et de lire des CDs (et stocker des mp3 ?)
+
 
 
 
@@ -336,64 +355,84 @@ OBJECTS
 
 
 
-
 #
-UI
+MECANIQUES PARTICULIERES
 #
-    l'UI est composé de différents écrans distinctifs :
 
-    HUD :
-        canva superposé à l'écran du jeu contenant différentes zones :
+    #
+    FORGE
+    #
 
-        haut à gauche - barres de vie, barre de bits (RGB)
+        "katana guy peut forger n'importe quoi, même des nouilles"
+
+        la forge est un petit secteur unique de la carte.
+        on y trouve katana guy qui nous permet de forger de nombreux items, high tech ou pas.
+
+        dès qu'on le trouve on peut forger le katana (à partir de notre vieux couteau)
+        pour débloquer d'autre items à lui faire forger, il faut trouver des schémas de forge.
+
+        ces items se trouvent dans les poubelles ou sous forme virtuelle dans des serveurs ou des vieux jeu vidéos (xbox etc)
+
+        on ramène le schéma de forge à katana guy qui nous indique ensuite les différents matériaux nécessaires à la forge de cet item.
+        on peut directement choisir de déforger un item (exemple : notre katana) pour forger un item équivalent (exemple : une batte de baseball)
+
+        les éléments les plus chers à forger sont évidemment les items légendaires, notamment le NOOD_OS qui a besoin d'un peu de tous les métaux,
+        et qui demandent aussi un ECLAT.
+
+
+    #
+    MONNAIE
+    #
+
+        il n'y a pas à proprement parler d'argent dans subrunner, cependant on peut utiliser différents items pour faire du troc ou acheter de la nourriture ou forger des trucs
+        ces différents items sont des vecteurs de marchandise et sont appelés grossièrement les "monnaies" du jeu.
+
+        elles sont au nombre de 6 (classé par rareté)
+
+        - PLASTIQUE :
+            ultra commun
+
+            y'en a partout
+            considéré comme du déchet
+            la base de beaucoup d'items
+
+        - FER :
+            commun
+
+            on en trouve dans tous les items métalliques et high tech
+            sur les zombies un peu
+
+        - MERCURE :
+            rare
+
+            on en trouve dans des labos, parfois dans des vieux tubes dans des poubelles
+            des fois dans des cerveaux de rat ou de zombies
         
-        haut à droite - minimap (Violet jaune)
+        - CARBONE :
+            très rare
 
-        bas à gauche  - lecteur cd (blanc bleu noir)
+            seulement dans l'électronique de haut niveau (parefeu, etc)
+            on en trouve sur les drones et les droides
 
-        bas à droite  - barre du drone ?
+            certains serveurs sont fait de carbone et ça se voit ils sont plus clairs
 
-    Inventaire :
 
-        l'inventaire est séparé en 2 UI distincts :
+        - OR :
+            épique
 
-            - l'inventaire général (big inventory) :
+            on en trouve dans les boss mécha, sur les policiers,
+            dans des banques ultra sécurisées des policiers
+            sur certains équipements électroniques rares type bornes d'amélioration ou borne de téléportation
 
-                accessible via pression d'une touche (F ?)
-                montre tous les inventaires différents, notamment :
+            certains serveurs sont fait en or et ça se voit ils sont jaunes mais vraiment très très rare..
 
-                    -l'inventaire des items légendaires (noodle_os; shoes; glasses; gyroscope; katana; recorder)
-                        (ajouter drone ? shuriken ?)
 
-                    -le sous inventaire virtuel contenant :
+        - ECLAT :
+            légendaire
 
-                        -les hacks d'objets connectés
-                        -les hacks de cyborgs (zombos, anicyborgs, cyborgs, drones)
-                        -fichiers virtuels annexes ?
+            vraiment très rare, on en trouve au goutte à goutte vraiment
+            on peut en trouver partout
+            même dans des équipements virtuels
 
-                    -le sous inventaire physique contenant :
+            nécessaire pour forger un item légendaire et améliorer des items légendaires
 
-                        -consommables (drink, food, ..)
-                        -weapons (fleches, shurikens, ..)
-                        -vrac du reste (améliorations d'items, matières premières, ..)
-
-            - l'inventaire de contexte (quick inventory) :
-
-                l'inventaire de contexte est accessible uniquement lors d'interactions avec
-                les différents éléments du jeu, notamment via les coffres, ordinateurs,
-                pnj parfois, etc.
-
-                l'inventaire de contexte n'affiche que la ou les sous partie.s concernée.s
-                en fonction du CONTEXTE (lol)
-
-                permet au joueur de facilement échanger des items avec les différents commercants,
-                coffres etc.
-
-    Menu Pause :
-
-        canva affichant en bg le jeu en pause flouté assombri
-        et différentes zones:
-
-        Cotés : comme le HUD mais en plus grands
-
-        Milieu : options du mode pause
