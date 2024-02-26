@@ -27,6 +27,7 @@ public class Attacker : Being
     {
         base.Start();
         anims = new AttackerAnims();
+        sounds = new AttackerSounds();
 
         // on ajoute les capacités
         addCapacity("hit", cooldown_attack);
@@ -148,4 +149,23 @@ public class AttackerAnims : BeingAnims
         base.init(name);
         attack = name + "_" + attack;
     }
+}
+
+public class AttackerSounds : BeingSounds
+{
+
+    public List<string> s_attack = new List<string>() { "attack - 1" };
+
+    public override void init(string name)
+    {
+        base.init(name);
+        s_attack = s_attack.Select(s => name + "_" + s).ToList();
+    }
+
+    // GETTERS
+    public string attack()
+    {
+        return s_attack[Random.Range(0, s_attack.Count)];
+    }
+
 }

@@ -246,6 +246,10 @@ public class Perso : Attacker
         // anims.init("perso");
         anims = new PersoAnims();
 
+        // on met à jour les sons
+        sounds = new PersoSounds();
+        audio_manager.init("audio/perso");
+
 
         // on CHEAT
         if (CHEAT)
@@ -1460,5 +1464,14 @@ public class PersoAnims : AttackerAnims
         base.init("perso");
         has_up_down_runnin = true;
         has_up_down_idle = true;
+    }
+}
+
+public class PersoSounds : AttackerSounds
+{
+    public PersoSounds()
+    {
+        s_hurted = new List<string>() { "hurted - 1" , "hurted - 2" , "hurted - 3" , "hurted - 4" };
+        base.init("perso");
     }
 }

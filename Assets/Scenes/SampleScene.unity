@@ -957,6 +957,7 @@ Transform:
   - {fileID: 893331456}
   - {fileID: 780531308}
   - {fileID: 308233542}
+  - {fileID: 2066781129}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9094,6 +9095,7 @@ GameObject:
   - component: {fileID: 1353416098}
   - component: {fileID: 1353416093}
   - component: {fileID: 1353416091}
+  - component: {fileID: 1353416099}
   m_Layer: 7
   m_Name: perso
   m_TagString: Untagged
@@ -9339,6 +9341,19 @@ MonoBehaviour:
   m_DefaultActionMap: perso
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &1353416099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1353416090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b960528b9965ae94cab28eb75ccf1969, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds: []
 --- !u!1 &1372138339
 GameObject:
   m_ObjectHideFlags: 0
@@ -13215,7 +13230,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2885522531141855324, guid: 1e69ce529fdebd748bef1cdd1c23abea, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6183914930862950832, guid: 1e69ce529fdebd748bef1cdd1c23abea, type: 3}
       propertyPath: m_RootOrder
@@ -19361,6 +19376,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2027746832}
   m_CullTransparentMesh: 1
+--- !u!1 &2066781128
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2066781129}
+  - component: {fileID: 2066781130}
+  m_Layer: 0
+  m_Name: audio_manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2066781129
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2066781128}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 151384321}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2066781130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2066781128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b960528b9965ae94cab28eb75ccf1969, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: creepy_theme
+    clip: {fileID: 8300000, guid: 30dc1ff7ad6909d489efd464f221537d, type: 3}
+    volume: 0.5
+    loop: 1
+    play_on_awake: 1
+    source: {fileID: 0}
 --- !u!1001 &2110833699
 PrefabInstance:
   m_ObjectHideFlags: 0

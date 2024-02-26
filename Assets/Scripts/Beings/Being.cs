@@ -5,6 +5,7 @@ using System.Linq;
 
 
 [RequireComponent(typeof(AnimationHandler))]
+[RequireComponent(typeof(AudioManager))]
 public class Being : MonoBehaviour
 {
 
@@ -48,6 +49,10 @@ public class Being : MonoBehaviour
     protected float lookin_at_angle = 40f; // angle du regard du perso en degrés
     protected BeingAnims anims = new BeingAnims();
 
+    // SOUND
+    protected AudioManager audio_manager;
+    protected BeingSounds sounds = new BeingSounds();
+
     // CAPACITES
     protected Dictionary<string, bool> capacities = new Dictionary<string, bool>();
     protected Dictionary<string, float> capacities_cooldowns = new Dictionary<string, float>();
@@ -64,6 +69,10 @@ public class Being : MonoBehaviour
         // on récupère les composants
         // gameObject.AddComponent<AnimationHandler>();
         anim_handler = GetComponent<AnimationHandler>();
+
+        // on récup le audio manager
+        audio_manager = GetComponent<AudioManager>();
+        
 
         // on crée notre collider_box des pieds
         feet_collider = Rect.zero;
@@ -750,6 +759,10 @@ public class Being : MonoBehaviour
         // play hurt animation
         anim_handler.ChangeAnimTilEnd(anims.hurted);
 
+        // play hurt sound
+        audio_manager.Play(sounds.hurted());
+
+
         // knockback
         // apply_force(knockback);
         if (knockback != null)
@@ -885,6 +898,45 @@ public class BeingAnims
         die = name + "_" + die;
         hurted = name + "_" + hurted;
     }
+}
+
+public class BeingSounds
+{
+    public List<string> s_hurted = new List<string>() {"hurted - 1"};
+    public List<string> s_die = new List<string>() {"die - 1"};
+    public List<string> s_walk = new List<string>() {"walk - 1"};
+    public List<string> s_run = new List<string>() {"run - 1"};
+
+    public virtual void init(string name)
+    {
+        s_hurted = s_hurted.Select(s => name + "_" + s).ToList();
+        s_die = s_die.Select(s => name + "_" + s).ToList();
+        s_walk = s_walk.Select(s => name + "_" + s).ToList();
+        s_run = s_run.Select(s => name + "_" + s).ToList();
+    }
+
+
+    // GETTERS
+    public string hurted()
+    {
+        return s_hurted[Random.Range(0, s_hurted.Count)];
+    }
+
+    public string die()
+    {
+        return s_die[Random.Range(0, s_die.Count)];
+    }
+
+    public string walk()
+    {
+        return s_walk[Random.Range(0, s_walk.Count)];
+    }
+
+    public string run()
+    {
+        return s_run[Random.Range(0, s_run.Count)];
+    }
+
 }
 
 public class Force
