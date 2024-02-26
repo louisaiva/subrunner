@@ -65,6 +65,9 @@ public class Attacker : Being
         // play attack animation
         anim_handler.ChangeAnimTilEnd(((AttackerAnims) anims).attack);
 
+        // play attack sound
+        audio_manager.Play(((AttackerSounds) sounds).attack());
+
         // check if there is a target
         Collider2D[] hit_enemies = Physics2D.OverlapCircleAll(attack_point.position, damage_range, enemy_layers);
 

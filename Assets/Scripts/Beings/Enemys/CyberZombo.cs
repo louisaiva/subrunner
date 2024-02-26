@@ -70,6 +70,11 @@ public class CyberZombo : Attacker, I_Hackable
         anims = new AttackerAnims();
         anims.init("zombo");
 
+        // on met les bons sons
+        sounds = new ZomboSounds();
+        audio_manager.LoadSoundsFromPath("audio/zombo");
+
+
         // on initialise le hackin
         initHack();
     }
@@ -356,4 +361,15 @@ public class CyberZombo : Attacker, I_Hackable
         base.die();
     }
 
+}
+
+
+public class ZomboSounds : AttackerSounds
+{
+    public ZomboSounds()
+    {
+        s_hurted = new List<string>() { "hurted - 1", "hurted - 2", "hurted - 3", "hurted - 4" };
+        s_idle = new List<string>() { "idle - 1", "idle - 2", "idle - 3"};
+        base.init("zombo");
+    }
 }

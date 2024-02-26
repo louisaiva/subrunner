@@ -905,7 +905,8 @@ public class BeingSounds
     public List<string> s_hurted = new List<string>() {"hurted - 1"};
     public List<string> s_die = new List<string>() {"die - 1"};
     public List<string> s_walk = new List<string>() {"walk - 1"};
-    public List<string> s_run = new List<string>() {"run - 1"};
+    public List<string> s_run = new List<string>() { "run - 1" };
+    public List<string> s_idle = new List<string>() { "idle - 1" };
 
     public virtual void init(string name)
     {
@@ -913,6 +914,7 @@ public class BeingSounds
         s_die = s_die.Select(s => name + "_" + s).ToList();
         s_walk = s_walk.Select(s => name + "_" + s).ToList();
         s_run = s_run.Select(s => name + "_" + s).ToList();
+        s_idle = s_idle.Select(s => name + "_" + s).ToList();
     }
 
 
@@ -935,6 +937,11 @@ public class BeingSounds
     public string run()
     {
         return s_run[Random.Range(0, s_run.Count)];
+    }
+
+    public string idle()
+    {
+        return s_idle[Random.Range(0, s_idle.Count)];
     }
 
 }

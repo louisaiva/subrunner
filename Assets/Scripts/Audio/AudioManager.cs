@@ -49,7 +49,7 @@ public class AudioManager : MonoBehaviour
         }        
     }
 
-    public void init(string path, float volume = 1f, bool loop = false, bool play_on_awake = false)
+    public void LoadSoundsFromPath(string path, float volume = 1f, bool loop = false, bool play_on_awake = false)
     {
         // on récupère tous les sons du dossier et on les ajoute à la liste des sons
         AudioClip[] clips = Resources.LoadAll<AudioClip>(path);

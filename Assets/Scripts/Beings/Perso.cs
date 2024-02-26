@@ -248,7 +248,7 @@ public class Perso : Attacker
 
         // on met à jour les sons
         sounds = new PersoSounds();
-        audio_manager.init("audio/perso");
+        audio_manager.LoadSoundsFromPath("audio/perso");
 
 
         // on CHEAT
@@ -1472,6 +1472,7 @@ public class PersoSounds : AttackerSounds
     public PersoSounds()
     {
         s_hurted = new List<string>() { "hurted - 1" , "hurted - 2" , "hurted - 3" , "hurted - 4" };
+        s_attack = new List<string>() { "attack - 1" , "attack - 2"};
         base.init("perso");
     }
 }
