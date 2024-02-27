@@ -9353,7 +9353,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b960528b9965ae94cab28eb75ccf1969, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sounds: []
+  path: audio/perso
+  sounds:
+  - name: perso_attack - 1
+    clip: {fileID: 8300000, guid: 993ef1bf5d254e940bb59f73c596c6ff, type: 3}
+    volume: 0.4
+    loop: 0
+    play_on_awake: 0
+    source: {fileID: 0}
+  - name: perso_attack - 2
+    clip: {fileID: 8300000, guid: f815784b832b0bf428b6784b2dbf68c7, type: 3}
+    volume: 0.4
+    loop: 0
+    play_on_awake: 0
+    source: {fileID: 0}
+  - name: perso_hurted - 1
+    clip: {fileID: 8300000, guid: cede7420b0fe65e498f55ba59bd1d95c, type: 3}
+    volume: 1
+    loop: 0
+    play_on_awake: 0
+    source: {fileID: 0}
+  - name: perso_hurted - 2
+    clip: {fileID: 8300000, guid: 699e06bff47361c479b4980e890afb82, type: 3}
+    volume: 1
+    loop: 0
+    play_on_awake: 0
+    source: {fileID: 0}
+  - name: perso_hurted - 3
+    clip: {fileID: 8300000, guid: 7f38d4865a6cc114e99ed5ed7c3dc9ef, type: 3}
+    volume: 1
+    loop: 0
+    play_on_awake: 0
+    source: {fileID: 0}
+  - name: perso_hurted - 4
+    clip: {fileID: 8300000, guid: f8f0d64c463219b48bcabefadba3418b, type: 3}
+    volume: 1
+    loop: 0
+    play_on_awake: 0
+    source: {fileID: 0}
 --- !u!1 &1372138339
 GameObject:
   m_ObjectHideFlags: 0
@@ -19420,12 +19457,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b960528b9965ae94cab28eb75ccf1969, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  path: 
   sounds:
   - name: creepy_theme
     clip: {fileID: 8300000, guid: 30dc1ff7ad6909d489efd464f221537d, type: 3}
     volume: 0.5
     loop: 1
-    play_on_awake: 1
+    play_on_awake: 0
     source: {fileID: 0}
 --- !u!1001 &2110833699
 PrefabInstance:

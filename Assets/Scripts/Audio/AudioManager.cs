@@ -5,11 +5,13 @@ using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
+    // [Header("Path")]
+    [SerializeField] private string path = "audio/";
 
+    [Header("Sounds")]
     public Sound[] sounds;
 
-    // public static AudioManager instance;
-
+    // INITIALISATION
 
     void Awake()
     {
@@ -49,25 +51,8 @@ public class AudioManager : MonoBehaviour
         }        
     }
 
-    public void LoadSoundsFromPath(string path, float volume = 1f, bool loop = false, bool play_on_awake = false)
-    {
-        // on récupère tous les sons du dossier et on les ajoute à la liste des sons
-        AudioClip[] clips = Resources.LoadAll<AudioClip>(path);
-        foreach (AudioClip clip in clips)
-        {
-            Sound s = new Sound();
-            s.name = clip.name;
-            s.clip = clip;
-            s.volume = volume;
-            s.loop = loop;
-            s.play_on_awake = play_on_awake;
-            Array.Resize(ref sounds, sounds.Length + 1);
-            sounds[sounds.Length - 1] = s;
 
-            LoadSound(s);
-        }
-
-    }
+    // MAIN FUNCTIONS
 
     public void Play(string name)
     {
@@ -80,6 +65,46 @@ public class AudioManager : MonoBehaviour
         s.source.Play();
     }
 
+
+
+    // LOADING SOUNDS
+
+    public void AddSoundsFromPath(string path, float volume = 1f, bool loop = false, bool play_on_awake = false)
+    {
+        // on récupère tous les sons du dossier et on les ajoute à la liste des sons
+        AudioClip[] clips = Resources.LoadAll<AudioClip>(path);
+        foreach (AudioClip clip in clips)
+        {
+            Sound s = new Sound();
+            s.name = clip.name;
+
+            if (Array.Exists(sounds, sound => sound.name == s.name))
+            {
+                // Debug.LogWarning("Sound: " + s.name + " already exists!");
+                continue;
+            }
+
+            s.clip = clip;
+            s.volume = volume;
+            s.loop = loop;
+            s.play_on_awake = play_on_awake;
+            Array.Resize(ref sounds, sounds.Length + 1);
+            sounds[sounds.Length - 1] = s;
+
+            // LoadSound(s);
+        }
+
+    }
+    public void AddSoundsFromDefaultPath()
+    {
+        if (path == "" || path == null)
+        {
+            Debug.LogWarning("(AudioManager) - Trying to load sounds from no path!");
+            return;
+        }
+
+        AddSoundsFromPath(path);
+    }
 
 }
 

@@ -223,6 +223,7 @@ GameObject:
   - component: {fileID: 1348946314214484562}
   - component: {fileID: 4983707700266989384}
   - component: {fileID: 5754811362346391166}
+  - component: {fileID: 4059367977545090141}
   m_Layer: 8
   m_Name: zombo
   m_TagString: Untagged
@@ -391,6 +392,7 @@ MonoBehaviour:
   xp_provider: {fileID: 0}
   floating_dmg_provider: {fileID: 0}
   inputs: {x: 0, y: 0}
+  inputs_magnitude: 1
   speed: 3
   running_speed: 5
   world_layers:
@@ -406,8 +408,23 @@ MonoBehaviour:
     m_Bits: 0
   cooldown_attack: 0.6
   knockback_base: 6
+  attackant_advantage: 3
   target_detected: 0
   meat_detected: 0
+--- !u!114 &4059367977545090141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8251907093500023076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b960528b9965ae94cab28eb75ccf1969, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  path: audio/zombo
+  sounds: []
 --- !u!1001 &1420885500956501502
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -72,7 +72,7 @@ public class CyberZombo : Attacker, I_Hackable
 
         // on met les bons sons
         sounds = new ZomboSounds();
-        audio_manager.LoadSoundsFromPath("audio/zombo");
+        // audio_manager.LoadSoundsFromPath("audio/zombo");
 
 
         // on initialise le hackin

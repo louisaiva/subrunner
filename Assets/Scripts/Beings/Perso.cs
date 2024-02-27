@@ -248,7 +248,7 @@ public class Perso : Attacker
 
         // on met à jour les sons
         sounds = new PersoSounds();
-        audio_manager.LoadSoundsFromPath("audio/perso");
+        // audio_manager.LoadSoundsFromPath("audio/perso");
 
 
         // on CHEAT
