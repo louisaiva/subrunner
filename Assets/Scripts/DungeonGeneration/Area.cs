@@ -86,6 +86,7 @@ public class Area : MonoBehaviour
         prefabs.Add("chest", Resources.Load<GameObject>("prefabs/objects/chest"));
         prefabs.Add("xp_chest", Resources.Load<GameObject>("prefabs/objects/xp_chest"));
         prefabs.Add("computer", Resources.Load<GameObject>("prefabs/objects/computer"));
+        prefabs.Add("trash_container", Resources.Load<GameObject>("prefabs/objects/trash_container"));
         prefabs.Add("fridge", Resources.Load<GameObject>("prefabs/objects/fridge"));
         prefabs.Add("bin", Resources.Load<GameObject>("prefabs/objects/deco/bin"));
         prefabs.Add("healing_tube", Resources.Load<GameObject>("prefabs/objects/tube_healing"));
@@ -103,6 +104,7 @@ public class Area : MonoBehaviour
         parents.Add("chest", transform.Find("interactives"));
         parents.Add("xp_chest", transform.Find("interactives"));
         parents.Add("computer", transform.Find("interactives"));
+        parents.Add("trash_container", transform.Find("interactives"));
         parents.Add("fridge", transform.Find("interactives"));
         parents.Add("healing_tube", transform.Find("interactives"));
         parents.Add("server_rack", transform.Find("interactives"));

@@ -93,19 +93,118 @@ PERSO
 
         les ordinateurs doivent être hackés pour accéder à la récompense.
 
+#
+ITEMS LEGENDAIRES :
+#
+
+    les items légendaire forment les items les plus important et impactants sur le gameplay
+    ils possèdent des améliorations diverses qui modifient la manière de jouer du joueur.
+    chaque amélioration d'item légendaire a son propre système de niveaux.
+
+    certains de ces items légendaire (la plupart ?) possèdent leur propre élément d'UI sur le hud in-game
+    et réorganisable via la borne de customisation
+
+    les améliorations d'items sont accessibles directement dans l'inventaire en appuyant sur Y.
+
+    au tout début d'une partie on ne possède aucun de ces items, ils sont UNIQUES et sont répartis aléatoirement dans leur Zone correspondante
+    sur toute la map.
+    La partie doit pouvoir se jouer SANS AVOIR BESOIN D AUCUN ITEM LEGENDAIRE.
+    cad même sans rien sans arme etc tu dois pouvoir te déplacer et trouver ton chemin dans le labyrinthe jusqu'à meme arriver au boss.
+    
+    MECANISME DE GAMEDESIGN POUR NE JAMAIS ETRE BLOQUE :
+
+        les items légendaires sont placés alétoirement en premier lieu dans les endroits accessibles.
+        ensuite, lorsqu'on trouve notre 1er item, les 5 autres sont redistribués dans les zones que l'accès au 1er item débloque.
+        exemple :
+
+            tu te balades tu trouves le dash.
+            les items légendaires se trouvent donc désormais derrière des portes à dash.
+            hop tu arrives et dans un secteur accessible via porte à dash tu trouves le gyroscope. le gyroscope t'indique les conduits d'aération.
+            les 4 items restants sont donc répartis dans les secteurs accessibles via conduit d'aeration.
+
+
+
+
+    ils sont au nombre de 6 :
+    
+    KATANA :
+
+        le katana est l'arme de base de corps à corps de notre perso.
+        il permet de faire de gros dégats mais à un range d'attaque assez court
+
+        il peut être refondu en l'arme de votre choix à la forge, et amélioré en trouvant du métal,
+        qui sert aussi de monnaie universelle.
+
+        l'arme de mélée est la seule amélioration que le perso retrouve après sa mort.
+        en fin de jeu il est intéressant d'avoir une bonne arme qui vaut beaucoup de métal,
+        ce qui fait qu'au début du jeu vous pouvez reforger directement votre bete d'arme en katana
+        simple + grave du métal pour échanger avec d'autres stores ou forger d'autres trucs. (acheter des hacks, ...)
+
+        en plus de l'arme principale, d'autres choses peuvent être forgées, notamment des shurikens.
+        on peut aussi.
+
+    NOOD_OS :
+
+        NOOD_OS est l'os de notre ordinateur portable de hack.
+        l'item agit comme une dorsale connectée au système nerveux du perso
+        et nous permet d'enclencher les hacks par la pensée
+
+    GLASSES :
+    
+    GYROSCOPE :
+
+        améliorations :
+
+            - permet de voir les zombies sur la map
+            - permet de voir les poubelles
+
+    SHOES :
+
+    RECORDER :
+
+        le recorder est un item légendaire de fin de jeu 
+        permet d'écouter des sons récupérables en trouvant des CDs.
+        permet d'enregistrer les bruits sonores
+
+        permet d'accéder à des salles de fin de jeux renfermant des coffres d'amélioration.
+
+        CDs :
+
+            les CDs sont des items qu'on trouve dans des ordis, vieux cartons de vinyles ou piles dans les étagères.
+            vieux cartons à bricoles.
+
+            ils contiennent une musique, et quand on en trouve plus ça ajoute des modifications sonores dans la musique.
+
+            écouter des musiques dans le recorder permet de changer certains paramètres du gameplay.
+            notamment :
+
+                la longueur du dash.
+                la vitesse de course.
+                déblocage de certaines portes.
+                repoussage de certains ennemis.
+
+
+
+
+
+        améliorations :
+
+            glitch :
+                amélioration random qui crée un glitch dans le recorder qui fait glitcher la musique dans les temps.
+                insère à des moments randoms (dans les temps) une version glitchée de ce qu'on a enregistré.
 
 
 #
 ITEMS
 #
 
-    ARMES :
-
-        katana
-        shurikens
-            tu peux les recup sur les zombies apres
 
     ITEMS A RAJOUTER :
+
+
+        - katana
+        - shurikens
+        (tu peux les recup sur les zombies apres)
 
         - item pour voir l'ami drone
 
@@ -132,112 +231,47 @@ ITEMS
         - amélioration du gyroscope pour lire automatique les indices dans les serveurs et les placer sur la carte
 
 
+    PHYSICAL ITEMS :
 
-    ITEMS LEGENDAIRES :
+        CD :
 
-        les items légendaire forment les items les plus important et impactants sur le gameplay
-        ils possèdent des améliorations diverses qui modifient la manière de jouer du joueur.
-        chaque amélioration d'item légendaire a son propre système de niveaux.
-
-        les améliorations d'items sont accessibles directement dans l'inventaire en appuyant sur Y.
-
-        au tout début d'une partie on ne possède aucun de ces items, ils sont UNIQUES et sont répartis aléatoirement dans leur Zone correspondante
-        sur toute la map.
-        La partie doit pouvoir se jouer SANS AVOIR BESOIN D AUCUN ITEM LEGENDAIRE.
-        cad même sans rien sans arme etc tu dois pouvoir te déplacer et trouver ton chemin dans le labyrinthe jusqu'à meme arriver au boss.
+            matériau : plastique, carbone ou or
         
-        MECANISME DE GAMEDESIGN POUR NE JAMAIS ETRE BLOQUE :
-
-            les items légendaires sont placés alétoirement en premier lieu dans les endroits accessibles.
-            ensuite, lorsqu'on trouve notre 1er item, les 5 autres sont redistribués dans les zones que l'accès au 1er item débloque.
-            exemple :
-
-                tu te balades tu trouves le dash.
-                les items légendaires se trouvent donc désormais derrière des portes à dash.
-                hop tu arrives et dans un secteur accessible via porte à dash tu trouves le gyroscope. le gyroscope t'indique les conduits d'aération.
-                les 4 items restants sont donc répartis dans les secteurs accessibles via conduit d'aeration.
+            stocke jusqu'à deux fichiers virtuels.
+            peut jouer de la musique s'il est inséré dans un speaker (et s'il contient un FileMP3)
 
 
+    
+    VIRTUAL ITEMS :
+
+        tous les items virtuels sont des enfants de la classe principale File
+        qui peut être stockée et lu sur des équipements informatique.
+
+        les différents types de Files sont les suivants
 
 
-        ils sont au nombre de 6 :
+
+        FileTXT :
+            contient du texte
+            donne parfois des indices sur des problèmes du jeu, parfois pas
+
+        FileMP3 :
+            contient de la musique (lol)
+            peut être joué sur des enceintes ou un recorder.
+
+        FileEXE :
+            fichiers qui stockent un jeu. on en trouve dans les CD de jeu et sur les PlayStation
         
-        KATANA :
-
-            le katana est l'arme de base de corps à corps de notre perso.
-            il permet de faire de gros dégats mais à un range d'attaque assez court
-
-            il peut être refondu en l'arme de votre choix à la forge, et amélioré en trouvant du métal,
-            qui sert aussi de monnaie universelle.
-
-            l'arme de mélée est la seule amélioration que le perso retrouve après sa mort.
-            en fin de jeu il est intéressant d'avoir une bonne arme qui vaut beaucoup de métal,
-            ce qui fait qu'au début du jeu vous pouvez reforger directement votre bete d'arme en katana
-            simple + grave du métal pour échanger avec d'autres stores ou forger d'autres trucs. (acheter des hacks, ...)
-
-            en plus de l'arme principale, d'autres choses peuvent être forgées, notamment des shurikens.
-            on peut aussi.
-
-        NOOD_OS :
-
-            NOOD_OS est l'os de notre ordinateur portable de hack.
-            l'item agit comme une dorsale connectée au système nerveux du perso
-            et nous permet d'enclencher les hacks par la pensée
-
-        GLASSES :
-        
-        GYROSCOPE :
-
-            améliorations :
-
-                - permet de voir les zombies sur la map
-                - permet de voir les poubelles
-
-        SHOES :
-
-        RECORDER :
-
-            le recorder est un item légendaire de fin de jeu 
-            permet d'écouter des sons récupérables en trouvant des CDs.
-            permet d'enregistrer les bruits sonores
-
-            permet d'accéder à des salles de fin de jeux renfermant des coffres d'amélioration.
-
-            CDs :
-
-                les CDs sont des items qu'on trouve dans des ordis, vieux cartons de vinyles ou piles dans les étagères.
-                vieux cartons à bricoles.
-
-                ils contiennent une musique, et quand on en trouve plus ça ajoute des modifications sonores dans la musique.
-
-                écouter des musiques dans le recorder permet de changer certains paramètres du gameplay.
-                notamment :
-
-                    la longueur du dash.
-                    la vitesse de course.
-                    déblocage de certaines portes.
-                    repoussage de certains ennemis.
-
-
-
-
-
-            améliorations :
-
-                glitch :
-                    amélioration random qui crée un glitch dans le recorder qui fait glitcher la musique dans les temps.
-                    insère à des moments randoms (dans les temps) une version glitchée de ce qu'on a enregistré.
-
-
+        FileNOOD :
+            fichiers .nood -> ce sont les hacks pour le NOOD_OS
 
 
 
 #
-OBJECTS
+INTERACTIVES OBJECTS
 #
-    Door :
 
-
+    DOOR :
 
         SimpleDoor :
 
@@ -246,26 +280,16 @@ OBJECTS
 
             souvent dans les secteurs.
 
-
-
-
         HackableDoor :
             peut être hacké avec door_hack
             se referme après votre passage
 
             inter secteur puis dans les secteurs pour protéger des parefeu par exemple.
 
-
-
-
-
         DynamitableDoor :
             s'explose avec de la Dynamite
 
             dans les secteurs pour cacher des coffres ou des endroits cachés.
-
-
-
 
         LaserDoor :
             peut être passée avec le dash
@@ -273,12 +297,8 @@ OBJECTS
             inter secteur et dans les secteurs pour protéger des parefeu par exemple.
             accompagné d'un SuperButton
             
-
-
-
         EncryptedDoor :
             visible seulement avec les 3D glasses
-
 
         MusicDoor :
             s'ouvre avec un son signature particulier
@@ -289,71 +309,76 @@ OBJECTS
 
             intersecteur ou dans le secteur derrière un spawn
 
-
-
-
         TV_Door :
             juste avant le boss final
             visible et ouverte avec un tv_hack
 
-
-
-
-    Computer :
-
-
-        les ordinateurs affichent un lock screen avec un mot de passe à remplir
-        si on trouve le mdp on peut entrer dans l'OS et on a un bureau avec des fichiers type fichier .txt
-        ou .png
-
-        parfois on y trouve des fichiers de hack mais c rare
-
-        3 OS différents :
-            windows, linux ou mac
-            fonctionnent de la même manière c juste graphique
-        
-    
-
-    
-    Borne d'amélioration :
+    NOOD_Station :
 
         les bornes d'amélioration permettent d'activer le skilltree de noodle_os afin d'améliorer nos compétences de hack
-
     
-
-    Enceinte :
+    Speaker :
         permet de lire des fichiers mp3.
+        peut être combiné à un lecteur CD pour pouvoir lire des CDs (et donc stocker des mp3)
+    
+    CD_Lector :
+        comme son nom l'indique, ce lecteur CD peut stocker un CD.
 
+        connecté à des équipements informatiques type Computer/Playstation, il permet de visualiser le contenu du CD.
+        On peut aussi analyser son contenu directement dans notre recorder
 
-        existe aussi en version améliorée Lecteur CD qui permet de stocker et de lire des CDs (et stocker des mp3 ?)
+    INTERACT CHEST :
 
-
-
-
-    Chest :
-
-
-        item chest :
-
-            s'ouvre via pression sur E
-            stocke des items physiques.
-            peut cacher des items utiles pour quitter le secteur.
-        
-        
-        xp chest & button :
+        XP_Chest & Button :
 
             stocke uniquement de l'xp
             s'ouvre via pression sur un button. 
 
+        TrashContainer :
 
+            principale source de récupération d'items physiques.
+            des grosses poubelles où on peut trouver des vieux items dégueu
+            de l'alcool
+            des cartons
 
+            s'ouvre via pression sur la touche d'interaction
+            peut cacher des items utiles pour quitter le secteur.
 
-        software chest :
+        Fridge :
+            la même qu'un trash container mais qui contient que de la bouffe et des boissons
+            plus rare
 
+        Computer :
 
+            les ordinateurs affichent un lock screen avec un mot de passe à remplir
+            si on trouve le mdp on peut entrer dans l'OS et on a un bureau avec des fichiers type fichier .txt
+            ou .png
 
+            parfois on y trouve des fichiers de hack mais c rare
 
+            3 OS différents :
+                windows, linux ou mac
+                fonctionnent de la même manière c juste graphique
+        
+        Server :
+            sorte de mini computer qui ne peut stocker que 2 items virtuels max.
+            n'a pas d'interface graphique c'est simplement un coffre
 
+            fonctionne de pair avec des ServerRack
+        
+        ServerRack :
+            Objet interactif qui permet de stocker des servers.
+            des pressions répétées de la touche d'interaction permet d'interagir avec les différents servers présents dans le rack.
+
+        PlayStation :
+            La console du futur. stocke des fichiers. moins sécurisé qu'un ordinateur.
+            stocke principâlement des jeux vidéos. les jeux vidéos sont des items virtuels qui peuvent s'échanger parfois cher.
+
+            équipé d'une manette ou d'un casque de vr.
+
+    InterfaceStation :
+
+        cette borne de customisation de l'interface permet au joueur de customiser son hud in-game.
 
 
 #
@@ -417,7 +442,6 @@ MECANIQUES PARTICULIERES
 
             certains serveurs sont fait de carbone et ça se voit ils sont plus clairs
 
-
         - OR :
             épique
 
@@ -426,7 +450,6 @@ MECANIQUES PARTICULIERES
             sur certains équipements électroniques rares type bornes d'amélioration ou borne de téléportation
 
             certains serveurs sont fait en or et ça se voit ils sont jaunes mais vraiment très très rare..
-
 
         - ECLAT :
             légendaire

@@ -690,15 +690,19 @@ public class Sector : MonoBehaviour
         // soit un coffre, soit un ordinateur, soit un xp_chest
         string type = "";
         float random = Random.Range(0f, 1f);
-        if (random > .85f)
+        if (random > .95f)
         {
             type = "bin";
         }
-        else if (random > .6f)
+        else if (random > .7f)
+        {
+            type = "trash_container";
+        }
+        else if (random > .45f)
         {
             type = "computer";
         }
-        else if (random > .35f)
+        else if (random > .25f)
         {
             type = "xp_chest";
         }
