@@ -114,8 +114,8 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
         // on vérifie si on a de la place
         if (!canGrab()) { return false; }
 
-        Debug.Log("ui_prefab : " + ui_item_prefab);
-        Debug.Log("slot : " + slot);
+        // Debug.Log("ui_prefab : " + ui_item_prefab);
+        // Debug.Log("slot : " + slot);
 
         // on instancie un ui_item
         GameObject ui_item = Instantiate(ui_item_prefab, slot.transform);
@@ -162,7 +162,7 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
             // on récupère un prefab random
             Item item = bank.getRandomItem(cat);
 
-            Debug.Log("item : " + item.item_name);
+            // Debug.Log("item : " + item.item_name);
 
             // on ajoute l'item
             grabItem(item);
