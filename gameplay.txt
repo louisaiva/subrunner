@@ -234,12 +234,16 @@ ITEMS
     PHYSICAL ITEMS :
 
         CD :
-
-            matériau : plastique, carbone ou or
-        
             stocke jusqu'à deux fichiers virtuels.
             peut jouer de la musique s'il est inséré dans un speaker (et s'il contient un FileMP3)
 
+            [ ] CD_Plastic
+            [ ] CD_Carbon
+            [ ] CD_Gold
+
+        DRINKS :
+
+            [x] Orangina
 
     
     VIRTUAL ITEMS :
@@ -273,34 +277,34 @@ INTERACTIVES OBJECTS
 
     DOOR :
 
-        SimpleDoor :
+        [x] SimpleDoor :
 
             s'ouvre automatiquement
             se referme après votre passage
 
             souvent dans les secteurs.
 
-        HackableDoor :
+        [x] HackableDoor :
             peut être hacké avec door_hack
             se referme après votre passage
 
             inter secteur puis dans les secteurs pour protéger des parefeu par exemple.
 
-        DynamitableDoor :
+        [ ] DynamitableDoor :
             s'explose avec de la Dynamite
 
             dans les secteurs pour cacher des coffres ou des endroits cachés.
 
-        LaserDoor :
+        [ ] LaserDoor :
             peut être passée avec le dash
 
             inter secteur et dans les secteurs pour protéger des parefeu par exemple.
             accompagné d'un SuperButton
             
-        EncryptedDoor :
+        [ ] EncryptedDoor :
             visible seulement avec les 3D glasses
 
-        MusicDoor :
+        [ ] MusicDoor :
             s'ouvre avec un son signature particulier
             pas très protégé car il suffit d'enregistrer sa signature
             au moment où elle s'ouvre
@@ -309,19 +313,19 @@ INTERACTIVES OBJECTS
 
             intersecteur ou dans le secteur derrière un spawn
 
-        TV_Door :
+        [ ] TV_Door :
             juste avant le boss final
             visible et ouverte avec un tv_hack
 
-    NOOD_Station :
+    [ ] NOOD_Station :
 
         les bornes d'amélioration permettent d'activer le skilltree de noodle_os afin d'améliorer nos compétences de hack
     
-    Speaker :
+    [ ] Speaker :
         permet de lire des fichiers mp3.
         peut être combiné à un lecteur CD pour pouvoir lire des CDs (et donc stocker des mp3)
     
-    CD_Lector :
+    [ ] CD_Lector :
         comme son nom l'indique, ce lecteur CD peut stocker un CD.
 
         connecté à des équipements informatiques type Computer/Playstation, il permet de visualiser le contenu du CD.
@@ -329,12 +333,12 @@ INTERACTIVES OBJECTS
 
     INTERACT CHEST :
 
-        XP_Chest & Button :
+        [x] XP_Chest & Button :
 
             stocke uniquement de l'xp
             s'ouvre via pression sur un button. 
 
-        TrashContainer :
+        [x] TrashContainer :
 
             principale source de récupération d'items physiques.
             des grosses poubelles où on peut trouver des vieux items dégueu
@@ -344,11 +348,11 @@ INTERACTIVES OBJECTS
             s'ouvre via pression sur la touche d'interaction
             peut cacher des items utiles pour quitter le secteur.
 
-        Fridge :
+        [x] Fridge :
             la même qu'un trash container mais qui contient que de la bouffe et des boissons
             plus rare
 
-        Computer :
+        [x] Computer :
 
             les ordinateurs affichent un lock screen avec un mot de passe à remplir
             si on trouve le mdp on peut entrer dans l'OS et on a un bureau avec des fichiers type fichier .txt
@@ -360,23 +364,23 @@ INTERACTIVES OBJECTS
                 windows, linux ou mac
                 fonctionnent de la même manière c juste graphique
         
-        Server :
+        [x] Server :
             sorte de mini computer qui ne peut stocker que 2 items virtuels max.
             n'a pas d'interface graphique c'est simplement un coffre
 
             fonctionne de pair avec des ServerRack
         
-        ServerRack :
+        [x] ServerRack :
             Objet interactif qui permet de stocker des servers.
             des pressions répétées de la touche d'interaction permet d'interagir avec les différents servers présents dans le rack.
 
-        PlayStation :
+        [ ] PlayStation :
             La console du futur. stocke des fichiers. moins sécurisé qu'un ordinateur.
             stocke principâlement des jeux vidéos. les jeux vidéos sont des items virtuels qui peuvent s'échanger parfois cher.
 
             équipé d'une manette ou d'un casque de vr.
 
-    InterfaceStation :
+    [ ] InterfaceStation :
 
         cette borne de customisation de l'interface permet au joueur de customiser son hud in-game.
 
