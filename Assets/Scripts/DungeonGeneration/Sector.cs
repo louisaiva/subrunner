@@ -698,11 +698,15 @@ public class Sector : MonoBehaviour
         {
             type = "trash_container";
         }
-        else if (random > .45f)
+        else if (random > .6f)
         {
             type = "computer";
         }
-        else if (random > .25f)
+        else if (random > .4f)
+        {
+            type = "playstation";
+        }
+        else if (random > .3f)
         {
             type = "xp_chest";
         }
