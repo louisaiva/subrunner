@@ -14,7 +14,7 @@ public class LevitatingStand : Stand
         foreach (Transform child in transform)
         {
             // on vérifie que ce n'est pas softlight
-            if (new string[] {"soft_light"}.Contains(child.name)) { continue; }
+            if (new string[] {"soft_light", "interact_tuto_label" }.Contains(child.name)) { continue; }
 
             // on déplace le gameobject de +offset pour le placer sur le stand
             child.localPosition = new Vector3(slot_offset.x, slot_offset.y + levitation_amplitude * Mathf.Sin(Time.time * levitation_speed), 0);

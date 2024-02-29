@@ -18,9 +18,14 @@ public class Button : MonoBehaviour, I_Interactable
     [SerializeField] protected GameObject buttonable = null;
     [SerializeField] protected bool verbose = false;
 
-    // unity functions
-    void Start()
+    public Transform interact_tuto_label { get; set; }
+
+    // UNITY FUNCTIONS
+    private void Start()
     {
+        // on récupère le label
+        interact_tuto_label = transform.Find("interact_tuto_label");
+
         // on récupère l'animation handler
         anim_handler = GetComponent<AnimationHandler>();
 
@@ -121,6 +126,8 @@ public class Button : MonoBehaviour, I_Interactable
 
     public void stopInteract()
     {
+        OnPlayerInteractRangeExit();
+
         if (!is_pressing) { return; }
 
         CancelInvoke();
@@ -134,6 +141,24 @@ public class Button : MonoBehaviour, I_Interactable
         {
             success_switch_off();
         }
+    }
+
+    public void OnPlayerInteractRangeEnter()
+    {
+        if (interact_tuto_label == null)
+        {
+            interact_tuto_label = transform.Find("interact_tuto_label");
+            if (interact_tuto_label == null) { return; }
+        }
+
+        // on affiche le label
+        interact_tuto_label.gameObject.SetActive(true);
+    }
+
+    public void OnPlayerInteractRangeExit()
+    {
+        // on cache le label
+        interact_tuto_label.gameObject.SetActive(false);
     }
 
 }

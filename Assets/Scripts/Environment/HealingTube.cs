@@ -24,16 +24,20 @@ public class HealingTube : MonoBehaviour, I_Interactable
     [SerializeField] protected float delay_reconsume = 3f;
     [SerializeField] protected float delay_reconsume_timer = 0f;
 
+    public Transform interact_tuto_label { get; set; }
 
-
-    // unity functions
-    protected virtual void Awake()
+    // UNITY FUNCTIONS
+    private void Start()
     {
+        // on récupère le label
+        interact_tuto_label = transform.Find("interact_tuto_label");
+        
         // on récupère l'animation handler
         anim_handler = GetComponent<AnimationHandler>();
     }
 
-    void Update()
+
+        void Update()
     {
         if (is_consumed)
         {
@@ -112,12 +116,30 @@ public class HealingTube : MonoBehaviour, I_Interactable
 
     public void stopInteract()
     {
+        OnPlayerInteractRangeExit();
         print("stop interact with " + gameObject.name);
 
         // on arrête l'interaction
         is_interacting = false;
     }
 
+    public void OnPlayerInteractRangeEnter()
+    {
+        if (interact_tuto_label == null)
+        {
+            interact_tuto_label = transform.Find("interact_tuto_label");
+            if (interact_tuto_label == null) { return; }
+        }
+
+        // on affiche le label
+        interact_tuto_label.gameObject.SetActive(true);
+    }
+
+    public void OnPlayerInteractRangeExit()
+    {
+        // on cache le label
+        interact_tuto_label.gameObject.SetActive(false);
+    }
 }
 
 

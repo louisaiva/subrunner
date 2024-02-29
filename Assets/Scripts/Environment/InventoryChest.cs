@@ -26,7 +26,7 @@ public class InventoryChest : Chest, I_Grabber
 
     }
 
-    void Start()
+    protected void Start()
     {
         // randomize
         if (inventory == null) {return;}

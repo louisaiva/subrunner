@@ -14,11 +14,13 @@ public class ServerRack : MonoBehaviour, I_Interactable
     [SerializeField] private GameObject server_prefab;
     [SerializeField] private List<Vector3> server_positions = new List<Vector3>();
 
+    public Transform interact_tuto_label { get; set; }
 
     // UNITY FUNCTIONS
-    
-    void Start()
+    private void Start()
     {
+        // on récupère le label
+        interact_tuto_label = transform.Find("interact_tuto_label");
 
         // on récupère le prefab du server
         server_prefab = Resources.Load("prefabs/objects/server") as GameObject;
@@ -125,6 +127,8 @@ public class ServerRack : MonoBehaviour, I_Interactable
 
     public void stopInteract()
     {
+        OnPlayerInteractRangeExit();
+
         if (current_server != -1)
         {
             servers[current_server].stopInteract();
@@ -133,5 +137,22 @@ public class ServerRack : MonoBehaviour, I_Interactable
     }
 
 
+    public void OnPlayerInteractRangeEnter()
+    {
+        if (interact_tuto_label == null)
+        {
+            interact_tuto_label = transform.Find("interact_tuto_label");
+            if (interact_tuto_label == null) { return; }
+        }
+
+        // on affiche le label
+        interact_tuto_label.gameObject.SetActive(true);
+    }
+
+    public void OnPlayerInteractRangeExit()
+    {
+        // on cache le label
+        interact_tuto_label.gameObject.SetActive(false);
+    }
 
 }

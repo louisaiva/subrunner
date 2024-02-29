@@ -7,7 +7,7 @@ public class ComputerVirtual : Computer
 {
 
     // UNITY FUNCTIONS
-    void Start()
+    new void Start()
     {
         base.Start();
         anims = new ComputerVirtualAnims();

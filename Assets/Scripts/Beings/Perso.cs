@@ -71,7 +71,6 @@ public class Perso : Attacker
     [SerializeField] private float interact_range = 1f;
     [SerializeField] private LayerMask interact_layers;
     public GameObject current_interactable = null;
-    public Bed respawn_bed = null;
 
     // hoover interactions
     [SerializeField] private GameObject current_hoover_interactable = null;
@@ -995,21 +994,30 @@ public class Perso : Attacker
                 }
 
                 // on met à jour l'objet avec lequel on peut interagir
-                /* if (current_hoover_interactable != null && current_hoover_interactable != target.gameObject)
-                {
-                    current_hoover_interactable.GetComponent<I_Interactable>().stopHoover();
-                } */
                 if (target != null)
                 {
+                    if (current_hoover_interactable != null && current_hoover_interactable != target.gameObject)
+                    {
+                        current_hoover_interactable.GetComponent<I_Interactable>().OnPlayerInteractRangeExit();
+                    }
                     current_hoover_interactable = target.gameObject;
+                    current_hoover_interactable.GetComponent<I_Interactable>().OnPlayerInteractRangeEnter();
                 }
                 else
                 {
+                    if (current_hoover_interactable != null)
+                    {
+                        current_hoover_interactable.GetComponent<I_Interactable>().OnPlayerInteractRangeExit();
+                    }
                     current_hoover_interactable = null;
                 }
             }
             else
             {
+                if (current_hoover_interactable != null)
+                {
+                    current_hoover_interactable.GetComponent<I_Interactable>().OnPlayerInteractRangeExit();
+                }
                 current_hoover_interactable = null;
             }
         }
@@ -1090,32 +1098,10 @@ public class Perso : Attacker
                 current_interactable.GetComponent<I_Interactable>().stopInteract();
                 current_interactable = null;
             }
-            else if (current_interactable.GetComponent<I_LongInteractable>() != null)
-            {
-                I_LongInteractable long_interactable = current_interactable.GetComponent<I_LongInteractable>();
-
-                // on regarde si cet objet interagit encore avec nous
-                if (!(long_interactable.is_interacting || long_interactable.is_being_activated))
-                {
-                    // on arrête d'interagir avec l'objet
-                    current_interactable = null;
-                }
-            }
         }
 
     }
 
-    public void setRespawnBed(Bed bed)
-    {
-        respawn_bed = bed;
-
-        // on affiche un texte de début
-        /* Vector3 position = transform.position + new Vector3(0, 1.2f, 0);
-        string text = "your respawn point has been set";
-        GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
-        floating_text.GetComponent<FloatingText>().init(text, Color.yellow, 30f, 0.1f, 0.2f, 6f);
-        floating_text.transform.SetParent(floating_dmg_provider.transform); */
-    }
 
 
     // INVENTORY
@@ -1131,11 +1117,6 @@ public class Perso : Attacker
             if (current_interactable.GetComponent<InventoryChest>() != null)
             {
                 current_interactable.GetComponent<InventoryChest>().grab(item);
-                drop_on_ground = false;
-            }
-            else if (current_interactable.GetComponent<Bed>() != null)
-            {
-                current_interactable.GetComponent<Bed>().grab(item);
                 drop_on_ground = false;
             }
         }

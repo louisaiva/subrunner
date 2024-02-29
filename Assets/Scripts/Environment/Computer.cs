@@ -50,11 +50,14 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
 
     // interactions
     public bool is_interacting { get; set; } // est en train d'interagir
-
+    public Transform interact_tuto_label { get; set; }
 
     // UNITY FUNCTIONS
     protected void Start()
     {
+        // on récupère le label
+        interact_tuto_label = transform.Find("interact_tuto_label");
+
         // on récupère l'animation handler
         anim_handler = GetComponent<AnimationHandler>();
 
@@ -351,8 +354,28 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
     }
     public void stopInteract()
     {
+        OnPlayerInteractRangeExit();
         // on arrête l'interaction
         is_interacting = false;
+    }
+
+
+    public void OnPlayerInteractRangeEnter()
+    {
+        if (interact_tuto_label == null)
+        {
+            interact_tuto_label = transform.Find("interact_tuto_label");
+            if (interact_tuto_label == null) { return; }
+        }
+
+        // on affiche le label
+        interact_tuto_label.gameObject.SetActive(true);
+    }
+
+    public void OnPlayerInteractRangeExit()
+    {
+        // on cache le label
+        interact_tuto_label.gameObject.SetActive(false);
     }
 }
 

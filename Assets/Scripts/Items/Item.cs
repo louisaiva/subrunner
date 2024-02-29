@@ -22,6 +22,11 @@ public class Item : MonoBehaviour, I_Interactable
     // perso
     public GameObject perso;
 
+    // interactable
+    public Transform interact_tuto_label { get; set; }
+
+    // UNITY FUNCTIONS
+
     protected void Awake()
     {
 
@@ -44,6 +49,11 @@ public class Item : MonoBehaviour, I_Interactable
 
     }
 
+    protected void Start()
+    {
+        // on récupère le label
+        interact_tuto_label = transform.Find("interact_tuto_label");
+    }
 
     // interactions
     public bool isInteractable()
@@ -57,8 +67,28 @@ public class Item : MonoBehaviour, I_Interactable
         perso.GetComponent<Perso>().grab(this);
     }
 
-    public void stopInteract() { }
+    public void stopInteract()
+    {
+        OnPlayerInteractRangeExit();
+    }
 
+    public void OnPlayerInteractRangeEnter()
+    {
+        if (interact_tuto_label == null)
+        {
+            interact_tuto_label = transform.Find("interact_tuto_label");
+            if (interact_tuto_label == null) { return; }
+        }
+
+        // on affiche le label
+        interact_tuto_label.gameObject.SetActive(true);
+    }
+
+    public void OnPlayerInteractRangeExit()
+    {
+        // on cache le label
+        interact_tuto_label.gameObject.SetActive(false);
+    }
     // end of life
     public void destruct()
     {

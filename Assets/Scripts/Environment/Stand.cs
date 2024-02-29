@@ -8,14 +8,18 @@ public class Stand : MonoBehaviour, I_Grabber, I_Interactable
     [Header("Stand")]
     [SerializeField] protected Vector2 slot_offset = new Vector2(0, 0.66f);
     // [SerializeField] protected Vector2 ;
+    public Transform interact_tuto_label { get; set; }
 
     private void Start()
     {
+        // on récupère le label
+        interact_tuto_label = transform.Find("interact_tuto_label");
+
         // on récupère les enfants et on désactive leur collider si ce ne sont pas des items
         foreach (Transform child in transform)
         {
             // on vérifie que ce n'est pas softlight
-            if (new string[] {"soft_light"}.Contains(child.name)) { continue; }
+            if (new string[] {"soft_light", "interact_tuto_label" }.Contains(child.name)) { continue; }
 
             // on place l'item sur le stand
             placeOnStand(child.gameObject);
@@ -61,7 +65,7 @@ public class Stand : MonoBehaviour, I_Grabber, I_Interactable
         foreach (Transform child in transform)
         {
             // on vérifie que ce n'est pas softlight
-            if (new string[] {"soft_light"}.Contains(child.name)) { continue; }
+            if (new string[] {"soft_light","interact_tuto_label"}.Contains(child.name)) { continue; }
             return false;
         }
         return true;
@@ -84,7 +88,7 @@ public class Stand : MonoBehaviour, I_Grabber, I_Interactable
         foreach (Transform child in transform)
         {
             // on vérifie que ce n'est pas softlight
-            if (new string[] {"soft_light"}.Contains(child.name)) { continue; }
+            if (new string[] {"soft_light","interact_tuto_label"}.Contains(child.name)) { continue; }
 
             if (child.GetComponent<I_Interactable>() != null)
             {
@@ -113,6 +117,8 @@ public class Stand : MonoBehaviour, I_Grabber, I_Interactable
 
     public void stopInteract()
     {
+        OnPlayerInteractRangeExit();
+
         if (!isInteractable()) { return; }
         foreach (Transform child in transform)
         {
@@ -127,4 +133,21 @@ public class Stand : MonoBehaviour, I_Grabber, I_Interactable
         }
     }
 
+    public void OnPlayerInteractRangeEnter()
+    {
+        if (interact_tuto_label == null)
+        {
+            interact_tuto_label = transform.Find("interact_tuto_label");
+            if (interact_tuto_label == null) { return; }
+        }
+
+        // on affiche le label
+        interact_tuto_label.gameObject.SetActive(true);
+    }
+
+    public void OnPlayerInteractRangeExit()
+    {
+        // on cache le label
+        interact_tuto_label.gameObject.SetActive(false);
+    }
 }

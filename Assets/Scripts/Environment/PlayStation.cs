@@ -7,7 +7,7 @@ public class PlayStation : Computer
 {
 
     // UNITY FUNCTIONS
-    void Start()
+    new void Start()
     {
         base.Start();
         anims = new PlayStationAnims();

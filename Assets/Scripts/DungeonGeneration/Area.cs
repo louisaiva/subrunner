@@ -307,9 +307,9 @@ public class Area : MonoBehaviour
 
         // on calcule un offset plus ou moins aléatoire
         float OFFSET_Y = 0.2f;
-        float OFFSET_RANGE_Y = 0.3f;
+        // float OFFSET_RANGE_Y = 0.3f;
         float OFFSET_X = -poster.GetComponent<SpriteRenderer>().bounds.size.x / 2;
-        float OFFSET_RANGE_X = 0f;
+        // float OFFSET_RANGE_X = 0f;
 
         Vector3 offset = Vector3.zero;
         // offset += new Vector3(OFFSET_X, OFFSET_Y, 0f);
