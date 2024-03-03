@@ -3,6 +3,9 @@ using UnityEngine;
 public class Rat : Being
 {
 
+    // [SerializeField] private float speed = 1f; // vitesse de sprint
+    // [SerializeField] private float running_speed = 3f; // vitesse de sprint
+
     [SerializeField] private float cooldown_sprint = 4f; // temps entre chaque déplacement
     [SerializeField] private float cooldown_waiting = 10f; // temps entre chaque déplacement
     [SerializeField] private string state = "idle"; // état du rat (idle, sprint, little_movement)
@@ -28,7 +31,7 @@ public class Rat : Being
         max_vie = 5000 + Random.Range(-3, 3);
         vie = (float)max_vie;
         speed = 3f + Random.Range(-0.5f, 0.5f);
-        running_speed = 5f;
+        running_speed = 17.5f;
         // damage = 5f + Random.Range(-2f, 2f);
         // attack_range = 0.15f + Random.Range(-0.05f, 0.05f);
         // damage_range = 0.15f + Random.Range(-0.05f, 0.05f);
@@ -60,7 +63,9 @@ public class Rat : Being
         // puis tape des grosses sprints
 
         // on vérifie si on est pas trop loin du perso
-        if (Vector2.Distance(transform.position, perso.transform.position) > 3f && state != "follow_perso")
+        isRunning = Vector2.Distance(transform.position, perso.transform.position) > 3f;
+        
+        if (Vector2.Distance(transform.position, perso.transform.position) > 2.5f && state != "follow_perso")
         {
             // print("(rat) nooo don't run away human !!");
 
@@ -69,7 +74,8 @@ public class Rat : Being
             Vector2 direction = (Vector2) (perso.transform.position - transform.position).normalized;
             destination = (Vector2) transform.position + direction * (perso.transform.position - transform.position).magnitude * 0.85f;
             current_state_left_time = 1f;
-            return destination - (Vector2) transform.position;
+            isRunning = false;
+            return (destination - (Vector2) transform.position);
         }
 
         if (state == "idle")
