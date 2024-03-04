@@ -17,10 +17,10 @@ public class Area : MonoBehaviour
     public string type; // exemple : room_U, corridor_LR, sas_ND, ...
 
 
-    [Header("Zone")]
+    [Header("Zones")]
     private GameObject zone_prefab;
-    private Vector2 zone_pos = new Vector3(4, 4, 0); // position par défaut de la zone (au milieu de l'area)
-
+    // private Vector2 zone_pos = new Vector3(4, 4, 0); // position par défaut de la zone (au milieu de l'area)
+    private List<GameObject> zones = new List<GameObject>();
 
 
     // SECTOR & NEIGHBORS
@@ -121,6 +121,9 @@ public class Area : MonoBehaviour
 
         poster_sprites = Resources.LoadAll<Sprite>("spritesheets/environments/objects/posters");
         tags_sprites = Resources.LoadAll<Sprite>("spritesheets/environments/objects/tags");
+
+        // on récupère le prefab de zone vide
+        zone_prefab = Resources.Load<GameObject>("prefabs/zones/empty_zone");
     }
 
     // init functions
@@ -140,8 +143,6 @@ public class Area : MonoBehaviour
         this.transform.parent = sector.transform.Find("areas");
 
         // on met la bonne position
-        // int real_x = (sector.x + x) * area_size.x /2;
-        // int real_y = (sector.y + y) * area_size.y /2;
         Vector2Int real_pos = getGlobalPosition();
         this.transform.position = new Vector3(real_pos.x, real_pos.y, 0);
 
@@ -165,10 +166,45 @@ public class Area : MonoBehaviour
         else
         {
             Debug.LogWarning("AreaJson not found for " + type);
+            return;
+        }
+
+        // on initialise les zones qu'on a en emplacements
+        foreach (KeyValuePair<string, HashSet<Vector2>> emplacement in emplacements)
+        {
+            if (emplacement.Key.Contains("zone"))
+            {
+                // we get the size of the zone
+                string[] parts = emplacement.Key.Split('x');
+                parts[0] = parts[0].Replace("zone", "");
+                try
+                {
+                    int.Parse(parts[0]);
+                    int.Parse(parts[1]);
+                }
+                catch
+                {
+                    Debug.LogWarning("(Area) Zone size not found for " + emplacement.Key);
+                    continue;
+                }
+                Vector2Int zone_size = new Vector2Int(int.Parse(parts[0]), int.Parse(parts[1]));
+                
+                // we get the positions
+                foreach (Vector2 pos in emplacement.Value)
+                {
+                    // on récupère la zone
+                    GameObject zone = Instantiate(zone_prefab, Vector3.zero, Quaternion.identity);
+                    zone.GetComponent<Zone>().INIT(zone_size, pos, this.transform);
+                    // Destroy(zone);
+
+                    // on ajoute la zone à la liste
+                    zones.Add(zone);
+                }
+            }
         }
     }
 
-    public void setZone(GameObject zone_prefab, Vector2 pos = default(Vector2))
+    /* public void setZone(GameObject zone_prefab, Vector2 pos = default(Vector2))
     {
         this.zone_prefab = zone_prefab;
         
@@ -176,18 +212,18 @@ public class Area : MonoBehaviour
         {
             zone_pos = pos;
         }
-    }
+    } */
 
     public void GENERATE()
     {
 
         // on place les zones
-        if (zone_prefab != null)
+        /* if (zone_prefab != null)
         {
             GameObject zone = Instantiate(zone_prefab, Vector3.zero, Quaternion.identity);
             zone.GetComponent<Zone>().PlaceZone(this);
             Destroy(zone);
-        }
+        } */
 
         // on regarde si on a un skin qui permet de placer des posters & tags
         if (skin != "server")
@@ -256,8 +292,14 @@ public class Area : MonoBehaviour
             }
         }
 
+        // on parcourt les zones et on les génère
+        foreach (GameObject zone in zones)
+        {
+            zone.GetComponent<Zone>().GENERATE();
+        }
+
         // on parcourt les emplacements et on place les objets
-        foreach (KeyValuePair<string, HashSet<Vector2>> emplacement in emplacements)
+        /* foreach (KeyValuePair<string, HashSet<Vector2>> emplacement in emplacements)
         {
             if (zone_prefab != null ) { continue; }
 
@@ -268,10 +310,12 @@ public class Area : MonoBehaviour
                     PlaceInteractive(new Vector3(pos.x, pos.y, 0));
                 }
             }
-        }
+        } */
+
+
     }
 
-    public void PlaceZoneObject(GameObject obj, Vector3 pos, string parent="decorative")
+    /* public void PlaceZoneObject(GameObject obj, Vector3 pos, string parent="decorative")
     {
         // on créee l'objet
         GameObject interactive = Instantiate(obj, pos, Quaternion.identity);
@@ -279,7 +323,7 @@ public class Area : MonoBehaviour
         // on met le bon parent
         interactive.transform.SetParent(parents[parent]);
         interactive.transform.localPosition = pos + new Vector3(zone_pos.x, zone_pos.y, 0);
-    }
+    } */
 
 
     // OBJETS GENERATION
@@ -393,10 +437,10 @@ public class Area : MonoBehaviour
         return bounds;
     }
 
-    public Vector2Int getZoneOrigin()
+    /* public Vector2Int getZoneOrigin()
     {
         return (getGlobalPosition() + new Vector2Int((int) zone_pos.x, (int) zone_pos.y))*2;
-    }
+    } */
 
     public Vector2Int getGlobalPosition()
     {

@@ -113,4 +113,19 @@ public class GroundLight : MonoBehaviour
         Debug.Log("(GroundLight) AddLightTile: " + x + ", " + y + " (" + type + ")");
     }
 
+
+    // GETTERS & SETTERS
+    public Vector2Int size
+    {
+        get
+        {
+            return new Vector2Int(width, height);
+        }
+        set
+        {
+            width = value.x;
+            height = value.y;
+        }
+    }
+
 }

@@ -234,11 +234,11 @@ public class Sector : MonoBehaviour
 
 
             // on lui donne une zone ou pas
-            if (rooms.Contains(tile) && Random.Range(0f, 1f) < .5f)
+            /* if (rooms.Contains(tile) && Random.Range(0f, 1f) < .5f)
             {
                 // on lui donne une zone aléatoire
                 area.setZone(zones[Random.Range(0, zones.Count)]);
-            }
+            } */
 
 
 
@@ -247,13 +247,13 @@ public class Sector : MonoBehaviour
         }
     }
 
-    public virtual void setZone(GameObject zone, Vector2Int global_area_pos)
+    /* public virtual void setZone(GameObject zone, Vector2Int global_area_pos)
     {
         // on set la zone de chaque area
         Vector2Int area_pos = new Vector2Int(global_area_pos.x - x, global_area_pos.y - y);
         Debug.Log("(Sector) setZone : " + zone.name + " at " + area_pos + " in " + gameObject.name + " at " + x + "," + y);
         areas[area_pos].setZone(zone);
-    }
+    } */
 
     // MAIN FUNCTIONS
     public void move(Vector2Int movement)

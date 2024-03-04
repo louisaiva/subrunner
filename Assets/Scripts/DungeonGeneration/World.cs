@@ -140,7 +140,7 @@ public class World : MonoBehaviour
             }
 
             // on place la zone
-            leg_sect.setZone(zone, room);
+            // leg_sect.setZone(zone, room);
 
             // on sauvegarde la position de la zone
             leg_zones_areas.Add(room);

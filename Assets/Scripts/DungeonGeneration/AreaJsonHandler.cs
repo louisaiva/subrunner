@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using UnityEditor;
 using System.Linq;
 
+
 public class AreaJsonHandler : MonoBehaviour
 {
     [Header("Loading")]
@@ -17,7 +18,6 @@ public class AreaJsonHandler : MonoBehaviour
     [SerializeField] private List<GameObject> areas;
 
     // SELECTING AREAS
-
     public void SelectAllAreas()
     {
         areas = new List<GameObject>();
@@ -306,7 +306,7 @@ public class AreaJsonHandler : MonoBehaviour
 
                 if (area_type != "sas/")
                 {
-                    if (new string[] {"enemy","interactive"}.Contains(type))
+                    if (new string[] {"interactive"}.Contains(type))
                     {
                         // on déplace la pos en Y de -0.25
                         pos.y -= 0.25f;
@@ -363,7 +363,7 @@ public class AreaJsonHandler : MonoBehaviour
         // todo - un peu schlag, comment mieux faire ?
         // on crée des ceilings qu'on sauvegarde en gameobjects dans les prefabs/areas/ceilings
 
-        if (area.transform.Find("ceilings") != null)
+        /* if (area.transform.Find("ceilings") != null)
         {
             foreach (Transform ceiling in area.transform.Find("ceilings"))
             {
@@ -377,7 +377,7 @@ public class AreaJsonHandler : MonoBehaviour
                 // on sauvegarde le prefab
                 PrefabUtility.SaveAsPrefabAsset(ceiling.gameObject, ceiling_path);
             }
-        }
+        } */
 
 
 
@@ -621,19 +621,23 @@ public class AreaJsonHandler : MonoBehaviour
                 {
                     // on récupère les tiles
                     TileBase fgTile = fg[y][x] == 0 ? null : Resources.Load<TileBase>("tilesets/fg_2_rule");
-                    TileBase bgTile = bg[y][x] == 0 ? null : Resources.Load<TileBase>("tilesets/walls_1_rule");
+                    TileBase bgTile = bg[y][x] == 0 ? null : Resources.Load<TileBase>("tilesets/bg_base");
                     TileBase gdTile = gd[y][x] == 0 ? null : Resources.Load<TileBase>("tilesets/gd_2_rule");
 
+                    Vector3Int anchor = new Vector3Int(-8, -8, 0);
+
                     // on ajoute les tiles aux tilemaps
-                    area.transform.Find("fg_tilemap").GetComponent<Tilemap>().SetTile(new Vector3Int(x, y, 0), fgTile);
-                    area.transform.Find("bg_tilemap").GetComponent<Tilemap>().SetTile(new Vector3Int(x, y, 0), bgTile);
-                    area.transform.Find("gd_tilemap").GetComponent<Tilemap>().SetTile(new Vector3Int(x, y, 0), gdTile);
+                    area.transform.Find("fg_tilemap").GetComponent<Tilemap>().SetTile(new Vector3Int(x, y, 0) + anchor, fgTile);
+                    area.transform.Find("bg_tilemap").GetComponent<Tilemap>().SetTile(new Vector3Int(x, y, 0) + anchor, bgTile);
+                    area.transform.Find("gd_tilemap").GetComponent<Tilemap>().SetTile(new Vector3Int(x, y, 0) + anchor, gdTile);
                 }
             }
 
             // on ajoute les emplacements
             foreach (string type in emplacements.Keys)
             {
+                if (type != "enemy") { continue; }
+                
                 foreach (Vector2 pos in emplacements[type])
                 {
                     GameObject emplacement = new GameObject(type);
@@ -644,8 +648,8 @@ public class AreaJsonHandler : MonoBehaviour
 
             // on sauvegarde l'area
             string path = areas_path + directory + name + ".prefab";
-            // print("saving " + name + " to " + path);
-            // PrefabUtility.SaveAsPrefabAsset(area, path);
+            print("saving " + name + " to " + path);
+            PrefabUtility.SaveAsPrefabAsset(area, path);
 
             // on détruit l'area
             DestroyImmediate(area);

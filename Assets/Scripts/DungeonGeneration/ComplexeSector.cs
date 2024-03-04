@@ -110,11 +110,11 @@ public class ComplexeSector : Sector
 
 
             // on lui donne une zone ou pas
-            if (rooms.Contains(tile) && Random.Range(0f, 1f) < .1f)
+            /* if (rooms.Contains(tile) && Random.Range(0f, 1f) < .1f)
             {
                 // on lui donne une zone aléatoire
                 area.setZone(zones[Random.Range(0, zones.Count)]);
-            }
+            } */
 
             // on ajoute l'area au dictionnaire
             areas[tile] = area;

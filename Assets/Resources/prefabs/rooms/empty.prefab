@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 254843701342453760}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.0280687, y: -0.0534719, z: 0.06969544}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -295,7 +295,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -31225397
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -524,7 +524,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -667374433
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -580,7 +580,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6478687143270892589}
   - component: {fileID: 4413038570644400622}
-  - component: {fileID: -8990660584012394420}
   m_Layer: 6
   m_Name: empty
   m_TagString: Untagged
@@ -619,39 +618,6 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
---- !u!114 &-8990660584012394420
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4448907022124578336}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 150ee58c708a4b04f94751164965944d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fg: {fileID: 0}
-  bg: {fileID: 0}
-  gd: {fileID: 0}
-  width: 0
-  height: 0
-  x: 0
-  y: 0
-  light_prefab: {fileID: 0}
-  light_parent: {fileID: 0}
-  density_posters: 0.3
-  poster_prefab: {fileID: 0}
-  poster_sprites: []
-  doors_parent: {fileID: 0}
-  door_prefab: {fileID: 0}
-  objects_parent: {fileID: 0}
-  emplacement_handler: {fileID: 0}
-  chest_parent: {fileID: 0}
-  chest_prefab: {fileID: 0}
-  computer_parent: {fileID: 0}
-  computer_prefab: {fileID: 0}
-  auto_start: 0
 --- !u!1 &5517596409435431137
 GameObject:
   m_ObjectHideFlags: 0
@@ -917,7 +883,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1229680597
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
