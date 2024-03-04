@@ -342,7 +342,7 @@ public class AreaJsonHandler : MonoBehaviour
 
 
         // on convertit les emplacements en json
-        string json_empl = "\"emplacements\":{\n";
+        string json_empl = "\"emplacements\":{   \n";
         foreach (string type in emplacements.Keys)
         {
             json_empl += "\"" + type + "\" : [";
