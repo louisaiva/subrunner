@@ -15,6 +15,7 @@ public class Zone : MonoBehaviour
     // protected World world;
     protected ZoneManager bank;
     protected Transform objects_parent;
+    public Vector3 anchor = new Vector3(4,4,0);
 
     public Vector2Int size;
 
@@ -33,7 +34,7 @@ public class Zone : MonoBehaviour
     {
         this.size = size;
         transform.SetParent(parent);
-        transform.localPosition = new Vector3(position.x,position.y,0);
+        transform.localPosition = new Vector3(position.x,position.y,0) + anchor;
         SetRandomZone();
 
         // on applique la size à la ground_light

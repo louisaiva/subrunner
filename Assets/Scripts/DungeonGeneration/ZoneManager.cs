@@ -12,7 +12,7 @@ public class ZoneManager : MonoBehaviour
     private string prefabs_path = "Assets/Resources/prefabs/zones/";
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         // load all folders from the prefabs folder
         foreach (string path in Directory.GetDirectories(prefabs_path))
