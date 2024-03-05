@@ -64,7 +64,7 @@ public class GroundLight : MonoBehaviour
 
     private void CreateGround()
     {
-        Debug.Log("(GroundLight) CreateGround: " + width + ", " + height);
+        // Debug.Log("(GroundLight) CreateGround: " + width + ", " + height);
 
         // create ground
         for (int x = 0; x < width; x++)
@@ -110,7 +110,7 @@ public class GroundLight : MonoBehaviour
         light_go.GetComponent<SpriteRenderer>().sprite = ground_lights[type];
         lights_go.Add(light_go.transform);
 
-        Debug.Log("(GroundLight) AddLightTile: " + x + ", " + y + " (" + type + ")");
+        // Debug.Log("(GroundLight) AddLightTile: " + x + ", " + y + " (" + type + ")");
     }
 
 

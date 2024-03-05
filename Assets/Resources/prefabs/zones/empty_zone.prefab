@@ -45,8 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61c13654841d78b49814cd777631ba08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anchor: {x: 4, y: 4, z: 0}
   size: {x: 0, y: 0}
+  bank: {fileID: 0}
+  objects_parent: {fileID: 0}
 --- !u!1001 &4549092193843217877
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -69,7 +70,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7481912596808846943, guid: 9115fccbcf70a5741a99d5f6339a7009, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 7481912596808846943, guid: 9115fccbcf70a5741a99d5f6339a7009, type: 3}
       propertyPath: m_LocalPosition.z

@@ -13,11 +13,11 @@ public class Zone : MonoBehaviour
 
 
     // protected World world;
-    protected ZoneManager bank;
-    protected Transform objects_parent;
-    public Vector3 anchor = new Vector3(4,4,0);
+    private Vector3 anchor = new Vector3(4,4,0);
+    [SerializeField] protected Vector2Int size;
+    [SerializeField] protected ZoneManager bank;
+    [SerializeField] protected Transform objects_parent;
 
-    public Vector2Int size;
 
     void Awake()
     {
@@ -47,7 +47,11 @@ public class Zone : MonoBehaviour
         // on load la zone depuis le fichier prefab en fonction de sa taille
         // string path = prefabs_path + size.x + "x" + size.y;
         GameObject zone = bank.GetZone(size);
-        if (zone == null) { return; }
+        if (zone == null)
+        {
+            Debug.Log("Zone " + size + " not found");
+            return;
+        }
 
         objects_parent = zone.transform.Find("obj");
     }
@@ -67,12 +71,23 @@ public class Zone : MonoBehaviour
     {
         if (objects_parent == null) { return; }
 
+        Debug.Log("(Zone) GENERATE " + size + " at " + transform.position);
+
+        Vector3 lil_anchor = new Vector3(size.x > 1 ? size.x/4f : 0 , size.y > 1 ? size.y/4f : 0,0);
+
+        if (size.y == 7f && size.x == 8f)
+        {
+            lil_anchor = new Vector3(2f,2f,0);
+        }
+
         // on place les objets dans notre transform en conservant leur localposition
         foreach (Transform child in objects_parent)
         {
+
+            // on instancie l'objet
             Vector3 pos = child.localPosition;
-            child.SetParent(transform);
-            child.localPosition = pos;
+            GameObject obj = Instantiate(child.gameObject,transform);
+            obj.transform.localPosition = pos + lil_anchor;
         }
     }
 

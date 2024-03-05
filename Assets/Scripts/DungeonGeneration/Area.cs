@@ -295,6 +295,8 @@ public class Area : MonoBehaviour
         // on parcourt les zones et on les génère
         foreach (GameObject zone in zones)
         {
+            // Debug.Log("Generating zone " + zone.name + " at " + zone.transform.position);
+
             zone.GetComponent<Zone>().GENERATE();
         }
 
