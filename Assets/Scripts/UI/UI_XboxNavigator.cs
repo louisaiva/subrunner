@@ -54,6 +54,8 @@ public class UI_XboxNavigator : MonoBehaviour
         // on récupère les slots & tresholds
         this.slottable = slottable;
         resetNavigation();
+
+        Debug.Log("enable with current_slot_index : " + current_slot_index);
     }
 
     public void disable()
@@ -71,6 +73,8 @@ public class UI_XboxNavigator : MonoBehaviour
         // on désactive le slot
         if (current_slot_index != -1)
         {
+            Debug.Log("disable with current_slot_index : " + current_slot_index);
+
             slots[current_slot_index].GetComponent<I_UI_Slot>().OnPointerExit(null);
         }
 
@@ -245,7 +249,7 @@ public class UI_XboxNavigator : MonoBehaviour
             position = getPosition(current_slot_index);
         }
 
-        // string s = "SLOTS: \n\n";
+        string s = "SLOTS: \n\n";
 
         // on récupère le slot le plus proche
         int next_index = -1;
@@ -259,11 +263,11 @@ public class UI_XboxNavigator : MonoBehaviour
             Vector2 slot_position = getPosition(slot);
             float distance = Vector2.Distance(position, slot_position);
 
-            // on vérifie si c'est un item
-            /* if (slot.GetComponent<UI_Item>() != null)
+            // on vérifie si c'est un item/* 
+            if (slot.GetComponent<I_UI_Slot>() != null)
             {
-                s += slot.GetComponent<UI_Item>().item.item_name + " : " + slot_position + " / distance : " + distance + "\n";
-            } */
+                s += slot.name + " : " + slot_position + " / distance : " + distance + "\n";
+            }
 
 
             if (distance < closest_distance)
@@ -272,9 +276,11 @@ public class UI_XboxNavigator : MonoBehaviour
                 next_index = slots.IndexOf(slot);
             }
         }
+
         if (next_index == -1) { return; }
 
-        // print(s);
+        s += "\n\nclosest : " + next_index + "\n";
+        print(s);
 
         // on met à jour l'affichage
         if (!a_position_is_given && current_slot_index != -1)

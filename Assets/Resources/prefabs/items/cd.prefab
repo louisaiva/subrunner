@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 991999328008795163}
   - component: {fileID: 2748573037149330120}
   - component: {fileID: 3845646378405068767}
-  - component: {fileID: 1180315892945734718}
+  - component: {fileID: -6080430558089587905}
   m_Layer: 16
   m_Name: cd
   m_TagString: Untagged
@@ -132,7 +132,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &1180315892945734718
+--- !u!114 &-6080430558089587905
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -141,18 +141,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 2038104776426337295}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1550ad94fd538a44850ed358fa44feb, type: 3}
+  m_Script: {fileID: 11500000, guid: 405e5758e701405499cbeacb1e2312f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   item_type: item
-  category: technological
-  action_type: capacity
+  category: fileholder
+  action_type: none
   item_name: cd
-  item_description: 'D:  -  8.2TB left'
-  capacities:
-  - plug
+  item_description: a/     -    8.2 TB left
+  capacities: []
   capacity_level: 1
   perso: {fileID: 0}
+  files: []
+  max_files: 1
+  root: {fileID: 0}
+  root_name: a/
 --- !u!1001 &8570405629607860591
 PrefabInstance:
   m_ObjectHideFlags: 0

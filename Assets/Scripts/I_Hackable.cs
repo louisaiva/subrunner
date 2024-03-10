@@ -25,7 +25,7 @@ public interface I_Hackable
     Material default_material { get; set; }
 
     // HackUI
-    HackUI hack_ui { get; set; }
+    // HackUI hack_ui { get; set; }
 
 
     // fonctions
@@ -42,6 +42,6 @@ public interface I_Hackable
     void unOutlineMe();
 
     // HackUI
-    void showHackUI();
-    void hideHackUI();
+    // void showHackUI();
+    // void hideHackUI();
 }

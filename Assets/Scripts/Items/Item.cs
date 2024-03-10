@@ -9,7 +9,7 @@ public class Item : MonoBehaviour, I_Interactable
 
     // item basics
     public string item_type = "item"; // is it a drink ? is it a glasses ? is it a hack ?
-    public string category = "object"; // OBJECT / FOOD / DRINK / GLASSES / HACK
+    public string category = "object"; // OBJECT / FOOD / DRINK / GLASSES / FILEHOLDER
     public string action_type = "active"; // is it a capacity item ?
     public string item_name = "heal_potion"; // name of the item
     public string item_description = "this is a heal potion";
@@ -26,7 +26,6 @@ public class Item : MonoBehaviour, I_Interactable
     public Transform interact_tuto_label { get; set; }
 
     // UNITY FUNCTIONS
-
     protected void Awake()
     {
 
@@ -89,6 +88,7 @@ public class Item : MonoBehaviour, I_Interactable
         // on cache le label
         interact_tuto_label.gameObject.SetActive(false);
     }
+
     // end of life
     public void destruct()
     {

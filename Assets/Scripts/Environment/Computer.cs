@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 
 [RequireComponent(typeof(AnimationHandler))]
-public class Computer : MonoBehaviour, I_Hackable, I_Interactable
+public class Computer : MonoBehaviour, I_Hackable, I_Interactable, I_FileHolder
 {
 
     // la classe CHEST sert à créer des coffres
@@ -18,10 +18,20 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
 
     // ORDI
     public bool is_on = false;
+    public bool is_loading = false;
     public float time_to_live = 0f; // si on ne l'utilise pas pendant ce temps, il s'éteint
     [SerializeField] private float time_to_live_base = 30f; // si on ne l'utilise pas pendant ce temps, il s'éteint
 
+
+    // LOCKIN
+    public bool is_locked = true;
+    public string password = "802";
+
     public int niveau = 1;
+
+
+
+
 
     // ANIMATION
     private AnimationHandler anim_handler;
@@ -46,9 +56,10 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
     public Material default_material { get; set; }
 
     // HackUI
-    public HackUI hack_ui { get; set; }
+    // public HackUI // hack_ui { get; set; }
 
     // interactions
+    public GameObject ui_computer;
     public bool is_interacting { get; set; } // est en train d'interagir
     public Transform interact_tuto_label { get; set; }
 
@@ -64,8 +75,22 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
         // on récupère le skill tree
         tree = GameObject.Find("/perso/skills_tree").GetComponent<SkillTree>();
 
+        // on récupère le ui_computer
+        ui_computer = GameObject.Find("/ui/screen/ui_computer");
+
         // on initialise le hackin
         initHack();
+
+        // on initialise les fichiers
+        files = new List<File>();
+        max_files = 12;
+        AddFile(new File("mdp", "802"));
+        AddFile(new File("mot", "aujourd'hui, j'ai mangé une pomme"));
+        AddFile(new File("delta - etoile", "", "mp3"));
+        AddFile(new File("overwatch", "", "exe"));
+        AddFile(new File("castor", "", "png"));
+        AddFile(new File("castor2", "", "png"));
+
     }
 
     protected void Update()
@@ -116,7 +141,9 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
     {
         // on regarde si on est déjà allumé
         if (is_on) { return; }
-        
+
+        is_loading = true;
+
         // on met à jour les animations
         anim_handler.ChangeAnim(anims.onin, turnin_on_duration);
 
@@ -131,12 +158,24 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
 
         // on allume l'ordi
         is_on = true;
+        is_loading = false;
     }
 
     public virtual void turnOff()
     {
         // on regarde si on est déjà éteint
         if (!is_on) { return; }
+
+        // on regarde si on est pas en train d'intéragir
+        if (is_interacting)
+        {
+            // on arrête l'affichage de l'UI_Computer
+            ui_computer.GetComponent<UI_Computer>().hide();
+            is_interacting = false;
+        }
+
+
+        is_loading = true;
 
         // on met à jour les animations
         anim_handler.ChangeAnim(anims.offin, turnin_on_duration);
@@ -152,6 +191,34 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
 
         // on allume l'ordi
         is_on = false;
+        is_loading = false;
+
+        // on bloque l'ordi
+        is_locked = true;
+    }
+
+
+    // UNLOCKIN
+    public void unlock(string password="")
+    {
+        // on regarde si on peut le débloquer
+        if (!is_on || !is_locked) { return; }
+
+        // on regarde si le mot de passe est bon
+        if (password != this.password) { return; }
+
+        // on débloque l'ordi
+        Invoke("succeedUnlock", 1f);
+
+    }
+
+    public void succeedUnlock()
+    {
+        // on met à jour les animations
+        anim_handler.ChangeAnim(anims.idle_on);
+
+        // on débloque l'ordi
+        is_locked = false;
     }
 
 
@@ -178,14 +245,14 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
         default_material = GetComponent<SpriteRenderer>().material;
         outline_material = Resources.Load<Material>("materials/targeted/hack_computer");
 
-        // on récupère le hack_ui
-        hack_ui = transform.Find("hack_ui").GetComponent<HackUI>();
+        // on récupère le // hack_ui
+        // hack_ui = transform.Find("// hack_ui").GetComponent<HackUI>();
     }
 
     public bool isHackable(string hack_type, int bits)
     {
         // on change le mode de l'UI
-        hack_ui.setMode("unhackable");
+        // hack_ui.setMode("unhackable");
 
         // on regarde si l'ordi est allumé
         if (!is_on) { return false; }
@@ -198,7 +265,7 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
         if (bits < required_bits) { return false; }
 
         // on change le mode de l'UI
-        hack_ui.setMode("hackable");
+        // hack_ui.setMode("hackable");
 
         return true;
     }
@@ -230,7 +297,7 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
         if (!anim_handler.ChangeAnimTilEnd(anims.hackin, hacking_current_duration)) { return 0; }
 
         // on change le mode de l'UI
-        hack_ui.setMode("hacked");
+        // hack_ui.setMode("hacked");
 
         // on commence le hack
         is_getting_hacked = true;
@@ -275,7 +342,7 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
         anim_handler.ChangeAnimTilEnd(is_on ? anims.idle_on : anims.idle_off);
 
         // on met à jour HackUI
-        hack_ui.setMode("unhackable");
+        // hack_ui.setMode("unhackable");
 
         // on met à jour les animations
         succeedTurnOn();
@@ -285,11 +352,11 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
     {
 
         // on affiche le virtual tree du perso
-        tree.virtualLevelUp(this);
+        // tree.virtualLevelUp(this);
 
         // on augmente le niveau de l'ordi
-        niveau++;
-        security_lvl = niveau;
+        // niveau++;
+        // security_lvl = niveau;
 
         // on arrête le hack
         is_getting_hacked = false;
@@ -297,10 +364,11 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
         hacking_current_duration = 0f;
 
         // on met à jour HackUI
-        hack_ui.setMode("unhackable");
+        // hack_ui.setMode("unhackable");
 
-        // on met à jour les animations
-        succeedTurnOn();
+        // on débloque l'ordi
+        // succeedTurnOn();
+        succeedUnlock();
     }
 
 
@@ -317,46 +385,62 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
     }
 
     // HackUI
-    public void showHackUI()
+    /* public void showHackUI()
     {
         // on le montre
-        hack_ui.show();
+        // hack_ui.show();
     }
     public void hideHackUI()
     {
 
         // on le montre
-        hack_ui.hide();
-    }
+        // hack_ui.hide();
+    } */
 
     // INTERACTIONS
     public bool isInteractable()
     {
-        // l'interaction porte juste sur l'allumage de l'ordi,
-        // donc on return false si l'ordi est déjà allumé
-        if (is_on) { return false; }
+        // on vérifie qu'on est pas déjà en train d'allumer l'ordi
+        if (!is_on && is_loading) { return false; }
 
-        // si on est déjà en train d'interagir, on return false
-        if (is_interacting) { return false; }
+        // on vérifie qu'on est pas déjà en train d'interagir
+        if (is_on && is_interacting) { return false; }
 
         return true;
     }
     public void interact(GameObject target)
     {
-        // on allume l'ordi
-        turnOn();
 
-        // on commence l'interaction
-        is_interacting = true;
+        // on vérifie quelle interaction on fait
+        if (!is_on)
+        {
+            // on allume l'ordi
+            turnOn();
 
-        // on lance le timer d'exctinction automatique
-        time_to_live = time_to_live_base;
+            // on lance le timer d'exctinction automatique
+            time_to_live = time_to_live_base;
+        }
+        else
+        {
+            // on lance l'affichage de l'UI_Computer
+            ui_computer.GetComponent<UI_Computer>().setComputer(this);
+            ui_computer.GetComponent<UI_Computer>().show();
+
+            is_interacting = true;
+        }
+
     }
     public void stopInteract()
     {
         OnPlayerInteractRangeExit();
+
         // on arrête l'interaction
-        is_interacting = false;
+        if (is_interacting)
+        {
+            // on arrête l'affichage de l'UI_Computer
+            ui_computer.GetComponent<UI_Computer>().hide();
+            is_interacting = false;
+        }
     }
 
 
@@ -377,6 +461,60 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable
         // on cache le label
         interact_tuto_label.gameObject.SetActive(false);
     }
+
+
+
+
+
+
+
+    // FILES
+    public List<File> files { get; set; }
+    public int max_files { get; set; }
+    public Transform root { get; set; }
+    public string root_name { get; set; }
+
+
+    // FILE MANAGEMENT
+    public void ClearFiles()
+    {
+        files.Clear();
+    }
+
+    public bool AddFile(File file)
+    {
+        // on vérifie qu'on peut ajouter un fichier
+        if (files.Count < max_files)
+        {
+            // on ajoute le fichier
+            files.Add(file);
+            return true;
+        }
+        return false;
+    }
+
+    public bool RemoveFile(File file)
+    {
+        // on vérifie qu'on peut retirer un fichier
+        if (files.Contains(file))
+        {
+            // on retire le fichier
+            files.Remove(file);
+            return true;
+        }
+        return false;
+    }
+
+    public List<File> GetFiles()
+    {
+        // if (files == null) {  }
+
+        return files;
+    }
+
+
+
+
 }
 
 public class ComputerAnims

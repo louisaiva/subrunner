@@ -550,7 +550,7 @@ public class Perso : Attacker
             if (hit.GetComponent<I_Hackable>() == null) { continue; }
 
             // on affiche le HackUI
-            hit.GetComponent<I_Hackable>().showHackUI();
+            // hit.GetComponent<I_Hackable>().showHackUI();
 
             // on regarde si la distance entre la souris et l'objet est plus petite que la distance précédente
             float new_distance = Vector2.Distance(mouse_pos, hit.transform.Find("hack_point").position);
