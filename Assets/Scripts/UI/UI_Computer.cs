@@ -12,12 +12,15 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
     [SerializeField] private bool is_showed = false;
     [SerializeField] private GameObject screen_bg;
     [SerializeField] private Transform files_parent;
+    [SerializeField] private Transform applis_parent;
     [SerializeField] private Transform details_parent;
+    [SerializeField] private TextMeshProUGUI filename;
+    [SerializeField] private TextMeshProUGUI filedata;
     private UI_MainUI main_ui;
 
 
     [Header("Computer")]
-    [SerializeField] private Computer computer;
+    public Computer computer;
 
     [Header("Files")]
     [SerializeField] private GameObject file_prefab;
@@ -26,7 +29,7 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
     [Header("Slottable")]
     [SerializeField] private Vector2 base_position = new Vector2(0, 10000);
     [SerializeField] private float angle_threshold = 45f;
-    [SerializeField] private float angle_multiplicator = 100f;
+    [SerializeField] private float angle_multiplicator = 0f;
 
 
     [Header("Inputs")]
@@ -38,8 +41,11 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
     {
         // on récupère les ui
         screen_bg = transform.Find("bg").gameObject;
+        applis_parent = transform.Find("applis");
         files_parent = transform.Find("files");
         details_parent = transform.Find("details");
+        filename = transform.Find("details/name").GetComponent<TextMeshProUGUI>();
+        filedata = transform.Find("details/data").GetComponent<TextMeshProUGUI>();
 
         // on récupère le main_ui
         main_ui = GameObject.Find("/ui").GetComponent<UI_MainUI>();
@@ -74,7 +80,9 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
         // on affiche les ui
         screen_bg.SetActive(true);
         transform.Find("text").gameObject.SetActive(true);
+        applis_parent.gameObject.SetActive(true);
         files_parent.gameObject.SetActive(true);
+        details_parent.gameObject.SetActive(true);
         // hc.SetActive(true);
 
         // on active le xbox_manager
@@ -92,7 +100,9 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
         // on cache les ui
         screen_bg.SetActive(false);
         transform.Find("text").gameObject.SetActive(false);
+        applis_parent.gameObject.SetActive(false);
         files_parent.gameObject.SetActive(false);
+        details_parent.gameObject.SetActive(false);
         // hc.SetActive(false);
 
         // on affiche le main_ui
@@ -115,7 +125,6 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
     // MAIN FUNCTIONS
     public void setComputer(Computer computer)
     {
-
         // on met à jour le computer
         if (this.computer != computer)
         {
@@ -132,6 +141,12 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
                 // on donne un nom
                 file_ui.name = file.name + "." + file.extension + " (" + Random.Range(0, 1000) + ")";
                 this.files.Add(file_ui);
+            }
+
+            // on maj les applis
+            foreach (Transform appli in applis_parent)
+            {
+                appli.GetComponent<UI_App>().setUIComputer(gameObject);
             }
         }
 
@@ -151,13 +166,38 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
         files.Clear();
 
         // on supprime les details
-        foreach (Transform child in details_parent)
-        {
-            Destroy(child.gameObject);
-        }
+        removeDetails();
 
         // on supprime le computer
         computer = null;
+    }
+
+
+    // DETAILS
+    public void setDetails(File file)
+    {
+        filename.text = file.name + "." + file.extension;
+        filedata.text = file.data;
+    }
+
+    public void removeDetails()
+    {
+        filename.text = "";
+        filedata.text = "";
+    }
+
+    public void detailsRollShow()
+    {
+        if (details_parent.gameObject.activeSelf)
+        {
+            // on cache les details
+            details_parent.gameObject.SetActive(false);
+
+        }
+        else
+        {
+            details_parent.gameObject.SetActive(true);
+        }
     }
 
 
@@ -172,13 +212,19 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
         // on met à jour la position de base
         base_position = this.base_position;
 
-        if (files.Count > 0)
+        // on récupère les slots
+        List<GameObject> slots = new List<GameObject>();
+
+        // on récupère les applis
+        foreach (Transform appli in applis_parent)
         {
-            // on met à jour la position de base
-            Debug.Log("UI_Computer : GetSlots : " + files.Count + " slots found, with first element : " + files[0].name);
+            slots.Add(appli.gameObject);
         }
 
-        return files;
+        // on récupère les files
+        slots.AddRange(files);
+
+        return slots;
     }
 
 }

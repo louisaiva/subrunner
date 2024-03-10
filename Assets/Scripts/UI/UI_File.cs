@@ -30,7 +30,6 @@ public class UI_File : MonoBehaviour, I_UI_Slot
     // unity functions
     protected void Awake()
     {
-
         // on récupère l'ui
         ui = transform.Find("file");
 
@@ -95,7 +94,8 @@ public class UI_File : MonoBehaviour, I_UI_Slot
     // interface functions
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("UI_File : OnPointerEnter : " + gameObject.name);
+        // Debug.Log("UI_File : OnPointerEnter : " + gameObject.name);
+        ui_computer.GetComponent<UI_Computer>().setDetails(file);
 
         // on change le sprite du slot
         GetComponent<Image>().sprite = hoover_sprite;
@@ -106,6 +106,8 @@ public class UI_File : MonoBehaviour, I_UI_Slot
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        ui_computer.GetComponent<UI_Computer>().removeDetails();
+
         // on change le sprite du slot
         GetComponent<Image>().sprite = base_sprite;
 
