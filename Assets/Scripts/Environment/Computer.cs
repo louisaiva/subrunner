@@ -400,8 +400,8 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable, I_FileHolder
     // INTERACTIONS
     public bool isInteractable()
     {
-        // on vérifie qu'on est pas déjà en train d'allumer l'ordi
-        if (!is_on && is_loading) { return false; }
+        // on vérifie qu'on est pas déjà en train d'allumer/eteindre l'ordi
+        if (is_loading) { return false; }
 
         // on vérifie qu'on est pas déjà en train d'interagir
         if (is_on && is_interacting) { return false; }

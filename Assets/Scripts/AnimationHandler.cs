@@ -6,6 +6,7 @@ public class AnimationHandler : MonoBehaviour
 {
     Animator animator;
     public string current_anim;
+    public string next_anim = "";
 
     // forcing one animation to play till the end
     public bool is_forcing = false;

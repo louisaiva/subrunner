@@ -5,12 +5,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+[RequireComponent(typeof(AnimationHandler))]
 public class UI_Computer : MonoBehaviour, I_UI_Slottable
 {
 
     [Header("UI Layers")]
     [SerializeField] private bool is_showed = false;
-    [SerializeField] private GameObject screen_bg;
+    // [SerializeField] private GameObject screen_bg;
     [SerializeField] private Transform files_parent;
     [SerializeField] private Transform applis_parent;
     [SerializeField] private Transform details_parent;
@@ -36,11 +37,15 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
     [SerializeField] private UI_XboxNavigator xbox_manager;
     [SerializeField] private InputManager input_manager;
 
+    [Header("Animations")]
+    protected AnimationHandler anim_handler;
+    protected InterfaceAnims anims = new InterfaceAnims();
+
     // unity functions
     void Start()
     {
         // on récupère les ui
-        screen_bg = transform.Find("bg").gameObject;
+        // screen_bg = transform.Find("bg").gameObject;
         applis_parent = transform.Find("applis");
         files_parent = transform.Find("files");
         details_parent = transform.Find("details");
@@ -58,6 +63,13 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
 
         // on récupère l'input_manager
         input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
+
+
+        // on récupère l'anim_handler
+        anim_handler = GetComponent<AnimationHandler>();
+
+        // on init les animations
+        anims.init();
 
         // on cache l'inventaire
         hide();
@@ -78,11 +90,12 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
         is_showed = true;
 
         // on affiche les ui
-        screen_bg.SetActive(true);
+        // screen_bg.SetActive(true);
+        GetComponent<Image>().enabled = true;
         transform.Find("text").gameObject.SetActive(true);
         applis_parent.gameObject.SetActive(true);
         files_parent.gameObject.SetActive(true);
-        details_parent.gameObject.SetActive(true);
+        // details_parent.gameObject.SetActive(true);
         // hc.SetActive(true);
 
         // on active le xbox_manager
@@ -98,7 +111,8 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
         is_showed = false;
 
         // on cache les ui
-        screen_bg.SetActive(false);
+        // screen_bg.SetActive(false);
+        GetComponent<Image>().enabled = false;
         transform.Find("text").gameObject.SetActive(false);
         applis_parent.gameObject.SetActive(false);
         files_parent.gameObject.SetActive(false);
@@ -172,6 +186,16 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
         computer = null;
     }
 
+    // ANIMATIONS
+    public void playIDLE_unlocked()
+    {
+        anim_handler.ChangeAnim(anims.idle_unlocked);
+    }
+
+    public void playIDLE_details()
+    {
+        anim_handler.ChangeAnim(anims.idle_details);
+    }
 
     // DETAILS
     public void setDetails(File file)
@@ -193,10 +217,17 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
             // on cache les details
             details_parent.gameObject.SetActive(false);
 
+            // on joue l'anim de fermeture
+            anim_handler.ChangeAnim(anims.closing_details, anims.timings[anims.closing_details]);
+            Invoke("playIDLE_unlocked", anims.timings[anims.closing_details]);
         }
         else
         {
             details_parent.gameObject.SetActive(true);
+
+            // on joue l'anim de fermeture
+            anim_handler.ChangeAnim(anims.openin_details, anims.timings[anims.openin_details]);
+            Invoke("playIDLE_details", anims.timings[anims.openin_details]);
         }
     }
 
@@ -227,4 +258,59 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
         return slots;
     }
 
+}
+
+
+public class InterfaceAnims
+{
+    
+    // ANIMATIONS
+    public string idle_locked = "idle_locked";
+    public string locked_one_digit = "locked_one_digit";
+    public string locked_two_digits = "locked_two_digits";
+    public string locked_three_digits = "locked_three_digits";
+    public string wrong_unlock = "wrong_unlock";
+    public string success_unlock = "success_unlock";
+    public string idle_unlocked = "idle_unlocked";
+    public string openin_details = "openin_details";
+    public string idle_details = "idle_details";
+    public string closing_details = "closing_details";
+
+
+    // TIMINGS
+    public Dictionary<string, float> timings = new Dictionary<string, float>()
+    {
+        {"idle_locked", 0.1f},
+        {"locked_one_digit", 0.1f},
+        {"locked_two_digits", 0.1f},
+        {"locked_three_digits", 0.1f},
+        {"wrong_unlock", 0.1f},
+        {"success_unlock", 0.1f},
+        {"idle_unlocked", 0.1f},
+        {"openin_details", 0.1f},
+        {"idle_details", 0.1f},
+        {"closing_details", 0.1f},
+    };
+
+
+    public virtual void init(string name="bee")
+    {
+        idle_locked = name + "_" + idle_locked;
+        locked_one_digit = name + "_" + locked_one_digit;
+        locked_two_digits = name + "_" + locked_two_digits;
+        locked_three_digits = name + "_" + locked_three_digits;
+        wrong_unlock = name + "_" + wrong_unlock;
+        success_unlock = name + "_" + success_unlock;
+        idle_unlocked = name + "_" + idle_unlocked;
+        openin_details = name + "_" + openin_details;
+        idle_details = name + "_" + idle_details;
+        closing_details = name + "_" + closing_details;
+
+        Dictionary<string, float> new_timings = new Dictionary<string, float>();
+        foreach (KeyValuePair<string, float> timing in timings)
+        {
+            new_timings.Add(name + "_" + timing.Key, timing.Value);
+        }
+        timings = new_timings;
+    }
 }
