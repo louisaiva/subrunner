@@ -199,17 +199,18 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable, I_FileHolder
 
 
     // UNLOCKIN
-    public void unlock(string password="")
+    public bool unlock(string password="")
     {
         // on regarde si on peut le débloquer
-        if (!is_on || !is_locked) { return; }
+        if (!is_on || !is_locked) { return false; }
 
         // on regarde si le mot de passe est bon
-        if (password != this.password) { return; }
+        if (password != this.password) { return false; }
 
         // on débloque l'ordi
         Invoke("succeedUnlock", 1f);
 
+        return true;
     }
 
     public void succeedUnlock()

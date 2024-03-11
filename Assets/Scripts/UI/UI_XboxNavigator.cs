@@ -225,8 +225,12 @@ public class UI_XboxNavigator : MonoBehaviour
         // slot.GetComponent<I_UI_Slot>().OnPointerExit(null);
         slot.GetComponent<I_UI_Slot>().OnPointerClick(null);
 
-        // on navigue vers le slot le plus proche
-        navigateToClosest(position);
+        // on vérifie si on doit naviguer
+        if (slot.GetComponent<UI_Item>() != null)
+        {
+            // on navigue vers le slot le plus proche
+            navigateToClosest(position);
+        }
     }
 
     private void navigateToClosest(Vector2 position = new Vector2())

@@ -86,6 +86,7 @@ public class Item : MonoBehaviour, I_Interactable
     public void OnPlayerInteractRangeExit()
     {
         // on cache le label
+        if (interact_tuto_label == null) { return; }
         interact_tuto_label.gameObject.SetActive(false);
     }
 

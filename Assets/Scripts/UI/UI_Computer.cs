@@ -14,6 +14,7 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
     // [SerializeField] private GameObject screen_bg;
     [SerializeField] private Transform files_parent;
     [SerializeField] private Transform applis_parent;
+    [SerializeField] private Transform numpad_parent;
     [SerializeField] private Transform details_parent;
     [SerializeField] private TextMeshProUGUI filename;
     [SerializeField] private TextMeshProUGUI filedata;
@@ -22,6 +23,7 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
 
     [Header("Computer")]
     public Computer computer;
+    [SerializeField] private string current_try_password = "";
 
     [Header("Files")]
     [SerializeField] private GameObject file_prefab;
@@ -48,6 +50,7 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
         // screen_bg = transform.Find("bg").gameObject;
         applis_parent = transform.Find("applis");
         files_parent = transform.Find("files");
+        numpad_parent = transform.Find("numpad");
         details_parent = transform.Find("details");
         filename = transform.Find("details/name").GetComponent<TextMeshProUGUI>();
         filedata = transform.Find("details/data").GetComponent<TextMeshProUGUI>();
@@ -93,8 +96,21 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
         // screen_bg.SetActive(true);
         GetComponent<Image>().enabled = true;
         transform.Find("text").gameObject.SetActive(true);
-        applis_parent.gameObject.SetActive(true);
-        files_parent.gameObject.SetActive(true);
+
+        // on regarde dans quel état est l'ordinateur
+        if (computer.is_locked)
+        {
+            // on arrive sur le lock_screen
+            anim_handler.ChangeAnim(anims.idle_locked);
+            numpad_parent.gameObject.SetActive(true);
+        }
+        else
+        {
+            // on arrive sur le main_screen
+            applis_parent.gameObject.SetActive(true);
+            files_parent.gameObject.SetActive(true);
+        }
+
         // details_parent.gameObject.SetActive(true);
         // hc.SetActive(true);
 
@@ -104,8 +120,14 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
 
     public void hide()
     {
+        // on cancel tous les invoke
+        CancelInvoke();
+
         // on désactive le xbox_manager
         xbox_manager.disable();
+
+        // on reset le current_try_password
+        current_try_password = "";
 
         // on cache l'ui
         is_showed = false;
@@ -117,6 +139,7 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
         applis_parent.gameObject.SetActive(false);
         files_parent.gameObject.SetActive(false);
         details_parent.gameObject.SetActive(false);
+        numpad_parent.gameObject.SetActive(false);
         // hc.SetActive(false);
 
         // on affiche le main_ui
@@ -186,7 +209,67 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
         computer = null;
     }
 
+
+    // LOCK SCREEN
+    public void clickOnNumpad(string num)
+    {
+        // on met à jour le computer
+        current_try_password += num;
+
+        // on joue l'anim
+        if (current_try_password.Length == 0)
+        {
+            anim_handler.ChangeAnim(anims.idle_locked);
+        }
+        else if (current_try_password.Length == 1)
+        {
+            anim_handler.ChangeAnim(anims.locked_one_digit);
+        }
+        else if (current_try_password.Length == 2)
+        {
+            anim_handler.ChangeAnim(anims.locked_two_digits);
+        }
+        else if (current_try_password.Length == 3)
+        {
+            anim_handler.ChangeAnim(anims.locked_three_digits);
+
+            // on vérifie le mot de passe
+            if (computer.unlock(current_try_password))
+            {
+                // on déverouille l'ordinateur
+                anim_handler.ChangeAnim(anims.success_unlock, anims.timings[anims.success_unlock]);
+                Invoke("successUnlock", anims.timings[anims.success_unlock]);
+            }
+            else
+            {
+                // on remet à zéro
+                anim_handler.ChangeAnim(anims.wrong_unlock, anims.timings[anims.wrong_unlock]);
+                Invoke("playIDLE_locked", anims.timings[anims.wrong_unlock]);
+            }
+            current_try_password = "";
+        }
+    }
+
+    public void successUnlock()
+    {
+        // on cache le numpad
+        numpad_parent.gameObject.SetActive(false);
+
+        // on affiche les applis et les files
+        applis_parent.gameObject.SetActive(true);
+        files_parent.gameObject.SetActive(true);
+
+        // on joue l'anim
+        anim_handler.ChangeAnim(anims.idle_unlocked);
+    }
+
+
     // ANIMATIONS
+    public void playIDLE_locked()
+    {
+        anim_handler.ChangeAnim(anims.idle_locked);
+    }
+
     public void playIDLE_unlocked()
     {
         anim_handler.ChangeAnim(anims.idle_unlocked);
@@ -246,14 +329,29 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
         // on récupère les slots
         List<GameObject> slots = new List<GameObject>();
 
-        // on récupère les applis
-        foreach (Transform appli in applis_parent)
+        // on récupère les applis (si le parent est actif)
+        if (applis_parent.gameObject.activeSelf)
         {
-            slots.Add(appli.gameObject);
+            foreach (Transform appli in applis_parent)
+            {
+                slots.Add(appli.gameObject);
+            }
         }
 
-        // on récupère les files
-        slots.AddRange(files);
+        // on récupère les files (si le parent est actif)
+        if (files_parent.gameObject.activeSelf)
+        {
+            slots.AddRange(files);
+        }
+
+        // on récupère les numpad (si le parent est actif)
+        if (numpad_parent.gameObject.activeSelf)
+        {
+            foreach (Transform numpad in numpad_parent)
+            {
+                slots.Add(numpad.gameObject);
+            }
+        }
 
         return slots;
     }
@@ -267,8 +365,8 @@ public class InterfaceAnims
     // ANIMATIONS
     public string idle_locked = "idle_locked";
     public string locked_one_digit = "locked_one_digit";
-    public string locked_two_digits = "locked_two_digits";
-    public string locked_three_digits = "locked_three_digits";
+    public string locked_two_digits = "locked_two_digit";
+    public string locked_three_digits = "locked_three_digit";
     public string wrong_unlock = "wrong_unlock";
     public string success_unlock = "success_unlock";
     public string idle_unlocked = "idle_unlocked";
@@ -284,8 +382,8 @@ public class InterfaceAnims
         {"locked_one_digit", 0.1f},
         {"locked_two_digits", 0.1f},
         {"locked_three_digits", 0.1f},
-        {"wrong_unlock", 0.1f},
-        {"success_unlock", 0.1f},
+        {"wrong_unlock", 0.3f},
+        {"success_unlock", 0.5f},
         {"idle_unlocked", 0.1f},
         {"openin_details", 0.1f},
         {"idle_details", 0.1f},
