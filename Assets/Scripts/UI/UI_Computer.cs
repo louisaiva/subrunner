@@ -11,7 +11,6 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
 
     [Header("UI Layers")]
     [SerializeField] private bool is_showed = false;
-    // [SerializeField] private GameObject screen_bg;
     [SerializeField] private Transform files_parent;
     [SerializeField] private Transform applis_parent;
     [SerializeField] private Transform numpad_parent;
@@ -93,23 +92,24 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
         is_showed = true;
 
         // on affiche les ui
-        // screen_bg.SetActive(true);
         GetComponent<Image>().enabled = true;
         transform.Find("text").gameObject.SetActive(true);
         transform.Find("text").GetComponent<TextMeshProUGUI>().text = computer.os;
 
+
         // on regarde dans quel état est l'ordinateur
         if (computer.is_locked)
         {
+            // on lance l'anim de chargement de l'ordinateur
+            anim_handler.ChangeAnim(anims.loading_screen, anims.timings[anims.loading_screen]);
+
             // on arrive sur le lock_screen
-            anim_handler.ChangeAnim(anims.idle_locked);
-            numpad_parent.gameObject.SetActive(true);
+            Invoke("successLock", anims.timings[anims.loading_screen]);
         }
         else
         {
             // on arrive sur le main_screen
-            applis_parent.gameObject.SetActive(true);
-            files_parent.gameObject.SetActive(true);
+            successUnlock();
         }
 
         // details_parent.gameObject.SetActive(true);
@@ -238,6 +238,10 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
             // on vérifie le mot de passe
             if (computer.unlock(current_try_password))
             {
+                // on reset le dernier numpad
+                transform.Find("numpad/" + num).GetComponent<UI_Numpad>().is_hoovered = false;
+                transform.Find("numpad/" + num).GetComponent<UI_Numpad>().resetSprite();
+
                 // on déverouille l'ordinateur
                 anim_handler.ChangeAnim(anims.success_unlock, anims.timings[anims.success_unlock]);
                 Invoke("successUnlock", anims.timings[anims.success_unlock]);
@@ -275,16 +279,23 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
         // on cache les applis et les files
         applis_parent.gameObject.SetActive(false);
         files_parent.gameObject.SetActive(false);
-        
+
         // on cache les details
         details_parent.gameObject.SetActive(false);
 
+        successLock();
+
+    }
+
+    public void successLock()
+    {
         // on affiche le numpad
         numpad_parent.gameObject.SetActive(true);
 
         // on joue l'anim
         anim_handler.ChangeAnim(anims.idle_locked);
     }
+
 
     // ANIMATIONS
     public void playIDLE_locked()
@@ -381,10 +392,11 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
 }
 
 
-public class InterfaceAnims
+public class InterfaceAnims 
 {
     
     // ANIMATIONS
+    public string loading_screen = "loading_screen";
     public string idle_locked = "idle_locked";
     public string locked_one_digit = "locked_one_digit";
     public string locked_two_digits = "locked_two_digit";
@@ -400,6 +412,7 @@ public class InterfaceAnims
     // TIMINGS
     public Dictionary<string, float> timings = new Dictionary<string, float>()
     {
+        {"loading_screen", 0.5f},
         {"idle_locked", 0.1f},
         {"locked_one_digit", 0.1f},
         {"locked_two_digits", 0.1f},
@@ -415,6 +428,7 @@ public class InterfaceAnims
 
     public virtual void init(string name="bee")
     {
+        loading_screen = name + "_" + loading_screen;
         idle_locked = name + "_" + idle_locked;
         locked_one_digit = name + "_" + locked_one_digit;
         locked_two_digits = name + "_" + locked_two_digits;

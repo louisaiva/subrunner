@@ -113,6 +113,8 @@ public class UI_Numpad : MonoBehaviour, I_UI_Slot
 
     public void resetSprite()
     {
+        CancelInvoke("resetSprite");
+
         num.localPosition = base_num_pos;
 
         // on change le sprite du slot
