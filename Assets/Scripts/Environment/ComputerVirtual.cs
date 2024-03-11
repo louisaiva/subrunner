@@ -9,6 +9,13 @@ public class ComputerVirtual : Computer
     // UNITY FUNCTIONS
     new void Start()
     {
+        os_names = new List<string> { "bee F14",
+                                            "bee - 16.04.1 LTS",
+                                            "bee - 14.04.1 LTS",
+                                            "bee F18",
+                                            "bee Y1",
+                                            "bee SWARM"};
+
         base.Start();
         anims = new ComputerVirtualAnims();
     }

@@ -26,7 +26,15 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable, I_FileHolder
     // LOCKIN
     public bool is_locked = true;
     public string password = "802";
-
+    public string os = "bee - 14.04.1 LTS";
+    protected List<string> os_names = new List<string> { "Doors XP",
+                                                        "Doors Vista",
+                                                        "Doors 7",
+                                                        "Doors 8",
+                                                        "Doors 8.1",
+                                                        "Doors 10",
+                                                        "Doors 11",
+                                                        };
     public int niveau = 1;
 
 
@@ -81,15 +89,24 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable, I_FileHolder
         // on initialise le hackin
         initHack();
 
+        // on initialise l'OS et le password
+        os = os_names[Random.Range(0, os_names.Count)];
+        password = Random.Range(100, 999).ToString();
+
         // on initialise les fichiers
-        files = new List<File>();
         max_files = 12;
-        AddFile(new File("mdp", "802"));
+        FileBank bank = GameObject.Find("/utils/bank").GetComponent<FileBank>();
+        files = bank.getRandomFiles(Random.Range(2,7));
+        // files.Add(bank.generateRandomTxtHint(os,password));
+        AddFile(bank.generateRandomTxtHint(os,password));
+
+
+        /* AddFile(new File("mdp", "802"));
         AddFile(new File("mot", "aujourd'hui, j'ai mangé une pomme"));
         AddFile(new File("delta - etoile", "", "mp3"));
         AddFile(new File("overwatch", "", "exe"));
         AddFile(new File("castor", "", "png"));
-        AddFile(new File("castor2", "", "png"));
+        AddFile(new File("castor2", "", "png")); */
 
     }
 
@@ -220,6 +237,15 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable, I_FileHolder
 
         // on débloque l'ordi
         is_locked = false;
+    }
+
+    public void Lock()
+    {
+        // on regarde si on peut le bloquer
+        if (!is_on || is_locked) { return; }
+
+        // on bloque l'ordi
+        is_locked = true;
     }
 
 

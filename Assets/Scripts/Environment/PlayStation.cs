@@ -9,6 +9,17 @@ public class PlayStation : Computer
     // UNITY FUNCTIONS
     new void Start()
     {
+        os_names = new List<string> { "GS X",
+                                    "GS 4.2",
+                                    "GS 4.3",
+                                    "GS 4.4",
+                                    "GS 5.01",
+                                    "GS 5.03",
+                                    "GS 5.05",
+                                    "GS Pro 5.1",
+                                    "GS 2X"
+                                    };
+
         base.Start();
         anims = new PlayStationAnims();
     }

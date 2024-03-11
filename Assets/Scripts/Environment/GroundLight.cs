@@ -110,6 +110,9 @@ public class GroundLight : MonoBehaviour
         light_go.GetComponent<SpriteRenderer>().sprite = ground_lights[type];
         lights_go.Add(light_go.transform);
 
+        // on cache le sprite (test)
+        light_go.GetComponent<SpriteRenderer>().enabled = false;
+
         // Debug.Log("(GroundLight) AddLightTile: " + x + ", " + y + " (" + type + ")");
     }
 

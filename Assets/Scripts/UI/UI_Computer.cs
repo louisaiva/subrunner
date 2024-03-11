@@ -96,6 +96,7 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
         // screen_bg.SetActive(true);
         GetComponent<Image>().enabled = true;
         transform.Find("text").gameObject.SetActive(true);
+        transform.Find("text").GetComponent<TextMeshProUGUI>().text = computer.os;
 
         // on regarde dans quel état est l'ordinateur
         if (computer.is_locked)
@@ -136,6 +137,7 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
         // screen_bg.SetActive(false);
         GetComponent<Image>().enabled = false;
         transform.Find("text").gameObject.SetActive(false);
+        transform.Find("text").GetComponent<TextMeshProUGUI>().text = "";
         applis_parent.gameObject.SetActive(false);
         files_parent.gameObject.SetActive(false);
         details_parent.gameObject.SetActive(false);
@@ -263,6 +265,26 @@ public class UI_Computer : MonoBehaviour, I_UI_Slottable
         anim_handler.ChangeAnim(anims.idle_unlocked);
     }
 
+    public void Lock()
+    {
+        // on lock l'ordinateur
+        computer.Lock();
+
+        if (!is_showed) { return; }
+
+        // on cache les applis et les files
+        applis_parent.gameObject.SetActive(false);
+        files_parent.gameObject.SetActive(false);
+        
+        // on cache les details
+        details_parent.gameObject.SetActive(false);
+
+        // on affiche le numpad
+        numpad_parent.gameObject.SetActive(true);
+
+        // on joue l'anim
+        anim_handler.ChangeAnim(anims.idle_locked);
+    }
 
     // ANIMATIONS
     public void playIDLE_locked()
