@@ -6,9 +6,10 @@ using System.IO;
 
 public class ZoneManager : MonoBehaviour
 {
-    
+
     // bank of zones
-    public Dictionary<Vector2Int,List<GameObject>> zones = new Dictionary<Vector2Int,List<GameObject>>();
+    public Dictionary<Vector2Int, List<GameObject>> zones = new Dictionary<Vector2Int, List<GameObject>>();
+    public Dictionary<Vector2Int, List<GameObject>> doors = new Dictionary<Vector2Int, List<GameObject>>();
     public List<GameObject> legendary_zones = new List<GameObject>();
     private string prefabs_path = "Assets/Resources/prefabs/zones/";
     private bool is_loaded = false;
@@ -60,7 +61,26 @@ public class ZoneManager : MonoBehaviour
             }
         }
 
-
+        // on récupère les portes
+        List<GameObject> front_doors = new List<GameObject>();
+        List<GameObject> side_doors = new List<GameObject>();
+        foreach (string file in Directory.GetFiles(prefabs_path + "doors/"))
+        {
+            if (file.EndsWith(".prefab"))
+            {
+                if (file.Contains("side"))
+                {
+                    side_doors.Add(Resources.Load<GameObject>(file.Replace("Assets/Resources/","").Replace(".prefab","").Replace("\\","/")));
+                }
+                else
+                {
+                    front_doors.Add(Resources.Load<GameObject>(file.Replace("Assets/Resources/","").Replace(".prefab","").Replace("\\","/")));
+                }
+            }
+        }
+        // add doors to the bank
+        doors.Add(new Vector2Int(2, 1), front_doors);
+        doors.Add(new Vector2Int(1, 2), side_doors);
 
         is_loaded = true;
     }
@@ -130,6 +150,34 @@ public class ZoneManager : MonoBehaviour
     {
         if (!is_loaded) { Awake(); }
         return legendary_zones;
+    }
+
+    public GameObject GetDoor(Vector2Int size,string type="")
+    {
+        // on load les portes si ce n'est pas déjà fait
+        if (!is_loaded) { Awake(); }
+
+        // on vérifie que la taille existe dans la banque
+        if (!doors.ContainsKey(size))
+        {
+            Debug.LogWarning("ZoneManager.GetDoor: size "+size+" not found in the bank");
+            return null;
+        }
+
+        // on récupère les portes de la taille
+        List<GameObject> door_prefabs = doors[size];
+
+        // on filtre les portes par type
+        if (type != "")
+        {
+            door_prefabs = door_prefabs.FindAll(door => door.name.Contains(type));
+        }
+
+        GameObject door = door_prefabs[Random.Range(0, door_prefabs.Count)];
+        // Debug.Log("ZoneManager.GetDoor: " + size + " found in the bank : " + door.name);
+
+        // on retourne une porte aléatoire dans la liste finale
+        return door;
     }
 
 }

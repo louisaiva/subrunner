@@ -21,6 +21,8 @@ public class Area : MonoBehaviour
     private GameObject zone_prefab;
     // private Vector2 zone_pos = new Vector3(4, 4, 0); // position par défaut de la zone (au milieu de l'area)
     private List<GameObject> zones = new List<GameObject>();
+    private GameObject door_prefab;
+    private List<GameObject> doors = new List<GameObject>();
 
 
     // SECTOR & NEIGHBORS
@@ -124,9 +126,10 @@ public class Area : MonoBehaviour
 
         // on récupère le prefab de zone vide
         zone_prefab = Resources.Load<GameObject>("prefabs/zones/empty_zone");
+        door_prefab = Resources.Load<GameObject>("prefabs/zones/empty_door");
     }
 
-    // init functions
+    // INIT & GENERATE
     public void init(int x, int y, int w, int h, string type, Sector sector)
     {
         this.x = x;
@@ -200,20 +203,39 @@ public class Area : MonoBehaviour
                     zones.Add(zone);
                 }
             }
+            else if (emplacement.Key.Contains("door"))
+            {
+                // we get the size of the zone
+                string[] parts = emplacement.Key.Split('x');
+                parts[0] = parts[0].Replace("door", "");
+                try
+                {
+                    int.Parse(parts[0]);
+                    int.Parse(parts[1]);
+                }
+                catch
+                {
+                    Debug.LogWarning("(Area) Door size not found for " + emplacement.Key);
+                    continue;
+                }
+                Vector2Int door_size = new Vector2Int(int.Parse(parts[0]), int.Parse(parts[1]));
+
+                // we get the positions
+                foreach (Vector2 pos in emplacement.Value)
+                {
+                    // on récupère la zone
+                    GameObject door = Instantiate(door_prefab, Vector3.zero, Quaternion.identity);
+                    door.GetComponent<ZoneDoor>().INIT(door_size, pos, this.transform);
+
+                    // on ajoute la door à la liste
+                    doors.Add(door);
+                }
+            }
         }
     }
 
-
     public void GENERATE()
     {
-
-        // on place les zones
-        /* if (zone_prefab != null)
-        {
-            GameObject zone = Instantiate(zone_prefab, Vector3.zero, Quaternion.identity);
-            zone.GetComponent<Zone>().PlaceZone(this);
-            Destroy(zone);
-        } */
 
         // on regarde si on a un skin qui permet de placer des posters & tags
         if (skin != "server")
@@ -288,22 +310,14 @@ public class Area : MonoBehaviour
             zone.GetComponent<Zone>().GENERATE();
         }
 
-        // on parcourt les emplacements et on place les objets
-        /* foreach (KeyValuePair<string, HashSet<Vector2>> emplacement in emplacements)
+        // on parcourt les doors et on les génère
+        foreach (GameObject door in doors)
         {
-            if (zone_prefab != null ) { continue; }
-
-            if (emplacement.Key == "interactive")
-            {
-                foreach (Vector2 pos in emplacement.Value)
-                {
-                    PlaceInteractive(new Vector3(pos.x, pos.y, 0));
-                }
-            }
-        } */
-
-
+            door.GetComponent<ZoneDoor>().GENERATE();
+        }
     }
+
+
 
     // OBJETS GENERATION
     protected void PlaceLight(Vector3 tile_pos)
@@ -368,21 +382,7 @@ public class Area : MonoBehaviour
         tag.transform.SetParent(parents["tag"]);
     }
 
-    /* protected void PlaceInteractive(Vector3 pos)
-    {
-        string interactive_type = sector.consumeEmplacement(this);
 
-        if (interactive_type == "") { return; }
-
-        // print("placing " + interactive_type + " at " + pos);
-
-        // on créee l'objet
-        GameObject interactive = Instantiate(prefabs[interactive_type], pos, Quaternion.identity);
-
-        // on met le bon parent
-        interactive.transform.SetParent(parents[interactive_type]);
-        interactive.transform.localPosition = pos + new Vector3(area_size.x/4, area_size.y/4, 0);
-    } */
 
     // ENEMIES
     public GameObject PlaceEnemy()
@@ -409,6 +409,8 @@ public class Area : MonoBehaviour
     {
         return emplacements.ContainsKey("enemy");
     }
+
+
 
     // GETTERS
     public BoundsInt getBounds()

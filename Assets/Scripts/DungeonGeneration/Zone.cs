@@ -13,7 +13,7 @@ public class Zone : MonoBehaviour
 
 
     // protected World world;
-    private Vector3 anchor = new Vector3(4,4,0);
+    protected Vector3 anchor = new Vector3(4,4,0);
     [SerializeField] protected Vector2Int size;
     [SerializeField] protected ZoneManager bank;
     [SerializeField] protected Transform objects_parent;
@@ -30,7 +30,7 @@ public class Zone : MonoBehaviour
 
 
     // initialise la zone
-    public void INIT(Vector2Int size, Vector2 position, Transform parent)
+    public virtual void INIT(Vector2Int size, Vector2 position, Transform parent)
     {
         this.size = size;
         transform.SetParent(parent);
@@ -75,7 +75,7 @@ public class Zone : MonoBehaviour
 
 
     // crée la zone (récupère les objets)
-    public void GENERATE()
+    public virtual void GENERATE()
     {
         if (objects_parent == null) { return; }
 

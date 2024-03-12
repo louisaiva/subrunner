@@ -68782,7 +68782,7 @@ MonoBehaviour:
   bg_tm: {fileID: 0}
   gd_tm: {fileID: 0}
   area_size: {x: 16, y: 16}
-  legendary_zones: []
+  bank_zones: {fileID: 0}
 --- !u!156049354 &1805520240
 Grid:
   m_ObjectHideFlags: 0
@@ -68807,6 +68807,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5f4db2450cc23c4f94b5b6c1346c288, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  legendary_zones: []
 --- !u!1 &1841409407
 GameObject:
   m_ObjectHideFlags: 0
@@ -70327,8 +70328,7 @@ MonoBehaviour:
   rooms_path: prefabs/areas/sas/
   areas_path: Assets/Resources/prefabs/areas/
   tile_areas_path: Assets/Resources/prefabs/area_json/
-  areas:
-  - {fileID: 2722455951248599642, guid: b32a3f2426f7e2b43beeb26d88856b23, type: 3}
+  areas: []
 --- !u!1 &2125119121
 GameObject:
   m_ObjectHideFlags: 0

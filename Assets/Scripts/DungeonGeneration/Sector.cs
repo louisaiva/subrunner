@@ -48,8 +48,8 @@ public class Sector : MonoBehaviour
     protected int nb_interactives = 0;
 
 
-    [Header("Doors")]
-    [SerializeField] private Dictionary<Vector2, string> sas_doors = new Dictionary<Vector2, string>();
+    // [Header("Doors")]
+    // [SerializeField] private Dictionary<Vector2, string> sas_doors = new Dictionary<Vector2, string>();
 
 
     [Header("Ceilings")]
@@ -60,10 +60,6 @@ public class Sector : MonoBehaviour
     [Header("Areas")]
     public GameObject area_prefab;
     public Dictionary<Vector2Int, Area> areas = new Dictionary<Vector2Int, Area>();
-
-    [Header("Zones")]
-    public List<GameObject> zones = new List<GameObject>();
-
 
 
     // UNITY METHODS
@@ -97,18 +93,6 @@ public class Sector : MonoBehaviour
         parents.Add("sector_label", transform.Find("decoratives"));
         parents.Add("tag", transform.Find("decoratives/posters"));
         parents.Add("ceiling", transform.Find("ceilings"));
-
-        // poster_sprites = Resources.LoadAll<Sprite>("spritesheets/environments/objects/posters");
-        // tags_sprites = Resources.LoadAll<Sprite>("spritesheets/environments/objects/tags");
-
-        // on récupère les ceilings
-        // ceilings.Add("base", transform.Find("ceilings/base").gameObject);
-        // ceilings.Add("secret", transform.Find("ceilings/secret").gameObject);
-        // ceilings.Add("sas", transform.Find("ceilings/sas").gameObject);
-
-        // on charge les zones
-        zones = Resources.LoadAll<GameObject>("prefabs/zones").ToList();
-
     }
 
     void Update()
@@ -233,16 +217,6 @@ public class Sector : MonoBehaviour
             Area area = area_go.GetComponent<Area>();
             area.init(tile.x, tile.y, area_size.x, area_size.y, type, this);
 
-
-            // on lui donne une zone ou pas
-            /* if (rooms.Contains(tile) && Random.Range(0f, 1f) < .5f)
-            {
-                // on lui donne une zone aléatoire
-                area.setZone(zones[Random.Range(0, zones.Count)]);
-            } */
-
-
-
             // on ajoute l'area au dictionnaire
             areas[tile] = area;
         }
@@ -272,7 +246,6 @@ public class Sector : MonoBehaviour
     // GENERATION
     public virtual void GENERATE()
     {
-
         // on génère les areas
         foreach (KeyValuePair<Vector2Int, Area> area in areas)
         {

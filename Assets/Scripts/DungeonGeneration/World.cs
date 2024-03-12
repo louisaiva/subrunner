@@ -28,9 +28,8 @@ public class World : MonoBehaviour
     [Header("Areas")]
     public Vector2Int area_size = new Vector2Int(16, 16);
 
-    [Header("Legendary Zones")]
+    [Header("Zones")]
     [SerializeField] protected ZoneManager bank_zones;
-    // public List<GameObject> legendary_zones = new List<GameObject>();
 
 
     void Awake()
@@ -58,9 +57,6 @@ public class World : MonoBehaviour
         fg_tiles.Add("mecha", Resources.Load<TileBase>("tilesets/fg_2_rule"));
         bg_tiles.Add("mecha", Resources.Load<TileBase>("tilesets/bg_mecha"));
         gd_tiles.Add("mecha", Resources.Load<TileBase>("tilesets/gd_dark"));
-        // fg_tile = Resources.Load<TileBase>("tilesets/fg_2_rule");
-        // bg_tile = Resources.Load<TileBase>("tilesets/walls_1_rule");
-        // gd_tile = Resources.Load<TileBase>("tilesets/gd_2_rule");
 
         // on récupère le builder
         builder = GameObject.Find("generator").transform.Find("builder").GetComponent<AreaJsonHandler>();
@@ -69,7 +65,6 @@ public class World : MonoBehaviour
         perso = GameObject.Find("/perso").GetComponent<Perso>();
 
         // on récupère les legendary zones
-        // legendary_zones = Resources.LoadAll<GameObject>("prefabs/legendary_zones").ToList();
         bank_zones = GetComponent<ZoneManager>();
     }
 
@@ -193,7 +188,6 @@ public class World : MonoBehaviour
 
     }
 
-
     private void MergeSector(ComplexeSector sector)
     {
         // on récupère les TileBase[] des tilemaps initiales
@@ -273,136 +267,6 @@ public class World : MonoBehaviour
     }
 
 
-
-    // EMPLACEMENTS
-    /* private void GetEmplacements(Sector sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives, out Dictionary<Vector2, string> empl_doors, out List<Vector2> empl_labels)
-    {
-        // on créé les emplacements
-        empl_enemies = new List<Vector2>();
-        empl_interactives = new List<Vector2>();
-        empl_labels = new List<Vector2>();
-
-        // on récupère les tiles
-        HashSet<Vector2Int> tiles = new HashSet<Vector2Int>();
-        if (sector is ComplexeSector)
-        {
-            tiles = ((ComplexeSector) sector).getGeneratedAreas();
-        }
-        else
-        {
-            tiles = sector.tiles;
-        }
-
-        // on parcourt les rooms
-        foreach (Vector2Int area in tiles)
-        {
-            // on récupère la position de l'area
-            Vector2Int area_pos = (area + sector.xy());
-
-
-            // on récupère les emplacements de la room
-            List<Vector2> empl_e, empl_i, empl_l;
-            GetAreaEmplacements(area_pos, out empl_e, out empl_i, out empl_l);
-
-            // on ajoute les emplacements à la liste
-            empl_enemies.AddRange(empl_e);
-            empl_interactives.AddRange(empl_i);
-            empl_labels.AddRange(empl_l);
-        }
-
-        // on récup les positions des portes
-        empl_doors = new Dictionary<Vector2, string>();
-        foreach (KeyValuePair<Vector2Int, List<Vector2Int>> door in sector.connections)
-        {
-            // on récupère l'areajson de l'area où se trouve la porte
-            AreaJson area = builder.LoadAreaJson(sector.getAreaName(door.Key));
-
-            foreach (Vector2Int direction in door.Value)
-            {
-                // on récupère la position de la porte dans l'area
-                Vector2 emp = area.GetDoorEmplacement(direction, out string door_type);
-
-                if (emp == Vector2.zero) { continue; }
-
-                // on récupère la position de l'area
-                Vector2Int area_pos = (door.Key + sector.xy());
-
-                // on convertit l'area_pos en tile_pos
-                Vector2Int tile_pos = area_pos * area_size + new Vector2Int(area_size.x / 2, area_size.y / 2);
-
-                // on récupère la position de la porte dans le secteur
-                Vector3 door_pos = CellToWorld(new Vector3Int(tile_pos.x, tile_pos.y, 0));
-
-                // on ajoute la position de la porte à la liste
-                empl_doors.Add(new Vector2(door_pos.x + emp.x, door_pos.y + emp.y), door_type);
-            }
-        }
-    }
-
-    private void GetAreaEmplacements(Vector2Int area_pos, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives, out List<Vector2> empl_labels)
-    {
-        // on créé les emplacements
-        empl_enemies = new List<Vector2>();
-        empl_interactives = new List<Vector2>();
-        empl_labels = new List<Vector2>();
-
-        // on convertit l'area_pos en tile_pos
-        Vector2Int tile_pos = area_pos * area_size + new Vector2Int(area_size.x / 2, area_size.y / 2);
-
-
-        // on récupère l'area
-        string area_name = getAreaName(tile_pos);
-
-        // print("getting emplacements for area " + area_name + " 
-
-        // on récupère le json de l'area
-        AreaJson area = builder.LoadAreaJson(area_name);
-
-        if (area == null)
-        {
-            Debug.LogError("(world - GetAreaEmplacements) area " + area_name + "at " + area_pos + "(" + tile_pos + ") not found");
-            return;
-        }
-
-        // on récupère les emplacements
-        Dictionary<string, HashSet<Vector2>> empl = area.GetEmplacements();
-        string s= "empl enemies: ";
-        foreach (string key in empl.Keys)
-        {
-            s += key + ": " + empl[key].Count + ", ";
-        }
-        // print(s);
-
-        if (empl.ContainsKey("enemy"))
-        {
-            foreach (Vector2 emp in empl["enemy"])
-            {
-                // print("adding enemy at " + (pos.x + tile_pos.x) + ", " + (pos.y + tile_pos.y));
-                Vector3 pos = CellToWorld(new Vector3Int(tile_pos.x, tile_pos.y, 0));
-                empl_enemies.Add(new Vector2(pos.x + emp.x, pos.y + emp.y));
-            }
-        }
-        if (empl.ContainsKey("interactive"))
-        {
-            foreach (Vector2 emp in empl["interactive"])
-            {
-                Vector3 pos = CellToWorld(new Vector3Int(tile_pos.x, tile_pos.y, 0));
-                empl_interactives.Add(new Vector2(pos.x + emp.x, pos.y + emp.y));
-            }
-        }
-        if (empl.ContainsKey("sector_label"))
-        {
-            foreach (Vector2 emp in empl["sector_label"])
-            {
-                Vector3 pos = CellToWorld(new Vector3Int(tile_pos.x, tile_pos.y, 0));
-                empl_labels.Add(new Vector2(pos.x + emp.x, pos.y + emp.y));
-            }
-        }
-
-    }
-
-    */
-    
     
     // SETTERS
     public void SetLayerTile(int x, int y, int tile=0, string layer="bg",string skin="base_sector")

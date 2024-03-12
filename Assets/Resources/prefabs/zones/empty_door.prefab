@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2789232997037817106}
-  - component: {fileID: 1900046874965673816}
+  - component: {fileID: 740282112023417974}
   m_Layer: 0
-  m_Name: empty_zone
+  m_Name: empty_door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33,7 +33,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1900046874965673816
+--- !u!114 &740282112023417974
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,7 +42,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4625998761464816196}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61c13654841d78b49814cd777631ba08, type: 3}
+  m_Script: {fileID: 11500000, guid: 53fae3fcd416bc74c9aceb499b27cad5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   size: {x: 0, y: 0}
@@ -59,10 +59,6 @@ PrefabInstance:
     - target: {fileID: 3210369274208902682, guid: 9115fccbcf70a5741a99d5f6339a7009, type: 3}
       propertyPath: m_Name
       value: ground_light
-      objectReference: {fileID: 0}
-    - target: {fileID: 3210369274208902682, guid: 9115fccbcf70a5741a99d5f6339a7009, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7481912596808846943, guid: 9115fccbcf70a5741a99d5f6339a7009, type: 3}
       propertyPath: m_RootOrder
