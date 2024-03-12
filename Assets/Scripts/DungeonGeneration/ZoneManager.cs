@@ -68,13 +68,16 @@ public class ZoneManager : MonoBehaviour
         {
             if (file.EndsWith(".prefab"))
             {
+                GameObject door = Resources.Load<GameObject>(file.Replace("Assets/Resources/","").Replace(".prefab","").Replace("\\","/"));
+                door.name += "_door";
+
                 if (file.Contains("side"))
                 {
-                    side_doors.Add(Resources.Load<GameObject>(file.Replace("Assets/Resources/","").Replace(".prefab","").Replace("\\","/")));
+                    side_doors.Add(door);
                 }
                 else
                 {
-                    front_doors.Add(Resources.Load<GameObject>(file.Replace("Assets/Resources/","").Replace(".prefab","").Replace("\\","/")));
+                    front_doors.Add(door);
                 }
             }
         }
@@ -178,6 +181,49 @@ public class ZoneManager : MonoBehaviour
 
         // on retourne une porte aléatoire dans la liste finale
         return door;
+    }
+
+
+    // PRECISE GETTERS
+    public GameObject GetZoneByName(string name)
+    {
+        if (!is_loaded) { Awake(); }
+
+        // on cherche dans les zones
+        foreach (Vector2Int size in zones.Keys)
+        {
+            foreach (GameObject zone in zones[size])
+            {
+                if (zone.name == name)
+                {
+                    return zone;
+                }
+            }
+        }
+
+        // on cherche dans les légendaires
+        foreach (GameObject zone in legendary_zones)
+        {
+            if (zone.name == name)
+            {
+                return zone;
+            }
+        }
+
+        // on cherche dans les portes
+        foreach (Vector2Int size in doors.Keys)
+        {
+            foreach (GameObject door in doors[size])
+            {
+                if (door.name == name)
+                {
+                    return door;
+                }
+            }
+        }
+
+        Debug.LogWarning("ZoneManager.GetZoneByName: zone "+name+" not found in the bank");
+        return null;
     }
 
 }

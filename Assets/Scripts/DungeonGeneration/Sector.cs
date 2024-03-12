@@ -22,6 +22,8 @@ public class Sector : MonoBehaviour
 
     [Header("Connections")]
     public Dictionary<Vector2Int, List<Vector2Int>> connections = new Dictionary<Vector2Int, List<Vector2Int>>();
+    public int reachability = 0;
+    
 
     [Header("Position")]
     public int x;

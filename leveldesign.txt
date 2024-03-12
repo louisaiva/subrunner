@@ -249,6 +249,66 @@ generation
 
 
 #
+DOORS & KEYS
+#
+    pour donner une sensation agréable de progression au joueur, il faut qu'il puisse débloquer de nouvelles
+    zones à explorer au fur et à mesure qu'il progresse dans le jeu.
+
+    pour instaurer ce concept de débloquage de zones on va utiliser les principes du metroidvania,
+    à base de portes et de clés (doors and keys lol)
+    les portes bloquent les nouvelles zones jusqu'à ce que le joueur en trouve la clé
+    les clés peuvent être diverses et variées, parfois évidentes, parfois cachées, parfois même subtiles
+
+
+    types de clés :
+
+        - item débloquant une capacité physique :
+            - shoes (dash)
+            - dynamite (explosion)
+            - pioche (mining)
+        
+        - fichiers de hack :
+            - computer_hack
+            - door_hack
+        
+        - fichiers txt contenant des passwords
+
+    paires doors : keys :
+
+        - hackable_door : password / door_hack
+        - dash_door : shoes
+        - weak_door : dynamite / pioche
+        - music_door : recorder
+        - locked_door : password
+    
+
+    pour éviter qu'on soit bloqué, il faut impérativement que les clés puissent être trouvées au fur et à mesure de la progression
+
+    - idée 1 : progression "linéaire"
+
+        on détermine à l'avance un ordre spécifique de clés qui débloquent des doors sur notre chemin
+        on place des doors aléatoirement entre les secteurs
+        on met des doors de niveau supérieur à chaque fois
+
+        certains secteurs à voisin unique ont une porte de niveau supérieur
+
+        puis on répartit aléaoiterment les clés dans les secteurs accessibles
+
+        inconvenients :
+            - une seule clé peut être délivrée à la fois
+            - des clés peuvent se marcher dessus ?
+            - aléatoire : on doit potentiellement revenir en arrière c relou
+
+        avantages :
+            - facile ?
+            - en vrai le retour en arrière c'est pas si grave si on peut se déplacer vite et si la map est fournie et cool
+                -> faut des métros
+
+
+
+
+
+#
 FACTIONS
 #
     

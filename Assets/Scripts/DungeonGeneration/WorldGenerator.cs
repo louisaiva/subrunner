@@ -27,7 +27,7 @@ public class WorldGenerator : MonoBehaviour
     private GameObject sector_prefab;
     private GameObject connector_sector_prefab;
     [SerializeField] private List<Sector> sectors = new List<Sector>();
-    // [SerializeField] private List<string> hand_made_sectors_names= new List<string>();
+    [SerializeField] private Sector spawn_sector;
 
     [Header("hand-made sectors")]
     [SerializeField] private List<GameObject> hand_made_sectors = new List<GameObject>();
@@ -85,7 +85,20 @@ public class WorldGenerator : MonoBehaviour
 
         // 2 - on génère les secteurs
         generateSectors();
- 
+
+        // 2.1 - on récupère le spawn sector
+        foreach (Sector sect in sectors)
+        {
+            if (sect is ComplexeSector)
+            {
+                if (((ComplexeSector)sect).isSpawnSector())
+                {
+                    spawn_sector = sect;
+                    break;
+                }
+            }
+        }
+
         // 3 - on sépare les secteurs
         separateSectors();
 
@@ -116,10 +129,15 @@ public class WorldGenerator : MonoBehaviour
             // loops = addSomeLoops(MST, DT);
             loops = new List<Edge>();
 
-            // 8 - on connecte les secteurs
+
+            // 8 - on calcule la reachability des secteurs
+            calculateReachability();
+
+
+            // 9 - on connecte les secteurs
             connectSectors(MST, loops);
 
-            // 9 - on met à jour les sectors complexes pour ajouter les extensions si pas de voisin
+            // 10 - on met à jour les sectors complexes pour ajouter les extensions si pas de voisin
             foreach (Sector sect in sectors)
             {
                 if (sect is ComplexeSector)
@@ -135,7 +153,7 @@ public class WorldGenerator : MonoBehaviour
         if (generate_world)
         {
             // on lance la génération du monde
-            world.GetComponent<World>().GENERATE(sectors);
+            world.GetComponent<World>().GENERATE(sectors, spawn_sector);
         }
         else
         {
@@ -401,8 +419,6 @@ public class WorldGenerator : MonoBehaviour
     private List<Edge> calculateMinimumSpanningTree(List<Vector2> vertices,List<Edge> edges)
     {
         // initialisation
-        // List<float> weights = new List<float>();
-        // Dictionary<int,int> tree = new Dictionary<int, int>();
         List<int> vertices_to_add = vertices.Select((v, i) => i).ToList();
         List<int> added_vertics = new List<int>();
         List<Edge> tree = new List<Edge>();
@@ -458,60 +474,6 @@ public class WorldGenerator : MonoBehaviour
 
         // on return
         return tree;
-
-
-
-        /* // on parcourt les sommets
-        for (int i=0;i<vertices.Count;i++)
-        {
-            // on récupère les sommets
-            Vector2 v1 = vertices[i];
-         
-            float min_dist = 10000;
-            int min_edge = -1;
-            for (int j=0;j<vertices.Count;j++)
-            {
-                if (i == j) { continue; }
-                Vector2 v2 = vertices[j];
-
-                // on calcule la distance
-                float dist = Vector2.Distance(v1, v2);
-                if (dist < min_dist) {
-                    min_dist = dist;
-                    min_edge = j;
-                }
-            }
-
-            // on ajoute la distance minimale
-            cheapest_cost.Add(min_dist);
-            tree.Add(i, min_edge);
-        }
-
-        // y'a une entrée de trop dans tree parce qu'on a X vertices et qu'il y a X-1 edges
-        int root_to_delete = -1;
-        foreach (KeyValuePair<int,int> entry in tree)
-        {
-            foreach (KeyValuePair<int, int> entry2 in tree)
-            {
-                if (entry.Key == entry2.Value && entry.Value == entry2.Key)
-                {
-                    root_to_delete = entry.Key;
-                    break;
-                }
-            }
-        }
-
-        // on supprime l'entrée
-        tree.Remove(root_to_delete);
-
-        // on affiche le minimum spanning tree
-        string s = "MINIMUM SPANNING TREE : \n";
-        foreach (KeyValuePair<int, int> entry in tree)
-        {
-            s += entry.Key + " " + entry.Value + "\n";
-        }
-        print(s); */
-
     }
 
     private List<Edge> addSomeLoops(List<Edge> mst, List<Edge> dt, float percentage=0.1f)
@@ -548,6 +510,56 @@ public class WorldGenerator : MonoBehaviour
         return loops;
     }
 
+
+    // KEY AND DOOR GENERATION
+    private void calculateReachability()
+    {
+
+        int sectors_per_reachability = 2;
+        int reachability = 0;
+        int sectors_done = 0;
+
+        // on part du spawn sector puis on attribue à chaque secteur voisin un score en fonction du nombre de secteurs parcourus pour y arriver
+        spawn_sector.reachability = 0;
+        List<Sector> done = new List<Sector>() { spawn_sector };
+        List<Sector> to_visit = new List<Sector>();
+
+        // on ajoute les voisins du spawn sector à la liste à visiter
+        to_visit.AddRange(getNeighbors(spawn_sector));
+
+        // on parcourt les secteurs
+        while (to_visit.Count > 0)
+        {
+            // on récupère le premier secteur à visiter
+            Sector sect = to_visit[0];
+
+            // on calcule le score du secteur
+            sect.reachability = reachability;
+            sectors_done += 1;
+            if (sectors_done >= sectors_per_reachability)
+            {
+                sectors_done = 0;
+                reachability += 1;
+            }
+
+            // on retire le secteur de la liste à visiter
+            to_visit.RemoveAt(0);
+            done.Add(sect);
+
+            // et on ajoute ses voisins à la liste à visiter
+            foreach (Sector neighbor in getNeighbors(sect))
+            {
+                // on vérifie si le secteur a déjà été visité
+                if (!done.Contains(neighbor) && !to_visit.Contains(neighbor))
+                {
+                    // on ajoute le secteur à la liste à visiter
+                    to_visit.Add(neighbor);
+                }
+            }
+        }
+
+
+    }
 
 
     // VISUALISATION
@@ -746,6 +758,24 @@ public class WorldGenerator : MonoBehaviour
             }
         }
         return null;
+    }
+
+    public List<Sector> getNeighbors(Sector sect)
+    {
+        // on récupère les voisins d'un secteur (par MST)
+        List<Sector> neighbors = new List<Sector>();
+        foreach (Edge edge in MST)
+        {
+            if (edge.p1 == sect.center())
+            {
+                neighbors.Add(getSectorByCenter(edge.p2));
+            }
+            if (edge.p2 == sect.center())
+            {
+                neighbors.Add(getSectorByCenter(edge.p1));
+            }
+        }
+        return neighbors;
     }
 }
 

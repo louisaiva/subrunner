@@ -90,7 +90,7 @@ public class World : MonoBehaviour
 
 
     // GENERATION
-    public void GENERATE(List<Sector> sect)
+    public void GENERATE(List<Sector> sect, Sector spawn_sector)
     {
 
         // on clear les tilemaps
@@ -98,9 +98,6 @@ public class World : MonoBehaviour
 
         // on récupère les sectors
         sectors = sect;
-
-        ComplexeSector spawn_sector = null;
-
 
         // on sauvegarde les zones qui pourraient accueillir des zones légendaires
         List<Zone> central_zones = new List<Zone>();
@@ -112,12 +109,6 @@ public class World : MonoBehaviour
             if (sect[i] is ComplexeSector)
             {
                 MergeSector((ComplexeSector) sect[i]);
-
-                // on récupère le secteur de spawn
-                if (((ComplexeSector) sect[i]).isSpawnSector())
-                {
-                    spawn_sector = (ComplexeSector) sect[i];
-                }
             }
 
             // on initialise les areas des secteurs
@@ -163,6 +154,7 @@ public class World : MonoBehaviour
         // on créé le plafond
         CreateVirtualCeiling();
 
+
         // on récupère la position de départ du perso
         Vector2 spawn_pos;
         if (spawn_sector == null)
@@ -176,11 +168,22 @@ public class World : MonoBehaviour
             // on place le spawn au milieu de la room
             spawn_pos = new Vector2((room.x * area_size.x + area_size.x / 2)/2f, (room.y * area_size.y + area_size.y / 2)/2f);
         }
-        else
+        else if (spawn_sector is ComplexeSector)
         {
             // on récupère la position de spawn du secteur
-            spawn_pos = spawn_sector.getSpawnPos();
+            spawn_pos = ((ComplexeSector)spawn_sector).getSpawnPos();
         }
+        else
+        {
+            // on choisit une room au hasard dans le secteur
+            Vector2Int room = spawn_sector.rooms.ElementAt(Random.Range(0, spawn_sector.rooms.Count));
+            room.x += spawn_sector.x;
+            room.y += spawn_sector.y;
+
+            // on place le spawn au milieu de la room
+            spawn_pos = new Vector2((room.x * area_size.x + area_size.x / 2) / 2f, (room.y * area_size.y + area_size.y / 2) / 2f);
+        }
+
 
         // on place le perso
         perso.transform.position = new Vector3(spawn_pos.x, spawn_pos.y, 0f);
