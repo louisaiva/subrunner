@@ -9,6 +9,7 @@ public class ZoneManager : MonoBehaviour
     
     // bank of zones
     public Dictionary<Vector2Int,List<GameObject>> zones = new Dictionary<Vector2Int,List<GameObject>>();
+    public List<GameObject> legendary_zones = new List<GameObject>();
     private string prefabs_path = "Assets/Resources/prefabs/zones/";
     private bool is_loaded = false;
 
@@ -48,18 +49,24 @@ public class ZoneManager : MonoBehaviour
             // add the zone to the bank
             zones.Add(zone_size,zone_prefabs);
         }
+        
 
-        /* string s = "ZoneManager: " + zones.Count + " zones loaded : \n";
-        foreach (Vector2Int size in zones.Keys)
+        // on récupère les légendaires
+        foreach (string file in Directory.GetFiles(prefabs_path + "legendary/"))
         {
-            s += size + " : " + string.Join(", ",zones[size].ConvertAll(x => x.name)) + "\n";
+            if (file.EndsWith(".prefab"))
+            {
+                legendary_zones.Add(Resources.Load<GameObject>(file.Replace("Assets/Resources/","").Replace(".prefab","").Replace("\\","/")));
+            }
         }
 
-        // Debug.Log("ZoneManager: " + zones.Count + " zones loaded : \n" + string.Join(", ",zones.Keys));
-        Debug.Log(s); */
+
+
         is_loaded = true;
     }
 
+
+    // GETTERS
     public GameObject GetZone(Vector2Int size)
     {
         if (!is_loaded)
@@ -117,6 +124,12 @@ public class ZoneManager : MonoBehaviour
             // Debug.LogWarning("ZoneManager.GetSmallerClosestSize: closest size not found in the bank");
             return Vector2Int.zero;
         }
+    }
+
+    public List<GameObject> GetLegendaryZones()
+    {
+        if (!is_loaded) { Awake(); }
+        return legendary_zones;
     }
 
 }

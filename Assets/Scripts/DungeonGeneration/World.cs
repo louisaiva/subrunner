@@ -29,7 +29,8 @@ public class World : MonoBehaviour
     public Vector2Int area_size = new Vector2Int(16, 16);
 
     [Header("Legendary Zones")]
-    public List<GameObject> legendary_zones = new List<GameObject>();
+    [SerializeField] protected ZoneManager bank_zones;
+    // public List<GameObject> legendary_zones = new List<GameObject>();
 
 
     void Awake()
@@ -68,7 +69,8 @@ public class World : MonoBehaviour
         perso = GameObject.Find("/perso").GetComponent<Perso>();
 
         // on récupère les legendary zones
-        legendary_zones = Resources.LoadAll<GameObject>("prefabs/legendary_zones").ToList();
+        // legendary_zones = Resources.LoadAll<GameObject>("prefabs/legendary_zones").ToList();
+        bank_zones = GetComponent<ZoneManager>();
     }
 
 
@@ -104,6 +106,10 @@ public class World : MonoBehaviour
 
         ComplexeSector spawn_sector = null;
 
+
+        // on sauvegarde les zones qui pourraient accueillir des zones légendaires
+        List<Zone> central_zones = new List<Zone>();
+
         // on parcourt les secteurs
         for (int i = 0; i < sect.Count; i++)
         {
@@ -121,29 +127,28 @@ public class World : MonoBehaviour
 
             // on initialise les areas des secteurs
             sect[i].initAreas();
+
+            // on ajoute les zones qui pourraient accueillir des zones légendaires
+            central_zones.AddRange(sect[i].getCentralZones());
         }
 
-        // on place 1 fois chaque zone légendaire
-        HashSet<Vector2Int> leg_zones_areas = new HashSet<Vector2Int>() { new Vector2Int(-1, -1) };
-        foreach (GameObject zone in legendary_zones)
+        // on affiche les central zones qu'on a récupéré
+        /* string s = "central zones: ";
+        foreach (Zone zone in central_zones)
         {
-            // on choisit une room au hasard
-            List<Sector> leg_sects = sectors.Where(s => s is ProceduralSector).ToList();
-            Sector leg_sect = leg_sects[Random.Range(0, leg_sects.Count)];
-            Vector2Int room = leg_sect.getGlobalRandomRoomPosition();
+            s += zone.name + ", ";
+        }
+        print(s); */
 
-            while (leg_zones_areas.Contains(room))
-            {
-                // on rechoisit une room au hasard
-                leg_sect = leg_sects[Random.Range(0, leg_sects.Count)];
-                room = leg_sect.getGlobalRandomRoomPosition();
-            }
+        // on place 1 fois chaque zone légendaire
+        foreach(GameObject zone_prefab in bank_zones.GetLegendaryZones())
+        {
+            // on choisit une zone au hasard
+            Zone zone = central_zones[Random.Range(0, central_zones.Count)];
+            central_zones.Remove(zone);
 
             // on place la zone
-            // leg_sect.setZone(zone, room);
-
-            // on sauvegarde la position de la zone
-            leg_zones_areas.Add(room);
+            zone.SetZone(zone_prefab);
         }
 
         // on refresh les tilemaps
@@ -270,7 +275,7 @@ public class World : MonoBehaviour
 
 
     // EMPLACEMENTS
-    private void GetEmplacements(Sector sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives, out Dictionary<Vector2, string> empl_doors, out List<Vector2> empl_labels)
+    /* private void GetEmplacements(Sector sector, out List<Vector2> empl_enemies, out List<Vector2> empl_interactives, out Dictionary<Vector2, string> empl_doors, out List<Vector2> empl_labels)
     {
         // on créé les emplacements
         empl_enemies = new List<Vector2>();
@@ -396,7 +401,9 @@ public class World : MonoBehaviour
 
     }
 
-
+    */
+    
+    
     // SETTERS
     public void SetLayerTile(int x, int y, int tile=0, string layer="bg",string skin="base_sector")
     {

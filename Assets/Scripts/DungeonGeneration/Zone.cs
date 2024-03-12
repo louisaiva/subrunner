@@ -54,15 +54,23 @@ public class Zone : MonoBehaviour
         }
 
         objects_parent = zone.transform.Find("obj");
+        gameObject.name = objects_parent.name;
     }
-
-    public void SetZone(string path)
+    public void SetZoneFromPath(string path)
     {
         // on set la zone depuis le fichier prefab en fonction de sa taille
         GameObject zone = Resources.Load<GameObject>(path);
         if (zone == null) { return; }
 
         objects_parent = zone.transform.Find("obj");
+        gameObject.name = objects_parent.name;
+    }
+    public void SetZone(GameObject zone)
+    {
+        // on set la zone directement
+        if (zone == null) { return; }
+        objects_parent = zone.transform.Find("obj");
+        gameObject.name = objects_parent.name;
     }
 
 
@@ -71,7 +79,7 @@ public class Zone : MonoBehaviour
     {
         if (objects_parent == null) { return; }
 
-        Debug.Log("(Zone) GENERATE " + size + " at " + transform.position);
+        // Debug.Log("(Zone) GENERATE " + size + " at " + transform.position);
 
         Vector3 lil_anchor = new Vector3(size.x > 1 ? size.x/4f : 0 , size.y > 1 ? size.y/4f : 0,0);
 
@@ -83,7 +91,6 @@ public class Zone : MonoBehaviour
         // on place les objets dans notre transform en conservant leur localposition
         foreach (Transform child in objects_parent)
         {
-
             // on instancie l'objet
             Vector3 pos = child.localPosition;
             GameObject obj = Instantiate(child.gameObject,transform);
@@ -91,4 +98,7 @@ public class Zone : MonoBehaviour
         }
     }
 
+
+    // GETTERS
+    public Vector2Int GetSize() { return size; }
 }

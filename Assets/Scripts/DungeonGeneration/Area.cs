@@ -140,7 +140,7 @@ public class Area : MonoBehaviour
         this.gameObject.name = "(" + x + ":" + y + ") " + type;
 
         // on met le bon parent
-        this.transform.parent = sector.transform.Find("areas");
+        this.transform.parent = sector.transform;
 
         // on met la bonne position
         Vector2Int real_pos = getGlobalPosition();
@@ -160,7 +160,6 @@ public class Area : MonoBehaviour
             emplacements = json.GetEmplacements();
 
             // on met les tilemaps de world à jour
-            // world.PlaceArea(this);
             world.SetAreaTiles(x + sector.x, y + sector.y, json, skin);
         }
         else
@@ -204,15 +203,6 @@ public class Area : MonoBehaviour
         }
     }
 
-    /* public void setZone(GameObject zone_prefab, Vector2 pos = default(Vector2))
-    {
-        this.zone_prefab = zone_prefab;
-        
-        if (pos != default(Vector2))
-        {
-            zone_pos = pos;
-        }
-    } */
 
     public void GENERATE()
     {
@@ -295,8 +285,6 @@ public class Area : MonoBehaviour
         // on parcourt les zones et on les génère
         foreach (GameObject zone in zones)
         {
-            // Debug.Log("Generating zone " + zone.name + " at " + zone.transform.position);
-
             zone.GetComponent<Zone>().GENERATE();
         }
 
@@ -316,17 +304,6 @@ public class Area : MonoBehaviour
 
 
     }
-
-    /* public void PlaceZoneObject(GameObject obj, Vector3 pos, string parent="decorative")
-    {
-        // on créee l'objet
-        GameObject interactive = Instantiate(obj, pos, Quaternion.identity);
-
-        // on met le bon parent
-        interactive.transform.SetParent(parents[parent]);
-        interactive.transform.localPosition = pos + new Vector3(zone_pos.x, zone_pos.y, 0);
-    } */
-
 
     // OBJETS GENERATION
     protected void PlaceLight(Vector3 tile_pos)
@@ -391,7 +368,7 @@ public class Area : MonoBehaviour
         tag.transform.SetParent(parents["tag"]);
     }
 
-    protected void PlaceInteractive(Vector3 pos)
+    /* protected void PlaceInteractive(Vector3 pos)
     {
         string interactive_type = sector.consumeEmplacement(this);
 
@@ -405,7 +382,7 @@ public class Area : MonoBehaviour
         // on met le bon parent
         interactive.transform.SetParent(parents[interactive_type]);
         interactive.transform.localPosition = pos + new Vector3(area_size.x/4, area_size.y/4, 0);
-    }
+    } */
 
     // ENEMIES
     public GameObject PlaceEnemy()
@@ -439,13 +416,20 @@ public class Area : MonoBehaviour
         return bounds;
     }
 
-    /* public Vector2Int getZoneOrigin()
-    {
-        return (getGlobalPosition() + new Vector2Int((int) zone_pos.x, (int) zone_pos.y))*2;
-    } */
-
     public Vector2Int getGlobalPosition()
     {
         return (new Vector2Int(sector.x + x, sector.y + y))*area_size/2;
+    }
+
+    public List<Zone> getCentralZones()
+    {
+        if (zones.Count == 0) { return new List<Zone>(); }
+        // if (!(emplacements.ContainsKey("zone_8x7") || emplacements.ContainsKey("zone_8x6"))) { return new List<Zone>(); }
+
+        List<Zone> central_zones = zones.Select(zone => zone.GetComponent<Zone>()).Where(zone => zone.GetSize() == new Vector2Int(8, 7) || zone.GetSize() == new Vector2Int(8, 6)).ToList();
+
+        // Debug.Log("(Area - " + type + ") central_zones : " + central_zones.Count);
+
+        return central_zones;
     }
 }

@@ -199,6 +199,7 @@ public class Sector : MonoBehaviour
 
     }
 
+
     // INIT FUNCTIONS
     public void init()
     {
@@ -247,13 +248,6 @@ public class Sector : MonoBehaviour
         }
     }
 
-    /* public virtual void setZone(GameObject zone, Vector2Int global_area_pos)
-    {
-        // on set la zone de chaque area
-        Vector2Int area_pos = new Vector2Int(global_area_pos.x - x, global_area_pos.y - y);
-        Debug.Log("(Sector) setZone : " + zone.name + " at " + area_pos + " in " + gameObject.name + " at " + x + "," + y);
-        areas[area_pos].setZone(zone);
-    } */
 
     // MAIN FUNCTIONS
     public void move(Vector2Int movement)
@@ -273,8 +267,10 @@ public class Sector : MonoBehaviour
         y = Mathf.RoundToInt(closest_y);
     }
 
+
+
     // GENERATION
-    public virtual void GENERATE(/* List<Vector2> empl_enemies, List<Vector2> empl_interactives, Dictionary<Vector2, string> empl_doors, List<Vector2> empl_labels */)
+    public virtual void GENERATE()
     {
 
         // on génère les areas
@@ -366,164 +362,6 @@ public class Sector : MonoBehaviour
         }
     }
 
-    // OBJETS GENERATION
-    /* protected void PlaceLights()
-    {
-        BoundsInt bounds = getBounds();
-        TileBase[] tiles = world.getTiles(bounds);
-
-        for (int i = 0; i < bounds.size.x; i++)
-        {
-            for (int j = 0; j < bounds.size.y; j++)
-            {
-                int x_ = bounds.x + i;
-                int y_ = bounds.y + j;
-
-                // on récupère le sprite
-                Sprite sprite = world.GetSprite(x_, y_);
-                if (sprite == null) { continue; }
-
-                if (walls_light_tiles.Contains(sprite.name))
-                {
-                    // on récupère la position globale de la tile
-                    Vector3 tile_pos = world.CellToWorld(new Vector3Int(x_, y_, 0));
-
-                    // on met une lumiere
-                    GameObject light = Instantiate(prefabs["light"], tile_pos + light_offset, Quaternion.identity);
-
-                    // on met le bon parent
-                    light.transform.SetParent(parents["light"]);
-                }
-            }
-        }
-    } */
-
-    /* protected void PlacePosters()
-    {
-
-        BoundsInt bounds = getBounds();
-        TileBase[] tiles = world.getTiles(bounds);
-
-
-        for (int i = 0; i < bounds.size.x; i++)
-        {
-            for (int j = 0; j < bounds.size.y; j++)
-            {
-                // on récupère la position globale de la tile
-                int x_ = bounds.x + i;
-                int y_ = bounds.y + j;
-
-                // on récupère le sprite
-                Sprite sprite = world.GetSprite(x_, y_);
-                if (sprite == null) { continue; }
-
-                if (full_walls_tiles.Contains(sprite.name))
-                {
-                    // on lance un random pour savoir si on met un poster
-                    if (Random.Range(0f, 1f) > density_posters) { continue; }
-
-                    // on instancie un poster aleatoire dans une premiere position
-                    Vector3 tile_pos = world.CellToWorld(new Vector3Int(x_, y_, 0));
-                    GameObject poster = Instantiate(prefabs["poster"], tile_pos, Quaternion.identity);
-                    poster.GetComponent<SpriteRenderer>().sprite = poster_sprites[Random.Range(0, poster_sprites.Length)];
-
-
-                    // on calcule un offset plus ou moins aléatoire
-                    float OFFSET_Y = 0.2f;
-                    float OFFSET_RANGE_Y = 0.3f;
-                    float OFFSET_X = -poster.GetComponent<SpriteRenderer>().bounds.size.x / 2;
-                    float OFFSET_RANGE_X = 0f;
-
-                    Vector3 offset = Vector3.zero;
-                    // offset += new Vector3(OFFSET_X, OFFSET_Y, 0f);
-                    // offset += new Vector3(Random.Range(-OFFSET_RANGE_X, OFFSET_RANGE_X), OFFSET_Y + Random.Range(0f, OFFSET_RANGE_Y), 0f);
-                    // offset.x += OFFSET_X;
-                    offset.y += 3 * OFFSET_Y;
-
-                    // on déplace le poster
-                    poster.transform.position += offset;
-
-                    // on met le bon parent
-                    poster.transform.SetParent(parents["poster"]);
-
-                    // on relance un random pour savoir si on remet un poster
-                    if (Random.Range(0f, 1f) < 0.1f)
-                    {
-                        i--;
-                    }
-                }
-            }
-        }
-    }
-
-    protected void PlaceTags()
-    {
-        // on récupère les tiles
-        BoundsInt bounds = getBounds();
-        TileBase[] tiles = world.getTiles(bounds);
-
-
-        // we need to find 5 tiles in a row to place a tag
-        int tags_width_in_tiles = 5;
-
-        // on parcourt les tiles
-        for (int i = 0; i < bounds.size.x; i++)
-        {
-            for (int j = 0; j < bounds.size.y; j++)
-            {
-                // on récupère la position globale de la tile
-                int x_ = bounds.x + i;
-                int y_ = bounds.y + j;
-
-                // on récupère le sprite
-                Sprite sprite = world.GetSprite(x_, y_);
-                if (sprite == null) { continue; }
-
-                if (full_walls_tiles.Contains(sprite.name))
-                {
-                    // on vérifie qu'il y a assez de place pour mettre un tag
-                    int nb_tiles_in_a_row = 1;
-                    for (int ii=1; ii<tags_width_in_tiles; ii++)
-                    {
-                        // on récupère la position globale de la tile
-                        int x__ = bounds.x + i + ii;
-                        int y__ = bounds.y + j;
-
-                        // on récupère le sprite
-                        Sprite sprite__ = world.GetSprite(x__, y__);
-                        if (sprite__ == null) { break; }
-
-                        if (full_walls_tiles.Contains(sprite__.name))
-                        {
-                            nb_tiles_in_a_row++;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-
-                    if (nb_tiles_in_a_row == tags_width_in_tiles && Random.Range(0f, 1f) < density_tags)
-                    {
-                        // on instancie un tag
-                        Vector3 tile_pos = world.CellToWorld(new Vector3Int(x_, y_, 0)) + tag_offset;
-                        GameObject tag = Instantiate(prefabs["tag"], tile_pos, Quaternion.identity);
-
-                        // on choisit un sprite random
-                        tag.GetComponent<SpriteRenderer>().sprite = tags_sprites[Random.Range(0, tags_sprites.Length)];
-
-                        // on met le bon parent
-                        tag.transform.SetParent(parents["tag"]);
-
-                        // on décale le i
-                        i += tags_width_in_tiles;
-                    }
-                }
-            }
-        }
-    }
- */
-    
     protected void PlaceEnemies()
     {
         for (int i = 0; i < nb_enemies; i++)
@@ -583,7 +421,7 @@ public class Sector : MonoBehaviour
     }
    */
     
-    private void PlaceDoors()
+    /* private void PlaceDoors()
     {
         int i = 0;
 
@@ -614,115 +452,7 @@ public class Sector : MonoBehaviour
 
             i++;
         }
-    }
-
-    /* private void PlaceLabels(List<Vector2> empl_labels)
-    {
-        string sector_number = gameObject.name.Split('_')[1];
-
-        // place les labels de secteur dans les sas
-        foreach (Vector2 empl in empl_labels)
-        {
-            // on instancie un label
-            Vector3 pos = new Vector3(empl.x, empl.y, 0);
-            GameObject label = Instantiate(prefabs["sector_label"], pos, Quaternion.identity);
-
-            // on change le texte
-            label.transform.Find("sector_number").GetComponent<TextMeshPro>().text = sector_number;
-
-            // on met le bon parent
-            label.transform.SetParent(parents["sector_label"]);
-        }
-    }
- */
-    // EMPLACEMENTS
-    /* private Vector2 consumeRandomEmplacement(string type)
-    {
-
-        // on récupère la liste d'emplacements du type
-        List<Vector2> empl = new List<Vector2>();
-        if (type == "enemies") { empl = empl_enemies; }
-        else if (type == "interactives") { empl = empl_interactives; }
-
-        // on vérifie qu'il reste des emplacements
-        if (empl.Count == 0)
-        {
-            Debug.LogWarning("Il n'y a plus d'emplacement de type " + type + " dans le secteur " + gameObject.name);
-            return new Vector2(20000, 0);
-        }
-
-        // on récupère un emplacement aléatoire
-        Vector2 emplacement = empl[Random.Range(0, empl.Count)];
-
-        // on le supprime de la liste
-        empl.Remove(emplacement);
-
-        // on retourne l'emplacement
-        return emplacement;
     } */
-
-    public string consumeEmplacement(Area area)
-    {
-        // on vérifie quel type d'area c'est
-        if (area.type.Split('_')[1].Length == 1)
-        {
-            // cul de sac, on est obligé de mettre un emplacement
-            return consumeInteractiveEmplacement(area);
-        }
-
-        // si ce n'est pas un cul de sac, on lance les probas
-        if (nb_interactives < planned_nb_interactives && Random.Range(0f, 1f) < density_interactives)
-        {
-            // on consomme un emplacement interactif
-            return consumeInteractiveEmplacement(area);
-        }
-        else
-        {
-            // on consomme un emplacement décoratif
-            // return consumeDecorativeEmplacement(area);
-            return "";
-        }
-    }
-
-    private string consumeInteractiveEmplacement(Area area)
-    {
-        // on doit donner un emplacement interactif
-        // soit un coffre, soit un ordinateur, soit un xp_chest
-        string type = "";
-        float random = Random.Range(0f, 1f);
-        if (random > .95f)
-        {
-            type = "bin";
-        }
-        else if (random > .7f)
-        {
-            type = "trash_container";
-        }
-        else if (random > .6f)
-        {
-            type = "computer";
-        }
-        else if (random > .4f)
-        {
-            type = "playstation";
-        }
-        else if (random > .3f)
-        {
-            type = "xp_chest";
-        }
-        else if (random > .17f)
-        {
-            type = "fridge";
-        }
-        else
-        {
-            type = "server_rack";
-        }
-
-        // on consomme un emplacement
-        nb_interactives++;
-        return type;
-    }
 
 
     // COLLISIONS
@@ -752,7 +482,7 @@ public class Sector : MonoBehaviour
 
 
 
-    // BORDERS
+    // BORDERS AND CONNECTIONS
     public string getBorder(Sector other)
     {
         // check if the sectors are colliding
@@ -792,11 +522,6 @@ public class Sector : MonoBehaviour
         return "no border";
     }
 
-
-
-
-
-    // CONNECTIONS
     public void connectWithSector(Sector other)
     {
         // créé le plus petit chemin entre les deux secteurs
@@ -1139,6 +864,7 @@ public class Sector : MonoBehaviour
     }
 
 
+
     // SETTERS
     public void setSkin(string skin)
     {
@@ -1198,6 +924,20 @@ public class Sector : MonoBehaviour
             return new Vector2Int(-1, -1);
         }
     }
+
+    public List<Zone> getCentralZones() 
+    {
+        // on récupère toutes les zones qui sont au centre de leurs areas respectives
+        // return areas.Values.ToList().Where(area => area.couldHostLegendaryZone()).ToList();
+
+        List<Zone> zones = new List<Zone>();
+        foreach (Area area in areas.Values)
+        {
+            zones.AddRange(area.getCentralZones());
+        }
+        return zones;
+    }
+
 
     // GETTERS
     public Vector2Int wh()

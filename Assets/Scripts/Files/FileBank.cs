@@ -33,7 +33,6 @@ public class FileBank : MonoBehaviour
         Dictionary<string, Dictionary<string, string>> hints = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(json_hints);
         txt_hints = hints["txt"].Select(f => new File(f.Key, f.Value, "txt")).ToList();
 
-        // Debug.Log("(FileBank) loaded " + txt_files.Count + " txt files");
     }
 
     // GETTERS
@@ -53,25 +52,21 @@ public class FileBank : MonoBehaviour
         if (ext == "txt" && txt_files.Count > 0)
         {
             int r = Random.Range(0, txt_files.Count);
-            // Debug.Log("(FileBank) getting txt file n° " + r + " / " + txt_files.Count);
             file = txt_files[r];
         }
         else if (ext == "png" && png_files.Count > 0)
         {
             int r = Random.Range(0, png_files.Count);
-            // Debug.Log("(FileBank) getting png file n° " + r + " / " + png_files.Count);
             file = png_files[r];
         }
         else if (ext == "exe" && exe_files.Count > 0)
         {
             int r = Random.Range(0, exe_files.Count);
-            // Debug.Log("(FileBank) getting exe file n° " + r + " / " + exe_files.Count);
             file = exe_files[r];
         }
         else if (ext == "mp3" && mp3_files.Count > 0)
         {
             int r = Random.Range(0, mp3_files.Count);
-            // Debug.Log("(FileBank) getting mp3 file n° " + r + " / " + mp3_files.Count);
             file = mp3_files[r];
         }
         else
@@ -114,7 +109,7 @@ public class FileBank : MonoBehaviour
         // on l'ajoute à la liste des files
         txt_files.Add(hint);
 
-        Debug.Log("(FileBank) generated hint : " + hint.name + " (" + hint.data +")");
+        // Debug.Log("(FileBank) generated hint : " + hint.name + " (" + hint.data +")");
 
         // on le retourne
         return hint;
