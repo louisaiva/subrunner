@@ -142,7 +142,7 @@ public class WorldGenerator : MonoBehaviour
             {
                 if (sect is ComplexeSector)
                 {
-                    ((ComplexeSector)sect).updateExtensions();
+                    ((ComplexeSector)sect).placeExtensions();
                 }
             }
         }
@@ -636,6 +636,9 @@ public class WorldGenerator : MonoBehaviour
             Sector sect1 = getSectorByCenter(edge.p1);
             Sector sect2 = getSectorByCenter(edge.p2);
 
+            // on vérifie si on change de reachability -> si oui on crée une porte
+            bool create_door = sect1.reachability != sect2.reachability;
+
             // on vérifie sur quel axe s'effectue la frontière
             string border = sect1.getBorder(sect2);
             print("(WorldGenerator - connectSectors)" + sect1.gameObject.name + " and " + sect2.gameObject.name + " are connecting via border : " + border);
@@ -644,11 +647,11 @@ public class WorldGenerator : MonoBehaviour
             {
                 if (new string[] { "R", "U" }.Contains(border))
                 {
-                    sect1.connectWithSector(sect2,false);
+                    sect1.connectWithSector(sect2,create_door);
                 }
                 else
                 {
-                    sect2.connectWithSector(sect1,false);
+                    sect2.connectWithSector(sect1,create_door);
                 }
             }
             else if (border == "no border")
@@ -677,8 +680,8 @@ public class WorldGenerator : MonoBehaviour
                     sectors.Add(sect.GetComponent<Sector>());
 
                     // on connecte les secteurs
-                    gauche.connectWithSector(sect.GetComponent<Sector>(),false);
-                    sect.GetComponent<Sector>().connectWithSector(droite,false);
+                    gauche.connectWithSector(sect.GetComponent<Sector>(),create_door);
+                    sect.GetComponent<Sector>().connectWithSector(droite,create_door);
                 }
                 else if (sect1.D() > sect2.U() || sect2.D() > sect1.U())
                 {
@@ -700,8 +703,8 @@ public class WorldGenerator : MonoBehaviour
                     sectors.Add(sect.GetComponent<Sector>());
 
                     // on connecte les secteurs
-                    bas.connectWithSector(sect.GetComponent<Sector>(),false);
-                    sect.GetComponent<Sector>().connectWithSector(haut,false);
+                    bas.connectWithSector(sect.GetComponent<Sector>(),create_door);
+                    sect.GetComponent<Sector>().connectWithSector(haut,create_door);
                 }
                 else
                 {

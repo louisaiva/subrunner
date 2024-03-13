@@ -124,7 +124,7 @@ public class ComplexeSector : Sector
         transform.position = new Vector3(((x +area_start.x)* area_size.x)/2, ((y +area_start.y)* area_size.y)/2, 0);
     }
 
-    public void updateExtensions()
+    public void placeExtensions()
     {
         // ici on vérifie si les connections internes sont bien connectées
         // si une connection interne n'est pas connectée, on ajoute l'extension appropriée

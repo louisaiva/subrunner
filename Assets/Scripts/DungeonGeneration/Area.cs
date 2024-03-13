@@ -203,6 +203,19 @@ public class Area : MonoBehaviour
                 // we get the size of the zone
                 string[] parts = emplacement.Key.Split('x');
                 parts[0] = parts[0].Replace("door", "");
+
+                if (type.Contains("dcorr"))
+                {
+                    // ça veut dire qu'on est un couloir à portes, dont seulement certaines doivent s'afficher
+                    List<Vector2Int> doors_to_keep = sector.getDoor(new Vector2Int(x, y));
+                    if (parts[0][0] == 'U' && !doors_to_keep.Contains(new Vector2Int(0, 1))) { continue; }
+                    if (parts[0][0] == 'D' && !doors_to_keep.Contains(new Vector2Int(0, -1))) { continue; }
+                    if (parts[0][0] == 'L' && !doors_to_keep.Contains(new Vector2Int(-1, 0))) { continue; }
+                    if (parts[0][0] == 'R' && !doors_to_keep.Contains(new Vector2Int(1, 0))) { continue; }
+
+                    parts[0] = parts[0].Replace("U", "").Replace("D", "").Replace("L", "").Replace("R", "");
+                }
+
                 try
                 {
                     int.Parse(parts[0]);

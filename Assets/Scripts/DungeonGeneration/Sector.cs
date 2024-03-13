@@ -19,6 +19,8 @@ public class Sector : MonoBehaviour
     public HashSet<Vector2Int> rooms = new HashSet<Vector2Int>();
     public HashSet<Vector2Int> sas = new HashSet<Vector2Int>();
     public HashSet<Vector2Int> corridors = new HashSet<Vector2Int>();
+    public HashSet<Vector2Int> dcorr = new HashSet<Vector2Int>();
+    // public HashSet<Vector2Int> corridors = new HashSet<Vector2Int>();
 
     [Header("Position")]
     public int x;
@@ -30,6 +32,8 @@ public class Sector : MonoBehaviour
     [Header("Connections")]
     public Dictionary<Vector2Int, List<Vector2Int>> connections = new Dictionary<Vector2Int, List<Vector2Int>>();
     public int reachability = 0;
+    public Dictionary<Vector2Int, List<Vector2Int>> doors = new Dictionary<Vector2Int, List<Vector2Int>>();
+
 
 
     [Header("Skin")]
@@ -104,6 +108,7 @@ public class Sector : MonoBehaviour
         // on unit les hashsets
         tiles.UnionWith(rooms);
         tiles.UnionWith(corridors);
+        tiles.UnionWith(dcorr);
 
         // on calcule la position SW du secteur
         x = tiles.Min(x => x.x);
@@ -273,7 +278,7 @@ public class Sector : MonoBehaviour
         return "no border";
     }
 
-    public void connectWithSector(Sector other, bool create_sas = true)
+    public void connectWithSector(Sector other,bool create_door=false)
     {
         // créé le plus petit chemin entre les deux secteurs
 
@@ -383,8 +388,8 @@ public class Sector : MonoBehaviour
         print(s);
 
         // on ajoute une connection
-        addConnection(sas, other_sas, create_sas);
-        other.addConnection(other_sas, sas, create_sas);
+        addConnection(sas, other_sas, create_door, false);
+        other.addConnection(other_sas, sas, false,false);
     }
 
     public virtual Vector2Int findClosestInsideConnectingArea(Sector other, string border="")
@@ -598,12 +603,19 @@ public class Sector : MonoBehaviour
 
     }
 
-    public void addConnection(Vector2Int start, Vector2Int end,bool create_sas=true)
+    public void addConnection(Vector2Int start, Vector2Int end, bool create_door = true, bool create_sas = false)
     {
         Vector2Int tile = new Vector2Int(start.x - x, start.y - y);
 
         // on ajoute un sas
-        if (create_sas) {addSas(tile);}
+        if (create_sas)
+        {
+            addSas(start);
+        }
+        else if (create_door)
+        {
+            addDoor(start, end - start);
+        }
 
         // on ajoute une connection
         if (!connections.ContainsKey(tile))
@@ -614,7 +626,36 @@ public class Sector : MonoBehaviour
         // print("connection added : " + start + " / " + end + " / " + (end - start));
     }
 
+    public void addDoor(Vector2Int room,Vector2Int locked_direction)
+    {
+        // on regarde si la room est dans le secteur
+        if (!collidesWithRoomPoint(room))
+        {
+            Debug.LogError("(Sector - addDoor) Erreur la room n'est pas dans le secteur");
+            return;
+        }
 
+        // on change la tile en dcorr
+        Vector2Int tile = room - new Vector2Int(x, y);
+        if (!dcorr.Contains(tile))
+        {
+            dcorr.Add(tile);
+            if (tiles.Contains(tile))
+            {
+                rooms.Remove(tile);
+                corridors.Remove(tile);
+            }
+            else { tiles.Add(tile); }
+        }
+
+        // on ajoute la direction
+        if (!doors.ContainsKey(tile))
+        {
+            doors.Add(tile,new List<Vector2Int>());
+        }
+        doors[tile].Add(locked_direction);
+
+    }
 
     // SETTERS
     public void setSkin(string skin)
@@ -766,7 +807,7 @@ public class Sector : MonoBehaviour
             {
                 return "sas";
             }
-            else if (connections.ContainsKey(pos))
+            else if (dcorr.Contains(pos))
             {
                 return "dcorr";
             }
@@ -904,6 +945,21 @@ public class Sector : MonoBehaviour
     public string getAreaSkin(Vector2Int pos)
     {
         return sector_skin;
+    }
+
+
+    // DOORS GETTERS
+    public List<Vector2Int> getDoor(Vector2Int area)
+    {
+        // on récupère la door
+        if (doors.ContainsKey(area))
+        {
+            return doors[area];
+        }
+        else
+        {
+            return new List<Vector2Int>();
+        }
     }
 
 }
