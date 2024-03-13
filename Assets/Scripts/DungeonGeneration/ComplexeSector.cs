@@ -126,7 +126,7 @@ public class ComplexeSector : Sector
         {
             Zone zone = child.GetComponent<Zone>();
             if (zone == null) { continue; }
-            zone.HANDMADE_INIT();
+            zone.HANDMADE_INIT(this);
 
             // on ajoute la zone à la liste
             handmade_zones.Add(zone);
@@ -173,6 +173,10 @@ public class ComplexeSector : Sector
         Destroy(bg_tm.gameObject);
         Destroy(fg_tm.gameObject);
         Destroy(gd_tm.gameObject);
+        if (transform.Find("measures") != null)
+        {
+            Destroy(transform.Find("measures").gameObject);
+        }
 
         // we move the sector to the right position
         transform.position = new Vector3(((x +area_start.x)* area_size.x)/2, ((y +area_start.y)* area_size.y)/2, 0);
@@ -202,7 +206,8 @@ public class ComplexeSector : Sector
     {
         // dans un premier temps on ajoute juste une salle de 1x1
         // -> on verra plus tard pour ajouter des salles déjà générées (extension)
-        corridors.Add(pos);
+        // corridors.Add(pos);
+        dend.Add(pos);
         tiles.Add(pos);
     }
 

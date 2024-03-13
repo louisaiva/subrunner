@@ -6,11 +6,24 @@ using System.Linq;
 
 public class ZoneDoor : Zone
 {
+
+    [Header("ZoneDoor")]
     public int reachability = 0;
     public bool is_vertical = false;
+    private KeyManager key_manager;
 
-    public void INIT(Vector2Int size, Vector2 position, Transform parent,bool verticality)
+    // unity awake
+    new void Awake()
     {
+        base.Awake();
+        // on récupère le manager de zones
+        key_manager = GameObject.Find("/world").GetComponent<KeyManager>();
+    }
+
+    // init 
+    public void INIT(Sector sector, Transform parent,Vector2Int size, Vector2 position,bool verticality)
+    {
+        this.sector = sector;
         this.size = size;
         transform.SetParent(parent);
         transform.localPosition = new Vector3(position.x, position.y, 0) + anchor;
@@ -27,7 +40,15 @@ public class ZoneDoor : Zone
         ground_light.GetComponent<GroundLight>().size = size;
     }
 
+    public override void HANDMADE_INIT(Sector sector)
+    {
+        base.HANDMADE_INIT(sector);
+        // SetRandomDoor();
+        SetReachableDoor();
+    }
 
+
+    // generate
     public override void GENERATE()
     {
         if (objects_parent == null)
@@ -49,6 +70,7 @@ public class ZoneDoor : Zone
     }
 
 
+    // main functions
     public void SetRandomDoor()
     {
         // on load la zone depuis le fichier prefab en fonction de sa taille
@@ -63,5 +85,18 @@ public class ZoneDoor : Zone
         gameObject.name = objects_parent.name;
     }
 
+    public void SetReachableDoor()
+    {
+        // set the door based on its reachability
+        GameObject zone = key_manager.GetDoor(reachability, is_vertical);
+        if (zone == null)
+        {
+            Debug.Log("Door " + reachability + " not found");
+            return;
+        }
+
+        objects_parent = zone.transform.Find("obj");
+        gameObject.name = objects_parent.name;
+    }
 
 }

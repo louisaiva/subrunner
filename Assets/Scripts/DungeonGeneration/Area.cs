@@ -183,7 +183,7 @@ public class Area : MonoBehaviour
                 {
                     // on récupère la zone
                     GameObject zone = Instantiate(zone_prefab, Vector3.zero, Quaternion.identity);
-                    zone.GetComponent<Zone>().INIT(this.transform,zone_size, pos);
+                    zone.GetComponent<Zone>().INIT(this.sector,this.transform,zone_size, pos);
                     // Destroy(zone);
 
                     // on ajoute la zone à la liste
@@ -239,7 +239,7 @@ public class Area : MonoBehaviour
                 {
                     // on récupère la zone
                     GameObject door = Instantiate(door_prefab, Vector3.zero, Quaternion.identity);
-                    door.GetComponent<ZoneDoor>().INIT(door_size, pos, this.transform, is_vertical);
+                    door.GetComponent<ZoneDoor>().INIT(this.sector, this.transform,door_size, pos, is_vertical);
 
                     if (type.Contains("dcorr"))
                     {

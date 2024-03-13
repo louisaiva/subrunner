@@ -17,10 +17,10 @@ public class Sector : MonoBehaviour
     [Header("HashSet")]
     public HashSet<Vector2Int> tiles = new HashSet<Vector2Int>();
     public HashSet<Vector2Int> rooms = new HashSet<Vector2Int>();
-    public HashSet<Vector2Int> sas = new HashSet<Vector2Int>();
+    public HashSet<Vector2Int> sas = new HashSet<Vector2Int>(); // ? deprecated ?
     public HashSet<Vector2Int> corridors = new HashSet<Vector2Int>();
-    public HashSet<Vector2Int> dcorr = new HashSet<Vector2Int>();
-    // public HashSet<Vector2Int> corridors = new HashSet<Vector2Int>();
+    public HashSet<Vector2Int> dcorr = new HashSet<Vector2Int>(); // doors corridors
+    public HashSet<Vector2Int> dend = new HashSet<Vector2Int>(); // dead ends
 
     [Header("Position")]
     public int x;
@@ -41,8 +41,6 @@ public class Sector : MonoBehaviour
 
     [Header("Zones")]
     public List<Zone> available_central_zones = new List<Zone>();
-    // public List<Area> keys_areas = new List<Area>();
-
 
 
     [Header("Skin")]
@@ -686,17 +684,6 @@ public class Sector : MonoBehaviour
         sector_skin = skin;
     }
 
-    /* public void setKeyZone(GameObject key_zone)
-    {
-        // on choisit une area aléatoire contenant une centrale zone
-        Zone zone = getCentralZones()[Random.Range(0, getCentralZones().Count)];
-
-        // on ajoute la zone à l'area
-        zone.SetZone(key_zone);
-
-        // on l'enlève de la liste des zones disponibles
-        available_central_zones.Remove(zone);
-    } */
 
     // AREA GETTERS
     public Area getArea(Vector2Int area)
@@ -761,17 +748,6 @@ public class Sector : MonoBehaviour
         }
 
         return available_central_zones;
-
-        /* List<Zone> zones = new List<Zone>();
-        foreach (Area area in areas.Values)
-        {
-            // on vérifie si l'area ne contient déjà pas une zone "légendaire" (ex : key_zone ou boss_zone)
-            // if (keys_areas.Contains(area)) { continue; }
-
-            zones.AddRange(area.getCentralZones());
-        }
-        available_central_zones = zones;
-        return zones; */
     }
 
     public void useCentralZone(Zone zone)
@@ -899,6 +875,10 @@ public class Sector : MonoBehaviour
             else if (dcorr.Contains(pos))
             {
                 return "dcorr";
+            }
+            else if (dend.Contains(pos))
+            {
+                return "dend";
             }
             else
             {

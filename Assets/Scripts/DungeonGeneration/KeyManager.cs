@@ -5,7 +5,6 @@ public class KeyManager : MonoBehaviour
 {
     
     // cette classe stocke les paires de doors / keys et les répartit à la génération du monde afin d'assurer une progression metroidvania
-
     [Header("Doors & Keys")]
     private Dictionary<string,string> doors_and_keys = new Dictionary<string, string>()
                                                             {
@@ -127,6 +126,7 @@ public class KeyManager : MonoBehaviour
             // on choisit une zone centrale aléatoire
             Zone zone = central_zones[Random.Range(0,central_zones.Count)];
             zone.SetZone(keys[doors_and_keys[pathvania[r-1]]]);
+            zone.sector.useCentralZone(zone);
         }
     }
 
@@ -141,5 +141,22 @@ public class KeyManager : MonoBehaviour
             zones.AddRange(sect.getAvailableCentralZones());
         }
         return zones;
+    }
+
+
+    // GETTERS
+    public GameObject GetDoor(int reachability, bool is_vertical = false)
+    {
+        // cette fonction renvoie la porte correspondante à la reachability
+        if (reachability > pathvania.Count) { reachability = pathvania.Count; }
+        string door_name = pathvania[reachability-1];
+        if (is_vertical)
+        {
+            return doors[door_name];
+        }
+        else
+        {
+            return doorsLR[door_name];
+        }
     }
 }

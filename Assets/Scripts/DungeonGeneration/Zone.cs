@@ -13,13 +13,15 @@ public class Zone : MonoBehaviour
 
 
     // protected World world;
+    public Sector sector;
     protected Vector3 anchor = new Vector3(4,4,0);
     [SerializeField] protected Vector2Int size;
     [SerializeField] protected ZoneManager bank;
     [SerializeField] protected Transform objects_parent;
 
 
-    void Awake()
+
+    protected void Awake()
     {
         // on récupère le monde
         // world = GameObject.Find("/world").GetComponent<World>();
@@ -30,8 +32,9 @@ public class Zone : MonoBehaviour
 
 
     // initialise la zone
-    public void INIT(Transform parent, Vector2Int size, Vector2 position)
+    public void INIT(Sector sector, Transform parent, Vector2Int size, Vector2 position)
     {
+        this.sector = sector;
         this.size = size;
 
         transform.SetParent(parent);
@@ -43,8 +46,10 @@ public class Zone : MonoBehaviour
         ground_light.GetComponent<GroundLight>().size = size;
     }
 
-    public void HANDMADE_INIT()
+    public virtual void HANDMADE_INIT(Sector sector)
     {
+        this.sector = sector;
+
         SetRandomZone();
 
         // on applique la size à la ground_light
