@@ -282,7 +282,7 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable, I_FileHolder
         // hack_ui.setMode("unhackable");
 
         // on regarde si l'ordi est allumé
-        if (!is_on) { return false; }
+        if (!is_on || is_loading) { return false; }
         if (anim_handler.IsForcing()) { return false; }
 
         // on regarde si on a le bon type de hack

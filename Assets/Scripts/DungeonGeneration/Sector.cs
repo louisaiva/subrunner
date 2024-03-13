@@ -20,44 +20,33 @@ public class Sector : MonoBehaviour
     public HashSet<Vector2Int> sas = new HashSet<Vector2Int>();
     public HashSet<Vector2Int> corridors = new HashSet<Vector2Int>();
 
-    [Header("Connections")]
-    public Dictionary<Vector2Int, List<Vector2Int>> connections = new Dictionary<Vector2Int, List<Vector2Int>>();
-    public int reachability = 0;
-    
-
     [Header("Position")]
     public int x;
     public int y;
     public int w;
     public int h;
 
+
+    [Header("Connections")]
+    public Dictionary<Vector2Int, List<Vector2Int>> connections = new Dictionary<Vector2Int, List<Vector2Int>>();
+    public int reachability = 0;
+
+
     [Header("Skin")]
     [SerializeField] protected string sector_skin = "base_sector";
+
 
     [Header("Objects")]
     [SerializeField] protected Dictionary<string, GameObject> prefabs = new Dictionary<string, GameObject>();
     [SerializeField] protected Dictionary<string, Transform> parents = new Dictionary<string, Transform>();
+
 
     [Header("Enemies")]
     protected List<Area> enemies_spawn_areas = new List<Area>();
     [SerializeField] protected List<Being> enemies = new List<Being>();
     [SerializeField] protected int nb_enemies = 5;
     public bool is_safe = false;
-
-    [Header("Interactives")]
-    [SerializeField] protected float density_interactives = 0.5f;
-    [SerializeField] protected int planned_nb_interactives = 10;
-    protected int nb_interactives = 0;
-
-
-    // [Header("Doors")]
-    // [SerializeField] private Dictionary<Vector2, string> sas_doors = new Dictionary<Vector2, string>();
-
-
-    [Header("Ceilings")]
-    public Dictionary<Vector2Int,Dictionary<string, GameObject>> ceilings = new Dictionary<Vector2Int,Dictionary<string, GameObject>>();
-    private Dictionary<Vector2Int, List<string>> hidden_ceilings = new Dictionary<Vector2Int, List<string>>();
-    private string ceiling_sas_prefabs_path = "prefabs/rooms/sas";
+    
 
     [Header("Areas")]
     public GameObject area_prefab;
@@ -74,27 +63,11 @@ public class Sector : MonoBehaviour
 
         // on récupère les prefabs
         prefabs.Add("light", Resources.Load<GameObject>("prefabs/objects/lights/small_light"));
-        // prefabs.Add("poster", Resources.Load<GameObject>("prefabs/objects/poster"));
         prefabs.Add("enemy", Resources.Load<GameObject>("prefabs/beings/enemies/zombo"));
-        // prefabs.Add("chest", Resources.Load<GameObject>("prefabs/objects/chest"));
-        // prefabs.Add("xp_chest", Resources.Load<GameObject>("prefabs/objects/xp_chest"));
-        // prefabs.Add("computer", Resources.Load<GameObject>("prefabs/objects/computer"));
-        // prefabs.Add("doorUD", Resources.Load<GameObject>("prefabs/objects/door"));
-        // prefabs.Add("doorLR", Resources.Load<GameObject>("prefabs/objects/door_L"));
-        // prefabs.Add("sector_label", Resources.Load<GameObject>("prefabs/objects/sector_label"));
-        // prefabs.Add("tag", Resources.Load<GameObject>("prefabs/objects/tag"));
-        // prefabs.Add("base_ceiling", Resources.Load<GameObject>("prefabs/sectors/ceiling"));
 
         // on récupère les parents
         parents.Add("light", transform.Find("objects"));
-        // parents.Add("poster", transform.Find("decoratives/posters"));
         parents.Add("enemy", GameObject.Find("/world/enemies").transform);
-        // parents.Add("chest", transform.Find("interactives"));
-        // parents.Add("computer", transform.Find("interactives"));
-        // parents.Add("sas_doors", transform.Find("interactives"));
-        // parents.Add("sector_label", transform.Find("decoratives"));
-        // parents.Add("tag", transform.Find("decoratives/posters"));
-        // parents.Add("ceiling", transform.Find("ceilings"));
     }
 
     void Update()
@@ -124,67 +97,6 @@ public class Sector : MonoBehaviour
         }
 
     }
-
-    /* public void UpdateCeilings(Vector2Int perso_area)
-    {
-        Dictionary<Vector2Int, List<string>> new_hidden_ceilings = new Dictionary<Vector2Int, List<string>>();
-
-        // on affiche les ceilings autour de l'area du perso
-        List<Vector2Int> directions = new List<Vector2Int>() { new Vector2Int(0, 0),
-                                         new Vector2Int(0, 1), new Vector2Int(0, -1), new Vector2Int(1, 0), new Vector2Int(-1, 0),
-                                         new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, 1), new Vector2Int(-1, -1)};
-        foreach (Vector2Int dir in directions)
-        {
-            Vector2Int area = perso_area + dir;
-
-            // on vérifie que l'area existe
-            if (!ceilings.ContainsKey(area)) { continue; }
-
-            // on l'ajoute aux ceilings à cacher
-            string ceiling_type = "base";
-            if (!new_hidden_ceilings.ContainsKey(area))
-            {
-                new_hidden_ceilings[area] = new List<string>() { ceiling_type };
-            }
-            else
-            {
-                new_hidden_ceilings[area].Add(ceiling_type);
-            }
-        }
-
-        // on cache les nouveaux ceilings
-        foreach (KeyValuePair<Vector2Int, List<string>> ceiling_area in new_hidden_ceilings)
-        {
-            Vector2Int area = ceiling_area.Key;
-            foreach (string ceiling_type in ceiling_area.Value)
-            {
-                // si le ceiling est déjà caché c good
-                if (hidden_ceilings.ContainsKey(area) && hidden_ceilings[area].Contains(ceiling_type)) { continue; }
-
-                // sinon on le cache
-                ceilings[area][ceiling_type].SetActive(false);
-            }
-        }
-
-        // on affiche les ceilings qui ne sont plus cachés
-        foreach (KeyValuePair<Vector2Int, List<string>> ceiling_area in hidden_ceilings)
-        {
-            Vector2Int area = ceiling_area.Key;
-            foreach (string ceiling_type in ceiling_area.Value)
-            {
-                // si le ceiling doit être caché c good
-                if (new_hidden_ceilings.ContainsKey(area) && new_hidden_ceilings[area].Contains(ceiling_type)) { continue; }
-
-                // sinon on l'affiche
-                ceilings[area][ceiling_type].SetActive(true);
-            }
-        }
-
-        // on met à jour les hidden_ceilings
-        hidden_ceilings = new_hidden_ceilings;
-
-    } */
-
 
     // INIT FUNCTIONS
     public void init()
@@ -271,72 +183,6 @@ public class Sector : MonoBehaviour
         // PlaceLabels(empl_labels);
     }
 
-    /* public void GenerateCeiling(Vector2Int area)
-    {
-        // on génère les ceilings de l'area spécifique
-        string type = getAreaType(area);
-        if (type == "ceiling") { return; }
-
-        else if (type == "sas")
-        {
-
-            // si c'est un sas : on a 2 ceilings : base et sas
-            // on récupère les objets dans le dossier ceiling_sas_prefabs_path
-            GameObject area_go = Instantiate(Resources.Load<GameObject>(ceiling_sas_prefabs_path + "/" + getAreaName(area)), Vector3.zero, Quaternion.identity);
-            GameObject base_ceiling = area_go.transform.Find("ceilings/base").gameObject;
-            GameObject sas_ceiling = area_go.transform.Find("ceilings/sas").gameObject;
-
-            // on les met à la bonne position
-            Vector3 translation = new Vector3((x+area.x) * area_size.x / 2, (y+area.y) * area_size.y / 2, 0f);
-            Vector3 base_pos = base_ceiling.transform.position + translation;
-            Vector3 sas_pos = sas_ceiling.transform.position + translation;
-            // base_ceiling.transform.position = new Vector3(area.x * area_size.x / 2, area.y * area_size.y / 2, 0f);
-            // sas_ceiling.transform.position = new Vector3(area.x * area_size.x / 2, area.y * area_size.y / 2, 0f);
-            base_ceiling.transform.position = base_pos;
-            sas_ceiling.transform.position = sas_pos;
-
-            // on les met dans le bon parent
-            base_ceiling.transform.SetParent(parents["ceiling"]);
-            sas_ceiling.transform.SetParent(parents["ceiling"]);
-
-            // on les ajoute au dictionnaire
-            ceilings[area] = new Dictionary<string, GameObject>();
-            ceilings[area]["base"] = base_ceiling;
-            ceilings[area]["sas"] = sas_ceiling;
-
-            // on affiche les ceilings
-            base_ceiling.SetActive(true);
-            foreach (Transform child in sas_ceiling.transform)
-            {
-                child.gameObject.SetActive(true);
-            }
-            sas_ceiling.SetActive(true);
-            foreach (Transform child in base_ceiling.transform)
-            {
-                child.gameObject.SetActive(true);
-            }
-
-            // on supprime l'oject area_go
-            Destroy(area_go);
-        }
-        /* else if (type == "secret")
-        {
-            GenerateCeilingSecret(area);
-        } 
-        else
-        {
-            // si c'est une area normale on génère un ceiling carré : sprite qui fait exactement la taille de l'area
-            Vector3 pos = new Vector3((x + area.x)*area_size.x/2 + area_size.x / 4, (y + area.y)*area_size.y/2 + area_size.y / 4, 0f);
-            print("placing ceiling at " + pos +" because x,y = " + x + "," + y + " and area.x,area.y = " + area.x + "," + area.y);
-            GameObject ceiling = Instantiate(prefabs["base_ceiling"], pos, Quaternion.identity);
-            ceiling.transform.SetParent(parents["ceiling"]);
-
-            ceilings[area] = new Dictionary<string, GameObject>();
-            ceilings[area]["base"] = ceiling;
-
-        }
-    } */
-
     protected void PlaceEnemies()
     {
         for (int i = 0; i < nb_enemies; i++)
@@ -358,76 +204,6 @@ public class Sector : MonoBehaviour
         // on ajoute l'enemy à la liste
         enemies.Add(enemy.GetComponent<Being>());
     }
-
-    /* protected void PlaceChest()
-    {
-        // on récupère un emplacement
-        Vector2 empl = consumeRandomEmplacement("interactives");
-
-        // on instancie un coffre
-        Vector3 pos = new Vector3(empl.x, empl.y, 0);
-
-        // on choisit un coffre random
-        GameObject chest = null;
-        if (Random.Range(0f, 1f) < .5f)
-        {
-            chest = Instantiate(prefabs["chest"], pos, Quaternion.identity);
-        }
-        else
-        {
-            chest = Instantiate(prefabs["xp_chest"], pos, Quaternion.identity);
-        }
-
-        // on met le bon parent
-        chest.transform.SetParent(parents["chest"]);
-    }
-    
-    protected void PlaceComputer()
-    {
-        // on récupère un emplacement
-        Vector2 empl = consumeRandomEmplacement("interactives");
-
-        // on instancie un computer
-        Vector3 pos = new Vector3(empl.x, empl.y, 0);
-        GameObject computer = Instantiate(prefabs["computer"], pos, Quaternion.identity);
-
-        // on met le bon parent
-        computer.transform.SetParent(parents["computer"]);
-    }
-   */
-    
-    /* private void PlaceDoors()
-    {
-        int i = 0;
-
-        // on parcourt les connections
-        foreach (KeyValuePair<Vector2, string> empl in sas_doors)
-        {
-
-            // on instancie une porte
-            Vector3 pos = new Vector3(empl.Key.x, empl.Key.y, 0);
-            GameObject door = null;
-
-
-            if ("hackable_vertical" == empl.Value)
-            {
-                print("instantiate a UD door at " + empl.Key);
-                // on instancie une porte verticale (up ou down)
-                door = Instantiate(prefabs["doorUD"], pos, Quaternion.identity);
-            }
-            else if ("simple_side" == empl.Value)
-            {
-                print("instantiate a LR door at " + empl.Key);
-                // on instancie une porte horizontale (left ou right)
-                door = Instantiate(prefabs["doorLR"], pos, Quaternion.identity);
-            }
-
-            // on met le bon parent
-            door.transform.SetParent(parents["sas_doors"]);
-
-            i++;
-        }
-    } */
 
 
     // COLLISIONS
@@ -497,7 +273,7 @@ public class Sector : MonoBehaviour
         return "no border";
     }
 
-    public void connectWithSector(Sector other)
+    public void connectWithSector(Sector other, bool create_sas = true)
     {
         // créé le plus petit chemin entre les deux secteurs
 
@@ -607,8 +383,8 @@ public class Sector : MonoBehaviour
         print(s);
 
         // on ajoute une connection
-        addConnection(sas, other_sas);
-        other.addConnection(other_sas, sas);
+        addConnection(sas, other_sas, create_sas);
+        other.addConnection(other_sas, sas, create_sas);
     }
 
     public virtual Vector2Int findClosestInsideConnectingArea(Sector other, string border="")
@@ -822,12 +598,12 @@ public class Sector : MonoBehaviour
 
     }
 
-    public void addConnection(Vector2Int start, Vector2Int end)
+    public void addConnection(Vector2Int start, Vector2Int end,bool create_sas=true)
     {
         Vector2Int tile = new Vector2Int(start.x - x, start.y - y);
 
         // on ajoute un sas
-        addSas(tile);
+        if (create_sas) {addSas(tile);}
 
         // on ajoute une connection
         if (!connections.ContainsKey(tile))
@@ -989,6 +765,10 @@ public class Sector : MonoBehaviour
             else if (sas.Contains(pos))
             {
                 return "sas";
+            }
+            else if (connections.ContainsKey(pos))
+            {
+                return "dcorr";
             }
             else
             {

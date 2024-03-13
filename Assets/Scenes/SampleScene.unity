@@ -542,6 +542,7 @@ MonoBehaviour:
   is_world_safe: 0
   generation_radius: {x: 10, y: 1}
   sectors: []
+  spawn_sector: {fileID: 0}
   hand_made_sectors: []
   visu_parent: {fileID: 0}
 --- !u!1 &72279455
@@ -70324,11 +70325,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a44f326fe4a5e8145bf0e00ec261abfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  area_to_load: 
-  rooms_path: prefabs/areas/sas/
+  areas_to_load: prefabs/areas/dcorr
   areas_path: Assets/Resources/prefabs/areas/
-  tile_areas_path: Assets/Resources/prefabs/area_json/
-  areas: []
+  json_path: Assets/Resources/prefabs/area_json/
+  areas:
+  - {fileID: 4017989619413226525, guid: da0beeb75226cca4f8af63e5311d0e2b, type: 3}
+  - {fileID: 7788669666752532476, guid: 1423ebd080be33f4f8460060c547d466, type: 3}
+  - {fileID: 3964070163027848567, guid: 93b8f655bfd8b3d4eacd31ee5e30fbc1, type: 3}
+  - {fileID: 1693926128930177296, guid: b2b7adb2783f9964bbcb9ed500aece72, type: 3}
+  - {fileID: 3067262903453708424, guid: aa7177897e4f1974c8afea0ddea28653, type: 3}
+  - {fileID: 2336832659883614376, guid: e125917c5611b1a45a611b3a88498b0d, type: 3}
+  - {fileID: 9144265131195854537, guid: 3413d6b54c9bc18409330d82882d18a3, type: 3}
+  - {fileID: 6401336102309710455, guid: c8fe4e9a852675c49b8a961b6596fdbf, type: 3}
+  - {fileID: 4500021222297657897, guid: 5e17aaac007e3664a83dcc9be1ae65d0, type: 3}
+  - {fileID: 2013646542115107806, guid: 82c0f5d356cfc03499598e216cfc91f9, type: 3}
+  - {fileID: 8194943481527064823, guid: c6b25d8b76418b3479890dcb4069432a, type: 3}
+  empty_room_prefab: {fileID: 4213936095315929734, guid: 98ceebc2b0af5154fa7ab4fac4d08e32, type: 3}
 --- !u!1 &2125119121
 GameObject:
   m_ObjectHideFlags: 0

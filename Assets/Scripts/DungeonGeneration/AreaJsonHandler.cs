@@ -9,29 +9,33 @@ using System.Linq;
 public class AreaJsonHandler : MonoBehaviour
 {
     [Header("Loading")]
-    [SerializeField] private string area_to_load = "";
+    [SerializeField] private string areas_to_load = "";
 
     [Header("Saving")]
-    [SerializeField] private string rooms_path = "prefabs/rooms/";
+    // [SerializeField]
     [SerializeField] private string areas_path = "Assets/Resources/prefabs/areas/";
-    [SerializeField] private string tile_areas_path = "Assets/Resources/prefabs/area_json/";
+    [SerializeField] private string json_path = "Assets/Resources/prefabs/area_json/";
     [SerializeField] private List<GameObject> areas;
 
+    
+    [Header("Prefab")]
+    [SerializeField] private GameObject empty_room_prefab;
+
     // SELECTING AREAS
-    public void SelectAllAreas()
+    public void SelectAreas()
     {
         areas = new List<GameObject>();
-        foreach (GameObject area in Resources.LoadAll<GameObject>(rooms_path))
+        foreach (GameObject area in Resources.LoadAll<GameObject>(areas_to_load))
         {
             if (area.name == "empty") { continue;}
             areas.Add(area);
         }
     }
 
-    public void SelectAllSasAreas()
+    /* public void SelectAllSasAreas()
     {
         areas = new List<GameObject>();
-        foreach (GameObject area in Resources.LoadAll<GameObject>(rooms_path+ "sas/"))
+        foreach (GameObject area in Resources.LoadAll<GameObject>(areas_to_load + "sas/"))
         {
             if (area.name == "empty") { continue; }
             if (area.name.Contains("sas_"))
@@ -39,10 +43,10 @@ public class AreaJsonHandler : MonoBehaviour
                 areas.Add(area);
             }
         }
-    }
+    } */
 
     // CHANGING TILEMAPS
-    public void MoveUpBg(ref Tilemap fg_tm, ref Tilemap bg_tm, ref Tilemap gd_tm)
+    /* public void MoveUpBg(ref Tilemap fg_tm, ref Tilemap bg_tm, ref Tilemap gd_tm)
     {
         // ici on applique différentes modifications aux tilemaps
         // tout d'abord on veut remonter les tiles de 1 unité
@@ -131,7 +135,7 @@ public class AreaJsonHandler : MonoBehaviour
             gd_tm.SetTile(new Vector3Int(0, 6, 0), Resources.Load<TileBase>("tilesets/gd_2_rule"));
         }
 
-    }
+    } */
 
     // SAVING SELECTED AREAS
     public void SaveAreaToJson(GameObject area)
@@ -161,20 +165,26 @@ public class AreaJsonHandler : MonoBehaviour
 
         */
         
-        // on récupère le type d'aera (corr, room, room ext)
+        // on récupère le type d'aera (corr, room, room ext, sas, dcorr)
         string area_type = "";
-        if (area.name.Contains("corridor_"))
-            area_type = "corridors/";
-        else if (area.name.Contains("room_"))
+        if (area.name.Contains("room_"))
             if (area.name.Contains("S") || area.name.Contains("N") || area.name.Contains("E") || area.name.Contains("W"))
-                area_type = "rooms_ext/";
+                area_type = "room_ext/";
             else
-                area_type = "rooms/";
-        else if (area.name.Contains("sas_"))
+                area_type = "room/";
+        else
+        {
+            // on split le nom pour récupérer le type
+            string[] split = area.name.Split('_');
+            area_type = split[0] + "/";
+        }
+        /* else if (area.name.Contains("sas_"))
             area_type = "sas/";
+        else if (area.name.Contains("dcoor_"))
+            area_type = "dcoor/"; */
 
         // on en déduit le path du fichier json
-        string path = tile_areas_path + area_type + area.name + ".json";
+        string path = json_path + area_type + area.name + ".json";
 
         // on sauvegarde les données des tilemaps dans des listes
         List<List<int>> fg = new List<List<int>>();
@@ -187,7 +197,6 @@ public class AreaJsonHandler : MonoBehaviour
         Tilemap gdTilemap = area.transform.Find("gd_tilemap").GetComponent<Tilemap>();
 
         // on applique des changements à nos tilemaps !!
-        // FillEmptyBottomLines(ref fgTilemap, ref gdTilemap);
 
 
         // on récupère les bounds des tilemaps
@@ -360,26 +369,6 @@ public class AreaJsonHandler : MonoBehaviour
 
 
 
-        // todo - un peu schlag, comment mieux faire ?
-        // on crée des ceilings qu'on sauvegarde en gameobjects dans les prefabs/areas/ceilings
-
-        /* if (area.transform.Find("ceilings") != null)
-        {
-            foreach (Transform ceiling in area.transform.Find("ceilings"))
-            {
-                // on sauvegarde le gameobject sous forme de prefab avec le nom : area_name + "_" + ceiling_name
-                string ceiling_name = ceiling.name;
-                string ceiling_path = "Assets/Resources/prefabs/areas/ceilings/" + area.name + "_" + ceiling_name + ".prefab";
-
-                // on déplace le gameobject de -middle
-                // ceiling.position -= new Vector3(middle.x, middle.y, 0);
-
-                // on sauvegarde le prefab
-                PrefabUtility.SaveAsPrefabAsset(ceiling.gameObject, ceiling_path);
-            }
-        } */
-
-
 
         // on sauvegarde les listes dans un fichier json
         string json = "{\n\n" + json_fg + ",\n\n" + json_bg + ",\n\n" + json_gd + ",\n\n" + json_empl + "\n\n}";
@@ -424,11 +413,11 @@ public class AreaJsonHandler : MonoBehaviour
     }
 
     // LOADING
-    public void LoadArea()
+    /* public void LoadArea()
     {
-        if (area_to_load == "") { return; }
-        GameObject area = LoadFromJson(area_to_load);
-    }
+        if (areas_to_load == "") { return; }
+        GameObject area = LoadFromJson(areas_to_load);
+    } */
 
     public GameObject LoadFromJson(string name)
     {
@@ -447,8 +436,8 @@ public class AreaJsonHandler : MonoBehaviour
         List<List<int>> gd = dict["gd"];
 
         // on instancie une empty area
-        GameObject area = Resources.Load<GameObject>(rooms_path + "empty");
-        area = Instantiate(area);
+        // GameObject area = Resources.Load<GameObject>(rooms_path + "empty");
+        GameObject area = Instantiate(empty_room_prefab);
         area.name = name;
 
         // on ajoute des tiles aux tilemaps
@@ -490,7 +479,7 @@ public class AreaJsonHandler : MonoBehaviour
     public string GetRandomAreaJson()
     {
         // on récupère un fichier json aléatoire
-        string[] files = System.IO.Directory.GetFiles(tile_areas_path, "*.json", System.IO.SearchOption.AllDirectories);
+        string[] files = System.IO.Directory.GetFiles(json_path, "*.json", System.IO.SearchOption.AllDirectories);
         string file = files[Random.Range(0, files.Length)];
         string json = System.IO.File.ReadAllText(file);
 
@@ -502,18 +491,20 @@ public class AreaJsonHandler : MonoBehaviour
     {
         // on récupère le type d'aera (corr, room, room ext)
         string area_type = "";
-        if (name.Contains("corridor_"))
-            area_type = "corridors/";
-        else if (name.Contains("room_"))
+        if (name.Contains("room_"))
             if (name.Contains("S") || name.Contains("N") || name.Contains("E") || name.Contains("W"))
-                area_type = "rooms_ext/";
+                area_type = "room_ext/";
             else
-                area_type = "rooms/";
-        else if (name.Contains("sas_"))
-            area_type = "sas/";
+                area_type = "room/";
+        else
+        {
+            // on split le nom pour récupérer le type
+            string[] split = name.Split('_');
+            area_type = split[0] + "/";
+        }
 
         // on en déduit le path du fichier json
-        string path = tile_areas_path + area_type + name + ".json";
+        string path = json_path + area_type + name + ".json";
 
         string json = "";
 
@@ -542,7 +533,6 @@ public class AreaJsonHandler : MonoBehaviour
                 }
             }
         }
-            
 
         // on retourne le json
         return json;
@@ -552,7 +542,7 @@ public class AreaJsonHandler : MonoBehaviour
     // LOADING THEN SAVING TO PREFABS
     public void SaveAreasToPrefab()
     {
-        foreach (string directory in System.IO.Directory.GetDirectories(tile_areas_path))
+        foreach (string directory in System.IO.Directory.GetDirectories(json_path))
         {
             string dir = directory.Split('/')[directory.Split('/').Length - 1] + "\\";
             print("saving areas prefabs to" + dir);
@@ -563,7 +553,7 @@ public class AreaJsonHandler : MonoBehaviour
     public void SaveDirAreasToPrefab(string directory)
     {
         // we load all areas from json
-        foreach (string area_name in System.IO.Directory.GetFiles(tile_areas_path + directory, "*.json"))
+        foreach (string area_name in System.IO.Directory.GetFiles(json_path + directory, "*.json"))
         {
             // print("loading " + area_name);
             string name = area_name.Split('/')[area_name.Split('/').Length - 1].Split('.')[0];
@@ -610,8 +600,7 @@ public class AreaJsonHandler : MonoBehaviour
             }
 
             // on instancie une empty area
-            GameObject area = Resources.Load<GameObject>(rooms_path + "empty");
-            area = Instantiate(area);
+            GameObject area = Instantiate(empty_room_prefab);
             // area.name = area_name.Split('/')[area_name.Split('/').Length - 1].Split('.')[0];
 
             // on ajoute des tiles aux tilemaps
@@ -765,7 +754,7 @@ public class AreaJson
     }
 }
 
-public class Point
+public class Points
 {
     public float x;
     public float y;

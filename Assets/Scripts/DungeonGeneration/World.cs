@@ -68,27 +68,6 @@ public class World : MonoBehaviour
         bank_zones = GetComponent<ZoneManager>();
     }
 
-
-    /* void Update()
-    {
-        // affiche ou cache les ceilings en fonction de la position du joueur
-        UpdateCeilings();
-    }
-
-    void UpdateCeilings()
-    {
-        // récupère l'area du perso
-        Vector2Int area_pos = getLocalAreaPos(getPersoPos());
-        Sector area_sector = getSector(getPersoPos());
-
-        if (area_sector == null) { return; }
-
-        // print("(world) updating ceilings for area " + area_sector.getAreaName(getPersoPos()) + " at " + area_pos + " in sector " + area_sector.name);
-
-        area_sector.UpdateCeilings(area_pos);
-    }*/
-
-
     // GENERATION
     public void GENERATE(List<Sector> sect, Sector spawn_sector)
     {

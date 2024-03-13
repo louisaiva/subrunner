@@ -10,21 +10,13 @@ public class AreaJsonEditor: Editor {
         {
             areaBuilder.SaveAreasToJson();
         }
-        else if (GUILayout.Button("Save Areas to Prefabs"))
+        /* else if (GUILayout.Button("Save Areas to Prefabs"))
         {
             areaBuilder.SaveAreasToPrefab();
-        }
-        else if (GUILayout.Button("Select all Areas"))
+        } */
+        else if (GUILayout.Button("Select Areas"))
         {
-            areaBuilder.SelectAllAreas();
-        }
-        else if (GUILayout.Button("Select all Sas areas"))
-        {
-            areaBuilder.SelectAllSasAreas();
-        }
-        else if (GUILayout.Button("Load Area"))
-        {
-            areaBuilder.LoadArea();
+            areaBuilder.SelectAreas();
         }
 
         DrawDefaultInspector();

@@ -557,8 +557,6 @@ public class WorldGenerator : MonoBehaviour
                 }
             }
         }
-
-
     }
 
 
@@ -646,11 +644,11 @@ public class WorldGenerator : MonoBehaviour
             {
                 if (new string[] { "R", "U" }.Contains(border))
                 {
-                    sect1.connectWithSector(sect2);
+                    sect1.connectWithSector(sect2,false);
                 }
                 else
                 {
-                    sect2.connectWithSector(sect1);
+                    sect2.connectWithSector(sect1,false);
                 }
             }
             else if (border == "no border")
@@ -679,8 +677,8 @@ public class WorldGenerator : MonoBehaviour
                     sectors.Add(sect.GetComponent<Sector>());
 
                     // on connecte les secteurs
-                    gauche.connectWithSector(sect.GetComponent<Sector>());
-                    sect.GetComponent<Sector>().connectWithSector(droite);
+                    gauche.connectWithSector(sect.GetComponent<Sector>(),false);
+                    sect.GetComponent<Sector>().connectWithSector(droite,false);
                 }
                 else if (sect1.D() > sect2.U() || sect2.D() > sect1.U())
                 {
@@ -702,8 +700,8 @@ public class WorldGenerator : MonoBehaviour
                     sectors.Add(sect.GetComponent<Sector>());
 
                     // on connecte les secteurs
-                    bas.connectWithSector(sect.GetComponent<Sector>());
-                    sect.GetComponent<Sector>().connectWithSector(haut);
+                    bas.connectWithSector(sect.GetComponent<Sector>(),false);
+                    sect.GetComponent<Sector>().connectWithSector(haut,false);
                 }
                 else
                 {
@@ -712,7 +710,6 @@ public class WorldGenerator : MonoBehaviour
                     // risque d'empieter sur un autre secteur existant -> on ne fait rien
                     Debug.LogWarning("(WorldGenerator - connectSectors) diagonal border between " + sect1.gameObject.name + " and " + sect2.gameObject.name + " -> COMPLEXE -> we do nothing");
                 }
-                    
             }
         }
     }

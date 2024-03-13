@@ -19,15 +19,12 @@ public class Area : MonoBehaviour
 
     [Header("Zones")]
     private GameObject zone_prefab;
-    // private Vector2 zone_pos = new Vector3(4, 4, 0); // position par défaut de la zone (au milieu de l'area)
     private List<GameObject> zones = new List<GameObject>();
     private GameObject door_prefab;
     private List<GameObject> doors = new List<GameObject>();
 
 
     // SECTOR & NEIGHBORS
-
-
     [Header("Sector")]
     protected World world;
     protected AreaJsonHandler builder;
@@ -49,8 +46,6 @@ public class Area : MonoBehaviour
 
 
     // OBJECTS
-
-
     [Header("Objects")]
     [SerializeField] protected Dictionary<string, GameObject> prefabs = new Dictionary<string, GameObject>();
     [SerializeField] protected Dictionary<string, Transform> parents = new Dictionary<string, Transform>();
