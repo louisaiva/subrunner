@@ -37,6 +37,7 @@ public class Being : MonoBehaviour
     private Rect feet_collider; // collider des pieds (pour les collisions)
     private float offset_perso_y_to_feet = 0f; // offset entre le perso et le collider des pieds
     public LayerMask world_layers; // layers du monde
+    public LayerMask ghost_layers; // layers du monde (ghost)
     private bool isMoving = false;
 
     // CURRENT VELOCITY
@@ -83,7 +84,8 @@ public class Being : MonoBehaviour
         inputs = new Vector2(0.1f,0f);
 
         // on défini les layers du monde
-        world_layers = LayerMask.GetMask("Ground","Walls","Ceiling","Doors","Chests","Computers","Decoratives", "Interactives");
+        world_layers = LayerMask.GetMask("Ground", "Walls", "Ceiling", "Doors", "Chests", "Computers", "Decoratives", "Interactives");
+        ghost_layers = LayerMask.GetMask("Ground", "Walls", "Ceiling");
 
         // on récupère le provider d'xp
         xp_provider = GameObject.Find("/particles/xp_provider");
@@ -274,6 +276,16 @@ public class Being : MonoBehaviour
         removeCapacity("invicible");
     }
 
+    protected void beGhost(float duration = 0.5f)
+    {
+        addCapacity("ghost");
+        Invoke("stopGhost", duration);
+    }
+    protected void stopGhost()
+    {
+        removeCapacity("ghost");
+    }
+
     // DEPLACEMENT
     protected void walk(Vector2 direction, float inputs_magnitude=1f)
     {
@@ -400,7 +412,7 @@ public class Being : MonoBehaviour
 
             // on lance le raycast
             Vector2 raycast_direction = new Vector2((movement.x > 0f) ? 1f : -1f, 0f);
-            RaycastHit2D hit = Physics2D.BoxCast(feet_collider.center, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.x), world_layers);
+            RaycastHit2D hit = Physics2D.BoxCast(feet_collider.center, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.x), hasCapacity("ghost") ? ghost_layers : world_layers);
 
             // on prépare un mouvement subsidiare en y
             float subsidiar_movement_y = 0f;
@@ -427,11 +439,11 @@ public class Being : MonoBehaviour
 
                     // 1er raycast
                     Vector2 center_hit_down = new Vector2(feet_collider.center.x, feet_collider.center.y - y_offset);
-                    RaycastHit2D hit_down = Physics2D.BoxCast(center_hit_down, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.x), world_layers);
+                    RaycastHit2D hit_down = Physics2D.BoxCast(center_hit_down, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.x), hasCapacity("ghost") ? ghost_layers : world_layers);
                     
                     // 2eme raycast
                     Vector2 center_hit_up = new Vector2(feet_collider.center.x, feet_collider.center.y + y_offset);
-                    RaycastHit2D hit_up = Physics2D.BoxCast(center_hit_up, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.x), world_layers);
+                    RaycastHit2D hit_up = Physics2D.BoxCast(center_hit_up, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.x), hasCapacity("ghost") ? ghost_layers : world_layers);
 
                     // on regarde si l'un des 2 raycast a touché un collider
                     // print("coll X - D : " + hit_down.normal + " / U : " + hit_up.normal);
@@ -485,7 +497,7 @@ public class Being : MonoBehaviour
 
             // on lance le raycast
             Vector2 raycast_direction = new Vector2(0f, (movement.y > 0f) ? 1f : -1f);
-            RaycastHit2D hit = Physics2D.BoxCast(feet_collider.center, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.y), world_layers);
+            RaycastHit2D hit = Physics2D.BoxCast(feet_collider.center, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.y), hasCapacity("ghost") ? ghost_layers : world_layers);
 
             // on prépare un mouvement subsidiare en x
             float subsidiar_movement_x = 0f;
@@ -512,11 +524,11 @@ public class Being : MonoBehaviour
 
                     // 1er raycast
                     Vector2 center_hit_L = new Vector2(feet_collider.center.x - x_offset, feet_collider.center.y);
-                    RaycastHit2D hit_L = Physics2D.BoxCast(center_hit_L, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.y), world_layers);
+                    RaycastHit2D hit_L = Physics2D.BoxCast(center_hit_L, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.y), hasCapacity("ghost") ? ghost_layers : world_layers);
 
                     // 2eme raycast
                     Vector2 center_hit_R = new Vector2(feet_collider.center.x + x_offset, feet_collider.center.y);
-                    RaycastHit2D hit_R = Physics2D.BoxCast(center_hit_R, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.y), world_layers);
+                    RaycastHit2D hit_R = Physics2D.BoxCast(center_hit_R, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.y), hasCapacity("ghost") ? ghost_layers : world_layers);
 
                     // on regarde si l'un des 2 raycast a touché un collider
                     // print("coll Y - L : " + hit_L.normal + " / R : " + hit_R.normal);

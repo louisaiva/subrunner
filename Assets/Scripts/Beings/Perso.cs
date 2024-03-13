@@ -146,6 +146,8 @@ public class Perso : Attacker
                             "ahh orangina I love that/l/.f*ck capitalism\nperchance",
                             "fuck Google I'm gonna hack them",
                         };
+    
+    
     [Header("TALKING")]
     [SerializeField] private bool allow_nsfw = true;
     [SerializeField] private Vector2 talking_delay_range = new Vector2(10f, 30f);
@@ -383,8 +385,8 @@ public class Perso : Attacker
     // CAPACITES
     public override void Events()
     {
-        showCapacities();
-        
+        // showCapacities();
+
         // on vérifie que le temps est pas en pause
         if (Time.timeScale == 0f) { return; }
 
@@ -1335,6 +1337,7 @@ public class Perso : Attacker
 
         // on se met invicible
         beInvicible(dash_duration);
+        beGhost(dash_duration);
 
         // on fait le dash
         Force dash_force = new Force(inputs.normalized, dash_magnitude);
