@@ -97,6 +97,9 @@ public class World : MonoBehaviour
             central_zones.AddRange(sect[i].getCentralZones());
         }
 
+        // on applique le pathvania aux secteurs
+        GetComponent<KeyManager>().applyPathVania(sect);
+
         // on affiche les central zones qu'on a récupéré
         /* string s = "central zones: ";
         foreach (Zone zone in central_zones)

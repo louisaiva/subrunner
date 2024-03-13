@@ -155,7 +155,7 @@ plan d'action après algo 3.0 (3/1/2024)
 
             items :         1 linuxack (key)
 
-            doors :         1 - SimpleDoor -> HUB
+            doors :         1 - DoorAuto -> HUB
 
         
         HUB :
@@ -175,7 +175,7 @@ plan d'action après algo 3.0 (3/1/2024)
             items :         1 door_hack (key)
 
             doors :         1 - HackableDoor -> TV
-                            1 - SimpleDoor -> QG
+                            1 - DoorAuto -> QG
 
         
         TV :

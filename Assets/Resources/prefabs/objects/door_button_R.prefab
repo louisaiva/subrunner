@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: 766063629823661261}
   - component: {fileID: 3855198413056985096}
   - component: {fileID: 6884534073690207558}
-  - component: {fileID: 3962741413946168127}
+  - component: {fileID: 2114237919681941278}
   m_Layer: 10
   m_Name: door_button_R
   m_TagString: Untagged
@@ -317,6 +317,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   current_anim: 
+  next_anim: 
   is_forcing: 0
   debug: 0
 --- !u!95 &6884534073690207558
@@ -340,7 +341,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3962741413946168127
+--- !u!114 &2114237919681941278
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -349,7 +350,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5458210506294928621}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0882e5c401c5e44a83b1fb4bdbf7758, type: 3}
+  m_Script: {fileID: 11500000, guid: 5aa6266088e7b79408a82e01d3b4041b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   is_open: 0

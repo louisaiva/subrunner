@@ -6,12 +6,19 @@ using System.Linq;
 
 public class ZoneDoor : Zone
 {
-    public override void INIT(Vector2Int size, Vector2 position, Transform parent)
+    public int reachability = 0;
+    public bool is_vertical = false;
+
+    public void INIT(Vector2Int size, Vector2 position, Transform parent,bool verticality)
     {
         this.size = size;
         transform.SetParent(parent);
         transform.localPosition = new Vector3(position.x, position.y, 0) + anchor;
-        // SetRandomZone();
+        this.is_vertical = verticality;
+        
+
+        // on applique la reachability
+        // this.reachability = reachability;
         SetRandomDoor();
 
 
@@ -55,4 +62,6 @@ public class ZoneDoor : Zone
         objects_parent = zone.transform.Find("obj");
         gameObject.name = objects_parent.name;
     }
+
+
 }

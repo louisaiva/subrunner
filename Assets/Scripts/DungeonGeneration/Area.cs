@@ -34,14 +34,6 @@ public class Area : MonoBehaviour
     public AreaJson json;
     public string skin = "base_sector";
 
-    [Header("Neighbors")]
-    // protected Area[] neighbors = new Area[4]; // 0: top, 1: right, 2: bottom, 3: left
-
-    [Header("Ceilings")]
-    // protected Dictionary<string, GameObject> ceilings = new Dictionary<string, GameObject>();
-
-
-
 
 
 
@@ -204,18 +196,29 @@ public class Area : MonoBehaviour
                 string[] parts = emplacement.Key.Split('x');
                 parts[0] = parts[0].Replace("door", "");
 
+
+                // on vérifie qu'on a bien besoin de cette door
+                Vector2Int door_direction = new Vector2Int(0, 0);
                 if (type.Contains("dcorr"))
                 {
+
+                    if (parts[0][0] == 'U') { door_direction = new Vector2Int(0, 1); }
+                    else if (parts[0][0] == 'D') { door_direction = new Vector2Int(0, -1); }
+                    else if (parts[0][0] == 'L') { door_direction = new Vector2Int(-1, 0); }
+                    else if (parts[0][0] == 'R') { door_direction = new Vector2Int(1, 0); }
+
+
                     // ça veut dire qu'on est un couloir à portes, dont seulement certaines doivent s'afficher
                     List<Vector2Int> doors_to_keep = sector.getDoor(new Vector2Int(x, y));
-                    if (parts[0][0] == 'U' && !doors_to_keep.Contains(new Vector2Int(0, 1))) { continue; }
-                    if (parts[0][0] == 'D' && !doors_to_keep.Contains(new Vector2Int(0, -1))) { continue; }
-                    if (parts[0][0] == 'L' && !doors_to_keep.Contains(new Vector2Int(-1, 0))) { continue; }
-                    if (parts[0][0] == 'R' && !doors_to_keep.Contains(new Vector2Int(1, 0))) { continue; }
+                    if (!doors_to_keep.Contains(door_direction))
+                    {
+                        continue;
+                    }
 
                     parts[0] = parts[0].Replace("U", "").Replace("D", "").Replace("L", "").Replace("R", "");
                 }
 
+                // on récup_re la taille
                 try
                 {
                     int.Parse(parts[0]);
@@ -227,13 +230,22 @@ public class Area : MonoBehaviour
                     continue;
                 }
                 Vector2Int door_size = new Vector2Int(int.Parse(parts[0]), int.Parse(parts[1]));
+                bool is_vertical = door_size.x == 2;
+
+
 
                 // we get the positions
                 foreach (Vector2 pos in emplacement.Value)
                 {
                     // on récupère la zone
                     GameObject door = Instantiate(door_prefab, Vector3.zero, Quaternion.identity);
-                    door.GetComponent<ZoneDoor>().INIT(door_size, pos, this.transform);
+                    door.GetComponent<ZoneDoor>().INIT(door_size, pos, this.transform, is_vertical);
+
+                    if (type.Contains("dcorr"))
+                    {
+                        // on met une reachability
+                        door.GetComponent<ZoneDoor>().reachability = sector.getDoorReachability(new Vector2Int(x, y), door_direction);
+                    }
 
                     // on ajoute la door à la liste
                     doors.Add(door);
@@ -442,4 +454,12 @@ public class Area : MonoBehaviour
 
         return central_zones;
     }
+
+    public List<ZoneDoor> getDoorZones()
+    {
+        if (doors.Count == 0) { return new List<ZoneDoor>(); }
+        return doors.Select(door => door.GetComponent<ZoneDoor>()).ToList();
+    }
+
+
 }

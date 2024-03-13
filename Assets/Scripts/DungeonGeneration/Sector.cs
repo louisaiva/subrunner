@@ -29,10 +29,19 @@ public class Sector : MonoBehaviour
     public int h;
 
 
+    [Header("Areas")]
+    public GameObject area_prefab;
+    public Dictionary<Vector2Int, Area> areas = new Dictionary<Vector2Int, Area>();
+
+
     [Header("Connections")]
     public Dictionary<Vector2Int, List<Vector2Int>> connections = new Dictionary<Vector2Int, List<Vector2Int>>();
     public int reachability = 0;
-    public Dictionary<Vector2Int, List<Vector2Int>> doors = new Dictionary<Vector2Int, List<Vector2Int>>();
+    public Dictionary<Vector2Int, Dictionary<Vector2Int,int>> doors = new Dictionary<Vector2Int, Dictionary<Vector2Int,int>>();
+
+    [Header("Zones")]
+    public List<Zone> available_central_zones = new List<Zone>();
+    // public List<Area> keys_areas = new List<Area>();
 
 
 
@@ -51,11 +60,6 @@ public class Sector : MonoBehaviour
     [SerializeField] protected int nb_enemies = 5;
     public bool is_safe = false;
     
-
-    [Header("Areas")]
-    public GameObject area_prefab;
-    public Dictionary<Vector2Int, Area> areas = new Dictionary<Vector2Int, Area>();
-
 
     // UNITY METHODS
     protected void Awake()
@@ -387,9 +391,16 @@ public class Sector : MonoBehaviour
         }
         print(s);
 
+        int door_reachability = 0;
+        if (create_door)
+        {
+            // la reachability est la plus grande des deux
+            door_reachability = Mathf.Max(reachability, other.reachability);
+        }
+
         // on ajoute une connection
-        addConnection(sas, other_sas, create_door, false);
-        other.addConnection(other_sas, sas, false,false);
+        addConnection(sas, other_sas, door_reachability);
+        other.addConnection(other_sas, sas);
     }
 
     public virtual Vector2Int findClosestInsideConnectingArea(Sector other, string border="")
@@ -603,7 +614,7 @@ public class Sector : MonoBehaviour
 
     }
 
-    public void addConnection(Vector2Int start, Vector2Int end, bool create_door = true, bool create_sas = false)
+    public void addConnection(Vector2Int start, Vector2Int end, int create_door = 0, bool create_sas = false)
     {
         Vector2Int tile = new Vector2Int(start.x - x, start.y - y);
 
@@ -612,9 +623,9 @@ public class Sector : MonoBehaviour
         {
             addSas(start);
         }
-        else if (create_door)
+        else if (create_door > 0)
         {
-            addDoor(start, end - start);
+            addDoor(start, end - start, create_door);
         }
 
         // on ajoute une connection
@@ -626,7 +637,7 @@ public class Sector : MonoBehaviour
         // print("connection added : " + start + " / " + end + " / " + (end - start));
     }
 
-    public void addDoor(Vector2Int room,Vector2Int locked_direction)
+    public void addDoor(Vector2Int room,Vector2Int locked_direction,int reachability)
     {
         // on regarde si la room est dans le secteur
         if (!collidesWithRoomPoint(room))
@@ -651,9 +662,9 @@ public class Sector : MonoBehaviour
         // on ajoute la direction
         if (!doors.ContainsKey(tile))
         {
-            doors.Add(tile,new List<Vector2Int>());
+            doors.Add(tile,new Dictionary<Vector2Int,int>());
         }
-        doors[tile].Add(locked_direction);
+        doors[tile].Add(locked_direction,reachability);
 
     }
 
@@ -663,6 +674,17 @@ public class Sector : MonoBehaviour
         sector_skin = skin;
     }
 
+    public void setKeyZone(GameObject key_zone)
+    {
+        // on choisit une area aléatoire contenant une centrale zone
+        Zone zone = getCentralZones()[Random.Range(0, getCentralZones().Count)];
+
+        // on ajoute la zone à l'area
+        zone.SetZone(key_zone);
+
+        // on l'enlève de la liste des zones disponibles
+        available_central_zones.Remove(zone);
+    }
 
     // AREA GETTERS
     public Area getArea(Vector2Int area)
@@ -717,19 +739,66 @@ public class Sector : MonoBehaviour
         }
     }
 
-    public List<Zone> getCentralZones() 
+    public List<Zone> getCentralZones()
     {
         // on récupère toutes les zones qui sont au centre de leurs areas respectives
-        // return areas.Values.ToList().Where(area => area.couldHostLegendaryZone()).ToList();
+        if (available_central_zones.Count > 0) { return available_central_zones; }
 
         List<Zone> zones = new List<Zone>();
         foreach (Area area in areas.Values)
         {
+            // on vérifie si l'area ne contient déjà pas une zone "légendaire" (ex : key_zone ou boss_zone)
+            // if (keys_areas.Contains(area)) { continue; }
+
             zones.AddRange(area.getCentralZones());
         }
+        available_central_zones = zones;
         return zones;
     }
 
+    public void useCentralZone(Zone zone)
+    {
+        // on l'enlève de la liste des zones disponibles
+        available_central_zones.Remove(zone);
+    }
+
+    // DOORS GETTERS
+    public List<Vector2Int> getDoor(Vector2Int area)
+    {
+        // on récupère la door
+        if (doors.ContainsKey(area))
+        {
+            return doors[area].Keys.ToList();
+        }
+        else
+        {
+            return new List<Vector2Int>();
+        }
+    }
+
+    public int getDoorReachability(Vector2Int area, Vector2Int door)
+    {
+        // on récupère la door
+        if (doors.ContainsKey(area))
+        {
+            if (doors[area].ContainsKey(door))
+            {
+                return doors[area][door];
+            }
+        }
+        return 0;
+    }
+
+    public List<ZoneDoor> getDoorZones()
+    {
+        List<ZoneDoor> zone_doors = new List<ZoneDoor>();
+        foreach (Vector2Int area in doors.Keys)
+        {
+            // on récupère les doors de l'area
+            zone_doors.AddRange(areas[area].getDoorZones());
+        }
+        return zone_doors;
+    }
 
     // GETTERS
     public Vector2Int wh()
@@ -945,21 +1014,6 @@ public class Sector : MonoBehaviour
     public string getAreaSkin(Vector2Int pos)
     {
         return sector_skin;
-    }
-
-
-    // DOORS GETTERS
-    public List<Vector2Int> getDoor(Vector2Int area)
-    {
-        // on récupère la door
-        if (doors.ContainsKey(area))
-        {
-            return doors[area];
-        }
-        else
-        {
-            return new List<Vector2Int>();
-        }
     }
 
 }

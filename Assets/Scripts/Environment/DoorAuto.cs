@@ -3,7 +3,7 @@ using System.Collections;
 
 
 [RequireComponent(typeof(AnimationHandler))]
-public class SimpleDoor : Door
+public class DoorAuto : Door
 {
 
     // [SerializeField] private float openin_duration = 1f;
@@ -15,22 +15,19 @@ public class SimpleDoor : Door
     {
         base.Update();
 
-        // on check si le perso est dans le rayon d'ouverture
-        if (!is_open && !is_moving)
-        {
-            if (Vector2.Distance(transform.position, perso.transform.position) < auto_openin_radius)
-            {
-                open();
-            }
-        }
-        else if (is_open && !is_moving)
-        {
-            if (Vector2.Distance(transform.position, perso.transform.position) > auto_openin_radius)
-            {
-                close();
-            }
-        }
+        if (!is_moving) { return;}
 
+
+        // on check si le perso est dans le rayon d'ouverture
+        if (!is_open && Vector2.Distance(transform.position, perso.transform.position) < auto_openin_radius)
+        {
+            if (!perso.GetComponent<Perso>().hasCapacity("badge")) { return; }
+            open();
+        }
+        else if (is_open && Vector2.Distance(transform.position, perso.transform.position) > auto_openin_radius)
+        {
+            close();
+        }
     }
 
 }

@@ -7,12 +7,21 @@ using System.IO;
 public class ZoneManager : MonoBehaviour
 {
 
-    // bank of zones
+    [Header("Bank")]
+    private string prefabs_path = "Assets/Resources/prefabs/zones/";
+    private bool is_loaded = false;
+
+
+
+    [Header("Zones")]
     public Dictionary<Vector2Int, List<GameObject>> zones = new Dictionary<Vector2Int, List<GameObject>>();
     public Dictionary<Vector2Int, List<GameObject>> doors = new Dictionary<Vector2Int, List<GameObject>>();
     public List<GameObject> legendary_zones = new List<GameObject>();
-    private string prefabs_path = "Assets/Resources/prefabs/zones/";
-    private bool is_loaded = false;
+    public List<GameObject> keys_zones = new List<GameObject>();
+
+
+
+
 
     // Start is called before the first frame update
     void Awake()
@@ -84,6 +93,16 @@ public class ZoneManager : MonoBehaviour
         // add doors to the bank
         doors.Add(new Vector2Int(2, 1), front_doors);
         doors.Add(new Vector2Int(1, 2), side_doors);
+
+
+        // on récupère les clés
+        foreach (string file in Directory.GetFiles(prefabs_path + "keys/"))
+        {
+            if (file.EndsWith(".prefab"))
+            {
+                keys_zones.Add(Resources.Load<GameObject>(file.Replace("Assets/Resources/", "").Replace(".prefab", "").Replace("\\", "/")));
+            }
+        }
 
         is_loaded = true;
     }
@@ -219,6 +238,15 @@ public class ZoneManager : MonoBehaviour
                 {
                     return door;
                 }
+            }
+        }
+
+        // on cherche dans les clés
+        foreach (GameObject key in keys_zones)
+        {
+            if (key.name == name)
+            {
+                return key;
             }
         }
 

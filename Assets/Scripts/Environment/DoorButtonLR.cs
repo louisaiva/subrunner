@@ -3,7 +3,7 @@ using System.Collections;
 
 
 [RequireComponent(typeof(AnimationHandler))]
-public class ButtonDoorLR : DoorLR, I_Buttonable
+public class DoorButtonLR : DoorLR, I_Buttonable
 {
 
     // BUTTONS

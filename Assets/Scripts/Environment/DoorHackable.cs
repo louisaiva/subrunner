@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(AnimationHandler))]
-public class HackableDoor : Door, I_Hackable
+public class DoorHackable : Door, I_Hackable
 {
 
     // secu de départ
