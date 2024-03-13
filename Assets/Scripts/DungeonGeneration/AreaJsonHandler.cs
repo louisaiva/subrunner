@@ -754,7 +754,7 @@ public class AreaJson
     }
 }
 
-public class Points
+public class Point
 {
     public float x;
     public float y;
