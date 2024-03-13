@@ -74,27 +74,27 @@ public class Sector : MonoBehaviour
 
         // on récupère les prefabs
         prefabs.Add("light", Resources.Load<GameObject>("prefabs/objects/lights/small_light"));
-        prefabs.Add("poster", Resources.Load<GameObject>("prefabs/objects/poster"));
+        // prefabs.Add("poster", Resources.Load<GameObject>("prefabs/objects/poster"));
         prefabs.Add("enemy", Resources.Load<GameObject>("prefabs/beings/enemies/zombo"));
-        prefabs.Add("chest", Resources.Load<GameObject>("prefabs/objects/chest"));
-        prefabs.Add("xp_chest", Resources.Load<GameObject>("prefabs/objects/xp_chest"));
-        prefabs.Add("computer", Resources.Load<GameObject>("prefabs/objects/computer"));
-        prefabs.Add("doorUD", Resources.Load<GameObject>("prefabs/objects/door"));
-        prefabs.Add("doorLR", Resources.Load<GameObject>("prefabs/objects/door_L"));
-        prefabs.Add("sector_label", Resources.Load<GameObject>("prefabs/objects/sector_label"));
-        prefabs.Add("tag", Resources.Load<GameObject>("prefabs/objects/tag"));
-        prefabs.Add("base_ceiling", Resources.Load<GameObject>("prefabs/sectors/ceiling"));
+        // prefabs.Add("chest", Resources.Load<GameObject>("prefabs/objects/chest"));
+        // prefabs.Add("xp_chest", Resources.Load<GameObject>("prefabs/objects/xp_chest"));
+        // prefabs.Add("computer", Resources.Load<GameObject>("prefabs/objects/computer"));
+        // prefabs.Add("doorUD", Resources.Load<GameObject>("prefabs/objects/door"));
+        // prefabs.Add("doorLR", Resources.Load<GameObject>("prefabs/objects/door_L"));
+        // prefabs.Add("sector_label", Resources.Load<GameObject>("prefabs/objects/sector_label"));
+        // prefabs.Add("tag", Resources.Load<GameObject>("prefabs/objects/tag"));
+        // prefabs.Add("base_ceiling", Resources.Load<GameObject>("prefabs/sectors/ceiling"));
 
         // on récupère les parents
-        parents.Add("light", transform.Find("decoratives/lights"));
-        parents.Add("poster", transform.Find("decoratives/posters"));
+        parents.Add("light", transform.Find("objects"));
+        // parents.Add("poster", transform.Find("decoratives/posters"));
         parents.Add("enemy", GameObject.Find("/world/enemies").transform);
-        parents.Add("chest", transform.Find("interactives"));
-        parents.Add("computer", transform.Find("interactives"));
-        parents.Add("sas_doors", transform.Find("interactives"));
-        parents.Add("sector_label", transform.Find("decoratives"));
-        parents.Add("tag", transform.Find("decoratives/posters"));
-        parents.Add("ceiling", transform.Find("ceilings"));
+        // parents.Add("chest", transform.Find("interactives"));
+        // parents.Add("computer", transform.Find("interactives"));
+        // parents.Add("sas_doors", transform.Find("interactives"));
+        // parents.Add("sector_label", transform.Find("decoratives"));
+        // parents.Add("tag", transform.Find("decoratives/posters"));
+        // parents.Add("ceiling", transform.Find("ceilings"));
     }
 
     void Update()
@@ -125,7 +125,7 @@ public class Sector : MonoBehaviour
 
     }
 
-    public void UpdateCeilings(Vector2Int perso_area)
+    /* public void UpdateCeilings(Vector2Int perso_area)
     {
         Dictionary<Vector2Int, List<string>> new_hidden_ceilings = new Dictionary<Vector2Int, List<string>>();
 
@@ -183,7 +183,7 @@ public class Sector : MonoBehaviour
         // on met à jour les hidden_ceilings
         hidden_ceilings = new_hidden_ceilings;
 
-    }
+    } */
 
 
     // INIT FUNCTIONS
@@ -271,7 +271,7 @@ public class Sector : MonoBehaviour
         // PlaceLabels(empl_labels);
     }
 
-    public void GenerateCeiling(Vector2Int area)
+    /* public void GenerateCeiling(Vector2Int area)
     {
         // on génère les ceilings de l'area spécifique
         string type = getAreaType(area);
@@ -322,7 +322,7 @@ public class Sector : MonoBehaviour
         /* else if (type == "secret")
         {
             GenerateCeilingSecret(area);
-        } */
+        } 
         else
         {
             // si c'est une area normale on génère un ceiling carré : sprite qui fait exactement la taille de l'area
@@ -335,7 +335,7 @@ public class Sector : MonoBehaviour
             ceilings[area]["base"] = ceiling;
 
         }
-    }
+    } */
 
     protected void PlaceEnemies()
     {

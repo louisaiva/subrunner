@@ -69,7 +69,7 @@ public class World : MonoBehaviour
     }
 
 
-    void Update()
+    /* void Update()
     {
         // affiche ou cache les ceilings en fonction de la position du joueur
         UpdateCeilings();
@@ -86,7 +86,7 @@ public class World : MonoBehaviour
         // print("(world) updating ceilings for area " + area_sector.getAreaName(getPersoPos()) + " at " + area_pos + " in sector " + area_sector.name);
 
         area_sector.UpdateCeilings(area_pos);
-    }
+    }*/
 
 
     // GENERATION

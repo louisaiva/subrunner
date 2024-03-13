@@ -33,7 +33,7 @@ Transform:
   m_Children:
   - {fileID: 3491493685001448771}
   - {fileID: 7283233828856632154}
-  m_Father: {fileID: 5102407272958992882}
+  m_Father: {fileID: 5143304087812774316}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2626089307347512177
@@ -2405,6 +2405,38 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
+--- !u!1 &5883273649549171175
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5143304087812774316}
+  m_Layer: 6
+  m_Name: objects
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5143304087812774316
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5883273649549171175}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8680168683245781865}
+  m_Father: {fileID: 5102407272958992882}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7130436163879003160
 GameObject:
   m_ObjectHideFlags: 0
@@ -4292,7 +4324,7 @@ Transform:
   - {fileID: 3549656064923623742}
   - {fileID: 2387596585415002645}
   - {fileID: 3873979619070961013}
-  - {fileID: 8680168683245781865}
+  - {fileID: 5143304087812774316}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4321,6 +4353,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   world: {fileID: 0}
+  reachability: 0
   x: 0
   y: 0
   w: 0
@@ -4332,7 +4365,6 @@ MonoBehaviour:
   density_interactives: 0.5
   planned_nb_interactives: 10
   area_prefab: {fileID: 0}
-  zones: []
   fg_tm: {fileID: 0}
   bg_tm: {fileID: 0}
   gd_tm: {fileID: 0}
