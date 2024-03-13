@@ -83,7 +83,7 @@ public class Being : MonoBehaviour
         inputs = new Vector2(0.1f,0f);
 
         // on défini les layers du monde
-        world_layers = LayerMask.GetMask("Ground","Walls","Ceiling","Doors","Chests","Computers","Buttons","Decoratives", "Interactives");
+        world_layers = LayerMask.GetMask("Ground","Walls","Ceiling","Doors","Chests","Computers","Decoratives", "Interactives");
 
         // on récupère le provider d'xp
         xp_provider = GameObject.Find("/particles/xp_provider");
@@ -840,6 +840,19 @@ public class Being : MonoBehaviour
     {
         return capacities.ContainsKey(capacity) && capacities[capacity];
     }
+
+
+    // PRINTERS
+    public void showCapacities()
+    {
+        string capacities_str = "(Being - "+gameObject.name + ") capacities : \n";
+        foreach (KeyValuePair<string, bool> entry in capacities)
+        {
+            capacities_str += entry.Key + " : " + entry.Value + "\n";
+        }
+        Debug.Log(capacities_str);
+    }
+
 
     // SETTERS
     public void addLife(float life)

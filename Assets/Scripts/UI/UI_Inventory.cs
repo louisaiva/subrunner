@@ -436,6 +436,7 @@ public class EnumItem
         item_prefabs.Add("tv_hack", "prefabs/items/tv_hack");
         item_prefabs.Add("katana", "prefabs/items/legendary/katana");
         item_prefabs.Add("cd", "prefabs/items/cd");
+        item_prefabs.Add("badge", "prefabs/items/badge");
 
     }
 
@@ -469,6 +470,7 @@ public class EnumItem
         item_sprites.Add("tv_hack", sprites[23]);
         item_sprites.Add("katana", sprites[24]);
         item_sprites.Add("cd", sprites[25]);
+        item_sprites.Add("badge", sprites[26]);
     }
 
 

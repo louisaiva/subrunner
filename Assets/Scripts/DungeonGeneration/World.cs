@@ -78,8 +78,6 @@ public class World : MonoBehaviour
         // on récupère les sectors
         sectors = sect;
 
-        // on sauvegarde les zones qui pourraient accueillir des zones légendaires
-        List<Zone> central_zones = new List<Zone>();
 
         // on parcourt les secteurs
         for (int i = 0; i < sect.Count; i++)
@@ -92,15 +90,13 @@ public class World : MonoBehaviour
 
             // on initialise les areas des secteurs
             sect[i].initAreas();
-
-            // on ajoute les zones qui pourraient accueillir des zones légendaires
-            central_zones.AddRange(sect[i].getCentralZones());
         }
 
         // on applique le pathvania aux secteurs
         GetComponent<KeyManager>().applyPathVania(sect);
 
-        // on affiche les central zones qu'on a récupéré
+        // on réccupère les zones qui pourraient accueillir des zones légendaires
+        List<Zone> central_zones = getAvailableCentralZones();
         /* string s = "central zones: ";
         foreach (Zone zone in central_zones)
         {
@@ -109,7 +105,7 @@ public class World : MonoBehaviour
         print(s); */
 
         // on place 1 fois chaque zone légendaire
-        foreach(GameObject zone_prefab in bank_zones.GetLegendaryZones())
+        foreach (GameObject zone_prefab in bank_zones.GetLegendaryZones())
         {
             // on choisit une zone au hasard
             Zone zone = central_zones[Random.Range(0, central_zones.Count)];
@@ -570,6 +566,19 @@ public class World : MonoBehaviour
         }
     }
 
+
+    // ZONES GETTERS
+    public List<Zone> getAvailableCentralZones()
+    {
+        // on récupère les zones centrales disponibles
+        List<Zone> zones = new List<Zone>();
+        foreach (Sector sect in sectors)
+        {
+            // on récupère les zones centrales
+            zones.AddRange(sect.getAvailableCentralZones());
+        }
+        return zones;
+    }
 
 
     // PERSO GETTERS

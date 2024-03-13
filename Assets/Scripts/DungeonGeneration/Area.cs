@@ -183,7 +183,7 @@ public class Area : MonoBehaviour
                 {
                     // on récupère la zone
                     GameObject zone = Instantiate(zone_prefab, Vector3.zero, Quaternion.identity);
-                    zone.GetComponent<Zone>().INIT(zone_size, pos, this.transform);
+                    zone.GetComponent<Zone>().INIT(this.transform,zone_size, pos);
                     // Destroy(zone);
 
                     // on ajoute la zone à la liste

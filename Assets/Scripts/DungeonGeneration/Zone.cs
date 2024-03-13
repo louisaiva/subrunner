@@ -30,11 +30,21 @@ public class Zone : MonoBehaviour
 
 
     // initialise la zone
-    public virtual void INIT(Vector2Int size, Vector2 position, Transform parent)
+    public void INIT(Transform parent, Vector2Int size, Vector2 position)
     {
         this.size = size;
+
         transform.SetParent(parent);
         transform.localPosition = new Vector3(position.x,position.y,0) + anchor;
+        SetRandomZone();
+
+        // on applique la size à la ground_light
+        GameObject ground_light = transform.Find("ground_light").gameObject;
+        ground_light.GetComponent<GroundLight>().size = size;
+    }
+
+    public void HANDMADE_INIT()
+    {
         SetRandomZone();
 
         // on applique la size à la ground_light

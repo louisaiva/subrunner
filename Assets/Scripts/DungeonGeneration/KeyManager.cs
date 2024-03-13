@@ -116,26 +116,30 @@ public class KeyManager : MonoBehaviour
             if (sects.Count == 0) { continue; }
 
             // on récupère toutes les zones centrales
-            List<Zone> central_zones = new List<Zone>();
-            foreach(Sector sect in sects)
-            {
-                central_zones.AddRange(sect.getCentralZones());
-            }
+            List<Zone> central_zones = getUsableZones(sects);
 
             // affiche les zones centrales
-            foreach(Zone z in central_zones)
+            foreach (Zone z in central_zones)
             {
                 Debug.Log("KeyManager.applyPathVania: central zone : " + z.name);
             }
 
             // on choisit une zone centrale aléatoire
-            // Zone zone = central_zones[Random.Range(0,central_zones.Count)];
-
-            // zone.SetZone(keys[doors_and_keys[pathvania[r-1]]]);
-            // zone.sector.useCentralZone(zone);
-            // int index = Random.Range(0,sects.Count);
-            // Sector sect = sects[index];
+            Zone zone = central_zones[Random.Range(0,central_zones.Count)];
+            zone.SetZone(keys[doors_and_keys[pathvania[r-1]]]);
         }
     }
 
+
+    // INTERNAL GETTERS
+    private List<Zone> getUsableZones(List<Sector> sectors)
+    {
+        // cette fonction récupère toutes les zones utilisables
+        List<Zone> zones = new List<Zone>();
+        foreach(Sector sect in sectors)
+        {
+            zones.AddRange(sect.getAvailableCentralZones());
+        }
+        return zones;
+    }
 }

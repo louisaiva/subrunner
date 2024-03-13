@@ -143,8 +143,20 @@ public class Sector : MonoBehaviour
             // on ajoute l'area au dictionnaire
             areas[tile] = area;
         }
+
+        // on load les zones
+        loadAvailableCentralZones();
     }
 
+    public virtual void loadAvailableCentralZones()
+    {
+        // on récupère toutes les zones qui sont au centre de leurs areas respectives
+        available_central_zones = new List<Zone>();
+        foreach (KeyValuePair<Vector2Int, Area> area in areas)
+        {
+            available_central_zones.AddRange(area.Value.getCentralZones());
+        }
+    }
 
     // MAIN FUNCTIONS
     public void move(Vector2Int movement)
@@ -674,7 +686,7 @@ public class Sector : MonoBehaviour
         sector_skin = skin;
     }
 
-    public void setKeyZone(GameObject key_zone)
+    /* public void setKeyZone(GameObject key_zone)
     {
         // on choisit une area aléatoire contenant une centrale zone
         Zone zone = getCentralZones()[Random.Range(0, getCentralZones().Count)];
@@ -684,7 +696,7 @@ public class Sector : MonoBehaviour
 
         // on l'enlève de la liste des zones disponibles
         available_central_zones.Remove(zone);
-    }
+    } */
 
     // AREA GETTERS
     public Area getArea(Vector2Int area)
@@ -739,12 +751,18 @@ public class Sector : MonoBehaviour
         }
     }
 
-    public List<Zone> getCentralZones()
+    public List<Zone> getAvailableCentralZones()
     {
         // on récupère toutes les zones qui sont au centre de leurs areas respectives
-        if (available_central_zones.Count > 0) { return available_central_zones; }
+        if (available_central_zones.Count == 0)
+        {
+            Debug.LogWarning("(Sector - getAvailableCentralZones) Pas de zones centrales disponibles dans le secteur " + gameObject.name);
+            return new List<Zone>();
+        }
 
-        List<Zone> zones = new List<Zone>();
+        return available_central_zones;
+
+        /* List<Zone> zones = new List<Zone>();
         foreach (Area area in areas.Values)
         {
             // on vérifie si l'area ne contient déjà pas une zone "légendaire" (ex : key_zone ou boss_zone)
@@ -753,7 +771,7 @@ public class Sector : MonoBehaviour
             zones.AddRange(area.getCentralZones());
         }
         available_central_zones = zones;
-        return zones;
+        return zones; */
     }
 
     public void useCentralZone(Zone zone)
@@ -761,6 +779,7 @@ public class Sector : MonoBehaviour
         // on l'enlève de la liste des zones disponibles
         available_central_zones.Remove(zone);
     }
+
 
     // DOORS GETTERS
     public List<Vector2Int> getDoor(Vector2Int area)
@@ -799,6 +818,7 @@ public class Sector : MonoBehaviour
         }
         return zone_doors;
     }
+
 
     // GETTERS
     public Vector2Int wh()

@@ -15,7 +15,7 @@ public class DoorAutoLR : DoorLR
     {
         base.Update();
 
-        if (!is_moving) { return; }
+        if (is_moving) { return; }
 
 
         // on check si le perso est dans le rayon d'ouverture

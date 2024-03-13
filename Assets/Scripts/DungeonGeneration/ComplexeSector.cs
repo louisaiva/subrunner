@@ -20,6 +20,12 @@ public class ComplexeSector : Sector
     [SerializeField] private bool is_spawn_sector = false;
     [SerializeField] private Vector2 spawn_pos;
 
+
+    [Header("Handmade Zones")]
+    [SerializeField] private Transform zones_parent;
+    [SerializeField] private List<Zone> handmade_zones = new List<Zone>();
+
+
     // unity functions
     new void Awake()
     {
@@ -29,6 +35,9 @@ public class ComplexeSector : Sector
         bg_tm = transform.Find("bg_sector").gameObject.GetComponent<Tilemap>();
         fg_tm = transform.Find("fg_sector").gameObject.GetComponent<Tilemap>();
         gd_tm = transform.Find("gd_sector").gameObject.GetComponent<Tilemap>();
+
+        // on récupère le parent des zones
+        zones_parent = transform.Find("zones");
     }
 
 
@@ -111,8 +120,53 @@ public class ComplexeSector : Sector
             // on ajoute l'area au dictionnaire
             areas[tile] = area;
         }
+
+        // on init les handmade zones
+        foreach (Transform child in zones_parent)
+        {
+            Zone zone = child.GetComponent<Zone>();
+            if (zone == null) { continue; }
+            zone.HANDMADE_INIT();
+
+            // on ajoute la zone à la liste
+            handmade_zones.Add(zone);
+        }
+
+        loadAvailableCentralZones();
     }
 
+    public override void loadAvailableCentralZones()
+    {
+        // Debug.LogWarning("BOUYAAAAH");
+
+        // on récupère toutes les zones qui sont au centre de leurs areas respectives
+        available_central_zones = new List<Zone>();
+        foreach (KeyValuePair<Vector2Int, Area> area in areas)
+        {
+            available_central_zones.AddRange(area.Value.getCentralZones());
+        }
+
+        string s = "(ComplexeSector - loadZones) " + name + " : \n\n";
+
+        // et on récupère aussi les zones qui sont dans les handmade areas
+        foreach (Zone zone in handmade_zones)
+        {
+            // on vérifie que la zone fait au moins 8x7
+            if (zone.GetSize().x < 8 || zone.GetSize().y < 7) { continue; }
+
+            if (!available_central_zones.Contains(zone))
+            {
+                available_central_zones.Add(zone);
+                s += zone.name + "\n";
+            }
+        }
+        
+        Debug.Log(s);
+    }
+
+
+
+    // LAUNCH
     public void LAUNCH()
     {
         // we delete our tilemaps
@@ -160,7 +214,18 @@ public class ComplexeSector : Sector
 
         // on génère les areas
         base.GENERATE();
+
+        // on génère les zones
+        foreach (Zone zone in handmade_zones)
+        {
+            zone.GENERATE();
+        }
     }
+
+
+
+
+
 
     [Header("Lights")]
     [SerializeField] protected List<string> walls_light_tiles = new List<string> { "bg_2_7", "walls_1_7", "walls_2_7", "walls_3_7" };

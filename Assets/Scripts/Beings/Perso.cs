@@ -383,7 +383,8 @@ public class Perso : Attacker
     // CAPACITES
     public override void Events()
     {
-
+        showCapacities();
+        
         // on vérifie que le temps est pas en pause
         if (Time.timeScale == 0f) { return; }
 
