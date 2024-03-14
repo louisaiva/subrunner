@@ -42,7 +42,8 @@ public class ZoneDoor : Zone
 
     public override void HANDMADE_INIT(Sector sector)
     {
-        base.HANDMADE_INIT(sector);
+        this.sector = sector;
+
         // SetRandomDoor();
         SetReachableDoor();
     }

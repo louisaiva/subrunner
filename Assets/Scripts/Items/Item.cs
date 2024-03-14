@@ -37,7 +37,7 @@ public class Item : MonoBehaviour, I_Interactable
         {
             // print("adding dash cooldown to " + gameObject.name);
             // on ajoute le cooldown
-            cooldowns.Add("dash", 1f);
+            cooldowns.Add("dash", 0.7f);
         }
         if (capacities.Contains("hit"))
         {

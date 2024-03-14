@@ -58,6 +58,7 @@ public class Being : MonoBehaviour
     protected Dictionary<string, bool> capacities = new Dictionary<string, bool>();
     protected Dictionary<string, float> capacities_cooldowns = new Dictionary<string, float>();
     protected Dictionary<string, float> capacities_cooldowns_base = new Dictionary<string, float>();
+    protected Dictionary<string, float> capacities_ttl = new Dictionary<string, float>();
 
     // unity functions
     protected void Start()
@@ -137,7 +138,7 @@ public class Being : MonoBehaviour
         // maj des animations
         maj_animations(inputs);
 
-        if (!hasCapacity("knocked_out"))
+        if (!hasCapacity("knocked_out") && !hasCapacity("dashin"))
         {
             // déplacement
             if (isRunning)
@@ -149,9 +150,10 @@ public class Being : MonoBehaviour
                 walk(inputs, inputs_magnitude);
             }
 
-            // update forces
-            update_forces();
         }
+        
+        // update forces
+        update_forces();
 
         // on calcule la current velocity
         Vector3 vel = (transform.position - last_position) / Time.deltaTime;
@@ -199,6 +201,24 @@ public class Being : MonoBehaviour
                 {
                     capacities_cooldowns[entry.Key] = 0f;
                     capacities[entry.Key] = true;
+                }
+            }
+        }
+
+        // update capacities ttl
+        for (int i = 0; i < capacities_ttl.Count; i++)
+        {
+            KeyValuePair<string, float> entry = capacities_ttl.ElementAt(i);
+            if (entry.Value > 0f)
+            {
+                // on diminue le ttl
+                capacities_ttl[entry.Key] -= Time.deltaTime;
+
+                // on enlève la capacité si le ttl est fini
+                if (capacities_ttl[entry.Key] < 0f)
+                {
+                    removeCapacity(entry.Key);
+                    capacities_ttl.Remove(entry.Key);
                 }
             }
         }
@@ -255,6 +275,22 @@ public class Being : MonoBehaviour
         }
     }
 
+    public void addCapacityCooldown(string capacity, float cooldown)
+    {
+        // on ajoute un cooldown à une capacité
+        if (!capacities_cooldowns_base.ContainsKey(capacity)) { return; }
+
+        // on met le cooldown à jour
+        capacities_cooldowns[capacity] = cooldown;
+    }
+
+    public void addEphemeralCapacity(string capacity, float duration, float cooldown=0f)
+    {
+        // on ajoute une capacité éphémère
+        addCapacity(capacity, cooldown);
+        capacities_ttl[capacity] = duration;
+    }
+
     protected void startCapacityCooldown(string capacity)
     {
         if (!capacities_cooldowns_base.ContainsKey(capacity)) { return; }
@@ -263,7 +299,7 @@ public class Being : MonoBehaviour
         capacities_cooldowns[capacity] = capacities_cooldowns_base[capacity];
     }
 
-    protected void beInvicible(float duration = 0.5f)
+    /* protected void beInvicible(float duration = 0.5f)
     {
         // capacities["invicible"] = true;
         addCapacity("invicible");
@@ -284,7 +320,7 @@ public class Being : MonoBehaviour
     protected void stopGhost()
     {
         removeCapacity("ghost");
-    }
+    } */
 
     // DEPLACEMENT
     protected void walk(Vector2 direction, float inputs_magnitude=1f)
@@ -853,6 +889,15 @@ public class Being : MonoBehaviour
         return capacities.ContainsKey(capacity) && capacities[capacity];
     }
 
+    public Force getForce(int id)
+    {
+        return forces.Find(f => f.id == id);
+    }
+
+    public List<Force> getForces(List<int> ids)
+    {
+        return forces.FindAll(f => ids.Contains(f.id));
+    }
 
     // PRINTERS
     public void showCapacities()
@@ -973,6 +1018,8 @@ public class BeingSounds
 
 public class Force
 {
+    public static int id_counter = 0;
+    public int id;
     public Vector2 direction;
     public float magnitude;
     public float attenuation;
@@ -984,6 +1031,10 @@ public class Force
         this.direction = direction;
         this.magnitude = magnitude;
         this.attenuation = attenuation;
+
+        // on génère un id unique
+        this.id = id_counter;
+        id_counter++;
     }
 
 }

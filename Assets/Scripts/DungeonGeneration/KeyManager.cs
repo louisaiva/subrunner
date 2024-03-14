@@ -30,6 +30,8 @@ public class KeyManager : MonoBehaviour
 
     void Awake()
     {
+        if (bank_zone != null) { return; }
+        
         // on récup le manager de zones
         bank_zone = GameObject.Find("/world").GetComponent<ZoneManager>();
 
@@ -43,7 +45,7 @@ public class KeyManager : MonoBehaviour
         }
 
         // on affiche les portes et les clés
-        /* foreach (KeyValuePair<string, GameObject> door in doors)
+        foreach (KeyValuePair<string, GameObject> door in doors)
         {
             Debug.Log("KeyManager.Awake: door : " + door.Key);
         }
@@ -54,7 +56,7 @@ public class KeyManager : MonoBehaviour
         foreach (KeyValuePair<string, GameObject> key in keys)
         {
             Debug.Log("KeyManager.Awake: key : " + key.Key);
-        } */
+        }
     }
 
     public void applyPathVania(List<Sector> sectors)
@@ -147,6 +149,8 @@ public class KeyManager : MonoBehaviour
     // GETTERS
     public GameObject GetDoor(int reachability, bool is_vertical = false)
     {
+        if (bank_zone == null) {Awake();}
+
         // cette fonction renvoie la porte correspondante à la reachability
         if (reachability > pathvania.Count) { reachability = pathvania.Count; }
         string door_name = pathvania[reachability-1];

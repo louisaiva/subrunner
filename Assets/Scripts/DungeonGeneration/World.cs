@@ -180,9 +180,9 @@ public class World : MonoBehaviour
         BoundsInt final_bounds = sector.getHandmadeBounds();
 
         // on set les tiles
-        setTiles(final_bounds, init_fg_tiles, "fg");
-        setTiles(final_bounds, init_bg_tiles, "bg");
-        setTiles(final_bounds, init_gd_tiles, "gd");
+        SetTiles(final_bounds, init_fg_tiles, "fg");
+        SetTiles(final_bounds, init_bg_tiles, "bg");
+        SetTiles(final_bounds, init_gd_tiles, "gd");
 
         // on launch le secteur
         sector.LAUNCH();
@@ -312,6 +312,24 @@ public class World : MonoBehaviour
             gd_tm.SetTile(new Vector3Int(pos.x, pos.y, 0), tile);
         }
     }
+
+    public void SetTiles(BoundsInt bounds, TileBase[] tiles, string tm = "bg")
+    {
+        // on set les tiles
+        if (tm == "bg")
+        {
+            bg_tm.SetTilesBlock(bounds, tiles);
+        }
+        else if (tm == "fg")
+        {
+            fg_tm.SetTilesBlock(bounds, tiles);
+        }
+        else if (tm == "gd")
+        {
+            gd_tm.SetTilesBlock(bounds, tiles);
+        }
+    }
+
 
 
     // GETTERS
@@ -548,24 +566,6 @@ public class World : MonoBehaviour
 
         return null;
     }
-
-    public void setTiles(BoundsInt bounds,TileBase[] tiles, string tm="bg")
-    {
-        // on set les tiles
-        if (tm == "bg")
-        {
-            bg_tm.SetTilesBlock(bounds, tiles);
-        }
-        else if (tm == "fg")
-        {
-            fg_tm.SetTilesBlock(bounds, tiles);
-        }
-        else if (tm == "gd")
-        {
-            gd_tm.SetTilesBlock(bounds, tiles);
-        }
-    }
-
 
     // ZONES GETTERS
     public List<Zone> getAvailableCentralZones()

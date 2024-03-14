@@ -50,6 +50,8 @@ public class Perso : Attacker
     // DASH
     [SerializeField] private float dash_magnitude = 25f;
     [SerializeField] private float dash_duration = 0.5f;
+    public float last_dash_time = 0f;
+    private List<int> dash_forces = new List<int>();
 
     // global light
     private GameObject global_light;
@@ -1316,12 +1318,48 @@ public class Perso : Attacker
         startCapacityCooldown("dash");
 
 
+        // we check the synchroneity of the dash
+        float dash_tempo = Time.time - last_dash_time;
+        Debug.Log("dash tempo : " + (dash_tempo));
+        last_dash_time = Time.time;
+
+        if (dash_tempo > 0.65f && dash_tempo < 0.95f)
+        {
+            // on est dans le tempo !
+            dash_magnitude = 64f;
+            dash_duration = 0.5f;
+        }
+        else
+        {
+            // on revient à la normale
+            dash_magnitude = 32f;
+            dash_duration = 0.25f;
+        }
+
+        
+
+
         // on fait un dash dans la direction du look_at du being
         // float ajout = 0f;
 
+
+        // on clamp les inputs dans l'une des 4 directions
+        Vector2Int dash_direction = new Vector2Int(0, 0);
+        if (Mathf.Abs(inputs.x) > Mathf.Abs(inputs.y))
+        {
+            dash_direction.x = inputs.x > 0f ? 1 : -1;
+        }
+        else
+        {
+            dash_direction.y = inputs.y > 0f ? 1 : -1;
+        }
+
+
+
+
         anim_handler.StopForcing();
         // on joue l'animation
-        if (Mathf.Abs(inputs.x) > Mathf.Abs(inputs.y))
+        /* if (Mathf.Abs(inputs.x) > Mathf.Abs(inputs.y))
         {
             anim_handler.ChangeAnimTilEnd(((PersoAnims) anims).dash_side);
         }
@@ -1334,17 +1372,76 @@ public class Perso : Attacker
             anim_handler.ChangeAnimTilEnd(((PersoAnims) anims).dash_down);
             // ajout = 0.25f;
         }
+        */
+        if (new List<Vector2Int>() { new Vector2Int(1, 0), new Vector2Int(-1, 0) }.Contains(dash_direction))
+        {
+            anim_handler.ChangeAnimTilEnd(((PersoAnims) anims).dash_side);
+        }
+        else if (dash_direction.y > 0)
+        {
+            anim_handler.ChangeAnimTilEnd(((PersoAnims) anims).dash_up);
+        }
+        else
+        {
+            anim_handler.ChangeAnimTilEnd(((PersoAnims) anims).dash_down);
+        }
+
+
 
         // on se met invicible
-        beInvicible(dash_duration);
-        beGhost(dash_duration);
+        // beInvicible(dash_duration);
+        // beGhost(dash_duration);
+
+        // on permet d'orienter le dash
+        // addCapacity("dash_orientable");
+        addEphemeralCapacity("invicible", dash_duration);
+        addEphemeralCapacity("ghost", dash_duration);
+        addEphemeralCapacity("dashin", 0.6f*dash_duration);
 
         // on fait le dash
-        Force dash_force = new Force(inputs.normalized, dash_magnitude);
+        Force dash_force = new Force(dash_direction, dash_magnitude);
         forces.Add(dash_force);
+        dash_forces.Add(dash_force.id);
     }
 
-    
+    private void orient_dash()
+    {
+        // on clamp les inputs dans l'une des 4 directions
+        Vector2Int dash_direction = new Vector2Int(0, 0);
+        if (Mathf.Abs(inputs.x) > Mathf.Abs(inputs.y))
+        {
+            dash_direction.x = inputs.x > 0f ? 1 : -1;
+        }
+        else
+        {
+            dash_direction.y = inputs.y > 0f ? 1 : -1;
+        }
+
+        // on récupère toutes les forces de dash encore actives
+        List<Force> forces = getForces(dash_forces);
+
+        // on oriente la force de dash
+        foreach (Force force in forces)
+        {
+            force.direction = dash_direction;
+        }
+
+        // on change l'animation du perso
+        anim_handler.StopForcing();
+        if (new List<Vector2Int>() { new Vector2Int(1, 0), new Vector2Int(-1, 0) }.Contains(dash_direction))
+        {
+            anim_handler.ChangeAnimTilEnd(((PersoAnims)anims).dash_side);
+        }
+        else if (dash_direction.y > 0)
+        {
+            anim_handler.ChangeAnimTilEnd(((PersoAnims)anims).dash_up);
+        }
+        else
+        {
+            anim_handler.ChangeAnimTilEnd(((PersoAnims)anims).dash_down);
+        }
+    }
+
 
 
     // INPUTS
@@ -1397,9 +1494,16 @@ public class Perso : Attacker
 
     public void OnDash()
     {
-        if (!hasCapacity("knocked_out") && hasCapacity("dash"))
+        if (!hasCapacity("knocked_out"))
         {
-            dash();
+            if (hasCapacity("dash"))
+            {
+                dash();
+            }
+            else if (hasCapacity("dash_orientable"))
+            {
+                orient_dash();
+            }
         }
     }
 

@@ -247,3 +247,57 @@ plan d'action après réflection sur gamedesign (24/02/2024)
             -> typiquement, on approche d'une poubelle :
                     [E] dig through the trash
             -> et hop, une fois qu'on a appuyé sur [E] après on a plus jamais le texte en dessous juste le [E] ?
+
+
+
+plan d'action reflexions (14/03/2024)
+
+    but : reréflechir certaines mechaniques de gameplay pour finr le jeu
+
+    réflexions :
+
+        - faire que les items se drop véritablement des coffres, puis sont ravalés si on y touche pas
+        - ne plus afficher de hud inventaire sur les coffres -> plus de UI_Item en dehors de l'inventaire principal
+        - agrandir le cercle d'interaction avec les objets de sorte à ce qu'on puisse lire à l'avance le hint de touche
+        - faire des badges de différentes couleurs RECONNAISSABLES qui ouvrent automatiquement les portes de différents secteurs :
+            tuto : première porte s'ouvre avec le badge violet de notre secteur !
+
+        - dash :
+            dash magnitude : le mettre à 25 de base, puis, si on relance le dash au bon moment (entre 0.65 et 0.95s), passe à 38 (pile poil pour courir en carré)
+            est reset à 25 si on loupe le créneau, ou si on collisionne dans un mur
+
+        - adapter le leveldesign au dash :
+            - dans des zones considérées comme "safe" ou "ennuyantes", on met aucun obstacle au dash, que des choses que le ghost peut traverser -> comme ça super vitesse et sah quel plaisir
+            - dans des zones "dangereuses", ou "intéressantes", on met des obstacles en travers du circuit de dash, pour ralentir le joueur légèrement -> on augmente la difficulté
+            - on met des lignes de métro en raccourcis entre les secteurs, qu'on peut traverser sans danger avec le dash et le ghost ability.
+
+        - adapter la musique au dash :
+            trouver le bon bpm et mettre des musiques de fin de jeu synchro sur ce bpm
+
+
+        - fin du jeu :
+            revoir elevatorspot pour mettre l'ascenceur en haut en un long couloir vertical final.
+            (créer un Elevator.cs , I_Interactable qui nous fait rentrer dans l'ascenceur et nous transporte loin puis affiche)
+            pour le moment on enlève l'ascenceur ?
+            
+            créer une Zone PASTASHOP qui vend des pates. -> fin du jeu.
+            cacher le PASTASHOP dans le secteur à la plus grosse reachability
+            quand on clique dessus c la fin du jeu
+            
+            faire des zooms de caméras en tant qu'animations (tah les screenshake)
+            
+        - QG :
+            revoir le QG pour y intégrer une salle des tutos et un lit
+            le lit est notre point de respawn par défaut.
+
+        - tutos :
+            mettre les ButtonsHints au mur pour qu'on voit interactivement quand on avance attaque etc.
+                placer les buttonshints juste avant qu'on en ai besoin.
+                
+                ex :
+                    juste avant le premier zombie, [space] attaquer, ou [X] attaquer
+                    comme ça le tuto est simple, efficace, interactif, et NE COUPE PAS LE TEMPS
+        
+
+
+
