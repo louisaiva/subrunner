@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -9,6 +10,7 @@ public class World : MonoBehaviour
 
     [Header("Builder")]
     [SerializeField] private AreaJsonHandler builder;
+    [SerializeField] private GameLoader game_loader;
     [SerializeField] private Perso perso;
     
     [Header("Sectors")]
@@ -64,15 +66,24 @@ public class World : MonoBehaviour
         // on récupère le perso
         perso = GameObject.Find("/perso").GetComponent<Perso>();
 
+        // on récupère le game loader
+        game_loader = GameObject.Find("/generator").GetComponent<GameLoader>();
+
         // on récupère les legendary zones
         bank_zones = GetComponent<ZoneManager>();
     }
 
     // GENERATION
-    public void GENERATE(List<Sector> sect, Sector spawn_sector)
+    public IEnumerator GENERATE(List<Sector> sect, Sector spawn_sector)
     {
 
+        // on attend une frame
+        WaitForSeconds wait = new WaitForSeconds(0.01f);
+        yield return wait;
+
         // on clear les tilemaps
+        game_loader.AddProgress("clearing tilemaps");
+        yield return wait;
         Clear();
 
         // on récupère les sectors
@@ -80,6 +91,8 @@ public class World : MonoBehaviour
 
 
         // on parcourt les secteurs
+        game_loader.AddProgress("initializing sectors");
+        yield return wait;
         for (int i = 0; i < sect.Count; i++)
         {
             // on vérifie si le secteur est un hand made sector
@@ -93,9 +106,13 @@ public class World : MonoBehaviour
         }
 
         // on applique le pathvania aux secteurs
+        game_loader.AddProgress("applying pathvania");
+        yield return wait;
         GetComponent<KeyManager>().applyPathVania(sect);
 
         // on réccupère les zones qui pourraient accueillir des zones légendaires
+        game_loader.AddProgress("looking for legendary zones");
+        yield return wait;
         List<Zone> central_zones = getAvailableCentralZones();
         /* string s = "central zones: ";
         foreach (Zone zone in central_zones)
@@ -105,6 +122,8 @@ public class World : MonoBehaviour
         print(s); */
 
         // on place 1 fois chaque zone légendaire
+        game_loader.AddProgress("placing keys");
+        yield return wait;
         foreach (GameObject zone_prefab in bank_zones.GetLegendaryZones())
         {
             // on choisit une zone au hasard
@@ -116,11 +135,15 @@ public class World : MonoBehaviour
         }
 
         // on refresh les tilemaps
+        game_loader.AddProgress("refreshing tilemaps");
+        yield return wait;
         fg_tm.RefreshAllTiles();
         bg_tm.RefreshAllTiles();
         gd_tm.RefreshAllTiles();
 
         // on lance la génération interne des secteurs
+        game_loader.AddProgress("launching sectors");
+        yield return wait;
         for (int i = 0; i < sect.Count; i++)
         {
             Sector sector = sect[i];
@@ -130,10 +153,16 @@ public class World : MonoBehaviour
         }
 
         // on créé le plafond
-        CreateVirtualCeiling();
+        game_loader.AddProgress("creating virtual ceiling");
+        yield return wait;
+        // CreateVirtualCeiling();
 
+        // on génère la minimap
+        // minimap.GENERATE();
 
         // on récupère la position de départ du perso
+        game_loader.AddProgress("placing perso");
+        yield return wait;
         Vector2 spawn_pos;
         if (spawn_sector == null)
         {
@@ -162,10 +191,9 @@ public class World : MonoBehaviour
             spawn_pos = new Vector2((room.x * area_size.x + area_size.x / 2) / 2f, (room.y * area_size.y + area_size.y / 2) / 2f);
         }
 
-
         // on place le perso
         perso.transform.position = new Vector3(spawn_pos.x, spawn_pos.y, 0f);
-        perso.transform.Find("minicam").GetComponent<Minimap>().Clear();
+        perso.transform.Find("minimap").GetComponent<Minimap>().Clear();
 
     }
 

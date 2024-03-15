@@ -2374,8 +2374,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 34111641859200133}
   - {fileID: 1784037364018439428}
+  - {fileID: 8708801191822973308}
   m_Father: {fileID: 2189221196486141749}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3717,7 +3717,7 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
---- !u!1001 &2795724889620064663
+--- !u!1001 &4501194058138081302
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -3786,12 +3786,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 542cfbced9229e7419cc14d2655c92ca, type: 3}
---- !u!4 &34111641859200133 stripped
+--- !u!4 &1784037364018439428 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2789232997037817106, guid: 542cfbced9229e7419cc14d2655c92ca, type: 3}
-  m_PrefabInstance: {fileID: 2795724889620064663}
+  m_PrefabInstance: {fileID: 4501194058138081302}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &4501194058138081302
+--- !u!1001 &6804578573004301422
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -3864,8 +3864,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 542cfbced9229e7419cc14d2655c92ca, type: 3}
---- !u!4 &1784037364018439428 stripped
+--- !u!4 &8708801191822973308 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2789232997037817106, guid: 542cfbced9229e7419cc14d2655c92ca, type: 3}
-  m_PrefabInstance: {fileID: 4501194058138081302}
+  m_PrefabInstance: {fileID: 6804578573004301422}
   m_PrefabAsset: {fileID: 0}

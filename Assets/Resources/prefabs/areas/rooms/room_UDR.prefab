@@ -371,7 +371,7 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
---- !u!1 &2015910999122250205
+--- !u!1 &3378714871140838074
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -379,7 +379,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8951949298179245175}
+  - component: {fileID: 5398424202305209500}
   m_Layer: 0
   m_Name: enemy
   m_TagString: Untagged
@@ -387,13 +387,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8951949298179245175
+--- !u!4 &5398424202305209500
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2015910999122250205}
+  m_GameObject: {fileID: 3378714871140838074}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 1.95, y: 0.48, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -2409,7 +2409,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5275938818720388194}
-  - {fileID: 8951949298179245175}
+  - {fileID: 5398424202305209500}
   - {fileID: 7482938716811522075}
   - {fileID: 4980916949840668906}
   - {fileID: 4718545821785043886}

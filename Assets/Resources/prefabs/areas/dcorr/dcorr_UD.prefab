@@ -2312,8 +2312,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2946146374341784584}
   - {fileID: 3221139428573818067}
+  - {fileID: 7407729916008345204}
   m_Father: {fileID: 5295667209690819821}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3131,7 +3131,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4625998761464816196, guid: 542cfbced9229e7419cc14d2655c92ca, type: 3}
       propertyPath: m_Name
-      value: doorD2x1
+      value: doorU2x1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3143,7 +3143,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2789232997037817106, guid: 542cfbced9229e7419cc14d2655c92ca, type: 3}
   m_PrefabInstance: {fileID: 722424891388268993}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1033444339026413850
+--- !u!1001 &4645695830165721958
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -3209,15 +3209,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4625998761464816196, guid: 542cfbced9229e7419cc14d2655c92ca, type: 3}
       propertyPath: m_Name
-      value: doorU2x1
+      value: doorD2x1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 542cfbced9229e7419cc14d2655c92ca, type: 3}
---- !u!4 &2946146374341784584 stripped
+--- !u!4 &7407729916008345204 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2789232997037817106, guid: 542cfbced9229e7419cc14d2655c92ca, type: 3}
-  m_PrefabInstance: {fileID: 1033444339026413850}
+  m_PrefabInstance: {fileID: 4645695830165721958}
   m_PrefabAsset: {fileID: 0}

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.UI;
@@ -8,6 +9,7 @@ public class Minimap : MonoBehaviour {
     public Transform player;
     private WorldGenerator generator;
     private World world;
+    private GameLoader game_loader;
 
     [Header("Map Settings")]
     public bool is_init = false;
@@ -50,16 +52,30 @@ public class Minimap : MonoBehaviour {
 
         // on récupère le world et les tilemaps
         world = GameObject.Find("/world").GetComponent<World>();
+
+        // on récupère le game loader
+        game_loader = GameObject.Find("/generator").GetComponent<GameLoader>();
+    }
+    
+    /* public void GENERATE()
+    {
+        // on crée la texture
+        StartCoroutine(GENERATE());
+    } */
+
+    public IEnumerator GENERATE()
+    {
+        // on attend une frame
+        WaitForSeconds wait = new WaitForSeconds(0.01f);
+        yield return wait;
+
+        print("(Minimap) creating textures");
+
+        // on récupère les tilemaps
+        game_loader.AddProgress("getting tilemaps");
+        yield return wait;
         world.GetTilemaps(out fg_tm, out bg_tm, out gd_tm);
 
-
-        // on crée la texture
-        createTextures();
-    }
-
-    public void createTextures()
-    {
-        print("(Minimap) creating textures");
 
         // on récupère les dimensions de la map
         Vector2Int mapSize = world.GetSize();
@@ -68,13 +84,23 @@ public class Minimap : MonoBehaviour {
         mapTexture = new Texture2D(mapSize.x, mapSize.y);
         maskTexture = new Texture2D(mapSize.x, mapSize.y);
 
+        // on remplit la texture de mask
+        game_loader.AddProgress("filling mask texture");
+        yield return wait;
+        Color[] pixels = Enumerable.Repeat(undiscoveredColor, mapSize.x * mapSize.y).ToArray();
+        maskTexture.SetPixels(pixels);
+
         // on remplit les textures
+        game_loader.AddProgress("filling map texture");
+        yield return wait;
         for (int x = 0; x < mapSize.x; x++)
         {
+            // game_loader.AddProgress("filling row " + x);
+            // yield return wait;
             for (int y = 0; y < mapSize.y; y++)
             {
                 // mask
-                maskTexture.SetPixel(x, y, undiscoveredColor);
+                // maskTexture.SetPixel(x, y, undiscoveredColor);
 
                 // map
                 // on récupère le type de tile
@@ -88,6 +114,8 @@ public class Minimap : MonoBehaviour {
         }
 
         // on change le mode de filtre
+        game_loader.AddProgress("applying filter mode");
+        yield return wait;
         mapTexture.filterMode = FilterMode.Point;
         mapTexture.Apply();
         maskTexture.filterMode = FilterMode.Point;
@@ -101,7 +129,7 @@ public class Minimap : MonoBehaviour {
     {
         if (!is_init) return;
 
-        createTextures();
+        GENERATE();
 
         GameObject.Find("/ui/minimap/mask/map").GetComponent<RawImage>().texture = null;
         GameObject.Find("/ui/fullmap/mask/map").GetComponent<RawImage>().texture = null;
@@ -137,6 +165,4 @@ public class Minimap : MonoBehaviour {
             maskTexture.Apply();
         }
     }
-
-
 }

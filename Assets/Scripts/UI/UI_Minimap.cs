@@ -30,7 +30,7 @@ public class UI_Minimap : MonoBehaviour {
         perso = GameObject.Find("/perso").GetComponent<Perso>();
 
         // on récupère la minimap
-        minimap = GameObject.Find("/perso/minicam").GetComponent<Minimap>();
+        minimap = GameObject.Find("/perso/minimap").GetComponent<Minimap>();
 
         // on recup les sprites
         sprites = Resources.LoadAll<Sprite>(mini_map_sprites_path);

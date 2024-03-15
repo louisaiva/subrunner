@@ -638,7 +638,10 @@ public class AreaJsonHandler : MonoBehaviour
             // on sauvegarde l'area
             string path = areas_path + directory + name + ".prefab";
             print("saving " + name + " to " + path);
-            PrefabUtility.SaveAsPrefabAsset(area, path);
+                
+            #if UNITY_EDITOR
+                PrefabUtility.SaveAsPrefabAsset(area, path);
+            #endif
 
             // on détruit l'area
             DestroyImmediate(area);

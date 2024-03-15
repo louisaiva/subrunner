@@ -14,7 +14,7 @@ public class UI_AreaAndPos : MonoBehaviour {
         // perso = GameObject.Find("/perso").GetComponent<Perso>();
 
         // on récupère la minimap
-        // minimap = GameObject.Find("/perso/minicam").GetComponent<Minimap>();
+        // minimap = GameObject.Find("/perso/minimap").GetComponent<Minimap>();
 
         // on récupère le world
         world = GameObject.Find("/world").GetComponent<World>();

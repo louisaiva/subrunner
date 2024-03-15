@@ -146,7 +146,7 @@ public class ComplexeSector : Sector
             available_central_zones.AddRange(area.Value.getCentralZones());
         }
 
-        string s = "(ComplexeSector - loadZones) " + name + " : \n\n";
+        // string s = "(ComplexeSector - loadZones) " + name + " : \n\n";
 
         // et on récupère aussi les zones qui sont dans les handmade areas
         foreach (Zone zone in handmade_zones)
@@ -157,11 +157,11 @@ public class ComplexeSector : Sector
             if (!available_central_zones.Contains(zone))
             {
                 available_central_zones.Add(zone);
-                s += zone.name + "\n";
+                // s += zone.name + "\n";
             }
         }
         
-        Debug.Log(s);
+        // Debug.Log(s);
     }
 
 

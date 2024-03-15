@@ -743,7 +743,7 @@ public class Sector : MonoBehaviour
         // on récupère toutes les zones qui sont au centre de leurs areas respectives
         if (available_central_zones.Count == 0)
         {
-            Debug.LogWarning("(Sector - getAvailableCentralZones) Pas de zones centrales disponibles dans le secteur " + gameObject.name);
+            // Debug.LogWarning("(Sector - getAvailableCentralZones) Pas de zones centrales disponibles dans le secteur " + gameObject.name);
             return new List<Zone>();
         }
 

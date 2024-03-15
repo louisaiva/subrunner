@@ -4,6 +4,7 @@ using System.Collections;
 using System.Linq;
 using DelaunatorSharp;
 using DelaunatorSharp.Unity.Extensions;
+// using System.Threading;
 
 public class WorldGenerator : MonoBehaviour
 {
@@ -16,6 +17,15 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] private Vector2 generation_radius = new Vector2(5, 5);
     private GameObject world;
     private double creation_time;
+
+
+
+    [Header("world generation")]
+    private GameLoader game_loader;
+    public bool world_generated = false;
+    // public bool is_world_generating = false;
+    // public int generation_progress = 0;
+    // public int generation_max_progress = 11;
 
 
 
@@ -36,9 +46,19 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] private Transform visu_parent;
 
 
+
+    // COMPONENTS
+    private SectorGenerator sector_generator;
+    private Minimap minimap;
+
+
     // unity functions
     void Awake()
     {
+        // on récupère les components
+        sector_generator = GetComponent<SectorGenerator>();
+        game_loader = GetComponent<GameLoader>();
+
         // on récupère le sector prefab
         sector_prefab = Resources.Load<GameObject>("prefabs/sectors/base_sector");
         connector_sector_prefab = Resources.Load<GameObject>("prefabs/sectors/base_connector_sector");
@@ -51,6 +71,9 @@ public class WorldGenerator : MonoBehaviour
 
         // on récupère les hand made sectors
         hand_made_sectors = Resources.LoadAll<GameObject>("prefabs/sectors/hand_made").ToList();
+        
+        // on récupère le minimap
+        minimap = GameObject.Find("/perso/minimap").GetComponent<Minimap>();
 
         // on vérifie si PLAYTEST est activé -> si oui on ne génère pas le monde (le playtest est déjà généré)
 
@@ -68,25 +91,43 @@ public class WorldGenerator : MonoBehaviour
             }
             catch {}
         #endif
-
-        // on génère le monde
-        GenerateWorld();
     }
 
-    // génère le monde
-    public void GenerateWorld()
+    public void Start()
     {
+        // on génère le monde
+        StartCoroutine(GenerateWorld());
+    }
+    
+    // génère le monde
+    public IEnumerator GenerateWorld()
+    {
+        // on attend une frame
+        WaitForSeconds wait = new WaitForSeconds(0.01f);
+
+        yield return wait;
+
+        // GetComponent<GameLoader>().StartLoadingGame();
+        world_generated = false;
+        game_loader.BeginProgress();
+
         // on récupère le temps de création
-        creation_time = Time.realtimeSinceStartup;
+        // creation_time = Time.realtimeSinceStartup;
         Debug.Log("<color=blue>on génère le monde</color>");
 
         // 1 - on vide le monde
+        game_loader.AddProgress("clearing world");
+        yield return wait;
         Clear();
 
         // 2 - on génère les secteurs
+        game_loader.AddProgress("generating sectors");
+        yield return wait;
         generateSectors();
 
         // 2.1 - on récupère le spawn sector
+        game_loader.AddProgress("finding spawn sector");
+        yield return wait;
         foreach (Sector sect in sectors)
         {
             if (sect is ComplexeSector)
@@ -100,14 +141,20 @@ public class WorldGenerator : MonoBehaviour
         }
 
         // 3 - on sépare les secteurs
+        game_loader.AddProgress("separating sectors");
+        yield return wait;
         separateSectors();
 
         // 4 - on les bascule en full positive
+        game_loader.AddProgress("translating sectors");
+        yield return wait;
         makeSectorsAllPositives();
 
         if (sectors.Count > 1)
         {
             // 5 - on créé un delaunay triangulation
+            game_loader.AddProgress("creating delaunay triangulation");
+            yield return wait;
             List<Vector2> vertices = new List<Vector2>();
             foreach (Sector sect in sectors)
             {
@@ -122,8 +169,12 @@ public class WorldGenerator : MonoBehaviour
                 DT.Add(new Edge(vertices[0], vertices[1]));
             }
 
+
             // 6 - on calcule le minimum spanning tree
+            game_loader.AddProgress("calculating minimum spanning tree");
+            yield return wait;
             MST = calculateMinimumSpanningTree(vertices, DT);
+
 
             // 7 - on ajoute quelques loops
             // loops = addSomeLoops(MST, DT);
@@ -131,13 +182,21 @@ public class WorldGenerator : MonoBehaviour
 
 
             // 8 - on calcule la reachability des secteurs
+            game_loader.AddProgress("calculating reachability");
+            yield return wait;
             calculateReachability();
 
 
+
             // 9 - on connecte les secteurs
+            game_loader.AddProgress("connecting sectors");
+            yield return wait;
             connectSectors(MST, loops);
 
+
             // 10 - on met à jour les sectors complexes pour ajouter les extensions si pas de voisin
+            game_loader.AddProgress("placing extensions");
+            yield return wait;
             foreach (Sector sect in sectors)
             {
                 if (sect is ComplexeSector)
@@ -145,15 +204,22 @@ public class WorldGenerator : MonoBehaviour
                     ((ComplexeSector)sect).placeExtensions();
                 }
             }
+
         }
 
-        // on crée des visus
-        if (!playtest_enabled) { visualizeSectors(); }
+        // 11 - on crée des visus
+        game_loader.AddProgress("generating visuals");
+        yield return wait;
+        // if (!playtest_enabled) { visualizeSectors(); }
 
+        // 12 - on lance la génération du monde
         if (generate_world)
         {
-            // on lance la génération du monde
-            world.GetComponent<World>().GENERATE(sectors, spawn_sector);
+            game_loader.AddProgress("generating world");
+            // yield return wait;
+            yield return StartCoroutine(world.GetComponent<World>().GENERATE(sectors, spawn_sector));
+            // world.GetComponent<World>().GENERATE(sectors, spawn_sector);
+
         }
         else
         {
@@ -164,7 +230,21 @@ public class WorldGenerator : MonoBehaviour
             }
         }
 
+        // 13 - on crée la map
+        game_loader.AddProgress("generating map");
+        // yield return wait;
+        yield return StartCoroutine(minimap.GENERATE());
+        
+
+
+
+        // on affiche le temps de génération
         Debug.Log("<color=blue>world generated in </color>" + (Time.realtimeSinceStartup - creation_time) + " <color=blue>seconds</color>");
+
+        world_generated = true;
+        game_loader.EndProgress();
+
+        yield return null;
     }
 
     // vide le monde
@@ -181,10 +261,10 @@ public class WorldGenerator : MonoBehaviour
         sectors.Clear();
 
         // on détruit tous les enfants du parent des visualisations
-        foreach (Transform child in visu_parent)
+        /* foreach (Transform child in visu_parent)
         {
             Destroy(child.gameObject);
-        }
+        } */
 
         // on vide les listes
         DT.Clear();
@@ -204,7 +284,7 @@ public class WorldGenerator : MonoBehaviour
             HashSet<Vector2Int> corridors = new HashSet<Vector2Int>();
 
             // on remplit les hashsets via sector generator
-            GetComponent<SectorGenerator>().GenerateSectorHashSets(ref rooms, ref corridors);
+            sector_generator.GenerateSectorHashSets(ref rooms, ref corridors);
 
             // on crée le secteur
             GameObject sect = Instantiate(sector_prefab, world.transform);

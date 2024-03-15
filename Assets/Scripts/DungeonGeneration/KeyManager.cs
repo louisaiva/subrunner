@@ -44,7 +44,7 @@ public class KeyManager : MonoBehaviour
             keys.Add(door_and_key.Value,bank_zone.GetZoneByName(door_and_key.Value));
         }
 
-        // on affiche les portes et les clés
+        /* // on affiche les portes et les clés
         foreach (KeyValuePair<string, GameObject> door in doors)
         {
             Debug.Log("KeyManager.Awake: door : " + door.Key);
@@ -56,7 +56,7 @@ public class KeyManager : MonoBehaviour
         foreach (KeyValuePair<string, GameObject> key in keys)
         {
             Debug.Log("KeyManager.Awake: key : " + key.Key);
-        }
+        } */
     }
 
     public void applyPathVania(List<Sector> sectors)
@@ -120,10 +120,10 @@ public class KeyManager : MonoBehaviour
             List<Zone> central_zones = getUsableZones(sects);
 
             // affiche les zones centrales
-            foreach (Zone z in central_zones)
+            /* foreach (Zone z in central_zones)
             {
                 Debug.Log("KeyManager.applyPathVania: central zone : " + z.name);
-            }
+            } */
 
             // on choisit une zone centrale aléatoire
             Zone zone = central_zones[Random.Range(0,central_zones.Count)];

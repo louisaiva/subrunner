@@ -31,7 +31,7 @@ public class UI_Fullmap : MonoBehaviour {
         perso = GameObject.Find("/perso").GetComponent<Perso>();
 
         // on récupère la minimap
-        minimap = GameObject.Find("/perso/minicam").GetComponent<Minimap>();
+        minimap = GameObject.Find("/perso/minimap").GetComponent<Minimap>();
 
         // on récupère le main_ui
         main_ui = GameObject.Find("/ui").GetComponent<UI_MainUI>();
