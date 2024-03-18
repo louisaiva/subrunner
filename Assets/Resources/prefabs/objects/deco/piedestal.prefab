@@ -382,6 +382,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5378797039908118141}
     m_Modifications:
+    - target: {fileID: 1627484105924939565, guid: 589d1d66d03f58543952a48a7d1db6cf, type: 3}
+      propertyPath: m_text
+      value: stand
+      objectReference: {fileID: 0}
     - target: {fileID: 1965281826810684873, guid: 589d1d66d03f58543952a48a7d1db6cf, type: 3}
       propertyPath: m_Name
       value: interact_tuto_label
@@ -389,6 +393,14 @@ PrefabInstance:
     - target: {fileID: 1965281826810684873, guid: 589d1d66d03f58543952a48a7d1db6cf, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5010221980980799836, guid: 589d1d66d03f58543952a48a7d1db6cf, type: 3}
+      propertyPath: m_SortingOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5010221980980799836, guid: 589d1d66d03f58543952a48a7d1db6cf, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -31225397
       objectReference: {fileID: 0}
     - target: {fileID: 6078341126154452387, guid: 589d1d66d03f58543952a48a7d1db6cf, type: 3}
       propertyPath: m_Pivot.x

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class Item : MonoBehaviour, I_Interactable
+public class Item : Movable, I_Interactable
 {
 
     // item basics
@@ -14,10 +14,15 @@ public class Item : MonoBehaviour, I_Interactable
     public string item_name = "heal_potion"; // name of the item
     public string item_description = "this is a heal potion";
 
-    // capacity
+    public string item_capacities = ""; // separated by a / : "dash/hit" and cooldowns by a : : "dash:0.7/hit:0.6"
+
+    public int level = 1; // level of the item
+
+    /* // capacity
     public List<string> capacities = new List<string>();
     public Dictionary<string, float> cooldowns = new Dictionary<string, float>();
     public int capacity_level = 1;
+    */
 
     // perso
     public GameObject perso;
@@ -26,14 +31,11 @@ public class Item : MonoBehaviour, I_Interactable
     public Transform interact_tuto_label { get; set; }
 
     // UNITY FUNCTIONS
-    protected void Awake()
+    /*protected void Awake()
     {
 
-        // on récupère le perso
-        perso = GameObject.Find("/perso");
-        
 
-        if (capacities.Contains("dash"))
+         if (capacities.Contains("dash"))
         {
             // print("adding dash cooldown to " + gameObject.name);
             // on ajoute le cooldown
@@ -46,12 +48,49 @@ public class Item : MonoBehaviour, I_Interactable
             cooldowns.Add("hit", 0.6f);
         }
 
-    }
+    } */
 
-    protected void Start()
+    public virtual void Start()
     {
+        // on récupère le perso
+        perso = GameObject.Find("/perso");
+
+
+        base.Start();
+
+        // on ajoute les capacités
+        foreach (string capacity in item_capacities.Split('/'))
+        {
+            // on récupère le nom et le cooldown
+            string[] capacity_and_cooldown = capacity.Split(':');
+            string capacity_name = capacity_and_cooldown[0];
+
+            if (capacity_and_cooldown.Length > 1)
+            {
+                try 
+                {
+                    float.Parse(capacity_and_cooldown[1]);
+                }
+                catch
+                {
+                    Debug.LogError("Item " + item_name + " has a wrong cooldown for capacity " + capacity_name + " to " + item_name);
+                    continue;
+                }
+                float capacity_cooldown = float.Parse(capacity_and_cooldown[1]);
+                // Debug.Log("(Item) successfully adding " + capacity_name + " with cooldown " + capacity_cooldown + " to " + item_name);
+                // on ajoute le cooldown
+                addCapacity(capacity_name, capacity_cooldown);
+            }
+            else
+            {
+                addCapacity(capacity_name);
+                // Debug.Log("(Item) adding " + capacity_name + " to " + item_name);
+            }
+        }
+
         // on récupère le label
         interact_tuto_label = transform.Find("interact_tuto_label");
+
     }
 
     // interactions

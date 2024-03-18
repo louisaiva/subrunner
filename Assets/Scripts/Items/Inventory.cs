@@ -451,6 +451,9 @@ public class Inventory : MonoBehaviour {
             return null;
         }
 
+        // on start l'item
+        item_go.GetComponent<Item>().Start();
+
         // on ajoute l'item
         addItem(item_go.GetComponent<Item>());
 

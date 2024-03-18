@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class CD : FileHolder
 {
-    
+
     // unity functions
-    protected new void Awake()
+    public override void Start()
     {
-        base.Awake();
+        base.Start();
 
         // on met un max de 1 fichier
         this.max_files = 1;

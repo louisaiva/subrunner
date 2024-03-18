@@ -387,7 +387,7 @@ public class Perso : Attacker
     // CAPACITES
     public override void Events()
     {
-        // showCapacities();
+        showCapacities();
 
         // on vérifie que le temps est pas en pause
         if (Time.timeScale == 0f) { return; }
@@ -553,6 +553,13 @@ public class Perso : Attacker
             // on regarde si c'est un hackable
             GameObject hit = hits[i].transform.parent.gameObject;
             if (hit.GetComponent<I_Hackable>() == null) { continue; }
+
+            // on regarde si on est pas déjà en train de hacker l'objet
+            /* if (current_hackin_targets.ContainsKey(hit.gameObject))// && current_hackin_targets[hit.gameObject] == hack)
+            {
+                // on peut plus hacker l'objet, on continue
+                continue;
+            } */
 
             // on affiche le HackUI
             // hit.GetComponent<I_Hackable>().showHackUI();
@@ -934,8 +941,14 @@ public class Perso : Attacker
         current_hoover_hackable = hackable;
         current_hoover_hack = hack;
 
-        hackray_hoover.setTarget(hackable);
-        hackray_hoover.show();
+        // on vérifie si on pas déjà en train de hacker l'objet
+        if (!current_hackin_targets.ContainsKey(hackable))// && current_hackin_targets[hackable] == hack)
+        {
+            // on affiche le hackray_hoover
+            hackray_hoover.setTarget(hackable);
+            hackray_hoover.show();
+            return;
+        }
 
         print("HOVERING " + current_hoover_hackable.gameObject.name);
     }
@@ -1233,7 +1246,7 @@ public class Perso : Attacker
 
             if (item.action_type == "capacity")
             {
-                foreach (string capa_item in item.capacities)
+                foreach (string capa_item in item.getCapacities())
                 {
                     if (capa_item == capa)
                     {
@@ -1256,7 +1269,7 @@ public class Perso : Attacker
         // on enlève la capacité de l'item si on a plus l'item dans notre inventaire
         if (item.action_type == "capacity")
         {
-            foreach (string capa in item.capacities)
+            foreach (string capa in item.getCapacities())
             {
                 removeCapaIfNotInInv(capa, item);
             }
@@ -1268,18 +1281,29 @@ public class Perso : Attacker
         // on ajoute la capacité de l'item
         if (item.action_type == "capacity")
         {
-            for (int i = 0; i < item.capacities.Count; i++)
+            // Debug.Log("(Perso) adding capacities of " + item.item_name + " to the perso");
+            List<string> capacities = item.getCapacities();
+            Dictionary<string,float> cooldowns = item.getCooldownsBase();
+            
+            /* string s = "capacities : ";
+            foreach (string capa in capacities)
             {
-                string capa = item.capacities[i];
+                s += capa + " " + (cooldowns.ContainsKey(capa) ? cooldowns[capa] : "/") + " \n";
+            }
+            Debug.Log(s); */
+
+
+            for (int i = 0; i < capacities.Count; i++)
+            {
+                string capa = capacities[i];
 
                 // on récupère le cooldown de l'item
                 float cooldown = 0f;
-                if (item.cooldowns.ContainsKey(capa))
+                if (cooldowns.ContainsKey(capa))
                 {
-                    print("added cooldown " + item.cooldowns[capa] + " to " + capa);
-                    cooldown = item.cooldowns[capa];
+                    // print("added cooldown " + cooldowns[capa] + " to " + capa);
+                    cooldown = cooldowns[capa];
                 }
-
                 addCapacity(capa, cooldown);
             }
         }

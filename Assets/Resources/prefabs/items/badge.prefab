@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2748573037149330120}
   - component: {fileID: 3845646378405068767}
   - component: {fileID: -6080430558089587905}
+  - component: {fileID: 1470620202395792050}
   m_Layer: 16
   m_Name: badge
   m_TagString: Untagged
@@ -122,7 +123,7 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0.5}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
+    pivot: {x: 0.5, y: 0}
     oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
@@ -144,19 +145,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 405e5758e701405499cbeacb1e2312f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weight: 1
+  world_layers:
+    serializedVersion: 2
+    m_Bits: 0
+  ghost_layers:
+    serializedVersion: 2
+    m_Bits: 0
+  velocity: {x: 0, y: 0}
   item_type: item
   category: key
   action_type: capacity
   item_name: badge
   item_description: badge electronique permettant d'ouvrir les portes automatiques
-  capacities:
-  - badge
-  capacity_level: 1
+  item_capacities: badge
+  level: 1
   perso: {fileID: 0}
   files: []
   max_files: 1
   root: {fileID: 0}
   root_name: a/
+--- !u!114 &1470620202395792050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2038104776426337295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b960528b9965ae94cab28eb75ccf1969, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  path: audio/
+  sounds: []
 --- !u!1001 &8570405629607860591
 PrefabInstance:
   m_ObjectHideFlags: 0

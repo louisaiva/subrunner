@@ -4991,6 +4991,7 @@ GameObject:
   - component: {fileID: 2748573037149330120}
   - component: {fileID: 3845646378405068767}
   - component: {fileID: 3045517501162894915}
+  - component: {fileID: 1470620202395792050}
   m_Layer: 16
   m_Name: 3D_glasses
   m_TagString: Untagged
@@ -5123,15 +5124,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac336139c3bd3be4a8d0f70b6cd28896, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weight: 1
+  world_layers:
+    serializedVersion: 2
+    m_Bits: 0
+  ghost_layers:
+    serializedVersion: 2
+    m_Bits: 0
+  velocity: {x: 0, y: 0}
   item_type: glasses
   category: clothes
   action_type: capacity
   item_name: 3d_glasses
   item_description: 3D GV speed glasses. The ultimate glasses. Allows you to see
     internet communications. Can't see through walls, unfortunately
-  capacities:
-  - gv_vision
-  - run
-  - 3d_vision
-  capacity_level: 3
+  item_capacities: gv_vision/run/3d_vision
+  level: 3
   perso: {fileID: 0}
+--- !u!114 &1470620202395792050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2038104776426337295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b960528b9965ae94cab28eb75ccf1969, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  path: audio/
+  sounds: []

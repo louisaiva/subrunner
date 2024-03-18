@@ -173,7 +173,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
             // on ajoute l'item
             addLeg(item);
         }
-        else if (leg_items[item.item_type].capacity_level < item.capacity_level)
+        else if (leg_items[item.item_type].level < item.level)
         {
             // on remplace l'item
             replaceLeg(item, item.item_type);
@@ -194,7 +194,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
             Item best_item = same_type_items[0];
             foreach (Item same_type_item in same_type_items)
             {
-                if (same_type_item.capacity_level > best_item.capacity_level)
+                if (same_type_item.level > best_item.level)
                 {
                     best_item = same_type_item;
                 }

@@ -14596,7 +14596,7 @@ Transform:
   - {fileID: 1000105125321168578}
   - {fileID: 8051981986127189689}
   - {fileID: 1927108986186872031}
-  - {fileID: 5086063743796142148}
+  - {fileID: 3509630947251173263}
   - {fileID: 8035589693924477645}
   - {fileID: 4149624570977981829}
   m_Father: {fileID: 6877338146996165636}
@@ -14613,7 +14613,7 @@ PrefabInstance:
     - target: {fileID: 497384399970867530, guid: 56410ca9320b78e4e8c56b74694061c0, type: 3}
       propertyPath: m_renderer
       value: 
-      objectReference: {fileID: 5755795050986205119}
+      objectReference: {fileID: 0}
     - target: {fileID: 4747786661751072123, guid: 56410ca9320b78e4e8c56b74694061c0, type: 3}
       propertyPath: m_RootOrder
       value: -1
@@ -14683,7 +14683,7 @@ PrefabInstance:
     - target: {fileID: 1280053885112030453, guid: 90300605d0eca154ab47a877c4b97325, type: 3}
       propertyPath: m_renderer
       value: 
-      objectReference: {fileID: 5755795050986205119}
+      objectReference: {fileID: 0}
     - target: {fileID: 7856076029556869123, guid: 90300605d0eca154ab47a877c4b97325, type: 3}
       propertyPath: m_Name
       value: fridge (1)
@@ -16981,7 +16981,7 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 1167256412079897127, guid: 7f6af733caa320a40a2b0cb1b137d27a, type: 3}
       insertIndex: 0
-      addedObject: {fileID: 8819789229775774164}
+      addedObject: {fileID: 1467247550037506050}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f6af733caa320a40a2b0cb1b137d27a, type: 3}
 --- !u!4 &1853474526226809348 stripped
@@ -20441,11 +20441,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2688323638434950999, guid: a7c5569832082f1428e4be64e255ae80, type: 3}
   m_PrefabInstance: {fileID: 2931788704410483093}
   m_PrefabAsset: {fileID: 0}
---- !u!23 &5755795050986205119 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 7444308696799663658, guid: a7c5569832082f1428e4be64e255ae80, type: 3}
-  m_PrefabInstance: {fileID: 2931788704410483093}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2966098936798019646
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21331,7 +21326,7 @@ PrefabInstance:
     - target: {fileID: 1280053885112030453, guid: 90300605d0eca154ab47a877c4b97325, type: 3}
       propertyPath: m_renderer
       value: 
-      objectReference: {fileID: 5755795050986205119}
+      objectReference: {fileID: 0}
     - target: {fileID: 7856076029556869123, guid: 90300605d0eca154ab47a877c4b97325, type: 3}
       propertyPath: m_Name
       value: fridge (2)
@@ -21401,7 +21396,7 @@ PrefabInstance:
     - target: {fileID: 1280053885112030453, guid: 90300605d0eca154ab47a877c4b97325, type: 3}
       propertyPath: m_renderer
       value: 
-      objectReference: {fileID: 5755795050986205119}
+      objectReference: {fileID: 0}
     - target: {fileID: 7856076029556869123, guid: 90300605d0eca154ab47a877c4b97325, type: 3}
       propertyPath: m_Name
       value: fridge
@@ -21455,7 +21450,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 90300605d0eca154ab47a877c4b97325, type: 3}
---- !u!4 &5086063743796142148 stripped
+--- !u!4 &3509630947251173263 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7942830545020770769, guid: 90300605d0eca154ab47a877c4b97325, type: 3}
   m_PrefabInstance: {fileID: 6813432267483541086}
@@ -21941,7 +21936,7 @@ PrefabInstance:
     - target: {fileID: 1280053885112030453, guid: 90300605d0eca154ab47a877c4b97325, type: 3}
       propertyPath: m_renderer
       value: 
-      objectReference: {fileID: 5755795050986205119}
+      objectReference: {fileID: 0}
     - target: {fileID: 7856076029556869123, guid: 90300605d0eca154ab47a877c4b97325, type: 3}
       propertyPath: m_Name
       value: fridge (3)
@@ -21995,7 +21990,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 90300605d0eca154ab47a877c4b97325, type: 3}
---- !u!4 &8819789229775774164 stripped
+--- !u!4 &1467247550037506050 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7942830545020770769, guid: 90300605d0eca154ab47a877c4b97325, type: 3}
   m_PrefabInstance: {fileID: 8819789229775774163}

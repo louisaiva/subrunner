@@ -13,9 +13,9 @@ public class FileHolder : Item
     [SerializeField] protected string root_name = "a/";
 
     // unity functions
-    protected new void Awake()
+    public override void Start()
     {
-        base.Awake();
+        base.Start();
 
         // on change le type de l'item
         this.category = "fileholder";

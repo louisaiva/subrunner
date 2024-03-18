@@ -333,11 +333,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8212337378664907603, guid: 1e998517ec2af304c824cf17ad6a7236, type: 3}
   m_PrefabInstance: {fileID: 4626387582876360609}
   m_PrefabAsset: {fileID: 0}
---- !u!23 &7720871822327209986 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 3103603554552479651, guid: 1e998517ec2af304c824cf17ad6a7236, type: 3}
-  m_PrefabInstance: {fileID: 4626387582876360609}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6415797715516227959
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -397,7 +392,7 @@ PrefabInstance:
     - target: {fileID: 9101227568890020971, guid: 1e998517ec2af304c824cf17ad6a7236, type: 3}
       propertyPath: m_renderer
       value: 
-      objectReference: {fileID: 7720871822327209986}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

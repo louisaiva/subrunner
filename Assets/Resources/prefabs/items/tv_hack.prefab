@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2748573037149330120}
   - component: {fileID: 3845646378405068767}
   - component: {fileID: 5989990578838116304}
+  - component: {fileID: 1470620202395792050}
   m_Layer: 16
   m_Name: tv_hack
   m_TagString: Untagged
@@ -144,16 +145,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4462e78dda8b60a42b0ad9fd588a7a76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weight: 1
+  world_layers:
+    serializedVersion: 2
+    m_Bits: 0
+  ghost_layers:
+    serializedVersion: 2
+    m_Bits: 0
+  velocity: {x: 0, y: 0}
   item_type: hack
   category: hack
   action_type: capacity
   item_name: tv_hack
   item_description: hack TVs in order to get your dose of bad news !
-  capacities:
-  - hack
-  capacity_level: 1
+  item_capacities: hack
+  level: 1
   perso: {fileID: 0}
   hack_type_target: tv
+--- !u!114 &1470620202395792050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2038104776426337295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b960528b9965ae94cab28eb75ccf1969, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  path: audio/
+  sounds: []
 --- !u!1001 &8681621016381441894
 PrefabInstance:
   m_ObjectHideFlags: 0
