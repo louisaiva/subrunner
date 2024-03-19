@@ -23,6 +23,9 @@ public class Movable : MonoBehaviour
     public LayerMask world_layers; // layers du monde
     public LayerMask ghost_layers; // layers du monde (ghost)
     
+    // COLLISIONS
+    // protected List<Collider2D> ghosting_colliders = new List<Collider2D>(); // colliders qui ne sont pas pris en compte dans les collisions
+
 
     // CURRENT VELOCITY
     protected Vector3 last_position = Vector3.zero;
@@ -197,7 +200,20 @@ public class Movable : MonoBehaviour
     }
 
 
-    // DEPLACEMENT
+
+    // FORCES
+    public void addForce(Force force)
+    {
+        // on ajoute une force
+        forces.Add(force);
+    }
+
+    public void clearForces()
+    {
+        // on supprime toutes les forces
+        forces.Clear();
+    }
+
     protected void update_forces()
     {
         // on parcourt les forces
@@ -232,7 +248,7 @@ public class Movable : MonoBehaviour
     {
         // on déplace le movable
         int moved_code = movable(force);
-        
+
 
         if (this is Perso)
         {
@@ -251,12 +267,15 @@ public class Movable : MonoBehaviour
             else if (moved_code == 3 || moved_code == 5)
             {
                 // on a collisionné moins fort
-                Camera.main.GetComponent<CameraShaker>().shake(force.magnitude/2f);
+                Camera.main.GetComponent<CameraShaker>().shake(force.magnitude / 2f);
                 // Debug.Log("shake w glissement : " + force.magnitude);
             }
         }
     }
 
+
+
+    // DEPLACEMENT
     protected int movable(Vector2 movement)
     {
         // fonction mère de toutes les fonctions de déplacement :

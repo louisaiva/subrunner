@@ -50,13 +50,14 @@ public class Item : Movable, I_Interactable
 
     } */
 
-    public virtual void Start()
+    public new virtual void Start()
     {
         // on récupère le perso
         perso = GameObject.Find("/perso");
 
 
         base.Start();
+        world_layers = LayerMask.GetMask("Ground", "Walls", "Ceiling", "Doors", "Computers", "Decoratives", "Interactives");
 
         // on ajoute les capacités
         foreach (string capacity in item_capacities.Split('/'))
@@ -128,6 +129,14 @@ public class Item : Movable, I_Interactable
         if (interact_tuto_label == null) { return; }
         interact_tuto_label.gameObject.SetActive(false);
     }
+
+
+    // forces
+    /* public void drop(Vector2 direction)
+    {
+
+    } */
+
 
     // end of life
     public void destruct()

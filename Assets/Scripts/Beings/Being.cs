@@ -352,7 +352,8 @@ public class Being : Movable
         // apply_force(knockback);
         if (knockback != null)
         {
-            forces.Add(knockback);
+            // forces.Add(knockback);
+            addForce(knockback);
 
             // change the flipX of the sprite if needed
             if (knockback.direction.x != 0f)

@@ -1142,7 +1142,7 @@ public class Perso : Attacker
 
 
         // sinon on drop l'item par terre
-        if (drop_on_ground)
+        /* if (drop_on_ground)
         {
 
             I_Grabber grabber = null;
@@ -1178,6 +1178,21 @@ public class Perso : Attacker
                 item.transform.position = position;
                 // item.fromInvToGround();
             }
+        } */
+
+        if (drop_on_ground)
+        {
+            // on drop sur le sol avec une force dans une direction aléatoire
+            item.transform.SetParent(items_parent);
+
+            // calcule une position aléatoire autour du perso -> dans la direction du look_at
+            float angle = Random.Range(0f, 360f);
+            Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+            // Vector2 position = (Vector2)transform.position + direction * 0.5f;
+
+            // item.transform.position = position;
+            item.transform.position = transform.position;
+            item.addForce(new Force(direction, 7.5f,1.5f));
         }
 
 
@@ -1216,6 +1231,9 @@ public class Perso : Attacker
         {
             item.GetComponent<Collider2D>().enabled = true;
         }
+
+        // on supprime les forces de l'item
+        item.clearForces();
 
 
 
@@ -1424,7 +1442,8 @@ public class Perso : Attacker
 
         // on fait le dash
         Force dash_force = new Force(dash_direction, dash_magnitude);
-        forces.Add(dash_force);
+        addForce(dash_force);
+        // forces.Add(dash_force);
         dash_forces.Add(dash_force.id);
     }
 

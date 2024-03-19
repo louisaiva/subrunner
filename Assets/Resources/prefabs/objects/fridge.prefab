@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1817115460361391784
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4889071402167946048}
+  m_Layer: 24
+  m_Name: items
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4889071402167946048
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1817115460361391784}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -19.29, y: 1.48, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7942830545020770769}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7856076029556869123
 GameObject:
   m_ObjectHideFlags: 0
@@ -36,6 +67,7 @@ Transform:
   - {fileID: 463603710553114805}
   - {fileID: 2037556146881027603}
   - {fileID: 3356344410275635644}
+  - {fileID: 4889071402167946048}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -188,10 +220,16 @@ MonoBehaviour:
   is_open: 0
   is_moving: 0
   openin_duration: 0.5
-  inventory: {fileID: 0}
   go_parent: {fileID: 0}
+  items: []
   randomize_on_start: 1
   randomize_cat: food_drink
+  drop_angle_base: -90
+  drop_angle_wide: 100
+  drop_force: 10
+  items_layer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1001 &1170742151809890475
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -365,6 +403,10 @@ PrefabInstance:
     - target: {fileID: 9118496334849514415, guid: 71581683959290a4b942c75728acdee2, type: 3}
       propertyPath: m_Name
       value: inventory
+      objectReference: {fileID: 0}
+    - target: {fileID: 9118496334849514415, guid: 71581683959290a4b942c75728acdee2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

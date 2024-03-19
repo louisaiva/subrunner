@@ -118,7 +118,7 @@ public class Attacker : Being
         float knockback_magnitude_inverse = knockback_base * ( total_knockback_weight - weight )
                                              / (total_knockback_weight * attackant_advantage);
         Force knockback_inverse = new Force(attacker_knockback_direction.normalized, knockback_magnitude_inverse);
-        forces.Add(knockback_inverse);
+        addForce(knockback_inverse);
 
         return killed_an_enemy ? 2 : 1;
     }
