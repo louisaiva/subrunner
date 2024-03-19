@@ -387,7 +387,7 @@ public class Perso : Attacker
     // CAPACITES
     public override void Events()
     {
-        showCapacities();
+        // showCapacities();
 
         // on vérifie que le temps est pas en pause
         if (Time.timeScale == 0f) { return; }
@@ -962,6 +962,7 @@ public class Perso : Attacker
         hackray_hoover.removeTarget();
     }
 
+
     // INTERACTIONS
     private void InteractHooverEvents()
     {
@@ -1062,31 +1063,26 @@ public class Perso : Attacker
         {
             print("INTERACTING WITH " + current_hoover_interactable);
 
+            // on interagit avec l'objet
+            current_hoover_interactable.GetComponent<I_Interactable>().interact(gameObject);
+
+            // si c'est un item, on quitte tout simplement
+            if (current_hoover_interactable.GetComponent<Item>() != null) { return; }
+
             // on met à jour l'objet avec lequel on interagit
             if (current_interactable != null && current_interactable != current_hoover_interactable)
             {
                 current_interactable.GetComponent<I_Interactable>().stopInteract();
             }
             current_interactable = current_hoover_interactable;
-
-            // on interagit avec l'objet
-            current_interactable.GetComponent<I_Interactable>().interact(gameObject);
-
-            // si c'est un item on arrête d'interagir avec l'objet
-            if (current_interactable.GetComponent<Item>() != null)
-            {
-                current_interactable = null;
-            }
         }
     }
 
     private void update_interactions()
     {
-
         // on vérifie si l'objet avec lequel on interagit est toujours à portée
         if (current_interactable != null)
         {
-
             // on regarde si on est toujours à portée de l'objet
             bool is_in_range = false;
 

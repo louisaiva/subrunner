@@ -22,7 +22,7 @@ public class Chest : MonoBehaviour
     }
 
     // OPENING
-    protected void open()
+    protected virtual void open()
     {
         CancelInvoke();
 

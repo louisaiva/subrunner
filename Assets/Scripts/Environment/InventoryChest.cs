@@ -28,17 +28,6 @@ public class InventoryChest : Chest, I_Grabber
     protected float attract_force_base = 1f;
 
     // unity functions
-    /* protected override void Awake()
-    {
-        base.Awake();
-
-        // on récupère l'inventaire
-        // inventory = transform.Find("inventory").GetComponent<UI_ChestInventory>();
-
-
-
-    } */
-
     protected void Start()
     {
         // on récupère le parent
@@ -52,7 +41,7 @@ public class InventoryChest : Chest, I_Grabber
 
     protected void Update()
     {
-        if (!is_open)
+        if (is_open && is_moving)
         {
             attractItems();
         }
@@ -72,13 +61,18 @@ public class InventoryChest : Chest, I_Grabber
         dropItems();
     }
 
-    protected override void close()
-    {
-        // on met à jour l'inventaire
-        // inventory.setShow(false);
-        // inventory.hide();
 
-        base.close();
+    // GRABBER
+    public bool canGrab() { return true; }
+
+    public void grab(GameObject target)
+    {
+        if (!target.GetComponent<Item>()) { return; }
+
+        // Debug.Log("grab " + target.name + " in " + gameObject.name + " & applied setactive : " + target.activeSelf);
+        
+        // on récupère l'item
+        grab(target.GetComponent<Item>());
     }
 
     protected void dropItems()
@@ -88,7 +82,7 @@ public class InventoryChest : Chest, I_Grabber
         for (int i = 0; i < nb_items; i++)
         {
             // angles.Add();
-            
+
             // on récupère un item
             Item item = items[0];
 
@@ -115,26 +109,7 @@ public class InventoryChest : Chest, I_Grabber
         }
     }
 
-
-    // GRABBER
-    public bool canGrab()
-    {
-        // return inventory.canGrab();
-        return true;
-    }
-
-    public void grab(GameObject target)
-    {
-        if (!canGrab()) { return; }
-        if (!target.GetComponent<Item>()) { return; }
-
-        Debug.Log("grab " + target.name + " in " + gameObject.name + " & applied setactive : " + target.activeSelf);
-        
-        // on récupère l'item
-        grab(target.GetComponent<Item>());
-    }
-
-    public void attractItems()
+    protected void attractItems()
     {
         // on récupère tous les items dans un range
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, grab_range, items_layer);
