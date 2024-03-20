@@ -407,9 +407,14 @@ class EnumHCI
     public Dictionary<string, Sprite> empty_sprites = new Dictionary<string, Sprite>();
     public Dictionary<string, Sprite> hint_sprites = new Dictionary<string, Sprite>();
 
+    private static EnumHCI instance = null;
+
 
     public EnumHCI()
     {
+        if (instance != null) { return; }
+        else { instance = this; }
+
         // on récupère les sprites
         Sprite[] sprites = Resources.LoadAll<Sprite>("spritesheets/ui/ui_interactables");
 
@@ -460,8 +465,8 @@ class EnumHCI
 
         // on ajoute les sprites du keyboard
         hint_sprites.Add("kb_slot_hint", sprites[38]);
-        hint_sprites.Add("kb_slot_hint_clicked", sprites[39]);
+        hint_sprites.Add("kb_slot_clicked", sprites[39]);
         hint_sprites.Add("kb_space_hint", sprites[40]);
-        hint_sprites.Add("kb_space_hint_clicked", sprites[41]);
+        hint_sprites.Add("kb_space_clicked", sprites[41]);
     }
 }

@@ -24,9 +24,9 @@ public class UI_SmallHC : MonoBehaviour
     [Header("Keyboard")]
     [SerializeField] private Transform kb;
     [SerializeField] private Transform slot;
-    [SerializeField] private string key_name;
-    [SerializeField] private Vector3 text_position_base;
-    [SerializeField] private Vector3 text_position_offset = new Vector3(0, -2, 0);
+    private string key_name;
+    private Vector3 text_position_base;
+    private Vector3 text_position_offset = new Vector3(0, -1f/8f, 0);
 
 
 
@@ -76,8 +76,6 @@ public class UI_SmallHC : MonoBehaviour
             return;
         }
 
-
-
         inputs.TUTO.Enable();
 
         // on ajoute les listeners
@@ -126,7 +124,7 @@ public class UI_SmallHC : MonoBehaviour
     {
         if (inputs == null) { return; }
 
-        inputs.TUTO.Disable();
+        // inputs.TUTO.Disable();
 
         // on enlève les listeners
         inputs.TUTO.x.performed -= ctx => updateButton("x", true);
@@ -299,14 +297,14 @@ public class UI_SmallHC : MonoBehaviour
         if (slot == null || !slot.gameObject.activeSelf) { return; }
 
         // we get the key
-        Transform key = slot.Find("key");
+        TextMeshPro key = slot.Find("key").GetComponent<TextMeshPro>();
 
         // si on a le meme texte qu'affiché alors on clique sur le bouton
         if (is_clicked)
         {
             // we change the color
             slot.GetComponent<Image>().color = clicked_color;
-            key.GetComponent<TextMeshProUGUI>().color = clicked_color;
+            key.color = clicked_color;
 
             // we change the sprite
             if (key_name == "space")
@@ -318,12 +316,12 @@ public class UI_SmallHC : MonoBehaviour
                 slot.GetComponent<Image>().sprite = bank.hint_sprites["kb_slot_clicked"];
             }
             // we translate the text
-            key.GetComponent<TextMeshProUGUI>().transform.localPosition = text_position_base + text_position_offset;
+            key.transform.localPosition = text_position_base + text_position_offset;
         }
         else
         {
             slot.GetComponent<Image>().color = hint_color;
-            key.GetComponent<TextMeshProUGUI>().color = hint_color;
+            key.color = hint_color;
 
             // we change the sprite
             if (key_name == "space")
@@ -336,9 +334,10 @@ public class UI_SmallHC : MonoBehaviour
             }
 
             // we reset the text
-            key.GetComponent<TextMeshProUGUI>().transform.localPosition = text_position_base;
+            key.transform.localPosition = text_position_base;
         }
     }
+
 
     // getters & setters
     private string getCategory(string button_name)
