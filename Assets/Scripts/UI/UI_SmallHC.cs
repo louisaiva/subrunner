@@ -8,19 +8,62 @@ using TMPro;
 public class UI_SmallHC : MonoBehaviour
 {
 
-    [Header("Sprites")]
+    [Header("Sprites & Colors")]
     private EnumHCI bank;
     [SerializeField] private Color hint_color = new Color(1f, 1f, 1f, 1f);
     [SerializeField] private Color clicked_color = new Color(1f, 1f, 0f, 1f);
 
     [Header("Inputs")]
     private PlayerInputActions inputs;
+    private InputManager manager;
+    private string current_input_type = "gamepad"; // keyboard or gamepad
+
+    [Header("Gamepad")]
+    [SerializeField] private Transform gamepad_slot;
+
+    [Header("Keyboard")]
+    [SerializeField] private Transform kb;
+    [SerializeField] private Transform slot;
+    [SerializeField] private string key_name;
+    [SerializeField] private Vector3 text_position_base;
+    [SerializeField] private Vector3 text_position_offset = new Vector3(0, -2, 0);
+
 
 
     void Start()
     {
         // Set the bank
         bank = new EnumHCI();
+
+        // Set the inputs
+        manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
+
+        // Set the gamepad
+        if (gamepad_slot == null)
+        {
+            gamepad_slot = transform.Find("xyab");
+        }
+
+        // we get the keyboard
+        kb = transform.Find("kb");
+        if (kb == null) { return; }
+        if (kb.Find("space").gameObject.activeSelf)
+        {
+            slot = kb.Find("space");
+            key_name = "space";
+            text_position_base = slot.Find("key").localPosition;
+        }
+        else
+        {
+            slot = kb.Find("slot");
+            key_name = slot.Find("key").GetComponent<TextMeshPro>().text;
+            text_position_base = slot.Find("key").localPosition;
+        }
+
+        // we set the current input type
+        current_input_type = "gamepad"; // "keyboard
+        kb.gameObject.SetActive(false);
+        gamepad_slot.gameObject.SetActive(true);
     }
 
     void OnEnable()
@@ -74,6 +117,9 @@ public class UI_SmallHC : MonoBehaviour
         inputs.TUTO.joyL.canceled += ctx => updateJoystick("joyL", Vector2.zero);
         inputs.TUTO.joyR.performed += ctx => updateJoystick("joyR", ctx.ReadValue<Vector2>());
         inputs.TUTO.joyR.canceled += ctx => updateJoystick("joyR", Vector2.zero);
+
+        inputs.TUTO.kb.performed += ctx => updateKeyboard(ctx.control.name, true);
+        inputs.TUTO.kb.canceled += ctx => updateKeyboard(ctx.control.name, false);
     }
 
     void OnDisable()
@@ -120,6 +166,27 @@ public class UI_SmallHC : MonoBehaviour
         inputs.TUTO.joyR.performed -= ctx => updateJoystick("joyR", ctx.ReadValue<Vector2>());
         inputs.TUTO.joyR.canceled -= ctx => updateJoystick("joyR", Vector2.zero);
 
+    }
+
+    void Update()
+    {
+        if (kb == null || slot == null) { return; }
+
+        // we check if we are using the keyboard
+        if (current_input_type != manager.getCurrentInputType())
+        {
+            current_input_type = manager.getCurrentInputType();
+            if (current_input_type == "keyboard")
+            {
+                gamepad_slot.gameObject.SetActive(false);
+                kb.gameObject.SetActive(true);
+            }
+            else
+            {
+                gamepad_slot.gameObject.SetActive(true);
+                kb.gameObject.SetActive(false);
+            }
+        }
     }
 
     // on met à jour les hints
@@ -219,6 +286,57 @@ public class UI_SmallHC : MonoBehaviour
 
             // we set the color
             img.color = hint_color;
+        }
+    }
+
+    private void updateKeyboard(string key_name, bool is_clicked)
+    {
+        Debug.Log("updateKeyboard " + key_name + " " + is_clicked + " " + this.key_name);
+        if (key_name != this.key_name) { return; }
+
+        // we get the button
+        if (kb == null || !kb.gameObject.activeSelf) { return; }
+        if (slot == null || !slot.gameObject.activeSelf) { return; }
+
+        // we get the key
+        Transform key = slot.Find("key");
+
+        // si on a le meme texte qu'affiché alors on clique sur le bouton
+        if (is_clicked)
+        {
+            // we change the color
+            slot.GetComponent<Image>().color = clicked_color;
+            key.GetComponent<TextMeshProUGUI>().color = clicked_color;
+
+            // we change the sprite
+            if (key_name == "space")
+            {
+                slot.GetComponent<Image>().sprite = bank.hint_sprites["kb_space_clicked"];
+            }
+            else
+            {
+                slot.GetComponent<Image>().sprite = bank.hint_sprites["kb_slot_clicked"];
+            }
+            // we translate the text
+            key.GetComponent<TextMeshProUGUI>().transform.localPosition = text_position_base + text_position_offset;
+        }
+        else
+        {
+            slot.GetComponent<Image>().color = hint_color;
+            key.GetComponent<TextMeshProUGUI>().color = hint_color;
+
+            // we change the sprite
+            if (key_name == "space")
+            {
+                slot.GetComponent<Image>().sprite = bank.hint_sprites["kb_space_hint"];
+            }
+            else
+            {
+                slot.GetComponent<Image>().sprite = bank.hint_sprites["kb_slot_hint"];
+            }
+
+            // we reset the text
+            key.GetComponent<TextMeshProUGUI>().transform.localPosition = text_position_base;
         }
     }
 

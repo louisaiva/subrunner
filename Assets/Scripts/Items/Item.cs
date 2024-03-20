@@ -31,25 +31,6 @@ public class Item : Movable, I_Interactable
     public Transform interact_tuto_label { get; set; }
 
     // UNITY FUNCTIONS
-    /*protected void Awake()
-    {
-
-
-         if (capacities.Contains("dash"))
-        {
-            // print("adding dash cooldown to " + gameObject.name);
-            // on ajoute le cooldown
-            cooldowns.Add("dash", 0.7f);
-        }
-        if (capacities.Contains("hit"))
-        {
-            // print("adding hit cooldown to " + gameObject.name);
-            // on ajoute le cooldown
-            cooldowns.Add("hit", 0.6f);
-        }
-
-    } */
-
     public new virtual void Start()
     {
         // on récupère le perso
@@ -91,6 +72,7 @@ public class Item : Movable, I_Interactable
 
         // on récupère le label
         interact_tuto_label = transform.Find("interact_tuto_label");
+        interact_tuto_label.Find("single_hc/text").GetComponent<TMPro.TextMeshPro>().text = item_name;
 
     }
 

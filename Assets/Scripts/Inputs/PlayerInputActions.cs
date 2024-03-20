@@ -124,7 +124,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""up"",
                     ""id"": ""cd5cb580-e676-4ba8-80e1-d63578a65114"",
-                    ""path"": ""<XInputController>/leftStick/up"",
+                    ""path"": ""<Joystick>/stick/up"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
@@ -135,7 +135,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""down"",
                     ""id"": ""6760f575-c485-4c4d-8260-6622ba5c842e"",
-                    ""path"": ""<XInputController>/leftStick/down"",
+                    ""path"": ""<Joystick>/stick/down"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
@@ -146,7 +146,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""left"",
                     ""id"": ""3a3703c7-05a4-441b-97e5-e552adca641d"",
-                    ""path"": ""<XInputController>/leftStick/left"",
+                    ""path"": ""<Joystick>/stick/left"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
@@ -157,7 +157,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""right"",
                     ""id"": ""16c3713d-c67f-4acf-b510-8b7f38817b07"",
-                    ""path"": ""<XInputController>/leftStick/right"",
+                    ""path"": ""<Joystick>/stick/right"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
@@ -223,7 +223,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""96585a0b-19a0-4a12-b30c-ee5c5664ed8c"",
-                    ""path"": ""<XInputController>/rightTrigger"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
@@ -267,7 +267,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""93b1a724-d3ff-4856-88c9-ac6ce6414518"",
-                    ""path"": ""<XInputController>/buttonWest"",
+                    ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
@@ -289,7 +289,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""8e26258b-b4ea-4ef6-a1eb-9a22f3f02dcf"",
-                    ""path"": ""<XInputController>/leftTrigger"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
@@ -311,7 +311,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""75dfc87d-e548-4042-8a15-def507bbd239"",
-                    ""path"": ""<XInputController>/buttonNorth"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
@@ -333,7 +333,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""c733c319-9b13-4a35-970c-ef0700b874a0"",
-                    ""path"": ""<XInputController>/buttonEast"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
@@ -436,7 +436,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""up"",
                     ""id"": ""81755a8d-61be-48a9-8fbf-1f5d6e2789cd"",
-                    ""path"": ""<XInputController>/rightStick/up"",
+                    ""path"": ""<Joystick>/stick/up"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
@@ -447,7 +447,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""down"",
                     ""id"": ""2c5c333e-9484-4f0c-a652-e3385fe00ce5"",
-                    ""path"": ""<XInputController>/rightStick/down"",
+                    ""path"": ""<Joystick>/stick/down"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
@@ -458,7 +458,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""left"",
                     ""id"": ""59adbb4a-f239-4404-ba67-9bcb5b0f0bdd"",
-                    ""path"": ""<XInputController>/rightStick/left"",
+                    ""path"": ""<Joystick>/stick/left"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
@@ -469,7 +469,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""right"",
                     ""id"": ""8bcedef8-4a78-4d85-ad3f-14f5835063d0"",
-                    ""path"": ""<XInputController>/rightStick/right"",
+                    ""path"": ""<Joystick>/stick/right"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
@@ -491,7 +491,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""5bbfd291-7f88-4772-9484-02def75ea68a"",
-                    ""path"": ""<XInputController>/buttonSouth"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
@@ -548,7 +548,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""74a37704-95d7-41bd-a178-f90badf1e6ba"",
-                    ""path"": ""<XInputController>/buttonSouth"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
@@ -570,7 +570,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""30be72d1-30ce-48e3-aa76-32f91b036399"",
-                    ""path"": ""<XInputController>/buttonEast"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
@@ -603,7 +603,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""up"",
                     ""id"": ""09eb962e-60a2-4161-a347-5c262b5efdc7"",
-                    ""path"": ""<XInputController>/rightStick/up"",
+                    ""path"": ""<Joystick>/stick/up"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
@@ -614,7 +614,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""down"",
                     ""id"": ""fa4c2ceb-4f91-40c7-95bf-d6129d404951"",
-                    ""path"": ""<XInputController>/rightStick/down"",
+                    ""path"": ""<Joystick>/stick/down"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
@@ -625,7 +625,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""left"",
                     ""id"": ""37850b98-b822-4000-9a19-9fa8421862cf"",
-                    ""path"": ""<XInputController>/rightStick/left"",
+                    ""path"": ""<Joystick>/stick/left"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
@@ -636,7 +636,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""right"",
                     ""id"": ""612be825-b9b3-4c13-b81a-7d17431309e0"",
-                    ""path"": ""<XInputController>/rightStick/right"",
+                    ""path"": ""<Joystick>/stick/right"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
@@ -920,6 +920,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""kb"",
+                    ""type"": ""Button"",
+                    ""id"": ""5c1d1e9f-706c-4a5c-87b9-c0638594273f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1096,6 +1105,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""xbox"",
                     ""action"": ""select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e8801b78-5e0e-4916-a18c-66ed0bdcda90"",
+                    ""path"": ""<Keyboard>/anyKey"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""kb"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1714,6 +1734,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_TUTO_joyR = m_TUTO.FindAction("joyR", throwIfNotFound: true);
         m_TUTO_start = m_TUTO.FindAction("start", throwIfNotFound: true);
         m_TUTO_select = m_TUTO.FindAction("select", throwIfNotFound: true);
+        m_TUTO_kb = m_TUTO.FindAction("kb", throwIfNotFound: true);
         // any
         m_any = asset.FindActionMap("any", throwIfNotFound: true);
         m_any_keyboard = m_any.FindAction("keyboard", throwIfNotFound: true);
@@ -2071,6 +2092,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_TUTO_joyR;
     private readonly InputAction m_TUTO_start;
     private readonly InputAction m_TUTO_select;
+    private readonly InputAction m_TUTO_kb;
     public struct TUTOActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -2091,6 +2113,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @joyR => m_Wrapper.m_TUTO_joyR;
         public InputAction @start => m_Wrapper.m_TUTO_start;
         public InputAction @select => m_Wrapper.m_TUTO_select;
+        public InputAction @kb => m_Wrapper.m_TUTO_kb;
         public InputActionMap Get() { return m_Wrapper.m_TUTO; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -2148,6 +2171,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @select.started += instance.OnSelect;
             @select.performed += instance.OnSelect;
             @select.canceled += instance.OnSelect;
+            @kb.started += instance.OnKb;
+            @kb.performed += instance.OnKb;
+            @kb.canceled += instance.OnKb;
         }
 
         private void UnregisterCallbacks(ITUTOActions instance)
@@ -2200,6 +2226,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @select.started -= instance.OnSelect;
             @select.performed -= instance.OnSelect;
             @select.canceled -= instance.OnSelect;
+            @kb.started -= instance.OnKb;
+            @kb.performed -= instance.OnKb;
+            @kb.canceled -= instance.OnKb;
         }
 
         public void RemoveCallbacks(ITUTOActions instance)
@@ -2388,6 +2417,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnJoyR(InputAction.CallbackContext context);
         void OnStart(InputAction.CallbackContext context);
         void OnSelect(InputAction.CallbackContext context);
+        void OnKb(InputAction.CallbackContext context);
     }
     public interface IAnyActions
     {

@@ -42,4 +42,9 @@ public class InputManager : MonoBehaviour
         return current_input_type == "gamepad";
     }
 
+    public string getCurrentInputType()
+    {
+        return current_input_type;
+    }
+
 }

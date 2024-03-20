@@ -83,7 +83,7 @@ public class Perso : Attacker
     public PlayerInputActions playerInputs;
 
     // [Header("HINTS")]
-    private UI_HintControlsManager hints_controls;
+    // private UI_HintControlsManager hints_controls;
 
     // TALKING
     private List<string> talks_random = new List<string>()
@@ -218,7 +218,7 @@ public class Perso : Attacker
         cursor_handler = GameObject.Find("/utils").GetComponent<CursorHandler>();
 
         // on récupère le hints_controls
-        hints_controls = transform.Find("hint_controls").GetComponent<UI_HintControlsManager>();
+        // hints_controls = transform.Find("hint_controls").GetComponent<UI_HintControlsManager>();
 
 
         // ON MET A JOUR DES TRUCS
@@ -1045,12 +1045,12 @@ public class Perso : Attacker
         // on regarde si on a un objet avec lequel on peut interagir
         if (current_hoover_interactable != null)
         {
-            hints_controls.addHint("b");
+            // hints_controls.addHint("b");
             addCapacity("interact");
         }
         else
         {
-            hints_controls.removeHint("b");
+            // hints_controls.removeHint("b");
             removeCapacity("interact");
         }
 
