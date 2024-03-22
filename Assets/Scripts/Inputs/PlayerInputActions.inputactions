@@ -90,61 +90,6 @@
             "bindings": [
                 {
                     "name": "main",
-                    "id": "7da63991-cb3c-430b-977c-698b30b90db7",
-                    "path": "2DVector(mode=2)",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "move",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "cd5cb580-e676-4ba8-80e1-d63578a65114",
-                    "path": "<Joystick>/stick/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "6760f575-c485-4c4d-8260-6622ba5c842e",
-                    "path": "<Joystick>/stick/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "3a3703c7-05a4-441b-97e5-e552adca641d",
-                    "path": "<Joystick>/stick/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "16c3713d-c67f-4acf-b510-8b7f38817b07",
-                    "path": "<Joystick>/stick/right",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "main",
                     "id": "d48d2582-0d80-4f60-b3bc-261e78d34df8",
                     "path": "2DVector(mode=2)",
                     "interactions": "",
@@ -373,6 +318,17 @@
                     "action": "pause",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d5f2eabe-9fbb-4bd3-9d4f-6e7ad143896a",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -400,61 +356,6 @@
                 }
             ],
             "bindings": [
-                {
-                    "name": "main",
-                    "id": "33ef89ea-5a45-430e-ac93-d53dfee50cbf",
-                    "path": "2DVector",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "navigate",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "81755a8d-61be-48a9-8fbf-1f5d6e2789cd",
-                    "path": "<Joystick>/stick/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "navigate",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "2c5c333e-9484-4f0c-a652-e3385fe00ce5",
-                    "path": "<Joystick>/stick/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "navigate",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "59adbb4a-f239-4404-ba67-9bcb5b0f0bdd",
-                    "path": "<Joystick>/stick/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "navigate",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "8bcedef8-4a78-4d85-ad3f-14f5835063d0",
-                    "path": "<Joystick>/stick/right",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "navigate",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
                 {
                     "name": "",
                     "id": "3572067e-9738-49b0-b697-7f44a8028c52",
@@ -485,6 +386,17 @@
                     "processors": "",
                     "groups": "keyboard",
                     "action": "activate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "40aa7c62-2967-4cd0-8d2d-b45ec65ebd01",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "navigate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -568,67 +480,23 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "main",
-                    "id": "8e057bc5-8757-40be-b237-903be937e396",
-                    "path": "2DVector",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "hackDirection",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "09eb962e-60a2-4161-a347-5c262b5efdc7",
-                    "path": "<Joystick>/stick/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "hackDirection",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "fa4c2ceb-4f91-40c7-95bf-d6129d404951",
-                    "path": "<Joystick>/stick/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "hackDirection",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "37850b98-b822-4000-9a19-9fa8421862cf",
-                    "path": "<Joystick>/stick/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "hackDirection",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "612be825-b9b3-4c13-b81a-7d17431309e0",
-                    "path": "<Joystick>/stick/right",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "hackDirection",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "",
                     "id": "f9f1a2ee-e589-4195-88f3-118d8282c227",
                     "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "keyboard",
+                    "action": "hackDirection",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "21447ab3-5393-4a27-ae78-45de43cee0bc",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
                     "action": "hackDirection",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -1045,6 +913,17 @@
                 {
                     "name": "",
                     "id": "6e0321f1-5692-4659-beb4-b4292bcbeac3",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "joyL",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e0179d5c-9a2d-458c-b708-9d34822024a6",
                     "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "",

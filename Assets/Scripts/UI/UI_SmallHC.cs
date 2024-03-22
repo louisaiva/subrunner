@@ -9,7 +9,7 @@ public class UI_SmallHC : MonoBehaviour
 {
 
     [Header("Sprites & Colors")]
-    private EnumHCI bank;
+    private HCBank bank;
     [SerializeField] private Color hint_color = new Color(1f, 1f, 1f, 1f);
     [SerializeField] private Color clicked_color = new Color(1f, 1f, 0f, 1f);
 
@@ -32,11 +32,11 @@ public class UI_SmallHC : MonoBehaviour
 
     void Start()
     {
-        // Set the bank
-        bank = new EnumHCI();
-
         // Set the inputs
         manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
+
+        // Set the bank
+        bank = manager.bank;
 
         // Set the gamepad
         if (gamepad_slot == null)
@@ -116,6 +116,8 @@ public class UI_SmallHC : MonoBehaviour
         inputs.TUTO.joyR.performed += ctx => updateJoystick("joyR", ctx.ReadValue<Vector2>());
         inputs.TUTO.joyR.canceled += ctx => updateJoystick("joyR", Vector2.zero);
 
+        // if (kb == null) { return; }
+
         inputs.TUTO.kb.performed += ctx => updateKeyboard(ctx.control.name, true);
         inputs.TUTO.kb.canceled += ctx => updateKeyboard(ctx.control.name, false);
     }
@@ -123,6 +125,7 @@ public class UI_SmallHC : MonoBehaviour
     void OnDisable()
     {
         if (inputs == null) { return; }
+
 
         // inputs.TUTO.Disable();
 
@@ -164,6 +167,10 @@ public class UI_SmallHC : MonoBehaviour
         inputs.TUTO.joyR.performed -= ctx => updateJoystick("joyR", ctx.ReadValue<Vector2>());
         inputs.TUTO.joyR.canceled -= ctx => updateJoystick("joyR", Vector2.zero);
 
+        inputs.TUTO.kb.performed -= ctx => updateKeyboard(ctx.control.name, true);
+        inputs.TUTO.kb.canceled -= ctx => updateKeyboard(ctx.control.name, false);
+
+        Debug.LogWarning("(UI_SmallHC) OnDisable called for " + transform.parent.parent.gameObject.name );//+ "/" + transform.parent.gameObject.name);
     }
 
     void Update()
@@ -190,12 +197,25 @@ public class UI_SmallHC : MonoBehaviour
     // on met à jour les hints
     private void updateButton(string button_name, bool is_clicked)
     {
+        print("WOW " + button_name + " " + transform.parent.parent.gameObject.name);
 
         // we get the category
         string category = getCategory(button_name);
         if (category == "") { return; }
         
         // we get the button
+        try
+        {
+            Transform butto2n = transform.Find(category);
+        }
+        catch
+        {
+            Debug.LogWarning("button not found on object " + transform.parent.gameObject.name);
+            return;
+        }
+
+
+
         Transform button = transform.Find(category);
         if (button == null) { return; }
         button = button.Find(button_name);
@@ -270,6 +290,17 @@ public class UI_SmallHC : MonoBehaviour
             {
                 sprite_name += "R";
             }
+
+            // we print the bank
+            /* string s = "sprite bank : " + bank.hint_sprites.Count + " \n";
+            foreach (KeyValuePair<string, Sprite> entry in bank.hint_sprites)
+            {
+                s += entry.Key + " " + entry.Value + " \n";
+            }
+            Debug.Log(s); */
+
+
+
             // we set the sprite
             img.sprite = bank.hint_sprites[sprite_name];
 
@@ -289,8 +320,10 @@ public class UI_SmallHC : MonoBehaviour
 
     private void updateKeyboard(string key_name, bool is_clicked)
     {
-        Debug.Log("updateKeyboard " + key_name + " " + is_clicked + " " + this.key_name);
-        if (key_name != this.key_name) { return; }
+        if (this.key_name == null) { return; }
+
+        // Debug.Log("updateKeyboard " + key_name.ToUpper() + " " + is_clicked + " " + this.key_name.ToUpper());
+        if (key_name.ToUpper() != this.key_name.ToUpper()) { return; }
 
         // we get the button
         if (kb == null || !kb.gameObject.activeSelf) { return; }
