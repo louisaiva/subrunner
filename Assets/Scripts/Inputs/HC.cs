@@ -7,8 +7,7 @@ using TMPro;
 public class HC : MonoBehaviour
 {
 
-    // HC means Hint Control
-    // -> shows controls to the player
+    // HC means Hint Control -> shows controls to the player
 
     [Header("HC")]
     private InputManager inputs;
@@ -30,26 +29,9 @@ public class HC : MonoBehaviour
     [SerializeField] private Vector3 text_position_base;
     [SerializeField] private Vector3 text_position_offset = new Vector3(0, -1f / 8f, 0);
 
-    /* exemple
-
-        Dictionary<Action,> action = new List<Action>(){
-                playerinputactions.player.move
-        };
-
-
-        TextMeshProUGUI text (move)
-
-
-
-
-
-    */
-
 
     void Start()
     {
-
-
         // Set the inputs
         inputs = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
         manager = inputs.GetComponent<HC_Manager>();
@@ -98,17 +80,17 @@ public class HC : MonoBehaviour
     {
         for (int i=0; i<actions.Count; i++)
         {
-            switch (slots_types[i])
+            if (slots_types[i] == "keyboard" || slots_types[i].Contains("2Daxis"))
             {
-                case "pad":
-                    updatePad(slots[i], false);
-                    break;
-                case "joystick":
-                    updateJoystick(slots[i], new Vector2(0, 0));
-                    break;
-                case "keyboard":
-                    updateKeyboard(slots[i], false);
-                    break;
+                updateKeyboard(slots[i], false);
+            }
+            else if (slots_types[i] == "pad")
+            {
+                updatePad(slots[i], false);
+            }
+            else if (slots_types[i] == "joystick")
+            {
+                updateJoystick(slots[i], new Vector2(0, 0));
             }
         }
     }
@@ -132,78 +114,69 @@ public class HC : MonoBehaviour
     public void activate(InputAction action, bool is_clicked)
     {
         // we get the index
-        int index = getIndexOfAction(action);
+        List<int> indexes = getIndexesOfAction(action);
 
-        // we check the type
-        string type = slots_types[index];
-
-        Debug.Log("(HC - " + transform.parent.parent.gameObject.name + ") activate " + action + " " + is_clicked + " " + type + " " + index);
-        
-        if (type == "pad")
+        /* string s= "(HC - " + transform.parent.parent.gameObject.name + ") activate " + action + " " + is_clicked + " " + indexes.Count + " indexes : ";
+        foreach (int index in indexes)
         {
-            updatePad(slots[index], is_clicked);
+            s += index + " ";
         }
-        else if (type == "joystick")
+        Debug.Log(s); */
+
+        foreach (int index in indexes)
         {
-            updateJoystick(slots[index], is_clicked ? new Vector2(action.ReadValue<Vector2>().x, action.ReadValue<Vector2>().y) : new Vector2(0, 0));
-        }
-        else if (type == "keyboard")
-        {
-            updateKeyboard(slots[index], is_clicked);
-        }
-        else if (type.Contains("2Daxis"))
-        {
-            Debug.Log("(HC - " + transform.parent.parent.gameObject.name + ") 2Daxis " + type + " " + action.ReadValue<Vector2>().x + " " + action.ReadValue<Vector2>().y);
+            // we check the type
+            string type = slots_types[index];
 
-            // we get the axis
-            string axis_name = type.Split('_')[1];
-            Vector2 axis2D = new Vector2(0, 0);
-            if (axis_name == "+x")
+            if (type == "pad")
             {
-                axis2D = new Vector2(1, 0);
-            }
-            else if (axis_name == "-x")
-            {
-                axis2D = new Vector2(-1, 0);
-            }
-            else if (axis_name == "+y")
-            {
-                axis2D = new Vector2(0, 1);
-            }
-            else if (axis_name == "-y")
-            {
-                axis2D = new Vector2(0, -1);
-            }
-
-            // we get the direction
-            Vector2 direction = new Vector2(action.ReadValue<Vector2>().x, action.ReadValue<Vector2>().y);
-
-            update2DAxis(slots[index], axis2D, direction);
-        }
-
-
-
-        /* switch (type)
-        {
-            case "pad":
                 updatePad(slots[index], is_clicked);
-                break;
-            case "joystick":
+            }
+            else if (type == "joystick")
+            {
                 updateJoystick(slots[index], is_clicked ? new Vector2(action.ReadValue<Vector2>().x, action.ReadValue<Vector2>().y) : new Vector2(0, 0));
-                break;
-            case "keyboard":
+            }
+            else if (type == "keyboard")
+            {
                 updateKeyboard(slots[index], is_clicked);
-                break;
-            case "2Daxis":
-                update2DAxis(slots[index], is_clicked);
-                break;
-        } */
+            }
+            else if (type.Contains("2Daxis"))
+            {
+                // we get the axis
+                string axis_name = type.Split('_')[1];
+                Vector2 axis2D = new Vector2(0, 0);
+                if (axis_name == "+x")
+                {
+                    axis2D = new Vector2(1, 0);
+                }
+                else if (axis_name == "-x")
+                {
+                    axis2D = new Vector2(-1, 0);
+                }
+                else if (axis_name == "+y")
+                {
+                    axis2D = new Vector2(0, 1);
+                }
+                else if (axis_name == "-y")
+                {
+                    axis2D = new Vector2(0, -1);
+                }
+
+                // we get the direction
+                Vector2 direction = new Vector2(action.ReadValue<Vector2>().x, action.ReadValue<Vector2>().y);
+
+                update2DAxis(slots[index], axis2D, direction);
+            }
+
+        }
+
     }
+
 
     // on met à jour les hints
     private void updatePad(Transform pad, bool is_clicked)
     {
-        Debug.Log("(HC - " + transform.parent.parent.gameObject.name + ") updatePad " + pad.gameObject.name + " is pressed ?" + is_clicked);
+        // Debug.Log("(HC - " + transform.parent.parent.gameObject.name + ") updatePad " + pad.gameObject.name + " is pressed ?" + is_clicked);
 
         // we set the color
         if (is_clicked)
@@ -304,17 +277,6 @@ public class HC : MonoBehaviour
 
     private void updateKeyboard(Transform slot, bool is_clicked)
     {
-        /* if (this.key_name == null) { return; }
-
-        // Debug.Log("updateKeyboard " + key_name.ToUpper() + " " + is_clicked + " " + this.key_name.ToUpper());
-        if (key_name.ToUpper() != this.key_name.ToUpper()) { return; }
-
-        // we get the pad
-        if (kb == null || !kb.gameObject.activeSelf) { return; }
-        if (slot == null || !slot.gameObject.activeSelf) { return; } */
-
-        Debug.Log("(HC - " + transform.parent.parent.gameObject.name + ") updateKeyboard " + slot.gameObject.name + " is pressed ?" + is_clicked);
-
         // we get the key
         TextMeshPro key = slot.Find("key").GetComponent<TextMeshPro>();
 
@@ -404,18 +366,19 @@ public class HC : MonoBehaviour
         return false;
     }
 
-    public int getIndexOfAction(InputAction action, bool check_if_enabled = true)
+    public List<int> getIndexesOfAction(InputAction action)
     {
         // we check if the action is in the list
+        List<int> indexes = new List<int>();
         for (int i = 0; i < actions.Count; i++)
         {
-            if (actions[i].action == action && (slots[i].gameObject.activeSelf && slots[i].transform.parent.gameObject.activeSelf || !check_if_enabled))
+            if (actions[i].action == action && slots[i].gameObject.activeSelf && slots[i].transform.parent.gameObject.activeSelf)
             {
-                Debug.Log("found action " + action + " at index " + i + " in " + transform.parent.gameObject.name + " with type " + slots_types[i]);
-                return i;
+                // Debug.Log("found action " + action + " at index " + i + " in " + transform.parent.gameObject.name + " with type " + slots_types[i]);
+                indexes.Add(i);
             }
         }
-        return -1;
+        return indexes;
     }
 
     public List<InputAction> getActions()
@@ -423,64 +386,39 @@ public class HC : MonoBehaviour
         return actions.ConvertAll(action => action.action);
     }
 
-    /* public List<InputAction> getActiveActions(out List<InputAction> inactive_actions)
-    {
-        List<InputAction> active_actions = new List<InputAction>();
-        List<InputAction> inactive_actions = new List<InputAction>();
-        // we check which actions are active
-        for (int i = 0; i < actions.Count; i++)
-        {
-            if (slots[i].gameObject.activeSelf && slots[i].transform.parent.gameObject.activeSelf)
-            {
-                active_actions.Add(actions[i].action);
-            }
-            else
-            {
-                inactive_actions.Add(actions[i].action);
-            }
-        }
-        return active_actions;
-    } */
-
     public List<InputAction> getKeyboardActions()
     {
-        return actions.FindAll(action => slots_types[actions.IndexOf(action)] == "keyboard").ConvertAll(action => action.action);
+        
+
+        List<InputAction> kb_actions = new List<InputAction>();
+        for (int i=0; i<actions.Count; i++)
+        {
+            if (slots_types[i] == "keyboard" || slots_types[i].Contains("2Daxis"))
+            {
+                kb_actions.Add(actions[i].action);
+            }
+        }
+        /* string s="(HC - " + transform.parent.parent.gameObject.name + ") getKeyboardActions : ";
+        foreach (InputAction action in kb_actions)
+        {
+            s += action.name + " ";
+        }
+        Debug.Log(s); */
+
+        return kb_actions;
     }
 
     public List<InputAction> getGamepadActions()
     {
-        return actions.FindAll(action => slots_types[actions.IndexOf(action)] != "keyboard").ConvertAll(action => action.action);
-    }
-
-    /* private string getCategory(string pad_name)
-    {
-        switch (pad_name)
+        List<InputAction> gp_actions = new List<InputAction>();
+        for (int i = 0; i < actions.Count; i++)
         {
-            case "y":
-            case "b":
-            case "a":
-            case "x":
-                return "xyab";
-            case "U":
-            case "R":
-            case "D":
-            case "L":
-                return "arrows";
-            case "LT":
-            case "RT":
-            case "RB":
-            case "LB":
-                return "triggers";
-            case "select":
-            case "start":
-                return "start_select";
-            case "joyL":
-                return "joyL";
-            case "joyR":
-                return "joyR";
-            default:
-                return "";
+            if (slots_types[i] == "pad" || slots_types[i] == "joystick")
+            {
+                gp_actions.Add(actions[i].action);
+            }
         }
-    } */
+        return gp_actions;
+    }
 
 }

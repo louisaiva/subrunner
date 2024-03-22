@@ -117,6 +117,8 @@ public class HC_Manager : MonoBehaviour
             action.performed += actions[0];
             action.canceled += actions[1];
             listeners.Add(action,actions);
+
+            // Debug.Log("(HC_Manager) addListeners : " + action.name + " added");
         }
     }
 
@@ -137,6 +139,8 @@ public class HC_Manager : MonoBehaviour
             action.canceled -= actions[1];
 
             listeners.Remove(action);
+
+            // Debug.Log("(HC_Manager) delListeners : " + action.name + " removed");
         }
     }
 
