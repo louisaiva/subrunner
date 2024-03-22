@@ -72,7 +72,7 @@ public class Item : Movable, I_Interactable
 
         // on récupère le label
         interact_tuto_label = transform.Find("interact_tuto_label");
-        interact_tuto_label.Find("single_hc/text").GetComponent<TMPro.TextMeshPro>().text = item_name;
+        interact_tuto_label.Find("hc/text").GetComponent<TMPro.TextMeshPro>().text = item_name;
 
     }
 

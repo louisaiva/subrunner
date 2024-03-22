@@ -46,6 +46,8 @@ public class HC_Manager : MonoBehaviour
                 foreach (HC hc in hcs)
                 {
                     hc.switchToKeyboard();
+                    delListeners(hc.getGamepadActions());
+                    addListeners(hc.getKeyboardActions());
                 }
             }
             else
@@ -54,6 +56,8 @@ public class HC_Manager : MonoBehaviour
                 foreach (HC hc in hcs)
                 {
                     hc.switchToGamepad();
+                    delListeners(hc.getKeyboardActions());
+                    addListeners(hc.getGamepadActions());
                 }
             }
         }
@@ -70,14 +74,39 @@ public class HC_Manager : MonoBehaviour
         if (current_input_type == "keyboard")
         {
             hc.switchToKeyboard();
+            addListeners(hc.getKeyboardActions());
         }
         else
         {
             hc.switchToGamepad();
+            addListeners(hc.getGamepadActions());
         }
+    }
 
-        // on ajoute les listeners
-        foreach (InputAction action in hc.getActions())
+    public void delHC(HC hc)
+    {
+        hcs.Remove(hc);
+
+        // on supprime les listeners
+        delListeners(hc.getActions());
+    }
+
+    public void activateHC(InputAction action, bool is_clicked)
+    {
+        // on trie les HC en fonction de si ils ont cette action ou pas
+        List<HC> hc_with_action = hcs.Where(hc => hc.hasAction(action)).ToList();
+
+        for (int i = 0; i < hc_with_action.Count; i++)
+        {
+            hc_with_action[i].activate(action,is_clicked);
+        }
+    }
+
+
+    // LISTENERS
+    public void addListeners(List<InputAction> listenactions)
+    {
+        foreach (InputAction action in listenactions)
         {
             if (listeners.Keys.Contains(action)) { continue; }
 
@@ -91,12 +120,9 @@ public class HC_Manager : MonoBehaviour
         }
     }
 
-    public void delHC(HC hc)
+    public void delListeners(List<InputAction> listenactions)
     {
-        hcs.Remove(hc);
-
-        // on supprime les listeners
-        foreach (InputAction action in hc.getActions())
+        foreach (InputAction action in listenactions)
         {
             // on vérifie si on a ce listener
             if (!listeners.Keys.Contains(action)) { continue; }
@@ -111,17 +137,6 @@ public class HC_Manager : MonoBehaviour
             action.canceled -= actions[1];
 
             listeners.Remove(action);
-        }
-    }
-
-    public void activateHC(InputAction action, bool is_clicked)
-    {
-        // on trie les HC en fonction de si ils ont cette action ou pas
-        List<HC> hc_with_action = hcs.Where(hc => hc.hasAction(action)).ToList();
-
-        for (int i = 0; i < hc_with_action.Count; i++)
-        {
-            hc_with_action[i].activate(action,is_clicked);
         }
     }
 
