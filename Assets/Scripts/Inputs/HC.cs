@@ -47,7 +47,7 @@ public class HC : MonoBehaviour
         }
     }
 
-    void OnEnable()
+    public void OnEnable()
     {
         
         if (manager != null)
@@ -57,7 +57,7 @@ public class HC : MonoBehaviour
         }
     }
 
-    void OnDisable()
+    public void OnDisable()
     {
         if (manager != null) { manager.delHC(this); }
     }
@@ -116,12 +116,12 @@ public class HC : MonoBehaviour
         // we get the index
         List<int> indexes = getIndexesOfAction(action);
 
-        /* string s= "(HC - " + transform.parent.parent.gameObject.name + ") activate " + action + " " + is_clicked + " " + indexes.Count + " indexes : ";
+        string s= "(HC - " + transform.parent.parent.gameObject.name + ") activate " + action + " " + is_clicked + " " + indexes.Count + " indexes : ";
         foreach (int index in indexes)
         {
             s += index + " ";
         }
-        Debug.Log(s); */
+        Debug.Log(s);
 
         foreach (int index in indexes)
         {
@@ -134,6 +134,8 @@ public class HC : MonoBehaviour
             }
             else if (type == "joystick")
             {
+                // Debug.Log("joystick " + action.ReadValue<Vector2>().x + " " + action.ReadValue<Vector2>().y);
+
                 updateJoystick(slots[index], is_clicked ? new Vector2(action.ReadValue<Vector2>().x, action.ReadValue<Vector2>().y) : new Vector2(0, 0));
             }
             else if (type == "keyboard")
@@ -191,12 +193,6 @@ public class HC : MonoBehaviour
 
     private void updateJoystick(Transform joystick, Vector2 direction)
     {
-        /* // we get the joystick
-        Transform joystick = transform.Find(joystick_name);
-        if (joystick == null) { return; } */
-        // joystick = joystick.Find("joy");
-        // if (joystick == null) { return; }
-
         // we get the direction
         float x = direction.x;
         float y = direction.y;
@@ -256,16 +252,16 @@ public class HC : MonoBehaviour
             }
             Debug.Log(s); */
 
-
+            Debug.Log("(HC - " + transform.parent.parent.gameObject.name + ") updateJoystick " + joystick.gameObject.name + " " + sprite_name + " " + distance + " " + angle + " " + x + " " + y);
 
             // we set the sprite
-            img.sprite = bank.hint_sprites[sprite_name];
+            img.sprite = bank.hint_sprites[sprite_name]; 
 
             // we set the color
             img.color = clicked_color;
 
         }
-        else
+        else 
         {
             // we set the sprite
             img.sprite = bank.empty_sprites["joy"];

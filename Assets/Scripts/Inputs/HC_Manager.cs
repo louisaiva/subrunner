@@ -118,7 +118,7 @@ public class HC_Manager : MonoBehaviour
             action.canceled += actions[1];
             listeners.Add(action,actions);
 
-            // Debug.Log("(HC_Manager) addListeners : " + action.name + " added");
+            Debug.Log("(HC_Manager) addListeners : " + action + " added");
         }
     }
 

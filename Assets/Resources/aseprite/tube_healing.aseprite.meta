@@ -1,7 +1,1287 @@
 fileFormatVersion: 2
 guid: 89a47a3375fc36044a65111933925345
-DefaultImporter:
+ScriptedImporter:
+  internalIDToNameTable: []
   externalObjects: {}
+  serializedVersion: 2
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+  script: {fileID: 11500000, guid: 62a9f0aa5b59740cfbadc7e5f9823bb0, type: 3}
+  textureImporterSettings:
+    alphaSource: 1
+    mipMapMode: 0
+    enableMipMap: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+    convertToNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+    swizzle: 50462976
+    isReadable: 0
+    streamingMipmaps: 0
+    streamingMipmapsPriority: 0
+    vTOnly: 0
+    ignoreMipmapLimit: 0
+    nPOTScale: 1
+    sRGBTexture: 1
+    spriteMode: 2
+    spriteExtrude: 1
+    spriteMeshType: 1
+    alignment: 0
+    spritePivot: {x: 0.5, y: 0.5}
+    spritePixelsToUnits: 100
+    spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+    spriteGenerateFallbackPhysicsShape: 0
+    generateCubemap: 6
+    cubemapConvolution: 0
+    seamlessCubemap: 0
+    alphaIsTransparency: 1
+    spriteTessellationDetail: -1
+    textureType: 8
+    textureShape: 1
+    singleChannelComponent: 0
+    flipbookRows: 0
+    flipbookColumns: 0
+    ignorePngGamma: 0
+    cookieMode: 0
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+    normalMap: 0
+    textureFormat: 0
+    maxTextureSize: 0
+    lightmap: 0
+    compressionQuality: 0
+    linearTexture: 0
+    grayScaleToAlpha: 0
+    rGBM: 0
+    cubemapConvolutionSteps: 0
+    cubemapConvolutionExponent: 0
+    maxTextureSizeSet: 0
+    compressionQualitySet: 0
+    textureFormatSet: 0
+    applyGammaDecoding: 0
+  previousAsepriteImporterSettings:
+    fileImportMode: 1
+    importHiddenLayers: 0
+    layerImportMode: 1
+    defaultPivotSpace: 0
+    defaultPivotAlignment: 7
+    customPivotPosition: {x: 0.5, y: 0.5}
+    mosaicPadding: 4
+    spritePadding: 0
+    generateModelPrefab: 1
+    generateAnimationClips: 1
+    addSortingGroup: 1
+    addShadowCasters: 0
+  asepriteImporterSettings:
+    fileImportMode: 1
+    importHiddenLayers: 0
+    layerImportMode: 1
+    defaultPivotSpace: 0
+    defaultPivotAlignment: 7
+    customPivotPosition: {x: 0.5, y: 0.5}
+    mosaicPadding: 4
+    spritePadding: 0
+    generateModelPrefab: 1
+    generateAnimationClips: 1
+    addSortingGroup: 1
+    addShadowCasters: 0
+  importFileNodeState: 1
+  platformSettingsDirtyTick: 0
+  textureAssetName: 
+  singleSpriteImportData:
+  - name: 
+    originalName: 
+    pivot: {x: 0, y: 0}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    spriteID: 
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  animatedSpriteImportData:
+  - name: tube_healing_Frame_0
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 4
+      width: 32
+      height: 48
+    spriteID: 284179f62c24b184cab65446210625ff
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 4}
+  - name: tube_healing_Frame_1
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 60
+      width: 32
+      height: 48
+    spriteID: 78a6cdb5b206f934894daa87ec4ed486
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 60}
+  - name: tube_healing_Frame_2
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 116
+      width: 32
+      height: 48
+    spriteID: bca09974960fa9f4d8fc4144f2068d0b
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 116}
+  - name: tube_healing_Frame_3
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 172
+      width: 32
+      height: 48
+    spriteID: b6cd8dacfdcc8f04c9fbb946006b9657
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 172}
+  - name: tube_healing_Frame_4
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 228
+      width: 32
+      height: 48
+    spriteID: c1160a5162ba13c4ea2585b57fea5754
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 228}
+  - name: tube_healing_Frame_5
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 284
+      width: 32
+      height: 48
+    spriteID: 918c7192977991346ab0a83697a34db0
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 284}
+  - name: tube_healing_Frame_6
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 340
+      width: 32
+      height: 48
+    spriteID: 58903987371e3134fa48374449a5a470
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 340}
+  - name: tube_healing_Frame_7
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 396
+      width: 32
+      height: 48
+    spriteID: 8c66b01b210fd4c4293b060f630cbbd3
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 396}
+  - name: tube_healing_Frame_8
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 452
+      width: 32
+      height: 48
+    spriteID: af155b9aad67d0749818d9e1ab8af204
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 452}
+  - name: tube_healing_Frame_9
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 44
+      y: 4
+      width: 32
+      height: 48
+    spriteID: c9d0e6ad8b6315249a7f3e3b7cc06c0c
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 44, y: 4}
+  - name: tube_healing_Frame_10
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 44
+      y: 60
+      width: 32
+      height: 48
+    spriteID: f6e6a7edc05a7bf4cbc79a8a269d2875
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 44, y: 60}
+  - name: tube_healing_Frame_11
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 44
+      y: 116
+      width: 32
+      height: 48
+    spriteID: de5c42dcc691ae543984015a0ee23c15
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 44, y: 116}
+  - name: tube_healing_Frame_12
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 44
+      y: 172
+      width: 32
+      height: 48
+    spriteID: f259d09b344fc364f87ca1f8b4ac70e8
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 44, y: 172}
+  - name: tube_healing_Frame_13
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 44
+      y: 228
+      width: 32
+      height: 48
+    spriteID: a76af01ed43564540bd9ff91ba25ebff
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 44, y: 228}
+  - name: tube_healing_Frame_14
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 44
+      y: 284
+      width: 32
+      height: 48
+    spriteID: ea981116f3ee3d34f8b59cd99639b7f3
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 44, y: 284}
+  - name: tube_healing_Frame_15
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 44
+      y: 340
+      width: 32
+      height: 48
+    spriteID: 8366d8794f28fff49ac2f4db0d3d4aed
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 44, y: 340}
+  - name: tube_healing_Frame_16
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 44
+      y: 396
+      width: 32
+      height: 48
+    spriteID: 3ea3cd10ceae79844b504e945a856e50
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 44, y: 396}
+  - name: tube_healing_Frame_17
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 44
+      y: 452
+      width: 32
+      height: 48
+    spriteID: 502724038acfda04f82b0640eeceb23c
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 44, y: 452}
+  - name: tube_healing_Frame_18
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 84
+      y: 4
+      width: 32
+      height: 48
+    spriteID: 9877088a82eebf94489ef2504a47a944
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 84, y: 4}
+  - name: tube_healing_Frame_19
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 84
+      y: 60
+      width: 32
+      height: 48
+    spriteID: 843114c95ac087d4a8eb73013d4b4bd5
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 84, y: 60}
+  - name: tube_healing_Frame_20
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 84
+      y: 116
+      width: 32
+      height: 48
+    spriteID: 39959b558ba0f104cb21ba2a3979d998
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 84, y: 116}
+  - name: tube_healing_Frame_21
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 84
+      y: 172
+      width: 32
+      height: 48
+    spriteID: 4f7bf3cf4e2c06a4e8dba38c2fa39bab
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 84, y: 172}
+  - name: tube_healing_Frame_22
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 84
+      y: 228
+      width: 32
+      height: 48
+    spriteID: 5b441ab17530e9244b821c441b791c27
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 84, y: 228}
+  - name: tube_healing_Frame_23
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 84
+      y: 284
+      width: 32
+      height: 48
+    spriteID: 2e92e53f375f9ca4ab7cd81adee032f8
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 84, y: 284}
+  - name: tube_healing_Frame_24
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 84
+      y: 340
+      width: 32
+      height: 48
+    spriteID: 58270434fe039894a9cf5c6bc9c229db
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 84, y: 340}
+  - name: tube_healing_Frame_25
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 84
+      y: 396
+      width: 32
+      height: 48
+    spriteID: 1dcfd3b9d1916544eb2bfef7f8608cde
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 84, y: 396}
+  - name: tube_healing_Frame_26
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 84
+      y: 452
+      width: 32
+      height: 48
+    spriteID: 062d36d00d64ded4685709056abccce4
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 84, y: 452}
+  - name: tube_healing_Frame_27
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 124
+      y: 4
+      width: 32
+      height: 48
+    spriteID: 806b432a62ec27948b1815b0345cafbe
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 124, y: 4}
+  - name: tube_healing_Frame_28
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 124
+      y: 60
+      width: 32
+      height: 48
+    spriteID: f90daa3e85fc8a144a0255ce044bbfbd
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 124, y: 60}
+  - name: tube_healing_Frame_29
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 124
+      y: 116
+      width: 32
+      height: 48
+    spriteID: 297cd03b56c59c949b8ef2e41a926cbd
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 124, y: 116}
+  - name: tube_healing_Frame_30
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 124
+      y: 172
+      width: 32
+      height: 48
+    spriteID: c1e30fdfebd07e94aad58f90ec88c8ff
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 124, y: 172}
+  - name: tube_healing_Frame_31
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 124
+      y: 228
+      width: 32
+      height: 48
+    spriteID: 1742d0253eaffbd448d6e431d83a9bbd
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 124, y: 228}
+  - name: tube_healing_Frame_32
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 124
+      y: 284
+      width: 32
+      height: 48
+    spriteID: 418389267eba88749ab3cc91300536c9
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 124, y: 284}
+  - name: tube_healing_Frame_33
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 124
+      y: 340
+      width: 32
+      height: 48
+    spriteID: 12c3dec34183586489f88c5ff73ac799
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 124, y: 340}
+  - name: tube_healing_Frame_34
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 124
+      y: 396
+      width: 32
+      height: 48
+    spriteID: 0b344d8473539ec42b1ae7c6cf94b297
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 124, y: 396}
+  - name: tube_healing_Frame_35
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 124
+      y: 452
+      width: 32
+      height: 48
+    spriteID: 5755f56c743d62c4f9570dd1d892ef60
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 124, y: 452}
+  - name: tube_healing_Frame_36
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 164
+      y: 4
+      width: 32
+      height: 48
+    spriteID: 9eb525ac9c4440747a4d78dbbbd1cf5b
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 164, y: 4}
+  - name: tube_healing_Frame_37
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 164
+      y: 60
+      width: 32
+      height: 48
+    spriteID: 817157f174d921049aac7e7b459f627e
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 164, y: 60}
+  - name: tube_healing_Frame_38
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 164
+      y: 116
+      width: 32
+      height: 48
+    spriteID: f2aa6bb201f561d42b1c817e5e338cb8
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 164, y: 116}
+  - name: tube_healing_Frame_39
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 164
+      y: 172
+      width: 32
+      height: 48
+    spriteID: bf116105bd1018642a8a640003410a7b
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 164, y: 172}
+  - name: tube_healing_Frame_40
+    originalName: 
+    pivot: {x: 0.40624997, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 164
+      y: 228
+      width: 32
+      height: 48
+    spriteID: 50e9396d5c6b2664888a48f37c1a1507
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 164, y: 228}
+  spriteSheetImportData: []
+  asepriteLayers:
+  - layerIndex: 0
+    guid: 1309903777
+    name: tube_healing
+    layerFlags: 0
+    layerType: 0
+    blendMode: 0
+    cells:
+    - name: tube_healing_Frame_0
+      frameIndex: 0
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 284179f62c24b184cab65446210625ff
+    - name: tube_healing_Frame_1
+      frameIndex: 1
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 78a6cdb5b206f934894daa87ec4ed486
+    - name: tube_healing_Frame_2
+      frameIndex: 2
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: bca09974960fa9f4d8fc4144f2068d0b
+    - name: tube_healing_Frame_3
+      frameIndex: 3
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: b6cd8dacfdcc8f04c9fbb946006b9657
+    - name: tube_healing_Frame_4
+      frameIndex: 4
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: c1160a5162ba13c4ea2585b57fea5754
+    - name: tube_healing_Frame_5
+      frameIndex: 5
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 918c7192977991346ab0a83697a34db0
+    - name: tube_healing_Frame_6
+      frameIndex: 6
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 58903987371e3134fa48374449a5a470
+    - name: tube_healing_Frame_7
+      frameIndex: 7
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 8c66b01b210fd4c4293b060f630cbbd3
+    - name: tube_healing_Frame_8
+      frameIndex: 8
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: af155b9aad67d0749818d9e1ab8af204
+    - name: tube_healing_Frame_9
+      frameIndex: 9
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: c9d0e6ad8b6315249a7f3e3b7cc06c0c
+    - name: tube_healing_Frame_10
+      frameIndex: 10
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: f6e6a7edc05a7bf4cbc79a8a269d2875
+    - name: tube_healing_Frame_11
+      frameIndex: 11
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: de5c42dcc691ae543984015a0ee23c15
+    - name: tube_healing_Frame_12
+      frameIndex: 12
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: f259d09b344fc364f87ca1f8b4ac70e8
+    - name: tube_healing_Frame_13
+      frameIndex: 13
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: a76af01ed43564540bd9ff91ba25ebff
+    - name: tube_healing_Frame_14
+      frameIndex: 14
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: ea981116f3ee3d34f8b59cd99639b7f3
+    - name: tube_healing_Frame_15
+      frameIndex: 15
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 8366d8794f28fff49ac2f4db0d3d4aed
+    - name: tube_healing_Frame_16
+      frameIndex: 16
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 3ea3cd10ceae79844b504e945a856e50
+    - name: tube_healing_Frame_17
+      frameIndex: 17
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 502724038acfda04f82b0640eeceb23c
+    - name: tube_healing_Frame_18
+      frameIndex: 18
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 9877088a82eebf94489ef2504a47a944
+    - name: tube_healing_Frame_19
+      frameIndex: 19
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 843114c95ac087d4a8eb73013d4b4bd5
+    - name: tube_healing_Frame_20
+      frameIndex: 20
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 39959b558ba0f104cb21ba2a3979d998
+    - name: tube_healing_Frame_21
+      frameIndex: 21
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 4f7bf3cf4e2c06a4e8dba38c2fa39bab
+    - name: tube_healing_Frame_22
+      frameIndex: 22
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 5b441ab17530e9244b821c441b791c27
+    - name: tube_healing_Frame_23
+      frameIndex: 23
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 2e92e53f375f9ca4ab7cd81adee032f8
+    - name: tube_healing_Frame_24
+      frameIndex: 24
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 58270434fe039894a9cf5c6bc9c229db
+    - name: tube_healing_Frame_25
+      frameIndex: 25
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 1dcfd3b9d1916544eb2bfef7f8608cde
+    - name: tube_healing_Frame_26
+      frameIndex: 26
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 062d36d00d64ded4685709056abccce4
+    - name: tube_healing_Frame_27
+      frameIndex: 27
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 806b432a62ec27948b1815b0345cafbe
+    - name: tube_healing_Frame_28
+      frameIndex: 28
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: f90daa3e85fc8a144a0255ce044bbfbd
+    - name: tube_healing_Frame_29
+      frameIndex: 29
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 297cd03b56c59c949b8ef2e41a926cbd
+    - name: tube_healing_Frame_30
+      frameIndex: 30
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: c1e30fdfebd07e94aad58f90ec88c8ff
+    - name: tube_healing_Frame_31
+      frameIndex: 31
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 1742d0253eaffbd448d6e431d83a9bbd
+    - name: tube_healing_Frame_32
+      frameIndex: 32
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 418389267eba88749ab3cc91300536c9
+    - name: tube_healing_Frame_33
+      frameIndex: 33
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 12c3dec34183586489f88c5ff73ac799
+    - name: tube_healing_Frame_34
+      frameIndex: 34
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 0b344d8473539ec42b1ae7c6cf94b297
+    - name: tube_healing_Frame_35
+      frameIndex: 35
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 5755f56c743d62c4f9570dd1d892ef60
+    - name: tube_healing_Frame_36
+      frameIndex: 36
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 9eb525ac9c4440747a4d78dbbbd1cf5b
+    - name: tube_healing_Frame_37
+      frameIndex: 37
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 817157f174d921049aac7e7b459f627e
+    - name: tube_healing_Frame_38
+      frameIndex: 38
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: f2aa6bb201f561d42b1c817e5e338cb8
+    - name: tube_healing_Frame_39
+      frameIndex: 39
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: bf116105bd1018642a8a640003410a7b
+    - name: tube_healing_Frame_40
+      frameIndex: 40
+      cellRect:
+        x: 11
+        y: 0
+        width: 32
+        height: 48
+      spriteId: 50e9396d5c6b2664888a48f37c1a1507
+    linkedCells: []
+    parentIndex: -1
+  platformSettings: []
+  generatePhysicsShape: 0
+  secondarySpriteTextures: []
+  spritePackingTag: 
+  canvasSize: {x: 48, y: 48}

@@ -1,7 +1,867 @@
 fileFormatVersion: 2
 guid: 57157bbd3ace05e43b2925ae5f917e8e
-DefaultImporter:
+ScriptedImporter:
+  internalIDToNameTable: []
   externalObjects: {}
+  serializedVersion: 2
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+  script: {fileID: 11500000, guid: 62a9f0aa5b59740cfbadc7e5f9823bb0, type: 3}
+  textureImporterSettings:
+    alphaSource: 1
+    mipMapMode: 0
+    enableMipMap: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+    convertToNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+    swizzle: 50462976
+    isReadable: 0
+    streamingMipmaps: 0
+    streamingMipmapsPriority: 0
+    vTOnly: 0
+    ignoreMipmapLimit: 0
+    nPOTScale: 1
+    sRGBTexture: 1
+    spriteMode: 2
+    spriteExtrude: 1
+    spriteMeshType: 1
+    alignment: 0
+    spritePivot: {x: 0.5, y: 0.5}
+    spritePixelsToUnits: 100
+    spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+    spriteGenerateFallbackPhysicsShape: 0
+    generateCubemap: 6
+    cubemapConvolution: 0
+    seamlessCubemap: 0
+    alphaIsTransparency: 1
+    spriteTessellationDetail: -1
+    textureType: 8
+    textureShape: 1
+    singleChannelComponent: 0
+    flipbookRows: 0
+    flipbookColumns: 0
+    ignorePngGamma: 0
+    cookieMode: 0
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+    normalMap: 0
+    textureFormat: 0
+    maxTextureSize: 0
+    lightmap: 0
+    compressionQuality: 0
+    linearTexture: 0
+    grayScaleToAlpha: 0
+    rGBM: 0
+    cubemapConvolutionSteps: 0
+    cubemapConvolutionExponent: 0
+    maxTextureSizeSet: 0
+    compressionQualitySet: 0
+    textureFormatSet: 0
+    applyGammaDecoding: 0
+  previousAsepriteImporterSettings:
+    fileImportMode: 1
+    importHiddenLayers: 0
+    layerImportMode: 1
+    defaultPivotSpace: 0
+    defaultPivotAlignment: 7
+    customPivotPosition: {x: 0.5, y: 0.5}
+    mosaicPadding: 4
+    spritePadding: 0
+    generateModelPrefab: 1
+    generateAnimationClips: 1
+    addSortingGroup: 1
+    addShadowCasters: 0
+  asepriteImporterSettings:
+    fileImportMode: 1
+    importHiddenLayers: 0
+    layerImportMode: 1
+    defaultPivotSpace: 0
+    defaultPivotAlignment: 7
+    customPivotPosition: {x: 0.5, y: 0.5}
+    mosaicPadding: 4
+    spritePadding: 0
+    generateModelPrefab: 1
+    generateAnimationClips: 1
+    addSortingGroup: 1
+    addShadowCasters: 0
+  importFileNodeState: 1
+  platformSettingsDirtyTick: 0
+  textureAssetName: 
+  singleSpriteImportData:
+  - name: 
+    originalName: 
+    pivot: {x: 0, y: 0}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    spriteID: 
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  animatedSpriteImportData:
+  - name: playstation_Frame_0
+    originalName: 
+    pivot: {x: 0.58064514, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 219
+      y: 4
+      width: 31
+      height: 20
+    spriteID: a251d105fe9b640478e18589aa1b2844
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 219, y: 4}
+  - name: playstation_Frame_1
+    originalName: 
+    pivot: {x: 0.58064514, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 219
+      y: 37
+      width: 31
+      height: 20
+    spriteID: d61e9801de18f3e4eb8eb006595d5da8
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 219, y: 37}
+  - name: playstation_Frame_2
+    originalName: 
+    pivot: {x: 0.58064514, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 219
+      y: 70
+      width: 31
+      height: 20
+    spriteID: 723d7b248f1712f4ca6bf300b1a0a8a3
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 219, y: 70}
+  - name: playstation_Frame_3
+    originalName: 
+    pivot: {x: 0.58064514, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 219
+      y: 103
+      width: 31
+      height: 20
+    spriteID: 83265762d020221448d2833d68a34fda
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 219, y: 103}
+  - name: playstation_Frame_4
+    originalName: 
+    pivot: {x: 0.58064514, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 47
+      y: 136
+      width: 31
+      height: 20
+    spriteID: 8566ce2dd0d41a546908b52b9160fbe3
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 47, y: 136}
+  - name: playstation_Frame_5
+    originalName: 
+    pivot: {x: 0.51428574, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 4
+      width: 35
+      height: 25
+    spriteID: e7db9aed5803a5f4bbee0319776d6f15
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 4}
+  - name: playstation_Frame_6
+    originalName: 
+    pivot: {x: 0.51428574, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 47
+      y: 4
+      width: 35
+      height: 25
+    spriteID: 1c0d6ed08e7fe6e4a82b3eec709b138a
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 47, y: 4}
+  - name: playstation_Frame_7
+    originalName: 
+    pivot: {x: 0.51428574, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 90
+      y: 4
+      width: 35
+      height: 25
+    spriteID: bdcb2643af7a69546b9b2159a0093faf
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 90, y: 4}
+  - name: playstation_Frame_8
+    originalName: 
+    pivot: {x: 0.51428574, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 133
+      y: 4
+      width: 35
+      height: 25
+    spriteID: 4941fe60cfba9714ebf13646378b7e0e
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 133, y: 4}
+  - name: playstation_Frame_9
+    originalName: 
+    pivot: {x: 0.51428574, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 176
+      y: 4
+      width: 35
+      height: 25
+    spriteID: f4db87046d2ddd64bb0cd9a75eb8804f
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 176, y: 4}
+  - name: playstation_Frame_10
+    originalName: 
+    pivot: {x: 0.51428574, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 37
+      width: 35
+      height: 25
+    spriteID: f498562d3c610b1409f0d967aafa9f9a
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 37}
+  - name: playstation_Frame_11
+    originalName: 
+    pivot: {x: 0.51428574, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 47
+      y: 37
+      width: 35
+      height: 25
+    spriteID: c98c2cc92bb0c094ca39fca8111db19a
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 47, y: 37}
+  - name: playstation_Frame_12
+    originalName: 
+    pivot: {x: 0.51428574, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 90
+      y: 37
+      width: 35
+      height: 25
+    spriteID: 745668060d2c2a04a81d9919cfb93f5a
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 90, y: 37}
+  - name: playstation_Frame_13
+    originalName: 
+    pivot: {x: 0.51428574, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 133
+      y: 37
+      width: 35
+      height: 25
+    spriteID: aa74f98b36dcc7c40adf49fef8eea06f
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 133, y: 37}
+  - name: playstation_Frame_14
+    originalName: 
+    pivot: {x: 0.51428574, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 176
+      y: 37
+      width: 35
+      height: 25
+    spriteID: ed3868264a9eee64086ce92d8ca4834b
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 176, y: 37}
+  - name: playstation_Frame_15
+    originalName: 
+    pivot: {x: 0.51428574, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 70
+      width: 35
+      height: 25
+    spriteID: 234fcf61bb7a94e4ab29994b360d1903
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 70}
+  - name: playstation_Frame_16
+    originalName: 
+    pivot: {x: 0.51428574, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 47
+      y: 70
+      width: 35
+      height: 25
+    spriteID: a532d3b2c0d4c7c44ad365622b649fd7
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 47, y: 70}
+  - name: playstation_Frame_17
+    originalName: 
+    pivot: {x: 0.51428574, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 90
+      y: 70
+      width: 35
+      height: 25
+    spriteID: 9fde11035ecefb744a25fd3635c66844
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 90, y: 70}
+  - name: playstation_Frame_18
+    originalName: 
+    pivot: {x: 0.51428574, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 133
+      y: 70
+      width: 35
+      height: 25
+    spriteID: 75cfaa5af19ece34898a9c3569fe25e4
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 133, y: 70}
+  - name: playstation_Frame_19
+    originalName: 
+    pivot: {x: 0.51428574, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 176
+      y: 70
+      width: 35
+      height: 25
+    spriteID: b9e49dd8513516f49b29c01f4fd51d16
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 176, y: 70}
+  - name: playstation_Frame_20
+    originalName: 
+    pivot: {x: 0.51428574, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 103
+      width: 35
+      height: 25
+    spriteID: d02ec3a44f24fef4f8e1de0e6adbafd0
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 103}
+  - name: playstation_Frame_21
+    originalName: 
+    pivot: {x: 0.51428574, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 47
+      y: 103
+      width: 35
+      height: 25
+    spriteID: a4a613abd4919b143a86da5c3a55ef5a
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 47, y: 103}
+  - name: playstation_Frame_22
+    originalName: 
+    pivot: {x: 0.51428574, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 90
+      y: 103
+      width: 35
+      height: 25
+    spriteID: d4e951484f38d0e4ba92c423a9e41a9c
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 90, y: 103}
+  - name: playstation_Frame_23
+    originalName: 
+    pivot: {x: 0.51428574, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 133
+      y: 103
+      width: 35
+      height: 25
+    spriteID: c9e4aa3b85b39a04dbf943d2dc2806e1
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 133, y: 103}
+  - name: playstation_Frame_24
+    originalName: 
+    pivot: {x: 0.51428574, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 176
+      y: 103
+      width: 35
+      height: 25
+    spriteID: b6983935d37cd344a93cf1584a1b16a3
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 176, y: 103}
+  - name: playstation_Frame_25
+    originalName: 
+    pivot: {x: 0.51428574, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 136
+      width: 35
+      height: 25
+    spriteID: be8b9b59663ebbe42924846a651cb67b
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 136}
+  spriteSheetImportData: []
+  asepriteLayers:
+  - layerIndex: 0
+    guid: 1565052140
+    name: playstation
+    layerFlags: 0
+    layerType: 0
+    blendMode: 0
+    cells:
+    - name: playstation_Frame_0
+      frameIndex: 0
+      cellRect:
+        x: 0
+        y: 0
+        width: 31
+        height: 20
+      spriteId: a251d105fe9b640478e18589aa1b2844
+    - name: playstation_Frame_1
+      frameIndex: 1
+      cellRect:
+        x: 0
+        y: 0
+        width: 31
+        height: 20
+      spriteId: d61e9801de18f3e4eb8eb006595d5da8
+    - name: playstation_Frame_2
+      frameIndex: 2
+      cellRect:
+        x: 0
+        y: 0
+        width: 31
+        height: 20
+      spriteId: 723d7b248f1712f4ca6bf300b1a0a8a3
+    - name: playstation_Frame_3
+      frameIndex: 3
+      cellRect:
+        x: 0
+        y: 0
+        width: 31
+        height: 20
+      spriteId: 83265762d020221448d2833d68a34fda
+    - name: playstation_Frame_4
+      frameIndex: 4
+      cellRect:
+        x: 0
+        y: 0
+        width: 31
+        height: 20
+      spriteId: 8566ce2dd0d41a546908b52b9160fbe3
+    - name: playstation_Frame_5
+      frameIndex: 5
+      cellRect:
+        x: 0
+        y: 0
+        width: 35
+        height: 25
+      spriteId: e7db9aed5803a5f4bbee0319776d6f15
+    - name: playstation_Frame_6
+      frameIndex: 6
+      cellRect:
+        x: 0
+        y: 0
+        width: 35
+        height: 25
+      spriteId: 1c0d6ed08e7fe6e4a82b3eec709b138a
+    - name: playstation_Frame_7
+      frameIndex: 7
+      cellRect:
+        x: 0
+        y: 0
+        width: 35
+        height: 25
+      spriteId: bdcb2643af7a69546b9b2159a0093faf
+    - name: playstation_Frame_8
+      frameIndex: 8
+      cellRect:
+        x: 0
+        y: 0
+        width: 35
+        height: 25
+      spriteId: 4941fe60cfba9714ebf13646378b7e0e
+    - name: playstation_Frame_9
+      frameIndex: 9
+      cellRect:
+        x: 0
+        y: 0
+        width: 35
+        height: 25
+      spriteId: f4db87046d2ddd64bb0cd9a75eb8804f
+    - name: playstation_Frame_10
+      frameIndex: 10
+      cellRect:
+        x: 0
+        y: 0
+        width: 35
+        height: 25
+      spriteId: f498562d3c610b1409f0d967aafa9f9a
+    - name: playstation_Frame_11
+      frameIndex: 11
+      cellRect:
+        x: 0
+        y: 0
+        width: 35
+        height: 25
+      spriteId: c98c2cc92bb0c094ca39fca8111db19a
+    - name: playstation_Frame_12
+      frameIndex: 12
+      cellRect:
+        x: 0
+        y: 0
+        width: 35
+        height: 25
+      spriteId: 745668060d2c2a04a81d9919cfb93f5a
+    - name: playstation_Frame_13
+      frameIndex: 13
+      cellRect:
+        x: 0
+        y: 0
+        width: 35
+        height: 25
+      spriteId: aa74f98b36dcc7c40adf49fef8eea06f
+    - name: playstation_Frame_14
+      frameIndex: 14
+      cellRect:
+        x: 0
+        y: 0
+        width: 35
+        height: 25
+      spriteId: ed3868264a9eee64086ce92d8ca4834b
+    - name: playstation_Frame_15
+      frameIndex: 15
+      cellRect:
+        x: 0
+        y: 0
+        width: 35
+        height: 25
+      spriteId: 234fcf61bb7a94e4ab29994b360d1903
+    - name: playstation_Frame_16
+      frameIndex: 16
+      cellRect:
+        x: 0
+        y: 0
+        width: 35
+        height: 25
+      spriteId: a532d3b2c0d4c7c44ad365622b649fd7
+    - name: playstation_Frame_17
+      frameIndex: 17
+      cellRect:
+        x: 0
+        y: 0
+        width: 35
+        height: 25
+      spriteId: 9fde11035ecefb744a25fd3635c66844
+    - name: playstation_Frame_18
+      frameIndex: 18
+      cellRect:
+        x: 0
+        y: 0
+        width: 35
+        height: 25
+      spriteId: 75cfaa5af19ece34898a9c3569fe25e4
+    - name: playstation_Frame_19
+      frameIndex: 19
+      cellRect:
+        x: 0
+        y: 0
+        width: 35
+        height: 25
+      spriteId: b9e49dd8513516f49b29c01f4fd51d16
+    - name: playstation_Frame_20
+      frameIndex: 20
+      cellRect:
+        x: 0
+        y: 0
+        width: 35
+        height: 25
+      spriteId: d02ec3a44f24fef4f8e1de0e6adbafd0
+    - name: playstation_Frame_21
+      frameIndex: 21
+      cellRect:
+        x: 0
+        y: 0
+        width: 35
+        height: 25
+      spriteId: a4a613abd4919b143a86da5c3a55ef5a
+    - name: playstation_Frame_22
+      frameIndex: 22
+      cellRect:
+        x: 0
+        y: 0
+        width: 35
+        height: 25
+      spriteId: d4e951484f38d0e4ba92c423a9e41a9c
+    - name: playstation_Frame_23
+      frameIndex: 23
+      cellRect:
+        x: 0
+        y: 0
+        width: 35
+        height: 25
+      spriteId: c9e4aa3b85b39a04dbf943d2dc2806e1
+    - name: playstation_Frame_24
+      frameIndex: 24
+      cellRect:
+        x: 0
+        y: 0
+        width: 35
+        height: 25
+      spriteId: b6983935d37cd344a93cf1584a1b16a3
+    - name: playstation_Frame_25
+      frameIndex: 25
+      cellRect:
+        x: 0
+        y: 0
+        width: 35
+        height: 25
+      spriteId: be8b9b59663ebbe42924846a651cb67b
+    linkedCells: []
+    parentIndex: -1
+  platformSettings: []
+  generatePhysicsShape: 0
+  secondarySpriteTextures: []
+  spritePackingTag: 
+  canvasSize: {x: 36, y: 36}
