@@ -298,6 +298,7 @@ public class Movable : MonoBehaviour
         // -1 : collision sur x et y
         // -2 : collision sur x et y + glissement en x et y
 
+        Physics2D.queriesHitTriggers = false;
 
         // on maj notre collider_box        
         float y_center = transform.position.y - offset_movable_y_to_feet + feet_collider.size.y / 2f;

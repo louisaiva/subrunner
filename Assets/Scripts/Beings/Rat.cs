@@ -50,6 +50,8 @@ public class Rat : Being
         if (hasCapacity("walk"))
         {
             inputs = rat_movement();
+            // Debug.Log("rat movement: " + inputs);
+            // Debug.Log("rat marche !!");
         }
     }
 

@@ -121,7 +121,7 @@ public class HC : MonoBehaviour
         {
             s += index + " ";
         }
-        Debug.Log(s);
+        // Debug.Log(s);
 
         foreach (int index in indexes)
         {
@@ -252,7 +252,7 @@ public class HC : MonoBehaviour
             }
             Debug.Log(s); */
 
-            Debug.Log("(HC - " + transform.parent.parent.gameObject.name + ") updateJoystick " + joystick.gameObject.name + " " + sprite_name + " " + distance + " " + angle + " " + x + " " + y);
+            // Debug.Log("(HC - " + transform.parent.parent.gameObject.name + ") updateJoystick " + joystick.gameObject.name + " " + sprite_name + " " + distance + " " + angle + " " + x + " " + y);
 
             // we set the sprite
             img.sprite = bank.hint_sprites[sprite_name]; 

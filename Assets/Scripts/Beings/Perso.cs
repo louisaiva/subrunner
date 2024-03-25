@@ -983,6 +983,9 @@ public class Perso : Attacker
         }
         else
         {
+            // on autorise les triggers
+            Physics2D.queriesHitTriggers = true;
+            
             // on regarde si on peut interagir avec qqch
             Collider2D[] hit_interactables = Physics2D.OverlapCircleAll(transform.position, interact_range, interact_layers);
             if (hit_interactables.Length != 0)

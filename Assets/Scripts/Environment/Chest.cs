@@ -58,7 +58,7 @@ public class Chest : MonoBehaviour
 
     }
 
-    protected void success_close()
+    protected virtual void success_close()
     {
         // on joue l'animation
         anim_handler.ChangeAnim(anims.idle_closed);
