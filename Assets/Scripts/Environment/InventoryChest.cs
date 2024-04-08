@@ -8,7 +8,7 @@ public class InventoryChest : Chest, I_Grabber
 { 
     // inventory
     [Header("INVENTORY CHEST")]
-    public EnumItem bank = new EnumItem();
+    public ItemBank bank;
     public Transform go_parent;
     [SerializeField] protected List<Item> items = new List<Item>();
     [SerializeField] protected bool randomize_on_start = true;
@@ -30,6 +30,8 @@ public class InventoryChest : Chest, I_Grabber
     // unity functions
     protected void Start()
     {
+        bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
+
         // on récupère le parent
         go_parent = transform.Find("items");
 

@@ -20,7 +20,7 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
     protected GameObject slot;
     protected Dictionary<Item, GameObject> item_ui = new Dictionary<Item, GameObject>();
     protected GameObject ui_item_prefab;
-    public EnumItem bank = new EnumItem();
+    public ItemBank bank;
 
 
     [Header("Slottable")]
@@ -41,6 +41,7 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
         description_ui = GameObject.Find("/ui/hoover_description").GetComponent<UI_HooverDescriptionHandler>();
 
         // on initialise les items
+        bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
         bank.init(Resources.LoadAll<Sprite>("spritesheets/items"));
 
         // on récupère les slots des items

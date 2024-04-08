@@ -2702,6 +2702,7 @@ GameObject:
   m_Component:
   - component: {fileID: 290161453}
   - component: {fileID: 290161454}
+  - component: {fileID: 290161455}
   m_Layer: 0
   m_Name: bank
   m_TagString: Untagged
@@ -2734,6 +2735,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfa1ac052a7bf6f4ab72e6000adb3883, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &290161455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 290161452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 858ee600729457e43be8cae86621c40f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &292535077
@@ -7647,7 +7660,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 961898467298563833, guid: d0e9cd6b86fda3747ab95f42af76658d, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -9825,6 +9839,7 @@ MonoBehaviour:
   perso: {fileID: 0}
   is_showed: 0
   description_ui: {fileID: 0}
+  bank: {fileID: 0}
   xbox_manager: {fileID: 0}
   input_manager: {fileID: 0}
 --- !u!1 &1013684008
@@ -12977,7 +12992,7 @@ CapsuleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.003658533, y: 0.38}

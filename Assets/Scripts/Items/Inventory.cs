@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class Inventory : MonoBehaviour {
 
 
+    public ItemBank bank;
+
     // items
     public int max_items = 9;
     public bool scalable = false;
@@ -31,6 +33,9 @@ public class Inventory : MonoBehaviour {
     // unity functions
     void Awake()
     {
+        // on récupère le bank
+        bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
+
         // on récupère le perso
         perso = GameObject.Find("/perso");
 
@@ -431,33 +436,18 @@ public class Inventory : MonoBehaviour {
 
     public Item createItem(string item_name, bool is_legendary = false)
     {
-        // on crée un item
-        GameObject item_go = null;
 
-        if (is_legendary)
-        {
-            // on crée un item légendaire
-            item_go = Instantiate(Resources.Load(prefabs_path + "legendary/" + item_name), transform.position, Quaternion.identity) as GameObject;
-        }
-        else
-        {
-            // on crée un item normal
-            item_go = Instantiate(Resources.Load(prefabs_path + item_name), transform.position, Quaternion.identity) as GameObject;
-        }
-
-        if (item_go == null)
-        {
-            Debug.LogWarning("(Inventory) createItem : item " + item_name + " not found in " + prefabs_path);
-            return null;
-        }
+        // on récupère l'item de la banque
+        Item item = bank.createItem(item_name);
+        if (item == null) { return null; }
 
         // on start l'item
-        item_go.GetComponent<Item>().Start();
+        item.Start();
 
         // on ajoute l'item
-        addItem(item_go.GetComponent<Item>());
+        addItem(item);
 
-        return item_go.GetComponent<Item>();
+        return item;
     }
 
     // getters

@@ -1213,6 +1213,8 @@ public class Perso : Attacker
     {
 
         // Debug.Log("GRABBING " + item.gameObject.name + " prefab scene ? " + item.gameObject.scene.name);
+        // on vérifie que l'item existe
+        if (item == null || item.gameObject == null) { return; }
 
         // on vérifie si on a affaire à un item déjà instancié ou pas
         if (item.gameObject.scene.name == null)
