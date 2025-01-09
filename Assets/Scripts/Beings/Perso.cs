@@ -412,10 +412,16 @@ public class Perso : Attacker
         if (hasCapacity("walk"))
         {
             Vector2 raw_inputs = new Vector2(playerInputs.perso.move.ReadValue<Vector2>().x, playerInputs.perso.move.ReadValue<Vector2>().y);
+            
+            // we check if the raw inputs are below the deadzone
+            raw_inputs.x = Mathf.Abs(raw_inputs.x) < 0.2 ? 0f : raw_inputs.x;
+            raw_inputs.y = Mathf.Abs(raw_inputs.y) < 0.2 ? 0f : raw_inputs.y;
+            
+            // we normalize the inputs
             inputs = raw_inputs.normalized;
             inputs_magnitude = raw_inputs.magnitude;
 
-            // print("inputs : " + inputs);
+            // print("inputs : " + inputs + " / raw_inputs : " + raw_inputs + " / inputs_magnitude : " + inputs_magnitude);
         }
 
         // run
@@ -521,7 +527,6 @@ public class Perso : Attacker
             }
         }
     }
-
     void HackinHooverEvents(Vector2 mouse_position)
     {
 
@@ -614,7 +619,6 @@ public class Perso : Attacker
 
 
     }
-
     void updateHackinHoover()
     {
         // on regarde si on a un hackable en hoover
@@ -649,7 +653,6 @@ public class Perso : Attacker
 
         }
     }
-
     void HackinClickEvents()
     {
         // le but de cette fonction est de hacker l'objet sur lequel on clique
@@ -679,7 +682,6 @@ public class Perso : Attacker
             return;
         }
     }
-
     void HooverNextHackableInDirection(Vector2 direction)
     {
 
@@ -789,7 +791,6 @@ public class Perso : Attacker
             levelUp();
         }
     }
-
     private void levelUp()
     {
         level += 1;
@@ -819,7 +820,6 @@ public class Perso : Attacker
 
         return attack_status;
     }
-
     protected override void die()
     {
         Debug.Log("YOU DIED");
@@ -838,7 +838,6 @@ public class Perso : Attacker
         playerInputs.enhanced_perso.Disable();
         playerInputs.dead_perso.Enable();
     }
-
     protected override void comeback_from_death()
     {
         base.comeback_from_death();
@@ -924,18 +923,15 @@ public class Perso : Attacker
             }
         }
     }
-
     public void addBits(int count)
     {
         bits += count;
         if (bits > max_bits) { bits = max_bits; }
     }
-
     public void setHackinRange(float range)
     {
         hack_collider.radius = range;
     }
-
     private void setHooverHackable(GameObject hackable, Hack hack)
     {
         current_hoover_hackable = hackable;
@@ -952,7 +948,6 @@ public class Perso : Attacker
 
         print("HOVERING " + current_hoover_hackable.gameObject.name);
     }
-
     private void unsetHooverHackable()
     {
         current_hoover_hackable = null;
@@ -1058,7 +1053,6 @@ public class Perso : Attacker
         }
 
     }
-
     private void interact()
     {
         // on interagit avec l'ojet
@@ -1080,7 +1074,6 @@ public class Perso : Attacker
             current_interactable = current_hoover_interactable;
         }
     }
-
     private void update_interactions()
     {
         // on vérifie si l'objet avec lequel on interagit est toujours à portée
@@ -1208,7 +1201,6 @@ public class Perso : Attacker
         // on active l'item
         item.gameObject.SetActive(true);
     }
-
     public void grab(Item item)
     {
 
@@ -1254,7 +1246,6 @@ public class Perso : Attacker
         // on désactive l'item
         item.gameObject.SetActive(false);
     }
-
     private void removeCapaIfNotInInv(string capa, Item item_capa=null)
     {
         // on regarde si on a encore un item avec cette capacité
@@ -1281,8 +1272,7 @@ public class Perso : Attacker
         {
             removeCapacity(capa);
         }
-    }
- 
+    } 
     private void removeCapaOfItem(Item item)
     {
         // on enlève la capacité de l'item si on a plus l'item dans notre inventaire
@@ -1294,7 +1284,6 @@ public class Perso : Attacker
             }
         }
     }
-
     private void addCapaOfItem(Item item)
     {
         // on ajoute la capacité de l'item
@@ -1447,7 +1436,6 @@ public class Perso : Attacker
         // forces.Add(dash_force);
         dash_forces.Add(dash_force.id);
     }
-
     private void orient_dash()
     {
         // on clamp les inputs dans l'une des 4 directions
@@ -1496,7 +1484,6 @@ public class Perso : Attacker
             drink();
         }
     }
-
     public void OnInteract()
     {
         if (hasCapacity("knocked_out")) { return; }
@@ -1506,7 +1493,6 @@ public class Perso : Attacker
             interact();
         }
     }
-
     public void OnInventory()
     {
         if (hasCapacity("knocked_out")) { return; }
@@ -1527,7 +1513,6 @@ public class Perso : Attacker
             }
         }
     }
-
     public void OnHit()
     {
         if (!hasCapacity("knocked_out") && hasCapacity("hit"))
@@ -1535,7 +1520,6 @@ public class Perso : Attacker
             attack();
         }
     }
-
     public void OnDash()
     {
         if (!hasCapacity("knocked_out"))
@@ -1550,7 +1534,6 @@ public class Perso : Attacker
             }
         }
     }
-
     public void OnRandomTalk()
     {
         if (!hasCapacity("knocked_out"))
@@ -1566,7 +1549,6 @@ public class Perso : Attacker
             }
         }
     }
-
     public void OnMap()
     {
         if (!hasCapacity("knocked_out"))
@@ -1577,7 +1559,6 @@ public class Perso : Attacker
             }
         }
     }
-
     public void OnPause()
     {
         pause_menu.rollShow();

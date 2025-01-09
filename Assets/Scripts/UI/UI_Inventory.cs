@@ -42,7 +42,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     [SerializeField] private InputManager input_manager;
 
     // unity functions
-    void Start()
+    void Awake()
     {
         bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
         
@@ -259,6 +259,8 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 
     private void setSpriteToLegSlot(string slot,Item item)
     {
+        // Debug.Log("setSpriteToLegSlot : " + slot + " - " + item.item_name + " - " + leg_slots + " - ");
+
         // on récupère le slot de l'item
         GameObject item_obj = leg_slots.transform.Find(slot).Find("ui_leg_item").gameObject;
 

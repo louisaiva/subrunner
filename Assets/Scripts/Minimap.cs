@@ -139,7 +139,7 @@ public class Minimap : MonoBehaviour {
     void Update()
     {
         // si on a pas généré le monde, on return
-        if (!generator.generate_world) return;
+        if (!generator || !generator.generate_world) return;
 
         if (is_discovering && player.GetComponent<Perso>().hasCapacity("gyroscope"))
         {
