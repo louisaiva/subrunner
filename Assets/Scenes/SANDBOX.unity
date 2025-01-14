@@ -480,7 +480,7 @@ GameObject:
   - component: {fileID: 45230419}
   - component: {fileID: 45230418}
   m_Layer: 0
-  m_Name: generator
+  m_Name: loader
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -557,7 +557,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9563d6a947eb4b14b8339b02b1e8df2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  world_generator: {fileID: 0}
   loading_ui: {fileID: 882981524}
   loading_text: {fileID: 2121558535}
   loading_bar: {fileID: 269571040}

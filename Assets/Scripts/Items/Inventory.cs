@@ -388,16 +388,6 @@ public class Inventory : MonoBehaviour {
 
     public bool addItem(Item item)
     {
-        // on vérifie si on est un inventaire de lit
-        /* if (is_bed)
-        {
-            // on vérifie si c'est un item légendaire
-            if (!item.legendary_item) { return false;}
-
-            // on vérifie qu'on a pas déjà cet item légendaire
-            if (getItem(item.item_name) != null) { return false; }
-        } */
-
         // on ajoute un item à l'inventaire
         // on vérifie qu'on est pas déjà plein
         if (!scalable && getItems().Count >= max_items) { return false; }

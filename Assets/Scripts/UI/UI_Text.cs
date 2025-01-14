@@ -42,7 +42,7 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
     public void regenerate_world()
     {
         tmp.text = "> " + base_text + " (that can take a while oopsie ;-;)";
-        GameObject.Find("/generator").GetComponent<WorldGenerator>().Start();
+        GameObject.Find("/loader").GetComponent<WorldGenerator>().Start();
         transform.parent.parent.GetComponent<UI_PauseMenu>().hide();
     }
 

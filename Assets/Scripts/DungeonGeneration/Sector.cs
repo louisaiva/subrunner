@@ -64,7 +64,7 @@ public class Sector : MonoBehaviour
     {
         // on récupère le world
         world = GameObject.Find("/world").GetComponent<World>();
-        world_generator = GameObject.Find("/generator").GetComponent<WorldGenerator>();
+        world_generator = GameObject.Find("/loader").GetComponent<WorldGenerator>();
         area_prefab = Resources.Load<GameObject>("prefabs/sectors/base_area");
 
         // on récupère les prefabs
@@ -78,7 +78,7 @@ public class Sector : MonoBehaviour
 
     void Update()
     {
-        if (!world_generator.generate_world) { return; }
+        if (!world_generator || !world_generator.generate_world) { return; }
 
         if (!is_safe)
         {

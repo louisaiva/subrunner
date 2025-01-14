@@ -66,7 +66,7 @@ public class Area : MonoBehaviour
         world = GameObject.Find("/world").GetComponent<World>();
 
         // on récupère le builder
-        builder = GameObject.Find("/generator").transform.Find("builder").GetComponent<AreaJsonHandler>();
+        builder = GameObject.Find("/loader").transform.Find("builder").GetComponent<AreaJsonHandler>();
 
         // on récupère les prefabs
         prefabs.Add("light", Resources.Load<GameObject>("prefabs/objects/lights/small_light"));

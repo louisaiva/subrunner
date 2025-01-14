@@ -27,7 +27,7 @@ public class ZombSpawner : MonoBehaviour
     void Start(){
 
         // on récupère le prefab du zombo
-        zombo_prefab = Resources.Load("prefabs/zombo") as GameObject;
+        if (!zombo_prefab) { zombo_prefab = Resources.Load("prefabs/beings/enemies/zombo") as GameObject; }
 
         // on récupère le perso
         perso = GameObject.Find("/perso");

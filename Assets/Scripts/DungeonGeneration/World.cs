@@ -61,13 +61,13 @@ public class World : MonoBehaviour
         gd_tiles.Add("mecha", Resources.Load<TileBase>("tilesets/gd_dark"));
 
         // on récupère le builder
-        builder = GameObject.Find("generator").transform.Find("builder").GetComponent<AreaJsonHandler>();
+        builder = GameObject.Find("/loader").transform.Find("builder")?.GetComponent<AreaJsonHandler>();
 
         // on récupère le perso
         perso = GameObject.Find("/perso").GetComponent<Perso>();
 
         // on récupère le game loader
-        game_loader = GameObject.Find("/generator").GetComponent<GameLoader>();
+        game_loader = GetComponent<GameLoader>();
 
         // on récupère les legendary zones
         bank_zones = GetComponent<ZoneManager>();
@@ -529,10 +529,12 @@ public class World : MonoBehaviour
         if (area_name == "ceiling") { return "ceiling"; }
         else if (area_name == "null") { return "ceiling"; }
         else if (area_name == "handmade") { return getActualTileType(tile,"handmade"); }
+        else if (builder == null) { return "null"; }
 
         // on récupère la position locale de la tile dans l'area
         Vector2Int local_tile_pos = getLocalTilePos(tile);
 
+        // on récupère l'area
         AreaJson area = builder.LoadAreaJson(area_name);
 
         // on vérifie quelle tile est à la position

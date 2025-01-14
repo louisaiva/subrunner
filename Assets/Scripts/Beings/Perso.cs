@@ -1352,7 +1352,7 @@ public class Perso : Attacker
 
         // we check the synchroneity of the dash
         float dash_tempo = Time.time - last_dash_time;
-        Debug.Log("dash tempo : " + (dash_tempo));
+        // Debug.Log("dash tempo : " + (dash_tempo));
         last_dash_time = Time.time;
 
         if (dash_tempo > 0.65f && dash_tempo < 0.95f)

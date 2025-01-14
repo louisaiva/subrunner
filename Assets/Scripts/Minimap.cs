@@ -48,13 +48,13 @@ public class Minimap : MonoBehaviour {
         player = GameObject.Find("/perso").transform;
 
         // on récupère le world generator
-        generator = GameObject.Find("/generator").GetComponent<WorldGenerator>();
+        generator = GameObject.Find("/loader")?.GetComponent<WorldGenerator>();
 
         // on récupère le world et les tilemaps
         world = GameObject.Find("/world").GetComponent<World>();
 
         // on récupère le game loader
-        game_loader = GameObject.Find("/generator").GetComponent<GameLoader>();
+        game_loader = GameObject.Find("/world").GetComponent<GameLoader>();
     }
     
     /* public void GENERATE()
@@ -72,7 +72,7 @@ public class Minimap : MonoBehaviour {
         print("(Minimap) creating textures");
 
         // on récupère les tilemaps
-        game_loader.AddProgress("getting tilemaps");
+        game_loader?.AddProgress("getting tilemaps");
         yield return wait;
         world.GetTilemaps(out fg_tm, out bg_tm, out gd_tm);
 
@@ -85,17 +85,17 @@ public class Minimap : MonoBehaviour {
         maskTexture = new Texture2D(mapSize.x, mapSize.y);
 
         // on remplit la texture de mask
-        game_loader.AddProgress("filling mask texture");
+        game_loader?.AddProgress("filling mask texture");
         yield return wait;
         Color[] pixels = Enumerable.Repeat(undiscoveredColor, mapSize.x * mapSize.y).ToArray();
         maskTexture.SetPixels(pixels);
 
         // on remplit les textures
-        game_loader.AddProgress("filling map texture");
+        game_loader?.AddProgress("filling map texture");
         yield return wait;
         for (int x = 0; x < mapSize.x; x++)
         {
-            // game_loader.AddProgress("filling row " + x);
+            // game_loader?.AddProgress("filling row " + x);
             // yield return wait;
             for (int y = 0; y < mapSize.y; y++)
             {
@@ -114,7 +114,7 @@ public class Minimap : MonoBehaviour {
         }
 
         // on change le mode de filtre
-        game_loader.AddProgress("applying filter mode");
+        game_loader?.AddProgress("applying filter mode");
         yield return wait;
         mapTexture.filterMode = FilterMode.Point;
         mapTexture.Apply();

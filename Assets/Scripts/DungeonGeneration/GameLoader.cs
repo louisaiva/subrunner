@@ -6,9 +6,6 @@ using TMPro;
 
 public class GameLoader : MonoBehaviour {
 
-    // [SerializeField] private bool loading_scene = false;
-    // [SerializeField] private int game_scene;
-    [SerializeField] private WorldGenerator world_generator;
     [SerializeField] private GameObject loading_ui;
     [SerializeField] private TextMeshProUGUI loading_text;
 
@@ -20,21 +17,6 @@ public class GameLoader : MonoBehaviour {
     private int generation_steps = 0;
     private float generation_max_steps = 26f;
 
-
-    // Load the game scene at the start
-    void Awake()
-    {
-        world_generator = GetComponent<WorldGenerator>();
-
-        // If the new scene has started loading...
-        /* if (loadScene == true) {
-
-            // ...then pulse the transparency of the loading text to let the player know that the computer is still working.
-            loading_text.color = new Color(loading_text.color.r, loading_text.color.g, loading_text.color.b, Mathf.PingPong(Time.time, 1));
-
-        }*/
-
-    }
 
     public void BeginProgress()
     {

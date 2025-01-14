@@ -476,11 +476,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 45230417}
-  - component: {fileID: 45230420}
   - component: {fileID: 45230419}
   - component: {fileID: 45230418}
   m_Layer: 0
-  m_Name: generator
+  m_Name: loader
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -545,22 +544,6 @@ MonoBehaviour:
   spawn_sector: {fileID: 0}
   hand_made_sectors: []
   visu_parent: {fileID: 0}
---- !u!114 &45230420
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 45230415}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9563d6a947eb4b14b8339b02b1e8df2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  world_generator: {fileID: 0}
-  loading_ui: {fileID: 882981524}
-  loading_text: {fileID: 2121558535}
-  loading_bar: {fileID: 269571040}
 --- !u!1 &72279455
 GameObject:
   m_ObjectHideFlags: 0
@@ -8152,7 +8135,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 882981524}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0

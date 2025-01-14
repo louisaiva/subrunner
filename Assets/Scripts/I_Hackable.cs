@@ -27,7 +27,6 @@ public interface I_Hackable
     // HackUI
     // HackUI hack_ui { get; set; }
 
-
     // fonctions
     void initHack();
     int beHacked(); // renvoie le nombre de bits nécessaires pour hacker
