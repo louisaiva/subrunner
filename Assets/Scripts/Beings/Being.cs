@@ -10,7 +10,7 @@ public class Being : Movable
 
 
     [Header("BEING")]
-    // a BEING is a character that can move, attack, etc.
+    // a BEING is a character that can move, die.
 
     // VIE
     public float vie = 100f;
@@ -20,7 +20,7 @@ public class Being : Movable
     // private float last_hurted_time = 0f; // temps de la dernière attaque subie
     public GameObject xp_provider;
     public GameObject floating_dmg_provider;
-    protected int xp_gift = 10;
+    public int xp_gift = 10;
 
     // DEPLACEMENT
     public Vector2 inputs;
@@ -35,7 +35,7 @@ public class Being : Movable
     protected AnimationHandler anim_handler;
     protected Vector2 lookin_at = new Vector2(0f, -1f);
     protected float lookin_at_angle = 40f; // angle du regard du perso en degrés
-    protected BeingAnims anims = new BeingAnims();
+    protected BeingAnims anims = new();
 
 
     // unity functions
@@ -65,6 +65,7 @@ public class Being : Movable
 
     public virtual void Events()
     {
+
 
         // on vérifie qu'on est pas KO
         if (hasCapacity("knocked_out")) { return; }
@@ -324,7 +325,7 @@ public class Being : Movable
 
 
     // DAMAGE
-    public bool take_damage(float damage, Force knockback=null)
+    public virtual bool take_damage(float damage, Force knockback=null)
     {
         // ! à mettre tjrs au début de la fonction update
         if (!isAlive()) { return false; }
@@ -371,6 +372,7 @@ public class Being : Movable
             die();
         }
 
+
         // Debug.Log(gameObject.name + " took " + damage + " dmg and has " + vie + " hp left");
         return true;
     }
@@ -401,13 +403,6 @@ public class Being : Movable
         // on remet l'animation de base
         anim_handler.StopForcing();
         anim_handler.ChangeAnim(anims.idle_side);
-    }
-
-    protected void DestroyObject()
-    {
-        if (!isAlive()){
-            Destroy(gameObject);
-        }
     }
 
 

@@ -19,10 +19,6 @@ public class Door : MonoBehaviour
     [SerializeField] protected BoxCollider2D box_collider;
 
 
-    [Header("CEILING")]
-    [SerializeField] protected GameObject ceiling;
-
-
     [Header ("LABELS")]
     [SerializeField] protected GameObject label1;
     [SerializeField] protected GameObject label2;
@@ -30,6 +26,10 @@ public class Door : MonoBehaviour
     [SerializeField] protected float offset_up_radius = 1f;
     [SerializeField] protected string door_axis = "vertical";
 
+    [Header("ROOMS")]
+    public Transform room1; // Left if vertical, Down if horizontal
+    public Transform room2; // Right if vertical, Up if horizontal
+    // public Level level;
 
     // PERSO
     protected GameObject perso;
@@ -45,9 +45,6 @@ public class Door : MonoBehaviour
 
         // on récupère le box_collider
         box_collider = GetComponent<BoxCollider2D>();
-
-        // on récupère le ceiling
-        ceiling = transform.Find("ceiling").gameObject;
 
         // on récupère les labels
         label1 = transform.Find("labels/label1").gameObject;
@@ -78,7 +75,10 @@ public class Door : MonoBehaviour
 
         // on met à jour le box_collider
         box_collider.enabled = false;
-        // ceiling.SetActive(false);
+
+        // on affiche les 2 rooms
+        room1?.gameObject.SetActive(true);
+        room2?.gameObject.SetActive(true);
     }
 
     protected virtual void success_open()
@@ -114,7 +114,9 @@ public class Door : MonoBehaviour
 
         // on met à jour le box_collider
         box_collider.enabled = true;
-        // ceiling.SetActive(true);
+
+        // on cache la 2ème room
+        room2?.gameObject.SetActive(false);
     }
 
 

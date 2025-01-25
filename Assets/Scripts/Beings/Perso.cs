@@ -46,6 +46,12 @@ public class Perso : Attacker
     public float aide_a_la_visee = 0.5f; // aide à la visée, rayon autour de la souris pour les objets hackables
     private CursorHandler cursor_handler;
 
+    [Header("DODGE")]
+    [SerializeField] private float dodge_magnitude = 25f;
+    [SerializeField] private float dodge_duration = 0.5f;
+    [SerializeField] private float dodge_cooldown = 2f;
+    
+    
     [Header("DASH")]
     // DASH
     [SerializeField] private float dash_magnitude = 25f;
@@ -140,7 +146,6 @@ public class Perso : Attacker
                             "ahh/./lloneliness is almost\nas scary as\nthe deep web",
                             "maybe I'll find\nsome friends/./l/. but I want noodles !",
                         };
-
     private List<string> talks_random_nsfw = new List<string>()
                         {
                             "fuck this shit/.\ni'm HUNGRY !",
@@ -228,6 +233,7 @@ public class Perso : Attacker
         // addCapacity("interact");
         addCapacity("debug_capacities");
         addCapacity("talk");
+        addCapacity("dodge", dodge_cooldown);
 
         // on met les differents paramètres du perso
         skills_tree = transform.Find("skills_tree").GetComponent<SkillTree>();
@@ -271,6 +277,7 @@ public class Perso : Attacker
 
         // on affiche un texte de début
         Invoke("showWelcome", 5f);
+        Invoke("showQuest", 10f);
         Invoke("randomTalk", Random.Range(talking_delay_range.x, talking_delay_range.y));
     }
 
@@ -298,6 +305,12 @@ public class Perso : Attacker
 
         // on affiche la quete 5sec après
         // Invoke("showQuest", 5f);
+    }
+
+    private string quest_text = "you need to\nbuy ramen noodles at\nUPRAMENS";
+    void showQuest()
+    {
+        floating_dmg_provider.GetComponent<TextManager>().addFloatingText(quest_text, transform.position + new Vector3(0, 0.5f, 0), "yellow");
     }
 
     /* void showQuest()
@@ -382,6 +395,7 @@ public class Perso : Attacker
         // on set les callbacks
         playerInputs.dead_perso.revive.performed += ctx => comeback_from_death();
         playerInputs.enhanced_perso.dash.performed += ctx => OnDash();
+        playerInputs.enhanced_perso.dodge.performed += ctx => OnDodge();
     }
 
     // CAPACITES
@@ -810,6 +824,18 @@ public class Perso : Attacker
     }
 
     // DAMAGE
+
+    public override bool take_damage(float damage, Force knockback = null)
+    {
+        bool dmg_status = base.take_damage(damage, knockback);
+        if (!dmg_status) { return false; }
+
+        // we make a little screenshake if perso
+        float shake_magnitude = damage / vie * 2f;
+        cam.GetComponent<CameraShaker>().shake(shake_magnitude);
+
+        return true;
+    }
     protected override int attack()
     {
         int attack_status = base.attack();
@@ -1343,7 +1369,7 @@ public class Perso : Attacker
         }
     }
 
-    // DASH
+    // DASH / DODGE
     private void dash()
     {
         // start cooldown
@@ -1475,7 +1501,6 @@ public class Perso : Attacker
     }
 
 
-
     // INPUTS
     public void OnUseConso()
     {
@@ -1562,6 +1587,26 @@ public class Perso : Attacker
     public void OnPause()
     {
         pause_menu.rollShow();
+    }
+
+    private void OnDodge()
+    {
+        // on vérifie que le perso peut dodge
+        if (!hasCapacity("dodge")) { return; }
+
+        // on devient invicible et on fait un PETIT dodge dans une direction.
+        // nous stunt un peu après ?
+        // reset le cooldown de l'attaque ?
+        addEphemeralCapacity("invicible", dodge_duration);
+
+        // on fait le dash
+        Force dodge_force = new Force(inputs, dodge_magnitude);
+        addForce(dodge_force);
+
+        // reset le dodge
+        startCapacityCooldown("dodge");
+
+
     }
 
 }

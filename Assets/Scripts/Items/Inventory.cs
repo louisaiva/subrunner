@@ -24,7 +24,7 @@ public class Inventory : MonoBehaviour {
 
     // ui
     public Canvas canvas;
-    // public GameObject inv_bg;
+    
     public bool is_showed = false;
     public Vector2 inv_offset = new Vector2(0.5f, 0.5f);
     List<GameObject> empty_slots = new List<GameObject>();
@@ -334,58 +334,6 @@ public class Inventory : MonoBehaviour {
         }
     }
 
-    public void removeItem(Item item)
-    {
-        // on supprime un item de l'inventaire
-        // on vérifie si l'item est dans l'inventaire
-        if (!item.transform.parent == this.transform) { return; }
-
-        // on supprime l'item
-        Destroy(item.gameObject);
-    }
-
-    public void removeRandomItem()
-    {
-        // on supprime un gameobject de l'inventaire
-        Destroy(getItems()[Random.Range(0, getItems().Count)].gameObject);
-    }
-
-    public void randomize(string cat = "all")
-    {
-        // on randomize les items de l'inventaire
-        // si on en a déjà, on les conserve
-        // List<Item> items = getItems();
-        
-        // le nombre d'items après la randomization
-        int nb_items = Random.Range(1, max_items + 1);
-
-        // on récupère les prefabs
-        GameObject[] prefabs = Resources.LoadAll<GameObject>(prefabs_path);
-
-
-        // on les trie par catégorie
-        if (cat != "all")
-        {
-            // on récupère les prefabs de la catégorie
-            prefabs = prefabs.Where(x => cat.Contains(x.GetComponent<Item>().category)).ToArray();
-        }
-
-        // print(prefabs + " " + prefabs.Length);
-
-        // on ajoute des items random
-        for (int i = 0; i < nb_items; i++)
-        {
-            // on choisit un prefab random
-            int nb = Random.Range(0, prefabs.Length);
-
-            // on crée un item random
-            GameObject item_go = Instantiate(prefabs[nb], transform.position, Quaternion.identity) as GameObject;
-
-            // on ajoute l'item
-            addItem(item_go.GetComponent<Item>());
-        }
-    }
-
     public bool addItem(Item item)
     {
         // on ajoute un item à l'inventaire
@@ -404,24 +352,6 @@ public class Inventory : MonoBehaviour {
         // item.changeShow(is_showed);
 
         return true;
-    }
-
-    public void forceAddItem(Item item)
-    {
-        // on ajoute de force un item à l'inventaire
-
-        // on vérifie qu'on est pas déjà plein
-        if (!scalable && getItems().Count >= max_items) {
-            // on supprime le dernier item
-            Destroy(getItems()[getItems().Count - 1].gameObject);
-            print("dernier item supprimé, nb items = " + getItems().Count);
-        }
-
-        // on ajoute l'item
-        item.transform.SetParent(transform);
-
-        // on règle la scale à 1
-        item.transform.localScale = new Vector3(1, 1, 1);
     }
 
     public Item createItem(string item_name, bool is_legendary = false)
@@ -463,59 +393,10 @@ public class Inventory : MonoBehaviour {
         return items.Where(x => x is LegendaryItem).ToList();
     }
 
-    public Item getItem(string item_name)
-    {
-        // on cherche l'item
-        foreach (Transform child in transform)
-        {
-            // on regarde si c'est un item
-            if (child.GetComponent<Item>() == null) { continue; }
-
-            // on regarde si c'est le bon item
-            if (child.gameObject.GetComponent<Item>().item_name == item_name)
-            {
-                // on retourne l'item
-                return child.gameObject.GetComponent<Item>();
-            }
-        }
-        return null;
-    }
-
     public List<Hack> getHacks()
     {
         // on récupère les hacks
         List<Hack> hacks = getItems().OfType<Hack>().ToList();
         return hacks;
-    }
-
-    public Vector3 getSidePos()
-    {
-        // returns a side position outside the bounds of the inventory
-        // returns the position of the bottom right corner of the inventory
-        // with a little x offset
-
-        // on récupère la position de l'inventaire
-        Vector3 pos = transform.position;
-        
-        // on récupère la taille de l'inventaire
-        Vector2 size = GetComponent<RectTransform>().sizeDelta * GetComponent<RectTransform>().localScale;
-
-        // on calcule la position
-        pos.x += size.x/2 + 0.1f;
-
-        return pos;
-    }
-
-
-    // gizmos
-
-    void OnDrawGizmos()
-    {
-        // on récupère la position de l'inventaire
-        Vector3 pos = getSidePos();
-
-        // on dessine un gizmo
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(pos, 0.1f);
     }
 }

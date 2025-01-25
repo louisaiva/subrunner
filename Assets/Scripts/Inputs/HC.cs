@@ -197,6 +197,12 @@ public class HC : MonoBehaviour
         float x = direction.x;
         float y = direction.y;
 
+        // Debug.Log("(HC - " + transform.parent.parent.gameObject.name + ") updateJoystick " + joystick.gameObject.name + " " + x + " " + y);
+
+        // we saturate the values by the joystick_treshold_min value
+        if (Mathf.Abs(x) < inputs.joystick_treshold_min) { x = 0; }
+        if (Mathf.Abs(y) < inputs.joystick_treshold_min) { y = 0; }
+
         // we get the angle
         float angle = Mathf.Atan2(y, x) * Mathf.Rad2Deg;
 

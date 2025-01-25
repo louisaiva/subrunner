@@ -34,9 +34,6 @@ public class Attacker : Being
 
         // on récupère le point d'attaque
         attack_point = transform.Find("attack_point");
-
-        // on défini les layers des ennemis
-        enemy_layers = LayerMask.GetMask("Enemies");
     }
 
     protected override void Update()

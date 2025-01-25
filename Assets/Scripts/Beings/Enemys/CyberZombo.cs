@@ -228,7 +228,7 @@ public class CyberZombo : Attacker, I_Hackable
         outline_material = Resources.Load<Material>("materials/targeted/hack_enemy");
 
         // on récupère le hack_ui
-        hack_ui = transform.Find("hack_ui").GetComponent<HackUI>();
+        // hack_ui = transform.Find("hack_ui").GetComponent<HackUI>();
     }
 
     public bool isHackable(string hack_type, int bits)

@@ -438,6 +438,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""dodge"",
+                    ""type"": ""Button"",
+                    ""id"": ""42dc8ca9-9da3-4420-a502-34d5c93f9b6f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""hack"",
                     ""type"": ""Button"",
                     ""id"": ""7ccb0cc6-c229-46ca-974b-ed8cb2b5d5ef"",
@@ -520,6 +529,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""xbox"",
                     ""action"": ""hackDirection"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2b39bdff-57b9-4a68-9c04-8a8fce256991"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bcd3a504-7cfd-43da-9a4b-8e504a953c24"",
+                    ""path"": ""<Keyboard>/alt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""dodge"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1231,6 +1262,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         // enhanced_perso
         m_enhanced_perso = asset.FindActionMap("enhanced_perso", throwIfNotFound: true);
         m_enhanced_perso_dash = m_enhanced_perso.FindAction("dash", throwIfNotFound: true);
+        m_enhanced_perso_dodge = m_enhanced_perso.FindAction("dodge", throwIfNotFound: true);
         m_enhanced_perso_hack = m_enhanced_perso.FindAction("hack", throwIfNotFound: true);
         m_enhanced_perso_hackDirection = m_enhanced_perso.FindAction("hackDirection", throwIfNotFound: true);
         // dead_perso
@@ -1470,6 +1502,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_enhanced_perso;
     private List<IEnhanced_persoActions> m_Enhanced_persoActionsCallbackInterfaces = new List<IEnhanced_persoActions>();
     private readonly InputAction m_enhanced_perso_dash;
+    private readonly InputAction m_enhanced_perso_dodge;
     private readonly InputAction m_enhanced_perso_hack;
     private readonly InputAction m_enhanced_perso_hackDirection;
     public struct Enhanced_persoActions
@@ -1477,6 +1510,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         private @PlayerInputActions m_Wrapper;
         public Enhanced_persoActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @dash => m_Wrapper.m_enhanced_perso_dash;
+        public InputAction @dodge => m_Wrapper.m_enhanced_perso_dodge;
         public InputAction @hack => m_Wrapper.m_enhanced_perso_hack;
         public InputAction @hackDirection => m_Wrapper.m_enhanced_perso_hackDirection;
         public InputActionMap Get() { return m_Wrapper.m_enhanced_perso; }
@@ -1491,6 +1525,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @dash.started += instance.OnDash;
             @dash.performed += instance.OnDash;
             @dash.canceled += instance.OnDash;
+            @dodge.started += instance.OnDodge;
+            @dodge.performed += instance.OnDodge;
+            @dodge.canceled += instance.OnDodge;
             @hack.started += instance.OnHack;
             @hack.performed += instance.OnHack;
             @hack.canceled += instance.OnHack;
@@ -1504,6 +1541,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @dash.started -= instance.OnDash;
             @dash.performed -= instance.OnDash;
             @dash.canceled -= instance.OnDash;
+            @dodge.started -= instance.OnDodge;
+            @dodge.performed -= instance.OnDodge;
+            @dodge.canceled -= instance.OnDodge;
             @hack.started -= instance.OnHack;
             @hack.performed -= instance.OnHack;
             @hack.canceled -= instance.OnHack;
@@ -1719,6 +1759,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     public interface IEnhanced_persoActions
     {
         void OnDash(InputAction.CallbackContext context);
+        void OnDodge(InputAction.CallbackContext context);
         void OnHack(InputAction.CallbackContext context);
         void OnHackDirection(InputAction.CallbackContext context);
     }

@@ -8,6 +8,7 @@ public class InputManager : MonoBehaviour
     [Header("INPUT MANAGER")]
     [SerializeField] private string current_input_type = "keyboard"; // keyboard or gamepad
     [SerializeField] private GameObject perso;
+    [SerializeField] public float joystick_treshold_min = 0.1f;
     public PlayerInputActions inputs;
     public HCBank bank;
 

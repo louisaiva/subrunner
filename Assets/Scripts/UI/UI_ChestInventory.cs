@@ -155,22 +155,6 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
     }
 
 
-    public void randomize(string cat = "all")
-    {
-        // on ajoute des items random
-        for (int i = 0; i < max_items; i++)
-        {
-            // on récupère un prefab random
-            Item item = bank.getRandomItem(cat);
-
-            // Debug.Log("item : " + item.item_name);
-
-            // on ajoute l'item
-            grabItem(item);
-        }
-    }
-
-
     // HOOVER
     private void resetAllSlotsHoover()
     {
@@ -230,6 +214,5 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
         // on vérifie si on a de la place
         return item_ui.Count < max_items;
     }
-
 
 }

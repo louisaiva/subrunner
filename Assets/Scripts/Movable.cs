@@ -10,7 +10,7 @@ public class Movable : MonoBehaviour
 
 
     [Header("MOVABLE")]
-    // a MOVABLE is a character that can ONLY move with FORCES. that's it.
+    // a MOVABLE is a character that can move with FORCES. that's it.
 
     public float weight = 1f; // poids du movable (pour le knockback)
 
@@ -85,22 +85,25 @@ public class Movable : MonoBehaviour
         for (int i = 0; i < capacities_cooldowns.Count; i++)
         {
             KeyValuePair<string, float> entry = capacities_cooldowns.ElementAt(i);
-            if (entry.Value > 0f)
+            string capacity = entry.Key;
+            float cooldown = entry.Value;
+            if (cooldown > 0f)
             {
                 // on désactive la capacité
-                if (capacities[entry.Key] == true)
+                if (capacities[capacity] == true)
                 {
-                    capacities[entry.Key] = false;
+                    capacities[capacity] = false;
                 }
 
                 // on diminue le cooldown
-                capacities_cooldowns[entry.Key] -= Time.deltaTime;
+                capacities_cooldowns[capacity] -= Time.deltaTime;
 
                 // on remet la capacité si le cooldown est fini
-                if (capacities_cooldowns[entry.Key] < 0f)
+                if (capacities_cooldowns[capacity] < 0f)
                 {
-                    capacities_cooldowns[entry.Key] = 0f;
-                    capacities[entry.Key] = true;
+                    capacities_cooldowns[capacity] = 0f;
+                    capacities[capacity] = true;
+                    if (capacity == "dodge") { Debug.Log("ended cooldown : " + capacity + " - " + capacities_cooldowns_base[capacity]); }
                 }
             }
         }
@@ -109,16 +112,18 @@ public class Movable : MonoBehaviour
         for (int i = 0; i < capacities_ttl.Count; i++)
         {
             KeyValuePair<string, float> entry = capacities_ttl.ElementAt(i);
-            if (entry.Value > 0f)
+            string capacity = entry.Key;
+            float time_to_live = entry.Value;
+            if (time_to_live > 0f)
             {
                 // on diminue le ttl
-                capacities_ttl[entry.Key] -= Time.deltaTime;
+                capacities_ttl[capacity] -= Time.deltaTime;
 
                 // on enlève la capacité si le ttl est fini
-                if (capacities_ttl[entry.Key] < 0f)
+                if (capacities_ttl[capacity] < 0f)
                 {
-                    removeCapacity(entry.Key);
-                    capacities_ttl.Remove(entry.Key);
+                    removeCapacity(capacity);
+                    capacities_ttl.Remove(capacity);
                 }
             }
         }
@@ -194,6 +199,8 @@ public class Movable : MonoBehaviour
     protected void startCapacityCooldown(string capacity)
     {
         if (!capacities_cooldowns_base.ContainsKey(capacity)) { return; }
+
+        if (capacity == "dodge") { Debug.Log("start cooldown : " + capacity + " - " + capacities_cooldowns_base[capacity]); }
 
         // on met le cooldown à jour
         capacities_cooldowns[capacity] = capacities_cooldowns_base[capacity];
