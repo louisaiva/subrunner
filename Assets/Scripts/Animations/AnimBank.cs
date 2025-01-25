@@ -83,7 +83,13 @@ public class AnimBank : MonoBehaviour
         Debug.Log("(AnimBank - LoadAnims) Loading animations from .json files.");
 
         // if in the build or not extracting from .anim, we load .json files
-        string[] json_paths = Directory.GetFiles("Assets/Resources/" + jsons_path, "*.json", SearchOption.AllDirectories);
+        TextAsset[] jsons = Resources.LoadAll<TextAsset>(jsons_path);
+        string[] json_paths = new string[jsons.Length];
+        for (int i = 0; i < jsons.Length; i++)
+        {
+            json_paths[i] = jsons[i].name;
+        }
+
         Debug.Log("(AnimBank - LoadAnims) Found " + json_paths.Length + " jsons :\n\t" + string.Join("\n\t", json_paths));
         foreach (string path in json_paths)
         {

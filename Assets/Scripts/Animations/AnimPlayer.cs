@@ -46,11 +46,11 @@ public class AnimPlayer : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
-            Play("run", "LR");
+            Play("run", "L");
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
-            Play("run", "LR");
+            Play("run", "R");
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -107,8 +107,11 @@ public class AnimPlayer : MonoBehaviour
     // PLAY ANIMATION
     public bool Play(string capacity, string orientation = "LR",float speed = default, bool? loop = null, int priority = default)
     {
+
+        // 1 - WE CHECK IF WE CAN PLAY THE ANIMATION
+
         // we get the animation from the bank (it gives us the closest anim possible if the exact one doesn't exist)
-        string anim_name = skin + "." + capacity + "." + orientation;
+        string anim_name = skin + "." + capacity + "." + (orientation == "L" || orientation == "R" ? "LR" : orientation);
         Anim anim = bank.GetAnim(anim_name);
         if (anim == null) { return false; }
 
@@ -121,6 +124,9 @@ public class AnimPlayer : MonoBehaviour
         if (current_anim != null && current_anim.priority > anim.priority) { return false; }
 
 
+
+        // 2 - WE PLAY THE ANIMATION
+
         // we get the sprites and frame times
         current_sprites = bank.GetSprites(anim.sprites_paths);
         current_anim = anim;
@@ -129,6 +135,11 @@ public class AnimPlayer : MonoBehaviour
 
         // we set the first sprite
         sr.sprite = current_sprites[current_frame];
+
+        // we check the orientation
+        if (orientation == "R") { sr.flipX = true; }
+        else { sr.flipX = false; }
+
         return true;
     }
 }
