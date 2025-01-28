@@ -385,9 +385,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8c864e1ad6aafb4f91e4d7abe6f5e1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vie: 100
-  max_vie: 100
-  regen_vie: 1
+  life: 100
+  max_life: 100
+  regen_life: 1
   weight: 1
   xp_provider: {fileID: 0}
   floating_dmg_provider: {fileID: 0}
@@ -403,7 +403,7 @@ MonoBehaviour:
   attack_point: {fileID: 0}
   attack_range: 0.25
   damage_range: 0.25
-  enemy_layers:
+  target_layers:
     serializedVersion: 2
     m_Bits: 0
   cooldown_attack: 0.6

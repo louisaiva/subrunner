@@ -4,6 +4,8 @@ using Newtonsoft.Json;
 using System.IO;
 using System;
 using System.Linq;
+using Unity.Properties;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -20,29 +22,23 @@ public class AnimBank : MonoBehaviour
 
 
     [Header("Animations")]
-    public Dictionary<string,Dictionary<string,List<Anim>>> anims = new();
     // store all the animations with the keys : skin, capacity, orientation
-    public bool extract_json_on_load = false;
+    public Dictionary<string,Dictionary<string,List<Anim>>> anims = new();
     // if this is true, the bank will load animations from .anim files and store them as .json files
     // if false, the bank will load animations from .json files (/!\ you need to have the .json files in the Resources/anims/ folder)
+    public bool extract_json_on_load = false;
     public string anims_path = "animations/";
     public string jsons_path = "anims/";
 
 
     [Header("Animations parameters")]
-    public List<string> capacities_with_parameters_override = new List<string>() { "attack","hurted","die" };
     // store the capacities that have parameters override
-    public List<bool> capacities_loops = new List<bool>() { false,false,true};
+    private List<string> capacities_with_parameters_override = new List<string>() { "attack","hurted","dodge" };
     // store the loops of the capacities
-    public List<int> capacities_priorities = new List<int>() { 1,2,3 };
-    // store the priorities of the capacities
-
+    private List<bool> capacities_loops = new List<bool>() { false,false,false };
 
     [Header("Sprites")]
     public string spritesheets_path = "spritesheets/";
-    public Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
-    // store all the sprites used in the animations
-    // with the key being the spritesheet name (with folders) and the value being the name of the sprite itself
 
 
 
@@ -50,6 +46,8 @@ public class AnimBank : MonoBehaviour
     private void Awake()
     {
         LoadAnims();
+
+        Debug.Log(getAnimsList());
     }
     private void LoadAnims()
     {
@@ -75,7 +73,7 @@ public class AnimBank : MonoBehaviour
                     new_path = new_path.Replace(".anim", "");
                     loadAnimFromAnimationClip(new_path);
                 }
-
+        
             return;
             #endif
         }
@@ -132,6 +130,7 @@ public class AnimBank : MonoBehaviour
         // only works in the editor
 
         Debug.Log("(AnimBank - LAFAC) Loading animation from AnimationClip : " + path);
+
         // on charge l'animation depuis le path
         AnimationClip clip = Resources.Load<AnimationClip>("animations/" + path /* + ".anim" */);
         if (!clip)
@@ -140,18 +139,16 @@ public class AnimBank : MonoBehaviour
             return;
         }
 
-        // on trouve le bon nom pour l'animation
-        // string[] splitted_path = path.Split('/');
-        // string anim_name = splitted_path[splitted_path.Length - 1];
-
+        // on extrait les données de l'animation
         Anim anim = extractDataFromAnimationClip(clip);
         if (anim == null) { return; }
-        if (!anim.isNameCorrect(anim.name))
+        if (!anim.IsNameCorrect(anim.name))
         {
             Debug.LogWarning("(AnimBank - LAFAC) Animation name format is incorrect : " + anim.name);
             return;
         }
 
+        // otherwise we simply save the animation
         saveAnimToJson(anim);
         AddAnim(anim);
     }
@@ -185,12 +182,12 @@ public class AnimBank : MonoBehaviour
         int frameCount = spriteCurve.Length;
 
         string[] sprites_paths = new string[frameCount];
-        float[] frame_times = new float[frameCount];
+        float[] sprites_durations = new float[frameCount];
 
         for (int i = 0; i < frameCount; i++)
         {
             // save the frame time
-            frame_times[i] = (i == 0) ? spriteCurve[i].time : spriteCurve[i].time - spriteCurve[i - 1].time;
+            sprites_durations[i] = (i == 0) ? spriteCurve[i].time : spriteCurve[i].time - spriteCurve[i - 1].time;
             
             // save the sprite path
             Sprite sprite = spriteCurve[i].value as Sprite;
@@ -205,7 +202,7 @@ public class AnimBank : MonoBehaviour
         }
 
         // we create a new Anim object
-        Anim anim = new Anim(clip.name, sprites_paths, frame_times);
+        Anim anim = new Anim(clip.name, sprites_paths, sprites_durations);
         return anim;
     }
     private void saveAnimToJson(Anim anim)
@@ -221,10 +218,6 @@ public class AnimBank : MonoBehaviour
     // BANK MANAGEMENT
     private void AddAnim(Anim anim)
     {
-
-        // check if the name format is correct
-
-
         // check if the animation already exists
         if (HasAnim(anim.name))
         {
@@ -232,7 +225,7 @@ public class AnimBank : MonoBehaviour
             return;
         }
         
-        // add the animation to the bank
+        // prepare the skin and capacity
         string[] splitted_name = anim.name.Split('.');
         string skin = splitted_name[0];
         string capacity = splitted_name[1];
@@ -242,9 +235,10 @@ public class AnimBank : MonoBehaviour
         if (index != -1)
         {
             anim.loop = capacities_loops[index];
-            anim.priority = capacities_priorities[index];
+            // anim.priority = capacities_priorities[index];
         }
 
+        // add the skin & capacity to the bank if they don't exist
         if (!HasSkin(skin))
         {
             anims.Add(skin, new Dictionary<string, List<Anim>>());
@@ -254,6 +248,30 @@ public class AnimBank : MonoBehaviour
             anims[skin].Add(capacity, new List<Anim>());
         }
 
+
+        // we check if the orientation has "LR" in it.
+        // if it does, we add the animation to the bank with "LR" replaced by "L" and "R"
+        if (splitted_name[2].Contains("LR"))
+        {
+            // we copy the animation
+            Anim anim_R = new Anim(anim);
+            anim_R.name = skin + "." + capacity + "." + splitted_name[2].Replace("LR", "R");
+            anim_R.flipX = true;
+
+            // load the sprites
+            anim_R.LoadSprites(spritesheets_path);
+
+            // we add the animation to the bank
+            anims[skin][capacity].Add(anim_R);
+
+            // we change the anim name
+            anim.name = skin + "." + capacity + "." + splitted_name[2].Replace("LR", "L");
+        }
+
+        // load the sprites
+        anim.LoadSprites(spritesheets_path);
+
+        // add the animation to the bank
         anims[skin][capacity].Add(anim);
     }
     public Anim GetAnim(string name)
@@ -306,60 +324,26 @@ public class AnimBank : MonoBehaviour
         return anims.ContainsKey(skin);
     }
 
-
-    // SPRITES MANAGEMENT
-    public Sprite[] GetSprites(string[] sprites_paths)
+    // DEBUG
+    private string getAnimsList()
     {
-        // on cherche les sprites dans la liste
-        Sprite[] sprites = new Sprite[sprites_paths.Length];
-        for (int i = 0; i < sprites_paths.Length; i++)
+        string title = "ANIMS in the bank - Total ";
+        string list = "";
+        int count = 0;
+        foreach (string skin in anims.Keys)
         {
-            if (this.sprites.ContainsKey(sprites_paths[i]))
+            list += skin + " :\n";
+            foreach (string capacity in anims[skin].Keys)
             {
-                sprites[i] = this.sprites[sprites_paths[i]];
+                list += "\t" + capacity + " :\n";
+                foreach (Anim anim in anims[skin][capacity])
+                {
+                    list += "\t\t" + anim.name + "\n";
+                    count++;
+                }
             }
-            else
-            {
-                sprites[i] = LoadSprite(sprites_paths[i]);
-            }
         }
-        return sprites;
-    }
-    public Sprite GetSprite(string name)
-    {
-        // on cherche le sprite dans la liste
-        if (sprites.ContainsKey(name))
-        {
-            return sprites[name];
-        }
-        Debug.LogWarning("(AnimBank - GetSprite) Sprite not found in the bank : " + name);
-        return null;
-    }
-    private void LoadSpriteSheet(string path)
-    {
-        // on charge le spritesheet depuis le path
-        Sprite[] spritesheet = Resources.LoadAll<Sprite>(spritesheets_path + path);
-        if (spritesheet.Length == 0)
-        {
-            Debug.LogError("(AnimBank - LoadSpriteSheet) Spritesheet NOT found in : " + spritesheets_path + path);
-            return;
-        }
-
-        // on ajoute chaque sprite du spritesheet à la liste
-        foreach (Sprite sprite in spritesheet)
-        {
-            sprites.Add(path + "." + sprite.name, sprite);
-        }
-    }
-    private Sprite LoadSprite(string path)
-    {
-        // on récupère le path du spritesheet
-        string[] splitted_path = path.Split('.');
-        string spritesheet_path = splitted_path[0];
-        LoadSpriteSheet(spritesheet_path);
-
-        // on retourne le sprite
-        return GetSprite(path);
+        return title + count + " animations\n" + list;
     }
 }
 
@@ -368,42 +352,114 @@ public class AnimBank : MonoBehaviour
     // stocke UNE animation
     // ainsi que quelques parametres utiles au AnimHandler
     public string name; // nom de l'animation au format : skin.capacity.orientation
-    
+    public string skin { get { return name.Split('.')[0]; } }
+    public string capacity { get { return name.Split('.')[1]; } }
+    public string orientation { get { return name.Split('.')[2]; } }
     
     // stockage utile de l'animation
     public string[] sprites_paths;
-    public float[] frame_times;
+    public Sprite[] sprites;
+    public float[] sprites_durations;
     
-    // public AnimationClip clip; 
+
+    // parametres utiles à l'AnimPlayer
     public bool loop = true; // si c'est false, l'AnimHandler revient sur l'animation par defaut
     public float speed = 1f; // vitesse de l'animation
-    public int priority = 0; // si on demande de jouer une animation, celle-ci sera jouée si sa priorité est plus haute que celle en cours
+    // public int priority = 0; // si on demande de jouer une animation, celle-ci sera jouée si sa priorité est plus haute que celle en cours
+    public bool flipX = false; // flip le sprite renderer si besoin
 
     public Anim() { }
-    public Anim(string name, string[] sprites_paths, float[] frame_times)
+    public Anim(string name, string[] sprites_paths, float[] sprites_durations)
     {
         this.name = name;
 
         this.sprites_paths = sprites_paths;
-        this.frame_times = frame_times;
+        this.sprites_durations = sprites_durations;
     }
-    public Anim(string name, string[] sprites_paths, float[] frame_times, bool loop=true, float speed=1f, int priority=0)
+    public Anim(string name, string[] sprites_paths, float[] sprites_durations, bool loop=true, float speed=1f, /* int priority=0,  */bool flipX=false)
     {
         this.name = name;
         this.loop = loop;
         this.speed = speed;
-        this.priority = priority;
+        // this.priority = priority;
 
         this.sprites_paths = sprites_paths;
-        this.frame_times = frame_times;
+        this.sprites_durations = sprites_durations;
     }
 
+    public Anim(Anim other)
+    {
+        this.name = other.name;
+        this.loop = other.loop;
+        this.speed = other.speed;
+        // this.priority = other.priority;
+        this.flipX = other.flipX;
+
+        this.sprites_paths = other.sprites_paths;
+        this.sprites_durations = other.sprites_durations;
+    }
+
+    // Sprite Loading
+    public void LoadSprites(string spritesheets_path)
+    {
+
+        // on se prépare à stocker les sprites
+        sprites = new Sprite[sprites_paths.Length];
+
+        // on prépare la ram pour les spritesheets
+        Dictionary<string,Sprite[]> spritesheets = new();
+
+        // on parcours tous les sprites qu'on cherche
+        for (int i = 0; i < sprites_paths.Length; i++)
+        {
+            // on regarde si on a déjà chargé le spritesheet
+            string[] splitted_path = sprites_paths[i].Split('.');
+            string spritesheet_path = splitted_path[0];
+            string sprite_name = splitted_path[1];
+
+            if (!spritesheets.ContainsKey(spritesheet_path))
+            {
+                // on charge le spritesheet depuis le path
+                Sprite[] spritesheet = Resources.LoadAll<Sprite>(spritesheets_path + spritesheet_path);
+                if (spritesheet.Length == 0)
+                {
+                    Debug.LogError("(Anim - LoadSprites) Spritesheet NOT found in : " + spritesheets_path + spritesheet_path);
+                    return;
+                }
+
+                // on ajoute le spritesheet à la liste
+                spritesheets.Add(spritesheet_path, spritesheet);
+
+                // on ajoute le bon sprite à la liste
+                sprites[i] = spritesheet.FirstOrDefault(sprite => sprite.name == sprite_name);
+                continue;
+            }
+
+            // si on est là on a déjà chargé le spritesheet
+            // on cherche le bon sprite
+            Sprite sprite = spritesheets[spritesheet_path].FirstOrDefault(sprite => sprite.name == sprite_name);
+
+            // on ajoute le bon sprite à la liste
+            sprites[i] = sprite;
+        }
+    }
 
     // getters
-    public bool isNameCorrect(string name)
+    public bool IsNameCorrect(string name)
     {
         string[] splitted_name = name.Split('.');
         if (splitted_name.Length != 3) { return false; }
         return true;
     }
+
+    public float GetDuration()
+    {
+        float duration = 0f;
+        foreach (float d in sprites_durations)
+        {
+            duration += d;
+        }
+        return duration / speed;
+    }
+
 }

@@ -4,7 +4,6 @@ using UnityEngine;
 using System.Linq;
 
 
-[RequireComponent(typeof(AnimationHandler))]
 public class Being : Movable
 {
 
@@ -13,9 +12,12 @@ public class Being : Movable
     // a BEING is a character that can move, die.
 
     // VIE
-    public float vie = 100f;
-    public int max_vie = 100;
-    public float regen_vie = 0f; // en point de vie par seconde
+    public float life = 100f;
+    public int max_life = 100;
+    public float regen_life = 0f; // en point de life par seconde
+    public Collider2D life_collider;
+
+
     // HURTED
     // private float last_hurted_time = 0f; // temps de la dernière attaque subie
     public GameObject xp_provider;
@@ -28,11 +30,11 @@ public class Being : Movable
     public float speed = 3f; // speed de déplacement
     public float running_speed = 5f; // speed de déplacement
     protected bool isRunning = false;
-    private bool isMoving = false;
+    // private bool isMoving = false;
 
 
     // ANIMATIONS
-    protected AnimationHandler anim_handler;
+    // protected AnimationHandler anim_handler;
     protected Vector2 lookin_at = new Vector2(0f, -1f);
     protected float lookin_at_angle = 40f; // angle du regard du perso en degrés
     protected BeingAnims anims = new();
@@ -42,25 +44,29 @@ public class Being : Movable
     protected override void Start()
     {
 
+        base.Start();
+        
         // on initialise les capacités
-        capacities.Add("life_regen", true);
-        capacities.Add("walk", true);
+        AddCapacity("hurted");
+        AddCapacity("die");
+        AddEffect(Effect.RegenLife, -888f); 
+
 
         // on récupère les composants
+        life_collider = transform.Find("body").GetComponent<Collider2D>();
         // gameObject.AddComponent<AnimationHandler>();
-        anim_handler = GetComponent<AnimationHandler>();
+        // anim_handler = GetComponent<AnimationHandler>();
 
 
         inputs = new Vector2(0.1f,0f);
 
 
         // on récupère le provider d'xp
-        xp_provider = GameObject.Find("/particles/xp_provider");
+        xp_provider = GameObject.Find("/utils/particles/xp_provider");
 
         // on récupère le provider de floating dmg
         floating_dmg_provider = GameObject.Find("/utils/dmgs_provider");
 
-        base.Start();
     }
 
     public virtual void Events()
@@ -68,19 +74,19 @@ public class Being : Movable
 
 
         // on vérifie qu'on est pas KO
-        if (hasCapacity("knocked_out")) { return; }
+        if (HasEffect(Effect.Stunned)) { return; }
 
         // life regen
-        if (hasCapacity("life_regen"))
+        if (HasEffect(Effect.RegenLife))
         {
-            if (vie < max_vie)
+            if (life < max_life)
             {
-                vie += regen_vie * Time.deltaTime;
+                life += regen_life * Time.deltaTime;
             }
         }
 
         // walk
-        if (hasCapacity("walk") && !(this is Perso))
+        if (Can("walk") && !(this is Perso))
         {
             inputs = randomly_circulate(inputs);
         }
@@ -89,25 +95,25 @@ public class Being : Movable
 
     protected override void Update()
     {
+        base.Update();
+
         // on vérifie si le perso est mort
         if (!isAlive()) { return; }
 
         // on sauvegarde la position du perso
         last_position = transform.position;
 
-        // update capacities cooldowns
-        UpdateCapacities();
-
         // on récupère les inputs
         Events();
 
         // on calcule la direction du regard
         calculate_lookin_at(inputs);
+        anim_player.SetOrientation(lookin_at);
 
         // maj des animations
-        maj_animations(inputs);
+        // maj_animations(inputs);
 
-        if (!hasCapacity("knocked_out") && !hasCapacity("dashin"))
+        if (!HasEffect(Effect.Stunned) && inputs.magnitude > 0.1f)
         {
             // déplacement
             if (isRunning)
@@ -118,39 +124,25 @@ public class Being : Movable
             {
                 walk(inputs, inputs_magnitude);
             }
-
         }
-        
+        else
+        {
+            anim_player.StopPlaying("run");
+            anim_player.StopPlaying("walk");
+        }
+
         // update forces
-        update_forces();
+        updateForces();
 
         // on calcule la current velocity
         Vector3 vel = (transform.position - last_position) / Time.deltaTime;
         velocity = new Vector2(vel.x, vel.y);
     }
 
-    protected void OnDrawGizmosSelected()
-    {
-
-        // calculate lookin_at vector base position
-        Vector3 lookin_at_pos = transform.position + new Vector3(lookin_at.x, lookin_at.y, 0f);
-        
-        // draw lookin_at angle
-        Vector3[] points = new Vector3[3]
-        {
-            transform.position,
-            transform.position + Quaternion.Euler(0f, 0f, lookin_at_angle/2f) * (lookin_at_pos - transform.position),
-            transform.position + Quaternion.Euler(0f, 0f, -lookin_at_angle/2f) * (lookin_at_pos - transform.position)
-        };
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawLineStrip(points, true);
-    }
 
     // DEPLACEMENT
     protected void walk(Vector2 direction, float inputs_magnitude=1f)
     {
-
         // on calcule le mouvement sur X
         float x_movement = direction.normalized.x * speed * Time.deltaTime * inputs_magnitude;
 
@@ -158,12 +150,11 @@ public class Being : Movable
         float y_movement = direction.normalized.y * speed * Time.deltaTime * inputs_magnitude;
 
         // on applique le mouvement au perso
-        movable(new Vector2(x_movement, y_movement));
-
+        move(new Vector2(x_movement, y_movement));
+        Do("walk");
     }
     protected void run(Vector2 direction, float inputs_magnitude=1f)
     {
-
         // on calcule le mouvement sur X
         float x_movement = direction.normalized.x * running_speed * Time.deltaTime * inputs_magnitude;
 
@@ -171,8 +162,8 @@ public class Being : Movable
         float y_movement = direction.normalized.y * running_speed * Time.deltaTime * inputs_magnitude;
 
         // on applique le mouvement au perso
-        movable(new Vector2(x_movement, y_movement));
-
+        move(new Vector2(x_movement, y_movement));
+        Do("run");
     }
 
 
@@ -232,7 +223,7 @@ public class Being : Movable
 
 
     // ANIMATIONS
-    protected void maj_animations(Vector2 direction)
+    /* protected void maj_animations(Vector2 direction)
     {
 
         // animation de déplacement (en fonction des inputs)
@@ -312,7 +303,7 @@ public class Being : Movable
             }
         }
 
-    }
+    } */
 
     protected void calculate_lookin_at(Vector2 direction)
     {
@@ -331,7 +322,7 @@ public class Being : Movable
         if (!isAlive()) { return false; }
 
         // on vérifie si on est invincible
-        if (hasCapacity("invicible"))
+        if (HasEffect(Effect.Invincible))
         {
             // floating missing text
             // floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddFloatingDmg(this.gameObject, 0, transform.position);
@@ -340,13 +331,11 @@ public class Being : Movable
         }
 
         // si on est ici on prend des dégats
-        vie -= damage;
+        life -= damage;
 
         // play hurt animation
-        anim_handler.ChangeAnimTilEnd(anims.hurted);
-
-        // play hurt sound
-        audio_manager.Play(sounds.hurted());
+        // anim_handler.ChangeAnimTilEnd(anims.hurted);
+        Do("hurted");
 
 
         // knockback
@@ -367,20 +356,21 @@ public class Being : Movable
         floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddFloatingDmg(this.gameObject,-1f * damage, transform.position);
 
         // check if dead
-        if (vie <= 0f)
+        if (life <= 0f)
         {
             die();
         }
 
 
-        // Debug.Log(gameObject.name + " took " + damage + " dmg and has " + vie + " hp left");
+        // Debug.Log(gameObject.name + " took " + damage + " dmg and has " + life + " hp left");
         return true;
     }
 
     protected virtual void die()
     {
         // play death animation
-        anim_handler.ForcedChangeAnim(anims.die);
+        // anim_handler.ForcedChangeAnim(anims.die);
+        Do("die");
 
         // on donne de l'xp
         Vector3 sprite_center = new Vector3(transform.position.x, transform.position.y + GetComponent<SpriteRenderer>().bounds.size.y / 2f,0);
@@ -397,27 +387,28 @@ public class Being : Movable
     {
         CancelInvoke("DestroyObject");
         
-        // on remet la vie au max
-        vie = max_vie;
+        // on remet la life au max
+        life = max_life;
 
         // on remet l'animation de base
-        anim_handler.StopForcing();
-        anim_handler.ChangeAnim(anims.idle_side);
+        // anim_handler.StopForcing();
+        // anim_handler.ChangeAnim(anims.idle_side);
+        anim_player.StopPlaying("die");
     }
 
 
     // GETTERS
     public bool isAlive()
     {
-        return vie > 0f;
+        return life > 0f;
     }
 
     
     // SETTERS
     public void addLife(float life)
     {
-        vie += life;
-        if (vie > max_vie) { vie = max_vie; }
+        life += life;
+        if (life > max_life) { life = max_life; }
 
         // floating dmg
         floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddFloatingDmg(this.gameObject, life, transform.position);
@@ -425,23 +416,49 @@ public class Being : Movable
 
     public void addBonusLife(float bonus_life)
     {
-        max_vie += (int) bonus_life;
-        vie += bonus_life;
+        max_life += (int) bonus_life;
+        life += bonus_life;
     }
 
     public void heal(int nb_heal=2)
     {
         // each heal gives 10% of max life
-        float heal = max_vie * 0.1f * nb_heal;
+        float heal = max_life * 0.1f * nb_heal;
         addLife(heal);
     }
 
     public void healMax()
     {
         // restore max life
-        addLife(max_vie-vie);
+        addLife(max_life-life);
     }
 
+
+
+    // gizmos
+    protected override void OnDrawGizmos()
+    {
+        base.OnDrawGizmos();
+
+        // calculate lookin_at vector base position
+        Vector3 lookin_at_pos = transform.position + new Vector3(lookin_at.x, lookin_at.y, 0f);
+
+        // draw lookin_at angle
+        Vector3[] points = new Vector3[3]
+        {
+            transform.position,
+            transform.position + Quaternion.Euler(0f, 0f, lookin_at_angle/2f) * (lookin_at_pos - transform.position),
+            transform.position + Quaternion.Euler(0f, 0f, -lookin_at_angle/2f) * (lookin_at_pos - transform.position)
+        };
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawLineStrip(points, true);
+        
+        // on dessine le Collider de life du Being
+        if (!life_collider) { return; }
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(life_collider.bounds.center, life_collider.bounds.size);
+    }
 }
 
 public class BeingAnims

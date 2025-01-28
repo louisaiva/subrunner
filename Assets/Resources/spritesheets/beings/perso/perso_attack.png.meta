@@ -1,0 +1,406 @@
+fileFormatVersion: 2
+guid: f1527933b9e8678498dd8d2f0fcc9f83
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 24
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: perso_attack_0
+      rect:
+        serializedVersion: 2
+        x: 29
+        y: 12
+        width: 18
+        height: 18
+      alignment: 9
+      pivot: {x: 0.33333334, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0970c1915b2ae7e44bc1b96755444efa
+      internalID: 246810180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: perso_attack_1
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 12
+        width: 16
+        height: 17
+      alignment: 9
+      pivot: {x: 0.375, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8fbbbcb130719eb41b573ce4af949c6d
+      internalID: 219911148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: perso_attack_2
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 12
+        width: 16
+        height: 17
+      alignment: 9
+      pivot: {x: 0.375, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6cf1ede4cbe4c4640901344d18a590d4
+      internalID: -1583206317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: perso_attack_3
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 12
+        width: 13
+        height: 17
+      alignment: 9
+      pivot: {x: 0.46153846, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8e533b079a5f9ce4ebfccb4e0b23baa6
+      internalID: -906861177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: perso_attack_4
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 12
+        width: 14
+        height: 18
+      alignment: 9
+      pivot: {x: 0.42857143, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0190b3780474bda45a43b8dced03b1d9
+      internalID: -446579665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: perso_attack_5
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 12
+        width: 14
+        height: 19
+      alignment: 9
+      pivot: {x: 0.42857143, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 26f66b5325db3394cbad8b031eafb91c
+      internalID: 294382405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: perso_attack_6
+      rect:
+        serializedVersion: 2
+        x: 364
+        y: 12
+        width: 38
+        height: 25
+      alignment: 9
+      pivot: {x: 0.84210527, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: 18, y: -1.5}
+        - {x: 18, y: 2.5}
+        - {x: 11, y: 9.5}
+        - {x: 5, y: 12.5}
+        - {x: -1, y: 10.5}
+        - {x: -18, y: -1.5}
+        - {x: -19, y: -4.5}
+        - {x: -13, y: -9.5}
+        - {x: 1, y: -10.5}
+        - {x: 1, y: -8.5}
+        - {x: 9, y: 4.5}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29d46d68603b68f4b87e2e973c82088a
+      internalID: 1588027336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: perso_attack_7
+      rect:
+        serializedVersion: 2
+        x: 430
+        y: 12
+        width: 32
+        height: 16
+      alignment: 9
+      pivot: {x: 0.8125, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -16, y: -3}
+        - {x: -14, y: -6}
+        - {x: -6, y: -7}
+        - {x: 6, y: -6}
+        - {x: 4, y: -4}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 146a03e0ac7839343bc53cf046c8a7d7
+      internalID: 1452109868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: perso_attack_8
+      rect:
+        serializedVersion: 2
+        x: 491
+        y: 12
+        width: 31
+        height: 17
+      alignment: 9
+      pivot: {x: 0.8064516, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -14.5, y: -8.5}
+        - {x: -6.5, y: -8.5}
+        - {x: 6.5, y: -6.5}
+        - {x: 4.5, y: -4.5}
+        - {x: -7.5, y: -6.5}
+        - {x: -15.5, y: -5.5}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 74f969b60e6f22f4e98f9e29bc86cb49
+      internalID: -1721751194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: perso_attack_9
+      rect:
+        serializedVersion: 2
+        x: 555
+        y: 12
+        width: 27
+        height: 17
+      alignment: 9
+      pivot: {x: 0.7407407, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -12.5, y: -5.5}
+        - {x: -6.5, y: -6.5}
+        - {x: 6.5, y: -6.5}
+        - {x: 4.5, y: -4.5}
+        - {x: -6.5, y: -3.5}
+        - {x: -13.5, y: -2.5}
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef11334d3986d834cb38be1faea27011
+      internalID: -1691242749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: perso_attack_10
+      rect:
+        serializedVersion: 2
+        x: 619
+        y: 12
+        width: 24
+        height: 18
+      alignment: 9
+      pivot: {x: 0.7083333, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -6, y: -6}
+        - {x: 9, y: 2}
+        - {x: 10, y: -4}
+        - {x: 12, y: 7}
+        - {x: 8, y: 7}
+        - {x: -2, y: 0}
+        - {x: -12, y: -5.5}
+      tessellationDetail: 0
+      bones: []
+      spriteID: d74abcb08b41b4d4d8ea0dd7a3291cee
+      internalID: 1175623258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures:
+    - texture: {fileID: 2800000, guid: 60bc13d0bf02c9c4aa49238d075a3388, type: 3}
+      name: _Emission
+    nameFileIdTable:
+      perso_attack_0: 246810180
+      perso_attack_1: 219911148
+      perso_attack_10: 1175623258
+      perso_attack_2: -1583206317
+      perso_attack_3: -906861177
+      perso_attack_4: -446579665
+      perso_attack_5: 294382405
+      perso_attack_6: 1588027336
+      perso_attack_7: 1452109868
+      perso_attack_8: -1721751194
+      perso_attack_9: -1691242749
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

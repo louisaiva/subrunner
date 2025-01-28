@@ -1,36 +1,35 @@
+using System.Linq;
 using UnityEngine;
 
-public class N0b0dy : Attacker
+public class N0b0dy : Enemy
 {
 
 
     // player detection
-    private float player_detection_radius = 3f;
+    /* private float player_detection_radius = 3f;
     public bool target_detected = false;
-    GameObject target;
+    GameObject target; */
 
-    new void Start()
+    /* new void Start()
     {
         base.Start();
         anims = new N0b0dyAnims();
         anims.init("n0b0dy");
         // addCapacity("life_regen");
-    }
+    } */
 
 
-    public override void Events()
+    /* public override void Events()
     {
-
-
         // on vérifie qu'on est pas KO
-        if (hasCapacity("knocked_out")) { return; }
+        if (HasEffect(Effect.Stunned)) { return; }
 
         // life regen
-        if (hasCapacity("life_regen"))
+        if (Can("life_regen"))
         {
-            if (vie < max_vie)
+            if (life < max_life)
             {
-                vie += regen_vie * Time.deltaTime;
+                life += regen_life * Time.deltaTime;
             }
         }
 
@@ -62,10 +61,10 @@ public class N0b0dy : Attacker
         // 3 - on se déplace aléatoirement circulairement en x
         // inputs = simulate_circular_input_on_x(inputs);
 
-    }
+    } */
 
     // update de d'habitude
-    new void Update()
+    /* new void Update()
     {
         // ! à mettre tjrs au début de la fonction update
         if (!isAlive()) { return; }
@@ -78,7 +77,7 @@ public class N0b0dy : Attacker
 
 
         // on essaye d'attaquer le joueur si on le détecte
-        if (hasCapacity("hit"))
+        if (Can("attack"))
         {
             if (target_detected)
             {
@@ -89,25 +88,28 @@ public class N0b0dy : Attacker
             }
         }
 
-    }
+    } */
 
     // DETECTION DU JOUEUR
 
-    private void detect_target(float radius)
+    /* private void detect_target(float radius)
     {
+        // on récupère tous les ennemis dans le rayon de détection
+        Collider2D[] targets = Physics2D.OverlapCircleAll(transform.position, radius, target_layers);
 
-        // on essaie de trouver le premier ennemi dans le rayon de détection
-        Collider2D targetCollider = Physics2D.OverlapCircle(transform.position, radius, enemy_layers);
-        target_detected = (targetCollider != null);
+        // on s'enleve soi même
+        targets = targets.Where(target => target.transform.parent.gameObject != gameObject).ToArray();
+
+        // on regarde si on a trouvé un ennemi
+        target_detected = targets.Length > 0;
         if (target_detected)
         {
-            target = targetCollider.gameObject;
+            target = targets[0].transform.parent.gameObject;
         }
         else
         {
             target = null;
         }
-
     }
 
     private void try_to_attack_target()
@@ -120,24 +122,24 @@ public class N0b0dy : Attacker
         float marge = Random.Range(-damage_range - 0.2f, damage_range + 0.2f);
         if (distance < attack_range + marge)
         {
-            attack();
+            if (Can("attack")) { Do("attack"); }
         }
 
 
-    }
+    } */
 
 }
 
 
-public class N0b0dyAnims : AttackerAnims
-{
-    public override void init(string name)
-    {
-        hurted = "hurted_LR";
-        die = "dead";
-        run_side = "run_LR";
-        idle_side = "idle_LR";
-        attack = "attack_LR";
-        base.init(name);
-    }
-}
+// public class N0b0dyAnims : AttackerAnims
+// {
+//     public override void init(string name)
+//     {
+//         hurted = "hurted_LR";
+//         die = "dead";
+//         run_side = "run_LR";
+//         idle_side = "idle_LR";
+//         attack = "attack_LR";
+//         base.init(name);
+//     }
+// }

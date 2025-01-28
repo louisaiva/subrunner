@@ -307,10 +307,10 @@ public class Inventory : MonoBehaviour {
     public void setShow(bool is_showed)
     {
         // on désactive le big inventory si c'est un inventaire de perso
-        if (is_showed && is_perso_inventory)
+        /* if (is_showed && is_perso_inventory)
         {
             perso.GetComponent<Perso>().big_inventory.hide();
-        }
+        } */
 
         // on met à jour l'affichage
         this.is_showed = is_showed;

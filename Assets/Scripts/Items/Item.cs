@@ -47,7 +47,10 @@ public class Item : Movable, I_Interactable
             string[] capacity_and_cooldown = capacity.Split(':');
             string capacity_name = capacity_and_cooldown[0];
 
-            if (capacity_and_cooldown.Length > 1)
+
+            // todo !! maintenant on fait plus comme ça y'a pas besoin d'ajouter les capacity au Being,
+            // todo ça se fait automatiquement via Can(capacity) qui vérifie les capacités de l'item
+            /* if (capacity_and_cooldown.Length > 1)
             {
                 try 
                 {
@@ -61,13 +64,13 @@ public class Item : Movable, I_Interactable
                 float capacity_cooldown = float.Parse(capacity_and_cooldown[1]);
                 // Debug.Log("(Item) successfully adding " + capacity_name + " with cooldown " + capacity_cooldown + " to " + item_name);
                 // on ajoute le cooldown
-                addCapacity(capacity_name, capacity_cooldown);
+                AddCapacity(capacity_name, capacity_cooldown);
             }
             else
             {
-                addCapacity(capacity_name);
+                AddCapacity(capacity_name);
                 // Debug.Log("(Item) adding " + capacity_name + " to " + item_name);
-            }
+            } */
         }
 
         // on récupère le label

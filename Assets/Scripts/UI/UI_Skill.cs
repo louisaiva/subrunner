@@ -10,7 +10,7 @@ public class UI_Skill : MonoBehaviour, I_UI_Slot
     public GameObject description_ui;
 
     // description
-    public string skill_name = "max_vie";
+    public string skill_name = "max_life";
     public string human_readable_name = "max health";
     public string description = "your maximum health. makes you tanky as f";
     public string current_value = "/";

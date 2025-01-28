@@ -37,7 +37,7 @@ public class UI_BarsHandler : MonoBehaviour {
     {
         // print(sprites);
 
-        if (perso.hasCapacity("hoover_hack"))
+        if (perso.Can("hoover_hack"))
         {
             // on active le UI_BitsHandler
             ui_bits_handler.SetActive(true);

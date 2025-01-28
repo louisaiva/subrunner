@@ -71,7 +71,7 @@ public class UI_Minimap : MonoBehaviour {
         }
 
 
-        bool gyro = perso.hasCapacity("gyroscope");
+        bool gyro = perso.Can("gyroscope");
 
         // on vérifie si on a le gyroscope
         if (gyro && !is_map_shown)

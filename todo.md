@@ -5,7 +5,7 @@
 - [ ] - faire une classe Movable parent de Being et de Item afin d'appliquer des forces aux items
 
 - [ ] - faire des plafonds respectifs à chaque area afin de pouvoir cacher les zones non découvertes
-- [ ] - faire des distributeurs de vie/bits
+- [ ] - faire des distributeurs de life/bits
 - [ ] - faire des coffres spéciaux à choix pour les sas
 - [ ] - marquer les coffres d'un skin différent après qu'on les ait ouverts
 - [ ] - améliorer le dash : changer le sprite en fonction de la direction
@@ -89,7 +89,7 @@
     - [ ] - acceleration de la vitesse de hack
 
 - [ ] - améliorer l'UI
-    - [ ] - faire un menu pause qui grossi les différents HUD (map, barre de vie)
+    - [ ] - faire un menu pause qui grossi les différents HUD (map, barre de life)
     - [ ] - ajouter lecteur CD en bas à gauche ?
     - [ ] - ajouter visu clés RSA / HASH en bas à droite ?
 
@@ -123,7 +123,7 @@
 - [x] - bug ordi freeze à la fin de l'animation idle_on
 
 - [x] - old
-    - [x] - mettre une barre de vie de perso
+    - [x] - mettre une barre de life de perso
     - [x] - mettre un compteur d'exploits (mana)
     - [x] - mettre une barre de hacker (xp)
 

@@ -21,7 +21,7 @@ public class DoorAuto : Door
         // on check si le perso est dans le rayon d'ouverture
         if (!is_open && Vector2.Distance(transform.position, perso.transform.position) < auto_openin_radius)
         {
-            // if (!perso.GetComponent<Perso>().hasCapacity("badge")) { return; }
+            // if (!perso.GetComponent<Perso>().Can("badge")) { return; }
             open();
         }
         else if (is_open && Vector2.Distance(transform.position, perso.transform.position) > auto_openin_radius)

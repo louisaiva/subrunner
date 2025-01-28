@@ -64,7 +64,7 @@ public class XPProvider : MonoBehaviour
         int xp_bonus = 0;
         int bit_bonus = 0;
 
-        // on change la vie des particules
+        // on change la life des particules
         for (int i = 0; i < triggeredParticles; i++)
         {
             ParticleSystem.Particle p = particles[i];
@@ -73,7 +73,7 @@ public class XPProvider : MonoBehaviour
             Color color = p.GetCurrentColor(generator);
             if (color == life_color)
             {
-                // on ajoute de la vie
+                // on ajoute de la life
                 life_bonus += 1;
             }
             else if (color == bit_color)
@@ -87,7 +87,7 @@ public class XPProvider : MonoBehaviour
                 xp_bonus += 1;
             }
 
-            // on change la vie de la particule
+            // on change la life de la particule
             p.remainingLifetime = 0;
             particles[i] = p;
         }
@@ -102,7 +102,7 @@ public class XPProvider : MonoBehaviour
         // on ajoute des bits au player
         if (bit_bonus > 0) { player.GetComponent<Perso>().addBits(bit_bonus); }
 
-        // on ajoute de la vie au player
+        // on ajoute de la life au player
         if (life_bonus > 0) { player.GetComponent<Perso>().heal(life_bonus); }
     }
 

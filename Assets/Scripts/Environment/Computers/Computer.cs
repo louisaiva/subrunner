@@ -136,7 +136,7 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable, I_FileHolder
             // on update le ttl
             if (is_interacting || is_getting_hacked)
             {
-                // on est utilisé -> on reset le temps de vie
+                // on est utilisé -> on reset le temps de life
                 time_to_live = time_to_live_base;
             }
 

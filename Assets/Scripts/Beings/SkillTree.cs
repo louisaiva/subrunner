@@ -30,14 +30,14 @@ public class SkillTree : MonoBehaviour {
 
     */
 
-    // maximum vie
+    // maximum life
     public int max_vie_level = 0;
     private float max_vie_base = 15f;
     private float max_vie_modifier = 0.1f;
     private float max_vie_K = 100f;
 
 
-    // regen vie (en vie par seconde)
+    // regen life (en life par seconde)
     public int regen_vie_level = 0;
     private float regen_vie_base = 0.15f;
     private float regen_vie_modifier = 0.1f;
@@ -110,9 +110,9 @@ public class SkillTree : MonoBehaviour {
         Start();
 
         // on met à jour les valeurs du perso
-        perso.GetComponent<Perso>().max_vie = (int) calculateX("max_vie");
-        perso.GetComponent<Perso>().regen_vie = calculateX("regen_vie");
-        perso.GetComponent<Perso>().damage = calculateX("degats");
+        perso.GetComponent<Perso>().max_life = (int) calculateX("max_life");
+        perso.GetComponent<Perso>().regen_life = calculateX("regen_life");
+        perso.transform.Find("attack").GetComponent<AttackCapacity>().damage = calculateX("degats");
         perso.GetComponent<Perso>().max_bits = (int) calculateX("max_bits");
         perso.GetComponent<Perso>().regen_bits = calculateX("regen_bits");
         perso.GetComponent<Perso>().setHackinRange(calculateX("portee_hack"));
@@ -162,7 +162,7 @@ public class SkillTree : MonoBehaviour {
     public void randomPhysicalLevelUp()
     {
         // on choisit un skill au hasard
-        string[] skills = { "max_vie", "regen_vie", "degats" };
+        string[] skills = { "max_life", "regen_life", "degats" };
         string skill = skills[Random.Range(0, skills.Length)];
 
         // on augmente le skill
@@ -221,21 +221,21 @@ public class SkillTree : MonoBehaviour {
         else if (!isPhysicalSkill(skill) && virtual_points <= 0) { return; }
 
         // on regarde quel skill on augmente
-        if (skill == "max_vie")
+        if (skill == "max_life")
         {
             // on augmente le skill
             max_vie_level++;
 
             // on met à jour les stats
-            perso.GetComponent<Perso>().max_vie = (int) calculateX("max_vie");
+            perso.GetComponent<Perso>().max_life = (int) calculateX("max_life");
         }
-        else if (skill == "regen_vie")
+        else if (skill == "regen_life")
         {
             // on augmente le skill
             regen_vie_level++;
 
             // on met à jour les stats
-            perso.GetComponent<Perso>().regen_vie = calculateX("regen_vie");
+            perso.GetComponent<Perso>().regen_life = calculateX("regen_life");
 
         }
         else if (skill == "degats")
@@ -244,7 +244,7 @@ public class SkillTree : MonoBehaviour {
             degats_level++;
 
             // on met à jour les stats
-            perso.GetComponent<Perso>().damage = calculateX("degats");
+            perso.transform.Find("attack").GetComponent<AttackCapacity>().damage = calculateX("degats");
 
         }
         else if (skill == "max_bits")
@@ -335,13 +335,13 @@ public class SkillTree : MonoBehaviour {
         // on regarde quel skill on augmente
         switch (skill)
         {
-            case "max_vie":
+            case "max_life":
                 l = max_vie_level;
                 b = max_vie_base;
                 m = max_vie_modifier;
                 K = max_vie_K;
                 break;
-            case "regen_vie":
+            case "regen_life":
                 l = regen_vie_level;
                 b = regen_vie_base;
                 m = regen_vie_modifier;
@@ -373,7 +373,7 @@ public class SkillTree : MonoBehaviour {
         // on calcule x
         if (K == 0f)
         {
-            // cas particulier de regen_vie
+            // cas particulier de regen_life
             x = l * (b + l * m);
         }
         else
@@ -406,13 +406,13 @@ public class SkillTree : MonoBehaviour {
         // on regarde quel skill on augmente
         switch (skill)
         {
-            case "max_vie":
+            case "max_life":
                 l = max_vie_level;
                 b = max_vie_base;
                 m = max_vie_modifier;
                 K = max_vie_K;
                 break;
-            case "regen_vie":
+            case "regen_life":
                 l = regen_vie_level;
                 b = regen_vie_base;
                 m = regen_vie_modifier;
@@ -445,7 +445,7 @@ public class SkillTree : MonoBehaviour {
         int l2 = (int) l + 1;
         if (K == 0f)
         {
-            // cas particulier de regen_vie
+            // cas particulier de regen_life
             x = l2 * (b + l2 * m);
         }
         else
@@ -468,9 +468,9 @@ public class SkillTree : MonoBehaviour {
         portee_hack_level = lvl;
 
         // on met à jour les stats
-        perso.GetComponent<Perso>().max_vie = (int) calculateX("max_vie");
-        perso.GetComponent<Perso>().regen_vie = calculateX("regen_vie");
-        perso.GetComponent<Perso>().damage = calculateX("degats");
+        perso.GetComponent<Perso>().max_life = (int) calculateX("max_life");
+        perso.GetComponent<Perso>().regen_life = calculateX("regen_life");
+        perso.transform.Find("attack").GetComponent<AttackCapacity>().damage = calculateX("degats");
         perso.GetComponent<Perso>().max_bits = (int) calculateX("max_bits");
         perso.GetComponent<Perso>().regen_bits = calculateX("regen_bits");
         perso.GetComponent<Perso>().setHackinRange(calculateX("portee_hack"));
@@ -481,17 +481,17 @@ public class SkillTree : MonoBehaviour {
         // on regarde quel skill on augmente
         switch (skill)
         {
-            case "max_vie":
+            case "max_life":
                 max_vie_level = lvl;
-                perso.GetComponent<Perso>().max_vie = (int)calculateX("max_vie");
+                perso.GetComponent<Perso>().max_life = (int)calculateX("max_life");
                 return;
-            case "regen_vie":
+            case "regen_life":
                 regen_vie_level = lvl;
-                perso.GetComponent<Perso>().regen_vie = calculateX("regen_vie");
+                perso.GetComponent<Perso>().regen_life = calculateX("regen_life");
                 return;
             case "degats":
                 degats_level = lvl;
-                perso.GetComponent<Perso>().damage = calculateX("degats");
+                perso.transform.Find("attack").GetComponent<AttackCapacity>().damage = calculateX("degats");
                 return;
             case "max_bits":
                 max_bits_level = lvl;
@@ -517,9 +517,9 @@ public class SkillTree : MonoBehaviour {
         // on regarde quel skill on augmente
         switch (skill)
         {
-            case "max_vie":
+            case "max_life":
                 return max_vie_level;
-            case "regen_vie":
+            case "regen_life":
                 return regen_vie_level;
             case "degats":
                 return degats_level;
@@ -551,9 +551,9 @@ public class SkillTree : MonoBehaviour {
         // on regarde quel skill on augmente
         switch (skill)
         {
-            case "max_vie":
+            case "max_life":
                 return true;
-            case "regen_vie":
+            case "regen_life":
                 return true;
             case "degats":
                 return true;

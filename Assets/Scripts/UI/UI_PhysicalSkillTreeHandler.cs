@@ -24,8 +24,8 @@ public class UI_PhysicalSkillTreeHandler : MonoBehaviour, I_UI_Slottable
         tree = transform.parent.GetComponent<SkillTree>();
 
         // on récupère les labels
-        max_vie_lvl_label = transform.Find("max_vie/lvl_label").gameObject;
-        regen_vie_lvl_label = transform.Find("regen_vie/lvl_label").gameObject;
+        max_vie_lvl_label = transform.Find("max_life/lvl_label").gameObject;
+        regen_vie_lvl_label = transform.Find("regen_life/lvl_label").gameObject;
         degats_lvl_label = transform.Find("degats/lvl_label").gameObject;
 
         points_to_spend_label = transform.Find("level/tuto/points_to_spend").gameObject;
@@ -54,8 +54,8 @@ public class UI_PhysicalSkillTreeHandler : MonoBehaviour, I_UI_Slottable
     {
         // on récupère les slots
         List<GameObject> slots = new List<GameObject>();
-        slots.Add(transform.Find("max_vie").gameObject);
-        slots.Add(transform.Find("regen_vie").gameObject);
+        slots.Add(transform.Find("max_life").gameObject);
+        slots.Add(transform.Find("regen_life").gameObject);
         slots.Add(transform.Find("degats").gameObject);
 
         // on récupère les variables

@@ -28,8 +28,8 @@ public class Rat : Being
         base.Start();
 
         // on met à jour les différentes variables d'attaques pour le rat
-        max_vie = 5000 + Random.Range(-3, 3);
-        vie = (float)max_vie;
+        max_life = 5000 + Random.Range(-3, 3);
+        life = (float)max_life;
         speed = 3f + Random.Range(-0.5f, 0.5f);
         running_speed = 17.5f;
         // damage = 5f + Random.Range(-2f, 2f);
@@ -47,7 +47,7 @@ public class Rat : Being
         base.Events();
 
         // walk
-        if (hasCapacity("walk"))
+        if (Can("walk"))
         {
             inputs = rat_movement();
             // Debug.Log("rat movement: " + inputs);

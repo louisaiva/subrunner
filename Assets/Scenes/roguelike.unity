@@ -9121,7 +9121,7 @@ GameObject:
   - component: {fileID: 1025543751}
   - component: {fileID: 1025543750}
   m_Layer: 18
-  m_Name: max_vie
+  m_Name: max_life
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9163,7 +9163,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   description_ui: {fileID: 0}
-  skill_name: max_vie
+  skill_name: max_life
   human_readable_name: max health
   description: your maximum health. you only trust your body's strengh
   current_value: /
@@ -9226,7 +9226,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: max_vie
+          m_StringArgument: max_life
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!222 &1025543752
@@ -10031,7 +10031,7 @@ GameObject:
   - component: {fileID: 1139419527}
   - component: {fileID: 1139419526}
   m_Layer: 18
-  m_Name: regen_vie
+  m_Name: regen_life
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10073,7 +10073,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   description_ui: {fileID: 0}
-  skill_name: regen_vie
+  skill_name: regen_life
   human_readable_name: health regen
   description: your health regeneration (hp/s). you know how to take care of yourself
   current_value: /
@@ -10136,7 +10136,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: regen_vie
+          m_StringArgument: regen_life
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!222 &1139419528
@@ -11676,9 +11676,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   velocity: {x: 0, y: 0}
-  vie: 100
-  max_vie: 100
-  regen_vie: 1
+  life: 100
+  max_life: 100
+  regen_life: 1
   xp_provider: {fileID: 0}
   floating_dmg_provider: {fileID: 0}
   inputs: {x: 0, y: 0}
@@ -11689,7 +11689,7 @@ MonoBehaviour:
   attack_point: {fileID: 0}
   attack_range: 0.25
   damage_range: 0.25
-  enemy_layers:
+  target_layers:
     serializedVersion: 2
     m_Bits: 0
   cooldown_attack: 0.6

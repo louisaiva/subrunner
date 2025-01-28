@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Perso : Attacker
+public class Perso : Being
 {
 
     // DEBUG
@@ -65,14 +65,14 @@ public class Perso : Attacker
 
     [Header("INVENTORY")]
     public Inventory inventory;
-    public UI_Inventory big_inventory;
+    // public UI_Inventory big_inventory;
     public Transform items_parent;
     private LayerMask grabber_layer;
 
     [Header("UI - MENUS")]
-    public SkillTree skills_tree;
-    public UI_Fullmap big_map;
-    public UI_PauseMenu pause_menu;
+    // public SkillTree skills_tree;
+    // public UI_Fullmap big_map;
+    // public UI_PauseMenu pause_menu;
 
     [Header("INTERACTIONS")]
     // interactions
@@ -176,7 +176,7 @@ public class Perso : Attacker
 
 
         // on met à jour le layer des ennemis
-        enemy_layers = LayerMask.GetMask("Enemies","Beings");
+        // target_layers = LayerMask.GetMask("Enemies","Beings");
 
         // on met à jour les layers du hack
         hack_layer = LayerMask.GetMask("Hackables");
@@ -195,13 +195,13 @@ public class Perso : Attacker
         // on récupère l'inventaire
         inventory = GameObject.Find("/inventory").GetComponent<Inventory>();
         inventory.scalable = true;
-        big_inventory = GameObject.Find("/ui/inventory/ui_inventory").GetComponent<UI_Inventory>();
+        // big_inventory = GameObject.Find("/ui/inventory/ui_inventory").GetComponent<UI_Inventory>();
 
         // on récupère la map
-        big_map = GameObject.Find("/ui/fullmap").GetComponent<UI_Fullmap>();
+        // big_map = GameObject.Find("/ui/fullmap").GetComponent<UI_Fullmap>();
 
         // on récupère le pause_menu
-        pause_menu = GameObject.Find("/ui/pause_menu").GetComponent<UI_PauseMenu>();
+        // pause_menu = GameObject.Find("/ui/pause_menu").GetComponent<UI_PauseMenu>();
 
         // on récupère le parent des items
         // items_parent = GameObject.Find("/world/sector_2/items").transform;
@@ -214,13 +214,13 @@ public class Perso : Attacker
         floating_text_prefab = Resources.Load("prefabs/ui/floating_text") as GameObject;
 
         // on récupère le global_light
-        global_light = GameObject.Find("/world/global_light").gameObject;
+        // global_light = GameObject.Find("/world/global_light").gameObject;
 
         // on met à jour les interactions
         interact_layers = LayerMask.GetMask("Chests", "Computers","Buttons","Items","Interactives");
 
         // on récupère le cursor_handler
-        cursor_handler = GameObject.Find("/utils").GetComponent<CursorHandler>();
+        // cursor_handler = GameObject.Find("/utils").GetComponent<CursorHandler>();
 
         // on récupère le hints_controls
         // hints_controls = transform.Find("hint_controls").GetComponent<UI_HintControlsManager>();
@@ -229,34 +229,35 @@ public class Perso : Attacker
         // ON MET A JOUR DES TRUCS
 
         // on ajoute des capacités
-        addCapacity("hoover_interact");
-        // addCapacity("interact");
-        addCapacity("debug_capacities");
-        addCapacity("talk");
-        addCapacity("dodge", dodge_cooldown);
+        AddCapacity("hoover_interact");
+        // AddCapacity("interact");
+        // AddCapacity("debug_capacities");
+        // AddCapacity("talk");
+        AddCapacity("dodge");
+        AddCapacity("attack");
 
         // on met les differents paramètres du perso
-        skills_tree = transform.Find("skills_tree").GetComponent<SkillTree>();
-        skills_tree.init();
+        // skills_tree = transform.Find("skills_tree").GetComponent<SkillTree>();
+        // skills_tree.init();
 
-        // max_vie = 100;
-        vie = (float) max_vie;
+        // max_life = 100;
+        life = (float) max_life;
         speed = 3f;
         running_speed = 5f;
         // damage = 10f;
-        attack_range = 0.3f; // defini par l'item
+        /* attack_range = 0.3f; // defini par l'item
         damage_range = 0.5f; // defini par l'item
         cooldown_attack = 0.5f; // defini par l'item
-        knockback_base = 10f;
+        knockback_base = 10f; */
 
         xp_gift = 0; // on ne donne pas d'xp quand on tue un perso
 
         // on met à jour les animations
         // anims.init("perso");
-        anims = new PersoAnims();
+        // anims = new PersoAnims();
 
         // on met à jour les sons
-        sounds = new PersoSounds();
+        // sounds = new PersoSounds();
         // audio_manager.LoadSoundsFromPath("audio/perso");
 
 
@@ -276,9 +277,9 @@ public class Perso : Attacker
 
 
         // on affiche un texte de début
-        Invoke("showWelcome", 5f);
-        Invoke("showQuest", 10f);
-        Invoke("randomTalk", Random.Range(talking_delay_range.x, talking_delay_range.y));
+        // Invoke("showWelcome", 5f);
+        // Invoke("showQuest", 10f);
+        // Invoke("randomTalk", Random.Range(talking_delay_range.x, talking_delay_range.y));
     }
 
     // welcoming
@@ -312,56 +313,6 @@ public class Perso : Attacker
     {
         floating_dmg_provider.GetComponent<TextManager>().addFloatingText(quest_text, transform.position + new Vector3(0, 0.5f, 0), "yellow");
     }
-
-    /* void showQuest()
-    {
-        // on affiche un texte de début
-        Vector3 position = transform.position + new Vector3(0, 1f, 0);
-        string text = "you need to";
-        GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
-        floating_text.GetComponent<FloatingText>().init(text, Color.yellow, 30f, 0.1f, 0.2f, 6f);
-        floating_text.transform.SetParent(floating_dmg_provider.transform);
-
-
-        position = transform.position + new Vector3(0, 0.5f, 0);
-        text = "HACK THE DOOR";
-        GameObject floating_text2 = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
-        floating_text2.GetComponent<FloatingText>().init(text, Color.red, 30f, 0.1f, 0.2f, 6f);
-        floating_text2.transform.SetParent(floating_dmg_provider.transform);
-
-        // on affiche la suite de la quete 5sec après
-        Invoke("showQuest2", 5f);
-    }
-
-    void showQuest2()
-    {
-        // on affiche un texte de début
-        Vector3 position = transform.position + new Vector3(0, 1f, 0);
-        string text = "find the usb key to hack it";
-        GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
-        floating_text.GetComponent<FloatingText>().init(text, Color.green, 30f, 0.1f, 0.2f, 6f);
-        floating_text.transform.SetParent(floating_dmg_provider.transform);
-
-        // on affiche la suite de la quete 5sec après
-        Invoke("showQuest3", 5f);
-    }
-
-    void showQuest3()
-    {
-        // on affiche un texte de début
-        Vector3 position = transform.position + new Vector3(0, 1f, 0);
-        string text = "but beware of";
-        GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
-        floating_text.GetComponent<FloatingText>().init(text, Color.yellow, 30f, 0.1f, 0.2f, 6f);
-        floating_text.transform.SetParent(floating_dmg_provider.transform);
-
-        // on affiche la suite de la quete 5sec après
-        position = transform.position + new Vector3(0, 0.5f, 0);
-        text = "ZOMBIES";
-        GameObject floating_text2 = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
-        floating_text2.GetComponent<FloatingText>().init(text, Color.red, 30f, 0.1f, 0.2f, 6f);
-        floating_text2.transform.SetParent(floating_dmg_provider.transform);
-    } */
 
     void randomTalk()
     {
@@ -407,7 +358,7 @@ public class Perso : Attacker
         if (Time.timeScale == 0f) { return; }
 
         // hoover interactions
-        if (hasCapacity("hoover_interact"))
+        if (Can("hoover_interact"))
         {
             // todo ici on highlight les objets avec lesquels on peut interagir
             InteractHooverEvents();
@@ -417,13 +368,13 @@ public class Perso : Attacker
         }
 
         // on vérifie qu'on est pas KO
-        if (hasCapacity("knocked_out")) { return; }
+        if (HasEffect(Effect.Stunned)) { return; }
 
         // on check toutes les capacities dans le bon ordre pour voir comment on peut agir etc.
         base.Events();
 
         // walk
-        if (hasCapacity("walk"))
+        if (Can("walk"))
         {
             Vector2 raw_inputs = new Vector2(playerInputs.perso.move.ReadValue<Vector2>().x, playerInputs.perso.move.ReadValue<Vector2>().y);
             
@@ -439,7 +390,7 @@ public class Perso : Attacker
         }
 
         // run
-        if (hasCapacity("run"))
+        if (Can("run"))
         {
             if (playerInputs.perso.run.ReadValue<float>() == 1f)
             {
@@ -453,17 +404,17 @@ public class Perso : Attacker
 
 
         // gv vision
-        if (capacities.ContainsKey("gv_vision") && capacities["gv_vision"])
+        // global_light.GetComponent<GlobalLight>().setMode("on");
+        /* if (capacities.ContainsKey("gv_vision") && capacities["gv_vision"])
         {
-            global_light.GetComponent<GlobalLight>().setMode("on");
         }
         else
         {
             global_light.GetComponent<GlobalLight>().setMode("off");
-        }
+        } */
 
         // hoover hack
-        if (hasCapacity("hoover_hack"))
+        if (Can("hoover_hack"))
         {
             if (playerInputs.enhanced_perso.hackDirection.ReadValue<Vector2>() != Vector2.zero)
             {
@@ -481,7 +432,7 @@ public class Perso : Attacker
             updateHackinHoover();
 
             // bit regen
-            if (hasCapacity("bit_regen"))
+            if (Can("bit_regen"))
             {
                 if (bits < max_bits)
                 {
@@ -490,7 +441,7 @@ public class Perso : Attacker
             }
 
             // hacks
-            if (hasCapacity("hack"))
+            if (Can("hack"))
             {
                 if (playerInputs.enhanced_perso.hack.ReadValue<float>() == 1f)
                 {
@@ -503,7 +454,7 @@ public class Perso : Attacker
         }
 
         // DEBUG
-        /* if (hasCapacity("debug_capacities"))
+        /* if (Can("debug_capacities"))
         {
             if (Input.GetButtonDown("debug_capacities"))
             {
@@ -517,8 +468,8 @@ public class Perso : Attacker
         } */
 
         // ouverture de l'inventaire
-        if (!skills_tree.isShowed() && !big_map.isShowed())
-        {
+        /* if (!skills_tree.isShowed() && !big_map.isShowed())
+        { 
             if (input_manager.isUsingGamepad())
             {
                 if (playerInputs.perso.inventory.ReadValue<float>() >= 1f && !big_inventory.isShowed())
@@ -539,7 +490,7 @@ public class Perso : Attacker
                     big_inventory.hide();
                 }
             }
-        }
+        }*/
     }
     void HackinHooverEvents(Vector2 mouse_position)
     {
@@ -778,10 +729,10 @@ public class Perso : Attacker
 
         // on se met lvl 10 sur le skill tree
         // skills_tree.setGlobalLevel(10);
-        skills_tree.setLevel("max_vie", 30);
+        // skills_tree.setLevel("max_life", 30);
 
         // on met à jour les paramètres du perso
-        vie = (float)max_vie;
+        life = (float)max_life;
         // speed = 5f;
 
         // on rajoute hacks, lunettes etc
@@ -816,7 +767,7 @@ public class Perso : Attacker
 
 
         // on ouvre le physical tree
-        skills_tree.physicalLevelUp();
+        // skills_tree.physicalLevelUp();
 
         // on affiche un texte de level up
         floating_dmg_provider.GetComponent<TextManager>().addFloatingText("LEVEL "+level.ToString(), transform.position + new Vector3(0, 0.5f, 0), "yellow");
@@ -831,20 +782,10 @@ public class Perso : Attacker
         if (!dmg_status) { return false; }
 
         // we make a little screenshake if perso
-        float shake_magnitude = damage / vie * 2f;
+        float shake_magnitude = damage / life * 2f;
         cam.GetComponent<CameraShaker>().shake(shake_magnitude);
 
         return true;
-    }
-    protected override int attack()
-    {
-        int attack_status = base.attack();
-
-        if (attack_status == 0) { return 0; }
-
-        cam.GetComponent<CameraShaker>().shake((float) attack_status);
-
-        return attack_status;
     }
     protected override void die()
     {
@@ -1022,7 +963,7 @@ public class Perso : Attacker
                     if (hit.gameObject.GetComponent<I_Interactable>() == null) { continue; }
 
                     // * cas spécial : si c'est un coffre et que le big inventory est ouvert, on ne peut pas interagir avec
-                    if (hit.gameObject.GetComponent<InventoryChest>() != null && big_inventory.isShowed()) { continue; }
+                    // if (hit.gameObject.GetComponent<InventoryChest>() != null && big_inventory.isShowed()) { continue; }
 
                     // on regarde si on peut interagir avec l'objet
                     if (hit.gameObject.GetComponent<I_Interactable>().isInteractable())
@@ -1070,12 +1011,12 @@ public class Perso : Attacker
         if (current_hoover_interactable != null)
         {
             // hints_controls.addHint("b");
-            addCapacity("interact");
+            AddCapacity("interact");
         }
         else
         {
             // hints_controls.removeHint("b");
-            removeCapacity("interact");
+            RemoveCapacity("interact");
         }
 
     }
@@ -1143,7 +1084,7 @@ public class Perso : Attacker
     // INVENTORY
     public void drop(Item item)
     {
-        removeCapaOfItem(item);
+        // removeCapaOfItem(item);
 
         bool drop_on_ground = true;
 
@@ -1215,14 +1156,14 @@ public class Perso : Attacker
 
 
         // on met à jour l'inventaire
-        if (item is LegendaryItem)
+        /* if (item is LegendaryItem)
         {
             big_inventory.dropLeg(item);
         }
         else
         {
             big_inventory.dropItem(item);
-        }
+        } */
 
         // on active l'item
         item.gameObject.SetActive(true);
@@ -1257,22 +1198,22 @@ public class Perso : Attacker
 
 
         // on ajoute la capacité de l'item
-        addCapaOfItem(item);
+        // addCapaOfItem(item);
 
         // on met à jour l'inventaire
-        if (item is LegendaryItem)
+        /* if (item is LegendaryItem)
         {
             big_inventory.grabLeg(item);
         }
         else
         {
             big_inventory.grabItem(item);
-        }
+        } */
     
         // on désactive l'item
         item.gameObject.SetActive(false);
     }
-    private void removeCapaIfNotInInv(string capa, Item item_capa=null)
+    /* private void removeCapaIfNotInInv(string capa, Item item_capa=null)
     {
         // on regarde si on a encore un item avec cette capacité
         bool has_capa = false;
@@ -1309,8 +1250,8 @@ public class Perso : Attacker
                 removeCapaIfNotInInv(capa, item);
             }
         }
-    }
-    private void addCapaOfItem(Item item)
+    } */
+    /* private void addCapaOfItem(Item item)
     {
         // on ajoute la capacité de l'item
         if (item.action_type == "capacity")
@@ -1318,14 +1259,6 @@ public class Perso : Attacker
             // Debug.Log("(Perso) adding capacities of " + item.item_name + " to the perso");
             List<string> capacities = item.getCapacities();
             Dictionary<string,float> cooldowns = item.getCooldownsBase();
-            
-            /* string s = "capacities : ";
-            foreach (string capa in capacities)
-            {
-                s += capa + " " + (cooldowns.ContainsKey(capa) ? cooldowns[capa] : "/") + " \n";
-            }
-            Debug.Log(s); */
-
 
             for (int i = 0; i < capacities.Count; i++)
             {
@@ -1341,7 +1274,7 @@ public class Perso : Attacker
                 addCapacity(capa, cooldown);
             }
         }
-    }
+    } */
 
 
     // DRINK
@@ -1359,10 +1292,10 @@ public class Perso : Attacker
             drink.drink();
 
             // on enlève la capacité de l'item si on a plus l'item dans notre inventaire
-            removeCapaIfNotInInv("drink");
+            // removeCapaIfNotInInv("drink");
 
             // on met à jour l'inventaire
-            big_inventory.dropItem(item);
+            // big_inventory.dropItem(item);
 
             // on sort de la fonction
             return;
@@ -1373,7 +1306,7 @@ public class Perso : Attacker
     private void dash()
     {
         // start cooldown
-        startCapacityCooldown("dash");
+        Do("dash");
 
 
         // we check the synchroneity of the dash
@@ -1415,22 +1348,7 @@ public class Perso : Attacker
 
 
 
-        anim_handler.StopForcing();
-        // on joue l'animation
-        /* if (Mathf.Abs(inputs.x) > Mathf.Abs(inputs.y))
-        {
-            anim_handler.ChangeAnimTilEnd(((PersoAnims) anims).dash_side);
-        }
-        else if (inputs.y > 0)
-        {
-            anim_handler.ChangeAnimTilEnd(((PersoAnims) anims).dash_up);
-        }
-        else
-        {
-            anim_handler.ChangeAnimTilEnd(((PersoAnims) anims).dash_down);
-            // ajout = 0.25f;
-        }
-        */
+        /* anim_handler.StopForcing();
         if (new List<Vector2Int>() { new Vector2Int(1, 0), new Vector2Int(-1, 0) }.Contains(dash_direction))
         {
             anim_handler.ChangeAnimTilEnd(((PersoAnims) anims).dash_side);
@@ -1442,7 +1360,7 @@ public class Perso : Attacker
         else
         {
             anim_handler.ChangeAnimTilEnd(((PersoAnims) anims).dash_down);
-        }
+        } */
 
 
 
@@ -1452,9 +1370,11 @@ public class Perso : Attacker
 
         // on permet d'orienter le dash
         // addCapacity("dash_orientable");
-        addEphemeralCapacity("invicible", dash_duration);
-        addEphemeralCapacity("ghost", dash_duration);
-        addEphemeralCapacity("dashin", 0.6f*dash_duration);
+        // addEphemeralCapacity("invicible", dash_duration);
+        AddEffect(Effect.Invincible, dash_duration);
+        AddEffect(Effect.Ghost, dash_duration);
+        // addEphemeralCapacity("ghost", dash_duration);
+        // addEphemeralCapacity("dashin", 0.6f*dash_duration);
 
         // on fait le dash
         Force dash_force = new Force(dash_direction, dash_magnitude);
@@ -1462,7 +1382,7 @@ public class Perso : Attacker
         // forces.Add(dash_force);
         dash_forces.Add(dash_force.id);
     }
-    private void orient_dash()
+    /* private void orient_dash()
     {
         // on clamp les inputs dans l'une des 4 directions
         Vector2Int dash_direction = new Vector2Int(0, 0);
@@ -1498,31 +1418,31 @@ public class Perso : Attacker
         {
             anim_handler.ChangeAnimTilEnd(((PersoAnims)anims).dash_down);
         }
-    }
+    } */
 
 
     // INPUTS
     public void OnUseConso()
     {
-        if (!hasCapacity("knocked_out") && hasCapacity("drink"))
+        if (Can("drink") && !HasEffect(Effect.Stunned))
         {
             drink();
         }
     }
     public void OnInteract()
     {
-        if (hasCapacity("knocked_out")) { return; }
+        if (HasEffect(Effect.Stunned)) { return; }
         
-        if (hasCapacity("interact"))
+        if (Can("interact"))
         {
             interact();
         }
     }
     public void OnInventory()
     {
-        if (hasCapacity("knocked_out")) { return; }
+        if (HasEffect(Effect.Stunned)) { return; }
 
-        if (!skills_tree.isShowed())
+        /* if (!skills_tree.isShowed())
         {
             if (!input_manager.isUsingGamepad())
             {
@@ -1536,34 +1456,30 @@ public class Perso : Attacker
                 // on ouvre l'inventaire
                 big_inventory.rollShow();
             }
-        }
+        } */
     }
     public void OnHit()
     {
-        if (!hasCapacity("knocked_out") && hasCapacity("hit"))
+        if (Can("attack") && !HasEffect(Effect.Stunned))
         {
-            attack();
+            Do("attack");
         }
     }
     public void OnDash()
     {
-        if (!hasCapacity("knocked_out"))
+        if (!HasEffect(Effect.Stunned))
         {
-            if (hasCapacity("dash"))
+            if (Can("dash"))
             {
                 dash();
-            }
-            else if (hasCapacity("dash_orientable"))
-            {
-                orient_dash();
             }
         }
     }
     public void OnRandomTalk()
     {
-        if (!hasCapacity("knocked_out"))
+        if (!HasEffect(Effect.Stunned))
         {
-            if (hasCapacity("talk"))
+            if (Can("talk"))
             {
                 CancelInvoke("randomTalk");
                 randomTalk();
@@ -1576,35 +1492,37 @@ public class Perso : Attacker
     }
     public void OnMap()
     {
-        if (!hasCapacity("knocked_out"))
+        /* if (!HasEffect(Effect.Stunned))
         {
-            if (hasCapacity("gyroscope"))
+            if (Can("gyroscope"))
             {
                 big_map.rollShow();
             }
-        }
+        } */
     }
     public void OnPause()
     {
-        pause_menu.rollShow();
+        // pause_menu.rollShow();
     }
 
     private void OnDodge()
     {
         // on vérifie que le perso peut dodge
-        if (!hasCapacity("dodge")) { return; }
+        if (!Can("dodge")) { return; }
 
         // on devient invicible et on fait un PETIT dodge dans une direction.
         // nous stunt un peu après ?
         // reset le cooldown de l'attaque ?
-        addEphemeralCapacity("invicible", dodge_duration);
+        // addEphemeralCapacity("invicible", dodge_duration);
+        AddEffect(Effect.Invincible, dodge_duration);
 
         // on fait le dash
         Force dodge_force = new Force(inputs, dodge_magnitude);
         addForce(dodge_force);
 
         // reset le dodge
-        startCapacityCooldown("dodge");
+        // startCapacityCooldown("dodge");
+        Do("dodge");
 
 
     }
@@ -1612,26 +1530,26 @@ public class Perso : Attacker
 }
 
 
-public class PersoAnims : AttackerAnims
-{
-    public string dash_side = "perso_dash_RL";
-    public string dash_up = "perso_dash_U";
-    public string dash_down = "perso_dash_D";
+// public class PersoAnims : AttackerAnims
+// {
+//     public string dash_side = "perso_dash_RL";
+//     public string dash_up = "perso_dash_U";
+//     public string dash_down = "perso_dash_D";
 
-    public PersoAnims()
-    {
-        base.init("perso");
-        has_up_down_runnin = true;
-        has_up_down_idle = true;
-    }
-}
+//     public PersoAnims()
+//     {
+//         base.init("perso");
+//         has_up_down_runnin = true;
+//         has_up_down_idle = true;
+//     }
+// }
 
-public class PersoSounds : AttackerSounds
-{
-    public PersoSounds()
-    {
-        s_hurted = new List<string>() { "hurted - 1" , "hurted - 2" , "hurted - 3" , "hurted - 4" };
-        s_attack = new List<string>() { "attack - 1" , "attack - 2"};
-        base.init("perso");
-    }
-}
+// public class PersoSounds : AttackerSounds
+// {
+//     public PersoSounds()
+//     {
+//         s_hurted = new List<string>() { "hurted - 1" , "hurted - 2" , "hurted - 3" , "hurted - 4" };
+//         s_attack = new List<string>() { "attack - 1" , "attack - 2"};
+//         base.init("perso");
+//     }
+// }

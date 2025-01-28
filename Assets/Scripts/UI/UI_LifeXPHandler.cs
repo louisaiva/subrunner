@@ -45,7 +45,7 @@ public class UI_LifeXPHandler : MonoBehaviour
             return;
         }
 
-        // on met à jour le fill de vie
+        // on met à jour le fill de life
         update_life_fill();
 
         // on met à jour le fill de xp
@@ -57,8 +57,8 @@ public class UI_LifeXPHandler : MonoBehaviour
     {
 
         // on récupère les infos du perso
-        int max_life = perso.GetComponent<Perso>().max_vie;
-        float life = perso.GetComponent<Perso>().vie;
+        int max_life = perso.GetComponent<Perso>().max_life;
+        float life = perso.GetComponent<Perso>().life;
 
         // on met à jour la taille du fill
         float life_percent = life / max_life;

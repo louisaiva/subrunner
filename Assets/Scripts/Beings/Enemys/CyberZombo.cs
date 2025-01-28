@@ -1,14 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class CyberZombo : Attacker, I_Hackable
+public class CyberZombo : Enemy, I_Hackable
 {
 
-    // player detection
-    private float player_detection_radius = 3f;
-    public bool target_detected = false;
-    GameObject target;
 
     // meat detection
     private float meat_detection_radius = 10f;
@@ -47,23 +44,20 @@ public class CyberZombo : Attacker, I_Hackable
 
         // on récupère le joueur
         // tar = GameObject.Find("/perso");
-        cooldown_attack = 0.6f;
 
         // on start de d'habitude
         base.Start();
 
         // on défini les layers des ennemis
-        enemy_layers = LayerMask.GetMask("Player","Beings");
+        target_layers = LayerMask.GetMask("Beings");
         meat_layers = LayerMask.GetMask("Meat","Beings");
 
         // on met à jour les différentes variables d'attaques pour le zombo
-        max_vie = 25 + Random.Range(-5, 5);
-        vie = (float) max_vie;
+        max_life = 25 + Random.Range(-5, 5);
+        life = (float) max_life;
         speed = 1f + Random.Range(-0.2f, 0.2f);
         running_speed = 2f;
-        damage = 20f + Random.Range(-5f, 5f);
-        attack_range = 0.25f + Random.Range(-0.05f, 0.05f);
-        damage_range = 0.25f + Random.Range(-0.05f, 0.05f);
+        ((AttackCapacity) getCapacity("attack")).damage = 20f + Random.Range(-5f, 5f);
         weight = 1.4f + Random.Range(-0.2f, 0.2f);
 
         // on met les bonnes animations
@@ -71,7 +65,7 @@ public class CyberZombo : Attacker, I_Hackable
         anims.init("zombo");
 
         // on met les bons sons
-        sounds = new ZomboSounds();
+        // sounds = new ZomboSounds();
         // audio_manager.LoadSoundsFromPath("audio/zombo");
 
 
@@ -81,26 +75,13 @@ public class CyberZombo : Attacker, I_Hackable
 
     public override void Events()
     {
+
+        base.Events();
+        if (inputs != new Vector2(0, 0)) { return; }
+
         // treshold distance "trop proche"
         float treshold_distance = 0.1f;
 
-
-        // 1 - on essaye de détecter le joueur
-        if (target_detected){
-            // on se dirige vers le joueur
-            inputs = new Vector2(target.transform.position.x - transform.position.x, target.transform.position.y - transform.position.y);
-
-            // on regarde si on est pas TROP proche du joueur
-            if (inputs.magnitude < treshold_distance){
-                inputs = new Vector2(0, 0);
-            }
-
-            // on normalise les inputs
-            inputs.Normalize();
-
-            return;
-        }
-        
         // 2 - on essaye de détecter de la viande
         if (meat_detected){
             // on se dirige vers la viande
@@ -123,7 +104,7 @@ public class CyberZombo : Attacker, I_Hackable
     }
 
     // update de d'habitude
-    new void Update()
+    protected override void Update()
     {
         // ! à mettre tjrs au début de la fonction update
         if (!isAlive()) { return; }
@@ -133,63 +114,27 @@ public class CyberZombo : Attacker, I_Hackable
             updateHack();
         }
 
-        // on essaye de détecter le joueur
-        detect_target(player_detection_radius);
-
-        // on essaye de détecter de la viande
-        detect_meat(meat_detection_radius);
-
         // update de d'habitude
         base.Update();
 
-
-        // on essaye d'attaquer le joueur si on le détecte
-        if(hasCapacity("hit"))
-        {
-            if (target_detected)
-            {
-                if (target.GetComponent<Being>().isAlive())
-                {
-                    try_to_attack_target();
-                }
-            }
-        }
-
+        // on essaye de détecter de la viande
+        detect_meat(meat_detection_radius);
     }
 
-    // DETECTION DU JOUEUR
 
-    private void detect_target(float radius){
+    // TARGETS DETECTION
+    protected override Collider2D[] get_targets_colliders(float radius)
+    {
+        Collider2D[] targets = base.get_targets_colliders(radius);
 
-        // on essaie de trouver le premier ennemi dans le rayon de détection
-        Collider2D targetCollider = Physics2D.OverlapCircle(transform.position, radius, enemy_layers);
-        target_detected = (targetCollider != null);
-        if (target_detected){
-            target = targetCollider.gameObject;
-        }
-        else{
-            target = null;
-        }
+        // on enlève les zombies des targets
+        targets = targets.Where(target => target.transform.parent.GetComponent<CyberZombo>() == null).ToArray();
 
-    }
-
-    private void try_to_attack_target(){
-
-        // on recupère la distance entre le zombo et le joueur
-        float distance = Vector2.Distance(transform.position, target.transform.position);
-
-        // on regarde si la target est dans le cercle d'attaque + une marge
-        float marge = Random.Range(-damage_range - 0.2f, damage_range + 0.2f);
-        if (distance < attack_range + marge)
-        {
-            attack();
-        }
-
-
+        Debug.Log("cyberzombo targets : " + targets.Length);
+        return targets;
     }
 
     // MEAT DETECTION
-
     private void detect_meat(float radius){
 
         // on essaie de trouver le premier gameobject meat dans le rayon de détection
@@ -263,8 +208,9 @@ public class CyberZombo : Attacker, I_Hackable
         if (hacking_current_duration < 0.1f) { hacking_current_duration = 0.1f; }
 
         // on met à jour les animations
-        anim_handler.StopForcing();
-        anim_handler.ChangeAnimTilEnd(anims.hurted, hacking_current_duration);
+        // anim_handler.StopForcing();
+        // anim_handler.ChangeAnimTilEnd(anims.hurted, hacking_current_duration);
+        Do("hurted");
 
         // on commence le hack
         is_getting_hacked = true;
@@ -311,7 +257,7 @@ public class CyberZombo : Attacker, I_Hackable
         xp_provider.GetComponent<XPProvider>().EmitBits(bits_left, transform.position, 0.5f);
 
         // on met à jour les animations
-        anim_handler.StopForcing();
+        // anim_handler.StopForcing();
     }
 
     public void succeedHack(){

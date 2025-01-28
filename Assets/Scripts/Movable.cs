@@ -1,211 +1,72 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-
-[RequireComponent(typeof(AudioManager))]
-public class Movable : MonoBehaviour
+// a MOVABLE is a character that can move with FORCES. that's it.
+public class Movable : Capable
 {
 
 
     [Header("MOVABLE")]
-    // a MOVABLE is a character that can move with FORCES. that's it.
-
     public float weight = 1f; // poids du movable (pour le knockback)
 
     // FORCES
     public List<Force> forces = new List<Force>();
 
     // DEPLACEMENT
-    private Rect feet_collider; // collider des pieds (pour les collisions)
-    private float offset_movable_y_to_feet = 0f; // offset entre le movable et le collider des pieds
+    // private Rect feet_collider; // collider des pieds (pour les collisions)
+    private BoxCollider2D feet;
+    // private float offset_movable_y_to_feet = 0f; // offset entre le movable et le collider des pieds
     public LayerMask world_layers; // layers du monde
     public LayerMask ghost_layers; // layers du monde (ghost)
     
-    // COLLISIONS
-    // protected List<Collider2D> ghosting_colliders = new List<Collider2D>(); // colliders qui ne sont pas pris en compte dans les collisions
-
-
     // CURRENT VELOCITY
     protected Vector3 last_position = Vector3.zero;
     public Vector2 velocity = Vector2.zero;
 
-    // SOUND
-    protected AudioManager audio_manager;
-    protected BeingSounds sounds = new BeingSounds();
-
-    // CAPACITES
-    protected Dictionary<string, bool> capacities = new Dictionary<string, bool>();
-    protected Dictionary<string, float> capacities_cooldowns = new Dictionary<string, float>();
-    protected Dictionary<string, float> capacities_cooldowns_base = new Dictionary<string, float>();
-    protected Dictionary<string, float> capacities_ttl = new Dictionary<string, float>();
-
     // unity functions
-    protected virtual void Start()
+    protected override void Start()
     {
+        base.Start();
 
-        // on récup le audio manager
-        audio_manager = GetComponent<AudioManager>();
-        
+        // on ajoute la capacité de déplacement
+        AddCapacity("walk");
+        AddCapacity("run");
 
-        // on crée notre collider_box des pieds
-        feet_collider = Rect.zero;
-        feet_collider.size = new Vector2(0.4f, 0.1f);
-        float y_center = transform.position.y - offset_movable_y_to_feet + feet_collider.size.y / 2f;
-        feet_collider.center = new Vector2(transform.position.x, y_center);
+        // on récupère notre collider_box des pieds
+        if (feet == null)
+        {
+            feet = transform.Find("run").GetComponent<BoxCollider2D>();
+        }
 
         // on défini les layers du monde
         world_layers = LayerMask.GetMask("Ground", "Walls", "Ceiling", "Doors", "Chests", "Computers", "Decoratives", "Interactives");
         ghost_layers = LayerMask.GetMask("Ground", "Walls", "Ceiling");
+
     }
 
 
-    protected virtual void Update()
+    protected override void Update()
     {
+        base.Update();
+
+        /* if (feet == null)
+        {
+            feet = transform.Find("run").GetComponent<BoxCollider2D>();
+            if (feet == null) {return;}
+        } */
+
         // on sauvegarde la position du movable
         last_position = transform.position;
-
-        // update capacities cooldowns
-        UpdateCapacities();
         
         // update forces
-        update_forces();
+        updateForces();
 
         // on calcule la current velocity
         Vector3 vel = (transform.position - last_position) / Time.deltaTime;
         velocity = new Vector2(vel.x, vel.y);
+
     }
-
-
-    // CAPACITES
-    protected virtual void UpdateCapacities()
-    {
-        // update capacities cooldowns
-        for (int i = 0; i < capacities_cooldowns.Count; i++)
-        {
-            KeyValuePair<string, float> entry = capacities_cooldowns.ElementAt(i);
-            string capacity = entry.Key;
-            float cooldown = entry.Value;
-            if (cooldown > 0f)
-            {
-                // on désactive la capacité
-                if (capacities[capacity] == true)
-                {
-                    capacities[capacity] = false;
-                }
-
-                // on diminue le cooldown
-                capacities_cooldowns[capacity] -= Time.deltaTime;
-
-                // on remet la capacité si le cooldown est fini
-                if (capacities_cooldowns[capacity] < 0f)
-                {
-                    capacities_cooldowns[capacity] = 0f;
-                    capacities[capacity] = true;
-                    if (capacity == "dodge") { Debug.Log("ended cooldown : " + capacity + " - " + capacities_cooldowns_base[capacity]); }
-                }
-            }
-        }
-
-        // update capacities ttl
-        for (int i = 0; i < capacities_ttl.Count; i++)
-        {
-            KeyValuePair<string, float> entry = capacities_ttl.ElementAt(i);
-            string capacity = entry.Key;
-            float time_to_live = entry.Value;
-            if (time_to_live > 0f)
-            {
-                // on diminue le ttl
-                capacities_ttl[capacity] -= Time.deltaTime;
-
-                // on enlève la capacité si le ttl est fini
-                if (capacities_ttl[capacity] < 0f)
-                {
-                    removeCapacity(capacity);
-                    capacities_ttl.Remove(capacity);
-                }
-            }
-        }
-    }
-
-    public void removeCapacity(string capacity)
-    {
-        if (!capacities.ContainsKey(capacity)) { return; }
-        
-        // on enlève la capacité
-        capacities.Remove(capacity);
-
-        if (capacities_cooldowns.ContainsKey(capacity))
-        {
-            // on enlève le cooldown
-            capacities_cooldowns.Remove(capacity);
-        }
-
-        if (capacities_cooldowns_base.ContainsKey(capacity))
-        {
-            // on enlève le cooldown de base
-            capacities_cooldowns_base.Remove(capacity);
-        }
-    }
-
-    public void addCapacity(string capacity, float cooldown=0f)
-    {
-        if (!capacities.ContainsKey(capacity))
-        {
-            // on ajoute la capacité
-            capacities.Add(capacity, true);
-        }
-        else
-        {
-            // on active la capacité
-            capacities[capacity] = true;
-        }
-
-        if (cooldown == 0f) { return; }
-
-
-        // on ajoute les cooldowns
-        if (!capacities_cooldowns.ContainsKey(capacity))
-        {
-            capacities_cooldowns.Add(capacity, 0f);
-        }
-        if (!capacities_cooldowns_base.ContainsKey(capacity))
-        {
-            capacities_cooldowns_base.Add(capacity, cooldown);
-        }
-        else
-        {
-            capacities_cooldowns_base[capacity] = cooldown;
-        }
-    }
-
-    public void addCapacityCooldown(string capacity, float cooldown)
-    {
-        // on ajoute un cooldown à une capacité
-        if (!capacities_cooldowns_base.ContainsKey(capacity)) { return; }
-
-        // on met le cooldown à jour
-        capacities_cooldowns[capacity] = cooldown;
-    }
-
-    public void addEphemeralCapacity(string capacity, float duration, float cooldown=0f)
-    {
-        // on ajoute une capacité éphémère
-        addCapacity(capacity, cooldown);
-        capacities_ttl[capacity] = duration;
-    }
-
-    protected void startCapacityCooldown(string capacity)
-    {
-        if (!capacities_cooldowns_base.ContainsKey(capacity)) { return; }
-
-        if (capacity == "dodge") { Debug.Log("start cooldown : " + capacity + " - " + capacities_cooldowns_base[capacity]); }
-
-        // on met le cooldown à jour
-        capacities_cooldowns[capacity] = capacities_cooldowns_base[capacity];
-    }
-
 
 
     // FORCES
@@ -221,7 +82,7 @@ public class Movable : MonoBehaviour
         forces.Clear();
     }
 
-    protected void update_forces()
+    protected void updateForces()
     {
         // on parcourt les forces
         for (int i = 0; i < forces.Count; i++)
@@ -254,7 +115,7 @@ public class Movable : MonoBehaviour
     protected void apply_force(Vector2 force)
     {
         // on déplace le movable
-        int moved_code = movable(force);
+        int moved_code = move(force);
 
 
         if (this is Perso)
@@ -283,7 +144,7 @@ public class Movable : MonoBehaviour
 
 
     // DEPLACEMENT
-    protected int movable(Vector2 movement)
+    protected int move(Vector2 movement)
     {
         // fonction mère de toutes les fonctions de déplacement :
         // applique le mouvement au movable en fonction des collisions
@@ -307,9 +168,8 @@ public class Movable : MonoBehaviour
 
         Physics2D.queriesHitTriggers = false;
 
-        // on maj notre collider_box        
-        float y_center = transform.position.y - offset_movable_y_to_feet + feet_collider.size.y / 2f;
-        feet_collider.center = new Vector2(transform.position.x, y_center);
+        // on récupère le AABB des pieds
+        Bounds feet_aabb = feet.bounds;
 
         // on sauvegarde le mouvement
         Vector2 movement_save = movement;
@@ -323,7 +183,7 @@ public class Movable : MonoBehaviour
 
             // on lance le raycast
             Vector2 raycast_direction = new Vector2((movement.x > 0f) ? 1f : -1f, 0f);
-            RaycastHit2D hit = Physics2D.BoxCast(feet_collider.center, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.x), hasCapacity("ghost") ? ghost_layers : world_layers);
+            RaycastHit2D hit = Physics2D.BoxCast(feet_aabb.center, feet_aabb.size, 0f, raycast_direction, Mathf.Abs(movement.x), HasEffect(Effect.Ghost) ? ghost_layers : world_layers);
 
             // on prépare un mouvement subsidiare en y
             float subsidiar_movement_y = 0f;
@@ -345,16 +205,16 @@ public class Movable : MonoBehaviour
                     // on envoie 2 raycasts en direction du mur sur x
                     // avec 2 boxs de y différents (un en haut et un en bas)
 
-                    float y_offset = feet_collider.size.y;
+                    float y_offset = feet_aabb.size.y;
 
 
                     // 1er raycast
-                    Vector2 center_hit_down = new Vector2(feet_collider.center.x, feet_collider.center.y - y_offset);
-                    RaycastHit2D hit_down = Physics2D.BoxCast(center_hit_down, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.x), hasCapacity("ghost") ? ghost_layers : world_layers);
+                    Vector2 center_hit_down = new Vector2(feet_aabb.center.x, feet_aabb.center.y - y_offset);
+                    RaycastHit2D hit_down = Physics2D.BoxCast(center_hit_down, feet_aabb.size, 0f, raycast_direction, Mathf.Abs(movement.x), HasEffect(Effect.Ghost) ? ghost_layers : world_layers);
                     
                     // 2eme raycast
-                    Vector2 center_hit_up = new Vector2(feet_collider.center.x, feet_collider.center.y + y_offset);
-                    RaycastHit2D hit_up = Physics2D.BoxCast(center_hit_up, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.x), hasCapacity("ghost") ? ghost_layers : world_layers);
+                    Vector2 center_hit_up = new Vector2(feet_aabb.center.x, feet_aabb.center.y + y_offset);
+                    RaycastHit2D hit_up = Physics2D.BoxCast(center_hit_up, feet_aabb.size, 0f, raycast_direction, Mathf.Abs(movement.x), HasEffect(Effect.Ghost) ? ghost_layers : world_layers);
 
                     // on regarde si l'un des 2 raycast a touché un collider
                     // print("coll X - D : " + hit_down.normal + " / U : " + hit_up.normal);
@@ -395,8 +255,9 @@ public class Movable : MonoBehaviour
             transform.position += new Vector3(movement.x, subsidiar_movement_y, 0f);
 
             // on maj notre collider_box
-            feet_collider.x += movement.x;
-            feet_collider.y += subsidiar_movement_y;
+            /* feet_aabb.x += movement.x;
+            feet_aabb.y += subsidiar_movement_y; */
+            // pas besoin notre collider est un child de notre movable
         }
 
         // ******************************
@@ -408,7 +269,7 @@ public class Movable : MonoBehaviour
 
             // on lance le raycast
             Vector2 raycast_direction = new Vector2(0f, (movement.y > 0f) ? 1f : -1f);
-            RaycastHit2D hit = Physics2D.BoxCast(feet_collider.center, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.y), hasCapacity("ghost") ? ghost_layers : world_layers);
+            RaycastHit2D hit = Physics2D.BoxCast(feet_aabb.center, feet_aabb.size, 0f, raycast_direction, Mathf.Abs(movement.y), HasEffect(Effect.Ghost) ? ghost_layers : world_layers);
 
             // on prépare un mouvement subsidiare en x
             float subsidiar_movement_x = 0f;
@@ -430,16 +291,16 @@ public class Movable : MonoBehaviour
                     // on envoie 2 raycasts en direction du mur sur x
                     // avec 2 boxs de x différents (un à gauche et un à droite)
 
-                    float x_offset = feet_collider.size.x;
+                    float x_offset = feet_aabb.size.x;
 
 
                     // 1er raycast
-                    Vector2 center_hit_L = new Vector2(feet_collider.center.x - x_offset, feet_collider.center.y);
-                    RaycastHit2D hit_L = Physics2D.BoxCast(center_hit_L, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.y), hasCapacity("ghost") ? ghost_layers : world_layers);
+                    Vector2 center_hit_L = new Vector2(feet_aabb.center.x - x_offset, feet_aabb.center.y);
+                    RaycastHit2D hit_L = Physics2D.BoxCast(center_hit_L, feet_aabb.size, 0f, raycast_direction, Mathf.Abs(movement.y), HasEffect(Effect.Ghost) ? ghost_layers : world_layers);
 
                     // 2eme raycast
-                    Vector2 center_hit_R = new Vector2(feet_collider.center.x + x_offset, feet_collider.center.y);
-                    RaycastHit2D hit_R = Physics2D.BoxCast(center_hit_R, feet_collider.size, 0f, raycast_direction, Mathf.Abs(movement.y), hasCapacity("ghost") ? ghost_layers : world_layers);
+                    Vector2 center_hit_R = new Vector2(feet_aabb.center.x + x_offset, feet_aabb.center.y);
+                    RaycastHit2D hit_R = Physics2D.BoxCast(center_hit_R, feet_aabb.size, 0f, raycast_direction, Mathf.Abs(movement.y), HasEffect(Effect.Ghost) ? ghost_layers : world_layers);
 
                     // on regarde si l'un des 2 raycast a touché un collider
                     // print("coll Y - L : " + hit_L.normal + " / R : " + hit_R.normal);
@@ -498,7 +359,6 @@ public class Movable : MonoBehaviour
         return 1;
 
     }
-
     public void MOVE(Vector3 position)
     {
         // on FORCE le déplacement du movable
@@ -506,7 +366,7 @@ public class Movable : MonoBehaviour
         // ! ne prend pas en compte les collisions
         // ! -> obliger le Being à être en knock out pour utiliser cette fonction
 
-        if (!hasCapacity("knocked_out")) { return; }
+        if (!HasEffect(Effect.Stunned)) { return; }
 
         // on déplace le movable
         // transform.position += new Vector3(movement.x, movement.y, 0f);
@@ -520,11 +380,6 @@ public class Movable : MonoBehaviour
         return GetComponent<SpriteRenderer>().bounds.size.y;
     }
 
-    public bool hasCapacity(string capacity)
-    {
-        return capacities.ContainsKey(capacity) && capacities[capacity];
-    }
-
     public Force getForce(int id)
     {
         return forces.Find(f => f.id == id);
@@ -535,26 +390,15 @@ public class Movable : MonoBehaviour
         return forces.FindAll(f => ids.Contains(f.id));
     }
 
-    public List<string> getCapacities()
+    // gizmos
+    protected virtual void OnDrawGizmos()
     {
-        return capacities.Keys.ToList();
-    }
-    public Dictionary<string, float> getCooldownsBase()
-    {
-        return capacities_cooldowns_base;
-    }
+        // on dessine le collider des pieds
+        if (feet == null)
+            return;
 
-
-
-    // PRINTERS
-    public void showCapacities()
-    {
-        string capacities_str = "(Being - "+gameObject.name + ") capacities : \n";
-        foreach (KeyValuePair<string, bool> entry in capacities)
-        {
-            capacities_str += entry.Key + " : " + entry.Value + "\n";
-        }
-        Debug.Log(capacities_str);
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireCube(feet.bounds.center, feet.bounds.size);
     }
 
 }

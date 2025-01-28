@@ -56,8 +56,8 @@ public class HealingTube : MonoBehaviour, I_Interactable
         CancelInvoke();
 
         // on knocked out le perso et on le déplace dans le tube
-        healing_target.GetComponent<Being>().addCapacity("knocked_out");
-        healing_target.GetComponent<Being>().addCapacity("invicible");
+        healing_target.GetComponent<Being>().AddCapacity("knocked_out");
+        healing_target.GetComponent<Being>().AddCapacity("invicible");
         healing_target.GetComponent<Being>().MOVE(transform.position + (Vector3)healing_target_offset);
 
         // on joue l'animation
@@ -79,8 +79,8 @@ public class HealingTube : MonoBehaviour, I_Interactable
 
         // on arrête le knocked out et on le déplace hors du tube
         healing_target.GetComponent<Being>().MOVE(transform.position + (Vector3)end_healing_target_pos);
-        healing_target.GetComponent<Being>().removeCapacity("knocked_out");
-        healing_target.GetComponent<Being>().removeCapacity("invicible");
+        healing_target.GetComponent<Being>().RemoveCapacity("knocked_out");
+        healing_target.GetComponent<Being>().RemoveCapacity("invicible");
 
         stopInteract();
 

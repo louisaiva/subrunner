@@ -141,7 +141,7 @@ public class Minimap : MonoBehaviour {
         // si on a pas généré le monde, on return
         if (!generator || !generator.generate_world) return;
 
-        if (is_discovering && player.GetComponent<Perso>().hasCapacity("gyroscope"))
+        if (is_discovering && player.GetComponent<Perso>().Can("gyroscope"))
         {
             // on récupère la position du perso
             Vector2Int pos = world.getPersoPos();
