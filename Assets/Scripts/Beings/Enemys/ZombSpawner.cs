@@ -12,6 +12,7 @@ public class ZombSpawner : MonoBehaviour
     public float spawn_rate = 1f; // zombos per second
     public float spawn_timer = 0f;
     public float spawn_radius = 2f;
+    public int max_zombies = 25;
     public int max_zombies_in_absence_of_player = 4;
     public bool perso_is_in_range = false;
     public float perso_range = 10f;
@@ -49,6 +50,9 @@ public class ZombSpawner : MonoBehaviour
         {
             return;
         }
+
+        // on vérifie si on a atteint le nombre max de zombos
+        if (transform.childCount >= max_zombies) { return; }
 
         // on spawn des zombos
         if (spawn_timer > 1f / spawn_rate)

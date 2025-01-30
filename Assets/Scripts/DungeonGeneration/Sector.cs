@@ -92,7 +92,7 @@ public class Sector : MonoBehaviour
             if (enemies.Count > 0)
             {
                 // on récupère les ennemis morts
-                List<Being> dead_enemies = enemies.Where(x => !x.isAlive()).ToList();
+                List<Being> dead_enemies = enemies.Where(x => !x.Alive).ToList();
 
                 // on les supprime de la liste
                 foreach (Being enemy in dead_enemies)

@@ -45,11 +45,6 @@ public class Perso : Being
     private Hack current_hoover_hack = null;
     public float aide_a_la_visee = 0.5f; // aide à la visée, rayon autour de la souris pour les objets hackables
     private CursorHandler cursor_handler;
-
-    [Header("DODGE")]
-    [SerializeField] private float dodge_magnitude = 25f;
-    [SerializeField] private float dodge_duration = 0.5f;
-    [SerializeField] private float dodge_cooldown = 2f;
     
     
     [Header("DASH")]
@@ -233,8 +228,6 @@ public class Perso : Being
         // AddCapacity("interact");
         // AddCapacity("debug_capacities");
         // AddCapacity("talk");
-        AddCapacity("dodge");
-        AddCapacity("attack");
 
         // on met les differents paramètres du perso
         // skills_tree = transform.Find("skills_tree").GetComponent<SkillTree>();
@@ -242,15 +235,15 @@ public class Perso : Being
 
         // max_life = 100;
         life = (float) max_life;
-        speed = 3f;
-        running_speed = 5f;
+        // speed = 3f;
+        // running_speed = 5f;
         // damage = 10f;
         /* attack_range = 0.3f; // defini par l'item
         damage_range = 0.5f; // defini par l'item
         cooldown_attack = 0.5f; // defini par l'item
         knockback_base = 10f; */
 
-        xp_gift = 0; // on ne donne pas d'xp quand on tue un perso
+        // xp_gift = 0; // on ne donne pas d'xp quand on tue un perso
 
         // on met à jour les animations
         // anims.init("perso");
@@ -277,9 +270,9 @@ public class Perso : Being
 
 
         // on affiche un texte de début
-        // Invoke("showWelcome", 5f);
-        // Invoke("showQuest", 10f);
-        // Invoke("randomTalk", Random.Range(talking_delay_range.x, talking_delay_range.y));
+        Invoke("showWelcome", 5f);
+        Invoke("showQuest", 10f);
+        Invoke("randomTalk", Random.Range(talking_delay_range.x, talking_delay_range.y));
     }
 
     // welcoming
@@ -316,7 +309,7 @@ public class Perso : Being
 
     void randomTalk()
     {
-        if (!isAlive()) { return; }
+        if (!Alive) { return; }
         // on fait parler le perso
         int index = Random.Range(0, talks_random.Count + (allow_nsfw ? talks_random_nsfw.Count : 0));
         if (index >= talks_random.Count)
@@ -381,10 +374,11 @@ public class Perso : Being
             // we check if the raw inputs are below the deadzone
             raw_inputs.x = Mathf.Abs(raw_inputs.x) < 0.2 ? 0f : raw_inputs.x;
             raw_inputs.y = Mathf.Abs(raw_inputs.y) < 0.2 ? 0f : raw_inputs.y;
-            
+
             // we normalize the inputs
-            inputs = raw_inputs.normalized;
+            Orientation = raw_inputs.normalized;
             inputs_magnitude = raw_inputs.magnitude;
+
 
             // print("inputs : " + inputs + " / raw_inputs : " + raw_inputs + " / inputs_magnitude : " + inputs_magnitude);
         }
@@ -787,7 +781,7 @@ public class Perso : Being
 
         return true;
     }
-    protected override void die()
+    public void Die()
     {
         Debug.Log("YOU DIED");
 
@@ -797,9 +791,6 @@ public class Perso : Being
         // on desactive l'inventaire
         inventory.setShow(false);
 
-        base.die();
-        CancelInvoke("DestroyObject");
-
         // on désactive les touches
         playerInputs.perso.Disable();
         playerInputs.enhanced_perso.Disable();
@@ -808,9 +799,6 @@ public class Perso : Being
     protected override void comeback_from_death()
     {
         base.comeback_from_death();
-
-        // on change le layer du perso en "perso"
-        gameObject.layer = LayerMask.NameToLayer("Player");
 
         // on reactive les touches
         playerInputs.dead_perso.Disable();
@@ -1151,7 +1139,7 @@ public class Perso : Being
 
             // item.transform.position = position;
             item.transform.position = transform.position;
-            item.addForce(new Force(direction, 7.5f,1.5f));
+            // item.AddForce(new Force(direction, 7.5f,1.5f));
         }
 
 
@@ -1193,7 +1181,7 @@ public class Perso : Being
         }
 
         // on supprime les forces de l'item
-        item.clearForces();
+        item.ClearForces();
 
 
 
@@ -1336,13 +1324,13 @@ public class Perso : Being
 
         // on clamp les inputs dans l'une des 4 directions
         Vector2Int dash_direction = new Vector2Int(0, 0);
-        if (Mathf.Abs(inputs.x) > Mathf.Abs(inputs.y))
+        if (Mathf.Abs(Orientation.x) > Mathf.Abs(Orientation.y))
         {
-            dash_direction.x = inputs.x > 0f ? 1 : -1;
+            dash_direction.x = Orientation.x > 0f ? 1 : -1;
         }
         else
         {
-            dash_direction.y = inputs.y > 0f ? 1 : -1;
+            dash_direction.y = Orientation.y > 0f ? 1 : -1;
         }
 
 
@@ -1377,10 +1365,10 @@ public class Perso : Being
         // addEphemeralCapacity("dashin", 0.6f*dash_duration);
 
         // on fait le dash
-        Force dash_force = new Force(dash_direction, dash_magnitude);
-        addForce(dash_force);
+        // Force dash_force = new Force(dash_direction, dash_magnitude);
+        // AddForce(dash_force);
         // forces.Add(dash_force);
-        dash_forces.Add(dash_force.id);
+        // dash_forces.Add(dash_force.id);
     }
     /* private void orient_dash()
     {
@@ -1509,20 +1497,17 @@ public class Perso : Being
     {
         // on vérifie que le perso peut dodge
         if (!Can("dodge")) { return; }
+        Do("dodge");
 
         // on devient invicible et on fait un PETIT dodge dans une direction.
         // nous stunt un peu après ?
         // reset le cooldown de l'attaque ?
         // addEphemeralCapacity("invicible", dodge_duration);
-        AddEffect(Effect.Invincible, dodge_duration);
+        // AddEffect(Effect.Invincible, dodge_duration);
 
-        // on fait le dash
-        Force dodge_force = new Force(inputs, dodge_magnitude);
-        addForce(dodge_force);
 
         // reset le dodge
         // startCapacityCooldown("dodge");
-        Do("dodge");
 
 
     }

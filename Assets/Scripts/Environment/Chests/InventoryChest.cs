@@ -104,7 +104,7 @@ public class InventoryChest : Chest, I_Grabber
 
             // item.transform.position = position;
             item.transform.position = transform.position;
-            item.addForce(new Force(direction, drop_force));
+            // item.AddForce(new Force(direction, drop_force));
 
             // on supprime l'item de l'inventaire
             items.Remove(item);
@@ -144,7 +144,7 @@ public class InventoryChest : Chest, I_Grabber
             float force = attract_force_base / distance;
 
             // on applique la force
-            item.addForce(new Force(direction, force));
+            // item.AddForce(new Force(direction, force));
         }
     }
 
@@ -178,7 +178,7 @@ public class InventoryChest : Chest, I_Grabber
         }
         
         // on clear les forces
-        item.clearForces();
+        item.ClearForces();
         
         // on désactive l'item
         item.transform.SetParent(go_parent);

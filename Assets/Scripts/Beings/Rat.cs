@@ -37,9 +37,6 @@ public class Rat : Being
         // damage_range = 0.15f + Random.Range(-0.05f, 0.05f);
         weight = 0.5f + Random.Range(-0.05f, 0.05f);
 
-        // on met les bonnes animations
-        anims.init("rat");
-        anims.has_up_down_runnin = true;
     }
 
     public override void Events()
@@ -49,7 +46,7 @@ public class Rat : Being
         // walk
         if (Can("walk"))
         {
-            inputs = rat_movement();
+            Orientation = rat_movement();
             // Debug.Log("rat movement: " + inputs);
             // Debug.Log("rat marche !!");
         }

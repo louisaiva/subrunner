@@ -1,17 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 // a MOVABLE is a character that can move with FORCES. that's it.
-public class Movable : Capable
+public class Movable_ : Capable
 {
 
 
     [Header("MOVABLE")]
     public float weight = 1f; // poids du movable (pour le knockback)
+    public float collisionBuffer = 0.02f; // Buffer to prevent clipping through walls
 
-    // FORCES
+    [Header("Forces")]
+    public bool use_update_forces_2 = true; // true : update2, false : update1
     public List<Force> forces = new List<Force>();
+
 
     // DEPLACEMENT
     // private Rect feet_collider; // collider des pieds (pour les collisions)
@@ -50,12 +54,6 @@ public class Movable : Capable
     {
         base.Update();
 
-        /* if (feet == null)
-        {
-            feet = transform.Find("run").GetComponent<BoxCollider2D>();
-            if (feet == null) {return;}
-        } */
-
         // on sauvegarde la position du movable
         last_position = transform.position;
         
@@ -65,23 +63,20 @@ public class Movable : Capable
         // on calcule la current velocity
         Vector3 vel = (transform.position - last_position) / Time.deltaTime;
         velocity = new Vector2(vel.x, vel.y);
-
     }
 
 
     // FORCES
-    public void addForce(Force force)
+    public void AddForce(Force force)
     {
         // on ajoute une force
         forces.Add(force);
     }
-
-    public void clearForces()
+    public void ClearForces()
     {
         // on supprime toutes les forces
         forces.Clear();
     }
-
     protected void updateForces()
     {
         // on parcourt les forces
@@ -98,7 +93,11 @@ public class Movable : Capable
                 apply_force(force.direction * force.magnitude * Time.deltaTime);
 
                 // on diminue la force
-                force.magnitude = Mathf.Lerp(force.magnitude, 0, Time.deltaTime * 10f * force.attenuation);
+                // force.magnitude = Mathf.Lerp(force.magnitude, 0, Time.deltaTime * 10f * force.attenuation);
+                // force.magnitude *= Mathf.Exp(-force.attenuation * Time.deltaTime * 5f);
+                // if (use_update_forces_2) { force.Update2(); }
+                // else { force.Update1(); }
+                force.Update();
 
                 // on met à jour la force
                 forces[i] = force;
@@ -111,16 +110,13 @@ public class Movable : Capable
             }
         }
     }
-
     protected void apply_force(Vector2 force)
     {
         // on déplace le movable
         int moved_code = move(force);
 
-
         if (this is Perso)
         {
-
             if (force.magnitude < 0.05f) { return; }
 
             // on regarde si on a collisionné
@@ -374,22 +370,12 @@ public class Movable : Capable
     }
 
 
+
     // GETTERS
     public float getHeight()
     {
         return GetComponent<SpriteRenderer>().bounds.size.y;
     }
-
-    public Force getForce(int id)
-    {
-        return forces.Find(f => f.id == id);
-    }
-
-    public List<Force> getForces(List<int> ids)
-    {
-        return forces.FindAll(f => ids.Contains(f.id));
-    }
-
     // gizmos
     protected virtual void OnDrawGizmos()
     {
@@ -404,25 +390,117 @@ public class Movable : Capable
 }
 
 
-public class Force
-{
-    public static int id_counter = 0;
-    public int id;
-    public Vector2 direction;
-    public float magnitude;
-    public float attenuation;
+// [Serializable] public class Force
+// {
+//     public Vector2 direction;
+//     public float magnitude;
+//     public float attenuation;
 
-    public static Force Zero = new Force(Vector2.zero, 0f, 1f);
+//     public static Force Zero = new Force(Vector2.zero, 0f, 1f);
 
-    public Force(Vector2 direction, float magnitude, float attenuation=1f)
-    {
-        this.direction = direction;
-        this.magnitude = magnitude;
-        this.attenuation = attenuation;
+//     public Force(Vector2 direction, float magnitude, float attenuation=1f)
+//     {
+//         this.direction = direction;
+//         this.magnitude = magnitude;
+//         this.attenuation = attenuation;
+//     }
 
-        // on génère un id unique
-        this.id = id_counter;
-        id_counter++;
-    }
+//     public void Update1()
+//     {
+//         // on diminue la force avec ma 1e méthode Update
+//         magnitude = Mathf.Lerp(magnitude, 0, Time.deltaTime * 10f * attenuation);
+//     }
 
-}
+//     public void Update2()
+//     {
+//         // on diminue la force avec ma 2e méthode Update -> chat gpt one
+//         magnitude *= Mathf.Exp(-attenuation * Time.deltaTime * 5f);
+//     }
+// }
+
+
+// [Serializable]
+// public class Force
+// {
+//     // Force parameters
+//     public Vector2 direction;
+//     public float magnitude;
+//     public float magnitude_max;
+
+//     // Force profile
+//     public float distance;
+//     public float duration;
+//     public AnimationCurve accelerationCurve;
+
+//     // timing
+//     public float time_start;
+//     public bool expired
+//     {
+//         get { return Time.time - time_start > duration; }
+//     }
+
+//     // Constructors
+//     public Force(Vector2 direction, float distance, float duration)
+//     {
+//         this.direction = direction;
+//         CalculateMagnitudeMax(distance, duration);
+//     }
+
+//     public void Update(bool log = false)
+//     {
+//         if (expired)
+//         {
+//             // If the force has expired, set it to zero
+//             magnitude = 0f;
+//             return;
+//         }
+
+//         // Update the force magnitude based on the acceleration curve
+//         float evaluation = accelerationCurve.Evaluate((Time.time - time_start) / duration);
+//         if (log) { Debug.Log("Updating Force" + direction + " from " + magnitude + " to " + evaluation * magnitude_max + " (evaluation :" + evaluation + ")"); }
+//         magnitude = evaluation * magnitude_max;
+//     }
+
+//     public void Start()
+//     {
+//         time_start = Time.time;
+//         Update();
+//     }
+
+//     // Method to calculate the parameters
+//     public float CalculateMagnitudeMax(float distance, float duration)
+//     {
+//         //set the distance and duration
+//         this.distance = distance;
+//         this.duration = duration;
+
+//         // calculate the maximum magnitude based on the distance and duration & the acceleration curve
+//         magnitude_max = 1f; // so we calculate a base distance
+//         magnitude_max = distance / CalculateDistance() / duration;
+
+//         return magnitude_max;
+//     }
+//     public float CalculateDistance()
+//     {
+//         float totalDistance = 0f;
+//         float timeElapsed = 0f;
+
+//         // Simulate the force over the given duration
+//         while (timeElapsed < duration)
+//         {
+//             // Calculate the current magnitude based on the acceleration curve
+//             float currentMagnitude = accelerationCurve.Evaluate(timeElapsed / duration) * magnitude_max;
+
+//             // Calculate the velocity for this time step (force = acceleration since mass = 1)
+//             float velocity = currentMagnitude * Time.deltaTime;
+
+//             // Update the total distance traveled (distance = velocity * time)
+//             totalDistance += velocity;
+
+//             // Increment the time
+//             timeElapsed += Time.deltaTime;
+//         }
+
+//         return totalDistance;
+//     }
+// }

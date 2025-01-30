@@ -12,6 +12,24 @@ public class Capable : MonoBehaviour
     public AnimPlayer anim_player;
     public CapacityBank bank;
 
+    [Header("Orientation")]
+    // the analog equivalent of the anim_player.orientation which is numerical
+    [SerializeField] protected Vector2 inputs; // inputs can be at 0,0
+    [SerializeField] protected Vector2 orientation; // orientation can't be at 0,0 -> always normalized & remember last orientation
+    public Vector2 Orientation {
+        get { return orientation; }
+        set
+        {
+            inputs = value;
+
+            if (value != Vector2.zero)
+            {
+                orientation = value.normalized;
+                anim_player.SetOrientation(orientation);
+            }
+        }
+    }
+
     [Header("Capacities")]
     [SerializeField] protected List<Capacity> capacities = new List<Capacity>();
 
@@ -40,7 +58,7 @@ public class Capable : MonoBehaviour
     }
 
     // EVENTS
-    private void Events()
+    /* private void Events()
     {
         // walk
         if (Can("run"))
@@ -57,50 +75,12 @@ public class Capable : MonoBehaviour
             if (inputs.x != 0 || inputs.y != 0) { running = true; }
 
             // we update the orientation
-            anim_player.SetOrientation(inputs);
+            Orientation = inputs;
 
             // we play the animation
             if (running) { Do("run"); }
             else { anim_player.StopPlaying("run"); }
         }
-
-        /* bool is_running = false;
-        // ZQSD
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-        }
-        else if (Input.GetKeyUp(KeyCode.W))
-        {
-            anim_player.StopPlaying("run");
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            anim_player.SetOrientation("D");
-            if (Can("run")) { Do("run"); }
-        }
-        else if (Input.GetKeyUp(KeyCode.S))
-        {
-            anim_player.StopPlaying("run");
-        }
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            anim_player.SetOrientation("L");
-            if (Can("run")) { Do("run"); }
-        }
-        else if (Input.GetKeyUp(KeyCode.A))
-        {
-            anim_player.StopPlaying("run");
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            anim_player.SetOrientation("R");
-            if (Can("run")) { Do("run"); }
-        }
-        else if (Input.GetKeyUp(KeyCode.D))
-        {
-            anim_player.StopPlaying("run");
-        } */
-
 
         // ATTACK & HURT
         if (Input.GetKey(KeyCode.Space))
@@ -117,7 +97,7 @@ public class Capable : MonoBehaviour
         {
             Do("die");
         }
-    }
+    } */
 
     // UPDATES
     protected virtual void Update()
@@ -273,4 +253,5 @@ public class Capable : MonoBehaviour
     Invincible,
     Stunned,
     RegenLife,
+    Immobile,
 }

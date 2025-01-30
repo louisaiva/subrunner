@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2513185796205984677}
-  - component: {fileID: 7976611794775360309}
+  - component: {fileID: -3412210366583761185}
   m_Layer: 0
   m_Name: dodge
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7976611794775360309
+--- !u!114 &-3412210366583761185
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,7 +41,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 8107155724917983305}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6c5bafe808c2114ba33e7cf5fff8dcc, type: 3}
+  m_Script: {fileID: 11500000, guid: efa651deb313e7946a884cd153213891, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 0.5
+  dodge_magnitude: 4
+  dodge_force:
+    name: dodge
+    direction: {x: 0, y: 0}
+    magnitude: 0
+    attenuation: 0

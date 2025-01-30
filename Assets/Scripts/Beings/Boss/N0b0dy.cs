@@ -67,7 +67,7 @@ public class N0b0dy : Enemy
     /* new void Update()
     {
         // ! à mettre tjrs au début de la fonction update
-        if (!isAlive()) { return; }
+        if (!Alive) { return; }
 
         // on essaye de détecter le joueur
         detect_target(player_detection_radius);
@@ -81,7 +81,7 @@ public class N0b0dy : Enemy
         {
             if (target_detected)
             {
-                if (target.GetComponent<Being>().isAlive())
+                if (target.GetComponent<Being>().Alive)
                 {
                     try_to_attack_target();
                 }

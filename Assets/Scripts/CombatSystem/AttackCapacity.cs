@@ -2,6 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// AttackCapacity is a capacity that allows a being to attack
+/// It is a collider that is enabled during the attack animation
+/// </summary>
+
 public class AttackCapacity : Capacity
 {
     // handle the collisions between an attack animation and a being
@@ -9,11 +14,15 @@ public class AttackCapacity : Capacity
     
     [Header("Damage parameters")]
     public float damage = 10f;
+    [SerializeField] private bool is_attacking = false;
+    [SerializeField] List<Collider2D> hit_enemies = new List<Collider2D> {};
+    [SerializeField] private List<string> not_attackable_tags = new List<string> {};
+    
+
+    [Header("Knockback parameters")]
+    // public Force knockback; // force de knockback
     public float knockback_base = 10f; // une attaque répartit le knockb
     public float attackant_advantage = 3f;
-    [SerializeField] private bool is_attacking = false;
-
-    [SerializeField] private List<string> not_attackable_tags = new List<string> {};
 
 
     [Header("Components")]
@@ -39,6 +48,28 @@ public class AttackCapacity : Capacity
         bank = GameObject.Find("/utils/bank").GetComponent<SpriteBank>();
     }
 
+    // trigger the attack
+    public override void Use(Capable capable)
+    {
+        // we play the animation
+        Anim anim = play_anim(capable.anim_player, name);
+
+        if (anim != null)
+        {
+            // we start the cooldown for the time of the animation
+            float anim_duration = anim.GetDuration();
+            startCooldown(anim_duration);
+        }
+        else
+        {
+            startCooldown();
+        }
+
+        is_attacking = true;
+        hit_enemies.Clear();
+        // Debug.Log(transform.parent.name + " just used attack");
+    }
+    
     // UPDATE
     protected override void Update()
     {
@@ -65,22 +96,13 @@ public class AttackCapacity : Capacity
 
             // we update the collider
             updateCollider(sprite);
+
+            // we update the attack
+            updateAttack();
         }
         else
         {
             pc.enabled = false;
-        }
-    }
-    private void FixedUpdate()
-    {
-        if (!is_attacking) { return; }
-        if (!anim_player.current_capacity.Equals("attack")) { return; }
-
-        // we check if the pc is enabled
-        if (pc.enabled)
-        {
-            // we update the attack
-            updateAttack();
         }
     }
     private void updateCollider(Sprite sprite)
@@ -108,21 +130,21 @@ public class AttackCapacity : Capacity
     private void updateAttack()
     {
         // we get the colliders
-        Collider2D[] hit_enemies = new Collider2D[20];
+        /* Collider2D[] hit_enemies = new Collider2D[20];
         ContactFilter2D filter = new ContactFilter2D();
         filter.SetLayerMask(LayerMask.GetMask("Beings"));
-        int count = pc.OverlapCollider(filter, hit_enemies);
+        int count = pc.OverlapCollider(filter, hit_enemies); */
 
         // verify that our life_collider is not in the list
-        hit_enemies = hit_enemies.Where(enemy => enemy != being.life_collider && enemy != null).ToArray();
+        if (being != null) { hit_enemies = hit_enemies.Where(enemy => enemy != being.life_collider && enemy != null).ToList(); }
 
         // we remove the not attackable tags
-        hit_enemies = hit_enemies.Where(enemy => !not_attackable_tags.Contains(enemy.tag)).ToArray();
+        hit_enemies = hit_enemies.Where(enemy => !not_attackable_tags.Contains(enemy.tag)).ToList();
 
         // we remove the not alive beings
-        hit_enemies = hit_enemies.Where(enemy => enemy.transform.parent.GetComponent<Being>().isAlive()).ToArray();
+        hit_enemies = hit_enemies.Where(enemy => enemy.transform.parent.GetComponent<Being>().Alive).ToList();
 
-        string hit_enemies_str = transform.parent.name + " attack enemies : " + hit_enemies.Length + " :\n";
+        string hit_enemies_str = transform.parent.name + " attack enemies : " + hit_enemies.Count + " :\n";
         foreach (Collider2D enemy in hit_enemies)
         {
             hit_enemies_str += "\t"+enemy + "\n";
@@ -130,14 +152,14 @@ public class AttackCapacity : Capacity
         Debug.Log(hit_enemies_str);
         
         // if no target, return
-        if (hit_enemies.Length == 0) { return; }
+        if (hit_enemies.Count == 0) { return; }
 
         // calculate damage dealt to single target
-        float damage_dealt_to_single_target = damage / hit_enemies.Length;
+        float damage_dealt_to_single_target = damage /* / hit_enemies.Length */;
 
 
         // calculate knockback
-        float advantage_attacker_weight = being.weight * attackant_advantage; // l'attaquant a un avantage de poids afin de recevoir moins de knockback
+        float advantage_attacker_weight = (being != null ? being.weight : 0.5f) * attackant_advantage; // l'attaquant a un avantage de poids afin de recevoir moins de knockback
         float total_knockback_weight = hit_enemies.Select(enemy => enemy.transform.parent.GetComponent<Being>().weight).Sum() + advantage_attacker_weight;
         Vector2 attacker_knockback_direction = Vector2.zero;
 
@@ -158,7 +180,7 @@ public class AttackCapacity : Capacity
             // calculate knockback magnitude proportionnal to weight
             float knockback_magnitude = knockback_base * (total_knockback_weight - enemy_weight)
                                          / total_knockback_weight;
-            Force knockback = new Force(direction_enemy.normalized, knockback_magnitude);
+            Force knockback = new Force("knockback",direction_enemy.normalized, knockback_magnitude);
             attacker_knockback_direction += -direction_enemy.normalized * knockback_magnitude;
 
             // apply damage and knockback
@@ -169,7 +191,7 @@ public class AttackCapacity : Capacity
             }
 
             // check if enemy is dead
-            /* if (!enemy_being.isAlive())
+            /* if (!enemy_being.Alive)
             {
                 killed_an_enemy = true;
             } 
@@ -182,36 +204,37 @@ public class AttackCapacity : Capacity
             */
         }
 
-        // on recoit un knockback inverse
-        float knockback_magnitude_inverse = knockback_base * (total_knockback_weight - being.weight)
-                                             / (total_knockback_weight * attackant_advantage);
-        Force knockback_inverse = new Force(attacker_knockback_direction.normalized, knockback_magnitude_inverse);
-        being.addForce(knockback_inverse);
+        if (being != null)
+        {
+            // on recoit un knockback inverse
+            float knockback_magnitude_inverse = knockback_base * (total_knockback_weight - being.weight)
+                                                 / (total_knockback_weight * attackant_advantage);
+            Force knockback_inverse = new Force("knockback",attacker_knockback_direction.normalized, knockback_magnitude_inverse);
+            being.AddForce(knockback_inverse);
+        }
 
         // we set the attacking to false
         is_attacking = false;
+        hit_enemies.Clear();
     }
 
-    // trigger the attack
-    public override void Use(Capable capable)
+
+    // COLLISION ENTER
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        // we play the animation
-        Anim anim = play_anim(capable.anim_player, name);
+        // we check if the other is on the Beings layer
+        if (!other.gameObject.layer.Equals(LayerMask.NameToLayer("Beings"))) { return; }
 
-        if (anim != null)
-        {
-            // we start the cooldown for the time of the animation
-            float anim_duration = anim.GetDuration();
-            startCooldown(anim_duration);
-        }
-        else
-        {
-            startCooldown();
-        }
+        // we check if we are attacking
+        if (!is_attacking) { return; }
+        if (!anim_player.current_capacity.Equals("attack")) { return; }
 
-        is_attacking = true;
-        // Debug.Log(transform.parent.name + " just used attack");
+        // we check if the pc is enabled
+        if (pc.enabled)
+        {
+            // we add the other to the hit enemies
+            hit_enemies.Add(other);
+        }
     }
-
 
 }

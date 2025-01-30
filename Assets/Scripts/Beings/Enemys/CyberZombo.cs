@@ -60,10 +60,6 @@ public class CyberZombo : Enemy, I_Hackable
         ((AttackCapacity) getCapacity("attack")).damage = 20f + Random.Range(-5f, 5f);
         weight = 1.4f + Random.Range(-0.2f, 0.2f);
 
-        // on met les bonnes animations
-        anims = new AttackerAnims();
-        anims.init("zombo");
-
         // on met les bons sons
         // sounds = new ZomboSounds();
         // audio_manager.LoadSoundsFromPath("audio/zombo");
@@ -77,29 +73,30 @@ public class CyberZombo : Enemy, I_Hackable
     {
 
         base.Events();
-        if (inputs != new Vector2(0, 0)) { return; }
+        if (Orientation != new Vector2(0, 0)) { return; }
 
         // treshold distance "trop proche"
         float treshold_distance = 0.1f;
 
         // 2 - on essaye de détecter de la viande
-        if (meat_detected){
+        if (meat_detected && meat_target != null){
+            
             // on se dirige vers la viande
-            inputs = new Vector2(meat_target.transform.position.x - transform.position.x, meat_target.transform.position.y - transform.position.y);
+            Orientation = new Vector2(meat_target.transform.position.x - transform.position.x, meat_target.transform.position.y - transform.position.y);
 
             // on regarde si on est pas TROP proche de la viande
-            if (inputs.magnitude < treshold_distance){
-                inputs = new Vector2(0, 0);
+            if (Orientation.magnitude < treshold_distance){
+                Orientation = new Vector2(0, 0);
             }
 
-            // on normalise les inputs
-            inputs.Normalize();
+            // on normalise les Orientation
+            Orientation.Normalize();
 
             return;
         }
 
         // 3 - on se déplace aléatoirement circulairement en x
-        inputs = simulate_circular_input_on_x(inputs);
+        Orientation = simulate_circular_input_on_x(Orientation);
 
     }
 
@@ -107,18 +104,19 @@ public class CyberZombo : Enemy, I_Hackable
     protected override void Update()
     {
         // ! à mettre tjrs au début de la fonction update
-        if (!isAlive()) { return; }
+        if (!Alive) { return; }
 
         // update des hacks
         if (is_getting_hacked) {
             updateHack();
         }
 
+        // on essaye de détecter de la viande
+        detect_meat(meat_detection_radius);
+
         // update de d'habitude
         base.Update();
 
-        // on essaye de détecter de la viande
-        detect_meat(meat_detection_radius);
     }
 
 
@@ -130,7 +128,7 @@ public class CyberZombo : Enemy, I_Hackable
         // on enlève les zombies des targets
         targets = targets.Where(target => target.transform.parent.GetComponent<CyberZombo>() == null).ToArray();
 
-        Debug.Log("cyberzombo targets : " + targets.Length);
+        // Debug.Log("cyberzombo targets : " + targets.Length);
         return targets;
     }
 
@@ -182,7 +180,7 @@ public class CyberZombo : Enemy, I_Hackable
         hack_ui.setMode("unhackable");
 
         // on regarde si on est pas mort
-        if (!isAlive()) { return false; }
+        if (!Alive) { return false; }
 
         // on regarde si on a le bon type de hack
         if (hack_type != hack_type_self) { return false; }
@@ -254,7 +252,7 @@ public class CyberZombo : Enemy, I_Hackable
         hack_ui.setMode("unhackable");
 
         // on drop les bits restants
-        xp_provider.GetComponent<XPProvider>().EmitBits(bits_left, transform.position, 0.5f);
+        // xp_provider.GetComponent<XPProvider>().EmitBits(bits_left, transform.position, 0.5f);
 
         // on met à jour les animations
         // anim_handler.StopForcing();
@@ -298,24 +296,13 @@ public class CyberZombo : Enemy, I_Hackable
     }
 
     // DIE
-    protected override void die(){
+    /* protected override void die(){
         // on arrête le hackin
         is_getting_hacked = false;
         hacking_end_time = -1;
 
         // on meurt
         base.die();
-    }
+    } */
 
-}
-
-
-public class ZomboSounds : AttackerSounds
-{
-    public ZomboSounds()
-    {
-        s_hurted = new List<string>() { "hurted - 1", "hurted - 2", "hurted - 3", "hurted - 4" };
-        s_idle = new List<string>() { "idle - 1", "idle - 2", "idle - 3"};
-        base.init("zombo");
-    }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 public class Capacity : MonoBehaviour
 {
     // public string name;
-    public bool Able
+    public virtual bool Able
     {
         get
         {
@@ -16,8 +16,8 @@ public class Capacity : MonoBehaviour
     }
     
     // cooldown
-    [SerializeField] private float cooldown = 0;
-    private float cooldown_timer;
+    [SerializeField] protected float cooldown = 0;
+    protected float cooldown_timer;
 
     protected virtual void Update()
     {

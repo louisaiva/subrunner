@@ -38,7 +38,7 @@ public class UI_LifeXPHandler : MonoBehaviour
     {
 
         // ! on check si le perso est mort
-        if (!perso || !perso.GetComponent<Perso>().isAlive())
+        if (!perso || !perso.GetComponent<Perso>().Alive)
         {
             // on met à zero
             life_fill.GetComponent<RectTransform>().sizeDelta = new Vector2(0, life_fill_height);

@@ -54,7 +54,7 @@ public class UI_BitHandler : MonoBehaviour
     {
 
         // ! on check si le perso est mort
-        if (!perso || !perso.GetComponent<Perso>().isAlive()) { return; }
+        if (!perso || !perso.GetComponent<Perso>().Alive) { return; }
 
         // on met à jour le fill des bits
         update_bits_fill();

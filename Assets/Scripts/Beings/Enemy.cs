@@ -26,7 +26,7 @@ public class Enemy : Being
         targets = targets.Where(target => target.transform.parent.gameObject != gameObject).ToArray();
 
         // on enlève les beings décédés
-        targets = targets.Where(target => target.transform.parent.GetComponent<Being>().isAlive()).ToArray();
+        targets = targets.Where(target => target.transform.parent.GetComponent<Being>().Alive).ToArray();
 
         return targets;
 
@@ -69,22 +69,22 @@ public class Enemy : Being
         if (target_detected)
         {
             // on se dirige vers le joueur
-            inputs = new Vector2(target.transform.position.x - transform.position.x, target.transform.position.y - transform.position.y);
+            Orientation = new Vector2(target.transform.position.x - transform.position.x, target.transform.position.y - transform.position.y);
 
             // on regarde si on est pas TROP proche du joueur
-            if (inputs.magnitude < treshold_distance)
+            if (Orientation.magnitude < treshold_distance)
             {
-                inputs = new Vector2(0, 0);
+                Orientation = new Vector2(0, 0);
             }
 
-            // on normalise les inputs
-            inputs.Normalize();
+            // on normalise les Orientation
+            Orientation.Normalize();
 
             return;
         }
 
         // 2 - on bouge pas
-        inputs = new Vector2(0, 0);
+        Orientation = new Vector2(0, 0);
     }
     protected override void Update()
     {
@@ -98,45 +98,11 @@ public class Enemy : Being
         if (target_detected && Can("attack"))
         {
             // Debug.Log("target detected" + target.name);
-            if (target.GetComponent<Being>().isAlive())
+            if (target.GetComponent<Being>().Alive)
             {
                 try_to_attack_target();
             }
         }
-    }
-
-}
-
-public class AttackerAnims : BeingAnims
-{
-
-    public bool has_up_down_attack = false;
-
-    // ANIMATIONS
-    public string attack = "attack_RL";
-
-    public override void init(string name)
-    {
-        base.init(name);
-        attack = name + "_" + attack;
-    }
-}
-
-public class AttackerSounds : BeingSounds
-{
-
-    public List<string> s_attack = new List<string>() { "attack - 1" };
-
-    public override void init(string name)
-    {
-        base.init(name);
-        s_attack = s_attack.Select(s => name + "_" + s).ToList();
-    }
-
-    // GETTERS
-    public string attack()
-    {
-        return s_attack[Random.Range(0, s_attack.Count)];
     }
 
 }
