@@ -26,14 +26,17 @@ public class AnimPlayer : MonoBehaviour
 
     [Header("Animation Pile")]
     public List<string> anim_pile = new();
-    public Dictionary<string, int> capacity_priorities = new() {
+    public Dictionary<string, int> capacity_priorities = new()
+            {
             {"idle",0},
             {"walk",1},
             {"run",1},
             {"attack",2},
+            {"spawn",2},
             {"dodge",2},
             {"hurted",2},
             {"die",3}};
+    // todo à transformer en List<CapacityPriority> sans MonoBehaviour pour pouvoir les éditer dans l'éditeur
 
     public List<int> animation_priorities_with_no_loop = new() { 2 };
         // we never loop the animation if it's in this priority (attack, dodge, hurted) -> always play once
@@ -123,12 +126,20 @@ public class AnimPlayer : MonoBehaviour
 
 
     // PLAY ANIMATION
-    public Anim Play(string capacity)
+    public Anim Play(string capacity, int? priority_override=null)
     {
         // we get the priority of the capacity
         int priority = 1;
-        if (capacity_priorities.ContainsKey(capacity)) { priority = capacity_priorities[capacity]; }
-        else { Debug.LogWarning("The capacity " + capacity + " doesn't exist in the capacity_priorities dictionnary. Priority 1 by default applied");}
+        if (priority_override != null)
+        {
+            priority = (int) priority_override;
+        }
+        if (priority_override == null && capacity_priorities.ContainsKey(capacity)) { priority = capacity_priorities[capacity]; }
+        else
+        {
+            Debug.LogWarning("The capacity " + capacity + " doesn't exist in the capacity_priorities dictionnary. Priority 1 by default applied");
+            capacity_priorities[capacity] = priority;
+        }
 
         // we check if we can play the animation
         if (priority >= getPileMaxPriority())

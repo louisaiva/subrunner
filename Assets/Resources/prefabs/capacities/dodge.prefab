@@ -41,13 +41,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 8107155724917983305}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efa651deb313e7946a884cd153213891, type: 3}
+  m_Script: {fileID: 11500000, guid: dbe8324d7ae63ec46a62ace2fda56ffe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooldown: 0.5
-  dodge_magnitude: 4
+  cooldown: 0
+  dodge_magnitude: 25
   dodge_force:
-    name: dodge
+    name: 
     direction: {x: 0, y: 0}
     magnitude: 0
     attenuation: 0

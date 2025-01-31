@@ -57,4 +57,9 @@ public class Capacity : MonoBehaviour
         return anim_player.Play(name);
     }
 
+    protected void stop_playing(AnimPlayer anim_player, string name)
+    {
+        anim_player.StopPlaying(name);
+    }
+
 }

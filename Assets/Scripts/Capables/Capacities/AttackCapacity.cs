@@ -149,7 +149,7 @@ public class AttackCapacity : Capacity
         {
             hit_enemies_str += "\t"+enemy + "\n";
         }
-        Debug.Log(hit_enemies_str);
+        // Debug.Log(hit_enemies_str);
         
         // if no target, return
         if (hit_enemies.Count == 0) { return; }
@@ -186,7 +186,7 @@ public class AttackCapacity : Capacity
             // apply damage and knockback
             if (!enemy_being.take_damage(damage_dealt_to_single_target, knockback))
             {
-                Debug.Log("Error : enemy " + enemy.name + " didn't take damage");
+                // Debug.Log("Error : enemy " + enemy.name + " didn't take damage");
                 return;
             }
 

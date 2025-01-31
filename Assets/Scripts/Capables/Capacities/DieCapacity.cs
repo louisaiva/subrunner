@@ -60,6 +60,11 @@ public class DieCapacity : Capacity
         // on change le layer du perso en "meat"
         ((Being) capable).life_collider.gameObject.layer = LayerMask.NameToLayer("Meat");
 
+        // on change le layer des feet en "Ghosts"
+        ((Being) capable).feet_collider.gameObject.layer = LayerMask.NameToLayer("Ghosts");
+
+        // ((Being)capable).ClearForces();
+
         // destroy object
         Invoke(nameof(destroyObject), time_before_disappearing);
     }

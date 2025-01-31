@@ -34,14 +34,16 @@ public class DodgeCapacity : Capacity
             // we can't take damage for the animation duration
             capable.AddEffect(Effect.Invincible, duration);
             // we can't move for a short time
-            capable.AddEffect(Effect.Immobile, duration/2f);
+            capable.AddEffect(Effect.Immobile, duration / 2f);
+            // we can't move for a short time
+            capable.AddEffect(Effect.Ghost, duration);
         }
 
         // check if the capable is a Movable_ to add them a force
-        if (capable is RigidMovable) 
+        if (capable is Movable) 
         {
             // add a dodge Force to the movable
-            RigidMovable movable = (RigidMovable) capable;
+            Movable movable = (Movable) capable;
             dodge_force.direction = movable.Orientation;
             dodge_force.magnitude = dodge_magnitude;
             // dodge_force.CalculateMagnitudeMax(dodge_distance, dodge_duration);
@@ -49,6 +51,6 @@ public class DodgeCapacity : Capacity
         }
 
         // log
-        Debug.Log(transform.parent.name + " just dodged");
+        // Debug.Log(transform.parent.name + " just dodged");
     }
 }

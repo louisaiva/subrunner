@@ -142,6 +142,7 @@ MonoBehaviour:
   weight: 0.8
   forces: []
   input_speed: 0
+  feet_collider: {fileID: 0}
   life: 500
   max_life: 500
   regen_life: 5
@@ -348,6 +349,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2923260706266234128, guid: 218dd56d6e10353498bdf3b630cbd19b, type: 3}
+      propertyPath: xp_gift
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 2923260706266234128, guid: 218dd56d6e10353498bdf3b630cbd19b, type: 3}
+      propertyPath: time_before_disappearing
+      value: 120
+      objectReference: {fileID: 0}
     - target: {fileID: 3147306694727553979, guid: 218dd56d6e10353498bdf3b630cbd19b, type: 3}
       propertyPath: xp_gift
       value: 500
@@ -513,6 +522,10 @@ PrefabInstance:
     - target: {fileID: 3831210645434146991, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: m_Name
       value: attack
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
+      propertyPath: damage
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8825243767214675206, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: m_LocalPosition.x

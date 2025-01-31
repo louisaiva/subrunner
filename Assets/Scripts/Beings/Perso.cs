@@ -1360,7 +1360,6 @@ public class Perso : Being
         // addCapacity("dash_orientable");
         // addEphemeralCapacity("invicible", dash_duration);
         AddEffect(Effect.Invincible, dash_duration);
-        AddEffect(Effect.Ghost, dash_duration);
         // addEphemeralCapacity("ghost", dash_duration);
         // addEphemeralCapacity("dashin", 0.6f*dash_duration);
 

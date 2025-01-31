@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 using System;
 
 
-public class Being : RigidMovable
+public class Being : Movable
 {
 
     [Header("LIFE")]
@@ -84,10 +84,14 @@ public class Being : RigidMovable
     protected override void Update()
     {
         // on vérifie si le perso est mort
-        if (!Alive) { return; }
-
-        // on sauvegarde la position du perso
-        // last_position = transform.position;
+        if (!Alive)
+        {
+            // input_speed = Mathf.Lerp(input_speed, 0f, 10f * Time.deltaTime);
+            inputs = Vector2.zero;
+            input_speed = 0f;
+            base.Update();
+            return;
+        }
 
         // on récupère les inputs
         Events();
@@ -114,13 +118,6 @@ public class Being : RigidMovable
 
 
         base.Update();
-
-        // on calcule la current velocity
-        // Vector3 vel = (transform.position - last_position) / Time.deltaTime;
-        // velocity = new Vector2(vel.x, vel.y);
-
-        // on update le mouvement
-        // updateMovement();
     }
 
 
@@ -228,12 +225,10 @@ public class Being : RigidMovable
         life -= damage;
 
         // play hurt animation
-        // anim_handler.ChangeAnimTilEnd(anims.hurted);
         Do("hurted");
 
 
         // knockback
-        // apply_force(knockback);
         if (knockback != null)
         {
             // forces.Add(knockback);
@@ -256,8 +251,6 @@ public class Being : RigidMovable
             if (this is Perso) { ((Perso) this).Die(); }
         }
 
-
-        // Debug.Log(gameObject.name + " took " + damage + " dmg and has " + life + " hp left");
         return true;
     }
 
@@ -271,6 +264,7 @@ public class Being : RigidMovable
 
         // on remet le layer à "default"
         life_collider.gameObject.layer = LayerMask.NameToLayer("Beings");
+        feet_collider.isTrigger = false;
     }
 
     

@@ -38,7 +38,7 @@ public class Item : Movable, I_Interactable
 
 
         base.Start();
-        world_layers = LayerMask.GetMask("Ground", "Walls", "Ceiling", "Doors", "Computers", "Decoratives", "Interactives");
+        // world_layers = LayerMask.GetMask("Ground", "Walls", "Ceiling", "Doors", "Computers", "Decoratives", "Interactives");
 
         // on ajoute les capacités
         foreach (string capacity in item_capacities.Split('/'))

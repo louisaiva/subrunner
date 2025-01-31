@@ -103,9 +103,6 @@ public class CyberZombo : Enemy, I_Hackable
     // update de d'habitude
     protected override void Update()
     {
-        // ! à mettre tjrs au début de la fonction update
-        if (!Alive) { return; }
-
         // update des hacks
         if (is_getting_hacked) {
             updateHack();

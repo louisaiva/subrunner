@@ -108,7 +108,7 @@ public class Capable : MonoBehaviour
         // we update the effects
         updateEffects();
     }
-    protected void updateEffects()
+    protected virtual void updateEffects()
     {
         int effects_count = effects.Count;
         int i = 0;
@@ -188,7 +188,7 @@ public class Capable : MonoBehaviour
 
 
     // EFFECTS
-    public void AddEffect(Effect effect, float timetolive)
+    public virtual void AddEffect(Effect effect, float timetolive)
     {
         effects.Add(effect);
         effects_timetolive.Add(timetolive);

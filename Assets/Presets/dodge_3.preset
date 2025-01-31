@@ -9,7 +9,7 @@ Preset:
   m_Name: dodge_3
   m_TargetType:
     m_NativeTypeID: 114
-    m_ManagedTypePPtr: {fileID: 11500000, guid: efa651deb313e7946a884cd153213891, type: 3}
+    m_ManagedTypePPtr: {fileID: 11500000, guid: dbe8324d7ae63ec46a62ace2fda56ffe, type: 3}
     m_ManagedTypeFallback: 
   m_Properties:
   - target: {fileID: 0}
@@ -30,11 +30,15 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: dodge_magnitude
-    value: 150
+    value: 400
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: dodge_force.name
+    value: 
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: dodge_force.direction.x
-    value: 1
+    value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: dodge_force.direction.y
@@ -42,10 +46,10 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: dodge_force.magnitude
-    value: 0.030562613
+    value: 0
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: dodge_force.attenuation
-    value: 6
+    value: 0.7
     objectReference: {fileID: 0}
   m_ExcludedProperties: []
