@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using System;
 
 public class UI_XboxNavigator : MonoBehaviour
 {
@@ -32,12 +33,17 @@ public class UI_XboxNavigator : MonoBehaviour
     [Header("Inputs")]
     [SerializeField] private PlayerInputActions inputs;
     [SerializeField] private bool first_navigation = true;
+    private event Action<InputAction.CallbackContext> navigateCallback;
+    private event Action<InputAction.CallbackContext> activateCallback;
+
 
     // unity functions
     protected void Start()
     {
         // on récupère les inputs
         inputs = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().inputs;
+        navigateCallback = ctx => navigate(ctx.ReadValue<Vector2>());
+        activateCallback = ctx => activate();
     }
 
     // enable/disable
@@ -45,8 +51,8 @@ public class UI_XboxNavigator : MonoBehaviour
     {
         // on récupère les inputs
         inputs.UI.Enable();
-        inputs.UI.navigate.performed += ctx => navigate(ctx.ReadValue<Vector2>());
-        inputs.UI.activate.performed += ctx => activate();
+        inputs.UI.navigate.performed += navigateCallback;
+        inputs.UI.activate.performed += activateCallback;
 
         // on désactive les perso inputs
         inputs.enhanced_perso.Disable();
@@ -64,8 +70,8 @@ public class UI_XboxNavigator : MonoBehaviour
 
         // on récupère les inputs
         inputs.UI.Disable();
-        inputs.UI.navigate.performed -= ctx => navigate(ctx.ReadValue<Vector2>());
-        inputs.UI.activate.performed -= ctx => activate();
+        inputs.UI.navigate.performed -= navigateCallback;
+        inputs.UI.activate.performed -= activateCallback;
 
         // on active les perso inputs
         inputs.enhanced_perso.Enable();

@@ -354,8 +354,12 @@ PrefabInstance:
       value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 2923260706266234128, guid: 218dd56d6e10353498bdf3b630cbd19b, type: 3}
+      propertyPath: destroy_object
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2923260706266234128, guid: 218dd56d6e10353498bdf3b630cbd19b, type: 3}
       propertyPath: time_before_disappearing
-      value: 120
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3147306694727553979, guid: 218dd56d6e10353498bdf3b630cbd19b, type: 3}
       propertyPath: xp_gift

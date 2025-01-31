@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Spawner : Capable
+public class Spawner : Capable, Interactable
 {
     // ON INTERACT
     public void OnInteract()

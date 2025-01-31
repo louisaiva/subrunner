@@ -243,6 +243,11 @@ public class Capable : MonoBehaviour
         }
         return null;
     }
+    public List<Capacity> GetCapacities()
+    {
+        return capacities;
+    }
+
 }
 
 [Serializable] public enum Effect

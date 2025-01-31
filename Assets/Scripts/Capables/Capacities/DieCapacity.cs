@@ -15,6 +15,7 @@ public class DieCapacity : Capacity
     public int xp_gift = 10;
 
     [Header("Die parameters")]
+    public bool destroy_object = true;
     public float time_before_disappearing = 60f;
     [SerializeField] private bool show_smiley = true;
     [SerializeField] private List<string> smileys = new List<string> { "RIP", "rip", ";-;", ":(" };
@@ -29,7 +30,7 @@ public class DieCapacity : Capacity
         text_manager = GameObject.Find("/utils/dmgs_provider").GetComponent<TextManager>();
     }    
 
-    // trigger the dodge
+    // trigger the dying
     public override void Use(Capable capable)
     {
         // check if the capable is a Being
@@ -63,8 +64,6 @@ public class DieCapacity : Capacity
         // on change le layer des feet en "Ghosts"
         ((Being) capable).feet_collider.gameObject.layer = LayerMask.NameToLayer("Ghosts");
 
-        // ((Being)capable).ClearForces();
-
         // destroy object
         Invoke(nameof(destroyObject), time_before_disappearing);
     }
@@ -74,6 +73,31 @@ public class DieCapacity : Capacity
         Being being = transform.parent.GetComponent<Being>();
         if (being == null) { return; }
         if (being.Alive) { return; }
-        Destroy(transform.parent.gameObject);
+
+        // destroy the object
+        if (destroy_object) { Destroy(transform.parent.gameObject); return; }
+
+        Debug.Log("Destroying capacities of " + being.name);
+
+        // else, we destroy all the capacities except RunCapacity
+        List<Capacity> capacities = new List<Capacity>(being.GetCapacities());
+        Capacity run_capacity = capacities.Find(capa => capa.name == "run");
+        capacities.RemoveAll(capa => capa.name == "run" || capa.name == "die");
+        while (capacities.Count > 0)
+        {
+            being.RemoveCapacity(capacities[0].name);
+            capacities.RemoveAt(0);
+        }
+        // we disable the RunCapacity if we found it
+        if (run_capacity != null) { run_capacity.enabled = false; }
+
+        // and we destroy the body
+        Destroy(being.transform.Find("body").gameObject);
+
+        // And finally we disable the Capable
+        Destroy(being.GetComponent<Capable>());
+
+        // and we destroy ourselves
+        Destroy(this.gameObject);
     }
 }

@@ -14,12 +14,10 @@ using UnityEngine.InputSystem;
 public class HooverCapacity : Capacity
 {
     [Header("Hoover parameters")]
-    public Spawner capable;
-    public Collider2D hoover_collider;
+    public Interactable capable;
 
-    [Header("INPUTS")]
-    [SerializeField] private InputManager input_manager;
-    public PlayerInputActions playerInputs;
+    [Header("Callbacks")]
+    public InputActionReference interactAction;
     private event Action<InputAction.CallbackContext> interactCallback;
     public bool set_callback = false;
 
@@ -27,50 +25,62 @@ public class HooverCapacity : Capacity
     // START
     private void Start()
     {
-        // we get the hoover collider
-        hoover_collider = GetComponent<Collider2D>();
-        capable = transform.parent.GetComponent<Spawner>();
+        // we get the Capable
+        capable = transform.parent.GetComponent<Interactable>();
 
-        // on récupère les inputs
-        input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
-        playerInputs = input_manager.inputs;
+        // we define the callback
+        defineCallback();
     }
 
-    // USE
-    public override void Use(Capable capable)
+    // HOVER
+    protected virtual void defineCallback()
     {
-        base.Use(capable);
+        // we define the interact action
+        interactCallback = ctx => capable.OnInteract();
+    }
+    protected virtual void hover(Capable capable)
+    {
+        // we play the animation
+        Use(capable);
 
+        // we set the callback
         if (!set_callback)
         {
             set_callback = true;
-            interactCallback = ctx => this.capable.OnInteract();
-            playerInputs.perso.interact.performed += interactCallback;
+            interactAction.action.performed += interactCallback;
             Debug.Log("(HooverCapacity) " + name + " set callback OnInteract()");
+        }
+    }
+    protected virtual void unhover(Capable capable)
+    {
+        // we stop the animation
+        stop_playing(capable.anim_player, name);
+
+        // we remove the callback
+        if (set_callback)
+        {
+            set_callback = false;
+            interactAction.action.performed -= interactCallback;
+            Debug.Log("(HooverCapacity) " + name + " removed callback OnInteract()");
         }
     }
 
     // TRIGGER ENTER
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            Use(capable);
-        }
+        // we check if the other is the player
+        if (!other.gameObject.CompareTag("Player")) { return; }
+        
+        // we hover
+        hover((Capable) capable);
     }
     private void OnTriggerExit2D(Collider2D other)
     {
         // we check if the other is the player
         if (!other.gameObject.CompareTag("Player")) { return; }
 
-        // we stop the animation
-        stop_playing(capable.anim_player, name);
-
-        // we remove the callback
-        if (!set_callback) { return; }
-        playerInputs.perso.interact.performed -= interactCallback;
-        Debug.Log("(HooverCapacity) "+ name + " removed callback OnInteract()");
-        set_callback = false;
+        // we unhover
+        unhover((Capable) capable);
     }
 
 }
