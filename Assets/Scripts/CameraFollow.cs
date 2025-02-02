@@ -32,9 +32,9 @@ public class CameraFollow : MonoBehaviour
         if (dynamic_cam)
         {
             Y_OFF = 0;
-            if (Mathf.Abs(player.velocity.y) > min_velocity)
+            if (Mathf.Abs(player.linearVelocity.y) > min_velocity)
             {
-                Y_OFF = (player.velocity.y - Mathf.Sign(player.velocity.y)*min_velocity) * Y_OFF_SPEED;
+                Y_OFF = (player.linearVelocity.y - Mathf.Sign(player.linearVelocity.y)*min_velocity) * Y_OFF_SPEED;
                 Y_OFF = Mathf.Clamp(Y_OFF, -Y_OFF_MAX, Y_OFF_MAX);
             }
         }

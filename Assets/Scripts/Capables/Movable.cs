@@ -7,10 +7,13 @@ public class Movable : Capable
     [Header("MOVABLE")]
     public Rigidbody2D rb;  // Replace transform movement
     public float weight = 1f;
-    private float friction = 7f;
+    public float friction = 7f;
     public List<Force> forces = new List<Force>();
     public float input_speed;
     public BoxCollider2D feet_collider;
+
+    [Header("DEBUG")]
+    public bool debug = false;
 
     protected override void Start()
     {
@@ -59,7 +62,7 @@ public class Movable : Capable
         if (input_speed < 0.1f) { input_speed = 0f; }
 
         // Apply input velocity
-        rb.velocity = input_speed * Orientation;
+        rb.linearVelocity = input_speed * Orientation;
 
         // Apply forces
         Vector2 totalForce = Vector2.zero;
@@ -83,7 +86,8 @@ public class Movable : Capable
         // Apply friction when no force is applied
         if (totalForce == Vector2.zero && inputs == Vector2.zero)
         {
-            rb.velocity = Vector2.Lerp(rb.velocity, Vector2.zero, friction * Time.deltaTime);
+            // if (debug) { Debug.Log("Applying friction ("+ friction +") to " + gameObject.name + " with velocity " + rb.velocity); }
+            rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, Vector2.zero, friction * Time.deltaTime);
         }
     }
 

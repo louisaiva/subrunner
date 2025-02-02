@@ -44,10 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbe8324d7ae63ec46a62ace2fda56ffe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooldown: 0
-  dodge_magnitude: 25
+  cooldown: 0.76666665
+  dodge_magnitude: 400
   dodge_force:
     name: 
     direction: {x: 0, y: 0}
     magnitude: 0
-    attenuation: 0
+    attenuation: 0.7

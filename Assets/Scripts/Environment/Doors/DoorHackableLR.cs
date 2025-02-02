@@ -10,16 +10,16 @@ public class DoorHackableLR : DoorHackable
     protected new void Start()
     {
         // on change les bonnes animations
-        anims.addGlobalModif("ss");
+        // anims.addGlobalModif("ss");
 
         base.Start();
 
         // on change la direction de la porte
-        door_axis = "horizontal";
+        // door_axis = "horizontal";
     }
 
 
-    protected override void success_open()
+    /* protected override void success_open()
     {
         base.success_open();
 
@@ -35,5 +35,5 @@ public class DoorHackableLR : DoorHackable
         // on modifie le sorting layer pour le mettre dans le main
         GetComponent<SpriteRenderer>().sortingLayerName = "main";
         GetComponent<SpriteRenderer>().sortingOrder = 0;
-    }
+    } */
 }

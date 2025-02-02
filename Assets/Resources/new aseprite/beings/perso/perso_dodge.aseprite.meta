@@ -105,6 +105,7 @@ ScriptedImporter:
     pivot: {x: 0, y: 0}
     alignment: 0
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 0
@@ -126,6 +127,7 @@ ScriptedImporter:
     pivot: {x: 0.4736842, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 30
@@ -146,6 +148,7 @@ ScriptedImporter:
     pivot: {x: 0.36842108, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 30
@@ -166,6 +169,7 @@ ScriptedImporter:
     pivot: {x: 0.33333334, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -186,6 +190,7 @@ ScriptedImporter:
     pivot: {x: 0.47826087, y: -0.083333336}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 58
@@ -206,6 +211,7 @@ ScriptedImporter:
     pivot: {x: 0.45000002, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 30
@@ -226,6 +232,7 @@ ScriptedImporter:
     pivot: {x: 0.4, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -246,6 +253,7 @@ ScriptedImporter:
     pivot: {x: 0.42857143, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -266,6 +274,7 @@ ScriptedImporter:
     pivot: {x: 0.46153846, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 30
@@ -286,6 +295,7 @@ ScriptedImporter:
     pivot: {x: 0.46153846, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 58
@@ -306,6 +316,7 @@ ScriptedImporter:
     pivot: {x: 0.3529412, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -326,6 +337,7 @@ ScriptedImporter:
     pivot: {x: 0.38888893, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -346,6 +358,7 @@ ScriptedImporter:
     pivot: {x: 0.41176474, y: -0.15384616}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 30
@@ -370,96 +383,108 @@ ScriptedImporter:
     layerType: 0
     blendMode: 0
     cells:
-    - name: perso_dodge_Frame_0
+    - name: Frame_0
       frameIndex: 0
+      additiveSortOrder: 0
       cellRect:
         x: 3
         y: 0
         width: 19
         height: 13
       spriteId: cd857a83d41b6ee4fa912c4872785c9f
-    - name: perso_dodge_Frame_1
+    - name: Frame_1
       frameIndex: 1
+      additiveSortOrder: 0
       cellRect:
         x: 5
         y: 0
         width: 19
         height: 14
       spriteId: d6a2ab68a6fe9304d81b9bd5076d0047
-    - name: perso_dodge_Frame_2
+    - name: Frame_2
       frameIndex: 2
+      additiveSortOrder: 0
       cellRect:
         x: 7
         y: 0
         width: 15
         height: 17
       spriteId: d9a6260ed962837458389b2419166c1f
-    - name: perso_dodge_Frame_4
+    - name: Frame_4
       frameIndex: 4
+      additiveSortOrder: 0
       cellRect:
         x: 1
         y: 1
         width: 23
         height: 12
       spriteId: 66050c3a9a6a1e449b786a0e4f11451e
-    - name: perso_dodge_Frame_5
+    - name: Frame_5
       frameIndex: 5
+      additiveSortOrder: 0
       cellRect:
         x: 3
         y: 0
         width: 20
         height: 15
       spriteId: 503b8158de1216146937502f56c05a81
-    - name: perso_dodge_Frame_6
+    - name: Frame_6
       frameIndex: 6
+      additiveSortOrder: 0
       cellRect:
         x: 6
         y: 0
         width: 15
         height: 15
       spriteId: 74059b64b190c0b4ba5401ff1dc9e1a2
-    - name: perso_dodge_Frame_7
+    - name: Frame_7
       frameIndex: 7
+      additiveSortOrder: 0
       cellRect:
         x: 6
         y: 0
         width: 14
         height: 16
       spriteId: 348297e6a7cffca49b1d023ed3d0fafb
-    - name: perso_dodge_Frame_8
+    - name: Frame_8
       frameIndex: 8
+      additiveSortOrder: 0
       cellRect:
         x: 6
         y: 0
         width: 13
         height: 17
       spriteId: a3999451e3cc01743967a2f95e9029fd
-    - name: perso_dodge_Frame_9
+    - name: Frame_9
       frameIndex: 9
+      additiveSortOrder: 0
       cellRect:
         x: 6
         y: 0
         width: 13
         height: 16
       spriteId: f89f36d11616e5147a7b1344f342b8a8
-    - name: perso_dodge_Frame_10
+    - name: Frame_10
       frameIndex: 10
+      additiveSortOrder: 0
       cellRect:
         x: 6
         y: 0
         width: 17
         height: 17
       spriteId: 8deac8052b8f6ac47a0b4643196e2d0f
-    - name: perso_dodge_Frame_11
+    - name: Frame_11
       frameIndex: 11
+      additiveSortOrder: 0
       cellRect:
         x: 5
         y: 0
         width: 18
         height: 17
       spriteId: 90c8a27ce22d7144bbd9f69ac72933b7
-    - name: perso_dodge_Frame_3
+    - name: Frame_3
       frameIndex: 3
+      additiveSortOrder: 0
       cellRect:
         x: 5
         y: 2

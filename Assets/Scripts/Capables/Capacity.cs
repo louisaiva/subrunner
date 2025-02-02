@@ -14,6 +14,12 @@ public class Capacity : MonoBehaviour
             return cooldown_timer <= 0;
         }
     }
+    public Capable capable
+    {
+        get {
+            return transform.parent.GetComponent<Capable>();
+        }
+    }
     
     // cooldown
     [SerializeField] protected float cooldown = 0;

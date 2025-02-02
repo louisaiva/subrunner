@@ -49,7 +49,8 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
     public void cheat()
     {
         transform.parent.parent.GetComponent<UI_PauseMenu>().hide();
-        GameObject.Find("/perso").GetComponent<Perso>().cheat();
+        Debug.Log("cheating...");
+        // GameObject.Find("/perso").GetComponent<Perso>().cheat();
     }
 
 

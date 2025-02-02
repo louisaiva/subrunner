@@ -6,7 +6,7 @@ using System.Collections;
 public class DoorAuto : Door
 {
 
-    // [SerializeField] private float openin_duration = 1f;
+    /* // [SerializeField] private float openin_duration = 1f;
 
     [Header("OPENING")]
     [SerializeField] protected float auto_openin_radius = 2f;
@@ -28,6 +28,6 @@ public class DoorAuto : Door
         {
             close();
         }
-    }
+    } */
 
 }

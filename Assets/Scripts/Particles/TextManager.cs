@@ -58,7 +58,7 @@ public class TextManager : MonoBehaviour
 
     IEnumerator talkLines(string[] lines, Being being)
     {
-        Transform voice = being.transform.Find("voice");
+        Transform voice = being.transform.Find("talk");
 
         // on affiche les lignes
         for (int i = 0; i < lines.Length; i++)

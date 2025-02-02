@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(AnimationHandler))]
-public class XP_Chest : Chest, I_Buttonable
+public class XP_Chest : OldChest, I_Buttonable
 {
 
     // XP Provider

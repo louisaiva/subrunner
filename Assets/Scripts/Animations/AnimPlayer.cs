@@ -26,21 +26,25 @@ public class AnimPlayer : MonoBehaviour
 
     [Header("Animation Pile")]
     public List<string> anim_pile = new();
-    public Dictionary<string, int> capacity_priorities = new()
+    private Dictionary<string, int> capacity_priorities = new()
             {
             {"idle",0},
             {"walk",1},
             {"run",1},
-            {"attack",2},
-            {"spawn",2},
-            {"dodge",2},
-            {"hurted",2},
-            {"die",3}};
+            {"hover",1},
+            {"idle_open",2},
+            {"attack",3},
+            {"spawn",3},
+            {"open",3},
+            {"close",3},
+            {"dodge",3},
+            {"hurted",3},
+            {"die",4}};
     // todo à transformer en List<CapacityPriority> sans MonoBehaviour pour pouvoir les éditer dans l'éditeur
 
-    public List<int> animation_priorities_with_no_loop = new() { 2 };
+    public List<int> animation_priorities_with_no_loop = new() { 3 };
         // we never loop the animation if it's in this priority (attack, dodge, hurted) -> always play once
-    public List<int> animation_priorities_with_no_interrupt = new() { 2 };
+    public List<int> animation_priorities_with_no_interrupt = new() { 3 };
         // we can't interrupt the animation if it's in this list (wait the end of the anim before changing orientation by example)
 
 
@@ -126,18 +130,20 @@ public class AnimPlayer : MonoBehaviour
 
 
     // PLAY ANIMATION
-    public Anim Play(string capacity, int? priority_override=null)
+    public Anim Play(string capacity, int? priority_override=null, float? duration_override=null)
     {
         // we get the priority of the capacity
         int priority = 1;
         if (priority_override != null)
         {
             priority = (int) priority_override;
+            Debug.Log("The capacity " + capacity + " has a priority override: " + priority);
+            capacity_priorities[capacity] = priority;
         }
-        if (priority_override == null && capacity_priorities.ContainsKey(capacity)) { priority = capacity_priorities[capacity]; }
+        else if (priority_override == null && capacity_priorities.ContainsKey(capacity)) { priority = capacity_priorities[capacity]; }
         else
         {
-            Debug.LogWarning("The capacity " + capacity + " doesn't exist in the capacity_priorities dictionnary. Priority 1 by default applied");
+            Debug.LogWarning("The capacity " + capacity + " doesn't exist in the capacity_priorities dictionnary. Priority 1 applied by default");
             capacity_priorities[capacity] = priority;
         }
 
@@ -147,6 +153,17 @@ public class AnimPlayer : MonoBehaviour
             // we get the animation from the bank
             string anim_name = skin + "." + capacity + "." + orientation;
             Anim anim = bank.GetAnim(anim_name);
+
+            // we check if the duration is overriden
+            if (duration_override != null)
+            {
+                // we get the duration of the animation
+                float duration = anim.GetBaseDuration();
+                
+                // we calculate the resulting speed
+                anim.speed = duration / (float) duration_override;
+            }
+
 
             // we check if the animation is not actually playing
             if (anim.name != current_anim.name)
@@ -260,6 +277,8 @@ public class AnimPlayer : MonoBehaviour
     // ORIENTATION
     public void SetOrientation(Vector2 look_at)
     {
+        if (debug) { Debug.Log("(AnimPlayer) Changing " + name +" orientation to " + look_at); }
+
         // we separate the 360° in 4 directions (up, down, left, right)
         if (look_at.y > 0.5) { SetOrientation("U"); }
         else if (look_at.y < -0.5) { SetOrientation("D"); }
@@ -276,7 +295,8 @@ public class AnimPlayer : MonoBehaviour
         { this.orientation = orientation; }
 
         // we check if we can interrupt the current animation
-        int current_anim_priority = current_capacity == "" ? 0 : capacity_priorities[current_capacity];
+        if (current_capacity == "") { return; }
+        int current_anim_priority = capacity_priorities[current_capacity];
         if (animation_priorities_with_no_interrupt.Contains(current_anim_priority)) { return; }
 
         // we check if the current animation is in the pile

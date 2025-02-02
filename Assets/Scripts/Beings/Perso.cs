@@ -6,10 +6,6 @@ using UnityEngine.InputSystem;
 public class Perso : Being
 {
 
-    // DEBUG
-    [Header("CHEAT")]
-    public bool CHEAT = true;
-
     [Header("PERSO")]
     // exploits (xp)
     public int level = 1;
@@ -19,6 +15,8 @@ public class Perso : Being
 
     private GameObject floating_text_prefab;
     private GameObject cam;
+
+    public Room current_room { get; set; }
 
 
     [Header("HACKIN")]
@@ -49,10 +47,10 @@ public class Perso : Being
     
     [Header("DASH")]
     // DASH
-    [SerializeField] private float dash_magnitude = 25f;
+    // [SerializeField] private float dash_magnitude = 25f;
     [SerializeField] private float dash_duration = 0.5f;
     public float last_dash_time = 0f;
-    private List<int> dash_forces = new List<int>();
+    // private List<int> dash_forces = new List<int>();
 
     // global light
     private GameObject global_light;
@@ -87,71 +85,7 @@ public class Perso : Being
     // private UI_HintControlsManager hints_controls;
 
     // TALKING
-    private List<string> talks_random = new List<string>()
-                        {
-                            "here we go again/.",
-                            "well/.i'm not dead yet :D/lthat's a good start",
-                            "give me some noodles !/l/.anyone ?",
-                            "still not dead/./lbut am i alive ?",
-                            "let's decrypt\nthe chaos, babyy",
-                            "ARGHHH/.ZOMBOS !",
-                            "those posters reminds\nme of the pixel war/./lwait/.wtf is the pixel war ?",
-                            "looks like life has/./lno meaning after all",
-                            "let's ctrl+alt+suppr\nall those cyberzombies",
-                            "do you feel the\nbreath of the city ?",
-                            "i'm talking alone/./las always..",
-                            "bits & bytes are\nmy only love, honey",
-                            "404: noodles not found :/",
-                            "feel like the labyrinth\nkeeps moving/.is it ?",
-                            "omg i almost glitched oO",
-                            "what if i could pass\nthrough those walls ?/lwell/.I can't",
-                            "this city is full of bugs/./llooks like a game actually",
-                            "ahh, the smell of the city,/lso/.digital",
-                            "i'm a pixel runner/.i'm a pixel runner",
-                            "let's hack the world, baby !",
-                            "running in da\nunderground,/lagain/.and again/.n agn",
-                            "i'm so tired/./lwhen was the last\ntime i slept ?",
-                            "why do i keep\nrunning, really ?",
-                            "this wall looks suspicious/. O.o",
-                            "feels good to run after/./l502420h of debugging",
-                            "here i dash/.here i slash",
-                            "where is my old\nfriend Marco ?",
-                            "ayy, 9 years without\nseeing the sun,/lwho can beat that ?",
-                            "i need to find the exit/./lis there even an exit ?",
-                            "ahhh what if I\ncould ctrl-Z irl ?",
-                            "alright./ltime to remember passwords/./ls7j3k9../lwell/.not this time apparently",
-                            "what's my name again ?",
-                            "ahh/./lI love feeling the\nbytes flowing in my veins..",
-                            "where is the internet again ?",
-                            "zombos, zombos\neverywhere/./lwelcome to the\nzapocalypse",
-                            "noodles,/lthe ultimate cure\nfor existential hunger !",
-                            "starving and debugging/./la perfect combo, really",
-                            "is this reality or just\na weird illusion ?",
-                            "zombos & hacking/./lno way it's real/./lit's so/.mainstream",
-                            "OH MY GOD,/ljust found the bug\nI was struggling with/./lToo bad my computer\npassed away..",
-                            "line 475,car. 45 :\n(WorldError)\nhere's comes the \"déjà vu\"",
-                            "looks like the matrix/./lugh ?/lwhat did I just say ?",
-                            "i could use a jetpack/./lwell no that's\nanother game./lwait/.a game ?",
-                            "ohhh, cuty rat !",
-                            "why do I keep\ntalking alone ?/l;-;",
-                            "i'm so tired of\nrunning/l/.looks like\nI can't stop",
-                            "how many times\nI've been here ?",
-                            "mmmmh/./lhow many zombos lives is\nworth some noodles ?",
-                            "pff !/lthose zombos are\nso annoying",
-                            "ahh/./lloneliness is almost\nas scary as\nthe deep web",
-                            "maybe I'll find\nsome friends/./l/. but I want noodles !",
-                        };
-    private List<string> talks_random_nsfw = new List<string>()
-                        {
-                            "fuck this shit/.\ni'm HUNGRY !",
-                            "is all of this\nsh*t even real ?",
-                            "ahh orangina I love that/l/.f*ck capitalism\nperchance",
-                            "fuck Google I'm gonna hack them",
-                        };
-    
-    
-    [Header("TALKING")]
-    [SerializeField] private bool allow_nsfw = true;
+
     [SerializeField] private Vector2 talking_delay_range = new Vector2(10f, 30f);
 
     // unity functions
@@ -224,7 +158,7 @@ public class Perso : Being
         // ON MET A JOUR DES TRUCS
 
         // on ajoute des capacités
-        AddCapacity("hoover_interact");
+        // AddCapacity("hoover_interact");
         // AddCapacity("interact");
         // AddCapacity("debug_capacities");
         // AddCapacity("talk");
@@ -253,13 +187,6 @@ public class Perso : Being
         // sounds = new PersoSounds();
         // audio_manager.LoadSoundsFromPath("audio/perso");
 
-
-        // on CHEAT
-        if (CHEAT)
-        {
-            cheat();
-        }
-
         // on MAJ les items
         inventory.getItems().ForEach(item => grab(item));
 
@@ -272,7 +199,7 @@ public class Perso : Being
         // on affiche un texte de début
         Invoke("showWelcome", 5f);
         Invoke("showQuest", 10f);
-        Invoke("randomTalk", Random.Range(talking_delay_range.x, talking_delay_range.y));
+        // Invoke("randomTalk", Random.Range(talking_delay_range.x, talking_delay_range.y));
     }
 
     // welcoming
@@ -307,14 +234,14 @@ public class Perso : Being
         floating_dmg_provider.GetComponent<TextManager>().addFloatingText(quest_text, transform.position + new Vector3(0, 0.5f, 0), "yellow");
     }
 
-    void randomTalk()
+    /* void randomTalk()
     {
         if (!Alive) { return; }
         // on fait parler le perso
-        int index = Random.Range(0, talks_random.Count + (allow_nsfw ? talks_random_nsfw.Count : 0));
+        int index = Random.Range(0, talks_random.Count + (allow_bad_words ? talks_random_bad_words.Count : 0));
         if (index >= talks_random.Count)
         {
-            floating_dmg_provider.GetComponent<TextManager>().talk(talks_random_nsfw[index - talks_random.Count], this);
+            floating_dmg_provider.GetComponent<TextManager>().talk(talks_random_bad_words[index - talks_random.Count], this);
         }
         else
         {
@@ -323,7 +250,7 @@ public class Perso : Being
 
         // on relance
         Invoke("randomTalk", Random.Range(talking_delay_range.x, talking_delay_range.y));
-    }
+    } */
 
     // INPUTS
     private void initInputs()
@@ -497,7 +424,7 @@ public class Perso : Being
 
         // 1 - on récupère tous les objets dans le range de hack
         Collider2D[] hits = new Collider2D[30];
-        hack_collider.OverlapCollider(hack_contact_filter, hits);
+        hack_collider.Overlap(hack_contact_filter, hits);
 
         // 2 - on récupère l'objet hackable le plus proche de la souris dans le range aide_a_la_visee
         Vector2 mouse_pos = Camera.main.ScreenToWorldPoint(mouse_position);
@@ -589,7 +516,7 @@ public class Perso : Being
 
             // 1 - on récupère tous les objets dans le range de hack
             Collider2D[] hits = new Collider2D[30];
-            hack_collider.OverlapCollider(hack_contact_filter, hits);
+            hack_collider.Overlap(hack_contact_filter, hits);
             foreach (Collider2D hit in hits)
             {
                 if (hit == null) { continue; }
@@ -646,7 +573,7 @@ public class Perso : Being
 
         // 1 - on récupère tous les objets dans le range de hack
         Collider2D[] hits = new Collider2D[30];
-        hack_collider.OverlapCollider(hack_contact_filter, hits);
+        hack_collider.Overlap(hack_contact_filter, hits);
         if (hits.Length == 0) { return; }
 
         // 2 - on parcourt tous les hackable et on trouve celui avec le plus petit angle
@@ -715,30 +642,6 @@ public class Perso : Being
         }
     }
 
-    // CHEAT
-    public void cheat()
-    {
-        // on met l'attaque à 0.1
-        // damage = 0.1f;
-
-        // on se met lvl 10 sur le skill tree
-        // skills_tree.setGlobalLevel(10);
-        // skills_tree.setLevel("max_life", 30);
-
-        // on met à jour les paramètres du perso
-        life = (float)max_life;
-        // speed = 5f;
-
-        // on rajoute hacks, lunettes etc
-        grab(inventory.createItem("carbon_shoes", true));
-        grab(inventory.createItem("nood_os", true));
-        grab(inventory.createItem("gyroscope", true));
-        grab(inventory.createItem("zombo_electrochoc"));
-        grab(inventory.createItem("door_hack"));
-        grab(inventory.createItem("computer_hack"));
-
-        Debug.Log("OMGGG R U CHEATING ?!");
-    }
 
     // XP
     public void addXP(int count)
@@ -762,6 +665,12 @@ public class Perso : Being
 
         // on ouvre le physical tree
         // skills_tree.physicalLevelUp();
+
+        // on augmente x1.5 l'attaque
+        if (hasCapacity("attack"))
+        {
+            transform.Find("attack").GetComponent<AttackCapacity>().damage *= 1.5f;
+        }
 
         // on affiche un texte de level up
         floating_dmg_provider.GetComponent<TextManager>().addFloatingText("LEVEL "+level.ToString(), transform.position + new Vector3(0, 0.5f, 0), "yellow");
@@ -822,7 +731,7 @@ public class Perso : Being
 
         // on récupère tous les objets hackables dans le range
         Collider2D[] hackables = new Collider2D[30];
-        hack_collider.OverlapCollider(hack_contact_filter, hackables);
+        hack_collider.Overlap(hack_contact_filter, hackables);
 
         // on regarde si les objets hackés sont toujours hackables
         foreach (GameObject target in current_hackin_targets.Keys)
@@ -1302,7 +1211,7 @@ public class Perso : Being
         // Debug.Log("dash tempo : " + (dash_tempo));
         last_dash_time = Time.time;
 
-        if (dash_tempo > 0.65f && dash_tempo < 0.95f)
+        /* if (dash_tempo > 0.65f && dash_tempo < 0.95f)
         {
             // on est dans le tempo !
             dash_magnitude = 64f;
@@ -1313,7 +1222,7 @@ public class Perso : Being
             // on revient à la normale
             dash_magnitude = 32f;
             dash_duration = 0.25f;
-        }
+        } */
 
         
 
@@ -1464,17 +1373,9 @@ public class Perso : Being
     }
     public void OnRandomTalk()
     {
-        if (!HasEffect(Effect.Stunned))
+        if (Can("talk") && !HasEffect(Effect.Stunned))
         {
-            if (Can("talk"))
-            {
-                CancelInvoke("randomTalk");
-                randomTalk();
-            }
-            else
-            {
-                floating_dmg_provider.GetComponent<TextManager>().talk("./.@.~@#", this);
-            }
+            Do("talk");
         }
     }
     public void OnMap()

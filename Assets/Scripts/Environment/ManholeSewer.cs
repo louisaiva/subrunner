@@ -6,7 +6,7 @@ using TMPro;
 
 
 [RequireComponent(typeof(AnimationHandler), typeof(BoxCollider2D))]
-public class ManholeSewer : Chest, I_Interactable
+public class ManholeSewer : OldChest, I_Interactable
 {
 
     [Header("MANHOLE SEWER")]

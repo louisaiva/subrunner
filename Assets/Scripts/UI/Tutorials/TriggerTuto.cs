@@ -14,34 +14,34 @@ public class TriggerTuto : MonoBehaviour
     public bool triggered = false;
 
     // Collisions
-    private Collider2D collider;
-    public LayerMask player_layer;
-    private ContactFilter2D player_contact_filter;
+    // private Collider2D trigger_collider;
+    // public LayerMask player_layer;
+    // private ContactFilter2D player_contact_filter;
 
-    private void Start()
+    /* private void Start()
     {
-        // Get the collider
-        collider = GetComponent<Collider2D>();
+        // Get the trigger_collider
+        // trigger_collider = GetComponent<Collider2D>();
 
         // Set the contact filter
         player_contact_filter = new ContactFilter2D();
         player_contact_filter.useLayerMask = true;
         player_contact_filter.layerMask = player_layer;
-    }
+    } */
 
-    private void Update()
+    /* private void Update()
     {
-        // 1 - we check if the collider collides with the player
+        // 1 - we check if the trigger_collider collides with the player
         
         // we get all the player collisions
         List<Collider2D> collisions = new();
-        Physics2D.OverlapCollider(collider, player_contact_filter,collisions);
+        Physics2D.OverlapCollider(trigger_collider, player_contact_filter,collisions);
 
         // we verify if we actually collided with the player
         bool player_is_colliding = false;
         foreach (Collider2D collision in collisions)
         {
-            if (collision.gameObject.name == "perso")
+            if (collision.gameObject.CompareTag("Player"))
             {
                 player_is_colliding = true;
                 break;
@@ -59,19 +59,31 @@ public class TriggerTuto : MonoBehaviour
             // we just got in the trigger
             OnTriggerEnter2D();
         }
-    }
+    } */
 
-    private void OnTriggerEnter2D()
+    private void OnTriggerEnter2D(Collider2D other)
     {
+        // we check if the other is the player
+        if (!other.gameObject.CompareTag("Player")) { return; }
+        if (triggered) { return; }
+
+        Debug.Log("OMG "+ name +" is Triggered by " + other.name);
+
         // Create the tutorial UI
         ui_tuto = Instantiate(ui_tuto_prefab, ui_tuto_parent);
         triggered = true;
     }
-
-    private void OnTriggerExit2D()
+    private void OnTriggerExit2D(Collider2D other)
     {
+        // we check if the other is the player
+        if (!other.gameObject.CompareTag("Player")) { return; }
+        if (!triggered) { return; }
+
+        Debug.Log("OMG " + name + " is ended Triggered by " + other.name);
+
         // Destroy the tutorial UI
         Destroy(ui_tuto);
         triggered = false;
     }
+
 }

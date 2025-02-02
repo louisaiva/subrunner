@@ -95,10 +95,10 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable, I_FileHolder
 
         // on initialise les fichiers
         max_files = 12;
-        FileBank bank = GameObject.Find("/utils/bank").GetComponent<FileBank>();
-        files = bank.getRandomFiles(Random.Range(2,7));
+        // FileBank bank = GameObject.Find("/utils/bank").GetComponent<FileBank>();
+        // files = bank.getRandomFiles(Random.Range(2,7));
         // files.Add(bank.generateRandomTxtHint(os,password));
-        AddFile(bank.generateRandomTxtHint(os,password));
+        // AddFile(bank.generateRandomTxtHint(os,password));
 
 
         /* AddFile(new File("mdp", "802"));

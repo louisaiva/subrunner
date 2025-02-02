@@ -49,7 +49,7 @@ public class SpawnCapacity : Capacity
     }
 
     // UPDATE
-    void Update()
+    new void Update()
     {
         if (spawn_rate == 0f) { return; }
 

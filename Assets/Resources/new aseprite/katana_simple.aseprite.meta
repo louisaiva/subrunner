@@ -105,6 +105,7 @@ ScriptedImporter:
     pivot: {x: 0, y: 0}
     alignment: 0
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 0
@@ -126,6 +127,7 @@ ScriptedImporter:
     pivot: {x: 0.54545456, y: -0.14285715}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 44
@@ -146,6 +148,7 @@ ScriptedImporter:
     pivot: {x: 0.54545456, y: -0.15}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -166,6 +169,7 @@ ScriptedImporter:
     pivot: {x: 0.54545456, y: -0.2}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 44
@@ -186,6 +190,7 @@ ScriptedImporter:
     pivot: {x: 0.54545456, y: -0.2}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -206,6 +211,7 @@ ScriptedImporter:
     pivot: {x: 0.54545456, y: -0.5}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -226,6 +232,7 @@ ScriptedImporter:
     pivot: {x: 0.54545456, y: -0.24}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -246,6 +253,7 @@ ScriptedImporter:
     pivot: {x: 0.54545456, y: -0.15}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -266,6 +274,7 @@ ScriptedImporter:
     pivot: {x: 0.49999997, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 4
@@ -286,6 +295,7 @@ ScriptedImporter:
     pivot: {x: 0.6, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 86
@@ -306,6 +316,7 @@ ScriptedImporter:
     pivot: {x: 0.50000006, y: -0.2647059}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 44
@@ -326,6 +337,7 @@ ScriptedImporter:
     pivot: {x: 0.5, y: -4.4}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 99
@@ -346,6 +358,7 @@ ScriptedImporter:
     pivot: {x: 0.44117647, y: -0.20588236}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 44
@@ -366,6 +379,7 @@ ScriptedImporter:
     pivot: {x: 0.39999992, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 86
@@ -386,6 +400,7 @@ ScriptedImporter:
     pivot: {x: 0.50000006, y: -0.14705883}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 44
@@ -406,6 +421,7 @@ ScriptedImporter:
     pivot: {x: 0.5, y: -4.2000003}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 155
@@ -426,6 +442,7 @@ ScriptedImporter:
     pivot: {x: 0.5588236, y: -0.20588236}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
     rect:
       serializedVersion: 2
       x: 44
@@ -450,128 +467,144 @@ ScriptedImporter:
     layerType: 0
     blendMode: 0
     cells:
-    - name: katana_simple_Frame_1
+    - name: Frame_1
       frameIndex: 1
+      additiveSortOrder: 0
       cellRect:
         x: 12
         y: 6
         width: 22
         height: 42
       spriteId: 45147b0030db60743927349a646b5662
-    - name: katana_simple_Frame_2
+    - name: Frame_2
       frameIndex: 2
+      additiveSortOrder: 0
       cellRect:
         x: 12
         y: 6
         width: 22
         height: 40
       spriteId: 61c29b8a58b474b4ba573a5338058c74
-    - name: katana_simple_Frame_3
+    - name: Frame_3
       frameIndex: 3
+      additiveSortOrder: 0
       cellRect:
         x: 12
         y: 6
         width: 22
         height: 30
       spriteId: 650425caff572a441bee162b2494a773
-    - name: katana_simple_Frame_4
+    - name: Frame_4
       frameIndex: 4
+      additiveSortOrder: 0
       cellRect:
         x: 12
         y: 6
         width: 22
         height: 30
       spriteId: 272d95379e371024a9a812f47024d031
-    - name: katana_simple_Frame_5
+    - name: Frame_5
       frameIndex: 5
+      additiveSortOrder: 0
       cellRect:
         x: 12
         y: 6
         width: 22
         height: 12
       spriteId: a6568e3ff03d54f4c8f25cc2942f33e1
-    - name: katana_simple_Frame_6
+    - name: Frame_6
       frameIndex: 6
+      additiveSortOrder: 0
       cellRect:
         x: 12
         y: 6
         width: 22
         height: 25
       spriteId: 78c0acb8b957da040bd2ffd625e1258e
-    - name: katana_simple_Frame_7
+    - name: Frame_7
       frameIndex: 7
+      additiveSortOrder: 0
       cellRect:
         x: 12
         y: 6
         width: 22
         height: 40
       spriteId: 5cc878e54f91f6245a162995d1dd21c9
-    - name: katana_simple_Frame_0
+    - name: Frame_0
       frameIndex: 0
+      additiveSortOrder: 0
       cellRect:
         x: 8
         y: 0
         width: 32
         height: 48
       spriteId: 0bf9dfb44278de94a821a8c4cc16e113
-    - name: katana_simple_Frame_8
+    - name: Frame_8
       frameIndex: 8
+      additiveSortOrder: 0
       cellRect:
         x: 21
         y: 0
         width: 5
         height: 48
       spriteId: 47da53bf9168d26478acb14e8902a339
-    - name: katana_simple_Frame_9
+    - name: Frame_9
       frameIndex: 9
+      additiveSortOrder: 0
       cellRect:
         x: 7
         y: 9
         width: 34
         height: 34
       spriteId: 2740cff3b6da189428f68a223e3af60b
-    - name: katana_simple_Frame_10
+    - name: Frame_10
       frameIndex: 10
+      additiveSortOrder: 0
       cellRect:
         x: 0
         y: 22
         width: 48
         height: 5
       spriteId: 4bb5f130c4110d141a3f09584514043e
-    - name: katana_simple_Frame_11
+    - name: Frame_11
       frameIndex: 11
+      additiveSortOrder: 0
       cellRect:
         x: 9
         y: 7
         width: 34
         height: 34
       spriteId: f15fa86c3da66354992a17c62e1e8e79
-    - name: katana_simple_Frame_12
+    - name: Frame_12
       frameIndex: 12
+      additiveSortOrder: 0
       cellRect:
         x: 22
         y: 0
         width: 5
         height: 48
       spriteId: a0aa629ccfa43bf45ae7849dc7e387ee
-    - name: katana_simple_Frame_13
+    - name: Frame_13
       frameIndex: 13
+      additiveSortOrder: 0
       cellRect:
         x: 7
         y: 5
         width: 34
         height: 34
       spriteId: e9618577f60ff514da82c89472b931dd
-    - name: katana_simple_Frame_14
+    - name: Frame_14
       frameIndex: 14
+      additiveSortOrder: 0
       cellRect:
         x: 0
         y: 21
         width: 48
         height: 5
       spriteId: 7255f26a7d757e6469a9d253bcf22625
-    - name: katana_simple_Frame_15
+    - name: Frame_15
       frameIndex: 15
+      additiveSortOrder: 0
       cellRect:
         x: 5
         y: 7

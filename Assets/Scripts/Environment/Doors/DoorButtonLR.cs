@@ -3,10 +3,10 @@ using System.Collections;
 
 
 [RequireComponent(typeof(AnimationHandler))]
-public class DoorButtonLR : DoorLR, I_Buttonable
+public class DoorButtonLR : DoorLR/* , I_Buttonable*/
 {
 
-    // BUTTONS
+    /*/ BUTTONS
     public void buttonDown()
     {
         open();
@@ -14,5 +14,5 @@ public class DoorButtonLR : DoorLR, I_Buttonable
     public void buttonUp()
     {
         close();
-    }
+    } */
 }

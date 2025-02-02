@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 
 [RequireComponent(typeof(AnimationHandler))]
-public class InventoryChest : Chest, I_Grabber
+public class InventoryChest : OldChest, I_Grabber
 { 
     // inventory
     [Header("INVENTORY CHEST")]

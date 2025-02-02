@@ -461,5 +461,15 @@ public class AnimBank : MonoBehaviour
         }
         return duration / speed;
     }
+    public float GetBaseDuration()
+    {
+        // same as up but without the speed
+        float duration = 0f;
+        foreach (float d in sprites_durations)
+        {
+            duration += d;
+        }
+        return duration;
+    }
 
 }

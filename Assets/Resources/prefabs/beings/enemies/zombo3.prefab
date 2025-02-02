@@ -183,8 +183,8 @@ MonoBehaviour:
     speed: 1
     flipX: 0
   anim_pile: []
-  animation_priorities_with_no_loop: 02000000
-  animation_priorities_with_no_interrupt: 02000000
+  animation_priorities_with_no_loop: 03000000
+  animation_priorities_with_no_interrupt: 03000000
   debug: 0
 --- !u!114 &7961395675651715899
 MonoBehaviour:
@@ -207,9 +207,11 @@ MonoBehaviour:
   effects_timetolive: []
   rb: {fileID: 0}
   weight: 1
+  friction: 7
   forces: []
   input_speed: 0
   feet_collider: {fileID: 0}
+  debug: 0
   life: 100
   max_life: 100
   regen_life: 1
