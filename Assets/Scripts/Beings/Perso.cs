@@ -497,7 +497,7 @@ public class Perso : Being
 
         // 1 - on récupère tous les objets dans le range de hack
         Collider2D[] hits = new Collider2D[30];
-        hack_collider.OverlapCollider(hack_contact_filter, hits);
+        hack_collider.Overlap(hack_contact_filter, hits);
 
         // 2 - on récupère l'objet hackable le plus proche de la souris dans le range aide_a_la_visee
         Vector2 mouse_pos = Camera.main.ScreenToWorldPoint(mouse_position);
@@ -589,7 +589,7 @@ public class Perso : Being
 
             // 1 - on récupère tous les objets dans le range de hack
             Collider2D[] hits = new Collider2D[30];
-            hack_collider.OverlapCollider(hack_contact_filter, hits);
+            hack_collider.Overlap(hack_contact_filter, hits);
             foreach (Collider2D hit in hits)
             {
                 if (hit == null) { continue; }
@@ -646,7 +646,7 @@ public class Perso : Being
 
         // 1 - on récupère tous les objets dans le range de hack
         Collider2D[] hits = new Collider2D[30];
-        hack_collider.OverlapCollider(hack_contact_filter, hits);
+        hack_collider.Overlap(hack_contact_filter, hits);
         if (hits.Length == 0) { return; }
 
         // 2 - on parcourt tous les hackable et on trouve celui avec le plus petit angle
@@ -822,7 +822,7 @@ public class Perso : Being
 
         // on récupère tous les objets hackables dans le range
         Collider2D[] hackables = new Collider2D[30];
-        hack_collider.OverlapCollider(hack_contact_filter, hackables);
+        hack_collider.Overlap(hack_contact_filter, hackables);
 
         // on regarde si les objets hackés sont toujours hackables
         foreach (GameObject target in current_hackin_targets.Keys)

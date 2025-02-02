@@ -59,7 +59,7 @@ public class Movable : Capable
         if (input_speed < 0.1f) { input_speed = 0f; }
 
         // Apply input velocity
-        rb.velocity = input_speed * Orientation;
+        rb.linearVelocity = input_speed * Orientation;
 
         // Apply forces
         Vector2 totalForce = Vector2.zero;
@@ -83,7 +83,7 @@ public class Movable : Capable
         // Apply friction when no force is applied
         if (totalForce == Vector2.zero && inputs == Vector2.zero)
         {
-            rb.velocity = Vector2.Lerp(rb.velocity, Vector2.zero, friction * Time.deltaTime);
+            rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, Vector2.zero, friction * Time.deltaTime);
         }
     }
 
