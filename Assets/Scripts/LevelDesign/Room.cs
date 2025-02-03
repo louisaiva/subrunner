@@ -12,6 +12,9 @@ public class Room : MonoBehaviour
     [Header("Room")]
     public Collider2D roomCollider;
 
+    [Header("Debug")]
+    public bool debug = false;
+
     void Awake()
     {
         roomCollider = GetComponent<Collider2D>();
@@ -21,19 +24,11 @@ public class Room : MonoBehaviour
         // lightsParent = transform.Find("lights");
     }
 
-    public void Hide()
-    {
-        gameObject.SetActive(false);
-    }
-    public void Show()
-    {
-        gameObject.SetActive(true);
-    }    
-
     public void findLights()
     {
         foreach (Transform child in transform)
         {
+            // todo : denestify this
             if (child.name == "lights" || child.name == "objects")
             {
                 foreach (Transform obj in child)
@@ -64,15 +59,18 @@ public class Room : MonoBehaviour
             }
         }
     }
-    public void HideLights()
+    public void Hide()
     {
+
+        if (debug) { Debug.Log("(Room) Hiding room " + gameObject.name); }
         foreach (Light2D light in lights)
         {
             light.enabled = false;
         }
     }
-    public void ShowLights()
+    public void Show()
     {
+        if (debug) { Debug.Log("(Room) Showing room " + gameObject.name); }
         foreach (Light2D light in lights)
         {
             light.enabled = true;

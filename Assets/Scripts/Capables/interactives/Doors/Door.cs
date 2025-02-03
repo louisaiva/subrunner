@@ -151,7 +151,7 @@ public class Door : Capable, Interactable, Openable
             Room room_to_open = perso_room == room1 ? room2 : room1;
 
             // on affiche les lights de la room qui s'ouvre
-            room_to_open.ShowLights();
+            room_to_open.Show();
         }
         else if (Can("close"))
         {
@@ -167,7 +167,7 @@ public class Door : Capable, Interactable, Openable
             Room room_to_close = perso_room == room1 ? room2 : room1;
 
             // on cache les lights de la room qui se ferme
-            room_to_close.HideLights();
+            room_to_close.Hide();
         }
     }
 

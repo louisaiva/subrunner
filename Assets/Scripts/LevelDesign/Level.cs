@@ -22,11 +22,11 @@ public class Level : MonoBehaviour
 
         foreach (Room room in rooms)
         {
-            room.HideLights();
+            room.Hide();
         }
 
         perso.current_room = findPersoRoom();
-        perso.current_room.ShowLights();
+        perso.current_room.Show();
     }
 
     private void Update()

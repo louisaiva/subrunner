@@ -9,7 +9,7 @@ public class HC_Manager : MonoBehaviour
     
 
     [Header("HC MANAGER")]
-    [SerializeField] private string current_input_type = "keyboard"; // keyboard or gamepad
+    [SerializeField] private string current_input_type = "gamepad"; // keyboard or gamepad
     // [SerializeField] private GameObject perso;
     [SerializeField] private InputManager inputs;
     [SerializeField] public HCBank bank;
