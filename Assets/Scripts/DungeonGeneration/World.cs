@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
-public class World : MonoBehaviour
+public class OldWorld : MonoBehaviour
 {
 
     [Header("Builder")]

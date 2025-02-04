@@ -197,11 +197,11 @@ public class AnimPlayer : MonoBehaviour
 
             // we get the closest animation from the bank
             Anim anim = bank.GetAnim(skin + "." + anim_pile[i] + "." + orientation);
-            /* if (anim == null)
+            if (anim == null)
             {
                 Debug.LogWarning("The animation " + skin + "." + anim_pile[i] + "." + orientation + " doesn't exist in the bank");
                 continue;
-            } */
+            }
             if (debug) {Debug.Log("Found an animation to play: " + anim.name + " for capacity " + anim_pile[i]);}
 
             // we set the current capacity

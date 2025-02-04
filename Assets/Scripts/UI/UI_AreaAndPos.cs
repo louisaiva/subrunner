@@ -5,7 +5,7 @@ public class UI_AreaAndPos : MonoBehaviour {
 
     // private Perso perso;
     // private Minimap minimap;
-    private World world;
+    private OldWorld world;
 
     // unity functions
     void Awake()
@@ -17,7 +17,7 @@ public class UI_AreaAndPos : MonoBehaviour {
         // minimap = GameObject.Find("/perso/minimap").GetComponent<Minimap>();
 
         // on récupère le world
-        world = GameObject.Find("/world").GetComponent<World>();
+        world = GameObject.Find("/world").GetComponent<OldWorld>();
     }
 
     void Update()

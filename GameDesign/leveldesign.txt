@@ -137,9 +137,9 @@ generation
 #
     1.X algo principal :
 
-        - génération des rooms par World.cs
+        - génération des rooms par OldWorld.cs
         - gestion des connections inter rooms (couloirs)
-        - création des coffres, ordi, portes par World.cs
+        - création des coffres, ordi, portes par OldWorld.cs
         - création des zones de spawn de zombies
 
         - "pavage" des tilemaps par Room.cs
@@ -170,25 +170,25 @@ generation
         
         inconvenients :
             -pré création de salles longue
-            -configuration du World.cs personnalisé
+            -configuration du OldWorld.cs personnalisé
             -peut-etre des salles repetitives
 
 
     2.0 algo :
 
         on crée des secteurs avant de créer les rooms.
-        World.cs crée et organise les secteurs (cf types de secteurs plus haut)
+        OldWorld.cs crée et organise les secteurs (cf types de secteurs plus haut)
         Sector.cs crée et organise ses propres rooms, items, etc
         Room.cs gère ses propres éléments décoratifs (posters, lights)
 
         algo :
-            -World crée des Sector.
+            -OldWorld crée des Sector.
                 -Il récup une List de Hashset obtenue via SectorGenerator (WalkMan algo)
                 -On vérifie qu'un secteur relie toutes ses salles
-            -World récupère les tailles des Sectors générés et créé un Schéma global du monde (TK Algo)
-            -World définit quels sectors sont de quel type.
-            -World retravaille les HashSet pour relier les secteurs (en ajoutant des corridors)
-            -World lance la création finale en passant a chaque Sector son Hashset et sa position globale
+            -OldWorld récupère les tailles des Sectors générés et créé un Schéma global du monde (TK Algo)
+            -OldWorld définit quels sectors sont de quel type.
+            -OldWorld retravaille les HashSet pour relier les secteurs (en ajoutant des corridors)
+            -OldWorld lance la création finale en passant a chaque Sector son Hashset et sa position globale
                 -si des rooms sont adjacentes -> ça fait une big room
                 -Chaque Sector applique son type -> change les tiles de ses rooms
                 -Chaque Sector applique son type -> gère les ennemis

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// HooverCapacity is a capacity that allows a Capable to hoover.
+/// HoverCapacity is a capacity that allows a Capable to hoover.
 /// It shows a hoover animation and sets the performed action in order
 /// to launches the Interactable.OnInteract() method.
 /// </summary>
@@ -18,6 +18,9 @@ public class HoverCapacity : Capacity
     public InputActionReference interactAction;
     private event Action<InputAction.CallbackContext> interactCallback;
     public bool set_callback = false;
+
+    [Header("Debug")]
+    public bool debug = false;
 
 
     // START
@@ -44,7 +47,7 @@ public class HoverCapacity : Capacity
         {
             set_callback = true;
             interactAction.action.performed += interactCallback;
-            Debug.Log("(HooverCapacity) " + name + " set callback OnInteract()");
+            if (debug) { Debug.Log("(HoverCapacity) " + name + " set callback OnInteract() on " + capable.name); }
         }
     }
     protected virtual void unhover(Capable capable)
@@ -57,7 +60,7 @@ public class HoverCapacity : Capacity
         {
             set_callback = false;
             interactAction.action.performed -= interactCallback;
-            Debug.Log("(HooverCapacity) " + name + " removed callback OnInteract()");
+            if (debug) { Debug.Log("(HoverCapacity) " + name + " removed callback OnInteract() on " + capable.name); }
         }
     }
 
@@ -68,7 +71,7 @@ public class HoverCapacity : Capacity
         if (!other.gameObject.CompareTag("Player")) { return; }
         
         // we hover
-        hover((Capable) capable);
+        hover(capable);
     }
     private void OnTriggerExit2D(Collider2D other)
     {
@@ -76,7 +79,7 @@ public class HoverCapacity : Capacity
         if (!other.gameObject.CompareTag("Player")) { return; }
 
         // we unhover
-        unhover((Capable) capable);
+        unhover(capable);
     }
 
 }

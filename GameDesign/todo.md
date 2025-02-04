@@ -47,7 +47,7 @@
             parce que ça rend bien ! genre dans les couloirs
 
 - [x] - génération procédurale
-    - [ ] - World.cs génère différents secteurs et les relie entre eux
+    - [ ] - OldWorld.cs génère différents secteurs et les relie entre eux
     - [ ] - Sector.cs applique les bonnes textures (tiles) aux tilemaps de chaque Room
     - [ ] - Sector.cs dit aux Rooms adequates de generer *coffres*, doors, *computers*, *zombies*
     - [ ] - Room.cs génère les éléments de décor : objects, *posters*, tags, *lights*

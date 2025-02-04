@@ -169,8 +169,8 @@ public class DoorHackable : Door /*, I_Hackable */
     //     // on change le mode de l'UI
     //     hack_ui.setMode("unhackable");
 
-    //     // on met à jour le box_collider
-    //     box_collider.enabled = false;
+    //     // on met à jour le door_collider
+    //     door_collider.enabled = false;
         
     //     // on ouvre la porte
     //     success_open();

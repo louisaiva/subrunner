@@ -423,7 +423,7 @@ public class AnimBank : MonoBehaviour
                 Sprite[] spritesheet = Resources.LoadAll<Sprite>(spritesheets_path + spritesheet_path);
                 if (spritesheet.Length == 0)
                 {
-                    Debug.LogError("(Anim - LoadSprites) Spritesheet NOT found in : " + spritesheets_path + spritesheet_path);
+                    Debug.LogError("(Anim - LoadSprites) Spritesheet NOT found : " + spritesheets_path + " (spritesheet_path from bank is " + spritesheet_path + ") for the sprite : " + sprite_name);
                     return;
                 }
 

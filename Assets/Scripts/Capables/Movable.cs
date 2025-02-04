@@ -10,7 +10,7 @@ public class Movable : Capable
     public float friction = 7f;
     public List<Force> forces = new List<Force>();
     public float input_speed;
-    public BoxCollider2D feet_collider;
+    public Collider2D feet_collider;
 
     [Header("DEBUG")]
     public bool debug = false;
@@ -23,7 +23,7 @@ public class Movable : Capable
         rb.freezeRotation = true; // Prevent unwanted rotation
 
         // Get the feet collider
-        feet_collider = transform.Find("run").GetComponent<BoxCollider2D>();
+        feet_collider = transform.Find("run").GetComponent<Collider2D>();
     }
 
     protected override void Update()

@@ -3,12 +3,30 @@ using UnityEngine;
 
 public class Level : MonoBehaviour
 {
-    public Perso perso;
+    [Header("Rooms")]
     public List<Room> rooms = new List<Room>();
+    [SerializeField] private Room elevator_room;
+    public Room RoomConnectedToElevator {
+        get
+        {
+            if (elevator_room == null)
+            {
+                Debug.LogWarning("(Level) No elevator room found in " + name + ", please set it manually in the inspector");
+                return rooms[0];
+            }
+            return elevator_room;
+        } }
 
-    private void Start()
+    [Header("Beings")]
+    public Transform being_parent;
+
+    [Header("Debug")]
+    public bool loaded = false;
+
+    // START
+    public void Start()
     {
-        perso = GameObject.Find("/perso").GetComponent<Perso>();
+        if (loaded) { return; }
 
         // on récupère les rooms
         foreach (Transform child in transform)
@@ -17,38 +35,26 @@ public class Level : MonoBehaviour
             if (room != null)
             {
                 rooms.Add(room);
+                if (!room.loaded) { room.Awake(); }
             }
         }
 
+        // on trie les rooms par priorité
+        rooms.Sort((b,a) => a.FindPriority.CompareTo(b.FindPriority));
+        Debug.Log(name + " level sorted rooms by priority");
+
+        // on récupère le parent des beings
+        being_parent = transform.Find("beings");
+
+        loaded = true;
+    }
+
+    // SHOW / HIDE
+    public void Hide()
+    {
         foreach (Room room in rooms)
         {
             room.Hide();
         }
-
-        perso.current_room = findPersoRoom();
-        perso.current_room.Show();
-    }
-
-    private void Update()
-    {
-        perso.current_room = findPersoRoom();
-    }
-
-    private Room findPersoRoom()
-    {
-        // définit la room du perso en faisant un raycast
-        // get the position of the perso
-        Vector2 perso_position = perso.transform.position;
-        
-        // we check if the perso is in a room
-        foreach (Room room in rooms)
-        {
-            if (room.roomCollider.OverlapPoint(perso_position))
-            {
-                return room;
-            }
-        }
-
-        return null;
     }
 }

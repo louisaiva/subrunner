@@ -26,7 +26,7 @@ public class Area : MonoBehaviour
 
     // SECTOR & NEIGHBORS
     [Header("Sector")]
-    protected World world;
+    protected OldWorld world;
     protected AreaJsonHandler builder;
     protected Sector sector;
     protected Vector2Int area_size = new Vector2Int(16, 16);
@@ -63,7 +63,7 @@ public class Area : MonoBehaviour
     void Awake()
     {
         // on récupère le world
-        world = GameObject.Find("/world").GetComponent<World>();
+        world = GameObject.Find("/world").GetComponent<OldWorld>();
 
         // on récupère le builder
         builder = GameObject.Find("/loader").transform.Find("builder").GetComponent<AreaJsonHandler>();

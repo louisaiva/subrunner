@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class Minimap : MonoBehaviour {
     public Transform player;
     private WorldGenerator generator;
-    private World world;
+    private OldWorld world;
     private GameLoader game_loader;
 
     [Header("Map Settings")]
@@ -51,7 +51,7 @@ public class Minimap : MonoBehaviour {
         generator = GameObject.Find("/loader")?.GetComponent<WorldGenerator>();
 
         // on récupère le world et les tilemaps
-        world = GameObject.Find("/world").GetComponent<World>();
+        world = GameObject.Find("/world").GetComponent<OldWorld>();
 
         // on récupère le game loader
         game_loader = GameObject.Find("/world").GetComponent<GameLoader>();

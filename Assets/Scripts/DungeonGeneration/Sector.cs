@@ -8,8 +8,8 @@ using TMPro;
 
 public class Sector : MonoBehaviour
 {
-    [Header("World")]
-    public World world;
+    [Header("OldWorld")]
+    public OldWorld world;
     protected WorldGenerator world_generator;
     protected Vector2Int area_size = new Vector2Int(16, 16);
 
@@ -63,7 +63,7 @@ public class Sector : MonoBehaviour
     protected void Awake()
     {
         // on récupère le world
-        world = GameObject.Find("/world").GetComponent<World>();
+        world = GameObject.Find("/world").GetComponent<OldWorld>();
         world_generator = GameObject.Find("/loader").GetComponent<WorldGenerator>();
         area_prefab = Resources.Load<GameObject>("prefabs/sectors/base_area");
 

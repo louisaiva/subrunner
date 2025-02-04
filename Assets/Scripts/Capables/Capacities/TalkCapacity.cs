@@ -11,12 +11,13 @@ public class TalkCapacity : Capacity
 {
 
     [Header("Talking parameters")]
+    [SerializeField] private bool talk_on_start = false;
     [SerializeField] private bool allow_bad_words = true;
     [SerializeField] private Vector2 talking_delay_range = new Vector2(30f, 60f);
 
 
     [Header("Talks")]
-    private List<string> talks_random = new List<string>()
+    [SerializeField] private List<string> talks_random = new List<string>()
                         {
                             "here we go again/.",
                             "well/.i'm not dead yet :D/lthat's a good start",
@@ -70,7 +71,7 @@ public class TalkCapacity : Capacity
                             "ahh/./lloneliness is almost\nas scary as\nthe deep web",
                             "maybe I'll find\nsome friends/./l/. but I want noodles !",
                         };
-    private List<string> talks_random_bad_words = new List<string>()
+    [SerializeField] private List<string> talks_random_bad_words = new List<string>()
                         {
                             "fuck this shit/.\ni'm HUNGRY !",
                             "is all of this\nsh*t even real ?",
@@ -80,7 +81,7 @@ public class TalkCapacity : Capacity
 
     [Header("Components")]
     private GameObject floating_dmg_provider;
-    private Being being;
+    // private Being being;
 
 
     // START
@@ -90,15 +91,17 @@ public class TalkCapacity : Capacity
         floating_dmg_provider = GameObject.Find("/utils/dmgs_provider");
 
         // on lance le parlage automatique
-        Invoke("randomTalk", Random.Range(talking_delay_range.x, talking_delay_range.y));
+        if (talk_on_start)
+        {
+            float delay_talking = Random.Range(talking_delay_range.x, talking_delay_range.y);
+            // Debug.Log(name + " is talking in " + delay_talking);
+            Invoke("randomTalk", delay_talking);
+        }
     }
 
     // trigger the attack
     public override void Use(Capable capable)
     {
-        if (capable is not Being) {return;}
-        being = (Being) capable;
-
         // todo talking has animations ?
         randomTalk();
         CancelInvoke("randomTalk");
@@ -106,17 +109,18 @@ public class TalkCapacity : Capacity
     
     void randomTalk()
     {
-        if (being == null) {return;}
+        // if (being == null) {return;}
+        if (capable is not Being) {return;}
 
         // on fait parler le perso
         int index = Random.Range(0, talks_random.Count + (allow_bad_words ? talks_random_bad_words.Count : 0));
         if (index >= talks_random.Count)
         {
-            floating_dmg_provider.GetComponent<TextManager>().talk(talks_random_bad_words[index - talks_random.Count], being);
+            floating_dmg_provider.GetComponent<TextManager>().talk(talks_random_bad_words[index - talks_random.Count], capable as Being);
         }
         else
         {
-            floating_dmg_provider.GetComponent<TextManager>().talk(talks_random[index], being);
+            floating_dmg_provider.GetComponent<TextManager>().talk(talks_random[index], capable as Being);
         }
 
         // on relance

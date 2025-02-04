@@ -55,7 +55,7 @@ public class Capacity : MonoBehaviour
     public virtual void Use(Capable capable)
     {
         // we play the animation
-        play_anim(capable.anim_player, name);
+        play_anim(this.capable.anim_player, name);
     }
 
     protected Anim play_anim(AnimPlayer anim_player, string name)

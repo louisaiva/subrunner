@@ -5,21 +5,31 @@ using UnityEngine.Rendering.Universal;
 public class Room : MonoBehaviour
 {
     
-    [Header("Parents Transforms")]
+    [Header("Lights")]
     // public Transform lightsParent;
+    public bool Alight = true;
     public List<Light2D> lights = new List<Light2D>();
+    public int FindPriority = 0;
+    // the priority which who the Level.cs will find the lights
+    // the more close to infinity you are, the more you will be found first
+    // if their is several Collider2D overlapping for the perso Room
 
     [Header("Room")]
-    public Collider2D roomCollider;
+    public Collider2D RoomCollider;
 
     [Header("Debug")]
     public bool debug = false;
+    public bool loaded = false;
 
-    void Awake()
+    public void Awake()
     {
-        roomCollider = GetComponent<Collider2D>();
+        if (loaded) { return; }
+        
+        RoomCollider = GetComponent<Collider2D>();
 
         findLights();
+
+        loaded = true;
 
         // lightsParent = transform.Find("lights");
     }
@@ -67,6 +77,7 @@ public class Room : MonoBehaviour
         {
             light.enabled = false;
         }
+        Alight = false;
     }
     public void Show()
     {
@@ -75,6 +86,7 @@ public class Room : MonoBehaviour
         {
             light.enabled = true;
         }
+        Alight = true;
     }
 
 }

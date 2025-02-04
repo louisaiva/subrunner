@@ -12,7 +12,7 @@ public class Zone : MonoBehaviour
     // s'applique à la génération du monde
 
 
-    // protected World world;
+    // protected OldWorld world;
     public Sector sector;
     protected Vector3 anchor = new Vector3(4,4,0);
     [SerializeField] protected Vector2Int size;
@@ -24,7 +24,7 @@ public class Zone : MonoBehaviour
     protected void Awake()
     {
         // on récupère le monde
-        // world = GameObject.Find("/world").GetComponent<World>();
+        // world = GameObject.Find("/world").GetComponent<OldWorld>();
 
         // on récupère la banque de zones
         bank = GameObject.Find("/world").GetComponent<ZoneManager>();

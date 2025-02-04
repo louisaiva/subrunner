@@ -217,8 +217,8 @@ public class WorldGenerator : MonoBehaviour
         {
             game_loader.AddProgress("generating world");
             // yield return wait;
-            yield return StartCoroutine(world.GetComponent<World>().GENERATE(sectors, spawn_sector));
-            // world.GetComponent<World>().GENERATE(sectors, spawn_sector);
+            yield return StartCoroutine(world.GetComponent<OldWorld>().GENERATE(sectors, spawn_sector));
+            // world.GetComponent<OldWorld>().GENERATE(sectors, spawn_sector);
 
         }
         else

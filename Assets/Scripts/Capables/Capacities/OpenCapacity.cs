@@ -42,9 +42,11 @@ public class OpenCapacity : Capacity
         // on ouvre le coffre
         (capable as Openable).is_moving = true;
 
-        // si on est une Door on désactive le ceiling
         if (capable is Door)
         {
+            // si on est une Door on désactive le collider
+            (capable as Door).door_collider.enabled = false;
+            // si on est une Door on désactive le ceiling
             (capable as Door).ceiling.gameObject.SetActive(false);
         }
 
@@ -60,10 +62,13 @@ public class OpenCapacity : Capacity
         // on joue l'animation
         capable.anim_player.Play("idle_open");
 
-        // si on est une Door on désactive le collider
         if (capable is Door)
         {
-            (capable as Door).box_collider.enabled = false;
+            // et on set le order in layer a -1
+            if (!(capable as Door).is_vertical)
+            {
+                capable.GetComponent<SpriteRenderer>().sortingOrder = -1;
+            }
         }
 
         if (debug) { Debug.Log(capable.name + " is open !"); }

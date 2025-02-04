@@ -10,7 +10,7 @@ using UnityEngine;
 public class SpawnCapacity : Capacity
 {
     [Header("Spawn parameters")]
-    public GameObject entity;
+    public GameObject entity_prefab;
     public Transform entity_parent;
 
     [Header("Spawn position")]
@@ -37,10 +37,10 @@ public class SpawnCapacity : Capacity
         }
         if (debug) {Debug.Log("(SpawnCapacity) " + name + " spawning entity at " + spawn_position);}
 
-        if (entity == null) { return; }
+        if (entity_prefab == null) { return; }
 
         // we spawn the entity
-        Instantiate(entity, spawn_position, Quaternion.identity);
+        GameObject entity = Instantiate(entity_prefab, spawn_position, Quaternion.identity);
         if (entity_parent != null)
         {
             entity.transform.parent = entity_parent;

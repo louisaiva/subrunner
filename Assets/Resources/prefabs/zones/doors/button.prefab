@@ -224,13 +224,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5da2d779be63cd4695d8a763275ab93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  is_open: 0
-  is_moving: 0
-  openin_duration: 0.5
-  box_collider: {fileID: 0}
+  anim_player: {fileID: 0}
+  bank: {fileID: 0}
+  inputs: {x: 0, y: 0}
+  orientation: {x: 0, y: 0}
+  capacities: []
+  effects: 
+  effects_timetolive: []
+  is_vertical: 0
+  door_collider: {fileID: 0}
   ceiling: {fileID: 0}
-  label1: {fileID: 0}
-  label2: {fileID: 0}
-  label_apparition_radius: 2
-  offset_up_radius: 1
-  door_axis: vertical
+  openin_duration: 0.5
+  room1: {fileID: 0}
+  room2: {fileID: 0}

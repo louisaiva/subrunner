@@ -46,8 +46,14 @@ public class CloseCapacity : Capacity
         // si on est une Door on désactive le collider
         if (capable is Door)
         {
-            (capable as Door).box_collider.enabled = true;
+            (capable as Door).door_collider.enabled = true;
             (capable as Door).ceiling.gameObject.SetActive(true);
+
+            // et on set le order in layer a 0 si la Door est horizontale
+            if (!(capable as Door).is_vertical)
+            {
+                capable.GetComponent<SpriteRenderer>().sortingOrder = 0;
+            }
         }
 
         if (debug) { Debug.Log(capable.name + " is closing..."); }
