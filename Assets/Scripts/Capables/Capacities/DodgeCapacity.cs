@@ -21,7 +21,7 @@ public class DodgeCapacity : Capacity
     public override void Use(Capable capable)
     {
         // we play the animation
-        Anim anim = play_anim(capable.anim_player, name);
+        Anim anim = capable.anim_player.Play(name);
         if (anim == null) { return; }
         
         // we start the cooldown for the time of the animation

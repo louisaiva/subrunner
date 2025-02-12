@@ -16,6 +16,10 @@ public class Room : MonoBehaviour
 
     [Header("Room")]
     public Collider2D RoomCollider;
+    public Transform hidden_ceiling;
+    public Transform room_hider;
+    public Transform walls_hider;
+    public Transform ground_hider;
 
     [Header("Debug")]
     public bool debug = false;
@@ -32,6 +36,12 @@ public class Room : MonoBehaviour
         loaded = true;
 
         // lightsParent = transform.Find("lights");
+        hidden_ceiling = transform.Find("hidden_ceiling");
+        room_hider = transform.Find("room_hider");
+        walls_hider = transform.Find("walls_hider");
+        ground_hider = transform.Find("ground_hider");
+
+        Hide();
     }
 
     public void findLights()
@@ -73,20 +83,48 @@ public class Room : MonoBehaviour
     {
 
         if (debug) { Debug.Log("(Room) Hiding room " + gameObject.name); }
-        foreach (Light2D light in lights)
+
+        if (hidden_ceiling != null)
         {
-            light.enabled = false;
+            hidden_ceiling.gameObject.SetActive(true);
         }
+        else if (room_hider != null)
+        {
+            room_hider.gameObject.SetActive(true);
+            walls_hider?.gameObject.SetActive(true);
+            ground_hider?.gameObject.SetActive(true);
+        }
+        else
+        {
+            foreach (Light2D light in lights)
+            {
+                light.enabled = false;
+            }
+        }
+
         Alight = false;
     }
     public void Show()
     {
         if (debug) { Debug.Log("(Room) Showing room " + gameObject.name); }
-        foreach (Light2D light in lights)
+
+        if (hidden_ceiling != null)
         {
-            light.enabled = true;
+            hidden_ceiling.gameObject.SetActive(false);
+        }
+        else if (room_hider != null)
+        {
+            room_hider.gameObject.SetActive(false);
+            walls_hider?.gameObject.SetActive(false);
+            ground_hider?.gameObject.SetActive(false);
+        }
+        else
+        {
+            foreach (Light2D light in lights)
+            {
+                light.enabled = true;
+            }
         }
         Alight = true;
     }
-
 }

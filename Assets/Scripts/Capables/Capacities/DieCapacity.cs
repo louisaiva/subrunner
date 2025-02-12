@@ -37,7 +37,7 @@ public class DieCapacity : Capacity
         if (capable is not Being) { return; }
 
         // we play the animation
-        Anim anim = play_anim(capable.anim_player, name);
+        Anim anim = capable.anim_player.Play(name);
         if (anim == null) { return; }
 
         // on donne de l'xp

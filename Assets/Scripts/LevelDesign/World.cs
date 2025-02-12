@@ -44,18 +44,25 @@ public class World : MonoBehaviour
                 break;
             }
         }
-        if (current_level == null)
-        {
-            if (debug) { Debug.LogError("(World) No active level found in world");}
-            return;
-        }
+
+        // on awake l'elevator room
+        if (!elevator_room.loaded) { elevator_room.Awake(); }
 
         // on initialise le level
-        load_level(current_level);
+        if (current_level != null)
+        {
+            load_level(current_level);
 
-        // on cache l'elevator room
-        if (!elevator_room.loaded) { elevator_room.Awake(); }
-        elevator_room.Hide();
+            // on regarde si on a déjà une room pour le perso 
+            Room perso_room = findPersoRoom(LoadedRooms);
+            if (perso_room != null) { return;}
+
+            // sinon on tp le perso à l'elevator
+        }
+    
+        // on envoie le perso au milieu de l'elevator room
+        perso.transform.position = elevator_room.transform.Find("objects/elevator").transform.position - new Vector3(0,0.5f,0);
+        if (debug) { Debug.LogWarning("(World) No Perso Room found !! teleporting perso to elevator");}
     }
 
     private void Update()

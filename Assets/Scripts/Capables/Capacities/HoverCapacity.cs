@@ -53,7 +53,7 @@ public class HoverCapacity : Capacity
     protected virtual void unhover(Capable capable)
     {
         // we stop the animation
-        stop_playing(capable.anim_player, name);
+        capable.anim_player.StopPlaying(name);
 
         // we remove the callback
         if (set_callback)

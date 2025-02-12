@@ -31,6 +31,10 @@ public class Level : MonoBehaviour
         // on récupère les rooms
         foreach (Transform child in transform)
         {
+            // check is activeSelf
+            if (!child.gameObject.activeSelf) { continue;}
+
+            // check if it has a child
             Room room = child.GetComponent<Room>();
             if (room != null)
             {

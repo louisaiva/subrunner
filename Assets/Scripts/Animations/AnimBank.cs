@@ -365,7 +365,6 @@ public class AnimBank : MonoBehaviour
     // parametres utiles à l'AnimPlayer
     public bool loop = true; // si c'est false, l'AnimHandler revient sur l'animation par defaut
     public float speed = 1f; // vitesse de l'animation
-    // public int priority = 0; // si on demande de jouer une animation, celle-ci sera jouée si sa priorité est plus haute que celle en cours
     public bool flipX = false; // flip le sprite renderer si besoin
 
     public Anim() { }

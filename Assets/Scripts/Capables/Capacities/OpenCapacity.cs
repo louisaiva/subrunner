@@ -35,19 +35,19 @@ public class OpenCapacity : Capacity
     // OPENING
     protected virtual void open()
     {
+        // on ouvre le coffre
+        (capable as Openable).is_moving = true;
+
         // on joue l'animation
         capable.anim_player.Play("open",priority_override:3,duration_override: opening_duration);
         Invoke("success_open", opening_duration);
 
-        // on ouvre le coffre
-        (capable as Openable).is_moving = true;
-
+        // on fait les vérifications pour les portes
         if (capable is Door)
         {
-            // si on est une Door on désactive le collider
-            (capable as Door).door_collider.enabled = false;
-            // si on est une Door on désactive le ceiling
-            (capable as Door).ceiling.gameObject.SetActive(false);
+            // on reset le layer à fg & order in layer à 1
+            capable.GetComponent<SpriteRenderer>().sortingLayerName = "fg";
+            capable.GetComponent<SpriteRenderer>().sortingOrder = 1;
         }
 
         if (debug) { Debug.Log(capable.name + " is opening..."); }
@@ -62,13 +62,12 @@ public class OpenCapacity : Capacity
         // on joue l'animation
         capable.anim_player.Play("idle_open");
 
+        // on fait les vérifications pour les portes
         if (capable is Door)
         {
-            // et on set le order in layer a -1
-            if (!(capable as Door).is_vertical)
-            {
-                capable.GetComponent<SpriteRenderer>().sortingOrder = -1;
-            }
+            // on reset le layer à main & order in layer a -1
+            capable.GetComponent<SpriteRenderer>().sortingLayerName = "main";
+            capable.GetComponent<SpriteRenderer>().sortingOrder = -1;
         }
 
         if (debug) { Debug.Log(capable.name + " is open !"); }

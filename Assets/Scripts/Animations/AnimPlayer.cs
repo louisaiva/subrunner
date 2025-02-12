@@ -6,10 +6,16 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class AnimPlayer : MonoBehaviour
 {
+
+
+
     [Header("Components")]
     private AnimBank bank;
     private SpriteRenderer sr;
     // private PolygonCollider2D pc;
+
+
+
 
     [Header("Skin")]
     public string skin;
@@ -18,11 +24,18 @@ public class AnimPlayer : MonoBehaviour
     public string orientation = "L";
 
 
+
+
+
     [Header("Current Animation")]
     public string current_capacity = "";
     public Anim current_anim = null;
     private float frame_timer = 0f;
     private int current_frame = -1; // if -1, the animation is over
+
+
+
+
 
     [Header("Animation Pile")]
     public List<string> anim_pile = new();
@@ -51,6 +64,12 @@ public class AnimPlayer : MonoBehaviour
 
     [Header("Debug")]
     public bool debug = false;
+
+
+
+
+
+
 
     // Start is called before the first frame update
     private void Start()
@@ -153,6 +172,11 @@ public class AnimPlayer : MonoBehaviour
             // we get the animation from the bank
             string anim_name = skin + "." + capacity + "." + orientation;
             Anim anim = bank.GetAnim(anim_name);
+            if (anim == null)
+            {
+                if (debug) { Debug.Log("(AnimPlayer) could not Play() : " + anim_name + " no contact with bank"); }
+                return null;
+            }
 
             // we check if the duration is overriden
             if (duration_override != null)

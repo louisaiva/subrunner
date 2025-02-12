@@ -23,6 +23,12 @@ public class TriggerTuto : MonoBehaviour
 
     private void Start()
     {
+        // set the ui tuto parent
+        if (ui_tuto_parent == null)
+        {
+            ui_tuto_parent = GameObject.Find("/ui/hud/tutorials").transform;
+        }
+
         // Get the trigger_collider
         trigger_collider = GetComponent<Collider2D>();
 

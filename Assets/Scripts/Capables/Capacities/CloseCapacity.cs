@@ -35,25 +35,19 @@ public class CloseCapacity : Capacity
     // OPENING
     protected virtual void close()
     {
+        // on ouvre le coffre
+        (capable as Openable).is_moving = true;
+
         // on joue l'animation
         capable.anim_player.StopPlaying("idle_open");
         capable.anim_player.Play("close",priority_override:3,duration_override: opening_duration);
         Invoke("success_close", opening_duration);
 
-        // on ouvre le coffre
-        (capable as Openable).is_moving = true;
-
-        // si on est une Door on désactive le collider
+        // on fait les vérifications pour les portes
         if (capable is Door)
         {
-            (capable as Door).door_collider.enabled = true;
-            (capable as Door).ceiling.gameObject.SetActive(true);
-
-            // et on set le order in layer a 0 si la Door est horizontale
-            if (!(capable as Door).is_vertical)
-            {
-                capable.GetComponent<SpriteRenderer>().sortingOrder = 0;
-            }
+            capable.GetComponent<SpriteRenderer>().sortingLayerName = "fg";
+            capable.GetComponent<SpriteRenderer>().sortingOrder = 1;
         }
 
         if (debug) { Debug.Log(capable.name + " is closing..."); }
@@ -68,12 +62,13 @@ public class CloseCapacity : Capacity
         // on joue l'animation
         capable.anim_player.Play("idle");
 
-        // si on est une Door on désactive le ceiling
+        // on fait les vérifications pour les portes
         if (capable is Door)
         {
-            (capable as Door).ceiling.gameObject.SetActive(true);
+            capable.GetComponent<SpriteRenderer>().sortingLayerName = "main";
+            capable.GetComponent<SpriteRenderer>().sortingOrder = 0;
         }
-
+                                                        
         if (debug) { Debug.Log(capable.name + " is closed !"); }
     }
 }

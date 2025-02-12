@@ -21,9 +21,12 @@ public class Capacity : MonoBehaviour
         }
     }
     
-    // cooldown
+    [Header("Cooldown")]
     [SerializeField] protected float cooldown = 0;
     protected float cooldown_timer;
+
+    /*todo [Header("Animation")] ?? */
+
 
     protected virtual void Update()
     {
@@ -55,17 +58,7 @@ public class Capacity : MonoBehaviour
     public virtual void Use(Capable capable)
     {
         // we play the animation
-        play_anim(this.capable.anim_player, name);
-    }
-
-    protected Anim play_anim(AnimPlayer anim_player, string name)
-    {
-        return anim_player.Play(name);
-    }
-
-    protected void stop_playing(AnimPlayer anim_player, string name)
-    {
-        anim_player.StopPlaying(name);
+        capable.anim_player.Play(name);
     }
 
 }

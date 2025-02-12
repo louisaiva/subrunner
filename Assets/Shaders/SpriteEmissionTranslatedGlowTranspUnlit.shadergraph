@@ -509,6 +509,7 @@
     "m_OutputNode": {
         "m_Id": ""
     },
+    "m_SubDatas": [],
     "m_ActiveTargets": [
         {
             "m_Id": "c83e8f054b0b4c1ca5b3c0f3a305c7b2"
@@ -980,8 +981,8 @@
     "m_ObjectId": "26869b475c634cd3aa00be2bbc112c14",
     "m_Title": "UNLIT",
     "m_Position": {
-        "x": -593.0001220703125,
-        "y": -706.9999389648438
+        "x": -592.9998779296875,
+        "y": -707.0000610351563
     }
 }
 
@@ -1911,9 +1912,9 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 259.9999084472656,
-            "y": -491.9999694824219,
-            "width": 208.00003051757813,
+            "x": 259.0000305175781,
+            "y": -486.0,
+            "width": 208.0,
             "height": 391.0
         }
     },
@@ -2141,7 +2142,7 @@
     "m_StageCapability": 3,
     "m_BareResource": false,
     "m_Texture": {
-        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
+        "m_SerializedTexture": "",
         "m_Guid": ""
     },
     "m_DefaultType": 0
@@ -2298,7 +2299,7 @@
     "m_StageCapability": 3,
     "m_BareResource": false,
     "m_Texture": {
-        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
+        "m_SerializedTexture": "",
         "m_Guid": ""
     },
     "m_DefaultType": 0
@@ -2453,7 +2454,7 @@
     "m_StageCapability": 3,
     "m_BareResource": false,
     "m_Texture": {
-        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
+        "m_SerializedTexture": "",
         "m_Guid": ""
     },
     "m_DefaultType": 0
@@ -2471,9 +2472,9 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 939.0,
-            "y": -1049.0,
-            "width": 55.99981689453125,
+            "x": 1033.0,
+            "y": -952.0,
+            "width": 56.0,
             "height": 24.0
         }
     },
@@ -2507,7 +2508,7 @@
     "m_StageCapability": 3,
     "m_BareResource": false,
     "m_Texture": {
-        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
+        "m_SerializedTexture": "",
         "m_Guid": ""
     },
     "m_DefaultType": 0
@@ -2763,8 +2764,8 @@
     "m_ObjectId": "bfd2e82259c04532ad6d81d54f4f86f3",
     "m_Title": "GLOWED",
     "m_Position": {
-        "x": -838.0000610351563,
-        "y": 323.0
+        "x": -743.9998779296875,
+        "y": 264.0
     }
 }
 
@@ -2928,6 +2929,9 @@
     "m_AlphaClip": true,
     "m_CastShadows": true,
     "m_ReceiveShadows": true,
+    "m_DisableTint": false,
+    "m_AdditionalMotionVectorMode": 0,
+    "m_AlembicMotionVectors": false,
     "m_SupportsLODCrossFade": false,
     "m_CustomEditorGUI": "",
     "m_SupportVFX": false
