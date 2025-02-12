@@ -15,27 +15,18 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "dodge",
+                    "type": "Button",
+                    "id": "626e002f-1d0c-46ed-a93a-c31a8ff7ea63",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "interact",
                     "type": "Button",
                     "id": "430686be-26cd-40e4-9321-059ac16b6dbd",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "inventory",
-                    "type": "Button",
-                    "id": "fbfa0ea4-b180-4324-8049-589af83809b1",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "map",
-                    "type": "Button",
-                    "id": "2009546e-be2f-4aec-89d1-3576c067877c",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -54,7 +45,7 @@
                     "name": "run",
                     "type": "Value",
                     "id": "0948f1ba-942c-47be-b02f-249a908482fc",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -78,10 +69,28 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "map",
+                    "type": "Button",
+                    "id": "8026e4fc-0276-44b3-bb91-0bf65e7d35fa",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "pause",
                     "type": "Button",
-                    "id": "21976488-dcb9-4123-ba3d-4f078f4ab76c",
-                    "expectedControlType": "Button",
+                    "id": "588c7322-2a49-4267-89c9-abbcd2e138a8",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "inventory",
+                    "type": "Button",
+                    "id": "ec932bee-d188-48de-b8c2-e8a081326f46",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -142,50 +151,6 @@
                     "action": "move",
                     "isComposite": false,
                     "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "96585a0b-19a0-4a12-b30c-ee5c5664ed8c",
-                    "path": "<Gamepad>/rightTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "inventory",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "5dec4aeb-67cc-4e7d-8d4d-74dfc9ec75df",
-                    "path": "<Keyboard>/f",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard",
-                    "action": "inventory",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "a78382af-fd0b-4b13-a37d-a064cac28d6f",
-                    "path": "<Gamepad>/select",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "map",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "8b8675a6-6cd9-4cf1-8743-ce77cb1bd10d",
-                    "path": "<Keyboard>/tab",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard",
-                    "action": "map",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 },
                 {
                     "name": "",
@@ -299,7 +264,29 @@
                 },
                 {
                     "name": "",
-                    "id": "834bd7bf-a313-4665-92f7-06e07653766b",
+                    "id": "80d2a5f6-9c34-4aea-a9c0-bcabf0a6f2d4",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "map",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "972ef66e-442c-43ff-8b44-a47a3e3fa1bf",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "map",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e6842c33-5c1f-4e69-b040-d2b2b59f685c",
                     "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
@@ -310,12 +297,34 @@
                 },
                 {
                     "name": "",
-                    "id": "ac9d0505-9602-4253-9908-c99691b89d78",
+                    "id": "0a3d20c0-4de5-4499-b346-622e9ccc795d",
                     "path": "<Gamepad>/start",
                     "interactions": "",
                     "processors": "",
                     "groups": "xbox",
                     "action": "pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c80469b8-66cd-47d0-8d9e-bc10179ab73c",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "inventory",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5f70576e-0f98-4a7d-96dd-dcada5bcdb29",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "inventory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -327,6 +336,28 @@
                     "processors": "",
                     "groups": "xbox",
                     "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5a880233-268d-4325-a8e7-c04a8a371d18",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "dodge",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ffde1d2d-6a8f-4c9e-95d8-73f82c723019",
+                    "path": "<Keyboard>/alt",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "dodge",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -346,10 +377,28 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "scroll",
+                    "type": "PassThrough",
+                    "id": "15949233-a652-4133-92ec-24cbee81ac13",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "activate",
                     "type": "Button",
                     "id": "bfb0aa0c-6049-4ece-a264-cceaa2a55caa",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "hide_pause",
+                    "type": "Button",
+                    "id": "585d96e6-ed58-44d2-9107-63ee9ed09f61",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -391,12 +440,56 @@
                 },
                 {
                     "name": "",
-                    "id": "40aa7c62-2967-4cd0-8d2d-b45ec65ebd01",
-                    "path": "<Gamepad>/rightStick",
+                    "id": "c0eda22f-9b5b-45f6-a2e5-6de70917a00a",
+                    "path": "<Gamepad>/start",
                     "interactions": "",
                     "processors": "",
                     "groups": "xbox",
+                    "action": "hide_pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1d0e9911-1b3d-4abf-a777-4c12a6b8c8b6",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "hide_pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "40aa7c62-2967-4cd0-8d2d-b45ec65ebd01",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1c0a8b72-8e5e-45e1-9023-ebb901460c68",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";keyboard",
+                    "action": "scroll",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f5c9c281-b6e3-44ad-a473-122f4f67ac3c",
+                    "path": "<Gamepad>/rightStick/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "scroll",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -407,28 +500,10 @@
             "id": "496fb706-37aa-4ede-8ba7-f8a5dfa615a7",
             "actions": [
                 {
-                    "name": "dash",
-                    "type": "Button",
-                    "id": "a9789480-6c9d-480f-aa99-098e4a684ac2",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "dodge",
-                    "type": "Button",
-                    "id": "42dc8ca9-9da3-4420-a502-34d5c93f9b6f",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "hack",
                     "type": "Button",
                     "id": "7ccb0cc6-c229-46ca-974b-ed8cb2b5d5ef",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -444,28 +519,6 @@
                 }
             ],
             "bindings": [
-                {
-                    "name": "",
-                    "id": "74a37704-95d7-41bd-a178-f90badf1e6ba",
-                    "path": "<Gamepad>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "dash",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "8187f5de-b6f0-4f6e-a814-a1124df965f2",
-                    "path": "<Keyboard>/alt",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard",
-                    "action": "dash",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
                 {
                     "name": "",
                     "id": "30be72d1-30ce-48e3-aa76-32f91b036399",
@@ -509,144 +562,6 @@
                     "action": "hackDirection",
                     "isComposite": false,
                     "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "2b39bdff-57b9-4a68-9c04-8a8fce256991",
-                    "path": "<Gamepad>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "dodge",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "bcd3a504-7cfd-43da-9a4b-8e504a953c24",
-                    "path": "<Keyboard>/alt",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard",
-                    "action": "dodge",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "dead_perso",
-            "id": "3c773e63-2b52-4744-844d-922cc5c58b7a",
-            "actions": [
-                {
-                    "name": "revive",
-                    "type": "Button",
-                    "id": "a3921c8e-6aa7-43d1-993e-eb9544973c3e",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "903462bb-7fac-4129-a165-ddb6a2241c9a",
-                    "path": "<Gamepad>/dpad/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "revive",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "4b5af530-baeb-49fc-9d8f-7bfa1ba93a37",
-                    "path": "<Gamepad>/dpad/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "revive",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b701690c-00b5-4f24-9405-ea881d2d0759",
-                    "path": "<Gamepad>/dpad/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "revive",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b309b744-a9db-4b0b-90e6-5189016e34b9",
-                    "path": "<Gamepad>/dpad/right",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "revive",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "9469c814-4ee1-4bc3-8cf7-a9bc38e9fbae",
-                    "path": "<Gamepad>/buttonWest",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "revive",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b92e939c-156f-4cf5-ac78-e765ad893eef",
-                    "path": "<Gamepad>/buttonNorth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "revive",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "997a2735-98a3-4c49-bc24-3950526e5ef6",
-                    "path": "<Gamepad>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "revive",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "5914de72-bd2c-43b0-805d-db5f951de793",
-                    "path": "<Gamepad>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "revive",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "f0c3bf8b-b9de-4ce3-bb50-b0b6fbd8d6b7",
-                    "path": "<Keyboard>/anyKey",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard",
-                    "action": "revive",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 }
             ]
         },
@@ -658,7 +573,7 @@
                     "name": "keyboard",
                     "type": "Button",
                     "id": "6e57fb60-629f-48f4-bdf3-7f45b10dc40c",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -1047,142 +962,6 @@
                     "action": "gamepad",
                     "isComposite": false,
                     "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "map",
-            "id": "1d12c9ec-53fc-4e76-b747-b101fc6248f5",
-            "actions": [
-                {
-                    "name": "zoom",
-                    "type": "PassThrough",
-                    "id": "570598f1-aa91-4935-88c9-2061e1b4b03d",
-                    "expectedControlType": "Axis",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "move",
-                    "type": "PassThrough",
-                    "id": "9b77e55f-aa18-46b1-b854-d1b234d4f1fd",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "eda0786b-1aab-4770-bd26-6917598ae6b7",
-                    "path": "<Gamepad>/leftStick/y",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "zoom",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "sz",
-                    "id": "d0271d57-e021-42e0-861a-7b9ed3fa8b4c",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "zoom",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "3a571c8b-cccc-41da-a555-f9bb35c30907",
-                    "path": "<Keyboard>/leftCtrl",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard",
-                    "action": "zoom",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "18938bc7-5323-40ab-926c-4fc238a92e8f",
-                    "path": "<Keyboard>/leftShift",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard",
-                    "action": "zoom",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "ac8bbae2-e325-491a-b0b3-f9bdeca80991",
-                    "path": "<Gamepad>/rightStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "move",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "zqsd",
-                    "id": "646cb3e8-373f-495b-85aa-1a6afe85b733",
-                    "path": "2DVector",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "move",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "5d5d198c-2b3a-4960-a169-458a21ba1893",
-                    "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard",
-                    "action": "move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "6a8d9c7e-9e25-41a1-a568-4b6c5d4d3acc",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard",
-                    "action": "move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "e380b820-b995-4096-8b78-f5cbc71edf43",
-                    "path": "<Keyboard>/a",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard",
-                    "action": "move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "978a842d-8858-48b4-8f9d-faf82e56072f",
-                    "path": "<Keyboard>/d",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard",
-                    "action": "move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
                 }
             ]
         }

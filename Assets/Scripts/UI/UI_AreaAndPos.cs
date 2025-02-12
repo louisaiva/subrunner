@@ -22,6 +22,11 @@ public class UI_AreaAndPos : MonoBehaviour {
 
     void Update()
     {
+        if (world == null)
+        {
+            Debug.LogWarning("UI_AreaAndPos: world is null");
+            return;
+        }
     
         // on récupère l'area_name au niveau du perso
         string area_name = world.getPersoAreaName();

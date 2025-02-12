@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PassThroughManager : MonoBehaviour
+public class SeeThroughHandler : MonoBehaviour
 {
     public static int PosID = Shader.PropertyToID("_PlayerScreenPosition");
     public static int SizeID = Shader.PropertyToID("_EllipseSize");
@@ -103,7 +103,7 @@ public class PassThroughManager : MonoBehaviour
         // we check if the raycast hit something
         if (hits.Count == 0)
         {
-            if (debug) { Debug.Log("(PassThroughManager) hit : nothing"); }
+            if (debug) { Debug.Log("(SeeThroughHandler) hit : nothing"); }
             current_size_percentage = Mathf.Lerp(current_size_percentage, 0f, size_up_speed * Time.deltaTime);
 
             // we unsee through the wall if we were seeing through it
@@ -122,7 +122,7 @@ public class PassThroughManager : MonoBehaviour
         Wall wall = hits[0].transform.parent.GetComponent<Wall>();
         if (wall != null && wall_hit != wall)
         {
-            if (debug) { Debug.Log("(PassThroughManager) hit a wall : " + wall.name); }
+            if (debug) { Debug.Log("(SeeThroughHandler) hit a wall : " + wall.name); }
 
             // we unsee through the previous wall
             if (wall_hit != null)
@@ -134,11 +134,11 @@ public class PassThroughManager : MonoBehaviour
             wall_hit = wall;
             wall.SeeThrough();
         }
-        else if (wall == wall_hit && debug) { Debug.Log("(PassThroughManager) hit the same wall : " + wall.name); }
-        else if (debug) { Debug.Log("(PassThroughManager) hit something : " + hits[0].name); }
+        else if (wall == wall_hit && debug) { Debug.Log("(SeeThroughHandler) hit the same wall : " + wall.name); }
+        else if (debug) { Debug.Log("(SeeThroughHandler) hit something : " + hits[0].name); }
 
         // we log the position of the hit
         // Vector3 hit_pos = hits[0].transform.position;
-        // if (debug_Y_Comparison) { Debug.Log("(PassThroughManager) hit : " + hit_pos.y + " player : " + transform.position.y); }
+        // if (debug_Y_Comparison) { Debug.Log("(SeeThroughHandler) hit : " + hit_pos.y + " player : " + transform.position.y); }
     }
 }

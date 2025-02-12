@@ -65,14 +65,14 @@ public class UI_Fullmap : MonoBehaviour {
 
         if (inputs != null && is_map_shown)
         {
-            if (inputs.map.move.ReadValue<Vector2>() != Vector2.zero)
+            if (inputs.UI.navigate.ReadValue<Vector2>() != Vector2.zero)
             {
-                move(inputs.map.move.ReadValue<Vector2>());
+                move(inputs.UI.navigate.ReadValue<Vector2>());
             }
 
-            if (inputs.map.zoom.ReadValue<float>() != 0)
+            if (inputs.UI.scroll.ReadValue<float>() != 0)
             {
-                zoom(inputs.map.zoom.ReadValue<float>());
+                zoom(inputs.UI.scroll.ReadValue<float>());
             }
         }
     }
@@ -111,10 +111,10 @@ public class UI_Fullmap : MonoBehaviour {
         Time.timeScale = 0;
 
         // on lance les inputs
-        inputs.map.Enable();
+        // inputs.UI.Enable();
         hc.GetComponent<HC>().OnEnable();
-        /* inputs.map.move.performed += ctx => move();
-        inputs.map.zoom.performed += ctx => zoom(); */
+        /* inputs.UI.navigate.performed += ctx => move();
+        inputs.UI.scroll.performed += ctx => zoom(); */
     }
 
     public void hide()
@@ -122,9 +122,9 @@ public class UI_Fullmap : MonoBehaviour {
         // on arrête les inputs
         if (inputs != null)
         {
-            inputs.map.Disable();
-            /* inputs.map.move.performed -= ctx => move();
-            inputs.map.zoom.performed -= ctx => zoom(); */
+            // inputs.UI.Disable();
+            /* inputs.UI.navigate.performed -= ctx => move();
+            inputs.UI.scroll.performed -= ctx => zoom(); */
         }
 
 

@@ -57,7 +57,7 @@ public class CyberZombo : Enemy, I_Hackable
         life = (float) max_life;
         speed = 1f + Random.Range(-0.2f, 0.2f);
         running_speed = 2f;
-        ((AttackCapacity) getCapacity("attack")).damage = 20f + Random.Range(-5f, 5f);
+        ((AttackCapacity) GetCapacity("attack")).damage = 20f + Random.Range(-5f, 5f);
         weight = 1.4f + Random.Range(-0.2f, 0.2f);
 
         // on met les bons sons

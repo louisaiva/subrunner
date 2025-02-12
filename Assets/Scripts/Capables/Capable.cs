@@ -232,7 +232,7 @@ public class Capable : MonoBehaviour
         }
         return false;
     }
-    protected Capacity getCapacity(string name)
+    public Capacity GetCapacity(string name)
     {
         foreach (Capacity capacity in capacities)
         {

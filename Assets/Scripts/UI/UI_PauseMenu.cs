@@ -4,11 +4,13 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.InputSystem;
 
 public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
 {
     private Transform text_slots;
     private Transform black;
+    private Transform hc;
     private bool is_showed = false;
 
     [Header("Slottable")]
@@ -17,9 +19,15 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
     [SerializeField] private float angle_multiplicator = 100f;
 
     [Header("Inputs")]
+    [SerializeField] private InputActionReference roll_input;
+    // [SerializeField] private InputActionReference hide_input;
+    // private event System.Action<InputAction.CallbackContext> pause_hide_callback;
     [SerializeField] private UI_XboxNavigator xbox_manager;
     [SerializeField] private InputManager input_manager;
     private UI_MainUI main_ui;
+
+    [Header("Debug")]
+    public bool debug = false;
 
     // unity functions
     void Start()
@@ -27,6 +35,7 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
         // on récupère les slots
         text_slots = transform.Find("texts");
         black = transform.Find("black");
+        hc = transform.Find("hc");
 
         // on récupère le xbox_manager
         xbox_manager = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
@@ -37,13 +46,35 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
         // on récupère l'input_manager
         input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
 
+        // on ajoute les listeners
+        defineCallback();
+
         // on cache l'inventaire
         hide();
+    }
+
+    // CALLBACK
+    private void defineCallback()
+    {
+        // we define the hide action callback
+        // pause_hide_callback = ctx => hide();
+
+        // we set the show callback
+        roll_input.action.performed += ctx => rollShow();
+
+        if (debug) { Debug.Log("(UI_Pause) set callback to rollShow()"); }
     }
 
     // SHOWING
     public void show()
     {
+        if (debug) { Debug.Log("(UI_Pause) showing"); }
+
+        // on disable le show input
+        // show_input.action.Disable();
+        // we set the hide callback
+        // hide_input.action.performed += pause_hide_callback;
+
         // on cache le main_ui
         main_ui.show();
         main_ui.hide();
@@ -51,11 +82,10 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
         // on affiche l'inventaire
         is_showed = true;
 
-        // on affiche les slots des items
+        // on affiche les éléments d'ui
         text_slots.gameObject.SetActive(true);
-
-        // on affiche le bg
         black.gameObject.SetActive(true);
+        hc.gameObject.SetActive(true);
 
         // on active le xbox_manager
         if (input_manager.isUsingGamepad()) { xbox_manager.enable(this); }
@@ -65,15 +95,21 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
     }
 
     public void hide()
-    {        
+    {
+        if (debug) { Debug.Log("(UI_Pause) hiding"); }
+
+        // we unset the hide callback
+        // hide_input.action.performed -= pause_hide_callback;
+        // on reenable le perso input
+        // show_input.action.Enable();
+
         // on cache l'inventaire
         is_showed = false;
 
-        // on cache les texts
+        // on cache les éléments d'ui
         text_slots.gameObject.SetActive(false);
-
-        // on cache le bg
         black.gameObject.SetActive(false);
+        hc.gameObject.SetActive(false);
 
 
         // on désactive le xbox_manager

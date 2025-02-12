@@ -7,6 +7,8 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
 {
     
     // hoover
+    [Header("Hover")]
+    public Color hover_color = new Color(1, 1, 0, 1);
     public bool is_hoovered { get; set; }
 
     // text
@@ -39,7 +41,7 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
         transform.parent.parent.GetComponent<UI_PauseMenu>().hide();
     }
 
-    public void regenerate_world()
+    /* public void regenerate_world()
     {
         tmp.text = "> " + base_text + " (that can take a while oopsie ;-;)";
         GameObject.Find("/loader").GetComponent<WorldGenerator>().Start();
@@ -51,7 +53,7 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
         transform.parent.parent.GetComponent<UI_PauseMenu>().hide();
         Debug.Log("cheating...");
         // GameObject.Find("/perso").GetComponent<Perso>().cheat();
-    }
+    } */
 
 
 
@@ -64,7 +66,7 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
     public void OnPointerEnter(PointerEventData eventData)
     {
 
-        tmp.color = new Color(1, 1, 0, 1);
+        tmp.color = hover_color;
         tmp.text = "> " + base_text;
 
         // on met à jour le fait qu'on est survolé
@@ -90,12 +92,12 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
             case "exit game":
                 exit();
                 break;
-            case "regenerate world":
+            /* case "regenerate world":
                 regenerate_world();
                 break;
             case "cheat":
                 cheat();
-                break;
+                break; */
         }
     }
 

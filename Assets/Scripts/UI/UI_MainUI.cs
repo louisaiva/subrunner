@@ -6,10 +6,22 @@ public class UI_MainUI : MonoBehaviour
     // [SerializeField] private bool is_showed = true;
     [SerializeField] private List<GameObject> ui_elements = new List<GameObject>();
     [SerializeField] private Dictionary<GameObject, bool> ui_elements_states = new Dictionary<GameObject, bool>();
+    
+    // inputs
+    private PlayerInputActions inputs;
+
+    [Header("Debug")]
+    public bool debug = false;
+
 
     // unity functions
     void Start()
     {
+        // on active les inputs
+        inputs = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().inputs;
+        inputs.UI.Enable();
+        if (debug) {Debug.Log("(UI_MainUI) UI inputs enabled");}
+
         // on récupère tous les ui_elements
         foreach (Transform child in transform)
         {

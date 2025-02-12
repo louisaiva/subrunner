@@ -9,6 +9,8 @@ using UnityEngine;
 
 public class DieCapacity : Capacity
 {
+    public int deaths = 0;
+
     [Header("XP parameters")]
     public XPProvider xp_provider;
     public TextManager text_manager;
@@ -39,6 +41,11 @@ public class DieCapacity : Capacity
         // we play the animation
         Anim anim = capable.anim_player.Play(name);
         if (anim == null) { return; }
+
+
+        // on meurt
+        deaths += 1;
+
 
         // on donne de l'xp
         Vector3 sprite_center = new Vector3(transform.position.x, transform.position.y + capable.GetComponent<SpriteRenderer>().bounds.size.y / 2f,0);

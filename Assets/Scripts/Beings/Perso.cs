@@ -65,7 +65,7 @@ public class Perso : Being
     [Header("UI - MENUS")]
     // public SkillTree skills_tree;
     // public UI_Fullmap big_map;
-    // public UI_PauseMenu pause_menu;
+    public UI_PauseMenu pause_menu;
 
     [Header("INTERACTIONS")]
     // interactions
@@ -79,7 +79,8 @@ public class Perso : Being
 
     [Header("INPUTS")]
     [SerializeField] private InputManager input_manager;
-    public PlayerInputActions playerInputs;
+    public PlayerInputActions inputs_actions;
+    private event System.Action<InputAction.CallbackContext> reviveCallback;
 
     // [Header("HINTS")]
     // private UI_HintControlsManager hints_controls;
@@ -130,7 +131,7 @@ public class Perso : Being
         // big_map = GameObject.Find("/ui/fullmap").GetComponent<UI_Fullmap>();
 
         // on récupère le pause_menu
-        // pause_menu = GameObject.Find("/ui/pause_menu").GetComponent<UI_PauseMenu>();
+        pause_menu = GameObject.Find("/ui/pause_menu").GetComponent<UI_PauseMenu>();
 
         // on récupère le parent des items
         // items_parent = GameObject.Find("/world/sector_2/items").transform;
@@ -141,9 +142,6 @@ public class Perso : Being
 
         //
         floating_text_prefab = Resources.Load("prefabs/ui/floating_text") as GameObject;
-
-        // on récupère le global_light
-        // global_light = GameObject.Find("/world/global_light").gameObject;
 
         // on met à jour les interactions
         interact_layers = LayerMask.GetMask("Chests", "Computers","Buttons","Items","Interactives");
@@ -157,35 +155,11 @@ public class Perso : Being
 
         // ON MET A JOUR DES TRUCS
 
-        // on ajoute des capacités
-        // AddCapacity("hoover_interact");
-        // AddCapacity("interact");
-        // AddCapacity("debug_capacities");
-        // AddCapacity("talk");
-
         // on met les differents paramètres du perso
         // skills_tree = transform.Find("skills_tree").GetComponent<SkillTree>();
         // skills_tree.init();
 
-        // max_life = 100;
         life = (float) max_life;
-        // speed = 3f;
-        // running_speed = 5f;
-        // damage = 10f;
-        /* attack_range = 0.3f; // defini par l'item
-        damage_range = 0.5f; // defini par l'item
-        cooldown_attack = 0.5f; // defini par l'item
-        knockback_base = 10f; */
-
-        // xp_gift = 0; // on ne donne pas d'xp quand on tue un perso
-
-        // on met à jour les animations
-        // anims.init("perso");
-        // anims = new PersoAnims();
-
-        // on met à jour les sons
-        // sounds = new PersoSounds();
-        // audio_manager.LoadSoundsFromPath("audio/perso");
 
         // on MAJ les items
         inventory.getItems().ForEach(item => grab(item));
@@ -197,7 +171,7 @@ public class Perso : Being
 
 
         // on affiche un texte de début
-        Invoke("showWelcome", 5f);
+        // Invoke("showWelcome", 5f);
         Invoke("showQuest", 10f);
         // Invoke("randomTalk", Random.Range(talking_delay_range.x, talking_delay_range.y));
     }
@@ -228,7 +202,7 @@ public class Perso : Being
         // Invoke("showQuest", 5f);
     }
 
-    private string quest_text = "you need to\nbuy ramen noodles at\nUPRAMENS";
+    private string quest_text = "mission 1 :\nfind the\nELEVATOR";
     void showQuest()
     {
         floating_dmg_provider.GetComponent<TextManager>().addFloatingText(quest_text, transform.position + new Vector3(0, 0.5f, 0), "yellow");
@@ -257,16 +231,15 @@ public class Perso : Being
     {
         // on récupère les inputs
         input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
-        playerInputs = input_manager.inputs;
+        inputs_actions = input_manager.inputs;
 
         // on active les inputs
-        playerInputs.perso.Enable();
-        playerInputs.enhanced_perso.Enable();
+        inputs_actions.perso.Enable();
+        inputs_actions.enhanced_perso.Enable();
 
         // on set les callbacks
-        playerInputs.dead_perso.revive.performed += ctx => comeback_from_death();
-        playerInputs.enhanced_perso.dash.performed += ctx => OnDash();
-        playerInputs.enhanced_perso.dodge.performed += ctx => OnDodge();
+        reviveCallback = ctx => comeback_from_death();
+        inputs_actions.perso.dodge.performed += ctx => OnDodge();
     }
 
     // CAPACITES
@@ -296,7 +269,7 @@ public class Perso : Being
         // walk
         if (Can("walk"))
         {
-            Vector2 raw_inputs = new Vector2(playerInputs.perso.move.ReadValue<Vector2>().x, playerInputs.perso.move.ReadValue<Vector2>().y);
+            Vector2 raw_inputs = new Vector2(inputs_actions.perso.move.ReadValue<Vector2>().x, inputs_actions.perso.move.ReadValue<Vector2>().y);
             
             // we check if the raw inputs are below the deadzone
             raw_inputs.x = Mathf.Abs(raw_inputs.x) < 0.2 ? 0f : raw_inputs.x;
@@ -313,11 +286,11 @@ public class Perso : Being
         // run
         if (Can("run"))
         {
-            if (playerInputs.perso.run.ReadValue<float>() == 1f)
+            if (inputs_actions.perso.run.ReadValue<float>() == 1f)
             {
                 isRunning = true;
             }
-            else if (playerInputs.perso.run.ReadValue<float>() == 0f)
+            else if (inputs_actions.perso.run.ReadValue<float>() == 0f)
             {
                 isRunning = false;
             }
@@ -337,16 +310,16 @@ public class Perso : Being
         // hoover hack
         if (Can("hoover_hack"))
         {
-            if (playerInputs.enhanced_perso.hackDirection.ReadValue<Vector2>() != Vector2.zero)
+            if (inputs_actions.enhanced_perso.hackDirection.ReadValue<Vector2>() != Vector2.zero)
             {
                 if (input_manager.isUsingGamepad())
                 {
-                    Vector2 direction = playerInputs.enhanced_perso.hackDirection.ReadValue<Vector2>();
+                    Vector2 direction = inputs_actions.enhanced_perso.hackDirection.ReadValue<Vector2>();
                     HooverNextHackableInDirection(direction);
                 }
                 else
                 {
-                    Vector2 mouse_position = playerInputs.enhanced_perso.hackDirection.ReadValue<Vector2>();
+                    Vector2 mouse_position = inputs_actions.enhanced_perso.hackDirection.ReadValue<Vector2>();
                     HackinHooverEvents(mouse_position);
                 }
             }
@@ -364,7 +337,7 @@ public class Perso : Being
             // hacks
             if (Can("hack"))
             {
-                if (playerInputs.enhanced_perso.hack.ReadValue<float>() == 1f)
+                if (inputs_actions.enhanced_perso.hack.ReadValue<float>() == 1f)
                 {
                     HackinClickEvents();
                 }
@@ -393,7 +366,7 @@ public class Perso : Being
         { 
             if (input_manager.isUsingGamepad())
             {
-                if (playerInputs.perso.inventory.ReadValue<float>() >= 1f && !big_inventory.isShowed())
+                if (inputs_actions.perso.inventory.ReadValue<float>() >= 1f && !big_inventory.isShowed())
                 {
                     // on regarde si on a pas un coffre ou un ordi en train d'être ouvert
                     if (current_interactable != null && !big_inventory.isShowed())
@@ -405,7 +378,7 @@ public class Perso : Being
                     // on ouvre l'inventaire
                     big_inventory.show();
                 }
-                else if (playerInputs.perso.inventory.ReadValue<float>() < 1f && big_inventory.isShowed())
+                else if (inputs_actions.perso.inventory.ReadValue<float>() < 1f && big_inventory.isShowed())
                 {
                     // on ferme l'inventaire
                     big_inventory.hide();
@@ -678,7 +651,6 @@ public class Perso : Being
     }
 
     // DAMAGE
-
     public override bool take_damage(float damage, Force knockback = null)
     {
         bool dmg_status = base.take_damage(damage, knockback);
@@ -692,6 +664,7 @@ public class Perso : Being
     }
     public void Die()
     {
+
         Debug.Log("YOU DIED");
 
         // on affiche un floating text
@@ -701,18 +674,23 @@ public class Perso : Being
         inventory.setShow(false);
 
         // on désactive les touches
-        playerInputs.perso.Disable();
-        playerInputs.enhanced_perso.Disable();
-        playerInputs.dead_perso.Enable();
+        inputs_actions.perso.Disable();
+
+        // on active la possibilité de revenir à la vie
+        inputs_actions.any.keyboard.performed += reviveCallback;
+        inputs_actions.any.gamepad.performed += reviveCallback;
     }
     protected override void comeback_from_death()
     {
         base.comeback_from_death();
 
         // on reactive les touches
-        playerInputs.dead_perso.Disable();
-        playerInputs.perso.Enable();
-        playerInputs.enhanced_perso.Enable();
+        inputs_actions.perso.Enable();
+        // inputs_actions.enhanced_perso.Enable();
+
+        // on active la possibilité de revenir à la vie
+        inputs_actions.any.keyboard.performed -= reviveCallback;
+        inputs_actions.any.gamepad.performed -= reviveCallback;
     }
 
 
@@ -1388,10 +1366,10 @@ public class Perso : Being
             }
         } */
     }
-    public void OnPause()
+    /* public void OnPause()
     {
         // pause_menu.rollShow();
-    }
+    } */
 
     private void OnDodge()
     {
@@ -1413,28 +1391,3 @@ public class Perso : Being
     }
 
 }
-
-
-// public class PersoAnims : AttackerAnims
-// {
-//     public string dash_side = "perso_dash_RL";
-//     public string dash_up = "perso_dash_U";
-//     public string dash_down = "perso_dash_D";
-
-//     public PersoAnims()
-//     {
-//         base.init("perso");
-//         has_up_down_runnin = true;
-//         has_up_down_idle = true;
-//     }
-// }
-
-// public class PersoSounds : AttackerSounds
-// {
-//     public PersoSounds()
-//     {
-//         s_hurted = new List<string>() { "hurted - 1" , "hurted - 2" , "hurted - 3" , "hurted - 4" };
-//         s_attack = new List<string>() { "attack - 1" , "attack - 2"};
-//         base.init("perso");
-//     }
-// }

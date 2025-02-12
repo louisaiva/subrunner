@@ -13,6 +13,7 @@ public class AttackCapacity : Capacity
     // test de mécanique pour voir si une gestion pixelperfect du combat est agréable
     
     [Header("Damage parameters")]
+    public int kills = 0;
     public float damage = 10f;
     [SerializeField] private bool is_attacking = false;
     [SerializeField] List<Collider2D> hit_enemies = new List<Collider2D> {};
@@ -31,6 +32,9 @@ public class AttackCapacity : Capacity
     private SpriteRenderer sr;
     private AnimPlayer anim_player;
     private PolygonCollider2D pc;
+
+    [Header("Debug")]
+    public bool debug = false;
 
     // START
     private void Start()
@@ -129,11 +133,6 @@ public class AttackCapacity : Capacity
     }
     private void updateAttack()
     {
-        // we get the colliders
-        /* Collider2D[] hit_enemies = new Collider2D[20];
-        ContactFilter2D filter = new ContactFilter2D();
-        filter.SetLayerMask(LayerMask.GetMask("Beings"));
-        int count = pc.OverlapCollider(filter, hit_enemies); */
 
         // verify that our life_collider is not in the list
         if (being != null) { hit_enemies = hit_enemies.Where(enemy => enemy != being.life_collider && enemy != null).ToList(); }
@@ -144,12 +143,15 @@ public class AttackCapacity : Capacity
         // we remove the not alive beings
         hit_enemies = hit_enemies.Where(enemy => enemy.transform.parent.GetComponent<Being>().Alive).ToList();
 
-        string hit_enemies_str = transform.parent.name + " attack enemies : " + hit_enemies.Count + " :\n";
-        foreach (Collider2D enemy in hit_enemies)
+        if (debug)
         {
-            hit_enemies_str += "\t"+enemy + "\n";
+            string hit_enemies_str = transform.parent.name + " attack enemies : " + hit_enemies.Count + " :\n";
+            foreach (Collider2D enemy in hit_enemies)
+            {
+                hit_enemies_str += "\t"+enemy + "\n";
+            }
+            Debug.Log(hit_enemies_str);
         }
-        // Debug.Log(hit_enemies_str);
         
         // if no target, return
         if (hit_enemies.Count == 0) { return; }
@@ -184,24 +186,20 @@ public class AttackCapacity : Capacity
             attacker_knockback_direction += -direction_enemy.normalized * knockback_magnitude;
 
             // apply damage and knockback
-            if (!enemy_being.take_damage(damage_dealt_to_single_target, knockback))
-            {
-                // Debug.Log("Error : enemy " + enemy.name + " didn't take damage");
-                return;
-            }
+            enemy_being.take_damage(damage_dealt_to_single_target, knockback);
 
             // check if enemy is dead
-            /* if (!enemy_being.Alive)
+            if (!enemy_being.Alive)
             {
-                killed_an_enemy = true;
-            } 
-            
-            if (transform.parent.parent.parent.name == "perso")
-            {
-                // on shake la caméra
-                GameObject cam = GameObject.Find("/main_camera");
+                kills += 1;
+                // we just killed someone : we add screen shake if we are the player
+                if (transform.parent.name == "perso")
+                {
+                    // on shake la caméra
+                    float shake_magnitude = damage * 2f;
+                    Camera.main.GetComponent<CameraShaker>().shake(shake_magnitude);
+                }
             }
-            */
         }
 
         if (being != null)

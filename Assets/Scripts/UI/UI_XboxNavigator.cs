@@ -50,7 +50,6 @@ public class UI_XboxNavigator : MonoBehaviour
     public void enable(I_UI_Slottable slottable)
     {
         // on récupère les inputs
-        inputs.UI.Enable();
         inputs.UI.navigate.performed += navigateCallback;
         inputs.UI.activate.performed += activateCallback;
 
@@ -69,7 +68,6 @@ public class UI_XboxNavigator : MonoBehaviour
         if (slottable == null) {return;}
 
         // on récupère les inputs
-        inputs.UI.Disable();
         inputs.UI.navigate.performed -= navigateCallback;
         inputs.UI.activate.performed -= activateCallback;
 
