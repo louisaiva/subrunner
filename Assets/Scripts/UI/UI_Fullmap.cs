@@ -112,7 +112,7 @@ public class UI_Fullmap : MonoBehaviour {
 
         // on lance les inputs
         // inputs.UI.Enable();
-        hc.GetComponent<HC>().OnEnable();
+        // hc.GetComponent<HC>().OnEnable();
         /* inputs.UI.navigate.performed += ctx => move();
         inputs.UI.scroll.performed += ctx => zoom(); */
     }

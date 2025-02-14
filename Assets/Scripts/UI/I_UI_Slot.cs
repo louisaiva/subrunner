@@ -1,6 +1,7 @@
-using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public interface I_UI_Slot : I_Descriptable, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
+    System.Action<InputAction.CallbackContext> Activate_callback { get;}
 }

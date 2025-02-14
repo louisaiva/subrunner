@@ -2,18 +2,30 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.InputSystem;
 
 public class UI_Text : MonoBehaviour, I_UI_Slot
 {
-    
+
+    // callback
+    public System.Action<InputAction.CallbackContext> Activate_callback
+    {
+        get
+        {
+            return ctx => OnPointerClick(null);
+        }
+    }
     // hoover
     [Header("Hover")]
     public Color hover_color = new Color(1, 1, 0, 1);
     public bool is_hoovered { get; set; }
 
-    // text
+    [Header("Text")]
     private TextMeshProUGUI tmp;
     [SerializeField] private string base_text;
+
+    [Header("Debug")]
+    public bool debug = false;
 
     // unity functions
     protected void Awake()
@@ -71,6 +83,8 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
 
         // on met à jour le fait qu'on est survolé
         is_hoovered = true;
+
+        if (debug) Debug.Log("hovering " + base_text);
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -80,10 +94,14 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
 
         // on met à jour le fait qu'on est survolé
         is_hoovered = false;
+
+        if (debug) Debug.Log("unhovering " + base_text);
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (debug) Debug.Log("clicking on " + base_text);
+
         switch (base_text)
         {
             case "play":
@@ -102,9 +120,9 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
     }
 
     // reset hoover
-    public void resetHoover()
+    /* public void resetHoover()
     {
         if (!is_hoovered) return;
         OnPointerExit(null);
-    }
+    } */
 }

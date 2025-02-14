@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class UI_Item : MonoBehaviour, I_UI_Slot
@@ -8,6 +10,19 @@ public class UI_Item : MonoBehaviour, I_UI_Slot
  
     // hoover
     public bool is_hoovered { get; set; }
+
+    public Action<InputAction.CallbackContext> Activate_callback
+    {
+        get
+        {
+            return ctx => 
+            {
+                OnPointerClick(null);
+                Debug.Log("UI_Item : Activate_callback !! Should we navigate to closest with Xbox Navigator ??");
+            };
+        }
+    }
+
     public GameObject description_ui;
 
     // item

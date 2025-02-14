@@ -67,7 +67,7 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable, I_FileHolder
     // public HackUI // hack_ui { get; set; }
 
     // interactions
-    public GameObject ui_computer;
+    // public GameObject ui_computer;
     public bool is_interacting { get; set; } // est en train d'interagir
     public Transform interact_tuto_label { get; set; }
 
@@ -84,7 +84,7 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable, I_FileHolder
         tree = GameObject.Find("/perso/skills_tree").GetComponent<SkillTree>();
 
         // on récupère le ui_computer
-        ui_computer = GameObject.Find("/ui/screen/ui_computer");
+        // ui_computer = GameObject.Find("/ui/screen/ui_computer");
 
         // on initialise le hackin
         initHack();
@@ -187,7 +187,7 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable, I_FileHolder
         if (is_interacting)
         {
             // on arrête l'affichage de l'UI_Computer
-            ui_computer.GetComponent<UI_Computer>().hide();
+            // ui_computer.GetComponent<UI_Computer>().hide();
             is_interacting = false;
         }
 
@@ -450,8 +450,8 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable, I_FileHolder
         else
         {
             // on lance l'affichage de l'UI_Computer
-            ui_computer.GetComponent<UI_Computer>().setComputer(this);
-            ui_computer.GetComponent<UI_Computer>().show();
+            // ui_computer.GetComponent<UI_Computer>().setComputer(this);
+            // ui_computer.GetComponent<UI_Computer>().show();
 
             is_interacting = true;
         }
@@ -465,7 +465,7 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable, I_FileHolder
         if (is_interacting)
         {
             // on arrête l'affichage de l'UI_Computer
-            ui_computer.GetComponent<UI_Computer>().hide();
+            // ui_computer.GetComponent<UI_Computer>().hide();
             is_interacting = false;
         }
     }

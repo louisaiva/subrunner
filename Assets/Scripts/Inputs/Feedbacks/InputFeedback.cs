@@ -66,6 +66,9 @@ public class InputFeedback : MonoBehaviour
 
     private void OnDisable()
     {
+        // we reset
+        OnReset();
+
         // we remove the listeners
         action.performed -= input_callback;
         action.canceled -= reset_callback;

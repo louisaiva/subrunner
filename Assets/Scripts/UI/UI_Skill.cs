@@ -1,10 +1,20 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+
 // using UnityEngine.UIElements;
 using UnityEngine.UI;
 
 public class UI_Skill : MonoBehaviour, I_UI_Slot
 {
+    public System.Action<InputAction.CallbackContext> Activate_callback
+    {
+        get
+        {
+            return ctx => OnPointerClick(null);
+        }
+    }
+
     // hoover
     public bool is_hoovered { get; set; }
     public GameObject description_ui;

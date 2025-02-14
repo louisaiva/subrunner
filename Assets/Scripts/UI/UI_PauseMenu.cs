@@ -10,7 +10,8 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
 {
     private Transform text_slots;
     private Transform black;
-    private Transform hc;
+    private Transform joy_f;
+    private Transform pad_f;
     private bool is_showed = false;
 
     [Header("Slottable")]
@@ -35,7 +36,8 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
         // on récupère les slots
         text_slots = transform.Find("texts");
         black = transform.Find("black");
-        hc = transform.Find("hc");
+        joy_f = transform.Find("joystick_feedback");
+        pad_f = transform.Find("pad_feedback");
 
         // on récupère le xbox_manager
         xbox_manager = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
@@ -92,7 +94,8 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
         // on affiche les éléments d'ui
         text_slots.gameObject.SetActive(true);
         black.gameObject.SetActive(true);
-        hc.gameObject.SetActive(true);
+        joy_f.gameObject.SetActive(true);
+        pad_f.gameObject.SetActive(true);
 
         // on active le xbox_manager
         if (input_manager.isUsingGamepad()) { xbox_manager.enable(this); }
@@ -111,7 +114,8 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
         // on cache les éléments d'ui
         text_slots.gameObject.SetActive(false);
         black.gameObject.SetActive(false);
-        hc.gameObject.SetActive(false);
+        joy_f.gameObject.SetActive(false);
+        pad_f.gameObject.SetActive(false);
 
 
         // on désactive le xbox_manager

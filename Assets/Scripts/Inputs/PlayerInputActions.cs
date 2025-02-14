@@ -324,6 +324,33 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""y"",
+                    ""type"": ""Button"",
+                    ""id"": ""d54f75d2-9814-4e30-b26b-b3e8fdee853f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""x"",
+                    ""type"": ""Button"",
+                    ""id"": ""9cabf8d8-163a-4ae7-a331-3f1b721b0fa6"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""cancel"",
+                    ""type"": ""Button"",
+                    ""id"": ""ab61f265-6045-46c4-8b6b-c5a9ed876406"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""map"",
                     ""type"": ""Button"",
                     ""id"": ""7b064787-d4ee-411b-9d58-cc8de14ac49c"",
@@ -382,6 +409,72 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""keyboard"",
                     ""action"": ""activate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""db8fd403-f280-4b0d-bd26-04895a2fe4bf"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""y"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6cad4bee-91f4-4954-a619-bc892eb9dd41"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""y"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""38c48ac6-6251-4242-ae36-ea4569e66299"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""x"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f8189062-e74c-453b-9a85-95be6e098fa2"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""x"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""be124d9a-1060-4a7f-8d76-0557f62268da"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""49f35044-050b-4cc3-b916-8423213986ba"",
+                    ""path"": ""<Keyboard>/backspace"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";keyboard"",
+                    ""action"": ""cancel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1006,6 +1099,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_UI_navigate = m_UI.FindAction("navigate", throwIfNotFound: true);
         m_UI_scroll = m_UI.FindAction("scroll", throwIfNotFound: true);
         m_UI_activate = m_UI.FindAction("activate", throwIfNotFound: true);
+        m_UI_y = m_UI.FindAction("y", throwIfNotFound: true);
+        m_UI_x = m_UI.FindAction("x", throwIfNotFound: true);
+        m_UI_cancel = m_UI.FindAction("cancel", throwIfNotFound: true);
         m_UI_map = m_UI.FindAction("map", throwIfNotFound: true);
         m_UI_pause = m_UI.FindAction("pause", throwIfNotFound: true);
         m_UI_inventory = m_UI.FindAction("inventory", throwIfNotFound: true);
@@ -1183,6 +1279,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_navigate;
     private readonly InputAction m_UI_scroll;
     private readonly InputAction m_UI_activate;
+    private readonly InputAction m_UI_y;
+    private readonly InputAction m_UI_x;
+    private readonly InputAction m_UI_cancel;
     private readonly InputAction m_UI_map;
     private readonly InputAction m_UI_pause;
     private readonly InputAction m_UI_inventory;
@@ -1193,6 +1292,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @navigate => m_Wrapper.m_UI_navigate;
         public InputAction @scroll => m_Wrapper.m_UI_scroll;
         public InputAction @activate => m_Wrapper.m_UI_activate;
+        public InputAction @y => m_Wrapper.m_UI_y;
+        public InputAction @x => m_Wrapper.m_UI_x;
+        public InputAction @cancel => m_Wrapper.m_UI_cancel;
         public InputAction @map => m_Wrapper.m_UI_map;
         public InputAction @pause => m_Wrapper.m_UI_pause;
         public InputAction @inventory => m_Wrapper.m_UI_inventory;
@@ -1214,6 +1316,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @activate.started += instance.OnActivate;
             @activate.performed += instance.OnActivate;
             @activate.canceled += instance.OnActivate;
+            @y.started += instance.OnY;
+            @y.performed += instance.OnY;
+            @y.canceled += instance.OnY;
+            @x.started += instance.OnX;
+            @x.performed += instance.OnX;
+            @x.canceled += instance.OnX;
+            @cancel.started += instance.OnCancel;
+            @cancel.performed += instance.OnCancel;
+            @cancel.canceled += instance.OnCancel;
             @map.started += instance.OnMap;
             @map.performed += instance.OnMap;
             @map.canceled += instance.OnMap;
@@ -1236,6 +1347,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @activate.started -= instance.OnActivate;
             @activate.performed -= instance.OnActivate;
             @activate.canceled -= instance.OnActivate;
+            @y.started -= instance.OnY;
+            @y.performed -= instance.OnY;
+            @y.canceled -= instance.OnY;
+            @x.started -= instance.OnX;
+            @x.performed -= instance.OnX;
+            @x.canceled -= instance.OnX;
+            @cancel.started -= instance.OnCancel;
+            @cancel.performed -= instance.OnCancel;
+            @cancel.canceled -= instance.OnCancel;
             @map.started -= instance.OnMap;
             @map.performed -= instance.OnMap;
             @map.canceled -= instance.OnMap;
@@ -1403,6 +1523,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnNavigate(InputAction.CallbackContext context);
         void OnScroll(InputAction.CallbackContext context);
         void OnActivate(InputAction.CallbackContext context);
+        void OnY(InputAction.CallbackContext context);
+        void OnX(InputAction.CallbackContext context);
+        void OnCancel(InputAction.CallbackContext context);
         void OnMap(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnInventory(InputAction.CallbackContext context);

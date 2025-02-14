@@ -34,7 +34,7 @@ public class UI_XboxNavigator : MonoBehaviour
     [SerializeField] private PlayerInputActions inputs;
     [SerializeField] private bool first_navigation = true;
     private event Action<InputAction.CallbackContext> navigateCallback;
-    private event Action<InputAction.CallbackContext> activateCallback;
+    // private event Action<InputAction.CallbackContext> activateCallback;
 
     [Header("Debug")]
     public bool debug = false;
@@ -46,7 +46,7 @@ public class UI_XboxNavigator : MonoBehaviour
         // on récupère les inputs
         inputs = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().inputs;
         navigateCallback = ctx => navigate(ctx.ReadValue<Vector2>());
-        activateCallback = ctx => activate();
+        // activateCallback = ctx => activate();
     }
 
     // enable/disable
@@ -54,7 +54,7 @@ public class UI_XboxNavigator : MonoBehaviour
     {
         // on récupère les inputs
         inputs.UI.navigate.performed += navigateCallback;
-        inputs.UI.activate.performed += activateCallback;
+        // inputs.UI.activate.performed += activateCallback;
 
         // on active les inputs
         // inputs.UI.Enable();
@@ -76,7 +76,7 @@ public class UI_XboxNavigator : MonoBehaviour
 
         // on récupère les inputs
         inputs.UI.navigate.performed -= navigateCallback;
-        inputs.UI.activate.performed -= activateCallback;
+        // inputs.UI.activate.performed -= activateCallback;
 
         // on active les perso inputs
         inputs.perso.Enable();
@@ -215,16 +215,20 @@ public class UI_XboxNavigator : MonoBehaviour
         if (current_slot_index != -1)
         {
             slots[current_slot_index].GetComponent<I_UI_Slot>().OnPointerExit(null);
+
+            // on enlève le callback
+            inputs.UI.activate.performed -= slots[current_slot_index].GetComponent<I_UI_Slot>().Activate_callback;
         }
         slots[next_index].GetComponent<I_UI_Slot>().OnPointerEnter(null);
-        
 
+        // on ajoute le callback
+        inputs.UI.activate.performed += slots[next_index].GetComponent<I_UI_Slot>().Activate_callback;
         
         // on met à jour l'index
         current_slot_index = next_index;
     }
 
-    public void activate()
+    /* public void activate()
     {
         if (slottable == null || current_slot_index == -1) {return;}
 
@@ -244,7 +248,7 @@ public class UI_XboxNavigator : MonoBehaviour
             // on navigue vers le slot le plus proche
             navigateToClosest(position);
         }
-    }
+    } */
 
     private void navigateToClosest(Vector2 position = new Vector2())
     {
