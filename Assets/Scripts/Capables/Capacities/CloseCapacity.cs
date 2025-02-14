@@ -22,9 +22,6 @@ public class CloseCapacity : Capacity
     [Header("Open parameters")]
     public float opening_duration = 0.5f;
 
-    [Header("Debug")]
-    public bool debug = false;  
-
     // USE
     public override void Use(Capable capable)
     {

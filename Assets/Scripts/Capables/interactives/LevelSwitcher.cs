@@ -24,9 +24,6 @@ public class LevelSwitcher : Capable, Interactable
     [Header("Switches")]
     public int elevator_uses = 0;
 
-    [Header("Debug")]
-    public bool debug = false;
-
     protected override void Start()
     {
         base.Start();

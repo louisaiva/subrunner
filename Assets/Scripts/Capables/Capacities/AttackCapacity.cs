@@ -33,9 +33,6 @@ public class AttackCapacity : Capacity
     private AnimPlayer anim_player;
     private PolygonCollider2D pc;
 
-    [Header("Debug")]
-    public bool debug = false;
-
     // START
     private void Start()
     {

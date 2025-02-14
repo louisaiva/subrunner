@@ -20,9 +20,6 @@ public class HoverCapacity : Capacity
     private event Action<InputAction.CallbackContext> interactCallback;
     [SerializeField] private bool set_callback = false;
 
-    [Header("Debug")]
-    public bool debug = false;
-
 
     // START
     private void Start()

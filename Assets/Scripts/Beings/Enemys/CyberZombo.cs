@@ -34,11 +34,6 @@ public class CyberZombo : Enemy, I_Hackable
     // HackUI
     public HackUI hack_ui { get; set; }
 
-    /*
-
-
-    */
-
     // unity functions
     new void Start(){
 

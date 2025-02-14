@@ -27,6 +27,9 @@ public class Capacity : MonoBehaviour
 
     /*todo [Header("Animation")] ?? */
 
+    [Header("Debug")]
+    public bool debug = false;
+
 
     protected virtual void Update()
     {

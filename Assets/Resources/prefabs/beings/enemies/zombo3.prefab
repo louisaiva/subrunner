@@ -40,6 +40,7 @@ CapsuleCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7017082596106958854}
   m_Enabled: 1
+  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -63,7 +64,8 @@ CapsuleCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
   m_Offset: {x: 0.021684647, y: 0.40055162}
   m_Size: {x: 0.44590378, y: 0.77110326}
   m_Direction: 0
@@ -124,6 +126,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -228,7 +233,7 @@ MonoBehaviour:
   meat_detected: 0
 --- !u!50 &8817564043264294159
 Rigidbody2D:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -239,8 +244,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -310,7 +315,7 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3147306694727553979, guid: 218dd56d6e10353498bdf3b630cbd19b, type: 3}
-      propertyPath: smileys.Array.data[3]
+      propertyPath: 'smileys.Array.data[3]'
       value: :(
       objectReference: {fileID: 0}
     - target: {fileID: 6582822749040364892, guid: 218dd56d6e10353498bdf3b630cbd19b, type: 3}
@@ -464,7 +469,7 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3540847410065718300, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
-      propertyPath: not_attackable_tags.Array.data[0]
+      propertyPath: 'not_attackable_tags.Array.data[0]'
       value: Zombo
       objectReference: {fileID: 0}
     - target: {fileID: 3831210645434146991, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
@@ -480,7 +485,7 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
-      propertyPath: not_attackable_tags.Array.data[0]
+      propertyPath: 'not_attackable_tags.Array.data[0]'
       value: Zombo
       objectReference: {fileID: 0}
     - target: {fileID: 8825243767214675206, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}

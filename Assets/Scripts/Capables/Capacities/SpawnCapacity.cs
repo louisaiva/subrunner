@@ -21,9 +21,6 @@ public class SpawnCapacity : Capacity
     public float spawn_rate = 0f; // in seconds - needs to be > 0 to spawn continuously
     private float last_use_time = 0f;
 
-    [Header("Debug")]
-    public bool debug = false;
-
     // USE
     public override void Use(Capable capable)
     {

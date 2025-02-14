@@ -12,9 +12,6 @@ public class Movable : Capable
     public float input_speed;
     public Collider2D feet_collider;
 
-    [Header("DEBUG")]
-    public bool debug = false;
-
     protected override void Start()
     {
         base.Start();

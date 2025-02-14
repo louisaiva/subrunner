@@ -82,9 +82,14 @@ public class DieCapacity : Capacity
         if (being.Alive) { return; }
 
         // destroy the object
-        if (destroy_object) { Destroy(transform.parent.gameObject); return; }
+        if (destroy_object)
+        {
+            Destroy(transform.parent.gameObject);
+            if (debug) { Debug.Log("Destroying " + being.name); }
+            return;
+        }
 
-        Debug.Log("Destroying capacities of " + being.name);
+        if (debug) { Debug.Log("Destroying capacities of " + being.name); }
 
         // else, we destroy all the capacities except RunCapacity
         List<Capacity> capacities = new List<Capacity>(being.GetCapacities());
@@ -101,8 +106,9 @@ public class DieCapacity : Capacity
         // and we destroy the body
         Destroy(being.transform.Find("body").gameObject);
 
-        // And finally we disable the Capable
+        // And finally we disable the Capable to replace it with a simple Movable
         Destroy(being.GetComponent<Capable>());
+        being.gameObject.AddComponent<Movable>();
 
         // and we destroy ourselves
         Destroy(this.gameObject);

@@ -37,6 +37,9 @@ public class Capable : MonoBehaviour
     [SerializeField] protected List<Effect> effects = new List<Effect>();
     [SerializeField] protected List<float> effects_timetolive = new List<float>();
 
+    [Header("Debug")]
+    public bool debug = false;
+
     // START
     protected virtual void Start()
     {
@@ -53,6 +56,9 @@ public class Capable : MonoBehaviour
             if (capa != null)
             {
                 add_capacity(capa);
+
+                // we check if the debug is true then we force debug to be true
+                if (debug) { capa.debug = true; }
             }
         }
     }
