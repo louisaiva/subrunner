@@ -332,15 +332,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -409,8 +411,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hint_color: {r: 1, g: 1, b: 1, a: 1}
   clicked_color: {r: 0.28235295, g: 0.8862745, b: 0.1882353, a: 1}
-  actions:
-  - {fileID: 7469080207358933745, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+  inputs:
+  - {fileID: -2859340253327848072, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   slots:
   - {fileID: 7535378853089255978}
   slots_types:

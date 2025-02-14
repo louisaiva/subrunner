@@ -19,7 +19,7 @@ public class UI_MainUI : MonoBehaviour
     {
         // on active les inputs
         inputs = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().inputs;
-        inputs.UI.Enable();
+
         if (debug) {Debug.Log("(UI_MainUI) UI inputs enabled");}
 
         // on récupère tous les ui_elements
@@ -72,7 +72,6 @@ public class UI_MainUI : MonoBehaviour
         saveStates();
 
         // on cache tout
-        // is_showed = false;
         foreach (GameObject ui_element_ in ui_elements)
         {
             ui_element_.SetActive(false);

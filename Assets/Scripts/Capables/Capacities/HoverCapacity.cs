@@ -14,10 +14,11 @@ using UnityEngine.InputSystem;
 public class HoverCapacity : Capacity
 {
 
-    [Header("Callbacks")]
-    public InputActionReference interactAction;
+    [Header("Input & Callbacks")]
+    [SerializeField] private InputActionReference interactInput;
+    private InputAction interactAction;
     private event Action<InputAction.CallbackContext> interactCallback;
-    public bool set_callback = false;
+    [SerializeField] private bool set_callback = false;
 
     [Header("Debug")]
     public bool debug = false;
@@ -26,17 +27,14 @@ public class HoverCapacity : Capacity
     // START
     private void Start()
     {
+        // we get the interact action
+        interactAction = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().GetAction(interactInput);
 
-        // we define the callback
-        defineCallback();
-    }
-
-    // HOVER
-    protected virtual void defineCallback()
-    {
         // we define the interact action
         interactCallback = ctx => (capable as Interactable).OnInteract();
     }
+
+    // HOVER
     protected virtual void hover(Capable capable)
     {
         // we play the animation
@@ -46,7 +44,7 @@ public class HoverCapacity : Capacity
         if (!set_callback)
         {
             set_callback = true;
-            interactAction.action.performed += interactCallback;
+            interactAction.performed += interactCallback;
             if (debug) { Debug.Log("(HoverCapacity) " + name + " set callback OnInteract() on " + capable.name); }
         }
     }
@@ -59,7 +57,7 @@ public class HoverCapacity : Capacity
         if (set_callback)
         {
             set_callback = false;
-            interactAction.action.performed -= interactCallback;
+            interactAction.performed -= interactCallback;
             if (debug) { Debug.Log("(HoverCapacity) " + name + " removed callback OnInteract() on " + capable.name); }
         }
     }

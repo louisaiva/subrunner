@@ -19,12 +19,12 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
     [SerializeField] private float angle_multiplicator = 100f;
 
     [Header("Inputs")]
-    [SerializeField] private InputActionReference roll_input;
-    // [SerializeField] private InputActionReference hide_input;
-    // private event System.Action<InputAction.CallbackContext> pause_hide_callback;
+    [SerializeField] private InputActionReference input;
+    private InputAction roll_action;
     [SerializeField] private UI_XboxNavigator xbox_manager;
     [SerializeField] private InputManager input_manager;
-    private UI_MainUI main_ui;
+    // private UI_MainUI main_ui;
+    private UI_Manager manager;
 
     [Header("Debug")]
     public bool debug = false;
@@ -41,7 +41,9 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
         xbox_manager = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
 
         // on récupère le main_ui
-        main_ui = GameObject.Find("/ui").GetComponent<UI_MainUI>();
+        // main_ui = GameObject.Find("/ui").GetComponent<UI_MainUI>();
+        manager = GameObject.Find("/ui").GetComponent<UI_Manager>();
+        manager.RegisterToPool("pause", gameObject);
 
         // on récupère l'input_manager
         input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
@@ -59,10 +61,20 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
         // we define the hide action callback
         // pause_hide_callback = ctx => hide();
 
-        // we set the show callback
-        roll_input.action.performed += ctx => rollShow();
+        // we get the action from input_manager
+        roll_action = input_manager.GetAction(input);
 
-        if (debug) { Debug.Log("(UI_Pause) set callback to rollShow()"); }
+        if (debug)
+        {
+            InputAction manager_pause = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().inputs.UI.pause;
+            string s = "(UI_Pause) set callback to rollShow() : " + roll_action;
+            s += "\n\t action == manager_pause action ?" + (manager_pause == roll_action);
+            s += "\n\t action.actionMap == manager_pause action.actionMap ?" + (manager_pause.actionMap == roll_action.actionMap);
+            Debug.Log(s);
+        }
+
+        // we set the show callback
+        roll_action.performed += ctx => rollShow();
     }
 
     // SHOWING
@@ -70,14 +82,9 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
     {
         if (debug) { Debug.Log("(UI_Pause) showing"); }
 
-        // on disable le show input
-        // show_input.action.Disable();
-        // we set the hide callback
-        // hide_input.action.performed += pause_hide_callback;
-
         // on cache le main_ui
-        main_ui.show();
-        main_ui.hide();
+        // main_ui.hide();
+        manager.ShowPool("pause");
 
         // on affiche l'inventaire
         is_showed = true;
@@ -98,11 +105,6 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
     {
         if (debug) { Debug.Log("(UI_Pause) hiding"); }
 
-        // we unset the hide callback
-        // hide_input.action.performed -= pause_hide_callback;
-        // on reenable le perso input
-        // show_input.action.Enable();
-
         // on cache l'inventaire
         is_showed = false;
 
@@ -116,7 +118,8 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
         xbox_manager.disable();
 
         // on affiche le main_ui
-        main_ui.show();
+        // main_ui.show();
+        manager.HidePool("pause");
 
         // on remet le temps
         Time.timeScale = 1;

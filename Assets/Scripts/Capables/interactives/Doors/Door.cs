@@ -11,6 +11,11 @@ public class Door : Capable, Interactable, Openable
     // protected AnimationHandler anim_handler;
     // protected DoorAnims anims = new DoorAnims();
 
+    // inputs actions
+    /*public PlayerInputActions input_actions
+    {
+        get => GameObject.Find("/utils/input_manager").GetComponent<InputManager>().inputs;
+    }*/
 
     [Header("Door")]
     public bool is_vertical = false; // just for the editor
@@ -83,6 +88,7 @@ public class Door : Capable, Interactable, Openable
     // ON INTERACT
     public virtual void OnInteract()
     {
+        // if (!input_actions.perso.enabled) { return; }
         if (Can("open")) { open(); }
         else if (Can("close")) { close(); }
     }

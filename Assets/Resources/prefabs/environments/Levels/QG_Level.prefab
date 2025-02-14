@@ -741,6 +741,9 @@ MonoBehaviour:
   FindPriority: 5
   RoomCollider: {fileID: 0}
   hidden_ceiling: {fileID: 0}
+  room_hider: {fileID: 0}
+  walls_hider: {fileID: 0}
+  ground_hider: {fileID: 0}
   debug: 0
   loaded: 0
 --- !u!60 &1612804305310284315
@@ -2232,7 +2235,7 @@ PolygonCollider2D:
       - {x: -5.963019, y: 7.378097}
       - {x: -4.382054, y: 7.3944716}
       - {x: 2.0877135, y: 7.4223933}
-      - {x: 2.014338, y: 10.861165}
+      - {x: 2.089749, y: 9.252396}
   m_UseDelaunayMesh: 0
 --- !u!114 &7102687024321871559
 MonoBehaviour:
@@ -4570,6 +4573,9 @@ MonoBehaviour:
   FindPriority: 0
   RoomCollider: {fileID: 0}
   hidden_ceiling: {fileID: 0}
+  room_hider: {fileID: 0}
+  walls_hider: {fileID: 0}
+  ground_hider: {fileID: 0}
   debug: 0
   loaded: 0
 --- !u!60 &6792348123141158881
@@ -6294,8 +6300,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: 3.5, y: 10, z: 0}
-      m_Extent: {x: 6, y: 2.5, z: 0}
+      m_Center: {x: 2, y: 9.25, z: 0}
+      m_Extent: {x: 7.5, y: 5.75, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0
@@ -7336,7 +7342,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 10
-      m_TileSpriteIndex: 10
+      m_TileSpriteIndex: 8
       m_TileMatrixIndex: 5
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -7396,7 +7402,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 10
-      m_TileSpriteIndex: 10
+      m_TileSpriteIndex: 6
       m_TileMatrixIndex: 5
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -7799,15 +7805,15 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 2
     m_Data: {fileID: 88374085, guid: 171d960a5f2ccd8449de689a8b2b87e2, type: 3}
-  - m_RefCount: 3
+  - m_RefCount: 4
     m_Data: {fileID: 1612600269, guid: 171d960a5f2ccd8449de689a8b2b87e2, type: 3}
   - m_RefCount: 3
     m_Data: {fileID: -786445278, guid: 171d960a5f2ccd8449de689a8b2b87e2, type: 3}
-  - m_RefCount: 4
+  - m_RefCount: 5
     m_Data: {fileID: -1917733270, guid: 171d960a5f2ccd8449de689a8b2b87e2, type: 3}
   - m_RefCount: 7
     m_Data: {fileID: -591912635, guid: 171d960a5f2ccd8449de689a8b2b87e2, type: 3}
-  - m_RefCount: 36
+  - m_RefCount: 34
     m_Data: {fileID: -558808158, guid: 171d960a5f2ccd8449de689a8b2b87e2, type: 3}
   m_TileMatrixArray:
   - m_RefCount: 0
@@ -8923,6 +8929,9 @@ MonoBehaviour:
   FindPriority: 0
   RoomCollider: {fileID: 0}
   hidden_ceiling: {fileID: 0}
+  room_hider: {fileID: 0}
+  walls_hider: {fileID: 0}
+  ground_hider: {fileID: 0}
   debug: 0
   loaded: 0
 --- !u!60 &7544304677562655684
@@ -9710,6 +9719,9 @@ MonoBehaviour:
   FindPriority: 5
   RoomCollider: {fileID: 0}
   hidden_ceiling: {fileID: 0}
+  room_hider: {fileID: 0}
+  walls_hider: {fileID: 0}
+  ground_hider: {fileID: 0}
   debug: 0
   loaded: 0
 --- !u!60 &2031015696730923584
@@ -9822,6 +9834,9 @@ MonoBehaviour:
   FindPriority: 0
   RoomCollider: {fileID: 0}
   hidden_ceiling: {fileID: 0}
+  room_hider: {fileID: 0}
+  walls_hider: {fileID: 0}
+  ground_hider: {fileID: 0}
   debug: 0
   loaded: 0
 --- !u!60 &5855769231911114832
@@ -24061,8 +24076,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: 6, y: 9.5, z: 0}
-      m_Extent: {x: 4, y: 3, z: 0}
+      m_Center: {x: 6.75, y: 10.25, z: 0}
+      m_Extent: {x: 4.75, y: 3.75, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0
@@ -25181,7 +25196,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 10
-      m_TileSpriteIndex: 10
+      m_TileSpriteIndex: 8
       m_TileMatrixIndex: 5
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -25221,7 +25236,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 10
-      m_TileSpriteIndex: 10
+      m_TileSpriteIndex: 5
       m_TileMatrixIndex: 5
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -26211,7 +26226,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 10
-      m_TileSpriteIndex: 6
+      m_TileSpriteIndex: 10
       m_TileMatrixIndex: 5
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -26522,17 +26537,17 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 14
+  - m_RefCount: 15
     m_Data: {fileID: 1612600269, guid: 171d960a5f2ccd8449de689a8b2b87e2, type: 3}
-  - m_RefCount: 17
+  - m_RefCount: 16
     m_Data: {fileID: -591912635, guid: 171d960a5f2ccd8449de689a8b2b87e2, type: 3}
   - m_RefCount: 3
     m_Data: {fileID: 88374085, guid: 171d960a5f2ccd8449de689a8b2b87e2, type: 3}
-  - m_RefCount: 22
+  - m_RefCount: 23
     m_Data: {fileID: -1917733270, guid: 171d960a5f2ccd8449de689a8b2b87e2, type: 3}
   - m_RefCount: 13
     m_Data: {fileID: -786445278, guid: 171d960a5f2ccd8449de689a8b2b87e2, type: 3}
-  - m_RefCount: 154
+  - m_RefCount: 153
     m_Data: {fileID: -558808158, guid: 171d960a5f2ccd8449de689a8b2b87e2, type: 3}
   m_TileMatrixArray:
   - m_RefCount: 0
@@ -26870,6 +26885,9 @@ MonoBehaviour:
   FindPriority: 5
   RoomCollider: {fileID: 0}
   hidden_ceiling: {fileID: 0}
+  room_hider: {fileID: 0}
+  walls_hider: {fileID: 0}
+  ground_hider: {fileID: 0}
   debug: 0
   loaded: 0
 --- !u!60 &5545639530739318857
@@ -30991,6 +31009,9 @@ MonoBehaviour:
   FindPriority: 0
   RoomCollider: {fileID: 0}
   hidden_ceiling: {fileID: 0}
+  room_hider: {fileID: 0}
+  walls_hider: {fileID: 0}
+  ground_hider: {fileID: 0}
   debug: 0
   loaded: 0
 --- !u!60 &7085676951233902387
@@ -33222,8 +33243,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: 12, y: 7.25, z: 0}
-      m_Extent: {x: 0.5, y: 0.25, z: 0}
+      m_Center: {x: 11.75, y: 9.25, z: 0}
+      m_Extent: {x: 6.75, y: 5.75, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0
@@ -43459,10 +43480,6 @@ PrefabInstance:
       propertyPath: m_PreviousShadowCastingSource
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 2154584211378189835, guid: 80d47e0a0573a1f4291d0360f4304a60, type: 3}
-      propertyPath: m_PreviousShadowShape2DSource
-      value: 
-      objectReference: {fileID: 1705229863153084906}
     - target: {fileID: 2197711243768661269, guid: 80d47e0a0573a1f4291d0360f4304a60, type: 3}
       propertyPath: m_ShadowShape2DProvider
       value: 691466519777640681
@@ -43563,11 +43580,6 @@ PrefabInstance:
 --- !u!4 &1494378940323002619 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9171474070275460988, guid: 80d47e0a0573a1f4291d0360f4304a60, type: 3}
-  m_PrefabInstance: {fileID: 7780679368803579783}
-  m_PrefabAsset: {fileID: 0}
---- !u!212 &1705229863153084906 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 8957861071819890285, guid: 80d47e0a0573a1f4291d0360f4304a60, type: 3}
   m_PrefabInstance: {fileID: 7780679368803579783}
   m_PrefabAsset: {fileID: 0}
 --- !u!61 &6453647496241310791 stripped
@@ -44297,10 +44309,6 @@ PrefabInstance:
       value: 691466477638254746
       objectReference: {fileID: 0}
     - target: {fileID: 2154584211378189835, guid: 80d47e0a0573a1f4291d0360f4304a60, type: 3}
-      propertyPath: m_ShadowShape2DComponent
-      value: 
-      objectReference: {fileID: 1144799555964797215}
-    - target: {fileID: 2154584211378189835, guid: 80d47e0a0573a1f4291d0360f4304a60, type: 3}
       propertyPath: m_ShadowMesh.m_InitialTrim
       value: 0
       objectReference: {fileID: 0}
@@ -44308,10 +44316,6 @@ PrefabInstance:
       propertyPath: m_PreviousShadowCastingSource
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 2154584211378189835, guid: 80d47e0a0573a1f4291d0360f4304a60, type: 3}
-      propertyPath: m_PreviousShadowShape2DSource
-      value: 
-      objectReference: {fileID: 1144799555964797215}
     - target: {fileID: 2154584211378189835, guid: 80d47e0a0573a1f4291d0360f4304a60, type: 3}
       propertyPath: m_ApplyToSortingLayers.Array.size
       value: 9
@@ -44432,11 +44436,6 @@ PrefabInstance:
 --- !u!4 &933385442792361998 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9171474070275460988, guid: 80d47e0a0573a1f4291d0360f4304a60, type: 3}
-  m_PrefabInstance: {fileID: 8337167925719949170}
-  m_PrefabAsset: {fileID: 0}
---- !u!212 &1144799555964797215 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 8957861071819890285, guid: 80d47e0a0573a1f4291d0360f4304a60, type: 3}
   m_PrefabInstance: {fileID: 8337167925719949170}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8659386146693362813

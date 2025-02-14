@@ -81,13 +81,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hint_color: {r: 1, g: 1, b: 1, a: 1}
   clicked_color: {r: 0.41568628, g: 0.74509805, b: 0.1882353, a: 1}
-  actions:
+  inputs:
   - {fileID: 2767387396969607311, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   - {fileID: -434995693547253189, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   - {fileID: 207262643675311995, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   - {fileID: 2767387396969607311, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
-  - {fileID: 6585834943812993673, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
-  - {fileID: 7469080207358933745, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+  - {fileID: 8033976421120227725, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+  - {fileID: -2859340253327848072, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   slots:
   - {fileID: 6974275375420774355}
   - {fileID: 5091714864540952172}
@@ -233,6 +233,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -321,15 +324,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 0
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 0
   m_isCullingEnabled: 0
@@ -404,6 +409,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -492,15 +500,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 0
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 0
   m_isCullingEnabled: 0

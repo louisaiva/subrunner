@@ -64,7 +64,7 @@ public class HC_Manager : MonoBehaviour
     }
 
     // HC GESTION
-    public void addHC(HC hc)
+    public void RegisterHC(HC hc)
     {
         if (hcs.Contains(hc)) { return; }
 
@@ -83,7 +83,7 @@ public class HC_Manager : MonoBehaviour
         }
     }
 
-    public void delHC(HC hc)
+    public void UnregisterHC(HC hc)
     {
         hcs.Remove(hc);
 

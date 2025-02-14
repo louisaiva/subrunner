@@ -1,6 +1,10 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+
 public interface Interactable
 {
-    void OnInteract();
+    // PlayerInputActions input_actions { get; }
+    void OnInteract() {}
 }
 
 public interface Openable

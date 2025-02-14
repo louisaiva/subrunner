@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class LevelSwitcher : Capable, Interactable
 {
+
+    // inputs actions
+    /*public PlayerInputActions input_actions
+    {
+        get => GameObject.Find("/utils/input_manager").GetComponent<InputManager>().inputs;
+    }*/
+
     [Header("Levels")]
     public List<string> levels_names = new List<string>();
     public int current_level = 0;
@@ -46,6 +53,7 @@ public class LevelSwitcher : Capable, Interactable
 
     public void OnInteract()
     {
+        // if (!input_actions.perso.enabled) { return; }
         elevator_uses++;
         StartCoroutine(switchLevel());
     }

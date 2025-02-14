@@ -30,7 +30,6 @@ public class UI_LifeXPHandler : MonoBehaviour
 
         // on récupère le fill des xp
         xp_fill = transform.Find("xp_fill").gameObject;
-
     }
 
     // Update is called once per frame

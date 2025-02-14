@@ -45,15 +45,15 @@ public class Perso : Being
     private CursorHandler cursor_handler;
     
     
-    [Header("DASH")]
+    // [Header("DASH")]
     // DASH
     // [SerializeField] private float dash_magnitude = 25f;
-    [SerializeField] private float dash_duration = 0.5f;
-    public float last_dash_time = 0f;
+    // [SerializeField] private float dash_duration = 0.5f;
+    // public float last_dash_time = 0f;
     // private List<int> dash_forces = new List<int>();
 
     // global light
-    private GameObject global_light;
+    // private GameObject global_light;
 
 
     [Header("INVENTORY")]
@@ -62,25 +62,26 @@ public class Perso : Being
     public Transform items_parent;
     private LayerMask grabber_layer;
 
-    [Header("UI - MENUS")]
+    // [Header("UI - MENUS")]
     // public SkillTree skills_tree;
     // public UI_Fullmap big_map;
-    public UI_PauseMenu pause_menu;
 
     [Header("INTERACTIONS")]
     // interactions
-    [SerializeField] private float interact_range = 1f;
+    // [SerializeField] private float interact_range = 1f;
     [SerializeField] private LayerMask interact_layers;
     public GameObject current_interactable = null;
 
     // hoover interactions
-    [SerializeField] private GameObject current_hoover_interactable = null;
+    // [SerializeField] private GameObject current_hoover_interactable = null;
 
 
     [Header("INPUTS")]
     [SerializeField] private InputManager input_manager;
     public PlayerInputActions inputs_actions;
     private event System.Action<InputAction.CallbackContext> reviveCallback;
+    private event System.Action<InputAction.CallbackContext> dodgeCallback;
+
 
     // [Header("HINTS")]
     // private UI_HintControlsManager hints_controls;
@@ -130,9 +131,6 @@ public class Perso : Being
         // on récupère la map
         // big_map = GameObject.Find("/ui/fullmap").GetComponent<UI_Fullmap>();
 
-        // on récupère le pause_menu
-        pause_menu = GameObject.Find("/ui/pause_menu").GetComponent<UI_PauseMenu>();
-
         // on récupère le parent des items
         // items_parent = GameObject.Find("/world/sector_2/items").transform;
         items_parent = null;
@@ -180,23 +178,8 @@ public class Perso : Being
     void showWelcome()
     {
         // on affiche un texte de début
-
-        // WELCOME TO
-        /* Vector3 position = transform.position + new Vector3(0, 1f, 0);
-        string text = "welcome to";
-        GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
-        floating_text.GetComponent<FloatingText>().init(text, Color.yellow, 30f, 0.1f, 0.2f, 16f);
-        floating_text.transform.SetParent(floating_dmg_provider.transform); */
         floating_dmg_provider.GetComponent<TextManager>().addFloatingText("WELCOME TO", transform.position + new Vector3(0, 1f, 0), "yellow");
-
-        // SUBRUNNER
-        /* position = transform.position + new Vector3(0, 0.5f, 0);
-        text = "SUBRUNNER";
-        GameObject floating_text2 = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
-        floating_text2.GetComponent<FloatingText>().init(text, Color.green, 30f, 0.1f, 0.2f, 16f);
-        floating_text2.transform.SetParent(floating_dmg_provider.transform); */
         floating_dmg_provider.GetComponent<TextManager>().addFloatingText("SUBRUNNER", transform.position + new Vector3(0, 0.5f, 0), "green");
-
 
         // on affiche la quete 5sec après
         // Invoke("showQuest", 5f);
@@ -232,14 +215,15 @@ public class Perso : Being
         // on récupère les inputs
         input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
         inputs_actions = input_manager.inputs;
-
-        // on active les inputs
         inputs_actions.perso.Enable();
-        inputs_actions.enhanced_perso.Enable();
 
         // on set les callbacks
         reviveCallback = ctx => comeback_from_death();
-        inputs_actions.perso.dodge.performed += ctx => OnDodge();
+        dodgeCallback = ctx => OnDodge();
+        inputs_actions.perso.dodge.performed += dodgeCallback;
+        inputs_actions.perso.attack.performed += ctx => OnAttack();
+        inputs_actions.perso.randomTalk.performed += ctx => OnRandomTalk();
+        // inputs_actions.perso.interact.performed += ctx => OnInteract();
     }
 
     // CAPACITES
@@ -254,10 +238,10 @@ public class Perso : Being
         if (Can("hoover_interact"))
         {
             // todo ici on highlight les objets avec lesquels on peut interagir
-            InteractHooverEvents();
+            // InteractHooverEvents();
 
             // on update les interactions
-            update_interactions();
+            // update_interactions();
         }
 
         // on vérifie qu'on est pas KO
@@ -801,7 +785,7 @@ public class Perso : Being
 
 
     // INTERACTIONS
-    private void InteractHooverEvents()
+    /* private void InteractHooverEvents()
     {
         // on regarde si on peut interagir avec qqch
         // si oui on donne la capacité "interact" au perso
@@ -953,7 +937,7 @@ public class Perso : Being
         }
 
     }
-
+ */
 
 
     // INVENTORY
@@ -1153,7 +1137,7 @@ public class Perso : Being
 
 
     // DRINK
-    private void drink()
+    /* private void drink()
     {
         // on boit la première boisson de notre inventaire
         foreach (Item item in inventory.getItems())
@@ -1175,128 +1159,11 @@ public class Perso : Being
             // on sort de la fonction
             return;
         }
-    }
-
-    // DASH / DODGE
-    private void dash()
-    {
-        // start cooldown
-        Do("dash");
-
-
-        // we check the synchroneity of the dash
-        float dash_tempo = Time.time - last_dash_time;
-        // Debug.Log("dash tempo : " + (dash_tempo));
-        last_dash_time = Time.time;
-
-        /* if (dash_tempo > 0.65f && dash_tempo < 0.95f)
-        {
-            // on est dans le tempo !
-            dash_magnitude = 64f;
-            dash_duration = 0.5f;
-        }
-        else
-        {
-            // on revient à la normale
-            dash_magnitude = 32f;
-            dash_duration = 0.25f;
-        } */
-
-        
-
-
-        // on fait un dash dans la direction du look_at du being
-        // float ajout = 0f;
-
-
-        // on clamp les inputs dans l'une des 4 directions
-        Vector2Int dash_direction = new Vector2Int(0, 0);
-        if (Mathf.Abs(Orientation.x) > Mathf.Abs(Orientation.y))
-        {
-            dash_direction.x = Orientation.x > 0f ? 1 : -1;
-        }
-        else
-        {
-            dash_direction.y = Orientation.y > 0f ? 1 : -1;
-        }
-
-
-
-
-        /* anim_handler.StopForcing();
-        if (new List<Vector2Int>() { new Vector2Int(1, 0), new Vector2Int(-1, 0) }.Contains(dash_direction))
-        {
-            anim_handler.ChangeAnimTilEnd(((PersoAnims) anims).dash_side);
-        }
-        else if (dash_direction.y > 0)
-        {
-            anim_handler.ChangeAnimTilEnd(((PersoAnims) anims).dash_up);
-        }
-        else
-        {
-            anim_handler.ChangeAnimTilEnd(((PersoAnims) anims).dash_down);
-        } */
-
-
-
-        // on se met invicible
-        // beInvicible(dash_duration);
-        // beGhost(dash_duration);
-
-        // on permet d'orienter le dash
-        // addCapacity("dash_orientable");
-        // addEphemeralCapacity("invicible", dash_duration);
-        AddEffect(Effect.Invincible, dash_duration);
-        // addEphemeralCapacity("ghost", dash_duration);
-        // addEphemeralCapacity("dashin", 0.6f*dash_duration);
-
-        // on fait le dash
-        // Force dash_force = new Force(dash_direction, dash_magnitude);
-        // AddForce(dash_force);
-        // forces.Add(dash_force);
-        // dash_forces.Add(dash_force.id);
-    }
-    /* private void orient_dash()
-    {
-        // on clamp les inputs dans l'une des 4 directions
-        Vector2Int dash_direction = new Vector2Int(0, 0);
-        if (Mathf.Abs(inputs.x) > Mathf.Abs(inputs.y))
-        {
-            dash_direction.x = inputs.x > 0f ? 1 : -1;
-        }
-        else
-        {
-            dash_direction.y = inputs.y > 0f ? 1 : -1;
-        }
-
-        // on récupère toutes les forces de dash encore actives
-        List<Force> forces = getForces(dash_forces);
-
-        // on oriente la force de dash
-        foreach (Force force in forces)
-        {
-            force.direction = dash_direction;
-        }
-
-        // on change l'animation du perso
-        anim_handler.StopForcing();
-        if (new List<Vector2Int>() { new Vector2Int(1, 0), new Vector2Int(-1, 0) }.Contains(dash_direction))
-        {
-            anim_handler.ChangeAnimTilEnd(((PersoAnims)anims).dash_side);
-        }
-        else if (dash_direction.y > 0)
-        {
-            anim_handler.ChangeAnimTilEnd(((PersoAnims)anims).dash_up);
-        }
-        else
-        {
-            anim_handler.ChangeAnimTilEnd(((PersoAnims)anims).dash_down);
-        }
     } */
-
+  
 
     // INPUTS
-    public void OnUseConso()
+    /* public void OnUseConso()
     {
         if (Can("drink") && !HasEffect(Effect.Stunned))
         {
@@ -1311,7 +1178,7 @@ public class Perso : Being
         {
             interact();
         }
-    }
+    } */
     public void OnInventory()
     {
         if (HasEffect(Effect.Stunned)) { return; }
@@ -1332,21 +1199,13 @@ public class Perso : Being
             }
         } */
     }
-    public void OnHit()
+    public void OnAttack()
     {
+        // if (!inputs_actions.perso.enabled) { return; }
+
         if (Can("attack") && !HasEffect(Effect.Stunned))
         {
             Do("attack");
-        }
-    }
-    public void OnDash()
-    {
-        if (!HasEffect(Effect.Stunned))
-        {
-            if (Can("dash"))
-            {
-                dash();
-            }
         }
     }
     public void OnRandomTalk()
@@ -1356,23 +1215,13 @@ public class Perso : Being
             Do("talk");
         }
     }
-    public void OnMap()
-    {
-        /* if (!HasEffect(Effect.Stunned))
-        {
-            if (Can("gyroscope"))
-            {
-                big_map.rollShow();
-            }
-        } */
-    }
-    /* public void OnPause()
-    {
-        // pause_menu.rollShow();
-    } */
-
     private void OnDodge()
     {
+        // on vérifie que l'input action map est activé
+        // if (!inputs_actions.perso.enabled) { return; }
+
+        // Debug.Log("DODGE : input_action enabled ?"+inputs_actions.perso.enabled);
+
         // on vérifie que le perso peut dodge
         if (!Can("dodge")) { return; }
         Do("dodge");

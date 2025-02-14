@@ -36,6 +36,9 @@ public class UI_XboxNavigator : MonoBehaviour
     private event Action<InputAction.CallbackContext> navigateCallback;
     private event Action<InputAction.CallbackContext> activateCallback;
 
+    [Header("Debug")]
+    public bool debug = false;
+
 
     // unity functions
     protected void Start()
@@ -53,14 +56,18 @@ public class UI_XboxNavigator : MonoBehaviour
         inputs.UI.navigate.performed += navigateCallback;
         inputs.UI.activate.performed += activateCallback;
 
+        // on active les inputs
+        // inputs.UI.Enable();
+
+        if (debug) { Debug.Log("(XboxNavigator) enabling slotabble. inputs.UI are :" + inputs.UI.enabled); }
+
         // on désactive les perso inputs
-        inputs.enhanced_perso.Disable();
+        inputs.perso.Disable();
 
         // on récupère les slots & tresholds
         this.slottable = slottable;
         resetNavigation();
 
-        // Debug.Log("enable with current_slot_index : " + current_slot_index);
     }
 
     public void disable()
@@ -72,13 +79,12 @@ public class UI_XboxNavigator : MonoBehaviour
         inputs.UI.activate.performed -= activateCallback;
 
         // on active les perso inputs
-        inputs.enhanced_perso.Enable();
+        inputs.perso.Enable();
 
         // on désactive le slot
         if (current_slot_index != -1)
         {
             // Debug.Log("disable with current_slot_index : " + current_slot_index);
-
             slots[current_slot_index].GetComponent<I_UI_Slot>().OnPointerExit(null);
         }
 
@@ -116,6 +122,8 @@ public class UI_XboxNavigator : MonoBehaviour
     // main functions
     public void navigate(Vector2 direction)
     {
+        if (debug) { Debug.Log("(XboxNavigator) navigating : " + direction); }
+
         // on vérifie que l'on peut naviguer
         if (direction == Vector2.zero || slottable == null)
         {
@@ -177,7 +185,7 @@ public class UI_XboxNavigator : MonoBehaviour
         }
         if (slots_in_angle.Count == 0) {return;}
 
-        // string s = "SLOTS: \n\n";
+        string s = "SLOTS: \n\n";
 
         // on récupère le slot le plus proche
         int next_index = -1;
@@ -189,7 +197,7 @@ public class UI_XboxNavigator : MonoBehaviour
             float angle = Vector2.Angle(direction, (slot_position - current_slot_position).normalized);
             float distance = Vector2.Distance(current_slot_position, slot_position - direction * angle_multiplicator);
 
-            // s += slot.name + " : " + slot_position + " / angle : " + angle + " /  distance : " + distance + "\n";
+            s += slot.name + " : " + slot_position + " / angle : " + angle + " /  distance : " + distance + "\n";
 
             if (distance < closest_distance)
             {
@@ -200,6 +208,7 @@ public class UI_XboxNavigator : MonoBehaviour
         if (next_index == -1) {return;}
 
         // print(s);
+        if (debug) { Debug.Log("(XboxNavigator) navigation slots : " + s); }
 
 
         // on met à jour l'affichage
