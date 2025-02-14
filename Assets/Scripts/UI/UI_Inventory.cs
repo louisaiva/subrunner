@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.InputSystem;
 
 public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 {
@@ -83,10 +84,25 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         // on récupère l'input_manager
         input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
 
+        // on définit le callback
+        define_callback();
+
         // on cache l'inventaire
         hide();
     }
-    
+
+    // CALLBACK
+    private System.Action<InputAction.CallbackContext> cancel_callback;
+    public System.Action<InputAction.CallbackContext> CancelCallback { get { return cancel_callback; } }
+
+    // CALLBACK
+    public void define_callback()
+    {
+        // we set the cancel callback
+        cancel_callback = ctx => hide();
+    }
+
+
     // SHOWING
     public void show()
     {

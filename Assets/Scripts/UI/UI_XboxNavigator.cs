@@ -217,12 +217,12 @@ public class UI_XboxNavigator : MonoBehaviour
             slots[current_slot_index].GetComponent<I_UI_Slot>().OnPointerExit(null);
 
             // on enlève le callback
-            inputs.UI.activate.performed -= slots[current_slot_index].GetComponent<I_UI_Slot>().Activate_callback;
+            inputs.UI.activate.performed -= slots[current_slot_index].GetComponent<I_UI_Slot>().ActivateCallback;
         }
         slots[next_index].GetComponent<I_UI_Slot>().OnPointerEnter(null);
 
         // on ajoute le callback
-        inputs.UI.activate.performed += slots[next_index].GetComponent<I_UI_Slot>().Activate_callback;
+        inputs.UI.activate.performed += slots[next_index].GetComponent<I_UI_Slot>().ActivateCallback;
         
         // on met à jour l'index
         current_slot_index = next_index;

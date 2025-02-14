@@ -7,21 +7,19 @@ using UnityEngine.UI;
 public class UI_Item : MonoBehaviour, I_UI_Slot
 {
 
- 
-    // hoover
-    public bool is_hoovered { get; set; }
 
-    public Action<InputAction.CallbackContext> Activate_callback
+    // callback
+    private System.Action<InputAction.CallbackContext> activateCallback;
+    public System.Action<InputAction.CallbackContext> ActivateCallback
     {
         get
         {
-            return ctx => 
-            {
-                OnPointerClick(null);
-                Debug.Log("UI_Item : Activate_callback !! Should we navigate to closest with Xbox Navigator ??");
-            };
+            return activateCallback;
         }
     }
+
+    // hoover
+    public bool is_hoovered { get; set; }
 
     public GameObject description_ui;
 
@@ -46,6 +44,13 @@ public class UI_Item : MonoBehaviour, I_UI_Slot
         Sprite[] sprites = Resources.LoadAll<Sprite>("spritesheets/item_slots");
         base_sprite = sprites[0];
         hoover_sprite = sprites[1];
+
+        // define the callback
+        activateCallback = ctx =>
+        {
+            OnPointerClick(null);
+            Debug.Log("UI_Item : ActivateCallback !! Should we navigate to closest with Xbox Navigator ??");
+        };
     }
 
     // main functions

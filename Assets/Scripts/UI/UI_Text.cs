@@ -8,11 +8,12 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
 {
 
     // callback
-    public System.Action<InputAction.CallbackContext> Activate_callback
+    private System.Action<InputAction.CallbackContext> activateCallback;
+    public System.Action<InputAction.CallbackContext> ActivateCallback
     {
         get
         {
-            return ctx => OnPointerClick(null);
+            return activateCallback;
         }
     }
     // hoover
@@ -33,6 +34,9 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
         // on récupère le tmp
         tmp = GetComponent<TextMeshProUGUI>();
         base_text = tmp.text;
+
+        // on met à jour le callback
+        activateCallback = ctx => OnPointerClick(null);
     }
 
 

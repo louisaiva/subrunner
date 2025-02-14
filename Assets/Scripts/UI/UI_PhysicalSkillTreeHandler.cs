@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine.InputSystem;
 
 public class UI_PhysicalSkillTreeHandler : MonoBehaviour, I_UI_Slottable
 {
@@ -32,6 +33,11 @@ public class UI_PhysicalSkillTreeHandler : MonoBehaviour, I_UI_Slottable
 
         perso_level_label = transform.Find("level").gameObject;
     }
+
+    // CALLBACK (we don't need it)
+    public System.Action<InputAction.CallbackContext> CancelCallback { get { return ctx => {}; } }
+    public void define_callback() { }
+
 
     void Update()
     {

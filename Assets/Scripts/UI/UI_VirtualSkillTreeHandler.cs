@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine.InputSystem;
 
 public class UI_VirtualSkillTreeHandler : MonoBehaviour, I_UI_Slottable
 {
@@ -16,6 +17,10 @@ public class UI_VirtualSkillTreeHandler : MonoBehaviour, I_UI_Slottable
     private GameObject points_to_spend_label;
 
     private GameObject perso_level_label;
+
+    // CALLBACK (we don't need it)
+    public System.Action<InputAction.CallbackContext> CancelCallback { get { return ctx => { }; } }
+    public void define_callback() { }
 
     // unity functions
     void Start()

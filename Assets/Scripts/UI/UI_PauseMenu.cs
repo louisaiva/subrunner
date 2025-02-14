@@ -8,11 +8,15 @@ using UnityEngine.InputSystem;
 
 public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
 {
-    private Transform text_slots;
-    private Transform black;
-    private Transform joy_f;
-    private Transform pad_f;
-    private bool is_showed = false;
+
+    private UI_Manager manager;
+    
+    [Header("UI elements")]
+    [SerializeField] private Transform text_slots;
+    [SerializeField] private Transform black;
+    [SerializeField] private Transform joy_f;
+    [SerializeField] private Transform pad_f;
+    [SerializeField] private bool is_showed = false;
 
     [Header("Slottable")]
     [SerializeField] private Vector2 base_position = new Vector2(0, 10000);
@@ -24,8 +28,15 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
     private InputAction roll_action;
     [SerializeField] private UI_XboxNavigator xbox_manager;
     [SerializeField] private InputManager input_manager;
-    // private UI_MainUI main_ui;
-    private UI_Manager manager;
+    // callback
+    private System.Action<InputAction.CallbackContext> cancel_callback;
+    public System.Action<InputAction.CallbackContext> CancelCallback
+    {
+        get
+        {
+            return cancel_callback;
+        }
+    }
 
     [Header("Debug")]
     public bool debug = false;
@@ -51,14 +62,14 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
         input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
 
         // on ajoute les listeners
-        defineCallback();
+        define_callback();
 
         // on cache l'inventaire
         hide();
     }
 
     // CALLBACK
-    private void defineCallback()
+    public void define_callback()
     {
         // we define the hide action callback
         // pause_hide_callback = ctx => hide();
@@ -77,6 +88,9 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
 
         // we set the show callback
         roll_action.performed += ctx => rollShow();
+
+        // we set the cancel callback
+        cancel_callback = ctx => hide();
     }
 
     // SHOWING
@@ -97,11 +111,15 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
         joy_f.gameObject.SetActive(true);
         pad_f.gameObject.SetActive(true);
 
+        // on set le cancel callback
+        input_manager.inputs.UI.cancel.performed += cancel_callback;
+
         // on active le xbox_manager
         if (input_manager.isUsingGamepad()) { xbox_manager.enable(this); }
 
         // on arrête le temps
         Time.timeScale = 0;
+
     }
 
     public void hide()
@@ -117,6 +135,8 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
         joy_f.gameObject.SetActive(false);
         pad_f.gameObject.SetActive(false);
 
+        // on deset le cancel callback
+        input_manager.inputs.UI.cancel.performed -= cancel_callback;
 
         // on désactive le xbox_manager
         xbox_manager.disable();

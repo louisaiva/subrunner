@@ -120,13 +120,7 @@ public class UI_Manager : MonoBehaviour
 
         // on désactive les inputs du joueur si c'est pas le hud
         if (pool_name == "hud") { inputs.perso.Enable(); }
-        else
-        {
-            Debug.Log("perso enabled? " + inputs.perso.enabled);
-            inputs.perso.Disable();
-            Debug.Log("perso enabled after disable? " + inputs.perso.enabled);
-        }
-
+        else { inputs.perso.Disable(); }
 
         // on met à jour le pool courant
         current_pool = pool_name;
