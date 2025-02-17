@@ -57,6 +57,19 @@ public class HoverCapacity : Capacity
             interactAction.performed -= interactCallback;
             if (debug) { Debug.Log("(HoverCapacity) " + name + " removed callback OnInteract() on " + capable.name); }
         }
+
+        // we check if the capable is a Chest, and if its opened than we close it
+        // we force (dont check the Can()) it so even if it is still opening it will close
+
+        if (capable is Chest /* && capable.Can("close") */)
+        {
+            Chest chest = capable as Chest;
+            if (chest.is_open && !chest.is_moving || chest.is_moving)
+            {
+                if (debug) { Debug.Log("(HoverCapacity) " + name + " called close() on the chest " + capable.name); }
+                chest.Do("close");
+            }
+        }
     }
 
     // TRIGGER ENTER

@@ -22,6 +22,9 @@ public class OpenCapacity : Capacity
     [Header("Open parameters")]
     public float opening_duration = 0.5f;
 
+    [Header("Sibling Close Capacity")]
+    public CloseCapacity close_capacity;
+
     // USE
     public override void Use(Capable capable)
     {
@@ -32,6 +35,9 @@ public class OpenCapacity : Capacity
     // OPENING
     protected virtual void open()
     {
+        // on supprime les invokes de l'ouverture si il y en a
+        close_capacity?.CancelCloseInvoke();
+
         // on ouvre le coffre
         (capable as Openable).is_moving = true;
 
@@ -68,5 +74,13 @@ public class OpenCapacity : Capacity
         }
 
         if (debug) { Debug.Log(capable.name + " is open !"); }
+    }
+
+
+    // CancelInvoke
+    public void CancelOpenInvoke()
+    {
+        if (debug) { Debug.Log("(OpenCapacity) " + capable.name + " CancelInvoke success_open"); }
+        CancelInvoke("success_open");
     }
 }

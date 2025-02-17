@@ -19,8 +19,11 @@ public class CloseCapacity : Capacity
         }
     }
 
-    [Header("Open parameters")]
-    public float opening_duration = 0.5f;
+    [Header("Close parameters")]
+    public float closing_duration = 0.5f;
+
+    [Header("Sibling Open Capacity")]
+    public OpenCapacity open_capacity;
 
     // USE
     public override void Use(Capable capable)
@@ -32,13 +35,16 @@ public class CloseCapacity : Capacity
     // OPENING
     protected virtual void close()
     {
+        // on supprime les invokes de l'ouverture si il y en a
+        open_capacity?.CancelOpenInvoke();
+
         // on ouvre le coffre
         (capable as Openable).is_moving = true;
 
         // on joue l'animation
         capable.anim_player.StopPlaying("idle_open");
-        capable.anim_player.Play("close",priority_override:3,duration_override: opening_duration);
-        Invoke("success_close", opening_duration);
+        capable.anim_player.Play("close",priority_override:3,duration_override: closing_duration);
+        Invoke("success_close", closing_duration);
 
         // on fait les vérifications pour les portes
         if (capable is Door)
@@ -67,5 +73,13 @@ public class CloseCapacity : Capacity
         }
                                                         
         if (debug) { Debug.Log(capable.name + " is closed !"); }
+    }
+
+
+    // CancelInvoke
+    public void CancelCloseInvoke()
+    {
+        if (debug) { Debug.Log("(CloseCapacity) " + capable.name + " CancelInvoke success_close"); }
+        CancelInvoke("success_close");
     }
 }
