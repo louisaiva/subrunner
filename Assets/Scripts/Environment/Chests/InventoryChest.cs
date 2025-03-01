@@ -7,12 +7,12 @@ using System.Collections.Generic;
 public class InventoryChest : OldChest, I_Grabber
 { 
     // inventory
-    [Header("INVENTORY CHEST")]
+    /* [Header("INVENTORY CHEST")]
     public ItemBank bank;
     public Transform go_parent;
-    [SerializeField] protected List<Item> items = new List<Item>();
+    [SerializeField] protected List<OldItem> items = new List<OldItem>();
     [SerializeField] protected bool randomize_on_start = true;
-    [SerializeField] protected string randomize_cat = "all";
+    [SerializeField] protected string randomize_cat = "all"; */
     // [SerializeField] protected Vector2 drop_direction = new Vector2(0, -1);
 
 
@@ -30,14 +30,14 @@ public class InventoryChest : OldChest, I_Grabber
     // unity functions
     protected void Start()
     {
-        bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
+        /* bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
 
         // on récupère le parent
         go_parent = transform.Find("items");
 
         // on récupère les items
-        items = new List<Item>(go_parent.GetComponentsInChildren<Item>());
-        if (randomize_on_start) { randomize(); }
+        items = new List<OldItem>(go_parent.GetComponentsInChildren<OldItem>());
+        if (randomize_on_start) { randomize(); } */
         items_layer = LayerMask.GetMask("Items");
     }
 
@@ -69,24 +69,24 @@ public class InventoryChest : OldChest, I_Grabber
 
     public void grab(GameObject target)
     {
-        if (!target.GetComponent<Item>()) { return; }
+        if (!target.GetComponent<OldItem>()) { return; }
 
         // Debug.Log("grab " + target.name + " in " + gameObject.name + " & applied setactive : " + target.activeSelf);
         
         // on récupère l'item
-        grab(target.GetComponent<Item>());
+        grab(target.GetComponent<OldItem>());
     }
 
     protected void dropItems()
     {
-        int nb_items = items.Count;
+        /* int nb_items = items.Count;
         // float base_angle = drop_angle_base ;
         for (int i = 0; i < nb_items; i++)
         {
             // angles.Add();
 
             // on récupère un item
-            Item item = items[0];
+            OldItem item = items[0];
 
             // on drop sur le sol avec une force dans une direction aléatoire
             // item.transform.SetParent(transform);
@@ -108,19 +108,19 @@ public class InventoryChest : OldChest, I_Grabber
 
             // on supprime l'item de l'inventaire
             items.Remove(item);
-        }
+        } */
     }
 
     protected void attractItems()
     {
-        // on récupère tous les items dans un range
+        /* // on récupère tous les items dans un range
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, grab_range, items_layer);
 
         // on les grab
         foreach (Collider2D collider in colliders)
         {
-            if (collider.GetComponent<Item>() == null) { continue; }
-            if (items.Contains(collider.GetComponent<Item>())) { continue; }
+            if (collider.GetComponent<OldItem>() == null) { continue; }
+            if (items.Contains(collider.GetComponent<OldItem>())) { continue; }
 
             grab(collider.gameObject);
         }
@@ -131,10 +131,10 @@ public class InventoryChest : OldChest, I_Grabber
         // on applique une force à ces items
         foreach (Collider2D collider in attract_colliders)
         {
-            if (collider.GetComponent<Item>() == null) { continue; }
-            if (items.Contains(collider.GetComponent<Item>())) { continue; }
+            if (collider.GetComponent<OldItem>() == null) { continue; }
+            if (items.Contains(collider.GetComponent<OldItem>())) { continue; }
 
-            Item item = collider.GetComponent<Item>();
+            OldItem item = collider.GetComponent<OldItem>();
             if (item == null) { continue; }
 
             // on calcule la force
@@ -145,33 +145,33 @@ public class InventoryChest : OldChest, I_Grabber
 
             // on applique la force
             // item.AddForce(new Force(direction, force));
-        }
+        } */
     }
 
 
     // INVENTORY FUNCTIONS
     public void randomize()
     {
-        int max_items = Random.Range(1, 5);
+        /* int max_items = Random.Range(1, 5);
 
         // on ajoute des items random
         for (int i = 0; i < max_items; i++)
         {
             // on récupère un prefab random
-            Item item = bank.getRandomItem(randomize_cat);
+            OldItem item = bank.getRandomItem(randomize_cat);
 
             // on ajoute l'item
             grab(item);
-        }
+        } */
     }
 
-    public void grab(Item item)
+    public void grab(OldItem item)
     {
         // on vérifie si on a affaire à un item déjà instancié ou pas
         if (item.gameObject.scene.name == null)
         {
             // on instancie l'item
-            item = Instantiate(item, transform.position, Quaternion.identity) as Item;
+            item = Instantiate(item, transform.position, Quaternion.identity) as OldItem;
 
             // on met le zoom à 0.5
             item.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
@@ -181,11 +181,11 @@ public class InventoryChest : OldChest, I_Grabber
         item.ClearForces();
         
         // on désactive l'item
-        item.transform.SetParent(go_parent);
+        // item.transform.SetParent(go_parent);
         item.gameObject.SetActive(false);
 
         // on ajoute l'item à l'inventaire
-        items.Add(item);
+        // items.Add(item);
     }
 }
 

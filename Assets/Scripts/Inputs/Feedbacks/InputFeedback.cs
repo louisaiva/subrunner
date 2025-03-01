@@ -37,7 +37,7 @@ public class InputFeedback : MonoBehaviour
         }
 
         // we get the sprite bank
-        bank = GameObject.Find("/utils/bank").GetComponent<SpriteBank>();
+        // bank = GameObject.Find("/utils/bank").GetComponent<SpriteBank>();
 
         // we get the input manager
         input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
@@ -59,6 +59,11 @@ public class InputFeedback : MonoBehaviour
     private void OnEnable()
     {
         if (action == null) { return; }
+        if (bank == null)
+        {
+            bank = GameObject.Find("/utils/bank").GetComponent<SpriteBank>();
+            if (debug) { Debug.Log("(IF) SpriteBank loaded : SpriteBank == " + bank); }
+        }
         // we add the listeners
         action.performed += input_callback;
         action.canceled += reset_callback;

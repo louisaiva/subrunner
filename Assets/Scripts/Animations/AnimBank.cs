@@ -41,6 +41,9 @@ public class AnimBank : MonoBehaviour
     public string spritesheets_path = "spritesheets/";
 
 
+    [Header("Debug")]
+    public bool debug = false;
+    public bool debug_LAFAC = false;
 
     // INITIALIZATION
     private void Awake()
@@ -61,11 +64,11 @@ public class AnimBank : MonoBehaviour
                 FileUtil.DeleteFileOrDirectory("Assets/Resources/" + jsons_path);
                 Directory.CreateDirectory("Assets/Resources/" + jsons_path);
 
-                Debug.Log("(AnimBank - LoadAnims) Extracting animations from AnimationClips and saving them as .json files.");
+                if (debug) {Debug.Log("(AnimBank - LoadAnims) Extracting animations from AnimationClips and saving them as .json files.");}
 
                 // if in the editor, we load AnimationClips and store them as .json files
                 string[] anims_paths = Directory.GetFiles("Assets/Resources/" + anims_path, "*.anim", SearchOption.AllDirectories);
-                Debug.Log("(AnimBank - LoadAnims) Found " + anims_paths.Length + " animations :\n\t" + string.Join("\n\t", anims_paths));
+                if (debug) {Debug.Log("(AnimBank - LoadAnims) Found " + anims_paths.Length + " animations :\n\t" + string.Join("\n\t", anims_paths));}
                 foreach (string path in anims_paths)
                 {
                     // we remove Assets/Resources/anims/ from the path
@@ -78,7 +81,7 @@ public class AnimBank : MonoBehaviour
             #endif
         }
 
-        Debug.Log("(AnimBank - LoadAnims) Loading animations from .json files.");
+        if (debug) {Debug.Log("(AnimBank - LoadAnims) Loading animations from .json files.");}
 
         // if in the build or not extracting from .anim, we load .json files
         TextAsset[] jsons = Resources.LoadAll<TextAsset>(jsons_path);
@@ -88,7 +91,7 @@ public class AnimBank : MonoBehaviour
             json_paths[i] = jsons[i].name;
         }
 
-        Debug.Log("(AnimBank - LoadAnims) Found " + json_paths.Length + " jsons :\n\t" + string.Join("\n\t", json_paths));
+        if (debug) {Debug.Log("(AnimBank - LoadAnims) Found " + json_paths.Length + " jsons :\n\t" + string.Join("\n\t", json_paths));}
         foreach (string path in json_paths)
         {
             // we remove Assets/Resources/anims/ from the path
@@ -129,7 +132,7 @@ public class AnimBank : MonoBehaviour
         // AND THEN EXTRACT THE DATA AND SAVE IT AS A JSON FILE
         // only works in the editor
 
-        Debug.Log("(AnimBank - LAFAC) Loading animation from AnimationClip : " + path);
+        if (debug_LAFAC) {Debug.Log("(AnimBank - LAFAC) Loading animation from AnimationClip : " + path);}
 
         // on charge l'animation depuis le path
         AnimationClip clip = Resources.Load<AnimationClip>("animations/" + path /* + ".anim" */);
@@ -144,7 +147,7 @@ public class AnimBank : MonoBehaviour
         if (anim == null) { return; }
         if (!anim.IsNameCorrect(anim.name))
         {
-            Debug.LogWarning("(AnimBank - LAFAC) Animation name format is incorrect : " + anim.name);
+            if (debug_LAFAC) {Debug.LogWarning("(AnimBank - LAFAC) Animation name format is incorrect : " + anim.name);}
             return;
         }
 
@@ -171,7 +174,7 @@ public class AnimBank : MonoBehaviour
         }
 
         // si on arrive ici c'est qu'on a pas trouvé de sprite curve
-        Debug.LogWarning("(AnimBank - ExtractDataFromAnimationClip) No sprite curve found in the animation clip.");
+        if (debug_LAFAC) {Debug.LogWarning("(AnimBank - ExtractDataFromAnimationClip) No sprite curve found in the animation clip.");}
         return null;
     }
     private Anim extractSpriteCurve(AnimationClip clip, EditorCurveBinding binding)
@@ -193,7 +196,7 @@ public class AnimBank : MonoBehaviour
             Sprite sprite = spriteCurve[i].value as Sprite;
             if (sprite == null)
             {
-                Debug.LogWarning("(AnimBank - ExtractSpriteCurve) Sprite not found in the animation clip. Skipping Anim : " + clip.name);
+                if (debug_LAFAC) {Debug.LogWarning("(AnimBank - ExtractSpriteCurve) Sprite not found in the animation clip. Skipping Anim : " + clip.name);}
                 return null;
             }
             string spritePath = AssetDatabase.GetAssetPath(sprite).Replace(".png","").Replace("Assets/Resources/" + spritesheets_path, "");
@@ -221,7 +224,7 @@ public class AnimBank : MonoBehaviour
         // check if the animation already exists
         if (HasAnim(anim.name))
         {
-            Debug.LogWarning("(AnimBank - AddAnim) Animation already exists in the bank : " + anim.name);
+            if (debug) {Debug.LogWarning("(AnimBank - AddAnim) Animation already exists in the bank : " + anim.name);}
             return;
         }
         
@@ -299,7 +302,7 @@ public class AnimBank : MonoBehaviour
             return anims[skin].Values.ToList()[0][0];
         }
         
-        Debug.LogWarning("(AnimBank - GetAnim) Animation not found in the bank : " + name);
+        if (debug) {Debug.LogWarning("(AnimBank - GetAnim) Animation not found in the bank : " + name);}
         return null;
     }
     public bool HasAnim(string name)

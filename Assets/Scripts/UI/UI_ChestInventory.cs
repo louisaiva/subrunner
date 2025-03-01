@@ -1,25 +1,14 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using UnityEngine.InputSystem;
 
 public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
 {
 
     // CALLBACK
-    private System.Action<InputAction.CallbackContext> cancel_callback;
-    public System.Action<InputAction.CallbackContext> CancelCallback { get { return cancel_callback; } }
-
-    // CALLBACK
-    public void define_callback()
-    {
-        // we set the cancel callback
-        cancel_callback = ctx => hide();
-    }
-
+    public System.Action<InputAction.CallbackContext> CancelCallback { get { return ctx => {}; } }
 
     // PERSO
     public GameObject perso;
@@ -31,7 +20,7 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
     // ITEMS
     [SerializeField] private int max_items = 4;
     protected GameObject slot;
-    protected Dictionary<Item, GameObject> item_ui = new Dictionary<Item, GameObject>();
+    protected Dictionary<OldItem, GameObject> item_ui = new Dictionary<OldItem, GameObject>();
     protected GameObject ui_item_prefab;
     public ItemBank bank;
 
@@ -68,9 +57,6 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
 
         // on récupère l'input_manager
         input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
-
-        // on définit le callback
-        define_callback();
 
         // on cache l'inventaire
         hide();
@@ -124,7 +110,7 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
 
 
     // ITEMS
-    public bool grabItem(Item item)
+    public bool grabItem(OldItem item)
     {
         // on vérifie si on a déjà un item de ce type
         if (item_ui.ContainsKey(item)) { return false; }
@@ -154,13 +140,13 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
         return true;
     }
 
-    public void dropItem(Item item)
+    public void dropItem(OldItem item)
     {
         // on vérifie si on a déjà un item de ce type
         if (!item_ui.ContainsKey(item)) { return; }
 
         // si on est un coffre, on drop l'item dans le perso
-        perso.GetComponent<Perso>().grab(item);
+        // perso.GetComponent<Perso>().grab(item);
 
         // on récupère le ui_item
         GameObject ui_item = item_ui[item];
@@ -176,7 +162,7 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
     private void resetAllSlotsHoover()
     {
         // on reset le hoover de tous les slots
-        foreach (KeyValuePair<Item, GameObject> entry in item_ui)
+        foreach (KeyValuePair<OldItem, GameObject> entry in item_ui)
         {
             entry.Value.GetComponent<UI_Item>().resetHoover();
         }
@@ -212,7 +198,7 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
 
         return slots;
     }
-    public void clickOnItem(Item item)
+    public void clickOnItem(OldItem item)
     {
         dropItem(item);
     }
@@ -220,7 +206,7 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
 
 
     // GETTERS
-    public List<Item> getItems()
+    public List<OldItem> getItems()
     {
         // on récupère les items
         return item_ui.Keys.ToList();

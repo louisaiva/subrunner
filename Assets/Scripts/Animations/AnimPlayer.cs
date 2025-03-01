@@ -156,13 +156,13 @@ public class AnimPlayer : MonoBehaviour
         if (priority_override != null)
         {
             priority = (int) priority_override;
-            Debug.Log("The capacity " + capacity + " has a priority override: " + priority);
+            if (debug) {Debug.Log("(AnimPlayer - Play) The capacity " + capacity + " has a priority override: " + priority);}
             capacity_priorities[capacity] = priority;
         }
         else if (priority_override == null && capacity_priorities.ContainsKey(capacity)) { priority = capacity_priorities[capacity]; }
         else
         {
-            Debug.LogWarning("The capacity " + capacity + " doesn't exist in the capacity_priorities dictionnary. Priority 1 applied by default");
+            if (debug) {Debug.Log("(AnimPlayer - Play) The capacity " + capacity + " doesn't exist in the capacity_priorities dictionnary. Priority 1 applied by default");}
             capacity_priorities[capacity] = priority;
         }
 
@@ -174,7 +174,7 @@ public class AnimPlayer : MonoBehaviour
             Anim anim = bank.GetAnim(anim_name);
             if (anim == null)
             {
-                if (debug) { Debug.Log("(AnimPlayer) could not Play() : " + anim_name + " no contact with bank"); }
+                if (debug) { Debug.Log("(AnimPlayer - Play) could not Play() : " + anim_name + " no contact with bank"); }
                 return null;
             }
 
@@ -206,7 +206,7 @@ public class AnimPlayer : MonoBehaviour
 
         // we add the animation to the pile
         anim_pile[priority] = capacity;
-        if (debug) {Debug.Log("Adding " + capacity + " to the pile at priority " + priority);}
+        if (debug) {Debug.LogWarning("(AnimPlayer - Play) Adding " + capacity + " to the pile at priority " + priority);}
 
         // we didn't play the animation so we return null
         return null;
@@ -223,10 +223,10 @@ public class AnimPlayer : MonoBehaviour
             Anim anim = bank.GetAnim(skin + "." + anim_pile[i] + "." + orientation);
             if (anim == null)
             {
-                Debug.LogWarning("The animation " + skin + "." + anim_pile[i] + "." + orientation + " doesn't exist in the bank");
+                if (debug) {Debug.LogWarning("(AnimPlayer - playFromPile) No animation " + skin + "." + anim_pile[i] + "." + orientation + " found to play in the bank");}
                 continue;
             }
-            if (debug) {Debug.Log("Found an animation to play: " + anim.name + " for capacity " + anim_pile[i]);}
+            if (debug) {Debug.Log("(AnimPlayer - playFromPile) Found an animation to play: " + anim.name + " for capacity " + anim_pile[i]);}
 
             // we set the current capacity
             current_capacity = anim_pile[i];
@@ -257,7 +257,7 @@ public class AnimPlayer : MonoBehaviour
         if (anim.flipX && !sr.flipX) { sr.flipX = true; }
         else if (!anim.flipX && sr.flipX) { sr.flipX = false; }
 
-        if (debug) {Debug.Log("Playing " + anim.name + " at frame " + frame + " flipX: " + anim.flipX);}
+        if (debug) {Debug.Log("(AnimPlayer) Playing " + anim.name + " at frame " + frame + " flipX: " + anim.flipX);}
     }
 
     // STOP ANIMATION
@@ -292,7 +292,7 @@ public class AnimPlayer : MonoBehaviour
             if (anim_pile[i] == capacity)
             {
                 anim_pile[i] = "";
-                if (debug) { Debug.Log("Removing " + capacity + " from the pile"); }
+                if (debug) { Debug.Log("(AnimPlayer) Removing " + capacity + " from the pile"); }
                 return;
             }
         }

@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+/// <summary>
+/// Mother class of all the Capables in the game.
+/// A Capable is a gameObject that can have Capacities.
+/// Each Capacity is linked to an animation.
+/// So every animated element in the game is a Capable.
+/// </summary>
+[RequireComponent(typeof(AnimPlayer))]
 public class Capable : MonoBehaviour
 {
     // un Capable est un gameObject qui possède des capacités
@@ -245,6 +252,17 @@ public class Capable : MonoBehaviour
             if (capacity.name == name)
             {
                 return capacity;
+            }
+        }
+        return null;
+    }
+    public T GetCapacity<T>() where T : Capacity
+    {
+        foreach (Capacity capacity in capacities)
+        {
+            if (capacity is T)
+            {
+                return (T)capacity;
             }
         }
         return null;

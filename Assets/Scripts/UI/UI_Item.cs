@@ -24,7 +24,7 @@ public class UI_Item : MonoBehaviour, I_UI_Slot
     public GameObject description_ui;
 
     // item
-    public Item item;
+    public OldItem item;
 
     // ui_inventory
     public GameObject ui_inventory;
@@ -54,7 +54,7 @@ public class UI_Item : MonoBehaviour, I_UI_Slot
     }
 
     // main functions
-    public void setItem(Item item)
+    public void setItem(OldItem item)
     {
         this.item = item;
     }
@@ -107,9 +107,9 @@ public class UI_Item : MonoBehaviour, I_UI_Slot
         GetComponent<Image>().sprite = base_sprite;
 
         // on click
-        if (ui_inventory.GetComponent<UI_Inventory>() != null)
+        if (ui_inventory.GetComponent<UI_OldInventory>() != null)
         {
-            ui_inventory.GetComponent<UI_Inventory>().clickOnItem(item);
+            ui_inventory.GetComponent<UI_OldInventory>().clickOnItem(item);
         }
         else if (ui_inventory.GetComponent<UI_ChestInventory>() != null)
         {
@@ -117,7 +117,7 @@ public class UI_Item : MonoBehaviour, I_UI_Slot
         }
         else
         {
-            Debug.LogWarning("UI_Item : no UI_Inventory or UI_ChestInventory found on " + ui_inventory.name);
+            Debug.LogWarning("UI_Item : no UI_OldInventory or UI_ChestInventory found on " + ui_inventory.name);
         }
     }
 

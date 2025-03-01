@@ -10,7 +10,7 @@ public class Server : InteractChest
     protected override void Awake()
     {
         anims = new ServerAnims();
-        randomize_cat = "hack_file";
+        // randomize_cat = "hack_file";
         base.Awake();
     }
 

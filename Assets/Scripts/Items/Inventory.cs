@@ -115,7 +115,7 @@ public class Inventory : MonoBehaviour {
     void updateUI()
     {
         // on récupère les items
-        List<Item> items = getItems();
+        List<OldItem> items = getItems();
 
         int w = (int) GetComponent<RectTransform>().sizeDelta.x;
 
@@ -123,7 +123,7 @@ public class Inventory : MonoBehaviour {
         for (int i = 0; i < items.Count; i++)
         {
             // on récupère l'item
-            Item item = items[i];
+            OldItem item = items[i];
 
             // on récupère la position de l'item
             Vector2 pos = new Vector2(0, 0);
@@ -200,10 +200,10 @@ public class Inventory : MonoBehaviour {
         foreach (Transform child in transform)
         {
             // on regarde si c'est un item
-            if (child.GetComponent<Item>() == null) { continue; }
+            if (child.GetComponent<OldItem>() == null) { continue; }
 
             // on récupère l'item
-            Item item = child.GetComponent<Item>();
+            OldItem item = child.GetComponent<OldItem>();
 
             // on met à jour l'affichage
             // item.changeShow(is_showed);
@@ -297,13 +297,13 @@ public class Inventory : MonoBehaviour {
         updateOffset();
     }
 
-    public void rollShow()
+    /* public void rollShow()
     {
         // on met à jour l'affichage
         is_showed = !is_showed;
         updateShow();
     }
-
+    */
     public void setShow(bool is_showed)
     {
         // on désactive le big inventory si c'est un inventaire de perso
@@ -319,7 +319,7 @@ public class Inventory : MonoBehaviour {
 
 
     // functions
-    public void dropItem(Item item)
+    /* public void dropItem(OldItem item)
     {
         // on vérifie si notre inventaire est un inventaire de perso
         if (is_perso_inventory)
@@ -331,10 +331,10 @@ public class Inventory : MonoBehaviour {
         {
             // si on est un coffre, on drop l'item dans le perso
             perso.GetComponent<Perso>().grab(item);
-        }
-    }
+        } 
+    } */
 
-    public bool addItem(Item item)
+    /* public bool addItem(OldItem item)
     {
         // on ajoute un item à l'inventaire
         // on vérifie qu'on est pas déjà plein
@@ -352,13 +352,13 @@ public class Inventory : MonoBehaviour {
         // item.changeShow(is_showed);
 
         return true;
-    }
+    } */
 
-    public Item createItem(string item_name, bool is_legendary = false)
+    /* public OldItem createItem(string item_name, bool is_legendary = false)
     {
 
         // on récupère l'item de la banque
-        Item item = bank.createItem(item_name);
+        OldItem item = bank.createItem(item_name);
         if (item == null) { return null; }
 
         // on start l'item
@@ -368,30 +368,30 @@ public class Inventory : MonoBehaviour {
         addItem(item);
 
         return item;
-    }
+    } */
 
     // getters
-    public List<Item> getItems()
+    public List<OldItem> getItems()
     {
         // on récupère les items
-        List<Item> items = new List<Item>();
+        List<OldItem> items = new List<OldItem>();
         foreach (Transform child in transform)
         {
             // on regarde si c'est un item
-            if (child.GetComponent<Item>() == null) { continue; }
+            if (child.GetComponent<OldItem>() == null) { continue; }
 
             // on ajoute l'item
-            items.Add(child.GetComponent<Item>());
+            items.Add(child.GetComponent<OldItem>());
         }
         return items;
     }
 
-    public List<Item> getLegendaryItems()
+    /* public List<OldItem> getLegendaryItems()
     {
         // on récupère les items
-        List<Item> items = getItems();
+        List<OldItem> items = getItems();
         return items.Where(x => x is LegendaryItem).ToList();
-    }
+    } */
 
     public List<Hack> getHacks()
     {

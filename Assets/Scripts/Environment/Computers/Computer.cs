@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 
 [RequireComponent(typeof(AnimationHandler))]
-public class Computer : MonoBehaviour, I_Hackable, I_Interactable, I_FileHolder
+public class Computer : MonoBehaviour, I_Hackable, I_Interactable
 {
 
     // la classe CHEST sert à créer des coffres
@@ -94,7 +94,7 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable, I_FileHolder
         password = Random.Range(100, 999).ToString();
 
         // on initialise les fichiers
-        max_files = 12;
+        // max_files = 12;
         // FileBank bank = GameObject.Find("/utils/bank").GetComponent<FileBank>();
         // files = bank.getRandomFiles(Random.Range(2,7));
         // files.Add(bank.generateRandomTxtHint(os,password));
@@ -491,53 +491,6 @@ public class Computer : MonoBehaviour, I_Hackable, I_Interactable, I_FileHolder
 
 
 
-
-
-
-
-    // FILES
-    public List<File> files { get; set; }
-    public int max_files { get; set; }
-    public Transform root { get; set; }
-    public string root_name { get; set; }
-
-
-    // FILE MANAGEMENT
-    public void ClearFiles()
-    {
-        files.Clear();
-    }
-
-    public bool AddFile(File file)
-    {
-        // on vérifie qu'on peut ajouter un fichier
-        if (files.Count < max_files)
-        {
-            // on ajoute le fichier
-            files.Add(file);
-            return true;
-        }
-        return false;
-    }
-
-    public bool RemoveFile(File file)
-    {
-        // on vérifie qu'on peut retirer un fichier
-        if (files.Contains(file))
-        {
-            // on retire le fichier
-            files.Remove(file);
-            return true;
-        }
-        return false;
-    }
-
-    public List<File> GetFiles()
-    {
-        // if (files == null) {  }
-
-        return files;
-    }
 
 
 

@@ -58,7 +58,7 @@ public class Perso : Being
 
     [Header("INVENTORY")]
     public Inventory inventory;
-    // public UI_Inventory big_inventory;
+    // public UI_OldInventory big_inventory;
     public Transform items_parent;
     private LayerMask grabber_layer;
 
@@ -124,9 +124,9 @@ public class Perso : Being
         hackray_prefab = Resources.Load("prefabs/hacks/hackray") as GameObject;
 
         // on récupère l'inventaire
-        inventory = GameObject.Find("/inventory").GetComponent<Inventory>();
-        inventory.scalable = true;
-        // big_inventory = GameObject.Find("/ui/inventory/ui_inventory").GetComponent<UI_Inventory>();
+        inventory = GameObject.Find("/inventory")?.GetComponent<Inventory>();
+        if (inventory != null) {inventory.scalable = true;}
+        // big_inventory = GameObject.Find("/ui/inventory/ui_inventory").GetComponent<UI_OldInventory>();
 
         // on récupère la map
         // big_map = GameObject.Find("/ui/fullmap").GetComponent<UI_Fullmap>();
@@ -144,11 +144,6 @@ public class Perso : Being
         // on met à jour les interactions
         interact_layers = LayerMask.GetMask("Chests", "Computers","Buttons","Items","Interactives");
 
-        // on récupère le cursor_handler
-        // cursor_handler = GameObject.Find("/utils").GetComponent<CursorHandler>();
-
-        // on récupère le hints_controls
-        // hints_controls = transform.Find("hint_controls").GetComponent<UI_HintControlsManager>();
 
 
         // ON MET A JOUR DES TRUCS
@@ -160,7 +155,7 @@ public class Perso : Being
         life = (float) max_life;
 
         // on MAJ les items
-        inventory.getItems().ForEach(item => grab(item));
+        // inventory?.getItems().ForEach(item => grab(item));
 
 
 
@@ -171,7 +166,6 @@ public class Perso : Being
         // on affiche un texte de début
         // Invoke("showWelcome", 5f);
         Invoke("showQuest", 10f);
-        // Invoke("randomTalk", Random.Range(talking_delay_range.x, talking_delay_range.y));
     }
 
     // welcoming
@@ -190,24 +184,6 @@ public class Perso : Being
     {
         floating_dmg_provider.GetComponent<TextManager>().addFloatingText(quest_text, transform.position + new Vector3(0, 0.5f, 0), "yellow");
     }
-
-    /* void randomTalk()
-    {
-        if (!Alive) { return; }
-        // on fait parler le perso
-        int index = Random.Range(0, talks_random.Count + (allow_bad_words ? talks_random_bad_words.Count : 0));
-        if (index >= talks_random.Count)
-        {
-            floating_dmg_provider.GetComponent<TextManager>().talk(talks_random_bad_words[index - talks_random.Count], this);
-        }
-        else
-        {
-            floating_dmg_provider.GetComponent<TextManager>().talk(talks_random[index], this);
-        }
-
-        // on relance
-        Invoke("randomTalk", Random.Range(talking_delay_range.x, talking_delay_range.y));
-    } */
 
     // INPUTS
     private void initInputs()
@@ -941,7 +917,7 @@ public class Perso : Being
 
 
     // INVENTORY
-    public void drop(Item item)
+    /* public void drop(Item item)
     {
         // removeCapaOfItem(item);
 
@@ -996,9 +972,9 @@ public class Perso : Being
                 item.transform.position = position;
                 // item.fromInvToGround();
             }
-        } */
+        } 
 
-        if (drop_on_ground)
+        /* if (drop_on_ground)
         {
             // on drop sur le sol avec une force dans une direction aléatoire
             item.transform.SetParent(items_parent);
@@ -1011,7 +987,7 @@ public class Perso : Being
             // item.transform.position = position;
             item.transform.position = transform.position;
             // item.AddForce(new Force(direction, 7.5f,1.5f));
-        }
+        } 
 
 
         // on met à jour l'inventaire
@@ -1022,7 +998,7 @@ public class Perso : Being
         else
         {
             big_inventory.dropItem(item);
-        } */
+        } 
 
         // on active l'item
         item.gameObject.SetActive(true);
@@ -1060,18 +1036,18 @@ public class Perso : Being
         // addCapaOfItem(item);
 
         // on met à jour l'inventaire
-        /* if (item is LegendaryItem)
+        f (item is LegendaryItem)
         {
             big_inventory.grabLeg(item);
         }
         else
         {
             big_inventory.grabItem(item);
-        } */
+        } 
     
         // on désactive l'item
         item.gameObject.SetActive(false);
-    }
+    } */
     /* private void removeCapaIfNotInInv(string capa, Item item_capa=null)
     {
         // on regarde si on a encore un item avec cette capacité

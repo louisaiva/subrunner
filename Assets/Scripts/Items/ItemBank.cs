@@ -7,15 +7,23 @@ using UnityEngine;
 public class ItemBank : MonoBehaviour
 { 
 
+    // sprites
     public Dictionary<string, Sprite> item_sprites = new Dictionary<string, Sprite>();
+
+    // prefabs
     public Dictionary<string, string> item_prefabs = new Dictionary<string, string>();
 
+
+    [Header("Debug")]
+    public bool debug = false;
+
+
     // constructor
-    public ItemBank()
+    void Start()
     {
 
         // on ajoute les prefabs des items
-        addItem("dirty_water", "prefabs/items/dirty_water");
+        /* addItem("dirty_water", "prefabs/items/dirty_water");
         addItem("clean_water", "prefabs/items/clean_water");
         addItem("orange_juice", "prefabs/items/orange_juice");
         addItem("usb_key", "prefabs/items/usb_key");
@@ -42,22 +50,18 @@ public class ItemBank : MonoBehaviour
         addItem("tv_hack", "prefabs/items/tv_hack");
         addItem("katana", "prefabs/items/legendary/katana");
         addItem("cd", "prefabs/items/cd");
-        addItem("badge", "prefabs/items/badge");
+        addItem("badge", "prefabs/items/badge"); */
 
     }
 
-    private void addItem(string item_name, string prefab_name)
+    /* private void addItem(string item_name, string prefab_name)
     {
         if (System.IO.File.Exists("Assets/Resources/" + prefab_name + ".prefab"))
         {
             item_prefabs.Add(item_name, prefab_name);
         }
-        else
-        {
-            // Debug.LogWarning("(ItemBank) cannot add item " + item_name);
-        }
-        // item_prefabs.Add(item_name, prefab_name);
-    }
+        else if (debug) { Debug.LogWarning("(ItemBank) cannot add item " + item_name); }
+    } */
 
     public void init(Sprite[] sprites)
     {
@@ -93,19 +97,8 @@ public class ItemBank : MonoBehaviour
     }
 
 
-    // GETTERS
-    public Sprite getSprite(string item_name)
-    {
-        if (!item_sprites.ContainsKey(item_name))
-        {
-            Debug.LogWarning("(ItemBank) cannot find sprite " + item_name);
-            return null;
-        }
-
-        return item_sprites[item_name];
-    }
-
-    public Item getRandomItem(string cat="all",bool use_leg=false)
+    // ITEM GENERATOR
+    /* public OldItem getRandomItem(string cat="all",bool use_leg=false)
     {
         List<string> prefabs = new List<string>();
 
@@ -130,13 +123,13 @@ public class ItemBank : MonoBehaviour
         int nb = Random.Range(0, prefabs.Count);
         GameObject item = Resources.Load(prefabs[nb]) as GameObject;
 
-        if (item == null || item.GetComponent<Item>() == null)
+        if (item == null || item.GetComponent<OldItem>() == null)
         {
             Debug.LogWarning("(ItemBank) cannot find item component in " + prefabs[nb]);
             return null;
         }
 
-        return item.GetComponent<Item>();
+        return item.GetComponent<OldItem>();
     }
 
     private string getCategory(string item_name)
@@ -149,10 +142,10 @@ public class ItemBank : MonoBehaviour
         
         // on instancie l'item
         GameObject item = Resources.Load(item_prefabs[item_name]) as GameObject;
-        return item.GetComponent<Item>().category;
+        return item.GetComponent<OldItem>().category;
     }
 
-    public Item createItem(string item_name)
+    public OldItem createItem(string item_name)
     {
         if (!item_prefabs.ContainsKey(item_name))
         {
@@ -163,6 +156,28 @@ public class ItemBank : MonoBehaviour
         // on instancie l'item
         // GameObject item = Resources.Load(item_prefabs[item_name]) as GameObject;
         GameObject item = Instantiate(Resources.Load(item_prefabs[item_name])) as GameObject;
-        return item.GetComponent<Item>();
+        return item.GetComponent<OldItem>();
+    } */
+
+
+   // UI_ITEM GENERATOR
+    public GameObject CreateUI_Item(Item item)
+    {
+        return null;
     }
+
+    // GETTERS
+    public Sprite getSprite(string item_name)
+    {
+        if (!item_sprites.ContainsKey(item_name))
+        {
+            Debug.LogWarning("(ItemBank) cannot find sprite " + item_name);
+            return null;
+        }
+
+        return item_sprites[item_name];
+    }
+
+
+
 }

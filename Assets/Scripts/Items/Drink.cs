@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Drink : Item
+public class Drink : OldItem
 {
 
     // unity functions

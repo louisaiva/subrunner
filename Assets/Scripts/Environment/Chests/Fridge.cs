@@ -10,7 +10,7 @@ public class Fridge : InteractChest
     protected override void Awake()
     {
         anims = new FridgeAnims();
-        randomize_cat = "food_drink";
+        // randomize_cat = "food_drink";
         base.Awake();
     }
 
