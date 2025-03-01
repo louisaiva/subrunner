@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using NUnit.Framework;
 using UnityEngine;
 
+// [RequireComponent(typeof(Rigidbody2D))] -> removed because we want to be able to use Movable without a Rigidbody2D
+// -> when an item is picked up, it is not supposed to move
 public class Movable : Capable
 {
     [Header("MOVABLE")]
@@ -12,21 +15,47 @@ public class Movable : Capable
     public float input_speed;
     public Collider2D feet_collider;
 
-    protected override void Start()
+    protected virtual void Start()
     {
-        base.Start();
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0;  // No gravity in top-down games
         rb.freezeRotation = true; // Prevent unwanted rotation
 
         // Get the feet collider
-        feet_collider = transform.Find("run").GetComponent<Collider2D>();
+        feet_collider = transform.Find("feet").GetComponent<Collider2D>();
     }
 
     protected override void Update()
     {
         base.Update();
+
+        // checks if it is not carried by a Being
+        if (HasEffect(Effect.BeingCarried))
+        {
+            // we remove all the forces
+            ClearForces();
+            return;
+        }
+
+        // Update moving effects
+        updateMovingEffects();
+
+        // Update forces
         updateForces();
+    }
+
+    // EFFECTS ASSOCIATED TO MOVING
+    protected void updateMovingEffects()
+    {
+        // we check if the Capable has the Ghost effect and if yes, we change the Layer of the feet collider to "Ghosts"
+        if (HasEffect(Effect.Ghost) && !(feet_collider.gameObject.layer == LayerMask.NameToLayer("Ghosts")))
+        {
+            feet_collider.gameObject.layer = LayerMask.NameToLayer("Ghosts");
+        }
+        else if (!HasEffect(Effect.Ghost) && (feet_collider.gameObject.layer != LayerMask.NameToLayer("Feet")))
+        {
+            feet_collider.gameObject.layer = LayerMask.NameToLayer("Feet");
+        }
     }
 
     // FORCES

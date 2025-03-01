@@ -48,7 +48,7 @@ public class Capable : MonoBehaviour
     public bool debug = false;
 
     // START
-    protected virtual void Start()
+    protected virtual void Awake()
     {
         // we get the anim player
         anim_player = GetComponent<AnimPlayer>();
@@ -206,6 +206,13 @@ public class Capable : MonoBehaviour
         effects.Add(effect);
         effects_timetolive.Add(timetolive);
     }
+    public virtual void RemoveEffect(Effect effect)
+    {
+        if (!HasEffect(effect)) { return; }
+
+        effects_timetolive.RemoveAt(effects.IndexOf(effect));
+        effects.Remove(effect);
+    }
 
     // GETTERS
     public virtual bool Can(string name)
@@ -278,9 +285,10 @@ public class Capable : MonoBehaviour
 {
     // an effect is a temporary state that can be applied to a capable
     // it can be a buff, a debuff, a status, etc.
-    Ghost,
-    Invincible,
-    Stunned,
-    RegenLife,
-    Immobile,
+    Ghost, // allow a Movable to walk through other Beings
+    Invincible, // a Being can't be hurt
+    Stunned, // a Being can't attack
+    RegenLife, // a Being regenerates life
+    Immobile, // a Movable can't move
+    BeingCarried, // a Movable is being carried (bypass all movement updates)
 }

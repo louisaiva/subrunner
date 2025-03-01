@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 891631874371971630}
-  - component: {fileID: 2923260706266234128}
+  - component: {fileID: 650425130176875094}
   m_Layer: 0
-  m_Name: die
+  m_Name: grab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2923260706266234128
+--- !u!114 &650425130176875094
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,20 +41,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 6582822749040364892}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9ece100a6ca0b84a8e097ce1b4406bb, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d84a036ccc2b72438402080a727943d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 0
   debug: 0
-  deaths: 0
-  xp_provider: {fileID: 0}
-  text_manager: {fileID: 0}
-  xp_gift: 10
-  destroy_object: 0
-  time_before_disappearing: 20
-  show_smiley: 1
-  smileys:
-  - RIP
-  - rip
-  - ;-;
-  - :(
+  selected_item: {fileID: 0}
+  items_parent: {fileID: 0}
+  ui_inventory: {fileID: 0}
+  bank: {fileID: 0}
+  grabInput: {fileID: 2767387396969607311, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
