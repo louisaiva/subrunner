@@ -32,4 +32,16 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         GameObject ui_item = bank.CreateUI_Item(item);
         ui_item.transform.SetParent(transform);
     }
+    public void Drop(Item item)
+    {
+        // we destroy the item
+        foreach (Transform child in transform)
+        {
+            if (child.GetComponent<UI_Item>().item == item)
+            {
+                Destroy(child.gameObject);
+                return;
+            }
+        }
+    }
 }

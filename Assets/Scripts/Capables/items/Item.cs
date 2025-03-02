@@ -37,6 +37,9 @@ public class Item : Movable
 
         // we set the effect IsBeingCarried to -888f (infinite time)
         AddEffect(Effect.BeingCarried, -888f);
+        
+        // we remove all the forces
+        ClearForces();
     }
     private void on_dropped()
     {

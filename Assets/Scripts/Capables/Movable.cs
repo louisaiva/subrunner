@@ -30,12 +30,7 @@ public class Movable : Capable
         base.Update();
 
         // checks if it is not carried by a Being
-        if (HasEffect(Effect.BeingCarried))
-        {
-            // we remove all the forces
-            ClearForces();
-            return;
-        }
+        if (HasEffect(Effect.BeingCarried)) { return; }
 
         // Update moving effects
         updateMovingEffects();
