@@ -24,9 +24,8 @@ public class LevelSwitcher : Capable, Interactable
     [Header("Switches")]
     public int elevator_uses = 0;
 
-    protected override void Start()
+    protected virtual void Start()
     {
-        base.Start();
 
         // we get the world
         world = GameObject.Find("/world").GetComponent<World>();
@@ -48,6 +47,8 @@ public class LevelSwitcher : Capable, Interactable
         }
     }
 
+    // INTERACTABLE
+    public InteractCapacity Interactor { get; set; }
     public void OnInteract()
     {
         // if (!input_actions.perso.enabled) { return; }

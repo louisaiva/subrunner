@@ -44,11 +44,16 @@ public class Capable : MonoBehaviour
     [SerializeField] protected List<Effect> effects = new List<Effect>();
     [SerializeField] protected List<float> effects_timetolive = new List<float>();
 
+    // un capable peut aussi avoir un inventaire
+    public Inventory inventory { get { return transform.Find("inventory").GetComponent<Inventory>(); } }
+
+
+
     [Header("Debug")]
     public bool debug = false;
 
     // START
-    protected virtual void Start()
+    protected virtual void Awake()
     {
         // we get the anim player
         anim_player = GetComponent<AnimPlayer>();
@@ -115,9 +120,6 @@ public class Capable : MonoBehaviour
     // UPDATES
     protected virtual void Update()
     {
-        // we get the inputs
-        // Events();
-
         // we update the effects
         updateEffects();
     }
@@ -200,14 +202,7 @@ public class Capable : MonoBehaviour
     }
 
 
-    // EFFECTS
-    public virtual void AddEffect(Effect effect, float timetolive)
-    {
-        effects.Add(effect);
-        effects_timetolive.Add(timetolive);
-    }
-
-    // GETTERS
+    // CAPACITIES GETTERS
     public virtual bool Can(string name)
     {
         foreach (Capacity capacity in capacities)
@@ -233,17 +228,6 @@ public class Capable : MonoBehaviour
     protected bool hasCapacity(Capacity capa)
     {
         return hasCapacity(capa.name);
-    }
-    public bool HasEffect(Effect effect)
-    {
-        foreach (Effect e in effects)
-        {
-            if (e == effect)
-            {
-                return true;
-            }
-        }
-        return false;
     }
     public Capacity GetCapacity(string name)
     {
@@ -272,15 +256,43 @@ public class Capable : MonoBehaviour
         return capacities;
     }
 
+
+
+    // EFFECTS
+    public virtual void AddEffect(Effect effect, float timetolive)
+    {
+        effects.Add(effect);
+        effects_timetolive.Add(timetolive);
+    }
+    public virtual void RemoveEffect(Effect effect)
+    {
+        if (!HasEffect(effect)) { return; }
+
+        effects_timetolive.RemoveAt(effects.IndexOf(effect));
+        effects.Remove(effect);
+    }
+    public bool HasEffect(Effect effect)
+    {
+        foreach (Effect e in effects)
+        {
+            if (e == effect)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
 
 [Serializable] public enum Effect
 {
     // an effect is a temporary state that can be applied to a capable
     // it can be a buff, a debuff, a status, etc.
-    Ghost,
-    Invincible,
-    Stunned,
-    RegenLife,
-    Immobile,
+    Ghost, // allow a Movable to walk through other Beings
+    Invincible, // a Being can't be hurt
+    Stunned, // a Being can't attack
+    RegenLife, // a Being regenerates life
+    Immobile, // a Movable can't move
+    BeingCarried, // a Movable is being carried (bypass all movement updates)
 }

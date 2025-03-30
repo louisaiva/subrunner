@@ -7,7 +7,8 @@ public class Chest : Capable, Interactable, Openable
     public bool is_open { get; set; }
     public bool is_moving { get; set; }
 
-    // ON INTERACT
+    // INTERACTABLE
+    public InteractCapacity Interactor { get; set; }
     public void OnInteract()
     {
         if (Can("open")) { Do("open"); }

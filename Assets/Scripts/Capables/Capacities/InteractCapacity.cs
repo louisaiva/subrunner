@@ -28,11 +28,17 @@ public class InteractCapacity : Capacity
     private event Action<InputAction.CallbackContext> interactCallback;
     [SerializeField] private bool callback_is_set = false;
 
+    [Header("Item Grab")]
+    [SerializeField] private GrabCapacity grab_capacity;
+
     // START
     private void Start()
     {
         // we get the interact action
         interactAction = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().GetAction(interactInput);
+
+        // we get the grab capacity
+        grab_capacity = capable.GetCapacity<GrabCapacity>();
     }
 
     // UPDATE
@@ -87,6 +93,11 @@ public class InteractCapacity : Capacity
             // we set the callback
             set_callbacks(closest_hover as Interactable);
         }
+        else if (closest_hover is Item)
+        {
+            // we unselect the item
+            grab_capacity?.Select(closest_hover as Item);
+        }
     }
     private void unselect_hover()
     {
@@ -100,6 +111,11 @@ public class InteractCapacity : Capacity
         if (closest_hover is Interactable)
         {
             remove_callbacks(closest_hover as Interactable);
+        }
+        else if (closest_hover is Item)
+        {
+            // we unselect the item
+            grab_capacity?.Deselect();
         }
 
         // we reset the current hover
@@ -145,7 +161,7 @@ public class InteractCapacity : Capacity
 
         // we check if it's an Interactable or an Item
         if (capable is not Interactable && capable is not Item) { return; }
-        
+
         // we check if the capable is already hovered
         if (capable == closest_hover) { return; }
 

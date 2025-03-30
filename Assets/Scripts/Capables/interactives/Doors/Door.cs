@@ -23,9 +23,8 @@ public class Door : Capable, Interactable, Openable
     protected Perso perso;
 
     // UNITY FUNCTIONS
-    protected override void Start()
+    protected virtual void Start()
     {
-        base.Start();
 
         // if vertical on set l'Orientaion à "up"
         if (is_vertical && (Orientation == Vector2.right || Orientation == Vector2.left))
@@ -60,7 +59,8 @@ public class Door : Capable, Interactable, Openable
 
 
 
-    // ON INTERACT
+    // INTERACTABLE
+    public InteractCapacity Interactor { get; set; }
     public virtual void OnInteract()
     {
         if (Can("open")) { open(); }

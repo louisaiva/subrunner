@@ -8,25 +8,68 @@ public class Movable : Capable
     public Rigidbody2D rb;  // Replace transform movement
     public float weight = 1f;
     public float friction = 7f;
+
+    [Header("Forces")]
     public List<Force> forces = new List<Force>();
     public float input_speed;
-    public Collider2D feet_collider;
-
-    protected override void Start()
+    public Vector2 Velocity
     {
-        base.Start();
-        rb = GetComponent<Rigidbody2D>();
-        rb.gravityScale = 0;  // No gravity in top-down games
-        rb.freezeRotation = true; // Prevent unwanted rotation
-
-        // Get the feet collider
-        feet_collider = transform.Find("run").GetComponent<Collider2D>();
+        get
+        {
+            if (rb != null) { return rb.linearVelocity / Time.fixedDeltaTime; }
+            else { return Vector2.zero; }
+        }
     }
 
-    protected override void Update()
+    [Header("Collisions")]
+    public Collider2D feet_collider;
+
+    protected virtual void Start()
     {
-        base.Update();
+        rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.gravityScale = 0;  // No gravity in top-down games
+            rb.freezeRotation = true; // Prevent unwanted rotation
+        }
+        else { Debug.LogError("No Rigidbody2D found on " + gameObject.name); }
+
+        // Get the feet collider
+        feet_collider = transform.Find("feet").GetComponent<Collider2D>();
+    }
+
+    protected virtual void FixedUpdate()
+    {
+        // base.Update();
+
+        // checks if it is not carried by a Being
+        if (HasEffect(Effect.BeingCarried))
+        {
+            // we remove all the forces
+            ClearForces();
+            return;
+        }
+        else if (rb == null) { return;}
+
+        // Update moving effects
+        updateMovingEffects();
+
+        // Update forces
         updateForces();
+    }
+
+    // EFFECTS ASSOCIATED TO MOVING
+    protected void updateMovingEffects()
+    {
+        // we check if the Capable has the Ghost effect and if yes, we change the Layer of the feet collider to "Ghosts"
+        if (HasEffect(Effect.Ghost) && !(feet_collider.gameObject.layer == LayerMask.NameToLayer("Ghosts")))
+        {
+            feet_collider.gameObject.layer = LayerMask.NameToLayer("Ghosts");
+        }
+        else if (!HasEffect(Effect.Ghost) && (feet_collider.gameObject.layer != LayerMask.NameToLayer("Feet")))
+        {
+            feet_collider.gameObject.layer = LayerMask.NameToLayer("Feet");
+        }
     }
 
     // FORCES
@@ -67,7 +110,8 @@ public class Movable : Capable
         {
             Force force = forces[i];
 
-            if (force.expired) // Small threshold to remove force
+            // Remove expired forces
+            if (force.expired)
             {
                 forces.RemoveAt(i);
                 continue;
@@ -78,7 +122,7 @@ public class Movable : Capable
         }
 
         // Apply force to Rigidbody2D
-        rb.AddForce(totalForce, ForceMode2D.Force);
+        rb.AddForce(totalForce * Time.timeScale, ForceMode2D.Force);
 
         // Apply friction when no force is applied
         if (totalForce == Vector2.zero && inputs == Vector2.zero)
@@ -86,6 +130,9 @@ public class Movable : Capable
             // if (debug) { Debug.Log("Applying friction ("+ friction +") to " + gameObject.name + " with velocity " + rb.velocity); }
             rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, Vector2.zero, friction * Time.deltaTime);
         }
+
+        // we log the current linear velocity
+        if (debug) { Debug.Log("velocity : " + rb.linearVelocity.magnitude); }
     }
 
     // gizmos
