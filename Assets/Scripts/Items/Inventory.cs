@@ -8,8 +8,8 @@ public class Inventory : MonoBehaviour {
     public List<Item> Items = new List<Item>();
 
     [Header("Inventory parameters")]
-    [SerializeField] private int max_items = 9;
-    [SerializeField] private bool scalable = false;
+    public int MaxItems = 9;
+    public bool Scalable = false;
 
     [Header("Drop parameters")]
     [SerializeField] private float drop_magnitude = 50f;
@@ -22,7 +22,7 @@ public class Inventory : MonoBehaviour {
 
 
     [Header("Components")]
-    public ItemBank bank;
+    public UI_Inventory ui;
     private Capable capable { get { return transform.parent.GetComponent<Capable>(); } }
 
     [Header("Debug")]
@@ -31,12 +31,19 @@ public class Inventory : MonoBehaviour {
     // AWAKE
     void Awake()
     {
-        // on récupère le bank
-        bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
+        // on vérifie si on a un ui_inventory
+        if (ui != null)
+        {
+            ui.inventory = this;
+        }
     }
 
+    // START
     void Start()
     {
+        // on initialise l'UI
+        ui?.Init();
+
         // on récupère les items
         foreach (Transform child in transform)
         {
@@ -50,7 +57,7 @@ public class Inventory : MonoBehaviour {
     {
         // we check if we can add the item
         if (item == null) { return false; }
-        if (Items.Count >= max_items && !scalable) { return false; }
+        if (Items.Count >= MaxItems && !Scalable) { return false; }
 
         // we add the item
         Items.Add(item);
@@ -65,6 +72,9 @@ public class Inventory : MonoBehaviour {
 
         // we trigger the event
         OnGrab.Invoke();
+        
+        // we update the UI
+        ui?.UI_Grab(item);
 
         return true;
     }
@@ -100,6 +110,9 @@ public class Inventory : MonoBehaviour {
 
         // we trigger the event
         OnDrop.Invoke();
+
+        // we update the UI
+        ui?.UI_Drop(item);
 
         return true;
     }

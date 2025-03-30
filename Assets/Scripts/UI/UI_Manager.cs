@@ -35,6 +35,7 @@ public class UI_Manager : MonoBehaviour
         RegisterToPool("hud", GameObject.Find("/ui/hud/tutorials"));
         RegisterToPool("hud", GameObject.Find("/ui/hud/hp_xp"));
         RegisterToPool("hud", GameObject.Find("/ui/hud/kda"));
+        RegisterToPool("hud", GameObject.Find("/ui/hud/ui_inventory"));
     }
 
     void Start()

@@ -11,7 +11,10 @@ public class SpawnCapacity : Capacity
 {
     [Header("Spawn parameters")]
     public GameObject entity_prefab;
-    public Transform entity_parent;
+    public Transform entity_parent; // the transform that will be the parent of the spawned entity
+
+    [Header("Spawn Force")]
+    public float spawn_force = 0f; // (optional) force applied to the spawned entity
 
     [Header("Spawn position")]
     public Vector2 local_spawn_position; // or the center of the spawn circle if spawn_radius > 0
@@ -25,6 +28,7 @@ public class SpawnCapacity : Capacity
     public override void Use(Capable capable)
     {
         base.Use(capable);
+        if (entity_prefab == null) { return; }
 
         // we get the spawn position
         Vector2 spawn_position = transform.parent.position + ((Vector3) local_spawn_position);
@@ -32,9 +36,6 @@ public class SpawnCapacity : Capacity
         {
             spawn_position += Random.insideUnitCircle * spawn_radius;
         }
-        if (debug) {Debug.Log("(SpawnCapacity) " + name + " spawning entity at " + spawn_position);}
-
-        if (entity_prefab == null) { return; }
 
         // we spawn the entity
         GameObject entity = Instantiate(entity_prefab, spawn_position, Quaternion.identity);
@@ -42,6 +43,17 @@ public class SpawnCapacity : Capacity
         {
             entity.transform.parent = entity_parent;
         }
+
+        // we create a spawn force
+        string force_debug = "";
+        if (spawn_force > 0f && entity.GetComponent<Movable>() != null)
+        {
+            Force spawn_force = new Force("spawn", capable.Orientation, this.spawn_force);
+            entity.GetComponent<Movable>().AddForce(spawn_force);
+            force_debug = " with force " + spawn_force;
+        }
+
+        if (debug) { Debug.Log("(SpawnCapacity) " + name + " spawning entity at " + spawn_position + force_debug); }
 
     }
 

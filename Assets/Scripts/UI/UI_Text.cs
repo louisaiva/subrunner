@@ -16,10 +16,10 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
             return activateCallback;
         }
     }
-    // hoover
+    // hover
     [Header("Hover")]
     public Color hover_color = new Color(1, 1, 0, 1);
-    public bool is_hoovered { get; set; }
+    public bool is_hovered { get; set; }
 
     [Header("Text")]
     private TextMeshProUGUI tmp;
@@ -86,7 +86,7 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
         tmp.text = "> " + base_text;
 
         // on met à jour le fait qu'on est survolé
-        is_hoovered = true;
+        is_hovered = true;
 
         if (debug) Debug.Log("hovering " + base_text);
     }
@@ -97,7 +97,7 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
         tmp.text = base_text;
 
         // on met à jour le fait qu'on est survolé
-        is_hoovered = false;
+        is_hovered = false;
 
         if (debug) Debug.Log("unhovering " + base_text);
     }
@@ -123,10 +123,10 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
         }
     }
 
-    // reset hoover
+    // reset hover
     /* public void resetHoover()
     {
-        if (!is_hoovered) return;
+        if (!is_hovered) return;
         OnPointerExit(null);
     } */
 }

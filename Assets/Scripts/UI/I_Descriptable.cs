@@ -4,7 +4,7 @@ public interface I_Descriptable
 {
 
     // hoover
-    bool is_hoovered { get; set; }
+    bool is_hovered { get; set; }
 
     // getters
     string getDescription();

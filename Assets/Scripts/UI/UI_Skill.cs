@@ -17,8 +17,8 @@ public class UI_Skill : MonoBehaviour, I_UI_Slot
         }
     }
 
-    // hoover
-    public bool is_hoovered { get; set; }
+    // hover
+    public bool is_hovered { get; set; }
     public GameObject description_ui;
 
     // description
@@ -36,7 +36,7 @@ public class UI_Skill : MonoBehaviour, I_UI_Slot
     [Header("UI")]
     [SerializeField] private GameObject ui_bg;
     [SerializeField] private Color base_color = Color.white;
-    [SerializeField] private Color hoover_color = Color.white;
+    [SerializeField] private Color hover_color = Color.white;
     [SerializeField] private Color clicked_color = Color.white;
 
 
@@ -47,7 +47,7 @@ public class UI_Skill : MonoBehaviour, I_UI_Slot
         skilltree = transform.parent.parent.gameObject.GetComponent<SkillTree>();
 
         // on récupère le description_ui
-        description_ui = GameObject.Find("/ui/hoover_description");
+        description_ui = GameObject.Find("/ui/hover_description");
 
         // on met à jour les valeurs
         current_value = skilltree.getSkillValue(skill_name).ToString();
@@ -88,10 +88,10 @@ public class UI_Skill : MonoBehaviour, I_UI_Slot
         description_ui.GetComponent<UI_HooverDescriptionHandler>().changeDescription(this);
 
         // on met à jour le fait qu'on est survolé
-        is_hoovered = true;
+        is_hovered = true;
         
         // on met à jour l'ui_bg
-        ui_bg.GetComponent<Image>().color = hoover_color;
+        ui_bg.GetComponent<Image>().color = hover_color;
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -100,7 +100,7 @@ public class UI_Skill : MonoBehaviour, I_UI_Slot
         description_ui.GetComponent<UI_HooverDescriptionHandler>().removeDescription(this);
 
         // on met à jour le fait qu'on est survolé
-        is_hoovered = false;
+        is_hovered = false;
 
         // on met à jour l'ui_bg
         ui_bg.GetComponent<Image>().color = base_color;

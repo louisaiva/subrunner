@@ -5,6 +5,9 @@ using UnityEngine;
 public class Item : Movable
 {
 
+    [Header("Item")]
+    public string Reference = "item";
+
     // Grabbable
     private bool _grabbed = false;
     public bool Grabbed
