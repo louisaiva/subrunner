@@ -20,11 +20,16 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     void Awake()
     {
         // on récupère le bank
-        bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
+        if (bank == null) { bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();}
     }
 
     public void Init()
     {
+        // si on a pas de bank, on a pas Awake() peut-etre tout simplement qu'on est désactivé de base
+        // ce qui est plutôt commun chez les UI
+        if (bank == null) { Awake(); }        
+
+
         // si on a pas d'inventory, il y a un problème
         if (inventory == null)
         {
@@ -49,14 +54,33 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 
     }
 
+    // SHOW / HIDE
+    public void Show()
+    {
+        gameObject.SetActive(true);
+    }
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+    }
+
     // SLOTTABLE
     public Action<InputAction.CallbackContext> CancelCallback => throw new NotImplementedException();
     public List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator)
     {
         List<GameObject> slots = new List<GameObject>();
+        Vector2 position = Vector2.negativeInfinity;
         foreach (Transform child in transform)
         {
+            // checks if the slot is disabled
+            if (child.GetComponent<UI_Item>().is_disabled) { continue; }
             slots.Add(child.gameObject);
+
+            // we update the position
+            if (position == Vector2.negativeInfinity)
+            {
+                position = child.position;
+            }
         }
         return slots;
     }

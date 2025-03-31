@@ -61,8 +61,12 @@ public class Door : Capable, Interactable, Openable
 
     // INTERACTABLE
     public InteractCapacity Interactor { get; set; }
-    public virtual void OnInteract()
+    public virtual void OnInteract(Capable interactor)
     {
+        // on set l'interactor
+        Interactor = interactor.GetCapacity<InteractCapacity>();
+
+        // on réagit à l'interaction
         if (Can("open")) { open(); }
         else if (Can("close")) { close(); }
     }

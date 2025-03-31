@@ -160,7 +160,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4964243457693928914}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -182,10 +182,10 @@ MonoBehaviour:
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
-    m_HighlightedSprite: {fileID: 669022736, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
-    m_PressedSprite: {fileID: 1477167940, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
-    m_SelectedSprite: {fileID: 669022736, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
-    m_DisabledSprite: {fileID: 669022736, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
+    m_HighlightedSprite: {fileID: 1477167940, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
+    m_PressedSprite: {fileID: -1489766419, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
+    m_SelectedSprite: {fileID: 722337240, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
+    m_DisabledSprite: {fileID: 6318401458311587813, guid: b00b3b1d4ccfb5448b45665efb587fbd, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
@@ -209,8 +209,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c085eeac05cbc4f4f933c07b1c61cfb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  description_ui: {fileID: 0}
   item: {fileID: 0}
-  ui_inventory: {fileID: 0}
-  base_sprite: {fileID: 0}
-  hoover_sprite: {fileID: 0}
+  base_sprite: {fileID: 722337240, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
+  hover_sprite: {fileID: 1477167940, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
+  down_sprite: {fileID: -1489766419, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
+  disabled_sprite: {fileID: -908096685, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}

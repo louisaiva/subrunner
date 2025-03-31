@@ -46,10 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Items: []
-  max_items: 9
-  scalable: 1
-  drop_magnitude: 50
-  parent_to_drop_items: {fileID: 0}
+  MaxItems: 9
+  Scalable: 1
   OnGrab:
     m_PersistentCalls:
       m_Calls: []
@@ -518,6 +516,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2056693723427999313, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4796508704093586641, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -705,3 +707,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bank: {fileID: 0}
+  inventory: {fileID: 0}

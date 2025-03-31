@@ -8,14 +8,14 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
 {
 
     // callback
-    private System.Action<InputAction.CallbackContext> activateCallback;
+    /* private System.Action<InputAction.CallbackContext> activateCallback;
     public System.Action<InputAction.CallbackContext> ActivateCallback
     {
         get
         {
             return activateCallback;
         }
-    }
+    } */
     // hover
     [Header("Hover")]
     public Color hover_color = new Color(1, 1, 0, 1);
@@ -36,7 +36,7 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
         base_text = tmp.text;
 
         // on met à jour le callback
-        activateCallback = ctx => OnPointerClick(null);
+        // activateCallback = ctx => OnPointerClick(null);
     }
 
 

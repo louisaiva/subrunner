@@ -11,11 +11,6 @@ public class Inventory : MonoBehaviour {
     public int MaxItems = 9;
     public bool Scalable = false;
 
-    [Header("Drop parameters")]
-    [SerializeField] private float drop_magnitude = 50f;
-    [SerializeField] private Transform parent_to_drop_items;
-
-
     [Header("Events")]
     public UnityEvent OnGrab;
     public UnityEvent OnDrop;
@@ -23,7 +18,7 @@ public class Inventory : MonoBehaviour {
 
     [Header("Components")]
     public UI_Inventory ui;
-    private Capable capable { get { return transform.parent.GetComponent<Capable>(); } }
+    public Capable capable { get { return transform.parent.GetComponent<Capable>(); } }
 
     [Header("Debug")]
     [SerializeField] private bool debug = false;
@@ -59,6 +54,9 @@ public class Inventory : MonoBehaviour {
         if (item == null) { return false; }
         if (Items.Count >= MaxItems && !Scalable) { return false; }
 
+        // we check if the item is already grabbed somewhere, if so we drop it
+        if (item.Grabbed) { item.transform.parent.GetComponent<Inventory>().Drop(item); }
+
         // we add the item
         Items.Add(item);
 
@@ -68,13 +66,13 @@ public class Inventory : MonoBehaviour {
         // we set the item parent
         item.transform.SetParent(transform);
 
-        if (debug) { Debug.Log("(Inventory) " + capable.name + " grabbed : " + item.name); }
-
         // we trigger the event
         OnGrab.Invoke();
         
         // we update the UI
         ui?.UI_Grab(item);
+
+        if (debug) { Debug.Log("(Inventory) " + capable.name + " grabbed : " + item.name); }
 
         return true;
     }
@@ -89,33 +87,59 @@ public class Inventory : MonoBehaviour {
 
         // we set the item to dropped (which enables the hover collider)
         item.Grabbed = false;
-
-        // we move the item back to the world
-        item.transform.position = capable.transform.position + ((Vector3) capable.Orientation * 0.2f);
-        item.transform.SetParent(parent_to_drop_items);
-
-        // we add a force to the item
-        Force force = new Force("drop", capable.Orientation , drop_magnitude);
-        if (capable is Movable)
-        {
-            // we add the current moving velocity to the force (for dropping items while moving)
-            force.magnitude += (capable as Movable).Velocity.magnitude*2f;
-        }
-        item.AddForce(force);
-
-        // we set the item parent
-        item.transform.SetParent(parent_to_drop_items);
-
-        if (debug) { Debug.Log("(Inventory) " + capable.name + " dropped : " + item.name + " with force of magnitude : " + force.magnitude); }
-
+        
         // we trigger the event
         OnDrop.Invoke();
 
         // we update the UI
         ui?.UI_Drop(item);
+        
+        if (debug) { Debug.Log("(Inventory) " + capable.name + " dropped : " + item.name); }
 
         return true;
     }
+
+    // GETTERS
+    public Inventory GetInteractingInventory()
+    {
+        // check if we are the interactable (so we look for the interactor)
+        // typically for Chest
+        if (capable is Interactable)
+        {
+            // this is the other capable
+            InteractCapacity interactor = (capable as Interactable).Interactor;
+
+            // check if we have an interactor
+            if (interactor == null) { return null; }
+
+            // yes we do !! return its inventory
+            return interactor.capable.inventory;
+        }
+
+
+        // check if we are the interactor (so we look for the interactable)
+        // typically for Being
+        else if (capable.GetCapacity<InteractCapacity>() != null)
+        {
+            // this is our capable
+            InteractCapacity interactor = capable.GetCapacity<InteractCapacity>();
+            
+            // check if we have an interactable
+            Capable interactable = interactor.interactable as Capable;
+            if (interactable == null) { return null; }
+
+            // checks if the interactable is an Openable and is closed
+            if (interactable is Openable && !(interactable as Openable).is_open) { return null; }
+
+            // we return the interactable's inventory
+            return interactable.inventory;
+        }
+
+        // we return null
+        return null;
+    }
+
+
 
 
     // ! DEPRECATED

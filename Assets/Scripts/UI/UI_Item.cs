@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class UI_Item : MonoBehaviour, I_UI_Slot
+public class UI_Item : MonoBehaviour, I_UI_Slot, IPointerDownHandler
 {
 
     [Header("Item Reference")]
@@ -12,30 +12,36 @@ public class UI_Item : MonoBehaviour, I_UI_Slot
 
     // hover
     public bool is_hovered { get; set; }
-    public Action<InputAction.CallbackContext> ActivateCallback
-    {
-        get
-        {
-            return ctx => OnPointerClick(null);
-        }
-    }
+    public bool is_disabled { get; set; }
 
     [Header("Sprites")]
     public Sprite base_sprite;
     public Sprite hover_sprite;
+    public Sprite down_sprite;
+    public Sprite disabled_sprite;
 
-    // unity functions
-    protected void Awake()
+    // DISABLE
+    public void Enable()
     {
-        // on récupère les sprites
-        Sprite[] sprites = Resources.LoadAll<Sprite>("spritesheets/item_slots");
-        base_sprite = sprites[0];
-        hover_sprite = sprites[1];
+        is_disabled = false;
+
+        // on change le sprite du slot
+        GetComponent<Image>().sprite = base_sprite;
+    }
+    public void Disable()
+    {
+        is_disabled = true;
+
+        // on change le sprite du slot
+        GetComponent<Image>().sprite = disabled_sprite;
     }
 
-    // interface functions
+    // POINTER HANDLERS
     public void OnPointerEnter(PointerEventData eventData)
     {
+        // check if disabled
+        if (is_disabled) { return; }
+
         // on change le sprite du slot
         GetComponent<Image>().sprite = hover_sprite;
 
@@ -44,17 +50,64 @@ public class UI_Item : MonoBehaviour, I_UI_Slot
     }
     public void OnPointerExit(PointerEventData eventData)
     {
+        // check if disabled
+        if (is_disabled) { return; }
+
         // on change le sprite du slot
         GetComponent<Image>().sprite = base_sprite;
 
         // on met à jour le fait qu'on est survolé
         is_hovered = false;
     }
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        // check if disabled
+        if (is_disabled) { return; }
+
+        // on change le sprite du slot
+        GetComponent<Image>().sprite = down_sprite;
+    }
     public void OnPointerClick(PointerEventData eventData)
     {
+        // check if disabled
+        if (is_disabled) { return; }
+
+        // on change le sprite du slot
+        GetComponent<Image>().sprite = is_hovered ? hover_sprite : base_sprite;
+
+        // we check if we have an item
+        if (item == null) { return; }
+
         // on récupère l'inventory qui drop l'item
-        item.transform.parent.GetComponent<Inventory>().Drop(item);
+        Inventory inventory = item.transform.parent.GetComponent<Inventory>();
+        // item.transform.parent.GetComponent<Inventory>().Drop(item);
+
+        // on cherche l'inventory qui reçoit l'item
+        Inventory inventory_to_drop = inventory.GetInteractingInventory();
+        if (inventory_to_drop == null)
+        {
+            // we drop on the ground
+
+            // we check if we have a DropCapacity
+            DropCapacity dropper = inventory.capable.GetCapacity<DropCapacity>();
+            if (dropper != null)
+            {
+                dropper.Select(item);
+                inventory.capable.Do("drop");
+            }
+            else
+            {
+                // the inventory simply drops the item (we may be in a chest)
+                inventory.Drop(item);
+            }
+        }
+        else
+        {
+            // we try to drop the item in the inventory
+            inventory_to_drop.Grab(item);
+        }
     }
+
 
     // reset hover
     public void resetHoover()
@@ -77,4 +130,5 @@ public class UI_Item : MonoBehaviour, I_UI_Slot
     // ! DEPRECATED
     public void setItem(OldItem item) {}
     public void setUIInventory(GameObject ui_inventory) {}
+
 }

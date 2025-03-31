@@ -18,6 +18,11 @@ public class InteractCapacity : Capacity
 
     [Header("Current Hover")]
     [SerializeField] private Capable closest_hover;
+    public Interactable interactable
+    { get{
+        if (closest_hover is Interactable) { return closest_hover as Interactable; }
+        return null;
+    }}
 
     [Header("Waiting hovers")]
     [SerializeField] private List<Capable> waiting_hovers = new List<Capable>();
@@ -73,6 +78,8 @@ public class InteractCapacity : Capacity
         unselect_hover();
         select_hover(waiting_hovers[0]);
         waiting_hovers.RemoveAt(0);
+
+        bool just_to_remove_warning = callback_is_set;
     }
 
     // INTERACTABLE SELECTION
@@ -127,7 +134,7 @@ public class InteractCapacity : Capacity
     public void set_callbacks(Interactable interactable)
     {
         // we define the interact action
-        interactCallback = ctx => interactable.OnInteract();
+        interactCallback = ctx => interactable.OnInteract(capable);
 
         // we set the callback
         interactAction.performed += interactCallback;

@@ -127,6 +127,9 @@ public class ItemBank : MonoBehaviour
         // on met la reference de l'item
         ui_item.item = item;
 
+        // on enable le slot
+        ui_item.Enable();
+
         if (debug) { Debug.Log("(ItemBank) set ui_item : " + item.name); }
     }
     public void ClearUI_Item(UI_Item ui_item)
@@ -141,6 +144,9 @@ public class ItemBank : MonoBehaviour
 
         // on met la reference de l'item
         ui_item.item = null;
+
+        // on disable le slot
+        ui_item.Disable();
 
         if (debug) { Debug.Log("(ItemBank) cleared ui_item"); }
     }

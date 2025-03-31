@@ -7,16 +7,6 @@ using UnityEngine.UI;
 
 public class UI_Skill : MonoBehaviour, I_UI_Slot
 {
-    // callback
-    private System.Action<InputAction.CallbackContext> activateCallback;
-    public System.Action<InputAction.CallbackContext> ActivateCallback
-    {
-        get
-        {
-            return activateCallback;
-        }
-    }
-
     // hover
     public bool is_hovered { get; set; }
     public GameObject description_ui;
@@ -60,9 +50,6 @@ public class UI_Skill : MonoBehaviour, I_UI_Slot
         // GetComponent<UnityEngine.UI.Button>().RegisterCallback<PointerEnterEvent>(OnPointerEnter);
         // GetComponent<UnityEngine.UI.Button>().RegisterCallback<PointerExitEvent>(OnPointerExit);
         // GetComponent<UnityEngine.UI.Button>().RegisterCallback<PointerClickEvent>(OnPointerClick);
-
-        // on met à jour le callback
-        activateCallback = ctx => OnPointerClick(null);
     }
     // getters
     public string getDescription()

@@ -48,8 +48,6 @@ MonoBehaviour:
   Items: []
   MaxItems: 2
   Scalable: 0
-  drop_magnitude: 50
-  parent_to_drop_items: {fileID: 0}
   OnGrab:
     m_PersistentCalls:
       m_Calls: []
@@ -246,6 +244,7 @@ MonoBehaviour:
   effects: 
   effects_timetolive: []
   debug: 0
+  ui_inventory: {fileID: 0}
 --- !u!1001 &217107131744511209
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -516,6 +515,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1353639604724703945, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2056693723427999313, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4796508704093586641, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}

@@ -10,8 +10,12 @@ public class DoorElevator : Door
     public float auto_close_timer = 0f;
 
     // ON INTERACT
-    public override void OnInteract()
+    public override void OnInteract(Capable interactor)
     {
+        // we set the interactor
+        Interactor = interactor.GetCapacity<InteractCapacity>();
+
+        // we react to the interaction
         if (!Can("open")) { return; }
 
         // on ouvre la porte

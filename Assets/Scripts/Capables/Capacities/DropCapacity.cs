@@ -4,6 +4,9 @@ using System;
 
 /// <summary>
 /// DropCapacity is a Capacity that allows the Capable to drop items.
+/// It applies a force to the item in the direction of the Capable's orientation.
+/// only for dropping items on the ground !!
+/// when dropping an item from an inventory to another, it is done via UI_Item that directly calls Inventory.Grab(item), never the Drop one but it is ok !
 /// </summary>
 
 public class DropCapacity : Capacity
@@ -20,6 +23,10 @@ public class DropCapacity : Capacity
 
     [Header("Selection")]
     [SerializeField] private Item selected_item;
+
+    [Header("Drop parameters")]
+    [SerializeField] private float drop_magnitude = 200f;
+    [SerializeField] private Transform parent_to_drop_items;
 
     [Header("Components")]
     [SerializeField] private ItemBank bank;
@@ -87,8 +94,30 @@ public class DropCapacity : Capacity
             return;
         }
 
-        // we drop the item
+        // we try to drop the item
+        Item item = selected_item;
         bool drop = inventory.Drop(selected_item);
-        if (debug) { Debug.Log("(DropCapacity) " + capable.name + (drop ? " :D dropped" : " :/ could not drop") + " : " + selected_item.name); }
+        if (!drop)
+        {
+            // we could not drop the item ooops
+            if (debug) { Debug.LogError("(DropCapacity) could not drop : " + item.name); }
+            return;
+        }
+
+        // we successfully dropped the item !!
+        // we move the item back to the world
+        item.transform.position = capable.transform.position + ((Vector3) capable.Orientation * 0.2f);
+        item.transform.SetParent(parent_to_drop_items);
+
+        // we add a force to the item
+        Force force = new Force("drop", capable.Orientation , drop_magnitude);
+        if (capable is Movable)
+        {
+            // we add the current moving velocity to the force (for dropping items while moving)
+            force.magnitude += (capable as Movable).Velocity.magnitude*2f;
+        }
+        item.AddForce(force);
+
+        if (debug) { Debug.Log("(DropCapacity) " + capable.name + " dropped : " + item.name + " with force of magnitude : " + force.magnitude); }
     }
 }

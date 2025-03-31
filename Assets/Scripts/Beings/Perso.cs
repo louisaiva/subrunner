@@ -57,7 +57,7 @@ public class Perso : Being
 
 
     [Header("INVENTORY")]
-    public Inventory inventory;
+    public new Inventory inventory;
     // public UI_OldInventory big_inventory;
     public Transform items_parent;
     private LayerMask grabber_layer;

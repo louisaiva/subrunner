@@ -9,8 +9,12 @@ public class Chest : Capable, Interactable, Openable
 
     // INTERACTABLE
     public InteractCapacity Interactor { get; set; }
-    public void OnInteract()
+    public void OnInteract(Capable interactor)
     {
+        // we set the interactor
+        Interactor = interactor.GetCapacity<InteractCapacity>();
+
+        // we react to the interaction
         if (Can("open")) { Do("open"); }
         else if (Can("close")) { Do("close"); }
     }

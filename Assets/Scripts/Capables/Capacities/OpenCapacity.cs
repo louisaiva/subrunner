@@ -52,6 +52,10 @@ public class OpenCapacity : Capacity
             capable.GetComponent<SpriteRenderer>().sortingLayerName = "fg";
             capable.GetComponent<SpriteRenderer>().sortingOrder = 1;
         }
+        else if (capable is Chest)
+        {
+            capable.inventory?.ui?.Show();
+        }
 
         if (debug) { Debug.Log(capable.name + " is opening..."); }
     }

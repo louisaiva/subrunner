@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6268219261002620662}
   - component: {fileID: 8258008451459818711}
   - component: {fileID: 3651365790579940442}
+  - component: {fileID: 6113777669669488765}
   m_Layer: 5
   m_Name: ui_inventory
   m_TagString: Untagged
@@ -69,6 +70,23 @@ Canvas:
   m_SortingLayerID: 22406999
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &6113777669669488765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 107290035593580173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &2056693723427999313
 GameObject:
   m_ObjectHideFlags: 0
@@ -143,3 +161,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bank: {fileID: 0}
+  inventory: {fileID: 0}

@@ -49,9 +49,12 @@ public class LevelSwitcher : Capable, Interactable
 
     // INTERACTABLE
     public InteractCapacity Interactor { get; set; }
-    public void OnInteract()
+    public void OnInteract(Capable interactor)
     {
-        // if (!input_actions.perso.enabled) { return; }
+        // we set the interactor
+        Interactor = interactor.GetCapacity<InteractCapacity>();
+
+        // we react to the interaction
         elevator_uses++;
         StartCoroutine(switchLevel());
     }
@@ -100,7 +103,7 @@ public class LevelSwitcher : Capable, Interactable
             floating_dmg_provider.GetComponent<TextManager>().talk("here we go\nlevel/. " + level.name,perso);
 
             // we open the elevator door
-            elevator_door.OnInteract();
+            elevator_door.OnInteract(null);
         }
 
     }

@@ -5,7 +5,7 @@ public interface Interactable
 {
     // PlayerInputActions input_actions { get; }
     public InteractCapacity Interactor { get; set; }
-    void OnInteract() {}
+    public void OnInteract(Capable interactor);
 }
 
 public interface Openable

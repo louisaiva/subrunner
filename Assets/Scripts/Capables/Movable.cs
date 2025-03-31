@@ -24,8 +24,10 @@ public class Movable : Capable
     [Header("Collisions")]
     public Collider2D feet_collider;
 
-    protected virtual void Start()
+    protected override void Awake()
     {
+        base.Awake();
+        
         rb = GetComponent<Rigidbody2D>();
         if (rb != null)
         {
