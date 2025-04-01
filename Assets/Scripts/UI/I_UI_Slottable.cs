@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using System;
 
 public interface I_UI_Slottable
 {
@@ -11,4 +12,7 @@ public interface I_UI_Slottable
     // void define_callback();
 
     List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator);
+
+    // MonoBehaviour functions
+    GameObject gameObject { get; }
 }

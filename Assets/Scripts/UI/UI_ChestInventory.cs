@@ -74,7 +74,7 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
         slot.SetActive(true);
 
         // on active le xbox_manager
-        if (input_manager.isUsingGamepad()) { xbox_manager.enable(this); }
+        if (input_manager.isUsingGamepad()) { xbox_manager.Enable(this); }
     }
 
     public void hide()
@@ -92,7 +92,7 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
         description_ui.removeAllDescriptions();
 
         // on désactive le xbox_manager
-        xbox_manager.disable();
+        xbox_manager.Disable(this);
 
     }
 

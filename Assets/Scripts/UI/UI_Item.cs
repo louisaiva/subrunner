@@ -64,6 +64,8 @@ public class UI_Item : MonoBehaviour, I_UI_Slot, IPointerDownHandler
         // check if disabled
         if (is_disabled) { return; }
 
+        Debug.Log("OnPointerDown on " + gameObject.name);
+
         // on change le sprite du slot
         GetComponent<Image>().sprite = down_sprite;
     }
@@ -77,6 +79,8 @@ public class UI_Item : MonoBehaviour, I_UI_Slot, IPointerDownHandler
 
         // we check if we have an item
         if (item == null) { return; }
+
+        Debug.Log("OnPointerClick on " + gameObject.name);
 
         // on récupère l'inventory qui drop l'item
         Inventory inventory = item.transform.parent.GetComponent<Inventory>();
@@ -109,6 +113,7 @@ public class UI_Item : MonoBehaviour, I_UI_Slot, IPointerDownHandler
     }
 
 
+    // ! DEPRECATED
     // reset hover
     public void resetHoover()
     {
@@ -116,18 +121,14 @@ public class UI_Item : MonoBehaviour, I_UI_Slot, IPointerDownHandler
 
         OnPointerExit(null);
     }
-
     public string getDescription()
     {
         throw new NotImplementedException();
     }
-
     public bool shouldDescriptionBeShown()
     {
         throw new NotImplementedException();
     }
-
-    // ! DEPRECATED
     public void setItem(OldItem item) {}
     public void setUIInventory(GameObject ui_inventory) {}
 

@@ -13,21 +13,15 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 {
     
     [Header("Components")]
+    [SerializeField] private UI_XboxNavigator navigator;
     [SerializeField] private ItemBank bank;
     public Inventory inventory;
 
-    // AWAKE
-    void Awake()
-    {
-        // on récupère le bank
-        if (bank == null) { bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();}
-    }
-
     public void Init()
     {
-        // si on a pas de bank, on a pas Awake() peut-etre tout simplement qu'on est désactivé de base
-        // ce qui est plutôt commun chez les UI
-        if (bank == null) { Awake(); }        
+        // on récupère les composants
+        bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
+        navigator = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
 
 
         // si on a pas d'inventory, il y a un problème
@@ -52,16 +46,42 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
             }
         }
 
+        // on regarde si on est l'ui_inventory de l'inventaire du joueur
+        // et dans ce cas on active tout de suite xbox_navigator
+        /* if (transform.parent.parent.name == "ui")
+        {
+            // on active le navigator
+            navigator.Enable(this);
+        } */
+
     }
 
     // SHOW / HIDE
     public void Show()
     {
         gameObject.SetActive(true);
+
+        // we set the navigator
+        navigator.Enable(this);
+
+        // we enable the perso_inventory also if we are not the player inventory
+        if (transform.parent.name != "hud")
+        {
+            navigator.Enable(GameObject.Find("/ui/hud/perso_inventory").GetComponent<UI_Inventory>());
+        }
     }
     public void Hide()
     {
         gameObject.SetActive(false);
+
+        // we disable the navigator
+        navigator.Disable(this);
+
+        // we disable the perso_inventory also if we are not the player inventory
+        if (transform.parent.name != "hud")
+        {
+            navigator.Disable(GameObject.Find("/ui/hud/perso_inventory").GetComponent<UI_Inventory>());
+        }
     }
 
     // SLOTTABLE

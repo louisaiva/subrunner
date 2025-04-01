@@ -7499,7 +7499,7 @@ GameObject:
   - component: {fileID: 974522240}
   - component: {fileID: 974522239}
   m_Layer: 5
-  m_Name: ui_inventory
+  m_Name: perso_inventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7536,6 +7536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb97402ee6332cc4fb62827af8b39a3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  navigator: {fileID: 0}
   bank: {fileID: 0}
   inventory: {fileID: 0}
 --- !u!114 &974522240
@@ -8603,17 +8604,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90af7a77457103344a06837e80a045fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slottables: []
   slots: []
   current_slot_index: 0
+  can_navigate: 1
+  last_input: {x: 0, y: 0}
+  navigate_continuously: 0
+  continuous_navigation_threshold: 0.4
+  continuous_navigation_cooldown: 0.075
+  continuous_navigation_counter: 0
   base_position: {x: 0, y: 0}
   angle_threshold: 45
   angle_multiplicator: 100
-  fast_navigation_time_first_threshold: 0.25
-  fast_navigation_time_cooldown: 0.05
-  fast_navigation_time: -1
-  fast_navigation: 0
-  first_navigation: 1
-  debug: 0
+  navigateInput: {fileID: 4690206707509844269, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+  activateInput: {fileID: 3671791553200363326, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+  debug: 1
 --- !u!114 &1244667850
 MonoBehaviour:
   m_ObjectHideFlags: 0

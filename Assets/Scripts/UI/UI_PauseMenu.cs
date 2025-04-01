@@ -115,7 +115,7 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
         input_manager.inputs.UI.cancel.performed += cancel_callback;
 
         // on active le xbox_manager
-        if (input_manager.isUsingGamepad()) { xbox_manager.enable(this); }
+        if (input_manager.isUsingGamepad()) { xbox_manager.Enable(this); }
 
         // on arrête le temps
         Time.timeScale = 0;
@@ -139,7 +139,7 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
         input_manager.inputs.UI.cancel.performed -= cancel_callback;
 
         // on désactive le xbox_manager
-        xbox_manager.disable();
+        xbox_manager.Disable(this);
 
         // on affiche le main_ui
         // main_ui.show();
