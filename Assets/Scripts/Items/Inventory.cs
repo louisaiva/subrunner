@@ -102,36 +102,80 @@ public class Inventory : MonoBehaviour {
     // GETTERS
     public Inventory GetInteractingInventory()
     {
+        string s = "(Inventory) " + capable.name + " is looking for an interacting inventory\n\n";
+
         // check if we are the interactable (so we look for the interactor)
         // typically for Chest
         if (capable is Interactable)
         {
             // this is the other capable
+            s+="we are the interactable\n";
             InteractCapacity interactor = (capable as Interactable).Interactor;
 
             // check if we have an interactor
-            if (interactor == null) { return null; }
+            if (interactor == null)
+            {
+                if (debug) { Debug.LogWarning(s + "we don't have an interactor\n");}
+                return null;
+            }
 
             // yes we do !! return its inventory
+            if (debug)
+            {
+                Debug.Log(s + "we have an interactor : " + interactor.capable.name
+                + "\nand its inventory is " + interactor.capable.inventory.name );
+            }
             return interactor.capable.inventory;
         }
-
+ 
 
         // check if we are the interactor (so we look for the interactable)
         // typically for Being
         else if (capable.GetCapacity<InteractCapacity>() != null)
         {
             // this is our capable
+            s += "we are the interactor\n";
             InteractCapacity interactor = capable.GetCapacity<InteractCapacity>();
             
             // check if we have an interactable
             Capable interactable = interactor.interactable as Capable;
-            if (interactable == null) { return null; }
+            if (interactable == null)
+            {
+                if (debug) { Debug.LogWarning(s + "we don't have an interactable\n");}
+                return null;
+            }
 
-            // checks if the interactable is an Openable and is closed
-            if (interactable is Openable && !(interactable as Openable).is_open) { return null; }
+            s += "we have an interactable : " + interactable.name + "\n";
+            // checks if the interactable is an Openable and is not closed
+            if (interactable is Openable)
+            {
+                s += "and it's an Openable\n";
+                Openable openable = interactable as Openable;
+
+                // fermé et pas en train de s'ouvrir
+                if (!openable.is_open && !openable.is_moving)
+                {
+                    if (debug) { Debug.LogWarning(s + "but it's closed & not opening\n");}
+                    return null;
+                }
+
+                // en train de se fermer
+                else if (openable.is_open && openable.is_moving)
+                {
+                    if (debug) { Debug.LogWarning(s + "but it's closing\n");}
+                    return null;
+                }
+
+                s+= "and it's open !!\n";
+            }
+            else if (interactable.inventory == null)
+            {
+                if (debug) { Debug.LogWarning(s + "but it doesn't have an inventory\n");}
+                return null;
+            }
 
             // we return the interactable's inventory
+            if (debug) { Debug.Log(s + "and its inventory is " + interactable.inventory.name + "\n\n");}
             return interactable.inventory;
         }
 

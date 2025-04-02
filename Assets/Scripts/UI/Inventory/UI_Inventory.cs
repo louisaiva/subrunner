@@ -61,26 +61,55 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     {
         gameObject.SetActive(true);
 
-        // we set the navigator
-        navigator.Enable(this);
-
-        // we enable the perso_inventory also if we are not the player inventory
+        // we enable the navigator if we are not the perso quick inventory
         if (transform.parent.name != "hud")
         {
-            navigator.Enable(GameObject.Find("/ui/hud/perso_inventory").GetComponent<UI_Inventory>());
+            navigator.Enable(this);
+            /* GameObject perso_quick_ui = GameObject.Find("/ui/hud/perso_quick_inventory");
+            if (perso_quick_ui == null)
+            {
+                Debug.LogError("(UI_Inventory) could not find the perso quick inventory, please check the hierarchy (should be in /ui/hud/perso_quick_inventory)");
+                return;
+            }
+            navigator.Enable(perso_quick_ui.GetComponent<UI_Inventory>()); */
         }
     }
     public void Hide()
     {
+        // we unhover all the slots
+        foreach (Transform child in transform)
+        {
+            UI_Item ui_item = child.GetComponent<UI_Item>();
+            if (ui_item == null) { continue; }
+            ui_item.OnPointerExit(null);
+        }
+
         gameObject.SetActive(false);
 
-        // we disable the navigator
-        navigator.Disable(this);
-
-        // we disable the perso_inventory also if we are not the player inventory
+        // we enable the navigator if we are not the perso quick inventory
         if (transform.parent.name != "hud")
         {
-            navigator.Disable(GameObject.Find("/ui/hud/perso_inventory").GetComponent<UI_Inventory>());
+            // we disable the navigator
+            navigator.Disable(this);
+            /* GameObject perso_quick_ui = GameObject.Find("/ui/hud/perso_quick_inventory");
+            if (perso_quick_ui == null)
+            {
+                Debug.LogError("(UI_Inventory) could not find the perso quick inventory, please check the hierarchy (should be in /ui/hud/perso_quick_inventory)");
+                return;
+            }
+            navigator.Disable(perso_quick_ui.GetComponent<UI_Inventory>()); */
+        }
+    }
+    public void Toggle()
+    {
+        // we check if the inventory is already shown
+        if (gameObject.activeSelf)
+        {
+            Hide();
+        }
+        else
+        {
+            Show();
         }
     }
 
@@ -103,6 +132,15 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
             }
         }
         return slots;
+    }
+    public bool IsYourSlot(GameObject slot)
+    {
+        // we check if the slot is in the inventory
+        foreach (Transform child in transform)
+        {
+            if (child.gameObject == slot) { return true; }
+        }
+        return false;
     }
 
     // GRAB

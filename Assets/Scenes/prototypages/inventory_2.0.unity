@@ -7499,7 +7499,7 @@ GameObject:
   - component: {fileID: 974522240}
   - component: {fileID: 974522239}
   m_Layer: 5
-  m_Name: perso_inventory
+  m_Name: perso_quick_inventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8615,7 +8615,7 @@ MonoBehaviour:
   continuous_navigation_counter: 0
   base_position: {x: 0, y: 0}
   angle_threshold: 45
-  angle_multiplicator: 100
+  angle_multiplicator: 0
   navigateInput: {fileID: 4690206707509844269, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   activateInput: {fileID: 3671791553200363326, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   debug: 1

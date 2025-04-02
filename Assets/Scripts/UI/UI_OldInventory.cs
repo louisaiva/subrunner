@@ -416,4 +416,8 @@ public class UI_OldInventory : MonoBehaviour, I_UI_Slottable
         return slots;
     }
 
+    public bool IsYourSlot(GameObject slot)
+    {
+        throw new System.NotImplementedException();
+    }
 }

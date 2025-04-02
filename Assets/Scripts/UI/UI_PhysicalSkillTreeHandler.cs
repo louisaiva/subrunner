@@ -72,4 +72,8 @@ public class UI_PhysicalSkillTreeHandler : MonoBehaviour, I_UI_Slottable
         return slots;
     }
 
+    public bool IsYourSlot(GameObject slot)
+    {
+        throw new System.NotImplementedException();
+    }
 }

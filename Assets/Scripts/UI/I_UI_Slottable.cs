@@ -12,6 +12,7 @@ public interface I_UI_Slottable
     // void define_callback();
 
     List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator);
+    bool IsYourSlot(GameObject slot);
 
     // MonoBehaviour functions
     GameObject gameObject { get; }

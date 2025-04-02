@@ -345,15 +345,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "inventory",
-                    "type": "Button",
-                    "id": "718497a6-ea54-4f17-b02c-205863a9f65e",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -475,28 +466,6 @@
                     "processors": "",
                     "groups": "xbox",
                     "action": "pause",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "f55fd782-031b-4d1f-987c-9bc79c5a6ec8",
-                    "path": "<Gamepad>/rightTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "inventory",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "2a470b7e-21b0-45b1-82d4-c46d97adb659",
-                    "path": "<Keyboard>/f",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard",
-                    "action": "inventory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1000,6 +969,45 @@
                     "processors": "",
                     "groups": "xbox",
                     "action": "gamepad",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "menus",
+            "id": "8d562067-e90e-4639-adc9-8052a2c3e6d7",
+            "actions": [
+                {
+                    "name": "inventory",
+                    "type": "Button",
+                    "id": "a423a577-9b81-481f-a030-17c42cb89013",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "e6ac260a-558c-41f0-a34e-f2691617259e",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "inventory",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c9a78d18-888d-4052-a7aa-d7d9eec79ba0",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "inventory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

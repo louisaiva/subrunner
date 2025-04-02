@@ -14,6 +14,8 @@ public class Chest : Capable, Interactable, Openable
         // we set the interactor
         Interactor = interactor.GetCapacity<InteractCapacity>();
 
+        if (debug) { Debug.Log("(Chest) " + name + " was interacted by " + interactor.name); }
+
         // we react to the interaction
         if (Can("open")) { Do("open"); }
         else if (Can("close")) { Do("close"); }

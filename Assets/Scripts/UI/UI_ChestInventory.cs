@@ -218,4 +218,8 @@ public class UI_ChestInventory : MonoBehaviour, I_UI_Slottable
         return item_ui.Count < max_items;
     }
 
+    public bool IsYourSlot(GameObject slot)
+    {
+        throw new System.NotImplementedException();
+    }
 }

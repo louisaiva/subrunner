@@ -20,6 +20,9 @@ public class UI_Item : MonoBehaviour, I_UI_Slot, IPointerDownHandler
     public Sprite down_sprite;
     public Sprite disabled_sprite;
 
+    [Header("Debug")]
+    [SerializeField] private bool debug = false;
+
     // DISABLE
     public void Enable()
     {
@@ -64,7 +67,7 @@ public class UI_Item : MonoBehaviour, I_UI_Slot, IPointerDownHandler
         // check if disabled
         if (is_disabled) { return; }
 
-        Debug.Log("OnPointerDown on " + gameObject.name);
+        if (debug) { Debug.Log("OnPointerDown on " + gameObject.name); }
 
         // on change le sprite du slot
         GetComponent<Image>().sprite = down_sprite;
@@ -79,36 +82,33 @@ public class UI_Item : MonoBehaviour, I_UI_Slot, IPointerDownHandler
 
         // we check if we have an item
         if (item == null) { return; }
-
-        Debug.Log("OnPointerClick on " + gameObject.name);
+        if (debug) { Debug.Log("OnPointerClick on " + gameObject.name); }
 
         // on récupère l'inventory qui drop l'item
         Inventory inventory = item.transform.parent.GetComponent<Inventory>();
-        // item.transform.parent.GetComponent<Inventory>().Drop(item);
 
         // on cherche l'inventory qui reçoit l'item
         Inventory inventory_to_drop = inventory.GetInteractingInventory();
-        if (inventory_to_drop == null)
+        
+        // we drop the item in the other inventory
+        if (inventory_to_drop != null)
         {
-            // we drop on the ground
+            inventory_to_drop.Grab(item);
+            return;
+        }
 
-            // we check if we have a DropCapacity
-            DropCapacity dropper = inventory.capable.GetCapacity<DropCapacity>();
-            if (dropper != null)
-            {
-                dropper.Select(item);
-                inventory.capable.Do("drop");
-            }
-            else
-            {
-                // the inventory simply drops the item (we may be in a chest)
-                inventory.Drop(item);
-            }
+        // we don't have an inventory to drop so we drop on the ground
+        // we check if we have a DropCapacity
+        DropCapacity dropper = inventory.capable.GetCapacity<DropCapacity>();
+        if (dropper != null)
+        {
+            dropper.Select(item);
+            inventory.capable.Do("drop");
         }
         else
         {
-            // we try to drop the item in the inventory
-            inventory_to_drop.Grab(item);
+            // the inventory simply drops the item (we may be in a chest)
+            inventory.Drop(item);
         }
     }
 

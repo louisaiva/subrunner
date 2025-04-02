@@ -45,7 +45,14 @@ public class Capable : MonoBehaviour
     [SerializeField] protected List<float> effects_timetolive = new List<float>();
 
     // un capable peut aussi avoir un inventaire
-    public Inventory inventory { get { return transform.Find("inventory").GetComponent<Inventory>(); } }
+    public Inventory inventory{ 
+        get
+        {
+            Transform inventory_transform = transform.Find("inventory");
+            if (inventory_transform == null) { return null; }
+            return inventory_transform.GetComponent<Inventory>();
+        }
+    }
 
 
 

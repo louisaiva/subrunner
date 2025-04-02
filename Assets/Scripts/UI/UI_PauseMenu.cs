@@ -186,5 +186,13 @@ public class UI_PauseMenu : MonoBehaviour, I_UI_Slottable
 
         return slots;
     }
-
+    public bool IsYourSlot(GameObject slot)
+    {
+        // on regarde si le slot est dans les slots
+        if (slot.transform.IsChildOf(text_slots))
+        {
+            return true;
+        }
+        return false;
+    }
 }
