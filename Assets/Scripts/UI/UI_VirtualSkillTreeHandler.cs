@@ -71,5 +71,8 @@ public class UI_VirtualSkillTreeHandler : MonoBehaviour, I_UI_Slottable
         return slots;
     }
 
-
+    public bool IsYourSlot(GameObject slot)
+    {
+        throw new System.NotImplementedException();
+    }
 }

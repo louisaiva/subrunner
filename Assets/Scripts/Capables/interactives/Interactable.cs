@@ -4,7 +4,8 @@ using UnityEngine.InputSystem;
 public interface Interactable
 {
     // PlayerInputActions input_actions { get; }
-    void OnInteract() {}
+    public InteractCapacity Interactor { get; set; }
+    public void OnInteract(Capable interactor);
 }
 
 public interface Openable

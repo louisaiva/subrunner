@@ -31,13 +31,13 @@ public class OldItem : Movable, I_Interactable
     public Transform interact_tuto_label { get; set; }
 
     // UNITY FUNCTIONS
-    public new virtual void Start()
+    public virtual void Start()
     {
         // on récupère le perso
         perso = GameObject.Find("/perso");
 
 
-        base.Start();
+        // base.Start();
         // world_layers = LayerMask.GetMask("Ground", "Walls", "Ceiling", "Doors", "Computers", "Decoratives", "Interactives");
 
         // on ajoute les capacités

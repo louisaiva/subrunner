@@ -29,6 +29,7 @@ public class InputManager : MonoBehaviour
         inputs.perso.Enable();
         inputs.UI.Enable();
         inputs.any.Enable();
+        inputs.menus.Enable();
 
         // on ajoute les listeners
         inputs.any.keyboard.performed += ctx => setInputType("keyboard");
@@ -44,6 +45,7 @@ public class InputManager : MonoBehaviour
             s += "- ui : " + inputs.UI.enabled + "\n\t";
             s += "- any : " + inputs.any.enabled + "\n\t";
             s += "- enhanced_perso : " + inputs.enhanced_perso.enabled + "\n\t";
+            s += "- menus : " + inputs.menus.enabled + "\n\t";
             Debug.Log(s);
         }
     }
@@ -74,6 +76,7 @@ public class InputManager : MonoBehaviour
         if (inputMap == "perso") { action = inputs.perso.Get()[action_name]; }
         else if (inputMap == "UI") { action = inputs.UI.Get()[action_name]; }
         else if (inputMap == "any") { action = inputs.any.Get()[action_name]; }
+        else if (inputMap == "menus") { action = inputs.menus.Get()[action_name]; }
         else if (inputMap == "enhanced_perso") { action = inputs.enhanced_perso.Get()[action_name]; }
 
         // on debug

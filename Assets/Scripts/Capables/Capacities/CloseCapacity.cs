@@ -52,6 +52,10 @@ public class CloseCapacity : Capacity
             capable.GetComponent<SpriteRenderer>().sortingLayerName = "fg";
             capable.GetComponent<SpriteRenderer>().sortingOrder = 1;
         }
+        else if (capable is Chest)
+        {
+            capable.inventory?.ui?.Hide();
+        }
 
         if (debug) { Debug.Log(capable.name + " is closing..."); }
     }

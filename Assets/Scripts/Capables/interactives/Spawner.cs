@@ -2,15 +2,14 @@ using UnityEngine;
 
 public class Spawner : Capable, Interactable
 {
-    // inputs actions
-    /*public PlayerInputActions input_actions
+    // INTERACTABLE
+    public InteractCapacity Interactor { get; set; }
+    public void OnInteract(Capable interactor)
     {
-        get => GameObject.Find("/utils/input_manager").GetComponent<InputManager>().inputs;
-    }*/
-    // ON INTERACT
-    public void OnInteract()
-    {
-        // if (!input_actions.perso.enabled) { return; }
+        // we set the interactor
+        Interactor = interactor.GetCapacity<InteractCapacity>();
+
+        // we react to the interaction
         if (Can("spawn")) { Do("spawn"); }
         else { Debug.Log("Spawner has been interacted !"); }
     }

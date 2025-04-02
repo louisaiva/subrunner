@@ -33,32 +33,23 @@ public class Being : Movable
     protected float lookin_at_angle = 40f; // angle du regard du perso en degrés
 
 
-    // unity functions
-    protected override void Start()
+    protected override void Awake()
     {
-
-        base.Start();
-        
-        // on initialise les capacités
-        AddCapacity("hurted");
-        AddEffect(Effect.RegenLife, -888f); 
-
+        base.Awake();
 
         // on récupère les composants
         life_collider = transform.Find("body").GetComponent<Collider2D>();
-        // gameObject.AddComponent<AnimationHandler>();
-        // anim_handler = GetComponent<AnimationHandler>();
-
-
-        // Orientation = new Vector2(0.1f,0f);
-
-
-        // on récupère le provider d'xp
-        // xp_provider = GameObject.Find("/utils/particles/xp_provider");
 
         // on récupère le provider de floating dmg
         floating_dmg_provider = GameObject.Find("/utils/dmgs_provider");
+    }
 
+    // unity functions
+    protected virtual void Start()
+    {
+        // on initialise les capacités
+        AddCapacity("hurted");
+        AddEffect(Effect.RegenLife, -888f);
     }
 
     public virtual void Events()

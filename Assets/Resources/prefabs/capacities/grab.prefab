@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 891631874371971630}
-  - component: {fileID: 3508513623195772367}
+  - component: {fileID: -1445130778198248968}
   m_Layer: 25
-  m_Name: run
+  m_Name: grab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3508513623195772367
+--- !u!114 &-1445130778198248968
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,8 +41,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6582822749040364892}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46cd24fe92a9ba64196a9432a9b59060, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d84a036ccc2b72438402080a727943d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 0
   debug: 0
+  selected_item: {fileID: 0}
+  bank: {fileID: 0}
+  inventory: {fileID: 0}
+  grabInput: {fileID: 2767387396969607311, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}

@@ -1,402 +1,192 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class Inventory : MonoBehaviour {
 
+    [Header("Items")]
+    public List<Item> Items = new List<Item>();
 
-    public ItemBank bank;
+    [Header("Inventory parameters")]
+    public int MaxItems = 9;
+    public bool Scalable = false;
 
-    // items
-    public int max_items = 9;
-    public bool scalable = false;
+    [Header("Events")]
+    public UnityEvent OnGrab;
+    public UnityEvent OnDrop;
 
-    // prefabs
-    public string prefabs_path = "prefabs/items/";
 
-    //bed
-    // [SerializeField] private bool is_bed = false;
+    [Header("Components")]
+    public UI_Inventory ui;
+    public Capable capable { get { return transform.parent.GetComponent<Capable>(); } }
 
-    // perso
-    public GameObject perso;
-    public bool is_perso_inventory = false;
+    [Header("Debug")]
+    [SerializeField] private bool debug = false;
 
-    // ui
-    public Canvas canvas;
-    
-    public bool is_showed = false;
-    public Vector2 inv_offset = new Vector2(0.5f, 0.5f);
-    List<GameObject> empty_slots = new List<GameObject>();
-    GameObject empty_slot_prefab;
-
-    // unity functions
+    // AWAKE
     void Awake()
     {
-        // on récupère le bank
-        bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
-
-        // on récupère le perso
-        perso = GameObject.Find("/perso");
-
-        // on récupère le prefab
-        /* if (is_bed)
+        // on vérifie si on a un ui_inventory
+        if (ui != null)
         {
-            empty_slot_prefab = Resources.Load("prefabs/ui/empty_legendary_slot") as GameObject;
+            ui.inventory = this;
         }
-        else
-        {
-        } */
-        empty_slot_prefab = Resources.Load("prefabs/ui/empty_slot") as GameObject;
-
-        // on récupère le canvas
-        canvas = GetComponent<Canvas>();
-
-        // on récupère le bg
-        // inv_bg = transform.Find("bg").gameObject;
-
-        // on met à jour la taille du canvas
-        updateSize();
-
-        // on met à jour l'offset de l'inventaire en fonction de l'offset du canvas
-        updateOffset();
-
     }
 
-    /* void Update()
+    // START
+    void Start()
     {
+        // on initialise l'UI
+        ui?.Init();
 
-        // on met à jour la taille du canvas si c'est scalable
-        if (scalable) { updateSize(); }
-
-        // si on est un inventaire de perso, on change la position de l'inventaire si on affiche un autre inventaire
-        if (is_perso_inventory)
-        {
-            bool is_offseted = false;
-            // on regarde si on affiche un autre inventaire
-            if (perso.GetComponent<Perso>().current_interactable != null)
-            {
-                // on regarde si c'est un coffre
-                if (perso.GetComponent<Perso>().current_interactable.GetComponent<InventoryChest>() != null &&
-                perso.GetComponent<Perso>().current_interactable.GetComponent<InventoryChest>().inventory.is_showed)
-                {
-                    // on calcule la position de l'inventaire
-                    Vector3 position = perso.GetComponent<Perso>().current_interactable.GetComponent<InventoryChest>().inventory.getSidePos();
-                    
-                    // on met à jour la position de l'inventaire
-                    transform.position = position;
-
-                    // on met à jour l'offset
-                    is_offseted = true;
-
-                    // on met à jour l'affichage
-                    setShow(true);
-                }
-            }
-
-            if (!is_offseted)
-            {
-                // on met à jour l'affichage
-                setShow(false);
-                
-                // on met à jour la position de l'inventaire
-                transform.position = perso.transform.position + new Vector3(inv_offset.x, inv_offset.y, 0);
-            }
-        }
-
-        // on met à jour l'affichage
-        updateShow();
-
-        // on met à jour les positions des items
-        updateUI();
-    } */
-
-    // UI
-    void updateUI()
-    {
         // on récupère les items
-        List<OldItem> items = getItems();
-
-        int w = (int) GetComponent<RectTransform>().sizeDelta.x;
-
-        // on met à jour les positions des items
-        for (int i = 0; i < items.Count; i++)
-        {
-            // on récupère l'item
-            OldItem item = items[i];
-
-            // on récupère la position de l'item
-            Vector2 pos = new Vector2(0, 0);
-            pos.x = inv_offset.x + (i % w);
-            pos.y = inv_offset.y + (i / w);
-
-            // on met à jour la position de l'item
-            item.transform.localPosition = pos;
-        }
-
-        // si on est pas scalable, on ajoute/supprime des items vides pour remplir l'inventaire
-        if (!scalable && items.Count + empty_slots.Count < max_items)
-        {
-            int nb_empty_slots_a_creer = max_items - items.Count - empty_slots.Count;
-
-            // on ajoute des empty slots
-            for (int i = 0; i < nb_empty_slots_a_creer; i++)
-            {
-                // on crée des empty slots
-                GameObject empty_slot = Instantiate(empty_slot_prefab, transform.position, Quaternion.identity) as GameObject;
-                empty_slot.transform.SetParent(transform);
-
-                // on règle la scale à 1
-                empty_slot.transform.localScale = new Vector3(1, 1, 1);
-
-                // on ajoute l'empty slot à la liste
-                empty_slots.Add(empty_slot);
-            }
-        }
-        else if (!scalable && items.Count + empty_slots.Count > max_items)
-        {
-            // on supprime les empty slots en trop
-            int nb_empty_slots_a_supprimer = items.Count + empty_slots.Count - max_items;
-
-            // on supprime les empty slots
-            for (int i = 0; i < nb_empty_slots_a_supprimer; i++)
-            {
-                // on récupère le dernier empty slot
-                GameObject empty_slot = empty_slots[empty_slots.Count - 1];
-
-                // on le supprime
-                Destroy(empty_slot);
-
-                // on le supprime de la liste
-                empty_slots.Remove(empty_slot);
-            }
-        }
-
-        // on met à jour les positions des empty slots
-        for (int i = 0; i < empty_slots.Count; i++)
-        {
-            // on récupère l'empty slot
-            GameObject empty_slot = empty_slots[i];
-
-            int pos_dans_linv = items.Count + i;
-
-            // on récupère la position de l'empty slot
-            Vector2 pos = new Vector2(0, 0);
-            pos.x = inv_offset.x + (pos_dans_linv % w);
-            pos.y = inv_offset.y + (pos_dans_linv / w);
-
-            // on met à jour la position de l'empty slot
-            empty_slot.transform.localPosition = pos;
-        }
-    }
-
-    void updateShow()
-    {
-        // on met à jour l'affichage du canvas
-        // canvas.SetActive(is_showed);
-        canvas.enabled = is_showed;
-
-        // on régule l'affichage des items
         foreach (Transform child in transform)
         {
-            // on regarde si c'est un item
-            if (child.GetComponent<OldItem>() == null) { continue; }
-
-            // on récupère l'item
-            OldItem item = child.GetComponent<OldItem>();
-
-            // on met à jour l'affichage
-            // item.changeShow(is_showed);
-        }
-
-        // on met à jour les empty slots
-        foreach (GameObject empty_slot in empty_slots)
-        {
-            // on met à jour l'affichage
-            empty_slot.SetActive(is_showed);
+            Grab(child.GetComponent<Item>());
         }
     }
 
-    void updateOffset()
+
+    // GRAB / DROP
+    public bool Grab(Item item)
     {
-        // on met à jour l'offset de l'inventaire en fonction de l'offset du canvas
-        if (GetComponent<RectTransform>().pivot.x == 0)
-        {
-            inv_offset.x = 0.5f;
-        }
-        else if (GetComponent<RectTransform>().pivot.x == 1)
-        {
-            inv_offset.x = -GetComponent<RectTransform>().sizeDelta.x + 0.5f;
-        }
-        else if (GetComponent<RectTransform>().pivot.x == 0.5f)
-        {
-            inv_offset.x = -GetComponent<RectTransform>().sizeDelta.x / 2 + 0.5f;
-        }
+        // we check if we can add the item
+        if (item == null) { return false; }
+        if (Items.Count >= MaxItems && !Scalable) { return false; }
 
-        // on met a jour l'offset du box collider
-        
-    }
+        // we check if the item is already grabbed somewhere, if so we drop it
+        if (item.Grabbed) { item.transform.parent.GetComponent<Inventory>().Drop(item); }
 
-    void updateSize()
-    {
+        // we add the item
+        Items.Add(item);
 
-        int size = max_items;
-        if (scalable) { size = getItems().Count; }
+        // we set the item to grabbed (which disables the hover collider)
+        item.Grabbed = true;
 
-        // nouvelle version on veut afficher "size" items avec l'inventaire le plus petit possible
-        // pour ça on veut trouver le nb le plus petit "n" tel que "n*n" >= "size"
-
-        // on vérifie qu'on a pas déjà la bonne taille
-        if (GetComponent<RectTransform>().sizeDelta.x * GetComponent<RectTransform>().sizeDelta.y >= size) { return; }
-
-        // on calcule la taille de l'inventaire
-        int width = 0;
-        int height = 0;
-
-        /* if (!is_bed)
-        { */
-        if (size == 3)
-        {
-            // cas particulier pour size == 3
-            width = 3;
-            height = 1;
-        }
-        else
-        {
-            // on cherche le plus petit carré >= size
-            for (int i = 1; i <= size; i++)
-            {
-                if (i * i >= size)
-                {
-                    width = i;
-                    height = i;
-                    break;
-                }
-            }
-        }
-        // }
-        /* else
-        {
-            // on met une seule ligne
-            width = size;
-            height = 1;
-        } */
-
-        // on met à jour la taille de l'inventaire
-        GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
-
-        // on met à jour la taille du box collider
-        GetComponent<BoxCollider2D>().size = new Vector2(width, height);
-
-        // on met à jour l'offset du box collider
-        float x_offset = (GetComponent<RectTransform>().pivot.x - 0.5f) * width * -1;
-        GetComponent<BoxCollider2D>().offset = new Vector2(x_offset, height / 2f);
-
-
-        // on met à jour l'offset de l'inventaire en fonction de l'offset du canvas
-        updateOffset();
-    }
-
-    /* public void rollShow()
-    {
-        // on met à jour l'affichage
-        is_showed = !is_showed;
-        updateShow();
-    }
-    */
-    public void setShow(bool is_showed)
-    {
-        // on désactive le big inventory si c'est un inventaire de perso
-        /* if (is_showed && is_perso_inventory)
-        {
-            perso.GetComponent<Perso>().big_inventory.hide();
-        } */
-
-        // on met à jour l'affichage
-        this.is_showed = is_showed;
-        updateShow();
-    }
-
-
-    // functions
-    /* public void dropItem(OldItem item)
-    {
-        // on vérifie si notre inventaire est un inventaire de perso
-        if (is_perso_inventory)
-        {
-            // on drop l'item via le perso
-            perso.GetComponent<Perso>().drop(item);
-        }
-        else
-        {
-            // si on est un coffre, on drop l'item dans le perso
-            perso.GetComponent<Perso>().grab(item);
-        } 
-    } */
-
-    /* public bool addItem(OldItem item)
-    {
-        // on ajoute un item à l'inventaire
-        // on vérifie qu'on est pas déjà plein
-        if (!scalable && getItems().Count >= max_items) { return false; }
-
-        // print("on ajoute " + item.item_name + " à " + gameObject.name);
-
-        // on ajoute l'item
+        // we set the item parent
         item.transform.SetParent(transform);
 
-        // on règle la scale à 1
-        item.transform.localScale = new Vector3(1, 1, 1);
+        // we trigger the event
+        OnGrab.Invoke();
+        
+        // we update the UI
+        ui?.UI_Grab(item);
 
-        // on affiche ou pas l'item
-        // item.changeShow(is_showed);
+        if (debug) { Debug.Log("(Inventory) " + capable.name + " grabbed : " + item.name); }
 
         return true;
-    } */
-
-    /* public OldItem createItem(string item_name, bool is_legendary = false)
+    }
+    public bool Drop(Item item)
     {
+        // we check if we can remove the item
+        if (item == null) { return false; }
+        if (!Items.Contains(item)) { return false; }
 
-        // on récupère l'item de la banque
-        OldItem item = bank.createItem(item_name);
-        if (item == null) { return null; }
+        // we remove the item
+        Items.Remove(item);
 
-        // on start l'item
-        item.Start();
+        // we set the item to dropped (which enables the hover collider)
+        item.Grabbed = false;
+        
+        // we trigger the event
+        OnDrop.Invoke();
 
-        // on ajoute l'item
-        addItem(item);
+        // we update the UI
+        ui?.UI_Drop(item);
+        
+        if (debug) { Debug.Log("(Inventory) " + capable.name + " dropped : " + item.name); }
 
-        return item;
-    } */
+        return true;
+    }
 
-    // getters
-    public List<OldItem> getItems()
+    // GETTERS
+    public Inventory GetInteractingInventory()
     {
-        // on récupère les items
-        List<OldItem> items = new List<OldItem>();
-        foreach (Transform child in transform)
+        string s = "(Inventory) " + capable.name + " is looking for an interacting inventory\n\n";
+
+        // check if we are the interactable (so we look for the interactor)
+        // typically for Chest
+        if (capable is Interactable)
         {
-            // on regarde si c'est un item
-            if (child.GetComponent<OldItem>() == null) { continue; }
+            // this is the other capable
+            s+="we are the interactable\n";
+            InteractCapacity interactor = (capable as Interactable).Interactor;
 
-            // on ajoute l'item
-            items.Add(child.GetComponent<OldItem>());
+            // check if we have an interactor
+            if (interactor == null)
+            {
+                if (debug) { Debug.LogWarning(s + "we don't have an interactor\n");}
+                return null;
+            }
+
+            // yes we do !! return its inventory
+            if (debug)
+            {
+                Debug.Log(s + "we have an interactor : " + interactor.capable.name
+                + "\nand its inventory is " + interactor.capable.inventory.name );
+            }
+            return interactor.capable.inventory;
         }
-        return items;
+ 
+
+        // check if we are the interactor (so we look for the interactable)
+        // typically for Being
+        else if (capable.GetCapacity<InteractCapacity>() != null)
+        {
+            // this is our capable
+            s += "we are the interactor\n";
+            InteractCapacity interactor = capable.GetCapacity<InteractCapacity>();
+            
+            // check if we have an interactable
+            Capable interactable = interactor.interactable as Capable;
+            if (interactable == null)
+            {
+                if (debug) { Debug.LogWarning(s + "we don't have an interactable\n");}
+                return null;
+            }
+
+            s += "we have an interactable : " + interactable.name + "\n";
+            // checks if the interactable is an Openable and is not closed
+            if (interactable is Openable)
+            {
+                s += "and it's an Openable\n";
+                Openable openable = interactable as Openable;
+
+                // fermé et pas en train de s'ouvrir
+                if (!openable.is_open && !openable.is_moving)
+                {
+                    if (debug) { Debug.LogWarning(s + "but it's closed & not opening\n");}
+                    return null;
+                }
+
+                // en train de se fermer
+                else if (openable.is_open && openable.is_moving)
+                {
+                    if (debug) { Debug.LogWarning(s + "but it's closing\n");}
+                    return null;
+                }
+
+                s+= "and it's open !!\n";
+            }
+            else if (interactable.inventory == null)
+            {
+                if (debug) { Debug.LogWarning(s + "but it doesn't have an inventory\n");}
+                return null;
+            }
+
+            // we return the interactable's inventory
+            if (debug) { Debug.Log(s + "and its inventory is " + interactable.inventory.name + "\n\n");}
+            return interactable.inventory;
+        }
+
+        // we return null
+        return null;
     }
 
-    /* public List<OldItem> getLegendaryItems()
-    {
-        // on récupère les items
-        List<OldItem> items = getItems();
-        return items.Where(x => x is LegendaryItem).ToList();
-    } */
 
-    public List<Hack> getHacks()
-    {
-        // on récupère les hacks
-        List<Hack> hacks = getItems().OfType<Hack>().ToList();
-        return hacks;
-    }
+
+
+    // ! DEPRECATED
+    public Hack[] getHacks() { return new Hack[0]; }
+    public void setShow(bool show) { }
 }

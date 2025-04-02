@@ -57,7 +57,7 @@ public class Perso : Being
 
 
     [Header("INVENTORY")]
-    public Inventory inventory;
+    public new Inventory inventory;
     // public UI_OldInventory big_inventory;
     public Transform items_parent;
     private LayerMask grabber_layer;
@@ -125,7 +125,7 @@ public class Perso : Being
 
         // on récupère l'inventaire
         inventory = GameObject.Find("/inventory")?.GetComponent<Inventory>();
-        if (inventory != null) {inventory.scalable = true;}
+        // if (inventory != null) {inventory.scalable = true;}
         // big_inventory = GameObject.Find("/ui/inventory/ui_inventory").GetComponent<UI_OldInventory>();
 
         // on récupère la map

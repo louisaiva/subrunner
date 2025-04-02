@@ -1,0 +1,123 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+using System;
+
+/// <summary>
+/// DropCapacity is a Capacity that allows the Capable to drop items.
+/// It applies a force to the item in the direction of the Capable's orientation.
+/// only for dropping items on the ground !!
+/// when dropping an item from an inventory to another, it is done via UI_Item that directly calls Inventory.Grab(item), never the Drop one but it is ok !
+/// </summary>
+
+public class DropCapacity : Capacity
+{
+    public override bool Able
+    {
+        get
+        {
+            // checks if we have a selected item
+            if (selected_item == null) { return false; }
+            return true;
+        }
+    }
+
+    [Header("Selection")]
+    [SerializeField] private Item selected_item;
+
+    [Header("Drop parameters")]
+    [SerializeField] private float drop_magnitude = 200f;
+    [SerializeField] private Transform parent_to_drop_items;
+
+    [Header("Components")]
+    [SerializeField] private ItemBank bank;
+    [SerializeField] private Inventory inventory;
+
+    [Header("Input & Callbacks")]
+    [SerializeField] private InputActionReference dropInput;
+    private InputAction dropAction;
+    private event Action<InputAction.CallbackContext> dropCallback;
+
+    // START
+    private void Start()
+    {
+        // on récupère la bank
+        bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
+        inventory = capable.inventory;
+
+        // on récupère l'action drop
+        dropAction = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().GetAction(dropInput);
+
+        // on définit le callback
+        dropCallback = ctx => Use(capable);
+    }
+
+    // SELECT / DESELECT
+    public void Select(Item item)
+    {
+        selected_item = item;
+
+        // we set the callback
+        dropAction.performed += dropCallback;
+
+        if (debug) { Debug.Log("(DropCapacity) selected (and callback set) : " + item.name); }
+    }
+    public void Deselect()
+    {
+        if (selected_item == null) { return; }
+
+        if (debug) { Debug.Log("(DropCapacity) deselected (and callback removed) : " + selected_item.name); }
+
+        selected_item = null;
+
+        // we remove the callback
+        dropAction.performed -= dropCallback;
+
+    }
+
+
+    public void SelectLastItem()
+    {
+        // we check if we have items
+        if (inventory.Items.Count == 0) { return; }
+
+        // we select the last item
+        Select(inventory.Items[inventory.Items.Count - 1]);
+    }
+
+    // USE
+    public override void Use(Capable capable)
+    {
+        // we check if we have a selected item
+        if (selected_item == null)
+        {
+            if (debug) { Debug.LogError("(DropCapacity) no selected item"); }
+            return;
+        }
+
+        // we try to drop the item
+        Item item = selected_item;
+        bool drop = inventory.Drop(selected_item);
+        if (!drop)
+        {
+            // we could not drop the item ooops
+            if (debug) { Debug.LogError("(DropCapacity) could not drop : " + item.name); }
+            return;
+        }
+
+        // we successfully dropped the item !!
+        // we move the item back to the world
+        item.transform.position = capable.transform.position + ((Vector3) capable.Orientation * 0.2f);
+        item.transform.SetParent(parent_to_drop_items);
+
+        // we add a force to the item
+        Force force = new Force("drop", capable.Orientation , drop_magnitude);
+        if (capable is Movable)
+        {
+            // we add the current moving velocity to the force (for dropping items while moving)
+            force.magnitude += (capable as Movable).Velocity.magnitude*2f;
+        }
+        item.AddForce(force);
+
+        if (debug) { Debug.Log("(DropCapacity) " + capable.name + " dropped : " + item.name + " with force of magnitude : " + force.magnitude); }
+    }
+}

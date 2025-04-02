@@ -307,7 +307,7 @@
                     "id": "d54f75d2-9814-4e30-b26b-b3e8fdee853f",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press(behavior=2)",
                     "initialStateCheck": false
                 },
                 {
@@ -345,29 +345,9 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "inventory",
-                    "type": "Button",
-                    "id": "718497a6-ea54-4f17-b02c-205863a9f65e",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
-                {
-                    "name": "",
-                    "id": "3572067e-9738-49b0-b697-7f44a8028c52",
-                    "path": "<Mouse>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard",
-                    "action": "navigate",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
                 {
                     "name": "",
                     "id": "5bbfd291-7f88-4772-9484-02def75ea68a",
@@ -397,17 +377,6 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "xbox",
-                    "action": "y",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "6cad4bee-91f4-4954-a619-bc892eb9dd41",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard",
                     "action": "y",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -502,30 +471,8 @@
                 },
                 {
                     "name": "",
-                    "id": "f55fd782-031b-4d1f-987c-9bc79c5a6ec8",
-                    "path": "<Gamepad>/rightTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "inventory",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "2a470b7e-21b0-45b1-82d4-c46d97adb659",
-                    "path": "<Keyboard>/f",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard",
-                    "action": "inventory",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "40aa7c62-2967-4cd0-8d2d-b45ec65ebd01",
-                    "path": "<Gamepad>/leftStick",
+                    "id": "24e22fb1-7fda-40a4-a15e-eef60861bb9a",
+                    "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -1022,6 +969,45 @@
                     "processors": "",
                     "groups": "xbox",
                     "action": "gamepad",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "menus",
+            "id": "8d562067-e90e-4639-adc9-8052a2c3e6d7",
+            "actions": [
+                {
+                    "name": "inventory",
+                    "type": "Button",
+                    "id": "a423a577-9b81-481f-a030-17c42cb89013",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "e6ac260a-558c-41f0-a34e-f2691617259e",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "inventory",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c9a78d18-888d-4052-a7aa-d7d9eec79ba0",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "inventory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

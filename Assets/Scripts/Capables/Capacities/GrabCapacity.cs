@@ -1,5 +1,6 @@
 using UnityEngine;
-using System.Collections.Generic;
+using UnityEngine.InputSystem;
+using System;
 
 /// <summary>
 /// GrabCapacity is a Capacity that allows the Capable to grab items.
@@ -17,40 +18,53 @@ public class GrabCapacity : Capacity
         }
     }
 
-    [Header("Items")]
+    [Header("Selection")]
     [SerializeField] private Item selected_item;
-    [SerializeField] private Transform items_parent;
-    public UI_Inventory ui_inventory;
 
-    [Header("Bank")] [SerializeField] private ItemBank bank;
+    [Header("Components")]
+    [SerializeField] private ItemBank bank;
+    [SerializeField] private Inventory inventory;
 
-    // [Header("UI Grab Callback")]
-    // public event System.Action grab_callback;
+    [Header("Input & Callbacks")]
+    [SerializeField] private InputActionReference grabInput;
+    private InputAction grabAction;
+    private event Action<InputAction.CallbackContext> grabCallback;
 
     // START
     private void Start()
     {
         // on récupère la bank
         bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
+        inventory = capable.inventory;
 
-        // on récupère le parent des items
-        items_parent = capable.transform.Find("inventory");
+        // on récupère l'action grab
+        grabAction = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().GetAction(grabInput);
 
-        // on récupère les items
-        foreach (Transform child in items_parent)
-        {
-            Item item = child.GetComponent<Item>();
-            if (item != null)
-            {
-                grab(item);
-            }
-        }
+        // on définit le callback
+        grabCallback = ctx => Use(capable);
     }
 
-    // SELECT
-    public void Select(Item item = null)
+    // SELECT / DESELECT
+    public void Select(Item item)
     {
         selected_item = item;
+
+        // we set the callback
+        grabAction.performed += grabCallback;
+
+        if (debug) { Debug.Log("(GrabCapacity) selected (and callback set) : " + item.name); }
+    }
+    public void Deselect()
+    {
+        if (selected_item == null) { return; }
+
+        if (debug) { Debug.Log("(GrabCapacity) deselected (and callback removed) : " + selected_item.name); }
+
+        selected_item = null;
+
+        // we remove the callback
+        grabAction.performed -= grabCallback;
+
     }
 
     // USE
@@ -62,33 +76,9 @@ public class GrabCapacity : Capacity
             if (debug) { Debug.LogError("(GrabCapacity) no selected item"); }
             return;
         }
-
-        // we grab
-        grab(selected_item);
-    }
-
-    
-    // GRAB / DROP
-    protected void grab(Item item)
-    {
-        if (item == null) { return; }
-
-        // we set the item to grabbed
-        item.Grabbed = true;
-        // todo which way is better ??
-        // we deactivate the hover capacity of the item
-        // item.transform.Find("hover").gameObject?.SetActive(false);
-
-
-        // we move the item to the parent of the capable
-        item.transform.SetParent(items_parent);
-
-        // we create the ui_item if we have a ui_inventory
-        if (ui_inventory != null)
-        {
-            ui_inventory.Grab(item);
-        }
-
-        if (debug) { Debug.Log("(GrabCapacity) grabbed : " + item.name); }
+        
+        // we grab the item
+        bool grab = inventory.Grab(selected_item);
+        if (debug) { Debug.Log("(GrabCapacity) " + capable.name + (grab ? " :D grabbed" : " :/ could not grab") + " : " + selected_item.name); }
     }
 }

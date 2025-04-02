@@ -141,7 +141,7 @@ public class SkillTree : MonoBehaviour {
         // Invoke("randomPhysicalLevelUp", 3f);
 
         // on active le xbox manager
-        if (input_manager.isUsingGamepad()) {xbox_manager.enable(ui_physical_tree.GetComponent<I_UI_Slottable>());}
+        if (input_manager.isUsingGamepad()) {xbox_manager.Enable(ui_physical_tree.GetComponent<I_UI_Slottable>());}
         
     }
 
@@ -156,7 +156,7 @@ public class SkillTree : MonoBehaviour {
         main_ui.show();
 
         // on désactive le xbox manager
-        xbox_manager.disable();
+        xbox_manager.Disable(ui_physical_tree.GetComponent<I_UI_Slottable>());
     }
 
     public void randomPhysicalLevelUp()
@@ -190,7 +190,7 @@ public class SkillTree : MonoBehaviour {
         is_virtual_tree_open = true;
 
         // on active le xbox manager
-        if (input_manager.isUsingGamepad()) {xbox_manager.enable(ui_virtual_tree.GetComponent<I_UI_Slottable>());}
+        if (input_manager.isUsingGamepad()) {xbox_manager.Enable(ui_virtual_tree.GetComponent<I_UI_Slottable>());}
     }
 
     private void closeVirtualTree()
@@ -204,7 +204,7 @@ public class SkillTree : MonoBehaviour {
         main_ui.show();
 
         // on désactive le xbox manager
-        xbox_manager.disable();
+        xbox_manager.Disable(ui_virtual_tree.GetComponent<I_UI_Slottable>());
     }
 
     // AUGMENTATION DES SKILLS

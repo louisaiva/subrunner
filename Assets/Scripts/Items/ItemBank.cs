@@ -87,17 +87,35 @@ public class ItemBank : MonoBehaviour
     }
 
     // UI_ITEM GENERATOR
-    public GameObject CreateUI_Item(Item item)
+    public GameObject CreateUI_Item(Item item = null)
     {
         // on instancie le prefab
         GameObject ui_item = Instantiate(ui_item_prefab, Vector3.zero, Quaternion.identity);
 
+        // we assign the item to the UI_Item
+        if (item != null)
+        {
+            SetUI_Item(ui_item.GetComponent<UI_Item>(), item);
+        }
+        else
+        {
+            ClearUI_Item(ui_item.GetComponent<UI_Item>());
+        }
+
+        if (debug) { Debug.Log("(ItemBank) created ui_item : " + item.name); }
+
+        return ui_item;
+    }
+
+    public void SetUI_Item(UI_Item ui_item, Item item)
+    {
         // on récupère le sprite de l'item
-        Sprite sprite = getSprite(item.name);
+        Sprite sprite = getSprite(item.Reference);
 
         // on change le sprite de l'image
         Image img = ui_item.transform.Find("item").GetComponent<Image>();
         img.sprite = sprite;
+        img.color = new Color(1, 1, 1, 1);
 
         // on calcule la taille de l'image
         RectTransform rt = img.GetComponent<RectTransform>();
@@ -107,11 +125,30 @@ public class ItemBank : MonoBehaviour
         ui_item.name = "ui_" + item.name;
 
         // on met la reference de l'item
-        // ui_item.GetComponent<UI_Item>().reference = item.reference;
+        ui_item.item = item;
 
-        if (debug) { Debug.Log("(ItemBank) created ui_item : " + item.name); }
+        // on enable le slot
+        ui_item.Enable();
 
-        return ui_item;
+        if (debug) { Debug.Log("(ItemBank) set ui_item : " + item.name); }
+    }
+    public void ClearUI_Item(UI_Item ui_item)
+    {
+        // on change le sprite de l'image
+        Image img = ui_item.transform.Find("item").GetComponent<Image>();
+        img.sprite = null;
+        img.color = new Color(0, 0, 0, 0);
+
+        // on change le nom du prefab
+        ui_item.name = "ui_empty";
+
+        // on met la reference de l'item
+        ui_item.item = null;
+
+        // on disable le slot
+        ui_item.Disable();
+
+        if (debug) { Debug.Log("(ItemBank) cleared ui_item"); }
     }
 
     // GETTERS

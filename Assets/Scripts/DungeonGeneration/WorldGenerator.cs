@@ -91,6 +91,7 @@ public class WorldGenerator : MonoBehaviour
             }
             catch {}
         #endif
+        bool just_to_remove_warning = playtest_enabled;
     }
 
     public void Start()

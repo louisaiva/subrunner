@@ -4,128 +4,132 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class UI_Item : MonoBehaviour, I_UI_Slot
+public class UI_Item : MonoBehaviour, I_UI_Slot, IPointerDownHandler
 {
 
+    [Header("Item Reference")]
+    public Item item;
 
-    // callback
-    private System.Action<InputAction.CallbackContext> activateCallback;
-    public System.Action<InputAction.CallbackContext> ActivateCallback
-    {
-        get
-        {
-            return activateCallback;
-        }
-    }
+    // hover
+    public bool is_hovered { get; set; }
+    public bool is_disabled { get; set; }
 
-    // hoover
-    public bool is_hoovered { get; set; }
-
-    public GameObject description_ui;
-
-    // item
-    public OldItem item;
-
-    // ui_inventory
-    public GameObject ui_inventory;
-
-    // slot sprite
+    [Header("Sprites")]
     public Sprite base_sprite;
-    public Sprite hoover_sprite;
+    public Sprite hover_sprite;
+    public Sprite down_sprite;
+    public Sprite disabled_sprite;
 
+    [Header("Debug")]
+    [SerializeField] private bool debug = false;
 
-    // unity functions
-    protected void Awake()
+    // DISABLE
+    public void Enable()
     {
-        // on récupère le description_ui
-        description_ui = GameObject.Find("/ui/hoover_description");
+        is_disabled = false;
 
-        // on récupère les sprites
-        Sprite[] sprites = Resources.LoadAll<Sprite>("spritesheets/item_slots");
-        base_sprite = sprites[0];
-        hoover_sprite = sprites[1];
+        // on change le sprite du slot
+        GetComponent<Image>().sprite = base_sprite;
+    }
+    public void Disable()
+    {
+        is_disabled = true;
 
-        // define the callback
-        activateCallback = ctx =>
-        {
-            OnPointerClick(null);
-            Debug.Log("UI_Item : ActivateCallback !! Should we navigate to closest with Xbox Navigator ??");
-        };
+        // on change le sprite du slot
+        GetComponent<Image>().sprite = disabled_sprite;
     }
 
-    // main functions
-    public void setItem(OldItem item)
-    {
-        this.item = item;
-    }
-
-    public void setUIInventory(GameObject ui_inventory)
-    {
-        this.ui_inventory = ui_inventory;
-    }
-
-    // getters
-    public string getDescription()
-    {
-        string s = item.item_name + "\n\n" + item.item_description;
-        return s;
-    }
-
-    public bool shouldDescriptionBeShown() {return true;}
-
-    // interface functions
+    // POINTER HANDLERS
     public void OnPointerEnter(PointerEventData eventData)
     {
-        // on met à jour l'affichage
-        description_ui.GetComponent<UI_HooverDescriptionHandler>().changeDescription(this);
+        // check if disabled
+        if (is_disabled) { return; }
 
         // on change le sprite du slot
-        GetComponent<Image>().sprite = hoover_sprite;
+        GetComponent<Image>().sprite = hover_sprite;
 
         // on met à jour le fait qu'on est survolé
-        is_hoovered = true;
+        is_hovered = true;
     }
-
     public void OnPointerExit(PointerEventData eventData)
     {
-        // on met à jour l'affichage
-        description_ui.GetComponent<UI_HooverDescriptionHandler>().removeDescription(this);
+        // check if disabled
+        if (is_disabled) { return; }
 
         // on change le sprite du slot
         GetComponent<Image>().sprite = base_sprite;
 
         // on met à jour le fait qu'on est survolé
-        is_hoovered = false;
+        is_hovered = false;
     }
-
-    public void OnPointerClick(PointerEventData eventData)
+    public void OnPointerDown(PointerEventData eventData)
     {
-        // on met à jour l'affichage
-        description_ui.GetComponent<UI_HooverDescriptionHandler>().removeDescription(this);
+        // check if disabled
+        if (is_disabled) { return; }
+
+        if (debug) { Debug.Log("OnPointerDown on " + gameObject.name); }
 
         // on change le sprite du slot
-        GetComponent<Image>().sprite = base_sprite;
+        GetComponent<Image>().sprite = down_sprite;
+    }
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        // check if disabled
+        if (is_disabled) { return; }
 
-        // on click
-        if (ui_inventory.GetComponent<UI_OldInventory>() != null)
+        // on change le sprite du slot
+        GetComponent<Image>().sprite = is_hovered ? hover_sprite : base_sprite;
+
+        // we check if we have an item
+        if (item == null) { return; }
+        if (debug) { Debug.Log("OnPointerClick on " + gameObject.name); }
+
+        // on récupère l'inventory qui drop l'item
+        Inventory inventory = item.transform.parent.GetComponent<Inventory>();
+
+        // on cherche l'inventory qui reçoit l'item
+        Inventory inventory_to_drop = inventory.GetInteractingInventory();
+        
+        // we drop the item in the other inventory
+        if (inventory_to_drop != null)
         {
-            ui_inventory.GetComponent<UI_OldInventory>().clickOnItem(item);
+            inventory_to_drop.Grab(item);
+            return;
         }
-        else if (ui_inventory.GetComponent<UI_ChestInventory>() != null)
+
+        // we don't have an inventory to drop so we drop on the ground
+        // we check if we have a DropCapacity
+        DropCapacity dropper = inventory.capable.GetCapacity<DropCapacity>();
+        if (dropper != null)
         {
-            ui_inventory.GetComponent<UI_ChestInventory>().clickOnItem(item);
+            dropper.Select(item);
+            inventory.capable.Do("drop");
         }
         else
         {
-            Debug.LogWarning("UI_Item : no UI_OldInventory or UI_ChestInventory found on " + ui_inventory.name);
+            // the inventory simply drops the item (we may be in a chest)
+            inventory.Drop(item);
         }
     }
 
-    // reset hoover
+
+    // ! DEPRECATED
+    // reset hover
     public void resetHoover()
     {
-        if (!is_hoovered) return;
+        if (!is_hovered) return;
 
         OnPointerExit(null);
     }
+    public string getDescription()
+    {
+        throw new NotImplementedException();
+    }
+    public bool shouldDescriptionBeShown()
+    {
+        throw new NotImplementedException();
+    }
+    public void setItem(OldItem item) {}
+    public void setUIInventory(GameObject ui_inventory) {}
+
 }

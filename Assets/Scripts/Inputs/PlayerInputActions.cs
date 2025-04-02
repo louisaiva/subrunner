@@ -329,7 +329,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""id"": ""d54f75d2-9814-4e30-b26b-b3e8fdee853f"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Press(behavior=2)"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -367,29 +367,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""inventory"",
-                    ""type"": ""Button"",
-                    ""id"": ""718497a6-ea54-4f17-b02c-205863a9f65e"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""3572067e-9738-49b0-b697-7f44a8028c52"",
-                    ""path"": ""<Mouse>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""keyboard"",
-                    ""action"": ""navigate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": """",
                     ""id"": ""5bbfd291-7f88-4772-9484-02def75ea68a"",
@@ -419,17 +399,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
-                    ""action"": ""y"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""6cad4bee-91f4-4954-a619-bc892eb9dd41"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""keyboard"",
                     ""action"": ""y"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -524,30 +493,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""f55fd782-031b-4d1f-987c-9bc79c5a6ec8"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""xbox"",
-                    ""action"": ""inventory"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""2a470b7e-21b0-45b1-82d4-c46d97adb659"",
-                    ""path"": ""<Keyboard>/f"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""keyboard"",
-                    ""action"": ""inventory"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""40aa7c62-2967-4cd0-8d2d-b45ec65ebd01"",
-                    ""path"": ""<Gamepad>/leftStick"",
+                    ""id"": ""24e22fb1-7fda-40a4-a15e-eef60861bb9a"",
+                    ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -1048,6 +995,45 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""menus"",
+            ""id"": ""8d562067-e90e-4639-adc9-8052a2c3e6d7"",
+            ""actions"": [
+                {
+                    ""name"": ""inventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""a423a577-9b81-481f-a030-17c42cb89013"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""e6ac260a-558c-41f0-a34e-f2691617259e"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c9a78d18-888d-4052-a7aa-d7d9eec79ba0"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -1104,7 +1090,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_UI_cancel = m_UI.FindAction("cancel", throwIfNotFound: true);
         m_UI_map = m_UI.FindAction("map", throwIfNotFound: true);
         m_UI_pause = m_UI.FindAction("pause", throwIfNotFound: true);
-        m_UI_inventory = m_UI.FindAction("inventory", throwIfNotFound: true);
         // enhanced_perso
         m_enhanced_perso = asset.FindActionMap("enhanced_perso", throwIfNotFound: true);
         m_enhanced_perso_hack = m_enhanced_perso.FindAction("hack", throwIfNotFound: true);
@@ -1113,6 +1098,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_any = asset.FindActionMap("any", throwIfNotFound: true);
         m_any_keyboard = m_any.FindAction("keyboard", throwIfNotFound: true);
         m_any_gamepad = m_any.FindAction("gamepad", throwIfNotFound: true);
+        // menus
+        m_menus = asset.FindActionMap("menus", throwIfNotFound: true);
+        m_menus_inventory = m_menus.FindAction("inventory", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -1121,6 +1109,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, PlayerInputActions.UI.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_enhanced_perso.enabled, "This will cause a leak and performance issues, PlayerInputActions.enhanced_perso.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_any.enabled, "This will cause a leak and performance issues, PlayerInputActions.any.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_menus.enabled, "This will cause a leak and performance issues, PlayerInputActions.menus.Disable() has not been called.");
     }
 
     public void Dispose()
@@ -1284,7 +1273,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_cancel;
     private readonly InputAction m_UI_map;
     private readonly InputAction m_UI_pause;
-    private readonly InputAction m_UI_inventory;
     public struct UIActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -1297,7 +1285,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @cancel => m_Wrapper.m_UI_cancel;
         public InputAction @map => m_Wrapper.m_UI_map;
         public InputAction @pause => m_Wrapper.m_UI_pause;
-        public InputAction @inventory => m_Wrapper.m_UI_inventory;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1331,9 +1318,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @pause.started += instance.OnPause;
             @pause.performed += instance.OnPause;
             @pause.canceled += instance.OnPause;
-            @inventory.started += instance.OnInventory;
-            @inventory.performed += instance.OnInventory;
-            @inventory.canceled += instance.OnInventory;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
@@ -1362,9 +1346,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @pause.started -= instance.OnPause;
             @pause.performed -= instance.OnPause;
             @pause.canceled -= instance.OnPause;
-            @inventory.started -= instance.OnInventory;
-            @inventory.performed -= instance.OnInventory;
-            @inventory.canceled -= instance.OnInventory;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -1490,6 +1471,52 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         }
     }
     public AnyActions @any => new AnyActions(this);
+
+    // menus
+    private readonly InputActionMap m_menus;
+    private List<IMenusActions> m_MenusActionsCallbackInterfaces = new List<IMenusActions>();
+    private readonly InputAction m_menus_inventory;
+    public struct MenusActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public MenusActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @inventory => m_Wrapper.m_menus_inventory;
+        public InputActionMap Get() { return m_Wrapper.m_menus; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MenusActions set) { return set.Get(); }
+        public void AddCallbacks(IMenusActions instance)
+        {
+            if (instance == null || m_Wrapper.m_MenusActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_MenusActionsCallbackInterfaces.Add(instance);
+            @inventory.started += instance.OnInventory;
+            @inventory.performed += instance.OnInventory;
+            @inventory.canceled += instance.OnInventory;
+        }
+
+        private void UnregisterCallbacks(IMenusActions instance)
+        {
+            @inventory.started -= instance.OnInventory;
+            @inventory.performed -= instance.OnInventory;
+            @inventory.canceled -= instance.OnInventory;
+        }
+
+        public void RemoveCallbacks(IMenusActions instance)
+        {
+            if (m_Wrapper.m_MenusActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IMenusActions instance)
+        {
+            foreach (var item in m_Wrapper.m_MenusActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_MenusActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public MenusActions @menus => new MenusActions(this);
     private int m_xboxSchemeIndex = -1;
     public InputControlScheme xboxScheme
     {
@@ -1528,7 +1555,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnCancel(InputAction.CallbackContext context);
         void OnMap(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
-        void OnInventory(InputAction.CallbackContext context);
     }
     public interface IEnhanced_persoActions
     {
@@ -1539,5 +1565,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     {
         void OnKeyboard(InputAction.CallbackContext context);
         void OnGamepad(InputAction.CallbackContext context);
+    }
+    public interface IMenusActions
+    {
+        void OnInventory(InputAction.CallbackContext context);
     }
 }

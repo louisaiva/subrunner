@@ -106,7 +106,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: cube
-  orientation: L
+  orientation: D
   current_capacity: 
   current_anim:
     name: 
@@ -117,8 +117,8 @@ MonoBehaviour:
     speed: 1
     flipX: 0
   anim_pile: []
-  animation_priorities_with_no_loop: 02000000
-  animation_priorities_with_no_interrupt: 02000000
+  animation_priorities_with_no_loop: 03000000
+  animation_priorities_with_no_interrupt: 03000000
   debug: 0
 --- !u!114 &8781775830682627617
 MonoBehaviour:
@@ -135,10 +135,11 @@ MonoBehaviour:
   anim_player: {fileID: 0}
   bank: {fileID: 0}
   inputs: {x: 0, y: 0}
-  orientation: {x: 0, y: 0}
+  orientation: {x: 0, y: -1}
   capacities: []
   effects: 
   effects_timetolive: []
+  debug: 0
 --- !u!60 &760670442392901231
 PolygonCollider2D:
   m_ObjectHideFlags: 0

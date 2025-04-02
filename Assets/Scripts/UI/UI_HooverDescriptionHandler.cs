@@ -70,7 +70,7 @@ public class UI_HooverDescriptionHandler : MonoBehaviour {
             if (input_manager.isUsingGamepad())
             {
                 offset_vector = new Vector3(gamepad_offset, -h/2, 0);
-                next_pos = (Vector3) xbox_manager.getCursorPosition() + offset_vector;
+                // next_pos = (Vector3) xbox_manager.getCursorPosition() + offset_vector;
             }
             else
             {

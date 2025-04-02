@@ -133,7 +133,7 @@ public class UI_OldInventory : MonoBehaviour, I_UI_Slottable
         // transform.Find("text").GetComponent<RectTransform>().position = text_position;
 
         // on active le xbox_manager
-        if (input_manager.isUsingGamepad()) { xbox_manager.enable(this); }
+        if (input_manager.isUsingGamepad()) { xbox_manager.Enable(this); }
     }
 
     public void hide()
@@ -164,7 +164,7 @@ public class UI_OldInventory : MonoBehaviour, I_UI_Slottable
         transform.parent.Find("text").gameObject.SetActive(false);
 
         // on désactive le xbox_manager
-        xbox_manager.disable();
+        xbox_manager.Disable(this);
 
         // on affiche le main_ui
         main_ui.show();
@@ -243,7 +243,7 @@ public class UI_OldInventory : MonoBehaviour, I_UI_Slottable
         leg_items.Add(type, item);
 
         // on met à jour le xbox_manager si on est show
-        if (is_showed) { xbox_manager.updateWhileShowed(); }
+        // if (is_showed) { xbox_manager.updateWhileShowed(); }
     }
 
     private void delLeg(OldItem item)
@@ -318,7 +318,7 @@ public class UI_OldInventory : MonoBehaviour, I_UI_Slottable
         slot_obj.transform.parent.gameObject.SetActive(is_showed);
 
         // on met à jour le xbox_manager si on est show
-        if (is_showed) { xbox_manager.updateWhileShowed(); }
+        // if (is_showed) { xbox_manager.updateWhileShowed(); }
     }
 
     public void dropItem(OldItem item)
@@ -416,4 +416,8 @@ public class UI_OldInventory : MonoBehaviour, I_UI_Slottable
         return slots;
     }
 
+    public bool IsYourSlot(GameObject slot)
+    {
+        throw new System.NotImplementedException();
+    }
 }
