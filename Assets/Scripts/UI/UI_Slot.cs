@@ -4,11 +4,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class UI_Item : MonoBehaviour, I_UI_Slot, IPointerDownHandler
+public class UI_Slot : MonoBehaviour, I_UI_Slot, IPointerDownHandler
 {
-
-    [Header("Item Reference")]
-    public Item item;
 
     // hover
     public bool is_hovered { get; set; }
@@ -21,7 +18,7 @@ public class UI_Item : MonoBehaviour, I_UI_Slot, IPointerDownHandler
     public Sprite disabled_sprite;
 
     [Header("Debug")]
-    [SerializeField] private bool debug = false;
+    public bool debug = false;
 
     // DISABLE
     public void Enable()
@@ -40,7 +37,7 @@ public class UI_Item : MonoBehaviour, I_UI_Slot, IPointerDownHandler
     }
 
     // POINTER HANDLERS
-    public void OnPointerEnter(PointerEventData eventData)
+    public virtual void OnPointerEnter(PointerEventData eventData)
     {
         // check if disabled
         if (is_disabled) { return; }
@@ -51,7 +48,7 @@ public class UI_Item : MonoBehaviour, I_UI_Slot, IPointerDownHandler
         // on met à jour le fait qu'on est survolé
         is_hovered = true;
     }
-    public void OnPointerExit(PointerEventData eventData)
+    public virtual void OnPointerExit(PointerEventData eventData)
     {
         // check if disabled
         if (is_disabled) { return; }
@@ -62,7 +59,7 @@ public class UI_Item : MonoBehaviour, I_UI_Slot, IPointerDownHandler
         // on met à jour le fait qu'on est survolé
         is_hovered = false;
     }
-    public void OnPointerDown(PointerEventData eventData)
+    public virtual void OnPointerDown(PointerEventData eventData)
     {
         // check if disabled
         if (is_disabled) { return; }
@@ -72,7 +69,7 @@ public class UI_Item : MonoBehaviour, I_UI_Slot, IPointerDownHandler
         // on change le sprite du slot
         GetComponent<Image>().sprite = down_sprite;
     }
-    public void OnPointerClick(PointerEventData eventData)
+    public virtual void OnPointerClick(PointerEventData eventData)
     {
         // check if disabled
         if (is_disabled) { return; }
@@ -80,7 +77,7 @@ public class UI_Item : MonoBehaviour, I_UI_Slot, IPointerDownHandler
         // on change le sprite du slot
         GetComponent<Image>().sprite = is_hovered ? hover_sprite : base_sprite;
 
-        // we check if we have an item
+        /* // we check if we have an item
         if (item == null) { return; }
         if (debug) { Debug.Log("OnPointerClick on " + gameObject.name); }
 
@@ -89,7 +86,7 @@ public class UI_Item : MonoBehaviour, I_UI_Slot, IPointerDownHandler
 
         // on cherche l'inventory qui reçoit l'item
         Inventory inventory_to_drop = inventory.GetInteractingInventory();
-        
+
         // we drop the item in the other inventory
         if (inventory_to_drop != null)
         {
@@ -109,18 +106,12 @@ public class UI_Item : MonoBehaviour, I_UI_Slot, IPointerDownHandler
         {
             // the inventory simply drops the item (we may be in a chest)
             inventory.Drop(item);
-        }
+        } */
     }
 
 
     // ! DEPRECATED
-    // reset hover
-    public void resetHoover()
-    {
-        if (!is_hovered) return;
 
-        OnPointerExit(null);
-    }
     public string getDescription()
     {
         throw new NotImplementedException();
@@ -129,7 +120,4 @@ public class UI_Item : MonoBehaviour, I_UI_Slot, IPointerDownHandler
     {
         throw new NotImplementedException();
     }
-    public void setItem(OldItem item) {}
-    public void setUIInventory(GameObject ui_inventory) {}
-
 }

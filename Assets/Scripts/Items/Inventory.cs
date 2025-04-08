@@ -7,10 +7,6 @@ public class Inventory : MonoBehaviour {
     [Header("Items")]
     public List<Item> Items = new List<Item>();
 
-    [Header("Inventory parameters")]
-    public int MaxItems = 9;
-    public bool Scalable = false;
-
     [Header("Events")]
     public UnityEvent OnGrab;
     public UnityEvent OnDrop;
@@ -52,7 +48,9 @@ public class Inventory : MonoBehaviour {
     {
         // we check if we can add the item
         if (item == null) { return false; }
-        if (Items.Count >= MaxItems && !Scalable) { return false; }
+
+        // we check if we have an ui_inventory & if we can store the item in it
+        if (ui != null && !ui.UI_Grab(item)) { return false; }
 
         // we check if the item is already grabbed somewhere, if so we drop it
         if (item.Grabbed) { item.transform.parent.GetComponent<Inventory>().Drop(item); }
@@ -68,9 +66,6 @@ public class Inventory : MonoBehaviour {
 
         // we trigger the event
         OnGrab.Invoke();
-        
-        // we update the UI
-        ui?.UI_Grab(item);
 
         if (debug) { Debug.Log("(Inventory) " + capable.name + " grabbed : " + item.name); }
 

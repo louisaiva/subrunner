@@ -12,17 +12,20 @@ using UnityEngine.UI;
 public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 {
     
+    [Header("UI_Item Pools")]
+    [SerializeField] private List<UI_ItemPool> pools = new List<UI_ItemPool>();
+
     [Header("Components")]
     [SerializeField] private UI_XboxNavigator navigator;
-    [SerializeField] private ItemBank bank;
     public Inventory inventory;
+
+    [Header("Debug")]
+    [SerializeField] private bool debug = false;
 
     public void Init()
     {
         // on récupère les composants
-        bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
         navigator = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
-
 
         // si on a pas d'inventory, il y a un problème
         if (inventory == null)
@@ -31,29 +34,20 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
             ", you need to set it in the inspector");
             return;
         }
-
-        // si l'inventory est non scalable, on affiche les slots vides
-        if (!inventory.Scalable)
+        // we check if we have some pools, otherwise we set ourself as the pool
+        else if (pools.Count == 0)
         {
-            for (int i = inventory.Items.Count; i < inventory.MaxItems; i++)
-            {
-                // we create empty slots
-                GameObject ui_item = bank.CreateUI_Item();
-                ui_item.transform.SetParent(transform);
-
-                // reset the scale to 1
-                ui_item.transform.localScale = Vector3.one;
-            }
+            Debug.LogError("(UI_Inventory) no pool found on " + transform.parent.parent.parent.name +
+            ", please set at least one pool in the inspector");
+            return;
         }
 
-        // on regarde si on est l'ui_inventory de l'inventaire du joueur
-        // et dans ce cas on active tout de suite xbox_navigator
-        /* if (transform.parent.parent.name == "ui")
+        // on initialise les pools
+        foreach (UI_ItemPool pool in pools)
         {
-            // on active le navigator
-            navigator.Enable(this);
-        } */
-
+            // on initialise la pool
+            pool.Init();
+        }
     }
 
     // SHOW / HIDE
@@ -65,23 +59,19 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         if (transform.parent.name != "hud")
         {
             navigator.Enable(this);
-            /* GameObject perso_quick_ui = GameObject.Find("/ui/hud/perso_quick_inventory");
-            if (perso_quick_ui == null)
-            {
-                Debug.LogError("(UI_Inventory) could not find the perso quick inventory, please check the hierarchy (should be in /ui/hud/perso_quick_inventory)");
-                return;
-            }
-            navigator.Enable(perso_quick_ui.GetComponent<UI_Inventory>()); */
         }
     }
     public void Hide()
     {
         // we unhover all the slots
-        foreach (Transform child in transform)
+        foreach (UI_ItemPool pool in pools)
         {
-            UI_Item ui_item = child.GetComponent<UI_Item>();
-            if (ui_item == null) { continue; }
-            ui_item.OnPointerExit(null);
+            foreach (Transform child in pool.transform)
+            {
+                UI_Item ui_item = child.GetComponent<UI_Item>();
+                if (ui_item == null) { continue; }
+                ui_item.OnPointerExit(null);
+            }
         }
 
         gameObject.SetActive(false);
@@ -91,13 +81,6 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         {
             // we disable the navigator
             navigator.Disable(this);
-            /* GameObject perso_quick_ui = GameObject.Find("/ui/hud/perso_quick_inventory");
-            if (perso_quick_ui == null)
-            {
-                Debug.LogError("(UI_Inventory) could not find the perso quick inventory, please check the hierarchy (should be in /ui/hud/perso_quick_inventory)");
-                return;
-            }
-            navigator.Disable(perso_quick_ui.GetComponent<UI_Inventory>()); */
         }
     }
     public void Toggle()
@@ -119,16 +102,19 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     {
         List<GameObject> slots = new List<GameObject>();
         Vector2 position = Vector2.negativeInfinity;
-        foreach (Transform child in transform)
+        foreach (UI_ItemPool pool in pools)
         {
-            // checks if the slot is disabled
-            if (child.GetComponent<UI_Item>().is_disabled) { continue; }
-            slots.Add(child.gameObject);
-
-            // we update the position
-            if (position == Vector2.negativeInfinity)
+            foreach (Transform child in pool.transform)
             {
-                position = child.position;
+                // checks if the slot is disabled
+                if (child.GetComponent<UI_Item>().is_disabled) { continue; }
+                slots.Add(child.gameObject);
+
+                // we update the position
+                if (position == Vector2.negativeInfinity)
+                {
+                    position = child.position;
+                }
             }
         }
         return slots;
@@ -136,63 +122,53 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     public bool IsYourSlot(GameObject slot)
     {
         // we check if the slot is in the inventory
-        foreach (Transform child in transform)
+        foreach (UI_ItemPool pool in pools)
         {
-            if (child.gameObject == slot) { return true; }
+            foreach (Transform child in pool.transform)
+            {
+                if (child.gameObject == slot) { return true; }
+            }
         }
         return false;
     }
 
     // GRAB
-    public void UI_Grab(Item item)
+    public virtual bool UI_Grab(Item item)
     {
-        // we check if we have a scalable inventory
-        if (inventory.Scalable)
+        foreach (UI_ItemPool pool in pools)
         {
-            // we create the item
-            GameObject ui_slot = bank.CreateUI_Item(item);
-            ui_slot.transform.SetParent(transform);
-
-            // reset the scale to 1
-            ui_slot.transform.localScale = Vector3.one;
-            return;
+            // we try to grab the item in the pool
+            bool grabbed = pool.Grab(item);
+            if (grabbed)
+            {
+                if (debug) { Debug.Log("(UI_Inventory) grabbed " + item.Reference + " in " + pool.name); }
+                return true;
+            }
         }
 
-        // if we are here, we have a non scalable inventory
-        // we go through the children to find an empty slot
-        foreach (Transform ui_slot in transform)
-        {
-            // we check if the slot is empty
-            UI_Item ui_item = ui_slot.GetComponent<UI_Item>();
-            if (ui_item.item != null) { continue; }
+        // if we are here, no pool could take the item
+        if (debug) { Debug.LogWarning("(UI_Inventory) no pool could take the item " + item.Reference +
+        " in " + inventory.capable.name + "'s ui_inventory, maybe they are full or the item is incompatible"); }
 
-            // we set the item
-            bank.SetUI_Item(ui_item, item);
-            return;
-        }
+        return false;
     }
-    public void UI_Drop(Item item)
+    public virtual bool UI_Drop(Item item)
     {
         // we go through the children
-        foreach (Transform ui_slot in transform)
+        foreach (UI_ItemPool pool in pools)
         {
-            // we check if the item is the one we want to drop
-            if (ui_slot.GetComponent<UI_Item>().item != item) { continue; }
-            
-            // if we are here, we have the item
-            // we check if the inventory is scalable
-            if (inventory.Scalable)
+            // we try to drop the item in the pool
+            bool dropped = pool.Drop(item);
+            if (dropped)
             {
-                // we destroy the item
-                Destroy(ui_slot.gameObject);
-                return;
-            }
-            else
-            {
-                // we clear the item
-                bank.ClearUI_Item(ui_slot.GetComponent<UI_Item>());
-                return;
+                if (debug) { Debug.Log("(UI_Inventory) dropped " + item.Reference + " in " + pool.name); }
+                return true;
             }
         }
+
+        if (debug) { Debug.LogWarning("(UI_Inventory) no pool could drop the item " + item.Reference +
+        " in " + inventory.capable.name + "'s ui_inventory, please check the pools and the item type"); }
+
+        return false;
     }
 }

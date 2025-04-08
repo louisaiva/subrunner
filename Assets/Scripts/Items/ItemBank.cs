@@ -95,72 +95,25 @@ public class ItemBank : MonoBehaviour
         // we assign the item to the UI_Item
         if (item != null)
         {
-            SetUI_Item(ui_item.GetComponent<UI_Item>(), item);
+            ui_item.GetComponent<UI_Item>().Store(item);
         }
-        else
-        {
-            ClearUI_Item(ui_item.GetComponent<UI_Item>());
-        }
+        else { ui_item.GetComponent<UI_Item>().ClearUI(); }
 
         if (debug) { Debug.Log("(ItemBank) created ui_item : " + item.name); }
 
         return ui_item;
     }
 
-    public void SetUI_Item(UI_Item ui_item, Item item)
-    {
-        // on récupère le sprite de l'item
-        Sprite sprite = getSprite(item.Reference);
-
-        // on change le sprite de l'image
-        Image img = ui_item.transform.Find("item").GetComponent<Image>();
-        img.sprite = sprite;
-        img.color = new Color(1, 1, 1, 1);
-
-        // on calcule la taille de l'image
-        RectTransform rt = img.GetComponent<RectTransform>();
-        rt.sizeDelta = new Vector2(sprite.rect.width, sprite.rect.height);
-
-        // on change le nom du prefab
-        ui_item.name = "ui_" + item.name;
-
-        // on met la reference de l'item
-        ui_item.item = item;
-
-        // on enable le slot
-        ui_item.Enable();
-
-        if (debug) { Debug.Log("(ItemBank) set ui_item : " + item.name); }
-    }
-    public void ClearUI_Item(UI_Item ui_item)
-    {
-        // on change le sprite de l'image
-        Image img = ui_item.transform.Find("item").GetComponent<Image>();
-        img.sprite = null;
-        img.color = new Color(0, 0, 0, 0);
-
-        // on change le nom du prefab
-        ui_item.name = "ui_empty";
-
-        // on met la reference de l'item
-        ui_item.item = null;
-
-        // on disable le slot
-        ui_item.Disable();
-
-        if (debug) { Debug.Log("(ItemBank) cleared ui_item"); }
-    }
-
     // GETTERS
-    public Sprite getSprite(string item_name)
+    public Sprite GetSprite(string item_reference)
     {
-        if (!item_sprites.ContainsKey(item_name))
+        if (!item_sprites.ContainsKey(item_reference))
         {
-            Debug.LogError("(ItemBank) cannot find sprite " + item_name);
+            Debug.LogError("(ItemBank) cannot find sprite " + item_reference);
             return null;
         }
 
-        return item_sprites[item_name];
+        return item_sprites[item_reference];
     }
 
 
@@ -177,4 +130,9 @@ public class ItemBank : MonoBehaviour
         }
         return title + count + " items\n" + list;
     }
+
+
+
+    // ! DEPRECATED
+    public Sprite getSprite(string item_ref) { return null;}
 }

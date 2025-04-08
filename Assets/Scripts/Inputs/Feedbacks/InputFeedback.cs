@@ -27,7 +27,7 @@ public class InputFeedback : MonoBehaviour
     [Header("debug")]
     public bool debug = false;
     
-    private void Start()
+    protected virtual void Start()
     {
         // we verify the image & the input
         if  (debug)

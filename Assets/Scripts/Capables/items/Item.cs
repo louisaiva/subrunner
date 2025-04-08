@@ -6,7 +6,9 @@ public class Item : Movable
 {
 
     [Header("Item")]
-    public string Reference = "item";
+    public string Reference = "category:item";
+    public int MaxQty = 1;
+    public bool Stackable { get => MaxQty > 1; }
 
     // Grabbable
     private bool _grabbed = false;
