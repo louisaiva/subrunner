@@ -52,7 +52,8 @@ MonoBehaviour:
   OnDrop:
     m_PersistentCalls:
       m_Calls: []
-  ui: {fileID: 5159443256930603166}
+  uis:
+  - {fileID: 5159443256930603166}
   debug: 0
 --- !u!1 &5265208009174208198
 GameObject:
@@ -488,7 +489,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 107290035593580173, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
       propertyPath: m_Name
-      value: ui_chest
+      value: canvas
       objectReference: {fileID: 0}
     - target: {fileID: 1353639604724703945, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
       propertyPath: m_AnchorMax.y
@@ -513,6 +514,10 @@ PrefabInstance:
     - target: {fileID: 1353639604724703945, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2056693723427999313, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
+      propertyPath: m_Name
+      value: ui_trash_container
       objectReference: {fileID: 0}
     - target: {fileID: 2056693723427999313, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
       propertyPath: m_IsActive

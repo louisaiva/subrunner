@@ -46,16 +46,26 @@ public class ItemBank : MonoBehaviour
 
             foreach (GameObject prefab in prefabs)
             {
+                // on récupère la reference de l'item
+                Item item = prefab.GetComponent<Item>();
+                if (item == null)
+                {
+                    if (debug) { Debug.LogWarning("(ItemBank) prefab " + prefab.name + " has no Item component, skipping it");}
+                    continue;
+                }
+                string reference = item.Reference;
+
                 // on ajoute le prefab des item
-                item_prefabs.Add(prefab.name, path + "/" + prefab.name);
+                item_prefabs.Add(reference, path + "/" + prefab.name);
 
                 // on ajoute le sprite de l'item
                 Sprite sprite = prefab.GetComponent<SpriteRenderer>().sprite;
-                item_sprites.Add(prefab.name, sprite);
+                item_sprites.Add(reference, sprite);
 
                 item_count++;
 
-                if (debug) { Debug.Log("(ItemBank) loaded item : " + prefab.name); }
+                if (debug) { Debug.Log("(ItemBank) loaded item : " + reference +
+                        (reference == prefab.name ? "" : " (prefab name is " + prefab.name + ")")); }
             }
         }
 

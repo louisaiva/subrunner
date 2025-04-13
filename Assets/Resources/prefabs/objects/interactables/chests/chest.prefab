@@ -52,7 +52,8 @@ MonoBehaviour:
   OnDrop:
     m_PersistentCalls:
       m_Calls: []
-  ui: {fileID: 1160253218401664466}
+  uis:
+  - {fileID: 1160253218401664466}
   debug: 0
 --- !u!1 &5145456041456219900
 GameObject:
@@ -242,6 +243,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 2950463690145935877}
     m_Modifications:
     - target: {fileID: 107290035593580173, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
+      propertyPath: m_Name
+      value: canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 2056693723427999313, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
       propertyPath: m_Name
       value: ui_chest
       objectReference: {fileID: 0}

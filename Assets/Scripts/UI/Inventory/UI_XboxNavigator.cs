@@ -88,15 +88,20 @@ public class UI_XboxNavigator : MonoBehaviour
         // on ajoute le slottable à la liste des slottables
         slottables.Add(slottable.gameObject);
 
-        // on active le perso quick inventory si besoin
-        if (slottable.gameObject != perso_quick_inventory.gameObject)
+        // si c'est l'ui d'un coffre on affiche le quick inventory
+        if (slottable is UI_Inventory && slottable.gameObject != perso_quick_inventory.gameObject)
         {
-            // on affiche le perso quick inventory si besoin
-            perso_quick_inventory_was_shown = perso_quick_inventory.gameObject.activeSelf;
-            if (!perso_quick_inventory_was_shown) { perso_quick_inventory.Show(); }
+            // on regarde si c'est un coffre
+            UI_Inventory inventory = slottable as UI_Inventory;
+            if (inventory.inventory.capable != null && inventory.inventory.capable is Chest)
+            {
+                // on affiche le perso quick inventory si besoin
+                perso_quick_inventory_was_shown = perso_quick_inventory.gameObject.activeSelf;
+                if (!perso_quick_inventory_was_shown) { perso_quick_inventory.Show(); }
 
-            // on enable le slottable
-            Enable(perso_quick_inventory);
+                // on enable le slottable
+                Enable(perso_quick_inventory);
+            }
         }
 
         // on navigue vers le premier slot
@@ -112,15 +117,15 @@ public class UI_XboxNavigator : MonoBehaviour
         // on enlève le slottable de la liste des slottables
         slottables.Remove(slottable.gameObject);
 
-        // on desactive le perso quick inventory si besoin
-        if (slottable.gameObject != perso_quick_inventory.gameObject)
+        /* // on desactive le perso quick inventory si c'etait un coffre
+        if (slottable != )
         {
             // on cache le perso quick inventory si besoin
             if (!perso_quick_inventory_was_shown) { perso_quick_inventory.Hide(); }
 
             // on disable le slottable
             Disable(perso_quick_inventory);
-        }
+        } */
 
         if (debug) { Debug.Log("(XboxNavigator) disabling slottable : " + slottable.gameObject.name); }
 
@@ -148,6 +153,15 @@ public class UI_XboxNavigator : MonoBehaviour
         update_slots();
         hover_slot(last_slot != null ? slots.IndexOf(last_slot) : -1);
 
+        // on cache le perso quick inventory si c'est le seul survivant
+        if (slottables.Count == 1 && slottables[0] == perso_quick_inventory.gameObject)
+        {
+            // on cache le perso quick inventory si besoin
+            if (!perso_quick_inventory_was_shown) { perso_quick_inventory.Hide(); }
+
+            // on disable le slottable
+            Disable(perso_quick_inventory);
+        }
         // on regarde si on a encore des slottables
         if (slottables.Count == 0)
         {

@@ -13,7 +13,8 @@ public class Inventory : MonoBehaviour {
 
 
     [Header("Components")]
-    public UI_Inventory ui;
+    [SerializeField] private List<UI_Inventory> uis = new List<UI_Inventory>();
+    public UI_Inventory ui { get { return uis.Count > 0 ? uis[0] : null; } }
     public Capable capable { get { return transform.parent.GetComponent<Capable>(); } }
 
     [Header("Debug")]
@@ -22,18 +23,15 @@ public class Inventory : MonoBehaviour {
     // AWAKE
     void Awake()
     {
-        // on vérifie si on a un ui_inventory
-        if (ui != null)
-        {
-            ui.inventory = this;
-        }
+        // on informe les UI de l'inventaire que l'on est là
+        uis.ForEach(ui => ui.inventory = this);
     }
 
     // START
     void Start()
     {
         // on initialise l'UI
-        ui?.Init();
+        uis.ForEach(ui => ui.Init());
 
         // on récupère les items
         foreach (Transform child in transform)
@@ -50,7 +48,16 @@ public class Inventory : MonoBehaviour {
         if (item == null) { return false; }
 
         // we check if we have an ui_inventory & if we can store the item in it
-        if (ui != null && !ui.UI_Grab(item)) { return false; }
+        if (ui != null)
+        {
+            // we have at least one ui_inventory
+            // we try to make it grab in the first ui_inventory
+            // if he can't, we do not grab it and we return false
+            if (!ui.UI_Grab(item)) { return false; }
+
+            // if he can, we grab it in all ui_inventories
+            for (int i=1; i < uis.Count; i++) { uis[i].UI_Grab(item); }
+        }
 
         // we check if the item is already grabbed somewhere, if so we drop it
         if (item.Grabbed) { item.transform.parent.GetComponent<Inventory>().Drop(item); }
@@ -87,7 +94,7 @@ public class Inventory : MonoBehaviour {
         OnDrop.Invoke();
 
         // we update the UI
-        ui?.UI_Drop(item);
+        uis.ForEach(ui => ui.UI_Drop(item));
         
         if (debug) { Debug.Log("(Inventory) " + capable.name + " dropped : " + item.name); }
 

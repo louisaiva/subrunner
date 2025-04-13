@@ -12,8 +12,10 @@ public class UI_Manager : MonoBehaviour
 
     [Header("Pools")]
     [SerializeField] private string current_pool = "";
+    [SerializeField] private string last_pool = "";
     [SerializeField] private List<string> pools = new List<string>() { "hud", "pause", "inventory", "map" };
     private Dictionary<string, List<GameObject>> ui_pools = new Dictionary<string, List<GameObject>>();
+
 
     [Header("Debug")]
     public bool debug = false;
@@ -32,10 +34,13 @@ public class UI_Manager : MonoBehaviour
 
 
         // on met manuellement quelques ui elements
-        RegisterToPool("hud", GameObject.Find("/ui/hud/tutorials"));
-        RegisterToPool("hud", GameObject.Find("/ui/hud/hp_xp"));
-        RegisterToPool("hud", GameObject.Find("/ui/hud/kda"));
-        RegisterToPool("hud", GameObject.Find("/ui/hud/ui_inventory"));
+        RegisterToPool("hud", "/ui/hud/tutorials");
+        RegisterToPool("hud", "/ui/hud/hp_xp");
+        RegisterToPool("hud", "/ui/hud/kda");
+        RegisterToPool("hud", "/ui/hud/perso_quick_inventory");
+
+        // et pour l'inventory
+        RegisterToPool("inventory", "/ui/inventory");
     }
 
     void Start()
@@ -45,6 +50,9 @@ public class UI_Manager : MonoBehaviour
         // inputs.UI.Enable();
         // input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
         // inputs_actions = input_manager.inputs;
+
+        // on mets les callbacks des menus
+        inputs.menus.inventory.performed += ctx => { TogglePool("inventory"); };
     }
 
     // UPDATE
@@ -55,6 +63,20 @@ public class UI_Manager : MonoBehaviour
     }
 
     // POOL REGISTERING
+    public void RegisterToPool(string pool_name,string go_path)
+    {
+        // try to get the gameobject from the path
+        GameObject ui_element = GameObject.Find(go_path);
+        if (ui_element != null) { RegisterToPool(pool_name, ui_element); return;}
+
+        // or if it is inactive, tries from its transform
+        if (!go_path.Contains("/ui/")) { return; }
+        ui_element = transform.Find(go_path.Replace("/ui/", "")).gameObject;
+        if (ui_element != null) { RegisterToPool(pool_name, ui_element); return; }
+
+        // if the gameobject is null, we return
+        return;
+    }
     public void RegisterToPool(string pool_name, GameObject ui_element)
     {
         // if the gameobject is null, we return
@@ -119,9 +141,17 @@ public class UI_Manager : MonoBehaviour
             ui_element.SetActive(true);
         }
 
+        // on active le Xbox manager si c'est l'inventaire
+        if (pool_name == "inventory")
+        {
+            UI_Inventory ui_inventory = transform.Find("inventory").GetComponent<UI_Inventory>();
+            ui_inventory.Show();
+            GetComponent<UI_XboxNavigator>()?.Enable(ui_inventory);
+        }
+
         // on désactive les inputs du joueur si c'est pas le hud
-        if (pool_name == "hud") { inputs.perso.Enable(); }
-        else { inputs.perso.Disable(); }
+        if (pool_name == "pause") { inputs.perso.Disable(); }
+        else { inputs.perso.Enable(); }
 
         // on met à jour le pool courant
         current_pool = pool_name;
@@ -135,6 +165,14 @@ public class UI_Manager : MonoBehaviour
             return;
         }
 
+        // on desactive le Xbox manager si c'est l'inventaire
+        if (pool_name == "inventory")
+        {
+            UI_Inventory ui_inventory = transform.Find("inventory").GetComponent<UI_Inventory>();
+            ui_inventory.Hide();
+            GetComponent<UI_XboxNavigator>()?.Disable(ui_inventory);
+        }
+
         // on cache tous les éléments du pool
         if (debug) { Debug.Log("(UI_Manager) hiding pool : " + pool_name); }
         foreach (GameObject ui_element in ui_pools[pool_name])
@@ -143,6 +181,7 @@ public class UI_Manager : MonoBehaviour
         }
 
         // on met à jour le pool courant
+        last_pool = current_pool;
         current_pool = "";
     }
     public void HideEverything()
@@ -156,4 +195,17 @@ public class UI_Manager : MonoBehaviour
         }
     }
 
+    public void TogglePool(string pool_name)
+    {
+        // we check if the pool exists
+        if (!pools.Contains(pool_name))
+        {
+            if (debug) { Debug.LogWarning("(UI_Manager) tried to toggle a non-existing pool : " + pool_name); }
+            return;
+        }
+
+        // we check if the pool is already shown
+        if (current_pool == pool_name) { ShowPool(last_pool);}
+        else { ShowPool(pool_name); }
+    }
 }
