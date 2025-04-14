@@ -68,8 +68,9 @@ public class Inventory : MonoBehaviour {
         // we set the item to grabbed (which disables the hover collider)
         item.Grabbed = true;
 
-        // we set the item parent
+        // we set the item parent and reset its local position
         item.transform.SetParent(transform);
+        item.transform.localPosition = Vector3.zero;
 
         // we trigger the event
         OnGrab.Invoke();
@@ -184,7 +185,15 @@ public class Inventory : MonoBehaviour {
         // we return null
         return null;
     }
-
+    public Item GetItem(string reference)
+    {
+        // we check if the item is in the inventory
+        foreach (Item item in Items)
+        {
+            if (item.Reference == reference) { return item; }
+        }
+        return null;
+    }
 
 
 

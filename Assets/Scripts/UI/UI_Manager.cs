@@ -36,7 +36,7 @@ public class UI_Manager : MonoBehaviour
         // on met manuellement quelques ui elements
         RegisterToPool("hud", "/ui/hud/tutorials");
         RegisterToPool("hud", "/ui/hud/hp_xp");
-        RegisterToPool("hud", "/ui/hud/kda");
+        // RegisterToPool("hud", "/ui/hud/kda");
         RegisterToPool("hud", "/ui/hud/perso_quick_inventory");
 
         // et pour l'inventory

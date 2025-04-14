@@ -264,6 +264,25 @@ public class Capable : MonoBehaviour
     }
 
 
+    // USING ITEMS
+    public void UseItem(string item_reference)
+    {
+        // we check if we have an inventory
+        if (inventory == null) { return; }
+
+        // we check if the item is in the inventory
+        Item item = inventory.GetItem(item_reference);
+        if (item == null)
+        {
+            if (debug) { Debug.LogWarning("(Capable) " + name + " doesn't have item " + item_reference); }
+            return;
+        }
+
+        // we use the item
+        if (debug) { Debug.Log("(Capable) " + name + " used item " + item_reference); }
+        item.Use();
+    }
+
 
     // EFFECTS
     public virtual void AddEffect(Effect effect, float timetolive)

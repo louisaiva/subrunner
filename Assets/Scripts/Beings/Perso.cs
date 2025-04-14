@@ -1178,12 +1178,11 @@ public class Perso : Being
     }
     public void OnAttack()
     {
-        // if (!perso_inputs.enabled) { return; }
+        // on vérifie qu'on est pas stunned
+        if (HasEffect(Effect.Stunned)) { return; }
 
-        if (Can("attack") && !HasEffect(Effect.Stunned))
-        {
-            Do("attack");
-        }
+        // on utilise l'item weapon:katana
+        UseItem("weapon:katana");
     }
     public void OnRandomTalk()
     {

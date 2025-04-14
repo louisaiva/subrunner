@@ -27,7 +27,12 @@ public class AttackCapacity : Capacity
 
 
     [Header("Components")]
-    private Being being;
+    private Capable bearer; // the being that is using the attack
+    private Being being { get
+    {
+        if (bearer == null || !(bearer is Being)) { return null; }
+        return bearer as Being;
+    } }
     private SpriteBank bank;
     private SpriteRenderer sr;
     private AnimPlayer anim_player;
@@ -37,9 +42,9 @@ public class AttackCapacity : Capacity
     private void Start()
     {
         // we get the sprite renderer
-        sr = transform.parent.GetComponent<SpriteRenderer>();
-        anim_player = transform.parent.GetComponent<AnimPlayer>();
-        being = transform.parent.GetComponent<Being>();
+        // sr = transform.parent.GetComponent<SpriteRenderer>();
+        // anim_player = transform.parent.GetComponent<AnimPlayer>();
+        // being = transform.parent.GetComponent<Being>();
 
         // we get the polygon collider
         pc = GetComponent<PolygonCollider2D>();
@@ -49,11 +54,25 @@ public class AttackCapacity : Capacity
         bank = GameObject.Find("/utils/bank").GetComponent<SpriteBank>();
     }
 
+    // BEARER SETUP
+    private void setBearer(Capable new_bearer)
+    {
+        bearer = new_bearer;
+
+        // we set the components
+        anim_player = bearer.GetComponent<AnimPlayer>();
+        sr = bearer.GetComponent<SpriteRenderer>();
+    }
+
+
     // trigger the attack
     public override void Use(Capable capable)
     {
+        // we set the bearer as the capable
+        setBearer(capable);
+
         // we play the animation
-        Anim anim = capable.anim_player.Play(name);
+        Anim anim = anim_player.Play("attack");
 
         if (anim != null)
         {
@@ -61,10 +80,7 @@ public class AttackCapacity : Capacity
             float anim_duration = anim.GetDuration();
             startCooldown(anim_duration);
         }
-        else
-        {
-            startCooldown();
-        }
+        else { startCooldown();}
 
         is_attacking = true;
         hit_enemies.Clear();
