@@ -1014,10 +1014,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""e6ac260a-558c-41f0-a34e-f2691617259e"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""path"": ""<Gamepad>/select"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""xbox"",
+                    ""groups"": "";xbox"",
                     ""action"": ""inventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
