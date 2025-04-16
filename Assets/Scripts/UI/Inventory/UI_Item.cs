@@ -80,7 +80,23 @@ public class UI_Item : UI_Slot
         return true;
     }
 
-    // ON POINTER CLICK
+    // ON POINTER
+    public override void OnPointerEnter(PointerEventData eventData)
+    {
+        base.OnPointerEnter(eventData);
+
+        string description = "";
+        if (Quantity == 0) { description = "empty slot"; }
+        else if (items.Count > 0) { description = items[0].Reference + "\n\n" + items[0].ItemDescription; }
+
+        // on met à jour la description si y'en a une
+        if (transform.parent.GetComponent<UI_ItemPool>() != null
+        && transform.parent.GetComponent<UI_ItemPool>().Descriptor != null)
+        {
+            Description descriptor = transform.parent.GetComponent<UI_ItemPool>().Descriptor;
+            descriptor.SetDescription(description);
+        }
+    }
     public override void OnPointerClick(PointerEventData eventData)
     {
         base.OnPointerClick(eventData);

@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -44,6 +45,7 @@ public class UI_Slot : MonoBehaviour, I_UI_Slot, IPointerDownHandler
 
         // on change le sprite du slot
         GetComponent<Image>().sprite = hover_sprite;
+
 
         // on met à jour le fait qu'on est survolé
         is_hovered = true;

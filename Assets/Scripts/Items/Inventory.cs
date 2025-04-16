@@ -53,7 +53,11 @@ public class Inventory : MonoBehaviour {
             // we have at least one ui_inventory
             // we try to make it grab in the first ui_inventory
             // if he can't, we do not grab it and we return false
-            if (!ui.UI_Grab(item)) { return false; }
+            if (!ui.UI_Grab(item))
+            {
+                if (debug) { Debug.LogWarning("(Inventory) " + capable.name + " can't grab : " + item.name + " in " + ui.name); }
+                return false;
+            }
 
             // if he can, we grab it in all ui_inventories
             for (int i=1; i < uis.Count; i++) { uis[i].UI_Grab(item); }

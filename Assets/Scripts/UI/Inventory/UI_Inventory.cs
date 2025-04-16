@@ -30,16 +30,31 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         // si on a pas d'inventory, il y a un problème
         if (inventory == null)
         {
-            Debug.LogError("(UI_Inventory) missing inventory on " + transform.parent.parent.parent.name +
-            ", you need to set it in the inspector");
-            return;
+            try
+            {
+                Debug.LogError("(UI_Inventory) missing inventory on " + transform.parent.parent.parent.name +
+                            ", you need to set it in the inspector");
+
+                return;
+            }
+            catch
+            {
+                Debug.LogError("(UI_Inventory) missing inventory on " + name);
+            }
         }
         // we check if we have some pools, otherwise we set ourself as the pool
         else if (pools.Count == 0)
         {
-            Debug.LogError("(UI_Inventory) no pool found on " + transform.parent.parent.parent.name +
-            ", please set at least one pool in the inspector");
-            return;
+            try
+            {
+                Debug.LogError("(UI_Inventory) no pool found on " + transform.parent.parent.parent.name +
+                ", please set at least one pool in the inspector");
+                return;
+            }
+            catch
+            {
+                Debug.LogError("(UI_Inventory) no pool found on " + name);
+            }
         }
 
         // on initialise les pools
@@ -58,6 +73,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         // we enable the navigator if we are not the perso quick inventory
         if (transform.parent.name != "hud")
         {
+            if (!navigator) { Init(); }
             navigator.Enable(this);
         }
     }
@@ -106,6 +122,10 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         {
             foreach (Transform child in pool.transform)
             {
+                // we check if the slot is a UI_Item
+                UI_Item ui_item = child.GetComponent<UI_Item>();
+                if (ui_item == null) { continue; }
+
                 // checks if the slot is disabled
                 if (child.GetComponent<UI_Item>().is_disabled) { continue; }
                 slots.Add(child.gameObject);

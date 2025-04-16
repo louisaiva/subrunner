@@ -15,6 +15,7 @@ public class ItemBank : MonoBehaviour
 
     [Header("UI")]
     public GameObject ui_item_prefab;
+    public GameObject ui_module_prefab;
 
     [Header("Debug")]
     public bool debug = false;
@@ -97,10 +98,12 @@ public class ItemBank : MonoBehaviour
     }
 
     // UI_ITEM GENERATOR
-    public GameObject CreateUI_Item(Item item = null)
+    public GameObject CreateUI_Item(Item item = null,bool create_ui_module=false)
     {
         // on instancie le prefab
-        GameObject ui_item = Instantiate(ui_item_prefab, Vector3.zero, Quaternion.identity);
+        GameObject ui_item = null;
+        if (!create_ui_module)  { ui_item = Instantiate(ui_item_prefab, Vector3.zero, Quaternion.identity);}
+        else                    { ui_item = Instantiate(ui_module_prefab, Vector3.zero, Quaternion.identity); }
 
         // we assign the item to the UI_Item
         if (item != null)

@@ -240,8 +240,10 @@ MonoBehaviour:
   forces: []
   input_speed: 0
   feet_collider: {fileID: 0}
-  Reference: hardware:network_module
+  Reference: module:network
   MaxQty: 4
+  ItemDescription: mandatory for connecting a laptop to other devices./l not mandatory
+    for eating ramens
 --- !u!1001 &5911729990550533727
 PrefabInstance:
   m_ObjectHideFlags: 0

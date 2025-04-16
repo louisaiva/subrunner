@@ -115,8 +115,11 @@ public class MotherboardBuilder : MonoBehaviour
             empty_slot.name = "empty_module_slot_" + i;
         }
 
-        // to finish we resize the entire motherboard to fit perfectly in the canvas
+        // we resize the entire motherboard to fit perfectly in the canvas
         adjustMBScale();
+
+        // and we set the right amont of ui_slots in the inside's pool
+        inside.GetComponent<UI_ModulePool>().MaxSlots = empty_slots;
     }
     private void calculate_width_and_height(Vector2Int size)
     {

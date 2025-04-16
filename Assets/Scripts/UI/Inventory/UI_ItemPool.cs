@@ -12,20 +12,26 @@ public class UI_ItemPool : MonoBehaviour
     public int MaxSlots = 9; // the maximum number of slots in the pool
     public bool Scalable = false; // if true, the pool will dynamically add/remove slots
 
-
     [Header("Item Rule")]
     public string item_rule = ""; // the rule to check if the item is valid
 
     [Header("Components")]
-    [SerializeField] private ItemBank bank;
+    [SerializeField] protected ItemBank bank;
+    public Description Descriptor; // the description of the item pool
 
     [Header("Debug")]
-    [SerializeField] private bool debug = false;
+    [SerializeField] protected bool debug = false;
 
-    public void Init()
+    public virtual void Init()
     {
         // we get the item bank
         bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
+
+        // we destroy the existing slots
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
 
         // we check if we are scalable or not
         if (!Scalable)

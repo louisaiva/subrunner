@@ -172,8 +172,9 @@ MonoBehaviour:
   forces: []
   input_speed: 0
   feet_collider: {fileID: 0}
-  Reference: hardware:storage_module
+  Reference: module:storage
   MaxQty: 4
+  ItemDescription: numeric memory. adds module slots to your laptop
 --- !u!1 &8814756426228828238
 GameObject:
   m_ObjectHideFlags: 0

@@ -146,7 +146,10 @@ public class UI_Manager : MonoBehaviour
         {
             UI_Inventory ui_inventory = transform.Find("inventory").GetComponent<UI_Inventory>();
             ui_inventory.Show();
-            GetComponent<UI_XboxNavigator>()?.Enable(ui_inventory);
+            UI_Inventory ui_laptop = ui_inventory.transform.Find("ui_laptop").GetComponent<UI_Inventory>();
+            ui_laptop.Show();
+            // GetComponent<UI_XboxNavigator>()?.Enable(ui_inventory);
+            // GetComponent<UI_XboxNavigator>()?.Enable(ui_laptop);
         }
 
         // on désactive les inputs du joueur si c'est pas le hud
@@ -170,7 +173,10 @@ public class UI_Manager : MonoBehaviour
         {
             UI_Inventory ui_inventory = transform.Find("inventory").GetComponent<UI_Inventory>();
             ui_inventory.Hide();
-            GetComponent<UI_XboxNavigator>()?.Disable(ui_inventory);
+            UI_Inventory ui_laptop = ui_inventory.transform.Find("ui_laptop").GetComponent<UI_Inventory>();
+            ui_laptop.Hide();
+            // GetComponent<UI_XboxNavigator>()?.Disable(ui_inventory);
+            
         }
 
         // on cache tous les éléments du pool

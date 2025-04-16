@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5186571838115229146}
   - component: {fileID: 1178637403024537787}
   - component: {fileID: 4185608048163301170}
-  - component: {fileID: -7840217606205089435}
+  - component: {fileID: 2996614389635581960}
   m_Layer: 0
   m_Name: empty_module_slot
   m_TagString: Untagged
@@ -76,7 +76,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &-7840217606205089435
+--- !u!114 &2996614389635581960
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -85,7 +85,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6477483050230691726}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef3b1c9fa5a7f1b4abb63c679f5d91c3, type: 3}
+  m_Script: {fileID: 11500000, guid: c085eeac05cbc4f4f933c07b1c61cfb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   base_sprite: {fileID: 1236777097, guid: 52204e3019eb6af40b70d4a1d02d8ac3, type: 3}
@@ -93,3 +93,5 @@ MonoBehaviour:
   down_sprite: {fileID: 1449048035, guid: 52204e3019eb6af40b70d4a1d02d8ac3, type: 3}
   disabled_sprite: {fileID: 0}
   debug: 0
+  quantity_text: {fileID: 0}
+  bank: {fileID: 0}
