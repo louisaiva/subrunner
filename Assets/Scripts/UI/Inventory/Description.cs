@@ -29,6 +29,9 @@ public class Description : MonoBehaviour
         StopAllCoroutines();
         label.text = string.Empty;
 
+        // check if description is active
+        if (gameObject.activeSelf == false) {return;}
+
         // set the description of the item
         target_description = description;
         StartCoroutine(write(description));
@@ -41,20 +44,20 @@ public class Description : MonoBehaviour
         {
             if (target[j] == '/' && j < target.Length - 1 && target[j + 1] == '.')
             {
-                yield return new WaitForSeconds(caractere_delay);
+                yield return new WaitForSecondsRealtime(caractere_delay);
                 label.text += '.';
-                yield return new WaitForSeconds(caractere_delay);
+                yield return new WaitForSecondsRealtime(caractere_delay);
                 label.text += '.';
                 string old_text = label.text;
-                yield return new WaitForSeconds(slow_caractere_delay);
+                yield return new WaitForSecondsRealtime(slow_caractere_delay);
                 label.text += '.';
 
                 // on clignote un petit peu
                 for (int arghfsdf = 0; arghfsdf < 2; arghfsdf++)
                 {
-                    yield return new WaitForSeconds(slow_caractere_delay);
+                    yield return new WaitForSecondsRealtime(slow_caractere_delay);
                     label.text = old_text + ' ';
-                    yield return new WaitForSeconds(slow_caractere_delay);
+                    yield return new WaitForSecondsRealtime(slow_caractere_delay);
                     label.text = old_text + '.';
                 }
                 label.text += ' ';
@@ -67,7 +70,7 @@ public class Description : MonoBehaviour
             else if (target[j] == '/' && j < target.Length - 1 && target[j + 1] == 'l')
             {
                 // on fait une grosse pause
-                yield return new WaitForSeconds(pause_caractere_delay);
+                yield return new WaitForSecondsRealtime(pause_caractere_delay);
 
                 // on saute le caractère suivant
                 j++;
@@ -75,7 +78,7 @@ public class Description : MonoBehaviour
                 continue;
             }
 
-            yield return new WaitForSeconds(caractere_delay);
+            yield return new WaitForSecondsRealtime(caractere_delay);
             label.text += target[j];
         }
     }

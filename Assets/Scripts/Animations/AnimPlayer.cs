@@ -51,13 +51,14 @@ public class AnimPlayer : MonoBehaviour
             {"open",3},
             {"close",3},
             {"dodge",3},
-            {"hurted",3},
-            {"die",4}};
+            {"hurted",4},
+            {"eat",4},
+            {"die",5}};
     // todo à transformer en List<CapacityPriority> sans MonoBehaviour pour pouvoir les éditer dans l'éditeur
 
-    public List<int> animation_priorities_with_no_loop = new() { 3 };
+    public List<int> animation_priorities_with_no_loop = new() { 3,4 };
         // we never loop the animation if it's in this priority (attack, dodge, hurted) -> always play once
-    public List<int> animation_priorities_with_no_interrupt = new() { 3 };
+    public List<int> animation_priorities_with_no_interrupt = new() { 3,4 };
         // we can't interrupt the animation if it's in this list (wait the end of the anim before changing orientation by example)
 
 

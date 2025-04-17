@@ -105,6 +105,34 @@ public class UI_Item : UI_Slot
         if (Quantity == 0) { return; }
         if (debug) { Debug.Log("OnPointerClick on " + gameObject.name); }
 
+        // we check if this is a food item
+        if (items.Count > 0 && items[0].GetComponent<Food>() != null)
+        {
+            Food food = items[0].GetComponent<Food>();
+
+            // we make it eat by the capable
+            // we get the EatCapacity
+            EatCapacity eater = food.Holder.GetCapacity<EatCapacity>();
+            if (eater == null) { return; }
+
+            eater.SetFoodTarget(food);
+            eater.Use(food.Holder);
+
+            // we switch back to hud
+            GameObject.Find("/ui").GetComponent<UI_Manager>().SwitchTo("hud");
+            return;
+        }
+    }
+    
+    // ON POINTER DROPPED
+    public void OnPointerDropped(PointerEventData eventData)
+    {
+        base.OnPointerClick(eventData);
+
+        // we check if we have an item
+        if (Quantity == 0) { return; }
+        if (debug) { Debug.Log("OnPointerDropped on " + gameObject.name); }
+
         // we get the item
         Item item = items[0];
 
@@ -128,6 +156,9 @@ public class UI_Item : UI_Slot
         {
             dropper.Select(item);
             inventory.capable.Do("drop");
+
+            // we switch back to hud
+            GameObject.Find("/ui").GetComponent<UI_Manager>().SwitchTo("hud");
         }
         else
         {

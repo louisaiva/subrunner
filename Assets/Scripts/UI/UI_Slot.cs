@@ -78,37 +78,6 @@ public class UI_Slot : MonoBehaviour, I_UI_Slot, IPointerDownHandler
 
         // on change le sprite du slot
         GetComponent<Image>().sprite = is_hovered ? hover_sprite : base_sprite;
-
-        /* // we check if we have an item
-        if (item == null) { return; }
-        if (debug) { Debug.Log("OnPointerClick on " + gameObject.name); }
-
-        // on récupère l'inventory qui drop l'item
-        Inventory inventory = item.transform.parent.GetComponent<Inventory>();
-
-        // on cherche l'inventory qui reçoit l'item
-        Inventory inventory_to_drop = inventory.GetInteractingInventory();
-
-        // we drop the item in the other inventory
-        if (inventory_to_drop != null)
-        {
-            inventory_to_drop.Grab(item);
-            return;
-        }
-
-        // we don't have an inventory to drop so we drop on the ground
-        // we check if we have a DropCapacity
-        DropCapacity dropper = inventory.capable.GetCapacity<DropCapacity>();
-        if (dropper != null)
-        {
-            dropper.Select(item);
-            inventory.capable.Do("drop");
-        }
-        else
-        {
-            // the inventory simply drops the item (we may be in a chest)
-            inventory.Drop(item);
-        } */
     }
 
 

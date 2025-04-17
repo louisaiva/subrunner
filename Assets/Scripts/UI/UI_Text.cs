@@ -7,15 +7,6 @@ using UnityEngine.InputSystem;
 public class UI_Text : MonoBehaviour, I_UI_Slot
 {
 
-    // callback
-    /* private System.Action<InputAction.CallbackContext> activateCallback;
-    public System.Action<InputAction.CallbackContext> ActivateCallback
-    {
-        get
-        {
-            return activateCallback;
-        }
-    } */
     // hover
     [Header("Hover")]
     public Color hover_color = new Color(1, 1, 0, 1);
@@ -43,9 +34,9 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
     // MAIN CLICK FUNCTIONS
     public void play()
     {
-        transform.parent.parent.GetComponent<UI_PauseMenu>().hide();
+        // transform.parent.parent.GetComponent<UI_PauseMenu>().hide();
+        GameObject.Find("/ui").GetComponent<UI_Manager>().SwitchTo("hud");
     }
-
     public void exit()
     {
         #if UNITY_EDITOR
@@ -54,7 +45,7 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
         #endif
         Application.Quit();
 
-        transform.parent.parent.GetComponent<UI_PauseMenu>().hide();
+        // GameObject.Find("/ui").GetComponent<UI_Manager>().TogglePool("pause");
     }
 
     /* public void regenerate_world()
@@ -90,7 +81,6 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
 
         if (debug) Debug.Log("hovering " + base_text);
     }
-
     public void OnPointerExit(PointerEventData eventData)
     {
         tmp.color = new Color(1, 1, 1, 1);
@@ -101,7 +91,6 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
 
         if (debug) Debug.Log("unhovering " + base_text);
     }
-
     public void OnPointerClick(PointerEventData eventData)
     {
         if (debug) Debug.Log("clicking on " + base_text);
@@ -122,11 +111,4 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
                 break; */
         }
     }
-
-    // reset hover
-    /* public void resetHoover()
-    {
-        if (!is_hovered) return;
-        OnPointerExit(null);
-    } */
 }

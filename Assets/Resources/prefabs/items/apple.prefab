@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4105084865145927335}
   - component: {fileID: 7751029223533838636}
   - component: {fileID: 7020607722277148866}
-  - component: {fileID: 3693721212652600826}
+  - component: {fileID: 8665536444718687376}
   m_Layer: 0
   m_Name: apple
   m_TagString: Untagged
@@ -146,7 +146,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &3693721212652600826
+--- !u!114 &8665536444718687376
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -155,7 +155,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3927794695775646843}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21b1e91dfac8ace4aabb5aed796039e2, type: 3}
+  m_Script: {fileID: 11500000, guid: 1d6f4a2ee79ba714cb2d63f8931d5817, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   anim_player: {fileID: 0}
@@ -165,7 +165,7 @@ MonoBehaviour:
   capacities: []
   effects: 
   effects_timetolive: []
-  debug: 0
+  debug: 1
   rb: {fileID: 0}
   weight: 1
   friction: 7
@@ -173,8 +173,10 @@ MonoBehaviour:
   input_speed: 0
   feet_collider: {fileID: 0}
   Reference: food:apple
-  MaxQty: 4
+  MaxQty: 9
   ItemDescription: just an old apple/. awful taste/. smells bad/./l a solid 8/10!
+  life_regen: 30
+  bites: 1
 --- !u!1 &8910784274748376873
 GameObject:
   m_ObjectHideFlags: 0

@@ -28,6 +28,16 @@ public class Item : Movable
         }
     }
 
+    public Capable Holder
+    {
+        get
+        {
+            if (transform.parent == null) { return null; }
+            if (transform.parent.GetComponent<Inventory>() == null) { return null; }
+            return transform.parent.GetComponent<Inventory>().capable;
+        }
+    }
+
     // BEING GRABBED / DROPPED
     protected virtual void on_grabbed()
     {
@@ -69,7 +79,6 @@ public class Item : Movable
         // we remove the effect IsBeingCarried
         RemoveEffect(Effect.BeingCarried);
     }
-
 
     // USE
     public virtual void Use()

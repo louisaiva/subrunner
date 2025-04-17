@@ -38,9 +38,13 @@ public class UI_XboxNavigator : MonoBehaviour
     [SerializeField] private InputActionReference navigateInput;
     private InputAction navigateAction;
     private event Action<InputAction.CallbackContext> navigateCallback;
+    [SerializeField] private InputActionReference moveInput;
+    private InputAction moveAction;
+    private event Action<InputAction.CallbackContext> moveCallback; // move Callback is for dropping items, or, when dragged, move it through the ui, on Y
+
     [SerializeField] private InputActionReference activateInput;
     private InputAction activateAction;
-    private event Action<InputAction.CallbackContext> activateCallback;
+    private event Action<InputAction.CallbackContext> activateCallback; // activate Callback is for activating the item/slot -> quit game, mostly on A
 
 
     [Header("Debug")]
@@ -57,9 +61,11 @@ public class UI_XboxNavigator : MonoBehaviour
         input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
         activateAction = input_manager.GetAction(activateInput);
         navigateAction = input_manager.GetAction(navigateInput);
+        moveAction = input_manager.GetAction(moveInput);
 
         // we create the callbacks
         navigateCallback = ctx => HandleNavigateInput(ctx.ReadValue<Vector2>());
+        moveCallback = ctx => HandleMoveInput(ctx.ReadValue<float>());
         activateCallback = ctx => HandleActivateInput(ctx.ReadValue<float>());
 
         if (debug) { Debug.Log("(XboxNavigator) started & callbacks created"); }
@@ -181,20 +187,14 @@ public class UI_XboxNavigator : MonoBehaviour
         // on récupère les inputs
         navigateAction.performed += navigateCallback;
         activateAction.performed += activateCallback;
-
-        // on désactive les perso inputs
-        // input_manager.inputs.perso.move.Disable();
-        input_manager.inputs.perso.useConso.Disable();
+        moveAction.performed += moveCallback;
     }
     private void disableInputs()
     {
         // on récupère les inputs
         navigateAction.performed -= navigateCallback;
         activateAction.performed -= activateCallback;
-
-        // on active les perso inputs
-        // input_manager.inputs.perso.move.Enable();
-        input_manager.inputs.perso.useConso.Enable();
+        moveAction.performed -= moveCallback;
     }
 
 
@@ -216,7 +216,7 @@ public class UI_XboxNavigator : MonoBehaviour
             if (can_navigate)
             {
                 // on lance le counter de navigation continue
-                continuous_navigation_counter = Time.time;
+                continuous_navigation_counter = Time.realtimeSinceStartup;
                 can_navigate = false;
 
                 // on navigue
@@ -240,21 +240,21 @@ public class UI_XboxNavigator : MonoBehaviour
         if (continuous_navigation_counter == float.MaxValue) { return; }
 
         // cas 1 - on ne navigue pas encore en continu mais on essaie !
-        if (!navigate_continuously && Time.time - continuous_navigation_counter > continuous_navigation_threshold)
+        if (!navigate_continuously && Time.realtimeSinceStartup - continuous_navigation_counter > continuous_navigation_threshold)
         {
             // on lance la navigation continue
             navigate_continuously = true;
 
             // on navigue
-            continuous_navigation_counter = Time.time;
+            continuous_navigation_counter = Time.realtimeSinceStartup;
             navigate(last_input.normalized);
         }
 
         // cas 2 - on navigue en continu
-        else if (navigate_continuously && Time.time - continuous_navigation_counter > continuous_navigation_cooldown)
+        else if (navigate_continuously && Time.realtimeSinceStartup - continuous_navigation_counter > continuous_navigation_cooldown)
         {
             // on navigue en continu
-            continuous_navigation_counter = Time.time;
+            continuous_navigation_counter = Time.realtimeSinceStartup;
             navigate(last_input.normalized);
         }
     }
@@ -426,11 +426,59 @@ public class UI_XboxNavigator : MonoBehaviour
     }
 
 
-    // ACTIVATION
-    private void HandleActivateInput(float input)
+    // MOVING / DROPPING SLOTS
+    private void HandleMoveInput(float input)
     {
         // cette fonction gère les inputs de navigation et décide si on doit naviguer ou non
-        // si oui elle appelle alors navigate() ou pressed()
+        // si oui elle appelle alors drop() ou pressed()
+
+        // 1 - on récupère le slot actuel
+        if (current_slot_index == -1) { return; }
+        GameObject go = slots[current_slot_index];
+        if (go == null) { return; }
+        I_UI_Slot slot = go.GetComponent<I_UI_Slot>();
+        if (slot == null) { return; }
+
+        // on handle le move seulement pour les UI_Item
+        if (slot is not UI_Item) { return; }
+
+        // 2 - on regarde si on a down ou up
+        if (input > 0.5f)
+        {
+            // on down le slot
+            (slot as UI_Slot).OnPointerDown(null);
+            if (debug) { Debug.Log("(XboxNavigator) pressed ui_item " + slot.gameObject.name); }
+        }
+        else
+        {
+            // on relache le slot
+            drop(slot as UI_Item);
+            if (debug) { Debug.Log("(XboxNavigator) dropped ui_item " + slot.gameObject.name); }
+        }
+
+    }
+    private async void drop(UI_Item slot)
+    {
+        if (slots.Count == 0 || current_slot_index == -1) { return; }
+
+        // on retient la position du slot
+        Vector2 position = get_position(slot.gameObject);
+
+        // on clique sur le slot
+        slot.OnPointerDropped(null);
+
+        // wait for a frame to let the click happen
+        await System.Threading.Tasks.Task.Yield();
+
+        // on navigue vers le slot le plus proche
+        navigateToClosest(position);
+    }
+    
+    // ACTIVATE SLOT
+    private void HandleActivateInput(float input)
+    {
+        // cette fonction gère les inputs d'activation et décide si on peut activer ou non
+        // si oui elle appelle alors activate() ou pressed()
 
         // 1 - on récupère le slot actuel
         if (current_slot_index == -1) { return; }
@@ -440,19 +488,18 @@ public class UI_XboxNavigator : MonoBehaviour
         if (slot == null) { return; }
 
         // 2 - on regarde si on a down ou up
-        if (input > 0.5f && slot is UI_Item)
+        if (input > 0.5f)
         {
             // on down le slot
-            (slot as UI_Item).OnPointerDown(null);
-            if (debug) { Debug.Log("(XboxNavigator) pressed on " + slot.gameObject.name); }
+            (slot as UI_Slot).OnPointerDown(null);
+            if (debug) { Debug.Log("(XboxNavigator) pressed slot " + slot.gameObject.name); }
         }
         else
         {
             // on relache le slot
             activate(slot);
-            if (debug) { Debug.Log("(XboxNavigator) released on " + slot.gameObject.name); }
+            if (debug) { Debug.Log("(XboxNavigator) activated slot " + slot.gameObject.name); }
         }
-
     }
     private async void activate(I_UI_Slot slot)
     {
@@ -470,7 +517,6 @@ public class UI_XboxNavigator : MonoBehaviour
         // on navigue vers le slot le plus proche
         navigateToClosest(position);
     }
-
 
     // UPDATE
     /* public void updateWhileShowed()

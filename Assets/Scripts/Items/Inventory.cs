@@ -105,6 +105,24 @@ public class Inventory : MonoBehaviour {
 
         return true;
     }
+    public bool Remove(Item item)
+    {
+        // only for items that are going to be destroyed
+
+        // we check if we can remove the item
+        if (item == null) { return false; }
+        if (!Items.Contains(item)) { return false; }
+
+        // we remove the item
+        Items.Remove(item);
+
+        // we update the UI
+        uis.ForEach(ui => ui.UI_Drop(item));
+
+        if (debug) { Debug.Log("(Inventory) " + capable.name + " removed : " + item.name); }
+
+        return true;
+    }
 
     // GETTERS
     public Inventory GetInteractingInventory()

@@ -8,6 +8,7 @@ public class Movable : Capable
     public Rigidbody2D rb;  // Replace transform movement
     public float weight = 1f;
     public float friction = 7f;
+    public bool debug_velocity = false; // Show velocity in console
 
     [Header("Forces")]
     public List<Force> forces = new List<Force>();
@@ -134,7 +135,7 @@ public class Movable : Capable
         }
 
         // we log the current linear velocity
-        if (debug) { Debug.Log("velocity : " + rb.linearVelocity.magnitude); }
+        if (debug_velocity) { Debug.Log("velocity : " + rb.linearVelocity.magnitude); }
     }
 
     // gizmos

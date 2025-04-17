@@ -1,26 +1,43 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class UI_Pool : MonoBehaviour
 {
     [Header("Pool paramaters")]
     public string Reference = "pool";
     public bool Showed = false;
-    
-    [Header("UI Elements")]
-    [SerializeField] private List<GameObject> ui_elements = new List<GameObject>();
+    public bool HasCancelAction = false; // if true, the UI_Manager will activate the cancel action when the pool is showed
+    public bool UsePersoInputs = true; // if true, the UI_Manager will activate the inputs.perso when the pool is showed
 
-    /* [Header("Components")]
-    [SerializeField] private UI_XboxNavigator navigator; */
+
+    [Header("UI Elements")]
+    [SerializeField] protected List<GameObject> ui_elements = new List<GameObject>();
+    
+    [Header("Inputs")]
+    protected PlayerInputActions inputs;
 
     [Header("Debug")]
-    [SerializeField] private bool debug = false;
+    [SerializeField] protected bool debug = false;
+
+    // AWAKE
+    protected virtual void Awake()
+    {
+
+        Hide();
+    }
+
+    // START
+    private void Start()
+    {
+        // we get the inputs
+        inputs = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().inputs;
+    }
 
     // SHOW / HIDE
-    public void Show()
+    public virtual void Show()
     {
-        if (Showed) { return; }
-
         // on affiche tous les éléments
         if (debug) { Debug.Log("(UI_Pool) showing pool : " + Reference); }
         foreach (GameObject ui in ui_elements)
@@ -28,28 +45,14 @@ public class UI_Pool : MonoBehaviour
             ui.SetActive(true);
         }
 
-        // on active le Xbox manager si c'est l'inventaire
-        /* if (pool_name == "inventory")
-        {
-            UI_Inventory ui_inventory = transform.Find("inventory").GetComponent<UI_Inventory>();
-            ui_inventory.Show();
-            GetComponent<UI_XboxNavigator>()?.Enable(ui_inventory);
-        } */
-
         Showed = true;
+
+        // s'il a une activate action, on désactive les inputs.perso
+        if (UsePersoInputs) { inputs.perso.Enable(); }
+        else { inputs.perso.Disable(); }
     }
-    public void Hide(string pool_name)
+    public virtual void Hide()
     {
-        if (!Showed) { return; }
-
-        /* // on desactive le Xbox manager si c'est l'inventaire
-        if (pool_name == "inventory")
-        {
-            UI_Inventory ui_inventory = transform.Find("inventory").GetComponent<UI_Inventory>();
-            ui_inventory.Hide();
-            GetComponent<UI_XboxNavigator>()?.Disable(ui_inventory);
-        } */
-
         // on cache tous les éléments du pool
         if (debug) { Debug.Log("(UI_Pool) hiding pool : " + Reference); }
         foreach (GameObject ui in ui_elements)
@@ -60,15 +63,42 @@ public class UI_Pool : MonoBehaviour
         Showed = false;
     }
 
-    public void TogglePool(string pool_name)
+    // REGISTER ELEMENTS
+    public void RegisterToPool(GameObject ui_element)
     {
-        if (Showed)
+        // if the gameobject is null, we return
+        if (ui_element == null) { return; }
+
+        // we check if the element is already in the pool
+        else if (ui_elements.Contains(ui_element))
         {
-            Hide(pool_name);
+            if (debug) { Debug.LogWarning("(UI_Manager) " + ui_element.name + " tried to register to a pool it's already in : " + Reference); }
+            return;
         }
-        else
+
+        if (debug) { Debug.Log("(UI_Manager) " + ui_element.name + " just registered to pool : " + Reference); }
+
+        // on ajoute l'élément au pool
+        ui_elements.Add(ui_element);
+
+        // we show/hide the element if the pool is showed
+        ui_element.SetActive(Showed);
+    }
+    public void QuitPool(GameObject ui_element)
+    {
+        // if the gameobject is null, we return
+        if (ui_element == null) { return; }
+
+        // we check if the element is already in the pool
+        else if (!ui_elements.Contains(ui_element))
         {
-            Show();
+            if (debug) { Debug.LogWarning("(UI_Manager) " + ui_element.name + " tried to quit a pool it's not in : " + Reference); }
+            return;
         }
+
+        if (debug) { Debug.Log("(UI_Manager) " + ui_element.name + " just quit pool : " + Reference); }
+
+        // on enlève l'élément du pool
+        ui_elements.Remove(ui_element);
     }
 }
