@@ -45,6 +45,9 @@ public class UI_ItemPool : MonoBehaviour
 
                 // reset the scale to 1
                 ui_slot.transform.localScale = Vector3.one;
+
+                // we change the layer of the slot to the same as the pool
+                ui_slot.layer = gameObject.layer;
             }
         }
     }
@@ -110,6 +113,10 @@ public class UI_ItemPool : MonoBehaviour
         
         // reset the scale to 1
         ui_slot.transform.localScale = Vector3.one;
+
+        // we change the layer of the slot to the same as the pool
+        ui_slot.layer = gameObject.layer;
+
         return true;
     }
     public bool Drop(Item item)

@@ -12,7 +12,7 @@ public class EatCapacity : Capacity
     [Header("Eating parameters")]
     public Food food_target;
 
-    // trigger the attack
+    // trigger the eating
     public override void Use(Capable capable)
     {
         // we check if we have a food target

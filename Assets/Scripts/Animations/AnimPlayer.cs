@@ -46,13 +46,18 @@ public class AnimPlayer : MonoBehaviour
             {"run",1},
             {"hover",1},
             {"idle_open",2},
+            {"idle_sleep",2},
             {"attack",3},
             {"spawn",3},
             {"open",3},
             {"close",3},
             {"dodge",3},
-            {"hurted",4},
+            {"hurted",3},
             {"eat",4},
+            {"fell_asleep",4},
+            {"wake_up",4},
+            {"lick_foot",4},
+            {"throw",5},
             {"die",5}};
     // todo à transformer en List<CapacityPriority> sans MonoBehaviour pour pouvoir les éditer dans l'éditeur
 
@@ -65,6 +70,8 @@ public class AnimPlayer : MonoBehaviour
 
     [Header("Debug")]
     public bool debug = false;
+    public bool debug_orientation = false;
+    public bool debug_advanced = false;
 
 
 
@@ -227,7 +234,7 @@ public class AnimPlayer : MonoBehaviour
                 if (debug) {Debug.LogWarning("(AnimPlayer - playFromPile) No animation " + skin + "." + anim_pile[i] + "." + orientation + " found to play in the bank");}
                 continue;
             }
-            if (debug) {Debug.Log("(AnimPlayer - playFromPile) Found an animation to play: " + anim.name + " for capacity " + anim_pile[i]);}
+            if (debug_advanced) {Debug.Log("(AnimPlayer - playFromPile) Found an animation to play: " + anim.name + " for capacity " + anim_pile[i]);}
 
             // we set the current capacity
             current_capacity = anim_pile[i];
@@ -258,7 +265,7 @@ public class AnimPlayer : MonoBehaviour
         if (anim.flipX && !sr.flipX) { sr.flipX = true; }
         else if (!anim.flipX && sr.flipX) { sr.flipX = false; }
 
-        if (debug) {Debug.Log("(AnimPlayer) Playing " + anim.name + " at frame " + frame + " flipX: " + anim.flipX);}
+        if (debug_advanced) {Debug.Log("(AnimPlayer) Playing " + anim.name + " at frame " + frame + " flipX: " + anim.flipX);}
     }
 
     // STOP ANIMATION
@@ -302,7 +309,7 @@ public class AnimPlayer : MonoBehaviour
     // ORIENTATION
     public void SetOrientation(Vector2 look_at)
     {
-        if (debug) { Debug.Log("(AnimPlayer) Changing " + name +" orientation to " + look_at); }
+        if (debug_orientation) { Debug.Log("(AnimPlayer) Changing " + name +" orientation to " + look_at); }
 
         // we separate the 360° in 4 directions (up, down, left, right)
         if (look_at.y > 0.5) { SetOrientation("U"); }

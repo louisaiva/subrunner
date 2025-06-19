@@ -9,7 +9,6 @@ public class UI_InventoryMenu : UI_Pool
 
     protected override void Awake()
     {
-
         // on récupère le xbox_manager
         xbox_manager = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
 

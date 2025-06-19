@@ -130,7 +130,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
                 if (child.GetComponent<UI_Item>().is_disabled) { continue; }
                 slots.Add(child.gameObject);
 
-                // we update the position
+                // we update the position to the first slot
                 if (position == Vector2.negativeInfinity)
                 {
                     position = child.position;

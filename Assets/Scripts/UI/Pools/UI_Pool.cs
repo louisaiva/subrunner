@@ -48,8 +48,19 @@ public class UI_Pool : MonoBehaviour
         Showed = true;
 
         // s'il a une activate action, on désactive les inputs.perso
-        if (UsePersoInputs) { inputs.perso.Enable(); }
-        else { inputs.perso.Disable(); }
+        if (UsePersoInputs)
+        {
+            inputs.perso.Enable();
+            if (inputs.UI.navigate.bindings.Count > 1)
+            {
+                inputs.UI.navigate.ChangeBinding(1).Erase();
+            }
+        }
+        else
+        {
+            inputs.perso.Disable();
+            inputs.UI.navigate.AddBinding("<Gamepad>/leftStick");
+        }
     }
     public virtual void Hide()
     {

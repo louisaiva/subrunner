@@ -64,9 +64,13 @@ public class InputFeedback : MonoBehaviour
             bank = GameObject.Find("/utils/bank").GetComponent<SpriteBank>();
             if (debug) { Debug.Log("(IF) SpriteBank loaded : SpriteBank == " + bank); }
         }
+
         // we add the listeners
         action.performed += input_callback;
         action.canceled += reset_callback;
+
+        // we reset the IF
+        OnReset();
     }
 
     private void OnDisable()

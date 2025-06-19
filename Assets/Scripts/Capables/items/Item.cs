@@ -45,7 +45,7 @@ public class Item : Movable
         Destroy(rb);
 
         // we disable the HoverCapacity's collider
-        GetCapacity<HoverCapacity>().transform.GetComponent<Collider2D>().enabled = false;
+        GetCapacity<HoverCapacity>().GetComponent<Collider2D>().enabled = false;
 
         // we disable the feet collider
         feet_collider.enabled = false;

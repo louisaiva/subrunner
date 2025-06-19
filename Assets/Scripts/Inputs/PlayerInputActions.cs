@@ -435,7 +435,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";xbox"",
                     ""action"": ""navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false

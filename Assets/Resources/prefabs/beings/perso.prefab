@@ -610,10 +610,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Items: []
-  max_items: 9
-  scalable: 1
-  drop_magnitude: 200
-  parent_to_drop_items: {fileID: 0}
   OnGrab:
     m_PersistentCalls:
       m_Calls:
@@ -644,7 +640,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  ui: {fileID: 0}
+  uis: []
   debug: 0
 --- !u!1 &3238169105776769028
 GameObject:
@@ -688,10 +684,10 @@ Transform:
   - {fileID: 7813571020575018812}
   - {fileID: 1926709610439740546}
   - {fileID: 2786445522269117577}
-  - {fileID: 6623671327554721870}
-  - {fileID: 2051910528379396212}
   - {fileID: 455273735031494225}
   - {fileID: 806613326114500989}
+  - {fileID: 6623671327554721870}
+  - {fileID: 2051910528379396212}
   - {fileID: 2327086996623757931}
   - {fileID: 6093387476269588347}
   - {fileID: 4230169019886544734}
@@ -810,6 +806,8 @@ MonoBehaviour:
   animation_priorities_with_no_loop: 03000000
   animation_priorities_with_no_interrupt: 03000000
   debug: 0
+  debug_orientation: 0
+  debug_advanced: 0
 --- !u!114 &767440920818722555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -833,8 +831,10 @@ MonoBehaviour:
   rb: {fileID: 0}
   weight: 1
   friction: 7
+  debug_velocity: 0
   forces: []
   input_speed: 0
+  Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 0}
   life: 100
   max_life: 100

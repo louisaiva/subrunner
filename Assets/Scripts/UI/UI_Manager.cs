@@ -14,7 +14,7 @@ public class UI_Manager : MonoBehaviour
     [Header("Pools")]
     [SerializeField] private List<UI_Pool> pools = new List<UI_Pool>();
     [SerializeField] private UI_Pool current_pool;
-    [SerializeField] private UI_Pool last_pool;
+    // [SerializeField] private UI_Pool last_pool;
     public string CurrentPool { get => current_pool.Reference; }
 
     
@@ -33,7 +33,7 @@ public class UI_Manager : MonoBehaviour
         foreach (UI_Pool pool in pools)
         {
             pool.gameObject.SetActive(true);
-        }    
+        }
     }
     void Start()
     {
@@ -55,7 +55,7 @@ public class UI_Manager : MonoBehaviour
     public void TogglePool(string pool_name)
     {
         // we check if the pool is already shown
-        if (pool_name == current_pool.Reference) { SwitchTo(last_pool);}
+        if (pool_name == current_pool.Reference) { SwitchTo("hud");}
         else { SwitchTo(pool_name); }
     }
     public void SwitchTo(string pool_name)
@@ -75,7 +75,7 @@ public class UI_Manager : MonoBehaviour
         {
             // we hide the current pool
             current_pool.Hide();
-            last_pool = current_pool;
+            // last_pool = current_pool;
         }
 
         // we show the new pool

@@ -62,13 +62,6 @@ public class Being : Movable
         {
             life += regen_life * Time.deltaTime;
         }
-
-        // walk
-        if (Can("walk") && !(this is Perso))
-        {
-            // Vector2 raw_inputs = randomly_circulate(Orientation);
-            Orientation = randomly_circulate(Orientation);
-        }
         
     }
 

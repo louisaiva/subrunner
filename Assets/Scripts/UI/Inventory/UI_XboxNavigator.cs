@@ -376,6 +376,8 @@ public class UI_XboxNavigator : MonoBehaviour
             slots = new List<GameObject>();
             foreach (GameObject slottable in slottables)
             {
+                if (slottable == null) { continue; }
+                
                 // on récupère les slots du slottable
                 List<GameObject> slottable_slots = slottable.GetComponent<I_UI_Slottable>().GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator);
                 slots.AddRange(slottable_slots);
@@ -422,6 +424,14 @@ public class UI_XboxNavigator : MonoBehaviour
         if (slot == null) { return base_position; }
 
         Vector2 position = slot.GetComponent<RectTransform>().TransformPoint(slot.GetComponent<RectTransform>().rect.center);
+
+        // on regarde si le slot est positionné dans un canvas world space or screen space
+        if (slot.layer == LayerMask.NameToLayer("UI_World"))
+        {
+            // on le convertit en position
+            position = Camera.main.WorldToScreenPoint(position);
+        }
+
         return position;
     }
 

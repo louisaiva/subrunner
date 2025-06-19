@@ -93,9 +93,12 @@ public class DropCapacity : Capacity
             if (debug) { Debug.LogError("(DropCapacity) no selected item"); }
             return;
         }
+        Item item = selected_item;
+
+        // we check if it s a shuriken, if so we throw it
+        if (item is Shuriken) { (item as Shuriken).Use(); }
 
         // we try to drop the item
-        Item item = selected_item;
         bool drop = inventory.Drop(selected_item);
         if (!drop)
         {
@@ -110,14 +113,23 @@ public class DropCapacity : Capacity
         item.transform.SetParent(parent_to_drop_items);
 
         // we add a force to the item
-        Force force = new Force("drop", capable.Orientation , drop_magnitude);
-        if (capable is Movable)
+        float force_magnitude = -888f;
+        if (item is not Shuriken)
         {
-            // we add the current moving velocity to the force (for dropping items while moving)
-            force.magnitude += (capable as Movable).Velocity.magnitude*2f;
+            Force force = new Force("drop", capable.Orientation , drop_magnitude);
+            if (capable is Movable)
+            {
+                // we add the current moving velocity to the force (for dropping items while moving)
+                force.magnitude += (capable as Movable).Velocity.magnitude*2f;
+            }
+            item.AddForce(force);
+            force_magnitude = force.magnitude;
         }
-        item.AddForce(force);
 
-        if (debug) { Debug.Log("(DropCapacity) " + capable.name + " dropped : " + item.name + " with force of magnitude : " + force.magnitude); }
+        if (debug) { Debug.Log("(DropCapacity) " + capable.name + " dropped : " + item.name +
+                (force_magnitude != -888f ? " with force of magnitude : " + force_magnitude : 
+                " and item is a SHURIKEN so no force applied")
+                ); }
+    
     }
 }
