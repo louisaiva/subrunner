@@ -5,12 +5,12 @@ public class UI_InventoryMenu : UI_Pool
     [Header("Inventory Menu Components")]
     [SerializeField] private UI_Inventory ui_inventory;
     [SerializeField] private UI_Inventory ui_laptop;
-    [SerializeField] private UI_XboxNavigator xbox_manager;
+    [SerializeField] private UI_XboxNavigator navigator;
 
     protected override void Awake()
     {
-        // on récupère le xbox_manager
-        xbox_manager = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
+        // on récupère le navigator
+        navigator = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
 
         // on récupère les composants
         ui_inventory = GetComponent<UI_Inventory>();
@@ -31,23 +31,24 @@ public class UI_InventoryMenu : UI_Pool
     {
         base.Show();
 
-        // on active le xbox_manager
-        xbox_manager.Enable(ui_inventory);
-        xbox_manager.Enable(ui_laptop);
+        // on active le navigator
+        navigator.Enable(ui_inventory);
+        navigator.Enable(ui_laptop);
 
         // on arrête le temps
         Time.timeScale = 0;
 
-        // on enlève les input du joueur
+        // on met à jour l'angle treshold du navigator
+        navigator.angle_threshold = base.angle_threshold;
         
     }
     public override void Hide()
     {
         base.Hide();
 
-        // on désactive le xbox_manager
-        xbox_manager.Disable(ui_inventory);
-        xbox_manager.Disable(ui_laptop);
+        // on désactive le navigator
+        navigator.Disable(ui_inventory);
+        navigator.Disable(ui_laptop);
 
         // on remet le temps
         Time.timeScale = 1;

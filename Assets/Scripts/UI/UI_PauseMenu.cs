@@ -6,8 +6,6 @@ public class UI_PauseMenu : UI_Pool, I_UI_Slottable
     [Header("Slottable")]
     [SerializeField] private Transform slots_parent;
     [SerializeField] private Vector2 base_position = new Vector2(0, 10000);
-    [SerializeField] private float angle_threshold = 45f;
-    [SerializeField] private float angle_multiplicator = 100f;
 
     [Header("Components")]
     [SerializeField] private UI_XboxNavigator xbox_manager;
@@ -59,8 +57,8 @@ public class UI_PauseMenu : UI_Pool, I_UI_Slottable
         }
 
         // on met à jour les seuils
-        angle_threshold = this.angle_threshold;
-        angle_multiplicator = this.angle_multiplicator;
+        angle_threshold = base.angle_threshold;
+        angle_multiplicator = base.angle_multiplicator;
 
         // on met à jour la position de base
         base_position = this.base_position;

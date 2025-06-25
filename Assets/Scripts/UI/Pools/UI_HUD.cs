@@ -5,12 +5,12 @@ public class UI_HUD : UI_Pool
     [Header("Inventory Menu Components")]
     [SerializeField] private UI_Inventory perso_quick_inventory;
     [SerializeField] private UI_Inventory ui_chest;
-    [SerializeField] private UI_XboxNavigator xbox_manager;
+    [SerializeField] private UI_XboxNavigator navigator;
 
     protected override void Awake()
     {
-        // on récupère le xbox_manager
-        xbox_manager = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
+        // on récupère le navigator
+        navigator = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
 
         // on récupère les composants
         perso_quick_inventory = transform.Find("perso_quick_inventory").GetComponent<UI_Inventory>();
@@ -31,11 +31,13 @@ public class UI_HUD : UI_Pool
         {
             // ça veut dire qu'on interagit avec un chest,
             // on doit les activer du xbox navigator
-            xbox_manager.Enable(ui_chest);
-            xbox_manager.Enable(perso_quick_inventory);
+            navigator.Enable(ui_chest);
+            navigator.Enable(perso_quick_inventory);
 
             // on désactive les perso useconso
             inputs.perso.useConso.Disable();
+
+            navigator.angle_threshold = base.angle_threshold;
         }
     }
     public override void Hide()
@@ -46,8 +48,8 @@ public class UI_HUD : UI_Pool
         {
             // ça veut dire qu'on interagit avec un chest,
             // on doit les désactiver du xbox navigator
-            xbox_manager.Disable(ui_chest);
-            xbox_manager.Disable(perso_quick_inventory);
+            navigator.Disable(ui_chest);
+            navigator.Disable(perso_quick_inventory);
 
             // on réactive les perso useconso
             inputs.perso.useConso.Enable();

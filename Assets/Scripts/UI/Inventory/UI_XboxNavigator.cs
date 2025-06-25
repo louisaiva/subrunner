@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using System;
+using Unity.Cinemachine;
 
 public class UI_XboxNavigator : MonoBehaviour
 {
@@ -29,8 +30,10 @@ public class UI_XboxNavigator : MonoBehaviour
 
     [Header("Navigation Parameters")]
     [SerializeField] private Vector2 base_position = Vector2.zero;
-    [SerializeField] private float angle_threshold = 45f;
-    [SerializeField] private float angle_multiplicator = 0f;
+    public float angle_threshold = 45f;
+    public float angle_multiplicator = 0f;
+    // [SerializeField] public float angle_vs_distance_precision = 0f; // from 0 to 1, affine la prédiction de navigation
+    
 
 
     [Header("Input & Callbacks")]
@@ -50,7 +53,13 @@ public class UI_XboxNavigator : MonoBehaviour
     [Header("Debug")]
     public bool debug = false;
     public bool debug_navigation = false;
+    public bool debug_gizmo = false;
 
+    [Header("Gizmos")]
+    private Vector2 gizmo_position = Vector2.negativeInfinity; // used to transmit the position to OnDrawGizmo
+    public List<Vector2> gizmos_positions = new List<Vector2>(); // used to show gizmos, Vector2 in world space
+    public List<float> gizmos_weights = new List<float>(); // used to show gizmos, weight from 0 to 1
+    // [Range(1, 10)] public double gizmo_dot_size = 1.0; // size of the dots in the gizmos
 
     // START
     protected void Start()
@@ -267,7 +276,7 @@ public class UI_XboxNavigator : MonoBehaviour
         // on récupère les slots
         update_slots();
 
-        string s = "(XboxNavigator) NAVIGATE: \n\n";
+        string s = "(XboxNavigator) NAVIGATE: \n\nparameters: \n\tangle_threshold : " + angle_threshold + "\n\tangle_multiplicator: " + angle_multiplicator + "\n\n";
 
         // on récupère la position du slot actuel
         Vector2 current_slot_position = get_position(current_slot_index);
@@ -289,7 +298,17 @@ public class UI_XboxNavigator : MonoBehaviour
                 slots_in_angle.Add(slot);
             }
         }
-        if (slots_in_angle.Count == 0) {return;}
+
+        if (slots_in_angle.Count == 0)
+        {
+            // we show a cross in the gizmo to say that we had nothing in angle
+
+            // we clear the gizmo data
+            gizmos_positions.Clear();
+            gizmos_weights.Clear();
+            gizmo_position = Camera.main.ScreenToWorldPoint(current_slot_position);
+            return;
+        }
 
         int next_index = findClosestSlot(slots_in_angle, current_slot_position, ref s, direction, angle_multiplicator);
 
@@ -347,6 +366,11 @@ public class UI_XboxNavigator : MonoBehaviour
         // if direction & local_angle_multiplicator are given, we will find the closest slot in the direction
         // s is a string to debug the slots
 
+        // we clear the gizmo data
+        gizmo_position = Camera.main.ScreenToWorldPoint(position);
+        gizmos_positions.Clear();
+        gizmos_weights.Clear();
+
         // on récupère le slot le plus proche
         int next_index = -1;
         float closest_distance = float.MaxValue;
@@ -354,8 +378,12 @@ public class UI_XboxNavigator : MonoBehaviour
         {
             // on récupère la position du slot
             Vector2 slot_position = get_position(slot);
-            float angle = Vector2.Angle(direction, (slot_position - position).normalized);
+            Vector2 direction_to_slot = (slot_position - position).normalized;
+            float angle = Vector2.Angle(direction, direction_to_slot);
             float distance = Vector2.Distance(position, slot_position - direction * local_angle_multiplicator);
+
+            // on ajoute les données de navigation aux gizmos
+            // gizmos_positions.Add(Camera.main.ScreenToWorldPoint(slot_position));
 
             s += this.slots.IndexOf(slot) + " : " + slot.name + " : " + slot_position + " / angle : " + angle + " /  distance : " + distance + "\n";
 
@@ -365,6 +393,42 @@ public class UI_XboxNavigator : MonoBehaviour
                 next_index = this.slots.IndexOf(slot);
             }
         }
+
+        // now that we have the next index (based on the closest_distance)
+        // we can calculate slot navigation weight
+        foreach (GameObject slot in slots)
+        {
+            /* // on récupère la position du slot
+            Vector2 slot_position = get_position(slot);
+            Vector2 direction_to_slot = (slot_position - position).normalized;
+            float angle = Vector2.Angle(direction, direction_to_slot);
+            float distance = Vector2.Distance(position, slot_position - direction * local_angle_multiplicator);
+
+            // we add the weight to the slot
+            float weight = Mathf.Clamp01(distance / closest_distance);*/
+
+
+            // on récupère la position du slot
+            Vector2 slot_position = get_position(slot);
+            Vector2 movement = slot_position - position; // ce vecteur est le vecteur PM où P est la position du slot actuelle et M la position du slot qu'on regarde
+            float weight = Vector2.Dot(direction, movement.normalized);
+
+
+            if (debug_navigation)
+            {
+                s += "weight for " + slot.name + " : " + weight + "\n";
+            }
+
+            // on applique un filtre pour mieux voir le gizmo (on veut voir en vert petant le slot choisi, et les autres NO)
+            // weight = (float)Math.Pow(weight, gizmo_dot_size);
+
+            // we add a gizmo
+            Vector2 gizmo_slot = Camera.main.ScreenToWorldPoint(slot_position);
+            // Vector3 gizmo_data = new Vector3(gizmo_slot.x, gizmo_slot.y, weight); // we add the weight as z value
+            gizmos_positions.Add(gizmo_slot);
+            gizmos_weights.Add(weight);
+        }
+
         return next_index;
     }
     private void update_slots()
@@ -410,7 +474,7 @@ public class UI_XboxNavigator : MonoBehaviour
         current_slot_index = index;
     }
 
-    // SLOT POSITION LOW LEVEL
+    // GET SLOT POSITION
     private Vector2 get_position(int index)
     {
         // get the position of the slot
@@ -450,7 +514,14 @@ public class UI_XboxNavigator : MonoBehaviour
         if (slot == null) { return; }
 
         // on handle le move seulement pour les UI_Item
-        if (slot is not UI_Item) { return; }
+        if (slot is not UI_Item)
+        {
+            if (debug)
+            {
+                Debug.Log("(XboxNavigator - HandleMoveInput) move input ignored for slot " + slot.gameObject.name + " because it is not a UI_Item (" + slot.GetType().Name + ")");
+            }
+            return;
+        }
 
         // 2 - on regarde si on a down ou up
         if (input > 0.5f)
@@ -474,7 +545,8 @@ public class UI_XboxNavigator : MonoBehaviour
         // on retient la position du slot
         Vector2 position = get_position(slot.gameObject);
 
-        // on clique sur le slot
+        // on vide le slot
+        // on appelle OnPointerDropped pour simuler un drop
         slot.OnPointerDropped(null);
 
         // wait for a frame to let the click happen
@@ -528,6 +600,81 @@ public class UI_XboxNavigator : MonoBehaviour
         navigateToClosest(position);
     }
 
+    // GIZMOS
+    private void OnDrawGizmos()
+    {
+        if (gizmo_position == Vector2.negativeInfinity) { return; }
+        if (!debug_navigation) { return; }
+
+        // we get the last navigation slot position from the gizmos list
+        Vector2 position = gizmo_position;
+
+        if (gizmos_positions.Count == 0)
+        {
+            // we draw a cross to say that we had nothing in angle
+            Gizmos.color = Color.red; // Set the color to red
+            Gizmos.DrawLine(position + Vector2.up * 0.1f, position - Vector2.up * 0.1f);
+            Gizmos.DrawLine(position + Vector2.right * 0.1f, position - Vector2.right * 0.1f);
+            return;
+        }
+
+        /* // we split the rest of the gizmos list in little portions of 2 (one for each slot)
+        for (int slot = 1; slot < gizmos_positions.Count; slot += 2)
+        {
+            // we show the distance
+            Gizmos.color = Color.red; // Set the color to red
+            Gizmos.DrawLine(position, gizmos_positions[slot]);
+
+            // we show the distance influenced by the angle
+            Gizmos.color = Color.green; // Set the color to green
+            Gizmos.DrawLine(gizmos_positions[slot], gizmos_positions[slot + 1]);
+        } */
+
+        // we normalize the weights so the minimum is at 0.25 and max is at 1
+        string s = "(XboxNavigator) GIZMOS WEIGHTS: " + gizmos_weights.Count + "\n";
+        List<float> gizmos_weights_normalised = new List<float>(gizmos_weights); // we copy the weights to avoid modifying the original list
+
+        if (gizmos_weights.Count > 1)
+        {
+            float min_weight = Mathf.Min(gizmos_weights.ToArray());
+            float max_weight = Mathf.Max(gizmos_weights.ToArray());
+
+            for (int i = 0; i < gizmos_weights.Count; i++)
+            {
+                // normalize the weight
+                gizmos_weights_normalised[i] = (gizmos_weights[i] - min_weight) / (max_weight - min_weight);
+                gizmos_weights_normalised[i] = (gizmos_weights_normalised[i] + 0.25f) / 1.25f; // we shift the weight to be between 0.25 and 1
+
+                // we log
+                s += "\n\t" + i + " : " + gizmos_weights[i] + " -> " + gizmos_weights_normalised[i];
+            }
+        }
+
+        if (debug_gizmo) { Debug.Log(s); }
+
+        // we show the rest of the gizmo with a color on a scale from red to green
+        for (int i = 0; i < gizmos_positions.Count; i++)
+        {
+            // get position & weight
+            Vector2 position_slot = gizmos_positions[i];
+            float weight = gizmos_weights_normalised[i];
+
+            // we draw the slot position in green if weight = 1f, red if not
+            if (weight == 1f || gizmos_weights.Count == 1) { Gizmos.color = Color.green; }
+            else { Gizmos.color = Color.red; }
+            Gizmos.DrawSphere(position_slot, 0.10f); // Draw a sphere at the slot position
+
+            // we change the color
+            Color color = Color.Lerp(Color.red, Color.green, weight);
+            Gizmos.color = color; // Set the color based on the weight
+
+            // we get the direction vector between the position and the slot
+            Vector2 direction = position_slot - position;
+            float magnitude = direction.magnitude * weight;
+            Vector2 dot_position = direction.normalized * magnitude + position;
+            Gizmos.DrawLine(position, dot_position);
+        }
+    }
     // UPDATE
     /* public void updateWhileShowed()
     {

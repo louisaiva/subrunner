@@ -12,6 +12,10 @@ public class UI_Pool : MonoBehaviour
     public bool UsePersoInputs = true; // if true, the UI_Manager will activate the inputs.perso when the pool is showed
 
 
+    [Header("Pool navigation parameters")]
+    [SerializeField] protected float angle_threshold = 45f;
+    [SerializeField] protected float angle_multiplicator = 0f;
+
     [Header("UI Elements")]
     [SerializeField] protected List<GameObject> ui_elements = new List<GameObject>();
     
