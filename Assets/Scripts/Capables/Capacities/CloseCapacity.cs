@@ -52,9 +52,10 @@ public class CloseCapacity : Capacity
             capable.GetComponent<SpriteRenderer>().sortingLayerName = "fg";
             capable.GetComponent<SpriteRenderer>().sortingOrder = 1;
         }
-        else if (capable is Chest)
+        else if (capable is Chest && capable.inventory != null && capable.inventory.ui != null)
         {
-            capable.inventory?.ui?.Hide();
+            capable.inventory.ui.Hide();
+            (GameObject.Find("/ui").GetComponent<UI_Manager>().GetPool("hud") as UI_HUD).RemoveChest(capable.inventory.ui);
         }
 
         if (debug) { Debug.Log(capable.name + " is closing..."); }

@@ -60,7 +60,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0492ef63fae80104aba5b578a11a5f94, type: 2}
+  - {fileID: 2100000, guid: d8bb29cea897d3f4fae0179a1f23075e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -131,7 +131,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 0.2
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 0
@@ -172,7 +172,10 @@ MonoBehaviour:
   forces: []
   input_speed: 0
   feet_collider: {fileID: 0}
-  Reference: sphere
+  Reference: other:sphere
+  MaxQty: 9
+  ItemDescription: OMG SECRET ITEM omg omg omg wtf is this ????/. looks like a ball
+    or smthg idk
 --- !u!1 &1713572188771639759
 GameObject:
   m_ObjectHideFlags: 0

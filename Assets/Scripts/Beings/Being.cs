@@ -62,13 +62,6 @@ public class Being : Movable
         {
             life += regen_life * Time.deltaTime;
         }
-
-        // walk
-        if (Can("walk") && !(this is Perso))
-        {
-            // Vector2 raw_inputs = randomly_circulate(Orientation);
-            Orientation = randomly_circulate(Orientation);
-        }
         
     }
 
@@ -260,26 +253,32 @@ public class Being : Movable
 
     
     // SETTERS
-    public void addLife(float life)
+    public void AddLife(float life)
     {
-        life += life;
-        if (life > max_life) { life = max_life; }
+        this.life += life;
+        if (this.life > max_life)
+        { 
+            // floating dmg
+            floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddFloatingDmg(gameObject, max_life - this.life, transform.position);
+
+            this.life = max_life;
+        }
 
         // floating dmg
-        floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddFloatingDmg(this.gameObject, life, transform.position);
+        floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddFloatingDmg(gameObject, life, transform.position);
     }
 
     public void heal(int nb_heal=2)
     {
         // each heal gives 10% of max life
         float heal = max_life * 0.1f * nb_heal;
-        addLife(heal);
+        AddLife(heal);
     }
 
     public void healMax()
     {
         // restore max life
-        addLife(max_life-life);
+        AddLife(max_life-life);
     }
 
 

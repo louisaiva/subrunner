@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: perso
-  m_Shader: {fileID: -6465566751694194690, guid: bddffaa008264e344981b00c03e7af8c, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 72af05fc8ba77084d9283f5fbb3bebf2, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -45,12 +45,20 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _EllipseOpacity: 1
+    - _EllipseSize: 1
+    - _EllipseSmoothness: 0.5
     - _GlobalIntensity: 1
     - _Intensity: 5
+    - _Luminosity: 0
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _Y_Player: 0
+    - _Y_Range: 0.4
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 0}
+    - _PlayerScreenPosition: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _Tint: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &6198531703931932868

@@ -13,6 +13,17 @@ public class ButtonFeedback : InputFeedback
     [SerializeField] protected string button_reference;
     [SerializeField] protected bool always_full = false;
     
+    protected override void Start()
+    {
+        base.Start();
+
+        // we get the sprite from the bank
+        Sprite sprite = bank.GetInputFeedbackSprite(button_reference, !always_full);
+
+        // we set the sprite to the image
+        image.sprite = sprite;
+    }
+
     public override void OnInput()
     {
         base.OnInput();

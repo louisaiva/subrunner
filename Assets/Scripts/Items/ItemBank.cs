@@ -15,6 +15,7 @@ public class ItemBank : MonoBehaviour
 
     [Header("UI")]
     public GameObject ui_item_prefab;
+    public GameObject ui_module_prefab;
 
     [Header("Debug")]
     public bool debug = false;
@@ -46,16 +47,26 @@ public class ItemBank : MonoBehaviour
 
             foreach (GameObject prefab in prefabs)
             {
+                // on récupère la reference de l'item
+                Item item = prefab.GetComponent<Item>();
+                if (item == null)
+                {
+                    if (debug) { Debug.LogWarning("(ItemBank) prefab " + prefab.name + " has no Item component, skipping it");}
+                    continue;
+                }
+                string reference = item.Reference;
+
                 // on ajoute le prefab des item
-                item_prefabs.Add(prefab.name, path + "/" + prefab.name);
+                item_prefabs.Add(reference, path + "/" + prefab.name);
 
                 // on ajoute le sprite de l'item
                 Sprite sprite = prefab.GetComponent<SpriteRenderer>().sprite;
-                item_sprites.Add(prefab.name, sprite);
+                item_sprites.Add(reference, sprite);
 
                 item_count++;
 
-                if (debug) { Debug.Log("(ItemBank) loaded item : " + prefab.name); }
+                if (debug) { Debug.Log("(ItemBank) loaded item : " + reference +
+                        (reference == prefab.name ? "" : " (prefab name is " + prefab.name + ")")); }
             }
         }
 
@@ -87,80 +98,35 @@ public class ItemBank : MonoBehaviour
     }
 
     // UI_ITEM GENERATOR
-    public GameObject CreateUI_Item(Item item = null)
+    public GameObject CreateUI_Item(Item item = null,bool create_ui_module=false)
     {
         // on instancie le prefab
-        GameObject ui_item = Instantiate(ui_item_prefab, Vector3.zero, Quaternion.identity);
+        GameObject ui_item = null;
+        if (!create_ui_module)  { ui_item = Instantiate(ui_item_prefab, Vector3.zero, Quaternion.identity);}
+        else                    { ui_item = Instantiate(ui_module_prefab, Vector3.zero, Quaternion.identity); }
 
         // we assign the item to the UI_Item
         if (item != null)
         {
-            SetUI_Item(ui_item.GetComponent<UI_Item>(), item);
+            ui_item.GetComponent<UI_Item>().Store(item);
         }
-        else
-        {
-            ClearUI_Item(ui_item.GetComponent<UI_Item>());
-        }
+        else { ui_item.GetComponent<UI_Item>().ClearUI(); }
 
         if (debug) { Debug.Log("(ItemBank) created ui_item : " + item.name); }
 
         return ui_item;
     }
 
-    public void SetUI_Item(UI_Item ui_item, Item item)
-    {
-        // on récupère le sprite de l'item
-        Sprite sprite = getSprite(item.Reference);
-
-        // on change le sprite de l'image
-        Image img = ui_item.transform.Find("item").GetComponent<Image>();
-        img.sprite = sprite;
-        img.color = new Color(1, 1, 1, 1);
-
-        // on calcule la taille de l'image
-        RectTransform rt = img.GetComponent<RectTransform>();
-        rt.sizeDelta = new Vector2(sprite.rect.width, sprite.rect.height);
-
-        // on change le nom du prefab
-        ui_item.name = "ui_" + item.name;
-
-        // on met la reference de l'item
-        ui_item.item = item;
-
-        // on enable le slot
-        ui_item.Enable();
-
-        if (debug) { Debug.Log("(ItemBank) set ui_item : " + item.name); }
-    }
-    public void ClearUI_Item(UI_Item ui_item)
-    {
-        // on change le sprite de l'image
-        Image img = ui_item.transform.Find("item").GetComponent<Image>();
-        img.sprite = null;
-        img.color = new Color(0, 0, 0, 0);
-
-        // on change le nom du prefab
-        ui_item.name = "ui_empty";
-
-        // on met la reference de l'item
-        ui_item.item = null;
-
-        // on disable le slot
-        ui_item.Disable();
-
-        if (debug) { Debug.Log("(ItemBank) cleared ui_item"); }
-    }
-
     // GETTERS
-    public Sprite getSprite(string item_name)
+    public Sprite GetSprite(string item_reference)
     {
-        if (!item_sprites.ContainsKey(item_name))
+        if (!item_sprites.ContainsKey(item_reference))
         {
-            Debug.LogError("(ItemBank) cannot find sprite " + item_name);
+            Debug.LogError("(ItemBank) cannot find sprite " + item_reference);
             return null;
         }
 
-        return item_sprites[item_name];
+        return item_sprites[item_reference];
     }
 
 
@@ -177,4 +143,9 @@ public class ItemBank : MonoBehaviour
         }
         return title + count + " items\n" + list;
     }
+
+
+
+    // ! DEPRECATED
+    public Sprite getSprite(string item_ref) { return null;}
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static PlayerInputActions;
 
 public class Perso : Being
 {
@@ -78,7 +79,7 @@ public class Perso : Being
 
     [Header("INPUTS")]
     [SerializeField] private InputManager input_manager;
-    public PlayerInputActions inputs_actions;
+    private PersoActions perso_inputs;
     private event System.Action<InputAction.CallbackContext> reviveCallback;
     private event System.Action<InputAction.CallbackContext> dodgeCallback;
 
@@ -190,16 +191,16 @@ public class Perso : Being
     {
         // on récupère les inputs
         input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
-        inputs_actions = input_manager.inputs;
-        inputs_actions.perso.Enable();
+        perso_inputs = input_manager.inputs.perso;
+        perso_inputs.Enable();
 
         // on set les callbacks
         reviveCallback = ctx => comeback_from_death();
         dodgeCallback = ctx => OnDodge();
-        inputs_actions.perso.dodge.performed += dodgeCallback;
-        inputs_actions.perso.attack.performed += ctx => OnAttack();
-        inputs_actions.perso.randomTalk.performed += ctx => OnRandomTalk();
-        // inputs_actions.perso.interact.performed += ctx => OnInteract();
+        perso_inputs.dodge.performed += dodgeCallback;
+        perso_inputs.attack.performed += ctx => OnAttack();
+        perso_inputs.randomTalk.performed += ctx => OnRandomTalk();
+        // perso_inputs.interact.performed += ctx => OnInteract();
     }
 
     // CAPACITES
@@ -229,7 +230,7 @@ public class Perso : Being
         // walk
         if (Can("walk"))
         {
-            Vector2 raw_inputs = new Vector2(inputs_actions.perso.move.ReadValue<Vector2>().x, inputs_actions.perso.move.ReadValue<Vector2>().y);
+            Vector2 raw_inputs = new Vector2(perso_inputs.move.ReadValue<Vector2>().x, perso_inputs.move.ReadValue<Vector2>().y);
             
             // we check if the raw inputs are below the deadzone
             raw_inputs.x = Mathf.Abs(raw_inputs.x) < 0.2 ? 0f : raw_inputs.x;
@@ -246,11 +247,11 @@ public class Perso : Being
         // run
         if (Can("run"))
         {
-            if (inputs_actions.perso.run.ReadValue<float>() == 1f)
+            if (perso_inputs.run.ReadValue<float>() == 1f)
             {
                 isRunning = true;
             }
-            else if (inputs_actions.perso.run.ReadValue<float>() == 0f)
+            else if (perso_inputs.run.ReadValue<float>() == 0f)
             {
                 isRunning = false;
             }
@@ -270,16 +271,16 @@ public class Perso : Being
         // hoover hack
         if (Can("hoover_hack"))
         {
-            if (inputs_actions.enhanced_perso.hackDirection.ReadValue<Vector2>() != Vector2.zero)
+            if (input_manager.inputs.enhanced_perso.hackDirection.ReadValue<Vector2>() != Vector2.zero)
             {
                 if (input_manager.isUsingGamepad())
                 {
-                    Vector2 direction = inputs_actions.enhanced_perso.hackDirection.ReadValue<Vector2>();
+                    Vector2 direction = input_manager.inputs.enhanced_perso.hackDirection.ReadValue<Vector2>();
                     HooverNextHackableInDirection(direction);
                 }
                 else
                 {
-                    Vector2 mouse_position = inputs_actions.enhanced_perso.hackDirection.ReadValue<Vector2>();
+                    Vector2 mouse_position = input_manager.inputs.enhanced_perso.hackDirection.ReadValue<Vector2>();
                     HackinHooverEvents(mouse_position);
                 }
             }
@@ -297,7 +298,7 @@ public class Perso : Being
             // hacks
             if (Can("hack"))
             {
-                if (inputs_actions.enhanced_perso.hack.ReadValue<float>() == 1f)
+                if (input_manager.inputs.enhanced_perso.hack.ReadValue<float>() == 1f)
                 {
                     HackinClickEvents();
                 }
@@ -326,7 +327,7 @@ public class Perso : Being
         { 
             if (input_manager.isUsingGamepad())
             {
-                if (inputs_actions.perso.inventory.ReadValue<float>() >= 1f && !big_inventory.isShowed())
+                if (perso_inputs.inventory.ReadValue<float>() >= 1f && !big_inventory.isShowed())
                 {
                     // on regarde si on a pas un coffre ou un ordi en train d'être ouvert
                     if (current_interactable != null && !big_inventory.isShowed())
@@ -338,7 +339,7 @@ public class Perso : Being
                     // on ouvre l'inventaire
                     big_inventory.show();
                 }
-                else if (inputs_actions.perso.inventory.ReadValue<float>() < 1f && big_inventory.isShowed())
+                else if (perso_inputs.inventory.ReadValue<float>() < 1f && big_inventory.isShowed())
                 {
                     // on ferme l'inventaire
                     big_inventory.hide();
@@ -631,26 +632,26 @@ public class Perso : Being
         floating_dmg_provider.GetComponent<TextManager>().addFloatingText("YOU DIED", transform.position + new Vector3(0, 0.5f, 0), "red");
 
         // on desactive l'inventaire
-        inventory.setShow(false);
+        // inventory.setShow(false);
 
         // on désactive les touches
-        inputs_actions.perso.Disable();
+        perso_inputs.Disable();
 
         // on active la possibilité de revenir à la vie
-        inputs_actions.any.keyboard.performed += reviveCallback;
-        inputs_actions.any.gamepad.performed += reviveCallback;
+        input_manager.inputs.any.keyboard.performed += reviveCallback;
+        input_manager.inputs.any.gamepad.performed += reviveCallback;
     }
     protected override void comeback_from_death()
     {
         base.comeback_from_death();
 
         // on reactive les touches
-        inputs_actions.perso.Enable();
-        // inputs_actions.enhanced_perso.Enable();
+        perso_inputs.Enable();
+        // input_manager.inputs.enhanced_perso.Enable();
 
         // on active la possibilité de revenir à la vie
-        inputs_actions.any.keyboard.performed -= reviveCallback;
-        inputs_actions.any.gamepad.performed -= reviveCallback;
+        input_manager.inputs.any.keyboard.performed -= reviveCallback;
+        input_manager.inputs.any.gamepad.performed -= reviveCallback;
     }
 
 
@@ -1177,12 +1178,11 @@ public class Perso : Being
     }
     public void OnAttack()
     {
-        // if (!inputs_actions.perso.enabled) { return; }
+        // on vérifie qu'on est pas stunned
+        if (HasEffect(Effect.Stunned)) { return; }
 
-        if (Can("attack") && !HasEffect(Effect.Stunned))
-        {
-            Do("attack");
-        }
+        // on utilise l'item weapon:katana
+        UseItem("weapon:katana");
     }
     public void OnRandomTalk()
     {
@@ -1194,9 +1194,9 @@ public class Perso : Being
     private void OnDodge()
     {
         // on vérifie que l'input action map est activé
-        // if (!inputs_actions.perso.enabled) { return; }
+        // if (!perso_inputs.enabled) { return; }
 
-        // Debug.Log("DODGE : input_action enabled ?"+inputs_actions.perso.enabled);
+        // Debug.Log("DODGE : input_action enabled ?"+perso_inputs.enabled);
 
         // on vérifie que le perso peut dodge
         if (!Can("dodge")) { return; }

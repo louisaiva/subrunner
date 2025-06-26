@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 4378018811218404903}
   - component: {fileID: 8405541509936947899}
   - component: {fileID: 1759623092198093553}
+  - component: {fileID: 8094867699145311709}
   m_Layer: 5
   m_Name: slot
   m_TagString: Untagged
@@ -160,5 +161,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb97402ee6332cc4fb62827af8b39a3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pools:
+  - {fileID: 8094867699145311709}
+  navigator: {fileID: 0}
   bank: {fileID: 0}
   inventory: {fileID: 0}
+--- !u!114 &8094867699145311709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2056693723427999313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fc4a6a908f46cf4db95a7028ed54910, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item_rule: 

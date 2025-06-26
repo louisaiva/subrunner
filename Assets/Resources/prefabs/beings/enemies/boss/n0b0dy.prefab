@@ -33,12 +33,12 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4584926664803357249}
   - {fileID: 701607102379892732}
+  - {fileID: 4584926664803357249}
   - {fileID: 2980218742701339}
-  - {fileID: 513077608903197376}
   - {fileID: 8953673297894067005}
   - {fileID: 9137177770088866671}
+  - {fileID: 513077608903197376}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2672347584786498524
@@ -123,6 +123,8 @@ MonoBehaviour:
   animation_priorities_with_no_loop: 03000000
   animation_priorities_with_no_interrupt: 03000000
   debug: 0
+  debug_orientation: 0
+  debug_advanced: 0
 --- !u!114 &7803903830049876761
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,8 +148,10 @@ MonoBehaviour:
   rb: {fileID: 0}
   weight: 0.8
   friction: 7
+  debug_velocity: 0
   forces: []
   input_speed: 0
+  Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 0}
   life: 500
   max_life: 500

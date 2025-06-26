@@ -91,12 +91,7 @@ public class TalkCapacity : Capacity
         floating_dmg_provider = GameObject.Find("/utils/dmgs_provider");
 
         // on lance le parlage automatique
-        if (talk_on_start)
-        {
-            float delay_talking = Random.Range(talking_delay_range.x, talking_delay_range.y);
-            // Debug.Log(name + " is talking in " + delay_talking);
-            Invoke("randomTalk", delay_talking);
-        }
+        if (talk_on_start) { StartTalking(); }
     }
 
     // trigger the attack
@@ -106,7 +101,26 @@ public class TalkCapacity : Capacity
         randomTalk();
         CancelInvoke("randomTalk");
     }
-    
+
+    // SINGLE TALKING
+    public void Say(string msg)
+    {
+        floating_dmg_provider.GetComponent<TextManager>().talk(msg, capable as Being);
+    }
+
+    // RANDOM TALKING
+    public void StopTalking()
+    {
+        // stop random talking
+        CancelInvoke("randomTalk");
+    }
+    public void StartTalking()
+    {
+        float delay_talking = Random.Range(talking_delay_range.x, talking_delay_range.y);
+        // Debug.Log(name + " is talking in " + delay_talking);
+        Invoke("randomTalk", delay_talking);
+    }
+
     void randomTalk()
     {
         // if (being == null) {return;}
@@ -116,11 +130,11 @@ public class TalkCapacity : Capacity
         int index = Random.Range(0, talks_random.Count + (allow_bad_words ? talks_random_bad_words.Count : 0));
         if (index >= talks_random.Count)
         {
-            floating_dmg_provider.GetComponent<TextManager>().talk(talks_random_bad_words[index - talks_random.Count], capable as Being);
+            Say(talks_random_bad_words[index - talks_random.Count]);
         }
         else
         {
-            floating_dmg_provider.GetComponent<TextManager>().talk(talks_random[index], capable as Being);
+            Say(talks_random[index]);
         }
 
         // on relance

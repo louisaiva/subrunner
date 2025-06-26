@@ -46,15 +46,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Items: []
-  MaxItems: 6
-  Scalable: 0
   OnGrab:
     m_PersistentCalls:
       m_Calls: []
   OnDrop:
     m_PersistentCalls:
       m_Calls: []
-  ui: {fileID: 1160253218401664466}
+  uis:
+  - {fileID: 1160253218401664466}
   debug: 0
 --- !u!1 &5145456041456219900
 GameObject:
@@ -198,7 +197,6 @@ MonoBehaviour:
   effects: 
   effects_timetolive: []
   debug: 0
-  ui_inventory: {fileID: 0}
 --- !u!70 &7264770161776517043
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -246,7 +244,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 107290035593580173, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
       propertyPath: m_Name
+      value: canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 2056693723427999313, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
+      propertyPath: m_Name
       value: ui_chest
+      objectReference: {fileID: 0}
+    - target: {fileID: 2056693723427999313, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
+      propertyPath: m_Layer
+      value: 27
       objectReference: {fileID: 0}
     - target: {fileID: 2056693723427999313, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
       propertyPath: m_IsActive
@@ -331,6 +337,10 @@ PrefabInstance:
     - target: {fileID: 6268219261002620662, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8094867699145311709, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
+      propertyPath: MaxSlots
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

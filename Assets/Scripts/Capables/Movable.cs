@@ -8,18 +8,13 @@ public class Movable : Capable
     public Rigidbody2D rb;  // Replace transform movement
     public float weight = 1f;
     public float friction = 7f;
+    public bool debug_velocity = false; // Show velocity in console
 
     [Header("Forces")]
     public List<Force> forces = new List<Force>();
     public float input_speed;
-    public Vector2 Velocity
-    {
-        get
-        {
-            if (rb != null) { return rb.linearVelocity / Time.fixedDeltaTime; }
-            else { return Vector2.zero; }
-        }
-    }
+    public Vector2 Velocity;
+    
 
     [Header("Collisions")]
     public Collider2D feet_collider;
@@ -133,8 +128,22 @@ public class Movable : Capable
             rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, Vector2.zero, friction * Time.deltaTime);
         }
 
+    }
+
+    protected void LateUpdate()
+    {
+        // check if we have a rigidbody
+        if (rb == null)
+        {
+            Velocity = Vector2.zero;
+            return;
+        }
+
+        // we set the current velocity
+        Velocity = rb.linearVelocity / Time.fixedDeltaTime;
+
         // we log the current linear velocity
-        if (debug) { Debug.Log("velocity : " + rb.linearVelocity.magnitude); }
+        if (debug_velocity) { Debug.Log("velocity : " + Velocity); }
     }
 
     // gizmos

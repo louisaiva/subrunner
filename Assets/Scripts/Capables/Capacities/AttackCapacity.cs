@@ -16,6 +16,9 @@ public class AttackCapacity : Capacity
     public int kills = 0;
     public float damage = 10f;
     [SerializeField] private bool is_attacking = false;
+    [SerializeField] private bool perforant_attack = false; // if true, the attack won't stop on the first enemy hit
+    [SerializeField] private float delay_between_perforations = 0.01f; // delay between each perforation
+    private float last_perforation_time = 0f; // time of the last perforation
     [SerializeField] List<Collider2D> hit_enemies = new List<Collider2D> {};
     [SerializeField] private List<string> not_attackable_tags = new List<string> {};
     
@@ -27,7 +30,12 @@ public class AttackCapacity : Capacity
 
 
     [Header("Components")]
-    private Being being;
+    private Capable bearer; // the being that is using the attack
+    private Being being { get
+    {
+        if (bearer == null || !(bearer is Being)) { return null; }
+        return bearer as Being;
+    } }
     private SpriteBank bank;
     private SpriteRenderer sr;
     private AnimPlayer anim_player;
@@ -37,9 +45,9 @@ public class AttackCapacity : Capacity
     private void Start()
     {
         // we get the sprite renderer
-        sr = transform.parent.GetComponent<SpriteRenderer>();
-        anim_player = transform.parent.GetComponent<AnimPlayer>();
-        being = transform.parent.GetComponent<Being>();
+        // sr = transform.parent.GetComponent<SpriteRenderer>();
+        // anim_player = transform.parent.GetComponent<AnimPlayer>();
+        // being = transform.parent.GetComponent<Being>();
 
         // we get the polygon collider
         pc = GetComponent<PolygonCollider2D>();
@@ -49,11 +57,25 @@ public class AttackCapacity : Capacity
         bank = GameObject.Find("/utils/bank").GetComponent<SpriteBank>();
     }
 
+    // BEARER SETUP
+    private void setBearer(Capable new_bearer)
+    {
+        bearer = new_bearer;
+
+        // we set the components
+        anim_player = bearer.GetComponent<AnimPlayer>();
+        sr = bearer.GetComponent<SpriteRenderer>();
+    }
+
+
     // trigger the attack
     public override void Use(Capable capable)
     {
+        // we set the bearer as the capable
+        setBearer(capable);
+
         // we play the animation
-        Anim anim = capable.anim_player.Play(name);
+        Anim anim = anim_player.Play(name);
 
         if (anim != null)
         {
@@ -61,10 +83,7 @@ public class AttackCapacity : Capacity
             float anim_duration = anim.GetDuration();
             startCooldown(anim_duration);
         }
-        else
-        {
-            startCooldown();
-        }
+        else { startCooldown();}
 
         is_attacking = true;
         hit_enemies.Clear();
@@ -77,7 +96,17 @@ public class AttackCapacity : Capacity
         base.Update();
 
         if (!is_attacking) { return; }
-        if (!anim_player.current_capacity.Equals("attack")) { return; }
+        if (!anim_player.current_capacity.Equals(name))
+        {
+            // checks if we are still attacking & the animation is not the attack animation anymore
+            if (is_attacking)
+            {
+                is_attacking = false;
+                hit_enemies.Clear();
+                last_perforation_time = 0f;
+            }
+            return;
+        }
 
         // we check if the sprite has a collider
         Sprite sprite = sr.sprite;
@@ -99,7 +128,11 @@ public class AttackCapacity : Capacity
             updateCollider(sprite);
 
             // we update the attack
-            updateAttack();
+            if (!perforant_attack || Time.time - last_perforation_time > delay_between_perforations)
+            {
+                // we update the attack
+                updateAttack();
+            }
         }
         else
         {
@@ -208,9 +241,18 @@ public class AttackCapacity : Capacity
             being.AddForce(knockback_inverse);
         }
 
+        // we clear the hit enemies
+        hit_enemies.Clear();
+
+        // check if we are perforant if yes we don't stop the attack (will automatically stop when the animation is over)
+        if (perforant_attack)
+        {
+            last_perforation_time = Time.time;
+            return;
+        }
+
         // we set the attacking to false
         is_attacking = false;
-        hit_enemies.Clear();
     }
 
 
@@ -222,7 +264,7 @@ public class AttackCapacity : Capacity
 
         // we check if we are attacking
         if (!is_attacking) { return; }
-        if (!anim_player.current_capacity.Equals("attack")) { return; }
+        if (!anim_player.current_capacity.Equals(name)) { return; }
 
         // we check if the pc is enabled
         if (pc.enabled)
@@ -232,4 +274,28 @@ public class AttackCapacity : Capacity
         }
     }
 
+    // WHITE LISTING
+    public async void WhiteListTagShortly(string tag, float duration)
+    {
+        // we check if the tag is not already in the list
+        if (not_attackable_tags.Contains(tag)) { return; }
+
+        if (debug)
+        {
+            Debug.Log("(AttackCapacity) Adding tag " + tag + " to the not attackable tags for " + duration + " seconds");
+        }
+
+        // we add the tag to the list
+        not_attackable_tags.Add(tag);
+
+        // wait for a frame to let the click happen
+        await System.Threading.Tasks.Task.Delay((int) (duration * 1000));
+
+        if (debug)
+        {
+            Debug.Log("(AttackCapacity) Removing tag " + tag + " from the not attackable tags");
+        }
+        // we remove the tag from the list
+        not_attackable_tags.Remove(tag);
+    }
 }
