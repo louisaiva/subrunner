@@ -67,7 +67,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""useConso"",
                     ""type"": ""Button"",
                     ""id"": ""af9057fb-3fd3-4bb3-bb36-27d0f1b16911"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -106,7 +106,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""db59ca6f-ab5b-4fbc-a6f9-60c0feb7cddd"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""keyboard"",
@@ -282,7 +282,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""ffde1d2d-6a8f-4c9e-95d8-73f82c723019"",
-                    ""path"": ""<Keyboard>/alt"",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""keyboard"",
@@ -376,6 +376,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""172d8e1b-8364-46e9-9b61-b108dcbf5525"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";keyboard"",
+                    ""action"": ""y"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""db8fd403-f280-4b0d-bd26-04895a2fe4bf"",
                     ""path"": ""<Gamepad>/buttonNorth"",
                     ""interactions"": """",
@@ -398,11 +409,11 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""f8189062-e74c-453b-9a85-95be6e098fa2"",
-                    ""path"": ""<Mouse>/leftButton"",
+                    ""id"": ""e6664270-23f2-4b09-a021-ac1962a08448"",
+                    ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""keyboard"",
+                    ""groups"": "";keyboard"",
                     ""action"": ""x"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false

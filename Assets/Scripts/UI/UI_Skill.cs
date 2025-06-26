@@ -76,7 +76,7 @@ public class UI_Skill : MonoBehaviour, I_UI_Slot
 
         // on met à jour le fait qu'on est survolé
         is_hovered = true;
-        
+
         // on met à jour l'ui_bg
         ui_bg.GetComponent<Image>().color = hover_color;
     }
@@ -110,5 +110,9 @@ public class UI_Skill : MonoBehaviour, I_UI_Slot
 
         // on met à jour l'ui_bg
         ui_bg.GetComponent<Image>().color = base_color;
+    }
+    public virtual void OnPointerDown(PointerEventData eventData)
+    {
+        Debug.Log("OnPointerDown on " + gameObject.name);
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public interface I_UI_Slot : I_Descriptable, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public interface I_UI_Slot : I_Descriptable, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IPointerDownHandler
 {
     // MonoBehaviour functions
     GameObject gameObject { get; }

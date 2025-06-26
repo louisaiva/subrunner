@@ -81,6 +81,7 @@ public class UI_XboxNavigator : MonoBehaviour
 
         // we reset the variables
         continuous_navigation_counter = float.MaxValue;
+        current_slot_index = -1;
 
         // we check if the perso quick inventory is shown
         if (perso_quick_inventory == null)
@@ -119,11 +120,16 @@ public class UI_XboxNavigator : MonoBehaviour
             }
         }
 
+        // log
+        if (debug) { Debug.Log("(XboxNavigator) enabled slotabble : " + slottable.gameObject.name); }
+
+        // on verifie si on utilise le clavier ou le controller
+        if (!input_manager.isUsingGamepad()) { return; }
+
         // on navigue vers le premier slot
         current_slot_index = -1;
         navigateToFirst();
 
-        if (debug) { Debug.Log("(XboxNavigator) enabled slotabble : " + slottable.gameObject.name);}
     }
     public void Disable(I_UI_Slottable slottable)
     {
@@ -210,6 +216,13 @@ public class UI_XboxNavigator : MonoBehaviour
     // NAVIGATION INPUTS & UPDATE
     private void HandleNavigateInput(Vector2 input)
     {
+        // do nothing if this input is mouse_based
+        if (!input_manager.isUsingGamepad())
+        {
+            if (debug) { Debug.Log("(XboxNavigator - HandleActivateInput) activate input ignored because mouse based"); }
+            return;
+        }
+
         // cette fonction gère les inputs de navigation et décide si on doit naviguer ou non
         // si oui elle appelle alors navigate()
 
@@ -233,7 +246,7 @@ public class UI_XboxNavigator : MonoBehaviour
             }
             return;
         }
-        
+
         // 3 - si on est là c'est qu'on navigue pas
         navigate_continuously = false; // on reset la navigation continue
         continuous_navigation_counter = float.MaxValue; // on reset le compteur de navigation continue
@@ -503,6 +516,13 @@ public class UI_XboxNavigator : MonoBehaviour
     // MOVING / DROPPING SLOTS
     private void HandleMoveInput(float input)
     {
+        // do nothing if this input is mouse_based
+        if (!input_manager.isUsingGamepad())
+        {
+            if (debug) { Debug.Log("(XboxNavigator - HandleActivateInput) activate input ignored because mouse based"); }
+            return;
+        }
+
         // cette fonction gère les inputs de navigation et décide si on doit naviguer ou non
         // si oui elle appelle alors drop() ou pressed()
 
@@ -549,6 +569,9 @@ public class UI_XboxNavigator : MonoBehaviour
         // on appelle OnPointerDropped pour simuler un drop
         slot.OnPointerDropped(null);
 
+        // si on utilise la souris alors pas besoin de naviguer vers le plus proche
+        if (!input_manager.isUsingGamepad()) { return; }
+
         // wait for a frame to let the click happen
         await System.Threading.Tasks.Task.Yield();
 
@@ -559,6 +582,13 @@ public class UI_XboxNavigator : MonoBehaviour
     // ACTIVATE SLOT
     private void HandleActivateInput(float input)
     {
+        // do nothing if this input is mouse_based
+        if (!input_manager.isUsingGamepad())
+        {
+            if (debug) { Debug.Log("(XboxNavigator - HandleActivateInput) activate input ignored because mouse based"); }
+            return;
+        }
+
         // cette fonction gère les inputs d'activation et décide si on peut activer ou non
         // si oui elle appelle alors activate() ou pressed()
 
@@ -573,7 +603,7 @@ public class UI_XboxNavigator : MonoBehaviour
         if (input > 0.5f)
         {
             // on down le slot
-            (slot as UI_Slot).OnPointerDown(null);
+            slot.OnPointerDown(null);
             if (debug) { Debug.Log("(XboxNavigator) pressed slot " + slot.gameObject.name); }
         }
         else
@@ -592,6 +622,9 @@ public class UI_XboxNavigator : MonoBehaviour
 
         // on clique sur le slot
         slot.OnPointerClick(null);
+
+        // si on utilise la souris alors pas besoin de naviguer vers le plus proche
+        if (!input_manager.isUsingGamepad()) { return; }
 
         // wait for a frame to let the click happen
         await System.Threading.Tasks.Task.Yield();

@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class UI_Slot : MonoBehaviour, I_UI_Slot, IPointerDownHandler
+public class UI_Slot : MonoBehaviour, I_UI_Slot
 {
 
     // hover
