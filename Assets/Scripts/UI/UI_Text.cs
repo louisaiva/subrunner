@@ -5,6 +5,10 @@ using TMPro;
 using UnityEngine.InputSystem;
 using UnityEngine.Events;
 
+#if UNITY_EDITOR
+    using UnityEditor;
+#endif
+
 public class UI_Text : MonoBehaviour, I_UI_Slot
 {
 
@@ -51,6 +55,16 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
         Application.Quit();
 
         // GameObject.Find("/ui").GetComponent<UI_Manager>().TogglePool("pause");
+    }
+    public void fullscreen()
+    {
+        #if UNITY_EDITOR
+                EditorWindow window = EditorWindow.focusedWindow;
+                // Assume the game view is focused.
+                window.maximized = !window.maximized;
+        #else
+                Screen.fullScreen = !Screen.fullScreen;
+        #endif
     }
 
     // Descriptable
