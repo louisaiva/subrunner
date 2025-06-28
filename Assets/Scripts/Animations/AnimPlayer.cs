@@ -63,8 +63,9 @@ public class AnimPlayer : MonoBehaviour
 
     public List<int> animation_priorities_with_no_loop = new() { 3,4 };
         // we never loop the animation if it's in this priority (attack, dodge, hurted) -> always play once
-    public List<int> animation_priorities_with_no_interrupt = new() { 3,4 };
-        // we can't interrupt the animation if it's in this list (wait the end of the anim before changing orientation by example)
+    public List<int> animation_priorities_with_static_orientation = new() { 3,4 };
+        // we can't interrupt the animation for switching orientation if it's in this list (wait the end of the anim before changing orientation)
+        // only for orientation, not for switching to another animation (ex we can interrupt dodge to attack bcz they have the same priority 3)
 
 
 
@@ -72,6 +73,7 @@ public class AnimPlayer : MonoBehaviour
     public bool debug = false;
     public bool debug_orientation = false;
     public bool debug_advanced = false;
+    public bool debug_frames = false;
 
 
 
@@ -163,14 +165,18 @@ public class AnimPlayer : MonoBehaviour
         int priority = 1;
         if (priority_override != null)
         {
-            priority = (int) priority_override;
-            if (debug) {Debug.Log("(AnimPlayer - Play) The capacity " + capacity + " has a priority override: " + priority);}
+            priority = (int)priority_override;
+            if (debug) { Debug.Log("(AnimPlayer - Play) The capacity " + capacity + " has a priority override: " + priority); }
             capacity_priorities[capacity] = priority;
         }
-        else if (priority_override == null && capacity_priorities.ContainsKey(capacity)) { priority = capacity_priorities[capacity]; }
+        else if (priority_override == null && capacity_priorities.ContainsKey(capacity))
+        {
+            priority = capacity_priorities[capacity];
+            if (debug) { Debug.Log("(AnimPlayer - Play) The capacity " + capacity + " has a priority: " + priority + " from the capacity_priorities dictionnary"); }
+        }
         else
         {
-            if (debug) {Debug.Log("(AnimPlayer - Play) The capacity " + capacity + " doesn't exist in the capacity_priorities dictionnary. Priority 1 applied by default");}
+            if (debug) { Debug.Log("(AnimPlayer - Play) The capacity " + capacity + " doesn't exist in the capacity_priorities dictionnary. Priority 1 applied by default"); }
             capacity_priorities[capacity] = priority;
         }
 
@@ -326,10 +332,10 @@ public class AnimPlayer : MonoBehaviour
         if (new List<string> { "U", "D", "L", "R" }.Contains(orientation))
         { this.orientation = orientation; }
 
-        // we check if we can interrupt the current animation
+        // we check if we can interrupt the current animation to update orientation
         if (current_capacity == "") { return; }
         int current_anim_priority = capacity_priorities[current_capacity];
-        if (animation_priorities_with_no_interrupt.Contains(current_anim_priority)) { return; }
+        if (animation_priorities_with_static_orientation.Contains(current_anim_priority)) { return; }
 
         // we check if the current animation is in the pile
         Anim new_anim = Play(current_capacity);
