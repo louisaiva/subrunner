@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9029424963950506204}
   - component: {fileID: -531492210321061640}
-  m_Layer: 15
+  m_Layer: 0
   m_Name: open
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,5 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 0
-  opening_duration: 0.15
   debug: 0
+  opening_duration: 0.15
+  close_capacity: {fileID: 0}

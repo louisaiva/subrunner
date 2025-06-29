@@ -206,7 +206,7 @@ public class Perso : Being
     // CAPACITES
     public override void Events()
     {
-        // showCapacities();
+        // Debug.Log("Perso " + name + " Events() called.");
 
         // on vérifie que le temps est pas en pause
         if (Time.timeScale == 0f) { return; }
@@ -228,25 +228,38 @@ public class Perso : Being
         base.Events();
 
         // walk
-        if (Can("walk"))
+        if (HasCapacity<WalkCapacity>())
         {
             Vector2 raw_inputs = new Vector2(perso_inputs.move.ReadValue<Vector2>().x, perso_inputs.move.ReadValue<Vector2>().y);
-            
+
             // we check if the raw inputs are below the deadzone
             raw_inputs.x = Mathf.Abs(raw_inputs.x) < 0.2 ? 0f : raw_inputs.x;
             raw_inputs.y = Mathf.Abs(raw_inputs.y) < 0.2 ? 0f : raw_inputs.y;
 
             // we normalize the inputs
             Orientation = raw_inputs.normalized;
-            inputs_magnitude = raw_inputs.magnitude;
 
+            // we set the walk_capacity.walk_percentage_target
+            GetCapacity<WalkCapacity>().walk_percentage_target = raw_inputs.magnitude;
+            // inputs_magnitude = raw_inputs.magnitude;
 
-            // print("inputs : " + inputs + " / raw_inputs : " + raw_inputs + " / inputs_magnitude : " + inputs_magnitude);
+            // Debug.Log("inputs : " + inputs + " / raw_inputs : " + raw_inputs + " / inputs_magnitude : " + raw_inputs.magnitude);
         }
 
         // run
-        if (Can("run"))
+        if (HasCapacity<RunCapacity>())
         {
+            if (perso_inputs.run.ReadValue<float>() == 1f)
+            {
+                GetCapacity<RunCapacity>().EnableRun();
+            }
+            else if (perso_inputs.run.ReadValue<float>() == 0f)
+            {
+                GetCapacity<RunCapacity>().DisableRun();
+            }
+        }
+
+        /* {
             if (perso_inputs.run.ReadValue<float>() == 1f)
             {
                 isRunning = true;
@@ -255,7 +268,7 @@ public class Perso : Being
             {
                 isRunning = false;
             }
-        }
+        } */
 
 
         // gv vision

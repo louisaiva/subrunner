@@ -30,8 +30,8 @@ public class Rat : Being
         // on met à jour les différentes variables d'attaques pour le rat
         max_life = 5000 + Random.Range(-3, 3);
         life = (float)max_life;
-        speed = 3f + Random.Range(-0.5f, 0.5f);
-        running_speed = 17.5f;
+        // speed = 3f + Random.Range(-0.5f, 0.5f);
+        // running_speed = 17.5f;
         // damage = 5f + Random.Range(-2f, 2f);
         // attack_range = 0.15f + Random.Range(-0.05f, 0.05f);
         // damage_range = 0.15f + Random.Range(-0.05f, 0.05f);
@@ -62,7 +62,7 @@ public class Rat : Being
         // puis tape des grosses sprints
 
         // on vérifie si on est pas trop loin du perso
-        isRunning = Vector2.Distance(transform.position, perso.transform.position) > 3f;
+        // isRunning = Vector2.Distance(transform.position, perso.transform.position) > 3f;
         
         if (Vector2.Distance(transform.position, perso.transform.position) > 2.5f && state != "follow_perso")
         {
@@ -73,7 +73,7 @@ public class Rat : Being
             Vector2 direction = (Vector2) (perso.transform.position - transform.position).normalized;
             destination = (Vector2) transform.position + direction * (perso.transform.position - transform.position).magnitude * 0.85f;
             current_state_left_time = 1f;
-            isRunning = false;
+            // isRunning = false;
             return (destination - (Vector2) transform.position);
         }
 

@@ -19,10 +19,11 @@ public class Movable : Capable
     [Header("Collisions")]
     public Collider2D feet_collider;
 
+    // AWAKE
     protected override void Awake()
     {
         base.Awake();
-        
+
         rb = GetComponent<Rigidbody2D>();
         if (rb != null)
         {
@@ -35,6 +36,7 @@ public class Movable : Capable
         feet_collider = transform.Find("feet").GetComponent<Collider2D>();
     }
 
+    // UPDATE
     protected virtual void FixedUpdate()
     {
         // base.Update();
@@ -46,13 +48,55 @@ public class Movable : Capable
             ClearForces();
             return;
         }
-        else if (rb == null) { return;}
+        else if (rb == null) { return; }
 
         // Update moving effects
         updateMovingEffects();
 
         // Update forces
         updateForces();
+    }
+
+    // UPDATE FORCES
+    protected virtual void updateForces()
+    {
+        // Apply input velocity from capacities
+        if (HasCapacity<WalkCapacity>())
+        {
+            rb.linearVelocity = GetCapacity<WalkCapacity>().walk_speed * Orientation;
+        }
+        else
+        {
+            rb.linearVelocity = Vector2.zero; // Stop movement if no speed
+        }
+
+        // Apply forces
+        Vector2 totalForce = Vector2.zero;
+        for (int i = forces.Count - 1; i >= 0; i--)
+        {
+            Force force = forces[i];
+
+            // Remove expired forces
+            if (force.expired)
+            {
+                forces.RemoveAt(i);
+                continue;
+            }
+
+            totalForce += force.direction * force.magnitude / weight;
+            force.Update();
+        }
+
+        // Apply force to Rigidbody2D
+        rb.AddForce(totalForce * Time.timeScale, ForceMode2D.Force);
+
+        // Apply friction when no force is applied
+        if (totalForce == Vector2.zero && inputs == Vector2.zero)
+        {
+            // if (debug) { Debug.Log("Applying friction ("+ friction +") to " + gameObject.name + " with velocity " + rb.velocity); }
+            rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, Vector2.zero, friction * Time.deltaTime);
+        }
+
     }
 
     // EFFECTS ASSOCIATED TO MOVING
@@ -93,43 +137,6 @@ public class Movable : Capable
         // on supprime toutes les forces
         forces.Clear();
     }
-    protected void updateForces()
-    {
-        // Update input speed
-        if (input_speed < 0.1f) { input_speed = 0f; }
-
-        // Apply input velocity
-        rb.linearVelocity = input_speed * Orientation;
-
-        // Apply forces
-        Vector2 totalForce = Vector2.zero;
-        for (int i = forces.Count - 1; i >= 0; i--)
-        {
-            Force force = forces[i];
-
-            // Remove expired forces
-            if (force.expired)
-            {
-                forces.RemoveAt(i);
-                continue;
-            }
-
-            totalForce += force.direction * force.magnitude / weight;
-            force.Update();
-        }
-
-        // Apply force to Rigidbody2D
-        rb.AddForce(totalForce * Time.timeScale, ForceMode2D.Force);
-
-        // Apply friction when no force is applied
-        if (totalForce == Vector2.zero && inputs == Vector2.zero)
-        {
-            // if (debug) { Debug.Log("Applying friction ("+ friction +") to " + gameObject.name + " with velocity " + rb.velocity); }
-            rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, Vector2.zero, friction * Time.deltaTime);
-        }
-
-    }
-
     protected void LateUpdate()
     {
         // check if we have a rigidbody

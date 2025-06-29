@@ -72,7 +72,7 @@ public class Cat : IA
         if (debug) { Debug.Log("Cat " + name + " chose to sleep at: " + chosen_spot.name); }
 
         // we go there
-        yield return GoTo(chosen_spot.position);
+        yield return GoToCoroutine(chosen_spot.position);
 
         // we sleep at the chosen spot
         nap_spot = chosen_spot; // Set the current nap spot

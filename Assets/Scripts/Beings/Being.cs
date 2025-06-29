@@ -18,11 +18,11 @@ public class Being : Movable
     public Collider2D life_collider;
 
 
-    [Header("MOVEMENT")]
-    public float inputs_magnitude=1f;
-    public float speed = 3f; // speed de déplacement
-    public float running_speed = 5f; // speed de déplacement
-    protected bool isRunning = false;
+    // [Header("MOVEMENT")]
+    // public float inputs_magnitude=1f;
+    // public float speed = 3f; // speed de déplacement
+    // protected bool isRunning = false;
+    // public float running_speed = 5f; // speed de déplacement
     // private bool isMoving = false;
 
     [Header("taking damage")]
@@ -62,7 +62,6 @@ public class Being : Movable
         {
             life += regen_life * Time.deltaTime;
         }
-        
     }
 
     protected override void Update()
@@ -70,69 +69,19 @@ public class Being : Movable
         // on vérifie si le perso est mort
         if (!Alive)
         {
-            // input_speed = Mathf.Lerp(input_speed, 0f, 10f * Time.deltaTime);
             inputs = Vector2.zero;
-            input_speed = 0f;
+            // input_speed = 0f;
+            // inputs_magnitude = 0f;
             base.Update();
             return;
         }
 
         // on récupère les inputs
         Events();
-
-        // update moving inputs & Orientation
-        if (!HasEffect(Effect.Immobile) && inputs_magnitude > 0.1f)
-        {
-            // déplacement
-            if (isRunning)
-            {
-                run(Orientation, inputs_magnitude);
-            }
-            else
-            {
-                walk(Orientation, inputs_magnitude);
-            }
-        }
-        else
-        {
-            anim_player.StopPlaying("run");
-            anim_player.StopPlaying("walk");
-            input_speed = Mathf.Lerp(input_speed, 0f, 10f * Time.deltaTime);
-        }
-
-
+        
         base.Update();
     }
 
-
-    // DEPLACEMENT
-    protected void walk(Vector2 direction, float inputs_magnitude=1f)
-    {
-        // on calcule le mouvement sur X
-        // float x_movement = direction.normalized.x * speed * Time.deltaTime * inputs_magnitude;
-
-        // on calcule le mouvement sur Y
-        // float y_movement = direction.normalized.y * speed * Time.deltaTime * inputs_magnitude;
-
-        // on applique le mouvement au perso
-        // move(new Vector2(x_movement, y_movement));
-        // velocity += new Vector2(x_movement, y_movement);
-        input_speed = Mathf.Lerp(input_speed, speed * inputs_magnitude, 10f * Time.deltaTime);
-        Do("walk");
-    }
-    protected void run(Vector2 direction, float inputs_magnitude=1f)
-    {
-        // on calcule le mouvement sur X
-        // float x_movement = direction.normalized.x * running_speed * Time.deltaTime * inputs_magnitude;
-
-        // on calcule le mouvement sur Y
-        // float y_movement = direction.normalized.y * running_speed * Time.deltaTime * inputs_magnitude;
-
-        // on applique le mouvement au perso
-        // move(new Vector2(x_movement, y_movement));
-        input_speed = Mathf.Lerp(input_speed, running_speed * inputs_magnitude, 10f * Time.deltaTime);
-        Do("run");
-    }
 
 
     // INPUTS SIMULATION

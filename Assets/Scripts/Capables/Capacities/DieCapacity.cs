@@ -69,7 +69,7 @@ public class DieCapacity : Capacity
         ((Being) capable).life_collider.gameObject.layer = LayerMask.NameToLayer("Meat");
 
         // on change le layer des feet en "Ghosts"
-        ((Being) capable).feet_collider.gameObject.layer = LayerMask.NameToLayer("Meat");
+        // ((Being) capable).feet_collider.gameObject.layer = LayerMask.NameToLayer("Meat");
 
         // destroy object
         Invoke(nameof(destroyObject), time_before_disappearing);
@@ -93,18 +93,15 @@ public class DieCapacity : Capacity
 
         // else, we destroy all the capacities except RunCapacity
         List<Capacity> capacities = new List<Capacity>(being.GetCapacities());
-        Capacity run_capacity = capacities.Find(capa => capa.name == "run");
-        capacities.RemoveAll(capa => capa.name == "run" || capa.name == "die");
+        capacities.RemoveAll(capa => capa.name == "die");
         while (capacities.Count > 0)
         {
             being.RemoveCapacity(capacities[0].name);
             capacities.RemoveAt(0);
         }
-        // we disable the RunCapacity if we found it
-        if (run_capacity != null) { run_capacity.enabled = false; }
 
         // and we destroy the body
-        Destroy(being.transform.Find("body").gameObject);
+        // Destroy(being.transform.Find("body").gameObject);
 
         // And finally we disable the Capable to replace it with a simple Movable
         Destroy(being.GetComponent<Capable>());

@@ -82,47 +82,6 @@ public class Capable : MonoBehaviour
         }
     }
 
-    // EVENTS
-    /* private void Events()
-    {
-        // walk
-        if (Can("run"))
-        {
-            // we get the inputs
-            Vector2 inputs = new Vector2(0, 0);
-            if (Input.GetKey(KeyCode.W)) { inputs.y += 1;}
-            if (Input.GetKey(KeyCode.S)) { inputs.y -= 1;}
-            if (Input.GetKey(KeyCode.A)) { inputs.x -= 1;}
-            if (Input.GetKey(KeyCode.D)) { inputs.x += 1;}
-
-            // we check if the player is running
-            bool running = false;
-            if (inputs.x != 0 || inputs.y != 0) { running = true; }
-
-            // we update the orientation
-            Orientation = inputs;
-
-            // we play the animation
-            if (running) { Do("run"); }
-            else { anim_player.StopPlaying("run"); }
-        }
-
-        // ATTACK & HURT
-        if (Input.GetKey(KeyCode.Space))
-        {
-            if (Can("attack")) { Do("attack"); }
-        }
-        if (Input.GetKey(KeyCode.H))
-        {
-            if (Can("hurted")) { Do("hurted"); }
-        }
-
-        // DIE
-        if (Input.GetKey(KeyCode.F))
-        {
-            Do("die");
-        }
-    } */
 
     // UPDATES
     protected virtual void Update()
@@ -235,6 +194,10 @@ public class Capable : MonoBehaviour
     protected bool hasCapacity(Capacity capa)
     {
         return hasCapacity(capa.name);
+    }
+    public bool HasCapacity<T>() where T : Capacity
+    {
+        return GetCapacity<T>() != null;
     }
     public Capacity GetCapacity(string name)
     {

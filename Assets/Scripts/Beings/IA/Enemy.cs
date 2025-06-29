@@ -3,20 +3,61 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Enemy : Being
+public class Enemy : IA
 {
 
     [Header("Target")]
-    private float player_detection_radius = 3f;
     public bool target_detected = false;
-    GameObject target;
     public LayerMask target_layers;
+    protected float player_detection_radius = 3f;
+    protected Being target;
 
 
     [Header("ATTACKER")]
     public float attack_range = 0.25f; // distance entre le point d'attaque et le being qui attaque
 
-    // unity functions
+    // UPDATE
+    protected override void Update()
+    {
+        // update de d'habitude
+        base.Update();
+
+        // on fait l'idle
+        IdleBehaviour();
+    }
+    protected virtual void IdleBehaviour()
+    {
+        // on essaye de détecter le joueur
+        detectTarget(player_detection_radius);
+
+        // on s'y dirige
+        if (target_detected)
+        {
+            GoTo(target.transform.position);
+        }
+        else { GoNowhere(); } // on n'a pas de cible, on ne bouge pas
+
+
+        // on essaye d'attaquer le joueur si on le détecte
+        try_to_attack_target();
+    }
+
+    // DETECTING TARGET
+    protected void detectTarget(float radius)
+    {
+        Collider2D[] targets = get_targets_colliders(radius);
+
+        // on regarde si on a trouvé un ennemi
+        target_detected = targets.Length > 0;
+        if (target_detected)
+        {
+            target = targets[0].transform.parent.gameObject.GetComponent<Being>();
+        }
+        else
+        {
+            target = null;
+        }
+    }
     protected virtual Collider2D[] get_targets_colliders(float radius)
     {
         // on récupère tous les ennemis dans le rayon de détection
@@ -31,24 +72,14 @@ public class Enemy : Being
         return targets;
 
     }
-    protected void detectTarget(float radius)
-    {
-        Collider2D[] targets = get_targets_colliders(radius);
 
-        // on regarde si on a trouvé un ennemi
-        target_detected = targets.Length > 0;
-        if (target_detected)
-        {
-            target = targets[0].transform.parent.gameObject;
-        }
-        else
-        {
-            target = null;
-        }
-    }
-
+    // ATTACKING TARGET
     protected void try_to_attack_target()
     {
+        // on vérifie qu'on a un target et qu'il est vivant
+        if (!target_detected) { return; }
+        if (!target.Alive) { return; }
+        
         // on recupère la distance entre le zombo et le joueur
         float distance = Vector2.Distance(transform.position, target.transform.position);
 
@@ -59,52 +90,4 @@ public class Enemy : Being
             if (Can("attack")) { Do("attack"); }
         }
     }
-
-    public override void Events()
-    {
-        base.Events();
-
-        // treshold distance "trop proche"
-        float treshold_distance = 0.1f;
-
-        // 1 - on essaye de détecter le joueur
-        if (target_detected)
-        {
-            // on se dirige vers le joueur
-            Orientation = new Vector2(target.transform.position.x - transform.position.x, target.transform.position.y - transform.position.y);
-
-            // on regarde si on est pas TROP proche du joueur
-            if (Orientation.magnitude < treshold_distance)
-            {
-                Orientation = new Vector2(0, 0);
-            }
-
-            // on normalise les Orientation
-            Orientation.Normalize();
-
-            return;
-        }
-
-        // 2 - on bouge pas
-        Orientation = new Vector2(0, 0);
-    }
-    protected override void Update()
-    {
-        // on essaye de détecter le joueur
-        detectTarget(player_detection_radius);
-
-        // update de d'habitude
-        base.Update();
-
-        // on essaye d'attaquer le joueur si on le détecte
-        if (target_detected && Can("attack"))
-        {
-            // Debug.Log("target detected" + target.name);
-            if (target.GetComponent<Being>().Alive)
-            {
-                try_to_attack_target();
-            }
-        }
-    }
-
 }

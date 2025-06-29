@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class CyberZombo : Enemy, I_Hackable
+public class CyberZombo : Enemy /*, I_Hackable */
 {
 
-
     // meat detection
-    private float meat_detection_radius = 10f;
-    public bool meat_detected = false;
-    GameObject meat_target;
-    private LayerMask meat_layers;
+    [Header("Meat Detection")]
+    [SerializeField] private bool meat_detected = false;
+    [SerializeField] private LayerMask meat_layers;
+    [SerializeField] private float meat_detection_radius = 20f;
+    [SerializeField] private GameObject meat_target;
 
     // HACKING
-
-    public string hack_type_self { get; set; }
+    /* public string hack_type_self { get; set; }
     public int required_bits { get; set; }
     public int required_bits_base { get; set; }
     public int security_lvl { get; set; }
@@ -32,85 +31,87 @@ public class CyberZombo : Enemy, I_Hackable
     public Material default_material { get; set; }
 
     // HackUI
-    public HackUI hack_ui { get; set; }
+    public HackUI hack_ui { get; set; } */
 
     // unity functions
-    new void Start(){
-
-        // on récupère le joueur
-        // tar = GameObject.Find("/perso");
+    protected override void Start()
+    {
 
         // on start de d'habitude
         base.Start();
 
         // on défini les layers des ennemis
-        target_layers = LayerMask.GetMask("Beings");
-        meat_layers = LayerMask.GetMask("Meat","Beings");
+        // target_layers = LayerMask.GetMask("Beings");
+        // meat_layers = LayerMask.GetMask("Meat");
 
         // on met à jour les différentes variables d'attaques pour le zombo
         max_life = 25 + Random.Range(-5, 5);
         life = (float) max_life;
-        speed = 1f + Random.Range(-0.2f, 0.2f);
-        running_speed = 2f;
-        ((AttackCapacity) GetCapacity("attack")).damage = 20f + Random.Range(-5f, 5f);
-        weight = 1.4f + Random.Range(-0.2f, 0.2f);
 
-        // on met les bons sons
-        // sounds = new ZomboSounds();
-        // audio_manager.LoadSoundsFromPath("audio/zombo");
+        // change speed
+        GetCapacity<WalkCapacity>().max_speed = 1f + Random.Range(-0.2f, 0.2f);
+
+        // change attack
+        GetCapacity<AttackCapacity>().damage = 20f + Random.Range(-5f, 5f);
+        weight = 1.4f + Random.Range(-0.2f, 0.2f);
 
 
         // on initialise le hackin
-        initHack();
-    }
-
-    public override void Events()
-    {
-
-        base.Events();
-        if (Orientation != new Vector2(0, 0)) { return; }
-
-        // treshold distance "trop proche"
-        float treshold_distance = 0.1f;
-
-        // 2 - on essaye de détecter de la viande
-        if (meat_detected && meat_target != null){
-            
-            // on se dirige vers la viande
-            Orientation = new Vector2(meat_target.transform.position.x - transform.position.x, meat_target.transform.position.y - transform.position.y);
-
-            // on regarde si on est pas TROP proche de la viande
-            if (Orientation.magnitude < treshold_distance){
-                Orientation = new Vector2(0, 0);
-            }
-
-            // on normalise les Orientation
-            Orientation.Normalize();
-
-            return;
-        }
-
-        // 3 - on se déplace aléatoirement circulairement en x
-        Orientation = simulate_circular_input_on_x(Orientation);
-
+        // initHack();
     }
 
     // update de d'habitude
-    protected override void Update()
+    /* protected override void Update()
     {
         // update des hacks
-        if (is_getting_hacked) {
+        /* if (is_getting_hacked) {
             updateHack();
-        }
+        } 
 
-        // on essaye de détecter de la viande
-        detect_meat(meat_detection_radius);
 
         // update de d'habitude
         base.Update();
 
-    }
+        // on vérifie si on a déjà une destination alors rien besoin de faire plus
+        if (has_destination) { return; }
 
+        // sinon on essaye de détecter de la viande
+        detect_meat(meat_detection_radius);
+
+        // si on en detecte on y va sinon on bouge pas
+        if (meat_detected)
+        {
+            GoTo(meat_target.transform.position); // on se dirige vers la viande
+        }
+    } */
+
+    protected override void IdleBehaviour()
+    {
+        // on essaye de détecter le joueur
+        detectTarget(player_detection_radius);
+        if (target_detected)
+        {
+            GoTo(target.transform.position);
+
+            // on essaye d'attaquer le joueur si on le détecte
+            try_to_attack_target();
+
+            return;
+        }
+
+        // si on est ici on a pas de target
+        // on essaie de detecter de la viande
+        detect_meat(meat_detection_radius);
+        if (meat_detected && Vector2.Distance(transform.position, meat_target.transform.position) > .5f)
+        {
+            GoTo(meat_target.transform.position); // on se dirige vers la viande (grand threshold parce que c ok)
+            return;
+        }
+
+        // si on est ici on a rien detecté donc on fait rien mdr
+        GoNowhere();
+
+    }
 
     // TARGETS DETECTION
     protected override Collider2D[] get_targets_colliders(float radius)
@@ -125,22 +126,35 @@ public class CyberZombo : Enemy, I_Hackable
     }
 
     // MEAT DETECTION
-    private void detect_meat(float radius){
+    private void detect_meat(float radius)
+    {
+        Collider2D[] targets = get_meat_colliders(radius);
 
-        // on essaie de trouver le premier gameobject meat dans le rayon de détection
-        Collider2D meatCollider = Physics2D.OverlapCircle(transform.position, radius, meat_layers);
-        meat_detected = (meatCollider != null);
-        if (meat_detected){
-            meat_target = meatCollider.gameObject;
+        // on regarde si on a trouvé de la viande
+        meat_detected = targets.Length > 0;
+        if (meat_detected)
+        {
+            meat_target = targets[0].transform.parent.gameObject;
         }
-        else{
+        else
+        {
             meat_target = null;
         }
     }
-    
+    protected virtual Collider2D[] get_meat_colliders(float radius)
+    {
+        // on récupère toutes les viandes dans le rayon de détection
+        Collider2D[] targets = Physics2D.OverlapCircleAll(transform.position, radius, meat_layers);
+
+        // on les trie par distance la plus proche
+        targets = targets.OrderBy(target => Vector2.Distance(transform.position, target.transform.position)).ToArray();
+
+        return targets;
+    }
+
 
     // HACKIN
-    public void initHack()
+    /* public void initHack()
     {
 
         // on récupère le xp_provider
@@ -286,7 +300,7 @@ public class CyberZombo : Enemy, I_Hackable
         // on le montre
         // hack_ui.hide();
     }
-
+ */
     // DIE
     /* protected override void die(){
         // on arrête le hackin
