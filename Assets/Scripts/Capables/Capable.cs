@@ -278,7 +278,9 @@ public class Capable : MonoBehaviour
 {
     // an effect is a temporary state that can be applied to a capable
     // it can be a buff, a debuff, a status, etc.
-    Ghost, // allow a Movable to walk through other Beings
+    SemiGhost, // allow a Movable to walk through other Beings
+    Ghost, // a Movable can walk through other Beings & walls & objects (everything)
+    Invisible, // a Being can't be seen -> change its body collider to Ghosts layer
     Invincible, // a Being can't be hurt
     Stunned, // a Being can't attack
     RegenLife, // a Being regenerates life

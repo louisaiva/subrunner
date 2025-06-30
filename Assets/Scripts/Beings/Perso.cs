@@ -204,7 +204,7 @@ public class Perso : Being
     }
 
     // CAPACITES
-    public override void Events()
+    protected override void UpdateGOAP()
     {
         // Debug.Log("Perso " + name + " Events() called.");
 
@@ -221,11 +221,8 @@ public class Perso : Being
             // update_interactions();
         }
 
-        // on vérifie qu'on est pas KO
-        if (HasEffect(Effect.Stunned)) { return; }
-
         // on check toutes les capacities dans le bon ordre pour voir comment on peut agir etc.
-        base.Events();
+        base.UpdateGOAP();
 
         // walk
         if (HasCapacity<WalkCapacity>())
@@ -589,6 +586,49 @@ public class Perso : Being
         }
     }
 
+
+    // METAMORPH
+    public void Metamorph()
+    {
+        // checks which skins we have
+        string skin = anim_player.skin;
+        string[] skins = new string[] { "perso", "cat", "zombo", "n0b0dy", "apple", "fridge", "small_laptop" };
+
+        // we roll through the list
+        int index = System.Array.IndexOf(skins, skin);
+        if (index == skins.Length - 1)
+        {
+            index = 0; // if we are at the end, we go back to the start
+        }
+        else
+        {
+            index += 1; // otherwise we go to the next skin
+        }
+
+        // we set the new skin
+        anim_player.skin = skins[index];
+    }
+    public void ToggleGhost()
+    {
+        if (anim_player.skin != "ghost")
+        {
+            // on change le skin
+            anim_player.skin = "ghost";
+
+            // on applique l'Effect Ghost & Invisible
+            AddEffect(Effect.Ghost, -888f);
+            AddEffect(Effect.Invisible, -888f);
+        }
+        else
+        {
+            // on remet le skin de base
+            anim_player.skin = "perso";
+
+            // on enleve l'Effect Ghost & Invisible
+            RemoveEffect(Effect.Ghost);
+            RemoveEffect(Effect.Invisible);
+        }
+    }
 
     // XP
     public void addXP(int count)

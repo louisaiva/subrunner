@@ -18,10 +18,8 @@ public class IA : Being
     private float threshold_distance; // current distance to the destination to consider it reached (because sometimes we can't have a very precise distance)
 
 
-    public override void Events()
+    protected override void UpdateGOAP()
     {
-        base.Events();
-
         // GOTO BEHAVIOR
         if (has_destination)
         {

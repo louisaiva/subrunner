@@ -21,7 +21,7 @@ public class SpawnCapacity : Capacity
     public float spawn_radius = 0.5f; // the spawn is randowmized in a circle of this radius
     
     [Header("Continuous spawn")]
-    public float spawn_rate = 0f; // in seconds - needs to be > 0 to spawn continuously
+    public float spawn_rate = 0f; // one entity is spawned each x seconds - needs to be > 0 to spawn continuously
     private float last_use_time = 0f;
 
     // USE
@@ -48,7 +48,8 @@ public class SpawnCapacity : Capacity
         string force_debug = "";
         if (spawn_force > 0f && entity.GetComponent<Movable>() != null)
         {
-            Force spawn_force = new Force("spawn", capable.Orientation, this.spawn_force);
+            Vector2 force_direction = (spawn_position - (Vector2) capable.transform.position).normalized;
+            Force spawn_force = new Force("spawn", force_direction, this.spawn_force);
             entity.GetComponent<Movable>().AddForce(spawn_force);
             force_debug = " with force " + spawn_force;
         }

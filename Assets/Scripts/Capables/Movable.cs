@@ -103,13 +103,29 @@ public class Movable : Capable
     protected void updateMovingEffects()
     {
         // we check if the Capable has the Ghost effect and if yes, we change the Layer of the feet collider to "Ghosts"
-        if (HasEffect(Effect.Ghost) && !(feet_collider.gameObject.layer == LayerMask.NameToLayer("Ghosts")))
+
+        // update the feet layer
+        string feet_layer = feet_collider.gameObject.layer.ToString();
+        if (feet_layer != "Feet" && !HasEffect(Effect.SemiGhost) && !HasEffect(Effect.Ghost))
         {
+            // if no ghost effect applied than we switch back to normal
+            feet_collider.gameObject.layer = LayerMask.NameToLayer("Feet");
+
+        }
+        else if (feet_layer != "Ghosts" && (HasEffect(Effect.SemiGhost) || HasEffect(Effect.Ghost)))
+        {
+            // if a ghost effect is applied than we switch to Ghosts
             feet_collider.gameObject.layer = LayerMask.NameToLayer("Ghosts");
         }
-        else if (!HasEffect(Effect.Ghost) && (feet_collider.gameObject.layer != LayerMask.NameToLayer("Feet")))
+
+        // update the feet is trigger
+        if (HasEffect(Effect.Ghost))
         {
-            feet_collider.gameObject.layer = LayerMask.NameToLayer("Feet");
+            feet_collider.isTrigger = true; // if the ghost effect is applied, we set the feet collider as trigger
+        }
+        else
+        {
+            feet_collider.isTrigger = false; // if not, we set it as not trigger
         }
     }
 

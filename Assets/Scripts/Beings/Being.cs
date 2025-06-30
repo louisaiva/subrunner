@@ -33,6 +33,7 @@ public class Being : Movable
     protected float lookin_at_angle = 40f; // angle du regard du perso en degrés
 
 
+    // START & AWAKE
     protected override void Awake()
     {
         base.Awake();
@@ -43,8 +44,6 @@ public class Being : Movable
         // on récupère le provider de floating dmg
         floating_dmg_provider = GameObject.Find("/utils/dmgs_provider");
     }
-
-    // unity functions
     protected virtual void Start()
     {
         // on initialise les capacités
@@ -52,35 +51,49 @@ public class Being : Movable
         AddEffect(Effect.RegenLife, -888f);
     }
 
-    public virtual void Events()
-    {
-        // on vérifie qu'on est pas KO
-        if (HasEffect(Effect.Stunned)) { return; }
 
-        // life regen
-        if (HasEffect(Effect.RegenLife) && life < max_life)
-        {
-            life += regen_life * Time.deltaTime;
-        }
-    }
 
+    // UPDATE HIGH LEVEL
     protected override void Update()
     {
         // on vérifie si le perso est mort
         if (!Alive)
         {
             inputs = Vector2.zero;
-            // input_speed = 0f;
-            // inputs_magnitude = 0f;
             base.Update();
             return;
         }
 
+        // on update les behaviour
+        UpdateGOAP();
+
         // on récupère les inputs
-        Events();
-        
+        UpdateBeingEffects();
+
         base.Update();
     }
+    protected virtual void UpdateGOAP() { }
+    public virtual void UpdateBeingEffects()
+    {
+        // life regen
+        if (HasEffect(Effect.RegenLife) && life < max_life)
+        {
+            life += regen_life * Time.deltaTime;
+        }
+
+        // Invisible
+        if (HasEffect(Effect.Invisible))
+        {
+            // change the body collider to Ghosts layer
+            life_collider.gameObject.layer = LayerMask.NameToLayer("Ghosts");
+        }
+        else
+        {
+            // reset the body collider to Beings layer
+            life_collider.gameObject.layer = LayerMask.NameToLayer("Beings");
+        }
+    }
+
 
 
 
@@ -119,7 +132,6 @@ public class Being : Movable
 
         return input_vecteur;
     }
-
     protected Vector2 randomly_circulate(Vector2 input_vecteur)
     {
         // simulate circular input on x
@@ -186,7 +198,6 @@ public class Being : Movable
 
         return true;
     }
-
     protected virtual void comeback_from_death()
     {
         // on remet la life au max
@@ -216,14 +227,12 @@ public class Being : Movable
         // floating dmg
         floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddFloatingDmg(gameObject, life, transform.position);
     }
-
     public void heal(int nb_heal=2)
     {
         // each heal gives 10% of max life
         float heal = max_life * 0.1f * nb_heal;
         AddLife(heal);
     }
-
     public void healMax()
     {
         // restore max life
