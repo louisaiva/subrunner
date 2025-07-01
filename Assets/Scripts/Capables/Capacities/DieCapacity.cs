@@ -100,8 +100,17 @@ public class DieCapacity : Capacity
             capacities.RemoveAt(0);
         }
 
-        // and we destroy the body
-        // Destroy(being.transform.Find("body").gameObject);
+        // we also destroy all Goal if this is an IA
+        if (being is IA ia)
+        {
+            if (debug) { Debug.Log("Destroying goals of " + being.name); }
+            List<GameObject> goal_objects = new List<GameObject>(ia.goals.ConvertAll(goal => goal.gameObject));
+            while (goal_objects.Count > 0)
+            {
+                Destroy(goal_objects[0]);
+                goal_objects.RemoveAt(0);
+            }
+        }
 
         // And finally we disable the Capable to replace it with a simple Movable
         Destroy(being.GetComponent<Capable>());

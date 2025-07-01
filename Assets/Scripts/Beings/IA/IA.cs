@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 /// <summary>
@@ -11,17 +12,61 @@ using UnityEngine.AI;
 // [RequireComponent(typeof(NavMeshAgent))]
 public class IA : Being
 {
-    [Header("Behaviours - GOTO")]
-    public bool has_destination = false;
-    public Vector2 destination;
-    private float base_threshold_distance = 0.2f; // distance to the destination to consider it reached (base)
-    private float threshold_distance; // current distance to the destination to consider it reached (because sometimes we can't have a very precise distance)
 
+    [Header("Goals")]
+    [SerializeField] private Transform goal_parent;
+    public List<Goal> goals = new List<Goal>(); // list of goals that the IA can achieve
+    public Goal current_goal; // the current goal that the IA is trying to achieve
+
+    [Header("Debug")]
+    public bool debug_goals = false;
+    public bool debug_doable_goals = false;
+
+
+    // [Header("Behaviours - GOTO")]
+    // public bool has_destination = false;
+    // public Vector2 destination;
+    // private float base_threshold_distance = 0.2f; // distance to the destination to consider it reached (base)
+    // private float threshold_distance; // current distance to the destination to consider it reached (because sometimes we can't have a very precise distance)
+
+    // AWAKE
+    protected override void Awake()
+    {
+        base.Awake();
+
+        if (goal_parent == null)
+        {
+            Debug.LogError("(IA) " + name + " has no goal parent set! Please set a goal parent in the inspector.");
+            return;
+        }
+        
+        // we get the goals from the goal parent
+        goals = goal_parent.GetComponentsInChildren<Goal>().ToList();
+        if (goals.Count == 0)
+        {
+            Debug.LogError("(IA) " + name + " has no goals set! Please add at least the default idle goal in the inspector");
+        }
+    }
 
     protected override void UpdateGOAP()
     {
+        // 1 - detect if one of the goal have a higher priority than the actual goal
+        Goal max_priority_goal = get_highest_priority_doable_goal();
+        if (max_priority_goal == null) { return; } // no goal to switch to
+
+        // checks if the current goal is the max priority goal
+        if (max_priority_goal != current_goal)
+        {
+            // we switch to the new goal
+            SwitchGoal(max_priority_goal);
+        }
+
+        // 2 - update current goal
+        current_goal.UpdateGoal();
+
+
         // GOTO BEHAVIOR
-        if (has_destination)
+        /* if (has_destination)
         {
             // on regarde si on est pas TROP proche de la destination
             if (Vector2.Distance(transform.position, destination) < threshold_distance)
@@ -42,11 +87,44 @@ public class IA : Being
             Orientation = global_movement.normalized;
             return;
         }
-        else { Orientation = new Vector2(0, 0); /* on bouge pas*/ }
+        else { Orientation = new Vector2(0, 0); /* on bouge pas } */
     }
 
+    // GOALS MANAGEMENT HIGH LEVEL
+    protected virtual void SwitchGoal(Goal new_goal)
+    {
+        // we stop the current goal
+        if (current_goal != null)
+        {
+            if (debug_goals) { Debug.Log("(IA) " + name + " stopped goal: " + current_goal.GetType()); }
+            current_goal.ClearPlan(); // we clear the plan of the current goal
+        }
+
+        // we start the new goal
+        current_goal = new_goal;
+        current_goal.Plan(); // we plan the new goal
+        if (debug_goals) { Debug.Log("(IA) " + name + " switched to goal: " + current_goal.GetType()); }
+    }
+
+    // GOALS LOW LEVEL
+    private Goal get_highest_priority_doable_goal()
+    {
+        // we filter the goals to get only the doable ones
+        var doable_goals = goals.Where(g => g.doable).ToList();
+
+        if (doable_goals.Count == 0)
+        {
+            if (debug_doable_goals) { Debug.Log("(IA) " + name + " has no doable goals"); }
+            return null;
+        }
+
+        // we return the highest priority doable goal
+        return doable_goals.OrderByDescending(g => g.priority).FirstOrDefault();
+    }
+
+
     // BEHAVIORS
-    protected IEnumerator GoToCoroutine(Vector2 position, float? threshold_distance = null)
+    /* protected IEnumerator GoToCoroutine(Vector2 position, float? threshold_distance = null)
     {
         // we want to go to a position
 
@@ -91,5 +169,5 @@ public class IA : Being
         {
             GetCapacity<WalkCapacity>().walk_percentage_target = 0f; // we stop walking
         }
-    }
+    } */
 }

@@ -17,7 +17,7 @@ public class Enemy : IA
     public float attack_range = 0.25f; // distance entre le point d'attaque et le being qui attaque
 
     // UPDATE
-    protected override void Update()
+    /* protected override void Update()
     {
         // update de d'habitude
         base.Update();
@@ -40,7 +40,7 @@ public class Enemy : IA
 
         // on essaye d'attaquer le joueur si on le détecte
         try_to_attack_target();
-    }
+    } */
 
     // DETECTING TARGET
     protected void detectTarget(float radius)

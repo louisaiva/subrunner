@@ -23,7 +23,8 @@ public class Capable : MonoBehaviour
     // the analog equivalent of the anim_player.orientation which is numerical
     [SerializeField] protected Vector2 inputs; // inputs can be at 0,0
     [SerializeField] protected Vector2 orientation; // orientation can't be at 0,0 -> always normalized & remember last orientation
-    public Vector2 Orientation {
+    public Vector2 Orientation
+    {
         get { return orientation; }
         set
         {
@@ -45,7 +46,8 @@ public class Capable : MonoBehaviour
     [SerializeField] protected List<float> effects_timetolive = new List<float>();
 
     // un capable peut aussi avoir un inventaire
-    public Inventory inventory{ 
+    public Inventory inventory
+    {
         get
         {
             Transform inventory_transform = transform.Find("inventory");
@@ -80,6 +82,10 @@ public class Capable : MonoBehaviour
                 if (debug) { capa.debug = true; }
             }
         }
+
+        // we add ourself to the entity count
+        EntitiesDebug entities_debug = GameObject.Find("/ui/hud/debug/entities").GetComponent<EntitiesDebug>();
+        entities_debug.AddEntity(this);
     }
 
 
@@ -111,7 +117,7 @@ public class Capable : MonoBehaviour
             }
         }
     }
-    
+
     // CAPACITIES
     public void Do(string name)
     {
@@ -135,7 +141,7 @@ public class Capable : MonoBehaviour
     }
     private void add_capacity(Capacity capacity)
     {
-        if (hasCapacity(capacity)) {return;}
+        if (hasCapacity(capacity)) { return; }
         capacities.Add(capacity);
     }
     public void AddCapacity(string capa_name)
@@ -270,6 +276,16 @@ public class Capable : MonoBehaviour
             }
         }
         return false;
+    }
+
+
+    // ON DESTROY
+    private void OnDestroy()
+    {
+        // we remove ourself from the entity count
+        EntitiesDebug entities_debug = GameObject.Find("/ui/hud/debug/entities")?.GetComponent<EntitiesDebug>();
+        if (entities_debug == null) { return; }
+        entities_debug.RemoveEntity(this);
     }
 
 }

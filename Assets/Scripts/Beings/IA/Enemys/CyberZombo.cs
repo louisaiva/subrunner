@@ -85,7 +85,7 @@ public class CyberZombo : Enemy /*, I_Hackable */
         }
     } */
 
-    protected override void IdleBehaviour()
+    /* protected override void IdleBehaviour()
     {
         // on essaye de détecter le joueur
         detectTarget(player_detection_radius);
@@ -111,7 +111,7 @@ public class CyberZombo : Enemy /*, I_Hackable */
         // si on est ici on a rien detecté donc on fait rien mdr
         GoNowhere();
 
-    }
+    } */
 
     // TARGETS DETECTION
     protected override Collider2D[] get_targets_colliders(float radius)
