@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using Unity.VisualScripting;
-using System;
 
 
 public class Being : Movable
@@ -12,10 +11,11 @@ public class Being : Movable
     [Header("LIFE")]
     public float life = 100f;
     public int max_life = 100;
+    [SerializeField] private int random_life_modifier_at_start = 0; // max_life += random.range(-5,5) in the start method if this modifier = 5
 
     public bool Alive { get { return life > 0f; } }
     public float regen_life = 0f; // en point de life par seconde
-    public Collider2D life_collider;
+    public Collider2D body_collider;
 
 
     // [Header("MOVEMENT")]
@@ -39,16 +39,22 @@ public class Being : Movable
         base.Awake();
 
         // on récupère les composants
-        life_collider = transform.Find("body").GetComponent<Collider2D>();
+        body_collider = transform.Find("body").GetComponent<Collider2D>();
 
         // on récupère le provider de floating dmg
         floating_dmg_provider = GameObject.Find("/utils/dmgs_provider");
     }
-    protected virtual void Start()
+    protected override void Start()
     {
+        base.Start();
+
         // on initialise les capacités
         AddCapacity("hurted");
-        AddEffect(Effect.RegenLife, -888f);
+        if (regen_life > 0) { AddEffect(Effect.RegenLife, -888f); }
+
+        // on initialise la vie
+        max_life = max_life + Random.Range(-random_life_modifier_at_start, random_life_modifier_at_start);
+        life = (float)max_life;
     }
 
 
@@ -85,12 +91,12 @@ public class Being : Movable
         if (HasEffect(Effect.Invisible))
         {
             // change the body collider to Ghosts layer
-            life_collider.gameObject.layer = LayerMask.NameToLayer("Ghosts");
+            body_collider.gameObject.layer = LayerMask.NameToLayer("Ghosts");
         }
         else
         {
             // reset the body collider to Beings layer
-            life_collider.gameObject.layer = LayerMask.NameToLayer("Beings");
+            body_collider.gameObject.layer = LayerMask.NameToLayer("Beings");
         }
     }
 
@@ -190,11 +196,7 @@ public class Being : Movable
         floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddFloatingDmg(this.gameObject,-1f * damage, transform.position);
 
         // check if dead
-        if (life <= 0f && Can("die"))
-        {
-            Do("die");
-            if (this is Perso) { ((Perso) this).Die(); }
-        }
+        if (life <= 0f && Can("die")) { Do("die"); }
 
         return true;
     }
@@ -207,8 +209,13 @@ public class Being : Movable
         anim_player.StopPlaying("die");
 
         // on remet le layer à "default"
-        life_collider.gameObject.layer = LayerMask.NameToLayer("Beings");
-        feet_collider.isTrigger = false;
+        body_collider.gameObject.layer = LayerMask.NameToLayer("Beings");
+
+        // on arrête la coroutine de mort
+        if (HasCapacity<DieCapacity>())
+        {
+            GetCapacity<DieCapacity>().StopAllCoroutines();
+        }
     }
 
     
@@ -261,8 +268,8 @@ public class Being : Movable
         Gizmos.DrawLineStrip(points, true);
         
         // on dessine le Collider de life du Being
-        if (!life_collider) { return; }
+        if (!body_collider) { return; }
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(life_collider.bounds.center, life_collider.bounds.size);
+        Gizmos.DrawWireCube(body_collider.bounds.center, body_collider.bounds.size);
     }
 }

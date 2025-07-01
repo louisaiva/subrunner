@@ -77,6 +77,9 @@ public class Goal : MonoBehaviour
     {
         if (!current_action) { return; }
 
+        // we quit the action
+        current_action.Quit();
+
         // we destroy the action
         Destroy(current_action.gameObject);
         current_plan.RemoveAt(0);

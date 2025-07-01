@@ -15,6 +15,7 @@ public class AttackCapacity : Capacity
     [Header("Damage parameters")]
     public int kills = 0;
     public float damage = 10f;
+    [SerializeField] private float random_damage_modifier_at_start = 0; // damage += random.range(-5,5) in the start method if this modifier = 5
     [SerializeField] private bool is_attacking = false;
     [SerializeField] private bool perforant_attack = false; // if true, the attack won't stop on the first enemy hit
     [SerializeField] private float delay_between_perforations = 0.01f; // delay between each perforation
@@ -55,6 +56,9 @@ public class AttackCapacity : Capacity
 
         // we get the sprite bank
         bank = GameObject.Find("/utils/bank").GetComponent<SpriteBank>();
+
+        // we set the damage variable
+        damage += Random.Range(-random_damage_modifier_at_start, random_damage_modifier_at_start);
     }
 
     // BEARER SETUP
@@ -164,8 +168,8 @@ public class AttackCapacity : Capacity
     private void updateAttack()
     {
 
-        // verify that our life_collider is not in the list
-        if (being != null) { hit_enemies = hit_enemies.Where(enemy => enemy != being.life_collider && enemy != null).ToList(); }
+        // verify that our body_collider is not in the list
+        if (being != null) { hit_enemies = hit_enemies.Where(enemy => enemy != being.body_collider && enemy != null).ToList(); }
 
         // we remove the not attackable tags
         hit_enemies = hit_enemies.Where(enemy => !not_attackable_tags.Contains(enemy.tag)).ToList();

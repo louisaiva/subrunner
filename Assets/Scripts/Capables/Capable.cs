@@ -121,14 +121,10 @@ public class Capable : MonoBehaviour
     // CAPACITIES
     public void Do(string name)
     {
-        foreach (Capacity capacity in capacities)
-        {
-            if (capacity.name == name)
-            {
-                // we use the capacity
-                capacity.Use(this);
-            }
-        }
+        // get the capacity
+        Capacity capacity = GetCapacity(name);
+
+        capacity.Use(this);
     }
     public void ShowCapacities()
     {
@@ -141,13 +137,13 @@ public class Capable : MonoBehaviour
     }
     private void add_capacity(Capacity capacity)
     {
-        if (hasCapacity(capacity)) { return; }
+        if (HasCapacity(capacity)) { return; }
         capacities.Add(capacity);
     }
     public void AddCapacity(string capa_name)
     {
         // we check if the capacity is already in the list
-        if (hasCapacity(capa_name)) { return; }
+        if (HasCapacity(capa_name)) { return; }
 
         // get the capacity instance
         GameObject capa_instance = bank.GetCapacityInstance(capa_name);
@@ -186,7 +182,7 @@ public class Capable : MonoBehaviour
         }
         return false;
     }
-    protected bool hasCapacity(string capa_name)
+    public bool HasCapacity(string capa_name)
     {
         foreach (Capacity capacity in capacities)
         {
@@ -197,9 +193,9 @@ public class Capable : MonoBehaviour
         }
         return false;
     }
-    protected bool hasCapacity(Capacity capa)
+    public bool HasCapacity(Capacity capa)
     {
-        return hasCapacity(capa.name);
+        return HasCapacity(capa.name);
     }
     public bool HasCapacity<T>() where T : Capacity
     {

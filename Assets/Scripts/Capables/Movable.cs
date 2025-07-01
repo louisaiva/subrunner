@@ -7,6 +7,7 @@ public class Movable : Capable
     [Header("MOVABLE")]
     public Rigidbody2D rb;  // Replace transform movement
     public float weight = 1f;
+    [SerializeField] private float random_weight_modifier_at_start = 0f; // weight += random.range(-5,5) in the start method if this modifier = 5
     public float friction = 7f;
     public bool debug_velocity = false; // Show velocity in console
 
@@ -34,6 +35,12 @@ public class Movable : Capable
 
         // Get the feet collider
         feet_collider = transform.Find("feet").GetComponent<Collider2D>();
+    }
+
+    protected virtual void Start()
+    {
+        // random weight
+        weight += UnityEngine.Random.Range(-random_weight_modifier_at_start, random_weight_modifier_at_start);
     }
 
     // UPDATE
@@ -148,10 +155,21 @@ public class Movable : Capable
         // if the force doesn't exist, we add it
         forces.Add(force);
     }
+    public void SetForces(List<Force> new_forces)
+    {
+        // on remplace la liste des forces par la nouvelle liste
+        forces.Clear();
+        forces.AddRange(new_forces);
+    }
     public void ClearForces()
     {
         // on supprime toutes les forces
         forces.Clear();
+    }
+    public List<Force> GetForces()
+    {
+        // on retourne la liste des forces
+        return forces;
     }
     protected void LateUpdate()
     {
@@ -168,7 +186,7 @@ public class Movable : Capable
         // we log the current linear velocity
         if (debug_velocity) { Debug.Log("velocity : " + Velocity); }
     }
-
+    
     // gizmos
     protected virtual void OnDrawGizmos()
     {

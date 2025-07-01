@@ -219,7 +219,7 @@ public class Inventory : MonoBehaviour {
 
 
 
-    // ! DEPRECATED
+    /* // ! DEPRECATED
     public Hack[] getHacks() { return new Hack[0]; }
-    public void setShow(bool show) { }
+    public void setShow(bool show) { } */
 }

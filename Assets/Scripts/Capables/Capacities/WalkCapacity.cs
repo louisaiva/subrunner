@@ -9,6 +9,13 @@ public class WalkCapacity : Capacity
     [Header("Walk Inputs")]
     public float walk_percentage_target = 0f; // walk percentage lerp continuellement jusqu'à walk_percentage_target*max_speed
     public float max_speed = 3f; // vitesse maximale de déplacement, atteinte quand walk_percentage = 1f
+    [SerializeField] private float random_speed_modifier_at_start = 0; // max_speed += random.range(-5,5) in the start method if this modifier = 5
+
+    // START
+    private void Start()
+    {
+        max_speed += Random.Range(-random_speed_modifier_at_start, random_speed_modifier_at_start);    
+    }
 
     // FIXED UPDATE
     protected override void Update()
@@ -39,20 +46,5 @@ public class WalkCapacity : Capacity
             capable.anim_player.Play("walk"); // we play the anim
         }
     }
-
-    // DEPLACEMENT
-    /* protected void run(Vector2 direction, float inputs_magnitude = 1f)
-    {
-        // on calcule le mouvement sur X
-        // float x_movement = direction.normalized.x * running_speed * Time.deltaTime * inputs_magnitude;
-
-        // on calcule le mouvement sur Y
-        // float y_movement = direction.normalized.y * running_speed * Time.deltaTime * inputs_magnitude;
-
-        // on applique le mouvement au perso
-        // move(new Vector2(x_movement, y_movement));
-        input_speed = Mathf.Lerp(input_speed, running_speed * inputs_magnitude, 10f * Time.deltaTime);
-        capable.anim_player.Play("run");
-    } */
 
 }

@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class CyberZombo : Enemy /*, I_Hackable */
+public class CyberZombo : IA /*, I_Hackable */
 {
 
     // meat detection
-    [Header("Meat Detection")]
+    /* [Header("Meat Detection")]
     [SerializeField] private bool meat_detected = false;
-    [SerializeField] private LayerMask meat_layers;
-    [SerializeField] private float meat_detection_radius = 20f;
-    [SerializeField] private GameObject meat_target;
+    [SerializeField] private LayerMask meat_layers; */
+    // [SerializeField] private float meat_detection_radius = 20f;
+    // [SerializeField] private GameObject meat_target;
 
     // HACKING
     /* public string hack_type_self { get; set; }
@@ -34,7 +34,7 @@ public class CyberZombo : Enemy /*, I_Hackable */
     public HackUI hack_ui { get; set; } */
 
     // unity functions
-    protected override void Start()
+    /* protected override void Start()
     {
 
         // on start de d'habitude
@@ -45,20 +45,20 @@ public class CyberZombo : Enemy /*, I_Hackable */
         // meat_layers = LayerMask.GetMask("Meat");
 
         // on met à jour les différentes variables d'attaques pour le zombo
-        max_life = 25 + Random.Range(-5, 5);
-        life = (float) max_life;
+        // max_life = 25 + Random.Range(-5, 5);
+        // life = (float) max_life;
 
         // change speed
-        GetCapacity<WalkCapacity>().max_speed = 1f + Random.Range(-0.2f, 0.2f);
+        /* GetCapacity<WalkCapacity>().max_speed = 1f + Random.Range(-0.2f, 0.2f);
 
         // change attack
         GetCapacity<AttackCapacity>().damage = 20f + Random.Range(-5f, 5f);
-        weight = 1.4f + Random.Range(-0.2f, 0.2f);
+        weight = 1.4f + Random.Range(-0.2f, 0.2f); 
 
 
         // on initialise le hackin
         // initHack();
-    }
+    } */
 
     // update de d'habitude
     /* protected override void Update()
@@ -114,7 +114,7 @@ public class CyberZombo : Enemy /*, I_Hackable */
     } */
 
     // TARGETS DETECTION
-    protected override Collider2D[] get_targets_colliders(float radius)
+    /* protected override Collider2D[] get_targets_colliders(float radius)
     {
         Collider2D[] targets = base.get_targets_colliders(radius);
 
@@ -123,10 +123,10 @@ public class CyberZombo : Enemy /*, I_Hackable */
 
         // Debug.Log("cyberzombo targets : " + targets.Length);
         return targets;
-    }
+    } */
 
     // MEAT DETECTION
-    private void detect_meat(float radius)
+    /* private void detect_meat(float radius)
     {
         Collider2D[] targets = get_meat_colliders(radius);
 
@@ -150,7 +150,7 @@ public class CyberZombo : Enemy /*, I_Hackable */
         targets = targets.OrderBy(target => Vector2.Distance(transform.position, target.transform.position)).ToArray();
 
         return targets;
-    }
+    } */
 
 
     // HACKIN

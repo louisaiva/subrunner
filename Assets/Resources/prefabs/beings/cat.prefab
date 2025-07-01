@@ -323,16 +323,18 @@ MonoBehaviour:
   debug: 0
   rb: {fileID: 0}
   weight: 1
+  random_weight_modifier_at_start: 0
   friction: 7
   debug_velocity: 0
   forces: []
   input_speed: 0
   Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 0}
-  life: 100
-  max_life: 100
-  regen_life: 1000
-  life_collider: {fileID: 0}
+  life: 50
+  random_life_modifier_at_start: 25
+  max_life: 50
+  regen_life: 10
+  body_collider: {fileID: 0}
   floating_dmg_provider: {fileID: 0}
   goal_parent: {fileID: 6254873895782535742}
   goals: []

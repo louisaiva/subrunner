@@ -40,8 +40,8 @@ public class Action : MonoBehaviour
     }
 
 
-    // DESTROYING (not succed sadly ://)
-    private void OnDestroy()
+    // QUITTING (not succed sadly ://)
+    public void Quit()
     {
         // this is called when the goal ClearPlan(). so basically the action will be deleted after this
         succeed(mark_as_done:false);

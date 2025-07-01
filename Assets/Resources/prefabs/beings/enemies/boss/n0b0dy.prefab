@@ -189,19 +189,14 @@ MonoBehaviour:
   feet_collider: {fileID: 0}
   life: 500
   max_life: 500
-  regen_life: 5
-  life_collider: {fileID: 0}
+  regen_life: 0
+  body_collider: {fileID: 0}
   floating_dmg_provider: {fileID: 0}
   goal_parent: {fileID: 5417561284830844432}
   goals: []
   current_goal: {fileID: 0}
   debug_goals: 0
   debug_doable_goals: 0
-  target_detected: 0
-  target_layers:
-    serializedVersion: 2
-    m_Bits: 8388608
-  attack_range: 1.2
 --- !u!50 &7208066328217349858
 Rigidbody2D:
   serializedVersion: 5
@@ -575,6 +570,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5417561284830844432}
     m_Modifications:
+    - target: {fileID: 1394363249585000781, guid: 5c9577cddbd74fb4ba911a7e785f4a3d, type: 3}
+      propertyPath: distance_to_attack
+      value: 0.9
+      objectReference: {fileID: 0}
     - target: {fileID: 3231073594812130121, guid: 5c9577cddbd74fb4ba911a7e785f4a3d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

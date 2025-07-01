@@ -33,7 +33,7 @@ public class ChaseAndAttackBeing : Goal
         // checks if we have the required action prefab we need
         if (goto_prefab == null || attack_prefab == null)
         {
-            Debug.LogError("(ChaseAndAttackBeing - Plan) " + name + " must have goto_prefab and attack_prefab set!");
+            Debug.LogError("(ChaseAndAttackBeing) " + name + " must have goto_prefab and attack_prefab set!");
         }
     }
 
@@ -113,14 +113,6 @@ public class ChaseAndAttackBeing : Goal
 
         // checks if it is not in the excluded tags
         if (excluded_tags.Count > 0 && excluded_tags.Contains(being.transform.tag)) { return; }
-
-        /* // we check if we don't have any current_target then this one become the current one !
-        if (!current_target)
-        {
-            current_target = being;
-            if (debug) { Debug.Log("(ChaseAndAttackBeing) " + being.name + " is now current target !"); }
-            return;
-        } */
 
         // we check if the being is already targeted
         if (being == current_target) { return; }
