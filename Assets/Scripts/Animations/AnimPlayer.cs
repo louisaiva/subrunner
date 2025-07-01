@@ -289,11 +289,22 @@ public class AnimPlayer : MonoBehaviour
             playFromPile();
         }
     }
+    public void ClearPile()
+    {
+        // we remove ALL animations from the pile
+        for (int i = 0; i < anim_pile.Count; i++)
+        {
+            anim_pile[i] = "";
+        }
+
+        // we play the idle animation
+        Play("idle");
+    }
 
     // PILE MANAGEMENT
     private int getPileMaxPriority()
     {
-        for (int i = anim_pile.Count-1; i >= 0; i--)
+        for (int i = anim_pile.Count - 1; i >= 0; i--)
         {
             if (anim_pile[i] != "") { return i; }
         }
@@ -312,10 +323,11 @@ public class AnimPlayer : MonoBehaviour
         }
     }
 
+
     // ORIENTATION
     public void SetOrientation(Vector2 look_at)
     {
-        if (debug_orientation) { Debug.Log("(AnimPlayer) Changing " + name +" orientation to " + look_at); }
+        if (debug_orientation) { Debug.Log("(AnimPlayer) Changing " + name + " orientation to " + look_at); }
 
         // we separate the 360° in 4 directions (up, down, left, right)
         if (look_at.y > 0.5) { SetOrientation("U"); }

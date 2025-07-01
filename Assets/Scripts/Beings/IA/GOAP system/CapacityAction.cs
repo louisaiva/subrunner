@@ -32,7 +32,7 @@ public class CapacityAction : Action
         StartCoroutine(WaitForAnim());
     }
 
-    private IEnumerator WaitForAnim()
+    protected IEnumerator WaitForAnim()
     {
         // wait for the animation to finish
         while (ia.anim_player.current_capacity == animation_name) { yield return null; }

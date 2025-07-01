@@ -8,7 +8,7 @@ public class EatMeat : Goal
         get
         {
             // if we already have meat is good !
-            if (meat) { return true; }
+            if (meat && meat.Eatable) { return true; }
 
             // else we try to find some meat
             detect_meat();
@@ -24,7 +24,7 @@ public class EatMeat : Goal
 
 
     [Header("Meat detection")]
-    [SerializeField] protected GameObject meat;
+    [SerializeField] protected Meat meat;
     public LayerMask meat_layers;
     protected ContactFilter2D contact_filter;
     protected CircleCollider2D circle_collider; // collider to detect meat
@@ -71,9 +71,10 @@ public class EatMeat : Goal
         }
 
         // we set the eat meat action
-        CapacityAction eat_meat_action = Instantiate(eat_meat_prefab, transform).GetComponent<CapacityAction>();
+        EatMeatAction eat_meat_action = Instantiate(eat_meat_prefab, transform).GetComponent<EatMeatAction>();
         eat_meat_action.capacity = "eat_meat"; // we set the capacity to eat
         eat_meat_action.animation_name = "eat"; // we set the animation name to eat
+        eat_meat_action.target = meat; // we set the target to the meat
 
         // we add it to the plan
         current_plan.Add(eat_meat_action);
@@ -86,11 +87,24 @@ public class EatMeat : Goal
         List<Collider2D> overlapping_colliders = new List<Collider2D>();
         circle_collider.Overlap(contact_filter, overlapping_colliders);
 
+        // we filter the colliders to find Eatable Meat
+        List<Meat> eatable_meats = new List<Meat>();
+        eatable_meats.AddRange(overlapping_colliders.ConvertAll(collider => collider.transform.parent.GetComponent<Meat>()));
+        eatable_meats.RemoveAll(meat => meat == null || !meat.Eatable);
+
+        // sorts them by distance
+        eatable_meats.Sort((a, b) =>
+        {
+            float distance1 = Vector2.Distance(transform.position, a.transform.position);
+            float distance2 = Vector2.Distance(transform.position, b.transform.position);
+            return distance1.CompareTo(distance2);
+        });
+
         // check if we have some colliders overlapping
-        if (overlapping_colliders.Count == 0) { return false; }
+        if (eatable_meats.Count == 0) { return false; }
 
         // else we have a detected meat !!
-        meat = overlapping_colliders[0].transform.parent.gameObject;
+        meat = eatable_meats[0];
         return true;
     }
 
@@ -104,6 +118,14 @@ public class EatMeat : Goal
         if (distance_to_meat > circle_collider.radius)
         {
             meat = null;
+            return;
+        }
+
+        // checks if the meat is still Eatable
+        if (!meat.Eatable)
+        {
+            if (debug) { Debug.LogWarning("(EatMeat) " + name + " detected meat is not Eatable anymore!"); }
+            meat = null; // we reset the meat
             return;
         }
 

@@ -111,7 +111,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8884672451934109289}
-  - component: {fileID: 5750277966430572911}
+  - component: {fileID: 3451285578437285014}
   m_Layer: 23
   m_Name: body
   m_TagString: Zombo
@@ -134,8 +134,8 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1982530335173329727}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!70 &5750277966430572911
-CapsuleCollider2D:
+--- !u!61 &3451285578437285014
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -168,9 +168,18 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.021684647, y: 0.40055162}
-  m_Size: {x: 0.44590378, y: 0.77110326}
-  m_Direction: 0
+  m_Offset: {x: 0.017057806, y: 0.35500473}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.42180037, y: 0.6844789}
+  m_EdgeRadius: 0
 --- !u!1 &8595018692463036030
 GameObject:
   m_ObjectHideFlags: 0
@@ -328,8 +337,8 @@ MonoBehaviour:
   Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 0}
   life: 25
-  random_life_modifier_at_start: 5
   max_life: 25
+  random_life_modifier_at_start: 5
   regen_life: 0
   body_collider: {fileID: 0}
   floating_dmg_provider: {fileID: 0}
@@ -416,6 +425,10 @@ PrefabInstance:
     - target: {fileID: 6582822749040364892, guid: a205875be1ef51740971638df813c24a, type: 3}
       propertyPath: m_Name
       value: eat_meat
+      objectReference: {fileID: 0}
+    - target: {fileID: 6775843954041256819, guid: a205875be1ef51740971638df813c24a, type: 3}
+      propertyPath: debug
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -513,10 +526,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6342629726665789238}
     m_Modifications:
-    - target: {fileID: -7949502167713410118, guid: bc742e455bdcca94681be4bd3acb1959, type: 3}
-      propertyPath: eat_meat_prefab
-      value: 
-      objectReference: {fileID: 1517839930669615865, guid: 1b0bf914e9ab0c04d94e507ec7570444, type: 3}
     - target: {fileID: 3231073594812130121, guid: bc742e455bdcca94681be4bd3acb1959, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

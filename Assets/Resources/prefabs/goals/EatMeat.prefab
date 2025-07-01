@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3231073594812130121}
   - component: {fileID: 3401165467986121313}
   - component: {fileID: -7949502167713410118}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: EatMeat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,6 +86,7 @@ MonoBehaviour:
   current_plan: []
   debug: 0
   goto_prefab: {fileID: 6045879927330546267, guid: 7171a3a81af3d394b8edde4fe8dbf047, type: 3}
+  eat_meat_prefab: {fileID: 1517839930669615865, guid: d5ef25a078d29d4498a46c8638391126, type: 3}
   meat: {fileID: 0}
   meat_layers:
     serializedVersion: 2

@@ -36,7 +36,7 @@ public class Perso : Being
     public new Inventory inventory;
     // public UI_OldInventory big_inventory;
     public Transform items_parent;
-    private LayerMask grabber_layer;
+    // private LayerMask grabber_layer;
 
     // [Header("UI - MENUS")]
     // public SkillTree skills_tree;
@@ -112,13 +112,13 @@ public class Perso : Being
         items_parent = null;
 
         // on récupère le grabber_layer
-        grabber_layer = LayerMask.GetMask("Chests");
+        // grabber_layer = LayerMask.GetMask("Chests");
 
         //
         floating_text_prefab = Resources.Load("prefabs/ui/floating_text") as GameObject;
 
         // on met à jour les interactions
-        interact_layers = LayerMask.GetMask("Chests", "Computers", "Buttons", "Items", "Interactives");
+        interact_layers = LayerMask.GetMask(/* "Chests", "Computers", "Buttons", "Items",  */"Interactives");
 
 
 

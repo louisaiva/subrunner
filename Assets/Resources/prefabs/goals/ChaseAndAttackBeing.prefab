@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3231073594812130121}
   - component: {fileID: 1394363249585000781}
   - component: {fileID: 3401165467986121313}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: ChaseAndAttackBeing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,17 +46,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   priority: 5
-  doable: 1
   has_plan: 0
   current_plan: []
   debug: 0
   goto_prefab: {fileID: 6045879927330546267, guid: 7171a3a81af3d394b8edde4fe8dbf047, type: 3}
   attack_prefab: {fileID: 1517839930669615865, guid: 873b5d5680654c348a61067510304119, type: 3}
-  target_detected: 0
+  current_target: {fileID: 0}
+  waiting_targets: []
   target_layers:
     serializedVersion: 2
     m_Bits: 8388608
   excluded_tags: []
+  always_chase_closest_target: 0
+  distance_to_attack: 1
 --- !u!58 &3401165467986121313
 CircleCollider2D:
   m_ObjectHideFlags: 0

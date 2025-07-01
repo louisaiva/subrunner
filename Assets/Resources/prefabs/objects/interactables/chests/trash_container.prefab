@@ -68,7 +68,7 @@ GameObject:
   - component: {fileID: 3750180377020842327}
   - component: {fileID: 6102629302753936061}
   - component: {fileID: 5002663357420119196}
-  m_Layer: 15
+  m_Layer: 29
   m_Name: trash_container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -174,8 +174,11 @@ MonoBehaviour:
     flipX: 0
   anim_pile: []
   animation_priorities_with_no_loop: 03000000
-  animation_priorities_with_no_interrupt: 03000000
+  animation_priorities_with_static_orientation: 0300000004000000
   debug: 0
+  debug_orientation: 0
+  debug_advanced: 0
+  debug_frames: 0
 --- !u!114 &6102629302753936061
 MonoBehaviour:
   m_ObjectHideFlags: 0

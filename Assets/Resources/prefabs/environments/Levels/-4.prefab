@@ -1495,7 +1495,7 @@ GameObject:
   - component: {fileID: 804194216004455250}
   - component: {fileID: 8804971830234581678}
   - component: {fileID: 6164777059761698282}
-  m_Layer: 8
+  m_Layer: 3
   m_Name: carpet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3044,8 +3044,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: 2, y: 6.25, z: 0}
-      m_Extent: {x: 7.5, y: 6.25, z: 0}
+      m_Center: {x: 7.75, y: 11.25, z: 0}
+      m_Extent: {x: 1.75, y: 2.25, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0
@@ -3107,7 +3107,7 @@ GameObject:
   - component: {fileID: 2240650520197444153}
   - component: {fileID: 583029332598440028}
   - component: {fileID: 1978079881536494593}
-  m_Layer: 8
+  m_Layer: 3
   m_Name: carpet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4796,8 +4796,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: -30.5, y: -12.25, z: 0}
-      m_Extent: {x: 7, y: 4.75, z: 0}
+      m_Center: {x: -22.5, y: -7, z: 0}
+      m_Extent: {x: 6.5, y: 0.5, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0
@@ -9723,10 +9723,11 @@ MonoBehaviour:
     flipX: 0
   anim_pile: []
   animation_priorities_with_no_loop: 03000000
-  animation_priorities_with_no_interrupt: 03000000
+  animation_priorities_with_static_orientation: 0300000004000000
   debug: 0
   debug_orientation: 0
   debug_advanced: 0
+  debug_frames: 0
 --- !u!114 &7348521099067748106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18962,7 +18963,7 @@ GameObject:
   - component: {fileID: 7336219099061224933}
   - component: {fileID: 8335021482691818990}
   - component: {fileID: 3578673022350393306}
-  m_Layer: 8
+  m_Layer: 3
   m_Name: carpet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20091,8 +20092,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: 1.75, y: -0.75, z: 0}
-      m_Extent: {x: 6.25, y: 2.25, z: 0}
+      m_Center: {x: 1.75, y: 0.75, z: 0}
+      m_Extent: {x: 6.25, y: 3.75, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0
@@ -29796,7 +29797,7 @@ GameObject:
   - component: {fileID: 8235703937005368389}
   - component: {fileID: 6954944539965689455}
   - component: {fileID: 8870910974793712178}
-  m_Layer: 8
+  m_Layer: 3
   m_Name: carpet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31915,8 +31916,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: -1.25, y: -6, z: 0}
-      m_Extent: {x: 3.25, y: 0.5, z: 0}
+      m_Center: {x: 3.5, y: 2, z: 0}
+      m_Extent: {x: 12, y: 6, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0
@@ -58307,7 +58308,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8182954742287188684}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: beings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58485,7 +58486,7 @@ GameObject:
   - component: {fileID: 2864824942014655838}
   - component: {fileID: 7063459249743014602}
   - component: {fileID: 2499776666040756279}
-  m_Layer: 24
+  m_Layer: 29
   m_Name: desktop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70113,7 +70114,7 @@ GameObject:
   - component: {fileID: 2186642421930538403}
   - component: {fileID: 2957132260289016429}
   - component: {fileID: 5962965773392398097}
-  m_Layer: 8
+  m_Layer: 3
   m_Name: carpet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70863,7 +70864,7 @@ GameObject:
   - component: {fileID: 8558321700839924836}
   - component: {fileID: 7324220280750788309}
   - component: {fileID: 7378190336155330088}
-  m_Layer: 0
+  m_Layer: 29
   m_Name: spawner (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70967,10 +70968,11 @@ MonoBehaviour:
     flipX: 0
   anim_pile: []
   animation_priorities_with_no_loop: 03000000
-  animation_priorities_with_no_interrupt: 03000000
+  animation_priorities_with_static_orientation: 0300000004000000
   debug: 0
   debug_orientation: 0
   debug_advanced: 0
+  debug_frames: 0
 --- !u!114 &7324220280750788309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72241,7 +72243,7 @@ GameObject:
   - component: {fileID: 3519722342094103332}
   - component: {fileID: 455455610568903544}
   - component: {fileID: 162494037470320472}
-  m_Layer: 8
+  m_Layer: 3
   m_Name: carpet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73040,8 +73042,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: 5.75, y: 7.5, z: 0}
-      m_Extent: {x: 3.75, y: 2.5, z: 0}
+      m_Center: {x: 7.75, y: 9, z: 0}
+      m_Extent: {x: 1.75, y: 1, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0
@@ -79286,6 +79288,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1870511653291227085, guid: 591c649f014b3df4f8211c47dcefa32a, type: 3}
+      propertyPath: m_Layer
+      value: 29
+      objectReference: {fileID: 0}
+    - target: {fileID: 6267300763623405590, guid: 591c649f014b3df4f8211c47dcefa32a, type: 3}
+      propertyPath: m_Layer
+      value: 29
+      objectReference: {fileID: 0}
+    - target: {fileID: 8468718468545117637, guid: 591c649f014b3df4f8211c47dcefa32a, type: 3}
+      propertyPath: m_Layer
+      value: 29
+      objectReference: {fileID: 0}
+    - target: {fileID: 9188833793657190737, guid: 591c649f014b3df4f8211c47dcefa32a, type: 3}
+      propertyPath: m_Layer
+      value: 29
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -80358,6 +80376,10 @@ PrefabInstance:
     - target: {fileID: 852976551797331715, guid: 90404391496e91e4793255c75fbc72d4, type: 3}
       propertyPath: m_Name
       value: bed
+      objectReference: {fileID: 0}
+    - target: {fileID: 852976551797331715, guid: 90404391496e91e4793255c75fbc72d4, type: 3}
+      propertyPath: m_Layer
+      value: 29
       objectReference: {fileID: 0}
     - target: {fileID: 2365544772092276658, guid: 90404391496e91e4793255c75fbc72d4, type: 3}
       propertyPath: m_IsActive

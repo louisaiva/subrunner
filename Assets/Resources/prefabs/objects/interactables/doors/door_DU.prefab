@@ -176,7 +176,7 @@ GameObject:
   - component: {fileID: 5309520440795862908}
   - component: {fileID: 5854468585278943998}
   - component: {fileID: 4043415612135997435}
-  m_Layer: 10
+  m_Layer: 29
   m_Name: door_DU
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -329,8 +329,11 @@ MonoBehaviour:
     flipX: 0
   anim_pile: []
   animation_priorities_with_no_loop: 03000000
-  animation_priorities_with_no_interrupt: 03000000
+  animation_priorities_with_static_orientation: 0300000004000000
   debug: 0
+  debug_orientation: 0
+  debug_advanced: 0
+  debug_frames: 0
 --- !u!114 &5854468585278943998
 MonoBehaviour:
   m_ObjectHideFlags: 0

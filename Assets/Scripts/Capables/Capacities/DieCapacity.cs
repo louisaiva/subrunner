@@ -116,13 +116,13 @@ public class DieCapacity : Capacity
             }
         }
 
-        
+        // And finally we add a Meat that will replace the being
+        // List<Force> forces = new List<Force>(being.GetForces()); // we save the current forces of the capable
+        Meat meat = being.gameObject.AddComponent<Meat>();
+        meat.SetForces(being.GetForces()); // we set the forces back to the Meat
 
-        // And finally we disable the Capable to replace it with a simple Movable
-        List<Force> forces = new List<Force>(being.GetForces()); // we save the current forces of the capable
-        Destroy(being.GetComponent<Capable>());
-        Movable movable = being.gameObject.AddComponent<Movable>();
-        movable.SetForces(forces); // we set the forces back to the Movable
+        // we destroy the old being component
+        Destroy(being);
 
         // and we destroy ourselves (the DieCapacity)
         Destroy(this.gameObject);

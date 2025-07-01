@@ -834,8 +834,11 @@ MonoBehaviour:
     flipX: 0
   anim_pile: []
   animation_priorities_with_no_loop: 03000000
-  animation_priorities_with_no_interrupt: 03000000
+  animation_priorities_with_static_orientation: 0300000004000000
   debug: 0
+  debug_orientation: 0
+  debug_advanced: 0
+  debug_frames: 0
 --- !u!60 &5304745220343042411
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -906,6 +909,7 @@ MonoBehaviour:
   capacities: []
   effects: 
   effects_timetolive: []
+  debug: 0
   levels_names:
   - SecretLevel
   - QG_Level
@@ -914,7 +918,6 @@ MonoBehaviour:
   perso: {fileID: 0}
   elevator_door: {fileID: 0}
   elevator_uses: 0
-  debug: 0
 --- !u!1 &842131233085488308
 GameObject:
   m_ObjectHideFlags: 0
@@ -961,7 +964,7 @@ GameObject:
   - component: {fileID: 3381590583682809495}
   - component: {fileID: 8497992428558674850}
   - component: {fileID: 2921318895563035406}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: Room_Elevator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1933,8 +1936,11 @@ MonoBehaviour:
     flipX: 0
   anim_pile: []
   animation_priorities_with_no_loop: 03000000
-  animation_priorities_with_no_interrupt: 03000000
+  animation_priorities_with_static_orientation: 0300000004000000
   debug: 0
+  debug_orientation: 0
+  debug_advanced: 0
+  debug_frames: 0
 --- !u!61 &3010659274244633798
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2000,6 +2006,7 @@ MonoBehaviour:
   capacities: []
   effects: 
   effects_timetolive: []
+  debug: 0
   is_vertical: 1
   door_collider: {fileID: 0}
   shadow_caster: {fileID: 0}
