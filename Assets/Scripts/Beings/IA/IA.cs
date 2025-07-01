@@ -109,16 +109,16 @@ public class IA : Being
     // GOALS LOW LEVEL
     private Goal get_highest_priority_doable_goal()
     {
-        // we filter the goals to get only the doable ones
-        var doable_goals = goals.Where(g => g.doable).ToList();
+        // we filter the goals to get only the Doable ones
+        var doable_goals = goals.Where(g => g.Doable).ToList();
 
         if (doable_goals.Count == 0)
         {
-            if (debug_doable_goals) { Debug.Log("(IA) " + name + " has no doable goals"); }
+            if (debug_doable_goals) { Debug.Log("(IA) " + name + " has no Doable goals"); }
             return null;
         }
 
-        // we return the highest priority doable goal
+        // we return the highest priority Doable goal
         return doable_goals.OrderByDescending(g => g.priority).FirstOrDefault();
     }
 

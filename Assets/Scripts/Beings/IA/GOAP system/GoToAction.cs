@@ -6,7 +6,7 @@ public class GoToAction : Action
     [Header("GOTO")]
     public bool has_destination = false;
     public Vector2 destination;
-    private float threshold_distance = 0.2f; // current distance to the destination to consider it reached
+    public float threshold_distance = 0.2f; // current distance to the destination to consider it reached
 
     // DOING
     public override void Do()

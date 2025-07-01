@@ -3,41 +3,54 @@ using System.Collections.Generic;
 
 public class ChaseAndAttackBeing : Goal
 {
+    public override bool Doable
+    {
+        get
+        {
+            // if we have a closest target than we can achieve this goal, otherwise noooo
+            return current_target != null || waiting_targets.Count > 0;
+        }
+    }
 
     [Header("Actions Prefabs")]
     public GameObject goto_prefab; // action to go to somewhere
-    public GameObject attack_prefab; // action to attack the target
+    public GameObject attack_prefab; // action to attack the current_target
 
 
-    [Header("Target detection")]
-    public bool target_detected = false;
-    protected Being target;
+    [Header("Targets detection")]
+    [SerializeField] protected Being current_target;
+    [SerializeField] private List<Being> waiting_targets = new List<Being>(); // list of potential targets, does not contains current_target !
     public LayerMask target_layers;
-    public List<string> excluded_tags; // tags to exclude from target detection
+    public List<string> excluded_tags; // tags to exclude from current_target detection
 
-    private void Start()
+    [Header("Attack & Chase")]
+    [SerializeField] private bool always_chase_closest_target = false; // if true, we always chase the closest target, which means we call set_closest_target_to_current() each player loop, which can affect performance
+    [SerializeField] private float distance_to_attack = 1f;
+
+    // AWAKE
+    private void Awake()
     {
-        // this goal is not doable at start, we need to detect a target first
-        doable = false;
+        // checks if we have the required action prefab we need
+        if (goto_prefab == null || attack_prefab == null)
+        {
+            Debug.LogError("(ChaseAndAttackBeing - Plan) " + name + " must have goto_prefab and attack_prefab set!");
+        }
     }
 
     // PLANNING
     public override bool Plan()
     {
-        // we need a target to plan
-        if (!target_detected) { return false; }
+        // we need a current_target to plan
+        if (!Doable) { return false; }
 
-        // checks if we have the required action prefab we need
-        if (goto_prefab == null || attack_prefab == null)
-        {
-            Debug.LogError("(ChaseAndAttackBeing - Plan) " + name + " must have goto_prefab and attack_prefab set!");
-            return false;
-        }
+        // we update the closest target if we don't have any current_target
+        if (!current_target) { set_closest_target_to_current(); }
 
         // we add the goto action to the plan
         GoToAction goto_action = Instantiate(goto_prefab, transform).GetComponent<GoToAction>();
-        // we set the target of the goto action to the target
-        goto_action.destination = target.transform.position;
+        // we set the current_target of the goto action to the current_target
+        goto_action.destination = current_target.transform.position;
+        goto_action.threshold_distance = distance_to_attack; // we set the threshold distance to the distance to attack
 
         // we add the attack action to the plan
         Action attack_action = Instantiate(attack_prefab, transform).GetComponent<Action>();
@@ -47,17 +60,40 @@ public class ChaseAndAttackBeing : Goal
 
         return base.Plan();
     }
+    private void set_closest_target_to_current()
+    {
+        // we can't set closest target if we don't have any target
+        if (!current_target && waiting_targets.Count <= 0) { return; }
+
+        // we remove all null waiting targets
+        waiting_targets.RemoveAll(target => target == null);
+
+        // we add the current_target to the waiting_targets if not null
+        if (current_target) { waiting_targets.Add(current_target); }
+
+        // we sort the waiting_targets by distance
+        waiting_targets.Sort((a, b) => Vector2.Distance(a.transform.position, transform.position).CompareTo(Vector2.Distance(b.transform.position, transform.position)));
+
+        // we set the current target as the first one
+        current_target = waiting_targets[0];
+        waiting_targets.RemoveAt(0);
+
+        if (debug) { Debug.Log("(ChaseAndAttackBeing) Current target updated to " + current_target.name); }
+    }
+
 
     // UPDATE
     public override void UpdateGoal()
     {
         base.UpdateGoal();
 
-        // we update the GoToAction destination if we still have a target in sight !
-        if (!target_detected) { return; }
+        // we check if we have a current_target
+        if (!current_target || always_chase_closest_target) { set_closest_target_to_current(); }
+
+        // we update the GoToAction destination if we still have a current_target in sight !
         if (current_action is GoToAction goto_action)
         {
-            goto_action.destination = target.transform.position;
+            goto_action.destination = current_target.transform.position;
         }
 
         // if we don't have any action in the plan it means we did everything (going & attacking once)
@@ -68,41 +104,59 @@ public class ChaseAndAttackBeing : Goal
     // DETECTING TARGET
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // check if we already have a target
-        if (target_detected) { return; }
-
         // checks if its on the right layer
         if (!((target_layers.value & (1 << other.transform.gameObject.layer)) > 0)) { return; }
 
-        // checks if the target is a Being
+        // checks if the collider is a Being
         Being being = other.transform.parent.GetComponent<Being>();
         if (being == null) { return; }
 
         // checks if it is not in the excluded tags
         if (excluded_tags.Count > 0 && excluded_tags.Contains(being.transform.tag)) { return; }
 
-        // we found a target
-        if (debug) { Debug.Log("(ChaseAndAttackBeing) " + other.transform.name + " entered chasing & attacking " + transform.parent.parent.name + " perception !!"); }
+        /* // we check if we don't have any current_target then this one become the current one !
+        if (!current_target)
+        {
+            current_target = being;
+            if (debug) { Debug.Log("(ChaseAndAttackBeing) " + being.name + " is now current target !"); }
+            return;
+        } */
 
-        target_detected = true;
-        target = being;
-        doable = true; // we can chase and attack now
+        // we check if the being is already targeted
+        if (being == current_target) { return; }
+
+        // or if it's already in the waiting targets
+        if (waiting_targets.Contains(being)) { return; }
+
+        // we add the being to the waiting targets
+        waiting_targets.Add(being);
+
+        if (debug) { Debug.Log("(ChaseAndAttackBeing) " + being.name + " added to waiting targets"); }
+
     }
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (!target_detected) { return; } // we don't have a target
-
         // checks if its on the right layer
         if (!((target_layers.value & (1 << other.transform.gameObject.layer)) > 0)) { return; }
 
-        // checks if it s the right target
-        if (other.transform.parent.GetComponent<Being>() != target) { return; }
+        // checks if the collider is a Being
+        Being being = other.transform.parent.GetComponent<Being>();
+        if (being == null) { return; }
 
-        if (debug) { Debug.Log("(ChaseAndAttackBeing) " + other.transform.name + " got out of chasing & attacking " + transform.parent.parent.name + " perception."); }
+        // checks if it s the current_target
+        if (being == current_target)
+        {
+            // we lost the current_target
+            current_target = null;
+            if (debug) { Debug.Log("(ChaseAndAttackBeing) " + being.name + " is no current target anymore ://"); }
+            return;
+        }
 
-        // we lost the target
-        target_detected = false;
-        target = null;
-        doable = false; // we can't chase and attack anymore
+        // we check if the being is in the waiting targets
+        if (waiting_targets.Contains(being))
+        {
+            waiting_targets.Remove(being);
+            if (debug) { Debug.Log("(ChaseAndAttackBeing) " + being.name + " removed from waiting targets"); }
+        }
     }
 }

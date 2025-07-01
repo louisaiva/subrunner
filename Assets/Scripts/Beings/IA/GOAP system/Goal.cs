@@ -6,7 +6,7 @@ public class Goal : MonoBehaviour
 {
     [Header("Goal")]
     public float priority = 0f; // Priority of the goal, higher means more important
-    public bool doable = true; // If the goal can be achieved or not
+    public virtual bool Doable { get { return true; } } // if the goal is Doable, if not we don't plan it
     // private IA ia;
     // public string goal_name = "Idle";
 
