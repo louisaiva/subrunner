@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 /// <summary>
@@ -8,56 +9,102 @@ using UnityEngine.AI;
 /// BUT also have Behaviors which define how it behaves in the game world.
 /// </summary>
 
-// [RequireComponent(typeof(NavMeshAgent))]
 public class IA : Being
 {
-    [Header("Behaviours - GOTO")]
-    public bool has_destination = false;
-    public Vector2 destination;
-    private float treshold_distance = 1f; // distance to the destination to consider it reached
 
+    [Header("Goals")]
+    [SerializeField] private Transform goal_parent;
+    public List<Goal> goals = new List<Goal>(); // list of goals that the IA can achieve
+    public Goal current_goal; // the current goal that the IA is trying to achieve
 
-    public override void Events()
+    [Header("Debug")]
+    public bool debug_goals = false;
+    public bool debug_doable_goals = false;
+
+    // AWAKE
+    protected override void Awake()
     {
-        base.Events();
+        base.Awake();
 
-        // GOTO BEHAVIOR
-        if (has_destination)
+        if (goal_parent == null)
         {
-            // on regarde si on est pas TROP proche du joueur
-            if (Vector2.Distance(transform.position, destination) < treshold_distance)
-            {
-                Orientation = new Vector2(0, 0);
-                destination = new Vector2(0, 0);
-                has_destination = false; // we reached the destination
-                inputs_magnitude = 0f; // we stop moving
-                return;
-            }
-
-            // on se dirige vers le joueur
-            Vector2 global_movement = new Vector2(destination.x - transform.position.x, destination.y - transform.position.y);
-            Orientation = global_movement.normalized;
+            Debug.LogError("(IA) " + name + " has no goal parent set! Please set a goal parent in the inspector.");
             return;
         }
-        else { Orientation = new Vector2(0, 0); /* on bouge pas*/ }
+
+        // we get the goals from the goal parent
+        goals = goal_parent.GetComponentsInChildren<Goal>().ToList();
+        if (goals.Count == 0)
+        {
+            Debug.LogError("(IA) " + name + " has no goals set! Please add at least the default idle goal in the inspector");
+        }
+
+        // we sort the goals by descending priority order (so the highest priority is in first)
+        goals = goals.OrderByDescending(g => g.priority).ToList();
     }
 
-    // BEHAVIORS
-    protected IEnumerator GoTo(Vector2 position)
+    protected override void Update()
     {
-        // we want to go to a position
+        base.Update();
 
-        // ! for now it goes in a straight line, but we could use NavMeshAgent to go around obstacles
+        // 1 - detect if one of the goal have a higher priority than the actual goal
+        Goal max_priority_goal = get_highest_priority_doable_goal();
+        if (max_priority_goal == null) { return; } // no goal to switch to
 
-        if (debug) { Debug.Log("(IA) " + name + " is going to transform: " + position); }
+        // checks if the current goal is the max priority goal
+        if (max_priority_goal != current_goal)
+        {
+            // we switch to the new goal
+            SwitchGoal(max_priority_goal);
+        }
 
-        // we set the destination
-        destination = position;
-        has_destination = true;
-        inputs_magnitude = 1f; // we start moving
-
-        // we wait until we reach the destination
-        while (has_destination) { yield return null; }
-        if (debug) { Debug.Log("(IA) " + name + " reached transform: " + position); }
+        // 2 - update current goal
+        current_goal.UpdateGoal();
     }
+
+    // GOALS MANAGEMENT HIGH LEVEL
+    protected virtual void SwitchGoal(Goal new_goal)
+    {
+        // we stop the current goal
+        if (current_goal != null)
+        {
+            if (debug_goals) { Debug.Log("(IA) " + name + " stopped goal: " + current_goal.GetType()); }
+            current_goal.ClearPlan(); // we clear the plan of the current goal
+        }
+
+        // we start the new goal
+        current_goal = new_goal;
+        current_goal.Plan(); // we plan the new goal
+        if (debug_goals) { Debug.Log("(IA) " + name + " switched to goal: " + current_goal.GetType()); }
+    }
+
+    // GOALS LOW LEVEL
+    private Goal get_highest_priority_doable_goal()
+    {
+
+        // we go through the goals from 0 to Count and we return the first doable one
+        for (int i=0; i < goals.Count; i++)
+        {
+            if (goals[i].Doable)
+            {
+                if (debug_doable_goals) { Debug.Log("(IA) " + name + " has Doable goal: " + goals[i].GetType()); }
+                return goals[i];
+            }
+        }
+
+        if (debug_doable_goals) { Debug.Log("(IA) " + name + " has no Doable goals"); }
+        return null;
+
+
+        /* // we filter the goals to get only the Doable ones
+        var doable_goals = goals.Where(g => g.Doable).ToList();
+
+        if (doable_goals.Count == 0)
+        {
+        }
+
+        // we return the highest priority Doable goal
+        return doable_goals.OrderByDescending(g => g.priority).FirstOrDefault(); */
+    }
+
 }

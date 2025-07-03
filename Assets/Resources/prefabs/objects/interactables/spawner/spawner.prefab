@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 5759709742764716814}
   - component: {fileID: 2052598830028912328}
   - component: {fileID: 8781775830682627617}
-  - component: {fileID: 760670442392901231}
-  m_Layer: 0
+  - component: {fileID: 8239128205784558305}
+  m_Layer: 29
   m_Name: spawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -118,8 +118,11 @@ MonoBehaviour:
     flipX: 0
   anim_pile: []
   animation_priorities_with_no_loop: 03000000
-  animation_priorities_with_no_interrupt: 03000000
+  animation_priorities_with_static_orientation: 0300000004000000
   debug: 0
+  debug_orientation: 0
+  debug_advanced: 0
+  debug_frames: 0
 --- !u!114 &8781775830682627617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,8 +143,8 @@ MonoBehaviour:
   effects: 
   effects_timetolive: []
   debug: 0
---- !u!60 &760670442392901231
-PolygonCollider2D:
+--- !u!61 &8239128205784558305
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -174,7 +177,7 @@ PolygonCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.123381615}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
@@ -184,13 +187,8 @@ PolygonCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: -0.25, y: 0.25}
-      - {x: -0.25, y: 0}
-      - {x: 0.25, y: 0}
-      - {x: 0.25, y: 0.25}
-  m_UseDelaunayMesh: 0
+  m_Size: {x: 0.5, y: 0.24676323}
+  m_EdgeRadius: 0
 --- !u!1001 &7056843530695103706
 PrefabInstance:
   m_ObjectHideFlags: 0

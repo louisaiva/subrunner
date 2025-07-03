@@ -23,7 +23,8 @@ public class Capable : MonoBehaviour
     // the analog equivalent of the anim_player.orientation which is numerical
     [SerializeField] protected Vector2 inputs; // inputs can be at 0,0
     [SerializeField] protected Vector2 orientation; // orientation can't be at 0,0 -> always normalized & remember last orientation
-    public Vector2 Orientation {
+    public Vector2 Orientation
+    {
         get { return orientation; }
         set
         {
@@ -45,7 +46,8 @@ public class Capable : MonoBehaviour
     [SerializeField] protected List<float> effects_timetolive = new List<float>();
 
     // un capable peut aussi avoir un inventaire
-    public Inventory inventory{ 
+    public Inventory inventory
+    {
         get
         {
             Transform inventory_transform = transform.Find("inventory");
@@ -58,6 +60,7 @@ public class Capable : MonoBehaviour
 
     [Header("Debug")]
     public bool debug = false;
+    public bool debug_capacities_on_awake = false;
 
     // START
     protected virtual void Awake()
@@ -72,57 +75,20 @@ public class Capable : MonoBehaviour
         foreach (Transform child in transform)
         {
             Capacity capa = child.GetComponent<Capacity>();
-            if (capa != null)
-            {
-                add_capacity(capa);
+            if (!capa) { continue; } // if no capacity, we skip
 
-                // we check if the debug is true then we force debug to be true
-                if (debug) { capa.debug = true; }
-            }
+            // we add it to the list
+            capacities.Add(capa);
+
+            // we check if the debug is true then we force debug to be true
+            if (debug_capacities_on_awake) { capa.debug = true; }
         }
+
+        // we add ourself to the entity count
+        EntitiesDebug entities_debug = GameObject.Find("/ui/hud/debug/entities").GetComponent<EntitiesDebug>();
+        entities_debug.AddEntity(this);
     }
 
-    // EVENTS
-    /* private void Events()
-    {
-        // walk
-        if (Can("run"))
-        {
-            // we get the inputs
-            Vector2 inputs = new Vector2(0, 0);
-            if (Input.GetKey(KeyCode.W)) { inputs.y += 1;}
-            if (Input.GetKey(KeyCode.S)) { inputs.y -= 1;}
-            if (Input.GetKey(KeyCode.A)) { inputs.x -= 1;}
-            if (Input.GetKey(KeyCode.D)) { inputs.x += 1;}
-
-            // we check if the player is running
-            bool running = false;
-            if (inputs.x != 0 || inputs.y != 0) { running = true; }
-
-            // we update the orientation
-            Orientation = inputs;
-
-            // we play the animation
-            if (running) { Do("run"); }
-            else { anim_player.StopPlaying("run"); }
-        }
-
-        // ATTACK & HURT
-        if (Input.GetKey(KeyCode.Space))
-        {
-            if (Can("attack")) { Do("attack"); }
-        }
-        if (Input.GetKey(KeyCode.H))
-        {
-            if (Can("hurted")) { Do("hurted"); }
-        }
-
-        // DIE
-        if (Input.GetKey(KeyCode.F))
-        {
-            Do("die");
-        }
-    } */
 
     // UPDATES
     protected virtual void Update()
@@ -152,18 +118,14 @@ public class Capable : MonoBehaviour
             }
         }
     }
-    
+
     // CAPACITIES
     public void Do(string name)
     {
-        foreach (Capacity capacity in capacities)
-        {
-            if (capacity.name == name)
-            {
-                // we use the capacity
-                capacity.Use(this);
-            }
-        }
+        // get the capacity
+        Capacity capacity = GetCapacity(name);
+
+        capacity.Use(this);
     }
     public void ShowCapacities()
     {
@@ -174,15 +136,10 @@ public class Capable : MonoBehaviour
         }
         Debug.Log(capacities_str);
     }
-    private void add_capacity(Capacity capacity)
-    {
-        if (hasCapacity(capacity)) {return;}
-        capacities.Add(capacity);
-    }
     public void AddCapacity(string capa_name)
     {
         // we check if the capacity is already in the list
-        if (hasCapacity(capa_name)) { return; }
+        if (HasCapacity(capa_name)) { return; }
 
         // get the capacity instance
         GameObject capa_instance = bank.GetCapacityInstance(capa_name);
@@ -193,7 +150,7 @@ public class Capable : MonoBehaviour
         capa_instance.transform.localPosition = Vector3.zero;
 
         // we put the capacity in the list
-        add_capacity(capa_instance.GetComponent<Capacity>());
+        capacities.Add(capa_instance.GetComponent<Capacity>());
     }
     public void RemoveCapacity(string capa_name)
     {
@@ -221,7 +178,7 @@ public class Capable : MonoBehaviour
         }
         return false;
     }
-    protected bool hasCapacity(string capa_name)
+    public bool HasCapacity(string capa_name)
     {
         foreach (Capacity capacity in capacities)
         {
@@ -232,9 +189,13 @@ public class Capable : MonoBehaviour
         }
         return false;
     }
-    protected bool hasCapacity(Capacity capa)
+    public bool HasCapacity(Capacity capa)
     {
-        return hasCapacity(capa.name);
+        return HasCapacity(capa.name);
+    }
+    public bool HasCapacity<T>() where T : Capacity
+    {
+        return GetCapacity<T>() != null;
     }
     public Capacity GetCapacity(string name)
     {
@@ -309,13 +270,25 @@ public class Capable : MonoBehaviour
         return false;
     }
 
+
+    // ON DESTROY
+    private void OnDestroy()
+    {
+        // we remove ourself from the entity count
+        EntitiesDebug entities_debug = GameObject.Find("/ui/hud/debug/entities")?.GetComponent<EntitiesDebug>();
+        if (entities_debug == null) { return; }
+        entities_debug.RemoveEntity(this);
+    }
+
 }
 
 [Serializable] public enum Effect
 {
     // an effect is a temporary state that can be applied to a capable
     // it can be a buff, a debuff, a status, etc.
-    Ghost, // allow a Movable to walk through other Beings
+    SemiGhost, // allow a Movable to walk through other Beings
+    Ghost, // a Movable can walk through other Beings & walls & objects (everything)
+    Invisible, // a Being can't be seen -> change its body collider to Ghosts layer
     Invincible, // a Being can't be hurt
     Stunned, // a Being can't attack
     RegenLife, // a Being regenerates life

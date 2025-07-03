@@ -46,6 +46,16 @@ public class UI_Manager : MonoBehaviour
         // inputs.menus.map.performed += ctx => { TogglePool("map"); };
         inputs.UI.cancel.performed += ctx => { SwitchTo("hud"); };
 
+        // we try to switch to current_pool if it is something
+        if (current_pool != null)
+        {
+            // only for debug & prototype purpose
+            string start_pool = current_pool.Reference;
+            current_pool = null;
+            SwitchTo(start_pool);
+            return;
+        }
+
         // on show le hud
         SwitchTo("hud");
     }

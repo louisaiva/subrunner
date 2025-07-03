@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using Unity.VisualScripting;
-using System;
 
 
 public class Being : Movable
@@ -12,17 +11,18 @@ public class Being : Movable
     [Header("LIFE")]
     public float life = 100f;
     public int max_life = 100;
+    [SerializeField] private int random_life_modifier_at_start = 0; // max_life += random.range(-5,5) in the start method if this modifier = 5
 
     public bool Alive { get { return life > 0f; } }
     public float regen_life = 0f; // en point de life par seconde
-    public Collider2D life_collider;
+    public Collider2D body_collider;
 
 
-    [Header("MOVEMENT")]
-    public float inputs_magnitude=1f;
-    public float speed = 3f; // speed de déplacement
-    public float running_speed = 5f; // speed de déplacement
-    protected bool isRunning = false;
+    // [Header("MOVEMENT")]
+    // public float inputs_magnitude=1f;
+    // public float speed = 3f; // speed de déplacement
+    // protected bool isRunning = false;
+    // public float running_speed = 5f; // speed de déplacement
     // private bool isMoving = false;
 
     [Header("taking damage")]
@@ -33,106 +33,74 @@ public class Being : Movable
     protected float lookin_at_angle = 40f; // angle du regard du perso en degrés
 
 
+    // START & AWAKE
     protected override void Awake()
     {
         base.Awake();
 
         // on récupère les composants
-        life_collider = transform.Find("body").GetComponent<Collider2D>();
+        body_collider = transform.Find("body").GetComponent<Collider2D>();
 
         // on récupère le provider de floating dmg
         floating_dmg_provider = GameObject.Find("/utils/dmgs_provider");
     }
-
-    // unity functions
-    protected virtual void Start()
+    protected override void Start()
     {
+        base.Start();
+
         // on initialise les capacités
         AddCapacity("hurted");
-        AddEffect(Effect.RegenLife, -888f);
+        if (regen_life > 0) { AddEffect(Effect.RegenLife, -888f); }
+
+        // on initialise la vie
+        max_life = max_life + Random.Range(-random_life_modifier_at_start, random_life_modifier_at_start);
+        life = (float)max_life;
     }
 
-    public virtual void Events()
-    {
-        // on vérifie qu'on est pas KO
-        if (HasEffect(Effect.Stunned)) { return; }
 
-        // life regen
-        if (HasEffect(Effect.RegenLife) && life < max_life)
-        {
-            life += regen_life * Time.deltaTime;
-        }
-        
-    }
 
+    // UPDATE HIGH LEVEL
     protected override void Update()
     {
         // on vérifie si le perso est mort
         if (!Alive)
         {
-            // input_speed = Mathf.Lerp(input_speed, 0f, 10f * Time.deltaTime);
             inputs = Vector2.zero;
-            input_speed = 0f;
             base.Update();
             return;
         }
 
+        // on update les behaviour
+        // UpdateGOAP();
+
         // on récupère les inputs
-        Events();
-
-        // update moving inputs & Orientation
-        if (!HasEffect(Effect.Immobile) && inputs_magnitude > 0.1f)
-        {
-            // déplacement
-            if (isRunning)
-            {
-                run(Orientation, inputs_magnitude);
-            }
-            else
-            {
-                walk(Orientation, inputs_magnitude);
-            }
-        }
-        else
-        {
-            anim_player.StopPlaying("run");
-            anim_player.StopPlaying("walk");
-            input_speed = Mathf.Lerp(input_speed, 0f, 10f * Time.deltaTime);
-        }
-
+        UpdateBeingEffects();
 
         base.Update();
     }
-
-
-    // DEPLACEMENT
-    protected void walk(Vector2 direction, float inputs_magnitude=1f)
+    // protected virtual void UpdateGOAP() { }
+    public virtual void UpdateBeingEffects()
     {
-        // on calcule le mouvement sur X
-        // float x_movement = direction.normalized.x * speed * Time.deltaTime * inputs_magnitude;
+        // life regen
+        if (HasEffect(Effect.RegenLife) && life < max_life)
+        {
+            life += regen_life * Time.deltaTime;
+        }
 
-        // on calcule le mouvement sur Y
-        // float y_movement = direction.normalized.y * speed * Time.deltaTime * inputs_magnitude;
-
-        // on applique le mouvement au perso
-        // move(new Vector2(x_movement, y_movement));
-        // velocity += new Vector2(x_movement, y_movement);
-        input_speed = Mathf.Lerp(input_speed, speed * inputs_magnitude, 10f * Time.deltaTime);
-        Do("walk");
+        // Invisible
+        if (HasEffect(Effect.Invisible))
+        {
+            // change the body collider to Ghosts layer
+            body_collider.gameObject.layer = LayerMask.NameToLayer("Ghosts");
+        }
+        else
+        {
+            // reset the body collider to Beings layer
+            body_collider.gameObject.layer = LayerMask.NameToLayer("Beings");
+        }
     }
-    protected void run(Vector2 direction, float inputs_magnitude=1f)
-    {
-        // on calcule le mouvement sur X
-        // float x_movement = direction.normalized.x * running_speed * Time.deltaTime * inputs_magnitude;
 
-        // on calcule le mouvement sur Y
-        // float y_movement = direction.normalized.y * running_speed * Time.deltaTime * inputs_magnitude;
 
-        // on applique le mouvement au perso
-        // move(new Vector2(x_movement, y_movement));
-        input_speed = Mathf.Lerp(input_speed, running_speed * inputs_magnitude, 10f * Time.deltaTime);
-        Do("run");
-    }
 
 
     // INPUTS SIMULATION
@@ -170,7 +138,6 @@ public class Being : Movable
 
         return input_vecteur;
     }
-
     protected Vector2 randomly_circulate(Vector2 input_vecteur)
     {
         // simulate circular input on x
@@ -229,15 +196,10 @@ public class Being : Movable
         floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddFloatingDmg(this.gameObject,-1f * damage, transform.position);
 
         // check if dead
-        if (life <= 0f && Can("die"))
-        {
-            Do("die");
-            if (this is Perso) { ((Perso) this).Die(); }
-        }
+        if (life <= 0f && Can("die")) { Do("die"); }
 
         return true;
     }
-
     protected virtual void comeback_from_death()
     {
         // on remet la life au max
@@ -247,8 +209,13 @@ public class Being : Movable
         anim_player.StopPlaying("die");
 
         // on remet le layer à "default"
-        life_collider.gameObject.layer = LayerMask.NameToLayer("Beings");
-        feet_collider.isTrigger = false;
+        body_collider.gameObject.layer = LayerMask.NameToLayer("Beings");
+
+        // on arrête la coroutine de mort
+        if (HasCapacity<DieCapacity>())
+        {
+            GetCapacity<DieCapacity>().StopAllCoroutines();
+        }
     }
 
     
@@ -267,14 +234,12 @@ public class Being : Movable
         // floating dmg
         floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddFloatingDmg(gameObject, life, transform.position);
     }
-
     public void heal(int nb_heal=2)
     {
         // each heal gives 10% of max life
         float heal = max_life * 0.1f * nb_heal;
         AddLife(heal);
     }
-
     public void healMax()
     {
         // restore max life
@@ -303,8 +268,8 @@ public class Being : Movable
         Gizmos.DrawLineStrip(points, true);
         
         // on dessine le Collider de life du Being
-        if (!life_collider) { return; }
+        if (!body_collider) { return; }
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(life_collider.bounds.center, life_collider.bounds.size);
+        Gizmos.DrawWireCube(body_collider.bounds.center, body_collider.bounds.size);
     }
 }

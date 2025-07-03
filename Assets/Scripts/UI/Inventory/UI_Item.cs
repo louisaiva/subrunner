@@ -217,16 +217,4 @@ public class UI_Item : UI_Slot
     }
 
 
-
-
-    // ! DEPRECATED
-    public void resetHoover()
-    {
-        if (!is_hovered) return;
-
-        OnPointerExit(null);
-    }
-    public void setItem(OldItem item) {}
-    public void setUIInventory(GameObject ui_inventory) {}
-
 }

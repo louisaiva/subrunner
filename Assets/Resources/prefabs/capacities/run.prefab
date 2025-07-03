@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 891631874371971630}
   - component: {fileID: 3508513623195772367}
-  m_Layer: 25
+  m_Layer: 0
   m_Name: run
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,3 +46,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown: 0
   debug: 0
+  IsRunning: 0
+  max_run_speed: 3
+  max_walk_speed: 0

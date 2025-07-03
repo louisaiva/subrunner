@@ -38,13 +38,23 @@ public class UI_XboxNavigator : MonoBehaviour
 
     [Header("Input & Callbacks")]
     private InputManager input_manager;
+
+    // NAVIGATE L
     [SerializeField] private InputActionReference navigateInput;
     private InputAction navigateAction;
     private event Action<InputAction.CallbackContext> navigateCallback;
+
+    // NAVIGATE IN-GAME
+    [SerializeField] private InputActionReference navigateInGameInput;
+    private InputAction navigateInGameAction;
+    [SerializeField] private bool navigateInGame = false; // if true, we use the navigateInGameAction instead of the navigateAction
+
+    // MOVE
     [SerializeField] private InputActionReference moveInput;
     private InputAction moveAction;
     private event Action<InputAction.CallbackContext> moveCallback; // move Callback is for dropping items, or, when dragged, move it through the ui, on Y
 
+    // ACTIVATE
     [SerializeField] private InputActionReference activateInput;
     private InputAction activateAction;
     private event Action<InputAction.CallbackContext> activateCallback; // activate Callback is for activating the item/slot -> quit game, mostly on A
@@ -59,7 +69,6 @@ public class UI_XboxNavigator : MonoBehaviour
     private Vector2 gizmo_position = Vector2.negativeInfinity; // used to transmit the position to OnDrawGizmo
     public List<Vector2> gizmos_positions = new List<Vector2>(); // used to show gizmos, Vector2 in world space
     public List<float> gizmos_weights = new List<float>(); // used to show gizmos, weight from 0 to 1
-    // [Range(1, 10)] public double gizmo_dot_size = 1.0; // size of the dots in the gizmos
 
     // START
     protected void Start()
@@ -68,14 +77,15 @@ public class UI_XboxNavigator : MonoBehaviour
 
         // we get the actions
         input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
-        activateAction = input_manager.GetAction(activateInput);
         navigateAction = input_manager.GetAction(navigateInput);
+        navigateInGameAction = input_manager.GetAction(navigateInGameInput);
+        activateAction = input_manager.GetAction(activateInput);
         moveAction = input_manager.GetAction(moveInput);
 
         // we create the callbacks
         navigateCallback = ctx => HandleNavigateInput(ctx.ReadValue<Vector2>());
-        moveCallback = ctx => HandleMoveInput(ctx.ReadValue<float>());
         activateCallback = ctx => HandleActivateInput(ctx.ReadValue<float>());
+        moveCallback = ctx => HandleMoveInput(ctx.ReadValue<float>());
 
         if (debug) { Debug.Log("(XboxNavigator) started & callbacks created"); }
 
@@ -86,20 +96,20 @@ public class UI_XboxNavigator : MonoBehaviour
         // we check if the perso quick inventory is shown
         if (perso_quick_inventory == null)
         {
-            Debug.LogError("(XboxNavigator) perso_quick_inventory is not set. please set it in the inspector");
+            Debug.LogWarning("(XboxNavigator) perso_quick_inventory is not set. please set it in the inspector");
         }
     }
 
 
     // ENABLE / DISABLE
-    public void Enable(I_UI_Slottable slottable)
+    public void Enable(I_UI_Slottable slottable,bool ingame_navigation = false)
     {
         if (slottables.Contains(slottable.gameObject)) { return; } // on ne fait rien si le slottable est déjà dans la liste
 
         if (navigateAction == null || activateAction == null) { Start(); }
 
         // on active les inputs si besoin
-        if (slottables.Count == 0) { enableInputs(); }
+        if (slottables.Count == 0) { enableInputs(ingame_navigation); }
 
         // on ajoute le slottable à la liste des slottables
         slottables.Add(slottable.gameObject);
@@ -116,7 +126,7 @@ public class UI_XboxNavigator : MonoBehaviour
                 if (!perso_quick_inventory_was_shown) { perso_quick_inventory.Show(); }
 
                 // on enable le slottable
-                Enable(perso_quick_inventory);
+                Enable(perso_quick_inventory,true);
             }
         }
 
@@ -137,16 +147,6 @@ public class UI_XboxNavigator : MonoBehaviour
 
         // on enlève le slottable de la liste des slottables
         slottables.Remove(slottable.gameObject);
-
-        /* // on desactive le perso quick inventory si c'etait un coffre
-        if (slottable != )
-        {
-            // on cache le perso quick inventory si besoin
-            if (!perso_quick_inventory_was_shown) { perso_quick_inventory.Hide(); }
-
-            // on disable le slottable
-            Disable(perso_quick_inventory);
-        } */
 
         if (debug) { Debug.Log("(XboxNavigator) disabling slottable : " + slottable.gameObject.name); }
 
@@ -195,22 +195,37 @@ public class UI_XboxNavigator : MonoBehaviour
             last_input = Vector2.zero;
         }
     }
-    
+
     // INPUTS
-    public void enableInputs()
+    public void enableInputs(bool ingame_navigation = false)
     {
-        // on récupère les inputs
-        navigateAction.performed += navigateCallback;
+        // on active les callbacks
         activateAction.performed += activateCallback;
         moveAction.performed += moveCallback;
+
+        // on active le bon callback de navigation
+        if (ingame_navigation)
+        {
+            navigateInGameAction.performed += navigateCallback;
+        }
+        else
+        {
+            navigateAction.performed += navigateCallback;
+        }
+        
+        navigateInGame = ingame_navigation; // on met à jour la variable
     }
     private void disableInputs()
     {
         // on récupère les inputs
         navigateAction.performed -= navigateCallback;
+        navigateInGameAction.performed -= navigateCallback;
         activateAction.performed -= activateCallback;
         moveAction.performed -= moveCallback;
+
+        navigateInGame = false; // on met à jour la variable
     }
+
 
 
     // NAVIGATION INPUTS & UPDATE
@@ -248,11 +263,13 @@ public class UI_XboxNavigator : MonoBehaviour
         }
 
         // 3 - si on est là c'est qu'on navigue pas
-        navigate_continuously = false; // on reset la navigation continue
-        continuous_navigation_counter = float.MaxValue; // on reset le compteur de navigation continue
-
         // 4 - on regarde si on a un input proche de zéro (pour naviguer à nouveau quand on revient à 1)
-        if (magnitude < 0.5f) { can_navigate = true; }
+        if (magnitude < 0.5f)
+        {
+            can_navigate = true;
+            navigate_continuously = false; // on reset la navigation continue
+            continuous_navigation_counter = float.MaxValue; // on reset le compteur de navigation continue
+        }
     }
     private void Update()
     {
@@ -284,6 +301,9 @@ public class UI_XboxNavigator : MonoBehaviour
     // NAVIGATION HIGH LEVEL
     private void navigate(Vector2 direction)
     {
+        // double check if time delay since last navigation is long enough
+        // if ()
+
         if (debug) { Debug.Log("(XboxNavigator) navigating : " + direction); }
 
         // on récupère les slots

@@ -7,6 +7,7 @@ public class Movable : Capable
     [Header("MOVABLE")]
     public Rigidbody2D rb;  // Replace transform movement
     public float weight = 1f;
+    [SerializeField] private float random_weight_modifier_at_start = 0f; // weight += random.range(-5,5) in the start method if this modifier = 5
     public float friction = 7f;
     public bool debug_velocity = false; // Show velocity in console
 
@@ -19,10 +20,11 @@ public class Movable : Capable
     [Header("Collisions")]
     public Collider2D feet_collider;
 
+    // AWAKE
     protected override void Awake()
     {
         base.Awake();
-        
+
         rb = GetComponent<Rigidbody2D>();
         if (rb != null)
         {
@@ -35,6 +37,13 @@ public class Movable : Capable
         feet_collider = transform.Find("feet").GetComponent<Collider2D>();
     }
 
+    protected virtual void Start()
+    {
+        // random weight
+        weight += UnityEngine.Random.Range(-random_weight_modifier_at_start, random_weight_modifier_at_start);
+    }
+
+    // UPDATE
     protected virtual void FixedUpdate()
     {
         // base.Update();
@@ -46,7 +55,7 @@ public class Movable : Capable
             ClearForces();
             return;
         }
-        else if (rb == null) { return;}
+        else if (rb == null) { return; }
 
         // Update moving effects
         updateMovingEffects();
@@ -55,51 +64,18 @@ public class Movable : Capable
         updateForces();
     }
 
-    // EFFECTS ASSOCIATED TO MOVING
-    protected void updateMovingEffects()
+    // UPDATE FORCES
+    protected virtual void updateForces()
     {
-        // we check if the Capable has the Ghost effect and if yes, we change the Layer of the feet collider to "Ghosts"
-        if (HasEffect(Effect.Ghost) && !(feet_collider.gameObject.layer == LayerMask.NameToLayer("Ghosts")))
+        // Apply input velocity from capacities
+        if (HasCapacity<WalkCapacity>())
         {
-            feet_collider.gameObject.layer = LayerMask.NameToLayer("Ghosts");
+            rb.linearVelocity = GetCapacity<WalkCapacity>().walk_speed * Orientation;
         }
-        else if (!HasEffect(Effect.Ghost) && (feet_collider.gameObject.layer != LayerMask.NameToLayer("Feet")))
+        else
         {
-            feet_collider.gameObject.layer = LayerMask.NameToLayer("Feet");
+            rb.linearVelocity = Vector2.zero; // Stop movement if no speed
         }
-    }
-
-    // FORCES
-    public void AddForce(Force force)
-    {
-        // checks if the force already exists
-        foreach (Force f in forces)
-        {
-            if (f.name == force.name)
-            {
-                // if it does, we update it
-                f.direction = force.direction;
-                f.magnitude = force.magnitude;
-                f.attenuation = force.attenuation;
-                return;
-            }
-        }
-
-        // if the force doesn't exist, we add it
-        forces.Add(force);
-    }
-    public void ClearForces()
-    {
-        // on supprime toutes les forces
-        forces.Clear();
-    }
-    protected void updateForces()
-    {
-        // Update input speed
-        if (input_speed < 0.1f) { input_speed = 0f; }
-
-        // Apply input velocity
-        rb.linearVelocity = input_speed * Orientation;
 
         // Apply forces
         Vector2 totalForce = Vector2.zero;
@@ -130,6 +106,71 @@ public class Movable : Capable
 
     }
 
+    // EFFECTS ASSOCIATED TO MOVING
+    protected void updateMovingEffects()
+    {
+
+        // 1 - SEMI GHOST
+
+        // update the semi ghost effect (passing through other feet by setting feet_collider layer to Ghosts)
+        string feet_layer = LayerMask.LayerToName(feet_collider.gameObject.layer);
+        if (HasEffect(Effect.SemiGhost) && feet_layer == "Feet")
+        {
+            feet_collider.gameObject.layer = LayerMask.NameToLayer("Ghosts");
+        }
+        else if (!HasEffect(Effect.SemiGhost) && feet_layer != "Feet")
+        {
+            feet_collider.gameObject.layer = LayerMask.NameToLayer("Feet");
+        }
+
+        // 2 - GHOST
+
+        // update the ghost effect (passing through everything by disabling the collider)
+        if (HasEffect(Effect.Ghost) && feet_collider.enabled)
+        {
+            feet_collider.enabled = false; // if the ghost effect is applied, we disable the feet !! so we can go through everything
+        }
+        else if (!HasEffect(Effect.Ghost) && !feet_collider.enabled)
+        {
+            feet_collider.enabled = true; // if not, we re enable it
+        }
+    }
+
+    // FORCES
+    public void AddForce(Force force)
+    {
+        // checks if the force already exists
+        foreach (Force f in forces)
+        {
+            if (f.name == force.name)
+            {
+                // if it does, we update it
+                f.direction = force.direction;
+                f.magnitude = force.magnitude;
+                f.attenuation = force.attenuation;
+                return;
+            }
+        }
+
+        // if the force doesn't exist, we add it
+        forces.Add(force);
+    }
+    public void SetForces(List<Force> new_forces)
+    {
+        // on remplace la liste des forces par la nouvelle liste
+        forces.Clear();
+        forces.AddRange(new_forces);
+    }
+    public void ClearForces()
+    {
+        // on supprime toutes les forces
+        forces.Clear();
+    }
+    public List<Force> GetForces()
+    {
+        // on retourne la liste des forces
+        return forces;
+    }
     protected void LateUpdate()
     {
         // check if we have a rigidbody
@@ -145,7 +186,7 @@ public class Movable : Capable
         // we log the current linear velocity
         if (debug_velocity) { Debug.Log("velocity : " + Velocity); }
     }
-
+    
     // gizmos
     protected virtual void OnDrawGizmos()
     {

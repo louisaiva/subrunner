@@ -31,8 +31,8 @@ public class UI_HUD : UI_Pool
         {
             // ça veut dire qu'on interagit avec un chest,
             // on doit les activer du xbox navigator
-            navigator.Enable(ui_chest);
-            navigator.Enable(perso_quick_inventory);
+            navigator.Enable(ui_chest,true);
+            // navigator.Enable(perso_quick_inventory,true);
 
             // on désactive les perso useconso
             inputs.perso.useConso.Disable();

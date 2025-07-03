@@ -17,7 +17,8 @@ public class World : MonoBehaviour
     {
         get
         {
-            List<Room> rooms = new List<Room>() { elevator_room };
+            List<Room> rooms = new List<Room>() { };
+            if (elevator_room != null) { rooms.Add(elevator_room); }
             if (current_level != null) { rooms.AddRange(current_level.rooms); }
             return rooms;
         }
@@ -31,9 +32,6 @@ public class World : MonoBehaviour
     {
         perso = GameObject.Find("/perso").GetComponent<Perso>();
 
-        // on récupère l'elevator room
-        elevator_room = transform.Find("Room_Elevator").GetComponent<Room>();
-
         // on récupère le level actif
         foreach (Transform child in transform)
         {
@@ -44,9 +42,6 @@ public class World : MonoBehaviour
                 break;
             }
         }
-
-        // on awake l'elevator room
-        if (!elevator_room.loaded) { elevator_room.Awake(); }
 
         // on initialise le level
         if (current_level != null)
@@ -59,7 +54,20 @@ public class World : MonoBehaviour
 
             // sinon on tp le perso à l'elevator
         }
-    
+
+        // on récupère l'elevator room
+        elevator_room = transform.Find("Room_Elevator")?.GetComponent<Room>();
+        if (elevator_room == null)
+        {
+            if (debug) { Debug.LogWarning("(World) Elevator room not found !"); }
+
+            // si on a pas d'elevator room alors on ne tp pas le perso
+            return;
+        }
+
+        // on awake l'elevator room
+        if (!elevator_room.loaded) { elevator_room.Awake(); }
+
         // on envoie le perso au milieu de l'elevator room
         perso.transform.position = elevator_room.transform.Find("objects/elevator").transform.position - new Vector3(0,0.5f,0);
         if (debug) { Debug.LogWarning("(World) No Perso Room found !! teleporting perso to elevator");}
@@ -146,10 +154,12 @@ public class World : MonoBehaviour
 
         // we add the level to the loaded levels
         if (!loaded_levels.Contains(level)) { loaded_levels.Add(level); }
-        
+
         // we play OnLevelLoaded event on the LevelSwitcher
-        elevator_room.transform.Find("objects/elevator").GetComponent<LevelSwitcher>().OnLevelLoaded(current_level);
-        // SetCurrentLevel(world.current_level.name);
+        if (elevator_room)
+        {
+            elevator_room.transform.Find("objects/elevator").GetComponent<LevelSwitcher>().OnLevelLoaded(current_level);
+        }
 
         if (debug) { Debug.Log("(World) Level loaded : " + level.name); }
     }

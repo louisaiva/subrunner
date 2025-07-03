@@ -221,7 +221,7 @@ GameObject:
   - component: {fileID: 5777571958852792238}
   - component: {fileID: 8558487863959659101}
   - component: {fileID: 2197711243768661269}
-  m_Layer: 10
+  m_Layer: 29
   m_Name: door_LR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -374,8 +374,11 @@ MonoBehaviour:
     flipX: 0
   anim_pile: []
   animation_priorities_with_no_loop: 03000000
-  animation_priorities_with_no_interrupt: 03000000
+  animation_priorities_with_static_orientation: 0300000004000000
   debug: 0
+  debug_orientation: 0
+  debug_advanced: 0
+  debug_frames: 0
 --- !u!114 &8558487863959659101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -395,6 +398,7 @@ MonoBehaviour:
   capacities: []
   effects: 
   effects_timetolive: []
+  debug: 0
   is_vertical: 0
   door_collider: {fileID: 0}
   shadow_caster: {fileID: 0}

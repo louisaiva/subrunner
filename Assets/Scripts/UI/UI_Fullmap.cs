@@ -65,10 +65,10 @@ public class UI_Fullmap : MonoBehaviour {
 
         if (inputs != null && is_map_shown)
         {
-            if (inputs.UI.navigate.ReadValue<Vector2>() != Vector2.zero)
+            /* if (inputs.UI.navigate.ReadValue<Vector2>() != Vector2.zero)
             {
                 move(inputs.UI.navigate.ReadValue<Vector2>());
-            }
+            } */
 
             if (inputs.UI.scroll.ReadValue<float>() != 0)
             {

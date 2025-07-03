@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8825243767214675206}
   - component: {fileID: 6180722776171797969}
   - component: {fileID: 4484191563328344606}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: attack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,6 +41,7 @@ PolygonCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3831210645434146991}
   m_Enabled: 1
+  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -64,7 +65,8 @@ PolygonCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -96,8 +98,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 0
+  debug: 0
+  kills: 0
   damage: 10
+  random_damage_modifier_at_start: 0
   is_attacking: 0
+  perforant_attack: 0
+  delay_between_perforations: 0.01
   hit_enemies: []
   not_attackable_tags: []
   knockback_base: 500

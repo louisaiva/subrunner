@@ -135,7 +135,7 @@ public class AnimBank : MonoBehaviour
         if (debug_LAFAC) {Debug.Log("(AnimBank - LAFAC) Loading animation from AnimationClip : " + path);}
 
         // on charge l'animation depuis le path
-        AnimationClip clip = Resources.Load<AnimationClip>("animations/" + path /* + ".anim" */);
+        AnimationClip clip = Resources.Load<AnimationClip>("animations/" + path);
         if (!clip)
         {
             Debug.LogError("(AnimBank - LAFAC) AnimationClip NOT found in : animations/" + path);
@@ -190,7 +190,12 @@ public class AnimBank : MonoBehaviour
         for (int i = 0; i < frameCount; i++)
         {
             // save the frame time
-            sprites_durations[i] = (i == 0) ? spriteCurve[i].time : spriteCurve[i].time - spriteCurve[i - 1].time;
+            sprites_durations[i] = (i == frameCount - 1)
+                    ? 0f // last frame duration is 0
+                    : spriteCurve[i+1].time - spriteCurve[i].time; // other frames duration are calculed with the next frame time - actual frame time
+
+            // we are extracting data in this sense for it to be the same as Unity default AnimationEditor
+            // before we did it in the opposite (frame 0 has a 0f duration) but the result is then different from the editor
             
             // save the sprite path
             Sprite sprite = spriteCurve[i].value as Sprite;
@@ -366,7 +371,7 @@ public class AnimBank : MonoBehaviour
     
 
     // parametres utiles à l'AnimPlayer
-    public bool loop = true; // si c'est false, l'AnimHandler revient sur l'animation par defaut
+    public bool loop = true; // si c'est false, l'AnimPlayer revient sur l'animation par defaut
     public float speed = 1f; // vitesse de l'animation
     public bool flipX = false; // flip le sprite renderer si besoin
 

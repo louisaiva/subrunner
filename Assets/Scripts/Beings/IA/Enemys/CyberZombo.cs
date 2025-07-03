@@ -3,19 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class CyberZombo : Enemy, I_Hackable
+public class CyberZombo : IA /*, I_Hackable */
 {
-
-
-    // meat detection
-    private float meat_detection_radius = 10f;
-    public bool meat_detected = false;
-    GameObject meat_target;
-    private LayerMask meat_layers;
-
     // HACKING
-
-    public string hack_type_self { get; set; }
+    /* public string hack_type_self { get; set; }
     public int required_bits { get; set; }
     public int required_bits_base { get; set; }
     public int security_lvl { get; set; }
@@ -32,115 +23,10 @@ public class CyberZombo : Enemy, I_Hackable
     public Material default_material { get; set; }
 
     // HackUI
-    public HackUI hack_ui { get; set; }
-
-    // unity functions
-    new void Start(){
-
-        // on récupère le joueur
-        // tar = GameObject.Find("/perso");
-
-        // on start de d'habitude
-        base.Start();
-
-        // on défini les layers des ennemis
-        target_layers = LayerMask.GetMask("Beings");
-        meat_layers = LayerMask.GetMask("Meat","Beings");
-
-        // on met à jour les différentes variables d'attaques pour le zombo
-        max_life = 25 + Random.Range(-5, 5);
-        life = (float) max_life;
-        speed = 1f + Random.Range(-0.2f, 0.2f);
-        running_speed = 2f;
-        ((AttackCapacity) GetCapacity("attack")).damage = 20f + Random.Range(-5f, 5f);
-        weight = 1.4f + Random.Range(-0.2f, 0.2f);
-
-        // on met les bons sons
-        // sounds = new ZomboSounds();
-        // audio_manager.LoadSoundsFromPath("audio/zombo");
-
-
-        // on initialise le hackin
-        initHack();
-    }
-
-    public override void Events()
-    {
-
-        base.Events();
-        if (Orientation != new Vector2(0, 0)) { return; }
-
-        // treshold distance "trop proche"
-        float treshold_distance = 0.1f;
-
-        // 2 - on essaye de détecter de la viande
-        if (meat_detected && meat_target != null){
-            
-            // on se dirige vers la viande
-            Orientation = new Vector2(meat_target.transform.position.x - transform.position.x, meat_target.transform.position.y - transform.position.y);
-
-            // on regarde si on est pas TROP proche de la viande
-            if (Orientation.magnitude < treshold_distance){
-                Orientation = new Vector2(0, 0);
-            }
-
-            // on normalise les Orientation
-            Orientation.Normalize();
-
-            return;
-        }
-
-        // 3 - on se déplace aléatoirement circulairement en x
-        Orientation = simulate_circular_input_on_x(Orientation);
-
-    }
-
-    // update de d'habitude
-    protected override void Update()
-    {
-        // update des hacks
-        if (is_getting_hacked) {
-            updateHack();
-        }
-
-        // on essaye de détecter de la viande
-        detect_meat(meat_detection_radius);
-
-        // update de d'habitude
-        base.Update();
-
-    }
-
-
-    // TARGETS DETECTION
-    protected override Collider2D[] get_targets_colliders(float radius)
-    {
-        Collider2D[] targets = base.get_targets_colliders(radius);
-
-        // on enlève les zombies des targets
-        targets = targets.Where(target => target.transform.parent.GetComponent<CyberZombo>() == null).ToArray();
-
-        // Debug.Log("cyberzombo targets : " + targets.Length);
-        return targets;
-    }
-
-    // MEAT DETECTION
-    private void detect_meat(float radius){
-
-        // on essaie de trouver le premier gameobject meat dans le rayon de détection
-        Collider2D meatCollider = Physics2D.OverlapCircle(transform.position, radius, meat_layers);
-        meat_detected = (meatCollider != null);
-        if (meat_detected){
-            meat_target = meatCollider.gameObject;
-        }
-        else{
-            meat_target = null;
-        }
-    }
-    
+    public HackUI hack_ui { get; set; } */
 
     // HACKIN
-    public void initHack()
+    /* public void initHack()
     {
 
         // on récupère le xp_provider
@@ -286,7 +172,7 @@ public class CyberZombo : Enemy, I_Hackable
         // on le montre
         // hack_ui.hide();
     }
-
+ */
     // DIE
     /* protected override void die(){
         // on arrête le hackin

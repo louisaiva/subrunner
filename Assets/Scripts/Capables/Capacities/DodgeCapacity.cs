@@ -36,7 +36,7 @@ public class DodgeCapacity : Capacity
             // we can't move for a short time
             capable.AddEffect(Effect.Immobile, duration / 2f);
             // we can't move for a short time
-            capable.AddEffect(Effect.Ghost, duration);
+            capable.AddEffect(Effect.SemiGhost, duration);
         }
 
         // check if the capable is a Movable_ to add them a force

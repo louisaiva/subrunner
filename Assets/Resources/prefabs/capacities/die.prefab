@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 891631874371971630}
   - component: {fileID: 2923260706266234128}
-  m_Layer: 25
+  m_Layer: 0
   m_Name: die
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,6 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 0
+  debug: 0
+  deaths: 0
   xp_provider: {fileID: 0}
   text_manager: {fileID: 0}
   xp_gift: 10

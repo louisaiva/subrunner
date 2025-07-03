@@ -46,7 +46,7 @@ public class Shuriken : Item
         AddForce(throw_force); // we add the force to the shuriken
 
         // we add a ghost effect to the shuriken
-        AddEffect(Effect.Ghost, -888f); // we add the ghost effect for infinite time
+        AddEffect(Effect.SemiGhost, -888f); // we add the ghost effect for infinite time
 
         // we start the particle system
         shuriken_particle.gameObject.SetActive(true);
@@ -106,7 +106,7 @@ public class Shuriken : Item
         GetComponent<AnimPlayer>().StopPlaying("throw");
 
         // we remove the ghost effect
-        RemoveEffect(Effect.Ghost);
+        RemoveEffect(Effect.SemiGhost);
 
         // we stop the particle system
         shuriken_particle.gameObject.SetActive(false);

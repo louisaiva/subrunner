@@ -297,15 +297,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             ""id"": ""eabb19b5-c974-4c9a-ba69-71b4bad173e5"",
             ""actions"": [
                 {
-                    ""name"": ""navigate"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""6081c15c-8c3f-4213-beb2-816695cc650c"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""scroll"",
                     ""type"": ""PassThrough"",
                     ""id"": ""15949233-a652-4133-92ec-24cbee81ac13"",
@@ -346,6 +337,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""type"": ""Button"",
                     ""id"": ""ab61f265-6045-46c4-8b6b-c5a9ed876406"",
                     ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""navigate_L"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""f7dea3fc-414f-4ffc-8e71-71d033ad3aa1"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""navigate_in_game"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""f07fc202-cf89-4336-a381-2a097a0b371e"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -442,17 +451,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""24e22fb1-7fda-40a4-a15e-eef60861bb9a"",
-                    ""path"": ""<Gamepad>/rightStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";xbox"",
-                    ""action"": ""navigate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""1c0a8b72-8e5e-45e1-9023-ebb901460c68"",
                     ""path"": ""<Mouse>/scroll"",
                     ""interactions"": """",
@@ -470,6 +468,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""xbox"",
                     ""action"": ""scroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8446bb45-7d27-4545-95f8-70fed83cb396"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";xbox"",
+                    ""action"": ""navigate_L"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""88310011-9ab3-4f7d-958e-0495ad44fc3a"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";xbox"",
+                    ""action"": ""navigate_in_game"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1093,12 +1113,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_perso_move = m_perso.FindAction("move", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
-        m_UI_navigate = m_UI.FindAction("navigate", throwIfNotFound: true);
         m_UI_scroll = m_UI.FindAction("scroll", throwIfNotFound: true);
         m_UI_activate = m_UI.FindAction("activate", throwIfNotFound: true);
         m_UI_y = m_UI.FindAction("y", throwIfNotFound: true);
         m_UI_x = m_UI.FindAction("x", throwIfNotFound: true);
         m_UI_cancel = m_UI.FindAction("cancel", throwIfNotFound: true);
+        m_UI_navigate_L = m_UI.FindAction("navigate_L", throwIfNotFound: true);
+        m_UI_navigate_in_game = m_UI.FindAction("navigate_in_game", throwIfNotFound: true);
         // enhanced_perso
         m_enhanced_perso = asset.FindActionMap("enhanced_perso", throwIfNotFound: true);
         m_enhanced_perso_hack = m_enhanced_perso.FindAction("hack", throwIfNotFound: true);
@@ -1276,22 +1297,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     // UI
     private readonly InputActionMap m_UI;
     private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
-    private readonly InputAction m_UI_navigate;
     private readonly InputAction m_UI_scroll;
     private readonly InputAction m_UI_activate;
     private readonly InputAction m_UI_y;
     private readonly InputAction m_UI_x;
     private readonly InputAction m_UI_cancel;
+    private readonly InputAction m_UI_navigate_L;
+    private readonly InputAction m_UI_navigate_in_game;
     public struct UIActions
     {
         private @PlayerInputActions m_Wrapper;
         public UIActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @navigate => m_Wrapper.m_UI_navigate;
         public InputAction @scroll => m_Wrapper.m_UI_scroll;
         public InputAction @activate => m_Wrapper.m_UI_activate;
         public InputAction @y => m_Wrapper.m_UI_y;
         public InputAction @x => m_Wrapper.m_UI_x;
         public InputAction @cancel => m_Wrapper.m_UI_cancel;
+        public InputAction @navigate_L => m_Wrapper.m_UI_navigate_L;
+        public InputAction @navigate_in_game => m_Wrapper.m_UI_navigate_in_game;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1301,9 +1324,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
-            @navigate.started += instance.OnNavigate;
-            @navigate.performed += instance.OnNavigate;
-            @navigate.canceled += instance.OnNavigate;
             @scroll.started += instance.OnScroll;
             @scroll.performed += instance.OnScroll;
             @scroll.canceled += instance.OnScroll;
@@ -1319,13 +1339,16 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @cancel.started += instance.OnCancel;
             @cancel.performed += instance.OnCancel;
             @cancel.canceled += instance.OnCancel;
+            @navigate_L.started += instance.OnNavigate_L;
+            @navigate_L.performed += instance.OnNavigate_L;
+            @navigate_L.canceled += instance.OnNavigate_L;
+            @navigate_in_game.started += instance.OnNavigate_in_game;
+            @navigate_in_game.performed += instance.OnNavigate_in_game;
+            @navigate_in_game.canceled += instance.OnNavigate_in_game;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
         {
-            @navigate.started -= instance.OnNavigate;
-            @navigate.performed -= instance.OnNavigate;
-            @navigate.canceled -= instance.OnNavigate;
             @scroll.started -= instance.OnScroll;
             @scroll.performed -= instance.OnScroll;
             @scroll.canceled -= instance.OnScroll;
@@ -1341,6 +1364,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @cancel.started -= instance.OnCancel;
             @cancel.performed -= instance.OnCancel;
             @cancel.canceled -= instance.OnCancel;
+            @navigate_L.started -= instance.OnNavigate_L;
+            @navigate_L.performed -= instance.OnNavigate_L;
+            @navigate_L.canceled -= instance.OnNavigate_L;
+            @navigate_in_game.started -= instance.OnNavigate_in_game;
+            @navigate_in_game.performed -= instance.OnNavigate_in_game;
+            @navigate_in_game.canceled -= instance.OnNavigate_in_game;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -1558,12 +1587,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     }
     public interface IUIActions
     {
-        void OnNavigate(InputAction.CallbackContext context);
         void OnScroll(InputAction.CallbackContext context);
         void OnActivate(InputAction.CallbackContext context);
         void OnY(InputAction.CallbackContext context);
         void OnX(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
+        void OnNavigate_L(InputAction.CallbackContext context);
+        void OnNavigate_in_game(InputAction.CallbackContext context);
     }
     public interface IEnhanced_persoActions
     {
