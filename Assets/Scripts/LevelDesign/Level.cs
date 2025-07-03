@@ -21,6 +21,7 @@ public class Level : MonoBehaviour
     public Transform being_parent;
 
     [Header("Debug")]
+    [SerializeField] private bool debug = false;
     public bool loaded = false;
 
     // START
@@ -45,7 +46,7 @@ public class Level : MonoBehaviour
 
         // on trie les rooms par priorité
         rooms.Sort((b,a) => a.FindPriority.CompareTo(b.FindPriority));
-        Debug.Log(name + " level sorted rooms by priority");
+        if (debug) { Debug.Log(name + " level sorted rooms by priority"); }
 
         // on récupère le parent des beings
         being_parent = transform.Find("beings");
