@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class InputManager : MonoBehaviour
 {
-    
     [Header("INPUT MANAGER")]
     [SerializeField] private string current_input_type = "keyboard"; // keyboard or gamepad
     public PlayerInputActions inputs;
@@ -34,6 +33,7 @@ public class InputManager : MonoBehaviour
         // on ajoute les listeners
         inputs.any.keyboard.performed += ctx => setInputType("keyboard");
         inputs.any.gamepad.performed += ctx => setInputType("gamepad");
+
     }
 
     void Update()

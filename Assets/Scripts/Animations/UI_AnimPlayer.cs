@@ -2,16 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
-[RequireComponent(typeof(SpriteRenderer))]
-public class AnimPlayer : MonoBehaviour
+[RequireComponent(typeof(Image))]
+public class UI_AnimPlayer : MonoBehaviour
 {
 
 
 
     [Header("Components")]
     private AnimBank bank;
-    private SpriteRenderer sr;
+    private Image img;
 
 
 
@@ -88,7 +89,7 @@ public class AnimPlayer : MonoBehaviour
         }
 
         // we get the sprite renderer
-        sr = GetComponent<SpriteRenderer>();
+        img = GetComponent<Image>();
 
         // we get the polygon collider
         // pc = GetComponent<PolygonCollider2D>();
@@ -148,7 +149,11 @@ public class AnimPlayer : MonoBehaviour
             }
 
             // we set the sprite
-            sr.sprite = current_anim.sprites[current_frame];
+            img.sprite = current_anim.sprites[current_frame];
+            if (img.sprite != null)
+            {
+                img.SetNativeSize();
+            }
 
             // we try to update the polygon collider
             // if (pc != null) { pc.TryUpdateShapeToAttachedSprite();}
@@ -157,7 +162,7 @@ public class AnimPlayer : MonoBehaviour
 
 
     // PLAY ANIMATION
-    public Anim Play(string capacity, int? priority_override=null, float? duration_override=null)
+    public Anim Play(string capacity, int? priority_override=null, float? duration_override=null,bool? loop_override=null)
     {
         // we get the priority of the capacity
         int priority = 1;
@@ -198,6 +203,13 @@ public class AnimPlayer : MonoBehaviour
                 
                 // we calculate the resulting speed
                 anim.speed = duration / (float) duration_override;
+            }
+
+            // we check if we have a loop override
+            if (loop_override != null)
+            {
+                // we set the loop of the animation
+                anim.loop = (bool) loop_override;
             }
 
 
@@ -263,13 +275,19 @@ public class AnimPlayer : MonoBehaviour
         frame_timer = 0f;
 
         // we set the sprite
-        sr.sprite = anim.sprites[current_frame];
+        img.sprite = anim.sprites[current_frame];
+
+        // we set the right size to the rect transform
+        if (img.sprite != null)
+        {
+            img.SetNativeSize();
+        }
 
         // we flip the sprite renderer if needed
-        if (anim.flipX && !sr.flipX) { sr.flipX = true; }
-        else if (!anim.flipX && sr.flipX) { sr.flipX = false; }
+        RectTransform rt = img.rectTransform;
+        rt.localScale = new Vector3(anim.flipX ? -1 : 1, 1, 1);
 
-        if (debug_advanced) {Debug.Log("(AnimPlayer) Playing " + anim.name + " at frame " + frame + " flipX: " + anim.flipX);}
+        if (debug_advanced) { Debug.Log("(AnimPlayer) Playing " + anim.name + " at frame " + frame /* + " flipX: " + anim.flipX */); }
     }
 
     // STOP ANIMATION
