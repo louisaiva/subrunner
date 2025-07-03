@@ -62,22 +62,71 @@ public class ChaseAndAttackBeing : Goal
     }
     private void set_closest_target_to_current()
     {
-        // we can't set closest target if we don't have any target
-        if (!current_target && waiting_targets.Count <= 0) { return; }
+        // if we don't have any waiting targets that means either we don't have target at all (!current_target)
+        // either we have one but it's the oonly one so already the closest
+        if (waiting_targets.Count <= 0) { return; }
 
+        /*
+        ! old algorithm with sorting just to test
+        
         // we remove all null waiting targets
         waiting_targets.RemoveAll(target => target == null);
 
         // we add the current_target to the waiting_targets if not null
         if (current_target) { waiting_targets.Add(current_target); }
+        if (waiting_targets.Count <= 0) { return; }
 
         // we sort the waiting_targets by distance
         waiting_targets.Sort((a, b) => Vector2.Distance(a.transform.position, transform.position).CompareTo(Vector2.Distance(b.transform.position, transform.position)));
 
         // we set the current target as the first one
         current_target = waiting_targets[0];
-        waiting_targets.RemoveAt(0);
+        waiting_targets.RemoveAt(0); */
 
+
+        // we go through all waiting targets & we clean it and find closest being
+        int i = 0;
+        float closest_distance = float.MaxValue;
+        int closest_index = -1;
+        while (i < waiting_targets.Count)
+        {
+            // if the target is null we remove it from the list
+            if (waiting_targets[i] == null)
+            {
+                // if (debug) { Debug.Log("(ChaseAndAttackBeing) " + waiting_targets[i] + " is null, removing it from waiting targets"); }
+                waiting_targets.RemoveAt(i);
+                continue;
+            }
+
+            // else we check the distance
+            float distance = Vector2.Distance(waiting_targets[i].transform.position, transform.position);
+            if (distance < closest_distance)
+            {
+                // if the distance is closer than the closest distance we found
+                closest_distance = distance;
+                closest_index = i; // we save the index of the closest target
+            }
+
+            // and we increment i
+            i++;
+        }
+
+        // we check if the closest is still the closest
+        if (current_target != null && Vector2.Distance(current_target.transform.position, transform.position) < closest_distance) { return; }
+
+        // if we didn't find any closest target, we return
+        if (closest_index < 0)
+        {
+            if (debug) { Debug.LogWarning("(ChaseAndAttackBeing) No closest target found, returning (that's weird we should not see this bug omg)"); }
+            return;
+        }
+
+        // else we set the current target as the first one
+        waiting_targets.Add(current_target);
+        current_target = waiting_targets[closest_index];
+        waiting_targets.RemoveAt(closest_index);
+
+        // we log the current target
         if (debug) { Debug.Log("(ChaseAndAttackBeing) Current target updated to " + current_target.name); }
     }
 
@@ -89,6 +138,7 @@ public class ChaseAndAttackBeing : Goal
 
         // we check if we have a current_target
         if (!current_target || always_chase_closest_target) { set_closest_target_to_current(); }
+        if (!current_target) { return; }
 
         // we update the GoToAction destination if we still have a current_target in sight !
         if (current_action is GoToAction goto_action)
@@ -140,7 +190,7 @@ public class ChaseAndAttackBeing : Goal
         {
             // we lost the current_target
             current_target = null;
-            if (debug) { Debug.Log("(ChaseAndAttackBeing) " + being.name + " is no current target anymore ://"); }
+            if (debug) { Debug.Log("(ChaseAndAttackBeing) " + being.name + " is too far away, removed from current target ://"); }
             return;
         }
 

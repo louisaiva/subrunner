@@ -9,7 +9,6 @@ using UnityEngine.AI;
 /// BUT also have Behaviors which define how it behaves in the game world.
 /// </summary>
 
-// [RequireComponent(typeof(NavMeshAgent))]
 public class IA : Being
 {
 
@@ -22,13 +21,6 @@ public class IA : Being
     public bool debug_goals = false;
     public bool debug_doable_goals = false;
 
-
-    // [Header("Behaviours - GOTO")]
-    // public bool has_destination = false;
-    // public Vector2 destination;
-    // private float base_threshold_distance = 0.2f; // distance to the destination to consider it reached (base)
-    // private float threshold_distance; // current distance to the destination to consider it reached (because sometimes we can't have a very precise distance)
-
     // AWAKE
     protected override void Awake()
     {
@@ -39,17 +31,22 @@ public class IA : Being
             Debug.LogError("(IA) " + name + " has no goal parent set! Please set a goal parent in the inspector.");
             return;
         }
-        
+
         // we get the goals from the goal parent
         goals = goal_parent.GetComponentsInChildren<Goal>().ToList();
         if (goals.Count == 0)
         {
             Debug.LogError("(IA) " + name + " has no goals set! Please add at least the default idle goal in the inspector");
         }
+
+        // we sort the goals by descending priority order (so the highest priority is in first)
+        goals = goals.OrderByDescending(g => g.priority).ToList();
     }
 
-    protected override void UpdateGOAP()
+    protected override void Update()
     {
+        base.Update();
+
         // 1 - detect if one of the goal have a higher priority than the actual goal
         Goal max_priority_goal = get_highest_priority_doable_goal();
         if (max_priority_goal == null) { return; } // no goal to switch to
@@ -63,31 +60,6 @@ public class IA : Being
 
         // 2 - update current goal
         current_goal.UpdateGoal();
-
-
-        // GOTO BEHAVIOR
-        /* if (has_destination)
-        {
-            // on regarde si on est pas TROP proche de la destination
-            if (Vector2.Distance(transform.position, destination) < threshold_distance)
-            {
-                Orientation = new Vector2(0, 0);
-                destination = new Vector2(0, 0);
-                has_destination = false; // we reached the destination
-                                         // inputs_magnitude = 0f; // we stop moving
-                if (HasCapacity<WalkCapacity>())
-                {
-                    GetCapacity<WalkCapacity>().walk_percentage_target = 0f; // we stop walking
-                }
-                return;
-            }
-
-            // on se dirige vers la destination
-            Vector2 global_movement = new Vector2(destination.x - transform.position.x, destination.y - transform.position.y);
-            Orientation = global_movement.normalized;
-            return;
-        }
-        else { Orientation = new Vector2(0, 0); /* on bouge pas } */
     }
 
     // GOALS MANAGEMENT HIGH LEVEL
@@ -109,65 +81,30 @@ public class IA : Being
     // GOALS LOW LEVEL
     private Goal get_highest_priority_doable_goal()
     {
-        // we filter the goals to get only the Doable ones
+
+        // we go through the goals from 0 to Count and we return the first doable one
+        for (int i=0; i < goals.Count; i++)
+        {
+            if (goals[i].Doable)
+            {
+                if (debug_doable_goals) { Debug.Log("(IA) " + name + " has Doable goal: " + goals[i].GetType()); }
+                return goals[i];
+            }
+        }
+
+        if (debug_doable_goals) { Debug.Log("(IA) " + name + " has no Doable goals"); }
+        return null;
+
+
+        /* // we filter the goals to get only the Doable ones
         var doable_goals = goals.Where(g => g.Doable).ToList();
 
         if (doable_goals.Count == 0)
         {
-            if (debug_doable_goals) { Debug.Log("(IA) " + name + " has no Doable goals"); }
-            return null;
         }
 
         // we return the highest priority Doable goal
-        return doable_goals.OrderByDescending(g => g.priority).FirstOrDefault();
+        return doable_goals.OrderByDescending(g => g.priority).FirstOrDefault(); */
     }
 
-
-    // BEHAVIORS
-    /* protected IEnumerator GoToCoroutine(Vector2 position, float? threshold_distance = null)
-    {
-        // we want to go to a position
-
-        // ! for now it goes in a straight line, but we could use NavMeshAgent to go around obstacles
-
-        if (debug) { Debug.Log("(IA) " + name + " is going to transform: " + position); }
-
-        // we set the destination
-        destination = position;
-        has_destination = true;
-        if (HasCapacity<WalkCapacity>())
-        {
-            GetCapacity<WalkCapacity>().walk_percentage_target = 1f; // we start walking
-        }
-
-        // we set the threshold distance
-        this.threshold_distance = threshold_distance ?? base_threshold_distance; // if no threshold distance is given, we use the base one
-
-        // we wait until we reach the destination
-        while (has_destination) { yield return null; }
-        if (debug) { Debug.Log("(IA) " + name + " reached transform: " + position); }
-    }
-    protected void GoTo(Vector2 position,float? threshold_distance = null)
-    {
-        if (has_destination)
-        {
-            // check if the destination is the same
-            if (destination == position) { return; }
-
-            // we already had a destination, we override it
-            StopCoroutine("GoToCoroutine");
-        }
-
-        StartCoroutine(GoToCoroutine(position, threshold_distance));
-    }
-    protected void GoNowhere()
-    {
-        // we stop going anywhere
-        has_destination = false;
-        threshold_distance = base_threshold_distance; // reset the treshold distance to the base value
-        if (HasCapacity<WalkCapacity>())
-        {
-            GetCapacity<WalkCapacity>().walk_percentage_target = 0f; // we stop walking
-        }
-    } */
 }

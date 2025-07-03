@@ -39,9 +39,9 @@ public class Rat : Being
 
     }
 
-    protected override void UpdateGOAP()
+    protected override void Update()
     {
-        base.UpdateGOAP();
+        base.Update();
 
         // walk
         if (Can("walk"))

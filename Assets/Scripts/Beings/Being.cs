@@ -71,14 +71,14 @@ public class Being : Movable
         }
 
         // on update les behaviour
-        UpdateGOAP();
+        // UpdateGOAP();
 
         // on récupère les inputs
         UpdateBeingEffects();
 
         base.Update();
     }
-    protected virtual void UpdateGOAP() { }
+    // protected virtual void UpdateGOAP() { }
     public virtual void UpdateBeingEffects()
     {
         // life regen

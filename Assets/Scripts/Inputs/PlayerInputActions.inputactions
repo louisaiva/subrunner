@@ -275,15 +275,6 @@
             "id": "eabb19b5-c974-4c9a-ba69-71b4bad173e5",
             "actions": [
                 {
-                    "name": "navigate",
-                    "type": "PassThrough",
-                    "id": "6081c15c-8c3f-4213-beb2-816695cc650c",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "scroll",
                     "type": "PassThrough",
                     "id": "15949233-a652-4133-92ec-24cbee81ac13",
@@ -324,6 +315,24 @@
                     "type": "Button",
                     "id": "ab61f265-6045-46c4-8b6b-c5a9ed876406",
                     "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "navigate_L",
+                    "type": "PassThrough",
+                    "id": "f7dea3fc-414f-4ffc-8e71-71d033ad3aa1",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "navigate_in_game",
+                    "type": "PassThrough",
+                    "id": "f07fc202-cf89-4336-a381-2a097a0b371e",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -420,17 +429,6 @@
                 },
                 {
                     "name": "",
-                    "id": "24e22fb1-7fda-40a4-a15e-eef60861bb9a",
-                    "path": "<Gamepad>/rightStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";xbox",
-                    "action": "navigate",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "1c0a8b72-8e5e-45e1-9023-ebb901460c68",
                     "path": "<Mouse>/scroll",
                     "interactions": "",
@@ -448,6 +446,28 @@
                     "processors": "",
                     "groups": "xbox",
                     "action": "scroll",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8446bb45-7d27-4545-95f8-70fed83cb396",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";xbox",
+                    "action": "navigate_L",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "88310011-9ab3-4f7d-958e-0495ad44fc3a",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";xbox",
+                    "action": "navigate_in_game",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

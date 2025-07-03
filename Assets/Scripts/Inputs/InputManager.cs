@@ -62,7 +62,19 @@ public class InputManager : MonoBehaviour
     }
 
     // getters
-    public InputAction GetActionFromString(string action_name)
+    public InputAction GetAction(InputActionReference reference)
+    {
+        // on récupère le nom de l'action
+        string action_name = reference.ToString();
+
+        // on découpe le nom de l'action avec : 
+        string[] action_name_parts = action_name.Split(':');
+        if (action_name_parts.Length > 1) { action_name = action_name_parts[1]; }
+
+        // on retourne l'action
+        return getActionFromString(action_name);
+    }
+    private InputAction getActionFromString(string action_name)
     {
         // on découpe via / pour avoir l'inputMap
         string[] action_name_parts = action_name.Split('/');
@@ -84,18 +96,6 @@ public class InputManager : MonoBehaviour
 
         // on retourne l'action
         return action;
-    }
-    public InputAction GetAction(InputActionReference reference)
-    {
-        // on récupère le nom de l'action
-        string action_name = reference.ToString();
-
-        // on découpe le nom de l'action avec : 
-        string[] action_name_parts = action_name.Split(':');
-        if (action_name_parts.Length > 1) { action_name = action_name_parts[1]; }
-
-        // on retourne l'action
-        return GetActionFromString(action_name);
     }
     public bool isUsingGamepad()
     {

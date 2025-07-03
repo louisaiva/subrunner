@@ -331,8 +331,8 @@ MonoBehaviour:
   Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 0}
   life: 50
-  random_life_modifier_at_start: 25
   max_life: 50
+  random_life_modifier_at_start: 25
   regen_life: 10
   body_collider: {fileID: 0}
   floating_dmg_provider: {fileID: 0}
@@ -800,7 +800,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1394363249585000781, guid: 5c9577cddbd74fb4ba911a7e785f4a3d, type: 3}
       propertyPath: always_chase_closest_target
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1394363249585000781, guid: 5c9577cddbd74fb4ba911a7e785f4a3d, type: 3}
       propertyPath: 'excluded_tags.Array.data[0]'

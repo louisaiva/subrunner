@@ -109,30 +109,30 @@ public class Movable : Capable
     // EFFECTS ASSOCIATED TO MOVING
     protected void updateMovingEffects()
     {
-        // we check if the Capable has the Ghost effect and if yes, we change the Layer of the feet collider to "Ghosts"
 
-        // update the feet layer
+        // 1 - SEMI GHOST
+
+        // update the semi ghost effect (passing through other feet by setting feet_collider layer to Ghosts)
         string feet_layer = feet_collider.gameObject.layer.ToString();
-        if (feet_layer != "Feet" && !HasEffect(Effect.SemiGhost) && !HasEffect(Effect.Ghost))
+        if (HasEffect(Effect.SemiGhost) && feet_layer == "Feet")
         {
-            // if no ghost effect applied than we switch back to normal
-            feet_collider.gameObject.layer = LayerMask.NameToLayer("Feet");
-
-        }
-        else if (feet_layer != "Ghosts" && (HasEffect(Effect.SemiGhost) || HasEffect(Effect.Ghost)))
-        {
-            // if a ghost effect is applied than we switch to Ghosts
             feet_collider.gameObject.layer = LayerMask.NameToLayer("Ghosts");
         }
-
-        // update the feet is trigger
-        if (HasEffect(Effect.Ghost))
+        else if (!HasEffect(Effect.SemiGhost) && !(feet_layer == "Feet"))
         {
-            feet_collider.isTrigger = true; // if the ghost effect is applied, we set the feet collider as trigger
+            feet_collider.gameObject.layer = LayerMask.NameToLayer("Feet");
         }
-        else
+
+        // 2 - GHOST
+
+        // update the ghost effect (passing through everything by disabling the collider)
+        if (HasEffect(Effect.Ghost) && feet_collider.enabled)
         {
-            feet_collider.isTrigger = false; // if not, we set it as not trigger
+            feet_collider.enabled = false; // if the ghost effect is applied, we disable the feet !! so we can go through everything
+        }
+        else if (!HasEffect(Effect.Ghost) && !feet_collider.enabled)
+        {
+            feet_collider.enabled = true; // if not, we re enable it
         }
     }
 

@@ -116,6 +116,10 @@ public class DieCapacity : Capacity
             }
         }
 
+        // we switch the rigidbody collision detection to discrete since the dead body won't move very fast (not affected by our forces)
+        Rigidbody2D rb = being.GetComponent<Rigidbody2D>();
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
+
         // And finally we add a Meat that will replace the being
         // List<Force> forces = new List<Force>(being.GetForces()); // we save the current forces of the capable
         Meat meat = being.gameObject.AddComponent<Meat>();

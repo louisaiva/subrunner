@@ -46,7 +46,7 @@ public class Perso : Being
     // interactions
     // [SerializeField] private float interact_range = 1f;
     [SerializeField] private LayerMask interact_layers;
-    public GameObject current_interactable = null;
+    // public GameObject current_interactable = null;
 
     // hoover interactions
     // [SerializeField] private GameObject current_hoover_interactable = null;
@@ -179,25 +179,9 @@ public class Perso : Being
     }
 
     // CAPACITES
-    protected override void UpdateGOAP()
+    protected override void Update()
     {
-        // Debug.Log("Perso " + name + " Events() called.");
-
-        // on vérifie que le temps est pas en pause
-        if (Time.timeScale == 0f) { return; }
-
-        // hoover interactions
-        if (Can("hoover_interact"))
-        {
-            // todo ici on highlight les objets avec lesquels on peut interagir
-            // InteractHooverEvents();
-
-            // on update les interactions
-            // update_interactions();
-        }
-
-        // on check toutes les capacities dans le bon ordre pour voir comment on peut agir etc.
-        base.UpdateGOAP();
+        base.Update();
 
         // walk
         if (HasCapacity<WalkCapacity>())
@@ -213,7 +197,6 @@ public class Perso : Being
 
             // we set the walk_capacity.walk_percentage_target
             GetCapacity<WalkCapacity>().walk_percentage_target = raw_inputs.magnitude;
-            // inputs_magnitude = raw_inputs.magnitude;
 
             // Debug.Log("inputs : " + inputs + " / raw_inputs : " + raw_inputs + " / inputs_magnitude : " + raw_inputs.magnitude);
         }
@@ -254,7 +237,7 @@ public class Perso : Being
         } */
 
         // hoover hack
-        if (Can("hoover_hack"))
+        /* if (Can("hoover_hack"))
         {
             if (input_manager.inputs.enhanced_perso.hackDirection.ReadValue<Vector2>() != Vector2.zero)
             {
@@ -291,7 +274,7 @@ public class Perso : Being
 
             // update hacks
             update_hacks();
-        }
+        } */
 
         // DEBUG
         /* if (Can("debug_capacities"))
@@ -339,6 +322,11 @@ public class Perso : Being
     {
         // checks which skins we have
         string skin = anim_player.skin;
+
+        // checks if we are a ghost
+        if (skin == "ghost") { ToggleGhost(); }
+
+        // get all metamorph skin list
         string[] skins = new string[] { "perso", "cat", "zombo", "n0b0dy", "apple", "fridge", "small_laptop" };
 
         // we roll through the list

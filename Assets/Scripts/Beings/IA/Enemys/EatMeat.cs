@@ -85,7 +85,7 @@ public class EatMeat : Goal
     {
         // we check if our collider2D collides with a meat
         List<Collider2D> overlapping_colliders = new List<Collider2D>();
-        circle_collider.Overlap(contact_filter, overlapping_colliders);
+        circle_collider.Overlap(overlapping_colliders);
 
         // we filter the colliders to find Eatable Meat
         List<Meat> eatable_meats = new List<Meat>();

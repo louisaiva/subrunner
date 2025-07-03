@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 936548808772692408}
   - component: {fileID: 3958733572470430793}
   - component: {fileID: 6192736764969982114}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: katana
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34,8 +34,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 931039466007955467}
-  - {fileID: 4384175510763329558}
   - {fileID: 4460504556543032414}
+  - {fileID: 4384175510763329558}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2804824707963241385
@@ -118,8 +118,11 @@ MonoBehaviour:
     flipX: 0
   anim_pile: []
   animation_priorities_with_no_loop: 03000000
-  animation_priorities_with_no_interrupt: 03000000
+  animation_priorities_with_static_orientation: 0300000004000000
   debug: 0
+  debug_orientation: 0
+  debug_advanced: 0
+  debug_frames: 0
 --- !u!50 &3958733572470430793
 Rigidbody2D:
   serializedVersion: 5
@@ -169,9 +172,12 @@ MonoBehaviour:
   debug: 0
   rb: {fileID: 0}
   weight: 1
+  random_weight_modifier_at_start: 0
   friction: 7
+  debug_velocity: 0
   forces: []
   input_speed: 0
+  Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 0}
   Reference: weapon:katana
   MaxQty: 1

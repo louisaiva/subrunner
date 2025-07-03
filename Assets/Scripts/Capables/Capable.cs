@@ -60,6 +60,7 @@ public class Capable : MonoBehaviour
 
     [Header("Debug")]
     public bool debug = false;
+    public bool debug_capacities_on_awake = false;
 
     // START
     protected virtual void Awake()
@@ -74,13 +75,13 @@ public class Capable : MonoBehaviour
         foreach (Transform child in transform)
         {
             Capacity capa = child.GetComponent<Capacity>();
-            if (capa != null)
-            {
-                add_capacity(capa);
+            if (!capa) { continue; } // if no capacity, we skip
 
-                // we check if the debug is true then we force debug to be true
-                if (debug) { capa.debug = true; }
-            }
+            // we add it to the list
+            capacities.Add(capa);
+
+            // we check if the debug is true then we force debug to be true
+            if (debug_capacities_on_awake) { capa.debug = true; }
         }
 
         // we add ourself to the entity count
@@ -135,11 +136,6 @@ public class Capable : MonoBehaviour
         }
         Debug.Log(capacities_str);
     }
-    private void add_capacity(Capacity capacity)
-    {
-        if (HasCapacity(capacity)) { return; }
-        capacities.Add(capacity);
-    }
     public void AddCapacity(string capa_name)
     {
         // we check if the capacity is already in the list
@@ -154,7 +150,7 @@ public class Capable : MonoBehaviour
         capa_instance.transform.localPosition = Vector3.zero;
 
         // we put the capacity in the list
-        add_capacity(capa_instance.GetComponent<Capacity>());
+        capacities.Add(capa_instance.GetComponent<Capacity>());
     }
     public void RemoveCapacity(string capa_name)
     {

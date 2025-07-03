@@ -74,7 +74,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         if (transform.parent.name != "hud")
         {
             if (!navigator) { Init(); }
-            navigator.Enable(this);
+            navigator.Enable(this,true);
         }
     }
     public void Hide()

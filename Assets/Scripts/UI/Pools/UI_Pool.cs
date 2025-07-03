@@ -55,15 +55,15 @@ public class UI_Pool : MonoBehaviour
         if (UsePersoInputs)
         {
             inputs.perso.Enable();
-            if (inputs.UI.navigate.bindings.Count > 1)
+            /* if (inputs.UI.navigate.bindings.Count > 1)
             {
                 inputs.UI.navigate.ChangeBinding(1).Erase();
-            }
+            } */
         }
         else
         {
             inputs.perso.Disable();
-            inputs.UI.navigate.AddBinding("<Gamepad>/leftStick");
+            // inputs.UI.navigate.AddBinding("<Gamepad>/leftStick");
         }
     }
     public virtual void Hide()
