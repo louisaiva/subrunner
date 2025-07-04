@@ -64,9 +64,6 @@ public class FloatingText : MonoBehaviour {
         if (speed != -1f) { this.speed = speed; }
         if (fade_out_speed != -1f) { this.fade_out_speed = fade_out_speed; }
         if (ttl != -1f) { this.ttl = ttl; }
-        /* this.speed = speed;
-        this.fade_out_speed = fade_out_speed;
-        this.ttl = ttl; */
     }
 
     void Update()
@@ -86,76 +83,13 @@ public class FloatingText : MonoBehaviour {
 
     public void ajustMaterial()
     {
-        // on récupère la couleur actuelle
-        Color color = GetComponent<TextMeshPro>().color;
-
-        string material_name = font_name + "_mat_" + base_color;
-
-        /* if (color == Color.red)
-        {
-            material_name += "red";
-        }
-        else if (color == Color.green)
-        {
-            material_name += "green";
-        }
-        else if (color == Color.blue)
-        {
-            material_name += "blue";
-        }
-        else if (color == Color.yellow)
-        {
-            material_name += "yellow";
-        }
-        else if (color == Color.white)
-        {
-            material_name += "white";
-        }
-        else if (color == Color.black)
-        {
-            material_name += "black";
-        }
-        else if (color == Color.cyan)
-        {
-            material_name += "cyan";
-        }
-        else if (color == Color.magenta)
-        {
-            material_name += "magenta";
-        }
-        else if (color == Color.grey)
-        {
-            material_name += "grey";
-        }
-        else if (color == 
-        {
-            material_name += "brown";
-        }
-        else if (color == new Color(1, 0.5f, 0.5f))
-        {
-            material_name += "pink";
-        }
-        else if (color == new Color(1, 0.5f, 0))
-        {
-            material_name += "orange";
-        }
-        else if (color == new Color(0.5f, 0, 1))
-        {
-            material_name += "purple";
-        }
-        else
-        {
-            material_name += "white";
-        } */
-
-
         // on récupère le material
+        string material_name = font_name + "_mat_" + base_color;
         Material material = Resources.Load<Material>(materials_path + material_name);
 
-        // on l'ajuste
+        // on le met
         GetComponent<TextMeshPro>().fontMaterial = material;
     }
-
 
     public void setTTL(float ttl)
     {

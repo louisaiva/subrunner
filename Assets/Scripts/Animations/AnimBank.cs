@@ -287,29 +287,31 @@ public class AnimBank : MonoBehaviour
         string[] splitted_name = name.Split('.');
         string skin = splitted_name[0];
         string capacity = splitted_name[1];
+        string orientation = splitted_name[2];
 
-        if (HasAnim(name))
+        // check if we do not have the skin
+        if (!anims.ContainsKey(skin))
         {
-            return anims[skin][capacity].Find(anim => anim.name == name);
-        }
-        
-        if (HasCapacity(name))
-        {
-            return anims[skin][capacity][0];
+            if (debug) { Debug.LogWarning("(AnimBank - GetAnim) Skin not found in the bank : " + skin + ", returning sphere anim"); }
+            return anims["sphere"]["idle"][0]; // return the sphere anim of the sphere skin
         }
 
-        if (HasSkin(skin))
+        // check if we do not have the capacity
+        if (!anims[skin].ContainsKey(capacity))
         {
-            if (anims[skin].ContainsKey("idle"))
-            {
-                return anims[skin]["idle"][0];
-            }
-            return anims[skin].Values.ToList()[0][0];
+            // return the idle anim of the skin
+            return GetAnim(skin + ".idle." + orientation);
         }
+
+        // checks if we have the perfect animation (orientation)
+        Anim exact_anim = anims[skin][capacity].Find(anim => anim.orientation == orientation);
+        if (exact_anim != null) { return exact_anim; }
         
-        if (debug) {Debug.LogWarning("(AnimBank - GetAnim) Animation not found in the bank : " + name);}
-        return null;
+        // else we return the first orientation
+        return anims[skin][capacity][0];
     }
+
+    // PUBLIC GETTERS
     public bool HasAnim(string name)
     {
         string skin = name.Split('.')[0];

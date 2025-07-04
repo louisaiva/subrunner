@@ -43,10 +43,9 @@ public class CharacterSwitcher : MonoBehaviour
             // change to a random skin
             List<string> skinList = new List<string>(skins);
             skinList.Remove(animPlayer.skin);
-            animPlayer.skin = skins[Random.Range(0, skinList.Count)];
+            animPlayer.skin = skinList[Random.Range(0, skinList.Count)];
 
             // and to a random anim between "walk","idle","dodge","loop"
-            animPlayer.ClearPile();
             animPlayer.Play(anims[Random.Range(0, anims.Length)], loop_override: true);
 
         }
