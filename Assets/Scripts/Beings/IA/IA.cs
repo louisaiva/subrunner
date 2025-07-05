@@ -1,21 +1,24 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Pathfinding;
 using UnityEngine;
-using UnityEngine.AI;
+
 /// <summary>
 /// IA is a class that represents an AI being in the game.
 /// it is a Capable of course so it has Capacities & Effects,
 /// BUT also have Behaviors which define how it behaves in the game world.
 /// </summary>
 
+[RequireComponent(typeof(Seeker))]
 public class IA : Being
 {
-
     [Header("Goals")]
     [SerializeField] private Transform goal_parent;
     public List<Goal> goals = new List<Goal>(); // list of goals that the IA can achieve
     public Goal current_goal; // the current goal that the IA is trying to achieve
+
+    [Header("Pathfinding")]
+    public Seeker seeker; // the seeker component used for pathfinding
 
     [Header("Debug")]
     public bool debug_goals = false;
@@ -25,6 +28,9 @@ public class IA : Being
     protected override void Awake()
     {
         base.Awake();
+
+        // we get the seeker component
+        seeker = GetComponent<Seeker>();
 
         if (goal_parent == null)
         {
@@ -43,6 +49,7 @@ public class IA : Being
         goals = goals.OrderByDescending(g => g.priority).ToList();
     }
 
+    // GOALS MANAGEMENT
     protected override void Update()
     {
         base.Update();
@@ -61,8 +68,6 @@ public class IA : Being
         // 2 - update current goal
         current_goal.UpdateGoal();
     }
-
-    // GOALS MANAGEMENT HIGH LEVEL
     protected virtual void SwitchGoal(Goal new_goal)
     {
         // we stop the current goal
@@ -77,13 +82,11 @@ public class IA : Being
         current_goal.Plan(); // we plan the new goal
         if (debug_goals) { Debug.Log("(IA) " + name + " switched to goal: " + current_goal.GetType()); }
     }
-
-    // GOALS LOW LEVEL
     private Goal get_highest_priority_doable_goal()
     {
 
         // we go through the goals from 0 to Count and we return the first doable one
-        for (int i=0; i < goals.Count; i++)
+        for (int i = 0; i < goals.Count; i++)
         {
             if (goals[i].Doable)
             {
@@ -106,5 +109,4 @@ public class IA : Being
         // we return the highest priority Doable goal
         return doable_goals.OrderByDescending(g => g.priority).FirstOrDefault(); */
     }
-
 }

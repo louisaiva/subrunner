@@ -77,6 +77,9 @@ namespace Pathfinding {
 					if (scripts[i].tagPenalties == null || scripts[i].tagPenalties.Length != tagNames.Length) scripts[i].tagPenalties = new int[tagNames.Length];
 				}
 
+				if (GUILayout.Button("Edit names", EditorStyles.miniButton)) {
+					AstarPathEditor.EditTags();
+				}
 				EditorGUILayout.EndVertical();
 
 #if !ASTAR_NoTagPenalty

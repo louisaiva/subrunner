@@ -43,7 +43,7 @@ public class GoToAction : Action
     }
    
     // SUCCEEDING
-    protected override void succeed(bool mark_as_done=true)
+    protected override void succeed()
     {
         // we stop going anywhere
         has_destination = false;
@@ -53,7 +53,7 @@ public class GoToAction : Action
         }
 
         // we mark the action as done
-        base.succeed(mark_as_done);
+        base.succeed();
     }
 
 
@@ -68,53 +68,4 @@ public class GoToAction : Action
         // we multiply by a factor to adjust the cost
         return distance_to_destination * 0.1f;
     }
-
-    // BEHAVIORS
-    /* protected IEnumerator GoToCoroutine(Vector2 position, float? threshold_distance = null)
-    {
-        // we want to go to a position
-
-        // ! for now it goes in a straight line, but we could use NavMeshAgent to go around obstacles
-
-        if (debug) { Debug.Log("(IA) " + name + " is going to transform: " + position); }
-
-        // we set the destination
-        destination = position;
-        has_destination = true;
-        if (HasCapacity<WalkCapacity>())
-        {
-            GetCapacity<WalkCapacity>().walk_percentage_target = 1f; // we start walking
-        }
-
-        // we set the threshold distance
-        this.threshold_distance = threshold_distance ?? base_threshold_distance; // if no threshold distance is given, we use the base one
-
-        // we wait until we reach the destination
-        while (has_destination) { yield return null; }
-        if (debug) { Debug.Log("(IA) " + name + " reached transform: " + position); }
-    } */
-    /* protected void GoTo(Vector2 position, float? threshold_distance = null)
-    {
-        if (has_destination)
-        {
-            // check if the destination is the same
-            if (destination == position) { return; }
-
-            // we already had a destination, we override it
-            StopCoroutine("GoToCoroutine");
-        }
-
-        StartCoroutine(GoToCoroutine(position, threshold_distance));
-    }
-    protected void GoNowhere()
-    {
-        // we stop going anywhere
-        has_destination = false;
-        threshold_distance = base_threshold_distance; // reset the treshold distance to the base value
-        if (HasCapacity<WalkCapacity>())
-        {
-            GetCapacity<WalkCapacity>().walk_percentage_target = 0f; // we stop walking
-        }
-    } */
-
 }

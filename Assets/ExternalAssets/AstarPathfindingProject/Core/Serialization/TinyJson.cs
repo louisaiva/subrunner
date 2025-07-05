@@ -341,7 +341,7 @@ namespace Pathfinding.Serialization {
 				}
 
 #if UNITY_2020_1_OR_NEWER
-				foreach (var helper in UnityEngine.Object.FindObjectsOfType<UnityReferenceHelper>(true))
+				foreach (var helper in UnityEngine.Object.FindObjectsByType<UnityReferenceHelper>(FindObjectsInactive.Include, FindObjectsSortMode.None))
 #else
 				foreach (var helper in UnityEngine.Object.FindObjectsOfType<UnityReferenceHelper>())
 #endif

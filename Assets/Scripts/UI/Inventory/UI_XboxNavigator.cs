@@ -175,7 +175,7 @@ public class UI_XboxNavigator : MonoBehaviour
         hover_slot(last_slot != null ? slots.IndexOf(last_slot) : -1);
 
         // on cache le perso quick inventory si c'est le seul survivant
-        if (slottables.Count == 1 && slottables[0] == perso_quick_inventory.gameObject)
+        if (slottables.Count == 1 && perso_quick_inventory != null && slottables[0] == perso_quick_inventory.gameObject)
         {
             // on cache le perso quick inventory si besoin
             if (!perso_quick_inventory_was_shown) { perso_quick_inventory.Hide(); }

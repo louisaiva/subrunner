@@ -157,6 +157,7 @@ GameObject:
   - component: {fileID: 2639434519578746112}
   - component: {fileID: 3387591549335084900}
   - component: {fileID: 7853161631166308107}
+  - component: {fileID: 3884268841172835077}
   - component: {fileID: 7206343197171121091}
   - component: {fileID: -5260680249891615082}
   m_Layer: 23
@@ -274,6 +275,34 @@ MonoBehaviour:
   debug_orientation: 0
   debug_advanced: 0
   debug_frames: 0
+--- !u!114 &3884268841172835077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6831872210500143280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 373b52eb9bf8c40f785bb6947a1aee66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  drawGizmos: 1
+  detailedGizmos: 0
+  startEndModifier:
+    addPoints: 0
+    exactStartPoint: 3
+    exactEndPoint: 3
+    useRaycasting: 0
+    mask:
+      serializedVersion: 2
+      m_Bits: 4294967295
+    useGraphRaycasting: 0
+  traversableTags: -1
+  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  graphMask:
+    value: -1
 --- !u!50 &7206343197171121091
 Rigidbody2D:
   serializedVersion: 5
@@ -321,6 +350,7 @@ MonoBehaviour:
   effects: 
   effects_timetolive: []
   debug: 0
+  debug_capacities_on_awake: 0
   rb: {fileID: 0}
   weight: 1
   random_weight_modifier_at_start: 0

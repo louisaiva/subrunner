@@ -27,7 +27,7 @@ namespace Pathfinding {
 			} else if (gameObject.scene.name != null) {
 				// Create a new GUID if there are duplicates in the scene.
 				// Don't do this if this is a prefab (scene.name == null)
-				foreach (UnityReferenceHelper urh in FindObjectsOfType(typeof(UnityReferenceHelper)) as UnityReferenceHelper[]) {
+				foreach (UnityReferenceHelper urh in FindObjectsByType<UnityReferenceHelper>(FindObjectsSortMode.None)) {
 					if (urh != this && guid == urh.guid) {
 						guid = Pathfinding.Util.Guid.NewGuid().ToString();
 						Debug.Log("Created new GUID - " + guid, this);

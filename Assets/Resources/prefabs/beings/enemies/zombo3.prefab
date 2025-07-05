@@ -191,6 +191,7 @@ GameObject:
   - component: {fileID: 1982530335173329727}
   - component: {fileID: 5396166487167258112}
   - component: {fileID: 4243531793187179843}
+  - component: {fileID: 1346960045669581303}
   - component: {fileID: 7961395675651715899}
   - component: {fileID: 8817564043264294159}
   m_Layer: 23
@@ -307,6 +308,34 @@ MonoBehaviour:
   debug_orientation: 0
   debug_advanced: 0
   debug_frames: 0
+--- !u!114 &1346960045669581303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8595018692463036030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 373b52eb9bf8c40f785bb6947a1aee66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  drawGizmos: 1
+  detailedGizmos: 0
+  startEndModifier:
+    addPoints: 0
+    exactStartPoint: 3
+    exactEndPoint: 3
+    useRaycasting: 0
+    mask:
+      serializedVersion: 2
+      m_Bits: 4294967295
+    useGraphRaycasting: 0
+  traversableTags: -1
+  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  graphMask:
+    value: -1
 --- !u!114 &7961395675651715899
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -327,6 +356,7 @@ MonoBehaviour:
   effects: 
   effects_timetolive: []
   debug: 0
+  debug_capacities_on_awake: 0
   rb: {fileID: 0}
   weight: 1.4
   random_weight_modifier_at_start: 0.2

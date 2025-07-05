@@ -73,7 +73,7 @@ namespace Pathfinding {
 		}
 
 		public static void FindAllGraphSurfaces () {
-			var srf = GameObject.FindObjectsOfType(typeof(RelevantGraphSurface)) as RelevantGraphSurface[];
+			var srf = GameObject.FindObjectsByType<RelevantGraphSurface>(FindObjectsSortMode.None) as RelevantGraphSurface[];
 
 			for (int i = 0; i < srf.Length; i++) {
 				srf[i].OnDisable();
