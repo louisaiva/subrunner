@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0857b2a53377458ebec6c4b1179e3c5a, type: 3}
+  m_Name: GOAPGenerator
+  m_EditorClassIdentifier: 
+  nameSpace: subrunner.goap
+  scripts:
+    goals:
+    - <Name>k__BackingField: IdleGoal
+      fullName: subrunner.goap.IdleGoal, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      <Path>k__BackingField: Assets/Scripts/GOAP/Goals/IdleGoal.cs
+      <Id>k__BackingField: Idle-d03cafb7-4861-429c-b3bd-c6eb56ad6fe2
+    actions:
+    - <Name>k__BackingField: IdleAction
+      fullName: subrunner.goap.IdleAction, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      <Path>k__BackingField: Assets/Scripts/GOAP/Actions/IdleAction.cs
+      <Id>k__BackingField: Idle-9b53930e-6c9f-44ee-8788-2b7c75333941
+    worldSensors: []
+    worldKeys:
+    - <Name>k__BackingField: IsIdle
+      fullName: subrunner.goap.IsIdle, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      <Path>k__BackingField: Assets/Scripts/GOAP/WorldKeys/IsIdle.cs
+      <Id>k__BackingField: IsIdle-89833099-1d95-4bd3-997f-482a4dda03cc
+    targetSensors:
+    - <Name>k__BackingField: IdleTargetSensor
+      fullName: subrunner.goap.IdleTargetSensor, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      <Path>k__BackingField: Assets/Scripts/GOAP/Sensors/IdleTargetSensor.cs
+      <Id>k__BackingField: IdleTargetSensor-c34e9575-d171-4044-9b83-a91a1c32e214
+    targetKeys:
+    - <Name>k__BackingField: IdleTarget
+      fullName: subrunner.goap.IdleTarget, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      <Path>k__BackingField: Assets/Scripts/GOAP/TargetKeys/IdleTarget.cs
+      <Id>k__BackingField: IdleTarget-32f93465-2ca7-431d-88e7-36ac07ad93ee
+    multiSensors: []

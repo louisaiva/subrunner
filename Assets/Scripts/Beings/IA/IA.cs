@@ -13,7 +13,7 @@ using UnityEngine;
 public class IA : Being
 {
     [Header("Goals")]
-    [SerializeField] private Transform goal_parent;
+    // [SerializeField] private Transform goal_parent;
     public List<Goal> goals = new List<Goal>(); // list of goals that the IA can achieve
     public Goal current_goal; // the current goal that the IA is trying to achieve
 
@@ -32,7 +32,7 @@ public class IA : Being
         // we get the seeker component
         seeker = GetComponent<Seeker>();
 
-        if (goal_parent == null)
+        /* if (goal_parent == null)
         {
             Debug.LogError("(IA) " + name + " has no goal parent set! Please set a goal parent in the inspector.");
             return;
@@ -43,14 +43,14 @@ public class IA : Being
         if (goals.Count == 0)
         {
             Debug.LogError("(IA) " + name + " has no goals set! Please add at least the default idle goal in the inspector");
-        }
+        } */
 
         // we sort the goals by descending priority order (so the highest priority is in first)
-        goals = goals.OrderByDescending(g => g.priority).ToList();
+        // goals = goals.OrderByDescending(g => g.priority).ToList();
     }
 
     // GOALS MANAGEMENT
-    protected override void Update()
+    /* protected override void Update()
     {
         base.Update();
 
@@ -67,7 +67,7 @@ public class IA : Being
 
         // 2 - update current goal
         current_goal.UpdateGoal();
-    }
+    } */
     protected virtual void SwitchGoal(Goal new_goal)
     {
         // we stop the current goal
