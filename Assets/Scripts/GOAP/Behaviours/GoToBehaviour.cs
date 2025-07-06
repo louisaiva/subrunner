@@ -10,7 +10,6 @@ namespace subrunner.goap
 
         [Header("GoTo Behaviour")]
         [SerializeField] private ITarget target;
-        // [SerializeField] private bool shouldMove;
         private AgentBehaviour agent;
 
 

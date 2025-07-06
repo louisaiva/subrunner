@@ -6,29 +6,36 @@ using System.Collections.Generic;
 
 namespace subrunner.goap
 {
-    // Defining a GoapId is only necessary when using the ScriptableObject configuration method.
-    [GoapId("IdleTargetSensor-c34e9575-d171-4044-9b83-a91a1c32e214")]
-    public class IdleTargetSensor : LocalTargetSensorBase
+    // [GoapId("IdleTargetSensor-c34e9575-d171-4044-9b83-a91a1c32e214")]
+    public class WanderTargetSensor : LocalTargetSensorBase
     {
-        // private static readonly Bounds Bounds = new(Vector3.zero, new Vector3(50, 50, 0));
-
-        // Is called when this script is initialzed
+        // 
         public override void Created() { }
-
-        // Is called every frame that an agent of an `AgentType` that uses this sensor needs it.
-        // This can be used to 'cache' data that is used in the `Sense` method.
-        // Eg look up all the trees in the scene, and then find the closest one in the Sense method.
         public override void Update() { }
 
         public override ITarget Sense(IActionReceiver agent, IComponentReference references, ITarget existingTarget)
         {
-            Vector3 random_position = this.GetRandomPositionOnGraph();
-            random_position.z = 0; // Ensure the z-coordinate is zero for 2D gameplay
+            Vector3? random_position_check = this.GetRandomPositionOnGraph();
+
+            // checks if the position found is valid
+            if (!random_position_check.HasValue)
+            {
+                // return the current target if we have one
+                if (existingTarget is PositionTarget) { return existingTarget as PositionTarget; }
+
+                // if no random position is found, return null
+                return null;
+            }
+
+            // the position is valid, we set the z as 0 for 2D gameplay
+            Vector3 random_position = random_position_check.Value;
+            random_position.z = 0;
+
             // Debug.Log($"(IdleTargetSensor) {agent} senses a new position target at {random_position}");
 
+            // and we return the position as a PositionTarget
             if (existingTarget is PositionTarget existingTargetPosition)
             {
-                // If an existing target is provided, update its position
                 existingTargetPosition.SetPosition(random_position);
                 return existingTarget;
             }
@@ -36,14 +43,14 @@ namespace subrunner.goap
             return new PositionTarget(random_position);
         }
 
-        private Vector3 GetRandomPositionOnGraph()
+        private Vector3? GetRandomPositionOnGraph()
         {
             // pick a random walkable node on the current grid graph and returns its position
             GridGraph gridGraph = AstarPath.active.data.gridGraph;
             int randomIndex;
             GridNode randomNode;
 
-            for (int i = 0; i < gridGraph.nodes.Length; i++)
+            for (int i = 0; i < 5; i++)
             {
                 randomIndex = Random.Range(0, gridGraph.nodes.Length);
                 randomNode = gridGraph.nodes[randomIndex];
@@ -53,8 +60,8 @@ namespace subrunner.goap
                 }
             }
 
-            Debug.LogWarning("(IdleTargetSensor) No walkable node found, returning the first node's position as a fallback.");
-            return (Vector3)gridGraph.nodes[0].position;
+            Debug.LogWarning("(IdleTargetSensor) No walkable node found");
+            return null;
         }
     }
 }

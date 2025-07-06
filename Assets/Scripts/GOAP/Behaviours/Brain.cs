@@ -6,29 +6,34 @@ namespace subrunner.goap
 {
     public class Brain : MonoBehaviour
     {
-        private AgentBehaviour agent;
-        private GoapActionProvider provider;
-        [Header("GOAP")]
-        [SerializeField] private GoapBehaviour goap;
+        [Header("Agent Type")]
         [SerializeField] private string agent_type;
+
+        [Header("GOAP Components")]
+        private AgentBehaviour agent; // handles action's doing
+        private GoapActionProvider provider; // handles goal's doing WHICH MEANS action's planning
+
+        // PROPERTIES
+        public IA ia => transform.parent.GetComponent<IA>();
 
         private void Awake()
         {
             this.agent = this.GetComponent<AgentBehaviour>();
             this.provider = this.GetComponent<GoapActionProvider>();
 
-            // we get the goap manager & the agent type
-            goap = GameObject.Find("/utils/goap_manager").GetComponent<GoapBehaviour>();
-            AgentTypeBehaviour agent_type_behaviour = goap.transform.Find(agent_type).GetComponent<AgentTypeBehaviour>();
-
-            // we set the provider's agent behaviour
-            // provider.AgentTypeBehaviour = agent_type_behaviour;
-            provider.AgentType = agent_type_behaviour.AgentType;
+            // we set the provider's agent type
+            GoapBehaviour goap = GameObject.Find("/utils/goap_manager").GetComponent<GoapBehaviour>();
+            if (goap == null)
+            {
+                Debug.LogError("(Brain) GoapBehaviour not found in the scene. Please add it to /utils/goap_manager");
+                return;
+            }
+            provider.AgentType = goap.GetAgentType(agent_type);
         }
 
         private void Start()
         {
-            this.provider.RequestGoal<IdleGoal>();
+            this.provider.RequestGoal<WanderGoal,SmellFoodGoal>();
         }
     }
 }
