@@ -13,7 +13,7 @@ public class InputManager : MonoBehaviour
     [SerializeField] public float joystick_treshold_min = 0.1f;
 
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
     public bool debug_input_maps_enabled = false;
 

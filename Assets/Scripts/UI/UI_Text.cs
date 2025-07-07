@@ -25,7 +25,7 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
     [Header("Events")]
     [SerializeField] private UnityEvent activateEvent;
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
 
     // unity functions

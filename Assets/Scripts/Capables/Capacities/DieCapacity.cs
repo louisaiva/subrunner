@@ -19,9 +19,11 @@ public class DieCapacity : Capacity
 
     [Header("Die parameters")]
     public bool destroy_object = true;
-    // public float time_before_disappearing = 60f;
     [SerializeField] private bool show_smiley = true;
-    [SerializeField] private List<string> smileys = new List<string> { "RIP", "rip", ";-;", ":(" };
+    [SerializeField] private List<string> smileys = new List<string> { "RIP", "rip", ";-;", ":(", "://" };
+
+    // [Header("Components")]
+    // [SerializeField] private GameObject hover_prefab;
 
     // START
     private void Start()
@@ -65,7 +67,6 @@ public class DieCapacity : Capacity
         }
 
         // destroy object
-        // Invoke(nameof(destroyObject), time_before_disappearing);
         StartCoroutine(destroyObject());
     }
 
@@ -114,21 +115,30 @@ public class DieCapacity : Capacity
                 Destroy(goal_objects[0]);
                 goal_objects.RemoveAt(0);
             }
+            Destroy(ia.transform.Find("goals").gameObject);
         }
-
         // we switch the rigidbody collision detection to discrete since the dead body won't move very fast (not affected by our forces)
         Rigidbody2D rb = being.GetComponent<Rigidbody2D>();
         rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
 
+
+        // we wait for a frame in order to the capacities to be destroyed & hover to be instanced
+        yield return null;
+
         // And finally we add a Meat that will replace the being
-        // List<Force> forces = new List<Force>(being.GetForces()); // we save the current forces of the capable
         Meat meat = being.gameObject.AddComponent<Meat>();
-        meat.SetForces(being.GetForces()); // we set the forces back to the Meat
+        meat.name = "Meat";
+        meat.debug = true;
+        meat.Initialize();
+        meat.SetForces(being.GetForces());
+
+        // we add a hover capacity to it (it is an item now)
+        meat.AddCapacity("hover");
 
         // we destroy the old being component
         Destroy(being);
 
-        // and we destroy ourselves (the DieCapacity)
-        Destroy(this.gameObject);
+        // and we finally remove the die capacity which will destroy it (ourselves)
+        meat.RemoveCapacity("die");
     }
 }

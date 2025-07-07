@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 {
-    
+
     [Header("UI_Item Pools")]
     [SerializeField] private List<UI_ItemPool> pools = new List<UI_ItemPool>();
 
@@ -19,7 +19,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     [SerializeField] private UI_XboxNavigator navigator;
     public Inventory inventory;
 
-    [Header("Debug")]
+    [Header("Logs")]
     [SerializeField] private bool debug = false;
 
     public void Init()
@@ -74,7 +74,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         if (transform.parent.name != "hud")
         {
             if (!navigator) { Init(); }
-            navigator.Enable(this,true);
+            navigator.Enable(this, true);
         }
     }
     public void Hide()
@@ -167,8 +167,11 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         }
 
         // if we are here, no pool could take the item
-        if (debug) { Debug.LogWarning("(UI_Inventory) no pool could take the item " + item.Reference +
-        " in " + inventory.capable.name + "'s ui_inventory, maybe they are full or the item is incompatible"); }
+        if (debug)
+        {
+            Debug.LogWarning("(UI_Inventory) no pool could take the item " + item.Reference +
+        " in " + inventory.capable.name + "'s ui_inventory, maybe they are full or the item is incompatible");
+        }
 
         return false;
     }
@@ -181,13 +184,16 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
             bool dropped = pool.Drop(item);
             if (dropped)
             {
-                if (debug) { Debug.Log("(UI_Inventory) dropped " + item.Reference + " in " + pool.name); }
+                /* if (debug) {  */Debug.Log("(UI_Inventory) dropped " + item.Reference + " in " + pool.name); //}
                 return true;
             }
         }
 
-        if (debug) { Debug.LogWarning("(UI_Inventory) no pool could drop the item " + item.Reference +
-        " in " + inventory.capable.name + "'s ui_inventory, please check the pools and the item type"); }
+        if (debug)
+        {
+            Debug.LogWarning("(UI_Inventory) no pool could drop the item " + item.Reference +
+        " in " + inventory.capable.name + "'s ui_inventory, please check the pools and the item type");
+        }
 
         return false;
     }

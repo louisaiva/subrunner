@@ -60,7 +60,7 @@ public class UI_XboxNavigator : MonoBehaviour
     private event Action<InputAction.CallbackContext> activateCallback; // activate Callback is for activating the item/slot -> quit game, mostly on A
 
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
     public bool debug_navigation = false;
     public bool debug_gizmo = false;

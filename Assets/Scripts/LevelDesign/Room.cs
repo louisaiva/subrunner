@@ -21,7 +21,7 @@ public class Room : MonoBehaviour
     public Transform walls_hider;
     public Transform ground_hider;
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
     public bool loaded = false;
 

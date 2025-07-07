@@ -1,14 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
-using Unity.VisualScripting;
 
 
 public class Being : Movable
 {
 
-    [Header("LIFE")]
+    [Header("BEING")]
     public float life = 100f;
     public int max_life = 100;
     [SerializeField] private int random_life_modifier_at_start = 0; // max_life += random.range(-5,5) in the start method if this modifier = 5
@@ -17,16 +13,7 @@ public class Being : Movable
     public float regen_life = 0f; // en point de life par seconde
     public Collider2D body_collider;
 
-
-    // [Header("MOVEMENT")]
-    // public float inputs_magnitude=1f;
-    // public float speed = 3f; // speed de déplacement
-    // protected bool isRunning = false;
-    // public float running_speed = 5f; // speed de déplacement
-    // private bool isMoving = false;
-
     [Header("taking damage")]
-    // public GameObject xp_provider;
     public GameObject floating_dmg_provider;
 
     // ANIMATIONS

@@ -2,20 +2,22 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class Movable : Capable
 {
+    public bool debug_velocity = false; // Show velocity in console
+
     [Header("MOVABLE")]
     public Rigidbody2D rb;  // Replace transform movement
     public float weight = 1f;
     [SerializeField] private float random_weight_modifier_at_start = 0f; // weight += random.range(-5,5) in the start method if this modifier = 5
     public float friction = 7f;
-    public bool debug_velocity = false; // Show velocity in console
 
     [Header("Forces")]
     public List<Force> forces = new List<Force>();
     public float input_speed;
     public Vector2 Velocity;
-    
+
 
     [Header("Collisions")]
     public Collider2D feet_collider;
@@ -186,7 +188,7 @@ public class Movable : Capable
         // we log the current linear velocity
         if (debug_velocity) { Debug.Log("velocity : " + Velocity); }
     }
-    
+
     // gizmos
     protected virtual void OnDrawGizmos()
     {

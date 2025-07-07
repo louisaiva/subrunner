@@ -2,5 +2,5 @@ using CrashKonijn.Goap.Runtime;
 
 namespace subrunner.goap
 {
-    public class ClosestFood : TargetKeyBase {}
+    public class BeingTarget : TargetKeyBase { }
 }

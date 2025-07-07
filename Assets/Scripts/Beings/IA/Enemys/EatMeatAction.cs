@@ -11,8 +11,8 @@ public class EatMeatAction : CapacityAction
 
         // we do the capacity
         if (debug) { Debug.Log("(EatMeatAction) " + name + " is eating meat: " + target.name); }
-        EatMeatCapacity capa = ia.GetCapacity<EatMeatCapacity>();
-        capa.meat_target = target; // set the meat target for the capacity
+        EatCapacity capa = ia.GetCapacity<EatCapacity>();
+        capa.SetFoodTarget(target);
         ia.Do(capacity);
 
         if (!wait_for_animation_to_finish)

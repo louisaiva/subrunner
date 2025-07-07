@@ -18,7 +18,7 @@ public class Wall : MonoBehaviour
     public Material ceilings_see_through;
 
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
 
 

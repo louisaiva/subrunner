@@ -7,7 +7,7 @@ public class Action : MonoBehaviour
     public bool done = false; // If the action is done or not
     protected IA ia;
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false; // If the action should be debugged or not
 
     // AWAKE

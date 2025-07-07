@@ -22,7 +22,7 @@ public class UI_Pool : MonoBehaviour
     [Header("Inputs")]
     protected PlayerInputActions inputs;
 
-    [Header("Debug")]
+    [Header("Logs")]
     [SerializeField] protected bool debug = false;
 
     // AWAKE

@@ -78,7 +78,11 @@ public class GrabCapacity : Capacity
         }
         
         // we grab the item
+        string item_name = selected_item.name;
         bool grab = inventory.Grab(selected_item);
-        if (debug) { Debug.Log("(GrabCapacity) " + capable.name + (grab ? " :D grabbed" : " :/ could not grab") + " : " + selected_item.name); }
+        if (debug)
+        {
+            Debug.Log("(GrabCapacity) " + capable.name + (grab ? " :D grabbed" : " :/ could not grab") + " : " + item_name);
+        }
     }
 }

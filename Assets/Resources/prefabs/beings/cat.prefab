@@ -258,7 +258,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: cat
-  orientation: L
   current_capacity: 
   current_anim:
     name: 
@@ -275,6 +274,7 @@ MonoBehaviour:
   debug_orientation: 0
   debug_advanced: 0
   debug_frames: 0
+  debug_pile: 0
 --- !u!114 &3884268841172835077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -342,8 +342,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea914553463741c47a717767f3c02f3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim_player: {fileID: 0}
-  bank: {fileID: 0}
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: 0}
   capacities: []
@@ -351,11 +349,11 @@ MonoBehaviour:
   effects_timetolive: []
   debug: 0
   debug_capacities_on_awake: 0
+  debug_velocity: 0
   rb: {fileID: 0}
   weight: 1
   random_weight_modifier_at_start: 0
   friction: 7
-  debug_velocity: 0
   forces: []
   input_speed: 0
   Velocity: {x: 0, y: 0}
@@ -385,7 +383,7 @@ GameObject:
   - component: {fileID: 3624794335309129108}
   - component: {fileID: 8949582032119047939}
   - component: {fileID: 2622228592504768606}
-  - component: {fileID: 7394943438126918280}
+  - component: {fileID: 2814625212250578100}
   m_Layer: 23
   m_Name: brain
   m_TagString: Untagged
@@ -458,9 +456,9 @@ MonoBehaviour:
   current_waypoint_destination: {x: 0, y: 0}
   current_waypoint: 0
   update_path_interval: 0.5
-  waypoint_threshold_distance: 0.2
-  debug: 0
---- !u!114 &7394943438126918280
+  log: 0
+  log_path_calculation: 0
+--- !u!114 &2814625212250578100
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -469,7 +467,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8796150177163226725}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db94d7d49ad82e34e9ea5912b59eddb2, type: 3}
+  m_Script: {fileID: 11500000, guid: 8ab34ce3f3c34434690f2ba82b782037, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   agent_type: cat

@@ -21,13 +21,8 @@ public class EatCapacity : Capacity
             if (debug) { Debug.LogWarning("(EatCapacity) " + capable.name + " has no food target"); }
             return;
         }
-        if (food_target.Holder != this.capable)
-        {
-            if (debug) { Debug.LogWarning("(EatCapacity) " + capable.name + " is not the holder of the food target"); }
-            return;
-        }
 
-        // checks if the capable is a capable
+        // checks if the capable is a being
         if (capable is not Being)
         {
             if (debug) { Debug.LogWarning("(EatCapacity) " + capable.name + " is not a being"); }
@@ -47,12 +42,8 @@ public class EatCapacity : Capacity
         else { startCooldown(); }
 
         // we launch the eating action for the food to take effect
-        food_target.BeingEat(anim_duration);
+        food_target.BeingBitten(being,anim_duration);
     }
 
-    public void SetFoodTarget(Food food)
-    {
-        // we set the food target
-        food_target = food;
-    }
+    public void SetFoodTarget(Food food) { food_target = food; }
 }

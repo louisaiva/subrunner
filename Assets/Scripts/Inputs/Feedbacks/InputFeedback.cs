@@ -24,7 +24,7 @@ public class InputFeedback : MonoBehaviour
     [SerializeField] protected Color base_color = new Color(1f, 1f, 1f, 1f);
     [SerializeField] protected Color clicked_color = new Color(1f, 1f, 0f, 1f);
 
-    [Header("debug")]
+    [Header("Logs")]
     public bool debug = false;
     
     protected virtual void Start()

@@ -10,8 +10,8 @@ namespace subrunner.goap
         [SerializeField] private string agent_type;
 
         [Header("GOAP Components")]
-        private AgentBehaviour agent; // handles action's doing
-        private GoapActionProvider provider; // handles goal's doing WHICH MEANS action's planning
+        protected AgentBehaviour agent; // handles action's doing
+        protected GoapActionProvider provider; // handles goal's doing WHICH MEANS action's planning
 
         // PROPERTIES
         public IA ia => transform.parent.GetComponent<IA>();
@@ -29,11 +29,6 @@ namespace subrunner.goap
                 return;
             }
             provider.AgentType = goap.GetAgentType(agent_type);
-        }
-
-        private void Start()
-        {
-            this.provider.RequestGoal<WanderGoal,SmellFoodGoal>();
         }
     }
 }

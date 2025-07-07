@@ -19,7 +19,7 @@ public class UI_ItemPool : MonoBehaviour
     [SerializeField] protected ItemBank bank;
     public Description Descriptor; // the description of the item pool
 
-    [Header("Debug")]
+    [Header("Logs")]
     [SerializeField] protected bool debug = false;
 
     public virtual void Init()

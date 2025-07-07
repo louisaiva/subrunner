@@ -36,7 +36,7 @@ public class UI_AnimPlayer : MonoBehaviour
 
 
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
     public bool debug_orientation = false;
     public bool debug_advanced = false;

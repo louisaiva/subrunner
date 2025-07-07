@@ -18,7 +18,7 @@ public class UI_Slot : MonoBehaviour, I_UI_Slot
     public Sprite down_sprite;
     public Sprite disabled_sprite;
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
 
     // DISABLE

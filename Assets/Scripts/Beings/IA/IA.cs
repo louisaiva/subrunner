@@ -12,7 +12,7 @@ using UnityEngine;
 [RequireComponent(typeof(Seeker))]
 public class IA : Being
 {
-    [Header("Goals")]
+    [Header("IA")]
     // [SerializeField] private Transform goal_parent;
     public List<Goal> goals = new List<Goal>(); // list of goals that the IA can achieve
     public Goal current_goal; // the current goal that the IA is trying to achieve
@@ -20,7 +20,7 @@ public class IA : Being
     [Header("Pathfinding")]
     public Seeker seeker; // the seeker component used for pathfinding
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug_goals = false;
     public bool debug_doable_goals = false;
 

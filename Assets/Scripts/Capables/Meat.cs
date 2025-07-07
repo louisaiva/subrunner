@@ -1,37 +1,41 @@
+using System.Collections;
 using UnityEngine;
 
-public class Meat : Movable
+public class Meat : Food
 {
     [Header("MEAT")]
-    [SerializeField] private int meat_amount = 10; // amount of meat on the body that being can eat (if they want of course)
     [SerializeField] private int random_meat_modifier_at_start = 5; // meat_amount += random.range(-5,5) in the start method if this modifier = 5
-    public bool Eatable { get { return meat_amount > 0; } }
 
-    // START
-    protected override void Start()
+    // INIT
+    public void Initialize()
     {
-        base.Start();
-
         // random meat
-        meat_amount += Random.Range(-random_meat_modifier_at_start, random_meat_modifier_at_start);
+        bites_left = 10;
+        bites_left += Random.Range(-random_meat_modifier_at_start, random_meat_modifier_at_start);
+        life_regen_per_bite = 1f; // 1 hp per bite
+
+        // set the item reference name
+        Reference = "food:meat";
+        ItemDescription = "meat./. mmh by bad it's just a dead body/./l do not eat PLEASE";
+        MaxQty = 10;
     }
 
-    // BEING EATEN
-    public bool BeingEaten(Being eater)
+    // BEING BITTEN
+    protected override IEnumerator being_bitten(Being eater, float duration)
     {
-        if (meat_amount <= 0) { return false; } // no meat left to eat
+        // we wait for the eat animation to finish
+        yield return new WaitForSeconds(duration);
 
-        // we lose one meat
-        meat_amount--;
+        // we regen the life of the eater
+        if (debug) { Debug.Log("(Meat) " + eater.name + " is eating one bite of " + name + " for " + life_regen_per_bite + " hp"); }
+        eater.AddLife(life_regen_per_bite);
 
-        if (debug) { Debug.Log("(Meat) eaten by " + eater.name + ". Meat amount left: " + meat_amount); }
+        // check if there is still some bites left
+        bites_left--;
+        if (bites_left > 0) { yield break; }
 
-        if (meat_amount <= 0)
-        {
-            become_bones();
-        }
-
-        return true; // we successfully ate the meat
+        // if not we destroy the item
+        become_bones();
     }
 
     // BECOME BONES

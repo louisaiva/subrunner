@@ -43,7 +43,7 @@ public class MotherboardBuilder : MonoBehaviour
     [Header("Components")]
     [SerializeField] private Canvas canvas;
 
-    [Header("Debug")]
+    [Header("Logs")]
     [SerializeField] private bool debug = false;
 
     // HELPERS

@@ -17,7 +17,7 @@ public class Inventory : MonoBehaviour {
     public UI_Inventory ui { get { return uis.Count > 0 ? uis[0] : null; } }
     public Capable capable { get { return transform.parent.GetComponent<Capable>(); } }
 
-    [Header("Debug")]
+    [Header("Logs")]
     [SerializeField] private bool debug = false;
 
     // AWAKE
@@ -68,8 +68,6 @@ public class Inventory : MonoBehaviour {
 
         // we add the item
         Items.Add(item);
-
-        // we set the item to grabbed (which disables the hover collider)
         item.Grabbed = true;
 
         // we set the item parent and reset its local position

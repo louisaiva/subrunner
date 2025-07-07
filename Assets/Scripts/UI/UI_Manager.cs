@@ -20,7 +20,7 @@ public class UI_Manager : MonoBehaviour
     
 
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
 
     // inputs

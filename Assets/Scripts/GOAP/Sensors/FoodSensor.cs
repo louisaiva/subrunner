@@ -5,9 +5,7 @@ using UnityEngine;
 
 namespace subrunner.goap
 {
-    // Defining a GoapId is only necessary when using the ScriptableObject configuration method.
-    [GoapId("FoodSensor-d68c875d-29c0-43f3-9d79-054d4cc6505d")]
-    public class FoodSensor : MultiSensorBase
+    public class FoodSensor : MultiSensorBase, IInjectable
     {
         private Food[] foods;
 
@@ -47,17 +45,21 @@ namespace subrunner.goap
             });
         }
 
-        // The Created method is called when the sensor is created
-        // This can be used to gather references to objects in the scene
         public override void Created() { }
 
-        // This method is equal to the Update method of a local sensor.
-        // It can be used to cache data, like gathering a list of all pears in the scene.
-        public override void Update()
+        public void Inject(DependencyInjector injector)
         {
-            this.foods = GameObject.FindObjectsByType<Food>(FindObjectsSortMode.None);
+            // throw new System.NotImplementedException();
         }
 
+
+        // UPDATE
+        public override void Update()
+        {
+            this.foods = GameObject.FindObjectsByType<Food>(FindObjectsSortMode.None)
+                .Where(food => !food.Grabbed) // only food on the ground
+                .ToArray();
+        }
 
         // Returns the closest item in a list
         private T Closest<T>(IEnumerable<T> list, Vector3 position)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ public class ItemBank : MonoBehaviour
     public GameObject ui_item_prefab;
     public GameObject ui_module_prefab;
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
 
 
@@ -122,7 +123,8 @@ public class ItemBank : MonoBehaviour
     {
         if (!item_sprites.ContainsKey(item_reference))
         {
-            Debug.LogError("(ItemBank) cannot find sprite " + item_reference);
+            Debug.LogError("(ItemBank) cannot find sprite " + item_reference
+                + ". are you sure its corresponding item prefab is in the " + items_path + " folder?");
             return null;
         }
 
@@ -146,6 +148,6 @@ public class ItemBank : MonoBehaviour
 
 
 
-    // ! DEPRECATED
+    [Obsolete("Use GetSprite(string item_reference) instead.")]
     public Sprite getSprite(string item_ref) { return null;}
 }

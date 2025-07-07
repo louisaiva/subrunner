@@ -20,7 +20,7 @@ public class Level : MonoBehaviour
     [Header("Beings")]
     public Transform being_parent;
 
-    [Header("Debug")]
+    [Header("Logs")]
     [SerializeField] private bool debug = false;
     public bool loaded = false;
 

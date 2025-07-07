@@ -41,7 +41,7 @@ public class AnimBank : MonoBehaviour
     public string spritesheets_path = "spritesheets/";
 
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
     public bool debug_LAFAC = false;
 

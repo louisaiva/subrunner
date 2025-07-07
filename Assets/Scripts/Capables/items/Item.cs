@@ -41,8 +41,8 @@ public class Item : Movable
     // BEING GRABBED / DROPPED
     protected virtual void on_grabbed()
     {
-        // we remove the rigidbody
-        Destroy(rb);
+        // we change the rigidbody to a kinematic
+        rb.bodyType = RigidbodyType2D.Kinematic;
 
         // we disable the HoverCapacity's collider
         GetCapacity<HoverCapacity>().GetComponent<Collider2D>().enabled = false;
@@ -62,10 +62,7 @@ public class Item : Movable
     }
     protected virtual void on_dropped()
     {
-        // we add the rigidbody
-        rb = gameObject.AddComponent<Rigidbody2D>();
-        rb.gravityScale = 0;
-        rb.freezeRotation = true;
+        rb.bodyType = RigidbodyType2D.Dynamic; // we change the rigidbody to a dynamic
 
         // we enable the HoverCapacity's collider
         GetCapacity<HoverCapacity>().transform.GetComponent<Collider2D>().enabled = true;
@@ -83,10 +80,12 @@ public class Item : Movable
     // USE
     public virtual void Use()
     {
+        // todo make this an interface
         // only for items that have a use (apple : being eaten, katana : make an attack, etc.)
         // use the capacity of the item BUT with the capable holding this item as the user
         // if katana make a Do("attack") for example, the katana will be the user of the attack
         // we want the perso, holding the katana, to be the user of the attack
+
 
         // we check if the item is grabbed
         if (!Grabbed) { return; }
@@ -98,4 +97,10 @@ public class Item : Movable
         // and then we use the item
     }
 
+    // ON DESTROY
+    private void OnDestroy()
+    {
+        if (!gameObject.scene.isLoaded) { return; } // this happens when the scene is destroyed when we quit the scene
+        if (Holder != null) { Holder.inventory.Remove(this); } // we remove the item from the holder's inventory
+    }
 }

@@ -35,7 +35,7 @@ public class SeeThroughHandler : MonoBehaviour
     public Wall wall_hit = null;
 
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
     public bool debug_Y_Comparison = false;
 

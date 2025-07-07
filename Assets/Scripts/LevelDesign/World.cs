@@ -24,7 +24,7 @@ public class World : MonoBehaviour
         }
     }
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
     public bool debug_find_perso_room = false;
 

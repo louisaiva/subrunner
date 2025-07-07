@@ -11,6 +11,7 @@ namespace subrunner.goap
         [Header("GoTo Behaviour")]
         [SerializeField] private ITarget target;
         private AgentBehaviour agent;
+        private WalkCapacity walker;
 
 
         [Header("Pathfinding")]
@@ -19,28 +20,26 @@ namespace subrunner.goap
         [SerializeField] private Path path; // the current path
         [SerializeField] private int current_waypoint = 0; // the current waypoint on the path
         [SerializeField] private float update_path_interval = 0.5f; // interval to update the pathfinding to the target
-        [SerializeField] private float waypoint_threshold_distance = 0.2f; // current distance to the waypoint to consider it reached
+        private float waypoint_threshold_distance = 0.1f; // current distance to the waypoint to consider it reached
 
-        [Header("Components")]
-        private WalkCapacity walker;
-
-        [Header("Debug")]
-        [SerializeField] private bool debug = false; // if we should debug the pathfinding
+        [Header("Logs")]
+        [SerializeField] private bool log = false;
+        [SerializeField] private bool log_path_calculation = false;
 
         // PROPERTIES
         public bool HasTarget => target != null; // check if we have a target to go to
 
-        // AWAKE
+
+        // AWAKE & START
         private void Awake()
         {
             agent = GetComponent<AgentBehaviour>();
         }
-
-        // START
         private void Start()
         {
             walker = ia.GetCapacity<WalkCapacity>();
         }
+
 
         // ENABLING / DISABLING CALLBACKS
         private void OnEnable()
@@ -48,7 +47,6 @@ namespace subrunner.goap
             // subscribing to the events
             agent.Events.OnTargetInRange += OnTargetInRange;
             agent.Events.OnTargetChanged += OnTargetChanged;
-            agent.Events.OnTargetNotInRange += TargetNotInRange;
             agent.Events.OnTargetLost += TargetLost;
         }
         private void OnDisable()
@@ -56,8 +54,39 @@ namespace subrunner.goap
             // unsubscribing to the events
             agent.Events.OnTargetInRange -= this.OnTargetInRange;
             agent.Events.OnTargetChanged -= this.OnTargetChanged;
-            agent.Events.OnTargetNotInRange -= this.TargetNotInRange;
             agent.Events.OnTargetLost -= this.TargetLost;
+        }
+
+
+        // TARGET CALLBACKS MANAGEMENT
+        private void TargetLost()
+        {
+            if (log) { Debug.Log("(GoToBehaviour) " + ia.name + " lost the target and stopped moving."); }
+
+            target = null;
+
+            // we remove the path
+            path = null;
+
+            // we stop moving
+            walker.walk_percentage_target = 0f;
+        }
+        private void OnTargetInRange(ITarget target)
+        {
+            walker.walk_percentage_target = 0f; // stop moving
+
+            // we reset the path
+            path = null;
+            CancelInvoke(nameof(CalculatePath));
+
+            if (log) { Debug.Log("(GoToBehaviour) " + ia.name + " has done moving to its target"); }
+        }
+        private void OnTargetChanged(ITarget target, bool inRange)
+        {
+            if (log) { Debug.Log("(GoToBehaviour) " + ia.name + " target just change !"); }
+
+            this.target = target;
+            CalculatePath();
         }
 
 
@@ -66,11 +95,9 @@ namespace subrunner.goap
         {
             if (target == null)
             {
-                if (debug) { Debug.LogWarning("(GoToBehaviour) " + ia.name + " has no target to go to."); }
+                if (log) { Debug.LogWarning("(GoToBehaviour) " + ia.name + " has no target to go to."); }
                 return;
             }
-
-            // if (debug) { Debug.LogWarning("(GoToBehaviour) " + ia.name + " calculating path"); }
 
             // we find a path to follow
             ia.seeker.StartPath(ia.transform.position, target.Position, OnPathComplete);
@@ -83,7 +110,7 @@ namespace subrunner.goap
         {
             if (path.error)
             {
-                if (debug) { Debug.LogError("(GoToBehaviour) " + ia.name + " failed to find a path to " + target + ": " + path.errorLog); }
+                if (log_path_calculation) { Debug.LogError("(GoToBehaviour) " + ia.name + " failed to find a path to " + target + ": " + path.errorLog); }
                 return;
             }
 
@@ -94,41 +121,8 @@ namespace subrunner.goap
 
             // we start walking
             walker.walk_percentage_target = 1f;
-            if (debug) { Debug.Log("(GoToBehaviour) " + ia.name + " found a path to target with " + path.vectorPath.Count + " waypoints."); }
+            if (log_path_calculation) { Debug.Log("(GoToBehaviour) " + ia.name + " found a path to target with " + path.vectorPath.Count + " waypoints."); }
         }
-
-        // TARGET CALLBACKS MANAGEMENT
-        private void TargetLost()
-        {
-            if (debug) { Debug.Log("(GoToBehaviour) " + ia.name + " lost the target and stopped moving."); }
-
-            target = null;
-
-            // we remove the path
-            path = null;
-
-            // we stop moving
-            walker.walk_percentage_target = 0f;
-        }
-        private void OnTargetInRange(ITarget target)
-        {
-            // we succeed !!
-            succeed();
-        }
-        private void OnTargetChanged(ITarget target, bool inRange)
-        {
-            if (debug) { Debug.Log("(GoToBehaviour) " + ia.name + " target just change !"); }
-
-            this.target = target;
-        }
-        private void TargetNotInRange(ITarget target)
-        {
-            if (debug) { Debug.Log("(GoToBehaviour) " + ia.name + " target not in range"); }
-
-            // we calculate the path
-            if (path == null) { CalculatePath(); }
-        }
-
 
         // UPDATE
         public void Update()
@@ -141,12 +135,13 @@ namespace subrunner.goap
             // on regarde si on est arrivé au prochain point
             if (Vector2.Distance(ia.transform.position, current_waypoint_destination) <= waypoint_threshold_distance)
             {
-                // we go to next point
+                // we check if we arrived at the end of the path
                 current_waypoint++;
                 if (current_waypoint >= path.vectorPath.Count)
                 {
-                    // if we reached the end of the path, we succeed
-                    succeed();
+                    // stop moving
+                    walker.walk_percentage_target = 0f;
+                    if (log) { Debug.Log("(GoToBehaviour) " + ia.name + " has reached the end of the path."); }
                     return;
                 }
 
@@ -157,20 +152,6 @@ namespace subrunner.goap
             // we calculate the direction of the movement towards the waypoint
             Vector2 direction_to_waypoint = (current_waypoint_destination - (Vector2)ia.transform.position).normalized;
             ia.Orientation = direction_to_waypoint;
-        }
-
-        // SUCCEEDING
-        private void succeed()
-        {
-            // stop moving
-            walker.walk_percentage_target = 0f;
-
-            // we reset the path & succeed it
-            path = null;
-            CancelInvoke(nameof(CalculatePath)); // cancel the path calculation
-
-            // mark the action as done
-            if (debug) { Debug.Log("(GoToBehaviour) " + ia.name + " has done doing its action"); }
         }
 
         // GIZMOS
