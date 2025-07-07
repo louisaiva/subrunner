@@ -33,9 +33,9 @@ public class AnimBank : MonoBehaviour
 
     [Header("Animations parameters")]
     // store the capacities that have parameters override
-    private List<string> capacities_with_parameters_override = new List<string>() { "attack","hurted","dodge" };
+    private List<string> capacities_with_parameters_override = new List<string>() { "attack","hurted","dodge" }; // todo obsolete ??
     // store the loops of the capacities
-    private List<bool> capacities_loops = new List<bool>() { false,false,false };
+    private List<bool> capacities_loops = new List<bool>() { false,false,false }; // todo obsolete ??
 
     [Header("Sprites")]
     public string spritesheets_path = "spritesheets/";
@@ -303,12 +303,31 @@ public class AnimBank : MonoBehaviour
             return GetAnim(skin + ".idle." + orientation);
         }
 
+        // check if we have at least one orientation
+        if (anims[skin][capacity].Count == 0)
+        {
+            if (debug) { Debug.LogWarning("(AnimBank - GetAnim) No orientations found for " + skin + "." + capacity + ", returning sphere anim"); }
+            return anims["sphere"]["idle"][0];
+        }
+
+        // return the best orientation recursively
+        return get_closest_orientation_anim(skin, capacity, orientation);        
+    }
+
+    private Anim get_closest_orientation_anim(string skin, string capacity, string orientation)
+    {
         // checks if we have the perfect animation (orientation)
         Anim exact_anim = anims[skin][capacity].Find(anim => anim.orientation == orientation);
         if (exact_anim != null) { return exact_anim; }
-        
-        // else we return the first orientation
-        return anims[skin][capacity][0];
+
+        // if we have only one letter in the orientation (L,R,U or D) we return the first one we have
+        if (orientation.Length == 1) { return anims[skin][capacity][0]; }
+
+        // if we have a 2 letters orientation (LU,LD,RU,RD) we delete the 2nd letter (and so we look either for L or R)
+        else
+        {
+            return get_closest_orientation_anim(skin, capacity, orientation[0].ToString());
+        }
     }
 
     // PUBLIC GETTERS
