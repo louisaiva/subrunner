@@ -10,7 +10,7 @@ public class Meat : Food
     public void Initialize()
     {
         // random meat
-        bites_left = 10;
+        bites_left = 9;
         bites_left += Random.Range(-random_meat_modifier_at_start, random_meat_modifier_at_start);
         life_regen_per_bite = 1f; // 1 hp per bite
 

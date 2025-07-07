@@ -8,7 +8,7 @@ namespace subrunner.goap
     {
         private void Start()
         {
-            this.provider.RequestGoal<WanderGoal, SmellFoodGoal>();
+            this.provider.RequestGoal<WanderGoal, EatGoal>();
         }
     }
 }

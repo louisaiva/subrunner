@@ -57,7 +57,7 @@ namespace subrunner.goap
         public override void Update()
         {
             this.foods = GameObject.FindObjectsByType<Food>(FindObjectsSortMode.None)
-                .Where(food => !food.Grabbed) // only food on the ground
+                .Where(food => !food.Grabbed && food.Eatable) // only food on the ground & eatable
                 .ToArray();
         }
 

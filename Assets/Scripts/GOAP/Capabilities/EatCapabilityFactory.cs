@@ -3,16 +3,16 @@ using CrashKonijn.Goap.Runtime;
 
 namespace subrunner.goap
 {
-    public class SmellFoodCapabilityFactory : CapabilityFactoryBase
+    public class EatCapabilityFactory : CapabilityFactoryBase
     {
         public override ICapabilityConfig Create()
         {
             var builder = new CapabilityBuilder("FoodCapability");
 
-            builder.AddGoal<SmellFoodGoal>()
+            builder.AddGoal<EatGoal>()
                 .AddCondition<FoodReadyToBeEaten>(Comparison.GreaterThanOrEqual, 3);
 
-            builder.AddAction<SmellFoodAction>()
+            builder.AddAction<EatAction>()
                 .AddEffect<FoodReadyToBeEaten>(EffectType.Increase)
                 .SetTarget<ClosestFood>()
                 .SetStoppingDistance(0.2f);

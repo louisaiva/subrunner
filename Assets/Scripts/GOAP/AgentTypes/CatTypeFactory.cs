@@ -10,7 +10,7 @@ namespace subrunner.goap
             var factory = new AgentTypeBuilder("cat");
 
             factory.AddCapability<WanderCapabilityFactory>();
-            factory.AddCapability<SmellFoodCapabilityFactory>();
+            factory.AddCapability<EatCapabilityFactory>();
 
             return factory.Build();
         }

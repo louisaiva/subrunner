@@ -2,7 +2,7 @@ using CrashKonijn.Goap.Runtime;
 
 namespace subrunner.goap
 {
-    public class SmellFoodGoal : GoalBase
+    public class EatGoal : GoalBase
     {
     }
 }
