@@ -11,7 +11,16 @@ public class AttackCapacity : Capacity
 {
     // handle the collisions between an attack animation and a being
     // test de mécanique pour voir si une gestion pixelperfect du combat est agréable
-    
+
+    // those parameters are useful to the ClosestBeingSensor to determine which target to choose
+    // they are public so we can access them inside the sensor
+    [Header("Targets")]
+    public LayerMask target_layers;
+    public List<string> excluded_tags; // tags to exclude from target detection
+    public float range_target_detection = 1f;
+    public float distance_to_attack = 1f;
+
+
     [Header("Damage parameters")]
     public int kills = 0;
     public float damage = 10f;

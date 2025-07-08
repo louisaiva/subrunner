@@ -11,6 +11,7 @@ namespace subrunner.goap
 
             factory.AddCapability<WanderCapabilityFactory>();
             factory.AddCapability<EatCapabilityFactory>();
+            factory.AddCapability<KillBeingCapabilityFactory>();
 
             return factory.Build();
         }

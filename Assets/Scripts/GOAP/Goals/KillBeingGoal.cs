@@ -2,5 +2,7 @@ using CrashKonijn.Goap.Runtime;
 
 namespace subrunner.goap
 {
-    public class BeingTarget : TargetKeyBase { }
+    public class KillBeingGoal : GoalBase
+    {
+    }
 }

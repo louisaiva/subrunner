@@ -14,10 +14,10 @@ namespace subrunner.goap
 
         public override void BeforePerform(IMonoAgent agent, Data data)
         {
-            if (data.Target is not TransformTarget transformTarget) { return; }
-
-            // get the eat capacity & the food
             this.ia = data.Brain.ia;
+            this.anim_player = ia.anim_player;
+
+            if (data.Target is not TransformTarget transformTarget) { return; }
             this.food_target = transformTarget.Transform.GetComponent<Food>();
 
             // verify that the food is still Eatable (maybe since the sensor sensed it it was eaten)
@@ -27,8 +27,6 @@ namespace subrunner.goap
             if (!ia.HasCapacity<EatCapacity>()) { return; }
             ia.GetCapacity<EatCapacity>().SetFoodTarget(food_target);
 
-            // sets the anim_player
-            this.anim_player = ia.anim_player;
 
             // if (ia is Cat cat) { cat.food_ready_to_be_eaten = true; }
             Debug.Log($"(EatAction) {agent.name} is going to eat {food_target.name}"

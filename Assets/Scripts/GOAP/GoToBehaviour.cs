@@ -20,7 +20,7 @@ namespace subrunner.goap
         [SerializeField] private Path path; // the current path
         [SerializeField] private int current_waypoint = 0; // the current waypoint on the path
         [SerializeField] private float update_path_interval = 0.5f; // interval to update the pathfinding to the target
-        private float waypoint_threshold_distance = 0.1f; // current distance to the waypoint to consider it reached
+        private float waypoint_threshold_distance = 0.25f; // current distance to the waypoint to consider it reached
 
         [Header("Logs")]
         [SerializeField] private bool log = false;

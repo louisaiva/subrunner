@@ -35,6 +35,15 @@ public class InteractCapacity : Capacity
 
     [Header("Item Grab")]
     [SerializeField] private GrabCapacity grab_capacity;
+    [SerializeField] private List<string> exclusion_item_rule = new List<string>() {}; // rule to check if an item is interactable with us
+    public string ExclusionItemRule {
+        get
+        {
+            // since it's an exclusion list we want to make sure that no item passes it if it's empty
+            if (exclusion_item_rule.Count == 0) { return "none"; }
+            return string.Join(",", exclusion_item_rule);
+        }
+    }
 
     // START
     private void Start()
@@ -163,22 +172,23 @@ public class InteractCapacity : Capacity
         if (hover == null) { return; }
         
         // we get the capable of the hover capacity
-        Capable capable = hover.capable;
-        if (capable == null) { return; }
+        Capable interactive = hover.capable;
+        if (interactive == null) { return; }
 
         // we check if it's an Interactable or an Item
-        if (capable is not Interactable && capable is not Item) { return; }
+        if (interactive is not Interactable && interactive is not Item) { return; }
+        if (interactive is Item item && item.ValidateRule(ExclusionItemRule)) { return; } // we check if the item is excluded by the rule
 
         // we check if the capable is already hovered
-        if (capable == closest_hover) { return; }
+        if (interactive == closest_hover) { return; }
 
         // or if it's already in the waiting hovers
-        if (waiting_hovers.Contains(capable)) { return; }
+        if (waiting_hovers.Contains(interactive)) { return; }
 
         // we add the capable to the waiting hovers
-        waiting_hovers.Add(capable);
+        waiting_hovers.Add(interactive);
 
-        if (debug) { Debug.Log("(InteractCapacity) " + capable.name + " added to waiting hovers"); }
+        if (debug) { Debug.Log("(InteractCapacity) " + interactive.name + " added to waiting hovers"); }
     }
     private void OnTriggerExit2D(Collider2D other)
     {

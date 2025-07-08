@@ -51,6 +51,9 @@ MonoBehaviour:
   waiting_hovers: []
   interactInput: {fileID: 2767387396969607311, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   callback_is_set: 0
+  grab_capacity: {fileID: 0}
+  exclusion_item_rule:
+  - food:meat
 --- !u!70 &5448652197415061413
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

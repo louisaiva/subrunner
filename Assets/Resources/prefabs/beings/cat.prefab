@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3890690113539468027}
   m_Layer: 23
   m_Name: body
-  m_TagString: Cats
+  m_TagString: Cat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -162,7 +162,7 @@ GameObject:
   - component: {fileID: -5260680249891615082}
   m_Layer: 23
   m_Name: cat
-  m_TagString: Cats
+  m_TagString: Cat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -452,7 +452,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c271ab77a3674f4db5f3efca8f26ef8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ia: {fileID: -5260680249891615082}
   current_waypoint_destination: {x: 0, y: 0}
   current_waypoint: 0
   update_path_interval: 0.5
@@ -760,6 +759,26 @@ PrefabInstance:
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: damage
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
+      propertyPath: target_layers.m_Bits
+      value: 8388608
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
+      propertyPath: range_target_detection
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
+      propertyPath: excluded_tags.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
+      propertyPath: 'excluded_tags.Array.data[0]'
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
+      propertyPath: 'excluded_tags.Array.data[1]'
+      value: Cat
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: not_attackable_tags.Array.size
