@@ -13,9 +13,27 @@ using UnityEngine;
 public class IA : Being
 {
     [Header("IA")]
+    public float hunger = 0f; // Hunger level of the cat, the less the better
+    [SerializeField] private string[] items_eatable = new string[] { "apple" }; // List of items that the IA can eat
+    public string FoodRule { get
+        {
+            // return the total item_rule to see if the ia can eat a precise item
+            if (items_eatable.Length == 0) { return "food"; }
+            string rule = "";
+            for (int i = 0; i < items_eatable.Length; i++)
+            {
+                rule += "food:" + items_eatable[i] + ",";
+            }
+            rule = rule.TrimEnd(','); // we remove the last comma
+            return rule;
+        }
+    }
+
+    // public bool food_ready_to_be_eaten = false; // If the food is ready to be eaten
+
     // [SerializeField] private Transform goal_parent;
-    public List<Goal> goals = new List<Goal>(); // list of goals that the IA can achieve
-    public Goal current_goal; // the current goal that the IA is trying to achieve
+    // public List<Goal> goals = new List<Goal>(); // list of goals that the IA can achieve
+    // public Goal current_goal; // the current goal that the IA is trying to achieve
 
     [Header("Pathfinding")]
     public Seeker seeker; // the seeker component used for pathfinding
@@ -49,6 +67,13 @@ public class IA : Being
         // goals = goals.OrderByDescending(g => g.priority).ToList();
     }
 
+    // UPDATE
+    protected override void Update()
+    {
+        base.Update();
+
+        hunger += Time.deltaTime * 1f;
+    }
     // GOALS MANAGEMENT
     /* protected override void Update()
     {
@@ -68,7 +93,7 @@ public class IA : Being
         // 2 - update current goal
         current_goal.UpdateGoal();
     } */
-    protected virtual void SwitchGoal(Goal new_goal)
+    /* protected virtual void SwitchGoal(Goal new_goal)
     {
         // we stop the current goal
         if (current_goal != null)
@@ -107,6 +132,6 @@ public class IA : Being
         }
 
         // we return the highest priority Doable goal
-        return doable_goals.OrderByDescending(g => g.priority).FirstOrDefault(); */
-    }
+        return doable_goals.OrderByDescending(g => g.priority).FirstOrDefault(); 
+    } */
 }

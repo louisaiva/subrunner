@@ -57,27 +57,8 @@ public class UI_ItemPool : MonoBehaviour
     {
         // we check if the item is valid
         if (item == null) { return false; }
-        if (item_rule == "") { return true; }
-        
-        // we check if our rule has multiple entries
-        string[] rules = item_rule.Split(',');
 
-        // we need at least one rule to be valid
-        foreach (string rule in rules)
-        {
-            // check if the rule is a category or a specific item
-            if (rule.Contains(":"))
-            {
-                // specific item -> we check if the item is the same
-                if (item.Reference == rule) { return true; }
-                continue;
-            }
-            
-            // we check if the item is in the category
-            if (item.Reference.Contains(rule)) { return true; }
-        }
-
-        return false;
+        return item.ValidateRule(item_rule);
     }
 
 

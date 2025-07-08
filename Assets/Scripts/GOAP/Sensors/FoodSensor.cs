@@ -8,36 +8,43 @@ namespace subrunner.goap
     public class FoodSensor : MultiSensorBase, IInjectable
     {
         private Food[] foods;
+        private IA ia;
 
         public FoodSensor()
         {
-            this.AddLocalWorldSensor<FoodReadyToBeEaten>((agent, references) =>
+            /* this.AddLocalWorldSensor<FoodReadyToBeEaten>((agent, references) =>
             {
                 // Get a cached reference to the Cat on the agent
                 var brain = references.GetCachedComponent<Brain>();
 
-                return (brain.ia as Cat).food_ready_to_be_eaten ? 1 : 0;
-            });
+                return brain.ia.food_ready_to_be_eaten ? 1 : 0;
+            }); */
 
             this.AddLocalWorldSensor<Hunger>((agent, references) =>
             {
-                // Get a cached reference to the Cat on the agent
-                var data = references.GetCachedComponent<Cat>();
+                // Get a cached reference to the IA on the agent
+                var data = references.GetCachedComponent<Brain>();
 
+                // this.ia = data.ia;
+
+                // string log = "(FoodSensor) " + ia.name + " is creating the hunger local food sensor"
+                //     + "\n\tFood rule is: " + this.ia.FoodRule;
+                // if (ia.debug_goals) { Debug.Log(log); }
+                
                 // We need to cast the float to an int, because the hunger is an int
                 // We will lose the decimal values, but we don't need them for this example
-                return (int)data.hunger;
+                return (int)ia.hunger;
             });
 
             this.AddLocalTargetSensor<ClosestFood>((agent, references, target) =>
             {
-                // Use the cashed pears list to find the closest pear
+                // Use the cashed foods list to find the closest food
                 var closestFood = this.Closest(this.foods, agent.Transform.position);
 
                 if (closestFood == null)
                     return null;
 
-                // If the target is a transform target, set the target to the closest pear
+                // If the target is a transform target, set the target to the closest food
                 if (target is TransformTarget transformTarget)
                     return transformTarget.SetTransform(closestFood.transform);
 
@@ -45,7 +52,7 @@ namespace subrunner.goap
             });
         }
 
-        public override void Created() { }
+        public override void Created() {}
 
         public void Inject(DependencyInjector injector)
         {
@@ -56,8 +63,15 @@ namespace subrunner.goap
         // UPDATE
         public override void Update()
         {
+            Debug.Log("(FoodSensor) updating the food sensor, ia is " + ia);
+            string log = "(FoodSensor) " + ia.name + " is updating the food sensor"
+                + "\n\tFood rule is: " + this.ia.FoodRule
+                + "\n\tFoods found: " + this.foods.Length;
+            if (ia.debug_goals) { Debug.Log(log); }
+
             this.foods = GameObject.FindObjectsByType<Food>(FindObjectsSortMode.None)
                 .Where(food => !food.Grabbed && food.Eatable) // only food on the ground & eatable
+                .Where(food => food.ValidateRule(ia.FoodRule)) // and that passes the food rule check of the ia
                 .ToArray();
         }
 

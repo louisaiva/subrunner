@@ -108,19 +108,14 @@ public class DieCapacity : Capacity
         // we also destroy all Goal if this is an IA
         if (being is IA ia)
         {
-            if (debug) { Debug.Log("Destroying goals of " + being.name); }
-            List<GameObject> goal_objects = new List<GameObject>(ia.goals.ConvertAll(goal => goal.gameObject));
-            while (goal_objects.Count > 0)
-            {
-                Destroy(goal_objects[0]);
-                goal_objects.RemoveAt(0);
-            }
-            Destroy(ia.transform.Find("goals").gameObject);
+            Transform goals = ia.transform.Find("goals");
+            if (goals != null) { Destroy(goals.gameObject); }
+            Destroy(ia.transform.Find("brain").gameObject);
         }
+
         // we switch the rigidbody collision detection to discrete since the dead body won't move very fast (not affected by our forces)
         Rigidbody2D rb = being.GetComponent<Rigidbody2D>();
         rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
-
 
         // we wait for a frame in order to the capacities to be destroyed & hover to be instanced
         yield return null;

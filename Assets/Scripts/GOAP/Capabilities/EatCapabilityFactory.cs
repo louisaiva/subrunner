@@ -10,14 +10,20 @@ namespace subrunner.goap
             var builder = new CapabilityBuilder("FoodCapability");
 
             builder.AddGoal<EatGoal>()
-                .AddCondition<FoodReadyToBeEaten>(Comparison.GreaterThanOrEqual, 3);
+                .AddCondition<Hunger>(Comparison.SmallerThanOrEqual, 20);
 
             builder.AddAction<EatAction>()
-                .AddEffect<FoodReadyToBeEaten>(EffectType.Increase)
+                .AddEffect<Hunger>(EffectType.Decrease)
                 .SetTarget<ClosestFood>()
                 .SetStoppingDistance(0.2f);
 
-            builder.AddMultiSensor<FoodSensor>();
+            builder.AddTargetSensor<ClosestFoodSensor>()
+                .SetTarget<ClosestFood>();
+
+            builder.AddWorldSensor<HungerSensor>()
+                .SetKey<Hunger>();
+
+            // builder.AddMultiSensor<FoodSensor>();
 
             return builder.Build();
         }

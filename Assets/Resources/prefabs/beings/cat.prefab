@@ -180,6 +180,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1156282414648763915}
   - {fileID: 5018290607981388640}
   - {fileID: 7194673372183240506}
   - {fileID: 1359607448421354268}
@@ -188,7 +189,6 @@ Transform:
   - {fileID: 3483722134617982619}
   - {fileID: 8380362635165026755}
   - {fileID: 5598589159712991066}
-  - {fileID: 1156282414648763915}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3387591549335084900
@@ -365,13 +365,12 @@ MonoBehaviour:
   regen_life: 0
   body_collider: {fileID: 0}
   floating_dmg_provider: {fileID: 0}
-  goals: []
-  current_goal: {fileID: 0}
+  hunger: 0
+  items_eatable:
+  - apple
   seeker: {fileID: 0}
   debug_goals: 0
   debug_doable_goals: 0
-  hunger: 0
-  food_ready_to_be_eaten: 0
 --- !u!1 &8796150177163226725
 GameObject:
   m_ObjectHideFlags: 0

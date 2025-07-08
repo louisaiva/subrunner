@@ -6,10 +6,8 @@ using System.Collections.Generic;
 
 namespace subrunner.goap
 {
-    // [GoapId("IdleTargetSensor-c34e9575-d171-4044-9b83-a91a1c32e214")]
     public class WanderTargetSensor : LocalTargetSensorBase
     {
-        // 
         public override void Created() { }
         public override void Update() { }
 

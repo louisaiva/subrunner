@@ -23,12 +23,14 @@ public class Food : Item
         // we regen the life of the eater
         if (debug) { Debug.Log("(Food) " + eater.name + " is eating one bite of " + name + " for " + life_regen_per_bite + " hp"); }
         eater.AddLife(life_regen_per_bite);
+        if (eater is IA ia) { ia.hunger -= life_regen_per_bite; } // if the eater is an IA, we reduce its hunger
 
         // check if there is still some bites left
         bites_left--;
         if (bites_left > 0) { yield break; }
 
-        // if not we destroy the item
-        Destroy(gameObject);
+        // we call the being fully eaten
+        beingFullyEaten(eater);
     }
+    protected virtual void beingFullyEaten(Being eater) { Destroy(gameObject); }
 }

@@ -27,7 +27,6 @@ public class Item : Movable
             else { on_dropped(); }
         }
     }
-
     public Capable Holder
     {
         get
@@ -37,6 +36,44 @@ public class Item : Movable
             return transform.parent.GetComponent<Inventory>().capable;
         }
     }
+
+
+    /// <summary>
+    /// Return true if the item pass the string rule in parameter.
+    /// The rule must be in format "category:item,category:item, ..."
+    /// If one of the rule match the Reference, it passes, otherwise it return false.
+    /// you don't have to write the precise item name if you want all the category to pass
+    /// ex: the item "food:meat" passes the rule "food,weapon:katana"
+    /// but the item "hardware:laptop" does not
+    /// </summary>
+    /// <param name="item_rule">the rule to test the item</param>
+    /// <returns>true if the item pass the rule, false otherwise</returns>
+    public bool ValidateRule(string item_rule)
+    {
+        // all items passes an empty rule
+        if (item_rule == "") { return true; }
+
+        // we check if our rule has multiple entries
+        string[] rules = item_rule.Split(',');
+
+        // we need at least one rule to be valid
+        foreach (string rule in rules)
+        {
+            // check if the rule is a category or a specific item
+            if (rule.Contains(":"))
+            {
+                // specific item -> we check if the item is the same
+                if (Reference == rule) { return true; }
+                continue;
+            }
+
+            // we check if the item is in the category
+            if (Reference.Contains(rule)) { return true; }
+        }
+
+        return false;
+    }
+
 
     // BEING GRABBED / DROPPED
     protected virtual void on_grabbed()

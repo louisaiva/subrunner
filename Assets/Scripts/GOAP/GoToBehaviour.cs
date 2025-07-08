@@ -12,10 +12,10 @@ namespace subrunner.goap
         [SerializeField] private ITarget target;
         private AgentBehaviour agent;
         private WalkCapacity walker;
+        protected IA ia;
 
 
         [Header("Pathfinding")]
-        [SerializeField] protected IA ia;
         [SerializeField] private Vector2 current_waypoint_destination;
         [SerializeField] private Path path; // the current path
         [SerializeField] private int current_waypoint = 0; // the current waypoint on the path
@@ -34,6 +34,7 @@ namespace subrunner.goap
         private void Awake()
         {
             agent = GetComponent<AgentBehaviour>();
+            ia = transform.parent.GetComponent<IA>();
         }
         private void Start()
         {

@@ -16,9 +16,14 @@ namespace subrunner.goap
         {
             if (data.Target is not TransformTarget transformTarget) { return; }
 
-            // get the eat capacity & set the food
+            // get the eat capacity & the food
             this.ia = data.Brain.ia;
             this.food_target = transformTarget.Transform.GetComponent<Food>();
+
+            // verify that the food is still Eatable (maybe since the sensor sensed it it was eaten)
+            if (food_target == null || !food_target.Eatable) { return; }
+
+            // set the food target
             if (!ia.HasCapacity<EatCapacity>()) { return; }
             ia.GetCapacity<EatCapacity>().SetFoodTarget(food_target);
 

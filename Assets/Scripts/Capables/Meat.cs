@@ -20,27 +20,14 @@ public class Meat : Food
         MaxQty = 10;
     }
 
-    // BEING BITTEN
-    protected override IEnumerator being_bitten(Being eater, float duration)
-    {
-        // we wait for the eat animation to finish
-        yield return new WaitForSeconds(duration);
-
-        // we regen the life of the eater
-        if (debug) { Debug.Log("(Meat) " + eater.name + " is eating one bite of " + name + " for " + life_regen_per_bite + " hp"); }
-        eater.AddLife(life_regen_per_bite);
-
-        // check if there is still some bites left
-        bites_left--;
-        if (bites_left > 0) { yield break; }
-
-        // if not we destroy the item
-        become_bones();
-    }
+    // BEING FULLY EATEN
+    protected override void beingFullyEaten(Being eater) { become_bones(); }
 
     // BECOME BONES
     private void become_bones()
     {
+        StopAllCoroutines(); // we stop all coroutines to avoid any issues
+
         if (debug) { Debug.Log("(Meat) " + name + " has become bones!"); }
 
         // we destroy the body child
