@@ -11,11 +11,23 @@ namespace subrunner.goap
         private IA ia;
         private AnimPlayer anim_player;
         private Being being_target;
+        // private IMonoAgent current_agent;
 
-        public override void BeforePerform(IMonoAgent agent, Data data)
+
+        // START
+        public override void Start(IMonoAgent agent, Data data)
         {
             this.ia = data.Brain.ia;
             this.anim_player = ia.anim_player;
+            // this.current_agent = agent;
+
+            // sets the stopping distance before moving
+            // this.Config.StoppingDistance = agen
+        }
+
+        // PERFORM
+        public override void BeforePerform(IMonoAgent agent, Data data)
+        {
 
             if (data.Target is not TransformTarget transformTarget) { return; }
             this.being_target = transformTarget.Transform.GetComponent<Being>();
@@ -28,13 +40,11 @@ namespace subrunner.goap
 
 
             // if (ia is Cat cat) { cat.food_ready_to_be_eaten = true; }
-            Debug.Log($"(EatAction) {agent.name} is trying to attack {being_target.name}"
-                + $" and animation {anim_player}");
+            Debug.Log($"(AttackAction) {ia.name} is trying to attack {being_target.name}");
 
             // use the EatCapacity
             ia.Do("attack");
         }
-
         public override IActionRunState Perform(IMonoAgent agent, Data data, IActionContext context)
         {
             // wait for the animation to finish
@@ -42,14 +52,15 @@ namespace subrunner.goap
             return ActionRunState.Completed;
         }
 
-        // The action class itself must be stateless!
-        // All data should be stored in the data class
+
+        // DATA
         public class Data : IActionData
         {
             public ITarget Target { get; set; }
 
             // When using the GetComponent attribute, the system will automatically inject the reference
             [GetComponent] public Brain Brain { get; set; }
+            [GetComponent] public AgentBehaviour AgentBehaviour { get; set; }
         }
     }
 }

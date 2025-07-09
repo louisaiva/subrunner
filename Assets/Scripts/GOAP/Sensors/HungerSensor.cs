@@ -15,7 +15,7 @@ namespace subrunner.goap
             var data = references.GetCachedComponent<Brain>();
 
             // We need to cast the float to an int, because the hunger is an int
-            return (int)data.ia.hunger;
+            return (int)data.ia.GetCapacity<EatCapacity>()?.hunger;
         }
     }
 }

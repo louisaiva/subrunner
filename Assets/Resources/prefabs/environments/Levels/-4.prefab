@@ -3044,8 +3044,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: 55.75, y: 20.75, z: 0}
-      m_Extent: {x: 0.25, y: 0.25, z: 0}
+      m_Center: {x: 1, y: 4.25, z: 0}
+      m_Extent: {x: 6.5, y: 4.25, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0
@@ -4796,8 +4796,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: -21.75, y: -8.5, z: 0}
-      m_Extent: {x: 5.75, y: 2, z: 0}
+      m_Center: {x: -35.75, y: -15.25, z: 0}
+      m_Extent: {x: 1.75, y: 1.75, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0
@@ -9710,7 +9710,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: cube
-  orientation: L
   current_capacity: 
   current_anim:
     name: 
@@ -9727,6 +9726,7 @@ MonoBehaviour:
   debug_orientation: 0
   debug_advanced: 0
   debug_frames: 0
+  debug_pile: 0
 --- !u!114 &7348521099067748106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9739,15 +9739,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c40f0dc7963d2d46a95171c34ece2c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim_player: {fileID: 0}
-  bank: {fileID: 0}
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: 0}
   capacities: []
   effects: 
   effects_timetolive: []
   debug: 0
-  debug_capacities_on_awake: 0
+  activate_all_capacities_logs_on_awake: 0
 --- !u!60 &6556481779216269944
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -70993,7 +70991,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: cube
-  orientation: L
   current_capacity: 
   current_anim:
     name: 
@@ -71010,6 +71007,7 @@ MonoBehaviour:
   debug_orientation: 0
   debug_advanced: 0
   debug_frames: 0
+  debug_pile: 0
 --- !u!114 &7324220280750788309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71022,15 +71020,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c40f0dc7963d2d46a95171c34ece2c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim_player: {fileID: 0}
-  bank: {fileID: 0}
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: 0}
   capacities: []
   effects: 
   effects_timetolive: []
   debug: 0
-  debug_capacities_on_awake: 0
+  activate_all_capacities_logs_on_awake: 0
 --- !u!60 &7378190336155330088
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -73080,8 +73076,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: 6, y: 9, z: 0}
-      m_Extent: {x: 3.5, y: 1, z: 0}
+      m_Center: {x: 5.75, y: 6.75, z: 0}
+      m_Extent: {x: 3.75, y: 1.75, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0

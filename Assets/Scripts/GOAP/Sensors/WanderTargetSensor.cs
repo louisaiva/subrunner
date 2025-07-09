@@ -21,14 +21,21 @@ namespace subrunner.goap
 
         public override ITarget Sense(IActionReceiver agent, IComponentReference references, ITarget existingTarget)
         {
+            // gets the agent's current node
+            GraphNode agent_node = AstarPath.active.GetNearest(agent.Transform.position, NNConstraint.None).node;
+
+            // get the ia & exploration range
+            IA ia = references.GetCachedComponentInParent<IA>();
+
+            // find a random position to go
             Vector3 random_position = existingTarget is PositionTarget positionTarget ? positionTarget.Position : Vector3.zero;
             for (int i = 0; i < 5; i++)
             {
                 // if the position is not valid, we get a new random position
-                random_position = getRandomPositionInRange(agent.Transform.position, 3f);
+                random_position = getRandomPositionInRange(agent.Transform.position, ia.exploration_radius);
 
-                // we check if the position is valid
-                if (isValidPosition(random_position)) { i = 1000; } // we break the loop if the position is on a graph
+                // we check if the position is reachable 
+                if (isReachablePosition(agent_node,random_position)) { break; }
 
                 if (i == 4)
                 {
@@ -58,18 +65,23 @@ namespace subrunner.goap
             Vector2 randomPosition = Random.insideUnitCircle * range;
             return center + randomPosition;
         }
-        private bool isValidPosition(Vector2 position)
-        {
-            // checks if the position is valid by checking if it's on the grid graph
-            foreach (GridGraph graph in graphs)
-            {
-                if (graph.GetNearest(position, NNConstraint.Default).node != null)
-                {
-                    return true;
-                }
-            }
 
-            return false;
+        /// <summary>
+        /// To know if a position is on a valid graph & reachable
+        /// </summary>
+        /// <param name="start_node"></param>
+        /// <param name="position"></param>
+        /// <returns>
+        /// <code>
+        /// return true if the position parameter represents a walkable node
+        /// and that can be reach from the start_node parameter
+        /// return false otherwise
+        /// </code></returns>
+        private bool isReachablePosition(GraphNode start_node, Vector2 position)
+        {
+            GraphNode destination = AstarPath.active.GetNearest(position, NNConstraint.Default).node;
+            if (destination == null) { return false; }
+            return PathUtilities.IsPathPossible(start_node, destination);
         }
 
         private Vector3? GetRandomPositionOnGraph()

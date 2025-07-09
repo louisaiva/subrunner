@@ -462,10 +462,7 @@ MonoBehaviour:
   regen_life: 0
   body_collider: {fileID: 0}
   floating_dmg_provider: {fileID: 0}
-  hunger: 0
-  items_eatable:
-  - meat
-  seeker: {fileID: 0}
+  exploration_radius: 5
   debug_goals: 0
   debug_doable_goals: 0
 --- !u!1001 &4874808237167080038
@@ -590,6 +587,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2037017623738312253, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
+      propertyPath: 'items_eatable.Array.data[0]'
+      value: meat
+      objectReference: {fileID: 0}
     - target: {fileID: 6582822749040364892, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
       propertyPath: m_Name
       value: eat
@@ -700,7 +701,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: range_target_detection
-      value: 8
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: excluded_tags.Array.size

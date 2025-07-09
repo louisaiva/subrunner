@@ -11,18 +11,21 @@ namespace subrunner.goap
     {
         private Food[] foods;
         private IA ia;
+        private EatCapacity eatCapacity;
 
         public override void Created() { }
         public override void Update() { }
         
         public override ITarget Sense(IActionReceiver agent, IComponentReference references, ITarget target)
         {
-            // Get a cached reference to the IA on the agent
-            this.ia = references.GetCachedComponent<Brain>().ia;
+            // Get a cached reference to the IA on the agent & EatCapacity
+            if (ia == null) { this.ia = references.GetCachedComponent<Brain>().ia; }
+            if (eatCapacity == null) { this.eatCapacity = ia.GetCapacity<EatCapacity>(); }
+            if (eatCapacity == null) { return null; }
 
             this.foods = GameObject.FindObjectsByType<Food>(FindObjectsSortMode.None)
                 .Where(food => !food.Grabbed && food.Eatable) // only food on the ground & eatable
-                .Where(food => food.ValidateRule(ia.FoodRule)) // and that passes the food rule check of the ia
+                .Where(food => food.ValidateRule(eatCapacity.FoodRule)) // and that passes the food rule check of the ia
                 .ToArray();
             
             // Debug.Log($"(ClosestFoodSensor) {ia.name} found {this.foods.Length} food to eat with rule {ia.FoodRule}");

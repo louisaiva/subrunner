@@ -23,7 +23,7 @@ public class Food : Item
         // we regen the life of the eater
         if (debug) { Debug.Log("(Food) " + eater.name + " is eating one bite of " + name + " for " + life_regen_per_bite + " hp"); }
         eater.AddLife(life_regen_per_bite);
-        if (eater is IA ia) { ia.hunger -= life_regen_per_bite; } // if the eater is an IA, we reduce its hunger
+        if (eater is IA ia) { ia.GetCapacity<EatCapacity>().hunger -= life_regen_per_bite; } // if the eater is an IA, we reduce its hunger
 
         // check if there is still some bites left
         bites_left--;

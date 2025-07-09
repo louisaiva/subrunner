@@ -12,6 +12,16 @@ namespace subrunner.goap
         private AnimPlayer anim_player;
         private Food food_target;
 
+
+        /* /// <summary>
+        /// called when the action is created. inject the EatCapacity into the action data
+        /// </summary>
+        public override void Created()
+        {
+            EatAction.Data data = this.CreateData();
+            data.EatCapacity = new EatCapacity();
+        } */
+
         public override void BeforePerform(IMonoAgent agent, Data data)
         {
             this.ia = data.Brain.ia;
@@ -69,6 +79,7 @@ namespace subrunner.goap
 
             // When using the GetComponent attribute, the system will automatically inject the reference
             [GetComponent] public Brain Brain { get; set; }
+            // public EatCapacity EatCapacity { get; set; }
         }
     }
 }

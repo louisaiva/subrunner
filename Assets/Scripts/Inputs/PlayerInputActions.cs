@@ -127,6 +127,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""6a12dd62-6ac5-4355-86be-4fce2cf37111"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";xbox"",
+                    ""action"": ""run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""493cb05f-36e7-4cc6-bca3-c7aa1148e65c"",
                     ""path"": ""<Keyboard>/leftShift"",
                     ""interactions"": """",
