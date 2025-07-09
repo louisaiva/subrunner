@@ -245,7 +245,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent_type: zombo
+  goals:
+  - type: 2
+    priority: 100
+    enabled: 0
+  - type: 3
+    priority: 50
+    enabled: 0
+  - type: 1
+    priority: 10
+    enabled: 1
+  current_goal: 0
   log_checks: 0
+  log_goals: 0
+  log_goals_update: 0
 --- !u!1 &8595018692463036030
 GameObject:
   m_ObjectHideFlags: 0
@@ -588,6 +601,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2037017623738312253, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
+      propertyPath: range_food_detection
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2037017623738312253, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
       propertyPath: 'items_eatable.Array.data[0]'
       value: meat
       objectReference: {fileID: 0}
@@ -598,8 +615,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6582822749040364892, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5509675537389742971}
   m_SourcePrefab: {fileID: 100100000, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
+--- !u!1 &2177116310577342690 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6582822749040364892, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
+  m_PrefabInstance: {fileID: 5002454470936929726}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5509675537389742971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2177116310577342690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 467b878483158354ba4fc693e8013c06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  brain: {fileID: 8217947553815526950}
+  goal_type: 3
+  detectionInterval: 0.1
+  healthPercentageThreshold: 30
+  hungerThreshold: 50
 --- !u!4 &5274840657265545104 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 891631874371971630, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}

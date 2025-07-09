@@ -101,6 +101,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown: 0.2
   debug: 0
+  target_layers:
+    serializedVersion: 2
+    m_Bits: 0
+  excluded_tags: []
+  range_target_detection: 1
+  distance_to_attack: 1
   kills: 0
   damage: 2
   random_damage_modifier_at_start: 0
@@ -126,7 +132,7 @@ GameObject:
   - component: {fileID: 4604390373980000295}
   m_Layer: 24
   m_Name: shuriken
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -218,7 +224,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: shuriken
-  orientation: D
   current_capacity: idle
   current_anim:
     name: shuriken.idle.D
@@ -271,6 +276,7 @@ MonoBehaviour:
   debug_orientation: 0
   debug_advanced: 0
   debug_frames: 0
+  debug_pile: 0
 --- !u!114 &2274157140532805568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -283,8 +289,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dfbf5714cb72034bbd1d1ccec996bd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim_player: {fileID: 1806198499784609161}
-  bank: {fileID: 0}
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: -1}
   capacities:
@@ -293,11 +297,12 @@ MonoBehaviour:
   effects: 
   effects_timetolive: []
   debug: 0
+  activate_all_capacities_logs_on_awake: 0
+  debug_velocity: 0
   rb: {fileID: 4604390373980000295}
   weight: 1
   random_weight_modifier_at_start: 0
   friction: 7
-  debug_velocity: 0
   forces: []
   input_speed: 0
   Velocity: {x: 0, y: 0}

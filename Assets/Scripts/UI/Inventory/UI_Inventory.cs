@@ -184,7 +184,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
             bool dropped = pool.Drop(item);
             if (dropped)
             {
-                /* if (debug) {  */Debug.Log("(UI_Inventory) dropped " + item.Reference + " in " + pool.name); //}
+                if (debug) { Debug.Log("(UI_Inventory) dropped " + item.Reference + " in " + pool.name); }
                 return true;
             }
         }

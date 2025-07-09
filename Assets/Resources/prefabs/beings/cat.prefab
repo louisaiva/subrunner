@@ -366,8 +366,7 @@ MonoBehaviour:
   body_collider: {fileID: 0}
   floating_dmg_provider: {fileID: 0}
   exploration_radius: 7
-  debug_goals: 0
-  debug_doable_goals: 0
+  log_actions: 0
 --- !u!1 &8796150177163226725
 GameObject:
   m_ObjectHideFlags: 0
@@ -467,6 +466,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent_type: cat
+  goals:
+  - type: 3
+    priority: 100
+    enabled: 0
+  - type: 2
+    priority: 50
+    enabled: 0
+  - type: 1
+    priority: 10
+    enabled: 1
+  current_goal: 0
+  log_checks: 0
+  log_goals: 0
+  log_goals_update: 0
 --- !u!1001 &347420623141943002
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -883,6 +896,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2037017623738312253, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
+      propertyPath: range_food_detection
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6582822749040364892, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
       propertyPath: m_Name
       value: eat
@@ -890,13 +907,38 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6582822749040364892, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1038189698447081003}
   m_SourcePrefab: {fileID: 100100000, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
 --- !u!4 &3483722134617982619 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 891631874371971630, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
   m_PrefabInstance: {fileID: 4325457465803631797}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &7448389512673108457 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6582822749040364892, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
+  m_PrefabInstance: {fileID: 4325457465803631797}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1038189698447081003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7448389512673108457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 467b878483158354ba4fc693e8013c06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  brain: {fileID: 2814625212250578100}
+  goal_type: 3
+  detectionInterval: 0.1
+  healthPercentageThreshold: 30
+  hungerThreshold: 50
 --- !u!1001 &8025175023944082585
 PrefabInstance:
   m_ObjectHideFlags: 0

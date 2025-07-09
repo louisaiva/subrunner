@@ -19,7 +19,6 @@ public class IA : Being
 
     [Header("Logs")]
     public bool log_actions = false;
-    // public bool debug_doable_goals = false;
 
     // AWAKE
     protected override void Awake()

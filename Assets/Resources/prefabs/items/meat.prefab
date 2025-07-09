@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7859241979772140614}
   m_Layer: 24
   m_Name: meat
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -167,7 +167,7 @@ MonoBehaviour:
   effects: 
   effects_timetolive: []
   debug: 0
-  debug_capacities_on_awake: 0
+  activate_all_capacities_logs_on_awake: 0
   debug_velocity: 0
   rb: {fileID: 0}
   weight: 1

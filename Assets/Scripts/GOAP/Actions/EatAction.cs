@@ -49,7 +49,9 @@ namespace subrunner.goap
             // we try to take another bite of the food
             if (data.food_target != null && data.food_target.Eatable)
             {
-                data.eatCapacity.Use(data.ia);
+                data.ia.Do("eat"); // we have to use the Do() method instead of Use() directly on
+                                   // the eatCapacity because using the capacity directly does not check if the cooldown is over or not
+                                   // which causes the Use() to be called every frame and so play the eat animation until the end of times
                 return ActionRunState.Continue;
             }
 

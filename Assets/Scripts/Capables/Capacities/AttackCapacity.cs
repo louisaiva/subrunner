@@ -21,6 +21,56 @@ public class AttackCapacity : Capacity
     public float distance_to_attack = 1f;
 
 
+    // 1 - TARGET DETECTION // todo change this to work with colliders
+    public List<Being> DetectPotentialTargets(IA ia)
+    {
+        // we do an overlap to detect targets
+        Collider2D[] results = Physics2D.OverlapCircleAll(ia.transform.position,
+            range_target_detection,
+            target_layers);
+        if (results.Length == 0) { return new List<Being>(); }
+
+        // we convert those into beings and filter their tags
+        List<Being> potential_targets = new List<Being>();
+        foreach (Collider2D collider in results)
+        {
+            // we check if the collider has a Being component
+            Being being = collider.transform.parent.GetComponent<Being>();
+            if (being == null) { continue; }
+            else if (being == ia) { continue; } // we don't want to target ourselves
+
+            // we check if the being is excluded by the tags
+            if (excluded_tags.Contains(being.gameObject.tag)) { continue; }
+
+            // we add the being to the list of potential targets
+            potential_targets.Add(being);
+        }
+        return potential_targets;
+    }
+    public Being GetClosestTarget(IA ia)
+    {
+        // get the potential targets
+        List<Being> potential_targets = DetectPotentialTargets(ia);
+        if (potential_targets.Count == 0) { return null; }
+
+        // we find the closest target
+        Being closest_target = null;
+        float closest_distance = float.MaxValue; // Start with the largest possible distance
+
+        foreach (Being target in potential_targets)
+        {
+            float distance = Vector3.Distance(target.gameObject.transform.position, ia.transform.position);
+
+            if (!(distance < closest_distance))
+                continue;
+
+            closest_target = target;
+            closest_distance = distance;
+        }
+        return closest_target;
+    }
+
+
     [Header("Damage parameters")]
     public int kills = 0;
     public float damage = 10f;
@@ -39,26 +89,27 @@ public class AttackCapacity : Capacity
     public float attackant_advantage = 3f;
 
 
-    [Header("Components")]
-    private Capable bearer; // the being that is using the attack
-    private Being being { get
+    [Header("Bearer")]
+    private Capable bearer; // the capable that is using this attack capacity
+    private Being being
     {
-        if (bearer == null || !(bearer is Being)) { return null; }
-        return bearer as Being;
-    } }
+        get
+        {
+            if (bearer == null || !(bearer is Being)) { return null; }
+            return bearer as Being;
+        }
+    }
+
+    [Header("Components")]
     private SpriteBank bank;
     private SpriteRenderer sr;
     private AnimPlayer anim_player;
     private PolygonCollider2D pc;
+    
 
     // START
     private void Start()
     {
-        // we get the sprite renderer
-        // sr = transform.parent.GetComponent<SpriteRenderer>();
-        // anim_player = transform.parent.GetComponent<AnimPlayer>();
-        // being = transform.parent.GetComponent<Being>();
-
         // we get the polygon collider
         pc = GetComponent<PolygonCollider2D>();
         pc.enabled = false;
@@ -70,22 +121,16 @@ public class AttackCapacity : Capacity
         damage += Random.Range(-random_damage_modifier_at_start, random_damage_modifier_at_start);
     }
 
-    // BEARER SETUP
-    private void setBearer(Capable new_bearer)
-    {
-        bearer = new_bearer;
 
-        // we set the components
-        anim_player = bearer.GetComponent<AnimPlayer>();
-        sr = bearer.GetComponent<SpriteRenderer>();
-    }
+    // 2 - USING THE CAPACITY
 
-
-    // trigger the attack
+    // USE
     public override void Use(Capable capable)
     {
-        // we set the bearer as the capable
-        setBearer(capable);
+        // we set the bearer and its components
+        bearer = capable;
+        anim_player = bearer.GetComponent<AnimPlayer>();
+        sr = bearer.GetComponent<SpriteRenderer>();
 
         // we play the animation
         Anim anim = anim_player.Play(name);
@@ -96,7 +141,7 @@ public class AttackCapacity : Capacity
             float anim_duration = anim.GetDuration();
             startCooldown(anim_duration);
         }
-        else { startCooldown();}
+        else { startCooldown(); }
 
         is_attacking = true;
         hit_enemies.Clear();
@@ -177,14 +222,21 @@ public class AttackCapacity : Capacity
     private void updateAttack()
     {
 
-        // verify that our body_collider is not in the list
-        if (being != null) { hit_enemies = hit_enemies.Where(enemy => enemy != being.body_collider && enemy != null).ToList(); }
+        int i = 0;
+        while (i < hit_enemies.Count)
+        {
+            // we remove the being's body collider from the list
+            if (being != null && hit_enemies[i] == being.body_collider) { hit_enemies.RemoveAt(i); continue; }
 
-        // we remove the not attackable tags
-        hit_enemies = hit_enemies.Where(enemy => !not_attackable_tags.Contains(enemy.tag)).ToList();
+            // we remove not attackable tags
+            Being enemy_being = hit_enemies[i].transform.parent.GetComponent<Being>();
+            if (enemy_being == null || not_attackable_tags.Contains(enemy_being.gameObject.tag)) { hit_enemies.RemoveAt(i); continue; }
 
-        // we remove the not alive beings
-        hit_enemies = hit_enemies.Where(enemy => enemy.transform.parent.GetComponent<Being>().Alive).ToList();
+            // we remove not alive beings
+            if (!enemy_being.Alive) { hit_enemies.RemoveAt(i); continue; }
+
+            i++;
+        }
 
         if (debug)
         {
@@ -268,7 +320,6 @@ public class AttackCapacity : Capacity
         is_attacking = false;
     }
 
-
     // COLLISION ENTER
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -277,7 +328,7 @@ public class AttackCapacity : Capacity
 
         // we check if we are attacking
         if (!is_attacking) { return; }
-        if (!anim_player.current_capacity.Equals(name)) { return; }
+        if (anim_player.current_capacity != "attack") { return; }
 
         // we check if the pc is enabled
         if (pc.enabled)

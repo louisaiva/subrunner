@@ -70,8 +70,8 @@ namespace subrunner.goap
         /// <summary>
         /// To know if a position is on a valid graph & reachable
         /// </summary>
-        /// <param name="start_node"></param>
-        /// <param name="position"></param>
+        /// <param name="start_node">starting node (position of the ai you want to test)</param>
+        /// <param name="destination">destination node</param>
         /// <returns>
         /// <code>
         /// return true if the position parameter represents a walkable node
@@ -86,7 +86,7 @@ namespace subrunner.goap
             return PathUtilities.IsPathPossible(start_node, destination);
         }
 
-        private Vector3? GetRandomPositionOnGraph()
+        /* private Vector3? GetRandomPositionOnGraph()
         {
             // pick a random walkable node on the current grid graph and returns its position
             GridGraph gridGraph = AstarPath.active.data.gridGraph;
@@ -105,6 +105,6 @@ namespace subrunner.goap
 
             Debug.LogWarning("(IdleTargetSensor) No walkable node found");
             return null;
-        }
+        } */
     }
 }
