@@ -12,6 +12,7 @@ namespace subrunner.goap
         public override void Start(IMonoAgent agent, Data data)
         {
             data.anim_player = data.ia.anim_player;
+            data.attack_capacity = data.ia.GetCapacity<AttackCapacity>();
         }
 
         // PERFORM
@@ -39,6 +40,22 @@ namespace subrunner.goap
             return ActionRunState.Completed;
         }
 
+        // IS IN RANGE OVERRIDE
+        public override bool IsInRange(IMonoAgent agent, float distance, IActionData data, IComponentReference references)
+        {
+            var actionData = (Data)data;
+            
+            // Fallback to default behavior if no AttackCapacity
+            if (actionData.attack_capacity == null) { return base.IsInRange(agent, distance, data, references); }
+            
+            // Use cached attack_capacity for performance
+            float agentStoppingDistance = actionData.attack_capacity.distance_to_attack;
+            
+            if (actionData.ia.log_actions) { Debug.Log($"(AttackAction) {actionData.ia.name} IsInRange check: distance={distance:F2}, stopping_distance={agentStoppingDistance:F2}, in_range={distance <= agentStoppingDistance}"); }
+            
+            return distance <= agentStoppingDistance;
+        }
+
 
         // DATA
         public class Data : IActionData
@@ -48,6 +65,7 @@ namespace subrunner.goap
             // Direct access to IA and AnimPlayer
             [GetComponentInParent] public IA ia { get; set; }
             public AnimPlayer anim_player { get; set; }
+            public AttackCapacity attack_capacity { get; set; }
         }
     }
 }

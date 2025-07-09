@@ -32,10 +32,11 @@ namespace subrunner.goap
             for (int i = 0; i < 5; i++)
             {
                 // if the position is not valid, we get a new random position
-                random_position = getRandomPositionInRange(agent.Transform.position, ia.exploration_radius);
+                GraphNode random_node = getRandomNodeInRange(agent.Transform.position, ia.exploration_radius);
 
-                // we check if the position is reachable 
-                if (isReachablePosition(agent_node,random_position)) { break; }
+                // we check if the position is reachable
+                random_position = (Vector3) random_node.position;
+                if (isReachablePosition(agent_node, random_node)) { break; }
 
                 if (i == 4)
                 {
@@ -59,11 +60,11 @@ namespace subrunner.goap
             return new PositionTarget(random_position);
         }
 
-        private Vector2 getRandomPositionInRange(Vector2 center, float range)
+        private GraphNode getRandomNodeInRange(Vector2 center, float range)
         {
             // generates a random position in a circle around the center
             Vector2 randomPosition = Random.insideUnitCircle * range;
-            return center + randomPosition;
+            return AstarPath.active.GetNearest(center + randomPosition, NNConstraint.Default).node;
         }
 
         /// <summary>
@@ -77,10 +78,11 @@ namespace subrunner.goap
         /// and that can be reach from the start_node parameter
         /// return false otherwise
         /// </code></returns>
-        private bool isReachablePosition(GraphNode start_node, Vector2 position)
+        private bool isReachablePosition(GraphNode start_node, GraphNode destination)
         {
-            GraphNode destination = AstarPath.active.GetNearest(position, NNConstraint.Default).node;
+            // GraphNode destination = AstarPath.active.GetNearest(position, NNConstraint.Default).node;
             if (destination == null) { return false; }
+            if (!destination.Walkable) { return false; }
             return PathUtilities.IsPathPossible(start_node, destination);
         }
 
