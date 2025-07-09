@@ -8,55 +8,48 @@ namespace subrunner.goap
 {
     public class EatAction : GoapActionBase<EatAction.Data>
     {
-        private IA ia;
-        private AnimPlayer anim_player;
-        private Food food_target;
 
-
-        /* /// <summary>
-        /// called when the action is created. inject the EatCapacity into the action data
-        /// </summary>
-        public override void Created()
+        // START
+        public override void Start(IMonoAgent agent, Data data)
         {
-            EatAction.Data data = this.CreateData();
-            data.EatCapacity = new EatCapacity();
-        } */
-
-        public override void BeforePerform(IMonoAgent agent, Data data)
-        {
-            this.ia = data.Brain.ia;
-            this.anim_player = ia.anim_player;
-
+            // we set the data
+            data.anim_player = data.ia.anim_player;
             if (data.Target is not TransformTarget transformTarget) { return; }
-            this.food_target = transformTarget.Transform.GetComponent<Food>();
+            data.food_target = transformTarget.Transform.GetComponent<Food>();
 
-            // verify that the food is still Eatable (maybe since the sensor sensed it it was eaten)
-            if (food_target == null || !food_target.Eatable) { return; }
-
-            // set the food target
-            if (!ia.HasCapacity<EatCapacity>()) { return; }
-            ia.GetCapacity<EatCapacity>().SetFoodTarget(food_target);
-
-
-            // if (ia is Cat cat) { cat.food_ready_to_be_eaten = true; }
-            Debug.Log($"(EatAction) {agent.name} is going to eat {food_target.name}"
-                + $" with capacity {ia.GetCapacity<EatCapacity>().GetType().Name}"
-                + $" and animation {anim_player}");
-
-            // use the EatCapacity
-            ia.Do("eat");
+            // set the eatCapa
+            data.eatCapacity = data.ia.GetCapacity<EatCapacity>();
         }
 
+        // PERFORM
+        public override void BeforePerform(IMonoAgent agent, Data data)
+        {
+            // verify that the food is still Eatable (maybe since the sensor sensed it it was eaten)
+            if (data.food_target == null || !data.food_target.Eatable) { return; }
+
+            // set the food target
+            if (!data.eatCapacity) { return; }
+            data.eatCapacity.SetFoodTarget(data.food_target);
+
+            if (data.ia.log_actions)
+            {
+                Debug.Log($"(EatAction) {data.ia.name} is going to eat {data.food_target.name}"
+                + $" with capacity {data.eatCapacity.GetType().Name}"
+                + $" and animation {data.anim_player}");
+            }
+
+            // use the EatCapacity
+            data.eatCapacity.Use(data.ia);
+        }
         public override IActionRunState Perform(IMonoAgent agent, Data data, IActionContext context)
         {
             // wait for the animation to finish
-            if (anim_player.current_capacity == "eat") { return ActionRunState.Continue; }
+            if (data.anim_player.current_capacity == "eat") { return ActionRunState.Continue; }
 
             // we try to take another bite of the food
-            if (food_target != null && food_target.Eatable)
+            if (data.food_target != null && data.food_target.Eatable)
             {
-                // we use the EatCapacity again
-                ia.Do("eat");
+                data.eatCapacity.Use(data.ia);
                 return ActionRunState.Continue;
             }
 
@@ -64,22 +57,16 @@ namespace subrunner.goap
             return ActionRunState.Completed;
         }
 
-        // This method is called when the action is completed
-        /* public override void Complete(IMonoAgent agent, Data data)
-        {
-            if (ia == null || food_target == null) { return; }
-
-        } */
-
-        // The action class itself must be stateless!
-        // All data should be stored in the data class
+        // DATA
         public class Data : IActionData
         {
             public ITarget Target { get; set; }
 
             // When using the GetComponent attribute, the system will automatically inject the reference
-            [GetComponent] public Brain Brain { get; set; }
-            // public EatCapacity EatCapacity { get; set; }
+            [GetComponentInParent] public IA ia { get; set; }
+            public Food food_target { get; set; }
+            public AnimPlayer anim_player { get; set; }
+            public EatCapacity eatCapacity { get; set; }
         }
     }
 }

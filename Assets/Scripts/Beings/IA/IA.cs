@@ -18,8 +18,8 @@ public class IA : Being
     public Seeker seeker { get; private set; } // the seeker component used for pathfinding
 
     [Header("Logs")]
-    public bool debug_goals = false;
-    public bool debug_doable_goals = false;
+    public bool log_actions = false;
+    // public bool debug_doable_goals = false;
 
     // AWAKE
     protected override void Awake()
