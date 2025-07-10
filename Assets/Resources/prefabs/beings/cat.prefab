@@ -1089,7 +1089,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: walk
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8825874904198225900, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8825874904198225900, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8825874904198225900, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 8825874904198225900, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
+    - {fileID: 7427386377428732974, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

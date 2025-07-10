@@ -14,11 +14,10 @@ public class AttackCapacity : Capacity
 
     // those parameters are useful to the ClosestBeingSensor to determine which target to choose
     // they are public so we can access them inside the sensor
-    [Header("Targets")]
-    public LayerMask target_layers;
-    public List<string> excluded_tags; // tags to exclude from target detection
-    public float range_target_detection = 1f;
-    public float distance_to_attack = 1f;
+    // [Header("Targets")]
+    // public LayerMask target_layers;
+    // public List<string> excluded_tags; // tags to exclude from target detection
+    // public float range_target_detection = 1f;
 
 
     // 1 - TARGET DETECTION // todo change this to work with colliders
@@ -72,6 +71,7 @@ public class AttackCapacity : Capacity
 
 
     [Header("Damage parameters")]
+    public float distance_to_attack = 1f;
     public int kills = 0;
     public float damage = 10f;
     [SerializeField] private float random_damage_modifier_at_start = 0; // damage += random.range(-5,5) in the start method if this modifier = 5
@@ -84,7 +84,6 @@ public class AttackCapacity : Capacity
     
 
     [Header("Knockback parameters")]
-    // public Force knockback; // force de knockback
     public float knockback_base = 10f; // une attaque répartit le knockb
     public float attackant_advantage = 3f;
 

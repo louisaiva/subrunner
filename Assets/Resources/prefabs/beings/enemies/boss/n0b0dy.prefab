@@ -106,7 +106,7 @@ MonoBehaviour:
   - type: 1
     priority: 10
     enabled: 1
-  current_goal: 0
+  CurrentGoal: 0
   log_checks: 0
   log_goals: 0
   log_goals_update: 0
@@ -157,6 +157,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   brain: {fileID: 8741128332665728097}
   goal_type: 2
+  always_select_closest: 1
+  selectionInterval: 0.2
   waiting_targets: []
   target_layers:
     serializedVersion: 2
@@ -760,6 +762,18 @@ PrefabInstance:
     - target: {fileID: 6582822749040364892, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
       propertyPath: m_Name
       value: walk
+      objectReference: {fileID: 0}
+    - target: {fileID: 8825874904198225900, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0.82745105
+      objectReference: {fileID: 0}
+    - target: {fileID: 8825874904198225900, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.5921569
+      objectReference: {fileID: 0}
+    - target: {fileID: 8825874904198225900, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0.7490196
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -13,14 +13,16 @@ namespace subrunner.goap
         [Header("Agent Type")]
         [SerializeField] private string agent_type;
         protected IA ia;
+        protected Detector detector; // main detector on eyes
 
         [Header("Goal Selection")]
         [SerializeField] protected List<GoalPriority> goals = new List<GoalPriority>();
-        [SerializeField] protected GoalType current_goal; // The current goal type being pursued
+        public GoalType CurrentGoal; // The current goal type being pursued
 
         [Header("GOAP Components")]
-        protected AgentBehaviour agent; // handles action's doing
+        public AgentBehaviour agent { get; set; }// handles action's doing
         protected GoapActionProvider provider; // handles goal's doing WHICH MEANS action's planning
+        // public ActionState CurrentActionState => agent.ActionState as ActionState;
 
 
         [Header("Logs")]
@@ -45,6 +47,8 @@ namespace subrunner.goap
             }
             provider.AgentType = goap.GetAgentType(agent_type);
 
+            // get detector
+            detector = ia.transform.Find("eyes")?.GetComponent<Detector>();
 
             // we initialize the goals
             if (goals.Count == 0)
@@ -82,14 +86,12 @@ namespace subrunner.goap
             // checks if the current action is an attack action
             if (agent.ActionState.Action is not AttackAction) { return; }
             if (target is not TransformTarget transformTarget) { return; }
+            if (detector == null || detector is not PreyDetector prey_detector) { return; } // no prey detector, nothing to check
 
-            if (log_checks) { Debug.Log($"(AttackAction) {ia.name} checking distance to target {transformTarget.Transform.name}"); }
+            if (log_checks) { Debug.Log($"(Brain) {ia.name} checking distance to target {transformTarget.Transform.name}"); }
 
-            AttackCapacity attack_capacity = ia.GetCapacity<AttackCapacity>();
-            if (attack_capacity == null) { return; }
-
-            if (Vector3.Distance(transformTarget.Transform.position, ia.transform.position)
-                < attack_capacity.range_target_detection) { return; }
+            // if we are still inside range is ok
+            if (Vector3.Distance(transformTarget.Transform.position, ia.transform.position) < prey_detector.Range) { return; }
 
             // stop the action
             if (log_checks) { Debug.Log($"(AttackAction) {ia.name} stopped attacking {transformTarget.Transform.name} because it is too far away."); }
@@ -119,8 +121,15 @@ namespace subrunner.goap
                 }
             }
             if (log_goals_update) { Debug.Log(log); }
-            if (highestGoal == null || highestGoal.type == current_goal) { return; }
+            if (highestGoal == null || highestGoal.type == CurrentGoal) { return; }
             if (log_goals) { Debug.Log("(Brain) " + ia.name + " is requesting " + highestGoal.type); }
+
+            // if we have an action we stop it
+            if (agent.ActionState.Action != null)
+            {
+                if (log_goals) { Debug.Log($"(Brain) {ia.name} is stopping current action: {agent.ActionState.Action.GetType().Name}"); }
+                agent.StopAction();
+            }
 
             // we request the goal
             request_goal(highestGoal.type,resolve);
@@ -146,8 +155,8 @@ namespace subrunner.goap
             }
 
             // we set the current goal
-            current_goal = goal;
-            if (log_goals) { Debug.Log($"(Brain) {ia.name} is now pursuing goal: {current_goal}"); }
+            CurrentGoal = goal;
+            if (log_goals) { Debug.Log($"(Brain) {ia.name} is now pursuing goal: {CurrentGoal}"); }
         }
 
         // GOAL DELEGATES
@@ -159,12 +168,12 @@ namespace subrunner.goap
         public void EnableGoal(GoalPriority goal,bool resolve = true)
         {
             goal.enabled = true;
-            if (goal.type != current_goal) { DetermineGoal(resolve); }
+            if (goal.type != CurrentGoal) { DetermineGoal(resolve); }
         }
         public void DisableGoal(GoalPriority goal, bool resolve = true)
         {
             goal.enabled = false;
-            if (goal.type == current_goal) { DetermineGoal(resolve); }
+            if (goal.type == CurrentGoal) { DetermineGoal(resolve); }
         }
         public GoalPriority GetGoal(GoalType goalType)
         {

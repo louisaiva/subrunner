@@ -9,6 +9,7 @@ namespace subrunner.goap
     {
         [Header("Agent Type")]
         [SerializeField] private string agent_type;
+        protected Detector detector; // main detector on eyes
 
         [Header("GOAP Components")]
         protected AgentBehaviour agent; // handles action's doing
@@ -35,6 +36,9 @@ namespace subrunner.goap
                 return;
             }
             provider.AgentType = goap.GetAgentType(agent_type);
+
+            // get detector
+            detector = ia.transform.Find("eyes")?.GetComponent<Detector>();
         }
 
         private void Start()
@@ -60,14 +64,12 @@ namespace subrunner.goap
             // checks if the current action is an attack action
             if (agent.ActionState.Action is not AttackAction) { return; }
             if (target is not TransformTarget transformTarget) { return; }
+            if (detector == null || detector is not PreyDetector prey_detector) { return; } // no prey detector, nothing to check
 
-            if (log_checks) { Debug.Log($"(AttackAction) {ia.name} checking distance to target {transformTarget.Transform.name}"); }
+            if (log_checks) { Debug.Log($"(Brain) {ia.name} checking distance to target {transformTarget.Transform.name}"); }
 
-            AttackCapacity attack_capacity = ia.GetCapacity<AttackCapacity>();
-            if (attack_capacity == null) { return; }
-
-            if (Vector3.Distance(transformTarget.Transform.position, ia.transform.position)
-                < attack_capacity.range_target_detection) { return; }
+            // if we are still inside range is ok
+            if (Vector3.Distance(transformTarget.Transform.position, ia.transform.position) < prey_detector.Range) { return; }
 
             // stop the action
             if (log_checks) { Debug.Log($"(AttackAction) {ia.name} stopped attacking {transformTarget.Transform.name} because it is too far away."); }

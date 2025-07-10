@@ -11,17 +11,34 @@ public class WalkCapacity : Capacity
     public float max_speed = 3f; // vitesse maximale de déplacement, atteinte quand walk_speed = 1f
     [SerializeField] private float random_speed_modifier_at_start = 0; // max_speed += random.range(-5,5) in the start method if this modifier = 5
 
+    [Header("Walk Particles")]
+    [SerializeField] private ParticleSystem walk_particles; // particles to play when walking
+    ParticleSystem.EmissionModule walk_particles_emission; // emission module of the particles
+    private float base_walk_particles_rate = 10f; // base rate of the particles emission
+
+    private void Awake()
+    {
+        walk_particles = GetComponent<ParticleSystem>();
+        if (walk_particles == null) { return; }
+        walk_particles_emission = walk_particles.emission;
+        walk_particles_emission.enabled = false; // we disable the particles by default
+        base_walk_particles_rate = walk_particles_emission.rateOverTime.constant; // we get the base rate of the particles emission
+    }
+
     // START
     private void Start()
     {
-        max_speed += Random.Range(-random_speed_modifier_at_start, random_speed_modifier_at_start);    
+        max_speed += Random.Range(-random_speed_modifier_at_start, random_speed_modifier_at_start);
     }
 
-    // FIXED UPDATE
+    // UPDATE
     protected override void Update()
     {
         base.Update();
-        
+
+        // update particles
+        update_particles();
+
         // 1 - WALK_SPEED CALCULATION
         walk_speed = Mathf.Lerp(walk_speed, walk_percentage_target * max_speed, 10f * Time.deltaTime);
 
@@ -46,4 +63,14 @@ public class WalkCapacity : Capacity
         }
     }
 
+    private void update_particles()
+    {
+        if (walk_particles == null) { return; } // if no particles, we return
+
+        // we enable the particles emission if walk_speed > 0
+        walk_particles_emission.enabled = walk_speed > 0f;
+
+        // we set the rate of the particles emission based on the walk speed
+        walk_particles_emission.rateOverTime = base_walk_particles_rate * (walk_speed / max_speed);
+    }
 }
