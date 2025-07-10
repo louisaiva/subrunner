@@ -7,8 +7,6 @@ public class Detector : MonoBehaviour
     [SerializeField] protected Brain brain;
     [SerializeField] protected GoalType goal_type = GoalType.None; // The type of goal this detector is looking for
     protected GoalPriority goal;
-    [SerializeField] protected float detectionInterval = 0.5f; // How often to check for conditions
-    protected float lastDetectionTime = 0f;
 
     protected virtual void Awake()
     {

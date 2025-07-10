@@ -22,7 +22,7 @@ public class AttackCapacity : Capacity
 
 
     // 1 - TARGET DETECTION // todo change this to work with colliders
-    public List<Being> DetectPotentialTargets(IA ia)
+    /* public List<Being> DetectPotentialTargets(IA ia)
     {
         // we do an overlap to detect targets
         Collider2D[] results = Physics2D.OverlapCircleAll(ia.transform.position,
@@ -68,7 +68,7 @@ public class AttackCapacity : Capacity
             closest_distance = distance;
         }
         return closest_target;
-    }
+    } */
 
 
     [Header("Damage parameters")]

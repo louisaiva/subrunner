@@ -9,6 +9,8 @@ public class HungerDetector : Detector
     [Header("Hunger Detector Settings")]
     public float healthPercentageThreshold = 30f; // between 0 & 100
     public float hungerThreshold = 50f;
+    [SerializeField] protected float detectionInterval = 0.5f; // How often to check for conditions
+    protected float lastDetectionTime = 0f;
 
     [Header("Components")]
     private IA ia;

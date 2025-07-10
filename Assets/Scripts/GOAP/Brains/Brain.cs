@@ -99,7 +99,7 @@ namespace subrunner.goap
 
 
         // GOAL SELECTION LOGIC
-        public void DetermineGoal()
+        public void DetermineGoal(bool resolve = true)
         {
             // we cycle through all the goals priorities & we find the highest one
             GoalPriority highestGoal = null;
@@ -123,22 +123,22 @@ namespace subrunner.goap
             if (log_goals) { Debug.Log("(Brain) " + ia.name + " is requesting " + highestGoal.type); }
 
             // we request the goal
-            request_goal(highestGoal.type);
+            request_goal(highestGoal.type,resolve);
         }
-        private void request_goal(GoalType goal)
+        private void request_goal(GoalType goal, bool resolve = true)
         {
             switch (goal)
             {
                 case GoalType.None:
                     break;
                 case GoalType.KillBeingGoal:
-                    provider.RequestGoal<KillBeingGoal>();
+                    provider.RequestGoal<KillBeingGoal>(resolve);
                     break;
                 case GoalType.EatGoal:
-                    provider.RequestGoal<EatGoal>();
+                    provider.RequestGoal<EatGoal>(resolve);
                     break;
                 case GoalType.WanderGoal:
-                    provider.RequestGoal<WanderGoal>();
+                    provider.RequestGoal<WanderGoal>(resolve);
                     break;
                 default:
                     Debug.LogWarning($"(Brain) Unknown goal type: {goal}");
@@ -156,15 +156,15 @@ namespace subrunner.goap
         private void OnGoalCompleted(IGoal goal) { DetermineGoal(); }
 
         // GOAL MANAGEMENT
-        public void EnableGoal(GoalPriority goal)
+        public void EnableGoal(GoalPriority goal,bool resolve = true)
         {
             goal.enabled = true;
-            if (goal.type != current_goal) { DetermineGoal(); }
+            if (goal.type != current_goal) { DetermineGoal(resolve); }
         }
-        public void DisableGoal(GoalPriority goal)
+        public void DisableGoal(GoalPriority goal, bool resolve = true)
         {
             goal.enabled = false;
-            if (goal.type == current_goal) { DetermineGoal(); }
+            if (goal.type == current_goal) { DetermineGoal(resolve); }
         }
         public GoalPriority GetGoal(GoalType goalType)
         {

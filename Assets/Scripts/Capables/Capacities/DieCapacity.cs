@@ -108,8 +108,8 @@ public class DieCapacity : Capacity
         // we also destroy all Goal if this is an IA
         if (being is IA ia)
         {
-            Transform goals = ia.transform.Find("goals");
-            if (goals != null) { Destroy(goals.gameObject); }
+            if (ia.transform.Find("goals") is Transform goal && goal != null) { Destroy(goal.gameObject); }
+            if (ia.transform.Find("eyes") is Transform eyes && eyes != null) { Destroy(eyes.gameObject); }
             Destroy(ia.transform.Find("brain").gameObject);
         }
 
@@ -123,7 +123,6 @@ public class DieCapacity : Capacity
         // And finally we add a Meat that will replace the being
         Meat meat = being.gameObject.AddComponent<Meat>();
         meat.name = "Meat";
-        meat.debug = true;
         meat.Initialize();
         meat.SetForces(being.GetForces());
 

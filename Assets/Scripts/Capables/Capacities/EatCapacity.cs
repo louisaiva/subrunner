@@ -118,20 +118,18 @@ public class EatCapacity : Capacity
         
         // launch the animation
         Anim anim = being.anim_player.Play("eat");
-        if (anim != null)
-        {
-            // we start the cooldown for the time of the animation
-            startCooldown(anim.GetDuration());
-        }
-        else { startCooldown(); }
+        if (anim == null) { return; }
+
+        float anim_duration = anim.GetDuration();
+        startCooldown(anim_duration);
 
         // we launch the eating action for the food to take effect
-        StartCoroutine(Bite(being));
+        StartCoroutine(Bite(being, anim_duration));
     }
-    private IEnumerator Bite(Being being)
+    private IEnumerator Bite(Being being, float bite_duration)
     {
         if (debug) { Debug.Log("(EatCapacity) " + being.name + " is trying to eat " + food_target.name); }
-        while (being.anim_player.current_capacity == "eat") { yield return null; } // wait for the animation to finish
+        yield return new WaitForSeconds(bite_duration); // wait for the bite duration
 
         // we check if the food target is still valid
         if (food_target == null || !food_target.Eatable)
