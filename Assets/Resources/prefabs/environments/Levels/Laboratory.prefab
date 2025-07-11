@@ -214,8 +214,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 0
-  opening_duration: 0.25
   debug: 0
+  closing_duration: 0.5
+  open_capacity: {fileID: 0}
 --- !u!1 &435459052445560588
 GameObject:
   m_ObjectHideFlags: 0
@@ -14490,8 +14491,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 0
-  interactInput: {fileID: 2767387396969607311, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
-  set_callback: 0
   debug: 0
 --- !u!1 &2513878005061601762
 GameObject:
@@ -14575,8 +14574,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 0
-  interactInput: {fileID: 0}
-  set_callback: 0
   debug: 0
 --- !u!1 &2639707252019862469
 GameObject:
@@ -14817,7 +14814,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: door_hackable
-  orientation: L
   current_capacity: 
   current_anim:
     name: 
@@ -14829,8 +14825,12 @@ MonoBehaviour:
     flipX: 0
   anim_pile: []
   animation_priorities_with_no_loop: 03000000
-  animation_priorities_with_no_interrupt: 03000000
+  animation_priorities_with_static_orientation: 0300000004000000
   debug: 0
+  debug_orientation: 0
+  debug_advanced: 0
+  debug_frames: 0
+  debug_pile: 0
 --- !u!114 &1684176694716961081
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14843,13 +14843,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff6c242488ed936468b3cd01a36ecb0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim_player: {fileID: 0}
-  bank: {fileID: 0}
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: 0}
   capacities: []
   effects: 
   effects_timetolive: []
+  debug: 0
+  activate_all_capacities_logs_on_awake: 0
   is_vertical: 1
   door_collider: {fileID: 0}
   shadow_caster: {fileID: 0}
@@ -37373,8 +37373,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 0
-  opening_duration: 0.15
   debug: 0
+  opening_duration: 0.15
+  close_capacity: {fileID: 0}
 --- !u!1 &4364788157350857517
 GameObject:
   m_ObjectHideFlags: 0
@@ -38309,8 +38310,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 0
-  opening_duration: 0.25
   debug: 0
+  closing_duration: 0.5
+  open_capacity: {fileID: 0}
 --- !u!1 &4979005483932850319
 GameObject:
   m_ObjectHideFlags: 0
@@ -44391,12 +44393,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 0
+  debug: 0
   entity_prefab: {fileID: 8595018692463036030, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
   entity_parent: {fileID: 2076165280769693443}
+  spawn_force: 0
   local_spawn_position: {x: 0, y: 0.5}
   spawn_radius: 0
   spawn_rate: 40
-  debug: 0
 --- !u!1 &6485550689857031286
 GameObject:
   m_ObjectHideFlags: 0
@@ -57329,7 +57332,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: door_hackable
-  orientation: L
   current_capacity: 
   current_anim:
     name: 
@@ -57341,8 +57343,12 @@ MonoBehaviour:
     flipX: 0
   anim_pile: []
   animation_priorities_with_no_loop: 03000000
-  animation_priorities_with_no_interrupt: 03000000
+  animation_priorities_with_static_orientation: 0300000004000000
   debug: 0
+  debug_orientation: 0
+  debug_advanced: 0
+  debug_frames: 0
+  debug_pile: 0
 --- !u!114 &5854468585278943998
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57355,13 +57361,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff6c242488ed936468b3cd01a36ecb0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim_player: {fileID: 0}
-  bank: {fileID: 0}
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: 0}
   capacities: []
   effects: 
   effects_timetolive: []
+  debug: 0
+  activate_all_capacities_logs_on_awake: 0
   is_vertical: 1
   door_collider: {fileID: 0}
   shadow_caster: {fileID: 0}
@@ -57502,8 +57508,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 0
-  interactInput: {fileID: 2767387396969607311, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
-  set_callback: 0
   debug: 0
 --- !u!1 &7574102789870103812
 GameObject:
@@ -57588,6 +57592,7 @@ MonoBehaviour:
   rooms: []
   elevator_room: {fileID: 518423483937043046}
   being_parent: {fileID: 0}
+  debug: 0
   loaded: 0
 --- !u!1 &8269961788774550156
 GameObject:
@@ -61904,8 +61909,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 0
-  opening_duration: 0.15
   debug: 0
+  opening_duration: 0.15
+  close_capacity: {fileID: 0}
 --- !u!1 &9161871998642663813
 GameObject:
   m_ObjectHideFlags: 0
@@ -62011,7 +62017,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: cube
-  orientation: L
   current_capacity: 
   current_anim:
     name: 
@@ -62023,8 +62028,12 @@ MonoBehaviour:
     flipX: 0
   anim_pile: []
   animation_priorities_with_no_loop: 03000000
-  animation_priorities_with_no_interrupt: 03000000
+  animation_priorities_with_static_orientation: 0300000004000000
   debug: 0
+  debug_orientation: 0
+  debug_advanced: 0
+  debug_frames: 0
+  debug_pile: 0
 --- !u!114 &4866035503554983734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62037,13 +62046,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c40f0dc7963d2d46a95171c34ece2c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim_player: {fileID: 0}
-  bank: {fileID: 0}
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: 0}
   capacities: []
   effects: 
   effects_timetolive: []
+  debug: 0
+  activate_all_capacities_logs_on_awake: 0
 --- !u!60 &5890044360682386066
 PolygonCollider2D:
   m_ObjectHideFlags: 0

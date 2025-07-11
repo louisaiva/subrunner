@@ -36,7 +36,7 @@ public class PreyDetector : Detector
         if (waiting_targets.Count == 0) { return null; }
 
         // we remove null targets
-        waiting_targets.RemoveAll(target => target == null);
+        waiting_targets.RemoveAll(target => target == null || !target.Alive);
 
         // we find the closest target
         Being closest_target = null;

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2052598830028912328}
   - component: {fileID: 8781775830682627617}
   - component: {fileID: 8239128205784558305}
+  - component: {fileID: 601935912462375894}
   m_Layer: 29
   m_Name: spawner
   m_TagString: Untagged
@@ -106,7 +107,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: cube
-  orientation: D
   current_capacity: 
   current_anim:
     name: 
@@ -123,6 +123,7 @@ MonoBehaviour:
   debug_orientation: 0
   debug_advanced: 0
   debug_frames: 0
+  debug_pile: 0
 --- !u!114 &8781775830682627617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,14 +136,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c40f0dc7963d2d46a95171c34ece2c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim_player: {fileID: 0}
-  bank: {fileID: 0}
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: -1}
   capacities: []
   effects: 
   effects_timetolive: []
   debug: 0
+  activate_all_capacities_logs_on_awake: 0
 --- !u!61 &8239128205784558305
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -189,6 +189,22 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.5, y: 0.24676323}
   m_EdgeRadius: 0
+--- !u!114 &601935912462375894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1341352508153809069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1001 &7056843530695103706
 PrefabInstance:
   m_ObjectHideFlags: 0

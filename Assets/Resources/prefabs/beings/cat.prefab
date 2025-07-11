@@ -78,6 +78,87 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.3953638, y: 0.44910526}
   m_EdgeRadius: 0
+--- !u!1 &3615429592293044737
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3059150726220298306}
+  - component: {fileID: 1171626126718227026}
+  - component: {fileID: 8531040572737004579}
+  m_Layer: 23
+  m_Name: goto
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3059150726220298306
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3615429592293044737}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1156282414648763915}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1171626126718227026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3615429592293044737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 373b52eb9bf8c40f785bb6947a1aee66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  drawGizmos: 0
+  detailedGizmos: 0
+  startEndModifier:
+    addPoints: 0
+    exactStartPoint: 3
+    exactEndPoint: 3
+    useRaycasting: 0
+    mask:
+      serializedVersion: 2
+      m_Bits: 4294967295
+    useGraphRaycasting: 0
+  traversableTags: -1
+  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  graphMask:
+    value: -1
+--- !u!114 &8531040572737004579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3615429592293044737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c271ab77a3674f4db5f3efca8f26ef8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  use_navmesh: 1
+  path: []
+  current_waypoint_destination: {x: 0, y: 0}
+  current_waypoint: 0
+  update_path_interval: 0.5
+  waypoint_threshold_distance: 0.25
+  log: 0
+  log_path_calculation: 0
 --- !u!1 &3996042554587929240
 GameObject:
   m_ObjectHideFlags: 0
@@ -144,7 +225,7 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.1}
+  m_Offset: {x: 0, y: 0}
   m_Radius: 0.09
 --- !u!1 &6831872210500143280
 GameObject:
@@ -157,7 +238,6 @@ GameObject:
   - component: {fileID: 2639434519578746112}
   - component: {fileID: 3387591549335084900}
   - component: {fileID: 7853161631166308107}
-  - component: {fileID: 3884268841172835077}
   - component: {fileID: 7206343197171121091}
   - component: {fileID: -5260680249891615082}
   m_Layer: 23
@@ -277,34 +357,6 @@ MonoBehaviour:
   debug_advanced: 0
   debug_frames: 0
   debug_pile: 0
---- !u!114 &3884268841172835077
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6831872210500143280}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 373b52eb9bf8c40f785bb6947a1aee66, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 1
-  drawGizmos: 1
-  detailedGizmos: 0
-  startEndModifier:
-    addPoints: 0
-    exactStartPoint: 3
-    exactEndPoint: 3
-    useRaycasting: 0
-    mask:
-      serializedVersion: 2
-      m_Bits: 4294967295
-    useGraphRaycasting: 0
-  traversableTags: -1
-  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  graphMask:
-    value: -1
 --- !u!50 &7206343197171121091
 Rigidbody2D:
   serializedVersion: 5
@@ -416,6 +468,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   brain: {fileID: 2814625212250578100}
   goal_type: 2
+  always_select_closest: 1
+  selectionInterval: 0.5
   waiting_targets: []
   target_layers:
     serializedVersion: 2
@@ -472,7 +526,6 @@ GameObject:
   - component: {fileID: 1156282414648763915}
   - component: {fileID: 3624794335309129108}
   - component: {fileID: 8949582032119047939}
-  - component: {fileID: 2622228592504768606}
   - component: {fileID: 2814625212250578100}
   m_Layer: 23
   m_Name: brain
@@ -493,7 +546,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3059150726220298306}
   m_Father: {fileID: 2639434519578746112}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3624794335309129108
@@ -530,23 +584,6 @@ MonoBehaviour:
     <MaxLogSize>k__BackingField: 20
   <AgentTypeBehaviour>k__BackingField: {fileID: 0}
   <DistanceMultiplier>k__BackingField: 1
---- !u!114 &2622228592504768606
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8796150177163226725}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c271ab77a3674f4db5f3efca8f26ef8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  current_waypoint_destination: {x: 0, y: 0}
-  current_waypoint: 0
-  update_path_interval: 0.5
-  log: 0
-  log_path_calculation: 0
 --- !u!114 &2814625212250578100
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -570,7 +607,7 @@ MonoBehaviour:
   - type: 1
     priority: 10
     enabled: 1
-  current_goal: 0
+  CurrentGoal: 0
   log_checks: 0
   log_goals: 0
   log_goals_update: 0

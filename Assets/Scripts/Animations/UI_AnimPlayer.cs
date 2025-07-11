@@ -13,8 +13,6 @@ using UnityEngine.UI;
 public class UI_AnimPlayer : MonoBehaviour
 {
 
-
-
     [Header("Components")]
     private AnimBank bank;
     private Image img;
@@ -53,7 +51,7 @@ public class UI_AnimPlayer : MonoBehaviour
     {
         if (bank == null)
         {
-            bank = GameObject.Find("/utils/bank").GetComponent<AnimBank>();
+            bank = AnimBank.Instance;
         }
 
         // we get the sprite renderer
@@ -129,7 +127,7 @@ public class UI_AnimPlayer : MonoBehaviour
         return null;
 
     }
-    private void play_now_at_frame(Anim anim, int frame=0)
+    private void play_now_at_frame(Anim anim, int frame = 0)
     {
         // we saturate the frame
         if (frame < 0) { frame = 0; }

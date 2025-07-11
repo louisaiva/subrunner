@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using CrashKonijn.Agent.Core;
 using CrashKonijn.Agent.Runtime;
 using Pathfinding;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace subrunner.goap
 {
@@ -9,18 +11,21 @@ namespace subrunner.goap
     {
 
         [Header("GoTo Behaviour")]
-        [SerializeField] private ITarget target;
+        private ITarget target;
         private AgentBehaviour agent;
         private WalkCapacity walker;
+        private Seeker seeker;
         protected IA ia;
 
-
         [Header("Pathfinding")]
+        [SerializeField] private bool use_navmesh = false; // if true, use NavMesh for pathfinding, otherwise use A* Pathfinding
+        [SerializeField] private List<Vector3> path; // the current path
+
+        [Header("Current Path")]
         [SerializeField] private Vector2 current_waypoint_destination;
-        [SerializeField] private Path path; // the current path
         [SerializeField] private int current_waypoint = 0; // the current waypoint on the path
         [SerializeField] private float update_path_interval = 0.5f; // interval to update the pathfinding to the target
-        private float waypoint_threshold_distance = 0.25f; // current distance to the waypoint to consider it reached
+        [SerializeField] private float waypoint_threshold_distance = 0.25f; // current distance to the waypoint to consider it reached
 
         [Header("Logs")]
         [SerializeField] private bool log = false;
@@ -33,8 +38,9 @@ namespace subrunner.goap
         // AWAKE & START
         private void Awake()
         {
-            agent = GetComponent<AgentBehaviour>();
-            ia = transform.parent.GetComponent<IA>();
+            agent = transform.parent.GetComponent<AgentBehaviour>();
+            ia = transform.parent.parent.GetComponent<IA>();
+            seeker = GetComponent<Seeker>();
         }
         private void Start()
         {
@@ -101,9 +107,19 @@ namespace subrunner.goap
             }
 
             // we find a path to follow
-            ia.seeker.StartPath(ia.transform.position, target.Position, OnPathComplete);
+            if (use_navmesh)
+            {
+                NavMeshPath navmesh_path = new NavMeshPath();
+                if (NavMesh.CalculatePath(transform.position, target.Position, NavMesh.AllAreas, navmesh_path))
+                {
+                    path = new List<Vector3>(navmesh_path.corners);
+                    start_following_path(path);
+                }
+                else if (log_path_calculation) { Debug.LogError("(GoToBehaviour) " + ia.name + " failed to find a NavMesh path to " + target.Position); }
+            }
+            else { seeker.StartPath(transform.position, target.Position, OnPathComplete); }
 
-            // we stop invoke ourselves
+            // we properly invoke ourselves repeatedly (for chasing moving target)
             CancelInvoke(nameof(CalculatePath));
             InvokeRepeating(nameof(CalculatePath), update_path_interval, update_path_interval); // we calculate the path every 0.5 seconds
         }
@@ -111,18 +127,22 @@ namespace subrunner.goap
         {
             if (path.error)
             {
-                if (log_path_calculation) { Debug.LogError("(GoToBehaviour) " + ia.name + " failed to find a path to " + target + ": " + path.errorLog); }
+                if (log_path_calculation) { Debug.LogError("(GoToBehaviour) " + ia.name + " failed to find a A*project path to " + target + ": " + path.errorLog); }
                 return;
             }
 
+            start_following_path(path.vectorPath);
+        }
+        private void start_following_path(List<Vector3> path)
+        {
             // we initialize the path & waypoints variables
             this.path = path;
             current_waypoint = 0;
-            current_waypoint_destination = path.vectorPath[0];
+            current_waypoint_destination = path[0];
 
             // we start walking
             walker.walk_percentage_target = 1f;
-            if (log_path_calculation) { Debug.Log("(GoToBehaviour) " + ia.name + " found a path to target with " + path.vectorPath.Count + " waypoints."); }
+            if (log_path_calculation) { Debug.Log("(GoToBehaviour) " + ia.name + " found a path to target with " + path.Count + " waypoints."); }
         }
 
         // UPDATE
@@ -138,7 +158,7 @@ namespace subrunner.goap
             {
                 // we check if we arrived at the end of the path
                 current_waypoint++;
-                if (current_waypoint >= path.vectorPath.Count)
+                if (current_waypoint >= path.Count)
                 {
                     // stop moving
                     walker.walk_percentage_target = 0f;
@@ -147,7 +167,7 @@ namespace subrunner.goap
                 }
 
                 // we update the current waypoint destination
-                current_waypoint_destination = path.vectorPath[current_waypoint];
+                current_waypoint_destination = path[current_waypoint];
             }
 
             // we calculate the direction of the movement towards the waypoint
@@ -158,9 +178,19 @@ namespace subrunner.goap
         // GIZMOS
         private void OnDrawGizmos()
         {
-            if (target == null) { return; }
-
-            Gizmos.DrawLine(ia.transform.position, this.target.Position);
+            if (path != null && path.Count >= 0)
+            {
+                Gizmos.color = Color.cyan;
+                for (int i = 0; i < path.Count - 1; i++)
+                {
+                    Gizmos.DrawLine(path[i], path[i + 1]);
+                }
+            }
+            if (target != null)
+            {
+                Gizmos.color = Color.white;
+                Gizmos.DrawLine(ia.transform.position, target.Position);
+            }
         }
     }
 }

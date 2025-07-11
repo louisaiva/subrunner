@@ -9,14 +9,13 @@ using UnityEngine;
 /// BUT also have Behaviors which define how it behaves in the game world.
 /// </summary>
 
-[RequireComponent(typeof(Seeker))]
 public class IA : Being
 {
     [Header("IA")]
     public float exploration_radius = 3f; // the radius of exploration for the IA
                                           // todo must be part of an IAData class or struct that influence a curiosity parameter
     public Transform eyes;
-    public Seeker seeker { get; private set; } // the seeker component used for pathfinding
+    // public Seeker seeker { get; private set; } // the seeker component used for pathfinding
 
     [Header("Logs")]
     public bool log_actions = false;
@@ -26,8 +25,7 @@ public class IA : Being
     {
         base.Awake();
 
-        // we get the seeker component
-        seeker = GetComponent<Seeker>();
+        // we get the eyes component
         eyes = transform.Find("eyes");
     }
 }

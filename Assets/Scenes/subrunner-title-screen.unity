@@ -554,6 +554,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d26417de7f4df5419b4c2e1076881cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linux_style_loading: 0
   loadingScreen: {fileID: 1647928293}
   bg: {fileID: 113438315}
   text_prefab: {fileID: 236027964217853167, guid: 194d992dcf64716409758e4d0892645e, type: 3}
@@ -1665,15 +1666,15 @@ MonoBehaviour:
   - small_laptop
   - rat
   - bones
-  anims:
+  capacities:
   - idle
   - walk
+  - run
+  - hurted
   - attack
+  - die
   - dodge
   - eat
-  - hurted
-  - die
-  - run
   skinChangeDelay: 8
   animPlayer: {fileID: 0}
 --- !u!114 &1367109925
@@ -1946,8 +1947,8 @@ MonoBehaviour:
   anims_path: animations/
   jsons_path: anims/
   spritesheets_path: spritesheets/
-  debug: 0
-  debug_LAFAC: 0
+  log: 0
+  log_LAFAC: 0
 --- !u!1 &1647928293
 GameObject:
   m_ObjectHideFlags: 0
@@ -1966,7 +1967,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1647928294
 RectTransform:
   m_ObjectHideFlags: 0

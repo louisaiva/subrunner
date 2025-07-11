@@ -82,7 +82,7 @@ public class AnimPlayer : MonoBehaviour
     {
         if (bank == null)
         {
-            bank = GameObject.Find("/utils/bank").GetComponent<AnimBank>();
+            bank = AnimBank.Instance;
         }
 
         // we get the sprite renderer
