@@ -5,6 +5,7 @@ using UnityEngine;
 /// <summary>
 /// UI_ItemPool is a helper class to manage the item pool in the UI.
 /// It can have a rule reference to filter the items that can be added to the pool.
+/// It is a smaller pool of item inside a bigger UI_Pool (mainly UI_InventoryMenu)
 /// </summary>
 public class UI_ItemPool : MonoBehaviour
 {

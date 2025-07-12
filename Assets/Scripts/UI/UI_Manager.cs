@@ -83,6 +83,13 @@ public class UI_Manager : MonoBehaviour
         // we check if we have a current pool
         if (current_pool != null)
         {
+            // checks if the current pool can be forcely hidden
+            if (!current_pool.CanBeHidden)
+            {
+                if (debug) { Debug.LogWarning("(UI_Manager) tried to hide a pool that cannot be hidden : " + current_pool.Reference); }
+                return;
+            }
+
             // we hide the current pool
             current_pool.Hide();
             // last_pool = current_pool;

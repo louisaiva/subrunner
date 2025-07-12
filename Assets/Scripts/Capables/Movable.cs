@@ -20,8 +20,8 @@ public class Movable : Capable
 
 
     [Header("Collisions")]
-    public CircleCollider2D feet_collider;
-    public float feet_radius => feet_collider is not null ? feet_collider.radius : 0f;
+    public Collider2D feet_collider;
+    public float feet_radius => feet_collider is CircleCollider2D circle ? circle.radius : feet_collider.bounds.extents.x;
 
     // AWAKE
     protected override void Awake()
@@ -37,7 +37,7 @@ public class Movable : Capable
         else { Debug.LogError("No Rigidbody2D found on " + gameObject.name); }
 
         // Get the feet collider
-        feet_collider = transform.Find("feet").GetComponent<CircleCollider2D>();
+        feet_collider = transform.Find("feet").GetComponent<Collider2D>();
     }
 
     protected virtual void Start()

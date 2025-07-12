@@ -219,18 +219,26 @@ public class Capable : MonoBehaviour
 
 
     // USING ITEMS
-    public void UseItem(string item_reference)
+    public bool HasItem(string item_reference,out Item item)
     {
+        item = null;
+
         // we check if we have an inventory
-        if (inventory == null) { return; }
+        if (inventory == null) { return false; }
 
         // we check if the item is in the inventory
-        Item item = inventory.GetItem(item_reference);
+        item = inventory.GetItem(item_reference);
         if (item == null)
         {
             if (debug) { Debug.LogWarning("(Capable) " + name + " doesn't have item " + item_reference); }
-            return;
+            return false;
         }
+
+        return true;
+    }
+    public void UseItem(string item_reference)
+    {
+        if (!HasItem(item_reference,out Item item)) { return; }
 
         // we use the item
         if (debug) { Debug.Log("(Capable) " + name + " used item " + item_reference); }

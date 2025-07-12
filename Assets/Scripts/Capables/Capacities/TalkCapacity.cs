@@ -81,8 +81,6 @@ public class TalkCapacity : Capacity
 
     [Header("Components")]
     private GameObject floating_dmg_provider;
-    // private Being being;
-
 
     // START
     private void Start()
@@ -103,10 +101,7 @@ public class TalkCapacity : Capacity
     }
 
     // SINGLE TALKING
-    public void Say(string msg)
-    {
-        floating_dmg_provider.GetComponent<TextManager>().talk(msg, capable as Being);
-    }
+    public void Say(string msg) { StartCoroutine(floating_dmg_provider.GetComponent<TextManager>().TalkLines(msg, capable as Being)); }
 
     // RANDOM TALKING
     public void StopTalking()

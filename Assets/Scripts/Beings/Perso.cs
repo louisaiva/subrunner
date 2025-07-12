@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -38,14 +39,14 @@ public class Perso : Being
     public Transform items_parent;
     // private LayerMask grabber_layer;
 
-    // [Header("UI - MENUS")]
-    // public SkillTree skills_tree;
+    [Header("SKILLS")]
+    public SkillManager skillManager;
     // public UI_Fullmap big_map;
 
-    [Header("INTERACTIONS")]
+    // [Header("INTERACTIONS")]
     // interactions
     // [SerializeField] private float interact_range = 1f;
-    [SerializeField] private LayerMask interact_layers;
+    // [SerializeField] private LayerMask interact_layers;
     // public GameObject current_interactable = null;
 
     // hoover interactions
@@ -69,7 +70,6 @@ public class Perso : Being
     // unity functions
     new void Start()
     {
-
         // on récupère les inputs
         initInputs();
 
@@ -78,25 +78,16 @@ public class Perso : Being
 
         // ON RECUP DES TRUCS
 
-        // on récup la camera
         cam = GameObject.Find("/cam_follow/cam");
-
-        // on met à jour les layers du hack
         hack_layer = LayerMask.GetMask("Hackables");
-
-        // on récupère le parent des hackrays
         hacks_path = transform.Find("hacks");
         hackray_hoover = hacks_path.transform.Find("hoover").GetComponent<HackrayHoover>();
-
-        // on récupère le collider de hack
         hack_collider = hacks_path.GetComponent<CircleCollider2D>();
         hack_contact_filter.SetLayerMask(hack_layer);
-
-        // on récupère les hackray
         hackray_prefab = Resources.Load("prefabs/hacks/hackray") as GameObject;
-
-        // on récupère l'inventaire
         inventory = GameObject.Find("/inventory")?.GetComponent<Inventory>();
+        skillManager = GetComponentInChildren<SkillManager>();
+
         // if (inventory != null) {inventory.scalable = true;}
         // big_inventory = GameObject.Find("/ui/inventory/ui_inventory").GetComponent<UI_OldInventory>();
 
@@ -111,7 +102,7 @@ public class Perso : Being
         floating_text_prefab = Resources.Load("prefabs/ui/floating_text") as GameObject;
 
         // on met à jour les interactions
-        interact_layers = LayerMask.GetMask(/* "Chests", "Computers", "Buttons", "Items",  */"Interactives");
+        // interact_layers = LayerMask.GetMask(/* "Chests", "Computers", "Buttons", "Items",  */"Interactives");
 
 
 
@@ -355,7 +346,8 @@ public class Perso : Being
         Debug.Log("LEVEL UP ! level " + level);
 
 
-        // on ouvre le physical tree
+        // on ouvre le level up menu
+        GameObject.Find("/ui").GetComponent<UI_Manager>().SwitchTo("level_up");
         // skills_tree.physicalLevelUp();
 
         // on augmente x1.5 l'attaque
@@ -368,6 +360,44 @@ public class Perso : Being
         floating_dmg_provider.GetComponent<TextManager>().addFloatingText("LEVEL " + level.ToString(), transform.position + new Vector3(0, 0.5f, 0), "yellow");
 
     }
+
+    // SKILLS
+    /* public float GetSkillValue(string skill_reference)
+    {
+        if (skill_reference == "skill:max_life") { return this.max_life; }
+        if (skill_reference == "skill:regen_life") { return this.regen_life; }
+        if (skill_reference == "skill:damage")
+        {
+            if (HasCapacity<AttackCapacity>())
+            {
+                return GetCapacity<AttackCapacity>().damage;
+            }
+            return 0f;
+        }
+        if (debug) { Debug.LogWarning("(Perso - GetSkillValue) : skill not found : " + skill_reference); }
+        return 0f;
+    }
+    public void UpgradeSkill(string reference)
+    {
+        if (debug) { Debug.Log("(Perso) : upgrading skill : " + reference); }
+        if (reference == "skill:max_life")
+        {
+            this.max_life = Mathf.RoundToInt(this.max_life * 1.5f);
+        }
+        else if (reference == "skill:regen_life")
+        {
+            this.regen_life = Mathf.RoundToInt(this.regen_life * 1.5f);
+        }
+        else if (reference == "skill:damage")
+        {
+            if (HasCapacity<AttackCapacity>())
+            {
+                GetCapacity<AttackCapacity>().damage = Mathf.RoundToInt(GetCapacity<AttackCapacity>().damage * 1.5f);
+            }
+        }
+        else if (debug) { Debug.LogWarning("(Perso - UpgradeSkill) : skill not found : " + reference); }
+
+    } */
 
     // DAMAGE
     public override bool take_damage(float damage, Force knockback = null)
@@ -417,6 +447,13 @@ public class Perso : Being
     {
         // on vérifie qu'on est pas stunned
         if (HasEffect(Effect.Stunned)) { return; }
+
+        // on met à jour la valeur de damage
+        if (HasItem("weapon:katana", out Item katana))
+        {
+            katana.GetCapacity<AttackCapacity>().damage = skillManager.GetSkillValue("skill:damage");
+        }
+        else { return; }
 
         // on utilise l'item weapon:katana
         UseItem("weapon:katana");
@@ -818,7 +855,4 @@ public class Perso : Being
             unsetHooverHackable();
         }
     }
-
-
-
 }

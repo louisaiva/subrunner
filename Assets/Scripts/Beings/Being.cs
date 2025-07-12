@@ -37,7 +37,7 @@ public class Being : Movable
 
         // on initialise les capacités
         AddCapacity("hurted");
-        if (regen_life > 0) { AddEffect(Effect.RegenLife, -888f); }
+        AddEffect(Effect.RegenLife, -888f);
 
         // on initialise la vie
         max_life = max_life + Random.Range(-random_life_modifier_at_start, random_life_modifier_at_start);

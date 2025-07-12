@@ -2,7 +2,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
-
+/// <summary>
+/// todo deprecated remove this shit asap plz
+/// </summary>
 public class UI_HooverDescriptionHandler : MonoBehaviour {
     
 
