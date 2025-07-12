@@ -20,7 +20,8 @@ public class Movable : Capable
 
 
     [Header("Collisions")]
-    public Collider2D feet_collider;
+    public CircleCollider2D feet_collider;
+    public float feet_radius => feet_collider is not null ? feet_collider.radius : 0f;
 
     // AWAKE
     protected override void Awake()
@@ -36,7 +37,7 @@ public class Movable : Capable
         else { Debug.LogError("No Rigidbody2D found on " + gameObject.name); }
 
         // Get the feet collider
-        feet_collider = transform.Find("feet").GetComponent<Collider2D>();
+        feet_collider = transform.Find("feet").GetComponent<CircleCollider2D>();
     }
 
     protected virtual void Start()
@@ -195,8 +196,8 @@ public class Movable : Capable
         // on dessine le collider des pieds
         if (feet_collider == null) { return; }
 
-        Gizmos.color = Color.white;
-        Gizmos.DrawWireCube(feet_collider.bounds.center, feet_collider.bounds.size);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(feet_collider.bounds.center, feet_radius);
     }
 
 }

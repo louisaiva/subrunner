@@ -68,6 +68,7 @@ GameObject:
   - component: {fileID: 8602255659220403311}
   - component: {fileID: 5783614897223846421}
   - component: {fileID: 8712190572133131088}
+  - component: {fileID: 3852121402500476383}
   m_Layer: 29
   m_Name: fridge
   m_TagString: Untagged
@@ -209,7 +210,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: fridge
-  orientation: D
   current_capacity: 
   current_anim:
     name: 
@@ -226,6 +226,7 @@ MonoBehaviour:
   debug_orientation: 0
   debug_advanced: 0
   debug_frames: 0
+  debug_pile: 0
 --- !u!114 &8712190572133131088
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -238,15 +239,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3199b5cc302101d4b87eb751dbb530e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim_player: {fileID: 0}
-  bank: {fileID: 0}
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: -1}
   capacities: []
   effects: 
   effects_timetolive: []
   debug: 0
-  debug_capacities_on_awake: 0
+  activate_all_capacities_logs_on_awake: 0
+--- !u!114 &3852121402500476383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7856076029556869123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1001 &217107131744511209
 PrefabInstance:
   m_ObjectHideFlags: 0

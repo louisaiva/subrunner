@@ -91,10 +91,11 @@ namespace subrunner.goap
             if (log_checks) { Debug.Log($"(Brain) {ia.name} checking distance to target {transformTarget.Transform.name}"); }
 
             // if we are still inside range is ok
-            if (Vector3.Distance(transformTarget.Transform.position, ia.transform.position) < prey_detector.Range) { return; }
+            if (Vector3.Distance(transformTarget.Transform.position, ia.transform.position) <= prey_detector.Range*2f) { return; }
 
             // stop the action
-            if (log_checks) { Debug.Log($"(AttackAction) {ia.name} stopped attacking {transformTarget.Transform.name} because it is too far away."); }
+            float distance = Vector3.Distance(transformTarget.Transform.position, ia.transform.position);
+            if (log_checks) { Debug.Log($"(Brain) {ia.name} stopped attacking {transformTarget.Transform.name} because it is too far away : {distance} and 2f * prey detector radius is : {prey_detector.Range*2f}"); }
 
             agent.StopAction();
         }

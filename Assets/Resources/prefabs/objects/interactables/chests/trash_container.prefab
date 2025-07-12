@@ -68,6 +68,7 @@ GameObject:
   - component: {fileID: 3750180377020842327}
   - component: {fileID: 6102629302753936061}
   - component: {fileID: 5002663357420119196}
+  - component: {fileID: 1356334953553191254}
   m_Layer: 29
   m_Name: trash_container
   m_TagString: Untagged
@@ -162,7 +163,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: trash_container
-  orientation: D
   current_capacity: 
   current_anim:
     name: 
@@ -179,6 +179,7 @@ MonoBehaviour:
   debug_orientation: 0
   debug_advanced: 0
   debug_frames: 0
+  debug_pile: 0
 --- !u!114 &6102629302753936061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,14 +192,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3199b5cc302101d4b87eb751dbb530e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim_player: {fileID: 0}
-  bank: {fileID: 0}
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: -1}
   capacities: []
   effects: 
   effects_timetolive: []
   debug: 0
+  activate_all_capacities_logs_on_awake: 0
 --- !u!61 &5002663357420119196
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -245,6 +245,22 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.2479562, y: 0.31948143}
   m_EdgeRadius: 0
+--- !u!114 &1356334953553191254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5265208009174208198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1001 &148707663706556636
 PrefabInstance:
   m_ObjectHideFlags: 0

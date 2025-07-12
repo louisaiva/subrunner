@@ -240,7 +240,7 @@ public class Being : Movable
     {
         base.OnDrawGizmos();
 
-        // calculate lookin_at vector base position
+        /* // calculate lookin_at vector base position
         Vector3 lookin_at_pos = transform.position + new Vector3(Orientation.x, Orientation.y, 0f);
 
         // draw lookin_at angle
@@ -252,7 +252,7 @@ public class Being : Movable
         };
 
         Gizmos.color = Color.red;
-        Gizmos.DrawLineStrip(points, true);
+        Gizmos.DrawLineStrip(points, true); */
         
         // on dessine le Collider de life du Being
         if (!body_collider) { return; }
