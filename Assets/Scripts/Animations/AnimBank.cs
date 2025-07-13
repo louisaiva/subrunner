@@ -294,23 +294,17 @@ public class AnimBank : Singleton<AnimBank>
         // check if we do not have the skin
         if (!anims.ContainsKey(skin))
         {
-            if (log) { Debug.LogWarning("(AnimBank - GetAnim) Skin not found in the bank : " + skin + ", returning sphere anim"); }
+            if (log) { Debug.LogWarning($"(AnimBank - GetAnim : {skin}.{capacity}.{orientation} ) Skin not found, returning sphere anim"); }
             return anims["sphere"]["idle"][0]; // return the sphere anim of the sphere skin
         }
 
         // check if we do not have the capacity
-        if (!anims[skin].ContainsKey(capacity))
+        if (!anims[skin].ContainsKey(capacity) || anims[skin][capacity].Count == 0)
         {
             // return the idle anim of the skin
+            if (log) { Debug.LogWarning($"(AnimBank - GetAnim : {skin}.{capacity}.{orientation} ) Capacity not found, returning idle"); }
             return GetAnim(skin + ".idle." + orientation);
-        }
-
-        // check if we have at least one orientation
-        if (anims[skin][capacity].Count == 0)
-        {
-            if (log) { Debug.LogWarning("(AnimBank - GetAnim) No orientations found for " + skin + "." + capacity + ", returning sphere anim"); }
-            return anims["sphere"]["idle"][0];
-        }
+        } 
 
         // return the best orientation recursively
         return get_closest_orientation_anim(skin, capacity, orientation);        
@@ -321,14 +315,19 @@ public class AnimBank : Singleton<AnimBank>
         Anim exact_anim = anims[skin][capacity].Find(anim => anim.orientation == orientation);
         if (exact_anim != null) { return exact_anim; }
 
-        // if we have only one letter in the orientation (L,R,U or D) we return the first one we have
-        if (orientation.Length == 1) { return anims[skin][capacity][0]; }
+        // todo improve this
+        // if we have only one letter in the orientation (L,R,U or D) we turn to find the closest other one letter
+        if (orientation == "U") { return get_closest_orientation_anim(skin, capacity, "L"); }
+        else if (orientation == "L") { return get_closest_orientation_anim(skin, capacity, "D"); }
+        else if (orientation == "D") { return get_closest_orientation_anim(skin, capacity, "R"); }
+        else if (orientation == "R") { return get_closest_orientation_anim(skin, capacity, "U"); }
+
+        // checks some special cases
+        if (skin == "zombo" && capacity == "attack" && (orientation == "LD" || orientation == "RD"))
+            { return get_closest_orientation_anim(skin, capacity, "D"); }
 
         // if we have a 2 letters orientation (LU,LD,RU,RD) we delete the 2nd letter (and so we look either for L or R)
-        else
-        {
-            return get_closest_orientation_anim(skin, capacity, orientation[0].ToString());
-        }
+        else { return get_closest_orientation_anim(skin, capacity, orientation[0].ToString()); }
     }
 
     /// <summary>

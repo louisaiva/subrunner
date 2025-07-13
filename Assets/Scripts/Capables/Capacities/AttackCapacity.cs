@@ -9,67 +9,6 @@ using UnityEngine;
 
 public class AttackCapacity : Capacity
 {
-    // handle the collisions between an attack animation and a being
-    // test de mécanique pour voir si une gestion pixelperfect du combat est agréable
-
-    // those parameters are useful to the ClosestBeingSensor to determine which target to choose
-    // they are public so we can access them inside the sensor
-    // [Header("Targets")]
-    // public LayerMask target_layers;
-    // public List<string> excluded_tags; // tags to exclude from target detection
-    // public float range_target_detection = 1f;
-
-
-    // 1 - TARGET DETECTION // todo change this to work with colliders
-    /* public List<Being> DetectPotentialTargets(IA ia)
-    {
-        // we do an overlap to detect targets
-        Collider2D[] results = Physics2D.OverlapCircleAll(ia.transform.position,
-            range_target_detection,
-            target_layers);
-        if (results.Length == 0) { return new List<Being>(); }
-
-        // we convert those into beings and filter their tags
-        List<Being> potential_targets = new List<Being>();
-        foreach (Collider2D collider in results)
-        {
-            // we check if the collider has a Being component
-            Being being = collider.transform.parent.GetComponent<Being>();
-            if (being == null) { continue; }
-            else if (being == ia) { continue; } // we don't want to target ourselves
-
-            // we check if the being is excluded by the tags
-            if (excluded_tags.Contains(being.gameObject.tag)) { continue; }
-
-            // we add the being to the list of potential targets
-            potential_targets.Add(being);
-        }
-        return potential_targets;
-    }
-    public Being GetClosestTarget(IA ia)
-    {
-        // get the potential targets
-        List<Being> potential_targets = DetectPotentialTargets(ia);
-        if (potential_targets.Count == 0) { return null; }
-
-        // we find the closest target
-        Being closest_target = null;
-        float closest_distance = float.MaxValue; // Start with the largest possible distance
-
-        foreach (Being target in potential_targets)
-        {
-            float distance = Vector3.Distance(target.gameObject.transform.position, ia.transform.position);
-
-            if (!(distance < closest_distance))
-                continue;
-
-            closest_target = target;
-            closest_distance = distance;
-        }
-        return closest_target;
-    } */
-
-
     [Header("Damage parameters")]
     public float distance_to_attack = 1f;
     public int kills = 0;
@@ -283,21 +222,20 @@ public class AttackCapacity : Capacity
             enemy_being.take_damage(damage_dealt_to_single_target, knockback);
 
             // check if enemy is dead
-            if (!enemy_being.Alive)
-            {
-                kills += 1;
-                // we just killed someone : we add screen shake if we are the player
-                if (transform.parent.name == "perso")
-                {
-                    // on shake la caméra
-                    float shake_magnitude = damage * 2f;
-                    Camera.main.GetComponent<CameraShaker>().shake(shake_magnitude);
-                }
-            }
+            if (!enemy_being.Alive) { kills += 1; }
         }
+
+        
 
         if (being != null)
         {
+            if (bearer is Perso)
+            {
+                // on shake la caméra
+                float shake_magnitude = damage * 2f;
+                CameraShaker.Instance.shake(shake_magnitude);
+            }
+            
             // on recoit un knockback inverse
             float knockback_magnitude_inverse = knockback_base * (total_knockback_weight - being.weight)
                                                  / (total_knockback_weight * attackant_advantage);

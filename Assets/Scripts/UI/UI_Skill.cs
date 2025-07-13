@@ -17,7 +17,7 @@ public class UI_Skill : MonoBehaviour, I_UI_Slot
 
     [Header("Skill")]
     private Image skill_bg;
-    public string Reference = "skill:max_life";
+    public string Reference = "stat:max_life";
     public string description = "your maximum health. makes you tanky as f";
     public string unit = "hp";
 

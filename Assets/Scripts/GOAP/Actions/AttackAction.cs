@@ -24,8 +24,11 @@ namespace subrunner.goap
             // verify that the being is still Alive
             if (being_target == null || !being_target.Alive) { return; }
 
+            // we turn over to face the target
+            data.ia.OrientTowards(being_target.transform.position);
+
             // Debug log only if enabled
-            if (data.ia.log_actions) 
+            if (data.ia.log_actions)
             {
                 Debug.Log($"(AttackAction) {data.ia.name} is trying to attack {being_target.name}");
             }

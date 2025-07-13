@@ -19,20 +19,20 @@ public class SkillManager : MonoBehaviour
 {
     private Perso perso;
 
-    [Header("skill:max_life")]
+    [Header("stat:max_life")]
     [SerializeField] private int max_life_level = 0;
     [SerializeField] private float max_life_K = 100f;
     [SerializeField] private float max_life_base = 15f;
     [SerializeField] private float max_life_modifier = 0.1f;
 
 
-    [Header("skill:regen_life")]
+    [Header("stat:regen_life")]
     [SerializeField] private int regen_life_level = 0;
     [SerializeField] private float regen_life_K = 0f;
     [SerializeField] private float regen_life_base = 0.15f;
     [SerializeField] private float regen_life_modifier = 0.1f;
 
-    [Header("skill:damage")]
+    [Header("stat:damage")]
     [SerializeField] private int damage_level = 0;
     [SerializeField] private float damage_K = 10f;
     [SerializeField] private float damage_base = 3f;
@@ -72,8 +72,8 @@ public class SkillManager : MonoBehaviour
         }
 
         // on met à jour les valeurs du perso
-        perso.max_life = (int)calculateX("skill:max_life");
-        perso.regen_life = calculateX("skill:regen_life");
+        perso.max_life = (int)calculateX("stat:max_life");
+        perso.regen_life = calculateX("stat:regen_life");
         // perso.GetCapacity<AttackCapacity>().damage = calculateX("damage");
         // perso.max_bits = (int) calculateX("max_bits");
         // perso.regen_bits = calculateX("regen_bits");
@@ -83,21 +83,21 @@ public class SkillManager : MonoBehaviour
     // UPGRADING
     public void UpgradeSkill(string reference)
     {
-        if (reference == "skill:max_life")
+        if (reference == "stat:max_life")
         {
             max_life_level++;
             perso.max_life = (int)calculateX(reference);
             if (log) { Debug.Log("(SkillManager) skill " + reference + " upgraded to level " + max_life_level + " (new value: " + perso.max_life + ")");}
             return;
         }
-        if (reference == "skill:regen_life")
+        if (reference == "stat:regen_life")
         {
             regen_life_level++;
             perso.regen_life = calculateX(reference);
             if (log) { Debug.Log("(SkillManager) skill " + reference + " upgraded to level " + regen_life_level + " (new value: " + perso.regen_life + ")");}
             return;
         }
-        if (reference == "skill:damage")
+        if (reference == "stat:damage")
         {
             damage_level++;
             if (log) { Debug.Log("(SkillManager) skill " + reference + " upgraded to level " + damage_level + " (new value: " + calculateX(reference) + ")");}
@@ -124,31 +124,31 @@ public class SkillManager : MonoBehaviour
         // on regarde quel skill on augmente
         switch (skill)
         {
-            case "skill:max_life":
+            case "stat:max_life":
                 l = max_life_level;
                 b = max_life_base;
                 m = max_life_modifier;
                 K = max_life_K;
                 break;
-            case "skill:regen_life":
+            case "stat:regen_life":
                 l = regen_life_level;
                 b = regen_life_base;
                 m = regen_life_modifier;
                 K = regen_life_K;
                 break;
-            case "skill:damage":
+            case "stat:damage":
                 l = damage_level;
                 b = damage_base;
                 m = damage_modifier;
                 K = damage_K;
                 break;
-            /* case "skill:regen_bits":
+            /* case "stat:regen_bits":
                 l = regen_bits_level;
                 b = regen_bits_base;
                 m = regen_bits_modifier;
                 K = regen_bits_K;
                 break;
-            case "skill:portee_hack":
+            case "stat:portee_hack":
                 l = portee_hack_level;
                 b = portee_hack_base;
                 m = portee_hack_modifier;

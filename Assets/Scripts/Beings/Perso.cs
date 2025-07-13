@@ -364,9 +364,9 @@ public class Perso : Being
     // SKILLS
     /* public float GetSkillValue(string skill_reference)
     {
-        if (skill_reference == "skill:max_life") { return this.max_life; }
-        if (skill_reference == "skill:regen_life") { return this.regen_life; }
-        if (skill_reference == "skill:damage")
+        if (skill_reference == "stat:max_life") { return this.max_life; }
+        if (skill_reference == "stat:regen_life") { return this.regen_life; }
+        if (skill_reference == "stat:damage")
         {
             if (HasCapacity<AttackCapacity>())
             {
@@ -380,15 +380,15 @@ public class Perso : Being
     public void UpgradeSkill(string reference)
     {
         if (debug) { Debug.Log("(Perso) : upgrading skill : " + reference); }
-        if (reference == "skill:max_life")
+        if (reference == "stat:max_life")
         {
             this.max_life = Mathf.RoundToInt(this.max_life * 1.5f);
         }
-        else if (reference == "skill:regen_life")
+        else if (reference == "stat:regen_life")
         {
             this.regen_life = Mathf.RoundToInt(this.regen_life * 1.5f);
         }
-        else if (reference == "skill:damage")
+        else if (reference == "stat:damage")
         {
             if (HasCapacity<AttackCapacity>())
             {
@@ -451,7 +451,7 @@ public class Perso : Being
         // on met à jour la valeur de damage
         if (HasItem("weapon:katana", out Item katana))
         {
-            katana.GetCapacity<AttackCapacity>().damage = skillManager.GetSkillValue("skill:damage");
+            katana.GetCapacity<AttackCapacity>().damage = skillManager.GetSkillValue("stat:damage");
         }
         else { return; }
 

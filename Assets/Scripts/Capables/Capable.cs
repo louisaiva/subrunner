@@ -123,6 +123,13 @@ public class Capable : MonoBehaviour
         }
     }
 
+    // SETTERS
+    public void OrientTowards(Vector3 target_position)
+    {
+        // we set the orientation
+        Orientation = target_position - transform.position;
+    }
+
     // CAPACITIES
     public void Do(string name)
     {
