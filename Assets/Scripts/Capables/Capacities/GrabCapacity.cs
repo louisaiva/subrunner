@@ -41,7 +41,11 @@ public class GrabCapacity : Capacity
         grabAction = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().GetAction(grabInput);
 
         // on définit le callback
-        grabCallback = ctx => Use(capable);
+        grabCallback = ctx =>
+        {
+            if (ctx.ReadValue<float>() > 0.5f) { return; } // we verify that the button was released
+            Use(capable);
+        };
     }
 
     // SELECT / DESELECT

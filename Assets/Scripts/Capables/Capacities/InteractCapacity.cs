@@ -77,10 +77,8 @@ public class InteractCapacity : Capacity
         }
 
         // we check if the current hover is still the closest
-        if (Vector2.Distance(closest_hover.transform.position, capable.transform.position) < Vector2.Distance(waiting_hovers[0].transform.position, capable.transform.position))
-        {
-            return;
-        }
+        if (Vector2.Distance(closest_hover.transform.position, capable.transform.position)
+            < Vector2.Distance(waiting_hovers[0].transform.position, capable.transform.position)) { return; }
 
         // we switch the current hover
         waiting_hovers.Add(closest_hover);
@@ -143,7 +141,11 @@ public class InteractCapacity : Capacity
     public void set_callbacks(Interactable interactable)
     {
         // we define the interact action
-        interactCallback = ctx => interactable.OnInteract(capable);
+        interactCallback = ctx =>
+        {
+            if (ctx.ReadValue<float>() > 0.5f) { return; } // we verify that the button was released
+            interactable.OnInteract(capable);
+        };
 
         // we set the callback
         interactAction.performed += interactCallback;

@@ -38,23 +38,18 @@ public class UI_XboxNavigator : MonoBehaviour
     [SerializeField] private UI_Item moving_ui_item = null; // the item that is currently being moved
 
 
-    [Header("Input & Callbacks")]
     private InputManager input_manager;
+    [Header("Input & Callbacks")]
 
     // NAVIGATE L
     [SerializeField] private InputActionReference navigateInput;
     private InputAction navigateAction;
     private event Action<InputAction.CallbackContext> navigateCallback; // for navigating through the UI -> LJoy
 
-    // NAVIGATE IN-GAME
-    [SerializeField] private InputActionReference navigateInGameInput;
-    private InputAction navigateInGameAction;
-    [SerializeField] private bool navigateInGame = false; // if true, we use the navigateInGameAction instead of the navigateAction -> RJoy 
-
     // DROP
     [SerializeField] private InputActionReference dropInput;
     private InputAction dropAction;
-    private event Action<InputAction.CallbackContext> dropCallback; // drop Callback is for dropping items -> Y
+    private event Action<InputAction.CallbackContext> dropCallback; // drop Callback is for dropping items when inside a big inventory -> X
 
     // ACTIVATE
     [SerializeField] private InputActionReference activateInput;
@@ -64,7 +59,16 @@ public class UI_XboxNavigator : MonoBehaviour
     // MOVING ITEM
     [SerializeField] private InputActionReference moveItemInput;
     private InputAction moveItemAction;
-    private event Action<InputAction.CallbackContext> moveItemCallback; // moveItem Callback is for moving an item through the ui. -> X
+    private event Action<InputAction.CallbackContext> moveItemCallback; // moveItem Callback is for moving an item through the ui. -> Y
+
+    // NAVIGATE IN-GAME
+    [SerializeField] private bool navigateInGame = false; // if true, we use the navigateInGameAction instead of the navigateAction -> RJoy 
+    [SerializeField] private InputActionReference navigateInGameInput;
+    private InputAction navigateInGameAction;
+
+    // DROP IN-GAME
+    [SerializeField] private InputActionReference dropInGameInput;
+    private InputAction dropInGameAction;
 
 
     [Header("Logs")]
@@ -88,6 +92,7 @@ public class UI_XboxNavigator : MonoBehaviour
         navigateInGameAction = input_manager.GetAction(navigateInGameInput);
         activateAction = input_manager.GetAction(activateInput);
         dropAction = input_manager.GetAction(dropInput);
+        dropInGameAction = input_manager.GetAction(dropInGameInput);
         moveItemAction = input_manager.GetAction(moveItemInput);
 
         // we create the callbacks
@@ -216,19 +221,19 @@ public class UI_XboxNavigator : MonoBehaviour
     // INPUTS
     public void enableInputs(bool ingame_navigation = false)
     {
-        // on active les callbacks
-        activateAction.performed += activateCallback;
-        dropAction.performed += dropCallback;
         moveItemAction.performed += moveItemCallback;
 
         // on active le bon callback de navigation
         if (ingame_navigation)
         {
             navigateInGameAction.performed += navigateCallback;
+            dropInGameAction.performed += dropCallback;
         }
         else
         {
             navigateAction.performed += navigateCallback;
+            activateAction.performed += activateCallback;
+            dropAction.performed += dropCallback;
         }
         
         navigateInGame = ingame_navigation; // on met à jour la variable
@@ -238,8 +243,9 @@ public class UI_XboxNavigator : MonoBehaviour
         // on récupère les inputs
         navigateAction.performed -= navigateCallback;
         navigateInGameAction.performed -= navigateCallback;
-        activateAction.performed -= activateCallback;
         dropAction.performed -= dropCallback;
+        dropInGameAction.performed -= dropCallback;
+        activateAction.performed -= activateCallback;
         moveItemAction.performed -= moveItemCallback;
 
         navigateInGame = false; // on met à jour la variable

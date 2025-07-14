@@ -26,10 +26,7 @@ public class OpenCapacity : Capacity
     public CloseCapacity close_capacity;
 
     // USE
-    public override void Use(Capable capable)
-    {
-        open();
-    }
+    public override void Use(Capable capable) { open(); }
 
     
     // OPENING
