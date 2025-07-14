@@ -13,7 +13,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 {
 
     [Header("UI_Item Pools")]
-    [SerializeField] private List<UI_ItemPool> pools = new List<UI_ItemPool>();
+    public List<UI_ItemPool> pools = new List<UI_ItemPool>();
 
     [Header("Components")]
     [SerializeField] private UI_XboxNavigator navigator;
@@ -126,8 +126,6 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
                 UI_Item ui_item = child.GetComponent<UI_Item>();
                 if (ui_item == null) { continue; }
 
-                // checks if the slot is disabled
-                if (child.GetComponent<UI_Item>().is_disabled) { continue; }
                 slots.Add(child.gameObject);
 
                 // we update the position to the first slot

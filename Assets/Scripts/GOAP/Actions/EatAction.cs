@@ -59,6 +59,13 @@ namespace subrunner.goap
             return ActionRunState.Completed;
         }
 
+        // STOPPED
+        public override void Stop(IMonoAgent agent, Data data)
+        {
+            data.eatCapacity.Cancel(data.ia);
+            if (data.ia.log_actions) { Debug.Log($"(EatAction) {data.ia.name} stopped eating"); }
+        }
+
         // DATA
         public class Data : IActionData
         {

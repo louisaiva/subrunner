@@ -34,7 +34,7 @@ public class Meat : Food
         Destroy(transform.Find("body").gameObject);
 
         // and change our skin to bones
-        anim_player.skin = "bones";
+        anim_player.Skin = "bones";
         anim_player.ClearPile();
     }
 }

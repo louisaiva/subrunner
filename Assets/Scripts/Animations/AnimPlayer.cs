@@ -16,7 +16,17 @@ public class AnimPlayer : MonoBehaviour
 
 
     [Header("Skin")]
-    public string skin;
+    [SerializeField] private string skin;
+    public string Skin {
+        get { return skin; }
+        set
+        {
+            if (value == skin) { return; }
+            skin = value;
+            OnSkillChange.Invoke(skin);
+        }
+    }
+    public event Action<string> OnSkillChange = delegate { };
 
     [Header("Orientation")]
     public string orientation { get; private set; } = "D";
@@ -174,7 +184,7 @@ public class AnimPlayer : MonoBehaviour
             capacity_priorities[capacity] = priority;
         }
 
-        // we check if we can play the animation
+        // we check if we can play the animation RIGHT NOW
         if (priority >= getPileMaxPriority())
         {
             // we get the animation from the bank
@@ -214,13 +224,12 @@ public class AnimPlayer : MonoBehaviour
             }
         }
 
-        // we add the animation to the pile
+        // we can't play the animation right now BUT we add the animation to the pile
         anim_pile[priority] = capacity;
         if (debug_pile) {Debug.LogWarning("(AnimPlayer - Play) Adding " + capacity + " to the pile at priority " + priority);}
 
         // we didn't play the animation so we return null
         return null;
-
     }
     private void playFromPile()
     {
@@ -239,12 +248,6 @@ public class AnimPlayer : MonoBehaviour
                     ? ""
                     : " (" + anim_name + " was asked)"));
             }
-            /* if (anim == null)
-            {
-                if (debug) {Debug.LogWarning("(AnimPlayer - playFromPile) No animation " + skin + "." + anim_pile[i] + "." + orientation + " found to play in the bank");}
-                continue;
-            }
-            if (debug_advanced) {Debug.Log("(AnimPlayer - playFromPile) Found an animation to play: " + anim.name + " for capacity " + anim_pile[i]);} */
 
             // we set the current capacity
             current_capacity = anim_pile[i];
@@ -279,7 +282,7 @@ public class AnimPlayer : MonoBehaviour
     }
 
     // STOP ANIMATION
-    public void StopPlaying(string capacity)
+    public void StopPlaying(string capacity,bool dont_stop_if_currently_playing=false)
     {
         // we check if the capacity is in the pile
         if (!anim_pile.Contains(capacity)) { return; }
@@ -288,7 +291,8 @@ public class AnimPlayer : MonoBehaviour
         removeFromPile(capacity);
 
         // if we were playing the capacity, we stop it
-        if (current_capacity == capacity)
+        // except if dont_stop_if_currently_playing == true
+        if (!dont_stop_if_currently_playing && current_capacity == capacity)
         {
             playFromPile();
         }

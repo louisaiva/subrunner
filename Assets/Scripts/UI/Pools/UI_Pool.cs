@@ -9,7 +9,7 @@ public class UI_Pool : MonoBehaviour
     public string Reference = "pool";
     public bool Showed = false;
     public bool CanBeHidden = true; // if true, the pool can be hidden when switching to another pool
-    public bool HasCancelAction = false; // if true, the UI_Manager will activate the cancel action when the pool is showed
+    public bool CanBeCanceled = false; // if true, the UI_Manager will switch to hud when pressed & released
     public bool UsePersoInputs = true; // if true, the UI_Manager will activate the inputs.perso when the pool is showed
 
 

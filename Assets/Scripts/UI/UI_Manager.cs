@@ -17,14 +17,15 @@ public class UI_Manager : MonoBehaviour
     // [SerializeField] private UI_Pool last_pool;
     public string CurrentPool { get => current_pool.Reference; }
 
-    
+
 
 
     [Header("Logs")]
     public bool debug = false;
 
     // inputs
-    private PlayerInputActions inputs;
+    // private PlayerInputActions inputs;
+    private InputManager input_manager;
 
     // START
     private void Awake()
@@ -38,13 +39,13 @@ public class UI_Manager : MonoBehaviour
     void Start()
     {
         // on récupère les inputs
-        inputs = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().inputs;
+        input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
 
         // on mets les callbacks des menus
-        inputs.menus.inventory.performed += ctx => { TogglePool("inventory"); };
-        inputs.menus.pause.performed += ctx => { TogglePool("pause"); };
+        input_manager.inputs.menus.inventory.performed += ctx => { TogglePool("inventory"); };
+        input_manager.inputs.menus.pause.performed += ctx => { TogglePool("pause"); };
         // inputs.menus.map.performed += ctx => { TogglePool("map"); };
-        inputs.UI.cancel.performed += ctx => { SwitchTo("hud"); };
+        input_manager.inputs.UI.cancel.performed += ctx => { HandleCancelInput(ctx.ReadValue<float>()); };
 
         // we try to switch to current_pool if it is something
         if (current_pool != null)
@@ -65,17 +66,17 @@ public class UI_Manager : MonoBehaviour
     public void TogglePool(string pool_name)
     {
         // we check if the pool is already shown
-        if (pool_name == current_pool.Reference) { SwitchTo("hud");}
-        else { SwitchTo(pool_name); }
+        if (pool_name == current_pool.Reference) { SwitchTo("hud",false); }
+        else { SwitchTo(pool_name,false); }
     }
-    public void SwitchTo(string pool_name)
+    public void SwitchTo(string pool_name, bool force = true)
     {
         // check if we have a pool to switch to
         UI_Pool pool = GetPool(pool_name);
         if (!pool) { return; }
-        SwitchTo(pool);
+        switch_to(pool, force);
     }
-    public void SwitchTo(UI_Pool pool)
+    private void switch_to(UI_Pool pool,bool force=true)
     {
         // check if this pool is not the same as the current one
         if (pool == current_pool) { return; }
@@ -84,7 +85,7 @@ public class UI_Manager : MonoBehaviour
         if (current_pool != null)
         {
             // checks if the current pool can be forcely hidden
-            if (!current_pool.CanBeHidden)
+            if (!force && !current_pool.CanBeHidden)
             {
                 if (debug) { Debug.LogWarning("(UI_Manager) tried to hide a pool that cannot be hidden : " + current_pool.Reference); }
                 return;
@@ -98,10 +99,6 @@ public class UI_Manager : MonoBehaviour
         // we show the new pool
         current_pool = pool;
         current_pool.Show();
-
-        // we activate the cancel callback if needed
-        if (current_pool.HasCancelAction) { inputs.UI.cancel.Enable(); }
-        else { inputs.UI.cancel.Disable(); }
     }
 
     // GETTERS
@@ -117,5 +114,21 @@ public class UI_Manager : MonoBehaviour
 
         // if we don't find it, we return null
         return null;
+    }
+
+    // CANCEL INPUT HANDLING
+    private void HandleCancelInput(float input)
+    {
+        if (input > 0.5f) { return; } // we only handle the release of the input
+
+        // check if we can cancel the pool
+        if (!current_pool.CanBeCanceled)
+        {
+            if (debug) { Debug.LogWarning("(UI_Manager) tried to cancel a pool that cannot be canceled : " + current_pool.Reference); }
+            return;
+        }
+
+        // we switch to hud
+        SwitchTo("hud");
     }
 }

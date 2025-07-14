@@ -144,7 +144,16 @@ public class EatCapacity : Capacity
         this.hunger -= food_target.life_regen_per_bite;
         food_target.RemoveOneBite(); // we remove one bite from the food target
     }
+    public void Cancel(Being being)
+    {
+        // we cancel the eating action
+        if (debug) { Debug.Log("(EatCapacity) Canceling eating action for " + food_target.name); }
+        food_target = null; // we reset the food target
+        StopAllCoroutines(); // stop all coroutines related to eating
 
+        // we stop the anim_player from playing
+        being.anim_player.StopPlaying("eat");
+    }
 
     // SET FOOD
     public void SetFoodTarget(Food food) { food_target = food; }

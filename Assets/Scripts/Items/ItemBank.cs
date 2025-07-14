@@ -14,6 +14,10 @@ public class ItemBank : MonoBehaviour
     public Dictionary<string, Sprite> item_sprites = new Dictionary<string, Sprite>();
     public Dictionary<string, string> item_prefabs = new Dictionary<string, string>();
 
+    [Header("UI Icons")]
+    public List<Sprite> ui_icons = new List<Sprite>();
+    public List<string> ui_icons_names = new List<string>();
+
     [Header("UI")]
     public GameObject ui_item_prefab;
     public GameObject ui_module_prefab;
@@ -106,6 +110,9 @@ public class ItemBank : MonoBehaviour
         if (!create_ui_module)  { ui_item = Instantiate(ui_item_prefab, Vector3.zero, Quaternion.identity);}
         else                    { ui_item = Instantiate(ui_module_prefab, Vector3.zero, Quaternion.identity); }
 
+        // we initialize it
+        ui_item.GetComponent<UI_Item>().Init(this);
+
         // we assign the item to the UI_Item
         if (item != null)
         {
@@ -130,7 +137,25 @@ public class ItemBank : MonoBehaviour
 
         return item_sprites[item_reference];
     }
+    public Sprite GetUI_Icon(string icon_name)
+    {
+        // we check if the icon exists
+        if (!ui_icons_names.Contains(icon_name))
+        {
+            Debug.LogError("(ItemBank) cannot find UI icon for " + icon_name);
+            return null;
+        }
+        int index = ui_icons_names.IndexOf(icon_name);
 
+        if (index >= ui_icons.Count)
+        {
+            Debug.LogError("(ItemBank) UI icons list is not initialized correctly, check the inspector");
+            return null;
+        }
+
+        // we get the sprite
+        return ui_icons[index];
+    }
 
     // DEBUG
     private string getItemsList()

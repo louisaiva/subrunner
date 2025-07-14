@@ -12,24 +12,25 @@ public class UI_Slot : MonoBehaviour, I_UI_Slot
     public bool is_hovered { get; set; }
     public bool is_disabled { get; set; }
 
+    [Header("Logs")]
+    public bool debug = false;
+
     [Header("Sprites")]
     public Sprite base_sprite;
     public Sprite hover_sprite;
     public Sprite down_sprite;
     public Sprite disabled_sprite;
 
-    [Header("Logs")]
-    public bool debug = false;
 
     // DISABLE
-    public void Enable()
+    public virtual void Enable()
     {
         is_disabled = false;
 
         // on change le sprite du slot
         GetComponent<Image>().sprite = base_sprite;
     }
-    public void Disable()
+    public virtual void Disable()
     {
         is_disabled = true;
 
@@ -45,7 +46,6 @@ public class UI_Slot : MonoBehaviour, I_UI_Slot
 
         // on change le sprite du slot
         GetComponent<Image>().sprite = hover_sprite;
-
 
         // on met à jour le fait qu'on est survolé
         is_hovered = true;

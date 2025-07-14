@@ -71,19 +71,20 @@ public class AttackCapacity : Capacity
         sr = bearer.GetComponent<SpriteRenderer>();
 
         // we play the animation
-        Anim anim = anim_player.Play(name);
-
-        if (anim != null)
+        Anim anim = anim_player.Play("attack");
+        if (anim == null)
         {
-            // we start the cooldown for the time of the animation
-            float anim_duration = anim.GetDuration();
-            startCooldown(anim_duration);
+            // we remove the animation from the pile
+            anim_player.StopPlaying("attack", true);
+            if (debug) { Debug.LogWarning($"(AttackCapacity) {bearer.name} tried to attack the animation can't be played right now."); }
+            return;
         }
-        else { startCooldown(); }
 
+        // we start the cooldown for the time of the animation
+        float anim_duration = anim.GetDuration();
+        startCooldown(anim_duration);
         is_attacking = true;
         hit_enemies.Clear();
-        // Debug.Log(transform.parent.name + " just used attack");
     }
     
     // UPDATE
@@ -92,7 +93,7 @@ public class AttackCapacity : Capacity
         base.Update();
 
         if (!is_attacking) { return; }
-        if (!anim_player.current_capacity.Equals(name))
+        if (!anim_player.current_capacity.Equals("attack"))
         {
             // checks if we are still attacking & the animation is not the attack animation anymore
             if (is_attacking)

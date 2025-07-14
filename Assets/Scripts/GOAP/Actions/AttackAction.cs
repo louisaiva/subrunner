@@ -43,19 +43,26 @@ namespace subrunner.goap
             return ActionRunState.Completed;
         }
 
+        /* // STOPPED
+        public override void Stop(IMonoAgent agent, Data data)
+        {
+            data.attack_capacity.Cancel(data.ia);
+            if (data.ia.log_actions) { Debug.Log($"(EatAction) {data.ia.name} stopped eating"); }
+        } */
+        
         // IS IN RANGE OVERRIDE
         public override bool IsInRange(IMonoAgent agent, float distance, IActionData data, IComponentReference references)
         {
             var actionData = (Data)data;
-            
+
             // Fallback to default behavior if no AttackCapacity
             if (actionData.attack_capacity == null) { return base.IsInRange(agent, distance, data, references); }
-            
+
             // Use cached attack_capacity for performance
             float agentStoppingDistance = actionData.attack_capacity.distance_to_attack;
-            
+
             if (actionData.ia.log_actions) { Debug.Log($"(AttackAction) {actionData.ia.name} IsInRange check: distance={distance:F2}, stopping_distance={agentStoppingDistance:F2}, in_range={distance <= agentStoppingDistance}"); }
-            
+
             return distance <= agentStoppingDistance;
         }
 

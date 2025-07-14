@@ -282,7 +282,7 @@ public class Perso : Being
     public void Metamorph()
     {
         // checks which skins we have
-        string skin = anim_player.skin;
+        string skin = anim_player.Skin;
 
         // checks if we are a ghost
         if (skin == "ghost") { ToggleGhost(); }
@@ -302,14 +302,14 @@ public class Perso : Being
         }
 
         // we set the new skin
-        anim_player.skin = skins[index];
+        anim_player.Skin = skins[index];
     }
     public void ToggleGhost()
     {
-        if (anim_player.skin != "ghost")
+        if (anim_player.Skin != "ghost")
         {
             // on change le skin
-            anim_player.skin = "ghost";
+            anim_player.Skin = "ghost";
 
             // on applique l'Effect Ghost & Invisible
             AddEffect(Effect.Ghost, -888f);
@@ -318,7 +318,7 @@ public class Perso : Being
         else
         {
             // on remet le skin de base
-            anim_player.skin = "perso";
+            anim_player.Skin = "perso";
 
             // on enleve l'Effect Ghost & Invisible
             RemoveEffect(Effect.Ghost);
