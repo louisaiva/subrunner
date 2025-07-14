@@ -479,7 +479,7 @@ public class UI_XboxNavigator : MonoBehaviour
         }
         else if (moving_ui_item != slots[index].GetComponent<UI_Item>())
         {
-            slots[index].GetComponent<UI_Item>().OnPointerDragEnter(null); // si on est ici on drag
+            slots[index].GetComponent<UI_Item>().OnPointerDragEnter(moving_ui_item); // si on est ici on drag
         }
 
         // on change le current slot index
@@ -742,7 +742,7 @@ public class UI_XboxNavigator : MonoBehaviour
         if (debug) { Debug.Log("(XboxNavigator) updated slots for moving item. current_slot_index is now : " + current_slot_index); }
 
         // on down le slot
-        moving_ui_item.OnPointerDragDown(null);
+        moving_ui_item.OnPointerDragDown();
         if (debug) { Debug.Log("(XboxNavigator) drag downed item " + potential_ui_item.gameObject.name); }
     }
     private void finish_moving_ui_item(UI_Item destination)
@@ -752,7 +752,14 @@ public class UI_XboxNavigator : MonoBehaviour
         destination.OnPointerExit(null);
 
         // on échange les deux UI_Item
-        switch_items(moving_ui_item, destination);
+        if (moving_ui_item.Reference != ""
+            && destination.Reference == moving_ui_item.Reference
+            && destination.Quantity < destination.MaxQty
+            && destination != moving_ui_item)
+        {
+            merge_items(moving_ui_item, destination); // ce sont les mêmes items, on peut alors les merge ensemble
+        }
+        else { switch_items(moving_ui_item, destination); }
 
         // on met à jour les slots
         disable_only_empty_slots();
@@ -779,10 +786,22 @@ public class UI_XboxNavigator : MonoBehaviour
         UI_ItemPool moving_pool = moving_ui_item.ItemPool;
         Item moving_item = moving_ui_item.Item;
 
+        List<UI_ItemPool> item_pools = new List<UI_ItemPool>();
+
         // on récupère les slots
         foreach (GameObject slottable in slottables)
         {
             if (slottable == null) { continue; }
+
+            // on récupère tous les UI_ItemPool du slottable si c'est un UI_Inventory
+            if (slottable.GetComponent<UI_Inventory>() is UI_Inventory inventory)
+            {
+                // on ajoute les item pools du slottable
+                foreach (UI_ItemPool item_pool in inventory.pools)
+                {
+                    if (!item_pools.Contains(item_pool)) { item_pools.Add(item_pool); }
+                }
+            }
 
             // on récupère les slots du slottable
             List<GameObject> slottable_slots = slottable.GetComponent<I_UI_Slottable>().GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator);
@@ -810,13 +829,37 @@ public class UI_XboxNavigator : MonoBehaviour
                 ui_item.Enable();
             }
         }
+
+        // on parcourt les item pools et on ajoute un ui_item vide si c'est un item pool scalable
+        // utile pour pouvoir déposer des ui_items dans une item pool scalable
+        foreach (UI_ItemPool item_pool in item_pools)
+        {
+            if (item_pool == moving_pool) { continue; }
+            if (!item_pool.Scalable) { continue; }
+            if (!item_pool.CanStore(moving_item)) { continue; }
+
+            GameObject empty_slot = item_pool.CreateEmptyItemSlot();
+            empty_slot.GetComponent<UI_Item>().Enable();
+        }
     }
     private void disable_only_empty_slots()
     {
-        // basically when stopping the moving ui item.
+        // on sauvegarde les item pools qu'on trouve
+        List<UI_ItemPool> item_pools = new List<UI_ItemPool>();
+
         foreach (GameObject slottable in slottables)
         {
             if (slottable == null) { continue; }
+
+            // on récupère tous les UI_ItemPool du slottable si c'est un UI_Inventory
+            if (slottable.GetComponent<UI_Inventory>() is UI_Inventory inventory)
+            {
+                // on ajoute les item pools du slottable
+                foreach (UI_ItemPool item_pool in inventory.pools)
+                {
+                    if (!item_pools.Contains(item_pool)) { item_pools.Add(item_pool); }
+                }
+            }
 
             // on récupère les slots du slottable
             List<GameObject> slottable_slots = slottable.GetComponent<I_UI_Slottable>().GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator);
@@ -829,6 +872,12 @@ public class UI_XboxNavigator : MonoBehaviour
                 if (ui_item.Item == null) { ui_item.Disable(); }
                 else { ui_item.Enable(); }
             }
+        }
+
+        // on parcourt les item pools et on supprime les ui_item vide si c'est un item pool scalable
+        foreach (UI_ItemPool item_pool in item_pools)
+        {
+            if (item_pool.Scalable) { item_pool.DestroyEmptySlots(); }
         }
     }
     private void switch_items(UI_Item item1, UI_Item item2)
@@ -844,7 +893,19 @@ public class UI_XboxNavigator : MonoBehaviour
         item1.SwitchItems(items2);
         item2.SwitchItems(items1);
     }
+    private void merge_items(UI_Item item1, UI_Item item2)
+    {
+        // on merge les items de item1 dans item2
+        List<Item> items = item1.GetItems();
+        while (item2.Store(items[0]))
+        {
+            items.RemoveAt(0);
+            if (items.Count == 0) { break; } // si on a plus d'items on sort de la boucle
+        }
 
+        // on vide le slot de item1
+        item1.SwitchItems(items);
+    }
 
 
     // GIZMOS

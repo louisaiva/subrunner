@@ -239,11 +239,13 @@ MonoBehaviour:
   base_position: {x: 0, y: 0}
   angle_threshold: 45
   angle_multiplicator: 0
+  moving_ui_item: {fileID: 0}
   navigateInput: {fileID: 6845285972889758690, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   navigateInGameInput: {fileID: -3072000485198250585, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   navigateInGame: 0
-  moveInput: {fileID: 3671791553200363326, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+  dropInput: {fileID: 3671791553200363326, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   activateInput: {fileID: -5345809961903225854, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+  moveItemInput: {fileID: 6921072670706733668, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   debug: 0
   debug_navigation: 0
   debug_gizmo: 0
@@ -386,12 +388,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shake_duration: 0.1
+  shake_magnitude: 1
   basic_shake_anims:
   - camera_shake01
   - camera_shake02
   big_shake_anims:
   - camera_shake03
   - camera_shake04
+  log: 0
 --- !u!114 &654843988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -407,7 +411,7 @@ MonoBehaviour:
   current_anim: 
   next_anim: 
   is_forcing: 0
-  debug: 0
+  log: 0
 --- !u!95 &654843989
 Animator:
   serializedVersion: 7
@@ -1876,6 +1880,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   items_path:
   - prefabs/items
+  ui_icons: []
+  ui_icons_names: []
   ui_item_prefab: {fileID: 4964243457693928914, guid: abacdc781c511fc42b1c0e4dd87c3c7b, type: 3}
   ui_module_prefab: {fileID: 0}
   debug: 0

@@ -40,7 +40,8 @@ public class UI_ItemPool : MonoBehaviour
             // we create the slots
             for (int i = 0; i < MaxSlots; i++)
             {
-                // we create the item
+                CreateEmptyItemSlot();
+                /* // we create the item
                 GameObject ui_slot = bank.CreateUI_Item(null);
                 ui_slot.transform.SetParent(transform);
 
@@ -48,7 +49,7 @@ public class UI_ItemPool : MonoBehaviour
                 ui_slot.transform.localScale = Vector3.one;
 
                 // we change the layer of the slot to the same as the pool
-                ui_slot.layer = gameObject.layer;
+                ui_slot.layer = gameObject.layer; */
             }
         }
     }
@@ -92,7 +93,7 @@ public class UI_ItemPool : MonoBehaviour
         // we add a new slot to the pool
         GameObject ui_slot = bank.CreateUI_Item(item);
         ui_slot.transform.SetParent(transform);
-        
+
         // reset the scale to 1
         ui_slot.transform.localScale = Vector3.one;
 
@@ -129,5 +130,34 @@ public class UI_ItemPool : MonoBehaviour
         }
 
         return false;
+    }
+
+    // DESTROY / CREATE EMPTY ITEM SLOT
+    public void DestroyEmptySlots()
+    {
+        // we go through the children to find the empty slots
+        foreach (Transform slot in transform)
+        {
+            // we get the slot
+            UI_Item ui_item = slot.GetComponent<UI_Item>();
+            if (ui_item == null) { continue; }
+
+            // we check if the slot is empty
+            if (ui_item.Item == null) { Destroy(slot.gameObject); }
+        }
+    }
+    public GameObject CreateEmptyItemSlot()
+    {
+        // we create the item
+        GameObject ui_slot = bank.CreateUI_Item(null);
+        ui_slot.transform.SetParent(transform);
+
+        // reset the scale to 1
+        ui_slot.transform.localScale = Vector3.one;
+
+        // we change the layer of the slot to the same as the pool
+        ui_slot.layer = gameObject.layer;
+
+        return ui_slot;
     }
 }

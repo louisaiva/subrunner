@@ -10,6 +10,7 @@ public class UI_Item : UI_Slot
 {
 
     public Sprite drag_sprite;
+    public Sprite drag_hover_sprite;
 
     [Header("Item Reference")]
     private List<Item> items = new List<Item>();
@@ -262,7 +263,7 @@ public class UI_Item : UI_Slot
 
 
     // ON POINTER DRAG
-    public void OnPointerDragDown(PointerEventData eventData)
+    public void OnPointerDragDown()
     {
         // check if disabled
         if (is_disabled) { return; }
@@ -270,22 +271,24 @@ public class UI_Item : UI_Slot
         // on change le sprite du slot
         GetComponent<Image>().sprite = drag_sprite;
     }
-    public void OnPointerDragEnter(PointerEventData eventData)
+    public void OnPointerDragEnter(UI_Item moving_ui_item)
     {
         // check if disabled
         if (is_disabled) { return; }
 
         // on change le sprite du slot
-        GetComponent<Image>().sprite = drag_sprite;
+        GetComponent<Image>().sprite = drag_hover_sprite;
+
 
         // on met un icon de switch à la place de l'item
-        // Debug.Log("(UI_Item) OnPointerDragEnter on " + gameObject.name + "with bank " + bank);
-        Sprite switch_icon = bank.GetUI_Icon("switch");
+        Sprite switch_icon = (Item != null && Reference == moving_ui_item.Reference && Quantity < MaxQty)
+            ? bank.GetUI_Icon("merge")
+            : bank.GetUI_Icon("switch");
         set_ui(switch_icon);
     }
-    public void OnPointerDragUp(PointerEventData eventData)
+    public void OnPointerDragUp()
     {
-        OnPointerEnter(eventData);
+        OnPointerEnter(null);
     }
 
     private void OnDrawGizmos()
