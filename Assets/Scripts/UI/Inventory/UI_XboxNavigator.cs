@@ -892,19 +892,75 @@ public class UI_XboxNavigator : MonoBehaviour
         // on echange les items
         item1.SwitchItems(items2);
         item2.SwitchItems(items1);
+
+        // on regarde si on est dans deux inventaires différents
+        Inventory inventory1 = item1.Inventory;
+        Inventory inventory2 = item2.Inventory;
+        if (inventory1 == null || inventory2 == null)
+        {
+            if (debug)
+            {
+                Debug.Log($"(XboxNavigator) switched items between {item1.gameObject.name} "
+            + $"and {item2.gameObject.name} but at least one inventory is null : {inventory1?.capable.name} and {inventory2?.capable.name}");
+            }
+            return;
+        }
+        if (inventory1 == inventory2) { return; } // we stay inside the same inventory so no need to update Items's inventories
+
+        List<UI_Inventory> uis_to_ignore = new List<UI_Inventory>() { item1.ItemPool.UI_Inventory, item2.ItemPool.UI_Inventory };
+
+        // on met à jour les inventories des items
+        foreach (Item item in items1)
+        {
+            inventory2.Grab(item, uis_to_ignore); // on ignore les ui_inventory parce qu'ils ont déjà été grab dans ces UI_Inventory
+        }
+        foreach (Item item in items2)
+        {
+            inventory1.Grab(item, uis_to_ignore); // pareil
+        }
     }
     private void merge_items(UI_Item item1, UI_Item item2)
     {
         // on merge les items de item1 dans item2
         List<Item> items = item1.GetItems();
+        List<Item> transfered_items = new List<Item>();
         while (item2.Store(items[0]))
         {
+            transfered_items.Add(items[0]); // on ajoute l'item à la liste des items transférés
             items.RemoveAt(0);
             if (items.Count == 0) { break; } // si on a plus d'items on sort de la boucle
         }
 
         // on vide le slot de item1
         item1.SwitchItems(items);
+
+        // on regarde si on est dans deux inventaires différents
+        Inventory inventory1 = item1.Inventory;
+        Inventory inventory2 = item2.Inventory;
+        if (inventory1 == null || inventory2 == null)
+        {
+            if (debug)
+            {
+                Debug.Log($"(XboxNavigator) merged items between {item1.gameObject.name} "
+            + $"and {item2.gameObject.name} but at least one inventory is null : {inventory1?.capable.name} and {inventory2?.capable.name}");
+            }
+            return;
+        }
+        if (inventory1 == inventory2) { return; } // we stay inside the same inventory so no need to update Items's inventories
+
+        if (debug)
+        {
+            Debug.Log($"(XboxNavigator) merged items between {item1.ItemPool.UI_Inventory.name} "
+            + $"and {item2.ItemPool.UI_Inventory.name} with {items.Count} items left in {item1.gameObject.name}");
+        }
+
+        // on met à jour les inventories des items
+        List<UI_Inventory> uis_to_ignore = new List<UI_Inventory>() { item1.ItemPool.UI_Inventory, item2.ItemPool.UI_Inventory };
+        foreach (Item item in transfered_items)
+        {
+            inventory2.Grab(item, uis_to_ignore); // on ignore les ui_inventory parce qu'ils ont déjà été grab dans ces UI_Inventory
+            // inventory1.Drop(item, uis_to_ignore); // on drop l'item de l'inventaire 1
+        }
     }
 
 

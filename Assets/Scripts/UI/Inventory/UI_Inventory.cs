@@ -61,7 +61,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         foreach (UI_ItemPool pool in pools)
         {
             // on initialise la pool
-            pool.Init();
+            pool.Init(this);
         }
     }
 

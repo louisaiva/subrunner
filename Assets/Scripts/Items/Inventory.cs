@@ -42,29 +42,33 @@ public class Inventory : MonoBehaviour {
 
 
     // GRAB / DROP
-    public bool Grab(Item item)
+    public bool Grab(Item item, List<UI_Inventory> uis_to_ignore = null)
     {
         // we check if we can add the item
         if (item == null) { return false; }
 
-        // we check if we have an ui_inventory & if we can store the item in it
+        // we check if we have at least one ui_inventory
         if (ui != null)
         {
-            // we have at least one ui_inventory
-            // we try to make it grab in the first ui_inventory
-            // if he can't, we do not grab it and we return false
-            if (!ui.UI_Grab(item))
+
+            // we try to make the first ui_inventory (which is our reference ui_inventory) to grab it
+            // if it can grab it, all the others can grab it.
+            // if no, we return false
+            if (uis_to_ignore == null) { uis_to_ignore = new List<UI_Inventory>(); }
+            if (!uis_to_ignore.Contains(ui) && !ui.UI_Grab(item))
             {
                 if (debug) { Debug.LogWarning("(Inventory) " + capable.name + " can't grab : " + item.name + " in " + ui.name); }
-                return false;
+                return false; // if the first ui_inventory can't grab it, we return false
             }
-
-            // if he can, we grab it in all ui_inventories
-            for (int i=1; i < uis.Count; i++) { uis[i].UI_Grab(item); }
+            for (int i = 1; i < uis.Count; i++)
+            {
+                if (uis_to_ignore.Contains(uis[i])) { continue; } // we skip the ui_to_ignore
+                uis[i].UI_Grab(item); // we try to make the other ui_inventories grab it (we don't care if it can't grab as long as the 1st can)
+            }
         }
 
         // we check if the item is already grabbed somewhere, if so we drop it
-        if (item.Grabbed) { item.transform.parent.GetComponent<Inventory>().Drop(item); }
+        if (item.Grabbed && item.Inventory != null) { item.Inventory.Drop(item, uis_to_ignore); }
 
         // we add the item
         Items.Add(item);
@@ -81,7 +85,7 @@ public class Inventory : MonoBehaviour {
 
         return true;
     }
-    public bool Drop(Item item)
+    public bool Drop(Item item, List<UI_Inventory> uis_to_ignore = null)
     {
         // we check if we can remove the item
         if (item == null) { return false; }
@@ -97,7 +101,12 @@ public class Inventory : MonoBehaviour {
         OnDrop.Invoke();
 
         // we update the UI
-        uis.ForEach(ui => ui.UI_Drop(item));
+        if (uis_to_ignore == null) { uis_to_ignore = new List<UI_Inventory>(); }
+        foreach (UI_Inventory ui in uis)
+        {
+            if (uis_to_ignore.Contains(ui)) { continue; } // we skip the ui_to_ignore
+            ui.UI_Drop(item);
+        }
         
         if (debug) { Debug.Log("(Inventory) " + capable.name + " dropped : " + item.name); }
 

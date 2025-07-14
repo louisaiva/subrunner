@@ -8,7 +8,7 @@ using UnityEngine;
 public class UI_ModulePool : UI_ItemPool
 {
 
-    public override void Init()
+    public override void Init(UI_Inventory ui)
     {
         // we get the item bank
         bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();

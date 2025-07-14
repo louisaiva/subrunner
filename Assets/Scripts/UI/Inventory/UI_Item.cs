@@ -28,6 +28,7 @@ public class UI_Item : UI_Slot
     [SerializeField] private Image item_image;
     [SerializeField] private Sprite current_item_sprite;
     public UI_ItemPool ItemPool => transform.parent.GetComponent<UI_ItemPool>();
+    public Inventory Inventory => ItemPool?.UI_Inventory?.inventory;
     public Item Item => items.Count > 0 ? items[0] : null;
 
     // AWAKE

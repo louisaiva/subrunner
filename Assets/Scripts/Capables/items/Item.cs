@@ -37,6 +37,15 @@ public class Item : Movable
         }
     }
 
+    // Inventory
+    public Inventory Inventory
+    {
+        get
+        {
+            if (transform.parent == null) { return null; }
+            return transform.parent.GetComponent<Inventory>();
+        }
+    }
 
     /// <summary>
     /// Return true if the item pass the string rule in parameter.

@@ -19,12 +19,16 @@ public class UI_ItemPool : MonoBehaviour
     [Header("Components")]
     [SerializeField] protected ItemBank bank;
     public Description Descriptor; // the description of the item pool
+    public UI_Inventory UI_Inventory;
 
     [Header("Logs")]
     [SerializeField] protected bool debug = false;
 
-    public virtual void Init()
+    public virtual void Init(UI_Inventory ui)
     {
+        // we set the UI_Inventory
+        this.UI_Inventory = ui;
+
         // we get the item bank
         bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
 
