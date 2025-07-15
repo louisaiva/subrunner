@@ -26,6 +26,9 @@ public class AttackCapacity : Capacity
     public float knockback_base = 10f; // une attaque répartit le knockb
     public float attackant_advantage = 3f;
 
+    [Header("Screen shake parameters")]
+    [SerializeField][Range(0f, 1f)] private float base_attack_shake_magnitude = 0.5f; // magnitude of the screen shake when attacking
+    [SerializeField][Range(0f, 1f)] private float base_kill_shake_magnitude = 0.8f; // magnitude of the screen shake when kill performed
 
     [Header("Bearer")]
     private Capable bearer; // the capable that is using this attack capacity
@@ -199,7 +202,7 @@ public class AttackCapacity : Capacity
         float total_knockback_weight = hit_enemies.Select(enemy => enemy.transform.parent.GetComponent<Being>().weight).Sum() + advantage_attacker_weight;
         Vector2 attacker_knockback_direction = Vector2.zero;
 
-        // bool killed_an_enemy = false;
+        bool killed_an_enemy = false;
 
         // deal damage to target
         foreach (Collider2D enemy in hit_enemies)
@@ -223,7 +226,7 @@ public class AttackCapacity : Capacity
             enemy_being.take_damage(damage_dealt_to_single_target, knockback);
 
             // check if enemy is dead
-            if (!enemy_being.Alive) { kills += 1; }
+            if (!enemy_being.Alive) { kills += 1; killed_an_enemy = true; }
         }
 
         
@@ -233,8 +236,8 @@ public class AttackCapacity : Capacity
             if (bearer is Perso)
             {
                 // on shake la caméra
-                float shake_magnitude = damage * 2f;
-                CameraShaker.Instance.shake(shake_magnitude);
+                // float shake_magnitude = damage * 2f;
+                CameraShaker.Instance.Shake(killed_an_enemy ? base_kill_shake_magnitude : base_attack_shake_magnitude);
             }
             
             // on recoit un knockback inverse

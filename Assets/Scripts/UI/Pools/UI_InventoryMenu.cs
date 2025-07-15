@@ -33,7 +33,7 @@ public class UI_InventoryMenu : UI_Pool
 
         // on active le navigator
         navigator.Enable(ui_inventory);
-        // navigator.Enable(ui_laptop);
+        navigator.Enable(ui_laptop);
 
         // on arrête le temps
         Time.timeScale = 0;
@@ -48,7 +48,7 @@ public class UI_InventoryMenu : UI_Pool
 
         // on désactive le navigator
         navigator.Disable(ui_inventory);
-        // navigator.Disable(ui_laptop);
+        navigator.Disable(ui_laptop);
 
         // on remet le temps
         Time.timeScale = 1;

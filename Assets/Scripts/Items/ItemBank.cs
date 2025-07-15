@@ -103,12 +103,10 @@ public class ItemBank : MonoBehaviour
     }
 
     // UI_ITEM GENERATOR
-    public GameObject CreateUI_Item(Item item = null,bool create_ui_module=false)
+    public GameObject CreateUI_Item(Item item = null)
     {
         // on instancie le prefab
-        GameObject ui_item = null;
-        if (!create_ui_module)  { ui_item = Instantiate(ui_item_prefab, Vector3.zero, Quaternion.identity);}
-        else                    { ui_item = Instantiate(ui_module_prefab, Vector3.zero, Quaternion.identity); }
+        GameObject ui_item = Instantiate(ui_item_prefab, Vector3.zero, Quaternion.identity);
 
         // we initialize it
         ui_item.GetComponent<UI_Item>().Init(this);
@@ -120,9 +118,26 @@ public class ItemBank : MonoBehaviour
         }
         else { ui_item.GetComponent<UI_Item>().ClearUI(); }
 
-        if (debug) { Debug.Log("(ItemBank) created ui_item : " + item.name); }
+        if (debug) { Debug.Log("(ItemBank) created ui_item : " + item.Reference); }
 
         return ui_item;
+    }
+    public GameObject CreateUI_Module(Item item = null)
+    {
+        // we create the module
+        GameObject module = Instantiate(ui_module_prefab, Vector3.zero, Quaternion.identity);
+        UI_Item ui_module = module.GetComponent<UI_Item>();
+
+        // we initialize it
+        ui_module.Init(this);
+
+        // we assign the item to the UI_Item
+        if (item != null) { ui_module.Store(item); }
+        else { ui_module.ClearUI(); }
+
+        if (debug) { Debug.Log("(ItemBank) created ui_module : " + item.Reference); }
+
+        return module;
     }
 
     // GETTERS

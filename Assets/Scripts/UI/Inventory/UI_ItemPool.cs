@@ -45,17 +45,10 @@ public class UI_ItemPool : MonoBehaviour
             for (int i = 0; i < MaxSlots; i++)
             {
                 CreateEmptyItemSlot();
-                /* // we create the item
-                GameObject ui_slot = bank.CreateUI_Item(null);
-                ui_slot.transform.SetParent(transform);
-
-                // reset the scale to 1
-                ui_slot.transform.localScale = Vector3.one;
-
-                // we change the layer of the slot to the same as the pool
-                ui_slot.layer = gameObject.layer; */
             }
         }
+
+        if (debug) { Debug.Log($"(UI_ItemPool) {name} just finished Init(), destroyed their children and recreated them");}
     }
 
     // RULE CHECK
@@ -150,7 +143,7 @@ public class UI_ItemPool : MonoBehaviour
             if (ui_item.Item == null) { Destroy(slot.gameObject); }
         }
     }
-    public GameObject CreateEmptyItemSlot()
+    public virtual GameObject CreateEmptyItemSlot()
     {
         // we create the item
         GameObject ui_slot = bank.CreateUI_Item(null);

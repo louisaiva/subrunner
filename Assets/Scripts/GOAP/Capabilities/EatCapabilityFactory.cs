@@ -15,7 +15,7 @@ namespace subrunner.goap
             builder.AddAction<EatAction>()
                 .AddEffect<Hunger>(EffectType.Decrease)
                 .SetTarget<ClosestFood>()
-                .SetStoppingDistance(0.2f);
+                .SetStoppingDistance(0.3f);
 
             builder.AddTargetSensor<ClosestFoodSensor>()
                 .SetTarget<ClosestFood>();

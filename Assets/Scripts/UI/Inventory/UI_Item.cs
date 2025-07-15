@@ -145,6 +145,11 @@ public class UI_Item : UI_Slot
     private void set_ui(Sprite sprite)
     {
         // Debug.Log("(UI_Item) setting UI for item_image :" + item_image + " with sprite " + (sprite != null ? sprite.name : "null"));
+        if (item_image == null)
+        {
+            Debug.LogWarning($"(UI_Item) item_image of {name} is null, cannot set UI");
+            return;
+        }
         item_image.sprite = sprite;
         item_image.color
                 = sprite != null

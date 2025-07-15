@@ -8,11 +8,20 @@ using UnityEngine;
 public class UI_ModulePool : UI_ItemPool
 {
 
-    public override void Init(UI_Inventory ui)
+    public override GameObject CreateEmptyItemSlot()
     {
-        // we get the item bank
-        bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
+        // we create the item
+        GameObject ui_slot = bank.CreateUI_Module(null);
+        ui_slot.transform.SetParent(transform);
 
-        // no need for creating slots
+        if (debug) { Debug.Log("(UI_ModulePool) created an empty ui_module with the help of Bank");}
+
+        // reset the scale to 1
+        ui_slot.transform.localScale = Vector3.one;
+
+        // we change the layer of the slot to the same as the pool
+        ui_slot.layer = gameObject.layer;
+
+        return ui_slot;
     }
 }

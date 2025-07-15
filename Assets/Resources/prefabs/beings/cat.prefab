@@ -156,9 +156,6 @@ MonoBehaviour:
   avoidance_predisposition: 0.5
   ttc_treshold: 3
   neighbour_radius: 2
-  avoidance_force: {x: 0, y: 0}
-  nearby_agents: []
-  waypoint_movement: {x: 0, y: 0}
   current_waypoint_destination: {x: 0, y: 0}
   current_waypoint: 0
   update_path_interval: 0.5
@@ -166,7 +163,7 @@ MonoBehaviour:
   log: 0
   log_path_calculation: 0
   gizmo_target: 1
-  gizmo_path: 0
+  gizmo_path: 1
   log_ttcbas: 0
   gizmo_ttcbas: 1
 --- !u!1 &3996042554587929240

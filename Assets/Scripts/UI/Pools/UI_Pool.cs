@@ -27,11 +27,7 @@ public class UI_Pool : MonoBehaviour
     [SerializeField] protected bool debug = false;
 
     // AWAKE
-    protected virtual void Awake()
-    {
-
-        Hide();
-    }
+    protected virtual void Awake() { Hide(); }
 
     // START
     private void Start()

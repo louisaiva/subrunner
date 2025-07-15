@@ -406,8 +406,8 @@ public class Perso : Being
         if (!dmg_status) { return false; }
 
         // we make a little screenshake if perso
-        float shake_magnitude = damage / life * 2f;
-        cam.GetComponent<CameraShaker>().shake(shake_magnitude);
+        float shake_magnitude = damage / life;
+        cam.GetComponent<CameraShaker>().Shake(shake_magnitude);
 
         return true;
     }

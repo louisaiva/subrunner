@@ -54,8 +54,10 @@ public class MotherboardBuilder : MonoBehaviour
     {
         // we build the motherboard
         BuildMotherboard(columns, rows);
+
+
     }
-    
+
     // BUILD MOTHERBOARD
     public void BuildMotherboard(int columns, int rows)
     {
@@ -63,10 +65,10 @@ public class MotherboardBuilder : MonoBehaviour
         calculate_width_and_height(new Vector2Int(columns, rows));
 
         // we place the corners
-        UL_corner.anchoredPosition = new Vector2(-width/2, height/2);
-        UR_corner.anchoredPosition = new Vector2(width/2, height/2);
-        DL_corner.anchoredPosition = new Vector2(-width/2, -height/2);
-        DR_corner.anchoredPosition = new Vector2(width/2, -height/2);
+        UL_corner.anchoredPosition = new Vector2(-width / 2, height / 2);
+        UR_corner.anchoredPosition = new Vector2(width / 2, height / 2);
+        DL_corner.anchoredPosition = new Vector2(-width / 2, -height / 2);
+        DR_corner.anchoredPosition = new Vector2(width / 2, -height / 2);
 
         // we place the label
         if (show_label)
@@ -77,28 +79,29 @@ public class MotherboardBuilder : MonoBehaviour
         {
             label_UL.gameObject.SetActive(false);
         }
-        label_UL.anchoredPosition = new Vector2(-width/2, height/2);
-        label_UL.sizeDelta = new Vector2(56*px_size, 12*px_size);
+        label_UL.anchoredPosition = new Vector2(-width / 2, height / 2);
+        label_UL.sizeDelta = new Vector2(56 * px_size, 12 * px_size);
 
         // we place the sides
-        if (show_label) { U_side.anchoredPosition = new Vector2(-width/2 + 56*px_size, height/2);}
-        else { U_side.anchoredPosition = new Vector2(-width/2, height/2);}
-        D_side.anchoredPosition = new Vector2(0, -height/2);
-        L_side.anchoredPosition = new Vector2(-width/2, 0);
-        R_side.anchoredPosition = new Vector2(width/2, 0);
+        if (show_label) { U_side.anchoredPosition = new Vector2(-width / 2 + 56 * px_size, height / 2); }
+        else { U_side.anchoredPosition = new Vector2(-width / 2, height / 2); }
+        D_side.anchoredPosition = new Vector2(0, -height / 2);
+        L_side.anchoredPosition = new Vector2(-width / 2, 0);
+        R_side.anchoredPosition = new Vector2(width / 2, 0);
 
         // we size the sides
-        if (show_label) { U_side.sizeDelta = new Vector2(width - 56 * px_size, 12*px_size);}
-        else { U_side.sizeDelta = new Vector2(width, 12*px_size);}
-        D_side.sizeDelta = new Vector2(width, 12*px_size);
-        L_side.sizeDelta = new Vector2(12*px_size, height);
-        R_side.sizeDelta = new Vector2(12*px_size, height);
+        if (show_label) { U_side.sizeDelta = new Vector2(width - 56 * px_size, 12 * px_size); }
+        else { U_side.sizeDelta = new Vector2(width, 12 * px_size); }
+        D_side.sizeDelta = new Vector2(width, 12 * px_size);
+        L_side.sizeDelta = new Vector2(12 * px_size, height);
+        R_side.sizeDelta = new Vector2(12 * px_size, height);
 
         // we size the inside
         inside.sizeDelta = new Vector2(width, height);
 
         // we set the inside column count
         inside.GetComponent<GridLayoutGroup>().constraintCount = columns;
+
 
         // we remove the old empty slots
         for (int i = inside.childCount; i > 0; --i)
@@ -120,6 +123,10 @@ public class MotherboardBuilder : MonoBehaviour
 
         // and we set the right amont of ui_slots in the inside's pool
         inside.GetComponent<UI_ModulePool>().MaxSlots = empty_slots;
+        // #if !UNITY_EDITOR
+        inside.GetComponent<UI_ModulePool>().Init(transform.parent.GetComponent<UI_Inventory>());
+        // #endif
+
     }
     private void calculate_width_and_height(Vector2Int size)
     {
