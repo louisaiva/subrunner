@@ -88,7 +88,11 @@ public class Item : Movable
     protected virtual void on_grabbed()
     {
         // we change the rigidbody to a kinematic
-        rb.bodyType = RigidbodyType2D.Kinematic;
+        // rb.bodyType = RigidbodyType2D.kinematic;
+
+        // we remove the rigidbody
+        Destroy(rb);
+        rb = null;
 
         // we disable the HoverCapacity's collider
         GetCapacity<HoverCapacity>().GetComponent<Collider2D>().enabled = false;
@@ -108,7 +112,12 @@ public class Item : Movable
     }
     protected virtual void on_dropped()
     {
-        rb.bodyType = RigidbodyType2D.Dynamic; // we change the rigidbody to a dynamic
+        // rb.bodyType = RigidbodyType2D.Dynamic; // we change the rigidbody to a dynamic
+
+        // we add the rigidbody
+        rb = gameObject.AddComponent<Rigidbody2D>();
+        rb.gravityScale = 0;
+        rb.freezeRotation = true;
 
         // we enable the HoverCapacity's collider
         GetCapacity<HoverCapacity>().transform.GetComponent<Collider2D>().enabled = true;

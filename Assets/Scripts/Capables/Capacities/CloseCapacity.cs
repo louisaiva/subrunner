@@ -25,6 +25,16 @@ public class CloseCapacity : Capacity
     [Header("Sibling Open Capacity")]
     public OpenCapacity open_capacity;
 
+    [Header("Components")]
+    private UI_HUD hud;
+
+    // AWAKE
+    private void Awake()
+    {
+        // we get the hud
+        hud = GameObject.Find("/ui").GetComponent<UI_Manager>().GetPool("hud") as UI_HUD;
+    }
+
     // USE
     public override void Use(Capable capable)
     {
@@ -55,7 +65,11 @@ public class CloseCapacity : Capacity
         else if (capable is Chest && capable.inventory != null && capable.inventory.ui != null)
         {
             capable.inventory.ui.Hide();
-            (GameObject.Find("/ui").GetComponent<UI_Manager>().GetPool("hud") as UI_HUD).RemoveChest(capable.inventory.ui);
+            if (hud == null)
+            {
+                Debug.LogError("(CloseCapacity) hud is null, why ?");
+            }
+            hud.RemoveChest(capable.inventory.ui);
         }
 
         if (debug) { Debug.Log(capable.name + " is closing..."); }

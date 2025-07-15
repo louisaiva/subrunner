@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
+// [RequireComponent(typeof(Rigidbody2D))]
 public class Movable : Capable
 {
     public bool debug_velocity = false; // Show velocity in console

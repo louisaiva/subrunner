@@ -159,6 +159,15 @@ public class UI_XboxNavigator : MonoBehaviour
     {
         if (!slottables.Contains(slottable.gameObject)) { return; }
 
+        // on désactive le moving_ui_item si on en a un
+        if (moving_ui_item != null)
+        {
+            // on désactive le moving item
+            moving_ui_item.OnPointerExit(null);
+            moving_ui_item = null;
+            disable_only_empty_slots();
+        }
+
         // on enlève le slottable de la liste des slottables
         slottables.Remove(slottable.gameObject);
 
@@ -184,13 +193,6 @@ public class UI_XboxNavigator : MonoBehaviour
             }
         }
 
-        // on désactive le moving_ui_item si on en a un
-        if (moving_ui_item != null)
-        {
-            // on désactive le moving item
-            moving_ui_item.OnPointerExit(null);
-            moving_ui_item = null;
-        }
 
         // on met à jour les slots
         update_slots();
