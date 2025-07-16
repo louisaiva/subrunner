@@ -1,9 +1,12 @@
 fileFormatVersion: 2
-guid: 4f0969678ad54fc4faff2132b8c0f1c2
+guid: cccb6378b30409049982517aba955bd7
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: -3843445929337379658
+    second: modules_0
   externalObjects: {}
-  serializedVersion: 12
+  serializedVersion: 13
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -67,7 +70,7 @@ TextureImporter:
   swizzle: 50462976
   cookieLightType: 0
   platformSettings:
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -80,7 +83,7 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -93,7 +96,7 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -110,111 +113,161 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ui_unhackables_0
+      name: module_0
       rect:
         serializedVersion: 2
-        x: 3
+        x: 0
         y: 0
-        width: 5
-        height: 5
-      alignment: 0
+        width: 72
+        height: 36
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d9fea89614dbc4a4abd40f03ab97d74b
-      internalID: -225098176
+      spriteID: fb6228a0bf817c042ac1d2b8c937f6ee
+      internalID: 592737694
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ui_unhackables_1
+      name: modules_0
       rect:
         serializedVersion: 2
-        x: 12
+        x: 72
         y: 0
-        width: 12
-        height: 6
-      alignment: 0
+        width: 72
+        height: 36
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dca0e79902426794f91b7d070a36d910
-      internalID: 1438113666
+      spriteID: da375f08dc6b61d4891725726a0308dc
+      internalID: 1896018074
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ui_unhackables_2
+      name: modules_1
       rect:
         serializedVersion: 2
-        x: 24
-        y: 0
-        width: 12
-        height: 6
-      alignment: 0
+        x: 0
+        y: 36
+        width: 72
+        height: 36
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 998b372b589f53645be6faaaf33ab83a
-      internalID: -1834420402
+      spriteID: 21fdd16ddc88517479f66e874635fb79
+      internalID: -2082243176
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ui_unhackables_3
+      name: modules_2
       rect:
         serializedVersion: 2
-        x: 36
-        y: 0
-        width: 12
-        height: 6
-      alignment: 0
+        x: 72
+        y: 36
+        width: 72
+        height: 36
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d9627893c030f6548b3a3533a2cb3707
-      internalID: -751374433
+      spriteID: 9e3a9a85571a986449d9a2f7d273a809
+      internalID: 228814985
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ui_unhackables_4
+      name: modules_3
       rect:
         serializedVersion: 2
-        x: 52
-        y: 1
-        width: 5
-        height: 5
-      alignment: 0
+        x: 0
+        y: 72
+        width: 72
+        height: 36
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a803ef4ef2af4ae44add2061857d322a
-      internalID: -873295279
+      spriteID: 8c455adaca64b994bb90520fa192a5b0
+      internalID: 930028889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: modules_4
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 72
+        width: 72
+        height: 36
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a75672dc5fce0d488942915ce756480
+      internalID: -1214204136
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: modules_5
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 72
+        width: 56
+        height: 21
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 371a81fc6634b8249a7b54c57d7e873a
+      internalID: 245982611
       vertices: []
       indices: 
       edges: []
       weights: []
     outline: []
+    customData: 
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
@@ -224,12 +277,21 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
     nameFileIdTable:
-      ui_unhackables_0: -225098176
-      ui_unhackables_1: 1438113666
-      ui_unhackables_2: -1834420402
-      ui_unhackables_3: -751374433
-      ui_unhackables_4: -873295279
+      module_0: 592737694
+      modules_0: 1896018074
+      modules_1: -2082243176
+      modules_2: 228814985
+      modules_3: 930028889
+      modules_4: -1214204136
+      modules_5: 245982611
+      xp_chest_1: 734011502
+      xp_chest_2: -880266741
+      xp_chest_3: 641565253
+      xp_chest_4: 2116671064
+      xp_chest_5: -209011607
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

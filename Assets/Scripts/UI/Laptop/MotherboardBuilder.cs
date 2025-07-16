@@ -38,7 +38,7 @@ public class MotherboardBuilder : MonoBehaviour
     [SerializeField] private RectTransform UR_corner, DL_corner, DR_corner;
     [SerializeField] private RectTransform U_side, D_side, L_side, R_side;
     [SerializeField] private RectTransform label_UL;
-    [SerializeField] private RectTransform inside;
+    [SerializeField] private RectTransform slots_parent;
 
     [Header("Components")]
     [SerializeField] private Canvas canvas;
@@ -54,8 +54,6 @@ public class MotherboardBuilder : MonoBehaviour
     {
         // we build the motherboard
         BuildMotherboard(columns, rows);
-
-
     }
 
     // BUILD MOTHERBOARD
@@ -96,37 +94,26 @@ public class MotherboardBuilder : MonoBehaviour
         L_side.sizeDelta = new Vector2(12 * px_size, height);
         R_side.sizeDelta = new Vector2(12 * px_size, height);
 
-        // we size the inside
-        inside.sizeDelta = new Vector2(width, height);
+        // we size the slots_parent
+        slots_parent.sizeDelta = new Vector2(width, height);
 
-        // we set the inside column count
-        inside.GetComponent<GridLayoutGroup>().constraintCount = columns;
+        // we set the slots_parent column count
+        slots_parent.GetComponent<GridLayoutGroup>().constraintCount = columns;
 
-
-        // we remove the old empty slots
-        for (int i = inside.childCount; i > 0; --i)
+        // we check how many children we have
+        int module_slots = columns * rows;
+        UI_ModulePool module_pool = slots_parent.GetComponent<UI_ModulePool>();
+        if (module_pool.Count > module_slots && Application.isPlaying)
         {
-            DestroyImmediate(inside.GetChild(0).gameObject);
+            module_pool.DropOverheadSlots();
         }
-
-        // and we put enough empty slots in the inside
-        // to fill the whole motherboard
-        int empty_slots = columns * rows;
-        for (int i = 0; i < empty_slots; i++)
+        else if (module_pool.Count < module_slots && Application.isPlaying)
         {
-            GameObject empty_slot = Instantiate(empty_slot_prefab, inside);
-            empty_slot.name = "empty_module_slot_" + i;
+            module_pool.CreateEmptySlots(module_slots - module_pool.Count);
         }
 
         // we resize the entire motherboard to fit perfectly in the canvas
         adjustMBScale();
-
-        // and we set the right amont of ui_slots in the inside's pool
-        inside.GetComponent<UI_ModulePool>().MaxSlots = empty_slots;
-        // #if !UNITY_EDITOR
-        inside.GetComponent<UI_ModulePool>().Init(transform.parent.GetComponent<UI_Inventory>());
-        // #endif
-
     }
     private void calculate_width_and_height(Vector2Int size)
     {

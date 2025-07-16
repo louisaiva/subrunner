@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -12,6 +13,8 @@ public class UI_ItemPool : MonoBehaviour
     [Header("Item Pool Parameters")]
     public int MaxSlots = 9; // the maximum number of slots in the pool
     public bool Scalable = false; // if true, the pool will dynamically add/remove slots
+    [SerializeField] protected List<UI_Item> ui_items = new List<UI_Item>();
+    public int Count { get { return ui_items.Count; } }
 
     [Header("Item Rule")]
     public string item_rule = ""; // the rule to check if the item is valid
@@ -32,23 +35,28 @@ public class UI_ItemPool : MonoBehaviour
         // we get the item bank
         bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
 
-        // we destroy the existing slots
+        // we add all existing uis to ui_items
         foreach (Transform child in transform)
         {
-            Destroy(child.gameObject);
-        }
+            // we check if the child is an empty slot
+            UI_Item ui_item = child.GetComponent<UI_Item>();
+            if (ui_item == null) { continue; }
 
+            // we init the slot
+            ui_item.Init();
+            ui_items.Add(ui_item);
+        }
+        int awake_slots = Count;
+
+        // we destroy the existing empty slots & init the others
+        DestroyEmptySlots();
+        int remaining_slots = Count;
+        // await System.Threading.Tasks.Task.Yield(); // we wait for a frame
+        
         // we check if we are scalable or not
-        if (!Scalable)
-        {
-            // we create the slots
-            for (int i = 0; i < MaxSlots; i++)
-            {
-                CreateEmptyItemSlot();
-            }
-        }
-
-        if (debug) { Debug.Log($"(UI_ItemPool) {name} just finished Init(), destroyed their children and recreated them");}
+        if (!Scalable) { CreateEmptySlots(this.MaxSlots - Count); }
+        if (debug) { Debug.Log($"(UI_ItemPool) {name} just finished Init(), destroyed {awake_slots - remaining_slots} empty children and kept "
+                + $"{remaining_slots} then recreated {Count - remaining_slots} empty ones");}
     }
 
     // RULE CHECK
@@ -56,8 +64,17 @@ public class UI_ItemPool : MonoBehaviour
     {
         // we check if the item is valid
         if (item == null) { return false; }
+        bool validate = item.ValidateRule(item_rule);
+        if (!validate && debug)
+        {
+            Debug.LogWarning($"(UI_ItemPool) {name} can't store item {item.Reference} because it doesn't match the rule {item_rule}");
+        }
+        else if (debug)
+        {
+            Debug.Log($"(UI_ItemPool) {name} can store item {item.Reference} because it matches the rule {item_rule}");
+        }
 
-        return item.ValidateRule(item_rule);
+        return validate;
     }
 
 
@@ -72,31 +89,23 @@ public class UI_ItemPool : MonoBehaviour
         }
 
         // we try to store the item in the existing slots
-        foreach (Transform slot in transform)
+        foreach (UI_Item ui_item in ui_items)
         {
-            // we get the slot
-            UI_Item ui_item = slot.GetComponent<UI_Item>();
-            if (ui_item == null) { continue; }
-
             // we check if the slot can take the item
             bool stored = ui_item.Store(item);
             if (stored) { return true; }
         }
 
         // if we are here, we didn't find a slot to stack the item
-        if (!Scalable) { return false; }
+        if (!Scalable)
+        {
+            if (debug) { Debug.Log("(UI_ItemPool) item " + item.Reference
+            + $" is valid for this pool but no slot to store it found :// ({Count} slots currently in the pool)"); }
+            return false;
+        }
 
         // if we are here, we have a scalable inventory
-        // we add a new slot to the pool
-        GameObject ui_slot = bank.CreateUI_Item(item);
-        ui_slot.transform.SetParent(transform);
-
-        // reset the scale to 1
-        ui_slot.transform.localScale = Vector3.one;
-
-        // we change the layer of the slot to the same as the pool
-        ui_slot.layer = gameObject.layer;
-
+        CreateItemSlot(item);
         return true;
     }
     public bool Drop(Item item)
@@ -105,12 +114,8 @@ public class UI_ItemPool : MonoBehaviour
         if (item == null) { return false; }
 
         // we go through the children to find the item
-        foreach (Transform slot in transform)
+        foreach (UI_Item ui_item in ui_items)
         {
-            // we get the slot
-            UI_Item ui_item = slot.GetComponent<UI_Item>();
-            if (ui_item == null) { continue; }
-
             // we try to unstore the item
             bool unstored = ui_item.Unstore(item);
             if (unstored)
@@ -120,7 +125,8 @@ public class UI_ItemPool : MonoBehaviour
                 if (ui_item.Quantity == 0 && Scalable)
                 {
                     // we destroy the item
-                    Destroy(slot.gameObject);
+                    Destroy(ui_item.gameObject);
+                    ui_items.Remove(ui_item);
                 }
                 return true;
             }
@@ -133,20 +139,31 @@ public class UI_ItemPool : MonoBehaviour
     public void DestroyEmptySlots()
     {
         // we go through the children to find the empty slots
-        foreach (Transform slot in transform)
+        int i = 0;
+        while (i < Count)
         {
-            // we get the slot
-            UI_Item ui_item = slot.GetComponent<UI_Item>();
-            if (ui_item == null) { continue; }
+            UI_Item ui_item = ui_items[i];
+            if (ui_item.Quantity == 0)
+            {
+                // we destroy the empty slot
+                Destroy(ui_item.gameObject);
+                ui_items.RemoveAt(i);
+                continue; // we don't increment i, we just remove the empty slot
+            }
 
-            // we check if the slot is empty
-            if (ui_item.Item == null) { Destroy(slot.gameObject); }
+            i++;
         }
     }
-    public virtual GameObject CreateEmptyItemSlot()
+    public void CreateEmptySlots(int count)
+    {
+        // we create the empty slots
+        for (int i = 0; i < count; i++) { CreateItemSlot(); }
+        if (debug) { Debug.Log($"(UI_ItemPool) created {count} empty slots in {name}"); }
+    }
+    public virtual GameObject CreateItemSlot(Item item = null)
     {
         // we create the item
-        GameObject ui_slot = bank.CreateUI_Item(null);
+        GameObject ui_slot = bank.CreateUI_Item();
         ui_slot.transform.SetParent(transform);
 
         // reset the scale to 1
@@ -154,6 +171,16 @@ public class UI_ItemPool : MonoBehaviour
 
         // we change the layer of the slot to the same as the pool
         ui_slot.layer = gameObject.layer;
+
+        UI_Item ui_item = ui_slot.GetComponent<UI_Item>();
+        ui_item.Init();
+        
+        // we assign the item to the UI_Item
+        if (item != null) { ui_item.Store(item); }
+        else { ui_item.ClearUI(); }
+
+        // we add the item to the list
+        ui_items.Add(ui_item);
 
         return ui_slot;
     }

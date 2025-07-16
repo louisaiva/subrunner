@@ -13,7 +13,7 @@ public class UI_Item : UI_Slot
     public Sprite drag_hover_sprite;
 
     [Header("Item Reference")]
-    private List<Item> items = new List<Item>();
+    protected List<Item> items = new List<Item>();
     public string Reference { get => items.Count > 0 ? items[0].Reference : ""; }
 
 
@@ -25,16 +25,16 @@ public class UI_Item : UI_Slot
 
     [Header("Components")]
     [SerializeField] public ItemBank bank;
-    [SerializeField] private Image item_image;
-    [SerializeField] private Sprite current_item_sprite;
+    [SerializeField] protected Image item_image;
+    [SerializeField] protected Sprite current_item_sprite;
     public UI_ItemPool ItemPool => transform.parent.GetComponent<UI_ItemPool>();
     public Inventory Inventory => ItemPool?.UI_Inventory?.inventory;
     public Item Item => items.Count > 0 ? items[0] : null;
 
     // AWAKE
-    public void Init(ItemBank bank)
+    public virtual void Init()
     {
-        this.bank = bank;
+        bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
         item_image = transform.Find("item").GetComponent<Image>();
     }
 
@@ -119,7 +119,7 @@ public class UI_Item : UI_Slot
     }
 
     // UI
-    private void update_ui_qty()
+    protected void update_ui_qty()
     {
         // we check if we have a quantity text
         if (quantity_text == null) { return; }
@@ -130,7 +130,7 @@ public class UI_Item : UI_Slot
         // we show or hide the text
         quantity_text.gameObject.SetActive(Quantity > 1);
     }
-    public void setItem(Item item)
+    public virtual void setItem(Item item)
     {
         // on charge le sprite de l'image
         current_item_sprite = bank.GetSprite(item.Reference);
@@ -142,7 +142,7 @@ public class UI_Item : UI_Slot
         // on enable le slot
         Enable();
     }
-    private void set_ui(Sprite sprite)
+    protected virtual void set_ui(Sprite sprite)
     {
         // Debug.Log("(UI_Item) setting UI for item_image :" + item_image + " with sprite " + (sprite != null ? sprite.name : "null"));
         if (item_image == null)
@@ -277,7 +277,7 @@ public class UI_Item : UI_Slot
         // on change le sprite du slot
         GetComponent<Image>().sprite = drag_sprite;
     }
-    public void OnPointerDragEnter(UI_Item moving_ui_item)
+    public virtual void OnPointerDragEnter(UI_Item moving_ui_item)
     {
         // check if disabled
         if (is_disabled) { return; }

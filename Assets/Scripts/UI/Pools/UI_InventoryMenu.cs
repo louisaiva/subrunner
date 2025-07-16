@@ -33,7 +33,14 @@ public class UI_InventoryMenu : UI_Pool
 
         // on active le navigator
         navigator.Enable(ui_inventory);
-        navigator.Enable(ui_laptop);
+
+        // on regarde si le perso a le laptop
+        if (ui_inventory.inventory.GetItem("hardware:laptop") != null)
+        {
+            ui_laptop.gameObject.SetActive(true);
+            navigator.Enable(ui_laptop);
+        }
+        else { ui_laptop.gameObject.SetActive(false); }
 
         // on arrête le temps
         Time.timeScale = 0;

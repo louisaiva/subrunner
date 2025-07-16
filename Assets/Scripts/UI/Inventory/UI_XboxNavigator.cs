@@ -846,7 +846,7 @@ public class UI_XboxNavigator : MonoBehaviour
             if (!item_pool.Scalable) { continue; }
             if (!item_pool.CanStore(moving_item)) { continue; }
 
-            GameObject empty_slot = item_pool.CreateEmptyItemSlot();
+            GameObject empty_slot = item_pool.CreateItemSlot();
             empty_slot.GetComponent<UI_Item>().Enable();
         }
     }

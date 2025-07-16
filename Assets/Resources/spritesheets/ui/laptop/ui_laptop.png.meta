@@ -1,9 +1,12 @@
 fileFormatVersion: 2
-guid: f9237ae249b9154449739cd9e18333db
+guid: 52204e3019eb6af40b70d4a1d02d8ac3
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: -5438124679723457863
+    second: ui_laptop_0
   externalObjects: {}
-  serializedVersion: 12
+  serializedVersion: 13
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -67,7 +70,7 @@ TextureImporter:
   swizzle: 50462976
   cookieLightType: 0
   platformSettings:
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -80,7 +83,7 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -93,7 +96,7 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -110,468 +113,447 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: cybzombo1_0
+      name: ui_laptop_label
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 15
+        y: 124
+        width: 56
+        height: 12
+      alignment: 6
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c81b21375933d744596c154d2c2448fb
-      internalID: 997634210
+      spriteID: 03923d735a001354c9b21d5508d4b64b
+      internalID: 1915008617
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: cybzombo1_1
+      name: ui_laptop_5
       rect:
         serializedVersion: 2
-        x: 24
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 73
+        y: 62
+        width: 56
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ccad6aa50a1f10642adbe8fb9505eeae
-      internalID: 1680838351
+      spriteID: 46e4f54224b6d9247a3a59eacaebcb74
+      internalID: 1236777097
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: cybzombo1_2
+      name: ui_laptop_UL
       rect:
         serializedVersion: 2
-        x: 48
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 3
+        y: 124
+        width: 12
+        height: 12
+      alignment: 8
+      pivot: {x: 1, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b55856172cdb24142afd96a948f23986
-      internalID: -1127031717
+      spriteID: 5433b001489b826468147b2c476424aa
+      internalID: -1243703569
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: cybzombo1_3
+      name: ui_laptop_DL
       rect:
         serializedVersion: 2
-        x: 72
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 3
+        y: 8
+        width: 12
+        height: 12
+      alignment: 3
+      pivot: {x: 1, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c19a398d29c4f804697875bc87b334b4
-      internalID: -1959535416
+      spriteID: 21ee6da5c2f89314a970190a81ddaf08
+      internalID: 512226972
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: cybzombo1_4
+      name: ui_laptop_D
       rect:
         serializedVersion: 2
-        x: 96
-        y: 0
-        width: 24
-        height: 24
+        x: 15
+        y: 8
+        width: 1
+        height: 12
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9823a3003528c7e47b6efea0b007652f
-      internalID: -693405170
+      spriteID: 3cf0c30f343c9f943b3e504407d92339
+      internalID: -384744245
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: cybzombo1_5
+      name: ui_laptop_U
       rect:
         serializedVersion: 2
-        x: 120
-        y: 0
-        width: 24
-        height: 24
+        x: 71
+        y: 124
+        width: 1
+        height: 12
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 82847b372e830c8419fad62d31f07859
-      internalID: -371602876
+      spriteID: 9f2ce3c24e7a45b43bec3a5a63429834
+      internalID: 803862992
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: cybzombo1_6
+      name: ui_laptop_0
       rect:
         serializedVersion: 2
-        x: 144
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 3
+        y: 123
+        width: 12
+        height: 1
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eb0d0026fca82dc4bbd51c9b356edd03
-      internalID: 660957125
+      spriteID: f439e83e5d1f5ac42ac5d6f41ba60ac2
+      internalID: 1897324925
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: cybzombo1_7
+      name: ui_laptop_1
       rect:
         serializedVersion: 2
-        x: 168
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 13
+        y: 103
+        width: 1
+        height: 1
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ff094786f6bc5ea4e8f9654cdbccffd1
-      internalID: -756236601
+      spriteID: da7788545966c104db14d0735fbfc492
+      internalID: -801482755
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: cybzombo1_8
+      name: ui_laptop_2
       rect:
         serializedVersion: 2
-        x: 192
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 129
+        y: 124
+        width: 12
+        height: 12
+      alignment: 8
+      pivot: {x: 1, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bdb1ce9ae6e3913439e377723397a93e
-      internalID: -1322757275
+      spriteID: da2c8f9ee28308840b823abbdd2406a3
+      internalID: 59750610
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: cybzombo1_9
+      name: ui_laptop_3
       rect:
         serializedVersion: 2
-        x: 216
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 129
+        y: 8
+        width: 12
+        height: 12
+      alignment: 3
+      pivot: {x: 1, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3aa255892e16adf4fb9e6d74a2fe2228
-      internalID: -1312016788
+      spriteID: 676432c0d22748349b0a1674aaa41cf9
+      internalID: 1083570076
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: cybzombo1_10
+      name: ui_laptop_4
       rect:
         serializedVersion: 2
-        x: 240
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 129
+        y: 123
+        width: 12
+        height: 1
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5ea3ee985e6c5f946b62eceaa967ab81
-      internalID: -1806626624
+      spriteID: b191c4716c7880440b8b11158cf01111
+      internalID: -1551330375
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: cybzombo1_11
+      name: ui_laptop_6
       rect:
         serializedVersion: 2
-        x: 264
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 15
+        y: 104
+        width: 56
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a27063b1830bac745afacaf13f7b2abc
-      internalID: -909346312
+      spriteID: b1f08066a8c238948ae342f2acd0df36
+      internalID: -1402660497
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: cybzombo1_12
+      name: ui_laptop_7
       rect:
         serializedVersion: 2
-        x: 288
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 15
+        y: 83
+        width: 56
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1fd7658400ffa0a49a5c9c185236331a
-      internalID: 1318889685
+      spriteID: b1379573959257e4ead8377440a25fa9
+      internalID: 695157732
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: cybzombo1_13
+      name: ui_laptop_8
       rect:
         serializedVersion: 2
-        x: 312
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 73
+        y: 41
+        width: 56
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cf85bad2b84a7044b84906d4da889b41
-      internalID: -50271235
+      spriteID: 46cffe1991196444381566a0b2ca380b
+      internalID: -1102986615
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: cybzombo1_14
+      name: ui_laptop_9
       rect:
         serializedVersion: 2
-        x: 336
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 73
+        y: 104
+        width: 56
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 304b795752ab8f1479016a59ae07e157
-      internalID: 1225993155
+      spriteID: bb5437aa38d5ab8429c3fd1f59e2f42a
+      internalID: 1021261267
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: cybzombo1_15
+      name: ui_laptop_10
       rect:
         serializedVersion: 2
-        x: 360
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 73
+        y: 20
+        width: 56
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3eeb8e03d66d5e74ca5c327df981cc6d
-      internalID: -783424279
+      spriteID: 8baed22e93141f040a8bd59d54263b58
+      internalID: -1358064724
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: cybzombo1_16
+      name: ui_laptop_11
       rect:
         serializedVersion: 2
-        x: 384
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 15
+        y: 41
+        width: 56
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1f6dc330c340fa4409574467fa2e8b15
-      internalID: -1363549226
+      spriteID: 5a516b034ef3bcf4cbe03018512186e4
+      internalID: -1014773812
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: cybzombo1_17
+      name: ui_laptop_12
       rect:
         serializedVersion: 2
-        x: 408
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 73
+        y: 83
+        width: 56
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 692f8b61acc670f42ac98d9276bf38e3
-      internalID: -584526903
+      spriteID: dfc8aa2e9edeb784eb8d6ec88a883eb8
+      internalID: -591300258
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: cybzombo1_18
+      name: ui_laptop_13
       rect:
         serializedVersion: 2
-        x: 432
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 15
+        y: 20
+        width: 56
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0e51e3a974546bf40b2ea040008b5163
-      internalID: -1310823985
+      spriteID: d6d29f1a959b562409f55318c9666f55
+      internalID: 1675996188
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: cybzombo1_19
+      name: ui_laptop_14
       rect:
         serializedVersion: 2
-        x: 456
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 15
+        y: 62
+        width: 56
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ceaf5a3cddcb5b1458109a71857397e0
-      internalID: 1008825552
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: cybzombo1_20
-      rect:
-        serializedVersion: 2
-        x: 480
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 0df3e9368715dd54590c22515114d680
-      internalID: -633074132
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: cybzombo1_21
-      rect:
-        serializedVersion: 2
-        x: 504
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 05dfa2aed1c006e4cb2b1026698ab825
-      internalID: -1733214585
+      spriteID: a91c7258e52096243887b7ad7c5412ca
+      internalID: 1487978836
       vertices: []
       indices: 
       edges: []
       weights: []
     outline: []
+    customData: 
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
@@ -580,32 +562,30 @@ TextureImporter:
     indices: 
     edges: []
     weights: []
-    secondaryTextures:
-    - texture: {fileID: 2800000, guid: 03b0c36f43ca2754ebb19cea97ba3a3f, type: 3}
-      name: _Emission
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
     nameFileIdTable:
-      cybzombo1_0: 997634210
-      cybzombo1_1: 1680838351
-      cybzombo1_10: -1806626624
-      cybzombo1_11: -909346312
-      cybzombo1_12: 1318889685
-      cybzombo1_13: -50271235
-      cybzombo1_14: 1225993155
-      cybzombo1_15: -783424279
-      cybzombo1_16: -1363549226
-      cybzombo1_17: -584526903
-      cybzombo1_18: -1310823985
-      cybzombo1_19: 1008825552
-      cybzombo1_2: -1127031717
-      cybzombo1_20: -633074132
-      cybzombo1_21: -1733214585
-      cybzombo1_3: -1959535416
-      cybzombo1_4: -693405170
-      cybzombo1_5: -371602876
-      cybzombo1_6: 660957125
-      cybzombo1_7: -756236601
-      cybzombo1_8: -1322757275
-      cybzombo1_9: -1312016788
+      ui_laptop_0: 1897324925
+      ui_laptop_1: -801482755
+      ui_laptop_10: -1358064724
+      ui_laptop_11: -1014773812
+      ui_laptop_12: -591300258
+      ui_laptop_13: 1675996188
+      ui_laptop_14: 1487978836
+      ui_laptop_2: 59750610
+      ui_laptop_3: 1083570076
+      ui_laptop_4: -1551330375
+      ui_laptop_5: 1236777097
+      ui_laptop_6: -1402660497
+      ui_laptop_7: 695157732
+      ui_laptop_8: -1102986615
+      ui_laptop_9: 1021261267
+      ui_laptop_D: -384744245
+      ui_laptop_DL: 512226972
+      ui_laptop_U: 803862992
+      ui_laptop_UL: -1243703569
+      ui_laptop_label: 1915008617
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
