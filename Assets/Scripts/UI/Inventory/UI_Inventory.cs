@@ -60,7 +60,11 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         // on initialise les pools
         foreach (UI_ItemPool pool in pools)
         {
-            // on initialise la pool
+            if (pool == null)
+            {
+                Debug.LogWarning("(Inventory) " + name + $" has a null UI_ItemPool : {pool}, skipping initialization");
+                continue;
+            } // skip null UIs
             pool.Init(this);
         }
     }

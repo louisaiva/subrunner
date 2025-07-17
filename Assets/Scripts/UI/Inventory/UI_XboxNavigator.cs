@@ -845,10 +845,21 @@ public class UI_XboxNavigator : MonoBehaviour
             if (item_pool == moving_pool) { continue; }
             if (!item_pool.Scalable) { continue; }
             if (!item_pool.CanStore(moving_item)) { continue; }
-
+            if (item_pool.EmptyCount > 0) { continue; }
             GameObject empty_slot = item_pool.CreateItemSlot();
             empty_slot.GetComponent<UI_Item>().Enable();
         }
+
+        // si on a un UI_InventoryMenu dans nos uis alors on refresh ses UI_ItemPools
+        if (GetComponent<UI_Manager>().CurrentPool == "inventory")
+        {
+            UI_InventoryMenu inventory_menu = GetComponent<UI_Manager>().GetPool("inventory") as UI_InventoryMenu;
+            if (inventory_menu != null)
+            {
+                inventory_menu.RefreshItemPools();
+            }
+        }
+
     }
     private void disable_only_empty_slots()
     {
@@ -887,6 +898,18 @@ public class UI_XboxNavigator : MonoBehaviour
         {
             if (item_pool.Scalable) { item_pool.DestroyEmptySlots(); }
         }
+
+
+        // si on a un UI_InventoryMenu dans nos uis alors on refresh ses UI_ItemPools
+        if (GetComponent<UI_Manager>().CurrentPool == "inventory")
+        {
+            UI_InventoryMenu inventory_menu = GetComponent<UI_Manager>().GetPool("inventory") as UI_InventoryMenu;
+            if (inventory_menu != null)
+            {
+                inventory_menu.RefreshItemPools();
+            }
+        }
+
     }
     private void switch_items(UI_Item item1, UI_Item item2)
     {

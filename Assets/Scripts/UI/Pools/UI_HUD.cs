@@ -7,7 +7,7 @@ public class UI_HUD : UI_Pool
     [SerializeField] private UI_Inventory ui_chest;
     [SerializeField] private UI_XboxNavigator navigator;
 
-    protected override void Awake()
+    protected void Awake()
     {
         // on récupère le navigator
         navigator = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
@@ -18,14 +18,12 @@ public class UI_HUD : UI_Pool
         {
             Debug.LogError("(UI_InventoryMenu) missing perso_quick_inventory on " + name);
         }
-        
-        base.Awake();
     }
 
     // SHOW / HIDE
-    public override void Show()
+    public override async Awaitable Show(float duration)
     {
-        base.Show();
+        await base.Show(duration);
 
         if (ui_chest != null)
         {
@@ -40,10 +38,8 @@ public class UI_HUD : UI_Pool
             navigator.angle_threshold = base.angle_threshold;
         }
     }
-    public override void Hide()
+    public override async Awaitable Hide(float duration)
     {
-        base.Hide();
-
         if (ui_chest != null)
         {
             // ça veut dire qu'on interagit avec un chest,
@@ -54,6 +50,8 @@ public class UI_HUD : UI_Pool
             // on réactive les perso useconso
             inputs.perso.useConso.Enable();
         }
+
+        await base.Hide(duration);
     }
 
     // REGISTER CHEST

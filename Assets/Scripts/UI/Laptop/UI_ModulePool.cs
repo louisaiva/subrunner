@@ -1,3 +1,4 @@
+using PrimeTween;
 using UnityEngine;
 
 /// <summary>
@@ -7,6 +8,16 @@ using UnityEngine;
 /// </summary>
 public class UI_ModulePool : UI_ItemPool
 {
+    [Header("Motherboard Transition")]
+    [SerializeField] private RectTransform motherboard;
+    [SerializeField] private Vector2 motherboard_LR_when_highlighted = new Vector2(0.25f, 0.85f);
+    [SerializeField] private Vector2 motherboard_LR_base = new Vector2(0.75f, 1.35f);
+
+    [Header("Inventory Transition")]
+    [SerializeField] private RectTransform item_pools;
+    [SerializeField] private Vector2 inventory_LR_base = new Vector2(0, 1f);
+    [SerializeField] private Vector2 inventory_LR_when_mb = new Vector2(-0.75f, 1f);
+
     public void DropOverheadSlots()
     {
         // we check if we have too many slots
@@ -69,5 +80,41 @@ public class UI_ModulePool : UI_ItemPool
         if (debug) { Debug.Log($"(UI_ModulePool) created an ui_module with item {(item == null ? "null" : item.Reference)}"); }
 
         return ui_slot;
+    }
+
+    public async override void Fade(float duration = 0.1f, bool fade_in = true)
+    {
+        // we get our sibling and make it fade
+        // TextMeshProUGUI sibling = transform.parent.Find("title").GetComponent<TextMeshProUGUI>();
+
+        // get screen
+        // Vector2 right_destination = fade_in ? motherboard_LR_when_highlighted*Screen.width : Vector2.zero;
+        // Vector2 left_destination = fade_in ? motherboard_LR_when_highlighted*Screen.width : Vector2.zero;
+
+
+        CanvasGroup group = GetComponentInParent<CanvasGroup>();
+        await Sequence.Create(useUnscaledTime: true)
+            .Group(Tween.Custom(fade_in ? 0f : 1f, fade_in ? 1f : 0f, duration: duration,
+                onValueChange: ctx => group.alpha = ctx))
+            .Group(Tween.Custom(fade_in ? motherboard_LR_base.x : motherboard_LR_when_highlighted.x,
+                                fade_in ? motherboard_LR_when_highlighted.x : motherboard_LR_base.x,
+                                duration: duration,
+                onValueChange: ctx => motherboard.anchorMin = new Vector2(ctx, motherboard.anchorMin.y)))
+            .Group(Tween.Custom(fade_in ? motherboard_LR_base.y : motherboard_LR_when_highlighted.y,
+                                fade_in ? motherboard_LR_when_highlighted.y : motherboard_LR_base.y,
+                                duration: duration,
+                onValueChange: ctx => motherboard.anchorMax = new Vector2(ctx, motherboard.anchorMax.y)))
+            .Group(Tween.Custom(fade_in ? inventory_LR_base.x : inventory_LR_when_mb.x,
+                                fade_in ? inventory_LR_when_mb.x : inventory_LR_base.x,
+                                duration: duration,
+                onValueChange: ctx => item_pools.anchorMin = new Vector2(ctx, item_pools.anchorMin.y)))
+            .Group(Tween.Custom(fade_in ? inventory_LR_base.y : inventory_LR_when_mb.y,
+                                fade_in ? inventory_LR_when_mb.y : inventory_LR_base.y,
+                                duration: duration,
+                onValueChange: ctx => item_pools.anchorMax = new Vector2(ctx, item_pools.anchorMax.y)));
+            
+
+        // we set the Faded state
+        Faded = !fade_in;
     }
 }

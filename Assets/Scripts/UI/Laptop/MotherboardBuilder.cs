@@ -29,6 +29,7 @@ public class MotherboardBuilder : MonoBehaviour
     [SerializeField] private bool show_label = true;
 
     [Header("MB building")]
+    [SerializeField] private bool update_scale = true;
     [SerializeField] private int width;
     [SerializeField] private int height;
     [SerializeField] private GameObject empty_slot_prefab;
@@ -182,6 +183,8 @@ public class MotherboardBuilder : MonoBehaviour
     private Vector2 lastSize;
     void Update()
     {
+        if (!update_scale) { return; }
+
         Vector2 currentSize = GetComponent<RectTransform>().rect.size;
         if (currentSize != lastSize)
         {

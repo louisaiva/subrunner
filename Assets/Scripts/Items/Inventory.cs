@@ -6,6 +6,7 @@ public class Inventory : MonoBehaviour {
 
     [Header("Items")]
     public List<Item> Items = new List<Item>();
+    public int Count { get { return Items.Count; } }
 
     [Header("Events")]
     public UnityEvent OnGrab;
@@ -31,7 +32,16 @@ public class Inventory : MonoBehaviour {
     void Start()
     {
         // on initialise l'UI
-        uis.ForEach(ui => ui.Init());
+
+        foreach (UI_Inventory ui in uis)
+        {
+            if (ui == null)
+            {
+                Debug.LogWarning("(Inventory) " + name + $" has a null UI_Inventory : {ui.name}, skipping initialization");
+                continue;
+            } // skip null UIs
+            ui.Init();
+        }
 
         // on récupère les items
         foreach (Transform child in transform)

@@ -1,7 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using PrimeTween;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// UI_ItemPool is a helper class to manage the item pool in the UI.
@@ -11,10 +15,15 @@ using UnityEngine;
 public class UI_ItemPool : MonoBehaviour
 {
     [Header("Item Pool Parameters")]
+    public bool Faded = false;
     public int MaxSlots = 9; // the maximum number of slots in the pool
+    public int MinSlots = 0;
     public bool Scalable = false; // if true, the pool will dynamically add/remove slots
     [SerializeField] protected List<UI_Item> ui_items = new List<UI_Item>();
     public int Count { get { return ui_items.Count; } }
+    public int EmptyCount { get { return ui_items.Where(ui_item => ui_item.Item == null).Count(); } }
+    public int FullCount { get { return Count - EmptyCount; } }
+    public int EnabledCount { get { return ui_items.Where(ui_item => !ui_item.is_disabled).Count(); } }
 
     [Header("Item Rule")]
     public string item_rule = ""; // the rule to check if the item is valid
@@ -52,11 +61,14 @@ public class UI_ItemPool : MonoBehaviour
         DestroyEmptySlots();
         int remaining_slots = Count;
         // await System.Threading.Tasks.Task.Yield(); // we wait for a frame
-        
+
         // we check if we are scalable or not
         if (!Scalable) { CreateEmptySlots(this.MaxSlots - Count); }
-        if (debug) { Debug.Log($"(UI_ItemPool) {name} just finished Init(), destroyed {awake_slots - remaining_slots} empty children and kept "
-                + $"{remaining_slots} then recreated {Count - remaining_slots} empty ones");}
+        if (debug)
+        {
+            Debug.Log($"(UI_ItemPool) {name} just finished Init(), destroyed {awake_slots - remaining_slots} empty children and kept "
+                + $"{remaining_slots} then recreated {Count - remaining_slots} empty ones");
+        }
     }
 
     // RULE CHECK
@@ -99,8 +111,11 @@ public class UI_ItemPool : MonoBehaviour
         // if we are here, we didn't find a slot to stack the item
         if (!Scalable)
         {
-            if (debug) { Debug.Log("(UI_ItemPool) item " + item.Reference
-            + $" is valid for this pool but no slot to store it found :// ({Count} slots currently in the pool)"); }
+            if (debug)
+            {
+                Debug.Log("(UI_ItemPool) item " + item.Reference
+            + $" is valid for this pool but no slot to store it found :// ({Count} slots currently in the pool)");
+            }
             return false;
         }
 
@@ -127,6 +142,7 @@ public class UI_ItemPool : MonoBehaviour
                     // we destroy the item
                     Destroy(ui_item.gameObject);
                     ui_items.Remove(ui_item);
+                    if (Count < MinSlots) { CreateEmptySlots(MinSlots - Count); }
                 }
                 return true;
             }
@@ -139,7 +155,7 @@ public class UI_ItemPool : MonoBehaviour
     public void DestroyEmptySlots()
     {
         // we go through the children to find the empty slots
-        int i = 0;
+        int i = MinSlots;
         while (i < Count)
         {
             UI_Item ui_item = ui_items[i];
@@ -152,6 +168,22 @@ public class UI_ItemPool : MonoBehaviour
             }
 
             i++;
+        }
+
+        // we disable the first ones if we have some
+        for (int j = 0; j < MinSlots && j < Count; j++)
+        {
+            UI_Item ui_item = ui_items[j];
+            if (ui_item == null || ui_item.Quantity > 0) { continue; }
+            ui_item.Disable();
+        }
+
+        // we verify that we still have more slots than the MinSlot
+        if (Count < MinSlots)
+        {
+            // we create the missing slots
+            CreateEmptySlots(MinSlots - Count);
+            if (debug) { Debug.Log($"(UI_ItemPool) {name} created {MinSlots - Count} empty slots to reach the minimum of {MinSlots} slots"); }
         }
     }
     public void CreateEmptySlots(int count)
@@ -174,7 +206,7 @@ public class UI_ItemPool : MonoBehaviour
 
         UI_Item ui_item = ui_slot.GetComponent<UI_Item>();
         ui_item.Init();
-        
+
         // we assign the item to the UI_Item
         if (item != null) { ui_item.Store(item); }
         else { ui_item.ClearUI(); }
@@ -183,5 +215,19 @@ public class UI_ItemPool : MonoBehaviour
         ui_items.Add(ui_item);
 
         return ui_slot;
+    }
+
+    // FADE
+    public async virtual void Fade(float duration = 0.1f, bool fade_in = true)
+    {
+        // we get our sibling and make it fade
+        // TextMeshProUGUI sibling = transform.parent.Find("title").GetComponent<TextMeshProUGUI>();
+        CanvasGroup group = GetComponentInParent<CanvasGroup>();
+        await Sequence.Create(useUnscaledTime: true)
+            .Group(Tween.Custom(fade_in ? 0f : 1f, fade_in ? 1f : 0f, duration: duration,
+                onValueChange: ctx => group.alpha = ctx));
+
+        // we set the Faded state
+        Faded = !fade_in;
     }
 }

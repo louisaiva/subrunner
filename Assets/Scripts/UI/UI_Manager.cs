@@ -1,6 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UI;
+using PrimeTween;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 /// <summary>
 /// This class is used to manage the UI elements
 /// its transform is located at /ui
@@ -17,6 +22,11 @@ public class UI_Manager : MonoBehaviour
     // [SerializeField] private UI_Pool last_pool;
     public string CurrentPool { get => current_pool.Reference; }
 
+
+    [Header("Background effect")]
+    [SerializeField] protected Image bg;
+    [SerializeField] protected Vector2Int bg_alpha_range = new Vector2Int(0, 245);
+    [SerializeField] protected float transition_duration = 0.2f;
 
 
 
@@ -35,6 +45,8 @@ public class UI_Manager : MonoBehaviour
         {
             pool.gameObject.SetActive(true);
         }
+
+        bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, bg_alpha_range.y / 255f);
     }
     void Start()
     {
@@ -66,8 +78,8 @@ public class UI_Manager : MonoBehaviour
     public void TogglePool(string pool_name)
     {
         // we check if the pool is already shown
-        if (pool_name == current_pool.Reference) { SwitchTo("hud",false); }
-        else { SwitchTo(pool_name,false); }
+        if (pool_name == current_pool.Reference) { SwitchTo("hud", false); }
+        else { SwitchTo(pool_name, false); }
     }
     public void SwitchTo(string pool_name, bool force = true)
     {
@@ -76,7 +88,7 @@ public class UI_Manager : MonoBehaviour
         if (!pool) { return; }
         switch_to(pool, force);
     }
-    private void switch_to(UI_Pool pool,bool force=true)
+    private async void switch_to(UI_Pool pool, bool force = true)
     {
         // check if this pool is not the same as the current one
         if (pool == current_pool) { return; }
@@ -91,14 +103,29 @@ public class UI_Manager : MonoBehaviour
                 return;
             }
 
+            if (!current_pool.Available)
+            {
+                if (debug) { Debug.LogWarning("(UI_Manager) tried to switch to a pool that is not available : " + current_pool.Reference); }
+                return;
+            }
+
             // we hide the current pool
-            current_pool.Hide();
-            // last_pool = current_pool;
+            await current_pool.Hide(transition_duration);
+
+            // we transition to the right bg/timescale effect
+            if (current_pool.StopTime != pool.StopTime) { TransitionTimeScale(pool.StopTime, transition_duration * 2f); }
+            if (current_pool.HasBackground != pool.HasBackground) { TransitionBackground(pool.HasBackground, transition_duration * 2f); }
+        }
+        else
+        {
+            // on active le background & time parameters
+            TransitionTimeScale(pool.StopTime, transition_duration);
+            TransitionBackground(pool.HasBackground, transition_duration);
         }
 
         // we show the new pool
         current_pool = pool;
-        current_pool.Show();
+        await current_pool.Show(transition_duration);
     }
 
     // GETTERS
@@ -131,4 +158,52 @@ public class UI_Manager : MonoBehaviour
         // we switch to hud
         SwitchTo("hud");
     }
+
+    // TRANSITIONS
+    public void TransitionBackground(bool show, float duration)
+    {
+        if (!show)
+        {
+            // we hide the bg
+            bg.GetComponent<PauseMenuBackgroundEffect>().DisableEffect(duration);
+            Tween.Custom(bg_alpha_range.y / 255f, bg_alpha_range.x / 255f, duration: duration,
+                onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx), useUnscaledTime: true);
+        }
+        else
+        {
+            // we show the bg
+            bg.GetComponent<PauseMenuBackgroundEffect>().ActivateEffect(duration);
+            Tween.Custom(bg_alpha_range.x / 255f, bg_alpha_range.y / 255f, duration: duration,
+                onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx), useUnscaledTime: true);
+        }
+    }
+    public void TransitionTimeScale(bool stop_time, float duration)
+    {
+        if (stop_time && Time.timeScale != 0f) { Tween.GlobalTimeScale(0f, duration, Ease.OutQuad); }
+        else if (!stop_time && Time.timeScale != 1f) { Tween.GlobalTimeScale(1f, duration, Ease.OutQuad); }
+    }
+
+#if UNITY_EDITOR
+    [CustomEditor(typeof(UI_Manager))]
+    public class UI_ManagerEditor : Editor
+    {
+        private bool bg_showed = false;
+        public override void OnInspectorGUI()
+        {
+            UI_Manager manager = (UI_Manager)target;
+            if (!bg_showed && GUILayout.Button("Show Background"))
+            {
+                manager.bg.color = new Color(manager.bg.color.r, manager.bg.color.g, manager.bg.color.b, manager.bg_alpha_range.y / 255f);
+                bg_showed = true;
+            }
+            if (bg_showed && GUILayout.Button("Hide Background"))
+            {
+                manager.bg.color = new Color(manager.bg.color.r, manager.bg.color.g, manager.bg.color.b, manager.bg_alpha_range.x / 255f);
+                bg_showed = false;
+            }
+
+            DrawDefaultInspector();
+        }
+    }
+#endif
 }

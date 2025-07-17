@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using PrimeTween;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
 public class UI_Pool : MonoBehaviour
@@ -8,9 +10,13 @@ public class UI_Pool : MonoBehaviour
     [Header("Pool paramaters")]
     public string Reference = "pool";
     public bool Showed = false;
+    private bool in_transition = false;
     public bool CanBeHidden = true; // if true, the pool can be hidden when switching to another pool
     public bool CanBeCanceled = false; // if true, the UI_Manager will switch to hud when pressed & released
     public bool UsePersoInputs = true; // if true, the UI_Manager will activate the inputs.perso when the pool is showed
+    public bool StopTime = true;
+    public bool HasBackground = true; // if true, the pool has a background effect
+    public bool Available => !in_transition;
 
 
     [Header("Pool navigation parameters")]
@@ -18,52 +24,55 @@ public class UI_Pool : MonoBehaviour
     [SerializeField] protected float angle_multiplicator = 0f;
 
     [Header("UI Elements")]
+    // [SerializeField] protected Tween bg_tween;
     [SerializeField] protected List<GameObject> ui_elements = new List<GameObject>();
-    
+
     [Header("Inputs")]
     protected PlayerInputActions inputs;
 
     [Header("Logs")]
     [SerializeField] protected bool debug = false;
 
-    // AWAKE
-    protected virtual void Awake() { Hide(); }
-
     // START
     private void Start()
     {
         // we get the inputs
+        Hide(0f);
         inputs = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().inputs;
     }
 
     // SHOW / HIDE
-    public virtual void Show()
+    public virtual async Awaitable Show(float duration)
+    {
+        in_transition = true;
+        // await System.Threading.Tasks.Task.Delay((int)(duration * 1000));
+
+        await show_pool(duration);
+        in_transition = false;
+    }
+    public virtual async Awaitable Hide(float duration)
+    {
+        hide_pool();
+        in_transition = true;
+        await System.Threading.Tasks.Task.Delay((int)(duration * 1000));
+
+        in_transition = false;
+    }
+
+    // LOW SHOWING
+    protected virtual async Awaitable show_pool(float duration)
     {
         // on affiche tous les éléments
         if (debug) { Debug.Log("(UI_Pool) showing pool : " + Reference); }
-        foreach (GameObject ui in ui_elements)
-        {
-            ui.SetActive(true);
-        }
+        foreach (GameObject ui in ui_elements) { ui.SetActive(true); }
 
         Showed = true;
 
         // s'il a une activate action, on désactive les inputs.perso
-        if (UsePersoInputs)
-        {
-            inputs.perso.Enable();
-            /* if (inputs.UI.navigate.bindings.Count > 1)
-            {
-                inputs.UI.navigate.ChangeBinding(1).Erase();
-            } */
-        }
-        else
-        {
-            inputs.perso.Disable();
-            // inputs.UI.navigate.AddBinding("<Gamepad>/leftStick");
-        }
+        if (UsePersoInputs) { inputs.perso.Enable(); }
+        else { inputs.perso.Disable(); }
     }
-    public virtual void Hide()
+    private void hide_pool()
     {
         // on cache tous les éléments du pool
         if (debug) { Debug.Log("(UI_Pool) hiding pool : " + Reference); }
@@ -71,7 +80,7 @@ public class UI_Pool : MonoBehaviour
         {
             ui.SetActive(false);
         }
-        
+
         Showed = false;
     }
 

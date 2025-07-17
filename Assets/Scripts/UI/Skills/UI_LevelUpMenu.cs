@@ -22,18 +22,16 @@ public class UI_LevelUpMenu : UI_Pool, I_UI_Slottable
     private TMPro.TextMeshProUGUI level_text;
 
     // AWAKE
-    protected override void Awake()
+    protected void Awake()
     {
         navigator = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
         level_text = transform.Find("text").GetComponent<TMPro.TextMeshProUGUI>();
-
-        base.Awake();
     }
 
     // POOL
-    public override void Show()
+    public override async Awaitable Show(float duration)
     {
-        base.Show();
+        await base.Show(duration);
 
         // update the level text
         level_text.text = "LEVEL " + GameObject.Find("/perso").GetComponent<Perso>().level.ToString();
@@ -43,19 +41,13 @@ public class UI_LevelUpMenu : UI_Pool, I_UI_Slottable
 
         // on active le navigator
         navigator.Enable(this);
-
-        // on arrête le temps
-        Time.timeScale = 0;
     }
-    public override void Hide()
+    public override async Awaitable Hide(float duration)
     {
-        base.Hide();
-
         // on désactive le navigator
         navigator.Disable(this);
 
-        // on remet le temps
-        Time.timeScale = 1;
+        await base.Hide(duration);
     }
 
     // SLOTTABLE
