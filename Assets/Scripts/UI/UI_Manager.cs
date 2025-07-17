@@ -109,23 +109,24 @@ public class UI_Manager : MonoBehaviour
                 return;
             }
 
-            // we hide the current pool
-            await current_pool.Hide(transition_duration);
 
             // we transition to the right bg/timescale effect
-            if (current_pool.StopTime != pool.StopTime) { TransitionTimeScale(pool.StopTime, transition_duration * 2f); }
-            if (current_pool.HasBackground != pool.HasBackground) { TransitionBackground(pool.HasBackground, transition_duration * 2f); }
+            if (current_pool.StopTime != pool.StopTime) { TransitionTimeScale(pool.StopTime, transition_duration); }
+            if (current_pool.HasBackground != pool.HasBackground) { TransitionBackground(pool.HasBackground, transition_duration); }
+            // await System.Threading.Tasks.Task.Delay((int)(transition_duration * 1000));
+            // we hide the current pool
+            await current_pool.Hide(transition_duration/2f);
         }
         else
         {
             // on active le background & time parameters
-            TransitionTimeScale(pool.StopTime, transition_duration);
-            TransitionBackground(pool.HasBackground, transition_duration);
+            TransitionTimeScale(pool.StopTime, transition_duration/2f);
+            TransitionBackground(pool.HasBackground, transition_duration/2f);
         }
 
         // we show the new pool
         current_pool = pool;
-        await current_pool.Show(transition_duration);
+        await current_pool.Show(transition_duration/2f);
     }
 
     // GETTERS

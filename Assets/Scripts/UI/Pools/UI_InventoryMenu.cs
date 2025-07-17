@@ -16,6 +16,7 @@ public class UI_InventoryMenu : UI_Pool
 
     [Header("Base Item Pool Transitions")]
     [SerializeField] private float base_transition = 0.2f;
+    [SerializeField] private bool fade_all_disabled = true;
 
     protected void Awake()
     {
@@ -100,14 +101,36 @@ public class UI_InventoryMenu : UI_Pool
     } */
     protected override async Awaitable show_pool(float duration)
     {
-        await base.show_pool(0f);
+        // on affiche tous les éléments
+        if (debug) { Debug.Log("(UI_InventoryMenu) showing pool : " + Reference); }
+        foreach (GameObject ui in ui_elements)
+        {
+            ui.SetActive(true);
+            /* if (ui.GetComponent<CanvasGroup>() != null)
+            {
+                ui.GetComponent<CanvasGroup>().alpha = 0f;
+                // we set the canvas group alpha to 0 because after we are going to fade in
+            } */
+        }
         await RefreshItemPools(duration);
+        Showed = true;
+
+        // s'il a une activate action, on désactive les inputs.perso
+        if (UsePersoInputs) { inputs.perso.Enable(); }
+        else { inputs.perso.Disable(); }
     }
+    protected override async Awaitable hide_pool(float duration)
+    {
+        await FadeOutAllPools(duration);
+        base.hide_pool(duration);
+    }
+
     // ITEM POOL TRANSITIONS
     public async Awaitable RefreshItemPools(float duration = default)
     {
         if (duration == default) { duration = base_transition; }
-        
+        if (debug) { Debug.Log($"(UI_InventoryMenu) refreshing item pools with duration {duration}"); }
+
         // on fade out les item pools qui sont vides & fade in ceux qui sont pleins
         foreach (GameObject ui in ui_elements)
         {
@@ -115,13 +138,36 @@ public class UI_InventoryMenu : UI_Pool
             if (item_pool == null) { ui.SetActive(true); continue; }
             if (debug)
             {
-                Debug.Log("(UI_InventoryMenu) investigating ui_itempool : " + item_pool.name + " with "
-                + item_pool.Count + " ui_items and " + item_pool.FullCount + " slots with at least 1 item");
+                Debug.Log("(UI_InventoryMenu) investigating ui_itempool " + item_pool.name + $" ({(item_pool.Faded ? "faded" : "visible")}) with "
+                + item_pool.Count + " slots and " + item_pool.FullCount + " items slots " + $"and {item_pool.EnabledCount} enabled slots");
             }
 
             // on regarde si la pool doit être affichée ou non
-            if (item_pool.EnabledCount > 0 && item_pool.Faded) { item_pool.Fade(duration, fade_in: true); }
-            else if (item_pool.EnabledCount == 0 && !item_pool.Faded) { item_pool.Fade(duration, fade_in: false); }
+            if (fade_all_disabled)
+            {
+                if (item_pool.EnabledCount > 0 && item_pool.Faded) { item_pool.Fade(duration, fade_in: true); }
+                else if (item_pool.EnabledCount == 0 && !item_pool.Faded) { item_pool.Fade(duration, fade_in: false); }
+            }
+            else
+            {
+                if ((item_pool.EnabledCount > 0 || item_pool.FullCount > 0) && item_pool.Faded) { item_pool.Fade(duration, fade_in: true); }
+                else if (item_pool.EnabledCount == 0 && item_pool.FullCount == 0 && !item_pool.Faded) { item_pool.Fade(duration, fade_in: false); }
+            }
+        }
+        await Task.Delay((int)(duration * 1000));
+    }
+    public async Awaitable FadeOutAllPools(float duration = default)
+    {
+        if (duration == default) { duration = base_transition; }
+        if (debug) { Debug.Log($"(UI_InventoryMenu) fading out all item pools with duration {duration}"); }
+
+        // on fade out tous les item pools
+        foreach (GameObject ui in ui_elements)
+        {
+            UI_ItemPool item_pool = ui.GetComponentInChildren<UI_ItemPool>();
+            if (item_pool == null || item_pool.Faded) { continue; }
+            if (debug) { Debug.Log("(UI_InventoryMenu) fading out ui_itempool " + item_pool.name); }
+            item_pool.Fade(duration, fade_in: false);
         }
         await Task.Delay((int)(duration * 1000));
     }

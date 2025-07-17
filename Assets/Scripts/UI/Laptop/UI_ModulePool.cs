@@ -92,7 +92,7 @@ public class UI_ModulePool : UI_ItemPool
         // Vector2 left_destination = fade_in ? motherboard_LR_when_highlighted*Screen.width : Vector2.zero;
 
 
-        CanvasGroup group = GetComponentInParent<CanvasGroup>();
+        // CanvasGroup group = GetComponentInParent<CanvasGroup>();
         await Sequence.Create(useUnscaledTime: true)
             .Group(Tween.Custom(fade_in ? 0f : 1f, fade_in ? 1f : 0f, duration: duration,
                 onValueChange: ctx => group.alpha = ctx))
@@ -112,9 +112,5 @@ public class UI_ModulePool : UI_ItemPool
                                 fade_in ? inventory_LR_when_mb.y : inventory_LR_base.y,
                                 duration: duration,
                 onValueChange: ctx => item_pools.anchorMax = new Vector2(ctx, item_pools.anchorMax.y)));
-            
-
-        // we set the Faded state
-        Faded = !fade_in;
     }
 }

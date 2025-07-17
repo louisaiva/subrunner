@@ -45,16 +45,15 @@ public class UI_Pool : MonoBehaviour
     public virtual async Awaitable Show(float duration)
     {
         in_transition = true;
-        // await System.Threading.Tasks.Task.Delay((int)(duration * 1000));
 
         await show_pool(duration);
         in_transition = false;
     }
     public virtual async Awaitable Hide(float duration)
     {
-        hide_pool();
         in_transition = true;
-        await System.Threading.Tasks.Task.Delay((int)(duration * 1000));
+        await hide_pool(duration);
+        // await System.Threading.Tasks.Task.Delay((int)(duration * 1000));
 
         in_transition = false;
     }
@@ -62,17 +61,18 @@ public class UI_Pool : MonoBehaviour
     // LOW SHOWING
     protected virtual async Awaitable show_pool(float duration)
     {
+        await System.Threading.Tasks.Task.Delay((int)(duration * 1000));
+
         // on affiche tous les éléments
         if (debug) { Debug.Log("(UI_Pool) showing pool : " + Reference); }
         foreach (GameObject ui in ui_elements) { ui.SetActive(true); }
-
         Showed = true;
 
         // s'il a une activate action, on désactive les inputs.perso
         if (UsePersoInputs) { inputs.perso.Enable(); }
         else { inputs.perso.Disable(); }
     }
-    private void hide_pool()
+    protected virtual async Awaitable hide_pool(float duration)
     {
         // on cache tous les éléments du pool
         if (debug) { Debug.Log("(UI_Pool) hiding pool : " + Reference); }
@@ -82,6 +82,8 @@ public class UI_Pool : MonoBehaviour
         }
 
         Showed = false;
+
+        await System.Threading.Tasks.Task.Delay((int)(duration * 1000));
     }
 
     // REGISTER ELEMENTS

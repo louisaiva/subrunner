@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.03529412, g: 0.050980393, b: 0.03137255, a: 1}
+  m_Color: {r: 0.03529412, g: 0.050980393, b: 0.03137255, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -241,11 +241,12 @@ MonoBehaviour:
   angle_multiplicator: 0
   moving_ui_item: {fileID: 0}
   navigateInput: {fileID: 6845285972889758690, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
-  navigateInGameInput: {fileID: -3072000485198250585, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
-  navigateInGame: 0
   dropInput: {fileID: 3671791553200363326, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   activateInput: {fileID: -5345809961903225854, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   moveItemInput: {fileID: 6921072670706733668, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+  navigateInGame: 0
+  navigateInGameInput: {fileID: -3072000485198250585, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+  dropInGameInput: {fileID: 2767387396969607311, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   debug: 0
   debug_navigation: 0
   debug_gizmo: 0
@@ -387,14 +388,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8b1a06584a7e8f47b3f8a1adf85a3c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shake_duration: 0.1
   shake_magnitude: 1
-  basic_shake_anims:
-  - camera_shake01
-  - camera_shake02
-  big_shake_anims:
-  - camera_shake03
-  - camera_shake04
+  settings:
+    strength: {x: 0, y: 0, z: 0}
+    duration: 0
+    frequency: 0
+    enableFalloff: 0
+    falloffEase: 0
+    strengthOverTime:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    asymmetry: 0
+    easeBetweenShakes: 0
+    cycles: 0
+    startDelay: 0
+    endDelay: 0
+    useUnscaledTime: 0
+    _useFixedUpdate: 0
+    _updateType: 0
   log: 0
 --- !u!114 &654843988
 MonoBehaviour:
@@ -539,6 +553,7 @@ GameObject:
   m_Component:
   - component: {fileID: 757762600}
   - component: {fileID: 757762599}
+  - component: {fileID: 757762601}
   m_Layer: 0
   m_Name: game_loader
   m_TagString: Untagged
@@ -560,9 +575,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linux_style_loading: 0
   loadingScreen: {fileID: 1647928293}
-  bg: {fileID: 113438315}
+  bg: {fileID: 113438317}
   text_prefab: {fileID: 236027964217853167, guid: 194d992dcf64716409758e4d0892645e, type: 3}
   text_parents: {fileID: 1175329316}
+  transition_duration: 1
   text_delay_range: {x: 0.01, y: 0.08}
   texts:
   - merging git conflicts
@@ -585,6 +601,7 @@ MonoBehaviour:
   - teleporting to world...
   joystickFeedback: {fileID: 1760471708}
   controller: {fileID: 1367109925}
+  log: 1
 --- !u!4 &757762600
 Transform:
   m_ObjectHideFlags: 0
@@ -601,6 +618,18 @@ Transform:
   - {fileID: 1647928294}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &757762601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 757762598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9519858cd92ecf040866eb6ae352d431, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &787797897
 GameObject:
   m_ObjectHideFlags: 0
@@ -877,7 +906,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1175329317
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1882,6 +1911,8 @@ MonoBehaviour:
   - prefabs/items
   ui_icons: []
   ui_icons_names: []
+  module_sprites: []
+  module_references: []
   ui_item_prefab: {fileID: 4964243457693928914, guid: abacdc781c511fc42b1c0e4dd87c3c7b, type: 3}
   ui_module_prefab: {fileID: 0}
   debug: 0
@@ -1973,7 +2004,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1647928294
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2051,7 +2082,7 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: -1998417709
   m_SortingLayer: 8
-  m_SortingOrder: 0
+  m_SortingOrder: 50
   m_SortAtRoot: 0
 --- !u!1 &1651987153
 GameObject:

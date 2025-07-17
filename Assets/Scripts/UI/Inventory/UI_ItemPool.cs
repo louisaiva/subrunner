@@ -15,7 +15,7 @@ using UnityEngine.UI;
 public class UI_ItemPool : MonoBehaviour
 {
     [Header("Item Pool Parameters")]
-    public bool Faded = false;
+    // public bool Faded = false;
     public int MaxSlots = 9; // the maximum number of slots in the pool
     public int MinSlots = 0;
     public bool Scalable = false; // if true, the pool will dynamically add/remove slots
@@ -32,6 +32,7 @@ public class UI_ItemPool : MonoBehaviour
     [SerializeField] protected ItemBank bank;
     public Description Descriptor; // the description of the item pool
     public UI_Inventory UI_Inventory;
+    protected CanvasGroup group;
 
     [Header("Logs")]
     [SerializeField] protected bool debug = false;
@@ -43,6 +44,10 @@ public class UI_ItemPool : MonoBehaviour
 
         // we get the item bank
         bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
+
+        // we get the CanvasGroup
+        group = GetComponentInParent<CanvasGroup>(includeInactive: true);
+        if (group != null) { group.alpha = 0f; }
 
         // we add all existing uis to ui_items
         foreach (Transform child in transform)
@@ -220,14 +225,11 @@ public class UI_ItemPool : MonoBehaviour
     // FADE
     public async virtual void Fade(float duration = 0.1f, bool fade_in = true)
     {
-        // we get our sibling and make it fade
-        // TextMeshProUGUI sibling = transform.parent.Find("title").GetComponent<TextMeshProUGUI>();
-        CanvasGroup group = GetComponentInParent<CanvasGroup>();
+        if (group == null) { return; }
+
         await Sequence.Create(useUnscaledTime: true)
             .Group(Tween.Custom(fade_in ? 0f : 1f, fade_in ? 1f : 0f, duration: duration,
                 onValueChange: ctx => group.alpha = ctx));
-
-        // we set the Faded state
-        Faded = !fade_in;
     }
+    public bool Faded { get { return group.alpha < 0.1f; } }
 }

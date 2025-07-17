@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using PrimeTween;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SceneLoader : Singleton<SceneLoader>
 {
@@ -11,9 +13,12 @@ public class SceneLoader : Singleton<SceneLoader>
     [Header("Loading screen")]
     [SerializeField] private bool linux_style_loading = false;
     [SerializeField] private GameObject loadingScreen;
-    [SerializeField] private GameObject bg;
+    [SerializeField] private Image bg;
     [SerializeField] private GameObject text_prefab;
     [SerializeField] private GameObject text_parents;
+
+    [Header("Transitions")]
+    [SerializeField] private float transition_duration = 0.2f;
 
     [Header("Texts")]
     [SerializeField] private Vector2 text_delay_range = new Vector2(0.1f, 0.5f);
@@ -22,28 +27,33 @@ public class SceneLoader : Singleton<SceneLoader>
     [Header("Title Screen Elements")]
     [SerializeField] private JoystickFeedback joystickFeedback;
     [SerializeField] private CharacterOrientationController controller;
-    // private AnimPlayer animPlayer;
 
-    // START
-    private void Start()
-    {
-        // we hide the loading screen
-        loadingScreen.SetActive(false);
-    }
+
+    [Header("Logs")]
+    [SerializeField] private bool log;
 
 
     // LOAD GAME
     public void LoadGame()
     {
         // we start the coroutine to load the game
-        StopAllCoroutines(); // we stop all coroutines to avoid multiple calls
-        StartCoroutine( linux_style_loading
+        // StopAllCoroutines(); // we stop all coroutines to avoid multiple calls
+        /* StartCoroutine(linux_style_loading
             ? load_game_linux_style()
-            : load_game_simplest());
+            : load_game_simplest()); */
+
+        load_game();
     }
 
     // LOAD GAME SIMPLEST
-    private IEnumerator load_game_simplest()
+    private async void load_game()
+    {
+        await load_game_simplest();
+
+        if (log) { Debug.Log("(SceneLoader) game scene loaded with success !!"); }
+    }   
+
+    private async Awaitable load_game_simplest()
     {
         Debug.Log("LOADING THE GAME");
 
@@ -54,25 +64,21 @@ public class SceneLoader : Singleton<SceneLoader>
         // we disable the input feedback
         Destroy(joystickFeedback.gameObject);
 
-        // we show the loading screen
-        loadingScreen.SetActive(true);
-
-        // we wait one frame
-        yield return null;
-
         // we pause the game
         Time.timeScale = 0f;
 
-        // load the main clean scene
-        AsyncOperation loading_game = SceneManager.LoadSceneAsync(1);
-        while (!loading_game.isDone)
-        {
-            // we wait for the loading to finish
-            yield return null;
-        }
+        // we show the loading screen
+        // loadingScreen.SetActive(true);
+        await Tween.Custom(0f, 1f, duration: transition_duration, useUnscaledTime: true,
+            onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx));
+
+        await SceneManager.LoadSceneAsync(1);
 
         // we hide the loading screen
-        loadingScreen.SetActive(false);
+        await Tween.Custom(1f, 0f, duration: transition_duration, useUnscaledTime: true,
+            onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx));
+
+        // loadingScreen.SetActive(false);
     }
 
     // LOAD GAME LINUX STYLE
@@ -135,7 +141,7 @@ public class SceneLoader : Singleton<SceneLoader>
 
         // we hide the bg
         Time.timeScale = 1f; // we resume the game
-        bg.SetActive(false);
+        bg.gameObject.SetActive(false);
 
         // we fade the texts away
         float fade_duration = 2f;

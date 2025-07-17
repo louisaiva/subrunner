@@ -25,6 +25,7 @@ public class CameraShaker : Singleton<CameraShaker>
 		// clamp and apply global setting to magnitude
 		magnitude *= shake_magnitude;
 		magnitude = Mathf.Clamp(magnitude, 0f, 2f);
+		if (magnitude <= 0f) { return; }
 
 		// tween the camera position
 		settings.strength.x = magnitude;
