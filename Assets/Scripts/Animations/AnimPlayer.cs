@@ -10,7 +10,7 @@ public class AnimPlayer : MonoBehaviour
 
 
     [Header("Components")]
-    private AnimBank bank;
+    // private AnimBank bank;
     private SpriteRenderer sr;
 
 
@@ -90,11 +90,6 @@ public class AnimPlayer : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        if (bank == null)
-        {
-            bank = AnimBank.Instance;
-        }
-
         // we get the sprite renderer
         sr = GetComponent<SpriteRenderer>();
 
@@ -165,6 +160,8 @@ public class AnimPlayer : MonoBehaviour
     // PLAY ANIMATION
     public Anim Play(string capacity, int? priority_override=null, float? duration_override=null)
     {
+        if (AnimBank.Instance == null) { return null; }
+
         // we get the priority of the capacity
         int priority = 1;
         if (priority_override != null)
@@ -189,7 +186,7 @@ public class AnimPlayer : MonoBehaviour
         {
             // we get the animation from the bank
             string anim_name = skin + "." + capacity + "." + orientation;
-            Anim anim = bank.GetAnim(anim_name);
+            Anim anim = AnimBank.Instance.GetAnim(anim_name);
             if (debug)
             {
                 Debug.Log("(AnimPlayer - Play) Bank found anim : " + anim.name
@@ -233,6 +230,8 @@ public class AnimPlayer : MonoBehaviour
     }
     private void playFromPile()
     {
+        if (AnimBank.Instance == null) { return; }
+
         for (int i = anim_pile.Count - 1; i >= 0; i--)
         {
             // we check if there is an animation to play
@@ -240,7 +239,7 @@ public class AnimPlayer : MonoBehaviour
 
             // we get the closest animation from the bank
             string anim_name = skin + "." + anim_pile[i] + "." + orientation;
-            Anim anim = bank.GetAnim(anim_name);
+            Anim anim = AnimBank.Instance.GetAnim(anim_name);
             if (debug_pile)
             {
                 Debug.Log("(AnimPlayer - playFromPile) Bank found anim : " + anim.name

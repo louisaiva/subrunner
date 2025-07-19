@@ -117,7 +117,7 @@ public class Inventory : MonoBehaviour
 
         // we set the item to dropped (which enables the hover collider)
         item.Grabbed = false;
-        
+
         // we trigger the event
         OnDrop.Invoke();
 
@@ -128,7 +128,7 @@ public class Inventory : MonoBehaviour
             if (uis_to_ignore.Contains(ui)) { continue; } // we skip the ui_to_ignore
             ui.UI_Drop(item);
         }
-        
+
         if (debug) { Debug.Log("(Inventory) " + capable.name + " dropped : " + item.name); }
 
         return true;
@@ -162,13 +162,13 @@ public class Inventory : MonoBehaviour
         if (capable is Interactable)
         {
             // this is the other capable
-            s+="we are the interactable\n";
+            s += "we are the interactable\n";
             InteractCapacity interactor = (capable as Interactable).Interactor;
 
             // check if we have an interactor
             if (interactor == null)
             {
-                if (debug) { Debug.LogWarning(s + "we don't have an interactor\n");}
+                if (debug) { Debug.LogWarning(s + "we don't have an interactor\n"); }
                 return null;
             }
 
@@ -176,11 +176,11 @@ public class Inventory : MonoBehaviour
             if (debug)
             {
                 Debug.Log(s + "we have an interactor : " + interactor.capable.name
-                + "\nand its inventory is " + interactor.capable.inventory.name );
+                + "\nand its inventory is " + interactor.capable.inventory.name);
             }
             return interactor.capable.inventory;
         }
- 
+
 
         // check if we are the interactor (so we look for the interactable)
         // typically for Being
@@ -189,12 +189,12 @@ public class Inventory : MonoBehaviour
             // this is our capable
             s += "we are the interactor\n";
             InteractCapacity interactor = capable.GetCapacity<InteractCapacity>();
-            
+
             // check if we have an interactable
             Capable interactable = interactor.interactable as Capable;
             if (interactable == null)
             {
-                if (debug) { Debug.LogWarning(s + "we don't have an interactable\n");}
+                if (debug) { Debug.LogWarning(s + "we don't have an interactable\n"); }
                 return null;
             }
 
@@ -208,27 +208,27 @@ public class Inventory : MonoBehaviour
                 // fermé et pas en train de s'ouvrir
                 if (!openable.is_open && !openable.is_moving)
                 {
-                    if (debug) { Debug.LogWarning(s + "but it's closed & not opening\n");}
+                    if (debug) { Debug.LogWarning(s + "but it's closed & not opening\n"); }
                     return null;
                 }
 
                 // en train de se fermer
                 else if (openable.is_open && openable.is_moving)
                 {
-                    if (debug) { Debug.LogWarning(s + "but it's closing\n");}
+                    if (debug) { Debug.LogWarning(s + "but it's closing\n"); }
                     return null;
                 }
 
-                s+= "and it's open !!\n";
+                s += "and it's open !!\n";
             }
             else if (interactable.inventory == null)
             {
-                if (debug) { Debug.LogWarning(s + "but it doesn't have an inventory\n");}
+                if (debug) { Debug.LogWarning(s + "but it doesn't have an inventory\n"); }
                 return null;
             }
 
             // we return the interactable's inventory
-            if (debug) { Debug.Log(s + "and its inventory is " + interactable.inventory.name + "\n\n");}
+            if (debug) { Debug.Log(s + "and its inventory is " + interactable.inventory.name + "\n\n"); }
             return interactable.inventory;
         }
 
@@ -246,8 +246,4 @@ public class Inventory : MonoBehaviour
     }
 
 
-
-    /* // ! DEPRECATED
-    public Hack[] getHacks() { return new Hack[0]; }
-    public void setShow(bool show) { } */
 }

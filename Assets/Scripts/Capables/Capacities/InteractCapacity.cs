@@ -19,10 +19,13 @@ public class InteractCapacity : Capacity
     [Header("Current Hover")]
     [SerializeField] private Capable closest_hover;
     public Interactable interactable
-    { get{
-        if (closest_hover is Interactable) { return closest_hover as Interactable; }
-        return null;
-    }}
+    {
+        get
+        {
+            if (closest_hover is Interactable) { return closest_hover as Interactable; }
+            return null;
+        }
+    }
 
     [Header("Waiting hovers")]
     [SerializeField] private List<Capable> waiting_hovers = new List<Capable>();
@@ -35,8 +38,9 @@ public class InteractCapacity : Capacity
 
     [Header("Item Grab")]
     [SerializeField] private GrabCapacity grab_capacity;
-    [SerializeField] private List<string> exclusion_item_rule = new List<string>() {}; // rule to check if an item is interactable with us
-    public string ExclusionItemRule {
+    [SerializeField] private List<string> exclusion_item_rule = new List<string>() { }; // rule to check if an item is interactable with us
+    public string ExclusionItemRule
+    {
         get
         {
             // since it's an exclusion list we want to make sure that no item passes it if it's empty
@@ -172,7 +176,7 @@ public class InteractCapacity : Capacity
         // we check if the other has a HoverCapacity
         HoverCapacity hover = other.GetComponent<HoverCapacity>();
         if (hover == null) { return; }
-        
+
         // we get the capable of the hover capacity
         Capable interactive = hover.capable;
         if (interactive == null) { return; }
@@ -197,14 +201,14 @@ public class InteractCapacity : Capacity
         // we check if the other has a HoverCapacity
         HoverCapacity hover = other.GetComponent<HoverCapacity>();
         if (hover == null) { return; }
-        
+
         // we get the capable of the hover capacity
         Capable capable = hover.capable;
         if (capable == null) { return; }
 
         // we check if it's an Interactable or an Item
         if (capable is not Interactable && capable is not Item) { return; }
-        
+
         // we check if the capable is the current hover
         if (capable == closest_hover)
         {
@@ -218,5 +222,12 @@ public class InteractCapacity : Capacity
             waiting_hovers.Remove(capable);
             if (debug) { Debug.Log("(InteractCapacity) " + capable.name + " removed from waiting hovers"); }
         }
+    }
+
+    // DESTROY
+    private void OnDestroy()
+    {
+        // we remove all callbacks
+        if (closest_hover is Interactable interactable) { remove_callbacks(interactable); }
     }
 }

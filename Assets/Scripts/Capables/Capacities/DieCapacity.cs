@@ -18,12 +18,11 @@ public class DieCapacity : Capacity
     public int xp_gift = 10;
 
     [Header("Die parameters")]
-    public bool destroy_object = true;
     [SerializeField] private bool show_smiley = true;
     [SerializeField] private List<string> smileys = new List<string> { "RIP", "rip", ";-;", ":(", "://" };
 
     // [Header("Components")]
-    // [SerializeField] private GameObject hover_prefab;
+    // [SerializeField] private GameObject lootable_inventory_prefab;
 
     // START
     private void Start()
@@ -74,21 +73,45 @@ public class DieCapacity : Capacity
     {
         // get the being
         Being being = capable as Being;
-
-        // on change le layer du perso en "meat"
         being.body_collider.gameObject.layer = LayerMask.NameToLayer("Meat");
+
+        // 1 - DROP ITEMS
+        if (being.inventory != null && being.inventory.Count > 0)
+        {
+            // we get the drop capacity
+            DropCapacity dropper = being.GetCapacity<DropCapacity>();
+            if (dropper == null)
+            {
+                Debug.LogError("(DieCapacity) " + being.name + " has no DropCapacity, cannot drop items");
+                being.inventory.Items.Clear();
+            }
+            else
+            {
+                dropper.random_direction = true;
+                dropper.lock_magnitude = false;
+            }
+
+            // we drop all items
+            int i = 0;
+            while (i < being.inventory.Items.Count)
+            {
+                Item item = being.inventory.Items[i];
+                if (item == null)
+                {
+                    being.inventory.Items.RemoveAt(i);
+                    continue; // skip null items
+                }
+
+                // we drop the item
+                dropper.Select(item);
+                dropper.Use(being);
+            }
+        }
+
 
         if (being is Perso perso) { perso.Die(); }
 
-        // destroy the object if the parameter is set
-        if (destroy_object)
-        {
-            Destroy(transform.parent.gameObject);
-            if (debug) { Debug.Log("Destroying " + being.name); }
-            yield break;
-        }
-
-        // else we just disable the being, including all capacities & etc
+        // 2 - DESTROYING CAPACITIES
         if (debug) { Debug.Log("Destroying capacities of " + being.name); }
 
         // we destroy all capacities (except DieCapacity FOR NOW)
@@ -100,17 +123,18 @@ public class DieCapacity : Capacity
             capacities.RemoveAt(0);
         }
 
-        // we also destroy all Goal if this is an IA
-        if (being is IA ia)
-        {
-            if (ia.transform.Find("goals") is Transform goal && goal != null) { Destroy(goal.gameObject); }
-            if (ia.transform.Find("eyes") is Transform eyes && eyes != null) { Destroy(eyes.gameObject); }
-            Destroy(ia.transform.Find("brain").gameObject);
-        }
-        else if (being is Perso persoo)
-        {
-        }
 
+        // 3 - DESTROYING OTHER ELEMENTS
+        if (being.transform.Find("brain") is Transform brain && brain != null) { Destroy(brain.gameObject); }
+        if (being.transform.Find("goals") is Transform goal && goal != null) { Destroy(goal.gameObject); }
+        if (being.transform.Find("eyes") is Transform eyes && eyes != null) { Destroy(eyes.gameObject); }
+        if (being.transform.Find("inventory") is Transform inventory && inventory != null) { Destroy(inventory.gameObject); }
+        if (being.transform.Find("head") is Transform head && head != null) { Destroy(head.gameObject); }
+        if (being.transform.Find("light") is Transform light && light != null) { Destroy(light.gameObject); }
+        if (being.transform.Find("hacks") is Transform hacks && hacks != null) { Destroy(hacks.gameObject); }
+
+
+        // 4 - HANDLE PHYSICS
         // we switch the rigidbody collision detection to discrete since the dead body won't move very fast (not affected by our forces)
         Rigidbody2D rb = being.GetComponent<Rigidbody2D>();
         rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
@@ -118,7 +142,9 @@ public class DieCapacity : Capacity
         // we wait for a frame in order to the capacities to be destroyed & hover to be instanced
         yield return null;
 
-        // And finally we add a Meat that will replace the being
+
+
+        // 5 - TURNING TO MEAT
         Meat meat = being.gameObject.AddComponent<Meat>();
         meat.name = "Meat";
         meat.Initialize();
@@ -127,10 +153,10 @@ public class DieCapacity : Capacity
         // we add a hover capacity to it (it is an item now)
         meat.AddCapacity("hover");
 
-        // we destroy the old being component
-        Destroy(being);
 
-        // and we finally remove the die capacity which will destroy it (ourselves)
-        meat.RemoveCapacity("die");
+
+        // 6 - DESTROYING OLD BEING & DIE CAPACITY
+        Destroy(being);
+        meat.RemoveCapacity("die"); // and we finally remove the die capacity which will destroy it (this)
     }
 }

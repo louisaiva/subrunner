@@ -11,9 +11,12 @@ using UnityEngine.UI;
 
 public class UI_LevelUpMenu : UI_Pool, I_UI_Slottable
 {
+    [SerializeField] private float delay_before_activating_buttons = 1f;
+
     [Header("Slottable")]
     [SerializeField] private Transform skills_parent;
     [SerializeField] private Vector2 base_position = new Vector2(0, 10000);
+    
 
     [Header("Components")]
     public Description Descriptor;
@@ -38,6 +41,8 @@ public class UI_LevelUpMenu : UI_Pool, I_UI_Slottable
 
         // sets base position to center of the screen
         base_position = new Vector2(Screen.width / 2f, Screen.height / 2f);
+
+        await System.Threading.Tasks.Task.Delay((int)(delay_before_activating_buttons * 1000));
 
         // on active le navigator
         navigator.Enable(this);

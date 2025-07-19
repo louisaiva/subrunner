@@ -63,6 +63,22 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
                 Screen.fullScreen = !Screen.fullScreen;
         #endif
     }
+    public void ghost_mode()
+    {
+        if (Perso.Instance == null) { return; }
+        Perso.Instance.ToggleGhost();
+    }
+    public void metamorph()
+    {
+        if (Perso.Instance == null) { return; }
+        Perso.Instance.Metamorph();
+    }
+    public void heal()
+    {
+        if (Perso.Instance == null) { return; }
+        Perso.Instance.healMax();
+    }
+
 
     // interface functions
     public void OnPointerEnter(PointerEventData eventData)

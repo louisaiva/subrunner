@@ -16,7 +16,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     public List<UI_ItemPool> pools = new List<UI_ItemPool>();
 
     [Header("Components")]
-    [SerializeField] private UI_XboxNavigator navigator;
+    // [SerializeField] private UI_XboxNavigator navigator;
     public Inventory Inventory;
 
     [Header("Logs")]
@@ -25,7 +25,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     public void Init()
     {
         // on récupère les composants
-        navigator = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
+        // navigator = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
 
         // si on a pas d'inventory, il y a un problème
         if (Inventory == null)
@@ -75,10 +75,9 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         gameObject.SetActive(true);
 
         // we enable the navigator if we are not the perso quick inventory
-        if (transform.parent.name != "hud")
+        if (transform.parent.name != "hud" && UI_XboxNavigator.Instance != null)
         {
-            if (!navigator) { Init(); }
-            navigator.Enable(this, true);
+            UI_XboxNavigator.Instance.Enable(this, true);
         }
     }
     public void Hide()
@@ -97,10 +96,9 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         gameObject.SetActive(false);
 
         // we enable the navigator if we are not the perso quick inventory
-        if (transform.parent.name != "hud")
+        if (transform.parent.name != "hud" && UI_XboxNavigator.Instance != null)
         {
-            // we disable the navigator
-            navigator.Disable(this);
+            UI_XboxNavigator.Instance.Disable(this);
         }
     }
     public void Toggle()

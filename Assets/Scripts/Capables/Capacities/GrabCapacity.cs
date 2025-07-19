@@ -80,7 +80,7 @@ public class GrabCapacity : Capacity
             if (debug) { Debug.LogError("(GrabCapacity) no selected item"); }
             return;
         }
-        
+
         // we grab the item
         string item_name = selected_item.name;
         bool grab = inventory.Grab(selected_item);
@@ -88,5 +88,11 @@ public class GrabCapacity : Capacity
         {
             Debug.Log("(GrabCapacity) " + capable.name + (grab ? " :D grabbed" : " :/ could not grab") + " : " + item_name);
         }
+    }
+
+    private void OnDestroy()
+    {
+        // we remove the callback
+        grabAction.performed -= grabCallback;
     }
 }

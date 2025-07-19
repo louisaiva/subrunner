@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.UI;
 using PrimeTween;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 /// <summary>
 /// This class is used to manage the UI elements
 /// its transform is located at /ui
@@ -23,11 +20,13 @@ public class UI_Manager : Singleton<UI_Manager>
     public string CurrentPool { get => current_pool.Reference; }
 
 
-    [Header("Background effect")]
-    [SerializeField] protected Image bg;
-    [SerializeField] protected Vector2Int bg_alpha_range = new Vector2Int(0, 245);
+    [Header("Transitions")]
+    // [SerializeField] protected Image bg;
+    // [SerializeField] protected Vector2Int bg_alpha_range = new Vector2Int(0, 245);
     [SerializeField] protected float transition_duration = 0.2f;
 
+    [Header("Components")]
+    private PauseMenuBackgroundEffect bg;
 
 
     [Header("Logs")]
@@ -47,6 +46,9 @@ public class UI_Manager : Singleton<UI_Manager>
         {
             pool.gameObject.SetActive(true);
         }
+
+        // we get the background effect
+        bg = transform.Find("bg").GetComponent<PauseMenuBackgroundEffect>();
 
     }
     void Start()
@@ -178,7 +180,7 @@ public class UI_Manager : Singleton<UI_Manager>
     // TRANSITIONS
     public async Awaitable TransitionBackground(bool show, float duration)
     {
-        await bg.GetComponent<PauseMenuBackgroundEffect>().Transition(show, duration);
+        await bg.Transition(show, duration);
     }
     public async Awaitable TransitionTimeScale(bool stop_time, float duration, float override_final_timescale = default)
     {
@@ -189,28 +191,4 @@ public class UI_Manager : Singleton<UI_Manager>
         await Tween.GlobalTimeScale(final_timescale, duration, Ease.OutQuad);
     }
 
-    // todo move this to PauseMenuBackgroundEffect
-#if UNITY_EDITOR
-    [CustomEditor(typeof(UI_Manager))]
-    public class UI_ManagerEditor : Editor
-    {
-        private bool bg_showed = false;
-        public override void OnInspectorGUI()
-        {
-            UI_Manager manager = (UI_Manager)target;
-            if (!bg_showed && GUILayout.Button("Show Background"))
-            {
-                manager.bg.color = new Color(manager.bg.color.r, manager.bg.color.g, manager.bg.color.b, manager.bg_alpha_range.y / 255f);
-                bg_showed = true;
-            }
-            if (bg_showed && GUILayout.Button("Hide Background"))
-            {
-                manager.bg.color = new Color(manager.bg.color.r, manager.bg.color.g, manager.bg.color.b, manager.bg_alpha_range.x / 255f);
-                bg_showed = false;
-            }
-
-            DrawDefaultInspector();
-        }
-    }
-#endif
 }

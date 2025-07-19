@@ -49,6 +49,9 @@ public class UI_ItemPool : MonoBehaviour
         group = GetComponentInParent<CanvasGroup>(includeInactive: true);
         if (group != null) { group.alpha = 0f; }
 
+        // we clear the ui_items
+        ui_items.Clear();
+
         // we add all existing uis to ui_items
         foreach (Transform child in transform)
         {
@@ -60,19 +63,17 @@ public class UI_ItemPool : MonoBehaviour
             ui_item.Init();
             ui_items.Add(ui_item);
         }
-        int awake_slots = Count;
+        int awake_slots = ui_items.Count;
 
         // we destroy the existing empty slots & init the others
         DestroyEmptySlots();
-        int remaining_slots = Count;
-        // await System.Threading.Tasks.Task.Yield(); // we wait for a frame
+        // int remaining_slots = ui_items.Count;
 
         // we check if we are scalable or not
-        if (!Scalable) { CreateEmptySlots(this.MaxSlots - Count); }
+        // if (!Scalable) { CreateEmptySlots(this.MaxSlots - ui_items.Count); }
         if (debug)
         {
-            Debug.Log($"(UI_ItemPool) {name} just finished Init(), destroyed {awake_slots - remaining_slots} empty children and kept "
-                + $"{remaining_slots} then recreated {Count - remaining_slots} empty ones");
+            Debug.Log($"(UI_ItemPool) {name} just finished Init(), had {awake_slots} awake slots, now has {Count} slots\ndestroyed empty slots (& hereby may have recreated some to reach min or max slots)");
         }
     }
 
@@ -184,11 +185,17 @@ public class UI_ItemPool : MonoBehaviour
         }
 
         // we verify that we still have more slots than the MinSlot
-        if (Count < MinSlots)
+        if (Scalable && Count < MinSlots)
         {
             // we create the missing slots
             CreateEmptySlots(MinSlots - Count);
             if (debug) { Debug.Log($"(UI_ItemPool) {name} created {MinSlots - Count} empty slots to reach the minimum of {MinSlots} slots"); }
+        }
+        else if (!Scalable && Count < MaxSlots)
+        {
+            // we create the missing slots
+            CreateEmptySlots(MaxSlots - Count);
+            if (debug) { Debug.Log($"(UI_ItemPool) {name} created {MaxSlots - Count} empty slots to reach the maximum of {MaxSlots} slots"); }
         }
     }
     public void CreateEmptySlots(int count)

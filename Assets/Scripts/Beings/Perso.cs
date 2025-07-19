@@ -250,11 +250,7 @@ public class Perso : Being
 
         // on désactive plein de choses
 
-        Destroy(transform.Find("inventory").gameObject);
-        Destroy(transform.Find("head").gameObject);
-        Destroy(transform.Find("light").gameObject);
         Destroy(GetComponent<SeeThroughHandler>());
-        Destroy(transform.Find("hacks").gameObject);
         Destroy(transform.Find("body").GetComponent<ParticleSystemForceField>());
     }
 

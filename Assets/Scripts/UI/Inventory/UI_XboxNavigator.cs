@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 using System;
 using Unity.Cinemachine;
 
-public class UI_XboxNavigator : MonoBehaviour
+public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
 {
     
     // this class handles how the UI reacts to the xbox controller

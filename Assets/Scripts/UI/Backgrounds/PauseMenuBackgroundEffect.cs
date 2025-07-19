@@ -1,3 +1,7 @@
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -11,7 +15,7 @@ public class PauseMenuBackgroundEffect : MonoBehaviour
     [Header("Background effect")]
     [SerializeField] protected Image bg;
     [SerializeField] protected Vector2Int bg_alpha_range = new Vector2Int(0, 245);
-    
+
     [Header("Bloom Transition")]
     [SerializeField] private Bloom bloom;
     [SerializeField] private float pause_bloom_intensity;
@@ -90,4 +94,29 @@ public class PauseMenuBackgroundEffect : MonoBehaviour
         // on enlève la chromatic aberration
         // chromatic_aberration.active = false;
     }
+
+
+#if UNITY_EDITOR
+    [CustomEditor(typeof(PauseMenuBackgroundEffect))]
+    public class UI_PauseMenuBackgroundEffectEditor : Editor
+    {
+        private bool bg_showed = false;
+        public override void OnInspectorGUI()
+        {
+            PauseMenuBackgroundEffect effect = (PauseMenuBackgroundEffect)target;
+            if (!bg_showed && GUILayout.Button("Show Background"))
+            {
+                effect.bg.color = new Color(effect.bg.color.r, effect.bg.color.g, effect.bg.color.b, effect.bg_alpha_range.y / 255f);
+                bg_showed = true;
+            }
+            if (bg_showed && GUILayout.Button("Hide Background"))
+            {
+                effect.bg.color = new Color(effect.bg.color.r, effect.bg.color.g, effect.bg.color.b, effect.bg_alpha_range.x / 255f);
+                bg_showed = false;
+            }
+
+            DrawDefaultInspector();
+        }
+    }
+#endif
 }
