@@ -17,7 +17,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 
     [Header("Components")]
     [SerializeField] private UI_XboxNavigator navigator;
-    public Inventory inventory;
+    public Inventory Inventory;
 
     [Header("Logs")]
     [SerializeField] private bool debug = false;
@@ -28,7 +28,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         navigator = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
 
         // si on a pas d'inventory, il y a un problème
-        if (inventory == null)
+        if (Inventory == null)
         {
             try
             {
@@ -172,7 +172,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         if (debug)
         {
             Debug.LogWarning("(UI_Inventory) no pool could take the item " + item.Reference +
-        " in " + inventory.capable.name + "'s ui_inventory, maybe they are full or the item is incompatible");
+        " in " + Inventory.capable.name + "'s ui_inventory, maybe they are full or the item is incompatible");
         }
 
         return false;
@@ -194,7 +194,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         if (debug)
         {
             Debug.LogWarning("(UI_Inventory) no pool could drop the item " + item.Reference +
-        " in " + inventory.capable.name + "'s ui_inventory, please check the pools and the item type");
+        " in " + Inventory.capable.name + "'s ui_inventory, please check the pools and the item type");
         }
 
         return false;

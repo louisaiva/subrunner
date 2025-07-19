@@ -27,6 +27,7 @@ public class Meat : Food
     private void become_bones()
     {
         StopAllCoroutines(); // we stop all coroutines to avoid any issues
+        if (anim_player.Skin == "bones") { return; } // if we are already bones, we do nothing
 
         if (debug) { Debug.Log("(Meat) " + name + " has become bones!"); }
 

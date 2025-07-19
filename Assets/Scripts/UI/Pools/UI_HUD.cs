@@ -3,7 +3,7 @@ using UnityEngine;
 public class UI_HUD : UI_Pool
 {
     [Header("Inventory Menu Components")]
-    [SerializeField] private UI_Inventory perso_quick_inventory;
+    public UI_Inventory perso_quick_inventory;
     [SerializeField] private UI_Inventory ui_chest;
     [SerializeField] private UI_XboxNavigator navigator;
 
@@ -33,7 +33,7 @@ public class UI_HUD : UI_Pool
             // navigator.Enable(perso_quick_inventory,true);
 
             // on désactive les perso useconso
-            inputs.perso.useConso.Disable();
+            InputManager.Instance.inputs.perso.useConso.Disable();
 
             navigator.angle_threshold = base.angle_threshold;
         }
@@ -48,7 +48,7 @@ public class UI_HUD : UI_Pool
             navigator.Disable(perso_quick_inventory);
 
             // on réactive les perso useconso
-            inputs.perso.useConso.Enable();
+            InputManager.Instance.inputs.perso.useConso.Enable();
         }
 
         await base.Hide(duration);
@@ -62,13 +62,13 @@ public class UI_HUD : UI_Pool
         this.ui_chest = ui_chest;
 
         // on désactive les perso useconso si on est showed
-        if (Showed) { inputs.perso.useConso.Disable(); }
+        if (Showed) { InputManager.Instance.inputs.perso.useConso.Disable(); }
     }
     public void RemoveChest(UI_Inventory ui_chest)
     {
         // on enlève le chest du pool
         QuitPool(ui_chest.gameObject);
         this.ui_chest = null;
-        if (Showed) { inputs.perso.useConso.Enable(); }
+        if (Showed) { InputManager.Instance.inputs.perso.useConso.Enable(); }
     }
 }

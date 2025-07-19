@@ -1,3 +1,4 @@
+#pragma warning disable 4014
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
@@ -133,7 +134,7 @@ public class UI_XboxNavigator : MonoBehaviour
         {
             // on regarde si c'est un coffre
             UI_Inventory inventory = slottable as UI_Inventory;
-            if (inventory.inventory != null && inventory.inventory.capable != null && inventory.inventory.capable is Chest)
+            if (inventory.Inventory != null && inventory.Inventory.capable != null && inventory.Inventory.capable is Chest)
             {
                 // on affiche le perso quick inventory si besoin
                 perso_quick_inventory_was_shown = perso_quick_inventory.gameObject.activeSelf;

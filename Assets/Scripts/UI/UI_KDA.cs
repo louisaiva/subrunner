@@ -6,7 +6,6 @@ using TMPro;
 public class UI_KDA : MonoBehaviour
 {
     // GAMEOBJECTS
-    public Perso perso;
     public TextMeshProUGUI kda;
 
     AttackCapacity attack;
@@ -14,15 +13,16 @@ public class UI_KDA : MonoBehaviour
 
     private void Start()
     {
-        perso = GameObject.Find("/perso").GetComponent<Perso>();
         kda = GetComponent<TextMeshProUGUI>();
     }
 
     private void Update()
     {
+        if (Perso.Instance == null) { return; }
+
         // we get the capacities
-        if (attack == null) { attack = perso.GetCapacity("attack") as AttackCapacity; }
-        if (die == null) { die = perso.GetCapacity("die") as DieCapacity; }
+        if (attack == null) { attack = Perso.Instance.GetCapacity("attack") as AttackCapacity; }
+        if (die == null) { die = Perso.Instance.GetCapacity("die") as DieCapacity; }
 
         // KDA
         kda.text = "KDA : "+attack?.kills + "/" + die.deaths;

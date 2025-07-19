@@ -1,3 +1,4 @@
+#pragma warning disable 4014
 using System;
 using System.Collections.Generic;
 using PrimeTween;
@@ -27,18 +28,14 @@ public class UI_Pool : MonoBehaviour
     // [SerializeField] protected Tween bg_tween;
     [SerializeField] protected List<GameObject> ui_elements = new List<GameObject>();
 
-    [Header("Inputs")]
-    protected PlayerInputActions inputs;
-
     [Header("Logs")]
-    [SerializeField] protected bool debug = false;
+    [SerializeField] protected bool log = false;
 
     // START
     private void Start()
     {
         // we get the inputs
         Hide(0f);
-        inputs = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().inputs;
     }
 
     // SHOW / HIDE
@@ -64,18 +61,18 @@ public class UI_Pool : MonoBehaviour
         await System.Threading.Tasks.Task.Delay((int)(duration * 1000));
 
         // on affiche tous les éléments
-        if (debug) { Debug.Log("(UI_Pool) showing pool : " + Reference); }
+        if (log) { Debug.Log("(UI_Pool) showing pool : " + Reference); }
         foreach (GameObject ui in ui_elements) { ui.SetActive(true); }
         Showed = true;
 
         // s'il a une activate action, on désactive les inputs.perso
-        if (UsePersoInputs) { inputs.perso.Enable(); }
-        else { inputs.perso.Disable(); }
+        if (UsePersoInputs) { InputManager.Instance.inputs.perso.Enable(); }
+        else { InputManager.Instance.inputs.perso.Disable(); }
     }
     protected virtual async Awaitable hide_pool(float duration)
     {
         // on cache tous les éléments du pool
-        if (debug) { Debug.Log("(UI_Pool) hiding pool : " + Reference); }
+        if (log) { Debug.Log("(UI_Pool) hiding pool : " + Reference); }
         foreach (GameObject ui in ui_elements)
         {
             ui.SetActive(false);
@@ -95,11 +92,11 @@ public class UI_Pool : MonoBehaviour
         // we check if the element is already in the pool
         else if (ui_elements.Contains(ui_element))
         {
-            if (debug) { Debug.LogWarning("(UI_Manager) " + ui_element.name + " tried to register to a pool it's already in : " + Reference); }
+            if (log) { Debug.LogWarning("(UI_Manager) " + ui_element.name + " tried to register to a pool it's already in : " + Reference); }
             return;
         }
 
-        if (debug) { Debug.Log("(UI_Manager) " + ui_element.name + " just registered to pool : " + Reference); }
+        if (log) { Debug.Log("(UI_Manager) " + ui_element.name + " just registered to pool : " + Reference); }
 
         // on ajoute l'élément au pool
         ui_elements.Add(ui_element);
@@ -115,11 +112,11 @@ public class UI_Pool : MonoBehaviour
         // we check if the element is already in the pool
         else if (!ui_elements.Contains(ui_element))
         {
-            if (debug) { Debug.LogWarning("(UI_Manager) " + ui_element.name + " tried to quit a pool it's not in : " + Reference); }
+            if (log) { Debug.LogWarning("(UI_Manager) " + ui_element.name + " tried to quit a pool it's not in : " + Reference); }
             return;
         }
 
-        if (debug) { Debug.Log("(UI_Manager) " + ui_element.name + " just quit pool : " + Reference); }
+        if (log) { Debug.Log("(UI_Manager) " + ui_element.name + " just quit pool : " + Reference); }
 
         // on enlève l'élément du pool
         ui_elements.Remove(ui_element);

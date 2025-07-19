@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(ParticleSystem))]
-public class XPProvider : MonoBehaviour
+public class XPProvider : Singleton<XPProvider>
 {
     // PARTICLES
     List<ParticleSystem.Particle> particles = new List<ParticleSystem.Particle>();
@@ -24,9 +24,6 @@ public class XPProvider : MonoBehaviour
     public Material bit_material;
     public Material xp_material;
 
-    // PLAYER
-    public GameObject player;
-
     // generator continue
     public bool generate_continuously = false;
     public Vector3 generator_position = new Vector3(-47, -9, 0);
@@ -34,8 +31,6 @@ public class XPProvider : MonoBehaviour
 
     private void Start()
     {
-        // on récupère le player
-        player = GameObject.Find("/perso");
 
         // on récupère le particle system
         generator = GetComponent<ParticleSystem>();
@@ -54,6 +49,7 @@ public class XPProvider : MonoBehaviour
 
     private void OnParticleTrigger()
     {
+        if (Perso.Instance == null) { return; } // no player, no trigger
 
         // on récupère les particules
         int triggeredParticles = generator.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles);
@@ -96,14 +92,15 @@ public class XPProvider : MonoBehaviour
         generator.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles);
 
 
+
         // on ajoute l'xp au player
-        if (xp_bonus > 0) { player.GetComponent<Perso>().addXP(xp_bonus); }
+        if (xp_bonus > 0) { Perso.Instance.addXP(xp_bonus); }
         
         // on ajoute des bits au player
-        if (bit_bonus > 0) { player.GetComponent<Perso>().addBits(bit_bonus); }
+        if (bit_bonus > 0) { Perso.Instance.addBits(bit_bonus); }
 
         // on ajoute de la life au player
-        if (life_bonus > 0) { player.GetComponent<Perso>().heal(life_bonus); }
+        if (life_bonus > 0) { Perso.Instance.heal(life_bonus); }
     }
 
     public void EmitXP(int count, Vector3 position,float strengh = 1f)

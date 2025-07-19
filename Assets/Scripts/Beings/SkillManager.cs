@@ -17,7 +17,6 @@ using UnityEngine;
 
 public class SkillManager : MonoBehaviour
 {
-    private Perso perso;
 
     [Header("stat:max_life")]
     [SerializeField] private int max_life_level = 0;
@@ -64,16 +63,9 @@ public class SkillManager : MonoBehaviour
     // START
     public void Start()
     {
-        perso = transform.parent.GetComponent<Perso>();
-        if (perso == null)
-        {
-            Debug.LogError("(SkillManager) the skill manager must be a child of the perso");
-            return;
-        }
-
         // on met à jour les valeurs du perso
-        perso.max_life = (int)calculateX("stat:max_life");
-        perso.regen_life = calculateX("stat:regen_life");
+        Perso.Instance.max_life = (int)calculateX("stat:max_life");
+        Perso.Instance.regen_life = calculateX("stat:regen_life");
         // perso.GetCapacity<AttackCapacity>().damage = calculateX("damage");
         // perso.max_bits = (int) calculateX("max_bits");
         // perso.regen_bits = calculateX("regen_bits");
@@ -83,18 +75,20 @@ public class SkillManager : MonoBehaviour
     // UPGRADING
     public void UpgradeSkill(string reference)
     {
+        if (Perso.Instance == null) { Debug.LogWarning("(SkillManager) Perso instance is null, can't upgrade skill " + reference); return; }
+        
         if (reference == "stat:max_life")
         {
             max_life_level++;
-            perso.max_life = (int)calculateX(reference);
-            if (log) { Debug.Log("(SkillManager) skill " + reference + " upgraded to level " + max_life_level + " (new value: " + perso.max_life + ")");}
+            Perso.Instance.max_life = (int)calculateX(reference);
+            if (log) { Debug.Log("(SkillManager) skill " + reference + " upgraded to level " + max_life_level + " (new value: " + Perso.Instance.max_life + ")"); }
             return;
         }
         if (reference == "stat:regen_life")
         {
             regen_life_level++;
-            perso.regen_life = calculateX(reference);
-            if (log) { Debug.Log("(SkillManager) skill " + reference + " upgraded to level " + regen_life_level + " (new value: " + perso.regen_life + ")");}
+            Perso.Instance.regen_life = calculateX(reference);
+            if (log) { Debug.Log("(SkillManager) skill " + reference + " upgraded to level " + regen_life_level + " (new value: " + Perso.Instance.regen_life + ")");}
             return;
         }
         if (reference == "stat:damage")

@@ -18,7 +18,6 @@ public class LevelSwitcher : Capable, Interactable
     [Header("Components")]
     public World world;
     private GameObject floating_dmg_provider;
-    public Perso perso;
     public Door elevator_door;
 
     [Header("Switches")]
@@ -32,9 +31,6 @@ public class LevelSwitcher : Capable, Interactable
 
         // we get the floating_dmg_provider
         floating_dmg_provider = GameObject.Find("/utils/dmgs_provider");
-
-        // we get the perso
-        perso = GameObject.Find("/perso").GetComponent<Perso>();
 
         // we get the elevator_door
         elevator_door = transform.parent.Find("door_elevator").GetComponent<Door>();
@@ -72,7 +68,7 @@ public class LevelSwitcher : Capable, Interactable
             else
             {
                 if (debug) { Debug.LogWarning("(LevelSwitcher) Can't switch level, the elevator door is open but can't close"); }
-                StartCoroutine(floating_dmg_provider.GetComponent<TextManager>().TalkLines("why door ?\nwhy don't u want to close ?", perso));
+                StartCoroutine(floating_dmg_provider.GetComponent<TextManager>().TalkLines("why door ?\nwhy don't u want to close ?", Perso.Instance));
                 yield break;
             }
         }
@@ -100,7 +96,10 @@ public class LevelSwitcher : Capable, Interactable
         if (elevator_uses != 0)
         {
             // we talk
-            StartCoroutine(floating_dmg_provider.GetComponent<TextManager>().TalkLines("here we go\nlevel/. " + level.name, perso));
+            if (Perso.Instance != null)
+            {
+                StartCoroutine(floating_dmg_provider.GetComponent<TextManager>().TalkLines("here we go\nlevel/. " + level.name, Perso.Instance));
+            }
 
             // we open the elevator door
             elevator_door.OnInteract(null);

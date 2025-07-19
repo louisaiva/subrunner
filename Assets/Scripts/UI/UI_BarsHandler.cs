@@ -4,8 +4,6 @@ using UnityEngine.UI;
 
 public class UI_BarsHandler : MonoBehaviour {
 
-    private Perso perso;
-
     // sprites
     private string bars_sprites_path = "spritesheets/ui/ui_bars";
     private Sprite[] sprites;
@@ -20,9 +18,6 @@ public class UI_BarsHandler : MonoBehaviour {
     // unity functions
     void Awake()
     {
-        // on récupère le perso
-        perso = GameObject.Find("/perso").GetComponent<Perso>();
-
         // on met à jour le nb d'octets max
         nb_octets_max = 13;
 
@@ -35,9 +30,8 @@ public class UI_BarsHandler : MonoBehaviour {
 
     void Update()
     {
-        // print(sprites);
-
-        if (perso.Can("hoover_hack"))
+        if (Perso.Instance == null) { return; }
+        if (Perso.Instance.Can("hoover_hack"))
         {
             // on active le UI_BitsHandler
             ui_bits_handler.SetActive(true);
@@ -62,7 +56,7 @@ public class UI_BarsHandler : MonoBehaviour {
     private void updateBars()
     {
         // on verifie si on a besoin de mettre à jour les barres
-        if (nb_bits_affiches == perso.max_bits || nb_octets_max <= nb_bits_affiches/8) { return; }
+        if (nb_bits_affiches == Perso.Instance.max_bits || nb_octets_max <= nb_bits_affiches/8) { return; }
 
         // on met à jour le nb max de bits affichés
         // nb_octets_max = sprites.Length - 1;
@@ -73,8 +67,8 @@ public class UI_BarsHandler : MonoBehaviour {
         // max_bits == 16 => sprites[2]
         // ...
 
-        int nb_octets = perso.max_bits / 8;
-        if (perso.max_bits % 8 != 0) { nb_octets++; }
+        int nb_octets = Perso.Instance.max_bits / 8;
+        if (Perso.Instance.max_bits % 8 != 0) { nb_octets++; }
 
         // on vérifie qu'on a assez de sprites
         if (nb_octets > sprites.Length)
@@ -88,7 +82,7 @@ public class UI_BarsHandler : MonoBehaviour {
         GetComponent<Image>().sprite = sprites[nb_octets];
 
         // on met à jour le nombre de bits affichés
-        nb_bits_affiches = perso.max_bits;
+        nb_bits_affiches = Perso.Instance.max_bits;
     }
 
 }

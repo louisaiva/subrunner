@@ -7,7 +7,8 @@ using static PlayerInputActions;
 
 public class Perso : Being
 {
-
+    public static Perso Instance { get; private set; }
+    
     [Header("PERSO")]
     // exploits (xp)
     public int level = 1;
@@ -21,54 +22,37 @@ public class Perso : Being
     public Room current_room { get; set; }
 
 
-
-    // [Header("DASH")]
-    // DASH
-    // [SerializeField] private float dash_magnitude = 25f;
-    // [SerializeField] private float dash_duration = 0.5f;
-    // public float last_dash_time = 0f;
-    // private List<int> dash_forces = new List<int>();
-
-    // global light
-    // private GameObject global_light;
-
-
-    [Header("INVENTORY")]
-    public new Inventory inventory;
-    // public UI_OldInventory big_inventory;
-    public Transform items_parent;
-    // private LayerMask grabber_layer;
-
     [Header("SKILLS")]
     public SkillManager skillManager;
     // public UI_Fullmap big_map;
 
-    // [Header("INTERACTIONS")]
-    // interactions
-    // [SerializeField] private float interact_range = 1f;
-    // [SerializeField] private LayerMask interact_layers;
-    // public GameObject current_interactable = null;
-
-    // hoover interactions
-    // [SerializeField] private GameObject current_hoover_interactable = null;
-
-
     [Header("INPUTS")]
     [SerializeField] private InputManager input_manager;
     private PersoActions perso_inputs;
-    private event System.Action<InputAction.CallbackContext> reviveCallback;
-    private event System.Action<InputAction.CallbackContext> dodgeCallback;
+    // private event Action<InputAction.CallbackContext> reviveCallback;
+    private event Action<InputAction.CallbackContext> dodgeCallback;
+    private event Action<InputAction.CallbackContext> attackCallback;
+    private event Action<InputAction.CallbackContext> talkCallback;
 
 
-    // [Header("HINTS")]
-    // private UI_HintControlsManager hints_controls;
 
-    // TALKING
 
-    [SerializeField] private Vector2 talking_delay_range = new Vector2(10f, 30f);
 
-    // unity functions
-    new void Start()
+
+
+
+    // AWAKE
+    protected override void Awake()
+    {
+        base.Awake();
+
+        // Singleton logic
+        if (Instance != null) { Destroy(Instance.gameObject); }
+        Instance = this;
+    }
+
+    // START
+    protected override void Start()
     {
         // on récupère les inputs
         initInputs();
@@ -85,35 +69,14 @@ public class Perso : Being
         hack_collider = hacks_path.GetComponent<CircleCollider2D>();
         hack_contact_filter.SetLayerMask(hack_layer);
         hackray_prefab = Resources.Load("prefabs/hacks/hackray") as GameObject;
-        inventory = GameObject.Find("/inventory")?.GetComponent<Inventory>();
         skillManager = GetComponentInChildren<SkillManager>();
-
-        // if (inventory != null) {inventory.scalable = true;}
-        // big_inventory = GameObject.Find("/ui/inventory/ui_inventory").GetComponent<UI_OldInventory>();
-
-        // on récupère la map
-        // big_map = GameObject.Find("/ui/fullmap").GetComponent<UI_Fullmap>();
-
-        // on récupère le parent des items
-        // items_parent = GameObject.Find("/world/sector_2/items").transform;
-        items_parent = null;
 
         //
         floating_text_prefab = Resources.Load("prefabs/ui/floating_text") as GameObject;
 
-        // on met à jour les interactions
-        // interact_layers = LayerMask.GetMask(/* "Chests", "Computers", "Buttons", "Items",  */"Interactives");
-
-
-
-        // ON MET A JOUR DES TRUCS
-
-        // on met les differents paramètres du perso
-        // skills_tree = transform.Find("skills_tree").GetComponent<SkillTree>();
-        // skills_tree.init();
-
-        // on MAJ les items
-        // inventory?.getItems().ForEach(item => grab(item));
+        // on s'enregistre en tant que trigger dans l'XPProvider particle system
+        var trigger_particle_module = XPProvider.Instance.GetComponent<ParticleSystem>().trigger;
+        trigger_particle_module.SetCollider(0, body_collider);
     }
 
 
@@ -131,12 +94,12 @@ public class Perso : Being
         perso_inputs = input_manager.inputs.perso;
 
         // on set les callbacks
-        reviveCallback = ctx => comeback_from_death();
         dodgeCallback = ctx => OnDodge();
+        attackCallback = ctx => OnAttack();
+        talkCallback = ctx => OnRandomTalk();
         perso_inputs.dodge.performed += dodgeCallback;
-        perso_inputs.attack.performed += ctx => OnAttack();
-        perso_inputs.randomTalk.performed += ctx => OnRandomTalk();
-        // perso_inputs.interact.performed += ctx => OnInteract();
+        perso_inputs.attack.performed += attackCallback;
+        perso_inputs.randomTalk.performed += talkCallback;
     }
 
     // CAPACITES
@@ -150,8 +113,8 @@ public class Perso : Being
             Vector2 raw_inputs = new Vector2(perso_inputs.move.ReadValue<Vector2>().x, perso_inputs.move.ReadValue<Vector2>().y);
 
             // we check if the raw inputs are below the deadzone
-            raw_inputs.x = Mathf.Abs(raw_inputs.x) < 0.2 ? 0f : raw_inputs.x;
-            raw_inputs.y = Mathf.Abs(raw_inputs.y) < 0.2 ? 0f : raw_inputs.y;
+            raw_inputs.x = Mathf.Abs(raw_inputs.x) < input_manager.joystick_treshold_min ? 0f : raw_inputs.x;
+            raw_inputs.y = Mathf.Abs(raw_inputs.y) < input_manager.joystick_treshold_min ? 0f : raw_inputs.y;
 
             // we normalize the inputs
             Orientation = raw_inputs.normalized;
@@ -165,116 +128,15 @@ public class Perso : Being
         // run
         if (HasCapacity<RunCapacity>())
         {
-            if (perso_inputs.run.ReadValue<float>() == 1f)
+            if (perso_inputs.run.ReadValue<float>() >= input_manager.button_threshold_max)
             {
                 GetCapacity<RunCapacity>().EnableRun();
             }
-            else if (perso_inputs.run.ReadValue<float>() == 0f)
+            else if (perso_inputs.run.ReadValue<float>() < input_manager.button_threshold_min)
             {
                 GetCapacity<RunCapacity>().DisableRun();
             }
         }
-
-        /* {
-            if (perso_inputs.run.ReadValue<float>() == 1f)
-            {
-                isRunning = true;
-            }
-            else if (perso_inputs.run.ReadValue<float>() == 0f)
-            {
-                isRunning = false;
-            }
-        } */
-
-
-        // gv vision
-        // global_light.GetComponent<GlobalLight>().setMode("on");
-        /* if (capacities.ContainsKey("gv_vision") && capacities["gv_vision"])
-        {
-        }
-        else
-        {
-            global_light.GetComponent<GlobalLight>().setMode("off");
-        } */
-
-        // hoover hack
-        /* if (Can("hoover_hack"))
-        {
-            if (input_manager.inputs.enhanced_perso.hackDirection.ReadValue<Vector2>() != Vector2.zero)
-            {
-                if (input_manager.isUsingGamepad())
-                {
-                    Vector2 direction = input_manager.inputs.enhanced_perso.hackDirection.ReadValue<Vector2>();
-                    HooverNextHackableInDirection(direction);
-                }
-                else
-                {
-                    Vector2 mouse_position = input_manager.inputs.enhanced_perso.hackDirection.ReadValue<Vector2>();
-                    HackinHooverEvents(mouse_position);
-                }
-            }
-            updateHackinHoover();
-
-            // bit regen
-            if (Can("bit_regen"))
-            {
-                if (bits < max_bits)
-                {
-                    bits += regen_bits * Time.deltaTime;
-                }
-            }
-
-            // hacks
-            if (Can("hack"))
-            {
-                if (input_manager.inputs.enhanced_perso.hack.ReadValue<float>() == 1f)
-                {
-                    HackinClickEvents();
-                }
-            }
-
-            // update hacks
-            update_hacks();
-        } */
-
-        // DEBUG
-        /* if (Can("debug_capacities"))
-        {
-            if (Input.GetButtonDown("debug_capacities"))
-            {
-                string s = "<color=green>DEBUG CAPACITIES : </color>\n";
-                foreach (string capacity in capacities.Keys)
-                {
-                    s += capacity + " : " + capacities[capacity] + "\n";
-                }
-                print(s);
-            }
-        } */
-
-        // ouverture de l'inventaire
-        /* if (!skills_tree.isShowed() && !big_map.isShowed())
-        { 
-            if (input_manager.isUsingGamepad())
-            {
-                if (perso_inputs.inventory.ReadValue<float>() >= 1f && !big_inventory.isShowed())
-                {
-                    // on regarde si on a pas un coffre ou un ordi en train d'être ouvert
-                    if (current_interactable != null && !big_inventory.isShowed())
-                    {
-                        current_interactable.GetComponent<I_Interactable>().stopInteract();
-                        current_interactable = null;
-                    }
-
-                    // on ouvre l'inventaire
-                    big_inventory.show();
-                }
-                else if (perso_inputs.inventory.ReadValue<float>() < 1f && big_inventory.isShowed())
-                {
-                    // on ferme l'inventaire
-                    big_inventory.hide();
-                }
-            }
-        }*/
     }
 
 
@@ -288,7 +150,7 @@ public class Perso : Being
         if (skin == "ghost") { ToggleGhost(); }
 
         // get all metamorph skin list
-        string[] skins = new string[] { "perso", "cat", "zombo", "n0b0dy", "apple", "fridge", "small_laptop" };
+        string[] skins = new string[] { "perso", "cat", "zombo", "nobody", "apple", "fridge", "small_laptop" };
 
         // we roll through the list
         int index = System.Array.IndexOf(skins, skin);
@@ -341,14 +203,11 @@ public class Perso : Being
         level += 1;
         xp = 0;
         xp_to_next_level = (int)(xp_to_next_level * 1.5f);
-        // xp_to_next_level = (int)(xp_to_next_level * 1.5f);
 
         Debug.Log("LEVEL UP ! level " + level);
 
-
         // on ouvre le level up menu
         GameObject.Find("/ui").GetComponent<UI_Manager>().SwitchTo("level_up");
-        // skills_tree.physicalLevelUp();
 
         // on augmente x1.5 l'attaque
         if (HasCapacity("attack"))
@@ -360,44 +219,6 @@ public class Perso : Being
         floating_dmg_provider.GetComponent<TextManager>().addFloatingText("LEVEL " + level.ToString(), transform.position + new Vector3(0, 0.5f, 0), "yellow");
 
     }
-
-    // SKILLS
-    /* public float GetSkillValue(string skill_reference)
-    {
-        if (skill_reference == "stat:max_life") { return this.max_life; }
-        if (skill_reference == "stat:regen_life") { return this.regen_life; }
-        if (skill_reference == "stat:damage")
-        {
-            if (HasCapacity<AttackCapacity>())
-            {
-                return GetCapacity<AttackCapacity>().damage;
-            }
-            return 0f;
-        }
-        if (debug) { Debug.LogWarning("(Perso - GetSkillValue) : skill not found : " + skill_reference); }
-        return 0f;
-    }
-    public void UpgradeSkill(string reference)
-    {
-        if (debug) { Debug.Log("(Perso) : upgrading skill : " + reference); }
-        if (reference == "stat:max_life")
-        {
-            this.max_life = Mathf.RoundToInt(this.max_life * 1.5f);
-        }
-        else if (reference == "stat:regen_life")
-        {
-            this.regen_life = Mathf.RoundToInt(this.regen_life * 1.5f);
-        }
-        else if (reference == "stat:damage")
-        {
-            if (HasCapacity<AttackCapacity>())
-            {
-                GetCapacity<AttackCapacity>().damage = Mathf.RoundToInt(GetCapacity<AttackCapacity>().damage * 1.5f);
-            }
-        }
-        else if (debug) { Debug.LogWarning("(Perso - UpgradeSkill) : skill not found : " + reference); }
-
-    } */
 
     // DAMAGE
     public override bool take_damage(float damage, Force knockback = null)
@@ -419,27 +240,22 @@ public class Perso : Being
         // on affiche un floating text
         floating_dmg_provider.GetComponent<TextManager>().addFloatingText("YOU DIED", transform.position + new Vector3(0, 0.5f, 0), "red");
 
-        // on desactive l'inventaire
-        // inventory.setShow(false);
+        // on enlève les callbacks
+        perso_inputs.dodge.performed -= dodgeCallback;
+        perso_inputs.attack.performed -= attackCallback;
+        perso_inputs.randomTalk.performed -= talkCallback;
 
-        // on désactive les touches
-        perso_inputs.Disable();
+        // on switch au game_over panel
+        UI_Manager.Instance.SwitchTo("game_over", override_duration: 3f);
 
-        // on active la possibilité de revenir à la vie
-        input_manager.inputs.any.keyboard.performed += reviveCallback;
-        input_manager.inputs.any.gamepad.performed += reviveCallback;
-    }
-    protected override void comeback_from_death()
-    {
-        base.comeback_from_death();
+        // on désactive plein de choses
 
-        // on reactive les touches
-        perso_inputs.Enable();
-        // input_manager.inputs.enhanced_perso.Enable();
-
-        // on active la possibilité de revenir à la vie
-        input_manager.inputs.any.keyboard.performed -= reviveCallback;
-        input_manager.inputs.any.gamepad.performed -= reviveCallback;
+        Destroy(transform.Find("inventory").gameObject);
+        Destroy(transform.Find("head").gameObject);
+        Destroy(transform.Find("light").gameObject);
+        Destroy(GetComponent<SeeThroughHandler>());
+        Destroy(transform.Find("hacks").gameObject);
+        Destroy(transform.Find("body").GetComponent<ParticleSystemForceField>());
     }
 
     // INPUTS
@@ -467,26 +283,9 @@ public class Perso : Being
     }
     private void OnDodge()
     {
-        // on vérifie que l'input action map est activé
-        // if (!perso_inputs.enabled) { return; }
-
-        // Debug.Log("DODGE : input_action enabled ?"+perso_inputs.enabled);
-
         // on vérifie que le perso peut dodge
         if (!Can("dodge")) { return; }
         Do("dodge");
-
-        // on devient invicible et on fait un PETIT dodge dans une direction.
-        // nous stunt un peu après ?
-        // reset le cooldown de l'attaque ?
-        // addEphemeralCapacity("invicible", dodge_duration);
-        // AddEffect(Effect.Invincible, dodge_duration);
-
-
-        // reset le dodge
-        // startCapacityCooldown("dodge");
-
-
     }
 
 

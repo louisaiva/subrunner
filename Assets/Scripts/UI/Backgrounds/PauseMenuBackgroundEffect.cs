@@ -3,9 +3,15 @@ using UnityEngine;
 using UnityEngine.Rendering;
 // using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
+#pragma warning disable 4014
 
 public class PauseMenuBackgroundEffect : MonoBehaviour
 {
+    [Header("Background effect")]
+    [SerializeField] protected Image bg;
+    [SerializeField] protected Vector2Int bg_alpha_range = new Vector2Int(0, 245);
+    
     [Header("Bloom Transition")]
     [SerializeField] private Bloom bloom;
     [SerializeField] private float pause_bloom_intensity;
@@ -15,9 +21,8 @@ public class PauseMenuBackgroundEffect : MonoBehaviour
     [SerializeField] private ChromaticAberration chromatic_aberration;
     [SerializeField] private float chromatic_aberration_intensity;
     private float base_chromatic_aberration_intensity;
-    
-    // [Header("Transition Parameters")]
-    // [SerializeField] private float transition_duration = 0.2f;
+
+
     private bool is_very_early_init_done = false;
 
     private void Awake()
@@ -29,29 +34,47 @@ public class PauseMenuBackgroundEffect : MonoBehaviour
         // on sauvegarde l'intensité de base du bloom
         base_bloom_intensity = bloom.intensity.value;
         base_chromatic_aberration_intensity = chromatic_aberration.intensity.value;
+
+        // on set le bg alpha
+        bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, 0f);
     }
 
     private void Start() { is_very_early_init_done = true; }
 
-    // ON ENABLE DISABLE
-    public void ActivateEffect(float transition_duration = 0.2f)
+    // SHOW / HIDE
+    public async Awaitable Transition(bool show, float duration)
     {
-        Sequence.Create(useUnscaledTime: true)
+        if (show)
+        {
+            ActivateEffect(duration);
+            await Tween.Custom(bg_alpha_range.x / 255f, bg_alpha_range.y / 255f, duration: duration,
+                onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx), useUnscaledTime: true);
+        }
+        else
+        {
+            DisableEffect(duration);
+            await Tween.Custom(bg_alpha_range.y / 255f, bg_alpha_range.x / 255f, duration: duration,
+                onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx), useUnscaledTime: true);
+        }
+    }
+    private async Awaitable ActivateEffect(float transition_duration = 0.2f)
+    {
+        await Sequence.Create(useUnscaledTime: true)
             .Group(Tween.Custom(base_bloom_intensity, pause_bloom_intensity, duration: transition_duration,
                 onValueChange: ctx => bloom.intensity.Override(ctx)))
             .Group(Tween.Custom(base_chromatic_aberration_intensity, chromatic_aberration_intensity, duration: transition_duration,
                 onValueChange: ctx => chromatic_aberration.intensity.Override(ctx)));
 
-            /* .OnComplete(() =>
-            {
-                bloom.intensity.Override(pause_bloom_intensity);
-            }); */
+        /* .OnComplete(() =>
+        {
+            bloom.intensity.Override(pause_bloom_intensity);
+        }); */
     }
-    public void DisableEffect(float transition_duration = 0.2f)
+    private async Awaitable DisableEffect(float transition_duration = 0.2f)
     {
         if (!is_very_early_init_done) { return; }
 
-        Sequence.Create(useUnscaledTime: true)
+        await Sequence.Create(useUnscaledTime: true)
             .Group(Tween.Custom(pause_bloom_intensity, base_bloom_intensity, duration: transition_duration,
                 onValueChange: ctx => bloom.intensity.Override(ctx)))
             .Group(Tween.Custom(chromatic_aberration_intensity, base_chromatic_aberration_intensity, duration: transition_duration,

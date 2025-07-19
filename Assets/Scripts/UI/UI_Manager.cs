@@ -1,3 +1,4 @@
+#pragma warning disable 4014
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,7 @@ using UnityEditor;
 /// all their children are considered as UI elements
 /// and are handled via "pools of UI elements"
 /// </summary>
-
-public class UI_Manager : MonoBehaviour
+public class UI_Manager : Singleton<UI_Manager>
 {
 
     [Header("Pools")]
@@ -38,15 +38,16 @@ public class UI_Manager : MonoBehaviour
     private InputManager input_manager;
 
     // START
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         // we wake up all the pools
         foreach (UI_Pool pool in pools)
         {
             pool.gameObject.SetActive(true);
         }
 
-        bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, bg_alpha_range.y / 255f);
     }
     void Start()
     {
@@ -81,17 +82,26 @@ public class UI_Manager : MonoBehaviour
         if (pool_name == current_pool.Reference) { SwitchTo("hud", false); }
         else { SwitchTo(pool_name, false); }
     }
-    public void SwitchTo(string pool_name, bool force = true)
+    public void SwitchTo(string pool_name, bool force = true, float override_duration = default)
     {
         // check if we have a pool to switch to
         UI_Pool pool = GetPool(pool_name);
         if (!pool) { return; }
-        switch_to(pool, force);
+
+        // we check if we have an override duration
+        float duration = override_duration != default ? override_duration : transition_duration;
+        switch_to(pool, force, duration);
     }
-    private async void switch_to(UI_Pool pool, bool force = true)
+    private async void switch_to(UI_Pool pool, bool force = true, float override_duration = default)
     {
+        
         // check if this pool is not the same as the current one
         if (pool == current_pool) { return; }
+
+        // we prepare the transition duration
+        float duration = override_duration != default ? override_duration : transition_duration;
+        if (pool.Reference == "game_over") { duration = (pool as UI_GameOver).transition_duration; }
+        else if (current_pool != null && current_pool.Reference == "game_over") { duration = (current_pool as UI_GameOver).transition_duration; }
 
         // we check if we have a current pool
         if (current_pool != null)
@@ -111,22 +121,27 @@ public class UI_Manager : MonoBehaviour
 
 
             // we transition to the right bg/timescale effect
-            if (current_pool.StopTime != pool.StopTime) { TransitionTimeScale(pool.StopTime, transition_duration); }
-            if (current_pool.HasBackground != pool.HasBackground) { TransitionBackground(pool.HasBackground, transition_duration); }
-            // await System.Threading.Tasks.Task.Delay((int)(transition_duration * 1000));
+            if (current_pool.StopTime != pool.StopTime)
+            {
+                float final_timescale = pool.StopTime ? 0f : 1f;
+                // if (pool.Reference == "game_over") { final_timescale = (pool as UI_GameOver).final_timescale; }
+                TransitionTimeScale(pool.StopTime, duration, final_timescale );
+            }
+            if (current_pool.HasBackground != pool.HasBackground) { TransitionBackground(pool.HasBackground, duration); }
+            
             // we hide the current pool
-            await current_pool.Hide(transition_duration/2f);
+            await current_pool.Hide(duration / 2f);
         }
         else
         {
             // on active le background & time parameters
-            TransitionTimeScale(pool.StopTime, transition_duration/2f);
-            TransitionBackground(pool.HasBackground, transition_duration/2f);
+            TransitionTimeScale(pool.StopTime, duration / 2f);
+            TransitionBackground(pool.HasBackground, duration / 2f);
         }
 
         // we show the new pool
         current_pool = pool;
-        await current_pool.Show(transition_duration/2f);
+        await current_pool.Show(duration / 2f);
     }
 
     // GETTERS
@@ -161,29 +176,20 @@ public class UI_Manager : MonoBehaviour
     }
 
     // TRANSITIONS
-    public void TransitionBackground(bool show, float duration)
+    public async Awaitable TransitionBackground(bool show, float duration)
     {
-        if (!show)
-        {
-            // we hide the bg
-            bg.GetComponent<PauseMenuBackgroundEffect>().DisableEffect(duration);
-            Tween.Custom(bg_alpha_range.y / 255f, bg_alpha_range.x / 255f, duration: duration,
-                onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx), useUnscaledTime: true);
-        }
-        else
-        {
-            // we show the bg
-            bg.GetComponent<PauseMenuBackgroundEffect>().ActivateEffect(duration);
-            Tween.Custom(bg_alpha_range.x / 255f, bg_alpha_range.y / 255f, duration: duration,
-                onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx), useUnscaledTime: true);
-        }
+        await bg.GetComponent<PauseMenuBackgroundEffect>().Transition(show, duration);
     }
-    public void TransitionTimeScale(bool stop_time, float duration)
+    public async Awaitable TransitionTimeScale(bool stop_time, float duration, float override_final_timescale = default)
     {
-        if (stop_time && Time.timeScale != 0f) { Tween.GlobalTimeScale(0f, duration, Ease.OutQuad); }
-        else if (!stop_time && Time.timeScale != 1f) { Tween.GlobalTimeScale(1f, duration, Ease.OutQuad); }
+        // we check if we have an override final timescale
+        float final_timescale = stop_time ? 0f : 1f;
+        if (override_final_timescale != default) { final_timescale = override_final_timescale; }
+
+        await Tween.GlobalTimeScale(final_timescale, duration, Ease.OutQuad);
     }
 
+    // todo move this to PauseMenuBackgroundEffect
 #if UNITY_EDITOR
     [CustomEditor(typeof(UI_Manager))]
     public class UI_ManagerEditor : Editor

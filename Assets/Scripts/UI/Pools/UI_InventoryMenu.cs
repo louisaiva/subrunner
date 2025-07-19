@@ -1,3 +1,4 @@
+#pragma warning disable 4014
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using PrimeTween;
@@ -43,17 +44,17 @@ public class UI_InventoryMenu : UI_Pool
     {
         // vérifie si on a des items dans notre inventaire
         ui_elements.Clear();
-        if (ui_inventory.inventory.Count == 0) { ui_elements.Add(no_inventory_panel.gameObject); }
+        if (ui_inventory.Inventory.Count == 0) { ui_elements.Add(no_inventory_panel.gameObject); }
         else { ui_elements.AddRange(saved_slots); }
 
         await base.Show(duration);
-        if (ui_inventory.inventory.Count == 0) { return; }
+        if (ui_inventory.Inventory.Count == 0) { return; }
 
         // on active le navigator
         navigator.Enable(ui_inventory);
 
         // on regarde si le perso a le laptop
-        if (ui_inventory.inventory.GetItem("hardware:laptop") != null)
+        if (ui_inventory.Inventory.GetItem("hardware:laptop") != null)
         {
             ui_laptop.gameObject.SetActive(true);
             navigator.Enable(ui_laptop);
@@ -73,51 +74,21 @@ public class UI_InventoryMenu : UI_Pool
 
         await base.Hide(duration);
     }
-
-    /* protected override void show_pool()
-    {
-        // on affiche tous les éléments
-        if (debug) { Debug.Log("(UI_InventoryMenu) showing pool : " + Reference); }
-        foreach (GameObject ui in ui_elements)
-        {
-            UI_ItemPool item_pool = ui.GetComponentInChildren<UI_ItemPool>();
-            if (item_pool == null) { ui.SetActive(true); continue; }
-            if (debug)
-            {
-                Debug.Log("(UI_InventoryMenu) investigating ui_itempool : " + item_pool.name + " with "
-                + item_pool.Count + " ui_items and " + item_pool.FullCount + " slots with at least 1 item");
-            }
-
-            // on regarde si la pool a no item ou pas et si oui on l'affiche pas
-            if (item_pool.FullCount > 0) { ui.SetActive(true); }
-            else { ui.SetActive(false); }
-        }
-
-        Showed = true;
-
-        // s'il a une activate action, on désactive les inputs.perso
-        if (UsePersoInputs) { inputs.perso.Enable(); }
-        else { inputs.perso.Disable(); }
-    } */
+    
     protected override async Awaitable show_pool(float duration)
     {
         // on affiche tous les éléments
-        if (debug) { Debug.Log("(UI_InventoryMenu) showing pool : " + Reference); }
+        if (log) { Debug.Log("(UI_InventoryMenu) showing pool : " + Reference); }
         foreach (GameObject ui in ui_elements)
         {
             ui.SetActive(true);
-            /* if (ui.GetComponent<CanvasGroup>() != null)
-            {
-                ui.GetComponent<CanvasGroup>().alpha = 0f;
-                // we set the canvas group alpha to 0 because after we are going to fade in
-            } */
         }
         await RefreshItemPools(duration);
         Showed = true;
 
         // s'il a une activate action, on désactive les inputs.perso
-        if (UsePersoInputs) { inputs.perso.Enable(); }
-        else { inputs.perso.Disable(); }
+        if (UsePersoInputs) { InputManager.Instance.inputs.perso.Enable(); }
+        else { InputManager.Instance.inputs.perso.Disable(); }
     }
     protected override async Awaitable hide_pool(float duration)
     {
@@ -129,14 +100,14 @@ public class UI_InventoryMenu : UI_Pool
     public async Awaitable RefreshItemPools(float duration = default)
     {
         if (duration == default) { duration = base_transition; }
-        if (debug) { Debug.Log($"(UI_InventoryMenu) refreshing item pools with duration {duration}"); }
+        if (log) { Debug.Log($"(UI_InventoryMenu) refreshing item pools with duration {duration}"); }
 
         // on fade out les item pools qui sont vides & fade in ceux qui sont pleins
         foreach (GameObject ui in ui_elements)
         {
             UI_ItemPool item_pool = ui.GetComponentInChildren<UI_ItemPool>();
             if (item_pool == null) { ui.SetActive(true); continue; }
-            if (debug)
+            if (log)
             {
                 Debug.Log("(UI_InventoryMenu) investigating ui_itempool " + item_pool.name + $" ({(item_pool.Faded ? "faded" : "visible")}) with "
                 + item_pool.Count + " slots and " + item_pool.FullCount + " items slots " + $"and {item_pool.EnabledCount} enabled slots");
@@ -159,14 +130,14 @@ public class UI_InventoryMenu : UI_Pool
     public async Awaitable FadeOutAllPools(float duration = default)
     {
         if (duration == default) { duration = base_transition; }
-        if (debug) { Debug.Log($"(UI_InventoryMenu) fading out all item pools with duration {duration}"); }
+        if (log) { Debug.Log($"(UI_InventoryMenu) fading out all item pools with duration {duration}"); }
 
         // on fade out tous les item pools
         foreach (GameObject ui in ui_elements)
         {
             UI_ItemPool item_pool = ui.GetComponentInChildren<UI_ItemPool>();
             if (item_pool == null || item_pool.Faded) { continue; }
-            if (debug) { Debug.Log("(UI_InventoryMenu) fading out ui_itempool " + item_pool.name); }
+            if (log) { Debug.Log("(UI_InventoryMenu) fading out ui_itempool " + item_pool.name); }
             item_pool.Fade(duration, fade_in: false);
         }
         await Task.Delay((int)(duration * 1000));

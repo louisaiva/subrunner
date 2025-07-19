@@ -2,15 +2,17 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
-public class InputManager : MonoBehaviour
+public class InputManager : Singleton<InputManager>
 {
     [Header("INPUT MANAGER")]
     [SerializeField] private string current_input_type = "keyboard"; // keyboard or gamepad
     public PlayerInputActions inputs;
 
 
-    [Header("HintControl (HC)")]
+    [Header("Inputs thresholds")]
     [SerializeField] public float joystick_treshold_min = 0.1f;
+    [SerializeField] public float button_threshold_min = 0.2f;
+    [SerializeField] public float button_threshold_max = 0.8f;
 
 
     [Header("Logs")]
@@ -19,8 +21,10 @@ public class InputManager : MonoBehaviour
 
 
     // unity functions
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        
         // on crée les inputs
         inputs = new PlayerInputActions();
 

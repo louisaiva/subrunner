@@ -78,12 +78,7 @@ public class DieCapacity : Capacity
         // on change le layer du perso en "meat"
         being.body_collider.gameObject.layer = LayerMask.NameToLayer("Meat");
 
-        // si c'est le perso on attend 3000s
-        if (being is Perso)
-        {
-            (being as Perso).Die();
-            yield return new WaitForSeconds(3000f);
-        }
+        if (being is Perso perso) { perso.Die(); }
 
         // destroy the object if the parameter is set
         if (destroy_object)
@@ -111,6 +106,9 @@ public class DieCapacity : Capacity
             if (ia.transform.Find("goals") is Transform goal && goal != null) { Destroy(goal.gameObject); }
             if (ia.transform.Find("eyes") is Transform eyes && eyes != null) { Destroy(eyes.gameObject); }
             Destroy(ia.transform.Find("brain").gameObject);
+        }
+        else if (being is Perso persoo)
+        {
         }
 
         // we switch the rigidbody collision detection to discrete since the dead body won't move very fast (not affected by our forces)

@@ -6,7 +6,7 @@ public class UI_LifeXPHandler : MonoBehaviour
 {
 
     // GAMEOBJECTS
-    public GameObject perso;
+    // public GameObject perso;
 
 
     // life filling bar
@@ -22,9 +22,6 @@ public class UI_LifeXPHandler : MonoBehaviour
 
     void Start()
     {
-        // on récupère le perso
-        perso = GameObject.Find("/perso");
-
         // on récupère le fill des life
         life_fill = transform.Find("life_fill").gameObject;
 
@@ -37,7 +34,7 @@ public class UI_LifeXPHandler : MonoBehaviour
     {
 
         // ! on check si le perso est mort
-        if (!perso || !perso.GetComponent<Perso>().Alive)
+        if (!Perso.Instance || !Perso.Instance.Alive)
         {
             // on met à zero
             life_fill.GetComponent<RectTransform>().sizeDelta = new Vector2(0, life_fill_height);
@@ -56,8 +53,8 @@ public class UI_LifeXPHandler : MonoBehaviour
     {
 
         // on récupère les infos du perso
-        int max_life = perso.GetComponent<Perso>().max_life;
-        float life = perso.GetComponent<Perso>().life;
+        int max_life = Perso.Instance.max_life;
+        float life = Perso.Instance.life;
 
         // on met à jour la taille du fill
         float life_percent = life / max_life;
@@ -71,8 +68,8 @@ public class UI_LifeXPHandler : MonoBehaviour
     {
 
         // on récupère les infos du perso
-        int max_xp = perso.GetComponent<Perso>().xp_to_next_level;
-        float xp = (float) perso.GetComponent<Perso>().xp;
+        int max_xp = Perso.Instance.xp_to_next_level;
+        float xp = (float) Perso.Instance.xp;
 
         // on met à jour la taille du fill
         float xp_percent = xp / max_xp;

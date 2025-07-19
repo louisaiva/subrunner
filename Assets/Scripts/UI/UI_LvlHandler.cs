@@ -1,22 +1,13 @@
 using UnityEngine;
 using TMPro;
 
-public class UI_LvlHandler : MonoBehaviour {
+public class UI_LvlHandler : MonoBehaviour
+{
     
-    // perso
-    private GameObject perso;
-
-    // unity functions
-    void Start()
-    {
-        // on récupère le perso
-        perso = GameObject.Find("/perso");
-    }
-
     void Update()
     {
-
-        string lvl = perso.GetComponent<Perso>().level.ToString();
+        if (!Perso.Instance) { return; }
+        string lvl = Perso.Instance.level.ToString();
 
         // on met à jour le niveau
         GetComponent<TextMeshProUGUI>().text = "level " + lvl;

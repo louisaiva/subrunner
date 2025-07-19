@@ -23,7 +23,6 @@ public class UI_Skill : MonoBehaviour, I_UI_Slot
 
     [Header("Components")]
     private UI_LevelUpMenu menu;
-    private Perso perso;
 
     [Header("Logs")]
     public bool log = false;
@@ -32,7 +31,6 @@ public class UI_Skill : MonoBehaviour, I_UI_Slot
     protected void Awake()
     {
         // on récupère les components
-        perso = GameObject.Find("/perso").GetComponent<Perso>();
         menu = transform.parent.parent.GetComponent<UI_LevelUpMenu>();
 
         // on récupère le bg
@@ -43,9 +41,11 @@ public class UI_Skill : MonoBehaviour, I_UI_Slot
     {
         menu.SkillNameDescriptor.SetDescription(Reference);
 
+        if (Perso.Instance == null) { menu.Descriptor.SetDescription("looks like there is no player anymore"); return; }
+
         string desc = description + "\n";
-        desc += "\ncurrent : " + perso.skillManager.GetSkillValue(Reference).ToString() + " " + unit;
-        desc += "\nnext : " + perso.skillManager.GetNextLevelSkillValue(Reference).ToString() + " " + unit;
+        desc += "\ncurrent : " + Perso.Instance.skillManager.GetSkillValue(Reference).ToString() + " " + unit;
+        desc += "\nnext : " + Perso.Instance.skillManager.GetNextLevelSkillValue(Reference).ToString() + " " + unit;
 
         // on met à jour la description
         menu.Descriptor.SetDescription(desc);
@@ -74,11 +74,12 @@ public class UI_Skill : MonoBehaviour, I_UI_Slot
     public void OnPointerClick(PointerEventData eventData)
     {
         if (log) Debug.Log("(UI_Skill) clicking on " + Reference);
+        if (Perso.Instance == null) { return; }
 
         // reset the color
         skill_bg.color = new Color(1, 1, 1, 1);
 
-        perso.skillManager.UpgradeSkill(Reference);
+        Perso.Instance.skillManager.UpgradeSkill(Reference);
 
         // on reouvre le hud
         GameObject.Find("/ui").GetComponent<UI_Manager>().SwitchTo("hud");

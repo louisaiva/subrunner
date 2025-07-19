@@ -2,7 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Events;
 
-public class Inventory : MonoBehaviour {
+public class Inventory : MonoBehaviour
+{
 
     [Header("Items")]
     public List<Item> Items = new List<Item>();
@@ -24,8 +25,18 @@ public class Inventory : MonoBehaviour {
     // AWAKE
     void Awake()
     {
+        if (capable is Perso && uis.Count > 0 && uis[0] == null)
+        {
+            // we just revived we don't have any uis, so we make them
+            uis = new List<UI_Inventory>
+            {
+                UI_Manager.Instance.GetPool("inventory").GetComponent<UI_Inventory>(),
+                UI_Manager.Instance.GetPool("hud").GetComponent<UI_HUD>().perso_quick_inventory
+            };
+        }
+
         // on informe les UI de l'inventaire que l'on est là
-        uis.ForEach(ui => ui.inventory = this);
+        uis.ForEach(ui => ui.Inventory = this);
     }
 
     // START
