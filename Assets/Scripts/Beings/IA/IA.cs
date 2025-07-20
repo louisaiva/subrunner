@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Pathfinding;
+using subrunner.goap;
 using UnityEngine;
 
 /// <summary>
@@ -15,6 +16,7 @@ public class IA : Being
     public float exploration_radius = 3f; // the radius of exploration for the IA
                                           // todo must be part of an IAData class or struct that influence a curiosity parameter
     public Transform eyes;
+    public GoToBehaviour mover;
     // public Seeker seeker { get; private set; } // the seeker component used for pathfinding
 
     [Header("Logs")]
@@ -27,5 +29,6 @@ public class IA : Being
 
         // we get the eyes component
         eyes = transform.Find("eyes");
+        mover = transform.Find("brain/goto").GetComponent<GoToBehaviour>();
     }
 }

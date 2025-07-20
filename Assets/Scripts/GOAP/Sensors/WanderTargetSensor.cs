@@ -11,6 +11,7 @@ namespace subrunner.goap
     public class WanderTargetSensor : LocalTargetSensorBase
     {
         GridGraph[] graphs;
+        NavMeshQueryFilter defaultFilter = new NavMeshQueryFilter { areaMask = NavMesh.AllAreas, };
         public override void Created()
         {
             NavGraph[] allGraphs = AstarPath.active.data.graphs;
@@ -26,7 +27,7 @@ namespace subrunner.goap
             IA ia = references.GetCachedComponentInParent<IA>();
 
             // find a random position to go
-            Vector3 random_position = getRandomPositionInRangeNavMesh(agent.Transform.position, ia.exploration_radius);
+            Vector3 random_position = getRandomPositionInRangeNavMesh(agent.Transform.position, ia.exploration_radius,ia.mover.filter);
             if (random_position == default)
             {
                 if (existingTarget is PositionTarget) { return existingTarget as PositionTarget; }
@@ -117,17 +118,18 @@ namespace subrunner.goap
 
 
         // NAV MESH
-        private Vector3 getRandomPositionInRangeNavMesh(Vector2 center, float range)
+        private Vector3 getRandomPositionInRangeNavMesh(Vector2 center, float range, NavMeshQueryFilter? filter = null)
         {
+            
             int attempts = 10;
             for (int i = 0; i < attempts; i++)
             {
-                Vector3 randomPosition = getRandomPositionOnNavMesh(center, range);
+                Vector3 randomPosition = getRandomPositionOnNavMesh(center, range,filter);
                 if (randomPosition == default) { continue; }
 
                 // checks if the destination is reachable
                 NavMeshPath path = new NavMeshPath();
-                if (!NavMesh.CalculatePath(center, randomPosition, NavMesh.AllAreas, path)) { continue; }
+                if (!NavMesh.CalculatePath(center, randomPosition, filter == null ? defaultFilter : filter.Value, path)) { continue; }
 
                 // on le clamp pour faire en sorte que l'ia ne puisse parcourir que range de distance maximale
                 return getMaxDistanceAlongPath(path, range);
@@ -136,13 +138,13 @@ namespace subrunner.goap
             Debug.LogWarning("(IdleTargetSensor) No walkable position found on the nav mesh");
             return default;
         }
-        private Vector3 getRandomPositionOnNavMesh(Vector2 center, float range)
+        private Vector3 getRandomPositionOnNavMesh(Vector2 center, float range, NavMeshQueryFilter? filter = null)
         {
             // pick a random position on the nav mesh
             Vector3 randomPosition = (Vector3) center + Random.insideUnitSphere * range;
 
             NavMeshHit hit;
-            if (NavMesh.SamplePosition(randomPosition, out hit, 10f, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(randomPosition, out hit, 10f, filter == null ? defaultFilter : filter.Value))
             {
                 return hit.position;
             }

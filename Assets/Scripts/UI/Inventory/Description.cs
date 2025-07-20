@@ -7,8 +7,8 @@ public class Description : MonoBehaviour
 {
     [Header("Description")]
     [SerializeField] private string target_description = "description";
-    [SerializeField] private float caractere_delay = 0.05f;
-    [SerializeField] private float slow_caractere_delay = 0.5f;
+    [SerializeField] private float caracters_per_sec = 200f;
+    [SerializeField] private float slow_caractere_delay = 0.1f;
     [SerializeField] private float pause_caractere_delay = 0.5f;
 
     [Header("Components")]
@@ -44,9 +44,9 @@ public class Description : MonoBehaviour
         {
             if (target[j] == '/' && j < target.Length - 1 && target[j + 1] == '.')
             {
-                yield return new WaitForSecondsRealtime(caractere_delay);
+                yield return new WaitForSecondsRealtime(1f / caracters_per_sec);
                 label.text += '.';
-                yield return new WaitForSecondsRealtime(caractere_delay);
+                yield return new WaitForSecondsRealtime(1f / caracters_per_sec);
                 label.text += '.';
                 string old_text = label.text;
                 yield return new WaitForSecondsRealtime(slow_caractere_delay);
@@ -78,7 +78,7 @@ public class Description : MonoBehaviour
                 continue;
             }
 
-            yield return new WaitForSecondsRealtime(caractere_delay);
+            yield return new WaitForSecondsRealtime(1f / caracters_per_sec);
             label.text += target[j];
         }
     }

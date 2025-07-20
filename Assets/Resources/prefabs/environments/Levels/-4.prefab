@@ -10497,8 +10497,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: 4, y: 11.25, z: 0}
-      m_Extent: {x: 5.5, y: 2.25, z: 0}
+      m_Center: {x: 2, y: 6.75, z: 0}
+      m_Extent: {x: 7.5, y: 6.75, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0
@@ -12266,8 +12266,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: -25.5, y: -11, z: 0}
-      m_Extent: {x: 9.5, y: 4.5, z: 0}
+      m_Center: {x: -26.75, y: -11.75, z: 0}
+      m_Extent: {x: 10.75, y: 5.25, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0
@@ -24035,14 +24035,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f036e249ae3dab4db13f4f04ac30852, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  triggered: 0
+  wait_time_before_showing: 1
+  hide_and_disable_after: 5
   ui_tuto_prefab: {fileID: 3393983848404623852, guid: f54324ab0de430a4f91615a344359f00, type: 3}
   ui_tuto_parent: {fileID: 0}
-  ui_tuto: {fileID: 0}
-  triggered: 0
-  debug: 0
-  player_layer:
-    serializedVersion: 2
-    m_Bits: 128
+  log: 0
 --- !u!1 &2199793856946125384
 GameObject:
   m_ObjectHideFlags: 0
@@ -27274,8 +27272,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: 2, y: -2.25, z: 0}
-      m_Extent: {x: 6, y: 0.75, z: 0}
+      m_Center: {x: 7.25, y: 3.25, z: 0}
+      m_Extent: {x: 12.25, y: 6.25, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0
@@ -37573,14 +37571,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f036e249ae3dab4db13f4f04ac30852, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  triggered: 0
+  wait_time_before_showing: 1
+  hide_and_disable_after: 5
   ui_tuto_prefab: {fileID: 3393983848404623852, guid: c659e110fdc61c94c84412b940e65fc6, type: 3}
   ui_tuto_parent: {fileID: 0}
-  ui_tuto: {fileID: 0}
-  triggered: 0
-  debug: 0
-  player_layer:
-    serializedVersion: 2
-    m_Bits: 128
+  log: 0
 --- !u!1 &3909438366724325583
 GameObject:
   m_ObjectHideFlags: 0
@@ -49446,8 +49442,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: -1.25, y: -4.5, z: 0}
-      m_Extent: {x: 3.25, y: 2, z: 0}
+      m_Center: {x: 3.5, y: -0.25, z: 0}
+      m_Extent: {x: 12, y: 8.25, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0
@@ -78297,14 +78293,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f036e249ae3dab4db13f4f04ac30852, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  triggered: 0
+  wait_time_before_showing: 1
+  hide_and_disable_after: 5
   ui_tuto_prefab: {fileID: 3393983848404623852, guid: 5797b1815a1d50b4b808e5213fb38828, type: 3}
   ui_tuto_parent: {fileID: 0}
-  ui_tuto: {fileID: 0}
-  triggered: 0
-  debug: 0
-  player_layer:
-    serializedVersion: 2
-    m_Bits: 128
+  log: 0
 --- !u!1 &5425419332097033930
 GameObject:
   m_ObjectHideFlags: 0
@@ -86339,14 +86333,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f036e249ae3dab4db13f4f04ac30852, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  triggered: 0
+  wait_time_before_showing: 1
+  hide_and_disable_after: 5
   ui_tuto_prefab: {fileID: 3393983848404623852, guid: f86e336875cd57b4e8e36683634712f7, type: 3}
   ui_tuto_parent: {fileID: 0}
-  ui_tuto: {fileID: 0}
-  triggered: 0
-  debug: 0
-  player_layer:
-    serializedVersion: 2
-    m_Bits: 128
+  log: 0
 --- !u!1 &6990394449604604607
 GameObject:
   m_ObjectHideFlags: 0
@@ -90810,8 +90802,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: -2.25, y: -3, z: 0}
-      m_Extent: {x: 0.25, y: 0.5, z: 0}
+      m_Center: {x: 1.5, y: -0.25, z: 0}
+      m_Extent: {x: 4, y: 3.25, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0

@@ -20,7 +20,7 @@ namespace subrunner.goap
 
         [Header("Pathfinding")]
         [SerializeField] private string agent_type = "humanoid";
-        private NavMeshQueryFilter filter;
+        public NavMeshQueryFilter filter;
         [SerializeField] private bool use_navmesh = false; // if true, use NavMesh for pathfinding, otherwise use A* Pathfinding
         [SerializeField] private List<Vector3> path; // the current path
 
