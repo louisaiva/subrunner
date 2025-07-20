@@ -19,6 +19,8 @@ namespace subrunner.goap
         protected IA ia;
 
         [Header("Pathfinding")]
+        [SerializeField] private string agent_type = "humanoid";
+        private NavMeshQueryFilter filter;
         [SerializeField] private bool use_navmesh = false; // if true, use NavMesh for pathfinding, otherwise use A* Pathfinding
         [SerializeField] private List<Vector3> path; // the current path
 
@@ -53,6 +55,13 @@ namespace subrunner.goap
             agent = transform.parent.GetComponent<AgentBehaviour>();
             ia = transform.parent.parent.GetComponent<IA>();
             seeker = GetComponent<Seeker>();
+
+            int agent_type_id = get_navmesh_agent_type_id(agent_type);
+            filter = new NavMeshQueryFilter
+            {
+                agentTypeID = agent_type_id != -1 ? agent_type_id : NavMesh.GetSettingsByIndex(0).agentTypeID, // if the agent type is not found, use the default agent type
+                areaMask = NavMesh.AllAreas
+            };
         }
         private void Start()
         {
@@ -132,7 +141,7 @@ namespace subrunner.goap
             if (use_navmesh)
             {
                 NavMeshPath navmesh_path = new NavMeshPath();
-                if (NavMesh.CalculatePath(transform.position, target.Position, NavMesh.AllAreas, navmesh_path))
+                if (NavMesh.CalculatePath(transform.position, target.Position, filter, navmesh_path))
                 {
                     path = new List<Vector3>(navmesh_path.corners);
                     start_following_path(path);
@@ -165,6 +174,18 @@ namespace subrunner.goap
             // we start walking
             walker.walk_percentage_target = 1f;
             if (log_path_calculation) { Debug.Log("(GoToBehaviour) " + ia.name + " found a path to target with " + path.Count + " waypoints."); }
+        }
+        private int get_navmesh_agent_type_id(string name)
+        {
+            for (int i = 0; i < NavMesh.GetSettingsCount(); i++)
+            {
+                NavMeshBuildSettings settings = NavMesh.GetSettingsByIndex(index: i);
+                if (name == NavMesh.GetSettingsNameFromID(agentTypeID: settings.agentTypeID))
+                {
+                    return settings.agentTypeID;
+                }
+            }
+            return -1;
         }
 
         // UPDATE
@@ -402,3 +423,4 @@ namespace subrunner.goap
         }
     }
 }
+

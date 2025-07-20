@@ -54,11 +54,12 @@ public class UI_Manager : Singleton<UI_Manager>
     void Start()
     {
         // on récupère les inputs
-        input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
+        input_manager = InputManager.Instance;
 
         // on mets les callbacks des menus
         input_manager.inputs.menus.inventory.performed += ctx => { TogglePool("inventory"); };
         input_manager.inputs.menus.pause.performed += ctx => { TogglePool("pause"); };
+        input_manager.inputs.menus.hacking.performed += ctx => { HandleHackingInput(ctx.ReadValue<float>()); };
         // inputs.menus.map.performed += ctx => { TogglePool("map"); };
         input_manager.inputs.UI.cancel.performed += ctx => { HandleCancelInput(ctx.ReadValue<float>()); };
 
@@ -122,14 +123,18 @@ public class UI_Manager : Singleton<UI_Manager>
             }
 
 
-            // we transition to the right bg/timescale effect
+            // we transition to the right bg/timescale/effect
             if (current_pool.StopTime != pool.StopTime)
             {
-                float final_timescale = pool.StopTime ? 0f : 1f;
-                // if (pool.Reference == "game_over") { final_timescale = (pool as UI_GameOver).final_timescale; }
+                float final_timescale = default;
+                if (pool.Reference == "game_over") { final_timescale = (pool as UI_GameOver).final_timescale; }
+                else if (pool.Reference == "hacking") { final_timescale = (pool as UI_Hacking).final_timescale; }
                 TransitionTimeScale(pool.StopTime, duration, final_timescale );
             }
-            if (current_pool.HasBackground != pool.HasBackground) { TransitionBackground(pool.HasBackground, duration); }
+            if (current_pool.HasBackground != pool.HasBackground)
+            {
+                TransitionBackground(pool.HasBackground, duration, pool.Reference == "hacking" ? (pool as UI_Hacking).bg_final_alpha : default);
+            }
             
             // we hide the current pool
             await current_pool.Hide(duration / 2f);
@@ -161,7 +166,7 @@ public class UI_Manager : Singleton<UI_Manager>
         return null;
     }
 
-    // CANCEL INPUT HANDLING
+    // INPUT HANDLING
     private void HandleCancelInput(float input)
     {
         if (input > 0.5f) { return; } // we only handle the release of the input
@@ -176,11 +181,30 @@ public class UI_Manager : Singleton<UI_Manager>
         // we switch to hud
         SwitchTo("hud");
     }
+    private void HandleHackingInput(float input)
+    {
+        // we activate the hacking ui when input is pressed > 0.5
+        // and disable it when released < 0.5
+        if (input > 0.5f)
+        {
+            // we check if we can switch to hacking
+            if (current_pool.Reference == "hud" && GetPool("hacking").Available)
+            {
+                SwitchTo("hacking");
+            }
+        }
+        else if (current_pool.Reference == "hacking")
+        {
+            SwitchTo("hud");
+        }
+    }
+
 
     // TRANSITIONS
-    public async Awaitable TransitionBackground(bool show, float duration)
+    public async Awaitable TransitionBackground(bool show, float duration,float override_bg_alpha = default)
     {
-        await bg.Transition(show, duration);
+        bg.TransitionEffect(show, duration);
+        await bg.TransitionAlpha(show, duration, override_bg_alpha);
     }
     public async Awaitable TransitionTimeScale(bool stop_time, float duration, float override_final_timescale = default)
     {

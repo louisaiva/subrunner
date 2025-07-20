@@ -984,6 +984,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "hacking",
+                    "type": "Button",
+                    "id": "549f77fd-37e1-4ea6-8215-8b5fa4d1092e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press(behavior=2)",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1050,6 +1059,28 @@
                     "processors": "",
                     "groups": "keyboard",
                     "action": "map",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "34ce3b3c-23ae-478f-83f0-77e78e6a9dd1",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "hacking",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "008e0bfa-9891-4d71-bc41-68758df7e1d2",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "hacking",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

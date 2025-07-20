@@ -4,35 +4,19 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 
-public class UI_GameOver : UI_Pool
+public class UI_Hacking : UI_Pool
 {
     [Header("Transition parameters")]
-    public float final_timescale = 0.1f;
-    public float transition_duration = 2f;
+    public float final_timescale = 0.5f;
+    public float bg_final_alpha = 0.5f;
 
-    [Header("Perso revive parameters")]
-    [SerializeField] private GameObject perso_prefab;
-    [SerializeField] private Transform perso_spawn_point;
-
-    [Header("Inputs")]
+    /* [Header("Inputs")]
     [SerializeField] private InputActionReference reviveInput;
     private InputAction reviveAction;
-    private event Action<InputAction.CallbackContext> reviveCallback; // revive Callback is for reviving items when inside a big inventory -> X
-
-    [Header("Components")]
-    [SerializeField] private TextMeshProUGUI oh_no_text;
-    // START
-    protected void Start()
-    {
-        // we create the callback
-        reviveAction = InputManager.Instance.GetAction(reviveInput);
-        reviveCallback = ctx => HandleReviveInput(ctx.ReadValue<float>());
-
-        if (log) { Debug.Log("(UI_GameOver) started & callbacks created"); }
-    }
+    private event Action<InputAction.CallbackContext> reviveCallback; */ // revive Callback is for reviving items when inside a big inventory -> X
 
     // REVIVE
-    private void HandleReviveInput(float input)
+    /* private void HandleReviveInput(float input)
     {
         if (log) { Debug.Log("(UI_GameOver) revive input received : " + input); }
 
@@ -40,9 +24,9 @@ public class UI_GameOver : UI_Pool
 
         // we switch to hud
         UI_Manager.Instance.SwitchTo("hud");
-    }
+    } */
 
-    protected override async Awaitable show_pool(float duration)
+    /* protected override async Awaitable show_pool(float duration)
     {
         // we set the callbacks
         reviveAction.performed += reviveCallback;
@@ -67,6 +51,6 @@ public class UI_GameOver : UI_Pool
         perso[0].name = "perso";
 
         await base.hide_pool(duration);
-    }
+    } */
 
 }

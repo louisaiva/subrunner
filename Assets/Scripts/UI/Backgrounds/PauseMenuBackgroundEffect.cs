@@ -46,9 +46,20 @@ public class PauseMenuBackgroundEffect : MonoBehaviour
     private void Start() { is_very_early_init_done = true; }
 
     // SHOW / HIDE
-    public async Awaitable Transition(bool show, float duration)
+    public async Awaitable TransitionAlpha(bool show, float duration,float override_final_alpha = default)
     {
-        if (show)
+        float start_alpha = bg.color.a;
+        float end_alpha = show ? bg_alpha_range.y / 255f : bg_alpha_range.x / 255f;
+
+        if (override_final_alpha != default)
+        {
+            end_alpha = override_final_alpha;
+        }
+
+        await Tween.Custom(start_alpha, end_alpha, duration: duration,
+                onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx), useUnscaledTime: true);
+
+        /* if (show)
         {
             ActivateEffect(duration);
             await Tween.Custom(bg_alpha_range.x / 255f, bg_alpha_range.y / 255f, duration: duration,
@@ -59,8 +70,20 @@ public class PauseMenuBackgroundEffect : MonoBehaviour
             DisableEffect(duration);
             await Tween.Custom(bg_alpha_range.y / 255f, bg_alpha_range.x / 255f, duration: duration,
                 onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx), useUnscaledTime: true);
+        } */
+    }
+    public async Awaitable TransitionEffect(bool show, float duration = 0.2f)
+    {
+        if (show)
+        {
+            await ActivateEffect(duration);
+        }
+        else
+        {
+            await DisableEffect(duration);
         }
     }
+
     private async Awaitable ActivateEffect(float transition_duration = 0.2f)
     {
         await Sequence.Create(useUnscaledTime: true)

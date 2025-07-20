@@ -7,6 +7,7 @@ using static PlayerInputActions;
 
 public class Perso : Being
 {
+    public static int deaths = 0; // nombre de morts du perso
     public static Perso Instance { get; private set; }
     
     [Header("PERSO")]
@@ -36,6 +37,8 @@ public class Perso : Being
 
 
 
+    [Header("METAMORPH")]
+    [SerializeField] private List<string> metamorph_skins = new List<string>() { "perso", "cat", "zombo", "robot", "apple", "fridge", "small_laptop" };
 
 
 
@@ -149,12 +152,9 @@ public class Perso : Being
         // checks if we are a ghost
         if (skin == "ghost") { ToggleGhost(); }
 
-        // get all metamorph skin list
-        string[] skins = new string[] { "perso", "cat", "zombo", "nobody", "apple", "fridge", "small_laptop" };
-
         // we roll through the list
-        int index = System.Array.IndexOf(skins, skin);
-        if (index == skins.Length - 1)
+        int index = metamorph_skins.IndexOf(skin);
+        if (index == metamorph_skins.Count - 1)
         {
             index = 0; // if we are at the end, we go back to the start
         }
@@ -164,7 +164,7 @@ public class Perso : Being
         }
 
         // we set the new skin
-        anim_player.Skin = skins[index];
+        anim_player.Skin = metamorph_skins[index];
     }
     public void ToggleGhost()
     {
@@ -249,9 +249,10 @@ public class Perso : Being
         UI_Manager.Instance.SwitchTo("game_over", override_duration: 3f);
 
         // on désactive plein de choses
-
         Destroy(GetComponent<SeeThroughHandler>());
         Destroy(transform.Find("body").GetComponent<ParticleSystemForceField>());
+
+        Perso.deaths += 1; // on incrémente le nombre de morts du perso
     }
 
     // INPUTS

@@ -1006,6 +1006,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""hacking"",
+                    ""type"": ""Button"",
+                    ""id"": ""549f77fd-37e1-4ea6-8215-8b5fa4d1092e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1072,6 +1081,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""keyboard"",
                     ""action"": ""map"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""34ce3b3c-23ae-478f-83f0-77e78e6a9dd1"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""hacking"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""008e0bfa-9891-4d71-bc41-68758df7e1d2"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""hacking"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1144,6 +1175,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_menus_inventory = m_menus.FindAction("inventory", throwIfNotFound: true);
         m_menus_pause = m_menus.FindAction("pause", throwIfNotFound: true);
         m_menus_map = m_menus.FindAction("map", throwIfNotFound: true);
+        m_menus_hacking = m_menus.FindAction("hacking", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -1513,6 +1545,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_menus_inventory;
     private readonly InputAction m_menus_pause;
     private readonly InputAction m_menus_map;
+    private readonly InputAction m_menus_hacking;
     public struct MenusActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -1520,6 +1553,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @inventory => m_Wrapper.m_menus_inventory;
         public InputAction @pause => m_Wrapper.m_menus_pause;
         public InputAction @map => m_Wrapper.m_menus_map;
+        public InputAction @hacking => m_Wrapper.m_menus_hacking;
         public InputActionMap Get() { return m_Wrapper.m_menus; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1538,6 +1572,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @map.started += instance.OnMap;
             @map.performed += instance.OnMap;
             @map.canceled += instance.OnMap;
+            @hacking.started += instance.OnHacking;
+            @hacking.performed += instance.OnHacking;
+            @hacking.canceled += instance.OnHacking;
         }
 
         private void UnregisterCallbacks(IMenusActions instance)
@@ -1551,6 +1588,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @map.started -= instance.OnMap;
             @map.performed -= instance.OnMap;
             @map.canceled -= instance.OnMap;
+            @hacking.started -= instance.OnHacking;
+            @hacking.performed -= instance.OnHacking;
+            @hacking.canceled -= instance.OnHacking;
         }
 
         public void RemoveCallbacks(IMenusActions instance)
@@ -1621,5 +1661,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnInventory(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnMap(InputAction.CallbackContext context);
+        void OnHacking(InputAction.CallbackContext context);
     }
 }
