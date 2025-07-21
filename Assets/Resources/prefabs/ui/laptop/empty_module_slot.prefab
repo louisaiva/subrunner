@@ -206,8 +206,8 @@ MonoBehaviour:
   base_sprite: {fileID: -1402660497, guid: 52204e3019eb6af40b70d4a1d02d8ac3, type: 3}
   hover_sprite: {fileID: 695157732, guid: 52204e3019eb6af40b70d4a1d02d8ac3, type: 3}
   down_sprite: {fileID: -1102986615, guid: 52204e3019eb6af40b70d4a1d02d8ac3, type: 3}
-  disabled_sprite: {fileID: -1102986615, guid: 52204e3019eb6af40b70d4a1d02d8ac3, type: 3}
-  drag_sprite: {fileID: 1675996188, guid: 52204e3019eb6af40b70d4a1d02d8ac3, type: 3}
+  disabled_sprite: {fileID: -1402660497, guid: 52204e3019eb6af40b70d4a1d02d8ac3, type: 3}
+  drag_sprite: {fileID: 1021261267, guid: 52204e3019eb6af40b70d4a1d02d8ac3, type: 3}
   drag_hover_sprite: {fileID: 1021261267, guid: 52204e3019eb6af40b70d4a1d02d8ac3, type: 3}
   quantity_text: {fileID: 0}
   bank: {fileID: 0}
@@ -215,6 +215,7 @@ MonoBehaviour:
   current_item_sprite: {fileID: 0}
   icon_image: {fileID: 0}
   helper_text: {fileID: 0}
+  drag_hover_color: {r: 0.2, g: 0.2, b: 0.2, a: 0.5}
 --- !u!1 &7858362101731939223
 GameObject:
   m_ObjectHideFlags: 0

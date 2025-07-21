@@ -9,8 +9,8 @@ public class UI_Slot : MonoBehaviour, I_UI_Slot
 {
 
     // hover
-    public bool is_hovered { get; set; }
-    public bool is_disabled { get; set; }
+    [SerializeField] public bool is_hovered { get; set; }
+    [SerializeField] public bool is_disabled { get; set; }
 
     [Header("Logs")]
     public bool debug = false;

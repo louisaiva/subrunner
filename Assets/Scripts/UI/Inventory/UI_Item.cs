@@ -30,6 +30,7 @@ public class UI_Item : UI_Slot
     public UI_ItemPool ItemPool => transform.parent.GetComponent<UI_ItemPool>();
     public Inventory Inventory => ItemPool?.UI_Inventory?.Inventory;
     public Item Item => items.Count > 0 ? items[0] : null;
+    public event Action<List<Item>> OnItemChanged = delegate { };
 
     // AWAKE
     public virtual void Init()
@@ -76,6 +77,8 @@ public class UI_Item : UI_Slot
         // we check if it is the first item we store
         if (Quantity == 1) { setItem(item); }
 
+        OnItemChanged?.Invoke(items);
+
         return true;
     }
     public bool Unstore(Item item)
@@ -92,6 +95,7 @@ public class UI_Item : UI_Slot
         // we check if we have no more items in the slot
         if (Quantity == 0) { ClearUI(); }
 
+        OnItemChanged?.Invoke(items);
         return true;
     }
 
@@ -111,6 +115,8 @@ public class UI_Item : UI_Slot
 
         // we update the UI
         update_ui_qty();
+
+        OnItemChanged?.Invoke(this.items);
     }
     public List<Item> GetItems()
     {
@@ -155,7 +161,7 @@ public class UI_Item : UI_Slot
                 = sprite != null
                 ? new Color(1, 1, 1, 1)
                 : new Color(0, 0, 0, 0);
-        if (sprite == null) { return; }
+        if (sprite == null){ return; }
 
         // on calcule la taille de l'image
         RectTransform rt = item_image.GetComponent<RectTransform>();
@@ -246,6 +252,7 @@ public class UI_Item : UI_Slot
         if (inventory_to_drop != null)
         {
             inventory_to_drop.Grab(item);
+            OnItemChanged?.Invoke(this.items);
             return;
         }
 
@@ -256,6 +263,7 @@ public class UI_Item : UI_Slot
         {
             dropper.Select(item);
             inventory.capable.Do("drop");
+            OnItemChanged?.Invoke(this.items);
 
             // we switch back to hud
             GameObject.Find("/ui").GetComponent<UI_Manager>().SwitchTo("hud");
@@ -264,6 +272,7 @@ public class UI_Item : UI_Slot
         {
             // the inventory simply drops the item (we may be in a chest)
             inventory.Drop(item);
+            OnItemChanged?.Invoke(this.items);
         }
     }
 

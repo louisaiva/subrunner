@@ -112,7 +112,7 @@ public class UI_Manager : Singleton<UI_Manager>
             // checks if the current pool can be forcely hidden
             if (!force && !current_pool.CanBeHidden)
             {
-                if (debug) { Debug.LogWarning("(UI_Manager) tried to hide a pool that cannot be hidden : " + current_pool.Reference); }
+                if (debug && current_pool.Reference != "hud") { Debug.LogWarning("(UI_Manager) tried to hide a pool that cannot be hidden : " + current_pool.Reference); }
                 return;
             }
 

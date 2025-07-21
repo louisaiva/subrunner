@@ -34,7 +34,9 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     public float angle_threshold = 45f;
     public float angle_multiplicator = 0f;
     // [SerializeField] public float angle_vs_distance_precision = 0f; // from 0 to 1, affine la prédiction de navigation
-    
+    public event Action<I_UI_Slot> OnSlotOutOfScreen = delegate { }; // delegate that triggers when we navigate to a position that is out of screen
+
+
     [Header("Moving Items")]
     [SerializeField] private UI_Item moving_ui_item = null; // the item that is currently being moved
 
@@ -470,7 +472,6 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     }
     private void hover_slot(int index)
     {
-
         // on unhover le slot actuel
         if (slots.Count > current_slot_index && current_slot_index != -1
             && (moving_ui_item == null || moving_ui_item != slots[current_slot_index].GetComponent<UI_Item>()))
@@ -489,6 +490,15 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         else if (moving_ui_item != slots[index].GetComponent<UI_Item>())
         {
             slots[index].GetComponent<UI_Item>().OnPointerDragEnter(moving_ui_item); // si on est ici on drag
+        }
+
+        // on vérifie si la position du slot est en dehors de l'écran
+        Vector2 position = get_position(index);
+        if (position.x < 0 || position.x > Screen.width || position.y < 0 || position.y > Screen.height)
+        {
+            // on déclenche l'event OnSlotOutOfScreen
+            if (debug) { Debug.Log("(XboxNavigator) slot " + index + " is out of screen"); }
+            OnSlotOutOfScreen?.Invoke(slots[index].GetComponent<I_UI_Slot>());
         }
 
         // on change le current slot index
@@ -771,7 +781,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         else { switch_items(moving_ui_item, destination); }
 
         // on met à jour les slots
-        disable_only_empty_slots();
+        disable_only_empty_slots(true);
         update_slots();
 
         // et on renavigue vers destination
@@ -852,9 +862,9 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         }
 
         // si on a un UI_InventoryMenu dans nos uis alors on refresh ses UI_ItemPools
-        if (GetComponent<UI_Manager>().CurrentPool == "inventory")
+        if (UI_Manager.Instance.CurrentPool == "inventory")
         {
-            UI_InventoryMenu inventory_menu = GetComponent<UI_Manager>().GetPool("inventory") as UI_InventoryMenu;
+            UI_InventoryMenu inventory_menu = UI_Manager.Instance.GetPool("inventory") as UI_InventoryMenu;
             if (inventory_menu != null)
             {
                 inventory_menu.RefreshItemPools();
@@ -862,7 +872,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         }
 
     }
-    private void disable_only_empty_slots()
+    private void disable_only_empty_slots(bool except_modules = false)
     {
         // on sauvegarde les item pools qu'on trouve
         List<UI_ItemPool> item_pools = new List<UI_ItemPool>();
@@ -889,8 +899,9 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
                 if (ui_slot is not UI_Item ui_item) { continue; }
 
                 // on regarde si le slot n'a pas d'item on le désactive
-                if (ui_item.Item == null) { ui_item.Disable(); }
-                else { ui_item.Enable(); }
+                if (ui_item.Item != null) { ui_item.Enable(); continue; }
+                if (except_modules && ui_item is UI_Module) { ui_item.Enable(); continue; } // on ne désactive pas les modules
+                ui_item.Disable(); // on désactive le slot
             }
         }
 
@@ -910,7 +921,6 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
                 inventory_menu.RefreshItemPools();
             }
         }
-
     }
     private void switch_items(UI_Item item1, UI_Item item2)
     {

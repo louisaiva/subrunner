@@ -4,16 +4,21 @@ using System.Threading.Tasks;
 using PrimeTween;
 using UnityEngine;
 
-public class UI_InventoryMenu : UI_Pool
+public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
 {
     private List<GameObject> saved_slots = new List<GameObject>();
     [Header("Inventory Menu Components")]
     [SerializeField] private UI_Inventory ui_inventory;
     [SerializeField] private UI_Inventory ui_laptop;
-    [SerializeField] private UI_XboxNavigator navigator;
-
-    [Header("No Inventory")]
     [SerializeField] private Transform no_inventory_panel;
+    [SerializeField] private UI_ModulePool motherboard_pool;
+
+
+
+    // [Header("Laptop")]
+    // [SerializeField] private UI_ItemPool ui_laptop_pool;
+    // public bool HasLaptop => ui_laptop_pool != null && ui_laptop_pool.FullCount > 0;
+
 
     [Header("Base Item Pool Transitions")]
     [SerializeField] private float base_transition = 0.2f;
@@ -22,15 +27,15 @@ public class UI_InventoryMenu : UI_Pool
     protected void Awake()
     {
         // on récupère le navigator
-        navigator = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
+        // navigator = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
 
         // on récupère les composants
-        ui_inventory = GetComponent<UI_Inventory>();
+        // ui_inventory = transform.Find("ui_inventory").GetComponent<UI_Inventory>();
         if (ui_inventory == null)
         {
             Debug.LogError("(UI_InventoryMenu) missing ui_inventory on " + name);
         }
-        ui_laptop = transform.Find("ui_laptop").GetComponent<UI_Inventory>();
+        // ui_laptop = transform.Find("ui_laptop").GetComponent<UI_Inventory>();
         if (ui_laptop == null)
         {
             Debug.LogError("(UI_InventoryMenu) missing ui_laptop on " + name);
@@ -40,6 +45,7 @@ public class UI_InventoryMenu : UI_Pool
         saved_slots = new List<GameObject>(ui_elements);
     }
 
+    // SHOW / HIDE
     public override async Awaitable Show(float duration)
     {
         // vérifie si on a des items dans notre inventaire
@@ -47,34 +53,39 @@ public class UI_InventoryMenu : UI_Pool
         if (ui_inventory.Inventory.Count == 0) { ui_elements.Add(no_inventory_panel.gameObject); }
         else { ui_elements.AddRange(saved_slots); }
 
+        // checks if we have the laptop
+        if (motherboard_pool.HasLaptop && !motherboard_pool.Faded)
+        {
+            motherboard_pool.Fade(duration, fade_in: true);
+        }
+        else if (!motherboard_pool.HasLaptop && motherboard_pool.Faded)
+        {
+            motherboard_pool.Fade(duration, fade_in: false);
+        }
+        
         await base.Show(duration);
         if (ui_inventory.Inventory.Count == 0) { return; }
 
-        // on active le navigator
-        navigator.Enable(ui_inventory);
 
-        // on regarde si le perso a le laptop
-        if (ui_inventory.Inventory.GetItem("hardware:laptop") != null)
-        {
-            ui_laptop.gameObject.SetActive(true);
-            navigator.Enable(ui_laptop);
-        }
-        else { ui_laptop.gameObject.SetActive(false); }
 
-        // on met à jour l'angle treshold du navigator
-        navigator.angle_threshold = base.angle_threshold;
+        UI_XboxNavigator.Instance.Enable(this);
+
+        // on met à jour l'angle treshold du UI_XboxNavigator.Instance
+        UI_XboxNavigator.Instance.angle_threshold = base.angle_threshold;
     }
     public override async Awaitable Hide(float duration)
     {
         // no_inventory_panel.gameObject.SetActive(false);
 
         // on désactive le navigator
-        navigator.Disable(ui_inventory);
-        navigator.Disable(ui_laptop);
+        /* navigator.Disable(ui_inventory);
+        navigator.Disable(ui_laptop); */
+        UI_XboxNavigator.Instance.Disable(this);
 
         await base.Hide(duration);
     }
-    
+
+    // LOW SHOWING
     protected override async Awaitable show_pool(float duration)
     {
         // on affiche tous les éléments
@@ -105,6 +116,7 @@ public class UI_InventoryMenu : UI_Pool
         // on fade out les item pools qui sont vides & fade in ceux qui sont pleins
         foreach (GameObject ui in ui_elements)
         {
+            // on récupère l'item pool
             UI_ItemPool item_pool = ui.GetComponentInChildren<UI_ItemPool>();
             if (item_pool == null) { ui.SetActive(true); continue; }
             if (log)
@@ -141,5 +153,27 @@ public class UI_InventoryMenu : UI_Pool
             item_pool.Fade(duration, fade_in: false);
         }
         await Task.Delay((int)(duration * 1000));
+    }
+
+    // SLOTTABLE
+    public List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator)
+    {
+        if (log) { Debug.Log($"(UI_InventoryMenu) getting slots"); }
+        List<GameObject> slots = new List<GameObject>();
+
+        // on ajoute les items de l'UI_Inventory
+        slots.AddRange(ui_inventory.GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator));
+        if (!motherboard_pool.HasLaptop) { return slots; }
+
+        // si on a le laptop, on ajoute aussi ceux de l'UI_Laptop
+        slots.AddRange(ui_laptop.GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator));
+
+        return slots;
+    }
+    public bool IsYourSlot(GameObject slot)
+    {
+        if (ui_inventory.IsYourSlot(slot)) { return true; }
+        if (motherboard_pool.HasLaptop && ui_laptop.IsYourSlot(slot)) { return true; }
+        return false;
     }
 }

@@ -118,6 +118,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     public Action<InputAction.CallbackContext> CancelCallback => throw new NotImplementedException();
     public List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator)
     {
+        if (debug) { Debug.Log($"(UI_Inventory) {name} getting slots"); }
         List<GameObject> slots = new List<GameObject>();
         Vector2 position = Vector2.negativeInfinity;
         foreach (UI_ItemPool pool in pools)

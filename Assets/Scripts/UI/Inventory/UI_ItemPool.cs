@@ -24,6 +24,7 @@ public class UI_ItemPool : MonoBehaviour
     public int EmptyCount { get { return ui_items.Where(ui_item => ui_item.Item == null).Count(); } }
     public int FullCount { get { return Count - EmptyCount; } }
     public int EnabledCount { get { return ui_items.Where(ui_item => !ui_item.is_disabled).Count(); } }
+    [SerializeField] protected bool destroy_empty_on_init = true; // if true, the empty slots will be destroyed on init
 
     [Header("Item Rule")]
     public string item_rule = ""; // the rule to check if the item is valid
@@ -62,15 +63,16 @@ public class UI_ItemPool : MonoBehaviour
             // we init the slot
             ui_item.Init();
             ui_items.Add(ui_item);
+
+            if (ui_item.Item == null) { ui_item.Disable(); }
+            else { ui_item.Enable(); }
         }
         int awake_slots = ui_items.Count;
 
         // we destroy the existing empty slots & init the others
-        DestroyEmptySlots();
-        // int remaining_slots = ui_items.Count;
+        if (destroy_empty_on_init) { DestroyEmptySlots(); }
 
         // we check if we are scalable or not
-        // if (!Scalable) { CreateEmptySlots(this.MaxSlots - ui_items.Count); }
         if (debug)
         {
             Debug.Log($"(UI_ItemPool) {name} just finished Init(), had {awake_slots} awake slots, now has {Count} slots\ndestroyed empty slots (& hereby may have recreated some to reach min or max slots)");

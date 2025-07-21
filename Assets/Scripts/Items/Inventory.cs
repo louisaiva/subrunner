@@ -30,7 +30,7 @@ public class Inventory : MonoBehaviour
             // we just revived we don't have any uis, so we make them
             uis = new List<UI_Inventory>
             {
-                UI_Manager.Instance.GetPool("inventory").GetComponent<UI_Inventory>(),
+                UI_Manager.Instance.GetPool("inventory").transform.Find("ui_inventory").GetComponent<UI_Inventory>(),
                 UI_Manager.Instance.GetPool("hud").GetComponent<UI_HUD>().perso_quick_inventory
             };
         }
