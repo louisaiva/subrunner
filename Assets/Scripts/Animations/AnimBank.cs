@@ -33,9 +33,9 @@ public class AnimBank : Singleton<AnimBank>
 
     [Header("Animations parameters")]
     // store the capacities that have parameters override
-    private List<string> capacities_with_parameters_override = new List<string>() { "attack","hurted","dodge" }; // todo obsolete ??
+    // private List<string> capacities_with_parameters_override = new List<string>() { "attack","hurted","dodge" }; // todo obsolete ??
     // store the loops of the capacities
-    private List<bool> capacities_loops = new List<bool>() { false,false,false }; // todo obsolete ??
+    [SerializeField] private List<string> capacities_with_no_loops = new List<string>() { "attack","hurted","dodge" };
 
     [Header("Sprites")]
     public string spritesheets_path = "spritesheets/";
@@ -241,11 +241,15 @@ public class AnimBank : Singleton<AnimBank>
         string capacity = splitted_name[1];
 
         // check if the capacity has parameters override
-        int index = capacities_with_parameters_override.IndexOf(capacity);
+        /* int index = capacities_with_parameters_override.IndexOf(capacity);
         if (index != -1)
         {
             anim.loop = capacities_loops[index];
             // anim.priority = capacities_priorities[index];
+        } */
+       if (capacities_with_no_loops.Contains(capacity))
+        {
+            anim.loop = false; // if the capacity is in the no loops list, we set the loop to false
         }
 
         // add the skin & capacity to the bank if they don't exist

@@ -244,6 +244,25 @@ public class Inventory : MonoBehaviour
         }
         return null;
     }
-
-
+    public List<Item> GetItemsByType<T>() where T : Item
+    {
+        // we get all the items of type T
+        List<Item> items = new List<Item>();
+        foreach (Item item in Items)
+        {
+            if (item is T) { items.Add(item); }
+        }
+        return items;
+    }
+    public List<Item> GetItemsByRule(string rule="",bool exclusion_rule = false)
+    {
+        // we get all the items that match the rule
+        List<Item> items = new List<Item>();
+        foreach (Item item in Items)
+        {
+            if (!exclusion_rule && item.ValidateRule(rule)) { items.Add(item); }
+            else if (exclusion_rule && !item.ValidateRule(rule)) { items.Add(item); }
+        }
+        return items;
+    }
 }

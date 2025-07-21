@@ -184,6 +184,7 @@ public class InteractCapacity : Capacity
         // we check if it's an Interactable or an Item
         if (interactive is not Interactable && interactive is not Item) { return; }
         if (interactive is Item item && item.ValidateRule(ExclusionItemRule)) { return; } // we check if the item is excluded by the rule
+        if (interactive is Hackable hackable && !hackable.CanInteract(capable)) { return; } // we check if the hackable can be interacted with
 
         // we check if the capable is already hovered
         if (interactive == closest_hover) { return; }

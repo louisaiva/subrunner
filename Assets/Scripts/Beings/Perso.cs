@@ -41,6 +41,19 @@ public class Perso : Being
     [SerializeField] private List<string> metamorph_skins = new List<string>() { "perso", "cat", "zombo", "robot", "apple", "fridge", "small_laptop" };
 
 
+    [Header("HACKING")]
+    public Laptop Laptop
+    {
+        get
+        {
+            if (inventory == null) { return null; } // if the inventory is not set, we return null
+            Laptop laptop = inventory.GetItem("hardware:laptop") as Laptop;
+            if (!laptop) { return null; } // if the inventory doesn't have a laptop, we return null
+            return laptop;
+            // todo for now we return the first laptop we find. but we want to make sure
+            // todo to return the laptop on the UI_LaptopItemPool
+        }
+    }
 
 
 
@@ -284,7 +297,13 @@ public class Perso : Being
         if (!Can("dodge")) { return; }
         Do("dodge");
     }
+    private void OnHack()
+    {
+        /* Laptop laptop = Laptop;
+        if (laptop == null) { return; } // if the laptop is not set, we return */
 
+        UseItem("hardware:laptop");
+    }
 
 
 

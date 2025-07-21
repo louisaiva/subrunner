@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4059532102827164284}
   - component: {fileID: 3075106799354149284}
   - component: {fileID: 8065716254065511569}
-  - component: {fileID: 4287555844564783839}
+  - component: {fileID: 5964260666296598924}
   m_Layer: 24
   m_Name: card
   m_TagString: Item
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 3273551725298802774}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 27.028, y: 29.435, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -149,7 +149,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &4287555844564783839
+--- !u!114 &5964260666296598924
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -158,7 +158,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3273551725298802774}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21b1e91dfac8ace4aabb5aed796039e2, type: 3}
+  m_Script: {fileID: 11500000, guid: 7bdd01976a9374e468b92c65bfe8b32a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   inputs: {x: 0, y: 0}
@@ -181,6 +181,9 @@ MonoBehaviour:
   MaxQty: 4
   ItemDescription: portable card that can store small datas/l (such as a 16-digit
     password/. or the equivalent of all data from the 2020' internet)
+  key:
+    key_type: SHA
+    key: 4iXSfHnzlxFbASpU
 --- !u!1 &7775233785251244999
 GameObject:
   m_ObjectHideFlags: 0

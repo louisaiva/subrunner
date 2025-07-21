@@ -101,22 +101,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown: 0.2
   debug: 0
-  target_layers:
-    serializedVersion: 2
-    m_Bits: 0
-  excluded_tags: []
-  range_target_detection: 1
   distance_to_attack: 1
   kills: 0
   damage: 2
   random_damage_modifier_at_start: 0
   is_attacking: 0
-  perforant_attack: 1
-  delay_between_perforations: 0.01
   hit_enemies: []
   not_attackable_tags: []
+  single_hit: 0
+  perforant_attack: 1
   knockback_base: 500
   attackant_advantage: 10
+  base_attack_shake_magnitude: 0.5
+  base_kill_shake_magnitude: 0.8
 --- !u!1 &1360620813671055405
 GameObject:
   m_ObjectHideFlags: 0
@@ -146,7 +143,7 @@ Transform:
   m_GameObject: {fileID: 1360620813671055405}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.493727, y: 3.6934118, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

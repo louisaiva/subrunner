@@ -60,12 +60,13 @@ public class AnimPlayer : MonoBehaviour
             {"open",3},
             {"close",3},
             {"dodge",3},
-            {"hurted",3},
             {"eat",4},
+            {"hack",4},
             {"fell_asleep",4},
             {"wake_up",4},
             {"lick_foot",4},
             {"throw",5},
+            {"hurted",5},
             {"die",5}};
     // todo à transformer en List<CapacityPriority> sans MonoBehaviour pour pouvoir les éditer dans l'éditeur
 

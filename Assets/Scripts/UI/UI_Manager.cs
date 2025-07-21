@@ -174,7 +174,7 @@ public class UI_Manager : Singleton<UI_Manager>
         // check if we can cancel the pool
         if (!current_pool.CanBeCanceled)
         {
-            if (debug) { Debug.LogWarning("(UI_Manager) tried to cancel a pool that cannot be canceled : " + current_pool.Reference); }
+            if (debug && current_pool.Reference != "hud") { Debug.LogWarning("(UI_Manager) tried to cancel a pool that cannot be canceled : " + current_pool.Reference); }
             return;
         }
 
