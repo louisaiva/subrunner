@@ -133,7 +133,7 @@ public class Item : Movable
     }
 
     // USE
-    public virtual void Use()
+    public virtual void Use(Capable user)
     {
         // todo make this an interface
         // only for items that have a use (apple : being eaten, katana : make an attack, etc.)
@@ -146,8 +146,8 @@ public class Item : Movable
         if (!Grabbed) { return; }
 
         // we find the holder of the item
-        Capable holder = transform.parent.GetComponent<Inventory>().capable;
-        if (holder == null) { return; }
+        // Capable holder = transform.parent.GetComponent<Inventory>().capable;
+        // if (holder == null) { return; }
 
         // and then we use the item
     }

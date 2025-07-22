@@ -121,6 +121,7 @@ public class InteractHackCapacity : Capacity
     {
         // we check if the other has a HoverCapacity
         HoverCapacity hover = other.GetComponent<HoverCapacity>();
+        if (hover == null) { hover = other.GetComponentInParent<HoverCapacity>(); }
         if (hover == null) { return; }
 
         // we get the hackable of the hover capacity
@@ -141,7 +142,7 @@ public class InteractHackCapacity : Capacity
     private void OnTriggerExit2D(Collider2D other)
     {
         // we check if the other has a HoverCapacity
-        HoverCapacity hover = other.GetComponent<HoverCapacity>();
+        HoverCapacity hover = other.GetComponentInParent<HoverCapacity>();
         if (hover == null) { return; }
 
         // we get the hackable of the hover capacity

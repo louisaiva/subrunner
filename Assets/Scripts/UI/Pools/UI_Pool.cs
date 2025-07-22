@@ -32,7 +32,7 @@ public class UI_Pool : MonoBehaviour
     [SerializeField] protected bool log = false;
 
     // START
-    private void Start()
+    protected virtual void Start()
     {
         // we get the inputs
         Hide(0f);

@@ -55,18 +55,18 @@ public class Laptop : Item
     }
 
     // USING ITEM
-    public override void Use()
+    public override void Use(Capable user)
     {
         // we check if we have a hack capacity
         HackCapacity hack_capacity = GetCapacity<HackCapacity>();
         if (hack_capacity == null) { return; }
 
         // we find the holder of the item
-        Capable holder = transform.parent.GetComponent<Inventory>().capable;
-        if (holder == null) { return; }
+        /* Capable holder = transform.parent.GetComponent<Inventory>().capable;
+        if (holder == null) { return; } */
 
         // we use the hack capacity
-        hack_capacity.Use(holder);
+        hack_capacity.Use(user);
     }
 
 }

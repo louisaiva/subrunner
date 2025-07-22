@@ -54,7 +54,7 @@ public class CloseCapacity : Capacity
         if (play_anim)
         {
             capable.anim_player.StopPlaying("idle_open");
-            capable.anim_player.Play("close", priority_override: 3, duration_override: closing_duration);
+            capable.anim_player.Play("close", duration_override: closing_duration);
         }
         Invoke("success_close", closing_duration);
 

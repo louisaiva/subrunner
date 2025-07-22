@@ -249,7 +249,7 @@ public class Capable : MonoBehaviour
 
         // we use the item
         if (debug) { Debug.Log("(Capable) " + name + " used item " + item_reference); }
-        item.Use();
+        item.Use(this);
     }
 
 

@@ -271,8 +271,8 @@ public class Perso : Being
     // INPUTS
     public void OnAttack()
     {
-        // on vérifie qu'on est pas stunned
         if (HasEffect(Effect.Stunned)) { return; }
+        // if (anim_player.current_anim.capacity == "attack") { return; }
 
         // on met à jour la valeur de damage
         if (HasItem("weapon:katana", out Item katana))
@@ -297,7 +297,7 @@ public class Perso : Being
         if (!Can("dodge")) { return; }
         Do("dodge");
     }
-    private void OnHack()
+    public void OnHack()
     {
         /* Laptop laptop = Laptop;
         if (laptop == null) { return; } // if the laptop is not set, we return */

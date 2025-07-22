@@ -197,7 +197,7 @@ GameObject:
   - component: {fileID: 962261051401836021}
   - component: {fileID: 6666599156580779850}
   - component: {fileID: 832885979200152637}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: interacthack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -235,7 +235,7 @@ CircleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 16777216
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -406,7 +406,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4515255295261711829, guid: eb43fdc2aea050f43a1b911bf48dfaa3, type: 3}
       propertyPath: range
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4515255295261711829, guid: eb43fdc2aea050f43a1b911bf48dfaa3, type: 3}
       propertyPath: exploits.Array.size

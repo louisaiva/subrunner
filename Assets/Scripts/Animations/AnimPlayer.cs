@@ -55,24 +55,24 @@ public class AnimPlayer : MonoBehaviour
             {"hover",1},
             {"idle_open",2},
             {"idle_sleep",2},
-            {"attack",3},
-            {"spawn",3},
-            {"open",3},
-            {"close",3},
-            {"dodge",3},
-            {"eat",4},
-            {"hack",4},
-            {"fell_asleep",4},
-            {"wake_up",4},
-            {"lick_foot",4},
-            {"throw",5},
+            {"hack",3},
+            {"attack",4},
+            {"spawn",4},
+            {"open",4},
+            {"close",4},
+            {"dodge",4},
             {"hurted",5},
-            {"die",5}};
+            {"eat",5},
+            {"fell_asleep",5},
+            {"wake_up",5},
+            {"lick_foot",5},
+            {"throw",6},
+            {"die",6}};
     // todo à transformer en List<CapacityPriority> sans MonoBehaviour pour pouvoir les éditer dans l'éditeur
 
-    public List<int> animation_priorities_with_no_loop = new() { 3,4 };
+    [SerializeField] private List<int> animation_priorities_with_no_loop = new() { 4,5 };
         // we never loop the animation if it's in this priority (attack, dodge, hurted) -> always play once
-    public List<int> animation_priorities_with_static_orientation = new() { 3,4 };
+    [SerializeField] private List<int> animation_priorities_with_static_orientation = new() { 4,5 };
         // we can't interrupt the animation for switching orientation if it's in this list (wait the end of the anim before changing orientation)
         // only for orientation, not for switching to another animation (ex we can interrupt dodge to attack bcz they have the same priority 3)
 
@@ -201,9 +201,9 @@ public class AnimPlayer : MonoBehaviour
             {
                 // we get the duration of the animation
                 float duration = anim.GetBaseDuration();
-                
+
                 // we calculate the resulting speed
-                anim.speed = duration / (float) duration_override;
+                anim.speed = duration / (float)duration_override;
             }
 
 

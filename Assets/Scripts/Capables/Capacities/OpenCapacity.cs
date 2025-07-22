@@ -39,7 +39,7 @@ public class OpenCapacity : Capacity
         (capable as Openable).is_moving = true;
 
         // on joue l'animation
-        capable.anim_player.Play("open",priority_override:3,duration_override: opening_duration);
+        capable.anim_player.Play("open",duration_override: opening_duration);
         Invoke("success_open", opening_duration);
 
         // on fait les vérifications pour les portes

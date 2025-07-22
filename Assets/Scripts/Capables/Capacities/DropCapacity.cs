@@ -97,7 +97,7 @@ public class DropCapacity : Capacity
         Item item = selected_item;
 
         // we check if it s a shuriken, if so we throw it
-        if (item is Shuriken) { (item as Shuriken).Use(); }
+        if (item is Shuriken) { (item as Shuriken).Use(capable); }
 
         // we try to drop the item
         bool drop = inventory.Drop(selected_item);

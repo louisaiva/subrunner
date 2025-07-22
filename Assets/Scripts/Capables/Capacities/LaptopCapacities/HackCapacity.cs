@@ -8,11 +8,9 @@ using UnityEngine;
 /// in their range. need to have a laptop for this to work
 /// </summary>
 
-[RequireComponent(typeof(CircleCollider2D))]
 public class HackCapacity : Capacity
 {
     [Header("Target Selection")]
-    public float range = 1f;
     public Hackable hovered_target;
 
     [Header("Hacks")]
@@ -22,19 +20,22 @@ public class HackCapacity : Capacity
     public List<Exploit> exploits = new List<Exploit>();
 
     [Header("Components")]
-    private Laptop laptop;
-    private Being being;
-    private AnimPlayer anim_player;
+    [SerializeField] private Laptop laptop;
+    [SerializeField] private Being being;
+    [SerializeField] private AnimPlayer anim_player;
+    [SerializeField] private float hacking_animation_duration = 2f; // duration of the hacking animation
+    [SerializeField] private CircleCollider2D hack_collider;
 
 
     // START
     private void Start()
     {
         laptop = capable.GetComponent<Laptop>();
+        hack_collider = laptop.GetCapacity<InteractHackCapacity>()?.GetComponent<CircleCollider2D>();
     }
 
     // USE
-    public override void Use(Capable capable)
+    public override async void Use(Capable capable)
     {
         // checks if we have a hovered target
         if (hovered_target == null)
@@ -43,32 +44,37 @@ public class HackCapacity : Capacity
             return;
         }
 
-        // check if we can hack this hovered target
-        Hack hack = CanHack(hovered_target);
-        if (hack == null)
+
+        // we set the bearer and its components
+        if (capable is Being) { being = capable as Being; }/* 
+        else if (capable is Laptop laptop && laptop.Holder is Being holder)
         {
-            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack {hovered_target.name} but can't hack it"); }
+            being = holder;
+        } */
+        else
+        {
+            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack but we have no being that can play animation"); }
             return;
         }
 
-        // we set the bearer and its components
-        if (capable is Being) { being = capable as Being; }
-        else { being = null; }
-        anim_player = capable.GetComponent<AnimPlayer>();
+        // check if we can hack this hovered target
+        Hack hack = CanHack(hovered_target);
+        if (hack == null) { return; }
+
+        // we start the cooldown for the time of the animation
+        startCooldown(hacking_animation_duration);
 
         // we play the animation
-        Anim anim = anim_player.Play("hack");
+        anim_player = capable.GetComponent<AnimPlayer>();
+        await play_animation();
+        /* Anim anim = anim_player.Play("hack");
         if (anim == null)
         {
             // we remove the animation from the pile
             anim_player.StopPlaying("hack", true);
             if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack but the animation can't be played right now."); }
             return;
-        }
-
-        // we start the cooldown for the time of the animation
-        float anim_duration = anim.GetDuration();
-        startCooldown(anim_duration);
+        } */
 
         // we run the exploit
         RunExploit(hack);
@@ -78,7 +84,7 @@ public class HackCapacity : Capacity
     public Hack CanHack(Hackable target)
     {
         // we check if the target is in range
-        if (Vector3.Distance(transform.position, target.transform.position) > range)
+        if (Vector3.Distance(transform.position, target.transform.position) > hack_collider.radius)
         {
             if (debug) { Debug.LogWarning($"(HackCapacity) {being.name} tried to hack {target.name} but it is out of range."); }
             return null;
@@ -109,6 +115,7 @@ public class HackCapacity : Capacity
         }
 
         // we have no hack we can't hack it
+        if (debug) { Debug.Log($"(HackCapacity) {being.name} tried to hack {target.name} but no vulnerability was found."); }
         return null;
     }
     public void RunExploit(Hack hack)
@@ -134,7 +141,7 @@ public class HackCapacity : Capacity
             Hack hack = running_hacks[i];
 
             // checks if we are too far away from the target
-            if (Vector3.Distance(transform.position, hack.target.transform.position) > range)
+            if (Vector3.Distance(transform.position, hack.target.transform.position) > hack_collider.radius)
             {
                 if (debug) { Debug.LogWarning($"(HackCapacity) {being.name} is too far away from {hack.target.name} to continue the hack."); }
                 // we remove the hack from the running hacks
@@ -169,7 +176,7 @@ public class HackCapacity : Capacity
         }
 
         // we check if the target is in range
-        if (Vector3.Distance(transform.position, target.transform.position) > range)
+        if (Vector3.Distance(transform.position, target.transform.position) > hack_collider.radius)
         {
             if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} is hovering {target.name} but it is out of range."); }
         }
@@ -184,6 +191,13 @@ public class HackCapacity : Capacity
         hovered_target = null;
     }
 
+    // STOP ANIMATION
+    private async Awaitable play_animation()
+    {
+        anim_player.Play("hack");
+        await Task.Delay((int)(hacking_animation_duration * 1000));
+        anim_player.StopPlaying("hack");
+    }
 }
 
 

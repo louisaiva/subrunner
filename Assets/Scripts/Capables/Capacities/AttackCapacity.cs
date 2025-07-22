@@ -14,7 +14,7 @@ public class AttackCapacity : Capacity
     public int kills = 0;
     public float damage = 10f;
     [SerializeField] private float random_damage_modifier_at_start = 0; // damage += random.range(-5,5) in the start method if this modifier = 5
-    [SerializeField] private bool is_attacking = false;
+    public bool IsAttacking = false;
     [SerializeField] List<Being> hit_enemies = new List<Being> {};
     [SerializeField] private List<string> not_attackable_tags = new List<string> {};
     
@@ -87,7 +87,7 @@ public class AttackCapacity : Capacity
         // we start the cooldown for the time of the animation
         float anim_duration = anim.GetDuration();
         startCooldown(anim_duration);
-        is_attacking = true;
+        IsAttacking = true;
         hit_enemies.Clear();
     }
     
@@ -96,13 +96,13 @@ public class AttackCapacity : Capacity
     {
         base.Update();
 
-        if (!is_attacking) { return; }
+        if (!IsAttacking) { return; }
         if (!anim_player.current_capacity.Equals("attack"))
         {
             // checks if we are still attacking & the animation is not the attack animation anymore
-            if (is_attacking)
+            if (IsAttacking)
             {
-                is_attacking = false;
+                IsAttacking = false;
                 hit_enemies.Clear();
             }
             return;
@@ -191,7 +191,7 @@ public class AttackCapacity : Capacity
 
         // we stop the attack
         hit_enemies.Clear();
-        if (single_hit) { is_attacking = false; }
+        if (single_hit) { IsAttacking = false; }
         if (being == null) { return; }
 
         
@@ -236,7 +236,7 @@ public class AttackCapacity : Capacity
         if (!other.gameObject.layer.Equals(LayerMask.NameToLayer("Beings"))) { return; }
 
         // we check if we are attacking
-        if (!is_attacking) { return; }
+        if (!IsAttacking) { return; }
         if (anim_player.current_capacity != "attack") { return; }
 
         // we check if the pc is enabled

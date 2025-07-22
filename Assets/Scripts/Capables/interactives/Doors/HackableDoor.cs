@@ -16,7 +16,11 @@ public class HackableDoor : Door, Hackable
     // HACKABLE
     public bool IsVulnerableTo(Exploit exploit)
     {
-        return exploit.name.Contains(key.key_type);
+        string[] exploitType = exploit.name.Split('_');
+        if (debug) { Debug.Log($"(HackableDoor) checking if {name} is vulnerable to exploit {exploit.name} ?" + exploitType); }
+        if (exploitType.Length < 2) { return false; }
+        if (exploitType[1] == key.key_type) { return true; } // if the exploit type matches the key type, we can hack the door
+        return false;
     }
     public void OnHackStarted(Hack hack)
     {
