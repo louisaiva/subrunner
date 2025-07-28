@@ -52,6 +52,7 @@ public class UI_Module : UI_Item
     {
         // check if disabled
         if (is_disabled) { return; }
+        if (log) { Debug.Log("OnPointerEnter on " + gameObject.name); }
 
         // on change le sprite du slot
         GetComponent<Image>().sprite = hover_sprite;
@@ -76,6 +77,7 @@ public class UI_Module : UI_Item
     {
         // check if disabled
         if (is_disabled) { return; }
+        if (log) { Debug.Log("OnPointerExit on " + gameObject.name); }
 
         // on change le sprite du slot
         GetComponent<Image>().sprite = base_sprite;
@@ -94,6 +96,7 @@ public class UI_Module : UI_Item
     {
         // check if disabled
         if (is_disabled) { return; }
+        if (log) { Debug.Log("OnPointerDragEnter on " + gameObject.name); }
 
         // on change le sprite du slot
         GetComponent<Image>().sprite = drag_hover_sprite;

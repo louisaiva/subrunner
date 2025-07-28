@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
+using UnityEngine.InputSystem.UI;
 
 public class InputManager : Singleton<InputManager>
 {
@@ -14,6 +15,8 @@ public class InputManager : Singleton<InputManager>
     [SerializeField] public float button_threshold_min = 0.2f;
     [SerializeField] public float button_threshold_max = 0.8f;
 
+    [Header("Components")]
+    [SerializeField] private InputSystemUIInputModule input_system_ui_input_module;
 
     [Header("Logs")]
     public bool debug = false;
@@ -61,7 +64,9 @@ public class InputManager : Singleton<InputManager>
         {
             // on met à jour le type d'input
             current_input_type = input_type;
-            if (debug) { Debug.Log("(InputManager) switching to " + input_type);}
+            input_system_ui_input_module.enabled = input_type == "keyboard";
+            Cursor.visible = input_type == "keyboard";
+            if (debug) { Debug.Log("(InputManager) switching to " + input_type); }
         }
     }
 

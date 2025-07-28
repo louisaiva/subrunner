@@ -204,7 +204,7 @@ public class UI_Item : UI_Slot
 
         // we check if we have an item
         if (Quantity == 0) { return; }
-        if (debug) { Debug.Log("OnPointerClick on " + gameObject.name); }
+        if (log) { Debug.Log("OnPointerClick on " + gameObject.name); }
 
         // we check if this is a food item
         if (items.Count > 0 && items[0].GetComponent<Food>() != null)
@@ -237,7 +237,7 @@ public class UI_Item : UI_Slot
 
         // we check if we have an item
         if (Quantity == 0) { return; }
-        if (debug) { Debug.Log("OnPointerDropped on " + gameObject.name); }
+        if (log) { Debug.Log("OnPointerDropped on " + gameObject.name); }
 
         // we get the item
         Item item = items[0];
@@ -282,6 +282,7 @@ public class UI_Item : UI_Slot
     {
         // check if disabled
         if (is_disabled) { return; }
+        if (log) { Debug.Log("OnPointerDragDown on " + gameObject.name); }
 
         // on change le sprite du slot
         GetComponent<Image>().sprite = drag_sprite;
@@ -290,6 +291,7 @@ public class UI_Item : UI_Slot
     {
         // check if disabled
         if (is_disabled) { return; }
+        if (log) { Debug.Log("OnPointerDragEnter on " + gameObject.name); }
 
         // on change le sprite du slot
         GetComponent<Image>().sprite = drag_hover_sprite;
@@ -303,6 +305,7 @@ public class UI_Item : UI_Slot
     }
     public void OnPointerDragUp()
     {
+        if (log) { Debug.Log("OnPointerDragUp on " + gameObject.name); }
         OnPointerEnter(null);
     }
 

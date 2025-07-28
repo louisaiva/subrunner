@@ -152,6 +152,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         }
         return false;
     }
+    public Vector2 SavedPosition { get; } = Vector2.zero;
 
     // GRAB
     public virtual bool UI_Grab(Item item)

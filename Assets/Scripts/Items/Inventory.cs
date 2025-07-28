@@ -71,7 +71,6 @@ public class Inventory : MonoBehaviour
         // we check if we have at least one ui_inventory
         if (ui != null)
         {
-
             // we try to make the first ui_inventory (which is our reference ui_inventory) to grab it
             // if it can grab it, all the others can grab it.
             // if no, we return false

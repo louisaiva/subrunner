@@ -22,7 +22,7 @@ public class UI_GameOver : UI_Pool
     [Header("Components")]
     [SerializeField] private TextMeshProUGUI oh_no_text;
     // START
-    protected void Start()
+    protected override void Start()
     {
         // we create the callback
         reviveAction = InputManager.Instance.GetAction(reviveInput);

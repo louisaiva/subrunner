@@ -66,4 +66,5 @@ public class UI_PauseMenu : UI_Pool, I_UI_Slottable
         }
         return false;
     }
+    public Vector2 SavedPosition { get => base_position; }
 }

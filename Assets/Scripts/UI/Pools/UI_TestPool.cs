@@ -67,4 +67,5 @@ public class UI_TestPool : UI_Pool, I_UI_Slottable
         }
         return false;
     }
+    public Vector2 SavedPosition { get; private set; } = Vector2.zero;
 }

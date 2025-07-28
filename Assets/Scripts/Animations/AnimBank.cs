@@ -415,6 +415,8 @@ public class AnimBank : Singleton<AnimBank>
     public string skin { get { return name.Split('.')[0]; } }
     public string capacity { get { return name.Split('.')[1]; } }
     public string orientation { get { return name.Split('.')[2]; } }
+    // todo pas opti, faire l'inverse : stocker chaque string skin,capacity,orientation
+    // todo et faire une propertie name qui concatene les 3
     
     // stockage utile de l'animation
     public string[] sprites_paths;

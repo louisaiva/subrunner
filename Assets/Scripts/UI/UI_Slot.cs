@@ -13,7 +13,7 @@ public class UI_Slot : MonoBehaviour, I_UI_Slot
     [SerializeField] public bool is_disabled { get; set; }
 
     [Header("Logs")]
-    public bool debug = false;
+    public bool log = false;
 
     [Header("Sprites")]
     public Sprite base_sprite;
@@ -44,6 +44,7 @@ public class UI_Slot : MonoBehaviour, I_UI_Slot
         // check if disabled
         if (is_disabled) { return; }
 
+        if (log) { Debug.Log("OnPointerEnter on " + gameObject.name); }
         // on change le sprite du slot
         GetComponent<Image>().sprite = hover_sprite;
 
@@ -54,6 +55,8 @@ public class UI_Slot : MonoBehaviour, I_UI_Slot
     {
         // check if disabled
         if (is_disabled) { return; }
+
+        if (log) { Debug.Log("OnPointerExit on " + gameObject.name); }
 
         // on change le sprite du slot
         GetComponent<Image>().sprite = base_sprite;
@@ -66,7 +69,7 @@ public class UI_Slot : MonoBehaviour, I_UI_Slot
         // check if disabled
         if (is_disabled) { return; }
 
-        if (debug) { Debug.Log("OnPointerDown on " + gameObject.name); }
+        if (log) { Debug.Log("OnPointerDown on " + gameObject.name); }
 
         // on change le sprite du slot
         GetComponent<Image>().sprite = down_sprite;

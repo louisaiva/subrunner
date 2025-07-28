@@ -1,3 +1,4 @@
+#pragma warning disable 4014
 using UnityEngine;
 using PrimeTween;
 using System.Collections.Generic;
@@ -56,7 +57,7 @@ public class UI_PanelManager : MonoBehaviour
         // we switch to the inventory panel
         await TweenToPanel(inventoryName);
         current_panel = inventoryName;
-        if (log) { Debug.Log($"\n\t switched to panel: {inventoryName} with success !!!"); }
+        if (log) { Debug.Log($"(UI_PanelManager) switched to panel: {inventoryName} with success !!!"); }
     }
 
     // TWEENING

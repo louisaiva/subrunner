@@ -16,7 +16,7 @@ public class UI_LevelUpMenu : UI_Pool, I_UI_Slottable
     [Header("Slottable")]
     [SerializeField] private Transform skills_parent;
     [SerializeField] private Vector2 base_position = new Vector2(0, 10000);
-    
+
 
     [Header("Components")]
     public Description Descriptor;
@@ -88,4 +88,5 @@ public class UI_LevelUpMenu : UI_Pool, I_UI_Slottable
         }
         return false;
     }
+    public Vector2 SavedPosition { get; private set; } = Vector2.zero;
 }

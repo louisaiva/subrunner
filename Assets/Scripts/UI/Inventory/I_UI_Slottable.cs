@@ -7,12 +7,9 @@ using System;
 public interface I_UI_Slottable
 {
 
-    // callback
-    // System.Action<InputAction.CallbackContext> CancelCallback { get; }
-    // void define_callback();
-
     List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator);
     bool IsYourSlot(GameObject slot);
+    Vector2 SavedPosition { get; }
 
     // MonoBehaviour functions
     GameObject gameObject { get; }

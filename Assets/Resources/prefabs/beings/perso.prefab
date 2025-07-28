@@ -920,6 +920,14 @@ MonoBehaviour:
   xp_to_next_level: 100
   skillManager: {fileID: 0}
   input_manager: {fileID: 0}
+  metamorph_skins:
+  - perso
+  - cat
+  - zombo
+  - robot
+  - apple
+  - fridge
+  - small_laptop
   bits: 8
   max_bits: 8
   regen_bits: 0.1
@@ -6440,7 +6448,9 @@ MonoBehaviour:
   cooldown: 0
   debug: 0
   selected_item: {fileID: 0}
+  random_direction: 0
   drop_magnitude: 50
+  lock_magnitude: 0
   parent_to_drop_items: {fileID: 0}
   bank: {fileID: 0}
   inventory: {fileID: 0}
@@ -6545,7 +6555,6 @@ MonoBehaviour:
   xp_provider: {fileID: 0}
   text_manager: {fileID: 0}
   xp_gift: 10
-  destroy_object: 0
   show_smiley: 1
   smileys:
   - RIP
