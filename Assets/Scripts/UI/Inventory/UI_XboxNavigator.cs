@@ -35,6 +35,9 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     public float angle_threshold = 45f;
     public float angle_multiplicator = 0f;
     // [SerializeField] public float angle_vs_distance_precision = 0f; // from 0 to 1, affine la prédiction de navigation
+
+    // EVENTS
+    public event Action<I_UI_Slot> OnSlotHoverEnter = delegate { }; // delegate that triggers when we navigate to a new slot
     public event Action<I_UI_Slot> OnSlotOutOfScreen = delegate { }; // delegate that triggers when we navigate to a position that is out of screen
 
 
@@ -64,6 +67,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     [SerializeField] private InputActionReference moveItemInput;
     private InputAction moveItemAction;
     private event Action<InputAction.CallbackContext> moveItemCallback; // moveItem Callback is for moving an item through the ui. -> Y
+    public bool IsMovingItem { get => moving_ui_item != null; } // returns true if we are moving an item
 
     // NAVIGATE IN-GAME
     [SerializeField] private bool navigateInGame = false; // if true, we use the navigateInGameAction instead of the navigateAction -> RJoy 
@@ -226,7 +230,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     }
 
     // INPUTS
-    public void enableInputs(bool ingame_navigation = false)
+    private void enableInputs(bool ingame_navigation = false)
     {
         moveItemAction.performed += moveItemCallback;
 
@@ -256,6 +260,24 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         moveItemAction.performed -= moveItemCallback;
 
         navigateInGame = false; // on met à jour la variable
+    }
+    public void ToggleInput(string input_name, bool enable = true)
+    {
+        if (input_name == "drop")
+        {
+            if (enable) { dropAction.performed += dropCallback; }
+            else { dropAction.performed -= dropCallback; }
+        }
+        else if (input_name == "activate")
+        {
+            if (enable) { activateAction.performed += activateCallback; }
+            else { activateAction.performed -= activateCallback; }
+        }
+        else if (input_name == "move")
+        {
+            if (enable) { moveItemAction.performed += moveItemCallback; }
+            else { moveItemAction.performed -= moveItemCallback; }
+        }
     }
 
     // UPDATE
@@ -502,6 +524,9 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
             if (debug) { Debug.Log("(UI_Navigator) slot " + index + " is out of screen"); }
             OnSlotOutOfScreen?.Invoke(slots[index].GetComponent<I_UI_Slot>());
         }
+
+        // on déclenche l'event OnSlotHoverEnter
+        OnSlotHoverEnter?.Invoke(slots[index].GetComponent<I_UI_Slot>());
 
         // on change le current slot index
         current_slot_index = index;
@@ -800,6 +825,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         }
         current_slot_index = destination_index;
         destination.OnPointerEnter(null); // on hover le slot de destination
+        OnSlotHoverEnter?.Invoke(destination); // on déclenche l'event OnSlotHoverEnter
 
         // on relache le drag
         if (debug) { Debug.Log($"(UI_Navigator) item {moving_ui_item.gameObject.name} switched position with {destination.gameObject.name}"); }

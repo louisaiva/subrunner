@@ -10,6 +10,7 @@ public class Item : Movable
     public int MaxQty = 1;
     public bool Stackable { get => MaxQty > 1; }
     public string ItemDescription = "description of the item";
+    public string ActivationLabel = ""; // if an item has an use, this is its label (example : food -> "eat", shuriken -> "throw" etc) but most of items don't have an action at all
 
     // Grabbable
     private bool _grabbed = false;

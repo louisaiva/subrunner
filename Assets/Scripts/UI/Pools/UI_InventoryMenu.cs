@@ -18,7 +18,12 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     [SerializeField] private float base_transition = 0.2f;
     [SerializeField] private bool fade_all_disabled = true;
 
+    [Header("Input Feedbacks")]
+    [SerializeField] private ButtonFeedback drop_feedback;
+    [SerializeField] private ButtonFeedback use_feedback;
+    [SerializeField] private ButtonFeedback move_feedback;
 
+    // AWAKE START
     protected void Awake()
     {
         // on récupère le navigator
@@ -38,6 +43,11 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
 
         // we save the current ui_elements state in saved_state
         saved_slots = new List<GameObject>(ui_elements);
+    }
+    protected override void Start()
+    {
+        UI_XboxNavigator.Instance.OnSlotHoverEnter += handleUI_ItemHoverEnter;
+        base.Start();
     }
 
     // SHOW / HIDE
@@ -158,4 +168,53 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         return false;
     }
     public Vector2 SavedPosition { get; private set; } = Vector2.zero;
+
+    // INPUT SWITCHING
+    protected void handleUI_ItemHoverEnter(I_UI_Slot slot)
+    {
+        if (!Showed) { return; }
+        if (slot is not UI_Item ui_slot) { return; }
+
+        // we handle the DROP (activate it only if it is a UI_Item that has Item & not a UI_Module)        
+        if (ui_slot is UI_Module || ui_slot.Item == null)
+        {
+            drop_feedback.SetAlwaysFull(false);
+            drop_feedback.SetLabel("");
+            UI_XboxNavigator.Instance.ToggleInput("drop", false);
+        }
+        else
+        {
+            drop_feedback.SetAlwaysFull(true);
+            drop_feedback.SetLabel("drop");
+            UI_XboxNavigator.Instance.ToggleInput("drop", true);
+        }
+
+        // ACTIVATE
+        if (ui_slot.Item != null && ui_slot.Item.ActivationLabel != "")
+        {
+            use_feedback.SetAlwaysFull(true);
+            use_feedback.SetLabel(ui_slot.Item.ActivationLabel);
+            UI_XboxNavigator.Instance.ToggleInput("activate", true);
+        }
+        else
+        {
+            use_feedback.SetAlwaysFull(false);
+            use_feedback.SetLabel("");
+            UI_XboxNavigator.Instance.ToggleInput("activate", false);
+        }
+
+        // MOVE
+        if (ui_slot.Item == null && !UI_XboxNavigator.Instance.IsMovingItem)
+        {
+            move_feedback.SetAlwaysFull(false);
+            move_feedback.SetLabel("");
+            UI_XboxNavigator.Instance.ToggleInput("move", false);
+        }
+        else
+        {
+            move_feedback.SetAlwaysFull(true);
+            move_feedback.SetLabel("move");
+            UI_XboxNavigator.Instance.ToggleInput("move", true);
+        }
+    }
 }
