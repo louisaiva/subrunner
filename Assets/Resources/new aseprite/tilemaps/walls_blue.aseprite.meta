@@ -124,15 +124,15 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: Frame_0
     originalName: 
-    pivot: {x: 0.5416667, y: 0}
+    pivot: {x: 0.5, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
       serializedVersion: 2
       x: 4
-      y: 60
-      width: 144
+      y: 4
+      width: 192
       height: 48
     spriteID: 8fa2d110a85a08b4883d646dbb2d6c3c
     spriteBone: []
@@ -142,17 +142,17 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 60}
+    uvTransform: {x: 4, y: 4}
   - name: Frame_1
     originalName: 
-    pivot: {x: 0.5, y: 0}
+    pivot: {x: 0.61538464, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
       serializedVersion: 2
       x: 4
-      y: 4
+      y: 60
       width: 156
       height: 48
     spriteID: 2fdbbd037b4d08044b6602fedbe9a1bb
@@ -163,10 +163,10 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 4}
+    uvTransform: {x: 4, y: 60}
   - name: Frame_2
     originalName: 
-    pivot: {x: 0.5416667, y: 0}
+    pivot: {x: 0.61538464, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
@@ -174,7 +174,7 @@ ScriptedImporter:
       serializedVersion: 2
       x: 4
       y: 116
-      width: 144
+      width: 156
       height: 48
     spriteID: b7ba07b69056b3049b75bd157227d010
     spriteBone: []
@@ -187,7 +187,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 116}
   - name: Frame_3
     originalName: 
-    pivot: {x: 0.5416667, y: 0}
+    pivot: {x: 0.6666667, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
@@ -221,7 +221,7 @@ ScriptedImporter:
       cellRect:
         x: 0
         y: 0
-        width: 144
+        width: 192
         height: 48
       spriteId: 8fa2d110a85a08b4883d646dbb2d6c3c
     - name: Frame_1
@@ -239,7 +239,7 @@ ScriptedImporter:
       cellRect:
         x: 0
         y: 0
-        width: 144
+        width: 156
         height: 48
       spriteId: b7ba07b69056b3049b75bd157227d010
     - name: Frame_3
@@ -269,4 +269,4 @@ ScriptedImporter:
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 156, y: 48}
+  canvasSize: {x: 192, y: 48}

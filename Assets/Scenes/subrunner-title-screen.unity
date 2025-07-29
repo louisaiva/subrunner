@@ -724,6 +724,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   current_input_type: keyboard
   joystick_treshold_min: 0.2
+  button_threshold_min: 0.2
+  button_threshold_max: 0.8
+  input_system_ui_input_module: {fileID: 787797899}
   debug: 0
   debug_input_maps_enabled: 0
 --- !u!1001 &880352141
@@ -1983,6 +1986,10 @@ MonoBehaviour:
   extract_json_on_load: 1
   anims_path: animations/
   jsons_path: anims/
+  capacities_with_no_loops:
+  - attack
+  - hurted
+  - dodge
   spritesheets_path: spritesheets/
   log: 0
   log_LAFAC: 0

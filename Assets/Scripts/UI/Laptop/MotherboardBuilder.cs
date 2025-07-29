@@ -6,9 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// This class is used as a helper to assemble the motherboard of the right size.
 /// </summary>
-/// 
-[ExecuteAlways]
-public class MotherboardBuilder : MonoBehaviour
+[ExecuteAlways] public class MotherboardBuilder : MonoBehaviour
 {
     [Header("Motherboard parameters")]
     [SerializeField] private int columns = 4;
