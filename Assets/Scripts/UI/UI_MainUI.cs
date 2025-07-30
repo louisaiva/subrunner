@@ -10,7 +10,7 @@ public class UI_MainUI : MonoBehaviour
     // inputs
     private PlayerInputActions inputs;
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
 
 

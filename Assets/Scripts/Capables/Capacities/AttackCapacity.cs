@@ -9,47 +9,52 @@ using UnityEngine;
 
 public class AttackCapacity : Capacity
 {
-    // handle the collisions between an attack animation and a being
-    // test de mécanique pour voir si une gestion pixelperfect du combat est agréable
-    
     [Header("Damage parameters")]
+    public float distance_to_attack = 1f;
     public int kills = 0;
     public float damage = 10f;
     [SerializeField] private float random_damage_modifier_at_start = 0; // damage += random.range(-5,5) in the start method if this modifier = 5
-    [SerializeField] private bool is_attacking = false;
-    [SerializeField] private bool perforant_attack = false; // if true, the attack won't stop on the first enemy hit
-    [SerializeField] private float delay_between_perforations = 0.01f; // delay between each perforation
-    private float last_perforation_time = 0f; // time of the last perforation
-    [SerializeField] List<Collider2D> hit_enemies = new List<Collider2D> {};
+    public bool IsAttacking = false;
+    [SerializeField] List<Being> hit_enemies = new List<Being> {};
     [SerializeField] private List<string> not_attackable_tags = new List<string> {};
     
 
+    [Header("Attack parameters")]
+    [SerializeField] private bool single_hit = false; // if true, the attack will stop after hitting one enemy
+    [SerializeField] private bool perforant_attack = false; // if true, each touched enemy will got full damage
+    // [SerializeField] private float delay_between_perforations = 0.01f; // delay between each perforation
+    // private float last_perforation_time = 0f; // time of the last perforation
+
+
     [Header("Knockback parameters")]
-    // public Force knockback; // force de knockback
     public float knockback_base = 10f; // une attaque répartit le knockb
     public float attackant_advantage = 3f;
 
+    [Header("Screen shake parameters")]
+    [SerializeField][Range(0f, 1f)] private float base_attack_shake_magnitude = 0.5f; // magnitude of the screen shake when attacking
+    [SerializeField][Range(0f, 1f)] private float base_kill_shake_magnitude = 0.8f; // magnitude of the screen shake when kill performed
+
+    [Header("Bearer")]
+    private Capable bearer; // the capable that is using this attack capacity
+    private Being being
+    {
+        get
+        {
+            if (bearer == null || !(bearer is Being)) { return null; }
+            return bearer as Being;
+        }
+    }
 
     [Header("Components")]
-    private Capable bearer; // the being that is using the attack
-    private Being being { get
-    {
-        if (bearer == null || !(bearer is Being)) { return null; }
-        return bearer as Being;
-    } }
     private SpriteBank bank;
     private SpriteRenderer sr;
     private AnimPlayer anim_player;
     private PolygonCollider2D pc;
+    
 
     // START
     private void Start()
     {
-        // we get the sprite renderer
-        // sr = transform.parent.GetComponent<SpriteRenderer>();
-        // anim_player = transform.parent.GetComponent<AnimPlayer>();
-        // being = transform.parent.GetComponent<Being>();
-
         // we get the polygon collider
         pc = GetComponent<PolygonCollider2D>();
         pc.enabled = false;
@@ -61,37 +66,29 @@ public class AttackCapacity : Capacity
         damage += Random.Range(-random_damage_modifier_at_start, random_damage_modifier_at_start);
     }
 
-    // BEARER SETUP
-    private void setBearer(Capable new_bearer)
-    {
-        bearer = new_bearer;
-
-        // we set the components
-        anim_player = bearer.GetComponent<AnimPlayer>();
-        sr = bearer.GetComponent<SpriteRenderer>();
-    }
-
-
-    // trigger the attack
+    // USE
     public override void Use(Capable capable)
     {
-        // we set the bearer as the capable
-        setBearer(capable);
+        // we set the bearer and its components
+        bearer = capable;
+        anim_player = bearer.GetComponent<AnimPlayer>();
+        sr = bearer.GetComponent<SpriteRenderer>();
 
         // we play the animation
-        Anim anim = anim_player.Play(name);
-
-        if (anim != null)
+        Anim anim = anim_player.Play("attack");
+        if (anim == null)
         {
-            // we start the cooldown for the time of the animation
-            float anim_duration = anim.GetDuration();
-            startCooldown(anim_duration);
+            // we remove the animation from the pile
+            anim_player.StopPlaying("attack", true);
+            if (debug) { Debug.LogWarning($"(AttackCapacity) {bearer.name} tried to attack the animation can't be played right now."); }
+            return;
         }
-        else { startCooldown();}
 
-        is_attacking = true;
+        // we start the cooldown for the time of the animation
+        float anim_duration = anim.GetDuration();
+        startCooldown(anim_duration);
+        IsAttacking = true;
         hit_enemies.Clear();
-        // Debug.Log(transform.parent.name + " just used attack");
     }
     
     // UPDATE
@@ -99,52 +96,35 @@ public class AttackCapacity : Capacity
     {
         base.Update();
 
-        if (!is_attacking) { return; }
-        if (!anim_player.current_capacity.Equals(name))
+        if (!IsAttacking) { return; }
+        if (!anim_player.current_capacity.Equals("attack"))
         {
             // checks if we are still attacking & the animation is not the attack animation anymore
-            if (is_attacking)
+            if (IsAttacking)
             {
-                is_attacking = false;
+                IsAttacking = false;
                 hit_enemies.Clear();
-                last_perforation_time = 0f;
             }
             return;
         }
 
         // we check if the sprite has a collider
         Sprite sprite = sr.sprite;
-        if (bank.HasDamageCollider(sprite))
-        {
-            pc.enabled = true;
+        if (!bank.HasDamageCollider(sprite)) { pc.enabled = false; return; }
+        pc.enabled = true;
+        
+        // we update the collider
+        updateCollider(sprite);
 
-            // we flip the collider if the sprite is flipped
-            if (sr.flipX && transform.localScale.x > 0)
-            {
-                transform.localScale = new Vector3(-1, 1, 1);
-            }
-            else if (!sr.flipX && transform.localScale.x < 0)
-            {
-                transform.localScale = new Vector3(1, 1, 1);
-            }
-
-            // we update the collider
-            updateCollider(sprite);
-
-            // we update the attack
-            if (!perforant_attack || Time.time - last_perforation_time > delay_between_perforations)
-            {
-                // we update the attack
-                updateAttack();
-            }
-        }
-        else
-        {
-            pc.enabled = false;
-        }
+        // if target we update the attack
+        if (hit_enemies.Count > 0) { updateAttack(); }
     }
     private void updateCollider(Sprite sprite)
     {
+        // we flip the collider if the sprite is flipped
+        if (sr.flipX && transform.localScale.x > 0) { transform.localScale = new Vector3(-1, 1, 1); }
+        else if (!sr.flipX && transform.localScale.x < 0) { transform.localScale = new Vector3(1, 1, 1); }
+
         // update count
         pc.pathCount = sprite.GetPhysicsShapeCount();
 
@@ -167,98 +147,87 @@ public class AttackCapacity : Capacity
     }
     private void updateAttack()
     {
-
-        // verify that our body_collider is not in the list
-        if (being != null) { hit_enemies = hit_enemies.Where(enemy => enemy != being.body_collider && enemy != null).ToList(); }
-
-        // we remove the not attackable tags
-        hit_enemies = hit_enemies.Where(enemy => !not_attackable_tags.Contains(enemy.tag)).ToList();
-
-        // we remove the not alive beings
-        hit_enemies = hit_enemies.Where(enemy => enemy.transform.parent.GetComponent<Being>().Alive).ToList();
-
         if (debug)
         {
             string hit_enemies_str = transform.parent.name + " attack enemies : " + hit_enemies.Count + " :\n";
-            foreach (Collider2D enemy in hit_enemies)
+            foreach (Being enemy in hit_enemies)
             {
-                hit_enemies_str += "\t"+enemy + "\n";
+                hit_enemies_str += "\t" + enemy.name + "\n";
             }
             Debug.Log(hit_enemies_str);
-        }
-        
-        // if no target, return
-        if (hit_enemies.Count == 0) { return; }
+        }        
 
         // calculate damage dealt to single target
-        float damage_dealt_to_single_target = damage /* / hit_enemies.Length */;
+        float single_target_damage
+                            = perforant_attack || single_hit // also if single hit we don't care we will apply damage once
+                            ? damage // if perforant attack, all enemies will receive the full damage
+                            : damage / hit_enemies.Count; 
 
 
         // calculate knockback
         float advantage_attacker_weight = (being != null ? being.weight : 0.5f) * attackant_advantage; // l'attaquant a un avantage de poids afin de recevoir moins de knockback
-        float total_knockback_weight = hit_enemies.Select(enemy => enemy.transform.parent.GetComponent<Being>().weight).Sum() + advantage_attacker_weight;
+        float total_knockback_weight = hit_enemies.Select(enemy => enemy.weight).Sum() + advantage_attacker_weight;
         Vector2 attacker_knockback_direction = Vector2.zero;
 
-        // bool killed_an_enemy = false;
+        bool killed_an_enemy = false;
+
+
+        // if we single attack we want to make sure to attack closest enemy
+        if (single_hit)
+        {
+            // we sort the hit enemies by distance to the attacker
+            hit_enemies = hit_enemies.OrderBy(enemy => Vector2.Distance(transform.position, enemy.transform.position)).ToList();
+        }
+
 
         // deal damage to target
-        foreach (Collider2D enemy in hit_enemies)
+        foreach (Being enemy in hit_enemies)
         {
-            // get enemy being
-            Being enemy_being = enemy.transform.parent.GetComponent<Being>();
+            applyDamageToEnemy(enemy, single_target_damage, total_knockback_weight, ref attacker_knockback_direction);
 
-            // get direction and weight of enemy
-            float dx = enemy.transform.position.x - transform.position.x;
-            float dy = enemy.transform.position.y - transform.position.y;
-            Vector2 direction_enemy = new Vector2(dx, dy);
-            float enemy_weight = enemy_being.weight;
-
-            // calculate knockback magnitude proportionnal to weight
-            float knockback_magnitude = knockback_base * (total_knockback_weight - enemy_weight)
-                                         / total_knockback_weight;
-            Force knockback = new Force("knockback",direction_enemy.normalized, knockback_magnitude);
-            attacker_knockback_direction += -direction_enemy.normalized * knockback_magnitude;
-
-            // apply damage and knockback
-            enemy_being.take_damage(damage_dealt_to_single_target, knockback);
-
-            // check if enemy is dead
-            if (!enemy_being.Alive)
-            {
-                kills += 1;
-                // we just killed someone : we add screen shake if we are the player
-                if (transform.parent.name == "perso")
-                {
-                    // on shake la caméra
-                    float shake_magnitude = damage * 2f;
-                    Camera.main.GetComponent<CameraShaker>().shake(shake_magnitude);
-                }
-            }
+            // if we have a single_hit attack we break the loop
+            if (single_hit) { break; }
         }
 
-        if (being != null)
-        {
-            // on recoit un knockback inverse
-            float knockback_magnitude_inverse = knockback_base * (total_knockback_weight - being.weight)
-                                                 / (total_knockback_weight * attackant_advantage);
-            Force knockback_inverse = new Force("knockback",attacker_knockback_direction.normalized, knockback_magnitude_inverse);
-            being.AddForce(knockback_inverse);
-        }
-
-        // we clear the hit enemies
+        // we stop the attack
         hit_enemies.Clear();
+        if (single_hit) { IsAttacking = false; }
+        if (being == null) { return; }
 
-        // check if we are perforant if yes we don't stop the attack (will automatically stop when the animation is over)
-        if (perforant_attack)
+        
+        // on shake la caméra
+        if (bearer is Perso)
         {
-            last_perforation_time = Time.time;
-            return;
+            CameraShaker.Instance.Shake(killed_an_enemy ? base_kill_shake_magnitude : base_attack_shake_magnitude);
         }
 
-        // we set the attacking to false
-        is_attacking = false;
+        // apply knockback to attacker
+        float knockback_magnitude_inverse = knockback_base * (total_knockback_weight - being.weight)
+                                                / (total_knockback_weight * attackant_advantage);
+        Force knockback_inverse = new Force("knockback", attacker_knockback_direction.normalized, knockback_magnitude_inverse);
+        being.AddForce(knockback_inverse);
     }
+    private bool applyDamageToEnemy(Being enemy, float damage, float total_knockback_weight, ref Vector2 attacker_knockback_direction)
+    {
+        // get direction and weight of enemy
+        float dx = enemy.transform.position.x - transform.position.x;
+        float dy = enemy.transform.position.y - transform.position.y;
+        Vector2 direction_enemy = new Vector2(dx, dy);
+        float enemy_weight = enemy.weight;
 
+        // calculate knockback magnitude proportionnal to weight
+        float knockback_magnitude = knockback_base * (total_knockback_weight - enemy_weight)
+                                     / total_knockback_weight;
+        Force knockback = new Force("knockback", direction_enemy.normalized, knockback_magnitude);
+        attacker_knockback_direction += -direction_enemy.normalized * knockback_magnitude;
+
+        // apply damage and knockback
+        enemy.take_damage(damage, knockback);
+
+        // check if enemy is dead
+        if (!enemy.Alive) { kills += 1; return true; }
+        return false;
+    }
 
     // COLLISION ENTER
     private void OnTriggerEnter2D(Collider2D other)
@@ -267,15 +236,23 @@ public class AttackCapacity : Capacity
         if (!other.gameObject.layer.Equals(LayerMask.NameToLayer("Beings"))) { return; }
 
         // we check if we are attacking
-        if (!is_attacking) { return; }
-        if (!anim_player.current_capacity.Equals(name)) { return; }
+        if (!IsAttacking) { return; }
+        if (anim_player.current_capacity != "attack") { return; }
 
         // we check if the pc is enabled
-        if (pc.enabled)
-        {
-            // we add the other to the hit enemies
-            hit_enemies.Add(other);
-        }
+        if (!pc.enabled) { return; }
+
+        if (being != null && being.body_collider == other) { return; } // we don't attack ourselves
+
+        // we remove not attackable tags
+        Being enemy_being = other.transform.parent.GetComponent<Being>();
+        if (enemy_being == null || not_attackable_tags.Contains(enemy_being.gameObject.tag)) { return; }
+
+        // we remove not alive beings
+        if (!enemy_being.Alive) { return; }
+
+        // we can add it !
+        hit_enemies.Add(enemy_being);
     }
 
     // WHITE LISTING

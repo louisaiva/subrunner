@@ -15,11 +15,8 @@ public class Capable : MonoBehaviour
     // un Capable est un gameObject qui possède des capacités
     // et donc des animations (les capacités peuvent être reliées à une animation)
 
-    [Header("Components")]
-    public AnimPlayer anim_player;
-    public CapacityBank bank;
 
-    [Header("Orientation")]
+    [Header("CAPABLE")]
     // the analog equivalent of the anim_player.orientation which is numerical
     [SerializeField] protected Vector2 inputs; // inputs can be at 0,0
     [SerializeField] protected Vector2 orientation; // orientation can't be at 0,0 -> always normalized & remember last orientation
@@ -37,6 +34,7 @@ public class Capable : MonoBehaviour
             }
         }
     }
+    public void ClearInputs() { inputs = Vector2.zero; } // does the same than Orientation = Vector2.zero; but more optimized
 
     [Header("Capacities")]
     [SerializeField] protected List<Capacity> capacities = new List<Capacity>();
@@ -44,6 +42,11 @@ public class Capable : MonoBehaviour
     [Header("Effects")]
     [SerializeField] protected List<Effect> effects = new List<Effect>();
     [SerializeField] protected List<float> effects_timetolive = new List<float>();
+
+
+    // PROPERTIES
+    public AnimPlayer anim_player { get; private set; }
+    public CapacityBank bank { get; private set; }
 
     // un capable peut aussi avoir un inventaire
     public Inventory inventory
@@ -58,9 +61,9 @@ public class Capable : MonoBehaviour
 
 
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
-    public bool debug_capacities_on_awake = false;
+    public bool activate_all_capacities_logs_on_awake = false;
 
     // START
     protected virtual void Awake()
@@ -79,9 +82,10 @@ public class Capable : MonoBehaviour
 
             // we add it to the list
             capacities.Add(capa);
+            if (debug) { Debug.Log("(Capable) " + name + " : capacity " + capa.name + " found on awake"); }
 
             // we check if the debug is true then we force debug to be true
-            if (debug_capacities_on_awake) { capa.debug = true; }
+            if (activate_all_capacities_logs_on_awake) { capa.debug = true; }
         }
 
         // we add ourself to the entity count
@@ -119,6 +123,13 @@ public class Capable : MonoBehaviour
         }
     }
 
+    // SETTERS
+    public void OrientTowards(Vector3 target_position)
+    {
+        // we set the orientation
+        Orientation = target_position - transform.position;
+    }
+
     // CAPACITIES
     public void Do(string name)
     {
@@ -127,39 +138,32 @@ public class Capable : MonoBehaviour
 
         capacity.Use(this);
     }
-    public void ShowCapacities()
-    {
-        string capacities_str = "(Capable - " + gameObject.name + ") capacities : \n";
-        foreach (Capacity capa in capacities)
-        {
-            capacities_str += capa.name + " : " + capa.Able + "\n";
-        }
-        Debug.Log(capacities_str);
-    }
-    public void AddCapacity(string capa_name)
+    public void AddCapacity(string name)
     {
         // we check if the capacity is already in the list
-        if (HasCapacity(capa_name)) { return; }
+        if (HasCapacity(name)) { return; }
 
         // get the capacity instance
-        GameObject capa_instance = bank.GetCapacityInstance(capa_name);
+        GameObject capa_instance = bank.GetCapacityInstance(name);
 
         // we put it as a child of the capable & we rename it
         capa_instance.transform.parent = transform;
-        capa_instance.name = capa_name;
+        capa_instance.name = name;
         capa_instance.transform.localPosition = Vector3.zero;
 
         // we put the capacity in the list
         capacities.Add(capa_instance.GetComponent<Capacity>());
+        if (debug) { Debug.Log("(Capable) " + this.name + " : capacity " + name + " added"); }
     }
-    public void RemoveCapacity(string capa_name)
+    public void RemoveCapacity(string name)
     {
         foreach (Capacity capa in capacities)
         {
-            if (capa.name == capa_name)
+            if (capa.name == name)
             {
                 capacities.Remove(capa);
                 Destroy(capa.gameObject);
+                if (debug) { Debug.Log("(Capable) " + this.name + " : capacity " + name + " removed"); }
                 return;
             }
         }
@@ -178,20 +182,16 @@ public class Capable : MonoBehaviour
         }
         return false;
     }
-    public bool HasCapacity(string capa_name)
+    public bool HasCapacity(string name)
     {
         foreach (Capacity capacity in capacities)
         {
-            if (capacity.name == capa_name)
+            if (capacity.name == name)
             {
                 return true;
             }
         }
         return false;
-    }
-    public bool HasCapacity(Capacity capa)
-    {
-        return HasCapacity(capa.name);
     }
     public bool HasCapacity<T>() where T : Capacity
     {
@@ -226,22 +226,30 @@ public class Capable : MonoBehaviour
 
 
     // USING ITEMS
-    public void UseItem(string item_reference)
+    public bool HasItem(string item_reference,out Item item)
     {
+        item = null;
+
         // we check if we have an inventory
-        if (inventory == null) { return; }
+        if (inventory == null) { return false; }
 
         // we check if the item is in the inventory
-        Item item = inventory.GetItem(item_reference);
+        item = inventory.GetItem(item_reference);
         if (item == null)
         {
             if (debug) { Debug.LogWarning("(Capable) " + name + " doesn't have item " + item_reference); }
-            return;
+            return false;
         }
+
+        return true;
+    }
+    public void UseItem(string item_reference)
+    {
+        if (!HasItem(item_reference,out Item item)) { return; }
 
         // we use the item
         if (debug) { Debug.Log("(Capable) " + name + " used item " + item_reference); }
-        item.Use();
+        item.Use(this);
     }
 
 

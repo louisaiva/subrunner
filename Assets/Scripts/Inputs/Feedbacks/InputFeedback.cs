@@ -24,13 +24,17 @@ public class InputFeedback : MonoBehaviour
     [SerializeField] protected Color base_color = new Color(1f, 1f, 1f, 1f);
     [SerializeField] protected Color clicked_color = new Color(1f, 1f, 0f, 1f);
 
-    [Header("debug")]
+    [Header("Label")]
+    [SerializeField] private TextMeshProUGUI label;
+
+    [Header("Logs")]
     public bool debug = false;
-    
+
+    // START
     protected virtual void Start()
     {
         // we verify the image & the input
-        if  (debug)
+        if (debug)
         {
             if (image == null) { Debug.LogWarning("(InputFeedback : " + name + " ) image is not set ! you should assign it in the inspector"); }
             if (input == null) { Debug.LogWarning("(InputFeedback : " + name + " ) input is not set ! you should assign it in the inspector"); }
@@ -49,6 +53,8 @@ public class InputFeedback : MonoBehaviour
 
         OnEnable();
     }
+
+    // DEFINE CALLBACKS
     protected virtual void defineCallbacks()
     {
         // we define the callback
@@ -56,6 +62,7 @@ public class InputFeedback : MonoBehaviour
         reset_callback = ctx => OnReset();
     }
 
+    // ONENABLE/DISABLE
     private void OnEnable()
     {
         if (action == null) { return; }
@@ -72,17 +79,15 @@ public class InputFeedback : MonoBehaviour
         // we reset the IF
         OnReset();
     }
-
     private void OnDisable()
     {
-        // we reset
-        // OnReset();
-
         // we remove the listeners
         action.performed -= input_callback;
         action.canceled -= reset_callback;
     }
 
+
+    // INPUT / RESET
     public virtual void OnInput()
     {
         // we set the color
@@ -92,5 +97,16 @@ public class InputFeedback : MonoBehaviour
     {
         // we set the color
         image.color = base_color;
+    }
+
+    // SETTERS
+    public void SetLabel(string text)
+    {
+        if (label == null)
+        {
+            if (debug) { Debug.LogWarning("(InputFeedback : " + name + " ) label is not set ! you should assign it in the inspector"); }
+            return;
+        }
+        label.text = text;
     }
 }

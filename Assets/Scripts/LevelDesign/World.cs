@@ -4,7 +4,6 @@ using UnityEngine;
 public class World : MonoBehaviour
 {
     [Header("World")]
-    [SerializeField] private Perso perso;
     [SerializeField] private Room elevator_room;
     public Level current_level;
     public List<Level> loaded_levels = new List<Level>();
@@ -24,14 +23,12 @@ public class World : MonoBehaviour
         }
     }
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
     public bool debug_find_perso_room = false;
 
     private void Start()
     {
-        perso = GameObject.Find("/perso").GetComponent<Perso>();
-
         // on récupère le level actif
         foreach (Transform child in transform)
         {
@@ -69,24 +66,26 @@ public class World : MonoBehaviour
         if (!elevator_room.loaded) { elevator_room.Awake(); }
 
         // on envoie le perso au milieu de l'elevator room
-        perso.transform.position = elevator_room.transform.Find("objects/elevator").transform.position - new Vector3(0,0.5f,0);
+        Perso.Instance.transform.position = elevator_room.transform.Find("objects/elevator").transform.position - new Vector3(0,0.5f,0);
         if (debug) { Debug.LogWarning("(World) No Perso Room found !! teleporting perso to elevator");}
     }
 
     private void Update()
     {
-        perso.current_room = findPersoRoom(LoadedRooms);
+        if (!Perso.Instance) { return; }
 
-        if (perso.current_room == null) { return; }
+        Perso.Instance.current_room = findPersoRoom(LoadedRooms);
 
-        if (!perso.current_room.Alight) { perso.current_room.Show(); }
+        if (Perso.Instance.current_room == null) { return; }
+
+        if (!Perso.Instance.current_room.Alight) { Perso.Instance.current_room.Show(); }
     }
 
     private Room findPersoRoom(List<Room> rooms)
     {
         // définit la room du perso en faisant un raycast
         // get the position of the perso
-        Vector2 perso_position = perso.transform.position;
+        Vector2 perso_position = Perso.Instance.transform.position;
 
         string debug_message = "(World - findPersoRoom) Loaded rooms :\n\t";
 

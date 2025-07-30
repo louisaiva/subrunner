@@ -11,34 +11,26 @@ public class UI_PauseMenu : UI_Pool, I_UI_Slottable
     [SerializeField] private UI_XboxNavigator xbox_manager;
 
     // unity functions
-    protected override void Awake()
+    protected void Awake()
     {
         // on récupère le xbox_manager
         xbox_manager = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
-
-        base.Awake();
     }
 
     // SHOWING
-    public override void Show()
+    public override async Awaitable Show(float duration)
     {
-        base.Show();
+        await base.Show(duration);
 
         // on active le xbox_manager
         xbox_manager.Enable(this);
-
-        // on arrête le temps
-        Time.timeScale = 0;
     }
-    public override void Hide()
+    public override async Awaitable Hide(float duration)
     {
-        base.Hide();
-
         // on désactive le xbox_manager
         xbox_manager.Disable(this);
 
-        // on remet le temps
-        Time.timeScale = 1;
+        await base.Hide(duration);
     }
 
     // SLOTTABLE
@@ -74,4 +66,5 @@ public class UI_PauseMenu : UI_Pool, I_UI_Slottable
         }
         return false;
     }
+    public Vector2 SavedPosition { get => base_position; }
 }

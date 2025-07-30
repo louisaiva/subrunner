@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 3033754770171441345}
   - component: {fileID: 7354868191211184046}
   - component: {fileID: 288237414113646751}
-  m_Layer: 24
+  - component: {fileID: 544740098546645170}
+  m_Layer: 29
   m_Name: bed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -145,6 +146,22 @@ PolygonCollider2D:
       - {x: 1.0032349, y: -1.4891272}
       - {x: 1.00525, y: -0.047918}
   m_UseDelaunayMesh: 0
+--- !u!114 &544740098546645170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 852976551797331715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &2365544772092276658
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6234543502669162689}
   - component: {fileID: 8252522207981929358}
   - component: {fileID: 5448652197415061413}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: interact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -51,6 +51,9 @@ MonoBehaviour:
   waiting_hovers: []
   interactInput: {fileID: 2767387396969607311, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   callback_is_set: 0
+  grab_capacity: {fileID: 0}
+  exclusion_item_rule:
+  - food:meat
 --- !u!70 &5448652197415061413
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -67,7 +70,7 @@ CapsuleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 16384
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2

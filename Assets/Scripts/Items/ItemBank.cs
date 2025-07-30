@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,19 @@ public class ItemBank : MonoBehaviour
     public Dictionary<string, Sprite> item_sprites = new Dictionary<string, Sprite>();
     public Dictionary<string, string> item_prefabs = new Dictionary<string, string>();
 
+    [Header("UI Icons")]
+    public List<Sprite> ui_icons = new List<Sprite>();
+    public List<string> ui_icons_names = new List<string>();
+
+    [Header("Module Sprites")]
+    public List<Sprite> module_sprites = new List<Sprite>();
+    public List<string> module_references = new List<string>();
+
     [Header("UI")]
     public GameObject ui_item_prefab;
     public GameObject ui_module_prefab;
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
 
 
@@ -98,23 +107,41 @@ public class ItemBank : MonoBehaviour
     }
 
     // UI_ITEM GENERATOR
-    public GameObject CreateUI_Item(Item item = null,bool create_ui_module=false)
+    public GameObject CreateUI_Item(/* Item item = null */)
     {
         // on instancie le prefab
-        GameObject ui_item = null;
-        if (!create_ui_module)  { ui_item = Instantiate(ui_item_prefab, Vector3.zero, Quaternion.identity);}
-        else                    { ui_item = Instantiate(ui_module_prefab, Vector3.zero, Quaternion.identity); }
+        GameObject ui_item = Instantiate(ui_item_prefab, Vector3.zero, Quaternion.identity);
+
+        // we initialize it
+        // ui_item.GetComponent<UI_Item>().Init(this);
 
         // we assign the item to the UI_Item
-        if (item != null)
+        /* if (item != null)
         {
             ui_item.GetComponent<UI_Item>().Store(item);
         }
         else { ui_item.GetComponent<UI_Item>().ClearUI(); }
 
-        if (debug) { Debug.Log("(ItemBank) created ui_item : " + item.name); }
+        if (debug) { Debug.Log("(ItemBank) created ui_item : " + item.Reference); } */
 
         return ui_item;
+    }
+    public GameObject CreateUI_Module()
+    {
+        // we create the module
+        GameObject module = Instantiate(ui_module_prefab, Vector3.zero, Quaternion.identity);
+        // UI_Item ui_module = module.GetComponent<UI_Item>();
+
+        // we initialize it
+        // ui_module.Init();
+
+        // we assign the item to the UI_Item
+        /* if (item != null) { ui_module.Store(item); }
+        else { ui_module.ClearUI(); }
+
+        if (debug) { Debug.Log("(ItemBank) created ui_module : " + item.Reference); } */
+
+        return module;
     }
 
     // GETTERS
@@ -122,13 +149,51 @@ public class ItemBank : MonoBehaviour
     {
         if (!item_sprites.ContainsKey(item_reference))
         {
-            Debug.LogError("(ItemBank) cannot find sprite " + item_reference);
+            Debug.LogError("(ItemBank) cannot find sprite " + item_reference
+                + ". are you sure its corresponding item prefab is in the " + items_path + " folder?");
             return null;
         }
 
         return item_sprites[item_reference];
     }
+    public Sprite GetUI_Icon(string icon_name)
+    {
+        // we check if the icon exists
+        if (!ui_icons_names.Contains(icon_name))
+        {
+            Debug.LogError("(ItemBank) cannot find UI icon for " + icon_name);
+            return null;
+        }
+        int index = ui_icons_names.IndexOf(icon_name);
 
+        if (index >= ui_icons.Count)
+        {
+            Debug.LogError("(ItemBank) UI icons list is not initialized correctly, check the inspector");
+            return null;
+        }
+
+        // we get the sprite
+        return ui_icons[index];
+    }
+    public Sprite GetModuleSprite(string module_reference)
+    {
+        // we check if the module exists
+        if (!module_references.Contains(module_reference))
+        {
+            Debug.LogError("(ItemBank) cannot find module sprite for " + module_reference);
+            return null;
+        }
+        int index = module_references.IndexOf(module_reference);
+
+        if (index >= module_sprites.Count)
+        {
+            Debug.LogError("(ItemBank) Module sprites list is not initialized correctly, check the inspector");
+            return null;
+        }
+
+        // we get the sprite
+        return module_sprites[index];
+    }
 
     // DEBUG
     private string getItemsList()
@@ -146,6 +211,6 @@ public class ItemBank : MonoBehaviour
 
 
 
-    // ! DEPRECATED
+    [Obsolete("Use GetSprite(string item_reference) instead.")]
     public Sprite getSprite(string item_ref) { return null;}
 }

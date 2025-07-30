@@ -22,7 +22,7 @@ public class Shuriken : Item
         emission = shuriken_particle.emission; // we get the emission module of the particle system
     }
 
-    public override void Use()
+    public override void Use(Capable user)
     {
         // the shuriken can be thrown only if it is grabbed
         if (!Grabbed) { return; }
@@ -32,17 +32,17 @@ public class Shuriken : Item
         if (attack_capacity == null) { return; }
 
         // we find the holder of the item
-        Capable holder = transform.parent.GetComponent<Inventory>().capable;
-        if (holder == null) { return; }
+        /* Capable holder = transform.parent.GetComponent<Inventory>().capable;
+        if (holder == null) { return; } */
 
         // we whitelist our holder as the user of the attack
-        attack_capacity.WhiteListTagShortly(holder.tag, 3f); // we whitelist the holder for 0.5s
+        attack_capacity.WhiteListTagShortly(user.tag, 3f); // we whitelist the holder for 0.5s
 
         // we use the attack capacity
         attack_capacity.Use(this);
 
         // we throw the shuriken
-        Force throw_force = new Force("throw", holder.Orientation,throw_force_magnitude,0.8f);
+        Force throw_force = new Force("throw", user.Orientation,throw_force_magnitude,0.8f);
         AddForce(throw_force); // we add the force to the shuriken
 
         // we add a ghost effect to the shuriken
@@ -56,7 +56,7 @@ public class Shuriken : Item
         // we launch the coroutine for removing the ghost effect & the animation when stopped
         StartCoroutine(AdjustAnim(throw_force)); // we start the coroutine for stopping the shuriken
 
-        if (debug) { Debug.Log("(Shuriken) shuriken throwed by " + holder.name); }
+        if (debug) { Debug.Log("(Shuriken) shuriken throwed by " + user.name); }
     }
 
     // we stop throwing the shuriken when it is stopped

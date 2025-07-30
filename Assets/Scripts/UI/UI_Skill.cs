@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
@@ -8,111 +9,85 @@ using UnityEngine.UI;
 public class UI_Skill : MonoBehaviour, I_UI_Slot
 {
     // hover
+    [Header("Hover")]
+    public Color hover_color = new Color(1, 1, 0, 1);
+    public Color down_color = new Color(1, 1, 1, 1);
     public bool is_hovered { get; set; }
-    public GameObject description_ui;
 
-    // description
-    public string skill_name = "max_life";
-    public string human_readable_name = "max health";
+
+    [Header("Skill")]
+    private Image skill_bg;
+    public string Reference = "stat:max_life";
     public string description = "your maximum health. makes you tanky as f";
-    public string current_value = "/";
-    public string next_value = "/";
+    public string unit = "hp";
 
-    [Header("skill tree")]
+    [Header("Components")]
+    private UI_LevelUpMenu menu;
 
-    // skill tree
-    public SkillTree skilltree;
+    [Header("Logs")]
+    public bool log = false;
 
-    [Header("UI")]
-    [SerializeField] private GameObject ui_bg;
-    [SerializeField] private Color base_color = Color.white;
-    [SerializeField] private Color hover_color = Color.white;
-    [SerializeField] private Color clicked_color = Color.white;
-
-
-    // unity functions
-    protected void Start()
+    // AWAKE
+    protected void Awake()
     {
-        // on récupère le skilltree
-        skilltree = transform.parent.parent.gameObject.GetComponent<SkillTree>();
-
-        // on récupère le description_ui
-        description_ui = GameObject.Find("/ui/hover_description");
-
-        // on met à jour les valeurs
-        current_value = skilltree.getSkillValue(skill_name).ToString();
-        next_value = skilltree.getNextLevelSkillValue(skill_name).ToString();
+        // on récupère les components
+        menu = transform.parent.parent.GetComponent<UI_LevelUpMenu>();
 
         // on récupère le bg
-        ui_bg = transform.Find("ui_bg").gameObject;
-
-        // on met à jour les events du button
-        // GetComponent<UnityEngine.UI.Button>().RegisterCallback<PointerEnterEvent>(OnPointerEnter);
-        // GetComponent<UnityEngine.UI.Button>().RegisterCallback<PointerExitEvent>(OnPointerExit);
-        // GetComponent<UnityEngine.UI.Button>().RegisterCallback<PointerClickEvent>(OnPointerClick);
+        skill_bg = GetComponent<Image>();
     }
-    // getters
-    public string getDescription()
+
+    private void update_description()
     {
-        string s = "- " + human_readable_name + " -\n\n";
-        s += description + "\n\n";
-        s += "current: " + current_value + "\n";
-        s += "next level: " + next_value + "\n";
+        menu.SkillNameDescriptor.SetDescription(Reference);
 
-        return s;
+        if (Perso.Instance == null) { menu.Descriptor.SetDescription("looks like there is no player anymore"); return; }
+
+        string desc = description + "\n";
+        desc += "\ncurrent : " + Perso.Instance.skillManager.GetSkillValue(Reference).ToString() + " " + unit;
+        desc += "\nnext : " + Perso.Instance.skillManager.GetNextLevelSkillValue(Reference).ToString() + " " + unit;
+
+        // on met à jour la description
+        menu.Descriptor.SetDescription(desc);
     }
 
-    public bool shouldDescriptionBeShown()
-    {
-        // on regarde si le tree est actif
-        return transform.parent.GetComponent<Canvas>().enabled;
-    }
-
-    // interface functions
+    // I_UI_SLOT
     public void OnPointerEnter(PointerEventData eventData)
     {
-        // on met à jour l'affichage
-        description_ui.GetComponent<UI_HooverDescriptionHandler>().changeDescription(this);
+        // on met à jour la description
+        update_description();
 
         // on met à jour le fait qu'on est survolé
+        skill_bg.color = hover_color;
         is_hovered = true;
 
-        // on met à jour l'ui_bg
-        ui_bg.GetComponent<Image>().color = hover_color;
+        if (log) Debug.Log("(UI_Skill) hovering " + Reference);
     }
-
     public void OnPointerExit(PointerEventData eventData)
     {
-        // on met à jour l'affichage
-        description_ui.GetComponent<UI_HooverDescriptionHandler>().removeDescription(this);
-
         // on met à jour le fait qu'on est survolé
+        skill_bg.color = new Color(1, 1, 1, 1);
         is_hovered = false;
 
-        // on met à jour l'ui_bg
-        ui_bg.GetComponent<Image>().color = base_color;
+        if (log) Debug.Log("(UI_Skill) unhovering " + Reference);
     }
-
     public void OnPointerClick(PointerEventData eventData)
     {
-        // on met à jour l'affichage
-        description_ui.GetComponent<UI_HooverDescriptionHandler>().removeDescription(this);
+        if (log) Debug.Log("(UI_Skill) clicking on " + Reference);
+        if (Perso.Instance == null) { return; }
 
-        // on clique sur le button
-        skilltree.levelUpSkill(skill_name);
+        // reset the color
+        skill_bg.color = new Color(1, 1, 1, 1);
 
-        // on met à jour les valeurs
-        current_value = skilltree.getSkillValue(skill_name).ToString();
-        next_value = skilltree.getNextLevelSkillValue(skill_name).ToString();
+        Perso.Instance.skillManager.UpgradeSkill(Reference);
 
-        // on met à jour l'affichage
-        description_ui.GetComponent<UI_HooverDescriptionHandler>().changeDescription(this);
-
-        // on met à jour l'ui_bg
-        ui_bg.GetComponent<Image>().color = base_color;
+        // on reouvre le hud
+        GameObject.Find("/ui").GetComponent<UI_Manager>().SwitchTo("hud");
     }
     public virtual void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("OnPointerDown on " + gameObject.name);
+        skill_bg.color = down_color;
+
+        if (log) { Debug.Log("(UI_Skill) downing " + Reference); }
     }
 }

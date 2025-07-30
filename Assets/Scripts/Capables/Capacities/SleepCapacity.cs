@@ -8,7 +8,7 @@ using UnityEngine;
 /// </summary>
 public class SleepCapacity : Capacity
 {
-    private Cat cat => capable as Cat; // we cast the capable to a Cat
+    private SleepingCat cat => capable as SleepingCat; // we cast the capable to a SleepingCat
 
     [Header("Sleeping parameters")]
     public bool asleep = false; // Is the cat asleep?
@@ -19,10 +19,10 @@ public class SleepCapacity : Capacity
     public override void Use(Capable capable)
     {
 
-        // we check if the capable is a Cat
-        if (!(capable is Cat))
+        // we check if the capable is a SleepingCat
+        if (!(capable is SleepingCat))
         {
-            if (debug) { Debug.LogWarning("(SleepCapacity) " + capable.name + " is not a Cat"); }
+            if (debug) { Debug.LogWarning("(SleepCapacity) " + capable.name + " is not a SleepingCat"); }
             return;
         }
 
@@ -141,8 +141,8 @@ public class SleepCapacity : Capacity
     // COLLISION ENTER
     private void OnTriggerStay2D(Collider2D other)
     {
-        // check if we are a Cat
-        if (!(capable is Cat)) { return; }
+        // check if we are a SleepingCat
+        if (!(capable is SleepingCat)) { return; }
 
         // we check if the other is on the Beings layer
         if (!other.gameObject.layer.Equals(LayerMask.NameToLayer("Beings"))) { return; }

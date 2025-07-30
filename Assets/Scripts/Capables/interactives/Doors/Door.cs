@@ -19,25 +19,17 @@ public class Door : Capable, Interactable, Openable
     public Room room1; // always matchs the Orientation direction (Orientation == "right" => room1 is on the right)
     public Room room2; // always matchs the opposite of the Orientation direction (Orientation == "right" => room2 is on the left)
 
-    // PERSO
-    protected Perso perso;
-
     // UNITY FUNCTIONS
     protected virtual void Start()
     {
 
         // if vertical on set l'Orientaion à "up"
-        if (is_vertical && (Orientation == Vector2.right || Orientation == Vector2.left))
-        {
-            Orientation = Vector2.up;
-        }
-        else if (!is_vertical && (Orientation == Vector2.up || Orientation == Vector2.down))
-        {
-            Orientation = Vector2.left;
-        }
+        if (is_vertical && (Orientation == Vector2.right || Orientation == Vector2.left)) { Orientation = Vector2.up; }
+        else if (!is_vertical && (Orientation == Vector2.up || Orientation == Vector2.down)) { Orientation = Vector2.left; }
 
         // on récupère le perso
-        perso = GameObject.Find("/perso").GetComponent<Perso>();
+        // perso = GameObject.Find("/perso").GetComponent<Perso>();
+        // Perso.Instance = this as Perso;
 
         // on récupère le door_collider
         door_collider = GetComponent<Collider2D>();
@@ -52,6 +44,8 @@ public class Door : Capable, Interactable, Openable
     protected override void Update()
     {
         base.Update();
+
+        if (Perso.Instance == null) { return; }
 
         // on met à jour l'orientation de la porte en fonction de la position du perso
         updateOrientation();
@@ -84,17 +78,22 @@ public class Door : Capable, Interactable, Openable
 
 
         // on récupère la room du perso
-        Room perso_room = perso.current_room;
+        Room perso_room = Perso.Instance.current_room;
 
         // on vérifie que la room du perso est bien une des 2 rooms de la porte
         if (!(perso_room == room1 || perso_room == room2)) { return; }
 
+
         // on récupère la room qui s'ouvre
         Room room_to_open = perso_room == room1 ? room2 : room1;
+        if (room_to_open == null)
+        {
+            Debug.LogWarning("(Door) Room to open is null!");
+            return;
+        }
 
         // on affiche les lights de la room qui s'ouvre
         room_to_open.Show();
-        
     }
 
     public void close()
@@ -108,7 +107,7 @@ public class Door : Capable, Interactable, Openable
 
 
         // on récupère la room du perso
-        Room perso_room = perso.current_room;
+        Room perso_room = Perso.Instance.current_room;
 
         // on vérifie que la room du perso est bien une des 2 rooms de la porte
         if (!(perso_room == room1 || perso_room == room2)) { return; }
@@ -125,7 +124,7 @@ public class Door : Capable, Interactable, Openable
     protected void updateOrientation()
     {
         // on récupère le vecteur entre la porte et le perso
-        Vector2 perso_direction = perso.transform.position - transform.position;
+        Vector2 perso_direction = Perso.Instance.transform.position - transform.position;
         
         // l'orientation de la porte tourne toujours le dos au perso !!
         // c'est pour avoir les flèches dans le bon sens

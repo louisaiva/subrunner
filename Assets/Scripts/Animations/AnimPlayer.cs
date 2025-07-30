@@ -10,16 +10,26 @@ public class AnimPlayer : MonoBehaviour
 
 
     [Header("Components")]
-    private AnimBank bank;
+    // private AnimBank bank;
     private SpriteRenderer sr;
 
 
 
     [Header("Skin")]
-    public string skin;
+    [SerializeField] private string skin;
+    public string Skin {
+        get { return skin; }
+        set
+        {
+            if (value == skin) { return; }
+            skin = value;
+            OnSkillChange.Invoke(skin);
+        }
+    }
+    public event Action<string> OnSkillChange = delegate { };
 
     [Header("Orientation")]
-    public string orientation = "L";
+    public string orientation { get; private set; } = "D";
 
 
 
@@ -45,36 +55,35 @@ public class AnimPlayer : MonoBehaviour
             {"hover",1},
             {"idle_open",2},
             {"idle_sleep",2},
-            {"attack",3},
-            {"spawn",3},
-            {"open",3},
-            {"close",3},
-            {"dodge",3},
-            {"hurted",3},
-            {"eat",4},
-            {"fell_asleep",4},
-            {"wake_up",4},
-            {"lick_foot",4},
-            {"throw",5},
-            {"die",5}};
+            {"hack",3},
+            {"attack",4},
+            {"spawn",4},
+            {"open",4},
+            {"close",4},
+            {"dodge",4},
+            {"hurted",5},
+            {"eat",5},
+            {"fell_asleep",5},
+            {"wake_up",5},
+            {"lick_foot",5},
+            {"throw",6},
+            {"die",6}};
     // todo à transformer en List<CapacityPriority> sans MonoBehaviour pour pouvoir les éditer dans l'éditeur
 
-    public List<int> animation_priorities_with_no_loop = new() { 3,4 };
+    [SerializeField] private List<int> animation_priorities_with_no_loop = new() { 4,5 };
         // we never loop the animation if it's in this priority (attack, dodge, hurted) -> always play once
-    public List<int> animation_priorities_with_static_orientation = new() { 3,4 };
+    [SerializeField] private List<int> animation_priorities_with_static_orientation = new() { 4,5 };
         // we can't interrupt the animation for switching orientation if it's in this list (wait the end of the anim before changing orientation)
         // only for orientation, not for switching to another animation (ex we can interrupt dodge to attack bcz they have the same priority 3)
 
 
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
     public bool debug_orientation = false;
     public bool debug_advanced = false;
     public bool debug_frames = false;
-
-
-
+    public bool debug_pile = false;
 
 
 
@@ -82,16 +91,8 @@ public class AnimPlayer : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        if (bank == null)
-        {
-            bank = GameObject.Find("/utils/bank").GetComponent<AnimBank>();
-        }
-
         // we get the sprite renderer
         sr = GetComponent<SpriteRenderer>();
-
-        // we get the polygon collider
-        // pc = GetComponent<PolygonCollider2D>();
 
         // we inspect the capacity_priorities and we create the anim_pile
         float highest_priority = capacity_priorities.Values.Max();
@@ -108,7 +109,11 @@ public class AnimPlayer : MonoBehaviour
     // Update
     private void Update()
     {
-        // Debug.Log("Current frame: " + current_frame + " Current anim: " + current_anim.name);
+        if (debug_frames)
+        {
+            if (current_anim != null) { Debug.Log("(AnimPlayer) Current frame: " + current_frame + " Current anim: " + current_anim.name); }
+            // else { Debug.Log("(AnimPlayer) Current frame: " + current_frame + " Current anim: null"); }
+        }
 
         // we play the current animation
         if (current_frame != -1)
@@ -149,9 +154,6 @@ public class AnimPlayer : MonoBehaviour
 
             // we set the sprite
             sr.sprite = current_anim.sprites[current_frame];
-
-            // we try to update the polygon collider
-            // if (pc != null) { pc.TryUpdateShapeToAttachedSprite();}
         }
     }
 
@@ -159,35 +161,39 @@ public class AnimPlayer : MonoBehaviour
     // PLAY ANIMATION
     public Anim Play(string capacity, int? priority_override=null, float? duration_override=null)
     {
+        if (AnimBank.Instance == null) { return null; }
+
         // we get the priority of the capacity
         int priority = 1;
         if (priority_override != null)
         {
             priority = (int)priority_override;
-            if (debug) { Debug.Log("(AnimPlayer - Play) The capacity " + capacity + " has a priority override: " + priority); }
+            if (debug_pile) { Debug.Log("(AnimPlayer - Play) The capacity " + capacity + " has a priority override: " + priority); }
             capacity_priorities[capacity] = priority;
         }
         else if (priority_override == null && capacity_priorities.ContainsKey(capacity))
         {
             priority = capacity_priorities[capacity];
-            if (debug) { Debug.Log("(AnimPlayer - Play) The capacity " + capacity + " has a priority: " + priority + " from the capacity_priorities dictionnary"); }
+            if (debug_pile) { Debug.Log("(AnimPlayer - Play) The capacity " + capacity + " has a priority: " + priority + " from the capacity_priorities dictionnary"); }
         }
         else
         {
-            if (debug) { Debug.Log("(AnimPlayer - Play) The capacity " + capacity + " doesn't exist in the capacity_priorities dictionnary. Priority 1 applied by default"); }
+            if (debug_pile) { Debug.Log("(AnimPlayer - Play) The capacity " + capacity + " doesn't exist in the capacity_priorities dictionnary. Priority 1 applied by default"); }
             capacity_priorities[capacity] = priority;
         }
 
-        // we check if we can play the animation
+        // we check if we can play the animation RIGHT NOW
         if (priority >= getPileMaxPriority())
         {
             // we get the animation from the bank
             string anim_name = skin + "." + capacity + "." + orientation;
-            Anim anim = bank.GetAnim(anim_name);
-            if (anim == null)
+            Anim anim = AnimBank.Instance.GetAnim(anim_name);
+            if (debug)
             {
-                if (debug) { Debug.Log("(AnimPlayer - Play) could not Play() : " + anim_name + " no contact with bank"); }
-                return null;
+                Debug.Log("(AnimPlayer - Play) Bank found anim : " + anim.name
+                    + (anim_name == anim.name
+                    ? ""
+                    : " (" + anim_name + " was asked)"));
             }
 
             // we check if the duration is overriden
@@ -195,9 +201,9 @@ public class AnimPlayer : MonoBehaviour
             {
                 // we get the duration of the animation
                 float duration = anim.GetBaseDuration();
-                
+
                 // we calculate the resulting speed
-                anim.speed = duration / (float) duration_override;
+                anim.speed = duration / (float)duration_override;
             }
 
 
@@ -216,29 +222,32 @@ public class AnimPlayer : MonoBehaviour
             }
         }
 
-        // we add the animation to the pile
+        // we can't play the animation right now BUT we add the animation to the pile
         anim_pile[priority] = capacity;
-        if (debug) {Debug.LogWarning("(AnimPlayer - Play) Adding " + capacity + " to the pile at priority " + priority);}
+        if (debug_pile) {Debug.LogWarning("(AnimPlayer - Play) Adding " + capacity + " to the pile at priority " + priority);}
 
         // we didn't play the animation so we return null
         return null;
-
     }
     private void playFromPile()
     {
+        if (AnimBank.Instance == null) { return; }
+
         for (int i = anim_pile.Count - 1; i >= 0; i--)
         {
             // we check if there is an animation to play
             if (anim_pile[i] == "") { continue; }
 
             // we get the closest animation from the bank
-            Anim anim = bank.GetAnim(skin + "." + anim_pile[i] + "." + orientation);
-            if (anim == null)
+            string anim_name = skin + "." + anim_pile[i] + "." + orientation;
+            Anim anim = AnimBank.Instance.GetAnim(anim_name);
+            if (debug_pile)
             {
-                if (debug) {Debug.LogWarning("(AnimPlayer - playFromPile) No animation " + skin + "." + anim_pile[i] + "." + orientation + " found to play in the bank");}
-                continue;
+                Debug.Log("(AnimPlayer - playFromPile) Bank found anim : " + anim.name
+                    + (anim_name == anim.name
+                    ? ""
+                    : " (" + anim_name + " was asked)"));
             }
-            if (debug_advanced) {Debug.Log("(AnimPlayer - playFromPile) Found an animation to play: " + anim.name + " for capacity " + anim_pile[i]);}
 
             // we set the current capacity
             current_capacity = anim_pile[i];
@@ -273,7 +282,7 @@ public class AnimPlayer : MonoBehaviour
     }
 
     // STOP ANIMATION
-    public void StopPlaying(string capacity)
+    public void StopPlaying(string capacity,bool dont_stop_if_currently_playing=false)
     {
         // we check if the capacity is in the pile
         if (!anim_pile.Contains(capacity)) { return; }
@@ -282,7 +291,8 @@ public class AnimPlayer : MonoBehaviour
         removeFromPile(capacity);
 
         // if we were playing the capacity, we stop it
-        if (current_capacity == capacity)
+        // except if dont_stop_if_currently_playing == true
+        if (!dont_stop_if_currently_playing && current_capacity == capacity)
         {
             playFromPile();
         }
@@ -315,7 +325,7 @@ public class AnimPlayer : MonoBehaviour
             if (anim_pile[i] == capacity)
             {
                 anim_pile[i] = "";
-                if (debug) { Debug.Log("(AnimPlayer) Removing " + capacity + " from the pile"); }
+                if (debug_pile) { Debug.Log("(AnimPlayer) Removing " + capacity + " from the pile"); }
                 return;
             }
         }
@@ -327,20 +337,32 @@ public class AnimPlayer : MonoBehaviour
     {
         if (debug_orientation) { Debug.Log("(AnimPlayer) Changing " + name + " orientation to " + look_at); }
 
-        // we separate the 360° in 4 directions (up, down, left, right)
-        if (look_at.y > 0.5) { SetOrientation("U"); }
-        else if (look_at.y < -0.5) { SetOrientation("D"); }
-        else if (look_at.x > 0.5) { SetOrientation("R"); }
-        else if (look_at.x < -0.5) { SetOrientation("L"); }
+
+        // todo - next step is to work with 12 orientations instead of 8
+        // todo - L,LU,UL,U,UR,RU,R,RD,DR,D,DL,LD
+        // todo - bcz for now if we're at 65° the AnimBank returns a L animation even if we
+        // todo - are closer to the D one
+
+
+        // we get the angle from the normalized vector (between 0 & 360f)
+        float angle = Mathf.Atan2(look_at.y, look_at.x) * Mathf.Rad2Deg + 180f;
+        if (angle >= 337.5f || angle < 22.5f) { setOrientation("L"); }
+        else if (angle >= 292.5f) { setOrientation("LU"); }
+        else if (angle >= 247.5f) { setOrientation("U"); }
+        else if (angle >= 202.5f) { setOrientation("RU"); }
+        else if (angle >= 157.5f) { setOrientation("R"); }
+        else if (angle >= 112.5f) { setOrientation("RD"); }
+        else if (angle >= 67.5f) { setOrientation("D"); }
+        else { setOrientation("LD"); }
     }
-    public void SetOrientation(string orientation)
+    private void setOrientation(string orientation)
     {
         // we check if the orientation is different
         if (orientation == this.orientation) { return; }
 
         // we set the orientation
-        if (new List<string> { "U", "D", "L", "R" }.Contains(orientation))
-        { this.orientation = orientation; }
+        //if (new List<string> { "U", "D", "L", "R" }.Contains(orientation)){
+        this.orientation = orientation;//}
 
         // we check if we can interrupt the current animation to update orientation
         if (current_capacity == "") { return; }
@@ -350,7 +372,7 @@ public class AnimPlayer : MonoBehaviour
         // we check if the current animation is in the pile
         Anim new_anim = Play(current_capacity);
         if (new_anim == null) { return; }
-        if (debug)
+        if (debug_orientation)
         {
             string s = "(AnimPlayer) Interrupted : Changing orientation to ";
             s += this.orientation + " | anim switched to ";

@@ -99,13 +99,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown: 0
   debug: 0
+  distance_to_attack: 1
   kills: 0
   damage: 10
   random_damage_modifier_at_start: 0
   is_attacking: 0
-  perforant_attack: 0
+  perforant_attack: 1
   delay_between_perforations: 0.01
   hit_enemies: []
   not_attackable_tags: []
   knockback_base: 500
   attackant_advantage: 10
+  base_attack_shake_magnitude: 0.5
+  base_kill_shake_magnitude: 0.8

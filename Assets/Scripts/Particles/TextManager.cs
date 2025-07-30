@@ -45,20 +45,11 @@ public class TextManager : MonoBehaviour
         return static_text;
     }
 
-    public void talk(string text, Being being)
-    {
-        // we make the being talk
-
-        // on crée un texte static qui reste accroché au being.
-        // parle line par line
-        // text = "/./l" + text;
-        string[] lines = text.Split("/l");
-        StartCoroutine(talkLines(lines, being));
-    }
-
-    IEnumerator talkLines(string[] lines, Being being)
+    public IEnumerator TalkLines(string text, Being being)
     {
         Transform voice = being.transform.Find("talk");
+
+        string[] lines = text.Split("/l");
 
         // on affiche les lignes
         for (int i = 0; i < lines.Length; i++)
@@ -106,7 +97,7 @@ public class TextManager : MonoBehaviour
                     sentence.GetComponent<TextMeshPro>().text += '.';
 
                     // on clignote un petit peu
-                    for (int arghfsdf =0; arghfsdf<2; arghfsdf++)
+                    for (int arghfsdf = 0; arghfsdf < 2; arghfsdf++)
                     {
                         yield return new WaitForSeconds(slow_caractere_delay);
                         sentence.GetComponent<TextMeshPro>().text = old_text;

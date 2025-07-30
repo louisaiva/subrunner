@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System;
 
 /// <summary>
 /// DropCapacity is a Capacity that allows the Capable to drop items.
@@ -25,7 +24,9 @@ public class DropCapacity : Capacity
     [SerializeField] private Item selected_item;
 
     [Header("Drop parameters")]
+    public bool random_direction = true;
     [SerializeField] private float drop_magnitude = 200f;
+    public bool lock_magnitude = false; // if true the dropping force won't be influenced by capable's movement
     [SerializeField] private Transform parent_to_drop_items;
 
     [Header("Components")]
@@ -35,7 +36,7 @@ public class DropCapacity : Capacity
     [Header("Input & Callbacks")]
     [SerializeField] private InputActionReference dropInput;
     private InputAction dropAction;
-    private event Action<InputAction.CallbackContext> dropCallback;
+    private event System.Action<InputAction.CallbackContext> dropCallback;
 
     // START
     private void Start()
@@ -96,7 +97,7 @@ public class DropCapacity : Capacity
         Item item = selected_item;
 
         // we check if it s a shuriken, if so we throw it
-        if (item is Shuriken) { (item as Shuriken).Use(); }
+        if (item is Shuriken) { (item as Shuriken).Use(capable); }
 
         // we try to drop the item
         bool drop = inventory.Drop(selected_item);
@@ -109,27 +110,36 @@ public class DropCapacity : Capacity
 
         // we successfully dropped the item !!
         // we move the item back to the world
-        item.transform.position = capable.transform.position + ((Vector3) capable.Orientation * 0.2f);
+        item.transform.position = capable.transform.position + ((Vector3)capable.Orientation * 0.2f);
         item.transform.SetParent(parent_to_drop_items);
 
         // we add a force to the item
         float force_magnitude = -888f;
         if (item is not Shuriken)
         {
-            Force force = new Force("drop", capable.Orientation , drop_magnitude);
-            if (capable is Movable)
+            Force force = new Force("drop", random_direction ? Random.insideUnitCircle : capable.Orientation, drop_magnitude);
+            if (capable is Movable && !lock_magnitude)
             {
                 // we add the current moving velocity to the force (for dropping items while moving)
-                force.magnitude += (capable as Movable).Velocity.magnitude*2f;
+                force.magnitude += (capable as Movable).Velocity.magnitude * 2f;
             }
             item.AddForce(force);
             force_magnitude = force.magnitude;
         }
 
-        if (debug) { Debug.Log("(DropCapacity) " + capable.name + " dropped : " + item.name +
-                (force_magnitude != -888f ? " with force of magnitude : " + force_magnitude : 
+        if (debug)
+        {
+            Debug.Log("(DropCapacity) " + capable.name + " dropped : " + item.name +
+                (force_magnitude != -888f ? " with force of magnitude : " + force_magnitude :
                 " and item is a SHURIKEN so no force applied")
-                ); }
-    
+                );
+        }
+
+    }
+
+    private void OnDestroy()
+    {
+        // we remove the callback
+        dropAction.performed -= dropCallback;
     }
 }

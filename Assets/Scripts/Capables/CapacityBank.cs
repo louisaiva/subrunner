@@ -12,7 +12,7 @@ public class CapacityBank : MonoBehaviour
     [Header("Prefab path")]
     public string capacities_prefabs_path = "capacities";
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
 
 

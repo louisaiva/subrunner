@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Capacity : MonoBehaviour
 {
-    // public string name;
     public virtual bool Able
     {
         get
@@ -14,20 +13,16 @@ public class Capacity : MonoBehaviour
             return cooldown_timer <= 0;
         }
     }
-    public Capable capable
-    {
-        get {
-            return transform.parent.GetComponent<Capable>();
-        }
-    }
-    
+    public Capable capable { get { return transform.parent.GetComponent<Capable>(); } }
+
+
+
+    // todo some capacity don't have a cooldown (walk, run, grab, hover), so make this an interface
     [Header("Cooldown")]
     [SerializeField] protected float cooldown = 0;
     protected float cooldown_timer;
 
-    /*todo [Header("Animation")] ?? */
-
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
 
 
@@ -54,10 +49,10 @@ public class Capacity : MonoBehaviour
         if (cooldown > 0)
         {
             cooldown_timer = cooldown;
-            // Debug.Log("cooldown started for " + name + " : " + cooldown);
         }
     }
 
+    // todo make this an interface too !!! some capacities don't have a "use" (walk, run)
     public virtual void Use(Capable capable)
     {
         // we play the animation

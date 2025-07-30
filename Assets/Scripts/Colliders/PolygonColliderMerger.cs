@@ -21,7 +21,7 @@ public class PolygonColliderMerger : MonoBehaviour
     [Header("Sources")]
     public List<Transform> sources = new List<Transform>();
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
 
 

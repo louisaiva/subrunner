@@ -25,15 +25,24 @@ public class CloseCapacity : Capacity
     [Header("Sibling Open Capacity")]
     public OpenCapacity open_capacity;
 
+    [Header("Components")]
+    private UI_HUD hud;
+
+    // START
+    private void Start()
+    {
+        hud = UI_Manager.Instance.GetPool("hud") as UI_HUD;
+        close(false);
+    }
+
     // USE
     public override void Use(Capable capable)
     {
         close();
     }
 
-    
     // OPENING
-    protected virtual void close()
+    protected virtual void close(bool play_anim = true)
     {
         // on supprime les invokes de l'ouverture si il y en a
         open_capacity?.CancelOpenInvoke();
@@ -42,8 +51,11 @@ public class CloseCapacity : Capacity
         (capable as Openable).is_moving = true;
 
         // on joue l'animation
-        capable.anim_player.StopPlaying("idle_open");
-        capable.anim_player.Play("close",priority_override:3,duration_override: closing_duration);
+        if (play_anim)
+        {
+            capable.anim_player.StopPlaying("idle_open");
+            capable.anim_player.Play("close", duration_override: closing_duration);
+        }
         Invoke("success_close", closing_duration);
 
         // on fait les vérifications pour les portes
@@ -55,7 +67,7 @@ public class CloseCapacity : Capacity
         else if (capable is Chest && capable.inventory != null && capable.inventory.ui != null)
         {
             capable.inventory.ui.Hide();
-            (GameObject.Find("/ui").GetComponent<UI_Manager>().GetPool("hud") as UI_HUD).RemoveChest(capable.inventory.ui);
+            if (hud != null) { hud.RemoveChest(capable.inventory.ui); }
         }
 
         if (debug) { Debug.Log(capable.name + " is closing..."); }
@@ -75,6 +87,12 @@ public class CloseCapacity : Capacity
         {
             capable.GetComponent<SpriteRenderer>().sortingLayerName = "main";
             capable.GetComponent<SpriteRenderer>().sortingOrder = 0;
+        }
+
+        // verifications pour les lootable meat
+        if (capable is LootableMeat lootableMeat && lootableMeat.inventory.Count == 0)
+        {
+            lootableMeat.TurnToMeat();
         }
                                                         
         if (debug) { Debug.Log(capable.name + " is closed !"); }

@@ -63,6 +63,7 @@ public class FloatingDmgProvider : MonoBehaviour {
             }
 
             // on affiche les dégats
+            if (obj == null) { continue; }
             create_floating_dmg((int)dmg_compteur[obj], obj.transform.position);
 
             // on met à jour le compteur

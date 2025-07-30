@@ -1,21 +1,23 @@
+#pragma warning disable 4014
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using System;
-using Unity.Cinemachine;
-
-public class UI_XboxNavigator : MonoBehaviour
+/// <summary>
+/// This class handles the navigation through UI
+/// with a controller
+/// </summary>
+public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
 {
     
-    // this class handles how the UI reacts to the xbox controller
-
     [Header("Slottables & Slots")]
     [SerializeField] private List<GameObject> slottables = new List<GameObject>();
     [SerializeField] private List<GameObject> slots;
     [SerializeField] private int current_slot_index;
     [SerializeField] private UI_Inventory perso_quick_inventory;
-    // this quick inventory is showed when another inventory (chess, etc.) is opened
+    // this quick inventory is showed when another inventory (chest, etc.) is opened
     // to allow the player to transfer items between inventories
+    // only showed in-game (when the hud is visible)
     private bool perso_quick_inventory_was_shown = true;
 
     [Header("Navigation")]
@@ -33,34 +35,51 @@ public class UI_XboxNavigator : MonoBehaviour
     public float angle_threshold = 45f;
     public float angle_multiplicator = 0f;
     // [SerializeField] public float angle_vs_distance_precision = 0f; // from 0 to 1, affine la prédiction de navigation
-    
+
+    // EVENTS
+    public event Action<I_UI_Slot> OnSlotHoverEnter = delegate { }; // delegate that triggers when we navigate to a new slot
+    public event Action<I_UI_Slot> OnSlotOutOfScreen = delegate { }; // delegate that triggers when we navigate to a position that is out of screen
 
 
-    [Header("Input & Callbacks")]
+    [Header("Moving Items")]
+    [SerializeField] private UI_Item moving_ui_item = null; // the item that is currently being moved
+
+
     private InputManager input_manager;
+    [Header("Input & Callbacks")]
 
     // NAVIGATE L
     [SerializeField] private InputActionReference navigateInput;
     private InputAction navigateAction;
-    private event Action<InputAction.CallbackContext> navigateCallback;
+    private event Action<InputAction.CallbackContext> navigateCallback; // for navigating through the UI -> LJoy
 
-    // NAVIGATE IN-GAME
-    [SerializeField] private InputActionReference navigateInGameInput;
-    private InputAction navigateInGameAction;
-    [SerializeField] private bool navigateInGame = false; // if true, we use the navigateInGameAction instead of the navigateAction
-
-    // MOVE
-    [SerializeField] private InputActionReference moveInput;
-    private InputAction moveAction;
-    private event Action<InputAction.CallbackContext> moveCallback; // move Callback is for dropping items, or, when dragged, move it through the ui, on Y
+    // DROP
+    [SerializeField] private InputActionReference dropInput;
+    private InputAction dropAction;
+    private event Action<InputAction.CallbackContext> dropCallback; // drop Callback is for dropping items when inside a big inventory -> X
 
     // ACTIVATE
     [SerializeField] private InputActionReference activateInput;
     private InputAction activateAction;
-    private event Action<InputAction.CallbackContext> activateCallback; // activate Callback is for activating the item/slot -> quit game, mostly on A
+    private event Action<InputAction.CallbackContext> activateCallback; // activate Callback is for activating the item/slot -> A
+
+    // MOVING ITEM
+    [SerializeField] private InputActionReference moveItemInput;
+    private InputAction moveItemAction;
+    private event Action<InputAction.CallbackContext> moveItemCallback; // moveItem Callback is for moving an item through the ui. -> Y
+    public bool IsMovingItem { get => moving_ui_item != null; } // returns true if we are moving an item
+
+    // NAVIGATE IN-GAME
+    [SerializeField] private bool navigateInGame = false; // if true, we use the navigateInGameAction instead of the navigateAction -> RJoy 
+    [SerializeField] private InputActionReference navigateInGameInput;
+    private InputAction navigateInGameAction;
+
+    // DROP IN-GAME
+    [SerializeField] private InputActionReference dropInGameInput;
+    private InputAction dropInGameAction;
 
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
     public bool debug_navigation = false;
     public bool debug_gizmo = false;
@@ -80,14 +99,17 @@ public class UI_XboxNavigator : MonoBehaviour
         navigateAction = input_manager.GetAction(navigateInput);
         navigateInGameAction = input_manager.GetAction(navigateInGameInput);
         activateAction = input_manager.GetAction(activateInput);
-        moveAction = input_manager.GetAction(moveInput);
+        dropAction = input_manager.GetAction(dropInput);
+        dropInGameAction = input_manager.GetAction(dropInGameInput);
+        moveItemAction = input_manager.GetAction(moveItemInput);
 
         // we create the callbacks
         navigateCallback = ctx => HandleNavigateInput(ctx.ReadValue<Vector2>());
         activateCallback = ctx => HandleActivateInput(ctx.ReadValue<float>());
-        moveCallback = ctx => HandleMoveInput(ctx.ReadValue<float>());
+        dropCallback = ctx => HandleDropInput(ctx.ReadValue<float>());
+        moveItemCallback = ctx => HandleMoveItemInput(ctx.ReadValue<float>());
 
-        if (debug) { Debug.Log("(XboxNavigator) started & callbacks created"); }
+        if (debug) { Debug.Log("(UI_Navigator) started & callbacks created"); }
 
         // we reset the variables
         continuous_navigation_counter = float.MaxValue;
@@ -96,13 +118,13 @@ public class UI_XboxNavigator : MonoBehaviour
         // we check if the perso quick inventory is shown
         if (perso_quick_inventory == null)
         {
-            Debug.LogWarning("(XboxNavigator) perso_quick_inventory is not set. please set it in the inspector");
+            Debug.LogWarning("(UI_Navigator) perso_quick_inventory is not set. please set it in the inspector");
         }
     }
 
 
     // ENABLE / DISABLE
-    public void Enable(I_UI_Slottable slottable,bool ingame_navigation = false)
+    public void Enable(I_UI_Slottable slottable, bool ingame_navigation = false)
     {
         if (slottables.Contains(slottable.gameObject)) { return; } // on ne fait rien si le slottable est déjà dans la liste
 
@@ -119,36 +141,46 @@ public class UI_XboxNavigator : MonoBehaviour
         {
             // on regarde si c'est un coffre
             UI_Inventory inventory = slottable as UI_Inventory;
-            if (inventory.inventory != null && inventory.inventory.capable != null && inventory.inventory.capable is Chest)
+            if (inventory.Inventory != null && inventory.Inventory.capable != null && inventory.Inventory.capable is Chest)
             {
                 // on affiche le perso quick inventory si besoin
                 perso_quick_inventory_was_shown = perso_quick_inventory.gameObject.activeSelf;
                 if (!perso_quick_inventory_was_shown) { perso_quick_inventory.Show(); }
 
                 // on enable le slottable
-                Enable(perso_quick_inventory,true);
+                Enable(perso_quick_inventory, true);
             }
         }
 
         // log
-        if (debug) { Debug.Log("(XboxNavigator) enabled slotabble : " + slottable.gameObject.name); }
+        if (debug) { Debug.Log("(UI_Navigator) enabled slotabble : " + slottable.gameObject.name); }
 
         // on verifie si on utilise le clavier ou le controller
         if (!input_manager.isUsingGamepad()) { return; }
 
         // on navigue vers le premier slot
         current_slot_index = -1;
-        navigateToFirst();
+        // navigateToFirst();
+        navigateToClosest(slottable.SavedPosition);
 
     }
     public void Disable(I_UI_Slottable slottable)
     {
         if (!slottables.Contains(slottable.gameObject)) { return; }
 
+        // on désactive le moving_ui_item si on en a un
+        if (moving_ui_item != null)
+        {
+            // on désactive le moving item
+            moving_ui_item.OnPointerExit(null);
+            moving_ui_item = null;
+            disable_only_empty_slots();
+        }
+
         // on enlève le slottable de la liste des slottables
         slottables.Remove(slottable.gameObject);
 
-        if (debug) { Debug.Log("(XboxNavigator) disabling slottable : " + slottable.gameObject.name); }
+        if (debug) { Debug.Log("(UI_Navigator) disabling slottable : " + slottable.gameObject.name); }
 
         // on sauvegarde le slot actuel
         GameObject last_slot = null;
@@ -170,12 +202,13 @@ public class UI_XboxNavigator : MonoBehaviour
             }
         }
 
+
         // on met à jour les slots
         update_slots();
         hover_slot(last_slot != null ? slots.IndexOf(last_slot) : -1);
 
         // on cache le perso quick inventory si c'est le seul survivant
-        if (slottables.Count == 1 && slottables[0] == perso_quick_inventory.gameObject)
+        if (slottables.Count == 1 && perso_quick_inventory != null && slottables[0] == perso_quick_inventory.gameObject)
         {
             // on cache le perso quick inventory si besoin
             if (!perso_quick_inventory_was_shown) { perso_quick_inventory.Hide(); }
@@ -197,20 +230,21 @@ public class UI_XboxNavigator : MonoBehaviour
     }
 
     // INPUTS
-    public void enableInputs(bool ingame_navigation = false)
+    private void enableInputs(bool ingame_navigation = false)
     {
-        // on active les callbacks
-        activateAction.performed += activateCallback;
-        moveAction.performed += moveCallback;
+        moveItemAction.performed += moveItemCallback;
 
         // on active le bon callback de navigation
         if (ingame_navigation)
         {
             navigateInGameAction.performed += navigateCallback;
+            dropInGameAction.performed += dropCallback;
         }
         else
         {
             navigateAction.performed += navigateCallback;
+            activateAction.performed += activateCallback;
+            dropAction.performed += dropCallback;
         }
         
         navigateInGame = ingame_navigation; // on met à jour la variable
@@ -220,57 +254,33 @@ public class UI_XboxNavigator : MonoBehaviour
         // on récupère les inputs
         navigateAction.performed -= navigateCallback;
         navigateInGameAction.performed -= navigateCallback;
+        dropAction.performed -= dropCallback;
+        dropInGameAction.performed -= dropCallback;
         activateAction.performed -= activateCallback;
-        moveAction.performed -= moveCallback;
+        moveItemAction.performed -= moveItemCallback;
 
         navigateInGame = false; // on met à jour la variable
     }
-
-
-
-    // NAVIGATION INPUTS & UPDATE
-    private void HandleNavigateInput(Vector2 input)
+    public void ToggleInput(string input_name, bool enable = true)
     {
-        // do nothing if this input is mouse_based
-        if (!input_manager.isUsingGamepad())
+        if (input_name == "drop")
         {
-            if (debug) { Debug.Log("(XboxNavigator - HandleActivateInput) activate input ignored because mouse based"); }
-            return;
+            if (enable) { dropAction.performed += dropCallback; }
+            else { dropAction.performed -= dropCallback; }
         }
-
-        // cette fonction gère les inputs de navigation et décide si on doit naviguer ou non
-        // si oui elle appelle alors navigate()
-
-        // 1 - on gère l'input
-        float magnitude = input.magnitude;
-        // on garde l'input précédent
-        last_input = input;
-
-        // 2 - on regarde si on est avec un gros input (pour naviguer !!!)
-        if (magnitude > 0.95f)
+        else if (input_name == "activate")
         {
-            // on regarde si c'est la première fois qu'on navigue
-            if (can_navigate)
-            {
-                // on lance le counter de navigation continue
-                continuous_navigation_counter = Time.realtimeSinceStartup;
-                can_navigate = false;
-
-                // on navigue
-                navigate(input.normalized);
-            }
-            return;
+            if (enable) { activateAction.performed += activateCallback; }
+            else { activateAction.performed -= activateCallback; }
         }
-
-        // 3 - si on est là c'est qu'on navigue pas
-        // 4 - on regarde si on a un input proche de zéro (pour naviguer à nouveau quand on revient à 1)
-        if (magnitude < 0.5f)
+        else if (input_name == "move")
         {
-            can_navigate = true;
-            navigate_continuously = false; // on reset la navigation continue
-            continuous_navigation_counter = float.MaxValue; // on reset le compteur de navigation continue
+            if (enable) { moveItemAction.performed += moveItemCallback; }
+            else { moveItemAction.performed -= moveItemCallback; }
         }
     }
+
+    // UPDATE
     private void Update()
     {
         // gère les timings de navigation continue
@@ -301,15 +311,12 @@ public class UI_XboxNavigator : MonoBehaviour
     // NAVIGATION HIGH LEVEL
     private void navigate(Vector2 direction)
     {
-        // double check if time delay since last navigation is long enough
-        // if ()
-
-        if (debug) { Debug.Log("(XboxNavigator) navigating : " + direction); }
+        if (debug) { Debug.Log("(UI_Navigator) navigating : " + direction); }
 
         // on récupère les slots
         update_slots();
 
-        string s = "(XboxNavigator) NAVIGATE: \n\nparameters: \n\tangle_threshold : " + angle_threshold + "\n\tangle_multiplicator: " + angle_multiplicator + "\n\n";
+        string s = "(UI_Navigator) NAVIGATE: \n\nparameters: \n\tangle_threshold : " + angle_threshold + "\n\tangle_multiplicator: " + angle_multiplicator + "\n\n";
 
         // on récupère la position du slot actuel
         Vector2 current_slot_position = get_position(current_slot_index);
@@ -362,7 +369,7 @@ public class UI_XboxNavigator : MonoBehaviour
         update_slots();
 
         // on récupère le slot le plus proche
-        string s = "(XboxNavigator) NAVIGATE TO CLOSEST: \n\nfrom position : " + position + "\n\n";
+        string s = "(UI_Navigator) NAVIGATE TO CLOSEST: \n\nfrom position : " + position + "\n\n";
         int next_index = findClosestSlot(slots, position,ref s);
 
         // we navigate to the slot if we have one
@@ -373,7 +380,7 @@ public class UI_XboxNavigator : MonoBehaviour
         s += "\n\nclosest : " + next_index + "\n";
         if (debug_navigation) { Debug.Log(s); }
     }
-    private void navigateToFirst()
+    /* private void navigateToFirst()
     {
         // we check if we have a slottable
         if (slottables.Count == 0) { return; }
@@ -388,9 +395,9 @@ public class UI_XboxNavigator : MonoBehaviour
         hover_slot(0);
 
         // we log the result
-        string s = "(XboxNavigator) NAVIGATE TO FIRST: slot is : " + slots[0].gameObject.name + "\n";
+        string s = "(UI_Navigator) NAVIGATE TO FIRST: slot is : " + slots[0].gameObject.name + "\n";
         if (debug_navigation) { Debug.Log(s); }
-    }
+    } */
 
     // NAVIGATION LOW LEVEL
     private int findClosestSlot(List<GameObject> slots, Vector2 position, ref string s, Vector2 direction = new Vector2(), float local_angle_multiplicator = 0f)
@@ -467,47 +474,65 @@ public class UI_XboxNavigator : MonoBehaviour
     private void update_slots()
     {
         // we check if we have a slottable
-        if (slottables.Count > 0)
+        if (slottables.Count == 0)
         {
-            // on récupère les slots
-            slots = new List<GameObject>();
-            foreach (GameObject slottable in slottables)
-            {
-                if (slottable == null) { continue; }
-                
-                // on récupère les slots du slottable
-                List<GameObject> slottable_slots = slottable.GetComponent<I_UI_Slottable>().GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator);
-                slots.AddRange(slottable_slots);
-            }
-        }
-        else { slots.Clear(); }
-
-        if (slots.Count == 0)
-        {
+            slots.Clear();
             current_slot_index = -1;
             return;
         }
+
+        // on récupère les slots
+        slots = new List<GameObject>();
+        foreach (GameObject slottable in slottables)
+        {
+            if (slottable == null) { continue; }
+            
+            // on récupère les slots du slottable
+            List<GameObject> slottable_slots = slottable.GetComponent<I_UI_Slottable>().GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator);
+            slottable_slots.RemoveAll(slot => slot.GetComponent<UI_Item>() != null && slot.GetComponent<UI_Item>().is_disabled); // we filter the disabled ones
+            slots.AddRange(slottable_slots);
+        }
+        if (slots.Count == 0) { current_slot_index = -1; }
     }
     private void hover_slot(int index)
     {
-
         // on unhover le slot actuel
-        if (slots.Count > current_slot_index && current_slot_index != -1)
+        if (slots.Count > current_slot_index && current_slot_index != -1
+            && (moving_ui_item == null || moving_ui_item != slots[current_slot_index].GetComponent<UI_Item>()))
         {
             slots[current_slot_index].GetComponent<I_UI_Slot>().OnPointerExit(null);
         }
 
-        // on hover le nouveau slot
-        if (index != -1)
+        // on vérifie si on a rien à hover
+        if (index == -1) { current_slot_index = -1; return; }
+
+        // on vérifie si on ne drag pas
+        if (moving_ui_item == null || slots[index].GetComponent<UI_Item>() == null)
         {
             slots[index].GetComponent<I_UI_Slot>().OnPointerEnter(null);
         }
+        else if (moving_ui_item != slots[index].GetComponent<UI_Item>())
+        {
+            slots[index].GetComponent<UI_Item>().OnPointerDragEnter(moving_ui_item); // si on est ici on drag
+        }
 
-        // on met à jour l'index
+        // on vérifie si la position du slot est en dehors de l'écran
+        Vector2 position = get_position(index);
+        if (position.x < 0 || position.x > Screen.width || position.y < 0 || position.y > Screen.height)
+        {
+            // on déclenche l'event OnSlotOutOfScreen
+            if (debug) { Debug.Log("(UI_Navigator) slot " + index + " is out of screen"); }
+            OnSlotOutOfScreen?.Invoke(slots[index].GetComponent<I_UI_Slot>());
+        }
+
+        // on déclenche l'event OnSlotHoverEnter
+        OnSlotHoverEnter?.Invoke(slots[index].GetComponent<I_UI_Slot>());
+
+        // on change le current slot index
         current_slot_index = index;
     }
 
-    // GET SLOT POSITION
+    // GETTERS SLOTS
     private Vector2 get_position(int index)
     {
         // get the position of the slot
@@ -531,10 +556,25 @@ public class UI_XboxNavigator : MonoBehaviour
 
         return position;
     }
+    /* private int get_slot_index(GameObject slot)
+    {
+        // get the index of the slot in the slots list
+        if (slot == null) { return -1; }
+        return slots.IndexOf(slot);
+    } */
+    public Vector2 GetCurrentSlotPosition()
+    {
+        // get the position of the current slot
+        if (current_slot_index == -1) { return base_position; }
+        return get_position(current_slot_index);
+    }
 
 
-    // MOVING / DROPPING SLOTS
-    private void HandleMoveInput(float input)
+
+
+
+    // NAVIGATION INPUTS & UPDATE
+    private void HandleNavigateInput(Vector2 input)
     {
         // do nothing if this input is mouse_based
         if (!input_manager.isUsingGamepad())
@@ -544,61 +584,39 @@ public class UI_XboxNavigator : MonoBehaviour
         }
 
         // cette fonction gère les inputs de navigation et décide si on doit naviguer ou non
-        // si oui elle appelle alors drop() ou pressed()
+        // si oui elle appelle alors navigate()
 
-        // 1 - on récupère le slot actuel
-        if (current_slot_index == -1) { return; }
-        GameObject go = slots[current_slot_index];
-        if (go == null) { return; }
-        I_UI_Slot slot = go.GetComponent<I_UI_Slot>();
-        if (slot == null) { return; }
+        // 1 - on gère l'input
+        float magnitude = input.magnitude;
+        // on garde l'input précédent
+        last_input = input;
 
-        // on handle le move seulement pour les UI_Item
-        if (slot is not UI_Item)
+        // 2 - on regarde si on est avec un gros input (pour naviguer !!!)
+        if (magnitude > 0.95f)
         {
-            if (debug)
+            // on regarde si c'est la première fois qu'on navigue
+            if (can_navigate)
             {
-                Debug.Log("(XboxNavigator - HandleMoveInput) move input ignored for slot " + slot.gameObject.name + " because it is not a UI_Item (" + slot.GetType().Name + ")");
+                // on lance le counter de navigation continue
+                continuous_navigation_counter = Time.realtimeSinceStartup;
+                can_navigate = false;
+
+                // on navigue
+                navigate(input.normalized);
             }
             return;
         }
 
-        // 2 - on regarde si on a down ou up
-        if (input > 0.5f)
+        // 3 - si on est là c'est qu'on navigue pas
+        // 4 - on regarde si on a un input proche de zéro (pour naviguer à nouveau quand on revient à 1)
+        if (magnitude < 0.5f)
         {
-            // on down le slot
-            (slot as UI_Slot).OnPointerDown(null);
-            if (debug) { Debug.Log("(XboxNavigator) pressed ui_item " + slot.gameObject.name); }
+            can_navigate = true;
+            navigate_continuously = false; // on reset la navigation continue
+            continuous_navigation_counter = float.MaxValue; // on reset le compteur de navigation continue
         }
-        else
-        {
-            // on relache le slot
-            drop(slot as UI_Item);
-            if (debug) { Debug.Log("(XboxNavigator) dropped ui_item " + slot.gameObject.name); }
-        }
-
     }
-    private async void drop(UI_Item slot)
-    {
-        if (slots.Count == 0 || current_slot_index == -1) { return; }
 
-        // on retient la position du slot
-        Vector2 position = get_position(slot.gameObject);
-
-        // on vide le slot
-        // on appelle OnPointerDropped pour simuler un drop
-        slot.OnPointerDropped(null);
-
-        // si on utilise la souris alors pas besoin de naviguer vers le plus proche
-        if (!input_manager.isUsingGamepad()) { return; }
-
-        // wait for a frame to let the click happen
-        await System.Threading.Tasks.Task.Yield();
-
-        // on navigue vers le slot le plus proche
-        navigateToClosest(position);
-    }
-    
     // ACTIVATE SLOT
     private void HandleActivateInput(float input)
     {
@@ -624,13 +642,13 @@ public class UI_XboxNavigator : MonoBehaviour
         {
             // on down le slot
             slot.OnPointerDown(null);
-            if (debug) { Debug.Log("(XboxNavigator) pressed slot " + slot.gameObject.name); }
+            if (debug) { Debug.Log("(UI_Navigator) pressed slot " + slot.gameObject.name); }
         }
         else
         {
             // on relache le slot
             activate(slot);
-            if (debug) { Debug.Log("(XboxNavigator) activated slot " + slot.gameObject.name); }
+            if (debug) { Debug.Log("(UI_Navigator) activated slot " + slot.gameObject.name); }
         }
     }
     private async void activate(I_UI_Slot slot)
@@ -652,6 +670,374 @@ public class UI_XboxNavigator : MonoBehaviour
         // on navigue vers le slot le plus proche
         navigateToClosest(position);
     }
+
+    // DROPPING SLOTS
+    private void HandleDropInput(float input)
+    {
+        // do nothing if this input is mouse_based
+        if (!input_manager.isUsingGamepad())
+        {
+            if (debug) { Debug.Log("(XboxNavigator - HandleActivateInput) activate input ignored because mouse based"); }
+            return;
+        }
+
+        // cette fonction gère le drop depuis l'inventaire. appelle soit drop() soit pressed()
+
+        // 1 - on récupère le slot actuel
+        if (current_slot_index == -1) { return; }
+        GameObject go = slots[current_slot_index];
+        if (go == null) { return; }
+        I_UI_Slot slot = go.GetComponent<I_UI_Slot>();
+        if (slot == null) { return; }
+
+        // 2 - on handle le drop seulement pour les UI_Item
+        if (slot is not UI_Item)
+        {
+            if (debug)
+            {
+                Debug.Log("(XboxNavigator - HandleMoveInput) drop input ignored for slot " + slot.gameObject.name
+                + " because it is not a UI_Item (" + slot.GetType().Name + ")");
+            }
+            return;
+        }
+
+        // 3 - on regarde si on a down ou up
+        if (input > 0.5f)
+        {
+            // on down le slot
+            (slot as UI_Slot).OnPointerDown(null);
+            if (debug) { Debug.Log("(UI_Navigator) pressed ui_item " + slot.gameObject.name); }
+        }
+        else
+        {
+            // on relache le slot
+            drop(slot as UI_Item);
+            if (debug) { Debug.Log("(UI_Navigator) dropped ui_item " + slot.gameObject.name); }
+        }
+
+    }
+    private async void drop(UI_Item slot)
+    {
+        if (slots.Count == 0 || current_slot_index == -1) { return; }
+
+        // on retient la position du slot
+        Vector2 position = get_position(slot.gameObject);
+
+        // on vide le slot
+        // on appelle OnPointerDropped pour simuler un drop
+        slot.OnPointerDropped(null);
+
+        // si on utilise la souris alors pas besoin de naviguer vers le plus proche
+        if (!input_manager.isUsingGamepad()) { return; }
+
+        // wait for a frame to let the click happen
+        await System.Threading.Tasks.Task.Yield();
+
+        // on navigue vers le slot le plus proche
+        navigateToClosest(position);
+    }
+
+
+
+
+    // MOVING ITEM THROUGH INVENTORY
+    private void HandleMoveItemInput(float input)
+    {
+        // do nothing if this input is mouse_based
+        if (!input_manager.isUsingGamepad())
+        {
+            if (debug) { Debug.Log("(XboxNavigator - HandleMoveItemInput) move input ignored because mouse based"); }
+            return;
+        }
+
+        // cette fonction gère le déplacement des items dans l'inventaire
+
+        // 1 - on récupère le slot actuel
+        if (current_slot_index == -1) { return; }
+        GameObject go = slots[current_slot_index];
+        if (go == null) { return; }
+        I_UI_Slot slot = go.GetComponent<I_UI_Slot>();
+        if (slot == null) { return; }
+
+        // 2 - on regarde si le slot est un UI_Item
+        if (slot is not UI_Item)
+        {
+            if (debug)
+            {
+                Debug.Log("(XboxNavigator - HandleMoveItemInput) move input ignored for slot " + slot.gameObject.name
+                + " because it is not a UI_Item (" + slot.GetType().Name + ")");
+            }
+            return;
+        }
+
+        // 3 - on regarde si on a down ou up
+        if (input > 0.5f) { start_moving_ui_item(slot as UI_Item); }
+        else if (moving_ui_item != null) { finish_moving_ui_item(slot as UI_Item); }
+    }
+    private void start_moving_ui_item(UI_Item potential_ui_item)
+    {
+        // on check si on a bien un item & un itempool
+        if (potential_ui_item.ItemPool == null || potential_ui_item.Item == null)
+        {
+            if (debug) { Debug.LogWarning("(UI_Navigator) moving item " + potential_ui_item.gameObject.name + " has no ItemPool or Item. cannot move it."); }
+            return;
+        }
+
+        // on active le moving item
+        moving_ui_item = potential_ui_item;
+        enable_only_recevable_slots();
+        update_slots(); // on met à jour les slots
+
+        // on remet l'index à l'index du ui_moving_item
+        current_slot_index = slots.IndexOf(moving_ui_item.gameObject);
+        if (debug) { Debug.Log("(UI_Navigator) updated slots for moving item. current_slot_index is now : " + current_slot_index); }
+
+        // on down le slot
+        moving_ui_item.OnPointerDragDown();
+        if (debug) { Debug.Log("(UI_Navigator) drag downed item " + potential_ui_item.gameObject.name); }
+    }
+    private void finish_moving_ui_item(UI_Item destination)
+    {
+        // on release les 2 slos
+        moving_ui_item.OnPointerExit(null);
+        destination.OnPointerExit(null);
+
+        // on échange les deux UI_Item
+        if (moving_ui_item.Reference != ""
+            && destination.Reference == moving_ui_item.Reference
+            && destination.Quantity < destination.MaxQty
+            && destination != moving_ui_item)
+        {
+            merge_items(moving_ui_item, destination); // ce sont les mêmes items, on peut alors les merge ensemble
+        }
+        else { switch_items(moving_ui_item, destination); }
+
+        // on met à jour les slots
+        disable_only_empty_slots(true);
+        update_slots();
+
+        // et on renavigue vers destination
+        int destination_index = slots.IndexOf(destination.gameObject);
+        if (destination_index == -1)
+        {
+            destination_index = slots.IndexOf(moving_ui_item.gameObject);
+            destination = moving_ui_item; // on remet le destination à l'ui_item en cours de drag
+        }
+        current_slot_index = destination_index;
+        destination.OnPointerEnter(null); // on hover le slot de destination
+        OnSlotHoverEnter?.Invoke(destination); // on déclenche l'event OnSlotHoverEnter
+
+        // on relache le drag
+        if (debug) { Debug.Log($"(UI_Navigator) item {moving_ui_item.gameObject.name} switched position with {destination.gameObject.name}"); }
+        moving_ui_item = null;
+    }
+
+    // MOVING ITEM LOW LEVEL
+    private void enable_only_recevable_slots()
+    {
+        UI_ItemPool moving_pool = moving_ui_item.ItemPool;
+        Item moving_item = moving_ui_item.Item;
+
+        List<UI_ItemPool> item_pools = new List<UI_ItemPool>();
+
+        // on récupère les slots
+        foreach (GameObject slottable in slottables)
+        {
+            if (slottable == null) { continue; }
+
+            // on récupère tous les UI_ItemPool du slottable si c'est un UI_Inventory
+            if (slottable.GetComponent<UI_Inventory>() is UI_Inventory inventory)
+            {
+                // on ajoute les item pools du slottable
+                foreach (UI_ItemPool item_pool in inventory.pools)
+                {
+                    if (!item_pools.Contains(item_pool)) { item_pools.Add(item_pool); }
+                }
+            }
+
+            // on récupère les slots du slottable
+            List<GameObject> slottable_slots = slottable.GetComponent<I_UI_Slottable>().GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator);
+            foreach (GameObject slot in slottable_slots)
+            {
+                I_UI_Slot ui_slot = slot.GetComponent<I_UI_Slot>();
+                if (ui_slot is not UI_Item ui_item) { continue; }
+                if (ui_item == moving_ui_item) { continue; } // on ne désactive pas le slot en cours de drag
+
+                // on regarde si le slot peut recevoir le moving item
+                if (ui_item.ItemPool == null || !ui_item.ItemPool.CanStore(moving_item))
+                {
+                    ui_item.Disable(); // on désactive le slot
+                    continue;
+                }
+
+                // on regarde si le slot a un item qui peut etre recu par le moving_ui_item_pool
+                if (ui_item.Item != null && !moving_pool.CanStore(ui_item.Item))
+                {
+                    ui_item.Disable(); // on désactive le slot
+                    continue;
+                }
+
+                // sinon on active le slot
+                ui_item.Enable();
+            }
+        }
+
+        // on parcourt les item pools et on ajoute un ui_item vide si c'est un item pool scalable
+        // utile pour pouvoir déposer des ui_items dans une item pool scalable
+        foreach (UI_ItemPool item_pool in item_pools)
+        {
+            if (item_pool == moving_pool) { continue; }
+            if (!item_pool.Scalable) { continue; }
+            if (!item_pool.CanStore(moving_item)) { continue; }
+            if (item_pool.EmptyCount > 0) { continue; }
+            GameObject empty_slot = item_pool.CreateItemSlot();
+            empty_slot.GetComponent<UI_Item>().Enable();
+        }
+
+        // si on a un UI_InventoryMenu dans nos uis alors on refresh ses UI_ItemPools
+        if (UI_Manager.Instance.CurrentPool == "inventory")
+        {
+            UI_InventoryMenu inventory_menu = UI_Manager.Instance.GetPool("inventory") as UI_InventoryMenu;
+            if (inventory_menu != null)
+            {
+                inventory_menu.RefreshItemPools();
+            }
+        }
+
+    }
+    private void disable_only_empty_slots(bool except_modules = false)
+    {
+        // on sauvegarde les item pools qu'on trouve
+        List<UI_ItemPool> item_pools = new List<UI_ItemPool>();
+
+        foreach (GameObject slottable in slottables)
+        {
+            if (slottable == null) { continue; }
+
+            // on récupère tous les UI_ItemPool du slottable si c'est un UI_Inventory
+            if (slottable.GetComponent<UI_Inventory>() is UI_Inventory inventory)
+            {
+                // on ajoute les item pools du slottable
+                foreach (UI_ItemPool item_pool in inventory.pools)
+                {
+                    if (!item_pools.Contains(item_pool)) { item_pools.Add(item_pool); }
+                }
+            }
+
+            // on récupère les slots du slottable
+            List<GameObject> slottable_slots = slottable.GetComponent<I_UI_Slottable>().GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator);
+            foreach (GameObject slot in slottable_slots)
+            {
+                I_UI_Slot ui_slot = slot.GetComponent<I_UI_Slot>();
+                if (ui_slot is not UI_Item ui_item) { continue; }
+
+                // on regarde si le slot n'a pas d'item on le désactive
+                if (ui_item.Item != null) { ui_item.Enable(); continue; }
+                if (except_modules && ui_item is UI_Module) { ui_item.Enable(); continue; } // on ne désactive pas les modules
+                ui_item.Disable(); // on désactive le slot
+            }
+        }
+
+        // on parcourt les item pools et on supprime les ui_item vide si c'est un item pool scalable
+        foreach (UI_ItemPool item_pool in item_pools)
+        {
+            if (item_pool.Scalable) { item_pool.DestroyEmptySlots(); }
+        }
+
+
+        // si on a un UI_InventoryMenu dans nos uis alors on refresh ses UI_ItemPools
+        if (GetComponent<UI_Manager>().CurrentPool == "inventory")
+        {
+            UI_InventoryMenu inventory_menu = GetComponent<UI_Manager>().GetPool("inventory") as UI_InventoryMenu;
+            if (inventory_menu != null)
+            {
+                inventory_menu.RefreshItemPools();
+            }
+        }
+    }
+    private void switch_items(UI_Item item1, UI_Item item2)
+    {
+        // on échange les items entre les deux UI_Items
+        if (item1 == null || item2 == null) { return; }
+
+        // on sauvegarde les items
+        List<Item> items1 = item1.GetItems();
+        List<Item> items2 = item2.GetItems();
+
+        // on echange les items
+        item1.SwitchItems(items2);
+        item2.SwitchItems(items1);
+
+        // on regarde si on est dans deux inventaires différents
+        Inventory inventory1 = item1.Inventory;
+        Inventory inventory2 = item2.Inventory;
+        if (inventory1 == null || inventory2 == null)
+        {
+            if (debug)
+            {
+                Debug.Log($"(UI_Navigator) switched items between {item1.gameObject.name} "
+            + $"and {item2.gameObject.name} but at least one inventory is null : {inventory1?.capable.name} and {inventory2?.capable.name}");
+            }
+            return;
+        }
+        if (inventory1 == inventory2) { return; } // we stay inside the same inventory so no need to update Items's inventories
+
+        List<UI_Inventory> uis_to_ignore = new List<UI_Inventory>() { item1.ItemPool.UI_Inventory, item2.ItemPool.UI_Inventory };
+
+        // on met à jour les inventories des items
+        foreach (Item item in items1)
+        {
+            inventory2.Grab(item, uis_to_ignore); // on ignore les ui_inventory parce qu'ils ont déjà été grab dans ces UI_Inventory
+        }
+        foreach (Item item in items2)
+        {
+            inventory1.Grab(item, uis_to_ignore); // pareil
+        }
+    }
+    private void merge_items(UI_Item item1, UI_Item item2)
+    {
+        // on merge les items de item1 dans item2
+        List<Item> items = item1.GetItems();
+        List<Item> transfered_items = new List<Item>();
+        while (item2.Store(items[0]))
+        {
+            transfered_items.Add(items[0]); // on ajoute l'item à la liste des items transférés
+            items.RemoveAt(0);
+            if (items.Count == 0) { break; } // si on a plus d'items on sort de la boucle
+        }
+
+        // on vide le slot de item1
+        item1.SwitchItems(items);
+
+        // on regarde si on est dans deux inventaires différents
+        Inventory inventory1 = item1.Inventory;
+        Inventory inventory2 = item2.Inventory;
+        if (inventory1 == null || inventory2 == null)
+        {
+            if (debug)
+            {
+                Debug.Log($"(UI_Navigator) merged items between {item1.gameObject.name} "
+            + $"and {item2.gameObject.name} but at least one inventory is null : {inventory1?.capable.name} and {inventory2?.capable.name}");
+            }
+            return;
+        }
+        if (inventory1 == inventory2) { return; } // we stay inside the same inventory so no need to update Items's inventories
+
+        if (debug)
+        {
+            Debug.Log($"(UI_Navigator) merged items between {item1.ItemPool.UI_Inventory.name} "
+            + $"and {item2.ItemPool.UI_Inventory.name} with {items.Count} items left in {item1.gameObject.name}");
+        }
+
+        // on met à jour les inventories des items
+        List<UI_Inventory> uis_to_ignore = new List<UI_Inventory>() { item1.ItemPool.UI_Inventory, item2.ItemPool.UI_Inventory };
+        foreach (Item item in transfered_items)
+        {
+            inventory2.Grab(item, uis_to_ignore); // on ignore les ui_inventory parce qu'ils ont déjà été grab dans ces UI_Inventory
+            // inventory1.Drop(item, uis_to_ignore); // on drop l'item de l'inventaire 1
+        }
+    }
+
 
     // GIZMOS
     private void OnDrawGizmos()
@@ -684,7 +1070,7 @@ public class UI_XboxNavigator : MonoBehaviour
         } */
 
         // we normalize the weights so the minimum is at 0.25 and max is at 1
-        string s = "(XboxNavigator) GIZMOS WEIGHTS: " + gizmos_weights.Count + "\n";
+        string s = "(UI_Navigator) GIZMOS WEIGHTS: " + gizmos_weights.Count + "\n";
         List<float> gizmos_weights_normalised = new List<float>(gizmos_weights); // we copy the weights to avoid modifying the original list
 
         if (gizmos_weights.Count > 1)
@@ -728,28 +1114,4 @@ public class UI_XboxNavigator : MonoBehaviour
             Gizmos.DrawLine(position, dot_position);
         }
     }
-    // UPDATE
-    /* public void updateWhileShowed()
-    {
-        if (slottable == null) {return;}
-        if (current_slot_index == -1)
-        {
-            navigateToClosest();
-            return;
-        }
-
-        // on conserve le slot actuel
-        Vector2 position = get_position(current_slot_index);
-
-        // on met à jour les slots en gardant le slot actuel
-        navigateToClosest(position);
-    } */
-    /* public Vector2 getCursorPosition()
-    {
-        if (slottable == null) {return base_position;}
-        if (current_slot_index == -1) {return base_position;}
-        
-        // on récupère le slot actuel
-        return get_position(current_slot_index);
-    } */
 }

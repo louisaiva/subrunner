@@ -11,24 +11,24 @@ using UnityEngine.UI;
 
 public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 {
-    
+
     [Header("UI_Item Pools")]
-    [SerializeField] private List<UI_ItemPool> pools = new List<UI_ItemPool>();
+    public List<UI_ItemPool> pools = new List<UI_ItemPool>();
 
     [Header("Components")]
-    [SerializeField] private UI_XboxNavigator navigator;
-    public Inventory inventory;
+    // [SerializeField] private UI_XboxNavigator navigator;
+    public Inventory Inventory;
 
-    [Header("Debug")]
+    [Header("Logs")]
     [SerializeField] private bool debug = false;
 
     public void Init()
     {
         // on récupère les composants
-        navigator = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
+        // navigator = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
 
         // si on a pas d'inventory, il y a un problème
-        if (inventory == null)
+        if (Inventory == null)
         {
             try
             {
@@ -60,8 +60,12 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         // on initialise les pools
         foreach (UI_ItemPool pool in pools)
         {
-            // on initialise la pool
-            pool.Init();
+            if (pool == null)
+            {
+                Debug.LogWarning("(Inventory) " + name + $" has a null UI_ItemPool : {pool}, skipping initialization");
+                continue;
+            } // skip null UIs
+            pool.Init(this);
         }
     }
 
@@ -71,10 +75,9 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         gameObject.SetActive(true);
 
         // we enable the navigator if we are not the perso quick inventory
-        if (transform.parent.name != "hud")
+        if (transform.parent.name != "hud" && UI_XboxNavigator.Instance != null)
         {
-            if (!navigator) { Init(); }
-            navigator.Enable(this,true);
+            UI_XboxNavigator.Instance.Enable(this, true);
         }
     }
     public void Hide()
@@ -93,10 +96,9 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         gameObject.SetActive(false);
 
         // we enable the navigator if we are not the perso quick inventory
-        if (transform.parent.name != "hud")
+        if (transform.parent.name != "hud" && UI_XboxNavigator.Instance != null)
         {
-            // we disable the navigator
-            navigator.Disable(this);
+            UI_XboxNavigator.Instance.Disable(this);
         }
     }
     public void Toggle()
@@ -116,6 +118,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     public Action<InputAction.CallbackContext> CancelCallback => throw new NotImplementedException();
     public List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator)
     {
+        if (debug) { Debug.Log($"(UI_Inventory) {name} getting slots"); }
         List<GameObject> slots = new List<GameObject>();
         Vector2 position = Vector2.negativeInfinity;
         foreach (UI_ItemPool pool in pools)
@@ -126,8 +129,6 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
                 UI_Item ui_item = child.GetComponent<UI_Item>();
                 if (ui_item == null) { continue; }
 
-                // checks if the slot is disabled
-                if (child.GetComponent<UI_Item>().is_disabled) { continue; }
                 slots.Add(child.gameObject);
 
                 // we update the position to the first slot
@@ -151,6 +152,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         }
         return false;
     }
+    public Vector2 SavedPosition { get => new Vector2(0f, Screen.height); }
 
     // GRAB
     public virtual bool UI_Grab(Item item)
@@ -167,8 +169,11 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         }
 
         // if we are here, no pool could take the item
-        if (debug) { Debug.LogWarning("(UI_Inventory) no pool could take the item " + item.Reference +
-        " in " + inventory.capable.name + "'s ui_inventory, maybe they are full or the item is incompatible"); }
+        if (debug)
+        {
+            Debug.LogWarning("(UI_Inventory) no pool could take the item " + item.Reference +
+        " in " + Inventory.capable.name + "'s ui_inventory, maybe they are full or the item is incompatible");
+        }
 
         return false;
     }
@@ -186,8 +191,11 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
             }
         }
 
-        if (debug) { Debug.LogWarning("(UI_Inventory) no pool could drop the item " + item.Reference +
-        " in " + inventory.capable.name + "'s ui_inventory, please check the pools and the item type"); }
+        if (debug)
+        {
+            Debug.LogWarning("(UI_Inventory) no pool could drop the item " + item.Reference +
+        " in " + Inventory.capable.name + "'s ui_inventory, please check the pools and the item type");
+        }
 
         return false;
     }

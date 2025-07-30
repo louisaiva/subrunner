@@ -41,7 +41,11 @@ public class GrabCapacity : Capacity
         grabAction = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().GetAction(grabInput);
 
         // on définit le callback
-        grabCallback = ctx => Use(capable);
+        grabCallback = ctx =>
+        {
+            if (ctx.ReadValue<float>() > 0.5f) { return; } // we verify that the button was released
+            Use(capable);
+        };
     }
 
     // SELECT / DESELECT
@@ -76,9 +80,19 @@ public class GrabCapacity : Capacity
             if (debug) { Debug.LogError("(GrabCapacity) no selected item"); }
             return;
         }
-        
+
         // we grab the item
+        string item_name = selected_item.name;
         bool grab = inventory.Grab(selected_item);
-        if (debug) { Debug.Log("(GrabCapacity) " + capable.name + (grab ? " :D grabbed" : " :/ could not grab") + " : " + selected_item.name); }
+        if (debug)
+        {
+            Debug.Log("(GrabCapacity) " + capable.name + (grab ? " :D grabbed" : " :/ could not grab") + " : " + item_name);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // we remove the callback
+        grabAction.performed -= grabCallback;
     }
 }

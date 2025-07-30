@@ -7,7 +7,8 @@ public class CharacterSwitcher : MonoBehaviour
 
     [Header("Skins")]
     [SerializeField] private string[] skins;
-    [SerializeField] private string[] anims;
+    [SerializeField] private string[] capacities = new string[] { "walk", "idle", "dodge", "attack", "die", "hurted", "run" };
+    private List<Anim> anims = new List<Anim>();
     [SerializeField] private float skinChangeDelay = 0.5f; // Delay between skin changes
 
     [Header("Components")]
@@ -23,6 +24,22 @@ public class CharacterSwitcher : MonoBehaviour
     private void Start()
     {
 
+        // we get all the anims we want
+        AnimBank bank = AnimBank.Instance;
+        foreach (string skin in skins)
+        {
+            foreach (string capacity in capacities)
+            {
+                // get the anims for this skin and capacity
+                List<Anim> animsForSkin = bank.GetOrientationAnims(skin, capacity);
+                if (animsForSkin != null && animsForSkin.Count > 0)
+                {
+                    anims.AddRange(animsForSkin);
+                }
+            }
+        }
+
+
         // Start the skin change coroutine
         StartCoroutine(SkinChangeCoroutine());
     }
@@ -33,22 +50,15 @@ public class CharacterSwitcher : MonoBehaviour
         // wait a frame to be sure animPlayer is ready
         yield return null;
 
-        // playing run animation
-
         while (true)
         {
             // Wait for the specified delay
             yield return new WaitForSeconds(skinChangeDelay);
 
-            // change to a random skin
-            List<string> skinList = new List<string>(skins);
-            skinList.Remove(animPlayer.skin);
-            animPlayer.skin = skins[Random.Range(0, skinList.Count)];
-
             // and to a random anim between "walk","idle","dodge","loop"
-            animPlayer.ClearPile();
-            animPlayer.Play(anims[Random.Range(0, anims.Length)], loop_override: true);
-
+            Anim anim = anims[Random.Range(0, anims.Count)];
+            animPlayer.skin = anim.skin;
+            animPlayer.Play(anim.capacity);
         }
     }
 }

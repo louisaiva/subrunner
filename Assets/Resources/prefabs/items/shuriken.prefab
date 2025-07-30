@@ -101,16 +101,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown: 0.2
   debug: 0
+  distance_to_attack: 1
   kills: 0
   damage: 2
   random_damage_modifier_at_start: 0
-  is_attacking: 0
-  perforant_attack: 1
-  delay_between_perforations: 0.01
+  IsAttacking: 0
   hit_enemies: []
   not_attackable_tags: []
+  single_hit: 0
+  perforant_attack: 1
   knockback_base: 500
   attackant_advantage: 10
+  base_attack_shake_magnitude: 0.5
+  base_kill_shake_magnitude: 0.8
 --- !u!1 &1360620813671055405
 GameObject:
   m_ObjectHideFlags: 0
@@ -126,7 +129,7 @@ GameObject:
   - component: {fileID: 4604390373980000295}
   m_Layer: 24
   m_Name: shuriken
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -140,7 +143,7 @@ Transform:
   m_GameObject: {fileID: 1360620813671055405}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.493727, y: 3.6934118, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -218,7 +221,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: shuriken
-  orientation: D
   current_capacity: idle
   current_anim:
     name: shuriken.idle.D
@@ -271,6 +273,7 @@ MonoBehaviour:
   debug_orientation: 0
   debug_advanced: 0
   debug_frames: 0
+  debug_pile: 0
 --- !u!114 &2274157140532805568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -283,8 +286,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dfbf5714cb72034bbd1d1ccec996bd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim_player: {fileID: 1806198499784609161}
-  bank: {fileID: 0}
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: -1}
   capacities:
@@ -293,11 +294,12 @@ MonoBehaviour:
   effects: 
   effects_timetolive: []
   debug: 0
+  activate_all_capacities_logs_on_awake: 0
+  debug_velocity: 0
   rb: {fileID: 4604390373980000295}
   weight: 1
   random_weight_modifier_at_start: 0
   friction: 7
-  debug_velocity: 0
   forces: []
   input_speed: 0
   Velocity: {x: 0, y: 0}
@@ -306,6 +308,7 @@ MonoBehaviour:
   MaxQty: 4
   ItemDescription: weird mix between a gear n a shuriken,/. maybe it is both ?/l
     *looks sharp*
+  ActivationLabel: 
   throw_force_magnitude: 800
   shuriken_particle: {fileID: 4891524088592280739}
   current_speed: 10

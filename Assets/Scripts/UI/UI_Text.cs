@@ -25,7 +25,7 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
     [Header("Events")]
     [SerializeField] private UnityEvent activateEvent;
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
 
     // unity functions
@@ -34,9 +34,6 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
         // on récupère le tmp
         tmp = GetComponent<TextMeshProUGUI>();
         base_text = tmp.text;
-
-        // on met à jour le callback
-        // activateCallback = ctx => OnPointerClick(null);
     }
 
 
@@ -66,10 +63,21 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
                 Screen.fullScreen = !Screen.fullScreen;
         #endif
     }
-
-    // Descriptable
-    public string getDescription() { return ""; }
-    public bool shouldDescriptionBeShown() { return false; }
+    public void ghost_mode()
+    {
+        if (Perso.Instance == null) { return; }
+        Perso.Instance.ToggleGhost();
+    }
+    public void metamorph()
+    {
+        if (Perso.Instance == null) { return; }
+        Perso.Instance.Metamorph();
+    }
+    public void heal()
+    {
+        if (Perso.Instance == null) { return; }
+        Perso.Instance.healMax();
+    }
 
 
     // interface functions
@@ -105,23 +113,6 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
 
         // invoke the event
         activateEvent?.Invoke();
-
-
-        /* switch (base_text)
-        {
-            case "play":
-                play();
-                break;
-            case "exit game":
-                exit();
-                break;
-                /* case "regenerate world":
-                    regenerate_world();
-                    break;
-                case "cheat":
-                    cheat();
-                    break; 
-        } */
     }
     public virtual void OnPointerDown(PointerEventData eventData)
     {

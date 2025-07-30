@@ -11,7 +11,7 @@ using Unity.Properties;
 using UnityEditor;
 #endif
 
-public class AnimBank : MonoBehaviour
+public class AnimBank : Singleton<AnimBank>
 {
     // stocke toutes les animations et sprites utilisées dans le jeu
     // permet de les charger et de les stocker pour les utiliser plus tard
@@ -33,21 +33,23 @@ public class AnimBank : MonoBehaviour
 
     [Header("Animations parameters")]
     // store the capacities that have parameters override
-    private List<string> capacities_with_parameters_override = new List<string>() { "attack","hurted","dodge" };
+    // private List<string> capacities_with_parameters_override = new List<string>() { "attack","hurted","dodge" }; // todo obsolete ??
     // store the loops of the capacities
-    private List<bool> capacities_loops = new List<bool>() { false,false,false };
+    [SerializeField] private List<string> capacities_with_no_loops = new List<string>() { "attack","hurted","dodge" };
 
     [Header("Sprites")]
     public string spritesheets_path = "spritesheets/";
 
 
-    [Header("Debug")]
-    public bool debug = false;
-    public bool debug_LAFAC = false;
+    [Header("Logs")]
+    public bool log = false;
+    public bool log_LAFAC = false;
 
     // INITIALIZATION
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        
         LoadAnims();
 
         Debug.Log(getAnimsList());
@@ -64,11 +66,11 @@ public class AnimBank : MonoBehaviour
                 FileUtil.DeleteFileOrDirectory("Assets/Resources/" + jsons_path);
                 Directory.CreateDirectory("Assets/Resources/" + jsons_path);
 
-                if (debug) {Debug.Log("(AnimBank - LoadAnims) Extracting animations from AnimationClips and saving them as .json files.");}
+                if (log) {Debug.Log("(AnimBank - LoadAnims) Extracting animations from AnimationClips and saving them as .json files.");}
 
                 // if in the editor, we load AnimationClips and store them as .json files
                 string[] anims_paths = Directory.GetFiles("Assets/Resources/" + anims_path, "*.anim", SearchOption.AllDirectories);
-                if (debug) {Debug.Log("(AnimBank - LoadAnims) Found " + anims_paths.Length + " animations :\n\t" + string.Join("\n\t", anims_paths));}
+                if (log) {Debug.Log("(AnimBank - LoadAnims) Found " + anims_paths.Length + " animations :\n\t" + string.Join("\n\t", anims_paths));}
                 foreach (string path in anims_paths)
                 {
                     // we remove Assets/Resources/anims/ from the path
@@ -81,7 +83,7 @@ public class AnimBank : MonoBehaviour
             #endif
         }
 
-        if (debug) {Debug.Log("(AnimBank - LoadAnims) Loading animations from .json files.");}
+        if (log) {Debug.Log("(AnimBank - LoadAnims) Loading animations from .json files.");}
 
         // if in the build or not extracting from .anim, we load .json files
         TextAsset[] jsons = Resources.LoadAll<TextAsset>(jsons_path);
@@ -91,7 +93,7 @@ public class AnimBank : MonoBehaviour
             json_paths[i] = jsons[i].name;
         }
 
-        if (debug) {Debug.Log("(AnimBank - LoadAnims) Found " + json_paths.Length + " jsons :\n\t" + string.Join("\n\t", json_paths));}
+        if (log) {Debug.Log("(AnimBank - LoadAnims) Found " + json_paths.Length + " jsons :\n\t" + string.Join("\n\t", json_paths));}
         foreach (string path in json_paths)
         {
             // we remove Assets/Resources/anims/ from the path
@@ -132,7 +134,7 @@ public class AnimBank : MonoBehaviour
         // AND THEN EXTRACT THE DATA AND SAVE IT AS A JSON FILE
         // only works in the editor
 
-        if (debug_LAFAC) {Debug.Log("(AnimBank - LAFAC) Loading animation from AnimationClip : " + path);}
+        if (log_LAFAC) {Debug.Log("(AnimBank - LAFAC) Loading animation from AnimationClip : " + path);}
 
         // on charge l'animation depuis le path
         AnimationClip clip = Resources.Load<AnimationClip>("animations/" + path);
@@ -147,7 +149,7 @@ public class AnimBank : MonoBehaviour
         if (anim == null) { return; }
         if (!anim.IsNameCorrect(anim.name))
         {
-            if (debug_LAFAC) {Debug.LogWarning("(AnimBank - LAFAC) Animation name format is incorrect : " + anim.name);}
+            if (log_LAFAC) {Debug.LogWarning("(AnimBank - LAFAC) Animation name format is incorrect : " + anim.name);}
             return;
         }
 
@@ -174,7 +176,7 @@ public class AnimBank : MonoBehaviour
         }
 
         // si on arrive ici c'est qu'on a pas trouvé de sprite curve
-        if (debug_LAFAC) {Debug.LogWarning("(AnimBank - ExtractDataFromAnimationClip) No sprite curve found in the animation clip.");}
+        if (log_LAFAC) {Debug.LogWarning("(AnimBank - ExtractDataFromAnimationClip) No sprite curve found in the animation clip.");}
         return null;
     }
     private Anim extractSpriteCurve(AnimationClip clip, EditorCurveBinding binding)
@@ -201,7 +203,7 @@ public class AnimBank : MonoBehaviour
             Sprite sprite = spriteCurve[i].value as Sprite;
             if (sprite == null)
             {
-                if (debug_LAFAC) {Debug.LogWarning("(AnimBank - ExtractSpriteCurve) Sprite not found in the animation clip. Skipping Anim : " + clip.name);}
+                if (log_LAFAC) {Debug.LogWarning("(AnimBank - ExtractSpriteCurve) Sprite not found in the animation clip. Skipping Anim : " + clip.name);}
                 return null;
             }
             string spritePath = AssetDatabase.GetAssetPath(sprite).Replace(".png","").Replace("Assets/Resources/" + spritesheets_path, "");
@@ -229,7 +231,7 @@ public class AnimBank : MonoBehaviour
         // check if the animation already exists
         if (HasAnim(anim.name))
         {
-            if (debug) {Debug.LogWarning("(AnimBank - AddAnim) Animation already exists in the bank : " + anim.name);}
+            if (log) {Debug.LogWarning("(AnimBank - AddAnim) Animation already exists in the bank : " + anim.name);}
             return;
         }
         
@@ -239,11 +241,15 @@ public class AnimBank : MonoBehaviour
         string capacity = splitted_name[1];
 
         // check if the capacity has parameters override
-        int index = capacities_with_parameters_override.IndexOf(capacity);
+        /* int index = capacities_with_parameters_override.IndexOf(capacity);
         if (index != -1)
         {
             anim.loop = capacities_loops[index];
             // anim.priority = capacities_priorities[index];
+        } */
+       if (capacities_with_no_loops.Contains(capacity))
+        {
+            anim.loop = false; // if the capacity is in the no loops list, we set the loop to false
         }
 
         // add the skin & capacity to the bank if they don't exist
@@ -287,29 +293,75 @@ public class AnimBank : MonoBehaviour
         string[] splitted_name = name.Split('.');
         string skin = splitted_name[0];
         string capacity = splitted_name[1];
+        string orientation = splitted_name[2];
 
-        if (HasAnim(name))
+        // check if we do not have the skin
+        if (!anims.ContainsKey(skin))
         {
-            return anims[skin][capacity].Find(anim => anim.name == name);
-        }
-        
-        if (HasCapacity(name))
-        {
-            return anims[skin][capacity][0];
+            if (log) { Debug.LogWarning($"(AnimBank - GetAnim : {skin}.{capacity}.{orientation} ) Skin not found, returning sphere anim"); }
+            return anims["sphere"]["idle"][0]; // return the sphere anim of the sphere skin
         }
 
-        if (HasSkin(skin))
+        // check if we do not have the capacity
+        if (!anims[skin].ContainsKey(capacity) || anims[skin][capacity].Count == 0)
         {
-            if (anims[skin].ContainsKey("idle"))
-            {
-                return anims[skin]["idle"][0];
-            }
-            return anims[skin].Values.ToList()[0][0];
-        }
-        
-        if (debug) {Debug.LogWarning("(AnimBank - GetAnim) Animation not found in the bank : " + name);}
-        return null;
+            // return the idle anim of the skin
+            if (log) { Debug.LogWarning($"(AnimBank - GetAnim : {skin}.{capacity}.{orientation} ) Capacity not found, returning idle"); }
+            return GetAnim(skin + ".idle." + orientation);
+        } 
+
+        // return the best orientation recursively
+        return get_closest_orientation_anim(skin, capacity, orientation);        
     }
+    private Anim get_closest_orientation_anim(string skin, string capacity, string orientation)
+    {
+        // checks if we have the perfect animation (orientation)
+        Anim exact_anim = anims[skin][capacity].Find(anim => anim.orientation == orientation);
+        if (exact_anim != null) { return exact_anim; }
+
+        // todo improve this
+        // if we have only one letter in the orientation (L,R,U or D) we turn to find the closest other one letter
+        if (orientation == "U") { return get_closest_orientation_anim(skin, capacity, "L"); }
+        else if (orientation == "L") { return get_closest_orientation_anim(skin, capacity, "D"); }
+        else if (orientation == "D") { return get_closest_orientation_anim(skin, capacity, "R"); }
+        else if (orientation == "R") { return get_closest_orientation_anim(skin, capacity, "U"); }
+
+        // checks some special cases
+        if (skin == "zombo" && capacity == "attack" && (orientation == "LD" || orientation == "RD"))
+            { return get_closest_orientation_anim(skin, capacity, "D"); }
+
+        // if we have a 2 letters orientation (LU,LD,RU,RD) we delete the 2nd letter (and so we look either for L or R)
+        else { return get_closest_orientation_anim(skin, capacity, orientation[0].ToString()); }
+    }
+
+    /// <summary>
+    /// get all animations of a specific skin & specific capacity.
+    /// basically all animations that matches skin.capacity.*
+    /// 
+    /// this method does not try to find the *best match* as GetAnim(string name) does. it only returns
+    /// the list of anim inside of our anims[skin][capacity]. it means that in the return list it will only be single animations.
+    /// can't be double, but some orientations can miss
+    /// </summary>
+    /// <param name="skin">the skin we want the animations from</param>
+    /// <param name="capacity">and the capacity</param>
+    /// <returns>the list of all animations found, </returns>
+    public List<Anim> GetOrientationAnims(string skin, string capacity)
+    {
+        // returns all the animations of a skin and capacity with all orientations
+        if (!HasSkin(skin))
+        {
+            if (log) { Debug.LogWarning("(AnimBank - GetOrientationAnims) Skin not found in the bank : " + skin); }
+            return new List<Anim>();
+        }
+        if (!HasCapacity(skin + "." + capacity))
+        {
+            if (log) { Debug.LogWarning("(AnimBank - GetOrientationAnims) Capacity not found in the bank : " + skin + "." + capacity); }
+            return new List<Anim>();
+        }
+        return anims[skin][capacity];
+    }
+
+    // PUBLIC GETTERS
     public bool HasAnim(string name)
     {
         string skin = name.Split('.')[0];
@@ -363,6 +415,8 @@ public class AnimBank : MonoBehaviour
     public string skin { get { return name.Split('.')[0]; } }
     public string capacity { get { return name.Split('.')[1]; } }
     public string orientation { get { return name.Split('.')[2]; } }
+    // todo pas opti, faire l'inverse : stocker chaque string skin,capacity,orientation
+    // todo et faire une propertie name qui concatene les 3
     
     // stockage utile de l'animation
     public string[] sprites_paths;

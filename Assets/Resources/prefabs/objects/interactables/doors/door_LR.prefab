@@ -221,7 +221,7 @@ GameObject:
   - component: {fileID: 5777571958852792238}
   - component: {fileID: 8558487863959659101}
   - component: {fileID: 2197711243768661269}
-  m_Layer: 29
+  m_Layer: 9
   m_Name: door_LR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -362,7 +362,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: blue_door
-  orientation: L
   current_capacity: 
   current_anim:
     name: 
@@ -373,12 +372,13 @@ MonoBehaviour:
     speed: 1
     flipX: 0
   anim_pile: []
-  animation_priorities_with_no_loop: 03000000
-  animation_priorities_with_static_orientation: 0300000004000000
+  animation_priorities_with_no_loop: 04000000
+  animation_priorities_with_static_orientation: 0400000005000000
   debug: 0
   debug_orientation: 0
   debug_advanced: 0
   debug_frames: 0
+  debug_pile: 0
 --- !u!114 &8558487863959659101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -391,14 +391,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff6c242488ed936468b3cd01a36ecb0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim_player: {fileID: 0}
-  bank: {fileID: 0}
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: 0}
   capacities: []
   effects: 
   effects_timetolive: []
   debug: 0
+  activate_all_capacities_logs_on_awake: 0
   is_vertical: 0
   door_collider: {fileID: 0}
   shadow_caster: {fileID: 0}

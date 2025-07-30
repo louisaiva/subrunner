@@ -18,9 +18,9 @@
                     "name": "interact",
                     "type": "Button",
                     "id": "430686be-26cd-40e4-9321-059ac16b6dbd",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press(behavior=2)",
                     "initialStateCheck": false
                 },
                 {
@@ -99,6 +99,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "xbox",
+                    "action": "run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6a12dd62-6ac5-4355-86be-4fce2cf37111",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";xbox",
                     "action": "run",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -307,7 +318,7 @@
                     "id": "9cabf8d8-163a-4ae7-a331-3f1b721b0fa6",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press(behavior=2)",
                     "initialStateCheck": false
                 },
                 {
@@ -316,7 +327,7 @@
                     "id": "ab61f265-6045-46c4-8b6b-c5a9ed876406",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press(behavior=2)",
                     "initialStateCheck": false
                 },
                 {
@@ -973,6 +984,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "hacking",
+                    "type": "Button",
+                    "id": "549f77fd-37e1-4ea6-8215-8b5fa4d1092e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press(behavior=2)",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1039,6 +1059,28 @@
                     "processors": "",
                     "groups": "keyboard",
                     "action": "map",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "34ce3b3c-23ae-478f-83f0-77e78e6a9dd1",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "hacking",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "008e0bfa-9891-4d71-bc41-68758df7e1d2",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "hacking",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

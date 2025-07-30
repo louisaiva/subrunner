@@ -1,14 +1,16 @@
+#pragma warning disable 4014
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UI;
+using PrimeTween;
 /// <summary>
 /// This class is used to manage the UI elements
 /// its transform is located at /ui
 /// all their children are considered as UI elements
 /// and are handled via "pools of UI elements"
 /// </summary>
-
-public class UI_Manager : MonoBehaviour
+public class UI_Manager : Singleton<UI_Manager>
 {
 
     [Header("Pools")]
@@ -17,34 +19,49 @@ public class UI_Manager : MonoBehaviour
     // [SerializeField] private UI_Pool last_pool;
     public string CurrentPool { get => current_pool.Reference; }
 
-    
+
+    [Header("Transitions")]
+    // [SerializeField] protected Image bg;
+    // [SerializeField] protected Vector2Int bg_alpha_range = new Vector2Int(0, 245);
+    [SerializeField] protected float transition_duration = 0.2f;
+
+    [Header("Components")]
+    private PauseMenuBackgroundEffect bg;
 
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
 
     // inputs
-    private PlayerInputActions inputs;
+    // private PlayerInputActions inputs;
+    private InputManager input_manager;
 
     // START
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         // we wake up all the pools
         foreach (UI_Pool pool in pools)
         {
             pool.gameObject.SetActive(true);
         }
+
+        // we get the background effect
+        bg = transform.Find("bg").GetComponent<PauseMenuBackgroundEffect>();
+
     }
     void Start()
     {
         // on récupère les inputs
-        inputs = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().inputs;
+        input_manager = InputManager.Instance;
 
         // on mets les callbacks des menus
-        inputs.menus.inventory.performed += ctx => { TogglePool("inventory"); };
-        inputs.menus.pause.performed += ctx => { TogglePool("pause"); };
+        input_manager.inputs.menus.inventory.performed += ctx => { TogglePool("inventory"); };
+        input_manager.inputs.menus.pause.performed += ctx => { TogglePool("pause"); };
+        input_manager.inputs.menus.hacking.performed += ctx => { HandleHackingInput(ctx.ReadValue<float>()); };
         // inputs.menus.map.performed += ctx => { TogglePool("map"); };
-        inputs.UI.cancel.performed += ctx => { SwitchTo("hud"); };
+        input_manager.inputs.UI.cancel.performed += ctx => { HandleCancelInput(ctx.ReadValue<float>()); };
 
         // we try to switch to current_pool if it is something
         if (current_pool != null)
@@ -65,36 +82,73 @@ public class UI_Manager : MonoBehaviour
     public void TogglePool(string pool_name)
     {
         // we check if the pool is already shown
-        if (pool_name == current_pool.Reference) { SwitchTo("hud");}
-        else { SwitchTo(pool_name); }
+        if (pool_name == current_pool.Reference) { SwitchTo("hud", false); }
+        else { SwitchTo(pool_name, false); }
     }
-    public void SwitchTo(string pool_name)
+    public void SwitchTo(string pool_name, bool force = true, float override_duration = default)
     {
         // check if we have a pool to switch to
         UI_Pool pool = GetPool(pool_name);
         if (!pool) { return; }
-        SwitchTo(pool);
+
+        // we check if we have an override duration
+        float duration = override_duration != default ? override_duration : transition_duration;
+        switch_to(pool, force, duration);
     }
-    public void SwitchTo(UI_Pool pool)
+    private async void switch_to(UI_Pool pool, bool force = true, float override_duration = default)
     {
+        
         // check if this pool is not the same as the current one
         if (pool == current_pool) { return; }
+
+        // we prepare the transition duration
+        float duration = override_duration != default ? override_duration : transition_duration;
+        if (pool.Reference == "game_over") { duration = (pool as UI_GameOver).transition_duration; }
+        else if (current_pool != null && current_pool.Reference == "game_over") { duration = (current_pool as UI_GameOver).transition_duration; }
 
         // we check if we have a current pool
         if (current_pool != null)
         {
+            // checks if the current pool can be forcely hidden
+            if (!force && !current_pool.CanBeHidden)
+            {
+                if (debug && current_pool.Reference != "hud") { Debug.LogWarning("(UI_Manager) tried to hide a pool that cannot be hidden : " + current_pool.Reference); }
+                return;
+            }
+
+            if (!current_pool.Available)
+            {
+                if (debug) { Debug.LogWarning("(UI_Manager) tried to switch to a pool that is not available : " + current_pool.Reference); }
+                return;
+            }
+
+
+            // we transition to the right bg/timescale/effect
+            if (current_pool.StopTime != pool.StopTime)
+            {
+                float final_timescale = default;
+                if (pool.Reference == "game_over") { final_timescale = (pool as UI_GameOver).final_timescale; }
+                else if (pool.Reference == "hacking") { final_timescale = (pool as UI_Hacking).final_timescale; }
+                TransitionTimeScale(pool.StopTime, duration, final_timescale );
+            }
+            if (current_pool.HasBackground != pool.HasBackground)
+            {
+                TransitionBackground(pool.HasBackground, duration, pool.Reference == "hacking" ? (pool as UI_Hacking).bg_final_alpha : default);
+            }
+            
             // we hide the current pool
-            current_pool.Hide();
-            // last_pool = current_pool;
+            await current_pool.Hide(duration / 2f);
+        }
+        else
+        {
+            // on active le background & time parameters
+            TransitionTimeScale(pool.StopTime, duration / 2f);
+            TransitionBackground(pool.HasBackground, duration / 2f);
         }
 
         // we show the new pool
         current_pool = pool;
-        current_pool.Show();
-
-        // we activate the cancel callback if needed
-        if (current_pool.HasCancelAction) { inputs.UI.cancel.Enable(); }
-        else { inputs.UI.cancel.Disable(); }
+        await current_pool.Show(duration / 2f);
     }
 
     // GETTERS
@@ -111,4 +165,54 @@ public class UI_Manager : MonoBehaviour
         // if we don't find it, we return null
         return null;
     }
+
+    // INPUT HANDLING
+    private void HandleCancelInput(float input)
+    {
+        if (input > 0.5f) { return; } // we only handle the release of the input
+
+        // check if we can cancel the pool
+        if (!current_pool.CanBeCanceled)
+        {
+            if (debug && current_pool.Reference != "hud") { Debug.LogWarning("(UI_Manager) tried to cancel a pool that cannot be canceled : " + current_pool.Reference); }
+            return;
+        }
+
+        // we switch to hud
+        SwitchTo("hud");
+    }
+    private void HandleHackingInput(float input)
+    {
+        // we activate the hacking ui when input is pressed > 0.5
+        // and disable it when released < 0.5
+        if (input > 0.5f)
+        {
+            // we check if we can switch to hacking
+            if (current_pool.Reference == "hud" && GetPool("hacking").Available)
+            {
+                SwitchTo("hacking");
+            }
+        }
+        else if (current_pool.Reference == "hacking")
+        {
+            SwitchTo("hud");
+        }
+    }
+
+
+    // TRANSITIONS
+    public async Awaitable TransitionBackground(bool show, float duration,float override_bg_alpha = default)
+    {
+        bg.TransitionEffect(show, duration);
+        await bg.TransitionAlpha(show, duration, override_bg_alpha);
+    }
+    public async Awaitable TransitionTimeScale(bool stop_time, float duration, float override_final_timescale = default)
+    {
+        // we check if we have an override final timescale
+        float final_timescale = stop_time ? 0f : 1f;
+        if (override_final_timescale != default) { final_timescale = override_final_timescale; }
+
+        await Tween.GlobalTimeScale(final_timescale, duration, Ease.OutQuad);
+    }
+
 }

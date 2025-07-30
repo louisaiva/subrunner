@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5581677777743325324}
   m_Layer: 24
   m_Name: processor_module
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 5599804067653209886}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.395, y: 3.52, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -105,7 +105,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: processor_module
-  orientation: D
   current_capacity: 
   current_anim:
     name: 
@@ -122,6 +121,7 @@ MonoBehaviour:
   debug_orientation: 0
   debug_advanced: 0
   debug_frames: 0
+  debug_pile: 0
 --- !u!50 &2128277213380865502
 Rigidbody2D:
   serializedVersion: 5
@@ -161,24 +161,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21b1e91dfac8ace4aabb5aed796039e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim_player: {fileID: 0}
-  bank: {fileID: 0}
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: -1}
   capacities: []
   effects: 
   effects_timetolive: []
   debug: 0
+  activate_all_capacities_logs_on_awake: 0
+  debug_velocity: 0
   rb: {fileID: 0}
   weight: 1
   random_weight_modifier_at_start: 0
   friction: 7
-  debug_velocity: 0
   forces: []
   input_speed: 0
   Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 0}
-  Reference: module:processor
+  Reference: module:cpu
   MaxQty: 4
   ItemDescription: the brain of your dummy laptop omg without me it is sooo stupid
 --- !u!1 &9047189143154024933

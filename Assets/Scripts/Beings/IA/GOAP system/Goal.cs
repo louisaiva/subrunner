@@ -17,7 +17,7 @@ public class Goal : MonoBehaviour
     public List<Action> current_plan; // the current plan that is being executed
     public Action current_action { get { return current_plan.Count > 0 ? current_plan[0] : null; } } // the current action that is being executed
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false;
 
     // UPDATE

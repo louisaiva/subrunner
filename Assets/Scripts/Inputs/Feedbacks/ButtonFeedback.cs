@@ -12,7 +12,9 @@ public class ButtonFeedback : InputFeedback
     [Header("Button Feedback")]
     [SerializeField] protected string button_reference;
     [SerializeField] protected bool always_full = false;
-    
+
+
+    // START
     protected override void Start()
     {
         base.Start();
@@ -24,6 +26,7 @@ public class ButtonFeedback : InputFeedback
         image.sprite = sprite;
     }
 
+    // INPUT / RESET
     public override void OnInput()
     {
         base.OnInput();
@@ -34,10 +37,21 @@ public class ButtonFeedback : InputFeedback
         // we set the sprite to the image
         image.sprite = sprite;
     }
-
     public override void OnReset()
     {
         base.OnReset();
+
+        // we get the sprite from the bank
+        Sprite sprite = bank.GetInputFeedbackSprite(button_reference, !always_full);
+
+        // we set the sprite to the image
+        image.sprite = sprite;
+    }
+
+    // SETTERS
+    public void SetAlwaysFull(bool new_value = true)
+    {
+        always_full = new_value;
 
         // we get the sprite from the bank
         Sprite sprite = bank.GetInputFeedbackSprite(button_reference, !always_full);

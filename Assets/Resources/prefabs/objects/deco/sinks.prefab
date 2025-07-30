@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 745539603501021210}
-  m_Layer: 0
+  m_Layer: 29
   m_Name: sinks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 8283945784787692189}
   - component: {fileID: 2466101304974694663}
   - component: {fileID: 7419074804789530363}
+  - component: {fileID: 8956088038143556840}
   m_Layer: 29
   m_Name: kitchen_plan (5)
   m_TagString: Untagged
@@ -167,8 +168,24 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 0.25}
+  m_Size: {x: 0.5, y: 0.25}
   m_EdgeRadius: 0
+--- !u!114 &8956088038143556840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870511653291227085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &6267300763623405590
 GameObject:
   m_ObjectHideFlags: 0
@@ -180,6 +197,7 @@ GameObject:
   - component: {fileID: 7102253801486607967}
   - component: {fileID: 7476039279123079419}
   - component: {fileID: 3944825385019222367}
+  - component: {fileID: 3685491645038316148}
   m_Layer: 29
   m_Name: kitchen_plan (4)
   m_TagString: Untagged
@@ -301,8 +319,24 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 0.25}
+  m_Size: {x: 0.5, y: 0.25}
   m_EdgeRadius: 0
+--- !u!114 &3685491645038316148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6267300763623405590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &8468718468545117637
 GameObject:
   m_ObjectHideFlags: 0
@@ -314,6 +348,7 @@ GameObject:
   - component: {fileID: 4332417193003984661}
   - component: {fileID: 6772481496500595622}
   - component: {fileID: 3763979085986282004}
+  - component: {fileID: 1364229109250236774}
   m_Layer: 29
   m_Name: kitchen_plan (6)
   m_TagString: Untagged
@@ -435,8 +470,24 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 0.25}
+  m_Size: {x: 0.5, y: 0.25}
   m_EdgeRadius: 0
+--- !u!114 &1364229109250236774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8468718468545117637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &9188833793657190737
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,6 +499,7 @@ GameObject:
   - component: {fileID: 6097671969106891768}
   - component: {fileID: 1077692140587994100}
   - component: {fileID: 7928884228978910936}
+  - component: {fileID: 5488386620453295841}
   m_Layer: 29
   m_Name: kitchen_plan (3)
   m_TagString: Untagged
@@ -569,5 +621,21 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 0.25}
+  m_Size: {x: 0.5, y: 0.25}
   m_EdgeRadius: 0
+--- !u!114 &5488386620453295841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9188833793657190737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff

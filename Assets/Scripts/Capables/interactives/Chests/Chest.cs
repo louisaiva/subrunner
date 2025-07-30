@@ -18,7 +18,7 @@ public class Chest : Capable, Interactable, Openable
 
         // we react to the interaction
         if (Can("open")) { Do("open"); }
-        else if (Can("close")) { Do("close"); }
+        /* else if (Can("close")) { Do("close"); } */
     }
 
 }

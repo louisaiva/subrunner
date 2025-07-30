@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8665536444718687376}
   m_Layer: 24
   m_Name: apple
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 3927794695775646843}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 28.854, y: 11.871, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -105,7 +105,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: apple
-  orientation: D
   current_capacity: 
   current_anim:
     name: 
@@ -122,6 +121,7 @@ MonoBehaviour:
   debug_orientation: 0
   debug_advanced: 0
   debug_frames: 0
+  debug_pile: 0
 --- !u!50 &7020607722277148866
 Rigidbody2D:
   serializedVersion: 5
@@ -161,19 +161,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d6f4a2ee79ba714cb2d63f8931d5817, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim_player: {fileID: 0}
-  bank: {fileID: 0}
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: -1}
   capacities: []
   effects: 
   effects_timetolive: []
   debug: 0
+  activate_all_capacities_logs_on_awake: 0
+  debug_velocity: 0
   rb: {fileID: 0}
   weight: 1
   random_weight_modifier_at_start: 0
   friction: 7
-  debug_velocity: 0
   forces: []
   input_speed: 0
   Velocity: {x: 0, y: 0}
@@ -181,8 +180,9 @@ MonoBehaviour:
   Reference: food:apple
   MaxQty: 9
   ItemDescription: just an old apple/. awful taste/. smells bad/./l a solid 8/10!
-  life_regen: 30
-  bites: 1
+  ActivationLabel: eat
+  life_regen_per_bite: 10
+  bites_left: 1
 --- !u!1 &8910784274748376873
 GameObject:
   m_ObjectHideFlags: 0

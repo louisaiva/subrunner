@@ -2,10 +2,12 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Events;
 
-public class Inventory : MonoBehaviour {
+public class Inventory : MonoBehaviour
+{
 
     [Header("Items")]
     public List<Item> Items = new List<Item>();
+    public int Count { get { return Items.Count; } }
 
     [Header("Events")]
     public UnityEvent OnGrab;
@@ -17,21 +19,40 @@ public class Inventory : MonoBehaviour {
     public UI_Inventory ui { get { return uis.Count > 0 ? uis[0] : null; } }
     public Capable capable { get { return transform.parent.GetComponent<Capable>(); } }
 
-    [Header("Debug")]
+    [Header("Logs")]
     [SerializeField] private bool debug = false;
 
     // AWAKE
     void Awake()
     {
+        if (capable is Perso && uis.Count > 0 && uis[0] == null)
+        {
+            // we just revived we don't have any uis, so we make them
+            uis = new List<UI_Inventory>
+            {
+                UI_Manager.Instance.GetPool("inventory").transform.Find("ui_inventory").GetComponent<UI_Inventory>(),
+                UI_Manager.Instance.GetPool("hud").GetComponent<UI_HUD>().perso_quick_inventory
+            };
+        }
+
         // on informe les UI de l'inventaire que l'on est là
-        uis.ForEach(ui => ui.inventory = this);
+        uis.ForEach(ui => ui.Inventory = this);
     }
 
     // START
     void Start()
     {
         // on initialise l'UI
-        uis.ForEach(ui => ui.Init());
+
+        foreach (UI_Inventory ui in uis)
+        {
+            if (ui == null)
+            {
+                Debug.LogWarning("(Inventory) " + name + $" has a null UI_Inventory : {ui.name}, skipping initialization");
+                continue;
+            } // skip null UIs
+            ui.Init();
+        }
 
         // on récupère les items
         foreach (Transform child in transform)
@@ -42,34 +63,35 @@ public class Inventory : MonoBehaviour {
 
 
     // GRAB / DROP
-    public bool Grab(Item item)
+    public bool Grab(Item item, List<UI_Inventory> uis_to_ignore = null)
     {
         // we check if we can add the item
         if (item == null) { return false; }
 
-        // we check if we have an ui_inventory & if we can store the item in it
+        // we check if we have at least one ui_inventory
         if (ui != null)
         {
-            // we have at least one ui_inventory
-            // we try to make it grab in the first ui_inventory
-            // if he can't, we do not grab it and we return false
-            if (!ui.UI_Grab(item))
+            // we try to make the first ui_inventory (which is our reference ui_inventory) to grab it
+            // if it can grab it, all the others can grab it.
+            // if no, we return false
+            if (uis_to_ignore == null) { uis_to_ignore = new List<UI_Inventory>(); }
+            if (!uis_to_ignore.Contains(ui) && !ui.UI_Grab(item))
             {
                 if (debug) { Debug.LogWarning("(Inventory) " + capable.name + " can't grab : " + item.name + " in " + ui.name); }
-                return false;
+                return false; // if the first ui_inventory can't grab it, we return false
             }
-
-            // if he can, we grab it in all ui_inventories
-            for (int i=1; i < uis.Count; i++) { uis[i].UI_Grab(item); }
+            for (int i = 1; i < uis.Count; i++)
+            {
+                if (uis_to_ignore.Contains(uis[i])) { continue; } // we skip the ui_to_ignore
+                uis[i].UI_Grab(item); // we try to make the other ui_inventories grab it (we don't care if it can't grab as long as the 1st can)
+            }
         }
 
         // we check if the item is already grabbed somewhere, if so we drop it
-        if (item.Grabbed) { item.transform.parent.GetComponent<Inventory>().Drop(item); }
+        if (item.Grabbed && item.Inventory != null) { item.Inventory.Drop(item, uis_to_ignore); }
 
         // we add the item
         Items.Add(item);
-
-        // we set the item to grabbed (which disables the hover collider)
         item.Grabbed = true;
 
         // we set the item parent and reset its local position
@@ -83,7 +105,7 @@ public class Inventory : MonoBehaviour {
 
         return true;
     }
-    public bool Drop(Item item)
+    public bool Drop(Item item, List<UI_Inventory> uis_to_ignore = null)
     {
         // we check if we can remove the item
         if (item == null) { return false; }
@@ -94,13 +116,18 @@ public class Inventory : MonoBehaviour {
 
         // we set the item to dropped (which enables the hover collider)
         item.Grabbed = false;
-        
+
         // we trigger the event
         OnDrop.Invoke();
 
         // we update the UI
-        uis.ForEach(ui => ui.UI_Drop(item));
-        
+        if (uis_to_ignore == null) { uis_to_ignore = new List<UI_Inventory>(); }
+        foreach (UI_Inventory ui in uis)
+        {
+            if (uis_to_ignore.Contains(ui)) { continue; } // we skip the ui_to_ignore
+            ui.UI_Drop(item);
+        }
+
         if (debug) { Debug.Log("(Inventory) " + capable.name + " dropped : " + item.name); }
 
         return true;
@@ -134,13 +161,13 @@ public class Inventory : MonoBehaviour {
         if (capable is Interactable)
         {
             // this is the other capable
-            s+="we are the interactable\n";
+            s += "we are the interactable\n";
             InteractCapacity interactor = (capable as Interactable).Interactor;
 
             // check if we have an interactor
             if (interactor == null)
             {
-                if (debug) { Debug.LogWarning(s + "we don't have an interactor\n");}
+                if (debug) { Debug.LogWarning(s + "we don't have an interactor\n"); }
                 return null;
             }
 
@@ -148,11 +175,11 @@ public class Inventory : MonoBehaviour {
             if (debug)
             {
                 Debug.Log(s + "we have an interactor : " + interactor.capable.name
-                + "\nand its inventory is " + interactor.capable.inventory.name );
+                + "\nand its inventory is " + interactor.capable.inventory.name);
             }
             return interactor.capable.inventory;
         }
- 
+
 
         // check if we are the interactor (so we look for the interactable)
         // typically for Being
@@ -161,12 +188,12 @@ public class Inventory : MonoBehaviour {
             // this is our capable
             s += "we are the interactor\n";
             InteractCapacity interactor = capable.GetCapacity<InteractCapacity>();
-            
+
             // check if we have an interactable
             Capable interactable = interactor.interactable as Capable;
             if (interactable == null)
             {
-                if (debug) { Debug.LogWarning(s + "we don't have an interactable\n");}
+                if (debug) { Debug.LogWarning(s + "we don't have an interactable\n"); }
                 return null;
             }
 
@@ -180,27 +207,27 @@ public class Inventory : MonoBehaviour {
                 // fermé et pas en train de s'ouvrir
                 if (!openable.is_open && !openable.is_moving)
                 {
-                    if (debug) { Debug.LogWarning(s + "but it's closed & not opening\n");}
+                    if (debug) { Debug.LogWarning(s + "but it's closed & not opening\n"); }
                     return null;
                 }
 
                 // en train de se fermer
                 else if (openable.is_open && openable.is_moving)
                 {
-                    if (debug) { Debug.LogWarning(s + "but it's closing\n");}
+                    if (debug) { Debug.LogWarning(s + "but it's closing\n"); }
                     return null;
                 }
 
-                s+= "and it's open !!\n";
+                s += "and it's open !!\n";
             }
             else if (interactable.inventory == null)
             {
-                if (debug) { Debug.LogWarning(s + "but it doesn't have an inventory\n");}
+                if (debug) { Debug.LogWarning(s + "but it doesn't have an inventory\n"); }
                 return null;
             }
 
             // we return the interactable's inventory
-            if (debug) { Debug.Log(s + "and its inventory is " + interactable.inventory.name + "\n\n");}
+            if (debug) { Debug.Log(s + "and its inventory is " + interactable.inventory.name + "\n\n"); }
             return interactable.inventory;
         }
 
@@ -216,10 +243,25 @@ public class Inventory : MonoBehaviour {
         }
         return null;
     }
-
-
-
-    /* // ! DEPRECATED
-    public Hack[] getHacks() { return new Hack[0]; }
-    public void setShow(bool show) { } */
+    public List<Item> GetItemsByType<T>() where T : Item
+    {
+        // we get all the items of type T
+        List<Item> items = new List<Item>();
+        foreach (Item item in Items)
+        {
+            if (item is T) { items.Add(item); }
+        }
+        return items;
+    }
+    public List<Item> GetItemsByRule(string rule="",bool exclusion_rule = false)
+    {
+        // we get all the items that match the rule
+        List<Item> items = new List<Item>();
+        foreach (Item item in Items)
+        {
+            if (!exclusion_rule && item.ValidateRule(rule)) { items.Add(item); }
+            else if (exclusion_rule && !item.ValidateRule(rule)) { items.Add(item); }
+        }
+        return items;
+    }
 }

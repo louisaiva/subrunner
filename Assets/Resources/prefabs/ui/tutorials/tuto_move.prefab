@@ -9,7 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5533196357180513427}
-  m_Layer: 21
+  - component: {fileID: 6714497861844412541}
+  m_Layer: 0
   m_Name: tuto_move
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26,7 +27,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5028364398227281065}
   - {fileID: 4172698662517947568}
@@ -36,8 +37,27 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 320, y: 128}
+  m_SizeDelta: {x: 336, y: 144}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6714497861844412541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3393983848404623852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ac3a151034802c4c8203973d3be9e59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transitype: 1
+  hidden_value: 0
+  shown_value: 1
+  ease_show: 24
+  ease_hide: 23
+  default_duration: 1
+  transition_on_enable: 0
 --- !u!1 &3427340769049281818
 GameObject:
   m_ObjectHideFlags: 0

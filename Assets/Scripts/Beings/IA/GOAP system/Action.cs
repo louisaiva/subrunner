@@ -7,7 +7,7 @@ public class Action : MonoBehaviour
     public bool done = false; // If the action is done or not
     protected IA ia;
 
-    [Header("Debug")]
+    [Header("Logs")]
     public bool debug = false; // If the action should be debugged or not
 
     // AWAKE
@@ -26,14 +26,8 @@ public class Action : MonoBehaviour
 
     // DOING / SUCCEEDING
     public virtual void Do() { }
-    protected virtual void succeed(bool mark_as_done = true)
+    protected virtual void succeed()
     {
-        if (!mark_as_done)
-        {
-            if (debug) { Debug.Log("(Action) " + name + " is not done but finished"); }
-            return; // we don't mark the action as done
-        }
-
         // Mark the action as done
         done = true;
         if (debug) { Debug.Log("(Action) " + name + " is done!"); }
@@ -41,9 +35,8 @@ public class Action : MonoBehaviour
 
 
     // QUITTING (not succed sadly ://)
-    public void Quit()
+    public virtual void Quit()
     {
-        // this is called when the goal ClearPlan(). so basically the action will be deleted after this
-        succeed(mark_as_done:false);
+        if (debug) { Debug.Log("(Action) " + name + " is not done but finished"); }
     }
 }
