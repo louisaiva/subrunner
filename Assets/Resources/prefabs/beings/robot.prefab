@@ -431,8 +431,8 @@ MonoBehaviour:
     speed: 1
     flipX: 0
   anim_pile: []
-  animation_priorities_with_no_loop: 0300000004000000
-  animation_priorities_with_static_orientation: 0300000004000000
+  animation_priorities_with_no_loop: 0400000005000000
+  animation_priorities_with_static_orientation: 0400000005000000
   debug: 0
   debug_orientation: 0
   debug_advanced: 0
@@ -501,6 +501,7 @@ MonoBehaviour:
   floating_dmg_provider: {fileID: 0}
   exploration_radius: 20
   eyes: {fileID: 0}
+  mover: {fileID: 0}
   log_actions: 0
 --- !u!1 &8660562499856506205
 GameObject:

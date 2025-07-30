@@ -151,6 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c271ab77a3674f4db5f3efca8f26ef8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agent_type: humanoid
   use_navmesh: 1
   path: []
   avoidance_predisposition: 0.5
@@ -357,8 +358,8 @@ MonoBehaviour:
     speed: 1
     flipX: 0
   anim_pile: []
-  animation_priorities_with_no_loop: 0300000004000000
-  animation_priorities_with_static_orientation: 0300000004000000
+  animation_priorities_with_no_loop: 0400000005000000
+  animation_priorities_with_static_orientation: 0400000005000000
   debug: 0
   debug_orientation: 0
   debug_advanced: 0
@@ -427,6 +428,7 @@ MonoBehaviour:
   floating_dmg_provider: {fileID: 0}
   exploration_radius: 7
   eyes: {fileID: 0}
+  mover: {fileID: 0}
   log_actions: 0
 --- !u!1 &8660562499856506205
 GameObject:
