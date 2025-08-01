@@ -43,7 +43,7 @@ public class UI_PanelManager : MonoBehaviour
         }
 
         // we tween to the current panel
-        TweenToPanel(current_panel);
+        TweenToPanel(get_panel(current_panel));
     }
 
     // HANDLER
@@ -57,35 +57,34 @@ public class UI_PanelManager : MonoBehaviour
 
         // we check if it's a UI_Item
         if (slot is not UI_Item uiItem || uiItem.ItemPool == null) { if (log) { Debug.Log(log_msg); } return; }
-        UI_Inventory ui_inventory = uiItem.ItemPool.UI_Inventory;
-        log_msg += $"\n\t has an ui_inventory ? {ui_inventory != null}";
-        if (ui_inventory == null || !is_our_inventory(ui_inventory)) { if (log) { Debug.Log(log_msg); } return; }
+        UI_Panel ui_panel = uiItem.ItemPool.GetComponentInParent<UI_Panel>();
+        log_msg += $"\n\t has an ui_panel ? {ui_panel != null}";
+        if (ui_panel == null || !panels.Contains(ui_panel)) { if (log) { Debug.Log(log_msg); } return; }
 
         // get the ui_inventory name
-        string inventoryName = ui_inventory.name;
+        /* string inventoryName = ui_inventory.name;
         log_msg += $"\n\t inventory is {ui_inventory.name} " + (ui_inventory.name == current_panel ? " (current)" : "");
         if (log) { Debug.Log(log_msg); }
-        if (current_panel == inventoryName) { return; }
+        if (current_panel == inventoryName) { return; } */
         
         // we switch to the inventory panel
-        await TweenToPanel(inventoryName);
-        current_panel = inventoryName;
-        if (log) { Debug.Log($"(UI_PanelManager) switched to panel: {inventoryName} with success !!!"); }
+        await TweenToPanel(ui_panel);
+        current_panel = ui_panel.name;
+        if (log) { Debug.Log($"(UI_PanelManager) switched to panel: {ui_panel.name} with success !!!"); }
     }
 
     // TWEENING
-    public async Awaitable TweenToPanel(string panelName, float duration = default)
+    public async Awaitable TweenToPanel(UI_Panel targetPanel, float duration = default)
     {
-        UI_Panel targetPanel = get_panel(panelName);
-        int targetIndex = get_panel_index(panelName);
+        int targetIndex = panels.IndexOf(targetPanel);
         if (targetPanel == null || panels.Count == 0) { return; }
 
         if (duration == default) { duration = default_duration; }
 
-        if (log) { Debug.Log($"(UI_PanelManager) Tweening to panel: {panelName}"); }
+        if (log) { Debug.Log($"(UI_PanelManager) Tweening to panel: {targetPanel.name}"); }
 
         // we call the event
-        OnPanelChanged?.Invoke(panelName, duration);
+        OnPanelChanged?.Invoke(targetPanel.name, duration);
 
         for (int i = 1; i < panels.Count; i++)
         {
@@ -116,32 +115,8 @@ public class UI_PanelManager : MonoBehaviour
     }
 
     // LOW GETTERS
-    private bool is_our_inventory(UI_Inventory ui_inv)
-    {
-        // checks if we have an UI_Panel for this ui_inv
-        return get_panel(ui_inv.name) != null;
-    }
     private UI_Panel get_panel(string panelName)
     {
         return panels.Find(p => p.name == panelName);
-    }
-    private int get_panel_index(string panelName)
-    {
-        return panels.FindIndex(p => p.name == panelName);
-    }
-
-}
-
-[Serializable] public class UI_Panel
-{
-    public string name;
-    public RectTransform panelTransform;
-    public List<Vector2> anchors;
-
-    public UI_Panel(string name, RectTransform panelTransform, List<Vector2> anchors = null)
-    {
-        this.name = name;
-        this.panelTransform = panelTransform;
-        this.anchors = anchors ?? new List<Vector2>();
     }
 }
