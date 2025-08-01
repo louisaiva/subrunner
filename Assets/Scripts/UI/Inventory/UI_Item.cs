@@ -68,6 +68,8 @@ public class UI_Item : UI_Slot
         // we check if we can store the item
         if (!CanStore(item)) { return false; }
 
+        if (log) { Debug.Log($"(UI_Item) Storing item {item.Reference} in {name}"); }
+
         // we add the item to the slot
         items.Add(item);
 

@@ -18,7 +18,7 @@ public class UI_ModulePool : UI_ItemPool
     // INIT
     public override void Init(UI_Inventory ui)
     {
-        UI_LaptopItemSlot.OnItemChanged += HandleLaptopChanged;
+        UI_LaptopItemSlot.Instance.OnItemChanged += HandleLaptopChanged;
         base.Init(ui);
     }
 

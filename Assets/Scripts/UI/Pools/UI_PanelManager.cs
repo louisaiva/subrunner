@@ -9,11 +9,17 @@ public class UI_PanelManager : MonoBehaviour
 {
     [Header("Panels")]
     [SerializeField] private string current_panel = "ui_inventory";
+    public string CurrentPanel { get => current_panel; }
     [SerializeField] private List<UI_Panel> panels;
+    public event Action<string,float> OnPanelChanged = delegate { };
+
+    [Header("Panels Indicators")]
+    [SerializeField] private List<UI_PanelIndicator> indicators = new List<UI_PanelIndicator>();
 
     [Header("Eases")]
     [SerializeField] private Ease showing_ease = Ease.Default;
     [SerializeField] private Ease hiding_ease = Ease.Default;
+    private float default_duration = 0.2f;
 
     [Header("Logs")]
     [SerializeField] private bool log = false;
@@ -29,8 +35,15 @@ public class UI_PanelManager : MonoBehaviour
             return;
         }
 
+        // Initialize each panel indicator
+        foreach (UI_PanelIndicator indicator in indicators)
+        {
+            if (indicator == null) { continue; }
+            indicator.InitStart(this);
+        }
+
         // we tween to the current panel
-        TweenToPanel(current_panel, 0.1f);
+        TweenToPanel(current_panel);
     }
 
     // HANDLER
@@ -46,7 +59,7 @@ public class UI_PanelManager : MonoBehaviour
         if (slot is not UI_Item uiItem || uiItem.ItemPool == null) { if (log) { Debug.Log(log_msg); } return; }
         UI_Inventory ui_inventory = uiItem.ItemPool.UI_Inventory;
         log_msg += $"\n\t has an ui_inventory ? {ui_inventory != null}";
-        if (ui_inventory == null) { if (log) { Debug.Log(log_msg); } return; }
+        if (ui_inventory == null || !is_our_inventory(ui_inventory)) { if (log) { Debug.Log(log_msg); } return; }
 
         // get the ui_inventory name
         string inventoryName = ui_inventory.name;
@@ -61,13 +74,18 @@ public class UI_PanelManager : MonoBehaviour
     }
 
     // TWEENING
-    public async Awaitable TweenToPanel(string panelName, float duration = 0.2f)
+    public async Awaitable TweenToPanel(string panelName, float duration = default)
     {
         UI_Panel targetPanel = get_panel(panelName);
         int targetIndex = get_panel_index(panelName);
         if (targetPanel == null || panels.Count == 0) { return; }
 
+        if (duration == default) { duration = default_duration; }
+
         if (log) { Debug.Log($"(UI_PanelManager) Tweening to panel: {panelName}"); }
+
+        // we call the event
+        OnPanelChanged?.Invoke(panelName, duration);
 
         for (int i = 1; i < panels.Count; i++)
         {
@@ -75,7 +93,7 @@ public class UI_PanelManager : MonoBehaviour
         }
         await TweenPanelToPositionIndex(panels[0], targetIndex, duration);
     }
-    private async Awaitable TweenPanelToPositionIndex(UI_Panel ui_panel, int index, float duration = 0.2f)
+    private async Awaitable TweenPanelToPositionIndex(UI_Panel ui_panel, int index, float duration = default)
     {
         if (index < 0 || index >= ui_panel.anchors.Count) { return; }
         Vector2 target_anchor = ui_panel.anchors[index];
@@ -83,6 +101,8 @@ public class UI_PanelManager : MonoBehaviour
 
         // get the ease if we want to show ourself we get the nice ease
         Ease ease = (ui_panel == panels[index]) ? showing_ease : hiding_ease;
+
+        if (duration == default) { duration = default_duration; }
 
         if (log) { Debug.Log($"(UI_PanelManager) Tweening panel {ui_panel.name} to anchors : {target_anchor}"); }
 
@@ -96,6 +116,11 @@ public class UI_PanelManager : MonoBehaviour
     }
 
     // LOW GETTERS
+    private bool is_our_inventory(UI_Inventory ui_inv)
+    {
+        // checks if we have an UI_Panel for this ui_inv
+        return get_panel(ui_inv.name) != null;
+    }
     private UI_Panel get_panel(string panelName)
     {
         return panels.Find(p => p.name == panelName);
