@@ -116,6 +116,14 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
                 + item_pool.Count + " slots and " + item_pool.FullCount + " items slots " + $"and {item_pool.EnabledCount} enabled slots");
             }
 
+            /* // we skip the shortcuts pool
+            if (item_pool.name == "shortcuts_pool")
+            {
+                if (item_pool.Faded) { item_pool.Fade(duration, fade_in: true); }
+                ui.SetActive(true);
+                continue;
+            } */
+
             // on regarde si la pool doit être affichée ou non
             if (fade_all_disabled)
             {

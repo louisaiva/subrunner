@@ -934,6 +934,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
                 // on regarde si le slot n'a pas d'item on le désactive
                 if (ui_item.Item != null) { ui_item.Enable(); continue; }
                 if (except_modules && ui_item is UI_Module) { ui_item.Enable(); continue; } // on ne désactive pas les modules
+                if (ui_item.ItemPool != null && ui_item.ItemPool.DoNotDisableEmptySlots) { ui_item.Enable(); continue; }
                 ui_item.Disable(); // on désactive le slot
             }
         }

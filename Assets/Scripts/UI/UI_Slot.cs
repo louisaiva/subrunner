@@ -29,6 +29,8 @@ public class UI_Slot : MonoBehaviour, I_UI_Slot
 
         // on change le sprite du slot
         GetComponent<Image>().sprite = base_sprite;
+
+        if (log) { Debug.Log("(UI_Item) Enabled " + gameObject.name); }
     }
     public virtual void Disable()
     {
@@ -36,6 +38,8 @@ public class UI_Slot : MonoBehaviour, I_UI_Slot
 
         // on change le sprite du slot
         GetComponent<Image>().sprite = disabled_sprite;
+
+        if (log) { Debug.Log("(UI_Item) Disabled " + gameObject.name); }
     }
 
     // POINTER HANDLERS

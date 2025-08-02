@@ -16,7 +16,6 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     public List<UI_ItemPool> pools = new List<UI_ItemPool>();
 
     [Header("Components")]
-    // [SerializeField] private UI_XboxNavigator navigator;
     public Inventory Inventory;
 
     [Header("Logs")]
@@ -24,9 +23,6 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 
     public void Init()
     {
-        // on récupère les composants
-        // navigator = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
-
         // si on a pas d'inventory, il y a un problème
         if (Inventory == null)
         {
