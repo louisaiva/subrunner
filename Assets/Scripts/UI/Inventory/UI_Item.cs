@@ -27,6 +27,7 @@ public class UI_Item : UI_Slot
     [SerializeField] public ItemBank bank;
     [SerializeField] protected Image item_image;
     [SerializeField] protected Sprite current_item_sprite;
+    public Sprite ItemSprite => current_item_sprite;
     public UI_ItemPool ItemPool => transform.parent.GetComponent<UI_ItemPool>();
     public Inventory Inventory => ItemPool?.UI_Inventory?.Inventory;
     public Item Item => items.Count > 0 ? items[0] : null;
@@ -179,6 +180,7 @@ public class UI_Item : UI_Slot
         name = "ui_empty";
 
         // on disable le slot
+        if (ItemPool != null && ItemPool.DoNotDisableEmptySlots) { return; }
         Disable();
     }
 

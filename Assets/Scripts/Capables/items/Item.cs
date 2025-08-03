@@ -69,13 +69,20 @@ public class Item : Movable
         // we need at least one rule to be valid
         foreach (string rule in rules)
         {
-            // check if the rule is a category or a specific item
-            if (rule.Contains(":"))
+            // checks special rule
+            if (rule == "activable")
             {
-                // specific item -> we check if the item is the same
-                if (Reference == rule) { return true; }
+                if (ActivationLabel != "") { return true; }
                 continue;
             }
+
+            // check if the rule is a category or a specific item
+                if (rule.Contains(":"))
+                {
+                    // specific item -> we check if the item is the same
+                    if (Reference == rule) { return true; }
+                    continue;
+                }
 
             // we check if the item is in the category
             if (Reference.Contains(rule)) { return true; }
