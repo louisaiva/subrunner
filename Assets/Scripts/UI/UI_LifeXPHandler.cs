@@ -4,40 +4,48 @@ using UnityEngine;
 
 public class UI_LifeXPHandler : MonoBehaviour
 {
-
-    // GAMEOBJECTS
-    // public GameObject perso;
-
-
     // life filling bar
-    public GameObject life_fill;
+    public RectTransform life_fill;
     private float life_fill_max_width = 192;
     private float life_fill_height = 16;
 
     // xp filling bar
-    public GameObject xp_fill; // exploits points = experience points
+    public RectTransform xp_fill;
     private float xp_fill_max_width = 182;
     private float xp_fill_height = 8;
 
 
-    void Start()
+    // AWAKE & START
+    private void Awake()
     {
-        // on récupère le fill des life
-        life_fill = transform.Find("life_fill").gameObject;
+        if (life_fill == null || xp_fill == null)
+        {
+            life_fill = transform.Find("life_fill").GetComponent<RectTransform>();
+            xp_fill = transform.Find("xp_fill").GetComponent<RectTransform>();
+        }
+    }
+    private void Start()
+    {
+        // on récupère la taille des fills
+        life_fill_max_width = life_fill.sizeDelta.x;
+        life_fill_height = life_fill.sizeDelta.y;
 
-        // on récupère le fill des xp
-        xp_fill = transform.Find("xp_fill").gameObject;
+        xp_fill_max_width = xp_fill.sizeDelta.x;
+        xp_fill_height = xp_fill.sizeDelta.y;
+
+        // on met à jour les fills
+        update_life_fill();
+        update_xp_fill();
     }
 
-    // Update is called once per frame
-    void Update()
+    // UPDATE
+    private void Update()
     {
-
         // ! on check si le perso est mort
         if (!Perso.Instance || !Perso.Instance.Alive)
         {
             // on met à zero
-            life_fill.GetComponent<RectTransform>().sizeDelta = new Vector2(0, life_fill_height);
+            life_fill.sizeDelta = new Vector2(0, life_fill_height);
             return;
         }
 
@@ -49,7 +57,8 @@ public class UI_LifeXPHandler : MonoBehaviour
 
     }
 
-    void update_life_fill()
+    // UPDATE FILL LOW METHODS
+    private void update_life_fill()
     {
 
         // on récupère les infos du perso
@@ -61,10 +70,9 @@ public class UI_LifeXPHandler : MonoBehaviour
         float life_width = life_fill_max_width * life_percent;
 
         // on met à jour la taille du fill
-        life_fill.GetComponent<RectTransform>().sizeDelta = new Vector2(life_width, life_fill_height);
+        life_fill.sizeDelta = new Vector2(life_width, life_fill_height);
     }
-
-    void update_xp_fill()
+    private void update_xp_fill()
     {
 
         // on récupère les infos du perso
@@ -76,6 +84,6 @@ public class UI_LifeXPHandler : MonoBehaviour
         float xp_width = xp_fill_max_width * xp_percent;
 
         // on met à jour la taille du fill
-        xp_fill.GetComponent<RectTransform>().sizeDelta = new Vector2(xp_width, xp_fill_height);
+        xp_fill.sizeDelta = new Vector2(xp_width, xp_fill_height);
     }
 }
