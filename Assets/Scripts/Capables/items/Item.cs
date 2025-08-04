@@ -10,7 +10,7 @@ public class Item : Movable
     public int MaxQty = 1;
     public bool Stackable { get => MaxQty > 1; }
     public string ItemDescription = "description of the item";
-    public string ActivationLabel = ""; // if an item has an use, this is its label (example : food -> "eat", shuriken -> "throw" etc) but most of items don't have an action at all
+    // public string UseLabel = ""; // if an item has an use, this is its label (example : food -> "eat", shuriken -> "throw" etc) but most of items don't have an action at all
 
     // Grabbable
     private bool _grabbed = false;
@@ -72,7 +72,7 @@ public class Item : Movable
             // checks special rule
             if (rule == "activable")
             {
-                if (ActivationLabel != "") { return true; }
+                if (this is Usable) { return true; }
                 continue;
             }
 
@@ -141,7 +141,7 @@ public class Item : Movable
     }
 
     // USE
-    public virtual void Use(Capable user)
+    /* public virtual void Use(Capable user)
     {
         // todo make this an interface
         // only for items that have a use (apple : being eaten, katana : make an attack, etc.)
@@ -158,7 +158,7 @@ public class Item : Movable
         // if (holder == null) { return; }
 
         // and then we use the item
-    }
+    } */
 
     // ON DESTROY
     private void OnDestroy()

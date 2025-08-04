@@ -34,6 +34,10 @@ public class Perso : Being
     private event Action<InputAction.CallbackContext> dodgeCallback;
     private event Action<InputAction.CallbackContext> attackCallback;
     private event Action<InputAction.CallbackContext> talkCallback;
+    private event Action<InputAction.CallbackContext> useConso1Callback;
+    private event Action<InputAction.CallbackContext> useConso2Callback;
+    private event Action<InputAction.CallbackContext> useConso3Callback;
+    private event Action<InputAction.CallbackContext> useConso4Callback;
 
 
 
@@ -41,17 +45,16 @@ public class Perso : Being
     [SerializeField] private List<string> metamorph_skins = new List<string>() { "perso", "cat", "zombo", "robot", "apple", "fridge", "small_laptop" };
 
 
-    [Header("HACKING")]
+    [Header("Items")]
+    private ItemManager item_manager;
     public Laptop Laptop
     {
         get
         {
-            if (inventory == null) { return null; } // if the inventory is not set, we return null
-            Laptop laptop = inventory.GetItem("hardware:laptop") as Laptop;
-            if (!laptop) { return null; } // if the inventory doesn't have a laptop, we return null
+            if (item_manager == null) { return null; }
+            Laptop laptop = item_manager.GetLaptop();
+            if (laptop == null) { return null; }
             return laptop;
-            // todo for now we return the first laptop we find. but we want to make sure
-            // todo to return the laptop on the UI_LaptopItemPool
         }
     }
 
@@ -87,6 +90,8 @@ public class Perso : Being
         hackray_prefab = Resources.Load("prefabs/hacks/hackray") as GameObject;
         skillManager = GetComponentInChildren<SkillManager>();
 
+        item_manager = GameObject.Find("/utils/item_manager").GetComponent<ItemManager>();
+
         //
         floating_text_prefab = Resources.Load("prefabs/ui/floating_text") as GameObject;
 
@@ -116,6 +121,16 @@ public class Perso : Being
         perso_inputs.dodge.performed += dodgeCallback;
         perso_inputs.attack.performed += attackCallback;
         perso_inputs.randomTalk.performed += talkCallback;
+
+        // et les callbacks de conso
+        useConso1Callback = ctx => OnUseConso(1);
+        useConso2Callback = ctx => OnUseConso(2);
+        useConso3Callback = ctx => OnUseConso(3);
+        useConso4Callback = ctx => OnUseConso(4);
+        perso_inputs.conso1.performed += useConso1Callback;
+        perso_inputs.conso2.performed += useConso2Callback;
+        perso_inputs.conso3.performed += useConso3Callback;
+        perso_inputs.conso4.performed += useConso4Callback;
     }
 
     // CAPACITES
@@ -257,6 +272,10 @@ public class Perso : Being
         perso_inputs.dodge.performed -= dodgeCallback;
         perso_inputs.attack.performed -= attackCallback;
         perso_inputs.randomTalk.performed -= talkCallback;
+        perso_inputs.conso1.performed -= useConso1Callback;
+        perso_inputs.conso2.performed -= useConso2Callback;
+        perso_inputs.conso3.performed -= useConso3Callback;
+        perso_inputs.conso4.performed -= useConso4Callback;
 
         // on switch au game_over panel
         UI_Manager.Instance.SwitchTo("game_over", override_duration: 3f);
@@ -271,18 +290,28 @@ public class Perso : Being
     // INPUTS
     public void OnAttack()
     {
-        if (HasEffect(Effect.Stunned)) { return; }
+        // if (HasEffect(Effect.Stunned)) { return; }
         // if (anim_player.current_anim.capacity == "attack") { return; }
 
         // on met à jour la valeur de damage
-        if (HasItem("weapon:katana", out Item katana))
+        /* if (HasItem("weapon:katana", out Item katana))
         {
             katana.GetCapacity<AttackCapacity>().damage = skillManager.GetSkillValue("stat:damage");
         }
         else { return; }
 
         // on utilise l'item weapon:katana
-        UseItem("weapon:katana");
+        UseItem("weapon:katana"); */
+
+        // on récupère le current weapon
+        Weapon current_weapon = item_manager.GetWeapon();
+        if (current_weapon == null) { return; } // if the weapon is not set, we return
+
+        // on met à jour la valeur de damage
+        current_weapon.GetCapacity<AttackCapacity>().damage = skillManager.GetSkillValue("stat:damage");
+
+        // on utilise l'attaque
+        current_weapon.Use(this);
     }
     public void OnRandomTalk()
     {
@@ -302,14 +331,24 @@ public class Perso : Being
         /* Laptop laptop = Laptop;
         if (laptop == null) { return; } // if the laptop is not set, we return */
 
-        UseItem("hardware:laptop");
+        // UseItem("hardware:laptop");
+        // if (UI_LaptopItemSlot.Instance == null || !UI_LaptopItemSlot.Instance.HasLaptop) { return; } // if the laptop is not set, we return
+        // UI_LaptopItemSlot.Instance.Laptop.Use(this);
+        Laptop laptop = item_manager.GetLaptop();
+        if (laptop == null) { return; }
+        laptop.Use(this);
+    }
+
+    // CONSOMMABLES INPUTS
+    public void OnUseConso(int index)
+    {
+        Usable conso = item_manager.GetConsumable(index);
+        if (conso == null) { return; }
+        conso.Use(this);
     }
 
 
-
-
     // ! deprecated HACK
-
 
     [Header("HACKIN")]
     // bits (mana)

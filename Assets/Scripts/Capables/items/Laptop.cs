@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class Laptop : Item
+public class Laptop : Item, Usable
 {
     [Header("Laptop parameters")]
     [SerializeField] protected int max_cores = 4;
@@ -54,8 +54,10 @@ public class Laptop : Item
         return keys;
     }
 
-    // USING ITEM
-    public override void Use(Capable user)
+
+    // USABLE
+    public string UseLabel { get; } = "hack";
+    public void Use(Capable user)
     {
         // we check if we have a hack capacity
         HackCapacity hack_capacity = GetCapacity<HackCapacity>();

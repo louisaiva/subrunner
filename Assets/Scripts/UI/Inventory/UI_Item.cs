@@ -210,22 +210,11 @@ public class UI_Item : UI_Slot
         if (Quantity == 0) { return; }
         if (log) { Debug.Log("OnPointerClick on " + gameObject.name); }
 
-        // we check if this is a food item
-        if (items.Count > 0 && items[0].GetComponent<Food>() != null)
+        // we check if the item is an usable
+        if (Item != null && Item is Usable usable)
         {
-            Food food = items[0].GetComponent<Food>();
-
-            // we make it eat by the capable
-            // we get the EatCapacity
-            EatCapacity eater = food.Holder.GetCapacity<EatCapacity>();
-            if (eater == null) { return; }
-
-            eater.SetFoodTarget(food);
-            eater.Use(food.Holder);
-
-            // we switch back to hud
-            GameObject.Find("/ui").GetComponent<UI_Manager>().SwitchTo("hud");
-            return;
+            usable.Use(Inventory.capable);
+            UI_Manager.Instance.SwitchTo("hud");
         }
     }
     public override void OnPointerExit(PointerEventData eventData)

@@ -198,10 +198,10 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         }
 
         // ACTIVATE
-        if (ui_slot.Item != null && ui_slot.Item.ActivationLabel != "")
+        if (ui_slot.Item != null && ui_slot.Item is Usable usable)
         {
             use_feedback.SetAlwaysFull(true);
-            use_feedback.SetLabel(ui_slot.Item.ActivationLabel);
+            use_feedback.SetLabel(usable.UseLabel);
             UI_XboxNavigator.Instance.ToggleInput("activate", true);
         }
         else
