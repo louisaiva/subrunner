@@ -66,9 +66,10 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     }
 
     // SHOW / HIDE
-    public void Show()
+    public async void Show()
     {
         gameObject.SetActive(true);
+        await System.Threading.Tasks.Task.Yield(); // wait for the next frame to ensure the UI is active
 
         // we enable the navigator if we are not the perso quick inventory
         if (transform.parent.name != "hud" && UI_XboxNavigator.Instance != null)
@@ -109,46 +110,6 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
             Show();
         }
     }
-
-    // SLOTTABLE
-    public Action<InputAction.CallbackContext> CancelCallback => throw new NotImplementedException();
-    public List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator)
-    {
-        if (debug) { Debug.Log($"(UI_Inventory) {name} getting slots"); }
-        List<GameObject> slots = new List<GameObject>();
-        Vector2 position = Vector2.negativeInfinity;
-        foreach (UI_ItemPool pool in pools)
-        {
-            foreach (Transform child in pool.transform)
-            {
-                // we check if the slot is a UI_Item
-                UI_Item ui_item = child.GetComponent<UI_Item>();
-                if (ui_item == null) { continue; }
-
-                slots.Add(child.gameObject);
-
-                // we update the position to the first slot
-                if (position == Vector2.negativeInfinity)
-                {
-                    position = child.position;
-                }
-            }
-        }
-        return slots;
-    }
-    public bool IsYourSlot(GameObject slot)
-    {
-        // we check if the slot is in the inventory
-        foreach (UI_ItemPool pool in pools)
-        {
-            foreach (Transform child in pool.transform)
-            {
-                if (child.gameObject == slot) { return true; }
-            }
-        }
-        return false;
-    }
-    public Vector2 SavedPosition { get => new Vector2(0f, Screen.height); }
 
     // GRAB
     public virtual bool UI_Grab(Item item)
@@ -195,4 +156,67 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 
         return false;
     }
+
+    // ITEM RULE
+    public string ItemRule
+    {
+        get
+        {
+            // todo concaten all pools' item rules
+            if (pools.Count > 0)
+            {
+                // we return the first pool's rule
+                return pools[0].item_rule;
+            }
+            return "";
+        }
+    }
+
+
+
+
+
+
+    // SLOTTABLE
+    public Action<InputAction.CallbackContext> CancelCallback => throw new NotImplementedException();
+    public List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator)
+    {
+        if (debug) { Debug.Log($"(UI_Inventory) {name} getting slots"); }
+        List<GameObject> slots = new List<GameObject>();
+        Vector2 position = Vector2.negativeInfinity;
+        foreach (UI_ItemPool pool in pools)
+        {
+            foreach (Transform child in pool.transform)
+            {
+                // we check if the ui_slot is enabled
+                if (!child.gameObject.activeSelf) { continue; }
+
+                // we check if the slot is a UI_Item
+                UI_Item ui_item = child.GetComponent<UI_Item>();
+                if (ui_item == null) { continue; }
+
+                slots.Add(child.gameObject);
+
+                // we update the position to the first slot
+                if (position == Vector2.negativeInfinity)
+                {
+                    position = child.position;
+                }
+            }
+        }
+        return slots;
+    }
+    public bool IsYourSlot(GameObject slot)
+    {
+        // we check if the slot is in the inventory
+        foreach (UI_ItemPool pool in pools)
+        {
+            foreach (Transform child in pool.transform)
+            {
+                if (child.gameObject == slot) { return true; }
+            }
+        }
+        return false;
+    }
+    public Vector2 SavedPosition { get => new Vector2(0f, Screen.height); }
 }
