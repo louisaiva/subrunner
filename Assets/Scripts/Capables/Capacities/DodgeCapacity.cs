@@ -20,8 +20,11 @@ public class DodgeCapacity : Capacity
     // trigger the dodge
     public override void Use(Capable capable)
     {
+        // we check if we are already dodging
+        if (capable.anim_player.current_capacity == "dodge") { return; }
+
         // we play the animation
-        Anim anim = capable.anim_player.Play(name);
+        Anim anim = capable.anim_player.Play("dodge");
         if (anim == null) { return; }
         
         // we start the cooldown for the time of the animation

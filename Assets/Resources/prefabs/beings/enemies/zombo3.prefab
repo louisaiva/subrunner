@@ -544,14 +544,45 @@ MonoBehaviour:
     loop: 1
     speed: 1
     flipX: 0
-  anim_pile: []
-  animation_priorities_with_no_loop: 0400000005000000
-  animation_priorities_with_static_orientation: 0400000005000000
-  debug: 0
-  debug_orientation: 0
-  debug_advanced: 0
-  debug_frames: 0
-  debug_pile: 0
+  update_each_frame: 1
+  anim_capacity_priorities:
+  - priority: 0
+    capacities:
+    - idle
+    lock_orientation: 0
+    one_shot: 0
+    capacity_playing: 
+  - priority: 1
+    capacities:
+    - walk
+    - run
+    lock_orientation: 0
+    one_shot: 0
+    capacity_playing: 
+  - priority: 3
+    capacities:
+    - attack
+    lock_orientation: 1
+    one_shot: 1
+    capacity_playing: 
+  - priority: 4
+    capacities:
+    - hurted
+    - eat
+    lock_orientation: 1
+    one_shot: 1
+    capacity_playing: 
+  - priority: 5
+    capacities:
+    - die
+    lock_orientation: 1
+    one_shot: 0
+    capacity_playing: 
+  log: 0
+  log_orientation: 0
+  log_advanced: 0
+  log_frames: 0
+  log_pile: 0
 --- !u!50 &8817564043264294159
 Rigidbody2D:
   serializedVersion: 5

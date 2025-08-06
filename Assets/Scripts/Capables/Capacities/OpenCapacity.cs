@@ -65,7 +65,7 @@ public class OpenCapacity : Capacity
         (capable as Openable).is_moving = false;
 
         // on joue l'animation
-        capable.anim_player.Play("idle_open");
+        capable.anim_player.AddToPile("idle_open");
 
         // on fait les vérifications pour les portes
         if (capable is Door)
