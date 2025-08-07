@@ -7,12 +7,8 @@ using UnityEngine;
 public class AnimPlayer : MonoBehaviour
 {
 
-
-
     [Header("Components")]
-    // private AnimBank bank;
     private SpriteRenderer sr;
-
 
 
     [Header("Skin")]
@@ -34,9 +30,6 @@ public class AnimPlayer : MonoBehaviour
     public string orientation { get; private set; } = "D";
 
 
-
-
-
     [Header("Current Animation")]
     public string current_capacity = "";
     public Anim current_anim = null;
@@ -50,40 +43,9 @@ public class AnimPlayer : MonoBehaviour
     [SerializeField] private List<AnimCapacityPriority> anim_capacity_priorities = new();
     private AnimCapacityPriority current_capacity_priority = null;
 
-    /* [Header("Animation Pile")]
-    public List<string> anim_pile = new();
-    private Dictionary<string, int> capacity_priorities = new()
-            {
-            {"idle",0},
-            {"walk",1},
-            {"run",1},
-            {"hover",1},
-            {"idle_open",2},
-            {"idle_sleep",2},
-            {"hack",3},
-            {"attack",4},
-            {"spawn",4},
-            {"open",4},
-            {"close",4},
-            {"dodge",4},
-            {"hurted",5},
-            {"eat",5},
-            {"fell_asleep",5},
-            {"wake_up",5},
-            {"lick_foot",5},
-            {"throw",6},
-            {"die",6}};
-    // todo à transformer en List<CapacityPriority> sans MonoBehaviour pour pouvoir les éditer dans l'éditeur
-
-    [SerializeField] private List<int> animation_priorities_with_no_loop = new() { 4, 5 };
-    // we never loop the animation if it's in this priority (attack, dodge, hurted) -> always play once
-    [SerializeField] private List<int> animation_priorities_with_static_orientation = new() { 4, 5 }; */
-    // we can't interrupt the animation for switching orientation if it's in this list (wait the end of the anim before changing orientation)
-    // only for orientation, not for switching to another animation (ex we can interrupt dodge to attack bcz they have the same priority 3)
-
-    [Header("Animation Pile")]
-    [SerializeField] private string capacity_pile = ""; // a string with the capacities separated by commas, ex: "walk,run,idle"
-    // todo is there any bugs with this transition system ?
+    // [Header("Animation Pile")]
+    // [SerializeField] private string capacity_pile = ""; // a string with the capacities separated by commas, ex: "walk,run,idle"
+    // // todo is there any bugs with this transition system ?
 
     [Header("Logs")]
     public bool log = false;
@@ -93,30 +55,19 @@ public class AnimPlayer : MonoBehaviour
     public bool log_pile = false;
 
 
-
-
-    // Start is called before the first frame update
-    private void Start()
+    // AWAKE & START
+    private void Awake()
     {
         // we get the sprite renderer
         sr = GetComponent<SpriteRenderer>();
-
-        // we inspect the capacity_priorities and we create the anim_pile
-        /* float highest_priority = capacity_priorities.Values.Max();
-        for (int i = 0; i <= highest_priority; i++)
-        {
-            anim_pile.Add("");
-        } */
 
         // we inform each anim capacity priority of its priority
         for (int i = 0; i < anim_capacity_priorities.Count; i++)
         {
             anim_capacity_priorities[i].priority = i;
         }
-
-        // we play the idle animation
-        Play("idle");
     }
+    private void Start() { AddToPile("idle"); }
 
 
     // Update
@@ -128,15 +79,7 @@ public class AnimPlayer : MonoBehaviour
         }
 
         // we play the current animation
-        if (current_frame != -1)
-        {
-            if (update_each_frame) { updateAnim(); }
-            // return;
-        }
-
-        // we play the highest animation in the pile if it's not the current one
-        // playFromPile();
-        // playNextAnim();
+        if (current_frame != -1 && update_each_frame) { updateAnim(); }
     }
     private void updateAnim()
     {
@@ -157,49 +100,22 @@ public class AnimPlayer : MonoBehaviour
         // if we are here, it means that we reached the end of the animation
         // the animation is over
         current_frame = -1;
-        // current_anim = null;
-        // current_capacity = "";
 
         // we check if it's looping or not
         if (current_capacity_priority.one_shot)
         {
             current_capacity_priority.capacity_playing = "";
         }
-
-        // we check if the priority of the current animation is in the list of priorities with no loop
-        // int current_anim_priority = capacity_priorities[current_capacity];
-        // if (animation_priorities_with_no_loop.Contains(current_anim_priority)) { removeFromPile(current_capacity); }
-        // we check if it is looping or not (if not, we remove it from the pile)
-        // else if (!current_anim.loop) { removeFromPile(current_capacity); }
-
+        
         // we play the highest animation in the pile
         playNextAnim();
     }
 
 
     // PLAY ANIMATION
-    public Anim Play(string capacity/* , int? priority_override = null */, float duration_override = default)
+    public Anim Play(string capacity, float duration_override = default)
     {
         if (AnimBank.Instance == null) { return null; }
-
-        /* // we get the priority of the capacity
-        int priority = 1;
-        if (priority_override != null)
-        {
-            priority = (int)priority_override;
-            if (log_pile) { Debug.Log("(AnimPlayer - Play) The capacity " + capacity + " has a priority override: " + priority); }
-            capacity_priorities[capacity] = priority;
-        }
-        else if (priority_override == null && capacity_priorities.ContainsKey(capacity))
-        {
-            priority = capacity_priorities[capacity];
-            if (log_pile) { Debug.Log("(AnimPlayer - Play) The capacity " + capacity + " has a priority: " + priority + " from the capacity_priorities dictionnary"); }
-        }
-        else
-        {
-            if (log_pile) { Debug.Log("(AnimPlayer - Play) The capacity " + capacity + " doesn't exist in the capacity_priorities dictionnary. Priority 1 applied by default"); }
-            capacity_priorities[capacity] = priority;
-        } */
 
         AnimCapacityPriority capacity_priority = getAnimCapacityPriority(capacity);
         if (capacity_priority == null)
@@ -263,62 +179,13 @@ public class AnimPlayer : MonoBehaviour
         current_capacity_priority = capacity_priority;
         current_capacity_priority.capacity_playing = capacity;
         return anim;
-        
-
-
-        /* // we check if we can play the animation RIGHT NOW
-        if (priority >= getPileMaxPriority())
-        {
-            // we get the animation from the bank
-            string anim_name = skin + "." + capacity + "." + orientation;
-            Anim anim = AnimBank.Instance.GetAnim(anim_name);
-            if (log)
-            {
-                Debug.Log("(AnimPlayer - Play) Bank found anim : " + anim.name
-                    + (anim_name == anim.name
-                    ? ""
-                    : " (" + anim_name + " was asked)"));
-            }
-
-            // we check if the duration is overriden
-            if (duration_override != null)
-            {
-                // we get the duration of the animation
-                float duration = anim.GetBaseDuration();
-
-                // we calculate the resulting speed
-                anim.speed = duration / (float)duration_override;
-            }
-
-
-            // we check if the animation is not actually playing
-            if (anim.name != current_anim.name)
-            {
-                // we play the animation
-                play_now_at_frame(anim);
-
-                // we set the current capacity
-                current_capacity = capacity;
-
-                // we add the animation to the pile
-                anim_pile[priority] = capacity;
-                return anim;
-            }
-        }
-
-        // we can't play the animation right now BUT we add the animation to the pile
-        // anim_pile[priority] = capacity;
-        // if (log_pile) { Debug.LogWarning("(AnimPlayer - Play) Adding " + capacity + " to the pile at priority " + priority); }
-
-        // we didn't play the animation so we return null
-        return null; */
     }
     private void playNextAnim()
     {
         string capacity = "";
         AnimCapacityPriority capacity_priority = null;
 
-        // we check if we have a capacity in the pile
+        /* // we check if we have a capacity in the pile
         if (capacity_pile != "")
         {
             capacity = capacity_pile.Split(',').FirstOrDefault();
@@ -326,19 +193,19 @@ public class AnimPlayer : MonoBehaviour
             capacity_pile = capacity_pile.Remove(0, capacity.Length + 1); // remove the first capacity and the comma after it
         }
         else
+        { */
+        // we go through the anim capacity priorities and we get the highest one playing a capacity
+        int highest_priority = -1;
+        foreach (AnimCapacityPriority priority in anim_capacity_priorities)
         {
-            // we go through the anim capacity priorities and we get the highest one playing a capacity
-            int highest_priority = -1;
-            foreach (AnimCapacityPriority priority in anim_capacity_priorities)
-            {
-                if (priority.priority < highest_priority) { continue; }
-                if (priority.capacity_playing == "") { continue; }
+            if (priority.priority < highest_priority) { continue; }
+            if (priority.capacity_playing == "") { continue; }
 
-                capacity = priority.capacity_playing;
-                highest_priority = priority.priority;
-                capacity_priority = priority;
-            }
+            capacity = priority.capacity_playing;
+            highest_priority = priority.priority;
+            capacity_priority = priority;
         }
+        // }
 
         // we get the animation from the bank
         string anim_name = skin + "." + capacity + "." + orientation;
@@ -361,36 +228,7 @@ public class AnimPlayer : MonoBehaviour
         current_capacity = capacity;
         current_capacity_priority = capacity_priority;
         current_capacity_priority.capacity_playing = capacity;
-
     }
-    /* private void playFromPile()
-    {
-        if (AnimBank.Instance == null) { return; }
-
-        for (int i = anim_pile.Count - 1; i >= 0; i--)
-        {
-            // we check if there is an animation to play
-            if (anim_pile[i] == "") { continue; }
-
-            // we get the closest animation from the bank
-            string anim_name = skin + "." + anim_pile[i] + "." + orientation;
-            Anim anim = AnimBank.Instance.GetAnim(anim_name);
-            if (log_pile)
-            {
-                Debug.Log("(AnimPlayer - playFromPile) Bank found anim : " + anim.name
-                    + (anim_name == anim.name
-                    ? ""
-                    : " (" + anim_name + " was asked)"));
-            }
-
-            // we set the current capacity
-            current_capacity = anim_pile[i];
-
-            // we play the animation
-            play_now_at_frame(anim);
-            return;
-        }
-    } */
     private void play_now_at_frame(Anim anim, int frame = 0)
     {
         // we saturate the frame
@@ -418,11 +256,6 @@ public class AnimPlayer : MonoBehaviour
     // STOP ANIMATION
     public void StopPlaying(string capacity, bool dont_stop_if_currently_playing = false)
     {
-        // we check if the capacity is in the pile
-        // if (!anim_pile.Contains(capacity)) { return; }
-
-        // we remove the capacity from the pile
-        // removeFromPile(capacity);
 
         // we get the anim capa prio
         AnimCapacityPriority priority = getAnimCapacityPriority(capacity);
@@ -437,13 +270,6 @@ public class AnimPlayer : MonoBehaviour
 
         // we check if we have to brutally stop the current playing animation
         if (dont_stop_if_currently_playing || current_capacity != capacity) { return; }
-        // if we were playing the capacity, we stop it
-        // except if dont_stop_if_currently_playing == true
-
-        // if we are here, it means we need to stop the animation from playing directly
-        // current_capacity_priority = null;
-
-        // playFromPile();
         playNextAnim();
         
     }
@@ -460,37 +286,33 @@ public class AnimPlayer : MonoBehaviour
     }
 
     // PILE MANAGEMENT
-    /* private int getPileMaxPriority()
-    {
-        for (int i = anim_pile.Count - 1; i >= 0; i--)
-        {
-            if (anim_pile[i] != "") { return i; }
-        }
-        return -1;
-    }
-    private void removeFromPile(string capacity)
-    {
-        for (int i = 0; i < anim_pile.Count; i++)
-        {
-            if (anim_pile[i] == capacity)
-            {
-                anim_pile[i] = "";
-                if (log_pile) { Debug.Log("(AnimPlayer) Removing " + capacity + " from the pile"); }
-                return;
-            }
-        }
-    } */
-
     private AnimCapacityPriority getAnimCapacityPriority(string capacity)
     {
         return anim_capacity_priorities.FirstOrDefault(p => p.capacities.Contains(capacity));
     }
     public void AddToPile(string capacity)
     {
-        // we add the capacity to the pile
-        capacity_pile += capacity + ",";
+        AnimCapacityPriority capacity_priority = getAnimCapacityPriority(capacity);
+        if (capacity_priority == null)
+        {
+            if (log_pile) { Debug.LogWarning("(AnimPlayer - AddToPile) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
+            return;
+        }
 
-        if (log_pile) { Debug.Log("(AnimPlayer - AddToPile) Adding " + capacity + " to the pile"); }
+        // if we don't have any ongoing anim, we simply play it
+        if (current_capacity_priority == null) { Play(capacity); return; }
+
+        // we check if the index is >= than current prio we play it also
+        if (capacity_priority.priority >= current_capacity_priority.priority)
+        {
+            if (log_pile) { Debug.LogWarning("(AnimPlayer - AddToPile) The capacity " + capacity + " has a higher priority than the current one. we play it rn"); }
+            Play(capacity);
+            return;
+        }
+
+        // else we don't want to play it rn we simply add it to the pile for it to be played next
+        capacity_priority.capacity_playing = capacity;
+        if (log_pile) { Debug.Log("(AnimPlayer - AddToPile) Added " + capacity + " to the pile"); }
     }
 
     // ORIENTATION
@@ -522,8 +344,7 @@ public class AnimPlayer : MonoBehaviour
         if (orientation == this.orientation) { return; }
 
         // we set the orientation
-        //if (new List<string> { "U", "D", "L", "R" }.Contains(orientation)){
-        this.orientation = orientation;//}
+        this.orientation = orientation;
 
         // we check if we can interrupt the current animation to update orientation
         if (current_capacity_priority != null && current_capacity_priority.lock_orientation)
@@ -532,10 +353,7 @@ public class AnimPlayer : MonoBehaviour
                 + " is locked by the current animation: " + current_capacity_priority.capacity_playing); }
             return;
         }
-        /* if (current_capacity == "") { return; }
-        int current_anim_priority = capacity_priorities[current_capacity];
-        if (animation_priorities_with_static_orientation.Contains(current_anim_priority)) { return; } */
-
+        
         // we play the animation again with the right orientation
         Anim new_anim = Play(current_capacity);
         if (new_anim == null) { return; }

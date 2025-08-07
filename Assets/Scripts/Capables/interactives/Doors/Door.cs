@@ -22,14 +22,9 @@ public class Door : Capable, Interactable, Openable
     // UNITY FUNCTIONS
     protected virtual void Start()
     {
-
         // if vertical on set l'Orientaion à "up"
         if (is_vertical && (Orientation == Vector2.right || Orientation == Vector2.left)) { Orientation = Vector2.up; }
         else if (!is_vertical && (Orientation == Vector2.up || Orientation == Vector2.down)) { Orientation = Vector2.left; }
-
-        // on récupère le perso
-        // perso = GameObject.Find("/perso").GetComponent<Perso>();
-        // Perso.Instance = this as Perso;
 
         // on récupère le door_collider
         door_collider = GetComponent<Collider2D>();
@@ -38,7 +33,7 @@ public class Door : Capable, Interactable, Openable
         shadow_caster = GetComponent<ShadowCaster2D>();
 
         // on close
-        if (Can("close")) { Do("close"); }
+        if (Can("close")) { close(); }
     }
 
     protected override void Update()

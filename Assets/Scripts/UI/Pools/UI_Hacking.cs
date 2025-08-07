@@ -6,6 +6,15 @@ using TMPro;
 
 public class UI_Hacking : UI_Pool
 {
+    public override bool Available {
+        get
+        {
+            if (in_transition) { return false; }
+            if (UI_LaptopItemSlot.Instance == null || !UI_LaptopItemSlot.Instance.HasLaptop) { return false; }
+            return true;
+        }
+    }
+
     [Header("Transition parameters")]
     public float final_timescale = 0.5f;
     public float bg_final_alpha = 0.5f;

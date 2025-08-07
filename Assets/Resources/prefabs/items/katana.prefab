@@ -118,17 +118,18 @@ MonoBehaviour:
   update_each_frame: 1
   anim_capacity_priorities:
   - priority: 0
+    capacity_playing: 
     capacities:
     - idle
     lock_orientation: 0
     one_shot: 0
-    capacity_playing: 
   - priority: 1
+    capacity_playing: 
     capacities:
     - hover
     lock_orientation: 0
     one_shot: 0
-    capacity_playing: 
+  capacity_pile: 
   log: 0
   log_orientation: 0
   log_advanced: 0
@@ -276,6 +277,10 @@ PrefabInstance:
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: debug
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
+      propertyPath: attack_duration
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8825243767214675206, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: m_LocalPosition.x

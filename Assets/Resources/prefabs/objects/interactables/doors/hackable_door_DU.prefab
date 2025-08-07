@@ -259,7 +259,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7381030289409828735}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 16, y: -3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -397,35 +397,49 @@ MonoBehaviour:
   update_each_frame: 1
   anim_capacity_priorities:
   - priority: 0
+    capacity_playing: 
     capacities:
     - idle
     lock_orientation: 0
     one_shot: 0
+  - priority: 4
     capacity_playing: 
-  - priority: 1
     capacities:
-    - hover
+    - idle_locked
     lock_orientation: 0
     one_shot: 0
+  - priority: 1
     capacity_playing: 
+    capacities:
+    - hover
+    - hover_locked
+    lock_orientation: 0
+    one_shot: 0
   - priority: 3
+    capacity_playing: 
     capacities:
     - idle_open
-    lock_orientation: 1
-    one_shot: 1
-    capacity_playing: 
+    lock_orientation: 0
+    one_shot: 0
   - priority: 4
+    capacity_playing: 
     capacities:
     - open
     - close
+    - unlock
     lock_orientation: 1
     one_shot: 1
+  - priority: 4
     capacity_playing: 
-  log: 0
+    capacities:
+    - hacked
+    lock_orientation: 0
+    one_shot: 0
+  log: 1
   log_orientation: 0
   log_advanced: 0
   log_frames: 0
-  log_pile: 0
+  log_pile: 1
 --- !u!114 &4412303674509227999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -496,14 +510,14 @@ MonoBehaviour:
   capacities: []
   effects: 
   effects_timetolive: []
-  debug: 0
+  debug: 1
   activate_all_capacities_logs_on_awake: 0
   is_vertical: 1
   door_collider: {fileID: 0}
   shadow_caster: {fileID: 0}
   room1: {fileID: 0}
   room2: {fileID: 0}
-  Locked: 1
+  locking_interval: 15
   key:
     key_type: SHA
     key: 4iXSfHnzlxFbASpU
