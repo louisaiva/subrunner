@@ -91,7 +91,7 @@ public class Inventory : MonoBehaviour
         }
 
         // we check if the item is already grabbed somewhere, if so we drop it
-        if (item.Grabbed && item.ParentInventory != null) { item.ParentInventory.Drop(item, uis_to_ignore); }
+        if (item.Grabbed && item.HolderInventory != null) { item.HolderInventory.Drop(item, uis_to_ignore); }
 
         // we add the item
         Items.Add(item);

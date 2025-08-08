@@ -11,7 +11,7 @@ public class Item : Movable
     public bool Stackable { get => MaxQty > 1; }
     public string ItemDescription = "description of the item";
 
-    // Grabbable
+    // GRAB / DROP
     private bool _grabbed = false;
     public bool Grabbed
     {
@@ -27,18 +27,14 @@ public class Item : Movable
             else { on_dropped(); }
         }
     }
-    public Capable Holder
-    {
-        get
-        {
-            if (transform.parent == null) { return null; }
-            if (transform.parent.GetComponent<Inventory>() == null) { return null; }
-            return transform.parent.GetComponent<Inventory>().capable;
-        }
-    }
 
-    // Inventory
-    public Inventory ParentInventory
+    // events
+    public event System.Action<Capable> OnGrabbed = delegate { };
+    public event System.Action OnDropped = delegate { };
+
+    // HOLDER
+    public Capable Holder => HolderInventory != null ? HolderInventory.capable : null;
+    public Inventory HolderInventory
     {
         get
         {
@@ -46,6 +42,9 @@ public class Item : Movable
             return transform.parent.GetComponent<Inventory>();
         }
     }
+
+
+
 
     /// <summary>
     /// Return true if the item pass the string rule in parameter.
@@ -76,12 +75,12 @@ public class Item : Movable
             }
 
             // check if the rule is a category or a specific item
-                if (rule.Contains(":"))
-                {
-                    // specific item -> we check if the item is the same
-                    if (Reference == rule) { return true; }
-                    continue;
-                }
+            if (rule.Contains(":"))
+            {
+                // specific item -> we check if the item is the same
+                if (Reference == rule) { return true; }
+                continue;
+            }
 
             // we check if the item is in the category
             if (Reference.Contains(rule)) { return true; }
@@ -92,11 +91,8 @@ public class Item : Movable
 
 
     // BEING GRABBED / DROPPED
-    protected virtual void on_grabbed()
+    protected virtual async void on_grabbed()
     {
-        // we change the rigidbody to a kinematic
-        // rb.bodyType = RigidbodyType2D.kinematic;
-
         // we remove the rigidbody
         Destroy(rb);
         rb = null;
@@ -116,11 +112,13 @@ public class Item : Movable
         // we remove all the forces
         ClearForces();
 
+        await System.Threading.Tasks.Task.Yield();
+
+        // we call the event
+        OnGrabbed?.Invoke(Holder);
     }
     protected virtual void on_dropped()
     {
-        // rb.bodyType = RigidbodyType2D.Dynamic; // we change the rigidbody to a dynamic
-
         // we add the rigidbody
         rb = gameObject.AddComponent<Rigidbody2D>();
         rb.gravityScale = 0;
@@ -137,6 +135,8 @@ public class Item : Movable
 
         // we remove the effect IsBeingCarried
         RemoveEffect(Effect.BeingCarried);
+
+        OnDropped?.Invoke();
     }
 
     // ON DESTROY

@@ -19,6 +19,15 @@ public class HackCapacity : Capacity
     [Header("Exploits")]
     public List<Exploit> exploits = new List<Exploit>();
 
+    [Header("Vulnerabilities found")]
+    public Dictionary<Hackable, List<Exploit>> vulnerabilities = new Dictionary<Hackable, List<Exploit>>();
+    // this stores the list of all the hackables we scanned & their vulnerabilites found !
+
+    [Header("Hackrays")]
+    [SerializeField] private GameObject hackray_prefab;
+    protected Dictionary<Hack, Hackray> hackrays = new Dictionary<Hack, Hackray>();
+
+
     [Header("Components")]
     [SerializeField] private Laptop laptop;
     [SerializeField] private Being being;
@@ -35,122 +44,6 @@ public class HackCapacity : Capacity
         laptop = capable.GetComponent<Laptop>();
         hack_collider = laptop.GetCapacity<InteractHackCapacity>()?.GetComponent<CircleCollider2D>();
     }
-
-    // USE
-    public override void Use(Capable capable)
-    {
-        // checks if we have a hovered target
-        if (hovered_target == null)
-        {
-            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack but no target is hovered."); }
-            return;
-        }
-
-        // check if we can hack this hovered target
-        Hack hack = CanHack(hovered_target);
-        if (hack == null) { return; }
-
-        // we run the exploit
-        RunExploit(hack);
-    }
-
-    // HACKING
-    public Hack CanHack(Hackable target)
-    {
-        // we check if the target is in range
-        if (Vector3.Distance(transform.position, target.transform.position) > hack_collider.radius)
-        {
-            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack {target.name} but it is out of range."); }
-            return null;
-        }
-
-        // we check if we are not already hacking this target
-        if (running_hacks.Any(h => h.target == target))
-        {
-            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} is already hacking {target.name}."); }
-            return null;
-        }
-
-        // check if we have at least 1 core
-        if (laptop.HasFreeCores() == false)
-        {
-            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack {target.name} but has no free cores."); }
-            return null;
-        }
-
-        // we check if we already have the key for this target (instant hack)
-        if (laptop.HasKeyFor(target))
-        {
-            if (debug) { Debug.Log($"(HackCapacity) {capable.name} instantly hacked {target.name}."); }
-            return new Hack(target, exploits[0]/* new Exploit("admin_connection", 1000, 0.1f, 1) */);
-        }
-
-        // we check if we have the right exploit for this target
-        foreach (Exploit exploit in exploits)
-        {
-            if (target.IsVulnerableTo(exploit) && laptop.HasFreeCores(exploit.cores_cost))
-            {
-                if (debug) { Debug.Log($"(HackCapacity) {capable.name} can hack {target.name} with exploit {exploit.name}."); }
-                return new Hack(target, exploit);
-            }
-        }
-
-        // we have no hack we can't hack it
-        if (debug) { Debug.Log($"(HackCapacity) {capable.name} tried to hack {target.name} but no vulnerability was found."); }
-        return null;
-    }
-    public void RunExploit(Hack hack)
-    {
-        // we run the hack
-        float duration = hack.CalculateDuration();
-        hack.Run(duration);
-
-        // we occupy some cores for the hack duration
-        laptop.UseCores(hack.exploit.cores_cost, duration);
-
-        // we add the hack to the running hacks
-        running_hacks.Add(hack);
-        hack.target.OnHackStarted(hack);
-    }
-    protected override void Update()
-    {
-        base.Update();
-
-        // we cycle through all the running exploits and we check few things
-        for (int i = running_hacks.Count - 1; i >= 0; --i)
-        {
-            Hack hack = running_hacks[i];
-
-            // checks if we are too far away from the target
-            if (Vector3.Distance(transform.position, hack.target.transform.position) > hack_collider.radius)
-            {
-                if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} is too far away from {hack.target.name} to continue the hack."); }
-                // we remove the hack from the running hacks
-                hack.Quit();
-                running_hacks.RemoveAt(i);
-                continue;
-            }
-
-            // we check if the hack is done
-            if (hack.state == HackState.Completed || hack.state == HackState.Failed)
-            {
-                if (debug) { Debug.Log($"(HackCapacity) {capable.name} finished hacking {hack.target.name} with exploit {hack.exploit.name}."); }
-                // we remove the hack from the running hacks
-                running_hacks.RemoveAt(i);
-                continue;
-            }
-
-            // we update the progress of the hack
-            hack.progress += Time.deltaTime / hack.duration * 100f;
-            if (log_hack_progress)
-            {
-                Debug.Log($"(HackCapacity) updating exploit {hack.exploit.name}. Progress: {hack.progress}%");
-            }
-            // we check if the hack is done
-            if (hack.progress >= 100f) { hack.Complete(); }
-        }
-    }
-
 
     // TARGET MANAGEMENT
     public void Select(Hackable target)
@@ -178,13 +71,168 @@ public class HackCapacity : Capacity
         hovered_target = null;
     }
 
-    // STOP ANIMATION
-    private async Awaitable play_animation()
+
+
+    // USE
+    public override void Use(Capable capable)
     {
-        anim_player.Play("hack");
-        await Task.Delay((int)(hacking_animation_duration * 1000));
-        anim_player.StopPlaying("hack");
+        // checks if we have a hovered target
+        if (hovered_target == null)
+        {
+            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack but no target is hovered."); }
+            return;
+        }
+
+        // we check if we are not already hacking this target
+        if (running_hacks.Any(h => h.target == hovered_target))
+        {
+            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} is already hacking {hovered_target.name}."); }
+            return;
+        }
+
+        // we try to connect to the target
+        if (!Connect(hovered_target))
+        {
+            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} failed to connect to {hovered_target.name}."); }
+            return;
+        }
+
+        // we scan the target
+        List<Exploit> vulnerabilities = Scan(hovered_target);
+        if (vulnerabilities.Count == 0)
+        {
+            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} found no vulnerabilities on {hovered_target.name}."); }
+            return;
+        }
+        Exploit exploit = vulnerabilities[0];
+
+        // we check if our laptop has enough cores for this exploit
+        if (!laptop.HasFreeCores(exploit.cores_cost))
+        {
+            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack {hovered_target.name} but has no free cores for exploit {exploit.name}."); }
+            return;
+        }
+
+        // we create a Hack for this target
+        Hack hack = new Hack(hovered_target, exploit);
+
+        // we run the exploit
+        RunExploit(hack);
     }
+
+    // CONNECTION
+    public bool Connect(Hackable target)
+    {
+        // we check if the target is in range
+        if (Vector3.Distance(transform.position, target.transform.position) > hack_collider.radius)
+        {
+            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to connect to {target.name} but it is out of range."); }
+            return false;
+        }
+        return true;
+    }
+
+    // SCANNING
+    public List<Exploit> Scan(Hackable target)
+    {
+        // if we have some vulnerabilities found for this hackable we clear them
+        vulnerabilities[target] = new List<Exploit>();
+
+        // we check if we already have the key for this target (instant hack)
+        string log_exploits = "";
+        if (laptop.HasKeyFor(target))
+        {
+            vulnerabilities[target].Add(exploits[0]);
+            log_exploits += $"- {exploits[0].name} (instant hack)\n";
+        }
+
+        // we scan the other vulnerabilities
+        for (int i = 1; i < exploits.Count; i++)
+        {
+            Exploit exploit = exploits[i];
+            if (target.IsVulnerableTo(exploit) && laptop.HasFreeCores(exploit.cores_cost))
+            {
+                vulnerabilities[target].Add(exploit);
+                log_exploits += $"- {exploit.name}\n";
+            }
+        }
+        if (debug) { Debug.Log($"(HackCapacity) {capable.name} scanned {target.name} : {vulnerabilities[target].Count} vulnerabilities found\n{log_exploits}"); }
+        return vulnerabilities[target];
+    }
+
+    // HACKING
+    public void RunExploit(Hack hack)
+    {
+        // we run the hack
+        float duration = hack.CalculateDuration();
+        hack.Run(duration);
+
+        // we occupy some cores for the hack duration
+        laptop.UseCores(hack.exploit.cores_cost, duration);
+
+        // we add the hack to the running hacks
+        running_hacks.Add(hack);
+        hack.target.OnHackStarted(hack);
+
+
+        // we create a hackray for this hack
+        Hackray hackray = (Instantiate(hackray_prefab, transform) as GameObject).GetComponent<Hackray>();
+        hackray.name = "hackray_" + hack.target.name + "_" + hack.exploit.name;
+        // hackray.SetHackerAndTarget(transform, hack.target.transform);
+        hackray.SetLaptopAndHackable(laptop, hack.target);
+        hackrays[hack] = hackray;
+    }
+
+    // UPDATE
+    protected override void Update()
+    {
+        base.Update();
+
+        // we cycle through all the running exploits and we check few things
+        for (int i = running_hacks.Count - 1; i >= 0; --i)
+        {
+            Hack hack = running_hacks[i];
+
+            // checks if we are too far away from the target
+            if (Vector3.Distance(transform.position, hack.target.transform.position) > hack_collider.radius)
+            {
+                if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} is too far away from {hack.target.name} to continue the hack."); }
+                
+                // we remove the hackray
+                Destroy(hackrays[hack].gameObject);
+                hackrays.Remove(hack);
+
+                // we remove the hack from the running hacks
+                hack.Fail();
+                running_hacks.RemoveAt(i);
+                continue;
+            }
+
+            // we check if the hack is done
+            if (hack.state == HackState.Completed || hack.state == HackState.Failed)
+            {
+                if (debug) { Debug.Log($"(HackCapacity) {capable.name} finished hacking {hack.target.name} with exploit {hack.exploit.name}."); }
+
+                // we remove the hackray
+                Destroy(hackrays[hack].gameObject);
+                hackrays.Remove(hack);
+
+                // we remove the hack from the running hacks
+                running_hacks.RemoveAt(i);
+                continue;
+            }
+
+            // we update the progress of the hack
+            hack.progress += Time.deltaTime / hack.duration * 100f;
+            if (log_hack_progress)
+            {
+                Debug.Log($"(HackCapacity) updating exploit {hack.exploit.name}. Progress: {hack.progress}%");
+            }
+            // we check if the hack is done
+            if (hack.progress >= 100f) { hack.Finish(); }
+        }
+    }
+
 }
 
 
@@ -208,24 +256,27 @@ public class Hack
         this.progress = 0f;
     }
 
-    // RUNNING / QUITTING / COMPLETING
+    // RUN & FINISH
     public void Run(float duration)
     {
         this.duration = duration;
-        // Here you would implement the logic to start the hack, e.g., starting a coroutine or a timer
-        // For now, we just log the hack start
         this.progress = 0f;
         state = HackState.Running;
         Debug.Log($"Starting hack on {target.name} with exploit {exploit.name}");
-
-        // Simulate the hacking process
-        // await Task.Delay((int)(duration * 1000));
-        // Complete();
     }
-    public void Quit()
+    public void Finish()
     {
-        // Here you would implement the logic to stop the hack, e.g., stopping a coroutine or a timer
-        // For now, we just log the hack quit
+        // the hack is done. but have we successfully hacked the target ?
+        // this is another thing.
+        // we check if the hackable is vulnerable to the exploit
+        if (target.IsVulnerableTo(exploit)) { Complete(); }
+        else { Fail(); }
+    }
+
+    // FAIL & COMPLETE
+    public void Fail()
+    {
+        // the hack has failed :///
         Debug.Log($"Hack on {target.name} with exploit {exploit.name} was quit.");
         this.progress = 0f;
         this.state = HackState.Failed;
@@ -235,8 +286,7 @@ public class Hack
     }
     public void Complete()
     {
-        // Here you would implement the logic to complete the hack, e.g., giving rewards or unlocking features
-        // For now, we just log the hack completion
+        // the hack is successful !!
         Debug.Log($"Hack on {target.name} with exploit {exploit.name} completed successfully.");
         this.progress = 100f;
         this.state = HackState.Completed;

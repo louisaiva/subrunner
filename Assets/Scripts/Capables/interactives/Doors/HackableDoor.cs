@@ -15,6 +15,8 @@ public class HackableDoor : Door, Hackable
     [SerializeField] private int securityLevel = 1;
     public int SecurityLevel => securityLevel;
 
+    public Vector3 HackPoint => transform.Find("hack_point").localPosition;
+
     [Header("Components")]
     private HoverCapacity hoverer;
 

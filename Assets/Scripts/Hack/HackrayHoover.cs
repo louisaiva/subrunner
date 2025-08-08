@@ -8,19 +8,19 @@ public class HackrayHoover : Hackray
     private GameObject perso;
 
     // unity functions
-    void Start()
+    /* void Start()
     {
         // on récupère le perso
         perso = GameObject.Find("/perso");
-    }
+    } */
 
-    void Update()
+    /* void Update()
     {
         updateTransform();
-    }
+    } */
 
     // functions
-    public void setTarget(GameObject target)
+    /* public void setTarget(GameObject target)
     {
         // on vérifie si on a pas déjà un target
         if (this.target != null)
@@ -41,8 +41,8 @@ public class HackrayHoover : Hackray
         target.GetComponent<I_Hackable>().outlineMe();
 
         // on set le nouveau target
-        SetHackerAndTarget(perso, target);
-    }
+        // SetHackerAndTarget(Perso.Instance.transform, target);
+    } */
 
     public void removeTarget()
     {
