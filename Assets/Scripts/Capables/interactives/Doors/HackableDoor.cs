@@ -78,6 +78,7 @@ public class HackableDoor : Door, Hackable
         // Handle the hack failure event
         if (debug) { Debug.Log($"(HackableDoor) Hack failed on {name} with exploit {hack.exploit.name}"); }
         anim_player.StopPlaying("hacked");
+        Lock();
     }
     public void OnHackCompleted(Hack hack)
     {
@@ -87,7 +88,6 @@ public class HackableDoor : Door, Hackable
 
         // we unlock the door & play unlock anim
         anim_player.StopPlaying("hacked");
-        anim_player.Play("unlock");
         Unlock();
     }
 
@@ -96,6 +96,9 @@ public class HackableDoor : Door, Hackable
     {
         Locked = false;
         if (debug) { Debug.Log($"(HackableDoor) {name} is now unlocked"); }
+
+        // we play unlock animation
+        anim_player.Play("unlock");
 
         // we update the hover animation to show a nice unlocked anim
         hoverer.ChangeAnimation("hover");
@@ -111,6 +114,9 @@ public class HackableDoor : Door, Hackable
         CancelInvoke();
         Locked = true;
         if (debug) { Debug.Log($"(HackableDoor) {name} is now locked"); }
+
+        // we play lock animation
+        anim_player.Play("lock");
 
         // we update the hover animation to show the locked anim
         hoverer.ChangeAnimation("hover_locked");

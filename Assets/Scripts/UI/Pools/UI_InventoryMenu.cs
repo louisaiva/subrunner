@@ -11,7 +11,6 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     [SerializeField] private UI_Inventory ui_inventory;
     [SerializeField] private UI_Inventory ui_laptop;
     [SerializeField] private Transform no_inventory_panel;
-    // [SerializeField] private UI_ModulePool motherboard_pool;
 
 
     [Header("Base Item Pool Transitions")]

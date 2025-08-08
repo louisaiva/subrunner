@@ -10,6 +10,7 @@ public class Description : MonoBehaviour
     [SerializeField] private float caracters_per_sec = 200f;
     [SerializeField] private float slow_caractere_delay = 0.1f;
     [SerializeField] private float pause_caractere_delay = 0.5f;
+    private int cursor = 0;
 
     [Header("Components")]
     [SerializeField] private TextMeshProUGUI label;
@@ -23,27 +24,38 @@ public class Description : MonoBehaviour
         label.text = target_description;
     }
 
+    // ON ENABLE
+    private void OnEnable()
+    {
+        if (cursor == 0) { return; } // we finished writing last time so we don't write again
+        StartCoroutine(write(target_description, cursor));
+    }
+
+    // WRITING
     public void SetDescription(string description)
     {
+        if (description == target_description) { return; }
+
         // on remet à zéro le label
         StopAllCoroutines();
         label.text = string.Empty;
 
         // check if description is active
-        if (gameObject.activeSelf == false) {return;}
+        if (gameObject.activeSelf == false) { return; }
 
         // set the description of the item
         target_description = description;
         StartCoroutine(write(description));
     }
-
-    IEnumerator write(string target)
+    IEnumerator write(string target, int cursor = 0)
     {
+        this.cursor = cursor;
         // on ajoute les caractères un par un
-        for (int j = 0; j < target.Length; j++)
+        for (int j = cursor; j < target.Length; j++)
         {
             if (target[j] == '/' && j < target.Length - 1 && target[j + 1] == '.')
             {
+                this.cursor = j + 2; // we set the cursor before waiting so we ensure that we won't write this caracter till the infinite
                 yield return new WaitForSecondsRealtime(1f / caracters_per_sec);
                 label.text += '.';
                 yield return new WaitForSecondsRealtime(1f / caracters_per_sec);
@@ -69,6 +81,7 @@ public class Description : MonoBehaviour
             }
             else if (target[j] == '/' && j < target.Length - 1 && target[j + 1] == 'l')
             {
+                this.cursor = j + 2; // we set the cursor before waiting so we ensure that we won't write this caracter till the infinite
                 // on fait une grosse pause
                 yield return new WaitForSecondsRealtime(pause_caractere_delay);
 
@@ -79,7 +92,11 @@ public class Description : MonoBehaviour
             }
 
             yield return new WaitForSecondsRealtime(1f / caracters_per_sec);
+            this.cursor = j + 1;
             label.text += target[j];
         }
+
+        // on reset le cursor
+        this.cursor = 0;
     }
 }
