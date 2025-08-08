@@ -9,71 +9,53 @@ using UnityEngine;
 /// </summary>
 public class UI_ModulePool : UI_ItemPool
 {
-    [Header("Laptop Module Pool")]
-    [SerializeField] private UI_LaptopItemSlot UI_LaptopItemSlot;
-    // public bool HasLaptop => UI_LaptopItemSlot != null && UI_LaptopItemSlot.FullCount > 0;
-    public bool HasLaptop = false;
 
-
-    // INIT
-    public override void Init(UI_Inventory ui)
+    // ENABLING / DISABLING
+    public void EnableModules()
     {
-        UI_LaptopItemSlot.Instance.OnItemChanged += HandleLaptopChanged;
-        base.Init(ui);
-    }
-
-    // LAPTOP CHANGED
-    private void HandleLaptopChanged(List<Item> items)
-    {
-        if (items.Count > 0 && items[0].Reference == "hardware:laptop")
+        // we enable all the ui_module
+        foreach (UI_Item ui_item in ui_items)
         {
-            HasLaptop = true;
-            // we enable all the ui_module
-            foreach (UI_Item ui_item in ui_items)
-            {
-                if (ui_item is not UI_Module module) { return; }
-                module.Enable();
-            }
-            return;
+            if (ui_item is not UI_Module module) { continue; }
+            module.Enable();
         }
-        HasLaptop = false;
-        if (!Faded) { Fade(fade_in: false); }
-
+    }
+    public void DisableModules()
+    {
         // we disable all the ui_module
         foreach (UI_Item ui_item in ui_items)
         {
-            if (ui_item is not UI_Module module) { return; }
+            if (ui_item is not UI_Module module) { continue; }
             module.Disable();
         }
     }
 
-
     // DROPPING OVERHEAD SLOTS
     public void DropOverheadSlots()
     {
+        if (debug) { Debug.Log($"(UI_ModulePool) dropping overhead slots, current count: {ui_items.Count}"); }
+
         // we check if we have too many slots
-        if (transform.childCount <= MaxSlots) { return; }
+        if (Count <= MaxSlots) { return; }
 
         // we first try to remove the empty slots
         DestroyEmptySlots();
-        if (transform.childCount <= MaxSlots)
+        if (debug) { Debug.Log($"(UI_ModulePool) tried destroying empty slots first, remaining count: {ui_items.Count}"); }
+        if (Count <= MaxSlots)
         {
             // if we are not scalable we create back some empty slots to match max slots
-            if (!Scalable) { CreateEmptySlots(MaxSlots - transform.childCount); }
+            if (!Scalable) { CreateEmptySlots(MaxSlots - Count); }
+            if (debug) { Debug.Log($"(UI_ModulePool) recreated some to match {MaxSlots} : have now {ui_items.Count}"); }
             return;
         }
 
         // we only have full slots, but we still have too many slots
         // so we drop the last slots items and remove their slots
-
-        // todo do this bcz for now we only remove them
-
-        for (int i = transform.childCount; i > MaxSlots; --i)
+        // todo do this bcz for now we only remove them brutally -> will make ui_items disappear in the limbs of hell ig ?
+        while (Count > MaxSlots)
         {
             // we get the last slot
-            Transform last_slot = transform.GetChild(i - 1);
-            UI_Item ui_item = last_slot.GetComponent<UI_Item>();
-            if (ui_item == null) { continue; }
+            UI_Item ui_item = ui_items[Count - 1];
 
             // we unstore the item
             if (ui_item.Quantity > 0)
@@ -83,8 +65,11 @@ public class UI_ModulePool : UI_ItemPool
             }
 
             // we destroy the slot
-            Destroy(last_slot.gameObject);
+            Destroy(ui_item.gameObject);
+            ui_items.Remove(ui_item);
         }
+
+        if (debug) { Debug.Log($"(UI_ModulePool) still too many slots, dropped full items and now we have {ui_items.Count}"); }
     }
 
     // CREATE ITEM SLOT
@@ -105,7 +90,7 @@ public class UI_ModulePool : UI_ItemPool
 
         // we assign the item to the UI_Item
         if (item != null) { ui_item.Store(item); }
-        else { ui_item.ClearUI(); }
+        else { ui_item.Clear(); }
 
         // we add the item to the list
         ui_items.Add(ui_item);
@@ -113,5 +98,17 @@ public class UI_ModulePool : UI_ItemPool
         if (debug) { Debug.Log($"(UI_ModulePool) created an ui_module with item {(item == null ? "null" : item.Reference)}"); }
 
         return ui_slot;
+    }
+
+    // INIT FROM INVENTORY
+    public void InitFromInventory(LaptopInventory inventory)
+    {
+        for (int i = 0; i < ui_items.Count; i++)
+        {
+            if (ui_items[i] == null || ui_items[i] is not UI_Module module) { continue; }
+
+            // we switch the items
+            module.SwitchItems(inventory.GetItemsInSlot(i));
+        }
     }
 }

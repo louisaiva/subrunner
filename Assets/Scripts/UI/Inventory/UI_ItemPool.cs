@@ -224,7 +224,7 @@ public class UI_ItemPool : MonoBehaviour
 
         // we assign the item to the UI_Item
         if (item != null) { ui_item.Store(item); }
-        else { ui_item.ClearUI(); }
+        else { ui_item.Clear(); }
 
         // we add the item to the list
         ui_items.Add(ui_item);
@@ -233,7 +233,7 @@ public class UI_ItemPool : MonoBehaviour
     }
 
     // FADE
-    public async virtual void Fade(float duration = 0.1f, bool fade_in = true)
+    public async virtual Awaitable Fade(float duration = 0.1f, bool fade_in = true)
     {
         if (group == null) { return; }
 
@@ -242,4 +242,22 @@ public class UI_ItemPool : MonoBehaviour
                 onValueChange: ctx => group.alpha = ctx));
     }
     public bool Faded { get { return group.alpha < 0.1f; } }
+
+    // GETTERS
+    public virtual int GetItemSlotIndex(Item item)
+    {
+        // we go through the ui_items and check if one of the slot contains the item,
+        // if yes we return the index
+        for (int i = 0; i < ui_items.Count; i++)
+        {
+            UI_Item ui_item = ui_items[i];
+            foreach (Item ui_item_item in ui_item.GetItems())
+            {
+                // we check if the item is the same as the one we are looking for
+                if (ui_item_item == item) { return i; }
+            }
+        }
+        return -1;
+    }
+
 }

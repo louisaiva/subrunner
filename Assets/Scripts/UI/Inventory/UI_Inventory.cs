@@ -19,27 +19,12 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     public Inventory Inventory;
 
     [Header("Logs")]
-    [SerializeField] private bool debug = false;
+    [SerializeField] protected bool log = false;
 
     public void Init()
     {
-        // si on a pas d'inventory, il y a un problème
-        if (Inventory == null)
-        {
-            try
-            {
-                Debug.LogError("(UI_Inventory) missing inventory on " + transform.parent.parent.parent.name +
-                            ", you need to set it in the inspector");
-
-                return;
-            }
-            catch
-            {
-                Debug.LogError("(UI_Inventory) missing inventory on " + name);
-            }
-        }
         // we check if we have some pools, otherwise we set ourself as the pool
-        else if (pools.Count == 0)
+        if (pools.Count == 0)
         {
             try
             {
@@ -120,13 +105,13 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
             bool grabbed = pool.Grab(item);
             if (grabbed)
             {
-                if (debug) { Debug.Log("(UI_Inventory) grabbed " + item.Reference + " in " + pool.name); }
+                if (log) { Debug.Log("(UI_Inventory) grabbed " + item.Reference + " in " + pool.name); }
                 return true;
             }
         }
 
         // if we are here, no pool could take the item
-        if (debug)
+        if (log)
         {
             Debug.LogWarning("(UI_Inventory) no pool could take the item " + item.Reference +
         " in " + Inventory.capable.name + "'s ui_inventory, maybe they are full or the item is incompatible");
@@ -143,12 +128,12 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
             bool dropped = pool.Drop(item);
             if (dropped)
             {
-                if (debug) { Debug.Log("(UI_Inventory) dropped " + item.Reference + " in " + pool.name); }
+                if (log) { Debug.Log("(UI_Inventory) dropped " + item.Reference + " in " + pool.name); }
                 return true;
             }
         }
 
-        if (debug)
+        if (log)
         {
             Debug.LogWarning("(UI_Inventory) no pool could drop the item " + item.Reference +
         " in " + Inventory.capable.name + "'s ui_inventory, please check the pools and the item type");
@@ -181,7 +166,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     public Action<InputAction.CallbackContext> CancelCallback => throw new NotImplementedException();
     public List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator)
     {
-        if (debug) { Debug.Log($"(UI_Inventory) {name} getting slots"); }
+        if (log) { Debug.Log($"(UI_Inventory) {name} getting slots"); }
         List<GameObject> slots = new List<GameObject>();
         Vector2 position = Vector2.negativeInfinity;
         foreach (UI_ItemPool pool in pools)

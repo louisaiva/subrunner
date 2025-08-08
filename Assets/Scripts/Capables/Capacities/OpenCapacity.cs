@@ -49,10 +49,10 @@ public class OpenCapacity : Capacity
             capable.GetComponent<SpriteRenderer>().sortingLayerName = "fg";
             capable.GetComponent<SpriteRenderer>().sortingOrder = 1;
         }
-        else if (capable is Chest && capable.inventory != null && capable.inventory.ui != null)
+        else if (capable is Chest && capable.Inventory != null && capable.Inventory.ui != null)
         {
-            capable.inventory.ui.Show();
-            (GameObject.Find("/ui").GetComponent<UI_Manager>().GetPool("hud") as UI_HUD).RegisterChest(capable.inventory.ui);
+            capable.Inventory.ui.Show();
+            (GameObject.Find("/ui").GetComponent<UI_Manager>().GetPool("hud") as UI_HUD).RegisterChest(capable.Inventory.ui);
         }
 
         if (debug) { Debug.Log(capable.name + " is opening..."); }

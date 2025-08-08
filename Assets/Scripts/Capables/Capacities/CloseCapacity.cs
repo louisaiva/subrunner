@@ -64,10 +64,10 @@ public class CloseCapacity : Capacity
             capable.GetComponent<SpriteRenderer>().sortingLayerName = "fg";
             capable.GetComponent<SpriteRenderer>().sortingOrder = 1;
         }
-        else if (capable is Chest && capable.inventory != null && capable.inventory.ui != null)
+        else if (capable is Chest && capable.Inventory != null && capable.Inventory.ui != null)
         {
-            capable.inventory.ui.Hide();
-            if (hud != null) { hud.RemoveChest(capable.inventory.ui); }
+            capable.Inventory.ui.Hide();
+            if (hud != null) { hud.RemoveChest(capable.Inventory.ui); }
         }
 
         if (debug) { Debug.Log(capable.name + " is closing..."); }
@@ -90,7 +90,7 @@ public class CloseCapacity : Capacity
         }
 
         // verifications pour les lootable meat
-        if (capable is LootableMeat lootableMeat && lootableMeat.inventory.Count == 0)
+        if (capable is LootableMeat lootableMeat && lootableMeat.Inventory.Count == 0)
         {
             lootableMeat.TurnToMeat();
         }

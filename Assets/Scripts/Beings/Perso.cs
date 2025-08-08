@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static PlayerInputActions;
 
-public class Perso : Being
+public class Perso : Being, Hacker
 {
     public static int deaths = 0; // nombre de morts du perso
     public static Perso Instance { get; private set; }

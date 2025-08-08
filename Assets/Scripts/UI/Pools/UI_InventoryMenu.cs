@@ -11,7 +11,7 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     [SerializeField] private UI_Inventory ui_inventory;
     [SerializeField] private UI_Inventory ui_laptop;
     [SerializeField] private Transform no_inventory_panel;
-    [SerializeField] private UI_ModulePool motherboard_pool;
+    // [SerializeField] private UI_ModulePool motherboard_pool;
 
 
     [Header("Base Item Pool Transitions")]
@@ -116,14 +116,6 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
                 + item_pool.Count + " slots and " + item_pool.FullCount + " items slots " + $"and {item_pool.EnabledCount} enabled slots");
             }
 
-            /* // we skip the shortcuts pool
-            if (item_pool.name == "shortcuts_pool")
-            {
-                if (item_pool.Faded) { item_pool.Fade(duration, fade_in: true); }
-                ui.SetActive(true);
-                continue;
-            } */
-
             // on regarde si la pool doit être affichée ou non
             if (fade_all_disabled)
             {
@@ -162,7 +154,7 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
 
         // on ajoute les items de l'UI_Inventory
         slots.AddRange(ui_inventory.GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator));
-        if (!motherboard_pool.HasLaptop) { return slots; }
+        if (UI_LaptopItemSlot.Instance == null || !UI_LaptopItemSlot.Instance.HasLaptop) { return slots; }
 
         // si on a le laptop, on ajoute aussi ceux de l'UI_Laptop
         slots.AddRange(ui_laptop.GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator));
@@ -172,7 +164,7 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     public bool IsYourSlot(GameObject slot)
     {
         if (ui_inventory.IsYourSlot(slot)) { return true; }
-        if (motherboard_pool.HasLaptop && ui_laptop.IsYourSlot(slot)) { return true; }
+        if (UI_LaptopItemSlot.Instance != null && UI_LaptopItemSlot.Instance.HasLaptop && ui_laptop.IsYourSlot(slot)) { return true; }
         return false;
     }
     public Vector2 SavedPosition { get; private set; } = Vector2.zero;

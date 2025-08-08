@@ -43,7 +43,7 @@ public class DropCapacity : Capacity
     {
         // on récupère la bank
         bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
-        inventory = capable.inventory;
+        inventory = capable.Inventory;
 
         // on récupère l'action drop
         dropAction = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().GetAction(dropInput);

@@ -35,7 +35,7 @@ public class GrabCapacity : Capacity
     {
         // on récupère la bank
         bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
-        inventory = capable.inventory;
+        inventory = capable.Inventory;
 
         // on récupère l'action grab
         grabAction = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().GetAction(grabInput);

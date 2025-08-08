@@ -49,7 +49,7 @@ public class Capable : MonoBehaviour
     public CapacityBank bank { get; private set; }
 
     // un capable peut aussi avoir un inventaire
-    public Inventory inventory
+    public Inventory Inventory
     {
         get
         {

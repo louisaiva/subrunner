@@ -88,7 +88,6 @@ public class Hackray : MonoBehaviour
         updateTransform();
 
     }
-
     public void RemoveHackerAndTarget()
     {
         // on désactive le sprite rrenderer
@@ -103,7 +102,6 @@ public class Hackray : MonoBehaviour
         target_offset = Vector3.zero;
 
     }
-
     protected void switchTargetAndHacker()
     {
         // switch hacker and target
@@ -115,5 +113,4 @@ public class Hackray : MonoBehaviour
         hacker_offset = target_offset;
         target_offset = temp_offset;
     }
-
 }

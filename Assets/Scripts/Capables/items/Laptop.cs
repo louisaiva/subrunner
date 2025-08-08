@@ -9,6 +9,9 @@ public class Laptop : Item, Usable
     [SerializeField] protected int max_cores = 4;
     [SerializeField] protected int free_cores = 4;
 
+    [Header("Logs")]
+    [SerializeField] protected bool log_keys = false;
+
     // CORES MANAGEMENTS
     public bool HasFreeCores(int amount = 1)
     {
@@ -32,6 +35,15 @@ public class Laptop : Item, Usable
     public bool HasKeyFor(Hackable target)
     {
         List<Key> keys = get_keys();
+        if (log_keys)
+        {
+            string s = $"(Laptop) {name} checking if has key for {target.Key} (security level {target.SecurityLevel})";
+            foreach (Key key in keys)
+            {
+                s += $"\n - {key.key} ({key.key_type})";
+            }
+            Debug.Log(s);
+        }
         foreach (Key key in keys)
         {
             if (key.Matches(target.Key))

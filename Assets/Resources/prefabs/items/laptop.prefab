@@ -120,17 +120,17 @@ MonoBehaviour:
   update_each_frame: 1
   anim_capacity_priorities:
   - priority: 0
+    capacity_playing: 
     capacities:
     - idle
     lock_orientation: 0
     one_shot: 0
-    capacity_playing: 
   - priority: 1
+    capacity_playing: 
     capacities:
     - hover
     lock_orientation: 0
     one_shot: 0
-    capacity_playing: 
   log: 0
   log_orientation: 0
   log_advanced: 0
@@ -197,6 +197,7 @@ MonoBehaviour:
     certainly doom !
   max_cores: 4
   free_cores: 4
+  log_keys: 0
 --- !u!1 &4913192481908797750
 GameObject:
   m_ObjectHideFlags: 0
@@ -359,7 +360,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1737685045003651019}
-  - component: {fileID: 376171824760991413}
+  - component: {fileID: 8692410019863420958}
   m_Layer: 7
   m_Name: inventory
   m_TagString: Untagged
@@ -382,7 +383,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6784830890958932939}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &376171824760991413
+--- !u!114 &8692410019863420958
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -391,7 +392,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8917142705693590481}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 352dd4bffc5726b41a31e2620019c7cb, type: 3}
+  m_Script: {fileID: 11500000, guid: a1536d53a3d970442a749907c9085d74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Items: []
@@ -403,6 +404,8 @@ MonoBehaviour:
       m_Calls: []
   uis: []
   debug: 0
+  Columns: 2
+  Rows: 2
 --- !u!1001 &335368620105986196
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -433,7 +436,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4515255295261711829, guid: eb43fdc2aea050f43a1b911bf48dfaa3, type: 3}
       propertyPath: exploits.Array.data[1].name
-      value: bruteforce_sha
+      value: bruteforce_SHA
       objectReference: {fileID: 0}
     - target: {fileID: 4515255295261711829, guid: eb43fdc2aea050f43a1b911bf48dfaa3, type: 3}
       propertyPath: exploits.Array.data[2].name

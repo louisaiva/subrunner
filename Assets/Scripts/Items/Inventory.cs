@@ -35,22 +35,25 @@ public class Inventory : MonoBehaviour
             };
         }
 
-        // on informe les UI de l'inventaire que l'on est là
-        uis.ForEach(ui => ui.Inventory = this);
+        // we attach the inventory to the UI
+        foreach (UI_Inventory ui in uis)
+        {
+            if (ui == null) { continue; }
+            ui.Inventory = this;
+        }
     }
 
     // START
     void Start()
     {
         // on initialise l'UI
-
         foreach (UI_Inventory ui in uis)
         {
             if (ui == null)
             {
                 Debug.LogWarning("(Inventory) " + name + $" has a null UI_Inventory : {ui.name}, skipping initialization");
                 continue;
-            } // skip null UIs
+            }
             ui.Init();
         }
 
@@ -63,7 +66,7 @@ public class Inventory : MonoBehaviour
 
 
     // GRAB / DROP
-    public bool Grab(Item item, List<UI_Inventory> uis_to_ignore = null)
+    public virtual bool Grab(Item item, List<UI_Inventory> uis_to_ignore = null)
     {
         // we check if we can add the item
         if (item == null) { return false; }
@@ -88,7 +91,7 @@ public class Inventory : MonoBehaviour
         }
 
         // we check if the item is already grabbed somewhere, if so we drop it
-        if (item.Grabbed && item.Inventory != null) { item.Inventory.Drop(item, uis_to_ignore); }
+        if (item.Grabbed && item.ParentInventory != null) { item.ParentInventory.Drop(item, uis_to_ignore); }
 
         // we add the item
         Items.Add(item);
@@ -105,7 +108,7 @@ public class Inventory : MonoBehaviour
 
         return true;
     }
-    public bool Drop(Item item, List<UI_Inventory> uis_to_ignore = null)
+    public virtual bool Drop(Item item, List<UI_Inventory> uis_to_ignore = null)
     {
         // we check if we can remove the item
         if (item == null) { return false; }
@@ -132,7 +135,7 @@ public class Inventory : MonoBehaviour
 
         return true;
     }
-    public bool Remove(Item item)
+    public virtual bool Remove(Item item)
     {
         // only for items that are going to be destroyed
 
@@ -175,9 +178,9 @@ public class Inventory : MonoBehaviour
             if (debug)
             {
                 Debug.Log(s + "we have an interactor : " + interactor.capable.name
-                + "\nand its inventory is " + interactor.capable.inventory.name);
+                + "\nand its inventory is " + interactor.capable.Inventory.name);
             }
-            return interactor.capable.inventory;
+            return interactor.capable.Inventory;
         }
 
 
@@ -220,15 +223,15 @@ public class Inventory : MonoBehaviour
 
                 s += "and it's open !!\n";
             }
-            else if (interactable.inventory == null)
+            else if (interactable.Inventory == null)
             {
                 if (debug) { Debug.LogWarning(s + "but it doesn't have an inventory\n"); }
                 return null;
             }
 
             // we return the interactable's inventory
-            if (debug) { Debug.Log(s + "and its inventory is " + interactable.inventory.name + "\n\n"); }
-            return interactable.inventory;
+            if (debug) { Debug.Log(s + "and its inventory is " + interactable.Inventory.name + "\n\n"); }
+            return interactable.Inventory;
         }
 
         // we return null
@@ -253,7 +256,7 @@ public class Inventory : MonoBehaviour
         }
         return items;
     }
-    public List<Item> GetItemsByRule(string rule="",bool exclusion_rule = false)
+    public List<Item> GetItemsByRule(string rule = "", bool exclusion_rule = false)
     {
         // we get all the items that match the rule
         List<Item> items = new List<Item>();
@@ -264,4 +267,25 @@ public class Inventory : MonoBehaviour
         }
         return items;
     }
+
+    // UI MANAGEMENT
+    public void RemoveUI(UI_Inventory ui_inventory)
+    {
+        if (!uis.Contains(ui_inventory)) { return; }
+
+        // we remove the UI from the list
+        uis.Remove(ui_inventory);
+        ui_inventory.Inventory = null;
+        if (debug) { Debug.Log("(Inventory) " + capable.name + " removed UI_Inventory : " + ui_inventory.name); }
+    }
+    public void AddUI(UI_Inventory ui_inventory)
+    {
+        if (uis.Contains(ui_inventory)) { return; }
+
+        // we add the UI to the list
+        uis.Add(ui_inventory);
+        ui_inventory.Inventory = this;
+        if (debug) { Debug.Log("(Inventory) " + capable.name + " added UI_Inventory : " + ui_inventory.name); }
+    }
+
 }

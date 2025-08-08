@@ -20,7 +20,7 @@ public class UI_Module : UI_Item
     }
 
     // ITEM SETTING
-    public override void setItem(Item item)
+    protected override void setItem(Item item)
     {
         // on charge le sprite de l'image
         current_item_sprite = bank.GetModuleSprite(item.Reference);

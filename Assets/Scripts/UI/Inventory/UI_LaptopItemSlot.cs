@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class UI_LaptopItemSlot : UI_Item, Awakable
@@ -13,6 +14,20 @@ public class UI_LaptopItemSlot : UI_Item, Awakable
         Instance = this;
 
         if (log) { Debug.Log($"(UI_LaptopItemSlot) {name} initialized as singleton"); }
+
+        // we subscribe to our own OnItemChanged event
+        this.OnItemChanged += HandleLaptopChanged;
+    }
+
+    // LOGGING
+    private void HandleLaptopChanged(List<Item> items)
+    {
+        if (items == null || items.Count == 0)
+        {
+            Debug.Log($"(UI_LaptopItemSlot) Removed laptop from slot");
+            return;
+        }
+        Debug.Log($"(UI_LaptopItemSlot) Laptop changed, new item: {items[0].Reference} with {items[0].Inventory.Count} modules installed");
     }
 
     // HAS LAPTOP

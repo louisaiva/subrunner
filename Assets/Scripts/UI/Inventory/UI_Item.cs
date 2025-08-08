@@ -101,13 +101,22 @@ public class UI_Item : UI_Slot
         OnItemChanged?.Invoke(items);
         return true;
     }
+    public void Clear()
+    {
+        // we clear the items
+        items.Clear();
+
+        // we update the UI
+        update_ui_qty();
+
+        // we clear the UI
+        ClearUI();
+    }
 
     // ITEM SWITCHING
     public void SwitchItems(List<Item> items)
     {
-        // we clear the ui
-        ClearUI();
-        this.items.Clear();
+        Clear();
 
         // we add the items to the slot
         if (items.Count > 0)
@@ -139,7 +148,7 @@ public class UI_Item : UI_Slot
         // we show or hide the text
         quantity_text.gameObject.SetActive(Quantity > 1);
     }
-    public virtual void setItem(Item item)
+    protected virtual void setItem(Item item)
     {
         // on charge le sprite de l'image
         current_item_sprite = bank.GetSprite(item.Reference);
@@ -170,7 +179,7 @@ public class UI_Item : UI_Slot
         RectTransform rt = item_image.GetComponent<RectTransform>();
         rt.sizeDelta = new Vector2(sprite.rect.width, sprite.rect.height);
     }
-    public void ClearUI()
+    protected void ClearUI()
     {
         // on change le sprite de l'image
         set_ui(null);

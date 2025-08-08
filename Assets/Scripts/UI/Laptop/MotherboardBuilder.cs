@@ -96,12 +96,17 @@ using UnityEngine.UI;
         // we size the slots_parent
         slots_parent.sizeDelta = new Vector2(width, height);
 
+        // todo : cache those getcomponent -> motherboard is disabled so no awake, maybe assign it to awaker manager ?
+
         // we set the slots_parent column count
         slots_parent.GetComponent<GridLayoutGroup>().constraintCount = columns;
 
         // we check how many children we have
         int module_slots = columns * rows;
         UI_ModulePool module_pool = slots_parent.GetComponent<UI_ModulePool>();
+
+        // we apply the slots nb to the module_pool max_slots (bcz it is non scalable)
+        module_pool.MaxSlots = module_slots;
         if (module_pool.Count > module_slots && Application.isPlaying)
         {
             module_pool.DropOverheadSlots();

@@ -76,14 +76,14 @@ public class DieCapacity : Capacity
         being.body_collider.gameObject.layer = LayerMask.NameToLayer("Meat");
 
         // 1 - DROP ITEMS
-        if (being.inventory != null && being.inventory.Count > 0)
+        if (being.Inventory != null && being.Inventory.Count > 0)
         {
             // we get the drop capacity
             DropCapacity dropper = being.GetCapacity<DropCapacity>();
             if (dropper == null)
             {
                 Debug.LogError("(DieCapacity) " + being.name + " has no DropCapacity, cannot drop items");
-                being.inventory.Items.Clear();
+                being.Inventory.Items.Clear();
             }
             else
             {
@@ -93,12 +93,12 @@ public class DieCapacity : Capacity
 
             // we drop all items
             int i = 0;
-            while (i < being.inventory.Items.Count)
+            while (i < being.Inventory.Items.Count)
             {
-                Item item = being.inventory.Items[i];
+                Item item = being.Inventory.Items[i];
                 if (item == null)
                 {
-                    being.inventory.Items.RemoveAt(i);
+                    being.Inventory.Items.RemoveAt(i);
                     continue; // skip null items
                 }
 

@@ -37,6 +37,18 @@ public class HackableDoor : Door, Hackable
     {
         if (!Locked) { base.OnInteract(interactor); return; }
 
+        // we are locked, we check if interactor has a laptop with the right key (instant hack)
+        if (interactor is Hacker hacker)
+        {
+            Laptop laptop = hacker.Laptop;
+            if (laptop != null && laptop.HasKeyFor(this))
+            {
+                Unlock();
+                base.OnInteract(interactor);
+                return;
+            }
+        }
+
         // else we are locked we can't interact.
         if (debug) { Debug.Log($"(HackableDoor) {interactor.name} tried to interact with locked door {name}"); }
 
