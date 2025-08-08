@@ -18,7 +18,7 @@ public class HoverCapacity : Capacity
 
         // we check if the capable is locked or not
         played_animation = "hover";
-        if (this.capable is Hackable hackable && hackable.Locked) { played_animation = "hover_locked"; }
+        if (this.capable is Lockable lockable && lockable.Locked) { played_animation = "hover_locked"; }
 
         // we play the animation
         this.capable.anim_player.Play(played_animation);

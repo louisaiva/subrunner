@@ -27,7 +27,7 @@ public class InputManager : Singleton<InputManager>
     protected override void Awake()
     {
         base.Awake();
-        
+
         // on crée les inputs
         inputs = new PlayerInputActions();
 
@@ -41,6 +41,7 @@ public class InputManager : Singleton<InputManager>
         inputs.any.keyboard.performed += ctx => setInputType("keyboard");
         inputs.any.gamepad.performed += ctx => setInputType("gamepad");
 
+        // inputs.perso.move.performed += ctx => MovementRawInputs = ctx.ReadValue<Vector2>();
     }
 
     void Update()
@@ -51,7 +52,7 @@ public class InputManager : Singleton<InputManager>
             s += "- perso : " + inputs.perso.enabled + "\n\t";
             s += "- ui : " + inputs.UI.enabled + "\n\t";
             s += "- any : " + inputs.any.enabled + "\n\t";
-            s += "- enhanced_perso : " + inputs.enhanced_perso.enabled + "\n\t";
+            // s += "- enhanced_perso : " + inputs.enhanced_perso.enabled + "\n\t";
             s += "- menus : " + inputs.menus.enabled + "\n\t";
             Debug.Log(s);
         }
@@ -98,7 +99,7 @@ public class InputManager : Singleton<InputManager>
         else if (inputMap == "UI") { action = inputs.UI.Get()[action_name]; }
         else if (inputMap == "any") { action = inputs.any.Get()[action_name]; }
         else if (inputMap == "menus") { action = inputs.menus.Get()[action_name]; }
-        else if (inputMap == "enhanced_perso") { action = inputs.enhanced_perso.Get()[action_name]; }
+        // else if (inputMap == "enhanced_perso") { action = inputs.enhanced_perso.Get()[action_name]; }
 
         // on debug
         if (debug) { Debug.Log("(InputManager) getting action : " + action_name + " from " + inputMap + " returned " + action); }
@@ -115,4 +116,7 @@ public class InputManager : Singleton<InputManager>
         return current_input_type;
     }
 
+
+    // INPUTS GETTERS
+    public Vector2 MovementRawInputs { get => inputs.perso.move.ReadValue<Vector2>(); }
 }

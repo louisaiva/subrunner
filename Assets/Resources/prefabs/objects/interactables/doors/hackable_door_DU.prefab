@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 5183794512506927880}
   - component: {fileID: 531679847975909350}
   m_Layer: 14
-  m_Name: hack_collider
+  m_Name: processor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -103,12 +103,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4613889439640014192}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2940856336932751042}
+  m_Father: {fileID: 7320133758028458334}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &531679847975909350
 CircleCollider2D:
@@ -265,6 +265,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5901721342173668361}
+  - {fileID: 5183794512506927880}
   - {fileID: 2940856336932751042}
   - {fileID: 6593078494629469334}
   - {fileID: 2616619868497128967}
@@ -733,10 +734,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5183794512506927880}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
 --- !u!4 &2940856336932751042 stripped

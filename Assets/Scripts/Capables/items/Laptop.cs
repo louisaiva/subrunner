@@ -32,7 +32,7 @@ public class Laptop : Item, Usable
     }
 
     // KEYS MANAGEMENT
-    public bool HasKeyFor(Hackable target)
+    public bool HasKeyFor(Lockable target)
     {
         List<Key> keys = get_keys();
         if (log_keys)

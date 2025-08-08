@@ -88,7 +88,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""conso1"",
@@ -755,76 +755,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             ]
         },
         {
-            ""name"": ""enhanced_perso"",
-            ""id"": ""496fb706-37aa-4ede-8ba7-f8a5dfa615a7"",
-            ""actions"": [
-                {
-                    ""name"": ""hack"",
-                    ""type"": ""Button"",
-                    ""id"": ""7ccb0cc6-c229-46ca-974b-ed8cb2b5d5ef"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""hackDirection"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""d41e8cc6-f0a5-4d64-b135-7e5433b38655"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""30be72d1-30ce-48e3-aa76-32f91b036399"",
-                    ""path"": ""<Gamepad>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""xbox"",
-                    ""action"": ""hack"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3454cd75-ad46-4aa5-9531-800fc03b3ee8"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""keyboard"",
-                    ""action"": ""hack"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f9f1a2ee-e589-4195-88f3-118d8282c227"",
-                    ""path"": ""<Mouse>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""keyboard"",
-                    ""action"": ""hackDirection"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""21447ab3-5393-4a27-ae78-45de43cee0bc"",
-                    ""path"": ""<Gamepad>/rightStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""xbox"",
-                    ""action"": ""hackDirection"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
             ""name"": ""any"",
             ""id"": ""b1da777d-2f34-478e-a36e-cbf8e11ead69"",
             ""actions"": [
@@ -1355,6 +1285,89 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""utils"",
+            ""id"": ""cfffe889-8fca-495f-957e-572fe068096a"",
+            ""actions"": [
+                {
+                    ""name"": ""move"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""d8cfe7b2-472e-4f1f-a2e9-ebafa9e790af"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""main"",
+                    ""id"": ""9dc9d016-3e20-4103-90a6-b25b343e6ed4"",
+                    ""path"": ""2DVector(mode=2)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""e99db5e3-0f6e-467e-94e0-c37d6e0c23ed"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""48b1ec2a-cbd0-4554-9320-20def950056a"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""393eae4a-d16f-410a-b30c-dd631fe2dffd"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""063f785b-496d-4c7e-8803-a99e94318c02"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""305cb6f3-932b-48ca-98a8-2d59e18fa10c"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -1418,10 +1431,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_UI_conso2 = m_UI.FindAction("conso2", throwIfNotFound: true);
         m_UI_conso3 = m_UI.FindAction("conso3", throwIfNotFound: true);
         m_UI_conso4 = m_UI.FindAction("conso4", throwIfNotFound: true);
-        // enhanced_perso
-        m_enhanced_perso = asset.FindActionMap("enhanced_perso", throwIfNotFound: true);
-        m_enhanced_perso_hack = m_enhanced_perso.FindAction("hack", throwIfNotFound: true);
-        m_enhanced_perso_hackDirection = m_enhanced_perso.FindAction("hackDirection", throwIfNotFound: true);
         // any
         m_any = asset.FindActionMap("any", throwIfNotFound: true);
         m_any_keyboard = m_any.FindAction("keyboard", throwIfNotFound: true);
@@ -1432,15 +1441,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_menus_pause = m_menus.FindAction("pause", throwIfNotFound: true);
         m_menus_map = m_menus.FindAction("map", throwIfNotFound: true);
         m_menus_hacking = m_menus.FindAction("hacking", throwIfNotFound: true);
+        // utils
+        m_utils = asset.FindActionMap("utils", throwIfNotFound: true);
+        m_utils_move = m_utils.FindAction("move", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
     {
         UnityEngine.Debug.Assert(!m_perso.enabled, "This will cause a leak and performance issues, PlayerInputActions.perso.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, PlayerInputActions.UI.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_enhanced_perso.enabled, "This will cause a leak and performance issues, PlayerInputActions.enhanced_perso.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_any.enabled, "This will cause a leak and performance issues, PlayerInputActions.any.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_menus.enabled, "This will cause a leak and performance issues, PlayerInputActions.menus.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_utils.enabled, "This will cause a leak and performance issues, PlayerInputActions.utils.Disable() has not been called.");
     }
 
     public void Dispose()
@@ -1751,60 +1763,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     }
     public UIActions @UI => new UIActions(this);
 
-    // enhanced_perso
-    private readonly InputActionMap m_enhanced_perso;
-    private List<IEnhanced_persoActions> m_Enhanced_persoActionsCallbackInterfaces = new List<IEnhanced_persoActions>();
-    private readonly InputAction m_enhanced_perso_hack;
-    private readonly InputAction m_enhanced_perso_hackDirection;
-    public struct Enhanced_persoActions
-    {
-        private @PlayerInputActions m_Wrapper;
-        public Enhanced_persoActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @hack => m_Wrapper.m_enhanced_perso_hack;
-        public InputAction @hackDirection => m_Wrapper.m_enhanced_perso_hackDirection;
-        public InputActionMap Get() { return m_Wrapper.m_enhanced_perso; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(Enhanced_persoActions set) { return set.Get(); }
-        public void AddCallbacks(IEnhanced_persoActions instance)
-        {
-            if (instance == null || m_Wrapper.m_Enhanced_persoActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_Enhanced_persoActionsCallbackInterfaces.Add(instance);
-            @hack.started += instance.OnHack;
-            @hack.performed += instance.OnHack;
-            @hack.canceled += instance.OnHack;
-            @hackDirection.started += instance.OnHackDirection;
-            @hackDirection.performed += instance.OnHackDirection;
-            @hackDirection.canceled += instance.OnHackDirection;
-        }
-
-        private void UnregisterCallbacks(IEnhanced_persoActions instance)
-        {
-            @hack.started -= instance.OnHack;
-            @hack.performed -= instance.OnHack;
-            @hack.canceled -= instance.OnHack;
-            @hackDirection.started -= instance.OnHackDirection;
-            @hackDirection.performed -= instance.OnHackDirection;
-            @hackDirection.canceled -= instance.OnHackDirection;
-        }
-
-        public void RemoveCallbacks(IEnhanced_persoActions instance)
-        {
-            if (m_Wrapper.m_Enhanced_persoActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        public void SetCallbacks(IEnhanced_persoActions instance)
-        {
-            foreach (var item in m_Wrapper.m_Enhanced_persoActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_Enhanced_persoActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    public Enhanced_persoActions @enhanced_perso => new Enhanced_persoActions(this);
-
     // any
     private readonly InputActionMap m_any;
     private List<IAnyActions> m_AnyActionsCallbackInterfaces = new List<IAnyActions>();
@@ -1928,6 +1886,52 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         }
     }
     public MenusActions @menus => new MenusActions(this);
+
+    // utils
+    private readonly InputActionMap m_utils;
+    private List<IUtilsActions> m_UtilsActionsCallbackInterfaces = new List<IUtilsActions>();
+    private readonly InputAction m_utils_move;
+    public struct UtilsActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public UtilsActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @move => m_Wrapper.m_utils_move;
+        public InputActionMap Get() { return m_Wrapper.m_utils; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(UtilsActions set) { return set.Get(); }
+        public void AddCallbacks(IUtilsActions instance)
+        {
+            if (instance == null || m_Wrapper.m_UtilsActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_UtilsActionsCallbackInterfaces.Add(instance);
+            @move.started += instance.OnMove;
+            @move.performed += instance.OnMove;
+            @move.canceled += instance.OnMove;
+        }
+
+        private void UnregisterCallbacks(IUtilsActions instance)
+        {
+            @move.started -= instance.OnMove;
+            @move.performed -= instance.OnMove;
+            @move.canceled -= instance.OnMove;
+        }
+
+        public void RemoveCallbacks(IUtilsActions instance)
+        {
+            if (m_Wrapper.m_UtilsActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IUtilsActions instance)
+        {
+            foreach (var item in m_Wrapper.m_UtilsActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_UtilsActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public UtilsActions @utils => new UtilsActions(this);
     private int m_xboxSchemeIndex = -1;
     public InputControlScheme xboxScheme
     {
@@ -1974,11 +1978,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnConso3(InputAction.CallbackContext context);
         void OnConso4(InputAction.CallbackContext context);
     }
-    public interface IEnhanced_persoActions
-    {
-        void OnHack(InputAction.CallbackContext context);
-        void OnHackDirection(InputAction.CallbackContext context);
-    }
     public interface IAnyActions
     {
         void OnKeyboard(InputAction.CallbackContext context);
@@ -1990,5 +1989,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnPause(InputAction.CallbackContext context);
         void OnMap(InputAction.CallbackContext context);
         void OnHacking(InputAction.CallbackContext context);
+    }
+    public interface IUtilsActions
+    {
+        void OnMove(InputAction.CallbackContext context);
     }
 }

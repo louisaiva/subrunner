@@ -66,7 +66,7 @@
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "conso1",
@@ -733,76 +733,6 @@
             ]
         },
         {
-            "name": "enhanced_perso",
-            "id": "496fb706-37aa-4ede-8ba7-f8a5dfa615a7",
-            "actions": [
-                {
-                    "name": "hack",
-                    "type": "Button",
-                    "id": "7ccb0cc6-c229-46ca-974b-ed8cb2b5d5ef",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "hackDirection",
-                    "type": "PassThrough",
-                    "id": "d41e8cc6-f0a5-4d64-b135-7e5433b38655",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "30be72d1-30ce-48e3-aa76-32f91b036399",
-                    "path": "<Gamepad>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "hack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "3454cd75-ad46-4aa5-9531-800fc03b3ee8",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard",
-                    "action": "hack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "f9f1a2ee-e589-4195-88f3-118d8282c227",
-                    "path": "<Mouse>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard",
-                    "action": "hackDirection",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "21447ab3-5393-4a27-ae78-45de43cee0bc",
-                    "path": "<Gamepad>/rightStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "hackDirection",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
             "name": "any",
             "id": "b1da777d-2f34-478e-a36e-cbf8e11ead69",
             "actions": [
@@ -1329,6 +1259,89 @@
                     "processors": "",
                     "groups": "xbox",
                     "action": "hacking",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "utils",
+            "id": "cfffe889-8fca-495f-957e-572fe068096a",
+            "actions": [
+                {
+                    "name": "move",
+                    "type": "PassThrough",
+                    "id": "d8cfe7b2-472e-4f1f-a2e9-ebafa9e790af",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "main",
+                    "id": "9dc9d016-3e20-4103-90a6-b25b343e6ed4",
+                    "path": "2DVector(mode=2)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "e99db5e3-0f6e-467e-94e0-c37d6e0c23ed",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "48b1ec2a-cbd0-4554-9320-20def950056a",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "393eae4a-d16f-410a-b30c-dd631fe2dffd",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "063f785b-496d-4c7e-8803-a99e94318c02",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "305cb6f3-932b-48ca-98a8-2d59e18fa10c",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "move",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

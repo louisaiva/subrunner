@@ -103,46 +103,18 @@ public class Hackray : MonoBehaviour
         // update transform
         Update();
     }
-
-
-    /* public void SetHackerAndTarget(Transform hacker, Transform target, Vector3 hacker_offset = default, Vector3 target_offset = default)
+    public void SetMaterial(Material material)
     {
-        // set hacker and target
-        this.hacker = hacker;
-        this.target = target;
-
-        // set offsets
-        // hacker_offset = hacker.transform.Find("center").transform.localPosition;
-        // target_offset = target.transform.Find("hack_point").transform.localPosition;
-
-        if (hacker_offset != default) { this.hacker_offset = hacker_offset; }
-        this.target_offset = target_offset;
-
-        // enable sprite renderer
-        sr.GetComponent<SpriteRenderer>().enabled = true;
-
-        // update transform
-        // updateTransform();
-
-    } */
-    public void RemoveHackerAndTarget()
+        // set the material of the sprite renderer
+        sr.GetComponent<SpriteRenderer>().material = material;
+    }
+    public void SetColor(Color color)
     {
-        // on désactive le sprite rrenderer
-        sr.GetComponent<SpriteRenderer>().enabled = false;
-
-        // on enlève le hacker et la target
-        hacker = null;
-        target = null;
-
-        // on enlève les offsets
-        hacker_offset = Vector3.zero;
-        target_offset = Vector3.zero;
-
+        // set the color of the sprite renderer
+        sr.GetComponent<SpriteRenderer>().color = color;
     }
 
-
     // CALLBACKS
-
     private void handleLaptopDropped()
     {
         this.hacker_offset = laptop.GetCapacity<HackCapacity>().transform.localPosition;
@@ -165,5 +137,4 @@ public class Hackray : MonoBehaviour
         laptop.OnDropped -= handleLaptopDropped;
         laptop.OnGrabbed -= handleLaptopGrabbed;
     }
-
 }

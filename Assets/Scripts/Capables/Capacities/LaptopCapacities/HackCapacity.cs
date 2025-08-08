@@ -24,15 +24,15 @@ public class HackCapacity : Capacity
     // this stores the list of all the hackables we scanned & their vulnerabilites found !
 
     [Header("Hackrays")]
-    [SerializeField] private GameObject hackray_prefab;
+    public GameObject hackray_prefab;
+    [SerializeField] private Color hackray_color = Color.white;
+    [SerializeField] private Color hover_hackray_color = Color.yellow;
+    private Hackray hover_hackray; // this is the hackray that is used to hover the target
     protected Dictionary<Hack, Hackray> hackrays = new Dictionary<Hack, Hackray>();
 
 
     [Header("Components")]
     [SerializeField] private Laptop laptop;
-    [SerializeField] private Being being;
-    [SerializeField] private AnimPlayer anim_player;
-    [SerializeField] private float hacking_animation_duration = 2f; // duration of the hacking animation
     [SerializeField] private CircleCollider2D hack_collider;
 
     [Header("Logs")]
@@ -63,15 +63,78 @@ public class HackCapacity : Capacity
 
         // we set the hovered target
         hovered_target = target;
+
+        // we update the hover_hackray or create one
+        if (hover_hackray != null)
+        {
+            hover_hackray.SetLaptopAndHackable(laptop, target);
+            return;
+        }
+        hover_hackray = create_hackray(target,true);        
     }
     public void Deselect()
     {
         // we reset the hovered target
-        if (debug) { Debug.Log($"(HackCapacity) {capable.name} stopped hovering {hovered_target.name}."); }
+        if (debug) { Debug.Log($"(HackCapacity) deselected target"); }
         hovered_target = null;
+
+        // we destroy the hover_hackray
+        if (hover_hackray != null)
+        {
+            Destroy(hover_hackray.gameObject);
+            hover_hackray = null;
+        }
     }
 
+    // UPDATE
+    protected override void Update()
+    {
+        base.Update();
 
+        // we cycle through all the running exploits and we check few things
+        for (int i = running_hacks.Count - 1; i >= 0; --i)
+        {
+            Hack hack = running_hacks[i];
+
+            // checks if we are too far away from the target
+            if (Vector3.Distance(transform.position, hack.target.transform.position) > hack_collider.radius)
+            {
+                if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} is too far away from {hack.target.name} to continue the hack."); }
+
+                // we remove the hackray
+                Destroy(hackrays[hack].gameObject);
+                hackrays.Remove(hack);
+
+                // we remove the hack from the running hacks
+                hack.Fail();
+                running_hacks.RemoveAt(i);
+                continue;
+            }
+
+            // we check if the hack is done
+            if (hack.state == HackState.Completed || hack.state == HackState.Failed)
+            {
+                if (debug) { Debug.Log($"(HackCapacity) {capable.name} finished hacking {hack.target.name} with exploit {hack.exploit.name}."); }
+
+                // we remove the hackray
+                Destroy(hackrays[hack].gameObject);
+                hackrays.Remove(hack);
+
+                // we remove the hack from the running hacks
+                running_hacks.RemoveAt(i);
+                continue;
+            }
+
+            // we update the progress of the hack
+            hack.progress += Time.deltaTime / hack.duration * 100f;
+            if (log_hack_progress)
+            {
+                Debug.Log($"(HackCapacity) updating exploit {hack.exploit.name}. Progress: {hack.progress}%");
+            }
+            // we check if the hack is done
+            if (hack.progress >= 100f) { hack.Finish(); }
+        }
+    }
 
     // USE
     public override void Use(Capable capable)
@@ -120,7 +183,7 @@ public class HackCapacity : Capacity
         RunExploit(hack);
     }
 
-    // CONNECTION
+    // HACKING HIGH LEVEL
     public bool Connect(Hackable target)
     {
         // we check if the target is in range
@@ -131,8 +194,6 @@ public class HackCapacity : Capacity
         }
         return true;
     }
-
-    // SCANNING
     public List<Exploit> Scan(Hackable target)
     {
         // if we have some vulnerabilities found for this hackable we clear them
@@ -140,7 +201,7 @@ public class HackCapacity : Capacity
 
         // we check if we already have the key for this target (instant hack)
         string log_exploits = "";
-        if (laptop.HasKeyFor(target))
+        if (target is Lockable lockable && laptop.HasKeyFor(lockable))
         {
             vulnerabilities[target].Add(exploits[0]);
             log_exploits += $"- {exploits[0].name} (instant hack)\n";
@@ -159,8 +220,6 @@ public class HackCapacity : Capacity
         if (debug) { Debug.Log($"(HackCapacity) {capable.name} scanned {target.name} : {vulnerabilities[target].Count} vulnerabilities found\n{log_exploits}"); }
         return vulnerabilities[target];
     }
-
-    // HACKING
     public void RunExploit(Hack hack)
     {
         // we run the hack
@@ -174,65 +233,31 @@ public class HackCapacity : Capacity
         running_hacks.Add(hack);
         hack.target.OnHackStarted(hack);
 
-
         // we create a hackray for this hack
-        Hackray hackray = (Instantiate(hackray_prefab, transform) as GameObject).GetComponent<Hackray>();
-        hackray.name = "hackray_" + hack.target.name + "_" + hack.exploit.name;
-        // hackray.SetHackerAndTarget(transform, hack.target.transform);
-        hackray.SetLaptopAndHackable(laptop, hack.target);
-        hackrays[hack] = hackray;
+        hackrays[hack] = create_hackray(hack.target);
     }
 
-    // UPDATE
-    protected override void Update()
+    // HACKRAY MANAGEMENT
+    private Hackray create_hackray(Hackable target, bool is_hover = false)
     {
-        base.Update();
+        // we create a hackray for this hack
+        Hackray hackray = Instantiate(hackray_prefab, transform).GetComponent<Hackray>();
+        hackray.name = is_hover ? "hover_hackray" : "hackray_" + target.name;
+        hackray.SetLaptopAndHackable(laptop, target);
 
-        // we cycle through all the running exploits and we check few things
-        for (int i = running_hacks.Count - 1; i >= 0; --i)
+        // apply color & material
+        if (is_hover)
         {
-            Hack hack = running_hacks[i];
-
-            // checks if we are too far away from the target
-            if (Vector3.Distance(transform.position, hack.target.transform.position) > hack_collider.radius)
-            {
-                if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} is too far away from {hack.target.name} to continue the hack."); }
-                
-                // we remove the hackray
-                Destroy(hackrays[hack].gameObject);
-                hackrays.Remove(hack);
-
-                // we remove the hack from the running hacks
-                hack.Fail();
-                running_hacks.RemoveAt(i);
-                continue;
-            }
-
-            // we check if the hack is done
-            if (hack.state == HackState.Completed || hack.state == HackState.Failed)
-            {
-                if (debug) { Debug.Log($"(HackCapacity) {capable.name} finished hacking {hack.target.name} with exploit {hack.exploit.name}."); }
-
-                // we remove the hackray
-                Destroy(hackrays[hack].gameObject);
-                hackrays.Remove(hack);
-
-                // we remove the hack from the running hacks
-                running_hacks.RemoveAt(i);
-                continue;
-            }
-
-            // we update the progress of the hack
-            hack.progress += Time.deltaTime / hack.duration * 100f;
-            if (log_hack_progress)
-            {
-                Debug.Log($"(HackCapacity) updating exploit {hack.exploit.name}. Progress: {hack.progress}%");
-            }
-            // we check if the hack is done
-            if (hack.progress >= 100f) { hack.Finish(); }
+            hackray.SetColor(hover_hackray_color);
         }
-    }
+        else
+        {
+            hackray.SetColor(hackray_color);
+            hackray.SetMaterial(GetComponent<HackrayMaterialVariation>().hackray_material);
+        }
 
+        return hackray;
+    }
 }
 
 

@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.Rendering.Universal;
 
 
-public class HackableDoor : Door, Hackable
+public class HackableDoor : Door, Lockable
 {
     [Header("Locking")]
     [SerializeField] private float locking_interval = 5f; // the time before the door is locked again after being unlocked
