@@ -24,10 +24,10 @@ public class UI_LaptopItemSlot : UI_Item, Awakable
     {
         if (items == null || items.Count == 0)
         {
-            Debug.Log($"(UI_LaptopItemSlot) Removed laptop from slot");
+            if (log) { Debug.Log($"(UI_LaptopItemSlot) Removed laptop from slot"); }
             return;
         }
-        Debug.Log($"(UI_LaptopItemSlot) Laptop changed, new item: {items[0].Reference} with {items[0].Inventory.Count} modules installed");
+        if (log) { Debug.Log($"(UI_LaptopItemSlot) Laptop changed, new item: {items[0].Reference} with {items[0].Inventory.Count} modules installed"); }
     }
 
     // HAS LAPTOP

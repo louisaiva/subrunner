@@ -13,10 +13,6 @@ public class Hackray : MonoBehaviour
     protected Vector3 hacker_offset;
     protected Vector3 target_offset;
 
-    // callbacks
-    // private event System.Action laptop_dropped_callback;
-    // private event System.Action<Capable> laptop_grabbed_callback;
-
 
     [Header("Components")]
     protected SpriteRenderer sr;
@@ -25,10 +21,6 @@ public class Hackray : MonoBehaviour
     void Awake()
     {
         sr = transform.Find("sr").GetComponent<SpriteRenderer>();
-
-        // create callbacks
-        // laptop_dropped_callback = handleLaptopDropped;
-        // laptop_grabbed_callback = handleLaptopGrabbed;
     }
 
     // UPDATE
@@ -88,14 +80,13 @@ public class Hackray : MonoBehaviour
         this.target = hackable.transform;
 
         // set offsets
-        target_offset = hackable.HackPoint;
+        target_offset = hackable.transform.Find("processor").localPosition;
         if (laptop.Grabbed) { handleLaptopGrabbed(laptop.Holder); }
         else { handleLaptopDropped(); }
 
         // register to events
         laptop.OnDropped += handleLaptopDropped;
         laptop.OnGrabbed += handleLaptopGrabbed;
-
 
         // enable sprite renderer
         sr.GetComponent<SpriteRenderer>().enabled = true;
@@ -117,18 +108,18 @@ public class Hackray : MonoBehaviour
     // CALLBACKS
     private void handleLaptopDropped()
     {
-        this.hacker_offset = laptop.GetCapacity<HackCapacity>().transform.localPosition;
+        this.hacker_offset = laptop.transform.Find("processor").localPosition;
     }
     private void handleLaptopGrabbed(Capable grabber)
     {
         if (grabber is not Being)
         {
-            this.hacker_offset = laptop.GetCapacity<HackCapacity>().transform.localPosition;
+            this.hacker_offset = laptop.transform.Find("processor").localPosition;
             return;
         }
 
-        // the grabber is a Being. we find the body
-        this.hacker_offset = grabber.transform.Find("body").localPosition;
+        // the grabber is a Being. we find the processor
+        this.hacker_offset = grabber.transform.Find("processor").localPosition;
     }
     private void OnDisable()
     {

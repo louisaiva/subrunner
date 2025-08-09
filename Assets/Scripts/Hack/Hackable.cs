@@ -6,6 +6,7 @@ public interface Hackable
 
     // unity
     GameObject gameObject { get; }
+    SpriteRenderer spriteRenderer { get; }
     Transform transform { get; }
     string name { get => gameObject.name; }
 
@@ -13,11 +14,16 @@ public interface Hackable
     int SecurityLevel { get; }
     bool IsVulnerableTo(Exploit exploit);
 
+    // TARGETED
+    Material TargetMaterial { get; }
+    Material DefaultMaterial { get; }
+
     // BEING HACKED
     void OnHackStarted(Hack hack);
     void OnHackCompleted(Hack hack);
     void OnHackFailed(Hack hack);
-    Vector3 HackPoint { get; } // the local position offset for the hackray to point to
+    // Vector3 HackPoint { get; } // the local position offset for the hackray to point to
+    // HackableSlot HackableSlot { get; }
 }
 
 public interface Lockable : Hackable

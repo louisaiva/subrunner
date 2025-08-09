@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class UI_Hacking : UI_Pool
 {
@@ -24,19 +25,35 @@ public class UI_Hacking : UI_Pool
     // EXPLOIT INPUT
     [SerializeField] private InputActionReference exploitInput;
     private InputAction exploitAction;
-    private event Action<InputAction.CallbackContext> exploitCallback; // revive Callback is for reviving items when inside a big inventory -> X
-    
-    // DROP LAPTOP INPUT
+    private event Action<InputAction.CallbackContext> exploitCallback;
 
+    // NAVIGATION INPUT
+    [SerializeField] private InputActionReference navigationInput;
+    private InputAction navigationAction;
+    private event Action<InputAction.CallbackContext> navigationCallback;
+
+    [Header("Components")]
+    [SerializeField] private HackNavigator navigator;
 
     // START
     protected override void Start()
     {
+        // we check if we have a navigator
+        if (navigator == null)
+        {
+            Debug.LogError("(UI_Hacking) No HackNavigator found on the UI_Hacking component. Please assign one in the inspector.");
+            return;
+        }
+
         // we get the action & create the callbacks
         exploitAction = InputManager.Instance.GetAction(exploitInput);
         exploitCallback = ctx => HandleExploitInput(ctx.ReadValue<float>());
 
-        if (log) { Debug.Log("(XboxNavigator) started & callbacks created"); }
+        // we get the navigation action & create the callbacks
+        navigationAction = InputManager.Instance.GetAction(navigationInput);
+        navigationCallback = ctx => navigator.HandleHackNavigationInput(ctx.ReadValue<Vector2>());
+
+        if (log) { Debug.Log("(UI_Hacking) started & callbacks created"); }
 
         base.Start();
     }
@@ -62,9 +79,18 @@ public class UI_Hacking : UI_Pool
         // we set the callbacks
         exploitAction.performed += exploitCallback;
         await base.show_pool(duration);
+
+
+        // we set the callbacks & enable HackNavigator
+        navigationAction.performed += navigationCallback;
+        navigator.Enable();
     }
     protected override async Awaitable hide_pool(float duration)
     {
+        // we disable navigator
+        navigator.Disable();
+        navigationAction.performed -= navigationCallback;
+
         // we remove the callbacks
         exploitAction.performed -= exploitCallback;
         await base.hide_pool(duration);

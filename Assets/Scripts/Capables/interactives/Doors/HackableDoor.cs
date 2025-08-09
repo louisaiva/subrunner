@@ -5,20 +5,34 @@ using UnityEngine.Rendering.Universal;
 
 public class HackableDoor : Door, Lockable
 {
-    [Header("Locking")]
+    [Header("Lockable")]
     [SerializeField] private float locking_interval = 5f; // the time before the door is locked again after being unlocked
-
-    [Header("Hackable")]
     public bool Locked { get; private set; } = true;
     [SerializeField] private Key key; // the key needed to hack this door
     public string Key => key.key; // the type of key needed to hack this door
+
+
+    [Header("Hackable")]
     [SerializeField] private int securityLevel = 1;
     public int SecurityLevel => securityLevel;
 
-    public Vector3 HackPoint => transform.Find("hack_point").localPosition;
 
     [Header("Components")]
     private HoverCapacity hoverer;
+
+    // TARGETED
+    public SpriteRenderer spriteRenderer { get; private set; }
+    public Material TargetMaterial { get; private set; }
+    public Material DefaultMaterial { get; private set; }
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        DefaultMaterial = spriteRenderer.material;
+        TargetMaterial = Resources.Load<Material>("materials/targeted/hack_door");
+    }
 
 
     // START

@@ -19,7 +19,6 @@ public class UI_PanelIndicator : MonoBehaviour
 
     [Header("Logs")]
     [SerializeField] private bool log = false;
-    [SerializeField] private bool log_laptop = false;
 
     // AWAKE START
     public void InitStart(UI_PanelManager panelManager)

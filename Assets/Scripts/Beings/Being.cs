@@ -205,13 +205,16 @@ public class Being : Movable
         }
     }
 
-    
+    // DIE
+    public virtual void Die() {}
+
+
     // SETTERS
     public void AddLife(float life)
     {
         this.life += life;
         if (this.life > max_life)
-        { 
+        {
             // floating dmg
             floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddFloatingDmg(gameObject, max_life - this.life, transform.position);
 

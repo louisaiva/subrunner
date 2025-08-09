@@ -18,7 +18,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     // this quick inventory is showed when another inventory (chest, etc.) is opened
     // to allow the player to transfer items between inventories
     // only showed in-game (when the hud is visible)
-    private bool perso_quick_inventory_was_shown = true;
+    // private bool perso_quick_inventory_was_shown = true;
 
     [Header("Navigation")]
     [SerializeField] private bool can_navigate = true; // devient true lorsque la magnitude de l'input revient à 0, et false lorsque la magnitude de l'input est supérieure à 0.95f
@@ -135,26 +135,13 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
 
         // on ajoute le slottable à la liste des slottables
         slottables.Add(slottable.gameObject);
-
-        // on check si c'est l'ui d'un coffre
-        /* if (slottable is UI_Inventory inventory && inventory.Inventory != null
-        && inventory.Inventory.capable != null && inventory.Inventory.capable is Chest)
-        {
-            // on affiche le perso quick inventory si besoin
-            perso_quick_inventory_was_shown = perso_quick_inventory.gameObject.activeSelf;
-            if (!perso_quick_inventory_was_shown) { perso_quick_inventory.Show(); }
-
-            // on enable le slottable
-            Enable(perso_quick_inventory, true);
-        } */
-
+        
         // log
         if (debug) { Debug.Log("(UI_Navigator) enabled slotabble : " + slottable.gameObject.name); }
 
         // on verifie si on utilise le clavier ou le controller
         if (!input_manager.isUsingGamepad()) { return; }
         if (!navigate) { return; }
-        // if (slottable == perso_quick_inventory as I_UI_Slottable) { return; }
 
         // ON NAVIGUE
         current_slot_index = -1;
@@ -203,15 +190,6 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         update_slots();
         hover_slot(last_slot != null ? slots.IndexOf(last_slot) : -1);
 
-        // on cache le perso quick inventory si c'est le seul survivant
-        /* if (slottables.Count == 1 && perso_quick_inventory != null && slottables[0] == perso_quick_inventory.gameObject)
-        {
-            // on cache le perso quick inventory si besoin
-            if (!perso_quick_inventory_was_shown) { perso_quick_inventory.Hide(); }
-
-            // on disable le slottable
-            Disable(perso_quick_inventory);
-        } */
         // on regarde si on a encore des slottables
         if (slottables.Count == 0)
         {
@@ -543,6 +521,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     {
         if (slot == null) { return base_position; }
 
+        // if we are here we have a canvas slot -> means we have a recttransform
         Vector2 position = slot.GetComponent<RectTransform>().TransformPoint(slot.GetComponent<RectTransform>().rect.center);
         string s = "(UI_Navigator) get_position: slot " + slot.name + " position : " + position;
 
@@ -557,12 +536,6 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
 
         return position;
     }
-    /* private int get_slot_index(GameObject slot)
-    {
-        // get the index of the slot in the slots list
-        if (slot == null) { return -1; }
-        return slots.IndexOf(slot);
-    } */
     public Vector2 GetCurrentSlotPosition()
     {
         // get the position of the current slot

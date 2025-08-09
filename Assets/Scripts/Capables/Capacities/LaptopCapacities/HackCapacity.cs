@@ -26,8 +26,6 @@ public class HackCapacity : Capacity
     [Header("Hackrays")]
     public GameObject hackray_prefab;
     [SerializeField] private Color hackray_color = Color.white;
-    [SerializeField] private Color hover_hackray_color = Color.yellow;
-    private Hackray hover_hackray; // this is the hackray that is used to hover the target
     protected Dictionary<Hack, Hackray> hackrays = new Dictionary<Hack, Hackray>();
 
 
@@ -62,28 +60,16 @@ public class HackCapacity : Capacity
         }
 
         // we set the hovered target
+        if (debug) { Debug.Log($"(HackCapacity) selected target: {target.name}"); }
         hovered_target = target;
-
-        // we update the hover_hackray or create one
-        if (hover_hackray != null)
-        {
-            hover_hackray.SetLaptopAndHackable(laptop, target);
-            return;
-        }
-        hover_hackray = create_hackray(target,true);        
     }
     public void Deselect()
     {
+        if (hovered_target == null) { return; }
+
         // we reset the hovered target
         if (debug) { Debug.Log($"(HackCapacity) deselected target"); }
         hovered_target = null;
-
-        // we destroy the hover_hackray
-        if (hover_hackray != null)
-        {
-            Destroy(hover_hackray.gameObject);
-            hover_hackray = null;
-        }
     }
 
     // UPDATE
@@ -238,23 +224,16 @@ public class HackCapacity : Capacity
     }
 
     // HACKRAY MANAGEMENT
-    private Hackray create_hackray(Hackable target, bool is_hover = false)
+    private Hackray create_hackray(Hackable target)
     {
         // we create a hackray for this hack
         Hackray hackray = Instantiate(hackray_prefab, transform).GetComponent<Hackray>();
-        hackray.name = is_hover ? "hover_hackray" : "hackray_" + target.name;
+        hackray.name = "hackray_" + target.name;
         hackray.SetLaptopAndHackable(laptop, target);
 
         // apply color & material
-        if (is_hover)
-        {
-            hackray.SetColor(hover_hackray_color);
-        }
-        else
-        {
-            hackray.SetColor(hackray_color);
-            hackray.SetMaterial(GetComponent<HackrayMaterialVariation>().hackray_material);
-        }
+        hackray.SetColor(hackray_color);
+        hackray.SetMaterial(GetComponent<HackrayMaterialVariation>().hackray_material);
 
         return hackray;
     }

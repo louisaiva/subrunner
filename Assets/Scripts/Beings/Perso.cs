@@ -133,7 +133,7 @@ public class Perso : Being, Hacker
         base.Update();
 
         // si les perso_inputs sont desactivés on return (comme ça on garde la même vitesse)
-        if (!perso_inputs.enabled) { return; }
+        // if (!perso_inputs.enabled) { return; }
 
         // walk
         if (HasCapacity<WalkCapacity>())
@@ -257,7 +257,7 @@ public class Perso : Being, Hacker
 
         return true;
     }
-    public void Die()
+    public override void Die()
     {
 
         Debug.Log("YOU DIED");

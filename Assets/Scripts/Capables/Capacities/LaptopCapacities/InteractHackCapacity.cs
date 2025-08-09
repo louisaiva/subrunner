@@ -95,20 +95,14 @@ public class InteractHackCapacity : Capacity
         closest_target = hackable.gameObject;
         if (debug) { Debug.Log("(InteractHackCapacity) " + hackable.name + " selected as closest target"); }
 
-        // we play the target animation
-        // closest_target.GetComponent<Capable>().GetCapacity<HoverCapacity>()?.Hover(this.capable);
-
-        hacker?.Select(hackable);
+        // hacker?.Select(hackable);
     }
     private void unselect_target()
     {
         // we check if we have a current target
         if (closest_target == null) { return; }
 
-        // we stop the target animation
-        // closest_target.gameObject.GetComponent<Capable>().GetCapacity<HoverCapacity>()?.Unhover(this.capable);
-
-        hacker?.Deselect();
+        // hacker?.Deselect();
 
         // we reset the current target
         if (debug) { Debug.Log("(InteractHackCapacity) " + closest_target.name + " unselected as closest target"); }
