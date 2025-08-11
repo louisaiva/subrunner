@@ -70,6 +70,9 @@ public class Perso : Being, Hacker
         // Singleton logic
         if (Instance != null) { Destroy(Instance.gameObject); }
         Instance = this;
+
+        // WE GET FEW THINGS
+        HackableNavigator = transform.Find("processor").GetComponent<HackableNavigator>();
     }
 
     // START
@@ -80,6 +83,8 @@ public class Perso : Being, Hacker
 
         // on start de d'habitude
         base.Start();
+
+        // todo move this in awake ?
 
         // ON RECUP DES TRUCS
         cam = GameObject.Find("/cam_follow/cam");
@@ -93,8 +98,6 @@ public class Perso : Being, Hacker
         // on s'enregistre en tant que trigger dans l'XPProvider particle system
         var trigger_particle_module = XPProvider.Instance.GetComponent<ParticleSystem>().trigger;
         trigger_particle_module.SetCollider(0, body_collider);
-
-        HackableNavigator = transform.Find("processor").GetComponent<HackableNavigator>();
     }
 
 

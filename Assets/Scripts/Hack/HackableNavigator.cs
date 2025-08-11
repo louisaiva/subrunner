@@ -186,7 +186,9 @@ public class HackableNavigator : MonoBehaviour
     public void Disable()
     {
         // we deactivate the callbacks
+        if (log) Debug.Log("(HackableNavigator) about to remove navigation callback");
         if (navigationAction != null) { navigationAction.performed -= navigationCallback; }
+        if (log) Debug.Log("(HackableNavigator) removed navigation callback");
 
         unselect_target();
 

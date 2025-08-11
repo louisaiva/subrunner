@@ -11,7 +11,7 @@ public class UI_Pool : MonoBehaviour
     [Header("Pool paramaters")]
     public string Reference = "pool";
     public bool Showed = false;
-    protected bool in_transition = false;
+    [SerializeField] protected bool in_transition = false;
 
     [Header("Transition parameters")]
     public bool CanBeHidden = true; // if true, the pool can be hidden when switching to another pool
@@ -27,7 +27,6 @@ public class UI_Pool : MonoBehaviour
     [SerializeField] protected float angle_multiplicator = 0f;
 
     [Header("UI Elements")]
-    // [SerializeField] protected Tween bg_tween;
     [SerializeField] protected List<GameObject> ui_elements = new List<GameObject>();
 
     [Header("Logs")]
