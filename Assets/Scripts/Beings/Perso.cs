@@ -22,6 +22,8 @@ public class Perso : Being, Hacker
 
     public Room current_room { get; set; }
 
+    public HackableNavigator HackableNavigator { get; private set; }
+
 
     [Header("SKILLS")]
     public SkillManager skillManager;
@@ -80,7 +82,6 @@ public class Perso : Being, Hacker
         base.Start();
 
         // ON RECUP DES TRUCS
-
         cam = GameObject.Find("/cam_follow/cam");
         skillManager = GetComponentInChildren<SkillManager>();
 
@@ -92,6 +93,8 @@ public class Perso : Being, Hacker
         // on s'enregistre en tant que trigger dans l'XPProvider particle system
         var trigger_particle_module = XPProvider.Instance.GetComponent<ParticleSystem>().trigger;
         trigger_particle_module.SetCollider(0, body_collider);
+
+        HackableNavigator = transform.Find("processor").GetComponent<HackableNavigator>();
     }
 
 
@@ -141,8 +144,8 @@ public class Perso : Being, Hacker
             Vector2 raw_inputs = InputManager.Instance.MovementRawInputs;
             
             // we check if the raw inputs are below the deadzone
-            raw_inputs.x = Mathf.Abs(raw_inputs.x) < input_manager.joystick_treshold_min ? 0f : raw_inputs.x;
-            raw_inputs.y = Mathf.Abs(raw_inputs.y) < input_manager.joystick_treshold_min ? 0f : raw_inputs.y;
+            raw_inputs.x = Mathf.Abs(raw_inputs.x) < input_manager.JOYSTICK_MIN_THRESHOLD ? 0f : raw_inputs.x;
+            raw_inputs.y = Mathf.Abs(raw_inputs.y) < input_manager.JOYSTICK_MIN_THRESHOLD ? 0f : raw_inputs.y;
 
             // we normalize the inputs
             Orientation = raw_inputs.normalized;
@@ -156,11 +159,11 @@ public class Perso : Being, Hacker
         // run
         if (HasCapacity<RunCapacity>())
         {
-            if (perso_inputs.run.ReadValue<float>() >= input_manager.button_threshold_max)
+            if (perso_inputs.run.ReadValue<float>() >= input_manager.BUTTON_MAX_THRESHOLD)
             {
                 GetCapacity<RunCapacity>().EnableRun();
             }
-            else if (perso_inputs.run.ReadValue<float>() < input_manager.button_threshold_min)
+            else if (perso_inputs.run.ReadValue<float>() < input_manager.BUTTON_MIN_THRESHOLD)
             {
                 GetCapacity<RunCapacity>().DisableRun();
             }
@@ -259,7 +262,6 @@ public class Perso : Being, Hacker
     }
     public override void Die()
     {
-
         Debug.Log("YOU DIED");
 
         // on affiche un floating text
@@ -281,7 +283,7 @@ public class Perso : Being, Hacker
         Destroy(GetComponent<SeeThroughHandler>());
         Destroy(transform.Find("body").GetComponent<ParticleSystemForceField>());
 
-        Perso.deaths += 1; // on incrémente le nombre de morts du perso
+        deaths += 1; // on incrémente le nombre de morts du perso
     }
 
     // INPUTS
@@ -348,33 +350,8 @@ public class Perso : Being, Hacker
     // ! deprecated HACK
 
     [Header("HACKIN")]
-    // bits (mana)
-    // public bool has_hackin_os = false;
     public float bits = 8f; // bits = mana (lance des sorts de hacks)
     public int max_bits = 8;
-    // public float regen_bits = 0.1f; // regen (en bits par seconde)
-
-    // hack
-    // public float hack_range = 2f; // distance entre le perso et la porte pour hacker
-    // private CircleCollider2D hack_collider;
-    // private ContactFilter2D hack_contact_filter = new ContactFilter2D();
-    // private LayerMask hack_layer;
-    // private Dictionary<GameObject,Hack> current_hackin_targets = new Dictionary<GameObject, Hack>(); // liste d'objets hackés en ce moment
-    // private Transform hacks_path; // le parent des hackrays
-
-    // HACKIN RAY
-    // private GameObject hackray_prefab; // le prefab du hackray
-    // private HackrayHoover hackray_hoover;
-
-    // hoover hackable
-    // private GameObject current_hoover_hackable = null;
-    // private Hack current_hoover_hack = null;
-    // public float aide_a_la_visee = 0.5f; // aide à la visée, rayon autour de la souris pour les objets hackables
-    // private CursorHandler cursor_handler;
-
-
-
-
     public void addBits(int count)
     {
         bits += count;

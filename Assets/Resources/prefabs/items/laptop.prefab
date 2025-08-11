@@ -39,6 +39,7 @@ Transform:
   - {fileID: 9012517784413137022}
   - {fileID: 8784695284965474376}
   - {fileID: 962261051401836021}
+  - {fileID: 4136281882820726052}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8412103389642397844
@@ -197,7 +198,6 @@ MonoBehaviour:
   ItemDescription: cuty little laptop !!! cannot run minecraft unfortunately/.but
     certainly doom !
   max_cores: 4
-  free_cores: 4
   log_keys: 0
 --- !u!1 &3618464003426445101
 GameObject:
@@ -438,7 +438,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   uis: []
-  debug: 0
+  log: 0
   Columns: 2
   Rows: 2
 --- !u!1001 &335368620105986196
@@ -564,4 +564,70 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
   m_PrefabInstance: {fileID: 3141095144179450047}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3835008606050363146
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6784830890958932939}
+    m_Modifications:
+    - target: {fileID: -3220367134068304729, guid: b2b20b9145ac3f14eb54a3cc8eb63ddd, type: 3}
+      propertyPath: random_direction
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 891631874371971630, guid: b2b20b9145ac3f14eb54a3cc8eb63ddd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 891631874371971630, guid: b2b20b9145ac3f14eb54a3cc8eb63ddd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 891631874371971630, guid: b2b20b9145ac3f14eb54a3cc8eb63ddd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 891631874371971630, guid: b2b20b9145ac3f14eb54a3cc8eb63ddd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 891631874371971630, guid: b2b20b9145ac3f14eb54a3cc8eb63ddd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 891631874371971630, guid: b2b20b9145ac3f14eb54a3cc8eb63ddd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 891631874371971630, guid: b2b20b9145ac3f14eb54a3cc8eb63ddd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 891631874371971630, guid: b2b20b9145ac3f14eb54a3cc8eb63ddd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 891631874371971630, guid: b2b20b9145ac3f14eb54a3cc8eb63ddd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 891631874371971630, guid: b2b20b9145ac3f14eb54a3cc8eb63ddd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6582822749040364892, guid: b2b20b9145ac3f14eb54a3cc8eb63ddd, type: 3}
+      propertyPath: m_Name
+      value: drop
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b2b20b9145ac3f14eb54a3cc8eb63ddd, type: 3}
+--- !u!4 &4136281882820726052 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 891631874371971630, guid: b2b20b9145ac3f14eb54a3cc8eb63ddd, type: 3}
+  m_PrefabInstance: {fileID: 3835008606050363146}
   m_PrefabAsset: {fileID: 0}

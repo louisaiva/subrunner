@@ -1,34 +1,56 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
 public class Laptop : Item, Usable
 {
-    [Header("Laptop parameters")]
-    [SerializeField] protected int max_cores = 4;
-    [SerializeField] protected int free_cores = 4;
+    [Header("Cores management")]
+    [SerializeField] protected int max_cores = 0;
+    private Dictionary<Hack, int> used_cores = new Dictionary<Hack, int>(); // store the nb of cores used per hack
+    public int FreeCoresCount
+    {
+        get
+        {
+            int free_cores = max_cores;
+            foreach (KeyValuePair<Hack, int> kvp in used_cores)
+            {
+                free_cores -= kvp.Value;
+            }
+            return free_cores;
+        }
+    }
 
     [Header("Logs")]
     [SerializeField] protected bool log_keys = false;
 
+
     // CORES MANAGEMENTS
     public bool HasFreeCores(int amount = 1)
     {
-        return free_cores >= amount;
+        return FreeCoresCount >= amount;
     }
-    public async void UseCores(int amount, float duration)
+    public void UseCores(Hack hack)
     {
-        free_cores -= amount;
-        if (free_cores < 0)
+        // we add the hack to the used cores
+        used_cores[hack] = hack.exploit.cores_cost;
+
+        if (FreeCoresCount < 0)
         {
             Debug.LogWarning($"(Laptop) {name} has a core overflow !!!");
             return;
         }
+    }
+    public void FreeCores(Hack hack)
+    {
+        if (!used_cores.ContainsKey(hack))
+        {
+            if (debug) { Debug.LogWarning($"(Laptop) {name} tried to free cores for a hack that is not running: {hack.exploit.name}"); }
+            return;
+        }
 
-        // simulate core usage over time
-        await Task.Delay((int)(duration * 1000));
-        free_cores += amount;
+        used_cores.Remove(hack);
     }
 
     // KEYS MANAGEMENT
@@ -83,6 +105,33 @@ public class Laptop : Item, Usable
         hack_capacity.Use(user);
     }
 
+    // GRABBING PROCESSOR MODULE
+    public void OnCPU_Changed()
+    {
+        // we check how many cpu modules we have in our inventory
+        List<Item> cpus = Inventory.GetItemsByRule("module:cpu");
+        int new_max_cores = cpus.Count * 2; // each cpu provides 2 cores
+
+        if (debug) { Debug.Log($"(Laptop) {name} CPU changed. New max cores: {new_max_cores} / old cores: {max_cores}"); }
+
+        // check the difference between current and next max_cores
+        if (new_max_cores >= max_cores) { max_cores = new_max_cores; return; }
+
+        // if we have less cores, it's ok if we have have enough free cores left
+        if (FreeCoresCount >= max_cores - new_max_cores) { max_cores = new_max_cores; return; }
+
+        // otherwise we need to free some used cores
+        while (FreeCoresCount < max_cores - new_max_cores)
+        {
+            // we free the first hack in the list
+            Hack first_hack = used_cores.Keys.First();
+            first_hack.Overflow();
+            FreeCores(first_hack);
+        }
+
+        // finally we set the new max_cores
+        max_cores = new_max_cores;
+    }
 }
 
 [System.Serializable]

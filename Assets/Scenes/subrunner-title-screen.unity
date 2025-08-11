@@ -229,7 +229,6 @@ MonoBehaviour:
   slottables: []
   slots: []
   current_slot_index: -1
-  perso_quick_inventory: {fileID: 0}
   can_navigate: 1
   last_input: {x: 0, y: 0}
   navigate_continuously: 0
@@ -249,6 +248,7 @@ MonoBehaviour:
   dropInGameInput: {fileID: 2767387396969607311, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   debug: 0
   debug_navigation: 0
+  log_slot_position: 0
   debug_gizmo: 0
   gizmos_positions: []
   gizmos_weights: []
@@ -352,7 +352,6 @@ GameObject:
   - component: {fileID: 654843992}
   - component: {fileID: 654843990}
   - component: {fileID: 654843989}
-  - component: {fileID: 654843988}
   - component: {fileID: 654843987}
   m_Layer: 0
   m_Name: cam
@@ -391,8 +390,8 @@ MonoBehaviour:
   shake_magnitude: 1
   settings:
     strength: {x: 0, y: 0, z: 0}
-    duration: 0
-    frequency: 0
+    duration: 1
+    frequency: 10
     enableFalloff: 0
     falloffEase: 0
     strengthOverTime:
@@ -403,28 +402,12 @@ MonoBehaviour:
       m_RotationOrder: 4
     asymmetry: 0
     easeBetweenShakes: 0
-    cycles: 0
+    cycles: 1
     startDelay: 0
     endDelay: 0
     useUnscaledTime: 0
     _useFixedUpdate: 0
     _updateType: 0
-  log: 0
---- !u!114 &654843988
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 654843983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 756aff6b08d5b144b88ed37051d71594, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  current_anim: 
-  next_anim: 
-  is_forcing: 0
   log: 0
 --- !u!95 &654843989
 Animator:
@@ -723,9 +706,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   current_input_type: keyboard
-  joystick_treshold_min: 0.2
-  button_threshold_min: 0.2
-  button_threshold_max: 0.8
+  JOYSTICK_MIN_THRESHOLD: 0.3
+  JOYSTICK_MAX_THRESHOLD: 0.95
+  BUTTON_MIN_THRESHOLD: 0.2
+  BUTTON_MAX_THRESHOLD: 0.8
   input_system_ui_input_module: {fileID: 787797899}
   debug: 0
   debug_input_maps_enabled: 0
@@ -1971,6 +1955,10 @@ MonoBehaviour:
   - {fileID: 1233729231, guid: 1126f0aed3df39f42a85236cfff9995b, type: 3}
   - {fileID: -1415960983, guid: 1126f0aed3df39f42a85236cfff9995b, type: 3}
   - {fileID: 786763477, guid: 1126f0aed3df39f42a85236cfff9995b, type: 3}
+  IF_gamepad_path: spritesheets/ui/inputs/ui_interactables
+  IF_kb_path: spritesheets/ui/inputs/input_kb_feedback
+  key_feedback_icons: []
+  key_feedback_keys: []
 --- !u!114 &1516803882
 MonoBehaviour:
   m_ObjectHideFlags: 0

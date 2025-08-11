@@ -6,12 +6,15 @@ using UnityEngine.UI;
 /// <summary>
 /// This class is used as a helper to assemble the motherboard of the right size.
 /// </summary>
-[ExecuteAlways] public class MotherboardBuilder : MonoBehaviour
+[ExecuteAlways]
+public class MotherboardBuilder : MonoBehaviour
 {
     [Header("Motherboard parameters")]
     [SerializeField] private int columns = 4;
     [SerializeField] private int rows = 4;
-    public Vector2Int Size {get { return new Vector2Int(columns, rows); }
+    public Vector2Int Size
+    {
+        get { return new Vector2Int(columns, rows); }
         set
         {
             // we check if the value is valid
@@ -43,10 +46,12 @@ using UnityEngine.UI;
     [SerializeField] private Canvas canvas;
 
     [Header("Logs")]
-    [SerializeField] private bool debug = false;
+    [SerializeField] private bool log = false;
+    [SerializeField] private bool log_ratio = false;
 
     // HELPERS
     private float px_size = 8.33f; // 12 px = 100 units  100/12 = 8.33
+
 
     // ON ENABLE
     private void OnEnable()
@@ -133,7 +138,6 @@ using UnityEngine.UI;
         height = (int)(height * px_size);
     }
 
-
     // ADJUSTING GLOBAL SIZE
     private void adjustMBScale()
     {
@@ -152,12 +156,15 @@ using UnityEngine.UI;
         float ratio = Mathf.Min(scaleX, scaleY); // preserve aspect ratio
 
         // we log
-        if (debug) {Debug.Log("(MotherboardBuilder) ratio : " + ratio + " | desired_px : " + desired_px.width + "x" + desired_px.height +
-            " | MB_px : " + MB_px.width + "x" + MB_px.height);}
+        if (log_ratio)
+        {
+            Debug.Log("(MotherboardBuilder) ratio : " + ratio + " | desired_px : " + desired_px.width + "x" + desired_px.height +
+            " | MB_px : " + MB_px.width + "x" + MB_px.height);
+        }
 
         // check if the ratio is valid
         if (ratio <= 0) { return; }
-        else if (ratio >= 100000) {return;}
+        else if (ratio >= 100000) { return; }
 
         // we apply the ratio to the scale
         Vector3 newScale = new Vector3(ratio, ratio, ratio);
@@ -177,7 +184,7 @@ using UnityEngine.UI;
         float xMin = ul[0].x;
         float xMax = dr[2].x;
         float yMin = dr[0].y;
-        float yMax = ul[1].y;       
+        float yMax = ul[1].y;
 
         return new Rect(xMin, yMin, xMax - xMin, yMax - yMin);
     }
@@ -202,10 +209,36 @@ using UnityEngine.UI;
         if (!Application.isPlaying)
         {
             // In editor mode!
-            if (debug) {Debug.Log("(MotherboardBuilder) OnRectTransformDimensionsChange");}
+            // if (log) { Debug.Log("(MotherboardBuilder) OnRectTransformDimensionsChange"); }
             adjustMBScale();
         }
     }
 #endif
+
+
+
+    [Header("Laptop Inventory")]
+    [SerializeField] private LaptopInventory laptop_inventory = null;
+    public void AssignLaptopInventory(LaptopInventory inventory)
+    {
+        if (laptop_inventory != null && laptop_inventory != inventory)
+        {
+            // we remove the callbacks
+            laptop_inventory.OnHDD_Changed -= OnSlotNumberChanged;
+        }
+
+        Size = new Vector2Int(inventory.Columns, inventory.Rows);
+
+        // we subscribe to the callbacks
+        if (laptop_inventory != inventory) { inventory.OnHDD_Changed += OnSlotNumberChanged; }
+        laptop_inventory = inventory;
+    }
+    private void OnSlotNumberChanged(int new_slot_count)
+    {
+        if (log) { Debug.Log($"(MotherboardBuilder) new size : {laptop_inventory.Columns} x {laptop_inventory.Rows}"); }
+        Size = new Vector2Int(laptop_inventory.Columns, laptop_inventory.Rows);
+    }
+
+
 }
 

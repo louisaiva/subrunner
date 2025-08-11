@@ -55,14 +55,18 @@ public class DebugManager : MonoBehaviour
     }
     private void ShowDebug()
     {
-        UI_HUD hud = GameObject.Find("/ui/hud").GetComponent<UI_HUD>();
+        UI_HUD hud = UI_Manager.Instance.GetPool("hud") as UI_HUD;
         hud.RegisterToPool(debugs.gameObject);
+        UI_Hacking hacking = UI_Manager.Instance.GetPool("hacking") as UI_Hacking;
+        hacking.RegisterToPool(debugs.gameObject);
         debug_in_hud = true;
     }
     private void HideDebug()
     {
-        UI_HUD hud = GameObject.Find("/ui/hud").GetComponent<UI_HUD>();
+        UI_HUD hud = UI_Manager.Instance.GetPool("hud") as UI_HUD;
         hud.QuitPool(debugs.gameObject);
+        UI_Hacking hacking = UI_Manager.Instance.GetPool("hacking") as UI_Hacking;
+        hacking.QuitPool(debugs.gameObject);
         debug_in_hud = false;
     }
 

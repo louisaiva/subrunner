@@ -39,7 +39,7 @@ public class UI_ModulePool : UI_ItemPool
         if (Count <= MaxSlots) { return; }
 
         // we first try to remove the empty slots
-        DestroyEmptySlots();
+        /* DestroyEmptySlots();
         if (debug) { Debug.Log($"(UI_ModulePool) tried destroying empty slots first, remaining count: {ui_items.Count}"); }
         if (Count <= MaxSlots)
         {
@@ -47,11 +47,14 @@ public class UI_ModulePool : UI_ItemPool
             if (!Scalable) { CreateEmptySlots(MaxSlots - Count); }
             if (debug) { Debug.Log($"(UI_ModulePool) recreated some to match {MaxSlots} : have now {ui_items.Count}"); }
             return;
-        }
+        } */
 
         // we only have full slots, but we still have too many slots
         // so we drop the last slots items and remove their slots
-        // todo do this bcz for now we only remove them brutally -> will make ui_items disappear in the limbs of hell ig ?
+        // normally we are in this method only when we uninstalled a HDD module
+        // so LaptopInventory already cleared the lasts slots for us so it's ok we can destroy them
+        // they should be empty
+        int full_slots_dropped = 0;
         while (Count > MaxSlots)
         {
             // we get the last slot
@@ -60,6 +63,7 @@ public class UI_ModulePool : UI_ItemPool
             // we unstore the item
             if (ui_item.Quantity > 0)
             {
+                full_slots_dropped++;
                 Item item = ui_item.Item;
                 ui_item.Unstore(item);
             }
@@ -69,7 +73,7 @@ public class UI_ModulePool : UI_ItemPool
             ui_items.Remove(ui_item);
         }
 
-        if (debug) { Debug.Log($"(UI_ModulePool) still too many slots, dropped full items and now we have {ui_items.Count}"); }
+        if (debug) { Debug.Log($"(UI_ModulePool) dropped last slots ({full_slots_dropped} non-empty) and now we have {ui_items.Count}"); }
     }
 
     // CREATE ITEM SLOT
@@ -100,7 +104,8 @@ public class UI_ModulePool : UI_ItemPool
         return ui_slot;
     }
 
-    // INIT FROM INVENTORY
+    // LAPTOP INVENTORY MANAGEMENT
+    private LaptopInventory laptop_inventory;
     public void InitFromInventory(LaptopInventory inventory)
     {
         for (int i = 0; i < ui_items.Count; i++)
@@ -108,7 +113,14 @@ public class UI_ModulePool : UI_ItemPool
             if (ui_items[i] == null || ui_items[i] is not UI_Module module) { continue; }
 
             // we switch the items
-            module.SwitchItems(inventory.GetItemsInSlot(i));
+            module.SwitchItems(inventory.GetItemsInSlot(i), items_moved: false);
         }
+
+        laptop_inventory = inventory;
+    }
+    public void OnModuleMoved(UI_Module module)
+    {
+        int new_slot_index = ui_items.IndexOf(module);
+        laptop_inventory.HandleUI_ModuleMoved(module.GetItems(), new_slot_index);
     }
 }

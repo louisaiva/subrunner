@@ -56,21 +56,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""run"",
-                    ""type"": ""Value"",
+                    ""type"": ""Button"",
                     ""id"": ""0948f1ba-942c-47be-b02f-249a908482fc"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""useConso"",
-                    ""type"": ""Button"",
-                    ""id"": ""af9057fb-3fd3-4bb3-bb36-27d0f1b16911"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""randomTalk"",
@@ -89,6 +80,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""select_hackable"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""9fdddbcc-5106-4198-81ab-d0f5d8e286a9"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""hack"",
+                    ""type"": ""Button"",
+                    ""id"": ""03e2768a-7667-483a-b36a-0bfd011eccd3"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""conso1"",
@@ -180,28 +189,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""keyboard"",
                     ""action"": ""run"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""75dfc87d-e548-4042-8a15-def507bbd239"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""xbox"",
-                    ""action"": ""useConso"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""9302c95f-072e-4189-9646-1b7b70d17571"",
-                    ""path"": ""<Keyboard>/q"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""keyboard"",
-                    ""action"": ""useConso"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -334,6 +321,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""keyboard"",
                     ""action"": ""dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""75d2e5bd-13e3-4328-888e-f7fbd4519ce4"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""hack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8255a3a8-40a7-476b-b6b8-b71a6bc62462"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";xbox"",
+                    ""action"": ""select_hackable"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1191,7 +1200,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""id"": ""549f77fd-37e1-4ea6-8215-8b5fa4d1092e"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": ""Press(behavior=2)"",
+                    ""interactions"": """",
                     ""initialStateCheck"": false
                 }
             ],
@@ -1411,9 +1420,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_perso_interact = m_perso.FindAction("interact", throwIfNotFound: true);
         m_perso_attack = m_perso.FindAction("attack", throwIfNotFound: true);
         m_perso_run = m_perso.FindAction("run", throwIfNotFound: true);
-        m_perso_useConso = m_perso.FindAction("useConso", throwIfNotFound: true);
         m_perso_randomTalk = m_perso.FindAction("randomTalk", throwIfNotFound: true);
         m_perso_move = m_perso.FindAction("move", throwIfNotFound: true);
+        m_perso_select_hackable = m_perso.FindAction("select_hackable", throwIfNotFound: true);
+        m_perso_hack = m_perso.FindAction("hack", throwIfNotFound: true);
         m_perso_conso1 = m_perso.FindAction("conso1", throwIfNotFound: true);
         m_perso_conso2 = m_perso.FindAction("conso2", throwIfNotFound: true);
         m_perso_conso3 = m_perso.FindAction("conso3", throwIfNotFound: true);
@@ -1518,9 +1528,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_perso_interact;
     private readonly InputAction m_perso_attack;
     private readonly InputAction m_perso_run;
-    private readonly InputAction m_perso_useConso;
     private readonly InputAction m_perso_randomTalk;
     private readonly InputAction m_perso_move;
+    private readonly InputAction m_perso_select_hackable;
+    private readonly InputAction m_perso_hack;
     private readonly InputAction m_perso_conso1;
     private readonly InputAction m_perso_conso2;
     private readonly InputAction m_perso_conso3;
@@ -1533,9 +1544,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @interact => m_Wrapper.m_perso_interact;
         public InputAction @attack => m_Wrapper.m_perso_attack;
         public InputAction @run => m_Wrapper.m_perso_run;
-        public InputAction @useConso => m_Wrapper.m_perso_useConso;
         public InputAction @randomTalk => m_Wrapper.m_perso_randomTalk;
         public InputAction @move => m_Wrapper.m_perso_move;
+        public InputAction @select_hackable => m_Wrapper.m_perso_select_hackable;
+        public InputAction @hack => m_Wrapper.m_perso_hack;
         public InputAction @conso1 => m_Wrapper.m_perso_conso1;
         public InputAction @conso2 => m_Wrapper.m_perso_conso2;
         public InputAction @conso3 => m_Wrapper.m_perso_conso3;
@@ -1561,15 +1573,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @run.started += instance.OnRun;
             @run.performed += instance.OnRun;
             @run.canceled += instance.OnRun;
-            @useConso.started += instance.OnUseConso;
-            @useConso.performed += instance.OnUseConso;
-            @useConso.canceled += instance.OnUseConso;
             @randomTalk.started += instance.OnRandomTalk;
             @randomTalk.performed += instance.OnRandomTalk;
             @randomTalk.canceled += instance.OnRandomTalk;
             @move.started += instance.OnMove;
             @move.performed += instance.OnMove;
             @move.canceled += instance.OnMove;
+            @select_hackable.started += instance.OnSelect_hackable;
+            @select_hackable.performed += instance.OnSelect_hackable;
+            @select_hackable.canceled += instance.OnSelect_hackable;
+            @hack.started += instance.OnHack;
+            @hack.performed += instance.OnHack;
+            @hack.canceled += instance.OnHack;
             @conso1.started += instance.OnConso1;
             @conso1.performed += instance.OnConso1;
             @conso1.canceled += instance.OnConso1;
@@ -1598,15 +1613,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @run.started -= instance.OnRun;
             @run.performed -= instance.OnRun;
             @run.canceled -= instance.OnRun;
-            @useConso.started -= instance.OnUseConso;
-            @useConso.performed -= instance.OnUseConso;
-            @useConso.canceled -= instance.OnUseConso;
             @randomTalk.started -= instance.OnRandomTalk;
             @randomTalk.performed -= instance.OnRandomTalk;
             @randomTalk.canceled -= instance.OnRandomTalk;
             @move.started -= instance.OnMove;
             @move.performed -= instance.OnMove;
             @move.canceled -= instance.OnMove;
+            @select_hackable.started -= instance.OnSelect_hackable;
+            @select_hackable.performed -= instance.OnSelect_hackable;
+            @select_hackable.canceled -= instance.OnSelect_hackable;
+            @hack.started -= instance.OnHack;
+            @hack.performed -= instance.OnHack;
+            @hack.canceled -= instance.OnHack;
             @conso1.started -= instance.OnConso1;
             @conso1.performed -= instance.OnConso1;
             @conso1.canceled -= instance.OnConso1;
@@ -1956,9 +1974,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnInteract(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
-        void OnUseConso(InputAction.CallbackContext context);
         void OnRandomTalk(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
+        void OnSelect_hackable(InputAction.CallbackContext context);
+        void OnHack(InputAction.CallbackContext context);
         void OnConso1(InputAction.CallbackContext context);
         void OnConso2(InputAction.CallbackContext context);
         void OnConso3(InputAction.CallbackContext context);

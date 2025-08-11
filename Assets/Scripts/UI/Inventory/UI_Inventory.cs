@@ -59,6 +59,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         // we enable the navigator if we are not the perso quick inventory
         if (transform.parent.name != "hud" && UI_XboxNavigator.Instance != null)
         {
+            InputManager.Instance.inputs.perso.select_hackable.Disable();
             UI_XboxNavigator.Instance.Enable(this, true);
         }
     }
@@ -81,6 +82,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         if (transform.parent.name != "hud" && UI_XboxNavigator.Instance != null)
         {
             UI_XboxNavigator.Instance.Disable(this);
+            InputManager.Instance.inputs.perso.select_hackable.Enable();
         }
     }
     public void Toggle()

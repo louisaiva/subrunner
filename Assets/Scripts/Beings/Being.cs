@@ -154,7 +154,6 @@ public class Being : Movable
         if (HasEffect(Effect.Invincible))
         {
             // floating missing text
-            // floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddFloatingDmg(this.gameObject, 0, transform.position);
             floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddMissed(this.gameObject, transform.position);
             return false;
         }
@@ -175,7 +174,7 @@ public class Being : Movable
             // change the flipX of the sprite if needed
             if (knockback.direction.x != 0f)
             {
-                GetComponent<SpriteRenderer>().flipX = (knockback.direction.x < 0f);
+                GetComponent<SpriteRenderer>().flipX = knockback.direction.x < 0f;
             }
         }
 

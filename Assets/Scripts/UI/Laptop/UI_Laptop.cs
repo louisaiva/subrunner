@@ -37,7 +37,7 @@ public class UI_Laptop : UI_Inventory
         if (items == null || items.Count == 0)
         {
             // we disable the modules
-            await pools[0].Fade(fade_in:false);
+            await pools[0].Fade(fade_in: false);
             (pools[0] as UI_ModulePool)?.DisableModules();
             return;
         }
@@ -46,7 +46,8 @@ public class UI_Laptop : UI_Inventory
         // first we warn the new inventory that we are its ui now
         TargetLaptop.Inventory.AddUI(this);
         LaptopInventory inventory = TargetLaptop.Inventory as LaptopInventory;
-        mb.Size = new Vector2Int(inventory.Columns, inventory.Rows);
+        mb.AssignLaptopInventory(inventory);
+        // mb.Size = new Vector2Int(inventory.Columns, inventory.Rows);
 
         await System.Threading.Tasks.Task.Yield(); // wait for the next frame to ensure the UI is active
 

@@ -32,9 +32,11 @@ public class HackCapacity : Capacity
     [Header("Components")]
     [SerializeField] private Laptop laptop;
     [SerializeField] private CircleCollider2D hack_collider;
+    public float Radius { get => hack_collider.radius; }
 
     [Header("Logs")]
     [SerializeField] private bool log_hack_progress = false;
+
 
     // START
     private void Start()
@@ -82,32 +84,22 @@ public class HackCapacity : Capacity
         {
             Hack hack = running_hacks[i];
 
-            // checks if we are too far away from the target
-            if (Vector3.Distance(transform.position, hack.target.transform.position) > hack_collider.radius)
+            // we check if the hack is done
+            if (hack.state == HackState.Completed || hack.state == HackState.Failed || hack.state == HackState.Overflowed)
             {
-                if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} is too far away from {hack.target.name} to continue the hack."); }
-
-                // we remove the hackray
-                Destroy(hackrays[hack].gameObject);
-                hackrays.Remove(hack);
-
-                // we remove the hack from the running hacks
-                hack.Fail();
-                running_hacks.RemoveAt(i);
+                if (debug) { Debug.Log($"(HackCapacity) {capable.name} finished hacking {hack.target.name} with exploit {hack.exploit.name}."); }
+                remove_hack(i);
                 continue;
             }
 
-            // we check if the hack is done
-            if (hack.state == HackState.Completed || hack.state == HackState.Failed)
+            // checks if we are too far away from the target
+            Hackable hackable = hack.target;
+            if (Vector3.Distance(transform.position, hackable.transform.position) > hack_collider.radius)
             {
-                if (debug) { Debug.Log($"(HackCapacity) {capable.name} finished hacking {hack.target.name} with exploit {hack.exploit.name}."); }
+                if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} is too far away from {hack.target.name} to continue the hack."); }
 
-                // we remove the hackray
-                Destroy(hackrays[hack].gameObject);
-                hackrays.Remove(hack);
-
-                // we remove the hack from the running hacks
-                running_hacks.RemoveAt(i);
+                hack.Fail();
+                remove_hack(i);
                 continue;
             }
 
@@ -120,6 +112,20 @@ public class HackCapacity : Capacity
             // we check if the hack is done
             if (hack.progress >= 100f) { hack.Finish(); }
         }
+    }
+    private void remove_hack(int hack_index)
+    {
+        Hack hack = running_hacks[hack_index];
+
+        // we remove the hackray
+        Destroy(hackrays[hack].gameObject);
+        hackrays.Remove(hack);
+
+        // we free the cores used by the hack
+        if (hack.state != HackState.Overflowed) { laptop.FreeCores(hack); }
+
+        // we remove the hack from the running hacks
+        running_hacks.RemoveAt(hack_index);
     }
 
     // USE
@@ -172,6 +178,8 @@ public class HackCapacity : Capacity
     // HACKING HIGH LEVEL
     public bool Connect(Hackable target)
     {
+        if (target == null) { return false; }
+
         // we check if the target is in range
         if (Vector3.Distance(transform.position, target.transform.position) > hack_collider.radius)
         {
@@ -213,7 +221,7 @@ public class HackCapacity : Capacity
         hack.Run(duration);
 
         // we occupy some cores for the hack duration
-        laptop.UseCores(hack.exploit.cores_cost, duration);
+        laptop.UseCores(hack);
 
         // we add the hack to the running hacks
         running_hacks.Add(hack);
@@ -229,13 +237,20 @@ public class HackCapacity : Capacity
         // we create a hackray for this hack
         Hackray hackray = Instantiate(hackray_prefab, transform).GetComponent<Hackray>();
         hackray.name = "hackray_" + target.name;
-        hackray.SetLaptopAndHackable(laptop, target);
+        hackray.SetLaptopAndTarget(laptop, target.transform);
 
         // apply color & material
         hackray.SetColor(hackray_color);
         hackray.SetMaterial(GetComponent<HackrayMaterialVariation>().hackray_material);
 
         return hackray;
+    }
+
+    // GETTERS
+    public bool IsHacking(Hackable target)
+    {
+        // checks if we are hacking this target
+        return running_hacks.Any(h => h.target == target);
     }
 }
 
@@ -298,6 +313,16 @@ public class Hack
         // Notify the target that the hack is completed
         target.OnHackCompleted(this);
     }
+    public void Overflow()
+    {
+        // the hack has overflowed :///
+        Debug.LogWarning($"Hack on {target.name} with exploit {exploit.name} has overflowed. Freeing cores.");
+        this.progress = 0f;
+        this.state = HackState.Overflowed;
+
+        // Notify the target that the hack is failed
+        target.OnHackFailed(this);
+    }
 
     // GETTERS
     public float CalculateDuration(float duration_multiplier = 2.25f)
@@ -324,7 +349,8 @@ public enum HackState
     NotStarted,
     Running,
     Completed,
-    Failed
+    Failed,
+    Overflowed
 }
 
 [System.Serializable]

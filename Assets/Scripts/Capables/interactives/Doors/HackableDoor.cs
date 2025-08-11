@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.Rendering.Universal;
+using System.Collections.Generic;
 
 
 public class HackableDoor : Door, Lockable
@@ -14,6 +15,7 @@ public class HackableDoor : Door, Lockable
 
     [Header("Hackable")]
     [SerializeField] private int securityLevel = 1;
+    public List<Hack> RunningHacks { get; private set; } = new List<Hack>();
     public int SecurityLevel => securityLevel;
 
 
@@ -88,6 +90,8 @@ public class HackableDoor : Door, Lockable
 
         // we show the hacked animation
         anim_player.Play("hacked");
+
+        RunningHacks.Add(hack);
     }
     public void OnHackFailed(Hack hack)
     {
@@ -95,6 +99,8 @@ public class HackableDoor : Door, Lockable
         if (debug) { Debug.Log($"(HackableDoor) Hack failed on {name} with exploit {hack.exploit.name}"); }
         anim_player.StopPlaying("hacked");
         Lock();
+
+        RunningHacks.Remove(hack);
     }
     public void OnHackCompleted(Hack hack)
     {
@@ -105,6 +111,8 @@ public class HackableDoor : Door, Lockable
         // we unlock the door & play unlock anim
         anim_player.StopPlaying("hacked");
         Unlock();
+
+        RunningHacks.Remove(hack);
     }
 
     // UNLOCKING

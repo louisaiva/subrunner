@@ -249,7 +249,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.15
+  m_Radius: 1
 --- !u!1 &6094739574941988477
 GameObject:
   m_ObjectHideFlags: 0
@@ -718,7 +718,7 @@ MonoBehaviour:
   mover: {fileID: 0}
   log_actions: 0
   processor_exploit_damage: 20
-  processor_exploit_knockback_magnitude: 5
+  processor_exploit_knockback_magnitude: 500
 --- !u!1001 &4874808237167080038
 PrefabInstance:
   m_ObjectHideFlags: 0

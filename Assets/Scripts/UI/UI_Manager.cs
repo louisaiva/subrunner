@@ -30,7 +30,8 @@ public class UI_Manager : Singleton<UI_Manager>
 
 
     [Header("Logs")]
-    public bool debug = false;
+    public bool log = false;
+    public bool log_availability = false;
 
     // inputs
     // private PlayerInputActions inputs;
@@ -59,14 +60,15 @@ public class UI_Manager : Singleton<UI_Manager>
         // on mets les callbacks des menus
         input_manager.inputs.menus.inventory.performed += ctx => { TogglePool("inventory"); };
         input_manager.inputs.menus.pause.performed += ctx => { TogglePool("pause"); };
-        input_manager.inputs.menus.hacking.performed += ctx => { HandleHackingInput(ctx.ReadValue<float>()); };
+        // input_manager.inputs.menus.hacking.performed += ctx => { HandleHackingInput(ctx.ReadValue<float>()); };
+        input_manager.inputs.perso.select_hackable.performed += ctx => { HandleHackingInput(ctx.ReadValue<Vector2>().magnitude); };
         // inputs.menus.map.performed += ctx => { TogglePool("map"); };
         input_manager.inputs.UI.cancel.performed += ctx => { HandleCancelInput(ctx.ReadValue<float>()); };
 
         // we try to switch to current_pool if it is something
         if (current_pool != null)
         {
-            // only for debug & prototype purpose
+            // only for log & prototype purpose
             string start_pool = current_pool.Reference;
             current_pool = null;
             SwitchTo(start_pool);
@@ -97,9 +99,10 @@ public class UI_Manager : Singleton<UI_Manager>
     }
     private async void switch_to(UI_Pool pool, bool force = true, float override_duration = default)
     {
-        
         // check if this pool is not the same as the current one
         if (pool == current_pool) { return; }
+
+        // todo : verify that the next pool is available before switching
 
         // we prepare the transition duration
         float duration = override_duration != default ? override_duration : transition_duration;
@@ -112,13 +115,13 @@ public class UI_Manager : Singleton<UI_Manager>
             // checks if the current pool can be forcely hidden
             if (!force && !current_pool.CanBeHidden)
             {
-                if (debug && current_pool.Reference != "hud") { Debug.LogWarning("(UI_Manager) tried to hide a pool that cannot be hidden : " + current_pool.Reference); }
+                if (log && current_pool.Reference != "hud") { Debug.LogWarning("(UI_Manager) tried to hide a pool that cannot be hidden : " + current_pool.Reference); }
                 return;
             }
 
             if (!current_pool.Available)
             {
-                if (debug) { Debug.LogWarning("(UI_Manager) tried to switch to a pool that is not available : " + current_pool.Reference); }
+                if (log_availability) { Debug.LogWarning("(UI_Manager) tried to switch pools while the current pool is not available : " + current_pool.Reference); }
                 return;
             }
 
@@ -146,6 +149,8 @@ public class UI_Manager : Singleton<UI_Manager>
             TransitionBackground(pool.HasBackground, duration / 2f);
         }
 
+        if (log) { Debug.Log("(UI_Manager) switching to pool : " + pool.Reference); }
+
         // we show the new pool
         current_pool = pool;
         await current_pool.Show(duration / 2f);
@@ -160,7 +165,7 @@ public class UI_Manager : Singleton<UI_Manager>
             if (pool.Reference == reference) { return pool; }
         }
 
-        if (debug) { Debug.LogWarning("(UI_Manager) tried to get a non-existing pool : " + reference); }
+        if (log) { Debug.LogWarning("(UI_Manager) tried to get a non-existing pool : " + reference); }
 
         // if we don't find it, we return null
         return null;
@@ -174,7 +179,7 @@ public class UI_Manager : Singleton<UI_Manager>
         // check if we can cancel the pool
         if (!current_pool.CanBeCanceled)
         {
-            if (debug && current_pool.Reference != "hud") { Debug.LogWarning("(UI_Manager) tried to cancel a pool that cannot be canceled : " + current_pool.Reference); }
+            if (log && current_pool.Reference != "hud") { Debug.LogWarning("(UI_Manager) tried to cancel a pool that cannot be canceled : " + current_pool.Reference); }
             return;
         }
 
@@ -183,19 +188,21 @@ public class UI_Manager : Singleton<UI_Manager>
     }
     private void HandleHackingInput(float input)
     {
+
         // we activate the hacking ui when input is pressed > 0.5
         // and disable it when released < 0.5
-        if (input > 0.5f)
+        if (input < InputManager.Instance.JOYSTICK_MIN_THRESHOLD)
         {
-            // we check if we can switch to hacking
-            if (current_pool.Reference == "hud" && GetPool("hacking").Available)
-            {
-                SwitchTo("hacking");
-            }
+            if (current_pool.Reference == "hacking") { SwitchTo("hud"); }
+            return;
         }
-        else if (current_pool.Reference == "hacking")
+
+        // if (log) { Debug.Log("(UI_Manager) hacking menu input received : " + input); }
+
+        // we check if we can switch to hacking
+        if (current_pool.Reference == "hud" && GetPool("hacking").Available)
         {
-            SwitchTo("hud");
+            SwitchTo("hacking");
         }
     }
 
@@ -211,6 +218,8 @@ public class UI_Manager : Singleton<UI_Manager>
         // we check if we have an override final timescale
         float final_timescale = stop_time ? 0f : 1f;
         if (override_final_timescale != default) { final_timescale = override_final_timescale; }
+
+        if (Time.timeScale == final_timescale) { return; } // if we are already at the right timescale, we do nothing
 
         await Tween.GlobalTimeScale(final_timescale, duration, Ease.OutQuad);
     }

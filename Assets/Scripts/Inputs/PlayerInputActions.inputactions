@@ -34,21 +34,12 @@
                 },
                 {
                     "name": "run",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "0948f1ba-942c-47be-b02f-249a908482fc",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
-                },
-                {
-                    "name": "useConso",
-                    "type": "Button",
-                    "id": "af9057fb-3fd3-4bb3-bb36-27d0f1b16911",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 },
                 {
                     "name": "randomTalk",
@@ -67,6 +58,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "select_hackable",
+                    "type": "PassThrough",
+                    "id": "9fdddbcc-5106-4198-81ab-d0f5d8e286a9",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "hack",
+                    "type": "Button",
+                    "id": "03e2768a-7667-483a-b36a-0bfd011eccd3",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "conso1",
@@ -158,28 +167,6 @@
                     "processors": "",
                     "groups": "keyboard",
                     "action": "run",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "75dfc87d-e548-4042-8a15-def507bbd239",
-                    "path": "<Gamepad>/buttonNorth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "useConso",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "9302c95f-072e-4189-9646-1b7b70d17571",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard",
-                    "action": "useConso",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -312,6 +299,28 @@
                     "processors": "",
                     "groups": "keyboard",
                     "action": "dodge",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "75d2e5bd-13e3-4328-888e-f7fbd4519ce4",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "hack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8255a3a8-40a7-476b-b6b8-b71a6bc62462",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";xbox",
+                    "action": "select_hackable",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1169,7 +1178,7 @@
                     "id": "549f77fd-37e1-4ea6-8215-8b5fa4d1092e",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "Press(behavior=2)",
+                    "interactions": "",
                     "initialStateCheck": false
                 }
             ],

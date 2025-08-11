@@ -109,7 +109,7 @@ public class DieCapacity : Capacity
         }
 
 
-        if (being is Perso perso) { perso.Die(); }
+        being.Die();
 
         // 2 - DESTROYING CAPACITIES
         if (debug) { Debug.Log("Destroying capacities of " + being.name); }
@@ -132,7 +132,7 @@ public class DieCapacity : Capacity
         if (being.transform.Find("head") is Transform head && head != null) { Destroy(head.gameObject); }
         if (being.transform.Find("light") is Transform light && light != null) { Destroy(light.gameObject); }
         if (being.transform.Find("hacks") is Transform hacks && hacks != null) { Destroy(hacks.gameObject); }
-
+        if (being.transform.Find("processor") is Transform processor && processor != null) { Destroy(processor.gameObject); }
 
         // 4 - HANDLE PHYSICS
         // we switch the rigidbody collision detection to discrete since the dead body won't move very fast (not affected by our forces)

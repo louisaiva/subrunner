@@ -42,9 +42,6 @@ public class UI_HUD : UI_Pool
             // on doit les activer du xbox navigator
             UI_XboxNavigator.Instance.Enable(ui_chest,true);
 
-            // on désactive les perso useconso
-            InputManager.Instance.inputs.perso.useConso.Disable();
-
             // UI_XboxNavigator.Instance.angle_threshold = base.angle_threshold;
         }
     }
@@ -56,9 +53,6 @@ public class UI_HUD : UI_Pool
             // on doit les désactiver du xbox navigator
             UI_XboxNavigator.Instance.Disable(ui_chest);
             UI_XboxNavigator.Instance.Disable(perso_quick_inventory);
-
-            // on réactive les perso useconso
-            InputManager.Instance.inputs.perso.useConso.Enable();
         }
 
         perso_quick_inventory.Hide();
@@ -86,9 +80,6 @@ public class UI_HUD : UI_Pool
             // on active le ui_navigator pour le perso_quick_inventory
             await System.Threading.Tasks.Task.Yield(); // wait for the next frame to ensure the UI is active
             UI_XboxNavigator.Instance.Enable(perso_quick_inventory, true);
-
-            // on désactive les perso useconso
-            InputManager.Instance.inputs.perso.useConso.Disable();
         }
     }
     public void RemoveChest(UI_Inventory ui_chest)
@@ -107,9 +98,6 @@ public class UI_HUD : UI_Pool
             }
             // on active tous les ui_items
             perso_quick_inventory_pool.EnableAllItems();
-
-            // on active les perso useconso
-            InputManager.Instance.inputs.perso.useConso.Enable();
         }
     }
 }

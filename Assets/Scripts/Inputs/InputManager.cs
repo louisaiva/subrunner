@@ -11,9 +11,10 @@ public class InputManager : Singleton<InputManager>
 
 
     [Header("Inputs thresholds")]
-    [SerializeField] public float joystick_treshold_min = 0.1f;
-    [SerializeField] public float button_threshold_min = 0.2f;
-    [SerializeField] public float button_threshold_max = 0.8f;
+    [SerializeField] public float JOYSTICK_MIN_THRESHOLD = 0.3f;
+    [SerializeField] public float JOYSTICK_MAX_THRESHOLD = 0.95f;
+    [SerializeField] public float BUTTON_MIN_THRESHOLD = 0.2f;
+    [SerializeField] public float BUTTON_MAX_THRESHOLD = 0.8f;
 
     [Header("Components")]
     [SerializeField] private InputSystemUIInputModule input_system_ui_input_module;
@@ -74,6 +75,12 @@ public class InputManager : Singleton<InputManager>
     // getters
     public InputAction GetAction(InputActionReference reference)
     {
+        if (reference == null)
+        {
+            Debug.LogWarning("(InputManager) GetAction called with null reference");
+            return null;
+        }
+
         // on récupère le nom de l'action
         string action_name = reference.ToString();
 

@@ -58,7 +58,7 @@ public class Capable : MonoBehaviour
             return inventory_transform.GetComponent<Inventory>();
         }
     }
-
+    
 
 
     [Header("Logs")]

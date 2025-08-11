@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -144,4 +145,13 @@ public class UI_Module : UI_Item
         icon_image.color = new Color(0, 0, 0, 0);
         helper_text.text = "";
     }
+    public override void SwitchItems(List<Item> items, bool items_moved = true)
+    {
+        base.SwitchItems(items, items_moved);
+        if (!items_moved) { return; }
+
+        // on met à jour la position dans le laptop inventory
+        (ItemPool as UI_ModulePool)?.OnModuleMoved(this);
+    }
+
 }

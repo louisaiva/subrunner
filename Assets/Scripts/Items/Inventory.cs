@@ -12,6 +12,8 @@ public class Inventory : MonoBehaviour
     [Header("Events")]
     public UnityEvent OnGrab;
     public UnityEvent OnDrop;
+    public event System.Action<Item> OnItemGrabbed = delegate { };
+    public event System.Action<Item> OnItemDropped = delegate { };
 
 
     [Header("Components")]
@@ -20,10 +22,10 @@ public class Inventory : MonoBehaviour
     public Capable capable { get { return transform.parent.GetComponent<Capable>(); } }
 
     [Header("Logs")]
-    [SerializeField] private bool debug = false;
+    [SerializeField] protected bool log = false;
 
     // AWAKE
-    void Awake()
+    protected virtual void Awake()
     {
         if (capable is Perso && uis.Count > 0 && uis[0] == null)
         {
@@ -44,7 +46,7 @@ public class Inventory : MonoBehaviour
     }
 
     // START
-    void Start()
+    protected virtual void Start()
     {
         // on initialise l'UI
         foreach (UI_Inventory ui in uis)
@@ -80,7 +82,7 @@ public class Inventory : MonoBehaviour
             if (uis_to_ignore == null) { uis_to_ignore = new List<UI_Inventory>(); }
             if (!uis_to_ignore.Contains(ui) && !ui.UI_Grab(item))
             {
-                if (debug) { Debug.LogWarning("(Inventory) " + capable.name + " can't grab : " + item.name + " in " + ui.name); }
+                if (log) { Debug.LogWarning("(Inventory) " + capable.name + " can't grab : " + item.name + " in " + ui.name); }
                 return false; // if the first ui_inventory can't grab it, we return false
             }
             for (int i = 1; i < uis.Count; i++)
@@ -101,10 +103,11 @@ public class Inventory : MonoBehaviour
         item.transform.SetParent(transform);
         item.transform.localPosition = Vector3.zero;
 
-        // we trigger the event
+        // we trigger the events
         OnGrab.Invoke();
+        OnItemGrabbed.Invoke(item);
 
-        if (debug) { Debug.Log("(Inventory) " + capable.name + " grabbed : " + item.name); }
+        if (log) { Debug.Log("(Inventory) " + capable.name + " grabbed : " + item.name); }
 
         return true;
     }
@@ -122,6 +125,7 @@ public class Inventory : MonoBehaviour
 
         // we trigger the event
         OnDrop.Invoke();
+        OnItemDropped.Invoke(item);
 
         // we update the UI
         if (uis_to_ignore == null) { uis_to_ignore = new List<UI_Inventory>(); }
@@ -131,7 +135,7 @@ public class Inventory : MonoBehaviour
             ui.UI_Drop(item);
         }
 
-        if (debug) { Debug.Log("(Inventory) " + capable.name + " dropped : " + item.name); }
+        if (log) { Debug.Log("(Inventory) " + capable.name + " dropped : " + item.name); }
 
         return true;
     }
@@ -149,7 +153,7 @@ public class Inventory : MonoBehaviour
         // we update the UI
         uis.ForEach(ui => ui.UI_Drop(item));
 
-        if (debug) { Debug.Log("(Inventory) " + capable.name + " removed : " + item.name); }
+        if (log) { Debug.Log("(Inventory) " + capable.name + " removed : " + item.name); }
 
         return true;
     }
@@ -170,12 +174,12 @@ public class Inventory : MonoBehaviour
             // check if we have an interactor
             if (interactor == null)
             {
-                if (debug) { Debug.LogWarning(s + "we don't have an interactor\n"); }
+                if (log) { Debug.LogWarning(s + "we don't have an interactor\n"); }
                 return null;
             }
 
             // yes we do !! return its inventory
-            if (debug)
+            if (log)
             {
                 Debug.Log(s + "we have an interactor : " + interactor.capable.name
                 + "\nand its inventory is " + interactor.capable.Inventory.name);
@@ -196,7 +200,7 @@ public class Inventory : MonoBehaviour
             Capable interactable = interactor.interactable as Capable;
             if (interactable == null)
             {
-                if (debug) { Debug.LogWarning(s + "we don't have an interactable\n"); }
+                if (log) { Debug.LogWarning(s + "we don't have an interactable\n"); }
                 return null;
             }
 
@@ -210,14 +214,14 @@ public class Inventory : MonoBehaviour
                 // fermé et pas en train de s'ouvrir
                 if (!openable.is_open && !openable.is_moving)
                 {
-                    if (debug) { Debug.LogWarning(s + "but it's closed & not opening\n"); }
+                    if (log) { Debug.LogWarning(s + "but it's closed & not opening\n"); }
                     return null;
                 }
 
                 // en train de se fermer
                 else if (openable.is_open && openable.is_moving)
                 {
-                    if (debug) { Debug.LogWarning(s + "but it's closing\n"); }
+                    if (log) { Debug.LogWarning(s + "but it's closing\n"); }
                     return null;
                 }
 
@@ -225,12 +229,12 @@ public class Inventory : MonoBehaviour
             }
             else if (interactable.Inventory == null)
             {
-                if (debug) { Debug.LogWarning(s + "but it doesn't have an inventory\n"); }
+                if (log) { Debug.LogWarning(s + "but it doesn't have an inventory\n"); }
                 return null;
             }
 
             // we return the interactable's inventory
-            if (debug) { Debug.Log(s + "and its inventory is " + interactable.Inventory.name + "\n\n"); }
+            if (log) { Debug.Log(s + "and its inventory is " + interactable.Inventory.name + "\n\n"); }
             return interactable.Inventory;
         }
 
@@ -276,7 +280,7 @@ public class Inventory : MonoBehaviour
         // we remove the UI from the list
         uis.Remove(ui_inventory);
         ui_inventory.Inventory = null;
-        if (debug) { Debug.Log("(Inventory) " + capable.name + " removed UI_Inventory : " + ui_inventory.name); }
+        if (log) { Debug.Log("(Inventory) " + capable.name + " removed UI_Inventory : " + ui_inventory.name); }
     }
     public void AddUI(UI_Inventory ui_inventory)
     {
@@ -285,7 +289,7 @@ public class Inventory : MonoBehaviour
         // we add the UI to the list
         uis.Add(ui_inventory);
         ui_inventory.Inventory = this;
-        if (debug) { Debug.Log("(Inventory) " + capable.name + " added UI_Inventory : " + ui_inventory.name); }
+        if (log) { Debug.Log("(Inventory) " + capable.name + " added UI_Inventory : " + ui_inventory.name); }
     }
 
 }

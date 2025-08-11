@@ -638,8 +638,13 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         // si on utilise la souris alors pas besoin de naviguer vers le plus proche
         if (!input_manager.isUsingGamepad()) { return; }
 
-        // wait for a frame to let the click happen
+        // wait for a few frame to let the click happen
         await System.Threading.Tasks.Task.Yield();
+        await System.Threading.Tasks.Task.Yield();
+        await System.Threading.Tasks.Task.Yield();
+        await System.Threading.Tasks.Task.Yield();
+
+        if (AppManager.Instance.IsQuitting) { return; }
 
         // on navigue vers le slot le plus proche
         navigateToClosest(position);

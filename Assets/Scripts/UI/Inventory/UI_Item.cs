@@ -114,7 +114,7 @@ public class UI_Item : UI_Slot
     }
 
     // ITEM SWITCHING
-    public void SwitchItems(List<Item> items)
+    public virtual void SwitchItems(List<Item> items, bool items_moved = true)
     {
         Clear();
 

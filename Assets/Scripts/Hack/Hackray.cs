@@ -67,20 +67,25 @@ public class Hackray : MonoBehaviour
     }
 
     // SETTERS
-    public void SetLaptopAndHackable(Laptop laptop, Hackable hackable)
+    public void SetLaptopAndTarget(Laptop laptop, Transform target)
     {
-        // todo checks if laptop is on ground or not & if on ground the hacker is the laptop
-        // otherwise it is its holder, and subscribe to item.OnGroundDropped & item.OnGrabbed
-        // to change it. for this we need to store callbacks and properly removed them ondisable
-
         this.laptop = laptop;
 
         // set hacker and target
         this.hacker = laptop.transform;
-        this.target = hackable.transform;
+        this.target = target;
 
-        // set offsets
-        target_offset = hackable.transform.Find("processor").localPosition;
+        // set target offset
+        if (target.name == "cursor")
+        {
+            target_offset = Vector2.zero;
+        }
+        else
+        {
+            target_offset = target.Find("processor").localPosition;
+        }
+
+        // set laptop offset
         if (laptop.Grabbed) { handleLaptopGrabbed(laptop.Holder); }
         else { handleLaptopDropped(); }
 

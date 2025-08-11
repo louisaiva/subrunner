@@ -10,7 +10,7 @@ public class CyberZombo : IA, Hackable
     public int processor_exploit_knockback_magnitude = 5;
 
 
-    // TARGETED
+    [Header("Components")]
     public SpriteRenderer spriteRenderer { get; private set; }
     public Material TargetMaterial { get; private set; }
     public Material DefaultMaterial { get; private set; }
@@ -24,8 +24,9 @@ public class CyberZombo : IA, Hackable
         TargetMaterial = Resources.Load<Material>("materials/targeted/hack_door");
     }
 
-    // HACKABLE
+    [Header("Hackable")]
     public int SecurityLevel => 1;
+    public List<Hack> RunningHacks { get; private set; } = new List<Hack>();
     public bool IsVulnerableTo(Exploit exploit)
     {
         return exploit.name == "processor_exploit";
@@ -35,6 +36,8 @@ public class CyberZombo : IA, Hackable
     public void OnHackStarted(Hack hack)
     {
         if (debug) { Debug.Log($"(CyberZombo) {name} is being hacked by {hack.exploit.name}"); }
+
+        RunningHacks.Add(hack);
     }
     public void OnHackCompleted(Hack hack)
     {
@@ -51,10 +54,13 @@ public class CyberZombo : IA, Hackable
 
             take_damage(processor_exploit_damage, knockback_force);
         }
+
+        RunningHacks.Remove(hack);
     }
     public void OnHackFailed(Hack hack)
     {
         if (debug) { Debug.Log($"(CyberZombo) {name} failed to hack by {hack.exploit.name}"); }
+        RunningHacks.Remove(hack);
     }
 
 
@@ -62,6 +68,13 @@ public class CyberZombo : IA, Hackable
     public override void Die()
     {
         spriteRenderer.material = DefaultMaterial;
-    }
+        int hacks = RunningHacks.Count;
+        while (RunningHacks.Count > 0)
+        {
+            Hack hack = RunningHacks[0];
+            hack.Fail();
+        }
 
+        Debug.Log($"(CyberZombo) {name} has died. {hacks} running hacks were forced to fail.");
+    }
 }

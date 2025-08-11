@@ -19,6 +19,7 @@ public interface Hackable
     Material DefaultMaterial { get; }
 
     // BEING HACKED
+    List<Hack> RunningHacks { get; }
     void OnHackStarted(Hack hack);
     void OnHackCompleted(Hack hack);
     void OnHackFailed(Hack hack);

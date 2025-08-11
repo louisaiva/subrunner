@@ -55,10 +55,11 @@ public class DropCapacity : Capacity
     // SELECT / DESELECT
     public void Select(Item item)
     {
+
         selected_item = item;
 
         // we set the callback
-        dropAction.performed += dropCallback;
+        if (dropAction != null) { dropAction.performed += dropCallback; }
 
         if (debug) { Debug.Log("(DropCapacity) selected (and callback set) : " + item.name); }
     }
@@ -71,7 +72,7 @@ public class DropCapacity : Capacity
         selected_item = null;
 
         // we remove the callback
-        dropAction.performed -= dropCallback;
+        if (dropAction != null) { dropAction.performed -= dropCallback; }
 
     }
 
@@ -140,6 +141,6 @@ public class DropCapacity : Capacity
     private void OnDestroy()
     {
         // we remove the callback
-        dropAction.performed -= dropCallback;
+        if (dropAction != null) { dropAction.performed -= dropCallback; }
     }
 }

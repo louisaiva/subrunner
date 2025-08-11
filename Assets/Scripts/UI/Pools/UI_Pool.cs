@@ -12,6 +12,8 @@ public class UI_Pool : MonoBehaviour
     public string Reference = "pool";
     public bool Showed = false;
     protected bool in_transition = false;
+
+    [Header("Transition parameters")]
     public bool CanBeHidden = true; // if true, the pool can be hidden when switching to another pool
     public bool CanBeCanceled = false; // if true, the UI_Manager will switch to hud when pressed & released
     public bool UsePersoInputs = true; // if true, the UI_Manager will activate the inputs.perso when the pool is showed
@@ -35,7 +37,7 @@ public class UI_Pool : MonoBehaviour
     protected virtual void Start()
     {
         // we get the inputs
-        Hide(0f);
+        Hide(0.01f);
     }
 
     // SHOW / HIDE
@@ -50,7 +52,6 @@ public class UI_Pool : MonoBehaviour
     {
         in_transition = true;
         await hide_pool(duration);
-        // await System.Threading.Tasks.Task.Delay((int)(duration * 1000));
 
         in_transition = false;
     }
@@ -72,7 +73,7 @@ public class UI_Pool : MonoBehaviour
     protected virtual async Awaitable hide_pool(float duration)
     {
         // on cache tous les éléments du pool
-        if (log) { Debug.Log("(UI_Pool) hiding pool : " + Reference); }
+        if (log) { Debug.Log("(UI_Pool) hiding pool : " + Reference + $"(duration : {(int)(duration * 1000)})"); }
         foreach (GameObject ui in ui_elements)
         {
             ui.SetActive(false);
