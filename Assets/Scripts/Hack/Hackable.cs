@@ -19,12 +19,11 @@ public interface Hackable
     Material DefaultMaterial { get; }
 
     // BEING HACKED
+    // List<ConnectionType> ConnectionTypes { get; } // the types of connections that can be used to connect to this hackable
     List<Hack> RunningHacks { get; }
     void OnHackStarted(Hack hack);
     void OnHackCompleted(Hack hack);
     void OnHackFailed(Hack hack);
-    // Vector3 HackPoint { get; } // the local position offset for the hackray to point to
-    // HackableSlot HackableSlot { get; }
 }
 
 public interface Lockable : Hackable

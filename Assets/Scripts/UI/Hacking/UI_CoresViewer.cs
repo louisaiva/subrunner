@@ -59,6 +59,12 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
         laptop.OnCoresChange += UpdateCoresCount;
         laptop.OnCoresFreedOrUsed += update_free_used_cores;
         UpdateCoresCount(laptop.MaxCores);
+
+        // we update the cores colors
+        free_them_all();
+
+        // we get the used cores number of the laptop
+        update_free_used_cores(laptop.UsedCoresCount);
     }
 
     // CORES MANAGEMENT
@@ -150,8 +156,9 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
     private void free_them_all()
     {
         if (log) { Debug.Log($"(UI_CoresViewer) Freeing all cores"); }
-        foreach (Image core in used_cores)
+        for (int i = 0; i < used_cores.Count; i++)
         {
+            Image core = used_cores[i];
             free_core(core);
         }
         used_cores.Clear();

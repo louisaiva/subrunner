@@ -59,8 +59,8 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
     private void createHackInfo(Hack hack)
     {
         Transitioner hack_info = Instantiate(hack_info_prefab, hack_info_container).GetComponent<Transitioner>();
-        hack_info.name = $"hack_info_{hack.exploit.name}";
-        hack_info.transform.Find("name").GetComponent<TextMeshProUGUI>().text = "> " + hack.exploit.name;
+        hack_info.name = $"hack_info_{hack.name}";
+        hack_info.transform.Find("name").GetComponent<TextMeshProUGUI>().text = "> " + hack.name;
         hack_info.transform.Find("details/cost/nb").GetComponent<TextMeshProUGUI>().text = hack.exploit.cores_cost.ToString();
         hack_info.transform.Find("details/cost/nb").gameObject.SetActive(hack.exploit.cores_cost > 1);
 

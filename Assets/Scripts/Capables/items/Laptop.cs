@@ -52,7 +52,7 @@ public class Laptop : Item, Usable
     {
         if (!used_cores.ContainsKey(hack))
         {
-            if (debug) { Debug.LogWarning($"(Laptop) {name} tried to free cores for a hack that is not running: {hack.exploit.name}"); }
+            if (debug) { Debug.LogWarning($"(Laptop) {name} tried to free cores for a hack that is not running: {hack.name}"); }
             return;
         }
 

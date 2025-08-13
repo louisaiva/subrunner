@@ -24,6 +24,7 @@ public class HackableNavigator : MonoBehaviour
     [SerializeField] private Color out_of_range_hackray_color = Color.yellow;
     [SerializeField] private Color no_vulnerability_hackray_color = Color.yellow;
     [SerializeField] private Color no_cores_hackray_color = Color.yellow;
+    [SerializeField] private float hackray_width = 1.8f; // the x scale of the hackray's sr
     private Hackray hover_hackray; // this is the hackray that is used to hover the target
 
 
@@ -89,52 +90,6 @@ public class HackableNavigator : MonoBehaviour
         hover_hackray.SetColor(hackable_color);
     }
 
-    // TRIGGER ENTER
-    /* private void OnTriggerEnter2D(Collider2D other)
-    {
-        // we check if other is a capable
-        Capable target = other.transform.parent.GetComponent<Capable>();
-        if (target == null) { return; }
-
-        // we get the hackable of the target capacity
-        if (target is not Hackable hack_target) { return; }
-
-        // we check if the hackable is already targeted
-        if (target.gameObject == current_hackable) { return; }
-
-        // or if it's already in the waiting targets
-        if (waiting_hackables.Contains(target.gameObject)) { return; }
-
-        // we add the hackable to the waiting targets
-        waiting_hackables.Add(target.gameObject);
-
-        if (log) { Debug.Log("(HackableNavigator) " + target.name + " added to waiting targets"); }
-    }
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        // we check if other is a capable
-        Capable target = other.transform.parent.GetComponent<Capable>();
-        if (target == null) { return; }
-
-        // we get the hackable of the target capacity
-        if (target is not Hackable hack_target) { return; }
-
-        // we check if the hackable is the current target
-        if (target.gameObject == current_hackable)
-        {
-            unselect_target();
-            return;
-        }
-
-        // we check if the hack_target is in the waiting targets
-        if (waiting_hackables.Contains(target.gameObject))
-        {
-            waiting_hackables.Remove(target.gameObject);
-            if (log) { Debug.Log("(HackableNavigator) " + hack_target.name + " removed from waiting targets"); }
-        }
-    } */
-
-
     // TARGET SELECTION
     private void select_target(Hackable hackable)
     {
@@ -146,7 +101,6 @@ public class HackableNavigator : MonoBehaviour
         if (log) { Debug.Log("(HackableNavigator) " + hackable.name + " selected as closest target"); }
 
         connector.Connect(hackable);
-        // hacker.Select(Exploit.Nmap); // we select nmap by default to check for vulnerabilities
 
         // we set the hovered target material
         hackable.spriteRenderer.material = hackable.TargetMaterial;
@@ -169,7 +123,11 @@ public class HackableNavigator : MonoBehaviour
 
         // we reset the hackable material
         Hackable hackable = current_hackable.GetComponent<Hackable>();
-        if (hackable == null) { return; }
+        if (hackable == null)
+        {
+            current_hackable = null;
+            return;
+        }
         hackable.spriteRenderer.material = hackable.DefaultMaterial;
 
         // we reset the current target
@@ -188,6 +146,8 @@ public class HackableNavigator : MonoBehaviour
         {
             hover_hackray = Instantiate(hackray_prefab, transform).GetComponent<Hackray>();
             hover_hackray.name = "hover_hackray";
+            Transform sr = hover_hackray.transform.Find("sr");
+            sr.localScale = new Vector3(hackray_width, sr.localScale.y, sr.localScale.z);
         }
         hover_hackray.gameObject.SetActive(false);
         hover_hackray.SetColor(hackray_color);

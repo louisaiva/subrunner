@@ -35,15 +35,15 @@ public class CyberZombo : IA, Hackable
     // BEING HACKED
     public void OnHackStarted(Hack hack)
     {
-        if (debug) { Debug.Log($"(CyberZombo) {name} is being hacked by {hack.exploit.name}"); }
+        if (debug) { Debug.Log($"(CyberZombo) {name} is being hacked by {hack.name}"); }
 
         RunningHacks.Add(hack);
     }
     public void OnHackCompleted(Hack hack)
     {
-        if (debug) { Debug.Log($"(CyberZombo) {name} has been hacked by {hack.exploit.name}"); }
+        if (debug) { Debug.Log($"(CyberZombo) {name} has been hacked by {hack.name}"); }
         // if the exploit is a processor exploit, we deal damage to the zombie
-        if (hack.exploit.name == "processor_exploit")
+        if (hack.name == "processor_exploit")
         {
             // we create a knockback force
             Force knockback_force = new Force(
@@ -59,7 +59,7 @@ public class CyberZombo : IA, Hackable
     }
     public void OnHackFailed(Hack hack)
     {
-        if (debug) { Debug.Log($"(CyberZombo) {name} failed to hack by {hack.exploit.name}"); }
+        if (debug) { Debug.Log($"(CyberZombo) {name} failed to hack by {hack.name}"); }
         RunningHacks.Remove(hack);
     }
 

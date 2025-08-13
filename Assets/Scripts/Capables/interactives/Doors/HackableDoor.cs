@@ -86,7 +86,7 @@ public class HackableDoor : Door, Lockable
     public void OnHackStarted(Hack hack)
     {
         // Handle the hack start event
-        if (debug) { Debug.Log($"(HackableDoor) Hack started on {name} with exploit {hack.exploit.name}"); }
+        if (debug) { Debug.Log($"(HackableDoor) Hack started on {name} with exploit {hack.name}"); }
 
         // we show the hacked animation
         anim_player.Play("hacked");
@@ -96,7 +96,7 @@ public class HackableDoor : Door, Lockable
     public void OnHackFailed(Hack hack)
     {
         // Handle the hack failure event
-        if (debug) { Debug.Log($"(HackableDoor) Hack failed on {name} with exploit {hack.exploit.name}"); }
+        if (debug) { Debug.Log($"(HackableDoor) Hack failed on {name} with exploit {hack.name}"); }
         anim_player.StopPlaying("hacked");
         Lock();
 
@@ -105,7 +105,7 @@ public class HackableDoor : Door, Lockable
     public void OnHackCompleted(Hack hack)
     {
         // Handle the hack completion event
-        if (debug) { Debug.Log($"(HackableDoor) Hack completed on {name} with exploit {hack.exploit.name}"); }
+        if (debug) { Debug.Log($"(HackableDoor) Hack completed on {name} with exploit {hack.name}"); }
         // this.Do("open");
 
         // we unlock the door & play unlock anim

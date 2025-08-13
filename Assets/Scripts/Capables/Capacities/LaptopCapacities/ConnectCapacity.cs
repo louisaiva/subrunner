@@ -41,7 +41,11 @@ public class ConnectCapacity : Capacity
     public void Connect(Hackable target)
     {
         // checks if we already have a connection to it we don't open a new one
-        if (IsConnectedTo(target)) { return; }
+        if (IsConnectedTo(target))
+        {
+            connection = get_connection(target);
+            return;
+        }
 
         // checks if target is unlocked already (can't connect)
         if (target is Lockable lockable && !lockable.Locked) { return; }
@@ -54,10 +58,9 @@ public class ConnectCapacity : Capacity
         {
             if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} try to connect to {target.name} but is out of range."); }
             connection.Close();
-            return;
         }
+        else if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} connected to {target.name}."); }
 
-        if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} connected to {target.name}."); }
 
         // and now we scan the target
         hacker.Scan(target);
@@ -65,7 +68,7 @@ public class ConnectCapacity : Capacity
     public void Disconnect()
     {
         if (connection == null) { return; }
-        if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} disconnected from {Target.name}."); }
+        if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} disconnected current connection."); }
         if (connection.state != ConnectionState.Opened) { connections.Remove(connection); }
         connection = null;
     }
@@ -76,6 +79,10 @@ public class ConnectCapacity : Capacity
             return connection.state == ConnectionState.Connected || connection.state == ConnectionState.Opened;
         }
         return connections.Any(c => c.target == target && (c.state == ConnectionState.Connected || c.state == ConnectionState.Opened));
+    }
+    private Connection get_connection(Hackable target)
+    {
+        return connections.FirstOrDefault(c => c.target == target);
     }
 
     // UPDATE
@@ -90,7 +97,7 @@ public class ConnectCapacity : Capacity
             // sinon on vérifie si on doit fermer la connection
             if (!is_in_range(tunnel.target))
             {
-                if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} closing connection to {tunnel.target.name} because it is out of range."); }
+                if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} closing connection because it is out of range."); }
                 tunnel.Close();
                 continue;
             }
@@ -102,11 +109,11 @@ public class ConnectCapacity : Capacity
             }
         }
     }
-
     private bool is_in_range(Hackable target)
     {
         if (target == null) { return false; }
-        return Vector3.Distance(transform.position, target.transform.position) <= Radius;
+        try { return Vector3.Distance(transform.position, target.transform.position) <= Radius; }
+        catch { return false; }
     }
 }
 
