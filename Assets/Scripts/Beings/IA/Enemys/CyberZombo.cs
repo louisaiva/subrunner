@@ -55,7 +55,7 @@ public class CyberZombo : IA, Hackable
             take_damage(processor_exploit_damage, knockback_force);
         }
 
-        RunningHacks.Remove(hack);
+        if (RunningHacks.Contains(hack)) { RunningHacks.Remove(hack); } // if the zombo is dead we may have already removed the hack
     }
     public void OnHackFailed(Hack hack)
     {
@@ -72,7 +72,8 @@ public class CyberZombo : IA, Hackable
         while (RunningHacks.Count > 0)
         {
             Hack hack = RunningHacks[0];
-            hack.Fail();
+            if (hack.state == HackState.Completed) { RunningHacks.RemoveAt(0); }
+            else { hack.Fail(); }
         }
 
         Debug.Log($"(CyberZombo) {name} has died. {hacks} running hacks were forced to fail.");

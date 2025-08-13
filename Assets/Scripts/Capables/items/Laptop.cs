@@ -21,6 +21,10 @@ public class Laptop : Item, Usable
             return free_cores;
         }
     }
+    public int MaxCores => max_cores;
+    public int UsedCoresCount => max_cores - FreeCoresCount;
+    public event System.Action<int> OnCoresChange = delegate { };
+    public event System.Action<int> OnCoresFreedOrUsed = delegate { };
 
     [Header("Logs")]
     [SerializeField] protected bool log_keys = false;
@@ -35,6 +39,8 @@ public class Laptop : Item, Usable
     {
         // we add the hack to the used cores
         used_cores[hack] = hack.exploit.cores_cost;
+
+        OnCoresFreedOrUsed?.Invoke(hack.exploit.cores_cost);
 
         if (FreeCoresCount < 0)
         {
@@ -51,6 +57,7 @@ public class Laptop : Item, Usable
         }
 
         used_cores.Remove(hack);
+        OnCoresFreedOrUsed?.Invoke(-hack.exploit.cores_cost);
     }
 
     // KEYS MANAGEMENT
@@ -106,6 +113,7 @@ public class Laptop : Item, Usable
     }
 
     // GRABBING PROCESSOR MODULE
+    // todo : i think it is better to have a ProcessCapacity that handles cores & etc
     public void OnCPU_Changed()
     {
         // we check how many cpu modules we have in our inventory
@@ -115,10 +123,10 @@ public class Laptop : Item, Usable
         if (debug) { Debug.Log($"(Laptop) {name} CPU changed. New max cores: {new_max_cores} / old cores: {max_cores}"); }
 
         // check the difference between current and next max_cores
-        if (new_max_cores >= max_cores) { max_cores = new_max_cores; return; }
+        if (new_max_cores >= max_cores) { set_new_max_cores(new_max_cores); return; }
 
         // if we have less cores, it's ok if we have have enough free cores left
-        if (FreeCoresCount >= max_cores - new_max_cores) { max_cores = new_max_cores; return; }
+        if (FreeCoresCount >= max_cores - new_max_cores) { set_new_max_cores(new_max_cores); return; }
 
         // otherwise we need to free some used cores
         while (FreeCoresCount < max_cores - new_max_cores)
@@ -130,7 +138,12 @@ public class Laptop : Item, Usable
         }
 
         // finally we set the new max_cores
+        set_new_max_cores(new_max_cores);
+    }
+    private void set_new_max_cores(int new_max_cores)
+    {
         max_cores = new_max_cores;
+        OnCoresChange?.Invoke(new_max_cores);
     }
 }
 

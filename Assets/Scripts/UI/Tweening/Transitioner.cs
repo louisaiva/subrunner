@@ -14,6 +14,7 @@ public class Transitioner : MonoBehaviour
     [SerializeField] protected Ease ease_show = Ease.Default;
     [SerializeField] protected Ease ease_hide = Ease.Default;
     [SerializeField] protected float default_duration = 1f;
+    [SerializeField] protected bool unscaled_time = true;
     // public bool Available = true;
     // public bool Shown => get_current_value() >= shown_value;
     // public bool Hidden => get_current_value() <= hidden_value;
@@ -27,6 +28,10 @@ public class Transitioner : MonoBehaviour
     [SerializeField] protected bool transition_on_enable = true;
     public bool ShouldBeVisibleOnEnable = true;
     protected Action<float> updater;
+
+    [Header("transition on Start")]
+    [SerializeField] protected bool transition_on_start = false;
+    [SerializeField] protected float start_transition = 0.1f;
 
     [Header("Logs")]
     [SerializeField] private bool log = false;
@@ -68,10 +73,19 @@ public class Transitioner : MonoBehaviour
         Hide();
     }
 
-    // TRANSITION
-    public async Awaitable Show(float duration = default)
+    // START
+    private void Start()
     {
-        // if (!Available) { return; }
+        if (transition_on_start)
+        {
+            if (log) { Debug.Log($"(Transitioner) Starting transition for {name} with duration {start_transition}"); }
+            Show(start_transition);
+        }
+    }
+
+    // TRANSITION
+    public async Awaitable Show(float duration = -99f)
+    {
         if (Shown)
         {
             if (log) { Debug.Log($"(Transitioner) {name} is already shown, no need to transition"); }
@@ -84,13 +98,9 @@ public class Transitioner : MonoBehaviour
         if (log) { Debug.Log($"(Transitioner) Showing {name} with duration {duration}"); }
         await Transition(true, duration);
 
-        // update states
-        if (get_current_value() >= shown_value) { Shown = true; }
-        else if (get_current_value() <= hidden_value) { Hidden = true; }
     }
-    public async Awaitable Hide(float duration = default)
+    public async Awaitable Hide(float duration = -99f)
     {
-        // if (!Available) { return; }
         if (Hidden)
         {
             if (log) { Debug.Log($"(Transitioner) {name} is already hidden, no need to transition"); }
@@ -101,18 +111,11 @@ public class Transitioner : MonoBehaviour
 
         // transition
         if (log) { Debug.Log($"(Transitioner) Hiding {name} with duration {duration}"); }
-        await Transition(false, duration);
-
-        // update states
-        if (get_current_value() <= hidden_value) { Hidden = true; }
-        else if (get_current_value() >= shown_value) { Shown = true; }
+        await Transition(false, -99f);
     }
-    public async Awaitable Transition(bool show, float duration = default)
+    public async Awaitable Transition(bool show, float duration = -99f)
     {
-        // Available = false;
-        // Shown = false;
-        // Hidden = false;
-        if (duration == default) { duration = default_duration; }
+        if (duration <= 0f) { duration = default_duration; }
 
         Ease ease = show ? ease_show : ease_hide;
 
@@ -126,10 +129,15 @@ public class Transitioner : MonoBehaviour
 
         // then we make the transition happen
         await Tween.Custom(start_value, end_value, duration: duration,
-                onValueChange: updater, useUnscaledTime: true, ease: ease);
+                onValueChange: updater, useUnscaledTime: unscaled_time, ease: ease);
 
-        // Available = true;
-        
+
+        // update states
+        if (get_current_value() >= shown_value) { Shown = true; }
+        else { Shown = false; }
+        if (get_current_value() <= hidden_value) { Hidden = true; }
+        else { Hidden = false; }
+
         /* if (log)
         {
             Debug.Log($"(Transitioner) Transitioning from {start_value} to {end_value} with duration {duration} and ease {ease}");
@@ -146,6 +154,15 @@ public class Transitioner : MonoBehaviour
             return GetComponent<RectTransform>().localScale.x; // Assuming uniform scaling
         }
         return 0f; // Default case, should not happen
+    }
+
+    // HIDE & DESTROY
+    public async Awaitable HideAndDestroy(float duration = default)
+    {
+        if (log) { Debug.Log($"(Transitioner) Hiding and destroying {name} with duration {duration}"); }
+        await Hide(duration);
+        await System.Threading.Tasks.Task.Delay(100); // wait a small time (100 ms) to ensure transition has happened
+        Destroy(gameObject);
     }
 }
 

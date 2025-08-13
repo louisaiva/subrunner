@@ -20,7 +20,10 @@ public class HackableNavigator : MonoBehaviour
     [Header("Hackrays")]
     public GameObject hackray_prefab;
     [SerializeField] private Color hackray_color = Color.yellow;
+    [SerializeField] private Color hackable_color = Color.yellow;
     [SerializeField] private Color out_of_range_hackray_color = Color.yellow;
+    [SerializeField] private Color no_vulnerability_hackray_color = Color.yellow;
+    [SerializeField] private Color no_cores_hackray_color = Color.yellow;
     private Hackray hover_hackray; // this is the hackray that is used to hover the target
 
 
@@ -60,12 +63,48 @@ public class HackableNavigator : MonoBehaviour
             unselect_target();
             return;
         }
-        bool connected = hacker.Connect(current_hackable.GetComponent<Hackable>());
 
-        // on met à jour le hackray
-        hover_hackray.SetColor(connected ? hackray_color : out_of_range_hackray_color);
-        if (connected) { hacker.Select(current_hackable.GetComponent<Hackable>()); }
-        else { hacker.Deselect(); }
+        // on met à jour le hackable
+        update_hackable(current_hackable.GetComponent<Hackable>());
+    }
+    private void update_hackable(Hackable hackable)
+    {
+        // check if we can't connect to the hackable
+        if (!hacker.Connect(hackable))
+        {
+            hover_hackray.SetColor(out_of_range_hackray_color);
+            hacker.Deselect();
+            return;
+        }
+
+        // check if we found any vulnerabilities
+        Exploit exploit = hacker.GetExploitVulnerabilities(hackable);
+        if (exploit == null)
+        {
+            hover_hackray.SetColor(no_vulnerability_hackray_color);
+            hacker.Deselect();
+            return;
+        }
+
+        // check if we have the required cores
+        if (!laptop.HasFreeCores(exploit.cores_cost))
+        {
+            hover_hackray.SetColor(no_cores_hackray_color);
+            hacker.Deselect();
+            return;
+        }
+
+        // checks if this is nmap -> if yes we can hack it to check for vulnerabilities
+        if (exploit == Exploit.Nmap)
+        {
+            hover_hackray.SetColor(hackray_color);
+            hacker.Select(hackable);
+            return;
+        }
+
+        // otherwise we can hack it !!!!
+        hover_hackray.SetColor(hackable_color);
+        hacker.Select(hackable);
     }
 
     // TRIGGER ENTER

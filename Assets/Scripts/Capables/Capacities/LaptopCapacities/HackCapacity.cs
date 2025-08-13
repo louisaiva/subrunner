@@ -15,6 +15,7 @@ public class HackCapacity : Capacity
 
     [Header("Hacks")]
     public List<Hack> running_hacks = new List<Hack>();
+    public event System.Action<Hack> OnExploitRun = delegate { };
 
     [Header("Exploits")]
     public List<Exploit> exploits = new List<Exploit>();
@@ -22,6 +23,8 @@ public class HackCapacity : Capacity
     [Header("Vulnerabilities found")]
     public Dictionary<Hackable, List<Exploit>> vulnerabilities = new Dictionary<Hackable, List<Exploit>>();
     // this stores the list of all the hackables we scanned & their vulnerabilites found !
+    // todo : improve this by saving the last scan time and remove those when time > x
+    // and maybe move it to a List<ScanResult> ???
 
     [Header("Hackrays")]
     public GameObject hackray_prefab;
@@ -48,18 +51,8 @@ public class HackCapacity : Capacity
     // TARGET MANAGEMENT
     public void Select(Hackable target)
     {
-        // we check if the target is null
-        if (target == null)
-        {
-            hovered_target = null;
-            return;
-        }
-
-        // we check if the target is in range
-        if (Vector3.Distance(transform.position, target.transform.position) > hack_collider.radius)
-        {
-            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} is hovering {target.name} but it is out of range."); }
-        }
+        // we check if the target is already selected
+        if (target == hovered_target) { return; }
 
         // we set the hovered target
         if (debug) { Debug.Log($"(HackCapacity) selected target: {target.name}"); }
@@ -103,14 +96,11 @@ public class HackCapacity : Capacity
                 continue;
             }
 
-            // we update the progress of the hack
-            hack.progress += Time.deltaTime / hack.duration * 100f;
-            if (log_hack_progress)
+            hack.Process();
+            /* if (log_hack_progress)
             {
                 Debug.Log($"(HackCapacity) updating exploit {hack.exploit.name}. Progress: {hack.progress}%");
-            }
-            // we check if the hack is done
-            if (hack.progress >= 100f) { hack.Finish(); }
+            } */
         }
     }
     private void remove_hack(int hack_index)
@@ -180,6 +170,8 @@ public class HackCapacity : Capacity
     {
         if (target == null) { return false; }
 
+        if (target is Lockable lockable && !lockable.Locked) { return false; } // if the target is a lockable and it is not locked, we can't hack it
+        
         // we check if the target is in range
         if (Vector3.Distance(transform.position, target.transform.position) > hack_collider.radius)
         {
@@ -197,15 +189,15 @@ public class HackCapacity : Capacity
         string log_exploits = "";
         if (target is Lockable lockable && laptop.HasKeyFor(lockable))
         {
-            vulnerabilities[target].Add(exploits[0]);
-            log_exploits += $"- {exploits[0].name} (instant hack)\n";
+            vulnerabilities[target].Add(Exploit.InsertPassword);
+            log_exploits += $"- {Exploit.InsertPassword.name} (instant hack)\n";
         }
 
         // we scan the other vulnerabilities
-        for (int i = 1; i < exploits.Count; i++)
+        for (int i = 0; i < exploits.Count; i++)
         {
             Exploit exploit = exploits[i];
-            if (target.IsVulnerableTo(exploit) && laptop.HasFreeCores(exploit.cores_cost))
+            if (target.IsVulnerableTo(exploit))
             {
                 vulnerabilities[target].Add(exploit);
                 log_exploits += $"- {exploit.name}\n";
@@ -226,6 +218,9 @@ public class HackCapacity : Capacity
         // we add the hack to the running hacks
         running_hacks.Add(hack);
         hack.target.OnHackStarted(hack);
+
+        // we notify that the exploit is run
+        OnExploitRun?.Invoke(hack);
 
         // we create a hackray for this hack
         hackrays[hack] = create_hackray(hack.target);
@@ -252,6 +247,12 @@ public class HackCapacity : Capacity
         // checks if we are hacking this target
         return running_hacks.Any(h => h.target == target);
     }
+    public Exploit GetExploitVulnerabilities(Hackable target)
+    {
+        if (!vulnerabilities.ContainsKey(target)) { return Exploit.Nmap; } // if we never scanned the target we can't know if its vulnerable or not
+        if (vulnerabilities[target].Count == 0) { return null; } // if we never found any vulnerabilities we return null
+        return vulnerabilities[target][0]; // returns the first exploit found
+    }
 }
 
 
@@ -273,6 +274,16 @@ public class Hack
         this.target = target;
         this.exploit = exploit;
         this.progress = 0f;
+    }
+
+    // PROCESS
+    public void Process()
+    {
+        // we update the progress of the hack
+        progress += Time.deltaTime / duration * 100f;
+
+        // we check if the hack is done
+        if (progress >= 100f) { Finish(); }
     }
 
     // RUN & FINISH
@@ -297,7 +308,7 @@ public class Hack
     {
         // the hack has failed :///
         Debug.Log($"Hack on {target.name} with exploit {exploit.name} was quit.");
-        this.progress = 0f;
+        // this.progress = 0f;
         this.state = HackState.Failed;
 
         // Notify the target that the hack is failed
@@ -317,7 +328,7 @@ public class Hack
     {
         // the hack has overflowed :///
         Debug.LogWarning($"Hack on {target.name} with exploit {exploit.name} has overflowed. Freeing cores.");
-        this.progress = 0f;
+        // this.progress = 0f;
         this.state = HackState.Overflowed;
 
         // Notify the target that the hack is failed
@@ -356,6 +367,9 @@ public enum HackState
 [System.Serializable]
 public class Exploit
 {
+    public static readonly Exploit Nmap = new Exploit("nmap", 0, 0.1f, 1);
+    public static readonly Exploit InsertPassword = new Exploit("insert_password", 1000, 0.1f, 1);
+
     [Header("Exploit Details")]
     public string name;
     public int security_level;

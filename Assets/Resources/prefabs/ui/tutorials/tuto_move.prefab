@@ -57,7 +57,14 @@ MonoBehaviour:
   ease_show: 24
   ease_hide: 23
   default_duration: 1
+  unscaled_time: 1
+  Shown: 0
+  Hidden: 1
   transition_on_enable: 0
+  ShouldBeVisibleOnEnable: 1
+  transition_on_start: 0
+  start_transition: 0.1
+  log: 0
 --- !u!1 &3427340769049281818
 GameObject:
   m_ObjectHideFlags: 0
@@ -369,6 +376,18 @@ PrefabInstance:
       propertyPath: input
       value: 
       objectReference: {fileID: -2859340253327848072, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+    - target: {fileID: 7812301186420496611, guid: 44ecfd6c9430d814cb017d42913f3113, type: 3}
+      propertyPath: clicked_color.b
+      value: 0.764151
+      objectReference: {fileID: 0}
+    - target: {fileID: 7812301186420496611, guid: 44ecfd6c9430d814cb017d42913f3113, type: 3}
+      propertyPath: clicked_color.g
+      value: 0.41451588
+      objectReference: {fileID: 0}
+    - target: {fileID: 7812301186420496611, guid: 44ecfd6c9430d814cb017d42913f3113, type: 3}
+      propertyPath: clicked_color.r
+      value: 0.704779
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

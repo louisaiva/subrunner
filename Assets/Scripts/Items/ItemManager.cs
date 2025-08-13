@@ -14,7 +14,7 @@ public class ItemManager : MonoBehaviour
 
     [Header("HUD Renderers")]
     [SerializeField] private RectTransform weapon_renderer;
-    // [SerializeField] private RectTransform laptop_renderer;
+    [SerializeField] private RectTransform laptop_renderer;
     [SerializeField] private RectTransform cons1_renderer;
     [SerializeField] private RectTransform cons2_renderer;
     [SerializeField] private RectTransform cons3_renderer;
@@ -100,6 +100,10 @@ public class ItemManager : MonoBehaviour
     // UPDATE HUDs
     private void update_hud_renderers(List<Item> items = null)
     {
+        // update LAPTOP
+        if (laptop_slot.Item != null) { enable_renderer(laptop_renderer); }
+        else { disable_renderer(laptop_renderer); }
+
         // initialize position
         float x = 0f;
         float cons_size = 37.5f; // size of the consumable icons
@@ -145,41 +149,6 @@ public class ItemManager : MonoBehaviour
             else { disable_renderer(renderer); }
         }
 
-        /* // update CONS 1
-            if (cons1_slot.Item != null)
-            {
-                enable_renderer(cons1_renderer, x);
-                // cons1_renderer.anchoredPosition = new Vector2(x, cons1_renderer.anchoredPosition.y);
-                x += cons_size;
-            }
-            else { disable_renderer(cons1_renderer); }
-
-        // update CONS 2
-        if (cons2_slot.Item != null)
-        {
-            enable_renderer(cons2_renderer, x);
-            // cons2_renderer.anchoredPosition = new Vector2(x, cons2_renderer.anchoredPosition.y);
-            x += cons_size;
-        }
-        else { disable_renderer(cons2_renderer); }
-
-        // update CONS 3
-        if (cons3_slot.Item != null)
-        {
-            enable_renderer(cons3_renderer, x);
-            // cons3_renderer.anchoredPosition = new Vector2(x, cons3_renderer.anchoredPosition.y);
-            x += cons_size;
-        }
-        else { disable_renderer(cons3_renderer); }
-
-        // update CONS 4
-        if (cons4_slot.Item != null)
-        {
-            enable_renderer(cons4_renderer, x);
-            // cons4_renderer.anchoredPosition = new Vector2(x, cons4_renderer.anchoredPosition.y);
-            x += cons_size;
-        }
-        else { disable_renderer(cons4_renderer); } */
     }
 
     private void disable_renderer(RectTransform renderer)
@@ -188,9 +157,9 @@ public class ItemManager : MonoBehaviour
         Transitioner transitioner = renderer.GetComponent<Transitioner>();
         transitioner.Hide();        
     }
-    private void enable_renderer(RectTransform renderer, float x)
+    private void enable_renderer(RectTransform renderer, float x = default)
     {
-        renderer.anchoredPosition = new Vector2(x, renderer.anchoredPosition.y);
+        if (x != default) { renderer.anchoredPosition = new Vector2(x, renderer.anchoredPosition.y); }
         // renderer.gameObject.SetActive(true);
         Transitioner transitioner = renderer.GetComponent<Transitioner>();
         transitioner.Show();

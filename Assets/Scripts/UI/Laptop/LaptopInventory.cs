@@ -18,12 +18,11 @@ public class LaptopInventory : Inventory
     // START
     protected override void Start()
     {
-        base.Start();
-        (capable as Laptop).OnCPU_Changed();
-
         // we subscribe to events
         OnItemGrabbed += HandleModuleGrabbed;
         OnItemDropped += HandleModuleDropped;
+        base.Start();
+        (capable as Laptop).OnCPU_Changed();
     }
 
     // GRAB DROP REMOVE
@@ -33,7 +32,21 @@ public class LaptopInventory : Inventory
         if (!base.Grab(item, uis_to_ignore)) { return false; }
 
         // we add an new index on the dictionary
-        items_slots[item] = (ui as UI_Laptop).GetItemSlotIndex(item);
+        if (ui != null)
+        {
+            items_slots[item] = (ui as UI_Laptop).GetItemSlotIndex(item);
+        }
+        else
+        {
+            List<int> free_slots = get_free_slots();
+            if (free_slots.Count == 0)
+            {
+                Debug.LogWarning($"(LaptopInventory) {name} has no free slots to grab {item.Reference}");
+                return false;
+            }
+            items_slots[item] = free_slots[0]; // we grab the first free slot
+        }
+
         if (log) { Debug.Log($"(LaptopInventory) grabbed {item.Reference} in slot {items_slots[item]}"); }
         return true;
     }

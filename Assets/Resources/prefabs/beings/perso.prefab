@@ -743,7 +743,7 @@ MonoBehaviour:
   uis:
   - {fileID: 0}
   - {fileID: 0}
-  debug: 0
+  log: 0
 --- !u!1 &3238169105776769028
 GameObject:
   m_ObjectHideFlags: 0
@@ -6337,10 +6337,13 @@ MonoBehaviour:
   selection_radius: 7
   hackray_prefab: {fileID: 2649227876755404805, guid: 3232acb1c565c9c4ab2e9dca453776b4, type: 3}
   hackray_color: {r: 1, g: 1, b: 1, a: 0.33333334}
+  hackable_color: {r: 0.5411765, g: 1, b: 0.6201, a: 0.48235294}
   out_of_range_hackray_color: {r: 1, g: 0, b: 0.06387138, a: 0.36862746}
+  no_vulnerability_hackray_color: {r: 1, g: 0, b: 0.0627451, a: 0.36862746}
+  no_cores_hackray_color: {r: 1, g: 0, b: 0.0627451, a: 0.36862746}
   hacker: {fileID: 0}
   cursor: {fileID: 546368589589292181}
-  log: 0
+  log: 1
   log_navigation_inputs: 0
   navigationInput: {fileID: -8837052246538266762, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
 --- !u!1 &7268661800307276622

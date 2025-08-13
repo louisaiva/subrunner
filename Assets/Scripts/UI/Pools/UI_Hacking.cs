@@ -20,6 +20,7 @@ public class UI_Hacking : UI_Pool
     public float final_timescale = 0.5f;
     public float bg_final_alpha = 0.5f;
 
+
     [Header("Inputs")]
 
     // EXPLOIT INPUT
@@ -55,6 +56,7 @@ public class UI_Hacking : UI_Pool
         exploitAction.performed += exploitCallback;
         await base.show_pool(duration);
 
+
         // we set the callbacks & enable HackableNavigator
         Perso.Instance.HackableNavigator.Enable();
 
@@ -62,17 +64,18 @@ public class UI_Hacking : UI_Pool
     }
     protected override async Awaitable hide_pool(float duration)
     {
-        if (log) { Debug.Log("(UI_Hacking) trying to hide pool"); }
+        // if (log) { Debug.Log("(UI_Hacking) trying to hide pool"); }
 
         // we disable navigator
         Perso.Instance.HackableNavigator.Disable();
 
-        if (log) { Debug.Log("(UI_Hacking) navigator disabled"); }
+
+        // if (log) { Debug.Log("(UI_Hacking) navigator disabled"); }
 
         // we remove the callbacks
         exploitAction.performed -= exploitCallback;
 
-        if (log) { Debug.Log("(UI_Hacking) callbacks removed"); }
+        // if (log) { Debug.Log("(UI_Hacking) callbacks removed"); }
 
         await base.hide_pool(duration);
 
