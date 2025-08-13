@@ -18,8 +18,9 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
     [SerializeField] private UI_LaptopItemSlot laptop_item_slot;
     [SerializeField] private Laptop laptop;
 
-    [Header("Components")]
-    private TextMeshProUGUI label;
+    [Header("Label")]
+    [SerializeField] private TextMeshProUGUI label;
+    [SerializeField] private string no_cores_text = "no processor ://";
     private RectTransform rect;
 
     [Header("Logs")]
@@ -36,7 +37,12 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
 
         laptop_item_slot.OnItemChanged += HandleLaptopChanged;
 
-        label = GetComponent<TextMeshProUGUI>();
+        if (label == null)
+        {
+            Debug.LogError("(UI_CoresViewer) label is not assigned! Please assign it in the inspector.");
+            return;
+        }
+
         rect = GetComponent<RectTransform>();
     }
 
@@ -73,12 +79,12 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
         if (log) { Debug.Log($"(UI_CoresViewer) Updating cores from {CoresCount} to {cores_count}"); }
 
         // modify the text
-        if (cores_count > 0) { label.text = "cpu cores"; }
-        else { label.text = "no processor ://"; }
+        if (cores_count > 0) { label.text = "cores"; }
+        else { label.text = no_cores_text; }
 
 
         // modify the height : 48 + 48*ceiltoint(cores/8)
-        rect.sizeDelta = new Vector2(rect.sizeDelta.x, 48 + 48 * Mathf.CeilToInt(cores_count / 8f));
+        // rect.sizeDelta = new Vector2(rect.sizeDelta.x, 48 + 48 * Mathf.CeilToInt(cores_count / 8f));
 
 
 

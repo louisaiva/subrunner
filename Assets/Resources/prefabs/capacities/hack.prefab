@@ -63,23 +63,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown: 0.1
   debug: 1
+  selected_exploit:
+    name: 
+    security_level: 0
+    base_duration: 0
+    cores_cost: 0
   running_hacks: []
   exploits:
-  - name: insert_password
-    security_level: 1000
-    base_duration: 0.1
-    cores_cost: 1
   - name: bruteforce_SHA
     security_level: 1
     base_duration: 15
-    cores_cost: 1
+    cores_cost: 2
   - name: processor_exploit
     security_level: 1
     base_duration: 2
     cores_cost: 1
   hackray_prefab: {fileID: 2649227876755404805, guid: 3232acb1c565c9c4ab2e9dca453776b4, type: 3}
   hackray_color: {r: 0.41568628, g: 0.74509805, b: 0.1882353, a: 1}
-  hover_hackray_color: {r: 1, g: 1, b: 1, a: 0.2}
   laptop: {fileID: 0}
-  hack_collider: {fileID: 0}
-  log_hack_progress: 0
