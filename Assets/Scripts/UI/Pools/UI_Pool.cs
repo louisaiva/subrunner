@@ -28,6 +28,7 @@ public class UI_Pool : MonoBehaviour
 
     [Header("UI Elements")]
     [SerializeField] protected List<GameObject> ui_elements = new List<GameObject>();
+    public List<GameObject> UIElements => ui_elements;
 
     [Header("Logs")]
     [SerializeField] protected bool log = false;
@@ -40,41 +41,46 @@ public class UI_Pool : MonoBehaviour
     }
 
     // SHOW / HIDE
-    public virtual async Awaitable Show(float duration)
+    public virtual async Awaitable Show(float duration, List<GameObject> dont_show = null)
     {
         in_transition = true;
 
-        await show_pool(duration);
+        await show_pool(duration, dont_show);
         in_transition = false;
     }
-    public virtual async Awaitable Hide(float duration)
+    public virtual async Awaitable Hide(float duration, List<GameObject> dont_hide = null)
     {
         in_transition = true;
-        await hide_pool(duration);
+        await hide_pool(duration, dont_hide);
 
         in_transition = false;
     }
 
     // LOW SHOWING
-    protected virtual async Awaitable show_pool(float duration)
+    protected virtual async Awaitable show_pool(float duration, List<GameObject> dont_show = null)
     {
         await System.Threading.Tasks.Task.Delay((int)(duration * 1000));
 
         // on affiche tous les éléments
         if (log) { Debug.Log("(UI_Pool) showing pool : " + Reference); }
-        foreach (GameObject ui in ui_elements) { ui.SetActive(true); }
+        foreach (GameObject ui in ui_elements)
+        {
+            if (dont_show != null && dont_show.Contains(ui)) { continue; }
+            ui.SetActive(true);
+        }
         Showed = true;
 
         // s'il a une activate action, on désactive les inputs.perso
         if (UsePersoInputs) { InputManager.Instance.inputs.perso.Enable(); }
         else { InputManager.Instance.inputs.perso.Disable(); }
     }
-    protected virtual async Awaitable hide_pool(float duration)
+    protected virtual async Awaitable hide_pool(float duration, List<GameObject> dont_hide = null)
     {
         // on cache tous les éléments du pool
         if (log) { Debug.Log("(UI_Pool) hiding pool : " + Reference + $"(duration : {(int)(duration * 1000)})"); }
         foreach (GameObject ui in ui_elements)
         {
+            if (dont_hide != null && dont_hide.Contains(ui)) { continue; }
             ui.SetActive(false);
         }
 

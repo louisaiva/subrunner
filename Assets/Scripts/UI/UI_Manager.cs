@@ -109,6 +109,9 @@ public class UI_Manager : Singleton<UI_Manager>
         if (pool.Reference == "game_over") { duration = (pool as UI_GameOver).transition_duration; }
         else if (current_pool != null && current_pool.Reference == "game_over") { duration = (current_pool as UI_GameOver).transition_duration; }
 
+        // we prepare the lists of the gameobjects to ignore
+        List<GameObject> same_pool_elements = null;
+
         // we check if we have a current pool
         if (current_pool != null)
         {
@@ -125,6 +128,11 @@ public class UI_Manager : Singleton<UI_Manager>
                 return;
             }
 
+            // we filter the same_pool_elements_list so only elements that are in both pools stay inside it
+            List<GameObject> current_pool_elements = current_pool.UIElements;
+            same_pool_elements = pool.UIElements;
+            same_pool_elements = same_pool_elements.Where(x => current_pool_elements.Contains(x)).ToList();
+
 
             // we transition to the right bg/timescale/effect
             if (current_pool.StopTime != pool.StopTime)
@@ -132,15 +140,15 @@ public class UI_Manager : Singleton<UI_Manager>
                 float final_timescale = default;
                 if (pool.Reference == "game_over") { final_timescale = (pool as UI_GameOver).final_timescale; }
                 else if (pool.Reference == "hacking") { final_timescale = (pool as UI_Hacking).final_timescale; }
-                TransitionTimeScale(pool.StopTime, duration, final_timescale );
+                TransitionTimeScale(pool.StopTime, duration, final_timescale);
             }
             if (current_pool.HasBackground != pool.HasBackground)
             {
                 TransitionBackground(pool.HasBackground, duration, pool.Reference == "hacking" ? (pool as UI_Hacking).bg_final_alpha : default);
             }
-            
+
             // we hide the current pool
-            await current_pool.Hide(duration / 2f);
+            await current_pool.Hide(duration / 2f, same_pool_elements);
         }
         else
         {
@@ -153,7 +161,7 @@ public class UI_Manager : Singleton<UI_Manager>
 
         // we show the new pool
         current_pool = pool;
-        await current_pool.Show(duration / 2f);
+        await current_pool.Show(duration / 2f, same_pool_elements);
     }
 
     // GETTERS

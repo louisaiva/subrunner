@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class UI_HUD : UI_Pool
@@ -27,14 +28,14 @@ public class UI_HUD : UI_Pool
     }
 
     // SHOW / HIDE
-    public override async Awaitable Show(float duration)
+    public override async Awaitable Show(float duration, List<GameObject> dont_show = null)
     {
         // on affiche le perso_quick_inventory
         if (show_perso_quick_inventory || ui_chest != null)
         {
             perso_quick_inventory.Show();
         }
-        await base.Show(duration);
+        await base.Show(duration, dont_show);
 
         if (ui_chest != null)
         {
@@ -45,7 +46,7 @@ public class UI_HUD : UI_Pool
             // UI_XboxNavigator.Instance.angle_threshold = base.angle_threshold;
         }
     }
-    public override async Awaitable Hide(float duration)
+    public override async Awaitable Hide(float duration, List<GameObject> dont_hide = null)
     {
         if (ui_chest != null)
         {
@@ -56,7 +57,7 @@ public class UI_HUD : UI_Pool
         }
 
         perso_quick_inventory.Hide();
-        await base.Hide(duration);
+        await base.Hide(duration, dont_hide);
     }
 
     // REGISTER CHEST

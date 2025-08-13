@@ -50,11 +50,11 @@ public class UI_Hacking : UI_Pool
     }
 
     // SHOW / HIDE
-    protected override async Awaitable show_pool(float duration)
+    protected override async Awaitable show_pool(float duration, List<GameObject> dont_show = null)
     {
         // we set the callbacks
         exploitAction.performed += exploitCallback;
-        await base.show_pool(duration);
+        await base.show_pool(duration, dont_show);
 
 
         // we set the callbacks & enable HackableNavigator
@@ -62,7 +62,7 @@ public class UI_Hacking : UI_Pool
 
         if (log) { Debug.Log("(UI_Hacking) showing pool : navigator enabled & callbacks set"); }
     }
-    protected override async Awaitable hide_pool(float duration)
+    protected override async Awaitable hide_pool(float duration, List<GameObject> dont_hide = null)
     {
         // if (log) { Debug.Log("(UI_Hacking) trying to hide pool"); }
 
@@ -77,7 +77,7 @@ public class UI_Hacking : UI_Pool
 
         // if (log) { Debug.Log("(UI_Hacking) callbacks removed"); }
 
-        await base.hide_pool(duration);
+        await base.hide_pool(duration, dont_hide);
 
         if (log) { Debug.Log("(UI_Hacking) hiding pool : navigator disabled & callbacks removed"); }
     }

@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class UI_GameOver : UI_Pool
 {
@@ -42,7 +43,7 @@ public class UI_GameOver : UI_Pool
         UI_Manager.Instance.SwitchTo("hud");
     }
 
-    protected override async Awaitable show_pool(float duration)
+    protected override async Awaitable show_pool(float duration, List<GameObject> dont_show = null)
     {
         // we set the callbacks
         reviveAction.performed += reviveCallback;
@@ -54,10 +55,10 @@ public class UI_GameOver : UI_Pool
             oh_no_text.text += "o";
         }
 
-        await base.show_pool(duration);
+        await base.show_pool(duration, dont_show);
     }
 
-    protected override async Awaitable hide_pool(float duration)
+    protected override async Awaitable hide_pool(float duration, List<GameObject> dont_hide = null)
     {
         // we remove the callbacks
         reviveAction.performed -= reviveCallback;
@@ -66,7 +67,7 @@ public class UI_GameOver : UI_Pool
         GameObject[] perso = await InstantiateAsync(perso_prefab, perso_spawn_point.position, Quaternion.identity);
         perso[0].name = "perso";
 
-        await base.hide_pool(duration);
+        await base.hide_pool(duration, dont_hide);
     }
 
 }
