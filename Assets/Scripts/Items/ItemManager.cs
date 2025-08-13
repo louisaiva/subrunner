@@ -157,10 +157,9 @@ public class ItemManager : MonoBehaviour
         Transitioner transitioner = renderer.GetComponent<Transitioner>();
         transitioner.Hide();        
     }
-    private void enable_renderer(RectTransform renderer, float x = default)
+    private void enable_renderer(RectTransform renderer, float x = float.NaN)
     {
-        if (x != default) { renderer.anchoredPosition = new Vector2(x, renderer.anchoredPosition.y); }
-        // renderer.gameObject.SetActive(true);
+        if (!float.IsNaN(x)) { renderer.anchoredPosition = new Vector2(x, renderer.anchoredPosition.y); }
         Transitioner transitioner = renderer.GetComponent<Transitioner>();
         transitioner.Show();
     }

@@ -20,8 +20,8 @@ public class InputManager : Singleton<InputManager>
     [SerializeField] private InputSystemUIInputModule input_system_ui_input_module;
 
     [Header("Logs")]
-    public bool debug = false;
-    public bool debug_input_maps_enabled = false;
+    public bool log = false;
+    public bool log_input_maps_enabled = false;
 
 
     // unity functions
@@ -47,7 +47,7 @@ public class InputManager : Singleton<InputManager>
 
     void Update()
     {
-        if (debug_input_maps_enabled)
+        if (log_input_maps_enabled)
         {
             string s = "inputs maps: \n\t";
             s += "- perso : " + inputs.perso.enabled + "\n\t";
@@ -68,7 +68,7 @@ public class InputManager : Singleton<InputManager>
             current_input_type = input_type;
             input_system_ui_input_module.enabled = input_type == "keyboard";
             Cursor.visible = input_type == "keyboard";
-            if (debug) { Debug.Log("(InputManager) switching to " + input_type); }
+            if (log) { Debug.Log("(InputManager) switching to " + input_type); }
         }
     }
 
@@ -77,7 +77,7 @@ public class InputManager : Singleton<InputManager>
     {
         if (reference == null)
         {
-            Debug.LogWarning("(InputManager) GetAction called with null reference");
+            if (log) { Debug.LogWarning("(InputManager) GetAction called with null reference"); }
             return null;
         }
 
@@ -108,8 +108,8 @@ public class InputManager : Singleton<InputManager>
         else if (inputMap == "menus") { action = inputs.menus.Get()[action_name]; }
         // else if (inputMap == "enhanced_perso") { action = inputs.enhanced_perso.Get()[action_name]; }
 
-        // on debug
-        if (debug) { Debug.Log("(InputManager) getting action : " + action_name + " from " + inputMap + " returned " + action); }
+        // on log
+        if (log) { Debug.Log("(InputManager) getting action : " + action_name + " from " + inputMap + " returned " + action); }
 
         // on retourne l'action
         return action;

@@ -53,16 +53,9 @@ public class HackableNavigator : MonoBehaviour
     // UPDATE
     private void Update()
     {
-        // we remove null waiting_hackables
-        if (current_hackable != null && current_hackable.GetComponent<Hackable>() == null) { unselect_target(); }
-
-        // on essaie de se connecter au current hackable si on en a un
+        // on récupère le hackable
         if (current_hackable == null || hacker == null || hover_hackray == null) { return; }
-        if (current_hackable.GetComponent<Hackable>() == null)
-        {
-            unselect_target();
-            return;
-        }
+        if (current_hackable.GetComponent<Hackable>() == null) { unselect_target(); return; } // on vérifie si le hackable est toujours valide
 
         // on met à jour le hackable
         update_hackable(current_hackable.GetComponent<Hackable>());
@@ -358,6 +351,8 @@ public class HackableNavigator : MonoBehaviour
         RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, direction, selection_radius, hackableLayerMask);
         if (hits.Length == 0) { return null; }
 
+        // we save the on-hacking processor
+        GameObject being_hacked_hackable = null;
 
         // we find the closest hackable to cursor
         float min_distance = float.MaxValue;
@@ -368,17 +363,17 @@ public class HackableNavigator : MonoBehaviour
 
             // we remove the target we are already hacking
             Hackable hackable = processor.transform.parent.GetComponent<Hackable>();
-            if (hackable == null || hacker.IsHacking(hackable)) { continue; }
+            if (hackable == null || hacker.IsHacking(hackable)) { being_hacked_hackable = hackable.gameObject; continue; }
 
             // we compare the distance
-            float distance = Vector2.Distance(transform.position, processor.transform.position);
+                float distance = Vector2.Distance(transform.position, processor.transform.position);
             if (distance < min_distance)
             {
                 min_distance = distance;
                 closest_processor = processor;
             }
         }
-        if (closest_processor == null) { return null; }
+        if (closest_processor == null){ return being_hacked_hackable; } // returns a current processor being hacked if hitted, null otherwise
         return closest_processor.transform.parent.gameObject; // we return the parent hackable
     }
 
