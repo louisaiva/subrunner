@@ -29,6 +29,7 @@ public class HackableNavigator : MonoBehaviour
 
     [Header("Components")]
     [SerializeField] private HackCapacity hacker;
+    [SerializeField] private ConnectCapacity connector;
     [SerializeField] private Transform cursor;
     private Laptop laptop;
     // private CircleCollider2D selection_collider;
@@ -63,10 +64,9 @@ public class HackableNavigator : MonoBehaviour
     private void update_hackable(Hackable hackable)
     {
         // check if we can't connect to the hackable
-        if (!hacker.Connect(hackable))
+        if (!connector.IsConnectedTo(hackable))
         {
             hover_hackray.SetColor(out_of_range_hackray_color);
-            hacker.Deselect();
             return;
         }
 
@@ -75,7 +75,6 @@ public class HackableNavigator : MonoBehaviour
         if (exploit == null)
         {
             hover_hackray.SetColor(no_vulnerability_hackray_color);
-            hacker.Deselect();
             return;
         }
 
@@ -83,21 +82,11 @@ public class HackableNavigator : MonoBehaviour
         if (!laptop.HasFreeCores(exploit.cores_cost))
         {
             hover_hackray.SetColor(no_cores_hackray_color);
-            hacker.Deselect();
-            return;
-        }
-
-        // checks if this is nmap -> if yes we can hack it to check for vulnerabilities
-        if (exploit == Exploit.Nmap)
-        {
-            hover_hackray.SetColor(hackray_color);
-            hacker.Select(hackable);
             return;
         }
 
         // otherwise we can hack it !!!!
         hover_hackray.SetColor(hackable_color);
-        hacker.Select(hackable);
     }
 
     // TRIGGER ENTER
@@ -156,13 +145,14 @@ public class HackableNavigator : MonoBehaviour
         current_hackable = hackable.gameObject;
         if (log) { Debug.Log("(HackableNavigator) " + hackable.name + " selected as closest target"); }
 
-        hacker.Select(hackable);
+        connector.Connect(hackable);
+        // hacker.Select(Exploit.Nmap); // we select nmap by default to check for vulnerabilities
 
         // we set the hovered target material
         hackable.spriteRenderer.material = hackable.TargetMaterial;
 
         // we update the hackray
-        hover_hackray.SetColor(hacker.Connect(hackable) ? hackray_color : out_of_range_hackray_color);
+        hover_hackray.SetColor(connector.IsConnectedTo(hackable) ? hackray_color : out_of_range_hackray_color);
         hover_hackray.SetLaptopAndTarget(laptop, hackable.transform);
         hover_hackray.gameObject.SetActive(true);
     }
@@ -171,7 +161,7 @@ public class HackableNavigator : MonoBehaviour
         // we check if we have a current target
         if (current_hackable == null || hacker == null) { return; }
 
-        hacker?.Deselect();
+        connector.Disconnect();
 
         // we update the hackray
         hover_hackray?.SetColor(hackray_color);
@@ -188,7 +178,7 @@ public class HackableNavigator : MonoBehaviour
     }
 
     // ENABLE / DISABLE
-    public async void Enable()
+    public void Enable()
     {
         // we activate the callbacks
         navigationAction.performed += navigationCallback;
@@ -205,8 +195,6 @@ public class HackableNavigator : MonoBehaviour
 
         // we activate the cursor
         cursor.gameObject.SetActive(false);
-        HandleHackNavigationInput(InputManager.Instance.inputs.perso.select_hackable.ReadValue<Vector2>());
-        await System.Threading.Tasks.Task.Yield(); // wait for cursor to be inactive & instantiated
 
 
         if (log) { Debug.Log("(HackableNavigator) enabled & callbacks set"); }
@@ -238,6 +226,7 @@ public class HackableNavigator : MonoBehaviour
         {
             unselect_target();
             hacker = null;
+            connector = null;
             laptop = null;
             return;
         }
@@ -245,6 +234,7 @@ public class HackableNavigator : MonoBehaviour
         // we assign the hacker as the new laptop hack capacity
         laptop = new_laptop;
         hacker = new_laptop.GetCapacity<HackCapacity>();
+        connector = new_laptop.GetCapacity<ConnectCapacity>();
     }
 
 
@@ -320,7 +310,7 @@ public class HackableNavigator : MonoBehaviour
     {
         // on met à jour le curseur
         if (cursor == null || hacker == null) { return; }
-        cursor.localPosition = new Vector3(input.x * hacker.Radius, input.y * hacker.Radius, 0f);
+        cursor.localPosition = new Vector3(input.x * connector.Radius, input.y * connector.Radius, 0f);
     }
     private Vector2 calculate_clean_inputs(Vector2 raw)
     {

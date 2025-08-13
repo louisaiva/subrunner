@@ -10,8 +10,10 @@ using UnityEngine;
 
 public class HackCapacity : Capacity
 {
-    [Header("Target Selection")]
-    public Hackable hovered_target;
+    // [Header("Target Selection")]
+    // public Hackable hovered_target;
+    [Header("Exploit selection")]
+    public Exploit selected_exploit;
 
     [Header("Hacks")]
     public List<Hack> running_hacks = new List<Hack>();
@@ -34,38 +36,40 @@ public class HackCapacity : Capacity
 
     [Header("Components")]
     [SerializeField] private Laptop laptop;
-    [SerializeField] private CircleCollider2D hack_collider;
-    public float Radius { get => hack_collider.radius; }
+    // [SerializeField] private CircleCollider2D hack_collider;
+    private ConnectCapacity connector;
+    // public float Radius { get => hack_collider.radius; }
 
-    [Header("Logs")]
-    [SerializeField] private bool log_hack_progress = false;
+    // [Header("Logs")]
+    // [SerializeField] private bool log_hack_progress = false;
 
 
     // START
     private void Start()
     {
         laptop = capable.GetComponent<Laptop>();
-        hack_collider = laptop.GetCapacity<InteractHackCapacity>()?.GetComponent<CircleCollider2D>();
+        // hack_collider = laptop.GetCapacity<InteractHackCapacity>()?.GetComponent<CircleCollider2D>();
+        connector = capable.GetCapacity<ConnectCapacity>();
     }
 
     // TARGET MANAGEMENT
-    public void Select(Hackable target)
+    /* public void Select(Exploit exploit)
     {
-        // we check if the target is already selected
-        if (target == hovered_target) { return; }
+        // we check if the exploit is already selected
+        if (exploit == selected_exploit) { return; }
 
-        // we set the hovered target
-        if (debug) { Debug.Log($"(HackCapacity) selected target: {target.name}"); }
-        hovered_target = target;
+        // we set the selected exploit
+        if (debug) { Debug.Log($"(HackCapacity) selected exploit: {exploit.name}"); }
+        selected_exploit = exploit;
     }
     public void Deselect()
     {
-        if (hovered_target == null) { return; }
+        if (selected_exploit == null) { return; }
 
-        // we reset the hovered target
-        if (debug) { Debug.Log($"(HackCapacity) deselected target"); }
-        hovered_target = null;
-    }
+        // we reset the selected exploit
+        if (debug) { Debug.Log($"(HackCapacity) deselected exploit: {selected_exploit.name}"); }
+        selected_exploit = null;
+    } */
 
     // UPDATE
     protected override void Update()
@@ -85,7 +89,7 @@ public class HackCapacity : Capacity
                 continue;
             }
 
-            // checks if we are too far away from the target
+            /* // checks if we are too far away from the target
             Hackable hackable = hack.target;
             if (Vector3.Distance(transform.position, hackable.transform.position) > hack_collider.radius)
             {
@@ -94,7 +98,7 @@ public class HackCapacity : Capacity
                 hack.Fail();
                 remove_hack(i);
                 continue;
-            }
+            } */
 
             hack.Process();
             /* if (log_hack_progress)
@@ -121,52 +125,51 @@ public class HackCapacity : Capacity
     // USE
     public override void Use(Capable capable)
     {
-        // checks if we have a hovered target
-        if (hovered_target == null)
+        
+        // checks if we have a connected target
+        Hackable target = connector.Target;
+        if (target == null)
         {
-            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack but no target is hovered."); }
+            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack but no target is connected."); }
             return;
         }
 
         // we check if we are not already hacking this target
-        if (running_hacks.Any(h => h.target == hovered_target))
+        if (running_hacks.Any(h => h.target == target))
         {
-            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} is already hacking {hovered_target.name}."); }
+            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} is already hacking {target.name}."); }
             return;
         }
 
-        // we try to connect to the target
-        if (!Connect(hovered_target))
+        Exploit exploit = selected_exploit;
+        if (exploit == Exploit.Nmap)
         {
-            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} failed to connect to {hovered_target.name}."); }
-            return;
+            // we scan the target
+            List<Exploit> vulnerabilities = Scan(target);
+            if (vulnerabilities.Count == 0)
+            {
+                if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} found no vulnerabilities on {target.name}."); }
+                return;
+            }
+            exploit = vulnerabilities[0]; // if no exploit is selected, we take the first one found
         }
-
-        // we scan the target
-        List<Exploit> vulnerabilities = Scan(hovered_target);
-        if (vulnerabilities.Count == 0)
-        {
-            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} found no vulnerabilities on {hovered_target.name}."); }
-            return;
-        }
-        Exploit exploit = vulnerabilities[0];
 
         // we check if our laptop has enough cores for this exploit
         if (!laptop.HasFreeCores(exploit.cores_cost))
         {
-            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack {hovered_target.name} but has no free cores for exploit {exploit.name}."); }
+            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack {target.name} but has no free cores for exploit {exploit.name}."); }
             return;
         }
 
         // we create a Hack for this target
-        Hack hack = new Hack(hovered_target, exploit);
+        Hack hack = new Hack(connector.connection, exploit);
 
         // we run the exploit
         RunExploit(hack);
     }
 
     // HACKING HIGH LEVEL
-    public bool Connect(Hackable target)
+    /* public bool Connect(Hackable target)
     {
         if (target == null) { return false; }
 
@@ -179,7 +182,7 @@ public class HackCapacity : Capacity
             return false;
         }
         return true;
-    }
+    } */
     public List<Exploit> Scan(Hackable target)
     {
         // if we have some vulnerabilities found for this hackable we clear them
@@ -203,6 +206,11 @@ public class HackCapacity : Capacity
                 log_exploits += $"- {exploit.name}\n";
             }
         }
+
+        // we always add Nmap as last vulnerability
+        vulnerabilities[target].Add(Exploit.Nmap);
+        selected_exploit = vulnerabilities[target][0]; // we select the first exploit
+
         if (debug) { Debug.Log($"(HackCapacity) {capable.name} scanned {target.name} : {vulnerabilities[target].Count} vulnerabilities found\n{log_exploits}"); }
         return vulnerabilities[target];
     }
@@ -264,35 +272,47 @@ public class Hack
     [Header("Hack Details")]
     public float progress;
     public Hackable target;
+    public Connection tunnel;
     public Exploit exploit;
     public float duration;
     public HackState state = HackState.NotStarted;
 
     // CONSTRUCTOR
-    public Hack(Hackable target, Exploit exploit)
+    public Hack(Connection tunnel, Exploit exploit)
     {
-        this.target = target;
+        this.tunnel = tunnel;
+        this.target = tunnel.target;
         this.exploit = exploit;
         this.progress = 0f;
     }
 
-    // PROCESS
+    // RUN , PROCESS & FINISH
+    public void Run(float duration)
+    {
+        // open the tunnel
+        tunnel.Open();
+
+        // run the hack
+        this.duration = duration;
+        this.progress = 0f;
+        state = HackState.Running;
+        Debug.Log($"Starting hack on {target.name} with exploit {exploit.name}");
+    }
     public void Process()
     {
+        // checks if the tunnel is still open
+        if (tunnel.state != ConnectionState.Opened)
+        {
+            Debug.LogWarning($"Hack on {target.name} with exploit {exploit.name} was interrupted because the tunnel was closed");
+            Fail();
+            return;
+        }
+
         // we update the progress of the hack
         progress += Time.deltaTime / duration * 100f;
 
         // we check if the hack is done
         if (progress >= 100f) { Finish(); }
-    }
-
-    // RUN & FINISH
-    public void Run(float duration)
-    {
-        this.duration = duration;
-        this.progress = 0f;
-        state = HackState.Running;
-        Debug.Log($"Starting hack on {target.name} with exploit {exploit.name}");
     }
     public void Finish()
     {
@@ -311,6 +331,9 @@ public class Hack
         // this.progress = 0f;
         this.state = HackState.Failed;
 
+        // we close the connection
+        tunnel.Close();
+
         // Notify the target that the hack is failed
         target.OnHackFailed(this);
     }
@@ -321,6 +344,9 @@ public class Hack
         this.progress = 100f;
         this.state = HackState.Completed;
 
+        // we close the connection
+        tunnel.Close();
+
         // Notify the target that the hack is completed
         target.OnHackCompleted(this);
     }
@@ -330,6 +356,9 @@ public class Hack
         Debug.LogWarning($"Hack on {target.name} with exploit {exploit.name} has overflowed. Freeing cores.");
         // this.progress = 0f;
         this.state = HackState.Overflowed;
+
+        // we close the connection
+        tunnel.Close();
 
         // Notify the target that the hack is failed
         target.OnHackFailed(this);
@@ -367,7 +396,7 @@ public enum HackState
 [System.Serializable]
 public class Exploit
 {
-    public static readonly Exploit Nmap = new Exploit("nmap", 0, 0.1f, 1);
+    public static readonly Exploit Nmap = new Exploit("nmap", 1000, 0.1f, 1);
     public static readonly Exploit InsertPassword = new Exploit("insert_password", 1000, 0.1f, 1);
 
     [Header("Exploit Details")]
