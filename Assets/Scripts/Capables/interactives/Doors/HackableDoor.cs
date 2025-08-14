@@ -77,6 +77,8 @@ public class HackableDoor : Door, Lockable
     // HACKABLE
     public bool IsVulnerableTo(Exploit exploit)
     {
+        if (exploit == Exploit.InsertPassword) { return true; }
+
         string[] exploitType = exploit.name.Split('_');
         if (debug) { Debug.Log($"(HackableDoor) checking if {name} is vulnerable to exploit {exploit.name} ?" + exploitType); }
         if (exploitType.Length < 2) { return false; }

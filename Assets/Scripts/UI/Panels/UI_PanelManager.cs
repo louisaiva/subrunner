@@ -42,11 +42,16 @@ public class UI_PanelManager : MonoBehaviour
             indicator.InitStart(this);
         }
 
+        // initialize the sequence list to keep track of sequences happening
+        sequences = new List<Sequence?>();
+        foreach (UI_Panel panel in panels) { sequences.Add(null); }
+
         // we tween to the current panel
         TweenToPanel(get_panel(current_panel));
     }
 
     // HANDLER
+    private UI_Panel destination_panel = null;
     private async void HandleSlotOutOfScreen(I_UI_Slot slot)
     {
         // Handle the case when a slot is out of screen
@@ -61,17 +66,18 @@ public class UI_PanelManager : MonoBehaviour
         log_msg += $"\n\t has an ui_panel ? {ui_panel != null}";
         if (ui_panel == null || !panels.Contains(ui_panel)) { if (log) { Debug.Log(log_msg); } return; }
 
-        // get the ui_inventory name
-        /* string inventoryName = ui_inventory.name;
-        log_msg += $"\n\t inventory is {ui_inventory.name} " + (ui_inventory.name == current_panel ? " (current)" : "");
-        if (log) { Debug.Log(log_msg); }
-        if (current_panel == inventoryName) { return; } */
+        // we check if we are already switching to this panel (then no need to switch to it)
+        if (destination_panel != null && destination_panel == ui_panel) { return; }
 
-        // we switch to the inventory panel
+        // we switch to the panel
         await TweenToPanel(ui_panel);
+
+        // if we still have a sequence running it means that another tweentopanel was called
+        if (HasRunningSequence) { return; }
+
         current_panel = ui_panel.name;
+        destination_panel = null;
         if (log) { Debug.Log($"(UI_PanelManager) switched to panel: {ui_panel.name} with success !!!"); }
-        RefreshIndicators();
     }
 
     // REFRESH
@@ -88,12 +94,24 @@ public class UI_PanelManager : MonoBehaviour
     }
 
     // TWEENING
-    public async Awaitable TweenToPanel(UI_Panel targetPanel, float duration = default)
+    private List<Sequence?> sequences = new List<Sequence?>();
+    private bool HasRunningSequence
+    {
+        get
+        {
+            foreach (Sequence? seq in sequences)
+            {
+                if (seq != null && seq.Value.isAlive) { return true; }
+            }
+            return false;
+        }
+    }
+    public async Awaitable TweenToPanel(UI_Panel targetPanel, float duration = -99f)
     {
         int targetIndex = panels.IndexOf(targetPanel);
         if (targetPanel == null || panels.Count == 0) { return; }
 
-        if (duration == default) { duration = default_duration; }
+        if (duration == -99f) { duration = default_duration; }
 
         if (log) { Debug.Log($"(UI_PanelManager) Tweening to panel: {targetPanel.name}"); }
 
@@ -102,29 +120,40 @@ public class UI_PanelManager : MonoBehaviour
 
         for (int i = 1; i < panels.Count; i++)
         {
-            TweenPanelToPositionIndex(panels[i], targetIndex, duration);
+            TweenPanelToPositionIndex(i, targetIndex, duration);
         }
-        await TweenPanelToPositionIndex(panels[0], targetIndex, duration);
+        await TweenPanelToPositionIndex(0, targetIndex, duration);
     }
-    private async Awaitable TweenPanelToPositionIndex(UI_Panel ui_panel, int index, float duration = default)
+    private async Awaitable TweenPanelToPositionIndex(int panel_index, int destination_index, float duration = -99f)
     {
-        if (index < 0 || index >= ui_panel.anchors.Count) { return; }
-        Vector2 target_anchor = ui_panel.anchors[index];
+        UI_Panel ui_panel = panels[panel_index];
+
+        if (destination_index < 0 || destination_index >= ui_panel.anchors.Count) { return; }
+        Vector2 target_anchor = ui_panel.anchors[destination_index];
         RectTransform panel = ui_panel.panelTransform;
 
         // get the ease if we want to show ourself we get the nice ease
-        Ease ease = (ui_panel == panels[index]) ? showing_ease : hiding_ease;
+        Ease ease = (ui_panel == panels[destination_index]) ? showing_ease : hiding_ease;
 
-        if (duration == default) { duration = default_duration; }
+        if (duration == -99f) { duration = default_duration; }
 
         if (log) { Debug.Log($"(UI_PanelManager) Tweening panel {ui_panel.name} to anchors : {target_anchor}"); }
 
+        // we stop the last sequence
+        if (sequences[panel_index] != null && sequences[panel_index].Value.isAlive)
+        {
+            sequences[panel_index].Value.Stop();
+            sequences[panel_index] = null;
+        }
+
         // we tween the anchorMin & anchorMax
-        await Sequence.Create(useUnscaledTime: true)
-            .Group(Tween.Custom(panel.anchorMin.x, /* start -> end */ target_anchor.x, duration,
-                onValueChange: ctx => panel.anchorMin = new Vector2(ctx, panel.anchorMin.y)))
-            .Group(Tween.Custom(panel.anchorMax.x, /* start -> end */ target_anchor.y, duration,
-                onValueChange: ctx => panel.anchorMax = new Vector2(ctx, panel.anchorMax.y)));
+        sequences[panel_index] = Sequence.Create(useUnscaledTime: true)
+           .Group(Tween.Custom(panel.anchorMin.x, /* start -> end */ target_anchor.x, duration,
+               onValueChange: ctx => panel.anchorMin = new Vector2(ctx, panel.anchorMin.y)))
+           .Group(Tween.Custom(panel.anchorMax.x, /* start -> end */ target_anchor.y, duration,
+               onValueChange: ctx => panel.anchorMax = new Vector2(ctx, panel.anchorMax.y)));
+
+        while (sequences[panel_index].Value.isAlive) { await System.Threading.Tasks.Task.Yield(); }
 
     }
 

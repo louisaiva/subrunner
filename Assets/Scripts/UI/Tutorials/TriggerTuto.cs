@@ -105,8 +105,8 @@ public class TriggerTuto : MonoBehaviour
         ui_tuto = Instantiate(ui_tuto_prefab, ui_tuto_parent);
 
         // we wait for the showing transition to happen
-        yield return new WaitUntil(() => ui_tuto.GetComponent<Transitioner>().Available);
-        Awaitable task = ui_tuto.GetComponent<Transitioner>().Transition(true, default);
+        yield return new WaitUntil(() => !ui_tuto.GetComponent<Transitioner>().Transitioning);
+        Awaitable task = ui_tuto.GetComponent<Transitioner>().Show();
         while (!task.IsCompleted) { yield return null; }
         if (log) { Debug.Log("(TriggerTuto) " + name + " ui tuto instantiated and shown !"); }
 
@@ -126,10 +126,10 @@ public class TriggerTuto : MonoBehaviour
         if (ui_tuto == null) { yield break; }
         if (ui_tuto.GetComponent<Transitioner>() == null) { yield break; }
 
-        yield return new WaitUntil(() => ui_tuto.GetComponent<Transitioner>().Available);
+        yield return new WaitUntil(() => !ui_tuto.GetComponent<Transitioner>().Transitioning);
 
         // we wait for the hiding transition to happen
-        Awaitable task = ui_tuto.GetComponent<Transitioner>().Transition(false, default);
+        Awaitable task = ui_tuto.GetComponent<Transitioner>().Hide();
         while (!task.IsCompleted) { yield return null; }
 
         if (log) { Debug.Log("(TriggerTuto) " + name + " hid the UI Tuto (and is going to destroy it)"); }

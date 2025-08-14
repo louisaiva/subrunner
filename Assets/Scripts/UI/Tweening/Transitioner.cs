@@ -15,14 +15,7 @@ public class Transitioner : MonoBehaviour
     [SerializeField] protected Ease ease_hide = Ease.Default;
     [SerializeField] protected float default_duration = 1f;
     [SerializeField] protected bool unscaled_time = true;
-    // public bool Available = true;
-    // public bool Shown => get_current_value() >= shown_value;
-    // public bool Hidden => get_current_value() <= hidden_value;
 
-    [Header("Transition state")]
-    public bool Shown = false;
-    public bool Hidden = true;
-    public bool Available => (Hidden || Shown) && !(Hidden && Shown);
 
     [Header("On Enable transition")]
     [SerializeField] protected bool transition_on_enable = true;
@@ -83,7 +76,7 @@ public class Transitioner : MonoBehaviour
         }
     }
 
-    // TRANSITION
+    // SHOW / HIDE
     public async Awaitable Show(float duration = -99f)
     {
         if (Shown)
@@ -91,12 +84,10 @@ public class Transitioner : MonoBehaviour
             if (log) { Debug.Log($"(Transitioner) {name} is already shown, no need to transition"); }
             return;
         }
-        Hidden = false;
-        Shown = false;
 
         // transition
         if (log) { Debug.Log($"(Transitioner) Showing {name} with duration {duration}"); }
-        await Transition(true, duration);
+        await transition(true, duration);
     }
     public async Awaitable Hide(float duration = -99f)
     {
@@ -105,14 +96,18 @@ public class Transitioner : MonoBehaviour
             if (log) { Debug.Log($"(Transitioner) {name} is already hidden, no need to transition"); }
             return;
         }
-        Hidden = false;
-        Shown = false;
 
         // transition
         if (log) { Debug.Log($"(Transitioner) Hiding {name} with duration {duration}"); }
-        await Transition(false, -99f);
+        await transition(false, -99f);
     }
-    public async Awaitable Transition(bool show, float duration = -99f)
+    public bool Shown => get_current_value() >= shown_value;
+    public bool Hidden => get_current_value() <= hidden_value;
+    public bool Transitioning => !Shown && !Hidden;
+
+    // TWEENING
+    private Tween? tween = null;
+    private async Awaitable transition(bool show, float duration = -99f)
     {
         if (duration <= 0f) { duration = default_duration; }
 
@@ -121,21 +116,20 @@ public class Transitioner : MonoBehaviour
         float start_value = get_current_value();
         float end_value = show ? shown_value : hidden_value;
 
-        if (log)
+        if (log) { Debug.Log($"(Transitioner) Transitioning from {start_value} to {end_value} with duration {duration} and ease {ease}"); }
+
+        // if we are already transitioning we stop the current tween
+        if (tween != null && tween.Value.isAlive)
         {
-            Debug.Log($"(Transitioner) Transitioning from {start_value} to {end_value} with duration {duration} and ease {ease}");
+            if (log) { Debug.Log($"(Transitioner) {name} is already transitioning, stopping current tween"); }
+            tween.Value.Stop();
         }
 
         // then we make the transition happen
-        await Tween.Custom(start_value, end_value, duration: duration,
-                onValueChange: updater, useUnscaledTime: unscaled_time, ease: ease);
+        tween = Tween.Custom(start_value, end_value, duration: duration,
+            onValueChange: updater, useUnscaledTime: unscaled_time, ease: ease);
 
-
-        // update states
-        if (get_current_value() >= shown_value) { Shown = true; }
-        else { Shown = false; }
-        if (get_current_value() <= hidden_value) { Hidden = true; }
-        else { Hidden = false; }
+        while (tween.Value.isAlive) { await System.Threading.Tasks.Task.Yield(); }
 
         /* if (log)
         {
