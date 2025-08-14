@@ -43,10 +43,6 @@ public class AnimPlayer : MonoBehaviour
     [SerializeField] private List<AnimCapacityPriority> anim_capacity_priorities = new();
     private AnimCapacityPriority current_capacity_priority = null;
 
-    // [Header("Animation Pile")]
-    // [SerializeField] private string capacity_pile = ""; // a string with the capacities separated by commas, ex: "walk,run,idle"
-    // // todo is there any bugs with this transition system ?
-
     [Header("Logs")]
     public bool log = false;
     public bool log_orientation = false;

@@ -23,7 +23,7 @@ public class Laptop : Item, Usable
     }
     public int MaxCores => max_cores;
     public int UsedCoresCount => max_cores - FreeCoresCount;
-    public event System.Action<int> OnCoresChange = delegate { };
+    // public event System.Action<int> OnCoresChange = delegate { };
     public event System.Action<int> OnCoresFreedOrUsed = delegate { };
 
     [Header("Logs")]
@@ -39,9 +39,9 @@ public class Laptop : Item, Usable
     {
         // we add the hack to the used cores
         used_cores[hack] = hack.exploit.cores_cost;
+        if (debug) { Debug.Log($"(Laptop) {name} using {hack.exploit.cores_cost} cores"); }
 
         OnCoresFreedOrUsed?.Invoke(hack.exploit.cores_cost);
-
         if (FreeCoresCount < 0)
         {
             Debug.LogWarning($"(Laptop) {name} has a core overflow !!!");
@@ -56,6 +56,7 @@ public class Laptop : Item, Usable
             return;
         }
 
+        if (debug) { Debug.Log($"(Laptop) {name} freeing {hack.exploit.cores_cost} cores"); }
         used_cores.Remove(hack);
         OnCoresFreedOrUsed?.Invoke(-hack.exploit.cores_cost);
     }
@@ -143,7 +144,7 @@ public class Laptop : Item, Usable
     private void set_new_max_cores(int new_max_cores)
     {
         max_cores = new_max_cores;
-        OnCoresChange?.Invoke(new_max_cores);
+        // OnCoresChange?.Invoke(new_max_cores);
     }
 
     // GRABBING HACK MODULE & NETWORK MODULE

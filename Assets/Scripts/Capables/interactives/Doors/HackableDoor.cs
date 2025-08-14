@@ -116,7 +116,7 @@ public class HackableDoor : Door, Lockable
     }
 
     // UNLOCKING
-    private void Unlock()
+    private async void Unlock()
     {
         Locked = false;
         if (debug) { Debug.Log($"(HackableDoor) {name} is now unlocked"); }
@@ -129,6 +129,12 @@ public class HackableDoor : Door, Lockable
 
         // we stop playing idle_locked
         anim_player.StopPlaying("idle_locked");
+
+        // we wait for the unlock animation to stop
+        while (anim_player.current_capacity == "unlock") { await System.Threading.Tasks.Task.Yield(); }
+
+        // we open the door
+        open();
 
         // we invoke the locking after x seconds
         Invoke(nameof(Lock), locking_interval);

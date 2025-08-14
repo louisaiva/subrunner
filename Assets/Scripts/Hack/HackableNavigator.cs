@@ -274,6 +274,9 @@ public class HackableNavigator : MonoBehaviour
             Hackable hackable = processor.transform.parent.GetComponent<Hackable>();
             if (hackable == null || hacker?.IsHacking(hackable) == true) { being_hacked_hackable = hackable.gameObject; continue; }
 
+            // we check if this is a lockable unlocked we skip it
+            if (hackable is Lockable lockable && !lockable.Locked) { continue; }
+
             // we compare the distance
             float distance = Vector2.Distance(transform.position, processor.transform.position);
             if (distance < min_distance)

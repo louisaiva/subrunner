@@ -49,34 +49,50 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
     // LAPTOP
     private void HandleLaptopChanged(List<Item> items)
     {
+        // we remove old laptop callbacks
         if (laptop != null)
         {
-            laptop.OnCoresChange -= UpdateCoresCount;
             laptop.OnCoresFreedOrUsed -= update_free_used_cores;
+            (laptop.Inventory as LaptopInventory).OnModuleChanged -= HandleModuleChanged;
         }
 
+        // if the next is null then we null everything
         if (items == null || items.Count == 0 || !(items[0] is Laptop))
         {
             laptop = null;
+            free_them_all();
+            UpdateCoresCount(0);
             return;
         }
 
+        // otherwise we have a new laptop, we get components and register callbacks
         laptop = items[0] as Laptop;
-        laptop.OnCoresChange += UpdateCoresCount;
+        (laptop.Inventory as LaptopInventory).OnModuleChanged += HandleModuleChanged;
         laptop.OnCoresFreedOrUsed += update_free_used_cores;
+
+        // we update the cores count
         UpdateCoresCount(laptop.MaxCores);
 
-        // we update the cores colors
+        // we update the colors
         free_them_all();
+        update_free_used_cores(laptop.UsedCoresCount);
+    }
+    private void HandleModuleChanged(Item item)
+    {
+        if (item == null || item.Reference != "module:cpu") { return; } // we only want to update if this is a cpu
 
-        // we get the used cores number of the laptop
+        // we update the cores count
+        UpdateCoresCount(laptop.MaxCores);
+
+        // we update the colors
+        free_them_all();
         update_free_used_cores(laptop.UsedCoresCount);
     }
 
-    // CORES MANAGEMENT
+    // CORES COUNT MANAGEMENT
     public void UpdateCoresCount(int cores_count)
     {
-        if (log) { Debug.Log($"(UI_CoresViewer) Updating cores from {CoresCount} to {cores_count}"); }
+        if (log) { Debug.Log($"(UI_CoresViewer) Updating viewed cores from {CoresCount} to {cores_count}"); }
 
         // modify the text
         if (cores_count > 0) { label.text = "cores"; }
@@ -96,14 +112,14 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
         {
             if (cores.Count == 0)
             {
-                if (log) { Debug.LogWarning("(UI_CoresViewer) tried to remove a core but there are none left!"); }
+                if (log) { Debug.LogWarning("(UI_CoresViewer) tried to remove a viewed core but there are none left!"); }
                 continue;
             }
             Destroy(free_cores[free_cores.Count - 1].gameObject);
             cores.Remove(free_cores[free_cores.Count - 1]);
             free_cores.RemoveAt(free_cores.Count - 1);
         }
-        if (log) { Debug.Log($"(UI_CoresViewer) Removed {Mathf.Abs(cores_diff)} cores, total: {cores.Count}"); }
+        if (log) { Debug.Log($"(UI_CoresViewer) Removed {Mathf.Abs(cores_diff)} viewed cores, total: {cores.Count}"); }
     }
     private void create_cores(int nb = 1)
     {
@@ -112,7 +128,7 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
             GameObject core = Instantiate(core_prefab, cores_container);
             cores.Add(core.GetComponent<Image>());
         }
-        if (log) { Debug.Log($"(UI_CoresViewer) Created {nb} cores, total: {cores.Count}"); }
+        if (log) { Debug.Log($"(UI_CoresViewer) Created {nb} viewed cores, total: {cores.Count}"); }
     }
 
     // UPDATE FREE / USED CORES
@@ -120,21 +136,21 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
     {
         if (nb > 0)
         {
-            if (log) { Debug.Log($"(UI_CoresViewer) Using {nb} cores"); }
             for (int i = 0; i < nb; i++)
             {
                 Image core = get_random_free_core();
                 use_core(core);
             }
+            if (log) { Debug.Log($"(UI_CoresViewer) Simulated using {nb} cores"); }
         }
         else if (nb < 0)
         {
-            if (log) { Debug.Log($"(UI_CoresViewer) Freeing {Mathf.Abs(nb)} cores"); }
             for (int i = 0; i < Mathf.Abs(nb); i++)
             {
                 Image core = used_cores[0];
                 free_core(core);
             }
+            if (log) { Debug.Log($"(UI_CoresViewer) Simulated freeing {Mathf.Abs(nb)} cores"); }
         }
     }
     private void free_core(Image core)
@@ -158,12 +174,12 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
     }
     private void free_them_all()
     {
-        if (log) { Debug.Log($"(UI_CoresViewer) Freeing all cores"); }
         for (int i = 0; i < used_cores.Count; i++)
         {
             Image core = used_cores[i];
             free_core(core);
         }
         used_cores.Clear();
+        if (log) { Debug.Log($"(UI_CoresViewer) Simulated freeing all cores"); }
     }
 }
