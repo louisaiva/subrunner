@@ -97,7 +97,6 @@ public class Transitioner : MonoBehaviour
         // transition
         if (log) { Debug.Log($"(Transitioner) Showing {name} with duration {duration}"); }
         await Transition(true, duration);
-
     }
     public async Awaitable Hide(float duration = -99f)
     {

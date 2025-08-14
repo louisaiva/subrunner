@@ -33,21 +33,10 @@ public class UI_ModulePool : UI_ItemPool
     // DROPPING OVERHEAD SLOTS
     public void DropOverheadSlots()
     {
-        if (debug) { Debug.Log($"(UI_ModulePool) dropping overhead slots, current count: {ui_items.Count}"); }
+        if (log) { Debug.Log($"(UI_ModulePool) dropping overhead slots, current count: {ui_items.Count}"); }
 
         // we check if we have too many slots
         if (Count <= MaxSlots) { return; }
-
-        // we first try to remove the empty slots
-        /* DestroyEmptySlots();
-        if (debug) { Debug.Log($"(UI_ModulePool) tried destroying empty slots first, remaining count: {ui_items.Count}"); }
-        if (Count <= MaxSlots)
-        {
-            // if we are not scalable we create back some empty slots to match max slots
-            if (!Scalable) { CreateEmptySlots(MaxSlots - Count); }
-            if (debug) { Debug.Log($"(UI_ModulePool) recreated some to match {MaxSlots} : have now {ui_items.Count}"); }
-            return;
-        } */
 
         // we only have full slots, but we still have too many slots
         // so we drop the last slots items and remove their slots
@@ -73,7 +62,7 @@ public class UI_ModulePool : UI_ItemPool
             ui_items.Remove(ui_item);
         }
 
-        if (debug) { Debug.Log($"(UI_ModulePool) dropped last slots ({full_slots_dropped} non-empty) and now we have {ui_items.Count}"); }
+        if (log) { Debug.Log($"(UI_ModulePool) dropped last slots ({full_slots_dropped} non-empty) and now we have {ui_items.Count}"); }
     }
 
     // CREATE ITEM SLOT
@@ -99,7 +88,7 @@ public class UI_ModulePool : UI_ItemPool
         // we add the item to the list
         ui_items.Add(ui_item);
 
-        if (debug) { Debug.Log($"(UI_ModulePool) created an ui_module with item {(item == null ? "null" : item.Reference)}"); }
+        if (log) { Debug.Log($"(UI_ModulePool) created an ui_module with item {(item == null ? "null" : item.Reference)}"); }
 
         return ui_slot;
     }

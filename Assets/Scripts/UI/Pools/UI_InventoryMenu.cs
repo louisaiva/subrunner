@@ -25,16 +25,12 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     // AWAKE START
     protected void Awake()
     {
-        // on récupère le navigator
-        // navigator = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
-
-        // on récupère les composants
-        // ui_inventory = transform.Find("ui_inventory").GetComponent<UI_Inventory>();
+        
         if (ui_inventory == null)
         {
             Debug.LogError("(UI_InventoryMenu) missing ui_inventory on " + name);
         }
-        // ui_laptop = transform.Find("ui_laptop").GetComponent<UI_Inventory>();
+        
         if (ui_laptop == null)
         {
             Debug.LogError("(UI_InventoryMenu) missing ui_laptop on " + name);
@@ -101,9 +97,9 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     }
 
     // ITEM POOL TRANSITIONS
-    public async Awaitable RefreshItemPools(float duration = default)
+    public async Awaitable RefreshItemPools(float duration = -99f)
     {
-        if (duration == default) { duration = base_transition; }
+        if (duration == -99f) { duration = base_transition; }
         if (log) { Debug.Log($"(UI_InventoryMenu) refreshing item pools with duration {duration}"); }
 
 
@@ -115,22 +111,27 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
             if (item_pool == null) { ui.SetActive(true); continue; }
             if (log)
             {
-                Debug.Log("(UI_InventoryMenu) investigating ui_itempool " + item_pool.name + $" ({(item_pool.Faded ? "faded" : "visible")}) with "
+                Debug.Log("(UI_InventoryMenu) investigating ui_itempool " + item_pool.name + $" (shown ? {item_pool.Shown} vs hidden ? {item_pool.Hidden}) with "
                 + item_pool.Count + " slots and " + item_pool.FullCount + " items slots " + $"and {item_pool.EnabledCount} enabled slots");
             }
 
             // on regarde si la pool doit être affichée ou non
-            if (fade_all_disabled)
+            if (fade_all_disabled || item_pool is UI_ModulePool) // ui_module pool fonctionne toujours en mode fade_all_disbled
             {
-                if (item_pool.EnabledCount > 0 && item_pool.Faded) { item_pool.Fade(duration, fade_in: true); }
-                else if (item_pool.EnabledCount == 0 && !item_pool.Faded) { item_pool.Fade(duration, fade_in: false); }
+                if (item_pool.EnabledCount > 0 && !item_pool.Shown) { item_pool.Fade(duration, fade_in: true); }
+                else if (item_pool.EnabledCount == 0 && !item_pool.Hidden) { item_pool.Fade(duration, fade_in: false); }
             }
-            else
+            else if (!item_pool.DoNotDisableEmptySlots) // si on est donotdisableemptyslots ça veut dire qu'on veut que ça soit toujours affiché
             {
-                if ((item_pool.EnabledCount > 0 || item_pool.FullCount > 0) && item_pool.Faded) { item_pool.Fade(duration, fade_in: true); }
-                else if (item_pool.EnabledCount == 0 && item_pool.FullCount == 0 && !item_pool.Faded) { item_pool.Fade(duration, fade_in: false); }
+                if (!item_pool.Shown && (item_pool.EnabledCount > 0 || item_pool.FullCount > 0 )) { item_pool.Fade(duration, fade_in: true); }
+                else if (!item_pool.Hidden && item_pool.EnabledCount == 0 && item_pool.FullCount == 0) { item_pool.Fade(duration, fade_in: false); }
             }
         }
+
+        // on refresh les indicators
+        GetComponent<UI_PanelManager>().RefreshIndicators(duration);
+
+        // on simule la duration
         await Task.Delay((int)(duration * 1000));
     }
     public async Awaitable FadeOutAllPools(float duration = default)
@@ -142,7 +143,7 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         foreach (GameObject ui in ui_elements)
         {
             UI_ItemPool item_pool = ui.GetComponentInChildren<UI_ItemPool>();
-            if (item_pool == null || item_pool.Faded) { continue; }
+            if (item_pool == null || item_pool.Hidden) { continue; }
             if (log) { Debug.Log("(UI_InventoryMenu) fading out ui_itempool " + item_pool.name); }
             item_pool.Fade(duration, fade_in: false);
         }

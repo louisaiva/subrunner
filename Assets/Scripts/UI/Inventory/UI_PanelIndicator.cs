@@ -11,17 +11,18 @@ using UnityEngine;
 public class UI_PanelIndicator : MonoBehaviour
 {
     [Header("Indicator parameters")]
+    [SerializeField] private string panel_name = "Motherboard";
     [SerializeField] private bool require_laptop = true;
+    [SerializeField] private List<UI_ItemPool> required_enabled_item_pools = new List<UI_ItemPool>();
 
     [Header("Components")]
-    /* [SerializeField]  */private UI_PanelManager panel_manager;
-    [SerializeField] private string panel_name = "Motherboard";
+    private UI_PanelManager panel_manager;
     private Transitioner transitioner;
 
     [Header("Logs")]
     [SerializeField] private bool log = false;
 
-    // AWAKE START
+    // INIT START
     public void InitStart(UI_PanelManager panelManager)
     {
         panel_manager = panelManager;
@@ -29,89 +30,67 @@ public class UI_PanelIndicator : MonoBehaviour
 
         if (require_laptop) { UI_LaptopItemSlot.Instance.OnItemChanged += HandleLaptopChanged; }
 
-        panel_manager.OnPanelChanged += HandlePanelChanged;
+        panel_manager.OnPanelChanged += Refresh;
 
         if (log) { Debug.Log($"(UI_PanelIndicator) {name} initialized for panel {panel_name}"); }
     }
 
-    // LAPTOP & PANEL CHANGING HANDLING
+    // LAPTOP, PANEL CHANGING & INVENTORY REFRESH HANDLING
     protected void HandleLaptopChanged(List<Item> items)
     {
-        if (log) { Debug.Log($"(UI_PanelIndicator) Laptop handle called on {name}, we have :\n transitioner :{transitioner}\n panel_manager :{panel_manager} (panel : {panel_manager.CurrentPanel})"); }
-        if (transitioner == null || panel_manager == null) { return; }
+        // if (transitioner == null || panel_manager == null) { return; }
         if (panel_manager.CurrentPanel != panel_name) { return; }
-        if (items.Count > 0 && items[0].Reference == "hardware:laptop")
-        {
-            if (log) { Debug.Log($"(UI_PanelIndicator) Laptop grabbed for {panel_name}, showing indicator"); }
-            transitioner.Show();
-            transitioner.ShouldBeVisibleOnEnable = true;
-            return;
-        }
-        if (log) { Debug.Log($"(UI_PanelIndicator) Laptop dropped for {panel_name}, hiding indicator"); }
-        transitioner.Hide();
-        transitioner.ShouldBeVisibleOnEnable = false;
-
-        /* // otherwise we have no laptop -> we hide the indicator
-        if (panel_manager.CurrentPanel == panel_name)
-        {
-            transitioner.Hide();
-            transitioner.ShouldBeVisibleOnEnable = false;
-        }
-
-            HasLaptop = false;
-        if (!Faded) { Fade(fade_in: false); }
-        
-        // if (log_laptop) { Debug.Log($"(UI_PanelIndicator) Checking laptop presence for {panel_name} : {UI_LaptopItemSlot.Instance.HasLaptop}"); }
-
-        // CHECK THAT CURRENT PANEL IS OURS
-        if (panel_manager.CurrentPanel != panel_name)
-        {
-            if (!transitioner.Hidden)
-            {
-                transitioner.Hide();
-                transitioner.ShouldBeVisibleOnEnable = false;
-            }
-            return;
-        } */
+        if (items.Count > 0 && items[0].Reference == "hardware:laptop") { show(); return; }
+        hide();
     }
-    protected void HandlePanelChanged(string new_panel_name,float duration = default)
+    public void Refresh(string panel,float duration = -99f)
     {
-        if (transitioner == null || UI_LaptopItemSlot.Instance == null) { return; }
-        if (require_laptop && !UI_LaptopItemSlot.Instance.HasLaptop) { return; } // in all cases we are not shown so we don't do anything
+        if (require_laptop && (UI_LaptopItemSlot.Instance == null || !UI_LaptopItemSlot.Instance.HasLaptop)) { return; } // in all cases we are not shown so we don't do anything
 
-        if (new_panel_name == panel_name)
+        // if the panel is not the one we are on, we hide ourselves
+        if (panel != panel_name)
         {
-            if (log) { Debug.Log($"(UI_PanelIndicator) Panel changed to {new_panel_name}, showing indicator"); }
-            transitioner.Show(duration);
-            transitioner.ShouldBeVisibleOnEnable = true;
+            if (log) { Debug.Log($"(UI_PanelIndicator) refreshing indicator {this.name} for panel {panel} : not our panel, hiding indicator"); }
+            hide(duration);
             return;
         }
-        if (log) { Debug.Log($"(UI_PanelIndicator) Panel changed to {new_panel_name}, hiding indicator"); }
+
+        // we verify if we don't have any required enabled item pools, we show
+        if (required_enabled_item_pools.Count == 0)
+        {
+            if (log) { Debug.Log($"(UI_PanelIndicator) refreshing indicator {this.name} for panel {panel} : it has no required enabled item pools, showing indicator"); }
+            show(duration);
+            return;
+        }
+
+        // we check if at least one item pools has enabled ui_item we show
+        foreach (UI_ItemPool item_pool in required_enabled_item_pools)
+        {
+            if (item_pool == null) { continue; }
+            if (item_pool.EnabledCount > 0)
+            {
+                if (log) { Debug.Log($"(UI_PanelIndicator) refreshing indicator {this.name} for panel {panel} : enabled item pool found ! showing indicator"); }
+                show(duration);
+                return;
+            }
+        }
+
+        // if we did not find any enabled ui_item we hide
+        if (log) { Debug.Log($"(UI_PanelIndicator) refreshing indicator {this.name} for panel {panel} : no enabled item_pools found, hiding indicator"); }
+        hide(duration);
+    }
+
+    // SHOW / HIDE
+    private void show(float duration = -99f)
+    {
+        if (transitioner == null) { return; }
+        transitioner.Show(duration);
+        transitioner.ShouldBeVisibleOnEnable = true;
+    }
+    private void hide(float duration = -99f)
+    {
+        if (transitioner == null) { return; }
         transitioner.Hide(duration);
         transitioner.ShouldBeVisibleOnEnable = false;
-        
-
-        /* // CHECKS HAS LAPTOP
-        if (require_laptop)
-        {
-            if (!transitioner.Hidden && !UI_LaptopItemSlot.Instance.HasLaptop)
-            {
-                transitioner.Hide();
-                transitioner.ShouldBeVisibleOnEnable = false;
-            }
-            else if (!transitioner.Shown && UI_LaptopItemSlot.Instance.HasLaptop)
-            {
-                transitioner.Show();
-                transitioner.ShouldBeVisibleOnEnable = true;
-            }
-            return;
-        }
-
-        // OTHERWISE IT'S OUR PANEL -> WE SHOW IT
-        if (!transitioner.Shown)
-        {
-            transitioner.Show();
-            transitioner.ShouldBeVisibleOnEnable = true;
-        } */
     }
 }

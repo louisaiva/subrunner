@@ -66,11 +66,25 @@ public class UI_PanelManager : MonoBehaviour
         log_msg += $"\n\t inventory is {ui_inventory.name} " + (ui_inventory.name == current_panel ? " (current)" : "");
         if (log) { Debug.Log(log_msg); }
         if (current_panel == inventoryName) { return; } */
-        
+
         // we switch to the inventory panel
         await TweenToPanel(ui_panel);
         current_panel = ui_panel.name;
         if (log) { Debug.Log($"(UI_PanelManager) switched to panel: {ui_panel.name} with success !!!"); }
+        RefreshIndicators();
+    }
+
+    // REFRESH
+    public void RefreshIndicators(float duration = -99f)
+    {
+        if (indicators == null || indicators.Count == 0) { return; }
+        if (duration == -99f) { duration = default_duration; }
+
+        // refresh all indicators
+        foreach (UI_PanelIndicator indicator in indicators)
+        {
+            indicator.Refresh(CurrentPanel, duration);
+        }
     }
 
     // TWEENING

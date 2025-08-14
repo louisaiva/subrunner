@@ -36,8 +36,13 @@ public class UI_ItemPool : MonoBehaviour
     public UI_Inventory UI_Inventory;
     protected CanvasGroup group;
 
+    [Header("Tween")]
+    [SerializeField] protected Sequence? fade_sequence = null;
+
     [Header("Logs")]
-    [SerializeField] protected bool debug = false;
+    [SerializeField] protected bool log = false;
+    [SerializeField] protected bool log_storage = false;
+    [SerializeField] protected bool log_fading = false;
 
     public virtual void Init(UI_Inventory ui)
     {
@@ -74,7 +79,7 @@ public class UI_ItemPool : MonoBehaviour
         if (destroy_empty_on_init) { DestroyEmptySlots(); }
 
         // we check if we are scalable or not
-        if (debug)
+        if (log)
         {
             Debug.Log($"(UI_ItemPool) {name} just finished Init(), had {awake_slots} awake slots, now has {Count} slots\ndestroyed empty slots (& hereby may have recreated some to reach min or max slots)");
         }
@@ -86,11 +91,11 @@ public class UI_ItemPool : MonoBehaviour
         // we check if the item is valid
         if (item == null) { return false; }
         bool validate = item.ValidateRule(item_rule);
-        if (!validate && debug)
+        if (!validate && log_storage)
         {
             Debug.LogWarning($"(UI_ItemPool) {name} can't store item {item.Reference} because it doesn't match the rule {item_rule}");
         }
-        else if (debug)
+        else if (log_storage)
         {
             Debug.Log($"(UI_ItemPool) {name} can store item {item.Reference} because it matches the rule {item_rule}");
         }
@@ -105,7 +110,7 @@ public class UI_ItemPool : MonoBehaviour
         // we check if we can add the item
         if (!CanStore(item))
         {
-            if (debug) { Debug.Log("(UI_ItemPool) item " + item.Reference + " is not valid for this pool"); }
+            if (log_storage) { Debug.Log("(UI_ItemPool) item " + item.Reference + " is not valid for this pool"); }
             return false;
         }
 
@@ -120,7 +125,7 @@ public class UI_ItemPool : MonoBehaviour
         // if we are here, we didn't find a slot to stack the item
         if (!Scalable)
         {
-            if (debug)
+            if (log_storage)
             {
                 Debug.Log("(UI_ItemPool) item " + item.Reference
             + $" is valid for this pool but no slot to store it found :// ({Count} slots currently in the pool)");
@@ -192,20 +197,20 @@ public class UI_ItemPool : MonoBehaviour
         {
             // we create the missing slots
             CreateEmptySlots(MinSlots - Count);
-            if (debug) { Debug.Log($"(UI_ItemPool) {name} created {MinSlots - Count} empty slots to reach the minimum of {MinSlots} slots"); }
+            if (log) { Debug.Log($"(UI_ItemPool) {name} created {MinSlots - Count} empty slots to reach the minimum of {MinSlots} slots"); }
         }
         else if (!Scalable && Count < MaxSlots)
         {
             // we create the missing slots
             CreateEmptySlots(MaxSlots - Count);
-            if (debug) { Debug.Log($"(UI_ItemPool) {name} created {MaxSlots - Count} empty slots to reach the maximum of {MaxSlots} slots"); }
+            if (log) { Debug.Log($"(UI_ItemPool) {name} created {MaxSlots - Count} empty slots to reach the maximum of {MaxSlots} slots"); }
         }
     }
     public void CreateEmptySlots(int count)
     {
         // we create the empty slots
         for (int i = 0; i < count; i++) { CreateItemSlot(); }
-        if (debug) { Debug.Log($"(UI_ItemPool) created {count} empty slots in {name}"); }
+        if (log) { Debug.Log($"(UI_ItemPool) created {count} empty slots in {name}"); }
     }
     public virtual GameObject CreateItemSlot(Item item = null)
     {
@@ -237,11 +242,26 @@ public class UI_ItemPool : MonoBehaviour
     {
         if (group == null) { return; }
 
-        await Sequence.Create(useUnscaledTime: true)
-            .Group(Tween.Custom(fade_in ? 0f : 1f, fade_in ? 1f : 0f, duration: duration,
+        if (log_fading) { Debug.Log($"(UI_ItemPool) {name} fading {(fade_in ? "in" : "out")} with duration {duration} (from {group.alpha} to {(fade_in ? 1f : 0f)})"); }
+
+        // we stop the last sequence
+        if (fade_sequence != null && fade_sequence.Value.isAlive)
+        {
+            fade_sequence.Value.Stop();
+            fade_sequence = null;
+        }
+
+        // we create a new sequence
+        fade_sequence = Sequence.Create(useUnscaledTime: true)
+            .Group(Tween.Custom(group.alpha, fade_in ? 1f : 0f, duration: duration,
                 onValueChange: ctx => group.alpha = ctx));
+
+        // we await til it's completed or stopped
+        while (fade_sequence.Value.isAlive) { await System.Threading.Tasks.Task.Yield(); }
     }
-    public bool Faded { get { return group.alpha < 0.1f; } }
+    public bool Transitionning { get { return !Hidden && !Shown; } }
+    public bool Hidden { get { return group.alpha == 0f; } }
+    public bool Shown { get { return group.alpha == 1f; } }
 
     // GETTERS
     public virtual int GetItemSlotIndex(Item item)
