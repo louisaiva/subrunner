@@ -49,7 +49,7 @@ public class Capable : MonoBehaviour
     public CapacityBank bank { get; private set; }
 
     // un capable peut aussi avoir un inventaire
-    public Inventory inventory
+    public Inventory Inventory
     {
         get
         {
@@ -58,7 +58,7 @@ public class Capable : MonoBehaviour
             return inventory_transform.GetComponent<Inventory>();
         }
     }
-
+    
 
 
     [Header("Logs")]
@@ -223,35 +223,6 @@ public class Capable : MonoBehaviour
     {
         return capacities;
     }
-
-
-    // USING ITEMS
-    public bool HasItem(string item_reference,out Item item)
-    {
-        item = null;
-
-        // we check if we have an inventory
-        if (inventory == null) { return false; }
-
-        // we check if the item is in the inventory
-        item = inventory.GetItem(item_reference);
-        if (item == null)
-        {
-            if (debug) { Debug.LogWarning("(Capable) " + name + " doesn't have item " + item_reference); }
-            return false;
-        }
-
-        return true;
-    }
-    public void UseItem(string item_reference)
-    {
-        if (!HasItem(item_reference,out Item item)) { return; }
-
-        // we use the item
-        if (debug) { Debug.Log("(Capable) " + name + " used item " + item_reference); }
-        item.Use(this);
-    }
-
 
     // EFFECTS
     public virtual void AddEffect(Effect effect, float timetolive)

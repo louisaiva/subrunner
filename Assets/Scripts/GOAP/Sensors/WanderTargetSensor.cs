@@ -14,6 +14,12 @@ namespace subrunner.goap
         NavMeshQueryFilter defaultFilter = new NavMeshQueryFilter { areaMask = NavMesh.AllAreas, };
         public override void Created()
         {
+            AstarPath astarPath = AstarPath.active;
+            if (astarPath == null)
+            {
+                Debug.LogWarning("(WanderTargetSensor) AstarPath is not active. Make sure the A* Pathfinding Project is set up correctly if you want to use it.");
+                return;
+            }
             NavGraph[] allGraphs = AstarPath.active.data.graphs;
 
             // we filter the graphs to only keep the grid graphs

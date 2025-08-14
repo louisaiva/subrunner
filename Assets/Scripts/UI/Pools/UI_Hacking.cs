@@ -3,22 +3,31 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class UI_Hacking : UI_Pool
 {
+    public override bool Available {
+        get
+        {
+            if (in_transition) { return false; }
+            if (/* Perso.Instance != null &&  */!Perso.Instance.Alive) { return true; }
+            if (UI_LaptopItemSlot.Instance == null || !UI_LaptopItemSlot.Instance.HasLaptop) { return false; }
+            return true;
+        }
+    }
+
     [Header("Transition parameters")]
     public float final_timescale = 0.5f;
     public float bg_final_alpha = 0.5f;
+
 
     [Header("Inputs")]
 
     // EXPLOIT INPUT
     [SerializeField] private InputActionReference exploitInput;
     private InputAction exploitAction;
-    private event Action<InputAction.CallbackContext> exploitCallback; // revive Callback is for reviving items when inside a big inventory -> X
-    
-    // DROP LAPTOP INPUT
-
+    private event Action<InputAction.CallbackContext> exploitCallback;
 
     // START
     protected override void Start()
@@ -27,38 +36,50 @@ public class UI_Hacking : UI_Pool
         exploitAction = InputManager.Instance.GetAction(exploitInput);
         exploitCallback = ctx => HandleExploitInput(ctx.ReadValue<float>());
 
-        if (log) { Debug.Log("(XboxNavigator) started & callbacks created"); }
-
         base.Start();
+
+        if (log) { Debug.Log("(UI_Hacking) started & callbacks created"); }
     }
 
     // EXPLOIT
     private void HandleExploitInput(float input)
     {
-        if (log) { Debug.Log("(UI_GameOver) revive input received : " + input); }
-
-        if (input > 0.5f) { return; } // we only handle the input when the value is below 0.5f
-
-        // we find the laptop
-        Laptop laptop = Perso.Instance.Laptop;
-        if (laptop == null) { return; }
+        if (log) { Debug.Log("(UI_Hacking) hack input received : " + input); }
 
         // we use the laptop
         Perso.Instance.OnHack();
     }
 
     // SHOW / HIDE
-    protected override async Awaitable show_pool(float duration)
+    protected override async Awaitable show_pool(float duration, List<GameObject> dont_show = null)
     {
         // we set the callbacks
         exploitAction.performed += exploitCallback;
-        await base.show_pool(duration);
+        await base.show_pool(duration, dont_show);
+
+
+        // we set the callbacks & enable HackableNavigator
+        Perso.Instance.HackableNavigator.Enable();
+
+        if (log) { Debug.Log("(UI_Hacking) showing pool : navigator enabled & callbacks set"); }
     }
-    protected override async Awaitable hide_pool(float duration)
+    protected override async Awaitable hide_pool(float duration, List<GameObject> dont_hide = null)
     {
+        // if (log) { Debug.Log("(UI_Hacking) trying to hide pool"); }
+
+        // we disable navigator
+        Perso.Instance.HackableNavigator.Disable();
+
+
+        // if (log) { Debug.Log("(UI_Hacking) navigator disabled"); }
+
         // we remove the callbacks
         exploitAction.performed -= exploitCallback;
-        await base.hide_pool(duration);
-    }
 
+        // if (log) { Debug.Log("(UI_Hacking) callbacks removed"); }
+
+        await base.hide_pool(duration, dont_hide);
+
+        if (log) { Debug.Log("(UI_Hacking) hiding pool : navigator disabled & callbacks removed"); }
+    }
 }

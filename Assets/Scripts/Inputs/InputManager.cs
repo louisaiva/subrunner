@@ -11,23 +11,24 @@ public class InputManager : Singleton<InputManager>
 
 
     [Header("Inputs thresholds")]
-    [SerializeField] public float joystick_treshold_min = 0.1f;
-    [SerializeField] public float button_threshold_min = 0.2f;
-    [SerializeField] public float button_threshold_max = 0.8f;
+    [SerializeField] public float JOYSTICK_MIN_THRESHOLD = 0.3f;
+    [SerializeField] public float JOYSTICK_MAX_THRESHOLD = 0.95f;
+    [SerializeField] public float BUTTON_MIN_THRESHOLD = 0.2f;
+    [SerializeField] public float BUTTON_MAX_THRESHOLD = 0.8f;
 
     [Header("Components")]
     [SerializeField] private InputSystemUIInputModule input_system_ui_input_module;
 
     [Header("Logs")]
-    public bool debug = false;
-    public bool debug_input_maps_enabled = false;
+    public bool log = false;
+    public bool log_input_maps_enabled = false;
 
 
     // unity functions
     protected override void Awake()
     {
         base.Awake();
-        
+
         // on crée les inputs
         inputs = new PlayerInputActions();
 
@@ -41,17 +42,18 @@ public class InputManager : Singleton<InputManager>
         inputs.any.keyboard.performed += ctx => setInputType("keyboard");
         inputs.any.gamepad.performed += ctx => setInputType("gamepad");
 
+        // inputs.perso.move.performed += ctx => MovementRawInputs = ctx.ReadValue<Vector2>();
     }
 
     void Update()
     {
-        if (debug_input_maps_enabled)
+        if (log_input_maps_enabled)
         {
             string s = "inputs maps: \n\t";
             s += "- perso : " + inputs.perso.enabled + "\n\t";
             s += "- ui : " + inputs.UI.enabled + "\n\t";
             s += "- any : " + inputs.any.enabled + "\n\t";
-            s += "- enhanced_perso : " + inputs.enhanced_perso.enabled + "\n\t";
+            // s += "- enhanced_perso : " + inputs.enhanced_perso.enabled + "\n\t";
             s += "- menus : " + inputs.menus.enabled + "\n\t";
             Debug.Log(s);
         }
@@ -66,13 +68,19 @@ public class InputManager : Singleton<InputManager>
             current_input_type = input_type;
             input_system_ui_input_module.enabled = input_type == "keyboard";
             Cursor.visible = input_type == "keyboard";
-            if (debug) { Debug.Log("(InputManager) switching to " + input_type); }
+            if (log) { Debug.Log("(InputManager) switching to " + input_type); }
         }
     }
 
     // getters
     public InputAction GetAction(InputActionReference reference)
     {
+        if (reference == null)
+        {
+            if (log) { Debug.LogWarning("(InputManager) GetAction called with null reference"); }
+            return null;
+        }
+
         // on récupère le nom de l'action
         string action_name = reference.ToString();
 
@@ -98,10 +106,10 @@ public class InputManager : Singleton<InputManager>
         else if (inputMap == "UI") { action = inputs.UI.Get()[action_name]; }
         else if (inputMap == "any") { action = inputs.any.Get()[action_name]; }
         else if (inputMap == "menus") { action = inputs.menus.Get()[action_name]; }
-        else if (inputMap == "enhanced_perso") { action = inputs.enhanced_perso.Get()[action_name]; }
+        // else if (inputMap == "enhanced_perso") { action = inputs.enhanced_perso.Get()[action_name]; }
 
-        // on debug
-        if (debug) { Debug.Log("(InputManager) getting action : " + action_name + " from " + inputMap + " returned " + action); }
+        // on log
+        if (log) { Debug.Log("(InputManager) getting action : " + action_name + " from " + inputMap + " returned " + action); }
 
         // on retourne l'action
         return action;
@@ -115,4 +123,7 @@ public class InputManager : Singleton<InputManager>
         return current_input_type;
     }
 
+
+    // INPUTS GETTERS
+    public Vector2 MovementRawInputs { get => inputs.perso.move.ReadValue<Vector2>(); }
 }

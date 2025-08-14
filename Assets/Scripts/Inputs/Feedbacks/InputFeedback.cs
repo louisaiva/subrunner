@@ -39,10 +39,7 @@ public class InputFeedback : MonoBehaviour
             if (image == null) { Debug.LogWarning("(InputFeedback : " + name + " ) image is not set ! you should assign it in the inspector"); }
             if (input == null) { Debug.LogWarning("(InputFeedback : " + name + " ) input is not set ! you should assign it in the inspector"); }
         }
-
-        // we get the sprite bank
-        // bank = GameObject.Find("/utils/bank").GetComponent<SpriteBank>();
-
+        
         // we get the input manager
         input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
 
@@ -81,6 +78,7 @@ public class InputFeedback : MonoBehaviour
     }
     private void OnDisable()
     {
+        if (action == null) { return; }
         // we remove the listeners
         action.performed -= input_callback;
         action.canceled -= reset_callback;

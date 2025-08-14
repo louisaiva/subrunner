@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
@@ -27,16 +28,18 @@ public class SpriteBank : MonoBehaviour
         return false;
     }
 
-    
+
     [Header("Input Feedback Sprites")]
+    [SerializeField] private string IF_gamepad_path = "spritesheets/ui/inputs/ui_interactables";
+    [SerializeField] private string IF_kb_path = "spritesheets/ui/inputs/input_kb_feedback";
     public Dictionary<string, Sprite> IF_base_sprites = new Dictionary<string, Sprite>();
     public Dictionary<string, Sprite> IF_clicked_sprites = new Dictionary<string, Sprite>();
 
     // GET INPUT FEEDBACK SPRITE
     private void init_input_feedback_sprites()
     {
-        // on récupère les sprites
-        Sprite[] sprites = Resources.LoadAll<Sprite>("spritesheets/ui/ui_interactables");
+        // on récupère les sprites du gamepad
+        Sprite[] sprites = Resources.LoadAll<Sprite>(IF_gamepad_path);
 
         // on les ajoute aux dictionnaires
         IF_base_sprites.Add("y", sprites[0]);
@@ -88,12 +91,30 @@ public class SpriteBank : MonoBehaviour
         IF_clicked_sprites.Add("keyboard", sprites[39]);
         IF_base_sprites.Add("space", sprites[40]);
         IF_clicked_sprites.Add("space", sprites[41]);
-    }
 
-    public Sprite GetInputFeedbackSprite(string key, bool empty=true)
+        // on récupère les sprites du gamepad
+        sprites = Resources.LoadAll<Sprite>(IF_kb_path);
+
+        IF_base_sprites.Add("key_dark", sprites[0]);
+        IF_clicked_sprites.Add("key_dark", sprites[1]);
+        IF_base_sprites.Add("key_light", sprites[2]);
+        IF_clicked_sprites.Add("key_light", sprites[3]);
+    }
+    public Sprite GetInputFeedbackSprite(string key, bool empty = true)
     {
         if (empty) { return IF_base_sprites[key]; }
         else { return IF_clicked_sprites[key]; }
     }
 
+    [Header("Key Feedback Icons")]
+    [SerializeField] private List<Sprite> key_feedback_icons = new List<Sprite>();
+    [SerializeField] private List<string> key_feedback_keys = new List<string>();
+
+    // GET KEY FEEDBACK ICON
+    public Sprite GetKeyFeedbackIcon(string key_reference)
+    {
+        int index = key_feedback_keys.IndexOf(key_reference);
+        if (index == -1 || index >= key_feedback_icons.Count) { return null; }
+        return key_feedback_icons[index];
+    }
 }

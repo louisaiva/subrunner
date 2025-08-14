@@ -14492,6 +14492,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown: 0
   debug: 0
+  hovered: 0
 --- !u!1 &2513878005061601762
 GameObject:
   m_ObjectHideFlags: 0
@@ -14575,6 +14576,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown: 0
   debug: 0
+  hovered: 0
 --- !u!1 &2639707252019862469
 GameObject:
   m_ObjectHideFlags: 0
@@ -14823,14 +14825,13 @@ MonoBehaviour:
     loop: 1
     speed: 1
     flipX: 0
-  anim_pile: []
-  animation_priorities_with_no_loop: 03000000
-  animation_priorities_with_static_orientation: 0300000004000000
-  debug: 0
-  debug_orientation: 0
-  debug_advanced: 0
-  debug_frames: 0
-  debug_pile: 0
+  update_each_frame: 1
+  anim_capacity_priorities: []
+  log: 0
+  log_orientation: 0
+  log_advanced: 0
+  log_frames: 0
+  log_pile: 0
 --- !u!114 &1684176694716961081
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57341,14 +57342,13 @@ MonoBehaviour:
     loop: 1
     speed: 1
     flipX: 0
-  anim_pile: []
-  animation_priorities_with_no_loop: 03000000
-  animation_priorities_with_static_orientation: 0300000004000000
-  debug: 0
-  debug_orientation: 0
-  debug_advanced: 0
-  debug_frames: 0
-  debug_pile: 0
+  update_each_frame: 1
+  anim_capacity_priorities: []
+  log: 0
+  log_orientation: 0
+  log_advanced: 0
+  log_frames: 0
+  log_pile: 0
 --- !u!114 &5854468585278943998
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57509,6 +57509,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown: 0
   debug: 0
+  hovered: 0
 --- !u!1 &7574102789870103812
 GameObject:
   m_ObjectHideFlags: 0
@@ -62026,14 +62027,13 @@ MonoBehaviour:
     loop: 1
     speed: 1
     flipX: 0
-  anim_pile: []
-  animation_priorities_with_no_loop: 03000000
-  animation_priorities_with_static_orientation: 0300000004000000
-  debug: 0
-  debug_orientation: 0
-  debug_advanced: 0
-  debug_frames: 0
-  debug_pile: 0
+  update_each_frame: 1
+  anim_capacity_priorities: []
+  log: 0
+  log_orientation: 0
+  log_advanced: 0
+  log_frames: 0
+  log_pile: 0
 --- !u!114 &4866035503554983734
 MonoBehaviour:
   m_ObjectHideFlags: 0

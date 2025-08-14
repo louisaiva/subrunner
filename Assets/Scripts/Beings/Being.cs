@@ -154,7 +154,6 @@ public class Being : Movable
         if (HasEffect(Effect.Invincible))
         {
             // floating missing text
-            // floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddFloatingDmg(this.gameObject, 0, transform.position);
             floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddMissed(this.gameObject, transform.position);
             return false;
         }
@@ -175,7 +174,7 @@ public class Being : Movable
             // change the flipX of the sprite if needed
             if (knockback.direction.x != 0f)
             {
-                GetComponent<SpriteRenderer>().flipX = (knockback.direction.x < 0f);
+                GetComponent<SpriteRenderer>().flipX = knockback.direction.x < 0f;
             }
         }
 
@@ -205,13 +204,16 @@ public class Being : Movable
         }
     }
 
-    
+    // DIE
+    public virtual void Die() {}
+
+
     // SETTERS
     public void AddLife(float life)
     {
         this.life += life;
         if (this.life > max_life)
-        { 
+        {
             // floating dmg
             floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddFloatingDmg(gameObject, max_life - this.life, transform.position);
 

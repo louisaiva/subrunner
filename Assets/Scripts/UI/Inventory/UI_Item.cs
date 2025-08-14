@@ -27,6 +27,7 @@ public class UI_Item : UI_Slot
     [SerializeField] public ItemBank bank;
     [SerializeField] protected Image item_image;
     [SerializeField] protected Sprite current_item_sprite;
+    public Sprite ItemSprite => current_item_sprite;
     public UI_ItemPool ItemPool => transform.parent.GetComponent<UI_ItemPool>();
     public Inventory Inventory => ItemPool?.UI_Inventory?.Inventory;
     public Item Item => items.Count > 0 ? items[0] : null;
@@ -68,6 +69,8 @@ public class UI_Item : UI_Slot
         // we check if we can store the item
         if (!CanStore(item)) { return false; }
 
+        if (log) { Debug.Log($"(UI_Item) Storing item {item.Reference} in {name}"); }
+
         // we add the item to the slot
         items.Add(item);
 
@@ -98,13 +101,22 @@ public class UI_Item : UI_Slot
         OnItemChanged?.Invoke(items);
         return true;
     }
+    public void Clear()
+    {
+        // we clear the items
+        items.Clear();
+
+        // we update the UI
+        update_ui_qty();
+
+        // we clear the UI
+        ClearUI();
+    }
 
     // ITEM SWITCHING
-    public void SwitchItems(List<Item> items)
+    public virtual void SwitchItems(List<Item> items, bool items_moved = true)
     {
-        // we clear the ui
-        ClearUI();
-        this.items.Clear();
+        Clear();
 
         // we add the items to the slot
         if (items.Count > 0)
@@ -136,7 +148,7 @@ public class UI_Item : UI_Slot
         // we show or hide the text
         quantity_text.gameObject.SetActive(Quantity > 1);
     }
-    public virtual void setItem(Item item)
+    protected virtual void setItem(Item item)
     {
         // on charge le sprite de l'image
         current_item_sprite = bank.GetSprite(item.Reference);
@@ -167,7 +179,7 @@ public class UI_Item : UI_Slot
         RectTransform rt = item_image.GetComponent<RectTransform>();
         rt.sizeDelta = new Vector2(sprite.rect.width, sprite.rect.height);
     }
-    public void ClearUI()
+    protected void ClearUI()
     {
         // on change le sprite de l'image
         set_ui(null);
@@ -177,6 +189,7 @@ public class UI_Item : UI_Slot
         name = "ui_empty";
 
         // on disable le slot
+        if (ItemPool != null && ItemPool.DoNotDisableEmptySlots) { return; }
         Disable();
     }
 
@@ -206,22 +219,11 @@ public class UI_Item : UI_Slot
         if (Quantity == 0) { return; }
         if (log) { Debug.Log("OnPointerClick on " + gameObject.name); }
 
-        // we check if this is a food item
-        if (items.Count > 0 && items[0].GetComponent<Food>() != null)
+        // we check if the item is an usable
+        if (Item != null && Item is Usable usable)
         {
-            Food food = items[0].GetComponent<Food>();
-
-            // we make it eat by the capable
-            // we get the EatCapacity
-            EatCapacity eater = food.Holder.GetCapacity<EatCapacity>();
-            if (eater == null) { return; }
-
-            eater.SetFoodTarget(food);
-            eater.Use(food.Holder);
-
-            // we switch back to hud
-            GameObject.Find("/ui").GetComponent<UI_Manager>().SwitchTo("hud");
-            return;
+            usable.Use(Inventory.capable);
+            UI_Manager.Instance.SwitchTo("hud");
         }
     }
     public override void OnPointerExit(PointerEventData eventData)

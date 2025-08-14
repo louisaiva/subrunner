@@ -10,9 +10,8 @@ public class Item : Movable
     public int MaxQty = 1;
     public bool Stackable { get => MaxQty > 1; }
     public string ItemDescription = "description of the item";
-    public string ActivationLabel = ""; // if an item has an use, this is its label (example : food -> "eat", shuriken -> "throw" etc) but most of items don't have an action at all
 
-    // Grabbable
+    // GRAB / DROP
     private bool _grabbed = false;
     public bool Grabbed
     {
@@ -28,18 +27,14 @@ public class Item : Movable
             else { on_dropped(); }
         }
     }
-    public Capable Holder
-    {
-        get
-        {
-            if (transform.parent == null) { return null; }
-            if (transform.parent.GetComponent<Inventory>() == null) { return null; }
-            return transform.parent.GetComponent<Inventory>().capable;
-        }
-    }
 
-    // Inventory
-    public Inventory Inventory
+    // events
+    public event System.Action<Capable> OnGrabbed = delegate { };
+    public event System.Action OnDropped = delegate { };
+
+    // HOLDER
+    public Capable Holder => HolderInventory != null ? HolderInventory.capable : null;
+    public Inventory HolderInventory
     {
         get
         {
@@ -47,6 +42,9 @@ public class Item : Movable
             return transform.parent.GetComponent<Inventory>();
         }
     }
+
+
+
 
     /// <summary>
     /// Return true if the item pass the string rule in parameter.
@@ -69,6 +67,13 @@ public class Item : Movable
         // we need at least one rule to be valid
         foreach (string rule in rules)
         {
+            // checks special rule
+            if (rule == "activable")
+            {
+                if (this is Usable) { return true; }
+                continue;
+            }
+
             // check if the rule is a category or a specific item
             if (rule.Contains(":"))
             {
@@ -86,11 +91,8 @@ public class Item : Movable
 
 
     // BEING GRABBED / DROPPED
-    protected virtual void on_grabbed()
+    protected virtual async void on_grabbed()
     {
-        // we change the rigidbody to a kinematic
-        // rb.bodyType = RigidbodyType2D.kinematic;
-
         // we remove the rigidbody
         Destroy(rb);
         rb = null;
@@ -110,11 +112,13 @@ public class Item : Movable
         // we remove all the forces
         ClearForces();
 
+        await System.Threading.Tasks.Task.Yield();
+
+        // we call the event
+        OnGrabbed?.Invoke(Holder);
     }
     protected virtual void on_dropped()
     {
-        // rb.bodyType = RigidbodyType2D.Dynamic; // we change the rigidbody to a dynamic
-
         // we add the rigidbody
         rb = gameObject.AddComponent<Rigidbody2D>();
         rb.gravityScale = 0;
@@ -131,32 +135,14 @@ public class Item : Movable
 
         // we remove the effect IsBeingCarried
         RemoveEffect(Effect.BeingCarried);
-    }
 
-    // USE
-    public virtual void Use(Capable user)
-    {
-        // todo make this an interface
-        // only for items that have a use (apple : being eaten, katana : make an attack, etc.)
-        // use the capacity of the item BUT with the capable holding this item as the user
-        // if katana make a Do("attack") for example, the katana will be the user of the attack
-        // we want the perso, holding the katana, to be the user of the attack
-
-
-        // we check if the item is grabbed
-        if (!Grabbed) { return; }
-
-        // we find the holder of the item
-        // Capable holder = transform.parent.GetComponent<Inventory>().capable;
-        // if (holder == null) { return; }
-
-        // and then we use the item
+        OnDropped?.Invoke();
     }
 
     // ON DESTROY
     private void OnDestroy()
     {
         if (!gameObject.scene.isLoaded) { return; } // this happens when the scene is destroyed when we quit the scene
-        if (Holder != null) { Holder.inventory.Remove(this); } // we remove the item from the holder's inventory
+        if (Holder != null) { Holder.Inventory.Remove(this); } // we remove the item from the holder's inventory
     }
 }

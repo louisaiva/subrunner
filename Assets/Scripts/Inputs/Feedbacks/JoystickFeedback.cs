@@ -30,7 +30,7 @@ public class JoystickFeedback : InputFeedback
 
     public override void OnInput()
     {
-        if (joystick_direction.magnitude <= input_manager.joystick_treshold_min) { OnReset(); return; }
+        if (joystick_direction.magnitude <= input_manager.JOYSTICK_MIN_THRESHOLD) { OnReset(); return; }
 
         base.OnInput();
 
@@ -55,7 +55,7 @@ public class JoystickFeedback : InputFeedback
 
     private string convertDirectionToReference(Vector2 direction)
     {
-        if (direction.magnitude <= input_manager.joystick_treshold_min) { return "joy"; }
+        if (direction.magnitude <= input_manager.JOYSTICK_MIN_THRESHOLD) { return "joy"; }
 
         // we get the angle
         float angle = Vector2.SignedAngle(Vector2.up, direction);

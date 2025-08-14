@@ -124,11 +124,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c37711ed55897fe4484e791d8a7a4a15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  input: {fileID: 207262643675311995, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+  input: {fileID: 0}
   input_manager: {fileID: 0}
   image: {fileID: 275454421929136878}
   bank: {fileID: 0}
   base_color: {r: 1, g: 1, b: 1, a: 1}
   clicked_color: {r: 0.03529412, g: 1, b: 0, a: 1}
+  label: {fileID: 0}
   debug: 0
   button_reference: y
+  always_full: 0

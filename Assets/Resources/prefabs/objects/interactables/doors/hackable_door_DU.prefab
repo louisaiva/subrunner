@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 5183794512506927880}
   - component: {fileID: 531679847975909350}
   m_Layer: 14
-  m_Name: hack_collider
+  m_Name: processor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -103,12 +103,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4613889439640014192}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.822, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2940856336932751042}
+  m_Father: {fileID: 7320133758028458334}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &531679847975909350
 CircleCollider2D:
@@ -145,7 +145,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.15
+  m_Radius: 1.5
 --- !u!1 &4872901202753562223
 GameObject:
   m_ObjectHideFlags: 0
@@ -259,12 +259,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7381030289409828735}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 16, y: -3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5901721342173668361}
+  - {fileID: 5183794512506927880}
   - {fileID: 2940856336932751042}
   - {fileID: 6593078494629469334}
   - {fileID: 2616619868497128967}
@@ -394,14 +395,53 @@ MonoBehaviour:
     loop: 1
     speed: 1
     flipX: 0
-  anim_pile: []
-  animation_priorities_with_no_loop: 04000000
-  animation_priorities_with_static_orientation: 0400000005000000
-  debug: 0
-  debug_orientation: 0
-  debug_advanced: 0
-  debug_frames: 0
-  debug_pile: 0
+  update_each_frame: 1
+  anim_capacity_priorities:
+  - priority: 0
+    capacity_playing: 
+    capacities:
+    - idle
+    lock_orientation: 0
+    one_shot: 0
+  - priority: 4
+    capacity_playing: 
+    capacities:
+    - idle_locked
+    lock_orientation: 0
+    one_shot: 0
+  - priority: 1
+    capacity_playing: 
+    capacities:
+    - hover
+    - hover_locked
+    lock_orientation: 0
+    one_shot: 0
+  - priority: 3
+    capacity_playing: 
+    capacities:
+    - idle_open
+    lock_orientation: 0
+    one_shot: 0
+  - priority: 4
+    capacity_playing: 
+    capacities:
+    - open
+    - close
+    - unlock
+    - lock
+    lock_orientation: 1
+    one_shot: 1
+  - priority: 4
+    capacity_playing: 
+    capacities:
+    - hacked
+    lock_orientation: 0
+    one_shot: 0
+  log: 1
+  log_orientation: 0
+  log_advanced: 0
+  log_frames: 0
+  log_pile: 1
 --- !u!114 &4412303674509227999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -472,14 +512,14 @@ MonoBehaviour:
   capacities: []
   effects: 
   effects_timetolive: []
-  debug: 0
+  debug: 1
   activate_all_capacities_logs_on_awake: 0
   is_vertical: 1
   door_collider: {fileID: 0}
   shadow_caster: {fileID: 0}
   room1: {fileID: 0}
   room2: {fileID: 0}
-  Locked: 1
+  locking_interval: 15
   key:
     key_type: SHA
     key: 4iXSfHnzlxFbASpU
@@ -662,10 +702,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5183794512506927880}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
 --- !u!4 &2940856336932751042 stripped

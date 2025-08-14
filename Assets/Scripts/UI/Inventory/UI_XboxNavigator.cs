@@ -14,11 +14,11 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     [SerializeField] private List<GameObject> slottables = new List<GameObject>();
     [SerializeField] private List<GameObject> slots;
     [SerializeField] private int current_slot_index;
-    [SerializeField] private UI_Inventory perso_quick_inventory;
+    // [SerializeField] private UI_Inventory perso_quick_inventory;
     // this quick inventory is showed when another inventory (chest, etc.) is opened
     // to allow the player to transfer items between inventories
     // only showed in-game (when the hud is visible)
-    private bool perso_quick_inventory_was_shown = true;
+    // private bool perso_quick_inventory_was_shown = true;
 
     [Header("Navigation")]
     [SerializeField] private bool can_navigate = true; // devient true lorsque la magnitude de l'input revient à 0, et false lorsque la magnitude de l'input est supérieure à 0.95f
@@ -82,6 +82,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     [Header("Logs")]
     public bool debug = false;
     public bool debug_navigation = false;
+    public bool log_slot_position = false;
     public bool debug_gizmo = false;
 
     [Header("Gizmos")]
@@ -116,18 +117,17 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         current_slot_index = -1;
 
         // we check if the perso quick inventory is shown
-        if (perso_quick_inventory == null)
+        /* if (perso_quick_inventory == null)
         {
             Debug.LogWarning("(UI_Navigator) perso_quick_inventory is not set. please set it in the inspector");
-        }
+        } */
     }
 
 
     // ENABLE / DISABLE
-    public void Enable(I_UI_Slottable slottable, bool ingame_navigation = false)
+    public void Enable(I_UI_Slottable slottable, bool ingame_navigation = false,bool navigate = true)
     {
         if (slottables.Contains(slottable.gameObject)) { return; } // on ne fait rien si le slottable est déjà dans la liste
-
         if (navigateAction == null || activateAction == null) { Start(); }
 
         // on active les inputs si besoin
@@ -135,34 +135,17 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
 
         // on ajoute le slottable à la liste des slottables
         slottables.Add(slottable.gameObject);
-
-        // si c'est l'ui d'un coffre on affiche le quick inventory
-        if (slottable is UI_Inventory && slottable.gameObject != perso_quick_inventory.gameObject)
-        {
-            // on regarde si c'est un coffre
-            UI_Inventory inventory = slottable as UI_Inventory;
-            if (inventory.Inventory != null && inventory.Inventory.capable != null && inventory.Inventory.capable is Chest)
-            {
-                // on affiche le perso quick inventory si besoin
-                perso_quick_inventory_was_shown = perso_quick_inventory.gameObject.activeSelf;
-                if (!perso_quick_inventory_was_shown) { perso_quick_inventory.Show(); }
-
-                // on enable le slottable
-                Enable(perso_quick_inventory, true);
-            }
-        }
-
+        
         // log
         if (debug) { Debug.Log("(UI_Navigator) enabled slotabble : " + slottable.gameObject.name); }
 
         // on verifie si on utilise le clavier ou le controller
         if (!input_manager.isUsingGamepad()) { return; }
+        if (!navigate) { return; }
 
-        // on navigue vers le premier slot
+        // ON NAVIGUE
         current_slot_index = -1;
-        // navigateToFirst();
         navigateToClosest(slottable.SavedPosition);
-
     }
     public void Disable(I_UI_Slottable slottable)
     {
@@ -207,15 +190,6 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         update_slots();
         hover_slot(last_slot != null ? slots.IndexOf(last_slot) : -1);
 
-        // on cache le perso quick inventory si c'est le seul survivant
-        if (slottables.Count == 1 && perso_quick_inventory != null && slottables[0] == perso_quick_inventory.gameObject)
-        {
-            // on cache le perso quick inventory si besoin
-            if (!perso_quick_inventory_was_shown) { perso_quick_inventory.Hide(); }
-
-            // on disable le slottable
-            Disable(perso_quick_inventory);
-        }
         // on regarde si on a encore des slottables
         if (slottables.Count == 0)
         {
@@ -360,13 +334,15 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         s += "\n\nclosest : " + next_index + "\n";
         if (debug_navigation) { Debug.Log(s); }
     }
-    private void navigateToClosest(Vector2 position)
+    private async void navigateToClosest(Vector2 position)
     {
         // we check if we have a slottable
         if (slottables.Count == 0) {return;}
 
         // we update the slots
         update_slots();
+
+        await System.Threading.Tasks.Task.Yield(); // wait for a frame to let the UI update
 
         // on récupère le slot le plus proche
         string s = "(UI_Navigator) NAVIGATE TO CLOSEST: \n\nfrom position : " + position + "\n\n";
@@ -380,7 +356,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         s += "\n\nclosest : " + next_index + "\n";
         if (debug_navigation) { Debug.Log(s); }
     }
-    /* private void navigateToFirst()
+    private void navigateToFirst()
     {
         // we check if we have a slottable
         if (slottables.Count == 0) { return; }
@@ -397,7 +373,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         // we log the result
         string s = "(UI_Navigator) NAVIGATE TO FIRST: slot is : " + slots[0].gameObject.name + "\n";
         if (debug_navigation) { Debug.Log(s); }
-    } */
+    }
 
     // NAVIGATION LOW LEVEL
     private int findClosestSlot(List<GameObject> slots, Vector2 position, ref string s, Vector2 direction = new Vector2(), float local_angle_multiplicator = 0f)
@@ -545,23 +521,21 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     {
         if (slot == null) { return base_position; }
 
+        // if we are here we have a canvas slot -> means we have a recttransform
         Vector2 position = slot.GetComponent<RectTransform>().TransformPoint(slot.GetComponent<RectTransform>().rect.center);
+        string s = "(UI_Navigator) get_position: slot " + slot.name + " position : " + position;
 
         // on regarde si le slot est positionné dans un canvas world space or screen space
         if (slot.layer == LayerMask.NameToLayer("UI_World"))
         {
             // on le convertit en position
             position = Camera.main.WorldToScreenPoint(position);
+            s += " position (screen) : " + position + "\n";
         }
+        if (log_slot_position) { Debug.Log(s); }
 
         return position;
     }
-    /* private int get_slot_index(GameObject slot)
-    {
-        // get the index of the slot in the slots list
-        if (slot == null) { return -1; }
-        return slots.IndexOf(slot);
-    } */
     public Vector2 GetCurrentSlotPosition()
     {
         // get the position of the current slot
@@ -664,8 +638,13 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         // si on utilise la souris alors pas besoin de naviguer vers le plus proche
         if (!input_manager.isUsingGamepad()) { return; }
 
-        // wait for a frame to let the click happen
+        // wait for a few frame to let the click happen
         await System.Threading.Tasks.Task.Yield();
+        await System.Threading.Tasks.Task.Yield();
+        await System.Threading.Tasks.Task.Yield();
+        await System.Threading.Tasks.Task.Yield();
+
+        if (AppManager.Instance.IsQuitting) { return; }
 
         // on navigue vers le slot le plus proche
         navigateToClosest(position);
@@ -934,6 +913,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
                 // on regarde si le slot n'a pas d'item on le désactive
                 if (ui_item.Item != null) { ui_item.Enable(); continue; }
                 if (except_modules && ui_item is UI_Module) { ui_item.Enable(); continue; } // on ne désactive pas les modules
+                if (ui_item.ItemPool != null && ui_item.ItemPool.DoNotDisableEmptySlots) { ui_item.Enable(); continue; }
                 ui_item.Disable(); // on désactive le slot
             }
         }

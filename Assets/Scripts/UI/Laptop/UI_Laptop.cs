@@ -1,0 +1,81 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+public class UI_Laptop : UI_Inventory
+{
+    protected virtual Laptop TargetLaptop
+    {
+        get
+        {
+            if (!UI_LaptopItemSlot.Instance.HasLaptop) { return null; }
+            return UI_LaptopItemSlot.Instance.Laptop;
+        }
+    }
+
+    [Header("Components")]
+    [SerializeField] private MotherboardBuilder mb;
+
+    // START
+    protected virtual void Start()
+    {
+        UI_LaptopItemSlot.Instance.OnItemChanged += HandleLaptopChanged;
+        if (mb == null)
+        {
+            Debug.LogError($"(UI_Laptop) {name} has no MotherboardBuilder assigned, please set one in the inspector");
+        }
+        // mb = GetComponentInChildren<MotherboardBuilder>();
+
+        // we initialize ourselves as big child bcz we may not have inventory
+        // to init us from the start
+        Init();
+    }
+
+    // LAPTOP CHANGED
+    private async void HandleLaptopChanged(List<Item> items)
+    {
+        if (Inventory != null) { Inventory.RemoveUI(this); }
+        if (items == null || items.Count == 0)
+        {
+            // we disable the modules
+            await pools[0].Fade(fade_in: false);
+            (pools[0] as UI_ModulePool)?.DisableModules();
+            return;
+        }
+
+        // if we are here we have a laptop, so we create the motherboard & its modules
+        // first we warn the new inventory that we are its ui now
+        TargetLaptop.Inventory.AddUI(this);
+        LaptopInventory inventory = TargetLaptop.Inventory as LaptopInventory;
+        mb.AssignLaptopInventory(inventory);
+        // mb.Size = new Vector2Int(inventory.Columns, inventory.Rows);
+
+        await System.Threading.Tasks.Task.Yield(); // wait for the next frame to ensure the UI is active
+
+        // we create the modules based on the inventory save
+        if (pools == null || pools.Count == 0 || pools[0] is not UI_ModulePool modulePool)
+        {
+            Debug.LogError($"(UI_Laptop) {name} has no UI_ModulePool to initialize from inventory, please set one in the inspector");
+            return;
+        }
+        modulePool.InitFromInventory(inventory);
+
+        // we enable the modules
+        modulePool.EnableModules();
+    }
+
+
+    // GETTERS
+    public int GetItemSlotIndex(Item item)
+    {
+        if (item == null) { return -1; }
+        if (pools == null || pools.Count == 0)
+        {
+            if (log) { Debug.LogWarning($"(UI_Laptop) {name} has no pools to search for item: {item.Reference}"); }
+            return -1;
+        }
+
+        // we go through the module pool and check if one of the module slot contains the item,
+        // if yes we return the index
+        return pools[0].GetItemSlotIndex(item);
+    }
+}

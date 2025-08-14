@@ -1,37 +1,79 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class Laptop : Item
+public class Laptop : Item, Usable
 {
-    [Header("Laptop parameters")]
-    [SerializeField] protected int max_cores = 4;
-    [SerializeField] protected int free_cores = 4;
+    [Header("Cores management")]
+    [SerializeField] protected int max_cores = 0;
+    private Dictionary<Hack, int> used_cores = new Dictionary<Hack, int>(); // store the nb of cores used per hack
+    public int FreeCoresCount
+    {
+        get
+        {
+            int free_cores = max_cores;
+            foreach (KeyValuePair<Hack, int> kvp in used_cores)
+            {
+                free_cores -= kvp.Value;
+            }
+            return free_cores;
+        }
+    }
+    public int MaxCores => max_cores;
+    public int UsedCoresCount => max_cores - FreeCoresCount;
+    // public event System.Action<int> OnCoresChange = delegate { };
+    public event System.Action<int> OnCoresFreedOrUsed = delegate { };
+
+    [Header("Logs")]
+    [SerializeField] protected bool log_keys = false;
+
 
     // CORES MANAGEMENTS
     public bool HasFreeCores(int amount = 1)
     {
-        return free_cores >= amount;
+        return FreeCoresCount >= amount;
     }
-    public async void UseCores(int amount, float duration)
+    public void UseCores(Hack hack)
     {
-        free_cores -= amount;
-        if (free_cores < 0)
+        // we add the hack to the used cores
+        used_cores[hack] = hack.exploit.cores_cost;
+        if (debug) { Debug.Log($"(Laptop) {name} using {hack.exploit.cores_cost} cores"); }
+
+        OnCoresFreedOrUsed?.Invoke(hack.exploit.cores_cost);
+        if (FreeCoresCount < 0)
         {
             Debug.LogWarning($"(Laptop) {name} has a core overflow !!!");
             return;
         }
+    }
+    public void FreeCores(Hack hack)
+    {
+        if (!used_cores.ContainsKey(hack))
+        {
+            if (debug) { Debug.LogWarning($"(Laptop) {name} tried to free cores for a hack that is not running: {hack.name}"); }
+            return;
+        }
 
-        // simulate core usage over time
-        await Task.Delay((int)(duration * 1000));
-        free_cores += amount;
+        if (debug) { Debug.Log($"(Laptop) {name} freeing {hack.exploit.cores_cost} cores"); }
+        used_cores.Remove(hack);
+        OnCoresFreedOrUsed?.Invoke(-hack.exploit.cores_cost);
     }
 
     // KEYS MANAGEMENT
-    public bool HasKeyFor(Hackable target)
+    public bool HasKeyFor(Lockable target)
     {
         List<Key> keys = get_keys();
+        if (log_keys)
+        {
+            string s = $"(Laptop) {name} checking if has key for {target.Key} (security level {target.SecurityLevel})";
+            foreach (Key key in keys)
+            {
+                s += $"\n - {key.key} ({key.key_type})";
+            }
+            Debug.Log(s);
+        }
         foreach (Key key in keys)
         {
             if (key.Matches(target.Key))
@@ -54,8 +96,10 @@ public class Laptop : Item
         return keys;
     }
 
-    // USING ITEM
-    public override void Use(Capable user)
+
+    // USABLE
+    public string UseLabel { get; } = "hack";
+    public void Use(Capable user)
     {
         // we check if we have a hack capacity
         HackCapacity hack_capacity = GetCapacity<HackCapacity>();
@@ -69,6 +113,83 @@ public class Laptop : Item
         hack_capacity.Use(user);
     }
 
+    // GRABBING PROCESSOR MODULE
+    // todo : i think it is better to have a ProcessCapacity that handles cores & etc
+    public void OnCPU_Changed()
+    {
+        // we check how many cpu modules we have in our inventory
+        List<Item> cpus = Inventory.GetItemsByRule("module:cpu");
+        int new_max_cores = cpus.Count * 2; // each cpu provides 2 cores
+
+        if (debug) { Debug.Log($"(Laptop) {name} CPU changed. New max cores: {new_max_cores} / old cores: {max_cores}"); }
+
+        // check the difference between current and next max_cores
+        if (new_max_cores >= max_cores) { set_new_max_cores(new_max_cores); return; }
+
+        // if we have less cores, it's ok if we have have enough free cores left
+        if (FreeCoresCount >= max_cores - new_max_cores) { set_new_max_cores(new_max_cores); return; }
+
+        // otherwise we need to free some used cores
+        while (FreeCoresCount < max_cores - new_max_cores)
+        {
+            // we free the first hack in the list
+            Hack first_hack = used_cores.Keys.First();
+            first_hack.Overflow();
+            FreeCores(first_hack);
+        }
+
+        // finally we set the new max_cores
+        set_new_max_cores(new_max_cores);
+    }
+    private void set_new_max_cores(int new_max_cores)
+    {
+        max_cores = new_max_cores;
+        // OnCoresChange?.Invoke(new_max_cores);
+    }
+
+    // GRABBING HACK MODULE & NETWORK MODULE
+    public void OnHackModuleChanged()
+    {
+        // we check how many hack modules we have in our inventory
+        List<Item> hack_modules = Inventory.GetItemsByRule("module:hack");
+
+        // remove hack capa if we don't have any hack module
+        if (hack_modules.Count == 0)
+        {
+            if (debug) { Debug.LogWarning($"(Laptop) {name} has no hack module, removing hack capacity."); }
+            if (GetCapacity<HackCapacity>() != null) { RemoveCapacity("hack"); }
+            return;
+        }
+
+        // otherwise we have at least one hack module -> we ensure we have a hack capa
+        HackCapacity hack_capacity = GetCapacity<HackCapacity>();
+        if (hack_capacity == null)
+        {
+            if (debug) { Debug.LogWarning($"(Laptop) {name} has a hack module, adding hack capacity."); }
+            AddCapacity("hack");
+        }
+    }
+    public void OnNetworkModuleChanged()
+    {
+        // we check how many network modules we have in our inventory
+        List<Item> network_modules = Inventory.GetItemsByRule("module:network");
+
+        // remove connect capa if we don't have any network module
+        if (network_modules.Count == 0)
+        {
+            if (debug) { Debug.LogWarning($"(Laptop) {name} has no network module, removing connect capacity."); }
+            if (GetCapacity<ConnectCapacity>() != null) { RemoveCapacity("connect"); }
+            return;
+        }
+
+        // otherwise we have at least one network module -> we ensure we have a connect capa
+        ConnectCapacity connect_capacity = GetCapacity<ConnectCapacity>();
+        if (connect_capacity == null)
+        {
+            if (debug) { Debug.LogWarning($"(Laptop) {name} has a network module, adding connect capacity."); }
+            AddCapacity("connect");
+        }
+    }
 }
 
 [System.Serializable]

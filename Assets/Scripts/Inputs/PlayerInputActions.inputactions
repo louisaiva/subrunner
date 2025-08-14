@@ -34,21 +34,12 @@
                 },
                 {
                     "name": "run",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "0948f1ba-942c-47be-b02f-249a908482fc",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
-                },
-                {
-                    "name": "useConso",
-                    "type": "Button",
-                    "id": "af9057fb-3fd3-4bb3-bb36-27d0f1b16911",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 },
                 {
                     "name": "randomTalk",
@@ -64,6 +55,60 @@
                     "type": "PassThrough",
                     "id": "015437b9-5c3f-4197-b941-6c30eb1c63de",
                     "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "select_hackable",
+                    "type": "PassThrough",
+                    "id": "9fdddbcc-5106-4198-81ab-d0f5d8e286a9",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "hack",
+                    "type": "Button",
+                    "id": "03e2768a-7667-483a-b36a-0bfd011eccd3",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "conso1",
+                    "type": "Button",
+                    "id": "4fe68a72-2931-49f0-8296-5f41c4b4f62b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "conso2",
+                    "type": "Button",
+                    "id": "6b49243a-cb30-4d02-8d4f-d6d523c4efce",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "conso3",
+                    "type": "Button",
+                    "id": "bcd6f92d-aa03-4a79-b510-1a8b08ce6134",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "conso4",
+                    "type": "Button",
+                    "id": "87c2e3bd-7255-4110-ac6c-0c7ef5364ce6",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -122,28 +167,6 @@
                     "processors": "",
                     "groups": "keyboard",
                     "action": "run",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "75dfc87d-e548-4042-8a15-def507bbd239",
-                    "path": "<Gamepad>/buttonNorth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "useConso",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "9302c95f-072e-4189-9646-1b7b70d17571",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard",
-                    "action": "useConso",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -278,6 +301,116 @@
                     "action": "dodge",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "75d2e5bd-13e3-4328-888e-f7fbd4519ce4",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "hack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8255a3a8-40a7-476b-b6b8-b71a6bc62462",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";xbox",
+                    "action": "select_hackable",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "eeda479f-567d-42bf-a9a9-a7f082f8c022",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";keyboard",
+                    "action": "conso1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2832f5a0-5162-4e68-b049-c7b10b8b451f",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "conso1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e8861174-64f9-4e98-a392-405cd257dc40",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";keyboard",
+                    "action": "conso2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "568f9187-0055-4297-a79e-efeb19d6eb03",
+                    "path": "<Gamepad>/dpad/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "conso2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bc0b198d-e660-412a-86aa-3761d45cc703",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";keyboard",
+                    "action": "conso3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c1dd63d0-f9fe-4937-ae19-abf5c74503cf",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "conso3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8a8a43df-41fe-4a3d-83bd-cca615f3ac79",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";keyboard",
+                    "action": "conso4",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a006e382-9384-46d6-9bb0-ecb21d00e4da",
+                    "path": "<Gamepad>/dpad/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "conso4",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -344,6 +477,42 @@
                     "type": "PassThrough",
                     "id": "f07fc202-cf89-4336-a381-2a097a0b371e",
                     "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "conso1",
+                    "type": "Button",
+                    "id": "b45f7726-2e77-4222-82f2-76a397e72409",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "conso2",
+                    "type": "Button",
+                    "id": "f9b6a622-1f51-4cc8-8d27-54ae086edbe7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "conso3",
+                    "type": "Button",
+                    "id": "bb0ae86d-6fbf-4262-b569-e9505bbc07a9",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "conso4",
+                    "type": "Button",
+                    "id": "9fff6911-cd25-43bf-825d-6497f686cf1f",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -481,74 +650,92 @@
                     "action": "navigate_in_game",
                     "isComposite": false,
                     "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "enhanced_perso",
-            "id": "496fb706-37aa-4ede-8ba7-f8a5dfa615a7",
-            "actions": [
-                {
-                    "name": "hack",
-                    "type": "Button",
-                    "id": "7ccb0cc6-c229-46ca-974b-ed8cb2b5d5ef",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 },
                 {
-                    "name": "hackDirection",
-                    "type": "PassThrough",
-                    "id": "d41e8cc6-f0a5-4d64-b135-7e5433b38655",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
+                    "name": "",
+                    "id": "a72ce27d-a346-4f70-9c0d-6da5b692960c",
+                    "path": "<Keyboard>/1",
                     "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
+                    "processors": "",
+                    "groups": ";keyboard",
+                    "action": "conso1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
                 {
                     "name": "",
-                    "id": "30be72d1-30ce-48e3-aa76-32f91b036399",
-                    "path": "<Gamepad>/buttonEast",
+                    "id": "294e72c2-fc58-45b8-8c0b-e777ca5e36b1",
+                    "path": "<Gamepad>/dpad/left",
                     "interactions": "",
                     "processors": "",
                     "groups": "xbox",
-                    "action": "hack",
+                    "action": "conso1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "3454cd75-ad46-4aa5-9531-800fc03b3ee8",
-                    "path": "<Mouse>/leftButton",
+                    "id": "5e04f11a-502e-4c22-9293-91d62d069786",
+                    "path": "<Keyboard>/2",
                     "interactions": "",
                     "processors": "",
-                    "groups": "keyboard",
-                    "action": "hack",
+                    "groups": ";keyboard",
+                    "action": "conso2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "f9f1a2ee-e589-4195-88f3-118d8282c227",
-                    "path": "<Mouse>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "keyboard",
-                    "action": "hackDirection",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "21447ab3-5393-4a27-ae78-45de43cee0bc",
-                    "path": "<Gamepad>/rightStick",
+                    "id": "ec6c8da3-5ff4-4db1-bca3-511672c4f63a",
+                    "path": "<Gamepad>/dpad/up",
                     "interactions": "",
                     "processors": "",
                     "groups": "xbox",
-                    "action": "hackDirection",
+                    "action": "conso2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "98e22a03-4398-40dc-85f0-ad68b84b3baa",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";keyboard",
+                    "action": "conso3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "599dc0b7-1f68-4265-a2e6-2df0e278570e",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "conso3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "39041b27-7e8f-4587-9bb9-67e22a19da64",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";keyboard",
+                    "action": "conso4",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "18f974cf-59b6-4969-a479-9088e25d175e",
+                    "path": "<Gamepad>/dpad/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "conso4",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -991,7 +1178,7 @@
                     "id": "549f77fd-37e1-4ea6-8215-8b5fa4d1092e",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "Press(behavior=2)",
+                    "interactions": "",
                     "initialStateCheck": false
                 }
             ],
@@ -1081,6 +1268,89 @@
                     "processors": "",
                     "groups": "xbox",
                     "action": "hacking",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "utils",
+            "id": "cfffe889-8fca-495f-957e-572fe068096a",
+            "actions": [
+                {
+                    "name": "move",
+                    "type": "PassThrough",
+                    "id": "d8cfe7b2-472e-4f1f-a2e9-ebafa9e790af",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "main",
+                    "id": "9dc9d016-3e20-4103-90a6-b25b343e6ed4",
+                    "path": "2DVector(mode=2)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "e99db5e3-0f6e-467e-94e0-c37d6e0c23ed",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "48b1ec2a-cbd0-4554-9320-20def950056a",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "393eae4a-d16f-410a-b30c-dd631fe2dffd",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "063f785b-496d-4c7e-8803-a99e94318c02",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "305cb6f3-932b-48ca-98a8-2d59e18fa10c",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "move",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

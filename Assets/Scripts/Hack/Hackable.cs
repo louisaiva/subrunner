@@ -6,17 +6,29 @@ public interface Hackable
 
     // unity
     GameObject gameObject { get; }
+    SpriteRenderer spriteRenderer { get; }
     Transform transform { get; }
     string name { get => gameObject.name; }
 
-    // interaction properties
-    bool CanInteract(Capable capable); // a zombo can open certain door and perso can't
-
-    // hackable properties
-    string Key { get; }
+    // VULNERABILITIES
     int SecurityLevel { get; }
-    // List<string> exploits_vulnerabilities { get; }
     bool IsVulnerableTo(Exploit exploit);
+
+    // TARGETED
+    Material TargetMaterial { get; }
+    Material DefaultMaterial { get; }
+
+    // BEING HACKED
+    // List<ConnectionType> ConnectionTypes { get; } // the types of connections that can be used to connect to this hackable
+    List<Hack> RunningHacks { get; }
     void OnHackStarted(Hack hack);
     void OnHackCompleted(Hack hack);
+    void OnHackFailed(Hack hack);
+}
+
+public interface Lockable : Hackable
+{
+    // LOCKS
+    bool Locked { get; } // whether the hackable is locked or not
+    string Key { get; }
 }

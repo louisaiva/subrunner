@@ -2,42 +2,33 @@ using UnityEngine;
 
 public class Hackray : MonoBehaviour
 {
-    
-    [SerializeField] protected GameObject hacker;
-    [SerializeField] protected GameObject target;
+    [Header("Laptop")]
+    [SerializeField] protected Laptop laptop;
+
+    [Header("Hackray Settings")]
+    [SerializeField] protected Transform hacker;
+    [SerializeField] protected Transform target;
 
     // offsets
     protected Vector3 hacker_offset;
     protected Vector3 target_offset;
 
-    // SR
-    protected GameObject sr;
 
-    // unity functions
-    void Start()
+    [Header("Components")]
+    protected SpriteRenderer sr;
+
+    // AWAKE
+    void Awake()
     {
-        // on récupère le sprite renderer
-        sr = transform.Find("sr").gameObject;
+        sr = transform.Find("sr").GetComponent<SpriteRenderer>();
     }
 
-    // unity functions
+    // UPDATE
     void Update()
     {
-
-        updateTransform();
-    }
-
-    protected void updateTransform()
-    {
-        if (sr == null)
-        {
-            // on récupère le sprite renderer
-            sr = transform.Find("sr").gameObject;
-        }
-        
         if (hacker == null || target == null)
         {
-            sr.GetComponent<SpriteRenderer>().enabled = false;
+            sr.enabled = false;
             return;
         }
 
@@ -56,58 +47,17 @@ public class Hackray : MonoBehaviour
 
         // set scale
         float distance = Vector3.Distance(sr.transform.position, target_pos);
-        sr.transform.localScale = new Vector3(sr.transform.localScale.x, distance * sr.GetComponent<SpriteRenderer>().sprite.pixelsPerUnit, sr.transform.localScale.z);
+        sr.transform.localScale = new Vector3(sr.transform.localScale.x, distance * sr.sprite.pixelsPerUnit, sr.transform.localScale.z);
 
         // set rotation (from hacker to target)
         Vector3 dir = target_pos - sr.transform.position;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         sr.transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
     }
-
-    // main functions
-    public void SetHackerAndTarget(GameObject hacker, GameObject target)
-    {
-        if (sr == null)
-        {
-            // on récupère le sprite renderer
-            sr = transform.Find("sr").gameObject;
-        }
-
-        // set hacker and target
-        this.hacker = hacker;
-        this.target = target;
-
-        // set offsets
-        hacker_offset = hacker.transform.Find("center").transform.localPosition;
-        target_offset = target.transform.Find("hack_point").transform.localPosition;
-
-        // enable sprite renderer
-        sr.GetComponent<SpriteRenderer>().enabled = true;
-
-        // update transform
-        updateTransform();
-
-    }
-
-    public void RemoveHackerAndTarget()
-    {
-        // on désactive le sprite rrenderer
-        sr.GetComponent<SpriteRenderer>().enabled = false;
-
-        // on enlève le hacker et la target
-        hacker = null;
-        target = null;
-
-        // on enlève les offsets
-        hacker_offset = Vector3.zero;
-        target_offset = Vector3.zero;
-
-    }
-
     protected void switchTargetAndHacker()
     {
         // switch hacker and target
-        GameObject temp = hacker;
+        Transform temp = hacker;
         hacker = target;
         target = temp;
 
@@ -116,4 +66,71 @@ public class Hackray : MonoBehaviour
         target_offset = temp_offset;
     }
 
+    // SETTERS
+    public void SetLaptopAndTarget(Laptop laptop, Transform target)
+    {
+        this.laptop = laptop;
+
+        // set hacker and target
+        this.hacker = laptop.transform;
+        this.target = target;
+
+        // set target offset
+        if (target.name == "cursor")
+        {
+            target_offset = Vector2.zero;
+        }
+        else
+        {
+            target_offset = target.Find("processor").localPosition;
+        }
+
+        // set laptop offset
+        if (laptop.Grabbed) { handleLaptopGrabbed(laptop.Holder); }
+        else { handleLaptopDropped(); }
+
+        // register to events
+        laptop.OnDropped += handleLaptopDropped;
+        laptop.OnGrabbed += handleLaptopGrabbed;
+
+        // enable sprite renderer
+        sr.GetComponent<SpriteRenderer>().enabled = true;
+
+        // update transform
+        Update();
+    }
+    public void SetMaterial(Material material)
+    {
+        // set the material of the sprite renderer
+        sr.GetComponent<SpriteRenderer>().material = material;
+    }
+    public void SetColor(Color color)
+    {
+        // set the color of the sprite renderer
+        sr.GetComponent<SpriteRenderer>().color = color;
+    }
+
+    // CALLBACKS
+    private void handleLaptopDropped()
+    {
+        this.hacker_offset = laptop.transform.Find("processor").localPosition;
+    }
+    private void handleLaptopGrabbed(Capable grabber)
+    {
+        if (grabber is not Being)
+        {
+            this.hacker_offset = laptop.transform.Find("processor").localPosition;
+            return;
+        }
+
+        // the grabber is a Being. we find the processor
+        this.hacker_offset = grabber.transform.Find("processor").localPosition;
+    }
+    private void OnDisable()
+    {
+        if (laptop == null) { return; }
+
+        laptop.OnDropped -= handleLaptopDropped;
+        laptop.OnGrabbed -= handleLaptopGrabbed;
+    }
 }

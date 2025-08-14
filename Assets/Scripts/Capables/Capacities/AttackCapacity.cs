@@ -22,6 +22,7 @@ public class AttackCapacity : Capacity
     [Header("Attack parameters")]
     [SerializeField] private bool single_hit = false; // if true, the attack will stop after hitting one enemy
     [SerializeField] private bool perforant_attack = false; // if true, each touched enemy will got full damage
+    [SerializeField] private float attack_duration = default;
     // [SerializeField] private float delay_between_perforations = 0.01f; // delay between each perforation
     // private float last_perforation_time = 0f; // time of the last perforation
 
@@ -73,16 +74,11 @@ public class AttackCapacity : Capacity
         bearer = capable;
         anim_player = bearer.GetComponent<AnimPlayer>();
         sr = bearer.GetComponent<SpriteRenderer>();
+        if (anim_player.current_capacity == "attack") { return; } // we check if we are already attacking
 
         // we play the animation
-        Anim anim = anim_player.Play("attack");
-        if (anim == null)
-        {
-            // we remove the animation from the pile
-            anim_player.StopPlaying("attack", true);
-            if (debug) { Debug.LogWarning($"(AttackCapacity) {bearer.name} tried to attack the animation can't be played right now."); }
-            return;
-        }
+        Anim anim = anim_player.Play("attack", duration_override: attack_duration);
+        if (anim == null) { return; } // if the animation is not found, we return
 
         // we start the cooldown for the time of the animation
         float anim_duration = anim.GetDuration();

@@ -11,7 +11,6 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     [SerializeField] private UI_Inventory ui_inventory;
     [SerializeField] private UI_Inventory ui_laptop;
     [SerializeField] private Transform no_inventory_panel;
-    [SerializeField] private UI_ModulePool motherboard_pool;
 
 
     [Header("Base Item Pool Transitions")]
@@ -26,16 +25,12 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     // AWAKE START
     protected void Awake()
     {
-        // on récupère le navigator
-        // navigator = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
-
-        // on récupère les composants
-        // ui_inventory = transform.Find("ui_inventory").GetComponent<UI_Inventory>();
+        
         if (ui_inventory == null)
         {
             Debug.LogError("(UI_InventoryMenu) missing ui_inventory on " + name);
         }
-        // ui_laptop = transform.Find("ui_laptop").GetComponent<UI_Inventory>();
+        
         if (ui_laptop == null)
         {
             Debug.LogError("(UI_InventoryMenu) missing ui_laptop on " + name);
@@ -51,14 +46,14 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     }
 
     // SHOW / HIDE
-    public override async Awaitable Show(float duration)
+    public override async Awaitable Show(float duration, List<GameObject> dont_show = null)
     {
         // vérifie si on a des items dans notre inventaire
         ui_elements.Clear();
         if (ui_inventory.Inventory.Count == 0) { ui_elements.Add(no_inventory_panel.gameObject); }
         else { ui_elements.AddRange(saved_slots); }
 
-        await base.Show(duration);
+        await base.Show(duration, dont_show);
         if (ui_inventory.Inventory.Count == 0) { return; }
 
         UI_XboxNavigator.Instance.Enable(this);
@@ -66,7 +61,7 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         // on met à jour l'angle treshold du UI_XboxNavigator.Instance
         UI_XboxNavigator.Instance.angle_threshold = base.angle_threshold;
     }
-    public override async Awaitable Hide(float duration)
+    public override async Awaitable Hide(float duration, List<GameObject> dont_hide = null)
     {
         // on récupère la position du slot actuel (pour le remettre quand on reouvre l'inventaire)
         SavedPosition = UI_XboxNavigator.Instance.GetCurrentSlotPosition();
@@ -74,15 +69,19 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         // on désactive le navigator
         UI_XboxNavigator.Instance.Disable(this);
 
-        await base.Hide(duration);
+        await base.Hide(duration, dont_hide);
     }
 
     // LOW SHOWING
-    protected override async Awaitable show_pool(float duration)
+    protected override async Awaitable show_pool(float duration, List<GameObject> dont_show = null)
     {
         // on affiche tous les éléments
         if (log) { Debug.Log("(UI_InventoryMenu) showing pool : " + Reference); }
-        foreach (GameObject ui in ui_elements) { ui.SetActive(true); }
+        foreach (GameObject ui in ui_elements)
+        {
+            if (dont_show != null && dont_show.Contains(ui)) { continue; }
+            ui.SetActive(true);
+        }
 
         // refresh pools
         await RefreshItemPools(duration);
@@ -91,16 +90,16 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         // on désactive les inputs.perso
         InputManager.Instance.inputs.perso.Disable();
     }
-    protected override async Awaitable hide_pool(float duration)
+    protected override async Awaitable hide_pool(float duration, List<GameObject> dont_hide = null)
     {
         await FadeOutAllPools(duration);
-        base.hide_pool(duration);
+        base.hide_pool(duration, dont_hide);
     }
 
     // ITEM POOL TRANSITIONS
-    public async Awaitable RefreshItemPools(float duration = default)
+    public async Awaitable RefreshItemPools(float duration = -99f)
     {
-        if (duration == default) { duration = base_transition; }
+        if (duration == -99f) { duration = base_transition; }
         if (log) { Debug.Log($"(UI_InventoryMenu) refreshing item pools with duration {duration}"); }
 
 
@@ -112,22 +111,27 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
             if (item_pool == null) { ui.SetActive(true); continue; }
             if (log)
             {
-                Debug.Log("(UI_InventoryMenu) investigating ui_itempool " + item_pool.name + $" ({(item_pool.Faded ? "faded" : "visible")}) with "
+                Debug.Log("(UI_InventoryMenu) investigating ui_itempool " + item_pool.name + $" (shown ? {item_pool.Shown} vs hidden ? {item_pool.Hidden}) with "
                 + item_pool.Count + " slots and " + item_pool.FullCount + " items slots " + $"and {item_pool.EnabledCount} enabled slots");
             }
 
             // on regarde si la pool doit être affichée ou non
-            if (fade_all_disabled)
+            if (fade_all_disabled || item_pool is UI_ModulePool) // ui_module pool fonctionne toujours en mode fade_all_disbled
             {
-                if (item_pool.EnabledCount > 0 && item_pool.Faded) { item_pool.Fade(duration, fade_in: true); }
-                else if (item_pool.EnabledCount == 0 && !item_pool.Faded) { item_pool.Fade(duration, fade_in: false); }
+                if (item_pool.EnabledCount > 0 && !item_pool.Shown) { item_pool.Fade(duration, fade_in: true); }
+                else if (item_pool.EnabledCount == 0 && !item_pool.Hidden) { item_pool.Fade(duration, fade_in: false); }
             }
-            else
+            else if (!item_pool.DoNotDisableEmptySlots) // si on est donotdisableemptyslots ça veut dire qu'on veut que ça soit toujours affiché
             {
-                if ((item_pool.EnabledCount > 0 || item_pool.FullCount > 0) && item_pool.Faded) { item_pool.Fade(duration, fade_in: true); }
-                else if (item_pool.EnabledCount == 0 && item_pool.FullCount == 0 && !item_pool.Faded) { item_pool.Fade(duration, fade_in: false); }
+                if (!item_pool.Shown && (item_pool.EnabledCount > 0 || item_pool.FullCount > 0 )) { item_pool.Fade(duration, fade_in: true); }
+                else if (!item_pool.Hidden && item_pool.EnabledCount == 0 && item_pool.FullCount == 0) { item_pool.Fade(duration, fade_in: false); }
             }
         }
+
+        // on refresh les indicators
+        GetComponent<UI_PanelManager>().RefreshIndicators(duration);
+
+        // on simule la duration
         await Task.Delay((int)(duration * 1000));
     }
     public async Awaitable FadeOutAllPools(float duration = default)
@@ -139,7 +143,7 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         foreach (GameObject ui in ui_elements)
         {
             UI_ItemPool item_pool = ui.GetComponentInChildren<UI_ItemPool>();
-            if (item_pool == null || item_pool.Faded) { continue; }
+            if (item_pool == null || item_pool.Hidden) { continue; }
             if (log) { Debug.Log("(UI_InventoryMenu) fading out ui_itempool " + item_pool.name); }
             item_pool.Fade(duration, fade_in: false);
         }
@@ -154,7 +158,7 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
 
         // on ajoute les items de l'UI_Inventory
         slots.AddRange(ui_inventory.GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator));
-        if (!motherboard_pool.HasLaptop) { return slots; }
+        if (UI_LaptopItemSlot.Instance == null || !UI_LaptopItemSlot.Instance.HasLaptop) { return slots; }
 
         // si on a le laptop, on ajoute aussi ceux de l'UI_Laptop
         slots.AddRange(ui_laptop.GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator));
@@ -164,7 +168,7 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     public bool IsYourSlot(GameObject slot)
     {
         if (ui_inventory.IsYourSlot(slot)) { return true; }
-        if (motherboard_pool.HasLaptop && ui_laptop.IsYourSlot(slot)) { return true; }
+        if (UI_LaptopItemSlot.Instance != null && UI_LaptopItemSlot.Instance.HasLaptop && ui_laptop.IsYourSlot(slot)) { return true; }
         return false;
     }
     public Vector2 SavedPosition { get; private set; } = Vector2.zero;
@@ -190,10 +194,10 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         }
 
         // ACTIVATE
-        if (ui_slot.Item != null && ui_slot.Item.ActivationLabel != "")
+        if (ui_slot.Item != null && ui_slot.Item is Usable usable)
         {
             use_feedback.SetAlwaysFull(true);
-            use_feedback.SetLabel(ui_slot.Item.ActivationLabel);
+            use_feedback.SetLabel(usable.UseLabel);
             UI_XboxNavigator.Instance.ToggleInput("activate", true);
         }
         else

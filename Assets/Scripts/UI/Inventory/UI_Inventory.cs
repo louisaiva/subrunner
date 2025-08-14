@@ -16,34 +16,15 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     public List<UI_ItemPool> pools = new List<UI_ItemPool>();
 
     [Header("Components")]
-    // [SerializeField] private UI_XboxNavigator navigator;
     public Inventory Inventory;
 
     [Header("Logs")]
-    [SerializeField] private bool debug = false;
+    [SerializeField] protected bool log = false;
 
     public void Init()
     {
-        // on récupère les composants
-        // navigator = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
-
-        // si on a pas d'inventory, il y a un problème
-        if (Inventory == null)
-        {
-            try
-            {
-                Debug.LogError("(UI_Inventory) missing inventory on " + transform.parent.parent.parent.name +
-                            ", you need to set it in the inspector");
-
-                return;
-            }
-            catch
-            {
-                Debug.LogError("(UI_Inventory) missing inventory on " + name);
-            }
-        }
         // we check if we have some pools, otherwise we set ourself as the pool
-        else if (pools.Count == 0)
+        if (pools.Count == 0)
         {
             try
             {
@@ -70,13 +51,15 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     }
 
     // SHOW / HIDE
-    public void Show()
+    public async void Show()
     {
         gameObject.SetActive(true);
+        await System.Threading.Tasks.Task.Yield(); // wait for the next frame to ensure the UI is active
 
         // we enable the navigator if we are not the perso quick inventory
         if (transform.parent.name != "hud" && UI_XboxNavigator.Instance != null)
         {
+            InputManager.Instance.inputs.perso.select_hackable.Disable();
             UI_XboxNavigator.Instance.Enable(this, true);
         }
     }
@@ -99,6 +82,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         if (transform.parent.name != "hud" && UI_XboxNavigator.Instance != null)
         {
             UI_XboxNavigator.Instance.Disable(this);
+            InputManager.Instance.inputs.perso.select_hackable.Enable();
         }
     }
     public void Toggle()
@@ -114,17 +98,86 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         }
     }
 
+    // GRAB
+    public virtual bool UI_Grab(Item item)
+    {
+        foreach (UI_ItemPool pool in pools)
+        {
+            // we try to grab the item in the pool
+            bool grabbed = pool.Grab(item);
+            if (grabbed)
+            {
+                if (log) { Debug.Log("(UI_Inventory) grabbed " + item.Reference + " in " + pool.name); }
+                return true;
+            }
+        }
+
+        // if we are here, no pool could take the item
+        if (log)
+        {
+            Debug.LogWarning("(UI_Inventory) no pool could take the item " + item.Reference +
+        " in " + Inventory.capable.name + "'s ui_inventory, maybe they are full or the item is incompatible");
+        }
+
+        return false;
+    }
+    public virtual bool UI_Drop(Item item)
+    {
+        // we go through the children
+        foreach (UI_ItemPool pool in pools)
+        {
+            // we try to drop the item in the pool
+            bool dropped = pool.Drop(item);
+            if (dropped)
+            {
+                if (log) { Debug.Log("(UI_Inventory) dropped " + item.Reference + " in " + pool.name); }
+                return true;
+            }
+        }
+
+        if (log)
+        {
+            Debug.LogWarning("(UI_Inventory) no pool could drop the item " + item.Reference +
+        " in " + Inventory.capable.name + "'s ui_inventory, please check the pools and the item type");
+        }
+
+        return false;
+    }
+
+    // ITEM RULE
+    public string ItemRule
+    {
+        get
+        {
+            // todo concaten all pools' item rules
+            if (pools.Count > 0)
+            {
+                // we return the first pool's rule
+                return pools[0].item_rule;
+            }
+            return "";
+        }
+    }
+
+
+
+
+
+
     // SLOTTABLE
     public Action<InputAction.CallbackContext> CancelCallback => throw new NotImplementedException();
     public List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator)
     {
-        if (debug) { Debug.Log($"(UI_Inventory) {name} getting slots"); }
+        if (log) { Debug.Log($"(UI_Inventory) {name} getting slots"); }
         List<GameObject> slots = new List<GameObject>();
         Vector2 position = Vector2.negativeInfinity;
         foreach (UI_ItemPool pool in pools)
         {
             foreach (Transform child in pool.transform)
             {
+                // we check if the ui_slot is enabled
+                if (!child.gameObject.activeSelf) { continue; }
+
                 // we check if the slot is a UI_Item
                 UI_Item ui_item = child.GetComponent<UI_Item>();
                 if (ui_item == null) { continue; }
@@ -153,50 +206,4 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         return false;
     }
     public Vector2 SavedPosition { get => new Vector2(0f, Screen.height); }
-
-    // GRAB
-    public virtual bool UI_Grab(Item item)
-    {
-        foreach (UI_ItemPool pool in pools)
-        {
-            // we try to grab the item in the pool
-            bool grabbed = pool.Grab(item);
-            if (grabbed)
-            {
-                if (debug) { Debug.Log("(UI_Inventory) grabbed " + item.Reference + " in " + pool.name); }
-                return true;
-            }
-        }
-
-        // if we are here, no pool could take the item
-        if (debug)
-        {
-            Debug.LogWarning("(UI_Inventory) no pool could take the item " + item.Reference +
-        " in " + Inventory.capable.name + "'s ui_inventory, maybe they are full or the item is incompatible");
-        }
-
-        return false;
-    }
-    public virtual bool UI_Drop(Item item)
-    {
-        // we go through the children
-        foreach (UI_ItemPool pool in pools)
-        {
-            // we try to drop the item in the pool
-            bool dropped = pool.Drop(item);
-            if (dropped)
-            {
-                if (debug) { Debug.Log("(UI_Inventory) dropped " + item.Reference + " in " + pool.name); }
-                return true;
-            }
-        }
-
-        if (debug)
-        {
-            Debug.LogWarning("(UI_Inventory) no pool could drop the item " + item.Reference +
-        " in " + Inventory.capable.name + "'s ui_inventory, please check the pools and the item type");
-        }
-
-        return false;
-    }
 }

@@ -18,20 +18,20 @@ public class UI_TestPool : UI_Pool, I_UI_Slottable
     }
 
     // SHOWING
-    public override async Awaitable Show(float duration)
+    public override async Awaitable Show(float duration, List<GameObject> dont_show = null)
     {
-        await base.Show(duration);
+        await base.Show(duration, dont_show);
 
         // on active le xbox_manager
         xbox_manager.Enable(this);
     }
-    public override async Awaitable Hide(float duration)
+    public override async Awaitable Hide(float duration, List<GameObject> dont_hide = null)
     {
 
         // on désactive le xbox_manager
         xbox_manager.Disable(this);
 
-        await base.Hide(duration);
+        await base.Hide(duration, dont_hide);
     }
 
     // SLOTTABLE
