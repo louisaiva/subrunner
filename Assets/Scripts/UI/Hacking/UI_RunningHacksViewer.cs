@@ -18,6 +18,7 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
 
     [Header("Components")]
     private Transitioner transitioner;
+    private TextMeshProUGUI title_text;
 
     [Header("Logs")]
     [SerializeField] private bool log = true;
@@ -34,6 +35,7 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
         laptop_item_slot.OnItemChanged += HandleLaptopChanged;
 
         transitioner = GetComponent<Transitioner>();
+        title_text = GetComponent<TextMeshProUGUI>();
     }
 
     // LAPTOP
@@ -47,10 +49,19 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
         if (items == null || items.Count == 0 || !(items[0] is Laptop))
         {
             hacker = null;
+            title_text.text = "no laptop";
             return;
         }
 
         hacker = (items[0] as Laptop).GetCapacity<HackCapacity>();
+        if (hacker == null)
+        {
+            Debug.LogWarning("(UI_RunningHacksViewer) No HackCapacity found in the laptop.");
+            title_text.text = "no module:hack on the laptop";
+            return;
+        }
+        
+        title_text.text = "running hacks";
         hacker.OnExploitRun += createHackInfo;
     }
 
@@ -68,6 +79,8 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
     // UPDATE
     private void Update()
     {
+        if (hacker == null) { return; }
+
         // update gameObject
         if (hack_infos.Count == 0) { transitioner.Hide(); return; }
 

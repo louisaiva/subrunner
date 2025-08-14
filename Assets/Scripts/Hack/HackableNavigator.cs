@@ -32,12 +32,12 @@ public class HackableNavigator : MonoBehaviour
     [SerializeField] private HackCapacity hacker;
     [SerializeField] private ConnectCapacity connector;
     [SerializeField] private Transform cursor;
-    private Laptop laptop;
+    [SerializeField] private Laptop laptop;
     // private CircleCollider2D selection_collider;
 
     [Header("Log")]
     [SerializeField] private bool log = false;
-    [SerializeField] private bool log_navigation_inputs = false;
+    // [SerializeField] private bool log_navigation_inputs = false;
 
 
     // START
@@ -52,11 +52,17 @@ public class HackableNavigator : MonoBehaviour
         if (log) { Debug.Log("(HackableNavigator) started & callbacks created"); }
     }
 
+    private void OnDestroy()
+    {
+        Disable();
+        UI_LaptopItemSlot.Instance.OnItemChanged -= ctx => OnLaptopChanged(ctx.Count > 0 ? ctx[0] as Laptop : null);
+    }
+
     // UPDATE
     private void Update()
     {
         // on récupère le hackable
-        if (current_hackable == null || hacker == null || hover_hackray == null) { return; }
+        if (current_hackable == null || connector == null || hover_hackray == null) { return; }
         if (current_hackable.GetComponent<Hackable>() == null) { unselect_target(); return; } // on vérifie si le hackable est toujours valide
 
         // on met à jour le hackable
@@ -72,7 +78,7 @@ public class HackableNavigator : MonoBehaviour
         }
 
         // check if we found any vulnerabilities
-        Exploit exploit = hacker.GetExploitVulnerabilities(hackable);
+        Exploit exploit = hacker?.GetExploitVulnerabilities(hackable);
         if (exploit == null)
         {
             hover_hackray.SetColor(no_vulnerability_hackray_color);
@@ -93,8 +99,6 @@ public class HackableNavigator : MonoBehaviour
     // TARGET SELECTION
     private void select_target(Hackable hackable)
     {
-        if (hacker == null) { return; }
-
         // we switch the current target
         if (current_hackable != null) { unselect_target(); }
         current_hackable = hackable.gameObject;
@@ -113,7 +117,7 @@ public class HackableNavigator : MonoBehaviour
     private void unselect_target()
     {
         // we check if we have a current target
-        if (current_hackable == null || hacker == null) { return; }
+        if (current_hackable == null) { return; }
 
         connector.Disconnect();
 
@@ -138,6 +142,13 @@ public class HackableNavigator : MonoBehaviour
     // ENABLE / DISABLE
     public void Enable()
     {
+        // we check if we have a connector
+        if (connector == null)
+        {
+            if (log) { Debug.LogWarning("(HackableNavigator) no ConnectCapacity found, disabling navigator"); }
+            return;
+        }
+
         // we activate the callbacks
         navigationAction.performed += navigationCallback;
 
@@ -187,14 +198,21 @@ public class HackableNavigator : MonoBehaviour
             unselect_target();
             hacker = null;
             connector = null;
+            if (laptop != null) { (laptop.Inventory as LaptopInventory).OnModuleChanged -= OnLaptopModuleChanged; }
             laptop = null;
             return;
         }
 
         // we assign the hacker as the new laptop hack capacity
         laptop = new_laptop;
+        (laptop.Inventory as LaptopInventory).OnModuleChanged += OnLaptopModuleChanged;
         hacker = new_laptop.GetCapacity<HackCapacity>();
         connector = new_laptop.GetCapacity<ConnectCapacity>();
+    }
+    private void OnLaptopModuleChanged(Item item)
+    {
+        hacker = laptop.GetCapacity<HackCapacity>();
+        connector = laptop.GetCapacity<ConnectCapacity>();
     }
 
 
@@ -211,8 +229,8 @@ public class HackableNavigator : MonoBehaviour
         if (input.magnitude < InputManager.Instance.JOYSTICK_MIN_THRESHOLD) { return; }
 
         // on crée un vector qui clamp la magnitude entre JOY_MIN & JOY_MAX -> 0 & 1 (et conserve le signe)
-        Vector2 clean_inputs = calculate_clean_inputs(input);
-        if (log_navigation_inputs) { Debug.Log($"(HackableNavigator) navigation inputs : raw {input} , clean {clean_inputs}"); }
+        // Vector2 clean_inputs = calculate_clean_inputs(input);
+        // if (log_navigation_inputs) { Debug.Log($"(HackableNavigator) navigation inputs : raw {input} , clean {clean_inputs}"); }
 
         // update cursor & hackray
         update_cursor(input);
@@ -236,65 +254,6 @@ public class HackableNavigator : MonoBehaviour
         // on sélectionne le nouveau hackable
         select_target(hackable.GetComponent<Hackable>());
     }
-
-    // simple closest angle selection
-    private GameObject get_closest_angled_hackable(Vector2 input)
-    {
-        // on vérifie qu'on a des hackables
-        List<GameObject> targets = new List<GameObject>();
-        if (current_hackable != null) { targets.Add(current_hackable); }
-        targets.AddRange(waiting_hackables);
-        if (targets.Count == 0) { return null; }
-
-        // on parcourt tous les hackable et on trouve celui avec le plus petit angle
-        float min_angle = 1000f;
-        GameObject hackable = null;
-        foreach (GameObject target in targets)
-        {
-            // on vérifie que le hackable est valide
-            if (target == null || target.GetComponent<Hackable>() == null) { continue; }
-
-            // on calcule l'angle entre le perso et l'objet
-            Vector2 direction = (target.transform.position - transform.position).normalized;
-            float angle = Vector2.Angle(input, direction);
-            if (angle < min_angle)
-            {
-                // on sélectionne le hackable
-                hackable = target;
-                min_angle = angle;
-            }
-        }
-        return hackable;
-    }
-    private void update_cursor(Vector2 input)
-    {
-        // on met à jour le curseur
-        if (cursor == null || hacker == null) { return; }
-        cursor.localPosition = new Vector3(input.x * connector.Radius, input.y * connector.Radius, 0f);
-    }
-    private Vector2 calculate_clean_inputs(Vector2 raw)
-    {
-        // store signs
-        float x_sign = Mathf.Sign(raw.x);
-        float y_sign = Mathf.Sign(raw.y);
-
-        // clamp base value between MIN_JOY & MAX_JOY
-        float clamped_x = Mathf.Clamp(Mathf.Abs(raw.x), InputManager.Instance.JOYSTICK_MIN_THRESHOLD, InputManager.Instance.JOYSTICK_MAX_THRESHOLD);
-        float clamped_y = Mathf.Clamp(Mathf.Abs(raw.y), InputManager.Instance.JOYSTICK_MIN_THRESHOLD, InputManager.Instance.JOYSTICK_MAX_THRESHOLD);
-
-        // substract MIN_JOY to recenter the vector to zero
-        clamped_x -= InputManager.Instance.JOYSTICK_MIN_THRESHOLD;
-        clamped_y -= InputManager.Instance.JOYSTICK_MIN_THRESHOLD;
-
-        // multiply by 1/(MAX_JOY - MIN_JOY) to normalize the vector
-        clamped_x *= 1f / (InputManager.Instance.JOYSTICK_MAX_THRESHOLD - InputManager.Instance.JOYSTICK_MIN_THRESHOLD);
-        clamped_y *= 1f / (InputManager.Instance.JOYSTICK_MAX_THRESHOLD - InputManager.Instance.JOYSTICK_MIN_THRESHOLD);
-
-        // return the re-signed version
-        return new Vector2(x_sign * clamped_x, y_sign * clamped_y);
-    }
-
-    // raycast selection with closest hitted
     private GameObject raycast_closest_processor(Vector2 input)
     {
         Vector2 direction = input.normalized;
@@ -313,18 +272,25 @@ public class HackableNavigator : MonoBehaviour
 
             // we remove the target we are already hacking
             Hackable hackable = processor.transform.parent.GetComponent<Hackable>();
-            if (hackable == null || hacker.IsHacking(hackable)) { being_hacked_hackable = hackable.gameObject; continue; }
+            if (hackable == null || hacker?.IsHacking(hackable) == true) { being_hacked_hackable = hackable.gameObject; continue; }
 
             // we compare the distance
-                float distance = Vector2.Distance(transform.position, processor.transform.position);
+            float distance = Vector2.Distance(transform.position, processor.transform.position);
             if (distance < min_distance)
             {
                 min_distance = distance;
                 closest_processor = processor;
             }
         }
-        if (closest_processor == null){ return being_hacked_hackable; } // returns a current processor being hacked if hitted, null otherwise
+        if (closest_processor == null) { return being_hacked_hackable; } // returns a current processor being hacked if hitted, null otherwise
         return closest_processor.transform.parent.gameObject; // we return the parent hackable
     }
 
+    // cursor update
+    private void update_cursor(Vector2 input)
+    {
+        // on met à jour le curseur
+        if (cursor == null || connector == null) { return; }
+        cursor.localPosition = new Vector3(input.x * connector.Radius, input.y * connector.Radius, 0f);
+    }
 }

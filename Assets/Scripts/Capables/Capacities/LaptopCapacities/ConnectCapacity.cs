@@ -24,18 +24,8 @@ public class ConnectCapacity : Capacity
     [Header("Connection Parameters")]
     public float Radius = 0.5f;
 
-
-    [Header("Components")]
-    private Laptop laptop;
-    private HackCapacity hacker;
-
-
-    // START
-    private void Start()
-    {
-        laptop = capable.GetComponent<Laptop>();
-        hacker = capable.GetCapacity<HackCapacity>();
-    }
+    [Header("Debug")]
+    public bool log_connection = false;
 
     // CONNECT
     public void Connect(Hackable target)
@@ -44,11 +34,16 @@ public class ConnectCapacity : Capacity
         if (IsConnectedTo(target))
         {
             connection = get_connection(target);
+            if (log_connection) { Debug.LogWarning($"(ConnectCapacity) {capable.name} is already connected to {target.name}"); }
             return;
         }
 
         // checks if target is unlocked already (can't connect)
-        if (target is Lockable lockable && !lockable.Locked) { return; }
+        if (target is Lockable lockable && !lockable.Locked)
+        {
+            if (log_connection) { Debug.LogWarning($"(ConnectCapacity) {capable.name} tried to connect to {target.name} but it is already unlocked."); }
+            return;
+        }
 
         // we connect to the target
         connection = new Connection(target);
@@ -61,8 +56,15 @@ public class ConnectCapacity : Capacity
         }
         else if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} connected to {target.name}."); }
 
-
         // and now we scan the target
+        HackCapacity hacker = capable.GetCapacity<HackCapacity>();
+        if (hacker == null)
+        {
+            if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} tried to scan {target.name} but no hack capacity is available."); }
+            return;
+        }
+
+        if (log_connection) { Debug.Log($"(ConnectCapacity) {capable.name} launching scan on {target.name}."); }
         hacker.Scan(target);
     }
     public void Disconnect()
@@ -114,6 +116,17 @@ public class ConnectCapacity : Capacity
         if (target == null) { return false; }
         try { return Vector3.Distance(transform.position, target.transform.position) <= Radius; }
         catch { return false; }
+    }
+
+    // ON DESTROY
+    private void OnDestroy()
+    {
+        for (int i = connections.Count - 1; i >= 0; --i)
+        {
+            Connection connection = connections[i];
+            connection.Close();
+            connections.RemoveAt(i);
+        }
     }
 }
 

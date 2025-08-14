@@ -32,6 +32,7 @@ public class UI_Manager : Singleton<UI_Manager>
     [Header("Logs")]
     public bool log = false;
     public bool log_availability = false;
+    public bool log_switching = false;
 
     // inputs
     // private PlayerInputActions inputs;
@@ -93,6 +94,8 @@ public class UI_Manager : Singleton<UI_Manager>
         UI_Pool pool = GetPool(pool_name);
         if (!pool) { return; }
 
+        if (log_switching) { Debug.Log($"(UI_Manager) trying to switch to pool : {pool.Reference} from {(current_pool != null ? current_pool.Reference : "null")}"); }
+
         // we check if we have an override duration
         float duration = override_duration != default ? override_duration : transition_duration;
         switch_to(pool, force, duration);
@@ -115,6 +118,8 @@ public class UI_Manager : Singleton<UI_Manager>
         // we check if we have a current pool
         if (current_pool != null)
         {
+            if (log_switching) { Debug.Log($"(UI_Manager - switch_to) current pool is not null : {current_pool.Reference}"); }
+
             // checks if the current pool can be forcely hidden
             if (!force && !current_pool.CanBeHidden)
             {
@@ -124,14 +129,19 @@ public class UI_Manager : Singleton<UI_Manager>
 
             if (!current_pool.Available)
             {
-                if (log_availability) { Debug.LogWarning("(UI_Manager) tried to switch pools while the current pool is not available : " + current_pool.Reference); }
+                if (log) { Debug.LogWarning("(UI_Manager) tried to switch pools while the current pool is not available : " + current_pool.Reference); }
                 return;
             }
+
+            if (log_switching) { Debug.Log($"(UI_Manager - switch_to) current pool is available and can be hidden"); }
+
 
             // we filter the same_pool_elements_list so only elements that are in both pools stay inside it
             List<GameObject> current_pool_elements = current_pool.UIElements;
             same_pool_elements = pool.UIElements;
             same_pool_elements = same_pool_elements.Where(x => current_pool_elements.Contains(x)).ToList();
+
+            if (log_switching) { Debug.Log($"(UI_Manager - switch_to) same pool elements contains {same_pool_elements.Count} elements"); }
 
 
             // we transition to the right bg/timescale/effect
@@ -142,26 +152,35 @@ public class UI_Manager : Singleton<UI_Manager>
                 else if (pool.Reference == "hacking") { final_timescale = (pool as UI_Hacking).final_timescale; }
                 TransitionTimeScale(pool.StopTime, duration, final_timescale);
             }
+            if (log_switching) { Debug.Log($"(UI_Manager - switch_to) transitionned time scale"); }
+
             if (current_pool.HasBackground != pool.HasBackground)
             {
                 TransitionBackground(pool.HasBackground, duration, pool.Reference == "hacking" ? (pool as UI_Hacking).bg_final_alpha : default);
             }
+            if (log_switching) { Debug.Log($"(UI_Manager - switch_to) transitionned background"); }
 
             // we hide the current pool
+            if (log_switching) { Debug.Log($"(UI_Manager - switch_to) launching current pool hide"); }
             await current_pool.Hide(duration / 2f, same_pool_elements);
+            if (log_switching) { Debug.Log($"(UI_Manager - switch_to) current pool hidden successfully"); }
         }
         else
         {
             // on active le background & time parameters
             TransitionTimeScale(pool.StopTime, duration / 2f);
             TransitionBackground(pool.HasBackground, duration / 2f);
+            if (log_switching) { Debug.Log($"(UI_Manager - switch_to) current pool is null, transitionned bg & time scale"); }
+
         }
 
         if (log) { Debug.Log("(UI_Manager) switching to pool : " + pool.Reference); }
 
         // we show the new pool
         current_pool = pool;
+        if (log_switching) { Debug.Log($"(UI_Manager - switch_to) launching next pool show"); }
         await current_pool.Show(duration / 2f, same_pool_elements);
+        if (log_switching) { Debug.Log($"(UI_Manager - switch_to) next pool shown successfully"); }
     }
 
     // GETTERS

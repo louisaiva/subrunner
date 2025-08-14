@@ -145,6 +145,50 @@ public class Laptop : Item, Usable
         max_cores = new_max_cores;
         OnCoresChange?.Invoke(new_max_cores);
     }
+
+    // GRABBING HACK MODULE & NETWORK MODULE
+    public void OnHackModuleChanged()
+    {
+        // we check how many hack modules we have in our inventory
+        List<Item> hack_modules = Inventory.GetItemsByRule("module:hack");
+
+        // remove hack capa if we don't have any hack module
+        if (hack_modules.Count == 0)
+        {
+            if (debug) { Debug.LogWarning($"(Laptop) {name} has no hack module, removing hack capacity."); }
+            if (GetCapacity<HackCapacity>() != null) { RemoveCapacity("hack"); }
+            return;
+        }
+
+        // otherwise we have at least one hack module -> we ensure we have a hack capa
+        HackCapacity hack_capacity = GetCapacity<HackCapacity>();
+        if (hack_capacity == null)
+        {
+            if (debug) { Debug.LogWarning($"(Laptop) {name} has a hack module, adding hack capacity."); }
+            AddCapacity("hack");
+        }
+    }
+    public void OnNetworkModuleChanged()
+    {
+        // we check how many network modules we have in our inventory
+        List<Item> network_modules = Inventory.GetItemsByRule("module:network");
+
+        // remove connect capa if we don't have any network module
+        if (network_modules.Count == 0)
+        {
+            if (debug) { Debug.LogWarning($"(Laptop) {name} has no network module, removing connect capacity."); }
+            if (GetCapacity<ConnectCapacity>() != null) { RemoveCapacity("connect"); }
+            return;
+        }
+
+        // otherwise we have at least one network module -> we ensure we have a connect capa
+        ConnectCapacity connect_capacity = GetCapacity<ConnectCapacity>();
+        if (connect_capacity == null)
+        {
+            if (debug) { Debug.LogWarning($"(Laptop) {name} has a network module, adding connect capacity."); }
+            AddCapacity("connect");
+        }
+    }
 }
 
 [System.Serializable]

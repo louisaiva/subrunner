@@ -7,7 +7,7 @@ using UnityEngine;
 /// can instance them and give them to any capable
 /// </summary>
 
-public class CapacityBank : MonoBehaviour
+public class CapacityBank : Singleton<CapacityBank>
 {
     [Header("Prefab path")]
     public string capacities_prefabs_path = "capacities";

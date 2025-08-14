@@ -1,12 +1,15 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(HackCapacity))]
 public class HackrayMaterialVariation : MonoBehaviour
 {
     // this class is used to handle the material variation of hackrays
     // -> changes the Intensity property of the material based on fully random for now
-    
+
+    [Header("Hackray Parameters")]
     private float hackray_base_intensity = 0f;
+    // [SerializeField] private GameObject hackray_prefab;
     [HideInInspector] public Material hackray_material;
 
     [Header("Hackray Variation Settings")]
@@ -18,7 +21,7 @@ public class HackrayMaterialVariation : MonoBehaviour
     void Start()
     {
         // on duplique le material des hackrays
-        GameObject hk = Instantiate(GetComponent<HackCapacity>().hackray_prefab as GameObject, transform);
+        GameObject hk = Instantiate(GetComponent<HackCapacity>().hackray_prefab, transform);
         hackray_material = new Material(hk.transform.Find("sr").GetComponent<SpriteRenderer>().sharedMaterial);
         hackray_base_intensity = hackray_material.GetFloat("_Intensity");
         Destroy(hk);

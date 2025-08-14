@@ -14,6 +14,7 @@ public class LaptopInventory : Inventory
 
     // EVENTS
     public event System.Action<int> OnHDD_Changed = delegate { };
+    public event System.Action<Item> OnModuleChanged = delegate { };
 
     // START
     protected override void Start()
@@ -100,29 +101,27 @@ public class LaptopInventory : Inventory
     // MODULES GRABBED/DROPPED
     private void HandleModuleGrabbed(Item item)
     {
-        if (item.Reference == "module:cpu")
-        {
-            (capable as Laptop).OnCPU_Changed();
-            return;
-        }
-        if (item.Reference == "module:hdd")
-        {
-            on_hdd_changed();
-            return;
-        }
+        HandleModuleDropped(item); // we handle the module dropped to update the slots
     }
     private void HandleModuleDropped(Item item)
     {
-        if (item.Reference == "module:cpu")
+        switch (item.Reference)
         {
-            (capable as Laptop).OnCPU_Changed();
-            return;
+            case "module:cpu":
+                (capable as Laptop).OnCPU_Changed();
+                break;
+            case "module:hdd":
+                on_hdd_changed();
+                break;
+            case "module:network":
+                (capable as Laptop).OnNetworkModuleChanged();
+                break;
+            case "module:hack":
+                (capable as Laptop).OnHackModuleChanged();
+                break;
         }
-        if (item.Reference == "module:hdd")
-        {
-            on_hdd_changed();
-            return;
-        }
+
+        OnModuleChanged?.Invoke(item);
     }
     public void HandleUI_ModuleMoved(List<Item> items, int new_slot_index)
     {

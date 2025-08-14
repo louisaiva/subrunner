@@ -11,6 +11,7 @@ public class UI_Hacking : UI_Pool
         get
         {
             if (in_transition) { return false; }
+            if (/* Perso.Instance != null &&  */!Perso.Instance.Alive) { return true; }
             if (UI_LaptopItemSlot.Instance == null || !UI_LaptopItemSlot.Instance.HasLaptop) { return false; }
             return true;
         }

@@ -34,13 +34,11 @@ public class HackCapacity : Capacity
 
     [Header("Components")]
     [SerializeField] private Laptop laptop;
-    private ConnectCapacity connector;
 
     // START
     private void Start()
     {
         laptop = capable.GetComponent<Laptop>();
-        connector = capable.GetCapacity<ConnectCapacity>();
     }
 
     // UPDATE
@@ -83,6 +81,14 @@ public class HackCapacity : Capacity
     // USE
     public override void Use(Capable capable)
     {
+        // checks if we have a connector
+        ConnectCapacity connector = laptop.GetCapacity<ConnectCapacity>();
+        if (connector == null)
+        {
+            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack but no connector is available."); }
+            return;
+        }
+
         // checks if we have a connected target
         Hackable target = connector.Target;
         if (target == null)
@@ -210,6 +216,17 @@ public class HackCapacity : Capacity
         if (vulnerabilities[target].Count == 0) { return null; } // if we never found any vulnerabilities we return null
         return vulnerabilities[target][0]; // returns the first exploit found
     }
+
+    // ON DESTROY
+    private void OnDestroy()
+    {
+        for (int i = running_hacks.Count - 1; i >= 0; --i)
+        {
+            Hack hack = running_hacks[i];
+            hack.Fail();
+            remove_hack(i); // we remove the hack
+        }
+    }
 }
 
 
@@ -264,9 +281,6 @@ public class Hack
     }
     public void Finish()
     {
-        // we close the connection
-        tunnel.Close();
-
         // we check if the hackable is vulnerable to the exploit
         if (name == "nmap" || target.IsVulnerableTo(exploit)) { Complete(); }
         else { Fail(); }
@@ -279,6 +293,9 @@ public class Hack
         Debug.Log($"Hack on {target.name} with exploit {exploit.name} was quit.");
         this.state = HackState.Failed;
 
+        // we close the connection
+        tunnel.Close();
+
         // Notify the target that the hack is failed
         target.OnHackFailed(this);
     }
@@ -288,6 +305,9 @@ public class Hack
         Debug.Log($"Hack on {target.name} with exploit {exploit.name} completed successfully.");
         this.progress = 100f;
         this.state = HackState.Completed;
+
+        // we close the connection
+        tunnel.Close();
 
         // Notify the target that the hack is completed
         target.OnHackCompleted(this);

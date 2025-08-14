@@ -185,17 +185,17 @@ MonoBehaviour:
   update_each_frame: 1
   anim_capacity_priorities:
   - priority: 0
+    capacity_playing: 
     capacities:
     - idle
     lock_orientation: 0
     one_shot: 0
-    capacity_playing: 
   - priority: 1
+    capacity_playing: 
     capacities:
     - hover
     lock_orientation: 0
     one_shot: 0
-    capacity_playing: 
   log: 0
   log_orientation: 0
   log_advanced: 0
@@ -256,7 +256,7 @@ MonoBehaviour:
   input_speed: 0
   Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 0}
-  Reference: module:usb
+  Reference: module:network
   MaxQty: 4
   ItemDescription: mandatory for connecting a laptop to other devices./l not mandatory
     for eating ramens
