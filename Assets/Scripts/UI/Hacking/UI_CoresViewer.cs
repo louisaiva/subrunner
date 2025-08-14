@@ -82,12 +82,6 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
         if (cores_count > 0) { label.text = "cores"; }
         else { label.text = no_cores_text; }
 
-
-        // modify the height : 48 + 48*ceiltoint(cores/8)
-        // rect.sizeDelta = new Vector2(rect.sizeDelta.x, 48 + 48 * Mathf.CeilToInt(cores_count / 8f));
-
-
-
         // get the number of cores to remove
         int cores_diff = cores_count - CoresCount;
         if (cores_diff == 0) { return; }
@@ -107,7 +101,9 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
             }
             Destroy(free_cores[free_cores.Count - 1].gameObject);
             cores.Remove(free_cores[free_cores.Count - 1]);
+            free_cores.RemoveAt(free_cores.Count - 1);
         }
+        if (log) { Debug.Log($"(UI_CoresViewer) Removed {Mathf.Abs(cores_diff)} cores, total: {cores.Count}"); }
     }
     private void create_cores(int nb = 1)
     {
@@ -116,6 +112,7 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
             GameObject core = Instantiate(core_prefab, cores_container);
             cores.Add(core.GetComponent<Image>());
         }
+        if (log) { Debug.Log($"(UI_CoresViewer) Created {nb} cores, total: {cores.Count}"); }
     }
 
     // UPDATE FREE / USED CORES

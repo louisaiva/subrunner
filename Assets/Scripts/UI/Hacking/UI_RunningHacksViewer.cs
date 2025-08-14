@@ -17,8 +17,9 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
     [SerializeField] private HackCapacity hacker;
 
     [Header("Components")]
-    private Transitioner transitioner;
-    private TextMeshProUGUI title_text;
+    // private Transitioner transitioner;
+    [SerializeField] private Laptop laptop;
+    [SerializeField] private TextMeshProUGUI title_text;
 
     [Header("Logs")]
     [SerializeField] private bool log = true;
@@ -31,38 +32,62 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
             Debug.LogError("(UI_RunningHacksViewer) laptop_item_slot is not assigned! Please assign it in the inspector.");
             return;
         }
+        if (title_text == null)
+        {
+            Debug.LogError("(UI_RunningHacksViewer) title_text is not assigned! Please assign it in the inspector.");
+            return;
+        }
 
         laptop_item_slot.OnItemChanged += HandleLaptopChanged;
-
-        transitioner = GetComponent<Transitioner>();
-        title_text = GetComponent<TextMeshProUGUI>();
+    }
+    private void Start()
+    {
+        update_title();
     }
 
     // LAPTOP
     private void HandleLaptopChanged(List<Item> items)
     {
-        if (hacker != null)
+        // we remove old laptop callbacks
+        if (laptop != null)
         {
-            hacker.OnExploitRun -= createHackInfo;
+            if (hacker != null) { hacker.OnExploitRun -= createHackInfo; }
+            (laptop.Inventory as LaptopInventory).OnModuleChanged -= HandleModuleChanged;
         }
 
+        // if the next is null then we null everything
         if (items == null || items.Count == 0 || !(items[0] is Laptop))
         {
             hacker = null;
-            title_text.text = "no laptop";
+            laptop = null;
+            update_title();
             return;
         }
 
-        hacker = (items[0] as Laptop).GetCapacity<HackCapacity>();
+        // otherwise we have a new laptop, we get components and register callbacks
+        laptop = items[0] as Laptop;
+        (laptop.Inventory as LaptopInventory).OnModuleChanged += HandleModuleChanged;
+        hacker = laptop.GetCapacity<HackCapacity>();
         if (hacker == null)
         {
-            Debug.LogWarning("(UI_RunningHacksViewer) No HackCapacity found in the laptop.");
-            title_text.text = "no module:hack on the laptop";
+            if (log) { Debug.LogWarning("(UI_RunningHacksViewer) No HackCapacity found in the laptop."); }
+            update_title();
             return;
         }
-        
-        title_text.text = "running hacks";
+
+        update_title();
         hacker.OnExploitRun += createHackInfo;
+    }
+    private void HandleModuleChanged(Item item)
+    {
+        // remove the old callback
+        if (hacker != null) { hacker.OnExploitRun -= createHackInfo; }
+
+        hacker = laptop.GetCapacity<HackCapacity>();
+
+        // setup the new callback
+        if (hacker != null) { hacker.OnExploitRun += createHackInfo; }
+        update_title();
     }
 
     // CREATE HACK INFO
@@ -73,17 +98,13 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
 
         hack_info.Init(hack);
         hack_infos.Add(hack_info);
-        transitioner.Show();
+
+        update_title();
     }
 
     // UPDATE
     private void Update()
     {
-        if (hacker == null) { return; }
-
-        // update gameObject
-        if (hack_infos.Count == 0) { transitioner.Hide(); return; }
-
         // update running hacks
         for (int i = 0; i < hack_infos.Count; i++)
         {
@@ -96,9 +117,33 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
                 // we remove the hack info
                 hack_infos[i].GetComponent<Transitioner>().HideAndDestroy();
                 hack_infos.RemoveAt(i);
+                update_title();
                 i--; // adjust index after removal
                 continue;
             }
         }
+    }
+
+    private void update_title()
+    {
+        if (laptop == null)
+        {
+            title_text.text = "no laptop";
+            return;
+        }
+
+        if (hacker == null)
+        {
+            title_text.text = "no module:hack";
+            return;
+        }
+
+        if (hack_infos.Count == 0)
+        {
+            title_text.text = "no running hacks";
+            return;
+        }
+
+        title_text.text = $"running hacks";
     }
 }
