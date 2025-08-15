@@ -521,8 +521,10 @@ MonoBehaviour:
   room2: {fileID: 0}
   locking_interval: 15
   key:
+    name: very_secured_key
+    extension: .sha
+    data: a933d7477c7989b8b22370f1eb94efa35aa2c565d626e575212667a4d17e6e45
     key_type: SHA
-    key: 4iXSfHnzlxFbASpU
   securityLevel: 1
 --- !u!1001 &2752165426723581002
 PrefabInstance:

@@ -19,17 +19,17 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
     public bool is_hovered { get; set; }
 
     [Header("Text")]
-    private TextMeshProUGUI tmp;
-    [SerializeField] private string base_text;
+    protected TextMeshProUGUI tmp;
+    [SerializeField] protected string base_text;
 
     [Header("Events")]
-    [SerializeField] private UnityEvent activateEvent;
+    [SerializeField] protected UnityEvent activateEvent;
 
     [Header("Logs")]
     public bool debug = false;
 
     // unity functions
-    protected void Awake()
+    protected virtual void Awake()
     {
         // on récupère le tmp
         tmp = GetComponent<TextMeshProUGUI>();
@@ -81,7 +81,7 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
 
 
     // interface functions
-    public void OnPointerEnter(PointerEventData eventData)
+    public virtual void OnPointerEnter(PointerEventData eventData)
     {
         tmp.color = hover_color;
         tmp.text = "> " + base_text;

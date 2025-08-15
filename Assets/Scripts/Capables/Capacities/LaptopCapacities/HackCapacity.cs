@@ -17,8 +17,8 @@ public class HackCapacity : Capacity
     public List<Hack> running_hacks = new List<Hack>();
     public event System.Action<Hack> OnExploitRun = delegate { };
 
-    [Header("Exploits")]
-    public List<Exploit> exploits = new List<Exploit>();
+    // [Header("Exploits")]
+    // public List<Exploit> exploits = new List<Exploit>();
 
     [Header("Vulnerabilities found")]
     public Dictionary<Hackable, List<Exploit>> vulnerabilities = new Dictionary<Hackable, List<Exploit>>();
@@ -105,17 +105,6 @@ public class HackCapacity : Capacity
         }
 
         Exploit exploit = selected_exploit;
-        /* if (exploit == Exploit.Nmap)
-        {
-            // we scan the target
-            List<Exploit> vulnerabilities = Scan(target);
-            if (vulnerabilities.Count == 0)
-            {
-                if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} found no vulnerabilities on {target.name}."); }
-                return;
-            }
-            exploit = vulnerabilities[0]; // if no exploit is selected, we take the first one found
-        } */
 
         // we check if our laptop has enough cores for this exploit
         if (!laptop.HasFreeCores(exploit.cores_cost))
@@ -169,6 +158,8 @@ public class HackCapacity : Capacity
             vulnerabilities[target].Add(Exploit.InsertPassword);
             log_exploits += $"- {Exploit.InsertPassword.name} (instant hack)\n";
         }
+
+        List<Exploit> exploits = laptop.GetExploits();
 
         // we scan the other vulnerabilities
         for (int i = 0; i < exploits.Count; i++)
@@ -355,13 +346,13 @@ public enum HackState
 }
 
 [System.Serializable]
-public class Exploit
+public class Exploit : File
 {
     public static readonly Exploit Nmap = new Exploit("nmap", 1000, 0.1f, 1);
     public static readonly Exploit InsertPassword = new Exploit("insert_password", 1000, 0.1f, 1);
 
     [Header("Exploit Details")]
-    public string name;
+    // public string name;
     public int security_level;
     public float base_duration;
     public int cores_cost;
@@ -369,6 +360,7 @@ public class Exploit
     // CONSTRUCTOR
     public Exploit(string name, int security_level, float base_duration, int cores_cost)
     {
+        this.extension = ".exe"; // default extension for exploits
         this.name = name;
         this.security_level = security_level;
         this.base_duration = base_duration;
@@ -376,6 +368,7 @@ public class Exploit
     }
     public Exploit(Exploit exploit, float base_duration = default)
     {
+        this.extension = exploit.extension;
         this.name = exploit.name;
         this.security_level = exploit.security_level;
         this.base_duration = base_duration == default ? exploit.base_duration : base_duration;

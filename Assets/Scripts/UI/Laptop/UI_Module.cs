@@ -92,6 +92,22 @@ public class UI_Module : UI_Item
         hide_icon();
     }
 
+    // ON POINTER CLICK
+    public override void OnPointerClick(PointerEventData eventData)
+    {
+        if (Item == null) { return; }
+        if (Item.Reference == "module:hdd")
+        {
+            // we open the HDD info
+            StoreCapacity disk = Item.GetCapacity<StoreCapacity>();
+            if (disk == null) { return; }
+            if (log) { Debug.Log($"(UI_Module) {name} clicked, opening HDD info"); }
+            UI_Manager.Instance.GetPool("hdd").gameObject.GetComponent<UI_HDD>().SetDisk(disk);
+            UI_Manager.Instance.SwitchTo("hdd");
+            return;
+        }
+    }
+
     // DRAGGING
     public override void OnPointerDragEnter(UI_Item moving_ui_item)
     {

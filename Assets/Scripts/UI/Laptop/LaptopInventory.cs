@@ -111,14 +111,14 @@ public class LaptopInventory : Inventory
                 (capable as Laptop).OnCPU_Changed();
                 break;
             case "module:hdd":
-                on_hdd_changed();
+                (capable as Laptop).OnHDD_Changed();
                 break;
             case "module:network":
                 (capable as Laptop).OnNetworkModuleChanged();
                 break;
-            case "module:hack":
+            /* case "module:hack":
                 (capable as Laptop).OnHackModuleChanged();
-                break;
+                break; */
         }
 
         OnModuleChanged?.Invoke(item);
@@ -133,8 +133,8 @@ public class LaptopInventory : Inventory
         }
     }
 
-    // HDD GESTION
-    private void on_hdd_changed()
+    // UPGRADE LAPTOP
+    private void on_laptop_upgrade()
     {
         // we check how many hdd do we have
         int hdd_count = GetItemsByRule("module:hdd").Count;

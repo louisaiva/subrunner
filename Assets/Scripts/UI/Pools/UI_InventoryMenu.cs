@@ -200,6 +200,12 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
             use_feedback.SetLabel(usable.UseLabel);
             UI_XboxNavigator.Instance.ToggleInput("activate", true);
         }
+        else if (ui_slot is UI_Module && ui_slot.Item != null && ui_slot.Item.Reference == "module:hdd")
+        {
+            use_feedback.SetAlwaysFull(true);
+            use_feedback.SetLabel("inspect");
+            UI_XboxNavigator.Instance.ToggleInput("activate", true);
+        }
         else
         {
             use_feedback.SetAlwaysFull(false);

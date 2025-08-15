@@ -210,6 +210,13 @@ public class UI_Manager : Singleton<UI_Manager>
             return;
         }
 
+        if (current_pool.Reference == "hdd")
+        {
+            // we switch to inventory
+            SwitchTo("inventory");
+            return;
+        }
+
         // we switch to hud
         SwitchTo("hud");
     }

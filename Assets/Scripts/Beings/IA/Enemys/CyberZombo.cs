@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class CyberZombo : IA, Hackable
 {
-    [Header("Processor exploit damage")]
-    public int processor_exploit_damage = 20;
-    public int processor_exploit_knockback_magnitude = 5;
+    [Header("CPU Overheat Damage")]
+    public int cpu_overheat_damage = 5;
+    public int cpu_overheat_knockback = 500;
 
 
     [Header("Components")]
@@ -29,7 +29,7 @@ public class CyberZombo : IA, Hackable
     public List<Hack> RunningHacks { get; private set; } = new List<Hack>();
     public bool IsVulnerableTo(Exploit exploit)
     {
-        return exploit.name == "processor_exploit";
+        return exploit.name == "cpu_overheat";
     }
 
     // BEING HACKED
@@ -42,17 +42,17 @@ public class CyberZombo : IA, Hackable
     public void OnHackCompleted(Hack hack)
     {
         if (debug) { Debug.Log($"(CyberZombo) {name} has been hacked by {hack.name}"); }
-        // if the exploit is a processor exploit, we deal damage to the zombie
-        if (hack.name == "processor_exploit")
+        // if the exploit is a cpu_overheat exploit, we deal damage to the zombie
+        if (hack.name == "cpu_overheat")
         {
             // we create a knockback force
             Force knockback_force = new Force(
-                name: "processor_exploit_knockback",
+                name: "cpu_overheat_knockback",
                 direction: new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized,
-                magnitude: processor_exploit_knockback_magnitude
+                magnitude: cpu_overheat_knockback
             );
 
-            take_damage(processor_exploit_damage, knockback_force);
+            take_damage(cpu_overheat_damage, knockback_force);
         }
 
         if (RunningHacks.Contains(hack)) { RunningHacks.Remove(hack); } // if the zombo is dead we may have already removed the hack

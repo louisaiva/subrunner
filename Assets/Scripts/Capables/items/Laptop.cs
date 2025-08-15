@@ -26,6 +26,9 @@ public class Laptop : Item, Usable
     // public event System.Action<int> OnCoresChange = delegate { };
     public event System.Action<int> OnCoresFreedOrUsed = delegate { };
 
+    [Header("Disks")]
+    [SerializeField] private List<StoreCapacity> disks;
+
     [Header("Logs")]
     [SerializeField] protected bool log_keys = false;
 
@@ -64,13 +67,13 @@ public class Laptop : Item, Usable
     // KEYS MANAGEMENT
     public bool HasKeyFor(Lockable target)
     {
-        List<Key> keys = get_keys();
+        List<Key> keys = GetKeys();
         if (log_keys)
         {
             string s = $"(Laptop) {name} checking if has key for {target.Key} (security level {target.SecurityLevel})";
             foreach (Key key in keys)
             {
-                s += $"\n - {key.key} ({key.key_type})";
+                s += $"\n - {key.data} ({key.key_type})";
             }
             Debug.Log(s);
         }
@@ -83,7 +86,7 @@ public class Laptop : Item, Usable
         }
         return false;
     }
-    private List<Key> get_keys()
+    /* private List<Key> get_keys()
     {
         List<Item> cards = Inventory.GetItemsByType<Card>();
         List<Key> keys = new List<Key>();
@@ -94,7 +97,7 @@ public class Laptop : Item, Usable
             if (card.key != null) { keys.Add(card.key); }
         }
         return keys;
-    }
+    } */
 
 
     // USABLE
@@ -148,7 +151,7 @@ public class Laptop : Item, Usable
     }
 
     // GRABBING HACK MODULE & NETWORK MODULE
-    public void OnHackModuleChanged()
+    /* public void OnHackModuleChanged()
     {
         // we check how many hack modules we have in our inventory
         List<Item> hack_modules = Inventory.GetItemsByRule("module:hack");
@@ -168,7 +171,7 @@ public class Laptop : Item, Usable
             if (debug) { Debug.LogWarning($"(Laptop) {name} has a hack module, adding hack capacity."); }
             AddCapacity("hack");
         }
-    }
+    } */
     public void OnNetworkModuleChanged()
     {
         // we check how many network modules we have in our inventory
@@ -190,22 +193,55 @@ public class Laptop : Item, Usable
             AddCapacity("connect");
         }
     }
+
+    // FILES MANAGEMENT
+    public void OnHDD_Changed()
+    {
+        // we check how many hdd do we have in our inventory
+        disks = Inventory.GetItemsByRule("module:hdd")
+                         .Select(item => item.GetCapacity<StoreCapacity>())
+                         .Where(capacity => capacity != null)
+                         .ToList();
+
+        if (debug) { Debug.Log($"(Laptop) {name} HDD changed. New disks count: {disks.Count}"); }
+    }
+    public List<Exploit> GetExploits()
+    {
+        // we get all exploits from all disks
+        List<Exploit> exploits = new List<Exploit>();
+        foreach (StoreCapacity disk in disks)
+        {
+            exploits.AddRange(disk.GetExploits());
+        }
+        return exploits;
+    }
+    public List<Key> GetKeys()
+    {
+        // we get all keys from all disks
+        List<Key> keys = new List<Key>();
+        foreach (StoreCapacity disk in disks)
+        {
+            keys.AddRange(disk.GetKeys());
+        }
+        return keys;
+    }
 }
 
 [System.Serializable]
-public class Key
+public class Key : File
 {
     public string key_type; // SHA, AES, RSA
-    public string key;
+    // public string key;
 
     public Key(string type, string key)
     {
+        this.extension = ".key"; // default extension for keys
         key_type = type;
-        this.key = key;
+        this.data = key;
     }
 
     public bool Matches(string target_key)
     {
-        return key == target_key;
+        return data == target_key;
     }
 }

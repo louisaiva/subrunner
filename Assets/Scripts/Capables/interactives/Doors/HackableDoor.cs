@@ -10,7 +10,7 @@ public class HackableDoor : Door, Lockable
     [SerializeField] private float locking_interval = 5f; // the time before the door is locked again after being unlocked
     public bool Locked { get; private set; } = true;
     [SerializeField] private Key key; // the key needed to hack this door
-    public string Key => key.key; // the type of key needed to hack this door
+    public string Key => key.data; // the type of key needed to hack this door
 
 
     [Header("Hackable")]
@@ -78,11 +78,13 @@ public class HackableDoor : Door, Lockable
     public bool IsVulnerableTo(Exploit exploit)
     {
         if (exploit == Exploit.InsertPassword) { return true; }
+        if (exploit.name == "bruteforce") { return true; }
+        if (exploit.name == "dictionary_attack") { return true; }
 
-        string[] exploitType = exploit.name.Split('_');
+        /* string[] exploitType = exploit.name.Split('_');
         if (debug) { Debug.Log($"(HackableDoor) checking if {name} is vulnerable to exploit {exploit.name} ?" + exploitType); }
         if (exploitType.Length < 2) { return false; }
-        if (exploitType[1] == key.key_type) { return true; } // if the exploit type matches the key type, we can hack the door
+        if (exploitType[1] == key.key_type) { return true; } // if the exploit type matches the key type, we can hack the door */
         return false;
     }
     public void OnHackStarted(Hack hack)
