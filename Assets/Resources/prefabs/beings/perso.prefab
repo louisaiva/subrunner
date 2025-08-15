@@ -6294,6 +6294,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5879746296165426956}
   - component: {fileID: 2631962172078966178}
+  - component: {fileID: 1290283336975900088}
   m_Layer: 15
   m_Name: processor
   m_TagString: Untagged
@@ -6330,7 +6331,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   current_hackable: {fileID: 0}
-  waiting_hackables: []
   hackableLayerMask:
     serializedVersion: 2
     m_Bits: 16384
@@ -6345,9 +6345,32 @@ MonoBehaviour:
   hacker: {fileID: 0}
   connector: {fileID: 0}
   cursor: {fileID: 546368589589292181}
-  log: 1
-  log_navigation_inputs: 0
+  laptop: {fileID: 0}
+  log: 0
   navigationInput: {fileID: -8837052246538266762, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+--- !u!114 &1290283336975900088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7127447681734335219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a94c9c308a8f3044bb9cff0f081cacc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  exploits: []
+  selected_exploit:
+    name: 
+    extension: 
+    data: 
+    security_level: 0
+    base_duration: 0
+    cores_cost: 0
+  nextExploitInput: {fileID: 5017164170596428349, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+  laptop: {fileID: 0}
+  log: 0
 --- !u!1 &7268661800307276622
 GameObject:
   m_ObjectHideFlags: 0

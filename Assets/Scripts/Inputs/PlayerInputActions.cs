@@ -100,6 +100,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""next_exploit"",
+                    ""type"": ""Button"",
+                    ""id"": ""bd7d860d-4391-461f-9486-df67c25fc2e2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""conso1"",
                     ""type"": ""Button"",
                     ""id"": ""4fe68a72-2931-49f0-8296-5f41c4b4f62b"",
@@ -332,6 +341,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""xbox"",
                     ""action"": ""hack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""adc4f574-63a0-4148-8ae5-4d13c8e876e7"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""next_exploit"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1424,6 +1444,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_perso_move = m_perso.FindAction("move", throwIfNotFound: true);
         m_perso_select_hackable = m_perso.FindAction("select_hackable", throwIfNotFound: true);
         m_perso_hack = m_perso.FindAction("hack", throwIfNotFound: true);
+        m_perso_next_exploit = m_perso.FindAction("next_exploit", throwIfNotFound: true);
         m_perso_conso1 = m_perso.FindAction("conso1", throwIfNotFound: true);
         m_perso_conso2 = m_perso.FindAction("conso2", throwIfNotFound: true);
         m_perso_conso3 = m_perso.FindAction("conso3", throwIfNotFound: true);
@@ -1532,6 +1553,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_perso_move;
     private readonly InputAction m_perso_select_hackable;
     private readonly InputAction m_perso_hack;
+    private readonly InputAction m_perso_next_exploit;
     private readonly InputAction m_perso_conso1;
     private readonly InputAction m_perso_conso2;
     private readonly InputAction m_perso_conso3;
@@ -1548,6 +1570,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @move => m_Wrapper.m_perso_move;
         public InputAction @select_hackable => m_Wrapper.m_perso_select_hackable;
         public InputAction @hack => m_Wrapper.m_perso_hack;
+        public InputAction @next_exploit => m_Wrapper.m_perso_next_exploit;
         public InputAction @conso1 => m_Wrapper.m_perso_conso1;
         public InputAction @conso2 => m_Wrapper.m_perso_conso2;
         public InputAction @conso3 => m_Wrapper.m_perso_conso3;
@@ -1585,6 +1608,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @hack.started += instance.OnHack;
             @hack.performed += instance.OnHack;
             @hack.canceled += instance.OnHack;
+            @next_exploit.started += instance.OnNext_exploit;
+            @next_exploit.performed += instance.OnNext_exploit;
+            @next_exploit.canceled += instance.OnNext_exploit;
             @conso1.started += instance.OnConso1;
             @conso1.performed += instance.OnConso1;
             @conso1.canceled += instance.OnConso1;
@@ -1625,6 +1651,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @hack.started -= instance.OnHack;
             @hack.performed -= instance.OnHack;
             @hack.canceled -= instance.OnHack;
+            @next_exploit.started -= instance.OnNext_exploit;
+            @next_exploit.performed -= instance.OnNext_exploit;
+            @next_exploit.canceled -= instance.OnNext_exploit;
             @conso1.started -= instance.OnConso1;
             @conso1.performed -= instance.OnConso1;
             @conso1.canceled -= instance.OnConso1;
@@ -1978,6 +2007,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnSelect_hackable(InputAction.CallbackContext context);
         void OnHack(InputAction.CallbackContext context);
+        void OnNext_exploit(InputAction.CallbackContext context);
         void OnConso1(InputAction.CallbackContext context);
         void OnConso2(InputAction.CallbackContext context);
         void OnConso3(InputAction.CallbackContext context);

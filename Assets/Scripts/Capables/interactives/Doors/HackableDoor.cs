@@ -77,14 +77,14 @@ public class HackableDoor : Door, Lockable
     // HACKABLE
     public bool IsVulnerableTo(Exploit exploit)
     {
-        if (exploit == Exploit.InsertPassword) { return true; }
+        if (exploit == Exploit.Nmap) { return true; }
         if (exploit.name == "bruteforce") { return true; }
         if (exploit.name == "dictionary_attack") { return true; }
+        if (exploit is FileExploit file_exploit && exploit.name == "type_password")
+        {
+            return key.Matches(file_exploit.file.data);
+        }
 
-        /* string[] exploitType = exploit.name.Split('_');
-        if (debug) { Debug.Log($"(HackableDoor) checking if {name} is vulnerable to exploit {exploit.name} ?" + exploitType); }
-        if (exploitType.Length < 2) { return false; }
-        if (exploitType[1] == key.key_type) { return true; } // if the exploit type matches the key type, we can hack the door */
         return false;
     }
     public void OnHackStarted(Hack hack)
@@ -108,15 +108,17 @@ public class HackableDoor : Door, Lockable
     }
     public void OnHackCompleted(Hack hack)
     {
-        // Handle the hack completion event
         if (debug) { Debug.Log($"(HackableDoor) Hack completed on {name} with exploit {hack.name}"); }
-        // this.Do("open");
-
-        // we unlock the door & play unlock anim
         anim_player.StopPlaying("hacked");
-        Unlock();
-
         RunningHacks.Remove(hack);
+
+        // if the hack was successful we unlock the door
+        if (hack.name == "bruteforce") { Unlock(); }
+        if (hack.name == "dictionary_attack") { Unlock(); }
+        if (hack.exploit is FileExploit file_exploit && hack.name == "type_password" && key.Matches(file_exploit.file.data))
+        {
+            Unlock();
+        }
     }
 
     // UNLOCKING

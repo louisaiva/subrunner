@@ -27,12 +27,14 @@ public class CyberZombo : IA, Hackable
     [Header("Hackable")]
     public int SecurityLevel => 1;
     public List<Hack> RunningHacks { get; private set; } = new List<Hack>();
+
+
+    // HACKABLE
     public bool IsVulnerableTo(Exploit exploit)
     {
+        if (exploit == Exploit.Nmap) { return true; }
         return exploit.name == "cpu_overheat";
     }
-
-    // BEING HACKED
     public void OnHackStarted(Hack hack)
     {
         if (debug) { Debug.Log($"(CyberZombo) {name} is being hacked by {hack.name}"); }

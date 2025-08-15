@@ -28,6 +28,7 @@ public class Laptop : Item, Usable
 
     [Header("Disks")]
     [SerializeField] private List<StoreCapacity> disks;
+    public event System.Action<List<StoreCapacity>> OnDisksChanged = delegate { };
 
     [Header("Logs")]
     [SerializeField] protected bool log_keys = false;
@@ -67,6 +68,10 @@ public class Laptop : Item, Usable
     // KEYS MANAGEMENT
     public bool HasKeyFor(Lockable target)
     {
+        return GetKeyFor(target) != null;
+    }
+    public Key GetKeyFor(Lockable target)
+    {
         List<Key> keys = GetKeys();
         if (log_keys)
         {
@@ -81,10 +86,10 @@ public class Laptop : Item, Usable
         {
             if (key.Matches(target.Key))
             {
-                return true;
+                return key;
             }
         }
-        return false;
+        return null;
     }
     /* private List<Key> get_keys()
     {
@@ -203,16 +208,26 @@ public class Laptop : Item, Usable
                          .Where(capacity => capacity != null)
                          .ToList();
 
+        // we call the event
+        OnDisksChanged?.Invoke(disks);
+
         if (debug) { Debug.Log($"(Laptop) {name} HDD changed. New disks count: {disks.Count}"); }
+    }
+    public List<StoreCapacity> GetDisks()
+    {
+        // we return the disks
+        return disks;
     }
     public List<Exploit> GetExploits()
     {
         // we get all exploits from all disks
         List<Exploit> exploits = new List<Exploit>();
+        exploits.Add(Exploit.TypePassword); // we always add TypePassword as default
         foreach (StoreCapacity disk in disks)
         {
             exploits.AddRange(disk.GetExploits());
         }
+        exploits.Add(Exploit.Nmap); // we always add Nmap as a default exploit
         return exploits;
     }
     public List<Key> GetKeys()

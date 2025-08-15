@@ -78,6 +78,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "next_exploit",
+                    "type": "Button",
+                    "id": "bd7d860d-4391-461f-9486-df67c25fc2e2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "conso1",
                     "type": "Button",
                     "id": "4fe68a72-2931-49f0-8296-5f41c4b4f62b",
@@ -310,6 +319,17 @@
                     "processors": "",
                     "groups": "xbox",
                     "action": "hack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "adc4f574-63a0-4148-8ae5-4d13c8e876e7",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "next_exploit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

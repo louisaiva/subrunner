@@ -13,7 +13,7 @@ public class HackableNavigator : MonoBehaviour
 
     [Header("Hackables selection")]
     [SerializeField] private GameObject current_hackable;
-    [SerializeField] private List<GameObject> waiting_hackables = new List<GameObject>();
+    public GameObject CurrentHackable => current_hackable;
     [SerializeField] private LayerMask hackableLayerMask = default;
     [SerializeField] private float selection_radius = 10f; // the radius of the selection collider
 
@@ -78,8 +78,8 @@ public class HackableNavigator : MonoBehaviour
         }
 
         // check if we found any vulnerabilities
-        Exploit exploit = hacker?.GetExploitVulnerabilities(hackable);
-        if (exploit == null)
+        Exploit exploit = hacker?.selected_exploit;
+        if (exploit == null || !hackable.IsVulnerableTo(exploit))
         {
             hover_hackray.SetColor(no_vulnerability_hackray_color);
             return;
@@ -120,6 +120,7 @@ public class HackableNavigator : MonoBehaviour
         if (current_hackable == null) { return; }
 
         connector.Disconnect();
+        hacker?.DeselectExploit();
 
         // we update the hackray
         hover_hackray?.SetColor(hackray_color);

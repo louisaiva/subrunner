@@ -12,19 +12,19 @@ public class HackCapacity : Capacity
 {
     [Header("Exploit selection")]
     public Exploit selected_exploit;
+    public event System.Action OnDeselected = delegate { };
 
     [Header("Hacks")]
     public List<Hack> running_hacks = new List<Hack>();
     public event System.Action<Hack> OnExploitRun = delegate { };
 
-    // [Header("Exploits")]
-    // public List<Exploit> exploits = new List<Exploit>();
-
-    [Header("Vulnerabilities found")]
+    [Header("Scanner")]
     public Dictionary<Hackable, List<Exploit>> vulnerabilities = new Dictionary<Hackable, List<Exploit>>();
     // this stores the list of all the hackables we scanned & their vulnerabilites found !
     // todo : improve this by saving the last scan time and remove those when time > x
     // and maybe move it to a List<ScanResult> ???
+    public event System.Action<Exploit> OnScanned = delegate { };
+
 
     [Header("Hackrays")]
     public GameObject hackray_prefab;
@@ -34,11 +34,37 @@ public class HackCapacity : Capacity
 
     [Header("Components")]
     [SerializeField] private Laptop laptop;
+    private Hackable Target => laptop.GetCapacity<ConnectCapacity>()?.Target;
 
     // START
     private void Start()
     {
         laptop = capable.GetComponent<Laptop>();
+    }
+
+    // EXPLOIT SELECTION
+    public void SelectExploit(Exploit exploit)
+    {
+        if (exploit == null) { return; }
+
+        // we check if the exploit is TypePassword then we need to assign a password
+        if (exploit == Exploit.TypePassword && Target != null && Target is Lockable lockable)
+        {
+            Key key = laptop.GetKeyFor(lockable);
+            if (key != null)
+            {
+                exploit = new FileExploit(exploit, key);
+            }
+        }
+
+        // we set the selected exploit
+        selected_exploit = exploit;
+        if (debug) { Debug.Log($"(HackCapacity) {capable.name} selected exploit {exploit.name}."); }
+    }
+    public void DeselectExploit()
+    {
+        selected_exploit = null;
+        OnDeselected?.Invoke();
     }
 
     // UPDATE
@@ -50,7 +76,7 @@ public class HackCapacity : Capacity
             Hack hack = running_hacks[i];
 
             // if the hack is completed and it was a nmap, we scan the target
-            if (hack.state == HackState.Completed && hack.name == "nmap") { scan_vulnerabilities(hack.target); }
+            if (hack.state == HackState.Completed && hack.name == "nmap") { Scan(hack.target); }
 
             // we check if the hack is done
             if (hack.state == HackState.Completed || hack.state == HackState.Failed || hack.state == HackState.Overflowed)
@@ -145,6 +171,7 @@ public class HackCapacity : Capacity
         // todo we launch a nmap hack on the target ???
         // but for now we just scan vulnerabilities
         scan_vulnerabilities(target);
+        OnScanned?.Invoke(selected_exploit);
     }
     private List<Exploit> scan_vulnerabilities(Hackable target)
     {
@@ -153,11 +180,11 @@ public class HackCapacity : Capacity
 
         // we check if we already have the key for this target (instant hack)
         string log_exploits = "";
-        if (target is Lockable lockable && laptop.HasKeyFor(lockable))
+        /* if (target is Lockable lockable && laptop.HasKeyFor(lockable))
         {
-            vulnerabilities[target].Add(Exploit.InsertPassword);
-            log_exploits += $"- {Exploit.InsertPassword.name} (instant hack)\n";
-        }
+            vulnerabilities[target].Add(Exploit.TypePassword);
+            log_exploits += $"- {Exploit.TypePassword.name} (instant hack)\n";
+        } */
 
         List<Exploit> exploits = laptop.GetExploits();
 
@@ -165,6 +192,18 @@ public class HackCapacity : Capacity
         for (int i = 0; i < exploits.Count; i++)
         {
             Exploit exploit = exploits[i];
+
+            // we check if the exploit is TypePassword then we need to assign a password
+            if (target is Lockable lockable && exploit == Exploit.TypePassword)
+            {
+                Key key = laptop.GetKeyFor(lockable);
+                if (key != null)
+                {
+                    exploit = new FileExploit(exploit, key);
+                }
+            }
+
+            // we check if the target is vulnerable to this exploit
             if (target.IsVulnerableTo(exploit))
             {
                 vulnerabilities[target].Add(exploit);
@@ -172,9 +211,8 @@ public class HackCapacity : Capacity
             }
         }
 
-        // we always add Nmap as last vulnerability
-        vulnerabilities[target].Add(Exploit.Nmap);
-        selected_exploit = vulnerabilities[target][0]; // we select the first exploit
+        // we select the first exploit
+        selected_exploit = vulnerabilities[target][0];
 
         if (debug) { Debug.Log($"(HackCapacity) {capable.name} scanned {target.name} : {vulnerabilities[target].Count} vulnerabilities found\n{log_exploits}"); }
         return vulnerabilities[target];
@@ -349,7 +387,7 @@ public enum HackState
 public class Exploit : File
 {
     public static readonly Exploit Nmap = new Exploit("nmap", 1000, 0.1f, 1);
-    public static readonly Exploit InsertPassword = new Exploit("insert_password", 1000, 0.1f, 1);
+    public static readonly Exploit TypePassword = new Exploit("type_password", 1000, 0.1f, 1);
 
     [Header("Exploit Details")]
     // public string name;
@@ -373,5 +411,15 @@ public class Exploit : File
         this.security_level = exploit.security_level;
         this.base_duration = base_duration == default ? exploit.base_duration : base_duration;
         this.cores_cost = exploit.cores_cost;
+    }
+}
+
+[System.Serializable]
+public class FileExploit : Exploit
+{
+    public File file;
+    public FileExploit(Exploit exploit, File file) : base(exploit)
+    {
+        this.file = file;
     }
 }

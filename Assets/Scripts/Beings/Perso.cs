@@ -23,6 +23,7 @@ public class Perso : Being, Hacker
     public Room current_room { get; set; }
 
     public HackableNavigator HackableNavigator { get; private set; }
+    public ExploitNavigator ExploitNavigator { get; private set; }
 
 
     [Header("SKILLS")]
@@ -73,6 +74,7 @@ public class Perso : Being, Hacker
 
         // WE GET FEW THINGS
         HackableNavigator = transform.Find("processor").GetComponent<HackableNavigator>();
+        ExploitNavigator = transform.Find("processor").GetComponent<ExploitNavigator>();
     }
 
     // START
