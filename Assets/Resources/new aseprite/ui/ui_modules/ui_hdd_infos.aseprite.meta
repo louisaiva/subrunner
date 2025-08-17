@@ -124,7 +124,7 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: Frame_0
     originalName: 
-    pivot: {x: 0.5, y: -0.15068494}
+    pivot: {x: 0.5, y: -0.10000001}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
@@ -132,8 +132,8 @@ ScriptedImporter:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 104
-      height: 73
+      width: 114
+      height: 80
     spriteID: dea8223719a75414ea3405f990e231ce
     spriteBone: []
     spriteOutline: []
@@ -145,17 +145,17 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 4}
   - name: Frame_1
     originalName: 
-    pivot: {x: 0.87096775, y: -15.200001}
+    pivot: {x: 0.38554215, y: -6.1666665}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
       serializedVersion: 2
       x: 4
-      y: 85
-      width: 31
-      height: 5
-    spriteID: c27e3d8fcc9af13458436830b11bf68c
+      y: 92
+      width: 83
+      height: 12
+    spriteID: d817d32be208c6340a5a17b1b20e2615
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -163,7 +163,7 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 85}
+    uvTransform: {x: 4, y: 92}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
@@ -177,20 +177,20 @@ ScriptedImporter:
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
-        x: 12
-        y: 11
-        width: 104
-        height: 73
+        x: 7
+        y: 8
+        width: 114
+        height: 80
       spriteId: dea8223719a75414ea3405f990e231ce
     - name: Frame_1
       frameIndex: 1
       additiveSortOrder: 0
       cellRect:
-        x: 37
-        y: 76
-        width: 31
-        height: 5
-      spriteId: c27e3d8fcc9af13458436830b11bf68c
+        x: 32
+        y: 74
+        width: 83
+        height: 12
+      spriteId: d817d32be208c6340a5a17b1b20e2615
     linkedCells: []
     parentIndex: -1
   platformSettings:

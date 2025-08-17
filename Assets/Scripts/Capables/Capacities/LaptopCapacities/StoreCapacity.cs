@@ -9,6 +9,10 @@ using UnityEngine;
 public class StoreCapacity : Capacity
 {
 
+    [Header("Store parameters")]
+    [SerializeField] private int max_files = 10;
+    public int MaxFiles => max_files;
+
     [Header("Files")]
     [SerializeField] private List<File> files = new List<File>();
     [SerializeField] private List<Key> keys = new List<Key>();

@@ -14,8 +14,24 @@ public class UI_HDD : UI_Pool, I_UI_Slottable
     [SerializeField] private Transform files_parent;
     [SerializeField] private TextMeshProUGUI data_text;
 
+
+
     [Header("UI_Texts")]
     [SerializeField] private List<GameObject> ui_texts;
+
+    [Header("capacity slider")]
+    [SerializeField] private RectTransform capacity_slider;
+    [SerializeField] private int capacity_slider_max_width = 330;
+    [SerializeField] private Color capacity_slider_empty_color = Color.green;
+    [SerializeField] private Color capacity_slider_full_color = Color.red;
+    [SerializeField] private TextMeshProUGUI capacity_text;
+
+    [Header("Temp Slider")]
+    [SerializeField] private RectTransform temp_slider;
+    [SerializeField] private int temp_slider_max_width = 72;
+    [SerializeField] private TextMeshProUGUI temp_text;
+    [SerializeField] private Color temp_slider_empty_color = Color.green;
+    [SerializeField] private Color temp_slider_full_color = Color.red;
 
     // DISK SETTING
     public void SetDisk(StoreCapacity disk)
@@ -51,6 +67,17 @@ public class UI_HDD : UI_Pool, I_UI_Slottable
             if (log) { Debug.Log($"(UI_HDD) creating filename {file.name}"); }
             create_filename(file);
         }
+
+        // we update the capacity slider
+        capacity_slider.sizeDelta = new Vector2(
+            capacity_slider_max_width * (disk.Files.Count / (float)disk.MaxFiles),
+            capacity_slider.sizeDelta.y);
+        capacity_slider.GetComponent<Image>().color = Color.Lerp(
+            capacity_slider_empty_color,
+            capacity_slider_full_color,
+            disk.Files.Count / (float)disk.MaxFiles);
+        int capa_percent = Mathf.RoundToInt(disk.Files.Count / (float)disk.MaxFiles * 100);
+        capacity_text.text = $"{capa_percent}%";
     }
     private void create_filename(File file)
     {
