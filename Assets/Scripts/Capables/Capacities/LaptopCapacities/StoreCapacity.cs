@@ -10,6 +10,7 @@ public class StoreCapacity : Capacity
 {
 
     [Header("Store parameters")]
+    public string DiskLetter = "c:";
     [SerializeField] private int max_files = 10;
     public int MaxFiles => max_files;
 

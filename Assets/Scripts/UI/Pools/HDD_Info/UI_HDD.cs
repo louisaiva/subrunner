@@ -8,13 +8,12 @@ public class UI_HDD : UI_Pool, I_UI_Slottable
 
     [Header("Disk")]
     [SerializeField] private StoreCapacity disk;
+    [SerializeField] private TextMeshProUGUI disk_letter;
 
-    [Header("Components")]
+    [Header("Files")]
     [SerializeField] private GameObject filename_prefab;
     [SerializeField] private Transform files_parent;
     [SerializeField] private TextMeshProUGUI data_text;
-
-
 
     [Header("UI_Texts")]
     [SerializeField] private List<GameObject> ui_texts;
@@ -28,10 +27,11 @@ public class UI_HDD : UI_Pool, I_UI_Slottable
 
     [Header("Temp Slider")]
     [SerializeField] private RectTransform temp_slider;
-    [SerializeField] private int temp_slider_max_width = 72;
+    [SerializeField] private int temp_slider_max_height = 72;
     [SerializeField] private TextMeshProUGUI temp_text;
     [SerializeField] private Color temp_slider_empty_color = Color.green;
     [SerializeField] private Color temp_slider_full_color = Color.red;
+    [SerializeField] private TempCapacity temperer;
 
     // DISK SETTING
     public void SetDisk(StoreCapacity disk)
@@ -39,6 +39,8 @@ public class UI_HDD : UI_Pool, I_UI_Slottable
         this.disk = disk;
         if (disk == null) { return; }
         if (log) { Debug.Log($"(UI_HDD) setting disk {disk.name}"); }
+        disk_letter.text = disk.DiskLetter;
+
 
         // we clear the files parent
         foreach (GameObject text in ui_texts) { Destroy(text); }
@@ -78,6 +80,10 @@ public class UI_HDD : UI_Pool, I_UI_Slottable
             disk.Files.Count / (float)disk.MaxFiles);
         int capa_percent = Mathf.RoundToInt(disk.Files.Count / (float)disk.MaxFiles * 100);
         capacity_text.text = $"{capa_percent}%";
+
+        // we update the temp slider
+        temperer = disk.capable.GetCapacity<TempCapacity>();
+        update_temp_slider();
     }
     private void create_filename(File file)
     {
@@ -85,6 +91,25 @@ public class UI_HDD : UI_Pool, I_UI_Slottable
         // text.GetComponent<TextMeshProUGUI>().text = file.name + file.extension;
         text.GetComponent<UI_HDD_File>().SetFile(file);
         ui_texts.Add(text);
+    }
+
+    // UPDATE
+    private void Update()
+    {
+        if (!Showed) { return; }
+        if (temperer == null) { return; }
+        update_temp_slider();
+    }
+    private void update_temp_slider()
+    {
+        temp_slider.sizeDelta = new Vector2(
+            temp_slider.sizeDelta.x,
+            temp_slider_max_height * (temperer.Temp / 100f));
+        temp_slider.GetComponent<Image>().color = Color.Lerp(
+            temp_slider_empty_color,
+            temp_slider_full_color,
+            temperer.Temp / temperer.MaxTemp);
+        temp_text.text = $"{Mathf.RoundToInt(temperer.Temp)}°";
     }
 
     // SHOW FILE DATA
