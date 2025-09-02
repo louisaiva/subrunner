@@ -11,8 +11,10 @@ public class StoreCapacity : Capacity
 
     [Header("Store parameters")]
     public string DiskLetter = "c:";
-    [SerializeField] private int max_files = 10;
-    public int MaxFiles => max_files;
+    private int capacity = 4096; // in bytes (octets)
+    public int Capacity => capacity;
+    public int SpaceLeft => capacity - SpaceUsed;
+    public int SpaceUsed => Files.Sum(file => file.Size);
 
     [Header("Files")]
     [SerializeField] private List<File> files = new List<File>();
@@ -40,4 +42,6 @@ public class File
     public string name;
     public string extension = "";
     public string data;
+
+    public virtual int Size => data.Length + name.Length + extension.Length;
 }
