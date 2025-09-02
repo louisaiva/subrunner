@@ -72,14 +72,13 @@ public class UI_HDD : UI_Pool, I_UI_Slottable
 
         // we update the capacity slider
         capacity_slider.sizeDelta = new Vector2(
-            capacity_slider_max_width * (disk.Files.Count / (float)disk.MaxFiles),
+            capacity_slider_max_width * (disk.SpaceUsed / (float)disk.Capacity),
             capacity_slider.sizeDelta.y);
         capacity_slider.GetComponent<Image>().color = Color.Lerp(
             capacity_slider_empty_color,
             capacity_slider_full_color,
-            disk.Files.Count / (float)disk.MaxFiles);
-        int capa_percent = Mathf.RoundToInt(disk.Files.Count / (float)disk.MaxFiles * 100);
-        capacity_text.text = $"{capa_percent}%";
+            disk.SpaceUsed / (float)disk.Capacity);
+        capacity_text.text = get_space_left(disk);
 
         // we update the temp slider
         temperer = disk.capable.GetCapacity<TempCapacity>();
@@ -91,6 +90,17 @@ public class UI_HDD : UI_Pool, I_UI_Slottable
         // text.GetComponent<TextMeshProUGUI>().text = file.name + file.extension;
         text.GetComponent<UI_HDD_File>().SetFile(file);
         ui_texts.Add(text);
+    }
+    private string get_space_left(StoreCapacity disk)
+    {
+        return get_bytes_string_from_int(disk.SpaceLeft) + " free of " + get_bytes_string_from_int(disk.Capacity);
+    }
+    private string get_bytes_string_from_int(int bytes)
+    {
+        if (bytes < 1000) { return $"{bytes} bytes"; }
+        else if (bytes < 1_000_000) { return $"{(bytes / 1_000f).ToString("f1")} KB"; }
+        else if (bytes < 1_000_000_000) { return $"{(bytes / 1_000_000f).ToString("f1")} MB"; }
+        else { return $"{(bytes / 1_000_000_000f).ToString("f1")} GB"; }
     }
 
     // UPDATE
