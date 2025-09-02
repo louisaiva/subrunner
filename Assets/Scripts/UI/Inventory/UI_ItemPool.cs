@@ -279,5 +279,13 @@ public class UI_ItemPool : MonoBehaviour
         }
         return -1;
     }
-
+    public List<Item> GetAllItems()
+    {
+        List<Item> items = new List<Item>();
+        foreach (UI_Item ui_item in ui_items)
+        {
+            items.AddRange(ui_item.GetItems());
+        }
+        return items;
+    }
 }

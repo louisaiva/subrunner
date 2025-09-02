@@ -93,7 +93,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""hack"",
                     ""type"": ""Button"",
-                    ""id"": ""03e2768a-7667-483a-b36a-0bfd011eccd3"",
+                    ""id"": ""a1372649-fb45-4509-b055-f40544935523"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -335,17 +335,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""75d2e5bd-13e3-4328-888e-f7fbd4519ce4"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""xbox"",
-                    ""action"": ""hack"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""adc4f574-63a0-4148-8ae5-4d13c8e876e7"",
                     ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
@@ -453,6 +442,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""conso4"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""da150186-98cd-4a27-a03d-65ff7132b437"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""hack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -558,6 +558,42 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""hack"",
+                    ""type"": ""Button"",
+                    ""id"": ""51ff366f-fea5-49b2-9bc7-95b1feb2fd2f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""next_exploit"",
+                    ""type"": ""Button"",
+                    ""id"": ""3a8ce758-3fcf-4ec3-80d5-3474d37fc398"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""run"",
+                    ""type"": ""Button"",
+                    ""id"": ""796e0ed5-9e1f-4cb3-b6ec-f63ba377c517"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""LB"",
+                    ""type"": ""Button"",
+                    ""id"": ""3a775e60-d909-45bb-82b0-38557ec6693a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -778,6 +814,50 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""xbox"",
                     ""action"": ""conso4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0ca70109-9aae-4223-9942-61357e7167fb"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""hack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""384229da-047e-4b30-b128-2a714885363a"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""next_exploit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9d5ff521-c039-4034-9b7b-94c05308c95d"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b895fc83-a5c5-4b48-887b-de9fcf6e9ac3"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";xbox"",
+                    ""action"": ""LB"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1462,6 +1542,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_UI_conso2 = m_UI.FindAction("conso2", throwIfNotFound: true);
         m_UI_conso3 = m_UI.FindAction("conso3", throwIfNotFound: true);
         m_UI_conso4 = m_UI.FindAction("conso4", throwIfNotFound: true);
+        m_UI_hack = m_UI.FindAction("hack", throwIfNotFound: true);
+        m_UI_next_exploit = m_UI.FindAction("next_exploit", throwIfNotFound: true);
+        m_UI_run = m_UI.FindAction("run", throwIfNotFound: true);
+        m_UI_LB = m_UI.FindAction("LB", throwIfNotFound: true);
         // any
         m_any = asset.FindActionMap("any", throwIfNotFound: true);
         m_any_keyboard = m_any.FindAction("keyboard", throwIfNotFound: true);
@@ -1698,6 +1782,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_conso2;
     private readonly InputAction m_UI_conso3;
     private readonly InputAction m_UI_conso4;
+    private readonly InputAction m_UI_hack;
+    private readonly InputAction m_UI_next_exploit;
+    private readonly InputAction m_UI_run;
+    private readonly InputAction m_UI_LB;
     public struct UIActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -1713,6 +1801,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @conso2 => m_Wrapper.m_UI_conso2;
         public InputAction @conso3 => m_Wrapper.m_UI_conso3;
         public InputAction @conso4 => m_Wrapper.m_UI_conso4;
+        public InputAction @hack => m_Wrapper.m_UI_hack;
+        public InputAction @next_exploit => m_Wrapper.m_UI_next_exploit;
+        public InputAction @run => m_Wrapper.m_UI_run;
+        public InputAction @LB => m_Wrapper.m_UI_LB;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1755,6 +1847,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @conso4.started += instance.OnConso4;
             @conso4.performed += instance.OnConso4;
             @conso4.canceled += instance.OnConso4;
+            @hack.started += instance.OnHack;
+            @hack.performed += instance.OnHack;
+            @hack.canceled += instance.OnHack;
+            @next_exploit.started += instance.OnNext_exploit;
+            @next_exploit.performed += instance.OnNext_exploit;
+            @next_exploit.canceled += instance.OnNext_exploit;
+            @run.started += instance.OnRun;
+            @run.performed += instance.OnRun;
+            @run.canceled += instance.OnRun;
+            @LB.started += instance.OnLB;
+            @LB.performed += instance.OnLB;
+            @LB.canceled += instance.OnLB;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
@@ -1792,6 +1896,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @conso4.started -= instance.OnConso4;
             @conso4.performed -= instance.OnConso4;
             @conso4.canceled -= instance.OnConso4;
+            @hack.started -= instance.OnHack;
+            @hack.performed -= instance.OnHack;
+            @hack.canceled -= instance.OnHack;
+            @next_exploit.started -= instance.OnNext_exploit;
+            @next_exploit.performed -= instance.OnNext_exploit;
+            @next_exploit.canceled -= instance.OnNext_exploit;
+            @run.started -= instance.OnRun;
+            @run.performed -= instance.OnRun;
+            @run.canceled -= instance.OnRun;
+            @LB.started -= instance.OnLB;
+            @LB.performed -= instance.OnLB;
+            @LB.canceled -= instance.OnLB;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -2026,6 +2142,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnConso2(InputAction.CallbackContext context);
         void OnConso3(InputAction.CallbackContext context);
         void OnConso4(InputAction.CallbackContext context);
+        void OnHack(InputAction.CallbackContext context);
+        void OnNext_exploit(InputAction.CallbackContext context);
+        void OnRun(InputAction.CallbackContext context);
+        void OnLB(InputAction.CallbackContext context);
     }
     public interface IAnyActions
     {

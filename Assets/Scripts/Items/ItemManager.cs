@@ -7,6 +7,7 @@ public class ItemManager : MonoBehaviour
     [Header("Special items slots")]
     [SerializeField] private UI_LaptopItemSlot laptop_slot;
     [SerializeField] private UI_Item weapon_slot;
+    [SerializeField] private UI_ItemPool shoes_pool;
     [SerializeField] private UI_Item cons1_slot;
     [SerializeField] private UI_Item cons2_slot;
     [SerializeField] private UI_Item cons3_slot;
@@ -68,6 +69,17 @@ public class ItemManager : MonoBehaviour
             return null;
         }
         return weapon_slot.Item as Weapon;
+    }
+    public Shoes GetShoes()
+    {
+        if (shoes_pool == null) { return null; }
+
+        List<Item> items = shoes_pool.GetAllItems();
+        foreach (var item in items)
+        {
+            if (item != null && item is Shoes) { return item as Shoes; }
+        }
+        return null;
     }
     public Usable GetConsumable(int index)
     {

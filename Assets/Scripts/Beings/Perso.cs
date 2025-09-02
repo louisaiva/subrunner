@@ -330,8 +330,15 @@ public class Perso : Being, Hacker
     private void OnDodge()
     {
         // on vérifie que le perso peut dodge
-        if (!Can("dodge")) { return; }
-        Do("dodge");
+        // if (!Can("dodge")) { return; }
+        // Do("dodge");
+
+        // on récupère les shoes
+        Shoes shoes = item_manager.GetShoes();
+        if (shoes == null) { return; } // if the shoes are not set, we return
+        
+        // on utilise les shoes
+        shoes.Use(this);
     }
     public void OnHack()
     {

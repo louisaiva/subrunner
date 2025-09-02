@@ -785,7 +785,6 @@ Transform:
   - {fileID: 2627025953398032101}
   - {fileID: 4053640228030260228}
   - {fileID: 2786445522269117577}
-  - {fileID: 2051910528379396212}
   - {fileID: 806613326114500989}
   - {fileID: 455273735031494225}
   - {fileID: 2327086996623757931}
@@ -1260,59 +1259,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &5628127095215936408
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2051910528379396212}
-  - component: {fileID: 7943254816321735950}
-  m_Layer: 0
-  m_Name: dodge
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2051910528379396212
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5628127095215936408}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 332583253616935226}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7943254816321735950
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5628127095215936408}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dbe8324d7ae63ec46a62ace2fda56ffe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cooldown: 0.76666665
-  debug: 0
-  dodge_magnitude: 400
-  dodge_force:
-    name: 
-    direction: {x: 0, y: 0}
-    magnitude: 0
-    attenuation: 0.7
-  dodge_duration: 0
 --- !u!1 &5860345377477898531
 GameObject:
   m_ObjectHideFlags: 0

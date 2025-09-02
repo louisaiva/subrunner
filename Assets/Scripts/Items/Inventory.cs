@@ -95,13 +95,13 @@ public class Inventory : MonoBehaviour
         // we check if the item is already grabbed somewhere, if so we drop it
         if (item.Grabbed && item.HolderInventory != null) { item.HolderInventory.Drop(item, uis_to_ignore); }
 
-        // we add the item
-        Items.Add(item);
-        item.Grabbed = true;
-
         // we set the item parent and reset its local position
         item.transform.SetParent(transform);
         item.transform.localPosition = Vector3.zero;
+
+        // we add the item
+        Items.Add(item);
+        item.Grabbed = true;
 
         // we trigger the events
         OnGrab.Invoke();
