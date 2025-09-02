@@ -43,6 +43,9 @@ public class Perso : Being, Hacker
     private event Action<InputAction.CallbackContext> useConso4Callback;
 
 
+    public Color HackColor { get; } = new Color(0.2f, 0.8f, 1f); // light blue
+
+
 
     [Header("METAMORPH")]
     [SerializeField] private List<string> metamorph_skins = new List<string>() { "perso", "cat", "zombo", "robot", "apple", "fridge", "small_laptop" };

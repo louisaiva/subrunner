@@ -43,9 +43,10 @@ public class UI_Skill : MonoBehaviour, I_UI_Slot
 
         if (Perso.Instance == null) { menu.Descriptor.SetDescription("looks like there is no player anymore"); return; }
 
-        string desc = description + "\n";
+        string desc = "";
         desc += "\ncurrent : " + Perso.Instance.skillManager.GetSkillValue(Reference).ToString() + " " + unit;
         desc += "\nnext : " + Perso.Instance.skillManager.GetNextLevelSkillValue(Reference).ToString() + " " + unit;
+        desc += "\n\n" + description;
 
         // on met à jour la description
         menu.Descriptor.SetDescription(desc);
