@@ -131,10 +131,52 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 4
-      y: 4
+      y: 94
       width: 123
       height: 84
     spriteID: dd435e1cc0c704d4c84c754728a90a49
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 94}
+  - name: Frame_1
+    originalName: 
+    pivot: {x: 0.50406504, y: -0.25}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 186
+      width: 123
+      height: 84
+    spriteID: 8f949093c2c44aa4ba322d25bb0d58ca
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 186}
+  - name: Frame_1
+    originalName: 
+    pivot: {x: 0.50340134, y: -0.2804878}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 4
+      width: 147
+      height: 82
+    spriteID: aa3b570e9da61714c839d5f2bf3df791
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -152,7 +194,7 @@ ScriptedImporter:
     layerType: 0
     blendMode: 0
     cells:
-    - name: paper
+    - name: Frame_0
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
@@ -161,6 +203,24 @@ ScriptedImporter:
         width: 123
         height: 84
       spriteId: dd435e1cc0c704d4c84c754728a90a49
+    - name: Frame_2
+      frameIndex: 2
+      additiveSortOrder: 0
+      cellRect:
+        x: 34
+        y: 21
+        width: 123
+        height: 84
+      spriteId: 8f949093c2c44aa4ba322d25bb0d58ca
+    - name: Frame_1
+      frameIndex: 1
+      additiveSortOrder: 0
+      cellRect:
+        x: 22
+        y: 23
+        width: 147
+        height: 82
+      spriteId: aa3b570e9da61714c839d5f2bf3df791
     linkedCells: []
     parentIndex: -1
   platformSettings:

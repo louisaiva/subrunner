@@ -107,22 +107,10 @@ public class ItemBank : MonoBehaviour
     }
 
     // UI_ITEM GENERATOR
-    public GameObject CreateUI_Item(/* Item item = null */)
+    public GameObject CreateUI_Item()
     {
         // on instancie le prefab
         GameObject ui_item = Instantiate(ui_item_prefab, Vector3.zero, Quaternion.identity);
-
-        // we initialize it
-        // ui_item.GetComponent<UI_Item>().Init(this);
-
-        // we assign the item to the UI_Item
-        /* if (item != null)
-        {
-            ui_item.GetComponent<UI_Item>().Store(item);
-        }
-        else { ui_item.GetComponent<UI_Item>().ClearUI(); }
-
-        if (debug) { Debug.Log("(ItemBank) created ui_item : " + item.Reference); } */
 
         return ui_item;
     }
@@ -130,16 +118,6 @@ public class ItemBank : MonoBehaviour
     {
         // we create the module
         GameObject module = Instantiate(ui_module_prefab, Vector3.zero, Quaternion.identity);
-        // UI_Item ui_module = module.GetComponent<UI_Item>();
-
-        // we initialize it
-        // ui_module.Init();
-
-        // we assign the item to the UI_Item
-        /* if (item != null) { ui_module.Store(item); }
-        else { ui_module.ClearUI(); }
-
-        if (debug) { Debug.Log("(ItemBank) created ui_module : " + item.Reference); } */
 
         return module;
     }
@@ -147,12 +125,17 @@ public class ItemBank : MonoBehaviour
     // GETTERS
     public Sprite GetSprite(string item_reference)
     {
-        if (!item_sprites.ContainsKey(item_reference))
+        if (item_reference.Contains("paper:"))
         {
-            Debug.LogError("(ItemBank) cannot find sprite " + item_reference
-                + ". are you sure its corresponding item prefab is in the " + items_path + " folder?");
-            return null;
+            return GetSprite("other:paper");
         }
+
+        if (!item_sprites.ContainsKey(item_reference))
+            {
+                Debug.LogError("(ItemBank) cannot find sprite " + item_reference
+                    + ". are you sure its corresponding item prefab is in the " + items_path + " folder?");
+                return null;
+            }
 
         return item_sprites[item_reference];
     }
