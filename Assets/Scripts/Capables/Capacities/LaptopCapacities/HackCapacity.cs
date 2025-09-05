@@ -81,6 +81,18 @@ public class HackCapacity : Capacity
             // we check if the hack is done
             if (hack.state == HackState.Completed || hack.state == HackState.Failed || hack.state == HackState.Overflowed)
             {
+                if (hack.target is Lockable lockable && hack.state == HackState.Completed)
+                {
+                    // we save the found key in our laptop
+                    Key key = lockable.Key;
+                    if (key != null && !laptop.HasKeyFor(lockable))
+                    {
+                        bool wrote_key = laptop.WriteFile(key);
+                        if (debug && wrote_key) { Debug.Log($"(HackCapacity) {capable.name} found key {key} for {lockable.name} and saved it to its laptop."); }
+                        else if (debug && !wrote_key) { Debug.LogWarning($"(HackCapacity) {capable.name} found key {key} for {lockable.name} but could not save it to its laptop (maybe full storage)."); }
+                    }
+                }
+
                 if (debug) { Debug.Log($"(HackCapacity) {capable.name} finished hacking {hack.target.name} with exploit {hack.name}."); }
                 remove_hack(i);
                 continue;

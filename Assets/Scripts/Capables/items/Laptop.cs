@@ -84,27 +84,14 @@ public class Laptop : Item, Usable
         }
         foreach (Key key in keys)
         {
-            if (key.Matches(target.Key))
+            if (key.Matches(target.Password))
             {
                 return key;
             }
         }
         return null;
     }
-    /* private List<Key> get_keys()
-    {
-        List<Item> cards = Inventory.GetItemsByType<Card>();
-        List<Key> keys = new List<Key>();
-        foreach (Item item in cards)
-        {
-            if (item is not Card card) { continue; }
-            ;
-            if (card.key != null) { keys.Add(card.key); }
-        }
-        return keys;
-    } */
-
-
+    
     // USABLE
     public string UseLabel { get; } = "hack";
     public void Use(Capable user)
@@ -212,6 +199,19 @@ public class Laptop : Item, Usable
         OnDisksChanged?.Invoke(disks);
 
         if (debug) { Debug.Log($"(Laptop) {name} HDD changed. New disks count: {disks.Count}"); }
+    }
+    public bool WriteFile(File file)
+    {
+        // we try to write the file to the first disk that has enough space
+        foreach (StoreCapacity disk in disks)
+        {
+            if (disk.CanStore(file))
+            {
+                disk.Store(file);
+                return true;
+            }
+        }
+        return false;
     }
     public List<StoreCapacity> GetDisks()
     {

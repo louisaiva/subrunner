@@ -10,7 +10,8 @@ public class HackableDoor : Door, Lockable
     [SerializeField] private float locking_interval = 5f; // the time before the door is locked again after being unlocked
     public bool Locked { get; private set; } = true;
     [SerializeField] private Key key; // the key needed to hack this door
-    public string Key => key.data; // the type of key needed to hack this door
+    public Key Key => key; // return the key
+    public string Password => key.data; // return the key password
 
 
     [Header("Hackable")]
@@ -113,8 +114,10 @@ public class HackableDoor : Door, Lockable
         RunningHacks.Remove(hack);
 
         // if the hack was successful we unlock the door
-        if (hack.name == "bruteforce") { Unlock(); }
-        if (hack.name == "dictionary_attack") { Unlock(); }
+        if (hack.name == "bruteforce" || hack.name == "dictionary_attack")
+        {
+            Unlock();
+        }
         if (hack.exploit is FileExploit file_exploit && hack.name == "type_password" && key.Matches(file_exploit.file.data))
         {
             Unlock();
