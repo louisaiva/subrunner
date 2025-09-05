@@ -6,6 +6,30 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
+
+[Serializable] public class PoolTransitionSettings
+{
+    public bool CanBeHidden = true; // if true, the pool can be hidden when switching to another pool
+    public bool CanBeCanceled = false; // if true, the UI_Manager will save the last pool and go back to it with B
+    public bool UsePersoInputs = true; // if true, the UI_Manager will activate the inputs.perso when the pool is showed
+    public float TimeScale = 1f; // time scale when the pool is showed
+    public float BackgroundAlpha = 0f; // alpha of the background when the pool is showed
+
+    public bool StopTime => TimeScale == 0f;
+    public bool HasBackground => BackgroundAlpha > 0f;
+
+    public PoolTransitionSettings(bool can_be_hidden = true, bool can_be_canceled = false, bool use_perso_inputs = true, float time_scale = 1f, float background_alpha = 0f)
+    {
+        CanBeHidden = can_be_hidden;
+        CanBeCanceled = can_be_canceled;
+        UsePersoInputs = use_perso_inputs;
+        TimeScale = time_scale;
+        BackgroundAlpha = background_alpha;
+    }
+    public static PoolTransitionSettings InGameDefault => new PoolTransitionSettings();
+    public static PoolTransitionSettings InMenuDefault => new PoolTransitionSettings(can_be_canceled: true, use_perso_inputs: false, time_scale: 0f, background_alpha: 0.96f);
+}
+
 public class UI_Pool : MonoBehaviour
 {
     [Header("Pool paramaters")]
@@ -14,11 +38,12 @@ public class UI_Pool : MonoBehaviour
     [SerializeField] protected bool in_transition = false;
 
     [Header("Transition parameters")]
-    public bool CanBeHidden = true; // if true, the pool can be hidden when switching to another pool
-    public bool CanBeCanceled = false; // if true, the UI_Manager will switch to hud when pressed & released
-    public bool UsePersoInputs = true; // if true, the UI_Manager will activate the inputs.perso when the pool is showed
-    public bool StopTime = true;
-    public bool HasBackground = true; // if true, the pool has a background effect
+    public PoolTransitionSettings TransitionSettings = PoolTransitionSettings.InGameDefault;
+    // public bool CanBeHidden = true; // if true, the pool can be hidden when switching to another pool
+    // public bool CanBeCanceled = false; // if true, the UI_Manager will switch to hud when pressed & released
+    // public bool UsePersoInputs = true; // if true, the UI_Manager will activate the inputs.perso when the pool is showed
+    // public bool StopTime = true;
+    // public bool HasBackground = true; // if true, the pool has a background effect
     public virtual bool Available => !in_transition;
 
 
@@ -71,7 +96,7 @@ public class UI_Pool : MonoBehaviour
         Showed = true;
 
         // s'il a une activate action, on désactive les inputs.perso
-        if (UsePersoInputs) { InputManager.Instance.inputs.perso.Enable(); }
+        if (TransitionSettings.UsePersoInputs) { InputManager.Instance.inputs.perso.Enable(); }
         else { InputManager.Instance.inputs.perso.Disable(); }
     }
     protected virtual async Awaitable hide_pool(float duration, List<GameObject> dont_hide = null)

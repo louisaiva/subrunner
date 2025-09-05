@@ -1,14 +1,12 @@
 using UnityEngine;
 
-// todo store a PoolTransitionSettings to choose if we want the paper can_be_hidden = true
-// todo or can_be_canceled if we need to show some IF
 
 public class Paper : Item, Usable
 {
 
-
     [Header("Paper parameters")]
     public GameObject prefab = null;
+    public PoolTransitionSettings transition_settings = PoolTransitionSettings.InMenuDefault;
 
 
     // USABLE

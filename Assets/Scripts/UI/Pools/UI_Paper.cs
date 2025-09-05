@@ -11,6 +11,8 @@ public class UI_Paper : UI_Pool
     public void SetPaper(Paper paper)
     {
         this.paper = paper;
+        this.TransitionSettings = paper.transition_settings;
+
         content = Instantiate(paper.prefab, transform);
         if (content == null) { return; }
 

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class UI_ItemRenderer : MonoBehaviour
 {
     [Header("UI_Item Target")]
-    [SerializeField] private UI_Item target;
+    public UI_Item Target;
 
     [Header("Components")]
     [SerializeField] private Image item;
@@ -14,26 +14,43 @@ public class UI_ItemRenderer : MonoBehaviour
 
     private void Awake()
     {
-        if (target == null)
+        if (Target == null)
         {
-            Debug.LogError("(UI_ItemRenderer) Target is not set on " + name);
+            Debug.LogWarning("(UI_ItemRenderer) Target is not set on " + name);
             return;
         }
 
         // subscribe to the event
-        target.OnItemChanged += UpdateItemDisplay;
+        Target.OnItemChanged += UpdateItemDisplay;
     }
-
     private void UpdateItemDisplay(List<Item> items)
     {
-        if (target == null) return;
+        if (Target == null) { return; }
 
-        item.sprite = target.ItemSprite;
+        item.sprite = Target.ItemSprite;
         if (item.sprite == null) { item.color = Color.clear; }
         else { item.color = Color.white; }
 
         // we show or hide the text
-        qty.text = target.Quantity.ToString();
-        qty.gameObject.SetActive(target.Quantity > 1);
+        qty.text = Target.Quantity.ToString();
+        qty.gameObject.SetActive(Target.Quantity > 1);
+    }
+
+    // SETTING NEW TARGET
+    public void SetTarget(UI_Item new_Target)
+    {
+        // we unsubscribe from the old Target
+        if (Target != null)
+        {
+            Target.OnItemChanged -= UpdateItemDisplay;
+        }
+
+        // we set the new Target
+        Target = new_Target;
+        if (Target == null) { return; }
+
+        // we subscribe to the new Target
+        Target.OnItemChanged += UpdateItemDisplay;
+        UpdateItemDisplay(Target.GetItems()); // we update the display
     }
 }

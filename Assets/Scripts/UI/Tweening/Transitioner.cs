@@ -79,7 +79,7 @@ public class Transitioner : MonoBehaviour
     // SHOW / HIDE
     public async Awaitable Show(float duration = -99f)
     {
-        if (Shown)
+        if (Shown && !Tweening)
         {
             if (log) { Debug.Log($"(Transitioner) {name} is already shown, no need to transition"); }
             return;
@@ -91,7 +91,7 @@ public class Transitioner : MonoBehaviour
     }
     public async Awaitable Hide(float duration = -99f)
     {
-        if (Hidden)
+        if (Hidden && !Tweening)
         {
             if (log) { Debug.Log($"(Transitioner) {name} is already hidden, no need to transition"); }
             return;
@@ -104,6 +104,7 @@ public class Transitioner : MonoBehaviour
     public bool Shown => get_current_value() >= shown_value;
     public bool Hidden => get_current_value() <= hidden_value;
     public bool Transitioning => !Shown && !Hidden;
+    public bool Tweening => tween != null && tween.Value.isAlive;
 
     // TWEENING
     private Tween? tween = null;

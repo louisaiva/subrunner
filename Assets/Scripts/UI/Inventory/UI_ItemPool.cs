@@ -15,7 +15,6 @@ using UnityEngine.UI;
 public class UI_ItemPool : MonoBehaviour
 {
     [Header("Item Pool Parameters")]
-    // public bool Faded = false;
     public int MaxSlots = 9; // the maximum number of slots in the pool
     public int MinSlots = 0;
     public bool Scalable = false; // if true, the pool will dynamically add/remove slots
@@ -85,6 +84,14 @@ public class UI_ItemPool : MonoBehaviour
         }
     }
 
+    // POOL EVENTS
+    public event Action<UI_Item> OnPoolChanged = delegate { };
+    public void NotifyPoolChanged(UI_Item ui_item)
+    {
+        OnPoolChanged.Invoke(ui_item);
+    }
+
+
     // RULE CHECK
     public bool CanStore(Item item)
     {
@@ -153,7 +160,7 @@ public class UI_ItemPool : MonoBehaviour
                 // we check if the slot is empty & we are scalable
                 if (ui_item.Quantity == 0 && Scalable)
                 {
-                    // we destroy the item
+                    // we destroy the ui_item
                     Destroy(ui_item.gameObject);
                     ui_items.Remove(ui_item);
                     if (Count < MinSlots) { CreateEmptySlots(MinSlots - Count); }
@@ -164,6 +171,7 @@ public class UI_ItemPool : MonoBehaviour
 
         return false;
     }
+
 
     // DESTROY / CREATE EMPTY ITEM SLOT
     public void DestroyEmptySlots()
@@ -288,4 +296,6 @@ public class UI_ItemPool : MonoBehaviour
         }
         return items;
     }
+
+
 }

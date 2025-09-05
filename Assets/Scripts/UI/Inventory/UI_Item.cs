@@ -81,6 +81,7 @@ public class UI_Item : UI_Slot
         if (Quantity == 1) { setItem(item); }
 
         OnItemChanged?.Invoke(items);
+        ItemPool?.NotifyPoolChanged(this);
 
         return true;
     }
@@ -99,6 +100,7 @@ public class UI_Item : UI_Slot
         if (Quantity == 0) { ClearUI(); }
 
         OnItemChanged?.Invoke(items);
+        ItemPool?.NotifyPoolChanged(this);
         return true;
     }
     public void Clear()
@@ -129,6 +131,7 @@ public class UI_Item : UI_Slot
         update_ui_qty();
 
         OnItemChanged?.Invoke(this.items);
+        ItemPool?.NotifyPoolChanged(this);
     }
     public List<Item> GetItems()
     {
@@ -255,6 +258,7 @@ public class UI_Item : UI_Slot
         {
             inventory_to_drop.Grab(item);
             OnItemChanged?.Invoke(this.items);
+            ItemPool?.NotifyPoolChanged(this);
             return;
         }
 
@@ -266,6 +270,7 @@ public class UI_Item : UI_Slot
             dropper.Select(item);
             inventory.capable.Do("drop");
             OnItemChanged?.Invoke(this.items);
+            ItemPool?.NotifyPoolChanged(this);
 
             // we switch back to hud
             GameObject.Find("/ui").GetComponent<UI_Manager>().SwitchTo("hud");
@@ -275,6 +280,7 @@ public class UI_Item : UI_Slot
             // the inventory simply drops the item (we may be in a chest)
             inventory.Drop(item);
             OnItemChanged?.Invoke(this.items);
+            ItemPool?.NotifyPoolChanged(this);
         }
     }
 
