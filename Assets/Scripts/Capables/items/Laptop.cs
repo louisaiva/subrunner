@@ -6,25 +6,11 @@ using UnityEngine;
 
 public class Laptop : Item, Usable
 {
-    [Header("Cores management")]
-    [SerializeField] protected int max_cores = 0;
-    private Dictionary<Hack, int> used_cores = new Dictionary<Hack, int>(); // store the nb of cores used per hack
-    public int FreeCoresCount
-    {
-        get
-        {
-            int free_cores = max_cores;
-            foreach (KeyValuePair<Hack, int> kvp in used_cores)
-            {
-                free_cores -= kvp.Value;
-            }
-            return free_cores;
-        }
-    }
-    public int MaxCores => max_cores;
-    public int UsedCoresCount => max_cores - FreeCoresCount;
-    // public event System.Action<int> OnCoresChange = delegate { };
-    public event System.Action<int> OnCoresFreedOrUsed = delegate { };
+    [Header("Processor")]
+    public ProcessCapacity Processor { get {
+        if (processor == null) { processor = GetCapacity<ProcessCapacity>(); }
+        return processor; }}
+    private ProcessCapacity processor;
 
     [Header("Disks")]
     [SerializeField] private List<StoreCapacity> disks;
@@ -32,38 +18,6 @@ public class Laptop : Item, Usable
 
     [Header("Logs")]
     [SerializeField] protected bool log_keys = false;
-
-
-    // CORES MANAGEMENTS
-    public bool HasFreeCores(int amount = 1)
-    {
-        return FreeCoresCount >= amount;
-    }
-    public void UseCores(Hack hack)
-    {
-        // we add the hack to the used cores
-        used_cores[hack] = hack.exploit.cores_cost;
-        if (debug) { Debug.Log($"(Laptop) {name} using {hack.exploit.cores_cost} cores"); }
-
-        OnCoresFreedOrUsed?.Invoke(hack.exploit.cores_cost);
-        if (FreeCoresCount < 0)
-        {
-            Debug.LogWarning($"(Laptop) {name} has a core overflow !!!");
-            return;
-        }
-    }
-    public void FreeCores(Hack hack)
-    {
-        if (!used_cores.ContainsKey(hack))
-        {
-            if (debug) { Debug.LogWarning($"(Laptop) {name} tried to free cores for a hack that is not running: {hack.name}"); }
-            return;
-        }
-
-        if (debug) { Debug.Log($"(Laptop) {name} freeing {hack.exploit.cores_cost} cores"); }
-        used_cores.Remove(hack);
-        OnCoresFreedOrUsed?.Invoke(-hack.exploit.cores_cost);
-    }
 
     // KEYS MANAGEMENT
     public bool HasKeyFor(Lockable target)
@@ -106,40 +60,6 @@ public class Laptop : Item, Usable
 
         // we use the hack capacity
         hack_capacity.Use(user);
-    }
-
-    // GRABBING PROCESSOR MODULE
-    // todo : i think it is better to have a ProcessCapacity that handles cores & etc
-    public void OnCPU_Changed()
-    {
-        // we check how many cpu modules we have in our inventory
-        List<Item> cpus = Inventory.GetItemsByRule("module:cpu");
-        int new_max_cores = cpus.Count * 2; // each cpu provides 2 cores
-
-        if (debug) { Debug.Log($"(Laptop) {name} CPU changed. New max cores: {new_max_cores} / old cores: {max_cores}"); }
-
-        // check the difference between current and next max_cores
-        if (new_max_cores >= max_cores) { set_new_max_cores(new_max_cores); return; }
-
-        // if we have less cores, it's ok if we have have enough free cores left
-        if (FreeCoresCount >= max_cores - new_max_cores) { set_new_max_cores(new_max_cores); return; }
-
-        // otherwise we need to free some used cores
-        while (FreeCoresCount < max_cores - new_max_cores)
-        {
-            // we free the first hack in the list
-            Hack first_hack = used_cores.Keys.First();
-            first_hack.Overflow();
-            FreeCores(first_hack);
-        }
-
-        // finally we set the new max_cores
-        set_new_max_cores(new_max_cores);
-    }
-    private void set_new_max_cores(int new_max_cores)
-    {
-        max_cores = new_max_cores;
-        // OnCoresChange?.Invoke(new_max_cores);
     }
 
     // GRABBING HACK MODULE & NETWORK MODULE
@@ -246,7 +166,6 @@ public class Laptop : Item, Usable
 public class Key : File
 {
     public string key_type; // SHA, AES, RSA
-    // public string key;
 
     public Key(string type, string key)
     {

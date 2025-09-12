@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+// using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -110,7 +110,7 @@ public class HackCapacity : Capacity
         hackrays.Remove(hack);
 
         // we free the cores used by the hack
-        if (hack.state != HackState.Overflowed) { laptop.FreeCores(hack); }
+        if (hack.state != HackState.Overflowed) { laptop.Processor.FreeCores(hack); }
 
         // we remove the hack from the running hacks
         running_hacks.RemoveAt(hack_index);
@@ -145,7 +145,7 @@ public class HackCapacity : Capacity
         Exploit exploit = selected_exploit;
 
         // we check if our laptop has enough cores for this exploit
-        if (!laptop.HasFreeCores(exploit.cores_cost))
+        if (!laptop.Processor.HasFreeCores(exploit.cores_cost))
         {
             if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack {target.name} but has no free cores for exploit {exploit.name}."); }
             return;
@@ -164,7 +164,7 @@ public class HackCapacity : Capacity
         hack.Run(duration);
 
         // we occupy some cores for the hack duration
-        laptop.UseCores(hack);
+        laptop.Processor.UseCores(hack);
 
         // we add the hack to the running hacks
         running_hacks.Add(hack);
@@ -271,167 +271,3 @@ public class HackCapacity : Capacity
 }
 
 
-
-
-[System.Serializable]
-public class Hack
-{
-    [Header("Hack Details")]
-    public float progress;
-    public Connection tunnel;
-    public Exploit exploit;
-    public float duration;
-    public HackState state = HackState.NotStarted;
-    public Hackable target => tunnel.target;
-    public string name => exploit.name;
-
-    // CONSTRUCTOR
-    public Hack(Connection tunnel, Exploit exploit)
-    {
-        this.tunnel = tunnel;
-        this.exploit = exploit;
-        this.progress = 0f;
-    }
-
-    // RUN , PROCESS & FINISH
-    public void Run(float duration)
-    {
-        // open the tunnel
-        tunnel.Open();
-
-        // run the hack
-        this.duration = duration;
-        state = HackState.Running;
-        Debug.Log($"Starting hack on {target.name} with exploit {exploit.name}");
-    }
-    public void Process()
-    {
-        // checks if the tunnel is still open
-        if (tunnel.state != ConnectionState.Opened)
-        {
-            Debug.LogWarning($"Hack on {target.name} with exploit {exploit.name} was interrupted because the tunnel was closed");
-            Fail();
-            return;
-        }
-
-        // we update the progress of the hack
-        progress += Time.deltaTime / duration * 100f;
-
-        // we check if the hack is done
-        if (progress >= 100f) { Finish(); }
-    }
-    public void Finish()
-    {
-        // we check if the hackable is vulnerable to the exploit
-        if (name == "nmap" || target.IsVulnerableTo(exploit)) { Complete(); }
-        else { Fail(); }
-    }
-
-    // FAIL & COMPLETE
-    public void Fail()
-    {
-        // the hack has failed :///
-        Debug.Log($"Hack on {target.name} with exploit {exploit.name} was quit.");
-        this.state = HackState.Failed;
-
-        // we close the connection
-        tunnel.Close();
-
-        // Notify the target that the hack is failed
-        target.OnHackFailed(this);
-    }
-    public void Complete()
-    {
-        // the hack is successful !!
-        Debug.Log($"Hack on {target.name} with exploit {exploit.name} completed successfully.");
-        this.progress = 100f;
-        this.state = HackState.Completed;
-
-        // we close the connection
-        tunnel.Close();
-
-        // Notify the target that the hack is completed
-        target.OnHackCompleted(this);
-    }
-    public void Overflow()
-    {
-        // the hack has overflowed :///
-        Debug.LogWarning($"Hack on {target.name} with exploit {exploit.name} has overflowed. Freeing cores.");
-        this.state = HackState.Overflowed;
-
-        // we close the connection
-        tunnel.Close();
-
-        // Notify the target that the hack is failed
-        target.OnHackFailed(this);
-    }
-
-    // GETTERS
-    public float CalculateDuration(float duration_multiplier = 2.25f)
-    {
-        float duration = exploit.base_duration;
-        int security_level_difference = target.SecurityLevel - exploit.security_level;
-
-        // checks if the difference is > 100
-        if (security_level_difference > 100) { return 1000f; }
-        else if (security_level_difference < -1000) { return 0.1f; }
-
-        // multiply the duration by multiplier once for eache security level difference
-        if (security_level_difference > 0) { duration_multiplier = 1 / duration_multiplier; }
-        for (int i = 0; i < security_level_difference; ++i)
-        {
-            duration *= duration_multiplier;
-        }
-        return duration;
-    }
-}
-
-public enum HackState
-{
-    NotStarted,
-    Running,
-    Completed,
-    Failed,
-    Overflowed
-}
-
-[System.Serializable]
-public class Exploit : File
-{
-    public static readonly Exploit Nmap = new Exploit("nmap", 1000, 0.1f, 1);
-    public static readonly Exploit TypePassword = new Exploit("type_password", 1000, 0.1f, 1);
-
-    [Header("Exploit Details")]
-    // public string name;
-    public int security_level;
-    public float base_duration;
-    public int cores_cost;
-
-    // CONSTRUCTOR
-    public Exploit(string name, int security_level, float base_duration, int cores_cost)
-    {
-        this.extension = ".exe"; // default extension for exploits
-        this.name = name;
-        this.security_level = security_level;
-        this.base_duration = base_duration;
-        this.cores_cost = cores_cost;
-    }
-    public Exploit(Exploit exploit, float base_duration = default)
-    {
-        this.extension = exploit.extension;
-        this.name = exploit.name;
-        this.security_level = exploit.security_level;
-        this.base_duration = base_duration == default ? exploit.base_duration : base_duration;
-        this.cores_cost = exploit.cores_cost;
-    }
-}
-
-[System.Serializable]
-public class FileExploit : Exploit
-{
-    public File file;
-    public FileExploit(Exploit exploit, File file) : base(exploit)
-    {
-        this.file = file;
-    }
-}

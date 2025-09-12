@@ -118,7 +118,7 @@ public class HackableDoor : Door, Lockable
         {
             Unlock();
         }
-        if (hack.exploit is FileExploit file_exploit && hack.name == "type_password" && key.Matches(file_exploit.file.data))
+        if (hack.program is FileExploit file_exploit && hack.name == "type_password" && key.Matches(file_exploit.file.data))
         {
             Unlock();
         }

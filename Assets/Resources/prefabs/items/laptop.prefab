@@ -196,7 +196,8 @@ MonoBehaviour:
   MaxQty: 1
   ItemDescription: cuty little laptop !!! cannot run minecraft unfortunately/.but
     certainly doom !
-  max_cores: 4
+  Processor: {fileID: 0}
+  disks: []
   log_keys: 0
 --- !u!1 &3618464003426445101
 GameObject:
@@ -207,6 +208,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3076745471474001668}
+  - component: {fileID: 8034655934512483449}
   m_Layer: 0
   m_Name: processor
   m_TagString: Untagged
@@ -229,6 +231,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6784830890958932939}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8034655934512483449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3618464003426445101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 238070cd3fa6d4b4ea552679068b6213, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldown: 0
+  debug: 0
 --- !u!1 &7128561092171830049
 GameObject:
   m_ObjectHideFlags: 0

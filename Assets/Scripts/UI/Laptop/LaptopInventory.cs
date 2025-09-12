@@ -23,7 +23,7 @@ public class LaptopInventory : Inventory
         OnItemGrabbed += HandleModuleGrabbed;
         OnItemDropped += HandleModuleDropped;
         base.Start();
-        (capable as Laptop).OnCPU_Changed();
+        (capable as Laptop).Processor.OnCPU_Changed();
     }
 
     // GRAB DROP REMOVE
@@ -108,7 +108,7 @@ public class LaptopInventory : Inventory
         switch (item.Reference)
         {
             case "module:cpu":
-                (capable as Laptop).OnCPU_Changed();
+                (capable as Laptop).Processor.OnCPU_Changed();
                 break;
             case "module:hdd":
                 (capable as Laptop).OnHDD_Changed();

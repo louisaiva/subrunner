@@ -86,7 +86,7 @@ public class HackableNavigator : MonoBehaviour
         }
 
         // check if we have the required cores
-        if (!laptop.HasFreeCores(exploit.cores_cost))
+        if (!laptop.Processor.HasFreeCores(exploit.cores_cost))
         {
             hover_hackray.SetColor(no_cores_hackray_color);
             return;

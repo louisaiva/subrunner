@@ -19,10 +19,10 @@ public class UI_HackInfo : MonoBehaviour
     public void Init(Hack hack)
     {
         this.hack = hack;
-        cores_cost.text = hack.exploit.cores_cost.ToString();
-        cores_cost.gameObject.SetActive(hack.exploit.cores_cost > 1);
+        cores_cost.text = hack.cost.ToString();
+        cores_cost.gameObject.SetActive(hack.cost > 1);
         progress.sizeDelta = new Vector2(0, progress.sizeDelta.y);
-        label.text = hack.exploit.name;
+        label.text = hack.name;
     }
 
     // UPDATE

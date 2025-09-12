@@ -52,7 +52,7 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
         // we remove old laptop callbacks
         if (laptop != null)
         {
-            laptop.OnCoresFreedOrUsed -= update_free_used_cores;
+            laptop.Processor.OnCoresFreedOrUsed -= update_free_used_cores;
             (laptop.Inventory as LaptopInventory).OnModuleChanged -= HandleModuleChanged;
         }
 
@@ -68,25 +68,25 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
         // otherwise we have a new laptop, we get components and register callbacks
         laptop = items[0] as Laptop;
         (laptop.Inventory as LaptopInventory).OnModuleChanged += HandleModuleChanged;
-        laptop.OnCoresFreedOrUsed += update_free_used_cores;
+        laptop.Processor.OnCoresFreedOrUsed += update_free_used_cores;
 
         // we update the cores count
-        UpdateCoresCount(laptop.MaxCores);
+        UpdateCoresCount(laptop.Processor.MaxCores);
 
         // we update the colors
         free_them_all();
-        update_free_used_cores(laptop.UsedCoresCount);
+        update_free_used_cores(laptop.Processor.UsedCoresCount);
     }
     private void HandleModuleChanged(Item item)
     {
         if (item == null || item.Reference != "module:cpu") { return; } // we only want to update if this is a cpu
 
         // we update the cores count
-        UpdateCoresCount(laptop.MaxCores);
+        UpdateCoresCount(laptop.Processor.MaxCores);
 
         // we update the colors
         free_them_all();
-        update_free_used_cores(laptop.UsedCoresCount);
+        update_free_used_cores(laptop.Processor.UsedCoresCount);
     }
 
     // CORES COUNT MANAGEMENT
