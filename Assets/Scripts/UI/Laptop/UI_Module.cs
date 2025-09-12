@@ -12,6 +12,8 @@ public class UI_Module : UI_Item
     [SerializeField] private TextMeshProUGUI helper_text;
     [SerializeField] private Color drag_hover_color = new Color(0.2f, 0.2f, 0.2f, 0.5f);
 
+    public override int MaxQty => 1; // modules are not stackable when showed on a motherboard
+
     // AWAKE
     public override void Init()
     {
@@ -126,9 +128,6 @@ public class UI_Module : UI_Item
         if (Item == null) { icon_ref = "screw"; }
         else if (Reference == moving_ui_item.Reference && Quantity < MaxQty) { icon_ref = "upgrade"; }
         else { icon_ref = "switch"; }
-        /* Sprite switch_icon = (Item != null && Reference == moving_ui_item.Reference && Quantity < MaxQty)
-            ? bank.GetUI_Icon("merge")
-            : bank.GetUI_Icon("switch"); */
         set_icon(icon_ref);
     }
     private void set_icon(string icon_ref)

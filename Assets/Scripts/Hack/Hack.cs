@@ -8,11 +8,9 @@ public class Hack : Processus
     [Header("Hack Details")]
     public float progress;
     public Connection tunnel;
-    // public Exploit exploit;
     public float duration;
     public HackState state = HackState.NotStarted;
     public Hackable target => tunnel.target;
-    // public string name => exploit.name;
 
     // CONSTRUCTOR
     public Hack(Connection tunnel, Exploit exploit) : base(exploit)

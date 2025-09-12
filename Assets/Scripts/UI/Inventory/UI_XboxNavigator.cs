@@ -789,6 +789,19 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         {
             merge_items(moving_ui_item, destination); // ce sont les mêmes items, on peut alors les merge ensemble
         }
+        else if (destination is UI_Module ui_module
+            && moving_ui_item is not UI_Module
+            && moving_ui_item.Quantity > 1)
+        {
+            split_items(ui_module, moving_ui_item); // on split l'item
+        }
+        else if (moving_ui_item is UI_Module ui_module2
+            && destination is not UI_Module
+            && destination.Quantity > 1)
+        {
+            split_items(ui_module2, destination); // on split l'item
+        }
+        // { } // on ne fait rien -> break en qq sorte
         else { switch_items(moving_ui_item, destination); }
 
         // on met à jour les slots
@@ -973,6 +986,46 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         {
             inventory1.Grab(item, uis_to_ignore); // pareil
         }
+    }
+    private void split_items(UI_Module ui_module, UI_Item ui_item)
+    {
+        // on vérifie que y'a pas déjà un module installé (sinon ça va tout kc)
+        // todo : faire en sorte que si un module est déjà installé il est juste drop dans l'inventaire et ça
+        // todo : switch quand mm le 1er module
+        if (ui_module.Item != null)
+        {
+            if (debug)
+            {
+                Debug.LogWarning($"(UI_Navigator) cannot split items from {ui_item.gameObject.name} to {ui_module.gameObject.name} because it already has a module installed.");
+            }
+            return;
+        }
+
+        // on récupère le 1er item de ui_item sous la forme d'une liste
+        Item item_to_move = ui_item.Item;
+        List<Item> remaining_items = ui_item.GetItems();
+        remaining_items.Remove(item_to_move);
+
+        // on echange les items
+        ui_module.SwitchItems(new List<Item>() { item_to_move });
+        ui_item.SwitchItems(remaining_items);
+
+        // on regarde si on est dans deux inventaires différents
+        Inventory ui_item_inv = ui_item.Inventory;
+        Inventory ui_module_inv = ui_module.Inventory;
+        if (ui_item_inv == null || ui_module_inv == null)
+        {
+            if (debug)
+            {
+                Debug.Log($"(UI_Navigator) switched items between {ui_item.gameObject.name} "
+            + $"and {ui_module.gameObject.name} but at least one inventory is null : {ui_item_inv?.capable.name} and {ui_module_inv?.capable.name}");
+            }
+            return;
+        }
+        if (ui_item_inv == ui_module_inv) { return; } // we stay inside the same inventory so no need to update Items's inventories
+
+        List<UI_Inventory> uis_to_ignore = new List<UI_Inventory>() { ui_item.ItemPool.UI_Inventory, ui_module.ItemPool.UI_Inventory };
+        ui_module_inv.Grab(item_to_move, uis_to_ignore); // on ignore les ui_inventory parce qu'ils ont déjà été grab dans ces UI_Inventory
     }
     private void merge_items(UI_Item item1, UI_Item item2)
     {

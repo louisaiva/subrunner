@@ -20,7 +20,7 @@ public class UI_Item : UI_Slot
     [Header("Item Stacking")]
     public TextMeshProUGUI quantity_text;
     public bool Stackable { get => MaxQty > 1; }
-    public int MaxQty { get => items.Count > 0 ? items[0].MaxQty : 1; }
+    public virtual int MaxQty { get => items.Count > 0 ? items[0].MaxQty : 1; }
     public int Quantity { get => items.Count; }
 
     [Header("Components")]
