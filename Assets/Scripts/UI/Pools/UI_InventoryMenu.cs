@@ -22,15 +22,18 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     [SerializeField] private ButtonFeedback use_feedback;
     [SerializeField] private ButtonFeedback move_feedback;
 
+    [Header("Components")]
+    public Descriptor Descriptor;
+
     // AWAKE START
     protected void Awake()
     {
-        
+
         if (ui_inventory == null)
         {
             Debug.LogError("(UI_InventoryMenu) missing ui_inventory on " + name);
         }
-        
+
         if (ui_laptop == null)
         {
             Debug.LogError("(UI_InventoryMenu) missing ui_laptop on " + name);

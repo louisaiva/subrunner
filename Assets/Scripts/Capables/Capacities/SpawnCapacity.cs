@@ -27,18 +27,23 @@ public class SpawnCapacity : Capacity
     // USE
     public override void Use(Capable capable)
     {
-        base.Use(capable);
+        // we spawn the entity
         if (entity_prefab == null) { return; }
+        Spawn(Instantiate(entity_prefab));
+    }
+    public void Spawn(GameObject entity)
+    {
+        capable.anim_player.Play(name);
 
-        // we get the spawn position
+        // we get a random spawn position
         Vector2 spawn_position = transform.parent.position + ((Vector3)local_spawn_position);
         if (spawn_radius > 0)
         {
             spawn_position += Random.insideUnitCircle * spawn_radius;
         }
 
-        // we spawn the entity
-        GameObject entity = Instantiate(entity_prefab, spawn_position, Quaternion.identity);
+        // we apply the position & parent to entity
+        entity.transform.position = spawn_position;
         if (entity_parent != null)
         {
             entity.transform.parent = entity_parent;
@@ -55,11 +60,11 @@ public class SpawnCapacity : Capacity
         }
 
         if (debug) { Debug.Log("(SpawnCapacity) " + name + " spawning entity at " + spawn_position + force_debug); }
-
     }
 
+
     // UPDATE
-    new void Update()
+    protected override void Update()
     {
         if (spawn_rate == 0f) { return; }
 

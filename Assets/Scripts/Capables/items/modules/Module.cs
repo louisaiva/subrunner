@@ -2,74 +2,97 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/// <summary>
+/// Hardware item that can be installed on a motherboard
+/// can be upgraded and merged with other same reference modules
+/// at the beginning every module has all its upgrades, but they are on tier 0 (or 1?)
+/// </summary>
 public class Module : Item
 {
 
+    [Header("Upgrades")]
     [SerializeField] private List<ModuleUpgrade> upgrades = new List<ModuleUpgrade>();
     public List<ModuleUpgrade> Upgrades => upgrades;
 
+    // UPGRADING
     public void MergeWith(Module other)
     {
         // check if we can merge
         if (other == null) { return; }
         if (other.Reference != Reference) { return; }
+        if (other.Upgrades.Count != Upgrades.Count) { return; }
 
         // we merge the upgrades
-        add_upgrades(other.Upgrades);
-        upgrade(); // apply random upgrade
+        for (int i = 0; i < upgrades.Count; i++)
+        {
+            upgrades[i].tier += other.Upgrades[i].tier;
+        }
+
+        // apply random upgrade
+        Upgrade();
         Destroy(other.gameObject);
     }
-
-    // UPGRADING
-    protected void upgrade()
+    public void Upgrade()
     {
-        // we get a random upgrade from the bank
-        ModuleUpgrade upgrade = ModuleUpgradeBank.Instance.GetRandomUpgrade(this);
-        if (upgrade == null) { return; }
+        // we get a random upgrade
+        ModuleUpgrade upgrade = upgrades[UnityEngine.Random.Range(0, upgrades.Count)];
+        upgrade.Upgrade();
+        if (debug) { Debug.Log($"(Module) {name} upgraded {upgrade.name} to tier {upgrade.tier}"); }
+    }
+    public bool HasSameUpgrades(Module other)
+    {
+        if (other == null) { return false; }
+        if (other.Upgrades.Count != Upgrades.Count) { return false; }
 
-        // we check if we already have a same name upgrade
-        foreach (ModuleUpgrade u in upgrades)
+        for (int i = 0; i < upgrades.Count; i++)
         {
-            if (u.name != upgrade.name) { continue; }
-
-            // we upgrade the current upgrade by one tier
-            u.tier += upgrade.tier;
-            if (debug) { Debug.Log($"(Module) {name} upgraded {u.name} to tier {u.tier}"); }
-            return;
+            if (other.Upgrades[i].tier != Upgrades[i].tier) { return false; }
         }
 
-        // we add the new upgrade
-        upgrades.Add(upgrade);
-        if (debug) { Debug.Log($"(Module) {name} added new upgrade {upgrade.name}"); }
+        return true;
     }
-
-    protected void add_upgrades(List<ModuleUpgrade> new_upgrades)
-    {
-        foreach (ModuleUpgrade new_upgrade in new_upgrades)
-        {
-            bool found = false;
-            foreach (ModuleUpgrade u in upgrades)
-            {
-                if (u.name != new_upgrade.name) { continue; }
-
-                // we upgrade the current upgrade by one tier
-                u.tier += new_upgrade.tier;
-                found = true;
-                if (debug) { Debug.Log($"(Module) {name} merged upgrade {u.name} to tier {u.tier}"); }
-                break;
-            }
-            if (!found)
-            {
-                upgrades.Add(new_upgrade);
-                if (debug) { Debug.Log($"(Module) {name} added new upgrade {new_upgrade.name}"); }
-            }
-        }
-    }
-
 }
 
-[Serializable] public class ModuleUpgrade
+[Serializable]
+public class ModuleUpgrade
 {
     public string name = "upgrade";
     public int tier = 1;
+    public int effect = 1; // generic effect value
+    public string effect_unit = ""; // unit of the effect (%, MB, units, etc)
+
+    public virtual void Upgrade()
+    {
+        tier++;
+
+        if (name == "storage capacity")
+        {
+            effect = 4096 + 1024 * tier; // in MB
+            if (tier >= 3) { effect = 8192 + 2048 * (tier - 3); }
+        }
+        else if (name == "hack range")
+        {
+            effect = tier + 1; // in number of unity units
+        }
+        else if (name == "cores")
+        {
+            effect = 2 * (tier + 1); // in number of cores
+        }
+        else if (name == "process speed")
+        {
+            effect = 100;
+            if (tier == 1) { effect = 110; }
+            else if (tier == 2) { effect = 125; }
+            else if (tier == 3) { effect = 145; }
+            else if (tier > 3) { effect = 145 + 20 * (tier - 3); }
+        }
+        else if (name == "bruteforce speed"
+                || name == "overheat damage"
+                || name == "ddos army speed")
+        {
+            effect = 100 + 25 * tier; // in percentage
+            if (tier >= 3) { effect = 200 + 50 * (tier - 3); }
+        }
+    }
 }

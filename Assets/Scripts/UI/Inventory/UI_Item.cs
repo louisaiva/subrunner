@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -57,6 +58,12 @@ public class UI_Item : UI_Slot
 
         // we check if the item is the same
         if (Reference != item.Reference) { return false; }
+
+        // we check if they are modules and have the same upgrades
+        if (item is Module module && Item is Module current_module)
+        {
+            if (!module.HasSameUpgrades(current_module)) { return false; }
+        }
 
         // we check if the item is full
         if (Quantity >= MaxQty) { return false; }
@@ -201,18 +208,16 @@ public class UI_Item : UI_Slot
     public override void OnPointerEnter(PointerEventData eventData)
     {
         base.OnPointerEnter(eventData);
+        update_description();
+    }
+    protected void update_description()
+    {
+        // we check if the current ui_pool has a descriptor or not
+        if (UI_Manager.Instance.CurrentPool != "inventory") { return; }
 
-        string description = "";
-        if (Quantity == 0) { description = "empty slot"; }
-        else if (items.Count > 0) { description = items[0].Reference + "\n\n" + items[0].ItemDescription; }
-
-        // on met à jour la description si y'en a une
-        if (transform.parent.GetComponent<UI_ItemPool>() != null
-        && transform.parent.GetComponent<UI_ItemPool>().Descriptor != null)
-        {
-            Description descriptor = transform.parent.GetComponent<UI_ItemPool>().Descriptor;
-            descriptor.SetDescription(description);
-        }
+        // we get the descriptor
+        UI_InventoryMenu menu = UI_Manager.Instance.GetPool("inventory").GetComponent<UI_InventoryMenu>();
+        menu.Descriptor.SetDescription(this);
     }
     public override void OnPointerClick(PointerEventData eventData)
     {

@@ -31,7 +31,7 @@ public class UI_ItemPool : MonoBehaviour
 
     [Header("Components")]
     [SerializeField] protected ItemBank bank;
-    public Description Descriptor; // the description of the item pool
+    // public Description Descriptor; // the description of the item pool
     public UI_Inventory UI_Inventory;
     protected CanvasGroup group;
 

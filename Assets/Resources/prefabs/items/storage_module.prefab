@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2169159139948925219}
   - component: {fileID: 4670902637708375457}
   - component: {fileID: 6370445202854426511}
-  - component: {fileID: 2464185202911991160}
+  - component: {fileID: 1974956459245711005}
   m_Layer: 24
   m_Name: storage_module
   m_TagString: Item
@@ -162,7 +162,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &2464185202911991160
+--- !u!114 &1974956459245711005
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -171,7 +171,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2668548537690662769}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21b1e91dfac8ace4aabb5aed796039e2, type: 3}
+  m_Script: {fileID: 11500000, guid: 9bef9cbcc43652b428fb6a3f79b7170a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   inputs: {x: 0, y: 0}
@@ -191,8 +191,13 @@ MonoBehaviour:
   Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 0}
   Reference: module:hdd
-  MaxQty: 4
+  MaxQty: 16
   ItemDescription: numeric memory. adds module slots to your laptop
+  upgrades:
+  - name: storage capacity
+    tier: 0
+    effect: 4096
+    effect_unit: o
 --- !u!1 &4530846955962049071
 GameObject:
   m_ObjectHideFlags: 0

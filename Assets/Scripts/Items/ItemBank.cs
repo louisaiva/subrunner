@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class ItemBank : MonoBehaviour
+public class ItemBank : Singleton<ItemBank>
 { 
 
     [Header("Item Bank")]
@@ -30,9 +30,11 @@ public class ItemBank : MonoBehaviour
     public bool debug = false;
 
 
-    // constructor
-    void Awake()
+    // AWAKE & LOADING
+    protected override void Awake()
     {
+        base.Awake();
+
         // on vérifie qu'on a un prefab pour l'UI
         if (ui_item_prefab == null)
         {
@@ -43,7 +45,7 @@ public class ItemBank : MonoBehaviour
         loadItems();
         Debug.Log(getItemsList());
     }
-    public void init(Sprite[] fake_sprites) {}
+    /* public void init(Sprite[] fake_sprites) {} */
     public void loadItems()
     {
         int item_count = 0;
@@ -82,29 +84,71 @@ public class ItemBank : MonoBehaviour
         if (debug) { Debug.Log("(ItemBank) loaded " + item_count + " items"); }
     }
 
-    // ITEM GENERATOR
-    public GameObject CreateItem(string item_name)
+
+
+    // ITEM & MODULES GENERATOR
+    public Module CreateModule(string reference)
     {
-        // on récupère le prefab de l'item
-        if (!item_prefabs.ContainsKey(item_name))
+        // on check si le module existe
+        if (!item_prefabs.ContainsKey(reference))
         {
-            Debug.LogError("(ItemBank) cannot find prefab " + item_name);
+            Debug.LogError("(ItemBank) cannot find module prefab for " + reference
+                + ". are you sure its corresponding item prefab is in the " + items_path + " folder?");
             return null;
         }
 
-        string prefab_path = item_prefabs[item_name];
-        GameObject prefab = Resources.Load<GameObject>(prefab_path);
-
         // on instancie le prefab
-        GameObject item = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+        string prefab_path = item_prefabs[reference];
+        GameObject module_go = Instantiate(Resources.Load<GameObject>(prefab_path), Vector3.zero, Quaternion.identity);
 
-        // on change le nom du prefab
-        item.name = item_name;
+        // on vérifie que c'est bien un module
+        Module module = module_go.GetComponent<Module>();
+        if (module == null)
+        {
+            Debug.LogError("(ItemBank) prefab " + prefab_path + " is not a Module");
+            Destroy(module_go);
+            return null;
+        }
 
-        if (debug) { Debug.Log("(ItemBank) created item : " + item_name); }
+        // then we apply random upgrades to it
+        int upcount = 0;
+        while (upcount < 100)
+        {
+            // we do a pile ou face to check if we apply an upgrade (otherwise we leave it like this)
+            if (UnityEngine.Random.Range(0, 2) == 0) { break; }
+            
+            // we upgrade it !!!
+            module.Upgrade();
+            upcount++;
+        }
 
-        return item;
+        if (debug) { Debug.Log("(ItemBank) Instanciating " + reference + " module prefab !!"); }
+        return module;
     }
+    public Module CreateRandomModule()
+    {
+        // we cycle through all the references to get the modules references
+        List<string> module_refs = new List<string>();
+        foreach (string item_ref in item_prefabs.Keys)
+        {
+            // we check if the reference starts with module:
+            if (!item_ref.StartsWith("module:")) { continue; }
+
+            // we add the reference to the list
+            module_refs.Add(item_ref);
+        }
+
+        if (module_refs.Count == 0)
+        {
+            Debug.LogError("(ItemBank) cannot create random module, no valid module references found");
+            return null;
+        }
+
+        // we get a random reference
+        string random_ref = module_refs[UnityEngine.Random.Range(0, module_refs.Count)];
+        return CreateModule(random_ref);
+    }
+
 
     // UI_ITEM GENERATOR
     public GameObject CreateUI_Item()
@@ -122,6 +166,8 @@ public class ItemBank : MonoBehaviour
         return module;
     }
 
+
+
     // GETTERS
     public Sprite GetSprite(string item_reference)
     {
@@ -131,11 +177,11 @@ public class ItemBank : MonoBehaviour
         }
 
         if (!item_sprites.ContainsKey(item_reference))
-            {
-                Debug.LogError("(ItemBank) cannot find sprite " + item_reference
-                    + ". are you sure its corresponding item prefab is in the " + items_path + " folder?");
-                return null;
-            }
+        {
+            Debug.LogError("(ItemBank) cannot find sprite " + item_reference
+                + ". are you sure its corresponding item prefab is in the " + items_path + " folder?");
+            return null;
+        }
 
         return item_sprites[item_reference];
     }
@@ -178,6 +224,8 @@ public class ItemBank : MonoBehaviour
         return module_sprites[index];
     }
 
+
+
     // DEBUG
     private string getItemsList()
     {
@@ -192,8 +240,4 @@ public class ItemBank : MonoBehaviour
         return title + count + " items\n" + list;
     }
 
-
-
-    [Obsolete("Use GetSprite(string item_reference) instead.")]
-    public Sprite getSprite(string item_ref) { return null;}
 }

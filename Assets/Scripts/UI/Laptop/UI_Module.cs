@@ -62,16 +62,9 @@ public class UI_Module : UI_Item
 
         // on met à jour le fait qu'on est survolé
         is_hovered = true;
+
         // on met à jour la description si y'en a une
-        string description = "";
-        if (Quantity == 0) { description = "empty slot"; }
-        else if (items.Count > 0) { description = items[0].Reference + "\n\n" + items[0].ItemDescription; }
-        if (transform.parent.GetComponent<UI_ItemPool>() != null
-        && transform.parent.GetComponent<UI_ItemPool>().Descriptor != null)
-        {
-            Description descriptor = transform.parent.GetComponent<UI_ItemPool>().Descriptor;
-            descriptor.SetDescription(description);
-        }
+        update_description();
 
         // si on a un Item on baisse l'alpha à 0.5
         if (Item != null) { item_image.color = new Color(1, 1, 1, 0.5f); }

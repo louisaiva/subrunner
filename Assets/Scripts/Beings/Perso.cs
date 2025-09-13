@@ -361,16 +361,4 @@ public class Perso : Being, Hacker
         conso.Use(this);
     }
 
-
-    // ! deprecated HACK
-
-    [Header("HACKIN")]
-    public float bits = 8f; // bits = mana (lance des sorts de hacks)
-    public int max_bits = 8;
-    public void addBits(int count)
-    {
-        bits += count;
-        if (bits > max_bits) { bits = max_bits; }
-    }
-    
 }
