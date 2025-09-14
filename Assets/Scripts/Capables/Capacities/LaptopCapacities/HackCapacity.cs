@@ -145,6 +145,8 @@ public class HackCapacity : Capacity
         Exploit exploit = selected_exploit;
 
         // we check if our laptop has enough cores for this exploit
+        if (debug && exploit == null) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack {target.name} but has no exploit selected."); }
+        if (debug && laptop.Processor == null) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack {target.name} but has no processor."); }
         if (!laptop.Processor.HasFreeCores(exploit.cores_cost))
         {
             if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack {target.name} but has no free cores for exploit {exploit.name}."); }
@@ -159,12 +161,12 @@ public class HackCapacity : Capacity
     }
     public void RunExploit(Hack hack)
     {
-        // we run the hack
-        float duration = hack.CalculateDuration();
-        hack.Run(duration);
-
         // we occupy some cores for the hack duration
+        // will also calculate average cores speed based on the chosen cores
         laptop.Processor.UseCores(hack);
+
+        // we run the hack
+        hack.Run();
 
         // we add the hack to the running hacks
         running_hacks.Add(hack);

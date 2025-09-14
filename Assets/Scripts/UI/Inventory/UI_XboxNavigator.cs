@@ -83,6 +83,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     public bool debug = false;
     public bool debug_navigation = false;
     public bool log_slot_position = false;
+    public bool log_moving_items = false;
     public bool debug_gizmo = false;
 
     [Header("Gizmos")]
@@ -781,11 +782,9 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         moving_ui_item.OnPointerExit(null);
         destination.OnPointerExit(null);
 
-        // on échange les deux UI_Item
-        if (moving_ui_item.Reference != ""
-            && destination.Reference == moving_ui_item.Reference
-            && destination.Quantity < destination.MaxQty
-            && destination != moving_ui_item)
+        // on choisit le mode d'action qu'il faut pour echanger les items
+        if (destination == moving_ui_item) { /* we do nothing -> will just avoid moving them */ } 
+        else if (destination != moving_ui_item && destination.CanStore(moving_ui_item.GetItems()))
         {
             merge_items(moving_ui_item, destination); // ce sont les mêmes items, on peut alors les merge ensemble
         }
@@ -801,7 +800,6 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         {
             split_items(ui_module2, destination); // on split l'item
         }
-        // { } // on ne fait rien -> break en qq sorte
         else { switch_items(moving_ui_item, destination); }
 
         // on met à jour les slots
@@ -953,6 +951,8 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         // on échange les items entre les deux UI_Items
         if (item1 == null || item2 == null) { return; }
 
+        if (log_moving_items) { Debug.Log($"(UI_Navigator) switching items between {item1.gameObject.name} and {item2.gameObject.name}"); }
+
         // on sauvegarde les items
         List<Item> items1 = item1.GetItems();
         List<Item> items2 = item2.GetItems();
@@ -968,7 +968,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         {
             if (debug)
             {
-                Debug.Log($"(UI_Navigator) switched items between {item1.gameObject.name} "
+                Debug.LogWarning($"(UI_Navigator) switched items between {item1.gameObject.name} "
             + $"and {item2.gameObject.name} but at least one inventory is null : {inventory1?.capable.name} and {inventory2?.capable.name}");
             }
             return;
@@ -989,6 +989,9 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     }
     private void split_items(UI_Module ui_module, UI_Item ui_item)
     {
+        if (log_moving_items) { Debug.Log($"(UI_Navigator) splitting items between {ui_item.gameObject.name} and {ui_module.gameObject.name}"); }
+
+
         // on vérifie que y'a pas déjà un module installé (sinon ça va tout kc)
         // todo : faire en sorte que si un module est déjà installé il est juste drop dans l'inventaire et ça
         // todo : switch quand mm le 1er module
@@ -1029,6 +1032,8 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     }
     private void merge_items(UI_Item item1, UI_Item item2)
     {
+        if (log_moving_items) { Debug.Log($"(UI_Navigator) merging items between {item1.gameObject.name} and {item2.gameObject.name}"); }
+
         // on merge les items de item1 dans item2
         List<Item> items = item1.GetItems();
         List<Item> transfered_items = new List<Item>();

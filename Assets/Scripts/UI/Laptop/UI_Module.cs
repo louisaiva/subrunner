@@ -119,7 +119,7 @@ public class UI_Module : UI_Item
         // on récupère quelle reference d'icon on doit mettre
         string icon_ref = "";
         if (Item == null) { icon_ref = "screw"; }
-        else if (Reference == moving_ui_item.Reference && Quantity < MaxQty) { icon_ref = "upgrade"; }
+        // else if (Reference == moving_ui_item.Reference && Quantity < MaxQty) { icon_ref = "upgrade"; }
         else { icon_ref = "switch"; }
         set_icon(icon_ref);
     }

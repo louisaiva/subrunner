@@ -42,9 +42,14 @@ public class UI_Item : UI_Slot
     }
 
     // STORE ITEM
-    private bool CanStore(Item item)
+    public bool CanStore(Item item)
+    {
+        return CanStore(new List<Item> { item });
+    }
+    public bool CanStore(List<Item> items)
     {
         // checks if we can add the item to the slot (store or stack it on the slot)
+        Item item = items.Count > 0 ? items[0] : null;
 
         // we check if the item is valid
         if (item == null) { return false; }
@@ -66,7 +71,7 @@ public class UI_Item : UI_Slot
         }
 
         // we check if the item is full
-        if (Quantity >= MaxQty) { return false; }
+        if (Quantity + items.Count > MaxQty) { return false; }
 
         // we can stack the item !!
         return true;
@@ -311,7 +316,7 @@ public class UI_Item : UI_Slot
 
 
         // on met un icon de switch à la place de l'item
-        Sprite switch_icon = (Item != null && Reference == moving_ui_item.Reference && Quantity < MaxQty)
+        Sprite switch_icon = CanStore(moving_ui_item.Item)
             ? bank.GetUI_Icon("merge")
             : bank.GetUI_Icon("switch");
         set_ui(switch_icon);

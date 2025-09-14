@@ -222,6 +222,11 @@ MonoBehaviour:
   effects_timetolive: []
   debug: 0
   activate_all_capacities_logs_on_awake: 0
+  module_references:
+  - module:bug_os
+  - module:network
+  - module:hdd
+  - module:cpu
 --- !u!1001 &7056843530695103706
 PrefabInstance:
   m_ObjectHideFlags: 0

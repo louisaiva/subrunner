@@ -125,27 +125,10 @@ public class ItemBank : Singleton<ItemBank>
         if (debug) { Debug.Log("(ItemBank) Instanciating " + reference + " module prefab !!"); }
         return module;
     }
-    public Module CreateRandomModule()
+    public Module CreateRandomModule(List<string> module_references)
     {
-        // we cycle through all the references to get the modules references
-        List<string> module_refs = new List<string>();
-        foreach (string item_ref in item_prefabs.Keys)
-        {
-            // we check if the reference starts with module:
-            if (!item_ref.StartsWith("module:")) { continue; }
-
-            // we add the reference to the list
-            module_refs.Add(item_ref);
-        }
-
-        if (module_refs.Count == 0)
-        {
-            Debug.LogError("(ItemBank) cannot create random module, no valid module references found");
-            return null;
-        }
-
         // we get a random reference
-        string random_ref = module_refs[UnityEngine.Random.Range(0, module_refs.Count)];
+        string random_ref = module_references[UnityEngine.Random.Range(0, module_references.Count)];
         return CreateModule(random_ref);
     }
 

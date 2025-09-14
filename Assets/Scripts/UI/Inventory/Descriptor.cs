@@ -101,7 +101,8 @@ public class Descriptor : MonoBehaviour
         if (log) { Debug.Log($"(Descriptor) updating upgrade {upgrade.name} to tier {upgrade.tier}"); }
         string roman = convert_to_roman(upgrade.tier);
         if (roman == "") { roman = "0"; }
-        desc.SetDescription($"{upgrade.effect}{upgrade.effect_unit} {upgrade.name} ({roman})");
+        string effect = upgrade.effect.ToString(upgrade.precision) + upgrade.effect_unit;
+        desc.SetDescription($"{effect} {upgrade.name} ({roman})");
 
         // we set the color
         switch (upgrade.tier)

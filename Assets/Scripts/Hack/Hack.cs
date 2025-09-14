@@ -20,13 +20,15 @@ public class Hack : Processus
     }
 
     // RUN , PROCESS & FINISH
-    public override void Run(float duration)
+    public override void Run()
     {
+        // we calculate the duration
+        this.duration = CalculateDuration();
+
         // open the tunnel
         tunnel.Open();
 
         // run the hack
-        this.duration = duration;
         state = HackState.Running;
         Debug.Log($"Starting hack on {target.name} with exploit {name}");
     }
@@ -93,7 +95,7 @@ public class Hack : Processus
     }
 
     // GETTERS
-    public float CalculateDuration(float duration_multiplier = 2.25f)
+    public float CalculateDuration()
     {
         float duration = program.base_duration;
         int security_level_difference = target.SecurityLevel - (program as Exploit).security_level;
@@ -102,12 +104,21 @@ public class Hack : Processus
         if (security_level_difference > 100) { return 1000f; }
         else if (security_level_difference < -1000) { return 0.1f; }
 
-        // multiply the duration by multiplier once for eache security level difference
-        if (security_level_difference > 0) { duration_multiplier = 1 / duration_multiplier; }
+        // multiply the duration by multiplier once for each security level difference
+        float security_multiplier = 2.25f;
+        if (security_level_difference > 0) { security_multiplier = 1 / security_multiplier; }
         for (int i = 0; i < security_level_difference; ++i)
         {
-            duration *= duration_multiplier;
+            duration *= security_multiplier;
         }
+
+        // we apply the cores speed modifier
+        if (average_cores_speed <= 0) { Debug.LogError($"(Hack) {name} has an invalid average cores speed: {average_cores_speed}"); }
+        else { duration /= average_cores_speed; }
+
+        // we apply the os speed modifier
+        duration /= os_speed;
+
         return duration;
     }
 }

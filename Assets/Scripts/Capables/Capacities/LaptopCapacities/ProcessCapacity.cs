@@ -14,7 +14,7 @@ public class ProcessCapacity : Capacity
     public int MaxCores => cores.Count;
     public int FreeCoresCount => cores.Count(c => c.isFree);
     public int UsedCoresCount => cores.Count(c => !c.isFree);
-    public event System.Action<int> OnCoresFreedOrUsed = delegate { };
+    public event Action<int> OnCoresFreedOrUsed = delegate { };
 
     [Header("Running processes")]
     private Dictionary<Processus, List<Core>> running_processes = new Dictionary<Processus, List<Core>>(); // store the nb of cores used per processus
@@ -73,47 +73,51 @@ public class ProcessCapacity : Capacity
 
 
     // GRABBING PROCESSOR MODULE
-    // todo : modify this so each Module_CPU has its own cores and we simply adds them to the cores list
     public void OnCPU_Changed()
     {
-        // we check how many cpu modules we have in our inventory
-        List<Item> cpus = capable.Inventory.GetItemsByRule("module:cpu");
-        int new_max_cores = cpus.Count * 2; // each cpu provides 2 cores
+        List<Module_CPU> cpus = capable.Inventory.GetItemsByRule("module:cpu")
+                                                .Select(item => item as Module_CPU)
+                                                .Where(cpu => cpu != null)
+                                                .ToList();
 
-        if (debug) { Debug.Log($"(ProcessCapacity) {capable.name} CPU changed. New max cores: {new_max_cores} / old cores: {cores.Count}"); }
+        List<Core> new_cores = cpus.SelectMany(cpu => cpu.Cores).ToList();
+        if (debug) { Debug.Log($"(ProcessCapacity) {capable.name} CPU changed. New max cores: {new_cores.Count} / old cores: {cores.Count}"); }
 
-        // check the difference between current and next cores.Count
-        if (new_max_cores >= cores.Count) { set_new_max_cores(new_max_cores); return; }
 
-        // if we have less cores, it's ok if we have have enough free cores left
-        if (FreeCoresCount >= cores.Count - new_max_cores) { set_new_max_cores(new_max_cores); return; }
-
-        // otherwise we need to free some used cores
-        while (FreeCoresCount < cores.Count - new_max_cores)
+        // we go through all the cores we had and check if they aren't in the list
+        List<Core> cores_to_remove = new List<Core>();
+        foreach (Core core in cores)
         {
-            // we free the first process in the list
-            Processus first_process = running_processes.Keys.First();
-            first_process.Overflow();
-            FreeCores(first_process);
+            if (new_cores.Contains(core)) { continue; }
+            cores_to_remove.Add(core);
         }
 
-        // finally we set the new max_cores
-        set_new_max_cores(new_max_cores);
-    }
-    private void set_new_max_cores(int new_max_cores)
-    {
-        cores = new List<Core>();
-        for (int i = 0; i < new_max_cores; i++) { cores.Add(new Core()); }
-        // OnCoresChange?.Invoke(new_max_cores);
-    }
+        // we go through all the cores we have and check if we need to add them to the list
+        foreach (Core core in new_cores)
+        {
+            if (cores.Contains(core)) { continue; }
+            cores.Add(core);
+        }
 
+        // finally we remove the old cores and overflow their processus if they were used
+        foreach (Core core in cores_to_remove)
+        {
+            if (!core.isFree)
+            {
+                if (debug) { Debug.Log($"(ProcessCapacity) {capable.name} lost a core that was used by {core.RunningProcess.name}. Overflowing process."); }
+                FreeCores(core.RunningProcess); // we don't only free this one core, but we free all the cores used by this processus
+                core.RunningProcess.Overflow(); // we overflow the processus
+            }
+            cores.Remove(core);
+        }
+    }
 }
 
-[System.Serializable]
-public class Core
+[Serializable] public class Core
 {
     public bool isFree = true;
-    public Processus RunningProcess = null;
+    public float Speed = 1.0f; // percentage speed (1 == 100%)
+    public Processus RunningProcess = Processus.Null;
     public Core() { }
 
     // USE / FREE
@@ -121,32 +125,51 @@ public class Core
     {
         isFree = false;
         RunningProcess = processus;
+
+        // we register the core in the processus
+        processus.RegisterCore(this);
     }
     public void Free()
     {
         isFree = true;
-        RunningProcess = null;
+        RunningProcess = Processus.Null;
     }
 }
 
 
-[System.Serializable] public class Processus
+[Serializable] public class Processus
 {
+    public static Processus Null = new Processus(new Program("null", 0, 0));
 
     // PROGRAM
     public Program program;
     public string name => program.name;
     public int cost => program.cores_cost;
 
+    // SPEED CALCULATIONS
+    public float average_cores_speed = 0.0f; // average speed of the cores used by the processus
+    public float os_speed = 1.0f; // bonus speed for if the os speed has particular speed for this kind of processus
+
     // CONSTRUCTOR
     public Processus(Program program)
     {
         this.program = program;
+
+        // reset speeds
+        average_cores_speed = 0.0f;
+        os_speed = 1.0f;
+    }
+
+    // Cores management
+    public void RegisterCore(Core core)
+    {
+        // speed is at zero so we can add the core speed / cost and NORMALLY it should be okay
+        average_cores_speed += core.Speed / cost;
     }
 
 
     // RUN , PROCESS & FINISH
-    public virtual void Run(float duration) { }
+    public virtual void Run() { }
     public virtual void Process() {}
     public virtual void Finish() {}
     public virtual void Overflow() {}

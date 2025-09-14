@@ -18,7 +18,7 @@ public class TempCapacity : Capacity
     [SerializeField] private float variation = 0.1f;
     [SerializeField] private float frequency = 0.5f;
 
-    private void Update()
+    protected override void Update()
     {
         Temp = variation * Mathf.Sin(Time.unscaledTime * frequency) + blind_temp;
     }

@@ -31,7 +31,7 @@ public class StoreCapacity : Capacity
     public bool Store(File file)
     {
         if (!CanStore(file)) { return false; }
-        
+
         if (file is Key key)
         {
             keys.Add(key);
@@ -63,6 +63,18 @@ public class StoreCapacity : Capacity
     public List<Key> GetKeys()
     {
         return keys;
+    }
+
+    // SETTERS
+    public void SetCapacity(int new_capacity)
+    {
+        if (new_capacity < SpaceUsed)
+        {
+            Debug.LogWarning($"(StoreCapacity) cannot set disk capacity to {new_capacity} bytes, not enough space for existing files ({SpaceUsed} bytes used)");
+            return;
+        }
+        capacity = new_capacity;
+        if (debug) { Debug.Log($"(StoreCapacity) {capable.name} disk capacity set to {capacity} bytes"); }
     }
 }
 

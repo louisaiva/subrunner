@@ -16,6 +16,18 @@ public class Module : Item
     public List<ModuleUpgrade> Upgrades => upgrades;
 
     // UPGRADING
+    public bool HasSameUpgrades(Module other)
+    {
+        if (other == null) { return false; }
+        if (other.Upgrades.Count != Upgrades.Count) { return false; }
+
+        for (int i = 0; i < upgrades.Count; i++)
+        {
+            if (other.Upgrades[i].tier != Upgrades[i].tier) { return false; }
+        }
+
+        return true;
+    }
     public void MergeWith(Module other)
     {
         // check if we can merge
@@ -39,18 +51,23 @@ public class Module : Item
         ModuleUpgrade upgrade = upgrades[UnityEngine.Random.Range(0, upgrades.Count)];
         upgrade.Upgrade();
         if (debug) { Debug.Log($"(Module) {name} upgraded {upgrade.name} to tier {upgrade.tier}"); }
+
+        // we apply the upgrade
+        apply_upgrade();
     }
-    public bool HasSameUpgrades(Module other)
+
+    // LOW UPGRADE
+    protected virtual void apply_upgrade() { }
+    protected float get_upgrade_effect(string upgrade_name)
     {
-        if (other == null) { return false; }
-        if (other.Upgrades.Count != Upgrades.Count) { return false; }
-
-        for (int i = 0; i < upgrades.Count; i++)
+        foreach (var upgrade in upgrades)
         {
-            if (other.Upgrades[i].tier != Upgrades[i].tier) { return false; }
+            if (upgrade.name == upgrade_name)
+            {
+                return upgrade.effect;
+            }
         }
-
-        return true;
+        return 0;
     }
 }
 
@@ -59,7 +76,8 @@ public class ModuleUpgrade
 {
     public string name = "upgrade";
     public int tier = 1;
-    public int effect = 1; // generic effect value
+    public float effect = 1; // generic effect value
+    public string precision = "F0";
     public string effect_unit = ""; // unit of the effect (%, MB, units, etc)
 
     public virtual void Upgrade()
@@ -68,8 +86,8 @@ public class ModuleUpgrade
 
         if (name == "storage capacity")
         {
-            effect = 4096 + 1024 * tier; // in MB
-            if (tier >= 3) { effect = 8192 + 2048 * (tier - 3); }
+            effect = 4.096f + 1.024f * tier; // in MB
+            if (tier >= 3) { effect = 8.192f + 2.048f * (tier - 3); }
         }
         else if (name == "hack range")
         {

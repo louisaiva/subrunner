@@ -196,8 +196,9 @@ MonoBehaviour:
   upgrades:
   - name: storage capacity
     tier: 0
-    effect: 4096
-    effect_unit: o
+    effect: 4.096
+    precision: F3
+    effect_unit: ' Ko'
 --- !u!1 &4530846955962049071
 GameObject:
   m_ObjectHideFlags: 0
