@@ -138,10 +138,10 @@ public class Capable : MonoBehaviour
 
         capacity.Use(this);
     }
-    public void AddCapacity(string name)
+    public Capacity AddCapacity(string name)
     {
         // we check if the capacity is already in the list
-        if (HasCapacity(name)) { return; }
+        if (HasCapacity(name)) { return GetCapacity(name); }
 
         // get the capacity instance
         GameObject capa_instance = bank.GetCapacityInstance(name);
@@ -152,8 +152,11 @@ public class Capable : MonoBehaviour
         capa_instance.transform.localPosition = Vector3.zero;
 
         // we put the capacity in the list
-        capacities.Add(capa_instance.GetComponent<Capacity>());
+        Capacity capa = capa_instance.GetComponent<Capacity>();
+        capacities.Add(capa);
         if (debug) { Debug.Log("(Capable) " + this.name + " : capacity " + name + " added"); }
+
+        return capa;
     }
     public void RemoveCapacity(string name)
     {

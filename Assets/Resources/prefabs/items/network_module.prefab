@@ -80,7 +80,7 @@ GameObject:
   - component: {fileID: 1336302667464753739}
   - component: {fileID: 2449958863233083572}
   - component: {fileID: 4870488224820713375}
-  - component: {fileID: 8584519124212572836}
+  - component: {fileID: 6161519289362507251}
   m_Layer: 24
   m_Name: network_module
   m_TagString: Item
@@ -228,7 +228,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &8584519124212572836
+--- !u!114 &6161519289362507251
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -237,7 +237,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6950409761678986107}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9bef9cbcc43652b428fb6a3f79b7170a, type: 3}
+  m_Script: {fileID: 11500000, guid: 5469343f523f2fb41b6e6eeaa3df5202, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   inputs: {x: 0, y: 0}
@@ -261,10 +261,15 @@ MonoBehaviour:
   ItemDescription: mandatory for connecting a laptop to other devices./l not mandatory
     for eating ramens
   upgrades:
-  - name: hack range
+  - name: usb cable
     tier: 0
     effect: 1
+    precision: F0
     effect_unit: m
+  USB_Range: 1
+  IR_Range: 0
+  BT_Range: 0
+  WIFI_Range: 0
 --- !u!1001 &5911729990550533727
 PrefabInstance:
   m_ObjectHideFlags: 0

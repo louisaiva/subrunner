@@ -87,7 +87,10 @@ public class Laptop : Item, Usable
     public void OnNetworkModuleChanged()
     {
         // we check how many network modules we have in our inventory
-        List<Item> network_modules = Inventory.GetItemsByRule("module:network");
+        List<Module_Network> network_modules = Inventory.GetItemsByRule("module:network")
+                                                    .Select(item => item as Module_Network)
+                                                    .Where(module => module != null)
+                                                    .ToList();
 
         // remove connect capa if we don't have any network module
         if (network_modules.Count == 0)
@@ -102,8 +105,11 @@ public class Laptop : Item, Usable
         if (connect_capacity == null)
         {
             if (debug) { Debug.LogWarning($"(Laptop) {name} has a network module, adding connect capacity."); }
-            AddCapacity("connect");
+            connect_capacity = AddCapacity("connect") as ConnectCapacity;
         }
+
+        // we update the radius of the connect capacity
+        connect_capacity.Radius = network_modules.Max(module => module.USB_Range);
     }
 
     // FILES MANAGEMENT

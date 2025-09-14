@@ -89,7 +89,7 @@ public class ModuleUpgrade
             effect = 4.096f + 1.024f * tier; // in MB
             if (tier >= 3) { effect = 8.192f + 2.048f * (tier - 3); }
         }
-        else if (name == "hack range")
+        else if (name == "usb cable")
         {
             effect = tier + 1; // in number of unity units
         }
