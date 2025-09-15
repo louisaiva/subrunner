@@ -152,13 +152,16 @@ public class ItemBank : Singleton<ItemBank>
 
 
     // GETTERS
+    public Sprite GetSprite(Item item)
+    {
+        if (item.Reference.Contains("paper:"))
+        {
+            return GetSprite("other:" + item.anim_player.Skin);
+        }
+        return GetSprite(item.Reference);
+    }
     public Sprite GetSprite(string item_reference)
     {
-        if (item_reference.Contains("paper:"))
-        {
-            return GetSprite("other:paper");
-        }
-
         if (!item_sprites.ContainsKey(item_reference))
         {
             Debug.LogError("(ItemBank) cannot find sprite " + item_reference

@@ -13,7 +13,23 @@ using UnityEngine.UI;
 public class UI_AnimPlayer : MonoBehaviour
 {
 
+    [Header("UI Related Parameters")]
+    public bool resize_to_native_size = true;
+    public bool play_on_start = true;
+    public bool unscaled_time = false;
+
     [Header("Components")]
+    public AnimBank Bank
+    {
+        get
+        {
+            if (bank == null)
+            {
+                bank = AnimBank.Instance;
+            }
+            return bank;
+        }
+    }
     private AnimBank bank;
     private Image img;
 
@@ -31,6 +47,7 @@ public class UI_AnimPlayer : MonoBehaviour
     public Anim current_anim = null;
     private float frame_timer = 0f;
     private int current_frame = -1; // if -1, the animation is over
+    public bool IsPlaying => current_frame != -1;
 
 
 
@@ -41,32 +58,25 @@ public class UI_AnimPlayer : MonoBehaviour
     public bool debug_frames = false;
 
 
-
-
-
-
-
-    // Start is called before the first frame update
+    // Awake & Start
+    private void Awake()
+    {
+        img = GetComponent<Image>();
+    }
     private void Start()
     {
-        if (bank == null)
-        {
-            bank = AnimBank.Instance;
-        }
-
-        // we get the sprite renderer
-        img = GetComponent<Image>();
-
         // we play the idle animation
-        Play("idle");
+        if (play_on_start) { Play("idle"); }
     }
 
 
     // Update
     private void Update()
     {
+        if (current_frame == -1 || current_anim == null) { return; }
+
         // update timer
-        frame_timer += Time.deltaTime;
+        frame_timer += unscaled_time ? Time.unscaledDeltaTime : Time.deltaTime;
 
         // checks if timer reach the next anim frame
         if (!(frame_timer >= current_anim.sprites_durations[current_frame] / current_anim.speed)) { return; }
@@ -76,13 +86,20 @@ public class UI_AnimPlayer : MonoBehaviour
         current_frame++;
         if (current_frame >= current_anim.sprites_durations.Length)
         {
+            // if the animation is not looping, we stop it
+            if (!current_anim.loop)
+            {
+                current_frame = -1;
+                if (debug_frames) { Debug.Log($"(UI_AnimPlayer) Animation {current_anim.name} ended."); }
+                return;
+            }
             // we loop the animation
             current_frame = 0;
         }
 
         // we set the sprite
         img.sprite = current_anim.sprites[current_frame];
-        if (img.sprite != null)
+        if (resize_to_native_size && img.sprite != null)
         {
             img.SetNativeSize();
         }
@@ -94,7 +111,7 @@ public class UI_AnimPlayer : MonoBehaviour
     {
         // we get the animation from the bank
         string anim_name = skin + "." + capacity + "." + orientation;
-        Anim anim = bank.GetAnim(anim_name);
+        Anim anim = Bank.GetAnim(anim_name);
         if (anim == null)
         {
             if (debug) { Debug.Log("(UI_AnimPlayer - Play) could not Play() : " + anim_name + " no contact with bank"); }
@@ -145,7 +162,7 @@ public class UI_AnimPlayer : MonoBehaviour
         img.sprite = anim.sprites[current_frame];
 
         // we set the right size to the rect transform
-        if (img.sprite != null)
+        if (resize_to_native_size && img.sprite != null)
         {
             img.SetNativeSize();
         }
@@ -153,6 +170,10 @@ public class UI_AnimPlayer : MonoBehaviour
         // we flip the sprite renderer if needed
         RectTransform rt = img.rectTransform;
         rt.localScale = new Vector3(anim.flipX ? -1 : 1, 1, 1);
+
+        // we check if its a one frame animation we instantly stop it
+        if (anim.sprites.Length == 1) { current_frame = -1; }
+
 
         if (debug_advanced) { Debug.Log("(AnimPlayer) Playing " + anim.name + " at frame " + frame); }
     }

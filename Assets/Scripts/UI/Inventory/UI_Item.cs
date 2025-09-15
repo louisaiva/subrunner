@@ -166,7 +166,7 @@ public class UI_Item : UI_Slot
     protected virtual void setItem(Item item)
     {
         // on charge le sprite de l'image
-        current_item_sprite = bank.GetSprite(item.Reference);
+        current_item_sprite = bank.GetSprite(item);
         set_ui(current_item_sprite);
 
         // on change le nom du prefab
