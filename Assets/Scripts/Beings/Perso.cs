@@ -30,20 +30,8 @@ public class Perso : Being, Hacker
     public SkillManager skillManager;
     // public UI_Fullmap big_map;
 
-    [Header("INPUTS")]
-    [SerializeField] private InputManager input_manager;
-    private PersoActions perso_inputs;
-    // private event Action<InputAction.CallbackContext> reviveCallback;
-    private event Action<InputAction.CallbackContext> dodgeCallback;
-    private event Action<InputAction.CallbackContext> attackCallback;
-    private event Action<InputAction.CallbackContext> talkCallback;
-    private event Action<InputAction.CallbackContext> useConso1Callback;
-    private event Action<InputAction.CallbackContext> useConso2Callback;
-    private event Action<InputAction.CallbackContext> useConso3Callback;
-    private event Action<InputAction.CallbackContext> useConso4Callback;
 
-
-    public Color HackColor { get; } = new Color(0.2f, 0.8f, 1f); // light blue
+    // public Color HackColor { get; } = new Color(0.2f, 0.8f, 1f); // light blue
 
 
 
@@ -52,13 +40,24 @@ public class Perso : Being, Hacker
 
 
     [Header("Items")]
-    private ItemManager item_manager;
+    public ItemManager ItemManager
+    {
+        get
+        {
+            if (_itemManager == null)
+            {
+                _itemManager = GameObject.Find("/utils/item_manager").GetComponent<ItemManager>();
+            }
+            return _itemManager;
+        }
+    }
+    private ItemManager _itemManager;
     public Laptop Laptop
     {
         get
         {
-            if (item_manager == null) { return null; }
-            Laptop laptop = item_manager.GetLaptop();
+            if (ItemManager == null) { return null; }
+            Laptop laptop = ItemManager.GetLaptop();
             if (laptop == null) { return null; }
             return laptop;
         }
@@ -84,7 +83,7 @@ public class Perso : Being, Hacker
     protected override void Start()
     {
         // on récupère les inputs
-        initInputs();
+        // initInputs();
 
         // on start de d'habitude
         base.Start();
@@ -95,7 +94,7 @@ public class Perso : Being, Hacker
         cam = GameObject.Find("/cam_follow/cam");
         skillManager = GetComponentInChildren<SkillManager>();
 
-        item_manager = GameObject.Find("/utils/item_manager").GetComponent<ItemManager>();
+        // ItemManager = GameObject.Find("/utils/ItemManager").GetComponent<ItemManager>();
 
         //
         floating_text_prefab = Resources.Load("prefabs/ui/floating_text") as GameObject;
@@ -112,71 +111,7 @@ public class Perso : Being, Hacker
         floating_dmg_provider.GetComponent<TextManager>().addFloatingText(quest_text, transform.position + new Vector3(0, 0.5f, 0), "yellow");
     }
 
-    // INPUTS
-    private void initInputs()
-    {
-        // on récupère les inputs
-        input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
-        perso_inputs = input_manager.inputs.perso;
 
-        // on set les callbacks
-        dodgeCallback = ctx => OnDodge();
-        attackCallback = ctx => OnAttack();
-        talkCallback = ctx => OnRandomTalk();
-        perso_inputs.dodge.performed += dodgeCallback;
-        perso_inputs.attack.performed += attackCallback;
-        perso_inputs.randomTalk.performed += talkCallback;
-
-        // et les callbacks de conso
-        useConso1Callback = ctx => OnUseConso(1);
-        useConso2Callback = ctx => OnUseConso(2);
-        useConso3Callback = ctx => OnUseConso(3);
-        useConso4Callback = ctx => OnUseConso(4);
-        perso_inputs.conso1.performed += useConso1Callback;
-        perso_inputs.conso2.performed += useConso2Callback;
-        perso_inputs.conso3.performed += useConso3Callback;
-        perso_inputs.conso4.performed += useConso4Callback;
-    }
-
-    // CAPACITES
-    protected override void Update()
-    {
-        base.Update();
-
-        // si les perso_inputs sont desactivés on return (comme ça on garde la même vitesse)
-        // if (!perso_inputs.enabled) { return; }
-
-        // walk
-        if (HasCapacity<WalkCapacity>())
-        {
-            Vector2 raw_inputs = InputManager.Instance.MovementRawInputs;
-            
-            // we check if the raw inputs are below the deadzone
-            raw_inputs.x = Mathf.Abs(raw_inputs.x) < input_manager.JOYSTICK_MIN_THRESHOLD ? 0f : raw_inputs.x;
-            raw_inputs.y = Mathf.Abs(raw_inputs.y) < input_manager.JOYSTICK_MIN_THRESHOLD ? 0f : raw_inputs.y;
-
-            // we normalize the inputs
-            Orientation = raw_inputs.normalized;
-
-            // we set the walk_capacity.walk_percentage_target
-            GetCapacity<WalkCapacity>().walk_percentage_target = raw_inputs.magnitude;
-
-            // Debug.Log("inputs : " + inputs + " / raw_inputs : " + raw_inputs + " / inputs_magnitude : " + raw_inputs.magnitude);
-        }
-
-        // run
-        if (HasCapacity<RunCapacity>())
-        {
-            if (perso_inputs.run.ReadValue<float>() >= input_manager.BUTTON_MAX_THRESHOLD)
-            {
-                GetCapacity<RunCapacity>().EnableRun();
-            }
-            else if (perso_inputs.run.ReadValue<float>() < input_manager.BUTTON_MIN_THRESHOLD)
-            {
-                GetCapacity<RunCapacity>().DisableRun();
-            }
-        }
-    }
 
 
     // METAMORPH
@@ -275,14 +210,9 @@ public class Perso : Being, Hacker
         // on affiche un floating text
         floating_dmg_provider.GetComponent<TextManager>().addFloatingText("YOU DIED", transform.position + new Vector3(0, 0.5f, 0), "red");
 
-        // on enlève les callbacks
-        perso_inputs.dodge.performed -= dodgeCallback;
-        perso_inputs.attack.performed -= attackCallback;
-        perso_inputs.randomTalk.performed -= talkCallback;
-        perso_inputs.conso1.performed -= useConso1Callback;
-        perso_inputs.conso2.performed -= useConso2Callback;
-        perso_inputs.conso3.performed -= useConso3Callback;
-        perso_inputs.conso4.performed -= useConso4Callback;
+        // on désactive le PersoInputsController
+        PersoInputsController.Instance.ResetCapableTarget();
+        PersoInputsController.Instance.DisableInputs();
 
         // on switch au game_over panel
         UI_Manager.Instance.SwitchTo("game_over", override_duration: 3f);
@@ -292,73 +222,6 @@ public class Perso : Being, Hacker
         Destroy(transform.Find("body").GetComponent<ParticleSystemForceField>());
 
         deaths += 1; // on incrémente le nombre de morts du perso
-    }
-
-    // INPUTS
-    public void OnAttack()
-    {
-        // if (HasEffect(Effect.Stunned)) { return; }
-        // if (anim_player.current_anim.capacity == "attack") { return; }
-
-        // on met à jour la valeur de damage
-        /* if (HasItem("weapon:katana", out Item katana))
-        {
-            katana.GetCapacity<AttackCapacity>().damage = skillManager.GetSkillValue("stat:damage");
-        }
-        else { return; }
-
-        // on utilise l'item weapon:katana
-        UseItem("weapon:katana"); */
-
-        // on récupère le current weapon
-        Weapon current_weapon = item_manager.GetWeapon();
-        if (current_weapon == null) { return; } // if the weapon is not set, we return
-
-        // on met à jour la valeur de damage
-        current_weapon.GetCapacity<AttackCapacity>().damage = skillManager.GetSkillValue("stat:damage");
-
-        // on utilise l'attaque
-        current_weapon.Use(this);
-    }
-    public void OnRandomTalk()
-    {
-        if (Can("talk") && !HasEffect(Effect.Stunned))
-        {
-            Do("talk");
-        }
-    }
-    private void OnDodge()
-    {
-        // on vérifie que le perso peut dodge
-        // if (!Can("dodge")) { return; }
-        // Do("dodge");
-
-        // on récupère les shoes
-        Shoes shoes = item_manager.GetShoes();
-        if (shoes == null) { return; } // if the shoes are not set, we return
-        
-        // on utilise les shoes
-        shoes.Use(this);
-    }
-    public void OnHack()
-    {
-        /* Laptop laptop = Laptop;
-        if (laptop == null) { return; } // if the laptop is not set, we return */
-
-        // UseItem("hardware:laptop");
-        // if (UI_LaptopItemSlot.Instance == null || !UI_LaptopItemSlot.Instance.HasLaptop) { return; } // if the laptop is not set, we return
-        // UI_LaptopItemSlot.Instance.Laptop.Use(this);
-        Laptop laptop = item_manager.GetLaptop();
-        if (laptop == null) { return; }
-        laptop.Use(this);
-    }
-
-    // CONSOMMABLES INPUTS
-    public void OnUseConso(int index)
-    {
-        Usable conso = item_manager.GetConsumable(index);
-        if (conso == null) { return; }
-        conso.Use(this);
     }
 
 }

@@ -15,7 +15,6 @@ using UnityEngine.InputSystem;
 public class InteractCapacity : Capacity
 {
 
-
     [Header("Current Hover")]
     [SerializeField] private Capable closest_hover;
     public Interactable interactable

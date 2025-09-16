@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -14,6 +15,12 @@ public class Module : Item
     [Header("Upgrades")]
     [SerializeField] private List<ModuleUpgrade> upgrades = new List<ModuleUpgrade>();
     public List<ModuleUpgrade> Upgrades => upgrades;
+
+    protected override void Start()
+    {
+        base.Start();
+        apply_upgrade();
+    }
 
     // UPGRADING
     public bool HasSameUpgrades(Module other)

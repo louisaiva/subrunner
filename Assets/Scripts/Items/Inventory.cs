@@ -250,13 +250,22 @@ public class Inventory : MonoBehaviour
         }
         return null;
     }
-    public List<Item> GetItemsByType<T>() where T : Item
+    public T GetItem<T>() where T : Item
     {
-        // we get all the items of type T
-        List<Item> items = new List<Item>();
+        // we get the first item of type T
         foreach (Item item in Items)
         {
-            if (item is T) { items.Add(item); }
+            if (item is T) { return item as T; }
+        }
+        return null;
+    }
+    public List<T> GetItemsByType<T>() where T : Item
+    {
+        // we get all the items of type T
+        List<T> items = new List<T>();
+        foreach (Item item in Items)
+        {
+            if (item is T) { items.Add(item as T); }
         }
         return items;
     }

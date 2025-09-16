@@ -47,7 +47,7 @@ public class UI_Hacking : UI_Pool
         if (log) { Debug.Log("(UI_Hacking) hack input received : " + input); }
 
         // we use the laptop
-        Perso.Instance.OnHack();
+        PersoInputsController.Instance.OnHack();
     }
 
     // SHOW / HIDE

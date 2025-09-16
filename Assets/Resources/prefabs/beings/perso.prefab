@@ -628,6 +628,8 @@ MonoBehaviour:
   grab_capacity: {fileID: 0}
   exclusion_item_rule:
   - food:meat
+  interacting_endlessly_waiting_threshold: 0
+  interacting_endlessly: 0
 --- !u!70 &5298488975636295711
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -778,16 +780,16 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7923865327126850587}
   - {fileID: 8664710929673099591}
   - {fileID: 6464662739898415761}
   - {fileID: 5879746296165426956}
   - {fileID: 7813571020575018812}
   - {fileID: 2627025953398032101}
-  - {fileID: 4053640228030260228}
   - {fileID: 2786445522269117577}
   - {fileID: 806613326114500989}
   - {fileID: 455273735031494225}
-  - {fileID: 2327086996623757931}
+  - {fileID: 7942793094811061728}
   - {fileID: 6093387476269588347}
   - {fileID: 1511319598159572609}
   - {fileID: 4230169019886544734}
@@ -956,7 +958,6 @@ MonoBehaviour:
   total_xp: 0
   xp_to_next_level: 100
   skillManager: {fileID: 0}
-  input_manager: {fileID: 0}
   metamorph_skins:
   - perso
   - cat
@@ -965,8 +966,6 @@ MonoBehaviour:
   - apple
   - fridge
   - small_laptop
-  bits: 8
-  max_bits: 8
 --- !u!50 &7958341093856896614
 Rigidbody2D:
   serializedVersion: 5
@@ -1061,12 +1060,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3410966834850605538}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.05, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.05000019, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 332583253616935226}
+  m_Father: {fileID: 7923865327126850587}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8120225080424912381
 MonoBehaviour:
@@ -1120,6 +1119,54 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
+--- !u!1 &3483458144230657414
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7923865327126850587}
+  - component: {fileID: 4377113909097244232}
+  m_Layer: 7
+  m_Name: controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7923865327126850587
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3483458144230657414}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4053640228030260228}
+  m_Father: {fileID: 332583253616935226}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4377113909097244232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3483458144230657414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 476279c74a945384798691bc1ba9609f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _capable: {fileID: 0}
+  input_manager: {fileID: 0}
+  Disabled: 0
 --- !u!1 &3890199276897646629
 GameObject:
   m_ObjectHideFlags: 0
@@ -6311,9 +6358,9 @@ MonoBehaviour:
     name: 
     extension: 
     data: 
-    security_level: 0
     base_duration: 0
     cores_cost: 0
+    security_level: 0
   nextExploitInput: {fileID: 5017164170596428349, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   laptop: {fileID: 0}
   log: 0
@@ -6572,177 +6619,65 @@ MonoBehaviour:
   - ;-;
   - :(
   - ...
---- !u!1 &8596858585055671577
-GameObject:
+--- !u!1001 &7090300012482586574
+PrefabInstance:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2327086996623757931}
-  - component: {fileID: 1543331515558147938}
-  m_Layer: 0
-  m_Name: talk
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2327086996623757931
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8596858585055671577}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 332583253616935226}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1543331515558147938
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 332583253616935226}
+    m_Modifications:
+    - target: {fileID: 891631874371971630, guid: 159a8149bceb3f040b4991aa3391ef5f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 891631874371971630, guid: 159a8149bceb3f040b4991aa3391ef5f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 891631874371971630, guid: 159a8149bceb3f040b4991aa3391ef5f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 891631874371971630, guid: 159a8149bceb3f040b4991aa3391ef5f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 891631874371971630, guid: 159a8149bceb3f040b4991aa3391ef5f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 891631874371971630, guid: 159a8149bceb3f040b4991aa3391ef5f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 891631874371971630, guid: 159a8149bceb3f040b4991aa3391ef5f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 891631874371971630, guid: 159a8149bceb3f040b4991aa3391ef5f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 891631874371971630, guid: 159a8149bceb3f040b4991aa3391ef5f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 891631874371971630, guid: 159a8149bceb3f040b4991aa3391ef5f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6582822749040364892, guid: 159a8149bceb3f040b4991aa3391ef5f, type: 3}
+      propertyPath: m_Name
+      value: talk
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 159a8149bceb3f040b4991aa3391ef5f, type: 3}
+--- !u!4 &7942793094811061728 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 891631874371971630, guid: 159a8149bceb3f040b4991aa3391ef5f, type: 3}
+  m_PrefabInstance: {fileID: 7090300012482586574}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8596858585055671577}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2e5a01826c23e3438f06c628b14f2bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cooldown: 0
-  debug: 0
-  talk_on_start: 0
-  allow_bad_words: 1
-  talking_delay_range: {x: 30, y: 60}
-  talks_random:
-  - here we go again/.
-  - well/.i'm not dead yet :D/lthat's a good start
-  - give me some noodles !/l/.anyone ?
-  - still not dead/./lbut am i alive ?
-  - 'let''s decrypt
-
-    the chaos, babyy'
-  - ARGHHH/.ZOMBOS !
-  - 'those posters reminds
-
-    me of the pixel war/./lwait/.wtf is the pixel war
-    ?'
-  - looks like life has/./lno meaning after all
-  - 'let''s ctrl+alt+suppr
-
-    all those cyberzombies'
-  - 'do you feel the
-
-    breath of the city ?'
-  - i'm talking alone/./las always..
-  - 'bits & bytes are
-
-    my only love, honey'
-  - '404: noodles not found :/'
-  - 'feel like the labyrinth
-
-    keeps moving/.is it ?'
-  - omg i almost glitched oO
-  - 'what if i could pass
-
-    through those walls ?/lwell/.I can''t'
-  - this city is full of bugs/./llooks like a game actually
-  - ahh, the smell of the city,/lso/.digital
-  - i'm a pixel runner/.i'm a pixel runner
-  - let's hack the world, baby !
-  - 'running in da
-
-    underground,/lagain/.and again/.n agn'
-  - 'i''m so tired/./lwhen was the last
-
-    time i slept ?'
-  - 'why do i keep
-
-    running, really ?'
-  - this wall looks suspicious/. O.o
-  - feels good to run after/./l502420h of debugging
-  - here i dash/.here i slash
-  - 'where is my old
-
-    friend Marco ?'
-  - 'ayy, 9 years without
-
-    seeing the sun,/lwho can beat that ?'
-  - i need to find the exit/./lis there even an exit ?
-  - 'ahhh what if I
-
-    could ctrl-Z irl ?'
-  - alright./ltime to remember passwords/./ls7j3k9../lwell/.not this time apparently
-  - what's my name again ?
-  - 'ahh/./lI love feeling the
-
-    bytes flowing in my veins..'
-  - where is the internet again ?
-  - 'zombos, zombos
-
-    everywhere/./lwelcome to the
-
-    zapocalypse'
-  - 'noodles,/lthe ultimate cure
-
-    for existential hunger !'
-  - starving and debugging/./la perfect combo, really
-  - 'is this reality or just
-
-    a weird illusion ?'
-  - zombos & hacking/./lno way it's real/./lit's so/.mainstream
-  - 'OH MY GOD,/ljust found the bug
-
-    I was struggling with/./lToo bad my computer
-
-    passed
-    away..'
-  - "line 475,car. 45 :\n(WorldError)\nhere's comes the \"d\xE9j\xE0 vu\""
-  - looks like the matrix/./lugh ?/lwhat did I just say ?
-  - 'i could use a jetpack/./lwell no that''s
-
-    another game./lwait/.a game ?'
-  - ohhh, cuty rat !
-  - 'why do I keep
-
-    talking alone ?/l;-;'
-  - 'i''m so tired of
-
-    running/l/.looks like
-
-    I can''t stop'
-  - 'how many times
-
-    I''ve been here ?'
-  - 'mmmmh/./lhow many zombos lives is
-
-    worth some noodles ?'
-  - 'pff !/lthose zombos are
-
-    so annoying'
-  - 'ahh/./lloneliness is almost
-
-    as scary as
-
-    the deep web'
-  - 'maybe I''ll find
-
-    some friends/./l/. but I want noodles !'
-  talks_random_bad_words:
-  - 'fuck this shit/.
-
-    i''m HUNGRY !'
-  - 'is all of this
-
-    sh*t even real ?'
-  - 'ahh orangina I love that/l/.f*ck capitalism
-
-    perchance'
-  - fuck Google I'm gonna hack them

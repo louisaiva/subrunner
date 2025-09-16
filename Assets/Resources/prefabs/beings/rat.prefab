@@ -360,7 +360,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6831872210500143280}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -31.12, y: -15.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -455,37 +455,37 @@ MonoBehaviour:
   update_each_frame: 1
   anim_capacity_priorities:
   - priority: 0
+    capacity_playing: 
     capacities:
     - idle
     lock_orientation: 0
     one_shot: 0
-    capacity_playing: 
   - priority: 1
+    capacity_playing: 
     capacities:
     - walk
     - run
     lock_orientation: 0
     one_shot: 0
-    capacity_playing: 
   - priority: 3
+    capacity_playing: 
     capacities:
     - attack
     lock_orientation: 1
     one_shot: 1
-    capacity_playing: 
   - priority: 4
+    capacity_playing: 
     capacities:
     - hurted
     - eat
     lock_orientation: 1
     one_shot: 1
-    capacity_playing: 
   - priority: 5
+    capacity_playing: 
     capacities:
     - die
     lock_orientation: 1
     one_shot: 0
-    capacity_playing: 
   log: 0
   log_orientation: 0
   log_advanced: 0
@@ -583,6 +583,7 @@ MonoBehaviour:
   exploration_radius: 3
   eyes: {fileID: 0}
   mover: {fileID: 0}
+  base_tag: Rat
   log_actions: 0
 --- !u!1001 &347420623141943002
 PrefabInstance:
@@ -662,11 +663,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 891631874371971630, guid: 159a8149bceb3f040b4991aa3391ef5f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.8599997
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 891631874371971630, guid: 159a8149bceb3f040b4991aa3391ef5f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.5400004
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 891631874371971630, guid: 159a8149bceb3f040b4991aa3391ef5f, type: 3}
       propertyPath: m_LocalPosition.z

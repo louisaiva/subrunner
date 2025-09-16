@@ -716,9 +716,10 @@ MonoBehaviour:
   exploration_radius: 5
   eyes: {fileID: 0}
   mover: {fileID: 0}
+  base_tag: Zombo
   log_actions: 0
-  processor_exploit_damage: 5
-  processor_exploit_knockback_magnitude: 500
+  cpu_overheat_damage: 5
+  cpu_overheat_knockback: 500
 --- !u!1001 &4874808237167080038
 PrefabInstance:
   m_ObjectHideFlags: 0

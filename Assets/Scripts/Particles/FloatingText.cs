@@ -1,28 +1,24 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 
 public class FloatingText : MonoBehaviour {
     
-    // mouvement
+    [Header("Parameters")]
     [SerializeField] private float speed = 0.5f;
-
-    // disparition
     [SerializeField] private float fade_out_speed = 0.5f;
-
-    // time to live
     [SerializeField] private float ttl = 3f;
-
-    // size
     [SerializeField] private float size = 30f;
+    [SerializeField] private float scale = 0.1f;
 
-    // materials path
+    [Header("Resources")]
     private string materials_path = "materials/text/";
     private string font_name = "pixelrunner";
 
 
-    // colors
+    [Header("Colors")]
     private Dictionary<string,Color> colors = new Dictionary<string, Color>
     {
         {"red", Color.red},
@@ -39,26 +35,55 @@ public class FloatingText : MonoBehaviour {
         {"orange", new Color(1, 0.5f, 0)},
         {"purple", new Color(0.5f, 0, 1)}
     };
+    [SerializeField] private string base_color = "white";
 
-    private string base_color = "white";
 
-    // unity functions
+    [Header("Components")]
+    [SerializeField] private TMP_Text text_mesh;
 
-    public void init(string text, string color, float size=-1f, float speed = -1f, float fade_out_speed = -1f, float ttl = -1f)
+    [Header("Logs")]
+    [SerializeField] private bool initialised_read_only = false;
+    [SerializeField] private bool log = false;
+
+    private void Start()
     {
+        if (text_mesh == null)
+        {
+            Debug.LogError("FloatingText: no text mesh found");
+            return;
+        }
+
+        if (text_mesh.text != "") 
+        {
+            init(text_mesh.text, base_color);
+        }
+    }
+
+    // INIT
+    public void init(string text, string color, float size = -1f, float speed = -1f, float fade_out_speed = -1f, float ttl = -1f)
+    {
+        if (initialised_read_only) { if (log) { Debug.LogWarning("FloatingText: already initialised"); } return; }
+
+        initialised_read_only = true;
         base_color = color;
 
+        if (text_mesh == null)
+        {
+            text_mesh = GetComponent<TMP_Text>();
+            if (text_mesh == null) { Debug.LogError("FloatingText: no text mesh found"); }
+        }
+
         // on initialise le texte
-        GetComponent<TextMeshPro>().text = text;
-        GetComponent<TextMeshPro>().color = colors[color];
-        GetComponent<TextMeshPro>().fontSize = 1;
+        text_mesh.text = text;
+        text_mesh.color = colors[color];
+        text_mesh.fontSize = 1;
 
         // on ajuste le material
         ajustMaterial();
 
         // ajustement de la taille
         if (size != -1f) { this.size = size; }
-        transform.localScale = new Vector3(0.1f, 0.1f, 0.1f) * this.size;
+        transform.localScale = new Vector3(scale, scale, scale) * this.size;
 
         // on initialise les variables
         if (speed != -1f) { this.speed = speed; }
@@ -66,6 +91,8 @@ public class FloatingText : MonoBehaviour {
         if (ttl != -1f) { this.ttl = ttl; }
     }
 
+
+    // UPDATING
     void Update()
     {
         // on fait disparaitre le texte
@@ -76,11 +103,10 @@ public class FloatingText : MonoBehaviour {
         transform.position += new Vector3(0, speed * Time.deltaTime, 0);
 
         // on fait disparaitre le texte
-        Color color = GetComponent<TextMeshPro>().color;
+        Color color = text_mesh.color;
         color.a -= fade_out_speed * Time.deltaTime;
-        GetComponent<TextMeshPro>().color = color;
+        text_mesh.color = color;
     }
-
     public void ajustMaterial()
     {
         // on récupère le material
@@ -88,9 +114,8 @@ public class FloatingText : MonoBehaviour {
         Material material = Resources.Load<Material>(materials_path + material_name);
 
         // on le met
-        GetComponent<TextMeshPro>().fontMaterial = material;
+        text_mesh.fontMaterial = material;
     }
-
     public void setTTL(float ttl)
     {
         this.ttl = ttl;

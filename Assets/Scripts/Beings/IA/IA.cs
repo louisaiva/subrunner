@@ -17,6 +17,9 @@ public class IA : Being
                                           // todo must be part of an IAData class or struct that influence a curiosity parameter
     public Transform eyes;
     public GoToBehaviour mover;
+    public Brain Brain => transform.Find("brain").GetComponent<Brain>();
+    [SerializeField] private string base_tag = "IA";
+    public string BaseTag => base_tag;
     // public Seeker seeker { get; private set; } // the seeker component used for pathfinding
 
     [Header("Logs")]
@@ -26,6 +29,9 @@ public class IA : Being
     protected override void Awake()
     {
         base.Awake();
+
+        // we set the tag
+        gameObject.tag = base_tag;
 
         // we get the eyes component
         eyes = transform.Find("eyes");

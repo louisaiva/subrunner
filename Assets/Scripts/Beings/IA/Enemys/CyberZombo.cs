@@ -33,7 +33,10 @@ public class CyberZombo : IA, Hackable
     public bool IsVulnerableTo(Exploit exploit)
     {
         if (exploit == Exploit.Nmap) { return true; }
-        return exploit.name == "cpu_overheat";
+        if (exploit.name == "cpu_overheat") { return true; }
+        if (exploit.name == "cpu_melt") { return true; }
+        if (exploit.name == "trojan") { return true; }
+        return false;
     }
     public void OnHackStarted(Hack hack)
     {
@@ -44,18 +47,41 @@ public class CyberZombo : IA, Hackable
     public void OnHackCompleted(Hack hack)
     {
         if (debug) { Debug.Log($"(CyberZombo) {name} has been hacked by {hack.name}"); }
-        // if the exploit is a cpu_overheat exploit, we deal damage to the zombie
+
+        int damage = 0;
+        Force knockback = null;
+
+        // if the exploit is a damage exploit, we deal damage to the zombie
         if (hack.name == "cpu_overheat")
         {
+            damage = cpu_overheat_damage;
             // we create a knockback force
-            Force knockback_force = new Force(
+            knockback = new Force(
                 name: "cpu_overheat_knockback",
                 direction: new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized,
                 magnitude: cpu_overheat_knockback
             );
-
-            take_damage(cpu_overheat_damage, knockback_force);
         }
+        else if (hack.name == "cpu_melt")
+        {
+            // we insta-kill the zombie
+            damage = 1000;
+
+            // we create a knockback force
+            knockback = new Force(
+                name: "cpu_overheat_knockback",
+                direction: new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized,
+                magnitude: cpu_overheat_knockback
+            );
+        }
+        else if (hack.name == "trojan")
+        {
+            // we move the PersoInputsController to the capable for 30 seconds
+            PersoInputsController.Instance.ChangeCapableTarget(this, 30f);
+        }
+
+        // take damage if needed
+        if (damage > 0) { take_damage(damage, knockback); }
 
         if (RunningHacks.Contains(hack)) { RunningHacks.Remove(hack); } // if the zombo is dead we may have already removed the hack
     }

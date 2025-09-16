@@ -326,6 +326,79 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3533525347385825561}
     m_Modifications:
+    - target: {fileID: 1495241056191344170, guid: 2fa49447df099654dbc24545c7293957, type: 3}
+      propertyPath: keys.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495241056191344170, guid: 2fa49447df099654dbc24545c7293957, type: 3}
+      propertyPath: files.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495241056191344170, guid: 2fa49447df099654dbc24545c7293957, type: 3}
+      propertyPath: exploits.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495241056191344170, guid: 2fa49447df099654dbc24545c7293957, type: 3}
+      propertyPath: exploits.Array.data[0].data
+      value: 3644 5563 7573 3165 754f 3462 5166 5363 5568 736b 4471 6c5a 7232 536c
+        4c78 5272 a717 0344 a783 5596 d4c7 65a5 9616 9337 1733 76f4 6777 37a7 05a4
+        d665 64a6 9694 8a41 7171 4B37 4957 6e54 4b6b 4a55 7247 4934 6f76 6362 6346
+        3770 4f32 445a 7a64
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495241056191344170, guid: 2fa49447df099654dbc24545c7293957, type: 3}
+      propertyPath: exploits.Array.data[0].name
+      value: bruteforce
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495241056191344170, guid: 2fa49447df099654dbc24545c7293957, type: 3}
+      propertyPath: exploits.Array.data[1].data
+      value: 3644 5563 7573 3165 754f 3462 5166 5363 5568 736b 4471 6c5a 7232 536c
+        4c78 5272 a717 0344 a783 5596 d4c7 65a5 9616 9337 1733 76f4 6777 37a7 05a4
+        d665 64a6 9694 8a41 7171 4B37 4957 6e54 4b6b 4a55 7247 4934 6f76 6362 6346
+        3770 4f32 445a 7a64
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495241056191344170, guid: 2fa49447df099654dbc24545c7293957, type: 3}
+      propertyPath: exploits.Array.data[1].name
+      value: bruteforce
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495241056191344170, guid: 2fa49447df099654dbc24545c7293957, type: 3}
+      propertyPath: exploits.Array.data[2].data
+      value: 3644 5563 7573 3165 754f 3462 5166 5363 5568 736b 4471 6c5a 7232 536c
+        4c78 5272 a717 0344 a783 5596 d4c7 65a5 9616 9337 1733 76f4 6777 37a7 05a4
+        d665 64a6 9694 8a41 7171 4B37 4957 6e54 4b6b 4a55 7247 4934 6f76 6362 6346
+        3770 4f32 445a 7a64
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495241056191344170, guid: 2fa49447df099654dbc24545c7293957, type: 3}
+      propertyPath: exploits.Array.data[2].name
+      value: bruteforce
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495241056191344170, guid: 2fa49447df099654dbc24545c7293957, type: 3}
+      propertyPath: exploits.Array.data[2].extension
+      value: .exe
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495241056191344170, guid: 2fa49447df099654dbc24545c7293957, type: 3}
+      propertyPath: exploits.Array.data[0].cores_cost
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495241056191344170, guid: 2fa49447df099654dbc24545c7293957, type: 3}
+      propertyPath: exploits.Array.data[2].cores_cost
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495241056191344170, guid: 2fa49447df099654dbc24545c7293957, type: 3}
+      propertyPath: exploits.Array.data[0].base_duration
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495241056191344170, guid: 2fa49447df099654dbc24545c7293957, type: 3}
+      propertyPath: exploits.Array.data[1].base_duration
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495241056191344170, guid: 2fa49447df099654dbc24545c7293957, type: 3}
+      propertyPath: exploits.Array.data[2].base_duration
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1495241056191344170, guid: 2fa49447df099654dbc24545c7293957, type: 3}
+      propertyPath: exploits.Array.data[2].security_level
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6265687751537305727, guid: 2fa49447df099654dbc24545c7293957, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
