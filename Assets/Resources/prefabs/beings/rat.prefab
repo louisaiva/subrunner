@@ -872,8 +872,16 @@ PrefabInstance:
       value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
+      propertyPath: base_excluded_tags.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: not_attackable_tags.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
+      propertyPath: 'base_excluded_tags.Array.data[0]'
+      value: Rat
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: 'not_attackable_tags.Array.data[0]'

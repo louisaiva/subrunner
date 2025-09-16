@@ -95,6 +95,8 @@ public class CyberZombo : IA, Hackable
     // DIE
     public override void Die()
     {
+        base.Die();
+
         spriteRenderer.material = DefaultMaterial;
         int hacks = RunningHacks.Count;
         while (RunningHacks.Count > 0)

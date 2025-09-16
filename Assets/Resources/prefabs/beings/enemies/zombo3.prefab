@@ -56,6 +56,9 @@ MonoBehaviour:
   excluded_tags:
   - Zombo
   - Robot
+  friendly_skins:
+  - zombo
+  - robot
   log: 0
 --- !u!58 &4164750315520189909
 CircleCollider2D:
@@ -534,6 +537,7 @@ Transform:
   - {fileID: 6273157296446669408}
   - {fileID: 2855746702652472508}
   - {fileID: 5274840657265545104}
+  - {fileID: 7650731112933661807}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5396166487167258112
@@ -720,6 +724,68 @@ MonoBehaviour:
   log_actions: 0
   cpu_overheat_damage: 5
   cpu_overheat_knockback: 500
+--- !u!1001 &4371120716597179566
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1982530335173329727}
+    m_Modifications:
+    - target: {fileID: 2301345579811965954, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: m_Name
+      value: interact
+      objectReference: {fileID: 0}
+    - target: {fileID: 6234543502669162689, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6234543502669162689, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6234543502669162689, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6234543502669162689, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6234543502669162689, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6234543502669162689, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6234543502669162689, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6234543502669162689, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6234543502669162689, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6234543502669162689, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+--- !u!4 &7650731112933661807 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6234543502669162689, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+  m_PrefabInstance: {fileID: 4371120716597179566}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4874808237167080038
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1018,12 +1084,20 @@ PrefabInstance:
       value: Zombo
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
+      propertyPath: base_excluded_tags.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: not_attackable_tags.Array.size
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: random_damage_modifier_at_start
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
+      propertyPath: 'base_excluded_tags.Array.data[0]'
+      value: Zombo
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: 'not_attackable_tags.Array.data[0]'

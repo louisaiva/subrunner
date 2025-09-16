@@ -27,6 +27,7 @@ public class PersoInputsController : Singleton<PersoInputsController>
     private event Action<InputAction.CallbackContext> useConso2Callback;
     private event Action<InputAction.CallbackContext> useConso3Callback;
     private event Action<InputAction.CallbackContext> useConso4Callback;
+    private event Action<InputAction.CallbackContext> interactCallback;
 
     private void Start()
     {
@@ -58,6 +59,10 @@ public class PersoInputsController : Singleton<PersoInputsController>
         perso_inputs.conso2.performed += useConso2Callback;
         perso_inputs.conso3.performed += useConso3Callback;
         perso_inputs.conso4.performed += useConso4Callback;
+
+        // et les callbacks d'interaction
+        interactCallback = ctx => OnInteract(ctx);
+        perso_inputs.interact.performed += interactCallback;
     }
 
     // UPDATE
@@ -173,13 +178,18 @@ public class PersoInputsController : Singleton<PersoInputsController>
         // on utilise la conso
         conso.Use(Capable);
     }
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        InteractCapacity interactor = Capable.GetCapacity<InteractCapacity>();
+        if (interactor == null) { return; } // if we don't have an interact capacity
+        if (!interactor.Able) { return; } // if we don't have an interact capacity
+        interactor.HandleInteractInput(context);
+    }
 
 
     // CHANGE CAPABLE TARGET
     public void ChangeCapableTarget(Capable new_target, float duration = -888f)
     {
-
-
         // reset les inputs de l'ancien capable
         Capable.ClearInputs();
         if (Capable.GetCapacity<WalkCapacity>() != null)
@@ -195,6 +205,12 @@ public class PersoInputsController : Singleton<PersoInputsController>
 
             // on remet le tag
             old_ia.gameObject.tag = old_ia.BaseTag;
+
+            // reset les tags d'attaques si on a
+            if (old_ia.HasCapacity<AttackCapacity>())
+            {
+                old_ia.GetCapacity<AttackCapacity>().ResetTags();
+            }
         }
 
 
@@ -220,6 +236,12 @@ public class PersoInputsController : Singleton<PersoInputsController>
 
             // on remet le tag
             ia.gameObject.tag = "Controlled";
+
+            // on clear les tags d'attaque pour pouvoir attaquer des gens
+            if (ia.HasCapacity<AttackCapacity>())
+            {
+                ia.GetCapacity<AttackCapacity>().ClearTags();
+            }
         }
     }
     public void ResetCapableTarget()
@@ -240,6 +262,7 @@ public class PersoInputsController : Singleton<PersoInputsController>
         perso_inputs.conso2.performed -= useConso2Callback;
         perso_inputs.conso3.performed -= useConso3Callback;
         perso_inputs.conso4.performed -= useConso4Callback;
+        perso_inputs.interact.performed -= interactCallback;
 
         Disabled = true;
     }
@@ -252,6 +275,7 @@ public class PersoInputsController : Singleton<PersoInputsController>
         perso_inputs.conso2.performed += useConso2Callback;
         perso_inputs.conso3.performed += useConso3Callback;
         perso_inputs.conso4.performed += useConso4Callback;
+        perso_inputs.interact.performed += interactCallback;
 
         Disabled = false;
     }

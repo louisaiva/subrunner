@@ -29,11 +29,11 @@ public class InteractCapacity : Capacity
     [Header("Waiting hovers")]
     [SerializeField] private List<Capable> waiting_hovers = new List<Capable>();
 
-    [Header("Input & Callbacks")]
-    [SerializeField] private InputActionReference interactInput;
-    private InputAction interactAction;
-    private event Action<InputAction.CallbackContext> interactCallback;
-    [SerializeField] private bool callback_is_set = false;
+    // [Header("Input & Callbacks")]
+    // [SerializeField] private InputActionReference interactInput;
+    // private InputAction interactAction;
+    // private event Action<InputAction.CallbackContext> interactCallback;
+    // [SerializeField] private bool callback_is_set = false;
 
     [Header("Item Grab")]
     [SerializeField] private GrabCapacity grab_capacity;
@@ -52,10 +52,10 @@ public class InteractCapacity : Capacity
     private void Start()
     {
         // we get the interact action
-        interactAction = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().GetAction(interactInput);
+        // interactAction = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().GetAction(interactInput);
 
-        interactCallback = ctx => HandleInteractInput(ctx);
-        interactAction.performed += interactCallback;
+        // interactCallback = ctx => HandleInteractInput(ctx);
+        // interactAction.performed += interactCallback;
 
         // we get the grab capacity
         grab_capacity = capable.GetCapacity<GrabCapacity>();
@@ -91,8 +91,6 @@ public class InteractCapacity : Capacity
         unselect_hover();
         select_hover(waiting_hovers[0]);
         waiting_hovers.RemoveAt(0);
-
-        bool just_to_remove_warning = callback_is_set;
     }
 
     // INTERACTABLE SELECTION
@@ -130,38 +128,8 @@ public class InteractCapacity : Capacity
         closest_hover = null;
     }
 
-    // CALLBACKS
-    /* public void set_callbacks(Capable hover)
-    {
-        // we define the interact action
-        interactCallback = ctx => HandleInteractInput(ctx);
-        /* {
-            if (ctx.ReadValue<float>() > 0.5f) { return; } // we verify that the button was released
-            hover.OnInteract(capable);
-        }; 
-
-        // we set the callback
-        interactAction.performed += interactCallback;
-
-        // we set the callback as set
-        callback_is_set = true;
-
-        if (debug) { Debug.Log("(InteractCapacity) " + capable.name + " set callback OnInteract() on " + (hover as Capable).name); }
-    }
-    public void remove_callbacks(Capable hover)
-    {
-        // we remove the callback
-        interactAction.performed -= interactCallback;
-
-        // we set the callback as not set
-        callback_is_set = false;
-
-        if (debug) { Debug.Log("(InteractCapacity) " + capable.name + " removed callback OnInteract() on " + (hover as Capable).name); }
-    } */
-
-
     // HANDLE INTERACT INPUT
-    private void HandleInteractInput(InputAction.CallbackContext context)
+    public void HandleInteractInput(InputAction.CallbackContext context)
     {
         // if we release the button we direclty interact with it
         if (context.ReadValue<float>() < 0.5f)
@@ -191,7 +159,6 @@ public class InteractCapacity : Capacity
     }
 
     // ENDLESS INTERACT INPUT
-    // todo : for now we don't deactivate it if we 
     [Header("Interact Endlessly")]
     [SerializeField] private bool interacting_endlessly_waiting_threshold = false;
     [SerializeField] private bool interacting_endlessly = false;
@@ -293,10 +260,10 @@ public class InteractCapacity : Capacity
     }
 
     // DESTROY
-    private void OnDestroy()
+    /* private void OnDestroy()
     {
         // we remove all callbacks
         // if (closest_hover is Interactable || closest_hover is Item) { remove_callbacks(closest_hover); }
         interactAction.performed -= interactCallback;
-    }
+    } */
 }

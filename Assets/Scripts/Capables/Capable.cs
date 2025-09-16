@@ -35,6 +35,7 @@ public class Capable : MonoBehaviour
         }
     }
     public void ClearInputs() { inputs = Vector2.zero; } // does the same than Orientation = Vector2.zero; but more optimized
+    public string Skin => (anim_player == null) ? "none" : anim_player.Skin;
 
     [Header("Capacities")]
     [SerializeField] protected List<Capacity> capacities = new List<Capacity>();

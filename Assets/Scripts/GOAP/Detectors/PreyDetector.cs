@@ -16,6 +16,8 @@ public class PreyDetector : Detector
     public LayerMask target_layers;
     public List<string> excluded_tags; // tags to exclude from current_target detection
 
+    public List<string> friendly_skins; // skins to exclude from current_target detection
+
     [Header("Logs")]
     [SerializeField] private bool log = false; // whether to log the detector's actions
 
@@ -91,7 +93,8 @@ public class PreyDetector : Detector
         if (!((target_layers.value & (1 << other.transform.gameObject.layer)) > 0)) { return; }
         Being being = other.transform.parent.GetComponent<Being>();
         if (being == null) { return; }
-        if (excluded_tags.Count > 0 && excluded_tags.Contains(being.transform.tag)) { return; }
+        // if (excluded_tags.Count > 0 && excluded_tags.Contains(being.transform.tag)) { return; }
+        if (friendly_skins.Count > 0 && friendly_skins.Contains(being.Skin)) { return; }
         if (waiting_targets.Contains(being)) { return; }
 
         // remove null targets
