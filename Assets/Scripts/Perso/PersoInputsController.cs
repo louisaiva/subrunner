@@ -29,10 +29,18 @@ public class PersoInputsController : Singleton<PersoInputsController>
     private event Action<InputAction.CallbackContext> useConso4Callback;
     private event Action<InputAction.CallbackContext> interactCallback;
 
+    [Header("Components")]
+    [SerializeField] private SeeThroughHandler see_through;
+    public Room current_room { get; set; }
+
     private void Start()
     {
         // on récupère les inputs
         initInputs();
+
+        see_through = transform.Find("see_through_handler").GetComponent<SeeThroughHandler>();
+
+        ResetCapableTarget();
     }
 
     // INPUTS
@@ -229,9 +237,15 @@ public class PersoInputsController : Singleton<PersoInputsController>
         CancelInvoke("ResetCapableTarget");
         if (duration != -888f) { Invoke("ResetCapableTarget", duration); }
 
+        // repositionne la tete
+        float head_y_offset = AnimBank.Instance.GetHeadOffset(new_target.Skin);
+        see_through.transform.localPosition = new Vector3(see_through.transform.localPosition.x, head_y_offset, see_through.transform.localPosition.z);
+        see_through.RecenterEllipseOffset(new_target.GetComponent<SpriteRenderer>());
+
         // on désactive le Brain si le nouveau capable est un IA
         if (new_target is IA ia)
         {
+            // désactive le cerveau
             ia.Brain.gameObject.SetActive(false);
 
             // on remet le tag

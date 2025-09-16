@@ -32,4 +32,5 @@ public interface Lockable : Hackable
     bool Locked { get; } // whether the hackable is locked or not
     Key Key { get; }
     string Password { get; }
+    bool IsUnlockableVia(Exploit exploit);
 }

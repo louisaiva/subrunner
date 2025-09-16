@@ -81,7 +81,8 @@ public class HackCapacity : Capacity
             // we check if the hack is done
             if (hack.state == HackState.Completed || hack.state == HackState.Failed || hack.state == HackState.Overflowed)
             {
-                if (hack.target is Lockable lockable && hack.state == HackState.Completed)
+                if (hack.target is Lockable lockable && hack.state == HackState.Completed
+                && hack.program is Exploit exploit && lockable.IsUnlockableVia(exploit))
                 {
                     // we save the found key in our laptop
                     Key key = lockable.Key;

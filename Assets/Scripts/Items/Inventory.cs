@@ -53,7 +53,7 @@ public class Inventory : MonoBehaviour
         {
             if (ui == null)
             {
-                Debug.LogWarning("(Inventory) " + name + $" has a null UI_Inventory : {ui.name}, skipping initialization");
+                Debug.LogWarning("(Inventory) " + name + $" has a null UI_Inventory : skipping initialization");
                 continue;
             }
             ui.Init();

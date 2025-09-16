@@ -170,4 +170,9 @@ public class HackableDoor : Door, Lockable
             close();
         }
     }
+    public bool IsUnlockableVia(Exploit exploit)
+    {
+        if (exploit == Exploit.Nmap) { return false; }
+        return IsVulnerableTo(exploit);
+    }
 }

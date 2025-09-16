@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CyberZombo : IA, Hackable
+public class HackableIA : IA, Hackable
 {
+    
     [Header("CPU Overheat Damage")]
     public int cpu_overheat_damage = 5;
     public int cpu_overheat_knockback = 500;
@@ -38,13 +39,13 @@ public class CyberZombo : IA, Hackable
     }
     public void OnHackStarted(Hack hack)
     {
-        if (debug) { Debug.Log($"(CyberZombo) {name} is being hacked by {hack.name}"); }
+        if (debug) { Debug.Log($"(HackableIA) {name} is being hacked by {hack.name}"); }
 
         RunningHacks.Add(hack);
     }
     public void OnHackCompleted(Hack hack)
     {
-        if (debug) { Debug.Log($"(CyberZombo) {name} has been hacked by {hack.name}"); }
+        if (debug) { Debug.Log($"(HackableIA) {name} has been hacked by {hack.name}"); }
 
         int damage = 0;
         Force knockback = null;
@@ -85,7 +86,7 @@ public class CyberZombo : IA, Hackable
     }
     public void OnHackFailed(Hack hack)
     {
-        if (debug) { Debug.Log($"(CyberZombo) {name} failed to hack by {hack.name}"); }
+        if (debug) { Debug.Log($"(HackableIA) {name} failed to hack by {hack.name}"); }
         RunningHacks.Remove(hack);
     }
 
@@ -104,6 +105,6 @@ public class CyberZombo : IA, Hackable
             else { hack.Fail(); }
         }
 
-        Debug.Log($"(CyberZombo) {name} has died. {hacks} running hacks were forced to fail.");
+        Debug.Log($"(HackableIA) {name} has died. {hacks} running hacks were forced to fail.");
     }
 }

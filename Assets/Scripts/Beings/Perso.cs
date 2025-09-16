@@ -20,7 +20,7 @@ public class Perso : Being, Hacker
     private GameObject floating_text_prefab;
     private GameObject cam;
 
-    public Room current_room { get; set; }
+    // public Room current_room { get; set; }
 
     public HackableNavigator HackableNavigator { get; private set; }
     public ExploitNavigator ExploitNavigator { get; private set; }
@@ -28,8 +28,6 @@ public class Perso : Being, Hacker
 
     [Header("SKILLS")]
     public SkillManager skillManager;
-    // public UI_Fullmap big_map;
-
 
     // public Color HackColor { get; } = new Color(0.2f, 0.8f, 1f); // light blue
 
