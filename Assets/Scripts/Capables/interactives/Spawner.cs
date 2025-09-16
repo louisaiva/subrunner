@@ -4,6 +4,9 @@ public class Spawner : Capable, Interactable
 {
     // INTERACTABLE
     public InteractCapacity Interactor { get; set; }
+    public bool AuthorizeEndlessInteraction => authorize_interact_endlessly;
+    [Header("Endless interaction")]
+    public bool authorize_interact_endlessly = true;
     public void OnInteract(Capable interactor)
     {
         // we set the interactor

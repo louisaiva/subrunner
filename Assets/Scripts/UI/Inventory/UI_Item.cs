@@ -278,12 +278,14 @@ public class UI_Item : UI_Slot
         if (dropper != null)
         {
             dropper.Select(item);
+            dropper.random_direction = true;
             inventory.capable.Do("drop");
             OnItemChanged?.Invoke(this.items);
             ItemPool?.NotifyPoolChanged(this);
+            dropper.random_direction = false;
 
             // we switch back to hud
-            GameObject.Find("/ui").GetComponent<UI_Manager>().SwitchTo("hud");
+            // GameObject.Find("/ui").GetComponent<UI_Manager>().SwitchTo("hud");
         }
         else
         {

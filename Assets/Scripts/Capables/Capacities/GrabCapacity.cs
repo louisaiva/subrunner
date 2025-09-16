@@ -44,7 +44,7 @@ public class GrabCapacity : Capacity
         grabCallback = ctx =>
         {
             if (ctx.ReadValue<float>() > 0.5f) { return; } // we verify that the button was released
-            Use(capable);
+            // Use(capable);
         };
     }
 

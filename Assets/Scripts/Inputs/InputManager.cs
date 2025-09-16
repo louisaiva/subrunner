@@ -16,6 +16,13 @@ public class InputManager : Singleton<InputManager>
     [SerializeField] public float BUTTON_MIN_THRESHOLD = 0.2f;
     [SerializeField] public float BUTTON_MAX_THRESHOLD = 0.8f;
 
+    [Header("Inputing endlessly")]
+    [SerializeField] public float BUTTON_ENDLESSLY_SHORT_THRESHOLD = 0.3f; // time threshold input need to be maintain before inputing endlessly
+    [SerializeField] public float BUTTON_ENDLESSLY_SHORT_DELAY = 0.06f; // when inputing endlessly, delay btwn each input
+    [SerializeField] public float BUTTON_ENDLESSLY_LONG_THRESHOLD = 0.6f; // time threshold input need to be maintain before inputing endlessly
+    [SerializeField] public float BUTTON_ENDLESSLY_LONG_DELAY = 0.1f; // when inputing endlessly, delay btwn each input
+
+
     [Header("Components")]
     [SerializeField] private InputSystemUIInputModule input_system_ui_input_module;
 

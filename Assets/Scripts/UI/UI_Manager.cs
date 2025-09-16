@@ -18,6 +18,19 @@ public class UI_Manager : Singleton<UI_Manager>
     [SerializeField] private UI_Pool current_pool;
     // [SerializeField] private UI_Pool last_pool;
     public string CurrentPool { get => current_pool.Reference; }
+    public bool InPool(string pool_name)
+    {
+        if (current_pool == null) { return false; }
+        return current_pool.Reference == pool_name;
+    }
+    public bool InPools(List<string> pool_names)
+    {
+        foreach (string pool_name in pool_names)
+        {
+            if (InPool(pool_name)) { return true; }
+        }
+        return false;
+    }
 
 
     [Header("Transitions")]

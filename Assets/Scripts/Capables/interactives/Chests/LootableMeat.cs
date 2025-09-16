@@ -9,6 +9,7 @@ public class LootableMeat : Meat, Interactable, Openable
 
     // INTERACTABLE
     public InteractCapacity Interactor { get; set; }
+    public bool AuthorizeEndlessInteraction => true;
     public void OnInteract(Capable interactor)
     {
         // we set the interactor

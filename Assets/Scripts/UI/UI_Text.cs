@@ -36,6 +36,13 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
         base_text = tmp.text;
     }
 
+    // TEXT FUNCTIONS
+    public void SetText(string new_text)
+    {
+        tmp.text = new_text;
+        base_text = new_text;
+    }
+
 
     // MAIN CLICK FUNCTIONS
     public void play()

@@ -34,4 +34,21 @@ public class UI_VersionText : MonoBehaviour
 
         text.text = label;
     }
+
+    public string GetVersion()
+    {
+        return version;
+    }
+    public string GetFullVersion(bool includePrototype = true)
+    {
+        string full = versionPrefix + version;
+
+        if (includePrototype && !string.IsNullOrEmpty(prototype))
+        {
+            full += "\n(prototype " + prototype + ")";
+        }
+
+        return full;
+    }
+
 }

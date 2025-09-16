@@ -6,6 +6,7 @@ public interface Interactable
     // PlayerInputActions input_actions { get; }
     public InteractCapacity Interactor { get; set; }
     public void OnInteract(Capable interactor);
+    public bool AuthorizeEndlessInteraction { get; }
 }
 
 public interface Openable

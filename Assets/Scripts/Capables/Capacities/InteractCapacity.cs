@@ -55,6 +55,9 @@ public class InteractCapacity : Capacity
         // we get the interact action
         interactAction = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().GetAction(interactInput);
 
+        interactCallback = ctx => HandleInteractInput(ctx);
+        interactAction.performed += interactCallback;
+
         // we get the grab capacity
         grab_capacity = capable.GetCapacity<GrabCapacity>();
     }
@@ -103,19 +106,11 @@ public class InteractCapacity : Capacity
 
         // we play the hover animation
         closest_hover.GetCapacity<HoverCapacity>()?.Hover(this.capable);
-        // if (closest_hover.Can("hover")) { closest_hover.Do("hover"); }
 
-        // we check if it's an Item or an Interactable
-        if (closest_hover is Interactable)
-        {
-            // we set the callback
-            set_callbacks(closest_hover as Interactable);
-        }
-        else if (closest_hover is Item)
-        {
-            // we unselect the item
-            grab_capacity?.Select(closest_hover as Item);
-        }
+        // set_callbacks(closest_hover);
+
+        // if it's an item and we have a grab capacity, we select it
+        if (closest_hover is Item item) { grab_capacity?.Select(item); }
     }
     private void unselect_hover()
     {
@@ -126,15 +121,10 @@ public class InteractCapacity : Capacity
         closest_hover.GetCapacity<HoverCapacity>()?.Unhover(this.capable);
 
         // we remove the callback
-        if (closest_hover is Interactable)
-        {
-            remove_callbacks(closest_hover as Interactable);
-        }
-        else if (closest_hover is Item)
-        {
-            // we unselect the item
-            grab_capacity?.Deselect();
-        }
+        // remove_callbacks(closest_hover);
+
+        // we deselect the grabbing if it's an item
+        if (closest_hover is Item) { grab_capacity?.Deselect(); }
 
         // we reset the current hover
         if (debug) { Debug.Log("(InteractCapacity) " + closest_hover.name + " unselected as closest hover"); }
@@ -142,14 +132,14 @@ public class InteractCapacity : Capacity
     }
 
     // CALLBACKS
-    public void set_callbacks(Interactable interactable)
+    /* public void set_callbacks(Capable hover)
     {
         // we define the interact action
-        interactCallback = ctx =>
-        {
+        interactCallback = ctx => HandleInteractInput(ctx);
+        /* {
             if (ctx.ReadValue<float>() > 0.5f) { return; } // we verify that the button was released
-            interactable.OnInteract(capable);
-        };
+            hover.OnInteract(capable);
+        }; 
 
         // we set the callback
         interactAction.performed += interactCallback;
@@ -157,9 +147,9 @@ public class InteractCapacity : Capacity
         // we set the callback as set
         callback_is_set = true;
 
-        if (debug) { Debug.Log("(InteractCapacity) " + capable.name + " set callback OnInteract() on " + (interactable as Capable).name); }
+        if (debug) { Debug.Log("(InteractCapacity) " + capable.name + " set callback OnInteract() on " + (hover as Capable).name); }
     }
-    public void remove_callbacks(Interactable interactable)
+    public void remove_callbacks(Capable hover)
     {
         // we remove the callback
         interactAction.performed -= interactCallback;
@@ -167,8 +157,86 @@ public class InteractCapacity : Capacity
         // we set the callback as not set
         callback_is_set = false;
 
-        if (debug) { Debug.Log("(InteractCapacity) " + capable.name + " removed callback OnInteract() on " + (interactable as Capable).name); }
+        if (debug) { Debug.Log("(InteractCapacity) " + capable.name + " removed callback OnInteract() on " + (hover as Capable).name); }
+    } */
+
+
+    // HANDLE INTERACT INPUT
+    private void HandleInteractInput(InputAction.CallbackContext context)
+    {
+        // if we release the button we direclty interact with it
+        if (context.ReadValue<float>() < 0.5f)
+        {
+            if (interacting_endlessly || interacting_endlessly_waiting_threshold)
+            {
+                interacting_endlessly_waiting_threshold = false;
+                interacting_endlessly = false;
+            }
+
+            // interact with interactable & select + grab items
+            interact();
+
+            return;
+        }
+
+        // else we launches endless interaction
+        interact_endlessly();        
     }
+    private void interact()
+    {
+        if (closest_hover == null) { return; }
+
+        // interact with interactable & select + grab items
+        if (closest_hover is Interactable interactable) { interactable.OnInteract(capable); }
+        else if (closest_hover is Item item) { grab_capacity?.Use(capable); }
+    }
+
+    // ENDLESS INTERACT INPUT
+    // todo : for now we don't deactivate it if we 
+    [Header("Interact Endlessly")]
+    [SerializeField] private bool interacting_endlessly_waiting_threshold = false;
+    [SerializeField] private bool interacting_endlessly = false;
+    private async void interact_endlessly()
+    {
+
+        // threshold wait
+        interacting_endlessly_waiting_threshold = true;
+        float elapsed = 0f;
+        while (elapsed < InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD && interacting_endlessly_waiting_threshold)
+        {
+            elapsed += Time.deltaTime;
+            await System.Threading.Tasks.Task.Yield();
+        }
+        if (!interacting_endlessly_waiting_threshold) { return; }
+
+        // endless interaction
+        interacting_endlessly = true;
+        interacting_endlessly_waiting_threshold = false;
+        while (interacting_endlessly)
+        {
+            if (UI_Manager.Instance != null && !UI_Manager.Instance.InPools(new List<string> { "hud", "hacking" })) { break; }
+
+            // interact endlessly if it's an item
+            if (closest_hover != null
+                && (closest_hover is Item
+                || (closest_hover is Interactable interactable && interactable.AuthorizeEndlessInteraction)))
+            { interact(); }
+
+            // delay wait
+            elapsed = 0f;
+            while (elapsed < InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY)
+            {
+                if (!interacting_endlessly) { break; }
+                elapsed += Time.deltaTime;
+                await System.Threading.Tasks.Task.Yield();
+            }
+        }
+
+        // deactivate everything
+        interacting_endlessly = false;
+        interacting_endlessly_waiting_threshold = false;
+    }
+
 
     // TRIGGER ENTER
     private void OnTriggerEnter2D(Collider2D other)
@@ -229,6 +297,7 @@ public class InteractCapacity : Capacity
     private void OnDestroy()
     {
         // we remove all callbacks
-        if (closest_hover is Interactable interactable) { remove_callbacks(interactable); }
+        // if (closest_hover is Interactable || closest_hover is Item) { remove_callbacks(closest_hover); }
+        interactAction.performed -= interactCallback;
     }
 }

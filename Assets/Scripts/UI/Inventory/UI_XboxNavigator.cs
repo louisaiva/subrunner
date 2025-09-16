@@ -201,6 +201,10 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
             can_navigate = true;
             continuous_navigation_counter = float.MaxValue;
             last_input = Vector2.zero;
+
+            // et celles de fast drop
+            fast_dropping = false;
+            fast_dropping_wait_threshold = false;
         }
     }
 
@@ -687,18 +691,29 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
             // on down le slot
             (slot as UI_Slot).OnPointerDown(null);
             if (debug) { Debug.Log("(UI_Navigator) pressed ui_item " + slot.gameObject.name); }
+
+            // on lance le fast drop
+            handle_drop_fast();
         }
         else
         {
+            if (fast_dropping || fast_dropping_wait_threshold)
+            {
+                fast_dropping = false;
+                fast_dropping_wait_threshold = false;
+            }
+
             // on relache le slot
-            drop(slot as UI_Item);
+            drop(/* slot as UI_Item */);
             if (debug) { Debug.Log("(UI_Navigator) dropped ui_item " + slot.gameObject.name); }
         }
 
     }
-    private async void drop(UI_Item slot)
+    private async void drop(/* UI_Item slot */)
     {
         if (slots.Count == 0 || current_slot_index == -1) { return; }
+        UI_Item slot = slots[current_slot_index].GetComponent<UI_Item>();
+        if (slot == null) { return; }
 
         // on retient la position du slot
         Vector2 position = get_position(slot.gameObject);
@@ -717,6 +732,42 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         navigateToClosest(position);
     }
 
+    [Header("Fast Drop")]
+    [SerializeField] private bool fast_dropping = false;
+    [SerializeField] private bool fast_dropping_wait_threshold = false;
+    // [SerializeField] private UI_Item fast_dropping_item = null;
+    private async void handle_drop_fast()
+    {
+        // wait for continuous_navigation_threshold before starting fast dropping
+        // in unscaled time
+
+        float elapsed = 0f;
+        fast_dropping_wait_threshold = true;
+        while (elapsed < InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD && fast_dropping_wait_threshold)
+        {
+            elapsed += navigateInGame ? Time.deltaTime : Time.unscaledDeltaTime;
+            await System.Threading.Tasks.Task.Yield();
+        }
+        if (!fast_dropping_wait_threshold) { return; }
+        fast_dropping_wait_threshold = false;
+
+        // fast drop
+        fast_dropping = true;
+        while (fast_dropping)
+        {
+            if (!fast_dropping) { break; }
+            elapsed = 0f;
+
+            drop();
+
+            while (elapsed < InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY)
+            {
+                if (!fast_dropping) { break; }
+                elapsed += navigateInGame ? Time.deltaTime : Time.unscaledDeltaTime;
+                await System.Threading.Tasks.Task.Yield();
+            }
+        }
+    }
 
 
 

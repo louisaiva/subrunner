@@ -9,6 +9,8 @@ public class Chest : Capable, Interactable, Openable
 
     // INTERACTABLE
     public InteractCapacity Interactor { get; set; }
+    public bool AuthorizeEndlessInteraction => false;
+
     public void OnInteract(Capable interactor)
     {
         // we set the interactor
