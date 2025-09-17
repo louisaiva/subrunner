@@ -43,17 +43,10 @@ public class SeeThroughHandler : MonoBehaviour
     {
         cam = Camera.main;
 
-        // we get the height of the current sprite
-        // SpriteRenderer sprite_renderer = GetComponent<SpriteRenderer>();
-        // float sprite_height = sprite_renderer.bounds.size.y;
-        // offset_ellipse_center.y = sprite_height / 2f;
-        // RecenterEllipseOffset(sprite_renderer);
-
-
         // we get the player body
         if (trigger == null)
         {
-            trigger = /* transform.Find("head"). */GetComponent<Collider2D>();
+            trigger = GetComponent<Collider2D>();
         }
 
         // we set the contact filter
@@ -65,9 +58,7 @@ public class SeeThroughHandler : MonoBehaviour
     {
         // on repositionne le collider de tete
         float head_y_offset = AnimBank.Instance.GetHeadOffset(target.Skin);
-        // trigger.offset = new Vector2(trigger.offset.x, head_y_offset);
         offset_ellipse_center.y = head_y_offset;
-        // RecenterEllipseOffset(target.GetComponent<SpriteRenderer>());
     }
 
     void Update()

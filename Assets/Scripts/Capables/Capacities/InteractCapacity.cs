@@ -29,12 +29,6 @@ public class InteractCapacity : Capacity
     [Header("Waiting hovers")]
     [SerializeField] private List<Capable> waiting_hovers = new List<Capable>();
 
-    // [Header("Input & Callbacks")]
-    // [SerializeField] private InputActionReference interactInput;
-    // private InputAction interactAction;
-    // private event Action<InputAction.CallbackContext> interactCallback;
-    // [SerializeField] private bool callback_is_set = false;
-
     [Header("Item Grab")]
     [SerializeField] private GrabCapacity grab_capacity;
     [SerializeField] private List<string> exclusion_item_rule = new List<string>() { }; // rule to check if an item is interactable with us
@@ -51,12 +45,6 @@ public class InteractCapacity : Capacity
     // START
     private void Start()
     {
-        // we get the interact action
-        // interactAction = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().GetAction(interactInput);
-
-        // interactCallback = ctx => HandleInteractInput(ctx);
-        // interactAction.performed += interactCallback;
-
         // we get the grab capacity
         grab_capacity = capable.GetCapacity<GrabCapacity>();
     }
@@ -103,8 +91,6 @@ public class InteractCapacity : Capacity
 
         // we play the hover animation
         closest_hover.GetCapacity<HoverCapacity>()?.Hover(this.capable);
-
-        // set_callbacks(closest_hover);
 
         // if it's an item and we have a grab capacity, we select it
         if (closest_hover is Item item) { grab_capacity?.Select(item); }
