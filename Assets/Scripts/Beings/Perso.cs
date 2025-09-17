@@ -176,7 +176,7 @@ public class Perso : Being, Hacker
         Debug.Log("LEVEL UP ! level " + level);
 
         // on ouvre le level up menu
-        GameObject.Find("/ui").GetComponent<UI_Manager>().SwitchTo("level_up");
+        UI_Manager.Instance.SwitchTo("level_up");
 
         // on augmente x1.5 l'attaque
         if (HasCapacity("attack"))

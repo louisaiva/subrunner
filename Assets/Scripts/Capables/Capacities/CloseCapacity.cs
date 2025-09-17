@@ -7,6 +7,8 @@ using UnityEngine;
 /// CloseCapacity is a capacity that allows to close itself. can be used for chests or doors for example.
 /// </summary>
 
+// todo : maybe re-unify the both open & close capacity since it's a one only system it would make sense..
+// todo : and we should stop using Do("") and instead call GetCapacity<>().Open() / .Close() it would be better ahah
 public class CloseCapacity : Capacity
 {
     public override bool Able
@@ -25,13 +27,9 @@ public class CloseCapacity : Capacity
     [Header("Sibling Open Capacity")]
     public OpenCapacity open_capacity;
 
-    [Header("Components")]
-    private UI_HUD hud;
-
     // START
     private void Start()
     {
-        hud = UI_Manager.Instance.GetPool("hud") as UI_HUD;
         close(false);
     }
 
@@ -41,7 +39,7 @@ public class CloseCapacity : Capacity
         close();
     }
 
-    // OPENING
+    // CLOSING
     protected virtual void close(bool play_anim = true)
     {
         // on supprime les invokes de l'ouverture si il y en a
@@ -64,15 +62,9 @@ public class CloseCapacity : Capacity
             capable.GetComponent<SpriteRenderer>().sortingLayerName = "fg";
             capable.GetComponent<SpriteRenderer>().sortingOrder = 1;
         }
-        else if (capable is Chest && capable.Inventory != null && capable.Inventory.ui != null)
-        {
-            capable.Inventory.ui.Hide();
-            if (hud != null) { hud.RemoveChest(capable.Inventory.ui); }
-        }
 
         if (debug) { Debug.Log(capable.name + " is closing..."); }
     }
-
     protected virtual void success_close()
     {
         // on ouvre le coffre
@@ -94,7 +86,7 @@ public class CloseCapacity : Capacity
         {
             lootableMeat.TurnToMeat();
         }
-                                                        
+
         if (debug) { Debug.Log(capable.name + " is closed !"); }
     }
 

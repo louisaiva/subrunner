@@ -48,7 +48,7 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
     public void play()
     {
         // transform.parent.parent.GetComponent<UI_PauseMenu>().hide();
-        GameObject.Find("/ui").GetComponent<UI_Manager>().SwitchTo("hud");
+        UI_Manager.Instance.SwitchTo("hud");
     }
     public void exit()
     {
@@ -58,7 +58,7 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
         #endif
         Application.Quit();
 
-        // GameObject.Find("/ui").GetComponent<UI_Manager>().TogglePool("pause");
+        // UI_Manager.Instance.TogglePool("pause");
     }
     public void fullscreen()
     {

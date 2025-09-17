@@ -275,6 +275,8 @@ public class PersoInputsController : Singleton<PersoInputsController>
     {
         CancelInvoke("ResetCapableTarget");
         ChangeCapableTarget(Perso.Instance);
+
+        // todo : disable ui_chest_inventory if we were in a chest
     }
 
 

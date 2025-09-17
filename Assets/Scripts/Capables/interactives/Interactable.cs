@@ -3,8 +3,7 @@ using UnityEngine.InputSystem;
 
 public interface Interactable
 {
-    // PlayerInputActions input_actions { get; }
-    public InteractCapacity Interactor { get; set; }
+    public InteractCapacity Interactor { get; set; } // there is only ONE because it's the one that is Controlled
     public void OnInteract(Capable interactor);
     public bool AuthorizeEndlessInteraction { get; }
 }

@@ -83,7 +83,7 @@ public class UI_Skill : MonoBehaviour, I_UI_Slot
         Perso.Instance.skillManager.UpgradeSkill(Reference);
 
         // on reouvre le hud
-        GameObject.Find("/ui").GetComponent<UI_Manager>().SwitchTo("hud");
+        UI_Manager.Instance.SwitchTo("hud");
     }
     public virtual void OnPointerDown(PointerEventData eventData)
     {

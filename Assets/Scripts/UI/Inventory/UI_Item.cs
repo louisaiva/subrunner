@@ -285,7 +285,7 @@ public class UI_Item : UI_Slot
             dropper.random_direction = false;
 
             // we switch back to hud
-            // GameObject.Find("/ui").GetComponent<UI_Manager>().SwitchTo("hud");
+            // UI_Manager.Instance.SwitchTo("hud");
         }
         else
         {
