@@ -23,7 +23,7 @@ public class LaptopInventory : Inventory
         OnItemGrabbed += HandleModuleGrabbed;
         OnItemDropped += HandleModuleDropped;
         base.Start();
-        (capable as Laptop).Processor.OnCPU_Changed();
+        // (capable as Laptop).Processor.OnCPU_Changed();
     }
 
     // GRAB DROP REMOVE
@@ -101,24 +101,36 @@ public class LaptopInventory : Inventory
     // MODULES GRABBED/DROPPED
     private void HandleModuleGrabbed(Item item)
     {
-        HandleModuleDropped(item); // we handle the module dropped to update the slots
+        if (capable is not Laptop laptop) { return; }
+        if (item is Module_CPU cpu)
+        {
+            laptop.Processor.OnProcessorGrabbed(cpu);
+        }
+        else if (item is Module_HDD)
+        {
+            laptop.OnHDD_Changed();
+        }
+        else if (item is Module_Network)
+        {
+            laptop.OnNetworkModuleChanged();
+        }
+
+        OnModuleChanged?.Invoke(item);
     }
     private void HandleModuleDropped(Item item)
     {
-        switch (item.Reference)
+        if (capable is not Laptop laptop) { return; }
+        if (item is Module_CPU cpu)
         {
-            case "module:cpu":
-                (capable as Laptop).Processor.OnCPU_Changed();
-                break;
-            case "module:hdd":
-                (capable as Laptop).OnHDD_Changed();
-                break;
-            case "module:network":
-                (capable as Laptop).OnNetworkModuleChanged();
-                break;
-            /* case "module:hack":
-                (capable as Laptop).OnHackModuleChanged();
-                break; */
+            laptop.Processor.OnProcessorDropped(cpu);
+        }
+        else if (item is Module_HDD)
+        {
+            laptop.OnHDD_Changed();
+        }
+        else if (item is Module_Network)
+        {
+            laptop.OnNetworkModuleChanged();
         }
 
         OnModuleChanged?.Invoke(item);

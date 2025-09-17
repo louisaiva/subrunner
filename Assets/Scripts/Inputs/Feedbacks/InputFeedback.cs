@@ -24,6 +24,9 @@ public class InputFeedback : MonoBehaviour
     [SerializeField] protected Color base_color = new Color(1f, 1f, 1f, 1f);
     [SerializeField] protected Color clicked_color = new Color(1f, 1f, 0f, 1f);
 
+    [Header("Colorers")]
+    [SerializeField] protected List<UI_Colorer> colorers = new List<UI_Colorer>();
+
     [Header("Label")]
     [SerializeField] private TextMeshProUGUI label;
 
@@ -90,11 +93,23 @@ public class InputFeedback : MonoBehaviour
     {
         // we set the color
         image.color = clicked_color;
+
+        // we apply the colorers color if we have any
+        foreach (UI_Colorer colorer in colorers)
+        {
+            colorer.ApplyColor();
+        }
     }
     public virtual void OnReset()
     {
         // we set the color
         image.color = base_color;
+
+        // we revert the colorers color if we have any
+        foreach (UI_Colorer colorer in colorers)
+        {
+            colorer.RevertColor();
+        }
     }
 
     // SETTERS

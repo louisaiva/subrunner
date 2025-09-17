@@ -16,9 +16,9 @@ public class Module : Item
     [SerializeField] private List<ModuleUpgrade> upgrades = new List<ModuleUpgrade>();
     public List<ModuleUpgrade> Upgrades => upgrades;
 
-    protected override void Start()
+    protected override void Awake()
     {
-        base.Start();
+        base.Awake();
         apply_upgrade();
     }
 

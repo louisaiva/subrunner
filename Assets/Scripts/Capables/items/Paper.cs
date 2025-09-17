@@ -32,6 +32,9 @@ public class Paper : Item, Usable
         await System.Threading.Tasks.Task.Yield();
 
         // we show the paper if we are grabbed by the perso
-        if (Holder is Perso perso) { Use(perso); }
+        if (PersoInputsController.Instance.Capable == Holder)
+        {
+            Use(PersoInputsController.Instance.Capable);
+        }
     }
 }

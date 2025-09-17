@@ -72,8 +72,41 @@ public class ProcessCapacity : Capacity
     }
 
 
-    // GRABBING PROCESSOR MODULE
-    public void OnCPU_Changed()
+    // GRABBING / DROPPING PROCESSOR MODULE
+    public void OnProcessorGrabbed(Module_CPU cpu)
+    {
+        if (debug) { Debug.Log($"(ProcessCapacity) {capable.name} grabbed a CPU module: {cpu.name}"); }
+
+        // we go through all the cores we have and check if we need to add them to the list
+        foreach (Core core in cpu.Cores)
+        {
+            if (cores.Contains(core)) { continue; }
+            cores.Add(core);
+        }
+    }
+    public void OnProcessorDropped(Module_CPU cpu)
+    {
+        if (debug) { Debug.Log($"(ProcessCapacity) {capable.name} dropped a CPU module: {cpu.name}"); }
+
+        // we go through all the cores we have and check if we need to remove them from the list
+        foreach (Core core in cpu.Cores)
+        {
+            if (!cores.Contains(core)) { continue; }
+
+            // we overflow the processus if the core is not free
+            if (!core.isFree)
+            {
+                if (debug) { Debug.Log($"(ProcessCapacity) {capable.name} lost a core that was used by {core.RunningProcess.name}. Overflowing process."); }
+                FreeCores(core.RunningProcess); // we don't only free this one core, but we free all the cores used by this processus
+                core.RunningProcess.Overflow(); // we overflow the processus
+            }
+
+            cores.Remove(core);
+        }
+
+        
+    }
+    /* public void OnCPU_Changed()
     {
         List<Module_CPU> cpus = capable.Inventory.GetItemsByRule("module:cpu")
                                                 .Select(item => item as Module_CPU)
@@ -110,7 +143,7 @@ public class ProcessCapacity : Capacity
             }
             cores.Remove(core);
         }
-    }
+    } */
 }
 
 [Serializable] public class Core

@@ -10614,8 +10614,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: 3, y: 12, z: 0}
-      m_Extent: {x: 4.5, y: 1.5, z: 0}
+      m_Center: {x: 0.5, y: 8, z: 0}
+      m_Extent: {x: 6, y: 4.5, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0
@@ -102064,6 +102064,7 @@ MonoBehaviour:
   debug: 0
   activate_all_capacities_logs_on_awake: 0
   authorize_interact_endlessly: 1
+  spawnables: []
 --- !u!60 &7378190336155330088
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -105010,8 +105011,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: 4.75, y: 8.75, z: 0}
-      m_Extent: {x: 2.75, y: 1.25, z: 0}
+      m_Center: {x: 4.75, y: 7.5, z: 0}
+      m_Extent: {x: 2.75, y: 2.5, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0
@@ -116261,6 +116262,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2263062880819809921}
     m_Modifications:
+    - target: {fileID: 353229046163021789, guid: 1f853f84acb91d5459f162afcf5ec102, type: 3}
+      propertyPath: upgrades.Array.data[0].tier
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 353229046163021789, guid: 1f853f84acb91d5459f162afcf5ec102, type: 3}
+      propertyPath: upgrades.Array.data[1].tier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 353229046163021789, guid: 1f853f84acb91d5459f162afcf5ec102, type: 3}
+      propertyPath: upgrades.Array.data[0].effect
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 353229046163021789, guid: 1f853f84acb91d5459f162afcf5ec102, type: 3}
+      propertyPath: upgrades.Array.data[1].effect
+      value: 110
+      objectReference: {fileID: 0}
     - target: {fileID: 5599804067653209886, guid: 1f853f84acb91d5459f162afcf5ec102, type: 3}
       propertyPath: m_Name
       value: processor_module
@@ -117078,6 +117095,14 @@ PrefabInstance:
     - target: {fileID: 3573527050700421231, guid: ba6e6504829a3fb4fa8e1991298ab582, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6161519289362507251, guid: ba6e6504829a3fb4fa8e1991298ab582, type: 3}
+      propertyPath: upgrades.Array.data[0].tier
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6161519289362507251, guid: ba6e6504829a3fb4fa8e1991298ab582, type: 3}
+      propertyPath: upgrades.Array.data[0].effect
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6950409761678986107, guid: ba6e6504829a3fb4fa8e1991298ab582, type: 3}
       propertyPath: m_Name
