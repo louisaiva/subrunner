@@ -33,12 +33,16 @@ public class PersoInputsController : Singleton<PersoInputsController>
     [SerializeField] private SeeThroughHandler see_through;
     public Room current_room { get; set; }
 
+    [Header("UI Statics elements")]
+    [SerializeField] private UI_Inventory perso_quick_inventory;
+
     private void Start()
     {
         // on récupère les inputs
         initInputs();
 
         see_through = transform.Find("see_through_handler").GetComponent<SeeThroughHandler>();
+        perso_quick_inventory = UI_Manager.Instance.GetPool("hud").transform.Find("perso_quick_inventory").GetComponent<UI_Inventory>();
 
         ResetCapableTarget();
     }
@@ -221,6 +225,10 @@ public class PersoInputsController : Singleton<PersoInputsController>
             }
         }
 
+        // reset l'inventory
+        Capable?.Inventory?.RemoveUI(perso_quick_inventory);
+        perso_quick_inventory.Inventory = null;
+
 
 
         // on déplace le script sur le gameobject capable
@@ -257,6 +265,10 @@ public class PersoInputsController : Singleton<PersoInputsController>
                 ia.GetCapacity<AttackCapacity>().ClearTags();
             }
         }
+
+        // on met le perso_quick_inventory sur la target si elle a un inventaire
+        new_target?.Inventory?.AddUI(perso_quick_inventory);
+        perso_quick_inventory.Refresh();
     }
     public void ResetCapableTarget()
     {

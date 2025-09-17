@@ -49,6 +49,26 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
             pool.Init(this);
         }
     }
+    public void Refresh()
+    {
+        // on clear les pools
+        foreach (UI_ItemPool pool in pools)
+        {
+            if (pool == null) { continue; } // skip null UIs
+            pool.DestroyAllSlots();
+        }
+
+        // on récupère tous les items de l'Inventaire et on les fait grab si possible par nous mêmes
+        foreach (Item item in Inventory.Items)
+        {
+            bool grabbed = UI_Grab(item);
+            if (!grabbed)
+            {
+                Debug.LogWarning("(UI_Inventory) could not grab item " + item.Reference + " in " + name +
+                ", maybe the pools are full or the item is incompatible");
+            }
+        }
+    }
 
     // SHOW / HIDE
     public async void Show()

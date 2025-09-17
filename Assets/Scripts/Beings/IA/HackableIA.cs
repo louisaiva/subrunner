@@ -34,7 +34,7 @@ public class HackableIA : IA, Hackable
         if (exploit == Exploit.Nmap) { return true; }
         if (exploit.name == "cpu_overheat") { return true; }
         if (exploit.name == "cpu_melt") { return true; }
-        if (exploit.name == "trojan") { return true; }
+        if (exploit.name == "cyborg_puppet") { return true; }
         return false;
     }
     public void OnHackStarted(Hack hack)
@@ -73,7 +73,7 @@ public class HackableIA : IA, Hackable
                 magnitude: cpu_overheat_knockback
             );
         }
-        else if (hack.name == "trojan")
+        else if (hack.name == "cyborg_puppet")
         {
             // we move the PersoInputsController to the capable for 30 seconds
             PersoInputsController.Instance.ChangeCapableTarget(this, 30f);

@@ -4,6 +4,7 @@ using UnityEngine;
 public class CameraFollow : Singleton<CameraFollow>
 {
 
+    [SerializeField] private Capable target;
     [SerializeField] private Rigidbody2D capable_rb;
     private Capable capable => PersoInputsController.Instance.Capable;
 
@@ -21,25 +22,25 @@ public class CameraFollow : Singleton<CameraFollow>
     public void RefreshTarget(Capable new_target)
     {
         if (new_target == null) { return; }
-        capable_rb = new_target.GetComponent<Rigidbody2D>();
-        transform.position = new Vector3(capable_rb.transform.position.x, capable_rb.transform.position.y, transform.position.z);
+        target = new_target;
+        capable_rb = target.GetComponent<Rigidbody2D>();
+        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
     }
 
     // UPDATE
     void Update()
     {
         // if (Perso.Instance == null) { capable_rb = null; return; }
-        if (capable == null || PersoInputsController.Instance.Disabled) { capable_rb = null; return; }
-        if (capable_rb == null) { capable_rb = capable.GetComponent<Rigidbody2D>(); }
+        if (capable == null || target == null || PersoInputsController.Instance.Disabled) { capable_rb = null; target = null; return; }
 
 
         // calcule le mouvement de la cam en X
-        float final_x = capable_rb.transform.position.x;
+        float final_x = target.transform.position.x;
         float x_movement = final_x - transform.position.x;
 
 
         // on ajuste l'offset en fonction de la vitesse du joueur en Y
-        if (dynamic_cam)
+        if (dynamic_cam && capable_rb != null)
         {
             Y_OFF = 0;
             if (Mathf.Abs(capable_rb.linearVelocity.y) > min_velocity)
@@ -51,7 +52,7 @@ public class CameraFollow : Singleton<CameraFollow>
             
 
         // calcule le mouvement de la cam en Y
-        float final_y = capable_rb.transform.position.y + Y_OFF;
+        float final_y = target.transform.position.y + Y_OFF;
         float y_movement = final_y - transform.position.y;
 
 

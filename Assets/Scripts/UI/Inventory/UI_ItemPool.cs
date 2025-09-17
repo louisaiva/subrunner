@@ -214,6 +214,15 @@ public class UI_ItemPool : MonoBehaviour
             if (log) { Debug.Log($"(UI_ItemPool) {name} created {MaxSlots - Count} empty slots to reach the maximum of {MaxSlots} slots"); }
         }
     }
+    public void DestroyAllSlots()
+    {
+        // we destroy all the slots
+        foreach (UI_Item ui_item in ui_items)
+        {
+            Destroy(ui_item.gameObject);
+        }
+        ui_items.Clear();
+    }
     public void CreateEmptySlots(int count)
     {
         // we create the empty slots
@@ -296,6 +305,4 @@ public class UI_ItemPool : MonoBehaviour
         }
         return items;
     }
-
-
 }

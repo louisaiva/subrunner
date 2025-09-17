@@ -187,7 +187,7 @@ Transform:
   m_GameObject: {fileID: 4374265471156462469}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.331, y: 3.032, z: 0}
+  m_LocalPosition: {x: -3.5843525, y: 3.5291333, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -400,7 +400,11 @@ MonoBehaviour:
   weight: 1
   random_weight_modifier_at_start: 0
   friction: 7
-  forces: []
+  forces:
+  - name: spawn
+    direction: {x: -0.92860025, y: 0.37108162}
+    magnitude: 500
+    attenuation: 1
   input_speed: 0
   Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 0}
