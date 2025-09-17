@@ -246,9 +246,10 @@ public class PersoInputsController : Singleton<PersoInputsController>
         if (duration != -888f) { Invoke("ResetCapableTarget", duration); }
 
         // repositionne la tete
-        float head_y_offset = AnimBank.Instance.GetHeadOffset(new_target.Skin);
-        see_through.transform.localPosition = new Vector3(see_through.transform.localPosition.x, head_y_offset, see_through.transform.localPosition.z);
-        see_through.RecenterEllipseOffset(new_target.GetComponent<SpriteRenderer>());
+        // float head_y_offset = AnimBank.Instance.GetHeadOffset(new_target.Skin);
+        // see_through.transform.localPosition = new Vector3(see_through.transform.localPosition.x, head_y_offset, see_through.transform.localPosition.z);
+        see_through.Refresh(new_target);
+        // RecenterEllipseOffset(new_target.GetComponent<SpriteRenderer>());
 
         // on désactive le Brain si le nouveau capable est un IA
         if (new_target is IA ia)

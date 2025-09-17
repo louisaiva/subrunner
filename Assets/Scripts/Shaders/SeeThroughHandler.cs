@@ -61,10 +61,13 @@ public class SeeThroughHandler : MonoBehaviour
         overlap_filter.useLayerMask = true;
         overlap_filter.useTriggers = true;
     }
-    public void RecenterEllipseOffset(SpriteRenderer sr)
+    public void Refresh(Capable target)
     {
-        float sprite_height = sr.bounds.size.y;
-        offset_ellipse_center.y = sprite_height / 2f;
+        // on repositionne le collider de tete
+        float head_y_offset = AnimBank.Instance.GetHeadOffset(target.Skin);
+        // trigger.offset = new Vector2(trigger.offset.x, head_y_offset);
+        offset_ellipse_center.y = head_y_offset;
+        // RecenterEllipseOffset(target.GetComponent<SpriteRenderer>());
     }
 
     void Update()

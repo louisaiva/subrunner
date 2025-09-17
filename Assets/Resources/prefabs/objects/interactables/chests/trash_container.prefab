@@ -54,7 +54,7 @@ MonoBehaviour:
       m_Calls: []
   uis:
   - {fileID: 5159443256930603166}
-  debug: 0
+  log: 0
 --- !u!1 &5265208009174208198
 GameObject:
   m_ObjectHideFlags: 0
@@ -175,30 +175,30 @@ MonoBehaviour:
   update_each_frame: 1
   anim_capacity_priorities:
   - priority: 0
+    capacity_playing: 
     capacities:
     - idle
     lock_orientation: 0
     one_shot: 0
-    capacity_playing: 
   - priority: 1
+    capacity_playing: 
     capacities:
     - hover
     lock_orientation: 0
     one_shot: 0
-    capacity_playing: 
   - priority: 3
+    capacity_playing: 
     capacities:
     - idle_open
     lock_orientation: 1
-    one_shot: 1
-    capacity_playing: 
+    one_shot: 0
   - priority: 4
+    capacity_playing: 
     capacities:
     - open
     - close
     lock_orientation: 1
     one_shot: 1
-    capacity_playing: 
   log: 0
   log_orientation: 0
   log_advanced: 0
