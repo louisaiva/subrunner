@@ -1147,6 +1147,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7923865327126850587}
   - component: {fileID: 4377113909097244232}
+  - component: {fileID: 4081912196447684149}
   m_Layer: 7
   m_Name: controller
   m_TagString: Untagged
@@ -1187,7 +1188,25 @@ MonoBehaviour:
   input_manager: {fileID: 0}
   see_through: {fileID: 0}
   perso_quick_inventory: {fileID: 0}
+  waiting_interacting: 0
+  endless_interacting: 0
   Disabled: 0
+--- !u!114 &4081912196447684149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3483458144230657414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99af404fed925414da40a8459c88ad21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  navigator: {fileID: 0}
+  navigate_in_game: 0
+  waiting_dropping: 0
+  endless_dropping: 0
 --- !u!1 &3890199276897646629
 GameObject:
   m_ObjectHideFlags: 0

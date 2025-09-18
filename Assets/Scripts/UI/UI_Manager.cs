@@ -30,6 +30,7 @@ public class UI_Manager : Singleton<UI_Manager>
         }
         return false;
     }
+    public event System.Action<string> OnPoolSwitched = delegate { };
 
 
     [Header("Transitions")]
@@ -185,6 +186,9 @@ public class UI_Manager : Singleton<UI_Manager>
         if (log_switching) { Debug.Log($"(UI_Manager - switch_to) launching next pool show"); }
         await current_pool.Show(duration / 2f, same_pool_elements);
         if (log_switching) { Debug.Log($"(UI_Manager - switch_to) next pool shown successfully"); }
+
+        // we invoke the OnPoolSwitched event
+        OnPoolSwitched?.Invoke(current_pool.Reference);
     }
 
     // GETTERS

@@ -31,7 +31,7 @@ public class CameraFollow : Singleton<CameraFollow>
     void Update()
     {
         // if (Perso.Instance == null) { capable_rb = null; return; }
-        if (capable == null || target == null || PersoInputsController.Instance.Disabled) { capable_rb = null; target = null; return; }
+        if (capable == null || target == null || PersoInputsController.Instance.InputsDisabled) { capable_rb = null; target = null; return; }
 
 
         // calcule le mouvement de la cam en X

@@ -72,7 +72,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
 
     // DROP IN-GAME
     [SerializeField] private InputActionReference dropInGameInput;
-    private InputAction dropInGameAction;
+    // private InputAction dropInGameAction;
 
 
     [Header("Logs")]
@@ -98,13 +98,13 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         navigateInGameAction = input_manager.GetAction(navigateInGameInput);
         activateAction = input_manager.GetAction(activateInput);
         dropAction = input_manager.GetAction(dropInput);
-        dropInGameAction = input_manager.GetAction(dropInGameInput);
+        // dropInGameAction = input_manager.GetAction(dropInGameInput);
         moveItemAction = input_manager.GetAction(moveItemInput);
 
         // we create the callbacks
         navigateCallback = ctx => HandleNavigateInput(ctx.ReadValue<Vector2>());
         activateCallback = ctx => HandleActivateInput(ctx.ReadValue<float>());
-        dropCallback = ctx => HandleDropInput(ctx.ReadValue<float>());
+        // dropCallback = ctx => HandleDropInput(ctx.ReadValue<float>());
         moveItemCallback = ctx => HandleMoveItemInput(ctx.ReadValue<float>());
 
         if (debug) { Debug.Log("(UI_Navigator) started & callbacks created"); }
@@ -207,39 +207,43 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         if (ingame_navigation)
         {
             navigateInGameAction.performed += navigateCallback;
-            dropInGameAction.performed += dropCallback;
-            // InputManager.Instance.inputs.perso.select_hackable.Disable();
+            // dropInGameAction.performed += dropCallback;
         }
         else
         {
             navigateAction.performed += navigateCallback;
             activateAction.performed += activateCallback;
-            dropAction.performed += dropCallback;
+            // dropAction.performed += dropCallback;
         }
-        
+
         navigateInGame = ingame_navigation; // on met à jour la variable
+        
+        UI_InputsController.Instance.EnableInputs(ingame_navigation); // on active les inputs dans le UI_InputsController
     }
     private void disableInputs()
     {
         // on récupère les inputs
         navigateAction.performed -= navigateCallback;
         navigateInGameAction.performed -= navigateCallback;
-        dropAction.performed -= dropCallback;
-        dropInGameAction.performed -= dropCallback;
+        // dropAction.performed -= dropCallback;
+        // dropInGameAction.performed -= dropCallback;
         activateAction.performed -= activateCallback;
         moveItemAction.performed -= moveItemCallback;
 
         navigateInGame = false; // on met à jour la variable
-        // InputManager.Instance.inputs.perso.select_hackable.Enable();
+        
+        UI_InputsController.Instance.DisableInputs(); // on désactive les inputs dans le UI_InputsController
     }
     public void ToggleInput(string input_name, bool enable = true)
     {
-        if (input_name == "drop")
+        UI_InputsController.Instance.ToggleInput(input_name, enable);
+        /* if (input_name == "drop")
         {
             if (enable) { dropAction.performed += dropCallback; }
             else { dropAction.performed -= dropCallback; }
         }
-        else if (input_name == "activate")
+        else  */
+        if (input_name == "activate")
         {
             if (enable) { activateAction.performed += activateCallback; }
             else { activateAction.performed -= activateCallback; }
@@ -696,12 +700,12 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
             }
 
             // on relache le slot
-            drop(/* slot as UI_Item */);
+            OnDrop(/* slot as UI_Item */);
             if (debug) { Debug.Log("(UI_Navigator) dropped ui_item " + slot.gameObject.name); }
         }
 
     }
-    private async void drop(/* UI_Item slot */)
+    public async void OnDrop()
     {
         if (slots.Count == 0 || current_slot_index == -1) { return; }
         UI_Item slot = slots[current_slot_index].GetComponent<UI_Item>();
@@ -722,6 +726,20 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
 
         // on navigue vers le slot le plus proche
         navigateToClosest(position);
+    }
+    public void OnDown()
+    {
+        // on récupère le slot actuel
+        if (current_slot_index == -1) { return; }
+        GameObject go = slots[current_slot_index];
+        if (go == null) { return; }
+        I_UI_Slot slot = go.GetComponent<I_UI_Slot>();
+        if (slot == null) { return; }
+
+
+        // on down le slot
+        slot.OnPointerDown(null);
+        if (debug) { Debug.Log("(UI_Navigator) pressed slot " + slot.gameObject.name); }
     }
 
     [Header("Fast Drop")]
@@ -750,7 +768,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
             if (!fast_dropping) { break; }
             elapsed = 0f;
 
-            drop();
+            OnDrop();
 
             while (elapsed < InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY)
             {

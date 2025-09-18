@@ -18,6 +18,7 @@ public class PersoInputsController : Singleton<PersoInputsController>
     [SerializeField] private Capable _capable;
 
     [Header("INPUTS")]
+    public bool InputsDisabled = false;
     [SerializeField] private InputManager input_manager;
     private PersoActions perso_inputs;
     // private event Action<InputAction.CallbackContext> reviveCallback;
@@ -80,6 +81,34 @@ public class PersoInputsController : Singleton<PersoInputsController>
         // et les callbacks d'interaction
         interactCallback = ctx => OnInteract(ctx);
         perso_inputs.interact.performed += interactCallback;
+
+        EnableInputs();
+    }
+    public void EnableInputs()
+    {
+        perso_inputs.dodge.performed += dodgeCallback;
+        perso_inputs.attack.performed += attackCallback;
+        perso_inputs.randomTalk.performed += talkCallback;
+        perso_inputs.conso1.performed += useConso1Callback;
+        perso_inputs.conso2.performed += useConso2Callback;
+        perso_inputs.conso3.performed += useConso3Callback;
+        perso_inputs.conso4.performed += useConso4Callback;
+        perso_inputs.interact.performed += interactCallback;
+
+        InputsDisabled = false;
+    }
+    public void DisableInputs()
+    {
+        perso_inputs.dodge.performed -= dodgeCallback;
+        perso_inputs.attack.performed -= attackCallback;
+        perso_inputs.randomTalk.performed -= talkCallback;
+        perso_inputs.conso1.performed -= useConso1Callback;
+        perso_inputs.conso2.performed -= useConso2Callback;
+        perso_inputs.conso3.performed -= useConso3Callback;
+        perso_inputs.conso4.performed -= useConso4Callback;
+        perso_inputs.interact.performed -= interactCallback;
+
+        InputsDisabled = true;
     }
 
     // UPDATE
@@ -218,7 +247,7 @@ public class PersoInputsController : Singleton<PersoInputsController>
 
         // wait for threshold
         waiting_interacting = true;
-        yield return new WaitForSeconds(InputManager.Instance.BUTTON_ENDLESSLY_SHORT_THRESHOLD);
+        yield return new WaitForSeconds(InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD);
         if (!waiting_interacting) { yield break; }
 
         // we start the endless interaction
@@ -316,36 +345,6 @@ public class PersoInputsController : Singleton<PersoInputsController>
         ChangeCapableTarget(Perso.Instance);
 
         // todo : disable ui_chest_inventory if we were in a chest
-    }
-
-
-    // ENABLE / DISABLE INPUTS
-    public bool Disabled;
-    public void DisableInputs()
-    {
-        perso_inputs.dodge.performed -= dodgeCallback;
-        perso_inputs.attack.performed -= attackCallback;
-        perso_inputs.randomTalk.performed -= talkCallback;
-        perso_inputs.conso1.performed -= useConso1Callback;
-        perso_inputs.conso2.performed -= useConso2Callback;
-        perso_inputs.conso3.performed -= useConso3Callback;
-        perso_inputs.conso4.performed -= useConso4Callback;
-        perso_inputs.interact.performed -= interactCallback;
-
-        Disabled = true;
-    }
-    public void EnableInputs()
-    {
-        perso_inputs.dodge.performed += dodgeCallback;
-        perso_inputs.attack.performed += attackCallback;
-        perso_inputs.randomTalk.performed += talkCallback;
-        perso_inputs.conso1.performed += useConso1Callback;
-        perso_inputs.conso2.performed += useConso2Callback;
-        perso_inputs.conso3.performed += useConso3Callback;
-        perso_inputs.conso4.performed += useConso4Callback;
-        perso_inputs.interact.performed += interactCallback;
-
-        Disabled = false;
     }
 
 }
