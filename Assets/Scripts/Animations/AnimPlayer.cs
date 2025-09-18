@@ -155,7 +155,7 @@ public class AnimPlayer : MonoBehaviour
 
             // we calculate the resulting speed
             anim.speed = duration / (float)duration_override;
-        }
+        } else { anim.speed = 1f; }
 
         // we check if the animation is not actually playing
         if (anim.name == current_anim.name && current_frame != -1)
