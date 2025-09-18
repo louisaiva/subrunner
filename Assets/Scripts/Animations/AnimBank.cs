@@ -505,7 +505,29 @@ public class AnimBank : Singleton<AnimBank>
         }
         return head_offset_per_skin[index];
     }
+    public Sprite GetDefaultSprite(string skin)
+    {
+        if (!HasSkin(skin))
+        {
+            if (log) { Debug.LogWarning("(AnimBank - GetDefaultSprite) Skin not found in the bank : " + skin); }
+            return null;
+        }
 
+        if (!HasCapacity(skin + ".idle"))
+        {
+            if (log) { Debug.LogWarning("(AnimBank - GetDefaultSprite) Capacity idle not found in the bank for skin : " + skin); }
+            return null;
+        }
+
+        Anim anim = anims[skin]["idle"].Find(a => a.orientation == "D");
+        if (anim == null)
+        {
+            if (log) { Debug.LogWarning("(AnimBank - GetDefaultSprite) Default animation not found for skin : " + skin); }
+            return null;
+        }
+
+        return anim.sprites[0];
+    }
 
     // DEBUG
     private string getAnimsList()

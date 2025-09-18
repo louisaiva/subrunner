@@ -16,7 +16,6 @@ public class UI_Manager : Singleton<UI_Manager>
     [Header("Pools")]
     [SerializeField] private List<UI_Pool> pools = new List<UI_Pool>();
     [SerializeField] private UI_Pool current_pool;
-    // [SerializeField] private UI_Pool last_pool;
     public string CurrentPool { get => current_pool.Reference; }
     public bool InPool(string pool_name)
     {
@@ -34,11 +33,7 @@ public class UI_Manager : Singleton<UI_Manager>
 
 
     [Header("Transitions")]
-    // [SerializeField] protected Image bg;
-    // [SerializeField] protected Vector2Int bg_alpha_range = new Vector2Int(0, 245);
     [SerializeField] protected float transition_duration = 0.2f;
-
-    [Header("Components")]
     private PauseMenuBackgroundEffect bg;
 
 
@@ -48,7 +43,6 @@ public class UI_Manager : Singleton<UI_Manager>
     public bool log_switching = false;
 
     // inputs
-    // private PlayerInputActions inputs;
     private InputManager input_manager;
 
     // START
@@ -160,9 +154,6 @@ public class UI_Manager : Singleton<UI_Manager>
             // we transition to the right bg/timescale/effect
             if (current_pool.TransitionSettings.TimeScale != pool.TransitionSettings.TimeScale)
             {
-                // float final_timescale = default;
-                // if (pool.Reference == "game_over") { final_timescale = (pool as UI_GameOver).final_timescale; }
-                // else if (pool.Reference == "hacking") { final_timescale = (pool as UI_Hacking).final_timescale; }
                 TransitionTimeScale(pool.TransitionSettings.TimeScale, duration);
             }
             if (log_switching) { Debug.Log($"(UI_Manager - switch_to) transitionned time scale"); }

@@ -91,7 +91,7 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         Showed = true;
 
         // on désactive les inputs.perso
-        InputManager.Instance.inputs.perso.Disable();
+        InputManager.Instance.DisablePersoInputs();
     }
     protected override async Awaitable hide_pool(float duration, List<GameObject> dont_hide = null)
     {

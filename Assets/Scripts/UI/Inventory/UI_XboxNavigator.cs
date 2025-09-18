@@ -14,11 +14,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     [SerializeField] private List<GameObject> slottables = new List<GameObject>();
     [SerializeField] private List<GameObject> slots;
     [SerializeField] private int current_slot_index;
-    // [SerializeField] private UI_Inventory perso_quick_inventory;
-    // this quick inventory is showed when another inventory (chest, etc.) is opened
-    // to allow the player to transfer items between inventories
-    // only showed in-game (when the hud is visible)
-    // private bool perso_quick_inventory_was_shown = true;
+    
 
     [Header("Navigation")]
     [SerializeField] private bool can_navigate = true; // devient true lorsque la magnitude de l'input revient à 0, et false lorsque la magnitude de l'input est supérieure à 0.95f
@@ -116,12 +112,6 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         // we reset the variables
         continuous_navigation_counter = float.MaxValue;
         current_slot_index = -1;
-
-        // we check if the perso quick inventory is shown
-        /* if (perso_quick_inventory == null)
-        {
-            Debug.LogWarning("(UI_Navigator) perso_quick_inventory is not set. please set it in the inspector");
-        } */
     }
 
 
@@ -170,7 +160,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         GameObject last_slot = null;
 
         // on désactive le slot
-        if (current_slot_index != -1)
+        if (current_slot_index != -1 && current_slot_index < slots.Count)
         {
             // on vérifie si le slot est encore présent et dans le slottable qu'on vient de désactiver
             GameObject slot = slots[current_slot_index];
@@ -218,6 +208,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         {
             navigateInGameAction.performed += navigateCallback;
             dropInGameAction.performed += dropCallback;
+            // InputManager.Instance.inputs.perso.select_hackable.Disable();
         }
         else
         {
@@ -239,6 +230,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         moveItemAction.performed -= moveItemCallback;
 
         navigateInGame = false; // on met à jour la variable
+        // InputManager.Instance.inputs.perso.select_hackable.Enable();
     }
     public void ToggleInput(string input_name, bool enable = true)
     {

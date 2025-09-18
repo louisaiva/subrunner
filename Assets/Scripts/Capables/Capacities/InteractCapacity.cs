@@ -47,6 +47,7 @@ public class InteractCapacity : Capacity
     {
         // we get the grab capacity
         grab_capacity = capable.GetCapacity<GrabCapacity>();
+
     }
 
     // UPDATE
@@ -115,80 +116,15 @@ public class InteractCapacity : Capacity
     }
 
     // HANDLE INTERACT INPUT
-    public void HandleInteractInput(InputAction.CallbackContext context)
-    {
-        // if we release the button we direclty interact with it
-        if (context.ReadValue<float>() < 0.5f)
-        {
-            if (interacting_endlessly || interacting_endlessly_waiting_threshold)
-            {
-                interacting_endlessly_waiting_threshold = false;
-                interacting_endlessly = false;
-            }
-
-            // interact with interactable & select + grab items
-            interact();
-
-            return;
-        }
-
-        // else we launches endless interaction
-        interact_endlessly();        
-    }
-    private void interact()
+    public void Interact(bool endless = false)
     {
         if (closest_hover == null) { return; }
 
         // interact with interactable & select + grab items
-        if (closest_hover is Interactable interactable) { interactable.OnInteract(capable); }
-        else if (closest_hover is Item item) { grab_capacity?.Use(capable); }
+        if (closest_hover is Interactable interactable && !endless) { interactable.OnInteract(capable); }
+        else if (closest_hover is Item) { grab_capacity?.Use(capable); }
+        else if (closest_hover is Interactable interactable_endless && endless && interactable_endless.AuthorizeEndlessInteraction) { interactable_endless.OnInteract(capable); }
     }
-
-    // ENDLESS INTERACT INPUT
-    [Header("Interact Endlessly")]
-    [SerializeField] private bool interacting_endlessly_waiting_threshold = false;
-    [SerializeField] private bool interacting_endlessly = false;
-    private async void interact_endlessly()
-    {
-
-        // threshold wait
-        interacting_endlessly_waiting_threshold = true;
-        float elapsed = 0f;
-        while (elapsed < InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD && interacting_endlessly_waiting_threshold)
-        {
-            elapsed += Time.deltaTime;
-            await System.Threading.Tasks.Task.Yield();
-        }
-        if (!interacting_endlessly_waiting_threshold) { return; }
-
-        // endless interaction
-        interacting_endlessly = true;
-        interacting_endlessly_waiting_threshold = false;
-        while (interacting_endlessly)
-        {
-            if (UI_Manager.Instance != null && !UI_Manager.Instance.InPools(new List<string> { "hud", "hacking" })) { break; }
-
-            // interact endlessly if it's an item
-            if (closest_hover != null
-                && (closest_hover is Item
-                || (closest_hover is Interactable interactable && interactable.AuthorizeEndlessInteraction)))
-            { interact(); }
-
-            // delay wait
-            elapsed = 0f;
-            while (elapsed < InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY)
-            {
-                if (!interacting_endlessly) { break; }
-                elapsed += Time.deltaTime;
-                await System.Threading.Tasks.Task.Yield();
-            }
-        }
-
-        // deactivate everything
-        interacting_endlessly = false;
-        interacting_endlessly_waiting_threshold = false;
-    }
-
 
     // TRIGGER ENTER
     private void OnTriggerEnter2D(Collider2D other)
@@ -244,12 +180,4 @@ public class InteractCapacity : Capacity
             if (debug) { Debug.Log("(InteractCapacity) " + capable.name + " removed from waiting hovers"); }
         }
     }
-
-    // DESTROY
-    /* private void OnDestroy()
-    {
-        // we remove all callbacks
-        // if (closest_hover is Interactable || closest_hover is Item) { remove_callbacks(closest_hover); }
-        interactAction.performed -= interactCallback;
-    } */
 }

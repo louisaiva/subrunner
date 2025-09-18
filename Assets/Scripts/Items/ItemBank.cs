@@ -156,19 +156,23 @@ public class ItemBank : Singleton<ItemBank>
     {
         if (item.Reference.Contains("paper:"))
         {
-            return GetSprite("other:" + item.anim_player.Skin);
+            return GetSprite("other:" + item.Skin);
         }
-        return GetSprite(item.Reference);
+        Sprite sprite = GetSprite(item.Reference);
+        if (sprite != null) { return sprite; }
+
+        // else the reference is not in the prefabs
+        // we try to get the first sprite of the idle animation of the skin
+        sprite = AnimBank.Instance.GetDefaultSprite(item.Skin);
+        if (sprite != null) { return sprite; }
+
+        Debug.LogError("(ItemBank) cannot find sprite " + item.Reference
+                + ". are you sure its corresponding item prefab is in the " + items_path + " folder?");
+        return null;
     }
     public Sprite GetSprite(string item_reference)
     {
-        if (!item_sprites.ContainsKey(item_reference))
-        {
-            Debug.LogError("(ItemBank) cannot find sprite " + item_reference
-                + ". are you sure its corresponding item prefab is in the " + items_path + " folder?");
-            return null;
-        }
-
+        if (!item_sprites.ContainsKey(item_reference)) { return null; }
         return item_sprites[item_reference];
     }
     public Sprite GetUI_Icon(string icon_name)

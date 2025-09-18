@@ -192,11 +192,10 @@ MonoBehaviour:
   input_speed: 0
   Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 0}
-  Reference: hardware:laptop
+  Reference: laptop:cuty
   MaxQty: 1
   ItemDescription: cuty little laptop !!! cannot run minecraft unfortunately/.but
     certainly doom !
-  Processor: {fileID: 0}
   disks: []
   log_keys: 0
 --- !u!1 &3618464003426445101
@@ -245,6 +244,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown: 0
   debug: 0
+  cores: []
 --- !u!1 &7128561092171830049
 GameObject:
   m_ObjectHideFlags: 0

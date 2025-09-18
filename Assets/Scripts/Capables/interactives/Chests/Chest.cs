@@ -26,8 +26,9 @@ public class Chest : Capable, Interactable, Openable
     // ON INTERACT / HOVER LOST
     public void OnInteract(Capable interactor)
     {
-        // first interaction
-        if (!interactors.Contains(interactor)) { interactors.Add(interactor); }
+        // only first interaction per interactor is authorized !!!
+        if (interactors.Contains(interactor)) { return; }
+        interactors.Add(interactor);
         if (debug) { Debug.Log("(Chest) " + name + " was interacted by " + interactor.name); }
 
         // we open if it's the first interactor we have !!
@@ -69,17 +70,13 @@ public class Chest : Capable, Interactable, Openable
     private void ShowUI_Inventory()
     {
         if (Inventory == null || Inventory.ui == null) { return; }
-        Inventory.ui.Show();
         (UI_Manager.Instance.GetPool("hud") as UI_HUD).RegisterChest(Inventory.ui);
-
         ui_inventory_shown = true;
     }
     private void HideUI_Inventory()
     {
         if (Inventory == null || Inventory.ui == null) { return; }
-        Inventory.ui.Hide();
         (UI_Manager.Instance.GetPool("hud") as UI_HUD).RemoveChest(Inventory.ui);
-
         ui_inventory_shown = false;
     }
 

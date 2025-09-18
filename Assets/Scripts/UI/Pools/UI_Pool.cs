@@ -32,18 +32,13 @@ using UnityEngine.InputSystem;
 
 public class UI_Pool : MonoBehaviour
 {
-    [Header("Pool paramaters")]
+    [Header("Pool parameters")]
     public string Reference = "pool";
     public bool Showed = false;
     [SerializeField] protected bool in_transition = false;
 
     [Header("Transition parameters")]
     public PoolTransitionSettings TransitionSettings = PoolTransitionSettings.InGameDefault;
-    // public bool CanBeHidden = true; // if true, the pool can be hidden when switching to another pool
-    // public bool CanBeCanceled = false; // if true, the UI_Manager will switch to hud when pressed & released
-    // public bool UsePersoInputs = true; // if true, the UI_Manager will activate the inputs.perso when the pool is showed
-    // public bool StopTime = true;
-    // public bool HasBackground = true; // if true, the pool has a background effect
     public virtual bool Available => !in_transition;
 
 
@@ -96,8 +91,8 @@ public class UI_Pool : MonoBehaviour
         Showed = true;
 
         // s'il a une activate action, on désactive les inputs.perso
-        if (TransitionSettings.UsePersoInputs) { InputManager.Instance.inputs.perso.Enable(); }
-        else { InputManager.Instance.inputs.perso.Disable(); }
+        if (TransitionSettings.UsePersoInputs) { InputManager.Instance.EnablePersoInputs(); }
+        else { InputManager.Instance.DisablePersoInputs(); }
     }
     protected virtual async Awaitable hide_pool(float duration, List<GameObject> dont_hide = null)
     {

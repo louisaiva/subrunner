@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using UnityEngine.InputSystem.UI;
+using System;
 
 public class InputManager : Singleton<InputManager>
 {
@@ -129,8 +130,24 @@ public class InputManager : Singleton<InputManager>
     {
         return current_input_type;
     }
-
-
-    // INPUTS GETTERS
     public Vector2 MovementRawInputs { get => inputs.perso.move.ReadValue<Vector2>(); }
+
+    // INPUTS MAP TOGGLING
+    // todo : ideally all inputs toggling logic should be controlled in this script
+    public event Action<bool> OnPersoInputsToggled = delegate { };
+    public void EnablePersoInputs()
+    {
+        if (log) { Debug.Log("(InputManager) enabling perso inputs"); }
+        inputs.perso.Enable();
+
+        OnPersoInputsToggled?.Invoke(true);
+    }
+    public void DisablePersoInputs()
+    {
+        if (log) { Debug.Log("(InputManager) disabling perso inputs"); }
+        inputs.perso.Disable();
+
+        OnPersoInputsToggled?.Invoke(false);
+    }
+
 }

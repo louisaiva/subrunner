@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static PlayerInputActions;
@@ -41,8 +42,12 @@ public class PersoInputsController : Singleton<PersoInputsController>
         // on récupère les inputs
         initInputs();
 
+        // on récupère les composants
         see_through = transform.Find("see_through_handler").GetComponent<SeeThroughHandler>();
         perso_quick_inventory = UI_Manager.Instance.GetPool("hud").transform.Find("perso_quick_inventory").GetComponent<UI_Inventory>();
+
+        // mets les callbacks pour stopper correctement les endless inputs
+        InputManager.Instance.OnPersoInputsToggled += perso_inputs_true => { if (!perso_inputs_true) { cancel_endless_interact(); } };
 
         ResetCapableTarget();
     }
@@ -163,17 +168,10 @@ public class PersoInputsController : Singleton<PersoInputsController>
     }
     public void OnHack()
     {
-        /* Laptop laptop = Laptop;
-        if (laptop == null) { return; } // if the laptop is not set, we return */
-
-        // UseItem("hardware:laptop");
-        // if (UI_LaptopItemSlot.Instance == null || !UI_LaptopItemSlot.Instance.HasLaptop) { return; } // if the laptop is not set, we return
-        // UI_LaptopItemSlot.Instance.Laptop.Use(this);
-
         // on récupère le laptop
         Laptop laptop = null;
         if (Capable is Perso perso) { laptop = perso.ItemManager.GetLaptop(); }
-        else { laptop = Capable.Inventory.GetItem<Laptop>(); }
+        else if (Capable.Inventory != null) { laptop = Capable.Inventory.GetItem<Laptop>(); }
         if (laptop == null) { return; }
 
         // on utilise le laptop
@@ -190,13 +188,57 @@ public class PersoInputsController : Singleton<PersoInputsController>
         // on utilise la conso
         conso.Use(Capable);
     }
+
+
+    [Header("Interaction input parameters")]
+    [SerializeField] private bool waiting_interacting = false; // waiting for the threshold delay before endless_interacting
+    [SerializeField] private bool endless_interacting = false; // we interact endlessly
     public void OnInteract(InputAction.CallbackContext context)
     {
         InteractCapacity interactor = Capable.GetCapacity<InteractCapacity>();
         if (interactor == null) { return; } // if we don't have an interact capacity
         if (!interactor.Able) { return; } // if we don't have an interact capacity
-        interactor.HandleInteractInput(context);
+
+        // if we press the button we launch the endless threshold
+        if (context.ReadValue<float>() >= 0.5f)
+        {
+            StopCoroutine(OnEndlessInteract(interactor));
+            StartCoroutine(OnEndlessInteract(interactor));
+            return;
+        }
+
+        // else we release the button so we direclty interact with it
+        if (waiting_interacting || endless_interacting) { cancel_endless_interact(); }
+        interactor.Interact();
     }
+    public IEnumerator OnEndlessInteract(InteractCapacity interactor)
+    {
+        // reset parameters
+        cancel_endless_interact();
+
+        // wait for threshold
+        waiting_interacting = true;
+        yield return new WaitForSeconds(InputManager.Instance.BUTTON_ENDLESSLY_SHORT_THRESHOLD);
+        if (!waiting_interacting) { yield break; }
+
+        // we start the endless interaction
+        endless_interacting = true;
+        waiting_interacting = false;
+        while (endless_interacting)
+        {
+            interactor.Interact(endless:true);
+            yield return new WaitForSeconds(InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY);
+        }
+
+        // we stop the endless interaction
+        cancel_endless_interact();
+    }
+    private void cancel_endless_interact()
+    {
+        waiting_interacting = false;
+        endless_interacting = false;
+    }
+
 
 
     // CHANGE CAPABLE TARGET
@@ -213,7 +255,7 @@ public class PersoInputsController : Singleton<PersoInputsController>
         if (Capable is IA old_ia)
         {
             // on réactive l'ancien Brain si le capable actuel est une ia
-            old_ia.Brain.gameObject.SetActive(true);
+            old_ia.Brain?.gameObject.SetActive(true);
 
             // on remet le tag
             old_ia.gameObject.tag = old_ia.BaseTag;
@@ -245,17 +287,14 @@ public class PersoInputsController : Singleton<PersoInputsController>
         CancelInvoke("ResetCapableTarget");
         if (duration != -888f) { Invoke("ResetCapableTarget", duration); }
 
-        // repositionne la tete
-        // float head_y_offset = AnimBank.Instance.GetHeadOffset(new_target.Skin);
-        // see_through.transform.localPosition = new Vector3(see_through.transform.localPosition.x, head_y_offset, see_through.transform.localPosition.z);
+        // refresh le see through pour remettre la tete bien centrée
         see_through.Refresh(new_target);
-        // RecenterEllipseOffset(new_target.GetComponent<SpriteRenderer>());
 
         // on désactive le Brain si le nouveau capable est un IA
         if (new_target is IA ia)
         {
             // désactive le cerveau
-            ia.Brain.gameObject.SetActive(false);
+            ia.Brain?.gameObject.SetActive(false);
 
             // on remet le tag
             ia.gameObject.tag = "Controlled";
