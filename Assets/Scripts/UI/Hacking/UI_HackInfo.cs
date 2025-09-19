@@ -14,6 +14,7 @@ public class UI_HackInfo : MonoBehaviour
     [SerializeField] private float max_progress_width = 150f;
     [SerializeField] private Color completed_color = Color.green;
     [SerializeField] private Color failed_color = Color.red;
+    [SerializeField] private Color waiting_color = Color.yellow;
 
     // START
     public void Init(Hack hack)
@@ -38,6 +39,10 @@ public class UI_HackInfo : MonoBehaviour
         else if (hack.state == HackState.Completed)
         {
             progress.GetComponent<Image>().color = completed_color;
+        }
+        else if (hack.state == HackState.Waiting)
+        {
+            progress.GetComponent<Image>().color = waiting_color;
         }
     }
 }

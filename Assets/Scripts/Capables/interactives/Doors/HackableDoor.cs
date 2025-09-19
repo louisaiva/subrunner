@@ -104,14 +104,11 @@ public class HackableDoor : Door, Lockable
         if (debug) { Debug.Log($"(HackableDoor) Hack failed on {name} with exploit {hack.name}"); }
         anim_player.StopPlaying("hacked");
         Lock();
-
-        RunningHacks.Remove(hack);
     }
-    public void OnHackCompleted(Hack hack)
+    public void OnHackSucceeded(Hack hack)
     {
         if (debug) { Debug.Log($"(HackableDoor) Hack completed on {name} with exploit {hack.name}"); }
         anim_player.StopPlaying("hacked");
-        RunningHacks.Remove(hack);
 
         // if the hack was successful we unlock the door
         if (hack.name == "bruteforce" || hack.name == "dictionary_attack")
@@ -123,9 +120,13 @@ public class HackableDoor : Door, Lockable
             Unlock();
         }
     }
+    public void OnHackDone(Hack hack)
+    {
+        if (RunningHacks.Contains(hack)) { RunningHacks.Remove(hack); } // if the zombo is dead we may have already removed the hack
+    }
 
     // UNLOCKING
-    private async void Unlock()
+    public async void Unlock()
     {
         Locked = false;
         if (debug) { Debug.Log($"(HackableDoor) {name} is now unlocked"); }
@@ -148,7 +149,7 @@ public class HackableDoor : Door, Lockable
         // we invoke the locking after x seconds
         Invoke(nameof(Lock), locking_interval);
     }
-    private void Lock()
+    public void Lock()
     {
         CancelInvoke();
         Locked = true;

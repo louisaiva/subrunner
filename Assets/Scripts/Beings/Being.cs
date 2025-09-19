@@ -208,9 +208,9 @@ public class Being : Movable
     public virtual void Die()
     {
         // if we are controlled by a controller we reset the controller
-        if (PersoInputsController.Instance.Capable == this)
+        if (Controller.Instance.Capable == this)
         {
-            PersoInputsController.Instance.ResetCapableTarget();
+            Controller.Instance.ResetCapableTarget();
         }
     }    
 

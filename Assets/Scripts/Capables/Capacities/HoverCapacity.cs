@@ -28,7 +28,7 @@ public class HoverCapacity : Capacity
         OnHover?.Invoke(capable);
 
         // then we only play animation if the capable is the one controlled
-        if (capable != PersoInputsController.Instance.Capable) { return; }
+        if (capable != Controller.Instance.Capable) { return; }
 
         // we check if the capable is locked or not
         played_animation = "hover";

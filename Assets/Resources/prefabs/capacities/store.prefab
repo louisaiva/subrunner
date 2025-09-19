@@ -74,12 +74,16 @@ MonoBehaviour:
     base_duration: 2
     cores_cost: 1
     security_level: 1
+    end_timer: 0
+    wait_end: 0
   - name: cpu_melt
     extension: .exe
     data: 62454964307a6845393756476b514a50564c685873436f586e31794876523145a5a514757526b4932334e70304a584c6362516245315947545a78516345316c46a38364e54684750526561634a4a35596e446f6378453532385936736f464e3373
     base_duration: 45
     cores_cost: 2
     security_level: 1
+    end_timer: 0
+    wait_end: 0
   - name: bruteforce
     extension: .exe
     data: 3644 5563 7573 3165 754f 3462 5166 5363 5568 736b 4471 6c5a 7232 536c 4c78
@@ -89,6 +93,8 @@ MonoBehaviour:
     base_duration: 15
     cores_cost: 2
     security_level: 1
+    end_timer: 0
+    wait_end: 0
   - name: ddos
     extension: .bat
     data: 4933 3163 6e47 3641 325a 576c 6770 4e70 6a69 6b32 6a34 6d74 544f 5254 3152
@@ -98,6 +104,8 @@ MonoBehaviour:
     base_duration: 60
     cores_cost: 4
     security_level: 2
+    end_timer: 0
+    wait_end: 0
   - name: dictionary_attack
     extension: .exe
     data: 7872 6259 5567 3559 7266 6346 4963 6267 754d 374d 515a 6838 774c 516d 6772
@@ -107,15 +115,21 @@ MonoBehaviour:
     base_duration: 10
     cores_cost: 2
     security_level: 2
+    end_timer: 0
+    wait_end: 0
   - name: trojan
     extension: .exe
     data: 49584f4867316d736d61414c694b63697a3952465343646e6a5162354e437071a7042316d32387134567036496f51696e396c66754c4836476f4f387036654e43a4668706a43594832354f437a3758386b4e4962566e6453707a3634654f384b59
     base_duration: 5
     cores_cost: 4
     security_level: 1
+    end_timer: 20
+    wait_end: 0
   - name: cyborg_puppet
     extension: .exe
     data: 49584f4867316d736d61414c694b63697a3952465343646e6a5162354e437071a7042316d32387134567036496f51696e396c66754c4836476f4f387036654e43a4668706a43594832354f437a3758386b4e4962566e6453707a3634654f384b59
     base_duration: 7
     cores_cost: 4
     security_level: 1
+    end_timer: 20
+    wait_end: 0

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 // HACKS (PROCESSUS)
@@ -10,7 +11,7 @@ public class Hack : Processus
     public Connection tunnel;
     public float duration;
     public HackState state = HackState.NotStarted;
-    public Hackable target => tunnel.target;
+    public Vulnerable target => tunnel.target;
 
     // CONSTRUCTOR
     public Hack(Connection tunnel, Exploit exploit) : base(exploit)
@@ -30,14 +31,14 @@ public class Hack : Processus
 
         // run the hack
         state = HackState.Running;
-        Debug.Log($"Starting hack on {target.name} with exploit {name}");
+        Debug.Log($"Starting hack on {target.capable.name} with exploit {name}");
     }
     public override void Process()
     {
         // checks if the tunnel is still open
         if (tunnel.state != ConnectionState.Opened)
         {
-            Debug.LogWarning($"Hack on {target.name} with exploit {name} was interrupted because the tunnel was closed");
+            Debug.LogWarning($"Hack on {target.capable.name} with exploit {name} was interrupted because the tunnel was closed");
             Fail();
             return;
         }
@@ -50,16 +51,44 @@ public class Hack : Processus
     }
     public override void Finish()
     {
-        // we check if the hackable is vulnerable to the exploit
-        if (name == "nmap" || target.IsVulnerableTo(program as Exploit)) { Complete(); }
-        else { Fail(); }
+
+        // we check if we failed or not
+        if (name != "nmap" && !target.IsVulnerableTo(Exploit.Nmap)) { Fail(); return; }
+        if (program is not Exploit exploit) { Fail(); return; }
+        if (!target.IsVulnerableTo(exploit)) { Fail(); return; }
+
+
+
+
+        // we check which type of exploit it is. if it's not a timer not a wait end we complete !
+        if (exploit.end_timer == 0f && !exploit.wait_end) { Complete(); return; }
+
+
+        // Notify the target that the hack is completed
+        target.OnHackSucceeded(this);
+
+        // we check if it's a timer or a wait end
+        if (exploit.end_timer > 0f)
+        {
+            // we start a timer
+            Debug.Log($"Hack on {target.capable.name} with exploit {name} is now in Timer mode for {exploit.end_timer} seconds.");
+            progress = 100f;
+            duration = exploit.end_timer;
+            state = HackState.Waiting; // we set the state to waiting while the timer is running
+        }
+        else if (exploit.wait_end)
+        {
+            progress = 100f;
+            duration = 0f;
+            state = HackState.Waiting; // we set the state to waiting while the user is expected to end the exploit
+        }
     }
 
     // FAIL & COMPLETE
     public void Fail()
     {
         // the hack has failed :///
-        Debug.Log($"Hack on {target.name} with exploit {name} was quit.");
+        Debug.Log($"Hack on {target.capable.name} with exploit {name} was quit.");
         this.state = HackState.Failed;
 
         // we close the connection
@@ -67,11 +96,12 @@ public class Hack : Processus
 
         // Notify the target that the hack is failed
         target.OnHackFailed(this);
+        target.OnHackDone(this);
     }
     public void Complete()
     {
         // the hack is successful !!
-        Debug.Log($"Hack on {target.name} with exploit {name} completed successfully.");
+        Debug.Log($"Hack on {target.capable.name} with exploit {name} completed successfully.");
         this.progress = 100f;
         this.state = HackState.Completed;
 
@@ -79,12 +109,13 @@ public class Hack : Processus
         tunnel.Close();
 
         // Notify the target that the hack is completed
-        target.OnHackCompleted(this);
+        target.OnHackSucceeded(this);
+        target.OnHackDone(this);
     }
     public override void Overflow()
     {
         // the hack has overflowed :///
-        Debug.LogWarning($"Hack on {target.name} with exploit {name} has overflowed. Freeing cores.");
+        Debug.LogWarning($"Hack on {target.capable.name} with exploit {name} has overflowed. Freeing cores.");
         this.state = HackState.Overflowed;
 
         // we close the connection
@@ -92,8 +123,52 @@ public class Hack : Processus
 
         // Notify the target that the hack is failed
         target.OnHackFailed(this);
+        target.OnHackDone(this);
     }
 
+
+    // WAITING
+    public void Wait()
+    {
+        // checks if the tunnel is still open
+        if (tunnel.state != ConnectionState.Opened)
+        {
+            Debug.LogWarning($"Hack on {target.capable.name} with exploit {name} was interrupted because the tunnel was closed");
+            Fail();
+            return;
+        }
+
+        // we update the progress of the hack
+        Exploit exploit = program as Exploit;
+        if (exploit.end_timer > 0f) { progress -= Time.deltaTime / duration * 100f; }
+        else if (!exploit.wait_end) { progress = 0f; } // we set progress at 0f if we don't need to wait anymore
+
+        // we check if the hack is done
+        if (progress <= 0f) { terminate(); }
+    }
+    private void terminate()
+    {
+        // we close the connection
+        tunnel.Close();
+
+        // we are done (no complete bcz we already hacked successfully the target)
+        target.OnHackDone(this);
+
+        // we set the state to completed
+        state = HackState.Completed;
+    }
+
+
+
+    [Header("Files found")]
+    public List<File> downloads = new List<File>();
+    public void Download(File file)
+    {
+        if (downloads.Contains(file)) { return; }
+        downloads.Add(file);
+        Debug.Log($"(Hack) {name} found file {file.name} on {target.capable.name} and downloaded it.");
+    }
+    
     // GETTERS
     public float CalculateDuration()
     {
@@ -129,7 +204,8 @@ public enum HackState
     Running,
     Completed,
     Failed,
-    Overflowed
+    Overflowed,
+    Waiting, // for WaitEnd & Timer exploits
 }
 
 
@@ -162,6 +238,8 @@ public class Exploit : Program
 
     [Header("Exploit Details")]
     public int security_level;
+    public float end_timer = 0f; // if > 0f it will make the exploit a Timer exploit
+    public bool wait_end = false; // if true it will make the exploit a WaitEnd exploit (and will wait until the "wait_end" bool become false again)
 
     // CONSTRUCTOR
     public Exploit(string name, int security_level, float base_duration, int cores_cost) : base(name, base_duration, cores_cost)
@@ -182,5 +260,18 @@ public class FileExploit : Exploit
     public FileExploit(Exploit exploit, File file) : base(exploit)
     {
         this.file = file;
+    }
+}
+
+[System.Serializable]
+public class DamageExploit : Exploit
+{
+    public float damage;
+    public float knockback_magnitude;
+
+    public DamageExploit(string name, int security_level, float base_duration, int cores_cost, float damage, float knockback_magnitude) : base(name, security_level, base_duration, cores_cost)
+    {
+        this.damage = damage;
+        this.knockback_magnitude = knockback_magnitude;
     }
 }

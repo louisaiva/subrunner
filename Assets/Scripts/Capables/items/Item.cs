@@ -29,8 +29,8 @@ public class Item : Movable
     }
 
     // events
-    public event System.Action<Capable> OnGrabbed = delegate { };
-    public event System.Action OnDropped = delegate { };
+    public event System.Action<Item, Capable> OnGrabbed = delegate { };
+    public event System.Action<Item> OnDropped = delegate { };
 
     // HOLDER
     public Capable Holder => HolderInventory != null ? HolderInventory.capable : null;
@@ -115,7 +115,7 @@ public class Item : Movable
         await System.Threading.Tasks.Task.Yield();
 
         // we call the event
-        OnGrabbed?.Invoke(Holder);
+        OnGrabbed?.Invoke(this,Holder);
     }
     protected virtual void on_dropped()
     {
@@ -136,7 +136,7 @@ public class Item : Movable
         // we remove the effect IsBeingCarried
         RemoveEffect(Effect.BeingCarried);
 
-        OnDropped?.Invoke();
+        OnDropped?.Invoke(this);
     }
 
     // ON DESTROY

@@ -4,18 +4,10 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static PlayerInputActions;
 
-public class PersoInputsController : Singleton<PersoInputsController>
+public class PersoInputsController : MonoBehaviour
 {
-    public Capable Capable
-    {
-        get
-        {
-            if (_capable == null)
-                _capable = transform.parent.GetComponent<Capable>();
-            return _capable;
-        }
-    }
-    [SerializeField] private Capable _capable;
+    private Controller controller;
+    private Capable Capable => controller.Capable;
 
     [Header("INPUTS")]
     public bool InputsDisabled = false;
@@ -32,25 +24,23 @@ public class PersoInputsController : Singleton<PersoInputsController>
     private event Action<InputAction.CallbackContext> interactCallback;
 
     [Header("Components")]
-    [SerializeField] private SeeThroughHandler see_through;
-    public Room current_room { get; set; }
+    public HackableNavigator HackableNavigator { get; private set; }
+    public ExploitNavigator ExploitNavigator { get; private set; }
 
-    [Header("UI Statics elements")]
-    [SerializeField] private UI_Inventory perso_quick_inventory;
 
     private void Start()
     {
         // on récupère les inputs
         initInputs();
 
-        // on récupère les composants
-        see_through = transform.Find("see_through_handler").GetComponent<SeeThroughHandler>();
-        perso_quick_inventory = UI_Manager.Instance.GetPool("hud").transform.Find("perso_quick_inventory").GetComponent<UI_Inventory>();
+        controller = GetComponent<Controller>();
+
+        HackableNavigator = transform.Find("hacking").GetComponent<HackableNavigator>();
+        ExploitNavigator = transform.Find("hacking").GetComponent<ExploitNavigator>();
 
         // mets les callbacks pour stopper correctement les endless inputs
         InputManager.Instance.OnPersoInputsToggled += perso_inputs_true => { if (!perso_inputs_true) { cancel_endless_interact(); } };
 
-        ResetCapableTarget();
     }
 
     // INPUTS
@@ -197,14 +187,17 @@ public class PersoInputsController : Singleton<PersoInputsController>
     }
     public void OnHack()
     {
-        // on récupère le laptop
-        Laptop laptop = null;
-        if (Capable is Perso perso) { laptop = perso.ItemManager.GetLaptop(); }
-        else if (Capable.Inventory != null) { laptop = Capable.Inventory.GetItem<Laptop>(); }
-        if (laptop == null) { return; }
 
-        // on utilise le laptop
-        laptop.Use(Capable);
+
+        // On récupère la hack capacity du hackable navigator
+        HackCapacity hacker = HackableNavigator.hacker;
+        if (hacker == null) { return; } // if the hacker is not set, we return
+
+        ConnectCapacity connector = Controller.Instance.Capable.Connector;
+        if (connector == null) { return; } // if the connector is not set,
+
+        hacker.SetConnector(connector);
+        hacker.Use(Capable);
     }
     public void OnUseConso(int index)
     {
@@ -268,83 +261,5 @@ public class PersoInputsController : Singleton<PersoInputsController>
         endless_interacting = false;
     }
 
-
-
-    // CHANGE CAPABLE TARGET
-    public void ChangeCapableTarget(Capable new_target, float duration = -888f)
-    {
-        // reset les inputs de l'ancien capable
-        Capable.ClearInputs();
-        if (Capable.GetCapacity<WalkCapacity>() != null)
-        {
-            Capable.GetCapacity<WalkCapacity>().walk_percentage_target = 0f;
-        }
-
-        // reset le behaviour
-        if (Capable is IA old_ia)
-        {
-            // on réactive l'ancien Brain si le capable actuel est une ia
-            old_ia.Brain?.gameObject.SetActive(true);
-
-            // on remet le tag
-            old_ia.gameObject.tag = old_ia.BaseTag;
-
-            // reset les tags d'attaques si on a
-            if (old_ia.HasCapacity<AttackCapacity>())
-            {
-                old_ia.GetCapacity<AttackCapacity>().ResetTags();
-            }
-        }
-
-        // reset l'inventory
-        Capable?.Inventory?.RemoveUI(perso_quick_inventory);
-        perso_quick_inventory.Inventory = null;
-
-
-
-        // on déplace le script sur le gameobject capable
-        transform.parent = new_target.transform;
-        transform.localPosition = Vector3.zero;
-
-        // on change le capable
-        _capable = new_target;
-
-        // on refresh la cam
-        CameraFollow.Instance.RefreshTarget(new_target);
-
-        // si on a une durée, on reviens au perso après la durée
-        CancelInvoke("ResetCapableTarget");
-        if (duration != -888f) { Invoke("ResetCapableTarget", duration); }
-
-        // refresh le see through pour remettre la tete bien centrée
-        see_through.Refresh(new_target);
-
-        // on désactive le Brain si le nouveau capable est un IA
-        if (new_target is IA ia)
-        {
-            // désactive le cerveau
-            ia.Brain?.gameObject.SetActive(false);
-
-            // on remet le tag
-            ia.gameObject.tag = "Controlled";
-
-            // on clear les tags d'attaque pour pouvoir attaquer des gens
-            if (ia.HasCapacity<AttackCapacity>())
-            {
-                ia.GetCapacity<AttackCapacity>().ClearTags();
-            }
-        }
-
-        // on met le perso_quick_inventory sur la target si elle a un inventaire
-        new_target?.Inventory?.AddUI(perso_quick_inventory);
-        perso_quick_inventory.Refresh();
-    }
-    public void ResetCapableTarget()
-    {
-        CancelInvoke("ResetCapableTarget");
-        ChangeCapableTarget(Perso.Instance);
-
-        // todo : disable ui_chest_inventory if we were in a chest
-    }
 
 }

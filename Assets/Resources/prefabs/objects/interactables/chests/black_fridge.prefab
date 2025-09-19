@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3488285615686108083
 Transform:
   m_ObjectHideFlags: 0
@@ -98,11 +98,12 @@ Transform:
   m_GameObject: {fileID: 5598203954203853511}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3, y: 12.75, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3488285615686108083}
+  - {fileID: 129976712824180544}
   - {fileID: 2866231941006832011}
   - {fileID: 2799477882058080881}
   - {fileID: 2931972518693024793}
@@ -300,7 +301,7 @@ MonoBehaviour:
   effects_timetolive: []
   debug: 0
   activate_all_capacities_logs_on_awake: 0
-  securityLevel: 1
+  interactors: []
 --- !u!1 &8618924164118755029
 GameObject:
   m_ObjectHideFlags: 0
@@ -783,6 +784,159 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bb97402ee6332cc4fb62827af8b39a3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1001 &6326472434000778494
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5659944045953487637}
+    m_Modifications:
+    - target: {fileID: 1038123483365548311, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: m_Name
+      value: connect
+      objectReference: {fileID: 0}
+    - target: {fileID: 1038123483365548311, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 3485473859685886737, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: m_Radius
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: vulnerabilities.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: vulnerabilities.Array.data[0].exploit_name
+      value: trojan
+      objectReference: {fileID: 0}
+    - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: vulnerabilities.Array.data[1].exploit_name
+      value: cyborg_puppet
+      objectReference: {fileID: 0}
+    - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: vulnerabilities.Array.data[0].on_hack_done.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: vulnerabilities.Array.data[1].on_hack_done.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: vulnerabilities.Array.data[0].on_hack_done.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 444367240025233683}
+    - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: vulnerabilities.Array.data[1].on_hack_done.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 444367240025233683}
+    - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: vulnerabilities.Array.data[0].on_hack_done.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: vulnerabilities.Array.data[1].on_hack_done.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: vulnerabilities.Array.data[0].on_hack_done.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: UncontrolController
+      objectReference: {fileID: 0}
+    - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: vulnerabilities.Array.data[1].on_hack_done.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ResetController
+      objectReference: {fileID: 0}
+    - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: vulnerabilities.Array.data[0].on_hack_succeeded.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 444367240025233683}
+    - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: vulnerabilities.Array.data[0].on_hack_succeeded.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ControlCapable
+      objectReference: {fileID: 0}
+    - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: vulnerabilities.Array.data[1].on_hack_succeeded.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ControlCapable
+      objectReference: {fileID: 0}
+    - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: vulnerabilities.Array.data[0].on_hack_done.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Vulnerable, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: vulnerabilities.Array.data[1].on_hack_done.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Vulnerable, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: vulnerabilities.Array.data[0].on_hack_done.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: vulnerabilities.Array.data[1].on_hack_done.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6197480893261519806, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.024
+      objectReference: {fileID: 0}
+    - target: {fileID: 6197480893261519806, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.928
+      objectReference: {fileID: 0}
+    - target: {fileID: 6197480893261519806, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6197480893261519806, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6197480893261519806, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6197480893261519806, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6197480893261519806, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6197480893261519806, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6197480893261519806, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6197480893261519806, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+--- !u!4 &129976712824180544 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6197480893261519806, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+  m_PrefabInstance: {fileID: 6326472434000778494}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &444367240025233683 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+  m_PrefabInstance: {fileID: 6326472434000778494}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eec115dbdabed94699baa2f8efafa8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &6639771646079470946

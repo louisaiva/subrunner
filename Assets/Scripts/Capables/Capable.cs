@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using NUnit.Framework;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.iOS;
 
 /// <summary>
 /// Mother class of all the Capables in the game.
@@ -59,7 +61,26 @@ public class Capable : MonoBehaviour
             return inventory_transform.GetComponent<Inventory>();
         }
     }
-    
+
+    // et des capacités electroniques
+    public virtual ConnectCapacity Connector
+    {
+        get
+        {
+            // we check if we have a ConnectCapacity directly
+            if (HasCapacity<ConnectCapacity>()) { return GetCapacity<ConnectCapacity>(); }
+
+            // or a connectable item
+            else if (Inventory != null)
+            {
+                // checks if one of our items is a laptop
+                Laptop laptop = Inventory.GetItem<Laptop>();
+                if (laptop != null) { return laptop.GetCapacity<ConnectCapacity>(); }
+            }
+            
+            return null;
+        }
+    }
 
 
     [Header("Logs")]

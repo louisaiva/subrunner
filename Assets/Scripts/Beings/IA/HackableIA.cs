@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HackableIA : IA, Hackable
+public class HackableIA : IA
 {
     
-    [Header("CPU Overheat Damage")]
-    public int cpu_overheat_damage = 5;
-    public int cpu_overheat_knockback = 500;
+    // [Header("CPU Overheat Damage")]
+    // public int cpu_overheat_damage = 5;
+    // public int cpu_overheat_knockback = 500;
 
 
-    [Header("Components")]
+    /* [Header("Components")]
     public SpriteRenderer spriteRenderer { get; private set; }
     public Material TargetMaterial { get; private set; }
     public Material DefaultMaterial { get; private set; }
@@ -43,7 +43,7 @@ public class HackableIA : IA, Hackable
 
         RunningHacks.Add(hack);
     }
-    public void OnHackCompleted(Hack hack)
+    public void OnHackSucceeded(Hack hack)
     {
         if (debug) { Debug.Log($"(HackableIA) {name} has been hacked by {hack.name}"); }
 
@@ -76,18 +76,23 @@ public class HackableIA : IA, Hackable
         else if (hack.name == "cyborg_puppet")
         {
             // we move the PersoInputsController to the capable for 30 seconds
-            PersoInputsController.Instance.ChangeCapableTarget(this, 30f);
+            Controller.Instance.ChangeCapableTarget(this, (hack.program as Exploit).end_timer);
         }
 
         // take damage if needed
         if (damage > 0) { take_damage(damage, knockback); }
-
-        if (RunningHacks.Contains(hack)) { RunningHacks.Remove(hack); } // if the zombo is dead we may have already removed the hack
     }
     public void OnHackFailed(Hack hack)
     {
+        if (Controller.Instance.Capable == this)
+        {
+            Controller.Instance.ResetCapableTarget();
+        }
         if (debug) { Debug.Log($"(HackableIA) {name} failed to hack by {hack.name}"); }
-        RunningHacks.Remove(hack);
+    }
+    public void OnHackDone(Hack hack)
+    {
+        if (RunningHacks.Contains(hack)) { RunningHacks.Remove(hack); } // if the zombo is dead we may have already removed the hack
     }
 
 
@@ -106,5 +111,5 @@ public class HackableIA : IA, Hackable
         }
 
         Debug.Log($"(HackableIA) {name} has died. {hacks} running hacks were forced to fail.");
-    }
+    } */
 }

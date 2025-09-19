@@ -47,7 +47,7 @@ public class UI_Hacking : UI_Pool
         if (log) { Debug.Log("(UI_Hacking) hack input received : " + input); }
 
         // we use the laptop
-        PersoInputsController.Instance.OnHack();
+        Controller.Instance.PIC.OnHack();
     }
 
     // SHOW / HIDE
@@ -62,10 +62,10 @@ public class UI_Hacking : UI_Pool
         if (log) { Debug.Log("(UI_Hacking) pool showed, trying to enable navigators"); }
 
         // we set the callbacks & enable HackableNavigator
-        Perso.Instance.HackableNavigator.Enable();
+        Controller.Instance.HackableNavigator.Enable();
         if (log) { Debug.Log("(UI_Hacking) hackable navigator enabled"); }
 
-        Perso.Instance.ExploitNavigator.Enable();
+        Controller.Instance.ExploitNavigator.Enable();
         if (log) { Debug.Log("(UI_Hacking) exploit navigator enabled"); }
 
         if (log) { Debug.Log("(UI_Hacking) showing pool : navigator enabled & callbacks set"); }
@@ -75,9 +75,9 @@ public class UI_Hacking : UI_Pool
         if (log) { Debug.Log("(UI_Hacking) trying to hide_pool"); }
 
         // we disable navigator
-        Perso.Instance.HackableNavigator.Disable();
+        Controller.Instance.HackableNavigator.Disable();
         if (log) { Debug.Log("(UI_Hacking) hackable navigator disabled"); }
-        Perso.Instance.ExploitNavigator.Disable();
+        Controller.Instance.ExploitNavigator.Disable();
         if (log) { Debug.Log("(UI_Hacking) exploit navigator disabled"); }
 
         // if (log) { Debug.Log("(UI_Hacking) navigator disabled"); }

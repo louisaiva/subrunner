@@ -6,7 +6,7 @@ public class CameraFollow : Singleton<CameraFollow>
 
     [SerializeField] private Capable target;
     [SerializeField] private Rigidbody2D capable_rb;
-    private Capable capable => PersoInputsController.Instance.Capable;
+    private Capable capable => Controller.Instance.Capable;
 
     public float timeOffset;
     private Vector3 velocity;
@@ -31,7 +31,7 @@ public class CameraFollow : Singleton<CameraFollow>
     void Update()
     {
         // if (Perso.Instance == null) { capable_rb = null; return; }
-        if (capable == null || target == null || PersoInputsController.Instance.InputsDisabled) { capable_rb = null; target = null; return; }
+        if (capable == null || target == null || Controller.Instance.PIC.InputsDisabled) { capable_rb = null; target = null; return; }
 
 
         // calcule le mouvement de la cam en X

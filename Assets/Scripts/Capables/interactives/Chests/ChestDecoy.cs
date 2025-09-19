@@ -4,10 +4,10 @@ using UnityEngine.Rendering.Universal;
 using System.Collections.Generic;
 
 
-public class ChestDecoy : Chest, Hackable
+public class ChestDecoy : Chest
 {
 
-    [Header("Hackable")]
+    /* [Header("Hackable")]
     [SerializeField] private int securityLevel = 1;
     public List<Hack> RunningHacks { get; private set; } = new List<Hack>();
     public int SecurityLevel => securityLevel;
@@ -48,23 +48,26 @@ public class ChestDecoy : Chest, Hackable
     {
         // Handle the hack failure event
         if (debug) { Debug.Log($"(ChestDecoy) Hack failed on {name} with exploit {hack.name}"); }
-        // anim_player.StopPlaying("hacked");
-        PersoInputsController.Instance.ResetCapableTarget();
-
-        RunningHacks.Remove(hack);
+        
+        if (Controller.Instance.Capable == this)
+        {
+            Controller.Instance.ResetCapableTarget();
+        }
     }
-    public void OnHackCompleted(Hack hack)
+    public void OnHackSucceeded(Hack hack)
     {
         if (debug) { Debug.Log($"(ChestDecoy) Hack completed on {name} with exploit {hack.name}"); }
-        // anim_player.StopPlaying("hacked");
-        RunningHacks.Remove(hack);
 
         // if the hack was successful we unlock the door
         if (hack.name == "trojan")
         {
             // we make the perso target the chest
-            PersoInputsController.Instance.ChangeCapableTarget(this, 10f);
+            Controller.Instance.ChangeCapableTarget(this, (hack.program as Exploit).end_timer);
         }
     }
+    public void OnHackDone(Hack hack)
+    {
+        if (RunningHacks.Contains(hack)) { RunningHacks.Remove(hack); } // if the zombo is dead we may have already removed the hack
+    } */
 
 }

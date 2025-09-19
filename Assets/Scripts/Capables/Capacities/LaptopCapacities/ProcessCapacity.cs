@@ -97,8 +97,9 @@ public class ProcessCapacity : Capacity
             if (!core.isFree)
             {
                 if (debug) { Debug.Log($"(ProcessCapacity) {capable.name} lost a core that was used by {core.RunningProcess.name}. Overflowing process."); }
-                FreeCores(core.RunningProcess); // we don't only free this one core, but we free all the cores used by this processus
                 core.RunningProcess.Overflow(); // we overflow the processus
+                FreeCores(core.RunningProcess); // we don't only free this one core, but we free all the cores used by this processus
+                // if (debug) { Debug.Log($"(ProcessCapacity) running process is ");}
             }
 
             cores.Remove(core);
@@ -106,44 +107,6 @@ public class ProcessCapacity : Capacity
 
         
     }
-    /* public void OnCPU_Changed()
-    {
-        List<Module_CPU> cpus = capable.Inventory.GetItemsByRule("module:cpu")
-                                                .Select(item => item as Module_CPU)
-                                                .Where(cpu => cpu != null)
-                                                .ToList();
-
-        List<Core> new_cores = cpus.SelectMany(cpu => cpu.Cores).ToList();
-        if (debug) { Debug.Log($"(ProcessCapacity) {capable.name} CPU changed. New max cores: {new_cores.Count} / old cores: {cores.Count}"); }
-
-
-        // we go through all the cores we had and check if they aren't in the list
-        List<Core> cores_to_remove = new List<Core>();
-        foreach (Core core in cores)
-        {
-            if (new_cores.Contains(core)) { continue; }
-            cores_to_remove.Add(core);
-        }
-
-        // we go through all the cores we have and check if we need to add them to the list
-        foreach (Core core in new_cores)
-        {
-            if (cores.Contains(core)) { continue; }
-            cores.Add(core);
-        }
-
-        // finally we remove the old cores and overflow their processus if they were used
-        foreach (Core core in cores_to_remove)
-        {
-            if (!core.isFree)
-            {
-                if (debug) { Debug.Log($"(ProcessCapacity) {capable.name} lost a core that was used by {core.RunningProcess.name}. Overflowing process."); }
-                FreeCores(core.RunningProcess); // we don't only free this one core, but we free all the cores used by this processus
-                core.RunningProcess.Overflow(); // we overflow the processus
-            }
-            cores.Remove(core);
-        }
-    } */
 }
 
 [Serializable] public class Core
@@ -203,7 +166,7 @@ public class ProcessCapacity : Capacity
 
     // RUN , PROCESS & FINISH
     public virtual void Run() { }
-    public virtual void Process() {}
-    public virtual void Finish() {}
+    public virtual void Process() { }
+    public virtual void Finish() { }
     public virtual void Overflow() {}
 }

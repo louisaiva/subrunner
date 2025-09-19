@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static PlayerInputActions;
 
-public class UI_InputsController : Singleton<UI_InputsController>
+public class UI_InputsController : MonoBehaviour
 {
     [Header("UI Inputs Parameters")]
     [SerializeField] private UI_XboxNavigator navigator;

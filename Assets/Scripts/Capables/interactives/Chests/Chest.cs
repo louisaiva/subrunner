@@ -35,7 +35,7 @@ public class Chest : Capable, Interactable, Openable
         if (interactors.Count == 1) { GetCapacity<OpenCapacity>().Use(interactor); }
 
         // only if the interactor is controlled
-        if (interactor == PersoInputsController.Instance.Capable && !ui_inventory_shown)
+        if (interactor == Controller.Instance.Capable && !ui_inventory_shown)
         {
             // we set the interactor
             Interactor = interactor.GetCapacity<InteractCapacity>();
@@ -56,7 +56,7 @@ public class Chest : Capable, Interactable, Openable
         if (!ui_inventory_shown) { return; }
         foreach (Capable c in interactors)
         {
-            if (c == PersoInputsController.Instance.Capable) { return; } // we still have the controlled interactor so we dont hide the ui
+            if (c == Controller.Instance.Capable) { return; } // we still have the controlled interactor so we dont hide the ui
         }
 
         // we hide the inventory UI

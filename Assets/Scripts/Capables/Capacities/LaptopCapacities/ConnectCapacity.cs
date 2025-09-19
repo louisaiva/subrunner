@@ -16,7 +16,7 @@ public class ConnectCapacity : Capacity
 {
     [Header("Connection Target")]
     public Connection connection = null;
-    public Hackable Target => connection != null ? connection.target : null;
+    public Vulnerable Target => connection != null ? connection.target : null;
 
     [Header("Opened Connections")]
     public List<Connection> connections = new List<Connection>();
@@ -28,7 +28,7 @@ public class ConnectCapacity : Capacity
     public bool log_connection = false;
 
     // CONNECT
-    public void Connect(Hackable target)
+    public void Connect(Vulnerable target, HackCapacity scanner = null)
     {
         // checks if we already have a connection to it we don't open a new one
         if (IsConnectedTo(target))
@@ -57,15 +57,15 @@ public class ConnectCapacity : Capacity
         else if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} connected to {target.name}."); }
 
         // and now we scan the target
-        HackCapacity hacker = capable.GetCapacity<HackCapacity>();
-        if (hacker == null)
+        // HackCapacity hacker = capable.GetCapacity<HackCapacity>();
+        if (scanner == null)
         {
             if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} tried to scan {target.name} but no hack capacity is available."); }
             return;
         }
 
         if (log_connection) { Debug.Log($"(ConnectCapacity) {capable.name} launching scan on {target.name}."); }
-        hacker.Scan(target);
+        scanner.Scan(target);
     }
     public void Disconnect()
     {
@@ -74,7 +74,7 @@ public class ConnectCapacity : Capacity
         if (connection.state != ConnectionState.Opened) { connections.Remove(connection); }
         connection = null;
     }
-    public bool IsConnectedTo(Hackable target)
+    public bool IsConnectedTo(Vulnerable target)
     {
         if (Target != null && Target == target)
         {
@@ -82,7 +82,7 @@ public class ConnectCapacity : Capacity
         }
         return connections.Any(c => c.target == target && (c.state == ConnectionState.Connected || c.state == ConnectionState.Opened));
     }
-    private Connection get_connection(Hackable target)
+    private Connection get_connection(Vulnerable target)
     {
         return connections.FirstOrDefault(c => c.target == target);
     }
@@ -111,7 +111,7 @@ public class ConnectCapacity : Capacity
             }
         }
     }
-    private bool is_in_range(Hackable target)
+    private bool is_in_range(Vulnerable target)
     {
         if (target == null) { return false; }
         try { return Vector3.Distance(transform.position, target.transform.position) <= Radius; }
@@ -134,9 +134,9 @@ public class ConnectCapacity : Capacity
 {
     public ConnectionType type = ConnectionType.None;
     public ConnectionState state = ConnectionState.None;
-    public Hackable target;
+    public Vulnerable target;
 
-    public Connection(Hackable target, ConnectionType type = ConnectionType.None)
+    public Connection(Vulnerable target, ConnectionType type = ConnectionType.None)
     {
         this.target = target;
         this.state = ConnectionState.Connected;

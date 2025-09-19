@@ -69,7 +69,6 @@ public class UI_Manager : Singleton<UI_Manager>
         // on mets les callbacks des menus
         input_manager.inputs.menus.inventory.performed += ctx => { TogglePool("inventory"); };
         input_manager.inputs.menus.pause.performed += ctx => { TogglePool("pause"); };
-        // input_manager.inputs.menus.hacking.performed += ctx => { HandleHackingInput(ctx.ReadValue<float>()); };
         input_manager.inputs.perso.select_hackable.performed += ctx => { HandleHackingInput(ctx.ReadValue<Vector2>().magnitude); };
         // inputs.menus.map.performed += ctx => { TogglePool("map"); };
         input_manager.inputs.UI.cancel.performed += ctx => { HandleCancelInput(ctx.ReadValue<float>()); };

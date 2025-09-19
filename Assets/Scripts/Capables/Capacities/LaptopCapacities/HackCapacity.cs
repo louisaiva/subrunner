@@ -17,12 +17,6 @@ public class HackCapacity : Capacity
     [Header("Hacks")]
     public List<Hack> running_hacks = new List<Hack>();
     public event System.Action<Hack> OnExploitRun = delegate { };
-
-    [Header("Scanner")]
-    public Dictionary<Hackable, List<Exploit>> vulnerabilities = new Dictionary<Hackable, List<Exploit>>();
-    // this stores the list of all the hackables we scanned & their vulnerabilites found !
-    // todo : improve this by saving the last scan time and remove those when time > x
-    // and maybe move it to a List<ScanResult> ???
     public event System.Action<Exploit> OnScanned = delegate { };
 
 
@@ -34,8 +28,8 @@ public class HackCapacity : Capacity
 
     [Header("Components")]
     [SerializeField] private Laptop laptop;
-    private Hackable Target => laptop.GetCapacity<ConnectCapacity>()?.Target;
-
+    [SerializeField] private ConnectCapacity connector;
+    
     // START
     private void Start()
     {
@@ -43,7 +37,7 @@ public class HackCapacity : Capacity
     }
 
     // EXPLOIT SELECTION
-    public void SelectExploit(Exploit exploit)
+    public void OverrideExploit(Exploit exploit, Vulnerable Target)
     {
         if (exploit == null) { return; }
 
@@ -81,21 +75,23 @@ public class HackCapacity : Capacity
             // we check if the hack is done
             if (hack.state == HackState.Completed || hack.state == HackState.Failed || hack.state == HackState.Overflowed)
             {
-                if (hack.target is Lockable lockable && hack.state == HackState.Completed
-                && hack.program is Exploit exploit && lockable.IsUnlockableVia(exploit))
+                // we donwload files that the hack found if there are any
+                foreach (File file in hack.downloads)
                 {
-                    // we save the found key in our laptop
-                    Key key = lockable.Key;
-                    if (key != null && !laptop.HasKeyFor(lockable))
-                    {
-                        bool wrote_key = laptop.WriteFile(key);
-                        if (debug && wrote_key) { Debug.Log($"(HackCapacity) {capable.name} found key {key} for {lockable.name} and saved it to its laptop."); }
-                        else if (debug && !wrote_key) { Debug.LogWarning($"(HackCapacity) {capable.name} found key {key} for {lockable.name} but could not save it to its laptop (maybe full storage)."); }
-                    }
+                    bool wrote_file = laptop.WriteFile(file);
+                    if (debug && wrote_file) { Debug.Log($"(HackCapacity) {capable.name} downloaded file {file.name} from {hack.target.name} and saved it to its laptop."); }
+                    else if (debug && !wrote_file) { Debug.LogWarning($"(HackCapacity) {capable.name} downloaded file {file.name} from {hack.target.name} but could not save it to its laptop (maybe full storage)."); }
                 }
 
-                if (debug) { Debug.Log($"(HackCapacity) {capable.name} finished hacking {hack.target.name} with exploit {hack.name}."); }
+                // we remove the hack
+                if (debug) { Debug.Log($"(HackCapacity) {capable.name} finished exploit {hack.name}."); }
                 remove_hack(i);
+                continue;
+            }
+
+            if (hack.state == HackState.Waiting)
+            {
+                hack.Wait();
                 continue;
             }
 
@@ -121,7 +117,7 @@ public class HackCapacity : Capacity
     public override void Use(Capable capable)
     {
         // checks if we have a connector
-        ConnectCapacity connector = laptop.GetCapacity<ConnectCapacity>();
+        // ConnectCapacity connector = laptop.GetCapacity<ConnectCapacity>();
         if (connector == null)
         {
             if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack but no connector is available."); }
@@ -129,7 +125,7 @@ public class HackCapacity : Capacity
         }
 
         // checks if we have a connected target
-        Hackable target = connector.Target;
+        Vulnerable target = connector.Target;
         if (target == null)
         {
             if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack but no target is connected."); }
@@ -185,65 +181,41 @@ public class HackCapacity : Capacity
     }
 
     // SCANNING
-    public void Scan(Hackable target)
+    public void Scan(Vulnerable target)
     {
-        // todo we launch a nmap hack on the target ???
-        // but for now we just scan vulnerabilities
-        scan_vulnerabilities(target);
-        OnScanned?.Invoke(selected_exploit);
-    }
-    private List<Exploit> scan_vulnerabilities(Hackable target)
-    {
-        // if we have some vulnerabilities found for this hackable we clear them
-        vulnerabilities[target] = new List<Exploit>();
-
-        // we check if we already have the key for this target (instant hack)
-        string log_exploits = "";
-        /* if (target is Lockable lockable && laptop.HasKeyFor(lockable))
-        {
-            vulnerabilities[target].Add(Exploit.TypePassword);
-            log_exploits += $"- {Exploit.TypePassword.name} (instant hack)\n";
-        } */
-
+        // we list all the exploits we have
         List<Exploit> exploits = laptop.GetExploits();
 
-        // we scan the other vulnerabilities
-        for (int i = 0; i < exploits.Count; i++)
+        // we associate the key file to type_password if it's a lockable and if we have the key
+        if (target is Lockable lockable)
         {
-            Exploit exploit = exploits[i];
-
-            // we check if the exploit is TypePassword then we need to assign a password
-            if (target is Lockable lockable && exploit == Exploit.TypePassword)
+            Key key = laptop.GetKeyFor(lockable);
+            if (key != null && !exploits.Any(e => e.name == "type_password"))
             {
-                Key key = laptop.GetKeyFor(lockable);
-                if (key != null)
-                {
-                    exploit = new FileExploit(exploit, key);
-                }
-            }
-
-            // we check if the target is vulnerable to this exploit
-            if (target.IsVulnerableTo(exploit))
-            {
-                vulnerabilities[target].Add(exploit);
-                log_exploits += $"- {exploit.name}\n";
+                exploits.Add(new FileExploit(Exploit.TypePassword, key));
+                exploits.Remove(Exploit.TypePassword); // we remove the empty type password exploit
             }
         }
 
-        // we select the first exploit
-        selected_exploit = vulnerabilities[target][0];
+        // we find the better suited exploit & select it
+        selected_exploit = target.GetHighestVulnerability(exploits);
 
-        if (debug) { Debug.Log($"(HackCapacity) {capable.name} scanned {target.name} : {vulnerabilities[target].Count} vulnerabilities found\n{log_exploits}"); }
-        return vulnerabilities[target];
+        // we invoke the event
+        OnScanned?.Invoke(selected_exploit);
+    }
+    public void SetConnector(ConnectCapacity connect)
+    {
+        connector = connect;
     }
 
     // HACKRAY MANAGEMENT
-    private Hackray create_hackray(Hackable target)
+    private Hackray create_hackray(Vulnerable target)
     {
         // we create a hackray for this hack
         Hackray hackray = Instantiate(hackray_prefab, transform).GetComponent<Hackray>();
         hackray.name = "hackray_" + target.name;
-        hackray.SetLaptopAndTarget(laptop, target.transform);
+        // hackray.SetLaptopAndTarget(laptop, target.transform);
+        hackray.SetConnectors(connector, target.Connector);
 
         // apply color & material
         hackray.SetColor(hackray_color);
@@ -253,18 +225,12 @@ public class HackCapacity : Capacity
     }
 
     // GETTERS
-    public bool IsHacking(Hackable target)
+    public bool IsHacking(Vulnerable vulnerable)
     {
         // checks if we are hacking this target
-        return running_hacks.Any(h => h.target == target);
+        return running_hacks.Any(h => h.target == vulnerable);
     }
-    public Exploit GetExploitVulnerabilities(Hackable target)
-    {
-        if (!vulnerabilities.ContainsKey(target)) { return Exploit.Nmap; } // if we never scanned the target we can't know if its vulnerable or not
-        if (vulnerabilities[target].Count == 0) { return null; } // if we never found any vulnerabilities we return null
-        return vulnerabilities[target][0]; // returns the first exploit found
-    }
-
+    
     // ON DESTROY
     private void OnDestroy()
     {

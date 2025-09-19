@@ -9,7 +9,8 @@ public class Perso : Being, Hacker
 {
     public static int deaths = 0; // nombre de morts du perso
     public static Perso Instance { get; private set; }
-    
+    public override ConnectCapacity Connector => Laptop?.Connector;
+
     [Header("PERSO")]
     // exploits (xp)
     public int level = 1;
@@ -22,8 +23,8 @@ public class Perso : Being, Hacker
 
     // public Room current_room { get; set; }
 
-    public HackableNavigator HackableNavigator { get; private set; }
-    public ExploitNavigator ExploitNavigator { get; private set; }
+    // public HackableNavigator HackableNavigator { get; private set; }
+    // public ExploitNavigator ExploitNavigator { get; private set; }
 
 
     [Header("SKILLS")]
@@ -71,10 +72,6 @@ public class Perso : Being, Hacker
         // Singleton logic
         if (Instance != null) { Destroy(Instance.gameObject); }
         Instance = this;
-
-        // WE GET FEW THINGS
-        HackableNavigator = transform.Find("processor").GetComponent<HackableNavigator>();
-        ExploitNavigator = transform.Find("processor").GetComponent<ExploitNavigator>();
     }
 
     // START
@@ -209,8 +206,8 @@ public class Perso : Being, Hacker
         floating_dmg_provider.GetComponent<TextManager>().addFloatingText("YOU DIED", transform.position + new Vector3(0, 0.5f, 0), "red");
 
         // on désactive le PersoInputsController
-        PersoInputsController.Instance.ResetCapableTarget();
-        PersoInputsController.Instance.DisableInputs();
+        Controller.Instance.ResetCapableTarget();
+        Controller.Instance.PIC.DisableInputs();
 
         // on switch au game_over panel
         UI_Manager.Instance.SwitchTo("game_over", override_duration: 3f);

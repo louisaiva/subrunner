@@ -29,7 +29,7 @@ public class Laptop : Item, Usable
         List<Key> keys = GetKeys();
         if (log_keys)
         {
-            string s = $"(Laptop) {name} checking if has key for {target.Key} (security level {target.SecurityLevel})";
+            string s = $"(Laptop) {name} checking if has key for {target.Key}";
             foreach (Key key in keys)
             {
                 s += $"\n - {key.data} ({key.key_type})";
@@ -54,36 +54,11 @@ public class Laptop : Item, Usable
         HackCapacity hack_capacity = GetCapacity<HackCapacity>();
         if (hack_capacity == null) { return; }
 
-        // we find the holder of the item
-        /* Capable holder = transform.parent.GetComponent<Inventory>().capable;
-        if (holder == null) { return; } */
-
         // we use the hack capacity
         hack_capacity.Use(user);
     }
 
     // GRABBING HACK MODULE & NETWORK MODULE
-    /* public void OnHackModuleChanged()
-    {
-        // we check how many hack modules we have in our inventory
-        List<Item> hack_modules = Inventory.GetItemsByRule("module:hack");
-
-        // remove hack capa if we don't have any hack module
-        if (hack_modules.Count == 0)
-        {
-            if (debug) { Debug.LogWarning($"(Laptop) {name} has no hack module, removing hack capacity."); }
-            if (GetCapacity<HackCapacity>() != null) { RemoveCapacity("hack"); }
-            return;
-        }
-
-        // otherwise we have at least one hack module -> we ensure we have a hack capa
-        HackCapacity hack_capacity = GetCapacity<HackCapacity>();
-        if (hack_capacity == null)
-        {
-            if (debug) { Debug.LogWarning($"(Laptop) {name} has a hack module, adding hack capacity."); }
-            AddCapacity("hack");
-        }
-    } */
     public void OnNetworkModuleChanged()
     {
         // we check how many network modules we have in our inventory
@@ -92,24 +67,15 @@ public class Laptop : Item, Usable
                                                     .Where(module => module != null)
                                                     .ToList();
 
-        // remove connect capa if we don't have any network module
+        // we check if we have a connect capacity
         if (network_modules.Count == 0)
         {
-            if (debug) { Debug.LogWarning($"(Laptop) {name} has no network module, removing connect capacity."); }
-            if (GetCapacity<ConnectCapacity>() != null) { RemoveCapacity("connect"); }
+            Connector.Radius = 0;
             return;
         }
 
-        // otherwise we have at least one network module -> we ensure we have a connect capa
-        ConnectCapacity connect_capacity = GetCapacity<ConnectCapacity>();
-        if (connect_capacity == null)
-        {
-            if (debug) { Debug.LogWarning($"(Laptop) {name} has a network module, adding connect capacity."); }
-            connect_capacity = AddCapacity("connect") as ConnectCapacity;
-        }
-
         // we update the radius of the connect capacity
-        connect_capacity.Radius = network_modules.Max(module => module.USB_Range);
+        Connector.Radius = network_modules.Max(module => module.USB_Range);
     }
 
     // FILES MANAGEMENT
@@ -148,11 +114,11 @@ public class Laptop : Item, Usable
     {
         // we get all exploits from all disks
         List<Exploit> exploits = new List<Exploit>();
-        exploits.Add(Exploit.TypePassword); // we always add TypePassword as default
         foreach (StoreCapacity disk in disks)
         {
             exploits.AddRange(disk.GetExploits());
         }
+        exploits.Add(Exploit.TypePassword); // we always add TypePassword as default
         exploits.Add(Exploit.Nmap); // we always add Nmap as a default exploit
         return exploits;
     }

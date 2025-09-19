@@ -51,8 +51,8 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
 
     // DROP
     [SerializeField] private InputActionReference dropInput;
-    private InputAction dropAction;
-    private event Action<InputAction.CallbackContext> dropCallback; // drop Callback is for dropping items when inside a big inventory -> X
+    // private InputAction dropAction;
+    // private event Action<InputAction.CallbackContext> dropCallback; // drop Callback is for dropping items when inside a big inventory -> X
 
     // ACTIVATE
     [SerializeField] private InputActionReference activateInput;
@@ -97,7 +97,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         navigateAction = input_manager.GetAction(navigateInput);
         navigateInGameAction = input_manager.GetAction(navigateInGameInput);
         activateAction = input_manager.GetAction(activateInput);
-        dropAction = input_manager.GetAction(dropInput);
+        // dropAction = input_manager.GetAction(dropInput);
         // dropInGameAction = input_manager.GetAction(dropInGameInput);
         moveItemAction = input_manager.GetAction(moveItemInput);
 
@@ -218,7 +218,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
 
         navigateInGame = ingame_navigation; // on met à jour la variable
         
-        UI_InputsController.Instance.EnableInputs(ingame_navigation); // on active les inputs dans le UI_InputsController
+        Controller.Instance.UIC.EnableInputs(ingame_navigation); // on active les inputs dans le UI_InputsController
     }
     private void disableInputs()
     {
@@ -232,11 +232,11 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
 
         navigateInGame = false; // on met à jour la variable
         
-        UI_InputsController.Instance.DisableInputs(); // on désactive les inputs dans le UI_InputsController
+        Controller.Instance.UIC.DisableInputs(); // on désactive les inputs dans le UI_InputsController
     }
     public void ToggleInput(string input_name, bool enable = true)
     {
-        UI_InputsController.Instance.ToggleInput(input_name, enable);
+        Controller.Instance.UIC.ToggleInput(input_name, enable);
         /* if (input_name == "drop")
         {
             if (enable) { dropAction.performed += dropCallback; }

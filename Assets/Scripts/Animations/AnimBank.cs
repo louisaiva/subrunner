@@ -489,6 +489,7 @@ public class AnimBank : Singleton<AnimBank>
     [Header("Skins management")]
     public List<string> skins = new List<string>() { "perso", "cat", "zombo", "robot", "rat", "nobody" };
     public List<float> head_offset_per_skin = new List<float>() { 0.7f, 0.7f, 0.7f, 0.7f, 0.7f, 0.7f };
+    public List<float> body_offset_per_skin = new List<float>() { 0.4f, 0.15f, 0.4f, 0.2f, 0.1f, 0.42f };
     public float GetHeadOffset(string skin)
     {
         int index = skins.IndexOf(skin);
@@ -504,6 +505,22 @@ public class AnimBank : Singleton<AnimBank>
             return 0f;
         }
         return head_offset_per_skin[index];
+    }
+    public float GetBodyOffset(string skin)
+    {
+        int index = skins.IndexOf(skin);
+        if (index == -1)
+        {
+            // checks if it's in the variant skins -> try to return the base skin head offset
+            if (skin_variants.Exists(variant => variant.variant_name == skin))
+            {
+                SkinVariant variant = skin_variants.Find(variant => variant.variant_name == skin);
+                return GetBodyOffset(variant.base_skin);
+            }
+
+            return 0f;
+        }
+        return body_offset_per_skin[index];
     }
     public Sprite GetDefaultSprite(string skin)
     {

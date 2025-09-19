@@ -19,6 +19,10 @@ public class Module : Item
     protected override void Awake()
     {
         base.Awake();
+        foreach (var upgrade in upgrades)
+        {
+            upgrade.CalculateEffect();
+        }
         apply_upgrade();
     }
 
@@ -56,7 +60,8 @@ public class Module : Item
     {
         // we get a random upgrade
         ModuleUpgrade upgrade = upgrades[UnityEngine.Random.Range(0, upgrades.Count)];
-        upgrade.Upgrade();
+        upgrade.tier += 1;
+        upgrade.CalculateEffect();
         if (debug) { Debug.Log($"(Module) {name} upgraded {upgrade.name} to tier {upgrade.tier}"); }
 
         // we apply the upgrade
@@ -64,7 +69,7 @@ public class Module : Item
     }
 
     // LOW UPGRADE
-    protected virtual void apply_upgrade() { }
+    protected virtual void apply_upgrade() {}
     protected float get_upgrade_effect(string upgrade_name)
     {
         foreach (var upgrade in upgrades)
@@ -87,10 +92,8 @@ public class ModuleUpgrade
     public string precision = "F0";
     public string effect_unit = ""; // unit of the effect (%, MB, units, etc)
 
-    public virtual void Upgrade()
+    public virtual void CalculateEffect()
     {
-        tier++;
-
         if (name == "storage capacity")
         {
             effect = 4.096f + 1.024f * tier; // in MB

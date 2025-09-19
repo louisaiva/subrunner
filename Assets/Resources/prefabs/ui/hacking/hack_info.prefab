@@ -660,12 +660,11 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 1
   unscaled_time: 0
-  Shown: 0
-  Hidden: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 1
   transition_on_start: 1
-  start_transition: 0.1
+  duration_start_transition: 0.1
+  delay_start_transition: 0
   log: 0
 --- !u!225 &5061650343338351217
 CanvasGroup:
@@ -694,21 +693,25 @@ MonoBehaviour:
   label: {fileID: 7143671397594243646}
   cores_cost: {fileID: 4292487989164702907}
   hack:
+    program:
+      name: 
+      extension: 
+      data: 
+      base_duration: 0
+      cores_cost: 0
+    average_cores_speed: 0
+    os_speed: 0
     progress: 0
     tunnel:
       type: 0
       state: 0
-    exploit:
-      name: 
-      security_level: 0
-      base_duration: 0
-      cores_cost: 0
     duration: 0
     state: 0
   progress: {fileID: 54824883916874698}
   max_progress_width: 240
   completed_color: {r: 0.03529412, g: 1, b: 0, a: 1}
   failed_color: {r: 0.8962264, g: 0.28324133, b: 0.28324133, a: 1}
+  waiting_color: {r: 0.31372544, g: 0.8666667, b: 0.8784314, a: 1}
 --- !u!1 &6348555097938292224
 GameObject:
   m_ObjectHideFlags: 0
