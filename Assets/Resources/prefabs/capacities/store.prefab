@@ -74,6 +74,7 @@ MonoBehaviour:
     base_duration: 2
     cores_cost: 1
     security_level: 1
+    cores_cost_after_exploit: 0
     end_timer: 0
     wait_end: 0
   - name: cpu_melt
@@ -82,6 +83,7 @@ MonoBehaviour:
     base_duration: 45
     cores_cost: 2
     security_level: 1
+    cores_cost_after_exploit: 0
     end_timer: 0
     wait_end: 0
   - name: bruteforce
@@ -93,6 +95,7 @@ MonoBehaviour:
     base_duration: 15
     cores_cost: 2
     security_level: 1
+    cores_cost_after_exploit: 0
     end_timer: 0
     wait_end: 0
   - name: ddos
@@ -104,6 +107,7 @@ MonoBehaviour:
     base_duration: 60
     cores_cost: 4
     security_level: 2
+    cores_cost_after_exploit: 0
     end_timer: 0
     wait_end: 0
   - name: dictionary_attack
@@ -115,6 +119,7 @@ MonoBehaviour:
     base_duration: 10
     cores_cost: 2
     security_level: 2
+    cores_cost_after_exploit: 0
     end_timer: 0
     wait_end: 0
   - name: trojan
@@ -123,6 +128,7 @@ MonoBehaviour:
     base_duration: 5
     cores_cost: 4
     security_level: 1
+    cores_cost_after_exploit: 1
     end_timer: 20
     wait_end: 0
   - name: cyborg_puppet
@@ -131,5 +137,6 @@ MonoBehaviour:
     base_duration: 7
     cores_cost: 4
     security_level: 1
+    cores_cost_after_exploit: 2
     end_timer: 20
     wait_end: 0

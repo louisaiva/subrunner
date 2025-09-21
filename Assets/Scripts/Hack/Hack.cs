@@ -10,8 +10,8 @@ public class Hack : Processus
     public float progress;
     public Connection tunnel;
     public float duration;
-    public HackState state = HackState.NotStarted;
     public Vulnerable target => tunnel.target;
+    public Exploit exploit => (Exploit)program;
 
     // CONSTRUCTOR
     public Hack(Connection tunnel, Exploit exploit) : base(exploit)
@@ -30,7 +30,7 @@ public class Hack : Processus
         tunnel.Open();
 
         // run the hack
-        state = HackState.Running;
+        state = ProcessusState.Running;
         Debug.Log($"Starting hack on {target.capable.name} with exploit {name}");
     }
     public override void Process()
@@ -74,13 +74,14 @@ public class Hack : Processus
             Debug.Log($"Hack on {target.capable.name} with exploit {name} is now in Timer mode for {exploit.end_timer} seconds.");
             progress = 100f;
             duration = exploit.end_timer;
-            state = HackState.Waiting; // we set the state to waiting while the timer is running
+            state = ProcessusState.Freeing;
+            // we set the state to freeing to free cores. hack capacity will free some cores and after it will switch to waiting while the timer is running
         }
         else if (exploit.wait_end)
         {
             progress = 100f;
             duration = 0f;
-            state = HackState.Waiting; // we set the state to waiting while the user is expected to end the exploit
+            state = ProcessusState.Freeing; // same, freeing then waiting while the user is expected to end the exploit
         }
     }
 
@@ -89,7 +90,7 @@ public class Hack : Processus
     {
         // the hack has failed :///
         Debug.Log($"Hack on {target.capable.name} with exploit {name} was quit.");
-        this.state = HackState.Failed;
+        this.state = ProcessusState.Failed;
 
         // we close the connection
         tunnel.Close();
@@ -103,7 +104,7 @@ public class Hack : Processus
         // the hack is successful !!
         Debug.Log($"Hack on {target.capable.name} with exploit {name} completed successfully.");
         this.progress = 100f;
-        this.state = HackState.Completed;
+        this.state = ProcessusState.Completed;
 
         // we close the connection
         tunnel.Close();
@@ -116,7 +117,7 @@ public class Hack : Processus
     {
         // the hack has overflowed :///
         Debug.LogWarning($"Hack on {target.capable.name} with exploit {name} has overflowed. Freeing cores.");
-        this.state = HackState.Overflowed;
+        this.state = ProcessusState.Overflowed;
 
         // we close the connection
         tunnel.Close();
@@ -155,7 +156,7 @@ public class Hack : Processus
         target.OnHackDone(this);
 
         // we set the state to completed
-        state = HackState.Completed;
+        state = ProcessusState.Completed;
     }
 
 
@@ -198,15 +199,6 @@ public class Hack : Processus
     }
 }
 
-public enum HackState
-{
-    NotStarted,
-    Running,
-    Completed,
-    Failed,
-    Overflowed,
-    Waiting, // for WaitEnd & Timer exploits
-}
 
 
 
@@ -238,6 +230,7 @@ public class Exploit : Program
 
     [Header("Exploit Details")]
     public int security_level;
+    public int cores_cost_after_exploit = 0; // if > 0 it's the cost of cores for the hack to continue after completion (only for timers / waitend)
     public float end_timer = 0f; // if > 0f it will make the exploit a Timer exploit
     public bool wait_end = false; // if true it will make the exploit a WaitEnd exploit (and will wait until the "wait_end" bool become false again)
 

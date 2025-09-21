@@ -569,6 +569,14 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: vulnerabilities.Array.data[0].selection_priority
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: vulnerabilities.Array.data[2].selection_priority
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
       propertyPath: vulnerabilities.Array.data[1].on_hack_done.m_PersistentCalls.m_Calls.Array.size
       value: 0
       objectReference: {fileID: 0}

@@ -778,8 +778,6 @@ MonoBehaviour:
   exploration_radius: 5
   base_tag: Zombo
   log_actions: 0
-  cpu_overheat_damage: 5
-  cpu_overheat_knockback: 500
 --- !u!1001 &4371120716597179566
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1418,6 +1416,10 @@ PrefabInstance:
     - target: {fileID: 1038123483365548311, guid: d765ac0cec860294e82f962c281919b7, type: 3}
       propertyPath: m_Layer
       value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: vulnerabilities.Array.data[0].selection_priority
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6197480893261519806, guid: d765ac0cec860294e82f962c281919b7, type: 3}
       propertyPath: m_LocalPosition.x

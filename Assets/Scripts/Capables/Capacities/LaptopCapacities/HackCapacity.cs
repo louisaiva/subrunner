@@ -70,10 +70,10 @@ public class HackCapacity : Capacity
             Hack hack = running_hacks[i];
 
             // if the hack is completed and it was a nmap, we scan the target
-            if (hack.state == HackState.Completed && hack.name == "nmap") { Scan(hack.target); }
+            if (hack.state == ProcessusState.Completed && hack.name == "nmap") { Scan(hack.target); }
 
             // we check if the hack is done
-            if (hack.state == HackState.Completed || hack.state == HackState.Failed || hack.state == HackState.Overflowed)
+            if (hack.state == ProcessusState.Completed || hack.state == ProcessusState.Failed || hack.state == ProcessusState.Overflowed)
             {
                 // we donwload files that the hack found if there are any
                 foreach (File file in hack.downloads)
@@ -89,7 +89,14 @@ public class HackCapacity : Capacity
                 continue;
             }
 
-            if (hack.state == HackState.Waiting)
+            if (hack.state == ProcessusState.Freeing)
+            {
+                laptop.Processor.FreeCores(hack);
+                hack.state = ProcessusState.Waiting;
+                continue;
+            }
+
+            if (hack.state == ProcessusState.Waiting)
             {
                 hack.Wait();
                 continue;
@@ -107,7 +114,7 @@ public class HackCapacity : Capacity
         hackrays.Remove(hack);
 
         // we free the cores used by the hack
-        if (hack.state != HackState.Overflowed) { laptop.Processor.FreeCores(hack); }
+        if (hack.state != ProcessusState.Overflowed) { laptop.Processor.FreeCores(hack); }
 
         // we remove the hack from the running hacks
         running_hacks.RemoveAt(hack_index);

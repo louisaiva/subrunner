@@ -32,15 +32,15 @@ public class UI_HackInfo : MonoBehaviour
         if (hack == null) { return; }
         progress.sizeDelta = new Vector2(hack.progress / 100f * max_progress_width, progress.sizeDelta.y);
 
-        if (hack.state == HackState.Failed || hack.state == HackState.Overflowed)
+        if (hack.state == ProcessusState.Failed || hack.state == ProcessusState.Overflowed)
         {
             progress.GetComponent<Image>().color = failed_color;
         }
-        else if (hack.state == HackState.Completed)
+        else if (hack.state == ProcessusState.Completed)
         {
             progress.GetComponent<Image>().color = completed_color;
         }
-        else if (hack.state == HackState.Waiting)
+        else if (hack.state == ProcessusState.Waiting)
         {
             progress.GetComponent<Image>().color = waiting_color;
         }

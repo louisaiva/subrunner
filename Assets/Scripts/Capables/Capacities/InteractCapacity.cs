@@ -15,6 +15,8 @@ using UnityEngine.InputSystem;
 public class InteractCapacity : Capacity
 {
 
+    public bool log_triggers = false;
+
     [Header("Current Hover")]
     [SerializeField] private Capable closest_hover;
     public Interactable interactable
@@ -131,21 +133,21 @@ public class InteractCapacity : Capacity
     {
         // we check if the other has a HoverCapacity
         HoverCapacity hover = other.GetComponent<HoverCapacity>();
-        if (hover == null) { return; }
+        if (hover == null) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + other.name + " but it has no HoverCapacity"); } return; }
 
         // we get the capable of the hover capacity
         Capable interactive = hover.capable;
         if (interactive == null) { return; }
 
         // we check if it's an Interactable or an Item
-        if (interactive is not Interactable && interactive is not Item) { return; }
-        if (interactive is Item item && item.ValidateRule(ExclusionItemRule)) { return; } // we check if the item is excluded by the rule
+        if (interactive is not Interactable && interactive is not Item) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + other.name + " but it is no Interactable nor Item"); } return; }
+        if (interactive is Item item && item.ValidateRule(ExclusionItemRule)) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + other.name + " but it is excluded by the rule"); } return; } // we check if the item is excluded by the rule
 
         // we check if the capable is already hovered
-        if (interactive == closest_hover) { return; }
+        if (interactive == closest_hover) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + other.name + " but it is already hovered"); } return; }
 
         // or if it's already in the waiting hovers
-        if (waiting_hovers.Contains(interactive)) { return; }
+        if (waiting_hovers.Contains(interactive)) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + other.name + " but it is already in the waiting hovers"); } return; }
 
         // we add the capable to the waiting hovers
         waiting_hovers.Add(interactive);

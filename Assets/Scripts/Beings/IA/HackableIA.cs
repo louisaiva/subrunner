@@ -106,7 +106,7 @@ public class HackableIA : IA
         while (RunningHacks.Count > 0)
         {
             Hack hack = RunningHacks[0];
-            if (hack.state == HackState.Completed) { RunningHacks.RemoveAt(0); }
+            if (hack.state == ProcessusState.Completed) { RunningHacks.RemoveAt(0); }
             else { hack.Fail(); }
         }
 

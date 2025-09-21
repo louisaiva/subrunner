@@ -30,6 +30,8 @@ public class Controller : Singleton<Controller>
     [Header("UI Statics elements")]
     [SerializeField] private UI_Inventory perso_quick_inventory;
 
+    [Header("Log")]
+    [SerializeField] private bool log = false;
 
     // START
     private void Start()
@@ -44,6 +46,8 @@ public class Controller : Singleton<Controller>
     // CHANGE CAPABLE TARGET HIGH LEVEL
     public void ChangeCapableTarget(Capable new_target, float duration = -888f,bool add_to_stack=true)
     {
+        if (log) { Debug.Log("(Controller) " + name + " is changing capable target to " + new_target.name + (add_to_stack ? " and adding to stack" : "")); }
+
         // on décontrole l'ancienne target
         uncontrol_capable(Capable);
 
@@ -55,12 +59,15 @@ public class Controller : Singleton<Controller>
         if (add_to_stack) { stack.Add(new_target); }
         _capable = new_target;
 
+
         // on controle la nouvelle target
         control(new_target, duration);
     }
     public void BreakCapableTarget(Capable target)
     {
         if (!stack.Contains(target) || stack.Count <= 1) { return; }
+
+        if (log) { Debug.Log("(Controller) " + name + " is breaking capable target : " + target.name); }
 
         // on parcourt toute la stack depuis la fin pour voir jusqu'ou on remonte dans la stack
         for (int i = stack.Count - 1; i >= 0; --i)
@@ -75,6 +82,9 @@ public class Controller : Singleton<Controller>
     }
     public void ResetCapableTarget()
     {
+
+        if (log) { Debug.Log("(Controller) " + name + " is resetting capable target to Perso"); }
+
         CancelInvoke("ResetCapableTarget");
 
         // on clear la stack
@@ -114,6 +124,9 @@ public class Controller : Singleton<Controller>
         // reset l'inventory
         capa?.Inventory?.RemoveUI(perso_quick_inventory);
         perso_quick_inventory.Inventory = null;
+
+
+        if (log) { Debug.Log("(Controller) " + name + " is done controlling " + capa.name); }
     }
     private void control(Capable capa, float duration = -888f)
     {
@@ -151,8 +164,9 @@ public class Controller : Singleton<Controller>
         ConnectCapacity connector = capa.Connector;
         if (connector != null)
         {
-            // HackableNavigator.SetConnector(connector);
             HackableNavigator.transform.localPosition = connector.transform.localPosition;
         }
+
+        if (log) { Debug.Log("(Controller) " + name + " is now controlling " + capa.name); }
     }
 }

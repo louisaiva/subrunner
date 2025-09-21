@@ -21,7 +21,7 @@ public class Capable : MonoBehaviour
     [Header("CAPABLE")]
     // the analog equivalent of the anim_player.orientation which is numerical
     [SerializeField] protected Vector2 inputs; // inputs can be at 0,0
-    [SerializeField] protected Vector2 orientation; // orientation can't be at 0,0 -> always normalized & remember last orientation
+    [SerializeField] protected Vector2 orientation = new Vector2(0,-1); // orientation can't be at 0,0 -> always normalized & remember last orientation
     public Vector2 Orientation
     {
         get { return orientation; }

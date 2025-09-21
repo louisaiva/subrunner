@@ -67,7 +67,7 @@ public class Vulnerable : MonoBehaviour
         if (effective_exploits.Count == 0) { return null; }
 
         effective_exploits = effective_exploits.OrderByDescending(
-            e => vulnerabilities.Find(v => v.exploit_name == e.name)?.security_risk ?? 0
+            e => vulnerabilities.Find(v => v.exploit_name == e.name)?.selection_priority ?? 0
         ).ToList();
 
         return effective_exploits.FirstOrDefault();
@@ -113,7 +113,7 @@ public class Vulnerable : MonoBehaviour
         while (running_hacks.Count > 0)
         {
             Hack hack = running_hacks[0];
-            if (hack.state == HackState.Completed) { running_hacks.RemoveAt(0); }
+            if (hack.state == ProcessusState.Completed) { running_hacks.RemoveAt(0); }
             else { hack.Fail(); }
         }
     }
@@ -186,7 +186,7 @@ public class Vulnerable : MonoBehaviour
 {
     // links an exploit and effects
     public string exploit_name;
-    public int security_risk = 1; // 0 = no risk, 1 = low risk, 2 = medium risk, 3 = high risk
+    public int selection_priority = 1;
     public UnityEvent<Hack> on_hack_started;
     public UnityEvent<Hack> on_hack_succeeded;
     public UnityEvent<Hack> on_hack_failed;

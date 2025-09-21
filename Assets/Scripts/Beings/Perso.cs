@@ -21,18 +21,9 @@ public class Perso : Being, Hacker
     private GameObject floating_text_prefab;
     private GameObject cam;
 
-    // public Room current_room { get; set; }
-
-    // public HackableNavigator HackableNavigator { get; private set; }
-    // public ExploitNavigator ExploitNavigator { get; private set; }
-
-
     [Header("SKILLS")]
     public SkillManager skillManager;
-
-    // public Color HackColor { get; } = new Color(0.2f, 0.8f, 1f); // light blue
-
-
+    
 
     [Header("METAMORPH")]
     [SerializeField] private List<string> metamorph_skins = new List<string>() { "perso", "cat", "zombo", "robot", "apple", "fridge", "small_laptop" };

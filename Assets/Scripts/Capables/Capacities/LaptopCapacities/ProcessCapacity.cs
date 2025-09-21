@@ -54,13 +54,36 @@ public class ProcessCapacity : Capacity
             return;
         }
 
+        // we check which cores must be freed based on processus' state
+        List<Core> cores_to_free = new List<Core>();
+        if (new List<ProcessusState> { ProcessusState.Completed, ProcessusState.Failed, ProcessusState.Overflowed }.Contains(processus.state))
+        {
+            // we free all the cores used by the processus
+            cores_to_free = running_processes[processus];
+        }
+        else if (processus.state == ProcessusState.Freeing)
+        {
+            if (processus.program is not Exploit exploit)
+            {
+                if (debug) { Debug.LogWarning($"(ProcessCapacity) {capable.name} tried to free cores for a processus that is waiting but it is not an exploit: {processus.name}"); }
+                return;
+            }
+            
+            // we get the number of cores that need to be freed
+            int cores_nb = exploit.cores_cost - exploit.cores_cost_after_exploit;
+            if (cores_nb > 0)
+            {
+                cores_to_free = running_processes[processus].Take(cores_nb).ToList();
+            }
+        }
+
         // we free the cores used by the processus
-        foreach (Core core in running_processes[processus]) { core.Free(); }
+        foreach (Core core in cores_to_free) { core.Free(); }
         if (debug) { Debug.Log($"(ProcessCapacity) {capable.name} freed {processus.cost} cores"); }
 
-        // remove the processus
-        running_processes.Remove(processus);
-        OnCoresFreedOrUsed?.Invoke(-processus.cost);
+        // remove the processus if it is not waiting
+        if (processus.state != ProcessusState.Freeing) { running_processes.Remove(processus); }
+        OnCoresFreedOrUsed?.Invoke(-cores_to_free.Count);
     }
 
     // low level core management
@@ -133,7 +156,8 @@ public class ProcessCapacity : Capacity
 }
 
 
-[Serializable] public class Processus
+[Serializable]
+public class Processus
 {
     public static Processus Null = new Processus(new Program("null", 0, 0));
 
@@ -141,6 +165,7 @@ public class ProcessCapacity : Capacity
     public Program program;
     public string name => program.name;
     public int cost => program.cores_cost;
+    public ProcessusState state = ProcessusState.NotStarted;
 
     // SPEED CALCULATIONS
     public float average_cores_speed = 0.0f; // average speed of the cores used by the processus
@@ -168,5 +193,17 @@ public class ProcessCapacity : Capacity
     public virtual void Run() { }
     public virtual void Process() { }
     public virtual void Finish() { }
-    public virtual void Overflow() {}
+    public virtual void Overflow() { }
+}
+
+
+public enum ProcessusState
+{
+    NotStarted,
+    Running,
+    Completed,
+    Failed,
+    Overflowed,
+    Freeing, // for waitend & timer exploits, short state before waiting (for freeing some cores)
+    Waiting, // for WaitEnd & Timer exploits
 }

@@ -27,6 +27,8 @@ public class PersoInputsController : MonoBehaviour
     public HackableNavigator HackableNavigator { get; private set; }
     public ExploitNavigator ExploitNavigator { get; private set; }
 
+    [Header("Log")]
+    public bool log = false;
 
     private void Start()
     {
@@ -187,15 +189,15 @@ public class PersoInputsController : MonoBehaviour
     }
     public void OnHack()
     {
-
-
         // On récupère la hack capacity du hackable navigator
         HackCapacity hacker = HackableNavigator.hacker;
-        if (hacker == null) { return; } // if the hacker is not set, we return
+        if (hacker == null) { if (log) { Debug.Log("(PersoInputsController) " + name + " tried to hack " + HackableNavigator.name + " but it has no HackCapacity"); } return; } // if the hacker is not set, we return
 
         ConnectCapacity connector = Controller.Instance.Capable.Connector;
-        if (connector == null) { return; } // if the connector is not set,
+        if (connector == null) { if (log) { Debug.Log("(PersoInputsController) " + name + " tried to hack " + HackableNavigator.name + " but it has no Connector"); } return; } // if the connector is not set,
 
+        // on hack
+        if (log) { Debug.Log("(PersoInputsController) " + name + " launches hack on " + HackableNavigator.name); }
         hacker.SetConnector(connector);
         hacker.Use(Capable);
     }

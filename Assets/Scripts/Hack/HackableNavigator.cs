@@ -30,7 +30,7 @@ public class HackableNavigator : MonoBehaviour
 
 
     [Header("Components")]
-    public HackCapacity hacker;
+    public HackCapacity hacker => Perso.Instance.Laptop?.GetCapacity<HackCapacity>();
     // public ConnectCapacity connector;
     private ConnectCapacity connector => Controller.Instance.Capable.Connector;
     private Laptop laptop => hacker.capable as Laptop;
@@ -40,6 +40,7 @@ public class HackableNavigator : MonoBehaviour
     [Header("Log")]
     [SerializeField] private bool log = false;
     [SerializeField] private bool log_update = false;
+    [SerializeField] private bool log_enabling = false;
 
 
     // START
@@ -51,7 +52,7 @@ public class HackableNavigator : MonoBehaviour
         navigationAction = InputManager.Instance.GetAction(navigationInput);
         navigationCallback = ctx => HandleHackNavigationInput(ctx.ReadValue<Vector2>());
 
-        if (log) { Debug.Log("(VulnerableNavigator) started & callbacks created"); }
+        if (log_enabling) { Debug.Log("(VulnerableNavigator) started & callbacks created"); }
     }
 
     private void OnDestroy()
@@ -92,7 +93,7 @@ public class HackableNavigator : MonoBehaviour
         }
 
         // check if we have the required cores
-        if (!laptop.Processor.HasFreeCores(exploit.cores_cost))
+        if (!(hacker.capable as Laptop).Processor.HasFreeCores(exploit.cores_cost))
         {
             hover_hackray.SetColor(no_cores_hackray_color);
             return logg + "(no cores)";
@@ -155,7 +156,7 @@ public class HackableNavigator : MonoBehaviour
         // we check if we have a connector
         if (connector == null)
         {
-            if (log) { Debug.LogWarning("(VulnerableNavigator) no ConnectCapacity found, disabling navigator"); }
+            if (log_enabling) { Debug.LogWarning("(VulnerableNavigator) no ConnectCapacity found, disabling navigator"); }
             return;
         }
 
@@ -179,7 +180,7 @@ public class HackableNavigator : MonoBehaviour
         cursor.gameObject.SetActive(false);
 
 
-        if (log) { Debug.Log("(VulnerableNavigator) enabled & callbacks set"); }
+        if (log_enabling) { Debug.Log("(VulnerableNavigator) enabled & callbacks set"); }
 
         // we select the last hackable if we still have some
         if (targeted_connector == null || hacker == null) { return; }
@@ -188,9 +189,9 @@ public class HackableNavigator : MonoBehaviour
     public void Disable()
     {
         // we deactivate the callbacks
-        if (log) Debug.Log("(VulnerableNavigator) about to remove navigation callback");
+        if (log_enabling) Debug.Log("(VulnerableNavigator) about to remove navigation callback");
         if (navigationAction != null) { navigationAction.performed -= navigationCallback; }
-        if (log) Debug.Log("(VulnerableNavigator) removed navigation callback");
+        if (log_enabling) Debug.Log("(VulnerableNavigator) removed navigation callback");
 
         unselect_target();
 
@@ -198,7 +199,7 @@ public class HackableNavigator : MonoBehaviour
         hover_hackray?.gameObject.SetActive(false);
         cursor.gameObject.SetActive(false);
 
-        if (log) { Debug.Log("(VulnerableNavigator) disabled & callbacks removed"); }
+        if (log_enabling) { Debug.Log("(VulnerableNavigator) disabled & callbacks removed"); }
     }
 
     // ON LAPTOP CHANGED
