@@ -12,11 +12,14 @@ public class UI_ItemRenderer : MonoBehaviour
     [SerializeField] private Image item;
     [SerializeField] private TextMeshProUGUI qty;
 
+    [Header("Log")]
+    public bool log = false;
+
     private void Awake()
     {
         if (Target == null)
         {
-            Debug.LogWarning("(UI_ItemRenderer) Target is not set on " + name);
+            if (log) { Debug.LogWarning("(UI_ItemRenderer) Target is not set on " + name); }
             return;
         }
 

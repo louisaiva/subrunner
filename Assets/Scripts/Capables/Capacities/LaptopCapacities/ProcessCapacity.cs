@@ -103,8 +103,7 @@ public class ProcessCapacity : Capacity
 }
 
 
-[Serializable]
-public class Processus
+[Serializable] public class Processus
 {
     public static Processus Null = new Processus(new Program("null", 0, 0));
 
@@ -184,7 +183,6 @@ public class Processus
     public virtual void Finish() { }
     public virtual void Fail() { }
 }
-
 
 public enum ProcessusState
 {

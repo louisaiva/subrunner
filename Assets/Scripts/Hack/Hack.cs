@@ -12,11 +12,13 @@ public class Hack : Processus
     public float duration;
     public Vulnerable target => tunnel.target;
     public Exploit exploit => (Exploit)program;
+    public HackCapacity hacker;
 
     // CONSTRUCTOR
-    public Hack(Connection tunnel, Exploit exploit) : base(exploit)
+    public Hack(Connection tunnel, Exploit exploit, HackCapacity hacker) : base(exploit)
     {
         this.tunnel = tunnel;
+        this.hacker = hacker;
         this.progress = 0f;
     }
 
@@ -70,6 +72,9 @@ public class Hack : Processus
         // Notify the target that the hack is completed
         target.OnHackSucceeded(this);
 
+        // Notify the hacker we need to retract the hackray
+        hacker.RetractHackray(this);
+
         // we free some cores until we only have the exploit.cores_cost_after_completion cores
         free_cores(provided_cores.Count - exploit.cores_cost_after_exploit);
 
@@ -98,15 +103,11 @@ public class Hack : Processus
         Debug.Log($"Hack on {target.capable.name} with exploit {name} was quit.");
         this.state = ProcessusState.Failed;
 
-        // we close the connection
-        tunnel.Close();
-
         // Notify the target that the hack is failed
         target.OnHackFailed(this);
-        target.OnHackDone(this);
 
-        // we free the cores
-        free_all_cores();
+        // terminate properly
+        terminate();
     }
     public void Complete()
     {
@@ -115,15 +116,11 @@ public class Hack : Processus
         this.progress = 100f;
         this.state = ProcessusState.Completed;
 
-        // we close the connection
-        tunnel.Close();
-
         // Notify the target that the hack is completed
         target.OnHackSucceeded(this);
-        target.OnHackDone(this);
 
-        // we free the cores
-        free_all_cores();
+        // terminate properly
+        terminate();
     }
 
     // WAITING
@@ -143,7 +140,12 @@ public class Hack : Processus
         else if (!exploit.wait_end) { progress = 0f; } // we set progress at 0f if we don't need to wait anymore
 
         // we check if the hack is done
-        if (progress <= 0f) { terminate(); }
+        if (progress <= 0f)
+        {
+            // we set the state to completed
+            state = ProcessusState.Completed;
+            terminate();
+        }
     }
     private void terminate()
     {
@@ -153,11 +155,11 @@ public class Hack : Processus
         // we are done (no complete bcz we already hacked successfully the target)
         target.OnHackDone(this);
 
-        // we set the state to completed
-        state = ProcessusState.Completed;
-
         // we free the cores
         free_all_cores();
+
+        // we notify the hacker capacity that the hack is done so it can remove it from its list
+        hacker.TerminateHack(this);
     }
 
 

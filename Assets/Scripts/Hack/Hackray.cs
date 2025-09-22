@@ -10,6 +10,8 @@ public class Hackray : MonoBehaviour
     // offsets
     protected Vector3 hacker_offset;
     protected Vector3 target_offset;
+    [SerializeField] protected float base_thickness = 1.8f;
+    [SerializeField] protected float waiting_thickness = 1f;
 
 
     [Header("Components")]
@@ -19,6 +21,7 @@ public class Hackray : MonoBehaviour
     void Awake()
     {
         sr = transform.Find("sr").GetComponent<SpriteRenderer>();
+        sr.transform.localScale = new Vector3(base_thickness, sr.transform.localScale.y, sr.transform.localScale.z);
     }
 
     // UPDATE
@@ -115,6 +118,10 @@ public class Hackray : MonoBehaviour
     {
         // set the color of the sprite renderer
         sr.GetComponent<SpriteRenderer>().color = color;
+    }
+    public void SetThickness(bool waiting = true)
+    {
+        sr.transform.localScale = new Vector3(waiting ? waiting_thickness : base_thickness, sr.transform.localScale.y, sr.transform.localScale.z);
     }
 
     // CALLBACKS

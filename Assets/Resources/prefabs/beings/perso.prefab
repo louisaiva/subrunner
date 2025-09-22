@@ -777,7 +777,6 @@ GameObject:
   - component: {fileID: 7133805124708220433}
   - component: {fileID: 767440920818722555}
   - component: {fileID: 7958341093856896614}
-  - component: {fileID: 8493601314656578907}
   m_Layer: 7
   m_Name: perso
   m_TagString: Player
@@ -1010,48 +1009,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &8493601314656578907
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3238169105776769028}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ada55befcc30091468a8e72463306565, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  current_size_percentage: 0
-  ceiling_desired_size: 4
-  wall_desired_size: 3
-  size_up_speed: 10
-  offset_ellipse_center: {x: 0, y: 0}
-  see_through_material_lit: {fileID: 2100000, guid: a9b48c49417f78c4e9c295b2867821f3, type: 2}
-  see_through_material_unlit: {fileID: 2100000, guid: 71aa4916f2ac66b47a35b03d36b5607f, type: 2}
-  y_see_through_material_lit: {fileID: 2100000, guid: fc7a97008fcc6804d84a76b6ac6f37f0, type: 2}
-  y_see_through_material_unlit: {fileID: 2100000, guid: 88d9eebbc271cea4c86aefb3a67951c5, type: 2}
-  trigger: {fileID: 0}
-  walls_and_ceiling_mask:
-    serializedVersion: 2
-    m_Bits: 4160
-  overlap_filter:
-    useTriggers: 0
-    useLayerMask: 0
-    useDepth: 0
-    useOutsideDepth: 0
-    useNormalAngle: 0
-    useOutsideNormalAngle: 0
-    layerMask:
-      serializedVersion: 2
-      m_Bits: 0
-    minDepth: 0
-    maxDepth: 0
-    minNormalAngle: 0
-    maxNormalAngle: 0
-  wall_hit: {fileID: 0}
-  debug: 0
-  debug_Y_Comparison: 0
 --- !u!1 &3410966834850605538
 GameObject:
   m_ObjectHideFlags: 0
@@ -1190,6 +1147,8 @@ MonoBehaviour:
   log: 0
   waiting_interacting: 0
   endless_interacting: 0
+  waiting_hacking: 0
+  endless_hacking: 0
 --- !u!114 &4081912196447684149
 MonoBehaviour:
   m_ObjectHideFlags: 0

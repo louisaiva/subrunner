@@ -15,6 +15,7 @@ public class ItemManager : MonoBehaviour
 
     [Header("HUD Renderers")]
     [SerializeField] private RectTransform laptop_renderer;
+    [SerializeField] private RectTransform hack_renderer;
     [SerializeField] private RectTransform weapon_renderer;
     [SerializeField] private UI_ItemRenderer shoes_renderer;
     [SerializeField] private RectTransform cons1_renderer;
@@ -148,8 +149,16 @@ public class ItemManager : MonoBehaviour
     private void update_hud_renderers(List<Item> items = null)
     {
         // update LAPTOP
-        if (laptop_slot.Item != null) { enable_renderer(laptop_renderer); }
-        else { disable_renderer(laptop_renderer); }
+        if (laptop_slot.Item != null)
+        {
+            enable_renderer(laptop_renderer);
+            enable_renderer(hack_renderer);
+        }
+        else
+        {
+            disable_renderer(laptop_renderer);
+            disable_renderer(hack_renderer);
+        }
 
         // initialize position
         float x = 0f;

@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-// using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
-/// HackCapacity is a capacity that allows a being to hack things
-/// in their range. need to have a laptop for this to work
+/// HackCapacity is a capacity that allows its capable
+/// to run exploits (create Hack) on a Vulnerable
 /// </summary>
 
 public class HackCapacity : Capacity
@@ -17,6 +16,7 @@ public class HackCapacity : Capacity
     [Header("Hacks")]
     public List<Hack> running_hacks = new List<Hack>();
     public event System.Action<Hack> OnExploitRun = delegate { };
+    // public event System.Action<Hack> OnExploitRun = delegate { };
     public event System.Action<Exploit> OnScanned = delegate { };
 
 
@@ -67,25 +67,27 @@ public class HackCapacity : Capacity
             Hack hack = running_hacks[i];
 
             // RUNNING HACKS
-            if (hack.state == ProcessusState.Running) { hack.Process(); continue; }
-            else if (hack.state == ProcessusState.Waiting) { hack.Wait(); continue; }
-
-            // NMAP
-            else if (hack.state == ProcessusState.Completed && hack.name == "nmap") { Scan(hack.target); }
-
-            // COMPLETED / FAILED HACKS
-            else if (hack.state == ProcessusState.Completed || hack.state == ProcessusState.Failed)
-            {
-                download_files(hack);
-
-                // we remove the hack
-                remove_hack(i);
-                continue;
-            }
+            if (hack.state == ProcessusState.Running) { hack.Process(); }
+            else if (hack.state == ProcessusState.Waiting) { hack.Wait(); }
         }
+    }
+
+
+    // HACK MANAGEMENT
+    public void TerminateHack(Hack hack)
+    {
+        if (hack.state != ProcessusState.Completed && hack.state != ProcessusState.Failed) { return; }
+        
+        // NMAP
+        if (hack.state == ProcessusState.Completed && hack.name == "nmap") { Scan(hack.target); }
+
+        // we download files if there are any
+        download_files(hack);
+        remove_hack(running_hacks.IndexOf(hack));
     }
     private void remove_hack(int hack_index)
     {
+        if (hack_index < 0 || hack_index >= running_hacks.Count) { Debug.LogError($"(HackCapacity) {capable.name} tried to remove a hack at index {hack_index} but it's out of range."); }
         Hack hack = running_hacks[hack_index];
 
         if (debug) { Debug.Log($"(HackCapacity) {capable.name} finished exploit {hack.name}."); }
@@ -108,11 +110,11 @@ public class HackCapacity : Capacity
         }
     }
 
-    // USE
+
+    // HACKING INPUT METHODS
     public override void Use(Capable capable)
     {
         // checks if we have a connector
-        // ConnectCapacity connector = laptop.GetCapacity<ConnectCapacity>();
         if (connector == null)
         {
             if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack but no connector is available."); }
@@ -150,7 +152,7 @@ public class HackCapacity : Capacity
         }
 
         // we create a Hack for this target
-        Hack hack = new Hack(connector.connection, exploit);
+        Hack hack = new Hack(connector.connection, exploit, this);
 
         // we run the exploit
         RunExploit(hack);
@@ -173,8 +175,6 @@ public class HackCapacity : Capacity
         // we create a hackray for this hack
         hackrays[hack] = create_hackray(hack.target);
     }
-
-    // CANCEL HACK
     public void CancelLastHack()
     {
         if (running_hacks.Count == 0) { return; }
@@ -182,7 +182,11 @@ public class HackCapacity : Capacity
         // we cancel the last hack
         Hack hack = running_hacks[running_hacks.Count - 1];
         hack.Fail();
-        remove_hack(running_hacks.Count - 1); // we remove the hack
+    }
+    public bool IsHacking(Vulnerable vulnerable)
+    {
+        // checks if we are hacking this target
+        return running_hacks.Any(h => h.target == vulnerable);
     }
 
     // SCANNING
@@ -228,14 +232,12 @@ public class HackCapacity : Capacity
 
         return hackray;
     }
-
-    // GETTERS
-    public bool IsHacking(Vulnerable vulnerable)
+    public void RetractHackray(Hack hack)
     {
-        // checks if we are hacking this target
-        return running_hacks.Any(h => h.target == vulnerable);
+        if (!hackrays.ContainsKey(hack)) { return; }
+        hackrays[hack].SetThickness();
     }
-    
+
     // ON DESTROY
     private void OnDestroy()
     {
@@ -243,7 +245,6 @@ public class HackCapacity : Capacity
         {
             Hack hack = running_hacks[i];
             hack.Fail();
-            remove_hack(i); // we remove the hack
         }
     }
 }

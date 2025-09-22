@@ -42,7 +42,11 @@ public class PersoInputsController : MonoBehaviour
         ExploitNavigator = transform.Find("hacking").GetComponent<ExploitNavigator>();
 
         // mets les callbacks pour stopper correctement les endless inputs
-        InputManager.Instance.OnPersoInputsToggled += perso_inputs_true => { if (!perso_inputs_true) { cancel_endless_interact(); } };
+        InputManager.Instance.OnPersoInputsToggled += perso_inputs_true => { if (!perso_inputs_true)
+                                                        {
+                                                            cancel_endless_interact();
+                                                            cancel_endless_hack();
+                                                        } };
 
     }
 
@@ -209,7 +213,7 @@ public class PersoInputsController : MonoBehaviour
         if (context.ReadValue<float>() >= 0.5f)
         {
             StopCoroutine(OnEndlessInteract(interactor));
-            StartCoroutine(OnEndlessInteract(interactor));
+            if (!waiting_interacting && !endless_interacting) { StartCoroutine(OnEndlessInteract(interactor)); }
             return;
         }
 
@@ -243,7 +247,10 @@ public class PersoInputsController : MonoBehaviour
     {
         waiting_interacting = false;
         endless_interacting = false;
+        StopCoroutine(OnEndlessInteract(Capable.GetCapacity<InteractCapacity>()));
     }
+
+
 
     [Header("Hack input parameters")]
     [SerializeField] private bool waiting_hacking = false; // waiting for the threshold delay before endless_hacking
@@ -253,16 +260,22 @@ public class PersoInputsController : MonoBehaviour
         if (log) { Debug.Log("(PersoInputsController) hack input received : " + context.ReadValue<float>()); }
 
         // if we press the button we launch the endless threshold
-        if (context.ReadValue<float>() >= 0.5f)
+        if (context.ReadValue<float>() < 0.5f)
         {
-            StopCoroutine(OnEndlessHack());
-            StartCoroutine(OnEndlessHack());
+            cancel_endless_hack();
             return;
         }
 
-        // else we release the button so we direclty hack it
-        if (waiting_hacking || endless_hacking) { cancel_endless_hack(); }
-        OnHack();
+        // if we are in the hud we launch the endless cancel hack routine        
+        if (UI_Manager.Instance.CurrentPool == "hud")
+        {
+            if (!waiting_hacking && !endless_hacking) { StartCoroutine(OnEndlessHack()); }
+            return;
+        }
+
+        // else if we are in the hacking we launch the hack directly
+        if (UI_Manager.Instance.CurrentPool == "hacking") { OnHack(); }
+        // if (waiting_hacking || endless_hacking) { cancel_endless_hack(); }
     }
     public IEnumerator OnEndlessHack()
     {
@@ -295,6 +308,7 @@ public class PersoInputsController : MonoBehaviour
     {
         waiting_hacking = false;
         endless_hacking = false;
+        StopCoroutine(OnEndlessHack());
     }
     public void OnHack()
     {
