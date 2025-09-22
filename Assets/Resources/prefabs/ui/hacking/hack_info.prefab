@@ -699,19 +699,25 @@ MonoBehaviour:
       data: 
       base_duration: 0
       cores_cost: 0
+    state: 0
+    provided_cores: []
     average_cores_speed: 0
     os_speed: 0
     progress: 0
     tunnel:
       type: 0
       state: 0
+      target: {fileID: 0}
     duration: 0
-    state: 0
+    downloads: []
   progress: {fileID: 54824883916874698}
   max_progress_width: 240
   completed_color: {r: 0.03529412, g: 1, b: 0, a: 1}
   failed_color: {r: 0.8962264, g: 0.28324133, b: 0.28324133, a: 1}
-  waiting_color: {r: 0.31372544, g: 0.8666667, b: 0.8784314, a: 1}
+  waiting_color: {r: 0.3033108, g: 0.75496197, b: 0.9056604, a: 1}
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &6348555097938292224
 GameObject:
   m_ObjectHideFlags: 0

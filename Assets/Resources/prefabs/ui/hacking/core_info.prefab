@@ -147,8 +147,9 @@ GameObject:
   - component: {fileID: 6294106145081251567}
   - component: {fileID: 1234543336261674732}
   - component: {fileID: 519397484570310629}
+  - component: {fileID: 3247505290422351762}
   m_Layer: 5
-  m_Name: core
+  m_Name: core_info
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -212,3 +213,40 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3247505290422351762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9188008040324697283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71fda73bee3a93a458d0b81cd4c9a6fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 519397484570310629}
+  core:
+    isFree: 1
+    Speed: 1
+    RunningProcess:
+      rid: 5402995149581582435
+  base_color: {r: 1, g: 1, b: 1, a: 1}
+  used_color: {r: 0.8962264, g: 0.28324133, b: 0.28324133, a: 1}
+  waiting_color: {r: 0.3033108, g: 0.75496197, b: 0.9056604, a: 1}
+  references:
+    version: 2
+    RefIds:
+    - rid: 5402995149581582435
+      type: {class: Processus, ns: , asm: Assembly-CSharp}
+      data:
+        program:
+          name: null
+          extension: .exe
+          data: 
+          base_duration: 0
+          cores_cost: 0
+        state: 0
+        provided_cores: []
+        average_cores_speed: 0
+        os_speed: 1

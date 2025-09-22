@@ -21,8 +21,12 @@ public class Hack : Processus
     }
 
     // RUN , PROCESS & FINISH
-    public override void Run()
+    public override void Run(List<Core> cores)
     {
+        // we use the cores
+        provided_cores = cores;
+        use_all_cores();
+
         // we calculate the duration
         this.duration = CalculateDuration();
 
@@ -63,9 +67,11 @@ public class Hack : Processus
         // we check which type of exploit it is. if it's not a timer not a wait end we complete !
         if (exploit.end_timer == 0f && !exploit.wait_end) { Complete(); return; }
 
-
         // Notify the target that the hack is completed
         target.OnHackSucceeded(this);
+
+        // we free some cores until we only have the exploit.cores_cost_after_completion cores
+        free_cores(provided_cores.Count - exploit.cores_cost_after_exploit);
 
         // we check if it's a timer or a wait end
         if (exploit.end_timer > 0f)
@@ -74,19 +80,18 @@ public class Hack : Processus
             Debug.Log($"Hack on {target.capable.name} with exploit {name} is now in Timer mode for {exploit.end_timer} seconds.");
             progress = 100f;
             duration = exploit.end_timer;
-            state = ProcessusState.Freeing;
-            // we set the state to freeing to free cores. hack capacity will free some cores and after it will switch to waiting while the timer is running
+            state = ProcessusState.Waiting;
         }
         else if (exploit.wait_end)
         {
             progress = 100f;
             duration = 0f;
-            state = ProcessusState.Freeing; // same, freeing then waiting while the user is expected to end the exploit
+            state = ProcessusState.Waiting;
         }
     }
 
     // FAIL & COMPLETE
-    public void Fail()
+    public override void Fail()
     {
         // the hack has failed :///
         Debug.Log($"Hack on {target.capable.name} with exploit {name} was quit.");
@@ -98,6 +103,9 @@ public class Hack : Processus
         // Notify the target that the hack is failed
         target.OnHackFailed(this);
         target.OnHackDone(this);
+
+        // we free the cores
+        free_all_cores();
     }
     public void Complete()
     {
@@ -112,21 +120,10 @@ public class Hack : Processus
         // Notify the target that the hack is completed
         target.OnHackSucceeded(this);
         target.OnHackDone(this);
+
+        // we free the cores
+        free_all_cores();
     }
-    public override void Overflow()
-    {
-        // the hack has overflowed :///
-        Debug.LogWarning($"Hack on {target.capable.name} with exploit {name} has overflowed. Freeing cores.");
-        this.state = ProcessusState.Overflowed;
-
-        // we close the connection
-        tunnel.Close();
-
-        // Notify the target that the hack is failed
-        target.OnHackFailed(this);
-        target.OnHackDone(this);
-    }
-
 
     // WAITING
     public void Wait()
@@ -157,6 +154,9 @@ public class Hack : Processus
 
         // we set the state to completed
         state = ProcessusState.Completed;
+
+        // we free the cores
+        free_all_cores();
     }
 
 

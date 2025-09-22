@@ -112,7 +112,7 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
             if (hack == null || hack_infos[i] == null) { continue; }
 
             // check the state of the hack
-            if (hack.state == ProcessusState.Failed || hack.state == ProcessusState.Overflowed || hack.state == ProcessusState.Completed)
+            if (hack.state == ProcessusState.Failed || hack.state == ProcessusState.Completed)
             {
                 // we remove the hack info
                 hack_infos[i].GetComponent<Transitioner>().HideAndDestroy();
@@ -123,7 +123,6 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
             }
         }
     }
-
     private void update_title()
     {
         if (laptop == null)

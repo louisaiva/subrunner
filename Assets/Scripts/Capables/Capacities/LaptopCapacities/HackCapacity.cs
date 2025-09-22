@@ -42,13 +42,10 @@ public class HackCapacity : Capacity
         if (exploit == null) { return; }
 
         // we check if the exploit is TypePassword then we need to assign a password
-        if (exploit == Exploit.TypePassword && Target != null && Target is Lockable lockable)
+        if (exploit == Exploit.TypePassword && Target != null && Target.capable is Lockable lockable)
         {
             Key key = laptop.GetKeyFor(lockable);
-            if (key != null)
-            {
-                exploit = new FileExploit(exploit, key);
-            }
+            if (key != null) { exploit = new FileExploit(exploit, key); }
         }
 
         // we set the selected exploit
@@ -73,7 +70,7 @@ public class HackCapacity : Capacity
             if (hack.state == ProcessusState.Completed && hack.name == "nmap") { Scan(hack.target); }
 
             // we check if the hack is done
-            if (hack.state == ProcessusState.Completed || hack.state == ProcessusState.Failed || hack.state == ProcessusState.Overflowed)
+            if (hack.state == ProcessusState.Completed || hack.state == ProcessusState.Failed)
             {
                 // we donwload files that the hack found if there are any
                 foreach (File file in hack.downloads)
@@ -89,12 +86,12 @@ public class HackCapacity : Capacity
                 continue;
             }
 
-            if (hack.state == ProcessusState.Freeing)
+            /* if (hack.state == ProcessusState.Freeing)
             {
                 laptop.Processor.FreeCores(hack);
                 hack.state = ProcessusState.Waiting;
                 continue;
-            }
+            } */
 
             if (hack.state == ProcessusState.Waiting)
             {
@@ -112,9 +109,6 @@ public class HackCapacity : Capacity
         // we remove the hackray
         Destroy(hackrays[hack].gameObject);
         hackrays.Remove(hack);
-
-        // we free the cores used by the hack
-        if (hack.state != ProcessusState.Overflowed) { laptop.Processor.FreeCores(hack); }
 
         // we remove the hack from the running hacks
         running_hacks.RemoveAt(hack_index);
@@ -169,12 +163,11 @@ public class HackCapacity : Capacity
     }
     public void RunExploit(Hack hack)
     {
-        // we occupy some cores for the hack duration
-        // will also calculate average cores speed based on the chosen cores
-        laptop.Processor.UseCores(hack);
+        // we get some free cores from the laptop
+        List<Core> free_cores = laptop.Processor.GetFreeCores(hack.program.cores_cost);
 
         // we run the hack
-        hack.Run();
+        hack.Run(free_cores);
 
         // we add the hack to the running hacks
         running_hacks.Add(hack);
@@ -194,13 +187,13 @@ public class HackCapacity : Capacity
         List<Exploit> exploits = laptop.GetExploits();
 
         // we associate the key file to type_password if it's a lockable and if we have the key
-        if (target is Lockable lockable)
+        if (target.capable is Lockable lockable)
         {
             Key key = laptop.GetKeyFor(lockable);
-            if (key != null && !exploits.Any(e => e.name == "type_password"))
+            if (key != null)
             {
-                exploits.Add(new FileExploit(Exploit.TypePassword, key));
                 exploits.Remove(Exploit.TypePassword); // we remove the empty type password exploit
+                exploits.Add(new FileExploit(Exploit.TypePassword, key));
             }
         }
 

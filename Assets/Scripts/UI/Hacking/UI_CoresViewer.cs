@@ -5,45 +5,37 @@ using UnityEngine.UI;
 
 public class UI_CoresViewer : MonoBehaviour, Awakable
 {
-    [Header("Cores")]
-    [SerializeField] private List<Image> cores = new List<Image>();
-    [SerializeField] private List<Image> used_cores = new List<Image>();
-    public int CoresCount => cores.Count;
-    [SerializeField] private Color free_core_color = Color.green;
-    [SerializeField] private Color used_core_color = Color.red;
-    [SerializeField] private GameObject core_prefab;
-    [SerializeField] private Transform cores_container;
 
-    [Header("Laptop")]
+    [Header("CoreInfo")]
+    [SerializeField] private GameObject core_info_prefab;
+    [SerializeField] private Transform core_info_container;
+    [SerializeField] private List<UI_CoreInfo> core_infos = new List<UI_CoreInfo>();
+
+    [Header("ProcessCapacity")]
     [SerializeField] private UI_LaptopItemSlot laptop_item_slot;
-    [SerializeField] private Laptop laptop;
+    [SerializeField] private ProcessCapacity processor;
 
-    [Header("Label")]
-    [SerializeField] private TextMeshProUGUI label;
-    [SerializeField] private string no_cores_text = "no processor ://";
-    private RectTransform rect;
+    [Header("Components")]
+    [SerializeField] private Laptop laptop;
+    [SerializeField] private UI_Resizer resizer;
+    [SerializeField] private TextMeshProUGUI title_text;
+    [SerializeField] private Image no_cores_image;
 
     [Header("Logs")]
-    [SerializeField] private bool log = true;
+    [SerializeField] private bool log = false;
 
     // INIT AWAKE
     public void InitAwake()
     {
         if (laptop_item_slot == null)
         {
-            Debug.LogError("(UI_CoresViewer) laptop_item_slot is not assigned! Please assign it in the inspector.");
+            Debug.LogError("(UI_RunningCoresViewer) laptop_item_slot is not assigned! Please assign it in the inspector.");
             return;
         }
 
         laptop_item_slot.OnItemChanged += HandleLaptopChanged;
-
-        if (label == null)
-        {
-            Debug.LogError("(UI_CoresViewer) label is not assigned! Please assign it in the inspector.");
-            return;
-        }
-
-        rect = GetComponent<RectTransform>();
+        resizer.Resize(0);
+        update_title();
     }
 
     // LAPTOP
@@ -52,134 +44,99 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
         // we remove old laptop callbacks
         if (laptop != null)
         {
-            laptop.Processor.OnCoresFreedOrUsed -= update_free_used_cores;
+            if (processor != null) { processor.OnCoresNumberChanged -= update_cores_count; }
             (laptop.Inventory as LaptopInventory).OnModuleChanged -= HandleModuleChanged;
         }
 
         // if the next is null then we null everything
         if (items == null || items.Count == 0 || !(items[0] is Laptop))
         {
+            processor = null;
             laptop = null;
-            free_them_all();
-            UpdateCoresCount(0);
+            update_cores_count(0);
+            // update_title();
             return;
         }
 
         // otherwise we have a new laptop, we get components and register callbacks
         laptop = items[0] as Laptop;
         (laptop.Inventory as LaptopInventory).OnModuleChanged += HandleModuleChanged;
-        laptop.Processor.OnCoresFreedOrUsed += update_free_used_cores;
+        processor = laptop.GetCapacity<ProcessCapacity>();
+        if (processor == null)
+        {
+            if (log) { Debug.LogWarning("(UI_RunningHacksViewer) No ProcessCapacity found in the laptop."); }
+            // update_title();
+            return;
+        }
+        update_cores_count(processor.MaxCores);
 
-        // we update the cores count
-        UpdateCoresCount(laptop.Processor.MaxCores);
-
-        // we update the colors
-        free_them_all();
-        update_free_used_cores(laptop.Processor.UsedCoresCount);
+        // update_title();
+        processor.OnCoresNumberChanged += update_cores_count;
     }
     private void HandleModuleChanged(Item item)
     {
-        if (item == null || item.Reference != "module:cpu") { return; } // we only want to update if this is a cpu
+        // remove the old callback
+        if (processor != null) { processor.OnCoresNumberChanged -= update_cores_count; }
 
-        // we update the cores count
-        UpdateCoresCount(laptop.Processor.MaxCores);
+        processor = laptop.GetCapacity<ProcessCapacity>();
 
-        // we update the colors
-        free_them_all();
-        update_free_used_cores(laptop.Processor.UsedCoresCount);
+        // setup the new callback
+        if (processor != null) { processor.OnCoresNumberChanged += update_cores_count; }
+        // update_title();
     }
 
-    // CORES COUNT MANAGEMENT
-    public void UpdateCoresCount(int cores_count)
+    // CREATE CORE INFO
+    private void update_cores_count(int new_core_count)
     {
-        if (log) { Debug.Log($"(UI_CoresViewer) Updating viewed cores from {CoresCount} to {cores_count}"); }
+        if (processor == null) { return; }
+        List<Core> cores = processor.Cores;
 
-        // modify the text
-        if (cores_count > 0) { label.text = "cores"; }
-        else { label.text = no_cores_text; }
-
-        // get the number of cores to remove
-        int cores_diff = cores_count - CoresCount;
-        if (cores_diff == 0) { return; }
-
-        // else if we create some
-        if (cores_diff > 0) { create_cores(cores_diff); return; }
-
-        // else we remove some
-        List<Image> free_cores = new List<Image>(cores);
-        free_cores.RemoveAll(core => used_cores.Contains(core));
-        for (int i = 0; i < Mathf.Abs(cores_diff); i++)
+        // we check if we have already enough core_count
+        if (core_infos.Count < new_core_count)
         {
-            if (cores.Count == 0)
+            int to_create = new_core_count - core_infos.Count;
+            for (int i = 0; i < to_create; ++i)
             {
-                if (log) { Debug.LogWarning("(UI_CoresViewer) tried to remove a viewed core but there are none left!"); }
-                continue;
+                create_core_info(cores[core_infos.Count], core_infos.Count);
             }
-            Destroy(free_cores[free_cores.Count - 1].gameObject);
-            cores.Remove(free_cores[free_cores.Count - 1]);
-            free_cores.RemoveAt(free_cores.Count - 1);
         }
-        if (log) { Debug.Log($"(UI_CoresViewer) Removed {Mathf.Abs(cores_diff)} viewed cores, total: {cores.Count}"); }
-    }
-    private void create_cores(int nb = 1)
-    {
-        for (int i = 0; i < nb; i++)
+        else if (core_infos.Count > new_core_count) // we have too many core_info
         {
-            GameObject core = Instantiate(core_prefab, cores_container);
-            cores.Add(core.GetComponent<Image>());
+            int to_remove = core_infos.Count - new_core_count;
+            for (int i = 0; i < to_remove; ++i)
+            {
+                Destroy(core_infos[core_infos.Count - 1].gameObject);
+                core_infos.RemoveAt(core_infos.Count - 1);
+            }
         }
-        if (log) { Debug.Log($"(UI_CoresViewer) Created {nb} viewed cores, total: {cores.Count}"); }
+
+        // resize
+        resizer.Resize(new_core_count);
+
+        // and refresh the parent layout group
+        LayoutRebuilder.ForceRebuildLayoutImmediate(transform.parent.GetComponent<RectTransform>());
+
+        update_title(new_core_count);
+    }
+    private void create_core_info(Core core, int index)
+    {
+        UI_CoreInfo core_info = Instantiate(core_info_prefab, core_info_container).GetComponent<UI_CoreInfo>();
+        core_info.name = $"core_info_{index}";
+
+        core_info.Init(core);
+        core_infos.Add(core_info);
     }
 
-    // UPDATE FREE / USED CORES
-    private void update_free_used_cores(int nb)
+    // TITLE
+    private void update_title(int cores_count = 0)
     {
-        if (nb > 0)
+        if (laptop == null || cores_count == 0)
         {
-            for (int i = 0; i < nb; i++)
-            {
-                Image core = get_random_free_core();
-                use_core(core);
-            }
-            if (log) { Debug.Log($"(UI_CoresViewer) Simulated using {nb} cores"); }
+            title_text.text = "no cores";
+            no_cores_image.gameObject.SetActive(true);
+            return;
         }
-        else if (nb < 0)
-        {
-            for (int i = 0; i < Mathf.Abs(nb); i++)
-            {
-                Image core = used_cores[0];
-                free_core(core);
-            }
-            if (log) { Debug.Log($"(UI_CoresViewer) Simulated freeing {Mathf.Abs(nb)} cores"); }
-        }
-    }
-    private void free_core(Image core)
-    {
-        if (core == null || !used_cores.Contains(core)) { return; }
-        core.color = free_core_color;
-        used_cores.Remove(core);
-    }
-    private void use_core(Image core)
-    {
-        if (core == null || !cores.Contains(core)) { return; }
-        core.color = used_core_color;
-        used_cores.Add(core);
-    }
-    private Image get_random_free_core()
-    {
-        List<Image> free_cores = new List<Image>(cores);
-        free_cores.RemoveAll(core => used_cores.Contains(core));
-        if (free_cores.Count == 0) { return null; }
-        return free_cores[Random.Range(0, free_cores.Count)];
-    }
-    private void free_them_all()
-    {
-        for (int i = 0; i < used_cores.Count; i++)
-        {
-            Image core = used_cores[i];
-            free_core(core);
-        }
-        used_cores.Clear();
-        if (log) { Debug.Log($"(UI_CoresViewer) Simulated freeing all cores"); }
+        title_text.text = cores_count + " cores";
+        no_cores_image.gameObject.SetActive(false);
     }
 }

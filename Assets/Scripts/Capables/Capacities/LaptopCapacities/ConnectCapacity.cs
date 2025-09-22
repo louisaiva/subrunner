@@ -34,14 +34,14 @@ public class ConnectCapacity : Capacity
         if (IsConnectedTo(target))
         {
             connection = get_connection(target);
-            if (log_connection) { Debug.LogWarning($"(ConnectCapacity) {capable.name} is already connected to {target.name}"); }
+            if (log_connection) { Debug.LogWarning($"(ConnectCapacity) {capable.name} is already connected to {target.capable.name}"); }
             return;
         }
 
         // checks if target is unlocked already (can't connect)
-        if (target is Lockable lockable && !lockable.Locked)
+        if (target.capable is Lockable lockable && !lockable.Locked)
         {
-            if (log_connection) { Debug.LogWarning($"(ConnectCapacity) {capable.name} tried to connect to {target.name} but it is already unlocked."); }
+            if (log_connection) { Debug.LogWarning($"(ConnectCapacity) {capable.name} tried to connect to {target.capable.name} but it is already unlocked."); }
             return;
         }
 
@@ -51,20 +51,20 @@ public class ConnectCapacity : Capacity
 
         if (!is_in_range(target))
         {
-            if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} try to connect to {target.name} but is out of range."); }
+            if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} try to connect to {target.capable.name} but is out of range."); }
             connection.Close();
         }
-        else if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} connected to {target.name}."); }
+        else if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} connected to {target.capable.name}."); }
 
         // and now we scan the target
         // HackCapacity hacker = capable.GetCapacity<HackCapacity>();
         if (scanner == null)
         {
-            if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} tried to scan {target.name} but no hack capacity is available."); }
+            if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} tried to scan {target.capable.name} but no hack capacity is available."); }
             return;
         }
 
-        if (log_connection) { Debug.Log($"(ConnectCapacity) {capable.name} launching scan on {target.name}."); }
+        if (log_connection) { Debug.Log($"(ConnectCapacity) {capable.name} launching scan on {target.capable.name}."); }
         scanner.Scan(target);
     }
     public void Disconnect()

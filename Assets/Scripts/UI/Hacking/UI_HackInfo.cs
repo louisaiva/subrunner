@@ -32,7 +32,7 @@ public class UI_HackInfo : MonoBehaviour
         if (hack == null) { return; }
         progress.sizeDelta = new Vector2(hack.progress / 100f * max_progress_width, progress.sizeDelta.y);
 
-        if (hack.state == ProcessusState.Failed || hack.state == ProcessusState.Overflowed)
+        if (hack.state == ProcessusState.Failed)
         {
             progress.GetComponent<Image>().color = failed_color;
         }
