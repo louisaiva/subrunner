@@ -151,7 +151,9 @@ public class Vulnerable : MonoBehaviour
     public void ControlCapable(Hack hack)
     {
         // we move the PersoInputsController to the capable for duration seconds
-        Controller.Instance.ChangeCapableTarget(capable, (hack.program as Exploit).end_timer);
+        float duration = -888f;
+        if (!hack.exploit.wait_end) { duration = hack.exploit.end_timer; }
+        Controller.Instance.ChangeCapableTarget(capable, duration);
     }
     public void UncontrolController(Hack hack)
     {

@@ -32,7 +32,8 @@ public class ProcessCapacity : Capacity
     private List<Core> get_random_free_cores(int amount = 1)
     {
         List<Core> free_cores = cores.Where(c => c.isFree).ToList();
-        if (free_cores.Count <= amount) { return null; }
+        if (free_cores.Count < amount) { return null; }
+        else if (free_cores.Count == amount) { return free_cores; }
         return free_cores.OrderBy(c => UnityEngine.Random.value).Take(amount).ToList();
     }
 

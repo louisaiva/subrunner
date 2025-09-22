@@ -16,6 +16,7 @@ public class PersoInputsController : MonoBehaviour
     // private event Action<InputAction.CallbackContext> reviveCallback;
     private event Action<InputAction.CallbackContext> dodgeCallback;
     private event Action<InputAction.CallbackContext> attackCallback;
+    private event Action<InputAction.CallbackContext> hackCallback;
     private event Action<InputAction.CallbackContext> talkCallback;
     private event Action<InputAction.CallbackContext> useConso1Callback;
     private event Action<InputAction.CallbackContext> useConso2Callback;
@@ -52,27 +53,20 @@ public class PersoInputsController : MonoBehaviour
         input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
         perso_inputs = input_manager.inputs.perso;
 
-        // on set les callbacks
+        // on crée les callbacks de base
         dodgeCallback = ctx => OnDodge();
         attackCallback = ctx => OnAttack();
+        hackCallback = ctx => HandleHackInput(ctx);
         talkCallback = ctx => OnRandomTalk();
-        perso_inputs.dodge.performed += dodgeCallback;
-        perso_inputs.attack.performed += attackCallback;
-        perso_inputs.randomTalk.performed += talkCallback;
 
         // et les callbacks de conso
         useConso1Callback = ctx => OnUseConso(1);
         useConso2Callback = ctx => OnUseConso(2);
         useConso3Callback = ctx => OnUseConso(3);
         useConso4Callback = ctx => OnUseConso(4);
-        perso_inputs.conso1.performed += useConso1Callback;
-        perso_inputs.conso2.performed += useConso2Callback;
-        perso_inputs.conso3.performed += useConso3Callback;
-        perso_inputs.conso4.performed += useConso4Callback;
 
         // et les callbacks d'interaction
         interactCallback = ctx => OnInteract(ctx);
-        perso_inputs.interact.performed += interactCallback;
 
         EnableInputs();
     }
@@ -80,6 +74,7 @@ public class PersoInputsController : MonoBehaviour
     {
         perso_inputs.dodge.performed += dodgeCallback;
         perso_inputs.attack.performed += attackCallback;
+        perso_inputs.hack.performed += hackCallback;
         perso_inputs.randomTalk.performed += talkCallback;
         perso_inputs.conso1.performed += useConso1Callback;
         perso_inputs.conso2.performed += useConso2Callback;
@@ -93,6 +88,7 @@ public class PersoInputsController : MonoBehaviour
     {
         perso_inputs.dodge.performed -= dodgeCallback;
         perso_inputs.attack.performed -= attackCallback;
+        perso_inputs.hack.performed -= hackCallback;
         perso_inputs.randomTalk.performed -= talkCallback;
         perso_inputs.conso1.performed -= useConso1Callback;
         perso_inputs.conso2.performed -= useConso2Callback;
@@ -187,20 +183,6 @@ public class PersoInputsController : MonoBehaviour
         // on utilise les shoes
         shoes.Use(Capable);
     }
-    public void OnHack()
-    {
-        // On récupère la hack capacity du hackable navigator
-        HackCapacity hacker = HackableNavigator.hacker;
-        if (hacker == null) { if (log) { Debug.Log("(PersoInputsController) " + name + " tried to hack " + HackableNavigator.name + " but it has no HackCapacity"); } return; } // if the hacker is not set, we return
-
-        ConnectCapacity connector = Controller.Instance.Capable.Connector;
-        if (connector == null) { if (log) { Debug.Log("(PersoInputsController) " + name + " tried to hack " + HackableNavigator.name + " but it has no Connector"); } return; } // if the connector is not set,
-
-        // on hack
-        if (log) { Debug.Log("(PersoInputsController) " + name + " launches hack on " + HackableNavigator.name); }
-        hacker.SetConnector(connector);
-        hacker.Use(Capable);
-    }
     public void OnUseConso(int index)
     {
 
@@ -250,7 +232,7 @@ public class PersoInputsController : MonoBehaviour
         waiting_interacting = false;
         while (endless_interacting)
         {
-            interactor.Interact(endless:true);
+            interactor.Interact(endless: true);
             yield return new WaitForSeconds(InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY);
         }
 
@@ -263,5 +245,84 @@ public class PersoInputsController : MonoBehaviour
         endless_interacting = false;
     }
 
+    [Header("Hack input parameters")]
+    [SerializeField] private bool waiting_hacking = false; // waiting for the threshold delay before endless_hacking
+    [SerializeField] private bool endless_hacking = false; // we are pressing hack input for a long time
+    public void HandleHackInput(InputAction.CallbackContext context)
+    {
+        if (log) { Debug.Log("(PersoInputsController) hack input received : " + context.ReadValue<float>()); }
 
+        // if we press the button we launch the endless threshold
+        if (context.ReadValue<float>() >= 0.5f)
+        {
+            StopCoroutine(OnEndlessHack());
+            StartCoroutine(OnEndlessHack());
+            return;
+        }
+
+        // else we release the button so we direclty hack it
+        if (waiting_hacking || endless_hacking) { cancel_endless_hack(); }
+        OnHack();
+    }
+    public IEnumerator OnEndlessHack()
+    {
+        // reset parameters
+        cancel_endless_hack();
+
+        // wait for threshold
+        waiting_hacking = true;
+        yield return new WaitForSeconds(InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD);
+        if (!waiting_hacking) { yield break; }
+
+        // we start the endless hack
+        endless_hacking = true;
+        waiting_hacking = false;
+        int hack_inputs_done = 0;
+        while (endless_hacking)
+        {
+            OnHackCancel(); // we cancel last hack
+
+            // we calculate next duration
+            hack_inputs_done++;
+            float hack_delay = Mathf.Max(InputManager.Instance.BUTTON_ENDLESSLY_SHORT_DELAY, InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD/hack_inputs_done);
+            yield return new WaitForSeconds(hack_delay);
+        }
+
+        // we cancel the hack
+        cancel_endless_hack();
+    }
+    private void cancel_endless_hack()
+    {
+        waiting_hacking = false;
+        endless_hacking = false;
+    }
+    public void OnHack()
+    {
+        // On récupère la hack capacity du hackable navigator
+        HackCapacity hacker = HackableNavigator.hacker;
+        if (hacker == null) { if (log) { Debug.Log("(PersoInputsController) " + name + " tried to hack " + HackableNavigator.name + " but it has no HackCapacity"); } return; } // if the hacker is not set, we return
+
+        ConnectCapacity connector = Controller.Instance.Capable.Connector;
+        if (connector == null) { if (log) { Debug.Log("(PersoInputsController) " + name + " tried to hack " + HackableNavigator.name + " but it has no Connector"); } return; } // if the connector is not set,
+
+        // on hack
+        if (log) { Debug.Log("(PersoInputsController) " + name + " launches hack on " + HackableNavigator.name); }
+        hacker.SetConnector(connector);
+        hacker.Use(Capable);
+    }
+    public void OnHackCancel()
+    {
+        // On récupère la hack capacity du hackable navigator
+        HackCapacity hacker = HackableNavigator.hacker;
+        if (hacker == null)
+        {
+            if (log) { Debug.Log("(PersoInputsController) " + name + " tried to cancel hack but it has no HackCapacity"); }
+            cancel_endless_hack();
+            return;
+        }
+
+        // on hack
+        if (log) { Debug.Log("(PersoInputsController) " + name + " cancels hack on " + HackableNavigator.name); }
+        hacker.CancelLastHack();
+    }
 }

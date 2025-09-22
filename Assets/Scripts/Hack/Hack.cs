@@ -84,6 +84,7 @@ public class Hack : Processus
         }
         else if (exploit.wait_end)
         {
+            Debug.Log($"Hack on {target.capable.name} with exploit {name} is now in Wait mode.");
             progress = 100f;
             duration = 0f;
             state = ProcessusState.Waiting;

@@ -66,45 +66,29 @@ public class HackCapacity : Capacity
         {
             Hack hack = running_hacks[i];
 
-            // if the hack is completed and it was a nmap, we scan the target
-            if (hack.state == ProcessusState.Completed && hack.name == "nmap") { Scan(hack.target); }
+            // RUNNING HACKS
+            if (hack.state == ProcessusState.Running) { hack.Process(); continue; }
+            else if (hack.state == ProcessusState.Waiting) { hack.Wait(); continue; }
 
-            // we check if the hack is done
-            if (hack.state == ProcessusState.Completed || hack.state == ProcessusState.Failed)
+            // NMAP
+            else if (hack.state == ProcessusState.Completed && hack.name == "nmap") { Scan(hack.target); }
+
+            // COMPLETED / FAILED HACKS
+            else if (hack.state == ProcessusState.Completed || hack.state == ProcessusState.Failed)
             {
-                // we donwload files that the hack found if there are any
-                foreach (File file in hack.downloads)
-                {
-                    bool wrote_file = laptop.WriteFile(file);
-                    if (debug && wrote_file) { Debug.Log($"(HackCapacity) {capable.name} downloaded file {file.name} from {hack.target.name} and saved it to its laptop."); }
-                    else if (debug && !wrote_file) { Debug.LogWarning($"(HackCapacity) {capable.name} downloaded file {file.name} from {hack.target.name} but could not save it to its laptop (maybe full storage)."); }
-                }
+                download_files(hack);
 
                 // we remove the hack
-                if (debug) { Debug.Log($"(HackCapacity) {capable.name} finished exploit {hack.name}."); }
                 remove_hack(i);
                 continue;
             }
-
-            /* if (hack.state == ProcessusState.Freeing)
-            {
-                laptop.Processor.FreeCores(hack);
-                hack.state = ProcessusState.Waiting;
-                continue;
-            } */
-
-            if (hack.state == ProcessusState.Waiting)
-            {
-                hack.Wait();
-                continue;
-            }
-
-            hack.Process();
         }
     }
     private void remove_hack(int hack_index)
     {
         Hack hack = running_hacks[hack_index];
+
+        if (debug) { Debug.Log($"(HackCapacity) {capable.name} finished exploit {hack.name}."); }
 
         // we remove the hackray
         Destroy(hackrays[hack].gameObject);
@@ -112,6 +96,16 @@ public class HackCapacity : Capacity
 
         // we remove the hack from the running hacks
         running_hacks.RemoveAt(hack_index);
+    }
+    private void download_files(Hack hack)
+    {
+        // we donwload files that the hack found if there are any
+        foreach (File file in hack.downloads)
+        {
+            bool wrote_file = laptop.WriteFile(file);
+            if (debug && wrote_file) { Debug.Log($"(HackCapacity) {capable.name} downloaded file {file.name} from {hack.target.name} and saved it to its laptop."); }
+            else if (debug && !wrote_file) { Debug.LogWarning($"(HackCapacity) {capable.name} downloaded file {file.name} from {hack.target.name} but could not save it to its laptop (maybe full storage)."); }
+        }
     }
 
     // USE
@@ -178,6 +172,17 @@ public class HackCapacity : Capacity
 
         // we create a hackray for this hack
         hackrays[hack] = create_hackray(hack.target);
+    }
+
+    // CANCEL HACK
+    public void CancelLastHack()
+    {
+        if (running_hacks.Count == 0) { return; }
+
+        // we cancel the last hack
+        Hack hack = running_hacks[running_hacks.Count - 1];
+        hack.Fail();
+        remove_hack(running_hacks.Count - 1); // we remove the hack
     }
 
     // SCANNING

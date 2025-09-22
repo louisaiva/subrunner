@@ -1187,6 +1187,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InputsDisabled: 0
   input_manager: {fileID: 0}
+  log: 0
   waiting_interacting: 0
   endless_interacting: 0
 --- !u!114 &4081912196447684149
@@ -1225,6 +1226,7 @@ MonoBehaviour:
   ExploitNavigator: {fileID: 1290283336975900088}
   see_through: {fileID: 2597504869246259624}
   perso_quick_inventory: {fileID: 0}
+  log: 0
 --- !u!1 &3890199276897646629
 GameObject:
   m_ObjectHideFlags: 0
@@ -6445,12 +6447,10 @@ MonoBehaviour:
   no_vulnerability_hackray_color: {r: 1, g: 0, b: 0.0627451, a: 0.36862746}
   no_cores_hackray_color: {r: 1, g: 0, b: 0.0627451, a: 0.36862746}
   hackray_width: 1.4
-  hacker: {fileID: 0}
-  connector: {fileID: 0}
   cursor: {fileID: 8894038253353197069}
-  laptop: {fileID: 0}
   log: 0
   log_update: 0
+  log_enabling: 0
   navigationInput: {fileID: -8837052246538266762, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
 --- !u!114 &1290283336975900088
 MonoBehaviour:
@@ -6472,6 +6472,7 @@ MonoBehaviour:
     base_duration: 0
     cores_cost: 0
     security_level: 0
+    cores_cost_after_exploit: 0
     end_timer: 0
     wait_end: 0
   nextExploitInput: {fileID: 5017164170596428349, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
