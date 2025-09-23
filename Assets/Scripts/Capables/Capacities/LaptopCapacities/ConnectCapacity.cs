@@ -16,7 +16,14 @@ public class ConnectCapacity : Capacity
 {
     [Header("Connection Target")]
     public Connection connection = null;
-    public Vulnerable Target => connection != null ? connection.target : null;
+    public Vulnerable Target {
+        get {
+            if (connection == null) { return null; }
+            if (connection.destination == null) { return null; }
+            return connection.destination.Vulnerable;
+        }
+    }
+    public Vulnerable Vulnerable => GetComponent<Vulnerable>();
 
     [Header("Opened Connections")]
     public List<Connection> connections = new List<Connection>();
@@ -24,11 +31,23 @@ public class ConnectCapacity : Capacity
     [Header("Connection Parameters")]
     public float Radius = 0.5f;
 
+    [Header("Connection Tree")]
+    public ConnectionTree Tree;
+
     [Header("Debug")]
     public bool log_connection = false;
+    public bool log_connection_details = false;
+
+    // AWAKE
+    private void Awake()
+    {
+        Tree = GetComponent<ConnectionTree>();
+        if (Tree != null) { Tree.root = this; }
+    }
+
 
     // CONNECT
-    public void Connect(Vulnerable target, HackCapacity scanner = null)
+    public void Connect(ConnectCapacity target, HackCapacity scanner = null)
     {
         // checks if we already have a connection to it we don't open a new one
         if (IsConnectedTo(target))
@@ -46,7 +65,7 @@ public class ConnectCapacity : Capacity
         }
 
         // we connect to the target
-        connection = new Connection(target);
+        connection = new Connection(this, target, Controller.Instance.HackableNavigator.Tree);
         connections.Add(connection);
 
         if (!is_in_range(target))
@@ -57,7 +76,6 @@ public class ConnectCapacity : Capacity
         else if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} connected to {target.capable.name}."); }
 
         // and now we scan the target
-        // HackCapacity hacker = capable.GetCapacity<HackCapacity>();
         if (scanner == null)
         {
             if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} tried to scan {target.capable.name} but no hack capacity is available."); }
@@ -65,26 +83,30 @@ public class ConnectCapacity : Capacity
         }
 
         if (log_connection) { Debug.Log($"(ConnectCapacity) {capable.name} launching scan on {target.capable.name}."); }
-        scanner.Scan(target);
+        scanner.Scan(target.Vulnerable);
     }
     public void Disconnect()
     {
         if (connection == null) { return; }
         if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} disconnected current connection."); }
-        if (connection.state != ConnectionState.Opened) { connections.Remove(connection); }
+        if (connection.state != ConnectionState.Opened)
+        {
+            connection.Close();
+            connections.Remove(connection);
+        }
         connection = null;
     }
-    public bool IsConnectedTo(Vulnerable target)
+    public bool IsConnectedTo(ConnectCapacity target)
     {
         if (Target != null && Target == target)
         {
             return connection.state == ConnectionState.Connected || connection.state == ConnectionState.Opened;
         }
-        return connections.Any(c => c.target == target && (c.state == ConnectionState.Connected || c.state == ConnectionState.Opened));
+        return connections.Any(c => c.destination == target && (c.state == ConnectionState.Connected || c.state == ConnectionState.Opened));
     }
-    private Connection get_connection(Vulnerable target)
+    private Connection get_connection(ConnectCapacity target)
     {
-        return connections.FirstOrDefault(c => c.target == target);
+        return connections.FirstOrDefault(c => c.destination == target);
     }
 
     // UPDATE
@@ -97,7 +119,7 @@ public class ConnectCapacity : Capacity
             if (tunnel.state == ConnectionState.Closed && tunnel != connection) { connections.RemoveAt(i); }
 
             // sinon on vérifie si on doit fermer la connection
-            if (!is_in_range(tunnel.target))
+            if (!is_in_range(tunnel.destination))
             {
                 if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} closing connection because it is out of range."); }
                 tunnel.Close();
@@ -111,7 +133,7 @@ public class ConnectCapacity : Capacity
             }
         }
     }
-    private bool is_in_range(Vulnerable target)
+    private bool is_in_range(ConnectCapacity target)
     {
         if (target == null) { return false; }
         try { return Vector3.Distance(transform.position, target.transform.position) <= Radius; }
@@ -130,25 +152,68 @@ public class ConnectCapacity : Capacity
     }
 }
 
-[Serializable] public class Connection
+[Serializable]
+public class Connection
 {
+    [NonSerialized] public ConnectCapacity start;
+    [NonSerialized] public ConnectCapacity destination;
+    public string to;
+    public string from;
+
+    [Header("Connection State")]
     public ConnectionType type = ConnectionType.None;
     public ConnectionState state = ConnectionState.None;
-    public Vulnerable target;
 
-    public Connection(Vulnerable target, ConnectionType type = ConnectionType.None)
+    [Header("Tree Structure")]
+    [SerializeReference] public ConnectionTree tree;
+    [SerializeReference] public List<Connection> children = new List<Connection>();
+
+
+    // CONSTRUCTOR
+    public Connection(ConnectCapacity start, ConnectCapacity destination, ConnectionTree tree, ConnectionType type = ConnectionType.None)
     {
-        this.target = target;
+        this.start = start;
+        this.destination = destination;
         this.state = ConnectionState.Connected;
         this.type = type;
+        this.tree = tree;
+
+        // we set the names
+        this.from = start.capable.name;
+        this.to = destination.capable.name;
     }
+
+    // OPEN / CLOSE
     public void Open()
     {
         this.state = ConnectionState.Opened;
+
+        // we add the node to the tree
+        tree.AddNode(this);
     }
     public void Close()
     {
         this.state = ConnectionState.Closed;
+
+        // we make the tree delete ourselves
+        tree.RemoveNode(this);
+
+        // we close all children too
+        while (children.Count > 0) { children[0].Close(); }
+    }
+
+    // CHILDREN MANAGEMENT
+    public void AddChild(Connection child)
+    {
+        if (children.Contains(child)) { return; }
+
+        // we add the children
+        children.Add(child);
+    }
+    public void RemoveChild(Connection child)
+    {
+        if (!children.Contains(child)) { return; }
+        children.Remove(child);
     }
 }
 

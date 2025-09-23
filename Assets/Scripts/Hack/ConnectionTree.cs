@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -9,41 +10,59 @@ using UnityEngine;
 /// </summary>
 public class ConnectionTree : MonoBehaviour
 {
+    [Header("Root & Nodes")]
+    public ConnectCapacity root;
+    public List<Connection> nodes = new List<Connection>();
 
-}
+    [Header("Parent caches")]
+    private Dictionary<Connection, Connection> parent_cache = new Dictionary<Connection, Connection>();
 
-class DeviceNode
-{
-    
-}
-
-
-
-
-
-
-
-
-
-/* here's a tree structure example from stack overflow
-(uses generic naming which we don't want for now i guess ?)
-
-class TreeNode<T>
-{
-    List<TreeNode<T>> Children = new List<TreeNode<T>>();
-
-    T Item {get;set;}
-
-    public TreeNode (T item)
+    // ADD / REMOVE
+    public void AddNode(Connection connection)
     {
-        Item = item;
+        // we find the connection's parent to add their child
+        Connection parent = get_parent(connection);
+        if (parent != null)
+        {
+            // we add the child to the parent
+            parent.AddChild(connection);
+        }
+
+        // add the node to the graph
+        nodes.Add(connection);
+    }
+    public void RemoveNode(Connection node)
+    {
+        // we remove the node from the graph
+        nodes.Remove(node);
+
+        // we remove the node from its parent's children list
+        Connection parent = get_parent(node);
+        if (parent != null)
+        {
+            parent.RemoveChild(node);
+            if (parent_cache.ContainsKey(node)) { parent_cache.Remove(node); }
+        }
     }
 
-    public TreeNode<T> AddChild(T item)
+    // GET PARENT
+    private Connection get_parent(Connection node)
     {
-        TreeNode<T> nodeItem = new TreeNode<T>(item);
-        Children.Add(nodeItem);
-        return nodeItem;
+        if (node.start == root) { return null; }
+
+        // we check in cache first
+        if (parent_cache.ContainsKey(node)) { return parent_cache[node]; }
+
+        // we search for the parent
+        foreach (Connection parent in nodes)
+        {
+            // only takes nodes where destination is the start of our
+            if (parent.destination == node.start)
+            {
+                parent_cache[node] = parent;
+                return parent;
+            }
+        }
+        return null;
     }
 }
-*/

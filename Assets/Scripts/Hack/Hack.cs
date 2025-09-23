@@ -10,7 +10,7 @@ public class Hack : Processus
     public float progress;
     public Connection tunnel;
     public float duration;
-    public Vulnerable target => tunnel.target;
+    public Vulnerable target => tunnel.destination.Vulnerable;
     public Exploit exploit => (Exploit)program;
     public HackCapacity hacker;
 
