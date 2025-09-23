@@ -30,10 +30,10 @@ public class HackableNavigator : MonoBehaviour
 
 
     [Header("Components")]
-    public HackCapacity hacker => Perso.Instance.Laptop?.GetCapacity<HackCapacity>();
+    public HackCapacity hacker => Perso.Instance.Laptop?.Hacker;
     private ConnectCapacity connector => Controller.Instance.Capable.Connector;
     private Laptop laptop => hacker.capable as Laptop;
-    public ConnectionTree Tree => laptop?.GetCapacity<ConnectCapacity>()?.Tree;
+    public ConnectionTree Tree => laptop?.Connector.Tree;
     [SerializeField] private ConnectCapacity cursor;
 
     [Header("Log")]
@@ -291,6 +291,9 @@ public class HackableNavigator : MonoBehaviour
 
             // we check if this is a lockable unlocked we skip it
             if (target.capable is Lockable lockable && !lockable.Locked) { continue; }
+
+            // or a powered off Onnable
+            if (target.capable is Onnable onnable && !onnable.IsOn) { continue; }
 
             // we compare the distance
             float distance = Vector2.Distance(transform.position, target_go.transform.position);

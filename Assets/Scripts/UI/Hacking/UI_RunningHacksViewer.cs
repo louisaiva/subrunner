@@ -17,7 +17,6 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
     [SerializeField] private HackCapacity hacker;
 
     [Header("Components")]
-    // private Transitioner transitioner;
     [SerializeField] private Laptop laptop;
     [SerializeField] private TextMeshProUGUI title_text;
 
@@ -52,7 +51,6 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
         if (laptop != null)
         {
             if (hacker != null) { hacker.OnExploitRun -= createHackInfo; }
-            (laptop.Inventory as LaptopInventory).OnModuleChanged -= HandleModuleChanged;
         }
 
         // if the next is null then we null everything
@@ -66,8 +64,7 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
 
         // otherwise we have a new laptop, we get components and register callbacks
         laptop = items[0] as Laptop;
-        (laptop.Inventory as LaptopInventory).OnModuleChanged += HandleModuleChanged;
-        hacker = laptop.GetCapacity<HackCapacity>();
+        hacker = laptop.Hacker;
         if (hacker == null)
         {
             if (log) { Debug.LogWarning("(UI_RunningHacksViewer) No HackCapacity found in the laptop."); }
@@ -78,18 +75,7 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
         update_title();
         hacker.OnExploitRun += createHackInfo;
     }
-    private void HandleModuleChanged(Item item)
-    {
-        // remove the old callback
-        if (hacker != null) { hacker.OnExploitRun -= createHackInfo; }
-
-        hacker = laptop.GetCapacity<HackCapacity>();
-
-        // setup the new callback
-        if (hacker != null) { hacker.OnExploitRun += createHackInfo; }
-        update_title();
-    }
-
+    
     // CREATE HACK INFO
     private void createHackInfo(Hack hack)
     {
@@ -143,6 +129,6 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
             return;
         }
 
-        title_text.text = $"running hacks";
+        title_text.text = $"{hack_infos.Count} running hacks";
     }
 }

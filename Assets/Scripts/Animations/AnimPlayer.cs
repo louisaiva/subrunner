@@ -109,6 +109,7 @@ public class AnimPlayer : MonoBehaviour
 
 
     // PLAY ANIMATION
+    public void VoidPlay(string capacity) { Play(capacity); }
     public Anim Play(string capacity, float duration_override = default)
     {
         if (AnimBank.Instance == null) { return null; }
@@ -155,7 +156,8 @@ public class AnimPlayer : MonoBehaviour
 
             // we calculate the resulting speed
             anim.speed = duration / (float)duration_override;
-        } else { anim.speed = 1f; }
+        }
+        else { anim.speed = 1f; }
 
         // we check if the animation is not actually playing
         if (anim.name == current_anim.name && current_frame != -1)
@@ -166,7 +168,7 @@ public class AnimPlayer : MonoBehaviour
             }
             return current_anim;
         }
-        
+
         // we play the animation    
         play_now_at_frame(anim);
 
@@ -250,6 +252,7 @@ public class AnimPlayer : MonoBehaviour
     }
 
     // STOP ANIMATION
+    public void StopPlaying(string capacity) { StopPlaying(capacity, false); }
     public void StopPlaying(string capacity, bool dont_stop_if_currently_playing = false)
     {
 

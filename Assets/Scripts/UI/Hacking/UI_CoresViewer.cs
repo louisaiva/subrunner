@@ -41,11 +41,10 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
     // LAPTOP
     private void HandleLaptopChanged(List<Item> items)
     {
-        // we remove old laptop callbacks
+        // we remove old laptop callback
         if (laptop != null)
         {
             if (processor != null) { processor.OnCoresNumberChanged -= update_cores_count; }
-            (laptop.Inventory as LaptopInventory).OnModuleChanged -= HandleModuleChanged;
         }
 
         // if the next is null then we null everything
@@ -54,37 +53,21 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
             processor = null;
             laptop = null;
             update_cores_count(0);
-            // update_title();
             return;
         }
 
-        // otherwise we have a new laptop, we get components and register callbacks
+        // otherwise we have a new laptop, we get the cpu & register callback
         laptop = items[0] as Laptop;
-        (laptop.Inventory as LaptopInventory).OnModuleChanged += HandleModuleChanged;
         processor = laptop.GetCapacity<ProcessCapacity>();
         if (processor == null)
         {
             if (log) { Debug.LogWarning("(UI_RunningHacksViewer) No ProcessCapacity found in the laptop."); }
-            // update_title();
             return;
         }
-        update_cores_count(processor.MaxCores);
-
-        // update_title();
         processor.OnCoresNumberChanged += update_cores_count;
+        update_cores_count(processor.MaxCores);
     }
-    private void HandleModuleChanged(Item item)
-    {
-        // remove the old callback
-        if (processor != null) { processor.OnCoresNumberChanged -= update_cores_count; }
-
-        processor = laptop.GetCapacity<ProcessCapacity>();
-
-        // setup the new callback
-        if (processor != null) { processor.OnCoresNumberChanged += update_cores_count; }
-        // update_title();
-    }
-
+    
     // CREATE CORE INFO
     private void update_cores_count(int new_core_count)
     {

@@ -46,7 +46,6 @@ public class ConnectCapacity : Capacity
         if (Tree != null) { Tree.root = this; }
     }
 
-
     // CONNECT
     public void Connect(ConnectCapacity target, HackCapacity scanner = null)
     {
@@ -149,7 +148,6 @@ public class ConnectCapacity : Capacity
         try { return Vector3.Distance(transform.position, target.transform.position) <= Radius; }
         catch { return false; }
     }
-
 
     // MANAGING CONNECTIONS
     public void AddConnection(Connection connection)

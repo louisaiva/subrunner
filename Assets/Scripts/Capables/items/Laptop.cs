@@ -4,13 +4,27 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class Laptop : Item, Usable
+public class Laptop : Item, Usable, Device
 {
-    [Header("Processor")]
-    public ProcessCapacity Processor { get {
-        if (processor == null) { processor = GetCapacity<ProcessCapacity>(); }
-        return processor; }}
+    [Header("Device")]
+    public ProcessCapacity Processor
+    {
+        get
+        {
+            if (processor == null) { processor = GetCapacity<ProcessCapacity>(); }
+            return processor;
+        }
+    }
     private ProcessCapacity processor;
+    public HackCapacity Hacker
+    {
+        get
+        {
+            if (hacker == null) { hacker = GetCapacity<HackCapacity>(); }
+            return hacker;
+        }
+    }
+    private HackCapacity hacker;
 
     [Header("Disks")]
     [SerializeField] private List<StoreCapacity> disks;
@@ -19,33 +33,6 @@ public class Laptop : Item, Usable
     [Header("Logs")]
     [SerializeField] protected bool log_keys = false;
 
-    // KEYS MANAGEMENT
-    public bool HasKeyFor(Lockable target)
-    {
-        return GetKeyFor(target) != null;
-    }
-    public Key GetKeyFor(Lockable target)
-    {
-        List<Key> keys = GetKeys();
-        if (log_keys)
-        {
-            string s = $"(Laptop) {name} checking if has key for {target.Key}";
-            foreach (Key key in keys)
-            {
-                s += $"\n - {key.data} ({key.key_type})";
-            }
-            Debug.Log(s);
-        }
-        foreach (Key key in keys)
-        {
-            if (key.Matches(target.Password))
-            {
-                return key;
-            }
-        }
-        return null;
-    }
-    
     // USABLE
     public string UseLabel { get; } = "hack";
     public void Use(Capable user)
@@ -58,7 +45,7 @@ public class Laptop : Item, Usable
         hack_capacity.Use(user);
     }
 
-    // GRABBING HACK MODULE & NETWORK MODULE
+    // MODULES MANAGEMENT
     public void OnNetworkModuleChanged()
     {
         // we check how many network modules we have in our inventory
@@ -77,8 +64,6 @@ public class Laptop : Item, Usable
         // we update the radius of the connect capacity
         Connector.Radius = network_modules.Max(module => module.USB_Range);
     }
-
-    // FILES MANAGEMENT
     public void OnHDD_Changed()
     {
         // we check how many hdd do we have in our inventory
@@ -92,6 +77,8 @@ public class Laptop : Item, Usable
 
         if (debug) { Debug.Log($"(Laptop) {name} HDD changed. New disks count: {disks.Count}"); }
     }
+
+    // FILES MANAGEMENT
     public bool WriteFile(File file)
     {
         // we try to write the file to the first disk that has enough space
@@ -122,7 +109,34 @@ public class Laptop : Item, Usable
         exploits.Add(Exploit.Nmap); // we always add Nmap as a default exploit
         return exploits;
     }
-    public List<Key> GetKeys()
+
+    // KEYS MANAGEMENT
+    public bool HasKeyFor(Lockable target)
+    {
+        return GetKeyFor(target) != null;
+    }
+    public Key GetKeyFor(Lockable target)
+    {
+        List<Key> keys = get_keys();
+        if (log_keys)
+        {
+            string s = $"(Laptop) {name} checking if has key for {target.Key}";
+            foreach (Key key in keys)
+            {
+                s += $"\n - {key.data} ({key.key_type})";
+            }
+            Debug.Log(s);
+        }
+        foreach (Key key in keys)
+        {
+            if (key.Matches(target.Password))
+            {
+                return key;
+            }
+        }
+        return null;
+    }
+    private List<Key> get_keys()
     {
         // we get all keys from all disks
         List<Key> keys = new List<Key>();

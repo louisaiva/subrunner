@@ -38,5 +38,5 @@ public interface Lockable
     // UNLOCK / LOCK
     void Unlock();
     void Lock();
-    bool IsUnlockableVia(Exploit exploit);
+    // bool IsUnlockableVia(Exploit exploit);
 }

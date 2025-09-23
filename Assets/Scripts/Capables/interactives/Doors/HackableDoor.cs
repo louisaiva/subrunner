@@ -76,7 +76,7 @@ public class HackableDoor : Door, Lockable
     }
 
     // HACKABLE
-    public bool IsVulnerableTo(Exploit exploit)
+    /* public bool IsVulnerableTo(Exploit exploit)
     {
         if (exploit == Exploit.Nmap) { return true; }
         if (exploit.name == "bruteforce") { return true; }
@@ -123,7 +123,7 @@ public class HackableDoor : Door, Lockable
     public void OnHackDone(Hack hack)
     {
         if (RunningHacks.Contains(hack)) { RunningHacks.Remove(hack); } // if the zombo is dead we may have already removed the hack
-    }
+    } */
 
     // UNLOCKING
     public async void Unlock()
@@ -171,9 +171,9 @@ public class HackableDoor : Door, Lockable
             close();
         }
     }
-    public bool IsUnlockableVia(Exploit exploit)
+    /* public bool IsUnlockableVia(Exploit exploit)
     {
         if (exploit == Exploit.Nmap) { return false; }
         return IsVulnerableTo(exploit);
-    }
+    } */
 }
