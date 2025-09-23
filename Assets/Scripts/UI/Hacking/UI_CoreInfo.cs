@@ -6,7 +6,7 @@ public class UI_CoreInfo : MonoBehaviour
 {
     [Header("UI_CoreInfo")]
     [SerializeField] private Image image;
-    [HideInInspector] public Core core;
+    /* [HideInInspector] */ public Core core;
 
     [Header("Colors")]
     [SerializeField] private Color base_color = Color.white;
