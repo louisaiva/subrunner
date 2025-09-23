@@ -52,10 +52,10 @@ public class UI_AnimPlayer : MonoBehaviour
 
 
     [Header("Logs")]
-    public bool debug = false;
-    public bool debug_orientation = false;
-    public bool debug_advanced = false;
-    public bool debug_frames = false;
+    public bool log = false;
+    public bool log_orientation = false;
+    public bool log_advanced = false;
+    public bool log_frames = false;
 
 
     // Awake & Start
@@ -90,7 +90,7 @@ public class UI_AnimPlayer : MonoBehaviour
             if (!current_anim.loop)
             {
                 current_frame = -1;
-                if (debug_frames) { Debug.Log($"(UI_AnimPlayer) Animation {current_anim.name} ended."); }
+                if (log_frames) { Debug.Log($"(UI_AnimPlayer) Animation {current_anim.name} ended."); }
                 return;
             }
             // we loop the animation
@@ -114,10 +114,10 @@ public class UI_AnimPlayer : MonoBehaviour
         Anim anim = Bank.GetAnim(anim_name);
         if (anim == null)
         {
-            if (debug) { Debug.Log("(UI_AnimPlayer - Play) could not Play() : " + anim_name + " no contact with bank"); }
+            if (log) { Debug.Log("(UI_AnimPlayer - Play) could not Play() : " + anim_name + " no contact with bank"); }
             return null;
         }
-        if (debug) { Debug.Log("(UI_AnimPlayer - Play) Bank found anim : " + anim.name
+        if (log) { Debug.Log("(UI_AnimPlayer - Play) Bank found anim : " + anim.name
                 + (anim_name == anim.name
                 ? ""
                 : " (" + anim_name + " was asked)")); }
@@ -175,13 +175,13 @@ public class UI_AnimPlayer : MonoBehaviour
         if (anim.sprites.Length == 1) { current_frame = -1; }
 
 
-        if (debug_advanced) { Debug.Log("(AnimPlayer) Playing " + anim.name + " at frame " + frame); }
+        if (log_advanced) { Debug.Log("(AnimPlayer) Playing " + anim.name + " at frame " + frame); }
     }
 
     // ORIENTATION
     public void SetOrientation(Vector2 look_at)
     {
-        if (debug_orientation) { Debug.Log("(AnimPlayer) Changing " + name + " orientation to " + look_at); }
+        if (log_orientation) { Debug.Log("(AnimPlayer) Changing " + name + " orientation to " + look_at); }
 
         // we separate the 360° in 4 directions (up, down, left, right)
         if (look_at.y > 0.5) { SetOrientation("U"); }
@@ -205,10 +205,10 @@ public class UI_AnimPlayer : MonoBehaviour
         Anim new_anim = Play(current_capacity);
         if (new_anim == null)
         {
-            if (debug_orientation) { Debug.LogWarning("(AnimPlayer) Could not change orientation to " + orientation + " for " + current_capacity); }
+            if (log_orientation) { Debug.LogWarning("(AnimPlayer) Could not change orientation to " + orientation + " for " + current_capacity); }
             return;
         }
-        if (debug_orientation)
+        if (log_orientation)
             {
                 string s = "(AnimPlayer) Interrupted : Changing orientation to ";
                 s += this.orientation + " | anim switched to ";

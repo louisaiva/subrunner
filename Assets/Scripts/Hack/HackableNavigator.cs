@@ -118,7 +118,6 @@ public class HackableNavigator : MonoBehaviour
 
         // we update the hackray
         hover_hackray.SetColor(connector.IsConnectedTo(target) ? hackray_color : out_of_range_hackray_color);
-        // hover_hackray.SetLaptopAndTarget(laptop, target.transform);
         hover_hackray.SetConnectors(connector, target);
         hover_hackray.gameObject.SetActive(true);
     }
@@ -132,7 +131,6 @@ public class HackableNavigator : MonoBehaviour
 
         // we update the hackray
         hover_hackray?.SetColor(hackray_color);
-        // hover_hackray?.SetLaptopAndTarget(laptop, cursor);
         hover_hackray.SetConnectors(connector, cursor);
 
         // we reset the vulnerable material

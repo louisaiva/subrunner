@@ -17,9 +17,14 @@ public class ConnectionTree : MonoBehaviour
     [Header("Parent caches")]
     private Dictionary<Connection, Connection> parent_cache = new Dictionary<Connection, Connection>();
 
+    [Header("Logs")]
+    public bool log = false;
+
     // ADD / REMOVE
     public void AddNode(Connection connection)
     {
+        if (log) { Debug.Log($"(ConnectionTree) Adding node from {connection.start.capable.name} to {connection.destination.capable.name}"); }
+
         // we find the connection's parent to add their child
         Connection parent = get_parent(connection);
         if (parent != null)
@@ -33,6 +38,8 @@ public class ConnectionTree : MonoBehaviour
     }
     public void RemoveNode(Connection node)
     {
+        if (log) { Debug.Log($"(ConnectionTree) Removing node from {node.start.capable.name} to {node.destination.capable.name}"); }
+
         // we remove the node from the graph
         nodes.Remove(node);
 

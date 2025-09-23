@@ -27,6 +27,7 @@ public class ConnectCapacity : Capacity
 
     [Header("Opened Connections")]
     public List<Connection> connections = new List<Connection>();
+    public List<Connection> incoming_connections = new List<Connection>();
 
     [Header("Connection Parameters")]
     public float Radius = 0.5f;
@@ -50,6 +51,7 @@ public class ConnectCapacity : Capacity
     public void Connect(ConnectCapacity target, HackCapacity scanner = null)
     {
         // checks if we already have a connection to it we don't open a new one
+        // ? is it really the best way to do ? should n t we create a new connection each time ?
         if (IsConnectedTo(target))
         {
             connection = get_connection(target);
@@ -58,20 +60,19 @@ public class ConnectCapacity : Capacity
         }
 
         // checks if target is unlocked already (can't connect)
-        if (target.capable is Lockable lockable && !lockable.Locked)
+        /* if (target.capable is Lockable lockable && !lockable.Locked)
         {
             if (log_connection) { Debug.LogWarning($"(ConnectCapacity) {capable.name} tried to connect to {target.capable.name} but it is already unlocked."); }
             return;
-        }
+        } */
 
         // we connect to the target
         connection = new Connection(this, target, Controller.Instance.HackableNavigator.Tree);
-        connections.Add(connection);
 
         if (!is_in_range(target))
         {
             if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} try to connect to {target.capable.name} but is out of range."); }
-            connection.Close();
+            connection.state = ConnectionState.Closed;
         }
         else if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} connected to {target.capable.name}."); }
 
@@ -89,16 +90,16 @@ public class ConnectCapacity : Capacity
     {
         if (connection == null) { return; }
         if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} disconnected current connection."); }
-        if (connection.state != ConnectionState.Opened)
+        /* if (connection.state != ConnectionState.Opened)
         {
-            connection.Close();
-            connections.Remove(connection);
-        }
+            
+            // connections.Remove(connection);
+        } */
         connection = null;
     }
     public bool IsConnectedTo(ConnectCapacity target)
     {
-        if (Target != null && Target == target)
+        if (connection != null && connection.destination != null && connection.destination == target)
         {
             return connection.state == ConnectionState.Connected || connection.state == ConnectionState.Opened;
         }
@@ -106,30 +107,39 @@ public class ConnectCapacity : Capacity
     }
     private Connection get_connection(ConnectCapacity target)
     {
+        if (connection != null && connection.destination == target) { return connection; }
         return connections.FirstOrDefault(c => c.destination == target);
     }
 
     // UPDATE
     protected override void Update()
     {
+        // si on a une connection principale on la met à jour
+        if (connection != null && connection.state != ConnectionState.Opened)
+        {
+            // checks if the connection is still valid (maybe the destination was destroyed)
+            try
+            {
+                // checks if it's in the range
+                bool in_range = Vector3.Distance(transform.position, connection.destination.transform.position) <= Radius;
+                connection.state = in_range ? ConnectionState.Connected : ConnectionState.Closed;
+            }
+            catch { Disconnect(); }
+        }
+
+
         // on parcourt les connections pour voir si on a des connections à fermer
         for (int i = connections.Count - 1; i >= 0; i--)
         {
             Connection tunnel = connections[i];
-            if (tunnel.state == ConnectionState.Closed && tunnel != connection) { connections.RemoveAt(i); }
+            // if (tunnel.state == ConnectionState.Closed /* && tunnel != connection */) { connections.RemoveAt(i); }
 
-            // sinon on vérifie si on doit fermer la connection
+            // on on vérifie si on doit fermer la connection
             if (!is_in_range(tunnel.destination))
             {
                 if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} closing connection because it is out of range."); }
                 tunnel.Close();
-                continue;
-            }
-
-            // on vérifie si on est connection et qu'on est à nouveau dans le range on rebascule en connected
-            if (tunnel.state == ConnectionState.Closed && tunnel == connection)
-            {
-                tunnel.state = ConnectionState.Connected;
+                // continue;
             }
         }
     }
@@ -140,6 +150,29 @@ public class ConnectCapacity : Capacity
         catch { return false; }
     }
 
+
+    // MANAGING CONNECTIONS
+    public void AddConnection(Connection connection)
+    {
+        if (connections.Contains(connection)) { return; }
+        connections.Add(connection);
+    }
+    public void RemoveConnection(Connection connection)
+    {
+        if (!connections.Contains(connection)) { return; }
+        connections.Remove(connection);
+    }
+    public void AddIncomingConnection(Connection connection)
+    {
+        if (incoming_connections.Contains(connection)) { return; }
+        incoming_connections.Add(connection);
+    }
+    public void RemoveIncomingConnection(Connection connection)
+    {
+        if (!incoming_connections.Contains(connection)) { return; }
+        incoming_connections.Remove(connection);
+    }
+
     // ON DESTROY
     private void OnDestroy()
     {
@@ -148,6 +181,12 @@ public class ConnectCapacity : Capacity
             Connection connection = connections[i];
             connection.Close();
             connections.RemoveAt(i);
+        }
+
+        for (int i = incoming_connections.Count - 1; i >= 0; --i)
+        {
+            Connection connection = incoming_connections[i];
+            connection.Close();
         }
     }
 }
@@ -181,6 +220,8 @@ public class Connection
         // we set the names
         this.from = start.capable.name;
         this.to = destination.capable.name;
+
+        if (Logger.Instance.LOG_CONNECTIONS) { Debug.Log($"---> (Connection) {from} <--> {to} : connected"); }
     }
 
     // OPEN / CLOSE
@@ -190,16 +231,29 @@ public class Connection
 
         // we add the node to the tree
         tree.AddNode(this);
+
+        // we alert the start & destination that we are setting up a connection
+        start.AddConnection(this);
+        destination.AddIncomingConnection(this);
+
+        if (Logger.Instance.LOG_CONNECTIONS) { Debug.Log($"---> (Connection) {from} <--> {to} : opened"); }
     }
     public void Close()
     {
-        this.state = ConnectionState.Closed;
-
         // we make the tree delete ourselves
+        /* if (this.state == ConnectionState.Opened) { } */
         tree.RemoveNode(this);
 
         // we close all children too
         while (children.Count > 0) { children[0].Close(); }
+
+        this.state = ConnectionState.Closed;
+
+        // we alert the destination that we are closing an incoming connection
+        destination.RemoveIncomingConnection(this);
+        start.RemoveConnection(this);
+
+        if (Logger.Instance.LOG_CONNECTIONS) { Debug.Log($"---> (Connection) {from} <--> {to} : closed"); }
     }
 
     // CHILDREN MANAGEMENT

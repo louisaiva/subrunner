@@ -75,9 +75,11 @@ public class Transitioner : MonoBehaviour
         if (transition_on_start)
         {
             if (log) { Debug.Log($"(Transitioner) Waiting {delay_start_transition} seconds before starting transition for {name}"); }
-            await Tween.Delay(delay_start_transition, useUnscaledTime: unscaled_time);
+            if (delay_start_transition > 0f) { await Tween.Delay(delay_start_transition, useUnscaledTime: unscaled_time); }
             show_start();
         }
+
+        
     }
     private void show_start()
     {

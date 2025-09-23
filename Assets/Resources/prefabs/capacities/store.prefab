@@ -129,8 +129,8 @@ MonoBehaviour:
     cores_cost: 4
     security_level: 1
     cores_cost_after_exploit: 1
-    end_timer: 20
-    wait_end: 0
+    end_timer: 0
+    wait_end: 1
   - name: cyborg_puppet
     extension: .exe
     data: 49584f4867316d736d61414c694b63697a3952465343646e6a5162354e437071a7042316d32387134567036496f51696e396c66754c4836476f4f387036654e43a4668706a43594832354f437a3758386b4e4962566e6453707a3634654f384b59
@@ -138,5 +138,5 @@ MonoBehaviour:
     cores_cost: 4
     security_level: 1
     cores_cost_after_exploit: 2
-    end_timer: 20
-    wait_end: 0
+    end_timer: 0
+    wait_end: 1

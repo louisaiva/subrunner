@@ -75,7 +75,7 @@ MonoBehaviour:
   transition_on_start: 1
   duration_start_transition: 0.25
   delay_start_transition: 0.5
-  log: 1
+  log: 0
 --- !u!1 &1279773479001451798
 GameObject:
   m_ObjectHideFlags: 0
@@ -467,10 +467,10 @@ MonoBehaviour:
     loop: 1
     speed: 1
     flipX: 0
-  debug: 1
-  debug_orientation: 0
-  debug_advanced: 0
-  debug_frames: 0
+  log: 0
+  log_orientation: 0
+  log_advanced: 0
+  log_frames: 0
 --- !u!114 &49485856118314038
 MonoBehaviour:
   m_ObjectHideFlags: 0

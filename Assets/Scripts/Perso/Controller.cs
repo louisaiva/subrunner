@@ -125,6 +125,11 @@ public class Controller : Singleton<Controller>
         capa?.Inventory?.RemoveUI(perso_quick_inventory);
         perso_quick_inventory.Inventory = null;
 
+        // on déconnecte la connect capacity
+        if (capa.HasCapacity<ConnectCapacity>())
+        {
+            capa.GetCapacity<ConnectCapacity>().Disconnect();
+        }
 
         if (log) { Debug.Log("(Controller) " + name + " is done controlling " + capa.name); }
     }

@@ -162,6 +162,8 @@ public class HackCapacity : Capacity
         // we get some free cores from the laptop
         List<Core> free_cores = laptop.Processor.GetFreeCores(hack.program.cores_cost);
 
+        if (debug) { Debug.Log($"(HackCapacity) {capable.name} is running exploit {hack.name} on {hack.target.capable.name} using {free_cores.Count} cores."); }
+
         // we run the hack
         hack.Run(free_cores);
 
