@@ -622,7 +622,7 @@ MonoBehaviour:
   m_BuildHeightMesh: 0
   m_MinRegionArea: 0
   m_HideEditorLogs: 0
-  m_NavMeshData: {fileID: 23800000, guid: 9eaa3b5bfedf6da4ca52555ba13e954e, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 0ad4e9ba25d46264badf703e6f43d17b, type: 2}
 --- !u!114 &3117844331737764809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5649,7 +5649,7 @@ MonoBehaviour:
   m_BuildHeightMesh: 0
   m_MinRegionArea: 0
   m_HideEditorLogs: 0
-  m_NavMeshData: {fileID: 23800000, guid: 7cac490569d663c4cbc1309d7770a36e, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: bd0ed88a2efb8054a98efad7de826bd4, type: 2}
 --- !u!114 &3508825735167502640
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5789,6 +5789,7 @@ GameObject:
   - component: {fileID: 1981274784206631526}
   - component: {fileID: 636149868414555374}
   - component: {fileID: 4532637608743644251}
+  - component: {fileID: 4313958320483949285}
   m_Layer: 0
   m_Name: bank
   m_TagString: Untagged
@@ -5841,9 +5842,17 @@ MonoBehaviour:
     variant_name: black_fridge
     variant_sprite_path: spritesheets/objects/interactives/chests/black_fridge
   - base_skin: small_laptop
-    base_sprite_path: spritesheets/objects/items/laptop
+    base_sprite_path: spritesheets/objects/items/laptops/laptop_blue
     variant_name: laptop_red
-    variant_sprite_path: spritesheets/objects/items/laptop_red
+    variant_sprite_path: spritesheets/objects/items/laptops/laptop_red
+  - base_skin: small_laptop
+    base_sprite_path: spritesheets/objects/items/laptops/laptop_blue
+    variant_name: laptop_black
+    variant_sprite_path: spritesheets/objects/items/laptops/laptop_black
+  - base_skin: small_laptop
+    base_sprite_path: spritesheets/objects/items/laptops/laptop_blue
+    variant_name: laptop_green
+    variant_sprite_path: spritesheets/objects/items/laptops/laptop_green
   log: 0
   log_LAFAC: 0
   log_variant_skins: 0
@@ -5981,6 +5990,35 @@ MonoBehaviour:
   ui_item_prefab: {fileID: 4964243457693928914, guid: abacdc781c511fc42b1c0e4dd87c3c7b, type: 3}
   ui_module_prefab: {fileID: 6477483050230691726, guid: ba7322b7ec1b3c34b85172c9189055b9, type: 3}
   debug: 0
+--- !u!114 &4313958320483949285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8896371288761135431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e49df1ca15eec3c42a931ca92de8f351, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  files: []
+  keys:
+  - {fileID: 11400000, guid: ba6d57367da3d5541a5c40095065d598, type: 2}
+  - {fileID: 11400000, guid: 675503f69abf483408e7e0e0969562af, type: 2}
+  - {fileID: 11400000, guid: 94720a86bfb33cc4b9b153de70b97bca, type: 2}
+  - {fileID: 11400000, guid: e67d7c9a757008b46b6262a0705b9834, type: 2}
+  - {fileID: 11400000, guid: 59a7033b05856a2489a04ad085c54fdc, type: 2}
+  programs: []
+  exploits:
+  - {fileID: 11400000, guid: b563beb01e376fc4dadf28bbf30c2623, type: 2}
+  - {fileID: 11400000, guid: 6b4698c43b3ec1d469c1c4a32ecff1c7, type: 2}
+  - {fileID: 11400000, guid: 53624da43e1b5ec4dae0ab5be8a35583, type: 2}
+  - {fileID: 11400000, guid: b2b52c3b3ea73aa4d8ff49ff8686a1ab, type: 2}
+  - {fileID: 11400000, guid: 663456199db6d174f80e5bd6af4c6132, type: 2}
+  - {fileID: 11400000, guid: 034b83dc13df22943ab2e888bd881fb7, type: 2}
+  - {fileID: 11400000, guid: 85f03e43ae658f44f8f2d256ef1b10ec, type: 2}
+  - {fileID: 11400000, guid: bd9effc632fe6d948af74cc6da283407, type: 2}
 --- !u!1 &8925621606889285348
 GameObject:
   m_ObjectHideFlags: 0

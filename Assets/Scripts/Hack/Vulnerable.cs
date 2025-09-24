@@ -48,11 +48,13 @@ public class Vulnerable : MonoBehaviour
     // VULNERABILITIES
     public bool IsVulnerableTo(Exploit exploit)
     {
-        if (exploit == Exploit.Nmap) { return true; }
-        if (capable is Lockable lockable)
+        if (exploit.name == "nmap") { return true; }
+        if (capable is Lockable lockable && exploit.name == "type_password")
         {
-            if (exploit is FileExploit file_exploit) { return lockable.Key.Matches(file_exploit.file.data); }
-            if (exploit == Exploit.TypePassword) { return false; } // type password vide c nul on veut pas
+            if (exploit is not FileExploit file_exploit) { return false; }
+            if (file_exploit.file == null) { return false; }
+            return lockable.Key.Matches(file_exploit.file.data);
+            // if (exploit.name == "type_password") { return false; } // type password vide c nul on veut pas
         }
 
         return vulnerabilities.Any(v => v.exploit_name == exploit.name);
@@ -136,8 +138,8 @@ public class Vulnerable : MonoBehaviour
 
 
         // todo temporary solution waiting for a better Exploit management (maybe with SO ??)
-        if (hack.program.name == "cpu_overheat") { damage = 10f; knockback_magnitude = 5f; }
-        else if (hack.program.name == "cpu_melt") { damage = 1000f; knockback_magnitude = 5f; }
+        /* if (hack.program.name == "cpu_overheat") { damage = 10f; knockback_magnitude = 5f; }
+        else if (hack.program.name == "cpu_melt") { damage = 1000f; knockback_magnitude = 5f; } */
 
         // we create a knockback force
         Force knockback = new Force(

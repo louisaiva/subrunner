@@ -105,8 +105,10 @@ public class Laptop : Item, Usable, Device
         {
             exploits.AddRange(disk.GetExploits());
         }
-        exploits.Add(Exploit.TypePassword); // we always add TypePassword as default
-        exploits.Add(Exploit.Nmap); // we always add Nmap as a default exploit
+        // exploits.Add(Exploit.TypePassword); // we always add TypePassword as default
+        // exploits.Add(Exploit.Nmap); // we always add Nmap as a default exploit
+        exploits.Add(FileBank.Instance.Nmap);
+        exploits.Add(FileBank.Instance.TypePassword);
         return exploits;
     }
 
@@ -123,7 +125,7 @@ public class Laptop : Item, Usable, Device
             string s = $"(Laptop) {name} checking if has key for {target.Key}";
             foreach (Key key in keys)
             {
-                s += $"\n - {key.data} ({key.key_type})";
+                s += $"\n - {key.data}";
             }
             Debug.Log(s);
         }
@@ -145,23 +147,5 @@ public class Laptop : Item, Usable, Device
             keys.AddRange(disk.GetKeys());
         }
         return keys;
-    }
-}
-
-[System.Serializable]
-public class Key : File
-{
-    public string key_type; // SHA, AES, RSA
-
-    public Key(string type, string key)
-    {
-        this.extension = ".key"; // default extension for keys
-        key_type = type;
-        this.data = key;
-    }
-
-    public bool Matches(string target_key)
-    {
-        return data == target_key;
     }
 }

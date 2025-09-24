@@ -88,8 +88,10 @@ public abstract class StaticDevice : Capable, Device
         {
             exploits.AddRange(disk.GetExploits());
         }
-        exploits.Add(Exploit.TypePassword); // we always add TypePassword as default
-        exploits.Add(Exploit.Nmap); // we always add Nmap as a default exploit
+        // exploits.Add(Exploit.TypePassword); // we always add TypePassword as default
+        // exploits.Add(Exploit.Nmap); // we always add Nmap as a default exploit
+        exploits.Add(FileBank.Instance.TypePassword);
+        exploits.Add(FileBank.Instance.Nmap);
         return exploits;
     }
 
@@ -106,7 +108,7 @@ public abstract class StaticDevice : Capable, Device
             string s = $"(Laptop) {name} checking if has key for {target.Key}";
             foreach (Key key in keys)
             {
-                s += $"\n - {key.data} ({key.key_type})";
+                s += $"\n - {key.data}";
             }
             Debug.Log(s);
         }

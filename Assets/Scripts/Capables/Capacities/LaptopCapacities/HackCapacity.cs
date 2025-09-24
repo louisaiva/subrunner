@@ -42,10 +42,10 @@ public class HackCapacity : Capacity
         if (exploit == null) { return; }
 
         // we check if the exploit is TypePassword then we need to assign a password
-        if (exploit == Exploit.TypePassword && Target != null && Target.capable is Lockable lockable)
+        if (exploit is FileExploit file_exploit && Target != null && Target.capable is Lockable lockable)
         {
             Key key = laptop.GetKeyFor(lockable);
-            if (key != null) { exploit = new FileExploit(exploit, key); }
+            file_exploit.file = key;
         }
 
         // we set the selected exploit
@@ -203,8 +203,11 @@ public class HackCapacity : Capacity
             Key key = laptop.GetKeyFor(lockable);
             if (key != null)
             {
-                exploits.Remove(Exploit.TypePassword); // we remove the empty type password exploit
-                exploits.Add(new FileExploit(Exploit.TypePassword, key));
+                // exploits.Remove(Exploit.TypePassword); // we remove the empty type password exploit
+                // exploits.Add(new FileExploit(Exploit.TypePassword, key));
+                FileExploit type_password_exploit = FileBank.Instance.TypePassword;
+                type_password_exploit.file = key;
+                exploits.Add(type_password_exploit);
             }
         }
 

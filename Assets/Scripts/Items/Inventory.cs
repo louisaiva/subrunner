@@ -62,6 +62,7 @@ public class Inventory : MonoBehaviour
         // on récupère les items
         foreach (Transform child in transform)
         {
+            if (child == null || child.gameObject.activeSelf == false) { continue; }
             Grab(child.GetComponent<Item>());
         }
     }

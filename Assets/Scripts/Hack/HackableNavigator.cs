@@ -13,8 +13,8 @@ public class HackableNavigator : MonoBehaviour
 
     [Header("Hackables selection")]
     [SerializeField] private GameObject targeted_connector;
-    public ConnectCapacity CurrentTarget => targeted_connector.GetComponent<ConnectCapacity>();
-    public Vulnerable CurrentVulnerable => targeted_connector.GetComponent<Vulnerable>();
+    public ConnectCapacity CurrentTarget => targeted_connector?.GetComponent<ConnectCapacity>();
+    public Vulnerable CurrentVulnerable => targeted_connector?.GetComponent<Vulnerable>();
     [SerializeField] private LayerMask hackableLayerMask = default;
     [SerializeField] private float selection_radius = 10f; // the radius of the selection collider
 

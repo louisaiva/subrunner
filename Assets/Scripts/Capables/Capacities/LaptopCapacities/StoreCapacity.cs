@@ -77,13 +77,3 @@ public class StoreCapacity : Capacity
         if (debug) { Debug.Log($"(StoreCapacity) {capable.name} disk capacity set to {capacity} bytes"); }
     }
 }
-
-[Serializable]
-public class File
-{
-    public string name;
-    public string extension = "";
-    public string data;
-
-    public virtual int Size => data.Length + name.Length + extension.Length;
-}

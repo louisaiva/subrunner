@@ -23,11 +23,13 @@ public class UI_GameOver : UI_Pool
     [Header("Components")]
     [SerializeField] private TextMeshProUGUI oh_no_text;
     // START
-    protected override void Start()
+    protected override void Start() 
     {
         // we create the callback
         reviveAction = InputManager.Instance.GetAction(reviveInput);
         reviveCallback = ctx => HandleReviveInput(ctx.ReadValue<float>());
+
+        if (perso_spawn_point == null) { Debug.LogError("(UI_GameOver) perso_spawn_point is not assigned! Please assign it in the inspector."); }
 
         if (log) { Debug.Log("(UI_GameOver) started & callbacks created"); }
     }

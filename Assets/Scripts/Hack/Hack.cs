@@ -59,7 +59,7 @@ public class Hack : Processus
     {
 
         // we check if we failed or not
-        if (name != "nmap" && !target.IsVulnerableTo(Exploit.Nmap)) { Fail(); return; }
+        // if (name != "nmap" && !target.IsVulnerableTo(Exploit.Nmap)) { Fail(); return; }
         if (program is not Exploit exploit) { Fail(); return; }
         if (!target.IsVulnerableTo(exploit)) { Fail(); return; }
 
@@ -202,72 +202,3 @@ public class Hack : Processus
     }
 }
 
-
-
-
-
-// PROGRAMS & EXPLOITS (FILES)
-
-[System.Serializable]
-public class Program : File
-{
-    [Header("Program Details")]
-    public float base_duration;
-    public int cores_cost;
-
-    // CONSTRUCTOR
-    public Program(string name, float base_duration, int cores_cost)
-    {
-        this.extension = ".exe"; // default extension for programs
-        this.name = name;
-        this.base_duration = base_duration;
-        this.cores_cost = cores_cost;
-    }
-}
-
-[System.Serializable]
-public class Exploit : Program
-{
-    public static readonly Exploit Nmap = new Exploit("nmap", 1000, 0.1f, 1);
-    public static readonly Exploit TypePassword = new Exploit("type_password", 1000, 0.1f, 1);
-
-    [Header("Exploit Details")]
-    public int security_level;
-    public int cores_cost_after_exploit = 0; // if > 0 it's the cost of cores for the hack to continue after completion (only for timers / waitend)
-    public float end_timer = 0f; // if > 0f it will make the exploit a Timer exploit
-    public bool wait_end = false; // if true it will make the exploit a WaitEnd exploit (and will wait until the "wait_end" bool become false again)
-
-    // CONSTRUCTOR
-    public Exploit(string name, int security_level, float base_duration, int cores_cost) : base(name, base_duration, cores_cost)
-    {
-        this.security_level = security_level;
-    }
-    public Exploit(Exploit exploit) : base(exploit.name, exploit.base_duration, exploit.cores_cost)
-    {
-        this.extension = exploit.extension;
-        this.security_level = exploit.security_level;
-    }
-}
-
-[System.Serializable]
-public class FileExploit : Exploit
-{
-    public File file;
-    public FileExploit(Exploit exploit, File file) : base(exploit)
-    {
-        this.file = file;
-    }
-}
-
-[System.Serializable]
-public class DamageExploit : Exploit
-{
-    public float damage;
-    public float knockback_magnitude;
-
-    public DamageExploit(string name, int security_level, float base_duration, int cores_cost, float damage, float knockback_magnitude) : base(name, security_level, base_duration, cores_cost)
-    {
-        this.damage = damage;
-        this.knockback_magnitude = knockback_magnitude;
-    }
-}

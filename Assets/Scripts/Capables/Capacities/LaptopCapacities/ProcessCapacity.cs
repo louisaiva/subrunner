@@ -86,7 +86,7 @@ public class ProcessCapacity : Capacity
 {
     public bool isFree = true;
     public float Speed = 1.0f; // percentage speed (1 == 100%)
-    [SerializeReference] public Processus RunningProcess = Processus.Null;
+    [SerializeReference] public Processus RunningProcess = null;
     public Core() { }
 
     // USE / FREE
@@ -98,14 +98,14 @@ public class ProcessCapacity : Capacity
     public void Free()
     {
         isFree = true;
-        RunningProcess = Processus.Null;
+        RunningProcess = null;
     }
 }
 
 
 [Serializable] public class Processus
 {
-    public static Processus Null = new Processus(new Program("null", 0, 0));
+    // public static Processus Null = new Processus(FileBank.Instance.GetFile<Program>("null_program"));
 
     // PROGRAM
     public Program program;
