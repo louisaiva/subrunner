@@ -76,7 +76,7 @@ public class UI_Item : UI_Slot
         // we can stack the item !!
         return true;
     }
-    public bool Store(Item item)
+    public virtual bool Store(Item item)
     {
         // we check if we can store the item
         if (!CanStore(item)) { return false; }
@@ -97,7 +97,7 @@ public class UI_Item : UI_Slot
 
         return true;
     }
-    public bool Unstore(Item item)
+    public virtual bool Unstore(Item item)
     {
         // we check if we can unstore the item
         if (!items.Contains(item)) { return false; }
@@ -115,7 +115,7 @@ public class UI_Item : UI_Slot
         ItemPool?.NotifyPoolChanged(this);
         return true;
     }
-    public void Clear()
+    public virtual void Clear()
     {
         // we clear the items
         items.Clear();

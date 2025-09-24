@@ -59,7 +59,6 @@ public class Hack : Processus
     {
 
         // we check if we failed or not
-        // if (name != "nmap" && !target.IsVulnerableTo(Exploit.Nmap)) { Fail(); return; }
         if (program is not Exploit exploit) { Fail(); return; }
         if (!target.IsVulnerableTo(exploit)) { Fail(); return; }
 
@@ -67,7 +66,7 @@ public class Hack : Processus
 
 
         // we check which type of exploit it is. if it's not a timer not a wait end we complete !
-        if (exploit.end_timer == 0f && !exploit.wait_end) { Complete(); return; }
+        if (exploit is not WaitExploit wait_exploit) { Complete(); return; }
 
         // Notify the target that the hack is completed
         target.OnHackSucceeded(this);
@@ -76,24 +75,22 @@ public class Hack : Processus
         hacker.RetractHackray(this);
 
         // we free some cores until we only have the exploit.cores_cost_after_completion cores
-        free_cores(provided_cores.Count - exploit.cores_cost_after_exploit);
+        free_cores(provided_cores.Count - wait_exploit.cores_cost_after_exploit);
 
         // we check if it's a timer or a wait end
-        if (exploit.end_timer > 0f)
+        if (wait_exploit is TimerExploit timer)
         {
             // we start a timer
-            if (Logger.Instance.LOG_HACKS) { Debug.Log($"---> (Hack) on {target.capable.name} : {name} : is now in Timer mode for {exploit.end_timer} seconds."); }
-            progress = 100f;
-            duration = exploit.end_timer;
-            state = ProcessusState.Waiting;
+            if (Logger.Instance.LOG_HACKS) { Debug.Log($"---> (Hack) on {target.capable.name} : {name} : is now in Timer mode for {timer.end_timer} seconds."); }
+            duration = timer.end_timer;
         }
-        else if (exploit.wait_end)
+        else
         {
             if (Logger.Instance.LOG_HACKS) { Debug.Log($"---> (Hack) on {target.capable.name} : {name} : is now in Wait mode."); }
-            progress = 100f;
             duration = 0f;
-            state = ProcessusState.Waiting;
         }
+        progress = 100f;
+        state = ProcessusState.Waiting;
     }
 
     // FAIL & COMPLETE
@@ -135,9 +132,7 @@ public class Hack : Processus
         }
 
         // we update the progress of the hack
-        Exploit exploit = program as Exploit;
-        if (exploit.end_timer > 0f) { progress -= Time.deltaTime / duration * 100f; }
-        else if (!exploit.wait_end) { progress = 0f; } // we set progress at 0f if we don't need to wait anymore
+        if (exploit is TimerExploit) { progress -= Time.deltaTime / duration * 100f; }
 
         // we check if the hack is done
         if (progress <= 0f)

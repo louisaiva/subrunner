@@ -130,8 +130,10 @@ public class Inventory : MonoBehaviour
 
         // we update the UI
         if (uis_to_ignore == null) { uis_to_ignore = new List<UI_Inventory>(); }
-        foreach (UI_Inventory ui in uis)
+        for (int i = 0; i < uis.Count; i++)
         {
+            UI_Inventory ui = uis[i];
+            if (ui == null) { continue; }
             if (uis_to_ignore.Contains(ui)) { continue; } // we skip the ui_to_ignore
             ui.UI_Drop(item);
         }

@@ -137,10 +137,6 @@ public class Vulnerable : MonoBehaviour
         }
 
 
-        // todo temporary solution waiting for a better Exploit management (maybe with SO ??)
-        /* if (hack.program.name == "cpu_overheat") { damage = 10f; knockback_magnitude = 5f; }
-        else if (hack.program.name == "cpu_melt") { damage = 1000f; knockback_magnitude = 5f; } */
-
         // we create a knockback force
         Force knockback = new Force(
             name: "cpu_overheat_knockback",
@@ -154,7 +150,7 @@ public class Vulnerable : MonoBehaviour
     {
         // we move the PersoInputsController to the capable for duration seconds
         float duration = -888f;
-        if (!hack.exploit.wait_end) { duration = hack.exploit.end_timer; }
+        if (hack.exploit is TimerExploit timer) { duration = timer.end_timer; }
         Controller.Instance.ChangeCapableTarget(capable, duration);
     }
     public void UncontrolController(Hack hack)

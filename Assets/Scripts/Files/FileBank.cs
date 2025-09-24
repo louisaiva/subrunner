@@ -17,7 +17,8 @@ public class FileBank : Singleton<FileBank>
         {
             return (T)keys.Find(file => file.name == name);
         }
-        else if (typeof(T) == typeof(Exploit) || typeof(T) == typeof(FileExploit) || typeof(T) == typeof(DamageExploit))
+        else if (typeof(T) == typeof(Exploit) || typeof(T) == typeof(FileExploit) || typeof(T) == typeof(DamageExploit)
+                 || typeof(T) == typeof(WaitExploit) || typeof(T) == typeof(TimerExploit))
         {
             return (T)exploits.Find(file => file.name == name);
         }

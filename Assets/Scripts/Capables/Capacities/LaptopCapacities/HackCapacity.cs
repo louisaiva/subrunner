@@ -185,11 +185,24 @@ public class HackCapacity : Capacity
         Hack hack = running_hacks[running_hacks.Count - 1];
         hack.Fail();
     }
+    public void CancelControlHacks()
+    {
+        // we cancel all trojan & cyborg_puppets hacks
+        for (int i = running_hacks.Count - 1; i >= 0; --i)
+        {
+            Hack hack = running_hacks[i];
+            if (hack.name == "trojan" || hack.name == "cyborg_puppet")
+            {
+                hack.Fail();
+            }
+        }
+    }
     public bool IsHacking(Vulnerable vulnerable)
     {
         // checks if we are hacking this target
         return running_hacks.Any(h => h.target == vulnerable);
     }
+
 
     // SCANNING
     public void Scan(Vulnerable target)
