@@ -255,19 +255,49 @@ public class AnimBank : Singleton<AnimBank>
         // we create the variant skin
         anims.Add(skin_variant.variant_name, new Dictionary<string, List<Anim>>());
 
-        // we load the sprites
-        Sprite[] variant_sprites = Resources.LoadAll<Sprite>(skin_variant.variant_sprite_path);
-        if (variant_sprites == null || variant_sprites.Length == 0)
+        // we prepare the List<Sprite[]> (list of spritesheets)
+        List<Sprite[]> base_sprites = new List<Sprite[]>();
+        List<Sprite[]> variant_sprites = new List<Sprite[]>();
+
+        // we load base spritesheets
+        foreach (string spritesheet in skin_variant.base_spritesheets)
         {
-            if (log_variant_skins) { Debug.LogWarning("(AnimBank - GenerateVariantSkin) Variant sprite not found : " + skin_variant.variant_sprite_path); }
-            return;
+            Sprite[] sprites = Resources.LoadAll<Sprite>(spritesheets_path + spritesheet);
+            if (sprites == null || sprites.Length == 0)
+            {
+                if (log_variant_skins) { Debug.LogWarning("(AnimBank - GenerateVariantSkin) Base spritesheet not found : " + spritesheet); }
+                return;
+            }
+            base_sprites.Add(sprites);
         }
-        Sprite[] base_sprites = Resources.LoadAll<Sprite>(skin_variant.base_sprite_path);
-        if (base_sprites == null || base_sprites.Length == 0)
+
+        // we load variant spritesheets
+        foreach (string spritesheet in skin_variant.variant_spritesheets)
         {
-            if (log_variant_skins) { Debug.LogWarning("(AnimBank - GenerateVariantSkin) Base sprite not found : " + skin_variant.base_sprite_path); }
-            return;
+            Sprite[] sprites = Resources.LoadAll<Sprite>(spritesheets_path + spritesheet);
+            if (sprites == null || sprites.Length == 0)
+            {
+                if (log_variant_skins) { Debug.LogWarning("(AnimBank - GenerateVariantSkin) Variant spritesheet not found : " + spritesheet); }
+                return;
+            }
+            variant_sprites.Add(sprites);
         }
+
+
+
+        // // we load the sprites
+        // Sprite[] variant_sprites = Resources.LoadAll<Sprite>(skin_variant.variant_sprite_path);
+        // if (variant_sprites == null || variant_sprites.Length == 0)
+        // {
+        //     if (log_variant_skins) { Debug.LogWarning("(AnimBank - GenerateVariantSkin) Variant sprite not found : " + skin_variant.variant_sprite_path); }
+        //     return;
+        // }
+        // Sprite[] base_sprites = Resources.LoadAll<Sprite>(skin_variant.base_sprite_path);
+        // if (base_sprites == null || base_sprites.Length == 0)
+        // {
+        //     if (log_variant_skins) { Debug.LogWarning("(AnimBank - GenerateVariantSkin) Base sprite not found : " + skin_variant.base_sprite_path); }
+        //     return;
+        // }
 
         // we copy all the animations from the base skin to the variant skin
         foreach (string capacity in anims[skin_variant.base_skin].Keys)
@@ -276,13 +306,13 @@ public class AnimBank : Singleton<AnimBank>
 
             foreach (Anim base_anim in anims[skin_variant.base_skin][capacity])
             {
-                Anim variant_anim = create_variant_anim(skin_variant, base_anim, base_sprites, variant_sprites);
+                create_variant_anim(skin_variant, base_anim, base_sprites, variant_sprites);
             }
         }
 
         if (log_variant_skins) { Debug.Log("(AnimBank - GenerateVariantSkin) Variant skin generated : " + skin_variant.variant_name); }
     }
-    private Anim create_variant_anim(SkinVariant skin_variant, Anim anim, Sprite[] base_sprites, Sprite[] variant_sprites)
+    private Anim create_variant_anim(SkinVariant skin_variant, Anim anim, List<Sprite[]> base_sprites, List<Sprite[]> variant_sprites)
     {
         // creates a variant animation based on the anim anim and with skin variant
         if (anim.skin != skin_variant.base_skin)
@@ -295,13 +325,40 @@ public class AnimBank : Singleton<AnimBank>
         Anim variant_anim = new Anim(anim);
         variant_anim.name = skin_variant.variant_name + "." + anim.capacity + "." + anim.orientation;
 
+        // we prepare for checking in which Sprite[] is every sprite
+        int preferred_spritesheet_index = 0;
+        Sprite[] preferred_spritesheet = base_sprites[preferred_spritesheet_index];
+
+
         // we replace the sprites in the animation by the variant sprite
         for (int i = 0; i < variant_anim.sprites.Length; i++)
         {
+            // we check in which spritesheet the sprite is
+            if (!preferred_spritesheet.Contains(variant_anim.sprites[i]))
+            {
+                // we look for the right spritesheet
+                bool found = false;
+                for (int j = 0; j < base_sprites.Count; j++)
+                {
+                    if (base_sprites[j].Contains(variant_anim.sprites[i]))
+                    {
+                        preferred_spritesheet_index = j;
+                        preferred_spritesheet = base_sprites[preferred_spritesheet_index];
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    if (log_variant_skins) { Debug.LogWarning("(AnimBank - CreateVariantAnim) Sprite not found in any base spritesheet : " + variant_anim.sprites[i].name + " in anim " + anim.name); }
+                    continue;
+                }
+            }
+
             // we get the index in the base_sprite list
-            int sprite_index = Array.IndexOf(base_sprites, variant_anim.sprites[i]);
+            int sprite_index = Array.IndexOf(preferred_spritesheet, variant_anim.sprites[i]);
             if (sprite_index == -1) { continue; } // if the sprite is not found in the base_sprites, we skip it
-            Sprite variant_sprite = variant_sprites[sprite_index];
+            Sprite variant_sprite = variant_sprites[preferred_spritesheet_index][sprite_index];
             // variant_anim.sprites[i] = variant_sprite;
 
             // we replace the sprite path
@@ -705,7 +762,7 @@ public class Anim
 public class SkinVariant
 {
     public string base_skin;
-    public string base_sprite_path;
+    public List<string> base_spritesheets;
     public string variant_name;
-    public string variant_sprite_path;
+    public List<string> variant_spritesheets;
 }

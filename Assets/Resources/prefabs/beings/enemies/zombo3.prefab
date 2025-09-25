@@ -101,7 +101,7 @@ MonoBehaviour:
   brain: {fileID: 8217947553815526950}
   goal_type: 2
   always_select_closest: 1
-  selectionInterval: 0.2
+  selectionInterval: 0.5
   waiting_targets: []
   target_layers:
     serializedVersion: 2
@@ -238,74 +238,6 @@ MonoBehaviour:
   gizmo_path: 1
   log_ttcbas: 0
   gizmo_ttcbas: 1
---- !u!1 &4355702043666733871
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7684710044242627986}
-  - component: {fileID: 5535103288041140747}
-  m_Layer: 14
-  m_Name: processor
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &7684710044242627986
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4355702043666733871}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.37, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1982530335173329727}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &5535103288041140747
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4355702043666733871}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 1
 --- !u!1 &6094739574941988477
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,21 +513,20 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1030484016159656178}
+  - {fileID: 1420446812193688983}
+  - {fileID: 8884672451934109289}
+  - {fileID: 6662979118773411559}
   - {fileID: 9076514140704620812}
   - {fileID: 5315820416120210401}
   - {fileID: 7149699630232227269}
   - {fileID: 7650731112933661807}
-  - {fileID: 1030484016159656178}
-  - {fileID: 1420446812193688983}
-  - {fileID: 7684710044242627986}
-  - {fileID: 2465502286823558342}
-  - {fileID: 8884672451934109289}
-  - {fileID: 6662979118773411559}
   - {fileID: 5762771565077239880}
   - {fileID: 6273157296446669408}
   - {fileID: 5036457234809199266}
   - {fileID: 2855746702652472508}
   - {fileID: 5274840657265545104}
+  - {fileID: 2465502286823558342}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5396166487167258112
@@ -1282,6 +1213,10 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
+      propertyPath: attack_duration_random_variation
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: 'base_excluded_tags.Array.data[0]'
       value: Zombo
       objectReference: {fileID: 0}
@@ -1416,6 +1351,10 @@ PrefabInstance:
     - target: {fileID: 1038123483365548311, guid: d765ac0cec860294e82f962c281919b7, type: 3}
       propertyPath: m_Layer
       value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 3485473859685886737, guid: d765ac0cec860294e82f962c281919b7, type: 3}
+      propertyPath: m_Radius
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 5901563302859541997, guid: d765ac0cec860294e82f962c281919b7, type: 3}
       propertyPath: vulnerabilities.Array.data[0].selection_priority

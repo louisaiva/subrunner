@@ -24,8 +24,7 @@ public class AttackCapacity : Capacity
     [SerializeField] private bool single_hit = false; // if true, the attack will stop after hitting one enemy
     [SerializeField] private bool perforant_attack = false; // if true, each touched enemy will got full damage
     [SerializeField] private float attack_duration = default;
-    // [SerializeField] private float delay_between_perforations = 0.01f; // delay between each perforation
-    // private float last_perforation_time = 0f; // time of the last perforation
+    [SerializeField] private float attack_duration_random_variation = 0f; // random variation of the attack duration
 
 
     [Header("Knockback parameters")]
@@ -79,8 +78,16 @@ public class AttackCapacity : Capacity
         sr = bearer.GetComponent<SpriteRenderer>();
         if (anim_player.current_capacity == "attack") { return; } // we check if we are already attacking
 
+        // we calculate the duration of the attack
+        float duration_override = attack_duration;
+        if (duration_override != default && attack_duration_random_variation > 0)
+        {
+            duration_override += Random.Range(-attack_duration_random_variation, attack_duration_random_variation);
+            duration_override = Mathf.Max(0.01f, duration_override); // we make sure the duration is not negative
+        }
+
         // we play the animation
-        Anim anim = anim_player.Play("attack", duration_override: attack_duration);
+        Anim anim = anim_player.Play("attack", duration_override: duration_override);
         if (anim == null) { return; } // if the animation is not found, we return
 
         // we start the cooldown for the time of the animation
