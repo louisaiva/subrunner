@@ -15,8 +15,7 @@ public class UI_Shard : MonoBehaviour
         if (full_version_text == null) { Debug.LogWarning("(UI_Shard) UI_Text component for full version is missing. please assign it in the inspector."); }
 
         // get the full version
-        UI_VersionText ui_version = GameObject.Find("/ui/pause_menu/version").GetComponent<UI_VersionText>();
-        string full_version = ui_version.GetFullVersion(includePrototype: false);
+        string full_version = AppManager.Instance.GetFullVersion(includePrototype: false);
         full_version_text.SetText(full_version);
 
         // get the version

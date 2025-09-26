@@ -249,9 +249,12 @@ MonoBehaviour:
   debug: 0
   debug_navigation: 0
   log_slot_position: 0
+  log_moving_items: 0
   debug_gizmo: 0
   gizmos_positions: []
   gizmos_weights: []
+  fast_dropping: 0
+  fast_dropping_wait_threshold: 0
 --- !u!114 &565962777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -710,9 +713,13 @@ MonoBehaviour:
   JOYSTICK_MAX_THRESHOLD: 0.95
   BUTTON_MIN_THRESHOLD: 0.2
   BUTTON_MAX_THRESHOLD: 0.8
+  BUTTON_ENDLESSLY_SHORT_THRESHOLD: 0.3
+  BUTTON_ENDLESSLY_SHORT_DELAY: 0.06
+  BUTTON_ENDLESSLY_LONG_THRESHOLD: 0.6
+  BUTTON_ENDLESSLY_LONG_DELAY: 0.1
   input_system_ui_input_module: {fileID: 787797899}
-  debug: 0
-  debug_input_maps_enabled: 0
+  log: 0
+  log_input_maps_enabled: 0
 --- !u!1001 &880352141
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -851,6 +858,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1086161894}
+  - component: {fileID: 1086161895}
   m_Layer: 0
   m_Name: utils
   m_TagString: Untagged
@@ -876,6 +884,22 @@ Transform:
   - {fileID: 1516803878}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1086161895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1086161893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5f1b07901738c24fb332d6561c9756c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsQuitting: 0
+  prototype: packages
+  versionPrefix: 'version alpha '
+  log: 0
 --- !u!1 &1175329316
 GameObject:
   m_ObjectHideFlags: 0
@@ -1149,9 +1173,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0afedb06469adae4eab9565f6826ecef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 0
-  prototype: none
-  versionPrefix: 'version alpha '
   showPrototype: 0
   text: {fileID: 1219918556}
 --- !u!1 &1220475873
@@ -1614,6 +1635,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53aa3812b92ed12468700b93b06e050b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  resize_to_native_size: 1
+  play_on_start: 1
+  unscaled_time: 0
   skin: cat
   orientation: R
   current_capacity: run
@@ -1625,10 +1649,10 @@ MonoBehaviour:
     loop: 1
     speed: 1
     flipX: 0
-  debug: 0
-  debug_orientation: 0
-  debug_advanced: 0
-  debug_frames: 0
+  log: 0
+  log_orientation: 0
+  log_advanced: 0
+  log_frames: 0
 --- !u!114 &1367109922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1959,6 +1983,7 @@ MonoBehaviour:
   IF_kb_path: spritesheets/ui/inputs/input_kb_feedback
   key_feedback_icons: []
   key_feedback_keys: []
+  log: 0
 --- !u!114 &1516803882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1979,8 +2004,31 @@ MonoBehaviour:
   - hurted
   - dodge
   spritesheets_path: spritesheets/
+  skin_variants: []
   log: 0
   log_LAFAC: 0
+  log_variant_skins: 0
+  skins:
+  - perso
+  - cat
+  - zombo
+  - robot
+  - rat
+  - nobody
+  head_offset_per_skin:
+  - 0.7
+  - 0.7
+  - 0.7
+  - 0.7
+  - 0.7
+  - 0.7
+  body_offset_per_skin:
+  - 0.4
+  - 0.15
+  - 0.4
+  - 0.2
+  - 0.1
+  - 0.42
 --- !u!1 &1647928293
 GameObject:
   m_ObjectHideFlags: 0
