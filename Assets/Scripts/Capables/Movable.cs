@@ -37,7 +37,7 @@ public class Movable : Capable
         else { Debug.LogError("No Rigidbody2D found on " + gameObject.name); }
 
         // Get the feet collider
-        feet_collider = transform.Find("feet").GetComponent<Collider2D>();
+        feet_collider = transform.Find("feet")?.GetComponent<Collider2D>();
     }
 
     protected virtual void Start()
@@ -59,6 +59,7 @@ public class Movable : Capable
             return;
         }
         else if (rb == null) { return; }
+        else if (feet_collider == null) { return; }
 
         // Update moving effects
         updateMovingEffects();
@@ -168,6 +169,14 @@ public class Movable : Capable
     {
         // on supprime toutes les forces
         forces.Clear();
+    }
+    public void ForceStop()
+    {
+        // on supprime les forces
+        ClearForces();
+
+        // on arrête le rb
+        if (rb != null) { rb.linearVelocity = Vector2.zero; }
     }
     public List<Force> GetForces()
     {
