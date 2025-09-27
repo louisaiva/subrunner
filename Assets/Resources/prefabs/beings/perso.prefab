@@ -978,10 +978,10 @@ MonoBehaviour:
   - perso
   - cat
   - zombo
-  - robot
+  - rat
   - apple
   - fridge
-  - small_laptop
+  - laptop_black
 --- !u!50 &7958341093856896614
 Rigidbody2D:
   serializedVersion: 5
@@ -6424,16 +6424,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   exploits: []
-  selected_exploit:
-    name: 
-    extension: 
-    data: 
-    base_duration: 0
-    cores_cost: 0
-    security_level: 0
-    cores_cost_after_exploit: 0
-    end_timer: 0
-    wait_end: 0
+  selected_exploit: {fileID: 0}
   nextExploitInput: {fileID: 5017164170596428349, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   laptop: {fileID: 0}
   log: 0
@@ -6581,6 +6572,7 @@ MonoBehaviour:
   random_direction: 0
   drop_magnitude: 50
   lock_magnitude: 0
+  offset_drop: {x: 0, y: 0, z: 0}
   parent_to_drop_items: {fileID: 0}
   bank: {fileID: 0}
   inventory: {fileID: 0}
