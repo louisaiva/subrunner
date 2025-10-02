@@ -1,0 +1,6 @@
+- Créer des faux **HalfMatrix** & **Matrix** pour supprimer les erreurs à la con du #TTCBAS
+-
+-
+- Dessiner des **UI_Window** pour l' #UI_Computer
+	-
+	-

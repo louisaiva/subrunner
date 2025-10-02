@@ -8,6 +8,10 @@ using UnityEngine.AI;
 
 namespace subrunner.goap
 {
+    // todo : suivre un pattern ECS pour eviter GC Alloc :
+    // todo     on met un GOTOManager qui stocke les agents
+    // todo     et les agents s'inscrivent sur le manager puis le manager gère les updates
+    // todo     -> faut stocker les choses de chaque agent dans un GOTOAgentData ?
     public class GoToBehaviour : MonoBehaviour
     {
 
@@ -24,6 +28,7 @@ namespace subrunner.goap
         [SerializeField] private bool use_navmesh = false; // if true, use NavMesh for pathfinding, otherwise use A* Pathfinding
         [SerializeField] private List<Vector3> path; // the current path
 
+        // todo : faire un script ttcbas ?
         [Header("TTCBAS")]
         [SerializeField] private float avoidance_predisposition = 0.5f; // the predisposition to avoid other agents, between 0 and 1
         [SerializeField] private float ttc_treshold = 3f; // the time to collision threshold, used to avoid other agents
@@ -218,7 +223,8 @@ namespace subrunner.goap
             Vector2 global_movement = waypoint_movement * walker.walk_speed;
 
             // we calculate the avoidance force
-            List<Movable> neighbours = find_neighbours();
+            // List<Movable> neighbours = find_neighbours();
+            List<Movable> neighbours = MovableEngine.Instance.GetNeighbours(ia, neighbour_radius);
             avoidance_force = calculate_avoidance_force(neighbours);
             if (avoidance_force.magnitude == 0f)
             {
@@ -254,37 +260,7 @@ namespace subrunner.goap
 
 
         // TTCBAS (time to collision based avoidance system)
-        private List<Movable> find_neighbours()
-        {
-            nearby_agents = new List<Movable>();
-
-            // checks if we have a target we want to collide with it so we don't count it as a neighbour
-            Movable target_movable = null;
-            if (target != null && target is TransformTarget transformTarget)
-            {
-                // we get the target's movable
-                Movable targetTransform = transformTarget.Transform.GetComponent<Movable>();
-                if (targetTransform != null) { target_movable = targetTransform; }
-            }
-
-            // we find all the nearby agents
-            // todo upgrade this bcz for now we do an overlap but it is not efficient
-            Collider2D[] results = Physics2D.OverlapCircleAll(ia.transform.position, neighbour_radius, LayerMask.GetMask("Feet"));
-            if (results.Length == 0) { return new List<Movable>(); }
-
-            // we try to find their movable
-            foreach (Collider2D collider in results)
-            {
-                Movable movable = collider.transform.parent.GetComponent<Movable>();
-                if (movable == null || movable == ia || movable == target_movable) { continue; }
-
-                nearby_agents.Add(movable);
-            }
-
-            if (log_ttcbas) { Debug.Log($"(GoToBehaviour) {ia.name} found {nearby_agents.Count} nearby agents for TTCBAS."); }
-
-            return nearby_agents;
-        }
+        /*  */
         private Vector2 calculate_avoidance_force(List<Movable> agents)
         {
             if (agents.Count == 0) { return Vector2.zero; } // no agents to avoid
@@ -294,6 +270,9 @@ namespace subrunner.goap
             // we loop through all the agents
             foreach (Movable other_agent in agents)
             {
+                // we check if the other_agent has a feet_collider
+                if (other_agent.feet_collider == null) { continue; }
+
                 // estimate ttc with the agent
                 float ttc = estimate_ttc(other_agent);
                 if (ttc == float.MaxValue) { continue; } // collision is not going to happen
@@ -319,7 +298,7 @@ namespace subrunner.goap
                 if (other_agent is Item item) { avoidance_magnitude /= 2f; }
 
                 if (log_ttcbas) { Debug.Log($"(GoToBehaviour) {ia.name} calculated avoidance for agent {other_agent.name} with ttc {ttc}, direction {avoidance_direction}, magnitude {avoidance_magnitude}"); }
-                
+
                 // we add it to the global avoidance vector
                 frame_avoidance_force += avoidance_direction * avoidance_magnitude;
             }
