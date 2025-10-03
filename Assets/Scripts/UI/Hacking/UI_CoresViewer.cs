@@ -52,7 +52,7 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
         {
             processor = null;
             laptop = null;
-            update_cores_count(0);
+            clear_core_infos();
             return;
         }
 
@@ -65,34 +65,13 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
             return;
         }
         processor.OnCoresNumberChanged += update_cores_count;
-        refreshCoreInfos();
+        update_cores_count(processor.MaxCores);
     }
 
 
 
 
     // CORE INFOS MANAGEMENT
-
-    /// <summary>
-    ///  this method is different than update_cores_count because it
-    /// also recall Init() method of each CoreInfo, which update_cores does not.
-    /// this method also call update_cores_count (which create missing cores / delete surplus cores)
-    /// </summary>
-    private void refreshCoreInfos()
-    {
-
-
-        if (processor == null) { return; }
-        List<Core> cores = processor.Cores;
-        if (cores.Count != core_infos.Count) { update_cores_count(processor.MaxCores); }
-
-        // now we have the exact same cores numbers.
-        // we recall Init() on them
-        for (int i = 0; i < core_infos.Count; ++i)
-        {
-            core_infos[i].Init(cores[i]);
-        }
-    }
     private void update_cores_count(int new_core_count)
     {
         if (processor == null) { return; }
@@ -117,6 +96,12 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
             }
         }
 
+        // we recall Init() on them
+        for (int i = 0; i < core_infos.Count; ++i)
+        {
+            core_infos[i].Init(cores[i]);
+        }
+
         // resize
         resizer.Resize(new_core_count);
 
@@ -133,7 +118,7 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
         core_info.Init(core);
         core_infos.Add(core_info);
     }
-    
+    private void clear_core_infos() { update_cores_count(0); }
 
     // TITLE
     private void update_title(int cores_count = 0)

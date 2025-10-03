@@ -28,7 +28,6 @@ namespace subrunner.goap
         [SerializeField] private bool use_navmesh = false; // if true, use NavMesh for pathfinding, otherwise use A* Pathfinding
         [SerializeField] private List<Vector3> path; // the current path
 
-        // todo : faire un script ttcbas ?
         [Header("TTCBAS")]
         [SerializeField] private float avoidance_predisposition = 0.5f; // the predisposition to avoid other agents, between 0 and 1
         public float ttc_treshold = 3f; // the time to collision threshold, used to avoid other agents
@@ -48,7 +47,7 @@ namespace subrunner.goap
         [SerializeField] private bool log_path_calculation = false;
         [SerializeField] private bool gizmo_target = false;
         [SerializeField] private bool gizmo_path = false;
-        [SerializeField] private bool log_ttcbas = false;
+        // [SerializeField] private bool log_ttcbas = false;
         [SerializeField] private bool gizmo_ttcbas = true; // time to collision based avoidance system
         // PROPERTIES
         public bool HasTarget => target != null; // check if we have a target to go to
