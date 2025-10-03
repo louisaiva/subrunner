@@ -59,7 +59,6 @@ public class UI_GameOver : UI_Pool
 
         await base.show_pool(duration, dont_show);
     }
-
     protected override async Awaitable hide_pool(float duration, List<GameObject> dont_hide = null)
     {
         // we remove the callbacks

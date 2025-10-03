@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -47,13 +48,14 @@ using UnityEngine;
 /// 
 /// </remarks>
 /// <typeparam name="T">the type of the matrix you want to store in each cells. for now it can only be, e.g., <c>int</c>, <c>float</c>, <c>double</c></typeparam>
-public class HalfMatrix<T>
+public class HalfMatrix<T> where T : struct
 {
 
     public int Population => population;
     public int RowCount => population - 1;
     private int population; // the count of our Agents
     private List<T> data = null; // the real data where all the T will be stored as an HalfMatrix list
+    public int DataCount => data.Count; // the count of data we have
 
     // CONSTRUCTOR
     public HalfMatrix()
@@ -63,7 +65,7 @@ public class HalfMatrix<T>
     }
 
 
-    // DATA ACCESS
+    // DATA HANDLING
     public T this[int a, int b]
     {
         get => (a == b) ? default : this.data[data_index_of_point(a, b)];
@@ -77,6 +79,16 @@ public class HalfMatrix<T>
             this.data[data_index_of_point(a, b)] = value;
         }
     }
+    public void SetData(NativeArray<T> array)
+    {
+        if (array.Length != this.DataCount) { throw new ArgumentException($"(HalfMatrix) Cannot set data from array of length {array.Length} because the HalfMatrix data count is {this.DataCount}"); }
+
+        for (int i = 0; i < array.Length; i++)
+        {
+            this.data[i] = array[i];
+        }
+    }
+
 
     // AGENT HANDLING
     public void AddAgent()

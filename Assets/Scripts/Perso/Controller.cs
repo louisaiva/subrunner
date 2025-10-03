@@ -165,11 +165,21 @@ public class Controller : Singleton<Controller>
         capa?.Inventory?.AddUI(perso_quick_inventory);
         perso_quick_inventory.Refresh();
 
-        // on refresh le hackable navigator pour qu'il ait une nouvelle ConnectCapacity si jamais le capable a un device
-        ConnectCapacity connector = capa.Connector;
-        if (connector != null)
+        // on regarde si le capable est un device
+        // ConnectCapacity connector = capa.Connector;
+        if (capa is Device device)
         {
-            HackableNavigator.transform.localPosition = connector.transform.localPosition;
+            // on refresh le hackable navigator pour qu'il ait une nouvelle ConnectCapacity si jamais le capable a un device
+            HackableNavigator.transform.localPosition = device.Connector.transform.localPosition;
+
+            // on bascule en pool UI_Device
+            UI_Manager.Instance.GetPool("device").GetComponent<UI_Device>().SetDevice(device);
+            UI_Manager.Instance.SwitchTo("device");
+        }
+        else if (UI_Manager.Instance.CurrentPool == "device")
+        {
+            // on bascule en pool hud si on était sur un device et qu'on en est plus un
+            UI_Manager.Instance.SwitchTo("hud");
         }
 
         if (log) { Debug.Log("(Controller) " + name + " is now controlling " + capa.name); }

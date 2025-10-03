@@ -124,7 +124,7 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: Frame_1
     originalName: 
-    pivot: {x: 0.5, y: -0.19767441}
+    pivot: {x: 0.5, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
@@ -132,8 +132,8 @@ ScriptedImporter:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 142
-      height: 86
+      width: 168
+      height: 108
     spriteID: e81a3a0b60f87214c8e664a4d0ec0b5e
     spriteBone: []
     spriteOutline: []
@@ -143,48 +143,6 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
-  - name: Frame_2
-    originalName: 
-    pivot: {x: 0.5, y: -0.19767441}
-    alignment: 9
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 4
-      y: 98
-      width: 142
-      height: 86
-    spriteID: 556027d545e33c241bb016f6c2ccdbb5
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 4, y: 98}
-  - name: Frame_0
-    originalName: 
-    pivot: {x: 0.6412214, y: -0.5}
-    alignment: 9
-    border: {x: 0, y: 0, z: 0, w: 0}
-    customData: 
-    rect:
-      serializedVersion: 2
-      x: 4
-      y: 192
-      width: 131
-      height: 72
-    spriteID: f78e8bd06e53be647b6e945ddd027508
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 4, y: 192}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
@@ -194,33 +152,15 @@ ScriptedImporter:
     layerType: 0
     blendMode: 0
     cells:
-    - name: Frame_1
-      frameIndex: 1
-      additiveSortOrder: 0
-      cellRect:
-        x: 25
-        y: 17
-        width: 142
-        height: 86
-      spriteId: e81a3a0b60f87214c8e664a4d0ec0b5e
-    - name: Frame_2
-      frameIndex: 2
-      additiveSortOrder: 0
-      cellRect:
-        x: 25
-        y: 17
-        width: 142
-        height: 86
-      spriteId: 556027d545e33c241bb016f6c2ccdbb5
-    - name: Frame_0
+    - name: ui_computer
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
         x: 12
-        y: 36
-        width: 131
-        height: 72
-      spriteId: f78e8bd06e53be647b6e945ddd027508
+        y: 0
+        width: 168
+        height: 108
+      spriteId: e81a3a0b60f87214c8e664a4d0ec0b5e
     linkedCells: []
     parentIndex: -1
   platformSettings:

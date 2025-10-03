@@ -14,7 +14,7 @@ public class UI_Manager : Singleton<UI_Manager>
 {
 
     [Header("Pools")]
-    [SerializeField] private List<UI_Pool> pools = new List<UI_Pool>();
+    private List<UI_Pool> pools = new List<UI_Pool>();
     [SerializeField] private UI_Pool current_pool;
     public string CurrentPool { get => current_pool.Reference; }
     public bool InPool(string pool_name)
@@ -51,9 +51,12 @@ public class UI_Manager : Singleton<UI_Manager>
     {
         base.Awake();
 
-        // we wake up all the pools
-        foreach (UI_Pool pool in pools)
+        // we get all the pools & wake up all the pools
+        foreach (Transform child in transform)
         {
+            UI_Pool pool = child.GetComponent<UI_Pool>();
+            if (pool == null) { continue; }
+            pools.Add(pool);
             pool.gameObject.SetActive(true);
         }
 
@@ -236,14 +239,19 @@ public class UI_Manager : Singleton<UI_Manager>
         // and disable it when released < 0.5
         if (input < InputManager.Instance.JOYSTICK_MIN_THRESHOLD)
         {
-            if (current_pool.Reference == "hacking") { SwitchTo("hud"); }
+            if (current_pool.Reference == "hacking")
+            {
+                // check if the controller is controlling a device
+                if (Controller.Instance.Capable is Device) { SwitchTo("device"); }
+                else { SwitchTo("hud"); }
+            }
             return;
         }
 
         // if (log) { Debug.Log("(UI_Manager) hacking menu input received : " + input); }
 
         // we check if we can switch to hacking
-        if (current_pool.Reference == "hud" && GetPool("hacking").Available)
+        if (current_pool.Reference == "hud" || current_pool.Reference == "device" && GetPool("hacking").Available)
         {
             SwitchTo("hacking");
         }

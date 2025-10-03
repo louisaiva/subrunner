@@ -12,6 +12,7 @@ public class SpawnCapacity : Capacity
     [Header("Spawn parameters")]
     public GameObject entity_prefab;
     public Transform entity_parent; // the transform that will be the parent of the spawned entity
+    private int entity_count = 0;
 
     [Header("Spawn Force")]
     public float spawn_force = 0f; // (optional) force applied to the spawned entity
@@ -49,6 +50,9 @@ public class SpawnCapacity : Capacity
             entity.transform.parent = entity_parent;
         }
 
+        // we rename the entity
+        entity.name = entity_prefab.name + "_" + entity_count;
+
         // we create a spawn force
         string force_debug = "";
         if (spawn_force > 0f && entity.GetComponent<Movable>() != null)
@@ -60,6 +64,7 @@ public class SpawnCapacity : Capacity
         }
 
         if (debug) { Debug.Log("(SpawnCapacity) " + name + " spawning entity at " + spawn_position + force_debug); }
+        entity_count++;
     }
 
 

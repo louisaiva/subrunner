@@ -266,8 +266,8 @@ public class PersoInputsController : MonoBehaviour
             return;
         }
 
-        // if we are in the hud we launch the endless cancel hack routine        
-        if (UI_Manager.Instance.CurrentPool == "hud")
+        // if we are in the hud we launch the endless cancel hack routine
+        if (UI_Manager.Instance.CurrentPool == "hud" || UI_Manager.Instance.CurrentPool == "device")
         {
             if (!waiting_hacking && !endless_hacking) { StartCoroutine(OnEndlessHack()); }
             return;
