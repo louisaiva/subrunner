@@ -9,7 +9,19 @@ public class FileBank : Singleton<FileBank>
     public List<File> exploits = new List<File>();
 
     public Exploit Nmap => (Exploit)exploits.Find(file => file.name == "nmap");
-    public FileExploit TypePassword => (FileExploit)exploits.Find(file => file.name == "type_password");
+    public FileExploit TypePassword
+    {
+        get
+        {
+            FileExploit exploit = ScriptableObject.CreateInstance<FileExploit>();
+            exploit.name = "type_password";
+            exploit.file = null;
+            exploit.cores_cost = 1;
+            exploit.base_duration = 0.1f;
+            exploit.security_level = 1;
+            return exploit;
+        }
+    }
 
     public T GetFile<T>(string name) where T : File
     {

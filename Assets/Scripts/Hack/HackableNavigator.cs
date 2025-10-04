@@ -127,7 +127,7 @@ public class HackableNavigator : MonoBehaviour
         if (targeted_connector == null) { return; }
 
         connector.Disconnect();
-        hacker?.DeselectExploit();
+        // hacker?.DeselectExploit();
 
         // we update the hackray
         hover_hackray?.SetColor(hackray_color);

@@ -11,9 +11,11 @@ public class UI_Resizer : MonoBehaviour
     [SerializeField] private GridLayoutGroup grid;
 
     [Header("Size")]
+    [SerializeField] private bool expand_vertically = true;
     [SerializeField] private Vector2 base_size;
     [SerializeField] private Vector2 cell_size;
-    [SerializeField] private Vector2 min_size = new Vector2(0,0);
+    [SerializeField] private Vector2 min_size = new Vector2(0, 0);
+    [SerializeField] private Vector2 max_size = new Vector2(1000, 1000);
 
     [Header("Colums & Rows")]
     [SerializeField] private int columns = 1;
@@ -70,13 +72,32 @@ public class UI_Resizer : MonoBehaviour
         {
             for (int r = 1; r <= cells; ++r)
             {
+                // check if we have enough space for putting all the cells
                 if (c * r < cells) { continue; }
+
+                // favorise an axis expansion
+                int row, col;
+                if (expand_vertically)
+                {
+                    row = r;
+                    col = c;
+                }
+                else
+                {
+                    row = c;
+                    col = r;
+                }
+
+                // check if we are already maxed by max_size
+                if (base_size.x + col * cell_size.x > max_size.x) { continue; }
+                if (base_size.y + row * cell_size.y > max_size.y) { continue; }
+
                 float diagonal = Mathf.Sqrt(c * c + r * r);
                 if (diagonal < best_diagonal)
                 {
                     best_diagonal = diagonal;
-                    best_columns = c;
-                    best_rows = r;
+                    best_columns = col;
+                    best_rows = row;
                 }
             }
         }

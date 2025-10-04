@@ -32,6 +32,10 @@ public class UI_InputsController : MonoBehaviour
         // on récupère les actions in-game
         dropInGameAction = InputManager.Instance.inputs.perso.interact;
         // navigateInGameAction = InputManager.Instance.inputs.perso.
+
+
+        // on met en place certains callbacks qu'on veut tout le temps actifs
+        ui_inputs.navigate_in_game.performed += ctx => handle_exploit_selection(ctx.ReadValue<Vector2>());
     }
     public void EnableInputs(bool ingame_navigation = false)
     {
@@ -51,6 +55,9 @@ public class UI_InputsController : MonoBehaviour
         }
 
         navigate_in_game = ingame_navigation; // on met à jour la variable
+
+        // exploit selection
+        // ui_inputs.navigate_in_game.performed += exploit_selection_callback;
     }
     public void DisableInputs()
     {
@@ -59,6 +66,7 @@ public class UI_InputsController : MonoBehaviour
         // navigateInGameAction.performed -= navigateCallback;
         ui_inputs.x.performed -= dropCallback;
         dropInGameAction.performed -= dropCallback;
+        // ui_inputs.navigate_in_game.performed -= exploit_selection_callback;
         // activateAction.performed -= activateCallback;
         // moveItemAction.performed -= moveItemCallback;
 
@@ -141,5 +149,31 @@ public class UI_InputsController : MonoBehaviour
         waiting_dropping = false;
         endless_dropping = false;
     }
+
+
+
+
+
+
+
+
+
+
+    // RIGHT JOYSTICK EXPLOIT SELECTION
+    private event Action<InputAction.CallbackContext> exploit_selection_callback;
+    private UI_ExploitSelector exploit_selector;
+    private void handle_exploit_selection(Vector2 direction)
+    {
+        // transfère l'event seulement quand on est dans l'ui pool exploit_wheel
+        if (UI_Manager.Instance.CurrentPool != "exploit_wheel") { return; }
+
+        // récupère l'UI_Exploit Selector
+        if (exploit_selector == null) { exploit_selector = UI_Manager.Instance.GetPool("exploit_wheel").GetComponent<UI_ExploitSelector>(); }
+
+        // on transfère l'input
+        exploit_selector.HandleSelectionInput(direction);
+    }
+
+
 
 }

@@ -6,17 +6,26 @@
 -
 - TODO Mettre des **KeyFeedback** sur les #Interactable
 -
-- TODO Mettre en place l' #UI_Computer
-	- DOING Dessiner des **UI_Window** pour l' #UI_Computer
+- TODO Mettre en place l' #UI_Device
+	- DOING Dessiner des **UI_Window** pour l' #UI_Device
 	  :LOGBOOK:
 	  CLOCK: [2025-10-03 Fri 21:23:05]
 	  :END:
+		-
 	- DOING faire des **UI_Buttons**
 	  :LOGBOOK:
 	  CLOCK: [2025-10-03 Fri 21:23:06]
 	  :END:
 	- TODO réflechir à un moyen de mettre le **CancelHack** qq part
-	- TODO et de même reflechir à un meilleur **UI** pour le #UI_ExploitSelector
+	- DOING faire un #UI_ExploitSelectionInfo pour afficher l'exploit selectionné (ou automatic)
+	  :LOGBOOK:
+	  CLOCK: [2025-10-04 Sat 00:58:08]--[2025-10-04 Sat 00:58:12] =>  00:00:04
+	  CLOCK: [2025-10-04 Sat 00:58:13]
+	  :END:
+	- DOING et de même reflechir à un meilleur **UI** pour le #UI_ExploitSelector
+	  :LOGBOOK:
+	  CLOCK: [2025-10-04 Sat 00:28:19]
+	  :END:
 	-
 	-
 - TODO *bug* **ui_endless_drop** sur le #Navigator

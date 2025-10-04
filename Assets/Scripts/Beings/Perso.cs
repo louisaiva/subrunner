@@ -52,6 +52,16 @@ public class Perso : Being, Hacker
             return laptop;
         }
     }
+    public Device Device
+    {
+        get
+        {
+            // if we are interacting with a computer we go with the computer
+
+            // if we have a laptop we return the laptop
+            return Laptop;
+        }
+    }
 
 
 

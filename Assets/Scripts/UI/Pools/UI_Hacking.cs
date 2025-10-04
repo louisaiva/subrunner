@@ -10,7 +10,7 @@ public class UI_Hacking : UI_Pool
         get
         {
             if (in_transition) { return false; }
-            if (!Perso.Instance.Alive) { return true; }
+            if (!Perso.Instance.Alive) { return false; }
             if (UI_LaptopItemSlot.Instance == null || !UI_LaptopItemSlot.Instance.HasLaptop) { return false; }
             return true;
         }
@@ -34,7 +34,7 @@ public class UI_Hacking : UI_Pool
         Controller.Instance.HackableNavigator.Enable();
         if (log_enabling) { Debug.Log("(UI_Hacking) hackable navigator enabled"); }
 
-        Controller.Instance.ExploitNavigator.Enable();
+        // Controller.Instance.ExploitNavigator.Enable();
         if (log_enabling) { Debug.Log("(UI_Hacking) exploit navigator enabled"); }
 
         if (log_enabling) { Debug.Log("(UI_Hacking) showing pool : navigator enabled & callbacks set"); }
@@ -46,7 +46,7 @@ public class UI_Hacking : UI_Pool
         // we disable navigator
         Controller.Instance.HackableNavigator.Disable();
         if (log_enabling) { Debug.Log("(UI_Hacking) hackable navigator disabled"); }
-        Controller.Instance.ExploitNavigator.Disable();
+        // Controller.Instance.ExploitNavigator.Disable();
         if (log_enabling) { Debug.Log("(UI_Hacking) exploit navigator disabled"); }
 
         // if (log_enabling) { Debug.Log("(UI_Hacking) navigator disabled"); }

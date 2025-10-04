@@ -122,7 +122,7 @@ public class Laptop : Item, Usable, Device
         List<Key> keys = get_keys();
         if (log_keys)
         {
-            string s = $"(Laptop) {name} checking if has key for {target.Key}";
+            string s = $"(Laptop) {name} checking if has key for {target.Key}. Keys found: {keys.Count}";
             foreach (Key key in keys)
             {
                 s += $"\n - {key.data}";
@@ -136,6 +136,7 @@ public class Laptop : Item, Usable, Device
                 return key;
             }
         }
+        if (log_keys) { Debug.Log($"(Laptop) {name} has no key for {target.Key}"); }
         return null;
     }
     private List<Key> get_keys()

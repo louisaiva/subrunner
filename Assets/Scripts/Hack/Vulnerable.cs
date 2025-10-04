@@ -32,6 +32,7 @@ public class Vulnerable : MonoBehaviour
 
     [Header("Log")]
     [SerializeField] private bool log = false;
+    [SerializeField] private bool log_vulnerabilities = false;
 
     // AWAKE
     private void Awake()
@@ -52,7 +53,12 @@ public class Vulnerable : MonoBehaviour
         if (capable is Lockable lockable && exploit.name == "type_password")
         {
             if (exploit is not FileExploit file_exploit) { return false; }
-            if (file_exploit.file == null) { return false; }
+            if (file_exploit.file == null)
+            {
+                if (log_vulnerabilities) { Debug.Log($"(Vulnerable) {name} checking type_password with empty password"); }
+                return false;
+            }
+            if (log_vulnerabilities) { Debug.Log($"(Vulnerable) {name} checking type_password vuln with password : {file_exploit.file.data} (lockable)"); }
             return lockable.Key.Matches(file_exploit.file.data);
             // if (exploit.name == "type_password") { return false; } // type password vide c nul on veut pas
         }
@@ -64,7 +70,9 @@ public class Vulnerable : MonoBehaviour
         List<Exploit> effective_exploits = new List<Exploit>();
         foreach (Exploit exploit in exploits)
         {
-            if (IsVulnerableTo(exploit)) { effective_exploits.Add(exploit); }
+            bool vulnerable = IsVulnerableTo(exploit);
+            if (log_vulnerabilities) { Debug.Log($"(Vulnerable) {name} is vuln to {exploit.name} ? : {vulnerable}"); }
+            if (vulnerable) { effective_exploits.Add(exploit); }
         }
         if (effective_exploits.Count == 0) { return null; }
 

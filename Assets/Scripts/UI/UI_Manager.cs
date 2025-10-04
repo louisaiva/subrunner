@@ -193,6 +193,13 @@ public class UI_Manager : Singleton<UI_Manager>
         OnPoolSwitched?.Invoke(current_pool.Reference);
     }
 
+    public void Cancel(string pool_name)
+    {
+        // todo make a stack so we pop the last pool right here
+        // for now we just go back to hud
+        SwitchTo("hud");
+    }
+
     // GETTERS
     public UI_Pool GetPool(string reference)
     {
@@ -251,7 +258,7 @@ public class UI_Manager : Singleton<UI_Manager>
         // if (log) { Debug.Log("(UI_Manager) hacking menu input received : " + input); }
 
         // we check if we can switch to hacking
-        if (current_pool.Reference == "hud" || current_pool.Reference == "device" && GetPool("hacking").Available)
+        if (new List<string> { "hud", "device" }.Contains(CurrentPool) && GetPool("hacking").Available)
         {
             SwitchTo("hacking");
         }

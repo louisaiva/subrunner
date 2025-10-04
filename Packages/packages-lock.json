@@ -360,6 +360,14 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.textmeshpro": {
+      "version": "3.0.9",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.ugui": "2.0.0"
+      }
+    },
     "com.unity.timeline": {
       "version": "1.8.8",
       "depth": 0,
@@ -390,6 +398,16 @@
         "com.unity.modules.jsonserialize": "1.0.0"
       },
       "url": "https://packages.unity.com"
+    },
+    "dk.cec.plot": {
+      "version": "https://github.com/cecarlsen/dk.cec.plot.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.textmeshpro": "3.0.9",
+        "com.unity.ugui": "1.0.0"
+      },
+      "hash": "83eaed635138f9929958c5eddd310ac8d926253a"
     },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",

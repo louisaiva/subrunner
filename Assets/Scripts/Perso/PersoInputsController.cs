@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static PlayerInputActions;
@@ -42,11 +43,14 @@ public class PersoInputsController : MonoBehaviour
         ExploitNavigator = transform.Find("hacking").GetComponent<ExploitNavigator>();
 
         // mets les callbacks pour stopper correctement les endless inputs
-        InputManager.Instance.OnPersoInputsToggled += perso_inputs_true => { if (!perso_inputs_true)
-                                                        {
-                                                            cancel_endless_interact();
-                                                            cancel_endless_hack();
-                                                        } };
+        InputManager.Instance.OnPersoInputsToggled += perso_inputs_true =>
+        {
+            if (!perso_inputs_true)
+            {
+                cancel_endless_interact();
+                // cancel_endless_hack();
+            }
+        };
 
     }
 
@@ -60,7 +64,7 @@ public class PersoInputsController : MonoBehaviour
         // on crée les callbacks de base
         dodgeCallback = ctx => OnDodge();
         attackCallback = ctx => OnAttack();
-        hackCallback = ctx => HandleHackInput(ctx);
+        hackCallback = ctx => HandleRunHackInput(ctx);
         talkCallback = ctx => OnRandomTalk();
 
         // et les callbacks de conso
@@ -252,12 +256,13 @@ public class PersoInputsController : MonoBehaviour
 
 
 
-    [Header("Hack input parameters")]
+    /* [Header("Hack input parameters")]
     [SerializeField] private bool waiting_hacking = false; // waiting for the threshold delay before endless_hacking
     [SerializeField] private bool endless_hacking = false; // we are pressing hack input for a long time
     public void HandleHackInput(InputAction.CallbackContext context)
     {
         if (log) { Debug.Log("(PersoInputsController) hack input received : " + context.ReadValue<float>()); }
+
 
         // if we press the button we launch the endless threshold
         if (context.ReadValue<float>() < 0.5f)
@@ -297,7 +302,7 @@ public class PersoInputsController : MonoBehaviour
 
             // we calculate next duration
             hack_inputs_done++;
-            float hack_delay = Mathf.Max(InputManager.Instance.BUTTON_ENDLESSLY_SHORT_DELAY, InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD/hack_inputs_done);
+            float hack_delay = Mathf.Max(InputManager.Instance.BUTTON_ENDLESSLY_SHORT_DELAY, InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD / hack_inputs_done);
             yield return new WaitForSeconds(hack_delay);
         }
 
@@ -309,7 +314,7 @@ public class PersoInputsController : MonoBehaviour
         waiting_hacking = false;
         endless_hacking = false;
         StopCoroutine(OnEndlessHack());
-    }
+    } */
     public void OnHack()
     {
         // On récupère la hack capacity du hackable navigator
@@ -331,7 +336,7 @@ public class PersoInputsController : MonoBehaviour
         if (hacker == null)
         {
             if (log) { Debug.Log("(PersoInputsController) " + name + " tried to cancel hack but it has no HackCapacity"); }
-            cancel_endless_hack();
+            // cancel_endless_hack();
             return;
         }
 
@@ -339,4 +344,25 @@ public class PersoInputsController : MonoBehaviour
         if (log) { Debug.Log("(PersoInputsController) " + name + " cancels hack on " + HackableNavigator.name); }
         hacker.CancelLastHack();
     }
+
+
+    // [Header("Run Hack input")]
+    public void HandleRunHackInput(InputAction.CallbackContext context)
+    {
+        float input = context.ReadValue<float>();
+
+        // 1 - if we are hacking we run the hack
+        if (UI_Manager.Instance.CurrentPool == "hacking")
+        {
+            // we check if the input is > 0.5 (we down the trigger -> we run hack), or not
+            if (input > 0.5f) { OnHack(); }
+            return;
+        }
+
+        // 2 - if we are in the hud / device we show the exploit wheel to select the exploit
+        if (!new List<string> { "hud", "device", "exploit_wheel" }.Contains(UI_Manager.Instance.CurrentPool)) { return; }
+        ExploitNavigator.HandleExploitWheelInput(input);
+    }
+
+
 }

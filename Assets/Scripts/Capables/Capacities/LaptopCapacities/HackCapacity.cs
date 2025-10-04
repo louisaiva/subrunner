@@ -9,15 +9,14 @@ using UnityEngine;
 
 public class HackCapacity : Capacity
 {
+    public bool log_scan = false;
+
     [Header("Exploit selection")]
     public Exploit selected_exploit;
-    public event System.Action OnDeselected = delegate { };
 
     [Header("Hacks")]
     public List<Hack> running_hacks = new List<Hack>();
     public event System.Action<Hack> OnExploitRun = delegate { };
-    // public event System.Action<Hack> OnExploitRun = delegate { };
-    public event System.Action<Exploit> OnScanned = delegate { };
 
 
     [Header("Hackrays")]
@@ -37,27 +36,22 @@ public class HackCapacity : Capacity
     }
 
     // EXPLOIT SELECTION
-    public void OverrideExploit(Exploit exploit, Vulnerable Target)
+    public void OverrideExploit(Exploit exploit)
     {
         if (exploit == null) { return; }
 
-        // we check if the exploit is TypePassword then we need to assign a password
+        /* // we check if the exploit is TypePassword then we need to assign a password
         if (exploit is FileExploit file_exploit && Target != null && Target.capable is Lockable lockable)
         {
             Key key = laptop.GetKeyFor(lockable);
             file_exploit.file = key;
-        }
+        } */
 
         // we set the selected exploit
         selected_exploit = exploit;
         if (debug) { Debug.Log($"(HackCapacity) {capable.name} selected exploit {exploit.name}."); }
     }
-    public void DeselectExploit()
-    {
-        selected_exploit = null;
-        OnDeselected?.Invoke();
-    }
-
+    
     // UPDATE
     protected override void Update()
     {
@@ -144,6 +138,13 @@ public class HackCapacity : Capacity
             return;
         }
 
+        // cas spécial de si on a un TypePassword
+        if (exploit is FileExploit file_exploit && target.capable is Lockable lockable && file_exploit.file == null)
+        {
+            Key key = laptop.GetKeyFor(lockable);
+            if (key != null) { file_exploit.file = key; }
+        }
+
         // we check if our laptop has enough cores for this exploit
         if (!laptop.Processor.HasFreeCores(exploit.cores_cost))
         {
@@ -210,25 +211,33 @@ public class HackCapacity : Capacity
         // we list all the exploits we have
         List<Exploit> exploits = laptop.GetExploits();
 
+        string s = $"(HackCapacity) {capable.name} scanning {target.name} ";
+
         // we associate the key file to type_password if it's a lockable and if we have the key
         if (target.capable is Lockable lockable)
         {
             Key key = laptop.GetKeyFor(lockable);
             if (key != null)
             {
-                // exploits.Remove(Exploit.TypePassword); // we remove the empty type password exploit
-                // exploits.Add(new FileExploit(Exploit.TypePassword, key));
                 FileExploit type_password_exploit = FileBank.Instance.TypePassword;
                 type_password_exploit.file = key;
                 exploits.Add(type_password_exploit);
+                s += $"(found key) ";
             }
         }
 
-        // we find the better suited exploit & select it
-        selected_exploit = target.GetHighestVulnerability(exploits);
+        foreach (Exploit exploit in exploits)
+        {
+            s += $"\n - {exploit.name}";
+            if (exploit is FileExploit file_exploit && file_exploit.file != null)
+            {
+                s += $" (with file {file_exploit.file.data})";
+            }
+        }
+        if (log_scan) { Debug.Log(s); }
 
-        // we invoke the event
-        OnScanned?.Invoke(selected_exploit);
+        // we find the better suited exploit & select it
+        Controller.Instance.ExploitNavigator.SetScannedExploit(target.GetHighestVulnerability(exploits));
     }
     public void SetConnector(ConnectCapacity connect)
     {

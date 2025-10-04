@@ -81,6 +81,11 @@ public class ConnectCapacity : Capacity
             if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} tried to scan {target.capable.name} but no hack capacity is available."); }
             return;
         }
+        else if (!Controller.Instance.ExploitNavigator.Automatic)
+        {
+            if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} tried to scan {target.capable.name} but automatic exploit selection is disabled."); }
+            return;
+        }
 
         if (log_connection) { Debug.Log($"(ConnectCapacity) {capable.name} launching scan on {target.capable.name}."); }
         scanner.Scan(target.Vulnerable);
