@@ -1,0 +1,16 @@
+### Singleton
+- Fait le lien entre les **Inputs** du #InputManager et le #Capable qu'on controle actuellement
+- en gros c'est un peu notre âme quoi, on peut la transférer d'un #Capable à l'autre et c'est ce qui nous permet de nous déplacer etc quand on contrôle le #Perso ou un #Being
+-
+- Contient plusieurs sous-systèmes importants:
+-
+- ## PIC & UIC
+	- #[[PIC (PersoInputsController)]] se charge de faire le pont entre les **Inputs** in-game et les actions qui vont être trigger par ces **Inputs**
+	- #[[UIC (UI_InputsController)]] fait la même chose mais pour l'UI
+	-
+- ### Hacking system
+	- #VulnerableNavigator permet de selectionner le #Vulnerable qu'on souhaite hack
+	- #ExploitNavigator permet de selectionner l' #Exploit qu'on souhaite selectionner (ou selection automatique)
+	-
+	-
+-

@@ -1,20 +1,23 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static PlayerInputActions;
 
-public class PersoInputsController : MonoBehaviour
+public class PersoInputsController : InputController
 {
+    public bool log = false;
+
+    // Controller thing
     private Controller controller;
     private Capable Capable => controller.Capable;
 
     [Header("INPUTS")]
     public bool InputsDisabled = false;
-    [SerializeField] private InputManager input_manager;
+    protected InputManager input_manager;
     private PersoActions perso_inputs;
-    // private event Action<InputAction.CallbackContext> reviveCallback;
     private event Action<InputAction.CallbackContext> dodgeCallback;
     private event Action<InputAction.CallbackContext> attackCallback;
     private event Action<InputAction.CallbackContext> hackCallback;
@@ -29,9 +32,6 @@ public class PersoInputsController : MonoBehaviour
     public HackableNavigator HackableNavigator { get; private set; }
     public ExploitNavigator ExploitNavigator { get; private set; }
 
-    [Header("Log")]
-    public bool log = false;
-
     private void Start()
     {
         // on récupère les inputs
@@ -42,29 +42,24 @@ public class PersoInputsController : MonoBehaviour
         HackableNavigator = transform.Find("hacking").GetComponent<HackableNavigator>();
         ExploitNavigator = transform.Find("hacking").GetComponent<ExploitNavigator>();
 
-        // mets les callbacks pour stopper correctement les endless inputs
-        InputManager.Instance.OnPersoInputsToggled += perso_inputs_true =>
-        {
-            if (!perso_inputs_true)
-            {
-                cancel_endless_interact();
-                // cancel_endless_hack();
-            }
-        };
-
+        // on crée les hold inputs
+        add_endless_input(new EndlessInput<float>("interact", perso_inputs.interact,
+                threshold: InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD,
+                repeat: InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY,
+                unscaled_time: false))
+                .OnEndless += ctx => OnInteract(true); // ajoute le callback directement
     }
 
     // INPUTS
     private void initInputs()
     {
         // on récupère les inputs
-        input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
+        input_manager = InputManager.Instance;
         perso_inputs = input_manager.inputs.perso;
 
         // on crée les callbacks de base
         dodgeCallback = ctx => OnDodge();
         attackCallback = ctx => OnAttack();
-        hackCallback = ctx => HandleRunHackInput(ctx);
         talkCallback = ctx => OnRandomTalk();
 
         // et les callbacks de conso
@@ -73,8 +68,12 @@ public class PersoInputsController : MonoBehaviour
         useConso3Callback = ctx => OnUseConso(3);
         useConso4Callback = ctx => OnUseConso(4);
 
-        // et les callbacks d'interaction
-        interactCallback = ctx => OnInteract(ctx);
+
+        // ici c'est les inputs qui prennent en charge hold input
+        interactCallback = ctx => HandleInteractInput(ctx);
+
+        // ici c les inputs qui ont pas besoin d'hold input
+        hackCallback = ctx => HandleRunHackInput(ctx);
 
         EnableInputs();
     }
@@ -106,6 +105,7 @@ public class PersoInputsController : MonoBehaviour
 
         InputsDisabled = true;
     }
+
 
     // UPDATE
     private void Update()
@@ -146,7 +146,16 @@ public class PersoInputsController : MonoBehaviour
         }
     }
 
-    // INPUTS
+
+
+
+
+
+
+
+
+
+    // HANDLE INPUTS
     public void OnAttack()
     {
         // on cherche si on a des armes
@@ -204,149 +213,29 @@ public class PersoInputsController : MonoBehaviour
     }
 
 
-    [Header("Interaction input parameters")]
-    [SerializeField] private bool waiting_interacting = false; // waiting for the threshold delay before endless_interacting
-    [SerializeField] private bool endless_interacting = false; // we interact endlessly
-    public void OnInteract(InputAction.CallbackContext context)
+    // INTERACT
+    public void HandleInteractInput(InputAction.CallbackContext context)
+    {
+        // if we press the button we launch the endless input
+        if (context.ReadValue<float>() >= 0.5f)
+        {
+            get_endless_input<float>("interact").OnInput(context);
+            return;
+        }
+
+        // else we release the button so we direclty interact with it
+        OnInteract();
+    }
+    private void OnInteract(bool endless = false)
     {
         InteractCapacity interactor = Capable.GetCapacity<InteractCapacity>();
         if (interactor == null) { return; } // if we don't have an interact capacity
         if (!interactor.Able) { return; } // if we don't have an interact capacity
 
-        // if we press the button we launch the endless threshold
-        if (context.ReadValue<float>() >= 0.5f)
-        {
-            StopCoroutine(OnEndlessInteract(interactor));
-            if (!waiting_interacting && !endless_interacting) { StartCoroutine(OnEndlessInteract(interactor)); }
-            return;
-        }
-
-        // else we release the button so we direclty interact with it
-        if (waiting_interacting || endless_interacting) { cancel_endless_interact(); }
-        interactor.Interact();
-    }
-    public IEnumerator OnEndlessInteract(InteractCapacity interactor)
-    {
-        // reset parameters
-        cancel_endless_interact();
-
-        // wait for threshold
-        waiting_interacting = true;
-        yield return new WaitForSeconds(InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD);
-        if (!waiting_interacting) { yield break; }
-
-        // we start the endless interaction
-        endless_interacting = true;
-        waiting_interacting = false;
-        while (endless_interacting)
-        {
-            interactor.Interact(endless: true);
-            yield return new WaitForSeconds(InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY);
-        }
-
-        // we stop the endless interaction
-        cancel_endless_interact();
-    }
-    private void cancel_endless_interact()
-    {
-        waiting_interacting = false;
-        endless_interacting = false;
-        StopCoroutine(OnEndlessInteract(Capable.GetCapacity<InteractCapacity>()));
+        interactor.Interact(endless: endless);
     }
 
-
-
-    /* [Header("Hack input parameters")]
-    [SerializeField] private bool waiting_hacking = false; // waiting for the threshold delay before endless_hacking
-    [SerializeField] private bool endless_hacking = false; // we are pressing hack input for a long time
-    public void HandleHackInput(InputAction.CallbackContext context)
-    {
-        if (log) { Debug.Log("(PersoInputsController) hack input received : " + context.ReadValue<float>()); }
-
-
-        // if we press the button we launch the endless threshold
-        if (context.ReadValue<float>() < 0.5f)
-        {
-            cancel_endless_hack();
-            return;
-        }
-
-        // if we are in the hud we launch the endless cancel hack routine
-        if (UI_Manager.Instance.CurrentPool == "hud" || UI_Manager.Instance.CurrentPool == "device")
-        {
-            if (!waiting_hacking && !endless_hacking) { StartCoroutine(OnEndlessHack()); }
-            return;
-        }
-
-        // else if we are in the hacking we launch the hack directly
-        if (UI_Manager.Instance.CurrentPool == "hacking") { OnHack(); }
-        // if (waiting_hacking || endless_hacking) { cancel_endless_hack(); }
-    }
-    public IEnumerator OnEndlessHack()
-    {
-        // reset parameters
-        cancel_endless_hack();
-
-        // wait for threshold
-        waiting_hacking = true;
-        yield return new WaitForSeconds(InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD);
-        if (!waiting_hacking) { yield break; }
-
-        // we start the endless hack
-        endless_hacking = true;
-        waiting_hacking = false;
-        int hack_inputs_done = 0;
-        while (endless_hacking)
-        {
-            OnHackCancel(); // we cancel last hack
-
-            // we calculate next duration
-            hack_inputs_done++;
-            float hack_delay = Mathf.Max(InputManager.Instance.BUTTON_ENDLESSLY_SHORT_DELAY, InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD / hack_inputs_done);
-            yield return new WaitForSeconds(hack_delay);
-        }
-
-        // we cancel the hack
-        cancel_endless_hack();
-    }
-    private void cancel_endless_hack()
-    {
-        waiting_hacking = false;
-        endless_hacking = false;
-        StopCoroutine(OnEndlessHack());
-    } */
-    public void OnHack()
-    {
-        // On récupère la hack capacity du hackable navigator
-        HackCapacity hacker = HackableNavigator.hacker;
-        if (hacker == null) { if (log) { Debug.Log("(PersoInputsController) " + name + " tried to hack " + HackableNavigator.name + " but it has no HackCapacity"); } return; } // if the hacker is not set, we return
-
-        ConnectCapacity connector = Controller.Instance.Capable.Connector;
-        if (connector == null) { if (log) { Debug.Log("(PersoInputsController) " + name + " tried to hack " + HackableNavigator.name + " but it has no Connector"); } return; } // if the connector is not set,
-
-        // on hack
-        if (log) { Debug.Log("(PersoInputsController) " + name + " launches hack on " + HackableNavigator.name); }
-        hacker.SetConnector(connector);
-        hacker.Use(Capable);
-    }
-    public void OnHackCancel()
-    {
-        // On récupère la hack capacity du hackable navigator
-        HackCapacity hacker = HackableNavigator.hacker;
-        if (hacker == null)
-        {
-            if (log) { Debug.Log("(PersoInputsController) " + name + " tried to cancel hack but it has no HackCapacity"); }
-            // cancel_endless_hack();
-            return;
-        }
-
-        // on hack
-        if (log) { Debug.Log("(PersoInputsController) " + name + " cancels hack on " + HackableNavigator.name); }
-        hacker.CancelLastHack();
-    }
-
-
-    // [Header("Run Hack input")]
+    // RUN HACK
     public void HandleRunHackInput(InputAction.CallbackContext context)
     {
         float input = context.ReadValue<float>();
@@ -363,6 +252,19 @@ public class PersoInputsController : MonoBehaviour
         if (!new List<string> { "hud", "device", "exploit_wheel" }.Contains(UI_Manager.Instance.CurrentPool)) { return; }
         ExploitNavigator.HandleExploitWheelInput(input);
     }
+    private void OnHack()
+    {
+        // On récupère la hack capacity du hackable navigator
+        HackCapacity hacker = HackableNavigator.hacker;
+        if (hacker == null) { if (log) { Debug.Log("(PersoInputsController) " + name + " tried to hack " + HackableNavigator.name + " but it has no HackCapacity"); } return; } // if the hacker is not set, we return
 
+        ConnectCapacity connector = Controller.Instance.Capable.Connector;
+        if (connector == null) { if (log) { Debug.Log("(PersoInputsController) " + name + " tried to hack " + HackableNavigator.name + " but it has no Connector"); } return; } // if the connector is not set,
+
+        // on hack
+        if (log) { Debug.Log("(PersoInputsController) " + name + " launches hack on " + HackableNavigator.name); }
+        hacker.SetConnector(connector);
+        hacker.Use(Capable);
+    }
 
 }

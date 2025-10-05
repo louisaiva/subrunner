@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using UnityEngine.InputSystem.UI;
 using System;
+using System.Collections;
 
 public class InputManager : Singleton<InputManager>
 {
@@ -148,6 +149,17 @@ public class InputManager : Singleton<InputManager>
         inputs.perso.Disable();
 
         OnPersoInputsToggled?.Invoke(false);
+    }
+
+
+    // INPUTS COROUTINES
+    public Coroutine StartInputCoroutine(IEnumerator coroutine)
+    {
+        return StartCoroutine(coroutine);
+    }
+    public void StopInputCoroutine(Coroutine coroutine)
+    {
+        StopCoroutine(coroutine);
     }
 
 }

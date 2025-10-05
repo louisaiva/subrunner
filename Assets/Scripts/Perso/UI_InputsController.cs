@@ -2,14 +2,19 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.XR;
 using static PlayerInputActions;
 
-public class UI_InputsController : MonoBehaviour
+public class UI_InputsController : InputController
 {
     [Header("UI Inputs Parameters")]
     [SerializeField] private UI_XboxNavigator navigator;
     [SerializeField] private UIActions ui_inputs;
     [SerializeField] private bool navigate_in_game = false; // if true we navigate in game, else in UI
+
+    [Header("Actions")]
+    private InputAction ui_drop_ingameAction;
+    private event Action<InputAction.CallbackContext> ui_dropCallback;
 
     // START
     protected void Start()
@@ -18,6 +23,16 @@ public class UI_InputsController : MonoBehaviour
         initInputs();
 
         navigator = UI_XboxNavigator.Instance;
+
+        // on crée les endless inputs
+        add_endless_input(new EndlessInput<float>("ui_drop", ui_inputs.x,
+                threshold: InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD,
+                repeat: InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY,
+                unscaled_time: true)).OnEndless += _ => OnUI_Drop();
+        add_endless_input(new EndlessInput<float>("ui_drop_ingame", ui_drop_ingameAction,
+                threshold: InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD,
+                repeat: InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY,
+                unscaled_time: false)).OnEndless += _ => OnUI_Drop();
     }
 
     // INPUTS
@@ -25,12 +40,12 @@ public class UI_InputsController : MonoBehaviour
     {
         // on récupère les inputs
         ui_inputs = InputManager.Instance.inputs.UI;
+        ui_drop_ingameAction = InputManager.Instance.inputs.perso.interact;
 
         // on crée les callbacks
-        dropCallback = ctx => OnDrop(ctx);
+        ui_dropCallback = ctx => HandleUI_DropInput(ctx);
 
         // on récupère les actions in-game
-        dropInGameAction = InputManager.Instance.inputs.perso.interact;
         // navigateInGameAction = InputManager.Instance.inputs.perso.
 
 
@@ -45,13 +60,13 @@ public class UI_InputsController : MonoBehaviour
         if (ingame_navigation)
         {
             // navigateInGameAction.performed += navigateCallback;
-            dropInGameAction.performed += dropCallback;
+            ui_drop_ingameAction.performed += ui_dropCallback;
         }
         else
         {
             // navigateAction.performed += navigateCallback;
             // activateAction.performed += activateCallback;
-            ui_inputs.x.performed += dropCallback;
+            ui_inputs.x.performed += ui_dropCallback;
         }
 
         navigate_in_game = ingame_navigation; // on met à jour la variable
@@ -64,22 +79,20 @@ public class UI_InputsController : MonoBehaviour
         // on récupère les inputs
         // navigateAction.performed -= navigateCallback;
         // navigateInGameAction.performed -= navigateCallback;
-        ui_inputs.x.performed -= dropCallback;
-        dropInGameAction.performed -= dropCallback;
+        ui_inputs.x.performed -= ui_dropCallback;
+        ui_drop_ingameAction.performed -= ui_dropCallback;
         // ui_inputs.navigate_in_game.performed -= exploit_selection_callback;
         // activateAction.performed -= activateCallback;
         // moveItemAction.performed -= moveItemCallback;
 
         navigate_in_game = false; // on met à jour la variable
-
-        cancel_endless_drop();
     }
     public void ToggleInput(string input_name, bool enable = true)
     {
         if (input_name == "drop")
         {
-            if (enable) { ui_inputs.x.performed += dropCallback; }
-            else { ui_inputs.x.performed -= dropCallback; cancel_endless_drop(); }
+            if (enable) { ui_inputs.x.performed += ui_dropCallback; }
+            else { ui_inputs.x.performed -= ui_dropCallback; }
         }
         /* else if (input_name == "activate")
         {
@@ -95,34 +108,22 @@ public class UI_InputsController : MonoBehaviour
 
 
 
-
-
-    // todo : est-ce qu'on peut pas faire une classe avec un seul endless input ?
-    // todo : parce que sinon ça va etre un script tres long mdr
-
-
-    // DROP COMME PIC
-    [Header("Drop actions parameters")]
-    [SerializeField] private bool waiting_dropping = false; // waiting for the threshold delay before endless_dropping
-    [SerializeField] private bool endless_dropping = false; // we drop endlessly
-    private InputAction dropInGameAction;
-    private event Action<InputAction.CallbackContext> dropCallback;
-    public void OnDrop(InputAction.CallbackContext context)
+    // UI_DROP
+    public void HandleUI_DropInput(InputAction.CallbackContext context)
     {
         // if we press the button we launch the endless threshold
         if (context.ReadValue<float>() >= 0.5f)
         {
-            navigator.OnDown();
-            StopCoroutine(OnEndlessDrop());
-            StartCoroutine(OnEndlessDrop());
+            // navigator.OnDown();
+            get_endless_input<float>("ui_drop" + (navigate_in_game ? "_ingame" : "")).OnInput(context);
             return;
         }
 
         // else we release the button so we direclty drop with it
-        if (waiting_dropping || endless_dropping) { cancel_endless_drop(); }
-        navigator.OnDrop();
+        OnUI_Drop();
     }
-    public IEnumerator OnEndlessDrop()
+    private void OnUI_Drop() { navigator.OnDrop(); }
+    /* public IEnumerator OnEndlessDrop()
     {
         // reset parameters
         cancel_endless_drop();
@@ -148,7 +149,7 @@ public class UI_InputsController : MonoBehaviour
     {
         waiting_dropping = false;
         endless_dropping = false;
-    }
+    } */
 
 
 

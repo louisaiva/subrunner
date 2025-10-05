@@ -10,7 +10,7 @@
  ;; Available options:
  ;; - :now for NOW/LATER style (default)
  ;; - :todo for TODO/DOING style
- :preferred-workflow :now
+ :preferred-workflow :todo
 
  ;; Exclude directories/files.
  ;; Example usage:
@@ -299,7 +299,7 @@
  ;;  :charge-range    600}   ; Default value: 600
 
  ;; Favorites to list on the left sidebar
- :favorites []
+ :favorites ["todo" "systems" "logs"]
 
  ;; Set flashcards interval.
  ;; Expected value:
@@ -419,4 +419,13 @@
  ;;      ;use triple underscore `___` for slash `/` in page title
  ;;      ;use Percent-encoding for other invalid characters
  :file/name-format :triple-lowbar
- :graph/settings {:journal? false}}
+ :graph/settings {:journal? true
+ :orphan-pages? true
+ :excluded-pages? false
+ :builtin-pages? false}
+ :feature/enable-flashcards? false
+ :feature/enable-journals? true
+ :zotero/settings-v2 nil
+ :graph/forcesettings {:link-dist 180
+ :charge-range 3700
+ :charge-strength -900}}
