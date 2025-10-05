@@ -18,10 +18,14 @@ public class EndlessInput<T> where T : struct
 
 
     // timers
-    WaitForSecondsRealtime wait_threshold_unscaled;
-    WaitForSecondsRealtime wait_repeat_unscaled;
+    // WaitForSecondsRealtime wait_threshold_unscaled; // can't cache real time bcz it's creating bugs when timescale changes
+    // WaitForSecondsRealtime wait_repeat_unscaled;
     WaitForSeconds wait_threshold;
     WaitForSeconds wait_repeat;
+
+    // timers help
+    float threshold_time = 0f;
+    float repeat_time = 0f;
 
 
     public EndlessInput(string name, InputAction action, float threshold = 0.5f, float repeat = 0.5f, bool unscaled_time = false)
@@ -34,8 +38,10 @@ public class EndlessInput<T> where T : struct
         this.unscaled_time = unscaled_time;
         wait_threshold = new WaitForSeconds(threshold);
         wait_repeat = new WaitForSeconds(repeat);
-        wait_threshold_unscaled = new WaitForSecondsRealtime(threshold);
-        wait_repeat_unscaled = new WaitForSecondsRealtime(repeat);
+
+        // setup times
+        threshold_time = threshold;
+        repeat_time = repeat;
     }
 
     // INPUTS TRIGGERS
@@ -60,7 +66,7 @@ public class EndlessInput<T> where T : struct
     {
         // wait for threshold
         waiting = true;
-        yield return unscaled_time ? wait_threshold_unscaled : wait_threshold;
+        yield return unscaled_time ? new WaitForSecondsRealtime(threshold_time) : wait_threshold;
         if (!waiting) { yield break; }
 
         // we start the holding
@@ -70,7 +76,7 @@ public class EndlessInput<T> where T : struct
         while (holding)
         {
             OnEndless?.Invoke(context.ReadValue<T>());
-            yield return unscaled_time ? wait_repeat_unscaled : wait_repeat;
+            yield return unscaled_time ? new WaitForSecondsRealtime(repeat_time) : wait_repeat;
         }
 
         // we stop the routine

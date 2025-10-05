@@ -10,4 +10,10 @@
 	  CLOCK: [2025-10-03 Fri 21:23:06]
 	  :END:
 	-
-- TODO *bug* **ui_endless_drop** sur le #UI_Navigator
+- DONE *bug* **ui_endless_drop** sur le #UI_Navigator
+  :LOGBOOK:
+  CLOCK: [2025-10-05 Sun 22:12:27]--[2025-10-05 Sun 22:36:03] =>  00:23:36
+  CLOCK: [2025-10-05 Sun 22:36:04]--[2025-10-05 Sun 22:36:05] =>  00:00:01
+  :END:
+- TODO *bug* les #UI_ItemPool scalable ne s'agrandissent plus quand on veut mettre un item dedans et que c deja plein ://
+- TODO faire spawn notre xp quand on meurt !!
