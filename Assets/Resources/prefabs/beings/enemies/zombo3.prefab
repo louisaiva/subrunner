@@ -106,11 +106,11 @@ MonoBehaviour:
   target_layers:
     serializedVersion: 2
     m_Bits: 8388608
-  excluded_tags:
-  - Zombo
-  - Robot
-  friendly_skins:
-  - zombo
+  target_skins:
+  - rat
+  - cat
+  - perso
+  - nobody
   - robot
   log: 0
 --- !u!58 &4164750315520189909
@@ -236,7 +236,6 @@ MonoBehaviour:
   log_path_calculation: 0
   gizmo_target: 1
   gizmo_path: 1
-  log_ttcbas: 0
   gizmo_ttcbas: 1
 --- !u!1 &6094739574941988477
 GameObject:

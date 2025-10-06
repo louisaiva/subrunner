@@ -218,7 +218,6 @@ MonoBehaviour:
   log_path_calculation: 0
   gizmo_target: 1
   gizmo_path: 1
-  log_ttcbas: 0
   gizmo_ttcbas: 1
 --- !u!1 &3996042554587929240
 GameObject:
@@ -569,14 +568,10 @@ MonoBehaviour:
   target_layers:
     serializedVersion: 2
     m_Bits: 8388608
-  excluded_tags:
-  - Cat
-  - Player
-  - Boss
-  friendly_skins:
-  - cat
-  - perso
-  - nobody
+  target_skins:
+  - zombo
+  - rat
+  - cyber_rat
   log: 0
 --- !u!58 &6522647850881590163
 CircleCollider2D:

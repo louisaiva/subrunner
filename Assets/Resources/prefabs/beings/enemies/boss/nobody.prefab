@@ -53,14 +53,11 @@ MonoBehaviour:
   target_layers:
     serializedVersion: 2
     m_Bits: 8388608
-  excluded_tags:
-  - Cat
-  - Boss
-  - Robot
-  friendly_skins:
-  - cat
-  - nobody
-  - robot
+  target_skins:
+  - zombo
+  - rat
+  - cyber_rat
+  - perso
   log: 0
 --- !u!58 &3025035457836413833
 CircleCollider2D:
@@ -132,9 +129,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2846294200545317991}
+  - {fileID: 1293499228707633087}
   - {fileID: 3184706805260829102}
   - {fileID: 6335948176053101012}
-  - {fileID: 1293499228707633087}
   - {fileID: 701607102379892732}
   - {fileID: 4584926664803357249}
   - {fileID: 530016101224911506}

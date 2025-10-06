@@ -382,7 +382,6 @@ MonoBehaviour:
   log_path_calculation: 0
   gizmo_target: 0
   gizmo_path: 0
-  log_ttcbas: 0
   gizmo_ttcbas: 1
 --- !u!1 &6831872210500143280
 GameObject:
@@ -419,10 +418,10 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7913642984476158931}
+  - {fileID: 144480814686880362}
   - {fileID: 5018290607981388640}
   - {fileID: 7194673372183240506}
   - {fileID: 8457675163751028485}
-  - {fileID: 144480814686880362}
   - {fileID: 7938144920441776271}
   - {fileID: 2742564798192476820}
   - {fileID: 1359607448421354268}
@@ -695,11 +694,10 @@ MonoBehaviour:
   target_layers:
     serializedVersion: 2
     m_Bits: 8388608
-  excluded_tags:
-  - Rat
-  friendly_skins:
-  - rat
-  - cyber_rat
+  target_skins:
+  - cat
+  - perso
+  - nobody
   log: 0
 --- !u!58 &4703695249517489592
 CircleCollider2D:

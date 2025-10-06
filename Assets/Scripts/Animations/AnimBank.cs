@@ -761,8 +761,8 @@ public class Anim
 [Serializable]
 public class SkinVariant
 {
-    public string base_skin;
-    public List<string> base_spritesheets;
     public string variant_name;
     public List<string> variant_spritesheets;
+    public string base_skin;
+    public List<string> base_spritesheets;
 }

@@ -107,9 +107,11 @@ MonoBehaviour:
   random_damage_modifier_at_start: 0
   IsAttacking: 0
   hit_enemies: []
-  not_attackable_tags: []
+  base_excluded_tags: []
   single_hit: 0
   perforant_attack: 1
+  attack_duration: 0
+  attack_duration_random_variation: 0
   knockback_base: 500
   attackant_advantage: 10
   base_attack_shake_magnitude: 0.5
@@ -257,17 +259,17 @@ MonoBehaviour:
   update_each_frame: 1
   anim_capacity_priorities:
   - priority: 0
+    capacity_playing: 
     capacities:
     - idle
     lock_orientation: 0
     one_shot: 0
-    capacity_playing: 
   - priority: 1
+    capacity_playing: 
     capacities:
     - hover
     lock_orientation: 0
     one_shot: 0
-    capacity_playing: 
   log: 0
   log_orientation: 0
   log_advanced: 0
@@ -5289,6 +5291,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6378803932534245458, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
+      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

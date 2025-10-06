@@ -129,7 +129,6 @@ MonoBehaviour:
     - hover
     lock_orientation: 0
     one_shot: 0
-  capacity_pile: 
   log: 0
   log_orientation: 0
   log_advanced: 0
@@ -383,6 +382,10 @@ PrefabInstance:
     - target: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6378803932534245458, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.75
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -232,7 +232,9 @@ MonoBehaviour:
   effects_timetolive: []
   debug: 0
   activate_all_capacities_logs_on_awake: 0
+  log_interact_kf: 0
   interactors: []
+  ui_opened_kf_position: {x: 0, y: 0}
 --- !u!1 &8618924164118755029
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,6 +698,10 @@ PrefabInstance:
       propertyPath: item_rule
       value: food,drink
       objectReference: {fileID: 0}
+    - target: {fileID: 8405541509936947899, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
+      propertyPath: m_ConstraintCount
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -921,6 +927,14 @@ PrefabInstance:
     - target: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6378803932534245458, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6378803932534245458, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 1.6666667
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

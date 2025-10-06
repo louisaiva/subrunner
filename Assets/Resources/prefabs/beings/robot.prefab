@@ -155,7 +155,6 @@ MonoBehaviour:
   log_path_calculation: 0
   gizmo_target: 1
   gizmo_path: 1
-  log_ttcbas: 0
   gizmo_ttcbas: 1
 --- !u!1 &3996042554587929240
 GameObject:
@@ -647,7 +646,8 @@ MonoBehaviour:
   - Player
   - Zombo
   - Boss
-  friendly_skins: []
+  friendly_skins:
+  - ghost
   log: 0
 --- !u!58 &6522647850881590163
 CircleCollider2D:

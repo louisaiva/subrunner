@@ -10,13 +10,33 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class HoverCapacity : Capacity
 {
+    [Header("Hover Capacity")]
     private string played_animation = "hover";
     [SerializeField] private List<Capable> hoverers = new List<Capable>();
     public bool Hovered { get { return hoverers.Count > 0; } }
 
+    [Header("Interact Key Feedback")]
+    [SerializeField] private Transform canvas_kf;
+    public Transform Canvas_kf { get { return canvas_kf; } }
+
     // DELEGATES
     public event Action<Capable> OnHover = delegate { };
     public event Action<Capable> OnHoverLost = delegate { };
+
+    // AWAKE
+    private void Awake()
+    {
+        // check if we have a canvas_kf
+        canvas_kf = transform.Find("canvas_kf");
+        if (canvas_kf != null)
+        {
+            canvas_kf.gameObject.SetActive(false);
+
+            // sets some callbacks to dynamically show the interact key feedback
+            OnHover += (capable) => toggle_key_feedback(capable, true);
+            OnHoverLost += (capable) => toggle_key_feedback(capable, false);
+        }
+    }
 
     // HOVER
     public void Hover(Capable capable)
@@ -63,4 +83,15 @@ public class HoverCapacity : Capacity
         played_animation = animation;
         capable.anim_player.AddToPile(played_animation);
     }
+
+
+    // HANDLE KEY FEEDBACK
+    private void toggle_key_feedback(Capable hoverer, bool show)
+    {
+        if (canvas_kf == null) { return; }
+        if (Controller.Instance == null) { return; }
+        if (hoverer != Controller.Instance.Capable) { return; }
+        canvas_kf.gameObject.SetActive(show);
+    }
+
 }
