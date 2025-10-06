@@ -102,8 +102,23 @@ public class SpriteBank : MonoBehaviour
     }
     public Sprite GetInputFeedbackSprite(string key, bool empty = true)
     {
-        if (empty) { return IF_base_sprites[key]; }
-        else { return IF_clicked_sprites[key]; }
+        if (empty)
+        {
+            if (!IF_base_sprites.ContainsKey(key))
+            {
+                if (log) { Debug.LogWarning($"(SpriteBank) The key '{key}' does not exist in the input feedback sprites"); }
+                return null;
+            }
+            return IF_base_sprites[key];
+        }
+
+        if (!IF_clicked_sprites.ContainsKey(key))
+        {
+            if (log) { Debug.LogWarning($"(SpriteBank) The key '{key}' does not exist in the input feedback clicked sprites"); }
+            return null;
+        }
+
+        return IF_clicked_sprites[key];
     }
 
     [Header("Key Feedback Icons")]
@@ -117,4 +132,8 @@ public class SpriteBank : MonoBehaviour
         if (index == -1 || index >= key_feedback_icons.Count) { return null; }
         return key_feedback_icons[index];
     }
+
+
+    [Header("Logs")]
+    [SerializeField] private bool log = false;
 }

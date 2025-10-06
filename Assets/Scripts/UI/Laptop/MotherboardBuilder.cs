@@ -224,13 +224,13 @@ public class MotherboardBuilder : MonoBehaviour
         if (laptop_inventory != null && laptop_inventory != inventory)
         {
             // we remove the callbacks
-            laptop_inventory.OnHDD_Changed -= OnSlotNumberChanged;
+            laptop_inventory.MB_SizeChanged -= OnSlotNumberChanged;
         }
 
         Size = new Vector2Int(inventory.Columns, inventory.Rows);
 
         // we subscribe to the callbacks
-        if (laptop_inventory != inventory) { inventory.OnHDD_Changed += OnSlotNumberChanged; }
+        if (laptop_inventory != inventory) { inventory.MB_SizeChanged += OnSlotNumberChanged; }
         laptop_inventory = inventory;
     }
     private void OnSlotNumberChanged(int new_slot_count)

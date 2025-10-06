@@ -10,7 +10,8 @@ public class HackableDoor : Door, Lockable
     [SerializeField] private float locking_interval = 5f; // the time before the door is locked again after being unlocked
     public bool Locked { get; private set; } = true;
     [SerializeField] private Key key; // the key needed to hack this door
-    public string Key => key.key; // the type of key needed to hack this door
+    public Key Key => key; // return the key
+    public string Password => key.data; // return the key password
 
 
     [Header("Hackable")]
@@ -75,14 +76,16 @@ public class HackableDoor : Door, Lockable
     }
 
     // HACKABLE
-    public bool IsVulnerableTo(Exploit exploit)
+    /* public bool IsVulnerableTo(Exploit exploit)
     {
-        if (exploit == Exploit.InsertPassword) { return true; }
+        if (exploit == Exploit.Nmap) { return true; }
+        if (exploit.name == "bruteforce") { return true; }
+        if (exploit.name == "dictionary_attack") { return true; }
+        if (exploit is FileExploit file_exploit && exploit.name == "type_password")
+        {
+            return key.Matches(file_exploit.file.data);
+        }
 
-        string[] exploitType = exploit.name.Split('_');
-        if (debug) { Debug.Log($"(HackableDoor) checking if {name} is vulnerable to exploit {exploit.name} ?" + exploitType); }
-        if (exploitType.Length < 2) { return false; }
-        if (exploitType[1] == key.key_type) { return true; } // if the exploit type matches the key type, we can hack the door
         return false;
     }
     public void OnHackStarted(Hack hack)
@@ -101,24 +104,29 @@ public class HackableDoor : Door, Lockable
         if (debug) { Debug.Log($"(HackableDoor) Hack failed on {name} with exploit {hack.name}"); }
         anim_player.StopPlaying("hacked");
         Lock();
-
-        RunningHacks.Remove(hack);
     }
-    public void OnHackCompleted(Hack hack)
+    public void OnHackSucceeded(Hack hack)
     {
-        // Handle the hack completion event
         if (debug) { Debug.Log($"(HackableDoor) Hack completed on {name} with exploit {hack.name}"); }
-        // this.Do("open");
-
-        // we unlock the door & play unlock anim
         anim_player.StopPlaying("hacked");
-        Unlock();
 
-        RunningHacks.Remove(hack);
+        // if the hack was successful we unlock the door
+        if (hack.name == "bruteforce" || hack.name == "dictionary_attack")
+        {
+            Unlock();
+        }
+        if (hack.program is FileExploit file_exploit && hack.name == "type_password" && key.Matches(file_exploit.file.data))
+        {
+            Unlock();
+        }
     }
+    public void OnHackDone(Hack hack)
+    {
+        if (RunningHacks.Contains(hack)) { RunningHacks.Remove(hack); } // if the zombo is dead we may have already removed the hack
+    } */
 
     // UNLOCKING
-    private async void Unlock()
+    public async void Unlock()
     {
         Locked = false;
         if (debug) { Debug.Log($"(HackableDoor) {name} is now unlocked"); }
@@ -141,7 +149,7 @@ public class HackableDoor : Door, Lockable
         // we invoke the locking after x seconds
         Invoke(nameof(Lock), locking_interval);
     }
-    private void Lock()
+    public void Lock()
     {
         CancelInvoke();
         Locked = true;
@@ -163,4 +171,9 @@ public class HackableDoor : Door, Lockable
             close();
         }
     }
+    /* public bool IsUnlockableVia(Exploit exploit)
+    {
+        if (exploit == Exploit.Nmap) { return false; }
+        return IsVulnerableTo(exploit);
+    } */
 }

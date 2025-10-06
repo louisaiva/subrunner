@@ -93,5 +93,18 @@ public class KeyFeedback : InputFeedback
             icon.color = this.base_color;
         }
     }
+
+    // PRESS & RELEASE MODE
+    public override void HandlePressAndReleaseInput(InputAction.CallbackContext context)
+    {
+        if (context.ReadValue<float>() > 0.5f) // means we pressed the input
+        {
+            OnInput();
+        }
+        else // means we released the input
+        {
+            OnReset();
+        }
+    }
 }
 

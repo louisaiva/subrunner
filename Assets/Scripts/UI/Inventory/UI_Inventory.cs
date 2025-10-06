@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
-/// UI_Inventory is the lowest UI representation of the Inventory.
+/// UI_Inventory is the highest UI representation of the Inventory.
 /// it is never triggered directly, but is showed by the Capacities & updated by the Inventory.
 /// </summary>
 
@@ -49,21 +50,43 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
             pool.Init(this);
         }
     }
-
-    // SHOW / HIDE
-    public async void Show()
+    public void Refresh()
     {
-        gameObject.SetActive(true);
-        await System.Threading.Tasks.Task.Yield(); // wait for the next frame to ensure the UI is active
-
-        // we enable the navigator if we are not the perso quick inventory
-        if (transform.parent.name != "hud" && UI_XboxNavigator.Instance != null)
+        // on clear les pools
+        foreach (UI_ItemPool pool in pools)
         {
-            InputManager.Instance.inputs.perso.select_hackable.Disable();
-            UI_XboxNavigator.Instance.Enable(this, true);
+            if (pool == null) { continue; } // skip null UIs
+            pool.DestroyAllSlots();
+        }
+
+        if (Inventory == null)
+        {
+            if (log) { Debug.LogWarning("(UI_Inventory) " + name + " has no Inventory, cannot refresh"); }
+            return;
+        }
+
+        // on récupère tous les items de l'Inventaire et on les fait grab si possible par nous mêmes
+        foreach (Item item in Inventory.Items)
+        {
+            bool grabbed = UI_Grab(item);
+            if (!grabbed)
+            {
+                Debug.LogWarning("(UI_Inventory) could not grab item " + item.Reference + " in " + name +
+                ", maybe the pools are full or the item is incompatible");
+            }
         }
     }
-    public void Hide()
+
+    // SHOW / HIDE
+    public virtual async void Show()
+    {
+        gameObject.SetActive(true);
+        await Task.Yield(); // wait for the next frame to ensure the UI is active
+
+        
+        UI_XboxNavigator.Instance.Enable(this, true);
+    }
+    public virtual void Hide()
     {
         // we unhover all the slots
         foreach (UI_ItemPool pool in pools)
@@ -78,12 +101,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 
         gameObject.SetActive(false);
 
-        // we enable the navigator if we are not the perso quick inventory
-        if (transform.parent.name != "hud" && UI_XboxNavigator.Instance != null)
-        {
-            UI_XboxNavigator.Instance.Disable(this);
-            InputManager.Instance.inputs.perso.select_hackable.Enable();
-        }
+        UI_XboxNavigator.Instance.Disable(this);
     }
     public void Toggle()
     {

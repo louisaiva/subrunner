@@ -54,7 +54,7 @@ MonoBehaviour:
       m_Calls: []
   uis:
   - {fileID: 8057584236331075997}
-  debug: 0
+  log: 0
 --- !u!1 &7856076029556869123
 GameObject:
   m_ObjectHideFlags: 0
@@ -85,7 +85,7 @@ Transform:
   m_GameObject: {fileID: 7856076029556869123}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.69, y: 5.17, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -222,30 +222,30 @@ MonoBehaviour:
   update_each_frame: 1
   anim_capacity_priorities:
   - priority: 0
+    capacity_playing: 
     capacities:
     - idle
     lock_orientation: 0
     one_shot: 0
-    capacity_playing: 
   - priority: 1
+    capacity_playing: 
     capacities:
     - hover
     lock_orientation: 0
     one_shot: 0
-    capacity_playing: 
   - priority: 3
+    capacity_playing: 
     capacities:
     - idle_open
     lock_orientation: 1
-    one_shot: 1
-    capacity_playing: 
+    one_shot: 0
   - priority: 4
+    capacity_playing: 
     capacities:
     - open
     - close
     lock_orientation: 1
     one_shot: 1
-    capacity_playing: 
   log: 0
   log_orientation: 0
   log_advanced: 0
@@ -270,6 +270,7 @@ MonoBehaviour:
   effects_timetolive: []
   debug: 0
   activate_all_capacities_logs_on_awake: 0
+  interactors: []
 --- !u!114 &3852121402500476383
 MonoBehaviour:
   m_ObjectHideFlags: 0

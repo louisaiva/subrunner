@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5654081741550803596}
   - component: {fileID: 1550921396109026499}
   - component: {fileID: 2128277213380865502}
-  - component: {fileID: 5581677777743325324}
+  - component: {fileID: 1026235348672228407}
   m_Layer: 24
   m_Name: hack_module
   m_TagString: Item
@@ -160,7 +160,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &5581677777743325324
+--- !u!114 &1026235348672228407
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -169,7 +169,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5599804067653209886}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21b1e91dfac8ace4aabb5aed796039e2, type: 3}
+  m_Script: {fileID: 11500000, guid: 9bef9cbcc43652b428fb6a3f79b7170a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   inputs: {x: 0, y: 0}
@@ -188,10 +188,23 @@ MonoBehaviour:
   input_speed: 0
   Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 0}
-  Reference: module:hack
-  MaxQty: 4
+  Reference: module:bug_os
+  MaxQty: 16
   ItemDescription: the real shadow brain of your laptop (but don't tell the processor
     it will be jealous)
+  upgrades:
+  - name: bruteforce speed
+    tier: 0
+    effect: 100
+    effect_unit: '%'
+  - name: ddos army speed
+    tier: 0
+    effect: 100
+    effect_unit: '%'
+  - name: overheat damage
+    tier: 0
+    effect: 100
+    effect_unit: '%'
 --- !u!1 &9047189143154024933
 GameObject:
   m_ObjectHideFlags: 0

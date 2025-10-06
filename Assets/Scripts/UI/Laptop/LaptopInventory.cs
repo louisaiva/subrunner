@@ -7,14 +7,10 @@ public class LaptopInventory : Inventory
     public int Columns = 2;
     public int Rows = 2;
     public int MaxSlots => Columns * Rows;
+    public event System.Action<int> MB_SizeChanged = delegate { };
 
     [Header("Items slots indexes")]
     protected Dictionary<Item, int> items_slots = new Dictionary<Item, int>(); // store les indexes de slot de chaque item via item.ID
-
-
-    // EVENTS
-    public event System.Action<int> OnHDD_Changed = delegate { };
-    public event System.Action<Item> OnModuleChanged = delegate { };
 
     // START
     protected override void Start()
@@ -23,10 +19,10 @@ public class LaptopInventory : Inventory
         OnItemGrabbed += HandleModuleGrabbed;
         OnItemDropped += HandleModuleDropped;
         base.Start();
-        (capable as Laptop).OnCPU_Changed();
+        // (capable as Laptop).Processor.OnCPU_Changed();
     }
 
-    // GRAB DROP REMOVE
+    // GRAB DROP REMOVE ITEMS
     public override bool Grab(Item item, List<UI_Inventory> uis_to_ignore = null)
     {
         // check if we can grab the item
@@ -101,27 +97,35 @@ public class LaptopInventory : Inventory
     // MODULES GRABBED/DROPPED
     private void HandleModuleGrabbed(Item item)
     {
-        HandleModuleDropped(item); // we handle the module dropped to update the slots
+        if (capable is not Device device) { return; }
+        if (item is Module_CPU cpu)
+        {
+            device.Processor.OnProcessorGrabbed(cpu);
+        }
+        else if (item is Module_HDD)
+        {
+            device.OnHDD_Changed();
+        }
+        else if (item is Module_Network)
+        {
+            device.OnNetworkModuleChanged();
+        }
     }
     private void HandleModuleDropped(Item item)
     {
-        switch (item.Reference)
+        if (capable is not Device device) { return; }
+        if (item is Module_CPU cpu)
         {
-            case "module:cpu":
-                (capable as Laptop).OnCPU_Changed();
-                break;
-            case "module:hdd":
-                on_hdd_changed();
-                break;
-            case "module:network":
-                (capable as Laptop).OnNetworkModuleChanged();
-                break;
-            case "module:hack":
-                (capable as Laptop).OnHackModuleChanged();
-                break;
+            device.Processor.OnProcessorDropped(cpu);
         }
-
-        OnModuleChanged?.Invoke(item);
+        else if (item is Module_HDD)
+        {
+            device.OnHDD_Changed();
+        }
+        else if (item is Module_Network)
+        {
+            device.OnNetworkModuleChanged();
+        }
     }
     public void HandleUI_ModuleMoved(List<Item> items, int new_slot_index)
     {
@@ -133,8 +137,8 @@ public class LaptopInventory : Inventory
         }
     }
 
-    // HDD GESTION
-    private void on_hdd_changed()
+    // CHANGE MOTHERBOARD SLOTS SIZE
+    /* private void on_laptop_upgrade()
     {
         // we check how many hdd do we have
         int hdd_count = GetItemsByRule("module:hdd").Count;
@@ -197,6 +201,6 @@ public class LaptopInventory : Inventory
         if (log) { Debug.Log($"(LaptopInventory) updating size to {Columns} x {Rows}"); }
 
         // we invoke the event
-        OnHDD_Changed.Invoke(slots_nb);
-    }
+        MB_SizeChanged.Invoke(slots_nb);
+    } */
 }

@@ -91,11 +91,11 @@ namespace subrunner.goap
             if (log_checks) { Debug.Log($"(Brain) {ia.name} checking distance to target {transformTarget.Transform.name}"); }
 
             // if we are still inside range is ok
-            if (Vector3.Distance(transformTarget.Transform.position, ia.transform.position) <= prey_detector.Range*2f) { return; }
+            if (Vector3.Distance(transformTarget.Transform.position, ia.transform.position) <= prey_detector.Range * 2f) { return; }
 
             // stop the action
             float distance = Vector3.Distance(transformTarget.Transform.position, ia.transform.position);
-            if (log_checks) { Debug.Log($"(Brain) {ia.name} stopped attacking {transformTarget.Transform.name} because it is too far away : {distance} and 2f * prey detector radius is : {prey_detector.Range*2f}"); }
+            if (log_checks) { Debug.Log($"(Brain) {ia.name} stopped attacking {transformTarget.Transform.name} because it is too far away : {distance} and 2f * prey detector radius is : {prey_detector.Range * 2f}"); }
 
             agent.StopAction();
         }
@@ -133,7 +133,7 @@ namespace subrunner.goap
             }
 
             // we request the goal
-            request_goal(highestGoal.type,resolve);
+            request_goal(highestGoal.type, resolve);
         }
         private void request_goal(GoalType goal, bool resolve = true)
         {
@@ -166,7 +166,7 @@ namespace subrunner.goap
         private void OnGoalCompleted(IGoal goal) { DetermineGoal(); }
 
         // GOAL MANAGEMENT
-        public void EnableGoal(GoalPriority goal,bool resolve = true)
+        public void EnableGoal(GoalPriority goal, bool resolve = true)
         {
             goal.enabled = true;
             if (goal.type != CurrentGoal) { DetermineGoal(resolve); }

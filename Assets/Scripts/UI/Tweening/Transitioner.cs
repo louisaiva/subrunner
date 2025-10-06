@@ -3,6 +3,8 @@ using UnityEngine;
 using PrimeTween;
 using UnityEngine.UI;
 using System;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 public class Transitioner : MonoBehaviour
 {
@@ -24,7 +26,8 @@ public class Transitioner : MonoBehaviour
 
     [Header("transition on Start")]
     [SerializeField] protected bool transition_on_start = false;
-    [SerializeField] protected float start_transition = 0.1f;
+    [SerializeField] protected float duration_start_transition = 0.1f;
+    [SerializeField] protected float delay_start_transition = 0f;
 
     [Header("Logs")]
     [SerializeField] private bool log = false;
@@ -67,19 +70,27 @@ public class Transitioner : MonoBehaviour
     }
 
     // START
-    private void Start()
+    private async Task Start()
     {
         if (transition_on_start)
         {
-            if (log) { Debug.Log($"(Transitioner) Starting transition for {name} with duration {start_transition}"); }
-            Show(start_transition);
+            if (log) { Debug.Log($"(Transitioner) Waiting {delay_start_transition} seconds before starting transition for {name}"); }
+            if (delay_start_transition > 0f) { await Tween.Delay(delay_start_transition, useUnscaledTime: unscaled_time); }
+            show_start();
         }
+
+        
+    }
+    private void show_start()
+    {
+        if (log) { Debug.Log($"(Transitioner) Starting transition for {name} with duration {duration_start_transition}"); }
+        Show(duration_start_transition);
     }
 
     // SHOW / HIDE
     public async Awaitable Show(float duration = -99f)
     {
-        if (Shown)
+        if (Shown && !Tweening)
         {
             if (log) { Debug.Log($"(Transitioner) {name} is already shown, no need to transition"); }
             return;
@@ -91,7 +102,7 @@ public class Transitioner : MonoBehaviour
     }
     public async Awaitable Hide(float duration = -99f)
     {
-        if (Hidden)
+        if (Hidden && !Tweening)
         {
             if (log) { Debug.Log($"(Transitioner) {name} is already hidden, no need to transition"); }
             return;
@@ -104,6 +115,7 @@ public class Transitioner : MonoBehaviour
     public bool Shown => get_current_value() >= shown_value;
     public bool Hidden => get_current_value() <= hidden_value;
     public bool Transitioning => !Shown && !Hidden;
+    public bool Tweening => tween != null && tween.Value.isAlive;
 
     // TWEENING
     private Tween? tween = null;
@@ -156,6 +168,14 @@ public class Transitioner : MonoBehaviour
         await Hide(duration);
         await System.Threading.Tasks.Task.Delay(100); // wait a small time (100 ms) to ensure transition has happened
         Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        if (tween != null && tween.Value.isAlive)
+        {
+            tween.Value.Stop();
+        }
     }
 }
 

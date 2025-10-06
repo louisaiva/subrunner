@@ -15,16 +15,17 @@ public class InputFeedback : MonoBehaviour
     protected InputAction action;
     protected System.Action<InputAction.CallbackContext> input_callback;
     protected System.Action<InputAction.CallbackContext> reset_callback;
+    protected System.Action<InputAction.CallbackContext> press_and_release_callback;
+    public bool use_press_and_release = false; // whether to use the press and release callback instead of the simple input & reset
 
     [Header("Image")]
     [SerializeField] protected Image image;
     [SerializeField] protected SpriteBank bank;
 
-    [Header("Colors")]
+    [Header("Colors & Label")]
     [SerializeField] protected Color base_color = new Color(1f, 1f, 1f, 1f);
     [SerializeField] protected Color clicked_color = new Color(1f, 1f, 0f, 1f);
-
-    [Header("Label")]
+    [SerializeField] protected List<UI_Colorer> colorers = new List<UI_Colorer>();
     [SerializeField] private TextMeshProUGUI label;
 
     [Header("Logs")]
@@ -57,6 +58,9 @@ public class InputFeedback : MonoBehaviour
         // we define the callback
         input_callback = ctx => OnInput();
         reset_callback = ctx => OnReset();
+
+        // and the complexe callback for press & release
+        press_and_release_callback = ctx => HandlePressAndReleaseInput(ctx);
     }
 
     // ONENABLE/DISABLE
@@ -70,8 +74,15 @@ public class InputFeedback : MonoBehaviour
         }
 
         // we add the listeners
-        action.performed += input_callback;
-        action.canceled += reset_callback;
+        if (use_press_and_release)
+        {
+            action.performed += press_and_release_callback;
+        }
+        else
+        {
+            action.performed += input_callback;
+            action.canceled += reset_callback;
+        }
 
         // we reset the IF
         OnReset();
@@ -79,9 +90,17 @@ public class InputFeedback : MonoBehaviour
     private void OnDisable()
     {
         if (action == null) { return; }
+
         // we remove the listeners
-        action.performed -= input_callback;
-        action.canceled -= reset_callback;
+        if (use_press_and_release)
+        {
+            action.performed -= press_and_release_callback;
+        }
+        else
+        {
+            action.performed -= input_callback;
+            action.canceled -= reset_callback;
+        }
     }
 
 
@@ -90,11 +109,34 @@ public class InputFeedback : MonoBehaviour
     {
         // we set the color
         image.color = clicked_color;
+
+        // we apply the colorers color if we have any
+        foreach (UI_Colorer colorer in colorers)
+        {
+            colorer.ApplyColor();
+        }
     }
     public virtual void OnReset()
     {
         // we set the color
         image.color = base_color;
+
+        // we revert the colorers color if we have any
+        foreach (UI_Colorer colorer in colorers)
+        {
+            colorer.RevertColor();
+        }
+    }
+    public virtual void HandlePressAndReleaseInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            OnInput();
+        }
+        else if (context.canceled)
+        {
+            OnReset();
+        }
     }
 
     // SETTERS

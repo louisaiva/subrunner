@@ -23,7 +23,7 @@ public class AnimBank : Singleton<AnimBank>
 
     [Header("Animations")]
     // store all the animations with the keys : skin, capacity, orientation
-    public Dictionary<string,Dictionary<string,List<Anim>>> anims = new();
+    public Dictionary<string, Dictionary<string, List<Anim>>> anims = new();
     // if this is true, the bank will load animations from .anim files and store them as .json files
     // if false, the bank will load animations from .json files (/!\ you need to have the .json files in the Resources/anims/ folder)
     public bool extract_json_on_load = false;
@@ -35,21 +35,25 @@ public class AnimBank : Singleton<AnimBank>
     // store the capacities that have parameters override
     // private List<string> capacities_with_parameters_override = new List<string>() { "attack","hurted","dodge" }; // todo obsolete ??
     // store the loops of the capacities
-    [SerializeField] private List<string> capacities_with_no_loops = new List<string>() { "attack","hurted","dodge" };
+    [SerializeField] private List<string> capacities_with_no_loops = new List<string>() { "attack", "hurted", "dodge" };
 
     [Header("Sprites")]
     public string spritesheets_path = "spritesheets/";
 
 
+    [Header("Skins management")]
+    public List<SkinVariant> skin_variants = new List<SkinVariant>();
+
     [Header("Logs")]
     public bool log = false;
     public bool log_LAFAC = false;
+    public bool log_variant_skins = false;
 
     // INITIALIZATION
     protected override void Awake()
     {
         base.Awake();
-        
+
         LoadAnims();
 
         Debug.Log(getAnimsList());
@@ -59,31 +63,37 @@ public class AnimBank : Singleton<AnimBank>
 
         if (extract_json_on_load)
         {
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
 
-                // we remove all the .json files in the Resources/anims/ folder
-                // string[] jsons_paths = Directory.GetFiles("Assets/Resources/" + jsons_path, "*.json", SearchOption.AllDirectories);
-                FileUtil.DeleteFileOrDirectory("Assets/Resources/" + jsons_path);
-                Directory.CreateDirectory("Assets/Resources/" + jsons_path);
+            // we remove all the .json files in the Resources/anims/ folder
+            // string[] jsons_paths = Directory.GetFiles("Assets/Resources/" + jsons_path, "*.json", SearchOption.AllDirectories);
+            FileUtil.DeleteFileOrDirectory("Assets/Resources/" + jsons_path);
+            Directory.CreateDirectory("Assets/Resources/" + jsons_path);
 
-                if (log) {Debug.Log("(AnimBank - LoadAnims) Extracting animations from AnimationClips and saving them as .json files.");}
+            if (log) { Debug.Log("(AnimBank - LoadAnims) Extracting animations from AnimationClips and saving them as .json files."); }
 
-                // if in the editor, we load AnimationClips and store them as .json files
-                string[] anims_paths = Directory.GetFiles("Assets/Resources/" + anims_path, "*.anim", SearchOption.AllDirectories);
-                if (log) {Debug.Log("(AnimBank - LoadAnims) Found " + anims_paths.Length + " animations :\n\t" + string.Join("\n\t", anims_paths));}
-                foreach (string path in anims_paths)
-                {
-                    // we remove Assets/Resources/anims/ from the path
-                    string new_path = path.Replace("Assets/Resources/" + anims_path, "");
-                    new_path = new_path.Replace(".anim", "");
-                    loadAnimFromAnimationClip(new_path);
-                }
-        
+            // if in the editor, we load AnimationClips and store them as .json files
+            string[] anims_paths = Directory.GetFiles("Assets/Resources/" + anims_path, "*.anim", SearchOption.AllDirectories);
+            if (log) { Debug.Log("(AnimBank - LoadAnims) Found " + anims_paths.Length + " animations :\n\t" + string.Join("\n\t", anims_paths)); }
+            foreach (string path in anims_paths)
+            {
+                // we remove Assets/Resources/anims/ from the path
+                string new_path = path.Replace("Assets/Resources/" + anims_path, "");
+                new_path = new_path.Replace(".anim", "");
+                loadAnimFromAnimationClip(new_path);
+            }
+
+            // we generate the skins variants if we have some
+            foreach (SkinVariant skin_variant in skin_variants)
+            {
+                generateVariantSkin(skin_variant);
+            }
+
             return;
-            #endif
+#endif
         }
 
-        if (log) {Debug.Log("(AnimBank - LoadAnims) Loading animations from .json files.");}
+        if (log) { Debug.Log("(AnimBank - LoadAnims) Loading animations from .json files."); }
 
         // if in the build or not extracting from .anim, we load .json files
         TextAsset[] jsons = Resources.LoadAll<TextAsset>(jsons_path);
@@ -93,7 +103,7 @@ public class AnimBank : Singleton<AnimBank>
             json_paths[i] = jsons[i].name;
         }
 
-        if (log) {Debug.Log("(AnimBank - LoadAnims) Found " + json_paths.Length + " jsons :\n\t" + string.Join("\n\t", json_paths));}
+        if (log) { Debug.Log("(AnimBank - LoadAnims) Found " + json_paths.Length + " jsons :\n\t" + string.Join("\n\t", json_paths)); }
         foreach (string path in json_paths)
         {
             // we remove Assets/Resources/anims/ from the path
@@ -127,14 +137,14 @@ public class AnimBank : Singleton<AnimBank>
         // on l'ajoute à la banque anims
         AddAnim(anim);
     }
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
     private void loadAnimFromAnimationClip(string path)
     {
         // LOAD AN ANIMATION FROM AN ANIMATION CLIP
         // AND THEN EXTRACT THE DATA AND SAVE IT AS A JSON FILE
         // only works in the editor
 
-        if (log_LAFAC) {Debug.Log("(AnimBank - LAFAC) Loading animation from AnimationClip : " + path);}
+        if (log_LAFAC) { Debug.Log("(AnimBank - LAFAC) Loading animation from AnimationClip : " + path); }
 
         // on charge l'animation depuis le path
         AnimationClip clip = Resources.Load<AnimationClip>("animations/" + path);
@@ -149,7 +159,7 @@ public class AnimBank : Singleton<AnimBank>
         if (anim == null) { return; }
         if (!anim.IsNameCorrect(anim.name))
         {
-            if (log_LAFAC) {Debug.LogWarning("(AnimBank - LAFAC) Animation name format is incorrect : " + anim.name);}
+            if (log_LAFAC) { Debug.LogWarning("(AnimBank - LAFAC) Animation name format is incorrect : " + anim.name); }
             return;
         }
 
@@ -176,7 +186,7 @@ public class AnimBank : Singleton<AnimBank>
         }
 
         // si on arrive ici c'est qu'on a pas trouvé de sprite curve
-        if (log_LAFAC) {Debug.LogWarning("(AnimBank - ExtractDataFromAnimationClip) No sprite curve found in the animation clip.");}
+        if (log_LAFAC) { Debug.LogWarning("(AnimBank - ExtractDataFromAnimationClip) No sprite curve found in the animation clip."); }
         return null;
     }
     private Anim extractSpriteCurve(AnimationClip clip, EditorCurveBinding binding)
@@ -194,19 +204,19 @@ public class AnimBank : Singleton<AnimBank>
             // save the frame time
             sprites_durations[i] = (i == frameCount - 1)
                     ? 0f // last frame duration is 0
-                    : spriteCurve[i+1].time - spriteCurve[i].time; // other frames duration are calculed with the next frame time - actual frame time
+                    : spriteCurve[i + 1].time - spriteCurve[i].time; // other frames duration are calculed with the next frame time - actual frame time
 
             // we are extracting data in this sense for it to be the same as Unity default AnimationEditor
             // before we did it in the opposite (frame 0 has a 0f duration) but the result is then different from the editor
-            
+
             // save the sprite path
             Sprite sprite = spriteCurve[i].value as Sprite;
             if (sprite == null)
             {
-                if (log_LAFAC) {Debug.LogWarning("(AnimBank - ExtractSpriteCurve) Sprite not found in the animation clip. Skipping Anim : " + clip.name);}
+                if (log_LAFAC) { Debug.LogWarning("(AnimBank - ExtractSpriteCurve) Sprite not found in the animation clip. Skipping Anim : " + clip.name); }
                 return null;
             }
-            string spritePath = AssetDatabase.GetAssetPath(sprite).Replace(".png","").Replace("Assets/Resources/" + spritesheets_path, "");
+            string spritePath = AssetDatabase.GetAssetPath(sprite).Replace(".png", "").Replace("Assets/Resources/" + spritesheets_path, "");
             spritePath += "." + sprite.name;
             sprites_paths[i] = spritePath;
         }
@@ -221,8 +231,155 @@ public class AnimBank : Singleton<AnimBank>
         string path = "Assets/Resources/" + jsons_path + anim.name + ".json";
         System.IO.File.WriteAllText(path, json);
     }
-    #endif
 
+
+
+
+    // SKIN VARIANT MANAGEMENT
+    private void generateVariantSkin(SkinVariant skin_variant)
+    {
+        // we check if the base skin exists
+        if (!HasSkin(skin_variant.base_skin))
+        {
+            if (log_variant_skins) { Debug.LogWarning("(AnimBank - GenerateVariantSkin) Base skin not found in the bank : " + skin_variant.base_skin); }
+            return;
+        }
+
+        // we check if the variant skin already exists
+        if (HasSkin(skin_variant.variant_name))
+        {
+            if (log_variant_skins) { Debug.LogWarning("(AnimBank - GenerateVariantSkin) Variant skin already exists in the bank : " + skin_variant.variant_name); }
+            return;
+        }
+
+        // we create the variant skin
+        anims.Add(skin_variant.variant_name, new Dictionary<string, List<Anim>>());
+
+        // we prepare the List<Sprite[]> (list of spritesheets)
+        List<Sprite[]> base_sprites = new List<Sprite[]>();
+        List<Sprite[]> variant_sprites = new List<Sprite[]>();
+
+        // we load base spritesheets
+        foreach (string spritesheet in skin_variant.base_spritesheets)
+        {
+            Sprite[] sprites = Resources.LoadAll<Sprite>(spritesheets_path + spritesheet);
+            if (sprites == null || sprites.Length == 0)
+            {
+                if (log_variant_skins) { Debug.LogWarning("(AnimBank - GenerateVariantSkin) Base spritesheet not found : " + spritesheet); }
+                return;
+            }
+            base_sprites.Add(sprites);
+        }
+
+        // we load variant spritesheets
+        foreach (string spritesheet in skin_variant.variant_spritesheets)
+        {
+            Sprite[] sprites = Resources.LoadAll<Sprite>(spritesheets_path + spritesheet);
+            if (sprites == null || sprites.Length == 0)
+            {
+                if (log_variant_skins) { Debug.LogWarning("(AnimBank - GenerateVariantSkin) Variant spritesheet not found : " + spritesheet); }
+                return;
+            }
+            variant_sprites.Add(sprites);
+        }
+
+
+
+        // // we load the sprites
+        // Sprite[] variant_sprites = Resources.LoadAll<Sprite>(skin_variant.variant_sprite_path);
+        // if (variant_sprites == null || variant_sprites.Length == 0)
+        // {
+        //     if (log_variant_skins) { Debug.LogWarning("(AnimBank - GenerateVariantSkin) Variant sprite not found : " + skin_variant.variant_sprite_path); }
+        //     return;
+        // }
+        // Sprite[] base_sprites = Resources.LoadAll<Sprite>(skin_variant.base_sprite_path);
+        // if (base_sprites == null || base_sprites.Length == 0)
+        // {
+        //     if (log_variant_skins) { Debug.LogWarning("(AnimBank - GenerateVariantSkin) Base sprite not found : " + skin_variant.base_sprite_path); }
+        //     return;
+        // }
+
+        // we copy all the animations from the base skin to the variant skin
+        foreach (string capacity in anims[skin_variant.base_skin].Keys)
+        {
+            anims[skin_variant.variant_name].Add(capacity, new List<Anim>());
+
+            foreach (Anim base_anim in anims[skin_variant.base_skin][capacity])
+            {
+                create_variant_anim(skin_variant, base_anim, base_sprites, variant_sprites);
+            }
+        }
+
+        if (log_variant_skins) { Debug.Log("(AnimBank - GenerateVariantSkin) Variant skin generated : " + skin_variant.variant_name); }
+    }
+    private Anim create_variant_anim(SkinVariant skin_variant, Anim anim, List<Sprite[]> base_sprites, List<Sprite[]> variant_sprites)
+    {
+        // creates a variant animation based on the anim anim and with skin variant
+        if (anim.skin != skin_variant.base_skin)
+        {
+            if (log_variant_skins) { Debug.LogWarning("(AnimBank - CreateVariantAnim) The anim skin is not the same as the base skin of the variant : " + anim.name); }
+            return null;
+        }
+
+        // we copy the animation
+        Anim variant_anim = new Anim(anim);
+        variant_anim.name = skin_variant.variant_name + "." + anim.capacity + "." + anim.orientation;
+
+        // we prepare for checking in which Sprite[] is every sprite
+        int preferred_spritesheet_index = 0;
+        Sprite[] preferred_spritesheet = base_sprites[preferred_spritesheet_index];
+
+
+        // we replace the sprites in the animation by the variant sprite
+        for (int i = 0; i < variant_anim.sprites.Length; i++)
+        {
+            // we check in which spritesheet the sprite is
+            if (!preferred_spritesheet.Contains(variant_anim.sprites[i]))
+            {
+                // we look for the right spritesheet
+                bool found = false;
+                for (int j = 0; j < base_sprites.Count; j++)
+                {
+                    if (base_sprites[j].Contains(variant_anim.sprites[i]))
+                    {
+                        preferred_spritesheet_index = j;
+                        preferred_spritesheet = base_sprites[preferred_spritesheet_index];
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    if (log_variant_skins) { Debug.LogWarning("(AnimBank - CreateVariantAnim) Sprite not found in any base spritesheet : " + variant_anim.sprites[i].name + " in anim " + anim.name); }
+                    continue;
+                }
+            }
+
+            // we get the index in the base_sprite list
+            int sprite_index = Array.IndexOf(preferred_spritesheet, variant_anim.sprites[i]);
+            if (sprite_index == -1) { continue; } // if the sprite is not found in the base_sprites, we skip it
+            Sprite variant_sprite = variant_sprites[preferred_spritesheet_index][sprite_index];
+            // variant_anim.sprites[i] = variant_sprite;
+
+            // we replace the sprite path
+            string spritePath = AssetDatabase.GetAssetPath(variant_sprite).Replace(".png", "").Replace("Assets/Resources/" + spritesheets_path, "");
+            spritePath += "." + variant_sprite.name;
+            variant_anim.sprites_paths[i] = spritePath;
+        }
+
+        // we clean the sprites
+        variant_anim.sprites = null;
+
+        // we save the json
+        saveAnimToJson(variant_anim);
+
+        // we add the anim (and so load the sprites)
+        AddAnim(variant_anim);
+
+        return variant_anim;
+    }
+
+#endif
 
 
     // BANK MANAGEMENT
@@ -231,10 +388,10 @@ public class AnimBank : Singleton<AnimBank>
         // check if the animation already exists
         if (HasAnim(anim.name))
         {
-            if (log) {Debug.LogWarning("(AnimBank - AddAnim) Animation already exists in the bank : " + anim.name);}
+            if (log) { Debug.LogWarning("(AnimBank - AddAnim) Animation already exists in the bank : " + anim.name); }
             return;
         }
-        
+
         // prepare the skin and capacity
         string[] splitted_name = anim.name.Split('.');
         string skin = splitted_name[0];
@@ -247,7 +404,7 @@ public class AnimBank : Singleton<AnimBank>
             anim.loop = capacities_loops[index];
             // anim.priority = capacities_priorities[index];
         } */
-       if (capacities_with_no_loops.Contains(capacity))
+        if (capacities_with_no_loops.Contains(capacity))
         {
             anim.loop = false; // if the capacity is in the no loops list, we set the loop to false
         }
@@ -308,10 +465,10 @@ public class AnimBank : Singleton<AnimBank>
             // return the idle anim of the skin
             if (log) { Debug.LogWarning($"(AnimBank - GetAnim : {skin}.{capacity}.{orientation} ) Capacity not found, returning idle"); }
             return GetAnim(skin + ".idle." + orientation);
-        } 
+        }
 
         // return the best orientation recursively
-        return get_closest_orientation_anim(skin, capacity, orientation);        
+        return get_closest_orientation_anim(skin, capacity, orientation);
     }
     private Anim get_closest_orientation_anim(string skin, string capacity, string orientation)
     {
@@ -328,7 +485,7 @@ public class AnimBank : Singleton<AnimBank>
 
         // checks some special cases
         if (skin == "zombo" && capacity == "attack" && (orientation == "LD" || orientation == "RD"))
-            { return get_closest_orientation_anim(skin, capacity, "D"); }
+        { return get_closest_orientation_anim(skin, capacity, "D"); }
 
         // if we have a 2 letters orientation (LU,LD,RU,RD) we delete the 2nd letter (and so we look either for L or R)
         else { return get_closest_orientation_anim(skin, capacity, orientation[0].ToString()); }
@@ -384,6 +541,68 @@ public class AnimBank : Singleton<AnimBank>
         return anims.ContainsKey(skin);
     }
 
+
+    // SKINS MANAGEMENT
+    [Header("Skins management")]
+    public List<string> skins = new List<string>() { "perso", "cat", "zombo", "robot", "rat", "nobody" };
+    public List<float> head_offset_per_skin = new List<float>() { 0.7f, 0.7f, 0.7f, 0.7f, 0.7f, 0.7f };
+    public List<float> body_offset_per_skin = new List<float>() { 0.4f, 0.15f, 0.4f, 0.2f, 0.1f, 0.42f };
+    public float GetHeadOffset(string skin)
+    {
+        int index = skins.IndexOf(skin);
+        if (index == -1)
+        {
+            // checks if it's in the variant skins -> try to return the base skin head offset
+            if (skin_variants.Exists(variant => variant.variant_name == skin))
+            {
+                SkinVariant variant = skin_variants.Find(variant => variant.variant_name == skin);
+                return GetHeadOffset(variant.base_skin);
+            }
+
+            return 0f;
+        }
+        return head_offset_per_skin[index];
+    }
+    public float GetBodyOffset(string skin)
+    {
+        int index = skins.IndexOf(skin);
+        if (index == -1)
+        {
+            // checks if it's in the variant skins -> try to return the base skin head offset
+            if (skin_variants.Exists(variant => variant.variant_name == skin))
+            {
+                SkinVariant variant = skin_variants.Find(variant => variant.variant_name == skin);
+                return GetBodyOffset(variant.base_skin);
+            }
+
+            return 0f;
+        }
+        return body_offset_per_skin[index];
+    }
+    public Sprite GetDefaultSprite(string skin)
+    {
+        if (!HasSkin(skin))
+        {
+            if (log) { Debug.LogWarning("(AnimBank - GetDefaultSprite) Skin not found in the bank : " + skin); }
+            return null;
+        }
+
+        if (!HasCapacity(skin + ".idle"))
+        {
+            if (log) { Debug.LogWarning("(AnimBank - GetDefaultSprite) Capacity idle not found in the bank for skin : " + skin); }
+            return null;
+        }
+
+        Anim anim = anims[skin]["idle"].Find(a => a.orientation == "D");
+        if (anim == null)
+        {
+            if (log) { Debug.LogWarning("(AnimBank - GetDefaultSprite) Default animation not found for skin : " + skin); }
+            return null;
+        }
+
+        return anim.sprites[0];
+    }
+
     // DEBUG
     private string getAnimsList()
     {
@@ -405,9 +624,11 @@ public class AnimBank : Singleton<AnimBank>
         }
         return title + count + " animations\n" + list;
     }
+
 }
 
-[Serializable] public class Anim 
+[Serializable]
+public class Anim
 {
     // stocke UNE animation
     // ainsi que quelques parametres utiles au AnimHandler
@@ -417,12 +638,12 @@ public class AnimBank : Singleton<AnimBank>
     public string orientation { get { return name.Split('.')[2]; } }
     // todo pas opti, faire l'inverse : stocker chaque string skin,capacity,orientation
     // todo et faire une propertie name qui concatene les 3
-    
+
     // stockage utile de l'animation
     public string[] sprites_paths;
     public Sprite[] sprites;
     public float[] sprites_durations;
-    
+
 
     // parametres utiles à l'AnimPlayer
     public bool loop = true; // si c'est false, l'AnimPlayer revient sur l'animation par defaut
@@ -437,7 +658,7 @@ public class AnimBank : Singleton<AnimBank>
         this.sprites_paths = sprites_paths;
         this.sprites_durations = sprites_durations;
     }
-    public Anim(string name, string[] sprites_paths, float[] sprites_durations, bool loop=true, float speed=1f, /* int priority=0,  */bool flipX=false)
+    public Anim(string name, string[] sprites_paths, float[] sprites_durations, bool loop = true, float speed = 1f, /* int priority=0,  */bool flipX = false)
     {
         this.name = name;
         this.loop = loop;
@@ -457,6 +678,7 @@ public class AnimBank : Singleton<AnimBank>
         this.flipX = other.flipX;
 
         this.sprites_paths = other.sprites_paths;
+        this.sprites = other.sprites;
         this.sprites_durations = other.sprites_durations;
     }
 
@@ -468,7 +690,7 @@ public class AnimBank : Singleton<AnimBank>
         sprites = new Sprite[sprites_paths.Length];
 
         // on prépare la ram pour les spritesheets
-        Dictionary<string,Sprite[]> spritesheets = new();
+        Dictionary<string, Sprite[]> spritesheets = new();
 
         // on parcours tous les sprites qu'on cherche
         for (int i = 0; i < sprites_paths.Length; i++)
@@ -533,4 +755,14 @@ public class AnimBank : Singleton<AnimBank>
         return duration;
     }
 
+}
+
+
+[Serializable]
+public class SkinVariant
+{
+    public string base_skin;
+    public List<string> base_spritesheets;
+    public string variant_name;
+    public List<string> variant_spritesheets;
 }

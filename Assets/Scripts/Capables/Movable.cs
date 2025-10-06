@@ -21,7 +21,9 @@ public class Movable : Capable
 
     [Header("Collisions")]
     public Collider2D feet_collider;
-    public float feet_radius => feet_collider is CircleCollider2D circle ? circle.radius : feet_collider.bounds.extents.x;
+    public float feet_radius => feet_collider != null ?
+                                feet_collider is CircleCollider2D circle ? circle.radius : feet_collider.bounds.extents.x
+                                : 0f;
 
     // AWAKE
     protected override void Awake()
@@ -37,13 +39,22 @@ public class Movable : Capable
         else { Debug.LogError("No Rigidbody2D found on " + gameObject.name); }
 
         // Get the feet collider
-        feet_collider = transform.Find("feet").GetComponent<Collider2D>();
+        feet_collider = transform.Find("feet")?.GetComponent<Collider2D>();
     }
-
     protected virtual void Start()
     {
         // random weight
         weight += UnityEngine.Random.Range(-random_weight_modifier_at_start, random_weight_modifier_at_start);
+    }
+
+    // ON ENABLE/DISABLE -> MOVABLE ENGINE REGISTERING
+    private void OnEnable()
+    {
+        MovableEngine.Instance.Register(this);
+    }
+    private void OnDisable()
+    {
+        MovableEngine.Instance.Unregister(this);
     }
 
     // UPDATE
@@ -59,6 +70,7 @@ public class Movable : Capable
             return;
         }
         else if (rb == null) { return; }
+        else if (feet_collider == null) { return; }
 
         // Update moving effects
         updateMovingEffects();
@@ -168,6 +180,14 @@ public class Movable : Capable
     {
         // on supprime toutes les forces
         forces.Clear();
+    }
+    public void ForceStop()
+    {
+        // on supprime les forces
+        ClearForces();
+
+        // on arrête le rb
+        if (rb != null) { rb.linearVelocity = Vector2.zero; }
     }
     public List<Force> GetForces()
     {

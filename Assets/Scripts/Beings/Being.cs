@@ -205,7 +205,14 @@ public class Being : Movable
     }
 
     // DIE
-    public virtual void Die() {}
+    public virtual void Die()
+    {
+        // if we are controlled by a controller we reset the controller
+        if (Controller.Instance.Capable == this)
+        {
+            Controller.Instance.ResetCapableTarget();
+        }
+    }    
 
 
     // SETTERS

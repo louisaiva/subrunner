@@ -1,0 +1,270 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using static PlayerInputActions;
+
+public class PersoInputsController : InputController
+{
+    public bool log = false;
+
+    // Controller thing
+    private Controller controller;
+    private Capable Capable => controller.Capable;
+
+    [Header("INPUTS")]
+    public bool InputsDisabled = false;
+    protected InputManager input_manager;
+    private PersoActions perso_inputs;
+    private event Action<InputAction.CallbackContext> dodgeCallback;
+    private event Action<InputAction.CallbackContext> attackCallback;
+    private event Action<InputAction.CallbackContext> hackCallback;
+    private event Action<InputAction.CallbackContext> talkCallback;
+    private event Action<InputAction.CallbackContext> useConso1Callback;
+    private event Action<InputAction.CallbackContext> useConso2Callback;
+    private event Action<InputAction.CallbackContext> useConso3Callback;
+    private event Action<InputAction.CallbackContext> useConso4Callback;
+    private event Action<InputAction.CallbackContext> interactCallback;
+
+    [Header("Components")]
+    public HackableNavigator HackableNavigator { get; private set; }
+    public ExploitNavigator ExploitNavigator { get; private set; }
+
+    private void Start()
+    {
+        // on récupère les inputs
+        initInputs();
+
+        controller = GetComponent<Controller>();
+
+        HackableNavigator = transform.Find("hacking").GetComponent<HackableNavigator>();
+        ExploitNavigator = transform.Find("hacking").GetComponent<ExploitNavigator>();
+
+        // on crée les hold inputs
+        add_endless_input(new EndlessInput<float>("interact", perso_inputs.interact,
+                threshold: InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD,
+                repeat: InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY,
+                unscaled_time: false))
+                .OnEndless += ctx => OnInteract(true); // ajoute le callback directement
+    }
+
+    // INPUTS
+    private void initInputs()
+    {
+        // on récupère les inputs
+        input_manager = InputManager.Instance;
+        perso_inputs = input_manager.inputs.perso;
+
+        // on crée les callbacks de base
+        dodgeCallback = ctx => OnDodge();
+        attackCallback = ctx => OnAttack();
+        talkCallback = ctx => OnRandomTalk();
+
+        // et les callbacks de conso
+        useConso1Callback = ctx => OnUseConso(1);
+        useConso2Callback = ctx => OnUseConso(2);
+        useConso3Callback = ctx => OnUseConso(3);
+        useConso4Callback = ctx => OnUseConso(4);
+
+
+        // ici c'est les inputs qui prennent en charge hold input
+        interactCallback = ctx => HandleInteractInput(ctx);
+
+        // ici c les inputs qui ont pas besoin d'hold input
+        hackCallback = ctx => HandleRunHackInput(ctx);
+
+        EnableInputs();
+    }
+    public void EnableInputs()
+    {
+        perso_inputs.dodge.performed += dodgeCallback;
+        perso_inputs.attack.performed += attackCallback;
+        perso_inputs.hack.performed += hackCallback;
+        perso_inputs.randomTalk.performed += talkCallback;
+        perso_inputs.conso1.performed += useConso1Callback;
+        perso_inputs.conso2.performed += useConso2Callback;
+        perso_inputs.conso3.performed += useConso3Callback;
+        perso_inputs.conso4.performed += useConso4Callback;
+        perso_inputs.interact.performed += interactCallback;
+
+        InputsDisabled = false;
+    }
+    public void DisableInputs()
+    {
+        perso_inputs.dodge.performed -= dodgeCallback;
+        perso_inputs.attack.performed -= attackCallback;
+        perso_inputs.hack.performed -= hackCallback;
+        perso_inputs.randomTalk.performed -= talkCallback;
+        perso_inputs.conso1.performed -= useConso1Callback;
+        perso_inputs.conso2.performed -= useConso2Callback;
+        perso_inputs.conso3.performed -= useConso3Callback;
+        perso_inputs.conso4.performed -= useConso4Callback;
+        perso_inputs.interact.performed -= interactCallback;
+
+        InputsDisabled = true;
+    }
+
+
+    // UPDATE
+    private void Update()
+    {
+
+        // si les perso_inputs sont desactivés on return (comme ça on garde la même vitesse)
+        // if (!perso_inputs.enabled) { return; }
+
+        // walk
+        if (Capable.HasCapacity<WalkCapacity>())
+        {
+            Vector2 raw_inputs = InputManager.Instance.MovementRawInputs;
+
+            // we check if the raw inputs are below the deadzone
+            raw_inputs.x = Mathf.Abs(raw_inputs.x) < input_manager.JOYSTICK_MIN_THRESHOLD ? 0f : raw_inputs.x;
+            raw_inputs.y = Mathf.Abs(raw_inputs.y) < input_manager.JOYSTICK_MIN_THRESHOLD ? 0f : raw_inputs.y;
+
+            // we normalize the inputs
+            Capable.Orientation = raw_inputs.normalized;
+
+            // we set the walk_capacity.walk_percentage_target
+            Capable.GetCapacity<WalkCapacity>().walk_percentage_target = raw_inputs.magnitude;
+
+            // Debug.Log("inputs : " + inputs + " / raw_inputs : " + raw_inputs + " / inputs_magnitude : " + raw_inputs.magnitude);
+        }
+
+        // run
+        if (Capable.HasCapacity<RunCapacity>())
+        {
+            if (perso_inputs.run.ReadValue<float>() >= input_manager.BUTTON_MAX_THRESHOLD)
+            {
+                Capable.GetCapacity<RunCapacity>().EnableRun();
+            }
+            else if (perso_inputs.run.ReadValue<float>() < input_manager.BUTTON_MIN_THRESHOLD)
+            {
+                Capable.GetCapacity<RunCapacity>().DisableRun();
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+    // HANDLE INPUTS
+    public void OnAttack()
+    {
+        // on cherche si on a des armes
+        Weapon weapon = null;
+        if (Capable is Perso perso)
+        {
+            weapon = perso.ItemManager.GetWeapon();
+            if (weapon != null)
+            {
+                weapon.GetCapacity<AttackCapacity>().damage = perso.skillManager.GetSkillValue("stat:damage");
+            }
+        }
+        else if (Capable.Inventory != null) { weapon = Capable.Inventory.GetItem<Weapon>(); }
+        if (weapon != null) { weapon.Use(Capable); return; }
+
+        // on essaie d'attaquer à la main
+        AttackCapacity hitter = Capable.GetCapacity<AttackCapacity>();
+        if (hitter != null) { hitter.Use(Capable); return; }
+
+        // on a pas d'armes ni rien, on return juste
+        return;
+    }
+    public void OnRandomTalk()
+    {
+        TalkCapacity voice = Capable.GetCapacity<TalkCapacity>();
+        if (voice == null) { return; } // if we don't have a talk capacity
+        if (!voice.Able) { return; } // if we don't have a talk capacity
+        voice.Use(Capable);
+    }
+    private void OnDodge()
+    {
+        // on vérifie que le perso peut dodge
+        // if (!Can("dodge")) { return; }
+        // Do("dodge");
+
+        // on récupère les shoes
+        Shoes shoes = null;
+        if (Capable is Perso perso) { shoes = perso.ItemManager.GetShoes(); }
+        else if (Capable.Inventory != null) { shoes = Capable.Inventory.GetItem<Shoes>(); }
+        if (shoes == null) { return; } // if the shoes are not set, we return
+
+        // on utilise les shoes
+        shoes.Use(Capable);
+    }
+    public void OnUseConso(int index)
+    {
+
+        // on trouve la conso
+        Usable conso = null;
+        if (Capable is Perso perso) { conso = perso.ItemManager.GetConsumable(index); }
+        if (conso == null) { return; }
+
+        // on utilise la conso
+        conso.Use(Capable);
+    }
+
+
+    // INTERACT
+    public void HandleInteractInput(InputAction.CallbackContext context)
+    {
+        // if we press the button we launch the endless input
+        if (context.ReadValue<float>() >= 0.5f)
+        {
+            get_endless_input<float>("interact").OnInput(context);
+            return;
+        }
+
+        // else we release the button so we direclty interact with it
+        OnInteract();
+    }
+    private void OnInteract(bool endless = false)
+    {
+        InteractCapacity interactor = Capable.GetCapacity<InteractCapacity>();
+        if (interactor == null) { return; } // if we don't have an interact capacity
+        if (!interactor.Able) { return; } // if we don't have an interact capacity
+
+        interactor.Interact(endless: endless);
+    }
+
+    // RUN HACK
+    public void HandleRunHackInput(InputAction.CallbackContext context)
+    {
+        float input = context.ReadValue<float>();
+
+        // 1 - if we are hacking we run the hack
+        if (UI_Manager.Instance.CurrentPool == "hacking")
+        {
+            // we check if the input is > 0.5 (we down the trigger -> we run hack), or not
+            if (input > 0.5f) { OnHack(); }
+            return;
+        }
+
+        // 2 - if we are in the hud / device we show the exploit wheel to select the exploit
+        if (!new List<string> { "hud", "device", "exploit_wheel" }.Contains(UI_Manager.Instance.CurrentPool)) { return; }
+        ExploitNavigator.HandleExploitWheelInput(input);
+    }
+    private void OnHack()
+    {
+        // On récupère la hack capacity du hackable navigator
+        HackCapacity hacker = HackableNavigator.hacker;
+        if (hacker == null) { if (log) { Debug.Log("(PersoInputsController) " + name + " tried to hack " + HackableNavigator.name + " but it has no HackCapacity"); } return; } // if the hacker is not set, we return
+
+        ConnectCapacity connector = Controller.Instance.Capable.Connector;
+        if (connector == null) { if (log) { Debug.Log("(PersoInputsController) " + name + " tried to hack " + HackableNavigator.name + " but it has no Connector"); } return; } // if the connector is not set,
+
+        // on hack
+        if (log) { Debug.Log("(PersoInputsController) " + name + " launches hack on " + HackableNavigator.name); }
+        hacker.SetConnector(connector);
+        hacker.Use(Capable);
+    }
+
+}

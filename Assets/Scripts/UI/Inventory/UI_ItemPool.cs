@@ -15,7 +15,6 @@ using UnityEngine.UI;
 public class UI_ItemPool : MonoBehaviour
 {
     [Header("Item Pool Parameters")]
-    // public bool Faded = false;
     public int MaxSlots = 9; // the maximum number of slots in the pool
     public int MinSlots = 0;
     public bool Scalable = false; // if true, the pool will dynamically add/remove slots
@@ -32,7 +31,7 @@ public class UI_ItemPool : MonoBehaviour
 
     [Header("Components")]
     [SerializeField] protected ItemBank bank;
-    public Description Descriptor; // the description of the item pool
+    // public Description Descriptor; // the description of the item pool
     public UI_Inventory UI_Inventory;
     protected CanvasGroup group;
 
@@ -84,6 +83,14 @@ public class UI_ItemPool : MonoBehaviour
             Debug.Log($"(UI_ItemPool) {name} just finished Init(), had {awake_slots} awake slots, now has {Count} slots\ndestroyed empty slots (& hereby may have recreated some to reach min or max slots)");
         }
     }
+
+    // POOL EVENTS
+    public event Action<UI_Item> OnPoolChanged = delegate { };
+    public void NotifyPoolChanged(UI_Item ui_item)
+    {
+        OnPoolChanged.Invoke(ui_item);
+    }
+
 
     // RULE CHECK
     public bool CanStore(Item item)
@@ -153,7 +160,7 @@ public class UI_ItemPool : MonoBehaviour
                 // we check if the slot is empty & we are scalable
                 if (ui_item.Quantity == 0 && Scalable)
                 {
-                    // we destroy the item
+                    // we destroy the ui_item
                     Destroy(ui_item.gameObject);
                     ui_items.Remove(ui_item);
                     if (Count < MinSlots) { CreateEmptySlots(MinSlots - Count); }
@@ -164,6 +171,7 @@ public class UI_ItemPool : MonoBehaviour
 
         return false;
     }
+
 
     // DESTROY / CREATE EMPTY ITEM SLOT
     public void DestroyEmptySlots()
@@ -205,6 +213,15 @@ public class UI_ItemPool : MonoBehaviour
             CreateEmptySlots(MaxSlots - Count);
             if (log) { Debug.Log($"(UI_ItemPool) {name} created {MaxSlots - Count} empty slots to reach the maximum of {MaxSlots} slots"); }
         }
+    }
+    public void DestroyAllSlots()
+    {
+        // we destroy all the slots
+        foreach (UI_Item ui_item in ui_items)
+        {
+            Destroy(ui_item.gameObject);
+        }
+        ui_items.Clear();
     }
     public void CreateEmptySlots(int count)
     {
@@ -279,5 +296,13 @@ public class UI_ItemPool : MonoBehaviour
         }
         return -1;
     }
-
+    public List<Item> GetAllItems()
+    {
+        List<Item> items = new List<Item>();
+        foreach (UI_Item ui_item in ui_items)
+        {
+            items.AddRange(ui_item.GetItems());
+        }
+        return items;
+    }
 }

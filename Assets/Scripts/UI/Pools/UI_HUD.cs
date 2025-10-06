@@ -1,16 +1,17 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class UI_HUD : UI_Pool
 {
     [Header("Perso Quick Inventory")]
     public UI_Inventory perso_quick_inventory;
-    [SerializeField] private bool show_perso_quick_inventory = true;
     private HUD_PersoItemPool perso_quick_inventory_pool;
 
     [Header("Components")]
     [SerializeField] private UI_Inventory ui_chest;
 
+    // AWAKE & START
     protected void Awake()
     {
         // on récupère les composants
@@ -26,79 +27,78 @@ public class UI_HUD : UI_Pool
 
         perso_quick_inventory_pool = perso_quick_inventory.GetComponent<HUD_PersoItemPool>();
     }
+    protected override void Start()
+    {
+        base.Start();
+
+        // on met les callbacks pour vérifier que le select_hackable se désactive bien
+        InputManager.Instance.OnPersoInputsToggled += verify_right_joy_is_disabled;
+    }
 
     // SHOW / HIDE
     public override async Awaitable Show(float duration, List<GameObject> dont_show = null)
     {
         // on affiche le perso_quick_inventory
-        if (show_perso_quick_inventory || ui_chest != null)
-        {
-            perso_quick_inventory.Show();
-        }
-        await base.Show(duration, dont_show);
-
         if (ui_chest != null)
         {
-            // ça veut dire qu'on interagit avec un chest,
-            // on doit les activer du xbox navigator
-            UI_XboxNavigator.Instance.Enable(ui_chest,true);
-
-            // UI_XboxNavigator.Instance.angle_threshold = base.angle_threshold;
+            ui_chest.Show();
+            perso_quick_inventory.Show();
         }
+
+        // attend que la pool s'affiche
+        await base.Show(duration, dont_show);
     }
     public override async Awaitable Hide(float duration, List<GameObject> dont_hide = null)
     {
         if (ui_chest != null)
         {
-            // ça veut dire qu'on interagit avec un chest,
-            // on doit les désactiver du xbox navigator
-            UI_XboxNavigator.Instance.Disable(ui_chest);
-            UI_XboxNavigator.Instance.Disable(perso_quick_inventory);
+            perso_quick_inventory.Hide();
+            ui_chest.Hide();
         }
 
-        perso_quick_inventory.Hide();
         await base.Hide(duration, dont_hide);
     }
 
     // REGISTER CHEST
-    public async void RegisterChest(UI_Inventory ui_chest)
+    public void RegisterChest(UI_Inventory ui_chest)
     {
         // on ajoute le chest au pool
-        RegisterToPool(ui_chest.gameObject);
+        ui_chest.Show();
         this.ui_chest = ui_chest;
 
-        if (Showed)
-        {
-            // on active le perso_quick_inventory si on doit l'afficher
-            if (!perso_quick_inventory.gameObject.activeSelf)
-            {
-                perso_quick_inventory.Show();
-            }
+        // on s'assure que le right joystick est désactivé
+        InputManager.Instance.inputs.perso.select_hackable.Disable();
 
-            // on active seulement les ui_items qui matche la rule du chest !
-            perso_quick_inventory_pool.EnableItemsByRule(ui_chest.ItemRule);
+        if (!Showed) { return; }
 
-            // on active le ui_navigator pour le perso_quick_inventory
-            await System.Threading.Tasks.Task.Yield(); // wait for the next frame to ensure the UI is active
-            UI_XboxNavigator.Instance.Enable(perso_quick_inventory, true);
-        }
+        // on active seulement les ui_items qui matche la rule du chest !
+        perso_quick_inventory.Show();
+        perso_quick_inventory_pool.EnableItemsByRule(ui_chest.ItemRule);
     }
     public void RemoveChest(UI_Inventory ui_chest)
     {
         // on enlève le chest du pool
-        QuitPool(ui_chest.gameObject);
+        ui_chest.Hide();
         this.ui_chest = null;
-        if (Showed)
-        {
-            UI_XboxNavigator.Instance.Disable(perso_quick_inventory);
+        if (!Showed) { return; }
 
-            // on desactive le perso_quick_inventory si on doit l'afficher
-            if (!show_perso_quick_inventory)
-            {
-                perso_quick_inventory.Hide();
-            }
-            // on active tous les ui_items
-            perso_quick_inventory_pool.EnableAllItems();
-        }
+        // on active tous les ui_items
+        perso_quick_inventory.Hide();
+        perso_quick_inventory_pool.EnableAllItems();
+
+        // on remet l'input de right joystick
+        InputManager.Instance.inputs.perso.select_hackable.Enable();
+    }
+    private void verify_right_joy_is_disabled(bool perso_inputs_enabled)
+    {
+
+        // todo : is there a better way to do this ? looks schlag. maybe it's better to bring back enhanced_perso map ? or hacking map ?
+
+        if (!perso_inputs_enabled) { return; }
+        if (!Showed) { return; }
+        if (ui_chest == null) { return; }
+
+        // on doit s'assurer que le right joystick est désactivé
+        InputManager.Instance.inputs.perso.select_hackable.Disable();
     }
 }

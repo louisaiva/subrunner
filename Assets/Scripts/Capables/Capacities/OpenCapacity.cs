@@ -49,15 +49,9 @@ public class OpenCapacity : Capacity
             capable.GetComponent<SpriteRenderer>().sortingLayerName = "fg";
             capable.GetComponent<SpriteRenderer>().sortingOrder = 1;
         }
-        else if (capable is Chest && capable.Inventory != null && capable.Inventory.ui != null)
-        {
-            capable.Inventory.ui.Show();
-            (GameObject.Find("/ui").GetComponent<UI_Manager>().GetPool("hud") as UI_HUD).RegisterChest(capable.Inventory.ui);
-        }
 
         if (debug) { Debug.Log(capable.name + " is opening..."); }
     }
-
     protected virtual void success_open()
     {
         // on ouvre le coffre

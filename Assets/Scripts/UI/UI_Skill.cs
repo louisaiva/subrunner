@@ -43,9 +43,10 @@ public class UI_Skill : MonoBehaviour, I_UI_Slot
 
         if (Perso.Instance == null) { menu.Descriptor.SetDescription("looks like there is no player anymore"); return; }
 
-        string desc = description + "\n";
-        desc += "\ncurrent : " + Perso.Instance.skillManager.GetSkillValue(Reference).ToString() + " " + unit;
+        string desc = "";
+        desc += "current : " + Perso.Instance.skillManager.GetSkillValue(Reference).ToString() + " " + unit;
         desc += "\nnext : " + Perso.Instance.skillManager.GetNextLevelSkillValue(Reference).ToString() + " " + unit;
+        desc += "\n\n" + description;
 
         // on met à jour la description
         menu.Descriptor.SetDescription(desc);
@@ -82,7 +83,7 @@ public class UI_Skill : MonoBehaviour, I_UI_Slot
         Perso.Instance.skillManager.UpgradeSkill(Reference);
 
         // on reouvre le hud
-        GameObject.Find("/ui").GetComponent<UI_Manager>().SwitchTo("hud");
+        UI_Manager.Instance.SwitchTo("hud");
     }
     public virtual void OnPointerDown(PointerEventData eventData)
     {

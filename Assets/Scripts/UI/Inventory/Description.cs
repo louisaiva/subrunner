@@ -31,6 +31,12 @@ public class Description : MonoBehaviour
         StartCoroutine(write(target_description, cursor));
     }
 
+    // COLOR
+    public void SetColor(Color color)
+    {
+        label.color = color;
+    }
+
     // WRITING
     public void SetDescription(string description)
     {

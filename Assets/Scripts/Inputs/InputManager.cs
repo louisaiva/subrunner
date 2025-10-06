@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using UnityEngine.InputSystem.UI;
+using System;
+using System.Collections;
 
 public class InputManager : Singleton<InputManager>
 {
@@ -15,6 +17,13 @@ public class InputManager : Singleton<InputManager>
     [SerializeField] public float JOYSTICK_MAX_THRESHOLD = 0.95f;
     [SerializeField] public float BUTTON_MIN_THRESHOLD = 0.2f;
     [SerializeField] public float BUTTON_MAX_THRESHOLD = 0.8f;
+
+    [Header("Inputing endlessly")]
+    [SerializeField] public float BUTTON_ENDLESSLY_SHORT_THRESHOLD = 0.3f; // time threshold input need to be maintain before inputing endlessly
+    [SerializeField] public float BUTTON_ENDLESSLY_SHORT_DELAY = 0.06f; // when inputing endlessly, delay btwn each input
+    [SerializeField] public float BUTTON_ENDLESSLY_LONG_THRESHOLD = 0.6f; // time threshold input need to be maintain before inputing endlessly
+    [SerializeField] public float BUTTON_ENDLESSLY_LONG_DELAY = 0.1f; // when inputing endlessly, delay btwn each input
+
 
     [Header("Components")]
     [SerializeField] private InputSystemUIInputModule input_system_ui_input_module;
@@ -122,8 +131,35 @@ public class InputManager : Singleton<InputManager>
     {
         return current_input_type;
     }
-
-
-    // INPUTS GETTERS
     public Vector2 MovementRawInputs { get => inputs.perso.move.ReadValue<Vector2>(); }
+
+    // INPUTS MAP TOGGLING
+    // todo : ideally all inputs toggling logic should be controlled in this script
+    public event Action<bool> OnPersoInputsToggled = delegate { };
+    public void EnablePersoInputs()
+    {
+        if (log) { Debug.Log("(InputManager) enabling perso inputs"); }
+        inputs.perso.Enable();
+
+        OnPersoInputsToggled?.Invoke(true);
+    }
+    public void DisablePersoInputs()
+    {
+        if (log) { Debug.Log("(InputManager) disabling perso inputs"); }
+        inputs.perso.Disable();
+
+        OnPersoInputsToggled?.Invoke(false);
+    }
+
+
+    // INPUTS COROUTINES
+    public Coroutine StartInputCoroutine(IEnumerator coroutine)
+    {
+        return StartCoroutine(coroutine);
+    }
+    public void StopInputCoroutine(Coroutine coroutine)
+    {
+        StopCoroutine(coroutine);
+    }
+
 }

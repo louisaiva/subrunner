@@ -14,18 +14,9 @@ namespace subrunner.goap
 
         public override ITarget Sense(IActionReceiver agent, IComponentReference references, ITarget target)
         {
-            // Get a cached reference to the IA on the agent & attack capacity
+            // Get a cached reference to the IA on the agent
             IA ia = references.GetCachedComponentInParent<IA>();
-            /* AttackCapacity attackCapacity = ia.GetCapacity<AttackCapacity>();
-            if (attackCapacity == null)
-            {
-                Debug.LogWarning($"(ClosestBeingSensor) {ia.name} has no AttackCapacity, cannot sense closest being.");
-                return null;
-            }
-
-            // gets the closest being
-            Being closestBeing = attackCapacity.GetClosestTarget(ia); */
-            PreyDetector preyDetector = ia.eyes.GetComponent<PreyDetector>();
+            PreyDetector preyDetector = ia.Eyes as PreyDetector;
             if (preyDetector == null) { return null; }
             Being closestBeing = preyDetector.GetClosestTarget(ia);
             if (closestBeing == null) { return null; }

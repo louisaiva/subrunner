@@ -21,23 +21,28 @@ public class UI_Slot : MonoBehaviour, I_UI_Slot
     public Sprite down_sprite;
     public Sprite disabled_sprite;
 
+    [Header("Components")]
+    public Image image;
+
 
     // DISABLE
     public virtual void Enable()
     {
+        if ( image == null ) { image = GetComponent<Image>(); }
         is_disabled = false;
 
         // on change le sprite du slot
-        GetComponent<Image>().sprite = base_sprite;
+        image.sprite = base_sprite;
 
         if (log) { Debug.Log("(UI_Item) Enabled " + gameObject.name); }
     }
     public virtual void Disable()
     {
+        if (image == null) { image = GetComponent<Image>(); }
         is_disabled = true;
 
         // on change le sprite du slot
-        GetComponent<Image>().sprite = disabled_sprite;
+        image.sprite = disabled_sprite;
 
         if (log) { Debug.Log("(UI_Item) Disabled " + gameObject.name); }
     }
@@ -50,7 +55,7 @@ public class UI_Slot : MonoBehaviour, I_UI_Slot
 
         if (log) { Debug.Log("OnPointerEnter on " + gameObject.name); }
         // on change le sprite du slot
-        GetComponent<Image>().sprite = hover_sprite;
+        image.sprite = hover_sprite;
 
         // on met à jour le fait qu'on est survolé
         is_hovered = true;
@@ -63,7 +68,7 @@ public class UI_Slot : MonoBehaviour, I_UI_Slot
         if (log) { Debug.Log("OnPointerExit on " + gameObject.name); }
 
         // on change le sprite du slot
-        GetComponent<Image>().sprite = base_sprite;
+        image.sprite = base_sprite;
 
         // on met à jour le fait qu'on est survolé
         is_hovered = false;
@@ -76,7 +81,7 @@ public class UI_Slot : MonoBehaviour, I_UI_Slot
         if (log) { Debug.Log("OnPointerDown on " + gameObject.name); }
 
         // on change le sprite du slot
-        GetComponent<Image>().sprite = down_sprite;
+        image.sprite = down_sprite;
     }
     public virtual void OnPointerClick(PointerEventData eventData)
     {
@@ -84,18 +89,7 @@ public class UI_Slot : MonoBehaviour, I_UI_Slot
         if (is_disabled) { return; }
 
         // on change le sprite du slot
-        GetComponent<Image>().sprite = is_hovered ? hover_sprite : base_sprite;
+        image.sprite = is_hovered ? hover_sprite : base_sprite;
     }
 
-
-    // ! DEPRECATED
-
-    public string getDescription()
-    {
-        throw new NotImplementedException();
-    }
-    public bool shouldDescriptionBeShown()
-    {
-        throw new NotImplementedException();
-    }
 }

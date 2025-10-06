@@ -33,7 +33,7 @@ namespace subrunner.goap
             IA ia = references.GetCachedComponentInParent<IA>();
 
             // find a random position to go
-            Vector3 random_position = getRandomPositionInRangeNavMesh(agent.Transform.position, ia.exploration_radius,ia.mover.filter);
+            Vector3 random_position = getRandomPositionInRangeNavMesh(agent.Transform.position, ia.exploration_radius,ia.Mover.filter);
             if (random_position == default)
             {
                 if (existingTarget is PositionTarget) { return existingTarget as PositionTarget; }

@@ -7,14 +7,17 @@ public class ItemManager : MonoBehaviour
     [Header("Special items slots")]
     [SerializeField] private UI_LaptopItemSlot laptop_slot;
     [SerializeField] private UI_Item weapon_slot;
+    [SerializeField] private UI_ItemPool shoes_pool;
     [SerializeField] private UI_Item cons1_slot;
     [SerializeField] private UI_Item cons2_slot;
     [SerializeField] private UI_Item cons3_slot;
     [SerializeField] private UI_Item cons4_slot;
 
     [Header("HUD Renderers")]
-    [SerializeField] private RectTransform weapon_renderer;
     [SerializeField] private RectTransform laptop_renderer;
+    [SerializeField] private RectTransform hack_renderer;
+    [SerializeField] private RectTransform weapon_renderer;
+    [SerializeField] private UI_ItemRenderer shoes_renderer;
     [SerializeField] private RectTransform cons1_renderer;
     [SerializeField] private RectTransform cons2_renderer;
     [SerializeField] private RectTransform cons3_renderer;
@@ -22,6 +25,7 @@ public class ItemManager : MonoBehaviour
 
     [Header("Log")]
     [SerializeField] private bool log = false;
+    [SerializeField] private bool log_shoes = false;
 
     // START
     private void Start()
@@ -45,6 +49,14 @@ public class ItemManager : MonoBehaviour
         cons2_slot.OnItemChanged += update_hud_renderers;
         cons3_slot.OnItemChanged += update_hud_renderers;
         cons4_slot.OnItemChanged += update_hud_renderers;
+
+        // shoes events
+        shoes_pool.OnPoolChanged += (ui_item) =>
+        {
+            if (log_shoes) { Debug.Log("(ItemManager) Shoes pool changed : " + ui_item.name + " ui_item has " + ui_item.GetItems().Count + " items."); }
+            update_shoes();
+            update_hud_renderers();
+        };
 
         // we update the HUD renderers
         update_hud_renderers();
@@ -97,12 +109,56 @@ public class ItemManager : MonoBehaviour
     }
 
 
+    // SHOES GETTERS
+    public Shoes GetShoes()
+    {
+        if (shoes_pool == null) { return null; }
+
+        List<Item> items = shoes_pool.GetAllItems();
+        foreach (var item in items)
+        {
+            if (item != null && item is Shoes) { return item as Shoes; }
+        }
+        return null;
+    }
+    public UI_Item GetShoesUI_Item()
+    {
+        if (shoes_pool == null) { return null; }
+
+        foreach (Transform child in shoes_pool.transform)
+        {
+            // we check if the ui_slot is enabled
+            if (!child.gameObject.activeSelf) { continue; }
+
+            // we check if the slot is a UI_Item
+            UI_Item ui_item = child.GetComponent<UI_Item>();
+            if (ui_item == null) { continue; }
+
+            if (ui_item.Item != null && ui_item.Item is Shoes) { return ui_item; }
+        }
+        return null;
+    }
+
+
     // UPDATE HUDs
+    private void update_shoes()
+    {
+        shoes_renderer.SetTarget(GetShoesUI_Item());
+        if (log_shoes) { Debug.Log("(ItemManager) Shoes renderer target set to " + (shoes_renderer.Target != null ? shoes_renderer.Target.name : "null")); }
+    }
     private void update_hud_renderers(List<Item> items = null)
     {
         // update LAPTOP
-        if (laptop_slot.Item != null) { enable_renderer(laptop_renderer); }
-        else { disable_renderer(laptop_renderer); }
+        if (laptop_slot.Item != null)
+        {
+            enable_renderer(laptop_renderer);
+            enable_renderer(hack_renderer);
+        }
+        else
+        {
+            disable_renderer(laptop_renderer);
+            disable_renderer(hack_renderer);
+        }
 
         // initialize position
         float x = 0f;
@@ -115,6 +171,14 @@ public class ItemManager : MonoBehaviour
             x += 50f;
         }
         else { disable_renderer(weapon_renderer); }
+
+        // update SHOES
+        if (shoes_renderer != null && shoes_renderer.Target != null && shoes_renderer.Target.Item != null)
+        {
+            enable_renderer(shoes_renderer.GetComponent<RectTransform>(), x);
+            x += 50f;
+        }
+        else { disable_renderer(shoes_renderer.GetComponent<RectTransform>()); }
 
         // update CONS
         for (int i = 1; i <= 4; i++)
@@ -151,11 +215,12 @@ public class ItemManager : MonoBehaviour
 
     }
 
+    // RENDERER HELPERS
     private void disable_renderer(RectTransform renderer)
     {
         // renderer.gameObject.SetActive(false);
         Transitioner transitioner = renderer.GetComponent<Transitioner>();
-        transitioner.Hide();        
+        transitioner.Hide();
     }
     private void enable_renderer(RectTransform renderer, float x = float.NaN)
     {

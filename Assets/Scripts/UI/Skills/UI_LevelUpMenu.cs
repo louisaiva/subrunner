@@ -21,13 +21,13 @@ public class UI_LevelUpMenu : UI_Pool, I_UI_Slottable
     [Header("Components")]
     public Description Descriptor;
     public Description SkillNameDescriptor;
-    private UI_XboxNavigator navigator;
+    // private UI_XboxNavigator navigator;
     private TMPro.TextMeshProUGUI level_text;
 
     // AWAKE
     protected void Awake()
     {
-        navigator = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
+        // navigator = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
         level_text = transform.Find("text").GetComponent<TMPro.TextMeshProUGUI>();
     }
 
@@ -45,12 +45,12 @@ public class UI_LevelUpMenu : UI_Pool, I_UI_Slottable
         await System.Threading.Tasks.Task.Delay((int)(delay_before_activating_buttons * 1000));
 
         // on active le navigator
-        navigator.Enable(this);
+        UI_XboxNavigator.Instance.Enable(this);
     }
     public override async Awaitable Hide(float duration, List<GameObject> dont_hide = null)
     {
         // on désactive le navigator
-        navigator.Disable(this);
+        UI_XboxNavigator.Instance.Disable(this);
 
         await base.Hide(duration, dont_hide);
     }

@@ -21,9 +21,6 @@ public class DieCapacity : Capacity
     [SerializeField] private bool show_smiley = true;
     [SerializeField] private List<string> smileys = new List<string> { "RIP", "rip", ";-;", ":(", "://" };
 
-    // [Header("Components")]
-    // [SerializeField] private GameObject lootable_inventory_prefab;
-
     // START
     private void Start()
     {
@@ -68,7 +65,6 @@ public class DieCapacity : Capacity
         // destroy object
         StartCoroutine(destroyObject());
     }
-
     private IEnumerator destroyObject()
     {
         // get the being
@@ -82,14 +78,15 @@ public class DieCapacity : Capacity
             DropCapacity dropper = being.GetCapacity<DropCapacity>();
             if (dropper == null)
             {
-                Debug.LogError("(DieCapacity) " + being.name + " has no DropCapacity, cannot drop items");
-                being.Inventory.Items.Clear();
+                // we add it if not present
+                being.AddCapacity("drop");
+
+                // we wait a frame
+                yield return null;
+                dropper = being.GetCapacity<DropCapacity>();
             }
-            else
-            {
-                dropper.random_direction = true;
-                dropper.lock_magnitude = false;
-            }
+            dropper.random_direction = true;
+            dropper.lock_magnitude = false;
 
             // we drop all items
             int i = 0;

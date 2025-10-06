@@ -96,7 +96,6 @@ GameObject:
   - component: {fileID: 940186541834443855}
   - component: {fileID: 2911939087155039146}
   - component: {fileID: 2668598624726329605}
-  - component: {fileID: 3217911819617583053}
   m_Layer: 29
   m_Name: dump_stand
   m_TagString: Untagged
@@ -243,21 +242,6 @@ PolygonCollider2D:
       - {x: 0.37094498, y: -0.7254152}
       - {x: 0.41650328, y: -0.6857956}
   m_UseDelaunayMesh: 0
---- !u!114 &3217911819617583053
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3703640194133020904}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ed24fbcafb9a6f47b15db4a6de04365, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slot_offset: {x: 0, y: 1.25}
-  levitation_speed: 2
-  levitation_amplitude: 0.1
 --- !u!1 &6566439744044196818
 GameObject:
   m_ObjectHideFlags: 0

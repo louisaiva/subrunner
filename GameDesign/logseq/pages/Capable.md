@@ -1,0 +1,4 @@
+-
+- Classe mère du système de #Capacity
+- Chaque entité possédant des **Animations** dans **subrunner** est un **Capable** qui est donc relié à un #AnimPlayer
+-

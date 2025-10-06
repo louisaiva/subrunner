@@ -18,6 +18,12 @@ public class ButtonFeedback : InputFeedback
     protected override void Start()
     {
         base.Start();
+        
+        if (bank == null)
+        {
+            bank = GameObject.Find("/utils/bank").GetComponent<SpriteBank>();
+            if (debug) { Debug.Log("(IF) SpriteBank loaded : SpriteBank == " + bank); }
+        }
 
         // we get the sprite from the bank
         Sprite sprite = bank.GetInputFeedbackSprite(button_reference, !always_full);

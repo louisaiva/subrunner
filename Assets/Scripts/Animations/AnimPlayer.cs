@@ -20,14 +20,15 @@ public class AnimPlayer : MonoBehaviour
         {
             if (value == skin) { return; }
             skin = value;
-            OnSkillChange.Invoke(skin);
+            OnSkinChange.Invoke(skin);
             Play(current_capacity);
         }
     }
-    public event Action<string> OnSkillChange = delegate { };
+    public event Action<string> OnSkinChange = delegate { };
 
     [Header("Orientation")]
     public string orientation { get; private set; } = "D";
+    public event Action<Vector2> OnOrientationChange = delegate { };
 
 
     [Header("Current Animation")]
@@ -36,7 +37,7 @@ public class AnimPlayer : MonoBehaviour
     private float frame_timer = 0f;
     private int current_frame = -1; // if -1, the animation is over
     [SerializeField] private bool update_each_frame = true; // if false, it means that the animation is a single frame anim, we don't want to check it each frame
-
+    public Action<string, int> OnAnimPlayedAtFrame = delegate { };
 
 
     [Header("Anim Capacity Priorities")]
@@ -66,49 +67,9 @@ public class AnimPlayer : MonoBehaviour
     private void Start() { AddToPile("idle"); }
 
 
-    // Update
-    private void Update()
-    {
-        if (log_frames && current_anim != null)
-        {
-            Debug.Log("(AnimPlayer) Current frame: " + current_frame + " Current anim: " + current_anim.name);
-        }
-
-        // we play the current animation
-        if (current_frame != -1 && update_each_frame) { updateAnim(); }
-    }
-    private void updateAnim()
-    {
-        // we update the timer
-        frame_timer += Time.deltaTime;
-        if (frame_timer < current_anim.sprites_durations[current_frame] / current_anim.speed) { return; }
-
-        // we go to the next frame
-        frame_timer = 0f;
-        current_frame++;
-        if (current_frame < current_anim.sprites_durations.Length)
-        {
-            sr.sprite = current_anim.sprites[current_frame];
-            return;
-        }
-
-
-        // if we are here, it means that we reached the end of the animation
-        // the animation is over
-        current_frame = -1;
-
-        // we check if it's looping or not
-        if (current_capacity_priority.one_shot)
-        {
-            current_capacity_priority.capacity_playing = "";
-        }
-        
-        // we play the highest animation in the pile
-        playNextAnim();
-    }
-
 
     // PLAY ANIMATION
+    public void VoidPlay(string capacity) { Play(capacity); }
     public Anim Play(string capacity, float duration_override = default)
     {
         if (AnimBank.Instance == null) { return null; }
@@ -156,6 +117,7 @@ public class AnimPlayer : MonoBehaviour
             // we calculate the resulting speed
             anim.speed = duration / (float)duration_override;
         }
+        else { anim.speed = 1f; }
 
         // we check if the animation is not actually playing
         if (anim.name == current_anim.name && current_frame != -1)
@@ -166,7 +128,7 @@ public class AnimPlayer : MonoBehaviour
             }
             return current_anim;
         }
-        
+
         // we play the animation    
         play_now_at_frame(anim);
 
@@ -225,8 +187,53 @@ public class AnimPlayer : MonoBehaviour
         current_capacity_priority = capacity_priority;
         current_capacity_priority.capacity_playing = capacity;
     }
+
+
+
+    // PLAY ANIM LOW LEVEL
+    private void Update()
+    {
+        if (log_frames && current_anim != null)
+        {
+            Debug.Log("(AnimPlayer) Current frame: " + current_frame + " Current anim: " + current_anim.name);
+        }
+
+        // we play the current animation
+        if (current_frame != -1 && update_each_frame) { updateAnim(); }
+    }
+    private void updateAnim()
+    {
+        // we update the timer
+        frame_timer += Time.deltaTime;
+        if (frame_timer < current_anim.sprites_durations[current_frame] / current_anim.speed) { return; }
+
+        // we go to the next frame
+        frame_timer = 0f;
+        current_frame++;
+        if (current_frame < current_anim.sprites_durations.Length)
+        {
+            sr.sprite = current_anim.sprites[current_frame];
+            return;
+        }
+
+
+        // if we are here, it means that we reached the end of the animation
+        // the animation is over
+        current_frame = -1;
+
+        // we check if it's looping or not
+        if (current_capacity_priority.one_shot)
+        {
+            current_capacity_priority.capacity_playing = "";
+        }
+
+        // we play the highest animation in the pile
+        playNextAnim();
+    }
     private void play_now_at_frame(Anim anim, int frame = 0)
     {
+        OnAnimPlayedAtFrame.Invoke(anim.name, frame);
+
         // we saturate the frame
         if (frame < 0) { frame = 0; }
         else if (frame >= anim.sprites.Length) { frame = 0; }
@@ -250,6 +257,7 @@ public class AnimPlayer : MonoBehaviour
     }
 
     // STOP ANIMATION
+    public void StopPlaying(string capacity) { StopPlaying(capacity, false); }
     public void StopPlaying(string capacity, bool dont_stop_if_currently_playing = false)
     {
 
@@ -333,6 +341,8 @@ public class AnimPlayer : MonoBehaviour
         else if (angle >= 112.5f) { setOrientation("RD"); }
         else if (angle >= 67.5f) { setOrientation("D"); }
         else { setOrientation("LD"); }
+
+        OnOrientationChange?.Invoke(look_at);
     }
     private void setOrientation(string orientation)
     {

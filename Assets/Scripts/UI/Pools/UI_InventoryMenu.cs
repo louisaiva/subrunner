@@ -22,15 +22,18 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     [SerializeField] private ButtonFeedback use_feedback;
     [SerializeField] private ButtonFeedback move_feedback;
 
+    [Header("Components")]
+    public Descriptor Descriptor;
+
     // AWAKE START
     protected void Awake()
     {
-        
+
         if (ui_inventory == null)
         {
             Debug.LogError("(UI_InventoryMenu) missing ui_inventory on " + name);
         }
-        
+
         if (ui_laptop == null)
         {
             Debug.LogError("(UI_InventoryMenu) missing ui_laptop on " + name);
@@ -88,7 +91,7 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         Showed = true;
 
         // on désactive les inputs.perso
-        InputManager.Instance.inputs.perso.Disable();
+        InputManager.Instance.DisablePersoInputs();
     }
     protected override async Awaitable hide_pool(float duration, List<GameObject> dont_hide = null)
     {
@@ -198,6 +201,12 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         {
             use_feedback.SetAlwaysFull(true);
             use_feedback.SetLabel(usable.UseLabel);
+            UI_XboxNavigator.Instance.ToggleInput("activate", true);
+        }
+        else if (ui_slot is UI_Module && ui_slot.Item != null && ui_slot.Item.Reference == "module:hdd")
+        {
+            use_feedback.SetAlwaysFull(true);
+            use_feedback.SetLabel("inspect");
             UI_XboxNavigator.Instance.ToggleInput("activate", true);
         }
         else

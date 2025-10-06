@@ -11,17 +11,12 @@ public class XPProvider : Singleton<XPProvider>
     // PARTICLES RADIUS GENERATION
     public float radius = 0.5f;
 
-    // heal and bits generation
+    // heal generation
     private float life_percent = 0.01f; // 1% des particules sont des vies
-    private float bit_percent = 0.01f; // 1% des particules sont des bits
-    // private Color life_color = new Color(226f / 255f, 144f / 255f, 144f / 255f);
     private Color life_color = new Color(1f, 0f, 0f);
-    // private Color bit_color = new Color(106f / 255f, 190f / 255f, 48f / 255f);
-    private Color bit_color = new Color(9f / 255f, 1f, 0f);
 
     // materials
     public Material life_material;
-    public Material bit_material;
     public Material xp_material;
 
     // generator continue
@@ -58,7 +53,6 @@ public class XPProvider : Singleton<XPProvider>
 
         int life_bonus = 0;
         int xp_bonus = 0;
-        int bit_bonus = 0;
 
         // on change la life des particules
         for (int i = 0; i < triggeredParticles; i++)
@@ -71,11 +65,6 @@ public class XPProvider : Singleton<XPProvider>
             {
                 // on ajoute de la life
                 life_bonus += 1;
-            }
-            else if (color == bit_color)
-            {
-                // on ajoute des bits
-                bit_bonus += 1;
             }
             else
             {
@@ -95,9 +84,6 @@ public class XPProvider : Singleton<XPProvider>
 
         // on ajoute l'xp au player
         if (xp_bonus > 0) { Perso.Instance.addXP(xp_bonus); }
-        
-        // on ajoute des bits au player
-        if (bit_bonus > 0) { Perso.Instance.addBits(bit_bonus); }
 
         // on ajoute de la life au player
         if (life_bonus > 0) { Perso.Instance.heal(life_bonus); }
@@ -128,38 +114,8 @@ public class XPProvider : Singleton<XPProvider>
                 // on change la couleur de la particule
                 emitParams.startColor = life_color;
             }
-            else if (rand > 1f - bit_percent)
-            {
-                // on change la couleur de la particule
-                emitParams.startColor = bit_color;
-            }
 
 
-            // on emet les particules
-            generator.Emit(emitParams, 1);
-        }
-    }
-
-    public void EmitBits(int count, Vector3 position, float strengh = 1f)
-    {
-        // on crée un EmitParams pour pouvoir changer la position de l'émission
-        ParticleSystem.EmitParams emitParams = new ParticleSystem.EmitParams();
-
-        for (int i = 0; i < count; i++)
-        {
-            // on change la position de l'émission
-            // dans un rayon de radius autour de la position
-            Vector2 position2D = Random.insideUnitCircle;
-            emitParams.position = -transform.position + position + radius * new Vector3(position2D.x, position2D.y, 0);
-
-            // on change la vitesse de l'émission en fonction de la strengh
-            // dans une direction 2D aléatoire en x et y
-            Vector2 direction = Random.insideUnitCircle;
-            emitParams.velocity = strengh * new Vector3(direction.x, direction.y, 0);
-
-            // on change la couleur de l'émission
-            emitParams.startColor = bit_color;
-    
             // on emet les particules
             generator.Emit(emitParams, 1);
         }

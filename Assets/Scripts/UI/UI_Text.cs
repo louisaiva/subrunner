@@ -19,21 +19,28 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
     public bool is_hovered { get; set; }
 
     [Header("Text")]
-    private TextMeshProUGUI tmp;
-    [SerializeField] private string base_text;
+    protected TextMeshProUGUI tmp;
+    [SerializeField] protected string base_text;
 
     [Header("Events")]
-    [SerializeField] private UnityEvent activateEvent;
+    [SerializeField] protected UnityEvent activateEvent;
 
     [Header("Logs")]
     public bool debug = false;
 
     // unity functions
-    protected void Awake()
+    protected virtual void Awake()
     {
         // on récupère le tmp
         tmp = GetComponent<TextMeshProUGUI>();
         base_text = tmp.text;
+    }
+
+    // TEXT FUNCTIONS
+    public void SetText(string new_text)
+    {
+        tmp.text = new_text;
+        base_text = new_text;
     }
 
 
@@ -41,7 +48,7 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
     public void play()
     {
         // transform.parent.parent.GetComponent<UI_PauseMenu>().hide();
-        GameObject.Find("/ui").GetComponent<UI_Manager>().SwitchTo("hud");
+        UI_Manager.Instance.SwitchTo("hud");
     }
     public void exit()
     {
@@ -51,7 +58,7 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
         #endif
         Application.Quit();
 
-        // GameObject.Find("/ui").GetComponent<UI_Manager>().TogglePool("pause");
+        // UI_Manager.Instance.TogglePool("pause");
     }
     public void fullscreen()
     {
@@ -81,7 +88,7 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
 
 
     // interface functions
-    public void OnPointerEnter(PointerEventData eventData)
+    public virtual void OnPointerEnter(PointerEventData eventData)
     {
         tmp.color = hover_color;
         tmp.text = "> " + base_text;

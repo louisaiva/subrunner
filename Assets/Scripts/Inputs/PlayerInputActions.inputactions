@@ -21,7 +21,7 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "Press(behavior=2)",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "attack",
@@ -71,7 +71,16 @@
                 {
                     "name": "hack",
                     "type": "Button",
-                    "id": "03e2768a-7667-483a-b36a-0bfd011eccd3",
+                    "id": "a1372649-fb45-4509-b055-f40544935523",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press(behavior=2)",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "next_exploit",
+                    "type": "Button",
+                    "id": "bd7d860d-4391-461f-9486-df67c25fc2e2",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -304,12 +313,12 @@
                 },
                 {
                     "name": "",
-                    "id": "75d2e5bd-13e3-4328-888e-f7fbd4519ce4",
-                    "path": "<Gamepad>/rightTrigger",
+                    "id": "adc4f574-63a0-4148-8ae5-4d13c8e876e7",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "xbox",
-                    "action": "hack",
+                    "action": "next_exploit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -409,6 +418,17 @@
                     "processors": "",
                     "groups": "xbox",
                     "action": "conso4",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "da150186-98cd-4a27-a03d-65ff7132b437",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "hack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -516,6 +536,42 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "hack",
+                    "type": "Button",
+                    "id": "51ff366f-fea5-49b2-9bc7-95b1feb2fd2f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "next_exploit",
+                    "type": "Button",
+                    "id": "3a8ce758-3fcf-4ec3-80d5-3474d37fc398",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "run",
+                    "type": "Button",
+                    "id": "796e0ed5-9e1f-4cb3-b6ec-f63ba377c517",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "LB",
+                    "type": "Button",
+                    "id": "3a775e60-d909-45bb-82b0-38557ec6693a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -736,6 +792,50 @@
                     "processors": "",
                     "groups": "xbox",
                     "action": "conso4",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0ca70109-9aae-4223-9942-61357e7167fb",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "hack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "384229da-047e-4b30-b128-2a714885363a",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "next_exploit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9d5ff521-c039-4034-9b7b-94c05308c95d",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b895fc83-a5c5-4b48-887b-de9fcf6e9ac3",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";xbox",
+                    "action": "LB",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

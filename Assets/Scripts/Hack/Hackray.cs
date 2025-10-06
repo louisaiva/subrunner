@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class Hackray : MonoBehaviour
 {
-    [Header("Laptop")]
-    [SerializeField] protected Laptop laptop;
-
+    
     [Header("Hackray Settings")]
-    [SerializeField] protected Transform hacker;
-    [SerializeField] protected Transform target;
+    [SerializeField] protected Capable hacker;
+    [SerializeField] protected Capable target;
 
     // offsets
     protected Vector3 hacker_offset;
     protected Vector3 target_offset;
+    [SerializeField] protected float base_thickness = 1.8f;
+    [SerializeField] protected float waiting_thickness = 1f;
 
 
     [Header("Components")]
@@ -21,6 +21,7 @@ public class Hackray : MonoBehaviour
     void Awake()
     {
         sr = transform.Find("sr").GetComponent<SpriteRenderer>();
+        sr.transform.localScale = new Vector3(base_thickness, sr.transform.localScale.y, sr.transform.localScale.z);
     }
 
     // UPDATE
@@ -57,7 +58,7 @@ public class Hackray : MonoBehaviour
     protected void switchTargetAndHacker()
     {
         // switch hacker and target
-        Transform temp = hacker;
+        Capable temp = hacker;
         hacker = target;
         target = temp;
 
@@ -67,31 +68,40 @@ public class Hackray : MonoBehaviour
     }
 
     // SETTERS
-    public void SetLaptopAndTarget(Laptop laptop, Transform target)
+    public void SetConnectors(ConnectCapacity hacker, ConnectCapacity target)
     {
-        this.laptop = laptop;
-
         // set hacker and target
-        this.hacker = laptop.transform;
-        this.target = target;
+        this.hacker = hacker.capable;
+        this.target = target.capable;
 
-        // set target offset
-        if (target.name == "cursor")
+        // set hacker offset
+        if (this.hacker is Item hacker_item)
         {
-            target_offset = Vector2.zero;
+            // calculates the offset
+            hacker_offset = calculate_item_offset(hacker_item);
+
+            // sets the callbacks
+            hacker_item.OnDropped += handleConnectorDropped;
+            hacker_item.OnGrabbed += handleConnectorGrabbed;
         }
         else
         {
-            target_offset = target.Find("processor").localPosition;
+            hacker_offset = hacker.transform.localPosition;
         }
 
-        // set laptop offset
-        if (laptop.Grabbed) { handleLaptopGrabbed(laptop.Holder); }
-        else { handleLaptopDropped(); }
+        // set target offset
+        if (this.target is Item target_item)
+        {
+            target_offset = calculate_item_offset(target_item);
 
-        // register to events
-        laptop.OnDropped += handleLaptopDropped;
-        laptop.OnGrabbed += handleLaptopGrabbed;
+            // sets the callbacks
+            target_item.OnDropped += handleConnectorDropped;
+            target_item.OnGrabbed += handleConnectorGrabbed;
+        }
+        else
+        {
+            target_offset = target.transform.localPosition;
+        }
 
         // enable sprite renderer
         sr.GetComponent<SpriteRenderer>().enabled = true;
@@ -109,28 +119,53 @@ public class Hackray : MonoBehaviour
         // set the color of the sprite renderer
         sr.GetComponent<SpriteRenderer>().color = color;
     }
+    public void SetThickness(bool waiting = true)
+    {
+        sr.transform.localScale = new Vector3(waiting ? waiting_thickness : base_thickness, sr.transform.localScale.y, sr.transform.localScale.z);
+    }
 
     // CALLBACKS
-    private void handleLaptopDropped()
+    private void handleConnectorDropped(Item item)
     {
-        this.hacker_offset = laptop.transform.Find("processor").localPosition;
+        // checks which item it is
+        if (item == hacker) { this.hacker_offset = calculate_item_offset(item); }
+        else if (item == target) { this.target_offset = calculate_item_offset(item); }
     }
-    private void handleLaptopGrabbed(Capable grabber)
+    private void handleConnectorGrabbed(Item item, Capable grabber)
     {
-        if (grabber is not Being)
+        handleConnectorDropped(item);
+    }
+    private Vector3 calculate_item_offset(Item item)
+    {
+        // if it is on the ground we return the connect local_offset
+        if (!item.Grabbed)
         {
-            this.hacker_offset = laptop.transform.Find("processor").localPosition;
-            return;
+            return item.GetCapacity<ConnectCapacity>().transform.localPosition;
         }
 
-        // the grabber is a Being. we find the processor
-        this.hacker_offset = grabber.transform.Find("processor").localPosition;
+        // if it is in a Inventory the offset depends on the Holder typer
+        // -> being ? -> offset is the body of the skin offset
+        Capable holder = item.Holder;
+        if (holder is Being being)
+        {
+            return new Vector3(0f, AnimBank.Instance.GetBodyOffset(being.Skin), 0f);
+        }
+
+        // -> capable ? -> offset is the item connect capa local pos
+        return item.GetCapacity<ConnectCapacity>().transform.localPosition;
     }
     private void OnDisable()
     {
-        if (laptop == null) { return; }
 
-        laptop.OnDropped -= handleLaptopDropped;
-        laptop.OnGrabbed -= handleLaptopGrabbed;
+        if (hacker is Item hacker_item)
+        {
+            hacker_item.OnDropped -= handleConnectorDropped;
+            hacker_item.OnGrabbed -= handleConnectorGrabbed;
+        }
+        if (target is Item target_item)
+        {
+            target_item.OnDropped -= handleConnectorDropped;
+            target_item.OnGrabbed -= handleConnectorGrabbed;
+        }
     }
 }

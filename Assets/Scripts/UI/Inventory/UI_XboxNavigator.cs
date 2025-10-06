@@ -14,11 +14,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     [SerializeField] private List<GameObject> slottables = new List<GameObject>();
     [SerializeField] private List<GameObject> slots;
     [SerializeField] private int current_slot_index;
-    // [SerializeField] private UI_Inventory perso_quick_inventory;
-    // this quick inventory is showed when another inventory (chest, etc.) is opened
-    // to allow the player to transfer items between inventories
-    // only showed in-game (when the hud is visible)
-    // private bool perso_quick_inventory_was_shown = true;
+    
 
     [Header("Navigation")]
     [SerializeField] private bool can_navigate = true; // devient true lorsque la magnitude de l'input revient à 0, et false lorsque la magnitude de l'input est supérieure à 0.95f
@@ -55,8 +51,8 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
 
     // DROP
     [SerializeField] private InputActionReference dropInput;
-    private InputAction dropAction;
-    private event Action<InputAction.CallbackContext> dropCallback; // drop Callback is for dropping items when inside a big inventory -> X
+    // private InputAction dropAction;
+    // private event Action<InputAction.CallbackContext> dropCallback; // drop Callback is for dropping items when inside a big inventory -> X
 
     // ACTIVATE
     [SerializeField] private InputActionReference activateInput;
@@ -76,13 +72,14 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
 
     // DROP IN-GAME
     [SerializeField] private InputActionReference dropInGameInput;
-    private InputAction dropInGameAction;
+    // private InputAction dropInGameAction;
 
 
     [Header("Logs")]
     public bool debug = false;
     public bool debug_navigation = false;
     public bool log_slot_position = false;
+    public bool log_moving_items = false;
     public bool debug_gizmo = false;
 
     [Header("Gizmos")]
@@ -100,14 +97,14 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         navigateAction = input_manager.GetAction(navigateInput);
         navigateInGameAction = input_manager.GetAction(navigateInGameInput);
         activateAction = input_manager.GetAction(activateInput);
-        dropAction = input_manager.GetAction(dropInput);
-        dropInGameAction = input_manager.GetAction(dropInGameInput);
+        // dropAction = input_manager.GetAction(dropInput);
+        // dropInGameAction = input_manager.GetAction(dropInGameInput);
         moveItemAction = input_manager.GetAction(moveItemInput);
 
         // we create the callbacks
         navigateCallback = ctx => HandleNavigateInput(ctx.ReadValue<Vector2>());
         activateCallback = ctx => HandleActivateInput(ctx.ReadValue<float>());
-        dropCallback = ctx => HandleDropInput(ctx.ReadValue<float>());
+        // dropCallback = ctx => HandleDropInput(ctx.ReadValue<float>());
         moveItemCallback = ctx => HandleMoveItemInput(ctx.ReadValue<float>());
 
         if (debug) { Debug.Log("(UI_Navigator) started & callbacks created"); }
@@ -115,12 +112,6 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         // we reset the variables
         continuous_navigation_counter = float.MaxValue;
         current_slot_index = -1;
-
-        // we check if the perso quick inventory is shown
-        /* if (perso_quick_inventory == null)
-        {
-            Debug.LogWarning("(UI_Navigator) perso_quick_inventory is not set. please set it in the inspector");
-        } */
     }
 
 
@@ -169,7 +160,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         GameObject last_slot = null;
 
         // on désactive le slot
-        if (current_slot_index != -1)
+        if (current_slot_index != -1 && current_slot_index < slots.Count)
         {
             // on vérifie si le slot est encore présent et dans le slottable qu'on vient de désactiver
             GameObject slot = slots[current_slot_index];
@@ -200,6 +191,10 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
             can_navigate = true;
             continuous_navigation_counter = float.MaxValue;
             last_input = Vector2.zero;
+
+            // et celles de fast drop
+            fast_dropping = false;
+            fast_dropping_wait_threshold = false;
         }
     }
 
@@ -212,37 +207,43 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         if (ingame_navigation)
         {
             navigateInGameAction.performed += navigateCallback;
-            dropInGameAction.performed += dropCallback;
+            // dropInGameAction.performed += dropCallback;
         }
         else
         {
             navigateAction.performed += navigateCallback;
             activateAction.performed += activateCallback;
-            dropAction.performed += dropCallback;
+            // dropAction.performed += dropCallback;
         }
-        
+
         navigateInGame = ingame_navigation; // on met à jour la variable
+        
+        Controller.Instance.UIC.EnableInputs(ingame_navigation); // on active les inputs dans le UI_InputsController
     }
     private void disableInputs()
     {
         // on récupère les inputs
         navigateAction.performed -= navigateCallback;
         navigateInGameAction.performed -= navigateCallback;
-        dropAction.performed -= dropCallback;
-        dropInGameAction.performed -= dropCallback;
+        // dropAction.performed -= dropCallback;
+        // dropInGameAction.performed -= dropCallback;
         activateAction.performed -= activateCallback;
         moveItemAction.performed -= moveItemCallback;
 
         navigateInGame = false; // on met à jour la variable
+        
+        Controller.Instance.UIC.DisableInputs(); // on désactive les inputs dans le UI_InputsController
     }
     public void ToggleInput(string input_name, bool enable = true)
     {
-        if (input_name == "drop")
+        Controller.Instance.UIC.ToggleInput(input_name, enable);
+        /* if (input_name == "drop")
         {
             if (enable) { dropAction.performed += dropCallback; }
             else { dropAction.performed -= dropCallback; }
         }
-        else if (input_name == "activate")
+        else  */
+        if (input_name == "activate")
         {
             if (enable) { activateAction.performed += activateCallback; }
             else { activateAction.performed -= activateCallback; }
@@ -686,18 +687,29 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
             // on down le slot
             (slot as UI_Slot).OnPointerDown(null);
             if (debug) { Debug.Log("(UI_Navigator) pressed ui_item " + slot.gameObject.name); }
+
+            // on lance le fast drop
+            handle_drop_fast();
         }
         else
         {
+            if (fast_dropping || fast_dropping_wait_threshold)
+            {
+                fast_dropping = false;
+                fast_dropping_wait_threshold = false;
+            }
+
             // on relache le slot
-            drop(slot as UI_Item);
+            OnDrop(/* slot as UI_Item */);
             if (debug) { Debug.Log("(UI_Navigator) dropped ui_item " + slot.gameObject.name); }
         }
 
     }
-    private async void drop(UI_Item slot)
+    public async void OnDrop()
     {
         if (slots.Count == 0 || current_slot_index == -1) { return; }
+        UI_Item slot = slots[current_slot_index].GetComponent<UI_Item>();
+        if (slot == null) { return; }
 
         // on retient la position du slot
         Vector2 position = get_position(slot.gameObject);
@@ -715,7 +727,57 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         // on navigue vers le slot le plus proche
         navigateToClosest(position);
     }
+    public void OnDown()
+    {
+        // on récupère le slot actuel
+        if (current_slot_index == -1) { return; }
+        GameObject go = slots[current_slot_index];
+        if (go == null) { return; }
+        I_UI_Slot slot = go.GetComponent<I_UI_Slot>();
+        if (slot == null) { return; }
 
+
+        // on down le slot
+        slot.OnPointerDown(null);
+        if (debug) { Debug.Log("(UI_Navigator) pressed slot " + slot.gameObject.name); }
+    }
+
+    [Header("Fast Drop")]
+    [SerializeField] private bool fast_dropping = false;
+    [SerializeField] private bool fast_dropping_wait_threshold = false;
+    // [SerializeField] private UI_Item fast_dropping_item = null;
+    private async void handle_drop_fast()
+    {
+        // wait for continuous_navigation_threshold before starting fast dropping
+        // in unscaled time
+
+        float elapsed = 0f;
+        fast_dropping_wait_threshold = true;
+        while (elapsed < InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD && fast_dropping_wait_threshold)
+        {
+            elapsed += navigateInGame ? Time.deltaTime : Time.unscaledDeltaTime;
+            await System.Threading.Tasks.Task.Yield();
+        }
+        if (!fast_dropping_wait_threshold) { return; }
+        fast_dropping_wait_threshold = false;
+
+        // fast drop
+        fast_dropping = true;
+        while (fast_dropping)
+        {
+            if (!fast_dropping) { break; }
+            elapsed = 0f;
+
+            OnDrop();
+
+            while (elapsed < InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY)
+            {
+                if (!fast_dropping) { break; }
+                elapsed += navigateInGame ? Time.deltaTime : Time.unscaledDeltaTime;
+                await System.Threading.Tasks.Task.Yield();
+            }
+        }
+    }
 
 
 
@@ -781,13 +843,23 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         moving_ui_item.OnPointerExit(null);
         destination.OnPointerExit(null);
 
-        // on échange les deux UI_Item
-        if (moving_ui_item.Reference != ""
-            && destination.Reference == moving_ui_item.Reference
-            && destination.Quantity < destination.MaxQty
-            && destination != moving_ui_item)
+        // on choisit le mode d'action qu'il faut pour echanger les items
+        if (destination == moving_ui_item) { /* we do nothing -> will just avoid moving them */ } 
+        else if (destination != moving_ui_item && destination.CanStore(moving_ui_item.GetItems()))
         {
             merge_items(moving_ui_item, destination); // ce sont les mêmes items, on peut alors les merge ensemble
+        }
+        else if (destination is UI_Module ui_module
+            && moving_ui_item is not UI_Module
+            && moving_ui_item.Quantity > 1)
+        {
+            split_items(ui_module, moving_ui_item); // on split l'item
+        }
+        else if (moving_ui_item is UI_Module ui_module2
+            && destination is not UI_Module
+            && destination.Quantity > 1)
+        {
+            split_items(ui_module2, destination); // on split l'item
         }
         else { switch_items(moving_ui_item, destination); }
 
@@ -940,6 +1012,8 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         // on échange les items entre les deux UI_Items
         if (item1 == null || item2 == null) { return; }
 
+        if (log_moving_items) { Debug.Log($"(UI_Navigator) switching items between {item1.gameObject.name} and {item2.gameObject.name}"); }
+
         // on sauvegarde les items
         List<Item> items1 = item1.GetItems();
         List<Item> items2 = item2.GetItems();
@@ -955,7 +1029,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         {
             if (debug)
             {
-                Debug.Log($"(UI_Navigator) switched items between {item1.gameObject.name} "
+                Debug.LogWarning($"(UI_Navigator) switched items between {item1.gameObject.name} "
             + $"and {item2.gameObject.name} but at least one inventory is null : {inventory1?.capable.name} and {inventory2?.capable.name}");
             }
             return;
@@ -974,8 +1048,53 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
             inventory1.Grab(item, uis_to_ignore); // pareil
         }
     }
+    private void split_items(UI_Module ui_module, UI_Item ui_item)
+    {
+        if (log_moving_items) { Debug.Log($"(UI_Navigator) splitting items between {ui_item.gameObject.name} and {ui_module.gameObject.name}"); }
+
+
+        // on vérifie que y'a pas déjà un module installé (sinon ça va tout kc)
+        // todo : faire en sorte que si un module est déjà installé il est juste drop dans l'inventaire et ça
+        // todo : switch quand mm le 1er module
+        if (ui_module.Item != null)
+        {
+            if (debug)
+            {
+                Debug.LogWarning($"(UI_Navigator) cannot split items from {ui_item.gameObject.name} to {ui_module.gameObject.name} because it already has a module installed.");
+            }
+            return;
+        }
+
+        // on récupère le 1er item de ui_item sous la forme d'une liste
+        Item item_to_move = ui_item.Item;
+        List<Item> remaining_items = ui_item.GetItems();
+        remaining_items.Remove(item_to_move);
+
+        // on echange les items
+        ui_module.SwitchItems(new List<Item>() { item_to_move });
+        ui_item.SwitchItems(remaining_items);
+
+        // on regarde si on est dans deux inventaires différents
+        Inventory ui_item_inv = ui_item.Inventory;
+        Inventory ui_module_inv = ui_module.Inventory;
+        if (ui_item_inv == null || ui_module_inv == null)
+        {
+            if (debug)
+            {
+                Debug.Log($"(UI_Navigator) switched items between {ui_item.gameObject.name} "
+            + $"and {ui_module.gameObject.name} but at least one inventory is null : {ui_item_inv?.capable.name} and {ui_module_inv?.capable.name}");
+            }
+            return;
+        }
+        if (ui_item_inv == ui_module_inv) { return; } // we stay inside the same inventory so no need to update Items's inventories
+
+        List<UI_Inventory> uis_to_ignore = new List<UI_Inventory>() { ui_item.ItemPool.UI_Inventory, ui_module.ItemPool.UI_Inventory };
+        ui_module_inv.Grab(item_to_move, uis_to_ignore); // on ignore les ui_inventory parce qu'ils ont déjà été grab dans ces UI_Inventory
+    }
     private void merge_items(UI_Item item1, UI_Item item2)
     {
+        if (log_moving_items) { Debug.Log($"(UI_Navigator) merging items between {item1.gameObject.name} and {item2.gameObject.name}"); }
+
         // on merge les items de item1 dans item2
         List<Item> items = item1.GetItems();
         List<Item> transfered_items = new List<Item>();

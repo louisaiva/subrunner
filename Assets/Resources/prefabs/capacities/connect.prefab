@@ -9,7 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6197480893261519806}
+  - component: {fileID: 3485473859685886737}
   - component: {fileID: 6498695312738846334}
+  - component: {fileID: 5901563302859541997}
   m_Layer: 0
   m_Name: connect
   m_TagString: Untagged
@@ -32,6 +34,42 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &3485473859685886737
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038123483365548311}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 1
 --- !u!114 &6498695312738846334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45,10 +83,122 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 0
-  debug: 1
+  debug: 0
   connection:
     type: 0
     state: 0
+    target: {fileID: 0}
   connections: []
   Radius: 3
-  log_connection: 1
+  log_connection: 0
+--- !u!114 &5901563302859541997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038123483365548311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eec115dbdabed94699baa2f8efafa8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vulnerabilities:
+  - exploit_name: cpu_overheat
+    security_risk: 2
+    on_hack_started:
+      m_PersistentCalls:
+        m_Calls: []
+    on_hack_succeeded:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5901563302859541997}
+          m_TargetAssemblyTypeName: Vulnerable, Assembly-CSharp
+          m_MethodName: DamageCapable
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    on_hack_failed:
+      m_PersistentCalls:
+        m_Calls: []
+    on_hack_done:
+      m_PersistentCalls:
+        m_Calls: []
+  - exploit_name: cpu_melt
+    security_risk: 1
+    on_hack_started:
+      m_PersistentCalls:
+        m_Calls: []
+    on_hack_succeeded:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5901563302859541997}
+          m_TargetAssemblyTypeName: Vulnerable, Assembly-CSharp
+          m_MethodName: DamageCapable
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    on_hack_failed:
+      m_PersistentCalls:
+        m_Calls: []
+    on_hack_done:
+      m_PersistentCalls:
+        m_Calls: []
+  - exploit_name: cyborg_puppet
+    security_risk: 3
+    on_hack_started:
+      m_PersistentCalls:
+        m_Calls: []
+    on_hack_succeeded:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5901563302859541997}
+          m_TargetAssemblyTypeName: Vulnerable, Assembly-CSharp
+          m_MethodName: ControlCapable
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    on_hack_failed:
+      m_PersistentCalls:
+        m_Calls: []
+    on_hack_done:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5901563302859541997}
+          m_TargetAssemblyTypeName: Vulnerable, Assembly-CSharp
+          m_MethodName: UncontrolController
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  SecurityLevel: 1
+  running_hacks: []
+  capable: {fileID: 0}
+  Connector: {fileID: 0}
+  Renderer: {fileID: 0}
+  TargetMaterial: {fileID: 0}
+  DefaultMaterial: {fileID: 0}
+  log: 0

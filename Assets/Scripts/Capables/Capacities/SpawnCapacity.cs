@@ -12,6 +12,7 @@ public class SpawnCapacity : Capacity
     [Header("Spawn parameters")]
     public GameObject entity_prefab;
     public Transform entity_parent; // the transform that will be the parent of the spawned entity
+    private int entity_count = 0;
 
     [Header("Spawn Force")]
     public float spawn_force = 0f; // (optional) force applied to the spawned entity
@@ -27,22 +28,30 @@ public class SpawnCapacity : Capacity
     // USE
     public override void Use(Capable capable)
     {
-        base.Use(capable);
+        // we spawn the entity
         if (entity_prefab == null) { return; }
+        Spawn(Instantiate(entity_prefab));
+    }
+    public void Spawn(GameObject entity)
+    {
+        capable.anim_player.Play(name);
 
-        // we get the spawn position
+        // we get a random spawn position
         Vector2 spawn_position = transform.parent.position + ((Vector3)local_spawn_position);
         if (spawn_radius > 0)
         {
             spawn_position += Random.insideUnitCircle * spawn_radius;
         }
 
-        // we spawn the entity
-        GameObject entity = Instantiate(entity_prefab, spawn_position, Quaternion.identity);
+        // we apply the position & parent to entity
+        entity.transform.position = spawn_position;
         if (entity_parent != null)
         {
             entity.transform.parent = entity_parent;
         }
+
+        // we rename the entity
+        entity.name = entity_prefab.name + "_" + entity_count;
 
         // we create a spawn force
         string force_debug = "";
@@ -55,11 +64,12 @@ public class SpawnCapacity : Capacity
         }
 
         if (debug) { Debug.Log("(SpawnCapacity) " + name + " spawning entity at " + spawn_position + force_debug); }
-
+        entity_count++;
     }
 
+
     // UPDATE
-    new void Update()
+    protected override void Update()
     {
         if (spawn_rate == 0f) { return; }
 

@@ -15,16 +15,16 @@ public class AttackCapacity : Capacity
     public float damage = 10f;
     [SerializeField] private float random_damage_modifier_at_start = 0; // damage += random.range(-5,5) in the start method if this modifier = 5
     public bool IsAttacking = false;
-    [SerializeField] List<Being> hit_enemies = new List<Being> {};
-    [SerializeField] private List<string> not_attackable_tags = new List<string> {};
-    
+    [SerializeField] List<Being> hit_enemies = new List<Being> { };
+    [SerializeField] private List<string> base_excluded_tags = new List<string> { };
+    private List<string> excluded_tags = new List<string> { };
+
 
     [Header("Attack parameters")]
     [SerializeField] private bool single_hit = false; // if true, the attack will stop after hitting one enemy
     [SerializeField] private bool perforant_attack = false; // if true, each touched enemy will got full damage
     [SerializeField] private float attack_duration = default;
-    // [SerializeField] private float delay_between_perforations = 0.01f; // delay between each perforation
-    // private float last_perforation_time = 0f; // time of the last perforation
+    [SerializeField] private float attack_duration_random_variation = 0f; // random variation of the attack duration
 
 
     [Header("Knockback parameters")]
@@ -51,7 +51,7 @@ public class AttackCapacity : Capacity
     private SpriteRenderer sr;
     private AnimPlayer anim_player;
     private PolygonCollider2D pc;
-    
+
 
     // START
     private void Start()
@@ -65,6 +65,8 @@ public class AttackCapacity : Capacity
 
         // we set the damage variable
         damage += Random.Range(-random_damage_modifier_at_start, random_damage_modifier_at_start);
+
+        ResetTags();
     }
 
     // USE
@@ -76,8 +78,16 @@ public class AttackCapacity : Capacity
         sr = bearer.GetComponent<SpriteRenderer>();
         if (anim_player.current_capacity == "attack") { return; } // we check if we are already attacking
 
+        // we calculate the duration of the attack
+        float duration_override = attack_duration;
+        if (duration_override != default && attack_duration_random_variation > 0)
+        {
+            duration_override += Random.Range(-attack_duration_random_variation, attack_duration_random_variation);
+            duration_override = Mathf.Max(0.01f, duration_override); // we make sure the duration is not negative
+        }
+
         // we play the animation
-        Anim anim = anim_player.Play("attack", duration_override: attack_duration);
+        Anim anim = anim_player.Play("attack", duration_override: duration_override);
         if (anim == null) { return; } // if the animation is not found, we return
 
         // we start the cooldown for the time of the animation
@@ -86,7 +96,7 @@ public class AttackCapacity : Capacity
         IsAttacking = true;
         hit_enemies.Clear();
     }
-    
+
     // UPDATE
     protected override void Update()
     {
@@ -108,7 +118,7 @@ public class AttackCapacity : Capacity
         Sprite sprite = sr.sprite;
         if (!bank.HasDamageCollider(sprite)) { pc.enabled = false; return; }
         pc.enabled = true;
-        
+
         // we update the collider
         updateCollider(sprite);
 
@@ -151,13 +161,13 @@ public class AttackCapacity : Capacity
                 hit_enemies_str += "\t" + enemy.name + "\n";
             }
             Debug.Log(hit_enemies_str);
-        }        
+        }
 
         // calculate damage dealt to single target
         float single_target_damage
                             = perforant_attack || single_hit // also if single hit we don't care we will apply damage once
                             ? damage // if perforant attack, all enemies will receive the full damage
-                            : damage / hit_enemies.Count; 
+                            : damage / hit_enemies.Count;
 
 
         // calculate knockback
@@ -190,7 +200,7 @@ public class AttackCapacity : Capacity
         if (single_hit) { IsAttacking = false; }
         if (being == null) { return; }
 
-        
+
         // on shake la caméra
         if (bearer is Perso)
         {
@@ -242,7 +252,7 @@ public class AttackCapacity : Capacity
 
         // we remove not attackable tags
         Being enemy_being = other.transform.parent.GetComponent<Being>();
-        if (enemy_being == null || not_attackable_tags.Contains(enemy_being.gameObject.tag)) { return; }
+        if (enemy_being == null || excluded_tags.Contains(enemy_being.gameObject.tag)) { return; }
 
         // we remove not alive beings
         if (!enemy_being.Alive) { return; }
@@ -255,7 +265,7 @@ public class AttackCapacity : Capacity
     public async void WhiteListTagShortly(string tag, float duration)
     {
         // we check if the tag is not already in the list
-        if (not_attackable_tags.Contains(tag)) { return; }
+        if (excluded_tags.Contains(tag)) { return; }
 
         if (debug)
         {
@@ -263,16 +273,24 @@ public class AttackCapacity : Capacity
         }
 
         // we add the tag to the list
-        not_attackable_tags.Add(tag);
+        excluded_tags.Add(tag);
 
         // wait for a frame to let the click happen
-        await System.Threading.Tasks.Task.Delay((int) (duration * 1000));
+        await System.Threading.Tasks.Task.Delay((int)(duration * 1000));
 
         if (debug)
         {
             Debug.Log("(AttackCapacity) Removing tag " + tag + " from the not attackable tags");
         }
         // we remove the tag from the list
-        not_attackable_tags.Remove(tag);
+        excluded_tags.Remove(tag);
+    }
+    public void ResetTags()
+    {
+        excluded_tags = new List<string>(base_excluded_tags);
+    }
+    public void ClearTags()
+    {
+        excluded_tags.Clear();
     }
 }

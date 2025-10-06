@@ -15,9 +15,39 @@ public class IA : Being
     [Header("IA")]
     public float exploration_radius = 3f; // the radius of exploration for the IA
                                           // todo must be part of an IAData class or struct that influence a curiosity parameter
-    public Transform eyes;
-    public GoToBehaviour mover;
-    // public Seeker seeker { get; private set; } // the seeker component used for pathfinding
+    [SerializeField] private string base_tag = "IA";
+    public string BaseTag => base_tag;
+
+
+    [Header("Components")]
+    private Detector _eyes;
+    public Detector Eyes
+    {
+        get
+        {
+            if (_eyes == null) { _eyes = transform.Find("eyes")?.GetComponent<Detector>(); }
+            return _eyes;
+        }
+    }
+    private GoToBehaviour _mover;
+    public GoToBehaviour Mover
+    {
+        get
+        {
+            if (_mover == null) { _mover = transform.Find("brain/goto")?.GetComponent<GoToBehaviour>(); }
+            return _mover;
+        }
+    }
+    private Brain _brain;
+    public Brain Brain
+    {
+        get
+        {
+            if (_brain == null) { _brain = transform.Find("brain")?.GetComponent<Brain>(); }
+            return _brain;
+        }
+    }
+
 
     [Header("Logs")]
     public bool log_actions = false;
@@ -27,8 +57,7 @@ public class IA : Being
     {
         base.Awake();
 
-        // we get the eyes component
-        eyes = transform.Find("eyes");
-        mover = transform.Find("brain/goto").GetComponent<GoToBehaviour>();
+        // we set the tag
+        gameObject.tag = base_tag;
     }
 }

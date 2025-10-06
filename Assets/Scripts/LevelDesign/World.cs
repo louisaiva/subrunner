@@ -66,26 +66,26 @@ public class World : MonoBehaviour
         if (!elevator_room.loaded) { elevator_room.Awake(); }
 
         // on envoie le perso au milieu de l'elevator room
-        Perso.Instance.transform.position = elevator_room.transform.Find("objects/elevator").transform.position - new Vector3(0,0.5f,0);
+        Controller.Instance.Capable.transform.position = elevator_room.transform.Find("objects/elevator").transform.position - new Vector3(0,0.5f,0);
         if (debug) { Debug.LogWarning("(World) No Perso Room found !! teleporting perso to elevator");}
     }
 
     private void Update()
     {
-        if (!Perso.Instance) { return; }
+        if (!Controller.Instance) { return; }
 
-        Perso.Instance.current_room = findPersoRoom(LoadedRooms);
+        Controller.Instance.current_room = findPersoRoom(LoadedRooms);
 
-        if (Perso.Instance.current_room == null) { return; }
+        if (Controller.Instance.current_room == null) { return; }
 
-        if (!Perso.Instance.current_room.Alight) { Perso.Instance.current_room.Show(); }
+        if (!Controller.Instance.current_room.Alight) { Controller.Instance.current_room.Show(); }
     }
 
     private Room findPersoRoom(List<Room> rooms)
     {
         // définit la room du perso en faisant un raycast
         // get the position of the perso
-        Vector2 perso_position = Perso.Instance.transform.position;
+        Vector2 perso_position = Controller.Instance.Capable.transform.position;
 
         string debug_message = "(World - findPersoRoom) Loaded rooms :\n\t";
 

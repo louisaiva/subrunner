@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NUnit.Framework;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -19,7 +20,7 @@ public class Capable : MonoBehaviour
     [Header("CAPABLE")]
     // the analog equivalent of the anim_player.orientation which is numerical
     [SerializeField] protected Vector2 inputs; // inputs can be at 0,0
-    [SerializeField] protected Vector2 orientation; // orientation can't be at 0,0 -> always normalized & remember last orientation
+    [SerializeField] protected Vector2 orientation = new Vector2(0,-1); // orientation can't be at 0,0 -> always normalized & remember last orientation
     public Vector2 Orientation
     {
         get { return orientation; }
@@ -35,6 +36,7 @@ public class Capable : MonoBehaviour
         }
     }
     public void ClearInputs() { inputs = Vector2.zero; } // does the same than Orientation = Vector2.zero; but more optimized
+    public string Skin => (anim_player == null) ? "none" : anim_player.Skin;
 
     [Header("Capacities")]
     [SerializeField] protected List<Capacity> capacities = new List<Capacity>();
@@ -58,7 +60,26 @@ public class Capable : MonoBehaviour
             return inventory_transform.GetComponent<Inventory>();
         }
     }
-    
+
+    // et des capacités electroniques
+    public virtual ConnectCapacity Connector
+    {
+        get
+        {
+            // we check if we have a ConnectCapacity directly
+            if (HasCapacity<ConnectCapacity>()) { return GetCapacity<ConnectCapacity>(); }
+
+            // or a connectable item
+            else if (Inventory != null)
+            {
+                // checks if one of our items is a laptop
+                Laptop laptop = Inventory.GetItem<Laptop>();
+                if (laptop != null) { return laptop.GetCapacity<ConnectCapacity>(); }
+            }
+            
+            return null;
+        }
+    }
 
 
     [Header("Logs")]
@@ -138,10 +159,10 @@ public class Capable : MonoBehaviour
 
         capacity.Use(this);
     }
-    public void AddCapacity(string name)
+    public Capacity AddCapacity(string name)
     {
         // we check if the capacity is already in the list
-        if (HasCapacity(name)) { return; }
+        if (HasCapacity(name)) { return GetCapacity(name); }
 
         // get the capacity instance
         GameObject capa_instance = bank.GetCapacityInstance(name);
@@ -152,8 +173,11 @@ public class Capable : MonoBehaviour
         capa_instance.transform.localPosition = Vector3.zero;
 
         // we put the capacity in the list
-        capacities.Add(capa_instance.GetComponent<Capacity>());
+        Capacity capa = capa_instance.GetComponent<Capacity>();
+        capacities.Add(capa);
         if (debug) { Debug.Log("(Capable) " + this.name + " : capacity " + name + " added"); }
+
+        return capa;
     }
     public void RemoveCapacity(string name)
     {

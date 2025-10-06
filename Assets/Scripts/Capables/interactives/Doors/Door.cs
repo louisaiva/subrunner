@@ -40,7 +40,7 @@ public class Door : Capable, Interactable, Openable
     {
         base.Update();
 
-        if (Perso.Instance == null) { return; }
+        if (Controller.Instance == null) { return; }
 
         // on met à jour l'orientation de la porte en fonction de la position du perso
         updateOrientation();
@@ -50,6 +50,7 @@ public class Door : Capable, Interactable, Openable
 
     // INTERACTABLE
     public InteractCapacity Interactor { get; set; }
+    public bool AuthorizeEndlessInteraction => false;
     public virtual void OnInteract(Capable interactor)
     {
         // on set l'interactor
@@ -73,7 +74,7 @@ public class Door : Capable, Interactable, Openable
 
 
         // on récupère la room du perso
-        Room perso_room = Perso.Instance.current_room;
+        Room perso_room = Controller.Instance.current_room;
 
         // on vérifie que la room du perso est bien une des 2 rooms de la porte
         if (!(perso_room == room1 || perso_room == room2)) { return; }
@@ -102,7 +103,7 @@ public class Door : Capable, Interactable, Openable
 
 
         // on récupère la room du perso
-        Room perso_room = Perso.Instance.current_room;
+        Room perso_room = Controller.Instance.current_room;
 
         // on vérifie que la room du perso est bien une des 2 rooms de la porte
         if (!(perso_room == room1 || perso_room == room2)) { return; }
@@ -119,7 +120,7 @@ public class Door : Capable, Interactable, Openable
     protected void updateOrientation()
     {
         // on récupère le vecteur entre la porte et le perso
-        Vector2 perso_direction = Perso.Instance.transform.position - transform.position;
+        Vector2 perso_direction = Controller.Instance.transform.position - transform.position;
         
         // l'orientation de la porte tourne toujours le dos au perso !!
         // c'est pour avoir les flèches dans le bon sens

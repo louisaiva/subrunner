@@ -1,0 +1,26 @@
+### Singleton
+- ### se situe sur /ui avec #UI_Navigator
+-
+- Manager principal qui gère tous les **UI** en un seul endroit.
+- Permet d'avoir de nombreuses #UI_Pool et permet d'en afficher une à l'écran
+- Si dessous on a toutes les différentes **Pool**
+-
+-
+- ## #UI_HUD
+-
+- ## #UI_InventoryMenu
+-
+- ## #UI_Hacking
+-
+- ## #UI_Paper
+	- TODO renommer ça en **UI_Reader** et faire en sorte que ça puisse afficher des **Readable** peu importe le type, si c un #Paper ou même une inscription sur un mur en tant qu' #Interactable ça marche aussi
+	-
+- ## #UI_GameOver
+-
+- ## #UI_LevelUp
+-
+- ## #UI_PauseMenu
+-
+- ## #UI_Device
+-
+-

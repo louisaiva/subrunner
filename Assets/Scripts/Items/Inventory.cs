@@ -53,7 +53,7 @@ public class Inventory : MonoBehaviour
         {
             if (ui == null)
             {
-                Debug.LogWarning("(Inventory) " + name + $" has a null UI_Inventory : {ui.name}, skipping initialization");
+                Debug.LogWarning("(Inventory) " + name + $" has a null UI_Inventory : skipping initialization");
                 continue;
             }
             ui.Init();
@@ -62,6 +62,7 @@ public class Inventory : MonoBehaviour
         // on récupère les items
         foreach (Transform child in transform)
         {
+            if (child == null || child.gameObject.activeSelf == false) { continue; }
             Grab(child.GetComponent<Item>());
         }
     }
@@ -95,13 +96,13 @@ public class Inventory : MonoBehaviour
         // we check if the item is already grabbed somewhere, if so we drop it
         if (item.Grabbed && item.HolderInventory != null) { item.HolderInventory.Drop(item, uis_to_ignore); }
 
-        // we add the item
-        Items.Add(item);
-        item.Grabbed = true;
-
         // we set the item parent and reset its local position
         item.transform.SetParent(transform);
         item.transform.localPosition = Vector3.zero;
+
+        // we add the item
+        Items.Add(item);
+        item.Grabbed = true;
 
         // we trigger the events
         OnGrab.Invoke();
@@ -129,8 +130,10 @@ public class Inventory : MonoBehaviour
 
         // we update the UI
         if (uis_to_ignore == null) { uis_to_ignore = new List<UI_Inventory>(); }
-        foreach (UI_Inventory ui in uis)
+        for (int i = 0; i < uis.Count; i++)
         {
+            UI_Inventory ui = uis[i];
+            if (ui == null) { continue; }
             if (uis_to_ignore.Contains(ui)) { continue; } // we skip the ui_to_ignore
             ui.UI_Drop(item);
         }
@@ -250,13 +253,22 @@ public class Inventory : MonoBehaviour
         }
         return null;
     }
-    public List<Item> GetItemsByType<T>() where T : Item
+    public T GetItem<T>() where T : Item
     {
-        // we get all the items of type T
-        List<Item> items = new List<Item>();
+        // we get the first item of type T
         foreach (Item item in Items)
         {
-            if (item is T) { items.Add(item); }
+            if (item is T) { return item as T; }
+        }
+        return null;
+    }
+    public List<T> GetItemsByType<T>() where T : Item
+    {
+        // we get all the items of type T
+        List<T> items = new List<T>();
+        foreach (Item item in Items)
+        {
+            if (item is T) { items.Add(item as T); }
         }
         return items;
     }

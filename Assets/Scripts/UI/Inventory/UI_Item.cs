@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -20,7 +21,7 @@ public class UI_Item : UI_Slot
     [Header("Item Stacking")]
     public TextMeshProUGUI quantity_text;
     public bool Stackable { get => MaxQty > 1; }
-    public int MaxQty { get => items.Count > 0 ? items[0].MaxQty : 1; }
+    public virtual int MaxQty { get => items.Count > 0 ? items[0].MaxQty : 1; }
     public int Quantity { get => items.Count; }
 
     [Header("Components")]
@@ -41,9 +42,14 @@ public class UI_Item : UI_Slot
     }
 
     // STORE ITEM
-    private bool CanStore(Item item)
+    public bool CanStore(Item item)
+    {
+        return CanStore(new List<Item> { item });
+    }
+    public bool CanStore(List<Item> items)
     {
         // checks if we can add the item to the slot (store or stack it on the slot)
+        Item item = items.Count > 0 ? items[0] : null;
 
         // we check if the item is valid
         if (item == null) { return false; }
@@ -58,13 +64,19 @@ public class UI_Item : UI_Slot
         // we check if the item is the same
         if (Reference != item.Reference) { return false; }
 
+        // we check if they are modules and have the same upgrades
+        if (item is Module module && Item is Module current_module)
+        {
+            if (!module.HasSameUpgrades(current_module)) { return false; }
+        }
+
         // we check if the item is full
-        if (Quantity >= MaxQty) { return false; }
+        if (Quantity + items.Count > MaxQty) { return false; }
 
         // we can stack the item !!
         return true;
     }
-    public bool Store(Item item)
+    public virtual bool Store(Item item)
     {
         // we check if we can store the item
         if (!CanStore(item)) { return false; }
@@ -81,10 +93,11 @@ public class UI_Item : UI_Slot
         if (Quantity == 1) { setItem(item); }
 
         OnItemChanged?.Invoke(items);
+        ItemPool?.NotifyPoolChanged(this);
 
         return true;
     }
-    public bool Unstore(Item item)
+    public virtual bool Unstore(Item item)
     {
         // we check if we can unstore the item
         if (!items.Contains(item)) { return false; }
@@ -99,9 +112,10 @@ public class UI_Item : UI_Slot
         if (Quantity == 0) { ClearUI(); }
 
         OnItemChanged?.Invoke(items);
+        ItemPool?.NotifyPoolChanged(this);
         return true;
     }
-    public void Clear()
+    public virtual void Clear()
     {
         // we clear the items
         items.Clear();
@@ -129,6 +143,7 @@ public class UI_Item : UI_Slot
         update_ui_qty();
 
         OnItemChanged?.Invoke(this.items);
+        ItemPool?.NotifyPoolChanged(this);
     }
     public List<Item> GetItems()
     {
@@ -151,7 +166,7 @@ public class UI_Item : UI_Slot
     protected virtual void setItem(Item item)
     {
         // on charge le sprite de l'image
-        current_item_sprite = bank.GetSprite(item.Reference);
+        current_item_sprite = bank.GetSprite(item);
         set_ui(current_item_sprite);
 
         // on change le nom du prefab
@@ -198,18 +213,16 @@ public class UI_Item : UI_Slot
     public override void OnPointerEnter(PointerEventData eventData)
     {
         base.OnPointerEnter(eventData);
+        update_description();
+    }
+    protected void update_description()
+    {
+        // we check if the current ui_pool has a descriptor or not
+        if (UI_Manager.Instance.CurrentPool != "inventory") { return; }
 
-        string description = "";
-        if (Quantity == 0) { description = "empty slot"; }
-        else if (items.Count > 0) { description = items[0].Reference + "\n\n" + items[0].ItemDescription; }
-
-        // on met à jour la description si y'en a une
-        if (transform.parent.GetComponent<UI_ItemPool>() != null
-        && transform.parent.GetComponent<UI_ItemPool>().Descriptor != null)
-        {
-            Description descriptor = transform.parent.GetComponent<UI_ItemPool>().Descriptor;
-            descriptor.SetDescription(description);
-        }
+        // we get the descriptor
+        UI_InventoryMenu menu = UI_Manager.Instance.GetPool("inventory").GetComponent<UI_InventoryMenu>();
+        menu.Descriptor.SetDescription(this);
     }
     public override void OnPointerClick(PointerEventData eventData)
     {
@@ -255,6 +268,7 @@ public class UI_Item : UI_Slot
         {
             inventory_to_drop.Grab(item);
             OnItemChanged?.Invoke(this.items);
+            ItemPool?.NotifyPoolChanged(this);
             return;
         }
 
@@ -264,17 +278,21 @@ public class UI_Item : UI_Slot
         if (dropper != null)
         {
             dropper.Select(item);
+            dropper.random_direction = true;
             inventory.capable.Do("drop");
             OnItemChanged?.Invoke(this.items);
+            ItemPool?.NotifyPoolChanged(this);
+            dropper.random_direction = false;
 
             // we switch back to hud
-            GameObject.Find("/ui").GetComponent<UI_Manager>().SwitchTo("hud");
+            // UI_Manager.Instance.SwitchTo("hud");
         }
         else
         {
             // the inventory simply drops the item (we may be in a chest)
             inventory.Drop(item);
             OnItemChanged?.Invoke(this.items);
+            ItemPool?.NotifyPoolChanged(this);
         }
     }
 
@@ -300,7 +318,7 @@ public class UI_Item : UI_Slot
 
 
         // on met un icon de switch à la place de l'item
-        Sprite switch_icon = (Item != null && Reference == moving_ui_item.Reference && Quantity < MaxQty)
+        Sprite switch_icon = CanStore(moving_ui_item.Item)
             ? bank.GetUI_Icon("merge")
             : bank.GetUI_Icon("switch");
         set_ui(switch_icon);

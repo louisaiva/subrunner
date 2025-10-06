@@ -12,6 +12,8 @@ public class UI_Module : UI_Item
     [SerializeField] private TextMeshProUGUI helper_text;
     [SerializeField] private Color drag_hover_color = new Color(0.2f, 0.2f, 0.2f, 0.5f);
 
+    public override int MaxQty => 1; // modules are not stackable when showed on a motherboard
+
     // AWAKE
     public override void Init()
     {
@@ -60,16 +62,9 @@ public class UI_Module : UI_Item
 
         // on met à jour le fait qu'on est survolé
         is_hovered = true;
+
         // on met à jour la description si y'en a une
-        string description = "";
-        if (Quantity == 0) { description = "empty slot"; }
-        else if (items.Count > 0) { description = items[0].Reference + "\n\n" + items[0].ItemDescription; }
-        if (transform.parent.GetComponent<UI_ItemPool>() != null
-        && transform.parent.GetComponent<UI_ItemPool>().Descriptor != null)
-        {
-            Description descriptor = transform.parent.GetComponent<UI_ItemPool>().Descriptor;
-            descriptor.SetDescription(description);
-        }
+        update_description();
 
         // si on a un Item on baisse l'alpha à 0.5
         if (Item != null) { item_image.color = new Color(1, 1, 1, 0.5f); }
@@ -92,6 +87,22 @@ public class UI_Module : UI_Item
         hide_icon();
     }
 
+    // ON POINTER CLICK
+    public override void OnPointerClick(PointerEventData eventData)
+    {
+        if (Item == null) { return; }
+        if (Item.Reference == "module:hdd")
+        {
+            // we open the HDD info
+            StoreCapacity disk = Item.GetCapacity<StoreCapacity>();
+            if (disk == null) { return; }
+            if (log) { Debug.Log($"(UI_Module) {name} clicked, opening HDD info"); }
+            UI_Manager.Instance.GetPool("hdd").gameObject.GetComponent<UI_HDD>().SetDisk(disk);
+            UI_Manager.Instance.SwitchTo("hdd");
+            return;
+        }
+    }
+
     // DRAGGING
     public override void OnPointerDragEnter(UI_Item moving_ui_item)
     {
@@ -108,11 +119,8 @@ public class UI_Module : UI_Item
         // on récupère quelle reference d'icon on doit mettre
         string icon_ref = "";
         if (Item == null) { icon_ref = "screw"; }
-        else if (Reference == moving_ui_item.Reference && Quantity < MaxQty) { icon_ref = "upgrade"; }
+        // else if (Reference == moving_ui_item.Reference && Quantity < MaxQty) { icon_ref = "upgrade"; }
         else { icon_ref = "switch"; }
-        /* Sprite switch_icon = (Item != null && Reference == moving_ui_item.Reference && Quantity < MaxQty)
-            ? bank.GetUI_Icon("merge")
-            : bank.GetUI_Icon("switch"); */
         set_icon(icon_ref);
     }
     private void set_icon(string icon_ref)

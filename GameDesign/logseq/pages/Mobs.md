@@ -1,0 +1,16 @@
+- Les différents mobs du jeu sont répartis en plusieurs #Factions qui se battent les unes entre elles
+- Les comportements des **Mobs** sont principalement gérés via :
+	- #Brain : pour choisir quel **Goal** chaque **Mob** doit faire à l'instant t
+	- #GOAP_system : pour définir quelles **Actions** sont nécessaires pour compléter le **Goal**. lance aussi les déplacements entre les **Actions** via #GoToBehaviour
+	- #MovableEngine : pour tout ce qui est gestion des mouvements, #TTCBAS etc
+	- #Being & #AttackCapacity : pour la gestion de la vie et des attaques
+	-
+-
+- ## Zombos
+- ## Cats
+- ## Rats
+- ## Robots
+-
+- TODO :
+	- Mettre des **CRS**
+	-
