@@ -9,6 +9,7 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     private List<GameObject> saved_slots = new List<GameObject>();
     [Header("Inventory Menu Components")]
     [SerializeField] private UI_Inventory ui_inventory;
+    public UI_Inventory UI_Inventory { get { return ui_inventory; } }
     [SerializeField] private UI_Inventory ui_laptop;
     [SerializeField] private Transform no_inventory_panel;
 

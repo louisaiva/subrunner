@@ -13,8 +13,6 @@
 - ## #UI_Hacking
 -
 - ## #UI_Paper
-	- TODO renommer ça en **UI_Reader** et faire en sorte que ça puisse afficher des **Readable** peu importe le type, si c un #Paper ou même une inscription sur un mur en tant qu' #Interactable ça marche aussi
-	-
 - ## #UI_GameOver
 -
 - ## #UI_LevelUp

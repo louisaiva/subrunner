@@ -41,6 +41,9 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     [SerializeField] private UI_Item moving_ui_item = null; // the item that is currently being moved
 
 
+    // todo : move all these inputs to UIC
+    // todo : and keep only methods like OnNavigate(), OnActivate(), OnDrop(), OnMove() etc
+
     private InputManager input_manager;
     [Header("Input & Callbacks")]
 
@@ -48,11 +51,6 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     [SerializeField] private InputActionReference navigateInput;
     private InputAction navigateAction;
     private event Action<InputAction.CallbackContext> navigateCallback; // for navigating through the UI -> LJoy
-
-    // DROP
-    [SerializeField] private InputActionReference dropInput;
-    // private InputAction dropAction;
-    // private event Action<InputAction.CallbackContext> dropCallback; // drop Callback is for dropping items when inside a big inventory -> X
 
     // ACTIVATE
     [SerializeField] private InputActionReference activateInput;
@@ -66,13 +64,10 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     public bool IsMovingItem { get => moving_ui_item != null; } // returns true if we are moving an item
 
     // NAVIGATE IN-GAME
-    [SerializeField] private bool navigateInGame = false; // if true, we use the navigateInGameAction instead of the navigateAction -> RJoy 
+    // [SerializeField] private bool navigateInGame = false; // if true, we use the navigateInGameAction instead of the navigateAction -> RJoy 
     [SerializeField] private InputActionReference navigateInGameInput;
     private InputAction navigateInGameAction;
 
-    // DROP IN-GAME
-    [SerializeField] private InputActionReference dropInGameInput;
-    // private InputAction dropInGameAction;
 
 
     [Header("Logs")]
@@ -80,6 +75,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     public bool debug_navigation = false;
     public bool log_slot_position = false;
     public bool log_moving_items = false;
+    public bool log_receivable_slots = false;
     public bool debug_gizmo = false;
 
     [Header("Gizmos")]
@@ -97,14 +93,11 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         navigateAction = input_manager.GetAction(navigateInput);
         navigateInGameAction = input_manager.GetAction(navigateInGameInput);
         activateAction = input_manager.GetAction(activateInput);
-        // dropAction = input_manager.GetAction(dropInput);
-        // dropInGameAction = input_manager.GetAction(dropInGameInput);
         moveItemAction = input_manager.GetAction(moveItemInput);
 
         // we create the callbacks
         navigateCallback = ctx => HandleNavigateInput(ctx.ReadValue<Vector2>());
         activateCallback = ctx => HandleActivateInput(ctx.ReadValue<float>());
-        // dropCallback = ctx => HandleDropInput(ctx.ReadValue<float>());
         moveItemCallback = ctx => HandleMoveItemInput(ctx.ReadValue<float>());
 
         if (debug) { Debug.Log("(UI_Navigator) started & callbacks created"); }
@@ -191,10 +184,6 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
             can_navigate = true;
             continuous_navigation_counter = float.MaxValue;
             last_input = Vector2.zero;
-
-            // et celles de fast drop
-            fast_dropping = false;
-            fast_dropping_wait_threshold = false;
         }
     }
 
@@ -207,16 +196,12 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         if (ingame_navigation)
         {
             navigateInGameAction.performed += navigateCallback;
-            // dropInGameAction.performed += dropCallback;
         }
         else
         {
             navigateAction.performed += navigateCallback;
             activateAction.performed += activateCallback;
-            // dropAction.performed += dropCallback;
         }
-
-        navigateInGame = ingame_navigation; // on met à jour la variable
         
         Controller.Instance.UIC.EnableInputs(ingame_navigation); // on active les inputs dans le UI_InputsController
     }
@@ -225,24 +210,14 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         // on récupère les inputs
         navigateAction.performed -= navigateCallback;
         navigateInGameAction.performed -= navigateCallback;
-        // dropAction.performed -= dropCallback;
-        // dropInGameAction.performed -= dropCallback;
         activateAction.performed -= activateCallback;
         moveItemAction.performed -= moveItemCallback;
-
-        navigateInGame = false; // on met à jour la variable
         
         Controller.Instance.UIC.DisableInputs(); // on désactive les inputs dans le UI_InputsController
     }
     public void ToggleInput(string input_name, bool enable = true)
     {
         Controller.Instance.UIC.ToggleInput(input_name, enable);
-        /* if (input_name == "drop")
-        {
-            if (enable) { dropAction.performed += dropCallback; }
-            else { dropAction.performed -= dropCallback; }
-        }
-        else  */
         if (input_name == "activate")
         {
             if (enable) { activateAction.performed += activateCallback; }
@@ -651,60 +626,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         navigateToClosest(position);
     }
 
-    // DROPPING SLOTS
-    private void HandleDropInput(float input)
-    {
-        // do nothing if this input is mouse_based
-        if (!input_manager.isUsingGamepad())
-        {
-            if (debug) { Debug.Log("(XboxNavigator - HandleActivateInput) activate input ignored because mouse based"); }
-            return;
-        }
-
-        // cette fonction gère le drop depuis l'inventaire. appelle soit drop() soit pressed()
-
-        // 1 - on récupère le slot actuel
-        if (current_slot_index == -1) { return; }
-        GameObject go = slots[current_slot_index];
-        if (go == null) { return; }
-        I_UI_Slot slot = go.GetComponent<I_UI_Slot>();
-        if (slot == null) { return; }
-
-        // 2 - on handle le drop seulement pour les UI_Item
-        if (slot is not UI_Item)
-        {
-            if (debug)
-            {
-                Debug.Log("(XboxNavigator - HandleMoveInput) drop input ignored for slot " + slot.gameObject.name
-                + " because it is not a UI_Item (" + slot.GetType().Name + ")");
-            }
-            return;
-        }
-
-        // 3 - on regarde si on a down ou up
-        if (input > 0.5f)
-        {
-            // on down le slot
-            (slot as UI_Slot).OnPointerDown(null);
-            if (debug) { Debug.Log("(UI_Navigator) pressed ui_item " + slot.gameObject.name); }
-
-            // on lance le fast drop
-            handle_drop_fast();
-        }
-        else
-        {
-            if (fast_dropping || fast_dropping_wait_threshold)
-            {
-                fast_dropping = false;
-                fast_dropping_wait_threshold = false;
-            }
-
-            // on relache le slot
-            OnDrop(/* slot as UI_Item */);
-            if (debug) { Debug.Log("(UI_Navigator) dropped ui_item " + slot.gameObject.name); }
-        }
-
-    }
+    // DROP
     public async void OnDrop()
     {
         if (slots.Count == 0 || current_slot_index == -1) { return; }
@@ -727,59 +649,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         // on navigue vers le slot le plus proche
         navigateToClosest(position);
     }
-    public void OnDown()
-    {
-        // on récupère le slot actuel
-        if (current_slot_index == -1) { return; }
-        GameObject go = slots[current_slot_index];
-        if (go == null) { return; }
-        I_UI_Slot slot = go.GetComponent<I_UI_Slot>();
-        if (slot == null) { return; }
-
-
-        // on down le slot
-        slot.OnPointerDown(null);
-        if (debug) { Debug.Log("(UI_Navigator) pressed slot " + slot.gameObject.name); }
-    }
-
-    [Header("Fast Drop")]
-    [SerializeField] private bool fast_dropping = false;
-    [SerializeField] private bool fast_dropping_wait_threshold = false;
-    // [SerializeField] private UI_Item fast_dropping_item = null;
-    private async void handle_drop_fast()
-    {
-        // wait for continuous_navigation_threshold before starting fast dropping
-        // in unscaled time
-
-        float elapsed = 0f;
-        fast_dropping_wait_threshold = true;
-        while (elapsed < InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD && fast_dropping_wait_threshold)
-        {
-            elapsed += navigateInGame ? Time.deltaTime : Time.unscaledDeltaTime;
-            await System.Threading.Tasks.Task.Yield();
-        }
-        if (!fast_dropping_wait_threshold) { return; }
-        fast_dropping_wait_threshold = false;
-
-        // fast drop
-        fast_dropping = true;
-        while (fast_dropping)
-        {
-            if (!fast_dropping) { break; }
-            elapsed = 0f;
-
-            OnDrop();
-
-            while (elapsed < InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY)
-            {
-                if (!fast_dropping) { break; }
-                elapsed += navigateInGame ? Time.deltaTime : Time.unscaledDeltaTime;
-                await System.Threading.Tasks.Task.Yield();
-            }
-        }
-    }
-
-
+    
 
     // MOVING ITEM THROUGH INVENTORY
     private void HandleMoveItemInput(float input)
@@ -888,6 +758,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     {
         UI_ItemPool moving_pool = moving_ui_item.ItemPool;
         Item moving_item = moving_ui_item.Item;
+        if (log_receivable_slots) { Debug.Log($"(UI_Navigator) enabling only receivable slots for item {moving_item.name} in pool {moving_pool.name}"); }
 
         List<UI_ItemPool> item_pools = new List<UI_ItemPool>();
 
@@ -896,15 +767,17 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         {
             if (slottable == null) { continue; }
 
-            // on récupère tous les UI_ItemPool du slottable si c'est un UI_Inventory
-            if (slottable.GetComponent<UI_Inventory>() is UI_Inventory inventory)
+            // si le slottable est ni un ui_inventory ni un ui_inventorymenu pas la peine de continuer y'a pas d'ui_items
+            UI_Inventory inventory = get_inventory_for_slottable(slottable);
+            if (inventory == null) { continue; }
+            
+            // on récupère tous les UI_ItemPool du slottable si on a un UI_Inventory
+            for (int i = 0; i < inventory.pools.Count; i++)
             {
-                // on ajoute les item pools du slottable
-                foreach (UI_ItemPool item_pool in inventory.pools)
-                {
-                    if (!item_pools.Contains(item_pool)) { item_pools.Add(item_pool); }
-                }
+                UI_ItemPool item_pool = inventory.pools[i];
+                if (!item_pools.Contains(item_pool)) { item_pools.Add(item_pool); }
             }
+            
 
             // on récupère les slots du slottable
             List<GameObject> slottable_slots = slottable.GetComponent<I_UI_Slottable>().GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator);
@@ -933,6 +806,8 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
             }
         }
 
+        if (log_receivable_slots) { Debug.Log($"(UI_Navigator) now trying to add empty slots to ({item_pools.Count}) scalable item pools : {string.Join(", ", item_pools)} "); }
+
         // on parcourt les item pools et on ajoute un ui_item vide si c'est un item pool scalable
         // utile pour pouvoir déposer des ui_items dans une item pool scalable
         foreach (UI_ItemPool item_pool in item_pools)
@@ -943,6 +818,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
             if (item_pool.EmptyCount > 0) { continue; }
             GameObject empty_slot = item_pool.CreateItemSlot();
             empty_slot.GetComponent<UI_Item>().Enable();
+            if (log_receivable_slots) { Debug.Log($"(UI_Navigator) added empty slot to item pool {item_pool.name}"); }
         }
 
         // si on a un UI_InventoryMenu dans nos uis alors on refresh ses UI_ItemPools
@@ -965,14 +841,14 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         {
             if (slottable == null) { continue; }
 
-            // on récupère tous les UI_ItemPool du slottable si c'est un UI_Inventory
-            if (slottable.GetComponent<UI_Inventory>() is UI_Inventory inventory)
+            // si le slottable est ni un ui_inventory ni un ui_inventorymenu pas la peine de continuer y'a pas d'ui_items
+            UI_Inventory inventory = get_inventory_for_slottable(slottable);
+            if (inventory == null) { continue; }
+
+            // on ajoute les item pools du slottable
+            foreach (UI_ItemPool item_pool in inventory.pools)
             {
-                // on ajoute les item pools du slottable
-                foreach (UI_ItemPool item_pool in inventory.pools)
-                {
-                    if (!item_pools.Contains(item_pool)) { item_pools.Add(item_pool); }
-                }
+                if (!item_pools.Contains(item_pool)) { item_pools.Add(item_pool); }
             }
 
             // on récupère les slots du slottable
@@ -1006,6 +882,16 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
                 inventory_menu.RefreshItemPools();
             }
         }
+    }
+    private UI_Inventory get_inventory_for_slottable(GameObject slottable)
+    {
+        // on récupère l'UI_Inventory si on en trouve un
+        I_UI_Slottable slottable_interface = slottable.GetComponent<I_UI_Slottable>();
+        UI_Inventory inventory = null;
+        if (slottable_interface is UI_Inventory) { inventory = slottable_interface as UI_Inventory; }
+        else if (slottable_interface is UI_InventoryMenu inventory_menu) { inventory = inventory_menu.UI_Inventory; }
+
+        return inventory;
     }
     private void switch_items(UI_Item item1, UI_Item item2)
     {

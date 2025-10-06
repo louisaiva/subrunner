@@ -1,0 +1,4 @@
+- Permet de stocker des #Item
+- Peut être associé à un #UI_Inventory, ou même plusieurs, mais aussi peut ne pas être associé.
+	- Par exemple les #Mobs n'ont pas d' #UI_Inventory vu qu'on a pas besoin de voir leur inventaire
+	- et pourtant cet inventaire existe quand même, mais du coup seulement via **Inventory**
