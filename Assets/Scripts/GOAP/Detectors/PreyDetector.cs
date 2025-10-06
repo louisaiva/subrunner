@@ -102,11 +102,11 @@ public class PreyDetector : Detector
         // remove null targets
         waiting_targets.RemoveAll(target => target == null);
 
-        // if we have no prey, we enable the goal
-        if (waiting_targets.Count == 0) { brain.EnableGoal(goal); }
-
         // we add the being to the waiting targets
         waiting_targets.Add(being);
+
+        // if we have no prey, we enable the goal
+        if (target_skins.Contains(being.Skin) && !goal.enabled) { brain.EnableGoal(goal); }
 
         if (log) { Debug.Log("(PreyDetector) " + being.name + " added to waiting targets of " + ia.name); }
     }

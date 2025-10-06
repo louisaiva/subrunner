@@ -1,6 +1,6 @@
-- DOING Mettre des **KeyFeedback** sur les #Interactable
+- DONE Mettre des **KeyFeedback** sur les #Interactable
   :LOGBOOK:
-  CLOCK: [2025-10-06 Mon 23:27:37]
+  CLOCK: [2025-10-06 Mon 23:27:37]--[2025-10-07 Tue 01:54:28] =>  02:26:51
   :END:
 -
 - TODO Mettre en place l' #UI_Device
@@ -23,6 +23,11 @@
   CLOCK: [2025-10-06 Mon 16:54:06]--[2025-10-06 Mon 16:54:06] =>  00:00:00
   :END:
 - TODO faire spawn notre xp quand on meurt !!
+-
+-
+- TODO mettre l'exploit selection mode sur automatique par défaut (mettre dans le start)
+- TODO déplacer le KF de **RT** en haut à droite à côté du #UI_ExploitSelectionInfo
+-
 -
 - DONE faire une release github avec version **1.4.10b**
   :LOGBOOK:
