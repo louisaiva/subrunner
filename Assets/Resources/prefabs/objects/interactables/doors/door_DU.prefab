@@ -382,6 +382,8 @@ MonoBehaviour:
   shadow_caster: {fileID: 0}
   room1: {fileID: 0}
   room2: {fileID: 0}
+  closed_interact_kf_y: {x: 2.25, y: 1.25}
+  opened_interact_kf_y: {x: 0.9, y: -0.4}
 --- !u!114 &4043415612135997435
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -571,18 +573,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: hover
       objectReference: {fileID: 0}
-    - target: {fileID: 4036542711931597449, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: m_text
-      value: b
-      objectReference: {fileID: 0}
-    - target: {fileID: 5361428994816629959, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: m_LocalScale.y
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5361428994816629959, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -624,36 +614,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6378803932534245458, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: m_Pivot.x
+      propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6378803932534245458, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: m_Pivot.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6378803932534245458, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: m_LocalScale.y
-      value: -0.01041667
-      objectReference: {fileID: 0}
-    - target: {fileID: 6378803932534245458, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.01041667
-      objectReference: {fileID: 0}
-    - target: {fileID: 6378803932534245458, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6378803932534245458, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.666
-      objectReference: {fileID: 0}
-    - target: {fileID: 6378803932534245458, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8365594326812171884, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
-      propertyPath: m_IsActive
-      value: 1
+      value: 2.25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

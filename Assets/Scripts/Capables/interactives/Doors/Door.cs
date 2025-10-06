@@ -6,44 +6,41 @@ using UnityEngine.Rendering.Universal;
 public class Door : Capable, Interactable, Openable
 {
 
+    public bool log_interact_kf = false;
 
     [Header("Door")]
     public bool is_vertical = false; // just for the editor
     public Collider2D door_collider;
     public ShadowCaster2D shadow_caster;
-    public bool is_open { get; set;}
-    public bool is_moving { get; set;}
+    public bool is_open { get; set; }
+    public bool is_moving { get; set; }
 
 
     [Header("ROOMS")]
     public Room room1; // always matchs the Orientation direction (Orientation == "right" => room1 is on the right)
     public Room room2; // always matchs the opposite of the Orientation direction (Orientation == "right" => room2 is on the left)
 
-    // UNITY FUNCTIONS
+    [Header("Interact Key Feedback Vertical position")]
+    private Vector2 closed_interact_kf_y = new Vector2(2.25f, 1.25f); // orientation up then down
+    private Vector2 opened_interact_kf_y = new Vector2(0.9f, -0.4f); // orientation up then down
+    private Transform interact_kf;
+
+    // START
     protected virtual void Start()
     {
         // if vertical on set l'Orientaion à "up"
         if (is_vertical && (Orientation == Vector2.right || Orientation == Vector2.left)) { Orientation = Vector2.up; }
         else if (!is_vertical && (Orientation == Vector2.up || Orientation == Vector2.down)) { Orientation = Vector2.left; }
 
-        // on récupère le door_collider
+        // on récupère les composants
         door_collider = GetComponent<Collider2D>();
-
-        // on récup le shadow caster
         shadow_caster = GetComponent<ShadowCaster2D>();
+
+        // on récup l'interact kf
+        interact_kf = GetCapacity<HoverCapacity>().Canvas_kf;
 
         // on close
         if (Can("close")) { close(); }
-    }
-
-    protected override void Update()
-    {
-        base.Update();
-
-        if (Controller.Instance == null) { return; }
-
-        // on met à jour l'orientation de la porte en fonction de la position du perso
-        updateOrientation();
     }
 
 
@@ -61,7 +58,9 @@ public class Door : Capable, Interactable, Openable
         else if (Can("close")) { close(); }
     }
 
+
     // todo : à déplacer dans les Capacity ????
+    // OPENABLE
     public void open()
     {
         // on désactive le collider
@@ -91,7 +90,6 @@ public class Door : Capable, Interactable, Openable
         // on affiche les lights de la room qui s'ouvre
         room_to_open.Show();
     }
-
     public void close()
     {
         // on reactive le collider
@@ -117,11 +115,21 @@ public class Door : Capable, Interactable, Openable
     }
 
 
+    // UPDATE
+    protected override void Update()
+    {
+        base.Update();
+
+        if (Controller.Instance == null) { return; }
+
+        // on met à jour l'orientation de la porte en fonction de la position du perso
+        updateOrientation();
+    }
     protected void updateOrientation()
     {
         // on récupère le vecteur entre la porte et le perso
         Vector2 perso_direction = Controller.Instance.transform.position - transform.position;
-        
+
         // l'orientation de la porte tourne toujours le dos au perso !!
         // c'est pour avoir les flèches dans le bon sens
         // si le perso est en bas de la porte, la fleche doit indiquer le haut !
@@ -131,12 +139,30 @@ public class Door : Capable, Interactable, Openable
         {
             // on set l'orientation de la porte à "up" ou "down"
             Orientation = perso_direction.y < 0 ? Vector2.up : Vector2.down;
+            update_interact_kf_position(Orientation);
         }
         else
         {
             // on set l'orientation de la porte à "right" ou "left"
             Orientation = perso_direction.x < 0 ? Vector2.right : Vector2.left;
         }
+    }
+
+    // INTERACT KF
+    private void update_interact_kf_position(Vector2 orientation)
+    {
+        if (interact_kf == null) { return; }
+        if (!is_vertical) { return; } // on ne bouge le kf que si la porte est verticale
+        float vertical_position;
+
+        // d'abord on veut savoir si la porte est ouverte ou fermée
+        if (is_open && !is_moving) { vertical_position = orientation == Vector2.up ? opened_interact_kf_y.x : opened_interact_kf_y.y; }
+        else { vertical_position = orientation == Vector2.up ? closed_interact_kf_y.x : closed_interact_kf_y.y; }
+
+        if (log_interact_kf) { Debug.Log("(Door) " + name + " orientation : " + orientation + ", is_open : " + is_open + ", vertical_position : " + vertical_position); }
+
+        // puis on applique la position
+        interact_kf.localPosition = new Vector2(interact_kf.localPosition.x, vertical_position);
     }
 
 }

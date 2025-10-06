@@ -20,7 +20,6 @@ public class Chest : Capable, Interactable, Openable
     [Header("Interact Key Feedback")]
     private Transform interact_kf;
     private Vector2 initial_kf_position;
-    [SerializeField] private Vector2 ui_opened_kf_position = Vector2.zero;
 
     // START
     protected virtual void Start()
