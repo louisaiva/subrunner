@@ -15,6 +15,7 @@ public class Controller : Singleton<Controller>
         }
     }
     [SerializeField] private Capable _capable;
+    System.Action<string> skin_changed_callback; // callback pour quand le skin du capable change
 
     [Header("Capable stack")]
     public List<Capable> stack = new List<Capable>();
@@ -39,12 +40,15 @@ public class Controller : Singleton<Controller>
         // on récupère les composants
         perso_quick_inventory = UI_Manager.Instance.GetPool("hud").transform.Find("perso_quick_inventory").GetComponent<UI_Inventory>();
 
+        // initialise le callback
+        skin_changed_callback = (string skin) => { refresh_skin_based_parameters(skin); };
+
         ResetCapableTarget();
     }
 
 
     // CHANGE CAPABLE TARGET HIGH LEVEL
-    public void ChangeCapableTarget(Capable new_target, float duration = -888f,bool add_to_stack=true)
+    public void ChangeCapableTarget(Capable new_target, float duration = -888f, bool add_to_stack = true)
     {
         if (log) { Debug.Log("(Controller) " + name + " is changing capable target to " + new_target.name + (add_to_stack ? " and adding to stack" : "")); }
 
@@ -131,6 +135,8 @@ public class Controller : Singleton<Controller>
             capa.GetCapacity<ConnectCapacity>().Disconnect();
         }
 
+        capa.anim_player.OnSkinChange -= skin_changed_callback; // on enlève le callback de changement de skin
+
         if (log) { Debug.Log("(Controller) " + name + " is done controlling " + capa.name); }
     }
     private void control(Capable capa, float duration = -888f)
@@ -142,8 +148,9 @@ public class Controller : Singleton<Controller>
         CancelInvoke("ResetCapableTarget");
         if (duration != -888f) { Invoke("ResetCapableTarget", duration); }
 
-        // refresh le see through pour remettre la tete bien centrée
-        see_through.Refresh(capa);
+        // on ajoute le callback de changement de skin
+        refresh_skin_based_parameters(capa.Skin);
+        capa.anim_player.OnSkinChange += skin_changed_callback; 
 
         // on désactive le Brain si le nouveau capable est un IA
         if (capa is IA ia)
@@ -183,5 +190,10 @@ public class Controller : Singleton<Controller>
         }
 
         if (log) { Debug.Log("(Controller) " + name + " is now controlling " + capa.name); }
+    }
+    private void refresh_skin_based_parameters(string skin)
+    {
+        // on refresh le see through pour remettre la tete bien centrée
+        see_through.Refresh(skin);
     }
 }

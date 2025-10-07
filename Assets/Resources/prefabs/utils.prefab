@@ -112,6 +112,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movables: []
   log_movables: 1
+  log_arrays: 0
   log_neighbours: 1
 --- !u!1 &586968992647353419
 GameObject:
@@ -5929,38 +5930,38 @@ MonoBehaviour:
   - dodge
   spritesheets_path: spritesheets/
   skin_variants:
-  - base_skin: rat
-    base_spritesheets:
-    - beings/rat/rat
-    - beings/rat/rat_attack
-    variant_name: cyber_rat
+  - variant_name: cyber_rat
     variant_spritesheets:
     - beings/rat/cyber_rat
     - beings/rat/rat_attack
-  - base_skin: fridge
+    base_skin: rat
     base_spritesheets:
-    - objects/interactives/chests/fridge
-    variant_name: black_fridge
+    - beings/rat/rat
+    - beings/rat/rat_attack
+  - variant_name: black_fridge
     variant_spritesheets:
     - objects/interactives/chests/black_fridge
-  - base_skin: small_laptop
+    base_skin: fridge
     base_spritesheets:
-    - objects/items/laptops/laptop_blue
-    variant_name: laptop_red
+    - objects/interactives/chests/fridge
+  - variant_name: laptop_red
     variant_spritesheets:
     - objects/items/laptops/laptop_red
-  - base_skin: small_laptop
+    base_skin: small_laptop
     base_spritesheets:
     - objects/items/laptops/laptop_blue
-    variant_name: laptop_black
+  - variant_name: laptop_black
     variant_spritesheets:
     - objects/items/laptops/laptop_black
-  - base_skin: small_laptop
+    base_skin: small_laptop
     base_spritesheets:
     - objects/items/laptops/laptop_blue
-    variant_name: laptop_green
+  - variant_name: laptop_green
     variant_spritesheets:
     - objects/items/laptops/laptop_green
+    base_skin: small_laptop
+    base_spritesheets:
+    - objects/items/laptops/laptop_blue
   log: 0
   log_LAFAC: 0
   log_variant_skins: 0
@@ -6023,6 +6024,8 @@ MonoBehaviour:
   - {fileID: 1233729231, guid: 1126f0aed3df39f42a85236cfff9995b, type: 3}
   - {fileID: -1415960983, guid: 1126f0aed3df39f42a85236cfff9995b, type: 3}
   - {fileID: 786763477, guid: 1126f0aed3df39f42a85236cfff9995b, type: 3}
+  - {fileID: -1365231551, guid: 1126f0aed3df39f42a85236cfff9995b, type: 3}
+  - {fileID: 704002655, guid: 1126f0aed3df39f42a85236cfff9995b, type: 3}
   - {fileID: 1208446064, guid: fc6a2e632b0fed347ad758f73ac33af3, type: 3}
   - {fileID: -947492696, guid: fc6a2e632b0fed347ad758f73ac33af3, type: 3}
   - {fileID: -1860854845, guid: fc6a2e632b0fed347ad758f73ac33af3, type: 3}

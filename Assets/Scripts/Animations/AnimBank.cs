@@ -420,13 +420,14 @@ public class AnimBank : Singleton<AnimBank>
         }
 
 
-        // we check if the orientation has "LR" in it.
-        // if it does, we add the animation to the bank with "LR" replaced by "L" and "R"
-        if (splitted_name[2].Contains("LR"))
+        // we check if the orientation has "LR" or "RL" in it.
+        // if it does, we add the animation to the bank with "LR" replaced by "L" and "R" & "RL" replaced by "R" & "L"
+        // "LR" stands for basic anim is facing L & "RL" is for basic anim is facing R
+        if (splitted_name[2].Contains("LR") || splitted_name[2].Contains("RL"))
         {
             // we copy the animation
             Anim anim_R = new Anim(anim);
-            anim_R.name = skin + "." + capacity + "." + splitted_name[2].Replace("LR", "R");
+            anim_R.name = skin + "." + capacity + "." + splitted_name[2].Replace("LR", "R").Replace("RL", "L");
             anim_R.flipX = true;
 
             // load the sprites
@@ -436,7 +437,7 @@ public class AnimBank : Singleton<AnimBank>
             anims[skin][capacity].Add(anim_R);
 
             // we change the anim name
-            anim.name = skin + "." + capacity + "." + splitted_name[2].Replace("LR", "L");
+            anim.name = skin + "." + capacity + "." + splitted_name[2].Replace("LR", "L").Replace("RL", "R");
         }
 
         // load the sprites

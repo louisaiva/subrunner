@@ -35,4 +35,8 @@
   :LOGBOOK:
   CLOCK: [2025-10-06 Mon 15:07:16]--[2025-10-06 Mon 15:41:01] =>  00:33:45
   :END:
--
+- DOING changer les sprites du fantom en plus petit :3
+  :LOGBOOK:
+  CLOCK: [2025-10-07 Tue 14:06:15]
+  CLOCK: [2025-10-07 Tue 14:06:18]
+  :END:
