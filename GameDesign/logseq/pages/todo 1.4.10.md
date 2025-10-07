@@ -8,11 +8,12 @@
 	  :LOGBOOK:
 	  CLOCK: [2025-10-03 Fri 21:23:05]--[2025-10-07 Tue 20:18:48] =>  94:55:43
 	  :END:
-	- DOING faire des **UI_Buttons**
+	- DONE faire des **UI_Buttons**
 	  :LOGBOOK:
-	  CLOCK: [2025-10-03 Fri 21:23:06]
+	  CLOCK: [2025-10-03 Fri 21:23:06]--[2025-10-08 Wed 01:39:36] =>  100:16:30
 	  :END:
 	- TODO faire que l'UI s'affiche correctement quand il faut !
+	- TODO régler bug du #UI_Navigator qui ne desactive pas le #UI_Device ce qui empeche de prendre des bails dans les coffres aprés
 	-
 - DONE *bug* **ui_endless_drop** sur le #UI_Navigator
   :LOGBOOK:

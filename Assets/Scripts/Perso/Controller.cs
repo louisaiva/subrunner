@@ -124,6 +124,12 @@ public class Controller : Singleton<Controller>
                 old_ia.GetCapacity<AttackCapacity>().ResetTags();
             }
         }
+        
+        if (capa is Device)
+        {
+            // on enleve le device du UI_Device
+            UI_Manager.Instance.GetPool("device").GetComponent<UI_Device>().ClearDevice();
+        }
 
         // reset l'inventory
         capa?.Inventory?.RemoveUI(perso_quick_inventory);

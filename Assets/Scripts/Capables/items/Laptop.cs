@@ -149,4 +149,8 @@ public class Laptop : Item, Usable, Device
         }
         return keys;
     }
+
+    // UI
+    public List<WindowType> WindowsTypes => new List<WindowType>() { WindowType.Device, WindowType.Connection, WindowType.Explorer };
 }
+

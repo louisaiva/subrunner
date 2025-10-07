@@ -131,4 +131,7 @@ public abstract class StaticDevice : Capable, Device
         }
         return keys;
     }
+
+    // UI
+    public List<WindowType> WindowsTypes => new List<WindowType>() { WindowType.Device, WindowType.Connection, WindowType.Explorer };
 }

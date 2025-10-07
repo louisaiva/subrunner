@@ -2,6 +2,10 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// this auto layout helper class determines which size we must put on this recttransform
+/// based on content's size + margins
+/// </summary>
 public class UI_AutoLayoutResizer : MonoBehaviour
 {
     [Header("Components")]
@@ -14,22 +18,17 @@ public class UI_AutoLayoutResizer : MonoBehaviour
     [SerializeField] private float margin_left;
     [SerializeField] private float margin_right;
 
+    // START
     private void Start()
     {
-        // auto resize to match content size
+        // get the components
         rect_transform = GetComponent<RectTransform>();
-        if (content == null) { Debug.LogError($"(UI_AutoSizeBasedOnGroup) {name} has no content set!"); return; }
-        UpdateSize();
-
-        // we subscribe to content size changes
+        if (content == null) { Debug.LogError($"(UI_AutoLayoutResizer) {name} has no content set!"); return; }
+        Update();
     }
 
+    // UPDATE
     public void Update()
-    {
-        UpdateSize();
-    }
-
-    public void UpdateSize()
     {
         // update our size based on content's size & margins
         float width = content.rect.width + margin_left + margin_right;

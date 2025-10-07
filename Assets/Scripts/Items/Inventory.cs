@@ -235,6 +235,7 @@ public class Inventory : MonoBehaviour
                 if (log) { Debug.LogWarning(s + "but it doesn't have an inventory\n"); }
                 return null;
             }
+            // todo : if the interactable is a Package, we can drop things in it, do we want this to happen ???
 
             // we return the interactable's inventory
             if (log) { Debug.Log(s + "and its inventory is " + interactable.Inventory.name + "\n\n"); }
