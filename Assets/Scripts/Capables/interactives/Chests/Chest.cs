@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using UnityEditor.Overlays;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -110,13 +110,33 @@ public class Chest : Capable, Interactable, Openable
         Vector2 kf_position = ui_canvas.transform.localPosition;
 
         // 2 - we apply an offset to the right by the columns count of the grid/2
-        LayoutRebuilder.ForceRebuildLayoutImmediate(Inventory.ui.transform as RectTransform);
-        float preffered_width = LayoutUtility.GetPreferredWidth(Inventory.ui.transform as RectTransform) * Inventory.ui.transform.localScale.x / 2f;
-        if (log_interact_kf) { Debug.Log("(Chest) " + name + " preffered width of the inventory is " + preffered_width); }
-        kf_position.x += preffered_width / 2f;
+        int columns = calculate_columns_count(Inventory.ui.GetComponent<GridLayoutGroup>());
+        if (log_interact_kf) { Debug.Log("(Chest) " + name + " columns count is " + columns); }
+        kf_position.x += columns / 4f; // divide by 2 bcz we move from center to right, and re-divide by 2 cz cellsize is 0.5
 
         // 3 - center vertically the KF + little offset on the right
         kf_position += new Vector2(0.25f, 0.25f);
         return kf_position;
+    }
+    private int calculate_columns_count(GridLayoutGroup grid)
+    {
+        RectTransform gridRect = grid.GetComponent<RectTransform>();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(gridRect);
+        // float preffered_width = LayoutUtility.GetPreferredWidth(gridRect) * Inventory.ui.transform.localScale.x;
+
+        List<float> columns_positions = new List<float>();
+
+        // we go through all children to check their x position
+        for (int i = 0; i < grid.transform.childCount; i++)
+        {
+            Transform child = grid.transform.GetChild(i);
+            float x_position = child.localPosition.x;
+            if (!columns_positions.Contains(x_position)) { columns_positions.Add(x_position); }
+
+            // check if we have all columns
+            if (columns_positions.Count >= grid.constraintCount) { break; }
+        }
+        
+        return columns_positions.Count;
     }
 }
