@@ -4,14 +4,15 @@
   :END:
 -
 - TODO Mettre en place l' #UI_Device
-	- DOING Dessiner des **UI_Window** pour l' #UI_Device
+	- DONE Dessiner des **UI_Window** pour l' #UI_Device
 	  :LOGBOOK:
-	  CLOCK: [2025-10-03 Fri 21:23:05]
+	  CLOCK: [2025-10-03 Fri 21:23:05]--[2025-10-07 Tue 20:18:48] =>  94:55:43
 	  :END:
 	- DOING faire des **UI_Buttons**
 	  :LOGBOOK:
 	  CLOCK: [2025-10-03 Fri 21:23:06]
 	  :END:
+	- TODO faire que l'UI s'affiche correctement quand il faut !
 	-
 - DONE *bug* **ui_endless_drop** sur le #UI_Navigator
   :LOGBOOK:
@@ -25,9 +26,12 @@
 - TODO faire spawn notre xp quand on meurt !!
 -
 -
-- TODO mettre l'exploit selection mode sur automatique par défaut (mettre dans le start)
-- TODO déplacer le KF de **RT** en haut à droite à côté du #UI_ExploitSelectionInfo
-- TODO faire que les éléments d' #ui_hacking ne s'affichent que quand on a un #Device !!
+- DONE mettre l'exploit selection mode sur automatique par défaut (mettre dans le start)
+- DONE déplacer le KF de **RT** en haut à droite à côté du #UI_ExploitSelectionInfo
+- DONE faire que les éléments d' #ui_hacking ne s'affichent que quand on a un #Device !!
+-
+-
+- TODO rework le #UI_RunningHacksViewer pour combiner les hacks en cours du même exploit & même statut !
 -
 -
 -
@@ -35,8 +39,8 @@
   :LOGBOOK:
   CLOCK: [2025-10-06 Mon 15:07:16]--[2025-10-06 Mon 15:41:01] =>  00:33:45
   :END:
-- DOING changer les sprites du fantom en plus petit :3
+- DONE changer les sprites du fantom en plus petit :3
   :LOGBOOK:
   CLOCK: [2025-10-07 Tue 14:06:15]
-  CLOCK: [2025-10-07 Tue 14:06:18]
+  CLOCK: [2025-10-07 Tue 14:06:18]--[2025-10-07 Tue 18:14:40] =>  04:08:22
   :END:

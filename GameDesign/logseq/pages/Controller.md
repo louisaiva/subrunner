@@ -2,6 +2,8 @@
 - Fait le lien entre les **Inputs** du #InputManager et le #Capable qu'on controle actuellement
 - en gros c'est un peu notre âme quoi, on peut la transférer d'un #Capable à l'autre et c'est ce qui nous permet de nous déplacer etc quand on contrôle le #Perso ou un #Being
 -
+-
+-
 - Contient plusieurs sous-systèmes importants:
 -
 - ## PIC & UIC

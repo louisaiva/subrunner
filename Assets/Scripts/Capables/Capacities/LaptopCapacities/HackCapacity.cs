@@ -10,6 +10,7 @@ using UnityEngine;
 public class HackCapacity : Capacity
 {
     public bool log_scan = false;
+    public bool log_cancel = false;
 
     [Header("Exploit selection")]
     public Exploit selected_exploit;
@@ -70,19 +71,24 @@ public class HackCapacity : Capacity
     // HACK MANAGEMENT
     public void TerminateHack(Hack hack)
     {
-        if (hack.state != ProcessusState.Completed && hack.state != ProcessusState.Failed) { return; }
-        
+        if (!new List<ProcessusState> { ProcessusState.Completed, ProcessusState.Failed }.Contains(hack.state)) { return; }
+
         // NMAP
         if (hack.state == ProcessusState.Completed && hack.name == "nmap") { Scan(hack.target); }
 
+        if (log_cancel && hack.state == ProcessusState.Failed) { Debug.Log($"(HackCapacity) {capable.name} finished exploit {hack.name} on {hack.target.capable.name} with state {hack.state}."); }
+
         // we download files if there are any
         download_files(hack);
-        remove_hack(running_hacks.IndexOf(hack));
+        remove_hack(hack);
     }
-    private void remove_hack(int hack_index)
+    private void remove_hack(Hack hack)
     {
-        if (hack_index < 0 || hack_index >= running_hacks.Count) { Debug.LogError($"(HackCapacity) {capable.name} tried to remove a hack at index {hack_index} but it's out of range."); }
-        Hack hack = running_hacks[hack_index];
+        if (!running_hacks.Contains(hack))
+        {
+            Debug.LogError($"(HackCapacity) {capable.name} tried to remove a hack {hack.name} but it's not running.");
+            return;
+        }
 
         if (debug) { Debug.Log($"(HackCapacity) {capable.name} finished exploit {hack.name}."); }
 
@@ -91,7 +97,7 @@ public class HackCapacity : Capacity
         hackrays.Remove(hack);
 
         // we remove the hack from the running hacks
-        running_hacks.RemoveAt(hack_index);
+        running_hacks.Remove(hack);
     }
     private void download_files(Hack hack)
     {
@@ -182,8 +188,16 @@ public class HackCapacity : Capacity
     {
         if (running_hacks.Count == 0) { return; }
 
-        // we cancel the last hack
+        // we get the last hack
         Hack hack = running_hacks[running_hacks.Count - 1];
+
+        // if it's already failed then we don't want to remove it (bug the CancelLastHack() method were called
+        // twice in a frame by the Controller.control() which call UI_Manager.SwitchTo("device") which
+        // recalls UI_ExploitSelector.ConfirmChoice() but it will be fixed when we rework UI_Manager)
+        if (hack.state == ProcessusState.Failed) { return; }
+
+        // we cancel the last hack
+        if (log_cancel) { Debug.Log($"(HackCapacity) {capable.name} is cancelling its last hack {hack.name} on {hack.target.capable.name}."); }
         hack.Fail();
     }
     public void CancelControlHacks()
