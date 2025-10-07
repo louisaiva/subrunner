@@ -12,7 +12,7 @@ public class SceneLoader : Singleton<SceneLoader>
 {
 
     [Header("Loading screen")]
-    [SerializeField] private bool linux_style_loading = false;
+    // [SerializeField] private bool linux_style_loading = false;
     [SerializeField] private GameObject loadingScreen;
     [SerializeField] private Image bg;
     [SerializeField] private GameObject text_prefab;

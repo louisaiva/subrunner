@@ -6,6 +6,7 @@ using UnityEngine;
 public class Movable : Capable
 {
     public bool debug_velocity = false; // Show velocity in console
+    public bool log_avoidance = false; // whether to log the avoidance force calculation
 
     [Header("MOVABLE")]
     public Rigidbody2D rb;  // Replace transform movement

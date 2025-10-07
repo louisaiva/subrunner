@@ -2,13 +2,13 @@
 {:block/content "**CURRENT TODO**"
 :block/format :markdown
 :block/left 
-{:block/uuid #uuid "02fcaa8a-e7cc-4c74-8a82-8920810fcb63"}
+{:block/uuid #uuid "ab353888-c7b2-44e4-bb72-306277f7df3e"}
 :block/parent 
-{:block/uuid #uuid "02fcaa8a-e7cc-4c74-8a82-8920810fcb63"}
+{:block/uuid #uuid "ab353888-c7b2-44e4-bb72-306277f7df3e"}
 :block/properties 
 {}
 :block/uuid #uuid "68de523d-23ed-4ec0-8044-b99dce844ca6"} 
-{:block/created-at 1759400778655
+{:block/created-at 1759832595263
 :block/properties 
 {:ls-type :whiteboard-shape
 :logseq.tldraw.shape 
@@ -25,7 +25,7 @@
 :compact true
 :isAutoResizing true
 :type "logseq-portal"
-:size [480 122.99993473397424]
+:size [480 122.99999954231701]
 :strokeType "line"
 :strokeWidth 2
 :opacity 1
@@ -34,9 +34,9 @@
 :point [448 224]
 :parentId "68de5224-dc37-4021-bb3b-c34766a09112"
 :collapsedHeight 0
-:nonce 1759400508421}}
-:block/updated-at 1759400778655} 
-{:block/created-at 1759756028003
+:nonce 1759400508423}}
+:block/updated-at 1759832595263} 
+{:block/created-at 1759832945455
 :block/properties 
 {:ls-type :whiteboard-shape
 :logseq.tldraw.shape 
@@ -53,7 +53,7 @@
 :compact false
 :isAutoResizing true
 :type "logseq-portal"
-:size [648 427.0000097564523]
+:size [648 730.9999303322248]
 :strokeType "line"
 :strokeWidth 2
 :opacity 1
@@ -62,14 +62,14 @@
 :point [352 360]
 :parentId "68de5224-dc37-4021-bb3b-c34766a09112"
 :collapsedHeight 0
-:nonce 1759400708789}}
-:block/updated-at 1759756028003} 
+:nonce 1759400708804}}
+:block/updated-at 1759832945455} 
 {:block/content "**DONE**"
 :block/format :markdown
 :block/left 
 {:block/uuid #uuid "68de523d-23ed-4ec0-8044-b99dce844ca6"}
 :block/parent 
-{:block/uuid #uuid "02fcaa8a-e7cc-4c74-8a82-8920810fcb63"}
+{:block/uuid #uuid "ab353888-c7b2-44e4-bb72-306277f7df3e"}
 :block/properties 
 {}
 :block/uuid #uuid "68de534f-8bfc-473f-8a45-e2dc42e47db2"} 
@@ -129,22 +129,202 @@
 :parentId "f60eacb4-ef6d-4dec-993c-70b211f0316f"
 :collapsedHeight 0
 :nonce 1759613490760}}
-:block/updated-at 1759613498290})
+:block/updated-at 1759613498290} 
+{:block/content "**BUGS**"
+:block/format :markdown
+:block/left 
+{:block/uuid #uuid "68de534f-8bfc-473f-8a45-e2dc42e47db2"}
+:block/parent 
+{:block/uuid #uuid "ab353888-c7b2-44e4-bb72-306277f7df3e"}
+:block/properties 
+{}
+:block/uuid #uuid "68e4ea03-86ec-43a6-8915-881103fd6ba9"} 
+{:block/collapsed? false
+:block/content "# **BUGS**\n:LOGBOOK:\nCLOCK: [2025-10-07 Tue 12:27:17]--[2025-10-07 Tue 12:27:18] =>  00:00:01\n:END:"
+:block/format :markdown
+:block/left 
+{:block/uuid #uuid "68e4ea03-86ec-43a6-8915-881103fd6ba9"}
+:block/parent 
+{:block/uuid #uuid "ab353888-c7b2-44e4-bb72-306277f7df3e"}
+:block/properties 
+{:heading 1}
+:block/uuid #uuid "68e4ea24-3741-478e-bbb5-1963dcac8791"} 
+{:block/created-at 1759833408278
+:block/properties 
+{:ls-type :whiteboard-shape
+:logseq.tldraw.shape 
+{:blockType "B"
+:stroke ""
+:rotation 0
+:collapsed false
+:borderRadius 8
+:index 4
+:scale [1 1]
+:pageId "68e4ea24-3741-478e-bbb5-1963dcac8791"
+:scaleLevel "md"
+:fill ""
+:compact false
+:isAutoResizing true
+:type "logseq-portal"
+:size [704 424.9999934945716]
+:strokeType "line"
+:strokeWidth 2
+:opacity 1
+:id "ab9f53f0-a367-11f0-be60-0d792f65649d"
+:noFill false
+:point [1048 240]
+:parentId "ab353888-c7b2-44e4-bb72-306277f7df3e"
+:collapsedHeight 0
+:nonce 1759832610827}}
+:block/updated-at 1759833408278} 
+{:block/content ""
+:block/format :markdown
+:block/left 
+{:block/uuid #uuid "68e4ea83-8c3d-4efc-9804-1bb6c8a976f9"}
+:block/parent 
+{:block/uuid #uuid "68e4ea83-8c3d-4efc-9804-1bb6c8a976f9"}
+:block/properties 
+{}
+:block/uuid #uuid "68e4ea41-d9b2-40e5-8f8e-ba5c7bc7163e"} 
+{:block/content ""
+:block/format :markdown
+:block/left 
+{:block/uuid #uuid "68e4ea83-8c3d-4efc-9804-1bb6c8a976f9"}
+:block/parent 
+{:block/uuid #uuid "ab353888-c7b2-44e4-bb72-306277f7df3e"}
+:block/properties 
+{}
+:block/uuid #uuid "68e4ea41-1f36-4d20-859f-996c53a36acf"} 
+{:block/content ""
+:block/format :markdown
+:block/left 
+{:block/uuid #uuid "68e4ea87-3863-47ef-b4c8-931549b1a5e1"}
+:block/parent 
+{:block/uuid #uuid "ab353888-c7b2-44e4-bb72-306277f7df3e"}
+:block/properties 
+{}
+:block/uuid #uuid "68e4ea83-8c3d-4efc-9804-1bb6c8a976f9"} 
+{:block/content "TODO"
+:block/format :markdown
+:block/left 
+{:block/uuid #uuid "68e4eacd-15a9-40c6-95c2-045f39092ef4"}
+:block/parent 
+{:block/uuid #uuid "ab353888-c7b2-44e4-bb72-306277f7df3e"}
+:block/properties 
+{}
+:block/uuid #uuid "68e4ea87-3863-47ef-b4c8-931549b1a5e1"} 
+{:block/content "DONE comprendre pk les #Mobs recommencent à bouger pendant la fin de leur attaque (même bug que celui du haut ?)"
+:block/format :markdown
+:block/left 
+{:block/uuid #uuid "68e4eb08-a74d-47ee-8417-21fbed4a66fa"}
+:block/parent 
+{:block/uuid #uuid "68e4ea24-3741-478e-bbb5-1963dcac8791"}
+:block/properties 
+{}
+:block/uuid #uuid "68e4ea8b-fbc0-41e2-890c-cd6374531a91"} 
+{:block/content ""
+:block/format :markdown
+:block/left 
+{:block/uuid #uuid "68e4ebbb-3658-4427-8cfc-4e6845b9fe77"}
+:block/parent 
+{:block/uuid #uuid "68e4ea24-3741-478e-bbb5-1963dcac8791"}
+:block/properties 
+{}
+:block/uuid #uuid "68e4eac8-d946-4a66-92a1-943229031543"} 
+{:block/content ""
+:block/format :markdown
+:block/left 
+{:block/uuid #uuid "68e4eac8-d946-4a66-92a1-943229031543"}
+:block/parent 
+{:block/uuid #uuid "68e4ea24-3741-478e-bbb5-1963dcac8791"}
+:block/properties 
+{}
+:block/uuid #uuid "68e4eac9-bd77-4bd8-a907-d905eceb0bf4"} 
+{:block/content "qsdqsd"
+:block/format :markdown
+:block/left 
+{:block/uuid #uuid "68e4ea24-3741-478e-bbb5-1963dcac8791"}
+:block/parent 
+{:block/uuid #uuid "ab353888-c7b2-44e4-bb72-306277f7df3e"}
+:block/properties 
+{}
+:block/uuid #uuid "68e4eac9-3614-4f99-87c6-99ca6ce63fc9"} 
+{:block/content ""
+:block/format :markdown
+:block/left 
+{:block/uuid #uuid "68e4eac9-3614-4f99-87c6-99ca6ce63fc9"}
+:block/parent 
+{:block/uuid #uuid "68e4eac9-3614-4f99-87c6-99ca6ce63fc9"}
+:block/properties 
+{}
+:block/uuid #uuid "68e4eac9-c9ba-498c-8c5e-a66c619220d8"} 
+{:block/content ""
+:block/format :markdown
+:block/left 
+{:block/uuid #uuid "68e4eac9-3614-4f99-87c6-99ca6ce63fc9"}
+:block/parent 
+{:block/uuid #uuid "ab353888-c7b2-44e4-bb72-306277f7df3e"}
+:block/properties 
+{}
+:block/uuid #uuid "68e4eacd-15a9-40c6-95c2-045f39092ef4"} 
+{:block/content ""
+:block/format :markdown
+:block/left 
+{:block/uuid #uuid "68e4ea41-1f36-4d20-859f-996c53a36acf"}
+:block/parent 
+{:block/uuid #uuid "ab353888-c7b2-44e4-bb72-306277f7df3e"}
+:block/uuid #uuid "68e4eae5-ccae-4ff0-af6f-bbf0b4d0ddef"} 
+{:block/content "DONE faire que le #TTCBAS ne prend pas en compte notre cible (zombos evitent le perso meme quand ils le chasent)"
+:block/format :markdown
+:block/left 
+{:block/uuid #uuid "68e4eb0e-4e01-467b-b45d-86e0df740d73"}
+:block/parent 
+{:block/uuid #uuid "68e4ea24-3741-478e-bbb5-1963dcac8791"}
+:block/properties 
+{}
+:block/uuid #uuid "68e4eb08-a74d-47ee-8417-21fbed4a66fa"} 
+{:block/content ""
+:block/format :markdown
+:block/left 
+{:block/uuid #uuid "68e4ea24-3741-478e-bbb5-1963dcac8791"}
+:block/parent 
+{:block/uuid #uuid "68e4ea24-3741-478e-bbb5-1963dcac8791"}
+:block/properties 
+{}
+:block/uuid #uuid "68e4eb0e-4e01-467b-b45d-86e0df740d73"} 
+{:block/content ""
+:block/format :markdown
+:block/left 
+{:block/uuid #uuid "68e4eac9-bd77-4bd8-a907-d905eceb0bf4"}
+:block/parent 
+{:block/uuid #uuid "68e4ea24-3741-478e-bbb5-1963dcac8791"}
+:block/properties 
+{}
+:block/uuid #uuid "68e4eb24-497a-47d6-9f95-b49d87badeb4"} 
+{:block/content "DONE le #PreyDetector ne semble pas basculer directement sur la proie si on fait une autre action ?"
+:block/format :markdown
+:block/left 
+{:block/uuid #uuid "68e4ea8b-fbc0-41e2-890c-cd6374531a91"}
+:block/parent 
+{:block/uuid #uuid "68e4ea24-3741-478e-bbb5-1963dcac8791"}
+:block/properties 
+{}
+:block/uuid #uuid "68e4ebbb-3658-4427-8cfc-4e6845b9fe77"})
 :pages (
-{:block/uuid #uuid "02fcaa8a-e7cc-4c74-8a82-8920810fcb63"
+{:block/uuid #uuid "ab353888-c7b2-44e4-bb72-306277f7df3e"
 :block/properties 
 {:ls-type :whiteboard-page
 :logseq.tldraw.page 
-{:id "02fcaa8a-e7cc-4c74-8a82-8920810fcb63"
+{:id "ab353888-c7b2-44e4-bb72-306277f7df3e"
 :name "todo"
 :bindings 
 {}
 :nonce 1
 :assets []
-:shapes-index ("9a649e70-9f79-11f0-b56f-2f5d91f41663" "11c5fd60-9f7a-11f0-b56f-2f5d91f41663" "3dedb360-9f7a-11f0-b56f-2f5d91f41663" "7e063760-a169-11f0-9e61-3b62fd53bac4")}}
+:shapes-index ("9a649e70-9f79-11f0-b56f-2f5d91f41663" "11c5fd60-9f7a-11f0-b56f-2f5d91f41663" "3dedb360-9f7a-11f0-b56f-2f5d91f41663" "7e063760-a169-11f0-9e61-3b62fd53bac4" "ab9f53f0-a367-11f0-be60-0d792f65649d")}}
 :block/journal? false
-:block/updated-at 1759756030962
+:block/updated-at 1759838495056
 :block/created-at 1759400484349
 :block/type "whiteboard"
 :block/name "todo"
-:block/original-name "TODO"})}
+:block/original-name "todo"})}

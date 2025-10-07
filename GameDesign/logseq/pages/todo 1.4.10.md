@@ -27,6 +27,8 @@
 -
 - TODO mettre l'exploit selection mode sur automatique par défaut (mettre dans le start)
 - TODO déplacer le KF de **RT** en haut à droite à côté du #UI_ExploitSelectionInfo
+- TODO faire que les éléments d' #ui_hacking ne s'affichent que quand on a un #Device !!
+-
 -
 -
 - DONE faire une release github avec version **1.4.10b**

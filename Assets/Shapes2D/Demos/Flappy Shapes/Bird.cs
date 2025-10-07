@@ -42,7 +42,7 @@
 		public void Reset() {
 			transform.position = startPosition;
 			GetComponent<Animator>().enabled = false;
-			rb.isKinematic = true;
+			rb.bodyType = RigidbodyType2D.Kinematic;
 			dead = false;
 			playing = false;
 			transform.rotation = Quaternion.Euler(0, 0, 0);
@@ -57,7 +57,7 @@
 			if (dead)
 				Reset();
 			GetComponent<Animator>().enabled = true;
-			rb.isKinematic = false;
+			rb.bodyType = RigidbodyType2D.Dynamic;
 			playing = true;
 			Flap();
 		}

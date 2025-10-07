@@ -73,7 +73,7 @@
             canvas.name = "Canvas";
             canvas.gameObject.layer = LayerMask.NameToLayer("UI");
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            if (GameObject.FindObjectOfType<EventSystem>() == null) {
+            if (Object.FindFirstObjectByType<EventSystem>() == null) {
                 GameObject es = new GameObject();
                 es.name = "Event System";
                 es.AddComponent<EventSystem>();
@@ -146,7 +146,7 @@
                 Undo.RegisterCreatedObjectUndo(go, "Create Shapes2D Button");
             } else {
                 bool createdCanvas = false;
-                Canvas canvas = GameObject.FindObjectOfType<Canvas>();
+                Canvas canvas = Object.FindFirstObjectByType<Canvas>();
                 if (canvas == null || !canvas.enabled || canvas.transform.parent != null) {
                     canvas = CreateCanvas();
                     createdCanvas = true;
@@ -170,7 +170,7 @@
                 Undo.RegisterCreatedObjectUndo(go, "Create Shapes2D Panel");
             } else {
                 bool createdCanvas = false;
-                Canvas canvas = GameObject.FindObjectOfType<Canvas>();
+                Canvas canvas = Object.FindFirstObjectByType<Canvas>();
                 if (canvas == null || !canvas.enabled || canvas.transform.parent != null) {
                     canvas = CreateCanvas();
                     createdCanvas = true;

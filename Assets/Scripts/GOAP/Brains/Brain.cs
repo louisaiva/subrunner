@@ -10,10 +10,11 @@ namespace subrunner.goap
 {
     public class Brain : MonoBehaviour
     {
-        [Header("Agent Type")]
+        [Header("Agent Parameters")]
         [SerializeField] private string agent_type;
         protected IA ia;
         protected Detector detector; // main detector on eyes
+        public IActionData currentActionData => agent.ActionState?.Data;
 
         [Header("Goal Selection")]
         [SerializeField] protected List<GoalPriority> goals = new List<GoalPriority>();
@@ -104,6 +105,14 @@ namespace subrunner.goap
         // GOAL SELECTION LOGIC
         public void DetermineGoal(bool resolve = true)
         {
+            // if we have an action we stop it
+            if (agent.ActionState.Action != null)
+            {
+                if (log_goals) { Debug.Log($"(Brain) {ia.name} is stopping current action: {agent.ActionState.Action.GetType().Name}"); }
+                agent.StopAction();
+                return; // we wait for the OnActionEnd event to request the new goal
+            }
+
             // we cycle through all the goals priorities & we find the highest one
             GoalPriority highestGoal = null;
             int highestPriority = int.MinValue;
@@ -124,13 +133,6 @@ namespace subrunner.goap
             if (log_goals_update) { Debug.Log(log); }
             if (highestGoal == null || highestGoal.type == CurrentGoal) { return; }
             if (log_goals) { Debug.Log("(Brain) " + ia.name + " is requesting " + highestGoal.type); }
-
-            // if we have an action we stop it
-            if (agent.ActionState.Action != null)
-            {
-                if (log_goals) { Debug.Log($"(Brain) {ia.name} is stopping current action: {agent.ActionState.Action.GetType().Name}"); }
-                agent.StopAction();
-            }
 
             // we request the goal
             request_goal(highestGoal.type, resolve);

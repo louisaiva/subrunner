@@ -26,7 +26,6 @@ public class MovableEngine : MonoBehaviour
     public bool log_movables = false;
     public bool log_arrays = false;
     public bool log_neighbours = false;
-    public bool log_avoidance = false;
 
     // AWAKE
     public static MovableEngine Instance { get; private set; }
@@ -83,62 +82,6 @@ public class MovableEngine : MonoBehaviour
 
     }
 
-    
-    // NEIGHBOURS CALCULATION
-    public List<Movable> GetNeighbours(Movable agent, float maxDistance = 1f)
-    {
-        // we cache the neighbours indexes in the neighbour_indexes array
-        cache_neighbours_indexes(agent, maxDistance);
-
-        // check that we have an array
-        if (!neighbours_indexes.IsCreated) { return new List<Movable>(); }
-
-        // convert back the indexes to a list
-        List<Movable> neighbours = new List<Movable>();
-        for (int i = 0; i < neighbours_indexes.Length; i++)
-        {
-            neighbours.Add(movables[neighbours_indexes[i]]);
-        }
-        return neighbours;
-    }
-    private void cache_neighbours_indexes(Movable agent, float maxDistance = 1f)
-    {
-        if (!neighbours_indexes.IsCreated) { return; }
-        neighbours_indexes.Clear();
-        int agentIndex = movables.IndexOf(agent);
-
-        // create a new job
-        FindNeighboursJob neighJob = new FindNeighboursJob
-        {
-            MovablePositions = movablePositions,
-            neighbours = neighbours_indexes,
-            movableIndex = agentIndex,
-            maxDistanceSq = maxDistance * maxDistance
-        };
-
-        // launches it
-        JobHandle neighHandle = neighJob.Schedule();
-        neighHandle.Complete();
-    }
-    private void cache_neighbours_movable_structs()
-    {
-        if (!neighbours_structs.IsCreated) { return; }
-        neighbours_structs.Clear();
-        foreach (int neighbourIndex in neighbours_indexes)
-        {
-            Movable neighbour = movables[neighbourIndex];
-            if (neighbour.feet_collider == null) { continue; } // we only consider movables with feet colliders
-            neighbours_structs.Add(new MovableStruct
-            {
-                id = neighbourIndex,
-                position = (float2)(Vector2)neighbour.transform.position,
-                velocity = (float2)neighbour.Velocity,
-                feet_radius = neighbour.feet_radius,
-                is_item = neighbour is Item
-            });
-        }
-    }
-
     // UPDATE
     private void Update()
     {
@@ -156,7 +99,7 @@ public class MovableEngine : MonoBehaviour
             if (mover == null) { continue; }
             Vector2 avoidance_force = CalculateAvoidanceForce(movable, mover.neighbour_radius, mover.ttc_treshold);
             mover.SetAvoidanceForce(avoidance_force);
-            if (log_avoidance) { Debug.Log($"(MovableEngine) {movable.name} has avoidance force {avoidance_force}"); }
+            if (movable.log_avoidance) { Debug.Log($"(MovableEngine) {movable.name} has avoidance force {avoidance_force}"); }
         }
 
     }
@@ -164,15 +107,26 @@ public class MovableEngine : MonoBehaviour
     // AVOIDANCE FORCE CALCULATION
     public Vector2 CalculateAvoidanceForce(Movable agent, float neighbour_radius, float ttc_treshold = 3f)
     {
+        // checks if the agent has a brain and has an attack target -> we exclude the target from the avoidance force calculation
+        // since we want to collide with it
+
+        NativeList<int> excludeIndexes = new NativeList<int>(Allocator.TempJob);
+        if (agent is IA ia && ia.Brain.currentActionData is AttackAction.Data attackData && attackData.BeingTarget != null)
+        {
+            int targetIndex = movables.IndexOf(attackData.BeingTarget);
+            if (targetIndex != -1) { excludeIndexes.Add(targetIndex); }
+            if (agent.log_avoidance) { Debug.Log($"(MovableEngine) {agent.name} tried excluding {attackData.BeingTarget.name} from ttc (and {((targetIndex != -1) ? "succeeded" : "failed")})"); }
+        }
+
         // get the neighbours
-        cache_neighbours_indexes(agent, neighbour_radius);
+        cache_neighbours_indexes(agent, neighbour_radius, excludeIndexes);
         cache_neighbours_movable_structs();
 
         // then we put all the values to the job
         NativeArray<float2> output = new NativeArray<float2>(1, Allocator.TempJob);
 
         // log
-        if (log_avoidance)
+        if (agent.log_avoidance)
         {
             string log = $"(MovableEngine) Calculating avoidance force for {agent.name} with {neighbours_structs.Length} neighbours: ";
             foreach (MovableStruct ms in neighbours_structs) { log += $"\n - Neighbour {movables[ms.id].name} at {ms.position} with velocity {ms.velocity}"; }
@@ -203,9 +157,67 @@ public class MovableEngine : MonoBehaviour
 
         // Dispose to free memory
         output.Dispose();
+        excludeIndexes.Dispose();
 
         // return
         return (Vector2)avoidance_force;
+    }
+
+    // NEIGHBOURS CALCULATION
+    public List<Movable> GetNeighbours(Movable agent, float maxDistance = 1f)
+    {
+        // we cache the neighbours indexes in the neighbour_indexes array
+        cache_neighbours_indexes(agent, maxDistance);
+
+        // check that we have an array
+        if (!neighbours_indexes.IsCreated) { return new List<Movable>(); }
+
+        // convert back the indexes to a list
+        List<Movable> neighbours = new List<Movable>();
+        for (int i = 0; i < neighbours_indexes.Length; i++)
+        {
+            neighbours.Add(movables[neighbours_indexes[i]]);
+        }
+        return neighbours;
+    }
+    private void cache_neighbours_indexes(Movable agent, float maxDistance = 1f, NativeList<int> excludeIndexes = default)
+    {
+        if (!neighbours_indexes.IsCreated) { return; }
+        neighbours_indexes.Clear();
+        int agentIndex = movables.IndexOf(agent);
+
+        // create a new job
+        FindNeighboursJob neighJob = new FindNeighboursJob
+        {
+            MovablePositions = movablePositions,
+            excludedIndexes = excludeIndexes,
+            neighbours = neighbours_indexes,
+            movableIndex = agentIndex,
+            maxDistanceSq = maxDistance * maxDistance,
+        };
+
+        // launches it
+        JobHandle neighHandle = neighJob.Schedule();
+        neighHandle.Complete();
+    }
+    private void cache_neighbours_movable_structs()
+    {
+        if (!neighbours_structs.IsCreated) { return; }
+        neighbours_structs.Clear();
+        foreach (int neighbourIndex in neighbours_indexes)
+        {
+            Movable neighbour = movables[neighbourIndex];
+            if (neighbour.feet_collider == null) { continue; } // we only consider movables with feet colliders
+            if (neighbour is Item item && item.Grabbed) { continue; } // we skip held items
+            neighbours_structs.Add(new MovableStruct
+            {
+                id = neighbourIndex,
+                position = (float2)(Vector2)neighbour.transform.position,
+                velocity = (float2)neighbour.Velocity,
+                feet_radius = neighbour.feet_radius,
+                is_item = neighbour is Item
+            });
+        }
     }
 
     // ON DESTROY
