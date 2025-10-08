@@ -147,7 +147,6 @@ public class Being : Movable
     // DAMAGE
     public virtual bool take_damage(float damage, Force knockback=null)
     {
-        // ! à mettre tjrs au début de la fonction update
         if (!Alive) { return false; }
 
         // on vérifie si on est invincible

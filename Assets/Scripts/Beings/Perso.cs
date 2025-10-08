@@ -184,7 +184,6 @@ public class Perso : Being, Hacker
 
         // on affiche un texte de level up
         floating_dmg_provider.GetComponent<TextManager>().addFloatingText("LEVEL " + level.ToString(), transform.position + new Vector3(0, 0.5f, 0), "yellow");
-
     }
 
     // DAMAGE
@@ -219,5 +218,4 @@ public class Perso : Being, Hacker
 
         deaths += 1; // on incrémente le nombre de morts du perso
     }
-
 }

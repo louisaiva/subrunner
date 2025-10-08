@@ -46,7 +46,9 @@ public class DieCapacity : Capacity
 
         // on donne de l'xp
         Vector3 sprite_center = new Vector3(transform.position.x, transform.position.y + capable.GetComponent<SpriteRenderer>().bounds.size.y / 2f, 0);
-        xp_provider.GetComponent<XPProvider>().EmitXP(xp_gift, sprite_center);
+        int xp_to_drop = xp_gift;
+        if (capable is Perso perso) { xp_to_drop = perso.total_xp/2; } // if the player dies he drops half of his total xp
+        xp_provider.GetComponent<XPProvider>().EmitXP(xp_to_drop, sprite_center);
 
         // on donne un floating dmg
         if (show_smiley)
