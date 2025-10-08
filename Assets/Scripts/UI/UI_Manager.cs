@@ -34,7 +34,7 @@ public class UI_Manager : Singleton<UI_Manager>
 
 
     [Header("Transitions")]
-    [SerializeField] protected float transition_duration = 0.2f;
+    // [SerializeField] protected float transition_duration = 0.2f;
     private PauseMenuBackgroundEffect bg;
 
 
@@ -98,29 +98,29 @@ public class UI_Manager : Singleton<UI_Manager>
         if (pool_name == current_pool.Reference) { SwitchTo("hud", false); }
         else { SwitchTo(pool_name, false); }
     }
-    public void SwitchTo(string pool_name, bool force = true, float override_duration = default)
+    public void SwitchTo(string pool_name, bool force = true)
     {
         // check if we have a pool to switch to
         UI_Pool pool = GetPool(pool_name);
         if (!pool) { return; }
 
         if (log_switching) { Debug.Log($"(UI_Manager) trying to switch to pool : {pool.Reference} from {(current_pool != null ? current_pool.Reference : "null")}"); }
-
-        // we check if we have an override duration
-        float duration = override_duration != default ? override_duration : transition_duration;
-        switch_to(pool, force, duration);
+        switch_to(pool, force);
     }
-    private async void switch_to(UI_Pool pool, bool force = true, float override_duration = default)
+    private async void switch_to(UI_Pool pool, bool force = true)
     {
         // check if this pool is not the same as the current one
         if (pool == current_pool) { return; }
 
         // todo : verify that the next pool is available before switching
 
-        // we prepare the transition duration
-        float duration = override_duration != default ? override_duration : transition_duration;
-        if (pool.Reference == "game_over") { duration = (pool as UI_GameOver).transition_duration; }
-        else if (current_pool != null && current_pool.Reference == "game_over") { duration = (current_pool as UI_GameOver).transition_duration; }
+        // we get the transition duration
+        float duration = 0f;
+        if (current_pool != null) { duration += current_pool.TransitionSettings.Duration; }
+        duration += pool.TransitionSettings.Duration;
+        //  = override_duration != default ? override_duration : transition_duration;
+        // if (pool.Reference == "game_over") { duration = (pool as UI_GameOver).transition_duration; }
+        // else if (current_pool != null && current_pool.Reference == "game_over") { duration = (current_pool as UI_GameOver).transition_duration; }
 
         // we prepare the lists of the gameobjects to ignore
         List<GameObject> same_pool_elements = null;
@@ -169,24 +169,24 @@ public class UI_Manager : Singleton<UI_Manager>
 
             // we hide the current pool
             if (log_switching) { Debug.Log($"(UI_Manager - switch_to) launching current pool hide"); }
-            await current_pool.Hide(duration / 2f, same_pool_elements);
+            await current_pool.Hide(same_pool_elements);
             if (log_switching) { Debug.Log($"(UI_Manager - switch_to) current pool hidden successfully"); }
         }
         else
         {
             // on active le background & time parameters
-            TransitionTimeScale(pool.TransitionSettings.TimeScale, duration / 2f);
-            TransitionBackground(pool.TransitionSettings.BackgroundAlpha, duration / 2f);
+            TransitionTimeScale(pool.TransitionSettings.TimeScale, duration);
+            TransitionBackground(pool.TransitionSettings.BackgroundAlpha, duration);
             if (log_switching) { Debug.Log($"(UI_Manager - switch_to) current pool is null, transitionned bg & time scale"); }
 
         }
 
-        if (log) { Debug.Log("(UI_Manager) switching to pool : " + pool.Reference); }
+        if (log) { Debug.Log("(UI_Manager) switching to pool : " + pool.Reference + " (duration : " + duration + ")"); }
 
         // we show the new pool
         current_pool = pool;
         if (log_switching) { Debug.Log($"(UI_Manager - switch_to) launching next pool show"); }
-        await current_pool.Show(duration / 2f, same_pool_elements);
+        await current_pool.Show(same_pool_elements);
         if (log_switching) { Debug.Log($"(UI_Manager - switch_to) next pool shown successfully"); }
 
         // we invoke the OnPoolSwitched event

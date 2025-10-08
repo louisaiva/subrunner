@@ -717,6 +717,7 @@ MonoBehaviour:
   Showed: 0
   in_transition: 0
   TransitionSettings:
+    Duration: 0.05
     CanBeHidden: 1
     CanBeCanceled: 0
     UsePersoInputs: 1
@@ -4884,6 +4885,7 @@ MonoBehaviour:
   Showed: 0
   in_transition: 0
   TransitionSettings:
+    Duration: 0.05
     CanBeHidden: 1
     CanBeCanceled: 1
     UsePersoInputs: 0
@@ -6717,6 +6719,7 @@ MonoBehaviour:
   Showed: 0
   in_transition: 0
   TransitionSettings:
+    Duration: 0.05
     CanBeHidden: 1
     CanBeCanceled: 0
     UsePersoInputs: 1
@@ -6734,8 +6737,6 @@ MonoBehaviour:
   - {fileID: 6047172991181861186}
   log: 0
   log_enabling: 0
-  final_timescale: 0.5
-  bg_final_alpha: 0.1
 --- !u!1 &2640498653413180510
 GameObject:
   m_ObjectHideFlags: 0
@@ -7650,8 +7651,8 @@ GameObject:
   - component: {fileID: 8768071035187334168}
   - component: {fileID: 4883415050271246860}
   - component: {fileID: 7531068810506088810}
-  - component: {fileID: 7282440825162870108}
   - component: {fileID: 4903622354906641671}
+  - component: {fileID: 7282440825162870108}
   m_Layer: 5
   m_Name: ui
   m_TagString: Untagged
@@ -7753,6 +7754,22 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &4903622354906641671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2970279675843071167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb54d56ce72d39041b6b6696eb81614e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  current_pool: {fileID: 0}
+  log: 0
+  log_availability: 0
+  log_switching: 0
 --- !u!114 &7282440825162870108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7790,23 +7807,6 @@ MonoBehaviour:
   debug_gizmo: 0
   gizmos_positions: []
   gizmos_weights: []
---- !u!114 &4903622354906641671
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2970279675843071167}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb54d56ce72d39041b6b6696eb81614e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  current_pool: {fileID: 0}
-  transition_duration: 0.1
-  log: 0
-  log_availability: 0
-  log_switching: 0
 --- !u!1 &2993804656602851118
 GameObject:
   m_ObjectHideFlags: 0
@@ -10453,6 +10453,7 @@ MonoBehaviour:
   Showed: 0
   in_transition: 0
   TransitionSettings:
+    Duration: 0.05
     CanBeHidden: 1
     CanBeCanceled: 0
     UsePersoInputs: 1
@@ -12097,6 +12098,7 @@ MonoBehaviour:
   Showed: 0
   in_transition: 0
   TransitionSettings:
+    Duration: 1
     CanBeHidden: 0
     CanBeCanceled: 0
     UsePersoInputs: 0
@@ -12108,8 +12110,6 @@ MonoBehaviour:
   - {fileID: 3817688745604161002}
   - {fileID: 3312476552729087044}
   log: 0
-  final_timescale: 0.1
-  transition_duration: 2
   perso_prefab: {fileID: 3238169105776769028, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
   perso_spawn_point: {fileID: 0}
   reviveInput: {fileID: -5345809961903225854, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
@@ -12331,6 +12331,7 @@ MonoBehaviour:
   Showed: 0
   in_transition: 0
   TransitionSettings:
+    Duration: 0.05
     CanBeHidden: 1
     CanBeCanceled: 0
     UsePersoInputs: 1
@@ -13501,6 +13502,7 @@ MonoBehaviour:
   Showed: 0
   in_transition: 0
   TransitionSettings:
+    Duration: 0.05
     CanBeHidden: 1
     CanBeCanceled: 1
     UsePersoInputs: 0
@@ -16107,6 +16109,7 @@ MonoBehaviour:
   Showed: 0
   in_transition: 0
   TransitionSettings:
+    Duration: 0.05
     CanBeHidden: 1
     CanBeCanceled: 1
     UsePersoInputs: 0
@@ -16875,6 +16878,7 @@ MonoBehaviour:
   Showed: 0
   in_transition: 0
   TransitionSettings:
+    Duration: 0.05
     CanBeHidden: 1
     CanBeCanceled: 1
     UsePersoInputs: 0
@@ -23167,6 +23171,7 @@ MonoBehaviour:
   Showed: 0
   in_transition: 0
   TransitionSettings:
+    Duration: 0.5
     CanBeHidden: 0
     CanBeCanceled: 0
     UsePersoInputs: 0

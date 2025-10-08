@@ -32,9 +32,9 @@ public class UI_LevelUpMenu : UI_Pool, I_UI_Slottable
     }
 
     // POOL
-    public override async Awaitable Show(float duration, List<GameObject> dont_show = null)
+    public override async Awaitable Show(List<GameObject> dont_show = null)
     {
-        await base.Show(duration, dont_show);
+        await base.Show(dont_show);
 
         // update the level text
         level_text.text = "LEVEL " + GameObject.Find("/perso").GetComponent<Perso>().level.ToString();
@@ -47,12 +47,12 @@ public class UI_LevelUpMenu : UI_Pool, I_UI_Slottable
         // on active le navigator
         UI_XboxNavigator.Instance.Enable(this);
     }
-    public override async Awaitable Hide(float duration, List<GameObject> dont_hide = null)
+    public override async Awaitable Hide(List<GameObject> dont_hide = null)
     {
         // on désactive le navigator
         UI_XboxNavigator.Instance.Disable(this);
 
-        await base.Hide(duration, dont_hide);
+        await base.Hide(dont_hide);
     }
 
     // SLOTTABLE

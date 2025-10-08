@@ -16,17 +16,17 @@ public class UI_Hacking : UI_Pool
         }
     }
 
-    [Header("Transition parameters")]
-    public float final_timescale = 0.5f;
-    public float bg_final_alpha = 0.5f;
+    // [Header("Transition parameters")]
+    // public float final_timescale = 0.5f;
+    // public float bg_final_alpha = 0.5f;
 
 
     // SHOW / HIDE
-    protected override async Awaitable show_pool(float duration, List<GameObject> dont_show = null)
+    protected override async Awaitable show_pool(List<GameObject> dont_show = null)
     {
         if (log_enabling) { Debug.Log("(UI_Hacking) trying to show_pool"); }
 
-        await base.show_pool(duration, dont_show);
+        await base.show_pool(dont_show);
 
         if (log_enabling) { Debug.Log("(UI_Hacking) pool showed, trying to enable navigators"); }
 
@@ -39,7 +39,7 @@ public class UI_Hacking : UI_Pool
 
         if (log_enabling) { Debug.Log("(UI_Hacking) showing pool : navigator enabled & callbacks set"); }
     }
-    protected override async Awaitable hide_pool(float duration, List<GameObject> dont_hide = null)
+    protected override async Awaitable hide_pool(List<GameObject> dont_hide = null)
     {
         if (log_enabling) { Debug.Log("(UI_Hacking) trying to hide_pool"); }
 
@@ -51,7 +51,7 @@ public class UI_Hacking : UI_Pool
 
         // if (log_enabling) { Debug.Log("(UI_Hacking) navigator disabled"); }
 
-        await base.hide_pool(duration, dont_hide);
+        await base.hide_pool(dont_hide);
 
         if (log_enabling) { Debug.Log("(UI_Hacking) hiding pool : navigator disabled & callbacks removed"); }
     }

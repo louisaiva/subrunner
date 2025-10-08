@@ -22,7 +22,7 @@ public interface Device
     public bool HasKeyFor(Lockable target);
     public Key GetKeyFor(Lockable target);
 
-
+ 
     // UI
     public List<WindowType> WindowsTypes { get; }
 }

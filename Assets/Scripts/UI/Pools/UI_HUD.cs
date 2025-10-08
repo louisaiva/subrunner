@@ -36,7 +36,7 @@ public class UI_HUD : UI_Pool
     }
 
     // SHOW / HIDE
-    public override async Awaitable Show(float duration, List<GameObject> dont_show = null)
+    public override async Awaitable Show(List<GameObject> dont_show = null)
     {
         // on affiche le perso_quick_inventory
         if (ui_chest != null)
@@ -46,9 +46,9 @@ public class UI_HUD : UI_Pool
         }
 
         // attend que la pool s'affiche
-        await base.Show(duration, dont_show);
+        await base.Show(dont_show);
     }
-    public override async Awaitable Hide(float duration, List<GameObject> dont_hide = null)
+    public override async Awaitable Hide(List<GameObject> dont_hide = null)
     {
         if (ui_chest != null)
         {
@@ -56,7 +56,7 @@ public class UI_HUD : UI_Pool
             ui_chest.Hide();
         }
 
-        await base.Hide(duration, dont_hide);
+        await base.Hide(dont_hide);
     }
 
     // REGISTER CHEST

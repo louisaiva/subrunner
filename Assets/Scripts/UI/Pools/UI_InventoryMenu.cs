@@ -50,14 +50,14 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     }
 
     // SHOW / HIDE
-    public override async Awaitable Show(float duration, List<GameObject> dont_show = null)
+    public override async Awaitable Show(List<GameObject> dont_show = null)
     {
         // vérifie si on a des items dans notre inventaire
         ui_elements.Clear();
         if (ui_inventory.Inventory.Count == 0) { ui_elements.Add(no_inventory_panel.gameObject); }
         else { ui_elements.AddRange(saved_slots); }
 
-        await base.Show(duration, dont_show);
+        await base.Show(dont_show);
         if (ui_inventory.Inventory.Count == 0) { return; }
 
         UI_XboxNavigator.Instance.Enable(this);
@@ -65,7 +65,7 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         // on met à jour l'angle treshold du UI_XboxNavigator.Instance
         UI_XboxNavigator.Instance.angle_threshold = base.angle_threshold;
     }
-    public override async Awaitable Hide(float duration, List<GameObject> dont_hide = null)
+    public override async Awaitable Hide(List<GameObject> dont_hide = null)
     {
         // on récupère la position du slot actuel (pour le remettre quand on reouvre l'inventaire)
         SavedPosition = UI_XboxNavigator.Instance.GetCurrentSlotPosition();
@@ -73,31 +73,22 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         // on désactive le navigator
         UI_XboxNavigator.Instance.Disable(this);
 
-        await base.Hide(duration, dont_hide);
+        await base.Hide(dont_hide);
     }
 
     // LOW SHOWING
-    protected override async Awaitable show_pool(float duration, List<GameObject> dont_show = null)
+    protected override async Awaitable show_pool(List<GameObject> dont_show = null)
     {
         // on affiche tous les éléments
-        if (log) { Debug.Log("(UI_InventoryMenu) showing pool : " + Reference); }
-        foreach (GameObject ui in ui_elements)
-        {
-            if (dont_show != null && dont_show.Contains(ui)) { continue; }
-            ui.SetActive(true);
-        }
-
+        base.show_pool(dont_show);
+        
         // refresh pools
-        await RefreshItemPools(duration);
-        Showed = true;
-
-        // on désactive les inputs.perso
-        InputManager.Instance.DisablePersoInputs();
+        await RefreshItemPools(TransitionSettings.Duration);
     }
-    protected override async Awaitable hide_pool(float duration, List<GameObject> dont_hide = null)
+    protected override async Awaitable hide_pool(List<GameObject> dont_hide = null)
     {
-        await FadeOutAllPools(duration);
-        base.hide_pool(duration, dont_hide);
+        await FadeOutAllPools(TransitionSettings.Duration);
+        base.hide_pool(dont_hide);
     }
 
     // ITEM POOL TRANSITIONS

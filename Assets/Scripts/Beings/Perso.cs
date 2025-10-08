@@ -211,7 +211,7 @@ public class Perso : Being, Hacker
         Controller.Instance.PIC.DisableInputs();
 
         // on switch au game_over panel
-        UI_Manager.Instance.SwitchTo("game_over", override_duration: 3f);
+        UI_Manager.Instance.SwitchTo("game_over");
 
         // on désactive plein de choses
         Destroy(GetComponent<SeeThroughHandler>());

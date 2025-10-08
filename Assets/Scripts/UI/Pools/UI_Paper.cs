@@ -19,7 +19,7 @@ public class UI_Paper : UI_Pool
         ui_elements.Add(content);
     }
 
-    public override async Awaitable Hide(float duration, List<GameObject> dont_hide = null)
+    public override async Awaitable Hide(List<GameObject> dont_hide = null)
     {
         // we remove the text of the paper
         if (paper != null && content != null)
@@ -30,6 +30,6 @@ public class UI_Paper : UI_Pool
             paper = null;
         }
 
-        await base.Hide(duration, dont_hide);
+        await base.Hide(dont_hide);
     }
 }

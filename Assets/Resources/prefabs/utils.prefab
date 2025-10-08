@@ -111,9 +111,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movables: []
-  log_movables: 1
+  log_movables: 0
   log_arrays: 0
-  log_neighbours: 1
+  log_neighbours: 0
 --- !u!1 &586968992647353419
 GameObject:
   m_ObjectHideFlags: 0
@@ -445,8 +445,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsQuitting: 0
-  prototype: none
-  versionPrefix: 'Version: '
+  prototype: interact key feedbacks
+  versionPrefix: 'subrunner version alpha '
   log: 0
 --- !u!114 &1409178628841570550
 MonoBehaviour:
@@ -567,6 +567,7 @@ GameObject:
   - component: {fileID: 7067669588219812867}
   - component: {fileID: 5680882237522360214}
   - component: {fileID: 3117844331737764809}
+  - component: {fileID: 2823759425825546407}
   m_Layer: 0
   m_Name: pathfinder_manager
   m_TagString: Untagged
@@ -674,8 +675,8 @@ MonoBehaviour:
   m_VoxelSize: 0.033333335
   m_BuildHeightMesh: 0
   m_MinRegionArea: 0
-  m_HideEditorLogs: 0
-  m_NavMeshData: {fileID: 23800000, guid: 249f99092fe220544852a1c98cd0f721, type: 2}
+  m_HideEditorLogs: 1
+  m_NavMeshData: {fileID: 23800000, guid: 9741e396ce790a14bbeb8bbb76a00fc2, type: 2}
 --- !u!114 &3117844331737764809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -692,6 +693,21 @@ MonoBehaviour:
   m_UseMeshPrefab: {fileID: 0}
   m_CompressBounds: 0
   m_OverrideVector: {x: 1, y: 1, z: 1}
+--- !u!114 &2823759425825546407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5634746178764748898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f417cfe53b6d6f6429a96ae574d2cf9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  surfaces:
+  - {fileID: 5680882237522360214}
+  - {fileID: 5427939901150469199}
 --- !u!1 &6415610740479548152
 GameObject:
   m_ObjectHideFlags: 0
@@ -5701,8 +5717,8 @@ MonoBehaviour:
   m_VoxelSize: 0.11666667
   m_BuildHeightMesh: 0
   m_MinRegionArea: 0
-  m_HideEditorLogs: 0
-  m_NavMeshData: {fileID: 23800000, guid: 03e65f6a9528c5e43a31cbb8a4d5d666, type: 2}
+  m_HideEditorLogs: 1
+  m_NavMeshData: {fileID: 23800000, guid: a381ad6c558f12e47abea193f80f2b54, type: 2}
 --- !u!114 &3508825735167502640
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5962,6 +5978,12 @@ MonoBehaviour:
     base_skin: small_laptop
     base_spritesheets:
     - objects/items/laptops/laptop_blue
+  - variant_name: pckg_back
+    variant_spritesheets:
+    - objects/interactives/package_back
+    base_skin: pckg_front
+    base_spritesheets:
+    - objects/interactives/package
   log: 0
   log_LAFAC: 0
   log_variant_skins: 0
@@ -5972,6 +5994,7 @@ MonoBehaviour:
   - robot
   - rat
   - nobody
+  - ghost
   head_offset_per_skin:
   - 0.7
   - 0.3
@@ -5979,6 +6002,7 @@ MonoBehaviour:
   - 0.2
   - 0.1
   - 0.7
+  - 0.5
   body_offset_per_skin:
   - 0.4
   - 0.15
@@ -5986,6 +6010,7 @@ MonoBehaviour:
   - 0.2
   - 0.1
   - 0.42
+  - 0.4
 --- !u!114 &1981274784206631526
 MonoBehaviour:
   m_ObjectHideFlags: 0

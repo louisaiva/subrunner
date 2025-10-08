@@ -137,19 +137,19 @@ public class UI_HDD : UI_Pool, I_UI_Slottable
     }
 
     // SHOW HIDE
-    public override async Awaitable Show(float duration, List<GameObject> dont_show = null)
+    public override async Awaitable Show(List<GameObject> dont_show = null)
     {
-        await base.Show(duration, dont_show);
+        await base.Show(dont_show);
 
         // on active le navigator
         UI_XboxNavigator.Instance.Enable(this);
     }
-    public override async Awaitable Hide(float duration, List<GameObject> dont_hide = null)
+    public override async Awaitable Hide(List<GameObject> dont_hide = null)
     {
         // on désactive le navigator
         UI_XboxNavigator.Instance.Disable(this);
 
-        await base.Hide(duration, dont_hide);
+        await base.Hide(dont_hide);
     }
 
     // SLOTTABLE
