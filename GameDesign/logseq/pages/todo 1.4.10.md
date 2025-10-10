@@ -24,7 +24,7 @@
   :LOGBOOK:
   CLOCK: [2025-10-06 Mon 16:54:06]--[2025-10-06 Mon 16:54:06] =>  00:00:00
   :END:
-- TODO faire spawn notre xp quand on meurt !!
+- DONE faire spawn notre xp quand on meurt !!
 -
 -
 - DONE mettre l'exploit selection mode sur automatique par défaut (mettre dans le start)

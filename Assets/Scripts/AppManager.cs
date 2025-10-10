@@ -24,6 +24,9 @@ public class AppManager : MonoBehaviour
 
         // on récupère la version de l'app
         version = Application.version;
+
+        // on affiche les stats
+        ProjectStats.AnalyzeProject();
     }
 
 
