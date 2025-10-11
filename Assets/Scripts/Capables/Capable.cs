@@ -91,6 +91,7 @@ public class Capable : MonoBehaviour
     {
         // we get the anim player
         anim_player = GetComponent<AnimPlayer>();
+        Orientation = orientation;
 
         // we get the capacity bank
         bank = GameObject.Find("/utils/bank").GetComponent<CapacityBank>();

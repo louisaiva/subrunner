@@ -25,6 +25,7 @@ public class Chair : Capable, EndlessInteractable
     private IEnumerator small_turn(int turns)
     {
         Anim turn_anim = anim_player.Play("turn");
+        if (turn_anim == null) { yield break; }
         anim_player.Play("start_turn");
 
         // get the duration of the anim

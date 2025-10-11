@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 41112be88dc35c54b8897a0c54f974ca
+guid: 0c507130110a89562b2fb632265ef82d
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -127,19 +127,19 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: sofa_Frame_0
+  - name: sofa
     originalName: 
-    pivot: {x: 0.51111114, y: 0}
+    pivot: {x: 0.47058827, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
     rect:
       serializedVersion: 2
-      x: 4
+      x: 48
       y: 4
-      width: 45
-      height: 18
-    spriteID: 8c034f5706e6e204f8de7864fa538ffa
+      width: 34
+      height: 32
+    spriteID: 12ae367ee600b3678a46446d00271c96
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -147,8 +147,29 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 4}
-  - name: sofa_Frame_1
+    uvTransform: {x: 48, y: 4}
+  - name: Frame_1
+    originalName: 
+    pivot: {x: 0.5294118, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 90
+      y: 4
+      width: 34
+      height: 32
+    spriteID: aaea35a1cf804a41bb8811f8522eee94
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 90, y: 4}
+  - name: Frame_2
     originalName: 
     pivot: {x: 0.5, y: 0}
     alignment: 9
@@ -157,10 +178,10 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 4
-      y: 30
-      width: 44
-      height: 18
-    spriteID: 8318b6759a4132b48af3c9610923c3f0
+      y: 4
+      width: 36
+      height: 32
+    spriteID: c801a1b45544eb12983ea0aea8a2ce2b
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -168,7 +189,28 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 30}
+    uvTransform: {x: 4, y: 4}
+  - name: Frame_3
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 44
+      width: 36
+      height: 23
+    spriteID: bc63c225113cf22c098fbc98c56b6aaa
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 44}
   spriteSheetImportData: []
   tileSetImportData: []
   asepriteLayers:
@@ -178,7 +220,7 @@ ScriptedImporter:
       value1: 0
       value2: 0
       value3: 0
-    guid: -555122905
+    guid: 0
     name: sofa
     layerFlags: 0
     layerType: 0
@@ -188,20 +230,38 @@ ScriptedImporter:
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
-        x: 1
+        x: 2
         y: 0
-        width: 45
-        height: 18
-      spriteId: 8c034f5706e6e204f8de7864fa538ffa
+        width: 34
+        height: 32
+      spriteId: 12ae367ee600b3678a46446d00271c96
     - name: Frame_1
       frameIndex: 1
       additiveSortOrder: 0
       cellRect:
-        x: 2
+        x: 0
         y: 0
-        width: 44
-        height: 18
-      spriteId: 8318b6759a4132b48af3c9610923c3f0
+        width: 34
+        height: 32
+      spriteId: aaea35a1cf804a41bb8811f8522eee94
+    - name: Frame_2
+      frameIndex: 2
+      additiveSortOrder: 0
+      cellRect:
+        x: 0
+        y: 0
+        width: 36
+        height: 32
+      spriteId: c801a1b45544eb12983ea0aea8a2ce2b
+    - name: Frame_3
+      frameIndex: 3
+      additiveSortOrder: 0
+      cellRect:
+        x: 0
+        y: 0
+        width: 36
+        height: 23
+      spriteId: bc63c225113cf22c098fbc98c56b6aaa
     linkedCells: []
     tileCells: []
     tileSetIndex: 0
@@ -211,5 +271,5 @@ ScriptedImporter:
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 48, y: 24}
-  previousTextureSize: {x: 64, y: 64}
+  canvasSize: {x: 36, y: 36}
+  previousTextureSize: {x: 128, y: 128}
