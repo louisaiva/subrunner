@@ -125,7 +125,7 @@ public class InteractCapacity : Capacity
         // interact with interactable & select + grab items
         if (closest_hover is Interactable interactable && !endless) { interactable.OnInteract(capable); }
         else if (closest_hover is Item) { grab_capacity?.Use(capable); }
-        else if (closest_hover is Interactable interactable_endless && endless && interactable_endless.AuthorizeEndlessInteraction) { interactable_endless.OnInteract(capable); }
+        else if (closest_hover is EndlessInteractable interactable_endless && endless) { interactable_endless.OnEndlessInteract(capable); }
     }
 
     // TRIGGER ENTER

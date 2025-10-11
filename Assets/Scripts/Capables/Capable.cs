@@ -150,6 +150,22 @@ public class Capable : MonoBehaviour
         // we set the orientation
         Orientation = target_position - transform.position;
     }
+    public void Orient(string direction)
+    {
+        // we set the orientation
+        switch (direction)
+        {
+            case "U": Orientation = Vector2.up; break;
+            case "D": Orientation = Vector2.down; break;
+            case "L": Orientation = Vector2.left; break;
+            case "R": Orientation = Vector2.right; break;
+            case "UL": Orientation = (Vector2.up + Vector2.left).normalized; break;
+            case "UR": Orientation = (Vector2.up + Vector2.right).normalized; break;
+            case "DL": Orientation = (Vector2.down + Vector2.left).normalized; break;
+            case "DR": Orientation = (Vector2.down + Vector2.right).normalized; break;
+            default: Debug.LogWarning("Orientation " + direction + " not recognized"); break;
+        }
+    }
 
     // CAPACITIES
     public void Do(string name)

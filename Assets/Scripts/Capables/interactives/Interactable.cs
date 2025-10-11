@@ -3,10 +3,13 @@ using UnityEngine.InputSystem;
 
 public interface Interactable
 {
-    
+
     public InteractCapacity Interactor { get; } // there is only ONE because it's the one that is Controlled
     public void OnInteract(Capable interactor);
-    public bool AuthorizeEndlessInteraction { get; }
+}
+public interface EndlessInteractable : Interactable
+{
+    public void OnEndlessInteract(Capable interactor);
 }
 
 public interface Openable

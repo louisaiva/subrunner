@@ -445,8 +445,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsQuitting: 0
-  prototype: interact key feedbacks
-  versionPrefix: 'subrunner version alpha '
+  prototype: linux migration
   log: 0
 --- !u!114 &1409178628841570550
 MonoBehaviour:
@@ -5581,6 +5580,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5602,6 +5603,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
@@ -5984,6 +5986,18 @@ MonoBehaviour:
     base_skin: pckg_front
     base_spritesheets:
     - objects/interactives/package
+  - variant_name: gaming_chair_arms
+    variant_spritesheets:
+    - objects/interactives/chairs/gaming_chair_arms
+    base_skin: gaming_chair_base
+    base_spritesheets:
+    - objects/interactives/chairs/gaming_chair_base
+  - variant_name: gaming_chair_head
+    variant_spritesheets:
+    - objects/interactives/chairs/gaming_chair_head
+    base_skin: gaming_chair_base
+    base_spritesheets:
+    - objects/interactives/chairs/gaming_chair_base
   log: 0
   log_LAFAC: 0
   log_variant_skins: 0

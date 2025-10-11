@@ -52,7 +52,10 @@ public class AnimLayer : MonoBehaviour
         }
 
         // we play the current animation
-        if (current_frame != -1 && update_each_frame) { updateAnim(); }
+        if (current_frame == -1) { return; }
+        if (current_frame >= current_anim.sprites.Length) { return; }
+        if (!update_each_frame) { return; }
+        updateAnim();
     }
     private void updateAnim()
     {
