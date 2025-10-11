@@ -85,6 +85,10 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
         if (Perso.Instance == null) { return; }
         Perso.Instance.healMax();
     }
+    public void toggle_vsync()
+    {
+        AppManager.Instance.useVSync = !AppManager.Instance.useVSync;
+    }
 
 
     // interface functions

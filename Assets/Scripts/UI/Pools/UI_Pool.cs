@@ -3,9 +3,6 @@ using System;
 using System.Collections.Generic;
 using PrimeTween;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.InputSystem;
-using UnityEditorInternal;
 
 
 [Serializable] public class PoolTransitionSettings

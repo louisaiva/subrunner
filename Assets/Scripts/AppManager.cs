@@ -11,8 +11,24 @@ public class AppManager : MonoBehaviour
 
     [Header("Version Text Settings")]
     public string prototype = "none";
-    [SerializeField] private string versionPrefix = "Version: ";
+    private string versionPrefix = "subrunner version alpha ";
     private string version = "0";
+
+
+    [Header("FPS & VSync Settings")]
+    public bool useVSync
+    {
+        get { return (QualitySettings.vSyncCount > 0); }
+        set { QualitySettings.vSyncCount = (value) ? 1 : 0; }
+    }
+    public int targetFrameRate
+    {
+
+        get { return Application.targetFrameRate; }
+        set { Application.targetFrameRate = value; }
+    }
+
+
 
     [Header("Logs")]
     public bool log = false;

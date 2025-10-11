@@ -15,7 +15,9 @@ using System.Collections.Generic;
 public static class ProjectStats
 {
 
+#if UNITY_EDITOR
     [MenuItem("Tools/Project Stats")]
+#endif
     public static void AnalyzeProject()
     {
         string[] allFiles = Directory.GetFiles(UnityEngine.Application.dataPath, "*.*", SearchOption.AllDirectories);
