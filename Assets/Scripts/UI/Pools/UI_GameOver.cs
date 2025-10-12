@@ -13,7 +13,7 @@ public class UI_GameOver : UI_Pool
 
     [Header("Perso revive parameters")]
     [SerializeField] private GameObject perso_prefab;
-    [SerializeField] private Transform perso_spawn_point;
+    // [SerializeField] private Transform perso_spawn_point;
 
     [Header("Inputs")]
     [SerializeField] private InputActionReference reviveInput;
@@ -29,7 +29,7 @@ public class UI_GameOver : UI_Pool
         reviveAction = InputManager.Instance.GetAction(reviveInput);
         reviveCallback = ctx => HandleReviveInput(ctx.ReadValue<float>());
 
-        if (perso_spawn_point == null) { Debug.LogError("(UI_GameOver) perso_spawn_point is not assigned! Please assign it in the inspector."); }
+        // if (perso_spawn_point == null) { Debug.LogError("(UI_GameOver) perso_spawn_point is not assigned! Please assign it in the inspector."); }
 
         if (log) { Debug.Log("(UI_GameOver) started & callbacks created"); }
     }
@@ -64,8 +64,15 @@ public class UI_GameOver : UI_Pool
         // we remove the callbacks
         reviveAction.performed -= reviveCallback;
 
+        // we get the spawn point
+        Vector3 perso_spawn_point = Vector3.zero;
+        if (World.Instance.spawn_point != null)
+        {
+            perso_spawn_point = World.Instance.spawn_point.position;
+        }
+
         // we instantiate the perso prefab at the spawn point
-        GameObject[] perso = await InstantiateAsync(perso_prefab, perso_spawn_point.position, Quaternion.identity);
+        GameObject[] perso = await InstantiateAsync(perso_prefab, perso_spawn_point, Quaternion.identity);
         perso[0].name = "perso";
 
         await base.hide_pool(dont_hide);
