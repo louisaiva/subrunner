@@ -29,6 +29,7 @@ public class PauseMenuBackgroundEffect : MonoBehaviour
 
     private bool is_very_early_init_done = false;
 
+    // AWAKE
     private void Awake()
     {
         var postProcessVolume = GameObject.Find("/utils/post_processing").GetComponent<Volume>();
@@ -43,6 +44,7 @@ public class PauseMenuBackgroundEffect : MonoBehaviour
         bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, 0f);
     }
 
+    // START
     private void Start() { is_very_early_init_done = true; }
 
     // SHOW / HIDE
@@ -117,6 +119,8 @@ public class PauseMenuBackgroundEffect : MonoBehaviour
         // on enlève la chromatic aberration
         // chromatic_aberration.active = false;
     }
+
+    public float Alpha => bg.color.a;
 
 
 #if UNITY_EDITOR

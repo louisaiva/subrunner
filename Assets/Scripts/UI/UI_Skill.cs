@@ -22,7 +22,15 @@ public class UI_Skill : MonoBehaviour, I_UI_Slot
     public string unit = "hp";
 
     [Header("Components")]
-    private UI_LevelUpMenu menu;
+    private UI_LevelUpMenu _menu;
+    private UI_LevelUpMenu menu
+    {
+        get
+        {
+            if (_menu == null) { _menu = UI_Manager.Instance.GetPool("level_up") as UI_LevelUpMenu; }
+            return _menu;
+        }
+    }
 
     [Header("Logs")]
     public bool log = false;
@@ -30,9 +38,6 @@ public class UI_Skill : MonoBehaviour, I_UI_Slot
     // AWAKE
     protected void Awake()
     {
-        // on récupère les components
-        menu = transform.parent.parent.GetComponent<UI_LevelUpMenu>();
-
         // on récupère le bg
         skill_bg = GetComponent<Image>();
     }

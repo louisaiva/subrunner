@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -53,15 +54,15 @@ public class UI_Device : UI_Pool, I_UI_Slottable
     public Device GetDevice() { return device; }
 
     // POOL
-    public override async Awaitable Show(List<GameObject> dont_show = null)
+    protected override IEnumerator show_coroutine(List<GameObject> dont_show = null)
     {
-        await base.Show(dont_show);
+        yield return base.show_coroutine(dont_show);
         UI_XboxNavigator.Instance.Enable(this);
     }
-    public override async Awaitable Hide(List<GameObject> dont_hide = null)
+    protected override IEnumerator hide_coroutine(List<GameObject> dont_hide = null)
     {
         UI_XboxNavigator.Instance.Disable(this);
-        await base.Hide(dont_hide);
+        yield return base.hide_coroutine(dont_hide);
     }
 
     // SLOTTABLE

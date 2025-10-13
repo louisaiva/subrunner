@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FalseInteractable : Capable, Interactable
+public class FalseInteractable : Capable, EndlessInteractable
 {
     // INTERACTABLE
     public InteractCapacity Interactor { get; set; }
     public bool AuthorizeEndlessInteraction => true;
 
-
+    // INTERACTION
+    public void OnEndlessInteract(Capable interactor) { OnInteract(interactor); }
     public void OnInteract(Capable interactor)
     {
         // we set the interactor

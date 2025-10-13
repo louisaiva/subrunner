@@ -75,6 +75,9 @@ public class PersoInputsController : InputController
         // ici c les inputs qui ont pas besoin d'hold input
         hackCallback = ctx => HandleRunHackInput(ctx);
 
+        // ensuite les callbacks statiques (ne se désactivent pas quand )
+        perso_inputs.select_hackable.performed += ctx => { handle_select_hack_target_input(ctx.ReadValue<Vector2>().magnitude); };
+
         EnableInputs();
     }
     public void EnableInputs()
@@ -267,4 +270,31 @@ public class PersoInputsController : InputController
         hacker.Use(Capable);
     }
 
+    // SELECT HACK TARGET
+    private void handle_select_hack_target_input(float input)
+    {
+        // permet de basculer entre la pool hud et la pool hacking
+
+
+        // we activate the hacking ui when input is pressed > 0.5
+        // and disable it when released < 0.5
+        if (input < InputManager.Instance.JOYSTICK_MIN_THRESHOLD)
+        {
+            if (UI_Manager.Instance.CurrentPool == "hacking")
+            {
+                // check if the controller is controlling a device
+                if (Controller.Instance.Capable is Device) { UI_Manager.Instance.SwitchTo("device"); }
+                else { UI_Manager.Instance.SwitchTo("hud"); }
+            }
+            return;
+        }
+
+        // if (log) { Debug.Log("(UI_Manager) hacking menu input received : " + input); }
+
+        // we check if we can switch to hacking
+        if (new List<string> { "hud", "device" }.Contains(UI_Manager.Instance.CurrentPool) && UI_Manager.Instance.GetPool("hacking").Available)
+        {
+            UI_Manager.Instance.SwitchTo("hacking");
+        }
+    }
 }

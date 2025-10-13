@@ -35,15 +35,7 @@ public class Transitioner : MonoBehaviour
     // AWAKE
     private void Awake()
     {
-        // Initialize the updater based on the transition type
-        if (transitype == TransitionType.Fade)
-        {
-            updater = value => GetComponent<CanvasGroup>().alpha = value;
-        }
-        else if (transitype == TransitionType.Popup)
-        {
-            updater = value => GetComponent<RectTransform>().localScale = new Vector3(value, value, 1f);
-        }
+        init_updater();
 
         // reset initial staets
         if (transitype == TransitionType.Fade)
@@ -53,6 +45,17 @@ public class Transitioner : MonoBehaviour
         else if (transitype == TransitionType.Popup)
         {
             GetComponent<RectTransform>().localScale = new Vector3(hidden_value, hidden_value, 1f);
+        }
+    }
+    private void init_updater()
+    {
+        if (transitype == TransitionType.Fade)
+        {
+            updater = value => GetComponent<CanvasGroup>().alpha = value;
+        }
+        else if (transitype == TransitionType.Popup)
+        {
+            updater = value => GetComponent<RectTransform>().localScale = new Vector3(value, value, 1f);
         }
     }
 
@@ -110,7 +113,7 @@ public class Transitioner : MonoBehaviour
 
         // transition
         if (log) { Debug.Log($"(Transitioner) Hiding {name} with duration {duration}"); }
-        await transition(false, -99f);
+        await transition(false, duration);
     }
     public bool Shown => get_current_value() >= shown_value;
     public bool Hidden => get_current_value() <= hidden_value;
@@ -121,14 +124,14 @@ public class Transitioner : MonoBehaviour
     private Tween? tween = null;
     private async Awaitable transition(bool show, float duration = -99f)
     {
-        if (duration <= 0f) { duration = default_duration; }
+        if (duration < 0f) { duration = default_duration; }
 
         Ease ease = show ? ease_show : ease_hide;
 
         float start_value = get_current_value();
         float end_value = show ? shown_value : hidden_value;
 
-        if (log) { Debug.Log($"(Transitioner) Transitioning from {start_value} to {end_value} with duration {duration} and ease {ease}"); }
+        if (log) { Debug.Log($"(Transitioner) {name} Transitioning from {start_value} to {end_value} with duration {duration} and ease {ease}"); }
 
         // if we are already transitioning we stop the current tween
         if (tween != null && tween.Value.isAlive)
@@ -137,11 +140,30 @@ public class Transitioner : MonoBehaviour
             tween.Value.Stop();
         }
 
+        // checks if we have an updater
+        if (updater == null)
+        {
+            if (log) { Debug.Log($"(Transitioner) {name} has no updater, initializing it"); }
+            init_updater();
+            if (updater == null)
+            {
+                Debug.LogError($"(Transitioner) {name} has no updater after initialization, cannot transition");
+                return;
+            }
+        }
+
+        // checks if transition duration is 0
+        if (duration == 0f)
+        {
+            updater(end_value);
+            return;
+        }
+
         // then we make the transition happen
         tween = Tween.Custom(start_value, end_value, duration: duration,
             onValueChange: updater, useUnscaledTime: unscaled_time, ease: ease);
 
-        while (tween.Value.isAlive) { await System.Threading.Tasks.Task.Yield(); }
+        while (tween.Value.isAlive) { await Task.Yield(); }
 
         /* if (log)
         {

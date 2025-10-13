@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ModuleSpawner : Capable, Interactable
+public class ModuleSpawner : Capable, EndlessInteractable
 {
     private SpawnCapacity spawner;
 
@@ -26,4 +26,6 @@ public class ModuleSpawner : Capable, Interactable
         spawner.Spawn(module.gameObject);
         if (debug) { Debug.Log("(ModuleSpawner) " + name + " spawned module " + module.Reference); }
     }
+
+    public void OnEndlessInteract(Capable interactor) => OnInteract(interactor);
 }

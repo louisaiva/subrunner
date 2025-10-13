@@ -1,4 +1,5 @@
 #pragma warning disable 4014
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using PrimeTween;
@@ -50,22 +51,51 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     }
 
     // SHOW / HIDE
-    public override async Awaitable Show(List<GameObject> dont_show = null)
+    /* public override IEnumerator ShowCoroutine(List<GameObject> dont_show = null)
+    {
+        if (current_transition != null) { yield break; }
+
+
+        yield return base.ShowCoroutine(dont_show);
+        if (ui_inventory.Inventory.Count == 0) { yield break; }
+
+        UI_XboxNavigator.Instance.Enable(this);
+
+        // on met à jour l'angle treshold du UI_XboxNavigator.Instance
+        // UI_XboxNavigator.Instance.angle_threshold = base.angle_threshold;
+    }
+    public override IEnumerator HideCoroutine(List<GameObject> dont_hide = null)
+    {
+        if (current_transition != null) { yield break; }
+
+
+        yield return base.HideCoroutine(dont_hide);
+    } */
+
+    // LOW SHOWING
+    protected override IEnumerator show_coroutine(List<GameObject> dont_show = null)
     {
         // vérifie si on a des items dans notre inventaire
         ui_elements.Clear();
         if (ui_inventory.Inventory.Count == 0) { ui_elements.Add(no_inventory_panel.gameObject); }
         else { ui_elements.AddRange(saved_slots); }
 
-        await base.Show(dont_show);
-        if (ui_inventory.Inventory.Count == 0) { return; }
+        // on affiche les items pool & indicators et on les refresh
+        List<GameObject> manually_shown = get_all_uis_with_item_pools();
+        manually_shown.AddRange(get_all_indicators());
+        for (int i = 0; i < manually_shown.Count; i++) { manually_shown[i].SetActive(true); }
+        RefreshItemPools(TransitionSettings.Duration);
 
+        // on affiche les autres elements du menu (sans s'occuper des item pool & indicators)
+        if (dont_show == null) { dont_show = new List<GameObject>(); }
+        dont_show.AddRange(manually_shown);
+        yield return base.show_coroutine(dont_show);
+
+        // on active le navigator si on a des pools
+        if (ui_inventory.Inventory.Count == 0) { yield break; }
         UI_XboxNavigator.Instance.Enable(this);
-
-        // on met à jour l'angle treshold du UI_XboxNavigator.Instance
-        UI_XboxNavigator.Instance.angle_threshold = base.angle_threshold;
     }
-    public override async Awaitable Hide(List<GameObject> dont_hide = null)
+    protected override IEnumerator hide_coroutine(List<GameObject> dont_hide = null)
     {
         // on récupère la position du slot actuel (pour le remettre quand on reouvre l'inventaire)
         SavedPosition = UI_XboxNavigator.Instance.GetCurrentSlotPosition();
@@ -73,63 +103,51 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         // on désactive le navigator
         UI_XboxNavigator.Instance.Disable(this);
 
-        await base.Hide(dont_hide);
+        // on hide tous les éléments
+        FadeOutAllPools(TransitionSettings.Duration);
+        yield return base.hide_coroutine(dont_hide);
     }
 
-    // LOW SHOWING
-    protected override async Awaitable show_pool(List<GameObject> dont_show = null)
-    {
-        // on affiche tous les éléments
-        base.show_pool(dont_show);
-        
-        // refresh pools
-        await RefreshItemPools(TransitionSettings.Duration);
-    }
-    protected override async Awaitable hide_pool(List<GameObject> dont_hide = null)
-    {
-        await FadeOutAllPools(TransitionSettings.Duration);
-        base.hide_pool(dont_hide);
-    }
-
-    // ITEM POOL TRANSITIONS
-    public async Awaitable RefreshItemPools(float duration = -99f)
+    // ITEM POOL MANAGEMENT
+    public void RefreshItemPools(float duration = -99f)
     {
         if (duration == -99f) { duration = base_transition; }
-        if (log) { Debug.Log($"(UI_InventoryMenu) refreshing item pools with duration {duration}"); }
+        // if (log) { Debug.Log($"(UI_InventoryMenu) refreshing item pools with duration {duration}"); }
 
+        // preparing logs
+        string log_msg = $"(UI_InventoryMenu) refreshing item pools with duration {duration}";
 
         // on fade out les item pools qui sont vides & fade in ceux qui sont pleins
-        foreach (GameObject ui in ui_elements)
+        List<GameObject> uis_with_item_pools = get_all_uis_with_item_pools();
+        for (int i = 0; i < uis_with_item_pools.Count; i++)
         {
-            // on récupère l'item pool
-            UI_ItemPool item_pool = ui.GetComponentInChildren<UI_ItemPool>();
-            if (item_pool == null) { ui.SetActive(true); continue; }
-            if (log)
-            {
-                Debug.Log("(UI_InventoryMenu) investigating ui_itempool " + item_pool.name + $" (shown ? {item_pool.Shown} vs hidden ? {item_pool.Hidden}) with "
-                + item_pool.Count + " slots and " + item_pool.FullCount + " items slots " + $"and {item_pool.EnabledCount} enabled slots");
-            }
+            // on récupère l'item pool & le transitioner
+            UI_ItemPool item_pool = uis_with_item_pools[i].GetComponentInChildren<UI_ItemPool>();
+            if (item_pool == null) { continue; }
+            Transitioner transitioner = uis_with_item_pools[i].GetComponent<Transitioner>();
+
+            log_msg += $"\n - investigating ui_itempool {item_pool.name} (shown ? {transitioner.Shown} vs hidden ? {transitioner.Hidden}) with "
+                + item_pool.Count + " slots and " + item_pool.FullCount + " items slots " + $"and {item_pool.EnabledCount} enabled slots ";
 
             // on regarde si la pool doit être affichée ou non
             if (fade_all_disabled || item_pool is UI_ModulePool) // ui_module pool fonctionne toujours en mode fade_all_disbled
             {
-                if (item_pool.EnabledCount > 0 && !item_pool.Shown) { item_pool.Fade(duration, fade_in: true); }
-                else if (item_pool.EnabledCount == 0 && !item_pool.Hidden) { item_pool.Fade(duration, fade_in: false); }
+                if (item_pool.EnabledCount > 0 && !transitioner.Shown) { transitioner.Show(duration); log_msg += " -> fading in"; }
+                else if (item_pool.EnabledCount == 0 && !transitioner.Hidden) { transitioner.Hide(duration); log_msg += " -> fading out"; }
             }
             else if (!item_pool.DoNotDisableEmptySlots) // si on est donotdisableemptyslots ça veut dire qu'on veut que ça soit toujours affiché
             {
-                if (!item_pool.Shown && (item_pool.EnabledCount > 0 || item_pool.FullCount > 0 )) { item_pool.Fade(duration, fade_in: true); }
-                else if (!item_pool.Hidden && item_pool.EnabledCount == 0 && item_pool.FullCount == 0) { item_pool.Fade(duration, fade_in: false); }
+                if (!transitioner.Shown && (item_pool.EnabledCount > 0 || item_pool.FullCount > 0)) { transitioner.Show(duration); log_msg += " -> fading in"; }
+                else if (!transitioner.Hidden && item_pool.EnabledCount == 0 && item_pool.FullCount == 0) { transitioner.Hide(duration); log_msg += " -> fading out"; }
             }
         }
 
+        if (log) { Debug.Log(log_msg); }
+
         // on refresh les indicators
         GetComponent<UI_PanelManager>().RefreshIndicators(duration);
-
-        // on simule la duration
-        await Task.Delay((int)(duration * 1000));
     }
-    public async Awaitable FadeOutAllPools(float duration = default)
+    public void FadeOutAllPools(float duration = default)
     {
         if (duration == default) { duration = base_transition; }
         if (log) { Debug.Log($"(UI_InventoryMenu) fading out all item pools with duration {duration}"); }
@@ -138,11 +156,31 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         foreach (GameObject ui in ui_elements)
         {
             UI_ItemPool item_pool = ui.GetComponentInChildren<UI_ItemPool>();
-            if (item_pool == null || item_pool.Hidden) { continue; }
+            if (item_pool == null) { continue; }
             if (log) { Debug.Log("(UI_InventoryMenu) fading out ui_itempool " + item_pool.name); }
-            item_pool.Fade(duration, fade_in: false);
+            // item_pool.Fade(duration, fade_in: false);
+            ui.GetComponent<Transitioner>().Hide(duration);
         }
-        await Task.Delay((int)(duration * 1000));
+    }
+    private List<GameObject> get_all_uis_with_item_pools()
+    {
+        List<GameObject> item_pools = new List<GameObject>();
+        foreach (GameObject ui in ui_elements)
+        {
+            UI_ItemPool item_pool = ui.GetComponentInChildren<UI_ItemPool>();
+            if (item_pool != null) { item_pools.Add(ui); }
+        }
+        return item_pools;
+    }
+    private List<GameObject> get_all_indicators()
+    {
+        List<GameObject> indicators = new List<GameObject>();
+        foreach (GameObject ui in ui_elements)
+        {
+            UI_PanelIndicator indicator = ui.GetComponent<UI_PanelIndicator>();
+            if (indicator != null) { indicators.Add(ui); }
+        }
+        return indicators;
     }
 
     // SLOTTABLE

@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using System.Collections;
 
 public class UI_GameOver : UI_Pool
 {
@@ -45,7 +46,7 @@ public class UI_GameOver : UI_Pool
         UI_Manager.Instance.SwitchTo("hud");
     }
 
-    protected override async Awaitable show_pool(List<GameObject> dont_show = null)
+    protected override IEnumerator show_coroutine(List<GameObject> dont_show = null)
     {
         // we set the callbacks
         reviveAction.performed += reviveCallback;
@@ -57,9 +58,9 @@ public class UI_GameOver : UI_Pool
             oh_no_text.text += "o";
         }
 
-        await base.show_pool(dont_show);
+        yield return base.show_coroutine(dont_show);
     }
-    protected override async Awaitable hide_pool(List<GameObject> dont_hide = null)
+    protected override IEnumerator hide_coroutine(List<GameObject> dont_hide = null)
     {
         // we remove the callbacks
         reviveAction.performed -= reviveCallback;
@@ -72,10 +73,17 @@ public class UI_GameOver : UI_Pool
         }
 
         // we instantiate the perso prefab at the spawn point
-        GameObject[] perso = await InstantiateAsync(perso_prefab, perso_spawn_point, Quaternion.identity);
+        // var task = ;
+        // yield return new WaitUntil(() => task.completed);
+
+        bool instantiated = false;
+        var instantiation = InstantiateAsync(perso_prefab, perso_spawn_point, Quaternion.identity);
+        instantiation.completed += (op) => instantiated = true;
+        yield return new WaitUntil(() => instantiated);
+        GameObject[] perso = instantiation.Result;
         perso[0].name = "perso";
 
-        await base.hide_pool(dont_hide);
+        yield return base.hide_coroutine(dont_hide);
     }
 
 }

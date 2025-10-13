@@ -37,7 +37,7 @@ public class UI_Laptop : UI_Inventory
         if (items == null || items.Count == 0)
         {
             // we disable the modules
-            await pools[0].Fade(fade_in: false);
+            await pools[0].GetComponentInParent<Transitioner>(includeInactive: true)?.Hide();
             (pools[0] as UI_ModulePool)?.DisableModules();
             return;
         }

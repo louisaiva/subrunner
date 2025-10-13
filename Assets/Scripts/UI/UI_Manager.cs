@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.UI;
 using PrimeTween;
+using System.Collections;
 /// <summary>
 /// This class is used to manage the UI elements
 /// its transform is located at /ui
@@ -12,6 +13,10 @@ using PrimeTween;
 /// </summary>
 public class UI_Manager : Singleton<UI_Manager>
 {
+
+    [Header("Pool stack")]
+    [SerializeField] private List<UI_Pool> pool_stack = new List<UI_Pool>();
+    public string PoolStack => "/" + string.Join("/", pool_stack.Select(x => x.Reference).ToArray());
 
     [Header("Pools")]
     private List<UI_Pool> pools = new List<UI_Pool>();
@@ -32,19 +37,15 @@ public class UI_Manager : Singleton<UI_Manager>
     }
     public event System.Action<string> OnPoolSwitched = delegate { };
 
-
     [Header("Transitions")]
-    // [SerializeField] protected float transition_duration = 0.2f;
     private PauseMenuBackgroundEffect bg;
+    private Coroutine current_transition = null;
 
 
     [Header("Logs")]
     public bool log = false;
     public bool log_availability = false;
     public bool log_switching = false;
-
-    // inputs
-    private InputManager input_manager;
 
     // START
     protected override void Awake()
@@ -66,16 +67,6 @@ public class UI_Manager : Singleton<UI_Manager>
     }
     void Start()
     {
-        // on récupère les inputs
-        input_manager = InputManager.Instance;
-
-        // on mets les callbacks des menus
-        input_manager.inputs.menus.inventory.performed += ctx => { TogglePool("inventory"); };
-        input_manager.inputs.menus.pause.performed += ctx => { TogglePool("pause"); };
-        input_manager.inputs.perso.select_hackable.performed += ctx => { HandleHackingInput(ctx.ReadValue<Vector2>().magnitude); };
-        // inputs.menus.map.performed += ctx => { TogglePool("map"); };
-        input_manager.inputs.UI.cancel.performed += ctx => { HandleCancelInput(ctx.ReadValue<float>()); };
-
         // we try to switch to current_pool if it is something
         if (current_pool != null)
         {
@@ -88,6 +79,21 @@ public class UI_Manager : Singleton<UI_Manager>
 
         // on show le hud
         SwitchTo("hud");
+    }
+
+    // TRANSITIONS
+    public async Awaitable TransitionBackground(float bg_alpha, float duration)
+    {
+        bg.TransitionEffect(bg_alpha > 0f, duration);
+        await bg.TransitionAlpha(bg_alpha > 0f, duration, bg_alpha);
+    }
+    public async Awaitable TransitionTimeScale(float time_scale, float duration)
+    {
+        // we check if we have an override final timescale
+        float final_timescale = time_scale;
+        if (Time.timeScale == final_timescale) { return; } // if we are already at the right timescale, we do nothing
+
+        await Tween.GlobalTimeScale(final_timescale, duration, Ease.OutQuad);
     }
 
 
@@ -104,10 +110,29 @@ public class UI_Manager : Singleton<UI_Manager>
         UI_Pool pool = GetPool(pool_name);
         if (!pool) { return; }
 
-        if (log_switching) { Debug.Log($"(UI_Manager) trying to switch to pool : {pool.Reference} from {(current_pool != null ? current_pool.Reference : "null")}"); }
-        switch_to(pool, force);
+        
+        // switch_to(pool, force);
+        if (current_transition != null)
+        {
+            if (log_switching) { Debug.LogWarning($"(UI_Manager) can't switch to pool : {pool.Reference} from {(current_pool != null ? current_pool.Reference : "null")} because a transition is already in progress"); }
+            return;
+        }
+        // if (log_switching) { Debug.Log($"(UI_Manager) trying to switch to pool : {pool.Reference} from {(current_pool != null ? current_pool.Reference : "null")}"); }
+        current_transition = StartCoroutine(switch_pool_coroutine(pool, force));
     }
-    private async void switch_to(UI_Pool pool, bool force = true)
+
+    /* public void StackPool(string pool_name)
+    {
+        // check if we have a pool to switch to
+        UI_Pool pool = GetPool(pool_name);
+        if (!pool) { return; }
+
+        if (log_switching) { Debug.Log($"(UI_Manager) trying to stack pool : {pool.Reference} on top of {(current_pool != null ? current_pool.Reference : "null")}"); }
+        switch_to(pool, false);
+    } */
+
+    // UI POOL MANAGEMENT LOW LEVEL
+    /* private async void switch_to(UI_Pool pool, bool force = true)
     {
         // check if this pool is not the same as the current one
         if (pool == current_pool) { return; }
@@ -191,14 +216,57 @@ public class UI_Manager : Singleton<UI_Manager>
 
         // we invoke the OnPoolSwitched event
         OnPoolSwitched?.Invoke(current_pool.Reference);
+    } */
+    private IEnumerator switch_pool_coroutine(UI_Pool pool, bool force = true)
+    {
+        // we check that we are not switching to the same pool
+        if (pool == current_pool) { yield break; }
+
+        // we check if the current pool can be hidden (if not we can't switch)
+        // checks if the current pool can be forcely hidden
+        if (current_pool != null && !force && !current_pool.TransitionSettings.CanBeHidden)
+        {
+            if (log && current_pool.Reference != "hud") { Debug.LogWarning("(UI_Manager) tried to hide a pool that cannot be hidden : " + current_pool.Reference); }
+            yield break;
+        }
+
+        // we get the transition duration
+        float duration = 0f;
+        if (current_pool != null) { duration += current_pool.TransitionSettings.Duration; }
+        duration += pool.TransitionSettings.Duration;
+
+        // we get the common elements between the two pools
+        List<GameObject> same_pool_elements = get_common_elements(current_pool, pool);
+
+        if (log) { Debug.Log($"(UI_Manager) switching : {(current_pool?.Reference ?? " / ")} -> {pool.Reference} (duration : " + duration + ")"); }
+
+
+        // we transition to the right bg/timescale/effect
+        if (Time.timeScale != pool.TransitionSettings.TimeScale) { TransitionTimeScale(pool.TransitionSettings.TimeScale, duration); }
+        if (bg.Alpha != pool.TransitionSettings.BackgroundAlpha) { TransitionBackground(pool.TransitionSettings.BackgroundAlpha, duration); }
+
+        // we hide the current pool
+        if (current_pool != null) { yield return current_pool.HideCoroutine(same_pool_elements); }
+
+        // we show the new pool
+        current_pool = pool;
+        yield return pool.ShowCoroutine(same_pool_elements);
+
+        // we invoke the OnPoolSwitched event
+        OnPoolSwitched?.Invoke(pool.Reference);
+
+        // we clear the current transition
+        current_transition = null;
+    }
+    private List<GameObject> get_common_elements(UI_Pool pool_a, UI_Pool pool_b)
+    {
+        if (pool_a == null || pool_b == null) { return new List<GameObject>(); }
+
+        List<GameObject> common_elements = pool_a.UIElements;
+        common_elements = common_elements.Where(x => pool_b.UIElements.Contains(x)).ToList();
+        return common_elements;
     }
 
-    public void Cancel(string pool_name)
-    {
-        // todo make a stack so we pop the last pool right here
-        // for now we just go back to hud
-        SwitchTo("hud");
-    }
 
     // GETTERS
     public UI_Pool GetPool(string reference)
@@ -215,12 +283,16 @@ public class UI_Manager : Singleton<UI_Manager>
         return null;
     }
 
-    // INPUT HANDLING
-    private void HandleCancelInput(float input)
+    // CANCEL POOLS
+    public void Cancel(string pool_name)
+    {
+        // todo make a stack so we pop the last pool right here
+        // for now we just go back to hud
+        SwitchTo("hud");
+    }
+    public void CancelCurrentPool()
     {
         // todo store a pool cancel stack to go back to previous pool
-
-        if (input > 0.5f) { return; } // we only handle the release of the input
 
         // check if we can cancel the pool
         if (!current_pool.TransitionSettings.CanBeCanceled)
@@ -238,46 +310,6 @@ public class UI_Manager : Singleton<UI_Manager>
 
         // we switch to hud
         SwitchTo("hud");
-    }
-    private void HandleHackingInput(float input)
-    {
-
-        // we activate the hacking ui when input is pressed > 0.5
-        // and disable it when released < 0.5
-        if (input < InputManager.Instance.JOYSTICK_MIN_THRESHOLD)
-        {
-            if (current_pool.Reference == "hacking")
-            {
-                // check if the controller is controlling a device
-                if (Controller.Instance.Capable is Device) { SwitchTo("device"); }
-                else { SwitchTo("hud"); }
-            }
-            return;
-        }
-
-        // if (log) { Debug.Log("(UI_Manager) hacking menu input received : " + input); }
-
-        // we check if we can switch to hacking
-        if (new List<string> { "hud", "device" }.Contains(CurrentPool) && GetPool("hacking").Available)
-        {
-            SwitchTo("hacking");
-        }
-    }
-
-
-    // TRANSITIONS
-    public async Awaitable TransitionBackground(float bg_alpha, float duration)
-    {
-        bg.TransitionEffect(bg_alpha > 0f, duration);
-        await bg.TransitionAlpha(bg_alpha > 0f, duration, bg_alpha);
-    }
-    public async Awaitable TransitionTimeScale(float time_scale, float duration)
-    {
-        // we check if we have an override final timescale
-        float final_timescale = time_scale;
-        if (Time.timeScale == final_timescale) { return; } // if we are already at the right timescale, we do nothing
-
-        await Tween.GlobalTimeScale(final_timescale, duration, Ease.OutQuad);
     }
 
 }

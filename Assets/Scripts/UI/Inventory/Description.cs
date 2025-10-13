@@ -13,12 +13,21 @@ public class Description : MonoBehaviour
     private int cursor = 0;
 
     [Header("Components")]
-    [SerializeField] private TextMeshProUGUI label;
+    private TextMeshProUGUI _label;
+    public TextMeshProUGUI label
+    {
+        get
+        {
+            if (_label == null) { _label = GetComponent<TextMeshProUGUI>(); }
+            return _label;
+        }
+    }
 
     private void Awake()
     {
         // on récupère le label
-        label = GetComponent<TextMeshProUGUI>();
+        // label = GetComponent<TextMeshProUGUI>();
+        // if (label == null) { Debug.LogError("(Description) missing label on " + name); }
 
         // on initialise le label
         label.text = target_description;

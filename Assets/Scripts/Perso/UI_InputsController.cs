@@ -43,14 +43,19 @@ public class UI_InputsController : InputController
         ui_drop_ingameAction = InputManager.Instance.inputs.perso.interact;
 
         // on crée les callbacks
-        ui_dropCallback = ctx => HandleUI_DropInput(ctx);
+        ui_dropCallback = ctx => handle_UI_drop_input(ctx);
 
         // on récupère les actions in-game
         // navigateInGameAction = InputManager.Instance.inputs.perso.
 
 
         // on met en place certains callbacks qu'on veut tout le temps actifs
-        ui_inputs.navigate_in_game.performed += ctx => handle_exploit_selection(ctx.ReadValue<Vector2>());
+        ui_inputs.navigate_in_game.performed += ctx => handle_exploit_selection_input(ctx.ReadValue<Vector2>());
+        ui_inputs.cancel.performed += ctx => { handle_cancel_pool_input(ctx.ReadValue<float>()); };
+        // notamment les inputs de menus
+        MenusActions ui_menus = InputManager.Instance.inputs.menus;
+        ui_menus.inventory.performed += ctx => { UI_Manager.Instance.TogglePool("inventory"); };
+        ui_menus.pause.performed += ctx => { UI_Manager.Instance.TogglePool("pause"); };
     }
     public void EnableInputs(bool ingame_navigation = false)
     {
@@ -109,7 +114,7 @@ public class UI_InputsController : InputController
 
 
     // UI_DROP
-    public void HandleUI_DropInput(InputAction.CallbackContext context)
+    public void handle_UI_drop_input(InputAction.CallbackContext context)
     {
         // if we press the button we launch the endless threshold
         if (context.ReadValue<float>() >= 0.5f)
@@ -123,47 +128,11 @@ public class UI_InputsController : InputController
         OnUI_Drop();
     }
     private void OnUI_Drop() { navigator.OnDrop(); }
-    /* public IEnumerator OnEndlessDrop()
-    {
-        // reset parameters
-        cancel_endless_drop();
-
-        // wait for threshold
-        waiting_dropping = true;
-        yield return new WaitForSecondsRealtime(InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD);
-        if (!waiting_dropping) { yield break; }
-
-        // we start the endless dropion
-        endless_dropping = true;
-        waiting_dropping = false;
-        while (endless_dropping)
-        {
-            navigator.OnDrop();
-            yield return new WaitForSecondsRealtime(InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY);
-        }
-
-        // we stop the endless dropion
-        cancel_endless_drop();
-    }
-    private void cancel_endless_drop()
-    {
-        waiting_dropping = false;
-        endless_dropping = false;
-    } */
-
-
-
-
-
-
-
-
 
 
     // RIGHT JOYSTICK EXPLOIT SELECTION
-    // private event Action<InputAction.CallbackContext> exploit_selection_callback;
     private UI_ExploitSelector exploit_selector;
-    private void handle_exploit_selection(Vector2 direction)
+    private void handle_exploit_selection_input(Vector2 direction)
     {
         // transfère l'event seulement quand on est dans l'ui pool exploit_wheel
         if (UI_Manager.Instance.CurrentPool != "exploit_wheel") { return; }
@@ -176,5 +145,12 @@ public class UI_InputsController : InputController
     }
 
 
+    // UI_MANAGER CANCEL POOL
+    private void handle_cancel_pool_input(float input)
+    {
+        if (input > 0.5f) { return; } // we only handle the release of the input
+
+        UI_Manager.Instance.CancelCurrentPool();
+    }
 
 }

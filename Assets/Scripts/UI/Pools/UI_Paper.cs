@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,15 +12,15 @@ public class UI_Paper : UI_Pool
     public void SetPaper(Paper paper)
     {
         this.paper = paper;
-        this.TransitionSettings = paper.transition_settings;
-
+        TransitionSettings = paper.transition_settings;
+    
         content = Instantiate(paper.prefab, transform);
         if (content == null) { return; }
 
         ui_elements.Add(content);
     }
 
-    public override async Awaitable Hide(List<GameObject> dont_hide = null)
+    protected override IEnumerator hide_coroutine(List<GameObject> dont_hide = null)
     {
         // we remove the text of the paper
         if (paper != null && content != null)
@@ -30,6 +31,6 @@ public class UI_Paper : UI_Pool
             paper = null;
         }
 
-        await base.Hide(dont_hide);
+        yield return base.hide_coroutine(dont_hide);
     }
 }

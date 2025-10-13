@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spawner : Capable, Interactable
+public class Spawner : Capable, EndlessInteractable
 {
     // INTERACTABLE
     public InteractCapacity Interactor { get; set; }
@@ -16,6 +16,7 @@ public class Spawner : Capable, Interactable
     private SpawnCapacity spawner;
 
 
+    // ON INTERACT
     public void OnInteract(Capable interactor)
     {
         // we set the interactor
@@ -33,4 +34,5 @@ public class Spawner : Capable, Interactable
         spawner.Spawn(entity);
         if (debug) { Debug.Log("(Spawner) " + name + " spawned entity " + entity.name); }
     }
+    public void OnEndlessInteract(Capable interactor) { OnInteract(interactor); }
 }

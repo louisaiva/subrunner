@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,48 +12,39 @@ using UnityEngine.UI;
 
 public class UI_LevelUpMenu : UI_Pool, I_UI_Slottable
 {
+    [Header("Level Up Menu Components")]
+    [SerializeField] private TMPro.TextMeshProUGUI level_text;
     [SerializeField] private float delay_before_activating_buttons = 1f;
 
     [Header("Slottable")]
     [SerializeField] private Transform skills_parent;
-    [SerializeField] private Vector2 base_position = new Vector2(0, 10000);
+    // [SerializeField] private Vector2 base_position = new Vector2(0, 10000);
 
 
     [Header("Components")]
     public Description Descriptor;
     public Description SkillNameDescriptor;
-    // private UI_XboxNavigator navigator;
-    private TMPro.TextMeshProUGUI level_text;
-
-    // AWAKE
-    protected void Awake()
-    {
-        // navigator = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
-        level_text = transform.Find("text").GetComponent<TMPro.TextMeshProUGUI>();
-    }
+    
 
     // POOL
-    public override async Awaitable Show(List<GameObject> dont_show = null)
+    protected override IEnumerator show_coroutine(List<GameObject> dont_show = null)
     {
-        await base.Show(dont_show);
+        yield return base.show_coroutine(dont_show);
 
         // update the level text
         level_text.text = "LEVEL " + GameObject.Find("/perso").GetComponent<Perso>().level.ToString();
 
-        // sets base position to center of the screen
-        base_position = new Vector2(Screen.width / 2f, Screen.height / 2f);
-
-        await System.Threading.Tasks.Task.Delay((int)(delay_before_activating_buttons * 1000));
+        yield return new WaitForSecondsRealtime(delay_before_activating_buttons);
 
         // on active le navigator
         UI_XboxNavigator.Instance.Enable(this);
     }
-    public override async Awaitable Hide(List<GameObject> dont_hide = null)
+    protected override IEnumerator hide_coroutine(List<GameObject> dont_hide = null)
     {
         // on désactive le navigator
         UI_XboxNavigator.Instance.Disable(this);
 
-        await base.Hide(dont_hide);
+        yield return base.hide_coroutine(dont_hide);
     }
 
     // SLOTTABLE
@@ -71,11 +63,11 @@ public class UI_LevelUpMenu : UI_Pool, I_UI_Slottable
         }
 
         // on met à jour les seuils
-        angle_threshold = base.angle_threshold;
-        angle_multiplicator = base.angle_multiplicator;
+        // angle_threshold = base.angle_threshold;
+        // angle_multiplicator = base.angle_multiplicator;
 
         // on met à jour la position de base
-        base_position = this.base_position;
+        // base_position = this.base_position;
 
         return slots;
     }
@@ -88,5 +80,5 @@ public class UI_LevelUpMenu : UI_Pool, I_UI_Slottable
         }
         return false;
     }
-    public Vector2 SavedPosition { get; private set; } = Vector2.zero;
+    public Vector2 SavedPosition { get; private set; } = new Vector2(Screen.width / 2f, Screen.height / 2f);
 }
