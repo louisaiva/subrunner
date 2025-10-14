@@ -11,9 +11,10 @@ public class UI_PauseMenu : UI_Pool, I_UI_Slottable
     [Header("Components")]
     [SerializeField] private UI_XboxNavigator xbox_manager;
 
-    // unity functions
-    protected void Awake()
+    // AWAKE
+    protected override void Awake()
     {
+        base.Awake();
         // on récupère le xbox_manager
         xbox_manager = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
     }

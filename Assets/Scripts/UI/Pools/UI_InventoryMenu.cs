@@ -28,7 +28,7 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     public Descriptor Descriptor;
 
     // AWAKE START
-    protected void Awake()
+    protected override void Awake()
     {
 
         if (ui_inventory == null)
@@ -43,34 +43,12 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
 
         // we save the current ui_elements state in saved_state
         saved_slots = new List<GameObject>(ui_elements);
+        base.Awake();
     }
-    protected override void Start()
+    protected void Start()
     {
         UI_XboxNavigator.Instance.OnSlotHoverEnter += handleUI_ItemHoverEnter;
-        base.Start();
     }
-
-    // SHOW / HIDE
-    /* public override IEnumerator ShowCoroutine(List<GameObject> dont_show = null)
-    {
-        if (current_transition != null) { yield break; }
-
-
-        yield return base.ShowCoroutine(dont_show);
-        if (ui_inventory.Inventory.Count == 0) { yield break; }
-
-        UI_XboxNavigator.Instance.Enable(this);
-
-        // on met à jour l'angle treshold du UI_XboxNavigator.Instance
-        // UI_XboxNavigator.Instance.angle_threshold = base.angle_threshold;
-    }
-    public override IEnumerator HideCoroutine(List<GameObject> dont_hide = null)
-    {
-        if (current_transition != null) { yield break; }
-
-
-        yield return base.HideCoroutine(dont_hide);
-    } */
 
     // LOW SHOWING
     protected override IEnumerator show_coroutine(List<GameObject> dont_show = null)

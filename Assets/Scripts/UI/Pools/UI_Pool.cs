@@ -31,8 +31,8 @@ public class UI_Pool : MonoBehaviour
     [SerializeField] protected bool log = false;
     [SerializeField] protected bool log_elements_showing = false;
 
-    // START
-    protected virtual void Start()
+    // AWAKE
+    protected virtual void Awake()
     {
         // we hide the pool for the first time
         for (int i = 0; i < ui_elements.Count; i++)
@@ -67,62 +67,7 @@ public class UI_Pool : MonoBehaviour
         current_transition = null;
     }
 
-    /* public virtual async Awaitable Show(List<GameObject> dont_show = null)
-    {
-        in_transition = true;
-
-        await show_pool(dont_show);
-        in_transition = false;
-    }
-    public virtual async Awaitable Hide(List<GameObject> dont_hide = null)
-    {
-        in_transition = true;
-        await hide_pool(dont_hide);
-
-        in_transition = false;
-    } */
-    /* private void hide_instantly()
-    {
-        float duration = TransitionSettings.Duration;
-        TransitionSettings.Duration = 0f;
-        hide_coroutine();
-        TransitionSettings.Duration = duration;
-        // in_transition = false;
-    } */
-
     // LOW SHOWING
-    /* protected virtual async Awaitable show_pool(List<GameObject> dont_show = null)
-    {
-        if (TransitionSettings.UsePersoInputs) { InputManager.Instance.EnablePersoInputs(); }
-        await System.Threading.Tasks.Task.Delay((int)(TransitionSettings.Duration * 1000));
-
-        // on affiche tous les éléments
-        if (log) { Debug.Log("(UI_Pool) showing pool : " + Reference); }
-        foreach (GameObject ui in ui_elements)
-        {
-            if (dont_show != null && dont_show.Contains(ui)) { continue; }
-            ui.SetActive(true);
-        }
-        Showed = true;
-
-        // on active les perso inputs si on doit les activer
-        if (!TransitionSettings.UsePersoInputs) { InputManager.Instance.DisablePersoInputs(); }
-    }
-    protected virtual async Awaitable hide_pool(List<GameObject> dont_hide = null)
-    {
-        // on cache tous les éléments du pool
-        if (log) { Debug.Log("(UI_Pool) hiding pool : " + Reference + $"(duration : {(int)(TransitionSettings.Duration * 1000)})"); }
-        foreach (GameObject ui in ui_elements)
-        {
-            if (dont_hide != null && dont_hide.Contains(ui)) { continue; }
-            ui.SetActive(false);
-        }
-
-        Showed = false;
-
-        if (TransitionSettings.Duration > 0f) { await System.Threading.Tasks.Task.Delay((int)(TransitionSettings.Duration * 1000)); }
-    } */
-
     protected virtual IEnumerator show_coroutine(List<GameObject> dont_show = null)
     {
         if (TransitionSettings.UsePersoInputs) { InputManager.Instance.EnablePersoInputs(); }

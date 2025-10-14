@@ -4789,8 +4789,8 @@ MonoBehaviour:
   - {fileID: 2780161619704681342}
   - {fileID: 1401372864129505342}
   - {fileID: 7401164733686839625}
-  log: 1
-  log_elements_showing: 1
+  log: 0
+  log_elements_showing: 0
   ui_inventory: {fileID: 1524634633796860591}
   ui_laptop: {fileID: 129471366508900232}
   no_inventory_panel: {fileID: 4376614431564456865}
@@ -4910,7 +4910,6 @@ MonoBehaviour:
   UI_Inventory: {fileID: 0}
   log: 0
   log_storage: 0
-  log_fading: 0
 --- !u!1 &1984227957808503677
 GameObject:
   m_ObjectHideFlags: 0
@@ -6854,7 +6853,7 @@ MonoBehaviour:
   shown_value: 1
   ease_show: 0
   ease_hide: 0
-  default_duration: 1
+  default_duration: 0.1
   unscaled_time: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
@@ -8428,7 +8427,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2356489064748087182
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8740,7 +8739,6 @@ MonoBehaviour:
   UI_Inventory: {fileID: 0}
   log: 0
   log_storage: 0
-  log_fading: 0
   dynamic_rule: 
 --- !u!1 &3261689245712872898
 GameObject:
@@ -10370,7 +10368,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2773003399836129100
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10567,8 +10565,8 @@ MonoBehaviour:
   - {fileID: 4935037789408016858}
   - {fileID: 6145079273292892347}
   - {fileID: 1718980280031326265}
-  log: 0
-  log_elements_showing: 0
+  log: 1
+  log_elements_showing: 1
   perso_quick_inventory: {fileID: 5192110125985442822}
   ui_chest: {fileID: 0}
 --- !u!1 &3916433396999067944
@@ -14966,7 +14964,6 @@ MonoBehaviour:
   UI_Inventory: {fileID: 0}
   log: 0
   log_storage: 0
-  log_fading: 0
 --- !u!1 &5582045804357744758
 GameObject:
   m_ObjectHideFlags: 0
@@ -15809,7 +15806,7 @@ MonoBehaviour:
   Showed: 0
   in_transition: 0
   TransitionSettings:
-    Duration: 0.05
+    Duration: 1
     CanBeHidden: 1
     CanBeCanceled: 1
     UsePersoInputs: 0
@@ -18526,7 +18523,6 @@ MonoBehaviour:
   UI_Inventory: {fileID: 0}
   log: 0
   log_storage: 0
-  log_fading: 0
 --- !u!1 &6953414909838448244
 GameObject:
   m_ObjectHideFlags: 0
@@ -19306,7 +19302,7 @@ MonoBehaviour:
   transition_on_start: 0
   duration_start_transition: 0.1
   delay_start_transition: 0
-  log: 0
+  log: 1
 --- !u!1 &7233372605650492963
 GameObject:
   m_ObjectHideFlags: 0
@@ -21203,7 +21199,6 @@ MonoBehaviour:
   UI_Inventory: {fileID: 0}
   log: 0
   log_storage: 0
-  log_fading: 0
 --- !u!1 &8030699225698279598
 GameObject:
   m_ObjectHideFlags: 0
@@ -22467,7 +22462,6 @@ MonoBehaviour:
   UI_Inventory: {fileID: 0}
   log: 0
   log_storage: 0
-  log_fading: 0
 --- !u!1 &8780297823631914783
 GameObject:
   m_ObjectHideFlags: 0
@@ -22553,7 +22547,6 @@ MonoBehaviour:
   UI_Inventory: {fileID: 0}
   log: 0
   log_storage: 0
-  log_fading: 0
 --- !u!1 &8840543475317824594
 GameObject:
   m_ObjectHideFlags: 0
@@ -26792,7 +26785,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2125867970608765467, guid: 6c1bc2d18ef822d44b0722c7ebcb34dd, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2326442985120429879, guid: 6c1bc2d18ef822d44b0722c7ebcb34dd, type: 3}
       propertyPath: m_text

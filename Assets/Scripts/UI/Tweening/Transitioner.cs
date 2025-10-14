@@ -24,10 +24,6 @@ public class Transitioner : MonoBehaviour
     public bool ShouldBeVisibleOnEnable = true;
     protected Action<float> updater;
 
-    [Header("transition on Start")]
-    [SerializeField] protected bool transition_on_start = false;
-    [SerializeField] protected float duration_start_transition = 0.1f;
-    [SerializeField] protected float delay_start_transition = 0f;
 
     [Header("Logs")]
     [SerializeField] private bool log = false;
@@ -70,24 +66,6 @@ public class Transitioner : MonoBehaviour
     {
         if (!transition_on_enable) { return; }
         Hide();
-    }
-
-    // START
-    private async Task Start()
-    {
-        if (transition_on_start)
-        {
-            if (log) { Debug.Log($"(Transitioner) Waiting {delay_start_transition} seconds before starting transition for {name}"); }
-            if (delay_start_transition > 0f) { await Tween.Delay(delay_start_transition, useUnscaledTime: unscaled_time); }
-            show_start();
-        }
-
-        
-    }
-    private void show_start()
-    {
-        if (log) { Debug.Log($"(Transitioner) Starting transition for {name} with duration {duration_start_transition}"); }
-        Show(duration_start_transition);
     }
 
     // SHOW / HIDE

@@ -6,8 +6,6 @@ public class Paper : Item, Usable
 
     [Header("Paper parameters")]
     public GameObject prefab = null;
-    public PoolTransitionSettings transition_settings = PoolTransitionSettings.InMenuDefault;
-
 
     // USABLE
     public string UseLabel { get; set; } = "read";

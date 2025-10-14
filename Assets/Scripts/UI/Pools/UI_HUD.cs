@@ -13,8 +13,10 @@ public class UI_HUD : UI_Pool
     [SerializeField] private UI_Inventory ui_chest;
 
     // AWAKE & START
-    protected void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         // on récupère les composants
         if (perso_quick_inventory == null)
         {
@@ -28,10 +30,8 @@ public class UI_HUD : UI_Pool
 
         perso_quick_inventory_pool = perso_quick_inventory.GetComponent<HUD_PersoItemPool>();
     }
-    protected override void Start()
+    protected void Start()
     {
-        base.Start();
-
         // on met les callbacks pour vérifier que le select_hackable se désactive bien
         InputManager.Instance.OnPersoInputsToggled += verify_right_joy_is_disabled;
     }

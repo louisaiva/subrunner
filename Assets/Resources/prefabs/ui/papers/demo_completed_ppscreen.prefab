@@ -72,9 +72,6 @@ MonoBehaviour:
   unscaled_time: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
-  transition_on_start: 1
-  duration_start_transition: 0.25
-  delay_start_transition: 0.5
   log: 0
 --- !u!1 &1279773479001451798
 GameObject:
@@ -292,7 +289,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '- magq'
+  m_text: '- nomaj'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c60dc2e81142dff44a9a4129c805e59b, type: 2}
   m_sharedMaterial: {fileID: 8570373338400943152, guid: c60dc2e81142dff44a9a4129c805e59b, type: 2}
@@ -375,7 +372,9 @@ GameObject:
   - component: {fileID: 9129126747211495837}
   - component: {fileID: 8942758983575031491}
   - component: {fileID: 8263876793427423422}
-  - component: {fileID: 49485856118314038}
+  - component: {fileID: 3052467333550843103}
+  - component: {fileID: 2892156871217645030}
+  - component: {fileID: 2121027198061191686}
   m_Layer: 0
   m_Name: demo_completed_ppscreen
   m_TagString: Untagged
@@ -467,11 +466,11 @@ MonoBehaviour:
     loop: 1
     speed: 1
     flipX: 0
-  log: 0
+  log: 1
   log_orientation: 0
   log_advanced: 0
-  log_frames: 0
---- !u!114 &49485856118314038
+  log_frames: 1
+--- !u!114 &3052467333550843103
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -480,12 +479,56 @@ MonoBehaviour:
   m_GameObject: {fileID: 4189490259085307429}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4d8978f6cc6ff94d9d93d63b5c9a706, type: 3}
+  m_Script: {fileID: 11500000, guid: 38e320f13ac9b18a3b47781f7d602bca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_Readable
+  transition_settings:
+    Duration: 0.5
+    CanBeHidden: 1
+    CanBeCanceled: 1
+    UsePersoInputs: 0
+    TimeScale: 0
+    BackgroundAlpha: 0.96
+  content: {fileID: 7015320438629330569}
+  transition_duration_percentage: 0.5
+  player: {fileID: 8263876793427423422}
+  show_animations:
+  - open
+  loop_animations:
+  - idle
+  hide_animations:
+  - close
+--- !u!225 &2892156871217645030
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4189490259085307429}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &2121027198061191686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4189490259085307429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ac3a151034802c4c8203973d3be9e59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  animations_to_play:
-  - open
-  - idle
-  delay_between_animations: 0
-  loop: 0
+  transitype: 0
+  hidden_value: 0
+  shown_value: 1
+  ease_show: 0
+  ease_hide: 0
+  default_duration: 1
+  unscaled_time: 1
+  transition_on_enable: 0
+  ShouldBeVisibleOnEnable: 0
+  log: 0

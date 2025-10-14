@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using PrimeTween;
 using TMPro;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,18 +31,11 @@ public class UI_ItemPool : MonoBehaviour
 
     [Header("Components")]
     [SerializeField] protected ItemBank bank;
-    // public Description Descriptor; // the description of the item pool
     public UI_Inventory UI_Inventory;
-    // protected CanvasGroup group;
-    // protected Transitioner transitioner;
-
-    // [Header("Tween")]
-    // [SerializeField] protected Sequence? fade_sequence = null;
 
     [Header("Logs")]
     [SerializeField] protected bool log = false;
     [SerializeField] protected bool log_storage = false;
-    // [SerializeField] protected bool log_fading = false;
 
     public virtual void Init(UI_Inventory ui)
     {
@@ -52,13 +44,6 @@ public class UI_ItemPool : MonoBehaviour
 
         // we get the item bank
         bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
-
-        // we get the CanvasGroup
-        // group = GetComponentInParent<CanvasGroup>(includeInactive: true);
-        // if (group != null) { group.alpha = 0f; }
-        // transitioner = GetComponentInParent<Transitioner>(includeInactive: true);
-        // if (transitioner != null) { transitioner.Hide(0f); }
-
         // we clear the ui_items
         ui_items.Clear();
 
@@ -257,43 +242,6 @@ public class UI_ItemPool : MonoBehaviour
 
         return ui_slot;
     }
-
-    // FADE
-    /* public async virtual Awaitable Fade(float duration = 0.1f, bool fade_in = true)
-    {
-        if (group == null) { return; }
-
-        if (log_fading) { Debug.Log($"(UI_ItemPool) {name} fading {(fade_in ? "in" : "out")} with duration {duration} (from {group.alpha} to {(fade_in ? 1f : 0f)})"); }
-
-        // we stop the last sequence
-        if (fade_sequence != null && fade_sequence.Value.isAlive)
-        {
-            fade_sequence.Value.Stop();
-            fade_sequence = null;
-        }
-
-        // we create a new sequence
-        fade_sequence = Sequence.Create(useUnscaledTime: true)
-            .Group(Tween.Custom(group.alpha, fade_in ? 1f : 0f, duration: duration,
-                onValueChange: ctx => group.alpha = ctx));
-
-        // we await til it's completed or stopped
-        while (fade_sequence.Value.isAlive) { await System.Threading.Tasks.Task.Yield(); }
-    } */
-    /* public async virtual Awaitable Fade(float duration = 0.1f, bool fade_in = true)
-    {
-        if (transitioner == null) { return; }
-
-        if (log_fading) { Debug.Log($"(UI_ItemPool) {name} fading {(fade_in ? "in" : "out")} with duration {duration}"); }
-
-        // we call the transitioner
-        if (fade_in) { await transitioner.Show(duration); }
-        else { await transitioner.Hide(duration); }
-    } */
-
-    // public bool Transitionning => transitioner != null && transitioner.Transitioning;
-    // public bool Hidden => transitioner != null && transitioner.Hidden;
-    // public bool Shown => transitioner != null && transitioner.Shown;
 
     // GETTERS
     public virtual int GetItemSlotIndex(Item item)

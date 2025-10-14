@@ -47,7 +47,7 @@ public class UI_Manager : Singleton<UI_Manager>
     public bool log_availability = false;
     public bool log_switching = false;
 
-    // START
+    // START & AWAKE
     protected override void Awake()
     {
         base.Awake();
@@ -81,7 +81,7 @@ public class UI_Manager : Singleton<UI_Manager>
         SwitchTo("hud");
     }
 
-    // TRANSITIONS
+    // TIMESCALE & BG & EFFECTS TRANSITIONS
     public async Awaitable TransitionBackground(float bg_alpha, float duration)
     {
         bg.TransitionEffect(bg_alpha > 0f, duration);
@@ -96,8 +96,7 @@ public class UI_Manager : Singleton<UI_Manager>
         await Tween.GlobalTimeScale(final_timescale, duration, Ease.OutQuad);
     }
 
-
-    // UI POOL MANAGEMENT
+    // UI POOL SHOW/HIDE
     public void TogglePool(string pool_name)
     {
         // we check if the pool is already shown
@@ -131,92 +130,7 @@ public class UI_Manager : Singleton<UI_Manager>
         switch_to(pool, false);
     } */
 
-    // UI POOL MANAGEMENT LOW LEVEL
-    /* private async void switch_to(UI_Pool pool, bool force = true)
-    {
-        // check if this pool is not the same as the current one
-        if (pool == current_pool) { return; }
-
-        // todo : verify that the next pool is available before switching
-
-        // we get the transition duration
-        float duration = 0f;
-        if (current_pool != null) { duration += current_pool.TransitionSettings.Duration; }
-        duration += pool.TransitionSettings.Duration;
-        //  = override_duration != default ? override_duration : transition_duration;
-        // if (pool.Reference == "game_over") { duration = (pool as UI_GameOver).transition_duration; }
-        // else if (current_pool != null && current_pool.Reference == "game_over") { duration = (current_pool as UI_GameOver).transition_duration; }
-
-        // we prepare the lists of the gameobjects to ignore
-        List<GameObject> same_pool_elements = null;
-
-        // we check if we have a current pool
-        if (current_pool != null)
-        {
-            if (log_switching) { Debug.Log($"(UI_Manager - switch_to) current pool is not null : {current_pool.Reference}"); }
-
-            // checks if the current pool can be forcely hidden
-            if (!force && !current_pool.TransitionSettings.CanBeHidden)
-            {
-                if (log && current_pool.Reference != "hud") { Debug.LogWarning("(UI_Manager) tried to hide a pool that cannot be hidden : " + current_pool.Reference); }
-                return;
-            }
-
-            if (!current_pool.Available)
-            {
-                if (log) { Debug.LogWarning("(UI_Manager) tried to switch pools while the current pool is not available : " + current_pool.Reference); }
-                return;
-            }
-
-            if (log_switching) { Debug.Log($"(UI_Manager - switch_to) current pool is available and can be hidden"); }
-
-
-            // we filter the same_pool_elements_list so only elements that are in both pools stay inside it
-            List<GameObject> current_pool_elements = current_pool.UIElements;
-            same_pool_elements = pool.UIElements;
-            same_pool_elements = same_pool_elements.Where(x => current_pool_elements.Contains(x)).ToList();
-
-            if (log_switching) { Debug.Log($"(UI_Manager - switch_to) same pool elements contains {same_pool_elements.Count} elements"); }
-
-
-            // we transition to the right bg/timescale/effect
-            if (current_pool.TransitionSettings.TimeScale != pool.TransitionSettings.TimeScale)
-            {
-                TransitionTimeScale(pool.TransitionSettings.TimeScale, duration);
-            }
-            if (log_switching) { Debug.Log($"(UI_Manager - switch_to) transitionned time scale"); }
-
-            if (current_pool.TransitionSettings.BackgroundAlpha != pool.TransitionSettings.BackgroundAlpha)
-            {
-                TransitionBackground(pool.TransitionSettings.BackgroundAlpha, duration);
-            }
-            if (log_switching) { Debug.Log($"(UI_Manager - switch_to) transitionned background"); }
-
-            // we hide the current pool
-            if (log_switching) { Debug.Log($"(UI_Manager - switch_to) launching current pool hide"); }
-            await current_pool.Hide(same_pool_elements);
-            if (log_switching) { Debug.Log($"(UI_Manager - switch_to) current pool hidden successfully"); }
-        }
-        else
-        {
-            // on active le background & time parameters
-            TransitionTimeScale(pool.TransitionSettings.TimeScale, duration);
-            TransitionBackground(pool.TransitionSettings.BackgroundAlpha, duration);
-            if (log_switching) { Debug.Log($"(UI_Manager - switch_to) current pool is null, transitionned bg & time scale"); }
-
-        }
-
-        if (log) { Debug.Log("(UI_Manager) switching to pool : " + pool.Reference + " (duration : " + duration + ")"); }
-
-        // we show the new pool
-        current_pool = pool;
-        if (log_switching) { Debug.Log($"(UI_Manager - switch_to) launching next pool show"); }
-        await current_pool.Show(same_pool_elements);
-        if (log_switching) { Debug.Log($"(UI_Manager - switch_to) next pool shown successfully"); }
-
-        // we invoke the OnPoolSwitched event
-        OnPoolSwitched?.Invoke(current_pool.Reference);
-    } */
+    // UI POOL SHOW/HIDE LOW LEVEL
     private IEnumerator switch_pool_coroutine(UI_Pool pool, bool force = true)
     {
         // we check that we are not switching to the same pool
@@ -311,5 +225,4 @@ public class UI_Manager : Singleton<UI_Manager>
         // we switch to hud
         SwitchTo("hud");
     }
-
 }
