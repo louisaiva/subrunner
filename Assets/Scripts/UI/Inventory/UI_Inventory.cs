@@ -119,9 +119,34 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     // GRAB
     public virtual bool UI_Grab(Item item)
     {
+
+        // if we have an UI_ItemPool called "shortcuts" then we check if we have any slots with the same item ref
+        UI_ItemPool shortcuts_pool = pools.Find(pool => pool.name == "shortcuts_pool");
+        if (shortcuts_pool != null && shortcuts_pool.CanStore(item) && shortcuts_pool.FullCount > 0)
+        {
+            // get the shortcuts slots
+            UI_Item[] shortcuts_slots = shortcuts_pool.GetFilledSlots().ToArray();
+            for (int i = 0; i < shortcuts_slots.Length; i++)
+            {
+                UI_Item ui_item = shortcuts_slots[i];
+
+                // we check if the item references match
+                if (ui_item.Item.Reference != item.Reference) { continue; }
+            
+                // we try to add the item to this slot
+                bool stored = ui_item.Store(item);
+                if (stored)
+                {
+                    if (log) { Debug.Log("(UI_Inventory) grabbed " + item.Reference + " in shortcut slot " + ui_item.name); }
+                    return true;
+                }
+            }
+        }
+
+
+        // we try to grab the item in every pool
         foreach (UI_ItemPool pool in pools)
         {
-            // we try to grab the item in the pool
             bool grabbed = pool.Grab(item);
             if (grabbed)
             {

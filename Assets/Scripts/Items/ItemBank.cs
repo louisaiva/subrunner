@@ -219,7 +219,7 @@ public class ItemBank : Singleton<ItemBank>
     // DEBUG
     private string getItemsList()
     {
-        string title = "ITEMS in the bank - Total ";
+        string title = "(ItemBank) ITEMS in the bank - Total ";
         string list = "";
         int count = 0;
         foreach (KeyValuePair<string, Sprite> item in item_sprites)

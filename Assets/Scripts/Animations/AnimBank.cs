@@ -607,7 +607,7 @@ public class AnimBank : Singleton<AnimBank>
     // DEBUG
     private string getAnimsList()
     {
-        string title = "ANIMS in the bank - Total ";
+        string title = "(AnimBank) ANIMS in the bank - Total ";
         string list = "";
         int count = 0;
         foreach (string skin in anims.Keys)

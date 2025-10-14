@@ -268,4 +268,13 @@ public class UI_ItemPool : MonoBehaviour
         }
         return items;
     }
+    public List<UI_Item> GetFilledSlots()
+    {
+        List<UI_Item> filled_slots = new List<UI_Item>();
+        foreach (UI_Item ui_item in ui_items)
+        {
+            if (ui_item.Quantity > 0) { filled_slots.Add(ui_item); }
+        }
+        return filled_slots;
+    }
 }
