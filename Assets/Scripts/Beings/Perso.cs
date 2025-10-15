@@ -195,7 +195,7 @@ public class Perso : Being, LaptopHacker
         Debug.Log("LEVEL UP ! level " + level);
 
         // on ouvre le level up menu
-        UI_Manager.Instance.SwitchTo("level_up");
+        UI_Manager.Instance.SwitchTo("level_up", force: true);
 
         // on augmente x1.5 l'attaque
         if (HasCapacity("attack"))
@@ -231,7 +231,7 @@ public class Perso : Being, LaptopHacker
         Controller.Instance.PIC.DisableInputs();
 
         // on switch au game_over panel
-        UI_Manager.Instance.SwitchTo("game_over");
+        UI_Manager.Instance.SwitchTo("game_over",force:true);
 
         // on désactive plein de choses
         Destroy(GetComponent<SeeThroughHandler>());

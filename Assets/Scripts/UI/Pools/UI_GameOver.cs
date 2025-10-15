@@ -43,7 +43,7 @@ public class UI_GameOver : UI_Pool
         if (input > 0.5f) { return; } // we only handle the input when the value is below 0.5f
 
         // we switch to hud
-        UI_Manager.Instance.SwitchToHUD();
+        UI_Manager.Instance.SwitchToHUD(force:true);
     }
 
 

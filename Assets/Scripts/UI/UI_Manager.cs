@@ -21,7 +21,6 @@ public class UI_Manager : Singleton<UI_Manager>
 
     [Header("Pools")]
     private List<UI_Pool> pools = new List<UI_Pool>();
-    [SerializeField]
     private UI_Pool current_pool
     {
         get
@@ -43,20 +42,7 @@ public class UI_Manager : Singleton<UI_Manager>
             return null;
         }
     }
-    public bool InPool(string pool_name)
-    {
-        if (current_pool == null) { return false; }
-        return current_pool.Reference == pool_name;
-    }
-    public bool InPools(List<string> pool_names)
-    {
-        foreach (string pool_name in pool_names)
-        {
-            if (InPool(pool_name)) { return true; }
-        }
-        return false;
-    }
-    public event System.Action<string> OnPoolSwitched = delegate { };
+    public event System.Action<string> OnPoolSwitched = delegate { }; // ? useful ??
 
     [Header("Transitions")]
     private PauseMenuBackgroundEffect bg;
@@ -65,8 +51,7 @@ public class UI_Manager : Singleton<UI_Manager>
 
     [Header("Logs")]
     public bool log = false;
-    public bool log_availability = false;
-    public bool log_switching = false;
+    public bool log_extended = false;
 
     // START & AWAKE
     protected override void Awake()
@@ -99,7 +84,7 @@ public class UI_Manager : Singleton<UI_Manager>
         }
 
         // on show le hud
-        SwitchTo("hud");
+        SwitchToHUD();
     }
 
     // TIMESCALE & BG & EFFECTS TRANSITIONS
@@ -124,33 +109,45 @@ public class UI_Manager : Singleton<UI_Manager>
         if (pool_name == current_pool.Reference) { SwitchToHUD(); }
         else { SwitchTo(pool_name, false); }
     }
-    public void SwitchTo(string pool_name, bool force = true)
+    public void SwitchTo(string pool_name, bool force = false)
     {
         // check if we have a pool to switch to
         UI_Pool pool = GetPool(pool_name);
         if (!pool) { return; }
 
-        if (current_transition != null)
+        if (current_transition != null && !force)
         {
-            if (log_switching) { Debug.LogWarning($"(UI_Manager) can't switch to pool : {pool.Reference} from {(current_pool != null ? current_pool.Reference : "null")} because a transition is already in progress"); }
+            if (log_extended) { Debug.LogWarning($"(UI_Manager) can't switch to pool : {pool.Reference} from {(current_pool != null ? current_pool.Reference : "null")} because a transition is already in progress"); }
             return;
+        }
+        else if (current_transition != null && force)
+        {
+            if (log) { Debug.LogWarning($"(UI_Manager) force switching to pool : {pool.Reference} /!\\ may break the last transition"); }
+            StopCoroutine(current_transition);
+            current_transition = null;
         }
         current_transition = StartCoroutine(switch_pool_coroutine(new List<UI_Pool> { pool }, force));
     }
-    public void SwitchToHUD()
+    public void SwitchToHUD(bool force = false)
     {
-        if (current_transition != null)
+        if (current_transition != null && !force)
         {
-            if (log_switching) { Debug.LogWarning($"(UI_Manager) can't switch to HUD group from {(current_pool != null ? current_pool.Reference : "null")} because a transition is already in progress"); }
+            if (log_extended) { Debug.LogWarning($"(UI_Manager) can't switch to HUD group from {(current_pool != null ? current_pool.Reference : "null")} because a transition is already in progress"); }
             return;
+        }
+        else if (current_transition != null && force)
+        {
+            if (log) { Debug.LogWarning($"(UI_Manager) force switching to HUD group /!\\ may break the last transition"); }
+            StopCoroutine(current_transition);
+            current_transition = null;
         }
 
         // we switch to the hud stack
-        current_transition = StartCoroutine(switch_pool_coroutine(get_stack_from_string(hud_stack)));
+        current_transition = StartCoroutine(switch_pool_coroutine(get_stack_from_string(hud_stack), force));
     }
 
     // UI POOL SWITCH LOW LEVEL
-    private IEnumerator switch_pool_coroutine(List<UI_Pool> stack, bool force = true)
+    private IEnumerator switch_pool_coroutine(List<UI_Pool> stack, bool force = false)
     {
         // we check that we are not switching to the same pool
         UI_Pool pool = stack[stack.Count - 1];
@@ -160,7 +157,7 @@ public class UI_Manager : Singleton<UI_Manager>
         // checks if the current pool can be forcely hidden
         if (current_pool != null && !force && !current_pool.TransitionSettings.CanBeHidden)
         {
-            if (log && current_pool.Reference != "hud") { Debug.LogWarning("(UI_Manager) tried to hide a pool that cannot be hidden : " + current_pool.Reference); }
+            if (log_extended) { Debug.LogWarning("(UI_Manager) tried to hide a pool that cannot be hidden : " + current_pool.Reference); }
             yield break;
         }
 
@@ -232,7 +229,7 @@ public class UI_Manager : Singleton<UI_Manager>
 
         if (current_transition != null)
         {
-            if (log_switching) { Debug.LogWarning($"(UI_Manager) can't switch to pool : {pool.Reference} from {(current_pool != null ? current_pool.Reference : "null")} because a transition is already in progress"); }
+            if (log_extended) { Debug.LogWarning($"(UI_Manager) can't stack pool : {pool.Reference} on {(current_pool != null ? current_pool.Reference : "/")} because a transition is already in progress"); }
             return;
         }
         current_transition = StartCoroutine(stack_pool_coroutine(pool));
@@ -244,20 +241,20 @@ public class UI_Manager : Singleton<UI_Manager>
         if (!pool) { return; }
         if (!pool_stack.Contains(pool))
         {
-            if (log && pool.Reference != "hud") { Debug.LogWarning("(UI_Manager) tried to unstack a pool that is not in the stack : " + pool.Reference); }
+            if (log_extended) { Debug.LogWarning("(UI_Manager) tried to unstack a pool that is not in the stack : " + pool.Reference); }
             return;
         }
 
         // check if we can hide the pool
         if (!pool.TransitionSettings.CanBeHidden)
         {
-            if (log && pool.Reference != "hud") { Debug.LogWarning("(UI_Manager) tried to unstack a pool that cannot be hidden : " + pool.Reference); }
+            if (log_extended) { Debug.LogWarning("(UI_Manager) tried to unstack a pool that cannot be hidden : " + pool.Reference); }
             return;
         }
 
         if (current_transition != null)
         {
-            if (log_switching) { Debug.LogWarning($"(UI_Manager) can't unstack pool : {pool.Reference} from {PoolStack} because a transition is already in progress"); }
+            if (log_extended) { Debug.LogWarning($"(UI_Manager) can't unstack pool : {pool.Reference} from {PoolStack} because a transition is already in progress"); }
             return;
         }
         current_transition = StartCoroutine(unstack_pool_coroutine(pool));
@@ -268,10 +265,30 @@ public class UI_Manager : Singleton<UI_Manager>
         // check if we can cancel the pool
         if (!current_pool.TransitionSettings.CanBeCanceled)
         {
-            if (log && current_pool.Reference != "hud") { Debug.LogWarning("(UI_Manager) tried to cancel a pool that cannot be canceled : " + current_pool.Reference); }
+            if (log_extended) { Debug.LogWarning("(UI_Manager) tried to cancel a pool that cannot be canceled : " + current_pool.Reference); }
             return;
         }
         UnstackCurrentPool();
+    }
+
+    // HUD STACKING
+    public void StackOnHUD(string pool_name)
+    {
+        // we check if we are not already stacked in the hud
+        if (hud_stack.Contains(pool_name)) { return; }
+        hud_stack += "/" + pool_name;
+
+        // we stack the pool (only if we are currently showing hud)
+        if (IsOnHUD()) { StackPool(pool_name); }
+    }
+    public void UnstackFromHUD(string pool_name)
+    {
+        // we check if we are stacked in the hud
+        if (!hud_stack.Contains(pool_name)) { return; }
+        hud_stack = string.Join("/", hud_stack.Split('/').Where(x => x != pool_name).ToArray());
+
+        // we unstack the pool (only if we are currently showing hud)
+        if (IsOnHUD()) { UnstackPool(pool_name); }
     }
 
     // UI POOL STACK/UNSTACK LOW LEVEL
@@ -326,7 +343,7 @@ public class UI_Manager : Singleton<UI_Manager>
         // if we have an empty next pool we simply switch to hud instead of unstacking
         if (next_stack.Count == 0)
         {
-            if (log_switching) { Debug.Log("(UI_Manager) unstacking the last pool, switching to hud instead"); }
+            if (log_extended) { Debug.Log("(UI_Manager) unstacking the last pool, switching to hud instead"); }
             yield return switch_pool_coroutine(get_stack_from_string(hud_stack));
             yield break;
         }
@@ -366,43 +383,6 @@ public class UI_Manager : Singleton<UI_Manager>
     }
 
 
-    // HUD STACKING
-    public void StackOnHUD(string pool_name)
-    {
-        // we check if we are not already stacked in the hud
-        if (hud_stack.Contains(pool_name)) { return; }
-        hud_stack += "/" + pool_name;
-
-        // we stack the pool (only if we are currently showing hud)
-        if (IsOnHUD()) { StackPool(pool_name); }
-    }
-    public void UnstackFromHUD(string pool_name)
-    {
-        // we check if we are stacked in the hud
-        if (!hud_stack.Contains(pool_name)) { return; }
-        hud_stack = string.Join("/", hud_stack.Split('/').Where(x => x != pool_name).ToArray());
-
-        // we unstack the pool (only if we are currently showing hud)
-        if (IsOnHUD()) { UnstackPool(pool_name); }
-    }
-    /* private IEnumerator reapply_hud_stack_coroutine()
-    {
-        // we unstack all the pools
-        while (pool_stack.Count > 1)
-        {
-            yield return unstack_pool_coroutine(pool_stack[pool_stack.Count - 1]);
-        }
-
-        // we stack all the pools in the hud stack
-        foreach (string pool_name in hud_stack.Split('/').Where(x => x != "hud" && x != ""))
-        {
-            UI_Pool pool = GetPool(pool_name);
-            if (pool != null)
-            {
-                yield return stack_pool_coroutine(pool);
-            }
-        }
-    } */
 
     // GETTERS
     public UI_Pool GetPool(string reference)
@@ -413,7 +393,7 @@ public class UI_Manager : Singleton<UI_Manager>
             if (pool.Reference == reference) { return pool; }
         }
 
-        if (log) { Debug.LogWarning("(UI_Manager) tried to get a non-existing pool : " + reference); }
+        if (log_extended) { Debug.LogWarning("(UI_Manager) tried to get a non-existing pool : " + reference); }
 
         // if we don't find it, we return null
         return null;
