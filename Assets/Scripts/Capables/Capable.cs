@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -11,7 +12,7 @@ using UnityEngine;
 /// So every animated element in the game is a Capable.
 /// </summary>
 [RequireComponent(typeof(AnimPlayer))]
-public class Capable : MonoBehaviour
+public class Capable : MonoBehaviour, Debuggable
 {
     // un Capable est un gameObject qui possède des capacités
     // et donc des animations (les capacités peuvent être reliées à une animation)
@@ -109,10 +110,7 @@ public class Capable : MonoBehaviour
             // we check if the debug is true then we force debug to be true
             if (activate_all_capacities_logs_on_awake) { capa.debug = true; }
         }
-
-        // we add ourself to the entity count
-        EntitiesDebug entities_debug = GameObject.Find("/ui/hud/debug/entities").GetComponent<EntitiesDebug>();
-        entities_debug.AddEntity(this);
+        DebugManager.Instance.transform.GetComponentInChildren<EntitiesDebug>()?.AddEntity(this);
     }
 
 
@@ -291,15 +289,37 @@ public class Capable : MonoBehaviour
     }
 
 
-    // ON DESTROY
+    // DEBUG
     private void OnDestroy()
     {
-        // we remove ourself from the entity count
-        EntitiesDebug entities_debug = GameObject.Find("/ui/hud/debug/entities")?.GetComponent<EntitiesDebug>();
-        if (entities_debug == null) { return; }
-        entities_debug.RemoveEntity(this);
+        if (DebugManager.Instance == null) { return; } // this happens when the scene is destroyed when we quit the scene
+        DebugManager.Instance.transform.GetComponentInChildren<EntitiesDebug>()?.RemoveEntity(this);
     }
+    public string GetDebugText()
+    {
+        string text = "name : " + name +"\n";
+        text += "type : " + GetType().Name.ToLower() + "\n";
+        text += "skin : " + Skin + "\n\n";
+        text += $"position :\n>>> x : {transform.position.x.ToString("F2")}\n>>> y : {transform.position.y.ToString("F2")}\n";
+        text += "orientation : " + anim_player.orientation + $"\n>>> x : {orientation.x.ToString("F2")}\n>>> y : {orientation.y.ToString("F2")}\n";
 
+        text += "\ncapacities : " + capacities.Count + "\n";
+        List<string> capa_names = capacities.ConvertAll(c => c.name);
+        text += ">>> " + string.Join(", ", capa_names) + "\n";
+
+        if (Inventory != null)
+        {
+            List<Usable> usables = Inventory.Items.Where(i => i is Usable).Cast<Usable>().ToList();
+            if (usables.Count > 0)
+            {
+                List<string> capa_from_items_names = usables.ConvertAll(i => i.UseLabel).Distinct().ToList();
+                text += "capacities from items : " + capa_from_items_names.Count + "\n";
+                text += ">>> " + string.Join(", ", capa_from_items_names) + "\n";
+            }
+        }
+
+        return text;
+    }
 }
 
 [Serializable] public enum Effect

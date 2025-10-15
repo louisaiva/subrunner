@@ -396,7 +396,7 @@ GameObject:
   - component: {fileID: 7853161631166308107}
   - component: {fileID: 3884268841172835077}
   - component: {fileID: 7206343197171121091}
-  - component: {fileID: 1383699158530347677}
+  - component: {fileID: 6067341419625358920}
   m_Layer: 23
   m_Name: rat
   m_TagString: Rat
@@ -452,6 +452,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -473,6 +475,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
@@ -603,7 +606,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &1383699158530347677
+--- !u!114 &6067341419625358920
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -612,9 +615,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6831872210500143280}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 667d6ec7c8afc3a4698a8d5a10953d0d, type: 3}
+  m_Script: {fileID: 11500000, guid: 7d1ee2279cb74654eb4f557f4c34f8fc, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::Rat
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: -1}
   capacities: []
@@ -623,6 +626,7 @@ MonoBehaviour:
   debug: 0
   activate_all_capacities_logs_on_awake: 0
   debug_velocity: 0
+  log_avoidance: 0
   rb: {fileID: 0}
   weight: 1
   random_weight_modifier_at_start: 0
@@ -631,8 +635,8 @@ MonoBehaviour:
   input_speed: 0
   Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 0}
-  life: 30
-  max_life: 30
+  life: 15
+  max_life: 15
   random_life_modifier_at_start: 5
   regen_life: 0
   body_collider: {fileID: 0}

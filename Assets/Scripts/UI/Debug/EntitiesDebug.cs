@@ -1,59 +1,92 @@
 using UnityEngine;
 using TMPro;
+using System.Collections.Generic;
 
-public class EntitiesDebug : MonoBehaviour
+public class EntitiesDebug : MonoBehaviour, Debuggable
 {
-    [SerializeField] TextMeshProUGUI debug_text;
-    [SerializeField] private int beingsCount = 0;
-    [SerializeField] private int capablesCount = 0; // capables but not beings !!! a fridge would go there but not the player
+    // [SerializeField] TextMeshProUGUI debug_text;
+    [SerializeField] private int capablesCount = 0; // all the capables in the world
+    [SerializeField] private int beingsCount = 0; // all the beings in the world
+    private Dictionary<string,int> beingsTypesCount = new Dictionary<string,int>(); // count of each type of beings
+    [SerializeField] private int itemsCount = 0; // all the items in the world
+    [SerializeField] private int grabbedItemsCount = 0; // all the grabbed items in the world
+    [SerializeField] private int meatCount = 0; // all the meat in the world
+
+
+    // START
+    private void Start()
+    {
+        DebugManager.Instance.AddDebuggable(this, "entities");
+    }
 
     // ENTITY
     public void AddEntity(Capable capable)
     {
-        if (capable is Being) { AddBeing(); }
-        else { AddCapable(); }
+        capablesCount++;
+        if (capable is Being being) { AddBeing(being); }
+        else if (capable is Item item) { AddItem(item); }
     }
     public void RemoveEntity(Capable capable)
     {
-        if (capable is Being) { RemoveBeing(); }
-        else { RemoveCapable(); }
+        capablesCount--;
+        if (capable is Being being) { RemoveBeing(being); }
+        else if (capable is Item item) { RemoveItem(item); }
     }
 
     // BEINGS
-    private void AddBeing()
+    private void AddBeing(Being being)
     {
         beingsCount++;
-        refresh();
+        string type = being.GetType().Name;
+        if (!beingsTypesCount.ContainsKey(type))
+        {
+            beingsTypesCount[type] = 0;
+        }
+        beingsTypesCount[type]++;
     }
-    private void RemoveBeing()
+    private void RemoveBeing(Being being)
     {
-        if (beingsCount <= 0) { return; } // we can't remove a being if there are none
-
         beingsCount--;
-        refresh();
+        string type = being.GetType().Name;
+        if (beingsTypesCount.ContainsKey(type))
+        {
+            beingsTypesCount[type]--;
+            if (beingsTypesCount[type] <= 0)
+            {
+                beingsTypesCount.Remove(type);
+            }
+        }
     }
 
-    // CAPABLES
-    private void AddCapable()
+    // ITEMS
+    private void AddItem(Item item)
     {
-        capablesCount++;
-        refresh();
+        itemsCount++;
+        if (item is Meat) { meatCount++; }
+        if (item.Grabbed) { grabbedItemsCount++; }
+
+        item.OnGrabbed += (it, holder) => { grabbedItemsCount++; };
+        item.OnDropped += (it) => { grabbedItemsCount--; };
     }
-    private void RemoveCapable()
+    private void RemoveItem(Item item)
     {
-        if (capablesCount <= 0) { return; } // we can't remove a being if there are none
-
-        capablesCount--;
-        refresh();
+        itemsCount--;
+        if (item is Meat) { meatCount--; }
+        if (item.Grabbed) { grabbedItemsCount--; }
     }
 
-    // REFRESH TEXT
-    private void refresh()
+    // DEBUGGABLE
+    public string GetDebugText()
     {
-        string text = "E-N-T-I-T-I-E-S";
-        text += "\n" + (beingsCount > 0 ? beingsCount : "no") + " entities in the world";
-        text += "\n" + (capablesCount > 0 ? capablesCount : "no") + " objects in the world";
-
-        debug_text.text = text;
+        string text = "capables : " + capablesCount + "\n";
+        text += "\nitems : " + itemsCount + "\n";
+        text += ">>> grabbed items : " + grabbedItemsCount + "\n";
+        text += ">>> meat : " + meatCount + "\n";
+        text += "\nbeings : " + beingsCount + "\n";
+        foreach (KeyValuePair<string, int> entry in beingsTypesCount)
+        {
+            text += ">>> " + entry.Key.ToLower() + " : " + entry.Value + "\n";
+        }
+        return text;
     }
 }

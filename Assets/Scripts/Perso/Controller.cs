@@ -196,6 +196,9 @@ public class Controller : Singleton<Controller>
         }
 
         if (log) { Debug.Log("(Controller) " + name + " is now controlling " + capa.name); }
+
+        // on informe le debug manager qu'on controle un nouveau capable
+        DebugManager.Instance.AddDebuggable(capa, "controller");
     }
     private void refresh_skin_based_parameters(string skin)
     {

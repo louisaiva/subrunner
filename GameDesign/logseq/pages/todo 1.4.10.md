@@ -30,7 +30,7 @@
 - DONE mettre l'exploit selection mode sur automatique par défaut (mettre dans le start)
 - DONE déplacer le KF de **RT** en haut à droite à côté du #UI_ExploitSelectionInfo
 - DONE faire que les éléments d' #ui_hacking ne s'affichent que quand on a un #Device !!
--
+- DONE quand on recup un item ça le met direct dans les shorcuts si on en a de la même ref
 -
 - TODO rework le #UI_RunningHacksViewer pour combiner les hacks en cours du même exploit & même statut !
 -
