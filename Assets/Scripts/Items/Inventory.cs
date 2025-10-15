@@ -284,6 +284,15 @@ public class Inventory : MonoBehaviour
         }
         return items;
     }
+    public Device GetDeviceItem()
+    {
+        // we check if one of our items is a device
+        foreach (Item item in Items)
+        {
+            if (item is Device) { return item as Device; }
+        }
+        return null;
+    }
 
     // UI MANAGEMENT
     public void RemoveUI(UI_Inventory ui_inventory)

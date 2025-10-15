@@ -12,11 +12,9 @@ public class UI_Pool : MonoBehaviour
     public string Reference = "pool";
     public bool Showed = false;
     public bool Stacked = false; // if true the pool is stacked below another one
-    [SerializeField] protected bool in_transition = false;
 
     [Header("Transition parameters")]
     public PoolTransitionSettings TransitionSettings = PoolTransitionSettings.InGameDefault;
-    public virtual bool Available => !in_transition;
     protected Coroutine current_transition = null;
 
 
@@ -31,7 +29,6 @@ public class UI_Pool : MonoBehaviour
     [Header("Stacked UI Elements")]
     [SerializeField] protected List<GameObject> stacked_elements = new List<GameObject>(); // elements that will stay showed when stacking a pool on top of this pool
     // stacked elements must also be in ui_elements
-    // public List<GameObject> StackedElements => stacked_elements;
 
     [Header("Logs")]
     [SerializeField] protected bool log = false;

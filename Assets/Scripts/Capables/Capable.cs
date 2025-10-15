@@ -73,9 +73,9 @@ public class Capable : MonoBehaviour, Debuggable
             // or a connectable item
             else if (Inventory != null)
             {
-                // checks if one of our items is a laptop
-                Laptop laptop = Inventory.GetItem<Laptop>();
-                if (laptop != null) { return laptop.GetCapacity<ConnectCapacity>(); }
+                // checks if one of our items is a device
+                Device device = Inventory.GetDeviceItem();
+                if (device != null) { return device.Connector; }
             }
             
             return null;

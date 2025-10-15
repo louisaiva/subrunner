@@ -4,9 +4,9 @@ using System.Collections;
 
 public class UI_Hacking : UI_Pool
 {
-    public bool log_enabling = false;
+    // public bool log_enabling = false;
 
-    public override bool Available
+    /* public override bool Available
     {
         get
         {
@@ -15,11 +15,32 @@ public class UI_Hacking : UI_Pool
             if (UI_LaptopItemSlot.Instance == null || !UI_LaptopItemSlot.Instance.HasLaptop) { return false; }
             return true;
         }
-    }
+    } */
 
     // [Header("Transition parameters")]
     // public float final_timescale = 0.5f;
     // public float bg_final_alpha = 0.5f;
+
+    // START
+    private void Start()
+    {
+        // on met le callback de pour afficher ui_hacking
+        Perso.Instance.OnDeviceChanged += HandlePersoDeviceChanged;
+    }
+
+    // ON PERSO DEVICE CHANGED
+    private void HandlePersoDeviceChanged(Device new_device)
+    {
+        if (new_device == null)
+        {
+            // on cache hacking
+            UI_Manager.Instance.UnstackFromHUD("hacking");
+            return;
+        }
+
+        // on affiche hacking
+        UI_Manager.Instance.StackOnHUD("hacking");
+    }
 
 
     // SHOW / HIDE
@@ -59,7 +80,7 @@ public class UI_Hacking : UI_Pool
 
 
     // ENABLING
-    protected override IEnumerator enable_coroutine()
+    /* protected override IEnumerator enable_coroutine()
     {
         // we enable HackableNavigator
         Controller.Instance.HackableNavigator.Enable();
@@ -70,6 +91,6 @@ public class UI_Hacking : UI_Pool
         // we disable navigator
         Controller.Instance.HackableNavigator.Disable();
         yield break;
-    }
+    } */
 
 }

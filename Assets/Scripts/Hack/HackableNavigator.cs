@@ -2,14 +2,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 /// <summary>
-/// this component must be a direct child of the perso (and ONLY the perso)
-/// this is used by the UI_Hacking pool to navigate through the hackables in order to select the target to hack
-/// it has a larger collider radius than the laptop's one because we want to hover out-of-range hackables
+/// this component must be a direct child of the controller (and ONLY the controller)
+/// this is used by the UI_Hacking pool to navigate through the vulnerables in order to select the target to hack
+/// it has a larger collider radius than the device's one because we want to hover out-of-range vulnerables
 /// and warn the player it is not hackable rn in the UI_Hacking
 /// also handles hover hackray & target hackable material
 /// </summary>
 public class HackableNavigator : MonoBehaviour
 {
+
+    public bool IsSelecting = false;
 
     [Header("Hackables selection")]
     [SerializeField] private GameObject targeted_connector;
@@ -30,10 +32,10 @@ public class HackableNavigator : MonoBehaviour
 
 
     [Header("Components")]
-    public HackCapacity hacker => Perso.Instance.Laptop?.Hacker;
+    public HackCapacity hacker => Perso.Instance.Device?.Hacker;
     private ConnectCapacity connector => Controller.Instance.Capable.Connector;
-    private Laptop laptop => hacker.capable as Laptop;
-    public ConnectionTree Tree => laptop?.Connector.Tree;
+    private Device device => hacker.capable as Device;
+    public ConnectionTree Tree => device?.Connector.Tree;
     [SerializeField] private ConnectCapacity cursor;
 
     [Header("Log")]
@@ -43,26 +45,29 @@ public class HackableNavigator : MonoBehaviour
 
 
     // START
-    private void Start()
+    /* private void Start()
     {
-        // UI_LaptopItemSlot.Instance.OnItemChanged += ctx => OnLaptopChanged(ctx.Count > 0 ? ctx[0] as Laptop : null);
+        // UI_LaptopItemSlot.Instance.OnItemChanged += ctx => OnLaptopChanged(ctx.Count > 0 ? ctx[0] as Device : null);
 
         // we get the navigation action & create the callbacks
-        navigationAction = InputManager.Instance.GetAction(navigationInput);
-        navigationCallback = ctx => HandleHackNavigationInput(ctx.ReadValue<Vector2>());
+        // navigationAction = InputManager.Instance.GetAction(navigationInput);
+        // navigationCallback = ctx => HandleHackNavigationInput(ctx.ReadValue<Vector2>());
 
         if (log_enabling) { Debug.Log("(VulnerableNavigator) started & callbacks created"); }
-    }
+    } */
 
     private void OnDestroy()
     {
         Disable();
-        // UI_LaptopItemSlot.Instance.OnItemChanged -= ctx => OnLaptopChanged(ctx.Count > 0 ? ctx[0] as Laptop : null);
+        // UI_LaptopItemSlot.Instance.OnItemChanged -= ctx => OnLaptopChanged(ctx.Count > 0 ? ctx[0] as Device : null);
     }
 
     // UPDATE
     private void Update()
     {
+        // on vérifie qu'on est en mode sélection
+        if (!IsSelecting) { return; }
+
         // on récupère le hackable
         if (targeted_connector == null || connector == null || hover_hackray == null) { return; }
         if (CurrentVulnerable == null) { unselect_target(); return; } // on vérifie si le hackable est toujours valide
@@ -92,7 +97,7 @@ public class HackableNavigator : MonoBehaviour
         }
 
         // check if we have the required cores
-        if (!(hacker.capable as Laptop).Processor.HasFreeCores(exploit.cores_cost))
+        if (!(hacker.capable as Device).Processor.HasFreeCores(exploit.cores_cost))
         {
             hover_hackray.SetColor(no_cores_hackray_color);
             return logg + "(no cores)";
@@ -150,6 +155,8 @@ public class HackableNavigator : MonoBehaviour
     // ENABLE / DISABLE
     public void Enable()
     {
+        if (IsSelecting) { return; }
+
         // we check if we have a connector
         if (connector == null)
         {
@@ -158,7 +165,7 @@ public class HackableNavigator : MonoBehaviour
         }
 
         // we activate the callbacks
-        navigationAction.performed += navigationCallback;
+        // navigationAction.performed += navigationCallback;
 
         // we update the hackray
         if (hover_hackray == null)
@@ -170,7 +177,7 @@ public class HackableNavigator : MonoBehaviour
         }
         hover_hackray.gameObject.SetActive(false);
         hover_hackray.SetColor(hackray_color);
-        // hover_hackray.SetLaptopAndTarget(laptop, cursor);
+        // hover_hackray.SetLaptopAndTarget(device, cursor);
         hover_hackray.SetConnectors(connector, cursor);
 
         // we activate the cursor
@@ -178,6 +185,7 @@ public class HackableNavigator : MonoBehaviour
 
 
         if (log_enabling) { Debug.Log("(VulnerableNavigator) enabled & callbacks set"); }
+        IsSelecting = true;
 
         // we select the last hackable if we still have some
         if (targeted_connector == null || hacker == null) { return; }
@@ -187,7 +195,7 @@ public class HackableNavigator : MonoBehaviour
     {
         // we deactivate the callbacks
         if (log_enabling) Debug.Log("(VulnerableNavigator) about to remove navigation callback");
-        if (navigationAction != null) { navigationAction.performed -= navigationCallback; }
+        // if (navigationAction != null) { navigationAction.performed -= navigationCallback; }
         if (log_enabling) Debug.Log("(VulnerableNavigator) removed navigation callback");
 
         unselect_target();
@@ -197,31 +205,32 @@ public class HackableNavigator : MonoBehaviour
         cursor.gameObject.SetActive(false);
 
         if (log_enabling) { Debug.Log("(VulnerableNavigator) disabled & callbacks removed"); }
+        IsSelecting = false;
     }
 
     // ON LAPTOP CHANGED
-    /* private void OnLaptopChanged(Laptop new_laptop)
+    /* private void OnLaptopChanged(Device new_laptop)
     {
         if (new_laptop == null)
         {
             unselect_target();
             hacker = null;
             connector = null;
-            if (laptop != null) { (laptop.Inventory as LaptopInventory).OnModuleChanged -= OnLaptopModuleChanged; }
-            laptop = null;
+            if (device != null) { (device.Inventory as LaptopInventory).OnModuleChanged -= OnLaptopModuleChanged; }
+            device = null;
             return;
         }
 
-        // we assign the hacker as the new laptop hack capacity
-        laptop = new_laptop;
-        (laptop.Inventory as LaptopInventory).OnModuleChanged += OnLaptopModuleChanged;
+        // we assign the hacker as the new device hack capacity
+        device = new_laptop;
+        (device.Inventory as LaptopInventory).OnModuleChanged += OnLaptopModuleChanged;
         hacker = new_laptop.GetCapacity<HackCapacity>();
         // connector = new_laptop.GetCapacity<ConnectCapacity>();
     } */
     /* private void OnLaptopModuleChanged(Item item)
     {
-        hacker = laptop.GetCapacity<HackCapacity>();
-        connector = laptop.GetCapacity<ConnectCapacity>();
+        hacker = device.GetCapacity<HackCapacity>();
+        connector = device.GetCapacity<ConnectCapacity>();
     } */
     /* public void SetConnector(ConnectCapacity new_connector)
     {
@@ -229,10 +238,10 @@ public class HackableNavigator : MonoBehaviour
         // hacker.SetConnector(new_connector);
     } */
 
-    [Header("Inputs")]
-    [SerializeField] private InputActionReference navigationInput;
-    private InputAction navigationAction;
-    private event System.Action<InputAction.CallbackContext> navigationCallback;
+    // [Header("Inputs")]
+    // [SerializeField] private InputActionReference navigationInput;
+    // private InputAction navigationAction;
+    // private event System.Action<InputAction.CallbackContext> navigationCallback;
 
 
     // TARGET SELECTION HANDLE INPUT

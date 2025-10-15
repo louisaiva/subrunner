@@ -180,7 +180,6 @@ public class Controller : Singleton<Controller>
         perso_quick_inventory.Refresh();
 
         // on regarde si le capable est un device
-        // ConnectCapacity connector = capa.Connector;
         if (capa is Device device)
         {
             // on refresh le hackable navigator pour qu'il ait une nouvelle ConnectCapacity si jamais le capable a un device

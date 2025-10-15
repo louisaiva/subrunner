@@ -12,11 +12,11 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
     [SerializeField] private List<UI_CoreInfo> core_infos = new List<UI_CoreInfo>();
 
     [Header("ProcessCapacity")]
-    [SerializeField] private UI_LaptopItemSlot laptop_item_slot;
+    // [SerializeField] private UI_LaptopItemSlot laptop_item_slot;
     [SerializeField] private ProcessCapacity processor;
 
     [Header("Components")]
-    [SerializeField] private Laptop laptop;
+    [SerializeField] private Device device;
     [SerializeField] private UI_Resizer resizer;
     [SerializeField] private TextMeshProUGUI title_text;
     [SerializeField] private Image no_cores_image;
@@ -27,41 +27,35 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
     // INIT AWAKE
     public void InitAwake()
     {
-        if (laptop_item_slot == null)
-        {
-            Debug.LogError("(UI_RunningCoresViewer) laptop_item_slot is not assigned! Please assign it in the inspector.");
-            return;
-        }
-
-        laptop_item_slot.OnItemChanged += HandleLaptopChanged;
+        GameObject.Find("/perso").GetComponent<Perso>().OnDeviceChanged += HandleDeviceChanged;
         resizer.Resize(0);
         update_title();
     }
 
     // LAPTOP
-    private void HandleLaptopChanged(List<Item> items)
+    private void HandleDeviceChanged(Device new_device)
     {
-        // we remove old laptop callback
-        if (laptop != null)
+        // we remove old device callback
+        if (device != null)
         {
             if (processor != null) { processor.OnCoresNumberChanged -= update_cores_count; }
         }
 
         // if the next is null then we null everything
-        if (items == null || items.Count == 0 || !(items[0] is Laptop))
+        if (new_device == null)
         {
             processor = null;
-            laptop = null;
+            device = null;
             clear_core_infos();
             return;
         }
 
-        // otherwise we have a new laptop, we get the cpu & register callback
-        laptop = items[0] as Laptop;
-        processor = laptop.GetCapacity<ProcessCapacity>();
+        // otherwise we have a new device, we get the cpu & register callback
+        device = new_device;
+        processor = device.Processor;
         if (processor == null)
         {
-            if (log) { Debug.LogWarning("(UI_RunningHacksViewer) No ProcessCapacity found in the laptop."); }
+            if (log) { Debug.LogWarning("(UI_RunningHacksViewer) No ProcessCapacity found in the device."); }
             return;
         }
         processor.OnCoresNumberChanged += update_cores_count;
@@ -123,7 +117,7 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
     // TITLE
     private void update_title(int cores_count = 0)
     {
-        if (laptop == null || cores_count == 0)
+        if (device == null || cores_count == 0)
         {
             title_text.text = "no cores";
             no_cores_image.gameObject.SetActive(true);

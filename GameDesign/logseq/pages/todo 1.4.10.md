@@ -12,8 +12,14 @@
 	  :LOGBOOK:
 	  CLOCK: [2025-10-03 Fri 21:23:06]--[2025-10-08 Wed 01:39:36] =>  100:16:30
 	  :END:
-	- TODO faire que l'UI s'affiche correctement quand il faut !
-	- TODO régler bug du #UI_Navigator qui ne desactive pas le #UI_Device ce qui empeche de prendre des bails dans les coffres aprés
+	- DONE faire que l'UI s'affiche correctement quand il faut !
+	  :LOGBOOK:
+	  CLOCK: [2025-10-15 Wed 19:41:31]--[2025-10-15 Wed 19:41:33] =>  00:00:02
+	  :END:
+	- DONE régler bug du #UI_Navigator qui ne desactive pas le #UI_Device ce qui empeche de prendre des bails dans les coffres aprés
+	  :LOGBOOK:
+	  CLOCK: [2025-10-15 Wed 19:41:32]--[2025-10-15 Wed 19:41:33] =>  00:00:01
+	  :END:
 	-
 - DONE *bug* **ui_endless_drop** sur le #UI_Navigator
   :LOGBOOK:
@@ -45,3 +51,6 @@
   CLOCK: [2025-10-07 Tue 14:06:15]
   CLOCK: [2025-10-07 Tue 14:06:18]--[2025-10-07 Tue 18:14:40] =>  04:08:22
   :END:
+-
+-
+- TODO mettre à jour les hud_shortcuts en fonction du #Capable du #Controller (les cacher si c un device)

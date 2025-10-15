@@ -5,11 +5,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static PlayerInputActions;
 
-public class Perso : Being, Hacker
+public class Perso : Being, LaptopHacker
 {
     public static int deaths = 0; // nombre de morts du perso
     public static Perso Instance { get; private set; }
-    public override ConnectCapacity Connector => Laptop?.Connector;
+    public override ConnectCapacity Connector => Device?.Connector;
 
     [Header("PERSO")]
     // exploits (xp)
@@ -18,7 +18,7 @@ public class Perso : Being, Hacker
     public int total_xp = 0;
     public int xp_to_next_level = 100;
 
-    private GameObject floating_text_prefab;
+    // private GameObject floating_text_prefab;
     private GameObject cam;
 
     [Header("SKILLS")]
@@ -42,14 +42,30 @@ public class Perso : Being, Hacker
         }
     }
     private ItemManager _itemManager;
+
+
+    [Header("Devices")]
+    public Laptop _laptop = null; // laptop item in our inventory on the "laptop" slot
     public Laptop Laptop
     {
-        get
+        get { return _laptop; }
+        set
         {
-            if (ItemManager == null) { return null; }
-            Laptop laptop = ItemManager.GetLaptop();
-            if (laptop == null) { return null; }
-            return laptop;
+            if (_laptop == value) { return; }
+            _laptop = value;
+            OnDeviceChanged?.Invoke(Device);
+        }
+    }
+    private Computer _computer = null; // computer we are currently interacting with (null if none)
+    public Computer Computer
+    {
+        get { return _computer; }
+        set
+        {
+            if (_computer == value) { return; }
+            
+            _computer = value;
+            OnDeviceChanged?.Invoke(Device);
         }
     }
     public Device Device
@@ -57,11 +73,13 @@ public class Perso : Being, Hacker
         get
         {
             // if we are interacting with a computer we go with the computer
+            if (_computer != null) { return _computer; }
 
             // if we have a laptop we return the laptop
             return Laptop;
         }
     }
+    public Action<Device> OnDeviceChanged; // callback pour quand le device du perso change
 
 
 
@@ -93,11 +111,14 @@ public class Perso : Being, Hacker
         // ItemManager = GameObject.Find("/utils/ItemManager").GetComponent<ItemManager>();
 
         //
-        floating_text_prefab = Resources.Load("prefabs/ui/floating_text") as GameObject;
+        // floating_text_prefab = Resources.Load("prefabs/ui/floating_text") as GameObject;
 
         // on s'enregistre en tant que trigger dans l'XPProvider particle system
         var trigger_particle_module = XPProvider.Instance.GetComponent<ParticleSystem>().trigger;
         trigger_particle_module.SetCollider(0, body_collider);
+
+        // met le callback de device pour le laptop
+        UI_LaptopItemSlot.Instance.OnItemChanged += (List<Item> items) => Laptop = items.Count > 0 ? items[0] as Laptop : null;
     }
 
 

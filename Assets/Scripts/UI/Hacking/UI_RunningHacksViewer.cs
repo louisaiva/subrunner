@@ -6,18 +6,17 @@ using UnityEngine.UI;
 
 public class UI_RunningHacksViewer : MonoBehaviour, Awakable
 {
-
     [Header("HackInfo")]
     [SerializeField] private GameObject hack_info_prefab;
     [SerializeField] private Transform hack_info_container;
     [SerializeField] private List<UI_HackInfo> hack_infos = new List<UI_HackInfo>();
 
     [Header("HackCapacity")]
-    [SerializeField] private UI_LaptopItemSlot laptop_item_slot;
+    // [SerializeField] private UI_LaptopItemSlot laptop_item_slot;
     [SerializeField] private HackCapacity hacker;
 
     [Header("Components")]
-    [SerializeField] private Laptop laptop;
+    [SerializeField] private Device device;
     [SerializeField] private TextMeshProUGUI title_text;
 
     [Header("Logs")]
@@ -26,18 +25,13 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
     // INIT AWAKE
     public void InitAwake()
     {
-        if (laptop_item_slot == null)
-        {
-            Debug.LogError("(UI_RunningHacksViewer) laptop_item_slot is not assigned! Please assign it in the inspector.");
-            return;
-        }
         if (title_text == null)
         {
             Debug.LogError("(UI_RunningHacksViewer) title_text is not assigned! Please assign it in the inspector.");
             return;
         }
 
-        laptop_item_slot.OnItemChanged += HandleLaptopChanged;
+        GameObject.Find("/perso").GetComponent<Perso>().OnDeviceChanged += HandleDeviceChanged;
     }
     private void Start()
     {
@@ -45,29 +39,29 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
     }
 
     // LAPTOP
-    private void HandleLaptopChanged(List<Item> items)
+    private void HandleDeviceChanged(Device new_device)
     {
-        // we remove old laptop callbacks
-        if (laptop != null)
+        // we remove old device callbacks
+        if (device != null)
         {
             if (hacker != null) { hacker.OnExploitRun -= createHackInfo; }
         }
 
         // if the next is null then we null everything
-        if (items == null || items.Count == 0 || !(items[0] is Laptop))
+        if (new_device == null)
         {
             hacker = null;
-            laptop = null;
+            device = null;
             update_title();
             return;
         }
 
-        // otherwise we have a new laptop, we get components and register callbacks
-        laptop = items[0] as Laptop;
-        hacker = laptop.Hacker;
+        // otherwise we have a new device, we get components and register callbacks
+        device = new_device;
+        hacker = device.Hacker;
         if (hacker == null)
         {
-            if (log) { Debug.LogWarning("(UI_RunningHacksViewer) No HackCapacity found in the laptop."); }
+            if (log) { Debug.LogWarning("(UI_RunningHacksViewer) No HackCapacity found in the device."); }
             update_title();
             return;
         }
@@ -75,7 +69,7 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
         update_title();
         hacker.OnExploitRun += createHackInfo;
     }
-    
+
     // CREATE HACK INFO
     private void createHackInfo(Hack hack)
     {
@@ -111,9 +105,9 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
     }
     private void update_title()
     {
-        if (laptop == null)
+        if (device == null)
         {
-            title_text.text = "no laptop";
+            title_text.text = "no device";
             return;
         }
 

@@ -56,7 +56,7 @@ public abstract class StaticDevice : Capable, Device
         // we call the event
         OnDisksChanged?.Invoke(disks);
 
-        if (debug) { Debug.Log($"(Laptop) {name} HDD changed. New disks count: {disks.Count}"); }
+        if (debug) { Debug.Log($"(StaticDevice) {name} HDD changed. New disks count: {disks.Count}"); }
     }
     public event System.Action<List<StoreCapacity>> OnDisksChanged = delegate { };
 
@@ -105,7 +105,7 @@ public abstract class StaticDevice : Capable, Device
         List<Key> keys = get_keys();
         if (log_keys)
         {
-            string s = $"(Laptop) {name} checking if has key for {target.Key}";
+            string s = $"(StaticDevice) {name} checking if has key for {target.Key}";
             foreach (Key key in keys)
             {
                 s += $"\n - {key.data}";

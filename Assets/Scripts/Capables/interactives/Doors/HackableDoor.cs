@@ -31,11 +31,11 @@ public class HackableDoor : Door, Lockable
     {
         if (!Locked) { base.OnInteract(interactor); return; }
 
-        // we are locked, we check if interactor has a laptop with the right key (instant hack)
-        if (interactor is Hacker hacker)
+        // we are locked, we check if interactor has a device with the right key (instant hack)
+        if (interactor is LaptopHacker hacker)
         {
-            Laptop laptop = hacker.Laptop;
-            if (laptop != null && laptop.HasKeyFor(this))
+            Device device = hacker.Laptop;
+            if (device != null && device.HasKeyFor(this))
             {
                 Unlock();
                 base.OnInteract(interactor);

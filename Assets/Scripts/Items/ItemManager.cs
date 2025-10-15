@@ -63,7 +63,7 @@ public class ItemManager : MonoBehaviour
     }
 
     // ITEM GETTERS
-    public Laptop GetLaptop()
+    /* public Laptop GetLaptop()
     {
         if (laptop_slot == null || !laptop_slot.HasLaptop)
         {
@@ -71,7 +71,7 @@ public class ItemManager : MonoBehaviour
             return null;
         }
         return laptop_slot.Laptop;
-    }
+    } */
     public Weapon GetWeapon()
     {
         if (weapon_slot == null || weapon_slot.Item == null || !(weapon_slot.Item is Weapon))
