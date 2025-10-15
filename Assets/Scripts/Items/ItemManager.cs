@@ -63,15 +63,6 @@ public class ItemManager : MonoBehaviour
     }
 
     // ITEM GETTERS
-    /* public Laptop GetLaptop()
-    {
-        if (laptop_slot == null || !laptop_slot.HasLaptop)
-        {
-            if (log) { Debug.LogWarning("(ItemManager) No laptop found in the laptop slot."); }
-            return null;
-        }
-        return laptop_slot.Laptop;
-    } */
     public Weapon GetWeapon()
     {
         if (weapon_slot == null || weapon_slot.Item == null || !(weapon_slot.Item is Weapon))
@@ -148,6 +139,8 @@ public class ItemManager : MonoBehaviour
     }
     private void update_hud_renderers(List<Item> items = null)
     {
+        if (log) { Debug.Log("(ItemManager) Updating HUD renderers... , laptop_slot item is " + (laptop_slot.Item != null ? laptop_slot.Item.name : "null")); }
+
         // update LAPTOP
         if (laptop_slot.Item != null)
         {

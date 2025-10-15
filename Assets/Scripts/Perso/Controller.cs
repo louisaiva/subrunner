@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+#pragma warning disable 4014;
 
 public class Controller : Singleton<Controller>
 {
@@ -30,6 +31,8 @@ public class Controller : Singleton<Controller>
 
     [Header("UI Statics elements")]
     [SerializeField] private UI_Inventory perso_quick_inventory;
+    [SerializeField] private GameObject life_bar;
+    [SerializeField] private GameObject shortcuts;
 
     [Header("Log")]
     [SerializeField] private bool log = false;
@@ -38,7 +41,10 @@ public class Controller : Singleton<Controller>
     private void Start()
     {
         // on récupère les composants
-        perso_quick_inventory = UI_Manager.Instance.GetPool("hud").transform.Find("perso_quick_inventory").GetComponent<UI_Inventory>();
+        UI_Pool hud = UI_Manager.Instance.GetPool("hud");
+        perso_quick_inventory = hud.transform.Find("perso_quick_inventory").GetComponent<UI_Inventory>();
+        life_bar = hud.transform.Find("life_bar").gameObject;
+        shortcuts = hud.transform.Find("shortcuts_if").gameObject;
 
         // initialise le callback
         skin_changed_callback = (string skin) => { refresh_skin_based_parameters(skin); };
@@ -136,6 +142,15 @@ public class Controller : Singleton<Controller>
         capa?.Inventory?.RemoveUI(perso_quick_inventory);
         perso_quick_inventory.Inventory = null;
 
+
+        // on cache l'hp bar & shortcuts seulement si c'est le perso
+        UI_HUD hud = UI_Manager.Instance.GetPool("hud").GetComponent<UI_HUD>();
+        if (capa is Perso)
+        {
+            hud.QuitPool(life_bar); life_bar.GetComponent<Transitioner>().Hide();
+            hud.QuitPool(shortcuts); shortcuts.GetComponent<Transitioner>().Hide();
+        }
+
         // on déconnecte la connect capacity
         if (capa.HasCapacity<ConnectCapacity>())
         {
@@ -178,6 +193,14 @@ public class Controller : Singleton<Controller>
         // on met le perso_quick_inventory sur la target si elle a un inventaire
         capa?.Inventory?.AddUI(perso_quick_inventory);
         perso_quick_inventory.Refresh();
+
+        // on affiche l'hp bar & shortcuts seulement si c'est le perso
+        UI_HUD hud = UI_Manager.Instance.GetPool("hud").GetComponent<UI_HUD>();
+        if (capa is Perso)
+        {
+            hud.RegisterToPool(life_bar, is_stacked: true);
+            hud.RegisterToPool(shortcuts, is_stacked: true);
+        }
 
         // on regarde si le capable est un device
         if (capa is Device device)
