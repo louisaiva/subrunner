@@ -55,6 +55,7 @@ public class Movable : Capable
     }
     private void OnDisable()
     {
+        if (MovableEngine.Instance == null) { return; }
         MovableEngine.Instance.Unregister(this);
     }
 

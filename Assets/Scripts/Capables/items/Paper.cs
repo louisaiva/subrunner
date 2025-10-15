@@ -16,7 +16,7 @@ public class Paper : Item, Usable
 
         // we show the ui_paper pool
         (UI_Manager.Instance.GetPool("paper") as UI_Paper).SetPaper(this);
-        UI_Manager.Instance.SwitchTo("paper");
+        UI_Manager.Instance.StackPool("paper");
     }
 
     // on grabbed

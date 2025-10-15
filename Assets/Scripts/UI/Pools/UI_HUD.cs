@@ -36,8 +36,8 @@ public class UI_HUD : UI_Pool
         InputManager.Instance.OnPersoInputsToggled += verify_right_joy_is_disabled;
     }
 
-    // SHOW / HIDE
-    protected override IEnumerator show_coroutine(List<GameObject> dont_show = null)
+    // ENABLING
+    protected override IEnumerator enable_coroutine()
     {
         // on affiche le perso_quick_inventory
         if (ui_chest != null)
@@ -45,20 +45,18 @@ public class UI_HUD : UI_Pool
             ui_chest.Show();
             perso_quick_inventory.Show();
         }
-
-        // attend que la pool s'affiche
-        yield return base.show_coroutine(dont_show);
+        yield break;
     }
-    protected override IEnumerator hide_coroutine(List<GameObject> dont_hide = null)
+    protected override IEnumerator disable_coroutine()
     {
         if (ui_chest != null)
         {
             perso_quick_inventory.Hide();
             ui_chest.Hide();
         }
-
-        yield return base.hide_coroutine(dont_hide);
+        yield break;
     }
+
 
     // REGISTER CHEST
     public void RegisterChest(UI_Inventory ui_chest)

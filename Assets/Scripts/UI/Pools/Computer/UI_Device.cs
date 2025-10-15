@@ -53,17 +53,20 @@ public class UI_Device : UI_Pool, I_UI_Slottable
     }
     public Device GetDevice() { return device; }
 
-    // POOL
-    protected override IEnumerator show_coroutine(List<GameObject> dont_show = null)
+    // ENABLING
+    protected override IEnumerator enable_coroutine()
     {
-        yield return base.show_coroutine(dont_show);
+        // on active le navigator
         UI_XboxNavigator.Instance.Enable(this);
+        yield break;
     }
-    protected override IEnumerator hide_coroutine(List<GameObject> dont_hide = null)
+    protected override IEnumerator disable_coroutine()
     {
+        // on désactive le navigator
         UI_XboxNavigator.Instance.Disable(this);
-        yield return base.hide_coroutine(dont_hide);
+        yield break;
     }
+
 
     // SLOTTABLE
     public List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator)

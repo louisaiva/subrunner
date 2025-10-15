@@ -26,11 +26,9 @@ public class UI_LevelUpMenu : UI_Pool, I_UI_Slottable
     public Description SkillNameDescriptor;
     
 
-    // POOL
-    protected override IEnumerator show_coroutine(List<GameObject> dont_show = null)
+    // ENABLING
+    protected override IEnumerator enable_coroutine()
     {
-        yield return base.show_coroutine(dont_show);
-
         // update the level text
         level_text.text = "LEVEL " + GameObject.Find("/perso").GetComponent<Perso>().level.ToString();
 
@@ -39,12 +37,11 @@ public class UI_LevelUpMenu : UI_Pool, I_UI_Slottable
         // on active le navigator
         UI_XboxNavigator.Instance.Enable(this);
     }
-    protected override IEnumerator hide_coroutine(List<GameObject> dont_hide = null)
+    protected override IEnumerator disable_coroutine()
     {
         // on désactive le navigator
         UI_XboxNavigator.Instance.Disable(this);
-
-        yield return base.hide_coroutine(dont_hide);
+        yield break;
     }
 
     // SLOTTABLE

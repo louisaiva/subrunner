@@ -25,8 +25,15 @@ public class Debugger : MonoBehaviour
     void Update()
     {
         if (debuggable == null) { debug_content.text = "/!\\ no info ;-; /!\\"; return; }
-
-        debug_content.text = debug_name + debuggable.GetDebugText();
+        try
+        {
+            debug_content.text = debug_name + debuggable.GetDebugText();
+        }
+        catch
+        {
+            debuggable = null;
+            debug_content.text = "/!\\ error getting info ;-; /!\\";
+        }
     }
     
     // SET DEBUGGABLE

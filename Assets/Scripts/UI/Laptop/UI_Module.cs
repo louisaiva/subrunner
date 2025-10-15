@@ -98,7 +98,7 @@ public class UI_Module : UI_Item
             if (disk == null) { return; }
             if (log) { Debug.Log($"(UI_Module) {name} clicked, opening HDD info"); }
             UI_Manager.Instance.GetPool("hdd").gameObject.GetComponent<UI_HDD>().SetDisk(disk);
-            UI_Manager.Instance.SwitchTo("hdd");
+            UI_Manager.Instance.StackPool("hdd");
             return;
         }
     }

@@ -236,7 +236,7 @@ public class UI_Item : UI_Slot
         if (Item != null && Item is Usable usable)
         {
             usable.Use(Inventory.capable);
-            UI_Manager.Instance.SwitchTo("hud");
+            UI_Manager.Instance.SwitchToHUD();
         }
     }
     public override void OnPointerExit(PointerEventData eventData)

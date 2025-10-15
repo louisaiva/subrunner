@@ -129,6 +129,7 @@ public class Controller : Singleton<Controller>
         {
             // on enleve le device du UI_Device
             UI_Manager.Instance.GetPool("device").GetComponent<UI_Device>().ClearDevice();
+            UI_Manager.Instance.UnstackFromHUD("device");
         }
 
         // reset l'inventory
@@ -187,12 +188,7 @@ public class Controller : Singleton<Controller>
 
             // on bascule en pool UI_Device
             UI_Manager.Instance.GetPool("device").GetComponent<UI_Device>().SetDevice(device);
-            UI_Manager.Instance.SwitchTo("device");
-        }
-        else if (UI_Manager.Instance.CurrentPool == "device")
-        {
-            // on bascule en pool hud si on était sur un device et qu'on en est plus un
-            UI_Manager.Instance.SwitchTo("hud");
+            UI_Manager.Instance.StackOnHUD("device");
         }
 
         if (log) { Debug.Log("(Controller) " + name + " is now controlling " + capa.name); }

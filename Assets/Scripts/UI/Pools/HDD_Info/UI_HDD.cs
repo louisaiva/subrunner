@@ -137,20 +137,18 @@ public class UI_HDD : UI_Pool, I_UI_Slottable
         data_text.text = data;
     }
 
-    // SHOW HIDE
-    protected override IEnumerator show_coroutine(List<GameObject> dont_show = null)
+    // ENABLING
+    protected override IEnumerator enable_coroutine()
     {
-        yield return base.show_coroutine(dont_show);
-
         // on active le navigator
         UI_XboxNavigator.Instance.Enable(this);
+        yield break;
     }
-    protected override IEnumerator hide_coroutine(List<GameObject> dont_hide = null)
+    protected override IEnumerator disable_coroutine()
     {
         // on désactive le navigator
         UI_XboxNavigator.Instance.Disable(this);
-
-        yield return base.hide_coroutine(dont_hide);
+        yield break;
     }
 
     // SLOTTABLE

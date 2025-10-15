@@ -23,11 +23,11 @@ public class UI_Hacking : UI_Pool
 
 
     // SHOW / HIDE
-    protected override IEnumerator show_coroutine(List<GameObject> dont_show = null)
+    /* protected override IEnumerator show_coroutine(List<GameObject> dont_show = null,float duration_override = -1f)
     {
         if (log_enabling) { Debug.Log("(UI_Hacking) trying to show_pool"); }
 
-        yield return base.show_coroutine(dont_show);
+        yield return base.show_coroutine(dont_show, duration_override);
 
         if (log_enabling) { Debug.Log("(UI_Hacking) pool showed, trying to enable navigators"); }
 
@@ -40,7 +40,7 @@ public class UI_Hacking : UI_Pool
 
         if (log_enabling) { Debug.Log("(UI_Hacking) showing pool : navigator enabled & callbacks set"); }
     }
-    protected override IEnumerator hide_coroutine(List<GameObject> dont_hide = null)
+    protected override IEnumerator hide_coroutine(List<GameObject> dont_hide = null, float duration_override = -1f)
     {
         if (log_enabling) { Debug.Log("(UI_Hacking) trying to hide_pool"); }
 
@@ -52,8 +52,24 @@ public class UI_Hacking : UI_Pool
 
         // if (log_enabling) { Debug.Log("(UI_Hacking) navigator disabled"); }
 
-        yield return base.hide_coroutine(dont_hide);
+        yield return base.hide_coroutine(dont_hide, duration_override);
 
         if (log_enabling) { Debug.Log("(UI_Hacking) hiding pool : navigator disabled & callbacks removed"); }
+    } */
+
+
+    // ENABLING
+    protected override IEnumerator enable_coroutine()
+    {
+        // we enable HackableNavigator
+        Controller.Instance.HackableNavigator.Enable();
+        yield break;
     }
+    protected override IEnumerator disable_coroutine()
+    {
+        // we disable navigator
+        Controller.Instance.HackableNavigator.Disable();
+        yield break;
+    }
+
 }

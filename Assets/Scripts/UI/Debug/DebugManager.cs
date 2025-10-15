@@ -31,6 +31,7 @@ public class DebugManager : Singleton<DebugManager>
 
         // find all debugs in children
         debugs = debug.GetComponentsInChildren<Debugger>(includeInactive: true).ToList();
+        debugs = debugs.Where(d => d.gameObject.activeSelf).ToList(); // we get only active debugs
         foreach (Debugger d in debugs)
         {
             d.gameObject.SetActive(false); // disable all debugs at start

@@ -43,10 +43,12 @@ public class UI_GameOver : UI_Pool
         if (input > 0.5f) { return; } // we only handle the input when the value is below 0.5f
 
         // we switch to hud
-        UI_Manager.Instance.SwitchTo("hud");
+        UI_Manager.Instance.SwitchToHUD();
     }
 
-    protected override IEnumerator show_coroutine(List<GameObject> dont_show = null)
+
+    // SHOWING
+    protected override IEnumerator show_coroutine(List<GameObject> dont_show = null, float duration_override = -1f)
     {
         // we set the callbacks
         reviveAction.performed += reviveCallback;
@@ -58,9 +60,11 @@ public class UI_GameOver : UI_Pool
             oh_no_text.text += "o";
         }
 
-        yield return base.show_coroutine(dont_show);
+        yield return base.show_coroutine(dont_show, duration_override);
     }
-    protected override IEnumerator hide_coroutine(List<GameObject> dont_hide = null)
+
+    // ENABLING
+    protected override IEnumerator disable_coroutine()
     {
         // we remove the callbacks
         reviveAction.performed -= reviveCallback;
@@ -82,8 +86,7 @@ public class UI_GameOver : UI_Pool
         yield return new WaitUntil(() => instantiated);
         GameObject[] perso = instantiation.Result;
         perso[0].name = "perso";
-
-        yield return base.hide_coroutine(dont_hide);
     }
+
 
 }

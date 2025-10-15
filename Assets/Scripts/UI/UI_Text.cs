@@ -48,7 +48,7 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
     public void play()
     {
         // transform.parent.parent.GetComponent<UI_PauseMenu>().hide();
-        UI_Manager.Instance.SwitchTo("hud");
+        UI_Manager.Instance.SwitchToHUD();
     }
     public void exit()
     {

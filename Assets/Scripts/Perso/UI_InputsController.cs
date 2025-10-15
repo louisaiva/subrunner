@@ -135,7 +135,7 @@ public class UI_InputsController : InputController
     private void handle_exploit_selection_input(Vector2 direction)
     {
         // transfère l'event seulement quand on est dans l'ui pool exploit_wheel
-        if (UI_Manager.Instance.CurrentPool != "exploit_wheel") { return; }
+        if (!UI_Manager.Instance.IsStacked("exploit_wheel")) { return; }
 
         // récupère l'UI_Exploit Selector
         if (exploit_selector == null) { exploit_selector = UI_Manager.Instance.GetPool("exploit_wheel").GetComponent<UI_ExploitSelector>(); }

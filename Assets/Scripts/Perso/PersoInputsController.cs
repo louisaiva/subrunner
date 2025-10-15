@@ -244,7 +244,7 @@ public class PersoInputsController : InputController
         float input = context.ReadValue<float>();
 
         // 1 - if we are hacking we run the hack
-        if (UI_Manager.Instance.CurrentPool == "hacking")
+        if (UI_Manager.Instance.IsStacked("hacking"))
         {
             // we check if the input is > 0.5 (we down the trigger -> we run hack), or not
             if (input > 0.5f) { OnHack(); }
@@ -252,8 +252,11 @@ public class PersoInputsController : InputController
         }
 
         // 2 - if we are in the hud / device we show the exploit wheel to select the exploit
-        if (!new List<string> { "hud", "device", "exploit_wheel" }.Contains(UI_Manager.Instance.CurrentPool)) { return; }
-        ExploitNavigator.HandleExploitWheelInput(input);
+        if (UI_Manager.Instance.IsOnHUD() || UI_Manager.Instance.IsStacked("exploit_wheel"))
+        {
+            ExploitNavigator.HandleExploitWheelInput(input);
+            return;
+        }
     }
     private void OnHack()
     {
@@ -280,21 +283,30 @@ public class PersoInputsController : InputController
         // and disable it when released < 0.5
         if (input < InputManager.Instance.JOYSTICK_MIN_THRESHOLD)
         {
-            if (UI_Manager.Instance.CurrentPool == "hacking")
+            /* if (UI_Manager.Instance.CurrentPool == "hacking")
             {
                 // check if the controller is controlling a device
                 if (Controller.Instance.Capable is Device) { UI_Manager.Instance.SwitchTo("device"); }
                 else { UI_Manager.Instance.SwitchTo("hud"); }
-            }
+            } */
+            UI_Manager.Instance.UnstackFromHUD("hacking");
+            return;
+        }
+
+        // we check if we have a device
+        if (Perso.Instance.Device == null)
+        {
+            UI_Manager.Instance.UnstackFromHUD("hacking");
             return;
         }
 
         // if (log) { Debug.Log("(UI_Manager) hacking menu input received : " + input); }
 
         // we check if we can switch to hacking
-        if (new List<string> { "hud", "device" }.Contains(UI_Manager.Instance.CurrentPool) && UI_Manager.Instance.GetPool("hacking").Available)
+        /* if (new List<string> { "hud", "device" }.Contains(UI_Manager.Instance.CurrentPool) && UI_Manager.Instance.GetPool("hacking").Available)
         {
             UI_Manager.Instance.SwitchTo("hacking");
-        }
+        } */
+       UI_Manager.Instance.StackOnHUD("hacking");
     }
 }

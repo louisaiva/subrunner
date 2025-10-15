@@ -19,21 +19,19 @@ public class UI_PauseMenu : UI_Pool, I_UI_Slottable
         xbox_manager = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
     }
 
-    // SHOWING
-    protected override IEnumerator show_coroutine(List<GameObject> dont_show = null)
-    {
-        yield return base.show_coroutine(dont_show);
 
-        // on active le xbox_manager
-        xbox_manager.Enable(this);
+    // ENABLING
+    protected override IEnumerator enable_coroutine()
+    {
+        // on active le navigator
+        UI_XboxNavigator.Instance.Enable(this);
+        yield break;
     }
-    protected override IEnumerator hide_coroutine(List<GameObject> dont_hide = null)
+    protected override IEnumerator disable_coroutine()
     {
-        
-        // on désactive le xbox_manager
-        xbox_manager.Disable(this);
-
-        yield return base.hide_coroutine(dont_hide);
+        // on désactive le navigator
+        UI_XboxNavigator.Instance.Disable(this);
+        yield break;
     }
 
     // SLOTTABLE
