@@ -1,7 +1,7 @@
+#pragma warning disable 4014
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-#pragma warning disable 4014;
 
 public class Controller : Singleton<Controller>
 {
@@ -49,7 +49,12 @@ public class Controller : Singleton<Controller>
         // initialise le callback
         skin_changed_callback = (string skin) => { refresh_skin_based_parameters(skin); };
 
-        ResetCapableTarget();
+        // ResetCapableTarget();
+
+        // on controlle le capable actuel
+        stack.Clear();
+        stack.Add(Capable);
+        control(Capable);
     }
 
 

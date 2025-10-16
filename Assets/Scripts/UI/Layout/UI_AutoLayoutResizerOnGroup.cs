@@ -19,6 +19,12 @@ public class UI_AutoLayoutResizerOnGroup : MonoBehaviour
     [SerializeField] private float margin_left;
     [SerializeField] private float margin_right;
 
+    [Header("Min Size")]
+    [SerializeField] private Vector2 min_size = new Vector2(0,0);
+
+    [Header("Logs")]
+    [SerializeField] private bool log = false;
+
     // START
     private void Start()
     {
@@ -38,6 +44,17 @@ public class UI_AutoLayoutResizerOnGroup : MonoBehaviour
         // apply margins
         width += margin_left + margin_right;
         height += margin_top + margin_bottom;
+
+        // apply min size
+        if (width < min_size.x) { width = min_size.x; }
+        if (height < min_size.y) { height = min_size.y; }
+
+        // apply the size
         rect_transform.sizeDelta = new Vector2(width, height);
+
+        if (log)
+        {
+            Debug.Log($"(UI_AutoLayoutResizerOnGroup) {name} resized to {rect_transform.sizeDelta}");
+        }
     }
 }

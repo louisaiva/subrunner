@@ -116,6 +116,7 @@ public class ProcessCapacity : Capacity
     // CORES MANAGEMENT
     public int cost => program.cores_cost;
     public List<Core> provided_cores = new List<Core>();
+    public int provided_cores_count => provided_cores.Count;
 
 
 

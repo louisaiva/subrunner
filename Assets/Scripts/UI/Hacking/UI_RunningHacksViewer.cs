@@ -11,6 +11,9 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
     [SerializeField] private Transform hack_info_container;
     [SerializeField] private List<UI_HackInfo> hack_infos = new List<UI_HackInfo>();
 
+    [Header("HacksInfoWaiting")]
+    [SerializeField] private UI_HacksWaitingInfo hacks_waiting_info;
+
     [Header("HackCapacity")]
     // [SerializeField] private UI_LaptopItemSlot laptop_item_slot;
     [SerializeField] private HackCapacity hacker;
@@ -32,6 +35,7 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
         }
 
         GameObject.Find("/perso").GetComponent<Perso>().OnDeviceChanged += HandleDeviceChanged;
+        hacks_waiting_info.Init();
     }
     private void Start()
     {
@@ -85,19 +89,35 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
     // UPDATE
     private void Update()
     {
+        update_title();
+
         // update running hacks
         for (int i = 0; i < hack_infos.Count; i++)
         {
-            Hack hack = hack_infos[i].hack;
-            if (hack == null || hack_infos[i] == null) { continue; }
+            bool to_remove = false;
 
-            // check the state of the hack
-            if (hack.state == ProcessusState.Failed || hack.state == ProcessusState.Completed)
+            // checking if we need to remove the hack info
+            if (hack_infos[i] == null) { to_remove = true; }
+            else if (hack_infos[i].State == ProcessusState.Completed || hack_infos[i].State == ProcessusState.Failed) { to_remove = true; }
+
+            // if the hack is waiting we remove it from the waiting info
+            if (hack_infos[i].State == ProcessusState.Waiting)
             {
-                // we remove the hack info
-                hack_infos[i].GetComponent<Transitioner>().HideAndDestroy();
+                to_remove = true;
+
+                // preparing for hiding the hack_info
+                float duration = -99f;
+                if (hacks_waiting_info.gameObject.activeSelf == false) { duration = 0f; } // if the waiting info is not visible we hide instantly the hack_info
+                hack_infos[i].GetComponent<Transitioner>().HideAndDestroy(duration);
+                
+                // adding it to the waiting info
+                hacks_waiting_info.AddHack(hack_infos[i].hack);
+            }
+
+            // removing it if needed
+            if (to_remove)
+            {
                 hack_infos.RemoveAt(i);
-                update_title();
                 i--; // adjust index after removal
                 continue;
             }
@@ -117,12 +137,14 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
             return;
         }
 
-        if (hack_infos.Count == 0)
+        int running_hacks_count = hack_infos.Count + hacks_waiting_info.Count;
+
+        if (running_hacks_count == 0)
         {
             title_text.text = "no running hacks";
             return;
         }
 
-        title_text.text = $"{hack_infos.Count} running hacks";
+        title_text.text = $"{running_hacks_count} running hacks";
     }
 }

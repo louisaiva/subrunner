@@ -162,12 +162,25 @@ public class Transitioner : MonoBehaviour
     }
 
     // HIDE & DESTROY
-    public async Awaitable HideAndDestroy(float duration = default)
+    public async Awaitable HideAndDestroy(float duration = -99f)
     {
+        if (duration < 0f) { duration = default_duration; }
         if (log) { Debug.Log($"(Transitioner) Hiding and destroying {name} with duration {duration}"); }
+
+        // we hide the transitionner
         await Hide(duration);
-        await System.Threading.Tasks.Task.Delay(100); // wait a small time (100 ms) to ensure transition has happened
+        await Task.Delay(100); // wait a small time (100 ms) to ensure transition has happened
         Destroy(gameObject);
+    }
+    public async Awaitable HideAndDisable(float duration = -99f)
+    {
+        if (duration < 0f) { duration = default_duration; }
+        if (log) { Debug.Log($"(Transitioner) Hiding and disabling {name} with duration {duration}"); }
+
+        // we hide the transitionner
+        await Hide(duration);
+        await Task.Delay(100); // wait a small time (100 ms) to ensure transition has happened
+        gameObject.SetActive(false);
     }
 
     private void OnDestroy()

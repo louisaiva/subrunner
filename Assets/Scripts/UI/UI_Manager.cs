@@ -182,7 +182,8 @@ public class UI_Manager : Singleton<UI_Manager>
             UI_Pool stacked_pool = pool_stack[i];
             if (stacked_pool != null)
             {
-                stacked_pool.HideCoroutine(same_pool_elements, current_pool.TransitionSettings.Duration);
+                if (log_extended) { Debug.Log($"(UI_Manager) hiding stacked pool : {stacked_pool.Reference}"); }
+                stacked_pool.StartCoroutine(stacked_pool.HideCoroutine(same_pool_elements, current_pool.TransitionSettings.Duration));
             }
         }
 
@@ -196,8 +197,10 @@ public class UI_Manager : Singleton<UI_Manager>
         pool_stack.Clear();
         for (int i = 0; i < stack.Count - 1; i++)
         {
-            pool_stack.Add(stack[i]);
-            pool_stack[i].StackShowCoroutine(pool.TransitionSettings.Duration);
+            UI_Pool stacked_pool = stack[i];
+            pool_stack.Add(stacked_pool);
+            if (log_extended) { Debug.Log($"(UI_Manager) showing stacked pool : {stacked_pool.Reference}"); }
+            stacked_pool.StartCoroutine(stacked_pool.StackShowCoroutine(pool.TransitionSettings.Duration));
         }
         pool_stack.Add(pool);
 
