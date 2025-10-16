@@ -61,6 +61,7 @@ public class UI_HacksWaitingInfo : MonoBehaviour
         update_cores_display();
 
         // we hide the no hack text
+        progress.color = waiting_color;
         no_hack_text.gameObject.SetActive(false);
 
         // update hacks names
