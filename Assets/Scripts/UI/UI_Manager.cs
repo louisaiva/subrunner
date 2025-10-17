@@ -224,20 +224,26 @@ public class UI_Manager : Singleton<UI_Manager>
     }
 
     // UI POOL STACK/UNSTACK & CANCELING
-    public void StackPool(string pool_name)
+    public void StackPool(string pool_name, bool override_transition = false)
     {
         // check if we have a pool to switch to
         UI_Pool pool = GetPool(pool_name);
         if (!pool) { return; }
 
-        if (current_transition != null)
+        if (current_transition != null && !override_transition)
         {
             if (log_extended) { Debug.LogWarning($"(UI_Manager) can't stack pool : {pool.Reference} on {(current_pool != null ? current_pool.Reference : "/")} because a transition is already in progress"); }
             return;
         }
+        else if (current_transition != null && override_transition)
+        {
+            if (log) { Debug.LogWarning($"(UI_Manager) override stacking pool : {pool.Reference} /!\\ may break the last transition"); }
+            StopCoroutine(current_transition);
+            current_transition = null;
+        }
         current_transition = StartCoroutine(stack_pool_coroutine(pool));
     }
-    public void UnstackPool(string pool_name)
+    public void UnstackPool(string pool_name, bool override_transition = false)
     {
         // check if we have a pool to unstack
         UI_Pool pool = GetPool(pool_name);
@@ -255,14 +261,20 @@ public class UI_Manager : Singleton<UI_Manager>
             return;
         }
 
-        if (current_transition != null)
+        if (current_transition != null && !override_transition)
         {
             if (log_extended) { Debug.LogWarning($"(UI_Manager) can't unstack pool : {pool.Reference} from {PoolStack} because a transition is already in progress"); }
             return;
         }
+        else if (current_transition != null && override_transition)
+        {
+            if (log) { Debug.LogWarning($"(UI_Manager) override stacking pool : {pool.Reference} /!\\ may break the last transition"); }
+            StopCoroutine(current_transition);
+            current_transition = null;
+        }
         current_transition = StartCoroutine(unstack_pool_coroutine(pool));
     }
-    public void UnstackCurrentPool() => UnstackPool(current_pool.Reference);
+    public void UnstackCurrentPool(bool override_transition = false) => UnstackPool(current_pool.Reference, override_transition);
     public void CancelCurrentPool()
     {
         // check if we can cancel the pool
@@ -275,23 +287,23 @@ public class UI_Manager : Singleton<UI_Manager>
     }
 
     // HUD STACKING
-    public void StackOnHUD(string pool_name)
+    public void StackOnHUD(string pool_name, bool override_transition = false)
     {
         // we check if we are not already stacked in the hud
         if (hud_stack.Contains(pool_name)) { return; }
         hud_stack += "/" + pool_name;
 
         // we stack the pool (only if we are currently showing hud)
-        if (IsOnHUD()) { StackPool(pool_name); }
+        if (IsOnHUD()) { StackPool(pool_name, override_transition); }
     }
-    public void UnstackFromHUD(string pool_name)
+    public void UnstackFromHUD(string pool_name, bool override_transition = false)
     {
         // we check if we are stacked in the hud
         if (!hud_stack.Contains(pool_name)) { return; }
         hud_stack = string.Join("/", hud_stack.Split('/').Where(x => x != pool_name).ToArray());
 
         // we unstack the pool (only if we are currently showing hud)
-        if (IsOnHUD()) { UnstackPool(pool_name); }
+        if (IsOnHUD()) { UnstackPool(pool_name, override_transition); }
     }
 
     // UI POOL STACK/UNSTACK LOW LEVEL

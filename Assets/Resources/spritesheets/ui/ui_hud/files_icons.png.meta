@@ -1,16 +1,28 @@
 fileFormatVersion: 2
-guid: a3c8436b59d05b644bb3a860ff15fb21
+guid: 393f5d7ac896f67fcb6c10c0977c55b2
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1435974598295145745
-    second: hud_shorcuts_0
+      213: 6381828555993847406
+    second: files_icons_0
   - first:
-      213: -4919873895591213614
-    second: hud_shorcuts_1
+      213: 7556156396671500983
+    second: files_icons_1
   - first:
-      213: 7062371001233120344
-    second: hud_shorcuts_2
+      213: 544606424184807301
+    second: files_icons_2
+  - first:
+      213: -5339220898008196282
+    second: files_icons_3
+  - first:
+      213: 3028766785337900745
+    second: files_icons_4
+  - first:
+      213: -5953731930167401597
+    second: files_icons_5
+  - first:
+      213: -2836914366708175910
+    second: files_icons_6
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -119,67 +131,177 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: hud_shorcuts_0
+      name: xp_chest_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 48
-        height: 48
-      alignment: 6
-      pivot: {x: 0, y: 0}
+        y: 10
+        width: 4
+        height: 4
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0df3b0542bd605b4e820406c2e3cdc36
-      internalID: -66017978
+      spriteID: fb6228a0bf817c042ac1d2b8c937f6ee
+      internalID: 592737694
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: hud_shorcuts_1
+      name: xp_chest_1
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 0
+        width: 24
+        height: 24
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c00e03cc9c507c645a9603c8a8e41829
+      internalID: 734011502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xp_chest_2
       rect:
         serializedVersion: 2
         x: 48
         y: 0
-        width: 48
-        height: 48
-      alignment: 6
-      pivot: {x: 0, y: 0}
+        width: 24
+        height: 24
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1eb490240e3732d4489a421f7cd8897b
-      internalID: 79192206
+      spriteID: 3c6651e3045e37844ab745378d9de399
+      internalID: -880266741
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: hud_shorcuts_2
+      name: xp_chest_3
       rect:
         serializedVersion: 2
-        x: 96
+        x: 72
         y: 0
-        width: 48
-        height: 48
-      alignment: 6
-      pivot: {x: 0, y: 0}
+        width: 24
+        height: 24
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0dfec4b2a4b66304eb3ebcbfd3379c74
-      internalID: -1995273599
+      spriteID: bed8cd4408bd6f04eae1f2c1c601f4ac
+      internalID: 641565253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xp_chest_4
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 24
+        height: 24
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e998c47e0c72f34cb9cbc284b7a2e9e
+      internalID: 2116671064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: xp_chest_5
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 0
+        width: 24
+        height: 24
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc43423b89a9d924d83bd7b499573323
+      internalID: -209011607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: files_icons_0
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 10
+        width: 1
+        height: 4
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e12f53f31783fa00c98032c5be3b15f7
+      internalID: -1831270720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: files_icons_1
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 10
+        width: 2
+        height: 4
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1b146fe03ad1769a834652d04c7a602
+      internalID: 843084019
       vertices: []
       indices: 
       edges: []
@@ -198,9 +320,14 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      hud_shorcuts_0: -66017978
-      hud_shorcuts_1: 79192206
-      hud_shorcuts_2: -1995273599
+      files_icons_0: -1831270720
+      files_icons_1: 843084019
+      xp_chest_0: 592737694
+      xp_chest_1: 734011502
+      xp_chest_2: -880266741
+      xp_chest_3: 641565253
+      xp_chest_4: 2116671064
+      xp_chest_5: -209011607
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

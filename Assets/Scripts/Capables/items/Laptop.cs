@@ -79,6 +79,7 @@ public class Laptop : Item, Usable, Device
     }
 
     // FILES MANAGEMENT
+    public System.Action<File> OnFileWritten { get; set; } = delegate { };
     public bool WriteFile(File file)
     {
         // we try to write the file to the first disk that has enough space
@@ -87,6 +88,7 @@ public class Laptop : Item, Usable, Device
             if (disk.CanStore(file))
             {
                 disk.Store(file);
+                OnFileWritten?.Invoke(file);
                 return true;
             }
         }
@@ -110,6 +112,16 @@ public class Laptop : Item, Usable, Device
         exploits.Add(FileBank.Instance.Nmap);
         exploits.Add(FileBank.Instance.TypePassword);
         return exploits;
+    }
+    public List<File> GetFiles()
+    {
+        // we get all files from all disks
+        List<File> files = new List<File>();
+        foreach (StoreCapacity disk in disks)
+        {
+            files.AddRange(disk.Files);
+        }
+        return files;
     }
 
     // KEYS MANAGEMENT

@@ -62,6 +62,7 @@ public abstract class StaticDevice : Capable, Device
 
     [Header("Disks")]
     [SerializeField] private List<StoreCapacity> disks;
+    public System.Action<File> OnFileWritten { get; set; } = delegate { };
     public bool WriteFile(File file)
     {
         // we try to write the file to the first disk that has enough space
@@ -70,6 +71,7 @@ public abstract class StaticDevice : Capable, Device
             if (disk.CanStore(file))
             {
                 disk.Store(file);
+                OnFileWritten?.Invoke(file);
                 return true;
             }
         }
@@ -93,6 +95,16 @@ public abstract class StaticDevice : Capable, Device
         exploits.Add(FileBank.Instance.TypePassword);
         exploits.Add(FileBank.Instance.Nmap);
         return exploits;
+    }
+    public List<File> GetFiles()
+    {
+        // we get all files from all disks
+        List<File> files = new List<File>();
+        foreach (StoreCapacity disk in disks)
+        {
+            files.AddRange(disk.Files);
+        }
+        return files;
     }
 
     // KEYS MANAGEMENT

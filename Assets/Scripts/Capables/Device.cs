@@ -4,6 +4,9 @@ using UnityEngine.InputSystem;
 
 public interface Device
 {
+    public GameObject gameObject { get; }
+    public string name { get; }
+
     public ProcessCapacity Processor { get; }
     public ConnectCapacity Connector { get; }
     public HackCapacity Hacker { get; } // this is the os actually ...
@@ -15,8 +18,10 @@ public interface Device
 
     // FILES MANAGEMENT
     public bool WriteFile(File file);
+    public System.Action<File> OnFileWritten { get; set; }
     public List<StoreCapacity> GetDisks();
     public List<Exploit> GetExploits();
+    public List<File> GetFiles();
 
     // KEYS MANAGEMENT
     public bool HasKeyFor(Lockable target);

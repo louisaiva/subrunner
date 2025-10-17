@@ -4,29 +4,31 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_RunningHacksViewer : MonoBehaviour, Awakable
+public class UI_RunningHacksViewer : MonoBehaviour, Startable
 {
     [Header("HackInfo")]
     [SerializeField] private GameObject hack_info_prefab;
     [SerializeField] private Transform hack_info_container;
     [SerializeField] private List<UI_HackInfo> hack_infos = new List<UI_HackInfo>();
 
-    [Header("HacksInfoWaiting")]
-    [SerializeField] private UI_HacksWaitingInfo hacks_waiting_info;
+    // [Header("HacksInfoWaiting")]
 
-    [Header("HackCapacity")]
+    // [Header("HackCapacity")]
+    // private System.Action<int> update_cores_count_callback;
     // [SerializeField] private UI_LaptopItemSlot laptop_item_slot;
-    [SerializeField] private HackCapacity hacker;
+    // [SerializeField] private HackCapacity hacker;
 
     [Header("Components")]
-    [SerializeField] private Device device;
+    // [SerializeField] private Device device;
+    [SerializeField] private UI_HacksWaitingInfo hacks_waiting_info;
     [SerializeField] private TextMeshProUGUI title_text;
+
 
     [Header("Logs")]
     [SerializeField] private bool log = true;
 
-    // INIT AWAKE
-    public void InitAwake()
+    // INIT START
+    public void InitStart()
     {
         if (title_text == null)
         {
@@ -34,16 +36,16 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
             return;
         }
 
-        GameObject.Find("/perso").GetComponent<Perso>().OnDeviceChanged += HandleDeviceChanged;
+        // GameObject.Find("/perso").GetComponent<Perso>().OnDeviceGranted += HandleDeviceChanged;
         hacks_waiting_info.Init();
-    }
-    private void Start()
-    {
+
+        Perso.Instance.OnDeviceGranted += HandleDeviceGranted;
+        Perso.Instance.OnDeviceRemoved += HandleDeviceRemoved;
         update_title();
     }
 
     // LAPTOP
-    private void HandleDeviceChanged(Device new_device)
+    /* private void HandleDeviceChanged(Device new_device)
     {
         // we remove old device callbacks
         if (device != null)
@@ -56,7 +58,6 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
         {
             hacker = null;
             device = null;
-            update_title();
             return;
         }
 
@@ -72,6 +73,28 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
 
         update_title();
         hacker.OnExploitRun += createHackInfo;
+    } */
+
+    // DEVICE
+    private void HandleDeviceRemoved(Device old_device)
+    {
+        update_title();
+        if (old_device.Hacker == null) { return; }
+
+        // we remove old device callback
+        old_device.Hacker.OnExploitRun -= createHackInfo;
+    }
+    private void HandleDeviceGranted(Device new_device)
+    {
+        update_title();
+        if (new_device.Hacker == null)
+        {
+            if (log) { Debug.LogWarning("(UI_RunningHacksViewer) No HackCapacity found in the new device, can't set callback"); }
+            return;
+        }
+
+        // we register new device callback
+        new_device.Hacker.OnExploitRun += createHackInfo;
     }
 
     // CREATE HACK INFO
@@ -125,13 +148,13 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
     }
     private void update_title()
     {
-        if (device == null)
+        if (Perso.Instance.Device == null)
         {
             title_text.text = "no device";
             return;
         }
 
-        if (hacker == null)
+        if (Perso.Instance.Device.Hacker == null)
         {
             title_text.text = "no module:hack";
             return;

@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
-using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -65,6 +63,8 @@ public class Capable : MonoBehaviour, Debuggable
     // et des capacités electroniques
     public virtual ConnectCapacity Connector
     {
+        // ? réellement logique que ça soit là ça ???
+        // todo on peut pas le mettre dans Hacker/Vulnerable ou simplement utiliser Device ?
         get
         {
             // we check if we have a ConnectCapacity directly

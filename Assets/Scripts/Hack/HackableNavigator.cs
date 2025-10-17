@@ -32,10 +32,10 @@ public class HackableNavigator : MonoBehaviour
 
 
     [Header("Components")]
-    public HackCapacity hacker => Perso.Instance.Device?.Hacker;
-    private ConnectCapacity connector => Controller.Instance.Capable.Connector;
-    private Device device => hacker.capable as Device;
+    private Device device => Perso.Instance.Device;
+    public HackCapacity hacker => device?.Hacker;
     public ConnectionTree Tree => device?.Connector.Tree;
+    private ConnectCapacity connector => Controller.Instance.Capable.Connector;
     [SerializeField] private ConnectCapacity cursor;
 
     [Header("Log")]

@@ -8,6 +8,13 @@ public class FileBank : Singleton<FileBank>
     public List<File> programs = new List<File>();
     public List<File> exploits = new List<File>();
 
+    [Header("File Icons")]
+    public Sprite file_icon;
+    public Sprite key_icon;
+    public Sprite program_icon;
+    public Sprite exploit_icon;
+    public Sprite scan_icon;
+
     public Exploit Nmap => (Exploit)exploits.Find(file => file.name == "nmap");
     public FileExploit TypePassword
     {
@@ -16,6 +23,7 @@ public class FileBank : Singleton<FileBank>
             FileExploit exploit = ScriptableObject.CreateInstance<FileExploit>();
             exploit.name = "type_password";
             exploit.file = null;
+            exploit.icon = key_icon;
             exploit.cores_cost = 1;
             exploit.base_duration = 0.1f;
             exploit.security_level = 1;

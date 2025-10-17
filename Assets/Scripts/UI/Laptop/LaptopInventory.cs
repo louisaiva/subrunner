@@ -25,6 +25,9 @@ public class LaptopInventory : Inventory
     // GRAB DROP REMOVE ITEMS
     public override bool Grab(Item item, List<UI_Inventory> uis_to_ignore = null)
     {
+        // we save the laptop's files
+        List<File> old_laptop_files = (capable as Device).GetFiles();
+
         // check if we can grab the item
         if (!base.Grab(item, uis_to_ignore)) { return false; }
 
@@ -43,6 +46,15 @@ public class LaptopInventory : Inventory
             }
             items_slots[item] = free_slots[0]; // we grab the first free slot
         }
+
+        // we check if files changed & call the file written event if yes
+        List<File> new_laptop_files = (capable as Device).GetFiles();
+        for (int i = 0; i < new_laptop_files.Count; i++)
+        {
+            if (old_laptop_files.Contains(new_laptop_files[i])) { continue; }
+            (capable as Device).OnFileWritten?.Invoke(new_laptop_files[i]);
+        }
+
 
         if (log) { Debug.Log($"(LaptopInventory) grabbed {item.Reference} in slot {items_slots[item]}"); }
         return true;

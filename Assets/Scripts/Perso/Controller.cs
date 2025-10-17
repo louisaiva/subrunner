@@ -34,6 +34,10 @@ public class Controller : Singleton<Controller>
     [SerializeField] private GameObject life_bar;
     [SerializeField] private GameObject shortcuts;
 
+    [Header("Events")]
+    public System.Action<Capable> OnCapableControlled;
+    public System.Action<Capable> OnCapableUncontrolled;
+
     [Header("Log")]
     [SerializeField] private bool log = false;
 
@@ -48,8 +52,6 @@ public class Controller : Singleton<Controller>
 
         // initialise le callback
         skin_changed_callback = (string skin) => { refresh_skin_based_parameters(skin); };
-
-        // ResetCapableTarget();
 
         // on controlle le capable actuel
         stack.Clear();
@@ -140,7 +142,7 @@ public class Controller : Singleton<Controller>
         {
             // on enleve le device du UI_Device
             UI_Manager.Instance.GetPool("device").GetComponent<UI_Device>().ClearDevice();
-            UI_Manager.Instance.UnstackFromHUD("device");
+            UI_Manager.Instance.UnstackFromHUD("device", override_transition: true);
         }
 
         // reset l'inventory
@@ -163,6 +165,8 @@ public class Controller : Singleton<Controller>
         }
 
         capa.anim_player.OnSkinChange -= skin_changed_callback; // on enlève le callback de changement de skin
+
+        OnCapableUncontrolled?.Invoke(capa);
 
         if (log) { Debug.Log("(Controller) " + name + " is done controlling " + capa.name); }
     }
@@ -215,10 +219,12 @@ public class Controller : Singleton<Controller>
 
             // on bascule en pool UI_Device
             UI_Manager.Instance.GetPool("device").GetComponent<UI_Device>().SetDevice(device);
-            UI_Manager.Instance.StackOnHUD("device");
+            UI_Manager.Instance.StackOnHUD("device", override_transition: true);
         }
 
         if (log) { Debug.Log("(Controller) " + name + " is now controlling " + capa.name); }
+
+        OnCapableControlled?.Invoke(capa);
 
         // on informe le debug manager qu'on controle un nouveau capable
         DebugManager.Instance.AddDebuggable(capa, "controller");

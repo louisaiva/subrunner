@@ -7,6 +7,7 @@ public class File : ScriptableObject
     // public new string name;
     public string extension = "";
     public string data;
+    public Sprite icon;
 
     public virtual int Size => data.Length + name.Length + extension.Length;
 }

@@ -32,6 +32,7 @@ public class AppManager : MonoBehaviour
 
     [Header("Logs")]
     public bool log = false;
+    public bool log_stats = false;
 
     // AWAKE
     private void Awake()
@@ -42,7 +43,7 @@ public class AppManager : MonoBehaviour
         version = Application.version;
 
         // on affiche les stats
-        ProjectStats.AnalyzeProject();
+        if (log_stats) { ProjectStats.AnalyzeProject(); }
     }
 
 

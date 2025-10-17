@@ -11,12 +11,25 @@ public class Awaker : MonoBehaviour
     public List<GameObject> objectsToAwake;
     private void Awake()
     {
-        foreach (GameObject obj in objectsToAwake)
+        for (int i = 0; i < objectsToAwake.Count; i++)
         {
+            GameObject obj = objectsToAwake[i];
             if (obj == null) { continue; }
             Awakable awakable = obj.GetComponent<Awakable>();
             if (awakable == null) { continue; }
             awakable.InitAwake();
+        }
+    }
+
+    private void Start()
+    {
+        for (int i = 0; i < objectsToAwake.Count; i++)
+        {
+            GameObject obj = objectsToAwake[i];
+            if (obj == null) { continue; }
+            Startable startable = obj.GetComponent<Startable>();
+            if (startable == null) { continue; }
+            startable.InitStart();
         }
     }
 }
@@ -24,4 +37,9 @@ public class Awaker : MonoBehaviour
 public interface Awakable
 {
     void InitAwake();
+}
+
+public interface Startable
+{
+    void InitStart();
 }

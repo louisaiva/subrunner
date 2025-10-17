@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static PlayerInputActions;
 
-public class Perso : Being, LaptopHacker
+public class Perso : Being, Hacker
 {
     public static int deaths = 0; // nombre de morts du perso
     public static Perso Instance { get; private set; }
@@ -52,8 +52,31 @@ public class Perso : Being, LaptopHacker
         set
         {
             if (_laptop == value) { return; }
+
+            Device old_device = Device;
+            Laptop old_laptop = _laptop;
             _laptop = value;
-            OnDeviceChanged?.Invoke(Device);
+
+            if (value == null && _computer == null)
+            {
+                // if we are here we successfully dropped item
+                // we check if we dropped a laptop that was using trojan / cyborg_puppet since we don't want them to
+                // continue if we are not here to stop them !!!! (if perso is not controlled he can't grab back the laptop)
+                // and if he can't grab the laptop he can't cancel the hack
+                // so it is stuck in the trojan / cyborg
+                old_laptop.Hacker.CancelControlHacks();
+                OnDeviceRemoved?.Invoke(old_laptop);
+            }
+            else if (value != null)
+            {
+                if (old_device != null)
+                {
+                    old_device.Hacker.CancelControlHacks();
+                    OnDeviceRemoved?.Invoke(old_device);
+                }
+                OnDeviceGranted?.Invoke(value);
+            }
+
         }
     }
     private Computer _computer = null; // computer we are currently interacting with (null if none)
@@ -63,9 +86,26 @@ public class Perso : Being, LaptopHacker
         set
         {
             if (_computer == value) { return; }
-            
+
+            Device old_device = Device;
+            Computer old_computer = _computer;
             _computer = value;
-            OnDeviceChanged?.Invoke(Device);
+
+            if (value == null)
+            {
+                old_computer.Hacker.CancelControlHacks();
+                OnDeviceRemoved?.Invoke(old_computer);
+                if (_laptop != null) { OnDeviceGranted?.Invoke(_laptop); }
+            }
+            else if (value != null)
+            {
+                if (old_device != null)
+                {
+                    old_device.Hacker.CancelControlHacks();
+                    OnDeviceRemoved?.Invoke(old_device);
+                }
+                OnDeviceGranted?.Invoke(value);
+            }
         }
     }
     public Device Device
@@ -79,7 +119,8 @@ public class Perso : Being, LaptopHacker
             return Laptop;
         }
     }
-    public Action<Device> OnDeviceChanged; // callback pour quand le device du perso change
+    public Action<Device> OnDeviceRemoved { get; set; } = delegate { };
+    public Action<Device> OnDeviceGranted { get; set; } = delegate { };
 
 
 
@@ -91,6 +132,16 @@ public class Perso : Being, LaptopHacker
         // Singleton logic
         if (Instance != null) { Destroy(Instance.gameObject); }
         Instance = this;
+
+        // set des logs
+        OnDeviceGranted += (Device new_device) =>
+        {
+            if (debug) { Debug.Log($"(Perso) new device set : {(new_device is Laptop laptop ? laptop.Reference : new_device.name)}"); }
+        };
+        OnDeviceRemoved += (Device old_device) =>
+        {
+            if (debug) { Debug.Log($"(Perso) Device removed: {(old_device is Laptop laptop ? laptop.Reference : old_device.name)}"); }
+        };
     }
 
     // START
