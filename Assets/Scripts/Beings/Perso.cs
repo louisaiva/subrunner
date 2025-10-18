@@ -136,40 +136,73 @@ public class Perso : Being, Hacker
         // set des logs
         OnDeviceGranted += (Device new_device) =>
         {
-            if (debug) { Debug.Log($"(Perso) new device set : {(new_device is Laptop laptop ? laptop.Reference : new_device.name)}"); }
+            /* if (debug) {  */Debug.Log($"(Perso) new device set : {(new_device is Laptop laptop ? laptop.Reference : new_device.name)}"); /* } */
         };
         OnDeviceRemoved += (Device old_device) =>
         {
-            if (debug) { Debug.Log($"(Perso) Device removed: {(old_device is Laptop laptop ? laptop.Reference : old_device.name)}"); }
+            /* if (debug) {  */
+            Debug.Log($"(Perso) Device removed: {(old_device is Laptop laptop ? laptop.Reference : old_device.name)}"); /* } */
         };
-    }
-
-    // START
-    protected override void Start()
-    {
-        // on récupère les inputs
-        // initInputs();
-
-        // on start de d'habitude
-        base.Start();
-
-        // todo move this in awake ?
 
         // ON RECUP DES TRUCS
         cam = GameObject.Find("/cam_follow/cam");
         skillManager = GetComponentInChildren<SkillManager>();
+    }
 
-        // ItemManager = GameObject.Find("/utils/ItemManager").GetComponent<ItemManager>();
-
-        //
-        // floating_text_prefab = Resources.Load("prefabs/ui/floating_text") as GameObject;
+    // START & CALLBACKS
+    protected override void Start()
+    {
+        // on start de d'habitude
+        base.Start();
 
         // on s'enregistre en tant que trigger dans l'XPProvider particle system
         var trigger_particle_module = XPProvider.Instance.GetComponent<ParticleSystem>().trigger;
         trigger_particle_module.SetCollider(0, body_collider);
 
-        // met le callback de device pour le laptop
-        UI_LaptopItemSlot.Instance.OnItemChanged += (List<Item> items) => Laptop = items.Count > 0 ? items[0] as Laptop : null;
+        // mets les callbacks
+        set_callbacks();
+    }
+    private void set_callbacks()
+    {
+        // todo plutot bouger ça dans le controller si on veut pouvoir afficher l'inventaire des bots ?
+
+        // met les callbacks de notif
+        UI_Manager.Instance.GetPool("hud").GetComponent<UI_HUD>().Notifier.SetCallbacks();
+
+        // on met le callback de pour afficher ui_hacking
+        UI_Hacking hacking_pool = UI_Manager.Instance.GetPool("hacking").GetComponent<UI_Hacking>();
+        Instance.OnDeviceGranted += hacking_pool.HandleDeviceGranted;
+        Instance.OnDeviceRemoved += hacking_pool.HandleDeviceRemoved;
+
+        // callbacks de ui_running hacks viewer
+        UI_RunningHacksViewer running_hacks_viewer = hacking_pool.transform.GetComponentInChildren<UI_RunningHacksViewer>(includeInactive: true);
+        Instance.OnDeviceGranted += running_hacks_viewer.HandleDeviceGranted;
+        Instance.OnDeviceRemoved += running_hacks_viewer.HandleDeviceRemoved;
+
+        // et du cores viewer
+        UI_CoresViewer cores_viewer = hacking_pool.transform.GetComponentInChildren<UI_CoresViewer>(includeInactive: true);
+        Instance.OnDeviceGranted += cores_viewer.HandleDeviceGranted;
+        Instance.OnDeviceRemoved += cores_viewer.HandleDeviceRemoved;
+    }
+    private void remove_callbacks()
+    {
+        // enleve les callbacks de notif
+        UI_Manager.Instance.GetPool("hud").GetComponent<UI_HUD>().Notifier.RemoveCallbacks();
+
+        // on enleve les callbacks de pour afficher ui_hacking
+        UI_Hacking hacking_pool = UI_Manager.Instance.GetPool("hacking").GetComponent<UI_Hacking>();
+        Instance.OnDeviceGranted -= hacking_pool.HandleDeviceGranted;
+        Instance.OnDeviceRemoved -= hacking_pool.HandleDeviceRemoved;
+
+        // callbacks de ui_running hacks viewer
+        UI_RunningHacksViewer running_hacks_viewer = hacking_pool.transform.GetComponentInChildren<UI_RunningHacksViewer>(includeInactive: true);
+        Instance.OnDeviceGranted -= running_hacks_viewer.HandleDeviceGranted;
+        Instance.OnDeviceRemoved -= running_hacks_viewer.HandleDeviceRemoved;
+        
+        // et du cores viewer
+        UI_CoresViewer cores_viewer = hacking_pool.transform.GetComponentInChildren<UI_CoresViewer>(includeInactive: true);
+        Instance.OnDeviceGranted -= cores_viewer.HandleDeviceGranted;
+        Instance.OnDeviceRemoved -= cores_viewer.HandleDeviceRemoved;
     }
 
 
@@ -282,11 +315,13 @@ public class Perso : Being, Hacker
         Controller.Instance.PIC.DisableInputs();
 
         // on switch au game_over panel
-        UI_Manager.Instance.SwitchTo("game_over",force:true);
+        UI_Manager.Instance.SwitchTo("game_over",force:true,override_transition:true);
 
         // on désactive plein de choses
         Destroy(GetComponent<SeeThroughHandler>());
         Destroy(transform.Find("body").GetComponent<ParticleSystemForceField>());
+
+        remove_callbacks();
 
         deaths += 1; // on incrémente le nombre de morts du perso
     }

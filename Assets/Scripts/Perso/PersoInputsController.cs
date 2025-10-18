@@ -21,6 +21,7 @@ public class PersoInputsController : InputController
     private event Action<InputAction.CallbackContext> dodgeCallback;
     private event Action<InputAction.CallbackContext> attackCallback;
     private event Action<InputAction.CallbackContext> hackCallback;
+    private event Action<InputAction.CallbackContext> select_hackableCallback;
     private event Action<InputAction.CallbackContext> talkCallback;
     private event Action<InputAction.CallbackContext> useConso1Callback;
     private event Action<InputAction.CallbackContext> useConso2Callback;
@@ -76,7 +77,8 @@ public class PersoInputsController : InputController
         hackCallback = ctx => HandleRunHackInput(ctx);
 
         // ensuite les callbacks statiques (ne se désactivent pas quand )
-        perso_inputs.select_hackable.performed += ctx => { handle_select_hack_target_input(ctx.ReadValue<Vector2>()); };
+        // perso_inputs.select_hackable.performed += ctx => { handle_select_hack_target_input(ctx.ReadValue<Vector2>()); };
+        select_hackableCallback = ctx => { handle_select_hack_target_input(ctx.ReadValue<Vector2>()); };
 
         EnableInputs();
     }
@@ -91,6 +93,7 @@ public class PersoInputsController : InputController
         perso_inputs.conso3.performed += useConso3Callback;
         perso_inputs.conso4.performed += useConso4Callback;
         perso_inputs.interact.performed += interactCallback;
+        perso_inputs.select_hackable.performed += select_hackableCallback;
 
         InputsDisabled = false;
     }
@@ -105,6 +108,7 @@ public class PersoInputsController : InputController
         perso_inputs.conso3.performed -= useConso3Callback;
         perso_inputs.conso4.performed -= useConso4Callback;
         perso_inputs.interact.performed -= interactCallback;
+        perso_inputs.select_hackable.performed -= select_hackableCallback;
 
         InputsDisabled = true;
     }

@@ -207,17 +207,14 @@ public class UI_Pool : MonoBehaviour
     // REGISTER ELEMENTS
     public void RegisterToPool(GameObject ui_element, bool is_stacked = false)
     {
-        // if the gameobject is null, we return
-        if (ui_element == null) { return; }
-
         // we check if the element is already in the pool
         if (ui_elements.Contains(ui_element))
         {
-            if (log) { Debug.LogWarning("(UI_Manager) " + ui_element.name + " tried to register to a pool it's already in : " + Reference); }
+            if (log) { Debug.LogWarning("(UI_Pool) " + ui_element.name + " tried to register to a pool it's already in : " + Reference); }
             return;
         }
 
-        if (log) { Debug.Log("(UI_Manager) " + ui_element.name + " just registered to pool : " + Reference); }
+        if (log) { Debug.Log("(UI_Pool) " + ui_element.name + " just registered to pool : " + Reference); }
 
         // on ajoute l'élément au pool
         ui_elements.Add(ui_element);
@@ -226,23 +223,23 @@ public class UI_Pool : MonoBehaviour
         // we show/hide the element if the pool is showed
         ui_element.SetActive(Showed);
     }
-    public void QuitPool(GameObject ui_element)
+    public void QuitPool(GameObject ui_element,bool hide_element = true)
     {
-        // if the gameobject is null, we return
-        if (ui_element == null) { return; }
-
         // we check if the element is already in the pool
         if (!ui_elements.Contains(ui_element))
         {
-            if (log) { Debug.LogWarning("(UI_Manager) " + ui_element.name + " tried to quit a pool it's not in : " + Reference); }
+            if (log) { Debug.LogWarning("(UI_Pool) " + ui_element.name + " tried to quit a pool it's not in : " + Reference); }
             return;
         }
 
-        if (log) { Debug.Log("(UI_Manager) " + ui_element.name + " just quit pool : " + Reference); }
+        if (log) { Debug.Log("(UI_Pool) " + ui_element.name + " just quit pool : " + Reference); }
 
         // on enlève l'élément du pool
         ui_elements.Remove(ui_element);
         if (stacked_elements.Contains(ui_element)) { stacked_elements.Remove(ui_element); }
+
+        // we hide the element if needed
+        if (hide_element) { ui_element.SetActive(false); }
     }
 }
 

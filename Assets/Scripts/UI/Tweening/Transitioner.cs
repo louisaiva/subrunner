@@ -17,6 +17,7 @@ public class Transitioner : MonoBehaviour
     [SerializeField] protected Ease ease_hide = Ease.Default;
     [SerializeField] protected float default_duration = 1f;
     [SerializeField] protected bool unscaled_time = true;
+    [SerializeField] protected bool reset_on_awake = true;
 
 
     [Header("On Enable transition")]
@@ -33,7 +34,9 @@ public class Transitioner : MonoBehaviour
     {
         init_updater();
 
-        // reset initial staets
+        if (!reset_on_awake) { return; }
+
+        // reset initial states
         if (transitype == TransitionType.Fade)
         {
             GetComponent<CanvasGroup>().alpha = hidden_value;

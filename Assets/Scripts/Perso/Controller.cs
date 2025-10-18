@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Controller : Singleton<Controller>
+public class Controller : MonoBehaviour
 {
     [Header("Current capable")]
     public Capable Capable
@@ -16,7 +16,6 @@ public class Controller : Singleton<Controller>
         }
     }
     [SerializeField] private Capable _capable;
-    System.Action<string> skin_changed_callback; // callback pour quand le skin du capable change
 
     [Header("Capable stack")]
     public List<Capable> stack = new List<Capable>();
@@ -41,6 +40,23 @@ public class Controller : Singleton<Controller>
     [Header("Log")]
     [SerializeField] private bool log = false;
 
+    // AWAKE
+    public static Controller Instance { get; private set; }
+    public static System.Action<Controller> OnInstanceRemoved { get; set; }
+    public static System.Action<Controller> OnInstanceSet { get; set; }
+    protected virtual void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            if (log) { Debug.LogWarning("(Controller) multiple instances of Controller detected! Destroying the old one."); }
+            Destroy(Instance.gameObject);
+            OnInstanceRemoved?.Invoke(Instance);
+            Instance = null;
+        }
+        Instance = this;
+        OnInstanceSet?.Invoke(Instance);
+    }
+
     // START
     private void Start()
     {
@@ -50,15 +66,11 @@ public class Controller : Singleton<Controller>
         life_bar = hud.transform.Find("life_bar").gameObject;
         shortcuts = hud.transform.Find("shortcuts_if").gameObject;
 
-        // initialise le callback
-        skin_changed_callback = (string skin) => { refresh_skin_based_parameters(skin); };
-
         // on controlle le capable actuel
         stack.Clear();
         stack.Add(Capable);
         control(Capable);
     }
-
 
     // CHANGE CAPABLE TARGET HIGH LEVEL
     public void ChangeCapableTarget(Capable new_target, float duration = -888f, bool add_to_stack = true)
@@ -99,7 +111,6 @@ public class Controller : Singleton<Controller>
     }
     public void ResetCapableTarget()
     {
-
         if (log) { Debug.Log("(Controller) " + name + " is resetting capable target to Perso"); }
 
         CancelInvoke("ResetCapableTarget");
@@ -164,7 +175,7 @@ public class Controller : Singleton<Controller>
             capa.GetCapacity<ConnectCapacity>().Disconnect();
         }
 
-        capa.anim_player.OnSkinChange -= skin_changed_callback; // on enlève le callback de changement de skin
+        capa.anim_player.OnSkinChange -= refresh_skin_based_parameters; // on enlève le callback de changement de skin
 
         OnCapableUncontrolled?.Invoke(capa);
 
@@ -181,7 +192,7 @@ public class Controller : Singleton<Controller>
 
         // on ajoute le callback de changement de skin
         refresh_skin_based_parameters(capa.Skin);
-        capa.anim_player.OnSkinChange += skin_changed_callback; 
+        capa.anim_player.OnSkinChange += refresh_skin_based_parameters; 
 
         // on désactive le Brain si le nouveau capable est un IA
         if (capa is IA ia)
@@ -231,6 +242,8 @@ public class Controller : Singleton<Controller>
     }
     private void refresh_skin_based_parameters(string skin)
     {
+        if (log) { Debug.Log("(Controller) refreshing skin based parameters for skin " + skin + " on capable " + Capable.name); }
+
         // on refresh le see through pour remettre la tete bien centrée
         see_through.Refresh(skin);
     }

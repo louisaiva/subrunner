@@ -23,7 +23,6 @@ public class UI_Paper : UI_Pool
     protected override IEnumerator show_coroutine(List<GameObject> dont_show = null, float duration_override = -1f)
     {
 
-        // todo : faire un UI_Readable à la racine du content qui s'occupe d'afficher bien les bails sinon ça va etre le sbeul
         // todo : d'ailleurs remplacer UI_Paper par un UI_Reader
 
         content.gameObject.SetActive(true);

@@ -283,8 +283,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Material: {fileID: 2100000, guid: 4f76765515b08b8d9be2a7ae4d629f35, type: 2}
+  m_Color: {r: 0.5411765, g: 0.9490196, b: 1, a: 0.49019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -655,6 +655,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 0.1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -1588,8 +1589,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Material: {fileID: 2100000, guid: 4f76765515b08b8d9be2a7ae4d629f35, type: 2}
+  m_Color: {r: 0.5411765, g: 0.9490196, b: 1, a: 0.49019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2203,6 +2204,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 0.2
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 1
   ShouldBeVisibleOnEnable: 1
   log: 0
@@ -2409,6 +2411,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 0.1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -2470,8 +2473,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Material: {fileID: 2100000, guid: 4f76765515b08b8d9be2a7ae4d629f35, type: 2}
+  m_Color: {r: 0.5411765, g: 0.9490196, b: 1, a: 0.49019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2558,6 +2561,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -3198,6 +3202,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 0.05
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -4084,6 +4089,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 0.1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -4806,6 +4812,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -5526,6 +5533,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -5879,6 +5887,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 0.2
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 1
   ShouldBeVisibleOnEnable: 1
   log: 0
@@ -5954,6 +5963,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -6748,7 +6758,7 @@ RectTransform:
   m_GameObject: {fileID: 2640498653413180510}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6446927, y: 0.6446927, z: 0.6446927}
+  m_LocalScale: {x: 0.45251396, y: 0.45251396, z: 0.45251396}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6164785366243112615}
@@ -6799,6 +6809,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 0.1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -6817,6 +6828,7 @@ MonoBehaviour:
   columns: 2
   rows: 3
   show_label: 0
+  Color: {r: 0, g: 0, b: 0, a: 0}
   update_scale: 1
   width: 949
   height: 516
@@ -6832,7 +6844,7 @@ MonoBehaviour:
   label_UL: {fileID: 5559941548322960117}
   slots_parent: {fileID: 1983528456145797996}
   canvas: {fileID: 8768071035187334168}
-  log: 0
+  log: 1
   log_ratio: 0
   laptop_inventory: {fileID: 0}
 --- !u!1 &2658310550383325827
@@ -7179,6 +7191,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 0.05
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -7545,6 +7558,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 0.05
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -7768,8 +7782,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pool_stack: []
   hud_stack: hud
-  log: 0
-  log_extended: 0
+  log: 1
+  log_extended: 1
 --- !u!114 &7282440825162870108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8414,6 +8428,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -8701,6 +8716,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 1
   unscaled_time: 1
+  reset_on_awake: 0
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -9936,6 +9952,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 0.1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -9997,8 +10014,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Material: {fileID: 2100000, guid: 4f76765515b08b8d9be2a7ae4d629f35, type: 2}
+  m_Color: {r: 0.5411765, g: 0.9490196, b: 1, a: 0.49019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10529,6 +10546,7 @@ MonoBehaviour:
   log_elements_showing: 0
   perso_quick_inventory: {fileID: 5192110125985442822}
   ui_chest: {fileID: 0}
+  Notifier: {fileID: 2070240564987113813}
 --- !u!1 &3916433396999067944
 GameObject:
   m_ObjectHideFlags: 0
@@ -11590,6 +11608,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 0.1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -11845,6 +11864,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -12238,8 +12258,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Material: {fileID: 2100000, guid: 4f76765515b08b8d9be2a7ae4d629f35, type: 2}
+  m_Color: {r: 0.5411765, g: 0.9490196, b: 1, a: 0.49019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -12554,6 +12574,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -12670,6 +12691,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 0.2
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 1
   ShouldBeVisibleOnEnable: 1
   log: 0
@@ -14212,6 +14234,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -14790,6 +14813,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -15137,6 +15161,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 0.05
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -15409,6 +15434,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 0.1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -15752,8 +15778,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Material: {fileID: 2100000, guid: 4f76765515b08b8d9be2a7ae4d629f35, type: 2}
+  m_Color: {r: 0.5411765, g: 0.9490196, b: 1, a: 0.49019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -16114,6 +16140,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 0.1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -16810,6 +16837,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -17496,6 +17524,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 0.1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -18129,8 +18158,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Material: {fileID: 2100000, guid: 4f76765515b08b8d9be2a7ae4d629f35, type: 2}
+  m_Color: {r: 0.5411765, g: 0.9490196, b: 1, a: 0.49019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -18968,6 +18997,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -19465,6 +19495,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -19481,7 +19512,7 @@ GameObject:
   - component: {fileID: 1099039236038924943}
   - component: {fileID: 7755095405291208546}
   m_Layer: 5
-  m_Name: run_hack_text
+  m_Name: kf_exploit_text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19504,7 +19535,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -32, y: 0}
-  m_SizeDelta: {x: 100, y: 32}
+  m_SizeDelta: {x: 143.75, y: 32}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &4205632370485610097
 CanvasRenderer:
@@ -20053,8 +20084,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Material: {fileID: 2100000, guid: 4f76765515b08b8d9be2a7ae4d629f35, type: 2}
+  m_Color: {r: 0.5411765, g: 0.9490196, b: 1, a: 0.49019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -20414,8 +20445,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Material: {fileID: 2100000, guid: 4f76765515b08b8d9be2a7ae4d629f35, type: 2}
+  m_Color: {r: 0.5411765, g: 0.9490196, b: 1, a: 0.49019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -21048,8 +21079,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Material: {fileID: 2100000, guid: 4f76765515b08b8d9be2a7ae4d629f35, type: 2}
+  m_Color: {r: 0.5411765, g: 0.9490196, b: 1, a: 0.49019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -21178,6 +21209,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -21920,6 +21952,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 0.1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
@@ -23298,6 +23331,7 @@ MonoBehaviour:
   ease_hide: 0
   default_duration: 1
   unscaled_time: 1
+  reset_on_awake: 1
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0

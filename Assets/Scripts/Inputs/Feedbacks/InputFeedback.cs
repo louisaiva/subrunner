@@ -17,6 +17,7 @@ public class InputFeedback : MonoBehaviour
     protected System.Action<InputAction.CallbackContext> reset_callback;
     protected System.Action<InputAction.CallbackContext> press_and_release_callback;
     public bool use_press_and_release = false; // whether to use the press and release callback instead of the simple input & reset
+    private bool is_pressed = false;
 
     [Header("Image")]
     [SerializeField] protected Image image;
@@ -40,7 +41,7 @@ public class InputFeedback : MonoBehaviour
             if (image == null) { Debug.LogWarning("(InputFeedback : " + name + " ) image is not set ! you should assign it in the inspector"); }
             if (input == null) { Debug.LogWarning("(InputFeedback : " + name + " ) input is not set ! you should assign it in the inspector"); }
         }
-        
+
         // we get the input manager
         input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
 
@@ -107,6 +108,7 @@ public class InputFeedback : MonoBehaviour
     // INPUT / RESET
     public virtual void OnInput()
     {
+        is_pressed = true;
         // we set the color
         image.color = clicked_color;
 
@@ -118,6 +120,7 @@ public class InputFeedback : MonoBehaviour
     }
     public virtual void OnReset()
     {
+        is_pressed = false;
         // we set the color
         image.color = base_color;
 
@@ -148,5 +151,13 @@ public class InputFeedback : MonoBehaviour
             return;
         }
         label.text = text;
+    }
+    public void SetColors(Color base_color, Color clicked_color)
+    {
+        this.base_color = base_color;
+        this.clicked_color = clicked_color;
+
+        // we apply the base color immediately
+        image.color = is_pressed ? clicked_color : base_color;
     }
 }

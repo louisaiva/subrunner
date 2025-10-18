@@ -277,4 +277,9 @@ public class UI_ItemPool : MonoBehaviour
         }
         return filled_slots;
     }
+    public UI_Item GetSlotAt(int index)
+    {
+        if (index < 0 || index >= ui_items.Count) { return null; }
+        return ui_items[index];
+    }
 }

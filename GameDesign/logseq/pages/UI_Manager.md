@@ -4,17 +4,21 @@
 - Manager principal qui gère tous les **UI** en un seul endroit.
 - Permet d'avoir de nombreuses #UI_Pool et permet d'en afficher une à l'écran
 -
+- gère le bg aussi
+	- TODO est-ce qu'on peut faire que le bg devient rouge quand on se fait hacker/on prend des dégats
+	-
+-
 - ## UI_Manager rework
 	- ### Inputs
 		- DONE enlever les inputs du manager et les mettre sur le #[[UIC (UI_InputsController)]]
 	- ### Layers
-		- on souhaiterait afficher plusieurs layers d'**UI_Pool** les uns au dessus des autres
-		- -> afin d'afficher les différents menus de l'**UI_Laptop** (**UI_Explorateur**, **UI_Terminal**) et même peut-etre des popups ?
-		- pour ça on garde une **PoolPile** qui permet d'entasser les différents **ui_pool** les uns sur les autres. Un call à **ui.cancel** cache la pool au top de la pile et revient à celle d'avant. Quand on veut rajouter un **pool** au top de la pile, on cache aucun element du dessous et on affiche juste ceux en plus (souvent qui ont le bg intégré ? comment on gère les inputs feedback ?)
+		- DONE on souhaiterait afficher plusieurs layers d'**UI_Pool** les uns au dessus des autres
+		- DONE -> afin d'afficher les différents menus de l'**UI_Laptop** (**UI_Explorateur**, **UI_Terminal**) et même peut-etre des popups ?
+		- DONE pour ça on garde une **PoolPile** qui permet d'entasser les différents **ui_pool** les uns sur les autres. Un call à **ui.cancel** cache la pool au top de la pile et revient à celle d'avant. Quand on veut rajouter un **pool** au top de la pile, on cache aucun element du dessous et on affiche juste ceux en plus (souvent qui ont le bg intégré ? comment on gère les inputs feedback ?)
 	- ### Tween
-		- on veut pouvoir mettre des #Transitioner sur les **ui_elements** comme ça la transition est niquel
-		- on veut aussi pouvoir détransitionner quand on hide pool -> pour le moment ça se fait de manière brutale
-		- décorreler la transition effect de la transition alpha bg
+		- DONE on veut pouvoir mettre des #Transitioner sur les **ui_elements** comme ça la transition est niquel
+		- DONE on veut aussi pouvoir détransitionner quand on hide pool -> pour le moment ça se fait de manière brutale
+		- TODO décorreler la transition effect de la transition alpha bg
 -
 -
 -

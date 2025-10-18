@@ -58,6 +58,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -79,6 +81,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
@@ -181,6 +184,7 @@ MonoBehaviour:
   debug: 0
   activate_all_capacities_logs_on_awake: 0
   debug_velocity: 0
+  log_avoidance: 0
   rb: {fileID: 0}
   weight: 1
   random_weight_modifier_at_start: 0
@@ -190,6 +194,7 @@ MonoBehaviour:
   Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 0}
   Reference: shoes:carbon
+  Color: {r: 0.7720177, g: 0.9528302, b: 0.39101997, a: 1}
   MaxQty: 1
   ItemDescription: brand new shoes, useful for running very very very fast i mean
     look at me i'm so fast omg

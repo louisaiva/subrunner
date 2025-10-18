@@ -7,6 +7,7 @@ public class Item : Movable
 
     [Header("Item")]
     public string Reference = "category:item";
+    public Color Color = Color.yellow;
     public int MaxQty = 1;
     public bool Stackable { get => MaxQty > 1; }
     public string ItemDescription = "description of the item";

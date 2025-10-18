@@ -78,7 +78,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     }
 
     // SHOW / HIDE
-    public virtual async void Show()
+    /* public virtual async void Show()
     {
         gameObject.SetActive(true);
         await Task.Yield(); // wait for the next frame to ensure the UI is active
@@ -114,7 +114,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         {
             Show();
         }
-    }
+    } */
 
     // GRAB
     public virtual bool UI_Grab(Item item)

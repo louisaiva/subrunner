@@ -25,6 +25,7 @@ public class Laptop : Item, Usable, Device
         }
     }
     private HackCapacity hacker;
+    public Color MB_Color { get => this.Color; }
 
     [Header("Disks")]
     [SerializeField] private List<StoreCapacity> disks;

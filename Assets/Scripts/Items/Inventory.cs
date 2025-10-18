@@ -167,7 +167,7 @@ public class Inventory : MonoBehaviour
         string s = "(Inventory) " + capable.name + " is looking for an interacting inventory\n\n";
 
         // check if we are the interactable (so we look for the interactor)
-        // typically for Chest
+        // typically we are dropping an item from a Chest's UI_Inventory
         if (capable is Interactable)
         {
             // this is the other capable
@@ -175,24 +175,16 @@ public class Inventory : MonoBehaviour
             InteractCapacity interactor = (capable as Interactable).Interactor;
 
             // check if we have an interactor
-            if (interactor == null)
-            {
-                if (log) { Debug.LogWarning(s + "we don't have an interactor\n"); }
-                return null;
-            }
+            if (interactor == null) { if (log) { Debug.LogWarning(s + "we don't have an interactor\n"); } return null; }
 
             // yes we do !! return its inventory
-            if (log)
-            {
-                Debug.Log(s + "we have an interactor : " + interactor.capable.name
-                + "\nand its inventory is " + interactor.capable.Inventory.name);
-            }
+            if (log) { Debug.Log(s + "we have an interactor : " + interactor.capable.name
+                + "\nand its inventory is " + interactor.capable.Inventory.name); }
             return interactor.capable.Inventory;
         }
 
-
         // check if we are the interactor (so we look for the interactable)
-        // typically for Being
+        // typically we are dropping from an item our perso_quick_inventory or the UI_InventoryMenu
         else if (capable.GetCapacity<InteractCapacity>() != null)
         {
             // this is our capable
@@ -201,42 +193,22 @@ public class Inventory : MonoBehaviour
 
             // check if we have an interactable
             Capable interactable = interactor.interactable as Capable;
-            if (interactable == null)
-            {
-                if (log) { Debug.LogWarning(s + "we don't have an interactable\n"); }
-                return null;
-            }
+            if (interactable == null) { if (log) { Debug.LogWarning(s + "we don't have an interactable\n"); } return null; }
 
             s += "we have an interactable : " + interactable.name + "\n";
-            // checks if the interactable is an Openable and is not closed
-            if (interactable is Openable)
-            {
-                s += "and it's an Openable\n";
-                Openable openable = interactable as Openable;
 
-                // fermé et pas en train de s'ouvrir
-                if (!openable.is_open && !openable.is_moving)
-                {
-                    if (log) { Debug.LogWarning(s + "but it's closed & not opening\n"); }
-                    return null;
-                }
+            // checks if this is a chest
+            if (interactable is not Chest chest) { if (log) { Debug.LogWarning(s + "but it's not a Chest\n"); } return null; }
+            else if (interactable.Inventory == null) { if (log) { Debug.LogWarning(s + "but it doesn't have an inventory\n"); } return null; }
 
-                // en train de se fermer
-                else if (openable.is_open && openable.is_moving)
-                {
-                    if (log) { Debug.LogWarning(s + "but it's closing\n"); }
-                    return null;
-                }
+            s += "and it's a Chest\n";
 
-                s += "and it's open !!\n";
-            }
-            else if (interactable.Inventory == null)
-            {
-                if (log) { Debug.LogWarning(s + "but it doesn't have an inventory\n"); }
-                return null;
-            }
-            // todo : if the interactable is a Package, we can drop things in it, do we want this to happen ???
+            // checks if the chest is not closed or closing
+            if (!chest.is_open && !chest.is_moving) { if (log) { Debug.LogWarning(s + "but it's closed & not opening\n"); } return null; }
+            else if (chest.is_open && chest.is_moving) { if (log) { Debug.LogWarning(s + "but it's closing\n"); } return null; }
 
+            s += "and it's open !!\n";
+            
             // we return the interactable's inventory
             if (log) { Debug.Log(s + "and its inventory is " + interactable.Inventory.name + "\n\n"); }
             return interactable.Inventory;

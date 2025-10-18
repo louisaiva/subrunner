@@ -8,13 +8,9 @@ using System.Collections;
 
 public class UI_GameOver : UI_Pool
 {
-    // [Header("Transition parameters")]
-    // public float final_timescale = 0.1f;
-    // public float transition_duration = 2f;
-
+    
     [Header("Perso revive parameters")]
     [SerializeField] private GameObject perso_prefab;
-    // [SerializeField] private Transform perso_spawn_point;
 
     [Header("Inputs")]
     [SerializeField] private InputActionReference reviveInput;
@@ -23,14 +19,13 @@ public class UI_GameOver : UI_Pool
 
     [Header("Components")]
     [SerializeField] private TextMeshProUGUI oh_no_text;
+    
     // START
     private void Start()
     {
         // we create the callback
         reviveAction = InputManager.Instance.GetAction(reviveInput);
         reviveCallback = ctx => HandleReviveInput(ctx.ReadValue<float>());
-
-        // if (perso_spawn_point == null) { Debug.LogError("(UI_GameOver) perso_spawn_point is not assigned! Please assign it in the inspector."); }
 
         if (log) { Debug.Log("(UI_GameOver) started & callbacks created"); }
     }
@@ -63,7 +58,7 @@ public class UI_GameOver : UI_Pool
         yield return base.show_coroutine(dont_show, duration_override);
     }
 
-    // ENABLING
+    // DISABLING
     protected override IEnumerator disable_coroutine()
     {
         // we remove the callbacks
@@ -77,9 +72,6 @@ public class UI_GameOver : UI_Pool
         }
 
         // we instantiate the perso prefab at the spawn point
-        // var task = ;
-        // yield return new WaitUntil(() => task.completed);
-
         bool instantiated = false;
         var instantiation = InstantiateAsync(perso_prefab, perso_spawn_point, Quaternion.identity);
         instantiation.completed += (op) => instantiated = true;
@@ -87,6 +79,5 @@ public class UI_GameOver : UI_Pool
         GameObject[] perso = instantiation.Result;
         perso[0].name = "perso";
     }
-
 
 }

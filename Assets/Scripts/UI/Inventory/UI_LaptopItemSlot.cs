@@ -43,6 +43,14 @@ public class UI_LaptopItemSlot : UI_Item, Awakable
         base.Clear();
         if (log) { Debug.Log($"(UI_LaptopItemSlot) Cleared laptop slot"); }
     }
+    public override void SwitchItems(List<Item> items, bool items_moved = true)
+    {
+        if (log) { Debug.Log($"(UI_LaptopItemSlot) Switching laptop items from {Perso.Instance.Laptop?.Reference} to {items[0]?.Reference}"); }
+        base.SwitchItems(items, items_moved);
+
+        // we update the perso laptop reference
+        Perso.Instance.Laptop = Item as Laptop;
+    }
 
     // HAS LAPTOP
     public bool HasLaptop => this.Item != null && Item is Laptop;

@@ -25,6 +25,7 @@ public abstract class StaticDevice : Capable, Device
         }
     }
     private HackCapacity hacker;
+    public Color MB_Color { get => Color.beige; }
 
     // MODULES MANAGEMENT
     public void OnNetworkModuleChanged()

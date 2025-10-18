@@ -25,8 +25,8 @@ public class UI_CoresViewer : MonoBehaviour, Startable
     // INIT START
     public void InitStart()
     {
-        Perso.Instance.OnDeviceGranted += HandleDeviceGranted;
-        Perso.Instance.OnDeviceRemoved += HandleDeviceRemoved;
+        // Perso.Instance.OnDeviceGranted += HandleDeviceGranted;
+        // Perso.Instance.OnDeviceRemoved += HandleDeviceRemoved;
 
         // reset title and all   
         resizer.Resize(0);
@@ -34,7 +34,7 @@ public class UI_CoresViewer : MonoBehaviour, Startable
     }
 
     // DEVICE
-    private void HandleDeviceRemoved(Device old_device)
+    public void HandleDeviceRemoved(Device old_device)
     {
         clear_core_infos();
 
@@ -43,7 +43,7 @@ public class UI_CoresViewer : MonoBehaviour, Startable
         old_device.Processor.OnCoresNumberChanged -= update_cores_count_callback;
         update_cores_count_callback = null;
     }
-    private void HandleDeviceGranted(Device new_device)
+    public void HandleDeviceGranted(Device new_device)
     {
         if (new_device.Processor == null) {
             if (log) { Debug.LogWarning("(UI_CoresViewer) No ProcessCapacity found in the device."); }

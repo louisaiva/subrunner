@@ -47,6 +47,7 @@ public class UI_Manager : Singleton<UI_Manager>
     [Header("Transitions")]
     private PauseMenuBackgroundEffect bg;
     private Coroutine current_transition = null;
+    public bool IsInTransition => current_transition != null;
 
 
     [Header("Logs")]
@@ -109,35 +110,44 @@ public class UI_Manager : Singleton<UI_Manager>
         if (pool_name == current_pool.Reference) { SwitchToHUD(); }
         else { SwitchTo(pool_name, false); }
     }
-    public void SwitchTo(string pool_name, bool force = false)
+
+    /// <summary>
+    /// this is the main method of the UI_Manager.
+    /// it is used to switch between UI_Pool. call the switch_pool_coroutine that allow us to switch between multiple UI_Pool stacks.
+    /// 
+    /// </summary>
+    /// <param name="pool_name">the pool we want to switch to. must exist</param>
+    /// <param name="force">should we force the switching even if the current pool is not hiddenable ?</param>
+    /// <param name="override_transition">should we force the switching even if we are still in transition ? may break things</param>
+    public void SwitchTo(string pool_name, bool force = false, bool override_transition = false)
     {
         // check if we have a pool to switch to
         UI_Pool pool = GetPool(pool_name);
         if (!pool) { return; }
 
-        if (current_transition != null && !force)
+        if (current_transition != null && !override_transition)
         {
             if (log_extended) { Debug.LogWarning($"(UI_Manager) can't switch to pool : {pool.Reference} from {(current_pool != null ? current_pool.Reference : "null")} because a transition is already in progress"); }
             return;
         }
-        else if (current_transition != null && force)
+        else if (current_transition != null && override_transition)
         {
-            if (log) { Debug.LogWarning($"(UI_Manager) force switching to pool : {pool.Reference} /!\\ may break the last transition"); }
+            if (log) { Debug.LogWarning($"(UI_Manager) overriding transition to switch to pool : {pool.Reference} /!\\ will break the last transition"); }
             StopCoroutine(current_transition);
             current_transition = null;
         }
         current_transition = StartCoroutine(switch_pool_coroutine(new List<UI_Pool> { pool }, force));
     }
-    public void SwitchToHUD(bool force = false)
+    public void SwitchToHUD(bool force = false, bool override_transition = false)
     {
-        if (current_transition != null && !force)
+        if (current_transition != null && !override_transition)
         {
             if (log_extended) { Debug.LogWarning($"(UI_Manager) can't switch to HUD group from {(current_pool != null ? current_pool.Reference : "null")} because a transition is already in progress"); }
             return;
         }
-        else if (current_transition != null && force)
+        else if (current_transition != null && override_transition)
         {
-            if (log) { Debug.LogWarning($"(UI_Manager) force switching to HUD group /!\\ may break the last transition"); }
+            if (log) { Debug.LogWarning($"(UI_Manager) overriding transition to switch to HUD group /!\\ will break the last transition"); }
             StopCoroutine(current_transition);
             current_transition = null;
         }
@@ -280,7 +290,7 @@ public class UI_Manager : Singleton<UI_Manager>
         // check if we can cancel the pool
         if (!current_pool.TransitionSettings.CanBeCanceled)
         {
-            if (log_extended) { Debug.LogWarning("(UI_Manager) tried to cancel a pool that cannot be canceled : " + current_pool.Reference); }
+            if (log_extended && !IsOnHUD()) { Debug.LogWarning("(UI_Manager) tried to cancel a pool that cannot be canceled : " + current_pool.Reference); }
             return;
         }
         UnstackCurrentPool();

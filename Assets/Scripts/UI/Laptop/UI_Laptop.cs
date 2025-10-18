@@ -49,6 +49,9 @@ public class UI_Laptop : UI_Inventory
         mb.AssignLaptopInventory(inventory);
         // mb.Size = new Vector2Int(inventory.Columns, inventory.Rows);
 
+        // we change the mb color based on laptop's color
+        mb.SetColor(TargetLaptop.MB_Color);
+
         await System.Threading.Tasks.Task.Yield(); // wait for the next frame to ensure the UI is active
 
         // we create the modules based on the inventory save

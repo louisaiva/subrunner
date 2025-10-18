@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0433b6b5ffb0e7148a08a012cfed5058
+guid: 2fa25cc3c0b1d2254a683acf7e4bf694
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -126,22 +126,52 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
-  animatedSpriteImportData: []
+  animatedSpriteImportData:
+  - name: ui_laptop
+    originalName: 
+    pivot: {x: 0.5413534, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 4
+      width: 133
+      height: 95
+    spriteID: 34d64dc2260760747ba7ecc0c8f247c8
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 4}
   spriteSheetImportData: []
   tileSetImportData: []
   asepriteLayers:
   - layerIndex: 0
     uuid:
-      value0: 4057195693
+      value0: 3593255013
       value1: 0
       value2: 0
       value3: 0
-    guid: -237771603
-    name: modules_slots
+    guid: -701712283
+    name: ui_laptop
     layerFlags: 0
     layerType: 0
     blendMode: 0
-    cells: []
+    cells:
+    - name: ui_modules
+      frameIndex: 0
+      additiveSortOrder: 0
+      cellRect:
+        x: 0
+        y: 0
+        width: 133
+        height: 95
+      spriteId: 34d64dc2260760747ba7ecc0c8f247c8
     linkedCells: []
     tileCells: []
     tileSetIndex: 0
@@ -163,5 +193,5 @@ ScriptedImporter:
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 96, y: 48}
-  previousTextureSize: {x: 0, y: 0}
+  canvasSize: {x: 144, y: 144}
+  previousTextureSize: {x: 256, y: 128}

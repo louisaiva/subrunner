@@ -139,7 +139,7 @@ public class HackCapacity : Capacity
         Exploit exploit = selected_exploit;
         if (exploit == null)
         {
-            // todo : bug quelques fois on a pas d'exploit selectionné, est-ce qu'il faut re nmap ?
+            // ? todo : bug quelques fois on a pas d'exploit selectionné, est-ce qu'il faut re nmap ?
             if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack {target.name} but has no exploit selected."); }
             return;
         }

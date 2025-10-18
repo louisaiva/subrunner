@@ -38,7 +38,10 @@
 - DONE faire que les éléments d' #ui_hacking ne s'affichent que quand on a un #Device !!
 - DONE quand on recup un item ça le met direct dans les shorcuts si on en a de la même ref
 -
-- TODO rework le #UI_RunningHacksViewer pour combiner les hacks en cours du même exploit & même statut !
+- DONE rework le #UI_RunningHacksViewer pour combiner les hacks en cours du même exploit & même statut !
+  :LOGBOOK:
+  CLOCK: [2025-10-17 Fri 23:50:16]--[2025-10-17 Fri 23:50:17] =>  00:00:01
+  :END:
 -
 -
 -
@@ -53,4 +56,4 @@
   :END:
 -
 -
-- TODO mettre à jour les hud_shortcuts en fonction du #Capable du #Controller (les cacher si c un device)
+- DONE mettre à jour les hud_shortcuts en fonction du #Capable du #Controller (les cacher si c un device)

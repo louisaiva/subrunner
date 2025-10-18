@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 /// <summary>
@@ -37,31 +38,23 @@ public class HackableNavigator : MonoBehaviour
     public ConnectionTree Tree => device?.Connector.Tree;
     private ConnectCapacity connector => Controller.Instance.Capable.Connector;
     [SerializeField] private ConnectCapacity cursor;
+    private TextMeshProUGUI kf_exploit_text;
 
     [Header("Log")]
     [SerializeField] private bool log = false;
     [SerializeField] private bool log_update = false;
     [SerializeField] private bool log_enabling = false;
 
-
     // START
-    /* private void Start()
+    void Start()
     {
-        // UI_LaptopItemSlot.Instance.OnItemChanged += ctx => OnLaptopChanged(ctx.Count > 0 ? ctx[0] as Device : null);
-
-        // we get the navigation action & create the callbacks
-        // navigationAction = InputManager.Instance.GetAction(navigationInput);
-        // navigationCallback = ctx => HandleHackNavigationInput(ctx.ReadValue<Vector2>());
-
-        if (log_enabling) { Debug.Log("(VulnerableNavigator) started & callbacks created"); }
-    } */
-
-    private void OnDestroy()
-    {
-        Disable();
-        // UI_LaptopItemSlot.Instance.OnItemChanged -= ctx => OnLaptopChanged(ctx.Count > 0 ? ctx[0] as Device : null);
+        kf_exploit_text = UI_Manager.Instance.GetPool("hacking").transform.Find("details/hack_if/kf_exploit_text").GetComponent<TextMeshProUGUI>();
+        if (kf_exploit_text == null)
+        {
+            Debug.LogWarning("(VulnerableNavigator) missing kf_exploit_text reference");
+        }
     }
-
+    
     // UPDATE
     private void Update()
     {
@@ -163,10 +156,7 @@ public class HackableNavigator : MonoBehaviour
             if (log_enabling) { Debug.LogWarning("(VulnerableNavigator) no ConnectCapacity found, disabling navigator"); }
             return;
         }
-
-        // we activate the callbacks
-        // navigationAction.performed += navigationCallback;
-
+        
         // we update the hackray
         if (hover_hackray == null)
         {
@@ -177,15 +167,17 @@ public class HackableNavigator : MonoBehaviour
         }
         hover_hackray.gameObject.SetActive(false);
         hover_hackray.SetColor(hackray_color);
-        // hover_hackray.SetLaptopAndTarget(device, cursor);
         hover_hackray.SetConnectors(connector, cursor);
 
         // we activate the cursor
         cursor.gameObject.SetActive(false);
 
-
-        if (log_enabling) { Debug.Log("(VulnerableNavigator) enabled & callbacks set"); }
         IsSelecting = true;
+
+        // we change the exploit KF text to "run hack"
+        kf_exploit_text.text = "run hack";
+        
+        if (log_enabling) { Debug.Log("(VulnerableNavigator) enabled & callbacks set"); }
 
         // we select the last hackable if we still have some
         if (targeted_connector == null || hacker == null) { return; }
@@ -193,55 +185,20 @@ public class HackableNavigator : MonoBehaviour
     }
     public void Disable()
     {
-        // we deactivate the callbacks
-        if (log_enabling) Debug.Log("(VulnerableNavigator) about to remove navigation callback");
-        // if (navigationAction != null) { navigationAction.performed -= navigationCallback; }
-        if (log_enabling) Debug.Log("(VulnerableNavigator) removed navigation callback");
-
         unselect_target();
 
         // we update the hackray & cursor
         hover_hackray?.gameObject.SetActive(false);
-        cursor.gameObject.SetActive(false);
+        cursor?.gameObject.SetActive(false);
 
-        if (log_enabling) { Debug.Log("(VulnerableNavigator) disabled & callbacks removed"); }
         IsSelecting = false;
+
+        // we change the exploit KF text to "open exploit wheel"
+        kf_exploit_text.text = "open exploit wheel";
+
+        if (log_enabling) { Debug.Log("(VulnerableNavigator) disabled"); }
     }
-
-    // ON LAPTOP CHANGED
-    /* private void OnLaptopChanged(Device new_laptop)
-    {
-        if (new_laptop == null)
-        {
-            unselect_target();
-            hacker = null;
-            connector = null;
-            if (device != null) { (device.Inventory as LaptopInventory).OnModuleChanged -= OnLaptopModuleChanged; }
-            device = null;
-            return;
-        }
-
-        // we assign the hacker as the new device hack capacity
-        device = new_laptop;
-        (device.Inventory as LaptopInventory).OnModuleChanged += OnLaptopModuleChanged;
-        hacker = new_laptop.GetCapacity<HackCapacity>();
-        // connector = new_laptop.GetCapacity<ConnectCapacity>();
-    } */
-    /* private void OnLaptopModuleChanged(Item item)
-    {
-        hacker = device.GetCapacity<HackCapacity>();
-        connector = device.GetCapacity<ConnectCapacity>();
-    } */
-    /* public void SetConnector(ConnectCapacity new_connector)
-    {
-        connector = new_connector;
-        // hacker.SetConnector(new_connector);
-    } */
-
-    // [Header("Inputs")]
-    // [SerializeField] private InputActionReference navigationInput;
-    // private InputAction navigationAction;
-    // private event System.Action<InputAction.CallbackContext> navigationCallback;
+    private void OnDestroy() => Disable();
 
 
     // TARGET SELECTION HANDLE INPUT

@@ -283,9 +283,6 @@ public class UI_Item : UI_Slot
             OnItemChanged?.Invoke(this.items);
             ItemPool?.NotifyPoolChanged(this);
             dropper.random_direction = false;
-
-            // we switch back to hud
-            // UI_Manager.Instance.SwitchTo("hud");
         }
         else
         {

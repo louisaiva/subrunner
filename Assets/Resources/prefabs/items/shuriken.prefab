@@ -175,6 +175,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -196,6 +198,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
@@ -297,6 +300,7 @@ MonoBehaviour:
   debug: 0
   activate_all_capacities_logs_on_awake: 0
   debug_velocity: 0
+  log_avoidance: 0
   rb: {fileID: 4604390373980000295}
   weight: 1
   random_weight_modifier_at_start: 0
@@ -306,6 +310,7 @@ MonoBehaviour:
   Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 5011315919855655935}
   Reference: weapon:shuriken
+  Color: {r: 0.57254905, g: 0.654902, b: 0.68235296, a: 1}
   MaxQty: 4
   ItemDescription: weird mix between a gear n a shuriken,/. maybe it is both ?/l
     *looks sharp*
@@ -5116,6 +5121,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5138,6 +5145,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -31225397
   m_SortingLayer: 2
   m_SortingOrder: 1

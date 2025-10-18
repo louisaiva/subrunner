@@ -14,6 +14,8 @@ public class UI_Notif : MonoBehaviour
     [SerializeField] private TextMeshProUGUI element_name;
     [SerializeField] private Image element_icon;
 
+    public Item Item = null;
+    public File File = null;
 
     // START
     private void Awake()
@@ -52,6 +54,9 @@ public class UI_Notif : MonoBehaviour
         Sprite icon = ItemBank.Instance.GetSprite(item);
         element_icon.sprite = icon;
         element_name.text = item.Reference;
+        element_name.color = item.Color;
+
+        Item = item;
     }
     private void set_file(File file)
     {
@@ -60,5 +65,19 @@ public class UI_Notif : MonoBehaviour
         // get the icon
         element_icon.sprite = file.icon;
         element_name.text = file.name;
+
+        File = file;
+    }
+
+    // add another item
+    private int notif_count = 1;
+    public void AddDuplicate(bool is_item=true)
+    {
+        notif_count++;
+        new_text.text = (is_item ? "new item x" : "new file x") + notif_count + " : ";
+
+        // we reset the time to live
+        CancelInvoke("HideAndDestroy");
+        Invoke("HideAndDestroy", time_to_live);
     }
 }
