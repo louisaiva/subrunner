@@ -43,7 +43,7 @@ public class UI_GameOver : UI_Pool
 
 
     // SHOWING
-    protected override IEnumerator show_coroutine(List<GameObject> dont_show = null, float duration_override = -1f)
+    protected override IEnumerator show_coroutine(List<GameObject> dont_show = null, float duration_override = -1f, bool was_stacked = false)
     {
         // we set the callbacks
         reviveAction.performed += reviveCallback;

@@ -515,7 +515,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     public Vector2 GetCurrentSlotPosition()
     {
         // get the position of the current slot
-        if (current_slot_index == -1) { return base_position; }
+        if (current_slot_index == -1) { return new Vector2(Screen.width / 2f, Screen.height / 2f); }
         return get_position(current_slot_index);
     }
 

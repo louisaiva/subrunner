@@ -104,11 +104,20 @@ public class UI_Manager : Singleton<UI_Manager>
     }
 
     // UI POOL SWITCH
-    public void TogglePool(string pool_name)
+    public void TogglePool(string pool_name, bool stacking = false)
     {
-        // we check if the pool is already shown
-        if (pool_name == current_pool.Reference) { SwitchToHUD(); }
-        else { SwitchTo(pool_name, false); }
+        // if we don't want stacking we simmply switch to the pool
+        if (!stacking)
+        {
+            // we check if the pool is already shown
+            if (pool_name == current_pool.Reference) { SwitchToHUD(); }
+            else { SwitchTo(pool_name, false); }
+            return;
+        }
+
+        // otherwise we stack/unstack it
+        if (IsStacked(pool_name)) { UnstackPool(pool_name); }
+        else { StackPool(pool_name); }
     }
 
     /// <summary>
@@ -397,7 +406,7 @@ public class UI_Manager : Singleton<UI_Manager>
         bg.transform.SetSiblingIndex(pools.IndexOf(next_pool));
 
         // we show the next pool
-        yield return next_pool.ShowCoroutine();
+        yield return next_pool.ShowCoroutine(was_stacked : true);
 
         // we invoke the OnPoolSwitched event
         OnPoolSwitched?.Invoke(next_pool.Reference);

@@ -45,7 +45,7 @@ public class UI_Pool : MonoBehaviour
     }
 
     // SHOW / HIDE
-    public IEnumerator ShowCoroutine(List<GameObject> dont_show = null,float duration_override = -1f)
+    public IEnumerator ShowCoroutine(List<GameObject> dont_show = null,float duration_override = -1f, bool was_stacked = false)
     {
         // si on est déjà en transition alors on ne vas pas plus loin
         // si on veut StopCoroutine plutot que de break faudrait que TOUTES les coroutines
@@ -53,7 +53,7 @@ public class UI_Pool : MonoBehaviour
         if (current_transition != null) { yield break; }
 
         // on lance l'affichage
-        current_transition = StartCoroutine(show_coroutine(dont_show, duration_override));
+        current_transition = StartCoroutine(show_coroutine(dont_show, duration_override, was_stacked));
         yield return current_transition;
 
         // on enable
@@ -94,7 +94,7 @@ public class UI_Pool : MonoBehaviour
         yield return StartCoroutine(disable_coroutine());
 
         // on lance le hiding
-        current_transition = StartCoroutine(hide_coroutine(stacked_elements, duration_override));
+        current_transition = StartCoroutine(hide_coroutine(stacked_elements, duration_override, stacking: true));
         yield return current_transition;
 
         // on clear la transition
@@ -127,7 +127,7 @@ public class UI_Pool : MonoBehaviour
     }
 
     // LOW SHOWING
-    protected virtual IEnumerator show_coroutine(List<GameObject> dont_show = null, float duration_override = -1f)
+    protected virtual IEnumerator show_coroutine(List<GameObject> dont_show = null, float duration_override = -1f, bool was_stacked = false)
     {
         if (TransitionSettings.UsePersoInputs) { InputManager.Instance.EnablePersoInputs(); }
 
@@ -165,7 +165,7 @@ public class UI_Pool : MonoBehaviour
         if (!TransitionSettings.UsePersoInputs) { InputManager.Instance.DisablePersoInputs(); }
         if (log) { Debug.Log("(UI_Pool) show_coroutine succeeded ! pool : " + Reference); }
     }
-    protected virtual IEnumerator hide_coroutine(List<GameObject> dont_hide = null, float duration_override = -1f)
+    protected virtual IEnumerator hide_coroutine(List<GameObject> dont_hide = null, float duration_override = -1f, bool stacking = false)
     {
         // on récupère la duration
         float duration = duration_override >= 0f ? duration_override : TransitionSettings.Duration;

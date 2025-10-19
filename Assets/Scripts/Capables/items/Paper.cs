@@ -15,7 +15,7 @@ public class Paper : Item, Usable
         if (!Grabbed) { return; }
 
         // we show the ui_paper pool
-        (UI_Manager.Instance.GetPool("paper") as UI_Paper).SetPaper(this);
+        (UI_Manager.Instance.GetPool("paper") as UI_Paper).SetReadable(prefab);
         UI_Manager.Instance.StackPool("paper");
     }
 

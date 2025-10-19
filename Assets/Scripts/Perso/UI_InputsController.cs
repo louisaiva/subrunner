@@ -55,7 +55,7 @@ public class UI_InputsController : InputController
         // notamment les inputs de menus
         MenusActions ui_menus = InputManager.Instance.inputs.menus;
         ui_menus.inventory.performed += ctx => { UI_Manager.Instance.TogglePool("inventory"); };
-        ui_menus.pause.performed += ctx => { UI_Manager.Instance.TogglePool("pause"); };
+        ui_menus.pause.performed += ctx => { UI_Manager.Instance.TogglePool("pause",stacking:true); };
     }
     public void EnableInputs(bool ingame_navigation = false)
     {

@@ -141,9 +141,11 @@ public class Item : Movable
     }
 
     // ON DESTROY
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
         if (!gameObject.scene.isLoaded) { return; } // this happens when the scene is destroyed when we quit the scene
         if (Holder != null) { Holder.Inventory.Remove(this); } // we remove the item from the holder's inventory
+
+        base.OnDestroy();
     }
 }

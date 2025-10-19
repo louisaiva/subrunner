@@ -30,7 +30,6 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     // AWAKE START
     protected override void Awake()
     {
-
         if (ui_inventory == null)
         {
             Debug.LogError("(UI_InventoryMenu) missing ui_inventory on " + name);
@@ -40,6 +39,9 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         {
             Debug.LogError("(UI_InventoryMenu) missing ui_laptop on " + name);
         }
+
+        // we set the saved position to screen center
+        SavedPosition = new Vector2(Screen.width / 2f, Screen.height / 2f);
 
         // we save the current ui_elements state in saved_state
         saved_slots = new List<GameObject>(ui_elements);
@@ -51,7 +53,7 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     }
 
     // LOW SHOWING
-    protected override IEnumerator show_coroutine(List<GameObject> dont_show = null, float duration_override = -1f)
+    protected override IEnumerator show_coroutine(List<GameObject> dont_show = null, float duration_override = -1f, bool was_stacked = false)
     {
         // vérifie si on a des items dans notre inventaire
         ui_elements.Clear();
@@ -82,7 +84,7 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     protected override IEnumerator disable_coroutine()
     {
         // on récupère la position du slot actuel (pour le remettre quand on reouvre l'inventaire)
-        SavedPosition = UI_XboxNavigator.Instance.GetCurrentSlotPosition();
+        if (UI_Manager.Instance.CurrentPool == Reference) { SavedPosition = UI_XboxNavigator.Instance.GetCurrentSlotPosition(); }
 
         // on désactive le navigator
         UI_XboxNavigator.Instance.Disable(this);

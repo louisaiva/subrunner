@@ -21,6 +21,9 @@ public class UI_Readable : MonoBehaviour
     public List<string> hide_animations = new List<string>(); // will play these animations on hide
     Coroutine anim_routine = null;
 
+    [Header("Logs")]
+    public bool log = false;
+
     // SHOW HIDE 
     public void Show(float duration = 0f)
     {
@@ -44,9 +47,10 @@ public class UI_Readable : MonoBehaviour
     // SHOW HIDE LOW LEVEL + CONTENT
     private IEnumerator show_anims(float duration = 0f)
     {
+        if (player == null) { yield return new WaitForSecondsRealtime(duration); yield break; }
+
         foreach (string anim in show_animations)
         {
-            if (player == null) { yield break; }
             float anim_duration = calculate_anim_duration(anim, animations: show_animations, total_duration: duration);
 
             // we play the animation
@@ -64,7 +68,6 @@ public class UI_Readable : MonoBehaviour
         {
             // we pick a random animation
             string anim = loop_animations[Random.Range(0, loop_animations.Count)];
-            if (player == null) { yield break; }
 
             // we play the animation
             player.Play(anim, loop_override: false);
@@ -75,9 +78,9 @@ public class UI_Readable : MonoBehaviour
     }
     private IEnumerator hide_anims(float duration = 0f)
     {
+        if (player == null) { yield return new WaitForSecondsRealtime(duration); yield break; }
         foreach (string anim in hide_animations)
         {
-            if (player == null) { yield break; }
             float anim_duration = calculate_anim_duration(anim, animations: hide_animations, total_duration: duration);
 
             // we play the animation
@@ -92,16 +95,20 @@ public class UI_Readable : MonoBehaviour
         float transition_duration = duration * transition_duration_percentage;
         float time_to_wait = show ? duration - transition_duration : 0f;
 
+        if (log) { Debug.Log($"(UI_Readable) waiting for {time_to_wait} sec before transitionning content"); }
+
         if (time_to_wait > 0f) { yield return new WaitForSecondsRealtime(time_to_wait); }
 
+        if (log) { Debug.Log($"(UI_Readable) waiting is done !! {(show? "showing" : "hiding")} the content"); }
         if (show) { yield return content.Show(transition_duration); }
         else
         {
-            yield return content.Hide(transition_duration);
+            if (log) { Debug.Log($"(UI_Readable) waiting for the end of the hide transition ({transition_duration})"); }
+            content.Hide(transition_duration);
+            if (transition_duration > 0f) { yield return new WaitForSecondsRealtime(transition_duration); }
+            if (log) { Debug.Log($"(UI_Readable) finally hiding the global transitionner"); }
             GetComponent<Transitioner>()?.Hide(duration - transition_duration);
-
         }
-
         content_routine = null;
     }
 

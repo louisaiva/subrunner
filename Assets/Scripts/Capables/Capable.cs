@@ -290,7 +290,7 @@ public class Capable : MonoBehaviour, Debuggable
 
 
     // DEBUG
-    private void OnDestroy()
+    protected virtual void OnDestroy()
     {
         if (DebugManager.Instance == null) { return; } // this happens when the scene is destroyed when we quit the scene
         DebugManager.Instance.transform.GetComponentInChildren<EntitiesDebug>()?.RemoveEntity(this);

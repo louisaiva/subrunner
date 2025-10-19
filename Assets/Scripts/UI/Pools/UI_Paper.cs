@@ -2,28 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// todo : renommer en UI_Reader
 public class UI_Paper : UI_Pool
 {
     [Header("Paper parameters")]
-    public Paper paper = null;
     public UI_Readable content = null;
 
 
-    public void SetPaper(Paper paper)
+    public void SetReadable(GameObject readable_prefab)
     {
-        this.paper = paper;
-    
-        GameObject content_go = Instantiate(paper.prefab, transform);
+        // if we already have a content we don't instantiate a new one (it won't appear anyway it means the transition was not done)
+        if (content != null) { return; }
+
+        GameObject content_go = Instantiate(readable_prefab, transform);
         if (content_go == null) { return; }
+        // last_prefab = readable_prefab;
         RegisterToPool(content_go, is_stacked: true);
 
         content = content_go.GetComponent<UI_Readable>();
         TransitionSettings = content.transition_settings;
-    }
-    protected override IEnumerator show_coroutine(List<GameObject> dont_show = null, float duration_override = -1f)
-    {
 
-        // todo : d'ailleurs remplacer UI_Paper par un UI_Reader
+        if (log) { Debug.Log("(UI_Reader) Set readable " + content.name); content.log = true; }
+    }
+    protected override IEnumerator show_coroutine(List<GameObject> dont_show = null, float duration_override = -1f, bool was_stacked = false)
+    {
+        // we check if we are stacking we simply do the virtual coroutine
+        if (was_stacked) { yield return base.show_coroutine(dont_show, duration_override, was_stacked);  yield break; }
 
         content.gameObject.SetActive(true);
         content.Show(duration_override >= 0f ? duration_override : TransitionSettings.Duration);
@@ -31,25 +36,30 @@ public class UI_Paper : UI_Pool
         dont_show.Add(content.gameObject);
 
         // we transition to the ui_paper pool
-        yield return base.show_coroutine(dont_show, duration_override);
+        yield return base.show_coroutine(dont_show, duration_override, was_stacked);
     }
-    protected override IEnumerator hide_coroutine(List<GameObject> dont_hide = null, float duration_override = -1f)
+    protected override IEnumerator hide_coroutine(List<GameObject> dont_hide = null, float duration_override = -1f, bool stacking = false)
     {
+        if (stacking)
+        {
+            // si on stacke on veut pas cacher tous les trucs donc on lance simplement la base
+            yield return base.hide_coroutine(dont_hide, duration_override, stacking);
+            yield break;
+        }
+
+        // sinon on veut vraiment cacher UI_Reader, on cache donc le UI_Readable puis on le supprime
+
         // we transition the content away
-        content.Hide(duration_override >= 0f ? duration_override : TransitionSettings.Duration);
-        if (dont_hide == null) { dont_hide = new List<GameObject>(); }
-        dont_hide.Add(content.gameObject);
+        float duration = duration_override >= 0f ? duration_override : TransitionSettings.Duration;
+        content.Hide(duration);
 
         // we transition away from the ui_paper pool
-        yield return base.hide_coroutine(dont_hide, duration_override);
+        yield return base.hide_coroutine(dont_hide, duration_override, stacking);
 
         // we remove the text of the paper
-        if (paper != null && content != null)
-        {
-            QuitPool(content.gameObject);
-            Destroy(content.gameObject);
-            content = null;
-            paper = null;
-        }
+        if (log) { Debug.Log("(UI_Reader) Cleaning readable " + content.name); }
+        QuitPool(content.gameObject);
+        Destroy(content.gameObject);
+        content = null;
     }
 }
