@@ -23,6 +23,11 @@ public class Description : MonoBehaviour
         }
     }
 
+    [Header("Logs")]
+    public bool log_writing = false;
+
+
+    // AWAKE
     private void Awake()
     {
         // on récupère le label
@@ -57,6 +62,7 @@ public class Description : MonoBehaviour
 
         // check if description is active
         if (gameObject.activeSelf == false) { return; }
+        if (description == null || description == "") { return; }
 
         // set the description of the item
         target_description = description;
@@ -64,10 +70,14 @@ public class Description : MonoBehaviour
     }
     IEnumerator write(string target, int cursor = 0)
     {
+        if (log_writing) { Debug.Log($"(Description) writing {target}"); }
+
         this.cursor = cursor;
         // on ajoute les caractères un par un
         for (int j = cursor; j < target.Length; j++)
         {
+            if (log_writing) { Debug.Log($"(Description) writing char {target[j]} at pos {j}"); }
+
             if (target[j] == '/' && j < target.Length - 1 && target[j + 1] == '.')
             {
                 this.cursor = j + 2; // we set the cursor before waiting so we ensure that we won't write this caracter till the infinite

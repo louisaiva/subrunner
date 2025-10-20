@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: nmap
   m_EditorClassIdentifier: 
   extension: 
-  data: Scan the target when executed.
+  data: vulnerabilty scanner. automatically select the right exploit after scanning
   icon: {fileID: 2116671064, guid: 393f5d7ac896f67fcb6c10c0977c55b2, type: 3}
   base_duration: 0.1
   cores_cost: 1
   security_level: 1
+  targets: everything

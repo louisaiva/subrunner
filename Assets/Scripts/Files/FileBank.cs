@@ -22,6 +22,8 @@ public class FileBank : Singleton<FileBank>
         {
             FileExploit exploit = ScriptableObject.CreateInstance<FileExploit>();
             exploit.name = "type_password";
+            exploit.data = "this program simply types a password from a .key file. won't work if you don't have the file for the selected target. fastest way to unlock things tho.";
+            exploit.targets = "anything that requires a password, doors, computers, etc.";
             exploit.file = null;
             exploit.icon = key_icon;
             exploit.cores_cost = 1;

@@ -180,7 +180,7 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         if (!Showed) { return; }
         if (slot is not UI_Item ui_slot) { return; }
 
-        // we handle the DROP (activate it only if it is a UI_Item that has Item & not a UI_Module)        
+        // we handle the DROP (activate it only if it is a UI_Item that has Item & not a UI_Module)
         if (ui_slot is UI_Module || ui_slot.Item == null)
         {
             drop_feedback.SetAlwaysFull(false);

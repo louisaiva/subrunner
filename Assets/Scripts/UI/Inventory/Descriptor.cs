@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// this class handles multiple description
+/// this class handles multiple description FOR ITEMS
 /// and allow the inventory to show item description
 /// with upgrades for example
 /// </summary>

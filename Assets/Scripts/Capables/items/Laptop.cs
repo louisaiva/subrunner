@@ -104,12 +104,28 @@ public class Laptop : Item, Usable, Device
     {
         // we get all exploits from all disks
         List<Exploit> exploits = new List<Exploit>();
-        foreach (StoreCapacity disk in disks)
+        List<string> exploit_refs = new List<string>();
+        for (int i=0; i<disks.Count; i++)
         {
-            exploits.AddRange(disk.GetExploits());
+            List<Exploit> disk_exploits = disks[i].GetExploits();
+            for (int j = 0; j < disk_exploits.Count; j++)
+            {
+                // if we already have the name, we keep the one with the highest security level
+                if (exploit_refs.Contains(disk_exploits[j].name))
+                {
+                    int index = exploit_refs.IndexOf(disk_exploits[j].name);
+                    if (disk_exploits[j].security_level > exploits[index].security_level)
+                    {
+                        exploits[index] = disk_exploits[j];
+                    }
+                    continue;
+                }
+
+                // else we add it
+                exploits.Add(disk_exploits[j]);
+                exploit_refs.Add(disk_exploits[j].name);
+            }
         }
-        // exploits.Add(Exploit.TypePassword); // we always add TypePassword as default
-        // exploits.Add(Exploit.Nmap); // we always add Nmap as a default exploit
         exploits.Add(FileBank.Instance.Nmap);
         exploits.Add(FileBank.Instance.TypePassword);
         return exploits;
