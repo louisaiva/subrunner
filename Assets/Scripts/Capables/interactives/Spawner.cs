@@ -5,7 +5,6 @@ public class Spawner : Capable, EndlessInteractable
 {
     // INTERACTABLE
     public InteractCapacity Interactor { get; set; }
-    public bool AuthorizeEndlessInteraction => authorize_interact_endlessly;
     [Header("Endless interaction")]
     public bool authorize_interact_endlessly = true;
 
@@ -34,5 +33,5 @@ public class Spawner : Capable, EndlessInteractable
         spawner.Spawn(entity);
         if (debug) { Debug.Log("(Spawner) " + name + " spawned entity " + entity.name); }
     }
-    public void OnEndlessInteract(Capable interactor) { OnInteract(interactor); }
+    public void OnEndlessInteract(Capable interactor) { if (authorize_interact_endlessly) { OnInteract(interactor); } }
 }

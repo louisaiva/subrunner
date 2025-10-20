@@ -1,0 +1,33 @@
+-
+-
+- ## OPTIMISER CREATION ANIMATIONS POUR ITEMS
+	- ### aseprite
+		- 24x24px
+		- on fait 4 frames : la 1 et la 3 sont pareil, la 2 et la 4 sont pareil
+		- la 1 c'est la basique, et la moitié haute du 2 descneds d'un pixel sur la moitié basse (donc la 2e frame fait 1 px de hauteur de moins que la 1e)
+		- ensuite on fait em que pour la frame 1 et 2 (c pour ça on duplique pour avoir 2 frames d'hover)
+	-
+		- le pixel le plus bas est donc à la même hauteur sur toutes les frames
+		- on appelle cette hauteur y, et y+1 est plus haut que y et y-1 moins haut de un pixel
+		- exporter em et normal
+	-
+	- ### unity - sprite manager
+		- faire em & normal, ouvrir le sprite manager
+		- maintenant on veut faire 5 sprites pour **idle** & 5 sprites pour le **hover**
+		-
+		- on commence par l'**idle**
+		  -> sprite **A** (frame 1) avec pivot à y-1
+		  -> sprite **B** (frame 2) pivot y-1
+		  -> sprite **C** (frame 1) pivot y
+		  -> sprite **D** (frame 2) pivot y-2
+		  -> sprite **E** (frame 1) pivot y-2
+		-
+		- ensuite on fait pareil pour le **hover** et donc avec les frames 3 & 4
+	-
+	- ### animations
+		- ensuite pour l'**idle** comme pour le **hover** c'est la même chose avec les sprites différents
+		- **A -> B -> C -> B -> A -> D -> E -> D**
+		- normalement ça boucle parfait
+	-
+-
+-

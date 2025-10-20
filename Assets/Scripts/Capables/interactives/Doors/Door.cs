@@ -47,7 +47,6 @@ public class Door : Capable, Interactable, Openable
 
     // INTERACTABLE
     public InteractCapacity Interactor { get; set; }
-    public bool AuthorizeEndlessInteraction => false;
     public virtual void OnInteract(Capable interactor)
     {
         // on set l'interactor

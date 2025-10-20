@@ -5,7 +5,6 @@ using UnityEngine;
 public class Package : Movable, Interactable
 {
     public InteractCapacity Interactor => null;
-    public bool AuthorizeEndlessInteraction => false;
 
     [Header("Items offset")]
     public Vector3 items_offset = new Vector3(0f, 0.2f, 0f);

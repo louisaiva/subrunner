@@ -233,11 +233,15 @@ public class UI_Item : UI_Slot
         if (log) { Debug.Log("OnPointerClick on " + gameObject.name); }
 
         // we check if the item is an usable
-        if (Item != null && Item is Usable usable)
+        if (Item is Usable usable)
         {
             usable.Use(Inventory.capable);
             UI_Manager.Instance.SwitchToHUD();
+            return;
         }
+
+        // we check if the item is an inspectable
+        if (Item is Inspectable inspectable) { inspectable.Inspect(); }
     }
     public override void OnPointerExit(PointerEventData eventData)
     {

@@ -77,14 +77,14 @@ public class AnimPlayer : MonoBehaviour
         AnimCapacityPriority capacity_priority = getAnimCapacityPriority(capacity);
         if (capacity_priority == null)
         {
-            if (log) { Debug.LogWarning("(AnimPlayer - Play) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
+            if (log) { Debug.LogWarning($"(AnimPlayer - {name}) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
             return null;
         }
 
         // we check if the index is < than current prio we don't play it
         if (current_capacity_priority != null && capacity_priority.priority < current_capacity_priority.priority)
         {
-            if (log_pile) { Debug.LogWarning("(AnimPlayer - Play) The capacity " + capacity + " has a lower priority than the current one (" + current_capacity_priority.priority + ")"); }
+            if (log_pile) { Debug.LogWarning($"(AnimPlayer - {name}) The capacity " + capacity + " has a lower priority than the current one (" + current_capacity_priority.priority + ")"); }
             return null;
         }
 
@@ -99,7 +99,7 @@ public class AnimPlayer : MonoBehaviour
         Anim anim = AnimBank.Instance.GetAnim(anim_name);
         if (log)
         {
-            Debug.Log("(AnimPlayer - Play) Bank found anim : " + anim.name
+            Debug.Log($"(AnimPlayer - {name}) Bank found anim : " + anim.name
                 + (anim_name == anim.name
                 ? ""
                 : " (" + anim_name + " was asked)"));
@@ -124,7 +124,7 @@ public class AnimPlayer : MonoBehaviour
         {
             if (log)
             {
-                Debug.LogWarning("(AnimPlayer - Play) The animation " + anim.name + " is already playing at frame " + current_frame);
+                Debug.LogWarning($"(AnimPlayer - {name}) The animation " + anim.name + " is already playing at frame " + current_frame);
             }
             return current_anim;
         }
@@ -170,7 +170,7 @@ public class AnimPlayer : MonoBehaviour
         Anim anim = AnimBank.Instance.GetAnim(anim_name);
         if (log)
         {
-            Debug.Log("(AnimPlayer - Play) Bank found anim : " + anim.name
+            Debug.Log($"(AnimPlayer - {name}) Bank found anim : " + anim.name
                 + (anim_name == anim.name
                 ? ""
                 : " (" + anim_name + " was asked)"));
@@ -287,6 +287,17 @@ public class AnimPlayer : MonoBehaviour
 
         // we play the idle animation
         Play("idle");
+    }
+    public bool IsPlaying(string capacity)
+    {
+        AnimCapacityPriority priority = getAnimCapacityPriority(capacity);
+        if (priority == null)
+        {
+            if (log_pile) { Debug.LogWarning("(AnimPlayer - IsPlaying) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
+            return false;
+        }
+
+        return priority.capacity_playing == capacity;
     }
 
     // PILE MANAGEMENT

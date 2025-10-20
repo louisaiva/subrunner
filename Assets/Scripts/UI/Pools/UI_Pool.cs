@@ -56,14 +56,15 @@ public class UI_Pool : MonoBehaviour
         current_transition = StartCoroutine(show_coroutine(dont_show, duration_override, was_stacked));
         yield return current_transition;
 
+        Showed = true;
+        Stacked = false;
+    
         // on enable
         // enable();
         yield return StartCoroutine(enable_coroutine());
 
         // on clear la transition
         current_transition = null;
-        Showed = true;
-        Stacked = false;
     }
     public IEnumerator HideCoroutine(List<GameObject> dont_hide = null, float duration_override = -1f)
     {
@@ -117,13 +118,14 @@ public class UI_Pool : MonoBehaviour
         current_transition = StartCoroutine(show_coroutine(dont_show, duration_override));
         yield return current_transition;
 
+        Showed = true;
+        Stacked = true;
+        
         // on enable
         yield return StartCoroutine(enable_coroutine());
 
         // on clear la transition
         current_transition = null;
-        Showed = true;
-        Stacked = true;
     }
 
     // LOW SHOWING

@@ -156,6 +156,50 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: hack_center_poster_2
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 48
+        height: 36
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 51c77fb54eb182e9bbc22721623e6fb0
+      internalID: -716941724
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hack_center_poster_3
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 0
+        width: 48
+        height: 36
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 991210be620f8253c831ab6be2939ea0
+      internalID: 2084200481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -166,7 +210,9 @@ TextureImporter:
     indices: 
     edges: []
     weights: []
-    secondaryTextures: []
+    secondaryTextures:
+    - texture: {fileID: 2800000, guid: bf91da37f6a0adf8aacb604f1a2ca62b, type: 3}
+      name: _Emission
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
@@ -174,6 +220,8 @@ TextureImporter:
     nameFileIdTable:
       hack_center_poster_0: 44085960
       hack_center_poster_1: 779306378
+      hack_center_poster_2: -716941724
+      hack_center_poster_3: 2084200481
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

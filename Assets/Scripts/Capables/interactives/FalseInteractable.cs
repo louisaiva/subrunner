@@ -5,7 +5,6 @@ public class FalseInteractable : Capable, EndlessInteractable
 {
     // INTERACTABLE
     public InteractCapacity Interactor { get; set; }
-    public bool AuthorizeEndlessInteraction => true;
 
     // INTERACTION
     public void OnEndlessInteract(Capable interactor) { OnInteract(interactor); }

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Events;
+using System;
 
 public class Inventory : MonoBehaviour
 {
@@ -10,10 +11,10 @@ public class Inventory : MonoBehaviour
     public int Count { get { return Items.Count; } }
 
     [Header("Events")]
-    public UnityEvent OnGrab;
-    public UnityEvent OnDrop;
-    public event System.Action<Item> OnItemGrabbed = delegate { };
-    public event System.Action<Item> OnItemDropped = delegate { };
+    [Obsolete] public UnityEvent OnGrab;
+    [Obsolete] public UnityEvent OnDrop;
+    public event Action<Item> OnItemGrabbed = delegate { };
+    public event Action<Item> OnItemDropped = delegate { };
 
 
     [Header("Components")]

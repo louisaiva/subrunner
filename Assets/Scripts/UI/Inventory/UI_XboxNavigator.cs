@@ -458,14 +458,17 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         // on vérifie si on a rien à hover
         if (index == -1) { current_slot_index = -1; return; }
 
+        // on récupère le UI_slot
+        I_UI_Slot ui_slot = slots[index].GetComponent<I_UI_Slot>();
+
         // on vérifie si on ne drag pas
-        if (moving_ui_item == null || slots[index].GetComponent<UI_Item>() == null)
+        if (moving_ui_item == null || ui_slot is not UI_Item ui_item)
         {
-            slots[index].GetComponent<I_UI_Slot>().OnPointerEnter(null);
+            ui_slot.OnPointerEnter(null);
         }
-        else if (moving_ui_item != slots[index].GetComponent<UI_Item>())
+        else if (moving_ui_item != ui_item)
         {
-            slots[index].GetComponent<UI_Item>().OnPointerDragEnter(moving_ui_item); // si on est ici on drag
+            ui_item.OnPointerDragEnter(moving_ui_item); // si on est ici on drag
         }
 
         // on vérifie si la position du slot est en dehors de l'écran
@@ -474,11 +477,11 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         {
             // on déclenche l'event OnSlotOutOfScreen
             if (debug) { Debug.Log("(UI_Navigator) slot " + index + " is out of screen"); }
-            OnSlotOutOfScreen?.Invoke(slots[index].GetComponent<I_UI_Slot>());
+            OnSlotOutOfScreen?.Invoke(ui_slot);
         }
 
         // on déclenche l'event OnSlotHoverEnter
-        OnSlotHoverEnter?.Invoke(slots[index].GetComponent<I_UI_Slot>());
+        OnSlotHoverEnter?.Invoke(ui_slot);
 
         // on change le current slot index
         current_slot_index = index;
@@ -518,7 +521,12 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         if (current_slot_index == -1) { return new Vector2(Screen.width / 2f, Screen.height / 2f); }
         return get_position(current_slot_index);
     }
-
+    public I_UI_Slot GetCurrentSlot()
+    {
+        // get the current slot
+        if (current_slot_index == -1 || current_slot_index >= slots.Count) { return null; }
+        return slots[current_slot_index].GetComponent<I_UI_Slot>();
+    }
 
 
 

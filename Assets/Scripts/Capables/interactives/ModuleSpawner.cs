@@ -10,7 +10,6 @@ public class ModuleSpawner : Capable, EndlessInteractable
 
     // INTERACTABLE
     public InteractCapacity Interactor { get; set; }
-    public bool AuthorizeEndlessInteraction => authorize_interact_endlessly;
     [Header("Endless interaction")]
     public bool authorize_interact_endlessly = true;
     public void OnInteract(Capable interactor)
@@ -27,5 +26,5 @@ public class ModuleSpawner : Capable, EndlessInteractable
         if (debug) { Debug.Log("(ModuleSpawner) " + name + " spawned module " + module.Reference); }
     }
 
-    public void OnEndlessInteract(Capable interactor) => OnInteract(interactor);
+    public void OnEndlessInteract(Capable interactor) { if (authorize_interact_endlessly) { OnInteract(interactor); } }
 }

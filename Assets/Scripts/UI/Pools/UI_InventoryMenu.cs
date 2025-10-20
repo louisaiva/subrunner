@@ -50,6 +50,7 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     protected void Start()
     {
         UI_XboxNavigator.Instance.OnSlotHoverEnter += handleUI_ItemHoverEnter;
+        if (log) { Debug.Log($"(UI_InventoryMenu) subscribed to OnSlotHoverEnter"); }
     }
 
     // LOW SHOWING
@@ -174,14 +175,16 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     }
     public Vector2 SavedPosition { get; private set; } = Vector2.zero;
 
-    // INPUT SWITCHING
-    protected void handleUI_ItemHoverEnter(I_UI_Slot slot)
+    // IF SWITCHING
+    private void handleUI_ItemHoverEnter(I_UI_Slot slot)
     {
+        if (log) { Debug.Log($"(UI_InventoryMenu) bwaaaa handleUI_ItemHoverEnter for slot {slot.gameObject.name}"); }
+
         if (!Showed) { return; }
-        if (slot is not UI_Item ui_slot) { return; }
+        if (slot is not UI_Item ui_item) { return; }
 
         // we handle the DROP (activate it only if it is a UI_Item that has Item & not a UI_Module)
-        if (ui_slot is UI_Module || ui_slot.Item == null)
+        if (ui_item is UI_Module || ui_item.Item == null)
         {
             drop_feedback.SetAlwaysFull(false);
             drop_feedback.SetLabel("");
@@ -195,27 +198,11 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         }
 
         // ACTIVATE
-        if (ui_slot.Item != null && ui_slot.Item is Usable usable)
-        {
-            use_feedback.SetAlwaysFull(true);
-            use_feedback.SetLabel(usable.UseLabel);
-            UI_XboxNavigator.Instance.ToggleInput("activate", true);
-        }
-        else if (ui_slot is UI_Module && ui_slot.Item != null && ui_slot.Item.Reference == "module:hdd")
-        {
-            use_feedback.SetAlwaysFull(true);
-            use_feedback.SetLabel("inspect");
-            UI_XboxNavigator.Instance.ToggleInput("activate", true);
-        }
-        else
-        {
-            use_feedback.SetAlwaysFull(false);
-            use_feedback.SetLabel("");
-            UI_XboxNavigator.Instance.ToggleInput("activate", false);
-        }
+        update_activate_if(ui_item);
+
 
         // MOVE
-        if (ui_slot.Item == null && !UI_XboxNavigator.Instance.IsMovingItem)
+        if (ui_item.Item == null && !UI_XboxNavigator.Instance.IsMovingItem)
         {
             move_feedback.SetAlwaysFull(false);
             move_feedback.SetLabel("");
@@ -227,5 +214,40 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
             move_feedback.SetLabel("move");
             UI_XboxNavigator.Instance.ToggleInput("move", true);
         }
+    }
+    private void update_activate_if(UI_Item ui_item)
+    {
+        if (log) { Debug.Log($"(UI_InventoryMenu) updating activate IF for ui_item with item {ui_item.Item?.name}"); }
+
+        // if we have no item or no usable & no inspectable
+        if (ui_item.Item == null || (ui_item.Item is not Usable && ui_item.Item is not Inspectable)
+        || (ui_item.Item is Usable usable && usable.UseLabel == "")
+        || (ui_item.Item is Inspectable inspectable && inspectable.InspectLabel == ""))
+        {
+            use_feedback.SetAlwaysFull(false);
+            use_feedback.SetLabel("");
+            UI_XboxNavigator.Instance.ToggleInput("activate", false);
+            return;
+        }
+
+        // we have a usable or an inspectable
+        string label = "";
+        if (ui_item.Item is Usable usable_item) { label = usable_item.UseLabel; }
+        else if (ui_item.Item is Inspectable inspectable_item) { label = inspectable_item.InspectLabel; }
+
+        // we enable the button & set the label
+        use_feedback.SetAlwaysFull(true);
+        use_feedback.SetLabel(label);
+        UI_XboxNavigator.Instance.ToggleInput("activate", true);
+    }
+    public void UpdateIF(Item item)
+    {
+        // we get the ui_item from the item
+        I_UI_Slot slot = UI_XboxNavigator.Instance.GetCurrentSlot();
+        if (slot == null || slot is not UI_Item ui_item) { return; }
+
+        // we update the activate if needed
+        if (ui_item.Item != item) { return; }
+        update_activate_if(ui_item);
     }
 }

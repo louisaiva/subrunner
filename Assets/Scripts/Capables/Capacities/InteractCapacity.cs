@@ -18,7 +18,7 @@ public class InteractCapacity : Capacity
     public bool log_triggers = false;
 
     [Header("Current Hover")]
-    [SerializeField] private Capable closest_hover;
+    [SerializeField] private HoverCapacity closest_hover;
     public Interactable interactable
     {
         get
@@ -29,7 +29,7 @@ public class InteractCapacity : Capacity
     }
 
     [Header("Waiting hovers")]
-    [SerializeField] private List<Capable> waiting_hovers = new List<Capable>();
+    [SerializeField] private List<HoverCapacity> waiting_hovers = new List<HoverCapacity>();
 
     [Header("Item Grab")]
     [SerializeField] private GrabCapacity grab_capacity;
@@ -85,18 +85,23 @@ public class InteractCapacity : Capacity
     }
 
     // INTERACTABLE SELECTION
-    private void select_hover(Capable capable)
+    public Action<Capable> OnHoverSelect;
+    public Action<Capable> OnHoverDeselect;
+    private void select_hover(HoverCapacity hover)
     {
         // we switch the current hover
         if (closest_hover != null) { unselect_hover(); }
-        closest_hover = capable;
-        if (debug) { Debug.Log("(InteractCapacity) " + capable.name + " selected as closest hover"); }
+        closest_hover = hover;
+        if (debug) { Debug.Log("(InteractCapacity) " + hover.capable.name + " selected as closest hover"); }
 
         // we play the hover animation
-        closest_hover.GetCapacity<HoverCapacity>()?.Hover(this.capable);
+        closest_hover.Hover(this.capable);
 
         // if it's an item and we have a grab capacity, we select it
-        if (closest_hover is Item item) { grab_capacity?.Select(item); }
+        if (closest_hover.capable is Item item) { grab_capacity?.Select(item); }
+
+        // we invoke the callback
+        OnHoverSelect?.Invoke(closest_hover.capable);
     }
     private void unselect_hover()
     {
@@ -104,28 +109,30 @@ public class InteractCapacity : Capacity
         if (closest_hover == null) { return; }
 
         // we stop the hover animation
-        closest_hover.GetCapacity<HoverCapacity>()?.Unhover(this.capable);
-
-        // we remove the callback
-        // remove_callbacks(closest_hover);
+        closest_hover.Unhover(this.capable);
 
         // we deselect the grabbing if it's an item
-        if (closest_hover is Item) { grab_capacity?.Deselect(); }
+        Capable interactive = closest_hover.capable;
+        if (interactive is Item) { grab_capacity?.Deselect(); }
 
         // we reset the current hover
-        if (debug) { Debug.Log("(InteractCapacity) " + closest_hover.name + " unselected as closest hover"); }
+        if (debug) { Debug.Log("(InteractCapacity) " + interactive.name + " unselected as closest hover"); }
         closest_hover = null;
+
+        // we invoke the callback
+        OnHoverDeselect?.Invoke(interactive);
     }
 
     // HANDLE INTERACT INPUT
     public void Interact(bool endless = false)
     {
         if (closest_hover == null) { return; }
+        Capable interactive = closest_hover.capable;
 
         // interact with interactable & select + grab items
-        if (closest_hover is Interactable interactable && !endless) { interactable.OnInteract(capable); }
-        else if (closest_hover is Item) { grab_capacity?.Use(capable); }
-        else if (closest_hover is EndlessInteractable interactable_endless && endless) { interactable_endless.OnEndlessInteract(capable); }
+        if (interactive is Interactable interactable && !endless) { interactable.OnInteract(capable); }
+        else if (interactive is Item) { grab_capacity?.Use(capable); }
+        else if (interactive is EndlessInteractable interactable_endless && endless) { interactable_endless.OnEndlessInteract(capable); }
     }
 
     // TRIGGER ENTER
@@ -140,17 +147,17 @@ public class InteractCapacity : Capacity
         if (interactive == null) { return; }
 
         // we check if it's an Interactable or an Item
-        if (interactive is not Interactable && interactive is not Item) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + other.name + " but it is no Interactable nor Item"); } return; }
-        if (interactive is Item item && item.ValidateRule(ExclusionItemRule)) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + other.name + " but it is excluded by the rule"); } return; } // we check if the item is excluded by the rule
+        if (interactive is not Interactable && interactive is not Item) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interactive.name + " but it is no Interactable nor Item"); } return; }
+        if (interactive is Item item && item.ValidateRule(ExclusionItemRule)) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interactive.name + " but it is excluded by the rule"); } return; } // we check if the item is excluded by the rule
 
         // we check if the capable is already hovered
-        if (interactive == closest_hover) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + other.name + " but it is already hovered"); } return; }
+        if (hover == closest_hover) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interactive.name + " but it is already hovered"); } return; }
 
         // or if it's already in the waiting hovers
-        if (waiting_hovers.Contains(interactive)) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + other.name + " but it is already in the waiting hovers"); } return; }
+        if (waiting_hovers.Contains(hover)) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interactive.name + " but it is already in the waiting hovers"); } return; }
 
         // we add the capable to the waiting hovers
-        waiting_hovers.Add(interactive);
+        waiting_hovers.Add(hover);
 
         if (debug) { Debug.Log("(InteractCapacity) " + interactive.name + " added to waiting hovers"); }
     }
@@ -161,24 +168,24 @@ public class InteractCapacity : Capacity
         if (hover == null) { return; }
 
         // we get the capable of the hover capacity
-        Capable capable = hover.capable;
-        if (capable == null) { return; }
+        Capable interactive = hover.capable;
+        if (interactive == null) { return; }
 
         // we check if it's an Interactable or an Item
-        if (capable is not Interactable && capable is not Item) { return; }
+        if (interactive is not Interactable && interactive is not Item) { return; }
 
-        // we check if the capable is the current hover
-        if (capable == closest_hover)
+        // we check if hover is the current hover
+        if (hover == closest_hover)
         {
             unselect_hover();
             return;
         }
 
-        // we check if the capable is in the waiting hovers
-        if (waiting_hovers.Contains(capable))
+        // we check if the hover is in the waiting hovers
+        if (waiting_hovers.Contains(hover))
         {
-            waiting_hovers.Remove(capable);
-            if (debug) { Debug.Log("(InteractCapacity) " + capable.name + " removed from waiting hovers"); }
+            waiting_hovers.Remove(hover);
+            if (debug) { Debug.Log("(InteractCapacity) " + interactive.name + " removed from waiting hovers"); }
         }
     }
 }
