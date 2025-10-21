@@ -68,6 +68,14 @@ public class Being : Movable
     // protected virtual void UpdateGOAP() { }
     public virtual void UpdateBeingEffects()
     {
+
+        // boiling
+        if (HasEffect(Effect.Boiling))
+        {
+            // on fait des dégats au being
+            take_damage(5f * Time.deltaTime);
+        }
+
         // life regen
         if (HasEffect(Effect.RegenLife) && life < max_life)
         {

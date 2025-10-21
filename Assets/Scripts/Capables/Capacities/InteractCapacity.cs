@@ -23,10 +23,13 @@ public class InteractCapacity : Capacity
     {
         get
         {
-            if (closest_hover is Interactable) { return closest_hover as Interactable; }
+            if (closest_hover == null) { return null; }
+            if (closest_hover.capable == null) { return null; }
+            if (closest_hover.capable is Interactable interactable) { return interactable; }
             return null;
         }
     }
+    public HoverCapacity CurrentHover { get { return closest_hover; } }
 
     [Header("Waiting hovers")]
     [SerializeField] private List<HoverCapacity> waiting_hovers = new List<HoverCapacity>();

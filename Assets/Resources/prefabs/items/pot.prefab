@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3927794695775646843}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -124,14 +124,50 @@ MonoBehaviour:
     capacity_playing: 
     capacities:
     - idle
+    - idle_full
+    lock_orientation: 0
+    one_shot: 0
+  - priority: 1
+    capacity_playing: 
+    capacities:
+    - fill_up
+    lock_orientation: 0
+    one_shot: 1
+  - priority: 1
+    capacity_playing: 
+    capacities:
+    - full_pasta
+    - boiling
+    - boiling_pasta
+    lock_orientation: 0
+    one_shot: 0
+  - priority: 1
+    capacity_playing: 
+    capacities:
+    - idle_burned
     lock_orientation: 0
     one_shot: 0
   - priority: 1
     capacity_playing: 
     capacities:
     - hover
+    - hover_burned
+    - hover_full
     lock_orientation: 0
     one_shot: 0
+  - priority: 1
+    capacity_playing: 
+    capacities:
+    - burning
+    lock_orientation: 0
+    one_shot: 0
+  - priority: 1
+    capacity_playing: 
+    capacities:
+    - burn_up
+    - burn_down
+    lock_orientation: 0
+    one_shot: 1
   log: 0
   log_orientation: 0
   log_advanced: 0
@@ -181,7 +217,7 @@ MonoBehaviour:
   capacities: []
   effects: 
   effects_timetolive: []
-  debug: 0
+  debug: 1
   activate_all_capacities_logs_on_awake: 0
   debug_velocity: 0
   log_avoidance: 0
@@ -193,11 +229,19 @@ MonoBehaviour:
   input_speed: 0
   Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 0}
-  Reference: tool:pot
+  Reference: pot:clean
   Color: {r: 0.7607843, g: 0.78039217, b: 0.78039217, a: 1}
   MaxQty: 1
   ItemDescription: little pot. useful for cooking some pastas. clean as f
+  Placed: 1
   usable_now: 0
+  has_pasta: 0
+  has_water: 0
+  dissipation: 94
+  temperature: 0
+  limit_temperature: 110
+  stacked_temperature: 0
+  stack_limit: 50
 --- !u!1 &8910784274748376873
 GameObject:
   m_ObjectHideFlags: 0

@@ -266,6 +266,7 @@ public class Capable : MonoBehaviour, Debuggable
     // EFFECTS
     public virtual void AddEffect(Effect effect, float timetolive)
     {
+        if (HasEffect(effect)) { return; }
         effects.Add(effect);
         effects_timetolive.Add(timetolive);
     }
@@ -322,7 +323,8 @@ public class Capable : MonoBehaviour, Debuggable
     }
 }
 
-[Serializable] public enum Effect
+[Serializable]
+public enum Effect
 {
     // an effect is a temporary state that can be applied to a capable
     // it can be a buff, a debuff, a status, etc.
@@ -334,4 +336,6 @@ public class Capable : MonoBehaviour, Debuggable
     RegenLife, // a Being regenerates life
     Immobile, // a Movable can't move
     BeingCarried, // a Movable is being carried (bypass all movement updates)
+    Boiling, // boiling, when the water is RILLY HOT -> deals damage to beings
+    Burning // litteraly in FIRE -> deals damage mainly, also transmit heat
 }

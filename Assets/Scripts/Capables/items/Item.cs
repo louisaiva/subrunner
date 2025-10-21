@@ -156,14 +156,14 @@ public class Item : Movable
     // BEING PLACED
     public virtual void Place()
     {
-        // we make sure we are dropped
-        if (Grabbed) { Holder.Inventory.Drop(this); }
-
-        // and we update some parameters
+        // we update some parameters
         Placed = true;
 
         // we disable the feet collider
         feet_collider.enabled = false;
+
+        // we enable the sprite renderer
+        GetComponent<SpriteRenderer>().enabled = true;
 
         // we set the effect IsBeingCarried to -888f (infinite time)
         AddEffect(Effect.BeingCarried, -888f);

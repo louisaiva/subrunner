@@ -51,8 +51,8 @@ public class HoverCapacity : Capacity
         if (capable != Controller.Instance.Capable) { return; }
 
         // we check if the capable is locked or not
-        played_animation = "hover";
-        if (this.capable is Lockable lockable && lockable.Locked) { played_animation = "hover_locked"; }
+        // played_animation = "hover";
+        // if (this.capable is Lockable lockable && lockable.Locked) { played_animation = "hover_locked"; }
 
         // we play the animation
         this.capable.anim_player.Play(played_animation);
@@ -74,7 +74,7 @@ public class HoverCapacity : Capacity
     // UPDATE HOVER ANIMATION
     public void ChangeAnimation(string animation = "hover")
     {
-        if (!Hovered) { return; }
+        if (!Hovered) { played_animation = animation; return; }
 
         // we stop the current animation
         capable.anim_player.StopPlaying(played_animation);

@@ -13,6 +13,8 @@ public class ItemBank : Singleton<ItemBank>
     public List<string> items_path = new List<string>() { "prefabs/items" };
     public Dictionary<string, Sprite> item_sprites = new Dictionary<string, Sprite>();
     public Dictionary<string, string> item_prefabs = new Dictionary<string, string>();
+    public List<string> item_custom_references = new List<string>();
+    public List<Sprite> item_custom_sprites = new List<Sprite>();
 
     [Header("UI Icons")]
     public List<Sprite> ui_icons = new List<Sprite>();
@@ -160,6 +162,13 @@ public class ItemBank : Singleton<ItemBank>
         }
         Sprite sprite = GetSprite(item.Reference);
         if (sprite != null) { return sprite; }
+
+        // we check in our item lists if we find a sprite for the corresponding ref
+        if (item_custom_references.Contains(item.Reference))
+        {
+            int index = item_custom_references.IndexOf(item.Reference);
+            return item_custom_sprites[index];
+        }
 
         // else the reference is not in the prefabs
         // we try to get the first sprite of the idle animation of the skin
