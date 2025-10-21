@@ -596,12 +596,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         if (slot == null) { return; }
 
         // 2 - on regarde si on a down ou up
-        if (input > 0.5f)
-        {
-            // on down le slot
-            slot.OnPointerDown(null);
-            if (debug) { Debug.Log("(UI_Navigator) pressed slot " + slot.gameObject.name); }
-        }
+        if (input > 0.5f) { OnDown(); }
         else
         {
             // on relache le slot
@@ -634,12 +629,30 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         navigateToClosest(position);
     }
 
+    // DOWN
+    public void OnDown()
+    {
+        if (slots.Count == 0 || current_slot_index == -1) { return; }
+        I_UI_Slot slot = slots[current_slot_index].GetComponent<I_UI_Slot>();
+        if (slot == null) { return; }
+
+        // on down le slot
+        slot.OnPointerDown(null);
+        if (debug) { Debug.Log("(UI_Navigator) pressed slot " + slot.gameObject.name); }
+    }
+
     // DROP
     public async void OnDrop()
     {
         if (slots.Count == 0 || current_slot_index == -1) { return; }
         UI_Item slot = slots[current_slot_index].GetComponent<UI_Item>();
-        if (slot == null) { return; }
+        if (slot == null)
+        {
+            // on a pas d'ui_item, alors on active tout simplement le i_ui_slot
+            if (debug) { Debug.Log("(UI_Navigator - OnDrop) current slot is not a UI_Item, cannot drop. activating instead."); }
+            activate(slots[current_slot_index].GetComponent<I_UI_Slot>());
+            return;
+        }
 
         // on retient la position du slot
         Vector2 position = get_position(slot.gameObject);

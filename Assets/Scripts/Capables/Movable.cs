@@ -196,7 +196,7 @@ public class Movable : Capable
         // on retourne la liste des forces
         return forces;
     }
-    protected void LateUpdate()
+    protected virtual void LateUpdate()
     {
         // check if we have a rigidbody
         if (rb == null)

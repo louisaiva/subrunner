@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 /// <summary>
 /// Item is a Movable that can be grabbed by other Capables with GrabCapacity + InteractCapacity.
@@ -6,7 +7,18 @@ public class Item : Movable
 {
 
     [Header("Item")]
-    public string Reference = "category:item";
+    [SerializeField] private string _reference = "category:item";
+    public string Reference
+    {
+        get => _reference;
+        set
+        {
+            if (_reference == value) { return; }
+            _reference = value;
+            OnReferenceChanged?.Invoke(this);
+        }
+    }
+    public Action<Item> OnReferenceChanged = delegate { };
     public Color Color = Color.yellow;
     public int MaxQty = 1;
     public bool Stackable { get => MaxQty > 1; }
@@ -55,7 +67,7 @@ public class Item : Movable
     /// If one of the rule match the Reference, it passes, otherwise it return false.
     /// you don't have to write the precise item name if you want all the category to pass
     /// ex: the item "food:meat" passes the rule "food,weapon:katana"
-    /// but the item "hardware:laptop" does not
+    /// but the item "weapon:shuriken" does not
     /// </summary>
     /// <param name="item_rule">the rule to test the item</param>
     /// <returns>true if the item pass the rule, false otherwise</returns>
@@ -127,6 +139,7 @@ public class Item : Movable
         ClearForces();
 
         await System.Threading.Tasks.Task.Yield();
+        if (this == null) { return; } // in case the item was destroyed during the await
 
         // we call the event
         OnGrabbed?.Invoke(this,Holder);

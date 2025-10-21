@@ -119,7 +119,7 @@ public class UI_InputsController : InputController
         // if we press the button we launch the endless threshold
         if (context.ReadValue<float>() >= 0.5f)
         {
-            // navigator.OnDown();
+            navigator.OnDown();
             get_endless_input<float>("ui_drop" + (navigate_in_game ? "_ingame" : "")).OnInput(context);
             return;
         }

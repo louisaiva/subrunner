@@ -156,10 +156,10 @@ public class ItemBank : Singleton<ItemBank>
     // GETTERS
     public Sprite GetSprite(Item item)
     {
-        if (item.Reference.Contains("paper:"))
+        /* if (item.Reference.Contains("paper:"))
         {
             return GetSprite("other:" + item.Skin);
-        }
+        } */
         Sprite sprite = GetSprite(item.Reference);
         if (sprite != null) { return sprite; }
 

@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class Oven : Capable, Interactable, Onnable
+public class Oven : Chest, Onnable
 {
+
+    // CHEST
+    public override bool is_open { get => true; }
+    public override bool is_moving { get => false; }
+
     // INTERACTABLE
-    public InteractCapacity Interactor { get; set; }
     public bool IsMoving { get; set; } = false;
     public bool IsOn { get; set; } = false;
 
@@ -19,32 +24,46 @@ public class Oven : Capable, Interactable, Onnable
 
     private Coroutine current_heating_coroutine = null;
 
-    // INTERACTION
-    public void OnInteract(Capable interactor)
+    // START
+    protected override void Start()
     {
-        // we set the interactor
-        Interactor = interactor.GetCapacity<InteractCapacity>();
+        base.Start();
 
-        // we check if a being interact with the oven
-        if (interactor is Being)
-        {
-            // if we have a burned pot and we are not on, we drop the pot
-            Pot burned_pot = Inventory.GetItemsByType<Pot>().Find(p => p.Reference == "pot:burned");
-            if (burned_pot != null && !IsOn)
-            {
-                interactor.Inventory.Grab(burned_pot);
-                return;
-            }
+        // suscribe to Inventory Grab
+        Inventory.OnItemGrabbed += (item) => handle_item_grabbed(item);
+    }
 
-            // we toggle the oven
-            if (current_heating_coroutine != null) { StopCoroutine(current_heating_coroutine); }
-            if (IsOn) { current_heating_coroutine = StartCoroutine(heat_down()); }
-            else { current_heating_coroutine = StartCoroutine(heat_up()); }
-            return;
-        }
+    // INTERACTION
+    public override void OnInteract(Capable interactor)
+    {
+        InteractCapacity old_interactor = Interactor;
+        base.OnInteract(interactor);
+        // we put back the interactor
+        Interactor = old_interactor;
 
         // we check if it is a pot
         if (interactor is Pot pot) { interact_with_pot(pot); return; }
+
+        // we check if a being interact with the oven
+        if (interactor is not Being) { return; }
+
+        // we set the Interactor as the being finally
+        Interactor = interactor.GetCapacity<InteractCapacity>();
+
+        // if we have a burned pot and we are not on, we drop the pot
+        /* Pot burned_pot = Inventory.GetItemsByType<Pot>().Find(p => p.Reference == "pot:burned");
+        if (burned_pot != null && !IsOn)
+        {
+            interactor.Inventory.Grab(burned_pot);
+            return;
+        } */
+
+        // we toggle the oven
+        /* if (current_heating_coroutine != null) { StopCoroutine(current_heating_coroutine); }
+        if (IsOn) { current_heating_coroutine = StartCoroutine(heat_down()); }
+        else { current_heating_coroutine = StartCoroutine(heat_up()); } */
+        // return;
+
     }
     private void interact_with_pot(Pot pot)
     {
@@ -53,24 +72,37 @@ public class Oven : Capable, Interactable, Onnable
 
         // we grab the pot
         Inventory.Grab(pot);
-
-        // we place the pot on the hob
-        place_pot(pot);
     }
-    private void place_pot(Pot pot)
+    private void handle_item_grabbed(Item item)
     {
-        // we place the pot
-        pot.Place();
-
-        // then we move the pot to our capable + position it
-        pot.transform.localPosition = pot_local_position;
-        /* Transform hover = pot.GetCapacity<HoverCapacity>()?.transform;
-        if (hover != null)
+        // if the item is a pot we place it on the oven
+        if (item is Pot pot)
         {
-            // we put the pot hover y at 0 so we can interact with it (otherwise it will never be reachable because
-            // the oven hover is always in front of it, and we can't get closer bcz of the collider)
-            hover.localPosition = new Vector3(hover.localPosition.x, -pot_local_position.y, hover.localPosition.z);
-        } */
+            pot.Place();
+            // then we move the pot to our capable + position it
+            pot.transform.localPosition = pot_local_position;
+        }
+
+        try_to_put_food_in_pot();
+    }
+    private void try_to_put_food_in_pot()
+    {
+        // we get the pot in the hob
+        Pot pot = Inventory.GetItemsByType<Pot>().FirstOrDefault();
+        if (pot == null) { return; }
+
+        // we get the food in the food pool
+        List<Food> food = Inventory.GetItemsByType<Food>();
+        if (food.Count == 0) { return; }
+
+        // we see if we have at least a Pasta
+        List<Pasta> pastas = food.OfType<Pasta>().ToList();
+        if (pastas.Count == 0) { return; }
+
+        // if this is Pasta and the pot does not have pasta, we put pasta in the pot
+        if (pot.HasPasta) { return; }
+        pot.PutPastaIn();
+        Destroy(pastas[0].gameObject);
     }
 
     // UPDATE
@@ -110,6 +142,16 @@ public class Oven : Capable, Interactable, Onnable
     }
 
     // ONNIN / ONNOFF
+    public void PowerOn()
+    {
+        if (current_heating_coroutine != null) { StopCoroutine(current_heating_coroutine); }
+        current_heating_coroutine = StartCoroutine(heat_up());
+    }
+    public void PowerOff()
+    {
+        if (current_heating_coroutine != null) { StopCoroutine(current_heating_coroutine); }
+        current_heating_coroutine = StartCoroutine(heat_down());
+    }
     private IEnumerator heat_up()
     {
         IsOn = true;
@@ -156,4 +198,18 @@ public class Oven : Capable, Interactable, Onnable
         IsMoving = false;
         heat_percentage = 0.0f;
     }
+
+
+    // INTERACT KEY FEEDBACK
+    protected override Vector2 calculate_best_kf_position()
+    {
+        // we calculate the position we need to give the kf's canvas
+
+        // 1 - we get the inventory's canvas
+        Transform ui_canvas = Inventory.ui.transform.parent;
+        Vector2 kf_position = ui_canvas.transform.localPosition;
+        kf_position.y += 150.0f; // we move it a bit up
+        return kf_position;
+    }
+
 }

@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 /// <summary>
 /// UI_Inventory is the highest UI representation of the Inventory.
@@ -22,7 +20,8 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     [Header("Logs")]
     [SerializeField] protected bool log = false;
 
-    public void Init()
+    // INIT
+    public virtual void Init()
     {
         // we check if we have some pools, otherwise we set ourself as the pool
         if (pools.Count == 0)
@@ -76,46 +75,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
             }
         }
     }
-
-    // SHOW / HIDE
-    /* public virtual async void Show()
-    {
-        gameObject.SetActive(true);
-        await Task.Yield(); // wait for the next frame to ensure the UI is active
-
-        
-        UI_XboxNavigator.Instance.Enable(this, true);
-    }
-    public virtual void Hide()
-    {
-        // we unhover all the slots
-        foreach (UI_ItemPool pool in pools)
-        {
-            foreach (Transform child in pool.transform)
-            {
-                UI_Item ui_item = child.GetComponent<UI_Item>();
-                if (ui_item == null) { continue; }
-                ui_item.OnPointerExit(null);
-            }
-        }
-
-        gameObject.SetActive(false);
-
-        UI_XboxNavigator.Instance.Disable(this);
-    }
-    public void Toggle()
-    {
-        // we check if the inventory is already shown
-        if (gameObject.activeSelf)
-        {
-            Hide();
-        }
-        else
-        {
-            Show();
-        }
-    } */
-
+ 
     // GRAB
     public virtual bool UI_Grab(Item item)
     {
@@ -186,6 +146,20 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 
         return false;
     }
+    public bool UI_Regrab(Item item)
+    {
+        // we try to drop the item AND directly after, grab it.
+        // if it is successful we don't even warn the Inventory about this, it is just pure black market
+        
+        bool dropped = UI_Drop(item);
+        if (!dropped) { Debug.LogError("(UI_Inventory) could not drop item " + item.Reference + " in " + name); return false; }
+
+        bool grabbed = UI_Grab(item);
+        if (grabbed) { if (log) { Debug.Log($"(UI_Inventory) successfully re-grabbed {item.Reference}"); } return true; }
+
+        // otherwise we can't grab the item ://
+        return false;
+    }
 
     // ITEM RULE
     public string ItemRule
@@ -195,8 +169,14 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
             // todo concaten all pools' item rules
             if (pools.Count > 0)
             {
+                string rules = "";
+                for (int i = 0; i < pools.Count; i++)
+                {
+                    rules += pools[i].item_rule + ",";
+                }
+                return rules.TrimEnd(',');
                 // we return the first pool's rule
-                return pools[0].item_rule;
+                // return pools[0].item_rule;
             }
             return "";
         }
@@ -206,10 +186,8 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 
 
 
-
     // SLOTTABLE
-    public Action<InputAction.CallbackContext> CancelCallback => throw new NotImplementedException();
-    public List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator)
+    public virtual List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator)
     {
         if (log) { Debug.Log($"(UI_Inventory) {name} getting slots"); }
         List<GameObject> slots = new List<GameObject>();
@@ -236,7 +214,7 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         }
         return slots;
     }
-    public bool IsYourSlot(GameObject slot)
+    public virtual bool IsYourSlot(GameObject slot)
     {
         // we check if the slot is in the inventory
         foreach (UI_ItemPool pool in pools)

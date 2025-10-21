@@ -192,10 +192,11 @@ MonoBehaviour:
   input_speed: 0
   Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 0}
-  Reference: other:paper
+  _reference: other:paper
   Color: {r: 0.47058824, g: 0.89411765, b: 0.8, a: 1}
   MaxQty: 1
   ItemDescription: an old paper. looks like it stayed in the trash for a long time/.
+  Placed: 0
   prefab: {fileID: 4189490259085307429, guid: 29aa5fadd17b37d41bf1d713e6966be2, type: 3}
 --- !u!1 &8814756426228828238
 GameObject:

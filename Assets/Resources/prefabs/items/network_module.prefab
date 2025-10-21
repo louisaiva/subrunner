@@ -260,11 +260,12 @@ MonoBehaviour:
   input_speed: 0
   Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 0}
-  Reference: module:network
+  _reference: module:network
   Color: {r: 0.85490197, g: 0.5411765, b: 0.4117647, a: 1}
   MaxQty: 16
   ItemDescription: mandatory for connecting a laptop to other devices./l not mandatory
     for eating ramens
+  Placed: 0
   upgrades:
   - name: usb cable
     tier: 0

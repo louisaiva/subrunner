@@ -125,6 +125,8 @@ MonoBehaviour:
     capacities:
     - idle
     - idle_full
+    - idle_pasta
+    - idle_full_pasta
     lock_orientation: 0
     one_shot: 0
   - priority: 1
@@ -136,7 +138,6 @@ MonoBehaviour:
   - priority: 1
     capacity_playing: 
     capacities:
-    - full_pasta
     - boiling
     - boiling_pasta
     lock_orientation: 0
@@ -153,6 +154,8 @@ MonoBehaviour:
     - hover
     - hover_burned
     - hover_full
+    - hover_full_pasta
+    - hover_pasta
     lock_orientation: 0
     one_shot: 0
   - priority: 1
@@ -229,7 +232,7 @@ MonoBehaviour:
   input_speed: 0
   Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 0}
-  Reference: pot:clean
+  _reference: pot:clean
   Color: {r: 0.7607843, g: 0.78039217, b: 0.78039217, a: 1}
   MaxQty: 1
   ItemDescription: little pot. useful for cooking some pastas. clean as f
@@ -242,6 +245,7 @@ MonoBehaviour:
   limit_temperature: 110
   stacked_temperature: 0
   stack_limit: 50
+  is_burned: 0
 --- !u!1 &8910784274748376873
 GameObject:
   m_ObjectHideFlags: 0

@@ -192,10 +192,11 @@ MonoBehaviour:
   input_speed: 0
   Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 0}
-  Reference: food:apple
+  _reference: food:apple
   Color: {r: 0.8980392, g: 0.28627452, b: 0.28627452, a: 1}
   MaxQty: 32
   ItemDescription: just an old apple/. awful taste/. smells bad/./l a solid 8/10!
+  Placed: 0
   life_regen_per_bite: 10
   bites_left: 1
 --- !u!1 &8910784274748376873

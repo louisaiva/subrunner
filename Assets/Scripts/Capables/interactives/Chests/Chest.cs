@@ -9,8 +9,8 @@ public class Chest : Capable, Interactable, Openable
     public bool log_interact_kf = false;
 
     [Header("Openable")]
-    public bool is_open { get; set; }
-    public bool is_moving { get; set; }
+    public virtual bool is_open { get; set; }
+    public virtual bool is_moving { get; set; }
 
     [Header("Interactable")]
     [SerializeField] private List<Capable> interactors = new List<Capable>(); // store all interactors, not just the one controlled
@@ -34,7 +34,7 @@ public class Chest : Capable, Interactable, Openable
     }
 
     // ON INTERACT / HOVER LOST
-    public void OnInteract(Capable interactor)
+    public virtual void OnInteract(Capable interactor)
     {
         // only first interaction per interactor is authorized !!!
         if (interactors.Contains(interactor)) { return; }
@@ -42,7 +42,7 @@ public class Chest : Capable, Interactable, Openable
         if (debug) { Debug.Log("(Chest) " + name + " was interacted by " + interactor.name); }
 
         // we open if it's the first interactor we have !!
-        if (interactors.Count == 1) { GetCapacity<OpenCapacity>().Use(interactor); }
+        if (interactors.Count == 1) { GetCapacity<OpenCapacity>()?.Use(interactor); }
 
         // only if the interactor is controlled
         if (interactor == Controller.Instance.Capable && !ui_inventory_shown)
@@ -60,7 +60,7 @@ public class Chest : Capable, Interactable, Openable
         interactors.Remove(interactor);
 
         // if there is no more interactor we close the chest
-        if (interactors.Count == 0) { GetCapacity<CloseCapacity>().Use(interactor); }
+        if (interactors.Count == 0) { GetCapacity<CloseCapacity>()?.Use(interactor); }
 
         // if there is no more controlled interactors we hide the ui inventory
         if (!ui_inventory_shown) { return; }
@@ -76,8 +76,8 @@ public class Chest : Capable, Interactable, Openable
 
 
     // UI INVENTORY SHOWING / HIDING
-    private bool ui_inventory_shown = false;
-    private void ShowUI_Inventory()
+    protected bool ui_inventory_shown = false;
+    protected virtual void ShowUI_Inventory()
     {
         if (Inventory == null || Inventory.ui == null) { return; }
         (UI_Manager.Instance.GetPool("hud") as UI_HUD).RegisterChest(Inventory.ui);
@@ -87,7 +87,7 @@ public class Chest : Capable, Interactable, Openable
         if (interact_kf == null) { return; }
         interact_kf.localPosition = calculate_best_kf_position();
     }
-    private void HideUI_Inventory()
+    protected virtual void HideUI_Inventory()
     {
         if (Inventory == null || Inventory.ui == null) { return; }
         (UI_Manager.Instance.GetPool("hud") as UI_HUD).RemoveChest(Inventory.ui);
@@ -100,7 +100,7 @@ public class Chest : Capable, Interactable, Openable
 
 
     // INTERACT KEY FEEDBACK
-    private Vector2 calculate_best_kf_position()
+    protected virtual Vector2 calculate_best_kf_position()
     {
         // we calculate the position we need to give the kf's canvas
 

@@ -41,7 +41,7 @@ public class UI_Item : UI_Slot
         item_image = transform.Find("item").GetComponent<Image>();
     }
 
-    // STORE ITEM
+    // GETTERS
     public bool CanStore(Item item)
     {
         return CanStore(new List<Item> { item });
@@ -76,6 +76,13 @@ public class UI_Item : UI_Slot
         // we can stack the item !!
         return true;
     }
+    public List<Item> GetItems()
+    {
+        // we return a copy of the items list
+        return new List<Item>(items);
+    }
+
+    // STORE / UNSTORE / CLEAR / SWITCH ITEMS
     public virtual bool Store(Item item)
     {
         // we check if we can store the item
@@ -85,6 +92,7 @@ public class UI_Item : UI_Slot
 
         // we add the item to the slot
         items.Add(item);
+        item.OnReferenceChanged += handle_item_reference_changed;
 
         // we update the UI
         update_ui_qty();
@@ -104,6 +112,7 @@ public class UI_Item : UI_Slot
 
         // we remove the item from the slot
         items.Remove(item);
+        item.OnReferenceChanged -= handle_item_reference_changed;
 
         // we update the UI
         update_ui_qty();
@@ -117,6 +126,12 @@ public class UI_Item : UI_Slot
     }
     public virtual void Clear()
     {
+        // we remove the reference change callbacks
+        for (int i = 0; i < items.Count; i++)
+        {
+            items[i].OnReferenceChanged -= handle_item_reference_changed;
+        }
+
         // we clear the items
         items.Clear();
 
@@ -126,8 +141,6 @@ public class UI_Item : UI_Slot
         // we clear the UI
         ClearUI();
     }
-
-    // ITEM SWITCHING
     public virtual void SwitchItems(List<Item> items, bool items_moved = true)
     {
         Clear();
@@ -137,6 +150,12 @@ public class UI_Item : UI_Slot
         {
             this.items.AddRange(items);
             setItem(items[0]);
+
+            // we set the reference change callbacks
+            for (int i = 0; i < this.items.Count; i++)
+            {
+                this.items[i].OnReferenceChanged += handle_item_reference_changed;
+            }
         }
 
         // we update the UI
@@ -144,11 +163,6 @@ public class UI_Item : UI_Slot
 
         OnItemChanged?.Invoke(this.items);
         ItemPool?.NotifyPoolChanged(this);
-    }
-    public List<Item> GetItems()
-    {
-        // we return a copy of the items list
-        return new List<Item>(items);
     }
 
     // UI
@@ -208,6 +222,24 @@ public class UI_Item : UI_Slot
         Disable();
     }
 
+    protected void handle_item_reference_changed(Item item)
+    {
+        // we check if this is the only one we have we simply change the ui
+        if (Quantity == 1)
+        {
+            setItem(item);
+            OnItemChanged?.Invoke(items);
+            ItemPool?.NotifyPoolChanged(this);
+            return;
+        }
+
+        // else we try to make the ui_inventory to regrab this item
+        bool regrabbed = Inventory?.ui?.UI_Regrab(item) ?? false;
+        if (regrabbed) { return; }
+
+        // else we could not regrab it so we simulate a PointerDropped to make it drop
+        drop_item(item);
+    }
 
     // ON POINTER
     public override void OnPointerEnter(PointerEventData eventData)
@@ -258,9 +290,12 @@ public class UI_Item : UI_Slot
         if (Quantity == 0) { return; }
         if (log) { Debug.Log("OnPointerDropped on " + gameObject.name); }
 
-        // we get the item
+        // we get the item & drop it
         Item item = items[0];
-
+        drop_item(item);
+    }
+    private void drop_item(Item item)
+    {
         // on récupère l'inventory qui drop l'item
         Inventory inventory = item.transform.parent.GetComponent<Inventory>();
 

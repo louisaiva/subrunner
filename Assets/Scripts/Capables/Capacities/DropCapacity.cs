@@ -32,7 +32,6 @@ public class DropCapacity : Capacity
     [SerializeField] private Transform parent_to_drop_items;
 
     [Header("Components")]
-    [SerializeField] private ItemBank bank;
     [SerializeField] private Inventory inventory;
 
     [Header("Input & Callbacks")]
@@ -44,7 +43,6 @@ public class DropCapacity : Capacity
     private void Start()
     {
         // on récupère la bank
-        bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
         inventory = capable.Inventory;
 
         // on récupère l'action drop

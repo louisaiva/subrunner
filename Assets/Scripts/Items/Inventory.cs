@@ -10,9 +10,7 @@ public class Inventory : MonoBehaviour
     public List<Item> Items = new List<Item>();
     public int Count { get { return Items.Count; } }
 
-    [Header("Events")]
-    [Obsolete] public UnityEvent OnGrab;
-    [Obsolete] public UnityEvent OnDrop;
+    // [Header("Events")]
     public event Action<Item> OnItemGrabbed = delegate { };
     public event Action<Item> OnItemDropped = delegate { };
 
@@ -106,7 +104,6 @@ public class Inventory : MonoBehaviour
         item.Grabbed = true;
 
         // we trigger the events
-        OnGrab.Invoke();
         OnItemGrabbed.Invoke(item);
 
         if (log) { Debug.Log("(Inventory) " + capable.name + " grabbed : " + item.name); }
@@ -126,7 +123,6 @@ public class Inventory : MonoBehaviour
         item.Grabbed = false;
 
         // we trigger the event
-        OnDrop.Invoke();
         OnItemDropped.Invoke(item);
 
         // we update the UI
@@ -265,6 +261,11 @@ public class Inventory : MonoBehaviour
             if (item is Device) { return item as Device; }
         }
         return null;
+    }
+    public bool HasItem(Item item)
+    {
+        // we check if we have the item
+        return Items.Contains(item);
     }
 
     // UI MANAGEMENT

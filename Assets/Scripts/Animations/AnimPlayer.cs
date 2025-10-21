@@ -163,7 +163,9 @@ public class AnimPlayer : MonoBehaviour
             highest_priority = priority.priority;
             capacity_priority = priority;
         }
-        // }
+        
+        // verify that we have something
+        if (capacity == "") { capacity = "idle"; capacity_priority = getAnimCapacityPriority("idle"); }
 
         // we get the animation from the bank
         string anim_name = skin + "." + capacity + "." + orientation;
@@ -329,6 +331,16 @@ public class AnimPlayer : MonoBehaviour
         capacity_priority.capacity_playing = capacity;
         if (log_pile) { Debug.Log("(AnimPlayer - AddToPile) Added " + capacity + " to the pile"); }
     }
+    public void ClearIdles()
+    {
+        // we go through all the anim capa prio and check which anims she is playing
+        for (int i = 0; i < anim_capacity_priorities.Count; i++)
+        {
+            AnimCapacityPriority priority = anim_capacity_priorities[i];
+            if (priority.capacity_playing.StartsWith("idle")) { StopPlaying(priority.capacity_playing); }
+        }
+    }
+
 
     // ORIENTATION
     public void SetOrientation(Vector2 look_at)
