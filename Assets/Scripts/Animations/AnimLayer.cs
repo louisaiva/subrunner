@@ -27,6 +27,7 @@ public class AnimLayer : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
 
         leader.OnAnimPlayedAtFrame += PlayAtFrame;
+        leader.RegisterAnimLayer(this);
     }
 
     // PLAY ANIM
@@ -113,4 +114,9 @@ public class AnimLayer : MonoBehaviour
         if (log) { Debug.Log("(AnimLayer) Playing " + anim.name + " at frame " + frame + " flipX: " + anim.flipX); }
     }
 
+
+
+    // RENDERER MANAGEMENT
+    public void DisableRenderer() { sr.enabled = false; }
+    public void EnableRenderer() { sr.enabled = true; }
 }

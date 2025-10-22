@@ -146,7 +146,7 @@ public class DieCapacity : Capacity
         // 5 - TURNING TO MEAT
         Meat meat = being.gameObject.AddComponent<Meat>();
         meat.name = "Meat";
-        meat.Initialize();
+        meat.Initialize(being);
         meat.SetForces(being.GetForces());
 
         // we add a hover capacity to it (it is an item now)

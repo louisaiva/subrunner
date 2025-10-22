@@ -445,8 +445,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsQuitting: 0
-  prototype: ui_manager rework p.1
+  prototype: ui_oven !! & pastas
   log: 0
+  log_stats: 0
 --- !u!114 &1409178628841570550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6001,6 +6002,30 @@ MonoBehaviour:
     base_skin: gaming_chair_base
     base_spritesheets:
     - objects/interactives/chairs/gaming_chair_base
+  - variant_name: pot_above
+    variant_spritesheets:
+    - objects/items/kitchen/pot_layers/pot_above
+    base_skin: pot
+    base_spritesheets:
+    - objects/items/kitchen/pot
+  - variant_name: pot_back
+    variant_spritesheets:
+    - objects/items/kitchen/pot_layers/pot_back
+    base_skin: pot
+    base_spritesheets:
+    - objects/items/kitchen/pot
+  - variant_name: pot_front
+    variant_spritesheets:
+    - objects/items/kitchen/pot_layers/pot_front
+    base_skin: pot
+    base_spritesheets:
+    - objects/items/kitchen/pot
+  - variant_name: pot_pasta
+    variant_spritesheets:
+    - objects/items/kitchen/pot_layers/pot_pasta
+    base_skin: pot
+    base_spritesheets:
+    - objects/items/kitchen/pot
   log: 0
   log_LAFAC: 0
   log_variant_skins: 0
@@ -6118,6 +6143,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   items_path:
   - prefabs/items
+  item_custom_references:
+  - pot:clean
+  - pot:full
+  - pot:pasta
+  - pot:full_pasta
+  - pot:burned
+  - food:meat
+  - food:zombo_meat
+  - food:bones
+  item_custom_sprites:
+  - {fileID: 574287140, guid: 0a4f37ef47fa3d0149cf518ae4f2a876, type: 3}
+  - {fileID: 933724332, guid: 0a4f37ef47fa3d0149cf518ae4f2a876, type: 3}
+  - {fileID: -1189073790, guid: 0a4f37ef47fa3d0149cf518ae4f2a876, type: 3}
+  - {fileID: 602023882, guid: 0a4f37ef47fa3d0149cf518ae4f2a876, type: 3}
+  - {fileID: -1976615783, guid: 0a4f37ef47fa3d0149cf518ae4f2a876, type: 3}
+  - {fileID: -930350640, guid: 38d1a7814571fbca78ecd4114827cb10, type: 3}
+  - {fileID: -384219376, guid: 38d1a7814571fbca78ecd4114827cb10, type: 3}
+  - {fileID: 819652910, guid: 0bda6ba40a874b7178bb59015f7fe57e, type: 3}
   ui_icons:
   - {fileID: 1355779389, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
   - {fileID: 1812302280, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
@@ -6178,6 +6221,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d08811eb9170f69489f668daf837811d, type: 2}
   - {fileID: 11400000, guid: 85f03e43ae658f44f8f2d256ef1b10ec, type: 2}
   - {fileID: 11400000, guid: bd9effc632fe6d948af74cc6da283407, type: 2}
+  file_icon: {fileID: 734011502, guid: 393f5d7ac896f67fcb6c10c0977c55b2, type: 3}
+  key_icon: {fileID: -209011607, guid: 393f5d7ac896f67fcb6c10c0977c55b2, type: 3}
+  program_icon: {fileID: 641565253, guid: 393f5d7ac896f67fcb6c10c0977c55b2, type: 3}
+  exploit_icon: {fileID: -880266741, guid: 393f5d7ac896f67fcb6c10c0977c55b2, type: 3}
+  scan_icon: {fileID: 2116671064, guid: 393f5d7ac896f67fcb6c10c0977c55b2, type: 3}
 --- !u!1 &8925621606889285348
 GameObject:
   m_ObjectHideFlags: 0
@@ -6266,5 +6314,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16951dfe17de1094b9ad5564469b4e8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  beingsCount: 0
   capablesCount: 0
+  beingsCount: 0
+  itemsCount: 0
+  grabbedItemsCount: 0
+  meatCount: 0

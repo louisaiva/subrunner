@@ -111,7 +111,7 @@ public class Pot : Item, Usable
 
 
     // BEING GRABBED / DROPPED
-    protected override async void on_grabbed()
+    protected override void on_grabbed()
     {
         base.on_grabbed();
 

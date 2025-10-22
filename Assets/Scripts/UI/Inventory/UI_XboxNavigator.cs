@@ -425,6 +425,19 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     }
     private void update_slots()
     {
+        // we check the current slot state
+        if (current_slot_index != -1 && current_slot_index < slots.Count)
+        {
+            GameObject current_slot = slots[current_slot_index];
+            if (current_slot == null || !slottables.Exists(slottable => slottable.GetComponent<I_UI_Slottable>().IsYourSlot(current_slot)))
+            {
+                // on reset le current slot index
+                current_slot_index = -1;
+                if (debug) { Debug.Log("(UI_Navigator) current slot is no longer valid, resetting current_slot_index"); }
+            }
+        }
+
+
         // we check if we have a slottable
         if (slottables.Count == 0)
         {
@@ -448,6 +461,10 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     }
     private void hover_slot(int index)
     {
+        // on verifie que le slot index n'est pas le meme que celui qu'on a maintenant
+        // todo problem si l'ancien slot a été détruit et que du coup le nouveau a le meme index que l'ancien
+        if (index == current_slot_index) { return; }
+
         // on unhover le slot actuel
         if (slots.Count > current_slot_index && current_slot_index != -1
             && (moving_ui_item == null || moving_ui_item != slots[current_slot_index].GetComponent<UI_Item>()))
@@ -472,11 +489,12 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         }
 
         // on vérifie si la position du slot est en dehors de l'écran
+        // todo fix bug declenche l'event meme pour des canvas UI_World
         Vector2 position = get_position(index);
         if (position.x < 0 || position.x > Screen.width || position.y < 0 || position.y > Screen.height)
         {
             // on déclenche l'event OnSlotOutOfScreen
-            if (debug) { Debug.Log("(UI_Navigator) slot " + index + " is out of screen"); }
+            if (log_slot_position) { Debug.Log("(UI_Navigator) slot " + index + " is out of screen"); }
             OnSlotOutOfScreen?.Invoke(ui_slot);
         }
 

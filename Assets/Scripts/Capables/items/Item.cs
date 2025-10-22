@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
 /// Item is a Movable that can be grabbed by other Capables with GrabCapacity + InteractCapacity.
@@ -64,54 +65,93 @@ public class Item : Movable
     /// <summary>
     /// Return true if the item pass the string rule in parameter.
     /// The rule must be in format "category:item,category:item, ..."
-    /// If one of the rule match the Reference, it passes, otherwise it return false.
+    /// If one of the rule match the Reference, it passes, otherwise it return false (understand the "," as a OR)
     /// you don't have to write the precise item name if you want all the category to pass
     /// ex: the item "food:meat" passes the rule "food,weapon:katana"
     /// but the item "weapon:shuriken" does not
+    /// 
+    /// you can also make the inverse of a rule with "!" ex : item "weapon:katana" does not pass the "!weapon" rule
+    ///
+    /// but careful only ONE rule needs to pass for the whole rule set to pass. so if you put "!laptop,!module",
+    /// both "laptop:blue" & "module:cpu" items validate the rule bcz laptop:blue is no module & module:cpu is not laptop ;-;
+    /// 
+    /// you can specify ";" caracters instead of "," to split the rule into 2 rules that need both to passes in order for the full rule to pass (it is kind of a AND door)
+    /// ex : "laptop:blue" & "module:cpu" does not pass the rule "!laptop;!module"
+    /// 
+    /// finally "|" is the higher OR door that wins over ";".
+    /// ex : item "food:pasta" passes the rule "food|!food;!pot:clean"
+    /// 
     /// </summary>
     /// <param name="item_rule">the rule to test the item</param>
     /// <returns>true if the item pass the rule, false otherwise</returns>
-    public bool ValidateRule(string item_rule)
+    public bool ValidateRule(string rule)
     {
         // all items passes an empty rule
-        if (item_rule == "") { return true; }
+        if (rule == "") { return true; }
 
-        // we check if our rule has multiple entries
-        string[] rules = item_rule.Split(',');
-
-        // we need at least one rule to be valid
-        foreach (string rule in rules)
+        // [OR] - we need at least one rule to be valid
+        if (rule.Contains("|"))
         {
-            // checks special rule
-            if (rule == "activable")
+            string[] rules = rule.Split('|');
+            for (int i = 0; i < rules.Length; i++)
             {
-                if (this is Usable) { return true; }
-                continue;
+                if (ValidateRule(rules[i])) { return true; }
             }
-
-            // check if the rule is a category or a specific item
-            if (rule.Contains(":"))
-            {
-                // specific item -> we check if the item is the same
-                if (Reference == rule) { return true; }
-                continue;
-            }
-
-            // we check if the item is in the category
-            if (Reference.Contains(rule)) { return true; }
+            return false;
         }
+
+        // [AND] - we need ALL rules to be valid 
+        if (rule.Contains(";"))
+        {
+            string[] rules = rule.Split(';');
+            for (int i = 0; i < rules.Length; i++)
+            {
+                if (!ValidateRule(rules[i])) { return false; }
+            }
+            return true;
+        }
+
+        // [OR] - we need at least one rule to be valid
+        if (rule.Contains(","))
+        {
+            string[] rules = rule.Split(',');
+            for (int i = 0; i < rules.Length; i++)
+            {
+                if (ValidateRule(rules[i])) { return true; }
+            }
+            return false;
+        }
+
+        // we have only one rule, we check the rule
+
+        // [NOT] - check for negation
+        if (rule.StartsWith("!")) { return !ValidateRule(rule.Substring(1)); }
+
+        // check special rule
+        if (rule == "usable") { return this is Usable; }
+
+        // specific item -> we check if the item is the same
+        if (rule.Contains(":")) { return Reference == rule; }
+
+        // we check if the item is in the category
+        if (Reference.Contains(rule)) { return true; }
 
         return false;
     }
+    // private List<string> split_rules
 
-    protected override void Awake()
+    // AWAKE
+    // protected override void Awake()
+    // {
+    //     base.Awake();
+    // }
+    protected override void Start()
     {
-        base.Awake();
-        
+        base.Start();
+
         // we check if we are placed or not
         if (Placed) { Place(); }
     }
-
 
     // BEING GRABBED / DROPPED
     protected virtual async void on_grabbed()
@@ -130,7 +170,7 @@ public class Item : Movable
         feet_collider.enabled = false;
 
         // we disable the sprite renderer
-        GetComponent<SpriteRenderer>().enabled = false;
+        anim_player.DisableRenderer();
 
         // we set the effect IsBeingCarried to -888f (infinite time)
         AddEffect(Effect.BeingCarried, -888f);
@@ -158,7 +198,7 @@ public class Item : Movable
         feet_collider.enabled = true;
 
         // we enable the sprite renderer
-        GetComponent<SpriteRenderer>().enabled = true;
+        anim_player.EnableRenderer();
 
         // we remove the effect IsBeingCarried
         RemoveEffect(Effect.BeingCarried);
@@ -176,7 +216,7 @@ public class Item : Movable
         feet_collider.enabled = false;
 
         // we enable the sprite renderer
-        GetComponent<SpriteRenderer>().enabled = true;
+        anim_player.EnableRenderer();
 
         // we set the effect IsBeingCarried to -888f (infinite time)
         AddEffect(Effect.BeingCarried, -888f);

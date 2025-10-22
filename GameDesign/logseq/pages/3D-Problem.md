@@ -4,6 +4,7 @@
 -
 	- subrunner a été tout d'abord créé en tant que projet **unity 2D** dcp y'a plein de trucs chiants qui se posent genre les collisions RELOUES qui fait qu'on peut attaquer à travers un mur MDR ou genre les particules qui sont baisées bref plein de bugs qui sont magnifiquement répertoriés dans la sous partie suivante :
 	- ## BUGS ACTUELS
+		- on peut interagir avec les coffres à travers les murs
 		- attaque à travers les murs
 		- attaque basé en raycast perpendiculaire à l'écran sans prendre en compte le rapport orthographique
 		- lumières qui éclairent mal, ombres seulement au sol
@@ -15,6 +16,14 @@
 -
 -
 - # SOLUTIONS 2D POTENTIELLES
+	- ## 2-width walls
+		- la plupart des problèmes (attaques, particules?, interaction) à travers les murs sont résolvables avec des murs plus gros (au moins 2 tiles de hauteur/largeur)
+		- pas sûr que ça règle TOUS les pb de particules par contre
+		-
+		- ### Points positifs / négatifs
+			- moins d'endroits "étriqués" -> -0.5 (pas forcément grave au contraire)
+			- est-ce que ça nous empeche de faire des pti passage de conduit d'aeration ???
+			-
 	-
 	- ## 3-Main-Layers
 		-
@@ -64,6 +73,7 @@
 				  -> **OUI**
 				  -> par exemple si un item est posé sur une table et qu'on est devant la table (perso_y < table_y), bah si on reste avec le perso full dans le sorting layer **down** ça fait que l'item va apparaitre au dessus de nous
 				  -> MAIS, ça règle le pb si on fait en 2 layers, un en **down** avec les jambes, et un en **mid** avec le corps & la tête, celui en mid va cacher l'item
+				  -> et puis y'a pas à refaire les items, ça concerne surtout les beings, les walls (qu'on va refaire dans tt les cas) et certains objets type fridge
 				  
 				  -> c chiant à faire mais ça peut être banger par exemple ça veut dire on peut couper des "blocs" de murs mdr ça me rappelle qqch ça par exemple
 				-

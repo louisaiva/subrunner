@@ -9,8 +9,10 @@ public class UI_Slot : MonoBehaviour, I_UI_Slot
 {
 
     // hover
-    [SerializeField] public bool is_hovered { get; set; }
-    [SerializeField] public bool is_disabled { get; set; }
+    [SerializeField] private bool _hovered = false;
+    [SerializeField] private bool _disabled = false;
+    public bool is_hovered { get => _hovered; set => _hovered = value; }
+    public bool is_disabled { get => _disabled; set => _disabled = value; }
 
     [Header("Logs")]
     public bool log = false;
@@ -40,6 +42,7 @@ public class UI_Slot : MonoBehaviour, I_UI_Slot
     {
         if (image == null) { image = GetComponent<Image>(); }
         is_disabled = true;
+        OnPointerExit(null); // on veut etre sur qu'on est pas hover
 
         // on change le sprite du slot
         image.sprite = disabled_sprite;
@@ -63,7 +66,7 @@ public class UI_Slot : MonoBehaviour, I_UI_Slot
     public virtual void OnPointerExit(PointerEventData eventData)
     {
         // check if disabled
-        if (is_disabled) { return; }
+        // if (is_disabled) { return; }
 
         if (log) { Debug.Log("OnPointerExit on " + gameObject.name); }
 

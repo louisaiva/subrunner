@@ -166,17 +166,14 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     {
         get
         {
-            // todo concaten all pools' item rules
             if (pools.Count > 0)
             {
                 string rules = "";
                 for (int i = 0; i < pools.Count; i++)
                 {
-                    rules += pools[i].item_rule + ",";
+                    rules += pools[i].item_rule + "|";
                 }
-                return rules.TrimEnd(',');
-                // we return the first pool's rule
-                // return pools[0].item_rule;
+                return rules.TrimEnd('|');
             }
             return "";
         }

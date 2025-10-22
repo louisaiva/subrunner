@@ -838,36 +838,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Items: []
-  OnGrab:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6990258359700423461}
-        m_TargetAssemblyTypeName: DropCapacity, Assembly-CSharp
-        m_MethodName: SelectLastItem
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnDrop:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6990258359700423461}
-        m_TargetAssemblyTypeName: DropCapacity, Assembly-CSharp
-        m_MethodName: SelectLastItem
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   uis:
   - {fileID: 0}
   - {fileID: 0}
@@ -6621,7 +6591,6 @@ MonoBehaviour:
   lock_magnitude: 0
   offset_drop: {x: 0, y: 0, z: 0}
   parent_to_drop_items: {fileID: 0}
-  bank: {fileID: 0}
   inventory: {fileID: 0}
   dropInput: {fileID: 0}
 --- !u!1 &7629901195229106969
@@ -7092,6 +7061,10 @@ PrefabInstance:
     - target: {fileID: 6234543502669162689, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8252522207981929358, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: item_rule
+      value: '!food|!food:meat;!food:zombo_meat;!food:bones'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

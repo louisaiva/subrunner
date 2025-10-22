@@ -7,7 +7,7 @@ public class Meat : Food
     [SerializeField] private int random_meat_modifier_at_start = 5; // meat_amount += random.range(-5,5) in the start method if this modifier = 5
 
     // INIT
-    public void Initialize()
+    public void Initialize(Being being)
     {
         // random meat
         bites_left = 9;
@@ -17,6 +17,11 @@ public class Meat : Food
         // set the item reference name
         Reference = "food:meat";
         ItemDescription = "meat./. mmh by bad it's just a dead body/./l do not eat PLEASE";
+        if (being is Zombo)
+        {
+            Reference = "food:zombo_meat";
+            ItemDescription = "meat./. mmh by bad it's just a dead zombo/./l better go vegan";
+        }
         MaxQty = 10;
     }
 
@@ -37,5 +42,7 @@ public class Meat : Food
         // and change our skin to bones
         anim_player.Skin = "bones";
         anim_player.ClearPile();
+        Reference = "food:bones";
+        ItemDescription = "just some bones./. nothing special here.";
     }
 }

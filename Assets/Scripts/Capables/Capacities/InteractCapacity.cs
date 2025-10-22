@@ -36,16 +36,8 @@ public class InteractCapacity : Capacity
 
     [Header("Item Grab")]
     [SerializeField] private GrabCapacity grab_capacity;
-    [SerializeField] private List<string> exclusion_item_rule = new List<string>() { }; // rule to check if an item is interactable with us
-    public string ExclusionItemRule
-    {
-        get
-        {
-            // since it's an exclusion list we want to make sure that no item passes it if it's empty
-            if (exclusion_item_rule.Count == 0) { return "none"; }
-            return string.Join(",", exclusion_item_rule);
-        }
-    }
+    [SerializeField] private string item_rule = ""; // rule to check if an item is interactable with us
+    public string ItemRule { get => item_rule; }
 
     // START
     private void Start()
@@ -59,6 +51,22 @@ public class InteractCapacity : Capacity
     protected override void Update()
     {
         base.Update();
+
+        // we remove nulls and items that are grabbed
+        for (int i = waiting_hovers.Count - 1; i >= 0; i--)
+        {
+            HoverCapacity hover = waiting_hovers[i];
+            if (hover == null || hover.capable == null)
+            {
+                waiting_hovers.RemoveAt(i);
+                continue;
+            }
+            if (hover.capable is Item item && item.Grabbed)
+            {
+                waiting_hovers.RemoveAt(i);
+                continue;
+            }
+        }        
 
         // we check if we have a something in the waiting hovers
         if (waiting_hovers.Count == 0) { return; }
@@ -78,7 +86,7 @@ public class InteractCapacity : Capacity
 
         // we check if the current hover is still the closest
         if (Vector2.Distance(closest_hover.transform.position, capable.transform.position)
-            < Vector2.Distance(waiting_hovers[0].transform.position, capable.transform.position)) { return; }
+            <= Vector2.Distance(waiting_hovers[0].transform.position, capable.transform.position)) { return; }
 
         // we switch the current hover
         waiting_hovers.Add(closest_hover);
@@ -151,7 +159,7 @@ public class InteractCapacity : Capacity
 
         // we check if it's an Interactable or an Item
         if (interactive is not Interactable && interactive is not Item) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interactive.name + " but it is no Interactable nor Item"); } return; }
-        if (interactive is Item item && item.ValidateRule(ExclusionItemRule)) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interactive.name + " but it is excluded by the rule"); } return; } // we check if the item is excluded by the rule
+        if (interactive is Item item && !item.ValidateRule(ItemRule)) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interactive.name + " but it is excluded by the rule"); } return; } // we check if the item is excluded by the rule
 
         // we check if the capable is already hovered
         if (hover == closest_hover) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + interactive.name + " but it is already hovered"); } return; }

@@ -228,6 +228,10 @@ public class UI_Item : UI_Slot
         if (Quantity == 1)
         {
             setItem(item);
+            // on remet le sprite du slot si on est hovered
+            image.sprite = is_hovered ? hover_sprite : base_sprite;
+
+            // on invoke les events
             OnItemChanged?.Invoke(items);
             ItemPool?.NotifyPoolChanged(this);
             return;

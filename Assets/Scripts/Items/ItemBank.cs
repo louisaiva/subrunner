@@ -156,13 +156,6 @@ public class ItemBank : Singleton<ItemBank>
     // GETTERS
     public Sprite GetSprite(Item item)
     {
-        /* if (item.Reference.Contains("paper:"))
-        {
-            return GetSprite("other:" + item.Skin);
-        } */
-        Sprite sprite = GetSprite(item.Reference);
-        if (sprite != null) { return sprite; }
-
         // we check in our item lists if we find a sprite for the corresponding ref
         if (item_custom_references.Contains(item.Reference))
         {
@@ -170,19 +163,17 @@ public class ItemBank : Singleton<ItemBank>
             return item_custom_sprites[index];
         }
 
+        // otherwise we check in the sprites we loaded at start from prefabs
+        if (item_sprites.ContainsKey(item.Reference)) { return item_sprites[item.Reference]; }
+
         // else the reference is not in the prefabs
         // we try to get the first sprite of the idle animation of the skin
-        sprite = AnimBank.Instance.GetDefaultSprite(item.Skin);
+        Sprite sprite = AnimBank.Instance.GetDefaultSprite(item.Skin);
         if (sprite != null) { return sprite; }
 
         Debug.LogError("(ItemBank) cannot find sprite " + item.Reference
                 + ". are you sure its corresponding item prefab is in the " + items_path + " folder?");
         return null;
-    }
-    public Sprite GetSprite(string item_reference)
-    {
-        if (!item_sprites.ContainsKey(item_reference)) { return null; }
-        return item_sprites[item_reference];
     }
     public Sprite GetUI_Icon(string icon_name)
     {
