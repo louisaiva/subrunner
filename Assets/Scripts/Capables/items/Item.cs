@@ -37,11 +37,24 @@ public class Item : Movable
 
             // we set the value
             _grabbed = value;
-            if (_grabbed) { on_grabbed(); }
+            if (value) { on_grabbed(); }
             else { on_dropped(); }
         }
     }
-    public bool Placed = false;
+    [SerializeField] private bool _placed = false;
+    public bool Placed
+    {
+        get => _placed;
+        set
+        {
+            // check if the value is the same
+            if (value == _placed) { return; }
+
+            // we set the value
+            _placed = value;
+            update_components();
+        }
+    }
 
 
     // events
@@ -138,45 +151,20 @@ public class Item : Movable
 
         return false;
     }
-    // private List<string> split_rules
 
-    // AWAKE
-    // protected override void Awake()
-    // {
-    //     base.Awake();
-    // }
     protected override void Start()
     {
         base.Start();
 
-        // we check if we are placed or not
-        if (Placed) { Place(); }
+        update_components();
     }
 
     // BEING GRABBED / DROPPED
     protected virtual async void on_grabbed()
     {
-        // check if we are placed
-        if (Placed) { unplace(); }
-
-        // we remove the rigidbody
-        Destroy(rb);
-        rb = null;
-
-        // we disable the HoverCapacity's collider
-        GetCapacity<HoverCapacity>().GetComponent<Collider2D>().enabled = false;
-
-        // we disable the feet collider
-        feet_collider.enabled = false;
-
-        // we disable the sprite renderer
-        anim_player.DisableRenderer();
-
-        // we set the effect IsBeingCarried to -888f (infinite time)
-        AddEffect(Effect.BeingCarried, -888f);
-
-        // we remove all the forces
-        ClearForces();
+        // on veut etre sur qu'on est pas placé
+        _placed = false;
+        update_components();
 
         await System.Threading.Tasks.Task.Yield();
         if (this == null) { return; } // in case the item was destroyed during the await
@@ -186,56 +174,90 @@ public class Item : Movable
     }
     protected virtual void on_dropped()
     {
-        // we add the rigidbody
-        rb = gameObject.AddComponent<Rigidbody2D>();
-        rb.gravityScale = 0;
-        rb.freezeRotation = true;
+        update_components();
 
-        // we enable the HoverCapacity's collider
-        GetCapacity<HoverCapacity>().transform.GetComponent<Collider2D>().enabled = true;
-
-        // we enable the feet collider
-        feet_collider.enabled = true;
-
-        // we enable the sprite renderer
-        anim_player.EnableRenderer();
-
-        // we remove the effect IsBeingCarried
-        RemoveEffect(Effect.BeingCarried);
-
+        // we call the event
         OnDropped?.Invoke(this);
     }
 
-    // BEING PLACED
-    public virtual void Place()
+    // update components
+    protected virtual void update_components()
     {
-        // we update some parameters
-        Placed = true;
+        // RENDERERs
+        transform.localScale = Vector3.one;
+        if (!Placed && Grabbed)
+        {
+            anim_player.DisableRenderer();
+            if (Inventory != null)
+            {
+                for (int i = 0; i < Inventory.Count; i++)
+                {
+                    Inventory.Items[i].anim_player.DisableRenderer();
+                }
+            }
+        }
+        else
+        {
+            anim_player.EnableRenderer();
+            if (Inventory != null)
+            {
+                for (int i = 0; i < Inventory.Count; i++)
+                {
+                    Inventory.Items[i].anim_player.EnableRenderer();
+                }
+            }
+        }
 
-        // we disable the feet collider
-        feet_collider.enabled = false;
+        // FEET & RB & BEING CARRIED EFFECT
+        if (!Placed && !Grabbed)
+        {
+            // enable rigidbody & feet
+            feet_collider.enabled = true;
 
-        // we enable the sprite renderer
-        anim_player.EnableRenderer();
+            // we add the rigidbody
+            if (rb == null)
+            {
+                rb = gameObject.AddComponent<Rigidbody2D>();
+                rb.gravityScale = 0;
+                rb.freezeRotation = true;
+            }
 
-        // we set the effect IsBeingCarried to -888f (infinite time)
-        AddEffect(Effect.BeingCarried, -888f);
-        ClearForces();
+            // we remove the being carried effect
+            RemoveEffect(Effect.BeingCarried);
+        }
+        else
+        {
+            // disable rigidbody & feet
+            feet_collider.enabled = false;
+
+            // we remove the rigidbody
+            if (rb != null)
+            {
+                Destroy(rb);
+                rb = null;
+            }
+
+            // we set the effect IsBeingCarried to -888f (infinite time)
+            AddEffect(Effect.BeingCarried, -888f);
+
+            // we remove all the forces
+            ClearForces();
+        }
+
+        // HOVER
+        if (!Grabbed)
+        {
+            GetCapacity<HoverCapacity>().transform.localPosition = Vector3.zero;
+            // we enable the HoverCapacity's collider
+            GetCapacity<HoverCapacity>().GetComponent<Collider2D>().enabled = true;
+        }
+        else
+        {
+            // we disable the HoverCapacity's collider
+            GetCapacity<HoverCapacity>().GetComponent<Collider2D>().enabled = false;
+        }
     }
-    protected virtual void unplace()
-    {
-        // we set the parent to null
-        Placed = false;
 
-        // we enable the feet collider
-        feet_collider.enabled = true;
-
-        // we reset the hover collider position
-        GetCapacity<HoverCapacity>().transform.localPosition = Vector3.zero;
-
-        // we remove the effect IsBeingCarried
-        RemoveEffect(Effect.BeingCarried);
-    }
 
     // ON DESTROY
     protected override void OnDestroy()

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 
 public class Pot : Item, Usable
@@ -62,7 +63,7 @@ public class Pot : Item, Usable
 
 
         // we have no interactable -> we check if we have pasta or wat
-        if (has_pasta || has_water)
+        if (HasFood || has_water)
         {
             UseLabel = "empty pot";
             usable_now = true;
@@ -91,7 +92,7 @@ public class Pot : Item, Usable
         interactor.CurrentHover.capable is not Pasta))
         {
             // either we are full / pastaed and we want to empty the pot
-            if (has_pasta) { RemovePasta(); }
+            if (HasFood) { RemoveFood(); }
             if (has_water) { Empty(); }
             return;
         }
@@ -100,8 +101,7 @@ public class Pot : Item, Usable
         if (interactor.CurrentHover?.capable is Pasta pasta)
         {
             if (Reference == "pot:burned") { return; }
-            PutPastaIn();
-            Destroy(pasta.gameObject);
+            PutFoodIn(pasta);
             return;
         }
 
@@ -131,10 +131,10 @@ public class Pot : Item, Usable
 
     // COOKING
     [Header("Cooking")]
-    [SerializeField] private bool has_pasta = false;
+    // [SerializeField] private bool has_pasta = false;
     [SerializeField] private bool has_water = false;
     public bool IsFull { get { return has_water; } }
-    public bool HasPasta { get { return has_pasta; } }
+    public bool HasFood { get { return Inventory.Count > 0; } }
 
     [Header("Temperature")]
     [SerializeField] private float dissipation = 1.0f;
@@ -183,26 +183,29 @@ public class Pot : Item, Usable
         // on met à jour l'usabilite
         update_usability();
     }
-    public void PutPastaIn()
+    public void PutFoodIn(Food food)
     {
-        has_pasta = true;
+        // on met les pates dans le pot
+        if (!Inventory.Grab(food)) { return; }
         update_state();
-
-        // on met à jour l'usabilite
         update_usability();
-
     }
-    public void RemovePasta()
+    public void RemoveFood()
     {
-        // on vide le pot
-        has_pasta = false;
-        update_state();
+        // on DETRUIT tous les items de l'inventaire
+        List<Item> items = Inventory.Items;
+        for (int i = items.Count - 1; i >= 0; i--)
+        {
+            Destroy(items[i].gameObject);
+            Inventory.Remove(items[i]);
+        }
 
-        // on met à jour l'usabilite
+        update_state();
         update_usability();
     }
 
     // UPDATE
+    // todo make a TemperatureCapacity for this ?
     protected override void LateUpdate()
     {
         base.LateUpdate();
@@ -274,9 +277,9 @@ public class Pot : Item, Usable
             anim_player.Play("burn_up");
             anim_player.AddToPile("burning");
             is_burned = true;
-            has_pasta = false; // les pates brulent
             has_water = false; // l'eau s'evapore
-            update_state();
+            RemoveFood(); // la nourriture crame
+            // update_state(); // c fait automatiquement dans remove food
 
             // on met à jour l'usabilite
             UseLabel = "";
@@ -305,9 +308,9 @@ public class Pot : Item, Usable
         // REFERENCE
         string reference = "pot:";
         if (is_burned) { reference += "burned"; }
-        else if (has_water && has_pasta) { reference += "full_pasta"; }
+        else if (has_water && HasFood) { reference += "full_pasta"; }
         else if (has_water) { reference += "full"; }
-        else if (has_pasta) { reference += "pasta"; }
+        else if (HasFood) { reference += "pasta"; }
         else { reference += "clean"; }
         Reference = reference;
 
@@ -320,7 +323,7 @@ public class Pot : Item, Usable
         // IDLE ANIMATIONS
         string contenu = "";
         if (has_water) { contenu += "full"; }
-        if (has_pasta) { contenu += (contenu == "" ? "pasta" : "_pasta"); }
+        if (HasFood) { contenu += (contenu == "" ? "pasta" : "_pasta"); }
 
         if (contenu == "") { GetCapacity<HoverCapacity>()?.ChangeAnimation("hover"); }
         else { anim_player.AddToPile("idle_" + contenu); GetCapacity<HoverCapacity>()?.ChangeAnimation("hover_" + contenu); }
@@ -330,7 +333,7 @@ public class Pot : Item, Usable
         {
             anim_player.StopPlaying("boiling");
             anim_player.StopPlaying("boiling_pasta");
-            if (has_water) { anim_player.Play(has_pasta ? "boiling_pasta" : "boiling"); }
+            if (has_water) { anim_player.Play(HasFood ? "boiling_pasta" : "boiling"); }
         }
     }
 }

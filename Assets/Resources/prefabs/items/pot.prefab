@@ -31,7 +31,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2658227395407497723}
+  m_Father: {fileID: 4947518456057425643}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5528876756191774922
 SpriteRenderer:
@@ -149,7 +149,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2658227395407497723}
+  - {fileID: 2927860107585372996}
+  - {fileID: 1157528483976801944}
+  - {fileID: 2637764254354605675}
+  - {fileID: 8958647535492943245}
+  - {fileID: 7991061100023726630}
   - {fileID: 16145665589224949}
   - {fileID: 4285641447910676976}
   - {fileID: 7429350970491798891}
@@ -356,7 +360,6 @@ MonoBehaviour:
   Placed: 1
   log_temp: 0
   usable_now: 0
-  has_pasta: 0
   has_water: 0
   dissipation: 94
   temperature: 0
@@ -395,7 +398,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2658227395407497723}
+  m_Father: {fileID: 4947518456057425643}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8461251672960966098
 SpriteRenderer:
@@ -511,7 +514,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2658227395407497723}
+  m_Father: {fileID: 4947518456057425643}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2152879327722898504
 SpriteRenderer:
@@ -561,7 +564,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 574287140, guid: 900a11adcb54e58958cdf2c622012a24, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.65882355}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -613,7 +616,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1157528483976801944
 Transform:
   m_ObjectHideFlags: 0
@@ -627,7 +630,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2658227395407497723}
+  m_Father: {fileID: 4947518456057425643}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5727228844656547943
 SpriteRenderer:
@@ -712,7 +715,7 @@ MonoBehaviour:
   update_each_frame: 1
   log: 0
   log_frames: 0
---- !u!1 &6804391582192325631
+--- !u!1 &8097682911300807571
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -720,33 +723,51 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2658227395407497723}
-  m_Layer: 24
-  m_Name: layers
+  - component: {fileID: 2637764254354605675}
+  - component: {fileID: 2396757424017905776}
+  m_Layer: 7
+  m_Name: inventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2658227395407497723
+--- !u!4 &2637764254354605675
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6804391582192325631}
+  m_GameObject: {fileID: 8097682911300807571}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2927860107585372996}
-  - {fileID: 1157528483976801944}
-  - {fileID: 8958647535492943245}
-  - {fileID: 7991061100023726630}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
   m_Father: {fileID: 4947518456057425643}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2396757424017905776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8097682911300807571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2faf993164e7a436b9c49b4cd3379e40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlacerInventory
+  Items: []
+  uis: []
+  log: 0
+  place_positions:
+  - {x: -0.06, y: 0.333}
+  - {x: 0, y: 0.125}
+  - {x: 0.06, y: 0.18}
+  item_rule_placing: 
+  authorize_overplace: 0
 --- !u!1 &8910784274748376873
 GameObject:
   m_ObjectHideFlags: 0

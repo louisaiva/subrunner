@@ -46,11 +46,9 @@ public class Sink : Capable, Interactable
 
         // we grab the pot
         Inventory.Grab(pot);
-
-        // we place the pot
-        pot.Place();
-
-        // then we move the pot to our capable + position it
+        
+        // then we place the pot to our capable + position it
+        pot.Placed = true;
         pot.transform.localPosition = pot_local_position;
     }
 }

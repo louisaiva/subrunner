@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6382465351322107435}
-  - component: {fileID: 2341537329930858266}
+  - component: {fileID: 2385498864150908841}
   m_Layer: 7
   m_Name: inventory
   m_TagString: Untagged
@@ -33,7 +33,7 @@ Transform:
   - {fileID: 4351884982134648392}
   m_Father: {fileID: 5867391868910205687}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2341537329930858266
+--- !u!114 &2385498864150908841
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,13 +42,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1746303875547801798}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 352dd4bffc5726b41a31e2620019c7cb, type: 3}
+  m_Script: {fileID: 11500000, guid: 2faf993164e7a436b9c49b4cd3379e40, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlacerInventory
   Items: []
   uis:
   - {fileID: 7028540115701977062}
   log: 0
+  place_positions:
+  - {x: -0.2083333, y: 0.5416667}
+  item_rule_placing: pot
+  authorize_overplace: 1
 --- !u!1 &2819302280963684633
 GameObject:
   m_ObjectHideFlags: 0
@@ -245,6 +249,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de8d89082cf5f152995d602fd450210e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_OnOffToggle
+  _hovered: 0
+  _disabled: 0
   log: 0
   base_sprite: {fileID: -637157629, guid: 0c2e8aec6434f89f2990c31d371eeb8f, type: 3}
   hover_sprite: {fileID: -2047012821, guid: 0c2e8aec6434f89f2990c31d371eeb8f, type: 3}

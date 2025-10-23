@@ -19,9 +19,6 @@ public class Oven : Chest, Onnable
     public float total_heat_time = 10.0f;
     public float max_heat_temperature = 100.0f; // corresponds to 1f heat percentage
 
-    [Header("Cooking")]
-    [SerializeField] private Vector2 pot_local_position = new Vector2(0.0f, 0.0f);
-
     private Coroutine current_heating_coroutine = null;
 
     // START
@@ -30,7 +27,7 @@ public class Oven : Chest, Onnable
         base.Start();
 
         // suscribe to Inventory Grab
-        Inventory.OnItemGrabbed += (item) => handle_item_grabbed(item);
+        Inventory.OnItemGrabbed += (item) => Invoke(nameof(try_to_put_food_in_pot), 0.1f);
     }
 
     // INTERACTION
@@ -42,48 +39,13 @@ public class Oven : Chest, Onnable
         Interactor = old_interactor;
 
         // we check if it is a pot
-        if (interactor is Pot pot) { interact_with_pot(pot); return; }
+        if (interactor is Pot pot) { Inventory.Grab(pot); return; }
 
         // we check if a being interact with the oven
         if (interactor is not Being) { return; }
 
         // we set the Interactor as the being finally
         Interactor = interactor.GetCapacity<InteractCapacity>();
-
-        // if we have a burned pot and we are not on, we drop the pot
-        /* Pot burned_pot = Inventory.GetItemsByType<Pot>().Find(p => p.Reference == "pot:burned");
-        if (burned_pot != null && !IsOn)
-        {
-            interactor.Inventory.Grab(burned_pot);
-            return;
-        } */
-
-        // we toggle the oven
-        /* if (current_heating_coroutine != null) { StopCoroutine(current_heating_coroutine); }
-        if (IsOn) { current_heating_coroutine = StartCoroutine(heat_down()); }
-        else { current_heating_coroutine = StartCoroutine(heat_up()); } */
-        // return;
-
-    }
-    private void interact_with_pot(Pot pot)
-    {
-        // we heat the pot
-        Debug.Log("(Oven) Heating pot " + pot.name);
-
-        // we grab the pot
-        Inventory.Grab(pot);
-    }
-    private void handle_item_grabbed(Item item)
-    {
-        // if the item is a pot we place it on the oven
-        if (item is Pot pot)
-        {
-            pot.Place();
-            // then we move the pot to our capable + position it
-            pot.transform.localPosition = pot_local_position;
-        }
-
-        try_to_put_food_in_pot();
     }
     private void try_to_put_food_in_pot()
     {
@@ -95,14 +57,11 @@ public class Oven : Chest, Onnable
         List<Food> food = Inventory.GetItemsByType<Food>();
         if (food.Count == 0) { return; }
 
-        // we see if we have at least a Pasta
-        List<Pasta> pastas = food.OfType<Pasta>().ToList();
-        if (pastas.Count == 0) { return; }
-
-        // if this is Pasta and the pot does not have pasta, we put pasta in the pot
-        if (pot.HasPasta) { return; }
-        pot.PutPastaIn();
-        Destroy(pastas[0].gameObject);
+        // we try to put them all in the pot
+        for (int i = food.Count - 1; i >= 0; i--)
+        {
+            pot.PutFoodIn(food[i]);
+        }
     }
 
     // UPDATE

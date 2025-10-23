@@ -73,24 +73,8 @@ public class Inventory : MonoBehaviour
         // we check if we can add the item
         if (item == null) { return false; }
 
-        // we check if we have at least one ui_inventory
-        if (ui != null)
-        {
-            // we try to make the first ui_inventory (which is our reference ui_inventory) to grab it
-            // if it can grab it, all the others can grab it.
-            // if no, we return false
-            if (uis_to_ignore == null) { uis_to_ignore = new List<UI_Inventory>(); }
-            if (!uis_to_ignore.Contains(ui) && !ui.UI_Grab(item))
-            {
-                if (log) { Debug.LogWarning("(Inventory) " + capable.name + " can't grab : " + item.name + " in " + ui.name); }
-                return false; // if the first ui_inventory can't grab it, we return false
-            }
-            for (int i = 1; i < uis.Count; i++)
-            {
-                if (uis_to_ignore.Contains(uis[i])) { continue; } // we skip the ui_to_ignore
-                uis[i].UI_Grab(item); // we try to make the other ui_inventories grab it (we don't care if it can't grab as long as the 1st can)
-            }
-        }
+        // we try to make the ui grab the item
+        if (!ui_grab(item, uis_to_ignore)) { return false; }
 
         // we check if the item is already grabbed somewhere, if so we drop it
         if (item.Grabbed && item.HolderInventory != null) { item.HolderInventory.Drop(item, uis_to_ignore); }
@@ -126,14 +110,7 @@ public class Inventory : MonoBehaviour
         OnItemDropped.Invoke(item);
 
         // we update the UI
-        if (uis_to_ignore == null) { uis_to_ignore = new List<UI_Inventory>(); }
-        for (int i = 0; i < uis.Count; i++)
-        {
-            UI_Inventory ui = uis[i];
-            if (ui == null) { continue; }
-            if (uis_to_ignore.Contains(ui)) { continue; } // we skip the ui_to_ignore
-            ui.UI_Drop(item);
-        }
+        ui_drop(item, uis_to_ignore);
 
         if (log) { Debug.Log("(Inventory) " + capable.name + " dropped : " + item.name); }
 
@@ -157,6 +134,39 @@ public class Inventory : MonoBehaviour
 
         return true;
     }
+    
+    // GRABBING / DROPPING LOW LEVEL
+    protected bool ui_grab(Item item, List<UI_Inventory> uis_to_ignore = null)
+    {
+        if (ui == null) { return true; } // no inventory so we successfully grabbed it ahah ^^
+
+        // we try to make the first ui_inventory (which is our reference ui_inventory) to grab it
+        // if it can grab it, all the others can grab it.
+        // if no, we return false
+        if (uis_to_ignore == null) { uis_to_ignore = new List<UI_Inventory>(); }
+        if (!uis_to_ignore.Contains(ui) && !ui.UI_Grab(item))
+        {
+            if (log) { Debug.LogWarning("(Inventory) " + capable.name + " can't grab : " + item.name + " in " + ui.name); }
+            return false; // if the first ui_inventory can't grab it, we return false
+        }
+        for (int i = 1; i < uis.Count; i++)
+        {
+            if (uis_to_ignore.Contains(uis[i])) { continue; } // we skip the ui_to_ignore
+            uis[i].UI_Grab(item); // we try to make the other ui_inventories grab it (we don't care if it can't grab as long as the 1st can)
+        }
+        return true;
+    }
+    protected void ui_drop(Item item, List<UI_Inventory> uis_to_ignore = null)
+    {
+        if (uis_to_ignore == null) { uis_to_ignore = new List<UI_Inventory>(); }
+        for (int i = 0; i < uis.Count; i++)
+        {
+            UI_Inventory ui = uis[i];
+            if (ui == null) { continue; }
+            if (uis_to_ignore.Contains(ui)) { continue; } // we skip the ui_to_ignore
+            ui.UI_Drop(item);
+        }
+    }
 
     // GETTERS
     public Inventory GetInteractingInventory()
@@ -175,8 +185,11 @@ public class Inventory : MonoBehaviour
             if (interactor == null) { if (log) { Debug.LogWarning(s + "we don't have an interactor\n"); } return null; }
 
             // yes we do !! return its inventory
-            if (log) { Debug.Log(s + "we have an interactor : " + interactor.capable.name
-                + "\nand its inventory is " + interactor.capable.Inventory.name); }
+            if (log)
+            {
+                Debug.Log(s + "we have an interactor : " + interactor.capable.name
+                + "\nand its inventory is " + interactor.capable.Inventory.name);
+            }
             return interactor.capable.Inventory;
         }
 
@@ -205,7 +218,7 @@ public class Inventory : MonoBehaviour
             else if (chest.is_open && chest.is_moving) { if (log) { Debug.LogWarning(s + "but it's closing\n"); } return null; }
 
             s += "and it's open !!\n";
-            
+
             // we return the interactable's inventory
             if (log) { Debug.Log(s + "and its inventory is " + interactable.Inventory.name + "\n\n"); }
             return interactable.Inventory;

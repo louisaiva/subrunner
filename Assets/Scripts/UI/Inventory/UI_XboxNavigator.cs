@@ -426,15 +426,10 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     private void update_slots()
     {
         // we check the current slot state
+        GameObject current_slot = null;
         if (current_slot_index != -1 && current_slot_index < slots.Count)
         {
-            GameObject current_slot = slots[current_slot_index];
-            if (current_slot == null || !slottables.Exists(slottable => slottable.GetComponent<I_UI_Slottable>().IsYourSlot(current_slot)))
-            {
-                // on reset le current slot index
-                current_slot_index = -1;
-                if (debug) { Debug.Log("(UI_Navigator) current slot is no longer valid, resetting current_slot_index"); }
-            }
+            current_slot = slots[current_slot_index];
         }
 
 
@@ -451,13 +446,36 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         foreach (GameObject slottable in slottables)
         {
             if (slottable == null) { continue; }
-            
+
             // on récupère les slots du slottable
             List<GameObject> slottable_slots = slottable.GetComponent<I_UI_Slottable>().GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator);
             slottable_slots.RemoveAll(slot => slot.GetComponent<UI_Item>() != null && slot.GetComponent<UI_Item>().is_disabled); // we filter the disabled ones
             slots.AddRange(slottable_slots);
         }
-        if (slots.Count == 0) { current_slot_index = -1; }
+        
+
+        // we check if the slot index is still valid
+        if (slots.Count == 0) { current_slot_index = -1; return; }
+        if (current_slot == null || !slottables.Exists(slottable => slottable.GetComponent<I_UI_Slottable>().IsYourSlot(current_slot)))
+        {
+            // on reset le current slot index
+            current_slot_index = -1;
+            if (debug) { Debug.Log("(UI_Navigator) current slot is no longer valid, resetting current_slot_index"); }
+            return;
+        }
+
+        // we have a valid current slot that exists. but is it still the same index for it ?
+        GameObject new_slot = null;
+        if (current_slot_index != -1 && current_slot_index < slots.Count)
+        {
+            new_slot = slots[current_slot_index];
+        }
+        if (new_slot != current_slot)
+        {
+            // on met à jour le current slot index
+            current_slot_index = slots.IndexOf(current_slot);
+            if (debug) { Debug.Log("(UI_Navigator) current slot index updated to " + current_slot_index); }
+        }
     }
     private void hover_slot(int index)
     {
