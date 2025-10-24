@@ -23,6 +23,7 @@ public class MovableEngine : MonoBehaviour
 
 
     [Header("Logs")]
+    public bool log = false;
     public bool log_movables = false;
     public bool log_arrays = false;
     public bool log_neighbours = false;
@@ -33,7 +34,7 @@ public class MovableEngine : MonoBehaviour
     {
         if (Instance == null) { Instance = this; }
         else { Destroy(gameObject); }
-        Debug.Log("(MovableEngine) Initialized");
+        if (log) { Debug.Log("(MovableEngine) Initialized"); }
 
         // on initialise les matrices
         distances_matrix = new HalfMatrix<float>();

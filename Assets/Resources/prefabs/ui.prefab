@@ -3316,6 +3316,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c085eeac05cbc4f4f933c07b1c61cfb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _hovered: 0
+  _disabled: 0
   log: 0
   base_sprite: {fileID: 722337240, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   hover_sprite: {fileID: 1477167940, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
@@ -4186,6 +4188,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15991b66f1df3074b9cf9a24c908c8c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _hovered: 0
+  _disabled: 0
   log: 0
   base_sprite: {fileID: 722337240, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   hover_sprite: {fileID: 1477167940, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
@@ -4989,6 +4993,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c085eeac05cbc4f4f933c07b1c61cfb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _hovered: 0
+  _disabled: 0
   log: 0
   base_sprite: {fileID: 722337240, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   hover_sprite: {fileID: 1477167940, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
@@ -6841,7 +6847,7 @@ RectTransform:
   m_GameObject: {fileID: 2640498653413180510}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.59999996, y: 0.59999996, z: 0.59999996}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6164785366243112615}
@@ -7896,7 +7902,7 @@ MonoBehaviour:
   activateInput: {fileID: -5345809961903225854, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   moveItemInput: {fileID: 3671791553200363326, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
   navigateInGameInput: {fileID: -3072000485198250585, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
-  debug: 0
+  debug: 1
   debug_navigation: 0
   log_slot_position: 0
   log_moving_items: 0
@@ -8069,6 +8075,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c085eeac05cbc4f4f933c07b1c61cfb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _hovered: 0
+  _disabled: 0
   log: 0
   base_sprite: {fileID: 722337240, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   hover_sprite: {fileID: 1477167940, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
@@ -11249,10 +11257,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pools:
   - {fileID: 5609916578867124607}
+  - {fileID: 4962439697037434}
   - {fileID: 2220925454443362976}
   - {fileID: 4734001381855922422}
   - {fileID: 3125642494784453069}
-  - {fileID: 4962439697037434}
   Inventory: {fileID: 0}
   log: 0
 --- !u!114 &3142657869747533312
@@ -12738,6 +12746,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c085eeac05cbc4f4f933c07b1c61cfb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _hovered: 0
+  _disabled: 0
   log: 0
   base_sprite: {fileID: 722337240, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   hover_sprite: {fileID: 1477167940, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
@@ -14537,7 +14547,7 @@ MonoBehaviour:
   ui_items: []
   destroy_empty_on_init: 0
   DoNotDisableEmptySlots: 1
-  item_rule: activable
+  item_rule: usable;!laptop;!shoes
   bank: {fileID: 0}
   UI_Inventory: {fileID: 0}
   log: 0
@@ -18091,7 +18101,7 @@ MonoBehaviour:
   ui_items: []
   destroy_empty_on_init: 1
   DoNotDisableEmptySlots: 0
-  item_rule: module,hardware:card
+  item_rule: module
   bank: {fileID: 0}
   UI_Inventory: {fileID: 0}
   log: 0
@@ -21391,7 +21401,7 @@ MonoBehaviour:
   ui_items: []
   destroy_empty_on_init: 1
   DoNotDisableEmptySlots: 0
-  item_rule: food,other,weapon,shoes,paper
+  item_rule: '!module;!hardware;!laptop'
   bank: {fileID: 0}
   UI_Inventory: {fileID: 0}
   log: 0

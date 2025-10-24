@@ -26,7 +26,7 @@ public class Meat : Food
     }
 
     // BEING FULLY EATEN
-    protected override void beingFullyEaten() { become_bones(); }
+    // protected override void beingFullyEaten() { become_bones(); }
 
     // BECOME BONES
     private void become_bones()

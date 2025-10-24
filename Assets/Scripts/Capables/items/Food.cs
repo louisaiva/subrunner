@@ -8,11 +8,13 @@ public class Food : Item, Usable
     [SerializeField] protected int bites_left = 0; // number of bites left on the food
 
     public bool Eatable { get { return bites_left > 0; } }
+    public event System.Action<Being> OnBeingBitten = delegate { };
 
     // BEING EATEN
-    public void RemoveOneBite()
+    public void RemoveOneBite(Being eater)
     {
         bites_left--;
+        OnBeingBitten?.Invoke(eater);
         if (bites_left > 0)
         {
             if (debug) { Debug.Log("(Food) " + name + " has " + bites_left + " bites left"); }
@@ -20,9 +22,10 @@ public class Food : Item, Usable
         }
 
         // else we being fully eaten
-        beingFullyEaten();
+        Destroy(gameObject);
+        // beingFullyEaten();
     }
-    protected virtual void beingFullyEaten() { Destroy(gameObject); }
+    // protected virtual void beingFullyEaten() { Destroy(gameObject); }
 
 
     // USABLE

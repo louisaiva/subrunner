@@ -127,7 +127,7 @@ public class DieCapacity : Capacity
         if (being.transform.Find("brain") is Transform brain && brain != null) { Destroy(brain.gameObject); }
         if (being.transform.Find("goals") is Transform goal && goal != null) { Destroy(goal.gameObject); }
         if (being.transform.Find("eyes") is Transform eyes && eyes != null) { Destroy(eyes.gameObject); }
-        if (being.transform.Find("inventory") is Transform inventory && inventory != null) { Destroy(inventory.gameObject); }
+        // if (being.transform.Find("inventory") is Transform inventory && inventory != null) { Destroy(inventory.gameObject); }
         if (being.transform.Find("head") is Transform head && head != null) { Destroy(head.gameObject); }
         if (being.transform.Find("light") is Transform light && light != null) { Destroy(light.gameObject); }
         if (being.transform.Find("hacks") is Transform hacks && hacks != null) { Destroy(hacks.gameObject); }
@@ -143,19 +143,19 @@ public class DieCapacity : Capacity
 
 
 
-        // 5 - TURNING TO MEAT
-        Meat meat = being.gameObject.AddComponent<Meat>();
-        meat.name = "Meat";
-        meat.Initialize(being);
-        meat.SetForces(being.GetForces());
+        // 5 - TURNING TO CORPSE
+        Corpse corpse = being.gameObject.AddComponent<Corpse>();
+        corpse.name = "Corpse";
+        corpse.Initialize(being);
+        corpse.SetForces(being.GetForces());
 
-        // we add a hover capacity to it (it is an item now)
-        meat.AddCapacity("hover");
+        // we add a hover capacity to it (it is an interactable now)
+        corpse.AddCapacity("hover");
 
 
 
         // 6 - DESTROYING OLD BEING & DIE CAPACITY
         Destroy(being);
-        meat.RemoveCapacity("die"); // and we finally remove the die capacity which will destroy it (this)
+        corpse.RemoveCapacity("die"); // and we finally remove the die capacity which will destroy it (this)
     }
 }

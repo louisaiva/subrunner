@@ -25,7 +25,7 @@ public class Item : Movable
     public bool Stackable { get => MaxQty > 1; }
     public string ItemDescription = "description of the item";
 
-    // GRAB / DROP
+    // GRAB / DROP / PLACING
     private bool _grabbed = false;
     public bool Grabbed
     {
@@ -52,10 +52,9 @@ public class Item : Movable
 
             // we set the value
             _placed = value;
-            update_components();
+            update_grab_n_place();
         }
     }
-
 
     // events
     public event System.Action<Item, Capable> OnGrabbed = delegate { };
@@ -71,7 +70,6 @@ public class Item : Movable
             return transform.parent.GetComponent<Inventory>();
         }
     }
-
 
 
 
@@ -152,11 +150,12 @@ public class Item : Movable
         return false;
     }
 
+    // START
     protected override void Start()
     {
         base.Start();
 
-        update_components();
+        update_grab_n_place();
     }
 
     // BEING GRABBED / DROPPED
@@ -164,7 +163,7 @@ public class Item : Movable
     {
         // on veut etre sur qu'on est pas placé
         _placed = false;
-        update_components();
+        update_grab_n_place();
 
         await System.Threading.Tasks.Task.Yield();
         if (this == null) { return; } // in case the item was destroyed during the await
@@ -174,14 +173,14 @@ public class Item : Movable
     }
     protected virtual void on_dropped()
     {
-        update_components();
+        update_grab_n_place();
 
         // we call the event
         OnDropped?.Invoke(this);
     }
 
-    // update components
-    protected virtual void update_components()
+    // MAIN LOW LEVEL UPGRADE GRABBING & PLACING
+    protected virtual void update_grab_n_place()
     {
         // RENDERERs
         transform.localScale = Vector3.one;
@@ -212,7 +211,7 @@ public class Item : Movable
         if (!Placed && !Grabbed)
         {
             // enable rigidbody & feet
-            feet_collider.enabled = true;
+            if (feet_collider != null) { feet_collider.enabled = true; }
 
             // we add the rigidbody
             if (rb == null)
@@ -228,7 +227,7 @@ public class Item : Movable
         else
         {
             // disable rigidbody & feet
-            feet_collider.enabled = false;
+            if (feet_collider != null) { feet_collider.enabled = false; }
 
             // we remove the rigidbody
             if (rb != null)
@@ -245,16 +244,17 @@ public class Item : Movable
         }
 
         // HOVER
+        if (Hover == null) { return; }
         if (!Grabbed)
         {
-            GetCapacity<HoverCapacity>().transform.localPosition = Vector3.zero;
+            Hover.transform.localPosition = Vector3.zero;
             // we enable the HoverCapacity's collider
-            GetCapacity<HoverCapacity>().GetComponent<Collider2D>().enabled = true;
+            Hover.GetComponent<Collider2D>().enabled = true;
         }
-        else
+        else 
         {
             // we disable the HoverCapacity's collider
-            GetCapacity<HoverCapacity>().GetComponent<Collider2D>().enabled = false;
+            Hover.GetComponent<Collider2D>().enabled = false;
         }
     }
 

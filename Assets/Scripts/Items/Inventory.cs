@@ -255,14 +255,14 @@ public class Inventory : MonoBehaviour
         }
         return items;
     }
-    public List<Item> GetItemsByRule(string rule = "", bool exclusion_rule = false)
+    public List<Item> GetItemsByRule(string rule = "")
     {
         // we get all the items that match the rule
         List<Item> items = new List<Item>();
-        foreach (Item item in Items)
+        for (int i = 0; i < Items.Count; i++)
         {
-            if (!exclusion_rule && item.ValidateRule(rule)) { items.Add(item); }
-            else if (exclusion_rule && !item.ValidateRule(rule)) { items.Add(item); }
+            Item item = Items[i];
+            if (item.ValidateRule(rule)) { items.Add(item); }
         }
         return items;
     }

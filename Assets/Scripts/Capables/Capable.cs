@@ -49,22 +49,39 @@ public class Capable : MonoBehaviour, Debuggable
     public AnimPlayer anim_player { get; private set; }
     public CapacityBank bank { get; private set; }
 
-    // un capable peut aussi avoir un inventaire
+    // un capable peut aussi avoir un inventaire & un hover
+    private Inventory _inventory = null;
     public Inventory Inventory
     {
         get
         {
-            Transform inventory_transform = transform.Find("inventory");
-            if (inventory_transform == null) { return null; }
-            return inventory_transform.GetComponent<Inventory>();
+            if (_inventory == null)
+            {
+                Transform inventory_transform = transform.Find("inventory");
+                if (inventory_transform == null) { return null; }
+                _inventory = inventory_transform.GetComponent<Inventory>();
+            }
+            return _inventory;
         }
     }
+    private HoverCapacity _hover = null;
+    public HoverCapacity Hover
+    {
+        get
+        {
+            if (_hover == null) { _hover = GetCapacity<HoverCapacity>(); }
+            return _hover;
+        }
+    }
+
+
 
     // et des capacités electroniques
     public virtual ConnectCapacity Connector
     {
         // ? réellement logique que ça soit là ça ???
         // todo on peut pas le mettre dans Hacker/Vulnerable ou simplement utiliser Device ?
+        // -> +1 pour Device
         get
         {
             // we check if we have a ConnectCapacity directly
@@ -77,7 +94,7 @@ public class Capable : MonoBehaviour, Debuggable
                 Device device = Inventory.GetDeviceItem();
                 if (device != null) { return device.Connector; }
             }
-            
+
             return null;
         }
     }

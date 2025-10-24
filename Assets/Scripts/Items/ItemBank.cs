@@ -64,7 +64,7 @@ public class ItemBank : Singleton<ItemBank>
                 Item item = prefab.GetComponent<Item>();
                 if (item == null)
                 {
-                    if (debug) { Debug.LogWarning("(ItemBank) prefab " + prefab.name + " has no Item component, skipping it");}
+                    if (debug) { Debug.LogWarning("(ItemBank) prefab " + prefab.name + " has no Item component, skipping it"); }
                     continue;
                 }
                 string reference = item.Reference;
@@ -78,8 +78,11 @@ public class ItemBank : Singleton<ItemBank>
 
                 item_count++;
 
-                if (debug) { Debug.Log("(ItemBank) loaded item : " + reference +
-                        (reference == prefab.name ? "" : " (prefab name is " + prefab.name + ")")); }
+                if (debug)
+                {
+                    Debug.Log("(ItemBank) loaded item : " + reference +
+                        (reference == prefab.name ? "" : " (prefab name is " + prefab.name + ")"));
+                }
             }
         }
 
@@ -89,6 +92,32 @@ public class ItemBank : Singleton<ItemBank>
 
 
     // ITEM & MODULES GENERATOR
+    public Item CreateItem(string reference)
+    {
+        // on check si l'item existe
+        if (!item_prefabs.ContainsKey(reference))
+        {
+            Debug.LogError("(ItemBank) cannot find item prefab for " + reference
+                + ". are you sure its corresponding item prefab is in the " + items_path + " folder?");
+            return null;
+        }
+
+        // on instancie le prefab
+        string prefab_path = item_prefabs[reference];
+        GameObject item_go = Instantiate(Resources.Load<GameObject>(prefab_path), Vector3.zero, Quaternion.identity);
+
+        // on vérifie que c'est bien un item
+        Item item = item_go.GetComponent<Item>();
+        if (item == null)
+        {
+            Debug.LogError("(ItemBank) prefab " + prefab_path + " is not an Item");
+            Destroy(item_go);
+            return null;
+        }
+
+        if (debug) { Debug.Log("(ItemBank) Instanciating " + reference + " item prefab !!"); }
+        return item;
+    }
     public Module CreateModule(string reference)
     {
         // on check si le module existe
