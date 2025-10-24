@@ -16,9 +16,15 @@ public class NeuronVisualizer : MonoBehaviour
     [SerializeField] private Color goal_neuron_color = Color.green;
     [SerializeField] private Color chosen_goal_color = Color.cyan;
 
+    [Header("Scale Settings")]
+    [SerializeField] private float scale_up_factor = 1.2f;
+    private float base_scale = 1f;
+
+    // INIT
     public void Initialize(Neuron neuron)
     {
         this.neuron = neuron;
+        base_scale = transform.localScale.x;
         UpdateVisual();
     }
 
@@ -36,5 +42,15 @@ public class NeuronVisualizer : MonoBehaviour
         }
 
         label.text = neuron.name;
+    }
+
+    // SCALING
+    public void ScaleUp()
+    {
+        transform.localScale = base_scale * scale_up_factor * Vector3.one;
+    }
+    public void ScaleDown()
+    {
+        transform.localScale = base_scale * Vector3.one;
     }
 }

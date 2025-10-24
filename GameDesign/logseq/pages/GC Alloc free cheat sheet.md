@@ -1,0 +1,12 @@
+-
+-
+- ## DESCRIPTION
+	- pour eviter d'utiliser au maximum le GC il faut faire des bails précis :
+-
+- ## REGLES
+	- créer des **struct** plutot que des **class** mdrr jfais jamais ça
+	- ne pas utiliser **var**
+	- utiliser **for** au lieu de **foreach** (et surtout quand on foreach sur une interface)
+	- utiliser des **NativeArray** ou **NativeList** quand on stocke > 10k elements
+	- récupérer le contenu d'un **Array** avant de loop dessus pcq sinon on va copier le tableau sans arret
+	-

@@ -119,6 +119,202 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!4 &72971042 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+  m_PrefabInstance: {fileID: 1881981718}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &151930414
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 768340769}
+    m_Modifications:
+    - target: {fileID: 1832143926947856674, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Name
+      value: neuron
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.67
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.47
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7895792345049995919, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_text
+      value: hunger
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.name
+      value: hunger
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.position.x
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.position.y
+      value: 2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3818160165151968124, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+  m_SourcePrefab: {fileID: 100100000, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+--- !u!1001 &158578650
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 768340769}
+    m_Modifications:
+    - target: {fileID: 1832143926947856674, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Name
+      value: neuron_8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.86
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847975698547627071, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Color.b
+      value: 0.8739687
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847975698547627071, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Color.g
+      value: 0.47806135
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847975698547627071, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Color.r
+      value: 0.60261303
+      objectReference: {fileID: 0}
+    - target: {fileID: 7895792345049995919, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_text
+      value: HUG
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.name
+      value: HUG
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.is_goal
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.position.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.position.y
+      value: -2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3818160165151968124, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+  m_SourcePrefab: {fileID: 100100000, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+--- !u!4 &199376980 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+  m_PrefabInstance: {fileID: 1848234896}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &242002615 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+  m_PrefabInstance: {fileID: 151930414}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &389253452 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+  m_PrefabInstance: {fileID: 158578650}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &402761469
 GameObject:
   m_ObjectHideFlags: 0
@@ -256,6 +452,16 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!4 &629963897 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+  m_PrefabInstance: {fileID: 1007127496}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &659215887 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+  m_PrefabInstance: {fileID: 1988654736}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &768340766
 GameObject:
   m_ObjectHideFlags: 0
@@ -267,6 +473,8 @@ GameObject:
   - component: {fileID: 768340769}
   - component: {fileID: 768340768}
   - component: {fileID: 768340767}
+  - component: {fileID: 768340770}
+  - component: {fileID: 768340771}
   m_Layer: 0
   m_Name: NeuralBrain
   m_TagString: Untagged
@@ -303,62 +511,108 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1708c0417c16405c5bc3db0226a039c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NeuralBrain
-  log: 0
+  log: 1
   neurons:
-  - name: hunger
-    position: {x: -2, y: 2, z: 0}
-    is_goal: 0
-    synapses: []
-  - name: fatigue
-    position: {x: -2, y: 1, z: 0}
-    is_goal: 0
-    synapses: []
   - name: pain
-    position: {x: -2, y: 0, z: 0}
+    position: {x: 1.7008506, y: 3.4878707, z: 2.7798758}
     is_goal: 0
-    synapses: []
-  - name: love
-    position: {x: -2, y: -1, z: 0}
+    synapses:
+    - neuronA:
+        rid: 6491698625526104228
+      neuronB:
+        rid: 6491698625526104229
+      weightA: 1
+      weightB: 1
+    - neuronA:
+        rid: 6491698625526104230
+      neuronB:
+        rid: 6491698625526104229
+      weightA: 1
+      weightB: 1
+  - name: cat
+    position: {x: -2.004449, y: 1.6840696, z: -3.2671878}
     is_goal: 0
-    synapses: []
-  - name: EAT
-    position: {x: 2, y: 2, z: 0}
-    is_goal: 1
-    synapses: []
-  - name: SLEEP
-    position: {x: 2, y: 1, z: 0}
-    is_goal: 1
-    synapses: []
-  - name: KILL
-    position: {x: 2, y: 0, z: 0}
-    is_goal: 1
-    synapses: []
-  - name: FLEE
-    position: {x: 2, y: -1, z: 0}
-    is_goal: 1
-    synapses: []
-  - name: HUG
-    position: {x: 2, y: -2, z: 0}
-    is_goal: 1
-    synapses: []
+    synapses:
+    - neuronA:
+        rid: 6491698625526104228
+      neuronB:
+        rid: 6491698625526104229
+      weightA: 1
+      weightB: 1
+  - name: me
+    position: {x: 2.9455972, y: 0.7150093, z: -0.027354872}
+    is_goal: 0
+    synapses:
+    - neuronA:
+        rid: 6491698625526104230
+      neuronB:
+        rid: 6491698625526104229
+      weightA: 1
+      weightB: 1
   synapses:
   - neuronA:
-      name: 
-      position: {x: 0, y: 0, z: 0}
-      is_goal: 0
-      synapses: []
+      rid: 6491698625526104228
     neuronB:
-      name: 
-      position: {x: 0, y: 0, z: 0}
-      is_goal: 0
-      synapses: []
-    weightA: 0
-    weightB: 0
+      rid: 6491698625526104229
+    weightA: 1
+    weightB: 1
+  - neuronA:
+      rid: 6491698625526104230
+    neuronB:
+      rid: 6491698625526104229
+    weightA: 1
+    weightB: 1
+  imagination_percentage: 0.1
   max_thinking_steps: 100
-  thinking_delay: 0.1
+  thinking_delay: 0.5
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 6491698625526104228
+      type: {class: Neuron, ns: , asm: Assembly-CSharp}
+      data:
+        name: cat
+        position: {x: -2.004449, y: 1.6840696, z: -3.2671878}
+        is_goal: 0
+        synapses:
+        - neuronA:
+            rid: 6491698625526104228
+          neuronB:
+            rid: 6491698625526104229
+          weightA: 1
+          weightB: 1
+    - rid: 6491698625526104229
+      type: {class: Neuron, ns: , asm: Assembly-CSharp}
+      data:
+        name: pain
+        position: {x: 1.7008506, y: 3.4878707, z: 2.7798758}
+        is_goal: 0
+        synapses:
+        - neuronA:
+            rid: 6491698625526104228
+          neuronB:
+            rid: 6491698625526104229
+          weightA: 1
+          weightB: 1
+        - neuronA:
+            rid: 6491698625526104230
+          neuronB:
+            rid: 6491698625526104229
+          weightA: 1
+          weightB: 1
+    - rid: 6491698625526104230
+      type: {class: Neuron, ns: , asm: Assembly-CSharp}
+      data:
+        name: me
+        position: {x: 2.9455972, y: 0.7150093, z: -0.027354872}
+        is_goal: 0
+        synapses:
+        - neuronA:
+            rid: 6491698625526104230
+          neuronB:
+            rid: 6491698625526104229
+          weightA: 1
+          weightB: 1
 --- !u!4 &768340769
 Transform:
   m_ObjectHideFlags: 0
@@ -371,12 +625,751 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 242002615}
+  - {fileID: 629963897}
+  - {fileID: 1418375937}
+  - {fileID: 72971042}
+  - {fileID: 659215887}
+  - {fileID: 971118597}
+  - {fileID: 199376980}
+  - {fileID: 1817882137}
+  - {fileID: 389253452}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &768340770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 768340766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41d15bd4bc151bd81ae6f2ceb0d58d06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NeuralBrainLoader
+  neuralBrain: {fileID: 768340768}
+  visualizer: {fileID: 768340767}
+--- !u!114 &768340771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 768340766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b7bca640249fdfe789dabbf204150be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NeuralBrancher
+  neuralBrain: {fileID: 768340768}
+  visualizer: {fileID: 768340767}
+  hovered_object: {fileID: 0}
+  clicked_object: {fileID: 0}
+  dragged_object: {fileID: 0}
+  dragged: 0
+  left_downed: 0
+  log_hover: 0
+  log_click: 1
+--- !u!4 &971118597 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+  m_PrefabInstance: {fileID: 1657913463}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1007127496
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 768340769}
+    m_Modifications:
+    - target: {fileID: 1832143926947856674, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Name
+      value: neuron_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.67
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.39
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7895792345049995919, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_text
+      value: fatigue
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.name
+      value: fatigue
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.position.x
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.position.y
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3818160165151968124, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+  m_SourcePrefab: {fileID: 100100000, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+--- !u!1001 &1172859214
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 768340769}
+    m_Modifications:
+    - target: {fileID: 1832143926947856674, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Name
+      value: neuron_7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.34
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.26
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847975698547627071, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Color.b
+      value: 0.8739687
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847975698547627071, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Color.g
+      value: 0.47806135
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847975698547627071, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Color.r
+      value: 0.60261303
+      objectReference: {fileID: 0}
+    - target: {fileID: 7895792345049995919, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_text
+      value: FLEE
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.name
+      value: FLEE
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.is_goal
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.position.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.position.y
+      value: -1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3818160165151968124, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+  m_SourcePrefab: {fileID: 100100000, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+--- !u!1001 &1354312656
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 768340769}
+    m_Modifications:
+    - target: {fileID: 1832143926947856674, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Name
+      value: neuron_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.62
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.43
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7895792345049995919, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_text
+      value: pain
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.name
+      value: pain
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.position.x
+      value: -2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3818160165151968124, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+  m_SourcePrefab: {fileID: 100100000, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+--- !u!4 &1418375937 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+  m_PrefabInstance: {fileID: 1354312656}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1657913463
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 768340769}
+    m_Modifications:
+    - target: {fileID: 1832143926947856674, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Name
+      value: neuron_5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.38
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847975698547627071, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Color.b
+      value: 0.8739687
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847975698547627071, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Color.g
+      value: 0.47806135
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847975698547627071, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Color.r
+      value: 0.60261303
+      objectReference: {fileID: 0}
+    - target: {fileID: 7895792345049995919, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_text
+      value: SLEEP
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.name
+      value: SLEEP
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.is_goal
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.position.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.position.y
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3818160165151968124, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+  m_SourcePrefab: {fileID: 100100000, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+--- !u!4 &1817882137 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+  m_PrefabInstance: {fileID: 1172859214}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1848234896
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 768340769}
+    m_Modifications:
+    - target: {fileID: 1832143926947856674, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Name
+      value: neuron_6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.3900002
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.13999999
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847975698547627071, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Color.b
+      value: 0.8739687
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847975698547627071, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Color.g
+      value: 0.47806135
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847975698547627071, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Color.r
+      value: 0.60261303
+      objectReference: {fileID: 0}
+    - target: {fileID: 7895792345049995919, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_text
+      value: KILL
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.name
+      value: KILL
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.is_goal
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.position.x
+      value: 2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3818160165151968124, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+  m_SourcePrefab: {fileID: 100100000, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+--- !u!1001 &1881981718
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 768340769}
+    m_Modifications:
+    - target: {fileID: 1832143926947856674, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Name
+      value: neuron_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.94
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7895792345049995919, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_text
+      value: love
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.name
+      value: love
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.position.x
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.position.y
+      value: -1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3818160165151968124, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+  m_SourcePrefab: {fileID: 100100000, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+--- !u!1 &1893579407
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1893579409}
+  - component: {fileID: 1893579408}
+  - component: {fileID: 1893579410}
+  m_Layer: 0
+  m_Name: Senser
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1893579408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1893579407}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6835c73ed66252809a8057abb5ac8ecc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FakeSenser
+  brain: {fileID: 768340768}
+  type: pain
+  intensity: 10
+  initiator: cat
+  receiver: me
+--- !u!4 &1893579409
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1893579407}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1893579410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1893579407}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca91d9b99437f07aab7f9e15448c8a65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FakeAnalyser
+  brain: {fileID: 768340768}
+--- !u!1001 &1988654736
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 768340769}
+    m_Modifications:
+    - target: {fileID: 1832143926947856674, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Name
+      value: neuron_4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.31
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692028324377314902, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847975698547627071, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Color.b
+      value: 0.8739687
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847975698547627071, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Color.g
+      value: 0.47806135
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847975698547627071, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_Color.r
+      value: 0.60261303
+      objectReference: {fileID: 0}
+    - target: {fileID: 7895792345049995919, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: m_text
+      value: EAT
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.name
+      value: EAT
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.is_goal
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.position.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017195029776288175, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      propertyPath: neuron.position.y
+      value: 2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3818160165151968124, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+  m_SourcePrefab: {fileID: 100100000, guid: 480f5f16ce4b1533aab0ade2b1da0616, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 402761472}
   - {fileID: 768340769}
+  - {fileID: 1893579409}

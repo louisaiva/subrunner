@@ -111,6 +111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movables: []
+  log: 0
   log_movables: 0
   log_arrays: 0
   log_neighbours: 0
@@ -6026,6 +6027,18 @@ MonoBehaviour:
     base_skin: pot
     base_spritesheets:
     - objects/items/kitchen/pot
+  - variant_name: sink_back
+    variant_spritesheets:
+    - objects/interactives/kitchen/sink_back
+    base_skin: sink_front
+    base_spritesheets:
+    - objects/interactives/kitchen/sink_front
+  - variant_name: blue_library_back
+    variant_spritesheets:
+    - objects/deco/library/library_back
+    base_skin: blue_library_front
+    base_spritesheets:
+    - objects/deco/library/library_front
   log: 0
   log_LAFAC: 0
   log_variant_skins: 0

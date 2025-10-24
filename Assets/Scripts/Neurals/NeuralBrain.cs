@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NeuralBrain : MonoBehaviour
+public class NeuralBrain : Singleton<NeuralBrain>
 {
     [SerializeField] private bool log = false;
 
@@ -11,17 +11,33 @@ public class NeuralBrain : MonoBehaviour
     [SerializeField] private List<Synapse> synapses = new List<Synapse>();
     public System.Action<Neuron> OnNeuronCreated;
     public System.Action<Synapse> OnSynapseCreated;
+    public System.Action<Synapse> OnSynapseDeleted;
 
     [Header("Thinking Settings")]
+    public float imagination_percentage = 0.1f; // percentage of thinking steps that can go to random neurons
     [SerializeField] private int max_thinking_steps = 100;
     [SerializeField] private float thinking_delay = 0.1f; // delay between thinking steps
     public System.Action<Thought[]> OnStartedThinking;
     public System.Action<Thought[]> OnCompletedThinking;
 
+    [Header("Memory Settings")]
+    public Memory instant_memory;
+
     // START
     private void Start()
     {
-        // we call OnCreated for all neurons & synapses we already have
+        LoadBrain();
+    }
+
+    // BRAIN LOADING
+    public void SetBrain(List<Neuron> neurons, List<Synapse> synapses)
+    {
+        this.neurons = neurons;
+        this.synapses = synapses;
+    }
+    public void LoadBrain()
+    {
+        // we call OnCreated for all neurons & synapses we just loaded
         for (int i = 0; i < neurons.Count; i++)
         {
             OnNeuronCreated?.Invoke(neurons[i]);
@@ -31,33 +47,49 @@ public class NeuralBrain : MonoBehaviour
             synapses[i].Init();
             OnSynapseCreated?.Invoke(synapses[i]);
         }
-    }
 
+        if (log) { Debug.Log($"[NeuralBrain] Loaded brain with {neurons.Count} neurons and {synapses.Count} synapses."); }
+    }
 
     // SENSE
     public void Sense(string type, float intensity, string initiator, string receiver)
     {
         // we check if we have those 3 neurons already
-        Neuron sensationNeuron = GetNeuronByName(type);
-        Neuron initiatorNeuron = GetNeuronByName(initiator);
-        Neuron receiverNeuron = GetNeuronByName(receiver);
+        Neuron sensationNeuron = GetNeuronByName(type, createIfNotFound: true);
+        Neuron initiatorNeuron = GetNeuronByName(initiator, createIfNotFound: true);
+        Neuron receiverNeuron = GetNeuronByName(receiver, createIfNotFound: true);
 
         // we link the initiator & the sensation & the receiver & the sensation
-        Synapse synapseA = GetSynapseBetween(initiatorNeuron, sensationNeuron);
-        Synapse synapseB = GetSynapseBetween(receiverNeuron, sensationNeuron);
+        Synapse synapseA = GetSynapseBetween(initiatorNeuron, sensationNeuron, createIfNotFound: true);
+        Synapse synapseB = GetSynapseBetween(receiverNeuron, sensationNeuron, createIfNotFound: true);
 
         // we create 3 raycasts from each neuron and wait for them to arrive
         // ? should a big intensity make more raycast or just longer raycasts ?
 
-        if (log) { Debug.Log($"[NeuralBrain] Sensed {type} with intensity {intensity} from {initiator} to {receiver}"); }
+        int steps = Mathf.CeilToInt(Mathf.Abs(intensity));
+
+        if (log) { Debug.Log($"[NeuralBrain] Sensed {type} with intensity {intensity} from {initiator} to {receiver} ({steps} steps)"); }
 
         // we start thinking
         Thought[] thoughts = new Thought[3];
-        thoughts[0] = new Thought(initiatorNeuron, (int)intensity);
-        thoughts[1] = new Thought(sensationNeuron, (int)intensity);
-        thoughts[2] = new Thought(receiverNeuron, (int)intensity);
+        thoughts[0] = new Thought(initiatorNeuron, steps);
+        thoughts[1] = new Thought(sensationNeuron, steps);
+        thoughts[2] = new Thought(receiverNeuron, steps);
         OnStartedThinking?.Invoke(thoughts);
         StartCoroutine(think_coroutine(thoughts));
+
+        // we add to instant memory
+        instant_memory = new Memory(
+            new Sensation
+            {
+                type = type,
+                intensity = intensity,
+                initiator = initiatorNeuron,
+                receiver = receiverNeuron
+            },
+            new List<Thought>(thoughts),
+            null
+        );
     }
     private IEnumerator think_coroutine(Thought[] thoughts)
     {
@@ -87,7 +119,7 @@ public class NeuralBrain : MonoBehaviour
         for (int i = 0; i < thoughts.Length; i++)
         {
             Thought thought = thoughts[i];
-            if (thought.state != ThoughtState.Completed) { continue; }
+            if (thought.state == ThoughtState.Failed) { continue; }
 
             Neuron goalNeuron = thought.currentNeuron;
             if (!goalCounts.ContainsKey(goalNeuron))
@@ -117,12 +149,14 @@ public class NeuralBrain : MonoBehaviour
             if (log) { Debug.Log($"[NeuralBrain] No goal neuron reached."); }
         }
 
+        // we add to instant memory
+        instant_memory.decision = finalGoal;
         OnCompletedThinking?.Invoke(thoughts);
     }
 
 
     // GETTERS
-    public Synapse GetSynapseBetween(Neuron a, Neuron b)
+    public Synapse GetSynapseBetween(Neuron a, Neuron b, bool createIfNotFound = false)
     {
         // try to find existing synapse
         for (int i = 0; i < a.synapses.Count; i++)
@@ -134,6 +168,8 @@ public class NeuralBrain : MonoBehaviour
             }
         }
 
+        if (!createIfNotFound) { return null; }
+
         // if not found, create it
         Synapse newSynapse = new Synapse(a, b);
         newSynapse.Init();
@@ -143,20 +179,52 @@ public class NeuralBrain : MonoBehaviour
         if (log) { Debug.Log($"[NeuralBrain] Created synapse between {a.name} and {b.name}"); }
         return newSynapse;
     }
-    private Neuron GetNeuronByName(string name)
+    public Neuron GetNeuronByName(string name, bool createIfNotFound = false)
     {
         // try to find the neuron by name
         Neuron neuron = neurons.Find(n => n.name == name);
         if (neuron != null) { return neuron; }
+        if (!createIfNotFound) { return null; }
 
         // and create one if not found
         return create_neuron(name);
+    }
+    public Neuron GetRandomCloseNeuron(Neuron fromNeuron, float maxDistance = 15f)
+    {
+        List<Neuron> closeNeurons = new List<Neuron>();
+        for (int i = 0; i < neurons.Count; i++)
+        {
+            Neuron neuron = neurons[i];
+            if (neuron == fromNeuron) { continue; }
+            if (Vector3.Distance(neuron.position, fromNeuron.position) <= maxDistance)
+            {
+                closeNeurons.Add(neuron);
+            }
+        }
+        if (closeNeurons.Count == 0) { return null; }
+
+        // we sort them by distance
+        closeNeurons.Sort((a, b) =>
+        {
+            float distA = Vector3.Distance(a.position, fromNeuron.position);
+            float distB = Vector3.Distance(b.position, fromNeuron.position);
+            return distA.CompareTo(distB);
+        });
+
+        // 50 % chance to pick the closest
+        for (int i = 0; i < closeNeurons.Count; i++)
+        {
+            int random = Random.Range(0, 2);
+            if (random == 0) { return closeNeurons[i]; }
+        }
+        return closeNeurons[closeNeurons.Count - 1];
     }
 
     // NEURON CREATION / REMOVAL
     private Neuron create_neuron(string name)
     {
         Neuron neuron = new Neuron(name, Random.insideUnitSphere * 5f);
+        neuron.SetPosition(new Vector3(neuron.position.x, neuron.position.y, 0f)); // we flatten z
 
         neurons.Add(neuron);
         OnNeuronCreated?.Invoke(neuron);
@@ -165,87 +233,14 @@ public class NeuralBrain : MonoBehaviour
 
         return neuron;
     }
-}
-
-public class Thought
-{
-    public ThoughtState state;
-    public List<Neuron> traveledNeurons = new List<Neuron>();
-    public Neuron currentNeuron => traveledNeurons[traveledNeurons.Count - 1];
-    public Neuron lastNeuron => traveledNeurons.Count > 1 ? traveledNeurons[traveledNeurons.Count - 2] : null;
-    public int ttl; // time to live in neurons traveled
-
-    public System.Action<Synapse> OnThoughtStep;
-
-    public Thought(Neuron creator, int ttl)
+    public void DeleteSynapse(Synapse synapse)
     {
-        traveledNeurons.Add(creator);
-        this.ttl = ttl;
-        state = ThoughtState.Thinking;
+        synapse.neuronA.synapses.Remove(synapse);
+        synapse.neuronB.synapses.Remove(synapse);
+        synapses.Remove(synapse);
+
+        OnSynapseDeleted?.Invoke(synapse);
+
+        if (log) { Debug.Log($"[NeuralBrain] Deleted synapse between {synapse.neuronA.name} and {synapse.neuronB.name}"); }
     }
-
-    public void Think()
-    {
-        // we find the next neuron (by choosing the synapse from the actual neuron)
-        Synapse synapse = choose_synapse(currentNeuron, lastNeuron);
-        Neuron nextNeuron = synapse.neuronA == currentNeuron ? synapse.neuronB : synapse.neuronA;
-
-        traveledNeurons.Add(nextNeuron);
-
-        // we check if this is a GoalSynapse then we took a decision !! we stop and complete
-        if (nextNeuron.is_goal)
-        {
-            state = ThoughtState.Completed;
-            return;
-        }
-        ttl--;
-
-        OnThoughtStep?.Invoke(synapse);
-    }
-
-    private Synapse choose_synapse(Neuron currentNeuron, Neuron lastNeuron)
-    {
-
-        // todo add a very small chance to create a new synapse to a close not - connected neuron
-        // so the brain can creates emergent decision
-
-        int totalWeight = 0;
-        List<Synapse> synapses = new List<Synapse>();
-        List<int> weights = new List<int>();
-
-        // we calculate the potentials synapses, their weights and the total weight
-        for (int i = 0; i < currentNeuron.synapses.Count; i++)
-        {
-            Synapse synapse = currentNeuron.synapses[i];
-            Neuron otherNeuron = synapse.neuronA == currentNeuron ? synapse.neuronB : synapse.neuronA;
-
-            if (lastNeuron != null && otherNeuron == lastNeuron) { continue; }
-
-            synapses.Add(synapse);
-            int weight = synapse.neuronA == currentNeuron ? synapse.weightA : synapse.weightB;
-            weights.Add(weight);
-            totalWeight += weight;
-        }
-
-        // we pick a random synapse weighted by weights
-        int randomValue = Random.Range(0, totalWeight);
-        for (int i = 0; i < weights.Count; i++)
-        {
-            if (randomValue < weights[i])
-            {
-                return synapses[i];
-            }
-            randomValue -= weights[i];
-        }
-
-        // if we reach here, something went wrong, we choose a random synapse
-        return synapses[Random.Range(0, synapses.Count)];
-    }
-}
-
-
-public enum ThoughtState
-{
-    Thinking,
-    Completed
 }

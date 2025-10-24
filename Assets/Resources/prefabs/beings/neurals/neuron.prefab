@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 6692028324377314902}
   - component: {fileID: 7847975698547627071}
   - component: {fileID: 8017195029776288175}
-  m_Layer: 0
+  - component: {fileID: 4255702207715629198}
+  m_Layer: 18
   m_Name: neuron
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,9 +79,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -667374433
+  m_SortingLayer: 3
+  m_SortingOrder: 41
   m_Sprite: {fileID: -6231044458718751821, guid: b03587d7c870f7a428ffab8afe6c4fac, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -115,9 +116,46 @@ MonoBehaviour:
   active_neuron_color: {r: 0.42784178, g: 0.9133485, b: 0.87377644, a: 1}
   goal_neuron_color: {r: 0.60261303, g: 0.47806135, b: 0.8739687, a: 1}
   chosen_goal_color: {r: 0.34576812, g: 0.91022074, b: 0.3436829, a: 1}
+  scale_up_factor: 2
   references:
     version: 2
     RefIds: []
+--- !u!58 &4255702207715629198
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1832143926947856674}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 2
 --- !u!1 &3818160165151968124
 GameObject:
   m_ObjectHideFlags: 0

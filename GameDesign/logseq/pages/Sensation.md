@@ -9,4 +9,12 @@
 	- Capable **Receiver**
 	- float **Intensity**
 -
+- ## Types de sensation
+	- pain
+	- touch
+	- sight
+	- sound
+	- fatigue
+	- hunger
+	-
 -

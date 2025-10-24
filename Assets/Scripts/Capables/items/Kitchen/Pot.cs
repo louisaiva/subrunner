@@ -148,19 +148,19 @@ public class Pot : Item, Usable
     // FILL UP !
     public void Fill()
     {
-        // si le pot est burned, alors on le nettoie
-        if (Reference == "pot:burned")
-        {
-            is_burned = false;
-            update_state();
-            return;
-        }
-
         // on lance une coroutine de filling
         StartCoroutine(fill_coroutine());
     }
     private IEnumerator fill_coroutine()
     {
+        // si le pot est burned, alors on le nettoie
+        if (Reference == "pot:burned")
+        {
+            yield return new WaitForSeconds(2.0f); // on attend un peu
+            is_burned = false;
+            update_state();
+        }
+
         // we play the filling_up anim
         anim_player.Play("fill_up");
 
