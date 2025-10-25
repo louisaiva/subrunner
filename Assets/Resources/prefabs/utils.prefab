@@ -344,6 +344,7 @@ Transform:
   - {fileID: 3552693348846279321}
   - {fileID: 5141048904952260210}
   - {fileID: 2356989553353723250}
+  - {fileID: 5014761727663062268}
   m_Father: {fileID: 8466870086659227338}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4927723071802305916
@@ -365,6 +366,7 @@ MonoBehaviour:
   - {fileID: 7018032064625905633}
   - {fileID: 6446474614370862984}
   - {fileID: 1926807372716761766}
+  - {fileID: 4743392949167436401}
 --- !u!114 &4638387620946702657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -389,6 +391,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a5699ae0abdeb343a176daf469936ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &780003408685879306
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5014761727663062268}
+  - component: {fileID: 4743392949167436401}
+  m_Layer: 23
+  m_Name: types
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5014761727663062268
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 780003408685879306}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 934573574474036947}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4743392949167436401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 780003408685879306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f3a87976be5cb3118f02c4b43c821b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::subrunner.goap.SpiderFactory
 --- !u!1 &2767827881693983402
 GameObject:
   m_ObjectHideFlags: 0
@@ -6050,6 +6096,7 @@ MonoBehaviour:
   - rat
   - nobody
   - ghost
+  - spider
   head_offset_per_skin:
   - 0.7
   - 0.3
@@ -6058,6 +6105,7 @@ MonoBehaviour:
   - 0.1
   - 0.7
   - 0.5
+  - 0.1
   body_offset_per_skin:
   - 0.4
   - 0.15
@@ -6066,6 +6114,7 @@ MonoBehaviour:
   - 0.1
   - 0.42
   - 0.4
+  - 0.1
 --- !u!114 &1981274784206631526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6115,6 +6164,11 @@ MonoBehaviour:
   - {fileID: -1184325717, guid: b49b251ee3a499749968e8089a567ae7, type: 3}
   - {fileID: -1881025940, guid: b49b251ee3a499749968e8089a567ae7, type: 3}
   - {fileID: -488819575, guid: b49b251ee3a499749968e8089a567ae7, type: 3}
+  - {fileID: -678336742, guid: 067a473f3b5cf80e29cdd8df756b8128, type: 3}
+  - {fileID: 75668332, guid: 067a473f3b5cf80e29cdd8df756b8128, type: 3}
+  - {fileID: -116349883, guid: 067a473f3b5cf80e29cdd8df756b8128, type: 3}
+  - {fileID: -796214224, guid: 067a473f3b5cf80e29cdd8df756b8128, type: 3}
+  - {fileID: -1409683600, guid: 067a473f3b5cf80e29cdd8df756b8128, type: 3}
   IF_gamepad_path: spritesheets/ui/inputs/ui_interactables
   IF_kb_path: spritesheets/ui/inputs/input_kb_feedback
   key_feedback_icons:
@@ -6328,7 +6382,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   capablesCount: 0
+  corpsesCount: 0
   beingsCount: 0
   itemsCount: 0
   grabbedItemsCount: 0
-  meatCount: 0

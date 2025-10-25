@@ -46,4 +46,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown: 0
   debug: 0
+  logs_detection: 0
+  log_actions: 0
   food_target: {fileID: 0}
+  hunger: 0
+  range_food_detection: 15
+  bite_duration: 1
+  bites_per_eating: 1
+  items_eatable: []
+  food_rule: food

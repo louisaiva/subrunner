@@ -4,16 +4,16 @@ using subrunner.goap;
 public class Detector : MonoBehaviour
 {
     [Header("Detector Settings")]
-    [SerializeField] protected Brain brain;
+    protected Brain brain;
     [SerializeField] protected GoalType goal_type = GoalType.None; // The type of goal this detector is looking for
     protected GoalPriority goal;
 
+    [Header("Components")]
+    protected IA ia;
     protected virtual void Awake()
     {
-        if (brain == null)
-        {
-            Debug.LogError($"(Detector) {name} requires a Brain component. Please assign it in the inspector");
-        }
+        ia = transform.parent.GetComponent<IA>();
+        brain = ia.Brain;
     }
 
     protected virtual void Start()

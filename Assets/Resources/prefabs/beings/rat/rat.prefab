@@ -123,12 +123,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Items: []
-  OnGrab:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDrop:
-    m_PersistentCalls:
-      m_Calls: []
   uis: []
   log: 0
 --- !u!1 &3350165851648520670
@@ -640,6 +634,8 @@ MonoBehaviour:
   random_life_modifier_at_start: 5
   regen_life: 0
   body_collider: {fileID: 0}
+  body_meats: 1
+  body_bones: 1
   floating_dmg_provider: {fileID: 0}
   exploration_radius: 7
   base_tag: Rat
@@ -1060,12 +1056,32 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2037017623738312253, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
+      propertyPath: food_rule
+      value: food:meat,food:meat_zombo
+      objectReference: {fileID: 0}
+    - target: {fileID: 2037017623738312253, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
+      propertyPath: bite_duration
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2037017623738312253, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
+      propertyPath: bites_per_eating
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2037017623738312253, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
       propertyPath: range_food_detection
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2037017623738312253, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
+      propertyPath: items_eatable.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2037017623738312253, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
       propertyPath: 'items_eatable.Array.data[0]'
       value: meat
+      objectReference: {fileID: 0}
+    - target: {fileID: 2037017623738312253, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
+      propertyPath: 'items_eatable.Array.data[1]'
+      value: meat_zombo
       objectReference: {fileID: 0}
     - target: {fileID: 6582822749040364892, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
       propertyPath: m_Name

@@ -29,21 +29,16 @@ namespace subrunner.goap
             if (data.target == null) { return false; }
             if (data.target is not Food && data.target is not Corpse) { return false; }
 
-            // set the food target
+            // get the food target
             Food target_food = null;
-            if (data.target is Food food)
-            {
-                if (!food.Eatable) { return false; }
-                target_food = food;
-            }
+            if (data.target is Food food) { target_food = food; }
             else if (data.target is Corpse corpse)
             {
-                // we try to get a food from the corpse
-                Meat corpse_food = corpse.GetMeatPortion();
-                if (corpse_food == null) { return false; }
-                target_food = corpse_food;
+                target_food = corpse.GetPortion(data.eatCapacity.FoodRule); // we try to get a food from the corpse
             }
+            if (target_food == null) { return false; }
 
+            // we set the food target into the capacity
             data.eatCapacity.SetFoodTarget(target_food);
             if (data.eatCapacity.log_actions)
             {

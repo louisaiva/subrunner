@@ -18,10 +18,11 @@ public class EatCapacity : Capacity
     public Food food_target;
     public float hunger = 0f; // Hunger level of the being, the less the better
     public float range_food_detection = 15f;
-    public float bite_duration = 1f; // duration of a bite action
+    public float bite_duration = 1f; // duration of one bite
+    public int bites_per_eating = 1; // number of bites per eating action
     [SerializeField] private string[] items_eatable = new string[] { "apple" }; // List of items that the IA can eat
-    public string FoodRule
-    {
+    public string FoodRule => food_rule;
+    /* {
         get
         {
             // return the total item_rule to see if the ia can eat a precise item
@@ -34,7 +35,8 @@ public class EatCapacity : Capacity
             rule = rule.TrimEnd(','); // we remove the last comma
             return rule;
         }
-    }
+    } */
+    [SerializeField] private string food_rule = "food"; // rule to determine what food the being can eat
 
 
     // 1 - FOOD DETECTION // todo change this to work with colliders
@@ -60,12 +62,12 @@ public class EatCapacity : Capacity
             if (capable == null) { continue; }
             if (capable is not Food && capable is not Corpse) { continue; }
 
-            if (capable is Food food && food.Eatable && food.ValidateRule(FoodRule))
+            if (capable is Food food && food.ValidateRule(FoodRule))
             {
                 // we add the food to the list of potential foods
                 potential_foods.Add(food);
             }
-            else if (capable is Corpse corpse)
+            else if (capable is Corpse corpse && corpse.EatableBy(FoodRule))
             {
                 // we add the corpse to the list of potential foods
                 potential_foods.Add(corpse);
@@ -95,9 +97,6 @@ public class EatCapacity : Capacity
         return closest_food;
     }
 
-
-    // 2 - USING THE CAPACITY
-
     // UPDATE
     protected override void Update()
     {
@@ -122,39 +121,33 @@ public class EatCapacity : Capacity
         }
 
         // we launch the eating action for the food to take effect
-        StartCoroutine(Bite(being, bite_duration));
+        StartCoroutine(Bite(being));
     }
-    private IEnumerator Bite(Being being, float bite_duration)
+    private IEnumerator Bite(Being being)
     {
         // launch the animation
-        Anim anim = being.anim_player.Play("eat", duration_override: bite_duration/2f);
+        Anim anim = being.anim_player.Play("eat", duration_override: bite_duration);
         if (anim == null) { yield break; }
 
         if (debug) { Debug.Log("(EatCapacity) " + being.name + " is trying to eat " + food_target.name); }
-        yield return new WaitForSeconds(bite_duration); // wait for the bite duration
+        yield return new WaitForSeconds(bite_duration * bites_per_eating); // wait for the eating duration
 
         // we stop playing the anim
         being.anim_player.StopPlaying("eat");
 
         // we check if the food target is still valid
-        if (food_target == null || !food_target.Eatable)
+        if (food_target == null)
         {
-            if (debug) { Debug.LogWarning("(EatCapacity) " + being.name + " has no food target or the food is not eatable anymore"); }
+            if (debug) { Debug.LogWarning("(EatCapacity) " + being.name + " has no food target anymore"); }
             yield break;
         }
 
-        // we eat one bite
-        if (debug) { Debug.Log("(EatCapacity) " + being.name + " is eating one bite of " + food_target.name); }
-        being.AddLife(food_target.life_regen_per_bite);
-        this.hunger -= food_target.life_regen_per_bite;
-        food_target.RemoveOneBite(being); // we remove one bite from the food target
-
-        // we check if the food_target is still eatable, otherwise we null it
-        if (!food_target.Eatable)
-        {
-            if (debug) { Debug.Log("(EatCapacity) " + food_target.name + " is no longer eatable, resetting food target"); }
-            food_target = null;
-        }
+        // we eat the food
+        if (debug) { Debug.Log("(EatCapacity) " + being.name + " is eating " + food_target.name); }
+        being.AddLife(food_target.life_regen);
+        this.hunger -= food_target.life_regen;
+        food_target.BeEaten(being); // we remove one bite from the food target
+        food_target = null;
     }
     public void Cancel(Being being)
     {

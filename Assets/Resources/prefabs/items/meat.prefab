@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4105084865145927335}
   - component: {fileID: 7751029223533838636}
   - component: {fileID: 7020607722277148866}
-  - component: {fileID: 7859241979772140614}
+  - component: {fileID: 542729204817951620}
   m_Layer: 24
   m_Name: meat
   m_TagString: Item
@@ -163,7 +163,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &7859241979772140614
+--- !u!114 &542729204817951620
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -172,11 +172,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3927794695775646843}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6083e2c45c1c3184cba0a8e6ae6d6015, type: 3}
+  m_Script: {fileID: 11500000, guid: 1d6f4a2ee79ba714cb2d63f8931d5817, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::Food
   inputs: {x: 0, y: 0}
-  orientation: {x: 0, y: 0}
+  orientation: {x: 0, y: -1}
   capacities: []
   effects: 
   effects_timetolive: []
@@ -197,9 +197,7 @@ MonoBehaviour:
   MaxQty: 9
   ItemDescription: meat./. mmh by bad it's just a dead body/./l do not eat PLEASE
   _placed: 0
-  life_regen_per_bite: 1
-  bites_left: 1
-  random_meat_modifier_at_start: 5
+  life_regen: 30
 --- !u!1 &8910784274748376873
 GameObject:
   m_ObjectHideFlags: 0

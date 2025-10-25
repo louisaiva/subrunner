@@ -68,21 +68,24 @@ public class Corpse : Movable, Interactable
     public List<Item> ExtractMeatAndBones()
     {
         List<Item> extracted_items = new List<Item>();
-        extracted_items.AddRange(Inventory.GetItemsByType<Meat>());
+        extracted_items.AddRange(Inventory.GetItemsByType<Food>());
         // extracted_items.AddRange(Inventory.GetItemsByType<Bone>());
         return extracted_items;
     }
-    public Meat GetMeatPortion()
+    public Food GetPortion(string food_rule)
     {
         // we check if we still have some food
-        List<Meat> meats = Inventory.GetItemsByType<Meat>();
+        List<Item> meats = Inventory.GetItemsByRule(food_rule);
         if (meats.Count == 0) { return null; }
 
         // we eat the first meat
-        Meat meat_to_eat = meats[0];
-        return meat_to_eat;
+        Item meat_to_eat = meats[0];
+        return meat_to_eat as Food;
     }
-
+    public bool EatableBy(string food_rule)
+    {
+        return GetPortion(food_rule) != null;
+    }
 
     // ON BEING BITTEN & BECOME BONES
     private async void being_bitten(Being eater)
@@ -96,10 +99,10 @@ public class Corpse : Movable, Interactable
         await System.Threading.Tasks.Task.Yield();
         await System.Threading.Tasks.Task.Yield();
 
-        int meat_left = Inventory.GetItemsByType<Meat>().Count;
+        int food_left = Inventory.GetItemsByType<Food>().Count;
         int bones_left = Inventory.GetItemsByRule("other:bone").Count;
 
-        if (log_bites) { Debug.Log($"(Corpse) {name} has {meat_left} meat & {bones_left} bones left after being bitten by {eater.name}"); }
+        if (log_bites) { Debug.Log($"(Corpse) {name} has {food_left} food & {bones_left} bones left after being bitten by {eater.name}"); }
 
         // we check how many bones we have left
         if (bones_left == 0)
@@ -109,10 +112,10 @@ public class Corpse : Movable, Interactable
             return;
         }
 
-        // if we still have meat we good !
-        if (meat_left > 0) { return; }
+        // if we still have food we good !
+        if (food_left > 0) { return; }
 
-        // else we have no more meat, we become bones
+        // else we have no more food, we become bones
         become_bones();
     }
     private void become_bones()

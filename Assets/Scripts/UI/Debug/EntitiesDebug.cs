@@ -6,11 +6,11 @@ public class EntitiesDebug : MonoBehaviour, Debuggable
 {
     // [SerializeField] TextMeshProUGUI debug_text;
     [SerializeField] private int capablesCount = 0; // all the capables in the world
+    [SerializeField] private int corpsesCount = 0; // all the corpses in the world
     [SerializeField] private int beingsCount = 0; // all the beings in the world
     private Dictionary<string,int> beingsTypesCount = new Dictionary<string,int>(); // count of each type of beings
     [SerializeField] private int itemsCount = 0; // all the items in the world
     [SerializeField] private int grabbedItemsCount = 0; // all the grabbed items in the world
-    [SerializeField] private int meatCount = 0; // all the meat in the world
 
 
     // START
@@ -23,13 +23,15 @@ public class EntitiesDebug : MonoBehaviour, Debuggable
     public void AddEntity(Capable capable)
     {
         capablesCount++;
-        if (capable is Being being) { AddBeing(being); }
+        if (capable is Corpse) { corpsesCount++; }
+        else if (capable is Being being) { AddBeing(being); }
         else if (capable is Item item) { AddItem(item); }
     }
     public void RemoveEntity(Capable capable)
     {
         capablesCount--;
-        if (capable is Being being) { RemoveBeing(being); }
+        if (capable is Corpse) { corpsesCount--; }
+        else if (capable is Being being) { RemoveBeing(being); }
         else if (capable is Item item) { RemoveItem(item); }
     }
 
@@ -62,7 +64,6 @@ public class EntitiesDebug : MonoBehaviour, Debuggable
     private void AddItem(Item item)
     {
         itemsCount++;
-        if (item is Meat) { meatCount++; }
         if (item.Grabbed) { grabbedItemsCount++; }
 
         item.OnGrabbed += (it, holder) => { grabbedItemsCount++; };
@@ -71,7 +72,6 @@ public class EntitiesDebug : MonoBehaviour, Debuggable
     private void RemoveItem(Item item)
     {
         itemsCount--;
-        if (item is Meat) { meatCount--; }
         if (item.Grabbed) { grabbedItemsCount--; }
     }
 
@@ -79,9 +79,9 @@ public class EntitiesDebug : MonoBehaviour, Debuggable
     public string GetDebugText()
     {
         string text = "capables : " + capablesCount + "\n";
+        text += ">>> corpses : " + corpsesCount + "\n";
         text += "\nitems : " + itemsCount + "\n";
         text += ">>> grabbed items : " + grabbedItemsCount + "\n";
-        text += ">>> meat : " + meatCount + "\n";
         text += "\nbeings : " + beingsCount + "\n";
         foreach (KeyValuePair<string, int> entry in beingsTypesCount)
         {
