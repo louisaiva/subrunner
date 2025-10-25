@@ -22,7 +22,6 @@ public class PreyDetector : Detector
 
 
     [Header("Components")]
-    private IA ia;
     private CircleCollider2D eyes;
     public float Range => eyes.radius; // the range of the detector, used to determine if the target is in range
 
@@ -30,7 +29,6 @@ public class PreyDetector : Detector
     protected override void Awake()
     {
         base.Awake();
-        ia = transform.parent.GetComponent<IA>();
         eyes = GetComponent<CircleCollider2D>();
     }
 

@@ -14,6 +14,7 @@ public class Computer : StaticDevice, Interactable, Onnable
 
     // INTERACTABLE
     public InteractCapacity Interactor => interactors.FirstOrDefault()?.GetCapacity<InteractCapacity>();
+    public InteractType InteractionType => InteractType.Device;
     [SerializeField] private List<Capable> interactors = new List<Capable>(); // store all interactors, not just the one controlled
 
     // START

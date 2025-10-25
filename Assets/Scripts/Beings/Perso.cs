@@ -310,9 +310,10 @@ public class Perso : Being, Hacker
         // on affiche un floating text
         floating_dmg_provider.GetComponent<TextManager>().addFloatingText("YOU DIED", transform.position + new Vector3(0, 0.5f, 0), "red");
 
-        // on désactive le PersoInputsController
-        Controller.Instance.ResetCapableTarget();
+        // on désactive le Controller & PersoInputsController
+        Controller.Instance.ResetCapableTarget(control_nothing: true);
         Controller.Instance.PIC.DisableInputs();
+
 
         // on switch au game_over panel
         UI_Manager.Instance.SwitchTo("game_over",force:true,override_transition:true);

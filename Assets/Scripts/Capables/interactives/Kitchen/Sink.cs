@@ -19,6 +19,7 @@ public class Sink : Chest, Onnable
     }
 
     // INTERACTION
+    public override InteractType InteractionType { get { return InteractType.Kitchen; } }
     public override void OnInteract(Capable interactor)
     {
         InteractCapacity old_interactor = Interactor;

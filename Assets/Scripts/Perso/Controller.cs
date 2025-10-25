@@ -75,6 +75,9 @@ public class Controller : MonoBehaviour
     // CHANGE CAPABLE TARGET HIGH LEVEL
     public void ChangeCapableTarget(Capable new_target, float duration = -888f, bool add_to_stack = true)
     {
+        // checks if the target is the same
+        if (new_target == Capable) { return; }
+
         if (log) { Debug.Log("(Controller) " + name + " is changing capable target to " + new_target.name + (add_to_stack ? " and adding to stack" : "")); }
 
         // on décontrole l'ancienne target
@@ -109,17 +112,20 @@ public class Controller : MonoBehaviour
         // on change de target
         ChangeCapableTarget(stack.Last(), add_to_stack: false);
     }
-    public void ResetCapableTarget()
+    public void ResetCapableTarget(bool control_nothing = false)
     {
         if (log) { Debug.Log("(Controller) " + name + " is resetting capable target to Perso"); }
 
         CancelInvoke("ResetCapableTarget");
 
+        // soit on clear tout carrément on décontrole giga tout
+        if (control_nothing) { uncontrol_capable(stack[stack.Count - 1]); }
+
         // on clear la stack
         stack.Clear();
 
-        // on change la target pour le perso (ajoute automatiquement à la stack)
-        ChangeCapableTarget(Perso.Instance, add_to_stack: true);
+        // soit on change la target pour le perso (ajoute automatiquement à la stack)
+        if (!control_nothing) { ChangeCapableTarget(Perso.Instance, add_to_stack: true); }
     }
 
 
@@ -192,7 +198,7 @@ public class Controller : MonoBehaviour
 
         // on ajoute le callback de changement de skin
         refresh_skin_based_parameters(capa.Skin);
-        capa.anim_player.OnSkinChange += refresh_skin_based_parameters; 
+        capa.anim_player.OnSkinChange += refresh_skin_based_parameters;
 
         // on désactive le Brain si le nouveau capable est un IA
         if (capa is IA ia)

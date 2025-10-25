@@ -15,6 +15,7 @@ public class Chest : Capable, Interactable, Openable
     [Header("Interactable")]
     [SerializeField] private List<Capable> interactors = new List<Capable>(); // store all interactors, not just the one controlled
     public InteractCapacity Interactor { get; set; } // there is only ONE because it's the one that is Controlled
+    public virtual InteractType InteractionType { get { return InteractType.Chest; } }
 
     [Header("Interact Key Feedback")]
     private Transform interact_kf;

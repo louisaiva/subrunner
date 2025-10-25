@@ -322,7 +322,7 @@ public class UI_Item : UI_Slot
         {
             dropper.Select(item);
             dropper.random_direction = true;
-            inventory.capable.Do("drop");
+            dropper.Use(inventory.capable);
             OnItemChanged?.Invoke(this.items);
             ItemPool?.NotifyPoolChanged(this);
             dropper.random_direction = false;

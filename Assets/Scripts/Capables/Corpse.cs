@@ -27,8 +27,6 @@ public class Corpse : Movable, Interactable
         int bones_qty = being.body_bones + Random.Range(-1,1);
         if (bones_qty < 1) { bones_qty = 1; }
 
-        log_bites = true;
-
         // we understand which meat type we want
         string meat_reference = "food:meat";
         if (being is Zombo) { meat_reference = "food:meat_zombo"; }
@@ -55,6 +53,7 @@ public class Corpse : Movable, Interactable
 
     // INTERACT
     public InteractCapacity Interactor => null;
+    public InteractType InteractionType => InteractType.Corpse;
     public void OnInteract(Capable interactor)
     {
         if (interactor is not Being) { return; }

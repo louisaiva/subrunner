@@ -5,6 +5,7 @@ using UnityEngine;
 public class Package : Movable, Interactable
 {
     public InteractCapacity Interactor => null;
+    public InteractType InteractionType => InteractType.Other;
 
     [Header("Items offset")]
     public Vector3 items_offset = new Vector3(0f, 0.2f, 0f);

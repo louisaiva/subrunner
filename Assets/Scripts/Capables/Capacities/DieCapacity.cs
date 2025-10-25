@@ -76,7 +76,7 @@ public class DieCapacity : Capacity
         // 1 - DROP ITEMS
         if (being.Inventory != null && being.Inventory.Count > 0)
         {
-            // we get the drop capacity
+            /* // we get the drop capacity
             DropCapacity dropper = being.GetCapacity<DropCapacity>();
             if (dropper == null)
             {
@@ -104,8 +104,10 @@ public class DieCapacity : Capacity
                 // we drop the item
                 dropper.Select(item);
                 dropper.Use(being);
-            }
+            } */
+            yield return being.DropAllItems(); // we wait for dropping all items
         }
+        being.Inventory?.RemoveAllUIs(); // on supprime les ui de l'inventory
 
 
         being.Die();

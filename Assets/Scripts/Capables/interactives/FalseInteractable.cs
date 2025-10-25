@@ -5,6 +5,7 @@ public class FalseInteractable : Capable, EndlessInteractable
 {
     // INTERACTABLE
     public InteractCapacity Interactor { get; set; }
+    public InteractType InteractionType { get; set; } = InteractType.Other;
 
     // INTERACTION
     public void OnEndlessInteract(Capable interactor) { OnInteract(interactor); }

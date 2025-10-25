@@ -10,7 +10,9 @@ public class Oven : Chest, Onnable
     public override bool is_open { get => true; }
     public override bool is_moving { get => false; }
 
+
     // INTERACTABLE
+    public override InteractType InteractionType { get => InteractType.Kitchen; }
     public bool IsMoving { get; set; } = false;
     public bool IsOn { get; set; } = false;
 
@@ -60,7 +62,7 @@ public class Oven : Chest, Onnable
         // we try to put them all in the pot
         for (int i = food.Count - 1; i >= 0; i--)
         {
-            pot.PutFoodIn(food[i]);
+            food[i].OnInteract(pot);
         }
     }
 

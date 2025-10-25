@@ -886,7 +886,6 @@ Transform:
   - {fileID: 7942793094811061728}
   - {fileID: 4376126531362925556}
   - {fileID: 1511319598159572609}
-  - {fileID: 4230169019886544734}
   - {fileID: 4472955831825563052}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1062,6 +1061,7 @@ MonoBehaviour:
   - perso
   - cat
   - zombo
+  - spider
   - rat
   - apple
   - fridge
@@ -1147,8 +1147,7 @@ MonoBehaviour:
   range_food_detection: 1
   bite_duration: 1.3
   bites_per_eating: 1
-  items_eatable:
-  - apple
+  food_rule: food
 --- !u!1 &5155773557348074959
 GameObject:
   m_ObjectHideFlags: 0
@@ -6689,57 +6688,7 @@ MonoBehaviour:
   perso_quick_inventory: {fileID: 0}
   life_bar: {fileID: 0}
   shortcuts: {fileID: 0}
-  log: 0
---- !u!1 &7904310275866689580
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4230169019886544734}
-  - component: {fileID: 6708955031118953608}
-  m_Layer: 0
-  m_Name: grab
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4230169019886544734
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7904310275866689580}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 332583253616935226}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6708955031118953608
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7904310275866689580}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d84a036ccc2b72438402080a727943d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cooldown: 0
-  debug: 0
-  selected_item: {fileID: 0}
-  bank: {fileID: 0}
-  inventory: {fileID: 0}
-  grabInput: {fileID: 2767387396969607311, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+  log: 1
 --- !u!1 &8191525930727259131
 GameObject:
   m_ObjectHideFlags: 0
@@ -7070,6 +7019,38 @@ PrefabInstance:
     - target: {fileID: 8252522207981929358, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
       propertyPath: item_rule
       value: '!food|!food:meat;!food:zombo_meat;!food:bones'
+      objectReference: {fileID: 0}
+    - target: {fileID: 8252522207981929358, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: interact_types.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8252522207981929358, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: 'interact_types.Array.data[1]'
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8252522207981929358, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: 'interact_types.Array.data[2]'
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8252522207981929358, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: 'interact_types.Array.data[3]'
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8252522207981929358, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: 'interact_types.Array.data[4]'
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8252522207981929358, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: 'interact_types.Array.data[5]'
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8252522207981929358, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: 'interact_types.Array.data[6]'
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8252522207981929358, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: 'interact_types.Array.data[7]'
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

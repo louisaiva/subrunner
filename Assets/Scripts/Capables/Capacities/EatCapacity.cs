@@ -20,23 +20,8 @@ public class EatCapacity : Capacity
     public float range_food_detection = 15f;
     public float bite_duration = 1f; // duration of one bite
     public int bites_per_eating = 1; // number of bites per eating action
-    [SerializeField] private string[] items_eatable = new string[] { "apple" }; // List of items that the IA can eat
-    public string FoodRule => food_rule;
-    /* {
-        get
-        {
-            // return the total item_rule to see if the ia can eat a precise item
-            if (items_eatable.Length == 0) { return "food"; }
-            string rule = "";
-            for (int i = 0; i < items_eatable.Length; i++)
-            {
-                rule += "food:" + items_eatable[i] + ",";
-            }
-            rule = rule.TrimEnd(','); // we remove the last comma
-            return rule;
-        }
-    } */
     [SerializeField] private string food_rule = "food"; // rule to determine what food the being can eat
+    public string FoodRule => food_rule;
 
 
     // 1 - FOOD DETECTION // todo change this to work with colliders
@@ -121,9 +106,9 @@ public class EatCapacity : Capacity
         }
 
         // we launch the eating action for the food to take effect
-        StartCoroutine(Bite(being));
+        StartCoroutine(eat_coroutine(being));
     }
-    private IEnumerator Bite(Being being)
+    private IEnumerator eat_coroutine(Being being)
     {
         // launch the animation
         Anim anim = being.anim_player.Play("eat", duration_override: bite_duration);

@@ -4,7 +4,9 @@ using UnityEngine.InputSystem;
 public interface Interactable
 {
 
+    public string name { get; }
     public InteractCapacity Interactor { get; } // there is only ONE because it's the one that is Controlled
+    public InteractType InteractionType { get; }
     public void OnInteract(Capable interactor);
 }
 public interface EndlessInteractable : Interactable

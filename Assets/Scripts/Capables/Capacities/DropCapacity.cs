@@ -116,6 +116,10 @@ public class DropCapacity : Capacity
         // we move the item back to the world
         item.transform.position = capable.transform.position + offset_position;
         item.transform.SetParent(parent_to_drop_items);
+        item.transform.localScale = Vector3.one;
+
+        // we make sure the item is not Placed
+        item.Placed = false;
 
         // we add a force to the item
         float force_magnitude = -888f;

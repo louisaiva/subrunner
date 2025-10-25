@@ -5,9 +5,6 @@ public class Food : Item, Usable
 {
     [Header("Food parameters")]
     public float life_regen = 10f; // life regen of the food
-    // [SerializeField] protected int bites_left = 0; // number of bites left on the food
-
-    // public bool Eatable { get { return bites_left > 0; } }
     public event System.Action<Being> OnBeingBitten = delegate { };
 
     // BEING EATEN

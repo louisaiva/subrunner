@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Item is a Movable that can be grabbed by other Capables with GrabCapacity + InteractCapacity.
 /// </summary>
-public class Item : Movable
+public class Item : Movable, EndlessInteractable
 {
 
     [Header("Item")]
@@ -158,6 +158,18 @@ public class Item : Movable
         update_grab_n_place();
     }
 
+
+    // INTERACTABLE
+    public InteractCapacity Interactor => null;
+    public InteractType InteractionType => InteractType.Item;
+    public void OnInteract(Capable interactor)
+    {
+        if (interactor.Inventory == null) { return; }
+        interactor.Inventory.Grab(this);
+    }
+    public void OnEndlessInteract(Capable interactor) { OnInteract(interactor); }
+
+
     // BEING GRABBED / DROPPED
     protected virtual async void on_grabbed()
     {
@@ -169,7 +181,7 @@ public class Item : Movable
         if (this == null) { return; } // in case the item was destroyed during the await
 
         // we call the event
-        OnGrabbed?.Invoke(this,Holder);
+        OnGrabbed?.Invoke(this, Holder);
     }
     protected virtual void on_dropped()
     {
@@ -189,9 +201,10 @@ public class Item : Movable
             anim_player.DisableRenderer();
             if (Inventory != null)
             {
-                for (int i = 0; i < Inventory.Count; i++)
+                List<Item> items = Inventory.Items;
+                for (int i = 0; i < items.Count; i++)
                 {
-                    Inventory.Items[i].anim_player.DisableRenderer();
+                    items[i].anim_player.DisableRenderer();
                 }
             }
         }
@@ -200,9 +213,11 @@ public class Item : Movable
             anim_player.EnableRenderer();
             if (Inventory != null)
             {
-                for (int i = 0; i < Inventory.Count; i++)
+                List<Item> items = Inventory.Items;
+                for (int i = 0; i < items.Count; i++)
                 {
-                    Inventory.Items[i].anim_player.EnableRenderer();
+                    if (!items[i].Placed) { continue; }
+                    items[i].anim_player.EnableRenderer();
                 }
             }
         }

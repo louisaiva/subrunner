@@ -14,12 +14,25 @@ public class Pot : Item, Usable
     private event Action<Item> OnUsabilityChanged = delegate { };
     private UI_InventoryMenu inventory_menu = null;
 
+    // AWAKE & START
     protected override void Awake()
     {
         base.Awake();
         interactor = GetCapacity<InteractCapacity>();
         interactor.OnHoverSelect += (capable) => update_usability();
         interactor.OnHoverDeselect += (capable) => update_usability();
+
+        // on subscribe aux events de l'inventaire
+        Inventory.OnItemGrabbed += (item) =>
+        {
+            update_state();
+            update_usability();
+        };
+        Inventory.OnItemDropped += (item) =>
+        {
+            update_state();
+            update_usability();
+        };
     }
     protected override void Start()
     {
@@ -27,56 +40,6 @@ public class Pot : Item, Usable
         inventory_menu = UI_Manager.Instance.GetPool("inventory") as UI_InventoryMenu;
     }
 
-    // UPDATE LABEL & USABILITY
-    private void update_usability()
-    {
-        // we check if we have an interactable
-        HoverCapacity hover = interactor.CurrentHover;
-        Capable interactable = hover?.capable;
-        if (interactable != null)
-        {
-            if (interactable is Oven oven)
-            {
-                UseLabel = "heat pot";
-                usable_now = true;
-                OnUsabilityChanged?.Invoke(this);
-                return;
-            }
-
-            if (interactable is Sink)
-            {
-                UseLabel = "fill pot";
-                usable_now = true;
-                OnUsabilityChanged?.Invoke(this);
-                return;
-            }
-
-            // or a pastaaaa
-            if (interactable is Pasta)
-            {
-                UseLabel = "put pasta in pot";
-                usable_now = true;
-                OnUsabilityChanged?.Invoke(this);
-                return;
-            }
-        }
-
-
-        // we have no interactable -> we check if we have pasta or wat
-        if (HasFood || has_water)
-        {
-            UseLabel = "empty pot";
-            usable_now = true;
-            OnUsabilityChanged?.Invoke(this);
-            return;
-        }
-
-        // we reset the use label and usability
-        if (!usable_now) { return; }
-        UseLabel = "";
-        usable_now = false;
-        OnUsabilityChanged?.Invoke(this);
-    }
 
     // USABLE
     public string UseLabel { get; set; } = "";
@@ -84,31 +47,32 @@ public class Pot : Item, Usable
     public void Use(Capable user)
     {
         // we check if we can interact with something
-        if (!usable_now) { return; }
+        if (interactor.interactable == null) { Empty(); return; }
 
-        if (interactor.CurrentHover == null ||
-        (interactor.CurrentHover.capable is not Sink &&
-        interactor.CurrentHover.capable is not Oven &&
-        interactor.CurrentHover.capable is not Pasta))
-        {
-            // either we are full / pastaed and we want to empty the pot
-            if (HasFood) { RemoveFood(); }
-            if (has_water) { Empty(); }
-            return;
-        }
-
-        // we check if we interact with Pasta, we simply put pasta in
-        if (interactor.CurrentHover?.capable is Pasta pasta)
-        {
-            if (Reference == "pot:burned") { return; }
-            PutFoodIn(pasta);
-            return;
-        }
+        // we check if we interact with some food but we are burned ://
+        if (interactor.interactable is Food && Reference == "pot:burned") { return; }
 
         // we use the interactable
         interactor.Interact();
     }
+    private void update_usability()
+    {
+        // we check if we have an interactable
+        Interactable interactable = interactor.interactable;
+        string label = "";
 
+        if (interactable is Oven) { label = "heat pot"; } // we check if it's an oven
+        else if (interactable is Sink) { label = "fill pot"; } // or a sink
+        else if (interactable is Food && Reference != "pot:burned") { label = "put food in"; } // or some food        
+        else if (HasFood || has_water) { label = "empty pot"; } // we have no interesting interactable ://
+
+        if (UseLabel == label) { return; }
+
+        // we set the label
+        UseLabel = label;
+        usable_now = (label != "");
+        OnUsabilityChanged?.Invoke(this);
+    }
 
     // BEING GRABBED / DROPPED
     protected override void on_grabbed()
@@ -116,12 +80,12 @@ public class Pot : Item, Usable
         base.on_grabbed();
 
         // we subscribe to the InventoryMenu On
-        if (Holder == Perso.Instance) { OnUsabilityChanged += inventory_menu.UpdateIF; }
+        if (Holder == Perso.Instance) { OnUsabilityChanged += inventory_menu.UpdateIFLabels; }
     }
     protected override void on_dropped()
     {
         // we unsubscribe to the InventoryMenu On
-        if (Holder == Perso.Instance) { OnUsabilityChanged -= inventory_menu.UpdateIF; }
+        if (Holder == Perso.Instance) { OnUsabilityChanged -= inventory_menu.UpdateIFLabels; }
 
         // we drop
         base.on_dropped();
@@ -131,9 +95,7 @@ public class Pot : Item, Usable
 
     // COOKING
     [Header("Cooking")]
-    // [SerializeField] private bool has_pasta = false;
     [SerializeField] private bool has_water = false;
-    public bool IsFull { get { return has_water; } }
     public bool HasFood { get { return Inventory.Count > 0; } }
 
     [Header("Temperature")]
@@ -146,11 +108,7 @@ public class Pot : Item, Usable
 
 
     // FILL UP !
-    public void Fill()
-    {
-        // on lance une coroutine de filling
-        StartCoroutine(fill_coroutine());
-    }
+    public void Fill() { StartCoroutine(fill_coroutine()); }
     private IEnumerator fill_coroutine()
     {
         // si le pot est burned, alors on le nettoie
@@ -174,38 +132,18 @@ public class Pot : Item, Usable
         // on met à jour l'usabilite
         update_usability();
     }
-    public void Empty()
+    public void Empty(bool delete_food = false)
     {
+        if (delete_food) { DestroyAllItems(); } // on DETRUIT tous les items de l'inventaire
+        else { DropAllItems(); } // on les drop juste par terre
+
         // on vide l'eau du pot
         has_water = false;
         update_state();
-
-        // on met à jour l'usabilite
-        update_usability();
-    }
-    public void PutFoodIn(Food food)
-    {
-        // on met les pates dans le pot
-        if (!Inventory.Grab(food)) { return; }
-        update_state();
-        update_usability();
-    }
-    public void RemoveFood()
-    {
-        // on DETRUIT tous les items de l'inventaire
-        List<Item> items = Inventory.Items;
-        for (int i = items.Count - 1; i >= 0; i--)
-        {
-            Destroy(items[i].gameObject);
-            Inventory.Remove(items[i]);
-        }
-
-        update_state();
         update_usability();
     }
 
-    // UPDATE
-    // todo make a TemperatureCapacity for this ?
+    // UPDATE // todo make a TemperatureCapacity for this ?
     protected override void LateUpdate()
     {
         base.LateUpdate();
@@ -277,9 +215,8 @@ public class Pot : Item, Usable
             anim_player.Play("burn_up");
             anim_player.AddToPile("burning");
             is_burned = true;
-            has_water = false; // l'eau s'evapore
-            RemoveFood(); // la nourriture crame
-            // update_state(); // c fait automatiquement dans remove food
+            Empty(delete_food: true); // la nourriture crame & l'eau s'evapore
+            // update_state(); // c fait automatiquement dans empty
 
             // on met à jour l'usabilite
             UseLabel = "";

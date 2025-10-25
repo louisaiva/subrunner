@@ -5,6 +5,7 @@ using UnityEngine;
 public class Chair : Capable, EndlessInteractable
 {
     public InteractCapacity Interactor => null;
+    public InteractType InteractionType => InteractType.Other;
 
     // coroutine
     Coroutine small_turn_coroutine = null;

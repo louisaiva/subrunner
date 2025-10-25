@@ -307,6 +307,72 @@ public class Capable : MonoBehaviour, Debuggable
     }
 
 
+    // ITEMS MANAGEMENT
+    public async Awaitable DestroyAllItems()
+    {
+        if (Inventory == null || Inventory.Count == 0) { return; }
+
+        // we drop all items on thr ground
+        List<Item> items = Inventory.Items;
+        for (int i = items.Count - 1; i >= 0; i--)
+        {
+            Item item = items[i];
+            Inventory.Remove(item);
+            Destroy(item.gameObject);
+        }
+    }
+    public async Awaitable DropAllItems()
+    {
+        if (Inventory == null || Inventory.Count == 0) { return; }
+
+        // we get the drop capacity
+        DropCapacity dropper = GetCapacity<DropCapacity>();
+        if (dropper == null)
+        {
+            // we add it if not present
+            AddCapacity("drop");
+
+            // we wait a frame
+            await System.Threading.Tasks.Task.Yield();
+
+            // we get the dropper
+            dropper = GetCapacity<DropCapacity>();
+        }
+        dropper.random_direction = true;
+        dropper.lock_magnitude = false;
+
+        // we drop all items on thr ground
+        List<Item> items = Inventory.Items;
+        for (int i = items.Count - 1; i >= 0; i--)
+        {
+            // we drop the item
+            dropper.Select(items[i]);
+            dropper.Use(this);
+        }
+    }
+    public async Awaitable DropItem(Item item)
+    {
+        if (Inventory == null || !Inventory.Items.Contains(item)) { return; }
+
+        // we get the drop capacity
+        DropCapacity dropper = GetCapacity<DropCapacity>();
+        if (dropper == null)
+        {
+            // we add it if not present
+            AddCapacity("drop");
+
+            // we wait a frame
+            await System.Threading.Tasks.Task.Yield();
+
+            // we get the dropper
+            dropper = GetCapacity<DropCapacity>();
+        }
+
+        // we drop the item
+        dropper.Select(item);
+        dropper.Use(this);
+    }
+
     // DEBUG
     protected virtual void OnDestroy()
     {

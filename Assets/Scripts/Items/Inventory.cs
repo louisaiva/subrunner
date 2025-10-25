@@ -282,6 +282,14 @@ public class Inventory : MonoBehaviour
     }
 
     // UI MANAGEMENT
+    public void RemoveAllUIs()
+    {
+        // we remove all UIs
+        while (uis.Count > 0)
+        {
+            RemoveUI(uis[0]);
+        }
+    }
     public void RemoveUI(UI_Inventory ui_inventory)
     {
         if (!uis.Contains(ui_inventory)) { return; }

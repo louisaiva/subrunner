@@ -240,7 +240,7 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         use_feedback.SetLabel(label);
         UI_XboxNavigator.Instance.ToggleInput("activate", true);
     }
-    public void UpdateIF(Item item)
+    public void UpdateIFLabels(Item item)
     {
         // we get the ui_item from the item
         I_UI_Slot slot = UI_XboxNavigator.Instance.GetCurrentSlot();
