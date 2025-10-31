@@ -9,7 +9,7 @@ public class UI_Colorer : MonoBehaviour
 
     [Header("Coloration")]
     [SerializeField] private Color color;
-    private Color previous_color;
+    private Color base_color;
     private bool is_colored = false;
     private UnityEngine.UI.Graphic graphic;
 
@@ -21,23 +21,23 @@ public class UI_Colorer : MonoBehaviour
         {
             Debug.LogError("UI_Colorer: no graphic found on " + gameObject.name);
         }
-        previous_color = graphic.color;
+        base_color = graphic.color;
     }
 
     // COLORER
-    public void ApplyColor()
+    public void ApplyColor(Color? color = null)
     {
         if (graphic == null) { return; }
         if (is_colored) { return; }
-        previous_color = graphic.color;
-        graphic.color = color;
+        base_color = graphic.color;
+        graphic.color = color == null ? this.color : color.Value;
         is_colored = true;
     }
     public void RevertColor()
     {
         if (graphic == null) { return; }
         if (!is_colored) { return; }
-        graphic.color = previous_color;
+        graphic.color = base_color;
         is_colored = false;
     }
 }

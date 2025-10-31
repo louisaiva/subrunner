@@ -33,8 +33,8 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
     // [SerializeField] public float angle_vs_distance_precision = 0f; // from 0 to 1, affine la prédiction de navigation
 
     // EVENTS
-    public event Action<I_UI_Slot> OnSlotHoverEnter = delegate { }; // delegate that triggers when we navigate to a new slot
-    public event Action<I_UI_Slot> OnSlotOutOfScreen = delegate { }; // delegate that triggers when we navigate to a position that is out of screen
+    public event Action<UI_Slot> OnSlotHoverEnter = delegate { }; // delegate that triggers when we navigate to a new slot
+    public event Action<UI_Slot> OnSlotOutOfScreen = delegate { }; // delegate that triggers when we navigate to a position that is out of screen
 
 
     [Header("Moving Items")]
@@ -318,8 +318,9 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         // we update the slots
         update_slots();
 
-        await System.Threading.Tasks.Task.Yield(); // wait for a frame to let the UI update
-
+        // wait for a frame to let the UI update
+        await System.Threading.Tasks.Task.Yield();
+    
         // on récupère le slot le plus proche
         string s = "(UI_Navigator) NAVIGATE TO CLOSEST: \n\nfrom position : " + position + "\n\n";
         int next_index = findClosestSlot(slots, position,ref s);
@@ -449,10 +450,10 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
 
             // on récupère les slots du slottable
             List<GameObject> slottable_slots = slottable.GetComponent<I_UI_Slottable>().GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator);
-            slottable_slots.RemoveAll(slot => slot.GetComponent<UI_Item>() != null && slot.GetComponent<UI_Item>().is_disabled); // we filter the disabled ones
+            slottable_slots.RemoveAll(slot => slot.GetComponent<UI_Item>() != null && slot.GetComponent<UI_Item>().Disabled); // we filter the disabled ones
             slots.AddRange(slottable_slots);
         }
-        
+
 
         // we check if the slot index is still valid
         if (slots.Count == 0) { current_slot_index = -1; return; }
@@ -494,7 +495,7 @@ public class UI_XboxNavigator : Singleton<UI_XboxNavigator>
         if (index == -1) { current_slot_index = -1; return; }
 
         // on récupère le UI_slot
-        I_UI_Slot ui_slot = slots[index].GetComponent<I_UI_Slot>();
+        UI_Slot ui_slot = slots[index].GetComponent<UI_Slot>();
 
         // on vérifie si on ne drag pas
         if (moving_ui_item == null || ui_slot is not UI_Item ui_item)

@@ -1,14 +1,18 @@
+#pragma warning disable 4014
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UI_Device : UI_Pool, I_UI_Slottable
+public class UI_Device : UI_Pool/* , Slottable */
 {
     private Device device;
 
     [Header("Windows")]
     [SerializeField] private Transitioner windows_parent; // parent of the windows to show/hide with the pool
     [SerializeField] private List<UI_Window> windows; // list of windows used by the current device
+
+    [Header("Components")]
+    public UI_Slottable slottable;
 
     // DEVICE MANAGEMENT
     public void SetDevice(Device dev)
@@ -57,22 +61,24 @@ public class UI_Device : UI_Pool, I_UI_Slottable
     protected override IEnumerator enable_coroutine()
     {
         // on active le navigator
-        UI_XboxNavigator.Instance.Enable(this);
+        // UI_Navigator.Instance.Enable(this);
+        slottable.Enable(ingame: false, starting_slot: true);
         yield break;
     }
     protected override IEnumerator disable_coroutine()
     {
         // on désactive le navigator
-        UI_XboxNavigator.Instance.Disable(this);
+        // UI_Navigator.Instance.Disable(this);
+        slottable.Disable();
         yield break;
     }
 
 
     // SLOTTABLE
-    public List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator)
+    public List<UI_Slot> GetSlots()
     {
         // on récupère les slots
-        List<GameObject> slots = new List<GameObject>();
+        List<UI_Slot> slots = new List<UI_Slot>();
 
         // on récupère les slots des boutons
         for (int i = 0; i < windows.Count; i++)
@@ -83,12 +89,12 @@ public class UI_Device : UI_Pool, I_UI_Slottable
             for (int j = 0; j < buttons.Count; j++)
             {
                 UI_Button button = buttons[j];
-                slots.Add(button.gameObject);
+                slots.Add(button);
             }
         }
         return slots;
     }
-    public bool IsYourSlot(GameObject slot)
+    public bool IsYourSlot(UI_Slot slot)
     {
         // on regarde si le slot est dans les slots
         if (slot.GetComponent<UI_Button>() == null) { return false; }

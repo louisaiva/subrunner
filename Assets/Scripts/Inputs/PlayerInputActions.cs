@@ -300,17 +300,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""caed2b77-a8cc-4ff6-a9c9-259965ac1618"",
-                    ""path"": ""<Gamepad>/leftStickPress"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""xbox"",
-                    ""action"": ""randomTalk"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
                     ""name"": ""main"",
                     ""id"": ""a790b397-bc9b-45c6-8820-f7ca3beeb354"",
                     ""path"": ""2DVector(mode=2)"",
@@ -571,13 +560,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""navigate_L"",
+                    ""name"": ""navigate"",
                     ""type"": ""PassThrough"",
-                    ""id"": ""f7dea3fc-414f-4ffc-8e71-71d033ad3aa1"",
+                    ""id"": ""91602ad3-624f-42b0-bea8-33b7cf04b3d3"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""navigate_in_game"",
@@ -585,8 +574,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""id"": ""f07fc202-cf89-4336-a381-2a097a0b371e"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""navigate_exploits"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""8368731e-eceb-4bc0-8fd4-d736b9ac841c"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""conso1"",
@@ -774,17 +772,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""8446bb45-7d27-4545-95f8-70fed83cb396"",
-                    ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";xbox"",
-                    ""action"": ""navigate_L"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""88310011-9ab3-4f7d-958e-0495ad44fc3a"",
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
@@ -923,6 +910,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";xbox"",
                     ""action"": ""LB"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""44f16b55-326c-4ed5-976e-242a5db2c31f"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""navigate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""38a07d14-ed72-41ad-a029-985af8b12b86"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""navigate_exploits"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1601,8 +1610,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_UI_y = m_UI.FindAction("y", throwIfNotFound: true);
         m_UI_x = m_UI.FindAction("x", throwIfNotFound: true);
         m_UI_cancel = m_UI.FindAction("cancel", throwIfNotFound: true);
-        m_UI_navigate_L = m_UI.FindAction("navigate_L", throwIfNotFound: true);
+        m_UI_navigate = m_UI.FindAction("navigate", throwIfNotFound: true);
         m_UI_navigate_in_game = m_UI.FindAction("navigate_in_game", throwIfNotFound: true);
+        m_UI_navigate_exploits = m_UI.FindAction("navigate_exploits", throwIfNotFound: true);
         m_UI_conso1 = m_UI.FindAction("conso1", throwIfNotFound: true);
         m_UI_conso2 = m_UI.FindAction("conso2", throwIfNotFound: true);
         m_UI_conso3 = m_UI.FindAction("conso3", throwIfNotFound: true);
@@ -1941,8 +1951,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_y;
     private readonly InputAction m_UI_x;
     private readonly InputAction m_UI_cancel;
-    private readonly InputAction m_UI_navigate_L;
+    private readonly InputAction m_UI_navigate;
     private readonly InputAction m_UI_navigate_in_game;
+    private readonly InputAction m_UI_navigate_exploits;
     private readonly InputAction m_UI_conso1;
     private readonly InputAction m_UI_conso2;
     private readonly InputAction m_UI_conso3;
@@ -1983,13 +1994,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @cancel => m_Wrapper.m_UI_cancel;
         /// <summary>
-        /// Provides access to the underlying input action "UI/navigate_L".
+        /// Provides access to the underlying input action "UI/navigate".
         /// </summary>
-        public InputAction @navigate_L => m_Wrapper.m_UI_navigate_L;
+        public InputAction @navigate => m_Wrapper.m_UI_navigate;
         /// <summary>
         /// Provides access to the underlying input action "UI/navigate_in_game".
         /// </summary>
         public InputAction @navigate_in_game => m_Wrapper.m_UI_navigate_in_game;
+        /// <summary>
+        /// Provides access to the underlying input action "UI/navigate_exploits".
+        /// </summary>
+        public InputAction @navigate_exploits => m_Wrapper.m_UI_navigate_exploits;
         /// <summary>
         /// Provides access to the underlying input action "UI/conso1".
         /// </summary>
@@ -2063,12 +2078,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @cancel.started += instance.OnCancel;
             @cancel.performed += instance.OnCancel;
             @cancel.canceled += instance.OnCancel;
-            @navigate_L.started += instance.OnNavigate_L;
-            @navigate_L.performed += instance.OnNavigate_L;
-            @navigate_L.canceled += instance.OnNavigate_L;
+            @navigate.started += instance.OnNavigate;
+            @navigate.performed += instance.OnNavigate;
+            @navigate.canceled += instance.OnNavigate;
             @navigate_in_game.started += instance.OnNavigate_in_game;
             @navigate_in_game.performed += instance.OnNavigate_in_game;
             @navigate_in_game.canceled += instance.OnNavigate_in_game;
+            @navigate_exploits.started += instance.OnNavigate_exploits;
+            @navigate_exploits.performed += instance.OnNavigate_exploits;
+            @navigate_exploits.canceled += instance.OnNavigate_exploits;
             @conso1.started += instance.OnConso1;
             @conso1.performed += instance.OnConso1;
             @conso1.canceled += instance.OnConso1;
@@ -2119,12 +2137,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @cancel.started -= instance.OnCancel;
             @cancel.performed -= instance.OnCancel;
             @cancel.canceled -= instance.OnCancel;
-            @navigate_L.started -= instance.OnNavigate_L;
-            @navigate_L.performed -= instance.OnNavigate_L;
-            @navigate_L.canceled -= instance.OnNavigate_L;
+            @navigate.started -= instance.OnNavigate;
+            @navigate.performed -= instance.OnNavigate;
+            @navigate.canceled -= instance.OnNavigate;
             @navigate_in_game.started -= instance.OnNavigate_in_game;
             @navigate_in_game.performed -= instance.OnNavigate_in_game;
             @navigate_in_game.canceled -= instance.OnNavigate_in_game;
+            @navigate_exploits.started -= instance.OnNavigate_exploits;
+            @navigate_exploits.performed -= instance.OnNavigate_exploits;
+            @navigate_exploits.canceled -= instance.OnNavigate_exploits;
             @conso1.started -= instance.OnConso1;
             @conso1.performed -= instance.OnConso1;
             @conso1.canceled -= instance.OnConso1;
@@ -2682,12 +2703,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnCancel(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "navigate_L" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "navigate" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnNavigate_L(InputAction.CallbackContext context);
+        void OnNavigate(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "navigate_in_game" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
@@ -2695,6 +2716,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnNavigate_in_game(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "navigate_exploits" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnNavigate_exploits(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "conso1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

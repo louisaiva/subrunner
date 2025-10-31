@@ -14,3 +14,15 @@ public interface I_UI_Slottable
     // MonoBehaviour functions
     GameObject gameObject { get; }
 }
+
+public interface Slottable
+{
+    public List<UI_Slot> GetSlots();
+    public bool IsYourSlot(UI_Slot slot);
+    public void Enable(bool ingame, bool starting_slot);
+    public void Disable();
+
+    // MonoBehaviour functions
+    public GameObject gameObject { get; }
+    public string name { get; }
+}

@@ -1,98 +1,70 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
-public class UI_Slot : MonoBehaviour, I_UI_Slot
+/// <summary>
+/// UI_Slot est la classe mère de tous les slots d'UI qu'on va être amené à travailler avec.
+/// De cette classe dérive notamment 2 grandes classes, 
+/// - UI_ImageSlot pour les slots ayant des images (ex UI_Button, UI_Toggle, UI_Item)
+/// - UI_TextSlot pour les slots ayant du text (ex UI_Text)
+/// </summary>
+public class UI_Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IPointerDownHandler
 {
-
     // hover
     [SerializeField] private bool _hovered = false;
     [SerializeField] private bool _disabled = false;
-    public bool is_hovered { get => _hovered; set => _hovered = value; }
-    public bool is_disabled { get => _disabled; set => _disabled = value; }
+    public bool Hovered { get => _hovered; protected set => _hovered = value; }
+    public bool Disabled { get => _disabled;
+        protected set
+        {
+            if (_disabled == value) { return; }
+            _disabled = value;
+            if (_disabled)  { OnSlotDisabled?.Invoke(this); }
+            else            { OnSlotEnabled?.Invoke(this); }
+        }
+    }
+
+    // events
+    public event Action<UI_Slot> OnSlotEnabled = delegate { };
+    public event Action<UI_Slot> OnSlotDisabled = delegate { };
 
     [Header("Logs")]
     public bool log = false;
 
-    [Header("Sprites")]
-    public Sprite base_sprite;
-    public Sprite hover_sprite;
-    public Sprite down_sprite;
-    public Sprite disabled_sprite;
-
-    [Header("Components")]
-    public Image image;
-
-
     // DISABLE
     public virtual void Enable()
     {
-        if ( image == null ) { image = GetComponent<Image>(); }
-        is_disabled = false;
-
-        // on change le sprite du slot
-        image.sprite = base_sprite;
-
-        if (log) { Debug.Log("(UI_Item) Enabled " + gameObject.name); }
+        Disabled = false;
+        if (log) { Debug.Log("(UI_Slot) Enabled " + gameObject.name); }
     }
     public virtual void Disable()
     {
-        if (image == null) { image = GetComponent<Image>(); }
-        is_disabled = true;
-        OnPointerExit(null); // on veut etre sur qu'on est pas hover
-
-        // on change le sprite du slot
-        image.sprite = disabled_sprite;
-
-        if (log) { Debug.Log("(UI_Item) Disabled " + gameObject.name); }
+        if (Hovered) { OnPointerExit(null); } // on veut etre sur qu'on est pas hovered
+        Disabled = true;
+        if (log) { Debug.Log("(UI_Slot) Disabled " + gameObject.name); }
     }
 
     // POINTER HANDLERS
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
-        // check if disabled
-        if (is_disabled) { return; }
-
-        if (log) { Debug.Log("OnPointerEnter on " + gameObject.name); }
-        // on change le sprite du slot
-        image.sprite = hover_sprite;
+        if (log) { Debug.Log("(UI_Slot) OnPointerEnter on " + gameObject.name); }
 
         // on met à jour le fait qu'on est survolé
-        is_hovered = true;
+        Hovered = true;
     }
     public virtual void OnPointerExit(PointerEventData eventData)
     {
-        // check if disabled
-        // if (is_disabled) { return; }
-
-        if (log) { Debug.Log("OnPointerExit on " + gameObject.name); }
-
-        // on change le sprite du slot
-        image.sprite = base_sprite;
+        if (log) { Debug.Log("(UI_Slot) OnPointerExit on " + gameObject.name); }
 
         // on met à jour le fait qu'on est survolé
-        is_hovered = false;
+        Hovered = false;
     }
     public virtual void OnPointerDown(PointerEventData eventData)
     {
-        // check if disabled
-        if (is_disabled) { return; }
-
-        if (log) { Debug.Log("OnPointerDown on " + gameObject.name); }
-
-        // on change le sprite du slot
-        image.sprite = down_sprite;
+        if (log) { Debug.Log("(UI_Slot) OnPointerDown on " + gameObject.name); }
     }
     public virtual void OnPointerClick(PointerEventData eventData)
     {
-        // check if disabled
-        if (is_disabled) { return; }
-
-        // on change le sprite du slot
-        image.sprite = is_hovered ? hover_sprite : base_sprite;
+        if (log) { Debug.Log("(UI_Slot) OnPointerClick on " + gameObject.name); }
     }
-
 }

@@ -22,7 +22,7 @@ public class UI_ItemPool : MonoBehaviour
     public int Count { get { return ui_items.Count; } }
     public int EmptyCount { get { return ui_items.Where(ui_item => ui_item.Item == null).Count(); } }
     public int FullCount { get { return Count - EmptyCount; } }
-    public int EnabledCount { get { return ui_items.Where(ui_item => !ui_item.is_disabled).Count(); } }
+    public int EnabledCount { get { return ui_items.Where(ui_item => !ui_item.Disabled).Count(); } }
     [SerializeField] protected bool destroy_empty_on_init = true; // if true, the empty slots will be destroyed on init
     public bool DoNotDisableEmptySlots = false;
 

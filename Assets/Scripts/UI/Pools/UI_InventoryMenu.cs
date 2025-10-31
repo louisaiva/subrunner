@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using PrimeTween;
 using UnityEngine;
 
-public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
+public class UI_InventoryMenu : UI_Pool/* , Slottable */
 {
     private List<GameObject> saved_slots = new List<GameObject>();
     [Header("Inventory Menu Components")]
@@ -26,6 +26,7 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
 
     [Header("Components")]
     public Descriptor Descriptor;
+    public UI_SlottableMixer slottable_mixer;
 
     // AWAKE START
     protected override void Awake()
@@ -41,7 +42,7 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         }
 
         // we set the saved position to screen center
-        SavedPosition = new Vector2(Screen.width / 2f, Screen.height / 2f);
+        // SavedPosition = new Vector2(Screen.width / 2f, Screen.height / 2f);
 
         // we save the current ui_elements state in saved_state
         saved_slots = new List<GameObject>(ui_elements);
@@ -49,7 +50,7 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     }
     protected void Start()
     {
-        UI_XboxNavigator.Instance.OnSlotHoverEnter += handleUI_ItemHoverEnter;
+        UI_Navigator.Instance.OnSlotHoverEnter += handleUI_ItemHoverEnter;
         if (log) { Debug.Log($"(UI_InventoryMenu) subscribed to OnSlotHoverEnter"); }
     }
 
@@ -79,16 +80,18 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     {
         // on active le navigator si on a des items
         if (ui_inventory.Inventory.Count == 0) { yield break; }
-        UI_XboxNavigator.Instance.Enable(this);
+        // UI_Navigator.Instance.Enable(this);
+        slottable_mixer.Enable(ingame: false, starting_slot: true);
         yield break;
     }
     protected override IEnumerator disable_coroutine()
     {
         // on récupère la position du slot actuel (pour le remettre quand on reouvre l'inventaire)
-        if (UI_Manager.Instance.CurrentPool == Reference) { SavedPosition = UI_XboxNavigator.Instance.GetCurrentSlotPosition(); }
+        // if (UI_Manager.Instance.CurrentPool == Reference) { SavedPosition = UI_Navigator.Instance.GetCurrentSlotPosition(); }
 
         // on désactive le navigator
-        UI_XboxNavigator.Instance.Disable(this);
+        // UI_Navigator.Instance.Disable(this);
+        slottable_mixer.Disable();
         yield break;
     }
 
@@ -153,30 +156,30 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
     }
 
     // SLOTTABLE
-    public List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator)
+    /* public List<UI_Slot> GetSlots()
     {
         if (log) { Debug.Log($"(UI_InventoryMenu) getting slots"); }
-        List<GameObject> slots = new List<GameObject>();
+        List<UI_Slot> slots = new List<UI_Slot>();
 
         // on ajoute les items de l'UI_Inventory
-        slots.AddRange(ui_inventory.GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator));
+        slots.AddRange(ui_inventory.GetSlots());
         if (UI_LaptopItemSlot.Instance == null || !UI_LaptopItemSlot.Instance.HasLaptop) { return slots; }
 
         // si on a le laptop, on ajoute aussi ceux de l'UI_Laptop
-        slots.AddRange(ui_laptop.GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator));
+        slots.AddRange(ui_laptop.GetSlots());
 
         return slots;
     }
-    public bool IsYourSlot(GameObject slot)
+    public bool IsYourSlot(UI_Slot slot)
     {
         if (ui_inventory.IsYourSlot(slot)) { return true; }
         if (UI_LaptopItemSlot.Instance != null && UI_LaptopItemSlot.Instance.HasLaptop && ui_laptop.IsYourSlot(slot)) { return true; }
         return false;
     }
-    public Vector2 SavedPosition { get; private set; } = Vector2.zero;
+    public Vector2 SavedPosition { get; private set; } = Vector2.zero; */
 
     // IF SWITCHING
-    private void handleUI_ItemHoverEnter(I_UI_Slot slot)
+    private void handleUI_ItemHoverEnter(UI_Slot slot)
     {
         if (log) { Debug.Log($"(UI_InventoryMenu) bwaaaa handleUI_ItemHoverEnter for slot {slot.gameObject.name}"); }
 
@@ -188,13 +191,15 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         {
             drop_feedback.SetAlwaysFull(false);
             drop_feedback.SetLabel("");
-            UI_XboxNavigator.Instance.ToggleInput("drop", false);
+            // UI_Navigator.Instance.ToggleInput("drop", false);
+            Controller.Instance.UIC.ToggleInput("drop", false);
         }
         else
         {
             drop_feedback.SetAlwaysFull(true);
             drop_feedback.SetLabel("drop");
-            UI_XboxNavigator.Instance.ToggleInput("drop", true);
+            // UI_Navigator.Instance.ToggleInput("drop", true);
+            Controller.Instance.UIC.ToggleInput("drop", true);
         }
 
         // ACTIVATE
@@ -202,17 +207,19 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
 
 
         // MOVE
-        if (ui_item.Item == null && !UI_XboxNavigator.Instance.IsMovingItem)
+        if (ui_item.Item == null && !UI_Navigator.Instance.IsMovingItem)
         {
             move_feedback.SetAlwaysFull(false);
             move_feedback.SetLabel("");
-            UI_XboxNavigator.Instance.ToggleInput("move", false);
+            // UI_Navigator.Instance.ToggleInput("move", false);
+            Controller.Instance.UIC.ToggleInput("move", false);
         }
         else
         {
             move_feedback.SetAlwaysFull(true);
             move_feedback.SetLabel("move");
-            UI_XboxNavigator.Instance.ToggleInput("move", true);
+            // UI_Navigator.Instance.ToggleInput("move", true);
+            Controller.Instance.UIC.ToggleInput("move", true);
         }
     }
     private void update_activate_if(UI_Item ui_item)
@@ -226,7 +233,8 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         {
             use_feedback.SetAlwaysFull(false);
             use_feedback.SetLabel("");
-            UI_XboxNavigator.Instance.ToggleInput("activate", false);
+            // UI_Navigator.Instance.ToggleInput("activate", false);
+            Controller.Instance.UIC.ToggleInput("activate", false);
             return;
         }
 
@@ -238,12 +246,13 @@ public class UI_InventoryMenu : UI_Pool, I_UI_Slottable
         // we enable the button & set the label
         use_feedback.SetAlwaysFull(true);
         use_feedback.SetLabel(label);
-        UI_XboxNavigator.Instance.ToggleInput("activate", true);
+        // UI_Navigator.Instance.ToggleInput("activate", true);
+        Controller.Instance.UIC.ToggleInput("activate", true);
     }
     public void UpdateIFLabels(Item item)
     {
         // we get the ui_item from the item
-        I_UI_Slot slot = UI_XboxNavigator.Instance.GetCurrentSlot();
+        UI_Slot slot = UI_Navigator.Instance.GetCurrentSlot();
         if (slot == null || slot is not UI_Item ui_item) { return; }
 
         // we update the activate if needed

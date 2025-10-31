@@ -6,7 +6,10 @@
 -
 - # Rework
 	- ## Inputs
-		- TODO : transférer tous les **Inputs** sur le #[[UIC (UI_InputsController)]]
+		- DOING : transférer tous les **Inputs** sur le #[[UIC (UI_InputsController)]]
+		  :LOGBOOK:
+		  CLOCK: [2025-10-31 Fri 00:09:22]
+		  :END:
 	- ## Current Slot
 		- on garde pas un int index en current slot index mais on garde direct le current slot
 		  -> evite des galeres de remettre à jour etc

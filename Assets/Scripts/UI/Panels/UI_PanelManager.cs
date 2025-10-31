@@ -27,7 +27,7 @@ public class UI_PanelManager : MonoBehaviour
     // AWAKE
     private void Start()
     {
-        UI_XboxNavigator.Instance.OnSlotOutOfScreen += HandleSlotOutOfScreen;
+        UI_Navigator.Instance.OnSlotOutOfScreen += HandleSlotOutOfScreen;
 
         if (panels == null || panels.Count == 0)
         {
@@ -52,7 +52,7 @@ public class UI_PanelManager : MonoBehaviour
 
     // HANDLER
     private UI_Panel destination_panel = null;
-    private async void HandleSlotOutOfScreen(I_UI_Slot slot)
+    private async void HandleSlotOutOfScreen(UI_Slot slot)
     {
         // Handle the case when a slot is out of screen
         string log_msg = "";

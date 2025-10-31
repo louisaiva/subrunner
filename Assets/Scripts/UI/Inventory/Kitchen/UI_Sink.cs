@@ -22,15 +22,15 @@ public class UI_Sink : UI_Inventory
     }
 
     // SLOTTABLE
-    public override List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator)
+    public override List<UI_Slot> GetSlots()
     {
-        List<GameObject> slots = base.GetSlots(ref base_position, ref angle_threshold, ref angle_multiplicator);
-        slots.Add(onoff_toggle.gameObject);
+        List<UI_Slot> slots = base.GetSlots();
+        slots.Add(onoff_toggle);
         return slots;
     }
-    public override bool IsYourSlot(GameObject slot)
+    public override bool IsYourSlot(UI_Slot slot)
     {
-        if (slot == onoff_toggle.gameObject) { return true; }
+        if (slot == onoff_toggle) { return true; }
         return base.IsYourSlot(slot);
     }
     // public Vector2 SavedPosition { get => new Vector2(0f, Screen.height); }

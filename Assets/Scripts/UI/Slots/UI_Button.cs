@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UI_Button : UI_Slot
+public class UI_Button : UI_ImageSlot
 {
 
     [Header("Button Events")]

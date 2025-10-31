@@ -190,7 +190,6 @@ public class UI_Manager : Singleton<UI_Manager>
 
         if (log) { Debug.Log($"(UI_Manager) switching : {(current_pool?.Reference ?? " / ")} -> {pool.Reference} (duration : " + duration + ")"); }
 
-
         // we transition to the right bg/timescale/effect
         if (Time.timeScale != pool.TransitionSettings.TimeScale) { TransitionTimeScale(pool.TransitionSettings.TimeScale, duration); }
         if (bg.Alpha != pool.TransitionSettings.BackgroundAlpha) { TransitionBackground(pool.TransitionSettings.BackgroundAlpha, duration); }
@@ -214,12 +213,13 @@ public class UI_Manager : Singleton<UI_Manager>
 
         // we show all the pools in the pool_stack
         pool_stack.Clear();
+        bool is_hud = stack[0].Reference == "hud";
         for (int i = 0; i < stack.Count - 1; i++)
         {
             UI_Pool stacked_pool = stack[i];
             pool_stack.Add(stacked_pool);
             if (log_extended) { Debug.Log($"(UI_Manager) showing stacked pool : {stacked_pool.Reference}"); }
-            stacked_pool.StartCoroutine(stacked_pool.StackShowCoroutine(pool.TransitionSettings.Duration));
+            stacked_pool.StartCoroutine(stacked_pool.StackShowCoroutine(pool.TransitionSettings.Duration, enable: is_hud));
         }
         pool_stack.Add(pool);
 
@@ -347,7 +347,8 @@ public class UI_Manager : Singleton<UI_Manager>
         if (bg.Alpha != pool.TransitionSettings.BackgroundAlpha) { TransitionBackground(pool.TransitionSettings.BackgroundAlpha, duration); }
 
         // we hide the current pool
-        if (current_pool != null) { yield return current_pool.StackHideCoroutine(); }
+        bool is_on_hud = pool_stack.Contains(GetPool("hud"));
+        if (current_pool != null) { yield return current_pool.StackHideCoroutine(disable: !is_on_hud); }
 
         // we add the pool to the stack
         pool_stack.Add(pool);

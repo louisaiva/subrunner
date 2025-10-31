@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UI_Toggle : UI_Slot
+public class UI_Toggle : UI_ImageSlot
 {
 
     [Header("Toggle Events")]

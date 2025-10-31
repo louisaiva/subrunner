@@ -8,17 +8,13 @@ using UnityEngine.InputSystem;
 /// it is never triggered directly, but is showed by the Capacities & updated by the Inventory.
 /// </summary>
 
-public class UI_Inventory : MonoBehaviour, I_UI_Slottable
+public class UI_Inventory : UI_Slottable
 {
-
     [Header("UI_Item Pools")]
     public List<UI_ItemPool> pools = new List<UI_ItemPool>();
 
     [Header("Components")]
     public Inventory Inventory;
-
-    [Header("Logs")]
-    [SerializeField] protected bool log = false;
 
     // INIT
     public virtual void Init()
@@ -184,23 +180,25 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 
 
     // SLOTTABLE
-    public virtual List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator)
+    public override List<UI_Slot> GetSlots()
     {
         if (log) { Debug.Log($"(UI_Inventory) {name} getting slots"); }
-        List<GameObject> slots = new List<GameObject>();
+        List<UI_Slot> slots = new List<UI_Slot>();
         Vector2 position = Vector2.negativeInfinity;
-        foreach (UI_ItemPool pool in pools)
+        for (int i=0; i< pools.Count; i++)
         {
-            foreach (Transform child in pool.transform)
+            UI_ItemPool pool = pools[i];
+            for (int j=0; j< pool.transform.childCount; j++)
             {
                 // we check if the ui_slot is enabled
+                Transform child = pool.transform.GetChild(j);
                 if (!child.gameObject.activeSelf) { continue; }
 
-                // we check if the slot is a UI_Item
-                UI_Item ui_item = child.GetComponent<UI_Item>();
-                if (ui_item == null) { continue; }
-
-                slots.Add(child.gameObject);
+                // we check if the slot is a UI_Slot
+                UI_Slot slot = child.GetComponent<UI_Slot>();
+                if (slot == null) { continue; }
+                if (slot.Disabled) { continue; }
+                slots.Add(slot);
 
                 // we update the position to the first slot
                 if (position == Vector2.negativeInfinity)
@@ -209,19 +207,27 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
                 }
             }
         }
+
+        // we concatenate the ui_slottable's slots
+        slots.AddRange(base.GetSlots());
+
         return slots;
     }
-    public virtual bool IsYourSlot(GameObject slot)
+    public override bool IsYourSlot(UI_Slot slot)
     {
+        if (base.IsYourSlot(slot)) { return true; }
+
         // we check if the slot is in the inventory
-        foreach (UI_ItemPool pool in pools)
+        for (int i = 0; i < pools.Count; i++)
         {
-            foreach (Transform child in pool.transform)
+            UI_ItemPool pool = pools[i];
+            for (int j = 0; j < pool.transform.childCount; j++)
             {
-                if (child.gameObject == slot) { return true; }
+                Transform child = pool.transform.GetChild(j);
+                if (child.GetComponent<UI_Slot>() == slot) { return true; }
             }
         }
         return false;
     }
-    public Vector2 SavedPosition { get => new Vector2(0f, Screen.height); }
+    // public Vector2 SavedPosition { get => new Vector2(0f, Screen.height); }
 }

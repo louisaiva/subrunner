@@ -1,35 +1,49 @@
 using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.XR;
 using static PlayerInputActions;
 
 public class UI_InputsController : InputController
 {
     [Header("UI Inputs Parameters")]
-    [SerializeField] private UI_XboxNavigator navigator;
+    // [SerializeField] private UI_XboxNavigator navigator;
+    [SerializeField] private UI_Navigator navigator;
     [SerializeField] private UIActions ui_inputs;
     [SerializeField] private bool navigate_in_game = false; // if true we navigate in game, else in UI
 
     [Header("Actions")]
-    private InputAction ui_drop_ingameAction;
+    // private InputAction ui_drop_ingameAction;
+    private PersoActions perso_inputs;
     private event Action<InputAction.CallbackContext> ui_dropCallback;
+    private event Action<InputAction.CallbackContext> ui_navigateCallback;
+    private event Action<InputAction.CallbackContext> ui_activateCallback;
 
     // START
     protected void Start()
     {
         // on récupère les inputs
+        perso_inputs = InputManager.Instance.inputs.perso;
         initInputs();
 
-        navigator = UI_XboxNavigator.Instance;
+        // on récupère le navigator
+        navigator = UI_Navigator.Instance;
 
-        // on crée les endless inputs
+        // on crée les endless inputs pour la navigation continue
+        add_endless_input(new EndlessInput<Vector2>("ui_navigate", ui_inputs.navigate,
+                threshold: InputManager.Instance.BUTTON_ENDLESSLY_SHORT_THRESHOLD,
+                repeat: InputManager.Instance.BUTTON_ENDLESSLY_SHORT_DELAY,
+                unscaled_time: true)).OnEndless += (direction) => OnUI_Navigate(direction);
+        add_endless_input(new EndlessInput<Vector2>("ui_navigate_ingame", ui_inputs.navigate_in_game,
+                threshold: InputManager.Instance.BUTTON_ENDLESSLY_SHORT_THRESHOLD,
+                repeat: InputManager.Instance.BUTTON_ENDLESSLY_SHORT_DELAY,
+                unscaled_time: false)).OnEndless += (direction) => OnUI_Navigate(direction);
+
+        // et pour le drop continu
         add_endless_input(new EndlessInput<float>("ui_drop", ui_inputs.x,
                 threshold: InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD,
                 repeat: InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY,
                 unscaled_time: true)).OnEndless += _ => OnUI_Drop();
-        add_endless_input(new EndlessInput<float>("ui_drop_ingame", ui_drop_ingameAction,
+        add_endless_input(new EndlessInput<float>("ui_drop_ingame", perso_inputs.interact,
                 threshold: InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD,
                 repeat: InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY,
                 unscaled_time: false)).OnEndless += _ => OnUI_Drop();
@@ -40,22 +54,19 @@ public class UI_InputsController : InputController
     {
         // on récupère les inputs
         ui_inputs = InputManager.Instance.inputs.UI;
-        ui_drop_ingameAction = InputManager.Instance.inputs.perso.interact;
 
         // on crée les callbacks
         ui_dropCallback = ctx => handle_UI_drop_input(ctx);
-
-        // on récupère les actions in-game
-        // navigateInGameAction = InputManager.Instance.inputs.perso.
-
+        ui_navigateCallback = ctx => handle_UI_navigate_input(ctx);
+        ui_activateCallback = ctx => handle_UI_activate_input(ctx);
 
         // on met en place certains callbacks qu'on veut tout le temps actifs
-        ui_inputs.navigate_in_game.performed += ctx => handle_exploit_selection_input(ctx.ReadValue<Vector2>());
+        ui_inputs.navigate_exploits.performed += ctx => handle_exploit_selection_input(ctx.ReadValue<Vector2>());
         ui_inputs.cancel.performed += ctx => { handle_cancel_pool_input(ctx.ReadValue<float>()); };
         // notamment les inputs de menus
         MenusActions ui_menus = InputManager.Instance.inputs.menus;
         ui_menus.inventory.performed += ctx => { UI_Manager.Instance.TogglePool("inventory"); };
-        ui_menus.pause.performed += ctx => { UI_Manager.Instance.TogglePool("pause",stacking:true); };
+        ui_menus.pause.performed += ctx => { UI_Manager.Instance.TogglePool("pause"); };
     }
     public void EnableInputs(bool ingame_navigation = false)
     {
@@ -64,30 +75,26 @@ public class UI_InputsController : InputController
         // on active les bons callbacks
         if (ingame_navigation)
         {
-            // navigateInGameAction.performed += navigateCallback;
-            ui_drop_ingameAction.performed += ui_dropCallback;
+            ui_inputs.navigate_in_game.performed += ui_navigateCallback;
+            perso_inputs.interact.performed += ui_dropCallback;
         }
         else
         {
-            // navigateAction.performed += navigateCallback;
-            // activateAction.performed += activateCallback;
+            ui_inputs.activate.performed += ui_activateCallback;
+            ui_inputs.navigate.performed += ui_navigateCallback;
             ui_inputs.x.performed += ui_dropCallback;
         }
 
         navigate_in_game = ingame_navigation; // on met à jour la variable
-
-        // exploit selection
-        // ui_inputs.navigate_in_game.performed += exploit_selection_callback;
     }
     public void DisableInputs()
     {
         // on récupère les inputs
-        // navigateAction.performed -= navigateCallback;
-        // navigateInGameAction.performed -= navigateCallback;
+        ui_inputs.navigate.performed -= ui_navigateCallback;
+        ui_inputs.navigate_in_game.performed -= ui_navigateCallback;
         ui_inputs.x.performed -= ui_dropCallback;
-        ui_drop_ingameAction.performed -= ui_dropCallback;
-        // ui_inputs.navigate_in_game.performed -= exploit_selection_callback;
-        // activateAction.performed -= activateCallback;
+        perso_inputs.interact.performed -= ui_dropCallback;
+        ui_inputs.activate.performed -= ui_activateCallback;
         // moveItemAction.performed -= moveItemCallback;
 
         navigate_in_game = false; // on met à jour la variable
@@ -112,6 +119,37 @@ public class UI_InputsController : InputController
     }
 
 
+    // UI_NAVIGATE
+    public void handle_UI_navigate_input(InputAction.CallbackContext context)
+    {
+        // if we press have a big joystick magnitude we launch the endless threshold
+        Vector2 navigate_value = context.ReadValue<Vector2>();
+        if (navigate_value.magnitude >= 0.5f)
+        {
+            OnUI_Navigate(navigate_value);
+            get_endless_input<Vector2>("ui_navigate" + (navigate_in_game ? "_ingame" : "")).OnInput(context);
+            return;
+        }
+
+        // OnUI_Drop();
+    }
+    private void OnUI_Navigate(Vector2 direction)
+    {
+        navigator.OnNavigate(direction);
+    }
+
+    // UI_ACTIVATE
+    private void handle_UI_activate_input(InputAction.CallbackContext context)
+    {
+        // checks magnitue to know if we downed or released
+        float activate_value = context.ReadValue<float>();
+        if (activate_value >= 0.5f)
+        {
+            navigator.OnDown();
+            return;
+        }
+        navigator.OnActivate();
+    }
 
     // UI_DROP
     public void handle_UI_drop_input(InputAction.CallbackContext context)

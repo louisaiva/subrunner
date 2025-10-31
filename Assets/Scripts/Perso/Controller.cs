@@ -62,9 +62,10 @@ public class Controller : MonoBehaviour
     {
         // on récupère les composants
         UI_Pool hud = UI_Manager.Instance.GetPool("hud");
-        perso_quick_inventory = hud.transform.Find("perso_quick_inventory").GetComponent<UI_Inventory>();
         life_bar = hud.transform.Find("life_bar").gameObject;
         shortcuts = hud.transform.Find("shortcuts_if").gameObject;
+        // perso_quick_inventory = UI_Manager.Instance.GetPool("quick_inventory").transform.Find("perso_quick_inventory").GetComponent<UI_Inventory>();
+        perso_quick_inventory = (UI_Manager.Instance.GetPool("quick_inventory") as UI_QuickInventoryPool).UI;
 
         // on controlle le capable actuel
         stack.Clear();
@@ -154,7 +155,7 @@ public class Controller : MonoBehaviour
                 old_ia.GetCapacity<AttackCapacity>().ResetTags();
             }
         }
-        
+
         if (capa is Device)
         {
             // on enleve le device du UI_Device
@@ -252,5 +253,15 @@ public class Controller : MonoBehaviour
 
         // on refresh le see through pour remettre la tete bien centrée
         see_through.Refresh(skin);
+    }
+
+
+    // GETTERS
+    public EndlessInput<T> GetEndlessInput<T>(string name) where T : struct
+    {
+        EndlessInput<T> endinp = PIC.get_endless_input<T>(name);
+        if (endinp != null) { return endinp; }
+        endinp = UIC.get_endless_input<T>(name);
+        return endinp;
     }
 }

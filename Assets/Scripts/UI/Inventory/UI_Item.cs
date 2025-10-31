@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class UI_Item : UI_Slot
+public class UI_Item : UI_ImageSlot
 {
 
     public Sprite drag_sprite;
@@ -229,7 +227,7 @@ public class UI_Item : UI_Slot
         {
             setItem(item);
             // on remet le sprite du slot si on est hovered
-            image.sprite = is_hovered ? hover_sprite : base_sprite;
+            image.sprite = Hovered ? hover_sprite : base_sprite;
 
             // on invoke les events
             OnItemChanged?.Invoke(items);
@@ -341,7 +339,7 @@ public class UI_Item : UI_Slot
     public void OnPointerDragDown()
     {
         // check if disabled
-        if (is_disabled) { return; }
+        if (Disabled) { return; }
         if (log) { Debug.Log("OnPointerDragDown on " + gameObject.name); }
 
         // on change le sprite du slot
@@ -350,7 +348,7 @@ public class UI_Item : UI_Slot
     public virtual void OnPointerDragEnter(UI_Item moving_ui_item)
     {
         // check if disabled
-        if (is_disabled) { return; }
+        if (Disabled) { return; }
         if (log) { Debug.Log("OnPointerDragEnter on " + gameObject.name); }
 
         // on change le sprite du slot

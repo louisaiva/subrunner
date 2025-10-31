@@ -54,14 +54,14 @@ public class UI_Module : UI_Item
     public override void OnPointerEnter(PointerEventData eventData)
     {
         // check if disabled
-        if (is_disabled) { return; }
+        if (Disabled) { return; }
         if (log) { Debug.Log("OnPointerEnter on " + gameObject.name); }
 
         // on change le sprite du slot
         GetComponent<Image>().sprite = hover_sprite;
 
         // on met à jour le fait qu'on est survolé
-        is_hovered = true;
+        Hovered = true;
 
         // on met à jour la description si y'en a une
         update_description();
@@ -72,14 +72,14 @@ public class UI_Module : UI_Item
     public override void OnPointerExit(PointerEventData eventData)
     {
         // check if disabled
-        if (is_disabled) { return; }
+        if (Disabled) { return; }
         if (log) { Debug.Log("OnPointerExit on " + gameObject.name); }
 
         // on change le sprite du slot
         GetComponent<Image>().sprite = base_sprite;
 
         // on met à jour le fait qu'on est survolé
-        is_hovered = false;
+        Hovered = false;
 
         // on remet l'alpha de l'image à 1
         if (Item != null) { item_image.color = new Color(1, 1, 1, 1); }
@@ -91,7 +91,7 @@ public class UI_Module : UI_Item
     public override void OnPointerDragEnter(UI_Item moving_ui_item)
     {
         // check if disabled
-        if (is_disabled) { return; }
+        if (Disabled) { return; }
         if (log) { Debug.Log("OnPointerDragEnter on " + gameObject.name); }
 
         // on change le sprite du slot

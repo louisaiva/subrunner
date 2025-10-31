@@ -86,13 +86,15 @@ public class UI_Pool : MonoBehaviour
         Showed = false;
         Stacked = false;
     }
-    public IEnumerator StackHideCoroutine(float duration_override = -1f)
+    public IEnumerator StackHideCoroutine(float duration_override = -1f, bool disable = true)
     {
         // on veut hide tous les elements sauf stacked elements !
+
+        // si on a une transition on return
         if (current_transition != null) { yield break; }
 
         // on lance le disabling
-        yield return StartCoroutine(disable_coroutine());
+        if (disable) { yield return StartCoroutine(disable_coroutine()); }
 
         // on lance le hiding
         current_transition = StartCoroutine(hide_coroutine(stacked_elements, duration_override, stacking: true));
@@ -103,7 +105,7 @@ public class UI_Pool : MonoBehaviour
         Showed = true;
         Stacked = true;
     }
-    public IEnumerator StackShowCoroutine(float duration_override = -1f)
+    public IEnumerator StackShowCoroutine(float duration_override = -1f, bool enable = true)
     {
         if (current_transition != null) { yield break; }
 
@@ -122,7 +124,7 @@ public class UI_Pool : MonoBehaviour
         Stacked = true;
         
         // on enable
-        yield return StartCoroutine(enable_coroutine());
+        if (enable) { yield return StartCoroutine(enable_coroutine()); }
 
         // on clear la transition
         current_transition = null;
@@ -223,9 +225,12 @@ public class UI_Pool : MonoBehaviour
         if (is_stacked && !stacked_elements.Contains(ui_element)) { stacked_elements.Add(ui_element); }
 
         // we show/hide the element if the pool is showed
-        ui_element.SetActive(Showed);
+        UI_Manager manager = UI_Manager.Instance;
+        if (manager.CurrentPool == Reference) { ui_element.SetActive(true); }
+        else if (manager.IsStacked(Reference) && is_stacked) { ui_element.SetActive(true); }
+        else { ui_element.SetActive(false); }
     }
-    public void QuitPool(GameObject ui_element,bool hide_element = true)
+    public void QuitPool(GameObject ui_element)
     {
         // we check if the element is already in the pool
         if (!ui_elements.Contains(ui_element))
@@ -235,13 +240,14 @@ public class UI_Pool : MonoBehaviour
         }
 
         if (log) { Debug.Log("(UI_Pool) " + ui_element.name + " just quit pool : " + Reference); }
+        // bool is_stacked = stacked_elements.Contains(ui_element);
+
+        // we hide the element
+        ui_element.SetActive(false);
 
         // on enlève l'élément du pool
         ui_elements.Remove(ui_element);
         if (stacked_elements.Contains(ui_element)) { stacked_elements.Remove(ui_element); }
-
-        // we hide the element if needed
-        if (hide_element) { ui_element.SetActive(false); }
     }
 }
 

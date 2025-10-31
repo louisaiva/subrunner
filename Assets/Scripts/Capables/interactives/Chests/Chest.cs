@@ -81,7 +81,7 @@ public class Chest : Capable, Interactable, Openable
     protected virtual void ShowUI_Inventory()
     {
         if (Inventory == null || Inventory.ui == null) { return; }
-        (UI_Manager.Instance.GetPool("hud") as UI_HUD).RegisterChest(Inventory.ui);
+        (UI_Manager.Instance.GetPool("quick_inventory") as UI_QuickInventoryPool).RegisterChest(Inventory.ui);
         ui_inventory_shown = true;
 
         // we move the interact key feedback if we have one
@@ -91,7 +91,7 @@ public class Chest : Capable, Interactable, Openable
     protected virtual void HideUI_Inventory()
     {
         if (Inventory == null || Inventory.ui == null) { return; }
-        (UI_Manager.Instance.GetPool("hud") as UI_HUD).RemoveChest(Inventory.ui);
+        (UI_Manager.Instance.GetPool("quick_inventory") as UI_QuickInventoryPool).RemoveChest(Inventory.ui);
         ui_inventory_shown = false;
 
         // we move back the interact key feedback if we have one

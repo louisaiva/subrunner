@@ -50,7 +50,7 @@
 
  ;; Automatically expand block references when zooming in.
  ;; Default value: true
- :ui/auto-expand-block-refs? true
+ :ui/auto-expand-block-refs? false
 
  ;; Enable Block timestamps.
  ;; Default value: false
@@ -299,7 +299,7 @@
  ;;  :charge-range    600}   ; Default value: 600
 
  ;; Favorites to list on the left sidebar
- :favorites ["todo" "systems" "logs"]
+ :favorites ["3D-Problem" "todo" "systems" "logs"]
 
  ;; Set flashcards interval.
  ;; Expected value:
@@ -421,11 +421,11 @@
  :file/name-format :triple-lowbar
  :graph/settings {:journal? false
  :orphan-pages? true
- :excluded-pages? false
+ :excluded-pages? true
  :builtin-pages? false}
  :feature/enable-flashcards? false
  :feature/enable-journals? true
  :zotero/settings-v2 nil
  :graph/forcesettings {:link-dist 180
- :charge-range 3700
- :charge-strength -900}}
+ :charge-range 500
+ :charge-strength -1000}}

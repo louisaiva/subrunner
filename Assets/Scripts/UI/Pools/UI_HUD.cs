@@ -14,7 +14,7 @@ public class UI_HUD : UI_Pool
     public UI_Notifier Notifier;
 
     // AWAKE & START
-    protected override void Awake()
+    /* protected override void Awake()
     {
         base.Awake();
 
@@ -35,29 +35,33 @@ public class UI_HUD : UI_Pool
     {
         // on met les callbacks pour vérifier que le select_hackable se désactive bien
         InputManager.Instance.OnPersoInputsToggled += verify_right_joy_is_disabled;
-    }
+    } */
 
     // ENABLING
-    protected override IEnumerator enable_coroutine()
+    /* protected override IEnumerator enable_coroutine()
     {
         if (ui_chest == null) { yield break; }
 
         // on active le perso_quick_inventory & chest navigator
-        UI_XboxNavigator.Instance.Enable(ui_chest,ingame_navigation: true);
-        UI_XboxNavigator.Instance.Enable(perso_quick_inventory,ingame_navigation: true);
+        // UI_Navigator.Instance.Enable(ui_chest,ingame_navigation: true);
+        // UI_Navigator.Instance.Enable(perso_quick_inventory, ingame_navigation: true);
+        perso_quick_inventory.Enable(ingame: true);
+        ui_chest.Enable(ingame: true, starting_slot: true);
     }
     protected override IEnumerator disable_coroutine()
     {
         if (ui_chest == null) { yield break; }
 
         // on active le perso_quick_inventory & chest navigator
-        UI_XboxNavigator.Instance.Disable(ui_chest);
-        UI_XboxNavigator.Instance.Disable(perso_quick_inventory);
-    }
+        ui_chest.Disable();
+        perso_quick_inventory.Disable();
+        // UI_Navigator.Instance.Disable(ui_chest);
+        // UI_Navigator.Instance.Disable(perso_quick_inventory);
+    } */
 
 
     // REGISTER CHEST
-    public void RegisterChest(UI_Inventory ui_chest)
+    /* public void RegisterChest(UI_Inventory ui_chest)
     {
         // on ajoute le chest au pool
         // ui_chest.Show();
@@ -65,8 +69,8 @@ public class UI_HUD : UI_Pool
         perso_quick_inventory_pool.EnableItemsByRule(ui_chest.ItemRule);
 
         // on ajoute le chest & persoquickinv au pool
-        RegisterToPool(ui_chest.gameObject);
-        RegisterToPool(perso_quick_inventory.gameObject);
+        RegisterToPool(ui_chest.gameObject,is_stacked:true);
+        RegisterToPool(perso_quick_inventory.gameObject,is_stacked:true);
 
         // on s'assure que le right joystick est désactivé
         InputManager.Instance.inputs.perso.select_hackable.Disable();
@@ -80,8 +84,8 @@ public class UI_HUD : UI_Pool
         StartCoroutine(disable_coroutine());
 
         // on ajoute le chest & persoquickinv au pool
-        QuitPool(ui_chest.gameObject,hide_element:true);
-        QuitPool(perso_quick_inventory.gameObject,hide_element:true);
+        QuitPool(ui_chest.gameObject);
+        QuitPool(perso_quick_inventory.gameObject);
 
         this.ui_chest = null;
 
@@ -102,5 +106,5 @@ public class UI_HUD : UI_Pool
 
         // on doit s'assurer que le right joystick est désactivé
         InputManager.Instance.inputs.perso.select_hackable.Disable();
-    }
+    } */
 }

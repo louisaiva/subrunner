@@ -1,33 +1,47 @@
 using UnityEngine;
-using System.Collections.Generic;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
-using TMPro;
+
 /// <summary>
 /// This class is used to give feedback to the player when they are pressing a Joystick
 /// </summary>
 public class JoystickFeedback : InputFeedback
 {
     [Header("Joystick Feedback")]
-    [SerializeField] private Vector2 joystick_direction;
+    [SerializeField] protected Vector2 joystick_direction;
 
+    // CALLBACKS
     protected override void defineCallbacks()
     {
         // we define the callback
-        input_callback = 
-            ctx => 
+        input_callback =
+            ctx =>
             {
                 joystick_direction = ctx.ReadValue<Vector2>();
                 OnInput();
             };
-        reset_callback = 
-            ctx => 
+        reset_callback =
+            ctx =>
             {
                 joystick_direction = ctx.ReadValue<Vector2>();
                 OnReset();
             };
+
+        // and the complexe callback for press & release
+        press_and_release_callback = ctx =>
+        {
+            joystick_direction = ctx.ReadValue<Vector2>();
+            if (ctx.phase == InputActionPhase.Performed)
+            {
+                OnInput();
+            }
+            else if (ctx.phase == InputActionPhase.Canceled)
+            {
+                OnReset();
+            }
+        };
     }
 
+    // ON INPUT / RESET 
     public override void OnInput()
     {
         if (joystick_direction.magnitude <= input_manager.JOYSTICK_MIN_THRESHOLD) { OnReset(); return; }
@@ -40,7 +54,6 @@ public class JoystickFeedback : InputFeedback
         // we set the sprite to the image
         image.sprite = sprite;
     }
-
     public override void OnReset()
     {
         base.OnReset();
@@ -52,8 +65,8 @@ public class JoystickFeedback : InputFeedback
         image.sprite = sprite;
     }
 
-
-    private string convertDirectionToReference(Vector2 direction)
+    // CONVERT DIRECTION TO REFERENCE
+    protected string convertDirectionToReference(Vector2 direction)
     {
         if (direction.magnitude <= input_manager.JOYSTICK_MIN_THRESHOLD) { return "joy"; }
 

@@ -22,7 +22,7 @@ public class ButtonFeedback : InputFeedback
         if (bank == null)
         {
             bank = GameObject.Find("/utils/bank").GetComponent<SpriteBank>();
-            if (debug) { Debug.Log("(IF) SpriteBank loaded : SpriteBank == " + bank); }
+            if (log) { Debug.Log("(IF) SpriteBank loaded : SpriteBank == " + bank); }
         }
 
         // we get the sprite from the bank

@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "name": "PlayerInputActions",
     "maps": [
         {
@@ -208,17 +209,6 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "keyboard",
-                    "action": "randomTalk",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "caed2b77-a8cc-4ff6-a9c9-259965ac1618",
-                    "path": "<Gamepad>/leftStickPress",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
                     "action": "randomTalk",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -484,13 +474,13 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "navigate_L",
+                    "name": "navigate",
                     "type": "PassThrough",
-                    "id": "f7dea3fc-414f-4ffc-8e71-71d033ad3aa1",
+                    "id": "91602ad3-624f-42b0-bea8-33b7cf04b3d3",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
+                    "interactions": "Press(behavior=2)",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "navigate_in_game",
@@ -498,8 +488,17 @@
                     "id": "f07fc202-cf89-4336-a381-2a097a0b371e",
                     "expectedControlType": "Vector2",
                     "processors": "",
+                    "interactions": "Press(behavior=2)",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "navigate_exploits",
+                    "type": "PassThrough",
+                    "id": "8368731e-eceb-4bc0-8fd4-d736b9ac841c",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "conso1",
@@ -687,17 +686,6 @@
                 },
                 {
                     "name": "",
-                    "id": "8446bb45-7d27-4545-95f8-70fed83cb396",
-                    "path": "<Gamepad>/leftStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";xbox",
-                    "action": "navigate_L",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "88310011-9ab3-4f7d-958e-0495ad44fc3a",
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
@@ -836,6 +824,28 @@
                     "processors": "",
                     "groups": ";xbox",
                     "action": "LB",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "44f16b55-326c-4ed5-976e-242a5db2c31f",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "38a07d14-ed72-41ad-a029-985af8b12b86",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
+                    "action": "navigate_exploits",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -1,64 +1,47 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class UI_PauseMenu : UI_Pool, I_UI_Slottable
+public class UI_PauseMenu : UI_Pool/* , Slottable */
 {
     [Header("Slottable")]
     [SerializeField] private Transform slots_parent;
-    [SerializeField] private Vector2 base_position = new Vector2(0, 10000);
-
-    [Header("Components")]
-    [SerializeField] private UI_XboxNavigator xbox_manager;
-
-    // AWAKE
-    protected override void Awake()
-    {
-        base.Awake();
-        // on récupère le xbox_manager
-        xbox_manager = GameObject.Find("/ui").GetComponent<UI_XboxNavigator>();
-    }
-
+    [SerializeField] private UI_Slottable slottable;
 
     // ENABLING
     protected override IEnumerator enable_coroutine()
     {
         // on active le navigator
-        UI_XboxNavigator.Instance.Enable(this);
+        // UI_Navigator.Instance.Enable(this);
+        slottable.Enable(ingame: false, starting_slot: true);
         yield break;
     }
     protected override IEnumerator disable_coroutine()
     {
         // on désactive le navigator
-        UI_XboxNavigator.Instance.Disable(this);
+        // UI_Navigator.Instance.Disable(this);
+        slottable.Disable();
         yield break;
     }
 
     // SLOTTABLE
-    public List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator)
+    /* public List<UI_Slot> GetSlots()
     {
         // on récupère les slots
-        List<GameObject> slots = new List<GameObject>();
+        List<UI_Slot> slots = new List<UI_Slot>();
 
         // on récupère les slots des texts
-        foreach (Transform slot in slots_parent)
+        for (int i = 0; i < slots_parent.childCount; i++)
         {
-            if (slot.gameObject.GetComponent<UI_Text>() != null && slot.gameObject.activeSelf)
-            {
-                slots.Add(slot.gameObject);
-            }
+            Transform slot = slots_parent.GetChild(i);
+            if (!slot.gameObject.activeSelf) { continue; }
+            UI_Text text = slot.gameObject.GetComponent<UI_Text>();
+            if (text == null) { continue; }
+            slots.Add(text);
         }
-
-        // on met à jour les seuils
-        angle_threshold = base.angle_threshold;
-        angle_multiplicator = base.angle_multiplicator;
-
-        // on met à jour la position de base
-        base_position = this.base_position;
 
         return slots;
     }
-    public bool IsYourSlot(GameObject slot)
+    public bool IsYourSlot(UI_Slot slot)
     {
         // on regarde si le slot est dans les slots
         if (slot.transform.IsChildOf(slots_parent))
@@ -66,6 +49,6 @@ public class UI_PauseMenu : UI_Pool, I_UI_Slottable
             return true;
         }
         return false;
-    }
-    public Vector2 SavedPosition { get => base_position; }
+    } */
+    // public Vector2 SavedPosition { get => base_position; }
 }

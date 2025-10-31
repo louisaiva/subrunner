@@ -30,13 +30,13 @@ public class InputFeedback : MonoBehaviour
     [SerializeField] private TextMeshProUGUI label;
 
     [Header("Logs")]
-    public bool debug = false;
+    public bool log = false;
 
     // START
     protected virtual void Start()
     {
         // we verify the image & the input
-        if (debug)
+        if (log)
         {
             if (image == null) { Debug.LogWarning("(InputFeedback : " + name + " ) image is not set ! you should assign it in the inspector"); }
             if (input == null) { Debug.LogWarning("(InputFeedback : " + name + " ) input is not set ! you should assign it in the inspector"); }
@@ -65,13 +65,13 @@ public class InputFeedback : MonoBehaviour
     }
 
     // ONENABLE/DISABLE
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         if (action == null) { return; }
         if (bank == null)
         {
             bank = GameObject.Find("/utils/bank").GetComponent<SpriteBank>();
-            if (debug) { Debug.Log("(IF) SpriteBank loaded : SpriteBank == " + bank); }
+            if (log) { Debug.Log("(IF) SpriteBank loaded : SpriteBank == " + bank); }
         }
 
         // we add the listeners
@@ -88,7 +88,7 @@ public class InputFeedback : MonoBehaviour
         // we reset the IF
         OnReset();
     }
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         if (action == null) { return; }
 
@@ -115,7 +115,7 @@ public class InputFeedback : MonoBehaviour
         // we apply the colorers color if we have any
         foreach (UI_Colorer colorer in colorers)
         {
-            colorer.ApplyColor();
+            colorer.ApplyColor(clicked_color);
         }
     }
     public virtual void OnReset()
@@ -147,7 +147,7 @@ public class InputFeedback : MonoBehaviour
     {
         if (label == null)
         {
-            if (debug) { Debug.LogWarning("(InputFeedback : " + name + " ) label is not set ! you should assign it in the inspector"); }
+            if (log) { Debug.LogWarning("(InputFeedback : " + name + " ) label is not set ! you should assign it in the inspector"); }
             return;
         }
         label.text = text;
