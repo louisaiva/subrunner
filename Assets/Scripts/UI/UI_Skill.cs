@@ -10,8 +10,6 @@ public class UI_Skill : UI_Slot
     [Header("Hover")]
     public Color hover_color = new Color(1, 1, 0, 1);
     public Color down_color = new Color(1, 1, 1, 1);
-    // public bool is_hovered { get; set; }
-
 
     [Header("Skill")]
     private Image skill_bg;

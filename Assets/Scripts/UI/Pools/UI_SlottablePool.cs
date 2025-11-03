@@ -10,7 +10,7 @@ public class UI_SlottablePool : UI_Pool
     // ENABLING
     protected override IEnumerator enable_coroutine()
     {
-        slottable.Enable(ingame: ingame, starting_slot: true);
+        slottable.Enable(ingame: ingame);
         yield break;
     }
     protected override IEnumerator disable_coroutine()

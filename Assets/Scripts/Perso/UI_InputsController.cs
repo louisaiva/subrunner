@@ -17,6 +17,7 @@ public class UI_InputsController : InputController
     private event Action<InputAction.CallbackContext> ui_dropCallback;
     private event Action<InputAction.CallbackContext> ui_navigateCallback;
     private event Action<InputAction.CallbackContext> ui_activateCallback;
+    private event Action<InputAction.CallbackContext> mouse_navigationCallback;
 
     // START
     protected void Start()
@@ -39,11 +40,11 @@ public class UI_InputsController : InputController
                 unscaled_time: false)).OnEndless += (direction) => OnUI_Navigate(direction);
 
         // et pour le drop continu
-        add_endless_input(new EndlessInput<float>("ui_drop", ui_inputs.x,
+        add_endless_input(new EndlessInput<float>("ui_drop", ui_inputs.ui_drop,
                 threshold: InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD,
                 repeat: InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY,
                 unscaled_time: true)).OnEndless += _ => OnUI_Drop();
-        add_endless_input(new EndlessInput<float>("ui_drop_ingame", perso_inputs.interact,
+        add_endless_input(new EndlessInput<float>("ui_drop_ingame", ui_inputs.ui_drop_ingame,
                 threshold: InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD,
                 repeat: InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY,
                 unscaled_time: false)).OnEndless += _ => OnUI_Drop();
@@ -67,6 +68,8 @@ public class UI_InputsController : InputController
         MenusActions ui_menus = InputManager.Instance.inputs.menus;
         ui_menus.inventory.performed += ctx => { UI_Manager.Instance.TogglePool("inventory"); };
         ui_menus.pause.performed += ctx => { UI_Manager.Instance.TogglePool("pause"); };
+
+        mouse_navigationCallback = ctx => OnUI_Navigate(ctx.ReadValue<Vector2>());
     }
     public void EnableInputs(bool ingame_navigation = false)
     {
@@ -76,36 +79,48 @@ public class UI_InputsController : InputController
         if (ingame_navigation)
         {
             ui_inputs.navigate_in_game.performed += ui_navigateCallback;
-            perso_inputs.interact.performed += ui_dropCallback;
+            ui_inputs.ui_drop_ingame.performed += ui_dropCallback;
         }
         else
         {
             ui_inputs.activate.performed += ui_activateCallback;
             ui_inputs.navigate.performed += ui_navigateCallback;
-            ui_inputs.x.performed += ui_dropCallback;
+            ui_inputs.ui_drop.performed += ui_dropCallback;
         }
 
+        // ui_inputs
+        ui_inputs.mouse_navigation.performed += mouse_navigationCallback;
+        
         navigate_in_game = ingame_navigation; // on met à jour la variable
     }
     public void DisableInputs()
     {
-        // on récupère les inputs
+        // on désactive les inputs
         ui_inputs.navigate.performed -= ui_navigateCallback;
         ui_inputs.navigate_in_game.performed -= ui_navigateCallback;
-        ui_inputs.x.performed -= ui_dropCallback;
-        perso_inputs.interact.performed -= ui_dropCallback;
+        ui_inputs.ui_drop.performed -= ui_dropCallback;
+        ui_inputs.ui_drop_ingame.performed -= ui_dropCallback;
         ui_inputs.activate.performed -= ui_activateCallback;
+        ui_inputs.mouse_navigation.performed -= mouse_navigationCallback;
         // moveItemAction.performed -= moveItemCallback;
 
         navigate_in_game = false; // on met à jour la variable
     }
     public void ToggleInput(string input_name, bool enable = true)
     {
-        if (input_name == "drop")
+        /* if (input_name == "drop")
         {
-            if (enable) { ui_inputs.x.performed += ui_dropCallback; }
-            else { ui_inputs.x.performed -= ui_dropCallback; }
-        }
+            if (enable)
+            {
+                ui_inputs.ui_drop.performed += ui_dropCallback;
+                ui_inputs.ui_drop_ingame.performed += ui_dropCallback;
+            }
+            else
+            {
+                ui_inputs.ui_drop.performed -= ui_dropCallback;
+                ui_inputs.ui_drop_ingame.performed -= ui_dropCallback;
+            }
+        } */
         /* else if (input_name == "activate")
         {
             if (enable) { activateAction.performed += activateCallback; }

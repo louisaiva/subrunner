@@ -1,8 +1,6 @@
 #pragma warning disable 4014
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using PrimeTween;
 using UnityEngine;
 
 public class UI_InventoryMenu : UI_Pool/* , Slottable */
@@ -81,7 +79,7 @@ public class UI_InventoryMenu : UI_Pool/* , Slottable */
         // on active le navigator si on a des items
         if (ui_inventory.Inventory.Count == 0) { yield break; }
         // UI_Navigator.Instance.Enable(this);
-        slottable_mixer.Enable(ingame: false, starting_slot: true);
+        slottable_mixer.Enable(ingame: false);
         yield break;
     }
     protected override IEnumerator disable_coroutine()

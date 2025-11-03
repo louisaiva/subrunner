@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8844480706161881856}
   - component: {fileID: 1600085908658575595}
   - component: {fileID: 343024490696494200}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: hdd_file
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -149,14 +149,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bfce1c93f888e409e927b6fc78499d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _hovered: 0
+  _disabled: 0
+  log: 0
   hover_color: {r: 1, g: 1, b: 0, a: 1}
   down_color: {r: 1, g: 1, b: 1, a: 1}
   base_text: 
   activateEvent:
     m_PersistentCalls:
       m_Calls: []
-  debug: 0
-  file:
-    name: 
-    extension: 
-    data: 
+  file: {fileID: 0}

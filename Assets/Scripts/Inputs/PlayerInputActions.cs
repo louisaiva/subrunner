@@ -542,9 +542,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""x"",
+                    ""name"": ""ui_drop_ingame"",
                     ""type"": ""Button"",
-                    ""id"": ""9cabf8d8-163a-4ae7-a331-3f1b721b0fa6"",
+                    ""id"": ""8dd2090d-fc95-4c4a-a7b8-d50c07621ed2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ui_drop"",
+                    ""type"": ""Button"",
+                    ""id"": ""53b51d99-0008-4842-a4ec-2d56837fe47f"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": ""Press(behavior=2)"",
@@ -657,6 +666,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""mouse_navigation"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""723af227-a0f9-4516-a09b-98cd2a14e64c"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -701,28 +719,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""xbox"",
                     ""action"": ""y"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""38c48ac6-6251-4242-ae36-ea4569e66299"",
-                    ""path"": ""<Gamepad>/buttonWest"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""xbox"",
-                    ""action"": ""x"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""e6664270-23f2-4b09-a021-ac1962a08448"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";keyboard"",
-                    ""action"": ""x"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -934,6 +930,72 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""navigate_exploits"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""53bd54e4-7cb9-4f82-8967-0d35bb0fa4c8"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""mouse_navigation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9d918d30-25b5-4816-86f0-5f916dae0f05"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""ui_drop"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""faaed508-2a23-4064-8b3b-f4f9fa565050"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""ui_drop"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""65007549-a164-4477-87b1-7f78159d43d9"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""ui_drop_ingame"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""670ca3e4-3068-4ff3-86aa-24052d5d0b99"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""ui_drop_ingame"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3a8233dc-7818-483c-8cf7-e3c971b7a00c"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""ui_drop_ingame"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -943,7 +1005,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""keyboard"",
-                    ""type"": ""Button"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""6e57fb60-629f-48f4-bdf3-7f45b10dc40c"",
                     ""expectedControlType"": """",
                     ""processors"": """",
@@ -979,6 +1041,83 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
+                    ""action"": ""keyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ca0f437f-c378-4381-a0ed-c678e762994b"",
+                    ""path"": ""<Mouse>/backButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""keyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e713e912-b6b1-4e97-925f-67b7156c51c0"",
+                    ""path"": ""<Mouse>/forwardButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""keyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ba65a9c7-9953-419c-a01d-745f2ae6b443"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""keyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3e8aeae7-9c4d-4dd4-93e3-c291bb22af8c"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""keyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2702aa27-e3c4-4fad-9823-91d04f067f74"",
+                    ""path"": ""<Mouse>/press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""keyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8baae983-f0af-4bd6-98da-bbd8b99d3de8"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""keyboard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0a259f1e-7a14-42d7-9299-50290fd85c64"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
                     ""action"": ""keyboard"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -1608,7 +1747,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_UI_scroll = m_UI.FindAction("scroll", throwIfNotFound: true);
         m_UI_activate = m_UI.FindAction("activate", throwIfNotFound: true);
         m_UI_y = m_UI.FindAction("y", throwIfNotFound: true);
-        m_UI_x = m_UI.FindAction("x", throwIfNotFound: true);
+        m_UI_ui_drop_ingame = m_UI.FindAction("ui_drop_ingame", throwIfNotFound: true);
+        m_UI_ui_drop = m_UI.FindAction("ui_drop", throwIfNotFound: true);
         m_UI_cancel = m_UI.FindAction("cancel", throwIfNotFound: true);
         m_UI_navigate = m_UI.FindAction("navigate", throwIfNotFound: true);
         m_UI_navigate_in_game = m_UI.FindAction("navigate_in_game", throwIfNotFound: true);
@@ -1621,6 +1761,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_UI_next_exploit = m_UI.FindAction("next_exploit", throwIfNotFound: true);
         m_UI_run = m_UI.FindAction("run", throwIfNotFound: true);
         m_UI_LB = m_UI.FindAction("LB", throwIfNotFound: true);
+        m_UI_mouse_navigation = m_UI.FindAction("mouse_navigation", throwIfNotFound: true);
         // any
         m_any = asset.FindActionMap("any", throwIfNotFound: true);
         m_any_keyboard = m_any.FindAction("keyboard", throwIfNotFound: true);
@@ -1949,7 +2090,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_scroll;
     private readonly InputAction m_UI_activate;
     private readonly InputAction m_UI_y;
-    private readonly InputAction m_UI_x;
+    private readonly InputAction m_UI_ui_drop_ingame;
+    private readonly InputAction m_UI_ui_drop;
     private readonly InputAction m_UI_cancel;
     private readonly InputAction m_UI_navigate;
     private readonly InputAction m_UI_navigate_in_game;
@@ -1962,6 +2104,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_next_exploit;
     private readonly InputAction m_UI_run;
     private readonly InputAction m_UI_LB;
+    private readonly InputAction m_UI_mouse_navigation;
     /// <summary>
     /// Provides access to input actions defined in input action map "UI".
     /// </summary>
@@ -1986,9 +2129,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @y => m_Wrapper.m_UI_y;
         /// <summary>
-        /// Provides access to the underlying input action "UI/x".
+        /// Provides access to the underlying input action "UI/ui_drop_ingame".
         /// </summary>
-        public InputAction @x => m_Wrapper.m_UI_x;
+        public InputAction @ui_drop_ingame => m_Wrapper.m_UI_ui_drop_ingame;
+        /// <summary>
+        /// Provides access to the underlying input action "UI/ui_drop".
+        /// </summary>
+        public InputAction @ui_drop => m_Wrapper.m_UI_ui_drop;
         /// <summary>
         /// Provides access to the underlying input action "UI/cancel".
         /// </summary>
@@ -2038,6 +2185,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @LB => m_Wrapper.m_UI_LB;
         /// <summary>
+        /// Provides access to the underlying input action "UI/mouse_navigation".
+        /// </summary>
+        public InputAction @mouse_navigation => m_Wrapper.m_UI_mouse_navigation;
+        /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
         public InputActionMap Get() { return m_Wrapper.m_UI; }
@@ -2072,9 +2223,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @y.started += instance.OnY;
             @y.performed += instance.OnY;
             @y.canceled += instance.OnY;
-            @x.started += instance.OnX;
-            @x.performed += instance.OnX;
-            @x.canceled += instance.OnX;
+            @ui_drop_ingame.started += instance.OnUi_drop_ingame;
+            @ui_drop_ingame.performed += instance.OnUi_drop_ingame;
+            @ui_drop_ingame.canceled += instance.OnUi_drop_ingame;
+            @ui_drop.started += instance.OnUi_drop;
+            @ui_drop.performed += instance.OnUi_drop;
+            @ui_drop.canceled += instance.OnUi_drop;
             @cancel.started += instance.OnCancel;
             @cancel.performed += instance.OnCancel;
             @cancel.canceled += instance.OnCancel;
@@ -2111,6 +2265,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @LB.started += instance.OnLB;
             @LB.performed += instance.OnLB;
             @LB.canceled += instance.OnLB;
+            @mouse_navigation.started += instance.OnMouse_navigation;
+            @mouse_navigation.performed += instance.OnMouse_navigation;
+            @mouse_navigation.canceled += instance.OnMouse_navigation;
         }
 
         /// <summary>
@@ -2131,9 +2288,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @y.started -= instance.OnY;
             @y.performed -= instance.OnY;
             @y.canceled -= instance.OnY;
-            @x.started -= instance.OnX;
-            @x.performed -= instance.OnX;
-            @x.canceled -= instance.OnX;
+            @ui_drop_ingame.started -= instance.OnUi_drop_ingame;
+            @ui_drop_ingame.performed -= instance.OnUi_drop_ingame;
+            @ui_drop_ingame.canceled -= instance.OnUi_drop_ingame;
+            @ui_drop.started -= instance.OnUi_drop;
+            @ui_drop.performed -= instance.OnUi_drop;
+            @ui_drop.canceled -= instance.OnUi_drop;
             @cancel.started -= instance.OnCancel;
             @cancel.performed -= instance.OnCancel;
             @cancel.canceled -= instance.OnCancel;
@@ -2170,6 +2330,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @LB.started -= instance.OnLB;
             @LB.performed -= instance.OnLB;
             @LB.canceled -= instance.OnLB;
+            @mouse_navigation.started -= instance.OnMouse_navigation;
+            @mouse_navigation.performed -= instance.OnMouse_navigation;
+            @mouse_navigation.canceled -= instance.OnMouse_navigation;
         }
 
         /// <summary>
@@ -2689,12 +2852,19 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnY(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "x" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "ui_drop_ingame" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnX(InputAction.CallbackContext context);
+        void OnUi_drop_ingame(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ui_drop" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnUi_drop(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "cancel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
@@ -2779,6 +2949,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnLB(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "mouse_navigation" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMouse_navigation(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "any" which allows adding and removing callbacks.

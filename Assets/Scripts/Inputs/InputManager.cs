@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections.Generic;
 using UnityEngine.InputSystem.UI;
 using System;
 using System.Collections;
@@ -9,6 +8,8 @@ public class InputManager : Singleton<InputManager>
 {
     [Header("INPUT MANAGER")]
     [SerializeField] private string current_input_type = "keyboard"; // keyboard or gamepad
+    public string CurrentInputType => current_input_type;
+    public event Action<string> OnInputTypeChanged = delegate { };
     public PlayerInputActions inputs;
 
 
@@ -68,17 +69,17 @@ public class InputManager : Singleton<InputManager>
         }
     }
 
-    // setters
+    // SWITCH INPUTS TYPE
     private void setInputType(string input_type)
     {
-        if (current_input_type != input_type)
-        {
-            // on met à jour le type d'input
-            current_input_type = input_type;
-            input_system_ui_input_module.enabled = input_type == "keyboard";
-            Cursor.visible = input_type == "keyboard";
-            if (log) { Debug.Log("(InputManager) switching to " + input_type); }
-        }
+        if (current_input_type == input_type) { return; }
+
+        // on met à jour le type d'input
+        current_input_type = input_type;
+        // input_system_ui_input_module.enabled = input_type == "keyboard";
+        Cursor.visible = input_type == "keyboard";
+        if (log) { Debug.Log("(InputManager) switching to " + input_type); }
+        OnInputTypeChanged?.Invoke(current_input_type);
     }
 
     // getters

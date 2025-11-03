@@ -62,7 +62,7 @@ public class UI_Device : UI_Pool/* , Slottable */
     {
         // on active le navigator
         // UI_Navigator.Instance.Enable(this);
-        slottable.Enable(ingame: false, starting_slot: true);
+        slottable.Enable(ingame: false);
         yield break;
     }
     protected override IEnumerator disable_coroutine()

@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 5671285354442261386}
   - component: {fileID: 7143562431207241119}
   - component: {fileID: 8479797854196837359}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: ui_skill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -226,12 +226,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db2f7f53e982c2a4faab1b743c93756d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _hovered: 0
+  _disabled: 0
+  log: 0
   hover_color: {r: 1, g: 0.74113095, b: 0, a: 1}
   down_color: {r: 0.9056604, g: 0.89089453, b: 0.4229263, a: 1}
   Reference: skill:max_life
   description: your maximum health. makes you tanky as f
   unit: hp
-  log: 0
 --- !u!1 &8861887843051962500
 GameObject:
   m_ObjectHideFlags: 0

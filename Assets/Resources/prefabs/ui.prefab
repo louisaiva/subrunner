@@ -2612,7 +2612,7 @@ GameObject:
   - component: {fileID: 6864754987453949642}
   - component: {fileID: 8274266218008163482}
   - component: {fileID: 3911861909165651803}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: heal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2863,7 +2863,7 @@ GameObject:
   - component: {fileID: 8252329875540751638}
   - component: {fileID: 2073922287873241732}
   - component: {fileID: 8026726308748094067}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: ghost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3275,7 +3275,7 @@ GameObject:
   - component: {fileID: 3067844571088074043}
   - component: {fileID: 7128835755493569818}
   - component: {fileID: 5120583762793397114}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: ui_right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4147,7 +4147,7 @@ GameObject:
   - component: {fileID: 7410501076331519398}
   - component: {fileID: 4776109418449319106}
   - component: {fileID: 5944930231020604311}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: ui_laptop_slot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4972,7 +4972,7 @@ GameObject:
   - component: {fileID: 1962273517914589355}
   - component: {fileID: 294263405048612598}
   - component: {fileID: 4647787620899142492}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: ui_down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7812,8 +7812,9 @@ GameObject:
   - component: {fileID: 4883415050271246860}
   - component: {fileID: 7531068810506088810}
   - component: {fileID: 4903622354906641671}
-  - component: {fileID: 7282440825162870108}
   - component: {fileID: 4663448115762578513}
+  - component: {fileID: 1123348581786394027}
+  - component: {fileID: 2824733737334845058}
   m_Layer: 5
   m_Name: ui
   m_TagString: Untagged
@@ -7932,43 +7933,6 @@ MonoBehaviour:
   hud_stack: hud
   log: 1
   log_extended: 0
---- !u!114 &7282440825162870108
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2970279675843071167}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90af7a77457103344a06837e80a045fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slottables: []
-  slots: []
-  current_slot_index: -1
-  can_navigate: 1
-  last_input: {x: 0, y: 0}
-  navigate_continuously: 0
-  continuous_navigation_threshold: 0.3
-  continuous_navigation_cooldown: 0.06
-  continuous_navigation_counter: 3.4028235e+38
-  base_position: {x: 0, y: 0}
-  angle_threshold: 45
-  angle_multiplicator: 0
-  moving_ui_item: {fileID: 0}
-  navigateInput: {fileID: 6845285972889758690, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
-  activateInput: {fileID: -5345809961903225854, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
-  moveItemInput: {fileID: 3671791553200363326, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
-  navigateInGameInput: {fileID: -3072000485198250585, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
-  debug: 0
-  debug_navigation: 0
-  log_slot_position: 0
-  log_moving_items: 0
-  log_receivable_slots: 0
-  debug_gizmo: 0
-  gizmos_positions: []
-  gizmos_weights: []
 --- !u!114 &4663448115762578513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7981,17 +7945,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5ea1bb99adea54080124e796c89224, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Navigator
-  slots: []
-  current_slot: {fileID: 0}
-  angle_threshold: 45
-  angle_multiplicator: 0
+  Slots: []
+  CurrentSlot: {fileID: 0}
   moving_ui_item: {fileID: 0}
   log: 1
-  log_navigation: 0
   log_hover: 0
-  log_moving_items: 0
   log_slot_position: 0
   log_inputs: 0
+--- !u!114 &1123348581786394027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2970279675843071167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f988d2afccb75c44f86a1d38f2901654, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GamepadNavigator
+  angle_threshold: 45
+  angle_multiplicator: 0
+  manager: {fileID: 0}
+  log: 1
+--- !u!114 &2824733737334845058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2970279675843071167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecfc88d3a09a60c4c98211e6b3e9333e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MouseNavigator
+  ui_slot_layer:
+    serializedVersion: 2
+    m_Bits: 1024
+  manager: {fileID: 0}
+  log: 1
+  log_hover: 1
 --- !u!1 &2993804656602851118
 GameObject:
   m_ObjectHideFlags: 0
@@ -8079,7 +8073,7 @@ GameObject:
   - component: {fileID: 8880080283257420812}
   - component: {fileID: 2918337935890777513}
   - component: {fileID: 2016090473139387061}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: ui_up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8183,7 +8177,7 @@ GameObject:
   - component: {fileID: 8575007374440842663}
   - component: {fileID: 3300305110623824450}
   - component: {fileID: 6489205593979516672}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: vsync
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8365,7 +8359,7 @@ GameObject:
   - component: {fileID: 1865361091901094604}
   - component: {fileID: 4073316956852030338}
   - component: {fileID: 6890388075834760535}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: debug
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11239,7 +11233,7 @@ GameObject:
   - component: {fileID: 1065591537362859593}
   - component: {fileID: 1569195096585406583}
   - component: {fileID: 1776179264867758658}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: exit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11542,7 +11536,7 @@ GameObject:
   - component: {fileID: 7635837258341956080}
   - component: {fileID: 1498987972168682493}
   - component: {fileID: 3827837329957551919}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: fullscreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12619,7 +12613,7 @@ GameObject:
   - component: {fileID: 7044486600843566586}
   - component: {fileID: 6741977269915899987}
   - component: {fileID: 4105921314593950470}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: ui_left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14471,7 +14465,7 @@ GameObject:
   - component: {fileID: 2799764599318465467}
   - component: {fileID: 9220964557095384590}
   - component: {fileID: 4962439697037434}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: shortcuts_pool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15256,7 +15250,7 @@ GameObject:
   - component: {fileID: 7570140190268466590}
   - component: {fileID: 8189247911824960011}
   - component: {fileID: 4913250108355797823}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: perso_quick_inventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18135,7 +18129,7 @@ GameObject:
   - component: {fileID: 1025292454828214470}
   - component: {fileID: 2254006405196753757}
   - component: {fileID: 5027530486096558737}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: slots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18258,7 +18252,7 @@ GameObject:
   - component: {fileID: 5123601086605438571}
   - component: {fileID: 5045050337777724455}
   - component: {fileID: 8880214368891121041}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: metamorph
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18789,7 +18783,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b62c7690aaea9664cb23c3b458e32385, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  input: {fileID: 6845285972889758690, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+  input: {fileID: 0}
   input_manager: {fileID: 0}
   use_press_and_release: 0
   image: {fileID: 3492320161267308030}
@@ -19498,7 +19492,7 @@ MonoBehaviour:
   - {fileID: 5779498944341450021}
   log: 0
   log_elements_showing: 0
-  slottable_mixer: {fileID: 1872010612978149022}
+  slottable: {fileID: 1872010612978149022}
   ingame: 1
   UI: {fileID: 7724454826991599713}
 --- !u!1 &7369067405943557491
@@ -23967,7 +23961,7 @@ GameObject:
   - component: {fileID: 7958702512009804807}
   - component: {fileID: 2836005009502623988}
   - component: {fileID: 4450824690237732994}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: play
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25177,7 +25171,7 @@ PrefabInstance:
     - target: {fileID: 7812301186420496611, guid: 44ecfd6c9430d814cb017d42913f3113, type: 3}
       propertyPath: input
       value: 
-      objectReference: {fileID: 6845285972889758690, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 7812301186420496611, guid: 44ecfd6c9430d814cb017d42913f3113, type: 3}
       propertyPath: clicked_color.b
       value: 0
@@ -29396,7 +29390,7 @@ PrefabInstance:
     - target: {fileID: 7812301186420496611, guid: 44ecfd6c9430d814cb017d42913f3113, type: 3}
       propertyPath: input
       value: 
-      objectReference: {fileID: 6845285972889758690, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 7812301186420496611, guid: 44ecfd6c9430d814cb017d42913f3113, type: 3}
       propertyPath: clicked_color.b
       value: 0

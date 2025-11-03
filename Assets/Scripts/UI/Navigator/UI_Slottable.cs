@@ -16,13 +16,13 @@ public abstract class UI_Slottable : MonoBehaviour, Slottable
     public bool log = false;
 
     // ENABLE - DISABLE
-    public virtual void Enable(bool ingame = false, bool starting_slot = false)
+    public virtual void Enable(bool ingame = false)
     {
         // on register to navigator's hover slot
         UI_Navigator.Instance.OnSlotHoverEnter += HandleSlotHover;
 
         // on enregistre le slottable
-        UI_Navigator.Instance.AddSlottable(this, ingame_navigation: ingame, starting_slot: starting_slot ? this.starting_slot : null);
+        UI_Navigator.Instance.AddSlottable(this, ingame_navigation: ingame);
     }
     public virtual void Disable()
     {

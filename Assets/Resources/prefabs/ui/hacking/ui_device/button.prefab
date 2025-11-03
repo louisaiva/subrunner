@@ -221,7 +221,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7530797417669932432}
   - component: {fileID: 6786993201004768275}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -261,6 +261,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8166b8787a108e551bba1766790eb532, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_TextButton
+  _hovered: 0
+  _disabled: 0
   log: 0
   base_sprite: {fileID: -1536914866, guid: d4df71173152f6e4d93ab17b3e634907, type: 3}
   hover_sprite: {fileID: 2052618030, guid: d4df71173152f6e4d93ab17b3e634907, type: 3}

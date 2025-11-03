@@ -19,8 +19,9 @@ public interface Slottable
 {
     public List<UI_Slot> GetSlots();
     public bool IsYourSlot(UI_Slot slot);
-    public void Enable(bool ingame, bool starting_slot);
+    public void Enable(bool ingame);
     public void Disable();
+    public UI_Slot StartingSlot { get; }
 
     // MonoBehaviour functions
     public GameObject gameObject { get; }

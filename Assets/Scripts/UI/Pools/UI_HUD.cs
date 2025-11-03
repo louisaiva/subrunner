@@ -46,7 +46,7 @@ public class UI_HUD : UI_Pool
         // UI_Navigator.Instance.Enable(ui_chest,ingame_navigation: true);
         // UI_Navigator.Instance.Enable(perso_quick_inventory, ingame_navigation: true);
         perso_quick_inventory.Enable(ingame: true);
-        ui_chest.Enable(ingame: true, starting_slot: true);
+        ui_chest.Enable(ingame: true);
     }
     protected override IEnumerator disable_coroutine()
     {
