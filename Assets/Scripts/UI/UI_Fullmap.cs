@@ -70,10 +70,10 @@ public class UI_Fullmap : MonoBehaviour {
                 move(inputs.UI.navigate.ReadValue<Vector2>());
             } */
 
-            if (inputs.UI.scroll.ReadValue<float>() != 0)
+            /* if (inputs.UI.scroll.ReadValue<float>() != 0)
             {
                 zoom(inputs.UI.scroll.ReadValue<float>());
-            }
+            } */
         }
     }
 

@@ -524,6 +524,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""roll_panel"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""ca9aab81-2601-4c87-86db-1bdb6dba279f"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""activate"",
                     ""type"": ""Button"",
                     ""id"": ""bfb0aa0c-6049-4ece-a264-cceaa2a55caa"",
@@ -746,11 +755,11 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""1c0a8b72-8e5e-45e1-9023-ebb901460c68"",
-                    ""path"": ""<Mouse>/scroll"",
+                    ""id"": ""8cc41558-6c57-4c17-bab3-6fc3717a499f"",
+                    ""path"": ""<Mouse>/scroll/y"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";keyboard"",
+                    ""groups"": ""keyboard"",
                     ""action"": ""scroll"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -994,6 +1003,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""keyboard"",
                     ""action"": ""ui_drop_ingame"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7c9ebb12-0cba-489f-bd2e-ce0fb3d44d94"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""roll_panel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1690,6 +1710,474 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""feedbacks"",
+            ""id"": ""4f1507bc-057f-4c71-95b3-1f983f16dc8d"",
+            ""actions"": [
+                {
+                    ""name"": ""mouse_L"",
+                    ""type"": ""Button"",
+                    ""id"": ""bd172b21-8b4a-4fa0-92bb-798a175296eb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""mouse_R"",
+                    ""type"": ""Button"",
+                    ""id"": ""f2e39677-478d-4cca-8d51-e418c4ed4785"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""mouse_C"",
+                    ""type"": ""Button"",
+                    ""id"": ""16166abe-0ff8-4467-b335-8affad0ade9f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""mouse_scroll"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""18bf9bc2-13fc-481d-9297-456486019dc3"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""mouse_move"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""55607dff-14d2-450f-a8f5-50a79e470eca"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""pad_L"",
+                    ""type"": ""Button"",
+                    ""id"": ""55c071a9-821b-4a18-928e-e7eb0751dbd7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""pad_R"",
+                    ""type"": ""Button"",
+                    ""id"": ""f1218775-971e-402a-85ff-781decf0dfdc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""pad_D"",
+                    ""type"": ""Button"",
+                    ""id"": ""0a52d7fe-4b9a-40ba-93e6-a049bb545403"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""pad_U"",
+                    ""type"": ""Button"",
+                    ""id"": ""6ed7152d-0a4f-4423-83e8-0fa54b2aa8ee"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""joy_L"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""51953f4e-48ce-4f6f-b827-4073eff66c65"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""joy_LC"",
+                    ""type"": ""Button"",
+                    ""id"": ""ecba427f-9395-4214-800a-8c55b014447e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""joy_R"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""9506bb24-07f5-42c5-85c7-bc7125ec0814"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""joy_RC"",
+                    ""type"": ""Button"",
+                    ""id"": ""57ee078b-36bf-489e-b2bc-ddff1d8975f7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""dpad_L"",
+                    ""type"": ""Button"",
+                    ""id"": ""4d717252-d20c-494e-9c73-8996c58f8869"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""dpad_R"",
+                    ""type"": ""Button"",
+                    ""id"": ""55275c40-dbf4-40ed-99f7-2caf812ed55d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""dpad_D"",
+                    ""type"": ""Button"",
+                    ""id"": ""b73338b8-ba6f-4acb-935b-3915c79bc511"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""dpad_U"",
+                    ""type"": ""Button"",
+                    ""id"": ""cd53bf0e-e009-49fc-bd7e-a1b5e819ea33"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""start"",
+                    ""type"": ""Button"",
+                    ""id"": ""b8bec320-5683-4fa1-ba0a-6c1601566207"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""select"",
+                    ""type"": ""Button"",
+                    ""id"": ""81faaaee-2d51-461d-96e1-e8d456117ab8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RT"",
+                    ""type"": ""Button"",
+                    ""id"": ""269d5f43-84ef-4ec0-b29e-52d7de317ac5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RB"",
+                    ""type"": ""Button"",
+                    ""id"": ""51ca1158-74ad-474c-b7ac-94cec8eab4ed"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LT"",
+                    ""type"": ""Button"",
+                    ""id"": ""9412a9bb-0987-4a83-9823-7defcc9edeb7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LB"",
+                    ""type"": ""Button"",
+                    ""id"": ""e59a00f7-aefa-419e-acfc-ef038ba9adeb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""79330ca2-0ee2-429c-a1c2-08f70a166e3b"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""mouse_L"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""afc7e35a-ae3d-4a27-a213-994d27c3f6e8"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""mouse_R"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""93439aa1-efbf-41af-95e0-9338a8eb58bc"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""mouse_C"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5688b053-6772-4a2d-83ac-cfccb25b900f"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""mouse_scroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""09319d5d-5af0-4567-9b5f-294c527364cd"",
+                    ""path"": ""<Mouse>/delta/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""mouse_move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""31090aa7-15b1-4fd4-b615-45a1b9945f2d"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""pad_L"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3de4b7be-16f9-44ce-b984-ffb1a95c6064"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""pad_D"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""54a850a6-5969-4f86-b902-97c3b6b7e84f"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""pad_U"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""14cea3d0-5bb8-424f-84e1-b31dc7cdcd1a"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""pad_R"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f52fbb2f-868a-4c43-b3a0-405f3e42edd6"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""joy_L"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fd737a07-987d-490b-87bc-7392b44e7ed8"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""joy_R"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""729b7f71-684c-4018-9d63-6274156333b9"",
+                    ""path"": ""<Gamepad>/leftStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""joy_LC"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cc21c8fe-b9e8-4243-9dab-05b51f654138"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""joy_RC"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6d9fec32-16e9-4cba-b4c5-8cb141d04004"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""dpad_L"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""893dc226-23bf-4033-9527-f6e0ea4a147b"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""dpad_R"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0659864d-852d-4aa2-b80f-cc2cbf03386d"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""dpad_D"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6d327cfd-9750-4bc7-91d6-974855616a1b"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""dpad_U"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4049f4df-06c0-41c3-8056-6aa3fdeb005f"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""start"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1c8ac159-89b9-4237-a27b-b9ab86f05263"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""84b82e25-ffb0-4993-a780-3bca34fba7c4"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RT"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dc040017-9a9d-4f5f-91b7-c956109098a0"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RB"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d9423ec6-438f-479b-8dc5-3e5d8a3346ec"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LT"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""aa5fba41-bfa7-4204-a6cd-2123341d63d8"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LB"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -1745,6 +2233,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_scroll = m_UI.FindAction("scroll", throwIfNotFound: true);
+        m_UI_roll_panel = m_UI.FindAction("roll_panel", throwIfNotFound: true);
         m_UI_activate = m_UI.FindAction("activate", throwIfNotFound: true);
         m_UI_y = m_UI.FindAction("y", throwIfNotFound: true);
         m_UI_ui_drop_ingame = m_UI.FindAction("ui_drop_ingame", throwIfNotFound: true);
@@ -1775,6 +2264,31 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         // utils
         m_utils = asset.FindActionMap("utils", throwIfNotFound: true);
         m_utils_move = m_utils.FindAction("move", throwIfNotFound: true);
+        // feedbacks
+        m_feedbacks = asset.FindActionMap("feedbacks", throwIfNotFound: true);
+        m_feedbacks_mouse_L = m_feedbacks.FindAction("mouse_L", throwIfNotFound: true);
+        m_feedbacks_mouse_R = m_feedbacks.FindAction("mouse_R", throwIfNotFound: true);
+        m_feedbacks_mouse_C = m_feedbacks.FindAction("mouse_C", throwIfNotFound: true);
+        m_feedbacks_mouse_scroll = m_feedbacks.FindAction("mouse_scroll", throwIfNotFound: true);
+        m_feedbacks_mouse_move = m_feedbacks.FindAction("mouse_move", throwIfNotFound: true);
+        m_feedbacks_pad_L = m_feedbacks.FindAction("pad_L", throwIfNotFound: true);
+        m_feedbacks_pad_R = m_feedbacks.FindAction("pad_R", throwIfNotFound: true);
+        m_feedbacks_pad_D = m_feedbacks.FindAction("pad_D", throwIfNotFound: true);
+        m_feedbacks_pad_U = m_feedbacks.FindAction("pad_U", throwIfNotFound: true);
+        m_feedbacks_joy_L = m_feedbacks.FindAction("joy_L", throwIfNotFound: true);
+        m_feedbacks_joy_LC = m_feedbacks.FindAction("joy_LC", throwIfNotFound: true);
+        m_feedbacks_joy_R = m_feedbacks.FindAction("joy_R", throwIfNotFound: true);
+        m_feedbacks_joy_RC = m_feedbacks.FindAction("joy_RC", throwIfNotFound: true);
+        m_feedbacks_dpad_L = m_feedbacks.FindAction("dpad_L", throwIfNotFound: true);
+        m_feedbacks_dpad_R = m_feedbacks.FindAction("dpad_R", throwIfNotFound: true);
+        m_feedbacks_dpad_D = m_feedbacks.FindAction("dpad_D", throwIfNotFound: true);
+        m_feedbacks_dpad_U = m_feedbacks.FindAction("dpad_U", throwIfNotFound: true);
+        m_feedbacks_start = m_feedbacks.FindAction("start", throwIfNotFound: true);
+        m_feedbacks_select = m_feedbacks.FindAction("select", throwIfNotFound: true);
+        m_feedbacks_RT = m_feedbacks.FindAction("RT", throwIfNotFound: true);
+        m_feedbacks_RB = m_feedbacks.FindAction("RB", throwIfNotFound: true);
+        m_feedbacks_LT = m_feedbacks.FindAction("LT", throwIfNotFound: true);
+        m_feedbacks_LB = m_feedbacks.FindAction("LB", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -1784,6 +2298,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         UnityEngine.Debug.Assert(!m_any.enabled, "This will cause a leak and performance issues, PlayerInputActions.any.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_menus.enabled, "This will cause a leak and performance issues, PlayerInputActions.menus.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_utils.enabled, "This will cause a leak and performance issues, PlayerInputActions.utils.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_feedbacks.enabled, "This will cause a leak and performance issues, PlayerInputActions.feedbacks.Disable() has not been called.");
     }
 
     /// <summary>
@@ -2088,6 +2603,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_UI;
     private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
     private readonly InputAction m_UI_scroll;
+    private readonly InputAction m_UI_roll_panel;
     private readonly InputAction m_UI_activate;
     private readonly InputAction m_UI_y;
     private readonly InputAction m_UI_ui_drop_ingame;
@@ -2120,6 +2636,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "UI/scroll".
         /// </summary>
         public InputAction @scroll => m_Wrapper.m_UI_scroll;
+        /// <summary>
+        /// Provides access to the underlying input action "UI/roll_panel".
+        /// </summary>
+        public InputAction @roll_panel => m_Wrapper.m_UI_roll_panel;
         /// <summary>
         /// Provides access to the underlying input action "UI/activate".
         /// </summary>
@@ -2217,6 +2737,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @scroll.started += instance.OnScroll;
             @scroll.performed += instance.OnScroll;
             @scroll.canceled += instance.OnScroll;
+            @roll_panel.started += instance.OnRoll_panel;
+            @roll_panel.performed += instance.OnRoll_panel;
+            @roll_panel.canceled += instance.OnRoll_panel;
             @activate.started += instance.OnActivate;
             @activate.performed += instance.OnActivate;
             @activate.canceled += instance.OnActivate;
@@ -2282,6 +2805,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @scroll.started -= instance.OnScroll;
             @scroll.performed -= instance.OnScroll;
             @scroll.canceled -= instance.OnScroll;
+            @roll_panel.started -= instance.OnRoll_panel;
+            @roll_panel.performed -= instance.OnRoll_panel;
+            @roll_panel.canceled -= instance.OnRoll_panel;
             @activate.started -= instance.OnActivate;
             @activate.performed -= instance.OnActivate;
             @activate.canceled -= instance.OnActivate;
@@ -2698,6 +3224,344 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="UtilsActions" /> instance referencing this action map.
     /// </summary>
     public UtilsActions @utils => new UtilsActions(this);
+
+    // feedbacks
+    private readonly InputActionMap m_feedbacks;
+    private List<IFeedbacksActions> m_FeedbacksActionsCallbackInterfaces = new List<IFeedbacksActions>();
+    private readonly InputAction m_feedbacks_mouse_L;
+    private readonly InputAction m_feedbacks_mouse_R;
+    private readonly InputAction m_feedbacks_mouse_C;
+    private readonly InputAction m_feedbacks_mouse_scroll;
+    private readonly InputAction m_feedbacks_mouse_move;
+    private readonly InputAction m_feedbacks_pad_L;
+    private readonly InputAction m_feedbacks_pad_R;
+    private readonly InputAction m_feedbacks_pad_D;
+    private readonly InputAction m_feedbacks_pad_U;
+    private readonly InputAction m_feedbacks_joy_L;
+    private readonly InputAction m_feedbacks_joy_LC;
+    private readonly InputAction m_feedbacks_joy_R;
+    private readonly InputAction m_feedbacks_joy_RC;
+    private readonly InputAction m_feedbacks_dpad_L;
+    private readonly InputAction m_feedbacks_dpad_R;
+    private readonly InputAction m_feedbacks_dpad_D;
+    private readonly InputAction m_feedbacks_dpad_U;
+    private readonly InputAction m_feedbacks_start;
+    private readonly InputAction m_feedbacks_select;
+    private readonly InputAction m_feedbacks_RT;
+    private readonly InputAction m_feedbacks_RB;
+    private readonly InputAction m_feedbacks_LT;
+    private readonly InputAction m_feedbacks_LB;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "feedbacks".
+    /// </summary>
+    public struct FeedbacksActions
+    {
+        private @PlayerInputActions m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public FeedbacksActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/mouse_L".
+        /// </summary>
+        public InputAction @mouse_L => m_Wrapper.m_feedbacks_mouse_L;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/mouse_R".
+        /// </summary>
+        public InputAction @mouse_R => m_Wrapper.m_feedbacks_mouse_R;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/mouse_C".
+        /// </summary>
+        public InputAction @mouse_C => m_Wrapper.m_feedbacks_mouse_C;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/mouse_scroll".
+        /// </summary>
+        public InputAction @mouse_scroll => m_Wrapper.m_feedbacks_mouse_scroll;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/mouse_move".
+        /// </summary>
+        public InputAction @mouse_move => m_Wrapper.m_feedbacks_mouse_move;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/pad_L".
+        /// </summary>
+        public InputAction @pad_L => m_Wrapper.m_feedbacks_pad_L;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/pad_R".
+        /// </summary>
+        public InputAction @pad_R => m_Wrapper.m_feedbacks_pad_R;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/pad_D".
+        /// </summary>
+        public InputAction @pad_D => m_Wrapper.m_feedbacks_pad_D;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/pad_U".
+        /// </summary>
+        public InputAction @pad_U => m_Wrapper.m_feedbacks_pad_U;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/joy_L".
+        /// </summary>
+        public InputAction @joy_L => m_Wrapper.m_feedbacks_joy_L;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/joy_LC".
+        /// </summary>
+        public InputAction @joy_LC => m_Wrapper.m_feedbacks_joy_LC;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/joy_R".
+        /// </summary>
+        public InputAction @joy_R => m_Wrapper.m_feedbacks_joy_R;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/joy_RC".
+        /// </summary>
+        public InputAction @joy_RC => m_Wrapper.m_feedbacks_joy_RC;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/dpad_L".
+        /// </summary>
+        public InputAction @dpad_L => m_Wrapper.m_feedbacks_dpad_L;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/dpad_R".
+        /// </summary>
+        public InputAction @dpad_R => m_Wrapper.m_feedbacks_dpad_R;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/dpad_D".
+        /// </summary>
+        public InputAction @dpad_D => m_Wrapper.m_feedbacks_dpad_D;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/dpad_U".
+        /// </summary>
+        public InputAction @dpad_U => m_Wrapper.m_feedbacks_dpad_U;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/start".
+        /// </summary>
+        public InputAction @start => m_Wrapper.m_feedbacks_start;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/select".
+        /// </summary>
+        public InputAction @select => m_Wrapper.m_feedbacks_select;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/RT".
+        /// </summary>
+        public InputAction @RT => m_Wrapper.m_feedbacks_RT;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/RB".
+        /// </summary>
+        public InputAction @RB => m_Wrapper.m_feedbacks_RB;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/LT".
+        /// </summary>
+        public InputAction @LT => m_Wrapper.m_feedbacks_LT;
+        /// <summary>
+        /// Provides access to the underlying input action "feedbacks/LB".
+        /// </summary>
+        public InputAction @LB => m_Wrapper.m_feedbacks_LB;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_feedbacks; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="FeedbacksActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(FeedbacksActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="FeedbacksActions" />
+        public void AddCallbacks(IFeedbacksActions instance)
+        {
+            if (instance == null || m_Wrapper.m_FeedbacksActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_FeedbacksActionsCallbackInterfaces.Add(instance);
+            @mouse_L.started += instance.OnMouse_L;
+            @mouse_L.performed += instance.OnMouse_L;
+            @mouse_L.canceled += instance.OnMouse_L;
+            @mouse_R.started += instance.OnMouse_R;
+            @mouse_R.performed += instance.OnMouse_R;
+            @mouse_R.canceled += instance.OnMouse_R;
+            @mouse_C.started += instance.OnMouse_C;
+            @mouse_C.performed += instance.OnMouse_C;
+            @mouse_C.canceled += instance.OnMouse_C;
+            @mouse_scroll.started += instance.OnMouse_scroll;
+            @mouse_scroll.performed += instance.OnMouse_scroll;
+            @mouse_scroll.canceled += instance.OnMouse_scroll;
+            @mouse_move.started += instance.OnMouse_move;
+            @mouse_move.performed += instance.OnMouse_move;
+            @mouse_move.canceled += instance.OnMouse_move;
+            @pad_L.started += instance.OnPad_L;
+            @pad_L.performed += instance.OnPad_L;
+            @pad_L.canceled += instance.OnPad_L;
+            @pad_R.started += instance.OnPad_R;
+            @pad_R.performed += instance.OnPad_R;
+            @pad_R.canceled += instance.OnPad_R;
+            @pad_D.started += instance.OnPad_D;
+            @pad_D.performed += instance.OnPad_D;
+            @pad_D.canceled += instance.OnPad_D;
+            @pad_U.started += instance.OnPad_U;
+            @pad_U.performed += instance.OnPad_U;
+            @pad_U.canceled += instance.OnPad_U;
+            @joy_L.started += instance.OnJoy_L;
+            @joy_L.performed += instance.OnJoy_L;
+            @joy_L.canceled += instance.OnJoy_L;
+            @joy_LC.started += instance.OnJoy_LC;
+            @joy_LC.performed += instance.OnJoy_LC;
+            @joy_LC.canceled += instance.OnJoy_LC;
+            @joy_R.started += instance.OnJoy_R;
+            @joy_R.performed += instance.OnJoy_R;
+            @joy_R.canceled += instance.OnJoy_R;
+            @joy_RC.started += instance.OnJoy_RC;
+            @joy_RC.performed += instance.OnJoy_RC;
+            @joy_RC.canceled += instance.OnJoy_RC;
+            @dpad_L.started += instance.OnDpad_L;
+            @dpad_L.performed += instance.OnDpad_L;
+            @dpad_L.canceled += instance.OnDpad_L;
+            @dpad_R.started += instance.OnDpad_R;
+            @dpad_R.performed += instance.OnDpad_R;
+            @dpad_R.canceled += instance.OnDpad_R;
+            @dpad_D.started += instance.OnDpad_D;
+            @dpad_D.performed += instance.OnDpad_D;
+            @dpad_D.canceled += instance.OnDpad_D;
+            @dpad_U.started += instance.OnDpad_U;
+            @dpad_U.performed += instance.OnDpad_U;
+            @dpad_U.canceled += instance.OnDpad_U;
+            @start.started += instance.OnStart;
+            @start.performed += instance.OnStart;
+            @start.canceled += instance.OnStart;
+            @select.started += instance.OnSelect;
+            @select.performed += instance.OnSelect;
+            @select.canceled += instance.OnSelect;
+            @RT.started += instance.OnRT;
+            @RT.performed += instance.OnRT;
+            @RT.canceled += instance.OnRT;
+            @RB.started += instance.OnRB;
+            @RB.performed += instance.OnRB;
+            @RB.canceled += instance.OnRB;
+            @LT.started += instance.OnLT;
+            @LT.performed += instance.OnLT;
+            @LT.canceled += instance.OnLT;
+            @LB.started += instance.OnLB;
+            @LB.performed += instance.OnLB;
+            @LB.canceled += instance.OnLB;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="FeedbacksActions" />
+        private void UnregisterCallbacks(IFeedbacksActions instance)
+        {
+            @mouse_L.started -= instance.OnMouse_L;
+            @mouse_L.performed -= instance.OnMouse_L;
+            @mouse_L.canceled -= instance.OnMouse_L;
+            @mouse_R.started -= instance.OnMouse_R;
+            @mouse_R.performed -= instance.OnMouse_R;
+            @mouse_R.canceled -= instance.OnMouse_R;
+            @mouse_C.started -= instance.OnMouse_C;
+            @mouse_C.performed -= instance.OnMouse_C;
+            @mouse_C.canceled -= instance.OnMouse_C;
+            @mouse_scroll.started -= instance.OnMouse_scroll;
+            @mouse_scroll.performed -= instance.OnMouse_scroll;
+            @mouse_scroll.canceled -= instance.OnMouse_scroll;
+            @mouse_move.started -= instance.OnMouse_move;
+            @mouse_move.performed -= instance.OnMouse_move;
+            @mouse_move.canceled -= instance.OnMouse_move;
+            @pad_L.started -= instance.OnPad_L;
+            @pad_L.performed -= instance.OnPad_L;
+            @pad_L.canceled -= instance.OnPad_L;
+            @pad_R.started -= instance.OnPad_R;
+            @pad_R.performed -= instance.OnPad_R;
+            @pad_R.canceled -= instance.OnPad_R;
+            @pad_D.started -= instance.OnPad_D;
+            @pad_D.performed -= instance.OnPad_D;
+            @pad_D.canceled -= instance.OnPad_D;
+            @pad_U.started -= instance.OnPad_U;
+            @pad_U.performed -= instance.OnPad_U;
+            @pad_U.canceled -= instance.OnPad_U;
+            @joy_L.started -= instance.OnJoy_L;
+            @joy_L.performed -= instance.OnJoy_L;
+            @joy_L.canceled -= instance.OnJoy_L;
+            @joy_LC.started -= instance.OnJoy_LC;
+            @joy_LC.performed -= instance.OnJoy_LC;
+            @joy_LC.canceled -= instance.OnJoy_LC;
+            @joy_R.started -= instance.OnJoy_R;
+            @joy_R.performed -= instance.OnJoy_R;
+            @joy_R.canceled -= instance.OnJoy_R;
+            @joy_RC.started -= instance.OnJoy_RC;
+            @joy_RC.performed -= instance.OnJoy_RC;
+            @joy_RC.canceled -= instance.OnJoy_RC;
+            @dpad_L.started -= instance.OnDpad_L;
+            @dpad_L.performed -= instance.OnDpad_L;
+            @dpad_L.canceled -= instance.OnDpad_L;
+            @dpad_R.started -= instance.OnDpad_R;
+            @dpad_R.performed -= instance.OnDpad_R;
+            @dpad_R.canceled -= instance.OnDpad_R;
+            @dpad_D.started -= instance.OnDpad_D;
+            @dpad_D.performed -= instance.OnDpad_D;
+            @dpad_D.canceled -= instance.OnDpad_D;
+            @dpad_U.started -= instance.OnDpad_U;
+            @dpad_U.performed -= instance.OnDpad_U;
+            @dpad_U.canceled -= instance.OnDpad_U;
+            @start.started -= instance.OnStart;
+            @start.performed -= instance.OnStart;
+            @start.canceled -= instance.OnStart;
+            @select.started -= instance.OnSelect;
+            @select.performed -= instance.OnSelect;
+            @select.canceled -= instance.OnSelect;
+            @RT.started -= instance.OnRT;
+            @RT.performed -= instance.OnRT;
+            @RT.canceled -= instance.OnRT;
+            @RB.started -= instance.OnRB;
+            @RB.performed -= instance.OnRB;
+            @RB.canceled -= instance.OnRB;
+            @LT.started -= instance.OnLT;
+            @LT.performed -= instance.OnLT;
+            @LT.canceled -= instance.OnLT;
+            @LB.started -= instance.OnLB;
+            @LB.performed -= instance.OnLB;
+            @LB.canceled -= instance.OnLB;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="FeedbacksActions.UnregisterCallbacks(IFeedbacksActions)" />.
+        /// </summary>
+        /// <seealso cref="FeedbacksActions.UnregisterCallbacks(IFeedbacksActions)" />
+        public void RemoveCallbacks(IFeedbacksActions instance)
+        {
+            if (m_Wrapper.m_FeedbacksActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="FeedbacksActions.AddCallbacks(IFeedbacksActions)" />
+        /// <seealso cref="FeedbacksActions.RemoveCallbacks(IFeedbacksActions)" />
+        /// <seealso cref="FeedbacksActions.UnregisterCallbacks(IFeedbacksActions)" />
+        public void SetCallbacks(IFeedbacksActions instance)
+        {
+            foreach (var item in m_Wrapper.m_FeedbacksActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_FeedbacksActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="FeedbacksActions" /> instance referencing this action map.
+    /// </summary>
+    public FeedbacksActions @feedbacks => new FeedbacksActions(this);
     private int m_xboxSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -2837,6 +3701,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnScroll(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "roll_panel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRoll_panel(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "activate" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
@@ -3029,5 +3900,174 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMove(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "feedbacks" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="FeedbacksActions.AddCallbacks(IFeedbacksActions)" />
+    /// <seealso cref="FeedbacksActions.RemoveCallbacks(IFeedbacksActions)" />
+    public interface IFeedbacksActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "mouse_L" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMouse_L(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "mouse_R" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMouse_R(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "mouse_C" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMouse_C(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "mouse_scroll" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMouse_scroll(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "mouse_move" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMouse_move(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "pad_L" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPad_L(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "pad_R" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPad_R(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "pad_D" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPad_D(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "pad_U" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPad_U(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "joy_L" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnJoy_L(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "joy_LC" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnJoy_LC(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "joy_R" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnJoy_R(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "joy_RC" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnJoy_RC(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "dpad_L" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDpad_L(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "dpad_R" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDpad_R(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "dpad_D" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDpad_D(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "dpad_U" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDpad_U(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "start" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnStart(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "select" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSelect(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RT" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRT(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RB" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRB(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "LT" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLT(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "LB" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLB(InputAction.CallbackContext context);
     }
 }

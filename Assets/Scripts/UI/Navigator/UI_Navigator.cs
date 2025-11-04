@@ -307,13 +307,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
     {
         if (CurrentSlot == null) { return; }
         UI_Item slot = CurrentSlot as UI_Item;
-        if (slot == null)
-        {
-            // on a pas d'ui_item, alors on active tout simplement le i_ui_slot
-            if (log_inputs) { Debug.Log("(UI_Navigator - OnDrop) current slot is not a UI_Item, cannot drop. activating instead."); }
-            await activate(CurrentSlot);
-            return;
-        }
+        if (slot == null) { return; }
 
         // on retient la position du slot
         Vector2 position = GetPosition(slot);
@@ -349,6 +343,7 @@ public interface Navigator
     // NAVIGATION
     void NavigateToClosest(Vector2 position);
     void Navigate(Vector2 direction);
+    // void Scroll(float scroll_value);
 
     Vector2 BasePosition { get; }
 }

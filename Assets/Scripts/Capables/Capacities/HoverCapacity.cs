@@ -48,7 +48,7 @@ public class HoverCapacity : Capacity
         OnHover?.Invoke(capable);
 
         // then we only play animation if the capable is the one controlled
-        if (capable != Controller.Instance.Capable) { return; }
+        if (Controller.Instance == null || capable != Controller.Instance.Capable) { return; }
         
         // we play the animation
         this.capable.anim_player.Play(played_animation);
@@ -61,7 +61,7 @@ public class HoverCapacity : Capacity
         hoverers.Remove(capable);
 
         // then we only stop playing animation if the capable is the one controlled
-        if (capable == Controller.Instance.Capable) { this.capable.anim_player.StopPlaying(played_animation); } // we stop the animation
+        if (Controller.Instance != null && capable == Controller.Instance.Capable) { this.capable.anim_player.StopPlaying(played_animation); } // we stop the animation
 
         OnHoverLost?.Invoke(capable);
         if (debug) { Debug.Log("(HoverCapacity) " + capable.name + " stop hovering " + this.capable.name + $", stopped playing {played_animation}"); }

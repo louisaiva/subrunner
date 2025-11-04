@@ -11,7 +11,7 @@ public class InputFeedback : MonoBehaviour
 {
     [Header("Input")]
     [SerializeField] private InputActionReference input;
-    [SerializeField] protected InputManager input_manager;
+    protected InputManager input_manager;
     protected InputAction action;
     protected System.Action<InputAction.CallbackContext> input_callback;
     protected System.Action<InputAction.CallbackContext> reset_callback;
@@ -21,7 +21,14 @@ public class InputFeedback : MonoBehaviour
 
     [Header("Image")]
     [SerializeField] protected Image image;
-    [SerializeField] protected SpriteBank bank;
+    [SerializeField] protected SpriteBank bank { get
+        {
+            if (_bank != null) { return _bank; }
+            
+            _bank = AnimBank.Instance.GetComponent<SpriteBank>();
+            return _bank;
+        } }
+    private SpriteBank _bank;
 
     [Header("Colors & Label")]
     [SerializeField] protected Color base_color = new Color(1f, 1f, 1f, 1f);
@@ -42,10 +49,8 @@ public class InputFeedback : MonoBehaviour
             if (input == null) { Debug.LogWarning("(InputFeedback : " + name + " ) input is not set ! you should assign it in the inspector"); }
         }
 
-        // we get the input manager
-        input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
-
-        // we get the input
+        // we get the input manager & input
+        input_manager = InputManager.Instance;
         action = input_manager.GetAction(input);
 
         defineCallbacks();
@@ -68,11 +73,6 @@ public class InputFeedback : MonoBehaviour
     protected virtual void OnEnable()
     {
         if (action == null) { return; }
-        if (bank == null)
-        {
-            bank = GameObject.Find("/utils/bank").GetComponent<SpriteBank>();
-            if (log) { Debug.Log("(IF) SpriteBank loaded : SpriteBank == " + bank); }
-        }
 
         // we add the listeners
         if (use_press_and_release)

@@ -407,7 +407,7 @@ public class UI_Manager : Singleton<UI_Manager>
         bg.transform.SetSiblingIndex(pools.IndexOf(next_pool));
 
         // we show the next pool
-        yield return next_pool.ShowCoroutine(was_stacked : true);
+        yield return next_pool.ShowCoroutine(was_stacked: true);
 
         // we invoke the OnPoolSwitched event
         OnPoolSwitched?.Invoke(next_pool.Reference);
@@ -420,6 +420,10 @@ public class UI_Manager : Singleton<UI_Manager>
 
 
     // GETTERS
+    public UI_Pool GetCurrentPool()
+    {
+        return current_pool;
+    }
     public UI_Pool GetPool(string reference)
     {
         // we try to find the pool
@@ -431,6 +435,19 @@ public class UI_Manager : Singleton<UI_Manager>
         if (log_extended) { Debug.LogWarning("(UI_Manager) tried to get a non-existing pool : " + reference); }
 
         // if we don't find it, we return null
+        return null;
+    }
+    public T GetPool<T>() where T : UI_Pool
+    {
+        // we try to find the pool
+        for (int i = 0; i < pools.Count; i++)
+        {
+            UI_Pool pool = pools[i];
+            if (pool is T typed_pool) { return typed_pool; }
+        }
+
+        if (log_extended) { Debug.LogWarning($"(UI_Manager) did not find any matching pool of type {typeof(T).Name}"); }
+
         return null;
     }
     private List<UI_Pool> get_stack_from_string(string stack_string)

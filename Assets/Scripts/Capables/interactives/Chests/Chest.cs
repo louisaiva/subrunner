@@ -104,8 +104,9 @@ public class Chest : Capable, Interactable, Openable
     protected virtual Vector2 calculate_best_kf_position()
     {
         // we calculate the position we need to give the kf's canvas
+        return new Vector2(150.0f, 150.0f);
 
-        // 1 - we get the inventory's canvas
+        /* // 1 - we get the inventory's canvas
         Transform ui_canvas = Inventory.ui.transform.parent;
         Vector2 kf_position = ui_canvas.transform.localPosition;
 
@@ -116,7 +117,7 @@ public class Chest : Capable, Interactable, Openable
 
         // 3 - center vertically the KF + little offset on the right
         kf_position += new Vector2(0.25f, 0.25f);
-        return kf_position;
+        return kf_position; */
     }
     private int calculate_columns_count(GridLayoutGroup grid)
     {

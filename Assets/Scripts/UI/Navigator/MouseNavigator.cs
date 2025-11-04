@@ -31,6 +31,8 @@ public class MouseNavigator : MonoBehaviour, Navigator
         if (manager.IsAllSlotsOutOfScreen())
         {
             if (log) { Debug.LogWarning("(UI_MouseNavigator) all slots are out of screen"); }
+
+            // we want to roll panel to show a panel with slots ?
         }
 
         // si on a des slots on navigue tout simplement

@@ -18,6 +18,7 @@ public class InputManager : Singleton<InputManager>
     [SerializeField] public float JOYSTICK_MAX_THRESHOLD = 0.95f;
     [SerializeField] public float BUTTON_MIN_THRESHOLD = 0.2f;
     [SerializeField] public float BUTTON_MAX_THRESHOLD = 0.8f;
+    // [SerializeField] public float MOUSE_DELTA_MIN_THRESHOLD = 5f;
 
     [Header("Inputing endlessly")]
     [SerializeField] public float BUTTON_ENDLESSLY_SHORT_THRESHOLD = 0.3f; // time threshold input need to be maintain before inputing endlessly
@@ -47,6 +48,7 @@ public class InputManager : Singleton<InputManager>
         inputs.UI.Enable();
         inputs.any.Enable();
         inputs.menus.Enable();
+        inputs.feedbacks.Enable();
 
         // on ajoute les listeners
         inputs.any.keyboard.performed += ctx => setInputType("keyboard");
@@ -116,6 +118,7 @@ public class InputManager : Singleton<InputManager>
         else if (inputMap == "UI") { action = inputs.UI.Get()[action_name]; }
         else if (inputMap == "any") { action = inputs.any.Get()[action_name]; }
         else if (inputMap == "menus") { action = inputs.menus.Get()[action_name]; }
+        else if (inputMap == "feedbacks") { action = inputs.feedbacks.Get()[action_name]; }
         // else if (inputMap == "enhanced_perso") { action = inputs.enhanced_perso.Get()[action_name]; }
 
         // on log

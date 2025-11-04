@@ -33,13 +33,6 @@ public class JoystickEndlessFeedback : JoystickFeedback
             return;
         }
 
-        // we get the bank
-        if (bank == null)
-        {
-            bank = GameObject.Find("/utils/bank").GetComponent<SpriteBank>();
-            if (log) { Debug.Log("(JEF) SpriteBank loaded : SpriteBank == " + bank); }
-        }
-
         // we add listeners
         endless_input.OnStarted += input_callback;
         endless_input.OnHold += endless_callback;

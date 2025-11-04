@@ -12,7 +12,16 @@
 		  :LOGBOOK:
 		  CLOCK: [2025-10-31 Fri 00:09:22]
 		  :END:
-		-
+		- DOING re-set JF for ui:
+		  :LOGBOOK:
+		  CLOCK: [2025-11-04 Tue 20:03:22]
+		  :END:
+			- DONE exploit_wheel
+			- DONE gamepad controls x2 (L & R)
+			  :LOGBOOK:
+			  CLOCK: [2025-11-04 Tue 20:03:15]--[2025-11-04 Tue 20:03:16] =>  00:00:01
+			  :END:
+			- DONE hack instructions ??
 	- ## Current Slot
 		- DONE on garde pas un int index en current slot index mais on garde direct le current slot
 		  -> evite des galeres de remettre à jour etc
@@ -32,4 +41,8 @@
 		-
 	- ### Moving Items
 		- géré différemment en fonction du navigator choisi
--
+	-
+	- ### KeyFeedback d'interaction
+		- TODO rework en faisant un seul [[KeyFeedback]] d'interaction et les [[UI_Slottable]] ont une méthode qui détermine la position adéquate en fonction du [[UI_Slot]] actuel du navigator
+		- TODO les [[Interactable]] ont d'ailleurs aussi cette méthode **GetInteractKFPosition()** cad que le KF est vraiment single et déconnecté des capables et des ui_chest, ça se fait que au niveau du ui_manager ?
+		- TODO basic chests placent mal leur KF interact

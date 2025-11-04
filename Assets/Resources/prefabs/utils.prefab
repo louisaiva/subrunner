@@ -195,7 +195,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 586968992647353419}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
   m_Name: 
@@ -492,7 +492,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsQuitting: 0
-  prototype: ui_oven !! & pastas
+  prototype: spider + bug fixes
   log: 0
   log_stats: 0
 --- !u!114 &1409178628841570550
@@ -6181,6 +6181,26 @@ MonoBehaviour:
   - right
   - up
   - down
+  mouse_feedback_icons:
+  - {fileID: -1928680401, guid: 4e6a625e2754875439fb2f07411cf8cd, type: 3}
+  - {fileID: -925159608, guid: 4e6a625e2754875439fb2f07411cf8cd, type: 3}
+  - {fileID: -213028818, guid: 4e6a625e2754875439fb2f07411cf8cd, type: 3}
+  - {fileID: 718726878, guid: 4e6a625e2754875439fb2f07411cf8cd, type: 3}
+  - {fileID: -1039303738, guid: 4e6a625e2754875439fb2f07411cf8cd, type: 3}
+  - {fileID: 1790710712, guid: 4e6a625e2754875439fb2f07411cf8cd, type: 3}
+  - {fileID: 752282824, guid: 4e6a625e2754875439fb2f07411cf8cd, type: 3}
+  - {fileID: 968214059, guid: 4e6a625e2754875439fb2f07411cf8cd, type: 3}
+  - {fileID: -103578361, guid: 4e6a625e2754875439fb2f07411cf8cd, type: 3}
+  mouse_feedback_keys:
+  - mouse_move
+  - mouse_move_L
+  - mouse_move_R
+  - mouse_L
+  - mouse_R
+  - mouse_C
+  - mouse_scroll
+  - mouse_scroll_U
+  - mouse_scroll_D
   log: 0
 --- !u!114 &636149868414555374
 MonoBehaviour:

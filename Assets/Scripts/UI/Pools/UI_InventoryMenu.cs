@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UI_InventoryMenu : UI_Pool/* , Slottable */
+public class UI_InventoryMenu : UI_Pool/* , Slottable */, Panelable
 {
     private List<GameObject> saved_slots = new List<GameObject>();
     [Header("Inventory Menu Components")]
@@ -11,6 +11,15 @@ public class UI_InventoryMenu : UI_Pool/* , Slottable */
     public UI_Inventory UI_Inventory { get { return ui_inventory; } }
     [SerializeField] private UI_Inventory ui_laptop;
     [SerializeField] private Transform no_inventory_panel;
+    private UI_PanelManager _panel_manager;
+    public UI_PanelManager PanelManager { get
+            {
+                if (_panel_manager == null)
+                {
+                    _panel_manager = GetComponent<UI_PanelManager>();
+                }
+                return _panel_manager;
+        } }
 
 
     [Header("Base Item Pool Transitions")]
@@ -130,7 +139,7 @@ public class UI_InventoryMenu : UI_Pool/* , Slottable */
         if (log) { Debug.Log(log_msg); }
 
         // on refresh les indicators
-        GetComponent<UI_PanelManager>().RefreshIndicators(duration);
+        PanelManager.RefreshIndicators(duration);
     }
     private List<GameObject> get_all_uis_with_item_pools()
     {
@@ -257,4 +266,9 @@ public class UI_InventoryMenu : UI_Pool/* , Slottable */
         if (ui_item.Item != item) { return; }
         update_activate_if(ui_item);
     }
+}
+
+public interface Panelable
+{
+    UI_PanelManager PanelManager { get;  }
 }

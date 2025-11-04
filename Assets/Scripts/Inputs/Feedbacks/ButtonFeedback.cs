@@ -1,8 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine.InputSystem;
-using UnityEngine.UI;
-using TMPro;
 /// <summary>
 /// This class is used to give feedback to the player when they are pressing a button
 /// </summary>
@@ -18,12 +14,6 @@ public class ButtonFeedback : InputFeedback
     protected override void Start()
     {
         base.Start();
-        
-        if (bank == null)
-        {
-            bank = GameObject.Find("/utils/bank").GetComponent<SpriteBank>();
-            if (log) { Debug.Log("(IF) SpriteBank loaded : SpriteBank == " + bank); }
-        }
 
         // we get the sprite from the bank
         Sprite sprite = bank.GetInputFeedbackSprite(button_reference, !always_full);

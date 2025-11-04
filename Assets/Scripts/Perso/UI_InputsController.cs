@@ -6,14 +6,12 @@ using static PlayerInputActions;
 public class UI_InputsController : InputController
 {
     [Header("UI Inputs Parameters")]
-    // [SerializeField] private UI_XboxNavigator navigator;
     [SerializeField] private UI_Navigator navigator;
     [SerializeField] private UIActions ui_inputs;
     [SerializeField] private bool navigate_in_game = false; // if true we navigate in game, else in UI
 
-    [Header("Actions")]
-    // private InputAction ui_drop_ingameAction;
-    private PersoActions perso_inputs;
+    // [Header("Actions")]
+    // private PersoActions perso_inputs;
     private event Action<InputAction.CallbackContext> ui_dropCallback;
     private event Action<InputAction.CallbackContext> ui_navigateCallback;
     private event Action<InputAction.CallbackContext> ui_activateCallback;
@@ -23,7 +21,7 @@ public class UI_InputsController : InputController
     protected void Start()
     {
         // on récupère les inputs
-        perso_inputs = InputManager.Instance.inputs.perso;
+        // perso_inputs = InputManager.Instance.inputs.perso;
         initInputs();
 
         // on récupère le navigator
@@ -64,6 +62,7 @@ public class UI_InputsController : InputController
         // on met en place certains callbacks qu'on veut tout le temps actifs
         ui_inputs.navigate_exploits.performed += ctx => handle_exploit_selection_input(ctx.ReadValue<Vector2>());
         ui_inputs.cancel.performed += ctx => { handle_cancel_pool_input(ctx.ReadValue<float>()); };
+        ui_inputs.roll_panel.performed += ctx => { handle_roll_panel_input(ctx.ReadValue<float>()); };
         // notamment les inputs de menus
         MenusActions ui_menus = InputManager.Instance.inputs.menus;
         ui_menus.inventory.performed += ctx => { UI_Manager.Instance.TogglePool("inventory"); };
@@ -90,7 +89,7 @@ public class UI_InputsController : InputController
 
         // ui_inputs
         ui_inputs.mouse_navigation.performed += mouse_navigationCallback;
-        
+
         navigate_in_game = ingame_navigation; // on met à jour la variable
     }
     public void DisableInputs()
@@ -206,4 +205,16 @@ public class UI_InputsController : InputController
         UI_Manager.Instance.CancelCurrentPool();
     }
 
+    // ROLL PANEL INPUT
+    private void handle_roll_panel_input(float input)
+    {
+        if (input == 0f) { return; } // no input
+
+        // on check si le current pool est un panelable (si non, ça sert a r de scroll)
+        UI_Pool current_pool = UI_Manager.Instance.GetCurrentPool();
+        if (current_pool == null || current_pool is not Panelable panelable) { return; }
+
+        Debug.Log($"(UI_InputsController) rolling panel with input {input}");
+        panelable.PanelManager.RollPanel((int)input);
+    }
 }

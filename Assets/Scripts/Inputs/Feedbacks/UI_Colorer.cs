@@ -28,8 +28,7 @@ public class UI_Colorer : MonoBehaviour
     public void ApplyColor(Color? color = null)
     {
         if (graphic == null) { return; }
-        if (is_colored) { return; }
-        base_color = graphic.color;
+        if (!is_colored) { base_color = graphic.color; }
         graphic.color = color == null ? this.color : color.Value;
         is_colored = true;
     }

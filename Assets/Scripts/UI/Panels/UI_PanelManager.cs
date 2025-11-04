@@ -27,7 +27,7 @@ public class UI_PanelManager : MonoBehaviour
     // AWAKE
     private void Start()
     {
-        UI_Navigator.Instance.OnSlotOutOfScreen += HandleSlotOutOfScreen;
+        UI_Navigator.Instance.OnSlotOutOfScreen += TweenToSlot;
 
         if (panels == null || panels.Count == 0)
         {
@@ -50,9 +50,8 @@ public class UI_PanelManager : MonoBehaviour
         TweenToPanel(get_panel(current_panel));
     }
 
-    // HANDLER
-    private UI_Panel destination_panel = null;
-    private async void HandleSlotOutOfScreen(UI_Slot slot)
+    // ROLLING & TWEENING HIGH LEVEL
+    private void TweenToSlot(UI_Slot slot)
     {
         // Handle the case when a slot is out of screen
         string log_msg = "";
@@ -60,24 +59,37 @@ public class UI_PanelManager : MonoBehaviour
         log_msg += $"\n\t current panel is {current_panel}";
         log_msg += $"\n\t is an ui_item ? {slot is UI_Item}";
 
-        // we check if it's a UI_Item
+        // we check if it's a UI_Item & if it belongs to one of our panels
         if (slot is not UI_Item uiItem || uiItem.ItemPool == null) { if (log) { Debug.Log(log_msg); } return; }
         UI_Panel ui_panel = uiItem.ItemPool.GetComponentInParent<UI_Panel>();
         log_msg += $"\n\t has an ui_panel ? {ui_panel != null}";
         if (ui_panel == null || !panels.Contains(ui_panel)) { if (log) { Debug.Log(log_msg); } return; }
 
-        // we check if we are already switching to this panel (then no need to switch to it)
-        if (destination_panel != null && destination_panel == ui_panel) { return; }
-
         // we switch to the panel
-        await TweenToPanel(ui_panel);
-
-        // if we still have a sequence running it means that another tweentopanel was called
+        TweenToPanel(ui_panel);
+    }
+    public void RollPanel(int direction = 1)
+    {
         if (HasRunningSequence) { return; }
 
-        current_panel = ui_panel.name;
-        destination_panel = null;
-        if (log) { Debug.Log($"(UI_PanelManager) switched to panel: {ui_panel.name} with success !!!"); }
+        // direction > 0 means we scroll up
+        // direction < 0 we scroll down
+
+        // get current panel
+        UI_Panel currentPanel = get_panel(current_panel);
+        if (currentPanel == null) { Debug.LogError($"(UI_PanelManager) Current panel not found: {current_panel}"); return; }
+
+        // get next panel
+        UI_Panel targetPanel = null;
+        int next_index = panels.IndexOf(currentPanel) - direction;
+        next_index = Mathf.Clamp(next_index, 0, panels.Count - 1);
+        targetPanel = panels[next_index];
+        if (targetPanel == currentPanel) { return; } // we are already on the target panel
+
+        if (log) { Debug.Log($"(UI_PanelManager) Rolling : {currentPanel.name} --> {targetPanel.name}"); }
+
+        // tween to it
+        TweenToPanel(targetPanel);
     }
 
     // REFRESH
@@ -123,6 +135,9 @@ public class UI_PanelManager : MonoBehaviour
             TweenPanelToPositionIndex(i, targetIndex, duration);
         }
         await TweenPanelToPositionIndex(0, targetIndex, duration);
+        if (HasRunningSequence) { return; } // if we still have a running sequence it means that we are still tweening so another TweenToPanel() was called during this one
+        current_panel = targetPanel.name;
+        if (log) { Debug.Log($"(UI_PanelManager) tweened to panel: {targetPanel.name} with success !!!"); }
     }
     private async Awaitable TweenPanelToPositionIndex(int panel_index, int destination_index, float duration = -99f)
     {
@@ -154,12 +169,15 @@ public class UI_PanelManager : MonoBehaviour
                onValueChange: ctx => panel.anchorMax = new Vector2(ctx, panel.anchorMax.y)));
 
         while (sequences[panel_index].Value.isAlive) { await System.Threading.Tasks.Task.Yield(); }
-
     }
 
     // LOW GETTERS
     private UI_Panel get_panel(string panelName)
     {
-        return panels.Find(p => p.name == panelName);
+        for (int i = 0; i < panels.Count; i++)
+        {
+            if (panels[i].name == panelName) { return panels[i]; }
+        }
+        return null;
     }
 }

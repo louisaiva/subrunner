@@ -134,6 +134,20 @@ public class SpriteBank : MonoBehaviour
     }
 
 
+
+    [Header("Mouse Feedback Icons")]
+    [SerializeField] private List<Sprite> mouse_feedback_icons = new List<Sprite>();
+    [SerializeField] private List<string> mouse_feedback_keys = new List<string>();
+
+    // GET MOUSE FEEDBACK ICON
+    public Sprite GetMouseFeedbackIcon(string mouse_reference)
+    {
+        int index = mouse_feedback_keys.IndexOf(mouse_reference);
+        if (index == -1 || index >= mouse_feedback_icons.Count) { return null; }
+        return mouse_feedback_icons[index];
+    }
+
+
     [Header("Logs")]
     [SerializeField] private bool log = false;
 }
