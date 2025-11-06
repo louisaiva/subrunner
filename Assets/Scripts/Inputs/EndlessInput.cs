@@ -91,6 +91,8 @@ public class EndlessInput<T> where T : struct
         holding = true;
         while (holding)
         {
+            if (repeat_time < 0f) { yield return null; continue; } // we don't invoke on endless, we just wait for holding to pass false
+
             OnEndless?.Invoke(context.ReadValue<T>());
             yield return unscaled_time ? new WaitForSecondsRealtime(repeat_time) : wait_repeat;
         }
@@ -99,4 +101,9 @@ public class EndlessInput<T> where T : struct
         OnCanceled(context);
     }
 
+    // GETTERS
+    public bool IsInputDown()
+    {
+        return waiting || holding;
+    }
 }

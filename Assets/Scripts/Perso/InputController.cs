@@ -7,8 +7,8 @@ public class InputController : MonoBehaviour
 {
 
     [Header("Endless Inputs")]
-    [SerializeField] private List<EndlessInput<float>> endless_floats = new List<EndlessInput<float>>();
-    [SerializeField] private List<EndlessInput<Vector2>> endless_vectors = new List<EndlessInput<Vector2>>();
+    [SerializeField] protected List<EndlessInput<float>> endless_floats = new List<EndlessInput<float>>();
+    [SerializeField] protected List<EndlessInput<Vector2>> endless_vectors = new List<EndlessInput<Vector2>>();
 
     [Header("Logs")]
     public bool log_endless_inputs = false;

@@ -308,7 +308,7 @@ public class Capable : MonoBehaviour, Debuggable
 
 
     // ITEMS MANAGEMENT
-    public async Awaitable DestroyAllItems()
+    public void DestroyAllItems()
     {
         if (Inventory == null || Inventory.Count == 0) { return; }
 

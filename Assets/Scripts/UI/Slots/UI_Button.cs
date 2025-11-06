@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UI_Button : UI_ImageSlot
+public class UI_Button : UI_ImageSlot, Droppable
 {
 
     [Header("Button Events")]
@@ -17,5 +17,11 @@ public class UI_Button : UI_ImageSlot
         // Call the base class method
         base.OnPointerClick(eventData);
         OnClick?.Invoke(); // trigger the onClick event if it's assigned
+    }
+
+    public void OnPointerDropped(PointerEventData eventData)
+    {
+        // we click
+        OnPointerClick(eventData);
     }
 }

@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UI_Toggle : UI_ImageSlot
+public class UI_Toggle : UI_ImageSlot, Droppable
 {
 
     [Header("Toggle Events")]
@@ -27,5 +27,11 @@ public class UI_Toggle : UI_ImageSlot
         else OnOff?.Invoke();
 
         if (log) { Debug.Log("(UI_Toggle) Toggle clicked - " + (is_on ? "ON" : "OFF")); }
+    }
+
+    public void OnPointerDropped(PointerEventData eventData)
+    {
+        // we click
+        OnPointerClick(eventData);
     }
 }

@@ -16,9 +16,9 @@ public class GamepadNavigator : MonoBehaviour, Navigator
     [Header("Components")]
     public UI_Navigator manager;
 
+
     [Header("Logs")]
     [SerializeField] private bool log = false;
-
 
     // START
     private void Start()
@@ -31,7 +31,7 @@ public class GamepadNavigator : MonoBehaviour, Navigator
     {
         // on navigue vers le plus proche
         if (slottable.StartingSlot == null) { NavigateToClosest(BasePosition); return; }
-        
+
         // on navigue vers le slot souhaité
         if (log) { Debug.Log("(UI_GamepadNavigator) navigating to starting slot : " + slottable.StartingSlot.name); }
         manager.HoverSlot(slottable.StartingSlot);
@@ -42,6 +42,9 @@ public class GamepadNavigator : MonoBehaviour, Navigator
     {
         if (log) { Debug.Log("(UI_Navigator) navigating : " + direction); }
 
+        // on move item potentiellement
+        manager.StartMovingItemIfInputDown();
+        
         // on récupère les manager.Slots
         manager.UpdateSlots();
 
@@ -72,10 +75,12 @@ public class GamepadNavigator : MonoBehaviour, Navigator
 
         // on récupère le slot le plus proche dans cet angle
         UI_Slot closest_slot = manager.GetClosestSlot(current_slot_position, ref slots_in_angle, ref s, direction, angle_multiplicator);
+        if (closest_slot == null) { return; }
+
 
         // on navigue vers le slot si on en a un
-        if (closest_slot == null) { return; }
         manager.HoverSlot(closest_slot);
+
 
         // log
         s += "\n\nclosest : " + closest_slot.name + "\n";
@@ -104,5 +109,5 @@ public class GamepadNavigator : MonoBehaviour, Navigator
         s += "\n\nclosest : " + closest_slot.name + "\n";
         if (log) { Debug.Log(s); }
     }
-    
+
 }

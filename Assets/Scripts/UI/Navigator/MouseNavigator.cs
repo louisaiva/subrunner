@@ -66,6 +66,31 @@ public class MouseNavigator : MonoBehaviour, Navigator
     {
         if (log_hover) { Debug.Log($"(UI_MouseNavigator) navigating with mouse position : {Input.mousePosition}"); }
 
+        // on move item potentiellement
+        manager.StartMovingItemIfInputDown();
+
+        // on récupère le slot raycasted
+        UI_Slot hovered_slot = raycast_mouse_slot();
+
+        // on vérifie si le slot est disabled
+        if (hovered_slot == null || hovered_slot.Disabled)
+        {
+            if (log_hover) { Debug.Log($"(UI_MouseNavigator) hovered slot is null or disabled, unhovering slot."); }
+            manager.UnhoverSlot();
+            return;
+        }
+
+        // on hover le slot
+        manager.HoverSlot(hovered_slot);
+    }
+    public void UnhoverIfNotHovering(UI_Slot slot)
+    {
+        UI_Slot hovered_slot = raycast_mouse_slot();
+        if (hovered_slot == slot) { return; }
+        manager.UnhoverSlot();
+    }
+    private UI_Slot raycast_mouse_slot()
+    {
         // prepare UI_Slot result list
         List<UI_Slot> hovered_slots = new List<UI_Slot>();
         UI_Slot slot;
@@ -93,23 +118,12 @@ public class MouseNavigator : MonoBehaviour, Navigator
         if (log_hover) { Debug.Log(log_results); }
 
         // if we have no slots hovered, we unhover & return
-        if (hovered_slots.Count == 0) {
-            if (log_hover) { Debug.Log($"(UI_MouseNavigator) no ui_slots - unhovering slot"); }
-            manager.UnhoverSlot(); return; }
+        if (hovered_slots.Count == 0) { return null; }
 
         // on récupère le premier résultat
         slot = hovered_slots[0];
         if (log_hover) { Debug.Log($"(UI_MouseNavigator) hovered {hovered_slots.Count} ui_slots ! first is {slot.name}"); }
 
-        // on vérifie si le slot est disabled
-        if (slot.Disabled)
-        {
-            if (log_hover) { Debug.Log($"(UI_MouseNavigator) current slot is disabled, unhovering slot."); }
-            manager.UnhoverSlot();
-            return;
-        }
-
-        // on hover le slot
-        manager.HoverSlot(slot);
+        return slot;
     }
 }

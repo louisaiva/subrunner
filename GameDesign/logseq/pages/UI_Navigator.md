@@ -12,9 +12,9 @@
 		  :LOGBOOK:
 		  CLOCK: [2025-10-31 Fri 00:09:22]
 		  :END:
-		- DOING re-set JF for ui:
+		- DONE re-set JF for ui:
 		  :LOGBOOK:
-		  CLOCK: [2025-11-04 Tue 20:03:22]
+		  CLOCK: [2025-11-04 Tue 20:03:22]--[2025-11-04 Tue 21:01:58] =>  00:58:36
 		  :END:
 			- DONE exploit_wheel
 			- DONE gamepad controls x2 (L & R)
@@ -22,6 +22,10 @@
 			  CLOCK: [2025-11-04 Tue 20:03:15]--[2025-11-04 Tue 20:03:16] =>  00:00:01
 			  :END:
 			- DONE hack instructions ??
+		-
+		- TODO transformer les inputs d'activation en [[EndlessInput]] ou fin en fait plutot des **HoldInput** pcq on a pas besoin du endless, juste du hold. quand on hold ça déclenche [[UI_ItemMover]] .SelectPotentialMovingItem(), ce qui se déclenche aussi si on navigate avant que le Hold arrive (mais qu'on maintient quand même)
+	-
+	-
 	- ## Current Slot
 		- DONE on garde pas un int index en current slot index mais on garde direct le current slot
 		  -> evite des galeres de remettre à jour etc
@@ -36,11 +40,25 @@
 		-
 		- TODO quand on ouvre l'inventaire et qu'on a aucun item sur le panel principal ça ne va pas dans les shortcuts...
 		  -> on doit naviguer direct ?
-		- TODO faire que la molette / mouvement de la souris fasse naviguer les [[UI_Panel]] de l'inventaire
+		  -> comment récupérer le panel vers lequel naviguer ?
+		- DONE faire que la molette / mouvement de la souris fasse naviguer les [[UI_Panel]] de l'inventaire
 	-
 		-
 	- ### Moving Items
-		- géré différemment en fonction du navigator choisi
+		- géré grâce au [[UI_ItemMover]]
+		- permet de bouger des [[UI_Item]] à travers un/plusieurs [[UI_Inventory]]
+		- DONE retracer bug qui remet les ui_module slots en tant que slots dans le **Navigator** après avoir move un item pour la 1e fois
+		  -> peut-etre ça vient du **GetSlots()** de [[UI_Inventory]]
+		  -> et [[UI_InventoryMenu]] .RefreshItemPools() qui active le gameobject de la motherboard alors qu'on a pas de laptop
+		- DONE encore avec la motherboard qui s'affiche pas quand on remet un laptop
+		- DONE bug quand on move un [[UI_Module]] sur la motherboard sur un empty_slot bah ça sauvegarde pas correctement la position dans le [[LaptopInventory]]
+		  :LOGBOOK:
+		  CLOCK: [2025-11-06 Thu 13:31:11]
+		  CLOCK: [2025-11-06 Thu 13:31:15]--[2025-11-06 Thu 14:03:44] =>  00:32:29
+		  :END:
+		-
+	-
+	-
 	-
 	- ### KeyFeedback d'interaction
 		- TODO rework en faisant un seul [[KeyFeedback]] d'interaction et les [[UI_Slottable]] ont une méthode qui détermine la position adéquate en fonction du [[UI_Slot]] actuel du navigator

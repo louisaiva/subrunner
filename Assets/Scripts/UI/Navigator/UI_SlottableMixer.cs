@@ -12,6 +12,7 @@ public class UI_SlottableMixer : UI_Slottable
     [SerializeField] protected List<UI_Slottable> slottables = new List<UI_Slottable>();
     [SerializeField] protected UI_Slottable master_slottable; // for knowing which slottable gives its starting slot
     public int Count => slottables.Count;
+    public List<UI_Slottable> Slottables { get => slottables; }
 
     // ENABLE - DISABLE
     public override void HandleSlotHover(UI_Slot slot)

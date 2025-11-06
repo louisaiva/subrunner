@@ -10,6 +10,8 @@ using UnityEngine.InputSystem;
 
 public class UI_Inventory : UI_Slottable
 {
+    [SerializeField] private bool log_get_slots = false;
+
     [Header("UI_Item Pools")]
     public List<UI_ItemPool> pools = new List<UI_ItemPool>();
 
@@ -182,11 +184,13 @@ public class UI_Inventory : UI_Slottable
     // SLOTTABLE
     public override List<UI_Slot> GetSlots()
     {
-        if (log) { Debug.Log($"(UI_Inventory) {name} getting slots"); }
+        string debug_slots = "";
+
         List<UI_Slot> slots = new List<UI_Slot>();
         Vector2 position = Vector2.negativeInfinity;
         for (int i=0; i< pools.Count; i++)
         {
+            debug_slots += $"-- pool {pools[i].name} -- \n";
             UI_ItemPool pool = pools[i];
             for (int j=0; j< pool.transform.childCount; j++)
             {
@@ -199,6 +203,7 @@ public class UI_Inventory : UI_Slottable
                 if (slot == null) { continue; }
                 if (slot.Disabled) { continue; }
                 slots.Add(slot);
+                debug_slots += $"    --> slot {slot.name} at position {child.position}\n";
 
                 // we update the position to the first slot
                 if (position == Vector2.negativeInfinity)
@@ -210,6 +215,8 @@ public class UI_Inventory : UI_Slottable
 
         // we concatenate the ui_slottable's slots
         slots.AddRange(base.GetSlots());
+
+        if (log_get_slots) { Debug.Log($"(UI_Inventory) {name} getting slots : {slots.Count} slots\n" + debug_slots); }
 
         return slots;
     }

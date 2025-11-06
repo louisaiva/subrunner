@@ -9,11 +9,18 @@ using UnityEngine.UI;
 /// </summary>
 public class UI_ModulePool : UI_ItemPool
 {
+    [SerializeField] private bool log_modules = false;
+
     private MotherboardBuilder mb => GetComponentInParent<MotherboardBuilder>(includeInactive: true);
+    [Header("UI_ModulePool Parameters")]
+    [SerializeField] private bool _has_device = false;
+    public bool HasDevice { get { return _has_device; } }
 
     // ENABLING / DISABLING
-    public void EnableModules()
+    public void EnableModulePool()
     {
+        _has_device = true;
+
         // we enable all the ui_module
         foreach (UI_Item ui_item in ui_items)
         {
@@ -21,8 +28,10 @@ public class UI_ModulePool : UI_ItemPool
             module.Enable();
         }
     }
-    public void DisableModules()
+    public void DisableModulePool()
     {
+        _has_device = false;
+
         // we disable all the ui_module
         foreach (UI_Item ui_item in ui_items)
         {
@@ -115,6 +124,7 @@ public class UI_ModulePool : UI_ItemPool
     public void OnModuleMoved(UI_Module module)
     {
         int new_slot_index = ui_items.IndexOf(module);
+        if (log_modules) { Debug.Log($"(UI_ModulePool) module {module.name} moved to slot {new_slot_index}"); }
         laptop_inventory.HandleUI_ModuleMoved(module.GetItems(), new_slot_index);
     }
 }

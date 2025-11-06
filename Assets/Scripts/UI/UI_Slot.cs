@@ -34,11 +34,13 @@ public class UI_Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     // DISABLE
     public virtual void Enable()
     {
+        if (!Disabled) { return; }
         Disabled = false;
         if (log) { Debug.Log("(UI_Slot) Enabled " + gameObject.name); }
     }
     public virtual void Disable()
     {
+        if (Disabled) { return; }
         if (Hovered) { OnPointerExit(null); } // on veut etre sur qu'on est pas hovered
         Disabled = true;
         if (log) { Debug.Log("(UI_Slot) Disabled " + gameObject.name); }

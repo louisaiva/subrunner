@@ -542,7 +542,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""y"",
+                    ""name"": ""ui_move_item"",
                     ""type"": ""Button"",
                     ""id"": ""d54f75d2-9814-4e30-b26b-b3e8fdee853f"",
                     ""expectedControlType"": """",
@@ -716,7 +716,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";keyboard"",
-                    ""action"": ""y"",
+                    ""action"": ""ui_move_item"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -727,7 +727,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""xbox"",
-                    ""action"": ""y"",
+                    ""action"": ""ui_move_item"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -2235,7 +2235,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_UI_scroll = m_UI.FindAction("scroll", throwIfNotFound: true);
         m_UI_roll_panel = m_UI.FindAction("roll_panel", throwIfNotFound: true);
         m_UI_activate = m_UI.FindAction("activate", throwIfNotFound: true);
-        m_UI_y = m_UI.FindAction("y", throwIfNotFound: true);
+        m_UI_ui_move_item = m_UI.FindAction("ui_move_item", throwIfNotFound: true);
         m_UI_ui_drop_ingame = m_UI.FindAction("ui_drop_ingame", throwIfNotFound: true);
         m_UI_ui_drop = m_UI.FindAction("ui_drop", throwIfNotFound: true);
         m_UI_cancel = m_UI.FindAction("cancel", throwIfNotFound: true);
@@ -2605,7 +2605,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_scroll;
     private readonly InputAction m_UI_roll_panel;
     private readonly InputAction m_UI_activate;
-    private readonly InputAction m_UI_y;
+    private readonly InputAction m_UI_ui_move_item;
     private readonly InputAction m_UI_ui_drop_ingame;
     private readonly InputAction m_UI_ui_drop;
     private readonly InputAction m_UI_cancel;
@@ -2645,9 +2645,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @activate => m_Wrapper.m_UI_activate;
         /// <summary>
-        /// Provides access to the underlying input action "UI/y".
+        /// Provides access to the underlying input action "UI/ui_move_item".
         /// </summary>
-        public InputAction @y => m_Wrapper.m_UI_y;
+        public InputAction @ui_move_item => m_Wrapper.m_UI_ui_move_item;
         /// <summary>
         /// Provides access to the underlying input action "UI/ui_drop_ingame".
         /// </summary>
@@ -2743,9 +2743,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @activate.started += instance.OnActivate;
             @activate.performed += instance.OnActivate;
             @activate.canceled += instance.OnActivate;
-            @y.started += instance.OnY;
-            @y.performed += instance.OnY;
-            @y.canceled += instance.OnY;
+            @ui_move_item.started += instance.OnUi_move_item;
+            @ui_move_item.performed += instance.OnUi_move_item;
+            @ui_move_item.canceled += instance.OnUi_move_item;
             @ui_drop_ingame.started += instance.OnUi_drop_ingame;
             @ui_drop_ingame.performed += instance.OnUi_drop_ingame;
             @ui_drop_ingame.canceled += instance.OnUi_drop_ingame;
@@ -2811,9 +2811,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @activate.started -= instance.OnActivate;
             @activate.performed -= instance.OnActivate;
             @activate.canceled -= instance.OnActivate;
-            @y.started -= instance.OnY;
-            @y.performed -= instance.OnY;
-            @y.canceled -= instance.OnY;
+            @ui_move_item.started -= instance.OnUi_move_item;
+            @ui_move_item.performed -= instance.OnUi_move_item;
+            @ui_move_item.canceled -= instance.OnUi_move_item;
             @ui_drop_ingame.started -= instance.OnUi_drop_ingame;
             @ui_drop_ingame.performed -= instance.OnUi_drop_ingame;
             @ui_drop_ingame.canceled -= instance.OnUi_drop_ingame;
@@ -3716,12 +3716,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnActivate(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "y" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "ui_move_item" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnY(InputAction.CallbackContext context);
+        void OnUi_move_item(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "ui_drop_ingame" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

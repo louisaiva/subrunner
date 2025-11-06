@@ -10,9 +10,19 @@ using UnityEngine;
 /// </summary>
 public class UI_Navigator : Singleton<UI_Navigator>
 {
-    public Navigator navigator;
+    public Navigator Navigator;
     private GamepadNavigator gamepad_navigator;
     private MouseNavigator mouse_navigator;
+    public UI_ItemMover Mover
+    {
+        get
+        {
+            if (_mover != null) { return _mover; }
+            _mover = GetComponent<UI_ItemMover>();
+            return _mover;
+        }
+    }
+    private UI_ItemMover _mover;
 
     [Header("Slottables & Slots")]
     public List<Slottable> Slottables = new List<Slottable>();
@@ -23,18 +33,13 @@ public class UI_Navigator : Singleton<UI_Navigator>
     public event Action<UI_Slot> OnSlotHoverEnter = delegate { }; // delegate that triggers when we navigate to a new slot
     public event Action<UI_Slot> OnSlotOutOfScreen = delegate { }; // delegate that triggers when we navigate to a position that is out of screen
 
-    [Header("Moving Item")]
-    [SerializeField] private UI_Item moving_ui_item = null;
-    public bool IsMovingItem { get { return moving_ui_item != null; } }
-
-
 
     [Header("Logs")]
     [SerializeField] private bool log = false;
     [SerializeField] private bool log_hover = false;
-    // [SerializeField] private bool log_moving_items = false;
     [SerializeField] private bool log_slot_position = false;
     [SerializeField] private bool log_inputs = false;
+    [SerializeField] private bool log_update_slots = false;
 
     private void Start()
     {
@@ -43,7 +48,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
         mouse_navigator = GetComponent<MouseNavigator>();
         handle_input_type_changed(InputManager.Instance.CurrentInputType);
 
-        // register toggling navigator when switching inputs
+        // register toggling Navigator when switching inputs
         InputManager.Instance.OnInputTypeChanged += handle_input_type_changed;
     }
     private void handle_input_type_changed(string input_type)
@@ -52,14 +57,14 @@ public class UI_Navigator : Singleton<UI_Navigator>
         {
             // on navigue vers le slot le plus proche
             if (log) { Debug.Log("(UI_Navigator) switching to gamepad navigation"); }
-            navigator = gamepad_navigator;
-            if (CurrentSlot == null) { navigator.NavigateToClosest(navigator.BasePosition); }
+            Navigator = gamepad_navigator;
+            if (CurrentSlot == null) { Navigator.NavigateToClosest(Navigator.BasePosition); }
             return;
         }
 
-        // on récupère le clavier/souris navigator
+        // on récupère le clavier/souris Navigator
         if (log) { Debug.Log("(UI_Navigator) switching to mouse navigation"); }
-        navigator = mouse_navigator;
+        Navigator = mouse_navigator;
         if (CurrentSlot != null) { UnhoverSlot(); }
     }
 
@@ -78,7 +83,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
         if (log) { Debug.Log("(UI_Navigator) enabled slottable : " + slottable.name); }
 
         // on active le plugin de navigation
-        navigator.ActivateSlottable(slottable);
+        Navigator.ActivateSlottable(slottable);
     }
     public void RemoveSlottable(Slottable slottable)
     {
@@ -119,7 +124,12 @@ public class UI_Navigator : Singleton<UI_Navigator>
         Slots.Clear();
 
         // we check if we have a slottable
-        if (Slottables.Count == 0) { CurrentSlot = null; return; }
+        if (Slottables.Count == 0)
+        {
+            CurrentSlot = null;
+            if (log_update_slots) { Debug.LogWarning("(UI_Navigator) no Slottables to update Slots from"); }
+            return;
+        }
 
         // on récupère les Slots
         for (int i = 0; i < Slottables.Count; i++)
@@ -132,26 +142,26 @@ public class UI_Navigator : Singleton<UI_Navigator>
             Slots.AddRange(slottable_slots);
         }
 
-        if (log) { Debug.Log("(UI_Navigator) updated Slots: " + Slots.Count + " Slots"); }
+        if (log_update_slots) { Debug.Log("(UI_Navigator) updated Slots: " + Slots.Count + " Slots"); }
     }
-    public void HoverSlot(UI_Slot slot)
+    public void HoverSlot(UI_Slot slot, bool prevent_same_slot = true)
     {
         // checks if we can hover the slot
         if (slot == null) { return; }
         if (slot.Disabled) { return; }
-        if (slot == CurrentSlot) { return; }
+        if (slot == CurrentSlot && prevent_same_slot) { return; }
 
         // checks if we already have a slot
         if (CurrentSlot != null) { UnhoverSlot(); }
 
         // check dragging & moving items
-        if (moving_ui_item == null || slot is not UI_Item ui_item)
+        if (!Mover.IsMovingItem || slot is not UI_Item ui_item)
         {
             slot.OnPointerEnter(null);
         }
-        else if (moving_ui_item != ui_item)
+        else if (Mover.MovingUIItem != ui_item)
         {
-            ui_item.OnPointerDragEnter(moving_ui_item); // si on est ici on drag
+            ui_item.OnPointerDragEnter(Mover.MovingUIItem); // si on est ici on drag
         }
 
         // on vérifie si la position du slot est en dehors de l'écran
@@ -166,22 +176,19 @@ public class UI_Navigator : Singleton<UI_Navigator>
     {
         if (CurrentSlot == null) { return; }
 
-        // on check le drag & moving
-        /* if (Slots.Count > CurrentSlot_index && CurrentSlot_index != -1
-            && (moving_ui_item == null || moving_ui_item != Slots[CurrentSlot_index].GetComponent<UI_Item>()))
-        {
-            Slots[CurrentSlot_index].GetComponent<I_UI_Slot>().OnPointerExit(null);
-        } */
+        // checks if we are moving an ui_item we don't unhover the moving item
+        if (Mover.IsMovingItem && Mover.MovingUIItem == CurrentSlot) { return; }
 
         // on unhover le slot actuel
         if (!CurrentSlot.Disabled) { CurrentSlot.OnPointerExit(null); }
         CurrentSlot = null;
     }
 
+
     // GETTERS SLOTS
     public Vector2 GetPosition(UI_Slot slot)
     {
-        if (slot == null) { return navigator.BasePosition; }
+        if (slot == null) { return Navigator.BasePosition; }
 
         // if we are here we have a canvas slot -> means we have a recttransform
         RectTransform rect_transform = slot.GetComponent<RectTransform>();
@@ -274,11 +281,22 @@ public class UI_Navigator : Singleton<UI_Navigator>
     }
 
     // INPUTS HANDLING
-    public void OnNavigate(Vector2 direction) => navigator.Navigate(direction.normalized);
+    public void OnNavigate(Vector2 direction) => Navigator.Navigate(direction.normalized);
     public void OnActivate()
     {
+        if (Mover.IsMovingItem)
+        {
+            Mover.FinishMovingItem();
+            return;
+        }
+        
         if (CurrentSlot == null) { return; }
+
+        // soit on activate le slot si on a pas d'ui_item moving
+        Mover.FinishMovingItem();
         activate(CurrentSlot);
+        return;
+        
     }
     private async Awaitable activate(UI_Slot slot)
     {
@@ -301,49 +319,64 @@ public class UI_Navigator : Singleton<UI_Navigator>
         if (AppManager.Instance.IsQuitting) { return; }
 
         // on navigue vers le slot le plus proche
-        navigator.NavigateToClosest(position);
+        Navigator.NavigateToClosest(position);
     }
     public async void OnDrop()
     {
         if (CurrentSlot == null) { return; }
-        UI_Item slot = CurrentSlot as UI_Item;
-        if (slot == null) { return; }
+        if (CurrentSlot is not Droppable droppable) { return; }
+        UI_Slot slot = CurrentSlot;
 
         // on retient la position du slot
         Vector2 position = GetPosition(slot);
 
         // on vide le slot
         // on appelle OnPointerDropped pour simuler un drop
-        slot.OnPointerDropped(null);
+        droppable.OnPointerDropped(null);
         if (log_inputs) { Debug.Log("(UI_Navigator) Dropped slot " + slot.name); }
 
         // wait for a frame to let the click happen
         await System.Threading.Tasks.Task.Yield();
 
         // on navigue vers le slot le plus proche
-        navigator.NavigateToClosest(position);
+        Navigator.NavigateToClosest(position);
     }
-    public void OnDown()
+    public void OnDown(bool for_drop = false)
     {
         if (CurrentSlot == null) { return; }
+
+        // check si c pour drop on verifie que c'est un UI_Item
+        if (for_drop && CurrentSlot is not Droppable) { return; }
 
         // on down le slot
         CurrentSlot.OnPointerDown(null);
         if (log_inputs) { Debug.Log("(UI_Navigator) Downed slot " + CurrentSlot.name); }
+    }
+    public void StartMovingItemIfInputDown()
+    {
+        // on vérifie si l'input n'est pas downed on ne move pas
+        if (!Controller.Instance.UIC.IsEndlessInputDown<float>("ui_activate")) { return; }
+
+        // si on bouge déjà c'est déjà activé, donc pas besoin 
+        if (Mover.IsMovingItem) { return; }
+
+        // on vérifie si c'est un UI_Item pour le moving item
+        if (CurrentSlot is not UI_Item ui_item) { return; }
+        if (ui_item.Quantity == 0) { return; }
+
+        // on set le moving item
+        Mover.StartMovingItem(ui_item);
     }
 }
 
 
 public interface Navigator
 {
-
     // HANDLE SLOTTABLE ACTIVATION
     void ActivateSlottable(Slottable slottable);
 
     // NAVIGATION
     void NavigateToClosest(Vector2 position);
     void Navigate(Vector2 direction);
-    // void Scroll(float scroll_value);
-
     Vector2 BasePosition { get; }
 }

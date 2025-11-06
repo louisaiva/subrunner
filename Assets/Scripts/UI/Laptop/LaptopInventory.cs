@@ -142,8 +142,9 @@ public class LaptopInventory : Inventory
     public void HandleUI_ModuleMoved(List<Item> items, int new_slot_index)
     {
         // we go through the items_slots list and update it
-        foreach (Item item in items)
+        for (int i = 0; i < items.Count; i++)
         {
+            Item item = items[i];
             if (log) { Debug.Log($"(LaptopInventory) moved {item.Reference} to slot {new_slot_index}"); }
             items_slots[item] = new_slot_index;
         }

@@ -11,6 +11,7 @@ public class UI_ImageSlot : UI_Slot
     public Sprite down_sprite;
     public Sprite disabled_sprite;
 
+
     [Header("Components")]
     public Image image;
 

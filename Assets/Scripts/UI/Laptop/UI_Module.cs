@@ -14,12 +14,30 @@ public class UI_Module : UI_Item
 
     public override int MaxQty => 1; // modules are not stackable when showed on a motherboard
 
+    private UI_ModulePool _module_pool;
+    public UI_ModulePool ModulePool
+    {
+        get
+        {
+            if (_module_pool == null) { _module_pool = ItemPool as UI_ModulePool; }
+            return _module_pool;
+        }
+    }
+
     // AWAKE
     public override void Init()
     {
         base.Init();
         icon_image = transform.Find("help/icon").GetComponent<Image>();
         helper_text = transform.Find("help/helper_text").GetComponent<TextMeshProUGUI>();
+    }
+
+    // ENABLING
+    public override void Enable()
+    {
+        // checks if we can enable
+        if (!ModulePool.HasDevice) { return; }
+        base.Enable();
     }
 
     // ITEM SETTING
@@ -143,7 +161,7 @@ public class UI_Module : UI_Item
         if (!items_moved) { return; }
 
         // on met à jour la position dans le laptop inventory
-        (ItemPool as UI_ModulePool)?.OnModuleMoved(this);
+        ModulePool.OnModuleMoved(this);
     }
 
 }

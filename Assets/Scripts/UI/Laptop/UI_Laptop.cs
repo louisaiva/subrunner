@@ -38,7 +38,10 @@ public class UI_Laptop : UI_Inventory
         {
             // we disable the modules
             await pools[0].GetComponentInParent<Transitioner>(includeInactive: true)?.Hide();
-            (pools[0] as UI_ModulePool)?.DisableModules();
+            (pools[0] as UI_ModulePool)?.DisableModulePool();
+            
+            // we refresh the ui_inventory menu
+            UI_Manager.Instance.GetPool<UI_InventoryMenu>()?.RefreshItemPools();
             return;
         }
 
@@ -63,7 +66,10 @@ public class UI_Laptop : UI_Inventory
         modulePool.InitFromInventory(inventory);
 
         // we enable the modules
-        modulePool.EnableModules();
+        modulePool.EnableModulePool();
+
+        // we refresh the ui_inventory menu
+        UI_Manager.Instance.GetPool<UI_InventoryMenu>()?.RefreshItemPools();
     }
 
 

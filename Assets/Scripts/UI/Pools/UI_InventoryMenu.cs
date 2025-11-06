@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UI_InventoryMenu : UI_Pool/* , Slottable */, Panelable
+public class UI_InventoryMenu : UI_Pool, Panelable
 {
     private List<GameObject> saved_slots = new List<GameObject>();
     [Header("Inventory Menu Components")]
@@ -106,19 +106,18 @@ public class UI_InventoryMenu : UI_Pool/* , Slottable */, Panelable
     public void RefreshItemPools(float duration = -99f)
     {
         if (duration == -99f) { duration = base_transition; }
-        // if (log) { Debug.Log($"(UI_InventoryMenu) refreshing item pools with duration {duration}"); }
 
         // preparing logs
         string log_msg = $"(UI_InventoryMenu) refreshing item pools with duration {duration}";
 
         // on fade out les item pools qui sont vides & fade in ceux qui sont pleins
-        List<GameObject> uis_with_item_pools = get_all_uis_with_item_pools();
-        for (int i = 0; i < uis_with_item_pools.Count; i++)
+        List<UI_ItemPool> item_pools = get_item_pools();
+        for (int i = 0; i < item_pools.Count; i++)
         {
             // on récupère l'item pool & le transitioner
-            UI_ItemPool item_pool = uis_with_item_pools[i].GetComponentInChildren<UI_ItemPool>();
+            UI_ItemPool item_pool = item_pools[i];
             if (item_pool == null) { continue; }
-            Transitioner transitioner = uis_with_item_pools[i].GetComponent<Transitioner>();
+            Transitioner transitioner = item_pool.GetComponentInParent<Transitioner>(includeInactive: true);
 
             log_msg += $"\n - investigating ui_itempool {item_pool.name} (shown ? {transitioner.Shown} vs hidden ? {transitioner.Hidden}) with "
                 + item_pool.Count + " slots and " + item_pool.FullCount + " items slots " + $"and {item_pool.EnabledCount} enabled slots ";
@@ -151,6 +150,12 @@ public class UI_InventoryMenu : UI_Pool/* , Slottable */, Panelable
         }
         return item_pools;
     }
+    private List<UI_ItemPool> get_item_pools()
+    {
+        List<UI_ItemPool> pools = new List<UI_ItemPool>(ui_inventory.pools);
+        pools.AddRange(ui_laptop.pools);
+        return pools;
+    }
     private List<GameObject> get_all_indicators()
     {
         List<GameObject> indicators = new List<GameObject>();
@@ -161,29 +166,6 @@ public class UI_InventoryMenu : UI_Pool/* , Slottable */, Panelable
         }
         return indicators;
     }
-
-    // SLOTTABLE
-    /* public List<UI_Slot> GetSlots()
-    {
-        if (log) { Debug.Log($"(UI_InventoryMenu) getting slots"); }
-        List<UI_Slot> slots = new List<UI_Slot>();
-
-        // on ajoute les items de l'UI_Inventory
-        slots.AddRange(ui_inventory.GetSlots());
-        if (UI_LaptopItemSlot.Instance == null || !UI_LaptopItemSlot.Instance.HasLaptop) { return slots; }
-
-        // si on a le laptop, on ajoute aussi ceux de l'UI_Laptop
-        slots.AddRange(ui_laptop.GetSlots());
-
-        return slots;
-    }
-    public bool IsYourSlot(UI_Slot slot)
-    {
-        if (ui_inventory.IsYourSlot(slot)) { return true; }
-        if (UI_LaptopItemSlot.Instance != null && UI_LaptopItemSlot.Instance.HasLaptop && ui_laptop.IsYourSlot(slot)) { return true; }
-        return false;
-    }
-    public Vector2 SavedPosition { get; private set; } = Vector2.zero; */
 
     // IF SWITCHING
     private void handleUI_ItemHoverEnter(UI_Slot slot)
@@ -214,7 +196,7 @@ public class UI_InventoryMenu : UI_Pool/* , Slottable */, Panelable
 
 
         // MOVE
-        if (ui_item.Item == null && !UI_Navigator.Instance.IsMovingItem)
+        if (ui_item.Item == null && !UI_Navigator.Instance.Mover.IsMovingItem)
         {
             move_feedback.SetAlwaysFull(false);
             move_feedback.SetLabel("");

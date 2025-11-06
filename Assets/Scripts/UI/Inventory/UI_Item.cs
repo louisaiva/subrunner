@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UI_Item : UI_ImageSlot
+public class UI_Item : UI_ImageSlot, Droppable
 {
 
     public Sprite drag_sprite;
@@ -27,10 +27,22 @@ public class UI_Item : UI_ImageSlot
     [SerializeField] protected Image item_image;
     [SerializeField] protected Sprite current_item_sprite;
     public Sprite ItemSprite => current_item_sprite;
-    public UI_ItemPool ItemPool => transform.parent.GetComponent<UI_ItemPool>();
-    public Inventory Inventory => ItemPool?.UI_Inventory?.Inventory;
     public Item Item => items.Count > 0 ? items[0] : null;
     public event Action<List<Item>> OnItemChanged = delegate { };
+    
+    
+    // GETTERS
+    private UI_ItemPool _item_pool;
+    public UI_ItemPool ItemPool
+    {
+        get
+        {
+            if (_item_pool != null) { return _item_pool; }
+            _item_pool = GetComponentInParent<UI_ItemPool>(includeInactive: true);
+            return _item_pool;
+        }
+    }
+    public Inventory Inventory => ItemPool?.UI_Inventory?.Inventory;
 
     // AWAKE
     public virtual void Init()
@@ -359,6 +371,9 @@ public class UI_Item : UI_ImageSlot
         Sprite switch_icon = CanStore(moving_ui_item.Item)
             ? bank.GetUI_Icon("merge")
             : bank.GetUI_Icon("switch");
+
+        // si on a aucun item on met tout simplement "move"
+        if (Quantity == 0) { switch_icon = bank.GetUI_Icon("move"); }
         set_ui(switch_icon);
     }
     public void OnPointerDragUp()
@@ -367,7 +382,7 @@ public class UI_Item : UI_ImageSlot
         OnPointerEnter(null);
     }
 
-    private void OnDrawGizmos()
+    /* private void OnDrawGizmos()
     {
         Vector3 position = GetComponent<RectTransform>().TransformPoint(GetComponent<RectTransform>().rect.center);
         position = Camera.main.ScreenToWorldPoint(position);
@@ -379,5 +394,5 @@ public class UI_Item : UI_ImageSlot
         if (item_image != null) { Gizmos.color = Color.green; }
         else { Gizmos.color = Color.red; }
         Gizmos.DrawWireSphere(position + new Vector3(0.2f, 0f, 0f), 0.1f);
-    }
+    } */
 }

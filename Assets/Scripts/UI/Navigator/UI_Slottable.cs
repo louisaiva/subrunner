@@ -14,6 +14,7 @@ public abstract class UI_Slottable : MonoBehaviour, Slottable
 
     [Header("Logs")]
     public bool log = false;
+    public bool log_starting_slot = false;
 
     // ENABLE - DISABLE
     public virtual void Enable(bool ingame = false)
@@ -48,11 +49,13 @@ public abstract class UI_Slottable : MonoBehaviour, Slottable
         if (starting_slot == null) { return; }
         starting_slot.OnSlotDisabled -= remove_starting_slot;
         starting_slot = null;
+        if (log_starting_slot) { Debug.Log("(UI_Slottable) removed starting slot"); }
     }
     protected void set_starting_slot(UI_Slot slot)
     {
         starting_slot = slot;
         starting_slot.OnSlotDisabled += remove_starting_slot;
+        if (log_starting_slot) { Debug.Log("(UI_Slottable) set starting slot to : " + slot.name); }
     }
 
 

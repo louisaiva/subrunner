@@ -10,12 +10,12 @@ public class UI_InputsController : InputController
     [SerializeField] private UIActions ui_inputs;
     [SerializeField] private bool navigate_in_game = false; // if true we navigate in game, else in UI
 
-    // [Header("Actions")]
-    // private PersoActions perso_inputs;
+    // CALLBACKS
     private event Action<InputAction.CallbackContext> ui_dropCallback;
     private event Action<InputAction.CallbackContext> ui_navigateCallback;
     private event Action<InputAction.CallbackContext> ui_activateCallback;
     private event Action<InputAction.CallbackContext> mouse_navigationCallback;
+    private event Action<InputAction.CallbackContext> ui_item_moveCallback;
 
     // START
     protected void Start()
@@ -46,6 +46,12 @@ public class UI_InputsController : InputController
                 threshold: InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD,
                 repeat: InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY,
                 unscaled_time: false)).OnEndless += _ => OnUI_Drop();
+
+        // et pour l'activation
+        add_endless_input(new EndlessInput<float>("ui_activate", ui_inputs.activate,
+                threshold: InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD,
+                repeat: -1, // no repeat, only holding
+                unscaled_time: true)).OnHold += _ => OnUI_ActivateHeld();
     }
 
     // INPUTS
@@ -58,6 +64,7 @@ public class UI_InputsController : InputController
         ui_dropCallback = ctx => handle_UI_drop_input(ctx);
         ui_navigateCallback = ctx => handle_UI_navigate_input(ctx);
         ui_activateCallback = ctx => handle_UI_activate_input(ctx);
+        // ui_item_moveCallback = ctx => handle_UI_item_move_input(ctx);
 
         // on met en place certains callbacks qu'on veut tout le temps actifs
         ui_inputs.navigate_exploits.performed += ctx => handle_exploit_selection_input(ctx.ReadValue<Vector2>());
@@ -72,7 +79,7 @@ public class UI_InputsController : InputController
     }
     public void EnableInputs(bool ingame_navigation = false)
     {
-        // moveItemAction.performed += moveItemCallback;
+        // ui_inputs.ui_move_item.performed += ui_item_moveCallback;
 
         // on active les bons callbacks
         if (ingame_navigation)
@@ -101,7 +108,7 @@ public class UI_InputsController : InputController
         ui_inputs.ui_drop_ingame.performed -= ui_dropCallback;
         ui_inputs.activate.performed -= ui_activateCallback;
         ui_inputs.mouse_navigation.performed -= mouse_navigationCallback;
-        // moveItemAction.performed -= moveItemCallback;
+        // ui_inputs.ui_move_item.performed -= ui_item_moveCallback;
 
         navigate_in_game = false; // on met à jour la variable
     }
@@ -131,7 +138,12 @@ public class UI_InputsController : InputController
             else { moveItemAction.performed -= moveItemCallback; }
         } */
     }
-
+    public bool IsEndlessInputDown<T>(string input_name) where T : struct
+    {
+        EndlessInput<T> endless_input = get_endless_input<T>(input_name);
+        if (endless_input == null) { return false; }
+        return endless_input.IsInputDown();
+    }
 
     // UI_NAVIGATE
     public void handle_UI_navigate_input(InputAction.CallbackContext context)
@@ -160,10 +172,12 @@ public class UI_InputsController : InputController
         if (activate_value >= 0.5f)
         {
             navigator.OnDown();
+            get_endless_input<float>("ui_activate" /* + (navigate_in_game ? "_ingame" : "" )*/).OnInput(context);
             return;
         }
         navigator.OnActivate();
     }
+    private void OnUI_ActivateHeld() { navigator.StartMovingItemIfInputDown(); }
 
     // UI_DROP
     public void handle_UI_drop_input(InputAction.CallbackContext context)
@@ -171,7 +185,7 @@ public class UI_InputsController : InputController
         // if we press the button we launch the endless threshold
         if (context.ReadValue<float>() >= 0.5f)
         {
-            navigator.OnDown();
+            navigator.OnDown(for_drop: true);
             get_endless_input<float>("ui_drop" + (navigate_in_game ? "_ingame" : "")).OnInput(context);
             return;
         }
@@ -180,6 +194,14 @@ public class UI_InputsController : InputController
         OnUI_Drop();
     }
     private void OnUI_Drop() { navigator.OnDrop(); }
+
+    // UI_ITEM MOVE
+    /* private void handle_UI_item_move_input(InputAction.CallbackContext context)
+    {
+        // checks magnitue to know if we downed or released
+        float move_value = context.ReadValue<float>();
+        navigator.Mover.OnMoveItem(move_value);
+    } */
 
 
     // RIGHT JOYSTICK EXPLOIT SELECTION

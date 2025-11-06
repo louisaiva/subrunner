@@ -282,4 +282,8 @@ public class UI_ItemPool : MonoBehaviour
         if (index < 0 || index >= ui_items.Count) { return null; }
         return ui_items[index];
     }
+    public List<UI_Item> GetAllSlots()
+    {
+        return ui_items;
+    }
 }

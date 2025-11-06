@@ -71,9 +71,12 @@ public class UI_PanelManager : MonoBehaviour
     public void RollPanel(int direction = 1)
     {
         if (HasRunningSequence) { return; }
+        // todo faire en sorte qu'on annule sequence et qu'on en recrée une adéquate
+        // todo type si on est en train de bouger pour aller au panel inventory bah on continue vers le laptop
 
         // direction > 0 means we scroll up
         // direction < 0 we scroll down
+
 
         // get current panel
         UI_Panel currentPanel = get_panel(current_panel);
