@@ -14,10 +14,20 @@ public class UI_SlottableMixer : UI_Slottable
     public int Count => slottables.Count;
     public List<UI_Slottable> Slottables { get => slottables; }
 
+    public void Init()
+    {
+        for (int i = 0; i < slottables.Count; i++)
+        {
+            slottables[i].Mixer = this;
+        }
+    }
+
     // ENABLE - DISABLE
     public override void HandleSlotHover(UI_Slot slot)
     {
         if (!IsYourSlot(slot)) { return; } // we check if the slot belongs to us
+        // we check if this ain't the exit btn because we don't want it to register as starting slot if possible
+        if (slot is UI_ExitButton) { return; }
 
         // we call HandleSlotHover on all slottables
         for (int i = 0; i < slottables.Count; i++)
@@ -36,7 +46,7 @@ public class UI_SlottableMixer : UI_Slottable
     }
 
     // ADD REMOVE SLOTTABLES
-    public void AddSlottable(UI_Slottable slottable,bool is_master = false)
+    public void AddSlottable(UI_Slottable slottable, bool is_master = false)
     {
         // on ajoute le slottable
         if (slottable == null) { return; }
@@ -92,5 +102,44 @@ public class UI_SlottableMixer : UI_Slottable
             if (slottables[i].IsYourSlot(slot)) { return true; }
         }
         return false;
+    }
+
+    // GET BUTTONS & TOGGLES
+    public override UI_Button GetButtonByName(string button_name)
+    {
+        for (int i = 0; i < slottables.Count; i++)
+        {
+            UI_Button button = slottables[i].GetButtonByName(button_name);
+            if (button != null) { return button; }
+        }
+        return null;
+    }
+    public override UI_Toggle GetToggleByName(string toggle_name)
+    {
+        for (int i = 0; i < slottables.Count; i++)
+        {
+            UI_Toggle toggle = slottables[i].GetToggleByName(toggle_name);
+            if (toggle != null) { return toggle; }
+        }
+        return null;
+    }
+
+    // GET ITEM RULES
+    public List<UI_Inventory> GetInventories()
+    {
+        List<UI_Inventory> inventories = new List<UI_Inventory>();
+        for (int i = 0; i < slottables.Count; i++)
+        {
+            if (slottables[i] is not UI_Inventory ui_inv) { continue; }
+            inventories.Add(ui_inv);
+        }
+        return inventories;
+    }
+    public string GetItemRule()
+    {
+        List<UI_Inventory> inventories = GetInventories();
+        if (inventories.Count == 0) { return "omg:not_existing_item"; }
+        List<string> item_rules = inventories.ConvertAll(inv => inv.ItemRule);
+        return string.Join("|", item_rules);
     }
 }

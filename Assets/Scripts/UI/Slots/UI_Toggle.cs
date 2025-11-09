@@ -1,5 +1,3 @@
-using PrimeTween;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 

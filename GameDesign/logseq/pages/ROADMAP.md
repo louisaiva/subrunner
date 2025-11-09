@@ -1,0 +1,44 @@
+-
+- # DEMO 1
+	- first playable demo
+	-
+	-
+	- ## objectives
+		- publish the demo on itch.io ?
+		- have 1 level with all capabilities
+		- starts with pasta cinematic
+		- finish with nobody's boss fight
+	-
+	-
+	- ## todo
+		- TODO implement cinematics system
+			- TODO make 2 start cinematic
+			- TODO make demo completed cinematic
+			-
+		- TODO polish the [[Keyboard + Mouse problem]] integration
+			- TODO adapt hacking to mouse
+				- TODO PIC input : left mouse
+			- TODO adapt exploit selection
+				- TODO PIC input : mid mouse
+			- TODO create a InputFeedbackSwitcher + InputFeedbackManager for updating them all
+		-
+		-
+		- TODO implement enemy wave system for the spawners to not appear
+		-
+		- TODO implement first computer UI to have a proper way to steal the door' key
+		-
+		- TODO change [[UI_File]] visuals to have better UX for
+			- TODO [[UI_ExploitSelector]]
+			- TODO [[UI_Device]]
+			- TODO [[UI_HDD]]
+			-
+		- TODO try with [[UI_CancelButton]] which is a [[UI_Button]] that cancels a specific [[UI_Slottable]] / [[UI_Pool]]
+			- TODO on [[Chest]]
+			- TODO on [[UI_Window]]
+		-
+		- TODO rework la [[UI_HUD]] pool pour qu'interagir avec un [[Chest]] fasse que le déplacement est désactivé
+			- TODO on navigue dans l'ui via **LJoy**
+			- TODO on récup les items rapidement via **B**
+			- TODO on ferme l'ui via activation d'un [[UI_CancelButton]]
+-
+-

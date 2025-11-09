@@ -8,6 +8,13 @@ using UnityEngine;
 /// </summary>
 public abstract class UI_Slottable : MonoBehaviour, Slottable
 {
+    private UI_SlottableMixer mixer = null;
+    public UI_SlottableMixer Mixer
+    {
+        get => mixer;
+        set => mixer = value;
+    }
+
     [Header("Starting Slot")]
     [SerializeField] protected UI_Slot starting_slot;
     public UI_Slot StartingSlot { get { return starting_slot; } }
@@ -38,6 +45,9 @@ public abstract class UI_Slottable : MonoBehaviour, Slottable
         if (!IsYourSlot(slot)) { return; } // we check if the slot belongs to us
         if (starting_slot == slot) { return; } // if it's already the starting slot we do nothing
 
+        // we check if this ain't the exit btn because we don't want it to register as starting slot if possible
+        if (slot is UI_ExitButton) { return; }
+
         // on unregister le callback de disabling starting slot
         remove_starting_slot();
 
@@ -62,4 +72,6 @@ public abstract class UI_Slottable : MonoBehaviour, Slottable
     // GETTERS
     public virtual List<UI_Slot> GetSlots() { return new List<UI_Slot>(); } // for now we don't have any slots
     public virtual bool IsYourSlot(UI_Slot slot) { return false; } // same so always false
+    public virtual UI_Button GetButtonByName(string button_name) { return null; }
+    public virtual UI_Toggle GetToggleByName(string toggle_name) { return null; }
 }

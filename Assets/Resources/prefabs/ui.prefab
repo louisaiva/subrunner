@@ -783,6 +783,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI_Slotter
   starting_slot: {fileID: 0}
   log: 0
+  log_starting_slot: 0
   slots:
   - {fileID: 8795744441089923280}
   - {fileID: 5800702793163495421}
@@ -4724,6 +4725,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI_SlottableMixer
   starting_slot: {fileID: 0}
   log: 0
+  log_starting_slot: 0
   slottables:
   - {fileID: 1524634633796860591}
   - {fileID: 129471366508900232}
@@ -4752,7 +4754,7 @@ MonoBehaviour:
   - {fileID: 7194260702930374232}
   showing_ease: 0
   hiding_ease: 0
-  log: 1
+  log: 0
 --- !u!1 &1982220952730422922
 GameObject:
   m_ObjectHideFlags: 0
@@ -7988,6 +7990,7 @@ MonoBehaviour:
   log_hover: 0
   log_slot_position: 0
   log_inputs: 0
+  log_update_slots: 0
 --- !u!114 &1123348581786394027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8020,8 +8023,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 134218752
   manager: {fileID: 0}
-  moving_ui_item: {fileID: 0}
-  potential_moving_item: {fileID: 0}
   log: 0
   log_hover: 0
 --- !u!114 &7290269408669715775
@@ -11252,6 +11253,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   starting_slot: {fileID: 0}
   log: 0
+  log_starting_slot: 0
+  log_get_slots: 0
   pools:
   - {fileID: 5609916578867124607}
   - {fileID: 4962439697037434}
@@ -13013,6 +13016,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI_ParentBasedSlottable
   starting_slot: {fileID: 0}
   log: 0
+  log_starting_slot: 0
   slots_parents:
   - {fileID: 7454519428155995838}
 --- !u!1 &4998657020044583673
@@ -13168,6 +13172,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   starting_slot: {fileID: 0}
   log: 0
+  log_starting_slot: 0
+  log_get_slots: 0
   pools:
   - {fileID: 5027530486096558737}
   Inventory: {fileID: 0}
@@ -15370,6 +15376,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   starting_slot: {fileID: 0}
   log: 0
+  log_starting_slot: 0
+  log_get_slots: 0
   pools:
   - {fileID: 7570140190268466590}
   Inventory: {fileID: 0}
@@ -15394,7 +15402,7 @@ MonoBehaviour:
   item_rule: 
   bank: {fileID: 0}
   UI_Inventory: {fileID: 0}
-  log: 1
+  log: 0
   log_storage: 0
   dynamic_rule: 
 --- !u!225 &8189247911824960011
@@ -16343,6 +16351,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI_ParentBasedSlottable
   starting_slot: {fileID: 0}
   log: 0
+  log_starting_slot: 0
   slots_parents:
   - {fileID: 2372389851678572456}
 --- !u!1 &6089700013687969685
@@ -18444,6 +18453,8 @@ MonoBehaviour:
   UI_Inventory: {fileID: 0}
   log: 0
   log_storage: 0
+  log_modules: 1
+  _has_device: 0
 --- !u!1 &6953414909838448244
 GameObject:
   m_ObjectHideFlags: 0
@@ -19659,6 +19670,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI_SlottableMixer
   starting_slot: {fileID: 0}
   log: 0
+  log_starting_slot: 0
   slottables:
   - {fileID: 7724454826991599713}
   master_slottable: {fileID: 0}
@@ -23779,6 +23791,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI_ParentBasedSlottable
   starting_slot: {fileID: 0}
   log: 0
+  log_starting_slot: 0
   slots_parents:
   - {fileID: 4337531550587478879}
 --- !u!1 &8852089020622114021

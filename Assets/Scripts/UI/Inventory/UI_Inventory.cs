@@ -21,6 +21,10 @@ public class UI_Inventory : UI_Slottable
     // INIT
     public virtual void Init()
     {
+        // we check if we have a SlottableMixer around us and we init it
+        UI_SlottableMixer mixer = GetComponent<UI_SlottableMixer>();
+        if (mixer != null) { mixer.Init(); }
+
         // we check if we have some pools, otherwise we set ourself as the pool
         if (pools.Count == 0)
         {
@@ -73,7 +77,7 @@ public class UI_Inventory : UI_Slottable
             }
         }
     }
- 
+
     // GRAB
     public virtual bool UI_Grab(Item item)
     {

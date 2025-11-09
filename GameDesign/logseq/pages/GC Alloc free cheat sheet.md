@@ -1,4 +1,5 @@
 -
+- #Optimisation
 -
 - ## DESCRIPTION
 	- pour eviter d'utiliser au maximum le GC il faut faire des bails précis :

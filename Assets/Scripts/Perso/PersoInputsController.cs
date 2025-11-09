@@ -237,8 +237,7 @@ public class PersoInputsController : InputController
     {
         InteractCapacity interactor = Capable.GetCapacity<InteractCapacity>();
         if (interactor == null) { return; } // if we don't have an interact capacity
-        if (!interactor.Able) { return; } // if we don't have an interact capacity
-
+        // if (!interactor.Able) { return; } // if we don't have an interact capacity
         interactor.Interact(endless: endless);
     }
 

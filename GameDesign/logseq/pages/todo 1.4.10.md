@@ -1,26 +1,4 @@
 - DONE Mettre des **KeyFeedback** sur les #Interactable
-  :LOGBOOK:
-  CLOCK: [2025-10-06 Mon 23:27:37]--[2025-10-07 Tue 01:54:28] =>  02:26:51
-  :END:
--
-- TODO Mettre en place l' #UI_Device
-	- DONE Dessiner des **UI_Window** pour l' #UI_Device
-	  :LOGBOOK:
-	  CLOCK: [2025-10-03 Fri 21:23:05]--[2025-10-07 Tue 20:18:48] =>  94:55:43
-	  :END:
-	- DONE faire des **UI_Buttons**
-	  :LOGBOOK:
-	  CLOCK: [2025-10-03 Fri 21:23:06]--[2025-10-08 Wed 01:39:36] =>  100:16:30
-	  :END:
-	- DONE faire que l'UI s'affiche correctement quand il faut !
-	  :LOGBOOK:
-	  CLOCK: [2025-10-15 Wed 19:41:31]--[2025-10-15 Wed 19:41:33] =>  00:00:02
-	  :END:
-	- DONE régler bug du #UI_Navigator qui ne desactive pas le #UI_Device ce qui empeche de prendre des bails dans les coffres aprés
-	  :LOGBOOK:
-	  CLOCK: [2025-10-15 Wed 19:41:32]--[2025-10-15 Wed 19:41:33] =>  00:00:01
-	  :END:
-	-
 - DONE *bug* **ui_endless_drop** sur le #UI_Navigator
   :LOGBOOK:
   CLOCK: [2025-10-05 Sun 22:12:27]--[2025-10-05 Sun 22:36:03] =>  00:23:36

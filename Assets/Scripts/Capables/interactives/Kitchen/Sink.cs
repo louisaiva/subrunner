@@ -16,25 +16,22 @@ public class Sink : Chest, Onnable
 
         // suscribe to Inventory Grab
         Inventory.OnItemGrabbed += (item) => handle_pot();
+
+        // and to buttons / toggles
+        UI_Toggle onoff_toggle = Inventory.MainUI.GetToggleByName("on_off_toggle");
+        onoff_toggle.OnOn += PowerOn;
+        onoff_toggle.OnOff += PowerOff;
+        Inventory.MainUI.GetButtonByName("exit_button").OnClick += ExitHover;
     }
 
     // INTERACTION
     public override InteractType InteractionType { get { return InteractType.Kitchen; } }
     public override void OnInteract(Capable interactor)
     {
-        InteractCapacity old_interactor = Interactor;
         base.OnInteract(interactor);
-        // we put back the interactor
-        Interactor = old_interactor;
 
         // we check if it is a pot
         if (interactor is Pot pot) { Inventory.Grab(pot); return; }
-
-        // we check if a being interact with the oven
-        if (interactor is not Being) { return; }
-
-        // we set the Interactor as the being finally
-        Interactor = interactor.GetCapacity<InteractCapacity>();
     }
     private void handle_pot()
     {

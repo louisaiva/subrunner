@@ -9,7 +9,15 @@ public class UI_PanelManager : MonoBehaviour
 {
     [Header("Panels")]
     [SerializeField] private string current_panel = "ui_inventory";
-    public string CurrentPanel { get => current_panel; }
+    [SerializeField] private string destination = "";
+    public string CurrentPanel
+    {
+        get
+        {
+            if (destination != "") { return destination; }
+            return current_panel;
+        }
+    }
     [SerializeField] private List<UI_Panel> panels;
     public event Action<string,float> OnPanelChanged = delegate { };
 
@@ -70,7 +78,7 @@ public class UI_PanelManager : MonoBehaviour
     }
     public void RollPanel(int direction = 1)
     {
-        if (HasRunningSequence) { return; }
+        // if (HasRunningSequence) { return; }
         // todo faire en sorte qu'on annule sequence et qu'on en recrée une adéquate
         // todo type si on est en train de bouger pour aller au panel inventory bah on continue vers le laptop
 
@@ -79,15 +87,15 @@ public class UI_PanelManager : MonoBehaviour
 
 
         // get current panel
-        UI_Panel currentPanel = get_panel(current_panel);
-        if (currentPanel == null) { Debug.LogError($"(UI_PanelManager) Current panel not found: {current_panel}"); return; }
+        UI_Panel currentPanel = get_panel(CurrentPanel);
+        if (currentPanel == null) { Debug.LogError($"(UI_PanelManager) Current panel not found: {CurrentPanel}"); return; }
 
         // get next panel
         UI_Panel targetPanel = null;
         int next_index = panels.IndexOf(currentPanel) - direction;
         next_index = Mathf.Clamp(next_index, 0, panels.Count - 1);
         targetPanel = panels[next_index];
-        if (targetPanel == currentPanel) { return; } // we are already on the target panel
+        if (targetPanel == currentPanel) { return; } // we are already on/moving to the target panel
 
         if (log) { Debug.Log($"(UI_PanelManager) Rolling : {currentPanel.name} --> {targetPanel.name}"); }
 
@@ -132,6 +140,7 @@ public class UI_PanelManager : MonoBehaviour
 
         // we call the event
         OnPanelChanged?.Invoke(targetPanel.name, duration);
+        destination = targetPanel.name;
 
         for (int i = 1; i < panels.Count; i++)
         {
@@ -140,6 +149,7 @@ public class UI_PanelManager : MonoBehaviour
         await TweenPanelToPositionIndex(0, targetIndex, duration);
         if (HasRunningSequence) { return; } // if we still have a running sequence it means that we are still tweening so another TweenToPanel() was called during this one
         current_panel = targetPanel.name;
+        destination = "";
         if (log) { Debug.Log($"(UI_PanelManager) tweened to panel: {targetPanel.name} with success !!!"); }
     }
     private async Awaitable TweenPanelToPositionIndex(int panel_index, int destination_index, float duration = -99f)

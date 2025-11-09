@@ -8,9 +8,9 @@
 	- DONE faire 2 sous scripts qui gère le clavier souris / gamepad + navigation ?
 	-
 	- ## Inputs
-		- DOING : transférer tous les **Inputs** sur le #[[UIC (UI_InputsController)]]
+		- DONE : transférer tous les **Inputs** sur le #[[UIC (UI_InputsController)]]
 		  :LOGBOOK:
-		  CLOCK: [2025-10-31 Fri 00:09:22]
+		  CLOCK: [2025-10-31 Fri 00:09:22]--[2025-11-06 Thu 18:45:43] =>  162:36:21
 		  :END:
 		- DONE re-set JF for ui:
 		  :LOGBOOK:
@@ -23,7 +23,7 @@
 			  :END:
 			- DONE hack instructions ??
 		-
-		- TODO transformer les inputs d'activation en [[EndlessInput]] ou fin en fait plutot des **HoldInput** pcq on a pas besoin du endless, juste du hold. quand on hold ça déclenche [[UI_ItemMover]] .SelectPotentialMovingItem(), ce qui se déclenche aussi si on navigate avant que le Hold arrive (mais qu'on maintient quand même)
+		- DONE transformer les inputs d'activation en [[EndlessInput]] ou fin en fait plutot des **HoldInput** pcq on a pas besoin du endless, juste du hold. quand on hold ça déclenche [[UI_ItemMover]] .SelectPotentialMovingItem(), ce qui se déclenche aussi si on navigate avant que le Hold arrive (mais qu'on maintient quand même)
 	-
 	-
 	- ## Current Slot
@@ -42,6 +42,7 @@
 		  -> on doit naviguer direct ?
 		  -> comment récupérer le panel vers lequel naviguer ?
 		- DONE faire que la molette / mouvement de la souris fasse naviguer les [[UI_Panel]] de l'inventaire
+		- TODO scroll ne fait que un par un
 	-
 		-
 	- ### Moving Items
@@ -61,6 +62,3 @@
 	-
 	-
 	- ### KeyFeedback d'interaction
-		- TODO rework en faisant un seul [[KeyFeedback]] d'interaction et les [[UI_Slottable]] ont une méthode qui détermine la position adéquate en fonction du [[UI_Slot]] actuel du navigator
-		- TODO les [[Interactable]] ont d'ailleurs aussi cette méthode **GetInteractKFPosition()** cad que le KF est vraiment single et déconnecté des capables et des ui_chest, ça se fait que au niveau du ui_manager ?
-		- TODO basic chests placent mal leur KF interact

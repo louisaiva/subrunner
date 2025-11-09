@@ -18,6 +18,13 @@ public class Inventory : MonoBehaviour
     [Header("Components")]
     [SerializeField] private List<UI_Inventory> uis = new List<UI_Inventory>();
     public UI_Inventory ui { get { return uis.Count > 0 ? uis[0] : null; } }
+    public UI_Slottable MainUI { get
+        {
+            if (ui == null) { return null; }
+            if (ui.Mixer != null) { return ui.Mixer; }
+            return ui;
+        }
+    }
     public Capable capable { get { return transform.parent.GetComponent<Capable>(); } }
 
     [Header("Logs")]
@@ -33,7 +40,7 @@ public class Inventory : MonoBehaviour
             {
                 UI_Manager.Instance.GetPool("inventory").transform.Find("ui_inventory").GetComponent<UI_Inventory>(),
                 // UI_Manager.Instance.GetPool("quick").GetComponent<UI_HUD>().perso_quick_inventory
-                (UI_Manager.Instance.GetPool("quick_inventory") as UI_QuickInventoryPool).UI
+                UI_Manager.Instance.GetPool<UI_QuickInventoryPool>().UI
             };
         }
 

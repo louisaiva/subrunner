@@ -30,24 +30,22 @@ public class Oven : Chest, Onnable
 
         // suscribe to Inventory Grab
         Inventory.OnItemGrabbed += (item) => Invoke(nameof(try_to_put_food_in_pot), 0.1f);
+
+        // and to buttons / toggles
+        UI_Toggle onoff_toggle = Inventory.MainUI.GetToggleByName("on_off_toggle");
+        onoff_toggle.OnOn += PowerOn;
+        onoff_toggle.OnOff += PowerOff;
+        UI_Button exit_btn = Inventory.MainUI.GetButtonByName("exit_button");
+        exit_btn.OnClick += ExitHover;
     }
 
     // INTERACTION
     public override void OnInteract(Capable interactor)
     {
-        InteractCapacity old_interactor = Interactor;
         base.OnInteract(interactor);
-        // we put back the interactor
-        Interactor = old_interactor;
 
         // we check if it is a pot
         if (interactor is Pot pot) { Inventory.Grab(pot); return; }
-
-        // we check if a being interact with the oven
-        if (interactor is not Being) { return; }
-
-        // we set the Interactor as the being finally
-        Interactor = interactor.GetCapacity<InteractCapacity>();
     }
     private void try_to_put_food_in_pot()
     {
@@ -65,6 +63,7 @@ public class Oven : Chest, Onnable
             food[i].OnInteract(pot);
         }
     }
+
 
     // UPDATE
     protected override void Update()

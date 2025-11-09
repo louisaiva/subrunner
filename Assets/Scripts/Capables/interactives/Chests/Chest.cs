@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Chest : Capable, Interactable, Openable
@@ -57,6 +55,7 @@ public class Chest : Capable, Interactable, Openable
     }
     public void OnHoverLost(Capable interactor)
     {
+        // if (debug) { Debug.Log("(Chest) " + name + " hover lost by " + interactor.name + $" (is in interactors ?? {interactors.Contains(interactor)})"); }
         if (!interactors.Contains(interactor)) { return; }
         interactors.Remove(interactor);
 
@@ -65,33 +64,39 @@ public class Chest : Capable, Interactable, Openable
 
         // if there is no more controlled interactors we hide the ui inventory
         if (!ui_inventory_shown) { return; }
-        foreach (Capable c in interactors)
+        for (int i = 0; i < interactors.Count; i++)
         {
-            if (c == Controller.Instance.Capable) { return; } // we still have the controlled interactor so we dont hide the ui
+            if (interactors[i] == Controller.Instance.Capable) { return; } // we still have the controlled interactor so we dont hide the ui
         }
 
         // we hide the inventory UI
         HideUI_Inventory();
         Interactor = null; // we reset the interactor
-    }
 
+        // if (debug) { Debug.Log("(Chest) " + name + " removed hover succesfully for " + interactor.name); }
+    }
+    public async void ExitHover()
+    {
+        await System.Threading.Tasks.Task.Yield(); // wait a bit to avoid issues with OnHoverLost called just after
+        OnHoverLost(Controller.Instance.Capable);
+    }
 
     // UI INVENTORY SHOWING / HIDING
     protected bool ui_inventory_shown = false;
-    protected virtual void ShowUI_Inventory()
+    protected void ShowUI_Inventory()
     {
         if (Inventory == null || Inventory.ui == null) { return; }
-        (UI_Manager.Instance.GetPool("quick_inventory") as UI_QuickInventoryPool).RegisterChest(Inventory.ui);
+        UI_Manager.Instance.GetPool<UI_QuickInventoryPool>().RegisterChest(Inventory.MainUI);
         ui_inventory_shown = true;
 
         // we move the interact key feedback if we have one
         if (interact_kf == null) { return; }
         interact_kf.localPosition = calculate_best_kf_position();
     }
-    protected virtual void HideUI_Inventory()
+    protected void HideUI_Inventory()
     {
         if (Inventory == null || Inventory.ui == null) { return; }
-        (UI_Manager.Instance.GetPool("quick_inventory") as UI_QuickInventoryPool).RemoveChest(Inventory.ui);
+        UI_Manager.Instance.GetPool<UI_QuickInventoryPool>().RemoveChest(Inventory.MainUI);
         ui_inventory_shown = false;
 
         // we move back the interact key feedback if we have one
