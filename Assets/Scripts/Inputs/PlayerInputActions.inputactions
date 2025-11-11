@@ -483,6 +483,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "ui_exit_ingame",
+                    "type": "Button",
+                    "id": "dce11359-673a-4b78-b190-e99eefd5db87",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press(behavior=2)",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "cancel",
                     "type": "Button",
                     "id": "ab61f265-6045-46c4-8b6b-c5a9ed876406",
@@ -928,6 +937,17 @@
                     "processors": "",
                     "groups": "keyboard",
                     "action": "roll_panel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "538e8961-7d08-45ed-bac2-3edeeae2557c",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "ui_exit_ingame",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

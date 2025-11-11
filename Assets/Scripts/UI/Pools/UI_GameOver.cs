@@ -64,6 +64,10 @@ public class UI_GameOver : UI_Pool
         // we remove the callbacks
         reviveAction.performed -= reviveCallback;
 
+        // we remove the controller
+        Destroy(Controller.Instance.gameObject);
+        yield return null;
+
         // we get the spawn point
         Vector3 perso_spawn_point = Vector3.zero;
         if (World.Instance.spawn_point != null)

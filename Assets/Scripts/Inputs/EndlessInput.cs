@@ -15,7 +15,7 @@ public class EndlessInput<T> where T : struct
     // event
     public event Action<T> OnHold; // triggered once the threshold is completed
     public event Action<T> OnEndless; // triggered each time the input is repeated while holding
-    public event Action<InputAction.CallbackContext> OnResetted; // triggered once, when the input is released
+    public event System.Action OnResetted; // triggered once, when the input is released
     public event Action<InputAction.CallbackContext> OnStarted; // triggered once, when the input is first pressed
 
 
@@ -69,12 +69,23 @@ public class EndlessInput<T> where T : struct
         holding = false;
         holdCoroutine = null;
 
-        OnResetted?.Invoke(context);
+        OnResetted?.Invoke();
     }
     private void cancel_if_below_threshold(InputAction.CallbackContext context)
     {
         if (context.ReadValue<Vector2>().magnitude > 0.5f) { return; }
         OnCanceled(context);
+    }
+    public void Cancel()
+    {
+        if (holdCoroutine == null) { return; } // not started
+
+        InputManager.Instance.StopInputCoroutine(holdCoroutine);
+        waiting = false;
+        holding = false;
+        holdCoroutine = null;
+
+        OnResetted?.Invoke();
     }
 
     // HOLDING COROUTINE

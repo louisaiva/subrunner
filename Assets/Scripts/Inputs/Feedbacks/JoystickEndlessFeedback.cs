@@ -37,7 +37,7 @@ public class JoystickEndlessFeedback : JoystickFeedback
         endless_input.OnStarted += input_callback;
         endless_input.OnHold += endless_callback;
         endless_input.OnEndless += endless_callback;
-        endless_input.OnResetted += reset_callback;
+        endless_input.OnResetted += on_reset;
 
         // we reset the IF
         OnReset();
@@ -48,7 +48,12 @@ public class JoystickEndlessFeedback : JoystickFeedback
         endless_input.OnStarted -= input_callback;
         endless_input.OnHold -= endless_callback;
         endless_input.OnEndless -= endless_callback;
-        endless_input.OnResetted -= reset_callback;
+        endless_input.OnResetted -= on_reset;
+    }
+    private void on_reset()
+    {
+        joystick_direction = Vector2.zero;
+        OnReset();
     }
 
     // CALLBACKS
@@ -68,10 +73,6 @@ public class JoystickEndlessFeedback : JoystickFeedback
                 clicked_color = endless_color;
                 OnInput();
             };
-        reset_callback = ctx =>
-            {
-                joystick_direction = Vector2.zero;
-                OnReset();
-            };
+        reset_callback = ctx => { };
     }
 }

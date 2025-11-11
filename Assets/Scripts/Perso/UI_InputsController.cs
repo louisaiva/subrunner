@@ -5,17 +5,29 @@ using static PlayerInputActions;
 
 public class UI_InputsController : InputController
 {
+    [SerializeField] private bool log_states = false;
+
     [Header("UI Inputs Parameters")]
     [SerializeField] private UI_Navigator navigator;
     [SerializeField] private UIActions ui_inputs;
-    [SerializeField] private bool navigate_in_game = false; // if true we navigate in game, else in UI
+    private MenusActions ui_menus;
+    [SerializeField] private bool in_game = false; // if true we navigate in game, else in UI
+    public bool InGame { get => in_game; }
 
     // CALLBACKS
-    private event Action<InputAction.CallbackContext> ui_dropCallback;
-    private event Action<InputAction.CallbackContext> ui_navigateCallback;
-    private event Action<InputAction.CallbackContext> ui_activateCallback;
-    private event Action<InputAction.CallbackContext> mouse_navigationCallback;
-    private event Action<InputAction.CallbackContext> ui_item_moveCallback;
+    private Action<InputAction.CallbackContext> ui_dropCallback = delegate { };
+    private Action<InputAction.CallbackContext> ui_navigateCallback = delegate { };
+    private Action<InputAction.CallbackContext> ui_activateCallback = delegate { };
+    private Action<InputAction.CallbackContext> mouse_navigationCallback = delegate { };
+    private Action<InputAction.CallbackContext> ui_exitCallback = delegate { };
+
+    // ALWAYS ACTIVATED CALLBACKS
+    private Action<InputAction.CallbackContext> ui_exploit_selectionCallback = delegate { };
+    private Action<InputAction.CallbackContext> ui_cancelPoolCallback = delegate { };
+    private Action<InputAction.CallbackContext> ui_rollPanelCallback = delegate { };
+    private Action<InputAction.CallbackContext> ui_inventoryCallback = delegate { };
+    private Action<InputAction.CallbackContext> ui_pauseCallback = delegate { };
+
 
     // START
     protected void Start()
@@ -32,10 +44,10 @@ public class UI_InputsController : InputController
                 threshold: InputManager.Instance.BUTTON_ENDLESSLY_SHORT_THRESHOLD,
                 repeat: InputManager.Instance.BUTTON_ENDLESSLY_SHORT_DELAY,
                 unscaled_time: true)).OnEndless += (direction) => OnUI_Navigate(direction);
-        add_endless_input(new EndlessInput<Vector2>("ui_navigate_ingame", ui_inputs.navigate_in_game,
+        /* add_endless_input(new EndlessInput<Vector2>("ui_navigate_ingame", ui_inputs.navigate_in_game,
                 threshold: InputManager.Instance.BUTTON_ENDLESSLY_SHORT_THRESHOLD,
                 repeat: InputManager.Instance.BUTTON_ENDLESSLY_SHORT_DELAY,
-                unscaled_time: false)).OnEndless += (direction) => OnUI_Navigate(direction);
+                unscaled_time: false)).OnEndless += (direction) => OnUI_Navigate(direction); */
 
         // et pour le drop continu
         add_endless_input(new EndlessInput<float>("ui_drop", ui_inputs.ui_drop,
@@ -52,6 +64,10 @@ public class UI_InputsController : InputController
                 threshold: InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD,
                 repeat: -1, // no repeat, only holding
                 unscaled_time: true)).OnHold += _ => OnUI_ActivateHeld();
+        add_endless_input(new EndlessInput<float>("ui_activate_ingame", ui_inputs.ui_drop_ingame,
+                threshold: InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD,
+                repeat: -1, // no repeat, only holding
+                unscaled_time: false)).OnHold += _ => OnUI_ActivateHeld();
     }
 
     // INPUTS
@@ -59,45 +75,57 @@ public class UI_InputsController : InputController
     {
         // on récupère les inputs
         ui_inputs = InputManager.Instance.inputs.UI;
+        ui_menus = InputManager.Instance.inputs.menus;
+
 
         // on crée les callbacks
         ui_dropCallback = ctx => handle_UI_drop_input(ctx);
         ui_navigateCallback = ctx => handle_UI_navigate_input(ctx);
         ui_activateCallback = ctx => handle_UI_activate_input(ctx);
-        // ui_item_moveCallback = ctx => handle_UI_item_move_input(ctx);
+        ui_exitCallback = ctx => handle_UI_exit_input(ctx);
+        mouse_navigationCallback = ctx => OnUI_Navigate(ctx.ReadValue<Vector2>());
+
+
+        // on crée les always active callbacks
+        ui_exploit_selectionCallback = ctx => handle_exploit_selection_input(ctx.ReadValue<Vector2>());
+        ui_cancelPoolCallback = ctx => { handle_cancel_pool_input(ctx.ReadValue<float>()); };
+        ui_rollPanelCallback = ctx => { handle_roll_panel_input(ctx.ReadValue<float>()); };
+        ui_inventoryCallback = ctx => { UI_Manager.Instance.TogglePool("inventory"); };
+        ui_pauseCallback = ctx => { UI_Manager.Instance.TogglePool("pause"); };
+
 
         // on met en place certains callbacks qu'on veut tout le temps actifs
-        ui_inputs.navigate_exploits.performed += ctx => handle_exploit_selection_input(ctx.ReadValue<Vector2>());
-        ui_inputs.cancel.performed += ctx => { handle_cancel_pool_input(ctx.ReadValue<float>()); };
-        ui_inputs.roll_panel.performed += ctx => { handle_roll_panel_input(ctx.ReadValue<float>()); };
+        ui_inputs.navigate_exploits.performed += ui_exploit_selectionCallback;
+        ui_inputs.cancel.performed += ui_cancelPoolCallback;
+        ui_inputs.roll_panel.performed += ui_rollPanelCallback;
         // notamment les inputs de menus
-        MenusActions ui_menus = InputManager.Instance.inputs.menus;
-        ui_menus.inventory.performed += ctx => { UI_Manager.Instance.TogglePool("inventory"); };
-        ui_menus.pause.performed += ctx => { UI_Manager.Instance.TogglePool("pause"); };
+        ui_menus.inventory.performed += ui_inventoryCallback;
+        ui_menus.pause.performed += ui_pauseCallback;
 
-        mouse_navigationCallback = ctx => OnUI_Navigate(ctx.ReadValue<Vector2>());
+        Debug.Log("(UI_InputsController) UIC INIT");
     }
     public void EnableInputs(bool ingame_navigation = false)
     {
-        // ui_inputs.ui_move_item.performed += ui_item_moveCallback;
-
         // on active les bons callbacks
         if (ingame_navigation)
         {
-            ui_inputs.navigate_in_game.performed += ui_navigateCallback;
+            // ui_inputs.navigate_in_game.performed += ui_navigateCallback;
             ui_inputs.ui_drop_ingame.performed += ui_dropCallback;
+            ui_inputs.ui_exit_ingame.performed += ui_exitCallback;
         }
         else
         {
-            ui_inputs.activate.performed += ui_activateCallback;
-            ui_inputs.navigate.performed += ui_navigateCallback;
             ui_inputs.ui_drop.performed += ui_dropCallback;
+            ui_inputs.activate.performed += ui_activateCallback;
         }
+        ui_inputs.navigate.performed += ui_navigateCallback;
 
         // ui_inputs
         ui_inputs.mouse_navigation.performed += mouse_navigationCallback;
+        in_game = ingame_navigation; // on met à jour la variable
 
-        navigate_in_game = ingame_navigation; // on met à jour la variable
+
+        Debug.Log($"(UI_InputsController) ON");
     }
     public void DisableInputs()
     {
@@ -106,11 +134,14 @@ public class UI_InputsController : InputController
         ui_inputs.navigate_in_game.performed -= ui_navigateCallback;
         ui_inputs.ui_drop.performed -= ui_dropCallback;
         ui_inputs.ui_drop_ingame.performed -= ui_dropCallback;
+        ui_inputs.ui_exit_ingame.performed -= ui_exitCallback;
         ui_inputs.activate.performed -= ui_activateCallback;
         ui_inputs.mouse_navigation.performed -= mouse_navigationCallback;
         // ui_inputs.ui_move_item.performed -= ui_item_moveCallback;
 
-        navigate_in_game = false; // on met à jour la variable
+        in_game = false; // on met à jour la variable
+
+        Debug.Log($"(UI_InputsController) OFF");
     }
     public void ToggleInput(string input_name, bool enable = true)
     {
@@ -153,16 +184,11 @@ public class UI_InputsController : InputController
         if (navigate_value.magnitude >= 0.5f)
         {
             OnUI_Navigate(navigate_value);
-            get_endless_input<Vector2>("ui_navigate" + (navigate_in_game ? "_ingame" : "")).OnInput(context);
+            get_endless_input<Vector2>("ui_navigate").OnInput(context);
             return;
         }
-
-        // OnUI_Drop();
     }
-    private void OnUI_Navigate(Vector2 direction)
-    {
-        navigator.OnNavigate(direction);
-    }
+    private void OnUI_Navigate(Vector2 direction) { navigator.OnNavigate(direction); }
 
     // UI_ACTIVATE
     private void handle_UI_activate_input(InputAction.CallbackContext context)
@@ -186,7 +212,13 @@ public class UI_InputsController : InputController
         if (context.ReadValue<float>() >= 0.5f)
         {
             navigator.OnDown(for_drop: true);
-            get_endless_input<float>("ui_drop" + (navigate_in_game ? "_ingame" : "")).OnInput(context);
+
+            // si on est pas in game on lance l'endless drop
+            if (!in_game) { get_endless_input<float>("ui_drop").OnInput(context); }
+
+            // si on est in game on lance l'activation du ui_drop_ingame
+            else { get_endless_input<float>("ui_drop_ingame").OnInput(context); }
+
             return;
         }
 
@@ -194,15 +226,6 @@ public class UI_InputsController : InputController
         OnUI_Drop();
     }
     private void OnUI_Drop() { navigator.OnDrop(); }
-
-    // UI_ITEM MOVE
-    /* private void handle_UI_item_move_input(InputAction.CallbackContext context)
-    {
-        // checks magnitue to know if we downed or released
-        float move_value = context.ReadValue<float>();
-        navigator.Mover.OnMoveItem(move_value);
-    } */
-
 
     // RIGHT JOYSTICK EXPLOIT SELECTION
     private UI_ExploitSelector exploit_selector;
@@ -218,6 +241,14 @@ public class UI_InputsController : InputController
         exploit_selector.HandleSelectionInput(direction);
     }
 
+
+    // UI_EXIT
+    private void handle_UI_exit_input(InputAction.CallbackContext context)
+    {
+        // Debug.Log("(UI_InputsController) handling UI exit input : " + context.ReadValue<float>());
+        if (context.ReadValue<float>() > 0.5f) { return; } // only on release
+        UI_Navigator.Instance.OnExit();
+    }
 
     // UI_MANAGER CANCEL POOL
     private void handle_cancel_pool_input(float input)
@@ -238,5 +269,52 @@ public class UI_InputsController : InputController
 
         Debug.Log($"(UI_InputsController) rolling panel with input {input}");
         panelable.PanelManager.RollPanel((int)input);
+    }
+
+
+    // OnDestroy
+    private void OnDestroy()
+    {
+        DisableInputs();
+
+        // on désactive les callbacks tout le temps actifs
+        ui_inputs.navigate_exploits.performed -= ui_exploit_selectionCallback;
+        ui_inputs.cancel.performed -= ui_cancelPoolCallback;
+        ui_inputs.roll_panel.performed -= ui_rollPanelCallback;
+        // notamment les inputs de menus
+        ui_menus.inventory.performed -= ui_inventoryCallback;
+        ui_menus.pause.performed -= ui_pauseCallback;
+
+        // set_all_callbacks_to_null();
+
+        /* s = $"- navigate has {ui_navigateCallback.GetInvocationList().Length} callbacks\n" +
+            $"- drop has {ui_dropCallback.GetInvocationList().Length} callbacks\n" +
+            $"- activate has {ui_activateCallback.GetInvocationList().Length} callbacks\n" +
+            $"- exit has {ui_exitCallback.GetInvocationList().Length} callbacks\n" +
+            $"- mouse_nav has {mouse_navigationCallback.GetInvocationList().Length} callbacks\n" +
+            $"- always active callbacks : \n";
+        s += $"\t- exploit selection has {ui_exploit_selectionCallback.GetInvocationList().Length} callbacks\n" +
+             $"\t- cancel pool has {ui_cancelPoolCallback.GetInvocationList().Length} callbacks\n" +
+             $"\t- roll panel has {ui_rollPanelCallback.GetInvocationList().Length} callbacks\n" +
+             $"\t- inventory has {ui_inventoryCallback.GetInvocationList().Length} callbacks\n" +
+             $"\t- pause has {ui_pauseCallback.GetInvocationList().Length} callbacks\n"; */
+
+        Debug.Log("(UI_InputsController) UIC ON DESTROY"/*  + s */);
+
+    }
+
+    private void set_all_callbacks_to_null()
+    {
+        ui_dropCallback = null;
+        ui_navigateCallback = null;
+        ui_activateCallback = null;
+        mouse_navigationCallback = null;
+        ui_exitCallback = null;
+
+        ui_exploit_selectionCallback = null;
+        ui_cancelPoolCallback = null;
+        ui_rollPanelCallback = null;
+        ui_inventoryCallback = null;
+        ui_pauseCallback = null;
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 /// UI_Slottable and make them act as a single UI_Slottable.
 /// Used mainly in Menus that need to have multiple slottables.
 /// </summary>
-public class UI_SlottableMixer : UI_Slottable
+public class UI_SlottableMixer : UI_Slottable, Awakable
 {
     [Header("UI_Slottables")]
     [SerializeField] protected List<UI_Slottable> slottables = new List<UI_Slottable>();
@@ -14,7 +14,7 @@ public class UI_SlottableMixer : UI_Slottable
     public int Count => slottables.Count;
     public List<UI_Slottable> Slottables { get => slottables; }
 
-    public void Init()
+    public void InitAwake()
     {
         for (int i = 0; i < slottables.Count; i++)
         {

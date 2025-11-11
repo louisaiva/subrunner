@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using PrimeTween;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class SceneLoader : Singleton<SceneLoader>
+public class SceneLoader : MonoBehaviour
 {
+    public static SceneLoader Instance { get; private set; }
 
     [Header("Loading screen")]
     // [SerializeField] private bool linux_style_loading = false;
@@ -27,12 +27,19 @@ public class SceneLoader : Singleton<SceneLoader>
 
     [Header("Title Screen Elements")]
     [SerializeField] private JoystickFeedback joystickFeedback;
-    [SerializeField] private CharacterOrientationController controller;
+    public HomeInputsController HIC;
+    public CharacterOrientationController CharacOrienter;
 
 
     [Header("Logs")]
     [SerializeField] private bool log;
 
+    // AWAKE
+    private void Awake()
+    {
+        if (Instance != null) { Destroy(Instance.gameObject); }
+        Instance = this;
+    }
 
     // LOAD GAME
     public void LoadGame()
@@ -52,18 +59,17 @@ public class SceneLoader : Singleton<SceneLoader>
         await load_game_simplest();
 
         if (log) { Debug.Log("(SceneLoader) game scene loaded with success !!"); }
-    }   
-
+    }
     private async Awaitable load_game_simplest()
     {
         Debug.Log("LOADING THE GAME");
 
         // we disable the input action
-        controller.RemoveCallbacks();
-        Destroy(controller.gameObject);
+        HIC.RemoveCallbacks();
+        // Destroy(CharacOrienter.gameObject);
 
         // we disable the input feedback
-        Destroy(joystickFeedback.gameObject);
+        // Destroy(joystickFeedback.gameObject);
 
         // we pause the game
         Time.timeScale = 0f;
@@ -73,6 +79,13 @@ public class SceneLoader : Singleton<SceneLoader>
         await Tween.Custom(0f, 1f, duration: transition_duration, useUnscaledTime: true,
             onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx));
 
+        // load loading scene
+        await SceneManager.LoadSceneAsync(2);
+
+        // unload title screen scene
+        await System.Threading.Tasks.Task.Delay(100); // small delay to ensure smooth transition
+
+        // load the main clean scene    
         await SceneManager.LoadSceneAsync(1);
 
         // we hide the loading screen
@@ -88,8 +101,8 @@ public class SceneLoader : Singleton<SceneLoader>
         Debug.Log("LOADING THE GAME");
 
         // we disable the input action
-        controller.RemoveCallbacks();
-        Destroy(controller.gameObject);
+        HIC.RemoveCallbacks();
+        Destroy(CharacOrienter.gameObject);
 
         // we disable the input feedback
         Destroy(joystickFeedback.gameObject);
@@ -180,4 +193,31 @@ public class SceneLoader : Singleton<SceneLoader>
             text.CrossFadeAlpha(0f, duration, false);
         }
     }
+
+
+    // GO BACK TO MAIN MENU
+    public async Awaitable GoBackToMainMenu()
+    {
+        // we pause the game
+        Time.timeScale = 0f;
+
+        // we show the loading screen
+        // loadingScreen.SetActive(true);
+        await Tween.Custom(0f, 1f, duration: transition_duration, useUnscaledTime: true,
+            onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx));
+
+        // load loading scene
+        await SceneManager.LoadSceneAsync(2);
+
+        await System.Threading.Tasks.Task.Delay(100); // small delay to ensure smooth transition
+
+        // we load the main menu scene
+        await SceneManager.LoadSceneAsync(0);
+
+        // we hide the loading screen
+        await Tween.Custom(1f, 0f, duration: transition_duration, useUnscaledTime: true,
+            onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx));
+    }
+
+
 }

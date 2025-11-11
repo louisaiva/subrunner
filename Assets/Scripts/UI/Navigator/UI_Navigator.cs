@@ -69,12 +69,12 @@ public class UI_Navigator : Singleton<UI_Navigator>
     }
 
     // ENABLE / DISABLE
-    public void AddSlottable(Slottable slottable, bool ingame_navigation = false, UI_Slot starting_slot = null)
+    public void AddSlottable(Slottable slottable, bool ingame_navigation = false)
     {
         if (Slottables.Contains(slottable)) { return; } // on ne fait rien si le slottable est déjà dans la liste
 
         // on active les inputs si besoin
-        if (Slottables.Count == 0) { Controller.Instance.UIC.EnableInputs(ingame_navigation); }
+        if (Slottables.Count == 0) { Controller.Instance?.UIC.EnableInputs(ingame_navigation); }
 
         // on ajoute le slottable à la liste des Slottables
         Slottables.Add(slottable);
@@ -104,7 +104,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
         // HoverSlot(last_slot != null ? Slots.IndexOf(last_slot) : -1);
 
         // on regarde si on a encore des Slottables
-        if (Slottables.Count == 0) { Controller.Instance.UIC.DisableInputs(); }
+        if (Slottables.Count == 0) { Controller.Instance?.UIC.DisableInputs(); }
         /* {
             disableInputs();
 
@@ -289,14 +289,14 @@ public class UI_Navigator : Singleton<UI_Navigator>
             Mover.FinishMovingItem();
             return;
         }
-        
+
         if (CurrentSlot == null) { return; }
 
         // soit on activate le slot si on a pas d'ui_item moving
         Mover.FinishMovingItem();
         activate(CurrentSlot);
         return;
-        
+
     }
     private async Awaitable activate(UI_Slot slot)
     {
@@ -323,6 +323,12 @@ public class UI_Navigator : Singleton<UI_Navigator>
     }
     public async void OnDrop()
     {
+        if (Mover.IsMovingItem)
+        {
+            Mover.FinishMovingItem();
+            return;
+        }
+
         if (CurrentSlot == null) { return; }
         if (CurrentSlot is not Droppable droppable) { return; }
         UI_Slot slot = CurrentSlot;
@@ -354,8 +360,19 @@ public class UI_Navigator : Singleton<UI_Navigator>
     }
     public void StartMovingItemIfInputDown()
     {
+        if (Controller.Instance == null || Controller.Instance.UIC == null) { return; }
+
         // on vérifie si l'input n'est pas downed on ne move pas
-        if (!Controller.Instance.UIC.IsEndlessInputDown<float>("ui_activate")) { return; }
+        bool is_input_down = Controller.Instance.UIC.IsEndlessInputDown<float>("ui_activate") ||
+                             Controller.Instance.UIC.IsEndlessInputDown<float>("ui_drop_ingame");
+        if (!is_input_down) { return; }
+
+        // on annule le endless drop ingame si besoin
+        if (Controller.Instance.UIC.InGame)
+        {
+            EndlessInput<float> endless_drop_input = Controller.Instance.UIC.get_endless_input<float>("ui_drop_ingame");
+            endless_drop_input.Cancel();
+        }
 
         // si on bouge déjà c'est déjà activé, donc pas besoin 
         if (Mover.IsMovingItem) { return; }
@@ -367,6 +384,30 @@ public class UI_Navigator : Singleton<UI_Navigator>
         // on set le moving item
         Mover.StartMovingItem(ui_item);
     }
+
+    // ON EXIT
+    public async void OnExit()
+    {
+        // waits for a frame to be sure the input will be finished and won't reopen the chest
+
+
+        // checks if we have a UI_ExitButton
+        for (int i = 0; i < Slots.Count; i++)
+        {
+            if (Slots[i] is not UI_ExitButton exit_button) { continue; }
+            exit_button.OnPointerClick(null);
+            if (log_inputs) { Debug.Log("(UI_Navigator) Exit button clicked: " + exit_button.name); }
+            return;
+        }
+    }
+
+
+
+    // OnDestroy
+    /* private void OnDestroy()
+    {
+        InputManager.Instance.OnInputTypeChanged -= handle_input_type_changed;
+    } */
 }
 
 

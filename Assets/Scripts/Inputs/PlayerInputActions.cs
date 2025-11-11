@@ -569,6 +569,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""ui_exit_ingame"",
+                    ""type"": ""Button"",
+                    ""id"": ""dce11359-673a-4b78-b190-e99eefd5db87"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""cancel"",
                     ""type"": ""Button"",
                     ""id"": ""ab61f265-6045-46c4-8b6b-c5a9ed876406"",
@@ -1014,6 +1023,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""keyboard"",
                     ""action"": ""roll_panel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""538e8961-7d08-45ed-bac2-3edeeae2557c"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""ui_exit_ingame"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -2238,6 +2258,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_UI_ui_move_item = m_UI.FindAction("ui_move_item", throwIfNotFound: true);
         m_UI_ui_drop_ingame = m_UI.FindAction("ui_drop_ingame", throwIfNotFound: true);
         m_UI_ui_drop = m_UI.FindAction("ui_drop", throwIfNotFound: true);
+        m_UI_ui_exit_ingame = m_UI.FindAction("ui_exit_ingame", throwIfNotFound: true);
         m_UI_cancel = m_UI.FindAction("cancel", throwIfNotFound: true);
         m_UI_navigate = m_UI.FindAction("navigate", throwIfNotFound: true);
         m_UI_navigate_in_game = m_UI.FindAction("navigate_in_game", throwIfNotFound: true);
@@ -2608,6 +2629,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_ui_move_item;
     private readonly InputAction m_UI_ui_drop_ingame;
     private readonly InputAction m_UI_ui_drop;
+    private readonly InputAction m_UI_ui_exit_ingame;
     private readonly InputAction m_UI_cancel;
     private readonly InputAction m_UI_navigate;
     private readonly InputAction m_UI_navigate_in_game;
@@ -2656,6 +2678,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "UI/ui_drop".
         /// </summary>
         public InputAction @ui_drop => m_Wrapper.m_UI_ui_drop;
+        /// <summary>
+        /// Provides access to the underlying input action "UI/ui_exit_ingame".
+        /// </summary>
+        public InputAction @ui_exit_ingame => m_Wrapper.m_UI_ui_exit_ingame;
         /// <summary>
         /// Provides access to the underlying input action "UI/cancel".
         /// </summary>
@@ -2752,6 +2778,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @ui_drop.started += instance.OnUi_drop;
             @ui_drop.performed += instance.OnUi_drop;
             @ui_drop.canceled += instance.OnUi_drop;
+            @ui_exit_ingame.started += instance.OnUi_exit_ingame;
+            @ui_exit_ingame.performed += instance.OnUi_exit_ingame;
+            @ui_exit_ingame.canceled += instance.OnUi_exit_ingame;
             @cancel.started += instance.OnCancel;
             @cancel.performed += instance.OnCancel;
             @cancel.canceled += instance.OnCancel;
@@ -2820,6 +2849,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @ui_drop.started -= instance.OnUi_drop;
             @ui_drop.performed -= instance.OnUi_drop;
             @ui_drop.canceled -= instance.OnUi_drop;
+            @ui_exit_ingame.started -= instance.OnUi_exit_ingame;
+            @ui_exit_ingame.performed -= instance.OnUi_exit_ingame;
+            @ui_exit_ingame.canceled -= instance.OnUi_exit_ingame;
             @cancel.started -= instance.OnCancel;
             @cancel.performed -= instance.OnCancel;
             @cancel.canceled -= instance.OnCancel;
@@ -3736,6 +3768,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnUi_drop(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ui_exit_ingame" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnUi_exit_ingame(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "cancel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

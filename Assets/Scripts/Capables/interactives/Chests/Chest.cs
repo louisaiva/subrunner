@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class Chest : Capable, Interactable, Openable
 {
     public bool log_interact_kf = false;
+    public bool log_buttons_registering = false;
 
     [Header("Openable")]
     public virtual bool is_open { get; set; }
@@ -30,6 +31,29 @@ public class Chest : Capable, Interactable, Openable
         hover_capacity.OnHoverLost += OnHoverLost;
         interact_kf = hover_capacity.Canvas_kf;
         if (interact_kf != null) { initial_kf_position = interact_kf.localPosition; }
+
+        // log message
+        if (log_buttons_registering)
+        {
+            string s = $"- Inventory is {(Inventory != null ? "set : " + Inventory.GetType() : "NOT set")}";
+            if (Inventory != null)
+            {
+                s += $"\n- Inventory.MainUI is {(Inventory.MainUI != null ? "set : " + Inventory.MainUI.GetType() : "NOT set")}";
+                if (Inventory.MainUI != null)
+                {
+                    var exit_button = Inventory.MainUI.GetButtonByName("exit_button");
+                    s += $"\n- Inventory.MainUI.exit_button is {(exit_button != null ? "set : " + exit_button.GetType() : "NOT set")}";
+                    if (exit_button != null)
+                    {
+                        s += $"\n- Subscribing to exit button event : " + exit_button.OnClick;
+                    }
+                }
+            }
+            Debug.Log("(Chest) " + name + " subscribing to exit button\n" + s);
+        }
+
+        // we subscribe to the exit button
+        Inventory.MainUI.GetButtonByName("exit_button").OnClick += ExitHover;
     }
 
     // ON INTERACT / HOVER LOST

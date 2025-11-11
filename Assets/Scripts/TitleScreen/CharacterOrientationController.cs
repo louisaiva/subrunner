@@ -6,14 +6,14 @@ using System.Linq;
 public class CharacterOrientationController : MonoBehaviour
 {
 
-    [Header("Input & Callbacks")]
-    private InputManager input_manager;
-    [SerializeField] private InputActionReference rotateInput;
-    private InputAction rotateAction;
-    private event Action<InputAction.CallbackContext> rotateCallback;
-    private InputControl[] rotate_controls;
-    private string[] rotate_controls_paths;
-    private event Action<InputAction.CallbackContext> playCallback;
+    // [Header("Input & Callbacks")]
+    // private InputManager input_manager;
+    // [SerializeField] private InputActionReference rotateInput;
+    // private InputAction rotateAction;
+    // private event Action<InputAction.CallbackContext> rotateCallback;
+    // private InputControl[] rotate_controls;
+    // private string[] rotate_controls_paths;
+    // private event Action<InputAction.CallbackContext> playCallback;
 
     [Header("Components")]
     [SerializeField] private UI_AnimPlayer animPlayer;
@@ -21,34 +21,34 @@ public class CharacterOrientationController : MonoBehaviour
     // START
     protected void Start()
     {
-        if (rotateAction != null) { return; } // on ne fait rien si on a déjà Start()
+        // if (rotateAction != null) { return; } // on ne fait rien si on a déjà Start()
 
         // we get the actions
-        input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
-        rotateAction = input_manager.GetAction(rotateInput);
+        // input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
+        // rotateAction = input_manager.GetAction(rotateInput);
 
         // we create the callbacks & set them
-        playCallback = ctx => press_button(ctx);
-        rotateCallback = ctx => handleOrientation(ctx.ReadValue<Vector2>());
-        setCallbacks();
+        // playCallback = ctx => press_button(ctx);
+        // rotateCallback = ctx => HandleOrientation(ctx.ReadValue<Vector2>());
+        // setCallbacks();
 
         // we get the anim player
         animPlayer = GetComponent<UI_AnimPlayer>();
 
         // we get the controls of the rotate action
-        rotate_controls = rotateAction.controls.ToArray();
-        rotate_controls_paths = new string[rotate_controls.Length];
+        // rotate_controls = rotateAction.controls.ToArray();
+        /* rotate_controls_paths = new string[rotate_controls.Length];
         string s = "ROTATE CONTROLS: ";
         foreach (InputControl c in rotate_controls)
         {
             s += "\n - " + c.path;
             rotate_controls_paths[Array.IndexOf(rotate_controls, c)] = c.path;
-        }
+        } */
         // Debug.Log(s);
     }
 
     // ORIENTATION UPDATING
-    private void handleOrientation(Vector2 input)
+    public void HandleOrientation(Vector2 input)
     {
         // we check if the input is not zero
         if (input == Vector2.zero) { return; }
@@ -58,7 +58,7 @@ public class CharacterOrientationController : MonoBehaviour
     }
 
     // LOAD GAME BUTTON PRESSING
-    private void press_button(InputAction.CallbackContext ctx)
+    /* private void press_button(InputAction.CallbackContext ctx)
     {
         // we check if the binding of the input action is a different binding from the rotate action input action
 
@@ -70,11 +70,11 @@ public class CharacterOrientationController : MonoBehaviour
         if (control != null && rotate_controls_paths.Contains(control.path)) { return; }
 
         SceneLoader.Instance.LoadGame();
-    }
+    } */
 
 
     // CALLBACKS
-    private void setCallbacks()
+    /* private void setCallbacks()
     {
         rotateAction.performed += rotateCallback;
         input_manager.inputs.any.keyboard.performed += playCallback;
@@ -86,6 +86,6 @@ public class CharacterOrientationController : MonoBehaviour
         rotateAction.performed -= rotateCallback;
         input_manager.inputs.any.keyboard.performed -= playCallback;
         input_manager.inputs.any.gamepad.performed -= playCallback;
-    }
+    } */
 
 }

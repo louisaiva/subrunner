@@ -2,8 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using PrimeTween;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class UI_Pool : MonoBehaviour

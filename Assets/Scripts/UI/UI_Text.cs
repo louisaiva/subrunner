@@ -84,7 +84,10 @@ public class UI_Text : UI_Slot
     {
         AppManager.Instance.useVSync = !AppManager.Instance.useVSync;
     }
-
+    public void credits()
+    {
+        UI_Manager.Instance.SwitchTo("credits");
+    }
 
     // interface functions
     public override void OnPointerEnter(PointerEventData eventData)
@@ -92,7 +95,7 @@ public class UI_Text : UI_Slot
         tmp.color = hover_color;
         tmp.text = "> " + base_text;
         // tmp.fontStyle = FontStyles.Bold;
-        
+
         base.OnPointerEnter(eventData);
     }
     public override void OnPointerExit(PointerEventData eventData)

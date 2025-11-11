@@ -138,7 +138,6 @@ public class InputManager : Singleton<InputManager>
     public Vector2 MovementRawInputs { get => inputs.perso.move.ReadValue<Vector2>(); }
 
     // INPUTS MAP TOGGLING
-    // todo : ideally all inputs toggling logic should be controlled in this script
     public event Action<bool> OnPersoInputsToggled = delegate { };
     public void EnablePersoInputs()
     {
@@ -164,6 +163,12 @@ public class InputManager : Singleton<InputManager>
     public void StopInputCoroutine(Coroutine coroutine)
     {
         StopCoroutine(coroutine);
+    }
+
+    // ON DESTROY
+    private void OnDestroy()
+    {
+        OnInputTypeChanged = null;
     }
 
 }

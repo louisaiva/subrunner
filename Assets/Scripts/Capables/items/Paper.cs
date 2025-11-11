@@ -20,7 +20,7 @@ public class Paper : Item, Usable
     }
 
     // on grabbed
-    protected override async void on_grabbed()
+    /* protected override async void on_grabbed()
     {
         base.on_grabbed();
 
@@ -34,5 +34,5 @@ public class Paper : Item, Usable
         {
             Use(Controller.Instance.Capable);
         }
-    }
+    } */
 }

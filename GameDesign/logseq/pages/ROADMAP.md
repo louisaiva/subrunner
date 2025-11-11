@@ -31,8 +31,11 @@
 			- TODO [[UI_ExploitSelector]]
 			- TODO [[UI_Device]]
 			- TODO [[UI_HDD]]
-			-
+		-
+		- TODO rework and fix the #UI_Description
+		-
 		- TODO try with [[UI_CancelButton]] which is a [[UI_Button]] that cancels a specific [[UI_Slottable]] / [[UI_Pool]]
+			- DONE prototype on #Oven & #Sink
 			- TODO on [[Chest]]
 			- TODO on [[UI_Window]]
 		-

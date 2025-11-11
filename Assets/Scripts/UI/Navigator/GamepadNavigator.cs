@@ -42,9 +42,16 @@ public class GamepadNavigator : MonoBehaviour, Navigator
     {
         if (log) { Debug.Log("(UI_Navigator) navigating : " + direction); }
 
+        // on annule le endless drop ingame si besoin
+        /* if (Controller.Instance.UIC.InGame)
+        {
+            EndlessInput<float> endless_drop_input = Controller.Instance.UIC.get_endless_input<float>("ui_drop_ingame");
+            endless_drop_input.Cancel();
+        } */
+
         // on move item potentiellement
         manager.StartMovingItemIfInputDown();
-        
+
         // on récupère les manager.Slots
         manager.UpdateSlots();
 

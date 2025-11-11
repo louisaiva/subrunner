@@ -35,8 +35,8 @@ public class Oven : Chest, Onnable
         UI_Toggle onoff_toggle = Inventory.MainUI.GetToggleByName("on_off_toggle");
         onoff_toggle.OnOn += PowerOn;
         onoff_toggle.OnOff += PowerOff;
-        UI_Button exit_btn = Inventory.MainUI.GetButtonByName("exit_button");
-        exit_btn.OnClick += ExitHover;
+        // UI_Button exit_btn = Inventory.MainUI.GetButtonByName("exit_button");
+        // exit_btn.OnClick += ExitHover;
     }
 
     // INTERACTION

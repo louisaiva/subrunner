@@ -113,6 +113,11 @@ public class PersoInputsController : InputController
         InputsDisabled = true;
     }
 
+    private void OnDestroy()
+    {
+        DisableInputs();
+    }
+
 
     // UPDATE
     private void Update()

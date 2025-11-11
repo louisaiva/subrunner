@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 /// <summary>
 /// UI_Inventory is the highest UI representation of the Inventory.
@@ -21,10 +19,6 @@ public class UI_Inventory : UI_Slottable
     // INIT
     public virtual void Init()
     {
-        // we check if we have a SlottableMixer around us and we init it
-        UI_SlottableMixer mixer = GetComponent<UI_SlottableMixer>();
-        if (mixer != null) { mixer.Init(); }
-
         // we check if we have some pools, otherwise we set ourself as the pool
         if (pools.Count == 0)
         {
@@ -240,5 +234,4 @@ public class UI_Inventory : UI_Slottable
         }
         return false;
     }
-    // public Vector2 SavedPosition { get => new Vector2(0f, Screen.height); }
 }

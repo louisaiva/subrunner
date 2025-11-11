@@ -264,4 +264,16 @@ public class Controller : MonoBehaviour
         endinp = UIC.get_endless_input<T>(name);
         return endinp;
     }
+
+
+    // ON DESTROY
+    protected virtual void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            OnInstanceRemoved?.Invoke(Instance);
+            Instance = null;
+        }
+    }
+
 }

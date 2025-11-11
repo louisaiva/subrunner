@@ -13,6 +13,8 @@ public class MouseNavigator : MonoBehaviour, Navigator
     [Header("Mouse navigation parameters")]
     public LayerMask ui_slot_layer;
     public Vector2 BasePosition => new Vector2(Screen.width / 2f, Screen.height / 2f);
+    [SerializeField] private float move_threshold = 5f;
+    [SerializeField] private Vector2 last_mouse_position = Vector2.zero;
 
     [Header("Components")]
     public UI_Navigator manager;
@@ -36,18 +38,13 @@ public class MouseNavigator : MonoBehaviour, Navigator
         }
 
         // si on a des slots on navigue tout simplement
-        Navigate();
+        Navigate(Vector2.zero, start_moving_item: false);
     }
     public async void NavigateToClosest(Vector2 position)
     {
         // wait a frame for ui to update it self
         await System.Threading.Tasks.Task.Yield();
-
-        // if (log) { Debug.Log($"(UI_MouseNavigator) navigating to closest !! we navigate after 1 frame"); }
-        // bool old_log_hover = log_hover;
-        // log_hover = true;
-        Navigate(position);
-        // log_hover = old_log_hover;
+        Navigate(position, start_moving_item: false);
     }
     public void NavigateToClosest() => NavigateToClosest(Vector2.zero);
 
@@ -61,13 +58,32 @@ public class MouseNavigator : MonoBehaviour, Navigator
 
 
     // NAVIGATION
-    public void Navigate() { Navigate(Vector2.zero); }
-    public void Navigate(Vector2 position)
+    public void Navigate(Vector2 position) { Navigate(position, true); }
+    public void Navigate(Vector2 position, bool start_moving_item = true)
     {
+        // checks if we are navigating enough
+        if (Vector2.Distance(last_mouse_position, Input.mousePosition) < move_threshold) { return; }
+        last_mouse_position = Input.mousePosition;
         if (log_hover) { Debug.Log($"(UI_MouseNavigator) navigating with mouse position : {Input.mousePosition}"); }
 
+
+        // checks if we are holding ui_drop_ingame (and so waiting for endless drop) we cancel it
+        // -> because it means we are going to move items
+        /* if (start_moving_item && Controller.Instance.UIC.InGame)
+        {
+            EndlessInput<float> endless_drop_input = Controller.Instance.UIC.get_endless_input<float>("ui_drop_ingame");
+            // if (!IsEndlessInputDown<float>("ui_drop_ingame")) { return; }
+            // get_endless_input<float>("ui_drop_ingame").Cancel();
+            endless_drop_input.Cancel();
+        } */
+
+
         // on move item potentiellement
-        manager.StartMovingItemIfInputDown();
+        if (start_moving_item)
+        {
+            
+            manager.StartMovingItemIfInputDown();
+        }
 
         // on récupère le slot raycasted
         UI_Slot hovered_slot = raycast_mouse_slot();

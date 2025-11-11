@@ -1,4 +1,10 @@
+
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 /// <summary>
 /// this class handles few global things
 /// of the application, such as a flag to know if the app is quitting or not
@@ -66,12 +72,68 @@ public class AppManager : MonoBehaviour
 
 
 
+
+    // MAIN CLICK FUNCTIONS
+    public void play()
+    {
+        // transform.parent.parent.GetComponent<UI_PauseMenu>().hide();
+        UI_Manager.Instance.SwitchToHUD();
+    }
+    public void exit()
+    {
+        #if UNITY_EDITOR
+        Debug.Log("exiting playmode...");
+        EditorApplication.ExitPlaymode();
+        #endif
+        Application.Quit();
+    }
+    public void fullscreen()
+    {
+        #if UNITY_EDITOR
+        EditorWindow window = EditorWindow.focusedWindow;
+        // Assume the game view is focused.
+        window.maximized = !window.maximized;
+        #else
+        Screen.fullScreen = !Screen.fullScreen;
+        #endif
+    }
+    public void ghost_mode()
+    {
+        if (Perso.Instance == null) { return; }
+        Perso.Instance.ToggleGhost();
+    }
+    public void metamorph()
+    {
+        if (Perso.Instance == null) { return; }
+        Perso.Instance.Metamorph();
+    }
+    public void heal()
+    {
+        if (Perso.Instance == null) { return; }
+        Perso.Instance.healMax();
+    }
+    public void toggle_vsync()
+    {
+        useVSync = !useVSync;
+    }
+    public void credits()
+    {
+        UI_Manager.Instance.SwitchTo("credits");
+    }
+    public async void back_to_main_menu()
+    {
+        /* UI_Manager.Instance.SwitchToHUD(); // we switch to hud to avoid ui bugs
+        while (!UI_Manager.Instance.IsOnHUD())
+        {
+            await System.Threading.Tasks.Task.Yield();
+        } */
+        await SceneLoader.Instance.GoBackToMainMenu();
+    }
+
     // APPLICATION QUIT
     private void OnApplicationQuit()
     {
         IsQuitting = true;
         if (log) { Debug.Log("(AppManager) Application is quitting"); }
     }
-
-
 }

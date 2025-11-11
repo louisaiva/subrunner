@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class UI_LifeXPHandler : MonoBehaviour
@@ -36,6 +34,19 @@ public class UI_LifeXPHandler : MonoBehaviour
         // on met à jour les fills
         update_life_fill();
         update_xp_fill();
+    }
+
+    // ON ENABLE
+    private async void OnEnable()
+    {
+        // on désactive / reactive les cutout image de la barre de vie pour régler un léger bug
+        life_fill.GetComponent<CutoutMaskUI>().enabled = false;
+        xp_fill.GetComponent<CutoutMaskUI>().enabled = false;
+        await System.Threading.Tasks.Task.Yield();
+        // await System.Threading.Tasks.Task.Yield();
+        await System.Threading.Tasks.Task.Yield();
+        life_fill.GetComponent<CutoutMaskUI>().enabled = true;
+        xp_fill.GetComponent<CutoutMaskUI>().enabled = true;
     }
 
     // UPDATE

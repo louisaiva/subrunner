@@ -21,7 +21,6 @@ public class Sink : Chest, Onnable
         UI_Toggle onoff_toggle = Inventory.MainUI.GetToggleByName("on_off_toggle");
         onoff_toggle.OnOn += PowerOn;
         onoff_toggle.OnOff += PowerOff;
-        Inventory.MainUI.GetButtonByName("exit_button").OnClick += ExitHover;
     }
 
     // INTERACTION

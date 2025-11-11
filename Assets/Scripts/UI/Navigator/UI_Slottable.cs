@@ -8,12 +8,9 @@ using UnityEngine;
 /// </summary>
 public abstract class UI_Slottable : MonoBehaviour, Slottable
 {
-    private UI_SlottableMixer mixer = null;
-    public UI_SlottableMixer Mixer
-    {
-        get => mixer;
-        set => mixer = value;
-    }
+    // [Header("Slottable Mixer")]
+    protected UI_SlottableMixer mixer = null;
+    public UI_SlottableMixer Mixer { get { return mixer; } set { mixer = value; } }
 
     [Header("Starting Slot")]
     [SerializeField] protected UI_Slot starting_slot;
