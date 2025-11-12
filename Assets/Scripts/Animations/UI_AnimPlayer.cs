@@ -16,6 +16,7 @@ public class UI_AnimPlayer : MonoBehaviour
     [Header("UI Related Parameters")]
     public bool resize_to_native_size = true;
     public bool play_on_start = true;
+    public bool always_loop = false;
     public bool unscaled_time = false;
 
     [Header("Components")]
@@ -87,7 +88,7 @@ public class UI_AnimPlayer : MonoBehaviour
         if (current_frame >= current_anim.sprites_durations.Length)
         {
             // if the animation is not looping, we stop it
-            if (!current_anim.loop)
+            if (!current_anim.loop && !always_loop)
             {
                 if (log_frames) { Debug.Log($"(UI_AnimPlayer) Animation {current_anim.name} ended."); }
                 current_frame = -1;

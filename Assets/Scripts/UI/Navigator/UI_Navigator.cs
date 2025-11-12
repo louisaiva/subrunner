@@ -363,16 +363,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
         if (Controller.Instance == null || Controller.Instance.UIC == null) { return; }
 
         // on vérifie si l'input n'est pas downed on ne move pas
-        bool is_input_down = Controller.Instance.UIC.IsEndlessInputDown<float>("ui_activate") ||
-                             Controller.Instance.UIC.IsEndlessInputDown<float>("ui_drop_ingame");
-        if (!is_input_down) { return; }
-
-        // on annule le endless drop ingame si besoin
-        if (Controller.Instance.UIC.InGame)
-        {
-            EndlessInput<float> endless_drop_input = Controller.Instance.UIC.get_endless_input<float>("ui_drop_ingame");
-            endless_drop_input.Cancel();
-        }
+        if (!Controller.Instance.UIC.IsMovingInputDown()) { return; }
 
         // si on bouge déjà c'est déjà activé, donc pas besoin 
         if (Mover.IsMovingItem) { return; }
@@ -381,8 +372,16 @@ public class UI_Navigator : Singleton<UI_Navigator>
         if (CurrentSlot is not UI_Item ui_item) { return; }
         if (ui_item.Quantity == 0) { return; }
 
+        // on annule le endless drop ingame si besoin
+        if (Controller.Instance.UIC.InGame)
+        {
+            EndlessInput<float> endless_drop_input = Controller.Instance.UIC.get_endless_input<float>("ui_drop_ingame");
+            endless_drop_input.Cancel();
+        }
+
         // on set le moving item
         Mover.StartMovingItem(ui_item);
+        return;
     }
 
     // ON EXIT

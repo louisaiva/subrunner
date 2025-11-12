@@ -19,19 +19,23 @@ public class UI_Text : UI_Slot
     // public bool is_hovered { get; set; }
 
     [Header("Text")]
-    protected TextMeshProUGUI tmp;
+    private TextMeshProUGUI _tmp;
+    protected TextMeshProUGUI tmp
+    {
+        get
+        {
+            if (_tmp == null)
+            {
+                _tmp = GetComponent<TextMeshProUGUI>();
+                base_text = tmp.text;
+            }
+            return _tmp;
+        }
+    }
     [SerializeField] protected string base_text;
 
     [Header("Events")]
     [SerializeField] protected UnityEvent activateEvent;
-
-    // unity functions
-    protected virtual void Awake()
-    {
-        // on récupère le tmp
-        tmp = GetComponent<TextMeshProUGUI>();
-        base_text = tmp.text;
-    }
 
     // TEXT FUNCTIONS
     public void SetText(string new_text)

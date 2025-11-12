@@ -554,10 +554,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""ui_drop_ingame"",
                     ""type"": ""Button"",
                     ""id"": ""8dd2090d-fc95-4c4a-a7b8-d50c07621ed2"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": ""Press(behavior=2)"",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""ui_drop"",
@@ -593,7 +593,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": ""Press(behavior=2)"",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""navigate_in_game"",
@@ -602,7 +602,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": ""Press(behavior=2)"",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""navigate_exploits"",
@@ -611,7 +611,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""conso1"",
@@ -671,19 +671,19 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""run"",
                     ""type"": ""Button"",
                     ""id"": ""796e0ed5-9e1f-4cb3-b6ec-f63ba377c517"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""LB"",
                     ""type"": ""Button"",
                     ""id"": ""3a775e60-d909-45bb-82b0-38557ec6693a"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""mouse_navigation"",

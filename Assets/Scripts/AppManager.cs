@@ -122,11 +122,7 @@ public class AppManager : MonoBehaviour
     }
     public async void back_to_main_menu()
     {
-        /* UI_Manager.Instance.SwitchToHUD(); // we switch to hud to avoid ui bugs
-        while (!UI_Manager.Instance.IsOnHUD())
-        {
-            await System.Threading.Tasks.Task.Yield();
-        } */
+        if (SceneLoader.Instance == null) { exit(); return; }
         await SceneLoader.Instance.GoBackToMainMenu();
     }
 

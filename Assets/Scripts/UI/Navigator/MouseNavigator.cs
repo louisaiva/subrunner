@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -13,7 +12,7 @@ public class MouseNavigator : MonoBehaviour, Navigator
     [Header("Mouse navigation parameters")]
     public LayerMask ui_slot_layer;
     public Vector2 BasePosition => new Vector2(Screen.width / 2f, Screen.height / 2f);
-    [SerializeField] private float move_threshold = 5f;
+    private float move_threshold = 15f;
     [SerializeField] private Vector2 last_mouse_position = Vector2.zero;
 
     [Header("Components")]
@@ -22,6 +21,7 @@ public class MouseNavigator : MonoBehaviour, Navigator
     [Header("Logs")]
     [SerializeField] private bool log = false;
     [SerializeField] private bool log_hover = false;
+    [SerializeField] private bool log_closest = false;
 
     // HANDLE SLOTTABLE ACTIVATION
     public void ActivateSlottable(Slottable slottable)
@@ -38,16 +38,15 @@ public class MouseNavigator : MonoBehaviour, Navigator
         }
 
         // si on a des slots on navigue tout simplement
-        Navigate(Vector2.zero, start_moving_item: false);
+        Navigate(start_moving_item: false);
     }
     public async void NavigateToClosest(Vector2 position)
     {
         // wait a frame for ui to update it self
         await System.Threading.Tasks.Task.Yield();
-        Navigate(position, start_moving_item: false);
+        if (log_closest) { Debug.Log($"(UI_MouseNavigator) navigatig to closest"); }
+        Navigate(start_moving_item: false, navigating_to_closest: true);
     }
-    public void NavigateToClosest() => NavigateToClosest(Vector2.zero);
-
 
 
     // START
@@ -58,11 +57,11 @@ public class MouseNavigator : MonoBehaviour, Navigator
 
 
     // NAVIGATION
-    public void Navigate(Vector2 position) { Navigate(position, true); }
-    public void Navigate(Vector2 position, bool start_moving_item = true)
+    public void Navigate(Vector2 position) { Navigate(true); }
+    public void Navigate(bool start_moving_item = true,bool navigating_to_closest = false)
     {
         // checks if we are navigating enough
-        if (Vector2.Distance(last_mouse_position, Input.mousePosition) < move_threshold) { return; }
+        if (!navigating_to_closest && Vector2.Distance(last_mouse_position, Input.mousePosition) < move_threshold) { return; }
         last_mouse_position = Input.mousePosition;
         if (log_hover) { Debug.Log($"(UI_MouseNavigator) navigating with mouse position : {Input.mousePosition}"); }
 

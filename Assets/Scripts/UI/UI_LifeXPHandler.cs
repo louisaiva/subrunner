@@ -43,7 +43,6 @@ public class UI_LifeXPHandler : MonoBehaviour
         life_fill.GetComponent<CutoutMaskUI>().enabled = false;
         xp_fill.GetComponent<CutoutMaskUI>().enabled = false;
         await System.Threading.Tasks.Task.Yield();
-        // await System.Threading.Tasks.Task.Yield();
         await System.Threading.Tasks.Task.Yield();
         life_fill.GetComponent<CutoutMaskUI>().enabled = true;
         xp_fill.GetComponent<CutoutMaskUI>().enabled = true;

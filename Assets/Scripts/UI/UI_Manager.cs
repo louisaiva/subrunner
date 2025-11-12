@@ -267,7 +267,7 @@ public class UI_Manager : Singleton<UI_Manager>
         // check if we have a pool to unstack
         UI_Pool pool = GetPool(pool_name);
         if (!pool) { return; }
-        if (!pool_stack.Contains(pool))
+        if (!pool_stack.Contains(pool) && current_transition == null)
         {
             if (log_extended) { Debug.LogWarning("(UI_Manager) tried to unstack a pool that is not in the stack : " + pool.Reference); }
             return;
@@ -312,6 +312,8 @@ public class UI_Manager : Singleton<UI_Manager>
         if (hud_stack.Contains(pool_name)) { return; }
         hud_stack += "/" + pool_name;
 
+        if (log_extended) { Debug.Log("(UI_Manager) added " + pool_name + " to hud stack, new hud stack : " + hud_stack); }
+
         // we stack the pool (only if we are currently showing hud)
         if (IsOnHUD()) { StackPool(pool_name, override_transition); }
     }
@@ -320,6 +322,8 @@ public class UI_Manager : Singleton<UI_Manager>
         // we check if we are stacked in the hud
         if (!hud_stack.Contains(pool_name)) { return; }
         hud_stack = string.Join("/", hud_stack.Split('/').Where(x => x != pool_name).ToArray());
+
+        if (log_extended) { Debug.Log("(UI_Manager) removed " + pool_name + " from hud stack, new hud stack : " + hud_stack); }
 
         // we unstack the pool (only if we are currently showing hud)
         if (IsOnHUD()) { UnstackPool(pool_name, override_transition); }

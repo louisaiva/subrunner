@@ -1,7 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class CreditPool : UI_SlottablePool
+public class UI_CreditsPool : UI_SlottablePool
 {
     [Header("Credits Settings")]
     public float speed = 20f;
@@ -17,15 +18,15 @@ public class CreditPool : UI_SlottablePool
     }
 
     // enable pool
-    protected override IEnumerator disable_coroutine()
+    protected override IEnumerator show_coroutine(List<GameObject> dont_show = null, float duration_override = -1f, bool was_stacked = false)
     {
-        yield return base.disable_coroutine();
-        
         // on reset la position du texte
         text_parent.anchoredPosition = new Vector2(
             text_parent.anchoredPosition.x,
             base_y_position
         );
+
+        yield return base.show_coroutine(dont_show, duration_override, was_stacked);
     }
 
     // UPDATE

@@ -26,6 +26,7 @@ public class InputManager : Singleton<InputManager>
     [SerializeField] public float BUTTON_ENDLESSLY_LONG_THRESHOLD = 0.6f; // time threshold input need to be maintain before inputing endlessly
     [SerializeField] public float BUTTON_ENDLESSLY_LONG_DELAY = 0.1f; // when inputing endlessly, delay btwn each input
 
+    // private bool callbacks_sets = false;
 
     [Header("Components")]
     [SerializeField] private InputSystemUIInputModule input_system_ui_input_module;
@@ -33,7 +34,6 @@ public class InputManager : Singleton<InputManager>
     [Header("Logs")]
     public bool log = false;
     public bool log_input_maps_enabled = false;
-
 
     // unity functions
     protected override void Awake()
@@ -50,11 +50,14 @@ public class InputManager : Singleton<InputManager>
         inputs.menus.Enable();
         inputs.feedbacks.Enable();
 
+        Invoke(nameof(set_callbacks), 0.2f); // slight delay to avoid issues on start
+    }
+    private void set_callbacks()
+    {
         // on ajoute les listeners
         inputs.any.keyboard.performed += ctx => setInputType("keyboard");
         inputs.any.gamepad.performed += ctx => setInputType("gamepad");
-
-        // inputs.perso.move.performed += ctx => MovementRawInputs = ctx.ReadValue<Vector2>();
+        if (log) { Debug.Log("(InputManager) input type callbacks set"); }
     }
 
     void Update()

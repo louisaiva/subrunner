@@ -14,64 +14,68 @@ public class GamepadNavigator : MonoBehaviour, Navigator
     public Vector2 BasePosition => new Vector2(Screen.width / 2f, Screen.height / 2f);
 
     [Header("Components")]
-    public UI_Navigator manager;
+    private UI_Navigator manager;
+    public UI_Navigator Manager
+    {
+        get
+        {
+            if (manager == null) { manager = GetComponent<UI_Navigator>(); }
+            return manager;
+        }
+    }
 
 
     [Header("Logs")]
     [SerializeField] private bool log = false;
 
-    // START
-    private void Start()
-    {
-        manager = GetComponent<UI_Navigator>();
-    }
-
     // HANDLE SLOTTABLE ACTIVATION
     public void ActivateSlottable(Slottable slottable)
     {
         // on navigue vers le plus proche
+        if (log) { Debug.Log("(UI_GamepadNavigator) activating slottable : " + slottable.name + $" (starting slot is : {(slottable.StartingSlot != null ? slottable.StartingSlot.name : "null")})"); }
         if (slottable.StartingSlot == null) { NavigateToClosest(BasePosition); return; }
 
         // on navigue vers le slot souhaité
         if (log) { Debug.Log("(UI_GamepadNavigator) navigating to starting slot : " + slottable.StartingSlot.name); }
-        manager.HoverSlot(slottable.StartingSlot);
+
+        // get slot position
+        NavigateToSlot(slottable.StartingSlot);
+        // Manager.HoverSlot(slottable.StartingSlot);
     }
 
     // NAVIGATION
     public void Navigate(Vector2 direction)
     {
-        if (log) { Debug.Log("(UI_Navigator) navigating : " + direction); }
+        if (log) { Debug.Log("(UI_GamepadNavigator) navigating : " + direction); }
 
-        // on annule le endless drop ingame si besoin
-        /* if (Controller.Instance.UIC.InGame)
-        {
-            EndlessInput<float> endless_drop_input = Controller.Instance.UIC.get_endless_input<float>("ui_drop_ingame");
-            endless_drop_input.Cancel();
-        } */
+        // on ne navigue pas si on essaie de drop et qu'on a pas d'ui_item
+        if (Controller.Instance.UIC.IsDropInputDown() && Manager.CurrentSlot is not UI_Item) { return; }
 
         // on move item potentiellement
-        manager.StartMovingItemIfInputDown();
+        Manager.StartMovingItemIfInputDown();
 
-        // on récupère les manager.Slots
-        manager.UpdateSlots();
+        // on récupère les Manager.Slots
+        Manager.UpdateSlots();
 
-        string s = "(UI_Navigator) NAVIGATE: \n\nparameters: \n\tangle_threshold : " + angle_threshold + "\n\tangle_multiplicator: " + angle_multiplicator + "\n\n";
+        string s = "(UI_GamepadNavigator) NAVIGATE: \n\nparameters: \n\tangle_threshold : " + angle_threshold + "\n\tangle_multiplicator: " + angle_multiplicator + "\n\n";
+
+        s+= "\n\ndropping :\n\tis_drop_input_down : " + Controller.Instance.UIC.IsDropInputDown() + "\n\tcurrent slot type : " + (Manager.CurrentSlot != null ? Manager.CurrentSlot.GetType().Name : "null") + "\n\n";
 
         // on récupère la position du slot actuel
-        Vector2 current_slot_position = manager.GetPosition(manager.CurrentSlot);
-        if (manager.CurrentSlot != null) { s += "current slot : " + manager.CurrentSlot.name + " / position : " + current_slot_position + "\n\n"; }
+        Vector2 current_slot_position = Manager.GetPosition(Manager.CurrentSlot);
+        if (Manager.CurrentSlot != null) { s += "current slot : " + Manager.CurrentSlot.name + " / position : " + current_slot_position + "\n\n"; }
         else { s += "no current slot\n\n"; }
 
-        // on récupère les manager.Slots dans le bon angle
+        // on récupère les Manager.Slots dans le bon angle
         List<UI_Slot> slots_in_angle = new List<UI_Slot>();
-        for (int i = 0; i < manager.Slots.Count; i++)
+        for (int i = 0; i < Manager.Slots.Count; i++)
         {
-            UI_Slot slot = manager.Slots[i];
+            UI_Slot slot = Manager.Slots[i];
             // on vérifie que ce n'est pas le slot actuel
-            if (slot == manager.CurrentSlot) { continue; }
+            if (slot == Manager.CurrentSlot) { continue; }
 
             // on récupère la position du slot
-            Vector2 slot_position = manager.GetPosition(slot);
+            Vector2 slot_position = Manager.GetPosition(slot);
             Vector2 direction_to_slot = (slot_position - current_slot_position).normalized;
             float angle = Vector2.Angle(direction, direction_to_slot);
             if (angle < angle_threshold)
@@ -81,12 +85,12 @@ public class GamepadNavigator : MonoBehaviour, Navigator
         }
 
         // on récupère le slot le plus proche dans cet angle
-        UI_Slot closest_slot = manager.GetClosestSlot(current_slot_position, ref slots_in_angle, ref s, direction, angle_multiplicator);
+        UI_Slot closest_slot = Manager.GetClosestSlot(current_slot_position, ref slots_in_angle, ref s, direction, angle_multiplicator);
         if (closest_slot == null) { return; }
 
 
         // on navigue vers le slot si on en a un
-        manager.HoverSlot(closest_slot);
+        Manager.HoverSlot(closest_slot);
 
 
         // log
@@ -96,25 +100,49 @@ public class GamepadNavigator : MonoBehaviour, Navigator
     public async void NavigateToClosest(Vector2 position)
     {
         // we check if we have a slottable
-        if (manager.Slottables.Count == 0) { return; }
+        if (Manager.Slottables.Count == 0) { return; }
 
-        // we update the manager.Slots
-        manager.UpdateSlots();
+        // we update the Manager.Slots
+        Manager.UpdateSlots();
 
         // wait for a frame to let the UI update
         await System.Threading.Tasks.Task.Yield();
 
         // on récupère le slot le plus proche
-        string s = "(UI_Navigator) NAVIGATE TO CLOSEST: \n\nfrom position : " + position + "\n\n";
-        UI_Slot closest_slot = manager.GetClosestSlot(position, ref manager.Slots, ref s);
+        string s = "(UI_GamepadNavigator) NAVIGATE TO CLOSEST: \n\nfrom position : " + position + "\n\n";
+        UI_Slot closest_slot = Manager.GetClosestSlot(position, ref Manager.Slots, ref s);
 
         // we navigate to the slot if we have one
         if (closest_slot == null) { return; }
-        manager.HoverSlot(closest_slot);
+        Manager.HoverSlot(closest_slot);
 
         // we log the result
         s += "\n\nclosest : " + closest_slot.name + "\n";
         if (log) { Debug.Log(s); }
+    }
+    public async void NavigateToSlot(UI_Slot slot)
+    {
+        // we check if we have a slottable
+        if (Manager.Slottables.Count == 0) { return; }
+
+        // we update the Manager.Slots
+        Manager.UpdateSlots();
+
+        // wait for a frame to let the UI update
+        await System.Threading.Tasks.Task.Yield();
+        await System.Threading.Tasks.Task.Yield();
+        await System.Threading.Tasks.Task.Yield();
+        await System.Threading.Tasks.Task.Yield();
+        
+        // we update the Manager.Slots
+        Manager.UpdateSlots();
+
+        // we navigate to the slot if we have one
+        if (slot == null) { return; }
+        Manager.HoverSlot(slot);
+
+        // we log the result
+        if (log) { Debug.Log("(UI_GamepadNavigator) NAVIGATE TO SLOT: " + slot.name); }
     }
 
 }

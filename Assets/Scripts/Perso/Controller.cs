@@ -275,5 +275,4 @@ public class Controller : MonoBehaviour
             Instance = null;
         }
     }
-
 }

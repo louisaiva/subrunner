@@ -5,6 +5,8 @@ using UnityEngine;
 /// </summary>
 public class UI_MoveUpWhenChildDisappear : MonoBehaviour
 {
+    [SerializeField] private bool log = false;
+
     private void Update()
     {
         // we check if the transform has children
@@ -16,7 +18,7 @@ public class UI_MoveUpWhenChildDisappear : MonoBehaviour
         // normally it is automatically in screen pos bcz parent is fullscreen + pivot in center
         float child_min_y = lastChild.localPosition.y + Screen.height/2f + transform.localPosition.y;
 
-        Debug.Log("Child " + lastChild.name + " min y: " + child_min_y);
+        if (log) { Debug.Log("Child " + lastChild.name + " min y: " + child_min_y); }
 
         if (child_min_y > 0) { return; }
 

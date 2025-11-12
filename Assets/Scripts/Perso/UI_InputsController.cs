@@ -102,7 +102,7 @@ public class UI_InputsController : InputController
         ui_menus.inventory.performed += ui_inventoryCallback;
         ui_menus.pause.performed += ui_pauseCallback;
 
-        Debug.Log("(UI_InputsController) UIC INIT");
+        if (log_states) { Debug.Log("(UI_InputsController) UIC INIT"); }
     }
     public void EnableInputs(bool ingame_navigation = false)
     {
@@ -125,7 +125,7 @@ public class UI_InputsController : InputController
         in_game = ingame_navigation; // on met à jour la variable
 
 
-        Debug.Log($"(UI_InputsController) ON");
+        if (log_states) { Debug.Log($"(UI_InputsController) ON"); }
     }
     public void DisableInputs()
     {
@@ -141,7 +141,7 @@ public class UI_InputsController : InputController
 
         in_game = false; // on met à jour la variable
 
-        Debug.Log($"(UI_InputsController) OFF");
+        if (log_states) { Debug.Log($"(UI_InputsController) OFF"); }
     }
     public void ToggleInput(string input_name, bool enable = true)
     {
@@ -172,8 +172,20 @@ public class UI_InputsController : InputController
     public bool IsEndlessInputDown<T>(string input_name) where T : struct
     {
         EndlessInput<T> endless_input = get_endless_input<T>(input_name);
+        if (log_endless_inputs) { Debug.Log($"(UI_InputsController) checking if endless input {input_name} is down : " + (endless_input != null ? endless_input.IsInputDown().ToString() : "endless input not found")); }
         if (endless_input == null) { return false; }
         return endless_input.IsInputDown();
+    }
+
+    // GETTERS
+    public bool IsMovingInputDown()
+    {
+        return IsEndlessInputDown<float>("ui_activate") || IsEndlessInputDown<float>("ui_drop_ingame");
+    }
+    public bool IsDropInputDown()
+    {
+        if (in_game) { return IsEndlessInputDown<float>("ui_drop_ingame"); }
+        return IsEndlessInputDown<float>("ui_drop");
     }
 
     // UI_NAVIGATE
@@ -285,36 +297,7 @@ public class UI_InputsController : InputController
         ui_menus.inventory.performed -= ui_inventoryCallback;
         ui_menus.pause.performed -= ui_pauseCallback;
 
-        // set_all_callbacks_to_null();
+        if (log_states) { Debug.Log("(UI_InputsController) UIC ON DESTROY"); }
 
-        /* s = $"- navigate has {ui_navigateCallback.GetInvocationList().Length} callbacks\n" +
-            $"- drop has {ui_dropCallback.GetInvocationList().Length} callbacks\n" +
-            $"- activate has {ui_activateCallback.GetInvocationList().Length} callbacks\n" +
-            $"- exit has {ui_exitCallback.GetInvocationList().Length} callbacks\n" +
-            $"- mouse_nav has {mouse_navigationCallback.GetInvocationList().Length} callbacks\n" +
-            $"- always active callbacks : \n";
-        s += $"\t- exploit selection has {ui_exploit_selectionCallback.GetInvocationList().Length} callbacks\n" +
-             $"\t- cancel pool has {ui_cancelPoolCallback.GetInvocationList().Length} callbacks\n" +
-             $"\t- roll panel has {ui_rollPanelCallback.GetInvocationList().Length} callbacks\n" +
-             $"\t- inventory has {ui_inventoryCallback.GetInvocationList().Length} callbacks\n" +
-             $"\t- pause has {ui_pauseCallback.GetInvocationList().Length} callbacks\n"; */
-
-        Debug.Log("(UI_InputsController) UIC ON DESTROY"/*  + s */);
-
-    }
-
-    private void set_all_callbacks_to_null()
-    {
-        ui_dropCallback = null;
-        ui_navigateCallback = null;
-        ui_activateCallback = null;
-        mouse_navigationCallback = null;
-        ui_exitCallback = null;
-
-        ui_exploit_selectionCallback = null;
-        ui_cancelPoolCallback = null;
-        ui_rollPanelCallback = null;
-        ui_inventoryCallback = null;
-        ui_pauseCallback = null;
     }
 }

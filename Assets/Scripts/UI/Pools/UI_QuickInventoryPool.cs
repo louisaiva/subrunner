@@ -55,7 +55,7 @@ public class UI_QuickInventoryPool : UI_SlottablePool
         else if (ui_chest is UI_SlottableMixer ui_mixer) { perso_quick_inventory_pool.EnableItemsByRule(ui_mixer.GetItemRule()); }
 
         // on active le pool (en le stackant sur le hud)
-        UI_Manager.Instance.StackOnHUD(Reference);
+        UI_Manager.Instance.StackOnHUD(Reference, override_transition: true);
     }
     public void RemoveChest(UI_Slottable ui_chest)
     {
@@ -64,6 +64,6 @@ public class UI_QuickInventoryPool : UI_SlottablePool
         QuitPool(ui_chest.gameObject);
 
         // on desactive le pool (en le destackant du hud)
-        UI_Manager.Instance.UnstackFromHUD(Reference);
+        UI_Manager.Instance.UnstackFromHUD(Reference, override_transition: true);
     }
 }

@@ -42,13 +42,26 @@ public class UI_Pool : MonoBehaviour
         }
     }
 
-    // SHOW / HIDE
-    public IEnumerator ShowCoroutine(List<GameObject> dont_show = null,float duration_override = -1f, bool was_stacked = false)
+
+    // COROUTINE GESTION
+    private void StopCoroutineIfAny()
     {
-        // si on est déjà en transition alors on ne vas pas plus loin
-        // si on veut StopCoroutine plutot que de break faudrait que TOUTES les coroutines
-        // qui découlent de celle ci s'arrêtent proprement quand on stop coroutine, ce qui 'nest pas le cas
-        if (current_transition != null) { yield break; }
+        // // si on est déjà en transition alors on ne vas pas plus loin
+        // // si on veut StopCoroutine plutot que de break faudrait que TOUTES les coroutines
+        // // qui découlent de celle ci s'arrêtent proprement quand on stop coroutine, ce qui 'nest pas le cas
+        if (current_transition == null) { return; }
+    
+        // on arrete la current_transition
+        StopCoroutine(current_transition);
+        current_transition = null;
+        if (log) { Debug.Log("(UI_Pool) stopped current transition for pool : " + Reference); }
+    }
+
+    // SHOW / HIDE
+    public IEnumerator ShowCoroutine(List<GameObject> dont_show = null, float duration_override = -1f, bool was_stacked = false)
+    {
+        // stop any started coroutine
+        StopCoroutineIfAny();
 
         // on lance l'affichage
         current_transition = StartCoroutine(show_coroutine(dont_show, duration_override, was_stacked));
@@ -56,9 +69,8 @@ public class UI_Pool : MonoBehaviour
 
         Showed = true;
         Stacked = false;
-    
+
         // on enable
-        // enable();
         yield return StartCoroutine(enable_coroutine());
 
         // on clear la transition
@@ -66,10 +78,8 @@ public class UI_Pool : MonoBehaviour
     }
     public IEnumerator HideCoroutine(List<GameObject> dont_hide = null, float duration_override = -1f)
     {
-        // si on est déjà en transition alors on ne vas pas plus loin
-        // si on veut StopCoroutine plutot que de break faudrait que TOUTES les coroutines
-        // qui découlent de celle ci s'arrêtent proprement quand on stop coroutine, ce qui 'nest pas le cas
-        if (current_transition != null) { yield break; }
+        // stop any started coroutine
+        StopCoroutineIfAny();
 
         // on lance le disabling
         yield return StartCoroutine(disable_coroutine());
@@ -86,10 +96,8 @@ public class UI_Pool : MonoBehaviour
     }
     public IEnumerator StackHideCoroutine(float duration_override = -1f, bool disable = true)
     {
-        // on veut hide tous les elements sauf stacked elements !
-
-        // si on a une transition on return
-        if (current_transition != null) { yield break; }
+        // stop any started coroutine
+        StopCoroutineIfAny();
 
         // on lance le disabling
         if (disable) { yield return StartCoroutine(disable_coroutine()); }
@@ -105,7 +113,8 @@ public class UI_Pool : MonoBehaviour
     }
     public IEnumerator StackShowCoroutine(float duration_override = -1f, bool enable = true)
     {
-        if (current_transition != null) { yield break; }
+        // stop any started coroutine
+        StopCoroutineIfAny();
 
         // on veut afficher que les stacked elements !
         List<GameObject> dont_show = new List<GameObject>();

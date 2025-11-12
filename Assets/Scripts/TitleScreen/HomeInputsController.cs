@@ -21,22 +21,18 @@ public class HomeInputsController : InputController
 
         // on récupère le navigator
         navigator = UI_Navigator.Instance;
-        
+
         // on crée les endless inputs pour la navigation continue
         add_endless_input(new EndlessInput<Vector2>("navigate", ui_inputs.navigate,
                 threshold: InputManager.Instance.BUTTON_ENDLESSLY_SHORT_THRESHOLD,
                 repeat: InputManager.Instance.BUTTON_ENDLESSLY_SHORT_DELAY,
-                unscaled_time: true)).OnEndless += (direction) => navigator.OnNavigate(direction);        
-
-        /* // et pour l'activation
-        add_endless_input(new EndlessInput<float>("ui_activate", ui_inputs.activate,
-                threshold: InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD,
-                repeat: -1, // no repeat, only holding
-                unscaled_time: true)).OnHold += _ => OnUI_ActivateHeld();
-        add_endless_input(new EndlessInput<float>("ui_activate_ingame", ui_inputs.ui_drop_ingame,
-                threshold: InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD,
-                repeat: -1, // no repeat, only holding
-                unscaled_time: false)).OnHold += _ => OnUI_ActivateHeld(); */
+                unscaled_time: true));
+        Invoke(nameof(set_inputs_callbacks), 0.3f);
+    }
+    private void set_inputs_callbacks()
+    {
+        get_endless_input<Vector2>("navigate").Cancel();
+        get_endless_input<Vector2>("navigate").OnEndless += (direction) => navigator.OnNavigate(direction);
     }
 
     // INPUTS

@@ -11,10 +11,9 @@ public class UI_HDD_File : UI_Text
     private UI_HDD ui_hdd;
 
     // AWAKE
-    protected override void Awake()
+    protected virtual void Awake()
     {
-        base.Awake();
-        ui_hdd = GetComponentInParent<UI_HDD>();
+        ui_hdd = GetComponentInParent<UI_HDD>(includeInactive: true);
     }
 
     // SET FILE
