@@ -88,9 +88,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
     public void RemoveSlottable(Slottable slottable)
     {
         if (!Slottables.Contains(slottable)) { return; }
-
-        // disable moving item
-
+        
         // on enlève le slottable de la liste des Slottables
         Slottables.Remove(slottable);
 
@@ -99,21 +97,8 @@ public class UI_Navigator : Singleton<UI_Navigator>
         // on désactive le slot si il fait partie du slot qu'on desactive
         if (CurrentSlot != null && slottable.IsYourSlot(CurrentSlot)) { UnhoverSlot(); }
 
-        // on met à jour les Slots
-        // update_slots();
-        // HoverSlot(last_slot != null ? Slots.IndexOf(last_slot) : -1);
-
         // on regarde si on a encore des Slottables
-        if (Slottables.Count == 0) { Controller.Instance?.UIC.DisableInputs(); }
-        /* {
-            disableInputs();
-
-            // on reset les variables de navigation
-            navigate_continuously = false;
-            can_navigate = true;
-            continuous_navigation_counter = float.MaxValue;
-            last_input = Vector2.zero;
-        } */
+        if (Slottables.Count == 0) { UnhoverSlot(); Controller.Instance?.UIC.DisableInputs(); }
     }
 
 
@@ -212,11 +197,11 @@ public class UI_Navigator : Singleton<UI_Navigator>
         if (CurrentSlot == null) { return null; }
         return CurrentSlot;
     }
-    public UI_Slot GetClosestSlot(Vector2 position, ref List<UI_Slot> slots, ref string s)
+    public UI_Slot GetClosestSlot(Vector2 position, ref List<UI_Slot> slots, ref string s,Type favorised_type=null)
     {
-        return GetClosestSlot(position, ref slots, ref s, new Vector2(), 0f);
+        return GetClosestSlot(position, ref slots, ref s, new Vector2(), 0f, favorised_type: favorised_type);
     }
-    public UI_Slot GetClosestSlot(Vector2 position, ref List<UI_Slot> slots, ref string s, Vector2 direction = new Vector2(), float local_angle_multiplicator = 0f)
+    public UI_Slot GetClosestSlot(Vector2 position, ref List<UI_Slot> slots, ref string s, Vector2 direction, float local_angle_multiplicator, Type favorised_type = null)
     {
         // find the closest slot to the given position
         // if direction & local_angle_multiplicator are given, we will find the closest slot in the direction
@@ -247,13 +232,28 @@ public class UI_Navigator : Singleton<UI_Navigator>
                 s += slot.name + " : " + slot_position + " / distance : " + distance + "\n";
             }
 
+            // favorised type check
+            bool override_distance = false;
+            if (favorised_type != null)
+            {
+                bool is_slot_favorised = slot.GetType() == favorised_type || slot.GetType().IsSubclassOf(favorised_type);
+                bool is_next_slot_favorised = next_slot != null && (next_slot.GetType() == favorised_type || next_slot.GetType().IsSubclassOf(favorised_type));
+
+                // si on est pas du bon type et que le next slot est du bon type on quitte direct
+                if (!is_slot_favorised && is_next_slot_favorised) { continue; }
+
+                // on override la distance si :
+                // - next slot n'est pas du bon type
+                // - le slot actuel est du bon type
+                override_distance = !is_next_slot_favorised && is_slot_favorised;
+            }
 
             // on compare les distances
-            if (distance < closest_distance)
-            {
-                closest_distance = distance;
-                next_slot = slot;
-            }
+            if (!override_distance && distance >= closest_distance) { continue; }
+
+            // finally we override the next slot it is the closest one yet !
+            closest_distance = distance;
+            next_slot = slot;
         }
         return next_slot;
     }
@@ -279,6 +279,12 @@ public class UI_Navigator : Singleton<UI_Navigator>
         }
         return true;
     }
+    public bool IsCurrentSlotTypeOf(Type type)
+    {
+        if (CurrentSlot == null) { return false; }
+        return CurrentSlot.GetType() == type || CurrentSlot.GetType().IsSubclassOf(type);
+    }
+
 
     // INPUTS HANDLING
     public void OnNavigate(Vector2 direction) => Navigator.Navigate(direction.normalized);
@@ -296,11 +302,13 @@ public class UI_Navigator : Singleton<UI_Navigator>
         Mover.FinishMovingItem();
         activate(CurrentSlot);
         return;
-
     }
     private async Awaitable activate(UI_Slot slot)
     {
         if (slot == null) { return; }
+
+        // on récupère le type favorisé pour la navigation après le click
+        Type navigating_to_closest_slot_type = slot.GetFavorisedNavigationType();
 
         // on retient la position du slot
         Vector2 position = GetPosition(slot);
@@ -319,7 +327,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
         if (AppManager.Instance.IsQuitting) { return; }
 
         // on navigue vers le slot le plus proche
-        Navigator.NavigateToClosest(position);
+        Navigator.NavigateToClosest(position, favorised_type: navigating_to_closest_slot_type);
     }
     public async void OnDrop()
     {
@@ -333,6 +341,9 @@ public class UI_Navigator : Singleton<UI_Navigator>
         if (CurrentSlot is not Droppable droppable) { return; }
         UI_Slot slot = CurrentSlot;
 
+        // on récupère le type favorisé pour la navigation après le click
+        Type navigating_to_closest_slot_type = slot.GetFavorisedNavigationType();
+
         // on retient la position du slot
         Vector2 position = GetPosition(slot);
 
@@ -345,7 +356,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
         await System.Threading.Tasks.Task.Yield();
 
         // on navigue vers le slot le plus proche
-        Navigator.NavigateToClosest(position);
+        Navigator.NavigateToClosest(position, favorised_type: navigating_to_closest_slot_type);
     }
     public void OnDown(bool for_drop = false)
     {
@@ -357,6 +368,14 @@ public class UI_Navigator : Singleton<UI_Navigator>
         // on down le slot
         CurrentSlot.OnPointerDown(null);
         if (log_inputs) { Debug.Log("(UI_Navigator) Downed slot " + CurrentSlot.name); }
+    }
+    public void OnUp()
+    {
+        if (CurrentSlot == null) { return; }
+
+        // on up le slot
+        CurrentSlot.OnPointerEnter(null);
+        if (log_inputs) { Debug.Log("(UI_Navigator) Uped slot " + CurrentSlot.name); }
     }
     public void StartMovingItemIfInputDown()
     {
@@ -385,17 +404,25 @@ public class UI_Navigator : Singleton<UI_Navigator>
     }
 
     // ON EXIT
-    public async void OnExit()
+    public void OnExit()
     {
-        // waits for a frame to be sure the input will be finished and won't reopen the chest
-
-
         // checks if we have a UI_ExitButton
         for (int i = 0; i < Slots.Count; i++)
         {
             if (Slots[i] is not UI_ExitButton exit_button) { continue; }
             exit_button.OnPointerClick(null);
             if (log_inputs) { Debug.Log("(UI_Navigator) Exit button clicked: " + exit_button.name); }
+            return;
+        }
+    }
+    public void OnExitDown()
+    {
+        // checks if we have a UI_ExitButton
+        for (int i = 0; i < Slots.Count; i++)
+        {
+            if (Slots[i] is not UI_ExitButton exit_button) { continue; }
+            exit_button.OnPointerDown(null);
+            if (log_inputs) { Debug.Log("(UI_Navigator) Exit button downed: " + exit_button.name); }
             return;
         }
     }
@@ -416,7 +443,7 @@ public interface Navigator
     void ActivateSlottable(Slottable slottable);
 
     // NAVIGATION
-    void NavigateToClosest(Vector2 position);
+    void NavigateToClosest(Vector2 position, Type favorised_type = null);
     void Navigate(Vector2 direction);
     Vector2 BasePosition { get; }
 }

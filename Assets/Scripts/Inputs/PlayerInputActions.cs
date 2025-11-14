@@ -542,15 +542,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ui_move_item"",
-                    ""type"": ""Button"",
-                    ""id"": ""d54f75d2-9814-4e30-b26b-b3e8fdee853f"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": ""Press(behavior=2)"",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""ui_drop_ingame"",
                     ""type"": ""Button"",
                     ""id"": ""8dd2090d-fc95-4c4a-a7b8-d50c07621ed2"",
@@ -715,28 +706,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""keyboard"",
                     ""action"": ""activate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""172d8e1b-8364-46e9-9b61-b108dcbf5525"",
-                    ""path"": ""<Mouse>/middleButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";keyboard"",
-                    ""action"": ""ui_move_item"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""db8fd403-f280-4b0d-bd26-04895a2fe4bf"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""xbox"",
-                    ""action"": ""ui_move_item"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1033,6 +1002,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""keyboard"",
+                    ""action"": ""ui_exit_ingame"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bdbe6184-4231-4833-b59f-2cc818ef2268"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
                     ""action"": ""ui_exit_ingame"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -2255,7 +2235,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_UI_scroll = m_UI.FindAction("scroll", throwIfNotFound: true);
         m_UI_roll_panel = m_UI.FindAction("roll_panel", throwIfNotFound: true);
         m_UI_activate = m_UI.FindAction("activate", throwIfNotFound: true);
-        m_UI_ui_move_item = m_UI.FindAction("ui_move_item", throwIfNotFound: true);
         m_UI_ui_drop_ingame = m_UI.FindAction("ui_drop_ingame", throwIfNotFound: true);
         m_UI_ui_drop = m_UI.FindAction("ui_drop", throwIfNotFound: true);
         m_UI_ui_exit_ingame = m_UI.FindAction("ui_exit_ingame", throwIfNotFound: true);
@@ -2626,7 +2605,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_scroll;
     private readonly InputAction m_UI_roll_panel;
     private readonly InputAction m_UI_activate;
-    private readonly InputAction m_UI_ui_move_item;
     private readonly InputAction m_UI_ui_drop_ingame;
     private readonly InputAction m_UI_ui_drop;
     private readonly InputAction m_UI_ui_exit_ingame;
@@ -2666,10 +2644,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "UI/activate".
         /// </summary>
         public InputAction @activate => m_Wrapper.m_UI_activate;
-        /// <summary>
-        /// Provides access to the underlying input action "UI/ui_move_item".
-        /// </summary>
-        public InputAction @ui_move_item => m_Wrapper.m_UI_ui_move_item;
         /// <summary>
         /// Provides access to the underlying input action "UI/ui_drop_ingame".
         /// </summary>
@@ -2769,9 +2743,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @activate.started += instance.OnActivate;
             @activate.performed += instance.OnActivate;
             @activate.canceled += instance.OnActivate;
-            @ui_move_item.started += instance.OnUi_move_item;
-            @ui_move_item.performed += instance.OnUi_move_item;
-            @ui_move_item.canceled += instance.OnUi_move_item;
             @ui_drop_ingame.started += instance.OnUi_drop_ingame;
             @ui_drop_ingame.performed += instance.OnUi_drop_ingame;
             @ui_drop_ingame.canceled += instance.OnUi_drop_ingame;
@@ -2840,9 +2811,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @activate.started -= instance.OnActivate;
             @activate.performed -= instance.OnActivate;
             @activate.canceled -= instance.OnActivate;
-            @ui_move_item.started -= instance.OnUi_move_item;
-            @ui_move_item.performed -= instance.OnUi_move_item;
-            @ui_move_item.canceled -= instance.OnUi_move_item;
             @ui_drop_ingame.started -= instance.OnUi_drop_ingame;
             @ui_drop_ingame.performed -= instance.OnUi_drop_ingame;
             @ui_drop_ingame.canceled -= instance.OnUi_drop_ingame;
@@ -3747,13 +3715,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnActivate(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "ui_move_item" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnUi_move_item(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "ui_drop_ingame" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

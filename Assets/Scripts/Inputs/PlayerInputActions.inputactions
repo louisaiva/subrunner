@@ -456,15 +456,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ui_move_item",
-                    "type": "Button",
-                    "id": "d54f75d2-9814-4e30-b26b-b3e8fdee853f",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "Press(behavior=2)",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "ui_drop_ingame",
                     "type": "Button",
                     "id": "8dd2090d-fc95-4c4a-a7b8-d50c07621ed2",
@@ -629,28 +620,6 @@
                     "processors": "",
                     "groups": "keyboard",
                     "action": "activate",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "172d8e1b-8364-46e9-9b61-b108dcbf5525",
-                    "path": "<Mouse>/middleButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";keyboard",
-                    "action": "ui_move_item",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "db8fd403-f280-4b0d-bd26-04895a2fe4bf",
-                    "path": "<Gamepad>/buttonNorth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "xbox",
-                    "action": "ui_move_item",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -947,6 +916,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "keyboard",
+                    "action": "ui_exit_ingame",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bdbe6184-4231-4833-b59f-2cc818ef2268",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "xbox",
                     "action": "ui_exit_ingame",
                     "isComposite": false,
                     "isPartOfComposite": false

@@ -229,7 +229,7 @@ public class Item : Movable, EndlessInteractable
             if (feet_collider != null) { feet_collider.enabled = true; }
 
             // we add the rigidbody
-            if (rb == null)
+            if (GetComponent<Rigidbody2D>() == null)
             {
                 rb = gameObject.AddComponent<Rigidbody2D>();
                 rb.gravityScale = 0;

@@ -2496,6 +2496,32 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!1102 &-1201161052436285496
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: moustik_idle_D
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: 977a7f75ceed63b4aa8dfb8fd661959f, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1102 &-939558942236460023
 AnimatorState:
   serializedVersion: 6
@@ -3388,7 +3414,7 @@ AnimatorStateMachine:
     m_Position: {x: 1640, y: -450, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -7617342085746965398}
-    m_Position: {x: 198.57028, y: 1033.4749, z: 0}
+    m_Position: {x: 190, y: 1030, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5236869120512811444}
     m_Position: {x: -674.3567, y: 399.01837, z: 0}
@@ -3551,6 +3577,9 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: -2580504887122139978}
     m_Position: {x: -342.41516, y: 793.28046, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: -1201161052436285496}
+    m_Position: {x: 530, y: 1130, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []

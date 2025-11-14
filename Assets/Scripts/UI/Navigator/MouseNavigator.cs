@@ -40,7 +40,7 @@ public class MouseNavigator : MonoBehaviour, Navigator
         // si on a des slots on navigue tout simplement
         Navigate(start_moving_item: false);
     }
-    public async void NavigateToClosest(Vector2 position)
+    public async void NavigateToClosest(Vector2 position, System.Type favorised_type = null)
     {
         // wait a frame for ui to update it self
         await System.Threading.Tasks.Task.Yield();

@@ -46,6 +46,7 @@ public class UI_Manager : Singleton<UI_Manager>
 
     [Header("Transitions")]
     private PauseMenuBackgroundEffect bg;
+    public PauseMenuBackgroundEffect BackgroundEffect => bg;
     private Coroutine current_transition = null;
     public bool IsInTransition => current_transition != null;
 

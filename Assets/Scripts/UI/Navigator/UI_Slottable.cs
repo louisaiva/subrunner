@@ -21,21 +21,33 @@ public abstract class UI_Slottable : MonoBehaviour, Slottable
     public bool log_starting_slot = false;
 
     // ENABLE - DISABLE
-    public virtual void Enable(bool ingame = false)
+    public void Enable(bool ingame = false)
     {
         // on register to navigator's hover slot
         UI_Navigator.Instance.OnSlotHoverEnter += HandleSlotHover;
 
         // on enregistre le slottable
         UI_Navigator.Instance.AddSlottable(this, ingame_navigation: ingame);
+
+        if (log) { Debug.Log("(UI_Slottable) enabled slottable : " + name); }
     }
-    public virtual void Disable()
+    public void Disable()
     {
         // on unregister to Navigator's hover slot
         UI_Navigator.Instance.OnSlotHoverEnter -= HandleSlotHover;
 
         // on remove le slottable
         UI_Navigator.Instance.RemoveSlottable(this);
+
+        UnhoverAllSlots();
+
+        if (log) { Debug.Log("(UI_Slottable) disabled slottable : " + name); }
+    }
+    public void UnhoverAllSlots()
+    {
+        // on unhover tous les slots
+        List<UI_Slot> slots = GetSlots();
+        for (int i = 0; i < slots.Count; i++) { slots[i].OnPointerExit(null); }
     }
     public virtual void HandleSlotHover(UI_Slot slot)
     {

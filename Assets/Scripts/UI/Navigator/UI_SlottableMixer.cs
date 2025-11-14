@@ -76,6 +76,7 @@ public class UI_SlottableMixer : UI_Slottable, Awakable
         if (!slottables.Contains(slottable)) { return; }
 
         slottables.Remove(slottable);
+        slottable.Disable();
 
         if (master_slottable == slottable) { master_slottable = null; }
         if (starting_slot != null && slottable.IsYourSlot(starting_slot)) { starting_slot = null; }

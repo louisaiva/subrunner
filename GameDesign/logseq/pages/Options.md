@@ -1,0 +1,6 @@
+-
+- ## Voici les options principales du menu
+	- ### graphismes
+		- - screenshake strengh
+		- - screenshake chroma strengh (+ duration ?)
+-

@@ -25,4 +25,11 @@ public class UI_ExitButton : UI_Button
         // we change the icon color
         btn_icon.color = baseColor;
     }
+    public override void OnPointerDown(PointerEventData eventData)
+    {
+        base.OnPointerDown(eventData);
+
+        // we change the icon color
+        btn_icon.color = hoverColor;
+    }
 }

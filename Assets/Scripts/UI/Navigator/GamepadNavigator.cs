@@ -49,7 +49,10 @@ public class GamepadNavigator : MonoBehaviour, Navigator
         if (log) { Debug.Log("(UI_GamepadNavigator) navigating : " + direction); }
 
         // on ne navigue pas si on essaie de drop et qu'on a pas d'ui_item
-        if (Controller.Instance.UIC.IsDropInputDown() && Manager.CurrentSlot is not UI_Item) { return; }
+        if (Manager.CurrentSlot != null
+            && Controller.Instance != null
+            && Controller.Instance.UIC.IsDropInputDown()
+            && Manager.CurrentSlot is not UI_Item) { return; }
 
         // on move item potentiellement
         Manager.StartMovingItemIfInputDown();
@@ -59,7 +62,7 @@ public class GamepadNavigator : MonoBehaviour, Navigator
 
         string s = "(UI_GamepadNavigator) NAVIGATE: \n\nparameters: \n\tangle_threshold : " + angle_threshold + "\n\tangle_multiplicator: " + angle_multiplicator + "\n\n";
 
-        s+= "\n\ndropping :\n\tis_drop_input_down : " + Controller.Instance.UIC.IsDropInputDown() + "\n\tcurrent slot type : " + (Manager.CurrentSlot != null ? Manager.CurrentSlot.GetType().Name : "null") + "\n\n";
+        if (Controller.Instance != null) { s += "\n\ndropping :\n\tis_drop_input_down : " + Controller.Instance.UIC.IsDropInputDown() + "\n\tcurrent slot type : " + (Manager.CurrentSlot != null ? Manager.CurrentSlot.GetType().Name : "null") + "\n\n"; }
 
         // on récupère la position du slot actuel
         Vector2 current_slot_position = Manager.GetPosition(Manager.CurrentSlot);
@@ -97,7 +100,7 @@ public class GamepadNavigator : MonoBehaviour, Navigator
         s += "\n\nclosest : " + closest_slot.name + "\n";
         if (log) { Debug.Log(s); }
     }
-    public async void NavigateToClosest(Vector2 position)
+    public async void NavigateToClosest(Vector2 position, System.Type favorised_type = null)
     {
         // we check if we have a slottable
         if (Manager.Slottables.Count == 0) { return; }
@@ -110,7 +113,7 @@ public class GamepadNavigator : MonoBehaviour, Navigator
 
         // on récupère le slot le plus proche
         string s = "(UI_GamepadNavigator) NAVIGATE TO CLOSEST: \n\nfrom position : " + position + "\n\n";
-        UI_Slot closest_slot = Manager.GetClosestSlot(position, ref Manager.Slots, ref s);
+        UI_Slot closest_slot = Manager.GetClosestSlot(position, ref Manager.Slots, ref s, favorised_type: favorised_type);
 
         // we navigate to the slot if we have one
         if (closest_slot == null) { return; }

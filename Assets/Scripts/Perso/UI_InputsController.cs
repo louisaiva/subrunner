@@ -33,7 +33,6 @@ public class UI_InputsController : InputController
     protected void Start()
     {
         // on récupère les inputs
-        // perso_inputs = InputManager.Instance.inputs.perso;
         initInputs();
 
         // on récupère le navigator
@@ -116,8 +115,8 @@ public class UI_InputsController : InputController
         else
         {
             ui_inputs.ui_drop.performed += ui_dropCallback;
-            ui_inputs.activate.performed += ui_activateCallback;
         }
+        ui_inputs.activate.performed += ui_activateCallback;
         ui_inputs.navigate.performed += ui_navigateCallback;
 
         // ui_inputs
@@ -180,7 +179,7 @@ public class UI_InputsController : InputController
     // GETTERS
     public bool IsMovingInputDown()
     {
-        return IsEndlessInputDown<float>("ui_activate") || IsEndlessInputDown<float>("ui_drop_ingame");
+        return IsEndlessInputDown<float>("ui_activate");
     }
     public bool IsDropInputDown()
     {
@@ -213,9 +212,33 @@ public class UI_InputsController : InputController
             get_endless_input<float>("ui_activate" /* + (navigate_in_game ? "_ingame" : "" )*/).OnInput(context);
             return;
         }
+
+        // si on est in-game et qu'on utilise la souris on veut pas les activer (pcq ça drop en même temps)
+        if (in_game)
+        {
+            // si on est à la souris on active jamais
+            if (!InputManager.Instance.isUsingGamepad()) { return; }
+
+            // si on est au gamepad & qu'on ne bouge pas d'items on up et return
+            if (!navigator.Mover.IsMovingItem && navigator.IsCurrentSlotTypeOf(typeof(UI_Item)))
+            {
+                navigator.OnUp();
+                return;
+            }
+        }
+        
+        // sinon on active
         navigator.OnActivate();
     }
-    private void OnUI_ActivateHeld() { navigator.StartMovingItemIfInputDown(); }
+    private void OnUI_ActivateHeld()
+    {
+        // si on est in-game et qu'on utilise la souris on veut pas start moving item non plus
+        // pcq on veut au contraire endless drop et ça va l'arreter
+        if (in_game && !InputManager.Instance.isUsingGamepad()) { return; }
+
+        // on start moving item
+        navigator.StartMovingItemIfInputDown();
+    }
 
     // UI_DROP
     public void handle_UI_drop_input(InputAction.CallbackContext context)
@@ -258,8 +281,12 @@ public class UI_InputsController : InputController
     private void handle_UI_exit_input(InputAction.CallbackContext context)
     {
         // Debug.Log("(UI_InputsController) handling UI exit input : " + context.ReadValue<float>());
-        if (context.ReadValue<float>() > 0.5f) { return; } // only on release
-        UI_Navigator.Instance.OnExit();
+        if (context.ReadValue<float>() > 0.5f)
+        {
+            navigator.OnExitDown();
+            return;
+        } // only on release
+        navigator.OnExit();
     }
 
     // UI_MANAGER CANCEL POOL

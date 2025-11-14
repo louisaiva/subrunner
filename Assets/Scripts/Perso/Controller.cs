@@ -159,7 +159,7 @@ public class Controller : MonoBehaviour
         if (capa is Device)
         {
             // on enleve le device du UI_Device
-            UI_Manager.Instance.GetPool("device").GetComponent<UI_Device>().ClearDevice();
+            UI_Manager.Instance.GetPool<UI_Device>()?.ClearDevice();
             UI_Manager.Instance.UnstackFromHUD("device", override_transition: true);
         }
 

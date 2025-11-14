@@ -69,4 +69,14 @@ public class UI_Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     {
         if (log) { Debug.Log("(UI_Slot) OnPointerClick on " + gameObject.name); }
     }
+
+
+    // GETTERS
+    public Type GetFavorisedNavigationType()
+    {
+        // get slot type
+        Type slot_type = null;
+        if (this is UI_Item) { slot_type = typeof(UI_Item); }
+        return slot_type;
+    }
 }

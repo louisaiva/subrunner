@@ -187,8 +187,10 @@ public class AttackCapacity : Capacity
 
 
         // deal damage to target
-        foreach (Being enemy in hit_enemies)
+        for (int i = 0; i < hit_enemies.Count; ++i)
         {
+            Being enemy = hit_enemies[i];
+            if (enemy == null) { continue; }
             applyDamageToEnemy(enemy, single_target_damage, total_knockback_weight, ref attacker_knockback_direction);
 
             // if we have a single_hit attack we break the loop
