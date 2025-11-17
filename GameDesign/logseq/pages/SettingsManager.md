@@ -1,0 +1,15 @@
+- DontDestroy
+- Singleton
+-
+- ## Fonctionnement
+	- ce script gere toutes les options. il possède une variable pour chaque option et est relié aux graphismes options (quand on bouge le slider dans les options ça change les valeurs de CE script)
+	- à chaque variable est associée un **Event** public qui est trigger lorsque la valeur correspondante est modifiée. Ensuite chaque script ayant besoin des options va:
+		- - accéder à la variable spécifique au chargement du jeu (CameraShaker set ses propres variables locales en fonction de celles du SettingsManager)
+		- - changer son comportement en direct si le script est chargé (si on est en jeu on a un CameraShaker -> change ses variables en direct, mais si on est dans le menu principal, on a pas de CameraShaker -> attend le chargement du jeu et ne provoque pas de NullRefError ! beneef)
+-
+-
+- ## Voici les options principales du menu
+	- ### graphismes
+		- - screenshake strengh
+		- - screenshake chroma strengh (+ duration ? + threshold ?)
+-

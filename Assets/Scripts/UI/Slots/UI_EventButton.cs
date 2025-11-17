@@ -10,6 +10,7 @@ public class UI_EventButton : UI_Button
     [Header("Color Button Settings")]
     [SerializeField] private Color baseColor = Color.red;
     [SerializeField] private Color hoverColor = Color.white;
+    [SerializeField] private Color iconHoverColor = Color.white;
     [SerializeField] private Image btn_icon;
 
     [Header("Colorers")]
@@ -25,7 +26,8 @@ public class UI_EventButton : UI_Button
         base.OnPointerEnter(eventData);
 
         // we change the icon color
-        btn_icon.color = hoverColor;
+        btn_icon.color = iconHoverColor;
+        image.color = baseColor; // and the main image color
 
         // we color all colorers
         for (int i = 0; i < colorers.Count; i++)
@@ -39,6 +41,7 @@ public class UI_EventButton : UI_Button
 
         // we change the icon color
         btn_icon.color = baseColor;
+        image.color = hoverColor; // and the main image color
 
         // we color all colorers
         for (int i = 0; i < colorers.Count; i++)

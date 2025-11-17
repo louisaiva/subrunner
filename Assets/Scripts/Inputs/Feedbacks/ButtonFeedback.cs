@@ -2,7 +2,7 @@ using UnityEngine;
 /// <summary>
 /// This class is used to give feedback to the player when they are pressing a button
 /// </summary>
-public class ButtonFeedback : InputFeedback
+public class ButtonFeedback : InputImageFeedback
 {
 
     [Header("Button Feedback")]

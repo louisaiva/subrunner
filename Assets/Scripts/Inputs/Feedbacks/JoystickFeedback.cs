@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// This class is used to give feedback to the player when they are pressing a Joystick
 /// </summary>
-public class JoystickFeedback : InputFeedback
+public class JoystickFeedback : InputImageFeedback
 {
     [Header("Joystick Feedback")]
     [SerializeField] protected Vector2 joystick_direction;

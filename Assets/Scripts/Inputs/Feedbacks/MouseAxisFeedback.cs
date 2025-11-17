@@ -2,7 +2,7 @@ using UnityEngine;
 /// <summary>
 /// This class is used to give feedback to the player we are moving the mouse
 /// </summary>
-public class MouseAxisFeedback : InputFeedback
+public class MouseAxisFeedback : InputImageFeedback
 {
 
     [Header("Mouse Axis Feedback")]

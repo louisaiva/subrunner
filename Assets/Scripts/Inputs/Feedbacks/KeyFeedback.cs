@@ -1,13 +1,13 @@
 using UnityEngine;
-using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
+
 /// <summary>
 /// This class is used to give feedback to the player when they are pressing a key
 /// (on keyboard but also with gamepad in particular cases)
 /// </summary>
-public class KeyFeedback : InputFeedback
+public class KeyFeedback : InputImageFeedback
 {
 
     [Header("Key Feedback")]

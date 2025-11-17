@@ -13,7 +13,7 @@ public class UI_ItemRenderer : MonoBehaviour
     [SerializeField] private TextMeshProUGUI qty;
 
     [Header("Colors & Feedbacks")]
-    [SerializeField] private InputFeedback feedback; // optionnel
+    [SerializeField] private InputImageFeedback feedback; // optionnel
     private float color_shift = 60f;
 
     [Header("Log")]

@@ -36,12 +36,12 @@
 		-
 		- TODO try with [[UI_CancelButton]] which is a [[UI_Button]] that cancels a specific [[UI_Slottable]] / [[UI_Pool]]
 			- DONE prototype on #Oven & #Sink
-			- TODO on [[Chest]]
+			- DONE on [[Chest]]
 			- TODO on [[UI_Window]]
 		-
-		- TODO rework la [[UI_HUD]] pool pour qu'interagir avec un [[Chest]] fasse que le déplacement est désactivé
-			- TODO on navigue dans l'ui via **LJoy**
-			- TODO on récup les items rapidement via **B**
-			- TODO on ferme l'ui via activation d'un [[UI_CancelButton]]
+		- DONE rework la [[UI_HUD]] pool pour qu'interagir avec un [[Chest]] fasse que le déplacement est désactivé
+			- DONE on navigue dans l'ui via **LJoy**
+			- DONE on récup les items rapidement via **B**
+			- DONE on ferme l'ui via activation d'un [[UI_CancelButton]]
 -
 -

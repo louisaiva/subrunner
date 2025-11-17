@@ -13,6 +13,9 @@ public class UI_Colorer : MonoBehaviour
     private bool is_colored = false;
     private UnityEngine.UI.Graphic graphic;
 
+    [Header("Logs")]
+    public bool log = false;
+
     // START
     private void Start()
     {
@@ -31,6 +34,7 @@ public class UI_Colorer : MonoBehaviour
         if (!is_colored) { base_color = graphic.color; }
         graphic.color = color == null ? this.color : color.Value;
         is_colored = true;
+        if (log) Debug.Log("(UI_Colorer) Applied color " + graphic.color + " to " + gameObject.name);
     }
     public void RevertColor()
     {
@@ -38,5 +42,6 @@ public class UI_Colorer : MonoBehaviour
         if (!is_colored) { return; }
         graphic.color = base_color;
         is_colored = false;
+        if (log) Debug.Log("(UI_Colorer) Reverted color to " + graphic.color + " on " + gameObject.name);
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 /// <summary>
 /// This class is used to give feedback to the player when they are pressing a mouse button
 /// </summary>
-public class MouseButtonFeedback : InputFeedback
+public class MouseButtonFeedback : InputImageFeedback
 {
 
     [Header("Mouse Button Feedback")]

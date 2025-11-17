@@ -13,6 +13,7 @@ public class CameraShaker : Singleton<CameraShaker>
 	[SerializeField] protected ShakeSettings settings;
 
 	[Header("Chroma effect")]
+	[SerializeField][Range(0f, 2f)] protected float chroma_magnitude_threshold = 0.8f;
 	[SerializeField][Range(0f, 8f)] protected float chroma_duration_factor = 2f;
 
 	[Header("Logs")]
@@ -41,7 +42,10 @@ public class CameraShaker : Singleton<CameraShaker>
 		Tween.ShakeLocalPosition(main_camera.transform, settings);
 		if (log) { Debug.Log("(CameraShaker) shaked the screen with " + magnitude + " magnitude");}
 
-		// "shake" the chroma effect
+		
+
+		// "shake" the chroma effect if the magnitude is > chroma_magnitude_threshold
+		if (magnitude < chroma_magnitude_threshold) { return; }
 		bg.TransitionEffect(show: true, duration:0f,bloom_effect:false);
 		await System.Threading.Tasks.Task.Yield(); // on attend une frame pour que l'effet soit visible
 		await bg.TransitionEffect(show: false, duration:settings.duration*chroma_duration_factor,bloom_effect:false);
