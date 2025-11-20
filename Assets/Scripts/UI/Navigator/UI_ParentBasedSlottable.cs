@@ -24,8 +24,10 @@ public class UI_ParentBasedSlottable : UI_Slottable
             for (int j= 0; j < parent.childCount; j++)
             {
                 child = parent.GetChild(j);
+                if (child.gameObject.activeSelf == false) { continue; }
                 slot = child.GetComponent<UI_Slot>();
                 if (slot == null) { continue; }
+                if (slot.Disabled) { continue; }
                 slots.Add(slot);
             }
         }

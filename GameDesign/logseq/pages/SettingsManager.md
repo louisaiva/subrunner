@@ -1,6 +1,9 @@
 - DontDestroy
 - Singleton
 -
+- ne pas confondre avec la #UI_Pool [[UI_SettingsPool]] qui elle, n'est ni singleton ni dontdestroy
+-
+-
 - ## Fonctionnement
 	- ce script gere toutes les options. il possède une variable pour chaque option et est relié aux graphismes options (quand on bouge le slider dans les options ça change les valeurs de CE script)
 	- à chaque variable est associée un **Event** public qui est trigger lorsque la valeur correspondante est modifiée. Ensuite chaque script ayant besoin des options va:
@@ -12,4 +15,10 @@
 	- ### graphismes
 		- - screenshake strengh
 		- - screenshake chroma strengh (+ duration ? + threshold ?)
+	- ### gameplay
+	- ### inputs
+	- ### ui
+	- ### audio
+	-
+	-
 -

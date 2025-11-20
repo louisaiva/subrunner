@@ -77,6 +77,7 @@ public class UI_Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         // get slot type
         Type slot_type = null;
         if (this is UI_Item) { slot_type = typeof(UI_Item); }
+        if (this is UI_PanelButton) { slot_type = typeof(UI_SettingSlot); }
         return slot_type;
     }
 }

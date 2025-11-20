@@ -20,7 +20,7 @@ public class InputImageFeedback : InputFeedback
         {
             if (_bank != null) { return _bank; }
 
-            _bank = AnimBank.Instance.GetComponent<SpriteBank>();
+            _bank = AnimBank.Instance?.GetComponent<SpriteBank>();
             return _bank;
         }
     }

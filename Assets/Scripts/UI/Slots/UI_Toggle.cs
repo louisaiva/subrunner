@@ -26,7 +26,6 @@ public class UI_Toggle : UI_ImageSlot, Droppable
 
         if (log) { Debug.Log("(UI_Toggle) Toggle clicked - " + (is_on ? "ON" : "OFF")); }
     }
-
     public void OnPointerDropped(PointerEventData eventData)
     {
         // we click

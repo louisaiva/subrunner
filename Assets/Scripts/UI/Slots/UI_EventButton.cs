@@ -8,10 +8,10 @@ public class UI_EventButton : UI_Button
 {
 
     [Header("Color Button Settings")]
-    [SerializeField] private Color baseColor = Color.red;
-    [SerializeField] private Color hoverColor = Color.white;
-    [SerializeField] private Color iconHoverColor = Color.white;
-    [SerializeField] private Image btn_icon;
+    [SerializeField] protected Color baseColor = Color.red;
+    [SerializeField] protected Color hoverColor = Color.white;
+    [SerializeField] protected Color iconHoverColor = Color.white;
+    [SerializeField] protected Image btn_icon;
 
     [Header("Colorers")]
     public List<UI_Colorer> colorers = new List<UI_Colorer>();

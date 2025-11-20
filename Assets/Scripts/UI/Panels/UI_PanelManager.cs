@@ -68,8 +68,10 @@ public class UI_PanelManager : MonoBehaviour
         log_msg += $"\n\t is an ui_item ? {slot is UI_Item}";
 
         // we check if it's a UI_Item & if it belongs to one of our panels
-        if (slot is not UI_Item uiItem || uiItem.ItemPool == null) { if (log) { Debug.Log(log_msg); } return; }
-        UI_Panel ui_panel = uiItem.ItemPool.GetComponentInParent<UI_Panel>();
+        // if (slot is not UI_Item uiItem || uiItem.ItemPool == null) { if (log) { Debug.Log(log_msg); } return; }
+
+        // checks if it has a UI_Panel in its above hierarchy
+        UI_Panel ui_panel = slot.GetComponentInParent<UI_Panel>(/* includeInactive: true */);
         log_msg += $"\n\t has an ui_panel ? {ui_panel != null}";
         if (ui_panel == null || !panels.Contains(ui_panel)) { if (log) { Debug.Log(log_msg); } return; }
 
@@ -100,6 +102,16 @@ public class UI_PanelManager : MonoBehaviour
         if (log) { Debug.Log($"(UI_PanelManager) Rolling : {currentPanel.name} --> {targetPanel.name}"); }
 
         // tween to it
+        TweenToPanel(targetPanel);
+    }
+    public void TweenToPanel(string panel_name)
+    {
+        UI_Panel targetPanel = get_panel(panel_name);
+        if (targetPanel == null)
+        {
+            Debug.LogError($"(UI_PanelManager) TweenToPanel failed: panel not found: {panel_name}");
+            return;
+        }
         TweenToPanel(targetPanel);
     }
 
@@ -193,4 +205,5 @@ public class UI_PanelManager : MonoBehaviour
         }
         return null;
     }
+    public UI_Panel GetPanel(string panelName) => get_panel(panelName);
 }

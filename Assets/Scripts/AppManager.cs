@@ -97,6 +97,16 @@ public class AppManager : MonoBehaviour
         Screen.fullScreen = !Screen.fullScreen;
         #endif
     }
+    public void fullscreen(bool set_full)
+    {
+        #if UNITY_EDITOR
+        EditorWindow window = EditorWindow.focusedWindow;
+        // Assume the game view is focused.
+        window.maximized = set_full;
+        #else
+        Screen.fullScreen = set_full;
+        #endif
+    }
     public void ghost_mode()
     {
         if (Perso.Instance == null) { return; }
@@ -119,6 +129,14 @@ public class AppManager : MonoBehaviour
     public void credits()
     {
         UI_Manager.Instance.SwitchTo("credits");
+    }
+    public void settings()
+    {
+        UI_Manager.Instance.SwitchTo("settings");
+    }
+    public void home()
+    {
+        UI_Manager.Instance.SwitchTo("home");
     }
     public async void back_to_main_menu()
     {

@@ -67,6 +67,12 @@ public class UI_InputsController : InputController
                 threshold: InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD,
                 repeat: -1, // no repeat, only holding
                 unscaled_time: false)).OnHold += _ => OnUI_ActivateHeld();
+
+        // et pour le slide continu dans les options
+        add_endless_input(new EndlessInput<Vector2>("slide", ui_inputs.navigate_exploits,
+                threshold: InputManager.Instance.BUTTON_ENDLESSLY_SHORT_THRESHOLD,
+                repeat: InputManager.Instance.BUTTON_ENDLESSLY_SHORT_DELAY,
+                unscaled_time: true)).OnEndless += slide_if_needed;
     }
 
     // INPUTS
@@ -82,11 +88,12 @@ public class UI_InputsController : InputController
         ui_navigateCallback = ctx => handle_UI_navigate_input(ctx);
         ui_activateCallback = ctx => handle_UI_activate_input(ctx);
         ui_exitCallback = ctx => handle_UI_exit_input(ctx);
-        mouse_navigationCallback = ctx => OnUI_Navigate(ctx.ReadValue<Vector2>());
+        // mouse_navigationCallback = ctx => OnUI_Navigate(ctx.ReadValue<Vector2>());
+        mouse_navigationCallback = handle_mouse_navigation;
 
 
         // on crée les always active callbacks
-        ui_exploit_selectionCallback = ctx => handle_exploit_selection_input(ctx.ReadValue<Vector2>());
+        ui_exploit_selectionCallback = handle_right_navigation_input;
         ui_cancelPoolCallback = ctx => { handle_cancel_pool_input(ctx.ReadValue<float>()); };
         ui_rollPanelCallback = ctx => { handle_roll_panel_input(ctx.ReadValue<float>()); };
         ui_inventoryCallback = ctx => { UI_Manager.Instance.TogglePool("inventory"); };
@@ -187,6 +194,22 @@ public class UI_InputsController : InputController
         return IsEndlessInputDown<float>("ui_drop");
     }
 
+    // MOUSE NAVIGATION
+    public void handle_mouse_navigation(InputAction.CallbackContext context)
+    {
+        // we check if the mouse is pressing a button or not
+        if (Input.GetMouseButton(0)) { handle_drag_input(context); }
+        OnUI_Navigate(context.ReadValue<Vector2>());
+    }
+    public void handle_drag_input(InputAction.CallbackContext context)
+    {
+        // depends on the slot type
+        if (navigator.CurrentSlot == null) { return; }
+        
+        // if ui_slider we down so it will update the slider
+        if (navigator.CurrentSlot is UI_Slider) { navigator.OnDown(); }
+    }
+
     // UI_NAVIGATE
     public void handle_UI_navigate_input(InputAction.CallbackContext context)
     {
@@ -262,8 +285,25 @@ public class UI_InputsController : InputController
     }
     private void OnUI_Drop() { navigator.OnDrop(); }
 
-    // RIGHT JOYSTICK EXPLOIT SELECTION
+
+    // RIGHT JOYSTICK NAVIGATION
     private UI_ExploitSelector exploit_selector;
+    private void handle_right_navigation_input(InputAction.CallbackContext context)
+    {
+        // on selectionne l'exploit seulement quand on est dans l'ui pool exploit_wheel
+        if (UI_Manager.Instance.IsStacked("exploit_wheel"))
+        {
+            handle_exploit_selection_input(context.ReadValue<Vector2>());
+            return;
+        }
+
+        // sinon on essaie de slide
+        if (UI_Manager.Instance.IsStacked("settings"))
+        {
+            handle_sliding_input(context);
+            return;
+        }
+    }
     private void handle_exploit_selection_input(Vector2 direction)
     {
         // transfère l'event seulement quand on est dans l'ui pool exploit_wheel
@@ -275,7 +315,30 @@ public class UI_InputsController : InputController
         // on transfère l'input
         exploit_selector.HandleSelectionInput(direction);
     }
+    private void handle_sliding_input(InputAction.CallbackContext context)
+    {
+        // on regarde si on doit commencer l'endless sliding ou pas
+        Vector2 slide_value = context.ReadValue<Vector2>();
+        if (slide_value.magnitude < 0.5f) { return; }
 
+        // if we are already holding no need to launch it
+        if (get_endless_input<Vector2>("slide").IsInputDown()) { return; }
+
+        // if we press have a big joystick magnitude we launch the endless threshold
+        get_endless_input<Vector2>("slide").OnInput(context);
+
+        // on fait bouger le slider si besoin
+        slide_if_needed(slide_value);
+    }
+    private void slide_if_needed(Vector2 direction)
+    {
+        // on regarde si le navigator est sur un slider
+        if (navigator.CurrentSlot == null) { return; }
+        if (navigator.CurrentSlot is not UI_Slider slider) { return; }
+
+        // on fait bouger le slider
+        slider.OnSlide(direction.x);
+    }
 
     // UI_EXIT
     private void handle_UI_exit_input(InputAction.CallbackContext context)

@@ -9,32 +9,79 @@ public class CameraShaker : Singleton<CameraShaker>
 
 	[Header("Shake magnitude")]
 	[SerializeField][Range(0f, 1f)] protected float shake_magnitude = 1f;
-	protected const float base_shake_magnitude = 0.75f;
+	protected float base_shake_magnitude = 0.75f;
+	private Setting screenshake_global_setting = null;
 	[SerializeField] protected ShakeSettings settings;
 
 	[Header("Chroma effect")]
-	[SerializeField][Range(0f, 2f)] protected float chroma_magnitude_threshold = 0.8f;
-	[SerializeField][Range(0f, 8f)] protected float chroma_duration_factor = 2f;
+	protected float chroma_magnitude_threshold = 0.8f;
+	private Setting chroma_thresh_setting = null;
+	protected float chroma_duration_factor = 2f;
+	private Setting chroma_duration_setting = null;
 
 	[Header("Logs")]
 	[SerializeField] protected bool log = false;
 
+	// START
 	private void Start()
 	{
 		main_camera = GetComponent<Camera>();
 		bg = GetComponent<PauseMenuBackgroundEffect>();
+
+		// we get the settings & set callbacks
+		set_settings();
     }
 
+	// SETTINGS MANAGEMENT
+	private void set_settings()
+    {
+        if (SettingsManager.Instance == null) { return; }
+
+		// screenshake_global_setting
+		screenshake_global_setting = SettingsManager.Instance.GetSetting("screenshake_global_setting");
+		if (screenshake_global_setting != null)
+		{
+			screenshake_global_setting.OnValueChanged += set_global_shake;
+			set_global_shake(screenshake_global_setting.value);
+		}
+
+		// chroma threshold
+		chroma_thresh_setting = SettingsManager.Instance.GetSetting("screenshake_chroma_threshold");
+		if (chroma_thresh_setting != null)
+        {
+			chroma_thresh_setting.OnValueChanged += set_chroma_thresh;
+			set_chroma_thresh(chroma_thresh_setting.value);
+        }
+
+		// chroma duration
+		chroma_duration_setting = SettingsManager.Instance.GetSetting("screenshake_chroma_duration_factor");
+		if (chroma_duration_setting != null)
+		{
+			chroma_duration_setting.OnValueChanged += set_chroma_duration;
+			set_chroma_duration(chroma_duration_setting.value);
+		}
+	}
+	private void set_global_shake(float shake) { base_shake_magnitude = shake; }
+	private void set_chroma_thresh(float thresh) { chroma_magnitude_threshold = thresh; }
+	private void set_chroma_duration(float duration) { chroma_duration_factor = duration; }
+	private void OnDestroy()
+	{
+		if (screenshake_global_setting != null) { screenshake_global_setting.OnValueChanged -= set_global_shake; }
+		if (chroma_thresh_setting != null) { chroma_thresh_setting.OnValueChanged -= set_chroma_thresh; }
+		if (chroma_duration_setting != null) { chroma_duration_setting.OnValueChanged -= set_chroma_duration; }
+	}
+
+	// SHAKE
 	public async void Shake(float magnitude = 1f)
 	{
 		// clamp and apply global setting to magnitude
-		magnitude *= shake_magnitude * base_shake_magnitude;
+		magnitude *= shake_magnitude * base_shake_magnitude * 2f;
 		if (magnitude <= 0f)
 		{
 			if (log) { Debug.Log("(CameraShaker) tried to shake the screen with " + magnitude + " magnitude, but it was too low"); }
 			return;
 		}
-		magnitude = Mathf.Clamp(magnitude, 0f, 2f);
+		magnitude = Mathf.Clamp(magnitude, 0f, 4f);
 
 		// tween the camera position
 		settings.strength.x = magnitude;
@@ -42,10 +89,8 @@ public class CameraShaker : Singleton<CameraShaker>
 		Tween.ShakeLocalPosition(main_camera.transform, settings);
 		if (log) { Debug.Log("(CameraShaker) shaked the screen with " + magnitude + " magnitude");}
 
-		
-
 		// "shake" the chroma effect if the magnitude is > chroma_magnitude_threshold
-		if (magnitude < chroma_magnitude_threshold) { return; }
+		if (magnitude < chroma_magnitude_threshold * base_shake_magnitude) { return; }
 		bg.TransitionEffect(show: true, duration:0f,bloom_effect:false);
 		await System.Threading.Tasks.Task.Yield(); // on attend une frame pour que l'effet soit visible
 		await bg.TransitionEffect(show: false, duration:settings.duration*chroma_duration_factor,bloom_effect:false);

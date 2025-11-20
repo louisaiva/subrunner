@@ -45,7 +45,7 @@ public class MouseAxisFeedback : InputImageFeedback
         base.OnReset();
 
         // we get the sprite from the bank
-        image.sprite = bank.GetMouseFeedbackIcon(axis_reference);
+        image.sprite = bank?.GetMouseFeedbackIcon(axis_reference);
     }
     private void reset_later()
     {

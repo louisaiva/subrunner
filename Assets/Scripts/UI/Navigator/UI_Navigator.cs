@@ -298,6 +298,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
 
         if (CurrentSlot == null) { return; }
 
+
         // soit on activate le slot si on a pas d'ui_item moving
         Mover.FinishMovingItem();
         activate(CurrentSlot);
@@ -427,13 +428,6 @@ public class UI_Navigator : Singleton<UI_Navigator>
         }
     }
 
-
-
-    // OnDestroy
-    /* private void OnDestroy()
-    {
-        InputManager.Instance.OnInputTypeChanged -= handle_input_type_changed;
-    } */
 }
 
 
