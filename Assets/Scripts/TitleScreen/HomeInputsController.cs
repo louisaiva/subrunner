@@ -43,6 +43,10 @@ public class HomeInputsController : InputController
         ui_inputs.activate.performed += handle_activate_input;
         ui_inputs.navigate_exploits.performed += handle_character_orientation;
 
+        ui_inputs.roll_panel.performed += handle_roll_panel_input;
+        ui_inputs.cancel.performed += handle_cancel_pool_input;
+
+        // ui_rollPanelCallback = ctx => { handle_roll_panel_input(ctx.ReadValue<float>()); };
 
         InputManager.Instance.OnInputTypeChanged += reset_all_endless_inputs;
         // ui_inputs.roll_panel.performed += ctx => { handle_roll_panel_input(ctx.ReadValue<float>()); };
@@ -55,6 +59,8 @@ public class HomeInputsController : InputController
         ui_inputs.mouse_navigation.performed -= handle_mouse_navigation;
         ui_inputs.activate.performed -= handle_activate_input;
         ui_inputs.navigate_exploits.performed -= handle_character_orientation;
+        ui_inputs.roll_panel.performed -= handle_roll_panel_input;
+        ui_inputs.cancel.performed -= handle_cancel_pool_input;
         if (InputManager.Instance != null) { InputManager.Instance.OnInputTypeChanged -= reset_all_endless_inputs; }
     }
     private void OnDestroy()
@@ -137,5 +143,30 @@ public class HomeInputsController : InputController
 
         // on fait bouger le slider
         slider.OnSlide(direction.x);
+    }
+
+
+
+    // UI_MANAGER CANCEL POOL
+    private void handle_cancel_pool_input(InputAction.CallbackContext context)
+    {
+        float input = context.ReadValue<float>();
+        if (input > 0.5f) { return; } // we only handle the release of the input
+
+        UI_Manager.Instance.CancelCurrentPool();
+    }
+
+    // ROLL PANEL INPUT
+    private void handle_roll_panel_input(InputAction.CallbackContext context)
+    {
+        float input = context.ReadValue<float>();
+        if (input == 0f) { return; } // no input
+
+        // on check si le current pool est un panelable (si non, ça sert a r de scroll)
+        UI_Pool current_pool = UI_Manager.Instance.GetCurrentPool();
+        if (current_pool == null || current_pool is not Panelable panelable) { return; }
+
+        Debug.Log($"(HomeInputsController) rolling panel with input {input}");
+        panelable.PanelManager.RollPanel((int)input);
     }
 }

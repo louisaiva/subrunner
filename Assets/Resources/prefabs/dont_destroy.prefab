@@ -107,6 +107,26 @@ MonoBehaviour:
     _value: 1
     min_value: 0
     max_value: 1
+  - name: ghost_mode
+    _value: 0
+    min_value: 0
+    max_value: 1
+  steps: []
+  strings:
+  - name: skin
+    _value: 0
+    min_value: 0
+    max_value: 7
+    steps: 8
+    possible_values:
+    - perso
+    - cat
+    - zombo
+    - spider
+    - rat
+    - apple
+    - fridge
+    - laptop_black
   log: 1
 --- !u!1 &8143234813479507016
 GameObject:

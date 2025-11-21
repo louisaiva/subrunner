@@ -22,25 +22,11 @@ public class UI_Slider : UI_ImageSlot, UI_SettingSlot
     [SerializeField] private Color hoverBarColor = Color.yellow;
     [SerializeField] private float bar_alpha = 1f; // alpha of the bar image
     [SerializeField] private Image bar_image;
-    private RectTransform _rectTransform;
-    private RectTransform rectTransform
-    {
-        get
-        {
-            if (_rectTransform == null)
-            {
-                _rectTransform = GetComponent<RectTransform>();
-            }
-            return _rectTransform;
-        }
-    }
-    public float BarSize { get { return rectTransform.sizeDelta.x; } }
+    [SerializeField] private RectTransform input_rect;
+    public float BarSize { get { return input_rect.rect.width; } }
 
     [Header("Colorers")]
     public List<UI_Colorer> colorers = new List<UI_Colorer>();
-
-    // [Header("Event")]
-    // public Action<float> OnSliderChanged;
 
     // START
     protected virtual void Start()
@@ -93,18 +79,16 @@ public class UI_Slider : UI_ImageSlot, UI_SettingSlot
 
         // we convert dp (which is in percentage) to value-relative value
         float dv = dp * (maxValue - minValue) / 100f;
-        // CurrentValue += dv;
-        // CurrentValue = Mathf.Clamp(CurrentValue, minValue, maxValue);
         set_value(CurrentValue + dv);
     }
-    public virtual void OnClickWithMouse()
+    public void OnClickWithMouse()
     {
         if (log) { Debug.Log("(UI_Slider) OnClickWithMouse on " + gameObject.name); }
 
         // we get the mouse position relative to the bar
         Vector2 local_mouse_position;
         if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            rectTransform,
+            input_rect,
             Input.mousePosition,
             null,
             out local_mouse_position
@@ -116,9 +100,20 @@ public class UI_Slider : UI_ImageSlot, UI_SettingSlot
 
         set_value(minValue + clicked_percentage * (maxValue - minValue));
     }
-    
+    private void Update()
+    {
+        // update the pointer position bcz when we scroll through the settings
+        // sometimes BarSize changes which makes it fked up
+
+        image.rectTransform.localPosition = new Vector3(
+            calculate_pointer_position() - (BarSize / 2f),
+            image.rectTransform.localPosition.y,
+            image.rectTransform.localPosition.z
+        );
+    }
+
     // LOW SETTER
-    protected void set_value(float value)
+    protected virtual void set_value(float value)
     {
         CurrentValue = Mathf.Clamp(value, minValue, maxValue);
 
@@ -132,7 +127,6 @@ public class UI_Slider : UI_ImageSlot, UI_SettingSlot
         );
 
         // we change settings manager 's setting value
-        // OnSliderChanged?.Invoke(CurrentValue);
         SettingsManager.Instance?.SetSetting(settingName: SettingName, value:CurrentValue);
     }
     protected void set_manager_setting()
@@ -157,8 +151,6 @@ public class UI_Slider : UI_ImageSlot, UI_SettingSlot
             image.rectTransform.localPosition.y,
             image.rectTransform.localPosition.z
         );
-
-        // OnSliderChanged?.Invoke(CurrentValue);
     }
 
     // VALUE PER PIXEL

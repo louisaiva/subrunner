@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
 /// <summary>
@@ -8,6 +9,9 @@ public class JoystickFeedback : InputImageFeedback
 {
     [Header("Joystick Feedback")]
     [SerializeField] protected Vector2 joystick_direction;
+
+    [Header("R/L specifications")]
+    [SerializeField] protected Image rl_image;
 
     // CALLBACKS
     protected override void defineCallbacks()
@@ -49,20 +53,26 @@ public class JoystickFeedback : InputImageFeedback
         base.OnInput();
 
         // we get the sprite from the bank
-        Sprite sprite = bank.GetInputFeedbackSprite(convertDirectionToReference(joystick_direction), false);
+        Sprite sprite = bank.GetJoystickFeedbackIcon(convertDirectionToReference(joystick_direction));
 
         // we set the sprite to the image
         image.sprite = sprite;
+
+        // we show the rl image
+        rl_image.gameObject.SetActive(false);
     }
     public override void OnReset()
     {
         base.OnReset();
 
         // we get the sprite from the bank
-        Sprite sprite = bank.GetInputFeedbackSprite("joy", true);
+        Sprite sprite = bank.GetJoystickFeedbackIcon("joy");
 
         // we set the sprite to the image
         image.sprite = sprite;
+
+        // we show the rl image
+        rl_image.gameObject.SetActive(true);
     }
 
     // CONVERT DIRECTION TO REFERENCE

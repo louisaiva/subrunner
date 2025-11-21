@@ -201,7 +201,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
     {
         return GetClosestSlot(position, ref slots, ref s, new Vector2(), 0f, favorised_type: favorised_type);
     }
-    public UI_Slot GetClosestSlot(Vector2 position, ref List<UI_Slot> slots, ref string s, Vector2 direction, float local_angle_multiplicator, Type favorised_type = null)
+    public UI_Slot GetClosestSlot(Vector2 position, ref List<UI_Slot> slots, ref string s, Vector2 direction, float local_angle_multiplicator, Type favorised_type = null, Type unfavorised_type = null)
     {
         // find the closest slot to the given position
         // if direction & local_angle_multiplicator are given, we will find the closest slot in the direction
@@ -234,6 +234,14 @@ public class UI_Navigator : Singleton<UI_Navigator>
 
             // favorised type check
             bool override_distance = false;
+            if (unfavorised_type != null)
+            {
+                bool is_slot_unfavorised = slot.GetType() == unfavorised_type || slot.GetType().IsSubclassOf(unfavorised_type);
+                bool is_next_slot_unfavorised = next_slot != null && (next_slot.GetType() == unfavorised_type || next_slot.GetType().IsSubclassOf(unfavorised_type));
+
+                // si le slot est du type unfavorised on skip si on a déjà un slot qui n'est pas unfavorised
+                if (!is_next_slot_unfavorised && is_slot_unfavorised) { continue; }
+            }
             if (favorised_type != null)
             {
                 bool is_slot_favorised = slot.GetType() == favorised_type || slot.GetType().IsSubclassOf(favorised_type);

@@ -42,13 +42,9 @@ public class UI_Pool : MonoBehaviour
         }
     }
 
-
     // COROUTINE GESTION
     private void StopCoroutineIfAny()
     {
-        // // si on est déjà en transition alors on ne vas pas plus loin
-        // // si on veut StopCoroutine plutot que de break faudrait que TOUTES les coroutines
-        // // qui découlent de celle ci s'arrêtent proprement quand on stop coroutine, ce qui 'nest pas le cas
         if (current_transition == null) { return; }
     
         // on arrete la current_transition

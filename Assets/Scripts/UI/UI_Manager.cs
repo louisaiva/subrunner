@@ -65,8 +65,9 @@ public class UI_Manager : Singleton<UI_Manager>
         {
             UI_Pool pool = child.GetComponent<UI_Pool>();
             if (pool == null) { continue; }
+            if (!pool.gameObject.activeSelf) { continue; }
             pools.Add(pool);
-            pool.gameObject.SetActive(true);
+            // pool.gameObject.SetActive(true);
         }
 
         // we get the background effect

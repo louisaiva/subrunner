@@ -8,7 +8,7 @@ using System.Collections.Generic;
 /// This specific input feedback handles its own rendering by applying a color
 /// to the image component + has colorers involved
 /// </summary>
-public class InputImageFeedback : InputFeedback
+public class InputImageFeedback : InputFeedback, Colorant
 {
 
     [Header("Image")]
@@ -20,7 +20,10 @@ public class InputImageFeedback : InputFeedback
         {
             if (_bank != null) { return _bank; }
 
-            _bank = AnimBank.Instance?.GetComponent<SpriteBank>();
+            // try to get the bank
+            try { _bank = AnimBank.Instance?.GetComponent<SpriteBank>(); }
+            catch { _bank = null; }
+            
             return _bank;
         }
     }
@@ -30,6 +33,7 @@ public class InputImageFeedback : InputFeedback
     [SerializeField] protected Color base_color = new Color(1f, 1f, 1f, 1f);
     [SerializeField] protected Color clicked_color = new Color(1f, 1f, 0f, 1f);
     [SerializeField] protected List<UI_Colorer> colorers = new List<UI_Colorer>();
+    public List<UI_Colorer> Colorers { get => colorers; }
     [SerializeField] private TextMeshProUGUI label;
 
 
@@ -91,5 +95,18 @@ public class InputImageFeedback : InputFeedback
 
         // we apply the base color immediately
         image.color = is_pressed ? clicked_color : base_color;
+
+        // we color all colorers
+        if (!is_pressed) { return; } // no need to update colorers if not hovered since colorers handle their own reset color
+        for (int i = 0; i < colorers.Count; i++)
+        {
+            colorers[i].ApplyColor(clicked_color);
+        }
     }
+}
+
+public interface Colorant
+{
+    public List<UI_Colorer> Colorers { get; }
+    public void SetColors(Color base_color, Color clicked_color);
 }

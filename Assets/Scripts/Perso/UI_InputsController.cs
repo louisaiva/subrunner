@@ -149,32 +149,6 @@ public class UI_InputsController : InputController
 
         if (log_states) { Debug.Log($"(UI_InputsController) OFF"); }
     }
-    public void ToggleInput(string input_name, bool enable = true)
-    {
-        /* if (input_name == "drop")
-        {
-            if (enable)
-            {
-                ui_inputs.ui_drop.performed += ui_dropCallback;
-                ui_inputs.ui_drop_ingame.performed += ui_dropCallback;
-            }
-            else
-            {
-                ui_inputs.ui_drop.performed -= ui_dropCallback;
-                ui_inputs.ui_drop_ingame.performed -= ui_dropCallback;
-            }
-        } */
-        /* else if (input_name == "activate")
-        {
-            if (enable) { activateAction.performed += activateCallback; }
-            else { activateAction.performed -= activateCallback; }
-        }
-        else if (input_name == "move")
-        {
-            if (enable) { moveItemAction.performed += moveItemCallback; }
-            else { moveItemAction.performed -= moveItemCallback; }
-        } */
-    }
     public bool IsEndlessInputDown<T>(string input_name) where T : struct
     {
         EndlessInput<T> endless_input = get_endless_input<T>(input_name);

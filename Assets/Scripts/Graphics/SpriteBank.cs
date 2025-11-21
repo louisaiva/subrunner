@@ -121,6 +121,35 @@ public class SpriteBank : MonoBehaviour
         return IF_clicked_sprites[key];
     }
 
+    [Header("Joystick Feedback Icons")]
+    [SerializeField] private List<Sprite> joystick_feedback_icons = new List<Sprite>();
+    public Sprite GetJoystickFeedbackIcon(string dir)
+    {
+        int index = -1;
+        
+        switch (dir)
+        {
+            case "joy" : index = 0; break;
+            case "joyU" : index = 1; break;
+            case "joyUR" : index = 2; break;
+            case "joyR" : index = 3; break;
+            case "joyDR" : index = 4; break;
+            case "joyD" : index = 5; break;
+            case "joyDL" : index = 6; break;
+            case "joyL" : index = 7; break;
+            case "joyUL" : index = 8; break;
+            default:
+                if (log) { Debug.LogWarning($"(SpriteBank) The direction '{dir}' does not exist in the joystick feedback icons"); }
+                return null;
+        }
+        if (index < 0 || index >= joystick_feedback_icons.Count)
+        {
+            if (log) { Debug.LogWarning($"(SpriteBank) The direction '{dir}' index is out of range in the joystick feedback icons"); }
+            return null;
+        }
+        return joystick_feedback_icons[index];
+    }
+
     [Header("Key Feedback Icons")]
     [SerializeField] private List<Sprite> key_feedback_icons = new List<Sprite>();
     [SerializeField] private List<string> key_feedback_keys = new List<string>();

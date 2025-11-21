@@ -74,11 +74,8 @@ public class AppManager : MonoBehaviour
 
 
     // MAIN CLICK FUNCTIONS
-    public void play()
-    {
-        // transform.parent.parent.GetComponent<UI_PauseMenu>().hide();
-        UI_Manager.Instance.SwitchToHUD();
-    }
+    public void play() => UI_Manager.Instance.SwitchToHUD();
+    public void hud() => UI_Manager.Instance.SwitchToHUD();
     public void exit()
     {
         #if UNITY_EDITOR

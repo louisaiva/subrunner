@@ -13,6 +13,10 @@ public class GamepadNavigator : MonoBehaviour, Navigator
     [SerializeField] private float angle_multiplicator = 0f;
     public Vector2 BasePosition => new Vector2(Screen.width / 2f, Screen.height / 2f);
 
+    [Header("Dot Navigation Settings")]
+    [SerializeField] private bool use_dot_navigation = false;
+    // [SerializeField] private float distance_over_dot_preference = 100f;
+
     [Header("Components")]
     private UI_Navigator manager;
     public UI_Navigator Manager
@@ -43,7 +47,7 @@ public class GamepadNavigator : MonoBehaviour, Navigator
         // Manager.HoverSlot(slottable.StartingSlot);
     }
 
-    // NAVIGATION
+    // NAVIGATION ALGORITHMS
     public void Navigate(Vector2 direction)
     {
         if (log) { Debug.Log("(UI_GamepadNavigator) navigating : " + direction); }
@@ -59,6 +63,18 @@ public class GamepadNavigator : MonoBehaviour, Navigator
 
         // on récupère les Manager.Slots
         Manager.UpdateSlots();
+
+        // on récupère le slot le plus proche dans la direction
+        UI_Slot next_slot = null;
+        if (use_dot_navigation) { next_slot = navigate_dot(direction); }
+        else { next_slot = navigate_distance(direction); }
+        if (next_slot == null) { return; }
+
+        // on navigue vers le slot si on en a un
+        Manager.HoverSlot(next_slot);
+    }
+    protected UI_Slot navigate_distance(Vector2 direction)
+    {
 
         string s = "(UI_GamepadNavigator) NAVIGATE: \n\nparameters: \n\tangle_threshold : " + angle_threshold + "\n\tangle_multiplicator: " + angle_multiplicator + "\n\n";
 
@@ -89,17 +105,51 @@ public class GamepadNavigator : MonoBehaviour, Navigator
 
         // on récupère le slot le plus proche dans cet angle
         UI_Slot closest_slot = Manager.GetClosestSlot(current_slot_position, ref slots_in_angle, ref s, direction, angle_multiplicator);
-        if (closest_slot == null) { return; }
-
-
-        // on navigue vers le slot si on en a un
-        Manager.HoverSlot(closest_slot);
-
 
         // log
-        s += "\n\nclosest : " + closest_slot.name + "\n";
+        if (closest_slot != null) { s += "\n\nclosest : " + closest_slot.name + "\n"; }
+        else { s += "\n\nno closest slot found\n"; }
         if (log) { Debug.Log(s); }
+
+        // return
+        if (closest_slot == null) { return null; }
+        return closest_slot;
     }
+    protected UI_Slot navigate_dot(Vector2 direction)
+    {
+        string s = "(UI_GamepadNavigator) NAVIGATE DOT: \n\n";
+
+        // on récupère la position du slot actuel
+        Vector2 current_slot_position = Manager.GetPosition(Manager.CurrentSlot);
+
+        // on récupère les Manager.Slots dans le bon angle 45°
+        float min_dot = float.MaxValue;
+        UI_Slot best_slot = null;
+        for (int i = 0; i < Manager.Slots.Count; i++)
+        {
+            UI_Slot slot = Manager.Slots[i];
+            // on vérifie que ce n'est pas le slot actuel
+            if (slot == Manager.CurrentSlot) { continue; }
+
+            // on récupère la position du slot
+            Vector2 slot_position = Manager.GetPosition(slot);
+            Vector2 direction_to_slot = (slot_position - current_slot_position).normalized;
+            float angle = Vector2.Angle(direction, direction_to_slot);
+            if (angle > 45f) { continue; }
+            
+            // on calcule le dot
+            float dot = Vector2.Dot(direction, direction_to_slot);
+            if (dot > min_dot) { continue; }
+
+            // on retient le slot (c le meilleur candidat jusqu'à présent)
+            min_dot = dot;
+            best_slot = slot;
+        }
+
+        return best_slot;
+    }
+
+    // NAVIGATION CLOSEST & DIRECT
     public async void NavigateToClosest(Vector2 position, System.Type favorised_type = null)
     {
         // we check if we have a slottable
@@ -147,5 +197,4 @@ public class GamepadNavigator : MonoBehaviour, Navigator
         // we log the result
         if (log) { Debug.Log("(UI_GamepadNavigator) NAVIGATE TO SLOT: " + slot.name); }
     }
-
 }

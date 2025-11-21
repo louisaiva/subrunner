@@ -26,10 +26,8 @@ public class UI_InventoryMenu : UI_Pool, Panelable
     [SerializeField] private float base_transition = 0.2f;
     [SerializeField] private bool fade_all_disabled = true;
 
-    [Header("Input Feedbacks")]
-    [SerializeField] private ButtonFeedback drop_feedback;
-    [SerializeField] private ButtonFeedback use_feedback;
-    [SerializeField] private ButtonFeedback move_feedback;
+    [Header("Input Feedbacks Pools")]
+    [SerializeField] private FeedbackPoolBuilder IFs;
 
     [Header("Components")]
     public Descriptor Descriptor;
@@ -170,46 +168,23 @@ public class UI_InventoryMenu : UI_Pool, Panelable
     // IF SWITCHING
     private void handleUI_ItemHoverEnter(UI_Slot slot)
     {
-        if (log) { Debug.Log($"(UI_InventoryMenu) bwaaaa handleUI_ItemHoverEnter for slot {slot.gameObject.name}"); }
-
         if (!Showed) { return; }
         if (slot is not UI_Item ui_item) { return; }
+
+        if (log) { Debug.Log($"(UI_InventoryMenu) bwaaaa handleUI_ItemHoverEnter for slot {slot.gameObject.name}"); }
 
         // we handle the DROP (activate it only if it is a UI_Item that has Item & not a UI_Module)
         if (ui_item is UI_Module || ui_item.Item == null)
         {
-            drop_feedback.SetAlwaysFull(false);
-            drop_feedback.SetLabel("");
-            // UI_Navigator.Instance.ToggleInput("drop", false);
-            Controller.Instance.UIC.ToggleInput("drop", false);
+            IFs.DisableRows("drop");
         }
         else
         {
-            drop_feedback.SetAlwaysFull(true);
-            drop_feedback.SetLabel("drop");
-            // UI_Navigator.Instance.ToggleInput("drop", true);
-            Controller.Instance.UIC.ToggleInput("drop", true);
+            IFs.EnableRows("drop");
         }
 
         // ACTIVATE
         update_activate_if(ui_item);
-
-
-        // MOVE
-        if (ui_item.Item == null && !UI_Navigator.Instance.Mover.IsMovingItem)
-        {
-            move_feedback.SetAlwaysFull(false);
-            move_feedback.SetLabel("");
-            // UI_Navigator.Instance.ToggleInput("move", false);
-            Controller.Instance.UIC.ToggleInput("move", false);
-        }
-        else
-        {
-            move_feedback.SetAlwaysFull(true);
-            move_feedback.SetLabel("move");
-            // UI_Navigator.Instance.ToggleInput("move", true);
-            Controller.Instance.UIC.ToggleInput("move", true);
-        }
     }
     private void update_activate_if(UI_Item ui_item)
     {
@@ -220,10 +195,7 @@ public class UI_InventoryMenu : UI_Pool, Panelable
         || (ui_item.Item is Usable usable && usable.UseLabel == "")
         || (ui_item.Item is Inspectable inspectable && inspectable.InspectLabel == ""))
         {
-            use_feedback.SetAlwaysFull(false);
-            use_feedback.SetLabel("");
-            // UI_Navigator.Instance.ToggleInput("activate", false);
-            Controller.Instance.UIC.ToggleInput("activate", false);
+            IFs.DisableRows("activate");
             return;
         }
 
@@ -233,10 +205,8 @@ public class UI_InventoryMenu : UI_Pool, Panelable
         else if (ui_item.Item is Inspectable inspectable_item) { label = inspectable_item.InspectLabel; }
 
         // we enable the button & set the label
-        use_feedback.SetAlwaysFull(true);
-        use_feedback.SetLabel(label);
-        // UI_Navigator.Instance.ToggleInput("activate", true);
-        Controller.Instance.UIC.ToggleInput("activate", true);
+        IFs.EnableRows("activate");
+        IFs.SetTextOnRows("activate", label);
     }
     public void UpdateIFLabels(Item item)
     {

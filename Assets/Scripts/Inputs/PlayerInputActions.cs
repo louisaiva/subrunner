@@ -1755,7 +1755,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""mouse_move"",
                     ""type"": ""PassThrough"",
                     ""id"": ""55607dff-14d2-450f-a8f5-50a79e470eca"",
-                    ""expectedControlType"": ""Axis"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -1971,7 +1971,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""09319d5d-5af0-4567-9b5f-294c527364cd"",
-                    ""path"": ""<Mouse>/delta/x"",
+                    ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

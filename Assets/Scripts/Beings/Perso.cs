@@ -21,6 +21,10 @@ public class Perso : Being, Hacker
     // private GameObject floating_text_prefab;
     private GameObject cam;
 
+    [Header("SETTINGS")]
+    private StringSetting skin_setting;
+    private Setting ghost_setting;
+
     [Header("SKILLS")]
     public SkillManager skillManager;
     
@@ -161,6 +165,22 @@ public class Perso : Being, Hacker
 
         // mets les callbacks
         set_callbacks();
+
+        // on met le skin en fonction du settings skin
+        skin_setting = SettingsManager.Instance.GetSetting("skin") as StringSetting;
+        if (skin_setting != null)
+        {
+            SetSkin(skin_setting.GetStringValue());
+            skin_setting.OnStringChanged += SetSkin;
+        }
+
+        // on met le ghost en fonction du settings ghost
+        ghost_setting = SettingsManager.Instance.GetSetting("ghost_mode");
+        if (ghost_setting != null)
+        {
+            set_ghost(ghost_setting.value >= 0.5f);
+            ghost_setting.OnValueChanged += set_ghost;
+        }
     }
     private void set_callbacks()
     {
@@ -203,6 +223,7 @@ public class Perso : Being, Hacker
         UI_CoresViewer cores_viewer = hacking_pool.transform.GetComponentInChildren<UI_CoresViewer>(includeInactive: true);
         Instance.OnDeviceGranted -= cores_viewer.HandleDeviceGranted;
         Instance.OnDeviceRemoved -= cores_viewer.HandleDeviceRemoved;
+
     }
 
 
@@ -238,6 +259,17 @@ public class Perso : Being, Hacker
         // we set the new skin
         anim_player.Skin = metamorph_skins[index];
     }
+    public void SetSkin(string skin_name)
+    {
+        // checks which skins we have
+        string skin = anim_player.Skin;
+
+        // checks if we are a ghost
+        set_ghost(false);
+
+        // we set the new skin
+        anim_player.Skin = skin_name;
+    }
     public void ToggleGhost()
     {
         if (anim_player.Skin != "ghost")
@@ -252,11 +284,29 @@ public class Perso : Being, Hacker
         else
         {
             // on remet le skin de base
-            anim_player.Skin = "perso";
+            if (skin_setting != null) { anim_player.Skin = skin_setting.GetStringValue(); }
+            else { anim_player.Skin = "perso"; }
 
             // on enleve l'Effect Ghost & Invisible
             RemoveEffect(Effect.Ghost);
             RemoveEffect(Effect.Invisible);
+        }
+
+        // sets the SettingsManager ghost setting
+        if (ghost_setting == null) { return; }
+        ghost_setting.value = (anim_player.Skin == "ghost") ? 1f : 0f;
+    }
+    private void set_ghost(bool activate=false) { set_ghost(activate ? 1f : 0f); }
+    private void set_ghost(float value)
+    {
+        bool is_ghost = value >= 0.5f;  
+        if (is_ghost && anim_player.Skin != "ghost")
+        {
+            ToggleGhost();
+        }
+        else if (!is_ghost && anim_player.Skin == "ghost")
+        {
+            ToggleGhost();
         }
     }
 
@@ -325,5 +375,15 @@ public class Perso : Being, Hacker
         remove_callbacks();
 
         deaths += 1; // on incrémente le nombre de morts du perso
+    }
+
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        // enleve les callbacks des settings
+        if (skin_setting != null) { skin_setting.OnStringChanged -= SetSkin; }
+        if (ghost_setting != null) { ghost_setting.OnValueChanged -= set_ghost; }
     }
 }

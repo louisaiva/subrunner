@@ -74,6 +74,19 @@ public class UI_ToggleSetting : UI_Toggle, UI_SettingSlot
         icon.sprite = is_on ? Hovered ? on_hover_sprite : on_sprite
                             : Hovered ? off_hover_sprite : off_sprite;
     }
+    private void Update()
+    {
+        // we try to get the value from the settings manager
+        Setting setting = SettingsManager.Instance?.GetSetting(settingName: SettingName);
+        if (setting == null) { return; }
+
+        // set current value
+        is_on = setting.value > 0;
+
+        // update the image bcz sometimes it does not update
+        icon.sprite = is_on ? Hovered ? on_hover_sprite : on_sprite
+                            : Hovered ? off_hover_sprite : off_sprite;
+    }
 
     // LOW SETTER
     protected void set_manager_setting()

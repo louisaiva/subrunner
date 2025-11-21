@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 /// <summary>
 /// This class is used to give feedback to the player we are moving the mouse
@@ -33,7 +34,12 @@ public class MouseAxisFeedback : InputImageFeedback
     // ON INPUT / RESET 
     public override void OnInput()
     {
-        if (Mathf.Abs(input_value) <= input_threshold) { reset_later(); return; }
+        if (Mathf.Abs(input_value) <= input_threshold)
+        {
+            StopCoroutine("reset_later");
+            StartCoroutine("reset_later");
+            return;
+        }
 
         base.OnInput();
 
@@ -47,17 +53,17 @@ public class MouseAxisFeedback : InputImageFeedback
         // we get the sprite from the bank
         image.sprite = bank?.GetMouseFeedbackIcon(axis_reference);
     }
-    private void reset_later()
+    private IEnumerator reset_later()
     {
-        CancelInvoke("OnReset");
-        Invoke("OnReset", reset_delay);
+        yield return new WaitForSecondsRealtime(reset_delay);
+        OnReset();
     }
 
     // ON DISABLE
     protected override void OnDisable()
     {
         base.OnDisable();
-        CancelInvoke("OnReset");
+        StopAllCoroutines();
         OnReset();
     }
 

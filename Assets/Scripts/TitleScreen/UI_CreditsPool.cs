@@ -12,11 +12,6 @@ public class UI_CreditsPool : UI_SlottablePool
     public float max_y_position = 100f;
     public float base_y_position = 0f;
 
-    void Start()
-    {
-        slottable.GetButtonByName("exit_button").OnClick += () => UI_Manager.Instance.SwitchTo("home");
-    }
-
     // enable pool
     protected override IEnumerator show_coroutine(List<GameObject> dont_show = null, float duration_override = -1f, bool was_stacked = false)
     {

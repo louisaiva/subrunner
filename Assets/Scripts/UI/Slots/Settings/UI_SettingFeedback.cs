@@ -1,12 +1,13 @@
 using UnityEngine;
 
-public class UI_SliderFeedback : MonoBehaviour
+public class UI_SettingFeedback : MonoBehaviour
 {
     [Header("Slider Feedback Settings")]
-    [SerializeField] private UI_Slider slider;
-    [SerializeField] private TMPro.TextMeshProUGUI value_text;
+    private UI_SettingSlot setting_slot;
+    private TMPro.TextMeshProUGUI value_text;
 
     [Header("Value showing Settings")]
+    [SerializeField] private bool is_string_value = false;
     [SerializeField] private bool show_percentage = false;
     [SerializeField] private bool show_as_integer = true;
     [SerializeField] private int decimal_places = 2;
@@ -14,20 +15,37 @@ public class UI_SliderFeedback : MonoBehaviour
 
     private Setting setting;
 
-    void Start()
+    private void Start()
     {
+        // we get the setting slot & the tmp
+        setting_slot = GetComponentInParent<UI_SettingSlot>(includeInactive: true);
+        value_text = GetComponent<TMPro.TextMeshProUGUI>();
+
         // we get the slider setting
-        setting = SettingsManager.Instance.GetSetting(slider.SettingName);
+        setting = SettingsManager.Instance.GetSetting(setting_slot.SettingName);
         if (setting == null) { return; }
         setting.OnValueChanged += update_text;
+        update_text(setting.value);
+    }
+    private void Update()
+    {
+        if (setting == null) { return; }
         update_text(setting.value);
     }
     private void update_text(float value)
     {
         string text = "";
+        if (is_string_value)
+        {
+            StringSetting string_setting = setting as StringSetting;
+            if (string_setting == null) { return; }
+            text = string_setting.GetStringValue();
+            value_text.text = text;
+            return;
+        }
         if (show_percentage)
         {
-            float percentage = slider.CurrentPercentage * 100f;
+            float percentage = setting.GetPercentage() * 100f;
             if (show_as_integer)
             {
                 text = Mathf.RoundToInt(percentage).ToString() + " %";
@@ -51,7 +69,7 @@ public class UI_SliderFeedback : MonoBehaviour
         text += suffix;
         value_text.text = text;
     }
-    void OnDestroy()
+    private void OnDestroy()
     {
         if (setting == null) { return; }
         setting.OnValueChanged -= update_text;
