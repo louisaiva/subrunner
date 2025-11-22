@@ -1,10 +1,8 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-
-// using UnityEngine.UIElements;
 using UnityEngine.UI;
 
-public class UI_Skill : UI_Slot
+public class UI_Skill : UI_Slot, Descriptable
 {
     // hover
     [Header("Hover")]
@@ -17,16 +15,9 @@ public class UI_Skill : UI_Slot
     public string description = "your maximum health. makes you tanky as f";
     public string unit = "hp";
 
-    [Header("Components")]
-    private UI_LevelUpMenu _menu;
-    private UI_LevelUpMenu menu
-    {
-        get
-        {
-            if (_menu == null) { _menu = UI_Manager.Instance.GetPool("level_up") as UI_LevelUpMenu; }
-            return _menu;
-        }
-    }
+    [Header("Descriptable")]
+    public string Name => Reference;
+    public string Description => description;
 
     // AWAKE
     protected void Awake()
@@ -35,28 +26,9 @@ public class UI_Skill : UI_Slot
         skill_bg = GetComponent<Image>();
     }
 
-    // UPDATE
-    private void update_description()
-    {
-        menu.SkillNameDescriptor.SetDescription(Reference);
-
-        if (Perso.Instance == null) { menu.Descriptor.SetDescription("looks like there is no player anymore"); return; }
-
-        string desc = "";
-        desc += "current : " + Perso.Instance.skillManager.GetSkillValue(Reference).ToString() + " " + unit;
-        desc += "\nnext : " + Perso.Instance.skillManager.GetNextLevelSkillValue(Reference).ToString() + " " + unit;
-        desc += "\n\n" + description;
-
-        // on met à jour la description
-        menu.Descriptor.SetDescription(desc);
-    }
-
     // UI_SLOT
     public override void OnPointerEnter(PointerEventData eventData)
     {
-        // on met à jour la description
-        update_description();
-
         // on met à jour le fait qu'on est survolé
         skill_bg.color = hover_color;
         

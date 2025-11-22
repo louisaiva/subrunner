@@ -78,7 +78,7 @@ public class InputImageFeedback : InputFeedback, Colorant
     }
 
 
-    // SETTERS
+    // COLORANT
     public void SetLabel(string text)
     {
         if (label == null)
@@ -88,6 +88,7 @@ public class InputImageFeedback : InputFeedback, Colorant
         }
         label.text = text;
     }
+    public Color HoverColor => clicked_color;
     public void SetColors(Color base_color, Color clicked_color)
     {
         this.base_color = base_color;
@@ -109,4 +110,5 @@ public interface Colorant
 {
     public List<UI_Colorer> Colorers { get; }
     public void SetColors(Color base_color, Color clicked_color);
+    public Color HoverColor { get; }
 }

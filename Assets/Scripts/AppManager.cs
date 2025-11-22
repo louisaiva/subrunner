@@ -145,6 +145,10 @@ public class AppManager : MonoBehaviour
     private void OnApplicationQuit()
     {
         IsQuitting = true;
+
+        // we save the settings prefs
+        SettingsManager.Instance.SaveLocalSettings();
+
         if (log) { Debug.Log("(AppManager) Application is quitting"); }
     }
 }

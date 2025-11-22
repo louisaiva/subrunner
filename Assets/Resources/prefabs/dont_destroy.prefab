@@ -90,44 +90,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1934be4fe5272594aaf4550a1405bfda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SettingsManager
-  settings:
-  - name: screenshake_global_setting
-    _value: 0.75
-    min_value: 0
-    max_value: 1
-  - name: screenshake_chroma_threshold
-    _value: 0.25
-    min_value: 0
-    max_value: 2
-  - name: screenshake_chroma_duration_factor
-    _value: 6
-    min_value: 0
-    max_value: 16
-  - name: fullscreen
-    _value: 1
-    min_value: 0
-    max_value: 1
-  - name: ghost_mode
-    _value: 0
-    min_value: 0
-    max_value: 1
-  steps: []
-  strings:
-  - name: skin
-    _value: 0
-    min_value: 0
-    max_value: 7
-    steps: 8
-    possible_values:
-    - perso
-    - cat
-    - zombo
-    - spider
-    - rat
-    - apple
-    - fridge
-    - laptop_black
-  log: 1
+  factory_general: {fileID: 11400000, guid: b6cb3e1182b15a74b9c90e1e1662b786, type: 2}
+  factory_gameplay: {fileID: 11400000, guid: 5729756fe12ca5747bd37a6df1e46174, type: 2}
+  factory_graphics: {fileID: 11400000, guid: 5aebe4c596a0d56439661152b42226e5, type: 2}
+  factory_ui: {fileID: 11400000, guid: b4c12df4f83fe3a4cb5404d931d6e370, type: 2}
+  factory_controls: {fileID: 11400000, guid: e36bfed1340373d498c5afe71e88e068, type: 2}
+  log: 0
 --- !u!1 &8143234813479507016
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,7 +8,12 @@ public class UI_Slider : UI_ImageSlot, UI_SettingSlot
 {
     [Header("Setting")]
     [SerializeField] protected string setting_name = "undefined";
-    public string SettingName => setting_name;
+    public string SettingName { get { return setting_name; } set 
+        {
+            setting_name = value;
+            set_manager_setting();
+        }
+    }
 
     [Header("Slider settings")]
     [SerializeField] protected float minValue = 0f;
@@ -27,6 +32,7 @@ public class UI_Slider : UI_ImageSlot, UI_SettingSlot
 
     [Header("Colorers")]
     public List<UI_Colorer> colorers = new List<UI_Colorer>();
+    public List<UI_Colorer> Colorers => colorers;
 
     // START
     protected virtual void Start()
@@ -174,9 +180,29 @@ public class UI_Slider : UI_ImageSlot, UI_SettingSlot
     {
         return calculate_percentage() * BarSize;
     }
+
+    // COLORANT
+    public Color HoverColor => hoverBarColor;
+    public void SetColors(Color baseColor, Color hoverColor)
+    {
+        this.baseBarColor = baseColor;
+        this.hoverBarColor = hoverColor;
+
+        // we apply the base color
+        bar_image.color = Hovered ? new Color(hoverColor.r, hoverColor.g, hoverColor.b, bar_alpha) : new Color(baseColor.r, baseColor.g, baseColor.b, bar_alpha);
+        image.color = Hovered ? hoverColor : baseColor;
+
+        // we color all colorers
+        if (!Hovered) { return; }
+        for (int i = 0; i < colorers.Count; i++)
+        {
+            colorers[i].ApplyColor(hoverColor);
+        }
+    }
 }
 
-public interface UI_SettingSlot
+public interface UI_SettingSlot : Colorant
 {
-    public string SettingName { get; }
+    public string SettingName { get; set;}
+    public GameObject gameObject { get; }
 }

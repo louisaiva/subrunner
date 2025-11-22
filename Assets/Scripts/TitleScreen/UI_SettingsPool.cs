@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UI_SettingsPool : UI_SlottablePool, Panelable
 {
@@ -12,7 +13,11 @@ public class UI_SettingsPool : UI_SlottablePool, Panelable
 
     [Header("Input Feedbacks Builder")]
     [SerializeField] protected FeedbackPoolBuilder IFB;
-    
+
+    [Header("Components")]
+    protected List<UI_PanelButton> panel_buttons;
+    protected RectTransform panel_bar;
+
     // START
     protected void Start()
     {
@@ -22,21 +27,54 @@ public class UI_SettingsPool : UI_SlottablePool, Panelable
     // SHOW
     protected override IEnumerator show_coroutine(List<GameObject> dont_show = null, float duration_override = -1f, bool was_stacked = false)
     {
-        // we get the last slot
+        // we get the last slot's panel or the general one
         UI_Slot last_slot = slottable.StartingSlot;
-        if (last_slot != null)
-        {
-            // we get the panel of this slot
-            UI_Panel slot_panel = last_slot.GetComponentInParent<UI_Panel>(includeInactive: true);
-            if (slot_panel != null) { panel_manager.TweenToPanel(slot_panel,0f); }        
-        }
-        else
-        {
-            UI_Panel default_panel = panel_manager.GetPanel("general");
-            if (default_panel != null) { panel_manager.TweenToPanel(default_panel,0f); }
-        }
+        UI_Panel panel;
+        if (last_slot != null) { panel = last_slot.GetComponentInParent<UI_Panel>(includeInactive: true); }
+        else { panel = panel_manager.GetPanel("general"); }
+
+        // we tween to the panel
+        panel_manager.TweenToPanel(panel, 0f);
 
         yield return base.show_coroutine(dont_show, duration_override, was_stacked);
+    }
+
+    protected override IEnumerator enable_coroutine()
+    {
+        yield return base.enable_coroutine();
+
+        // we enable manually the dedicated UI_PanelButton
+        UI_PanelButton panel_btn = get_panel_button(panel_manager.CurrentPanel);
+        if (panel_btn != null) { panel_btn.OnPointerEnter(null); panel_btn.OnPointerClick(null); }
+        yield return null;
+        yield return null;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(panel_bar);
+    }
+
+    // UI_PanelButton GETTER
+    private UI_PanelButton get_panel_button(string panel_name)
+    {
+        // we ensure we have some panel buttons
+        if (panel_buttons == null || panel_buttons.Count == 0)
+        {
+            panel_buttons = new List<UI_PanelButton>();
+            panel_bar = transform.Find("panel_bar") as RectTransform;
+            for (int i = 0; i < panel_bar.childCount; i++)
+            {
+                UI_PanelButton button = panel_bar.GetChild(i).GetComponent<UI_PanelButton>();
+                if (button == null) { continue; }
+                panel_buttons.Add(button);
+            }
+        }
+
+        // we search for the button with the given panel name
+        for (int i = 0; i < panel_buttons.Count; i++)
+        {
+            UI_PanelButton button = panel_buttons[i];
+            if (button == null) { continue; }
+            if (button.name == panel_name) { return button; }
+        }
+        return null;
     }
 
     // UPDATE FEEDBACKS

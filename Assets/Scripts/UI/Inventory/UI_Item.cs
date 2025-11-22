@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UI_Item : UI_ImageSlot, Droppable
+public class UI_Item : UI_ImageSlot, Droppable, Descriptable
 {
 
     public Sprite drag_sprite;
@@ -14,6 +14,10 @@ public class UI_Item : UI_ImageSlot, Droppable
     [Header("Item Reference")]
     protected List<Item> items = new List<Item>();
     public string Reference { get => items.Count > 0 ? items[0].Reference : ""; }
+
+    [Header("Descriptable")]
+    public string Name => Reference;
+    public string Description => Item != null ? Item.ItemDescription : "";
 
 
     [Header("Item Stacking")]
@@ -256,20 +260,20 @@ public class UI_Item : UI_ImageSlot, Droppable
     }
 
     // ON POINTER
-    public override void OnPointerEnter(PointerEventData eventData)
+    /* public override void OnPointerEnter(PointerEventData eventData)
     {
         base.OnPointerEnter(eventData);
         update_description();
-    }
-    protected void update_description()
+    } */
+    /* protected void update_description()
     {
         // we check if the current ui_pool has a descriptor or not
         if (UI_Manager.Instance.CurrentPool != "inventory") { return; }
 
         // we get the descriptor
         UI_InventoryMenu menu = UI_Manager.Instance.GetPool("inventory").GetComponent<UI_InventoryMenu>();
-        menu.Descriptor.SetDescription(this);
-    }
+        menu.UI_ItemDescriptor.SetDescription(this);
+    } */
     public override void OnPointerClick(PointerEventData eventData)
     {
         base.OnPointerClick(eventData);

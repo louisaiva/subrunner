@@ -1,15 +1,23 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
+using System.IO;
 
 public class SettingsManager : MonoBehaviour
 {
     public static SettingsManager Instance;
 
+    [Header("Factory settings")]
+    public SettingsSaveData factory_general;
+    public SettingsSaveData factory_gameplay;
+    public SettingsSaveData factory_graphics;
+    public SettingsSaveData factory_ui;
+    public SettingsSaveData factory_controls;
+
     [Header("Settings")]
-    public List<Setting> settings = new List<Setting>();
-    public List<StepSetting> steps = new List<StepSetting>();
-    public List<StringSetting> strings = new List<StringSetting>();
+    private Dictionary<string, List<Setting>> settings = new Dictionary<string, List<Setting>>();
+    public Dictionary<string, List<Setting>> Settings => settings;
 
     [Header("Logs")]
     public bool log = false;
@@ -21,11 +29,11 @@ public class SettingsManager : MonoBehaviour
         if (Instance != null) { Destroy(transform.parent.gameObject); return; } // ensure we destroy the "dont_destroy" object and not only this object
         Instance = this;
 
-        // we try to load local settings
-        // todo
-
-        // reset factory settings if saved_file not found
+        // reset factory settings to generate every settings
         reset_factory_settings();
+
+        // then load local settings values
+        LoadLocalSettings();
     }
 
     // START
@@ -39,7 +47,7 @@ public class SettingsManager : MonoBehaviour
 
         // skin
         // (GetSetting("skin") as StringSetting).OnStringChanged += (skin) => Perso.Instance.SetSkin(skin);
-        // Perso.Instance.SetSkin((GetSetting("skin") as StringSetting).GetStringValue());
+        // Perso.Instance.SetSkin((GetSetting("skin") as StringSetting).ToString());
     }
 
     // SETTERS & GETTERS
@@ -61,156 +69,128 @@ public class SettingsManager : MonoBehaviour
     }
     public Setting GetSetting(string settingName)
     {
-        // Logic to get the setting based on its name
-        for (int i = 0; i < settings.Count; i++)
+        // Logic to get the setting based on its name (which is a reference actually)
+        List<string> panel_keys = new List<string>(settings.Keys);
+        List<Setting> panel_settings;
+        for (int p = 0; p < panel_keys.Count; p++)
         {
-            if (settings[i].name != settingName) { continue; }
-            return settings[i];
-        }
-        for (int i = 0; i < steps.Count; i++)
-        {
-            if (steps[i].name != settingName) { continue; }
-            return steps[i];
-        }
-        for (int i = 0; i < strings.Count; i++)
-        {
-            if (strings[i].name != settingName) { continue; }
-            return strings[i];
+            panel_settings = settings[panel_keys[p]];
+            for (int s = 0; s < panel_settings.Count; s++)
+            {
+                if (panel_settings[s].name != settingName) { continue; }
+                return panel_settings[s];
+            }
         }
         if (log) { Debug.LogWarning($"(SettingsManager) Setting {settingName} not found!"); }
         return null; // Default value if not found
     }
 
-    // FACTORY SETTINGS
-    private void reset_factory_settings()
+
+    // SAVE / LOAD SETTINGS
+    public void SaveLocalSettings()
     {
-        if (log) { Debug.Log("(SettingsManager) resetting to factory settings"); }
+        // convert all values to a Dictionary<string,float>
+        Dictionary<string, float> settings_values = new Dictionary<string, float>();
 
-
-        // gameplay
-        SetSetting("skin", 0f); // skin
-        SetSetting("ghost_mode", 0f); // ghost
-
-        // graphics
-        SetSetting("fullscreen", 1f); // fullscreen
-
-        // screenshake & chroma screenshake
-        SetSetting("screenshake_global_setting", 0.5f);
-        SetSetting("screenshake_chroma_threshold", 0.6f);
-        SetSetting("screenshake_chroma_duration_factor", 16f);
-
-    }
-}
-
-[Serializable] public class Setting
-{
-    public string name;
-    [SerializeField] protected float _value;
-    public virtual float value 
-    { 
-        get { return _value; }
-        set 
+        // we go through each panel
+        List<string> panel_keys = new List<string>(settings.Keys);
+        List<Setting> panel_settings;
+        for (int p = 0; p < panel_keys.Count; p++)
         {
-            if (_value == value) { return; }
-            
-            _value = value;
-            OnValueChanged?.Invoke(_value);
-        }
-    }
-
-    [Header("Framing")]
-    public float min_value;
-    public float max_value;
-
-    public Action<float> OnValueChanged;
-
-    public Setting(string name, float value)
-    {
-        this.name = name;
-        this.value = value;
-    }
-
-    public float GetPercentage()
-    {
-        if (max_value - min_value == 0f) { return 0f; }
-        return (_value - min_value) / (max_value - min_value);
-    }
-}
-
-[Serializable] public class StepSetting : Setting
-{
-    public int steps = 2;
-    public StepSetting(string name, float value, int steps) : base(name, value)
-    {
-        this.steps = steps;
-    }
-
-    public List<float> GetPossibleValues()
-    {
-        List<float> values = new List<float>();
-        if (steps < 2) 
-        { 
-            values.Add(min_value);
-            return values;
-        }
-
-        float step_size = (max_value - min_value) / (steps - 1);
-        for (int i = 0; i < steps; i++)
-        {
-            values.Add(min_value + i * step_size);
-        }
-        return values;
-    }
-    public float GetClosestStepValue(float value)
-    {
-        List<float> possible_values = GetPossibleValues();
-        float closest_value = possible_values[0];
-        float closest_distance = Mathf.Abs(value - closest_value);
-
-        for (int i = 1; i < possible_values.Count; i++)
-        {
-            float distance = Mathf.Abs(value - possible_values[i]);
-            if (distance < closest_distance)
+            panel_settings = settings[panel_keys[p]];
+            for (int s = 0; s < panel_settings.Count; s++)
             {
-                closest_distance = distance;
-                closest_value = possible_values[i];
+                settings_values[panel_settings[s].name] = panel_settings[s].value;
             }
         }
 
-        return closest_value;
-    }
+        // we serialize to json
+        string json = JsonConvert.SerializeObject(settings_values);
 
-}
-
-[Serializable] public class StringSetting : StepSetting
-{
-    public List<string> possible_values = new List<string>();
-    public Action<string> OnStringChanged;
-
-    public override float value
-    {
-        get { return _value; }
-        set
+        // we save to Application.persistentDataPath
+        if (log) { Debug.Log($"(SettingsManager) Saving local settings to {Application.persistentDataPath}/local_settings.json"); }
+        using (FileStream stream = new FileStream(Application.persistentDataPath + "/local_settings.json", FileMode.Create))
         {
-            if (_value == value) { return; }
+            using (StreamWriter writer = new StreamWriter(stream))
+            {
+                writer.Write(json);
+            }
+        }
 
-            _value = value;
-            OnValueChanged?.Invoke(_value);
-            OnStringChanged?.Invoke(GetStringValue());
+        // we save to PlayerPrefs
+        // if (log) { Debug.Log("(SettingsManager) Saving local settings from PlayerPrefs"); }
+        // PlayerPrefs.SetString("local_settings", json);
+    }
+    public void LoadLocalSettings()
+    {
+        string json = "";
+
+        // we get the json string
+        // if (!PlayerPrefs.HasKey("local_settings")) { return; }
+        // if (log) { Debug.Log("(SettingsManager) Loading local settings from PlayerPrefs"); }
+        // json = PlayerPrefs.GetString("local_settings");
+
+        // we load settings from Application.persistentDataPath
+        try 
+        {
+            using (FileStream stream = new FileStream(Application.persistentDataPath + "/local_settings.json", FileMode.Open))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    json = reader.ReadToEnd();
+                }
+            }
+            if (log) { Debug.Log($"(SettingsManager) Loaded local settings from {Application.persistentDataPath}/local_settings.json"); }
+        }
+        catch (Exception e)
+        {
+            if (log) { Debug.LogWarning($"(SettingsManager) Failed to load local settings in {Application.persistentDataPath}/local_settings.json: {e.Message}"); }
+            return;
+        }
+        if (string.IsNullOrEmpty(json)) { return; }
+
+        // we deserialize to Dictionary<string,float>
+        Dictionary<string, float> settings_values = JsonConvert.DeserializeObject<Dictionary<string, float>>(json);
+        if (settings_values == null) { return; }
+
+        // we go through each saved setting
+        foreach (KeyValuePair<string, float> entry in settings_values)
+        {
+            if (log) { Debug.Log($"(SettingsManager) Loading setting {entry.Key} with value {entry.Value}"); }
+
+            // we get the setting
+            Setting setting = GetSetting(entry.Key);
+            if (setting == null) { continue; }
+
+            // checks if the value is in the bounds otherwise it will break things
+            if (entry.Value < setting.min_value) { continue; }
+            if (entry.Value > setting.max_value) { continue; }
+
+            // we set the value
+            setting.value = entry.Value;
         }
     }
 
-    public StringSetting(string name, List<string> values) : base(name, 0f, values.Count)
+    // RESET FACTORY SETTINGS
+    public void reset_factory_settings()
     {
-        this.possible_values = values;
-        
-        // we restrict the string setting to work with ints so we set the min & max value accordingly
-        min_value = 0f;
-        max_value = values.Count - 1;
+        // we clear current settings
+        settings.Clear();
+
+        // we build settings from each factory
+        settings["general"] = factory_general.Clone();
+        settings["gameplay"] = factory_gameplay.Clone();
+        settings["graphics"] = factory_graphics.Clone();
+        settings["ui"] = factory_ui.Clone();
+        settings["controls"] = factory_controls.Clone();
     }
-    public string GetStringValue()
-    {
-        int index = Mathf.Clamp(Mathf.RoundToInt(value), 0, possible_values.Count - 1);
-        return possible_values[index];
-    }
+}
+
+// SETTING SHOW SETTINGS
+[Serializable] public struct SettingShowSettings
+{
+    public bool is_toggle; // is a toggle (on/off), if true overries below
+    public bool show_percentage; // show as percentage, if true overrides below settings
+    public bool show_as_integer; // show as integer, if true overrides below
+    public int decimal_places; // number of decimal places to show if not integer
 }

@@ -68,6 +68,7 @@ public class ManualImageFeedback : InputFeedback, Colorant
 
 
     // SETTERS
+    public Color HoverColor => clicked_color;
     public void SetColors(Color base_color, Color clicked_color)
     {
         this.base_color = base_color;

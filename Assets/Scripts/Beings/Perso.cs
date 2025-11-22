@@ -170,7 +170,7 @@ public class Perso : Being, Hacker
         skin_setting = SettingsManager.Instance.GetSetting("skin") as StringSetting;
         if (skin_setting != null)
         {
-            SetSkin(skin_setting.GetStringValue());
+            SetSkin(skin_setting.ToString());
             skin_setting.OnStringChanged += SetSkin;
         }
 
@@ -284,7 +284,7 @@ public class Perso : Being, Hacker
         else
         {
             // on remet le skin de base
-            if (skin_setting != null) { anim_player.Skin = skin_setting.GetStringValue(); }
+            if (skin_setting != null) { anim_player.Skin = skin_setting.ToString(); }
             else { anim_player.Skin = "perso"; }
 
             // on enleve l'Effect Ghost & Invisible

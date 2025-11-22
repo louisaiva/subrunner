@@ -20,7 +20,7 @@
 				- TODO PIC input : left mouse
 			- TODO adapt exploit selection
 				- TODO PIC input : mid mouse
-			- TODO create a InputFeedbackSwitcher + InputFeedbackManager for updating them all
+			- DONE create a InputFeedbackSwitcher + InputFeedbackManager for updating them all
 		-
 		-
 		- TODO implement enemy wave system for the spawners to not appear
@@ -32,7 +32,9 @@
 			- TODO [[UI_Device]]
 			- TODO [[UI_HDD]]
 		-
-		- TODO rework and fix the #UI_Description
+		- DONE rework and fix the #UI_Description
+			- DONE smaller description
+			- DONE that can write multiple characters at once ?
 		-
 		- TODO try with [[UI_CancelButton]] which is a [[UI_Button]] that cancels a specific [[UI_Slottable]] / [[UI_Pool]]
 			- DONE prototype on #Oven & #Sink
@@ -43,5 +45,7 @@
 			- DONE on navigue dans l'ui via **LJoy**
 			- DONE on récup les items rapidement via **B**
 			- DONE on ferme l'ui via activation d'un [[UI_CancelButton]]
+		-
+		- DONE create a #SettingsManager
 -
 -

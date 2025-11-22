@@ -27,11 +27,11 @@ public class UI_AutoLayoutMerger : MonoBehaviour
     {
         // get the components
         rect_transform = GetComponent<RectTransform>();
-        LateUpdate();
+        Update();
     }
 
     // UPDATE
-    private void LateUpdate()
+    public void Update()
     {
         if (contents.Count == 0) { if (log) { Debug.LogError($"(UI_AutoLayoutResizer) {name} has no content set!"); } return; }
         
@@ -62,6 +62,8 @@ public class UI_AutoLayoutMerger : MonoBehaviour
         // apply margins
         float width = max_x - min_x + margin_left + margin_right;
         float height = max_y - min_y + margin_top + margin_bottom;
-        rect_transform.sizeDelta = new Vector2(width, height);        
+        rect_transform.sizeDelta = new Vector2(width, height);
+
+        if (log) { Debug.Log($"(UI_AutoLayoutMerger) {name} resized to {rect_transform.sizeDelta}"); }
     }
 }

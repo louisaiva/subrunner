@@ -186,6 +186,13 @@ public class UI_PanelManager : MonoBehaviour
             sequences[panel_index] = null;
         }
 
+        if (duration <= 0f)
+        {
+            panel.anchorMin = new Vector2(target_anchor.x, panel.anchorMin.y);
+            panel.anchorMax = new Vector2(target_anchor.y, panel.anchorMax.y);
+            return;
+        }
+
         // we tween the anchorMin & anchorMax
         sequences[panel_index] = Sequence.Create(useUnscaledTime: true)
            .Group(Tween.Custom(panel.anchorMin.x, /* start -> end */ target_anchor.x, duration,

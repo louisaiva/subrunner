@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+
 /// <summary>
 /// this class manages all the debug elements by counting stuff
 /// on awake, and nothing else for now !
@@ -21,6 +22,9 @@ public class DebugManager : Singleton<DebugManager>
     [SerializeField] private string precision = "F0"; // precision of the fps text
     [SerializeField] private bool show_unscaled_fps = false; // if we want to show the unscaled fps or not (djizzi)
 
+    [Header("Settings")]
+    private Setting debug_setting;
+
     [Header("Logs")]
     [SerializeField] private bool log = false; // if we want to log warnings when
 
@@ -36,6 +40,18 @@ public class DebugManager : Singleton<DebugManager>
         {
             d.gameObject.SetActive(false); // disable all debugs at start
         }
+    }
+    protected void Start()
+    {
+        // on met le skin en fonction du settings skin
+        debug_setting = SettingsManager.Instance.GetSetting("debug");
+        if (debug_setting == null) { return; }
+        toggle_debug(debug_setting.value);
+        debug_setting.OnValueChanged += toggle_debug;
+    }
+    void OnDestroy()
+    {
+        if (debug_setting != null) { debug_setting.OnValueChanged -= toggle_debug; }
     }
 
     // UPDATE + FPS
@@ -66,9 +82,10 @@ public class DebugManager : Singleton<DebugManager>
     }
 
     // TOGGLE DEBUG
-    public void ToggleDebug()
+    private void toggle_debug(float value)
     {
-        debug.gameObject.SetActive(!debug.gameObject.activeSelf);
+        bool enable = (value > 0.5f) ? true : false;
+        debug.gameObject.SetActive(enable);
     }
 
     // ADD DEBUGGABLE TO DEBUGGER

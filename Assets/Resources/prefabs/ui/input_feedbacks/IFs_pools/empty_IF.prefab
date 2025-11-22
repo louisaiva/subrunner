@@ -276,6 +276,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FeedbackSwitcher
   keyboardFeedback: {fileID: 8097132085706908411}
   gamepadFeedback: {fileID: 1696110642191500170}
+  show_feedback_setting_name: show_menus_feedbacks
 --- !u!114 &566069968101679158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -291,6 +292,7 @@ MonoBehaviour:
   pool_schematic: {fileID: 0}
   left_row_prefab: {fileID: 555520272314691009, guid: b5dda2ed4b3b71247965e72fd13e9cd5, type: 3}
   right_row_prefab: {fileID: 2069058503190567260, guid: 71d66b4f9e5bde9429ae6c66e62745b3, type: 3}
+  show_feedbacks: {fileID: 0}
   log: 0
 --- !u!1 &6875313574213253717
 GameObject:

@@ -30,7 +30,6 @@ public class UI_InventoryMenu : UI_Pool, Panelable
     [SerializeField] private FeedbackPoolBuilder IFs;
 
     [Header("Components")]
-    public Descriptor Descriptor;
     public UI_SlottableMixer slottable_mixer;
 
     // AWAKE START

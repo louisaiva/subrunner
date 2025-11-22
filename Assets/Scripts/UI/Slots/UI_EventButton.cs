@@ -58,7 +58,8 @@ public class UI_EventButton : UI_Button, Colorant
         onClickedEvent.Invoke();
     }
 
-    // SET COLORS
+    // COLORANT
+    public Color HoverColor => baseColor;
     public void SetColors(Color base_color, Color clicked_color)
     {
         // special case for UI_EventButton the colors are inversed (the base color is the base color of the icon when not hovered -> means its the clicked one)

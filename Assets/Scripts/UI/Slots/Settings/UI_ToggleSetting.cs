@@ -7,7 +7,12 @@ public class UI_ToggleSetting : UI_Toggle, UI_SettingSlot
 {
     [Header("Setting")]
     [SerializeField] protected string setting_name = "undefined";
-    public string SettingName => setting_name;
+    public string SettingName { get { return setting_name; } set
+        {
+            setting_name = value;
+            set_manager_setting();
+        }
+    }
 
     [Header("On Off Sprites")]
     [SerializeField] private Image icon;
@@ -22,6 +27,7 @@ public class UI_ToggleSetting : UI_Toggle, UI_SettingSlot
 
     [Header("Colorers")]
     public List<UI_Colorer> colorers = new List<UI_Colorer>();
+    public List<UI_Colorer> Colorers => colorers;
 
 
     // START
@@ -102,5 +108,24 @@ public class UI_ToggleSetting : UI_Toggle, UI_SettingSlot
         // change icon based on is_on
         icon.sprite = is_on ? Hovered ? on_hover_sprite : on_sprite
                             : Hovered ? off_hover_sprite : off_sprite;
+    }
+
+    // COLORANT
+    public Color HoverColor => hoverColor;
+    public void SetColors(Color baseColor, Color hoverColor)
+    {
+        this.baseColor = baseColor;
+        this.hoverColor = hoverColor;
+
+        // we apply the base color
+        image.color = Hovered ? hoverColor : baseColor;
+        icon.color = Hovered ? hoverColor : baseColor;
+
+        // we color all colorers
+        if (!Hovered) { return; }
+        for (int i = 0; i < colorers.Count; i++)
+        {
+            colorers[i].ApplyColor(baseColor);
+        }
     }
 }

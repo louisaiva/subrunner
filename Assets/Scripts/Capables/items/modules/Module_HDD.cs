@@ -16,7 +16,7 @@ public class Module_HDD : Module
         if (store == null) { return; }
 
         // we get the capacity value from the effect
-        int new_disk_capacity = Mathf.RoundToInt(get_upgrade_effect("storage capacity") * 1000); // in bytes
+        int new_disk_capacity = Mathf.RoundToInt(get_upgrade_effect("storage") * 1000); // in bytes
         store.SetCapacity(new_disk_capacity);
     }
 

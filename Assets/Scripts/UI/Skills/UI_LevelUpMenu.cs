@@ -10,7 +10,7 @@ using UnityEngine.UI;
 /// shows the pool of 3 UI_Skill and allows you to upgrade one of them
 /// </summary>
 
-public class UI_LevelUpMenu : UI_Pool/* , Slottable */
+public class UI_LevelUpMenu : UI_Pool
 {
     [Header("Level Up Menu Components")]
     [SerializeField] private TMPro.TextMeshProUGUI level_text;
@@ -19,12 +19,11 @@ public class UI_LevelUpMenu : UI_Pool/* , Slottable */
     [Header("Slottable")]
     [SerializeField] private Transform skills_parent;
     [SerializeField] private UI_Slottable slottable;
-    // [SerializeField] private Vector2 base_position = new Vector2(0, 10000);
 
 
-    [Header("Components")]
-    public Description Descriptor;
-    public Description SkillNameDescriptor;
+    // [Header("Components")]
+    // public UI_Writer UI_ItemDescriptor;
+    // public UI_Writer SkillNameDescriptor;
     
 
     // ENABLING
@@ -36,39 +35,12 @@ public class UI_LevelUpMenu : UI_Pool/* , Slottable */
         yield return new WaitForSecondsRealtime(delay_before_activating_buttons);
 
         // on active le navigator
-        // UI_Navigator.Instance.Enable(this);
         slottable.Enable(ingame: false);
     }
     protected override IEnumerator disable_coroutine()
     {
         // on désactive le navigator
-        // UI_Navigator.Instance.Disable(this);
         slottable.Disable();
         yield break;
     }
-
-    // SLOTTABLE
-    /* public List<UI_Slot> GetSlots()
-    {
-        // on récupère les slots
-        List<UI_Slot> slots = new List<UI_Slot>();
-
-        // on récupère les slots des texts
-        for (int i = 0; i < skills_parent.childCount; i++)
-        {
-            Transform slot = skills_parent.GetChild(i);
-            if (!slot.gameObject.activeSelf) { continue; }
-            UI_Skill skill = slot.gameObject.GetComponent<UI_Skill>();
-            if (skill == null) { continue; }
-            slots.Add(skill);
-        }
-
-        return slots;
-    }
-    public bool IsYourSlot(UI_Slot slot)
-    {
-        // on regarde si le slot est dans les slots
-        return slot.transform.IsChildOf(skills_parent);
-    } */
-    // public Vector2 SavedPosition { get; private set; } = new Vector2(Screen.width / 2f, Screen.height / 2f);
 }

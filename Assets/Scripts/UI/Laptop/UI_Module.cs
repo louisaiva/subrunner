@@ -82,7 +82,7 @@ public class UI_Module : UI_Item
         Hovered = true;
 
         // on met à jour la description si y'en a une
-        update_description();
+        // update_description();
 
         // si on a un Item on baisse l'alpha à 0.5
         if (Item != null) { item_image.color = new Color(1, 1, 1, 0.5f); }

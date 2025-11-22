@@ -198,9 +198,9 @@ MonoBehaviour:
   Color: {r: 0.39215687, g: 0.37254903, b: 0.3647059, a: 1}
   MaxQty: 16
   ItemDescription: numeric memory. adds module slots to your laptop
-  Placed: 0
+  _placed: 0
   upgrades:
-  - name: storage capacity
+  - name: storage
     tier: 0
     effect: 4.096
     precision: F3

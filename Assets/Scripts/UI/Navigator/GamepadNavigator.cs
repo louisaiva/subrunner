@@ -117,7 +117,7 @@ public class GamepadNavigator : MonoBehaviour, Navigator
     }
     protected UI_Slot navigate_dot(Vector2 direction)
     {
-        string s = "(UI_GamepadNavigator) NAVIGATE DOT: \n\n";
+        // string s = "(UI_GamepadNavigator) NAVIGATE DOT: \n\n";
 
         // on récupère la position du slot actuel
         Vector2 current_slot_position = Manager.GetPosition(Manager.CurrentSlot);
