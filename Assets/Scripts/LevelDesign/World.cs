@@ -1,14 +1,19 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class World : MonoBehaviour
+public class World : Singleton<World>
 {
     [Header("World")]
     [SerializeField] private Room elevator_room;
     public Level current_level;
     public List<Level> loaded_levels = new List<Level>();
 
+    [Header("Spawn")]
+    public Transform spawn_point;
+
     [Header("Levels")]
+    public List<Level> Levels;
     public string levels_prefab_path = "prefabs/environments/Levels/";
 
     [Header("Rooms")]
@@ -27,49 +32,32 @@ public class World : MonoBehaviour
     public bool debug = false;
     public bool debug_find_perso_room = false;
 
+    // START
     private void Start()
     {
-        // on récupère le level actif
-        foreach (Transform child in transform)
+        // on charge l'elevator room
+        load_elevator_room();
+
+        // on vérifie que nos levels sont bien
+        Levels.RemoveAll(l => l == null);
+        if (debug) { Debug.Log($"(World) {Levels.Count} Levels: " + string.Join(", ", Levels.Select(l => l.name))); }
+
+        // on charge le 1er level si on en a un
+        if (Levels.Count > 0) { load_level(Levels[0]); }
+
+        // on tp le perso au spawn si on en a un
+        if (spawn_point == null)
         {
-            Level level = child.GetComponent<Level>();
-            if (level != null && level.gameObject.activeSelf)
-            {
-                current_level = level;
-                break;
-            }
+            if (debug) { Debug.LogWarning("(World) No spawn point found in world, please set it manually in the inspector"); }
         }
-
-        // on initialise le level
-        if (current_level != null)
+        else
         {
-            load_level(current_level);
-
-            // on regarde si on a déjà une room pour le perso 
-            Room perso_room = findPersoRoom(LoadedRooms);
-            if (perso_room != null) { return;}
-
-            // sinon on tp le perso à l'elevator
+            Controller.Instance.Capable.transform.position = spawn_point.position;
         }
-
-        // on récupère l'elevator room
-        elevator_room = transform.Find("Room_Elevator")?.GetComponent<Room>();
-        if (elevator_room == null)
-        {
-            if (debug) { Debug.LogWarning("(World) Elevator room not found !"); }
-
-            // si on a pas d'elevator room alors on ne tp pas le perso
-            return;
-        }
-
-        // on awake l'elevator room
-        if (!elevator_room.loaded) { elevator_room.Awake(); }
-
-        // on envoie le perso au milieu de l'elevator room
-        Controller.Instance.Capable.transform.position = elevator_room.transform.Find("objects/elevator").transform.position - new Vector3(0,0.5f,0);
-        if (debug) { Debug.LogWarning("(World) No Perso Room found !! teleporting perso to elevator");}
     }
 
+
+    // UPDATE
     private void Update()
     {
         if (!Controller.Instance) { return; }
@@ -80,7 +68,6 @@ public class World : MonoBehaviour
 
         if (!Controller.Instance.current_room.Alight) { Controller.Instance.current_room.Show(); }
     }
-
     private Room findPersoRoom(List<Room> rooms)
     {
         // définit la room du perso en faisant un raycast
@@ -105,6 +92,7 @@ public class World : MonoBehaviour
         return null;
     }
 
+
     // Level Loading/Unloading
     public void LoadLevelFromName(string level_name)
     {
@@ -112,7 +100,7 @@ public class World : MonoBehaviour
         if (current_level != null)
         {
             current_level.Hide();
-            
+
             // we desactivate the current level
             current_level.gameObject.SetActive(false);
         }
@@ -142,6 +130,7 @@ public class World : MonoBehaviour
     }
     private void load_level(Level level)
     {
+
         // we initialize the level
         if (!level.loaded) { level.Start(); }
 
@@ -161,6 +150,21 @@ public class World : MonoBehaviour
         }
 
         if (debug) { Debug.Log("(World) Level loaded : " + level.name); }
+    }
+    private void load_elevator_room()
+    {
+        // on récupère l'elevator room
+        if (elevator_room == null)
+        {
+            elevator_room = transform.Find("Room_Elevator")?.GetComponent<Room>();
+            if (elevator_room == null && debug) { Debug.LogWarning("(World) No elevator room found in world, please set it manually in the inspector"); }
+            
+            // si on a pas d'elevator room alors pas besoin de la charger
+            return;
+        }
+
+        // on awake l'elevator room
+        if (!elevator_room.loaded) { elevator_room.Awake(); }
     }
 
 }

@@ -25,6 +25,7 @@ public class Laptop : Item, Usable, Device
         }
     }
     private HackCapacity hacker;
+    public Color MB_Color { get => this.Color; }
 
     [Header("Disks")]
     [SerializeField] private List<StoreCapacity> disks;
@@ -79,6 +80,7 @@ public class Laptop : Item, Usable, Device
     }
 
     // FILES MANAGEMENT
+    public System.Action<File> OnFileWritten { get; set; } = delegate { };
     public bool WriteFile(File file)
     {
         // we try to write the file to the first disk that has enough space
@@ -87,6 +89,7 @@ public class Laptop : Item, Usable, Device
             if (disk.CanStore(file))
             {
                 disk.Store(file);
+                OnFileWritten?.Invoke(file);
                 return true;
             }
         }
@@ -101,15 +104,41 @@ public class Laptop : Item, Usable, Device
     {
         // we get all exploits from all disks
         List<Exploit> exploits = new List<Exploit>();
-        foreach (StoreCapacity disk in disks)
+        List<string> exploit_refs = new List<string>();
+        for (int i=0; i<disks.Count; i++)
         {
-            exploits.AddRange(disk.GetExploits());
+            List<Exploit> disk_exploits = disks[i].GetExploits();
+            for (int j = 0; j < disk_exploits.Count; j++)
+            {
+                // if we already have the name, we keep the one with the highest security level
+                if (exploit_refs.Contains(disk_exploits[j].name))
+                {
+                    int index = exploit_refs.IndexOf(disk_exploits[j].name);
+                    if (disk_exploits[j].security_level > exploits[index].security_level)
+                    {
+                        exploits[index] = disk_exploits[j];
+                    }
+                    continue;
+                }
+
+                // else we add it
+                exploits.Add(disk_exploits[j]);
+                exploit_refs.Add(disk_exploits[j].name);
+            }
         }
-        // exploits.Add(Exploit.TypePassword); // we always add TypePassword as default
-        // exploits.Add(Exploit.Nmap); // we always add Nmap as a default exploit
         exploits.Add(FileBank.Instance.Nmap);
         exploits.Add(FileBank.Instance.TypePassword);
         return exploits;
+    }
+    public List<File> GetFiles()
+    {
+        // we get all files from all disks
+        List<File> files = new List<File>();
+        foreach (StoreCapacity disk in disks)
+        {
+            files.AddRange(disk.Files);
+        }
+        return files;
     }
 
     // KEYS MANAGEMENT
@@ -149,4 +178,8 @@ public class Laptop : Item, Usable, Device
         }
         return keys;
     }
+
+    // UI
+    public List<WindowType> WindowsTypes => new List<WindowType>() { WindowType.Device, WindowType.Connection, WindowType.Explorer };
 }
+

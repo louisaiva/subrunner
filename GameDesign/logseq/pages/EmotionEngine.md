@@ -1,0 +1,3 @@
+-
+- prend en entrée une #Sensation et la transforme en #Emotion
+-

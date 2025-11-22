@@ -1,0 +1,5 @@
+- gère l'affichage des différentes options en affichant des [[UI_Slider]] qui vont appeler les methods de set variables du settings manager via **SettingsManager.Instance.SetValue(string,float)**
+-
+-
+- DONE enlever les events de modification de value
+- DONE lors de l'affichage de la pool, ça charge toutes les valeurs du [[SettingsManager]] dans les **sliders** correspondant, ou même ça crée dynamiquement les sliders ???

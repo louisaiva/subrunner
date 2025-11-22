@@ -22,6 +22,8 @@ public class UI_LaptopItemSlot : UI_Item, Awakable
     {
         if (!base.Store(item)) { return false; }
         // if we are here we successfully grabbed item
+        Perso.Instance.Laptop = item as Laptop;
+
         if (log) { Debug.Log($"(UI_LaptopItemSlot) Laptop changed, new item: {items[0].Reference} with {items[0].Inventory.Count} modules installed"); }
         return true;
     }
@@ -29,23 +31,25 @@ public class UI_LaptopItemSlot : UI_Item, Awakable
     {
         if (!base.Unstore(item)) { return false; }
 
-        // if we are here we successfully dropped item
-        // we check if we dropped a laptop that was using trojan / cyborg_puppet since we don't want them to
-        // continue if we are not here to stop them !!!! (if perso is not controlled he can't grab back the laptop)
-        // and if he can't grab the laptop he can't cancel the hack
-        // so it is stuck in the trojan / cyborg
-
-        if (item is Laptop laptop) { laptop.Hacker.CancelControlHacks(); }
+        Perso.Instance.Laptop = null;
 
         if (log) { Debug.Log($"(UI_LaptopItemSlot) Removed laptop from slot"); }
         return true;
     }
     public override void Clear()
     {
-        if (Item is Laptop laptop) { laptop.Hacker.CancelControlHacks(); }
+        Perso.Instance.Laptop = null;
 
         base.Clear();
         if (log) { Debug.Log($"(UI_LaptopItemSlot) Cleared laptop slot"); }
+    }
+    public override void SwitchItems(List<Item> items, bool items_moved = true)
+    {
+        if (log) { Debug.Log($"(UI_LaptopItemSlot) Switching laptop items from {Perso.Instance.Laptop?.Reference} to {items[0]?.Reference}"); }
+        base.SwitchItems(items, items_moved);
+
+        // we update the perso laptop reference
+        Perso.Instance.Laptop = Item as Laptop;
     }
 
     // HAS LAPTOP

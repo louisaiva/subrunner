@@ -46,7 +46,9 @@ public class DieCapacity : Capacity
 
         // on donne de l'xp
         Vector3 sprite_center = new Vector3(transform.position.x, transform.position.y + capable.GetComponent<SpriteRenderer>().bounds.size.y / 2f, 0);
-        xp_provider.GetComponent<XPProvider>().EmitXP(xp_gift, sprite_center);
+        int xp_to_drop = xp_gift;
+        if (capable is Perso perso) { xp_to_drop = perso.total_xp/2; } // if the player dies he drops half of his total xp
+        xp_provider.GetComponent<XPProvider>().EmitXP(xp_to_drop, sprite_center);
 
         // on donne un floating dmg
         if (show_smiley)
@@ -74,7 +76,7 @@ public class DieCapacity : Capacity
         // 1 - DROP ITEMS
         if (being.Inventory != null && being.Inventory.Count > 0)
         {
-            // we get the drop capacity
+            /* // we get the drop capacity
             DropCapacity dropper = being.GetCapacity<DropCapacity>();
             if (dropper == null)
             {
@@ -102,8 +104,10 @@ public class DieCapacity : Capacity
                 // we drop the item
                 dropper.Select(item);
                 dropper.Use(being);
-            }
+            } */
+            yield return being.DropAllItems(); // we wait for dropping all items
         }
+        being.Inventory?.RemoveAllUIs(); // on supprime les ui de l'inventory
 
 
         being.Die();
@@ -125,7 +129,7 @@ public class DieCapacity : Capacity
         if (being.transform.Find("brain") is Transform brain && brain != null) { Destroy(brain.gameObject); }
         if (being.transform.Find("goals") is Transform goal && goal != null) { Destroy(goal.gameObject); }
         if (being.transform.Find("eyes") is Transform eyes && eyes != null) { Destroy(eyes.gameObject); }
-        if (being.transform.Find("inventory") is Transform inventory && inventory != null) { Destroy(inventory.gameObject); }
+        // if (being.transform.Find("inventory") is Transform inventory && inventory != null) { Destroy(inventory.gameObject); }
         if (being.transform.Find("head") is Transform head && head != null) { Destroy(head.gameObject); }
         if (being.transform.Find("light") is Transform light && light != null) { Destroy(light.gameObject); }
         if (being.transform.Find("hacks") is Transform hacks && hacks != null) { Destroy(hacks.gameObject); }
@@ -141,19 +145,19 @@ public class DieCapacity : Capacity
 
 
 
-        // 5 - TURNING TO MEAT
-        Meat meat = being.gameObject.AddComponent<Meat>();
-        meat.name = "Meat";
-        meat.Initialize();
-        meat.SetForces(being.GetForces());
+        // 5 - TURNING TO CORPSE
+        Corpse corpse = being.gameObject.AddComponent<Corpse>();
+        corpse.name = "Corpse";
+        corpse.Initialize(being);
+        corpse.SetForces(being.GetForces());
 
-        // we add a hover capacity to it (it is an item now)
-        meat.AddCapacity("hover");
+        // we add a hover capacity to it (it is an interactable now)
+        corpse.AddCapacity("hover");
 
 
 
         // 6 - DESTROYING OLD BEING & DIE CAPACITY
         Destroy(being);
-        meat.RemoveCapacity("die"); // and we finally remove the die capacity which will destroy it (this)
+        corpse.RemoveCapacity("die"); // and we finally remove the die capacity which will destroy it (this)
     }
 }

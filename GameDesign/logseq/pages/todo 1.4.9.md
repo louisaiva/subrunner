@@ -23,4 +23,11 @@
   CLOCK: [2025-10-03 Fri 21:22:37]--[2025-10-03 Fri 21:38:15] =>  00:15:38
   CLOCK: [2025-10-03 Fri 21:38:16]--[2025-10-03 Fri 21:38:17] =>  00:00:01
   :END:
+- DONE faire que le #TTCBAS ne prend pas en compte notre cible (zombos evitent le perso meme quand ils le chasent)
+- DONE comprendre pk les #Mobs recommencent à bouger pendant la fin de leur attaque (même bug que celui du haut ?)
+- DONE le #PreyDetector ne semble pas basculer directement sur la proie si on fait une autre action ?
+-
+-
+- DONE bug quand on cancel 2 hacks très vite ça trouve pas le hack
+-
 -

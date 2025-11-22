@@ -1,8 +1,9 @@
+#pragma warning disable 4014
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Controller : Singleton<Controller>
+public class Controller : MonoBehaviour
 {
     [Header("Current capable")]
     public Capable Capable
@@ -29,23 +30,55 @@ public class Controller : Singleton<Controller>
 
     [Header("UI Statics elements")]
     [SerializeField] private UI_Inventory perso_quick_inventory;
+    [SerializeField] private GameObject life_bar;
+    [SerializeField] private GameObject shortcuts;
+
+    [Header("Events")]
+    public System.Action<Capable> OnCapableControlled;
+    public System.Action<Capable> OnCapableUncontrolled;
 
     [Header("Log")]
     [SerializeField] private bool log = false;
+
+    // AWAKE
+    public static Controller Instance { get; private set; }
+    public static System.Action<Controller> OnInstanceRemoved { get; set; }
+    public static System.Action<Controller> OnInstanceSet { get; set; }
+    protected virtual void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            if (log) { Debug.LogWarning("(Controller) multiple instances of Controller detected! Destroying the old one."); }
+            Destroy(Instance.gameObject);
+            OnInstanceRemoved?.Invoke(Instance);
+            Instance = null;
+        }
+        Instance = this;
+        OnInstanceSet?.Invoke(Instance);
+    }
 
     // START
     private void Start()
     {
         // on récupère les composants
-        perso_quick_inventory = UI_Manager.Instance.GetPool("hud").transform.Find("perso_quick_inventory").GetComponent<UI_Inventory>();
+        UI_Pool hud = UI_Manager.Instance.GetPool("hud");
+        life_bar = hud.transform.Find("life_bar").gameObject;
+        shortcuts = hud.transform.Find("shortcuts_if").gameObject;
+        // perso_quick_inventory = UI_Manager.Instance.GetPool("quick_inventory").transform.Find("perso_quick_inventory").GetComponent<UI_Inventory>();
+        perso_quick_inventory = (UI_Manager.Instance.GetPool("quick_inventory") as UI_QuickInventoryPool).UI;
 
-        ResetCapableTarget();
+        // on controlle le capable actuel
+        stack.Clear();
+        stack.Add(Capable);
+        control(Capable);
     }
 
-
     // CHANGE CAPABLE TARGET HIGH LEVEL
-    public void ChangeCapableTarget(Capable new_target, float duration = -888f,bool add_to_stack=true)
+    public void ChangeCapableTarget(Capable new_target, float duration = -888f, bool add_to_stack = true)
     {
+        // checks if the target is the same
+        if (new_target == Capable) { return; }
+
         if (log) { Debug.Log("(Controller) " + name + " is changing capable target to " + new_target.name + (add_to_stack ? " and adding to stack" : "")); }
 
         // on décontrole l'ancienne target
@@ -80,18 +113,20 @@ public class Controller : Singleton<Controller>
         // on change de target
         ChangeCapableTarget(stack.Last(), add_to_stack: false);
     }
-    public void ResetCapableTarget()
+    public void ResetCapableTarget(bool control_nothing = false)
     {
-
         if (log) { Debug.Log("(Controller) " + name + " is resetting capable target to Perso"); }
 
         CancelInvoke("ResetCapableTarget");
 
+        // soit on clear tout carrément on décontrole giga tout
+        if (control_nothing) { uncontrol_capable(stack[stack.Count - 1]); }
+
         // on clear la stack
         stack.Clear();
 
-        // on change la target pour le perso (ajoute automatiquement à la stack)
-        ChangeCapableTarget(Perso.Instance, add_to_stack: true);
+        // soit on change la target pour le perso (ajoute automatiquement à la stack)
+        if (!control_nothing) { ChangeCapableTarget(Perso.Instance, add_to_stack: true); }
     }
 
 
@@ -121,15 +156,35 @@ public class Controller : Singleton<Controller>
             }
         }
 
+        if (capa is Device)
+        {
+            // on enleve le device du UI_Device
+            UI_Manager.Instance.GetPool<UI_Device>()?.ClearDevice();
+            UI_Manager.Instance.UnstackFromHUD("device", override_transition: true);
+        }
+
         // reset l'inventory
         capa?.Inventory?.RemoveUI(perso_quick_inventory);
         perso_quick_inventory.Inventory = null;
+
+
+        // on cache l'hp bar & shortcuts seulement si c'est le perso
+        UI_HUD hud = UI_Manager.Instance.GetPool("hud").GetComponent<UI_HUD>();
+        if (capa is Perso)
+        {
+            hud.QuitPool(life_bar); life_bar.GetComponent<Transitioner>().Hide();
+            hud.QuitPool(shortcuts); shortcuts.GetComponent<Transitioner>().Hide();
+        }
 
         // on déconnecte la connect capacity
         if (capa.HasCapacity<ConnectCapacity>())
         {
             capa.GetCapacity<ConnectCapacity>().Disconnect();
         }
+
+        capa.anim_player.OnSkinChange -= refresh_skin_based_parameters; // on enlève le callback de changement de skin
+
+        OnCapableUncontrolled?.Invoke(capa);
 
         if (log) { Debug.Log("(Controller) " + name + " is done controlling " + capa.name); }
     }
@@ -142,8 +197,9 @@ public class Controller : Singleton<Controller>
         CancelInvoke("ResetCapableTarget");
         if (duration != -888f) { Invoke("ResetCapableTarget", duration); }
 
-        // refresh le see through pour remettre la tete bien centrée
-        see_through.Refresh(capa);
+        // on ajoute le callback de changement de skin
+        refresh_skin_based_parameters(capa.Skin);
+        capa.anim_player.OnSkinChange += refresh_skin_based_parameters;
 
         // on désactive le Brain si le nouveau capable est un IA
         if (capa is IA ia)
@@ -165,8 +221,15 @@ public class Controller : Singleton<Controller>
         capa?.Inventory?.AddUI(perso_quick_inventory);
         perso_quick_inventory.Refresh();
 
+        // on affiche l'hp bar & shortcuts seulement si c'est le perso
+        UI_HUD hud = UI_Manager.Instance.GetPool("hud").GetComponent<UI_HUD>();
+        if (capa is Perso)
+        {
+            hud.RegisterToPool(life_bar, is_stacked: true);
+            hud.RegisterToPool(shortcuts, is_stacked: true);
+        }
+
         // on regarde si le capable est un device
-        // ConnectCapacity connector = capa.Connector;
         if (capa is Device device)
         {
             // on refresh le hackable navigator pour qu'il ait une nouvelle ConnectCapacity si jamais le capable a un device
@@ -174,14 +237,42 @@ public class Controller : Singleton<Controller>
 
             // on bascule en pool UI_Device
             UI_Manager.Instance.GetPool("device").GetComponent<UI_Device>().SetDevice(device);
-            UI_Manager.Instance.SwitchTo("device");
-        }
-        else if (UI_Manager.Instance.CurrentPool == "device")
-        {
-            // on bascule en pool hud si on était sur un device et qu'on en est plus un
-            UI_Manager.Instance.SwitchTo("hud");
+            UI_Manager.Instance.StackOnHUD("device", override_transition: true);
         }
 
         if (log) { Debug.Log("(Controller) " + name + " is now controlling " + capa.name); }
+
+        OnCapableControlled?.Invoke(capa);
+
+        // on informe le debug manager qu'on controle un nouveau capable
+        DebugManager.Instance.AddDebuggable(capa, "controller");
+    }
+    private void refresh_skin_based_parameters(string skin)
+    {
+        if (log) { Debug.Log("(Controller) refreshing skin based parameters for skin " + skin + " on capable " + Capable.name); }
+
+        // on refresh le see through pour remettre la tete bien centrée
+        see_through.Refresh(skin);
+    }
+
+
+    // GETTERS
+    public EndlessInput<T> GetEndlessInput<T>(string name) where T : struct
+    {
+        EndlessInput<T> endinp = PIC.get_endless_input<T>(name);
+        if (endinp != null) { return endinp; }
+        endinp = UIC.get_endless_input<T>(name);
+        return endinp;
+    }
+
+
+    // ON DESTROY
+    protected virtual void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            OnInstanceRemoved?.Invoke(Instance);
+            Instance = null;
+        }
     }
 }

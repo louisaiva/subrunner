@@ -25,6 +25,7 @@ public abstract class StaticDevice : Capable, Device
         }
     }
     private HackCapacity hacker;
+    public Color MB_Color { get => Color.beige; }
 
     // MODULES MANAGEMENT
     public void OnNetworkModuleChanged()
@@ -56,12 +57,13 @@ public abstract class StaticDevice : Capable, Device
         // we call the event
         OnDisksChanged?.Invoke(disks);
 
-        if (debug) { Debug.Log($"(Laptop) {name} HDD changed. New disks count: {disks.Count}"); }
+        if (debug) { Debug.Log($"(StaticDevice) {name} HDD changed. New disks count: {disks.Count}"); }
     }
     public event System.Action<List<StoreCapacity>> OnDisksChanged = delegate { };
 
     [Header("Disks")]
     [SerializeField] private List<StoreCapacity> disks;
+    public System.Action<File> OnFileWritten { get; set; } = delegate { };
     public bool WriteFile(File file)
     {
         // we try to write the file to the first disk that has enough space
@@ -70,6 +72,7 @@ public abstract class StaticDevice : Capable, Device
             if (disk.CanStore(file))
             {
                 disk.Store(file);
+                OnFileWritten?.Invoke(file);
                 return true;
             }
         }
@@ -84,15 +87,41 @@ public abstract class StaticDevice : Capable, Device
     {
         // we get all exploits from all disks
         List<Exploit> exploits = new List<Exploit>();
+        List<string> exploit_refs = new List<string>();
+        for (int i = 0; i < disks.Count; i++)
+        {
+            List<Exploit> disk_exploits = disks[i].GetExploits();
+            for (int j = 0; j < disk_exploits.Count; j++)
+            {
+                // if we already have the name, we keep the one with the highest security level
+                if (exploit_refs.Contains(disk_exploits[j].name))
+                {
+                    int index = exploit_refs.IndexOf(disk_exploits[j].name);
+                    if (disk_exploits[j].security_level > exploits[index].security_level)
+                    {
+                        exploits[index] = disk_exploits[j];
+                    }
+                    continue;
+                }
+
+                // else we add it
+                exploits.Add(disk_exploits[j]);
+                exploit_refs.Add(disk_exploits[j].name);
+            }
+        }
+        exploits.Add(FileBank.Instance.Nmap);
+        exploits.Add(FileBank.Instance.TypePassword);
+        return exploits;
+    }
+    public List<File> GetFiles()
+    {
+        // we get all files from all disks
+        List<File> files = new List<File>();
         foreach (StoreCapacity disk in disks)
         {
-            exploits.AddRange(disk.GetExploits());
+            files.AddRange(disk.Files);
         }
-        // exploits.Add(Exploit.TypePassword); // we always add TypePassword as default
-        // exploits.Add(Exploit.Nmap); // we always add Nmap as a default exploit
-        exploits.Add(FileBank.Instance.TypePassword);
-        exploits.Add(FileBank.Instance.Nmap);
-        return exploits;
+        return files;
     }
 
     // KEYS MANAGEMENT
@@ -105,7 +134,7 @@ public abstract class StaticDevice : Capable, Device
         List<Key> keys = get_keys();
         if (log_keys)
         {
-            string s = $"(Laptop) {name} checking if has key for {target.Key}";
+            string s = $"(StaticDevice) {name} checking if has key for {target.Key}";
             foreach (Key key in keys)
             {
                 s += $"\n - {key.data}";
@@ -131,4 +160,7 @@ public abstract class StaticDevice : Capable, Device
         }
         return keys;
     }
+
+    // UI
+    public List<WindowType> WindowsTypes => new List<WindowType>() { WindowType.Device, WindowType.Connection, WindowType.Explorer };
 }

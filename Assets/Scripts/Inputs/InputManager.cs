@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections.Generic;
 using UnityEngine.InputSystem.UI;
 using System;
 using System.Collections;
@@ -9,6 +8,8 @@ public class InputManager : Singleton<InputManager>
 {
     [Header("INPUT MANAGER")]
     [SerializeField] private string current_input_type = "keyboard"; // keyboard or gamepad
+    public string CurrentInputType => current_input_type;
+    public event Action<string> OnInputTypeChanged = delegate { };
     public PlayerInputActions inputs;
 
 
@@ -17,6 +18,7 @@ public class InputManager : Singleton<InputManager>
     [SerializeField] public float JOYSTICK_MAX_THRESHOLD = 0.95f;
     [SerializeField] public float BUTTON_MIN_THRESHOLD = 0.2f;
     [SerializeField] public float BUTTON_MAX_THRESHOLD = 0.8f;
+    // [SerializeField] public float MOUSE_DELTA_MIN_THRESHOLD = 5f;
 
     [Header("Inputing endlessly")]
     [SerializeField] public float BUTTON_ENDLESSLY_SHORT_THRESHOLD = 0.3f; // time threshold input need to be maintain before inputing endlessly
@@ -24,6 +26,7 @@ public class InputManager : Singleton<InputManager>
     [SerializeField] public float BUTTON_ENDLESSLY_LONG_THRESHOLD = 0.6f; // time threshold input need to be maintain before inputing endlessly
     [SerializeField] public float BUTTON_ENDLESSLY_LONG_DELAY = 0.1f; // when inputing endlessly, delay btwn each input
 
+    // private bool callbacks_sets = false;
 
     [Header("Components")]
     [SerializeField] private InputSystemUIInputModule input_system_ui_input_module;
@@ -31,7 +34,6 @@ public class InputManager : Singleton<InputManager>
     [Header("Logs")]
     public bool log = false;
     public bool log_input_maps_enabled = false;
-
 
     // unity functions
     protected override void Awake()
@@ -46,12 +48,16 @@ public class InputManager : Singleton<InputManager>
         inputs.UI.Enable();
         inputs.any.Enable();
         inputs.menus.Enable();
+        inputs.feedbacks.Enable();
 
+        Invoke(nameof(set_callbacks), 0.2f); // slight delay to avoid issues on start
+    }
+    private void set_callbacks()
+    {
         // on ajoute les listeners
         inputs.any.keyboard.performed += ctx => setInputType("keyboard");
         inputs.any.gamepad.performed += ctx => setInputType("gamepad");
-
-        // inputs.perso.move.performed += ctx => MovementRawInputs = ctx.ReadValue<Vector2>();
+        if (log) { Debug.Log("(InputManager) input type callbacks set"); }
     }
 
     void Update()
@@ -68,17 +74,17 @@ public class InputManager : Singleton<InputManager>
         }
     }
 
-    // setters
+    // SWITCH INPUTS TYPE
     private void setInputType(string input_type)
     {
-        if (current_input_type != input_type)
-        {
-            // on met à jour le type d'input
-            current_input_type = input_type;
-            input_system_ui_input_module.enabled = input_type == "keyboard";
-            Cursor.visible = input_type == "keyboard";
-            if (log) { Debug.Log("(InputManager) switching to " + input_type); }
-        }
+        if (current_input_type == input_type) { return; }
+
+        // on met à jour le type d'input
+        current_input_type = input_type;
+        // input_system_ui_input_module.enabled = input_type == "keyboard";
+        Cursor.visible = input_type == "keyboard";
+        if (log) { Debug.Log("(InputManager) switching to " + input_type); }
+        OnInputTypeChanged?.Invoke(current_input_type);
     }
 
     // getters
@@ -115,6 +121,7 @@ public class InputManager : Singleton<InputManager>
         else if (inputMap == "UI") { action = inputs.UI.Get()[action_name]; }
         else if (inputMap == "any") { action = inputs.any.Get()[action_name]; }
         else if (inputMap == "menus") { action = inputs.menus.Get()[action_name]; }
+        else if (inputMap == "feedbacks") { action = inputs.feedbacks.Get()[action_name]; }
         // else if (inputMap == "enhanced_perso") { action = inputs.enhanced_perso.Get()[action_name]; }
 
         // on log
@@ -134,7 +141,6 @@ public class InputManager : Singleton<InputManager>
     public Vector2 MovementRawInputs { get => inputs.perso.move.ReadValue<Vector2>(); }
 
     // INPUTS MAP TOGGLING
-    // todo : ideally all inputs toggling logic should be controlled in this script
     public event Action<bool> OnPersoInputsToggled = delegate { };
     public void EnablePersoInputs()
     {
@@ -160,6 +166,12 @@ public class InputManager : Singleton<InputManager>
     public void StopInputCoroutine(Coroutine coroutine)
     {
         StopCoroutine(coroutine);
+    }
+
+    // ON DESTROY
+    private void OnDestroy()
+    {
+        OnInputTypeChanged = null;
     }
 
 }

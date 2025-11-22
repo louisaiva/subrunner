@@ -1,9 +1,10 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_HDD : UI_Pool, I_UI_Slottable
+public class UI_HDD : UI_Pool/* , Slottable */
 {
 
     [Header("Disk")]
@@ -16,7 +17,7 @@ public class UI_HDD : UI_Pool, I_UI_Slottable
     [SerializeField] private TextMeshProUGUI data_text;
 
     [Header("UI_Texts")]
-    [SerializeField] private List<GameObject> ui_texts;
+    [SerializeField] private List<UI_Text> ui_texts;
 
     [Header("capacity slider")]
     [SerializeField] private RectTransform capacity_slider;
@@ -33,6 +34,9 @@ public class UI_HDD : UI_Pool, I_UI_Slottable
     [SerializeField] private Color temp_slider_full_color = Color.red;
     [SerializeField] private TempCapacity temperer;
 
+    [Header("Components")]
+    [SerializeField] private UI_Slottable slottable;
+
     // DISK SETTING
     public void SetDisk(StoreCapacity disk)
     {
@@ -43,7 +47,7 @@ public class UI_HDD : UI_Pool, I_UI_Slottable
 
 
         // we clear the files parent
-        foreach (GameObject text in ui_texts) { Destroy(text); }
+        foreach (UI_Text text in ui_texts) { Destroy(text.gameObject); }
         ui_texts.Clear();
 
         // we clear the empty_disk file
@@ -86,7 +90,7 @@ public class UI_HDD : UI_Pool, I_UI_Slottable
     }
     private void create_filename(File file)
     {
-        GameObject text = Instantiate(filename_prefab, files_parent);
+        UI_Text text = Instantiate(filename_prefab, files_parent).GetComponent<UI_Text>();
         // text.GetComponent<TextMeshProUGUI>().text = file.name + file.extension;
         text.GetComponent<UI_HDD_File>().SetFile(file);
         ui_texts.Add(text);
@@ -136,42 +140,42 @@ public class UI_HDD : UI_Pool, I_UI_Slottable
         data_text.text = data;
     }
 
-    // SHOW HIDE
-    public override async Awaitable Show(float duration, List<GameObject> dont_show = null)
+    // ENABLING
+    protected override IEnumerator enable_coroutine()
     {
-        await base.Show(duration, dont_show);
-
         // on active le navigator
-        UI_XboxNavigator.Instance.Enable(this);
+        // UI_Navigator.Instance.Enable(this);
+        slottable.Enable(ingame: false);
+        yield break;
     }
-    public override async Awaitable Hide(float duration, List<GameObject> dont_hide = null)
+    protected override IEnumerator disable_coroutine()
     {
         // on désactive le navigator
-        UI_XboxNavigator.Instance.Disable(this);
-
-        await base.Hide(duration, dont_hide);
+        // UI_Navigator.Instance.Disable(this);
+        slottable.Disable();
+        yield break;
     }
 
     // SLOTTABLE
-    public List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator)
+    /* public List<UI_Slot> GetSlots()
     {
         if (log) { Debug.Log($"(UI_HDD) getting slots"); }
-        List<GameObject> slots = new List<GameObject>();
+        List<UI_Slot> slots = new List<UI_Slot>();
 
         // we add the ui_texts
-        foreach (GameObject text in ui_texts)
+        foreach (UI_Text text in ui_texts)
         {
-            if (text == null || text.GetComponent<UI_Text>() == null) { continue; }
+            // if (text == null || text.GetComponent<UI_Text>() == null) { continue; }
             slots.Add(text);
         }
 
         return slots;
     }
-    public bool IsYourSlot(GameObject slot)
+    public bool IsYourSlot(UI_Slot slot)
     {
         if (slot.transform.parent == files_parent) { return true; }
         return false;
-    }
-    public Vector2 SavedPosition { get; private set; } = Vector2.zero;
+    } */
+    // public Vector2 SavedPosition { get; private set; } = Vector2.zero;
 
 }

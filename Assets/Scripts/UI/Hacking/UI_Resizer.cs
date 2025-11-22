@@ -1,8 +1,16 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// this class calculates the right rect transform size based on a group cells count
+/// it auto calculates how many rows & columns we should have for the rectransform size to
+/// be as compact (and so as small) as possible
+/// 
+/// also has parameters for putting a min size (will never go below this size)
+/// and a max size (will try to expand rows/columns in the other axis to stay below this max size,
+/// but if you passes wrong max size it can go above it)
+/// </summary>
 public class UI_Resizer : MonoBehaviour
 {
 
@@ -55,7 +63,8 @@ public class UI_Resizer : MonoBehaviour
     }
 
 
-    private Dictionary<int,Vector2Int> size_cache = new Dictionary<int, Vector2Int>();
+    // LOW LEVEL COLUMNS & ROWS SIZE CALCULATION (with cache)
+    private Dictionary<int, Vector2Int> size_cache = new Dictionary<int, Vector2Int>();
     private Vector2Int calculate_best_suited_size_for_cells(int cells)
     {
         // checks the cache if we have already calculated it

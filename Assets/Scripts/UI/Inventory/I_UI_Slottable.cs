@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using System;
+using UnityEngine.EventSystems;
 
 public interface I_UI_Slottable
 {
@@ -13,4 +14,22 @@ public interface I_UI_Slottable
 
     // MonoBehaviour functions
     GameObject gameObject { get; }
+}
+
+public interface Slottable
+{
+    public List<UI_Slot> GetSlots();
+    public bool IsYourSlot(UI_Slot slot);
+    public void Enable(bool ingame);
+    public void Disable();
+    public UI_Slot StartingSlot { get; }
+
+    // MonoBehaviour functions
+    public GameObject gameObject { get; }
+    public string name { get; }
+}
+
+public interface Droppable
+{
+    void OnPointerDropped(PointerEventData eventData);
 }

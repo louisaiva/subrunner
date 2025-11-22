@@ -162,6 +162,24 @@ public class SkillManager : MonoBehaviour
     }
     
     // GETTERS
+    public float GetSkillLevel(string skill)
+    {
+        switch (skill)
+        {
+            case "stat:max_life":
+                return max_life_level;
+            case "stat:regen_life":
+                return regen_life_level;
+            case "stat:damage":
+                return damage_level;
+            /* case "stat:regen_bits":
+                return regen_bits_level;
+            case "stat:portee_hack":
+                return portee_hack_level; */
+            default:
+                return 0f;
+        }
+    }
     public float GetSkillValue(string skill)
     {
         return (float) calculateX(skill);

@@ -233,19 +233,14 @@ MonoBehaviour:
       rid: 5402995149581582435
   base_color: {r: 1, g: 1, b: 1, a: 1}
   used_color: {r: 0.8962264, g: 0.28324133, b: 0.28324133, a: 1}
-  waiting_color: {r: 0.3033108, g: 0.75496197, b: 0.9056604, a: 1}
+  waiting_color: {r: 0.47058824, g: 0.89411765, b: 0.8, a: 1}
   references:
     version: 2
     RefIds:
     - rid: 5402995149581582435
       type: {class: Processus, ns: , asm: Assembly-CSharp}
       data:
-        program:
-          name: null
-          extension: .exe
-          data: 
-          base_duration: 0
-          cores_cost: 0
+        program: {fileID: 0}
         state: 0
         provided_cores: []
         average_cores_speed: 0

@@ -10,41 +10,24 @@ using TMPro;
 public class InputFeedback : MonoBehaviour
 {
     [Header("Input")]
-    [SerializeField] private InputActionReference input;
-    [SerializeField] protected InputManager input_manager;
+    [SerializeField] protected InputActionReference input;
+    protected InputManager input_manager;
     protected InputAction action;
     protected System.Action<InputAction.CallbackContext> input_callback;
     protected System.Action<InputAction.CallbackContext> reset_callback;
     protected System.Action<InputAction.CallbackContext> press_and_release_callback;
     public bool use_press_and_release = false; // whether to use the press and release callback instead of the simple input & reset
-
-    [Header("Image")]
-    [SerializeField] protected Image image;
-    [SerializeField] protected SpriteBank bank;
-
-    [Header("Colors & Label")]
-    [SerializeField] protected Color base_color = new Color(1f, 1f, 1f, 1f);
-    [SerializeField] protected Color clicked_color = new Color(1f, 1f, 0f, 1f);
-    [SerializeField] protected List<UI_Colorer> colorers = new List<UI_Colorer>();
-    [SerializeField] private TextMeshProUGUI label;
+    protected bool is_pressed = false;
 
     [Header("Logs")]
-    public bool debug = false;
+    public bool log = false;
 
     // START
     protected virtual void Start()
     {
-        // we verify the image & the input
-        if (debug)
-        {
-            if (image == null) { Debug.LogWarning("(InputFeedback : " + name + " ) image is not set ! you should assign it in the inspector"); }
-            if (input == null) { Debug.LogWarning("(InputFeedback : " + name + " ) input is not set ! you should assign it in the inspector"); }
-        }
-        
-        // we get the input manager
-        input_manager = GameObject.Find("/utils/input_manager").GetComponent<InputManager>();
 
-        // we get the input
+        // we get the input manager & input
+        input_manager = InputManager.Instance;
         action = input_manager.GetAction(input);
 
         defineCallbacks();
@@ -64,14 +47,9 @@ public class InputFeedback : MonoBehaviour
     }
 
     // ONENABLE/DISABLE
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         if (action == null) { return; }
-        if (bank == null)
-        {
-            bank = GameObject.Find("/utils/bank").GetComponent<SpriteBank>();
-            if (debug) { Debug.Log("(IF) SpriteBank loaded : SpriteBank == " + bank); }
-        }
 
         // we add the listeners
         if (use_press_and_release)
@@ -87,7 +65,7 @@ public class InputFeedback : MonoBehaviour
         // we reset the IF
         OnReset();
     }
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         if (action == null) { return; }
 
@@ -107,25 +85,11 @@ public class InputFeedback : MonoBehaviour
     // INPUT / RESET
     public virtual void OnInput()
     {
-        // we set the color
-        image.color = clicked_color;
-
-        // we apply the colorers color if we have any
-        foreach (UI_Colorer colorer in colorers)
-        {
-            colorer.ApplyColor();
-        }
+        is_pressed = true;
     }
     public virtual void OnReset()
     {
-        // we set the color
-        image.color = base_color;
-
-        // we revert the colorers color if we have any
-        foreach (UI_Colorer colorer in colorers)
-        {
-            colorer.RevertColor();
-        }
+        is_pressed = false;
     }
     public virtual void HandlePressAndReleaseInput(InputAction.CallbackContext context)
     {
@@ -139,14 +103,4 @@ public class InputFeedback : MonoBehaviour
         }
     }
 
-    // SETTERS
-    public void SetLabel(string text)
-    {
-        if (label == null)
-        {
-            if (debug) { Debug.LogWarning("(InputFeedback : " + name + " ) label is not set ! you should assign it in the inspector"); }
-            return;
-        }
-        label.text = text;
-    }
 }

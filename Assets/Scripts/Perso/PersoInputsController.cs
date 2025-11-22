@@ -21,6 +21,7 @@ public class PersoInputsController : InputController
     private event Action<InputAction.CallbackContext> dodgeCallback;
     private event Action<InputAction.CallbackContext> attackCallback;
     private event Action<InputAction.CallbackContext> hackCallback;
+    private event Action<InputAction.CallbackContext> select_hackableCallback;
     private event Action<InputAction.CallbackContext> talkCallback;
     private event Action<InputAction.CallbackContext> useConso1Callback;
     private event Action<InputAction.CallbackContext> useConso2Callback;
@@ -75,6 +76,10 @@ public class PersoInputsController : InputController
         // ici c les inputs qui ont pas besoin d'hold input
         hackCallback = ctx => HandleRunHackInput(ctx);
 
+        // ensuite les callbacks statiques (ne se désactivent pas quand )
+        // perso_inputs.select_hackable.performed += ctx => { handle_select_hack_target_input(ctx.ReadValue<Vector2>()); };
+        select_hackableCallback = ctx => { handle_select_hack_target_input(ctx.ReadValue<Vector2>()); };
+
         EnableInputs();
     }
     public void EnableInputs()
@@ -88,6 +93,7 @@ public class PersoInputsController : InputController
         perso_inputs.conso3.performed += useConso3Callback;
         perso_inputs.conso4.performed += useConso4Callback;
         perso_inputs.interact.performed += interactCallback;
+        perso_inputs.select_hackable.performed += select_hackableCallback;
 
         InputsDisabled = false;
     }
@@ -102,8 +108,14 @@ public class PersoInputsController : InputController
         perso_inputs.conso3.performed -= useConso3Callback;
         perso_inputs.conso4.performed -= useConso4Callback;
         perso_inputs.interact.performed -= interactCallback;
+        perso_inputs.select_hackable.performed -= select_hackableCallback;
 
         InputsDisabled = true;
+    }
+
+    private void OnDestroy()
+    {
+        DisableInputs();
     }
 
 
@@ -230,8 +242,7 @@ public class PersoInputsController : InputController
     {
         InteractCapacity interactor = Capable.GetCapacity<InteractCapacity>();
         if (interactor == null) { return; } // if we don't have an interact capacity
-        if (!interactor.Able) { return; } // if we don't have an interact capacity
-
+        // if (!interactor.Able) { return; } // if we don't have an interact capacity
         interactor.Interact(endless: endless);
     }
 
@@ -241,7 +252,7 @@ public class PersoInputsController : InputController
         float input = context.ReadValue<float>();
 
         // 1 - if we are hacking we run the hack
-        if (UI_Manager.Instance.CurrentPool == "hacking")
+        if (Controller.Instance.HackableNavigator.IsSelecting)
         {
             // we check if the input is > 0.5 (we down the trigger -> we run hack), or not
             if (input > 0.5f) { OnHack(); }
@@ -249,8 +260,11 @@ public class PersoInputsController : InputController
         }
 
         // 2 - if we are in the hud / device we show the exploit wheel to select the exploit
-        if (!new List<string> { "hud", "device", "exploit_wheel" }.Contains(UI_Manager.Instance.CurrentPool)) { return; }
-        ExploitNavigator.HandleExploitWheelInput(input);
+        if (UI_Manager.Instance.IsOnHUD() || UI_Manager.Instance.IsStacked("exploit_wheel"))
+        {
+            ExploitNavigator.HandleExploitWheelInput(input);
+            return;
+        }
     }
     private void OnHack()
     {
@@ -267,4 +281,21 @@ public class PersoInputsController : InputController
         hacker.Use(Capable);
     }
 
+    // SELECT HACK TARGET
+    private void handle_select_hack_target_input(Vector2 input)
+    {
+        // we activate the hackable navigator when input is pressed > 0.5
+        // and disable it when released < 0.5
+        if (input.magnitude < InputManager.Instance.JOYSTICK_MIN_THRESHOLD || Perso.Instance.Device == null)
+        {
+            HackableNavigator.Disable();
+            return;
+        }
+
+        // if we are not on the hud we don't hack
+        if (!UI_Manager.Instance.IsOnHUD()) { HackableNavigator.Disable(); return; }
+
+        HackableNavigator.Enable();
+        HackableNavigator.HandleHackNavigationInput(input);
+    }
 }

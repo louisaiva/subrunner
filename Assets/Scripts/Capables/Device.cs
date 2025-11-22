@@ -4,6 +4,10 @@ using UnityEngine.InputSystem;
 
 public interface Device
 {
+    public GameObject gameObject { get; }
+    public string name { get; }
+    public Color MB_Color { get; } // color of the motherboard
+
     public ProcessCapacity Processor { get; }
     public ConnectCapacity Connector { get; }
     public HackCapacity Hacker { get; } // this is the os actually ...
@@ -15,10 +19,16 @@ public interface Device
 
     // FILES MANAGEMENT
     public bool WriteFile(File file);
+    public System.Action<File> OnFileWritten { get; set; }
     public List<StoreCapacity> GetDisks();
     public List<Exploit> GetExploits();
+    public List<File> GetFiles();
 
     // KEYS MANAGEMENT
     public bool HasKeyFor(Lockable target);
     public Key GetKeyFor(Lockable target);
+
+ 
+    // UI
+    public List<WindowType> WindowsTypes { get; }
 }

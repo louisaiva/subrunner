@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class UI_Item : UI_Slot
+public class UI_Item : UI_ImageSlot, Droppable, Descriptable
 {
 
     public Sprite drag_sprite;
@@ -16,6 +14,10 @@ public class UI_Item : UI_Slot
     [Header("Item Reference")]
     protected List<Item> items = new List<Item>();
     public string Reference { get => items.Count > 0 ? items[0].Reference : ""; }
+
+    [Header("Descriptable")]
+    public string Name => Reference;
+    public string Description => Item != null ? Item.ItemDescription : "";
 
 
     [Header("Item Stacking")]
@@ -29,10 +31,22 @@ public class UI_Item : UI_Slot
     [SerializeField] protected Image item_image;
     [SerializeField] protected Sprite current_item_sprite;
     public Sprite ItemSprite => current_item_sprite;
-    public UI_ItemPool ItemPool => transform.parent.GetComponent<UI_ItemPool>();
-    public Inventory Inventory => ItemPool?.UI_Inventory?.Inventory;
     public Item Item => items.Count > 0 ? items[0] : null;
     public event Action<List<Item>> OnItemChanged = delegate { };
+    
+    
+    // GETTERS
+    private UI_ItemPool _item_pool;
+    public UI_ItemPool ItemPool
+    {
+        get
+        {
+            if (_item_pool != null) { return _item_pool; }
+            _item_pool = GetComponentInParent<UI_ItemPool>(includeInactive: true);
+            return _item_pool;
+        }
+    }
+    public Inventory Inventory => ItemPool?.UI_Inventory?.Inventory;
 
     // AWAKE
     public virtual void Init()
@@ -41,7 +55,7 @@ public class UI_Item : UI_Slot
         item_image = transform.Find("item").GetComponent<Image>();
     }
 
-    // STORE ITEM
+    // GETTERS
     public bool CanStore(Item item)
     {
         return CanStore(new List<Item> { item });
@@ -76,6 +90,13 @@ public class UI_Item : UI_Slot
         // we can stack the item !!
         return true;
     }
+    public List<Item> GetItems()
+    {
+        // we return a copy of the items list
+        return new List<Item>(items);
+    }
+
+    // STORE / UNSTORE / CLEAR / SWITCH ITEMS
     public virtual bool Store(Item item)
     {
         // we check if we can store the item
@@ -85,6 +106,7 @@ public class UI_Item : UI_Slot
 
         // we add the item to the slot
         items.Add(item);
+        item.OnReferenceChanged += handle_item_reference_changed;
 
         // we update the UI
         update_ui_qty();
@@ -104,6 +126,7 @@ public class UI_Item : UI_Slot
 
         // we remove the item from the slot
         items.Remove(item);
+        item.OnReferenceChanged -= handle_item_reference_changed;
 
         // we update the UI
         update_ui_qty();
@@ -117,6 +140,12 @@ public class UI_Item : UI_Slot
     }
     public virtual void Clear()
     {
+        // we remove the reference change callbacks
+        for (int i = 0; i < items.Count; i++)
+        {
+            items[i].OnReferenceChanged -= handle_item_reference_changed;
+        }
+
         // we clear the items
         items.Clear();
 
@@ -126,8 +155,6 @@ public class UI_Item : UI_Slot
         // we clear the UI
         ClearUI();
     }
-
-    // ITEM SWITCHING
     public virtual void SwitchItems(List<Item> items, bool items_moved = true)
     {
         Clear();
@@ -137,6 +164,12 @@ public class UI_Item : UI_Slot
         {
             this.items.AddRange(items);
             setItem(items[0]);
+
+            // we set the reference change callbacks
+            for (int i = 0; i < this.items.Count; i++)
+            {
+                this.items[i].OnReferenceChanged += handle_item_reference_changed;
+            }
         }
 
         // we update the UI
@@ -144,11 +177,6 @@ public class UI_Item : UI_Slot
 
         OnItemChanged?.Invoke(this.items);
         ItemPool?.NotifyPoolChanged(this);
-    }
-    public List<Item> GetItems()
-    {
-        // we return a copy of the items list
-        return new List<Item>(items);
     }
 
     // UI
@@ -208,22 +236,44 @@ public class UI_Item : UI_Slot
         Disable();
     }
 
+    protected void handle_item_reference_changed(Item item)
+    {
+        // we check if this is the only one we have we simply change the ui
+        if (Quantity == 1)
+        {
+            setItem(item);
+            // on remet le sprite du slot si on est hovered
+            image.sprite = Hovered ? hover_sprite : base_sprite;
+
+            // on invoke les events
+            OnItemChanged?.Invoke(items);
+            ItemPool?.NotifyPoolChanged(this);
+            return;
+        }
+
+        // else we try to make the ui_inventory to regrab this item
+        bool regrabbed = Inventory?.ui?.UI_Regrab(item) ?? false;
+        if (regrabbed) { return; }
+
+        // else we could not regrab it so we simulate a PointerDropped to make it drop
+        drop_item(item);
+    }
 
     // ON POINTER
-    public override void OnPointerEnter(PointerEventData eventData)
+    /* public override void OnPointerEnter(PointerEventData eventData)
     {
         base.OnPointerEnter(eventData);
         update_description();
-    }
-    protected void update_description()
+    } */
+    /* protected void update_description()
     {
         // we check if the current ui_pool has a descriptor or not
         if (UI_Manager.Instance.CurrentPool != "inventory") { return; }
 
         // we get the descriptor
         UI_InventoryMenu menu = UI_Manager.Instance.GetPool("inventory").GetComponent<UI_InventoryMenu>();
-        menu.Descriptor.SetDescription(this);
-    }
+        menu.UI_ItemDescriptor.SetDescription(this);
+    } */
     public override void OnPointerClick(PointerEventData eventData)
     {
         base.OnPointerClick(eventData);
@@ -233,11 +283,15 @@ public class UI_Item : UI_Slot
         if (log) { Debug.Log("OnPointerClick on " + gameObject.name); }
 
         // we check if the item is an usable
-        if (Item != null && Item is Usable usable)
+        if (Item is Usable usable)
         {
             usable.Use(Inventory.capable);
-            UI_Manager.Instance.SwitchTo("hud");
+            UI_Manager.Instance.SwitchToHUD();
+            return;
         }
+
+        // we check if the item is an inspectable
+        if (Item is Inspectable inspectable) { inspectable.Inspect(); }
     }
     public override void OnPointerExit(PointerEventData eventData)
     {
@@ -254,9 +308,12 @@ public class UI_Item : UI_Slot
         if (Quantity == 0) { return; }
         if (log) { Debug.Log("OnPointerDropped on " + gameObject.name); }
 
-        // we get the item
+        // we get the item & drop it
         Item item = items[0];
-
+        drop_item(item);
+    }
+    private void drop_item(Item item)
+    {
         // on récupère l'inventory qui drop l'item
         Inventory inventory = item.transform.parent.GetComponent<Inventory>();
 
@@ -279,13 +336,10 @@ public class UI_Item : UI_Slot
         {
             dropper.Select(item);
             dropper.random_direction = true;
-            inventory.capable.Do("drop");
+            dropper.Use(inventory.capable);
             OnItemChanged?.Invoke(this.items);
             ItemPool?.NotifyPoolChanged(this);
             dropper.random_direction = false;
-
-            // we switch back to hud
-            // UI_Manager.Instance.SwitchTo("hud");
         }
         else
         {
@@ -301,7 +355,7 @@ public class UI_Item : UI_Slot
     public void OnPointerDragDown()
     {
         // check if disabled
-        if (is_disabled) { return; }
+        if (Disabled) { return; }
         if (log) { Debug.Log("OnPointerDragDown on " + gameObject.name); }
 
         // on change le sprite du slot
@@ -310,7 +364,7 @@ public class UI_Item : UI_Slot
     public virtual void OnPointerDragEnter(UI_Item moving_ui_item)
     {
         // check if disabled
-        if (is_disabled) { return; }
+        if (Disabled) { return; }
         if (log) { Debug.Log("OnPointerDragEnter on " + gameObject.name); }
 
         // on change le sprite du slot
@@ -321,6 +375,9 @@ public class UI_Item : UI_Slot
         Sprite switch_icon = CanStore(moving_ui_item.Item)
             ? bank.GetUI_Icon("merge")
             : bank.GetUI_Icon("switch");
+
+        // si on a aucun item on met tout simplement "move"
+        if (Quantity == 0) { switch_icon = bank.GetUI_Icon("move"); }
         set_ui(switch_icon);
     }
     public void OnPointerDragUp()
@@ -329,7 +386,7 @@ public class UI_Item : UI_Slot
         OnPointerEnter(null);
     }
 
-    private void OnDrawGizmos()
+    /* private void OnDrawGizmos()
     {
         Vector3 position = GetComponent<RectTransform>().TransformPoint(GetComponent<RectTransform>().rect.center);
         position = Camera.main.ScreenToWorldPoint(position);
@@ -341,5 +398,5 @@ public class UI_Item : UI_Slot
         if (item_image != null) { Gizmos.color = Color.green; }
         else { Gizmos.color = Color.red; }
         Gizmos.DrawWireSphere(position + new Vector3(0.2f, 0f, 0f), 0.1f);
-    }
+    } */
 }

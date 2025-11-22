@@ -9,12 +9,14 @@ using UnityEngine;
 /// can be upgraded and merged with other same reference modules
 /// at the beginning every module has all its upgrades, but they are on tier 0 (or 1?)
 /// </summary>
-public class Module : Item
+public class Module : Item, Inspectable
 {
 
     [Header("Upgrades")]
     [SerializeField] private List<ModuleUpgrade> upgrades = new List<ModuleUpgrade>();
     public List<ModuleUpgrade> Upgrades => upgrades;
+
+    
 
     protected override void Awake()
     {
@@ -81,6 +83,11 @@ public class Module : Item
         }
         return 0;
     }
+
+
+    // INSPECTABLE
+    public virtual string InspectLabel => "";
+    public virtual void Inspect() { }
 }
 
 [Serializable]

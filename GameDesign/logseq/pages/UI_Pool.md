@@ -1,0 +1,24 @@
+-
+-
+-
+- Ce composant fonctionne comme un **layer** de menu. Il est géré par le [[UI_Manager]] et permet l'affichage des différents menus correctement au sein du jeu.
+- Ce pool contient différent éléments d'ui, peu importe leur type, qui vont être affichés & cachés correctement lorsque le menu est affiché/caché
+- Il peut être stacké sur d'autres pools, ou bien avoir d'autres pools stackées sur lui.
+- On peut ajouter dynamiquement des éléments
+-
+- ## Affichage des **ui_elements**
+	- **UI_Pool** possède différentes listes permettant d'afficher/cacher correctement les bons éléments au bon moment
+		- **ui_elements** : liste de base contenant TOUS les éléments appartenant à la pool
+		- **stacked_elements** : liste des elements à afficher même lorsqu'on est stacked
+	-
+	- **UI_Pool** possède aussi différentes **Coroutines** qui vont se déclencher lorsque le [[UI_Manager]] lance l'affichage/cachage de la pool
+		- **ShowCoroutine** : routine principale appelée lorsque la pool devient la **current_pool** du **Manager**. affiche tous les **ui_elements** (sauf les elements passés par le manager et qui sont donc déjà affichés)
+		- **HideCoroutine** : routine pour TOUT cacher. cache tous les **ui_elements**. appelée via **UI_Manager.SwitchTo()** mais aussi quand on unstack la pool bah on veut cacher complètement la pool unstackée.
+		- **StackShowCoroutine**, routine appelée lorsqu'on re-affiche une stack complète (ex: HUD), ça appelle stackshow coroutine pour tous les pools qui étaient cachées et qui vont être stackées sous la pool principale (ex: on passe de /inventory à /hud/device/hacking on appelle cette coroutine sur hud & device).
+		  -> affiche SEULEMENT les **stacked_elements**
+		- **StackHideCoroutine**, routine appelée lorsque la pool est déjà affichée et qu'on stack une nouvelle pool au dessus de celle là
+		  -> cache SEULEMENT les **ui_elements** qui ne sont pas dans **stacked_elements**
+	-
+-
+-
+-

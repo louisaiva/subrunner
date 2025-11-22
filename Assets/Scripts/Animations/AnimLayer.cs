@@ -27,6 +27,7 @@ public class AnimLayer : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
 
         leader.OnAnimPlayedAtFrame += PlayAtFrame;
+        leader.RegisterAnimLayer(this);
     }
 
     // PLAY ANIM
@@ -52,7 +53,10 @@ public class AnimLayer : MonoBehaviour
         }
 
         // we play the current animation
-        if (current_frame != -1 && update_each_frame) { updateAnim(); }
+        if (current_frame == -1) { return; }
+        if (current_frame >= current_anim.sprites.Length) { return; }
+        if (!update_each_frame) { return; }
+        updateAnim();
     }
     private void updateAnim()
     {
@@ -110,4 +114,9 @@ public class AnimLayer : MonoBehaviour
         if (log) { Debug.Log("(AnimLayer) Playing " + anim.name + " at frame " + frame + " flipX: " + anim.flipX); }
     }
 
+
+
+    // RENDERER MANAGEMENT
+    public void DisableRenderer() { sr.enabled = false; }
+    public void EnableRenderer() { sr.enabled = true; }
 }

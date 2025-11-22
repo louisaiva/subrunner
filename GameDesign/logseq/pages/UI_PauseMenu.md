@@ -1,0 +1,10 @@
+-
+-
+- ## Settings à mettre :
+	- ### UI
+		- supp les ui_notifs
+		- supprimer les ui_interact_kf
+		- supprimer les shortcuts etc
+-
+-
+-

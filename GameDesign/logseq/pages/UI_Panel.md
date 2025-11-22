@@ -1,0 +1,3 @@
+-
+- composant d'ui géré par un [[UI_PanelManager]]
+-

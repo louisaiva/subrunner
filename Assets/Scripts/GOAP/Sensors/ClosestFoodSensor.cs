@@ -23,15 +23,15 @@ namespace subrunner.goap
             if (eatCapacity == null) { return null; }
             
             // find the closest food
-            Food closestFood = eatCapacity.GetClosestFood(ia);
-            if (closestFood == null) { return null; }
+            Capable closestFoodTarget = eatCapacity.GetClosestFoodTarget(ia);
+            if (closestFoodTarget == null) { return null; }
 
             // If the target is a transform target, set the target to the closest food
             if (target is TransformTarget transformTarget)
             {
-                return transformTarget.SetTransform(closestFood.transform);
+                return transformTarget.SetTransform(closestFoodTarget.transform);
             }
-            return new TransformTarget(closestFood.transform);
+            return new TransformTarget(closestFoodTarget.transform);
         }
 
 

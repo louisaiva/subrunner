@@ -1,0 +1,8 @@
+-
+- possède un #UI_Inventory avec 2 #UI_ItemPool, un pour le #Pot et un pour les autres ingrédients, #Food
+- si on met un pot et un ingrédient au moins ça le cuit
+-
+- mettre un #UI_Button ??? qui est en gros un slot bouton on off qui permet d'actionner le four
+-
+- s'update en direct genre dès qu'on met l'ui_item pot dans le ui_inventory de l'oven ça place direct l'item pot sur le hob
+-

@@ -4,16 +4,13 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using System.Collections;
 
 public class UI_GameOver : UI_Pool
 {
-    [Header("Transition parameters")]
-    public float final_timescale = 0.1f;
-    public float transition_duration = 2f;
-
+    
     [Header("Perso revive parameters")]
     [SerializeField] private GameObject perso_prefab;
-    [SerializeField] private Transform perso_spawn_point;
 
     [Header("Inputs")]
     [SerializeField] private InputActionReference reviveInput;
@@ -22,14 +19,13 @@ public class UI_GameOver : UI_Pool
 
     [Header("Components")]
     [SerializeField] private TextMeshProUGUI oh_no_text;
+    
     // START
-    protected override void Start() 
+    private void Start()
     {
         // we create the callback
         reviveAction = InputManager.Instance.GetAction(reviveInput);
         reviveCallback = ctx => HandleReviveInput(ctx.ReadValue<float>());
-
-        if (perso_spawn_point == null) { Debug.LogError("(UI_GameOver) perso_spawn_point is not assigned! Please assign it in the inspector."); }
 
         if (log) { Debug.Log("(UI_GameOver) started & callbacks created"); }
     }
@@ -42,10 +38,12 @@ public class UI_GameOver : UI_Pool
         if (input > 0.5f) { return; } // we only handle the input when the value is below 0.5f
 
         // we switch to hud
-        UI_Manager.Instance.SwitchTo("hud");
+        UI_Manager.Instance.SwitchToHUD(force:true);
     }
 
-    protected override async Awaitable show_pool(float duration, List<GameObject> dont_show = null)
+
+    // SHOWING
+    protected override IEnumerator show_coroutine(List<GameObject> dont_show = null, float duration_override = -1f, bool was_stacked = false)
     {
         // we set the callbacks
         reviveAction.performed += reviveCallback;
@@ -57,18 +55,33 @@ public class UI_GameOver : UI_Pool
             oh_no_text.text += "o";
         }
 
-        await base.show_pool(duration, dont_show);
+        yield return base.show_coroutine(dont_show, duration_override);
     }
-    protected override async Awaitable hide_pool(float duration, List<GameObject> dont_hide = null)
+
+    // DISABLING
+    protected override IEnumerator disable_coroutine()
     {
         // we remove the callbacks
         reviveAction.performed -= reviveCallback;
 
-        // we instantiate the perso prefab at the spawn point
-        GameObject[] perso = await InstantiateAsync(perso_prefab, perso_spawn_point.position, Quaternion.identity);
-        perso[0].name = "perso";
+        // we remove the controller
+        Destroy(Controller.Instance.gameObject);
+        yield return null;
 
-        await base.hide_pool(duration, dont_hide);
+        // we get the spawn point
+        Vector3 perso_spawn_point = Vector3.zero;
+        if (World.Instance.spawn_point != null)
+        {
+            perso_spawn_point = World.Instance.spawn_point.position;
+        }
+
+        // we instantiate the perso prefab at the spawn point
+        bool instantiated = false;
+        var instantiation = InstantiateAsync(perso_prefab, perso_spawn_point, Quaternion.identity);
+        instantiation.completed += (op) => instantiated = true;
+        yield return new WaitUntil(() => instantiated);
+        GameObject[] perso = instantiation.Result;
+        perso[0].name = "perso";
     }
 
 }

@@ -393,10 +393,10 @@ MonoBehaviour:
     loop: 1
     speed: 1
     flipX: 0
-  debug: 1
-  debug_orientation: 0
-  debug_advanced: 0
-  debug_frames: 0
+  log: 0
+  log_orientation: 0
+  log_advanced: 0
+  log_frames: 0
 --- !u!1 &3647027839413195876
 GameObject:
   m_ObjectHideFlags: 0
@@ -661,7 +661,6 @@ MonoBehaviour:
   UI_Inventory: {fileID: 0}
   log: 0
   log_storage: 0
-  log_fading: 0
 --- !u!1 &4933445404343551578
 GameObject:
   m_ObjectHideFlags: 0
@@ -1060,7 +1059,7 @@ MonoBehaviour:
   unscaled_time: 0
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
-  transition_on_start: 1
+  transition_on_start: 0
   duration_start_transition: 0.1
   delay_start_transition: 0.2
   log: 0

@@ -6,7 +6,14 @@ public class CameraFollow : Singleton<CameraFollow>
 
     [SerializeField] private Capable target;
     [SerializeField] private Rigidbody2D capable_rb;
-    private Capable capable => Controller.Instance.Capable;
+    private Capable capable
+    {
+        get
+        {
+            if (Controller.Instance == null) { return null; }
+            return Controller.Instance.Capable;
+        }
+    }
 
     public float timeOffset;
     private Vector3 velocity;

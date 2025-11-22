@@ -11,10 +11,9 @@ public class UI_HDD_File : UI_Text
     private UI_HDD ui_hdd;
 
     // AWAKE
-    protected override void Awake()
+    protected virtual void Awake()
     {
-        base.Awake();
-        ui_hdd = GetComponentInParent<UI_HDD>();
+        ui_hdd = GetComponentInParent<UI_HDD>(includeInactive: true);
     }
 
     // SET FILE
@@ -22,7 +21,7 @@ public class UI_HDD_File : UI_Text
     {
         this.file = file;
         if (file == null) { return; }
-        if (debug) { Debug.Log($"(UI_HDD_File) setting file {file.name}"); }
+        if (log) { Debug.Log($"(UI_HDD_File) setting file {file.name}"); }
 
         // we set the text
         GetComponent<TextMeshProUGUI>().text = file.name + file.extension;
@@ -33,7 +32,7 @@ public class UI_HDD_File : UI_Text
     {
         base.OnPointerEnter(eventData);
         if (file == null) { return; }
-        if (debug) { Debug.Log($"(UI_HDD_File) hovering file {file.name}"); }
+        if (log) { Debug.Log($"(UI_HDD_File) hovering file {file.name}"); }
 
         ui_hdd.ShowFileData(file);
     }

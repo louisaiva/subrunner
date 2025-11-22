@@ -9,32 +9,33 @@ using UnityEngine.Events;
     using UnityEditor;
 #endif
 
-public class UI_Text : MonoBehaviour, I_UI_Slot
+public class UI_Text : UI_Slot
 {
 
     // hover
     [Header("Hover")]
     public Color hover_color = new Color(1, 1, 0, 1);
     public Color down_color = new Color(1, 1, 1, 1);
-    public bool is_hovered { get; set; }
+    // public bool is_hovered { get; set; }
 
     [Header("Text")]
-    protected TextMeshProUGUI tmp;
+    private TextMeshProUGUI _tmp;
+    protected TextMeshProUGUI tmp
+    {
+        get
+        {
+            if (_tmp == null)
+            {
+                _tmp = GetComponent<TextMeshProUGUI>();
+                base_text = tmp.text;
+            }
+            return _tmp;
+        }
+    }
     [SerializeField] protected string base_text;
 
     [Header("Events")]
     [SerializeField] protected UnityEvent activateEvent;
-
-    [Header("Logs")]
-    public bool debug = false;
-
-    // unity functions
-    protected virtual void Awake()
-    {
-        // on récupère le tmp
-        tmp = GetComponent<TextMeshProUGUI>();
-        base_text = tmp.text;
-    }
 
     // TEXT FUNCTIONS
     public void SetText(string new_text)
@@ -48,7 +49,7 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
     public void play()
     {
         // transform.parent.parent.GetComponent<UI_PauseMenu>().hide();
-        UI_Manager.Instance.SwitchTo("hud");
+        UI_Manager.Instance.SwitchToHUD();
     }
     public void exit()
     {
@@ -57,8 +58,6 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
                 UnityEditor.EditorApplication.ExitPlaymode();
         #endif
         Application.Quit();
-
-        // UI_Manager.Instance.TogglePool("pause");
     }
     public void fullscreen()
     {
@@ -85,34 +84,35 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
         if (Perso.Instance == null) { return; }
         Perso.Instance.healMax();
     }
-
+    public void toggle_vsync()
+    {
+        AppManager.Instance.useVSync = !AppManager.Instance.useVSync;
+    }
+    public void credits()
+    {
+        UI_Manager.Instance.SwitchTo("credits");
+    }
 
     // interface functions
-    public virtual void OnPointerEnter(PointerEventData eventData)
+    public override void OnPointerEnter(PointerEventData eventData)
     {
         tmp.color = hover_color;
         tmp.text = "> " + base_text;
         // tmp.fontStyle = FontStyles.Bold;
 
-        // on met à jour le fait qu'on est survolé
-        is_hovered = true;
-
-        if (debug) Debug.Log("hovering " + base_text);
+        base.OnPointerEnter(eventData);
     }
-    public void OnPointerExit(PointerEventData eventData)
+    public override void OnPointerExit(PointerEventData eventData)
     {
         tmp.color = new Color(1, 1, 1, 1);
         tmp.text = base_text;
         // tmp.fontStyle = FontStyles.Normal;
 
-        // on met à jour le fait qu'on est survolé
-        is_hovered = false;
-
-        if (debug) Debug.Log("unhovering " + base_text);
+        base.OnPointerExit(eventData);
     }
-    public void OnPointerClick(PointerEventData eventData)
+    public override void OnPointerClick(PointerEventData eventData)
     {
-        if (debug) Debug.Log("clicking on " + base_text);
+        if (log) Debug.Log("clicking on " + base_text);
 
         // reset the color & text
         tmp.text = base_text;
@@ -121,10 +121,10 @@ public class UI_Text : MonoBehaviour, I_UI_Slot
         // invoke the event
         activateEvent?.Invoke();
     }
-    public virtual void OnPointerDown(PointerEventData eventData)
+    public override void OnPointerDown(PointerEventData eventData)
     {
         tmp.color = down_color;
 
-        if (debug) { Debug.Log("downing " + gameObject.name); }
+        if (log) { Debug.Log("downing " + gameObject.name); }
     }
 }

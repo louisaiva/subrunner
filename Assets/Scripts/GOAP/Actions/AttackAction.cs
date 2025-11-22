@@ -13,24 +13,26 @@ namespace subrunner.goap
         {
             data.anim_player = data.ia.anim_player;
             data.attack_capacity = data.ia.GetCapacity<AttackCapacity>();
+            data.BeingTarget = data.Target is TransformTarget target ? target.Transform.GetComponent<Being>() : null;
         }
 
         // PERFORM
         public override void BeforePerform(IMonoAgent agent, Data data)
         {
-            if (data.Target is not TransformTarget transformTarget) { return; }
-            Being being_target = transformTarget.Transform.GetComponent<Being>();
+            // if (data.Target is not TransformTarget transformTarget) { return; }
+            // Being being_target = transformTarget.Transform.GetComponent<Being>();
+            if (data.BeingTarget == null) { return; }
 
             // verify that the being is still Alive
-            if (being_target == null || !being_target.Alive) { return; }
+            if (data.BeingTarget == null || !data.BeingTarget.Alive) { return; }
 
             // we turn over to face the target
-            data.ia.OrientTowards(being_target.transform.position);
+            data.ia.OrientTowards(data.BeingTarget.transform.position);
 
             // Debug log only if enabled
             if (data.ia.log_actions)
             {
-                Debug.Log($"(AttackAction) {data.ia.name} is trying to attack {being_target.name}");
+                Debug.Log($"(AttackAction) {data.ia.name} is trying to attack {data.BeingTarget.name}");
             }
 
             // use the attack capacity
@@ -42,13 +44,6 @@ namespace subrunner.goap
             if (data.anim_player.current_capacity == "attack") { return ActionRunState.Continue; }
             return ActionRunState.Completed;
         }
-
-        /* // STOPPED
-        public override void Stop(IMonoAgent agent, Data data)
-        {
-            data.attack_capacity.Cancel(data.ia);
-            if (data.ia.log_actions) { Debug.Log($"(EatAction) {data.ia.name} stopped eating"); }
-        } */
         
         // IS IN RANGE OVERRIDE
         public override bool IsInRange(IMonoAgent agent, float distance, IActionData data, IComponentReference references)
@@ -60,7 +55,6 @@ namespace subrunner.goap
 
             // Use cached attack_capacity for performance
             float agentStoppingDistance = actionData.attack_capacity.distance_to_attack;
-
             if (actionData.ia.log_actions) { Debug.Log($"(AttackAction) {actionData.ia.name} IsInRange check: distance={distance:F2}, stopping_distance={agentStoppingDistance:F2}, in_range={distance <= agentStoppingDistance}"); }
 
             return distance <= agentStoppingDistance;
@@ -71,6 +65,7 @@ namespace subrunner.goap
         public class Data : IActionData
         {
             public ITarget Target { get; set; }
+            public Being BeingTarget { get; set; }
 
             // Direct access to IA and AnimPlayer
             [GetComponentInParent] public IA ia { get; set; }

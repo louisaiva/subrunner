@@ -1,8 +1,4 @@
 using UnityEngine;
-using System.Collections;
-using UnityEngine.Rendering.Universal;
-using System.Collections.Generic;
-
 
 public class HackableDoor : Door, Lockable
 {
@@ -14,29 +10,8 @@ public class HackableDoor : Door, Lockable
     public string Password => key.data; // return the key password
 
 
-    [Header("Hackable")]
-    [SerializeField] private int securityLevel = 1;
-    public List<Hack> RunningHacks { get; private set; } = new List<Hack>();
-    public int SecurityLevel => securityLevel;
-
-
     [Header("Components")]
     private HoverCapacity hoverer;
-
-    // TARGETED
-    public SpriteRenderer spriteRenderer { get; private set; }
-    public Material TargetMaterial { get; private set; }
-    public Material DefaultMaterial { get; private set; }
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        DefaultMaterial = spriteRenderer.material;
-        TargetMaterial = Resources.Load<Material>("materials/targeted/hack_door");
-    }
-
 
     // START
     protected override void Start()
@@ -56,11 +31,11 @@ public class HackableDoor : Door, Lockable
     {
         if (!Locked) { base.OnInteract(interactor); return; }
 
-        // we are locked, we check if interactor has a laptop with the right key (instant hack)
+        // we are locked, we check if interactor has a device with the right key (instant hack)
         if (interactor is Hacker hacker)
         {
-            Laptop laptop = hacker.Laptop;
-            if (laptop != null && laptop.HasKeyFor(this))
+            Device device = hacker.Laptop;
+            if (device != null && device.HasKeyFor(this))
             {
                 Unlock();
                 base.OnInteract(interactor);
@@ -74,56 +49,6 @@ public class HackableDoor : Door, Lockable
         // if we have a hover capacity we try to update its animation (so it will reset the animation, which alert the player it's locked)
         hoverer.ChangeAnimation("hover_locked");
     }
-
-    // HACKABLE
-    /* public bool IsVulnerableTo(Exploit exploit)
-    {
-        if (exploit == Exploit.Nmap) { return true; }
-        if (exploit.name == "bruteforce") { return true; }
-        if (exploit.name == "dictionary_attack") { return true; }
-        if (exploit is FileExploit file_exploit && exploit.name == "type_password")
-        {
-            return key.Matches(file_exploit.file.data);
-        }
-
-        return false;
-    }
-    public void OnHackStarted(Hack hack)
-    {
-        // Handle the hack start event
-        if (debug) { Debug.Log($"(HackableDoor) Hack started on {name} with exploit {hack.name}"); }
-
-        // we show the hacked animation
-        anim_player.Play("hacked");
-
-        RunningHacks.Add(hack);
-    }
-    public void OnHackFailed(Hack hack)
-    {
-        // Handle the hack failure event
-        if (debug) { Debug.Log($"(HackableDoor) Hack failed on {name} with exploit {hack.name}"); }
-        anim_player.StopPlaying("hacked");
-        Lock();
-    }
-    public void OnHackSucceeded(Hack hack)
-    {
-        if (debug) { Debug.Log($"(HackableDoor) Hack completed on {name} with exploit {hack.name}"); }
-        anim_player.StopPlaying("hacked");
-
-        // if the hack was successful we unlock the door
-        if (hack.name == "bruteforce" || hack.name == "dictionary_attack")
-        {
-            Unlock();
-        }
-        if (hack.program is FileExploit file_exploit && hack.name == "type_password" && key.Matches(file_exploit.file.data))
-        {
-            Unlock();
-        }
-    }
-    public void OnHackDone(Hack hack)
-    {
-        if (RunningHacks.Contains(hack)) { RunningHacks.Remove(hack); } // if the zombo is dead we may have already removed the hack
-    } */
 
     // UNLOCKING
     public async void Unlock()
@@ -171,9 +96,4 @@ public class HackableDoor : Door, Lockable
             close();
         }
     }
-    /* public bool IsUnlockableVia(Exploit exploit)
-    {
-        if (exploit == Exploit.Nmap) { return false; }
-        return IsVulnerableTo(exploit);
-    } */
 }

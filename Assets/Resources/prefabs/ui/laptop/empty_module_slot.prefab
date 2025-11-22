@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 1178637403024537787}
   - component: {fileID: 4185608048163301170}
   - component: {fileID: 3041361937093203584}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: empty_module_slot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -172,7 +172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 4f76765515b08b8d9be2a7ae4d629f35, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -202,11 +202,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ae469858b3a12b498e48cdd32275127, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debug: 1
+  _hovered: 0
+  _disabled: 0
+  log: 0
   base_sprite: {fileID: -1402660497, guid: 52204e3019eb6af40b70d4a1d02d8ac3, type: 3}
   hover_sprite: {fileID: 695157732, guid: 52204e3019eb6af40b70d4a1d02d8ac3, type: 3}
   down_sprite: {fileID: -1102986615, guid: 52204e3019eb6af40b70d4a1d02d8ac3, type: 3}
   disabled_sprite: {fileID: -1402660497, guid: 52204e3019eb6af40b70d4a1d02d8ac3, type: 3}
+  image: {fileID: 4185608048163301170}
   drag_sprite: {fileID: 1021261267, guid: 52204e3019eb6af40b70d4a1d02d8ac3, type: 3}
   drag_hover_sprite: {fileID: 1021261267, guid: 52204e3019eb6af40b70d4a1d02d8ac3, type: 3}
   quantity_text: {fileID: 0}

@@ -438,6 +438,7 @@ MonoBehaviour:
   input_speed: 0
   Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 0}
+  items_offset: {x: 0, y: 0.2, z: 0}
 --- !u!1001 &4355419063980102597
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -461,6 +462,10 @@ PrefabInstance:
     - target: {fileID: 2056693723427999313, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3651365790579940442, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 4378018811218404903, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
       propertyPath: m_AnchorMax.y
@@ -591,6 +596,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7018375921251704102}
     m_Modifications:
+    - target: {fileID: 936021612240457855, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
+      propertyPath: base_color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 936021612240457855, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
+      propertyPath: base_color.g
+      value: 0.74113095
+      objectReference: {fileID: 0}
+    - target: {fileID: 936021612240457855, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
+      propertyPath: base_color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2301345579811965954, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
       propertyPath: m_Name
       value: hover

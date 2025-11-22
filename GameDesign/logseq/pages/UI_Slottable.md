@@ -1,0 +1,2 @@
+- classe mère de [[UI_Inventory]]
+- implémente l'interface **Slottable** bien que

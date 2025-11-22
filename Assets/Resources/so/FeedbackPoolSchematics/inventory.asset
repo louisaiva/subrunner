@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c7bcc88c100e8c499f1e5fe0557f86d, type: 3}
+  m_Name: inventory
+  m_EditorClassIdentifier: Assembly-CSharp::FeedbackPoolSchematic
+  kb_L_plan:
+  - label_text: navigate
+    base_color: {r: 1, g: 1, b: 1, a: 1}
+    inputed_color: {r: 0.90588236, g: 0.45882353, b: 0.89411765, a: 1}
+    prefabs:
+    - {fileID: 1482210605628757102, guid: 523c4f83643d1c548a5aa6c5d7c4a451, type: 3}
+    - {fileID: 7002321450701441238, guid: 42664570f8cbd354ebfaa9267cb4860f, type: 3}
+  kb_R_plan:
+  - label_text: close
+    base_color: {r: 1, g: 1, b: 1, a: 1}
+    inputed_color: {r: 1, g: 0, b: 0.06387138, a: 1}
+    prefabs:
+    - {fileID: 5073313702871382076, guid: 609aea6603e0fd54996bd2806f7d0226, type: 3}
+  - label_text: activate
+    base_color: {r: 1, g: 1, b: 1, a: 1}
+    inputed_color: {r: 0.03529412, g: 1, b: 0, a: 1}
+    prefabs:
+    - {fileID: 2923867467209066976, guid: dcbd5867d8fc43e4eb37b8a2a2aacfd9, type: 3}
+  - label_text: drop
+    base_color: {r: 1, g: 1, b: 1, a: 1}
+    inputed_color: {r: 1, g: 0.8881224, b: 0.3254717, a: 1}
+    prefabs:
+    - {fileID: 2923867467209066976, guid: afc182bab5bef7f4ca563d0cb0bb89b8, type: 3}
+  gmpd_L_plan:
+  - label_text: navigate
+    base_color: {r: 1, g: 1, b: 1, a: 1}
+    inputed_color: {r: 0.90588236, g: 0.45882353, b: 0.89411765, a: 1}
+    prefabs:
+    - {fileID: 5896076262160305960, guid: 44ecfd6c9430d814cb017d42913f3113, type: 3}
+  gmpd_R_plan:
+  - label_text: close
+    base_color: {r: 1, g: 1, b: 1, a: 1}
+    inputed_color: {r: 1, g: 0, b: 0.06387138, a: 1}
+    prefabs:
+    - {fileID: 5073313702871382076, guid: 6d3ab8603848ff843a5ab7dcdb01a47d, type: 3}
+  - label_text: activate
+    base_color: {r: 1, g: 1, b: 1, a: 1}
+    inputed_color: {r: 0, g: 1, b: 0, a: 1}
+    prefabs:
+    - {fileID: 5073313702871382076, guid: 299a199f1a67c6c469c1ae8d35da505b, type: 3}
+  - label_text: drop
+    base_color: {r: 1, g: 1, b: 1, a: 1}
+    inputed_color: {r: 1, g: 0.8881224, b: 0.3254717, a: 1}
+    prefabs:
+    - {fileID: 5073313702871382076, guid: ec4d2f72cd4d741449789ec0863b900b, type: 3}

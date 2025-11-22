@@ -57,6 +57,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -78,6 +80,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
@@ -180,6 +183,7 @@ MonoBehaviour:
   debug: 0
   activate_all_capacities_logs_on_awake: 0
   debug_velocity: 0
+  log_avoidance: 0
   rb: {fileID: 0}
   weight: 1
   random_weight_modifier_at_start: 0
@@ -188,16 +192,12 @@ MonoBehaviour:
   input_speed: 0
   Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 0}
-  Reference: other:paper
+  _reference: other:paper
+  Color: {r: 0.47058824, g: 0.89411765, b: 0.8, a: 1}
   MaxQty: 1
   ItemDescription: an old paper. looks like it stayed in the trash for a long time/.
+  Placed: 0
   prefab: {fileID: 4189490259085307429, guid: 29aa5fadd17b37d41bf1d713e6966be2, type: 3}
-  transition_settings:
-    CanBeHidden: 1
-    CanBeCanceled: 1
-    UsePersoInputs: 0
-    TimeScale: 0
-    BackgroundAlpha: 0.96
 --- !u!1 &8814756426228828238
 GameObject:
   m_ObjectHideFlags: 0
@@ -317,6 +317,10 @@ PrefabInstance:
     - target: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6378803932534245458, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

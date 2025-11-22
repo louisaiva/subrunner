@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using NUnit.Framework;
-using Unity.VisualScripting;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -11,7 +10,7 @@ using UnityEngine;
 /// So every animated element in the game is a Capable.
 /// </summary>
 [RequireComponent(typeof(AnimPlayer))]
-public class Capable : MonoBehaviour
+public class Capable : MonoBehaviour, Debuggable
 {
     // un Capable est un gameObject qui possède des capacités
     // et donc des animations (les capacités peuvent être reliées à une animation)
@@ -50,20 +49,39 @@ public class Capable : MonoBehaviour
     public AnimPlayer anim_player { get; private set; }
     public CapacityBank bank { get; private set; }
 
-    // un capable peut aussi avoir un inventaire
+    // un capable peut aussi avoir un inventaire & un hover
+    private Inventory _inventory = null;
     public Inventory Inventory
     {
         get
         {
-            Transform inventory_transform = transform.Find("inventory");
-            if (inventory_transform == null) { return null; }
-            return inventory_transform.GetComponent<Inventory>();
+            if (_inventory == null)
+            {
+                Transform inventory_transform = transform.Find("inventory");
+                if (inventory_transform == null) { return null; }
+                _inventory = inventory_transform.GetComponent<Inventory>();
+            }
+            return _inventory;
         }
     }
+    private HoverCapacity _hover = null;
+    public HoverCapacity Hover
+    {
+        get
+        {
+            if (_hover == null) { _hover = GetCapacity<HoverCapacity>(); }
+            return _hover;
+        }
+    }
+
+
 
     // et des capacités electroniques
     public virtual ConnectCapacity Connector
     {
+        // ? réellement logique que ça soit là ça ???
+        // todo on peut pas le mettre dans Hacker/Vulnerable ou simplement utiliser Device ?
+        // -> +1 pour Device
         get
         {
             // we check if we have a ConnectCapacity directly
@@ -72,11 +90,11 @@ public class Capable : MonoBehaviour
             // or a connectable item
             else if (Inventory != null)
             {
-                // checks if one of our items is a laptop
-                Laptop laptop = Inventory.GetItem<Laptop>();
-                if (laptop != null) { return laptop.GetCapacity<ConnectCapacity>(); }
+                // checks if one of our items is a device
+                Device device = Inventory.GetDeviceItem();
+                if (device != null) { return device.Connector; }
             }
-            
+
             return null;
         }
     }
@@ -91,6 +109,7 @@ public class Capable : MonoBehaviour
     {
         // we get the anim player
         anim_player = GetComponent<AnimPlayer>();
+        Orientation = orientation;
 
         // we get the capacity bank
         bank = GameObject.Find("/utils/bank").GetComponent<CapacityBank>();
@@ -108,10 +127,7 @@ public class Capable : MonoBehaviour
             // we check if the debug is true then we force debug to be true
             if (activate_all_capacities_logs_on_awake) { capa.debug = true; }
         }
-
-        // we add ourself to the entity count
-        EntitiesDebug entities_debug = GameObject.Find("/ui/hud/debug/entities").GetComponent<EntitiesDebug>();
-        entities_debug.AddEntity(this);
+        DebugManager.Instance.transform.GetComponentInChildren<EntitiesDebug>()?.AddEntity(this);
     }
 
 
@@ -149,6 +165,22 @@ public class Capable : MonoBehaviour
     {
         // we set the orientation
         Orientation = target_position - transform.position;
+    }
+    public void Orient(string direction)
+    {
+        // we set the orientation
+        switch (direction)
+        {
+            case "U": Orientation = Vector2.up; break;
+            case "D": Orientation = Vector2.down; break;
+            case "L": Orientation = Vector2.left; break;
+            case "R": Orientation = Vector2.right; break;
+            case "UL": Orientation = (Vector2.up + Vector2.left).normalized; break;
+            case "UR": Orientation = (Vector2.up + Vector2.right).normalized; break;
+            case "DL": Orientation = (Vector2.down + Vector2.left).normalized; break;
+            case "DR": Orientation = (Vector2.down + Vector2.right).normalized; break;
+            default: Debug.LogWarning("Orientation " + direction + " not recognized"); break;
+        }
     }
 
     // CAPACITIES
@@ -251,6 +283,7 @@ public class Capable : MonoBehaviour
     // EFFECTS
     public virtual void AddEffect(Effect effect, float timetolive)
     {
+        if (HasEffect(effect)) { return; }
         effects.Add(effect);
         effects_timetolive.Add(timetolive);
     }
@@ -274,18 +307,107 @@ public class Capable : MonoBehaviour
     }
 
 
-    // ON DESTROY
-    private void OnDestroy()
+    // ITEMS MANAGEMENT
+    public void DestroyAllItems()
     {
-        // we remove ourself from the entity count
-        EntitiesDebug entities_debug = GameObject.Find("/ui/hud/debug/entities")?.GetComponent<EntitiesDebug>();
-        if (entities_debug == null) { return; }
-        entities_debug.RemoveEntity(this);
+        if (Inventory == null || Inventory.Count == 0) { return; }
+
+        // we drop all items on thr ground
+        List<Item> items = Inventory.Items;
+        for (int i = items.Count - 1; i >= 0; i--)
+        {
+            Item item = items[i];
+            Inventory.Remove(item);
+            Destroy(item.gameObject);
+        }
+    }
+    public async Awaitable DropAllItems()
+    {
+        if (Inventory == null || Inventory.Count == 0) { return; }
+
+        // we get the drop capacity
+        DropCapacity dropper = GetCapacity<DropCapacity>();
+        if (dropper == null)
+        {
+            // we add it if not present
+            AddCapacity("drop");
+
+            // we wait a frame
+            await System.Threading.Tasks.Task.Yield();
+
+            // we get the dropper
+            dropper = GetCapacity<DropCapacity>();
+        }
+        dropper.random_direction = true;
+        dropper.lock_magnitude = false;
+
+        // we drop all items on thr ground
+        List<Item> items = Inventory.Items;
+        for (int i = items.Count - 1; i >= 0; i--)
+        {
+            // we drop the item
+            dropper.Select(items[i]);
+            dropper.Use(this);
+        }
+    }
+    public async Awaitable DropItem(Item item)
+    {
+        if (Inventory == null || !Inventory.Items.Contains(item)) { return; }
+
+        // we get the drop capacity
+        DropCapacity dropper = GetCapacity<DropCapacity>();
+        if (dropper == null)
+        {
+            // we add it if not present
+            AddCapacity("drop");
+
+            // we wait a frame
+            await System.Threading.Tasks.Task.Yield();
+
+            // we get the dropper
+            dropper = GetCapacity<DropCapacity>();
+        }
+
+        // we drop the item
+        dropper.Select(item);
+        dropper.Use(this);
     }
 
+    // DEBUG
+    protected virtual void OnDestroy()
+    {
+        if (DebugManager.Instance == null) { return; } // this happens when the scene is destroyed when we quit the scene
+        DebugManager.Instance.transform.GetComponentInChildren<EntitiesDebug>()?.RemoveEntity(this);
+    }
+    public string GetDebugText()
+    {
+        string text = "name : " + name +"\n";
+        text += "type : " + GetType().Name.ToLower() + "\n";
+        text += "skin : " + Skin + "\n\n";
+        text += $"position :\n>>> x : {transform.position.x.ToString("F2")}\n>>> y : {transform.position.y.ToString("F2")}\n";
+        text += "orientation : " + anim_player.orientation + $"\n>>> x : {orientation.x.ToString("F2")}\n>>> y : {orientation.y.ToString("F2")}\n";
+
+        text += "\ncapacities : " + capacities.Count + "\n";
+        List<string> capa_names = capacities.ConvertAll(c => c.name);
+        text += ">>> " + string.Join(", ", capa_names) + "\n";
+
+        if (Inventory != null)
+        {
+            List<Usable> usables = Inventory.Items.Where(i => i is Usable).Cast<Usable>().ToList();
+            if (usables.Count > 0)
+            {
+                List<string> capa_from_items_names = usables.ConvertAll(i => i.UseLabel).Distinct().ToList();
+                text += "capacities from items : " + capa_from_items_names.Count + "\n";
+                text += ">>> " + string.Join(", ", capa_from_items_names) + "\n";
+            }
+        }
+
+        return text;
+    }
 }
 
-[Serializable] public enum Effect
+[Serializable]
+public enum Effect
 {
     // an effect is a temporary state that can be applied to a capable
     // it can be a buff, a debuff, a status, etc.
@@ -297,4 +419,6 @@ public class Capable : MonoBehaviour
     RegenLife, // a Being regenerates life
     Immobile, // a Movable can't move
     BeingCarried, // a Movable is being carried (bypass all movement updates)
+    Boiling, // boiling, when the water is RILLY HOT -> deals damage to beings
+    Burning // litteraly in FIRE -> deals damage mainly, also transmit heat
 }

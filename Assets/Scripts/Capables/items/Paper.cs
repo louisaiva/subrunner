@@ -6,8 +6,6 @@ public class Paper : Item, Usable
 
     [Header("Paper parameters")]
     public GameObject prefab = null;
-    public PoolTransitionSettings transition_settings = PoolTransitionSettings.InMenuDefault;
-
 
     // USABLE
     public string UseLabel { get; set; } = "read";
@@ -17,12 +15,12 @@ public class Paper : Item, Usable
         if (!Grabbed) { return; }
 
         // we show the ui_paper pool
-        (UI_Manager.Instance.GetPool("paper") as UI_Paper).SetPaper(this);
-        UI_Manager.Instance.SwitchTo("paper");
+        (UI_Manager.Instance.GetPool("paper") as UI_Paper).SetReadable(prefab);
+        UI_Manager.Instance.StackPool("paper");
     }
 
     // on grabbed
-    protected override async void on_grabbed()
+    /* protected override async void on_grabbed()
     {
         base.on_grabbed();
 
@@ -36,5 +34,5 @@ public class Paper : Item, Usable
         {
             Use(Controller.Instance.Capable);
         }
-    }
+    } */
 }

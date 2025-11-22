@@ -16,7 +16,8 @@ public class SeeThroughHandler : MonoBehaviour
 
     public float size_up_speed = 1f; // speed at which the circle grows
     public Vector2 offset_ellipse_center = new Vector2(0f, 0f);
-
+    private float min_trigger_max_y = 0.3f; // min y that the trigger needs to overlap at otherwise it won't collide with walls when we are just behind a wall
+    private float base_trigger_radius = 0.03f; // base radius of the trigger
 
     [Header("Materials")]
     public Material see_through_material_lit;
@@ -39,6 +40,7 @@ public class SeeThroughHandler : MonoBehaviour
     public bool debug = false;
     public bool debug_Y_Comparison = false;
 
+    // START
     void Start()
     {
         cam = Camera.main;
@@ -54,13 +56,8 @@ public class SeeThroughHandler : MonoBehaviour
         overlap_filter.useLayerMask = true;
         overlap_filter.useTriggers = true;
     }
-    public void Refresh(Capable target)
-    {
-        // on repositionne le collider de tete
-        float head_y_offset = AnimBank.Instance.GetHeadOffset(target.Skin);
-        offset_ellipse_center.y = head_y_offset;
-    }
 
+    // UPDATE
     void Update()
     {
         // we get the center of the ellipse
@@ -78,7 +75,7 @@ public class SeeThroughHandler : MonoBehaviour
         y_see_through_material_lit.SetFloat(SizeID, current_size_percentage * wall_desired_size);
         y_see_through_material_unlit.SetFloat(SizeID, current_size_percentage * ceiling_desired_size);
 
-        see_through_material_lit.SetFloat(SizeID, current_size_percentage*wall_desired_size);
+        see_through_material_lit.SetFloat(SizeID, current_size_percentage * wall_desired_size);
         see_through_material_unlit.SetFloat(SizeID, current_size_percentage * ceiling_desired_size);
 
         // we send the player screen position to the shader
@@ -93,7 +90,6 @@ public class SeeThroughHandler : MonoBehaviour
         y_see_through_material_lit.SetFloat(Y_PlayerID, transform.position.y);
         y_see_through_material_unlit.SetVector(WorldPosID, transform.position);
     }
-
     private void calculate_size_percentage()
     {
 
@@ -141,5 +137,35 @@ public class SeeThroughHandler : MonoBehaviour
         // we log the position of the hit
         // Vector3 hit_pos = hits[0].transform.position;
         // if (debug_Y_Comparison) { Debug.Log("(SeeThroughHandler) hit : " + hit_pos.y + " player : " + transform.position.y); }
+    }
+
+
+    // REFRESH SEE THROUGH WHEN CHANGED SKIN
+    public void Refresh(string skin)
+    {
+        // on repositionne le collider de tete
+        float head_y_offset = AnimBank.Instance.GetHeadOffset(skin);
+        offset_ellipse_center.y = head_y_offset;
+        calculate_trigger_bounds(head_y_offset);
+    }
+
+    private void calculate_trigger_bounds(float head_y_offset)
+    {
+
+        // if head_y_offset > min_trigger_max_y then npp !!! we just set the offset, reset the radius and we good
+        if (head_y_offset > min_trigger_max_y)
+        {
+            trigger.offset = new Vector2(0f, head_y_offset);
+            ((CircleCollider2D)trigger).radius = base_trigger_radius;
+            return;
+        }
+
+        // otherwise we increase the radius size so the top of the circle will
+        // be at min_trigger_max_y and the bottom at head_y_offset
+
+        float radius = (min_trigger_max_y - head_y_offset) / 2f;
+        float offset_y = head_y_offset + radius;
+        trigger.offset = new Vector2(0f, offset_y);
+        ((CircleCollider2D)trigger).radius = radius + 0.02f; // we add a bit of margin
     }
 }

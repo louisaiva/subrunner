@@ -4,78 +4,68 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_RunningHacksViewer : MonoBehaviour, Awakable
+public class UI_RunningHacksViewer : MonoBehaviour, Startable
 {
-
     [Header("HackInfo")]
     [SerializeField] private GameObject hack_info_prefab;
     [SerializeField] private Transform hack_info_container;
     [SerializeField] private List<UI_HackInfo> hack_infos = new List<UI_HackInfo>();
 
-    [Header("HackCapacity")]
-    [SerializeField] private UI_LaptopItemSlot laptop_item_slot;
-    [SerializeField] private HackCapacity hacker;
+    // [Header("HacksInfoWaiting")]
+
+    // [Header("HackCapacity")]
+    // private System.Action<int> update_cores_count_callback;
+    // [SerializeField] private UI_LaptopItemSlot laptop_item_slot;
+    // [SerializeField] private HackCapacity hacker;
 
     [Header("Components")]
-    [SerializeField] private Laptop laptop;
+    // [SerializeField] private Device device;
+    [SerializeField] private UI_HacksWaitingInfo hacks_waiting_info;
     [SerializeField] private TextMeshProUGUI title_text;
+
 
     [Header("Logs")]
     [SerializeField] private bool log = true;
 
-    // INIT AWAKE
-    public void InitAwake()
+    // INIT START
+    public void InitStart()
     {
-        if (laptop_item_slot == null)
-        {
-            Debug.LogError("(UI_RunningHacksViewer) laptop_item_slot is not assigned! Please assign it in the inspector.");
-            return;
-        }
         if (title_text == null)
         {
             Debug.LogError("(UI_RunningHacksViewer) title_text is not assigned! Please assign it in the inspector.");
             return;
         }
 
-        laptop_item_slot.OnItemChanged += HandleLaptopChanged;
-    }
-    private void Start()
-    {
+        // GameObject.Find("/perso").GetComponent<Perso>().OnDeviceGranted += HandleDeviceChanged;
+        hacks_waiting_info.Init();
+
+        // Perso.Instance.OnDeviceGranted += HandleDeviceGranted;
+        // Perso.Instance.OnDeviceRemoved += HandleDeviceRemoved;
         update_title();
     }
 
-    // LAPTOP
-    private void HandleLaptopChanged(List<Item> items)
+    // DEVICE
+    public void HandleDeviceRemoved(Device old_device)
     {
-        // we remove old laptop callbacks
-        if (laptop != null)
-        {
-            if (hacker != null) { hacker.OnExploitRun -= createHackInfo; }
-        }
-
-        // if the next is null then we null everything
-        if (items == null || items.Count == 0 || !(items[0] is Laptop))
-        {
-            hacker = null;
-            laptop = null;
-            update_title();
-            return;
-        }
-
-        // otherwise we have a new laptop, we get components and register callbacks
-        laptop = items[0] as Laptop;
-        hacker = laptop.Hacker;
-        if (hacker == null)
-        {
-            if (log) { Debug.LogWarning("(UI_RunningHacksViewer) No HackCapacity found in the laptop."); }
-            update_title();
-            return;
-        }
-
         update_title();
-        hacker.OnExploitRun += createHackInfo;
+        if (old_device.Hacker == null) { return; }
+
+        // we remove old device callback
+        old_device.Hacker.OnExploitRun -= createHackInfo;
     }
-    
+    public void HandleDeviceGranted(Device new_device)
+    {
+        update_title();
+        if (new_device.Hacker == null)
+        {
+            if (log) { Debug.LogWarning("(UI_RunningHacksViewer) No HackCapacity found in the new device, can't set callback"); }
+            return;
+        }
+
+        // we register new device callback
+        new_device.Hacker.OnExploitRun += createHackInfo;
+    }
+
     // CREATE HACK INFO
     private void createHackInfo(Hack hack)
     {
@@ -91,19 +81,35 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
     // UPDATE
     private void Update()
     {
+        update_title();
+
         // update running hacks
         for (int i = 0; i < hack_infos.Count; i++)
         {
-            Hack hack = hack_infos[i].hack;
-            if (hack == null || hack_infos[i] == null) { continue; }
+            bool to_remove = false;
 
-            // check the state of the hack
-            if (hack.state == ProcessusState.Failed || hack.state == ProcessusState.Completed)
+            // checking if we need to remove the hack info
+            if (hack_infos[i] == null) { to_remove = true; }
+            else if (hack_infos[i].State == ProcessusState.Completed || hack_infos[i].State == ProcessusState.Failed) { to_remove = true; }
+
+            // if the hack is waiting we remove it from the waiting info
+            if (hack_infos[i].State == ProcessusState.Waiting)
             {
-                // we remove the hack info
-                hack_infos[i].GetComponent<Transitioner>().HideAndDestroy();
+                to_remove = true;
+
+                // preparing for hiding the hack_info
+                float duration = -99f;
+                if (hacks_waiting_info.gameObject.activeSelf == false) { duration = 0f; } // if the waiting info is not visible we hide instantly the hack_info
+                hack_infos[i].GetComponent<Transitioner>().HideAndDestroy(duration);
+                
+                // adding it to the waiting info
+                hacks_waiting_info.AddHack(hack_infos[i].hack);
+            }
+
+            // removing it if needed
+            if (to_remove)
+            {
                 hack_infos.RemoveAt(i);
-                update_title();
                 i--; // adjust index after removal
                 continue;
             }
@@ -111,24 +117,26 @@ public class UI_RunningHacksViewer : MonoBehaviour, Awakable
     }
     private void update_title()
     {
-        if (laptop == null)
+        if (Perso.Instance.Device == null)
         {
-            title_text.text = "no laptop";
+            title_text.text = "no device";
             return;
         }
 
-        if (hacker == null)
+        if (Perso.Instance.Device.Hacker == null)
         {
             title_text.text = "no module:hack";
             return;
         }
 
-        if (hack_infos.Count == 0)
+        int running_hacks_count = hack_infos.Count + hacks_waiting_info.Count;
+
+        if (running_hacks_count == 0)
         {
             title_text.text = "no running hacks";
             return;
         }
 
-        title_text.text = $"{hack_infos.Count} running hacks";
+        title_text.text = $"{running_hacks_count} running hacks";
     }
 }

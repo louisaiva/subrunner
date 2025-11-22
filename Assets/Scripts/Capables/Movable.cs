@@ -6,6 +6,7 @@ using UnityEngine;
 public class Movable : Capable
 {
     public bool debug_velocity = false; // Show velocity in console
+    public bool log_avoidance = false; // whether to log the avoidance force calculation
 
     [Header("MOVABLE")]
     public Rigidbody2D rb;  // Replace transform movement
@@ -54,6 +55,7 @@ public class Movable : Capable
     }
     private void OnDisable()
     {
+        if (MovableEngine.Instance == null) { return; }
         MovableEngine.Instance.Unregister(this);
     }
 
@@ -194,7 +196,7 @@ public class Movable : Capable
         // on retourne la liste des forces
         return forces;
     }
-    protected void LateUpdate()
+    protected virtual void LateUpdate()
     {
         // check if we have a rigidbody
         if (rb == null)

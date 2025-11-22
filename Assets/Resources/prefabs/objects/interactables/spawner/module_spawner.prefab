@@ -227,6 +227,7 @@ MonoBehaviour:
   - module:network
   - module:hdd
   - module:cpu
+  authorize_interact_endlessly: 1
 --- !u!1001 &7056843530695103706
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -490,6 +491,10 @@ PrefabInstance:
     - target: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6378803932534245458, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

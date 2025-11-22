@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Events;
+using System;
 
 public class Inventory : MonoBehaviour
 {
@@ -9,16 +10,21 @@ public class Inventory : MonoBehaviour
     public List<Item> Items = new List<Item>();
     public int Count { get { return Items.Count; } }
 
-    [Header("Events")]
-    public UnityEvent OnGrab;
-    public UnityEvent OnDrop;
-    public event System.Action<Item> OnItemGrabbed = delegate { };
-    public event System.Action<Item> OnItemDropped = delegate { };
+    // [Header("Events")]
+    public event Action<Item> OnItemGrabbed = delegate { };
+    public event Action<Item> OnItemDropped = delegate { };
 
 
     [Header("Components")]
     [SerializeField] private List<UI_Inventory> uis = new List<UI_Inventory>();
     public UI_Inventory ui { get { return uis.Count > 0 ? uis[0] : null; } }
+    public UI_Slottable MainUI { get
+        {
+            if (ui == null) { return null; }
+            if (ui.Mixer != null) { return ui.Mixer; }
+            return ui;
+        }
+    }
     public Capable capable { get { return transform.parent.GetComponent<Capable>(); } }
 
     [Header("Logs")]
@@ -33,7 +39,8 @@ public class Inventory : MonoBehaviour
             uis = new List<UI_Inventory>
             {
                 UI_Manager.Instance.GetPool("inventory").transform.Find("ui_inventory").GetComponent<UI_Inventory>(),
-                UI_Manager.Instance.GetPool("hud").GetComponent<UI_HUD>().perso_quick_inventory
+                // UI_Manager.Instance.GetPool("quick").GetComponent<UI_HUD>().perso_quick_inventory
+                UI_Manager.Instance.GetPool<UI_QuickInventoryPool>().UI
             };
         }
 
@@ -74,24 +81,8 @@ public class Inventory : MonoBehaviour
         // we check if we can add the item
         if (item == null) { return false; }
 
-        // we check if we have at least one ui_inventory
-        if (ui != null)
-        {
-            // we try to make the first ui_inventory (which is our reference ui_inventory) to grab it
-            // if it can grab it, all the others can grab it.
-            // if no, we return false
-            if (uis_to_ignore == null) { uis_to_ignore = new List<UI_Inventory>(); }
-            if (!uis_to_ignore.Contains(ui) && !ui.UI_Grab(item))
-            {
-                if (log) { Debug.LogWarning("(Inventory) " + capable.name + " can't grab : " + item.name + " in " + ui.name); }
-                return false; // if the first ui_inventory can't grab it, we return false
-            }
-            for (int i = 1; i < uis.Count; i++)
-            {
-                if (uis_to_ignore.Contains(uis[i])) { continue; } // we skip the ui_to_ignore
-                uis[i].UI_Grab(item); // we try to make the other ui_inventories grab it (we don't care if it can't grab as long as the 1st can)
-            }
-        }
+        // we try to make the ui grab the item
+        if (!ui_grab(item, uis_to_ignore)) { return false; }
 
         // we check if the item is already grabbed somewhere, if so we drop it
         if (item.Grabbed && item.HolderInventory != null) { item.HolderInventory.Drop(item, uis_to_ignore); }
@@ -105,7 +96,6 @@ public class Inventory : MonoBehaviour
         item.Grabbed = true;
 
         // we trigger the events
-        OnGrab.Invoke();
         OnItemGrabbed.Invoke(item);
 
         if (log) { Debug.Log("(Inventory) " + capable.name + " grabbed : " + item.name); }
@@ -125,18 +115,10 @@ public class Inventory : MonoBehaviour
         item.Grabbed = false;
 
         // we trigger the event
-        OnDrop.Invoke();
         OnItemDropped.Invoke(item);
 
         // we update the UI
-        if (uis_to_ignore == null) { uis_to_ignore = new List<UI_Inventory>(); }
-        for (int i = 0; i < uis.Count; i++)
-        {
-            UI_Inventory ui = uis[i];
-            if (ui == null) { continue; }
-            if (uis_to_ignore.Contains(ui)) { continue; } // we skip the ui_to_ignore
-            ui.UI_Drop(item);
-        }
+        ui_drop(item, uis_to_ignore);
 
         if (log) { Debug.Log("(Inventory) " + capable.name + " dropped : " + item.name); }
 
@@ -160,6 +142,39 @@ public class Inventory : MonoBehaviour
 
         return true;
     }
+    
+    // GRABBING / DROPPING LOW LEVEL
+    protected bool ui_grab(Item item, List<UI_Inventory> uis_to_ignore = null)
+    {
+        if (ui == null) { return true; } // no inventory so we successfully grabbed it ahah ^^
+
+        // we try to make the first ui_inventory (which is our reference ui_inventory) to grab it
+        // if it can grab it, all the others can grab it.
+        // if no, we return false
+        if (uis_to_ignore == null) { uis_to_ignore = new List<UI_Inventory>(); }
+        if (!uis_to_ignore.Contains(ui) && !ui.UI_Grab(item))
+        {
+            if (log) { Debug.LogWarning("(Inventory) " + capable.name + " can't grab : " + item.name + " in " + ui.name); }
+            return false; // if the first ui_inventory can't grab it, we return false
+        }
+        for (int i = 1; i < uis.Count; i++)
+        {
+            if (uis_to_ignore.Contains(uis[i])) { continue; } // we skip the ui_to_ignore
+            uis[i].UI_Grab(item); // we try to make the other ui_inventories grab it (we don't care if it can't grab as long as the 1st can)
+        }
+        return true;
+    }
+    protected void ui_drop(Item item, List<UI_Inventory> uis_to_ignore = null)
+    {
+        if (uis_to_ignore == null) { uis_to_ignore = new List<UI_Inventory>(); }
+        for (int i = 0; i < uis.Count; i++)
+        {
+            UI_Inventory ui = uis[i];
+            if (ui == null) { continue; }
+            if (uis_to_ignore.Contains(ui)) { continue; } // we skip the ui_to_ignore
+            ui.UI_Drop(item);
+        }
+    }
 
     // GETTERS
     public Inventory GetInteractingInventory()
@@ -167,7 +182,7 @@ public class Inventory : MonoBehaviour
         string s = "(Inventory) " + capable.name + " is looking for an interacting inventory\n\n";
 
         // check if we are the interactable (so we look for the interactor)
-        // typically for Chest
+        // typically we are dropping an item from a Chest's UI_Inventory
         if (capable is Interactable)
         {
             // this is the other capable
@@ -175,11 +190,7 @@ public class Inventory : MonoBehaviour
             InteractCapacity interactor = (capable as Interactable).Interactor;
 
             // check if we have an interactor
-            if (interactor == null)
-            {
-                if (log) { Debug.LogWarning(s + "we don't have an interactor\n"); }
-                return null;
-            }
+            if (interactor == null) { if (log) { Debug.LogWarning(s + "we don't have an interactor\n"); } return null; }
 
             // yes we do !! return its inventory
             if (log)
@@ -190,9 +201,8 @@ public class Inventory : MonoBehaviour
             return interactor.capable.Inventory;
         }
 
-
         // check if we are the interactor (so we look for the interactable)
-        // typically for Being
+        // typically we are dropping from an item our perso_quick_inventory or the UI_InventoryMenu
         else if (capable.GetCapacity<InteractCapacity>() != null)
         {
             // this is our capable
@@ -201,40 +211,21 @@ public class Inventory : MonoBehaviour
 
             // check if we have an interactable
             Capable interactable = interactor.interactable as Capable;
-            if (interactable == null)
-            {
-                if (log) { Debug.LogWarning(s + "we don't have an interactable\n"); }
-                return null;
-            }
+            if (interactable == null) { if (log) { Debug.LogWarning(s + "we don't have an interactable\n"); } return null; }
 
             s += "we have an interactable : " + interactable.name + "\n";
-            // checks if the interactable is an Openable and is not closed
-            if (interactable is Openable)
-            {
-                s += "and it's an Openable\n";
-                Openable openable = interactable as Openable;
 
-                // fermé et pas en train de s'ouvrir
-                if (!openable.is_open && !openable.is_moving)
-                {
-                    if (log) { Debug.LogWarning(s + "but it's closed & not opening\n"); }
-                    return null;
-                }
+            // checks if this is a chest
+            if (interactable is not Chest chest) { if (log) { Debug.LogWarning(s + "but it's not a Chest\n"); } return null; }
+            else if (interactable.Inventory == null) { if (log) { Debug.LogWarning(s + "but it doesn't have an inventory\n"); } return null; }
 
-                // en train de se fermer
-                else if (openable.is_open && openable.is_moving)
-                {
-                    if (log) { Debug.LogWarning(s + "but it's closing\n"); }
-                    return null;
-                }
+            s += "and it's a Chest\n";
 
-                s += "and it's open !!\n";
-            }
-            else if (interactable.Inventory == null)
-            {
-                if (log) { Debug.LogWarning(s + "but it doesn't have an inventory\n"); }
-                return null;
-            }
+            // checks if the chest is not closed or closing
+            if (!chest.is_open && !chest.is_moving) { if (log) { Debug.LogWarning(s + "but it's closed & not opening\n"); } return null; }
+            else if (chest.is_open && chest.is_moving) { if (log) { Debug.LogWarning(s + "but it's closing\n"); } return null; }
+
+            s += "and it's open !!\n";
 
             // we return the interactable's inventory
             if (log) { Debug.Log(s + "and its inventory is " + interactable.Inventory.name + "\n\n"); }
@@ -272,19 +263,41 @@ public class Inventory : MonoBehaviour
         }
         return items;
     }
-    public List<Item> GetItemsByRule(string rule = "", bool exclusion_rule = false)
+    public List<Item> GetItemsByRule(string rule = "")
     {
         // we get all the items that match the rule
         List<Item> items = new List<Item>();
-        foreach (Item item in Items)
+        for (int i = 0; i < Items.Count; i++)
         {
-            if (!exclusion_rule && item.ValidateRule(rule)) { items.Add(item); }
-            else if (exclusion_rule && !item.ValidateRule(rule)) { items.Add(item); }
+            Item item = Items[i];
+            if (item.ValidateRule(rule)) { items.Add(item); }
         }
         return items;
     }
+    public Device GetDeviceItem()
+    {
+        // we check if one of our items is a device
+        foreach (Item item in Items)
+        {
+            if (item is Device) { return item as Device; }
+        }
+        return null;
+    }
+    public bool HasItem(Item item)
+    {
+        // we check if we have the item
+        return Items.Contains(item);
+    }
 
     // UI MANAGEMENT
+    public void RemoveAllUIs()
+    {
+        // we remove all UIs
+        while (uis.Count > 0)
+        {
+            RemoveUI(uis[0]);
+        }
+    }
     public void RemoveUI(UI_Inventory ui_inventory)
     {
         if (!uis.Contains(ui_inventory)) { return; }

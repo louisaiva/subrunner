@@ -77,14 +77,14 @@ public class AnimPlayer : MonoBehaviour
         AnimCapacityPriority capacity_priority = getAnimCapacityPriority(capacity);
         if (capacity_priority == null)
         {
-            if (log) { Debug.LogWarning("(AnimPlayer - Play) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
+            if (log) { Debug.LogWarning($"(AnimPlayer - {name}) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
             return null;
         }
 
         // we check if the index is < than current prio we don't play it
         if (current_capacity_priority != null && capacity_priority.priority < current_capacity_priority.priority)
         {
-            if (log_pile) { Debug.LogWarning("(AnimPlayer - Play) The capacity " + capacity + " has a lower priority than the current one (" + current_capacity_priority.priority + ")"); }
+            if (log_pile) { Debug.LogWarning($"(AnimPlayer - {name}) The capacity " + capacity + " has a lower priority than the current one (" + current_capacity_priority.priority + ")"); }
             return null;
         }
 
@@ -99,7 +99,7 @@ public class AnimPlayer : MonoBehaviour
         Anim anim = AnimBank.Instance.GetAnim(anim_name);
         if (log)
         {
-            Debug.Log("(AnimPlayer - Play) Bank found anim : " + anim.name
+            Debug.Log($"(AnimPlayer - {name}) Bank found anim : " + anim.name
                 + (anim_name == anim.name
                 ? ""
                 : " (" + anim_name + " was asked)"));
@@ -124,7 +124,7 @@ public class AnimPlayer : MonoBehaviour
         {
             if (log)
             {
-                Debug.LogWarning("(AnimPlayer - Play) The animation " + anim.name + " is already playing at frame " + current_frame);
+                Debug.LogWarning($"(AnimPlayer - {name}) The animation " + anim.name + " is already playing at frame " + current_frame);
             }
             return current_anim;
         }
@@ -163,14 +163,16 @@ public class AnimPlayer : MonoBehaviour
             highest_priority = priority.priority;
             capacity_priority = priority;
         }
-        // }
+
+        // verify that we have something
+        if (capacity == "") { capacity = "idle"; capacity_priority = getAnimCapacityPriority("idle"); }
 
         // we get the animation from the bank
         string anim_name = skin + "." + capacity + "." + orientation;
         Anim anim = AnimBank.Instance.GetAnim(anim_name);
         if (log)
         {
-            Debug.Log("(AnimPlayer - Play) Bank found anim : " + anim.name
+            Debug.Log($"(AnimPlayer - {name}) Bank found anim : " + anim.name
                 + (anim_name == anim.name
                 ? ""
                 : " (" + anim_name + " was asked)"));
@@ -275,7 +277,7 @@ public class AnimPlayer : MonoBehaviour
         // we check if we have to brutally stop the current playing animation
         if (dont_stop_if_currently_playing || current_capacity != capacity) { return; }
         playNextAnim();
-        
+
     }
     public void ClearPile()
     {
@@ -287,6 +289,17 @@ public class AnimPlayer : MonoBehaviour
 
         // we play the idle animation
         Play("idle");
+    }
+    public bool IsPlaying(string capacity)
+    {
+        AnimCapacityPriority priority = getAnimCapacityPriority(capacity);
+        if (priority == null)
+        {
+            if (log_pile) { Debug.LogWarning("(AnimPlayer - IsPlaying) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
+            return false;
+        }
+
+        return priority.capacity_playing == capacity;
     }
 
     // PILE MANAGEMENT
@@ -318,6 +331,16 @@ public class AnimPlayer : MonoBehaviour
         capacity_priority.capacity_playing = capacity;
         if (log_pile) { Debug.Log("(AnimPlayer - AddToPile) Added " + capacity + " to the pile"); }
     }
+    public void ClearIdles()
+    {
+        // we go through all the anim capa prio and check which anims she is playing
+        for (int i = 0; i < anim_capacity_priorities.Count; i++)
+        {
+            AnimCapacityPriority priority = anim_capacity_priorities[i];
+            if (priority.capacity_playing.StartsWith("idle")) { StopPlaying(priority.capacity_playing); }
+        }
+    }
+
 
     // ORIENTATION
     public void SetOrientation(Vector2 look_at)
@@ -355,11 +378,14 @@ public class AnimPlayer : MonoBehaviour
         // we check if we can interrupt the current animation to update orientation
         if (current_capacity_priority != null && current_capacity_priority.lock_orientation)
         {
-            if (log_orientation) { Debug.LogWarning("(AnimPlayer) Orientation change to " + orientation
-                + " is locked by the current animation: " + current_capacity_priority.capacity_playing); }
+            if (log_orientation)
+            {
+                Debug.LogWarning("(AnimPlayer) Orientation change to " + orientation
+                + " is locked by the current animation: " + current_capacity_priority.capacity_playing);
+            }
             return;
         }
-        
+
         // we play the animation again with the right orientation
         Anim new_anim = Play(current_capacity);
         if (new_anim == null) { return; }
@@ -371,6 +397,38 @@ public class AnimPlayer : MonoBehaviour
             Debug.Log(s);
         }
     }
+
+
+
+
+    // LAYERS & SPRITE RENDERER MANAGEMENT
+    private List<AnimLayer> anim_layers = new List<AnimLayer>();
+    public void RegisterAnimLayer(AnimLayer anim_layer)
+    {
+        if (anim_layers.Contains(anim_layer)) { return; }
+        anim_layers.Add(anim_layer);
+    }
+    public void DisableRenderer()
+    {
+        sr.enabled = false;
+
+        // we disable all the anim layers renderers
+        for (int i = 0; i < anim_layers.Count; i++)
+        {
+            anim_layers[i].DisableRenderer();
+        }
+    }
+    public void EnableRenderer()
+    {
+        sr.enabled = true;
+
+        // we enable all the anim layers renderers
+        for (int i = 0; i < anim_layers.Count; i++)
+        {
+            anim_layers[i].EnableRenderer();
+        }
+    }
+
 }
 
 

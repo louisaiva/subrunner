@@ -81,12 +81,6 @@ public class CloseCapacity : Capacity
             capable.GetComponent<SpriteRenderer>().sortingOrder = 0;
         }
 
-        // verifications pour les lootable meat
-        if (capable is LootableMeat lootableMeat && lootableMeat.Inventory.Count == 0)
-        {
-            lootableMeat.TurnToMeat();
-        }
-
         if (debug) { Debug.Log(capable.name + " is closed !"); }
     }
 

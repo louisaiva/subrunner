@@ -12,14 +12,11 @@ public class HungerDetector : Detector
     [SerializeField] protected float detectionInterval = 0.5f; // How often to check for conditions
     protected float lastDetectionTime = 0f;
 
-    [Header("Components")]
-    private IA ia;
     private EatCapacity eatCapacity;
 
     protected override void Start()
     {
         base.Start();
-        ia = transform.parent.GetComponent<IA>();
         eatCapacity = ia.GetCapacity<EatCapacity>();
 
         lastDetectionTime = Time.time; // initialize the timer

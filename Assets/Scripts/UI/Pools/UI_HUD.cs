@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -10,10 +11,13 @@ public class UI_HUD : UI_Pool
 
     [Header("Components")]
     [SerializeField] private UI_Inventory ui_chest;
+    public UI_Notifier Notifier;
 
     // AWAKE & START
-    protected void Awake()
+    /* protected override void Awake()
     {
+        base.Awake();
+
         // on récupère les composants
         if (perso_quick_inventory == null)
         {
@@ -27,63 +31,65 @@ public class UI_HUD : UI_Pool
 
         perso_quick_inventory_pool = perso_quick_inventory.GetComponent<HUD_PersoItemPool>();
     }
-    protected override void Start()
+    protected void Start()
     {
-        base.Start();
-
         // on met les callbacks pour vérifier que le select_hackable se désactive bien
         InputManager.Instance.OnPersoInputsToggled += verify_right_joy_is_disabled;
-    }
+    } */
 
-    // SHOW / HIDE
-    public override async Awaitable Show(float duration, List<GameObject> dont_show = null)
+    // ENABLING
+    /* protected override IEnumerator enable_coroutine()
     {
-        // on affiche le perso_quick_inventory
-        if (ui_chest != null)
-        {
-            ui_chest.Show();
-            perso_quick_inventory.Show();
-        }
+        if (ui_chest == null) { yield break; }
 
-        // attend que la pool s'affiche
-        await base.Show(duration, dont_show);
+        // on active le perso_quick_inventory & chest navigator
+        // UI_Navigator.Instance.Enable(ui_chest,ingame_navigation: true);
+        // UI_Navigator.Instance.Enable(perso_quick_inventory, ingame_navigation: true);
+        perso_quick_inventory.Enable(ingame: true);
+        ui_chest.Enable(ingame: true);
     }
-    public override async Awaitable Hide(float duration, List<GameObject> dont_hide = null)
+    protected override IEnumerator disable_coroutine()
     {
-        if (ui_chest != null)
-        {
-            perso_quick_inventory.Hide();
-            ui_chest.Hide();
-        }
+        if (ui_chest == null) { yield break; }
 
-        await base.Hide(duration, dont_hide);
-    }
+        // on active le perso_quick_inventory & chest navigator
+        ui_chest.Disable();
+        perso_quick_inventory.Disable();
+        // UI_Navigator.Instance.Disable(ui_chest);
+        // UI_Navigator.Instance.Disable(perso_quick_inventory);
+    } */
+
 
     // REGISTER CHEST
-    public void RegisterChest(UI_Inventory ui_chest)
+    /* public void RegisterChest(UI_Inventory ui_chest)
     {
         // on ajoute le chest au pool
-        ui_chest.Show();
+        // ui_chest.Show();
         this.ui_chest = ui_chest;
+        perso_quick_inventory_pool.EnableItemsByRule(ui_chest.ItemRule);
+
+        // on ajoute le chest & persoquickinv au pool
+        RegisterToPool(ui_chest.gameObject,is_stacked:true);
+        RegisterToPool(perso_quick_inventory.gameObject,is_stacked:true);
 
         // on s'assure que le right joystick est désactivé
         InputManager.Instance.inputs.perso.select_hackable.Disable();
 
         if (!Showed) { return; }
-
-        // on active seulement les ui_items qui matche la rule du chest !
-        perso_quick_inventory.Show();
-        perso_quick_inventory_pool.EnableItemsByRule(ui_chest.ItemRule);
+        StartCoroutine(enable_coroutine());
     }
     public void RemoveChest(UI_Inventory ui_chest)
     {
-        // on enlève le chest du pool
-        ui_chest.Hide();
+        // on enlève le chest
+        StartCoroutine(disable_coroutine());
+
+        // on ajoute le chest & persoquickinv au pool
+        QuitPool(ui_chest.gameObject);
+        QuitPool(perso_quick_inventory.gameObject);
+
         this.ui_chest = null;
-        if (!Showed) { return; }
 
         // on active tous les ui_items
-        perso_quick_inventory.Hide();
         perso_quick_inventory_pool.EnableAllItems();
 
         // on remet l'input de right joystick
@@ -100,5 +106,5 @@ public class UI_HUD : UI_Pool
 
         // on doit s'assurer que le right joystick est désactivé
         InputManager.Instance.inputs.perso.select_hackable.Disable();
-    }
+    } */
 }

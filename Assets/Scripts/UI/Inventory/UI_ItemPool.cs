@@ -22,7 +22,7 @@ public class UI_ItemPool : MonoBehaviour
     public int Count { get { return ui_items.Count; } }
     public int EmptyCount { get { return ui_items.Where(ui_item => ui_item.Item == null).Count(); } }
     public int FullCount { get { return Count - EmptyCount; } }
-    public int EnabledCount { get { return ui_items.Where(ui_item => !ui_item.is_disabled).Count(); } }
+    public int EnabledCount { get { return ui_items.Where(ui_item => !ui_item.Disabled).Count(); } }
     [SerializeField] protected bool destroy_empty_on_init = true; // if true, the empty slots will be destroyed on init
     public bool DoNotDisableEmptySlots = false;
 
@@ -31,17 +31,11 @@ public class UI_ItemPool : MonoBehaviour
 
     [Header("Components")]
     [SerializeField] protected ItemBank bank;
-    // public Description Descriptor; // the description of the item pool
     public UI_Inventory UI_Inventory;
-    protected CanvasGroup group;
-
-    [Header("Tween")]
-    [SerializeField] protected Sequence? fade_sequence = null;
 
     [Header("Logs")]
     [SerializeField] protected bool log = false;
     [SerializeField] protected bool log_storage = false;
-    [SerializeField] protected bool log_fading = false;
 
     public virtual void Init(UI_Inventory ui)
     {
@@ -50,11 +44,6 @@ public class UI_ItemPool : MonoBehaviour
 
         // we get the item bank
         bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
-
-        // we get the CanvasGroup
-        group = GetComponentInParent<CanvasGroup>(includeInactive: true);
-        if (group != null) { group.alpha = 0f; }
-
         // we clear the ui_items
         ui_items.Clear();
 
@@ -254,32 +243,6 @@ public class UI_ItemPool : MonoBehaviour
         return ui_slot;
     }
 
-    // FADE
-    public async virtual Awaitable Fade(float duration = 0.1f, bool fade_in = true)
-    {
-        if (group == null) { return; }
-
-        if (log_fading) { Debug.Log($"(UI_ItemPool) {name} fading {(fade_in ? "in" : "out")} with duration {duration} (from {group.alpha} to {(fade_in ? 1f : 0f)})"); }
-
-        // we stop the last sequence
-        if (fade_sequence != null && fade_sequence.Value.isAlive)
-        {
-            fade_sequence.Value.Stop();
-            fade_sequence = null;
-        }
-
-        // we create a new sequence
-        fade_sequence = Sequence.Create(useUnscaledTime: true)
-            .Group(Tween.Custom(group.alpha, fade_in ? 1f : 0f, duration: duration,
-                onValueChange: ctx => group.alpha = ctx));
-
-        // we await til it's completed or stopped
-        while (fade_sequence.Value.isAlive) { await System.Threading.Tasks.Task.Yield(); }
-    }
-    public bool Transitionning { get { return !Hidden && !Shown; } }
-    public bool Hidden { get { return group.alpha == 0f; } }
-    public bool Shown { get { return group.alpha == 1f; } }
-
     // GETTERS
     public virtual int GetItemSlotIndex(Item item)
     {
@@ -304,5 +267,23 @@ public class UI_ItemPool : MonoBehaviour
             items.AddRange(ui_item.GetItems());
         }
         return items;
+    }
+    public List<UI_Item> GetFilledSlots()
+    {
+        List<UI_Item> filled_slots = new List<UI_Item>();
+        foreach (UI_Item ui_item in ui_items)
+        {
+            if (ui_item.Quantity > 0) { filled_slots.Add(ui_item); }
+        }
+        return filled_slots;
+    }
+    public UI_Item GetSlotAt(int index)
+    {
+        if (index < 0 || index >= ui_items.Count) { return null; }
+        return ui_items[index];
+    }
+    public List<UI_Item> GetAllSlots()
+    {
+        return ui_items;
     }
 }

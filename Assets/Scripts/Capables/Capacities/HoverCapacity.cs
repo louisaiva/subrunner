@@ -10,13 +10,33 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class HoverCapacity : Capacity
 {
+    [Header("Hover Capacity")]
     private string played_animation = "hover";
     [SerializeField] private List<Capable> hoverers = new List<Capable>();
     public bool Hovered { get { return hoverers.Count > 0; } }
 
+    [Header("Interact Key Feedback")]
+    [SerializeField] private Transform canvas_kf;
+    public Transform Canvas_kf { get { return canvas_kf; } }
+
     // DELEGATES
     public event Action<Capable> OnHover = delegate { };
     public event Action<Capable> OnHoverLost = delegate { };
+
+    // AWAKE
+    private void Awake()
+    {
+        // check if we have a canvas_kf
+        canvas_kf = transform.Find("canvas_kf");
+        if (canvas_kf != null)
+        {
+            canvas_kf.gameObject.SetActive(false);
+
+            // sets some callbacks to dynamically show the interact key feedback
+            OnHover += (capable) => toggle_key_feedback(capable, true);
+            OnHoverLost += (capable) => toggle_key_feedback(capable, false);
+        }
+    }
 
     // HOVER
     public void Hover(Capable capable)
@@ -28,12 +48,8 @@ public class HoverCapacity : Capacity
         OnHover?.Invoke(capable);
 
         // then we only play animation if the capable is the one controlled
-        if (capable != Controller.Instance.Capable) { return; }
-
-        // we check if the capable is locked or not
-        played_animation = "hover";
-        if (this.capable is Lockable lockable && lockable.Locked) { played_animation = "hover_locked"; }
-
+        if (Controller.Instance == null || capable != Controller.Instance.Capable) { return; }
+        
         // we play the animation
         this.capable.anim_player.Play(played_animation);
 
@@ -44,8 +60,8 @@ public class HoverCapacity : Capacity
         if (!hoverers.Contains(capable)) { return; }
         hoverers.Remove(capable);
 
-        // we stop the animation
-        this.capable.anim_player.StopPlaying(played_animation);
+        // then we only stop playing animation if the capable is the one controlled
+        if (Controller.Instance != null && capable == Controller.Instance.Capable) { this.capable.anim_player.StopPlaying(played_animation); } // we stop the animation
 
         OnHoverLost?.Invoke(capable);
         if (debug) { Debug.Log("(HoverCapacity) " + capable.name + " stop hovering " + this.capable.name + $", stopped playing {played_animation}"); }
@@ -54,7 +70,7 @@ public class HoverCapacity : Capacity
     // UPDATE HOVER ANIMATION
     public void ChangeAnimation(string animation = "hover")
     {
-        if (!Hovered) { return; }
+        if (!Hovered) { played_animation = animation; return; }
 
         // we stop the current animation
         capable.anim_player.StopPlaying(played_animation);
@@ -63,4 +79,15 @@ public class HoverCapacity : Capacity
         played_animation = animation;
         capable.anim_player.AddToPile(played_animation);
     }
+
+
+    // HANDLE KEY FEEDBACK
+    private void toggle_key_feedback(Capable hoverer, bool show)
+    {
+        if (canvas_kf == null) { return; }
+        if (Controller.Instance == null) { return; }
+        if (hoverer != Controller.Instance.Capable) { return; }
+        canvas_kf.gameObject.SetActive(show);
+    }
+
 }

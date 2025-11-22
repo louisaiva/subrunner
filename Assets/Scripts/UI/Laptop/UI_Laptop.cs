@@ -37,8 +37,11 @@ public class UI_Laptop : UI_Inventory
         if (items == null || items.Count == 0)
         {
             // we disable the modules
-            await pools[0].Fade(fade_in: false);
-            (pools[0] as UI_ModulePool)?.DisableModules();
+            await pools[0].GetComponentInParent<Transitioner>(includeInactive: true)?.Hide();
+            (pools[0] as UI_ModulePool)?.DisableModulePool();
+            
+            // we refresh the ui_inventory menu
+            UI_Manager.Instance.GetPool<UI_InventoryMenu>()?.RefreshItemPools();
             return;
         }
 
@@ -48,6 +51,9 @@ public class UI_Laptop : UI_Inventory
         LaptopInventory inventory = TargetLaptop.Inventory as LaptopInventory;
         mb.AssignLaptopInventory(inventory);
         // mb.Size = new Vector2Int(inventory.Columns, inventory.Rows);
+
+        // we change the mb color based on laptop's color
+        mb.SetColor(TargetLaptop.MB_Color);
 
         await System.Threading.Tasks.Task.Yield(); // wait for the next frame to ensure the UI is active
 
@@ -60,7 +66,10 @@ public class UI_Laptop : UI_Inventory
         modulePool.InitFromInventory(inventory);
 
         // we enable the modules
-        modulePool.EnableModules();
+        modulePool.EnableModulePool();
+
+        // we refresh the ui_inventory menu
+        UI_Manager.Instance.GetPool<UI_InventoryMenu>()?.RefreshItemPools();
     }
 
 

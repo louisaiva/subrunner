@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using PrimeTween;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// UI_ModulePool is a helper class to manage the module pool in the UI_Laptop
@@ -9,10 +9,18 @@ using UnityEngine;
 /// </summary>
 public class UI_ModulePool : UI_ItemPool
 {
+    [SerializeField] private bool log_modules = false;
+
+    private MotherboardBuilder mb => GetComponentInParent<MotherboardBuilder>(includeInactive: true);
+    [Header("UI_ModulePool Parameters")]
+    [SerializeField] private bool _has_device = false;
+    public bool HasDevice { get { return _has_device; } }
 
     // ENABLING / DISABLING
-    public void EnableModules()
+    public void EnableModulePool()
     {
+        _has_device = true;
+
         // we enable all the ui_module
         foreach (UI_Item ui_item in ui_items)
         {
@@ -20,8 +28,10 @@ public class UI_ModulePool : UI_ItemPool
             module.Enable();
         }
     }
-    public void DisableModules()
+    public void DisableModulePool()
     {
+        _has_device = false;
+
         // we disable all the ui_module
         foreach (UI_Item ui_item in ui_items)
         {
@@ -78,6 +88,10 @@ public class UI_ModulePool : UI_ItemPool
         // we change the layer of the slot to the same as the pool
         ui_slot.layer = gameObject.layer;
 
+        // change the image color of the ui_module
+        Image image = ui_slot.GetComponent<Image>();
+        if (image != null) { image.color = mb?.Color ?? Color.white; }
+
         UI_Item ui_item = ui_slot.GetComponent<UI_Item>();
         ui_item.Init();
 
@@ -110,6 +124,7 @@ public class UI_ModulePool : UI_ItemPool
     public void OnModuleMoved(UI_Module module)
     {
         int new_slot_index = ui_items.IndexOf(module);
+        if (log_modules) { Debug.Log($"(UI_ModulePool) module {module.name} moved to slot {new_slot_index}"); }
         laptop_inventory.HandleUI_ModuleMoved(module.GetItems(), new_slot_index);
     }
 }

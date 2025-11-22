@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_CoresViewer : MonoBehaviour, Awakable
+public class UI_CoresViewer : MonoBehaviour, Startable
 {
 
     [Header("CoreInfo")]
@@ -12,11 +12,9 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
     [SerializeField] private List<UI_CoreInfo> core_infos = new List<UI_CoreInfo>();
 
     [Header("ProcessCapacity")]
-    [SerializeField] private UI_LaptopItemSlot laptop_item_slot;
-    [SerializeField] private ProcessCapacity processor;
+    private System.Action<int> update_cores_count_callback;
 
     [Header("Components")]
-    [SerializeField] private Laptop laptop;
     [SerializeField] private UI_Resizer resizer;
     [SerializeField] private TextMeshProUGUI title_text;
     [SerializeField] private Image no_cores_image;
@@ -24,58 +22,52 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
     [Header("Logs")]
     [SerializeField] private bool log = false;
 
-    // INIT AWAKE
-    public void InitAwake()
+    // INIT START
+    public void InitStart()
     {
-        if (laptop_item_slot == null)
-        {
-            Debug.LogError("(UI_RunningCoresViewer) laptop_item_slot is not assigned! Please assign it in the inspector.");
-            return;
-        }
+        // Perso.Instance.OnDeviceGranted += HandleDeviceGranted;
+        // Perso.Instance.OnDeviceRemoved += HandleDeviceRemoved;
 
-        laptop_item_slot.OnItemChanged += HandleLaptopChanged;
+        // reset title and all   
         resizer.Resize(0);
         update_title();
     }
 
-    // LAPTOP
-    private void HandleLaptopChanged(List<Item> items)
+    // DEVICE
+    public void HandleDeviceRemoved(Device old_device)
     {
-        // we remove old laptop callback
-        if (laptop != null)
-        {
-            if (processor != null) { processor.OnCoresNumberChanged -= update_cores_count; }
-        }
+        clear_core_infos();
 
-        // if the next is null then we null everything
-        if (items == null || items.Count == 0 || !(items[0] is Laptop))
-        {
-            processor = null;
-            laptop = null;
-            clear_core_infos();
+        // we remove old device callback
+        if (update_cores_count_callback == null) { return; }
+        old_device.Processor.OnCoresNumberChanged -= update_cores_count_callback;
+        update_cores_count_callback = null;
+    }
+    public void HandleDeviceGranted(Device new_device)
+    {
+        if (new_device.Processor == null) {
+            if (log) { Debug.LogWarning("(UI_CoresViewer) No ProcessCapacity found in the device."); }
             return;
         }
 
-        // otherwise we have a new laptop, we get the cpu & register callback
-        laptop = items[0] as Laptop;
-        processor = laptop.GetCapacity<ProcessCapacity>();
-        if (processor == null)
-        {
-            if (log) { Debug.LogWarning("(UI_RunningHacksViewer) No ProcessCapacity found in the laptop."); }
-            return;
-        }
-        processor.OnCoresNumberChanged += update_cores_count;
-        update_cores_count(processor.MaxCores);
+        // we create & register the callback and we update directly
+        update_cores_count_callback = (int cores_count) => { update_cores_count(new_device.Processor); };
+        new_device.Processor.OnCoresNumberChanged += update_cores_count_callback;
+        update_cores_count(new_device.Processor);
     }
 
 
-
-
     // CORE INFOS MANAGEMENT
-    private void update_cores_count(int new_core_count)
+    private void update_cores_count(ProcessCapacity processor)
     {
-        if (processor == null) { return; }
-        List<Core> cores = processor.Cores;
+        // we get the target core number & cores list
+        int new_core_count = 0;
+        List<Core> cores = new List<Core>();
+        if (processor != null)
+        {
+            new_core_count = processor.MaxCores;
+            cores = processor.Cores;
+        }
 
         // we check if we have already enough core_count
         if (core_infos.Count < new_core_count)
@@ -118,12 +110,12 @@ public class UI_CoresViewer : MonoBehaviour, Awakable
         core_info.Init(core);
         core_infos.Add(core_info);
     }
-    private void clear_core_infos() { update_cores_count(0); }
+    private void clear_core_infos() { update_cores_count(null); }
 
     // TITLE
     private void update_title(int cores_count = 0)
     {
-        if (laptop == null || cores_count == 0)
+        if (cores_count == 0)
         {
             title_text.text = "no cores";
             no_cores_image.gameObject.SetActive(true);

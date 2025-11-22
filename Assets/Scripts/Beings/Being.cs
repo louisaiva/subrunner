@@ -12,6 +12,8 @@ public class Being : Movable
     public bool Alive { get { return life > 0f; } }
     public float regen_life = 0f; // en point de life par seconde
     public Collider2D body_collider;
+    public int body_meats = 1; // nombre de viande dans le corps du being
+    public int body_bones = 1; // nombre d'os dans le corps du being
 
     [Header("taking damage")]
     public GameObject floating_dmg_provider;
@@ -68,6 +70,14 @@ public class Being : Movable
     // protected virtual void UpdateGOAP() { }
     public virtual void UpdateBeingEffects()
     {
+
+        // boiling
+        if (HasEffect(Effect.Boiling))
+        {
+            // on fait des dégats au being
+            take_damage(5f * Time.deltaTime);
+        }
+
         // life regen
         if (HasEffect(Effect.RegenLife) && life < max_life)
         {
@@ -147,7 +157,6 @@ public class Being : Movable
     // DAMAGE
     public virtual bool take_damage(float damage, Force knockback=null)
     {
-        // ! à mettre tjrs au début de la fonction update
         if (!Alive) { return false; }
 
         // on vérifie si on est invincible

@@ -1,18 +1,20 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+
 /// <summary>
 /// this class manages all the debug elements by counting stuff
 /// on awake, and nothing else for now !
 /// </summary>
-public class DebugManager : MonoBehaviour
+public class DebugManager : Singleton<DebugManager>
 {
-    [Header("Debugs")]
-    [SerializeField] private Transform debugs;
-    bool debug_in_hud = false;
+    [Header("Debug")]
+    [SerializeField] private Transform debug;
+    private List<Debugger> debugs = new List<Debugger>();
 
-    [Header("Debugs - FPS")]
+    [Header("FPS Debug")]
     [SerializeField] private TextMeshProUGUI fps;
     [SerializeField] private float smoothed_fps = 0f; // smoothed fps for the debug text
     private List<float> fps_samples = new List<float>(); // list of fps samples for smoothing
@@ -20,9 +22,41 @@ public class DebugManager : MonoBehaviour
     [SerializeField] private string precision = "F0"; // precision of the fps text
     [SerializeField] private bool show_unscaled_fps = false; // if we want to show the unscaled fps or not (djizzi)
 
+    [Header("Settings")]
+    private Setting debug_setting;
 
-    // UPDATE
-    private void Update()
+    [Header("Logs")]
+    [SerializeField] private bool log = false; // if we want to log warnings when
+
+    // START
+    protected override void Awake()
+    {
+        base.Awake();
+
+        // find all debugs in children
+        debugs = debug.GetComponentsInChildren<Debugger>(includeInactive: true).ToList();
+        debugs = debugs.Where(d => d.gameObject.activeSelf).ToList(); // we get only active debugs
+        foreach (Debugger d in debugs)
+        {
+            d.gameObject.SetActive(false); // disable all debugs at start
+        }
+    }
+    protected void Start()
+    {
+        // on met le skin en fonction du settings skin
+        debug_setting = SettingsManager.Instance.GetSetting("debug");
+        if (debug_setting == null) { return; }
+        toggle_debug(debug_setting.value);
+        debug_setting.OnValueChanged += toggle_debug;
+    }
+    void OnDestroy()
+    {
+        if (debug_setting != null) { debug_setting.OnValueChanged -= toggle_debug; }
+    }
+
+    // UPDATE + FPS
+    private void Update() { update_fps(); }
+    private void update_fps()
     {
         if (!fps) { return; }
 
@@ -47,27 +81,26 @@ public class DebugManager : MonoBehaviour
         fps.text = smoothed_fps.ToString(precision) + " FPS";
     }
 
-    // ADD DEBUG TO HUD POOL
-    public void ToggleDebug()
+    // TOGGLE DEBUG
+    private void toggle_debug(float value)
     {
-        if (debug_in_hud) { HideDebug(); }
-        else { ShowDebug(); }
-    }
-    private void ShowDebug()
-    {
-        UI_HUD hud = UI_Manager.Instance.GetPool("hud") as UI_HUD;
-        hud.RegisterToPool(debugs.gameObject);
-        UI_Hacking hacking = UI_Manager.Instance.GetPool("hacking") as UI_Hacking;
-        hacking.RegisterToPool(debugs.gameObject);
-        debug_in_hud = true;
-    }
-    private void HideDebug()
-    {
-        UI_HUD hud = UI_Manager.Instance.GetPool("hud") as UI_HUD;
-        hud.QuitPool(debugs.gameObject);
-        UI_Hacking hacking = UI_Manager.Instance.GetPool("hacking") as UI_Hacking;
-        hacking.QuitPool(debugs.gameObject);
-        debug_in_hud = false;
+        bool enable = (value > 0.5f) ? true : false;
+        debug.gameObject.SetActive(enable);
     }
 
+    // ADD DEBUGGABLE TO DEBUGGER
+    public void AddDebuggable(Debuggable debuggable,string name)
+    {
+        // find the debug with the right name
+        Debugger debug = debugs.Find(d => d.name == name);
+        if (debug == null)
+        {
+            if (log) { Debug.LogWarning("(DebugManager) No debug found with name " + name); }
+            return;
+        }
+
+        // add the debuggable to the debug
+        debug.SetDebuggable(debuggable);
+        debug.gameObject.SetActive(true); // enable the debug
+    }
 }

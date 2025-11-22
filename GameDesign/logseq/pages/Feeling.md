@@ -1,0 +1,4 @@
+-
+- ## Description
+	- chaque ai store une List<Feeling> par skin.
+	- chaque ai peut aussi développer des sentiments (feeling) forts envers un autre capable précis lorsque celui-ci a beaucoup interagit avec nous

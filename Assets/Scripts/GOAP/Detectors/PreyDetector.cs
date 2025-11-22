@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using CrashKonijn.Agent.Core;
 using CrashKonijn.Agent.Runtime;
 using CrashKonijn.Goap.Runtime;
+using subrunner.goap;
 using UnityEngine;
 
 public class PreyDetector : Detector
@@ -14,21 +15,21 @@ public class PreyDetector : Detector
     [Header("Targets detection")]
     [SerializeField] private List<Being> waiting_targets = new List<Being>(); // list of potential targets, does not contains current_target !
     public LayerMask target_layers;
-    public List<string> excluded_tags; // tags to exclude from current_target detection
-
-    public List<string> friendly_skins; // skins to exclude from current_target detection
+    [SerializeField] private List<string> target_skins; // skins to include from current_target detection
 
     [Header("Logs")]
     [SerializeField] private bool log = false; // whether to log the detector's actions
 
-    private IA ia;
-    public float Range => GetComponent<CircleCollider2D>().radius; // the range of the detector, used to determine if the target is in range
+
+    [Header("Components")]
+    private CircleCollider2D eyes;
+    public float Range => eyes.radius; // the range of the detector, used to determine if the target is in range
 
     // AWAKE
     protected override void Awake()
     {
         base.Awake();
-        ia = transform.parent.GetComponent<IA>();
+        eyes = GetComponent<CircleCollider2D>();
     }
 
     // GETTING CLOSEST TARGET
@@ -48,6 +49,7 @@ public class PreyDetector : Detector
         {
             float distance = Vector3.Distance(target.gameObject.transform.position, ia.transform.position);
 
+            if (!target_skins.Contains(target.Skin)) { continue; }
             if (distance >= closest_distance) { continue; }
 
             closest_target = target;
@@ -56,7 +58,7 @@ public class PreyDetector : Detector
         return closest_target;
     }
 
-
+    // UPDATE
     private void Update()
     {
         if (!always_select_closest) { return; }
@@ -65,27 +67,38 @@ public class PreyDetector : Detector
         if (Time.time - lastSelectionTime <= selectionInterval) { return; }
         lastSelectionTime = Time.time;
 
-        // checks if we have a closest_target
-        if (waiting_targets.Count == 0) { return; }
+        // find the closest target
+        Being closest_target = GetClosestTarget(ia);
 
         // checks if the goal is the active one
-        if (!goal.enabled || brain.CurrentGoal != goal.type) { return; }
+        if (!goal.enabled)
+        {
+            // if we have a closest target, we enable the goal
+            if (closest_target != null) { brain.EnableGoal(goal); }
+            return;
+        }
+        else if (brain.CurrentGoal != goal.type) { return; }
+
+        // here we are on the Attack Goal : if we have no closest target, we stop the goal
+        if (closest_target == null)
+        {
+            brain.DisableGoal(goal);
+            if (log) { Debug.Log($"(PreyDetector) {ia.name} is disabling the goal because it has no valid target."); }
+            return;
+        }
 
         // we get the current action state target
-        ActionState actionState = brain.agent.ActionState as ActionState;
-        if (actionState == null || actionState.Data == null) { return; }
-        if (actionState.Data.Target is not TransformTarget target) { return; }
-        Being current_target = target.Transform.GetComponent<Being>();
-        if (current_target == null) { return; }
+        IActionData actionData = brain.currentActionData;
+        if (actionData is not AttackAction.Data attackData) { return; } // we only care about attack actions
+        if (attackData.BeingTarget == null) { return; }
 
         // if the target is different than the current closest one, we stop the action
-        if (current_target == GetClosestTarget(ia)) { return; }
-
-        // we stop the current action
+        // (will request a new attack action with the right closest target)
+        if (attackData.BeingTarget == closest_target) { return; }
         brain.agent.StopAction();
-        if (log) { Debug.Log($"(PreyDetector) {ia.name} is stopping current action because the target {current_target.name} is not the closest one."); }
+        if (log) { Debug.Log($"(PreyDetector) {ia.name} is stopping current action because the target {attackData.BeingTarget.name} is not the closest one."); }
     }
-    
+
     // DETECTING TARGET
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -93,18 +106,17 @@ public class PreyDetector : Detector
         if (!((target_layers.value & (1 << other.transform.gameObject.layer)) > 0)) { return; }
         Being being = other.transform.parent.GetComponent<Being>();
         if (being == null) { return; }
-        // if (excluded_tags.Count > 0 && excluded_tags.Contains(being.transform.tag)) { return; }
-        if (friendly_skins.Count > 0 && friendly_skins.Contains(being.Skin)) { return; }
+        
         if (waiting_targets.Contains(being)) { return; }
 
         // remove null targets
         waiting_targets.RemoveAll(target => target == null);
 
-        // if we have no prey, we enable the goal
-        if (waiting_targets.Count == 0) { brain.EnableGoal(goal); }
-
         // we add the being to the waiting targets
         waiting_targets.Add(being);
+
+        // if we have no prey, we enable the goal
+        if (target_skins.Contains(being.Skin) && !goal.enabled) { brain.EnableGoal(goal); }
 
         if (log) { Debug.Log("(PreyDetector) " + being.name + " added to waiting targets of " + ia.name); }
     }
@@ -123,8 +135,8 @@ public class PreyDetector : Detector
 
         // we remove null targets
         waiting_targets.RemoveAll(target => target == null);
-
-        // if we have no prey anymore, we disable the goal
-        if (waiting_targets.Count == 0) { brain.DisableGoal(goal,false); } // we don't resolve so the ia will still finish its action
+        
+        // if we have no more prey, we disable the goal
+        if (waiting_targets.Count == 0 && goal.enabled) { brain.DisableGoal(goal); if (log) { Debug.Log($"(PreyDetector) {ia.name} is disabling the goal because it has no more waiting targets."); } }
     }
 }

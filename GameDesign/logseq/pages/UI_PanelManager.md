@@ -1,0 +1,12 @@
+-
+- script permettant d'organiser un [[UI_Pool]] en plusieurs [[UI_Panel]] possédant leurs propres [[UI_Slot]] / [[UI_ItemPool]] (voir meme leurs propres [[UI_Slottable]] ?)
+-
+- chaque panel possède un **RectTransform** et certains paramètres de position / ancrage pour chaque panel différent.
+-
+- ex : *[[UI_InventoryMenu]] possède 3 panels différents*
+	- *inventory* :
+	- *laptop* :
+	- *shortcuts* :
+-
+- est-ce que le panel manager doit appartenir
+-

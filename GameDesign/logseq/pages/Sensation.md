@@ -1,0 +1,20 @@
+-
+-
+- ## Description
+	- voué à être transformé en #Emotion
+-
+- ## Variables
+	- string **Name**
+	- Capable **Initiator**
+	- Capable **Receiver**
+	- float **Intensity**
+-
+- ## Types de sensation
+	- pain
+	- touch
+	- sight
+	- sound
+	- fatigue
+	- hunger
+	-
+-

@@ -28,6 +28,7 @@ public class MotherboardBuilder : MonoBehaviour
         }
     }
     [SerializeField] private bool show_label = true;
+    public Color Color;
 
     [Header("MB building")]
     [SerializeField] private bool update_scale = true;
@@ -187,6 +188,44 @@ public class MotherboardBuilder : MonoBehaviour
         float yMax = ul[1].y;
 
         return new Rect(xMin, yMin, xMax - xMin, yMax - yMin);
+    }
+
+    // SET COLOR
+    public void SetColor(Color color)
+    {
+        // change color alpha to 125
+        color.a = 125f / 255f;
+
+        // change color of the sides
+        U_side.GetComponent<Image>().color = color;
+        D_side.GetComponent<Image>().color = color;
+        L_side.GetComponent<Image>().color = color;
+        R_side.GetComponent<Image>().color = color;
+
+        // change color of corners
+        UL_corner.GetComponent<Image>().color = color;
+        UR_corner.GetComponent<Image>().color = color;
+        DL_corner.GetComponent<Image>().color = color;
+        DR_corner.GetComponent<Image>().color = color;
+
+        // change color of the filler
+        slots_parent.GetComponent<Image>().color = color;
+
+        // change color of slots
+        UI_ModulePool module_pool = slots_parent.GetComponent<UI_ModulePool>();
+        for (int i = 0; i < module_pool.Count; i++)
+        {
+            UI_Item slot = module_pool.GetSlotAt(i);
+            if (slot == null) { continue; }
+            Image img = slot.GetComponent<Image>();
+            if (img == null) { continue; }
+            img.color = color;
+        }
+
+        // sets main color so future slots will be created with the right color
+        Color = color;
+
+        if (log) { Debug.Log($"(MotherboardBuilder) Set motherboard color to {color}"); }
     }
 
     // UPDATE

@@ -1,21 +1,24 @@
 using UnityEngine;
-using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
+
 /// <summary>
 /// This class is used to give feedback to the player when they are pressing a key
 /// (on keyboard but also with gamepad in particular cases)
 /// </summary>
-public class KeyFeedback : InputFeedback
+public class KeyFeedback : InputImageFeedback
 {
 
     [Header("Key Feedback")]
     [SerializeField] protected string key_reference;
     [SerializeField] protected bool upper_case = false;
     [SerializeField] protected bool dark = false;
-    protected Vector2 text_movement = new Vector2(0f, -2f); // how much to move the text when pressed
     public bool UsingIcon = false; // whether the KF is using a text ("B", "X") or an icon (left icon, right icon, enter, ...)
+
+    [Header("Text Movement")]
+    // todo : would be better to calculate dynamically how much we need the text to go down
+    [SerializeField] protected Vector2 text_movement = new Vector2(0f, -2f); // how much to move the text when pressed
 
     [Header("Components")]
     [SerializeField] protected Image icon;

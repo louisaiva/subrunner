@@ -13,6 +13,8 @@ public class ItemBank : Singleton<ItemBank>
     public List<string> items_path = new List<string>() { "prefabs/items" };
     public Dictionary<string, Sprite> item_sprites = new Dictionary<string, Sprite>();
     public Dictionary<string, string> item_prefabs = new Dictionary<string, string>();
+    public List<string> item_custom_references = new List<string>();
+    public List<Sprite> item_custom_sprites = new List<Sprite>();
 
     [Header("UI Icons")]
     public List<Sprite> ui_icons = new List<Sprite>();
@@ -62,7 +64,7 @@ public class ItemBank : Singleton<ItemBank>
                 Item item = prefab.GetComponent<Item>();
                 if (item == null)
                 {
-                    if (debug) { Debug.LogWarning("(ItemBank) prefab " + prefab.name + " has no Item component, skipping it");}
+                    if (debug) { Debug.LogWarning("(ItemBank) prefab " + prefab.name + " has no Item component, skipping it"); }
                     continue;
                 }
                 string reference = item.Reference;
@@ -76,8 +78,11 @@ public class ItemBank : Singleton<ItemBank>
 
                 item_count++;
 
-                if (debug) { Debug.Log("(ItemBank) loaded item : " + reference +
-                        (reference == prefab.name ? "" : " (prefab name is " + prefab.name + ")")); }
+                if (debug)
+                {
+                    Debug.Log("(ItemBank) loaded item : " + reference +
+                        (reference == prefab.name ? "" : " (prefab name is " + prefab.name + ")"));
+                }
             }
         }
 
@@ -87,6 +92,32 @@ public class ItemBank : Singleton<ItemBank>
 
 
     // ITEM & MODULES GENERATOR
+    public Item CreateItem(string reference)
+    {
+        // on check si l'item existe
+        if (!item_prefabs.ContainsKey(reference))
+        {
+            Debug.LogError("(ItemBank) cannot find item prefab for " + reference
+                + ". are you sure its corresponding item prefab is in the " + items_path + " folder?");
+            return null;
+        }
+
+        // on instancie le prefab
+        string prefab_path = item_prefabs[reference];
+        GameObject item_go = Instantiate(Resources.Load<GameObject>(prefab_path), Vector3.zero, Quaternion.identity);
+
+        // on vérifie que c'est bien un item
+        Item item = item_go.GetComponent<Item>();
+        if (item == null)
+        {
+            Debug.LogError("(ItemBank) prefab " + prefab_path + " is not an Item");
+            Destroy(item_go);
+            return null;
+        }
+
+        if (debug) { Debug.Log("(ItemBank) Instanciating " + reference + " item prefab !!"); }
+        return item;
+    }
     public Module CreateModule(string reference)
     {
         // on check si le module existe
@@ -154,26 +185,24 @@ public class ItemBank : Singleton<ItemBank>
     // GETTERS
     public Sprite GetSprite(Item item)
     {
-        if (item.Reference.Contains("paper:"))
+        // we check in our item lists if we find a sprite for the corresponding ref
+        if (item_custom_references.Contains(item.Reference))
         {
-            return GetSprite("other:" + item.Skin);
+            int index = item_custom_references.IndexOf(item.Reference);
+            return item_custom_sprites[index];
         }
-        Sprite sprite = GetSprite(item.Reference);
-        if (sprite != null) { return sprite; }
+
+        // otherwise we check in the sprites we loaded at start from prefabs
+        if (item_sprites.ContainsKey(item.Reference)) { return item_sprites[item.Reference]; }
 
         // else the reference is not in the prefabs
         // we try to get the first sprite of the idle animation of the skin
-        sprite = AnimBank.Instance.GetDefaultSprite(item.Skin);
+        Sprite sprite = AnimBank.Instance.GetDefaultSprite(item.Skin);
         if (sprite != null) { return sprite; }
 
         Debug.LogError("(ItemBank) cannot find sprite " + item.Reference
                 + ". are you sure its corresponding item prefab is in the " + items_path + " folder?");
         return null;
-    }
-    public Sprite GetSprite(string item_reference)
-    {
-        if (!item_sprites.ContainsKey(item_reference)) { return null; }
-        return item_sprites[item_reference];
     }
     public Sprite GetUI_Icon(string icon_name)
     {
@@ -219,7 +248,7 @@ public class ItemBank : Singleton<ItemBank>
     // DEBUG
     private string getItemsList()
     {
-        string title = "ITEMS in the bank - Total ";
+        string title = "(ItemBank) ITEMS in the bank - Total ";
         string list = "";
         int count = 0;
         foreach (KeyValuePair<string, Sprite> item in item_sprites)

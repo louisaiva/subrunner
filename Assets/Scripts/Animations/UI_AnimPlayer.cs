@@ -16,6 +16,7 @@ public class UI_AnimPlayer : MonoBehaviour
     [Header("UI Related Parameters")]
     public bool resize_to_native_size = true;
     public bool play_on_start = true;
+    public bool always_loop = false;
     public bool unscaled_time = false;
 
     [Header("Components")]
@@ -87,10 +88,12 @@ public class UI_AnimPlayer : MonoBehaviour
         if (current_frame >= current_anim.sprites_durations.Length)
         {
             // if the animation is not looping, we stop it
-            if (!current_anim.loop)
+            if (!current_anim.loop && !always_loop)
             {
-                current_frame = -1;
                 if (log_frames) { Debug.Log($"(UI_AnimPlayer) Animation {current_anim.name} ended."); }
+                current_frame = -1;
+                current_capacity = "";
+                current_anim = null;
                 return;
             }
             // we loop the animation
@@ -107,7 +110,7 @@ public class UI_AnimPlayer : MonoBehaviour
 
 
     // PLAY ANIMATION
-    public Anim Play(string capacity,bool? loop_override=null)
+    public Anim Play(string capacity,bool? loop_override=null, float? duration_override = null)
     {
         // we get the animation from the bank
         string anim_name = skin + "." + capacity + "." + orientation;
@@ -122,6 +125,9 @@ public class UI_AnimPlayer : MonoBehaviour
                 ? ""
                 : " (" + anim_name + " was asked)")); }
 
+        // we check if the animation is not actually playing
+        if (current_anim != null && anim.name == current_anim.name) { return null; }
+
         // we check if we have a loop override
         if (loop_override != null)
         {
@@ -129,19 +135,20 @@ public class UI_AnimPlayer : MonoBehaviour
             anim.loop = (bool)loop_override;
         }
 
-        // we check if the animation is not actually playing
-        if (anim.name != current_anim.name)
+        // we check if the duration is overriden
+        if (duration_override == null) { anim.speed = 1f; }
+        else
         {
-            // we play the animation
-            play_now_at_frame(anim);
-
-            // we set the current capacity
-            current_capacity = capacity;
-            return anim;
+            // we calculate the resulting speed
+            anim.speed = anim.GetBaseDuration() / (float)duration_override;
         }
 
-        // we didn't play the animation so we return null
-        return null;
+        // we play the animation
+        play_now_at_frame(anim);
+
+        // we set the current capacity
+        current_capacity = capacity;
+        return anim;       
 
     }
     private void play_now_at_frame(Anim anim, int frame = 0)
@@ -216,4 +223,4 @@ public class UI_AnimPlayer : MonoBehaviour
                 Debug.Log(s);
             }
     }
-}
+} 

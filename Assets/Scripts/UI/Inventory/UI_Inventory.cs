@@ -1,17 +1,14 @@
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 /// <summary>
 /// UI_Inventory is the highest UI representation of the Inventory.
 /// it is never triggered directly, but is showed by the Capacities & updated by the Inventory.
 /// </summary>
 
-public class UI_Inventory : MonoBehaviour, I_UI_Slottable
+public class UI_Inventory : UI_Slottable
 {
+    [SerializeField] private bool log_get_slots = false;
 
     [Header("UI_Item Pools")]
     public List<UI_ItemPool> pools = new List<UI_ItemPool>();
@@ -19,10 +16,8 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
     [Header("Components")]
     public Inventory Inventory;
 
-    [Header("Logs")]
-    [SerializeField] protected bool log = false;
-
-    public void Init()
+    // INIT
+    public virtual void Init()
     {
         // we check if we have some pools, otherwise we set ourself as the pool
         if (pools.Count == 0)
@@ -77,51 +72,37 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
         }
     }
 
-    // SHOW / HIDE
-    public virtual async void Show()
-    {
-        gameObject.SetActive(true);
-        await Task.Yield(); // wait for the next frame to ensure the UI is active
-
-        
-        UI_XboxNavigator.Instance.Enable(this, true);
-    }
-    public virtual void Hide()
-    {
-        // we unhover all the slots
-        foreach (UI_ItemPool pool in pools)
-        {
-            foreach (Transform child in pool.transform)
-            {
-                UI_Item ui_item = child.GetComponent<UI_Item>();
-                if (ui_item == null) { continue; }
-                ui_item.OnPointerExit(null);
-            }
-        }
-
-        gameObject.SetActive(false);
-
-        UI_XboxNavigator.Instance.Disable(this);
-    }
-    public void Toggle()
-    {
-        // we check if the inventory is already shown
-        if (gameObject.activeSelf)
-        {
-            Hide();
-        }
-        else
-        {
-            Show();
-        }
-    }
-
     // GRAB
     public virtual bool UI_Grab(Item item)
     {
+
+        // if we have an UI_ItemPool called "shortcuts" then we check if we have any slots with the same item ref
+        UI_ItemPool shortcuts_pool = pools.Find(pool => pool.name == "shortcuts_pool");
+        if (shortcuts_pool != null && shortcuts_pool.CanStore(item) && shortcuts_pool.FullCount > 0)
+        {
+            // get the shortcuts slots
+            UI_Item[] shortcuts_slots = shortcuts_pool.GetFilledSlots().ToArray();
+            for (int i = 0; i < shortcuts_slots.Length; i++)
+            {
+                UI_Item ui_item = shortcuts_slots[i];
+
+                // we check if the item references match
+                if (ui_item.Item.Reference != item.Reference) { continue; }
+            
+                // we try to add the item to this slot
+                bool stored = ui_item.Store(item);
+                if (stored)
+                {
+                    if (log) { Debug.Log("(UI_Inventory) grabbed " + item.Reference + " in shortcut slot " + ui_item.name); }
+                    return true;
+                }
+            }
+        }
+
+
+        // we try to grab the item in every pool
         foreach (UI_ItemPool pool in pools)
         {
-            // we try to grab the item in the pool
             bool grabbed = pool.Grab(item);
             if (grabbed)
             {
@@ -161,17 +142,34 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 
         return false;
     }
+    public bool UI_Regrab(Item item)
+    {
+        // we try to drop the item AND directly after, grab it.
+        // if it is successful we don't even warn the Inventory about this, it is just pure black market
+        
+        bool dropped = UI_Drop(item);
+        if (!dropped) { Debug.LogError("(UI_Inventory) could not drop item " + item.Reference + " in " + name); return false; }
+
+        bool grabbed = UI_Grab(item);
+        if (grabbed) { if (log) { Debug.Log($"(UI_Inventory) successfully re-grabbed {item.Reference}"); } return true; }
+
+        // otherwise we can't grab the item ://
+        return false;
+    }
 
     // ITEM RULE
     public string ItemRule
     {
         get
         {
-            // todo concaten all pools' item rules
             if (pools.Count > 0)
             {
-                // we return the first pool's rule
-                return pools[0].item_rule;
+                string rules = "";
+                for (int i = 0; i < pools.Count; i++)
+                {
+                    rules += pools[i].item_rule + "|";
+                }
+                return rules.TrimEnd('|');
             }
             return "";
         }
@@ -181,26 +179,29 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
 
 
 
-
     // SLOTTABLE
-    public Action<InputAction.CallbackContext> CancelCallback => throw new NotImplementedException();
-    public List<GameObject> GetSlots(ref Vector2 base_position, ref float angle_threshold, ref float angle_multiplicator)
+    public override List<UI_Slot> GetSlots()
     {
-        if (log) { Debug.Log($"(UI_Inventory) {name} getting slots"); }
-        List<GameObject> slots = new List<GameObject>();
+        string debug_slots = "";
+
+        List<UI_Slot> slots = new List<UI_Slot>();
         Vector2 position = Vector2.negativeInfinity;
-        foreach (UI_ItemPool pool in pools)
+        for (int i=0; i< pools.Count; i++)
         {
-            foreach (Transform child in pool.transform)
+            debug_slots += $"-- pool {pools[i].name} -- \n";
+            UI_ItemPool pool = pools[i];
+            for (int j=0; j< pool.transform.childCount; j++)
             {
                 // we check if the ui_slot is enabled
+                Transform child = pool.transform.GetChild(j);
                 if (!child.gameObject.activeSelf) { continue; }
 
-                // we check if the slot is a UI_Item
-                UI_Item ui_item = child.GetComponent<UI_Item>();
-                if (ui_item == null) { continue; }
-
-                slots.Add(child.gameObject);
+                // we check if the slot is a UI_Slot
+                UI_Slot slot = child.GetComponent<UI_Slot>();
+                if (slot == null) { continue; }
+                if (slot.Disabled) { continue; }
+                slots.Add(slot);
+                debug_slots += $"    --> slot {slot.name} at position {child.position}\n";
 
                 // we update the position to the first slot
                 if (position == Vector2.negativeInfinity)
@@ -209,19 +210,28 @@ public class UI_Inventory : MonoBehaviour, I_UI_Slottable
                 }
             }
         }
+
+        // we concatenate the ui_slottable's slots
+        slots.AddRange(base.GetSlots());
+
+        if (log_get_slots) { Debug.Log($"(UI_Inventory) {name} getting slots : {slots.Count} slots\n" + debug_slots); }
+
         return slots;
     }
-    public bool IsYourSlot(GameObject slot)
+    public override bool IsYourSlot(UI_Slot slot)
     {
+        if (base.IsYourSlot(slot)) { return true; }
+
         // we check if the slot is in the inventory
-        foreach (UI_ItemPool pool in pools)
+        for (int i = 0; i < pools.Count; i++)
         {
-            foreach (Transform child in pool.transform)
+            UI_ItemPool pool = pools[i];
+            for (int j = 0; j < pool.transform.childCount; j++)
             {
-                if (child.gameObject == slot) { return true; }
+                Transform child = pool.transform.GetChild(j);
+                if (child.GetComponent<UI_Slot>() == slot) { return true; }
             }
         }
         return false;
     }
-    public Vector2 SavedPosition { get => new Vector2(0f, Screen.height); }
 }

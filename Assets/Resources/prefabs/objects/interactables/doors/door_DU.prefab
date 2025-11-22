@@ -382,6 +382,8 @@ MonoBehaviour:
   shadow_caster: {fileID: 0}
   room1: {fileID: 0}
   room2: {fileID: 0}
+  closed_interact_kf_y: {x: 2.25, y: 1.25}
+  opened_interact_kf_y: {x: 0.9, y: -0.4}
 --- !u!114 &4043415612135997435
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -610,6 +612,14 @@ PrefabInstance:
     - target: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6378803932534245458, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6378803932534245458, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 2.25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

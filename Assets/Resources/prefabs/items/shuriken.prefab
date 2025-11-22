@@ -107,9 +107,11 @@ MonoBehaviour:
   random_damage_modifier_at_start: 0
   IsAttacking: 0
   hit_enemies: []
-  not_attackable_tags: []
+  base_excluded_tags: []
   single_hit: 0
   perforant_attack: 1
+  attack_duration: 0
+  attack_duration_random_variation: 0
   knockback_base: 500
   attackant_advantage: 10
   base_attack_shake_magnitude: 0.5
@@ -173,6 +175,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -194,6 +198,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
@@ -257,17 +262,17 @@ MonoBehaviour:
   update_each_frame: 1
   anim_capacity_priorities:
   - priority: 0
+    capacity_playing: 
     capacities:
     - idle
     lock_orientation: 0
     one_shot: 0
-    capacity_playing: 
   - priority: 1
+    capacity_playing: 
     capacities:
     - hover
     lock_orientation: 0
     one_shot: 0
-    capacity_playing: 
   log: 0
   log_orientation: 0
   log_advanced: 0
@@ -295,6 +300,7 @@ MonoBehaviour:
   debug: 0
   activate_all_capacities_logs_on_awake: 0
   debug_velocity: 0
+  log_avoidance: 0
   rb: {fileID: 4604390373980000295}
   weight: 1
   random_weight_modifier_at_start: 0
@@ -303,10 +309,12 @@ MonoBehaviour:
   input_speed: 0
   Velocity: {x: 0, y: 0}
   feet_collider: {fileID: 5011315919855655935}
-  Reference: weapon:shuriken
+  _reference: weapon:shuriken
+  Color: {r: 0.57254905, g: 0.654902, b: 0.68235296, a: 1}
   MaxQty: 4
   ItemDescription: weird mix between a gear n a shuriken,/. maybe it is both ?/l
     *looks sharp*
+  Placed: 0
   throw_force_magnitude: 800
   shuriken_particle: {fileID: 4891524088592280739}
   current_speed: 10
@@ -5114,6 +5122,8 @@ ParticleSystemRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5136,6 +5146,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -31225397
   m_SortingLayer: 2
   m_SortingOrder: 1
@@ -5289,6 +5300,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6378803932534245458, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
+      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -15,13 +15,15 @@ public class EndlessInput<T> where T : struct
     // event
     public event Action<T> OnHold; // triggered once the threshold is completed
     public event Action<T> OnEndless; // triggered each time the input is repeated while holding
+    public event System.Action OnResetted; // triggered once, when the input is released
+    public event Action<InputAction.CallbackContext> OnStarted; // triggered once, when the input is first pressed
 
 
     // timers
     // WaitForSecondsRealtime wait_threshold_unscaled; // can't cache real time bcz it's creating bugs when timescale changes
     // WaitForSecondsRealtime wait_repeat_unscaled;
-    WaitForSeconds wait_threshold;
-    WaitForSeconds wait_repeat;
+    private WaitForSeconds wait_threshold;
+    private WaitForSeconds wait_repeat;
 
     // timers help
     float threshold_time = 0f;
@@ -32,7 +34,14 @@ public class EndlessInput<T> where T : struct
     {
         this.name = name;
         // action.started += OnInput;
-        action.canceled += OnCanceled;
+        if (typeof(T) == typeof(float))
+        {
+            action.canceled += OnCanceled;
+        }
+        else if (typeof(T) == typeof(Vector2))
+        {
+            action.performed += cancel_if_below_threshold;
+        }
 
         // setup timers
         this.unscaled_time = unscaled_time;
@@ -49,6 +58,7 @@ public class EndlessInput<T> where T : struct
     {
         if (holdCoroutine != null) { return; } // already started
         holdCoroutine = InputManager.Instance.StartInputCoroutine(HoldInputCoroutine(context));
+        OnStarted?.Invoke(context);
     }
     private void OnCanceled(InputAction.CallbackContext context)
     {
@@ -58,8 +68,25 @@ public class EndlessInput<T> where T : struct
         waiting = false;
         holding = false;
         holdCoroutine = null;
-    }
 
+        OnResetted?.Invoke();
+    }
+    private void cancel_if_below_threshold(InputAction.CallbackContext context)
+    {
+        if (context.ReadValue<Vector2>().magnitude > 0.5f) { return; }
+        OnCanceled(context);
+    }
+    public void Cancel()
+    {
+        if (holdCoroutine == null) { return; } // not started
+
+        InputManager.Instance.StopInputCoroutine(holdCoroutine);
+        waiting = false;
+        holding = false;
+        holdCoroutine = null;
+
+        OnResetted?.Invoke();
+    }
 
     // HOLDING COROUTINE
     private IEnumerator HoldInputCoroutine(InputAction.CallbackContext context)
@@ -75,6 +102,8 @@ public class EndlessInput<T> where T : struct
         holding = true;
         while (holding)
         {
+            if (repeat_time < 0f) { yield return null; continue; } // we don't invoke on endless, we just wait for holding to pass false
+
             OnEndless?.Invoke(context.ReadValue<T>());
             yield return unscaled_time ? new WaitForSecondsRealtime(repeat_time) : wait_repeat;
         }
@@ -83,4 +112,9 @@ public class EndlessInput<T> where T : struct
         OnCanceled(context);
     }
 
+    // GETTERS
+    public bool IsInputDown()
+    {
+        return waiting || holding;
+    }
 }

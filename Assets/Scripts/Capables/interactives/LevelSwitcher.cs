@@ -45,7 +45,7 @@ public class LevelSwitcher : Capable, Interactable
 
     // INTERACTABLE
     public InteractCapacity Interactor { get; set; }
-    public bool AuthorizeEndlessInteraction => false;
+    public InteractType InteractionType { get { return InteractType.Other; } }
     public void OnInteract(Capable interactor)
     {
         // we set the interactor

@@ -1,11 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class UI_Hacking : UI_Pool
 {
-    public bool log_enabling = false;
+    // public bool log_enabling = false;
 
-    public override bool Available
+    /* public override bool Available
     {
         get
         {
@@ -14,45 +15,54 @@ public class UI_Hacking : UI_Pool
             if (UI_LaptopItemSlot.Instance == null || !UI_LaptopItemSlot.Instance.HasLaptop) { return false; }
             return true;
         }
-    }
+    } */
 
-    [Header("Transition parameters")]
-    public float final_timescale = 0.5f;
-    public float bg_final_alpha = 0.5f;
+    // [Header("Transition parameters")]
+    // public float final_timescale = 0.5f;
+    // public float bg_final_alpha = 0.5f;
 
-
-    // SHOW / HIDE
-    protected override async Awaitable show_pool(float duration, List<GameObject> dont_show = null)
+    // START
+    /* private void Start()
     {
-        if (log_enabling) { Debug.Log("(UI_Hacking) trying to show_pool"); }
+        // on met le callback de pour afficher ui_hacking
+        Perso.Instance.OnDeviceGranted += HandleDeviceGranted;
+        Perso.Instance.OnDeviceRemoved += HandleDeviceRemoved;
+    } */
 
-        await base.show_pool(duration, dont_show);
-
-        if (log_enabling) { Debug.Log("(UI_Hacking) pool showed, trying to enable navigators"); }
-
-        // we enable HackableNavigator
-        Controller.Instance.HackableNavigator.Enable();
-        if (log_enabling) { Debug.Log("(UI_Hacking) hackable navigator enabled"); }
-
-        // Controller.Instance.ExploitNavigator.Enable();
-        if (log_enabling) { Debug.Log("(UI_Hacking) exploit navigator enabled"); }
-
-        if (log_enabling) { Debug.Log("(UI_Hacking) showing pool : navigator enabled & callbacks set"); }
-    }
-    protected override async Awaitable hide_pool(float duration, List<GameObject> dont_hide = null)
+    // ON PERSO DEVICE CHANGED
+    /* private void HandlePersoDeviceChanged(Device new_device)
     {
-        if (log_enabling) { Debug.Log("(UI_Hacking) trying to hide_pool"); }
+        if (new_device == null)
+        {
+            // on cache hacking
+            UI_Manager.Instance.UnstackFromHUD("hacking");
+            return;
+        }
 
-        // we disable navigator
-        Controller.Instance.HackableNavigator.Disable();
-        if (log_enabling) { Debug.Log("(UI_Hacking) hackable navigator disabled"); }
-        // Controller.Instance.ExploitNavigator.Disable();
-        if (log_enabling) { Debug.Log("(UI_Hacking) exploit navigator disabled"); }
+        // on affiche hacking
+        UI_Manager.Instance.StackOnHUD("hacking");
+    }
+    */
+   
+    // DEVICE
+    public void HandleDeviceRemoved(Device old_device)
+    {
+        // on cache hacking
+        UI_Manager.Instance.UnstackFromHUD("hacking", override_transition: true);
 
-        // if (log_enabling) { Debug.Log("(UI_Hacking) navigator disabled"); }
+        // ! todo gaffe pcq vu que le UI_Manager n'autorise pas les transitions quand y'en a déjà une en cours,
+        // todo bah ça risque de bug quand on passe d'un laptop à un computer et qu'on se trouve dans le hud
+        // todo (pour le moment ça pose pas de pb vu qu'on passe tt le temps par l'inventaire ou alors c'est juste recup un laptop)
 
-        await base.hide_pool(duration, dont_hide);
-
-        if (log_enabling) { Debug.Log("(UI_Hacking) hiding pool : navigator disabled & callbacks removed"); }
+        // todo : update, j'ai mis un parametre override transition par contre ça peut casser les transitions d'avant,
+        // todo : et donc laisser des ui_pool partiellement affichées
+        // ex si on level up et que 0.1s plus tard on meurt alors game over va s'afficher MAIS va interrompre
+        // la coroutine du level up ce qui ne l'arrete pas proprement et donc level_up_ui_pool.show_coroutine va se terminer proprement,
+        // mais UI_Manager aura oublié que lvl up est affiché
+    }
+    public void HandleDeviceGranted(Device new_device)
+    {
+        // on affiche hacking
+        UI_Manager.Instance.StackOnHUD("hacking", override_transition: true);
     }
 }

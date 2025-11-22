@@ -2,7 +2,11 @@ using UnityEngine;
 
 public interface Hacker
 {
-    // this interface is mainly for being that can carry a laptop
-    public Laptop Laptop { get; }
-    // public Color HackColor { get; }
+    // this interface is for capables that can carry a laptop and or interact with computers
+    // it then has a device
+    public Laptop Laptop { get; set; }
+    public Computer Computer { get; set; }
+    public Device Device { get; }
+    public System.Action<Device> OnDeviceRemoved { get; }
+    public System.Action<Device> OnDeviceGranted { get; }
 }
