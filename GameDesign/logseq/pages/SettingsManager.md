@@ -18,6 +18,10 @@
 	- ### gameplay
 	- ### inputs
 	- ### ui
+		- toggle #UI_Notif
+		- toggle menus IF
+		- toggle interact IF
+		- toggle HUD IF
 	- ### audio
 	-
 	-

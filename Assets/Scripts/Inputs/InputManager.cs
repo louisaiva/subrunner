@@ -18,7 +18,8 @@ public class InputManager : MonoBehaviour
     [SerializeField] public float JOYSTICK_MAX_THRESHOLD = 0.95f;
     [SerializeField] public float BUTTON_MIN_THRESHOLD = 0.2f;
     [SerializeField] public float BUTTON_MAX_THRESHOLD = 0.8f;
-    // [SerializeField] public float MOUSE_DELTA_MIN_THRESHOLD = 5f;
+    [SerializeField] public float MOUSE_DELTA_MIN_THRESHOLD = 5f;
+    public float MOUSE_DELTA_BIG_THRESHOLD = 15f;
 
     [Header("Inputing endlessly")]
     [SerializeField] public float BUTTON_ENDLESSLY_SHORT_THRESHOLD = 0.3f; // time threshold input need to be maintain before inputing endlessly

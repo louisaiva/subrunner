@@ -55,32 +55,8 @@ public class PostProcessManager : MonoBehaviour
 
 
     [Header("Tweens")]
-    private Tween? chroma_tween = null;
     private Tween? bloom_tween = null;
-    public async Awaitable TransitionChroma(float chroma, float duration = 0.2f)
-    {
-        // checks if already tweening we stop it
-        if (chroma_tween != null && chroma_tween.Value.isAlive) { chroma_tween.Value.Stop(); }
-
-        // checks if same value
-        if (chromatic_aberration.intensity.value == chroma) { return; }
-
-        // checks null duration
-        if (duration <= 0f)
-        {
-            chromatic_aberration.intensity.Override(chroma);
-            return;
-        }
-
-        // tweening
-        chroma_tween = Tween.Custom(chromatic_aberration.intensity.value,
-                        chroma,
-                        duration: duration,
-                        useUnscaledTime: true,
-                        onValueChange: ctx => chromatic_aberration.intensity.Override(ctx));
-        while (chroma_tween.Value.isAlive) { await Task.Yield(); }
-        chroma_tween = null;
-    }
+    
     public async Awaitable TransitionBloom(float bloom_target, float duration = 0.2f)
     {
         // checks if already tweening we stop it
@@ -105,14 +81,7 @@ public class PostProcessManager : MonoBehaviour
         while (bloom_tween.Value.isAlive) { await Task.Yield(); }
         bloom_tween = null;
     }
-    public float Chroma
-    {
-        get
-        {
-            if (chromatic_aberration == null) { return 0f; }
-            return chromatic_aberration.intensity.value;
-        }
-    }
+    
     public float Bloom
     {
         get
@@ -126,14 +95,78 @@ public class PostProcessManager : MonoBehaviour
         tonemapping.mode.Override(aces ? TonemappingMode.ACES : TonemappingMode.None);
     }
 
+
+
+    // CHROMA
+    private Tween? chroma_tween = null;
+
+    public float Chroma
+    {
+        get
+        {
+            if (chromatic_aberration == null) { return 0f; }
+            return chromatic_aberration.intensity.value;
+        }
+    }
+    public async Awaitable TransitionChroma(float chroma, float duration = 0.2f)
+    {
+        // checks if already tweening we stop it
+        if (chroma_tween != null && chroma_tween.Value.isAlive) { chroma_tween.Value.Stop(); }
+
+        chroma += calculate_perso_additive_chroma();
+
+        // checks if same value
+        if (chromatic_aberration.intensity.value == chroma) { return; }
+
+        // checks null duration
+        if (duration <= 0f)
+        {
+            chromatic_aberration.intensity.Override(chroma);
+            return;
+        }
+
+        // tweening
+        chroma_tween = Tween.Custom(chromatic_aberration.intensity.value,
+                        chroma,
+                        duration: duration,
+                        useUnscaledTime: true,
+                        onValueChange: ctx => chromatic_aberration.intensity.Override(ctx));
+        while (chroma_tween.Value.isAlive) { await Task.Yield(); }
+    }
+
+    // BASE CHROMA (different than chroma because this is based on scene + perso life percentage)
+    private float calculate_perso_additive_chroma()
+    {
+        // checks if we don't have a Perso.Instance it is null
+        if (Perso.Instance == null) { return 0f; }
+
+        // on calcule le chroma en fonction de la vie du perso
+        float life = Perso.Instance.LifePourcent;
+        if (life >= 0.5f) { return 0f; } // pas de chroma si on est au dessus de 50% de vie
+        // chroma = -life + 0.5 -> bcz when life = 0 we want to have chroma = 0.5
+        return -life + 0.5f; 
+    }
+    public void UpdateChroma()
+    {
+        if (chroma_tween != null && chroma_tween.Value.isAlive) { return; } // on ne met à jour le chroma que si on n'est pas en train de le tween
+        float target_chroma = GetDefaultChroma() + calculate_perso_additive_chroma();
+        chromatic_aberration.intensity.Override(target_chroma);
+    }
+
+
     // GET DEFAULT SCENE SETTINGS
     private bool title_screen => SceneManager.GetActiveScene().name == "subrunner-title-screen";
+    private bool clean_scene => SceneManager.GetActiveScene().name == "subrunner-clean";
     public float GetDefaultChroma()
     {
         Scene scene = SceneManager.GetActiveScene();
         foreach (var s in scenes_base_settings)
         {
             if (s.scene_name != scene.name) { continue; }
+            if (scene.name == "subrunner-clean")
+            {
+                // on return chroma
+            }
             return s.chromatic_aberration_intensity;
         }
         return 0f;

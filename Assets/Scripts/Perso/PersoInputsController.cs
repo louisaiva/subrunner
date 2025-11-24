@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static PlayerInputActions;
@@ -22,6 +19,8 @@ public class PersoInputsController : InputController
     private event Action<InputAction.CallbackContext> attackCallback;
     private event Action<InputAction.CallbackContext> hackCallback;
     private event Action<InputAction.CallbackContext> select_hackableCallback;
+    private event Action<InputAction.CallbackContext> hackMouseCallback;
+    private event Action<InputAction.CallbackContext> exploitMouseCallback;
     private event Action<InputAction.CallbackContext> talkCallback;
     private event Action<InputAction.CallbackContext> useConso1Callback;
     private event Action<InputAction.CallbackContext> useConso2Callback;
@@ -32,6 +31,10 @@ public class PersoInputsController : InputController
     [Header("Components")]
     public HackableNavigator HackableNavigator { get; private set; }
     public ExploitNavigator ExploitNavigator { get; private set; }
+
+    [Header("Settings")]
+    private Setting hack_mouse_post_sensitivity_setting;
+    private Setting hack_mouse_pre_sensitivity_setting;
 
     private void Start()
     {
@@ -49,6 +52,11 @@ public class PersoInputsController : InputController
                 repeat: InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY,
                 unscaled_time: false))
                 .OnEndless += ctx => OnInteract(true); // ajoute le callback directement
+
+
+        // on récupère les settings
+        hack_mouse_post_sensitivity_setting = SettingsManager.Instance.GetSetting("hack_mouse_post_sensitivity");
+        hack_mouse_pre_sensitivity_setting = SettingsManager.Instance.GetSetting("hack_mouse_pre_sensitivity");
     }
 
     // INPUTS
@@ -75,6 +83,8 @@ public class PersoInputsController : InputController
 
         // ici c les inputs qui ont pas besoin d'hold input
         hackCallback = ctx => HandleRunHackInput(ctx);
+        hackMouseCallback = ctx => handle_mouse_hack_selection(ctx);
+        exploitMouseCallback = ctx => handle_exploit_wheel_mouse(ctx);
 
         // ensuite les callbacks statiques (ne se désactivent pas quand )
         // perso_inputs.select_hackable.performed += ctx => { handle_select_hack_target_input(ctx.ReadValue<Vector2>()); };
@@ -94,6 +104,8 @@ public class PersoInputsController : InputController
         perso_inputs.conso4.performed += useConso4Callback;
         perso_inputs.interact.performed += interactCallback;
         perso_inputs.select_hackable.performed += select_hackableCallback;
+        perso_inputs.mouse_hack.performed += hackMouseCallback;
+        perso_inputs.exploit_wheel_mouse.performed += exploitMouseCallback;
 
         InputsDisabled = false;
     }
@@ -109,10 +121,11 @@ public class PersoInputsController : InputController
         perso_inputs.conso4.performed -= useConso4Callback;
         perso_inputs.interact.performed -= interactCallback;
         perso_inputs.select_hackable.performed -= select_hackableCallback;
+        perso_inputs.mouse_hack.performed -= hackMouseCallback;
+        perso_inputs.exploit_wheel_mouse.performed -= exploitMouseCallback;
 
         InputsDisabled = true;
     }
-
     private void OnDestroy()
     {
         DisableInputs();
@@ -224,7 +237,6 @@ public class PersoInputsController : InputController
         conso.Use(Capable);
     }
 
-
     // INTERACT
     public void HandleInteractInput(InputAction.CallbackContext context)
     {
@@ -292,10 +304,72 @@ public class PersoInputsController : InputController
             return;
         }
 
+        select_hack(input);
+    }
+    private void select_hack(Vector2 direction)
+    {
         // if we are not on the hud we don't hack
         if (!UI_Manager.Instance.IsOnHUD()) { HackableNavigator.Disable(); return; }
 
+        // show the input
+        Debug.Log("(PersoInputsController) selecting hack target : magnitude is " + direction.magnitude + " / direction is " + direction.normalized);
+
         HackableNavigator.Enable();
-        HackableNavigator.HandleHackNavigationInput(input);
+        HackableNavigator.HandleHackNavigationInput(direction);
+    }
+
+
+    // MOUSE HACKING INPUTS
+    public void handle_mouse_hack_selection(InputAction.CallbackContext context)
+    {
+        if (Perso.Instance.Device == null) { HackableNavigator.Disable(); return; }
+        
+        // checks if we are releasing the right button while connected to a target -> we run the hack
+        if (Input.GetMouseButtonUp(1) && Controller.Instance.HackableNavigator.IsConnected) { OnHack(); return; }
+
+        // else if we are not downing the right button we are not selecting a hack target anymore
+        if (!Input.GetMouseButton(1))
+        {
+            HackableNavigator.Disable();
+            return;
+        }
+
+        // get the direction
+        Vector2 direction = calculate_mouse_direction();
+
+        // finally we select the target
+        select_hack(direction);
+    }
+    private void handle_exploit_wheel_mouse(InputAction.CallbackContext context)
+    {
+        // checks if we are pressing the middle button & have a device
+        if (!Input.GetMouseButton(2) || Perso.Instance.Device == null)
+        {
+            ExploitNavigator.HandleExploitWheelInput(0f);
+            Cursor.visible = true;
+            return;
+        }
+
+        // check if we just clicked mid button
+        if (Input.GetMouseButtonDown(2))
+        {
+            Cursor.visible = false;
+            ExploitNavigator.HandleExploitWheelInput(1f);
+            return;
+        }
+
+        // else we are holding & moving the mid button -> we check the threshold
+        if (context.valueType != typeof(Vector2)) { return; }
+        if (context.ReadValue<Vector2>().magnitude < InputManager.Instance.MOUSE_DELTA_BIG_THRESHOLD) { return; }
+
+        // we transmit the delta position to UI_ExploitSelector
+        UI_ExploitSelector exploit_selector = UI_Manager.Instance.GetPool("exploit_wheel").GetComponent<UI_ExploitSelector>();
+        exploit_selector.HandleSelectionInput(context.ReadValue<Vector2>().normalized);
+    }
+    private Vector2 calculate_mouse_direction()
+    {
+        Vector2 mouse_position = Mouse.current.position.ReadValue();
+        Vector2 distance = Camera.main.ScreenToWorldPoint(mouse_position) - Controller.Instance.Capable.transform.position;
+        return distance.normalized;
     }
 }

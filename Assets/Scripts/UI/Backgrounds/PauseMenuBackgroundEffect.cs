@@ -16,17 +16,9 @@ public class PauseMenuBackgroundEffect : MonoBehaviour
     [SerializeField] protected Image bg;
     [SerializeField] protected Vector2Int bg_alpha_range = new Vector2Int(0, 245);
 
-    // [Header("Post Process Effects")]
-    // [SerializeField] private Bloom bloom;
-    // [SerializeField] private ChromaticAberration chromatic_aberration;
-
     // START
     private void Start()
     {
-        // var postProcessVolume = PostProcessManager.Instance.Volume;
-        // postProcessVolume.profile.TryGet(out bloom);
-        // postProcessVolume.profile.TryGet(out chromatic_aberration);
-
         // on set le bg alpha
         if (bg == null) { return; }
         bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, 0f);
@@ -43,21 +35,16 @@ public class PauseMenuBackgroundEffect : MonoBehaviour
             end_alpha = override_final_alpha;
         }
 
+        // checks duration
+        if (duration <= 0f)
+        {
+            bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, end_alpha);
+            return;
+        }
+
+        // tween
         await Tween.Custom(start_alpha, end_alpha, duration: duration,
                 onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx), useUnscaledTime: true);
-
-        /* if (show)
-        {
-            ActivateEffect(duration);
-            await Tween.Custom(bg_alpha_range.x / 255f, bg_alpha_range.y / 255f, duration: duration,
-                onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx), useUnscaledTime: true);
-        }
-        else
-        {
-            DisableEffect(duration);
-            await Tween.Custom(bg_alpha_range.y / 255f, bg_alpha_range.x / 255f, duration: duration,
-                onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx), useUnscaledTime: true);
-        } */
     }
     
     public float Alpha => bg.color.a;

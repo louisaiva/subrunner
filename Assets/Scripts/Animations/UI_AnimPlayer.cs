@@ -230,4 +230,11 @@ public class UI_AnimPlayer : MonoBehaviour
                 Debug.Log(s);
             }
     }
-} 
+
+
+    // GETTERS
+    public bool IsPlayingCapacity(string capacity)
+    {
+        return current_capacity == capacity && IsPlaying;
+    }
+}

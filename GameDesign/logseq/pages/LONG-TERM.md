@@ -1,0 +1,9 @@
+- TODO title screen quand on est afk ça cache la pool home
+- TODO mettre un callback sur le HIC qui permet d'activer plus vite que prévu la pool home ? comme ça on peut delay légèrement l'affichage de la pool home si besoin est
+-
+-
+-
+-
+- TODO long term : faire des lunettes qui, quand tu les active tu passe en mode god controller ce qui veut dire que tu controles directement la position du controller via le L joy et ensuite quand tu survoles un being ou un capable tu es attiré par lui donc tu peux "lock" la position ce qui fait que la caméra le suit (pas forcément le controlle, mais ça peut etre marrant aussi) et tous les inputs sont désactivés, on peut quitter ce mode via B
+- TODO long term, easter egg : faire un ordi avec un fond d'écran "godot is better"
+-

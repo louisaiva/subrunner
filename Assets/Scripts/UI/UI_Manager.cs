@@ -202,11 +202,7 @@ public class UI_Manager : Singleton<UI_Manager>
 
         if (log) { Debug.Log($"(UI_Manager) switching : {(current_pool?.Reference ?? " / ")} -> {pool.Reference} (duration : " + duration + ")"); }
 
-        // we transition to the right bg/timescale/effect
-        /* if (Time.timeScale != pool.Settings.TimeScale) { TransitionTimeScale(pool.Settings.TimeScale, duration); }
-        if (bg.Alpha != pool.Settings.BackgroundAlpha) { TransitionBackground(pool.Settings.BackgroundAlpha, duration); }
-        if (bg.Chroma != pool.Settings.ChromaticAberration) { bg.TransitionChroma(pool.Settings.ChromaticAberration, duration); }
-        if (bg.Bloom != pool.Settings.Bloom) { bg.TransitionChroma(chroma, duration); } */
+        // transition effects
         TransitionEffects(pool.Settings, duration);
 
         // we hide all stacked pool except last one (which is the current one)
@@ -356,15 +352,10 @@ public class UI_Manager : Singleton<UI_Manager>
         duration += pool.Settings.Duration;
 
         // we get the common elements between the two pools
-        // List<GameObject> same_pool_elements = get_common_elements(current_pool, pool);
-
         if (log) { Debug.Log($"(UI_Manager) stacking : {PoolStack} -> {PoolStack + "/" + pool.Reference} (duration : " + duration + ")"); }
 
 
-        // we transition to the right bg/timescale/effect
-        // if (Time.timeScale != pool.Settings.TimeScale) { TransitionTimeScale(pool.Settings.TimeScale, duration); }
-        // if (bg.Alpha != pool.Settings.BackgroundAlpha) { TransitionBackground(pool.Settings.BackgroundAlpha, duration); }
-        // if (bg.Chroma != pool.Settings.ChromaticAberration) { TransitionChroma(pool.Settings.ChromaticAberration, duration); }
+        // we transition the effects
         TransitionEffects(pool.Settings, duration);
 
         // we hide the current pool

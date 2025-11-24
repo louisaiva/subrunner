@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 
@@ -82,6 +83,10 @@ public class UI_Title : MonoBehaviour
         yield return null; // wait one frame to be sure that the manager took the home_appearance_duration value
         home.Settings.Duration = old_transition_duration;
         while (player.IsPlaying) { yield return null; }
+
+        // once appear is done, we auto switch the charac switcher (si it won't only play the cat)
+        CharacterSwitcher switcher = SceneLoader.Instance.CharacOrienter.GetComponent<CharacterSwitcher>();
+        switcher.AutoSwitchFromNow();
 
         // we launch the loop coroutine
         yield return loop_coroutine();

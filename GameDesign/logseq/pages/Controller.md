@@ -1,12 +1,18 @@
 ### Singleton
 - Fait le lien entre les **Inputs** du #InputManager et le #Capable qu'on controle actuellement
 - en gros c'est un peu notre âme quoi, on peut la transférer d'un #Capable à l'autre et c'est ce qui nous permet de nous déplacer etc quand on contrôle le #Perso ou un #Being
+- pour le moment c'est un enfant du #Capable contrôlé. est détruit à chaque fois qu'on meurt
+-
+- ### est-ce que ça serait pas mieux de le mettre sur "scene" (new "utils") ?
+	- +1 parce que le controller doit rester le même même si notre perso meurt
+	- +1 ça facilite le dev unity
+	- +1 ça change pas grand chose à part régler des callbacks certainement
 -
 -
 - TODO est -ce qu'il serait intéressant d'avoir un "base_capable" qui n'est pas obligatoirement notre perso, et qui serait le capable qu'on va suivre et notamment qui va hacker des trucs avec son #Device . Pour le moment c'est statique c'est #Perso.
 - TODO quand on controle un autre capable que le perso, comment gère t on :
 	- -> l'inventaire ??? est-ce qu'on affiche celui du perso tjrs ? ou pas ?
-	- -> les shortcuts renderer ?? est-ce qu'on en affiche ?
+	- -> les shortcuts hud renderer ?? est-ce qu'on en affiche ?
 	- -> le hacking ?? est-ce qu'on utilise seulement la #HackCapacity du #Device du #Perso ? ou alors est-ce qu'on peut utiliser par exemple les #Core du #Device controllé ???
 -
 -

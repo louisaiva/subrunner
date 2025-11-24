@@ -261,6 +261,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51c286d4ece8f7949991c1c9393ab4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  first_skin: cat
+  first_capacity: idle
+  nb_loops_first_anim: 2
   skins:
   - cat
   - perso
@@ -1468,8 +1471,8 @@ MonoBehaviour:
   - {fileID: 935571162}
   - {fileID: 1546453844}
   - {fileID: 1219918554}
-  log: 1
-  log_elements_showing: 1
+  log: 0
+  log_elements_showing: 0
   slottable: {fileID: 509150605}
   use_ingame_drop: 0
 --- !u!114 &509150605

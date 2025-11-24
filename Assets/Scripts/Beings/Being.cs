@@ -10,6 +10,7 @@ public class Being : Movable
     [SerializeField] private int random_life_modifier_at_start = 0; // max_life += random.range(-5,5) in the start method if this modifier = 5
 
     public bool Alive { get { return life > 0f; } }
+    public float LifePourcent { get { return life / (float)max_life; } }
     public float regen_life = 0f; // en point de life par seconde
     public Collider2D body_collider;
     public int body_meats = 1; // nombre de viande dans le corps du being
@@ -81,7 +82,8 @@ public class Being : Movable
         // life regen
         if (HasEffect(Effect.RegenLife) && life < max_life)
         {
-            life += regen_life * Time.deltaTime;
+            // life += regen_life * Time.deltaTime;
+            AddLife(regen_life * Time.deltaTime);
         }
 
         // Invisible
@@ -225,7 +227,7 @@ public class Being : Movable
 
 
     // SETTERS
-    public void AddLife(float life)
+    public virtual void AddLife(float life)
     {
         this.life += life;
         if (this.life > max_life)

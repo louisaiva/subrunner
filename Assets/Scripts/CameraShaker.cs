@@ -79,6 +79,7 @@ public class CameraShaker : Singleton<CameraShaker>
 		if (magnitude <= 0f)
 		{
 			if (log) { Debug.Log("(CameraShaker) tried to shake the screen with " + magnitude + " magnitude, but it was too low"); }
+			PostProcessManager.Instance.UpdateChroma();
 			return;
 		}
 		magnitude = Mathf.Clamp(magnitude, 0f, 4f);
@@ -91,7 +92,7 @@ public class CameraShaker : Singleton<CameraShaker>
 		// "shake" the chroma effect if the magnitude is > chroma_magnitude_threshold
 		float chroma_threshold = chroma_magnitude_threshold * base_shake_magnitude;
 		if (log) { Debug.Log("(CameraShaker) shaked the screen with " + magnitude + $" magnitude (chroma threshold is {chroma_threshold})");}
-		if (magnitude < chroma_threshold) { return; }
+		if (magnitude < chroma_threshold) { PostProcessManager.Instance.UpdateChroma(); return; } // update chroma based on perso's life if the threshold is not meet
 		
 		// we "shake" the chromatic aberration
 		PostProcessManager.Instance.TransitionChroma(1f, duration:0f);

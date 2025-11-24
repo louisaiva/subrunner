@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using static PlayerInputActions;
 
 public class Perso : Being, Hacker
 {
@@ -339,6 +336,16 @@ public class Perso : Being, Hacker
 
         // on affiche un texte de level up
         floating_dmg_provider.GetComponent<TextManager>().addFloatingText("LEVEL " + level.ToString(), transform.position + new Vector3(0, 0.5f, 0), "yellow");
+    }
+
+    // HEAL
+    public override void AddLife(float life)
+    {
+        base.AddLife(life);
+
+        // si on est sur le hud, on met à jour le chroma du PostProcessManager
+        if (!UI_Manager.Instance.IsOnHUD()) { return; }
+        PostProcessManager.Instance.UpdateChroma();
     }
 
     // DAMAGE

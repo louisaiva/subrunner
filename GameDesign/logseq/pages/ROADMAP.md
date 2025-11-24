@@ -9,7 +9,6 @@
 		- starts with pasta cinematic
 		- finish with nobody's boss fight
 	-
-	-
 	- ## todo
 		- TODO implement cinematics system
 			- TODO make 2 start cinematic
@@ -47,5 +46,6 @@
 			- DONE on ferme l'ui via activation d'un [[UI_CancelButton]]
 		-
 		- DONE create a #SettingsManager
+		- DONE rework title screen
 -
 -

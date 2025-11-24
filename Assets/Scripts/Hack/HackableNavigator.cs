@@ -13,6 +13,7 @@ public class HackableNavigator : MonoBehaviour
 {
 
     public bool IsSelecting = false;
+    public bool IsConnected => targeted_connector != null;
 
     [Header("Hackables selection")]
     [SerializeField] private GameObject targeted_connector;
@@ -204,9 +205,6 @@ public class HackableNavigator : MonoBehaviour
     // TARGET SELECTION HANDLE INPUT
     public void HandleHackNavigationInput(Vector2 input)
     {
-        // on vérifie qu'on est au moins dans le threshold min
-        if (input.magnitude < InputManager.Instance.JOYSTICK_MIN_THRESHOLD) { return; }
-
         // update cursor & hackray
         update_cursor(input);
         hover_hackray.gameObject.SetActive(true);

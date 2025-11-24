@@ -42,9 +42,8 @@
 		  -> on doit naviguer direct ?
 		  -> comment récupérer le panel vers lequel naviguer ?
 		- DONE faire que la molette / mouvement de la souris fasse naviguer les [[UI_Panel]] de l'inventaire
-		- TODO scroll ne fait que un par un
+		- DONE scroll ne fait que un par un
 	-
-		-
 	- ### Moving Items
 		- géré grâce au [[UI_ItemMover]]
 		- permet de bouger des [[UI_Item]] à travers un/plusieurs [[UI_Inventory]]

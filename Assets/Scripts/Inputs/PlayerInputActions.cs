@@ -208,6 +208,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""mouse_hack"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""7debb219-4424-4050-89bf-fa4faa86079b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""exploit_wheel_mouse"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""13c8804a-778d-4962-af8c-9fa4c972921c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -505,6 +523,50 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""xbox"",
                     ""action"": ""hack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4cdaef79-71c5-454f-a06f-5ec72574c7af"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""mouse_hack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f1874356-87a9-42e8-92e8-6c5da1efac89"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""mouse_hack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ce025cab-52ec-49bc-8d00-7ebd943b449f"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""exploit_wheel_mouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d7cd530c-0642-40ab-9f96-0ba0898577bb"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""exploit_wheel_mouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -2230,6 +2292,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_perso_conso2 = m_perso.FindAction("conso2", throwIfNotFound: true);
         m_perso_conso3 = m_perso.FindAction("conso3", throwIfNotFound: true);
         m_perso_conso4 = m_perso.FindAction("conso4", throwIfNotFound: true);
+        m_perso_mouse_hack = m_perso.FindAction("mouse_hack", throwIfNotFound: true);
+        m_perso_exploit_wheel_mouse = m_perso.FindAction("exploit_wheel_mouse", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_scroll = m_UI.FindAction("scroll", throwIfNotFound: true);
@@ -2387,6 +2451,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_perso_conso2;
     private readonly InputAction m_perso_conso3;
     private readonly InputAction m_perso_conso4;
+    private readonly InputAction m_perso_mouse_hack;
+    private readonly InputAction m_perso_exploit_wheel_mouse;
     /// <summary>
     /// Provides access to input actions defined in input action map "perso".
     /// </summary>
@@ -2450,6 +2516,14 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "perso/conso4".
         /// </summary>
         public InputAction @conso4 => m_Wrapper.m_perso_conso4;
+        /// <summary>
+        /// Provides access to the underlying input action "perso/mouse_hack".
+        /// </summary>
+        public InputAction @mouse_hack => m_Wrapper.m_perso_mouse_hack;
+        /// <summary>
+        /// Provides access to the underlying input action "perso/exploit_wheel_mouse".
+        /// </summary>
+        public InputAction @exploit_wheel_mouse => m_Wrapper.m_perso_exploit_wheel_mouse;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -2515,6 +2589,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @conso4.started += instance.OnConso4;
             @conso4.performed += instance.OnConso4;
             @conso4.canceled += instance.OnConso4;
+            @mouse_hack.started += instance.OnMouse_hack;
+            @mouse_hack.performed += instance.OnMouse_hack;
+            @mouse_hack.canceled += instance.OnMouse_hack;
+            @exploit_wheel_mouse.started += instance.OnExploit_wheel_mouse;
+            @exploit_wheel_mouse.performed += instance.OnExploit_wheel_mouse;
+            @exploit_wheel_mouse.canceled += instance.OnExploit_wheel_mouse;
         }
 
         /// <summary>
@@ -2565,6 +2645,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @conso4.started -= instance.OnConso4;
             @conso4.performed -= instance.OnConso4;
             @conso4.canceled -= instance.OnConso4;
+            @mouse_hack.started -= instance.OnMouse_hack;
+            @mouse_hack.performed -= instance.OnMouse_hack;
+            @mouse_hack.canceled -= instance.OnMouse_hack;
+            @exploit_wheel_mouse.started -= instance.OnExploit_wheel_mouse;
+            @exploit_wheel_mouse.performed -= instance.OnExploit_wheel_mouse;
+            @exploit_wheel_mouse.canceled -= instance.OnExploit_wheel_mouse;
         }
 
         /// <summary>
@@ -3686,6 +3772,20 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnConso4(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "mouse_hack" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMouse_hack(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "exploit_wheel_mouse" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnExploit_wheel_mouse(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
