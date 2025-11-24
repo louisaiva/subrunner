@@ -22,7 +22,7 @@ public class GrabCapacity : Capacity
     [SerializeField] private Item selected_item;
 
     [Header("Components")]
-    [SerializeField] private ItemBank bank;
+    // [SerializeField] private ItemBank bank;
     [SerializeField] private Inventory inventory;
 
     [Header("Input & Callbacks")]
@@ -34,11 +34,10 @@ public class GrabCapacity : Capacity
     private void Start()
     {
         // on récupère la bank
-        bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
         inventory = capable.Inventory;
 
         // on récupère l'action grab
-        grabAction = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().GetAction(grabInput);
+        grabAction = InputManager.Instance.GetComponent<InputManager>().GetAction(grabInput);
 
         // on définit le callback
         grabCallback = ctx =>

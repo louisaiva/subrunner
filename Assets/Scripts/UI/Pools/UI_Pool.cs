@@ -10,9 +10,11 @@ public class UI_Pool : MonoBehaviour
     public string Reference = "pool";
     public bool Showed = false;
     public bool Stacked = false; // if true the pool is stacked below another one
+    private bool prepared = false;
 
     [Header("Transition parameters")]
-    public PoolTransitionSettings TransitionSettings = PoolTransitionSettings.InGameDefault;
+    public UI_PoolSettings Settings;
+    // public PoolTransitionSettings TransitionSettings = PoolTransitionSettings.InGameDefault;
     protected Coroutine current_transition = null;
 
 
@@ -35,6 +37,7 @@ public class UI_Pool : MonoBehaviour
     // AWAKE
     protected virtual void Awake()
     {
+        if (prepared) { return; }
         // we hide the pool for the first time
         for (int i = 0; i < ui_elements.Count; i++)
         {
@@ -136,10 +139,10 @@ public class UI_Pool : MonoBehaviour
     // LOW SHOWING
     protected virtual IEnumerator show_coroutine(List<GameObject> dont_show = null, float duration_override = -1f, bool was_stacked = false)
     {
-        if (TransitionSettings.UsePersoInputs) { InputManager.Instance.EnablePersoInputs(); }
+        if (Settings.UsePersoInputs) { InputManager.Instance.EnablePersoInputs(); }
 
         // on récupère la duration
-        float duration = duration_override >= 0f ? duration_override : TransitionSettings.Duration;
+        float duration = duration_override >= 0f ? duration_override : Settings.Duration;
 
         // on lance la transitions des elements avec transitionners et on retient les autres
         List<GameObject> uis_without_transitioner = new List<GameObject>();
@@ -169,13 +172,13 @@ public class UI_Pool : MonoBehaviour
         }
 
         // on desactive les perso inputs si on ne les utilise pas
-        if (!TransitionSettings.UsePersoInputs) { InputManager.Instance.DisablePersoInputs(); }
+        if (!Settings.UsePersoInputs) { InputManager.Instance.DisablePersoInputs(); }
         if (log) { Debug.Log("(UI_Pool) show_coroutine succeeded ! pool : " + Reference); }
     }
     protected virtual IEnumerator hide_coroutine(List<GameObject> dont_hide = null, float duration_override = -1f, bool stacking = false)
     {
         // on récupère la duration
-        float duration = duration_override >= 0f ? duration_override : TransitionSettings.Duration;
+        float duration = duration_override >= 0f ? duration_override : Settings.Duration;
 
         // on lance la transitions des elements avec transitionners et on cache direct les autres
         List<GameObject> uis_with_transitioner = new List<GameObject>();
@@ -210,6 +213,27 @@ public class UI_Pool : MonoBehaviour
     // LOW ENABLING
     protected virtual IEnumerator enable_coroutine() { yield break; } // only useful for overriding properly for pools that don't need to override the showing
     protected virtual IEnumerator disable_coroutine() { yield break; }
+
+    // PREPARING POOl
+    public void PreparePool()
+    {
+        if (log) {  Debug.Log($"(UI_Pool) Preparing pool : {Reference}"); }
+
+        // on cache tous les éléments du pool via canvas group
+        for (int i = 0; i < ui_elements.Count; i++)
+        {
+            // on prepare seulement les elements qui ont un canvas group
+            if (!ui_elements[i].TryGetComponent(out CanvasGroup cg)) { continue; }
+
+            // on cache l'element abruptement
+            cg.alpha = 0f;
+
+            // on active l'element (va appeler Awake + Start dans les prochaines frames)
+            // (et donc va préparer l'élement pour que son prochain show soit bcp plus rapide (on espere))
+            ui_elements[i].SetActive(true);
+        }
+        prepared = true;
+    }
 
     // REGISTER ELEMENTS
     public void RegisterToPool(GameObject ui_element, bool is_stacked = false)
@@ -263,11 +287,15 @@ public class PoolTransitionSettings
     public bool UsePersoInputs = true; // if true, the UI_Manager will activate the inputs.perso when the pool is showed
     public float TimeScale = 1f; // time scale when the pool is showed
     public float BackgroundAlpha = 0f; // alpha of the background when the pool is showed
+    public float ChromaticAberration = 0f; // chromatic aberration effect intensity when the pool is showed
+    public float Bloom = 0f; // bloom effect intensity when the pool is showed
 
     public bool StopTime => TimeScale == 0f;
     public bool HasBackground => BackgroundAlpha > 0f;
 
-    public PoolTransitionSettings(float duration = 0.1f, bool can_be_hidden = true, bool can_be_canceled = false, bool use_perso_inputs = true, float time_scale = 1f, float background_alpha = 0f)
+    public PoolTransitionSettings(float duration = 0.1f, bool can_be_hidden = true, bool can_be_canceled = false,
+            bool use_perso_inputs = true, float time_scale = 1f, float background_alpha = 0f,
+            float chromatic_aberration = 0f, float bloom = 0f)
     {
         Duration = duration;
         CanBeHidden = can_be_hidden;
@@ -275,6 +303,8 @@ public class PoolTransitionSettings
         UsePersoInputs = use_perso_inputs;
         TimeScale = time_scale;
         BackgroundAlpha = background_alpha;
+        ChromaticAberration = chromatic_aberration;
+        Bloom = bloom;
     }
     public static PoolTransitionSettings InGameDefault => new PoolTransitionSettings();
     public static PoolTransitionSettings InMenuDefault => new PoolTransitionSettings(can_be_canceled: true, use_perso_inputs: false, time_scale: 0f, background_alpha: 0.96f);

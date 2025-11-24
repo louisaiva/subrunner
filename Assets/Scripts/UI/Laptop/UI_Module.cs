@@ -44,7 +44,7 @@ public class UI_Module : UI_Item
     protected override void setItem(Item item)
     {
         // on charge le sprite de l'image
-        current_item_sprite = bank.GetModuleSprite(item.Reference);
+        current_item_sprite = ItemBank.Instance.GetModuleSprite(item.Reference);
         set_ui(current_item_sprite);
 
         // on change le nom du prefab
@@ -132,7 +132,7 @@ public class UI_Module : UI_Item
             Debug.LogWarning($"(UI_Module) icon_image of {name} is null, cannot set UI Icon {icon_ref}");
             return;
         }
-        icon_image.sprite = bank.GetUI_Icon(icon_ref);
+        icon_image.sprite = ItemBank.Instance.GetUI_Icon(icon_ref);
         icon_image.color = new Color(1, 1, 1, 1);
 
         // sets the text

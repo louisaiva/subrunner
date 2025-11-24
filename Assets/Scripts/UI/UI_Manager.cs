@@ -2,7 +2,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine.UI;
 using PrimeTween;
 using System.Collections;
 /// <summary>
@@ -77,24 +76,35 @@ public class UI_Manager : Singleton<UI_Manager>
     void Start()
     {
         // we try to switch to current_pool if it is something
-        if (current_pool != null)
-        {
-            // only for log & prototype purpose
-            string start_pool = current_pool.Reference;
-            current_pool = null;
-            SwitchTo(start_pool);
-            return;
-        }
+        if (current_pool == null || IsInTransition) { return; }
+        
+        // only for log & prototype purpose
+        string start_pool = current_pool.Reference;
+        current_pool = null;
+        SwitchTo(start_pool);        
+    }
 
-        // on show le hud
-        SwitchToHUD();
+    /// <summary>
+    /// should happen before UI_Manager.Start() to take effect !!
+    /// this method assign the pool to the pool stack, in order for
+    /// UI_Manager to switch to it on Start()
+    /// </summary>
+    /// <param name="pool"></param>
+    public void AssignStartPool(UI_Pool pool)
+    {
+        if (pool == null) { return; }
+        pool_stack.Add(pool);
     }
 
     // TIMESCALE & BG & EFFECTS TRANSITIONS
-    public async Awaitable TransitionBackground(float bg_alpha, float duration)
+    public void TransitionEffects(UI_PoolSettings settings, float duration)
     {
-        bg.TransitionEffect(bg_alpha > 0f, duration);
-        await bg.TransitionAlpha(bg_alpha > 0f, duration, bg_alpha);
+        // we transition to the right bg/timescale/effect
+        if (Time.timeScale != settings.TimeScale) { TransitionTimeScale(settings.TimeScale, duration); }
+        if (bg.Alpha != settings.BackgroundAlpha) { bg.TransitionAlpha(settings.BackgroundAlpha > 0f, duration, settings.BackgroundAlpha); }
+        PostProcessManager ppm = PostProcessManager.Instance;
+        if (ppm.Chroma != settings.ChromaticAberration) { ppm.TransitionChroma(settings.ChromaticAberration, duration); }
+        if (ppm.Bloom != settings.Bloom) { ppm.TransitionBloom(settings.Bloom, duration); }
     }
     public async Awaitable TransitionTimeScale(float time_scale, float duration)
     {
@@ -112,7 +122,7 @@ public class UI_Manager : Singleton<UI_Manager>
         if (!stacking)
         {
             // we check if the pool is already shown
-            if (pool_name == current_pool.Reference) { SwitchToHUD(); }
+            if (current_pool != null && pool_name == current_pool.Reference) { SwitchToHUD(); }
             else { SwitchTo(pool_name, false); }
             return;
         }
@@ -176,7 +186,7 @@ public class UI_Manager : Singleton<UI_Manager>
 
         // we check if the current pool can be hidden (if not we can't switch)
         // checks if the current pool can be forcely hidden
-        if (current_pool != null && !force && !current_pool.TransitionSettings.CanBeHidden)
+        if (current_pool != null && !force && !current_pool.Settings.CanBeHidden)
         {
             if (log_extended) { Debug.LogWarning("(UI_Manager) tried to hide a pool that cannot be hidden : " + current_pool.Reference); }
             yield break;
@@ -184,8 +194,8 @@ public class UI_Manager : Singleton<UI_Manager>
 
         // we get the transition duration
         float duration = 0f;
-        if (current_pool != null) { duration += current_pool.TransitionSettings.Duration; }
-        duration += pool.TransitionSettings.Duration;
+        if (current_pool != null) { duration += current_pool.Settings.Duration; }
+        duration += pool.Settings.Duration;
 
         // we get the common elements between the two pools
         List<GameObject> same_pool_elements = get_common_elements(current_pool, pool);
@@ -193,8 +203,11 @@ public class UI_Manager : Singleton<UI_Manager>
         if (log) { Debug.Log($"(UI_Manager) switching : {(current_pool?.Reference ?? " / ")} -> {pool.Reference} (duration : " + duration + ")"); }
 
         // we transition to the right bg/timescale/effect
-        if (Time.timeScale != pool.TransitionSettings.TimeScale) { TransitionTimeScale(pool.TransitionSettings.TimeScale, duration); }
-        if (bg.Alpha != pool.TransitionSettings.BackgroundAlpha) { TransitionBackground(pool.TransitionSettings.BackgroundAlpha, duration); }
+        /* if (Time.timeScale != pool.Settings.TimeScale) { TransitionTimeScale(pool.Settings.TimeScale, duration); }
+        if (bg.Alpha != pool.Settings.BackgroundAlpha) { TransitionBackground(pool.Settings.BackgroundAlpha, duration); }
+        if (bg.Chroma != pool.Settings.ChromaticAberration) { bg.TransitionChroma(pool.Settings.ChromaticAberration, duration); }
+        if (bg.Bloom != pool.Settings.Bloom) { bg.TransitionChroma(chroma, duration); } */
+        TransitionEffects(pool.Settings, duration);
 
         // we hide all stacked pool except last one (which is the current one)
         for (int i = 0; i < pool_stack.Count - 1; i++)
@@ -203,7 +216,7 @@ public class UI_Manager : Singleton<UI_Manager>
             if (stacked_pool != null)
             {
                 if (log_extended) { Debug.Log($"(UI_Manager) hiding stacked pool : {stacked_pool.Reference}"); }
-                stacked_pool.StartCoroutine(stacked_pool.HideCoroutine(same_pool_elements, current_pool.TransitionSettings.Duration));
+                stacked_pool.StartCoroutine(stacked_pool.HideCoroutine(same_pool_elements, current_pool.Settings.Duration));
             }
         }
 
@@ -221,7 +234,7 @@ public class UI_Manager : Singleton<UI_Manager>
             UI_Pool stacked_pool = stack[i];
             pool_stack.Add(stacked_pool);
             if (log_extended) { Debug.Log($"(UI_Manager) showing stacked pool : {stacked_pool.Reference}"); }
-            stacked_pool.StartCoroutine(stacked_pool.StackShowCoroutine(pool.TransitionSettings.Duration, enable: is_hud));
+            stacked_pool.StartCoroutine(stacked_pool.StackShowCoroutine(pool.Settings.Duration, enable: is_hud));
         }
         pool_stack.Add(pool);
 
@@ -276,7 +289,7 @@ public class UI_Manager : Singleton<UI_Manager>
         }
 
         // check if we can hide the pool
-        if (!pool.TransitionSettings.CanBeHidden)
+        if (!pool.Settings.CanBeHidden)
         {
             if (log_extended) { Debug.LogWarning("(UI_Manager) tried to unstack a pool that cannot be hidden : " + pool.Reference); }
             return;
@@ -299,7 +312,7 @@ public class UI_Manager : Singleton<UI_Manager>
     public void CancelCurrentPool()
     {
         // check if we can cancel the pool
-        if (!current_pool.TransitionSettings.CanBeCanceled)
+        if (!current_pool.Settings.CanBeCanceled)
         {
             if (log_extended && !IsOnHUD()) { Debug.LogWarning("(UI_Manager) tried to cancel a pool that cannot be canceled : " + current_pool.Reference); }
             return;
@@ -339,8 +352,8 @@ public class UI_Manager : Singleton<UI_Manager>
 
         // we get the transition duration
         float duration = 0f;
-        if (current_pool != null) { duration += current_pool.TransitionSettings.Duration; }
-        duration += pool.TransitionSettings.Duration;
+        if (current_pool != null) { duration += current_pool.Settings.Duration; }
+        duration += pool.Settings.Duration;
 
         // we get the common elements between the two pools
         // List<GameObject> same_pool_elements = get_common_elements(current_pool, pool);
@@ -349,8 +362,10 @@ public class UI_Manager : Singleton<UI_Manager>
 
 
         // we transition to the right bg/timescale/effect
-        if (Time.timeScale != pool.TransitionSettings.TimeScale) { TransitionTimeScale(pool.TransitionSettings.TimeScale, duration); }
-        if (bg.Alpha != pool.TransitionSettings.BackgroundAlpha) { TransitionBackground(pool.TransitionSettings.BackgroundAlpha, duration); }
+        // if (Time.timeScale != pool.Settings.TimeScale) { TransitionTimeScale(pool.Settings.TimeScale, duration); }
+        // if (bg.Alpha != pool.Settings.BackgroundAlpha) { TransitionBackground(pool.Settings.BackgroundAlpha, duration); }
+        // if (bg.Chroma != pool.Settings.ChromaticAberration) { TransitionChroma(pool.Settings.ChromaticAberration, duration); }
+        TransitionEffects(pool.Settings, duration);
 
         // we hide the current pool
         bool is_on_hud = pool_stack.Contains(GetPool("hud"));
@@ -394,14 +409,16 @@ public class UI_Manager : Singleton<UI_Manager>
 
         // we get the transition duration
         float duration = 0f;
-        duration += pool.TransitionSettings.Duration;
-        duration += next_pool.TransitionSettings.Duration;
+        duration += pool.Settings.Duration;
+        duration += next_pool.Settings.Duration;
 
         if (log) { Debug.Log($"(UI_Manager) unstacking : {PoolStack} -> {PoolStack.Replace("/" + pool.Reference, "")} (duration : " + duration + ")"); }
 
         // we transition to the right bg/timescale/effect
-        if (Time.timeScale != next_pool.TransitionSettings.TimeScale) { TransitionTimeScale(next_pool.TransitionSettings.TimeScale, duration); }
-        if (bg.Alpha != next_pool.TransitionSettings.BackgroundAlpha) { TransitionBackground(next_pool.TransitionSettings.BackgroundAlpha, duration); }
+        // if (Time.timeScale != next_pool.Settings.TimeScale) { TransitionTimeScale(next_pool.Settings.TimeScale, duration); }
+        // if (bg.Alpha != next_pool.Settings.BackgroundAlpha) { TransitionBackground(next_pool.Settings.BackgroundAlpha, duration); }
+        // if (bg.Chroma != next_pool.Settings.ChromaticAberration) { TransitionChroma(next_pool.Settings.ChromaticAberration, duration); }
+        TransitionEffects(next_pool.Settings, duration);
 
         // we hide the pool
         yield return pool.HideCoroutine();

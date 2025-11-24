@@ -4,7 +4,7 @@ using UnityEngine.InputSystem.UI;
 using System;
 using System.Collections;
 
-public class InputManager : Singleton<InputManager>
+public class InputManager : MonoBehaviour
 {
     [Header("INPUT MANAGER")]
     [SerializeField] private string current_input_type = "keyboard"; // keyboard or gamepad
@@ -35,10 +35,12 @@ public class InputManager : Singleton<InputManager>
     public bool log = false;
     public bool log_input_maps_enabled = false;
 
-    // unity functions
-    protected override void Awake()
+    // AWAKE & SINGLETON LOGIC
+    public static InputManager Instance { get; private set; }
+    private void Awake()
     {
-        base.Awake();
+        if (Instance == null) { Instance = this; }
+        else { Destroy(gameObject); return; }
 
         // on crée les inputs
         inputs = new PlayerInputActions();

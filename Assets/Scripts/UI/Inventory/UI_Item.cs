@@ -27,7 +27,6 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
     public int Quantity { get => items.Count; }
 
     [Header("Components")]
-    [SerializeField] public ItemBank bank;
     [SerializeField] protected Image item_image;
     [SerializeField] protected Sprite current_item_sprite;
     public Sprite ItemSprite => current_item_sprite;
@@ -51,7 +50,6 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
     // AWAKE
     public virtual void Init()
     {
-        bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
         item_image = transform.Find("item").GetComponent<Image>();
     }
 
@@ -194,7 +192,7 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
     protected virtual void setItem(Item item)
     {
         // on charge le sprite de l'image
-        current_item_sprite = bank.GetSprite(item);
+        current_item_sprite = ItemBank.Instance.GetSprite(item);
         set_ui(current_item_sprite);
 
         // on change le nom du prefab
@@ -260,20 +258,6 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
     }
 
     // ON POINTER
-    /* public override void OnPointerEnter(PointerEventData eventData)
-    {
-        base.OnPointerEnter(eventData);
-        update_description();
-    } */
-    /* protected void update_description()
-    {
-        // we check if the current ui_pool has a descriptor or not
-        if (UI_Manager.Instance.CurrentPool != "inventory") { return; }
-
-        // we get the descriptor
-        UI_InventoryMenu menu = UI_Manager.Instance.GetPool("inventory").GetComponent<UI_InventoryMenu>();
-        menu.UI_ItemDescriptor.SetDescription(this);
-    } */
     public override void OnPointerClick(PointerEventData eventData)
     {
         base.OnPointerClick(eventData);
@@ -373,11 +357,11 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
 
         // on met un icon de switch à la place de l'item
         Sprite switch_icon = CanStore(moving_ui_item.Item)
-            ? bank.GetUI_Icon("merge")
-            : bank.GetUI_Icon("switch");
+            ? ItemBank.Instance.GetUI_Icon("merge")
+            : ItemBank.Instance.GetUI_Icon("switch");
 
         // si on a aucun item on met tout simplement "move"
-        if (Quantity == 0) { switch_icon = bank.GetUI_Icon("move"); }
+        if (Quantity == 0) { switch_icon = ItemBank.Instance.GetUI_Icon("move"); }
         set_ui(switch_icon);
     }
     public void OnPointerDragUp()
@@ -385,18 +369,4 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
         if (log) { Debug.Log("OnPointerDragUp on " + gameObject.name); }
         OnPointerEnter(null);
     }
-
-    /* private void OnDrawGizmos()
-    {
-        Vector3 position = GetComponent<RectTransform>().TransformPoint(GetComponent<RectTransform>().rect.center);
-        position = Camera.main.ScreenToWorldPoint(position);
-
-        // we draw 2 circles to show if bank & item_image are shown
-        if (bank != null) { Gizmos.color = Color.green; }
-        else { Gizmos.color = Color.red; }
-        Gizmos.DrawWireSphere(position - new Vector3(0.2f, 0f, 0f), 0.1f);
-        if (item_image != null) { Gizmos.color = Color.green; }
-        else { Gizmos.color = Color.red; }
-        Gizmos.DrawWireSphere(position + new Vector3(0.2f, 0f, 0f), 0.1f);
-    } */
 }

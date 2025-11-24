@@ -1,5 +1,7 @@
 
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -13,6 +15,7 @@ public class AppManager : MonoBehaviour
 {
     public static AppManager Instance { get; private set; }
     public bool IsQuitting = false;
+    public int LoadedSceneCount = 0;
 
 
     [Header("Version Text Settings")]
@@ -44,12 +47,21 @@ public class AppManager : MonoBehaviour
     private void Awake()
     {
         if (Instance == null) { Instance = this; }
+        else { Destroy(gameObject); return; }
 
         // on récupère la version de l'app
         version = Application.version;
 
         // on affiche les stats
         if (log_stats) { ProjectStats.AnalyzeProject(); }
+
+        // si on est sur la scene subrunner-clean alors on trouve le UI_Manager pour lui assigner hud
+        if (SceneManager.GetActiveScene().name == "subrunner-clean")
+        {
+            UI_Manager ui = GameObject.Find("/ui").GetComponent<UI_Manager>();
+            UI_Pool hud = GameObject.Find("/ui/hud").GetComponent<UI_Pool>();
+            ui.AssignStartPool(hud);
+        }
     }
 
 
@@ -74,8 +86,6 @@ public class AppManager : MonoBehaviour
 
 
     // MAIN CLICK FUNCTIONS
-    public void play() => UI_Manager.Instance.SwitchToHUD();
-    public void hud() => UI_Manager.Instance.SwitchToHUD();
     public void exit()
     {
         #if UNITY_EDITOR
@@ -104,41 +114,9 @@ public class AppManager : MonoBehaviour
         Screen.fullScreen = set_full;
         #endif
     }
-    public void ghost_mode()
-    {
-        if (Perso.Instance == null) { return; }
-        Perso.Instance.ToggleGhost();
-    }
-    public void metamorph()
-    {
-        if (Perso.Instance == null) { return; }
-        Perso.Instance.Metamorph();
-    }
-    public void heal()
-    {
-        if (Perso.Instance == null) { return; }
-        Perso.Instance.healMax();
-    }
     public void toggle_vsync()
     {
         useVSync = !useVSync;
-    }
-    public void credits()
-    {
-        UI_Manager.Instance.SwitchTo("credits");
-    }
-    public void settings()
-    {
-        UI_Manager.Instance.SwitchTo("settings");
-    }
-    public void home()
-    {
-        UI_Manager.Instance.SwitchTo("home");
-    }
-    public async void back_to_main_menu()
-    {
-        if (SceneLoader.Instance == null) { exit(); return; }
-        await SceneLoader.Instance.GoBackToMainMenu();
     }
 
     // APPLICATION QUIT

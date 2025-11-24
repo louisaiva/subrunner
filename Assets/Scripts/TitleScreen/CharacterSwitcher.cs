@@ -13,17 +13,15 @@ public class CharacterSwitcher : MonoBehaviour
 
     [Header("Components")]
     [SerializeField] private UI_AnimPlayer animPlayer;
-
+    
     // AWAKE
     private void Awake()
     {
         // get the ui_animplayer component
         animPlayer = GetComponent<UI_AnimPlayer>();
     }
-
     private void Start()
     {
-
         // we get all the anims we want
         AnimBank bank = AnimBank.Instance;
         foreach (string skin in skins)
@@ -43,6 +41,13 @@ public class CharacterSwitcher : MonoBehaviour
         // Start the skin change coroutine
         StartCoroutine(SkinChangeCoroutine());
     }
+    private void OnEnable()
+    {
+        if (anims.Count == 0) { return; }
+        
+        // Restart the skin change coroutine
+        StartCoroutine(SkinChangeCoroutine());
+    }
 
     // SKIN SWITCHING
     private IEnumerator SkinChangeCoroutine()
@@ -53,7 +58,7 @@ public class CharacterSwitcher : MonoBehaviour
         while (true)
         {
             // Wait for the specified delay
-            yield return new WaitForSeconds(skinChangeDelay);
+            yield return new WaitForSecondsRealtime(skinChangeDelay);
 
             // and to a random anim between "walk","idle","dodge","loop"
             Anim anim = anims[Random.Range(0, anims.Count)];

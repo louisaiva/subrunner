@@ -61,7 +61,7 @@ public class AttackCapacity : Capacity
         pc.enabled = false;
 
         // we get the sprite bank
-        bank = GameObject.Find("/utils/bank").GetComponent<SpriteBank>();
+        bank = AnimBank.Instance.GetComponent<SpriteBank>();
 
         // we set the damage variable
         damage += Random.Range(-random_damage_modifier_at_start, random_damage_modifier_at_start);

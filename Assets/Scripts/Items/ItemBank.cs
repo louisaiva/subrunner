@@ -1,13 +1,9 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 
-public class ItemBank : Singleton<ItemBank>
-{ 
+public class ItemBank : MonoBehaviour
+{
 
     [Header("Item Bank")]
     public List<string> items_path = new List<string>() { "prefabs/items" };
@@ -32,10 +28,13 @@ public class ItemBank : Singleton<ItemBank>
     public bool debug = false;
 
 
-    // AWAKE & LOADING
-    protected override void Awake()
+    // AWAKE & SINGLETON LOGIC & LOADING
+    public static ItemBank Instance { get; private set; }
+    private void Awake()
     {
-        base.Awake();
+        // SINGLETON LOGIC
+        if (Instance == null) { Instance = this; }
+        else { Destroy(gameObject); return; }
 
         // on vérifie qu'on a un prefab pour l'UI
         if (ui_item_prefab == null)

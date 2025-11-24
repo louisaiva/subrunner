@@ -36,7 +36,6 @@ public class HomeInputsController : InputController
     // INPUTS
     private void initInputs()
     {
-
         // on assigne les callbacks
         ui_inputs.navigate.performed += handle_navigate_input;
         ui_inputs.mouse_navigation.performed += handle_mouse_navigation;

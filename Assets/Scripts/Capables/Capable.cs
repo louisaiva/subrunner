@@ -112,7 +112,7 @@ public class Capable : MonoBehaviour, Debuggable
         Orientation = orientation;
 
         // we get the capacity bank
-        bank = GameObject.Find("/utils/bank").GetComponent<CapacityBank>();
+        bank = AnimBank.Instance.GetComponent<CapacityBank>();
 
         // we add all the capacities that are in the gameObject
         foreach (Transform child in transform)

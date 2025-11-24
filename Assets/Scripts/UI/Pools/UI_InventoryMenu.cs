@@ -45,9 +45,6 @@ public class UI_InventoryMenu : UI_Pool, Panelable
             Debug.LogError("(UI_InventoryMenu) missing ui_laptop on " + name);
         }
 
-        // we set the saved position to screen center
-        // SavedPosition = new Vector2(Screen.width / 2f, Screen.height / 2f);
-
         // we save the current ui_elements state in saved_state
         saved_slots = new List<GameObject>(ui_elements);
         base.Awake();
@@ -70,7 +67,7 @@ public class UI_InventoryMenu : UI_Pool, Panelable
         List<GameObject> manually_shown = get_all_uis_with_item_pools();
         manually_shown.AddRange(get_all_indicators());
         for (int i = 0; i < manually_shown.Count; i++) { manually_shown[i].SetActive(true); }
-        RefreshItemPools(duration_override >= 0f ? duration_override : TransitionSettings.Duration);
+        RefreshItemPools(duration_override >= 0f ? duration_override : Settings.Duration);
 
         // on affiche les autres elements du menu (sans s'occuper des item pool & indicators)
         if (dont_show == null) { dont_show = new List<GameObject>(); }

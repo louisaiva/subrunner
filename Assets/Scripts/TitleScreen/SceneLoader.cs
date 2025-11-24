@@ -13,23 +13,36 @@ public class SceneLoader : MonoBehaviour
 
     [Header("Loading screen")]
     [SerializeField] private bool linux_style_loading = false;
-    [SerializeField] private GameObject loadingScreen;
+    // [SerializeField] private GameObject loadingScreen;
     [SerializeField] private Image bg;
+    private PauseMenuBackgroundEffect fx;
     [SerializeField] private GameObject text_prefab;
     [SerializeField] private GameObject text_parents;
 
     [Header("Transitions")]
     [SerializeField] private float transition_duration = 0.2f;
+    [SerializeField] private UI_PoolSettings Transition;
 
     [Header("Texts")]
     [SerializeField] private Vector2 text_delay_range = new Vector2(0.1f, 0.5f);
     [SerializeField] private List<string> texts;
 
-    [Header("Title Screen Elements")]
-    [SerializeField] private JoystickFeedback joystickFeedback;
-    public HomeInputsController HIC;
-    public CharacterOrientationController CharacOrienter;
+    [Header("Components")]
+    private CharacterOrientationController charac_orienter = null;
+    public CharacterOrientationController CharacOrienter
+    {
+        get
+        {
+            if (charac_orienter == null)
+            {
+                charac_orienter = GameObject.Find("ui_chroma/charac/character").GetComponent< CharacterOrientationController>();
+                if (charac_orienter == null) { Debug.LogError("(SceneLoader) could not find CharacterOrientationController at /ui_chroma/charac/character!"); }
+            }
+            return charac_orienter;
+        }
+    }
 
+    private PostProcessManager ppm => PostProcessManager.Instance;
 
     [Header("Logs")]
     [SerializeField] private bool log;
@@ -37,8 +50,9 @@ public class SceneLoader : MonoBehaviour
     // AWAKE
     private void Awake()
     {
-        // if (Instance != null) { Instance.FinishTransitionAndDestroy(); return; }
-        Instance = this;
+        if (Instance == null) { Instance = this; }
+        else { Destroy(gameObject); return; }
+        fx = bg.GetComponent<PauseMenuBackgroundEffect>();
     }
 
     // LOAD GAME
@@ -59,9 +73,6 @@ public class SceneLoader : MonoBehaviour
     {
         if (log) { Debug.Log("LOADING THE GAME"); }
 
-        // we disable the input action
-        HIC.RemoveCallbacks();
-
         // we pause the game
         Time.timeScale = 0f;
 
@@ -80,6 +91,7 @@ public class SceneLoader : MonoBehaviour
             onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx));
 
         if (log) { Debug.Log("GAME LOADED"); }
+        AppManager.Instance.LoadedSceneCount++;
     }
 
     // LOAD GAME LINUX STYLE
@@ -87,18 +99,16 @@ public class SceneLoader : MonoBehaviour
     {
         if (log) { Debug.Log("LOADING THE GAME - LINUX STYLE"); }
 
-        // we disable the input action
-        HIC.RemoveCallbacks();
-
-        // we wait one frame
-        yield return null;
+        // we get the title
+        UI_Title title = FindFirstObjectByType<UI_Title>();
+        if (title != null) { title.Run(); }
 
         // we show the loading screen
-        Tween show_bg = Tween.Custom(0f, 1f, duration: transition_duration, useUnscaledTime: true,
-            onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx));
-
-        bg.GetComponent<PauseMenuBackgroundEffect>().TransitionEffect(true,transition_duration);
-        while (show_bg.isAlive) { yield return null; }
+        ppm.TransitionChroma(Transition.ChromaticAberration, transition_duration);
+        ppm.TransitionBloom(Transition.Bloom, transition_duration);
+        yield return new WaitForSecondsRealtime(transition_duration - 0.1f);
+        fx.TransitionAlpha(true, 0.1f, override_final_alpha: Transition.BackgroundAlpha);
+        yield return new WaitForSecondsRealtime(0.1f);
 
         // load loading scene
         AsyncOperation loading_scene = SceneManager.LoadSceneAsync(2);
@@ -107,6 +117,7 @@ public class SceneLoader : MonoBehaviour
         // we pause the game
         Time.timeScale = 0f;
         float timer = Time.realtimeSinceStartup;
+        ppm.SetToneMapping(aces:false);
 
         // load the main clean scene
         AsyncOperation loading_game = SceneManager.LoadSceneAsync(1);
@@ -144,30 +155,26 @@ public class SceneLoader : MonoBehaviour
         text = Instantiate(text_prefab, text_parents.transform);
         text.GetComponent<TextMeshProUGUI>().text = "game loaded in " + (Time.realtimeSinceStartup - timer).ToString("F2") + " seconds";
 
-        // we wait a little time
-        yield return new WaitForSecondsRealtime(0.2f);
-
-
         // we fade the texts away
-        float fade_duration = 2f;
-        fade_texts_away(fade_duration);
+        fade_texts_away(transition_duration);
 
         // we hide the transitionner on the linux texts
-        text_parents.GetComponent<Transitioner>().Hide(fade_duration);
+        text_parents.GetComponent<Transitioner>().Hide(transition_duration);
 
-        // we wait for the fade to finish
-        yield return new WaitForSecondsRealtime(fade_duration/2f);
+        // we show the ui_manager hud pool
+        UI_Pool hud = UI_Manager.Instance.GetPool("hud");
+        float old_transition_duration = hud.Settings.Duration;
+        hud.Settings.Duration = transition_duration;
+        UI_Manager.Instance.SwitchTo("hud");
+        yield return null; // wait one frame to be sure that the manager took the home_appearance_duration value
+        hud.Settings.Duration = old_transition_duration;
 
         // we hide the bg
-        Time.timeScale = 1f; // we resume the game
-
-        // we hide the bg
-        bg.GetComponent<PauseMenuBackgroundEffect>().TransitionEffect(false, fade_duration);
-        Tween hide_bg = Tween.Custom(1f, 0f, duration: fade_duration, useUnscaledTime: true,
-            onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx));
-        while (hide_bg.isAlive) { yield return null; }
+        fx.TransitionAlpha(false, 0f);
+        yield return new WaitForSecondsRealtime(transition_duration);
 
         if (log) { Debug.Log("GAME LOADED - LINUX STYLE"); }
+        AppManager.Instance.LoadedSceneCount++;
     }
     private IEnumerator wait_for_loading_to_finish(AsyncOperation loading_game)
     {
@@ -206,24 +213,45 @@ public class SceneLoader : MonoBehaviour
         Time.timeScale = 0f;
 
         // we show the loading screen
-        bg.GetComponent<PauseMenuBackgroundEffect>().TransitionEffect(true, transition_duration);
-        await Tween.Custom(0f, 1f, duration: transition_duration, useUnscaledTime: true,
-            onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx));
-
+        ppm.TransitionChroma(Transition.ChromaticAberration, transition_duration);
+        ppm.TransitionBloom(Transition.Bloom, transition_duration);
+        TransitionTimeScale(0f, transition_duration);
+        await System.Threading.Tasks.Task.Delay((int)((transition_duration-0.1f) * 1000));
+        await fx.TransitionAlpha(true, 0.1f, override_final_alpha: Transition.BackgroundAlpha);
+        
         // load loading scene
         await SceneManager.LoadSceneAsync(2);
+        ppm.SetToneMapping(aces:true);
 
         // we load the main menu scene
         await SceneManager.LoadSceneAsync(0);
 
-        // we hide the loading screen
-        UI_Manager.Instance.TransitionBackground(0f, transition_duration/2f);
-        bg.GetComponent<PauseMenuBackgroundEffect>().TransitionEffect(false, transition_duration);
-        await Tween.Delay(transition_duration/2f); // we wait for half duration to avoid a sudden cut
-        await Tween.Custom(1f, 0f, duration: transition_duration / 2f, useUnscaledTime: true,
-            onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx));
+        // we show the ui_manager home
+        UI_Pool home = UI_Manager.Instance.GetPool("home");
+        home.PreparePool();
+        float old_transition_duration = home.Settings.Duration;
+        home.Settings.Duration = transition_duration;
+        UI_Manager.Instance.SwitchTo("home");
+        await System.Threading.Tasks.Task.Yield(); // wait one frame to be sure that the manager took the home_appearance_duration value
+        home.Settings.Duration = old_transition_duration;
 
-        // we destroy this object
-        Destroy(this.gameObject);
+        // we hide the bg
+        fx.TransitionAlpha(false, 0f);
+
+        if (log) { Debug.Log("BACK TO MAIN MENU"); }
+        AppManager.Instance.LoadedSceneCount++;
     }
+
+    // HELPER METHODS
+    private async Awaitable TransitionTimeScale(float target, float duration)
+    {
+        if (Mathf.Approximately(Time.timeScale, target)) { return; }
+        if (duration <= 0f)
+        {
+            Time.timeScale = target;
+            return;
+        }
+        await Tween.GlobalTimeScale(target, duration, Ease.OutQuad);
+    }
+
 }

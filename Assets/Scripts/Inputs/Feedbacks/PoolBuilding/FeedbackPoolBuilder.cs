@@ -51,33 +51,33 @@ public class FeedbackPoolBuilder : MonoBehaviour
         if (log) { Debug.Log("(FeedbackPoolBuilder) Building Feedback Pool from schematic : " + pool_schematic.name); }
 
         // keyboard left column
-        await buildColumn(pool_schematic.kb_L_plan, kb_col_L, is_left: true);
+        buildColumn(pool_schematic.kb_L_plan, kb_col_L, is_left: true);
         if (log) { Debug.Log($"(FeedbackPoolBuilder) [{pool_schematic.name}] Built keyboard left column : {pool_schematic.kb_L_plan.Count} rows"); }
 
         // keyboard right column
-        await buildColumn(pool_schematic.kb_R_plan, kb_col_R, is_left: false);
+        buildColumn(pool_schematic.kb_R_plan, kb_col_R, is_left: false);
         if (log) { Debug.Log($"(FeedbackPoolBuilder) [{pool_schematic.name}] Built keyboard right column : {pool_schematic.kb_R_plan.Count} rows"); }
         // gamepad left column
-        await buildColumn(pool_schematic.gmpd_L_plan, gmpd_col_L, is_left: true);
+        buildColumn(pool_schematic.gmpd_L_plan, gmpd_col_L, is_left: true);
         if (log) { Debug.Log($"(FeedbackPoolBuilder) [{pool_schematic.name}] Built gamepad left column : {pool_schematic.gmpd_L_plan.Count} rows"); }
 
         // gamepad right column
-        await buildColumn(pool_schematic.gmpd_R_plan, gmpd_col_R, is_left: false);
+        buildColumn(pool_schematic.gmpd_R_plan, gmpd_col_R, is_left: false);
         if (log) { Debug.Log($"(FeedbackPoolBuilder) [{pool_schematic.name}] Built gamepad right column : {pool_schematic.gmpd_R_plan.Count} rows"); }
     }
 
     // BUILD COLUMN & ROWS
-    protected async Awaitable buildColumn(List<FeedbackRowSchematic> column_plan, Transform column_transform, bool is_left)
+    protected void buildColumn(List<FeedbackRowSchematic> column_plan, Transform column_transform, bool is_left)
     {
         // we build the column row per row
         for (int r = 0; r < column_plan.Count; r++)
         {
             FeedbackRowSchematic row_schem = column_plan[r];
-            GameObject row_go = await create_row_go(row_schem, column_transform, is_left);
+            GameObject row_go = create_row_go(row_schem, column_transform, is_left);
             row_go.name = $"row_{row_schem.label_text}";
         }
     }
-    protected async Awaitable<GameObject> create_row_go(FeedbackRowSchematic row_schem, Transform parent_transform, bool is_left)
+    protected GameObject create_row_go(FeedbackRowSchematic row_schem, Transform parent_transform, bool is_left)
     {
         // we get the game object list
         List<GameObject> IFs = row_schem.prefabs;
@@ -86,7 +86,7 @@ public class FeedbackPoolBuilder : MonoBehaviour
         GameObject row_go = Instantiate(is_left ? left_row_prefab : right_row_prefab, parent_transform);
 
         // wait a frame to be sure the row is instantiated
-        await System.Threading.Tasks.Task.Yield();
+        // await System.Threading.Tasks.Task.Yield();
 
         // we set the label
         TextMeshProUGUI label = row_go.transform.Find("text").GetComponent<TextMeshProUGUI>();
@@ -106,9 +106,6 @@ public class FeedbackPoolBuilder : MonoBehaviour
                 colorant.Colorers.Add(label_colorer);
                 colorant.SetColors(row_schem.base_color, row_schem.inputed_color);
             }
-
-            // wait a frame to be sure the row is instantiated
-            await System.Threading.Tasks.Task.Yield();
 
             // set its children index at Count-1 (count always > 0 bcz there is a text in empty row)
             // IF_go.transform.SetSiblingIndex(row_go.transform.childCount - 1);

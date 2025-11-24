@@ -43,7 +43,7 @@ public class UI_ItemPool : MonoBehaviour
         this.UI_Inventory = ui;
 
         // we get the item bank
-        bank = GameObject.Find("/utils/bank").GetComponent<ItemBank>();
+        bank = ItemBank.Instance;
         // we clear the ui_items
         ui_items.Clear();
 

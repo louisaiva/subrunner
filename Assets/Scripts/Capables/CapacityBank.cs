@@ -7,13 +7,21 @@ using UnityEngine;
 /// can instance them and give them to any capable
 /// </summary>
 
-public class CapacityBank : Singleton<CapacityBank>
+public class CapacityBank : MonoBehaviour
 {
     [Header("Prefab path")]
     public string capacities_prefabs_path = "capacities";
 
     [Header("Logs")]
     public bool debug = false;
+
+    // AWAKE & SINGLETON LOGIC
+    public static CapacityBank Instance { get; private set; }
+    private void Awake()
+    {
+        if (Instance == null) { Instance = this; }
+        else { Destroy(gameObject); return; }
+    }
 
 
     // GETTERS

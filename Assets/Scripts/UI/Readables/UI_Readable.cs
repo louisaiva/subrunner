@@ -5,6 +5,7 @@ using UnityEngine;
 public class UI_Readable : MonoBehaviour
 {
     [Header("Transition parameters")]
+    public UI_PoolSettings transi_settings;
     public PoolTransitionSettings transition_settings = PoolTransitionSettings.InMenuDefault;
 
     [Header("Content showing parameters")]

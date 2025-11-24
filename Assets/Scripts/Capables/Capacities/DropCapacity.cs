@@ -46,7 +46,7 @@ public class DropCapacity : Capacity
         inventory = capable.Inventory;
 
         // on récupère l'action drop
-        dropAction = GameObject.Find("/utils/input_manager").GetComponent<InputManager>().GetAction(dropInput);
+        dropAction = InputManager.Instance.GetComponent<InputManager>().GetAction(dropInput);
 
         // on définit le callback
         dropCallback = ctx => Use(capable);

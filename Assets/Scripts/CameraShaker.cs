@@ -92,8 +92,10 @@ public class CameraShaker : Singleton<CameraShaker>
 		float chroma_threshold = chroma_magnitude_threshold * base_shake_magnitude;
 		if (log) { Debug.Log("(CameraShaker) shaked the screen with " + magnitude + $" magnitude (chroma threshold is {chroma_threshold})");}
 		if (magnitude < chroma_threshold) { return; }
-		bg.TransitionEffect(show: true, duration:0f,bloom_effect:false);
+		
+		// we "shake" the chromatic aberration
+		PostProcessManager.Instance.TransitionChroma(1f, duration:0f);
 		await System.Threading.Tasks.Task.Yield(); // on attend une frame pour que l'effet soit visible
-		await bg.TransitionEffect(show: false, duration:settings.duration*chroma_duration_factor,bloom_effect:false);
+		await PostProcessManager.Instance.TransitionChroma(0f, duration:settings.duration*chroma_duration_factor);
 	}
 }

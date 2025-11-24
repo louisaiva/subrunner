@@ -11,7 +11,7 @@ using Unity.Properties;
 using UnityEditor;
 #endif
 
-public class AnimBank : Singleton<AnimBank>
+public class AnimBank : MonoBehaviour
 {
     // stocke toutes les animations et sprites utilisées dans le jeu
     // permet de les charger et de les stocker pour les utiliser plus tard
@@ -49,11 +49,15 @@ public class AnimBank : Singleton<AnimBank>
     public bool log_LAFAC = false;
     public bool log_variant_skins = false;
 
-    // INITIALIZATION
-    protected override void Awake()
+    // AWAKE & SINGLETON LOGIC
+    public static AnimBank Instance { get; private set; }
+    private void Awake()
     {
-        base.Awake();
+        // singleton logic
+        if (Instance == null) { Instance = this; }
+        else { Destroy(gameObject); return; }
 
+        // load anims
         LoadAnims();
 
         Debug.Log(getAnimsList());

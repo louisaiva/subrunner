@@ -436,11 +436,22 @@ public class UI_Navigator : Singleton<UI_Navigator>
         }
     }
 
+
+    // ON DESTROY
+    private void OnDestroy()
+    {
+        if (InputManager.Instance == null) { return; }
+        InputManager.Instance.OnInputTypeChanged -= handle_input_type_changed;
+    }
 }
 
 
 public interface Navigator
 {
+
+    // GAMEOBJECT
+    GameObject gameObject { get; }
+
     // HANDLE SLOTTABLE ACTIVATION
     void ActivateSlottable(Slottable slottable);
 

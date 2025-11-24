@@ -32,7 +32,14 @@ public class UI_AnimPlayer : MonoBehaviour
         }
     }
     private AnimBank bank;
-    private Image img;
+    private Image _img;
+    private Image img {
+        get
+        {
+            if (_img == null) { _img = GetComponent<Image>(); }
+            return _img;
+        }
+    }
 
 
     [Header("Skin")]
@@ -59,11 +66,7 @@ public class UI_AnimPlayer : MonoBehaviour
     public bool log_frames = false;
 
 
-    // Awake & Start
-    private void Awake()
-    {
-        img = GetComponent<Image>();
-    }
+    // START
     private void Start()
     {
         // we play the idle animation
@@ -148,8 +151,7 @@ public class UI_AnimPlayer : MonoBehaviour
 
         // we set the current capacity
         current_capacity = capacity;
-        return anim;       
-
+        return anim;
     }
     private void play_now_at_frame(Anim anim, int frame = 0)
     {
@@ -164,6 +166,11 @@ public class UI_AnimPlayer : MonoBehaviour
         }
         current_frame = frame;
         frame_timer = 0f;
+
+        if (log_frames)
+        {
+            Debug.Log($"(UI_AnimPlayer) Playing animation {anim.name} at frame {frame} (anim frames: {anim.sprites.Length})");
+        }
 
         // we set the sprite
         img.sprite = anim.sprites[current_frame];

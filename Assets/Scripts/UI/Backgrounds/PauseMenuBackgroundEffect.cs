@@ -16,31 +16,16 @@ public class PauseMenuBackgroundEffect : MonoBehaviour
     [SerializeField] protected Image bg;
     [SerializeField] protected Vector2Int bg_alpha_range = new Vector2Int(0, 245);
 
-    [Header("Bloom Transition")]
-    [SerializeField] private Bloom bloom;
-    [SerializeField] private float pause_bloom_intensity;
-    private float base_bloom_intensity;
-
-    [Header("Chromatic Aberration")]
-    [SerializeField] private ChromaticAberration chromatic_aberration;
-    [SerializeField] private float chromatic_aberration_intensity;
-    private float base_chromatic_aberration_intensity;
-
-
-    private bool is_very_early_init_done = false;
+    // [Header("Post Process Effects")]
+    // [SerializeField] private Bloom bloom;
+    // [SerializeField] private ChromaticAberration chromatic_aberration;
 
     // START
     private void Start()
     {
-        var postProcessVolume = PostProcessManager.Instance.Volume;
-        postProcessVolume.profile.TryGet(out bloom);
-        postProcessVolume.profile.TryGet(out chromatic_aberration);
-
-        // on sauvegarde l'intensité de base du bloom
-        base_bloom_intensity = PostProcessManager.Instance.BaseBloom;
-        base_chromatic_aberration_intensity = PostProcessManager.Instance.BaseChroma;
-
-        is_very_early_init_done = true;
+        // var postProcessVolume = PostProcessManager.Instance.Volume;
+        // postProcessVolume.profile.TryGet(out bloom);
+        // postProcessVolume.profile.TryGet(out chromatic_aberration);
 
         // on set le bg alpha
         if (bg == null) { return; }
@@ -74,101 +59,7 @@ public class PauseMenuBackgroundEffect : MonoBehaviour
                 onValueChange: ctx => bg.color = new Color(bg.color.r, bg.color.g, bg.color.b, ctx), useUnscaledTime: true);
         } */
     }
-    public async Awaitable TransitionEffect(bool show, float duration = 0.2f, bool chromatic=true, bool bloom_effect=true)
-    {
-        if (show)
-        {
-            if (bloom_effect) { ActivateBloom(duration); }
-            if (chromatic) { ActivateAberration(duration); }
-            
-            // waits for duration
-            if (duration > 0f) { await Tween.Delay(duration, useUnscaledTime: true); }
-        }
-        else
-        {
-            if (bloom_effect) { DisableBloom(duration); }
-            if (chromatic) { DisableAberration(duration); }
-
-            // waits for duration
-            if (duration > 0f) { await Tween.Delay(duration, useUnscaledTime: true); }
-        }
-    }
-
-    // BLOOM
-    private async Awaitable ActivateBloom(float transition_duration = 0.2f)
-    {
-        if (transition_duration <= 0f)
-        {
-            bloom.intensity.Override(pause_bloom_intensity);
-            return;
-        }
-
-        await Sequence.Create(useUnscaledTime: true)
-            .Group(Tween.Custom(base_bloom_intensity, pause_bloom_intensity, duration: transition_duration,
-                onValueChange: ctx => bloom.intensity.Override(ctx)));
-
-        /* .OnComplete(() =>
-        {
-            bloom.intensity.Override(pause_bloom_intensity);
-        }); */
-    }
-    private async Awaitable DisableBloom(float transition_duration = 0.2f)
-    {
-        if (!is_very_early_init_done) { return; }
-
-        if (transition_duration <= 0f)
-        {
-            bloom.intensity.Override(base_bloom_intensity);
-            return;
-        }
-
-        await Sequence.Create(useUnscaledTime: true)
-            .Group(Tween.Custom(pause_bloom_intensity, base_bloom_intensity, duration: transition_duration,
-                onValueChange: ctx => bloom.intensity.Override(ctx)));
-
-        /* Tween.Custom(pause_bloom_intensity, base_bloom_intensity, duration: transition_duration,
-                onValueChange: ctx => bloom.intensity.Override(ctx), useUnscaledTime: true)
-            .OnComplete(() => bloom.intensity.Override(base_bloom_intensity)); */
-
-        // on reset le bloom
-        // bloom.intensity.Override(base_bloom_intensity);
-
-        // on enlève la chromatic aberration
-        // chromatic_aberration.active = false;
-    }
-
-    // CHROMATIC ABERRATION
-    private async Awaitable ActivateAberration(float transition_duration = 0.2f)
-    {
-        if (transition_duration <= 0f)
-        {
-            chromatic_aberration.intensity.Override(chromatic_aberration_intensity);
-            return;
-        }
-
-        await Tween.Custom(base_chromatic_aberration_intensity,
-                chromatic_aberration_intensity,
-                duration: transition_duration,
-                useUnscaledTime: true,
-                onValueChange: ctx => chromatic_aberration.intensity.Override(ctx));
-    }
-    private async Awaitable DisableAberration(float transition_duration = 0.2f)
-    {
-        if (!is_very_early_init_done) { return; }
-
-        if (transition_duration <= 0f)
-        {
-            chromatic_aberration.intensity.Override(base_chromatic_aberration_intensity);
-            return;
-        }
-
-        await Tween.Custom(chromatic_aberration_intensity,
-                base_chromatic_aberration_intensity,
-                duration: transition_duration,
-                useUnscaledTime: true,
-                onValueChange: ctx => chromatic_aberration.intensity.Override(ctx));
-    }
-
+    
     public float Alpha => bg.color.a;
 
 
