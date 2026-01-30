@@ -32,9 +32,6 @@ public class PersoInputsController : InputController
     public HackableNavigator HackableNavigator { get; private set; }
     public ExploitNavigator ExploitNavigator { get; private set; }
 
-    [Header("Settings")]
-    private Setting hack_mouse_post_sensitivity_setting;
-    private Setting hack_mouse_pre_sensitivity_setting;
 
     private void Start()
     {
@@ -52,11 +49,6 @@ public class PersoInputsController : InputController
                 repeat: InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY,
                 unscaled_time: false))
                 .OnEndless += ctx => OnInteract(true); // ajoute le callback directement
-
-
-        // on récupère les settings
-        hack_mouse_post_sensitivity_setting = SettingsManager.Instance.GetSetting("hack_mouse_post_sensitivity");
-        hack_mouse_pre_sensitivity_setting = SettingsManager.Instance.GetSetting("hack_mouse_pre_sensitivity");
     }
 
     // INPUTS

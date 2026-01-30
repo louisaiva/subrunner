@@ -14,11 +14,11 @@
 			- TODO make 2 start cinematic
 			- TODO make demo completed cinematic
 			-
-		- TODO polish the [[Keyboard + Mouse problem]] integration
-			- TODO adapt hacking to mouse
-				- TODO PIC input : left mouse
-			- TODO adapt exploit selection
-				- TODO PIC input : mid mouse
+		- DONE polish the [[Keyboard + Mouse problem]] integration
+			- DONE adapt hacking to mouse
+				- DONE PIC input : left mouse
+			- DONE adapt exploit selection
+				- DONE PIC input : mid mouse
 			- DONE create a InputFeedbackSwitcher + InputFeedbackManager for updating them all
 		-
 		-
@@ -35,10 +35,10 @@
 			- DONE smaller description
 			- DONE that can write multiple characters at once ?
 		-
-		- TODO try with [[UI_CancelButton]] which is a [[UI_Button]] that cancels a specific [[UI_Slottable]] / [[UI_Pool]]
+		- DONE try with [[UI_CancelButton]] which is a [[UI_Button]] that cancels a specific [[UI_Slottable]] / [[UI_Pool]]
 			- DONE prototype on #Oven & #Sink
 			- DONE on [[Chest]]
-			- TODO on [[UI_Window]]
+			- DONE on [[UI_Window]]
 		-
 		- DONE rework la [[UI_HUD]] pool pour qu'interagir avec un [[Chest]] fasse que le déplacement est désactivé
 			- DONE on navigue dans l'ui via **LJoy**

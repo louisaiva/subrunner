@@ -317,6 +317,12 @@ MonoBehaviour:
   - {fileID: -116349883, guid: 067a473f3b5cf80e29cdd8df756b8128, type: 3}
   - {fileID: -796214224, guid: 067a473f3b5cf80e29cdd8df756b8128, type: 3}
   - {fileID: -1409683600, guid: 067a473f3b5cf80e29cdd8df756b8128, type: 3}
+  - {fileID: 20051895, guid: b756c27a866df924b839cdfed9895c67, type: 3}
+  - {fileID: -1342086262, guid: b756c27a866df924b839cdfed9895c67, type: 3}
+  - {fileID: 624880164, guid: b756c27a866df924b839cdfed9895c67, type: 3}
+  - {fileID: -1274118261, guid: b756c27a866df924b839cdfed9895c67, type: 3}
+  - {fileID: -1847526143, guid: b756c27a866df924b839cdfed9895c67, type: 3}
+  - {fileID: 2019041239, guid: b756c27a866df924b839cdfed9895c67, type: 3}
   IF_gamepad_path: spritesheets/ui/inputs/ui_interactables
   IF_kb_path: spritesheets/ui/inputs/input_kb_feedback
   joystick_feedback_icons:
@@ -711,7 +717,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsQuitting: 0
   LoadedSceneCount: 0
-  prototype: ui_title animation
+  prototype: mouse hacking v1
   log: 0
   log_stats: 0
 --- !u!1 &7970305435618458122
@@ -997,6 +1003,8 @@ MonoBehaviour:
   JOYSTICK_MAX_THRESHOLD: 0.95
   BUTTON_MIN_THRESHOLD: 0.2
   BUTTON_MAX_THRESHOLD: 0.8
+  MOUSE_DELTA_MIN_THRESHOLD: 5
+  MOUSE_DELTA_BIG_THRESHOLD: 20
   BUTTON_ENDLESSLY_SHORT_THRESHOLD: 0.3
   BUTTON_ENDLESSLY_SHORT_DELAY: 0.06
   BUTTON_ENDLESSLY_LONG_THRESHOLD: 0.6

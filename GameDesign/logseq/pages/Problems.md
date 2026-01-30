@@ -1,6 +1,12 @@
 -
+- ## GLOBAUX
+	- [[Scenario]]
+	- [[equilibrage]]
+	- [[chara-design]]
 -
--
--
--
-- [[Keyboard + Mouse problem]]
+- ## 1.5.0
+	- [[Inventory-Problem]]
+	- [[Over-Complicated-Hacking]]
+	- [[3D-Problem]]
+	- [[Optimisation]]
+	- [[Keyboard + Mouse problem]]
