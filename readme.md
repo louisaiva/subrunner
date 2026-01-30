@@ -7,7 +7,7 @@
 
 ## About
 
-**SUBRUNNER** is a 2D top-down cyberpunk rogue-lite where you play as a small ninja hacker trying to escape the underground and make it to the surface for some noodles.
+**SUBRUNNER** is a 2D top-down action/maze cyberpunk game where you play as a small ninja hacker trying to escape the underground and make it to the surface for some pastaaaaaas omg i love pastas.
 
 Navigate through dangerous facilities, fight hostile creatures, and **hack your way through locked doors and security systems** using your laptop. Every hack you pull off and every enemy you defeat brings you closer to the elevator—and freedom.
 
@@ -15,15 +15,15 @@ Navigate through dangerous facilities, fight hostile creatures, and **hack your 
 
 Your arsenal consists of two main mechanics:
 
-### Hacking
-Find a laptop and you unlock the ability to hack into devices and security systems. Target vulnerable systems, execute exploits, and manage your limited CPU cores efficiently. Each successful hack opens new paths and disables threats.
-
-![hacking](https://github.com/louisaiva/subrunner/blob/world/Assets/Resources/exports/iteration-2/hacking.png?raw=true)
-
 ### Combat
 Equip weapons and engage enemies in real-time, top-down combat. Attack, dodge, and use consumable items to survive encounters. Defeat enemies to earn XP, level up your character, and increase your damage output.
 
 ![attack](https://github.com/louisaiva/subrunner/blob/world/Assets/Resources/exports/iteration-2/attack.png?raw=true)
+
+### Hacking
+Find a laptop and you unlock the ability to hack into devices and security systems. Target vulnerable systems, execute exploits, and manage your limited CPU cores efficiently. Each successful hack opens new paths and disables threats.
+
+![hacking](https://github.com/louisaiva/subrunner/blob/world/Assets/Resources/exports/iteration-2/hacking.png?raw=true)
 
 ### Progression
 Collect weapons, consumables, and equipment as you explore. Manage your inventory and equip items from four dedicated hotkey slots. As you gain experience, you'll level up and become stronger.
@@ -59,7 +59,7 @@ The game uses a **Capabilities system** for all objects in the game world. This 
 ## Download & Installation
 
 ### Latest Release
-Download the latest build from the [**SUBRUNNER Releases page**](https://github.com/louisaiva/subrunner/releases).
+Download the latest build from the [**subrunner releases page**](https://github.com/louisaiva/subrunner/releases).
 
 Pre-built binaries are available for Windows. Extract and run the executable—no installation required.
 
