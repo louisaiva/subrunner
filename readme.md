@@ -72,7 +72,7 @@ git clone https://github.com/louisaiva/subrunner.git
 
 ## Learn More
 
-For detailed game design documentation, visit the [**SUBRUNNER Design Repository**](https://github.com/louisaiva/subrunner-design).
+For detailed game design documentation, visit the [**subrunner design repository**](https://github.com/louisaiva/subrunner-gamedesign).
 
 ---
 
