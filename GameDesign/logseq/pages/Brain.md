@@ -1,1 +1,0 @@
-- transforme des #Emotion & des #Feeling en un **Goal** à transmettre au #GOAP_system

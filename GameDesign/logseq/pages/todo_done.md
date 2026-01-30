@@ -1,6 +1,0 @@
-- DONE #UI_Device buggé avec le new #UI_Manager
-- DONE pareil pour les #UI_RunningHacksViewer
-- DONE et aussi quand on ouvre des coffres avec un device des fois c bzar
--
-- DONE items ne s'enlèvent pas dans le #DebugManager
-- DONE #UI_ExploitSelector les boutons cancel hack & automatic grandissent trop quand on show la pool

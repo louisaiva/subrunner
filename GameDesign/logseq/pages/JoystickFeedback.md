@@ -1,3 +1,0 @@
-## classe enfant de : #InputFeedback
--
--

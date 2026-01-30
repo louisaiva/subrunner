@@ -1,5 +1,0 @@
-- permet d'afficher des **Inputs** en direct à l'écran
-- s'**update** tout seul
--
-- fonctionne en souscrivant à des **events** de #InputManager
--

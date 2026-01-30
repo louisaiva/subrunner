@@ -1,4 +1,0 @@
-- #Problems
--
-- [[GC Alloc free cheat sheet]]
--
