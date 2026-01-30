@@ -3,7 +3,7 @@
 
 # SUBRUNNER
 
-![capsule](https://github.com/louisaiva/subrunner/blob/master/Assets/Resources/exports/iteration-2/capsule_v4.png?raw=true)
+![capsule](https://github.com/louisaiva/subrunner/blob/world/Assets/Resources/exports/iteration-2/capsule_v4.png?raw=true)
 
 ## About
 
@@ -18,17 +18,17 @@ Your arsenal consists of two main mechanics:
 ### Hacking
 Find a laptop and you unlock the ability to hack into devices and security systems. Target vulnerable systems, execute exploits, and manage your limited CPU cores efficiently. Each successful hack opens new paths and disables threats.
 
-![hacking](https://github.com/louisaiva/subrunner/blob/master/Assets/Resources/exports/iteration-2/hacking.png?raw=true)
+![hacking](https://github.com/louisaiva/subrunner/blob/world/Assets/Resources/exports/iteration-2/hacking.png?raw=true)
 
 ### Combat
 Equip weapons and engage enemies in real-time, top-down combat. Attack, dodge, and use consumable items to survive encounters. Defeat enemies to earn XP, level up your character, and increase your damage output.
 
-![attack](https://github.com/louisaiva/subrunner/blob/master/Assets/Resources/exports/iteration-2/attack.png?raw=true)
+![attack](https://github.com/louisaiva/subrunner/blob/world/Assets/Resources/exports/iteration-2/attack.png?raw=true)
 
 ### Progression
 Collect weapons, consumables, and equipment as you explore. Manage your inventory and equip items from four dedicated hotkey slots. As you gain experience, you'll level up and become stronger.
 
-![level-up](https://github.com/louisaiva/subrunner/blob/master/Assets/Resources/exports/iteration-2/level-up.png?raw=true)
+![level-up](https://github.com/louisaiva/subrunner/blob/world/Assets/Resources/exports/iteration-2/level-up.png?raw=true)
 
 ## Controls
 
@@ -46,7 +46,7 @@ Collect weapons, consumables, and equipment as you explore. Manage your inventor
 - **R** - Use equipped consumable
 
 ### Gamepad
-![gamepad](https://github.com/louisaiva/subrunner/blob/master/Assets/Resources/exports/iteration-1/manette2.png?raw=true)
+![gamepad](https://github.com/louisaiva/subrunner/blob/world/Assets/Resources/exports/iteration-1/manette2.png?raw=true)
 
 ## Strong Points
 
@@ -72,7 +72,7 @@ git clone https://github.com/louisaiva/subrunner.git
 
 ## Learn More
 
-For detailed game design documentation, visit the [**SUBRUNNER Design Repository**](https://github.com/louisaiva/subrunner-design) (also available locally in `GameDesign/obsidian/`).
+For detailed game design documentation, visit the [**SUBRUNNER Design Repository**](https://github.com/louisaiva/subrunner-design).
 
 ---
 
