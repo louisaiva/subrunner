@@ -25,3 +25,8 @@ public interface Onnable
     public bool IsMoving { get; set; }
     public bool IsOn { get; set; }
 }
+
+public interface Holdable : Onnable
+{
+    public bool IsHolding { get; set; }
+}

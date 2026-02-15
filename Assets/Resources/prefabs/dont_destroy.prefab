@@ -181,10 +181,10 @@ MonoBehaviour:
     - objects/items/laptops/laptop_blue
   - variant_name: pckg_back
     variant_spritesheets:
-    - objects/interactives/package_back
+    - objects/interactives/box/box_bg
     base_skin: pckg_front
     base_spritesheets:
-    - objects/interactives/package
+    - objects/interactives/box/box_fg
   - variant_name: gaming_chair_arms
     variant_spritesheets:
     - objects/interactives/chairs/gaming_chair_arms
@@ -233,6 +233,24 @@ MonoBehaviour:
     base_skin: blue_library_front
     base_spritesheets:
     - objects/deco/library/library_front
+  - variant_name: rack_fg
+    variant_spritesheets:
+    - objects/interactives/computers/servers/blue_server_fg
+    base_skin: rack_bg
+    base_spritesheets:
+    - objects/interactives/computers/servers/blue_server_bg
+  - variant_name: station_L
+    variant_spritesheets:
+    - objects/interactives/computers/module_station/module_station_L
+    base_skin: station
+    base_spritesheets:
+    - objects/interactives/computers/module_station/module_station_U
+  - variant_name: station_R
+    variant_spritesheets:
+    - objects/interactives/computers/module_station/module_station_R
+    base_skin: station
+    base_spritesheets:
+    - objects/interactives/computers/module_station/module_station_U
   log: 0
   log_LAFAC: 0
   log_variant_skins: 0

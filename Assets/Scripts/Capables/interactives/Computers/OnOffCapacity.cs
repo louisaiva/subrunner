@@ -7,6 +7,13 @@ public class OnOffCapacity : Capacity
     // public float powering_on_duration = 0.5f;
     // public float powering_off_duration = 0.5f;
 
+    [Header("On Off Animations")]
+    [SerializeField] private string powering_on_animation = "onnin";
+    [SerializeField] private string powering_off_animation = "offin";
+    [SerializeField] private string idle_on_animation = "idle_on";
+    [SerializeField] private string idle_off_animation = "idle";
+
+
     public Onnable Onnable => capable as Onnable;
 
 
@@ -40,11 +47,12 @@ public class OnOffCapacity : Capacity
         // on allume l'ordi
         Onnable.IsOn = false;
         Onnable.IsMoving = true;
-        capable.anim_player.Play("onnin");
-        capable.anim_player.AddToPile("idle_on");
+        capable.anim_player.Play(powering_on_animation);
+        capable.anim_player.AddToPile(idle_on_animation);
+        if (idle_off_animation != "idle") { capable.anim_player.StopPlaying(idle_off_animation); }
 
         // on attend la fin de l'anim
-        while (capable.anim_player.current_capacity == "onnin") { yield return null; }
+        while (capable.anim_player.current_capacity == powering_on_animation) { yield return null; }
 
         // on allume l'ordi
         Onnable.IsOn = true;
@@ -61,11 +69,12 @@ public class OnOffCapacity : Capacity
         // on éteint l'ordi
         Onnable.IsOn = true;
         Onnable.IsMoving = true;
-        capable.anim_player.Play("offin");
-        capable.anim_player.StopPlaying("idle_on");
+        capable.anim_player.Play(powering_off_animation);
+        capable.anim_player.AddToPile(idle_off_animation);
+        if (idle_on_animation != "idle") { capable.anim_player.StopPlaying(idle_on_animation); }
 
         // on attend la fin de l'anim
-        while (capable.anim_player.current_capacity == "offin") { yield return null; }
+        while (capable.anim_player.current_capacity == powering_off_animation) { yield return null; }
 
         // on eteint l'ordi
         Onnable.IsOn = false;

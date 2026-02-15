@@ -308,6 +308,11 @@ public class UI_Manager : Singleton<UI_Manager>
     public void CancelCurrentPool()
     {
         // check if we can cancel the pool
+        if (current_pool == null)
+        {
+            if (log_extended) { Debug.LogWarning("(UI_Manager) tried to cancel a pool while no pool is currently shown"); }
+            return;
+        }
         if (!current_pool.Settings.CanBeCanceled)
         {
             if (log_extended && !IsOnHUD()) { Debug.LogWarning("(UI_Manager) tried to cancel a pool that cannot be canceled : " + current_pool.Reference); }

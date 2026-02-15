@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class AnimLayer : MonoBehaviour
@@ -34,7 +35,9 @@ public class AnimLayer : MonoBehaviour
     private void PlayAtFrame(string anim_name, int frame)
     {
         // we replace our skin
-        anim_name = anim_name.Replace(leader.Skin, skin);
+        // anim_name = anim_name.Replace(leader.Skin, skin); // ! if leader.Skin is different than anim_name' skin (which is the case when the leader skin does not exist -> we send sphere anim) -> then it does not work
+        string current_leader_skin = anim_name.Split('.')[0]; // we get the skin of the anim name, we split by dot and we take the first word (which is the skin)
+        anim_name = skin + anim_name[current_leader_skin.Length..]; // replace the current skin by our layer skin
 
         // we get the anim
         Anim anim = AnimBank.Instance.GetAnim(anim_name);
