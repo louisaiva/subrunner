@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class UI_QuickInventoryPool : UI_SlottablePool
+public class UI_ChestPool : UI_SlottablePool
 {
 
     [Header("Perso Quick Inventory")]
@@ -13,10 +13,11 @@ public class UI_QuickInventoryPool : UI_SlottablePool
     protected void Start()
     {
         // on met les callbacks pour vérifier que le select_hackable se désactive bien
-        InputManager.Instance.OnPersoInputsToggled += verify_right_joy_is_disabled;
+        // InputManager.Instance.OnPersoInputsToggled += verify_right_joy_is_disabled;
         perso_quick_inventory_pool = UI.GetComponent<HUD_PersoItemPool>();
     }
-    private void verify_right_joy_is_disabled(bool perso_inputs_enabled)
+
+    /* private void verify_right_joy_is_disabled(bool perso_inputs_enabled)
     {
         // todo : is there a better way to do this ? looks schlag. maybe it's better to bring back enhanced_perso map ? or hacking map ?
 
@@ -26,10 +27,10 @@ public class UI_QuickInventoryPool : UI_SlottablePool
 
         // on doit s'assurer que le right joystick est désactivé
         InputManager.Instance.inputs.perso.select_hackable.Disable();
-    }
+    } */
 
     // ENABLE - DISABLE ROUTINES
-    protected override IEnumerator enable_coroutine()
+    /* protected override IEnumerator enable_coroutine()
     {
         // on s'assure que le right joystick est désactivé
         InputManager.Instance.inputs.perso.select_hackable.Disable();
@@ -41,29 +42,16 @@ public class UI_QuickInventoryPool : UI_SlottablePool
 
         // on remet l'input de right joystick
         InputManager.Instance.inputs.perso.select_hackable.Enable();
-    }
+    } */
 
     // REGISTER CHEST
-    public void RegisterChest(UI_Slottable ui_chest)
+    public void RegisterChest(Inventory chest_inv)
     {
-        // on ajoute le chest au pool
-        slottable_mixer.AddSlottable(ui_chest, is_master: true);
-        RegisterToPool(ui_chest.gameObject, is_stacked: true);
+        // on met les items dans le UI_Inventory du chest
+
 
         // on s'assure que le persoquickinventory n'affiche que les bons items
-        if (ui_chest is UI_Inventory ui_inv) { perso_quick_inventory_pool.EnableItemsByRule(ui_inv.ItemRule); }
-        else if (ui_chest is UI_SlottableMixer ui_mixer) { perso_quick_inventory_pool.EnableItemsByRule(ui_mixer.GetItemRule()); }
-
-        // on active le pool (en le stackant sur le hud)
-        UI_Manager.Instance.StackOnHUD(Reference, override_transition: true);
-    }
-    public void RemoveChest(UI_Slottable ui_chest)
-    {
-        // on enleve le chest du pool
-        slottable_mixer.RemoveSlottable(ui_chest);
-        QuitPool(ui_chest.gameObject);
-
-        // on desactive le pool (en le destackant du hud)
-        UI_Manager.Instance.UnstackFromHUD(Reference, override_transition: true);
+        // if (ui_chest is UI_Inventory ui_inv) { perso_quick_inventory_pool.EnableItemsByRule(ui_inv.ItemRule); }
+        // else if (ui_chest is UI_SlottableMixer ui_mixer) { perso_quick_inventory_pool.EnableItemsByRule(ui_mixer.GetItemRule()); }
     }
 }

@@ -107,7 +107,7 @@ public class DieCapacity : Capacity
             } */
             yield return being.DropAllItems(); // we wait for dropping all items
         }
-        being.Inventory?.RemoveAllUIs(); // on supprime les ui de l'inventory
+        // being.Inventory?.RemoveAllUIs(); // on supprime les ui de l'inventory
 
 
         being.Die();

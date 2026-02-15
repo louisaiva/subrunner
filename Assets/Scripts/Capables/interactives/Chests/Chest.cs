@@ -33,7 +33,7 @@ public class Chest : Capable, Interactable, Openable
         if (interact_kf != null) { initial_kf_position = interact_kf.localPosition; }
 
         // log message
-        if (log_buttons_registering)
+        /* if (log_buttons_registering)
         {
             string s = $"- Inventory is {(Inventory != null ? "set : " + Inventory.GetType() : "NOT set")}";
             if (Inventory != null)
@@ -50,10 +50,10 @@ public class Chest : Capable, Interactable, Openable
                 }
             }
             Debug.Log("(Chest) " + name + " subscribing to exit button\n" + s);
-        }
+        } */
 
         // we subscribe to the exit button
-        Inventory.MainUI.GetButtonByName("exit_button").OnClick += ExitHover;
+        // Inventory.MainUI.GetButtonByName("exit_button").OnClick += ExitHover;
     }
 
     // ON INTERACT / HOVER LOST
@@ -109,8 +109,9 @@ public class Chest : Capable, Interactable, Openable
     protected bool ui_inventory_shown = false;
     protected void ShowUI_Inventory()
     {
-        if (Inventory == null || Inventory.ui == null) { return; }
-        UI_Manager.Instance.GetPool<UI_QuickInventoryPool>().RegisterChest(Inventory.MainUI);
+        // if (Inventory == null || Inventory.ui == null) { return; }
+        UI_Manager.Instance.GetPool<UI_ChestPool>()?.RegisterChest(Inventory);
+        UI_Manager.Instance.SwitchTo("chest");
         ui_inventory_shown = true;
 
         // we move the interact key feedback if we have one
@@ -119,8 +120,9 @@ public class Chest : Capable, Interactable, Openable
     }
     protected void HideUI_Inventory()
     {
-        if (Inventory == null || Inventory.ui == null) { return; }
-        UI_Manager.Instance.GetPool<UI_QuickInventoryPool>().RemoveChest(Inventory.MainUI);
+        // if (Inventory == null || Inventory.ui == null) { return; }
+        // UI_Manager.Instance.GetPool<UI_ChestPool>().RemoveChest(Inventory.MainUI);
+        UI_Manager.Instance.UnstackPool("chest");
         ui_inventory_shown = false;
 
         // we move back the interact key feedback if we have one

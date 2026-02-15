@@ -140,7 +140,7 @@ public class UI_SlottableMixer : UI_Slottable, Awakable
     {
         List<UI_Inventory> inventories = GetInventories();
         if (inventories.Count == 0) { return "omg:not_existing_item"; }
-        List<string> item_rules = inventories.ConvertAll(inv => inv.ItemRule);
+        List<string> item_rules = inventories.ConvertAll(inv => inv.Inventory.ItemRule);
         return string.Join("|", item_rules);
     }
 }

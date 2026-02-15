@@ -65,7 +65,7 @@ public class Controller : MonoBehaviour
         life_bar = hud.transform.Find("life_bar").gameObject;
         shortcuts = hud.transform.Find("shortcuts_if").gameObject;
         // perso_quick_inventory = UI_Manager.Instance.GetPool("quick_inventory").transform.Find("perso_quick_inventory").GetComponent<UI_Inventory>();
-        perso_quick_inventory = (UI_Manager.Instance.GetPool("quick_inventory") as UI_QuickInventoryPool).UI;
+        // perso_quick_inventory = (UI_Manager.Instance.GetPool("quick_inventory") as UI_ChestPool).UI;
 
         // on controlle le capable actuel
         stack.Clear();
@@ -160,11 +160,11 @@ public class Controller : MonoBehaviour
         {
             // on enleve le device du UI_Device
             UI_Manager.Instance.GetPool<UI_Device>()?.ClearDevice();
-            UI_Manager.Instance.UnstackFromHUD("device", override_transition: true);
+            UI_Manager.Instance.UnstackPool("device", override_transition: true);
         }
 
         // reset l'inventory
-        capa?.Inventory?.RemoveUI(perso_quick_inventory);
+        // capa?.Inventory?.RemoveUI(perso_quick_inventory);
         perso_quick_inventory.Inventory = null;
 
 
@@ -218,7 +218,7 @@ public class Controller : MonoBehaviour
         }
 
         // on met le perso_quick_inventory sur la target si elle a un inventaire
-        capa?.Inventory?.AddUI(perso_quick_inventory);
+        // capa?.Inventory?.AddUI(perso_quick_inventory);
         perso_quick_inventory.Refresh();
 
         // on affiche l'hp bar & shortcuts seulement si c'est le perso
@@ -237,7 +237,7 @@ public class Controller : MonoBehaviour
 
             // on bascule en pool UI_Device
             UI_Manager.Instance.GetPool("device").GetComponent<UI_Device>().SetDevice(device);
-            UI_Manager.Instance.StackOnHUD("device", override_transition: true);
+            UI_Manager.Instance.SwitchTo("device", override_transition: true);
         }
 
         if (log) { Debug.Log("(Controller) " + name + " is now controlling " + capa.name); }

@@ -61,13 +61,13 @@ public class Item : Movable, EndlessInteractable
     public event System.Action<Item> OnDropped = delegate { };
 
     // HOLDER
-    public Capable Holder => HolderInventory != null ? HolderInventory.capable : null;
-    public Inventory HolderInventory
+    public Capable Holder => ItemPoolHolder != null ? ItemPoolHolder.Inventory.capable : null;
+    public ItemPool ItemPoolHolder
     {
         get
         {
             if (transform.parent == null) { return null; }
-            return transform.parent.GetComponent<Inventory>();
+            return transform.parent.GetComponent<ItemPool>();
         }
     }
 

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 /// <summary>
 /// this UI_ItemPool is a special one that can dynamically enable/disable
 /// ui_items based on a given item rule. useful for the Perso quick inventory
-/// shown in the HUD pool. When we open a fridge we don't want our katana
+/// shown in the UI_ChestPool. When we open a fridge we don't want our katana
 /// to be shown bcz we can't put it inside lol
 /// </summary>
 public class HUD_PersoItemPool : UI_ItemPool

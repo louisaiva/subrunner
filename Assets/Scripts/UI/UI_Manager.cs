@@ -322,7 +322,7 @@ public class UI_Manager : Singleton<UI_Manager>
     }
 
     // HUD STACKING
-    public void StackOnHUD(string pool_name, bool override_transition = false)
+    /* public void StackOnHUD(string pool_name, bool override_transition = false)
     {
         // we check if we are not already stacked in the hud
         if (hud_stack.Contains(pool_name)) { return; }
@@ -343,7 +343,7 @@ public class UI_Manager : Singleton<UI_Manager>
 
         // we unstack the pool (only if we are currently showing hud)
         if (IsOnHUD()) { UnstackPool(pool_name, override_transition); }
-    }
+    } */
 
     // UI POOL STACK/UNSTACK LOW LEVEL
     private IEnumerator stack_pool_coroutine(UI_Pool pool)

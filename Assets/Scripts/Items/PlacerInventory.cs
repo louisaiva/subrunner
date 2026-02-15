@@ -15,7 +15,7 @@ public class PlacerInventory : Inventory
     [SerializeField] private bool authorize_overplace = false; // if true, will still grab the items but won't place them if we don't have position
 
     // GRAB DROP REMOVE
-    public override bool Grab(Item item, List<UI_Inventory> uis_to_ignore = null)
+    /* public override bool Grab(Item item, List<UI_Inventory> uis_to_ignore = null)
     {
         // we try to get a free position where we will put the item
         Vector2? place_position = occupy_free_position();
@@ -66,7 +66,7 @@ public class PlacerInventory : Inventory
         Vector2 item_local_pos = item.transform.localPosition;
         free_position(item_local_pos);
         return base.Remove(item);
-    }
+    } */
 
     // PLACING LOW LEVEL
     private Vector2? occupy_free_position()

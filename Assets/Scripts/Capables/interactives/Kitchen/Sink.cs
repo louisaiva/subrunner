@@ -18,9 +18,9 @@ public class Sink : Chest, Onnable
         Inventory.OnItemGrabbed += (item) => handle_pot();
 
         // and to buttons / toggles
-        UI_Toggle onoff_toggle = Inventory.MainUI.GetToggleByName("on_off_toggle");
+        /* UI_Toggle onoff_toggle = Inventory.MainUI.GetToggleByName("on_off_toggle");
         onoff_toggle.OnOn += PowerOn;
-        onoff_toggle.OnOff += PowerOff;
+        onoff_toggle.OnOff += PowerOff; */
     }
 
     // INTERACTION
@@ -66,7 +66,7 @@ public class Sink : Chest, Onnable
     }
 
     // INTERACT KEY FEEDBACK
-    protected override Vector2 calculate_best_kf_position()
+    /* protected override Vector2 calculate_best_kf_position()
     {
         // we calculate the position we need to give the kf's canvas
 
@@ -75,5 +75,5 @@ public class Sink : Chest, Onnable
         Vector2 kf_position = ui_canvas.transform.localPosition;
         kf_position.y += 150.0f; // we move it a bit up
         return kf_position;
-    }
+    } */
 }

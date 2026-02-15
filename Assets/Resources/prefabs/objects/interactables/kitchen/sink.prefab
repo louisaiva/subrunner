@@ -327,6 +327,7 @@ MonoBehaviour:
   debug: 0
   activate_all_capacities_logs_on_awake: 0
   log_interact_kf: 0
+  log_buttons_registering: 0
   interactors: []
 --- !u!1 &1863892299916585823
 GameObject:
@@ -427,7 +428,12 @@ MonoBehaviour:
   image: {fileID: 1816862205740027892}
   baseColor: {r: 1, g: 0, b: 0.06387138, a: 1}
   hoverColor: {r: 1, g: 1, b: 1, a: 1}
+  iconHoverColor: {r: 1, g: 1, b: 1, a: 1}
   btn_icon: {fileID: 6685223035723143825}
+  colorers: []
+  onClickedEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2561952397799866009
 GameObject:
   m_ObjectHideFlags: 0
@@ -438,6 +444,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6614446229248136475}
   - component: {fileID: 5334033520400572889}
+  - component: {fileID: 4682595555538990496}
   m_Layer: 7
   m_Name: inventory
   m_TagString: Untagged
@@ -473,14 +480,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2faf993164e7a436b9c49b4cd3379e40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlacerInventory
-  Items: []
-  uis:
-  - {fileID: 3834885299718168518}
+  pools:
+  - {fileID: 4682595555538990496}
   log: 0
   place_positions:
   - {x: -0.04166667, y: 0.375}
   item_rule_placing: pot
   authorize_overplace: 0
+--- !u!114 &4682595555538990496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2561952397799866009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemPool
+  stacks: []
+  MaxStacks: 9
+  MinStacks: 0
+  Scalable: 0
+  item_rule: 
+  Inventory: {fileID: 0}
+  log: 0
+  log_storage: 0
 --- !u!1 &4221640235276599949
 GameObject:
   m_ObjectHideFlags: 0

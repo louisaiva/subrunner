@@ -1,21 +1,28 @@
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.Events;
 using System;
+using System.Linq;
 
-public class Inventory : MonoBehaviour
+public class Inventory : MonoBehaviour, ItemStorer
 {
+    
+    [Header("ItemPools")]
+    public List<ItemPool> pools = new List<ItemPool>();
+    public List<Item> Items { get { return pools.SelectMany(p => p.Items).ToList(); } }
+    public int Count
+    {
+        get
+        {
+            return pools.Sum(pool => pool.Count);
+        }
+    }
 
-    [Header("Items")]
-    public List<Item> Items = new List<Item>();
-    public int Count { get { return Items.Count; } }
-
-    // [Header("Events")]
+    // EVENTS
+    public event Action<Item> OnItemGrabbedAtStart = delegate { };
     public event Action<Item> OnItemGrabbed = delegate { };
     public event Action<Item> OnItemDropped = delegate { };
 
-
-    [Header("Components")]
+    /* [Header("Components")]
     [SerializeField] private List<UI_Inventory> uis = new List<UI_Inventory>();
     public UI_Inventory ui { get { return uis.Count > 0 ? uis[0] : null; } }
     public UI_Slottable MainUI { get
@@ -24,7 +31,7 @@ public class Inventory : MonoBehaviour
             if (ui.Mixer != null) { return ui.Mixer; }
             return ui;
         }
-    }
+    } */
     public Capable capable { get { return transform.parent.GetComponent<Capable>(); } }
 
     [Header("Logs")]
@@ -33,27 +40,27 @@ public class Inventory : MonoBehaviour
     // AWAKE
     protected virtual void Awake()
     {
-        if (capable is Perso && uis.Count > 0 && uis[0] == null)
+        /* if (capable is Perso && uis.Count > 0 && uis[0] == null)
         {
             // we just revived we don't have any uis, so we make them
             uis = new List<UI_Inventory>
             {
                 UI_Manager.Instance.GetPool("inventory").transform.Find("ui_inventory").GetComponent<UI_Inventory>(),
                 // UI_Manager.Instance.GetPool("quick").GetComponent<UI_HUD>().perso_quick_inventory
-                UI_Manager.Instance.GetPool<UI_QuickInventoryPool>().UI
+                UI_Manager.Instance.GetPool<UI_ChestPool>().UI
             };
-        }
+        } */
 
-        // we attach the inventory to the UI
-        foreach (UI_Inventory ui in uis)
+        // we attach the inventory to the pools
+        for (int i = 0; i < pools.Count; i++)
         {
-            if (ui == null) { continue; }
-            ui.Inventory = this;
+            if (pools[i] == null) { continue; }
+            pools[i].AttachToInventory(this);
         }
     }
 
     // START
-    protected virtual void Start()
+    /* protected virtual void Start()
     {
         // on initialise l'UI
         foreach (UI_Inventory ui in uis)
@@ -72,28 +79,25 @@ public class Inventory : MonoBehaviour
             if (child == null || child.gameObject.activeSelf == false) { continue; }
             Grab(child.GetComponent<Item>());
         }
-    }
+    } */
 
 
     // GRAB / DROP
-    public virtual bool Grab(Item item, List<UI_Inventory> uis_to_ignore = null)
+
+    /// <summary>
+    /// these 3 methods are the main one. when they are activated they
+    /// make the right pool do the action, then trigger the event
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns></returns>
+    public virtual bool Grab(Item item)
     {
         // we check if we can add the item
         if (item == null) { return false; }
 
         // we try to make the ui grab the item
-        if (!ui_grab(item, uis_to_ignore)) { return false; }
+        if (!pool_grab(item)) { return false; }
 
-        // we check if the item is already grabbed somewhere, if so we drop it
-        if (item.Grabbed && item.HolderInventory != null) { item.HolderInventory.Drop(item, uis_to_ignore); }
-
-        // we set the item parent and reset its local position
-        item.transform.SetParent(transform);
-        item.transform.localPosition = Vector3.zero;
-
-        // we add the item
-        Items.Add(item);
-        item.Grabbed = true;
 
         // we trigger the events
         OnItemGrabbed.Invoke(item);
@@ -102,14 +106,12 @@ public class Inventory : MonoBehaviour
 
         return true;
     }
-    public virtual bool Drop(Item item, List<UI_Inventory> uis_to_ignore = null)
+    public virtual bool Drop(Item item)
     {
         // we check if we can remove the item
         if (item == null) { return false; }
-        if (!Items.Contains(item)) { return false; }
 
-        // we remove the item
-        Items.Remove(item);
+        if (!pool_drop(item)) { return false; }
 
         // we set the item to dropped (which enables the hover collider)
         item.Grabbed = false;
@@ -118,7 +120,7 @@ public class Inventory : MonoBehaviour
         OnItemDropped.Invoke(item);
 
         // we update the UI
-        ui_drop(item, uis_to_ignore);
+        // ui_drop(item, uis_to_ignore);
 
         if (log) { Debug.Log("(Inventory) " + capable.name + " dropped : " + item.name); }
 
@@ -130,51 +132,59 @@ public class Inventory : MonoBehaviour
 
         // we check if we can remove the item
         if (item == null) { return false; }
-        if (!Items.Contains(item)) { return false; }
+        for (int i = 0; i < pools.Count; i++)
+        {
+            if (!pools[i].Drop(item)) { continue; }
 
-        // we remove the item
-        Items.Remove(item);
+            if (log) { Debug.Log("(Inventory) " + capable.name + " removed : " + item.name); }
+            return true;
+            
+        }
 
-        // we update the UI
-        uis.ForEach(ui => ui.UI_Drop(item));
-
-        if (log) { Debug.Log("(Inventory) " + capable.name + " removed : " + item.name); }
-
-        return true;
+        if (log) { Debug.LogWarning("(Inventory) " + capable.name + " can't remove : " + item.name); }
+        return false;
     }
-    
-    // GRABBING / DROPPING LOW LEVEL
-    protected bool ui_grab(Item item, List<UI_Inventory> uis_to_ignore = null)
+
+
+    /// <summary>
+    /// These methods are low level equivalent of the aboves. it go through all the ItemPool and tries to make them grab/drop the item. Returns true if 
+    /// a ItemPool grabbed/dropped succesfully, false otherwise
+    /// </summary>
+    /// <returns></returns>
+    protected bool pool_grab(Item item)
     {
-        if (ui == null) { return true; } // no inventory so we successfully grabbed it ahah ^^
-
-        // we try to make the first ui_inventory (which is our reference ui_inventory) to grab it
-        // if it can grab it, all the others can grab it.
-        // if no, we return false
-        if (uis_to_ignore == null) { uis_to_ignore = new List<UI_Inventory>(); }
-        if (!uis_to_ignore.Contains(ui) && !ui.UI_Grab(item))
+        for (int i = 0; i < pools.Count; i++)
         {
-            if (log) { Debug.LogWarning("(Inventory) " + capable.name + " can't grab : " + item.name + " in " + ui.name); }
-            return false; // if the first ui_inventory can't grab it, we return false
+            if (pools[i].Grab(item)) { return true; }
         }
-        for (int i = 1; i < uis.Count; i++)
-        {
-            if (uis_to_ignore.Contains(uis[i])) { continue; } // we skip the ui_to_ignore
-            uis[i].UI_Grab(item); // we try to make the other ui_inventories grab it (we don't care if it can't grab as long as the 1st can)
-        }
-        return true;
+        return false;
     }
-    protected void ui_drop(Item item, List<UI_Inventory> uis_to_ignore = null)
+    protected bool pool_drop(Item item)
     {
-        if (uis_to_ignore == null) { uis_to_ignore = new List<UI_Inventory>(); }
-        for (int i = 0; i < uis.Count; i++)
+        for (int i = 0; i < pools.Count; i++)
         {
-            UI_Inventory ui = uis[i];
-            if (ui == null) { continue; }
-            if (uis_to_ignore.Contains(ui)) { continue; } // we skip the ui_to_ignore
-            ui.UI_Drop(item);
+            if (pools[i].Drop(item)) { return true; }
         }
+        return false;
     }
+
+    /// <summary>
+    /// This particular method should be thought of the same as Grab() but
+    /// the grab already happened in a lower level (ItemPool grabbed an Item during Start() probably)
+    /// Then we need to fire the event so that's the only purpose of this method after all
+    /// </summary>
+    public void GrabAtStart(Item item)
+    {
+        if (item == null) { return; }
+
+        // we trigger the events
+        OnItemGrabbedAtStart.Invoke(item);
+
+        if (log) { Debug.Log("(Inventory) " + capable.name + " grabbed at start : " + item.name); }
+    }
+
+
+
 
     // GETTERS
     public Inventory GetInteractingInventory()
@@ -235,7 +245,7 @@ public class Inventory : MonoBehaviour
         // we return null
         return null;
     }
-    public Item GetItem(string reference)
+    /* public Item GetItem(string reference)
     {
         // we check if the item is in the inventory
         foreach (Item item in Items)
@@ -243,7 +253,8 @@ public class Inventory : MonoBehaviour
             if (item.Reference == reference) { return item; }
         }
         return null;
-    }
+    } */
+    // todo these methods are not efficient, we should have them in the pool and check type there instead of going through Items
     public T GetItem<T>() where T : Item
     {
         // we get the first item of type T
@@ -290,7 +301,7 @@ public class Inventory : MonoBehaviour
     }
 
     // UI MANAGEMENT
-    public void RemoveAllUIs()
+    /* public void RemoveAllUIs()
     {
         // we remove all UIs
         while (uis.Count > 0)
@@ -315,6 +326,27 @@ public class Inventory : MonoBehaviour
         uis.Add(ui_inventory);
         ui_inventory.Inventory = this;
         if (log) { Debug.Log("(Inventory) " + capable.name + " added UI_Inventory : " + ui_inventory.name); }
+    } */
+
+
+
+
+    // ITEM RULE
+    public string ItemRule
+    {
+        get
+        {
+            if (pools.Count > 0)
+            {
+                string rules = "";
+                for (int i = 0; i < pools.Count; i++)
+                {
+                    rules += pools[i].item_rule + "|";
+                }
+                return rules.TrimEnd('|');
+            }
+            return "";
+        }
     }
 
 }

@@ -47,8 +47,10 @@ public class UI_Hacking : UI_Pool
     // DEVICE
     public void HandleDeviceRemoved(Device old_device)
     {
+        
+
         // on cache hacking
-        UI_Manager.Instance.UnstackFromHUD("hacking", override_transition: true);
+        // UI_Manager.Instance.UnstackFromHUD("hacking", override_transition: true);
 
         // ! todo gaffe pcq vu que le UI_Manager n'autorise pas les transitions quand y'en a déjà une en cours,
         // todo bah ça risque de bug quand on passe d'un laptop à un computer et qu'on se trouve dans le hud
@@ -63,6 +65,6 @@ public class UI_Hacking : UI_Pool
     public void HandleDeviceGranted(Device new_device)
     {
         // on affiche hacking
-        UI_Manager.Instance.StackOnHUD("hacking", override_transition: true);
+        // UI_Manager.Instance.StackOnHUD("hacking", override_transition: true);
     }
 }

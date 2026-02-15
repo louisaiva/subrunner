@@ -157,23 +157,6 @@ public class UI_Inventory : UI_Slottable
         return false;
     }
 
-    // ITEM RULE
-    public string ItemRule
-    {
-        get
-        {
-            if (pools.Count > 0)
-            {
-                string rules = "";
-                for (int i = 0; i < pools.Count; i++)
-                {
-                    rules += pools[i].item_rule + "|";
-                }
-                return rules.TrimEnd('|');
-            }
-            return "";
-        }
-    }
 
 
 

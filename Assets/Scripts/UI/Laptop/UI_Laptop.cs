@@ -33,7 +33,7 @@ public class UI_Laptop : UI_Inventory
     // LAPTOP CHANGED
     private async void HandleLaptopChanged(List<Item> items)
     {
-        if (Inventory != null) { Inventory.RemoveUI(this); }
+        // if (Inventory != null) { Inventory.RemoveUI(this); }
         if (items == null || items.Count == 0)
         {
             // we disable the modules
@@ -47,7 +47,7 @@ public class UI_Laptop : UI_Inventory
 
         // if we are here we have a laptop, so we create the motherboard & its modules
         // first we warn the new inventory that we are its ui now
-        TargetLaptop.Inventory.AddUI(this);
+        // TargetLaptop.Inventory.AddUI(this);
         LaptopInventory inventory = TargetLaptop.Inventory as LaptopInventory;
         mb.AssignLaptopInventory(inventory);
         // mb.Size = new Vector2Int(inventory.Columns, inventory.Rows);

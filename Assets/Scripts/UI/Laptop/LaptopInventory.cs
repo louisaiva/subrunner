@@ -13,17 +13,17 @@ public class LaptopInventory : Inventory
     protected Dictionary<Item, int> items_slots = new Dictionary<Item, int>(); // store les indexes de slot de chaque item via item.ID
 
     // START
-    protected override void Start()
+    protected /* override  */void Start()
     {
         // we subscribe to events
         OnItemGrabbed += HandleModuleGrabbed;
         OnItemDropped += HandleModuleDropped;
-        base.Start();
+        // base.Start();
         // (capable as Laptop).Processor.OnCPU_Changed();
     }
 
     // GRAB DROP REMOVE ITEMS
-    public override bool Grab(Item item, List<UI_Inventory> uis_to_ignore = null)
+    /* public override bool Grab(Item item, List<UI_Inventory> uis_to_ignore = null)
     {
         // we save the laptop's files
         List<File> old_laptop_files = (capable as Device).GetFiles();
@@ -76,7 +76,7 @@ public class LaptopInventory : Inventory
         // we remove the item from the dictionary
         items_slots.Remove(item);
         return true;
-    }
+    } */
 
     // GETTERS
     public List<Item> GetItemsInSlot(int slot_index)

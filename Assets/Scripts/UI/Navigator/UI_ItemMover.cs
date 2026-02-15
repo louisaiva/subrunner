@@ -163,11 +163,11 @@ public class UI_ItemMover : MonoBehaviour
         // on met à jour les inventories des items
         foreach (Item item in items1)
         {
-            inventory2.Grab(item, uis_to_ignore); // on ignore les ui_inventory parce qu'ils ont déjà été grab dans ces UI_Inventory
+            inventory2.Grab(item/* , uis_to_ignore */); // on ignore les ui_inventory parce qu'ils ont déjà été grab dans ces UI_Inventory
         }
         foreach (Item item in items2)
         {
-            inventory1.Grab(item, uis_to_ignore); // pareil
+            inventory1.Grab(item/* , uis_to_ignore */); // pareil
         }
     }
     private void split_items(UI_Module ui_module, UI_Item ui_item)
@@ -211,7 +211,7 @@ public class UI_ItemMover : MonoBehaviour
         if (ui_item_inv == ui_module_inv) { return; } // we stay inside the same inventory so no need to update Items's inventories
 
         List<UI_Inventory> uis_to_ignore = new List<UI_Inventory>() { ui_item.ItemPool.UI_Inventory, ui_module.ItemPool.UI_Inventory };
-        ui_module_inv.Grab(item_to_move, uis_to_ignore); // on ignore les ui_inventory parce qu'ils ont déjà été grab dans ces UI_Inventory
+        ui_module_inv.Grab(item_to_move/* , uis_to_ignore */); // on ignore les ui_inventory parce qu'ils ont déjà été grab dans ces UI_Inventory
     }
     private void merge_items(UI_Item item1, UI_Item item2)
     {
@@ -255,7 +255,7 @@ public class UI_ItemMover : MonoBehaviour
         List<UI_Inventory> uis_to_ignore = new List<UI_Inventory>() { item1.ItemPool.UI_Inventory, item2.ItemPool.UI_Inventory };
         foreach (Item item in transfered_items)
         {
-            inventory2.Grab(item, uis_to_ignore); // on ignore les ui_inventory parce qu'ils ont déjà été grab dans ces UI_Inventory
+            inventory2.Grab(item/* , uis_to_ignore */); // on ignore les ui_inventory parce qu'ils ont déjà été grab dans ces UI_Inventory
         }
     }
 

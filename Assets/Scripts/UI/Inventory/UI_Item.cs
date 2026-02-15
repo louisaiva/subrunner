@@ -250,8 +250,8 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
         }
 
         // else we try to make the ui_inventory to regrab this item
-        bool regrabbed = Inventory?.ui?.UI_Regrab(item) ?? false;
-        if (regrabbed) { return; }
+        // bool regrabbed = Inventory?.ui?.UI_Regrab(item) ?? false;
+        // if (regrabbed) { return; }
 
         // else we could not regrab it so we simulate a PointerDropped to make it drop
         drop_item(item);
