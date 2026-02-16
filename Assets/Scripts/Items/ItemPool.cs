@@ -21,6 +21,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
     public List<Item> Items { get { return stacks.SelectMany(s => s.Items).ToList(); } }
     public string ItemRule { get { return item_rule; } }
     public virtual int Count { get { return Items.Count; } }
+    public virtual bool HasSpaceLeft { get { return Scalable || stacks.Count < MaxStacks || stacks.Any(s => !s.IsFull); } }
 
     [Header("Item Stacks Parameters")]
     public int MaxStacks = 9; // the maximum number of stacks in the pool
@@ -173,6 +174,65 @@ public class ItemPool : MonoBehaviour, ItemStorer
         item.Grabbed = true;
 
         OnItemGrabbed.Invoke(item);
+    }
+
+
+    // GETTERS
+    public T GetItem<T>() where T : Item
+    {
+        for (int i = 0; i < stacks.Count; i++)
+        {
+            ItemStack stack = stacks[i];
+            if (stack.IsEmpty) { continue; }
+            if (stack.Items[0] is not T) { continue; }
+
+            // we return the first item of this stack
+            return stack.Items[0] as T;
+        }
+        return null;
+    }
+    public List<T> GetItemsByType<T>() where T : Item
+    {
+        List<T> items = new List<T>();
+        for (int i = 0; i < stacks.Count; i++)
+        {
+            ItemStack stack = stacks[i];
+            if (stack.IsEmpty) { continue; }
+            if (stack.Items[0] is not T) { continue; }
+
+            // we add all items of this stack
+            items.AddRange(stack.Items.Cast<T>());
+        }
+        return items;
+    }
+    public List<Item> GetItemsByRule(string rule = "")
+    {
+        List<Item> items = new List<Item>();
+        for (int i = 0; i < stacks.Count; i++)
+        {
+            ItemStack stack = stacks[i];
+            if (stack.IsEmpty) { continue; }
+
+            // we check the first item of the stack to see if it matches the rule
+            if (!stack.Items[0].ValidateRule(rule)) { continue; }
+
+            // we add all items of this stack
+            items.AddRange(stack.Items);
+        }
+        return items;
+    }
+    public bool HasItem(Item item)
+    {
+        for (int i = 0; i < stacks.Count; i++)
+        {
+            ItemStack stack = stacks[i];
+            if (stack.IsEmpty) { continue; }
+            if (stack.ItemReference != item.Reference) { continue; }
+
+            // we check if the item is in this stack
+            if (stack.Items.Contains(item)) { return true; }
+        }
+        return false;
     }
 }
 

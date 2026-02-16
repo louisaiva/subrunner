@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// purement visuel.
+/// 
+/// </summary>
 public class ItemManager : MonoBehaviour
 {
     [Header("Special items slots")]
@@ -62,56 +66,7 @@ public class ItemManager : MonoBehaviour
         update_hud_renderers();
     }
 
-    // ITEM GETTERS
-    public Weapon GetWeapon()
-    {
-        if (weapon_slot == null || weapon_slot.Item == null || !(weapon_slot.Item is Weapon))
-        {
-            if (log) { Debug.LogWarning("(ItemManager) No weapon found in the weapon slot."); }
-            return null;
-        }
-        return weapon_slot.Item as Weapon;
-    }
-    public Usable GetConsumable(int index)
-    {
-        UI_Item slot = null;
-        switch (index)
-        {
-            case 1: slot = cons1_slot; break;
-            case 2: slot = cons2_slot; break;
-            case 3: slot = cons3_slot; break;
-            case 4: slot = cons4_slot; break;
-            default:
-                if (log) { Debug.LogWarning("(ItemManager) Invalid consumable index: " + index); }
-                return null;
-        }
-
-        if (slot == null || slot.Item == null)
-        {
-            if (log) { Debug.LogWarning("(ItemManager) No consumable found in the consumable slot " + index); }
-            return null;
-        }
-        if (slot.Item is not Usable usable)
-        {
-            if (log) { Debug.LogWarning("(ItemManager) Item in consumable slot " + index + " is not usable."); }
-            return null;
-        }
-        return usable;
-    }
-
-
     // SHOES GETTERS
-    public Shoes GetShoes()
-    {
-        if (shoes_pool == null) { return null; }
-
-        List<Item> items = shoes_pool.GetAllItems();
-        foreach (var item in items)
-        {
-            if (item != null && item is Shoes) { return item as Shoes; }
-        }
-        return null;
-    }
     public UI_Item GetShoesUI_Item()
     {
         if (shoes_pool == null) { return null; }

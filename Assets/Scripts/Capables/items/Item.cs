@@ -140,6 +140,7 @@ public class Item : Movable, EndlessInteractable
 
         // check special rule
         if (rule == "usable") { return this is Usable; }
+        if (rule == "device") { return this is Device; }
 
         // specific item -> we check if the item is the same
         if (rule.Contains(":")) { return Reference == rule; }

@@ -9,29 +9,34 @@ public class Inventory : MonoBehaviour, ItemStorer
     [Header("ItemPools")]
     public List<ItemPool> pools = new List<ItemPool>();
     public List<Item> Items { get { return pools.SelectMany(p => p.Items).ToList(); } }
-    public int Count
+    public int Count { get { return pools.Sum(pool => pool.Count); } }
+
+    // specific pool getters
+    protected ItemPool _shoes_stack = null;
+    protected ItemPool shoes_stack { 
+        get
+        {
+            if (_shoes_stack == null) { _shoes_stack = get_itempool("shoes_stack"); }
+            return _shoes_stack;
+        }
+    }
+    protected ItemPool _weapon_stack = null;
+    protected ItemPool weapon_stack
     {
         get
         {
-            return pools.Sum(pool => pool.Count);
+            if (_weapon_stack == null) { _weapon_stack = get_itempool("weapon_stack"); }
+            return _weapon_stack;
         }
     }
+
+
 
     // EVENTS
     public event Action<Item> OnItemGrabbedAtStart = delegate { };
     public event Action<Item> OnItemGrabbed = delegate { };
     public event Action<Item> OnItemDropped = delegate { };
 
-    /* [Header("Components")]
-    [SerializeField] private List<UI_Inventory> uis = new List<UI_Inventory>();
-    public UI_Inventory ui { get { return uis.Count > 0 ? uis[0] : null; } }
-    public UI_Slottable MainUI { get
-        {
-            if (ui == null) { return null; }
-            if (ui.Mixer != null) { return ui.Mixer; }
-            return ui;
-        }
-    } */
     public Capable capable { get { return transform.parent.GetComponent<Capable>(); } }
 
     [Header("Logs")]
@@ -40,17 +45,6 @@ public class Inventory : MonoBehaviour, ItemStorer
     // AWAKE
     protected virtual void Awake()
     {
-        /* if (capable is Perso && uis.Count > 0 && uis[0] == null)
-        {
-            // we just revived we don't have any uis, so we make them
-            uis = new List<UI_Inventory>
-            {
-                UI_Manager.Instance.GetPool("inventory").transform.Find("ui_inventory").GetComponent<UI_Inventory>(),
-                // UI_Manager.Instance.GetPool("quick").GetComponent<UI_HUD>().perso_quick_inventory
-                UI_Manager.Instance.GetPool<UI_ChestPool>().UI
-            };
-        } */
-
         // we attach the inventory to the pools
         for (int i = 0; i < pools.Count; i++)
         {
@@ -59,30 +53,11 @@ public class Inventory : MonoBehaviour, ItemStorer
         }
     }
 
-    // START
-    /* protected virtual void Start()
-    {
-        // on initialise l'UI
-        foreach (UI_Inventory ui in uis)
-        {
-            if (ui == null)
-            {
-                Debug.LogWarning("(Inventory) " + name + $" has a null UI_Inventory : skipping initialization");
-                continue;
-            }
-            ui.Init();
-        }
-
-        // on récupère les items
-        foreach (Transform child in transform)
-        {
-            if (child == null || child.gameObject.activeSelf == false) { continue; }
-            Grab(child.GetComponent<Item>());
-        }
-    } */
-
 
     // GRAB / DROP
+
+
+    
 
     /// <summary>
     /// these 3 methods are the main one. when they are activated they
@@ -95,7 +70,29 @@ public class Inventory : MonoBehaviour, ItemStorer
         // we check if we can add the item
         if (item == null) { return false; }
 
-        // we try to make the ui grab the item
+
+        // special cases - if we have a shoes and shoes_stack is empty we force to drop it there first
+        if (item is Shoes && shoes_stack != null && shoes_stack.HasSpaceLeft)
+        {
+            if (shoes_stack.Grab(item))
+            {
+                OnItemGrabbed.Invoke(item);
+                if (log) { Debug.Log("(Inventory) " + capable.name + " grabbed : " + item.name + " in shoes_stack"); }
+                return true;
+            }
+        }
+        else if (item is Weapon && weapon_stack != null && weapon_stack.HasSpaceLeft)
+        {
+            if (weapon_stack.Grab(item))
+            {
+                OnItemGrabbed.Invoke(item);
+                if (log) { Debug.Log("(Inventory) " + capable.name + " grabbed : " + item.name + " in weapon_stack"); }
+                return true;
+            }
+        }
+
+
+        // we try to make all the pools grab the item
         if (!pool_grab(item)) { return false; }
 
 
@@ -184,9 +181,45 @@ public class Inventory : MonoBehaviour, ItemStorer
     }
 
 
+    // SPECIFIC GETTERS
+    public Usable GetShoes() { return get_item_from_rule_in_itempool("shoes_stack") as Usable; }
+    public Usable GetWeapon() { return get_item_from_rule_in_itempool("weapon_stack") as Usable; }
+    public Device GetDeviceItem() { return get_item_from_rule_in_itempool("device_stack","device") as Device; }
+    public Usable GetConso(int index) { return get_item_from_rule_in_itempool("conso_" + index) as Usable; }
+    private Item get_item_from_rule_in_itempool(string pool_name,string rule="usable")
+    {
+        // checks if we have the pool
+        ItemPool pool = get_itempool(pool_name);
+        if (pool == null)
+        {
+            if (log) { Debug.LogWarning($"(Inventory) {pool_name} ItemPool was NOT found :O"); }
+            return null;
+        }
+    
+        // find the matching item rule items
+        List<Item> usables_in_pool = pool.GetItemsByRule(rule);
+        if (usables_in_pool.Count > 0) { return usables_in_pool[0]; }
+
+        // else we have no matching item in the pool
+        if (log) { Debug.LogWarning($"(Inventory) {pool_name} ItemPool was found but no \"{rule}\" inside ://"); }
+        return null;
+    }
+    private ItemPool get_itempool(string pool_name)
+    {
+        // checks if we have the pool
+        for (int i = 0; i < pools.Count; i++)
+        {
+            if (pools[i].name != pool_name) { continue; }
+            return pools[i];
+        }
+
+        // else we have no pool named like this
+        // if (log) { Debug.LogWarning($"(Inventory) {pool_name} ItemPool was NOT found :O"); }
+        return null;
+    }
 
 
-    // GETTERS
+    // GLOBAL GETTERS
     public Inventory GetInteractingInventory()
     {
         string s = "(Inventory) " + capable.name + " is looking for an interacting inventory\n\n";
@@ -245,22 +278,12 @@ public class Inventory : MonoBehaviour, ItemStorer
         // we return null
         return null;
     }
-    /* public Item GetItem(string reference)
-    {
-        // we check if the item is in the inventory
-        foreach (Item item in Items)
-        {
-            if (item.Reference == reference) { return item; }
-        }
-        return null;
-    } */
-    // todo these methods are not efficient, we should have them in the pool and check type there instead of going through Items
     public T GetItem<T>() where T : Item
     {
-        // we get the first item of type T
-        foreach (Item item in Items)
+        for (int i = 0; i < pools.Count; i++)
         {
-            if (item is T) { return item as T; }
+            T item = pools[i].GetItem<T>();
+            if (item != null) { return item; }
         }
         return null;
     }
@@ -268,9 +291,9 @@ public class Inventory : MonoBehaviour, ItemStorer
     {
         // we get all the items of type T
         List<T> items = new List<T>();
-        foreach (Item item in Items)
+        for (int i = 0; i < pools.Count; i++)
         {
-            if (item is T) { items.Add(item as T); }
+            items.AddRange(pools[i].GetItemsByType<T>());
         }
         return items;
     }
@@ -278,58 +301,20 @@ public class Inventory : MonoBehaviour, ItemStorer
     {
         // we get all the items that match the rule
         List<Item> items = new List<Item>();
-        for (int i = 0; i < Items.Count; i++)
+        for (int i = 0; i < pools.Count; i++)
         {
-            Item item = Items[i];
-            if (item.ValidateRule(rule)) { items.Add(item); }
+            items.AddRange(pools[i].GetItemsByRule(rule));
         }
         return items;
     }
-    public Device GetDeviceItem()
-    {
-        // we check if one of our items is a device
-        foreach (Item item in Items)
-        {
-            if (item is Device) { return item as Device; }
-        }
-        return null;
-    }
     public bool HasItem(Item item)
     {
-        // we check if we have the item
-        return Items.Contains(item);
-    }
-
-    // UI MANAGEMENT
-    /* public void RemoveAllUIs()
-    {
-        // we remove all UIs
-        while (uis.Count > 0)
+        for (int i = 0; i < pools.Count; i++)
         {
-            RemoveUI(uis[0]);
+            if (pools[i].HasItem(item)) { return true; }
         }
+        return false;
     }
-    public void RemoveUI(UI_Inventory ui_inventory)
-    {
-        if (!uis.Contains(ui_inventory)) { return; }
-
-        // we remove the UI from the list
-        uis.Remove(ui_inventory);
-        ui_inventory.Inventory = null;
-        if (log) { Debug.Log("(Inventory) " + capable.name + " removed UI_Inventory : " + ui_inventory.name); }
-    }
-    public void AddUI(UI_Inventory ui_inventory)
-    {
-        if (uis.Contains(ui_inventory)) { return; }
-
-        // we add the UI to the list
-        uis.Add(ui_inventory);
-        ui_inventory.Inventory = this;
-        if (log) { Debug.Log("(Inventory) " + capable.name + " added UI_Inventory : " + ui_inventory.name); }
-    } */
-
-
-
 
     // ITEM RULE
     public string ItemRule

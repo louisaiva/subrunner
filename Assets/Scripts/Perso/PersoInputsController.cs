@@ -175,17 +175,10 @@ public class PersoInputsController : InputController
     // HANDLE INPUTS
     public void OnAttack()
     {
-        // on cherche si on a des armes
-        Weapon weapon = null;
-        if (Capable is Perso perso)
-        {
-            weapon = perso.ItemManager.GetWeapon();
-            if (weapon != null)
-            {
-                weapon.GetCapacity<AttackCapacity>().damage = perso.skillManager.GetSkillValue("stat:damage");
-            }
-        }
-        else if (Capable.Inventory != null) { weapon = Capable.Inventory.GetItem<Weapon>(); }
+        // on cherche si on a un usable dans la weapon_stack
+        // (on l'appelle weapon mais ça peut etre n'importe quel usable en vrai)
+        Usable weapon = null;
+        if (Capable.Inventory != null) { weapon = Capable.Inventory.GetWeapon(); }
         if (weapon != null) { weapon.Use(Capable); return; }
 
         // on essaie d'attaquer à la main
@@ -195,23 +188,11 @@ public class PersoInputsController : InputController
         // on a pas d'armes ni rien, on return juste
         return;
     }
-    public void OnRandomTalk()
-    {
-        TalkCapacity voice = Capable.GetCapacity<TalkCapacity>();
-        if (voice == null) { return; } // if we don't have a talk capacity
-        if (!voice.Able) { return; } // if we don't have a talk capacity
-        voice.Use(Capable);
-    }
     private void OnDodge()
     {
-        // on vérifie que le perso peut dodge
-        // if (!Can("dodge")) { return; }
-        // Do("dodge");
-
-        // on récupère les shoes
-        Shoes shoes = null;
-        if (Capable is Perso perso) { shoes = perso.ItemManager.GetShoes(); }
-        else if (Capable.Inventory != null) { shoes = Capable.Inventory.GetItem<Shoes>(); }
+        // on récupère l'usable qui est dans le shoes_stack de l'inventaire
+        Usable shoes = null; // on l'appelle shoes pour simplifier la nomenclature mais ça peut etre completement autre chose
+        if (Capable.Inventory != null) { shoes = Capable.Inventory.GetShoes(); }
         if (shoes == null) { return; } // if the shoes are not set, we return
 
         // on utilise les shoes
@@ -219,16 +200,22 @@ public class PersoInputsController : InputController
     }
     public void OnUseConso(int index)
     {
-
         // on trouve la conso
         Usable conso = null;
-        if (Capable is Perso perso) { conso = perso.ItemManager.GetConsumable(index); }
+        if (Capable.Inventory != null) { conso = Capable.Inventory.GetConso(index); }
         if (conso == null) { return; }
 
         // on utilise la conso
         conso.Use(Capable);
     }
-
+    public void OnRandomTalk()
+    {
+        TalkCapacity voice = Capable.GetCapacity<TalkCapacity>();
+        if (voice == null) { return; } // if we don't have a talk capacity
+        if (!voice.Able) { return; } // if we don't have a talk capacity
+        voice.Use(Capable);
+    }
+    
     // INTERACT
     public void HandleInteractInput(InputAction.CallbackContext context)
     {
