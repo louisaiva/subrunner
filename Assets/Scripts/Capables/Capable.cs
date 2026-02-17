@@ -281,6 +281,13 @@ public class Capable : MonoBehaviour, Debuggable
     }
 
     // EFFECTS
+
+    /// <summary>
+    /// Add an effect to the capable with a time to live in seconds. If the effect is already present, it won't be added again.
+    /// If the time to live is -888f, the effect will be infinite.
+    /// </summary>
+    /// <param name="effect"></param>
+    /// <param name="timetolive"></param>
     public virtual void AddEffect(Effect effect, float timetolive)
     {
         if (HasEffect(effect)) { return; }
@@ -418,6 +425,7 @@ public enum Effect
     Stunned, // a Being can't attack
     RegenLife, // a Being regenerates life
     Immobile, // a Movable can't move
+    Unstoppable, // a Movable can't be stopped in its attack
     BeingCarried, // a Movable is being carried (bypass all movement updates)
     Boiling, // boiling, when the water is RILLY HOT -> deals damage to beings
     Burning // litteraly in FIRE -> deals damage mainly, also transmit heat

@@ -60,6 +60,7 @@ MonoBehaviour:
   - robot
   - spider
   - qwin
+  - npc
   log: 0
 --- !u!58 &4164750315520189909
 CircleCollider2D:
@@ -1175,8 +1176,16 @@ PrefabInstance:
       value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
+      propertyPath: unstoppable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: attack_duration
       value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
+      propertyPath: unstoppable_rate
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: distance_to_attack

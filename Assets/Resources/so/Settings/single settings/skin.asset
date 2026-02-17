@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StringSetting
   _value: 0
   min_value: 0
-  max_value: 8
+  max_value: 9
   show_settings:
     is_toggle: 0
     show_percentage: 0
@@ -22,11 +22,12 @@ MonoBehaviour:
     decimal_places: 0
   label: skin
   description: the skin of the player
-  steps: 9
+  steps: 10
   possible_values:
   - perso
   - cat
   - zombo
+  - npc
   - rat
   - qwin
   - apple

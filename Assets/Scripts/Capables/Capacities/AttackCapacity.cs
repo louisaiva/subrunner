@@ -26,6 +26,9 @@ public class AttackCapacity : Capacity
     [SerializeField] private float attack_duration = default;
     [SerializeField] private float attack_duration_random_variation = 0f; // random variation of the attack duration
 
+    [Header("Unstoppable parameters")]
+    [SerializeField] private bool unstoppable = false; // confers the Unstoppable effect during the attack -> can't be hurted, means will allways attack
+    [SerializeField] private float unstoppable_rate = 1; // when unstoppable is true, percentage of an attack to trigger unstoppable effect (0 never to 1 always)
 
     [Header("Knockback parameters")]
     public float knockback_base = 10f; // une attaque répartit le knockb
@@ -98,6 +101,12 @@ public class AttackCapacity : Capacity
         startCooldown(anim_duration);
         IsAttacking = true;
         hit_enemies.Clear();
+
+        // we check if we need to turn on unstoppable effect
+        if (unstoppable && Random.Range(0f, 1f) < unstoppable_rate)
+        {
+            being.AddEffect(Effect.Unstoppable, -888f); // infinite unstoppable
+        }
     }
 
     // UPDATE
@@ -113,6 +122,7 @@ public class AttackCapacity : Capacity
             {
                 IsAttacking = false;
                 hit_enemies.Clear();
+                being.RemoveEffect(Effect.Unstoppable);
             }
             return;
         }
@@ -175,7 +185,7 @@ public class AttackCapacity : Capacity
 
         // calculate knockback
         float advantage_attacker_weight = (being != null ? being.weight : 0.5f) * attackant_advantage; // l'attaquant a un avantage de poids afin de recevoir moins de knockback
-        float total_knockback_weight = hit_enemies.Select(enemy => enemy.weight).Sum() + advantage_attacker_weight;
+        float total_knockback_weight = hit_enemies.Sum(enemy => enemy.weight) + advantage_attacker_weight;
         Vector2 attacker_knockback_direction = Vector2.zero;
 
         bool killed_an_enemy = false;

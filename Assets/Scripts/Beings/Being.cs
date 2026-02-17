@@ -173,20 +173,16 @@ public class Being : Movable
         life -= damage;
 
         // play hurt animation
-        Do("hurted");
-
+        if (!HasEffect(Effect.Unstoppable)) { Do("hurted"); }
+        else { knockback.magnitude *= 0.125f; } // reduce knockback magnitude by 8
 
         // knockback
         if (knockback != null)
         {
-            // forces.Add(knockback);
             AddForce(knockback);
 
             // change the flipX of the sprite if needed
-            if (knockback.direction.x != 0f)
-            {
-                GetComponent<SpriteRenderer>().flipX = knockback.direction.x < 0f;
-            }
+            if (knockback.direction.x != 0f) { GetComponent<SpriteRenderer>().flipX = knockback.direction.x < 0f; }
         }
 
         // floating dmg
