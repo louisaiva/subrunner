@@ -42,10 +42,10 @@ public class UI_Inventory : UI_Slottable
                 Debug.LogWarning("(Inventory) " + name + $" has a null UI_ItemPool : {pool}, skipping initialization");
                 continue;
             } // skip null UIs
-            pool.Init(this);
+            // pool.Init(this);
         }
     }
-    public void Refresh()
+    /* public void Refresh()
     {
         // on clear les pools
         foreach (UI_ItemPool pool in pools)
@@ -141,8 +141,8 @@ public class UI_Inventory : UI_Slottable
         }
 
         return false;
-    }
-    public bool UI_Regrab(Item item)
+    } */
+    /* public bool UI_Regrab(Item item)
     {
         // we try to drop the item AND directly after, grab it.
         // if it is successful we don't even warn the Inventory about this, it is just pure black market
@@ -155,7 +155,7 @@ public class UI_Inventory : UI_Slottable
 
         // otherwise we can't grab the item ://
         return false;
-    }
+    } */
 
 
 

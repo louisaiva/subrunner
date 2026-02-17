@@ -219,7 +219,7 @@ public class Controller : MonoBehaviour
 
         // on met le perso_quick_inventory sur la target si elle a un inventaire
         // capa?.Inventory?.AddUI(perso_quick_inventory);
-        perso_quick_inventory.Refresh();
+        // perso_quick_inventory.Refresh();
 
         // on affiche l'hp bar & shortcuts seulement si c'est le perso
         UI_HUD hud = UI_Manager.Instance.GetPool("hud").GetComponent<UI_HUD>();

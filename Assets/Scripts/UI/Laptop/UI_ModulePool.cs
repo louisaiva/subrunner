@@ -46,7 +46,7 @@ public class UI_ModulePool : UI_ItemPool
         if (log) { Debug.Log($"(UI_ModulePool) dropping overhead slots, current count: {ui_items.Count}"); }
 
         // we check if we have too many slots
-        if (Count <= MaxSlots) { return; }
+        if (Count <= pool.MaxStacks) { return; }
 
         // we only have full slots, but we still have too many slots
         // so we drop the last slots items and remove their slots
@@ -54,7 +54,7 @@ public class UI_ModulePool : UI_ItemPool
         // so LaptopInventory already cleared the lasts slots for us so it's ok we can destroy them
         // they should be empty
         int full_slots_dropped = 0;
-        while (Count > MaxSlots)
+        while (Count > pool.MaxStacks)
         {
             // we get the last slot
             UI_Item ui_item = ui_items[Count - 1];

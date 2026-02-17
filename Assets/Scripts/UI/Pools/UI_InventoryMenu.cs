@@ -7,8 +7,7 @@ public class UI_InventoryMenu : UI_Pool, Panelable
 {
     private List<GameObject> saved_slots = new List<GameObject>();
     [Header("Inventory Menu Components")]
-    [SerializeField] private UI_Inventory ui_inventory;
-    public UI_Inventory UI_Inventory { get { return ui_inventory; } }
+    // [SerializeField] private UI_Inventory ui_inventory;
     [SerializeField] private UI_Inventory ui_laptop;
     [SerializeField] private Transform no_inventory_panel;
     private UI_PanelManager _panel_manager;
@@ -35,10 +34,10 @@ public class UI_InventoryMenu : UI_Pool, Panelable
     // AWAKE START
     protected override void Awake()
     {
-        if (ui_inventory == null)
+        /* if (ui_inventory == null)
         {
             Debug.LogError("(UI_InventoryMenu) missing ui_inventory on " + name);
-        }
+        } */
 
         if (ui_laptop == null)
         {
@@ -60,7 +59,7 @@ public class UI_InventoryMenu : UI_Pool, Panelable
     {
         // vérifie si on a des items dans notre inventaire
         ui_elements.Clear();
-        if (ui_inventory.Inventory.Count == 0) { ui_elements.Add(no_inventory_panel.gameObject); }
+        if (Perso.Instance.Inventory.Count == 0) { ui_elements.Add(no_inventory_panel.gameObject); }
         else { ui_elements.AddRange(saved_slots); }
 
         // on affiche les items pool & indicators et on les refresh
@@ -80,7 +79,7 @@ public class UI_InventoryMenu : UI_Pool, Panelable
     protected override IEnumerator enable_coroutine()
     {
         // on active le navigator si on a des items
-        if (ui_inventory.Inventory.Count == 0) { yield break; }
+        if (Perso.Instance.Inventory.Count == 0) { yield break; }
         // UI_Navigator.Instance.Enable(this);
         slottable_mixer.Enable(ingame: false);
         yield break;
@@ -146,8 +145,17 @@ public class UI_InventoryMenu : UI_Pool, Panelable
     }
     private List<UI_ItemPool> get_item_pools()
     {
-        List<UI_ItemPool> pools = new List<UI_ItemPool>(ui_inventory.pools);
+        List<UI_ItemPool> pools = new List<UI_ItemPool>(/* ui_inventory.pools */);
         pools.AddRange(ui_laptop.pools);
+
+        // find the pools in the ui_elements
+        for (int i = 0; i < ui_elements.Count; i++)
+        {
+            GameObject ui = ui_elements[i];
+            UI_ItemPool item_pool = ui.GetComponentInChildren<UI_ItemPool>(includeInactive: true);
+            if (item_pool != null) { pools.Add(item_pool); }
+        }
+
         return pools;
     }
     private List<GameObject> get_all_indicators()

@@ -17,7 +17,7 @@ public interface ItemStorer
 public class ItemPool : MonoBehaviour, ItemStorer
 {
     [Header("Items")]
-    [SerializeField] private List<ItemStack> stacks = new List<ItemStack>();
+    public List<ItemStack> stacks = new List<ItemStack>();
     public List<Item> Items { get { return stacks.SelectMany(s => s.Items).ToList(); } }
     public string ItemRule { get { return item_rule; } }
     public virtual int Count { get { return Items.Count; } }
@@ -32,6 +32,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
     // [Header("Events")]
     public event Action<Item> OnItemGrabbed = delegate { };
     public event Action<Item> OnItemDropped = delegate { };
+    public event Action<Item> OnStacksChanged = delegate { };
 
 
     [Header("Item Rule")]
@@ -60,8 +61,36 @@ public class ItemPool : MonoBehaviour, ItemStorer
             if (item == null) { continue; }
             if (Grab(item)) { Inventory.GrabAtStart(item); }
         }
+
+        // we ensure we have at least MinStacks stacks (for the ui to be great)
+        if (stacks.Count < MinStacks)
+        {
+            int stacks_to_add = MinStacks - stacks.Count;
+            for (int i = 0; i < stacks_to_add; i++)
+            {
+                stacks.Add(new ItemStack());
+            }
+        }
     }
 
+
+    // RULE CHECK
+    public bool CanStore(Item item)
+    {
+        // we check if the item is valid
+        if (item == null) { return false; }
+        bool validate = item.ValidateRule(item_rule);
+        if (!validate && log_storage)
+        {
+            Debug.LogWarning($"(ItemPool) {name} can't store item {item.Reference} because it doesn't match the rule {item_rule}");
+        }
+        else if (log_storage)
+        {
+            Debug.Log($"(ItemPool) {name} can store item {item.Reference} because it matches the rule {item_rule}");
+        }
+
+        return validate;
+    }
 
     // GRAB / DROP
     public virtual bool Grab(Item item)
@@ -111,6 +140,8 @@ public class ItemPool : MonoBehaviour, ItemStorer
         bool added_to_new_stack = new_stack.Add(item);
         stacks.Add(new_stack);
 
+        OnStacksChanged?.Invoke(null);
+
         // we successfully grabbed the item
         finalise_grab(item);
         if (log) { Debug.Log("(ItemPool) " + name + " grabbed : " + item.name + " in new stack"); }
@@ -125,13 +156,23 @@ public class ItemPool : MonoBehaviour, ItemStorer
         {
             ItemStack stack = stacks[i];
             if (stack.IsEmpty) { continue; }
-            if (stack.ItemReference != item.Reference) { continue; }
+            // dont uncomment if (stack.ItemReference != item.Reference) { continue; } - we don't want to check item ref since when ref changed we need to drop it
+            if (!stack.Items.Contains(item)) { continue; }
 
             // we try to remove the item from this stack
             bool removed = stack.Remove(item);
             if (!removed) { continue; }
 
+            // we check if the stack is empty now or not
+            if (Scalable && stack.IsEmpty && stacks.Count > MinStacks)
+            {
+                stacks.Remove(stack);
+                OnStacksChanged?.Invoke(null);
+            }
+
             // if we are here, we successfully dropped the item
+            item.OnReferenceChanged -= handle_item_reference_changed;
+            item.Grabbed = false; // we set the item to dropped (which enables the hover collider)
             OnItemDropped.Invoke(item);
             if (log) { Debug.Log("(ItemPool) " + name + " dropped : " + item.name); }
             return true;
@@ -140,41 +181,51 @@ public class ItemPool : MonoBehaviour, ItemStorer
         return false;
     }
 
-    // RULE CHECK
-    public bool CanStore(Item item)
-    {
-        // we check if the item is valid
-        if (item == null) { return false; }
-        bool validate = item.ValidateRule(item_rule);
-        if (!validate && log_storage)
-        {
-            Debug.LogWarning($"(ItemPool) {name} can't store item {item.Reference} because it doesn't match the rule {item_rule}");
-        }
-        else if (log_storage)
-        {
-            Debug.Log($"(ItemPool) {name} can store item {item.Reference} because it matches the rule {item_rule}");
-        }
-
-        return validate;
-    }
-
     // low level grab drop
     private void finalise_grab(Item item)
     {
         // we check if the item is already grabbed somewhere, if so we drop it
         if (item.Grabbed && item.ItemPoolHolder != null) { item.ItemPoolHolder.Drop(item); }
-        // todo can be improved if we make the ItemPoolHolder drop instead of making the InventoryHolder drop
 
         // we set the item parent and reset its local position
         item.transform.SetParent(transform);
         item.transform.localPosition = Vector3.zero;
 
+        // we register the item callback to when it changes references
+        // (will either update the stack' either split it either drop it AND THEN automatically update the UI)
+        item.OnReferenceChanged += handle_item_reference_changed;
+
         // we add the item
-        // Items.Add(item);
         item.Grabbed = true;
 
         OnItemGrabbed.Invoke(item);
     }
+    private void handle_item_reference_changed(Item item)
+    {
+        // get the stack of the item
+        ItemStack stack = get_stack_of_item(item);
+        if (stack == null) { return; }
+
+        // 4 cases :
+
+        // 1 - item is alone in their stack
+        if (stack.Items.Count == 1)
+        {
+            // nothing to do bcz the reference auto updates in ItemStack
+            // todo maybe check that UI updates itself since no event was fired
+            return;
+        }
+
+        // 2 - item is not alone and we can grab it in this Pool
+        if (Grab(item)) { return; } // this is successful and calls ui events so perfect
+
+        // 3 - item is not alone, we can't grab it, so we try to grab it in the inventory
+        if (Inventory != null && Inventory.Grab(item)) { return; }
+
+        // 4 - we drop it
+        Inventory?.Drop(item); // we try to drop it from the inventory if it's in, this will update the UI and drop it in the world if it's not in the inventory anymore
+    }
+
 
 
     // GETTERS
@@ -234,24 +285,41 @@ public class ItemPool : MonoBehaviour, ItemStorer
         }
         return false;
     }
+    protected ItemStack get_stack_of_item(Item item)
+    {
+        for (int i = 0; i < stacks.Count; i++)
+        {
+            ItemStack stack = stacks[i];
+            if (stack.IsEmpty) { continue; }
+
+            // -> we don't want to check reference since maybe the reference just changed so sometimes it's not the same
+            // dont uncomment lol -> if (stack.ItemReference != item.Reference) { continue; }
+
+            // we check if the item is in this stack
+            if (stack.Items.Contains(item)) { return stack; }
+        }
+        return null;
+    }
 }
 
 
 [Serializable] public class ItemStack 
 {
-    public string ItemReference = "";
+    public string ItemReference { get   {
+                                            if (IsEmpty) { return ""; }
+                                            return Items[0].Reference;
+                                        } }
     public int MaxQty = 1;
     public List<Item> Items = new List<Item>();
     public bool IsFull { get { return Items.Count >= MaxQty; } }
     public bool IsEmpty { get { return Items.Count == 0; } }
-    
+
     // ADD / REMOVE
     public bool Add(Item item)
     {
         if (IsEmpty)
         {
-            // we set the max qty & the item ref
-            ItemReference = item.Reference;
+            // we set the max qty
             MaxQty = item.MaxQty;
             Items.Add(item);
             return true;
@@ -274,7 +342,6 @@ public class ItemPool : MonoBehaviour, ItemStorer
         // if we are empty, we reset the stack
         if (IsEmpty)
         {
-            ItemReference = "";
             MaxQty = 1;
         }
 

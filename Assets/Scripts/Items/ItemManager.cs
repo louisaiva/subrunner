@@ -55,12 +55,12 @@ public class ItemManager : MonoBehaviour
         cons4_slot.OnItemChanged += update_hud_renderers;
 
         // shoes events
-        shoes_pool.OnPoolChanged += (ui_item) =>
+        /* shoes_pool.OnPoolChanged += (ui_item) =>
         {
             if (log_shoes) { Debug.Log("(ItemManager) Shoes pool changed : " + ui_item.name + " ui_item has " + ui_item.GetItems().Count + " items."); }
             update_shoes();
             update_hud_renderers();
-        };
+        }; */
 
         // we update the HUD renderers
         update_hud_renderers();

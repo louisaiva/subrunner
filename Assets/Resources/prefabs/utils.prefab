@@ -476,8 +476,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectsToAwake:
   - {fileID: 0}
+  awake_all_awakables_in_scene: 0
+  objectsToStart:
   - {fileID: 0}
   - {fileID: 0}
+  start_all_startables_in_scene: 1
 --- !u!1 &5634746178764748898
 GameObject:
   m_ObjectHideFlags: 0
@@ -583,8 +586,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AgentTypeID: 0
   m_CollectObjects: 1
-  m_Size: {x: 62.996895, y: 10, z: 37.707592}
-  m_Center: {x: 24.549194, y: 2, z: 17.883806}
+  m_Size: {x: 62.996895, y: 10, z: 42.37407}
+  m_Center: {x: 24.549194, y: 2, z: 6.3287196}
   m_LayerMask:
     serializedVersion: 2
     m_Bits: 570427400
@@ -599,7 +602,7 @@ MonoBehaviour:
   m_BuildHeightMesh: 0
   m_MinRegionArea: 0
   m_HideEditorLogs: 1
-  m_NavMeshData: {fileID: 23800000, guid: a68b478d435af0bbeb262d3c2689f482, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 497efffc3f96b7144a3b9e0e67dd8db7, type: 2}
 --- !u!114 &3117844331737764809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5631,8 +5634,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AgentTypeID: -1372625422
   m_CollectObjects: 1
-  m_Size: {x: 62.569313, y: 10, z: 37.707592}
-  m_Center: {x: 24.335403, y: 2, z: 17.883806}
+  m_Size: {x: 62.347095, y: 10, z: 42.485176}
+  m_Center: {x: 24.224298, y: 2, z: 6.16206}
   m_LayerMask:
     serializedVersion: 2
     m_Bits: 536872968
@@ -5647,7 +5650,7 @@ MonoBehaviour:
   m_BuildHeightMesh: 0
   m_MinRegionArea: 0
   m_HideEditorLogs: 1
-  m_NavMeshData: {fileID: 23800000, guid: 6dd2693aa0f00f35da433ff24daada2a, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: a211901d6a0e2be4da87ecdcee7ec925, type: 2}
 --- !u!114 &3508825735167502640
 MonoBehaviour:
   m_ObjectHideFlags: 0

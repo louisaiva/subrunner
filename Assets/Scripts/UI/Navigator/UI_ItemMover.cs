@@ -275,24 +275,24 @@ public class UI_ItemMover : MonoBehaviour
         // on récupère les item pools
         for (int i = 0; i < pools.Count; i++)
         {
-            UI_ItemPool pool = pools[i];
+            UI_ItemPool ui_pool = pools[i];
 
-            log_slottables += $"- {pool.name} ({pool.GetType()}) ";
+            log_slottables += $"- {ui_pool.name} ({ui_pool.GetType()}) ";
 
-            // si le moving item ne matche pas la rule de la pool on désactive toute la pool
-            if (!pool.CanStore(moving_item))
+            // si le moving item ne matche pas la rule de la ui_pool on désactive toute la ui_pool
+            if (!ui_pool.pool.CanStore(moving_item))
             {
-                // on désactive tous les slots de la pool
+                // on désactive tous les slots de la ui_pool
                 slots.Clear();
-                slots.AddRange(pool.GetAllSlots());
+                slots.AddRange(ui_pool.GetAllSlots());
                 log_slottables += $"--> cannot store {moving_item.name}, disabling all {slots.Count} slots \n";
                 for (int j = 0; j < slots.Count; j++) { slots[j].Disable(); }
                 continue;
             }
 
-            // on récupère les slots de la pool
+            // on récupère les slots de la ui_pool
             slots.Clear();
-            slots.AddRange(pool.GetAllSlots());
+            slots.AddRange(ui_pool.GetAllSlots());
             log_slottables += $"--> can store {moving_item.name}, enabling receivable slots \n";
             for (int k = 0; k < slots.Count; k++)
             {
@@ -301,7 +301,7 @@ public class UI_ItemMover : MonoBehaviour
                 if (ui_item == moving_ui) { continue; } // on ne désactive pas le slot en cours de drag
 
                 // on regarde si le slot a un item qui peut etre recu par le moving_ui_item_pool
-                if (ui_item.Item != null && !moving_pool.CanStore(ui_item.Item))
+                if (ui_item.Item != null && !moving_pool.pool.CanStore(ui_item.Item))
                 {
                     ui_item.Disable(); // on désactive le slot
                     continue;
@@ -312,12 +312,12 @@ public class UI_ItemMover : MonoBehaviour
                 ui_item.Enable();
             }
 
-            // on regarde si la pool est full et scalable -> on ajout un ui_item vide dedans
-            if (pool == moving_pool) { continue; }
-            if (!pool.Scalable) { continue; }
-            if (!pool.CanStore(moving_item)) { continue; }
-            if (pool.EmptyCount > 0) { continue; }
-            GameObject empty_slot = pool.CreateItemSlot();
+            // on regarde si la ui_pool est full et scalable -> on ajout un ui_item vide dedans
+            if (ui_pool == moving_pool) { continue; }
+            if (!ui_pool.pool.Scalable) { continue; }
+            if (!ui_pool.pool.CanStore(moving_item)) { continue; }
+            if (ui_pool.EmptyCount > 0) { continue; }
+            GameObject empty_slot = ui_pool.CreateItemSlot();
             empty_slot.GetComponent<UI_Item>().Enable();
             log_slottables += $"        --> added empty slot bcz scalable & full\n";
         }
@@ -348,10 +348,10 @@ public class UI_ItemMover : MonoBehaviour
 
         for (int i = 0; i < item_pools.Count; i++)
         {
-            UI_ItemPool pool = item_pools[i];
+            UI_ItemPool ui_pool = item_pools[i];
 
             // on récupère les slots du inventory
-            List<UI_Item> slots = pool.GetAllSlots();
+            List<UI_Item> slots = ui_pool.GetAllSlots();
             for (int j = 0; j < slots.Count; j++)
             {
                 UI_Item ui_item = slots[j];
@@ -359,11 +359,11 @@ public class UI_ItemMover : MonoBehaviour
                 // on regarde si le slot n'a pas d'item on le désactive
                 if (ui_item.Item != null) { ui_item.Enable(); continue; }
                 if (except_modules && ui_item is UI_Module) { ui_item.Enable(); continue; } // on ne désactive pas les modules
-                if (pool.DoNotDisableEmptySlots) { ui_item.Enable(); continue; }
+                if (ui_pool.DoNotDisableEmptySlots) { ui_item.Enable(); continue; }
                 ui_item.Disable(); // on désactive le slot
             }
 
-            if (pool.Scalable) { pool.DestroyEmptySlots(); }
+            if (ui_pool.pool.Scalable) { ui_pool.DestroyEmptySlots(); }
         }
 
         // si on a un UI_InventoryMenu dans nos uis alors on refresh ses UI_ItemPools

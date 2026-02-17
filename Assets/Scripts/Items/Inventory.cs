@@ -110,8 +110,7 @@ public class Inventory : MonoBehaviour, ItemStorer
 
         if (!pool_drop(item)) { return false; }
 
-        // we set the item to dropped (which enables the hover collider)
-        item.Grabbed = false;
+        // todo call the potential DropCapacity of the capable ?
 
         // we trigger the event
         OnItemDropped.Invoke(item);

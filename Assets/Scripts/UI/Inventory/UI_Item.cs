@@ -60,6 +60,8 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
     }
     public bool CanStore(List<Item> items)
     {
+        // todo we already have this method in ItemPool, shouldn't we use only one ?
+
         // checks if we can add the item to the slot (store or stack it on the slot)
         Item item = items.Count > 0 ? items[0] : null;
 
@@ -104,7 +106,7 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
 
         // we add the item to the slot
         items.Add(item);
-        item.OnReferenceChanged += handle_item_reference_changed;
+        // item.OnReferenceChanged += handle_item_reference_changed;
 
         // we update the UI
         update_ui_qty();
@@ -113,7 +115,7 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
         if (Quantity == 1) { setItem(item); }
 
         OnItemChanged?.Invoke(items);
-        ItemPool?.NotifyPoolChanged(this);
+        // ItemPool?.NotifyPoolChanged(this);
 
         return true;
     }
@@ -124,7 +126,7 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
 
         // we remove the item from the slot
         items.Remove(item);
-        item.OnReferenceChanged -= handle_item_reference_changed;
+        // item.OnReferenceChanged -= handle_item_reference_changed;
 
         // we update the UI
         update_ui_qty();
@@ -133,16 +135,16 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
         if (Quantity == 0) { ClearUI(); }
 
         OnItemChanged?.Invoke(items);
-        ItemPool?.NotifyPoolChanged(this);
+        // ItemPool?.NotifyPoolChanged(this);
         return true;
     }
     public virtual void Clear()
     {
         // we remove the reference change callbacks
-        for (int i = 0; i < items.Count; i++)
+        /* for (int i = 0; i < items.Count; i++)
         {
             items[i].OnReferenceChanged -= handle_item_reference_changed;
-        }
+        } */
 
         // we clear the items
         items.Clear();
@@ -163,18 +165,39 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
             this.items.AddRange(items);
             setItem(items[0]);
 
-            // we set the reference change callbacks
+            /* // we set the reference change callbacks
             for (int i = 0; i < this.items.Count; i++)
             {
                 this.items[i].OnReferenceChanged += handle_item_reference_changed;
-            }
+            } */
         }
 
         // we update the UI
         update_ui_qty();
 
         OnItemChanged?.Invoke(this.items);
-        ItemPool?.NotifyPoolChanged(this);
+        // ItemPool?.NotifyPoolChanged(this);
+    }
+    public virtual void Store(ItemStack stack)
+    {
+        // if we are not empty we throw an error
+        if (Quantity > 0)
+        {
+            Debug.LogWarning($"(UI_Item) Trying to store a full item stack in a non empty slot, will destroy {Quantity} items ! (only in the ui but still)");
+            Clear();
+        }
+
+        // if stack is empty we r good !
+        if (stack.IsEmpty) { return; }
+
+        // we DO have items, so we update the sprite
+        setItem(stack.Items[0]);
+
+        // we add the items to the slot
+        items.AddRange(stack.Items);
+
+        // we update the UI
+        update_ui_qty();
     }
 
     // UI
@@ -233,8 +256,7 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
         if (ItemPool != null && ItemPool.DoNotDisableEmptySlots) { return; }
         Disable();
     }
-
-    protected void handle_item_reference_changed(Item item)
+    /* protected void handle_item_reference_changed(Item item)
     {
         // we check if this is the only one we have we simply change the ui
         if (Quantity == 1)
@@ -255,7 +277,7 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
 
         // else we could not regrab it so we simulate a PointerDropped to make it drop
         drop_item(item);
-    }
+    } */
 
     // ON POINTER
     public override void OnPointerClick(PointerEventData eventData)
@@ -309,7 +331,7 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
         {
             inventory_to_drop.Grab(item);
             OnItemChanged?.Invoke(this.items);
-            ItemPool?.NotifyPoolChanged(this);
+            // ItemPool?.NotifyPoolChanged(this);
             return;
         }
 
@@ -322,7 +344,7 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
             dropper.random_direction = true;
             dropper.Use(inventory.capable);
             OnItemChanged?.Invoke(this.items);
-            ItemPool?.NotifyPoolChanged(this);
+            // ItemPool?.NotifyPoolChanged(this);
             dropper.random_direction = false;
         }
         else
@@ -330,7 +352,7 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
             // the inventory simply drops the item (we may be in a chest)
             inventory.Drop(item);
             OnItemChanged?.Invoke(this.items);
-            ItemPool?.NotifyPoolChanged(this);
+            // ItemPool?.NotifyPoolChanged(this);
         }
     }
 
