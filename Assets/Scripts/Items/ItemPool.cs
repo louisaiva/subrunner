@@ -16,6 +16,9 @@ public interface ItemStorer
 
 public class ItemPool : MonoBehaviour, ItemStorer
 {
+    [Header("Pool ID")]
+    public string PoolID = "stuff";
+
     [Header("Items")]
     public List<ItemStack> stacks = new List<ItemStack>();
     public List<Item> Items { get { return stacks.SelectMany(s => s.Items).ToList(); } }

@@ -837,8 +837,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 352dd4bffc5726b41a31e2620019c7cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Items: []
-  uis:
+  pools:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   log: 0
@@ -6647,6 +6652,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   endless_floats: []
+  endless_vectors: []
   log_endless_inputs: 0
   log: 0
   InputsDisabled: 0
@@ -6663,9 +6669,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   endless_floats: []
+  endless_vectors: []
   log_endless_inputs: 0
+  log_states: 0
   navigator: {fileID: 0}
-  navigate_in_game: 0
+  in_game: 0
 --- !u!114 &4712917403971600642
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6689,6 +6697,7 @@ MonoBehaviour:
   life_bar: {fileID: 0}
   shortcuts: {fileID: 0}
   log: 1
+  log_ui_attachment: 0
 --- !u!1 &8191525930727259131
 GameObject:
   m_ObjectHideFlags: 0

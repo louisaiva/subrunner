@@ -18,7 +18,7 @@ using UnityEngine.UI;
 /// todo make sure we have space to put an item stack, etc
 /// todo ItemPool  can work without UI_ItemPool, but not the opposite
 /// </summary>
-public class UI_ItemPool : MonoBehaviour, Startable
+public class UI_ItemPool : UI_Slottable, Startable
 {
     // [Header("Item Pool Parameters")]
     // public int MaxSlots = 9; // the maximum number of slots in the pool
@@ -26,9 +26,12 @@ public class UI_ItemPool : MonoBehaviour, Startable
     // public bool Scalable = false; // if true, the pool will dynamically add/remove slots
 
     [Header("Item Pool")]
+    public string PoolID = "stuff"; // the ID of the pool, used to link an UI_ItemPool and a ItemPool via Controller
     public ItemPool pool;
+    [SerializeField] protected string item_slot_type = "item"; // the type of the item slot to create, used to get the right prefab from the ItemBank
 
 
+    [Header("UI Items")]
     [SerializeField] protected List<UI_Item> ui_items = new List<UI_Item>();
     public int Count { get { return ui_items.Count; } }
     public int EmptyCount { get { return ui_items.Where(ui_item => ui_item.Item == null).Count(); } }
@@ -37,15 +40,11 @@ public class UI_ItemPool : MonoBehaviour, Startable
     [SerializeField] protected bool destroy_empty_on_init = true; // if true, the empty slots will be destroyed on init
     public bool DoNotDisableEmptySlots = false;
 
-    [Obsolete,Header("Item Rule")]
-    public string item_rule = ""; // the rule to check if the item is valid
-
     [Header("Components")]
     [SerializeField] protected ItemBank bank;
     public UI_Inventory UI_Inventory;
 
     [Header("Logs")]
-    [SerializeField] protected bool log = false;
     [SerializeField] protected bool log_storage = false;
 
     // START
@@ -53,18 +52,12 @@ public class UI_ItemPool : MonoBehaviour, Startable
     {
         bank = ItemBank.Instance;
 
+        // we inspect all the ui_items we already have and delete them
+        List<UI_Item> ui_items_found_at_start = new List<UI_Item>(GetComponentsInChildren<UI_Item>(includeInactive: true));
+        ui_items.AddRange(ui_items_found_at_start);
+
         // clear the ui_items
-        ui_items.Clear();
-
-        // find the ItemPool and link it to us (register to their callbacks)
-        if (pool == null) { return;} // todo for now we don't do nothing but we should
-        // todo same we should use 'AttachToPool' method instead but for now we can't otherwise it messed up the callbacks
-        pool.OnItemGrabbed += SyncUIWithPool;
-        pool.OnItemDropped += SyncUIWithPool;
-        pool.OnStacksChanged += SyncUIWithPool;
-
-        // sync the UI with pool
-        SyncUIWithPool();
+        DestroyAllSlots();
     }
 
     // ITEM POOL ATTACHMENT
@@ -73,12 +66,7 @@ public class UI_ItemPool : MonoBehaviour, Startable
         if (pool == null) { return; }
 
         // remove all callbacks
-        if (this.pool != null)
-        {
-            this.pool.OnItemGrabbed -= SyncUIWithPool;
-            this.pool.OnItemDropped -= SyncUIWithPool;
-            this.pool.OnStacksChanged -= SyncUIWithPool;
-        }
+        if (this.pool != null) { DetachFromPool(); }
 
         // set new pool and register callbacks
         this.pool = pool;
@@ -88,6 +76,21 @@ public class UI_ItemPool : MonoBehaviour, Startable
 
         // sync the UI with pool
         SyncUIWithPool();
+    }
+    public void DetachFromPool()
+    {
+        if (pool == null) { return; }
+
+        // remove all callbacks
+        pool.OnItemGrabbed -= SyncUIWithPool;
+        pool.OnItemDropped -= SyncUIWithPool;
+        pool.OnStacksChanged -= SyncUIWithPool;
+
+        // clear pool reference
+        pool = null;
+
+        // clear the UI
+        DestroyAllSlots();
     }
 
 
@@ -119,88 +122,6 @@ public class UI_ItemPool : MonoBehaviour, Startable
             ui_items.Add(ui_item);
         }
     }
-
-
-    // RULE CHECK
-    /* public bool CanStore(Item item)
-    {
-        // we check if the item is valid
-        if (item == null) { return false; }
-        bool validate = item.ValidateRule(item_rule);
-        if (!validate && log_storage)
-        {
-            Debug.LogWarning($"(UI_ItemPool) {name} can't store item {item.Reference} because it doesn't match the rule {item_rule}");
-        }
-        else if (log_storage)
-        {
-            Debug.Log($"(UI_ItemPool) {name} can store item {item.Reference} because it matches the rule {item_rule}");
-        }
-
-        return validate;
-    } */
-
-
-    // GRAB / DROP
-    /* public bool Grab(Item item)
-    {
-        // we check if we can add the item
-        if (!CanStore(item))
-        {
-            if (log_storage) { Debug.Log("(UI_ItemPool) item " + item.Reference + " is not valid for this pool"); }
-            return false;
-        }
-
-        // we try to store the item in the existing slots
-        foreach (UI_Item ui_item in ui_items)
-        {
-            // we check if the slot can take the item
-            bool stored = ui_item.Store(item);
-            if (stored) { return true; }
-        }
-
-        // if we are here, we didn't find a slot to stack the item
-        if (!Scalable)
-        {
-            if (log_storage)
-            {
-                Debug.Log("(UI_ItemPool) item " + item.Reference
-            + $" is valid for this pool but no slot to store it found :// ({Count} slots currently in the pool)");
-            }
-            return false;
-        }
-
-        // if we are here, we have a scalable inventory
-        CreateItemSlot(item);
-        return true;
-    } */
-    /* public bool Drop(Item item)
-    {
-        // we check if we can remove the item
-        if (item == null) { return false; }
-
-        // we go through the children to find the item
-        foreach (UI_Item ui_item in ui_items)
-        {
-            // we try to unstore the item
-            bool unstored = ui_item.Unstore(item);
-            if (unstored)
-            {
-                // we successfully unstored the item !!
-                // we check if the slot is empty & we are scalable
-                if (ui_item.Quantity == 0 && Scalable)
-                {
-                    // we destroy the ui_item
-                    Destroy(ui_item.gameObject);
-                    ui_items.Remove(ui_item);
-                    if (Count < MinSlots) { CreateEmptySlots(MinSlots - Count); }
-                }
-                return true;
-            }
-        }
-
-        return false;
-    } */
-
 
     // DESTROY / CREATE EMPTY ITEM SLOT
     public void DestroyEmptySlots()
@@ -264,11 +185,9 @@ public class UI_ItemPool : MonoBehaviour, Startable
     public virtual GameObject CreateItemSlot(Item item = null)
     {
         // we create the item
-        GameObject ui_slot = bank.CreateUI_Item();
-        ui_slot.transform.SetParent(transform);
+        GameObject ui_slot = bank.CreateUI_Item(transform, item_slot_type);
+        // ui_slot.transform.SetParent(transform);
 
-        // reset the scale to 1
-        ui_slot.transform.localScale = Vector3.one;
 
         // we change the layer of the slot to the same as the pool
         ui_slot.layer = gameObject.layer;
@@ -282,6 +201,11 @@ public class UI_ItemPool : MonoBehaviour, Startable
 
         // we add the item to the list
         ui_items.Add(ui_item);
+
+
+        // reset the scale to 1 and local position to 0,0
+        ui_slot.transform.localScale = Vector3.one;
+        ui_slot.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 
         return ui_slot;
     }
@@ -302,7 +226,7 @@ public class UI_ItemPool : MonoBehaviour, Startable
         }
         return -1;
     }
-    public List<Item> GetAllItems()
+    /* public List<Item> GetAllItems()
     {
         List<Item> items = new List<Item>();
         foreach (UI_Item ui_item in ui_items)
@@ -319,7 +243,7 @@ public class UI_ItemPool : MonoBehaviour, Startable
             if (ui_item.Quantity > 0) { filled_slots.Add(ui_item); }
         }
         return filled_slots;
-    }
+    } */
     public UI_Item GetSlotAt(int index)
     {
         if (index < 0 || index >= ui_items.Count) { return null; }
@@ -328,5 +252,16 @@ public class UI_ItemPool : MonoBehaviour, Startable
     public List<UI_Item> GetAllSlots()
     {
         return ui_items;
+    }
+
+
+
+
+    // SLOTTABLE
+    public override List<UI_Slot> GetSlots() { return ui_items.Cast<UI_Slot>().ToList(); }
+    public override bool IsYourSlot(UI_Slot slot)
+    {
+        if (ui_items.Contains(slot)) { return true; }
+        return false;
     }
 }

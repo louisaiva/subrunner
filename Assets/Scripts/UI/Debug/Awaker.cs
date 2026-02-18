@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public interface Awakable { void InitAwake(); }
-public interface Startable { void InitStart(); }
+public interface Awakable { void InitAwake(); GameObject gameObject { get; } }
+public interface Startable { void InitStart(); GameObject gameObject { get; } }
 
 
 /// <summary>
@@ -23,6 +23,10 @@ public class Awaker : MonoBehaviour
     public bool start_all_startables_in_scene = true;
     private List<Startable> all_startables = new List<Startable>();
 
+
+    [Header("Logs")]
+    public bool log = true;
+
     // AWAKE - CALL INITAWAKE
     private void Awake()
     {
@@ -35,7 +39,6 @@ public class Awaker : MonoBehaviour
         if (awake_all_awakables_in_scene) { awakables.AddRange(all_awakables); }
         else
         {
-
             // else we add chosen awakbles only
             for (int i = 0; i < objectsToAwake.Count; i++)
             {
@@ -52,12 +55,15 @@ public class Awaker : MonoBehaviour
         }
 
         // 3 - we init awake all those awakable
+        string log_str = $"(Awaker) InitAwake called on {awakables.Count} awakables : ";
         for (int i = 0; i < awakables.Count; i++)
         {
             Awakable awakable = awakables[i];
             if (awakable == null) { continue; }
+            log_str += "\n\t - " + awakable.gameObject.name + " : " + awakable.ToString();
             awakable.InitAwake();
         }
+        if (log) { Debug.Log(log_str); }
     }
 
     // START - CALL INITSTART
@@ -78,12 +84,15 @@ public class Awaker : MonoBehaviour
             }
         }
 
+        string log_str = $"(Awaker) InitStart called on {startables.Count} startables : ";
         for (int i = 0; i < startables.Count; i++)
         {
             Startable startable = startables[i];
             if (startable == null) { continue; }
+            log_str += "\n\t - " + startable.gameObject.name + " : " + startable.ToString();
             startable.InitStart();
         }
+        if (log) { Debug.Log(log_str); }
     }
 
 

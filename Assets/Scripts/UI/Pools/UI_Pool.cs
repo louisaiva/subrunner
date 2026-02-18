@@ -29,7 +29,7 @@ public class UI_Pool : MonoBehaviour
     [Header("Stacked UI Elements")]
     [SerializeField] protected List<GameObject> stacked_elements = new List<GameObject>(); // elements that will stay showed when stacking a pool on top of this pool
     // stacked elements must also be in ui_elements
-
+ 
     [Header("Logs")]
     [SerializeField] protected bool log = false;
     [SerializeField] protected bool log_elements_showing = false;

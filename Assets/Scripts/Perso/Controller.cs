@@ -39,6 +39,7 @@ public class Controller : MonoBehaviour
 
     [Header("Log")]
     [SerializeField] private bool log = false;
+    [SerializeField] private bool log_ui_attachment = false;
 
     // AWAKE
     public static Controller Instance { get; private set; }
@@ -166,6 +167,7 @@ public class Controller : MonoBehaviour
         // reset l'inventory
         // capa?.Inventory?.RemoveUI(perso_quick_inventory);
         perso_quick_inventory.Inventory = null;
+        unattach_ui_item_pools();
 
 
         // on cache l'hp bar & shortcuts seulement si c'est le perso
@@ -221,6 +223,11 @@ public class Controller : MonoBehaviour
         // capa?.Inventory?.AddUI(perso_quick_inventory);
         // perso_quick_inventory.Refresh();
 
+        // on assigne les différents item pools de l'inventaire à leurs UI_ItemPool respectifs
+        attach_item_pools_to_ui(capa.Inventory);
+
+
+
         // on affiche l'hp bar & shortcuts seulement si c'est le perso
         UI_HUD hud = UI_Manager.Instance.GetPool("hud").GetComponent<UI_HUD>();
         if (capa is Perso)
@@ -254,6 +261,50 @@ public class Controller : MonoBehaviour
         // on refresh le see through pour remettre la tete bien centrée
         see_through.Refresh(skin);
     }
+
+
+
+    // low level control / uncontrol helpers
+    private void attach_item_pools_to_ui(Inventory inventory)
+    {
+        if (inventory == null) { return; }
+
+        // on récupère les ui_item_pools du ui_inventoryMenu
+        UI_InventoryMenu inventory_menu = UI_Manager.Instance.GetPool<UI_InventoryMenu>();
+        List<UI_ItemPool> ui_pools = inventory_menu.GetItemPools();
+        
+        // we go through all itempools in inventory
+        for (int i=0; i<inventory.pools.Count; ++i)
+        {
+            ItemPool pool = inventory.pools[i];
+            if (pool == null) { continue; }
+
+            // on regarde si on a un ui_item_pool qui a la même pool_id
+            UI_ItemPool ui_pool = ui_pools.Find(p => p.PoolID == pool.PoolID);
+            if (ui_pool == null)
+            {
+                // if we don't have a ui pool for this item pool, we skip it
+                if (log_ui_attachment) { Debug.LogWarning($"(Controller) No UI_ItemPool found for ItemPool with id {pool.PoolID} in inventory of capable {Capable.name}! Skipping UI attachment for this pool."); }
+                continue;
+            }
+
+            if (log_ui_attachment) { Debug.Log($"(Controller) Attaching ItemPool with id {pool.PoolID} to UI_ItemPool {ui_pool.name} for capable {Capable.name}."); }
+
+            // on attache la pool à l'ui pool
+            ui_pool.AttachToPool(pool);
+        }
+    }
+    private void unattach_ui_item_pools()
+    {
+        // on récupère les ui_item_pools du ui_inventoryMenu
+        UI_InventoryMenu inventory_menu = UI_Manager.Instance.GetPool<UI_InventoryMenu>();
+        List<UI_ItemPool> ui_pools = inventory_menu.GetItemPools();
+
+        // on détache tous les ui pools de leur pool
+        for (int i = 0; i < ui_pools.Count; ++i) { ui_pools[i].DetachFromPool(); }
+    }
+
+
 
 
     // GETTERS

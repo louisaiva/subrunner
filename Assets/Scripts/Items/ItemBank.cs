@@ -22,6 +22,8 @@ public class ItemBank : MonoBehaviour
 
     [Header("UI")]
     public GameObject ui_item_prefab;
+    public GameObject ui_big_item_prefab;
+    public GameObject ui_file_prefab;
     public GameObject ui_module_prefab;
 
     [Header("Logs")]
@@ -164,20 +166,30 @@ public class ItemBank : MonoBehaviour
 
 
     // UI_ITEM GENERATOR
-    public GameObject CreateUI_Item()
+    public GameObject CreateUI_Item(Transform parent, string slot_type="item")
     {
-        // on instancie le prefab
-        GameObject ui_item = Instantiate(ui_item_prefab, Vector3.zero, Quaternion.identity);
+        // on récup le bon prefab
+        GameObject prefab;
+        switch (slot_type)
+        {
+            case "item": prefab = ui_item_prefab; break;
+            case "big_item": prefab = ui_big_item_prefab; break;
+            case "file": prefab = ui_file_prefab; break;
+            case "module": prefab = ui_module_prefab; break;
+            default: Debug.LogError("(ItemBank) unknown slot type " + slot_type + ", cannot create UI_Item"); return null;
+        }
 
+        // on crée le slot
+        GameObject ui_item = Instantiate(prefab, Vector3.zero, Quaternion.identity, parent);
         return ui_item;
     }
-    public GameObject CreateUI_Module()
+    /* public GameObject CreateUI_Module()
     {
         // we create the module
         GameObject module = Instantiate(ui_module_prefab, Vector3.zero, Quaternion.identity);
 
         return module;
-    }
+    } */
 
 
 

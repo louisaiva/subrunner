@@ -79,8 +79,8 @@ public class UI_ModulePool : UI_ItemPool
     public override GameObject CreateItemSlot(Item item = null)
     {
         // we create the item
-        GameObject ui_slot = bank.CreateUI_Module();
-        ui_slot.transform.SetParent(transform);
+        GameObject ui_slot = bank.CreateUI_Item(transform, slot_type: "module");
+        // ui_slot.transform.SetParent(transform);
 
         // reset the scale to 1
         ui_slot.transform.localScale = Vector3.one;

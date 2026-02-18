@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UI_InventoryMenu : UI_Pool, Panelable
+public class UI_InventoryMenu : UI_Pool/* , Panelable */
 {
     private List<GameObject> saved_slots = new List<GameObject>();
     [Header("Inventory Menu Components")]
     // [SerializeField] private UI_Inventory ui_inventory;
-    [SerializeField] private UI_Inventory ui_laptop;
+    // [SerializeField] private UI_Inventory ui_laptop;
     [SerializeField] private Transform no_inventory_panel;
-    private UI_PanelManager _panel_manager;
+    /* private UI_PanelManager _panel_manager;
     public UI_PanelManager PanelManager { get
             {
                 if (_panel_manager == null)
@@ -18,7 +18,7 @@ public class UI_InventoryMenu : UI_Pool, Panelable
                     _panel_manager = GetComponent<UI_PanelManager>();
                 }
                 return _panel_manager;
-        } }
+        } } */
 
 
     [Header("Base Item Pool Transitions")]
@@ -39,14 +39,18 @@ public class UI_InventoryMenu : UI_Pool, Panelable
             Debug.LogError("(UI_InventoryMenu) missing ui_inventory on " + name);
         } */
 
-        if (ui_laptop == null)
+        /* if (ui_laptop == null)
         {
             Debug.LogError("(UI_InventoryMenu) missing ui_laptop on " + name);
-        }
+        } */
 
         // we save the current ui_elements state in saved_state
         saved_slots = new List<GameObject>(ui_elements);
         base.Awake();
+
+        // we add all the UI_ItemPools in the ui_elements as slottables inside our UI_SlottableMixer
+        List<UI_ItemPool> ui_item_pools = GetItemPools();
+        for (int i = 0; i < ui_item_pools.Count; i++) { slottable_mixer.AddSlottable(ui_item_pools[i]); }
     }
     protected void Start()
     {
@@ -104,7 +108,7 @@ public class UI_InventoryMenu : UI_Pool, Panelable
         string log_msg = $"(UI_InventoryMenu) refreshing item pools with duration {duration}";
 
         // on fade out les item pools qui sont vides & fade in ceux qui sont pleins
-        List<UI_ItemPool> item_pools = get_item_pools();
+        List<UI_ItemPool> item_pools = GetItemPools();
         for (int i = 0; i < item_pools.Count; i++)
         {
             // on récupère l'item pool & le transitioner
@@ -131,7 +135,7 @@ public class UI_InventoryMenu : UI_Pool, Panelable
         if (log) { Debug.Log(log_msg); }
 
         // on refresh les indicators
-        PanelManager.RefreshIndicators(duration);
+        // PanelManager.RefreshIndicators(duration);
     }
     private List<GameObject> get_all_uis_with_item_pools()
     {
@@ -143,19 +147,23 @@ public class UI_InventoryMenu : UI_Pool, Panelable
         }
         return item_pools;
     }
-    private List<UI_ItemPool> get_item_pools()
+    public List<UI_ItemPool> GetItemPools()
     {
         List<UI_ItemPool> pools = new List<UI_ItemPool>(/* ui_inventory.pools */);
-        pools.AddRange(ui_laptop.pools);
+        // pools.AddRange(ui_laptop.pools);
 
         // find the pools in the ui_elements
         for (int i = 0; i < ui_elements.Count; i++)
         {
             GameObject ui = ui_elements[i];
-            UI_ItemPool item_pool = ui.GetComponentInChildren<UI_ItemPool>(includeInactive: true);
-            if (item_pool != null) { pools.Add(item_pool); }
+            List<UI_ItemPool> ui_item_pools = new List<UI_ItemPool>(ui.GetComponentsInChildren<UI_ItemPool>(includeInactive: true));
+            if (ui_item_pools.Count == 0) { continue; }
+            for (int j = 0; j < ui_item_pools.Count; j++)
+            {
+                UI_ItemPool ui_item_pool = ui_item_pools[j];
+                if (ui_item_pool != null) { pools.Add(ui_item_pool); }
+            }
         }
-
         return pools;
     }
     private List<GameObject> get_all_indicators()

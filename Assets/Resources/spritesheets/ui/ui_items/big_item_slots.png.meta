@@ -1,7 +1,10 @@
 fileFormatVersion: 2
-guid: 5755464e4ed56af4b8c1ec57af58e2f0
+guid: a721cdfb675dca949952e3d7610b060d
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 5862411012569178989
+    second: big_item_slots_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -106,269 +109,172 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: item_slots_0
+      name: big_item_slots_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7f99df921955c7742ab26b20860f73ff
-      internalID: 722337240
+      spriteID: 868ebb7cc4359364b83853c3f210c9e4
+      internalID: 293463580
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_slots_1
+      name: big_item_slots_1
       rect:
         serializedVersion: 2
-        x: 24
+        x: 32
         y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bc0ea43c3c693004280106b236e58731
-      internalID: 669022736
+      spriteID: 244d7403cc6453b46affd151c2259196
+      internalID: 1567746036
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_slots_2
+      name: big_item_slots_2
       rect:
         serializedVersion: 2
-        x: 48
+        x: 64
         y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b6e9580a5cbac2b41ae65a449604a8d7
-      internalID: 1477167940
+      spriteID: af3bd5c22881d89479bfee69eaa8b762
+      internalID: 1247441813
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_slots_3
-      rect:
-        serializedVersion: 2
-        x: 72
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c522068ff4b61b545826381d8e54ee7f
-      internalID: -1489766419
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: item_slots_4
+      name: big_item_slots_3
       rect:
         serializedVersion: 2
         x: 96
         y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0eca03ab3a3bcab4a95882fad922c917
-      internalID: -175696828
+      spriteID: 344c2d47cfd56c84585f3e5309a94e5f
+      internalID: 1284292354
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_slots_5
+      name: big_item_slots_4
       rect:
         serializedVersion: 2
-        x: 120
+        x: 128
         y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 01fd44ae03db6824b8ce716fc36b0809
-      internalID: -908096685
+      spriteID: a59c960a85eb8de45ac271273c5c3f81
+      internalID: -152258312
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_slots_6
+      name: big_item_slots_5
       rect:
         serializedVersion: 2
-        x: 144
+        x: 160
         y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 348edb4c75c83894d80ca4377767b8c8
-      internalID: 886446766
+      spriteID: ed857dcc69d95cc4da9a646c6d2ce625
+      internalID: 745847375
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: item_slots_7
-      rect:
-        serializedVersion: 2
-        x: 168
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5bdaea10b01963f41b468975e3f37bb8
-      internalID: -2120159911
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: item_slots_8
+      name: big_item_slots_6
       rect:
         serializedVersion: 2
         x: 192
         y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 358c89e5446bfa84498646e8fdc3184e
-      internalID: 1075853624
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: item_slots_9
-      rect:
-        serializedVersion: 2
-        x: 216
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f795331463aa54743a5dc6b2f2c11f46
-      internalID: 1844584853
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: item_slots_10
-      rect:
-        serializedVersion: 2
-        x: 240
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f18f3784570e7994eb7759c4d1dcff82
-      internalID: -766758579
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: item_slots_11
-      rect:
-        serializedVersion: 2
-        x: 264
-        y: 0
-        width: 24
-        height: 24
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 0bd0461f6ead5774ea7c8fcf715dda30
-      internalID: -847514649
+      spriteID: cd307def8d8e41d479b176c558bbe588
+      internalID: 839623250
       vertices: []
       indices: 
       edges: []
@@ -385,20 +291,17 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":32.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      item_slots_0: 722337240
-      item_slots_1: 669022736
-      item_slots_10: -766758579
-      item_slots_11: -847514649
-      item_slots_2: 1477167940
-      item_slots_3: -1489766419
-      item_slots_4: -175696828
-      item_slots_5: -908096685
-      item_slots_6: 886446766
-      item_slots_7: -2120159911
-      item_slots_8: 1075853624
-      item_slots_9: 1844584853
+      big_item_slots_0: 293463580
+      big_item_slots_1: 1567746036
+      big_item_slots_2: 1247441813
+      big_item_slots_3: 1284292354
+      big_item_slots_4: -152258312
+      big_item_slots_5: 745847375
+      big_item_slots_6: 839623250
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

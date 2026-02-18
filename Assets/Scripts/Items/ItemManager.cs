@@ -37,12 +37,12 @@ public class ItemManager : MonoBehaviour
         // checks if we have all variables set
         if (laptop_slot == null || weapon_slot == null || cons1_slot == null || cons2_slot == null || cons3_slot == null || cons4_slot == null)
         {
-            Debug.LogError("(ItemManager) One or more item slots are not set.");
+            // Debug.LogError("(ItemManager) One or more item slots are not set.");
             return;
         }
         else if (weapon_renderer == null || cons1_renderer == null || cons2_renderer == null || cons3_renderer == null || cons4_renderer == null)
         {
-            Debug.LogError("(ItemManager) One or more HUD renderers are not set.");
+            // Debug.LogError("(ItemManager) One or more HUD renderers are not set.");
             return;
         }
 
