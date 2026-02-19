@@ -12,11 +12,11 @@ public class HUD_PersoItemPool : UI_ItemPool
     [Header("Perso Item Pool")]
     [SerializeField] private string dynamic_rule = "";
 
-    public void EnableAllItems()
+    /* public void EnableAllItems()
     {
         foreach (UI_Item ui_item in ui_items)
         {
-            if (ui_item.Item == null) { continue; }
+            if (ui_item.Stack.Item == null) { continue; }
             ui_item.gameObject.SetActive(true);
         }
         dynamic_rule = "";
@@ -25,11 +25,11 @@ public class HUD_PersoItemPool : UI_ItemPool
     {
         foreach (UI_Item ui_item in ui_items)
         {
-            if (ui_item.Item == null) { continue; }
+            if (ui_item.Stack.Item == null) { continue; }
 
-            if (ui_item.Item.ValidateRule(rule)) { ui_item.gameObject.SetActive(true); }
+            if (ui_item.Stack.Item.ValidateRule(rule)) { ui_item.gameObject.SetActive(true); }
             else { ui_item.gameObject.SetActive(false); }
         }
         dynamic_rule = rule;
-    }
+    } */
 }

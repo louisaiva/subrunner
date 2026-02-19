@@ -186,7 +186,7 @@ public class UI_InventoryMenu : UI_Pool/* , Panelable */
         if (log) { Debug.Log($"(UI_InventoryMenu) bwaaaa handleUI_ItemHoverEnter for slot {slot.gameObject.name}"); }
 
         // we handle the DROP (activate it only if it is a UI_Item that has Item & not a UI_Module)
-        if (ui_item is UI_Module || ui_item.Item == null)
+        if (ui_item is UI_Module || ui_item.Stack.Item == null)
         {
             IFs.DisableRows("drop");
         }
@@ -200,12 +200,12 @@ public class UI_InventoryMenu : UI_Pool/* , Panelable */
     }
     private void update_activate_if(UI_Item ui_item)
     {
-        if (log) { Debug.Log($"(UI_InventoryMenu) updating activate IF for ui_item with item {ui_item.Item?.name}"); }
+        if (log) { Debug.Log($"(UI_InventoryMenu) updating activate IF for ui_item with item {ui_item.Stack.Item?.name}"); }
 
         // if we have no item or no usable & no inspectable
-        if (ui_item.Item == null || (ui_item.Item is not Usable && ui_item.Item is not Inspectable)
-        || (ui_item.Item is Usable usable && usable.UseLabel == "")
-        || (ui_item.Item is Inspectable inspectable && inspectable.InspectLabel == ""))
+        if (ui_item.Stack.Item == null || (ui_item.Stack.Item is not Usable && ui_item.Stack.Item is not Inspectable)
+        || (ui_item.Stack.Item is Usable usable && usable.UseLabel == "")
+        || (ui_item.Stack.Item is Inspectable inspectable && inspectable.InspectLabel == ""))
         {
             IFs.DisableRows("activate");
             return;
@@ -213,8 +213,8 @@ public class UI_InventoryMenu : UI_Pool/* , Panelable */
 
         // we have a usable or an inspectable
         string label = "";
-        if (ui_item.Item is Usable usable_item) { label = usable_item.UseLabel; }
-        else if (ui_item.Item is Inspectable inspectable_item) { label = inspectable_item.InspectLabel; }
+        if (ui_item.Stack.Item is Usable usable_item) { label = usable_item.UseLabel; }
+        else if (ui_item.Stack.Item is Inspectable inspectable_item) { label = inspectable_item.InspectLabel; }
 
         // we enable the button & set the label
         IFs.EnableRows("activate");
@@ -227,7 +227,7 @@ public class UI_InventoryMenu : UI_Pool/* , Panelable */
         if (slot == null || slot is not UI_Item ui_item) { return; }
 
         // we update the activate if needed
-        if (ui_item.Item != item) { return; }
+        if (ui_item.Stack.Item != item) { return; }
         update_activate_if(ui_item);
     }
 }

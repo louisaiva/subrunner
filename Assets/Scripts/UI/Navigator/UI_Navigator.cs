@@ -398,7 +398,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
 
         // on vérifie si c'est un UI_Item pour le moving item
         if (CurrentSlot is not UI_Item ui_item) { return; }
-        if (ui_item.Quantity == 0) { return; }
+        if (ui_item.Stack.Quantity == 0) { return; }
 
         // on annule le endless drop ingame si besoin
         if (Controller.Instance.UIC.InGame)

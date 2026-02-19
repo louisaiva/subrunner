@@ -11,32 +11,38 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
     public Sprite drag_sprite;
     public Sprite drag_hover_sprite;
 
-    [Header("Item Reference")]
-    protected List<Item> items = new List<Item>();
-    public string Reference { get => items.Count > 0 ? items[0].Reference : ""; }
+    // [Header("Item Reference")]
+    // protected List<Item> items = new List<Item>();
+    // public string Reference { get => items.Count > 0 ? items[0].Reference : ""; }
+    [Header("Item Stack Data")]
+    public ItemStack Stack = null;
 
     [Header("Descriptable")]
-    public string Name => Reference;
-    public string Description => Item != null ? Item.ItemDescription : "";
+    public string Name => Stack.ItemReference;
+    public string Description => Stack != null
+                                ? Stack.Item != null
+                                    ? Stack.Item.ItemDescription
+                                    : ""
+                                : "";
 
 
     [Header("Item Stacking")]
     public TextMeshProUGUI quantity_text;
-    public bool Stackable { get => MaxQty > 1; }
-    public virtual int MaxQty { get => items.Count > 0 ? items[0].MaxQty : 1; }
-    public int Quantity { get => items.Count; }
+    // public bool Stackable { get => MaxQty > 1; }
+    // public virtual int MaxQty { get => items.Count > 0 ? items[0].MaxQty : 1; }
+    // public int Quantity => Stack.Quantity;
 
     [Header("Components")]
     [SerializeField] protected Image item_image;
     [SerializeField] protected Sprite current_item_sprite;
     public Sprite ItemSprite => current_item_sprite;
-    public Item Item => items.Count > 0 ? items[0] : null;
-    public event Action<List<Item>> OnItemChanged = delegate { };
+    // public Item Item => Stack != null && Stack.Quantity > 0 ? Stack.Items[0] : null;
+    // public event Action<List<Item>> OnItemChanged = delegate { };
     
     
     // GETTERS
     private UI_ItemPool _item_pool;
-    public UI_ItemPool ItemPool
+    public UI_ItemPool UI_ItemPool
     {
         get
         {
@@ -45,7 +51,18 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
             return _item_pool;
         }
     }
-    public Inventory Inventory => ItemPool?.UI_Inventory?.Inventory;
+    public ItemPool ItemPool => UI_ItemPool?.pool;
+    public Inventory Inventory => ItemPool?.Inventory;
+    /* private ItemStack _item_stack;
+    public ItemStack ItemStack
+    {
+        get
+        {
+            if (_item_stack != null) { return _item_stack; }
+            _item_stack = ItemPool?.GetStackOfItem(Item);
+            return _item_stack;
+        }
+    } */
 
     // AWAKE
     public virtual void Init()
@@ -54,13 +71,13 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
     }
 
     // GETTERS
-    public bool CanStore(Item item)
+    /* public bool CanStore(Item item)
     {
         return CanStore(new List<Item> { item });
     }
     public bool CanStore(List<Item> items)
     {
-        // todo we already have this method in ItemPool, shouldn't we use only one ?
+        // todo we already have this method in UI_ItemPool, shouldn't we use only one ?
 
         // checks if we can add the item to the slot (store or stack it on the slot)
         Item item = items.Count > 0 ? items[0] : null;
@@ -89,137 +106,87 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
 
         // we can stack the item !!
         return true;
-    }
-    public List<Item> GetItems()
+    } */
+    /* public bool CanStore(List<Item> items)
+    {
+        // we get our ItemStack from our UI_ItemPool
+        ItemStack stack = ItemPool?.GetStackOfItem(items[0]);
+        if (stack == null) { return false; }
+        
+        return stack.CanAdd(items);
+    } */
+    /* public List<Item> GetItems()
     {
         // we return a copy of the items list
-        return new List<Item>(items);
-    }
+        return Stack.Items;
+    } */
+
 
     // STORE / UNSTORE / CLEAR / SWITCH ITEMS
-    public virtual bool Store(Item item)
+    public virtual void Attach(ItemStack stack)
     {
-        // we check if we can store the item
-        if (!CanStore(item)) { return false; }
+        if (Stack != null) { Detach(); }
 
-        if (log) { Debug.Log($"(UI_Item) Storing item {item.Reference} in {name}"); }
-
-        // we add the item to the slot
-        items.Add(item);
-        // item.OnReferenceChanged += handle_item_reference_changed;
-
-        // we update the UI
-        update_ui_qty();
-
-        // we check if it is the first item we store
-        if (Quantity == 1) { setItem(item); }
-
-        OnItemChanged?.Invoke(items);
-        // ItemPool?.NotifyPoolChanged(this);
-
-        return true;
-    }
-    public virtual bool Unstore(Item item)
-    {
-        // we check if we can unstore the item
-        if (!items.Contains(item)) { return false; }
-
-        // we remove the item from the slot
-        items.Remove(item);
-        // item.OnReferenceChanged -= handle_item_reference_changed;
-
-        // we update the UI
-        update_ui_qty();
-
-        // we check if we have no more items in the slot
-        if (Quantity == 0) { ClearUI(); }
-
-        OnItemChanged?.Invoke(items);
-        // ItemPool?.NotifyPoolChanged(this);
-        return true;
-    }
-    public virtual void Clear()
-    {
-        // we remove the reference change callbacks
-        /* for (int i = 0; i < items.Count; i++)
-        {
-            items[i].OnReferenceChanged -= handle_item_reference_changed;
-        } */
-
-        // we clear the items
-        items.Clear();
-
-        // we update the UI
-        update_ui_qty();
-
-        // we clear the UI
-        ClearUI();
-    }
-    public virtual void SwitchItems(List<Item> items, bool items_moved = true)
-    {
-        Clear();
-
-        // we add the items to the slot
-        if (items.Count > 0)
-        {
-            this.items.AddRange(items);
-            setItem(items[0]);
-
-            /* // we set the reference change callbacks
-            for (int i = 0; i < this.items.Count; i++)
-            {
-                this.items[i].OnReferenceChanged += handle_item_reference_changed;
-            } */
-        }
-
-        // we update the UI
-        update_ui_qty();
-
-        OnItemChanged?.Invoke(this.items);
-        // ItemPool?.NotifyPoolChanged(this);
-    }
-    public virtual void Store(ItemStack stack)
-    {
-        // if we are not empty we throw an error
-        if (Quantity > 0)
-        {
-            Debug.LogWarning($"(UI_Item) Trying to store a full item stack in a non empty slot, will destroy {Quantity} items ! (only in the ui but still)");
-            Clear();
-        }
-
-        // if stack is empty we r good !
-        if (stack.IsEmpty) { return; }
+        this.Stack = stack;
 
         // we DO have items, so we update the sprite
-        setItem(stack.Items[0]);
-
-        // we add the items to the slot
-        items.AddRange(stack.Items);
+        update_ui();
 
         // we update the UI
         update_ui_qty();
+        
+        // subscribe to stack callbacks
+        // stack.OnChanged += update_ui;
+        // stack.OnChanged += update_ui_qty;
     }
+    public virtual void Detach()
+    {
+        if (Stack == null) { return; }
+
+        // unsubscribe from stack callbacks
+        // Stack.OnChanged -= update_ui;
+        // Stack.OnChanged -= update_ui_qty;
+
+        Stack = null;
+
+        // we update the UI
+        ClearUI();
+        update_ui_qty();
+    }
+    /* public virtual void SwitchItems(ItemStack new_stack)
+    {
+        Detach();
+        Attach(new_stack);
+    } */
 
     // UI
     protected void update_ui_qty()
     {
+        int quantity = Stack != null ? Stack.Quantity : 0;
+
         // we check if we have a quantity text
         if (quantity_text == null) { return; }
 
         // we update the text
-        quantity_text.text = Quantity.ToString();
+        quantity_text.text = quantity.ToString();
 
         // we show or hide the text
-        quantity_text.gameObject.SetActive(Quantity > 1);
+        quantity_text.gameObject.SetActive(quantity > 1);
     }
-    protected virtual void setItem(Item item)
+    protected virtual void update_ui()
     {
+        if (Stack == null || Stack.Quantity == 0)
+        {
+            ClearUI();
+            return;
+        }
+
         // on charge le sprite de l'image
-        current_item_sprite = ItemBank.Instance.GetSprite(item);
+        current_item_sprite = ItemBank.Instance.GetSprite(Stack.Item);
         set_ui(current_item_sprite);
 
         // on change le nom du prefab
-        name = "ui_" + Reference;
+        name = "ui_" + Stack.ItemReference;
 
         // on enable le slot
         Enable();
@@ -253,7 +220,7 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
         name = "ui_empty";
 
         // on disable le slot
-        if (ItemPool != null && ItemPool.DoNotDisableEmptySlots) { return; }
+        if (UI_ItemPool != null && UI_ItemPool.DoNotDisableEmptySlots) { return; }
         Disable();
     }
     /* protected void handle_item_reference_changed(Item item)
@@ -267,7 +234,7 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
 
             // on invoke les events
             OnItemChanged?.Invoke(items);
-            ItemPool?.NotifyPoolChanged(this);
+            UI_ItemPool?.NotifyPoolChanged(this);
             return;
         }
 
@@ -285,11 +252,11 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
         base.OnPointerClick(eventData);
 
         // we check if we have an item
-        if (Quantity == 0) { return; }
+        if (Stack == null || Stack.Quantity == 0) { return; }
         if (log) { Debug.Log("OnPointerClick on " + gameObject.name); }
 
         // we check if the item is an usable
-        if (Item is Usable usable)
+        if (Stack.Item is Usable usable)
         {
             usable.Use(Inventory.capable);
             UI_Manager.Instance.SwitchToHUD();
@@ -297,7 +264,7 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
         }
 
         // we check if the item is an inspectable
-        if (Item is Inspectable inspectable) { inspectable.Inspect(); }
+        if (Stack.Item is Inspectable inspectable) { inspectable.Inspect(); }
     }
     public override void OnPointerExit(PointerEventData eventData)
     {
@@ -311,12 +278,11 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
         base.OnPointerClick(eventData);
 
         // we check if we have an item
-        if (Quantity == 0) { return; }
+        if (Stack == null || Stack.Quantity == 0) { return; }
         if (log) { Debug.Log("OnPointerDropped on " + gameObject.name); }
 
         // we get the item & drop it
-        Item item = items[0];
-        drop_item(item);
+        drop_item(Stack.Item);
     }
     private void drop_item(Item item)
     {
@@ -330,8 +296,8 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
         if (inventory_to_drop != null)
         {
             inventory_to_drop.Grab(item);
-            OnItemChanged?.Invoke(this.items);
-            // ItemPool?.NotifyPoolChanged(this);
+            // OnItemChanged?.Invoke(this.items);
+            // UI_ItemPool?.NotifyPoolChanged(this);
             return;
         }
 
@@ -343,16 +309,16 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
             dropper.Select(item);
             dropper.random_direction = true;
             dropper.Use(inventory.capable);
-            OnItemChanged?.Invoke(this.items);
-            // ItemPool?.NotifyPoolChanged(this);
+            // OnItemChanged?.Invoke(this.items);
+            // UI_ItemPool?.NotifyPoolChanged(this);
             dropper.random_direction = false;
         }
         else
         {
             // the inventory simply drops the item (we may be in a chest)
             inventory.Drop(item);
-            OnItemChanged?.Invoke(this.items);
-            // ItemPool?.NotifyPoolChanged(this);
+            // OnItemChanged?.Invoke(this.items);
+            // UI_ItemPool?.NotifyPoolChanged(this);
         }
     }
 
@@ -378,12 +344,12 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
 
 
         // on met un icon de switch à la place de l'item
-        Sprite switch_icon = CanStore(moving_ui_item.Item)
+        Sprite switch_icon = Stack.CanAdd(moving_ui_item.Stack.Item)
             ? ItemBank.Instance.GetUI_Icon("merge")
             : ItemBank.Instance.GetUI_Icon("switch");
 
         // si on a aucun item on met tout simplement "move"
-        if (Quantity == 0) { switch_icon = ItemBank.Instance.GetUI_Icon("move"); }
+        if (Stack.Quantity == 0) { switch_icon = ItemBank.Instance.GetUI_Icon("move"); }
         set_ui(switch_icon);
     }
     public void OnPointerDragUp()

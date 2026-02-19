@@ -22,9 +22,9 @@ public class UI_ModulePool : UI_ItemPool
         _has_device = true;
 
         // we enable all the ui_module
-        foreach (UI_Item ui_item in ui_items)
+        foreach (UI_ItemStack ui_stack in ui_stacks)
         {
-            if (ui_item is not UI_Module module) { continue; }
+            if (ui_stack is not UI_Module module) { continue; }
             module.Enable();
         }
     }
@@ -33,15 +33,15 @@ public class UI_ModulePool : UI_ItemPool
         _has_device = false;
 
         // we disable all the ui_module
-        foreach (UI_Item ui_item in ui_items)
+        foreach (UI_ItemStack ui_stack in ui_stacks)
         {
-            if (ui_item is not UI_Module module) { continue; }
+            if (ui_stack is not UI_Module module) { continue; }
             module.Disable();
         }
     }
 
     // DROPPING OVERHEAD SLOTS
-    public void DropOverheadSlots()
+    /* public void DropOverheadSlots()
     {
         if (log) { Debug.Log($"(UI_ModulePool) dropping overhead slots, current count: {ui_items.Count}"); }
 
@@ -60,10 +60,10 @@ public class UI_ModulePool : UI_ItemPool
             UI_Item ui_item = ui_items[Count - 1];
 
             // we unstore the item
-            if (ui_item.Quantity > 0)
+            if (ui_item.Stack.Quantity > 0)
             {
                 full_slots_dropped++;
-                Item item = ui_item.Item;
+                Item item = ui_item.Stack.Item;
                 ui_item.Unstore(item);
             }
 
@@ -73,10 +73,10 @@ public class UI_ModulePool : UI_ItemPool
         }
 
         if (log) { Debug.Log($"(UI_ModulePool) dropped last slots ({full_slots_dropped} non-empty) and now we have {ui_items.Count}"); }
-    }
+    } */
 
     // CREATE ITEM SLOT
-    public override GameObject CreateItemSlot(Item item = null)
+    /* public override UI_Item CreateItemSlot()
     {
         // we create the item
         GameObject ui_slot = bank.CreateUI_Item(transform, slot_type: "module");
@@ -95,28 +95,24 @@ public class UI_ModulePool : UI_ItemPool
         UI_Item ui_item = ui_slot.GetComponent<UI_Item>();
         ui_item.Init();
 
-        // we assign the item to the UI_Item
-        if (item != null) { ui_item.Store(item); }
-        else { ui_item.Clear(); }
-
         // we add the item to the list
         ui_items.Add(ui_item);
 
-        if (log) { Debug.Log($"(UI_ModulePool) created an ui_module with item {(item == null ? "null" : item.Reference)}"); }
+        if (log) { Debug.Log($"(UI_ModulePool) created an ui_module"); }
 
-        return ui_slot;
-    }
+        return ui_item;
+    } */
 
     // LAPTOP INVENTORY MANAGEMENT
-    private LaptopInventory laptop_inventory;
-    public void InitFromInventory(LaptopInventory inventory)
+    // private LaptopInventory laptop_inventory;
+    /* public void InitFromInventory(LaptopInventory inventory)
     {
         for (int i = 0; i < ui_items.Count; i++)
         {
             if (ui_items[i] == null || ui_items[i] is not UI_Module module) { continue; }
 
             // we switch the items
-            module.SwitchItems(inventory.GetItemsInSlot(i), items_moved: false);
+            // module.SwitchItems(inventory.GetStackInSlot(i));
         }
 
         laptop_inventory = inventory;
@@ -125,6 +121,6 @@ public class UI_ModulePool : UI_ItemPool
     {
         int new_slot_index = ui_items.IndexOf(module);
         if (log_modules) { Debug.Log($"(UI_ModulePool) module {module.name} moved to slot {new_slot_index}"); }
-        laptop_inventory.HandleUI_ModuleMoved(module.GetItems(), new_slot_index);
-    }
+        laptop_inventory.HandleUI_ModuleMoved(module.Stack, new_slot_index);
+    } */
 }

@@ -7,6 +7,7 @@ public interface Device
     public GameObject gameObject { get; }
     public string name { get; }
     public Color MB_Color { get; } // color of the motherboard
+    public Inventory Inventory { get; } // the inventory of the device, which can be a LaptopInventory or a regular Inventory
 
     public ProcessCapacity Processor { get; }
     public ConnectCapacity Connector { get; }

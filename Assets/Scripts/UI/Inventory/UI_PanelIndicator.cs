@@ -12,7 +12,7 @@ public class UI_PanelIndicator : MonoBehaviour
 {
     [Header("Indicator parameters")]
     [SerializeField] private string panel_name = "Motherboard";
-    [SerializeField] private bool require_laptop = true;
+    // [SerializeField] private bool require_laptop = true;
     [SerializeField] private List<UI_ItemPool> required_enabled_item_pools = new List<UI_ItemPool>();
 
     [Header("Components")]
@@ -28,7 +28,7 @@ public class UI_PanelIndicator : MonoBehaviour
         panel_manager = panelManager;
         transitioner = GetComponent<Transitioner>();
 
-        if (require_laptop) { UI_LaptopItemSlot.Instance.OnItemChanged += HandleLaptopChanged; }
+        // if (require_laptop) { UI_LaptopItemSlot.Instance.OnItemChanged += HandleLaptopChanged; }
 
         panel_manager.OnPanelChanged += Refresh;
 
@@ -45,7 +45,7 @@ public class UI_PanelIndicator : MonoBehaviour
     }
     public void Refresh(string panel,float duration = -99f)
     {
-        if (require_laptop && (UI_LaptopItemSlot.Instance == null || !UI_LaptopItemSlot.Instance.HasLaptop)) { return; } // in all cases we are not shown so we don't do anything
+        // if (require_laptop && (UI_LaptopItemSlot.Instance == null || !UI_LaptopItemSlot.Instance.HasLaptop)) { return; } // in all cases we are not shown so we don't do anything
 
         // if the panel is not the one we are on, we hide ourselves
         if (panel != panel_name)

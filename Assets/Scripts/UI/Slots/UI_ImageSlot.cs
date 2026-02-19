@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class UI_ImageSlot : UI_Slot
 {
+
+    [Header("Components")]
+    public Image image;
     
     [Header("Sprites")]
     public Sprite base_sprite;
@@ -12,8 +15,6 @@ public class UI_ImageSlot : UI_Slot
     public Sprite disabled_sprite;
 
 
-    [Header("Components")]
-    public Image image;
 
 
     // DISABLE

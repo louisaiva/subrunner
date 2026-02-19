@@ -8,8 +8,8 @@ public interface ItemStorer
     public List<Item> Items { get; }
     public string ItemRule { get; }
     public int Count { get; }
-    public event Action<Item> OnItemGrabbed;
-    public event Action<Item> OnItemDropped;
+    // public event Action<Item> OnItemGrabbed;
+    // public event Action<Item> OnItemDropped;
     public bool Grab(Item item);
     public bool Drop(Item item);
 }
@@ -33,9 +33,13 @@ public class ItemPool : MonoBehaviour, ItemStorer
 
 
     // [Header("Events")]
-    public event Action<Item> OnItemGrabbed = delegate { };
-    public event Action<Item> OnItemDropped = delegate { };
-    public event Action<Item> OnStacksChanged = delegate { };
+    // public event Action<Item> OnItemGrabbed = delegate { };
+    // public event Action<Item> OnItemDropped = delegate { };
+    // public event Action<Item> OnStacksChanged = delegate { };
+    // public event Action<ItemStack> OnStackUpdated = delegate { };
+    public event Action<ItemStack> OnStackCreated = delegate { };
+    public event Action<ItemStack> OnStackRemoved = delegate { };
+
 
 
     [Header("Item Rule")]
@@ -62,7 +66,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
             if (child == null || child.gameObject.activeSelf == false) { continue; }
             Item item = child.GetComponent<Item>();
             if (item == null) { continue; }
-            if (Grab(item)) { Inventory.GrabAtStart(item); }
+            if (Grab(item)) { Inventory.GrabFromLowerLevel(item); }
         }
 
         // we ensure we have at least MinStacks stacks (for the ui to be great)
@@ -71,14 +75,16 @@ public class ItemPool : MonoBehaviour, ItemStorer
             int stacks_to_add = MinStacks - stacks.Count;
             for (int i = 0; i < stacks_to_add; i++)
             {
-                stacks.Add(new ItemStack());
+                ItemStack new_stack = new ItemStack(this);
+                stacks.Add(new_stack);
+                OnStackCreated?.Invoke(new_stack);
             }
         }
     }
 
 
     // RULE CHECK
-    public bool CanStore(Item item)
+    /* public bool CanStore(Item item)
     {
         // we check if the item is valid
         if (item == null) { return false; }
@@ -93,7 +99,8 @@ public class ItemPool : MonoBehaviour, ItemStorer
         }
 
         return validate;
-    }
+    } */
+    public bool ValidateRule(Item item) { return item.ValidateRule(item_rule); }
 
     // GRAB / DROP
     public virtual bool Grab(Item item)
@@ -102,7 +109,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
         if (item == null) { return false; }
 
         // we check if the item passes the rule
-        if (!CanStore(item)) { return false; }
+        if (!ValidateRule(item)) { return false; }
 
         // we check if we already have a stack for this item reference
         List<ItemStack> empty_stacks = new List<ItemStack>();
@@ -117,7 +124,8 @@ public class ItemPool : MonoBehaviour, ItemStorer
             if (!added) { continue; }
 
             // we successfully grabbed the item
-            finalise_grab(item);
+            finalise_grab(item, stack);
+            
             if (log) { Debug.Log("(ItemPool) " + name + " grabbed : " + item.name + " in existing stack"); }
             return true;
         }
@@ -126,7 +134,8 @@ public class ItemPool : MonoBehaviour, ItemStorer
         if (empty_stacks.Count > 0) {
             empty_stacks[0].Add(item);
             // we successfully grabbed the item
-            finalise_grab(item);
+            finalise_grab(item, empty_stacks[0]);
+            // OnStackUpdated?.Invoke(empty_stacks[0]);
             if (log) { Debug.Log("(ItemPool) " + name + " grabbed : " + item.name + " in empty stack"); }
             return true;
         }
@@ -139,14 +148,13 @@ public class ItemPool : MonoBehaviour, ItemStorer
         }
 
         // we create a new stack for this item
-        ItemStack new_stack = new ItemStack();
-        bool added_to_new_stack = new_stack.Add(item);
+        ItemStack new_stack = new ItemStack(this);
+        new_stack.Add(item);
         stacks.Add(new_stack);
 
-        OnStacksChanged?.Invoke(null);
-
         // we successfully grabbed the item
-        finalise_grab(item);
+        finalise_grab(item, new_stack);
+        OnStackCreated?.Invoke(new_stack);
         if (log) { Debug.Log("(ItemPool) " + name + " grabbed : " + item.name + " in new stack"); }
         return true;
     }
@@ -166,17 +174,20 @@ public class ItemPool : MonoBehaviour, ItemStorer
             bool removed = stack.Remove(item);
             if (!removed) { continue; }
 
-            // we check if the stack is empty now or not
-            if (Scalable && stack.IsEmpty && stacks.Count > MinStacks)
-            {
-                stacks.Remove(stack);
-                OnStacksChanged?.Invoke(null);
-            }
 
             // if we are here, we successfully dropped the item
             item.OnReferenceChanged -= handle_item_reference_changed;
             item.Grabbed = false; // we set the item to dropped (which enables the hover collider)
-            OnItemDropped.Invoke(item);
+            // OnItemDropped.Invoke(item);
+
+            // finally we deal with the stack
+            if (Scalable && stack.IsEmpty && stacks.Count > MinStacks)
+            {
+                stacks.Remove(stack);
+                OnStackRemoved?.Invoke(stack);
+            }
+            // else { OnStackUpdated?.Invoke(stack); }
+
             if (log) { Debug.Log("(ItemPool) " + name + " dropped : " + item.name); }
             return true;
         }
@@ -185,7 +196,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
     }
 
     // low level grab drop
-    private void finalise_grab(Item item)
+    private void finalise_grab(Item item,ItemStack stack)
     {
         // we check if the item is already grabbed somewhere, if so we drop it
         if (item.Grabbed && item.ItemPoolHolder != null) { item.ItemPoolHolder.Drop(item); }
@@ -200,13 +211,11 @@ public class ItemPool : MonoBehaviour, ItemStorer
 
         // we add the item
         item.Grabbed = true;
-
-        OnItemGrabbed.Invoke(item);
     }
     private void handle_item_reference_changed(Item item)
     {
         // get the stack of the item
-        ItemStack stack = get_stack_of_item(item);
+        ItemStack stack = GetStackOfItem(item);
         if (stack == null) { return; }
 
         // 4 cases :
@@ -230,6 +239,72 @@ public class ItemPool : MonoBehaviour, ItemStorer
     }
 
 
+    // STACK MANAGEMENT
+    public void AddEmptyStack()
+    {
+        if (!Scalable) { return; }
+        if (stacks.Count >= MaxStacks) { return; }
+        ItemStack new_stack = new ItemStack(this);
+        stacks.Add(new_stack);
+        OnStackCreated?.Invoke(new_stack);
+    }
+    public void DestroyEmptyStacks()
+    {
+        // we remove all empty stacks we can find in the pool
+        // from the last one to the first
+        // we stop only if we are at MinStacks
+        while (stacks.Count > MinStacks)
+        {
+            ItemStack stack = stacks.LastOrDefault(s => s.IsEmpty);
+            if (stack == null) { break; }
+            stacks.Remove(stack);
+            OnStackRemoved?.Invoke(stack);
+        }
+    }
+
+
+
+    // todo rework all this, we don't want to directly swap stacks between itempools, we should rather swap item per item
+    public bool HasStack(ItemStack stack)
+    {
+        return stacks.Contains(stack);
+    }
+    public void AddStack(ItemStack stack)
+    {
+        if (stack == null) { return; }
+        if (!Scalable && stacks.Count >= MaxStacks) { return; }
+        stacks.Add(stack);
+        OnStackCreated?.Invoke(stack);
+
+        // we make sure the inventory registered the grab
+        for (int i = 0; i < stack.Items.Count; i++)
+        {
+            Item item = stack.Items[i];
+            Inventory.GrabFromLowerLevel(item);
+        }
+    }
+    public void RemoveStack(ItemStack stack)
+    {
+        if (stack == null) { return; }
+        if (!stacks.Contains(stack)) { return; }
+        stacks.Remove(stack);
+        OnStackRemoved?.Invoke(stack);
+    }
+    public void MergeStackIntoStack(ItemStack from_stack, ItemStack to_stack)
+    {
+        if (from_stack == null || to_stack == null) { return; }
+        if (!stacks.Contains(to_stack)) { return; }
+
+        // we add all items from from_stack into to_stack until we can't anymore
+        while (from_stack.Items.Count > 0)
+        {
+            Item item = from_stack.Items[0];
+            bool added = to_stack.Add(item);
+            if (!added) { break; }
+            from_stack.Remove(item);
+            Inventory.GrabFromLowerLevel(item);
+        }
+    }
 
     // GETTERS
     public T GetItem<T>() where T : Item
@@ -288,7 +363,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
         }
         return false;
     }
-    protected ItemStack get_stack_of_item(Item item)
+    public ItemStack GetStackOfItem(Item item)
     {
         for (int i = 0; i < stacks.Count; i++)
         {
@@ -305,49 +380,3 @@ public class ItemPool : MonoBehaviour, ItemStorer
     }
 }
 
-
-[Serializable] public class ItemStack 
-{
-    public string ItemReference { get   {
-                                            if (IsEmpty) { return ""; }
-                                            return Items[0].Reference;
-                                        } }
-    public int MaxQty = 1;
-    public List<Item> Items = new List<Item>();
-    public bool IsFull { get { return Items.Count >= MaxQty; } }
-    public bool IsEmpty { get { return Items.Count == 0; } }
-
-    // ADD / REMOVE
-    public bool Add(Item item)
-    {
-        if (IsEmpty)
-        {
-            // we set the max qty
-            MaxQty = item.MaxQty;
-            Items.Add(item);
-            return true;
-        }
-
-        if (item.Reference != ItemReference) { return false; }
-        if (IsFull) { return false; }
-
-        Items.Add(item);
-        return true;
-    }
-    public bool Remove(Item item)
-    {
-        if (IsEmpty) { return false; }
-        if (item.Reference != ItemReference) { return false; }
-
-        bool removed = Items.Remove(item);
-        if (!removed) { return false; }
-
-        // if we are empty, we reset the stack
-        if (IsEmpty)
-        {
-            MaxQty = 1;
-        }
-
-        return true;
-    }
-}

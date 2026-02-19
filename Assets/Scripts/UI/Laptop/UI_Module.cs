@@ -5,29 +5,29 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UI_Module : UI_Item
+public class UI_Module : UI_ItemStack
 {
     [Header("Drag Module")]
     [SerializeField] private Image icon_image;
     [SerializeField] private TextMeshProUGUI helper_text;
     [SerializeField] private Color drag_hover_color = new Color(0.2f, 0.2f, 0.2f, 0.5f);
 
-    public override int MaxQty => 1; // modules are not stackable when showed on a motherboard
+    // public override int MaxQty => 1; // modules are not stackable when showed on a motherboard
 
     private UI_ModulePool _module_pool;
     public UI_ModulePool ModulePool
     {
         get
         {
-            if (_module_pool == null) { _module_pool = ItemPool as UI_ModulePool; }
+            if (_module_pool == null) { _module_pool = UI_ItemPool as UI_ModulePool; }
             return _module_pool;
         }
     }
 
     // AWAKE
-    public override void Init()
+    public override void Init(ItemStack stack)
     {
-        base.Init();
+        base.Init(stack);
         icon_image = transform.Find("help/icon").GetComponent<Image>();
         helper_text = transform.Find("help/helper_text").GetComponent<TextMeshProUGUI>();
     }
@@ -41,19 +41,26 @@ public class UI_Module : UI_Item
     }
 
     // ITEM SETTING
-    protected override void setItem(Item item)
+    protected override void update_ui_item()
     {
         // on charge le sprite de l'image
-        current_item_sprite = ItemBank.Instance.GetModuleSprite(item.Reference);
-        set_ui(current_item_sprite);
+        if (Stack.Quantity == 0)
+        {
+            clear_ui_item();
+            return;
+        }
+
+        // on charge le sprite de l'image
+        current_item_sprite = ItemBank.Instance.GetModuleSprite(Stack.Item.Reference);
+        set_ui_item(current_item_sprite);
 
         // on change le nom du prefab
-        name = "ui_" + Reference;
+        name = "ui_" + Stack.ItemReference;
 
         // on enable le slot
         Enable();
     }
-    protected override void set_ui(Sprite sprite)
+    protected override void set_ui_item(Sprite sprite)
     {
         if (item_image == null)
         {
@@ -85,7 +92,7 @@ public class UI_Module : UI_Item
         // update_description();
 
         // si on a un Item on baisse l'alpha à 0.5
-        if (Item != null) { item_image.color = new Color(1, 1, 1, 0.5f); }
+        if (Stack.Item != null) { item_image.color = new Color(1, 1, 1, 0.5f); }
     }
     public override void OnPointerExit(PointerEventData eventData)
     {
@@ -100,7 +107,7 @@ public class UI_Module : UI_Item
         Hovered = false;
 
         // on remet l'alpha de l'image à 1
-        if (Item != null) { item_image.color = new Color(1, 1, 1, 1); }
+        if (Stack.Item != null) { item_image.color = new Color(1, 1, 1, 1); }
 
         hide_icon();
     }
@@ -116,11 +123,11 @@ public class UI_Module : UI_Item
         GetComponent<Image>().sprite = drag_hover_sprite;
 
         // si on a un Item on baisse l'alpha à 0.5
-        if (Item != null) { item_image.color = drag_hover_color; }
+        if (Stack.Item != null) { item_image.color = drag_hover_color; }
 
         // on récupère quelle reference d'icon on doit mettre
         string icon_ref = "";
-        if (Item == null) { icon_ref = "screw"; }
+        if (Stack.Item == null) { icon_ref = "screw"; }
         // else if (Reference == moving_ui_item.Reference && Quantity < MaxQty) { icon_ref = "upgrade"; }
         else { icon_ref = "switch"; }
         set_icon(icon_ref);
@@ -155,13 +162,10 @@ public class UI_Module : UI_Item
         icon_image.color = new Color(0, 0, 0, 0);
         helper_text.text = "";
     }
-    public override void SwitchItems(List<Item> items, bool items_moved = true)
+    /* public override void SwitchItems(ItemStack new_stack)
     {
-        base.SwitchItems(items, items_moved);
-        if (!items_moved) { return; }
-
+        base.SwitchItems(new_stack);
         // on met à jour la position dans le laptop inventory
         ModulePool.OnModuleMoved(this);
-    }
-
+    } */
 }

@@ -47,12 +47,12 @@ public class ItemManager : MonoBehaviour
         }
 
         // we subscribe to events
-        laptop_slot.OnItemChanged += update_hud_renderers;
+        /* laptop_slot.OnItemChanged += update_hud_renderers;
         weapon_slot.OnItemChanged += update_hud_renderers;
         cons1_slot.OnItemChanged += update_hud_renderers;
         cons2_slot.OnItemChanged += update_hud_renderers;
         cons3_slot.OnItemChanged += update_hud_renderers;
-        cons4_slot.OnItemChanged += update_hud_renderers;
+        cons4_slot.OnItemChanged += update_hud_renderers; */
 
         // shoes events
         /* shoes_pool.OnPoolChanged += (ui_item) =>
@@ -80,24 +80,24 @@ public class ItemManager : MonoBehaviour
             UI_Item ui_item = child.GetComponent<UI_Item>();
             if (ui_item == null) { continue; }
 
-            if (ui_item.Item != null && ui_item.Item is Shoes) { return ui_item; }
+            // if (ui_item.Item != null && ui_item.Item is Shoes) { return ui_item; }
         }
         return null;
     }
 
 
     // UPDATE HUDs
-    private void update_shoes()
+    /* private void update_shoes()
     {
         shoes_renderer.SetTarget(GetShoesUI_Item());
         if (log_shoes) { Debug.Log("(ItemManager) Shoes renderer target set to " + (shoes_renderer.Target != null ? shoes_renderer.Target.name : "null")); }
-    }
+    } */
     private void update_hud_renderers(List<Item> items = null)
     {
-        if (log) { Debug.Log("(ItemManager) Updating HUD renderers... , laptop_slot item is " + (laptop_slot.Item != null ? laptop_slot.Item.name : "null")); }
+        // if (log) { Debug.Log("(ItemManager) Updating HUD renderers... , laptop_slot item is " + (laptop_slot.Item != null ? laptop_slot.Item.name : "null")); }
 
         // update LAPTOP
-        if (laptop_slot.Item != null)
+        if (laptop_slot.Stack.Item != null)
         {
             enable_renderer(laptop_renderer);
             enable_renderer(hack_renderer);
@@ -113,7 +113,7 @@ public class ItemManager : MonoBehaviour
         float cons_size = 37.5f; // size of the consumable icons
 
         // update WEAPON
-        if (weapon_slot.Item != null)
+        if (weapon_slot.Stack.Item != null)
         {
             enable_renderer(weapon_renderer, x);
             x += 50f;
@@ -121,7 +121,7 @@ public class ItemManager : MonoBehaviour
         else { disable_renderer(weapon_renderer); }
 
         // update SHOES
-        if (shoes_renderer != null && shoes_renderer.Target != null && shoes_renderer.Target.Item != null)
+        if (shoes_renderer != null && shoes_renderer.Target != null && shoes_renderer.Target.Stack.Item != null)
         {
             enable_renderer(shoes_renderer.GetComponent<RectTransform>(), x);
             x += 50f;
@@ -152,7 +152,7 @@ public class ItemManager : MonoBehaviour
                     renderer = cons4_renderer;
                     break;
             }
-            if (slot.Item != null)
+            if (slot.Stack.Item != null)
             {
                 enable_renderer(renderer, x);
                 // renderer.anchoredPosition = new Vector2(x, renderer.anchoredPosition.y);

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class UI_ItemMover : MonoBehaviour
 {
@@ -110,23 +111,23 @@ public class UI_ItemMover : MonoBehaviour
         // on choisit le mode d'action qu'il faut pour echanger les items
         // entre moving_ui_item & destination
 
-        // sinon on choisit en fonction des différentes situations
-        if (destination != moving_ui_item && destination.CanStore(moving_ui_item.GetItems()))
+        // on choisit en fonction des différentes situations :
+        if (destination != moving_ui_item && destination.Stack.CanAdd(moving_ui_item.Stack))
         {
             merge_items(moving_ui_item, destination); // ce sont les mêmes items, on peut alors les merge ensemble
         }
-        else if (destination is UI_Module ui_module
+        /* else if (destination is UI_Module ui_module
             && moving_ui_item is not UI_Module
-            && moving_ui_item.Quantity > 1)
+            && moving_ui_item.Stack.Quantity > 1)
         {
             split_items(ui_module, moving_ui_item); // on split l'item
         }
         else if (moving_ui_item is UI_Module ui_module2
             && destination is not UI_Module
-            && destination.Quantity > 1)
+            && destination.Stack.Quantity > 1)
         {
             split_items(ui_module2, destination); // on split l'item
-        }
+        } */
         else { switch_items(moving_ui_item, destination); }
     }
     private void switch_items(UI_Item item1, UI_Item item2)
@@ -136,42 +137,76 @@ public class UI_ItemMover : MonoBehaviour
 
         if (log_moving_items) { Debug.Log($"(UI_ItemMover) switching items between {item1.gameObject.name} and {item2.gameObject.name}"); }
 
-        // on sauvegarde les items
-        List<Item> items1 = item1.GetItems();
-        List<Item> items2 = item2.GetItems();
+        // on sauvegarde les stacks
+        // List<Item> items1 = item1.GetItems();
+        // List<Item> items2 = item2.GetItems();
+        // ItemStack stack1 = item1.Stack;
+        // ItemStack stack2 = item2.Stack;
 
-        // on echange les items
-        item1.SwitchItems(items2);
-        item2.SwitchItems(items1);
-
-        // on regarde si on est dans deux inventaires différents
+        // on trouve les ItemPool qui contiennent les 2 ItemStacks
         Inventory inventory1 = item1.Inventory;
         Inventory inventory2 = item2.Inventory;
         if (inventory1 == null || inventory2 == null)
         {
             if (log)
             {
-                Debug.LogWarning($"(UI_ItemMover) switched items between {item1.gameObject.name} "
+                Debug.LogWarning($"(UI_ItemMover) switching items stacks between {item1.gameObject.name} "
             + $"and {item2.gameObject.name} but at least one inventory is null : {inventory1?.capable.name} and {inventory2?.capable.name}");
             }
             return;
         }
-        if (inventory1 == inventory2) { return; } // we stay inside the same inventory so no need to update Items's inventories
 
-        List<UI_Inventory> uis_to_ignore = new List<UI_Inventory>() { item1.ItemPool.UI_Inventory, item2.ItemPool.UI_Inventory };
+        ItemPool pool1 = inventory1.GetItemPoolThatHoldsItemStack(item1.Stack);
+        ItemPool pool2 = inventory2.GetItemPoolThatHoldsItemStack(item2.Stack);
+        if (pool1 == null || pool2 == null)
+        {
+            if (log)
+            {
+                Debug.LogWarning($"(UI_ItemMover) switching items stacks between {item1.gameObject.name} "
+            + $"and {item2.gameObject.name} but at least one item pool is null : {pool1?.name} and {pool2?.name}");
+            }
+            return;
+        }
+
+        // sauvegarde les stacks
+        ItemStack stack1 = item1.Stack;
+        ItemStack stack2 = item2.Stack;
+
+        // enlève les stacks des pools
+        pool1.RemoveStack(stack1);
+        pool2.RemoveStack(stack2);
+
+        // on switch les stacks
+        pool1.AddStack(stack2);
+        pool2.AddStack(stack1);
+
+
+        // on echange les items
+        // item1.SwitchItems(stack2);
+        // item2.SwitchItems(stack1);
+
+        // on regarde si on est dans deux inventaires différents
+        // Inventory inventory1 = item1.Inventory;
+        // Inventory inventory2 = item2.Inventory;
+        /*  */
+        // if (inventory1 == inventory2) { return; } // we stay inside the same inventory so no need to update Items's inventories
+
+        // List<UI_Inventory> uis_to_ignore = new List<UI_Inventory>() { item1.ItemPool.UI_Inventory, item2.ItemPool.UI_Inventory };
 
         // on met à jour les inventories des items
-        foreach (Item item in items1)
+        /*foreach (Item item in stack1)
         {
-            inventory2.Grab(item/* , uis_to_ignore */); // on ignore les ui_inventory parce qu'ils ont déjà été grab dans ces UI_Inventory
+            inventory2.Grab(item/* , uis_to_ignore ); // on ignore les ui_inventory parce qu'ils ont déjà été grab dans ces UI_Inventory
         }
-        foreach (Item item in items2)
+        foreach (Item item in stack2)
         {
-            inventory1.Grab(item/* , uis_to_ignore */); // pareil
-        }
+            inventory1.Grab(item/* , uis_to_ignore ); // pareil
+        }*/
     }
-    private void split_items(UI_Module ui_module, UI_Item ui_item)
+    /* private void split_items(UI_Module ui_module, UI_Item ui_item)
     {
+        // on essaie de mettre un 
+
         if (log_moving_items) { Debug.Log($"(UI_ItemMover) splitting items between {ui_item.gameObject.name} and {ui_module.gameObject.name}"); }
 
 
@@ -188,7 +223,7 @@ public class UI_ItemMover : MonoBehaviour
         }
 
         // on récupère le 1er item de ui_item sous la forme d'une liste
-        Item item_to_move = ui_item.Item;
+        Item item_to_move = ui_item.Stack.Item;
         List<Item> remaining_items = ui_item.GetItems();
         remaining_items.Remove(item_to_move);
 
@@ -210,15 +245,32 @@ public class UI_ItemMover : MonoBehaviour
         }
         if (ui_item_inv == ui_module_inv) { return; } // we stay inside the same inventory so no need to update Items's inventories
 
-        List<UI_Inventory> uis_to_ignore = new List<UI_Inventory>() { ui_item.ItemPool.UI_Inventory, ui_module.ItemPool.UI_Inventory };
-        ui_module_inv.Grab(item_to_move/* , uis_to_ignore */); // on ignore les ui_inventory parce qu'ils ont déjà été grab dans ces UI_Inventory
-    }
-    private void merge_items(UI_Item item1, UI_Item item2)
+        // List<UI_Inventory> uis_to_ignore = new List<UI_Inventory>() { ui_item.ItemPool.UI_Inventory, ui_module.ItemPool.UI_Inventory };
+        ui_module_inv.Grab(item_to_move/* , uis_to_ignore ); // on ignore les ui_inventory parce qu'ils ont déjà été grab dans ces UI_Inventory
+    } */
+    private void merge_items(UI_Item from, UI_Item to)
     {
-        if (log_moving_items) { Debug.Log($"(UI_ItemMover) merging items between {item1.gameObject.name} and {item2.gameObject.name}"); }
+        // on merge les items de from dans to
+        if (log_moving_items) { Debug.Log($"(UI_ItemMover) merging items from {from.gameObject.name} into {to.gameObject.name}"); }
 
-        // on merge les items de item1 dans item2
-        List<Item> items = item1.GetItems();
+        // on cherche l'ItemPool qui contient le stack de to (celui qui grab)
+        Inventory inventory = to.Inventory;
+        if (inventory == null)
+        {
+            if (log) { Debug.LogWarning($"(UI_ItemMover) cannot merge items from {from.gameObject.name} into {to.gameObject.name} because inventory is null : {inventory?.capable.name}");}
+            return;
+        }
+
+        ItemPool pool = inventory.GetItemPoolThatHoldsItemStack(to.Stack);
+        if (pool == null)
+        {
+            if (log) { Debug.LogWarning($"(UI_ItemMover) cannot merge items from {from.gameObject.name} into {to.gameObject.name} because item pool is null : {pool?.name}"); }
+            return;
+        }
+        pool.MergeStackIntoStack(from.Stack, to.Stack);
+
+
+        /* List<Item> items = item1.GetItems();
         List<Item> transfered_items = new List<Item>();
         while (item2.Store(items[0]))
         {
@@ -245,54 +297,60 @@ public class UI_ItemMover : MonoBehaviour
         }
         if (inventory1 == inventory2) { return; } // we stay inside the same inventory so no need to update Items's inventories
 
-        if (log)
+        /* if (log)
         {
             Debug.Log($"(UI_ItemMover) merged items between {item1.ItemPool.UI_Inventory.name} "
             + $"and {item2.ItemPool.UI_Inventory.name} with {items.Count} items left in {item1.gameObject.name}");
-        }
+        } 
 
         // on met à jour les inventories des items
-        List<UI_Inventory> uis_to_ignore = new List<UI_Inventory>() { item1.ItemPool.UI_Inventory, item2.ItemPool.UI_Inventory };
+        // List<UI_Inventory> uis_to_ignore = new List<UI_Inventory>() { item1.ItemPool.UI_Inventory, item2.ItemPool.UI_Inventory };
         foreach (Item item in transfered_items)
         {
-            inventory2.Grab(item/* , uis_to_ignore */); // on ignore les ui_inventory parce qu'ils ont déjà été grab dans ces UI_Inventory
-        }
+            inventory2.Grab(item/* , uis_to_ignore ); // on ignore les ui_inventory parce qu'ils ont déjà été grab dans ces UI_Inventory
+        } */
     }
 
     // ENABLE / DISABLE UI_ITEM_POOL SLOTS FOR MOVING
     private void enable_only_recevable_slots(UI_Item moving_ui)
     {
-        UI_ItemPool moving_pool = moving_ui.ItemPool;
-        Item moving_item = moving_ui.Item;
+        UI_ItemPool moving_pool = moving_ui.UI_ItemPool;
+        Item moving_item = moving_ui.Stack.Item;
         if (log_receivable_slots) { Debug.Log($"(UI_ItemMover) enabling only receivable slots for item {moving_item.name} in pool {moving_pool.name}"); }
 
-        List<UI_ItemPool> pools = get_items_pools_from_slottables(manager.Slottables);
+
+        // on récup toutes les ui_item_pools qui sont affichées
+        List<UI_ItemPool> ui_item_pools = new List<UI_ItemPool>();
+        get_ui_items_pools_from_slottables(manager.Slottables, ref ui_item_pools);
+        // List<UI_ItemPool> pools = get_items_pools_from_slottables(manager.Slottables);
+        ui_item_pools = ui_item_pools.Where(ui_pool => ui_pool.pool != null).ToList();
+
+
+        // log preparatiob
+        string log_slottables = "(UI_ItemMover) got " + ui_item_pools.Count + " ui_item_pools to enable/disable slots from \n";
         List<UI_Slot> slots = new List<UI_Slot>();
 
-        // convert slottables into ui_inventories
-        string log_slottables = "(UI_ItemMover) got " + pools.Count + " pools to enable/disable slots from \n";
-
-        // on récupère les item pools
-        for (int i = 0; i < pools.Count; i++)
+        // on parcourt tous les ui item pools
+        for (int i = 0; i < ui_item_pools.Count; i++)
         {
-            UI_ItemPool ui_pool = pools[i];
+            UI_ItemPool ui_item_pool = ui_item_pools[i];
 
-            log_slottables += $"- {ui_pool.name} ({ui_pool.GetType()}) ";
+            log_slottables += $"- {ui_item_pool.name} ({ui_item_pool.GetType()}) ";
 
-            // si le moving item ne matche pas la rule de la ui_pool on désactive toute la ui_pool
-            if (!ui_pool.pool.CanStore(moving_item))
+            // si le moving item ne matche pas la rule de la ui_item_pool on désactive toute la ui_item_pool
+            if (!ui_item_pool.pool.ValidateRule(moving_item))
             {
-                // on désactive tous les slots de la ui_pool
+                // on désactive tous les slots de la ui_item_pool
                 slots.Clear();
-                slots.AddRange(ui_pool.GetAllSlots());
+                slots.AddRange(ui_item_pool.GetAllSlots());
                 log_slottables += $"--> cannot store {moving_item.name}, disabling all {slots.Count} slots \n";
                 for (int j = 0; j < slots.Count; j++) { slots[j].Disable(); }
                 continue;
             }
 
-            // on récupère les slots de la ui_pool
+            // on récupère les slots de la ui_item_pool
             slots.Clear();
-            slots.AddRange(ui_pool.GetAllSlots());
+            slots.AddRange(ui_item_pool.GetAllSlots());
             log_slottables += $"--> can store {moving_item.name}, enabling receivable slots \n";
             for (int k = 0; k < slots.Count; k++)
             {
@@ -300,8 +358,8 @@ public class UI_ItemMover : MonoBehaviour
                 if (slot is not UI_Item ui_item) { slot.Disable(); continue; }
                 if (ui_item == moving_ui) { continue; } // on ne désactive pas le slot en cours de drag
 
-                // on regarde si le slot a un item qui peut etre recu par le moving_ui_item_pool
-                if (ui_item.Item != null && !moving_pool.pool.CanStore(ui_item.Item))
+                // on regarde si le moving_ui_item_pool peut recevoir l'item du slot (scénario inverse de juste avant)
+                if (ui_item.Stack.Item != null && !moving_pool.pool.ValidateRule(ui_item.Stack.Item))
                 {
                     ui_item.Disable(); // on désactive le slot
                     continue;
@@ -313,19 +371,19 @@ public class UI_ItemMover : MonoBehaviour
             }
 
             // on regarde si la ui_pool est full et scalable -> on ajout un ui_item vide dedans
-            if (ui_pool == moving_pool) { continue; }
-            if (!ui_pool.pool.Scalable) { continue; }
-            if (!ui_pool.pool.CanStore(moving_item)) { continue; }
-            if (ui_pool.EmptyCount > 0) { continue; }
-            GameObject empty_slot = ui_pool.CreateItemSlot();
-            empty_slot.GetComponent<UI_Item>().Enable();
+            if (ui_item_pool == moving_pool) { continue; }
+            if (!ui_item_pool.pool.Scalable) { continue; }
+            if (ui_item_pool.EmptyCount > 0) { continue; }
+            ui_item_pool.pool.AddEmptyStack();
+            // UI_Item empty_slot = ui_item_pool.CreateItemSlot();
+            // empty_slot.Enable();
             log_slottables += $"        --> added empty slot bcz scalable & full\n";
         }
 
         if (log_receivable_slots) { Debug.Log(log_slottables); }
 
         // si on a un UI_InventoryMenu dans nos uis alors on refresh ses UI_ItemPools
-        if (UI_Manager.Instance.CurrentPool == "inventory")
+        /* if (UI_Manager.Instance.CurrentPool == "inventory")
         {
             UI_InventoryMenu inventory_menu = UI_Manager.Instance.GetPool<UI_InventoryMenu>();
             if (inventory_menu != null)
@@ -335,7 +393,7 @@ public class UI_ItemMover : MonoBehaviour
                 return;
             }
         }
-        if (log_receivable_slots) { Debug.Log($"(UI_ItemMover) no inventory menu to refresh"); }
+        if (log_receivable_slots) { Debug.Log($"(UI_ItemMover) no inventory menu to refresh"); } */
 
         // refreshing navigator ui_slots
         manager.UpdateSlots();
@@ -343,40 +401,43 @@ public class UI_ItemMover : MonoBehaviour
     private void disable_only_empty_slots(bool except_modules = false)
     {
         // on sauvegarde les item pools qu'on trouve
-        List<UI_ItemPool> item_pools = get_items_pools_from_slottables(manager.Slottables);
-        if (log_receivable_slots) { Debug.Log($"(UI_ItemMover) disabling empty slots in {item_pools.Count} item pools"); }
+        // List<UI_ItemPool> item_pools = get_items_pools_from_slottables(manager.Slottables);
+        List<UI_ItemPool> ui_item_pools = new List<UI_ItemPool>();
+        get_ui_items_pools_from_slottables(manager.Slottables, ref ui_item_pools);
+        ui_item_pools = ui_item_pools.Where(ui_pool => ui_pool.pool != null).ToList();
+        if (log_receivable_slots) { Debug.Log($"(UI_ItemMover) disabling empty slots in {ui_item_pools.Count} item pools"); }
 
-        for (int i = 0; i < item_pools.Count; i++)
+        for (int i = 0; i < ui_item_pools.Count; i++)
         {
-            UI_ItemPool ui_pool = item_pools[i];
+            UI_ItemPool ui_pool = ui_item_pools[i];
 
             // on récupère les slots du inventory
-            List<UI_Item> slots = ui_pool.GetAllSlots();
+            List<UI_ItemStack> slots = ui_pool.GetAllSlots();
             for (int j = 0; j < slots.Count; j++)
             {
-                UI_Item ui_item = slots[j];
+                UI_ItemStack ui_item = slots[j];
 
                 // on regarde si le slot n'a pas d'item on le désactive
-                if (ui_item.Item != null) { ui_item.Enable(); continue; }
+                if (ui_item.Stack.Item != null) { ui_item.Enable(); continue; }
                 if (except_modules && ui_item is UI_Module) { ui_item.Enable(); continue; } // on ne désactive pas les modules
                 if (ui_pool.DoNotDisableEmptySlots) { ui_item.Enable(); continue; }
                 ui_item.Disable(); // on désactive le slot
             }
 
-            if (ui_pool.pool.Scalable) { ui_pool.DestroyEmptySlots(); }
+            if (ui_pool.pool.Scalable) { ui_pool.pool.DestroyEmptyStacks(); }
         }
 
         // si on a un UI_InventoryMenu dans nos uis alors on refresh ses UI_ItemPools
-        if (UI_Manager.Instance.CurrentPool == "inventory")
+        /* if (UI_Manager.Instance.CurrentPool == "inventory")
         {
             UI_InventoryMenu inventory_menu = UI_Manager.Instance.GetPool<UI_InventoryMenu>();
             if (inventory_menu != null)
             {
                 inventory_menu.RefreshItemPools();
             }
-        }
+        } */
     }
-    private List<UI_Inventory> get_inventories_from_slottables(List<Slottable> slottables)
+    /* private List<UI_Inventory> get_inventories_from_slottables(List<Slottable> slottables)
     {
         List<UI_Inventory> inventories = new List<UI_Inventory>();
 
@@ -420,5 +481,25 @@ public class UI_ItemMover : MonoBehaviour
         }
 
         return item_pools;
+    } */
+   private void get_ui_items_pools_from_slottables(List<Slottable> slottables, ref List<UI_ItemPool> found_pools)
+    {
+        // List<UI_ItemPool> item_pools = new List<UI_ItemPool>();
+
+        // convert slottables into ui_item_pools
+        while (slottables.Count > 0)
+        {
+            Slottable slottable = slottables[0];
+            slottables.RemoveAt(0);
+
+            // if slottable is directly an item pool it s perfect
+            if (slottable is UI_ItemPool item_pool && !found_pools.Contains(item_pool)) { found_pools.Add(item_pool); }
+
+            if (slottable is not UI_SlottableMixer mixer) { continue; }
+
+            // if this is a slottable mixer we go through their slottables too
+            List<Slottable> mixer_slottables = mixer.Slottables.Cast<Slottable>().ToList();
+            get_ui_items_pools_from_slottables(mixer_slottables, ref found_pools);
+        }
     }
 }

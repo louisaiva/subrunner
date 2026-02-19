@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: 2806026283884960729}
   - component: {fileID: 5671285354442261386}
   - component: {fileID: 7143562431207241119}
-  - component: {fileID: -9170513310328476977}
+  - component: {fileID: 5392797873378683439}
   m_Layer: 10
   m_Name: ui_item
   m_TagString: Untagged
@@ -289,7 +289,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &-9170513310328476977
+--- !u!114 &5392797873378683439
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -298,19 +298,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 4964243457693928914}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c085eeac05cbc4f4f933c07b1c61cfb7, type: 3}
+  m_Script: {fileID: 11500000, guid: f2d87307439b10c4c8395e2f1d98e266, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_ItemStack
   _hovered: 0
   _disabled: 0
   log: 0
+  image: {fileID: 7143562431207241119}
   base_sprite: {fileID: 722337240, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   hover_sprite: {fileID: 1477167940, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   down_sprite: {fileID: -1489766419, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   disabled_sprite: {fileID: -908096685, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
-  image: {fileID: 7143562431207241119}
   drag_sprite: {fileID: 1075853624, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   drag_hover_sprite: {fileID: 1844584853, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
-  quantity_text: {fileID: 1089391367578041106}
-  item_image: {fileID: 0}
-  current_item_sprite: {fileID: 0}
+  Stack:
+    Pool: {fileID: 0}
+    MaxQty: 0
+    Items: []

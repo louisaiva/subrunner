@@ -18,7 +18,7 @@ public class UI_LaptopItemSlot : UI_Item, Awakable
 
 
     // LAPTOP GRABBING / DROPPING
-    public override bool Store(Item item)
+    /* public override bool Store(Item item)
     {
         if (!base.Store(item)) { return false; }
         // if we are here we successfully grabbed item
@@ -50,9 +50,9 @@ public class UI_LaptopItemSlot : UI_Item, Awakable
 
         // we update the perso laptop reference
         Perso.Instance.Laptop = Item as Laptop;
-    }
+    } */
 
     // HAS LAPTOP
-    public bool HasLaptop => this.Item != null && Item is Laptop;
-    public Laptop Laptop => this.Item != null && Item is Laptop laptop ? laptop : null;
+    /* public bool HasLaptop => this.Item != null && Item is Laptop;
+    public Laptop Laptop => this.Item != null && Item is Laptop laptop ? laptop : null; */
 }

@@ -33,7 +33,7 @@ public class Inventory : MonoBehaviour, ItemStorer
 
 
     // EVENTS
-    public event Action<Item> OnItemGrabbedAtStart = delegate { };
+    public event Action<Item> OnItemGrabbedFromLowerLevel = delegate { };
     public event Action<Item> OnItemGrabbed = delegate { };
     public event Action<Item> OnItemDropped = delegate { };
 
@@ -169,14 +169,14 @@ public class Inventory : MonoBehaviour, ItemStorer
     /// the grab already happened in a lower level (ItemPool grabbed an Item during Start() probably)
     /// Then we need to fire the event so that's the only purpose of this method after all
     /// </summary>
-    public void GrabAtStart(Item item)
+    public void GrabFromLowerLevel(Item item)
     {
         if (item == null) { return; }
 
         // we trigger the events
-        OnItemGrabbedAtStart.Invoke(item);
+        OnItemGrabbedFromLowerLevel.Invoke(item);
 
-        if (log) { Debug.Log("(Inventory) " + capable.name + " grabbed at start : " + item.name); }
+        if (log) { Debug.Log("(Inventory) " + capable.name + " grabbed from lower level : " + item.name); }
     }
 
 
@@ -214,6 +214,14 @@ public class Inventory : MonoBehaviour, ItemStorer
 
         // else we have no pool named like this
         // if (log) { Debug.LogWarning($"(Inventory) {pool_name} ItemPool was NOT found :O"); }
+        return null;
+    }
+    public ItemPool GetItemPoolThatHoldsItemStack(ItemStack stack)
+    {
+        for (int i = 0; i < pools.Count; i++)
+        {
+            if (pools[i].HasStack(stack)) { return pools[i]; }
+        }
         return null;
     }
 

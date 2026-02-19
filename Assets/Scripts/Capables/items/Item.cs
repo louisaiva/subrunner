@@ -70,6 +70,15 @@ public class Item : Movable, EndlessInteractable
             return transform.parent.GetComponent<ItemPool>();
         }
     }
+    public ItemStack ItemStackHolder
+    {
+        get
+        {
+            ItemPool pool = ItemPoolHolder;
+            if (pool == null) { return null; }
+            return pool.GetStackOfItem(this);
+        }
+    }
 
 
 
