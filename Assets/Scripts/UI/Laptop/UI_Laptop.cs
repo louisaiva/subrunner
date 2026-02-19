@@ -80,7 +80,7 @@ public class UI_Laptop : UI_Inventory
         modulePool.EnableModulePool();
 
         // we refresh the ui_inventory menu
-        UI_Manager.Instance.GetPool<UI_InventoryMenu>()?.RefreshItemPools();
+        // UI_Manager.Instance.GetPool<UI_InventoryMenu>()?.RefreshItemPools();
     }
 
 

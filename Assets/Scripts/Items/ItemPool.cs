@@ -51,6 +51,8 @@ public class ItemPool : MonoBehaviour, ItemStorer
     [Header("Logs")]
     [SerializeField] protected bool log = false;
     [SerializeField] protected bool log_storage = false;
+    [SerializeField] protected bool log_merge = false;
+    
 
     public void AttachToInventory(Inventory inventory)
     {
@@ -120,8 +122,8 @@ public class ItemPool : MonoBehaviour, ItemStorer
             if (stack.ItemReference != item.Reference) { continue; }
 
             // we try to add the item to this stack
-            bool added = stack.Add(item);
-            if (!added) { continue; }
+            bool can_add = stack.CanAdd(item);
+            if (!can_add) { return false; }
 
             // we successfully grabbed the item
             finalise_grab(item, stack);
@@ -132,7 +134,9 @@ public class ItemPool : MonoBehaviour, ItemStorer
 
         // we have no existing stack with same reference, we try to put into an empty one
         if (empty_stacks.Count > 0) {
-            empty_stacks[0].Add(item);
+
+            // no need for checking the can add, the stack is empty
+
             // we successfully grabbed the item
             finalise_grab(item, empty_stacks[0]);
             // OnStackUpdated?.Invoke(empty_stacks[0]);
@@ -149,7 +153,6 @@ public class ItemPool : MonoBehaviour, ItemStorer
 
         // we create a new stack for this item
         ItemStack new_stack = new ItemStack(this);
-        new_stack.Add(item);
         stacks.Add(new_stack);
 
         // we successfully grabbed the item
@@ -167,18 +170,16 @@ public class ItemPool : MonoBehaviour, ItemStorer
         {
             ItemStack stack = stacks[i];
             if (stack.IsEmpty) { continue; }
-            // dont uncomment if (stack.ItemReference != item.Reference) { continue; } - we don't want to check item ref since when ref changed we need to drop it
             if (!stack.Items.Contains(item)) { continue; }
+            // dont uncomment if (stack.ItemReference != item.Reference) { continue; } - we don't want to check item ref since when ref changed we need to drop it
 
-            // we try to remove the item from this stack
-            bool removed = stack.Remove(item);
-            if (!removed) { continue; }
+            // we remove the item from this stack
+            stack.Remove(item);
 
 
             // if we are here, we successfully dropped the item
             item.OnReferenceChanged -= handle_item_reference_changed;
             item.Grabbed = false; // we set the item to dropped (which enables the hover collider)
-            // OnItemDropped.Invoke(item);
 
             // finally we deal with the stack
             if (Scalable && stack.IsEmpty && stacks.Count > MinStacks)
@@ -186,7 +187,6 @@ public class ItemPool : MonoBehaviour, ItemStorer
                 stacks.Remove(stack);
                 OnStackRemoved?.Invoke(stack);
             }
-            // else { OnStackUpdated?.Invoke(stack); }
 
             if (log) { Debug.Log("(ItemPool) " + name + " dropped : " + item.name); }
             return true;
@@ -194,12 +194,30 @@ public class ItemPool : MonoBehaviour, ItemStorer
 
         return false;
     }
+    public bool GrabInStack(Item item, ItemStack stack)
+    {
+        if (item == null || stack == null) { return false; }
+        if (!stacks.Contains(stack)) { return false; }
+        if (!ValidateRule(item)) { return false; }
+
+        // we try to add the item to this stack
+        bool can_add = stack.CanAdd(item);
+        if (!can_add) { return false; }
+
+        // we successfully grabbed the item
+        finalise_grab(item, stack);
+        if (log) { Debug.Log("(ItemPool) " + name + " grabbed : " + item.name + $" in specific stack {stacks.IndexOf(stack)}"); }
+        return true;
+    }
 
     // low level grab drop
-    private void finalise_grab(Item item,ItemStack stack)
+    private void finalise_grab(Item item, ItemStack stack)
     {
         // we check if the item is already grabbed somewhere, if so we drop it
         if (item.Grabbed && item.ItemPoolHolder != null) { item.ItemPoolHolder.Drop(item); }
+
+        // we finally grab it into the stack
+        stack.Add(item);
 
         // we set the item parent and reset its local position
         item.transform.SetParent(transform);
@@ -269,7 +287,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
     {
         return stacks.Contains(stack);
     }
-    public void AddStack(ItemStack stack)
+    /* public void AddStack(ItemStack stack)
     {
         if (stack == null) { return; }
         if (!Scalable && stacks.Count >= MaxStacks) { return; }
@@ -289,20 +307,52 @@ public class ItemPool : MonoBehaviour, ItemStorer
         if (!stacks.Contains(stack)) { return; }
         stacks.Remove(stack);
         OnStackRemoved?.Invoke(stack);
-    }
-    public void MergeStackIntoStack(ItemStack from_stack, ItemStack to_stack)
+    } */
+    public void MergeIntoStack(ItemStack from_stack, ItemStack to_stack)
     {
         if (from_stack == null || to_stack == null) { return; }
-        if (!stacks.Contains(to_stack)) { return; }
+        if (!stacks.Contains(to_stack)) { return; } // must hold the to_stack
 
         // we add all items from from_stack into to_stack until we can't anymore
         while (from_stack.Items.Count > 0)
         {
             Item item = from_stack.Items[0];
-            bool added = to_stack.Add(item);
+            bool added = GrabInStack(item, to_stack);
+            if (log_merge) { Debug.Log($"(ItemPool) Merged item {item} into stack {stacks.IndexOf(to_stack)}"); }
             if (!added) { break; }
             from_stack.Remove(item);
-            Inventory.GrabFromLowerLevel(item);
+            if (log_merge) { Debug.Log($"(ItemPool) Removed item {item} from stack {from_stack.Pool} - {from_stack.Pool.stacks.IndexOf(from_stack)}"); }
+        }
+    }
+    public void SwapStacks(ItemStack stack1, ItemStack stack2)
+    {
+        if (stack1 == null || stack2 == null) { return; }
+        if (!stacks.Contains(stack1) && !stacks.Contains(stack2)) { return; } // must at least hold one of those two stacks
+
+        // we store the items
+        List<Item> items1 = new List<Item>(stack1.Items);
+        List<Item> items2 = new List<Item>(stack2.Items);
+
+        // we clear the stacks
+        stack1.Clear();
+        stack2.Clear();
+
+        // we get the ItemPools for those stacks
+        ItemPool pool1 = stack1.Pool;
+        ItemPool pool2 = stack2.Pool;
+
+        // we add the items to the opposite stacks
+        for (int i = 0; i < items1.Count; i++)
+        {
+            Item item = items1[i];
+            bool added = pool2.GrabInStack(item, stack2);
+            if (!added) { Debug.LogError($"(ItemPool - swap) Failed to add {item} to stack {stack2} in ItemPool {pool2}"); break; }
+        }
+        for (int i = 0; i < items2.Count; i++)
+        {
+            Item item = items2[i];
+            bool added = pool1.GrabInStack(item, stack1);
+            if (!added) { Debug.LogError($"(ItemPool - swap) Failed to add {item} to stack {stack1} in ItemPool {pool1}"); break; }
         }
     }
 

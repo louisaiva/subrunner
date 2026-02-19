@@ -121,14 +121,117 @@ public class UI_ItemStack : UI_ImageSlot, Droppable, Descriptable
         Disable();
     }
 
-    // DROPPABLE
-    public void OnPointerDropped(PointerEventData eventData)
+
+
+
+    // CLICK
+
+    // ON POINTER
+    public override void OnPointerClick(PointerEventData eventData)
     {
-        throw new System.NotImplementedException();
+        base.OnPointerClick(eventData);
+
+        // we check if we have an item
+        if (Stack.Quantity == 0) { return; }
+        if (log) { Debug.Log("OnPointerClick on " + gameObject.name); }
+
+        Item item = Stack.Item;
+
+        // we check if the item is an usable
+        if (item is Usable usable)
+        {
+            usable.Use(item.Holder);
+            UI_Manager.Instance.SwitchToHUD();
+            return;
+        }
+
+        // we check if the item is an inspectable
+        if (item is Inspectable inspectable) { inspectable.Inspect(); }
+    }
+    public override void OnPointerExit(PointerEventData eventData)
+    {
+        base.OnPointerExit(eventData);
+        set_ui_item(current_item_sprite);
     }
 
 
-    // MOVE ITEM
-    public virtual void OnPointerDragEnter(UI_Item moving_ui_item) { }
+    // DROPPABLE
+    public void OnPointerDropped(PointerEventData eventData)
+    {
+        base.OnPointerClick(eventData);
 
+        // we check if we have an item
+        if (Stack == null || Stack.Quantity == 0) { return; }
+        if (log) { Debug.Log("OnPointerDropped on " + gameObject.name); }
+
+        // we get the item & drop it
+        drop_item(Stack.Item);
+    }
+    private void drop_item(Item item)
+    {
+        // on récupère l'inventory qui drop l'item
+        Inventory inventory = item.Holder.Inventory;
+
+        // on cherche l'inventory qui reçoit l'item
+        Inventory inventory_to_drop = inventory.GetInteractingInventory();
+
+        // we drop the item in the other inventory
+        if (inventory_to_drop != null)
+        {
+            inventory_to_drop.Grab(item);
+            return;
+        }
+
+        // we don't have an inventory to drop so we drop on the ground
+        // we check if we have a DropCapacity
+        DropCapacity dropper = inventory.capable.GetCapacity<DropCapacity>();
+        if (dropper != null)
+        {
+            dropper.Select(item);
+            dropper.random_direction = true;
+            dropper.Use(inventory.capable);
+            dropper.random_direction = false;
+        }
+        else
+        {
+            // the inventory simply drops the item (dropper may be a chest)
+            inventory.Drop(item);
+        }
+    }
+
+
+    // ON POINTER DRAG
+    public void OnPointerDragDown()
+    {
+        // check if disabled
+        if (Disabled) { return; }
+        if (log) { Debug.Log("OnPointerDragDown on " + gameObject.name); }
+
+        // on change le sprite du slot
+        GetComponent<Image>().sprite = drag_sprite;
+    }
+    public virtual void OnPointerDragEnter(UI_ItemStack moving_ui_item)
+    {
+        // check if disabled
+        if (Disabled) { return; }
+        if (log) { Debug.Log("OnPointerDragEnter on " + gameObject.name); }
+
+        // on change le sprite du slot
+        GetComponent<Image>().sprite = drag_hover_sprite;
+
+
+        // on met un icon de switch à la place de l'item
+        Sprite switch_icon = Stack.CanAdd(moving_ui_item.Stack.Item)
+            ? ItemBank.Instance.GetUI_Icon("merge")
+            : ItemBank.Instance.GetUI_Icon("switch");
+
+        // si on a aucun item on met tout simplement "move"
+        if (Stack.Quantity == 0) { switch_icon = ItemBank.Instance.GetUI_Icon("move"); }
+        set_ui_item(switch_icon);
+    }
+    public void OnPointerDragUp()
+    {
+        if (log) { Debug.Log("OnPointerDragUp on " + gameObject.name); }
+        OnPointerEnter(null);
+    }
 }

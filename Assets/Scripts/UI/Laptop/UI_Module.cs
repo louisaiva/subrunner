@@ -113,7 +113,7 @@ public class UI_Module : UI_ItemStack
     }
 
     // DRAGGING
-    public override void OnPointerDragEnter(UI_Item moving_ui_item)
+    public override void OnPointerDragEnter(UI_ItemStack moving_ui_item)
     {
         // check if disabled
         if (Disabled) { return; }

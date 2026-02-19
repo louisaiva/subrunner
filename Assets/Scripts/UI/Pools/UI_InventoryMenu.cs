@@ -130,6 +130,7 @@ public class UI_InventoryMenu : UI_Pool/* , Panelable */
                 if (!transitioner.Shown && (item_pool.EnabledCount > 0 || item_pool.FullCount > 0)) { transitioner.Show(duration); log_msg += " -> fading in"; }
                 else if (!transitioner.Hidden && item_pool.EnabledCount == 0 && item_pool.FullCount == 0) { transitioner.Hide(duration); log_msg += " -> fading out"; }
             }
+            else if (!transitioner.Shown) { transitioner.Show(duration); log_msg += " -> always fading in"; } // on affiche toujours la pool si elle n'est pas affichée
         }
 
         if (log) { Debug.Log(log_msg); }
@@ -142,7 +143,7 @@ public class UI_InventoryMenu : UI_Pool/* , Panelable */
         List<GameObject> item_pools = new List<GameObject>();
         foreach (GameObject ui in ui_elements)
         {
-            UI_ItemPool item_pool = ui.GetComponentInChildren<UI_ItemPool>();
+            UI_ItemPool item_pool = ui.GetComponentInChildren<UI_ItemPool>(includeInactive: true);
             if (item_pool != null) { item_pools.Add(ui); }
         }
         return item_pools;

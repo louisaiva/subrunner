@@ -80,7 +80,7 @@ using UnityEngine;
     public bool CanAdd(ItemStack item_stack) { return CanAdd(item_stack.Items); }
 
     // ADD / REMOVE
-    public bool Add(Item item)
+    public void Add(Item item)
     {
         if (IsEmpty)
         {
@@ -88,25 +88,23 @@ using UnityEngine;
             MaxQty = item.MaxQty;
             Items.Add(item);
             OnUpdated?.Invoke();
-            return true;
+            return;
         }
-
-        if (!CanAdd(item)) { return false; }
 
         // if (item.Reference != ItemReference) { return false; }
         // if (IsFull) { return false; }
 
         Items.Add(item);
         OnUpdated?.Invoke();
-        return true;
+        return;
     }
-    public bool Remove(Item item)
+    public void Remove(Item item)
     {
-        if (IsEmpty) { return false; }
-        if (!Items.Contains(item)) { return false; }
+        if (IsEmpty) { return; }
+        if (!Items.Contains(item)) { return; }
 
         bool removed = Items.Remove(item);
-        if (!removed) { return false; }
+        if (!removed) { return; }
 
         // if we are empty, we reset the stack
         if (IsEmpty)
@@ -115,6 +113,12 @@ using UnityEngine;
         }
 
         OnUpdated?.Invoke();
-        return true;
+        return;
+    }
+    public void Clear()
+    {
+        Items.Clear();
+        MaxQty = 1;
+        OnUpdated?.Invoke();
     }
 }

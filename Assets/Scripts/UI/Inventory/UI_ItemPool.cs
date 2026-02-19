@@ -36,13 +36,12 @@ public class UI_ItemPool : UI_Slottable, Startable
     public int Count { get { return ui_stacks.Count; } }
     public int EmptyCount { get { return ui_stacks.Count(ui_stack => ui_stack.Stack.Item == null); } }
     public int FullCount { get { return Count - EmptyCount; } }
-    public int EnabledCount { get { return ui_stacks.Where(ui_stack => !ui_stack.Disabled).Count(); } }
-    [SerializeField] protected bool destroy_empty_on_init = true; // if true, the empty slots will be destroyed on init
+    public int EnabledCount { get { return ui_stacks.Count(ui_stack => !ui_stack.Disabled); } }
+    // [SerializeField] protected bool destroy_empty_on_init = true; // if true, the empty slots will be destroyed on init
     public bool DoNotDisableEmptySlots = false;
 
     [Header("Components")]
     [SerializeField] protected ItemBank bank;
-    // public UI_Inventory UI_Inventory;
 
     [Header("Logs")]
     [SerializeField] protected bool log_storage = false;
@@ -60,7 +59,7 @@ public class UI_ItemPool : UI_Slottable, Startable
         destroyAllStacks();
     }
 
-    // ITEM POOL ATTACHMENT
+    // ITEMPOOL ATTACHMENT
     public void AttachToPool(ItemPool pool)
     {
         if (pool == null) { return; }
@@ -94,7 +93,6 @@ public class UI_ItemPool : UI_Slottable, Startable
         destroyAllStacks();
     }
 
-
     // UI_ITEMSTACK MANAGEMENT
     protected void createStacksForPool()
     {
@@ -117,7 +115,7 @@ public class UI_ItemPool : UI_Slottable, Startable
         ui_stacks.Clear();
     }
 
-    // LOW LEVEL STACKS MANAGEMENT
+    // LOW LEVEL UI_ITEMSTACK MANAGEMENT
     protected void add_ui_stack(ItemStack stack)
     {
         UI_ItemStack ui_stack = create_ui_stack(stack); // creates the ui_stack
@@ -153,83 +151,6 @@ public class UI_ItemPool : UI_Slottable, Startable
     }
 
 
-
-
-    // DESTROY / CREATE EMPTY ITEM SLOT
-    /* public void DestroyEmptySlots()
-    {
-        /* // we go through the children to find the empty slots
-        int i = MinSlots;
-        while (i < Count)
-        {
-            UI_Item ui_item = ui_items[i];
-            if (ui_item.Quantity == 0)
-            {
-                // we destroy the empty slot
-                Destroy(ui_item.gameObject);
-                ui_items.RemoveAt(i);
-                continue; // we don't increment i, we just remove the empty slot
-            }
-
-            i++;
-        }
-
-        // we disable the first ones if we have some
-        for (int j = 0; j < MinSlots && j < Count; j++)
-        {
-            UI_Item ui_item = ui_items[j];
-            if (ui_item == null || ui_item.Quantity > 0) { continue; }
-            ui_item.Disable();
-        }
-
-        // we verify that we still have more slots than the MinSlot
-        if (Scalable && Count < MinSlots)
-        {
-            // we create the missing slots
-            CreateEmptySlots(MinSlots - Count);
-            if (log) { Debug.Log($"(UI_ItemPool) {name} created {MinSlots - Count} empty slots to reach the minimum of {MinSlots} slots"); }
-        }
-        else if (!Scalable && Count < MaxSlots)
-        {
-            // we create the missing slots
-            CreateEmptySlots(MaxSlots - Count);
-            if (log) { Debug.Log($"(UI_ItemPool) {name} created {MaxSlots - Count} empty slots to reach the maximum of {MaxSlots} slots"); }
-        } 
-
-
-        SyncUIWithPool();
-    } */
-
-    /* public void CreateEmptySlots(int count)
-    {
-        // we create the empty slots
-        for (int i = 0; i < count; i++) { CreateItemSlot(); }
-        if (log) { Debug.Log($"(UI_ItemPool) created {count} empty slots in {name}"); }
-    } */
-    /* protected virtual UI_ItemStack create_item_stack(ItemStack stack)
-    {
-        // we create the item
-        GameObject ui_slot = bank.CreateUI_Item(transform, item_slot_type);
-        // ui_slot.transform.SetParent(transform);
-
-
-        // we change the layer of the slot to the same as the pool
-        ui_slot.layer = gameObject.layer;
-
-        // reset the scale to 1 and local position to 0,0
-        ui_slot.transform.localScale = Vector3.one;
-        ui_slot.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-        
-        // initialize the ui_item and return it
-        UI_Item ui_item = ui_slot.GetComponent<UI_Item>();
-        ui_item.Init();
-
-        // we add the ui_item to the list
-        ui_items.Add(ui_item);
-
-        return ui_item;
-    } */
-
     // GETTERS
     protected UI_ItemStack get_ui_stack_attached_to_stack(ItemStack stack)
     {
@@ -251,24 +172,6 @@ public class UI_ItemPool : UI_Slottable, Startable
         }
         return -1;
     }
-    /* public List<Item> GetAllItems()
-    {
-        List<Item> items = new List<Item>();
-        foreach (UI_ItemStack ui_stack in ui_stacks)
-        {
-            items.AddRange(ui_item.GetItems());
-        }
-        return items;
-    }
-    public List<UI_Item> GetFilledSlots()
-    {
-        List<UI_Item> filled_slots = new List<UI_Item>();
-        foreach (UI_Item ui_item in ui_items)
-        {
-            if (ui_item.Quantity > 0) { filled_slots.Add(ui_item); }
-        }
-        return filled_slots;
-    } */
     public UI_ItemStack GetSlotAt(int index)
     {
         if (index < 0 || index >= ui_stacks.Count) { return null; }
@@ -278,8 +181,6 @@ public class UI_ItemPool : UI_Slottable, Startable
     {
         return ui_stacks;
     }
-
-
 
 
     // SLOTTABLE

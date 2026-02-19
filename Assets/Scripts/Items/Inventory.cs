@@ -216,14 +216,14 @@ public class Inventory : MonoBehaviour, ItemStorer
         // if (log) { Debug.LogWarning($"(Inventory) {pool_name} ItemPool was NOT found :O"); }
         return null;
     }
-    public ItemPool GetItemPoolThatHoldsItemStack(ItemStack stack)
+    /* public ItemPool GetItemPoolThatHoldsItemStack(ItemStack stack)
     {
         for (int i = 0; i < pools.Count; i++)
         {
             if (pools[i].HasStack(stack)) { return pools[i]; }
         }
         return null;
-    }
+    } */
 
 
     // GLOBAL GETTERS

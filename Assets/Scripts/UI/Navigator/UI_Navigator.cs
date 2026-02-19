@@ -140,7 +140,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
         if (CurrentSlot != null) { UnhoverSlot(); }
 
         // check dragging & moving items
-        if (!Mover.IsMovingItem || slot is not UI_Item ui_item)
+        if (!Mover.IsMovingItem || slot is not UI_ItemStack ui_item)
         {
             slot.OnPointerEnter(null);
         }
@@ -371,7 +371,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
     {
         if (CurrentSlot == null) { return; }
 
-        // check si c pour drop on verifie que c'est un UI_Item
+        // check si c pour drop on verifie que c'est un UI_ItemStack
         if (for_drop && CurrentSlot is not Droppable) { return; }
 
         // on down le slot
@@ -396,8 +396,8 @@ public class UI_Navigator : Singleton<UI_Navigator>
         // si on bouge déjà c'est déjà activé, donc pas besoin 
         if (Mover.IsMovingItem) { return; }
 
-        // on vérifie si c'est un UI_Item pour le moving item
-        if (CurrentSlot is not UI_Item ui_item) { return; }
+        // on vérifie si c'est un UI_ItemStack pour le moving item
+        if (CurrentSlot is not UI_ItemStack ui_item) { return; }
         if (ui_item.Stack.Quantity == 0) { return; }
 
         // on annule le endless drop ingame si besoin
