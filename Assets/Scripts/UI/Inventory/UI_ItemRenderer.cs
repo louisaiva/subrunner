@@ -4,11 +4,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-[Obsolete("UI_ItemRenderer is deprecated, use UI_Item instead, which is kind of a renderer for ItemStack now")]
+[Obsolete("UI_ItemRenderer is deprecated, use UI_ItemStack instead, which is kind of a renderer for ItemStack now")]
 public class UI_ItemRenderer : MonoBehaviour
 {
-    [Header("UI_Item Target")]
-    public UI_Item Target;
+    [Header("UI_ItemStack Target")]
+    public UI_ItemStack Target;
 
     [Header("Components")]
     [SerializeField] private Image item;
@@ -34,7 +34,7 @@ public class UI_ItemRenderer : MonoBehaviour
     }
 
     // SETTING NEW TARGET
-    /* public void SetTarget(UI_Item new_Target)
+    /* public void SetTarget(UI_ItemStack new_Target)
     {
         // we unsubscribe from the old Target
         if (Target != null)

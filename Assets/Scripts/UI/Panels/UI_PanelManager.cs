@@ -65,10 +65,10 @@ public class UI_PanelManager : MonoBehaviour
         string log_msg = "";
         log_msg += $"(UI_PanelManager) Slot {slot.gameObject.name} is out of screen";
         log_msg += $"\n\t current panel is {current_panel}";
-        log_msg += $"\n\t is an ui_item ? {slot is UI_Item}";
+        log_msg += $"\n\t is an ui_item ? {slot is UI_ItemStack}";
 
-        // we check if it's a UI_Item & if it belongs to one of our panels
-        // if (slot is not UI_Item uiItem || uiItem.ItemPool == null) { if (log) { Debug.Log(log_msg); } return; }
+        // we check if it's a UI_ItemStack & if it belongs to one of our panels
+        // if (slot is not UI_ItemStack uiItem || uiItem.ItemPool == null) { if (log) { Debug.Log(log_msg); } return; }
 
         // checks if it has a UI_Panel in its above hierarchy
         UI_Panel ui_panel = slot.GetComponentInParent<UI_Panel>(/* includeInactive: true */);

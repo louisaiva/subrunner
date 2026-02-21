@@ -38,8 +38,8 @@ public class UI_ItemPool : UI_Slottable, Startable
     public int FullCount { get { return Count - EmptyCount; } }
     public int EnabledCount { get { return ui_stacks.Count(ui_stack => !ui_stack.Disabled); } }
     
-    [Obsolete("This variable is not used anymore, as not disabling allow us to navigate to it. Use AlwaysShow if you want to always show the pool")]
-    public bool DoNotDisableEmptySlots = false;
+    // [Obsolete("This variable is not used anymore, as not disabling allow us to navigate to it. Use AlwaysShow if you want to always show the pool")]
+    // public bool DoNotDisableEmptySlots = false;
     public bool AlwaysShow = false; // if true, the pool will always be shown even if it is empty/disabled (affects UI_InventoryMenu)
 
     [Header("Components")]
@@ -183,7 +183,10 @@ public class UI_ItemPool : UI_Slottable, Startable
 
 
     // SLOTTABLE
-    public override List<UI_Slot> GetSlots() { return ui_stacks.Cast<UI_Slot>().ToList(); }
+    public override List<UI_Slot> GetSlots()
+    {
+        return ui_stacks.Cast<UI_Slot>().Where(s => !s.Disabled).ToList();
+    }
     public override bool IsYourSlot(UI_Slot slot)
     {
         if (ui_stacks.Contains(slot)) { return true; }

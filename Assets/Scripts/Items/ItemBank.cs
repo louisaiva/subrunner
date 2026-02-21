@@ -176,7 +176,7 @@ public class ItemBank : MonoBehaviour
             case "big_item": prefab = ui_big_item_prefab; break;
             case "file": prefab = ui_file_prefab; break;
             case "module": prefab = ui_module_prefab; break;
-            default: Debug.LogError("(ItemBank) unknown slot type " + slot_type + ", cannot create UI_Item"); return null;
+            default: Debug.LogError("(ItemBank) unknown slot type " + slot_type + ", cannot create UI_ItemStack"); return null;
         }
 
         // on crée le slot

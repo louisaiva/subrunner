@@ -56,7 +56,7 @@ public class GamepadNavigator : MonoBehaviour, Navigator
         if (Manager.CurrentSlot != null
             && Controller.Instance != null
             && Controller.Instance.UIC.IsDropInputDown()
-            && Manager.CurrentSlot is not UI_Item) { return; }
+            && Manager.CurrentSlot is not UI_ItemStack) { return; }
 
         // on move item potentiellement
         Manager.StartMovingItemIfInputDown();

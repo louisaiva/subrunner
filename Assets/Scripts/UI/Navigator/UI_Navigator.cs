@@ -366,6 +366,9 @@ public class UI_Navigator : Singleton<UI_Navigator>
 
         // on navigue vers le slot le plus proche
         Navigator.NavigateToClosest(position, favorised_type: navigating_to_closest_slot_type);
+
+        // on refresh les item pools de l'inventory menu
+        UI_Manager.Instance.RefreshInventoryMenu();
     }
     public void OnDown(bool for_drop = false)
     {

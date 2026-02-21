@@ -25,7 +25,7 @@ public class UI_ItemDescriptor : UI_Descriptor
         base.Describe(descriptable);
 
         // we get the item
-        UI_Item ui_item = descriptable as UI_Item;
+        UI_ItemStack ui_item = descriptable as UI_ItemStack;
         if (ui_item == null) { updateUpgrades(null); return; }
         Item item = ui_item.Stack.Item;
         if (item == null) { updateUpgrades(null); return; }

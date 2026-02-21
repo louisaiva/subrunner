@@ -220,7 +220,7 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
         name = "ui_empty";
 
         // on disable le slot
-        if (UI_ItemPool != null && UI_ItemPool.DoNotDisableEmptySlots) { return; }
+        // if (UI_ItemPool != null && UI_ItemPool.DoNotDisableEmptySlots) { return; }
         Disable();
     }
     /* protected void handle_item_reference_changed(Item item)

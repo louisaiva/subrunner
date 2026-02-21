@@ -217,7 +217,7 @@ public class UI_InputsController : InputController
             if (!InputManager.Instance.isUsingGamepad()) { return; }
 
             // si on est au gamepad & qu'on ne bouge pas d'items on up et return
-            if (!navigator.Mover.IsMovingItem && navigator.IsCurrentSlotTypeOf(typeof(UI_Item)))
+            if (!navigator.Mover.IsMovingItem && navigator.IsCurrentSlotTypeOf(typeof(UI_ItemStack)))
             {
                 navigator.OnUp();
                 return;

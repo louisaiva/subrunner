@@ -14,7 +14,7 @@ public class HUD_PersoItemPool : UI_ItemPool
 
     /* public void EnableAllItems()
     {
-        foreach (UI_Item ui_item in ui_items)
+        foreach (UI_ItemStack ui_item in ui_items)
         {
             if (ui_item.Stack.Item == null) { continue; }
             ui_item.gameObject.SetActive(true);
@@ -23,7 +23,7 @@ public class HUD_PersoItemPool : UI_ItemPool
     }
     public void EnableItemsByRule(string rule)
     {
-        foreach (UI_Item ui_item in ui_items)
+        foreach (UI_ItemStack ui_item in ui_items)
         {
             if (ui_item.Stack.Item == null) { continue; }
 

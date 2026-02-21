@@ -438,6 +438,21 @@ public class UI_Manager : Singleton<UI_Manager>
 
 
 
+
+    // SPECIFIC UI POOLS THAT NEED REFRESHING
+    // todo rework this method so it can take non-inventory menu UI_Pool and still work (ex : UI_Chest)
+    public void RefreshInventoryMenu()
+    {
+        // si on a un UI_InventoryMenu dans nos uis alors on refresh ses UI_ItemPools
+        if (CurrentPool != "inventory") { return; }
+        UI_InventoryMenu inventory_menu = GetPool<UI_InventoryMenu>();
+        if (inventory_menu == null) { return; }
+        inventory_menu.RefreshItemPools();
+    }
+
+
+
+
     // GETTERS
     public UI_Pool GetCurrentPool()
     {

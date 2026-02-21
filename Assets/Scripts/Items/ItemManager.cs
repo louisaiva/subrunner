@@ -1,4 +1,5 @@
 #pragma warning disable 4014
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ using UnityEngine;
 /// purement visuel.
 /// 
 /// </summary>
+[Obsolete("ItemManager is now obsolete. We can just use UI_ItemPool & UI_ItemStack for everything. This class is kept for now in case we want to add special item slots later, but it should not be used for now.")]
 public class ItemManager : MonoBehaviour
 {
     [Header("Special items slots")]

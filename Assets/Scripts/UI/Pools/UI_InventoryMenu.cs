@@ -133,25 +133,10 @@ public class UI_InventoryMenu : UI_Pool/* , Panelable */
         if (never_fade_pools) { should_pool_be_shown = true; }
         else if (item_pool.AlwaysShow) { should_pool_be_shown = true; }
         if (item_pool is UI_ModulePool) { should_pool_be_shown = false; } // specific override for UI_ModulePool
-        if (item_pool.EnabledCount > 0 || item_pool.FullCount > 0) { should_pool_be_shown = true; }
+        if (item_pool.EnabledCount > 0) { should_pool_be_shown = true; }
 
         if (should_pool_be_shown) { transitioner.Show(duration); log_msg += " -> should be shown"; }
         else { transitioner.Hide(duration); log_msg += " -> should be hidden"; }
-
-
-        // on regarde si la pool doit être affichée ou non
-        /* if (fade_all_disabled || item_pool is UI_ModulePool) // ui_module pool fonctionne toujours en mode fade_all_disbled
-        {
-            if (item_pool.EnabledCount > 0 && !transitioner.Shown) { transitioner.Show(duration); log_msg += " -> shown"; }
-            else if (item_pool.EnabledCount == 0 && !transitioner.Hidden) { transitioner.Hide(duration); log_msg += " -> fading out"; }
-        }
-        else if (!item_pool.DoNotDisableEmptySlots) // si on est donotdisableemptyslots ça veut dire qu'on veut que ça soit toujours affiché
-        {
-            if (!transitioner.Shown && (item_pool.EnabledCount > 0 || item_pool.FullCount > 0)) { transitioner.Show(duration); log_msg += " -> fading in"; }
-            else if (!transitioner.Hidden && item_pool.EnabledCount == 0 && item_pool.FullCount == 0) { transitioner.Hide(duration); log_msg += " -> fading out"; }
-        }
-        else if (!transitioner.Shown) { transitioner.Show(duration); log_msg += " -> always fading in"; } */ // on affiche toujours la pool si elle n'est pas affichée
-
     }
 
     private List<GameObject> get_all_uis_with_item_pools()

@@ -1,7 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.UI;
-using TMPro;
 
 /// <summary>
 /// This class is used to give feedback to the player when they are pressing a key

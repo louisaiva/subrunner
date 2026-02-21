@@ -202,6 +202,8 @@ public class UI_ItemMover : MonoBehaviour
 
         if (log_receivable_slots) { Debug.Log(log_slottables); }
         manager.UpdateSlots();
+
+        UI_Manager.Instance.RefreshInventoryMenu();
     }
     private void disable_only_empty_slots(bool except_modules = false)
     {
@@ -228,16 +230,10 @@ public class UI_ItemMover : MonoBehaviour
 
             if (ui_pool.pool.Scalable) { ui_pool.pool.DestroyEmptyStacks(); }
         }
+        
+        manager.UpdateSlots();
 
-        // si on a un UI_InventoryMenu dans nos uis alors on refresh ses UI_ItemPools
-        /* if (UI_Manager.Instance.CurrentPool == "inventory")
-        {
-            UI_InventoryMenu inventory_menu = UI_Manager.Instance.GetPool<UI_InventoryMenu>();
-            if (inventory_menu != null)
-            {
-                inventory_menu.RefreshItemPools();
-            }
-        } */
+        UI_Manager.Instance.RefreshInventoryMenu();
     }
 
     /// <summary>
@@ -286,4 +282,6 @@ public class UI_ItemMover : MonoBehaviour
             get_ui_items_pools_from_slottables(mixer_slottables, ref found_pools);
         }
     }
+
+
 }
