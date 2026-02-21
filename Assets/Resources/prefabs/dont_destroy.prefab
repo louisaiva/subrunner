@@ -251,6 +251,18 @@ MonoBehaviour:
     base_skin: station
     base_spritesheets:
     - objects/interactives/computers/module_station/module_station_U
+  - variant_name: button_gnd
+    variant_spritesheets:
+    - objects/interactives/buttons/button_gnd
+    base_skin: button
+    base_spritesheets:
+    - objects/interactives/buttons/button
+  - variant_name: button_mid
+    variant_spritesheets:
+    - objects/interactives/buttons/button_mid
+    base_skin: button
+    base_spritesheets:
+    - objects/interactives/buttons/button
   log: 0
   log_LAFAC: 0
   log_variant_skins: 0

@@ -25,6 +25,18 @@ public class SpawnCapacity : Capacity
     public float spawn_rate = 0f; // one entity is spawned each x seconds - needs to be > 0 to spawn continuously
     private float last_use_time = 0f;
 
+    [Header("Spawn Animation")]
+    [SerializeField] private bool spawn_after_animation = false; // if true, the entity will be spawned at the end of the animation, otherwise it will be spawned at the start of the animation
+    // [SerializeField] private string name = "spawn"; // the name of the spawn animation in the AnimPlayer
+    private AnimLayer entity_layer; // the animation layer of the 
+
+    // START
+    private void Start()
+    {
+        // cache the entity layer
+        entity_layer = GetComponent<AnimLayer>();
+    }
+
     // USE
     public override void Use(Capable capable)
     {
@@ -32,9 +44,23 @@ public class SpawnCapacity : Capacity
         if (entity_prefab == null) { return; }
         Spawn(Instantiate(entity_prefab));
     }
-    public void Spawn(GameObject entity)
+    public async void Spawn(GameObject entity)
     {
+        entity.SetActive(false);
+
+        // we find the entity_layer new skin name based on the capable skin + "_" + entity skin
+        if (entity_layer != null) { set_entity_layer_skin(entity); }
+
+        // we make the main capable play an animation
         capable.anim_player.Play(name);
+
+        // if we spawn after the animation we wait for it to finish
+        if (spawn_after_animation)
+        {
+            while (capable.anim_player.IsPlaying(name)) { await System.Threading.Tasks.Task.Yield(); }
+        }
+
+        entity.SetActive(true);
 
         // we get a random spawn position
         Vector2 spawn_position = transform.parent.position + ((Vector3)local_spawn_position);
@@ -65,6 +91,20 @@ public class SpawnCapacity : Capacity
 
         if (debug) { Debug.Log("(SpawnCapacity) " + name + " spawning entity at " + spawn_position + force_debug); }
         entity_count++;
+    }
+
+    // low level spawning
+    private void set_entity_layer_skin(GameObject entity)
+    {
+        // we get the entity anim player
+        Capable entity_capable = entity.GetComponent<Capable>();
+        if (entity_capable == null) { return; }
+
+        // we get the skin name based on the capable skin + "_" + entity skin
+        string skin_name = capable.Skin + "_" + entity_capable.Skin;
+
+        // we set the skin of the entity layer to the new skin
+        entity_layer.skin = skin_name;
     }
 
 

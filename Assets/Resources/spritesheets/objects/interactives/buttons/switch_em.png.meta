@@ -1,51 +1,36 @@
 fileFormatVersion: 2
-guid: 91427d12c922d2147b0d94757d3d8809
+guid: cfa3ed6931bbe7547ac3f2e9580e7d73
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2578081213848696425
-    second: vent_spawner_0
+      213: -5254138324558929173
+    second: switch_em_0
   - first:
-      213: 1437173683499846830
-    second: vent_spawner_1
+      213: -7528291998923837984
+    second: switch_em_1
   - first:
-      213: -8209868912306626117
-    second: vent_spawner_2
+      213: -4961998470393414738
+    second: switch_em_2
   - first:
-      213: -7411646437156124267
-    second: vent_spawner_3
+      213: -5289358834122776934
+    second: switch_em_3
   - first:
-      213: 7985769099722757844
-    second: vent_spawner_4
+      213: 3391144512281709342
+    second: switch_em_4
   - first:
-      213: 1817944354586992082
-    second: vent_spawner_5
+      213: -747607865387562063
+    second: switch_em_5
   - first:
-      213: -5064417209001569898
-    second: vent_spawner_6
+      213: 1078172388791530584
+    second: switch_em_6
   - first:
-      213: 5551508094896716609
-    second: vent_spawner_7
-  - first:
-      213: -7687992559077676314
-    second: vent_spawner_8
-  - first:
-      213: 1759876132566924897
-    second: vent_spawner_9
-  - first:
-      213: 5047310569008733807
-    second: vent_spawner_10
-  - first:
-      213: 3663137564275826207
-    second: vent_spawner_11
-  - first:
-      213: 5100856774304354182
-    second: vent_spawner_12
+      213: -9141540562563778706
+    second: switch_em_7
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 0
+    enableMipMap: 1
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -82,18 +67,18 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 24
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 1
+  alphaIsTransparency: 0
   spriteTessellationDetail: -1
-  textureType: 8
+  textureType: 0
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -171,18 +156,10 @@ TextureImporter:
     indices: 
     edges: []
     weights: []
-    secondaryTextures:
-    - texture: {fileID: 2800000, guid: 01483b276f89be245881a20011dbfbd5, type: 3}
-      name: _Emission
+    secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      xp_chest_0: 592737694
-      xp_chest_1: 734011502
-      xp_chest_2: -880266741
-      xp_chest_3: 641565253
-      xp_chest_4: 2116671064
-      xp_chest_5: -209011607
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

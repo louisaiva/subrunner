@@ -23,9 +23,6 @@ public class Spawner : Capable, EndlessInteractable
     // ON INTERACT
     public void OnInteract(Capable interactor)
     {
-        // we set the interactor
-        Interactor = interactor.GetCapacity<InteractCapacity>();
-
         // we get the spawner
         if (spawner == null) { spawner = GetCapacity<SpawnCapacity>(); }
 
