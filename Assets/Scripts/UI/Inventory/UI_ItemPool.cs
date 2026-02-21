@@ -37,8 +37,10 @@ public class UI_ItemPool : UI_Slottable, Startable
     public int EmptyCount { get { return ui_stacks.Count(ui_stack => ui_stack.Stack.Item == null); } }
     public int FullCount { get { return Count - EmptyCount; } }
     public int EnabledCount { get { return ui_stacks.Count(ui_stack => !ui_stack.Disabled); } }
-    // [SerializeField] protected bool destroy_empty_on_init = true; // if true, the empty slots will be destroyed on init
+    
+    [Obsolete("This variable is not used anymore, as not disabling allow us to navigate to it. Use AlwaysShow if you want to always show the pool")]
     public bool DoNotDisableEmptySlots = false;
+    public bool AlwaysShow = false; // if true, the pool will always be shown even if it is empty/disabled (affects UI_InventoryMenu)
 
     [Header("Components")]
     [SerializeField] protected ItemBank bank;
@@ -74,9 +76,6 @@ public class UI_ItemPool : UI_Slottable, Startable
 
         // create the UI_ItemStack for matching the ItemStack of the ItemPool
         createStacksForPool();
-
-        // sync the UI with pool
-        // SyncUIWithPool();
     }
     public void DetachFromPool()
     {

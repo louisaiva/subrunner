@@ -41,6 +41,8 @@ public class Inventory : MonoBehaviour, ItemStorer
 
     [Header("Logs")]
     [SerializeField] protected bool log = false;
+    [SerializeField] protected bool log_grab = false;
+    [SerializeField] protected bool log_get_items = false;
 
     // AWAKE
     protected virtual void Awake()
@@ -77,7 +79,7 @@ public class Inventory : MonoBehaviour, ItemStorer
             if (shoes_stack.Grab(item))
             {
                 OnItemGrabbed.Invoke(item);
-                if (log) { Debug.Log("(Inventory) " + capable.name + " grabbed : " + item.name + " in shoes_stack"); }
+                if (log_grab) { Debug.Log("(Inventory) " + capable.name + " grabbed : " + item.name + " in shoes_stack"); }
                 return true;
             }
         }
@@ -86,20 +88,24 @@ public class Inventory : MonoBehaviour, ItemStorer
             if (weapon_stack.Grab(item))
             {
                 OnItemGrabbed.Invoke(item);
-                if (log) { Debug.Log("(Inventory) " + capable.name + " grabbed : " + item.name + " in weapon_stack"); }
+                if (log_grab) { Debug.Log("(Inventory) " + capable.name + " grabbed : " + item.name + " in weapon_stack"); }
                 return true;
             }
         }
 
 
         // we try to make all the pools grab the item
-        if (!pool_grab(item)) { return false; }
+        if (!pool_grab(item))
+        {
+            if (log_grab) { Debug.LogWarning("(Inventory) " + capable.name + " can't grab : " + item.name); }
+            return false;
+        }
 
 
         // we trigger the events
         OnItemGrabbed.Invoke(item);
 
-        if (log) { Debug.Log("(Inventory) " + capable.name + " grabbed : " + item.name); }
+        if (log_grab) { Debug.Log("(Inventory) " + capable.name + " grabbed : " + item.name); }
 
         return true;
     }
@@ -152,6 +158,7 @@ public class Inventory : MonoBehaviour, ItemStorer
         for (int i = 0; i < pools.Count; i++)
         {
             if (pools[i].Grab(item)) { return true; }
+            if (log_grab) { Debug.Log("(Inventory) " + capable.name + " pool " + pools[i].name + " could not grab : " + item.name); }
         }
         return false;
     }
@@ -191,7 +198,7 @@ public class Inventory : MonoBehaviour, ItemStorer
         ItemPool pool = get_itempool(pool_name);
         if (pool == null)
         {
-            if (log) { Debug.LogWarning($"(Inventory) {pool_name} ItemPool was NOT found :O"); }
+            if (log_get_items) { Debug.LogWarning($"(Inventory) {pool_name} ItemPool was NOT found :O"); }
             return null;
         }
     
@@ -200,7 +207,7 @@ public class Inventory : MonoBehaviour, ItemStorer
         if (usables_in_pool.Count > 0) { return usables_in_pool[0]; }
 
         // else we have no matching item in the pool
-        if (log) { Debug.LogWarning($"(Inventory) {pool_name} ItemPool was found but no \"{rule}\" inside ://"); }
+        if (log_get_items) { Debug.LogWarning($"(Inventory) {pool_name} ItemPool was found but no \"{rule}\" inside ://"); }
         return null;
     }
     private ItemPool get_itempool(string pool_name)

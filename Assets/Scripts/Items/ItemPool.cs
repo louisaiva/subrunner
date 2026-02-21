@@ -49,9 +49,10 @@ public class ItemPool : MonoBehaviour, ItemStorer
     public Inventory Inventory;
 
     [Header("Logs")]
-    [SerializeField] protected bool log = false;
-    [SerializeField] protected bool log_storage = false;
+    // [SerializeField] protected bool log = false;
+    [SerializeField] protected bool log_grab = false;
     [SerializeField] protected bool log_merge = false;
+    [SerializeField] protected bool log_stacks = false;
     
 
     public void AttachToInventory(Inventory inventory)
@@ -108,10 +109,18 @@ public class ItemPool : MonoBehaviour, ItemStorer
     public virtual bool Grab(Item item)
     {
         // we check if we can add the item
-        if (item == null) { return false; }
+        if (item == null)
+        {
+            if (log_grab) { Debug.LogWarning("(ItemPool) " + name + " can't grab null item"); }
+            return false;
+        }
 
         // we check if the item passes the rule
-        if (!ValidateRule(item)) { return false; }
+        if (!ValidateRule(item))
+        {
+            if (log_grab) { Debug.LogWarning("(ItemPool) " + name + " can't grab : " + item.name + " because it doesn't match the rule"); }
+            return false;
+        }
 
         // we check if we already have a stack for this item reference
         List<ItemStack> empty_stacks = new List<ItemStack>();
@@ -123,12 +132,12 @@ public class ItemPool : MonoBehaviour, ItemStorer
 
             // we try to add the item to this stack
             bool can_add = stack.CanAdd(item);
-            if (!can_add) { return false; }
+            if (!can_add) { continue; }
 
             // we successfully grabbed the item
             finalise_grab(item, stack);
             
-            if (log) { Debug.Log("(ItemPool) " + name + " grabbed : " + item.name + " in existing stack"); }
+            if (log_grab) { Debug.Log("(ItemPool) " + name + " grabbed : " + item.name + " in existing stack"); }
             return true;
         }
 
@@ -140,14 +149,18 @@ public class ItemPool : MonoBehaviour, ItemStorer
             // we successfully grabbed the item
             finalise_grab(item, empty_stacks[0]);
             // OnStackUpdated?.Invoke(empty_stacks[0]);
-            if (log) { Debug.Log("(ItemPool) " + name + " grabbed : " + item.name + " in empty stack"); }
+            if (log_grab) { Debug.Log("(ItemPool) " + name + " grabbed : " + item.name + " in empty stack"); }
             return true;
         }
 
         // if we are here, we need to create a new stack for this item, we check if we are scalable
         if (!Scalable)
         {
-            if (stacks.Count >= MaxStacks) { return false; }
+            if (stacks.Count >= MaxStacks)
+            {
+                if (log_grab) { Debug.LogWarning("(ItemPool) " + name + " can't grab : " + item.name + " because it has reached the max stacks and is not scalable"); }
+                return false;
+            }
             // if we are here, we are not scalable but we still can add some stacks before the max, so we continue !
         }
 
@@ -158,7 +171,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
         // we successfully grabbed the item
         finalise_grab(item, new_stack);
         OnStackCreated?.Invoke(new_stack);
-        if (log) { Debug.Log("(ItemPool) " + name + " grabbed : " + item.name + " in new stack"); }
+        if (log_grab) { Debug.Log("(ItemPool) " + name + " grabbed : " + item.name + " in new stack"); }
         return true;
     }
     public bool Drop(Item item)
@@ -188,7 +201,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
                 OnStackRemoved?.Invoke(stack);
             }
 
-            if (log) { Debug.Log("(ItemPool) " + name + " dropped : " + item.name); }
+            if (log_grab) { Debug.Log("(ItemPool) " + name + " dropped : " + item.name); }
             return true;
         }
 
@@ -206,7 +219,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
 
         // we successfully grabbed the item
         finalise_grab(item, stack);
-        if (log) { Debug.Log("(ItemPool) " + name + " grabbed : " + item.name + $" in specific stack {stacks.IndexOf(stack)}"); }
+        if (log_grab) { Debug.Log("(ItemPool) " + name + " grabbed : " + item.name + $" in specific stack {stacks.IndexOf(stack)}"); }
         return true;
     }
 
@@ -261,53 +274,35 @@ public class ItemPool : MonoBehaviour, ItemStorer
     public void AddEmptyStack()
     {
         if (!Scalable) { return; }
-        if (stacks.Count >= MaxStacks) { return; }
         ItemStack new_stack = new ItemStack(this);
         stacks.Add(new_stack);
         OnStackCreated?.Invoke(new_stack);
+        if (log_stacks) { Debug.Log($"(ItemPool) Added empty stack to pool {name}, total stacks : {stacks.Count}"); }
     }
     public void DestroyEmptyStacks()
     {
         // we remove all empty stacks we can find in the pool
         // from the last one to the first
         // we stop only if we are at MinStacks
+
+        int removed_count = 0;
         while (stacks.Count > MinStacks)
         {
             ItemStack stack = stacks.LastOrDefault(s => s.IsEmpty);
             if (stack == null) { break; }
             stacks.Remove(stack);
             OnStackRemoved?.Invoke(stack);
+            removed_count++;
         }
+
+        if (log_stacks) { Debug.Log($"(ItemPool) Removed {removed_count} empty stacks from pool {name}, total stacks : {stacks.Count}"); }
     }
 
 
-
-    // todo rework all this, we don't want to directly swap stacks between itempools, we should rather swap item per item
     public bool HasStack(ItemStack stack)
     {
         return stacks.Contains(stack);
     }
-    /* public void AddStack(ItemStack stack)
-    {
-        if (stack == null) { return; }
-        if (!Scalable && stacks.Count >= MaxStacks) { return; }
-        stacks.Add(stack);
-        OnStackCreated?.Invoke(stack);
-
-        // we make sure the inventory registered the grab
-        for (int i = 0; i < stack.Items.Count; i++)
-        {
-            Item item = stack.Items[i];
-            Inventory.GrabFromLowerLevel(item);
-        }
-    }
-    public void RemoveStack(ItemStack stack)
-    {
-        if (stack == null) { return; }
-        if (!stacks.Contains(stack)) { return; }
-        stacks.Remove(stack);
-        OnStackRemoved?.Invoke(stack);
-    } */
     public void MergeIntoStack(ItemStack from_stack, ItemStack to_stack)
     {
         if (from_stack == null || to_stack == null) { return; }

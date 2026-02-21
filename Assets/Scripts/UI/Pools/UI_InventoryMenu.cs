@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class UI_InventoryMenu : UI_Pool/* , Panelable */
 {
+    [SerializeField] private bool log_refresh_pools = false;
+
     private List<GameObject> saved_slots = new List<GameObject>();
     [Header("Inventory Menu Components")]
     // [SerializeField] private UI_Inventory ui_inventory;
@@ -23,7 +25,7 @@ public class UI_InventoryMenu : UI_Pool/* , Panelable */
 
     [Header("Base Item Pool Transitions")]
     [SerializeField] private float base_transition = 0.2f;
-    [SerializeField] private bool fade_all_disabled = true;
+    [SerializeField] private bool never_fade_pools = true;
 
     [Header("Input Feedbacks Pools")]
     [SerializeField] private FeedbackPoolBuilder IFs;
@@ -109,35 +111,49 @@ public class UI_InventoryMenu : UI_Pool/* , Panelable */
 
         // on fade out les item pools qui sont vides & fade in ceux qui sont pleins
         List<UI_ItemPool> item_pools = GetItemPools();
-        for (int i = 0; i < item_pools.Count; i++)
-        {
-            // on récupère l'item pool & le transitioner
-            UI_ItemPool item_pool = item_pools[i];
-            if (item_pool == null) { continue; }
-            Transitioner transitioner = item_pool.GetComponentInParent<Transitioner>(includeInactive: true);
+        for (int i = 0; i < item_pools.Count; i++) { refresh_item_pool(item_pools[i], duration, ref log_msg); }
 
-            log_msg += $"\n - investigating ui_itempool {item_pool.name} (shown ? {transitioner.Shown} vs hidden ? {transitioner.Hidden}) with "
-                + item_pool.Count + " slots and " + item_pool.FullCount + " items slots " + $"and {item_pool.EnabledCount} enabled slots ";
-
-            // on regarde si la pool doit être affichée ou non
-            if (fade_all_disabled || item_pool is UI_ModulePool) // ui_module pool fonctionne toujours en mode fade_all_disbled
-            {
-                if (item_pool.EnabledCount > 0 && !transitioner.Shown) { transitioner.Show(duration); log_msg += " -> fading in"; }
-                else if (item_pool.EnabledCount == 0 && !transitioner.Hidden) { transitioner.Hide(duration); log_msg += " -> fading out"; }
-            }
-            else if (!item_pool.DoNotDisableEmptySlots) // si on est donotdisableemptyslots ça veut dire qu'on veut que ça soit toujours affiché
-            {
-                if (!transitioner.Shown && (item_pool.EnabledCount > 0 || item_pool.FullCount > 0)) { transitioner.Show(duration); log_msg += " -> fading in"; }
-                else if (!transitioner.Hidden && item_pool.EnabledCount == 0 && item_pool.FullCount == 0) { transitioner.Hide(duration); log_msg += " -> fading out"; }
-            }
-            else if (!transitioner.Shown) { transitioner.Show(duration); log_msg += " -> always fading in"; } // on affiche toujours la pool si elle n'est pas affichée
-        }
-
-        if (log) { Debug.Log(log_msg); }
+        if (log_refresh_pools) { Debug.Log(log_msg); }
 
         // on refresh les indicators
         // PanelManager.RefreshIndicators(duration);
     }
+    private void refresh_item_pool(UI_ItemPool item_pool, float duration, ref string log_msg)
+    {
+        // on récupère l'item pool & le transitioner
+        if (item_pool == null) { return; }
+        Transitioner transitioner = item_pool.GetComponentInParent<Transitioner>(includeInactive: true);
+
+        log_msg += $"\n - investigating ui_itempool {item_pool.name} (shown ? {transitioner.Shown} vs hidden ? {transitioner.Hidden}) with "
+            + item_pool.Count + " slots and " + item_pool.FullCount + " items slots " + $"and {item_pool.EnabledCount} enabled slots ";
+
+
+        // check whether the pool should be shown or not
+        bool should_pool_be_shown = false;
+        if (never_fade_pools) { should_pool_be_shown = true; }
+        else if (item_pool.AlwaysShow) { should_pool_be_shown = true; }
+        if (item_pool is UI_ModulePool) { should_pool_be_shown = false; } // specific override for UI_ModulePool
+        if (item_pool.EnabledCount > 0 || item_pool.FullCount > 0) { should_pool_be_shown = true; }
+
+        if (should_pool_be_shown) { transitioner.Show(duration); log_msg += " -> should be shown"; }
+        else { transitioner.Hide(duration); log_msg += " -> should be hidden"; }
+
+
+        // on regarde si la pool doit être affichée ou non
+        /* if (fade_all_disabled || item_pool is UI_ModulePool) // ui_module pool fonctionne toujours en mode fade_all_disbled
+        {
+            if (item_pool.EnabledCount > 0 && !transitioner.Shown) { transitioner.Show(duration); log_msg += " -> shown"; }
+            else if (item_pool.EnabledCount == 0 && !transitioner.Hidden) { transitioner.Hide(duration); log_msg += " -> fading out"; }
+        }
+        else if (!item_pool.DoNotDisableEmptySlots) // si on est donotdisableemptyslots ça veut dire qu'on veut que ça soit toujours affiché
+        {
+            if (!transitioner.Shown && (item_pool.EnabledCount > 0 || item_pool.FullCount > 0)) { transitioner.Show(duration); log_msg += " -> fading in"; }
+            else if (!transitioner.Hidden && item_pool.EnabledCount == 0 && item_pool.FullCount == 0) { transitioner.Hide(duration); log_msg += " -> fading out"; }
+        }
+        else if (!transitioner.Shown) { transitioner.Show(duration); log_msg += " -> always fading in"; } */ // on affiche toujours la pool si elle n'est pas affichée
+
+    }
+
     private List<GameObject> get_all_uis_with_item_pools()
     {
         List<GameObject> item_pools = new List<GameObject>();
@@ -182,11 +198,11 @@ public class UI_InventoryMenu : UI_Pool/* , Panelable */
     private void handleUI_ItemHoverEnter(UI_Slot slot)
     {
         if (!Showed) { return; }
-        if (slot is not UI_Item ui_item) { return; }
+        if (slot is not UI_ItemStack ui_item) { return; }
 
         if (log) { Debug.Log($"(UI_InventoryMenu) bwaaaa handleUI_ItemHoverEnter for slot {slot.gameObject.name}"); }
 
-        // we handle the DROP (activate it only if it is a UI_Item that has Item & not a UI_Module)
+        // we handle the DROP (activate it only if it is a UI_ItemStack that has Item & not a UI_Module)
         if (ui_item is UI_Module || ui_item.Stack.Item == null)
         {
             IFs.DisableRows("drop");
@@ -199,7 +215,7 @@ public class UI_InventoryMenu : UI_Pool/* , Panelable */
         // ACTIVATE
         update_activate_if(ui_item);
     }
-    private void update_activate_if(UI_Item ui_item)
+    private void update_activate_if(UI_ItemStack ui_item)
     {
         if (log) { Debug.Log($"(UI_InventoryMenu) updating activate IF for ui_item with item {ui_item.Stack.Item?.name}"); }
 
@@ -225,7 +241,7 @@ public class UI_InventoryMenu : UI_Pool/* , Panelable */
     {
         // we get the ui_item from the item
         UI_Slot slot = UI_Navigator.Instance.GetCurrentSlot();
-        if (slot == null || slot is not UI_Item ui_item) { return; }
+        if (slot == null || slot is not UI_ItemStack ui_item) { return; }
 
         // we update the activate if needed
         if (ui_item.Stack.Item != item) { return; }

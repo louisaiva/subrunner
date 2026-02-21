@@ -117,7 +117,7 @@ public class UI_ItemStack : UI_ImageSlot, Droppable, Descriptable
         name = "ui_empty";
 
         // on disable le slot vu qu'on a plus rien dedans
-        if (UI_ItemPool != null && UI_ItemPool.DoNotDisableEmptySlots) { return; }
+        if (UI_ItemPool != null) { return; }
         Disable();
     }
 
