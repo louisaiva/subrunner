@@ -1,14 +1,18 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+
+
 /// <summary>
 /// this class handles what we can call a Pool of InputFeedback.
-/// it has 2 separated input types pool and 2 columns for each input type
-/// then inside the columns there can be as many rows as specified
+/// it has 2 separated input types pool and 2 columns for each input type.
+/// then inside the columns there can be as many rows as specified;
 /// and inside each rows as many InputFeedback as specified.
 /// 
-/// the InputFeedback are got at Start from the FeedbackBank
-/// and the plan are transmitted through a specific SO : FeedbackPoolSchematic
+/// the InputFeedback are got at Start from the FeedbackBank.
+/// and the plan are transmitted through a specific SO : FeedbackPoolSchematic.
+/// 
+/// todo rename it InputFeedbackBuilder
 /// </summary>
 public class FeedbackPoolBuilder : MonoBehaviour
 {

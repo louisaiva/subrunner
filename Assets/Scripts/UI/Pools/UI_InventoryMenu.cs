@@ -3,25 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UI_InventoryMenu : UI_Pool/* , Panelable */
+public class UI_InventoryMenu : UI_Pool
 {
     [SerializeField] private bool log_refresh_pools = false;
 
     private List<GameObject> saved_slots = new List<GameObject>();
     [Header("Inventory Menu Components")]
-    // [SerializeField] private UI_Inventory ui_inventory;
-    // [SerializeField] private UI_Inventory ui_laptop;
     [SerializeField] private Transform no_inventory_panel;
-    /* private UI_PanelManager _panel_manager;
-    public UI_PanelManager PanelManager { get
-            {
-                if (_panel_manager == null)
-                {
-                    _panel_manager = GetComponent<UI_PanelManager>();
-                }
-                return _panel_manager;
-        } } */
-
 
     [Header("Base Item Pool Transitions")]
     [SerializeField] private float base_transition = 0.2f;
@@ -151,8 +139,7 @@ public class UI_InventoryMenu : UI_Pool/* , Panelable */
     }
     public List<UI_ItemPool> GetItemPools()
     {
-        List<UI_ItemPool> pools = new List<UI_ItemPool>(/* ui_inventory.pools */);
-        // pools.AddRange(ui_laptop.pools);
+        List<UI_ItemPool> pools = new List<UI_ItemPool>();
 
         // find the pools in the ui_elements
         for (int i = 0; i < ui_elements.Count; i++)
@@ -184,8 +171,6 @@ public class UI_InventoryMenu : UI_Pool/* , Panelable */
     {
         if (!Showed) { return; }
         if (slot is not UI_ItemStack ui_item) { return; }
-
-        if (log) { Debug.Log($"(UI_InventoryMenu) bwaaaa handleUI_ItemHoverEnter for slot {slot.gameObject.name}"); }
 
         // we handle the DROP (activate it only if it is a UI_ItemStack that has Item & not a UI_Module)
         if (ui_item is UI_Module || ui_item.Stack.Item == null)

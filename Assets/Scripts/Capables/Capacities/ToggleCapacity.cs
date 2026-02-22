@@ -16,7 +16,7 @@ public class ToggleCapacity : Capacity
 
 
     [Header("Animations parameters")]
-    [SerializeField] private string idle_off_anim = "idle";
+    // [SerializeField] private string idle_off_anim = "idle";
     [SerializeField] private string idle_on_anim = "idle_on";
     [SerializeField] private string hover_off_anim = "hover";
     [SerializeField] private string hover_on_anim = "hover_on";

@@ -124,23 +124,4 @@ public class UI_SlottableMixer : UI_Slottable, Awakable
         }
         return null;
     }
-
-    // GET ITEM RULES
-    public List<UI_Inventory> GetInventories()
-    {
-        List<UI_Inventory> inventories = new List<UI_Inventory>();
-        for (int i = 0; i < slottables.Count; i++)
-        {
-            if (slottables[i] is not UI_Inventory ui_inv) { continue; }
-            inventories.Add(ui_inv);
-        }
-        return inventories;
-    }
-    public string GetItemRule()
-    {
-        List<UI_Inventory> inventories = GetInventories();
-        if (inventories.Count == 0) { return "omg:not_existing_item"; }
-        List<string> item_rules = inventories.ConvertAll(inv => inv.Inventory.ItemRule);
-        return string.Join("|", item_rules);
-    }
 }

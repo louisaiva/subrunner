@@ -10,6 +10,7 @@ public class Inventory : MonoBehaviour, ItemStorer
     public List<ItemPool> pools = new List<ItemPool>();
     public List<Item> Items { get { return pools.SelectMany(p => p.Items).ToList(); } }
     public int Count { get { return pools.Sum(pool => pool.Count); } }
+    public List<ItemStack> Stacks { get { return pools.SelectMany(p => p.Stacks).ToList(); } }
 
     // specific pool getters
     protected ItemPool _shoes_stack = null;
@@ -37,6 +38,10 @@ public class Inventory : MonoBehaviour, ItemStorer
     public event Action<Item> OnItemGrabbed = delegate { };
     public event Action<Item> OnItemDropped = delegate { };
 
+    // EVENTS
+    public event Action<ItemStack> OnStackCreated = delegate { };
+    public event Action<ItemStack> OnStackRemoved = delegate { };
+
     public Capable capable { get { return transform.parent.GetComponent<Capable>(); } }
 
     [Header("Logs")]
@@ -52,14 +57,16 @@ public class Inventory : MonoBehaviour, ItemStorer
         {
             if (pools[i] == null) { continue; }
             pools[i].AttachToInventory(this);
+
+            // & assign callbacks
+            pools[i].OnStackCreated += (stack) => { OnStackCreated?.Invoke(stack); };
+            pools[i].OnStackRemoved += (stack) => { OnStackRemoved?.Invoke(stack); };
         }
     }
 
 
     // GRAB / DROP
 
-
-    
 
     /// <summary>
     /// these 3 methods are the main one. when they are activated they
@@ -181,10 +188,46 @@ public class Inventory : MonoBehaviour, ItemStorer
         if (item == null) { return; }
 
         // we trigger the events
-        OnItemGrabbedFromLowerLevel.Invoke(item);
+        OnItemGrabbedFromLowerLevel?.Invoke(item);
 
         if (log) { Debug.Log("(Inventory) " + capable.name + " grabbed from lower level : " + item.name); }
     }
+    public void DropFromLowerLevel(Item item)
+    {
+        if (item == null) { return; }
+
+        // we trigger the events
+        OnItemDropped?.Invoke(item);
+
+        if (log) { Debug.Log("(Inventory) " + capable.name + " dropped from lower level : " + item.name); }
+    }
+
+
+    // STACK MANAGEMENT
+    public bool GrabInStack(Item item, ItemStack stack)
+    {
+        // we check if we have the stack
+        ItemPool pool = GetStackPool(stack);
+        if (pool == null)
+        {
+            // we don't have the stack, we don't care we try to grab it normally
+            bool grabbed = Grab(item);
+            return grabbed;
+        }
+
+        // we have the stack, we try to grab it in it
+        return pool.GrabInStack(item, stack);
+    }
+    public ItemPool GetStackPool(ItemStack stack)
+    {
+        // we get the stack in one of our pools
+        for (int i = 0; i < pools.Count; i++)
+        {
+            if (pools[i].HasStack(stack)) { return pools[i]; }
+        }
+        return null;
+    }
+
 
 
     // SPECIFIC GETTERS
@@ -223,14 +266,6 @@ public class Inventory : MonoBehaviour, ItemStorer
         // if (log) { Debug.LogWarning($"(Inventory) {pool_name} ItemPool was NOT found :O"); }
         return null;
     }
-    /* public ItemPool GetItemPoolThatHoldsItemStack(ItemStack stack)
-    {
-        for (int i = 0; i < pools.Count; i++)
-        {
-            if (pools[i].HasStack(stack)) { return pools[i]; }
-        }
-        return null;
-    } */
 
 
     // GLOBAL GETTERS
@@ -331,7 +366,9 @@ public class Inventory : MonoBehaviour, ItemStorer
     }
 
     // ITEM RULE
-    public string ItemRule
+    public bool ValidateRule(Item item) { return item.ValidateRule(item_rule); }
+
+    private string item_rule
     {
         get
         {
@@ -347,5 +384,31 @@ public class Inventory : MonoBehaviour, ItemStorer
             return "";
         }
     }
+}
 
+
+public interface ItemStorer
+{
+    // items access
+    public List<Item> Items { get; }
+    public int Count { get; }
+    public List<ItemStack> Stacks { get; }
+
+    // events
+    public event Action<ItemStack> OnStackCreated;
+    public event Action<ItemStack> OnStackRemoved;
+    public event Action<Item> OnItemGrabbed;
+    public event Action<Item> OnItemDropped;
+
+    // GRAB / DROP
+    public bool Grab(Item item);
+    public bool Drop(Item item);
+
+    // STACK MANAGEMENT
+    // public void SwapStacks(ItemStack stack1, ItemStack stack2);
+    // public void MergeIntoStack(ItemStack from, ItemStack to);
+    public bool GrabInStack(Item item, ItemStack stack);
+    
+    // ITEM RULE
+    public bool ValidateRule(Item item);
 }

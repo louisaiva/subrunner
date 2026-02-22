@@ -11,9 +11,6 @@ public class UI_SettingsPool : UI_SlottablePool, Panelable
     [SerializeField] private UI_PanelManager panel_manager;
     public UI_PanelManager PanelManager => panel_manager;
 
-    [Header("Input Feedbacks Builder")]
-    [SerializeField] protected FeedbackPoolBuilder IFB;
-
     [Header("Components")]
     protected List<UI_PanelButton> panel_buttons;
     protected RectTransform panel_bar;
@@ -76,6 +73,15 @@ public class UI_SettingsPool : UI_SlottablePool, Panelable
         }
         return null;
     }
+
+
+    // FEEDBACKS
+    // todo - should we rather put those feedbacks parameters into UI_SlottablePool ?
+    // todo - or have a separate script that we can put on IFB gameobject ?
+
+    [Header("Input Feedbacks Builder")]
+    [SerializeField] protected FeedbackPoolBuilder IFB;
+
 
     // UPDATE FEEDBACKS
     private void update_feedbacks(UI_Slot slot)

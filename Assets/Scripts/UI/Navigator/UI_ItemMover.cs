@@ -17,7 +17,6 @@ public class UI_ItemMover : MonoBehaviour
     [SerializeField] private bool log = false;
     [SerializeField] private bool log_moving_items = false;
     [SerializeField] private bool log_receivable_slots = false;
-    // [SerializeField] private bool log_get_pools = false;
 
     // START
     private void Start()
@@ -75,9 +74,12 @@ public class UI_ItemMover : MonoBehaviour
             return;
         }
 
+        // todo implement a new UI_Slot type which is kind of a item receiver slot
+        // todo that is linked to a specific inventory / item pool that will receive and handles the itemstack
+
+
         // checks if the current slot is an ui_item and not the same as the moving item one
         UI_ItemStack destination = manager.CurrentSlot as UI_ItemStack;
-        // UI_Slot saved_moving_ui_item = moving_ui_item;
 
         // on exit le slot si c pas la destination
         if (destination != moving_ui_item && destination != null)
@@ -111,6 +113,14 @@ public class UI_ItemMover : MonoBehaviour
         // on choisit le mode d'action qu'il faut pour echanger les items
         // entre moving_ui_item & destination
 
+        // on vérifie que les ItemPool reliés aux ItemStack des 2 UI_ItemStack ne sont pas null sinon on fait r
+        if (moving_ui_item.Stack.Storer == null || destination.Stack.Storer == null)
+        {
+            if (log) { Debug.Log($"(UI_ItemMover) cannot move items because one of the stack has no storer : moving_ui_item storer = {moving_ui_item.Stack.Storer}, destination storer = {destination.Stack.Storer}"); }
+            return;
+        }
+
+
         // on choisit en fonction des différentes situations :
         if (destination != moving_ui_item && destination.Stack.CanAdd(moving_ui_item.Stack))
         {
@@ -120,31 +130,40 @@ public class UI_ItemMover : MonoBehaviour
     }
     private void switch_items(UI_ItemStack stack1, UI_ItemStack stack2)
     {
-        // on échange les items entre les deux UI_Items
+        // we need at least one stack.storer to be an ItemPool
         if (stack1 == null || stack2 == null) { return; }
+        ItemPool swapper = null;
+        if (stack1.Stack.Storer is ItemPool pool1) { swapper = pool1; }
+        else if (stack2.Stack.Storer is ItemPool pool2) { swapper = pool2; }
+        if (swapper == null) { return; }
 
+        // on échange les items entre les deux stacks
         if (log_moving_items) { Debug.Log($"(UI_ItemMover) switching items between {stack1.gameObject.name} and {stack2.gameObject.name}"); }
 
-        stack1.Stack.Pool.SwapStacks(stack1.Stack,stack2.Stack);
+        swapper.SwapStacks(stack1.Stack,stack2.Stack);
     }
     private void merge_items(UI_ItemStack from, UI_ItemStack to)
     {
-        // on merge les items de from dans to
-        if (from == null || to == null || to.Stack.Pool == null) { return; }
+        // we need the to stack.Storer to be ItemPool
+        if (from == null || to == null || to.Stack.Storer == null) { return; }
+        ItemPool merger = to.Stack.Storer as ItemPool;
+        if (merger == null) { return; }
+
         if (log_moving_items) { Debug.Log($"(UI_ItemMover) merging items from {from.gameObject.name} into {to.gameObject.name}"); }
-        to.Stack.Pool.MergeIntoStack(from.Stack, to.Stack);
+        // on merge les items de from dans to
+        merger.MergeIntoStack(from.Stack, to.Stack);
     }
 
 
     // ENABLE / DISABLE UI_ITEM_POOL SLOTS FOR MOVING
     private void enable_only_recevable_slots(UI_ItemStack moving_ui)
     {
-        UI_ItemPool moving_pool = moving_ui.UI_ItemPool;
+        UI_ItemSlottable moving_pool = moving_ui.UI_ItemSlottable;
         Item moving_item = moving_ui.Stack.Item;
         if (log_receivable_slots) { Debug.Log($"(UI_ItemMover) enabling only receivable slots for item {moving_item.name} in pool {moving_pool.name}"); }
 
         // on récup toutes les ui_item_pools qui sont affichées
-        List<UI_ItemPool> ui_item_pools = get_all_valid_ui_item_pools();
+        List<UI_ItemSlottable> ui_item_pools = get_all_valid_ui_item_pools();
 
 
         // log preparatiob
@@ -154,12 +173,31 @@ public class UI_ItemMover : MonoBehaviour
         // on parcourt tous les ui item pools
         for (int i = 0; i < ui_item_pools.Count; i++)
         {
-            UI_ItemPool ui_item_pool = ui_item_pools[i];
+            UI_ItemSlottable ui_item_pool = ui_item_pools[i];
+            ItemStorer storer = ui_item_pool.Storer;
 
             log_slottables += $"\n - {ui_item_pool.name} ({ui_item_pool.GetType()}) ";
 
+            // si le UI_ItemSlottable est un UI_FilteredItemPool alors ses ItemStacks n'ont pas de Pool
+            // et on désactive tous les slots sauf si c le moving ui_itemstack
+            if (ui_item_pool is UI_CompactItemPool)
+            {
+                // on récupère les slots du inventory
+                slots.Clear();
+                slots.AddRange(ui_item_pool.GetAllSlots());
+                log_slottables += $"   --> {ui_item_pool.name} is a UI_FilteredItemPool, disabling all slots except the moving one \n";
+                for (int j = 0; j < slots.Count; j++)
+                {
+                    UI_ItemStack ui_item = slots[j] as UI_ItemStack;
+                    if (ui_item == null) { continue; }
+                    if (ui_item == moving_ui) { continue; }
+                    ui_item.Disable();
+                }
+                continue;
+            }
+
             // si le moving item ne matche pas la rule de la ui_item_pool on désactive toute la ui_item_pool
-            if (!ui_item_pool.pool.ValidateRule(moving_item))
+            if (!storer.ValidateRule(moving_item))
             {
                 // on désactive tous les slots de la ui_item_pool
                 slots.Clear();
@@ -171,10 +209,11 @@ public class UI_ItemMover : MonoBehaviour
 
             // on regarde si la ui_pool est full et scalable -> on ajout un ui_item vide dedans
             if ((ui_item_pool != moving_pool) &&
-                ui_item_pool.pool.Scalable &&
+                storer is ItemPool pool &&
+                pool.Scalable &&
                 (ui_item_pool.EmptyCount == 0))
             {
-                ui_item_pool.pool.AddEmptyStack();
+                pool.AddEmptyStack();
                 log_slottables += $"   --> added empty slot bcz scalable & full\n";
             }
 
@@ -189,7 +228,7 @@ public class UI_ItemMover : MonoBehaviour
                 if (ui_item == moving_ui) { continue; } // on ne désactive pas le slot en cours de drag
 
                 // on regarde si le moving_ui_item_pool peut recevoir l'item du slot (scénario inverse de juste avant)
-                if (ui_item.Stack.Item != null && !moving_pool.pool.ValidateRule(ui_item.Stack.Item))
+                if (ui_item.Stack.Item != null && !moving_pool.Storer.ValidateRule(ui_item.Stack.Item))
                 {
                     ui_item.Disable(); // on désactive le slot
                     continue;
@@ -208,12 +247,13 @@ public class UI_ItemMover : MonoBehaviour
     private void disable_only_empty_slots(bool except_modules = false)
     {
         // on sauvegarde les item pools qu'on trouve
-        List<UI_ItemPool> ui_item_pools = get_all_valid_ui_item_pools();
+        List<UI_ItemSlottable> ui_item_pools = get_all_valid_ui_item_pools();
         if (log_receivable_slots) { Debug.Log($"(UI_ItemMover) disabling empty slots in {ui_item_pools.Count} item pools"); }
 
         for (int i = 0; i < ui_item_pools.Count; i++)
         {
-            UI_ItemPool ui_pool = ui_item_pools[i];
+            UI_ItemSlottable ui_pool = ui_item_pools[i];
+            ItemStorer storer = ui_pool.Storer;
 
             // on récupère les slots du inventory
             List<UI_ItemStack> slots = ui_pool.GetAllSlots();
@@ -228,7 +268,7 @@ public class UI_ItemMover : MonoBehaviour
                 ui_item.Disable(); // on désactive le slot
             }
 
-            if (ui_pool.pool.Scalable) { ui_pool.pool.DestroyEmptyStacks(); }
+            if (storer is ItemPool pool && pool.Scalable) { pool.DestroyEmptyStacks(); }
         }
         
         manager.UpdateSlots();
@@ -241,9 +281,9 @@ public class UI_ItemMover : MonoBehaviour
     /// the ui_navigator slottables, and uses recursive method below to track down all slottables in these slottables / slottables mixer
     /// </summary>
     /// <returns>a list containing the found & valid ui_item_pools</returns>
-    private List<UI_ItemPool> get_all_valid_ui_item_pools()
+    private List<UI_ItemSlottable> get_all_valid_ui_item_pools()
     {
-        List<UI_ItemPool> found_pools = new List<UI_ItemPool>();
+        List<UI_ItemSlottable> found_pools = new List<UI_ItemSlottable>();
         get_ui_items_pools_from_slottables(new List<Slottable>(manager.Slottables), ref found_pools);
 
         /* if (log_get_pools)
@@ -252,19 +292,19 @@ public class UI_ItemMover : MonoBehaviour
             log_msg += "\n - " + $"manager has {manager.Slottables.Count} root slottables \n";
             for (int i = 0; i < found_pools.Count; i++)
             {
-                UI_ItemPool pool = found_pools[i];
-                log_msg += $"    - {pool.name} ({pool.GetType()}) - linked to - {pool.pool?.name ?? "null"} \n";
+                UI_ItemSlottable pool = found_pools[i];
+                log_msg += $"    - {pool.name} ({pool.GetType()}) - linked to - {pool.Storer?.name ?? "null"} \n";
             }
             Debug.Log(log_msg);
         } */
 
 
-        found_pools = found_pools.Where(ui_pool => ui_pool.pool != null).ToList();
+        found_pools = found_pools.Where(ui_pool => ui_pool.Storer != null).ToList();
         return found_pools;
     }
-    private void get_ui_items_pools_from_slottables(List<Slottable> slottables, ref List<UI_ItemPool> found_pools)
+    private void get_ui_items_pools_from_slottables(List<Slottable> slottables, ref List<UI_ItemSlottable> found_pools)
     {
-        // List<UI_ItemPool> item_pools = new List<UI_ItemPool>();
+        // List<UI_ItemSlottable> item_pools = new List<UI_ItemSlottable>();
 
         // convert slottables into ui_item_pools
         while (slottables.Count > 0)
@@ -273,7 +313,7 @@ public class UI_ItemMover : MonoBehaviour
             slottables.RemoveAt(0);
 
             // if slottable is directly an item pool it s perfect
-            if (slottable is UI_ItemPool item_pool && !found_pools.Contains(item_pool)) { found_pools.Add(item_pool); }
+            if (slottable is UI_ItemSlottable item_pool && !found_pools.Contains(item_pool)) { found_pools.Add(item_pool); }
 
             if (slottable is not UI_SlottableMixer mixer) { continue; }
 
@@ -282,6 +322,4 @@ public class UI_ItemMover : MonoBehaviour
             get_ui_items_pools_from_slottables(mixer_slottables, ref found_pools);
         }
     }
-
-
 }

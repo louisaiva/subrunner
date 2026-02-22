@@ -4,54 +4,73 @@ using UnityEngine;
 public class UI_ChestPool : UI_SlottablePool
 {
 
-    [Header("Perso Quick Inventory")]
-    public UI_Inventory UI;
-    private HUD_PersoItemPool perso_quick_inventory_pool;
-    private UI_SlottableMixer slottable_mixer => slottable as UI_SlottableMixer;
+    [Header("UI_Inventory")]
+    public UI_CompactItemPool PersoUI_Inventory; // the UI_Inventory of the perso, used to show the items of the chest when we open it
+    public UI_ItemPool ChestUI_ItemPool; // the UI_ItemPool of the chest, used to show the items of the chest when we open it
+    private Chest chest; // todo for now it only works with Chest but should it rather work with HoverCapacity ?
 
-    // START & RJOY VERIF
-    protected void Start()
+    // AWAKE
+    protected override void Awake()
     {
-        // on met les callbacks pour vérifier que le select_hackable se désactive bien
-        // InputManager.Instance.OnPersoInputsToggled += verify_right_joy_is_disabled;
-        perso_quick_inventory_pool = UI.GetComponent<HUD_PersoItemPool>();
+        base.Awake();
+
+        // we add item pools to our ui_elements
+        if (!ui_elements.Contains(PersoUI_Inventory.gameObject)) { ui_elements.Add(PersoUI_Inventory.gameObject); }
+        if (!ui_elements.Contains(ChestUI_ItemPool.gameObject)) { ui_elements.Add(ChestUI_ItemPool.gameObject); }
+
+        // we add item pools to slottable mixer
+        if (!(slottable is UI_SlottableMixer mixer)) { if (log) { Debug.LogError($"(UI_ChestPool) slottable on {name} is not a UI_SlottableMixer"); } return; }
+
+        // we add all the UI_ItemPools in the ui_elements as slottables inside our UI_SlottableMixer
+        mixer.AddSlottable(ChestUI_ItemPool);
+        mixer.AddSlottable(PersoUI_Inventory);
     }
 
-    /* private void verify_right_joy_is_disabled(bool perso_inputs_enabled)
+    // REGISTER CHEST & PERSO
+    public void AttachChest(Inventory chest_inv)
     {
-        // todo : is there a better way to do this ? looks schlag. maybe it's better to bring back enhanced_perso map ? or hacking map ?
+        // on met les items du chest dans
+        ChestUI_ItemPool.AttachToPool(chest_inv);
 
-        if (!perso_inputs_enabled) { return; }
-        if (!Showed) { return; }
-        if (slottable_mixer.Count == 1) { return; } // si on a qu'un seul slottable, pas besoin de désactiver le joystick
-
-        // on doit s'assurer que le right joystick est désactivé
-        InputManager.Instance.inputs.perso.select_hackable.Disable();
-    } */
-
-    // ENABLE - DISABLE ROUTINES
-    /* protected override IEnumerator enable_coroutine()
-    {
-        // on s'assure que le right joystick est désactivé
-        InputManager.Instance.inputs.perso.select_hackable.Disable();
-        yield return base.enable_coroutine();
-    }
-    protected override IEnumerator disable_coroutine()
-    {
-        yield return base.disable_coroutine();
-
-        // on remet l'input de right joystick
-        InputManager.Instance.inputs.perso.select_hackable.Enable();
-    } */
-
-    // REGISTER CHEST
-    public void RegisterChest(Inventory chest_inv)
-    {
-        // on met les items dans le UI_Inventory du chest
-
+        if (chest_inv.capable is Chest chest) { this.chest = chest; }
 
         // on s'assure que le persoquickinventory n'affiche que les bons items
         // if (ui_chest is UI_Inventory ui_inv) { perso_quick_inventory_pool.EnableItemsByRule(ui_inv.ItemRule); }
         // else if (ui_chest is UI_SlottableMixer ui_mixer) { perso_quick_inventory_pool.EnableItemsByRule(ui_mixer.GetItemRule()); }
     }
+    public void DetachChest()
+    {
+        // on met les items du chest dans
+        ChestUI_ItemPool.DetachFromPool();
+
+        this.chest = null;
+
+        // on s'assure que le persoquickinventory n'affiche que les bons items
+        // perso_quick_inventory_pool.EnableItemsByRule(null);
+    }
+
+    // CLOSING CHEST (HAPPENS WHEN SWITCHING TO ANOTHER UI_POOL)
+    protected override IEnumerator disable_coroutine()
+    {
+        yield return base.disable_coroutine();
+
+        // we force the chest to interrupt interaction
+        chest?.ExitHover();
+
+        yield break;
+    }
+
+
+    // PERSO ATTACH / DETACH
+    public void AttachPerso(Inventory perso_inv)
+    {
+        // on met les items du chest dans le UI_Inventory du perso
+        PersoUI_Inventory.AttachToStorer(perso_inv);
+    }
+    public void DetachPerso()
+    {
+        // on met les items du chest dans le UI_Inventory du perso
+        PersoUI_Inventory.DetachFromStorer();
+    }
+
 }

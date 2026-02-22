@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UI_Laptop : UI_Inventory
+public class UI_Laptop : UI_ItemSlottable
 {
     /* protected virtual Laptop TargetLaptop
     {
@@ -42,7 +42,7 @@ public class UI_Laptop : UI_Inventory
     public void DetachDevice() { target_device = null; }
 
     // LAPTOP CHANGED
-    private async void HandleLaptopChanged(Device new_device = null)
+    /* private async void HandleLaptopChanged(Device new_device = null)
     {
         // if (Inventory != null) { Inventory.RemoveUI(this); }
         if (new_device == null)
@@ -97,5 +97,5 @@ public class UI_Laptop : UI_Inventory
         // we go through the module pool and check if one of the module slot contains the item,
         // if yes we return the index
         return pools[0].GetItemSlotIndex(item);
-    }
+    } */
 }

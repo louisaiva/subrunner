@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// todo rename into "InputsSwitcher"
 public class FeedbackSwitcher : MonoBehaviour
 {
     

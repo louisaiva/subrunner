@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+[Obsolete("UI_Item is deprecated, use UI_ItemStack instead")]
 public class UI_Item : UI_ImageSlot, Droppable, Descriptable
 {
 
@@ -51,8 +52,8 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
             return _item_pool;
         }
     }
-    public ItemPool ItemPool => UI_ItemPool?.pool;
-    public Inventory Inventory => ItemPool?.Inventory;
+    // public ItemPool ItemPool => UI_ItemPool?.pool;
+    // public Inventory Inventory => ItemPool?.Inventory;
     /* private ItemStack _item_stack;
     public ItemStack ItemStack
     {
@@ -258,7 +259,7 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
         // we check if the item is an usable
         if (Stack.Item is Usable usable)
         {
-            usable.Use(Inventory.capable);
+            // usable.Use(Inventory.capable);
             UI_Manager.Instance.SwitchToHUD();
             return;
         }

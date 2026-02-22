@@ -109,8 +109,7 @@ public class Chest : Capable, Interactable, Openable
     protected bool ui_inventory_shown = false;
     protected void ShowUI_Inventory()
     {
-        // if (Inventory == null || Inventory.ui == null) { return; }
-        UI_Manager.Instance.GetPool<UI_ChestPool>()?.RegisterChest(Inventory);
+        UI_Manager.Instance.GetPool<UI_ChestPool>()?.AttachChest(Inventory);
         UI_Manager.Instance.SwitchTo("chest");
         ui_inventory_shown = true;
 
@@ -120,8 +119,7 @@ public class Chest : Capable, Interactable, Openable
     }
     protected void HideUI_Inventory()
     {
-        // if (Inventory == null || Inventory.ui == null) { return; }
-        // UI_Manager.Instance.GetPool<UI_ChestPool>().RemoveChest(Inventory.MainUI);
+        UI_Manager.Instance.GetPool<UI_ChestPool>()?.DetachChest();
         UI_Manager.Instance.UnstackPool("chest");
         ui_inventory_shown = false;
 

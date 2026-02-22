@@ -19,7 +19,7 @@ public class UI_Module : UI_ItemStack
     {
         get
         {
-            if (_module_pool == null) { _module_pool = UI_ItemPool as UI_ModulePool; }
+            if (_module_pool == null) { _module_pool = UI_ItemSlottable as UI_ModulePool; }
             return _module_pool;
         }
     }

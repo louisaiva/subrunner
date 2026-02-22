@@ -3,16 +3,6 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
-public interface ItemStorer
-{
-    public List<Item> Items { get; }
-    public string ItemRule { get; }
-    public int Count { get; }
-    // public event Action<Item> OnItemGrabbed;
-    // public event Action<Item> OnItemDropped;
-    public bool Grab(Item item);
-    public bool Drop(Item item);
-}
 
 public class ItemPool : MonoBehaviour, ItemStorer
 {
@@ -21,22 +11,21 @@ public class ItemPool : MonoBehaviour, ItemStorer
 
     [Header("Items")]
     public List<ItemStack> stacks = new List<ItemStack>();
+    public List<ItemStack> Stacks { get { return stacks; } }
     public List<Item> Items { get { return stacks.SelectMany(s => s.Items).ToList(); } }
-    public string ItemRule { get { return item_rule; } }
+    // public string ItemRule { get { return item_rule; } }
     public virtual int Count { get { return Items.Count; } }
     public virtual bool HasSpaceLeft { get { return Scalable || stacks.Count < MaxStacks || stacks.Any(s => !s.IsFull); } }
+
 
     [Header("Item Stacks Parameters")]
     public int MaxStacks = 9; // the maximum number of stacks in the pool
     public int MinStacks = 0;
     public bool Scalable = false; // if true, the pool will dynamically add/remove stacks
 
-
-    // [Header("Events")]
-    // public event Action<Item> OnItemGrabbed = delegate { };
-    // public event Action<Item> OnItemDropped = delegate { };
-    // public event Action<Item> OnStacksChanged = delegate { };
-    // public event Action<ItemStack> OnStackUpdated = delegate { };
+    // EVENTS
+    public event Action<Item> OnItemGrabbed = delegate { };
+    public event Action<Item> OnItemDropped = delegate { };
     public event Action<ItemStack> OnStackCreated = delegate { };
     public event Action<ItemStack> OnStackRemoved = delegate { };
 
@@ -49,7 +38,6 @@ public class ItemPool : MonoBehaviour, ItemStorer
     public Inventory Inventory;
 
     [Header("Logs")]
-    // [SerializeField] protected bool log = false;
     [SerializeField] protected bool log_grab = false;
     [SerializeField] protected bool log_merge = false;
     [SerializeField] protected bool log_stacks = false;
@@ -59,7 +47,6 @@ public class ItemPool : MonoBehaviour, ItemStorer
     {
         this.Inventory = inventory;
     }
-
     private void Start()
     {
         // we go through all children to try to grab them
@@ -87,22 +74,6 @@ public class ItemPool : MonoBehaviour, ItemStorer
 
 
     // RULE CHECK
-    /* public bool CanStore(Item item)
-    {
-        // we check if the item is valid
-        if (item == null) { return false; }
-        bool validate = item.ValidateRule(item_rule);
-        if (!validate && log_storage)
-        {
-            Debug.LogWarning($"(ItemPool) {name} can't store item {item.Reference} because it doesn't match the rule {item_rule}");
-        }
-        else if (log_storage)
-        {
-            Debug.Log($"(ItemPool) {name} can store item {item.Reference} because it matches the rule {item_rule}");
-        }
-
-        return validate;
-    } */
     public bool ValidateRule(Item item) { return item.ValidateRule(item_rule); }
 
     // GRAB / DROP
@@ -194,6 +165,10 @@ public class ItemPool : MonoBehaviour, ItemStorer
             item.OnReferenceChanged -= handle_item_reference_changed;
             item.Grabbed = false; // we set the item to dropped (which enables the hover collider)
 
+            // we trigger the event
+            OnItemDropped?.Invoke(item);
+            Inventory?.DropFromLowerLevel(item); // we try to drop it from the inventory if it's in, this will update the UI and drop it in the world if it's not in the inventory anymore
+
             // finally we deal with the stack
             if (Scalable && stack.IsEmpty && stacks.Count > MinStacks)
             {
@@ -226,6 +201,8 @@ public class ItemPool : MonoBehaviour, ItemStorer
     // low level grab drop
     private void finalise_grab(Item item, ItemStack stack)
     {
+        if (log_grab) { Debug.Log($"(ItemPool) finalising grab of item {item.name} into stack {stacks.IndexOf(stack)}. ItemPoolHolder is {item.ItemPoolHolder?.name ?? "null"}"); }
+
         // we check if the item is already grabbed somewhere, if so we drop it
         if (item.Grabbed && item.ItemPoolHolder != null) { item.ItemPoolHolder.Drop(item); }
 
@@ -242,6 +219,9 @@ public class ItemPool : MonoBehaviour, ItemStorer
 
         // we add the item
         item.Grabbed = true;
+
+        // we trigger the event
+        OnItemGrabbed?.Invoke(item);
     }
     private void handle_item_reference_changed(Item item)
     {
@@ -306,7 +286,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
     public void MergeIntoStack(ItemStack from_stack, ItemStack to_stack)
     {
         if (from_stack == null || to_stack == null) { return; }
-        if (!stacks.Contains(to_stack)) { return; } // must hold the to_stack
+        if (!HasStack(to_stack)) { return; } // must hold the to_stack
 
         // we add all items from from_stack into to_stack until we can't anymore
         while (from_stack.Items.Count > 0)
@@ -316,7 +296,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
             if (log_merge) { Debug.Log($"(ItemPool) Merged item {item} into stack {stacks.IndexOf(to_stack)}"); }
             if (!added) { break; }
             from_stack.Remove(item);
-            if (log_merge) { Debug.Log($"(ItemPool) Removed item {item} from stack {from_stack.Pool} - {from_stack.Pool.stacks.IndexOf(from_stack)}"); }
+            // if (log_merge) { Debug.Log($"(ItemPool) Removed item {item} from stack {from_stack.Pool} - {from_stack.Pool.stacks.IndexOf(from_stack)}"); }
         }
     }
     public void SwapStacks(ItemStack stack1, ItemStack stack2)
@@ -333,8 +313,8 @@ public class ItemPool : MonoBehaviour, ItemStorer
         stack2.Clear();
 
         // we get the ItemPools for those stacks
-        ItemPool pool1 = stack1.Pool;
-        ItemPool pool2 = stack2.Pool;
+        ItemStorer pool1 = stack1.Storer;
+        ItemStorer pool2 = stack2.Storer;
 
         // we add the items to the opposite stacks
         for (int i = 0; i < items1.Count; i++)

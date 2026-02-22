@@ -131,7 +131,7 @@ public class UI_InputsController : InputController
         in_game = ingame_navigation; // on met à jour la variable
 
 
-        if (log_states) { Debug.Log($"(UI_InputsController) ON"); }
+        if (log_states) { Debug.Log($"(UI_InputsController) ON ({(ingame_navigation ? "ingame" : "menu")})"); }
     }
     public void DisableInputs()
     {

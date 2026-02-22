@@ -7,7 +7,7 @@ using UnityEngine;
 [Serializable] public class ItemStack : Descriptable
 {
     [Header("ItemPool Reference")]
-    public ItemPool Pool;
+    public ItemStorer Storer;
 
     [Header("Stack Parameters")]
     public string ItemReference
@@ -35,8 +35,13 @@ using UnityEngine;
     public string Description => Item != null ? Item.ItemDescription : "/!\\ no data /!\\";
 
 
-    // CONSTRUCTOR
-    public ItemStack(ItemPool pool) { Pool = pool; }
+    /// <summary>
+    /// Creates an ItemStack. The ItemPool pool parameter is used by the UI_ItemMover
+    /// to find the ItemPool that created this stack. If null is provided, the UI_ItemMover
+    /// will disable the ui_slots when moving. the rest should work fine.
+    /// </summary>
+    /// <param name="storer"></param>
+    public ItemStack(ItemStorer storer) { Storer = storer; }
 
 
     // GETTERS

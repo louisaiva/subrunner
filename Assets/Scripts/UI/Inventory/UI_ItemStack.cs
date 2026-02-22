@@ -6,10 +6,11 @@ using UnityEngine.UI;
 /// <summary>
 /// This is the new version of UI_Item, which is obsolete now.
 /// UI_ItemStack is the visual representation of ItemStack, and so is linked to an ItemStack from the construction of ItemStack to its death.
-/// UI_ItemStack is created, handled and destroyed by UI_ItemPool which is the visual rep. of ItemPool (lol)
+/// UI_ItemStack is created, handled and destroyed by UI_ItemSlottable which is the visual rep. of ItemPool (lol)
 /// </summary>
 public class UI_ItemStack : UI_ImageSlot, Droppable, Descriptable
 {
+
 
     public Sprite drag_sprite;
     public Sprite drag_hover_sprite;
@@ -26,16 +27,18 @@ public class UI_ItemStack : UI_ImageSlot, Droppable, Descriptable
     protected TextMeshProUGUI quantity_text;
     protected Image item_image;
 
+    [Header("Logs part 2")]
+    public bool log_drop = false;
 
 
-    // UI_ItemPool
-    private UI_ItemPool _item_pool;
-    public UI_ItemPool UI_ItemPool
+    // UI_ItemSlottable
+    private UI_ItemSlottable _item_pool;
+    public UI_ItemSlottable UI_ItemSlottable
     {
         get
         {
             if (_item_pool != null) { return _item_pool; }
-            _item_pool = GetComponentInParent<UI_ItemPool>(includeInactive: true);
+            _item_pool = GetComponentInParent<UI_ItemSlottable>(includeInactive: true);
             return _item_pool;
         }
     }
@@ -171,8 +174,11 @@ public class UI_ItemStack : UI_ImageSlot, Droppable, Descriptable
         // on récupère l'inventory qui drop l'item
         Inventory inventory = item.Holder.Inventory;
 
+        if (log_drop) { Debug.Log($"(UI_ItemStack) dropping item {item.name} from inventory of {inventory.capable.name}"); }
+
         // on cherche l'inventory qui reçoit l'item
         Inventory inventory_to_drop = inventory.GetInteractingInventory();
+        if (log_drop) { Debug.Log($"(UI_ItemStack) interacting inventory to drop in: {(inventory_to_drop != null ? inventory_to_drop.capable.name : "none")}"); }
 
         // we drop the item in the other inventory
         if (inventory_to_drop != null)
@@ -186,6 +192,7 @@ public class UI_ItemStack : UI_ImageSlot, Droppable, Descriptable
         DropCapacity dropper = inventory.capable.GetCapacity<DropCapacity>();
         if (dropper != null)
         {
+            if (log_drop) { Debug.Log($"(UI_ItemStack) no inventory so we dropping item {item.name} on the ground with dropper of {inventory.capable.name}"); }
             dropper.Select(item);
             dropper.random_direction = true;
             dropper.Use(inventory.capable);
@@ -193,6 +200,7 @@ public class UI_ItemStack : UI_ImageSlot, Droppable, Descriptable
         }
         else
         {
+            if (log_drop) { Debug.Log($"(UI_ItemStack) no inventory and no dropper capacity, so we simply drop item {item.name} from inventory of {inventory.capable.name} (it may be lost if the inventory is a chest for example)"); }
             // the inventory simply drops the item (dropper may be a chest)
             inventory.Drop(item);
         }

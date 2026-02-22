@@ -112,7 +112,7 @@ public class MotherboardBuilder : MonoBehaviour
         UI_ModulePool module_pool = slots_parent.GetComponent<UI_ModulePool>();
 
         // we apply the slots nb to the module_pool max_slots (bcz it is non scalable)
-        module_pool.pool.MaxStacks = module_slots;
+        (module_pool.Storer as ItemPool).MaxStacks = module_slots;
         if (module_pool.Count > module_slots && Application.isPlaying)
         {
             // module_pool.DropOverheadSlots();

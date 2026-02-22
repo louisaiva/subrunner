@@ -32,6 +32,7 @@ public class UI_Pool : MonoBehaviour
  
     [Header("Logs")]
     [SerializeField] protected bool log = false;
+    [SerializeField] protected bool log_extended = false;
     [SerializeField] protected bool log_elements_showing = false;
 
     // AWAKE
@@ -59,34 +60,45 @@ public class UI_Pool : MonoBehaviour
     // SHOW / HIDE
     public IEnumerator ShowCoroutine(List<GameObject> dont_show = null, float duration_override = -1f, bool was_stacked = false)
     {
+        if (log_extended) { Debug.Log($"(UI_Pool) ShowCoroutine called on pool : {Reference}"); }
         // stop any started coroutine
         StopCoroutineIfAny();
 
         // on lance l'affichage
+        if (log_extended) { Debug.Log($"(UI_Pool - ShowCoroutine) starting show coroutine : {Reference}"); }
         current_transition = StartCoroutine(show_coroutine(dont_show, duration_override, was_stacked));
         yield return current_transition;
+        if (log_extended) { Debug.Log($"(UI_Pool - ShowCoroutine) show coroutine succeeded ! : {Reference}"); }
 
         Showed = true;
         Stacked = false;
 
         // on enable
+        if (log_extended) { Debug.Log($"(UI_Pool - ShowCoroutine) starting enable coroutine : {Reference}"); }
         yield return StartCoroutine(enable_coroutine());
+        if (log_extended) { Debug.Log($"(UI_Pool - ShowCoroutine) enable coroutine succeeded ! : {Reference}"); }
 
         // on clear la transition
         current_transition = null;
     }
     public IEnumerator HideCoroutine(List<GameObject> dont_hide = null, float duration_override = -1f)
     {
+        if (log_extended) { Debug.Log($"(UI_Pool) HideCoroutine called on pool : {Reference}"); }
+
         // stop any started coroutine
         StopCoroutineIfAny();
 
         // on lance le disabling
+        if (log_extended) { Debug.Log($"(UI_Pool - HideCoroutine) starting disable coroutine : {Reference}"); }
         yield return StartCoroutine(disable_coroutine());
+        if (log_extended) { Debug.Log($"(UI_Pool - HideCoroutine) disable coroutine succeeded ! : {Reference}"); }
         // disable();
 
         // on lance le hiding
+        if (log_extended) { Debug.Log($"(UI_Pool - HideCoroutine) starting hide coroutine : {Reference}"); }
         current_transition = StartCoroutine(hide_coroutine(dont_hide, duration_override));
         yield return current_transition;
+        if (log_extended) { Debug.Log($"(UI_Pool - HideCoroutine) hide coroutine succeeded ! : {Reference}"); }
 
         // on clear la transition
         current_transition = null;
@@ -95,15 +107,21 @@ public class UI_Pool : MonoBehaviour
     }
     public IEnumerator StackHideCoroutine(float duration_override = -1f, bool disable = true)
     {
+        if (log_extended) { Debug.Log($"(UI_Pool) StackHideCoroutine called on pool : {Reference}"); }
+
         // stop any started coroutine
         StopCoroutineIfAny();
 
         // on lance le disabling
+        if (log_extended) { Debug.Log($"(UI_Pool - StackHideCoroutine) starting disable coroutine : {Reference}"); }
         if (disable) { yield return StartCoroutine(disable_coroutine()); }
+        if (log_extended) { Debug.Log($"(UI_Pool - StackHideCoroutine) disable coroutine succeeded ! : {Reference}"); }
 
         // on lance le hiding
+        if (log_extended) { Debug.Log($"(UI_Pool - StackHideCoroutine) starting hide coroutine : {Reference}"); }
         current_transition = StartCoroutine(hide_coroutine(stacked_elements, duration_override, stacking: true));
         yield return current_transition;
+        if (log_extended) { Debug.Log($"(UI_Pool - StackHideCoroutine) hide coroutine succeeded ! : {Reference}"); }
 
         // on clear la transition
         current_transition = null;
@@ -112,6 +130,8 @@ public class UI_Pool : MonoBehaviour
     }
     public IEnumerator StackShowCoroutine(float duration_override = -1f, bool enable = true)
     {
+        if (log_extended) { Debug.Log($"(UI_Pool) StackShowCoroutine called on pool : {Reference}"); }
+
         // stop any started coroutine
         StopCoroutineIfAny();
 
@@ -123,14 +143,18 @@ public class UI_Pool : MonoBehaviour
         }
 
         // on lance l'affichage
+        if (log_extended) { Debug.Log($"(UI_Pool - StackShowCoroutine) starting show coroutine : {Reference}"); }
         current_transition = StartCoroutine(show_coroutine(dont_show, duration_override));
         yield return current_transition;
+        if (log_extended) { Debug.Log($"(UI_Pool - StackShowCoroutine) show coroutine succeeded ! : {Reference}"); }
 
         Showed = true;
         Stacked = true;
         
         // on enable
+        if (log_extended) { Debug.Log($"(UI_Pool - StackShowCoroutine) starting enable coroutine : {Reference}"); }
         if (enable) { yield return StartCoroutine(enable_coroutine()); }
+        if (log_extended) { Debug.Log($"(UI_Pool - StackShowCoroutine) enable coroutine succeeded ! : {Reference}"); }
 
         // on clear la transition
         current_transition = null;
