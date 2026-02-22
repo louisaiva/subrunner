@@ -15,7 +15,7 @@ public class UI_ChestPool : UI_SlottablePool
         base.Awake();
 
         // we add item pools to our ui_elements
-        if (!ui_elements.Contains(PersoUI_Inventory.gameObject)) { ui_elements.Add(PersoUI_Inventory.gameObject); }
+        if (!ui_elements.Contains(PersoUI_Inventory.transform.parent.gameObject)) { ui_elements.Add(PersoUI_Inventory.transform.parent.gameObject); }
         if (!ui_elements.Contains(ChestUI_ItemPool.gameObject)) { ui_elements.Add(ChestUI_ItemPool.gameObject); }
 
         // we add item pools to slottable mixer

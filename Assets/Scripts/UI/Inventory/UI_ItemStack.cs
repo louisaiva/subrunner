@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// UI_ItemStack is the visual representation of ItemStack, and so is linked to an ItemStack from the construction of ItemStack to its death.
 /// UI_ItemStack is created, handled and destroyed by UI_ItemSlottable which is the visual rep. of ItemPool (lol)
 /// </summary>
-public class UI_ItemStack : UI_ImageSlot, Droppable, Descriptable
+public class UI_ItemStack : UI_ImageSlot, Droppable, Descriptable, ItemReceivable, ItemMovable
 {
 
 

@@ -33,3 +33,12 @@ public interface Droppable
 {
     void OnPointerDropped(PointerEventData eventData);
 }
+
+public interface ItemReceivable
+{
+    void OnPointerDragEnter(UI_ItemStack moving_ui_item);
+}
+public interface ItemMovable
+{
+    void OnPointerDragDown();
+}

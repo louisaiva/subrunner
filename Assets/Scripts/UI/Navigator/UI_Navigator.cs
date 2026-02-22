@@ -140,11 +140,11 @@ public class UI_Navigator : Singleton<UI_Navigator>
         if (CurrentSlot != null) { UnhoverSlot(); }
 
         // check dragging & moving items
-        if (!Mover.IsMovingItem || slot is not UI_ItemStack ui_item)
+        if (!Mover.IsMovingItem || slot is not ItemReceivable ui_item)
         {
             slot.OnPointerEnter(null);
         }
-        else if (Mover.MovingUIItem != ui_item)
+        else if ((Mover.MovingUIItem as ItemReceivable) != ui_item)
         {
             ui_item.OnPointerDragEnter(Mover.MovingUIItem); // si on est ici on drag
         }
@@ -207,12 +207,32 @@ public class UI_Navigator : Singleton<UI_Navigator>
         // if direction & local_angle_multiplicator are given, we will find the closest slot in the direction
         // s is a string to debug the found slots
 
+        
+        // global can't be set to closest slot type (specific ui_slot types that can't be closest, never)
+        List<Type> global_unfavorised_types = new List<Type>() { typeof(UI_OutlineSlot) };
+
+
         // on récupère le slot le plus proche
         UI_Slot next_slot = null;
         float closest_distance = float.MaxValue;
         for (int i = 0; i < slots.Count; i++)
         {
             UI_Slot slot = slots[i];
+
+            // global unfavorised type check - not even need to check distance for this type of slot
+            bool is_slot_global_unfavorised = false;
+            for (int j = 0; j < global_unfavorised_types.Count; j++)
+            {
+                Type global_unfavorised_type = global_unfavorised_types[j];
+                if (slot.GetType() == global_unfavorised_type || slot.GetType().IsSubclassOf(global_unfavorised_type))
+                {
+                    is_slot_global_unfavorised = true;
+                    break;
+                }
+            }
+            if (is_slot_global_unfavorised) { continue; }
+
+
 
             // on récupère la distance entre la position et la position du slot
             Vector2 slot_position = GetPosition(slot);

@@ -178,20 +178,27 @@ public class UI_ItemMover : MonoBehaviour
 
             log_slottables += $"\n - {ui_item_pool.name} ({ui_item_pool.GetType()}) ";
 
-            // si le UI_ItemSlottable est un UI_FilteredItemPool alors ses ItemStacks n'ont pas de Pool
+            // si le UI_ItemSlottable est un UI_CompactItemPool alors ses ItemStacks n'ont pas de Pool
             // et on désactive tous les slots sauf si c le moving ui_itemstack
-            if (ui_item_pool is UI_CompactItemPool)
+            // + on active son OutlineSlot si le moving ui_itemstack est dans une autre pool
+            if (ui_item_pool is UI_CompactItemPool compact_pool)
             {
                 // on récupère les slots du inventory
                 slots.Clear();
                 slots.AddRange(ui_item_pool.GetAllSlots());
+                bool moving_ui_in_pool = false;
                 log_slottables += $"   --> {ui_item_pool.name} is a UI_FilteredItemPool, disabling all slots except the moving one \n";
                 for (int j = 0; j < slots.Count; j++)
                 {
                     UI_ItemStack ui_item = slots[j] as UI_ItemStack;
                     if (ui_item == null) { continue; }
-                    if (ui_item == moving_ui) { continue; }
+                    if (ui_item == moving_ui) { moving_ui_in_pool = true; continue; }
                     ui_item.Disable();
+                }
+                // on active l'outline slot si le moving_ui_itemstack n'est pas dans la pool
+                if (!moving_ui_in_pool)
+                {
+                    compact_pool.OutlinerReceivable.Enable();
                 }
                 continue;
             }
@@ -269,6 +276,7 @@ public class UI_ItemMover : MonoBehaviour
             }
 
             if (storer is ItemPool pool && pool.Scalable) { pool.DestroyEmptyStacks(); }
+            if (ui_pool is UI_CompactItemPool compact_pool) { compact_pool.OutlinerReceivable.Disable(); }
         }
         
         manager.UpdateSlots();

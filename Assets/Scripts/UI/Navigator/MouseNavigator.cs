@@ -137,7 +137,22 @@ public class MouseNavigator : MonoBehaviour, Navigator
 
         // on récupère le premier résultat
         slot = hovered_slots[0];
-        if (log_hover) { Debug.Log($"(UI_MouseNavigator) hovered {hovered_slots.Count} ui_slots ! first is {slot.name}"); }
+
+        // special cases when it's an OutlinerSlot and is Disabled we skip it
+        if (slot is UI_OutlineSlot outline_slot && outline_slot.Disabled)
+        {
+            if (hovered_slots.Count > 1)
+            {
+                slot = hovered_slots[1];
+                if (log_hover) { Debug.Log($"(UI_MouseNavigator) skipped disabled outline slot, hovered another slot : {slot.name}"); }
+            }
+            else
+            {
+                if (log_hover) { Debug.Log($"(UI_MouseNavigator) only hovered slot is a disabled outline slot, unhovering."); }
+                return null;
+            }
+        }
+        if (log_hover) { Debug.Log($"(UI_MouseNavigator) hovered {hovered_slots.Count} ui_slots ! chosen one is {slot.name}"); }
 
         return slot;
     }

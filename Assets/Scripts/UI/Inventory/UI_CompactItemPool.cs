@@ -23,6 +23,10 @@ public class UI_CompactItemPool : UI_ItemSlottable
     [Header("ItemStacks")]
     protected List<ItemStack> stacks = new List<ItemStack>(); // the list of stacks that are currently shown in the pool, they are created by the pool and not linked to the stacks of the inventory, but they are updated when those are updated (quantity, item change, etc.)
 
+    [Header("Outline Slot")]
+    [SerializeField] protected UI_OutlineSlot outliner;
+    public UI_OutlineSlot OutlinerReceivable => outliner;
+
 
     // ITEMPOOL ATTACHMENT
     public void AttachToStorer(ItemStorer real_holder)
@@ -39,6 +43,9 @@ public class UI_CompactItemPool : UI_ItemSlottable
 
         // create the UI_ItemStack for matching the ItemStack of the ItemPool
         createStacksForStorer();
+
+        // and we make sure the outline slot is disabled
+        outliner.Disable();
     }
     public void DetachFromStorer()
     {
@@ -109,4 +116,20 @@ public class UI_CompactItemPool : UI_ItemSlottable
         stack.Remove(item);
         if (stack.IsEmpty) { stacks.Remove(stack); remove_ui_stack(stack); if (log_grab_drop) { Debug.Log($"(UI_CompactItemPool) removed stack for dropped item {item.name} because it is now empty"); } }
     }
+
+
+
+    // SLOTTABLE
+    public override List<UI_Slot> GetSlots()
+    {
+        List<UI_Slot> slots = base.GetSlots();
+        if (!outliner.Disabled) { slots.Add(outliner); }
+        return slots;
+    }
+    public override bool IsYourSlot(UI_Slot slot)
+    {
+        if (slot == outliner) { return true; }
+        return base.IsYourSlot(slot);
+    }
+
 }
