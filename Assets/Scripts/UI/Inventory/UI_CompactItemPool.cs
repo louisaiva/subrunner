@@ -20,6 +20,7 @@ public class UI_CompactItemPool : UI_ItemSlottable
     [Header("Item Pool")]
     [SerializeField] protected ItemStorer storer;
     public override ItemStorer Storer { get { return storer; } }
+    [SerializeField] protected string item_rule; // the item rule to apply to the items of the storer to know if we should show them or not, it can be dynamically changed and then we just update the shown stacks
 
     [Header("ItemStacks")]
     [SerializeField] protected List<ItemStack> stacks = new List<ItemStack>(); // the list of stacks that are currently shown in the pool, they are created by the pool and not linked to the stacks of the inventory, but they are updated when those are updated (quantity, item change, etc.)
@@ -28,11 +29,17 @@ public class UI_CompactItemPool : UI_ItemSlottable
     [SerializeField] protected UI_OutlineSlot outliner;
     public UI_OutlineSlot OutlinerReceivable => outliner;
 
+    [Header("Empty Text")]
+    [SerializeField] protected TMPro.TextMeshProUGUI empty_text;
+
+    // EVENTS
+    protected System.Action<Item> on_item_received_callback;
+
 
     // ITEMPOOL ATTACHMENT
-    public void AttachToStorer(ItemStorer real_holder)
+    public void AttachToStorer(ItemStorer real_holder, string item_rule = "")
     {
-        if (log_attach) { Debug.Log($"(UI_CompactItemPool) attaching to storer {(real_holder != null ? real_holder.gameObject.name : "null")}"); }
+        if (log_attach) { Debug.Log($"(UI_CompactItemPool) attaching to storer {(real_holder != null ? real_holder.gameObject.name : "null")} with item rule '{item_rule}'"); }
 
         if (real_holder == null) { return; }
 
@@ -43,10 +50,17 @@ public class UI_CompactItemPool : UI_ItemSlottable
         storer = real_holder;
         storer.OnItemGrabbed += grab_item;
         storer.OnItemDropped += drop_item;
+        on_item_received_callback = (Item item) => { storer.Grab(item); };
+        outliner.OnReceivedItem += on_item_received_callback;
+
+        // set item rule
+        this.item_rule = item_rule;
 
         // create the UI_ItemStack for matching the ItemStack of the ItemPool
         createStacksForStorer();
 
+        if (stacks.Count == 0) { empty_text.gameObject.SetActive(true); }
+        else { empty_text.gameObject.SetActive(false); }
 
         if (log_attach) { Debug.Log($"(UI_CompactItemPool) attached to storer {real_holder.gameObject.name} and created {stacks.Count} stacks"); }
     }
@@ -58,6 +72,11 @@ public class UI_CompactItemPool : UI_ItemSlottable
         // remove all callbacks
         storer.OnItemGrabbed -= grab_item;
         storer.OnItemDropped -= drop_item;
+        outliner.OnReceivedItem -= on_item_received_callback;
+        on_item_received_callback = null;
+
+        // clear rule
+        item_rule = "";
 
         // clear pool reference
         storer = null;
@@ -91,8 +110,10 @@ public class UI_CompactItemPool : UI_ItemSlottable
         // 1 - verify we have not already grabbed this item
         if (stacks.Exists(s => s.Items.Contains(item))) { if (log_grab_drop) { Debug.Log($"(UI_CompactItemPool) item {item.name} already grabbed"); } return; }
 
+        // 2 - verify that it passes the rule
+        if (!item.ValidateRule(item_rule)) { return; }
 
-        // 2 - try to grab it in existing stacks
+        // 3 - try to grab it in existing stacks
         for (int i = 0; i < stacks.Count; i++)
         {
             ItemStack stack = stacks[i];
@@ -104,7 +125,7 @@ public class UI_CompactItemPool : UI_ItemSlottable
             }
         }
 
-        // 3 - creates a new ItemStack
+        // 4 - creates a new ItemStack
         ItemStack new_stack = new ItemStack(storer);
         new_stack.Add(item);
         stacks.Add(new_stack);
@@ -112,6 +133,8 @@ public class UI_CompactItemPool : UI_ItemSlottable
         if (log_grab_drop) { ui_stacks.LastOrDefault().log_drop = true; }
 
         if (log_grab_drop) { Debug.Log($"(UI_CompactItemPool) created new stack for grabbed item {item.name}"); }
+
+        if (empty_text.gameObject.activeSelf) { empty_text.gameObject.SetActive(false); }
     }
     protected void drop_item(Item item)
     {
@@ -122,6 +145,9 @@ public class UI_CompactItemPool : UI_ItemSlottable
         if (log_grab_drop) { Debug.Log($"(UI_CompactItemPool) dropping item {item.name}"); }
         stack.Remove(item);
         if (stack.IsEmpty) { stacks.Remove(stack); remove_ui_stack(stack); if (log_grab_drop) { Debug.Log($"(UI_CompactItemPool) removed stack for dropped item {item.name} because it is now empty"); } }
+
+        // check if we have 0 stacks then we are empty -> activate empty text
+        if (stacks.Count == 0) { empty_text.gameObject.SetActive(true); }
     }
 
 

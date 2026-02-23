@@ -29,8 +29,12 @@ public class UI_ChestPool : UI_SlottablePool
     // PERSO ATTACH / DETACH
     public void AttachPerso(Inventory perso_inv)
     {
+        // check if we have a chest already, if yes we extract their rule to give it to the ui_compact item pool
+        string rule = "";
+        if (chest != null) { rule = chest.Inventory.ItemRule; }
+
         // on met les items du chest dans le UI_Inventory du perso
-        PersoUI_Inventory.AttachToStorer(perso_inv);
+        PersoUI_Inventory.AttachToStorer(perso_inv, rule);
     }
     public void DetachPerso()
     {

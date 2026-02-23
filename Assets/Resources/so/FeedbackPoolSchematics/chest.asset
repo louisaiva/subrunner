@@ -26,14 +26,15 @@ MonoBehaviour:
     - {fileID: 5073313702871382076, guid: 609aea6603e0fd54996bd2806f7d0226, type: 3}
   - label_text: swap
     base_color: {r: 1, g: 1, b: 1, a: 1}
-    inputed_color: {r: 1, g: 0.8862745, b: 0.3254902, a: 1}
+    inputed_color: {r: 0.03529412, g: 1, b: 0, a: 1}
     prefabs:
     - {fileID: 2923867467209066976, guid: dcbd5867d8fc43e4eb37b8a2a2aacfd9, type: 3}
   - label_text: move
     base_color: {r: 1, g: 1, b: 1, a: 1}
-    inputed_color: {r: 0.03529412, g: 1, b: 0, a: 1}
+    inputed_color: {r: 0.90588236, g: 0.45882353, b: 0.89411765, a: 1}
     prefabs:
     - {fileID: 2923867467209066976, guid: dcbd5867d8fc43e4eb37b8a2a2aacfd9, type: 3}
+    - {fileID: 8830998502573575478, guid: e2fb1023943a6d04b85de73a37ed029e, type: 3}
     - {fileID: 7002321450701441238, guid: 42664570f8cbd354ebfaa9267cb4860f, type: 3}
   gmpd_L_plan:
   - label_text: navigate
@@ -49,12 +50,13 @@ MonoBehaviour:
     - {fileID: 5073313702871382076, guid: 6d3ab8603848ff843a5ab7dcdb01a47d, type: 3}
   - label_text: swap
     base_color: {r: 1, g: 1, b: 1, a: 1}
-    inputed_color: {r: 1, g: 0.8862745, b: 0.3254902, a: 1}
+    inputed_color: {r: 0.03529412, g: 1, b: 0, a: 1}
     prefabs:
     - {fileID: 5073313702871382076, guid: 299a199f1a67c6c469c1ae8d35da505b, type: 3}
   - label_text: move
     base_color: {r: 1, g: 1, b: 1, a: 1}
-    inputed_color: {r: 0, g: 1, b: 0, a: 1}
+    inputed_color: {r: 0.90588236, g: 0.45882353, b: 0.89411765, a: 1}
     prefabs:
     - {fileID: 5073313702871382076, guid: 299a199f1a67c6c469c1ae8d35da505b, type: 3}
+    - {fileID: 8830998502573575478, guid: e2fb1023943a6d04b85de73a37ed029e, type: 3}
     - {fileID: 5896076262160305960, guid: 44ecfd6c9430d814cb017d42913f3113, type: 3}

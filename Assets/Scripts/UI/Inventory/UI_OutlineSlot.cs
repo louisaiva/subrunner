@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
@@ -24,7 +25,12 @@ public class UI_OutlineSlot : UI_ImageSlot, ItemReceivable
     
     [Header("Outline helpers")]
     [SerializeField] private List<UI_OutlineHelper> outline_helpers;
+
+    // EVENTS 
+    public Action<Item> OnReceivedItem = delegate { };
+
     
+    // START
     protected void Start()
     {
         // we find the outline helpers
@@ -38,6 +44,17 @@ public class UI_OutlineSlot : UI_ImageSlot, ItemReceivable
 
         // we disable the slot at the start
         Disable();
+    }
+
+    // ON RECEIVED
+    public void OnReceived(ItemStack moving_ui_item)
+    {
+        if (log) { Debug.Log($"(UI_OutlineSlot) received itemstack with {moving_ui_item.Quantity} items of type {moving_ui_item.ItemReference}, calling OnReceivedItem delegate"); }
+        for (int i = 0; i < moving_ui_item.Quantity; i++)
+        {
+            Item item = moving_ui_item.Item;
+            OnReceivedItem?.Invoke(item);
+        }
     }
 
     // DISABLE
@@ -72,7 +89,7 @@ public class UI_OutlineSlot : UI_ImageSlot, ItemReceivable
         base.Disable();
     }
 
-    // RECEIVE
+    // DRAG
     public virtual void OnPointerDragEnter(UI_ItemStack moving_ui_item)
     {
         // check if disabled

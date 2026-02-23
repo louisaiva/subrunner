@@ -368,6 +368,7 @@ public class Inventory : MonoBehaviour, ItemStorer
     // ITEM RULE
     public bool ValidateRule(Item item) { return item.ValidateRule(item_rule); }
 
+    public string ItemRule { get { return item_rule; } }
     private string item_rule
     {
         get

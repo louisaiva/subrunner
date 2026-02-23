@@ -233,7 +233,7 @@ public class UI_ItemStack : UI_ImageSlot, Droppable, Descriptable, ItemReceivabl
             : ItemBank.Instance.GetUI_Icon("switch");
 
         // si on a aucun item on met tout simplement "move"
-        if (Stack.Quantity == 0) { switch_icon = ItemBank.Instance.GetUI_Icon("move"); }
+        if (Stack.Quantity == 0) { switch_icon = ItemBank.Instance.GetUI_Icon("place"); }
         set_ui_item(switch_icon);
     }
     public void OnPointerDragUp()

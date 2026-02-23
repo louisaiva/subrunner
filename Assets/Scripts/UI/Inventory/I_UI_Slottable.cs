@@ -36,6 +36,7 @@ public interface Droppable
 
 public interface ItemReceivable
 {
+    GameObject gameObject { get; }
     void OnPointerDragEnter(UI_ItemStack moving_ui_item);
 }
 public interface ItemMovable

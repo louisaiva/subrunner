@@ -290,10 +290,6 @@ public class Controller : MonoBehaviour
             // on attache la pool à l'ui pool
             ui_pool.AttachToPool(pool);
         }
-
-        // on attache aussi les différents UI_Inventory qui servent pour interagir avec les coffres, etc
-        // UI_ChestPool chest_pool = UI_Manager.Instance.GetPool<UI_ChestPool>();
-        // chest_pool?.AttachPerso(inventory);
     }
     private void unattach_ui_item_pools()
     {
@@ -303,10 +299,6 @@ public class Controller : MonoBehaviour
 
         // on détache tous les ui pools de leur pool
         for (int i = 0; i < ui_pools.Count; ++i) { ui_pools[i].DetachFromPool(); }
-
-        // on détache aussi les différents UI_Inventory qui servent pour intéragir avec les coffres, etc
-        // UI_ChestPool chest_pool = UI_Manager.Instance.GetPool<UI_ChestPool>();
-        // chest_pool?.DetachPerso();
     }
 
 

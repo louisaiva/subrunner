@@ -79,15 +79,15 @@ public class UI_ItemMover : MonoBehaviour
 
 
         // checks if the current slot is an ui_item and not the same as the moving item one
-        UI_ItemStack destination = manager.CurrentSlot as UI_ItemStack;
+        ItemReceivable destination = manager.CurrentSlot as ItemReceivable;
 
         // on exit le slot si c pas la destination
-        if (destination != moving_ui_item && destination != null)
+        if ((destination as UI_ItemStack) != moving_ui_item && destination != null)
         {
             moving_ui_item.OnPointerExit(null);
 
             // finally we move the items
-            if (log) { Debug.Log($"(UI_ItemMover) moving ui_item : {moving_ui_item.name} --> {destination.name}"); }
+            if (log) { Debug.Log($"(UI_ItemMover) moving ui_item : {moving_ui_item.name} --> {destination.gameObject.name}"); }
             moveItems(destination);
         }
 
@@ -97,36 +97,52 @@ public class UI_ItemMover : MonoBehaviour
         potential_moving_item = null;
 
         // et on navigue vers la destination (seulement si on utilise le gamepad)
-        if (destination != null) { manager.HoverSlot(destination, prevent_same_slot: false); }
+        if (destination != null) { manager.HoverSlot(destination as UI_Slot/* , prevent_same_slot: false */); }
         if (manager.Navigator is MouseNavigator mouse)
         {
-            if (log) { Debug.Log($"(UI_ItemMover) mouse navigator detected, unhovering if hovered ui_item is not {(destination == null ? "null" : destination.name)}"); }
-            mouse.UnhoverIfNotHovering(destination);
+            if (log) { Debug.Log($"(UI_ItemMover) mouse navigator detected, unhovering if hovered ui_item is not {(destination == null ? "null" : destination.gameObject.name)}"); }
+            mouse.UnhoverIfNotHovering(destination as UI_Slot);
         }
     }
 
 
 
     // MOVING ITEM LOW LEVEL
-    private void moveItems(UI_ItemStack destination)
+    private void moveItems(ItemReceivable destination)
     {
         // on choisit le mode d'action qu'il faut pour echanger les items
         // entre moving_ui_item & destination
 
-        // on vérifie que les ItemPool reliés aux ItemStack des 2 UI_ItemStack ne sont pas null sinon on fait r
-        if (moving_ui_item.Stack.Storer == null || destination.Stack.Storer == null)
+        // on regarde si le type de destination est un UI_OutlineSlot & que moving_ui_item a un storer
+        if (destination is UI_OutlineSlot outline_slot && moving_ui_item.Stack.Storer != null)
         {
-            if (log) { Debug.Log($"(UI_ItemMover) cannot move items because one of the stack has no storer : moving_ui_item storer = {moving_ui_item.Stack.Storer}, destination storer = {destination.Stack.Storer}"); }
+            if (log) { Debug.Log($"(UI_ItemMover) destination is an outline slot, calling OnReceived with moving_ui_item {moving_ui_item.name}"); }
+            outline_slot.OnReceived(moving_ui_item.Stack);
             return;
         }
 
+        // ensuite on caste destination à une UI_ItemStack parce que y'a pas d'autres types
+        if (destination is not UI_ItemStack dest_stack)
+        {
+            if (log) { Debug.Log($"(UI_ItemMover) destination {destination.gameObject.name} is not a UI_ItemStack, cannot move items"); }
+            return;
+        }
+
+        // on vérifie que les ItemPool reliés aux ItemStack des 2 UI_ItemStack ne sont pas null sinon on fait r
+        if (moving_ui_item.Stack.Storer == null || dest_stack.Stack.Storer == null)
+        {
+            if (log) { Debug.Log($"(UI_ItemMover) cannot move items because one of the stack has no storer : moving_ui_item storer = {moving_ui_item.Stack.Storer}, destination storer = {dest_stack.Stack.Storer}"); }
+            return;
+        }
 
         // on choisit en fonction des différentes situations :
-        if (destination != moving_ui_item && destination.Stack.CanAdd(moving_ui_item.Stack))
+        if (dest_stack != moving_ui_item && dest_stack.Stack.CanAdd(moving_ui_item.Stack))
         {
-            merge_items(moving_ui_item, destination); // ce sont les mêmes items, on peut alors les merge ensemble
+            merge_items(moving_ui_item, dest_stack); // ce sont les mêmes items, on peut alors les merge ensemble
         }
-        else { switch_items(moving_ui_item, destination); }
+        else { switch_items(moving_ui_item, dest_stack); } // sinon on switch les items
+
+        
     }
     private void switch_items(UI_ItemStack stack1, UI_ItemStack stack2)
     {
@@ -271,7 +287,6 @@ public class UI_ItemMover : MonoBehaviour
                 // on regarde si le slot n'a pas d'item on le désactive
                 if (ui_item.Stack.Item != null) { ui_item.Enable(); continue; }
                 if (except_modules && ui_item is UI_Module) { ui_item.Enable(); continue; } // on ne désactive pas les modules
-                // if (ui_pool.DoNotDisableEmptySlots) { ui_item.Enable(); continue; }
                 ui_item.Disable(); // on désactive le slot
             }
 
