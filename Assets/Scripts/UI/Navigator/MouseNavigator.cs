@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -12,6 +13,8 @@ public class MouseNavigator : MonoBehaviour, Navigator
     [Header("Mouse navigation parameters")]
     public LayerMask ui_slot_layer;
     public Vector2 BasePosition => new Vector2(Screen.width / 2f, Screen.height / 2f);
+    public List<Type> UnwantedTypesAfterActivate => new List<Type>();
+
     private float move_threshold = 15f;
     [SerializeField] private Vector2 last_mouse_position = Vector2.zero;
 
@@ -40,7 +43,7 @@ public class MouseNavigator : MonoBehaviour, Navigator
         // si on a des slots on navigue tout simplement
         Navigate(start_moving_item: false);
     }
-    public async void NavigateToClosest(Vector2 position, System.Type favorised_type = null)
+    public async void NavigateToClosest(Vector2 position, System.Type favorised_type = null, List<System.Type> unwanted_types = null)
     {
         // wait a frame for ui to update it self
         await System.Threading.Tasks.Task.Yield();

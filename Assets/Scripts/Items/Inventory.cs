@@ -389,6 +389,8 @@ public class Inventory : MonoBehaviour, ItemStorer
 
 public interface ItemStorer
 {
+    public GameObject gameObject { get; }
+
     // items access
     public List<Item> Items { get; }
     public int Count { get; }

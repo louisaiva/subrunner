@@ -263,6 +263,12 @@ MonoBehaviour:
     base_skin: button
     base_spritesheets:
     - objects/interactives/buttons/button
+  - variant_name: robot_sp_npc
+    variant_spritesheets:
+    - objects/interactives/spawners/robot_spawner_npc
+    base_skin: robot_sp
+    base_spritesheets:
+    - objects/interactives/spawners/robot_spawner_base
   log: 0
   log_LAFAC: 0
   log_variant_skins: 0
@@ -456,6 +462,8 @@ MonoBehaviour:
   - {fileID: -1759323912, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
   - {fileID: 363200836, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
   - {fileID: 856147322, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: 1542503243, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: 1880052999, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
   ui_icons_names:
   - switch
   - merge
@@ -465,6 +473,8 @@ MonoBehaviour:
   - cross
   - play
   - contacts
+  - download
+  - place
   module_sprites:
   - {fileID: 592737694, guid: cccb6378b30409049982517aba955bd7, type: 3}
   - {fileID: 930028889, guid: cccb6378b30409049982517aba955bd7, type: 3}
@@ -876,7 +886,7 @@ MonoBehaviour:
   - scene_name: subrunner-title-screen
     bloom_intensity: 5
     chromatic_aberration_intensity: 1
-  log: 1
+  log: 0
 --- !u!1 &8648687975417559356
 GameObject:
   m_ObjectHideFlags: 0

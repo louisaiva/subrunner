@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ public class GamepadNavigator : MonoBehaviour, Navigator
     [SerializeField] private float angle_threshold = 45f;
     [SerializeField] private float angle_multiplicator = 0f;
     public Vector2 BasePosition => new Vector2(Screen.width / 2f, Screen.height / 2f);
+    public List<Type> UnwantedTypesAfterActivate => new List<Type>() { typeof(UI_OutlineSlot) };
 
     [Header("Dot Navigation Settings")]
     [SerializeField] private bool use_dot_navigation = false;
@@ -150,7 +152,7 @@ public class GamepadNavigator : MonoBehaviour, Navigator
     }
 
     // NAVIGATION CLOSEST & DIRECT
-    public async void NavigateToClosest(Vector2 position, System.Type favorised_type = null)
+    public async void NavigateToClosest(Vector2 position, System.Type favorised_type = null, List<System.Type> unwanted_types = null)
     {
         // we check if we have a slottable
         if (Manager.Slottables.Count == 0) { return; }
@@ -163,7 +165,7 @@ public class GamepadNavigator : MonoBehaviour, Navigator
 
         // on récupère le slot le plus proche
         string s = "(UI_GamepadNavigator) NAVIGATE TO CLOSEST: \n\nfrom position : " + position + "\n\n";
-        UI_Slot closest_slot = Manager.GetClosestSlot(position, ref Manager.Slots, ref s, favorised_type: favorised_type);
+        UI_Slot closest_slot = Manager.GetClosestSlot(position, ref Manager.Slots, ref s, favorised_type: favorised_type, unwanted_types: unwanted_types);
 
         // we navigate to the slot if we have one
         if (closest_slot == null) { return; }

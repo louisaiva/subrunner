@@ -109,7 +109,12 @@ public class Chest : Capable, Interactable, Openable
     protected bool ui_inventory_shown = false;
     protected void ShowUI_Inventory()
     {
-        UI_Manager.Instance.GetPool<UI_ChestPool>()?.AttachChest(Inventory);
+        // attach the chest inventory & perso inventory to the ui chest pool
+        UI_ChestPool ui_chest = UI_Manager.Instance.GetPool<UI_ChestPool>();
+        ui_chest?.AttachChest(Inventory);
+        ui_chest?.AttachPerso(Interactor?.capable.Inventory);
+
+        // then we show the ui_chest
         UI_Manager.Instance.SwitchTo("chest");
         ui_inventory_shown = true;
 
@@ -119,7 +124,12 @@ public class Chest : Capable, Interactable, Openable
     }
     protected void HideUI_Inventory()
     {
-        UI_Manager.Instance.GetPool<UI_ChestPool>()?.DetachChest();
+        // we detach the chest inventory & perso inventory from the ui chest pool
+        UI_ChestPool ui_chest = UI_Manager.Instance.GetPool<UI_ChestPool>();
+        ui_chest?.DetachChest();
+        ui_chest?.DetachPerso();
+
+        // then we hide the ui_chest
         UI_Manager.Instance.UnstackPool("chest");
         ui_inventory_shown = false;
 

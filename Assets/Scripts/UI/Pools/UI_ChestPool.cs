@@ -16,7 +16,7 @@ public class UI_ChestPool : UI_SlottablePool
 
         // we add item pools to our ui_elements
         if (!ui_elements.Contains(PersoUI_Inventory.transform.parent.gameObject)) { ui_elements.Add(PersoUI_Inventory.transform.parent.gameObject); }
-        if (!ui_elements.Contains(ChestUI_ItemPool.gameObject)) { ui_elements.Add(ChestUI_ItemPool.gameObject); }
+        if (!ui_elements.Contains(ChestUI_ItemPool.transform.parent.gameObject)) { ui_elements.Add(ChestUI_ItemPool.transform.parent.gameObject); }
 
         // we add item pools to slottable mixer
         if (!(slottable is UI_SlottableMixer mixer)) { if (log) { Debug.LogError($"(UI_ChestPool) slottable on {name} is not a UI_SlottableMixer"); } return; }
@@ -26,7 +26,20 @@ public class UI_ChestPool : UI_SlottablePool
         mixer.AddSlottable(PersoUI_Inventory);
     }
 
-    // REGISTER CHEST & PERSO
+    // PERSO ATTACH / DETACH
+    public void AttachPerso(Inventory perso_inv)
+    {
+        // on met les items du chest dans le UI_Inventory du perso
+        PersoUI_Inventory.AttachToStorer(perso_inv);
+    }
+    public void DetachPerso()
+    {
+        // on met les items du chest dans le UI_Inventory du perso
+        PersoUI_Inventory.DetachFromStorer();
+    }
+
+
+    // CHEST ATTACH / DETACH
     public void AttachChest(Inventory chest_inv)
     {
         // on met les items du chest dans
@@ -58,19 +71,6 @@ public class UI_ChestPool : UI_SlottablePool
         chest?.ExitHover();
 
         yield break;
-    }
-
-
-    // PERSO ATTACH / DETACH
-    public void AttachPerso(Inventory perso_inv)
-    {
-        // on met les items du chest dans le UI_Inventory du perso
-        PersoUI_Inventory.AttachToStorer(perso_inv);
-    }
-    public void DetachPerso()
-    {
-        // on met les items du chest dans le UI_Inventory du perso
-        PersoUI_Inventory.DetachFromStorer();
     }
 
 }

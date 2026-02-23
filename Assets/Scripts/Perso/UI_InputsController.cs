@@ -56,7 +56,7 @@ public class UI_InputsController : InputController
         add_endless_input(new EndlessInput<float>("ui_drop_ingame", ui_inputs.ui_drop_ingame,
                 threshold: InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD,
                 repeat: InputManager.Instance.BUTTON_ENDLESSLY_LONG_DELAY,
-                unscaled_time: false)).OnEndless += _ => OnUI_Drop();
+                unscaled_time: true)).OnEndless += _ => OnUI_Drop();
 
         // et pour l'activation
         add_endless_input(new EndlessInput<float>("ui_activate", ui_inputs.activate,
@@ -66,7 +66,7 @@ public class UI_InputsController : InputController
         add_endless_input(new EndlessInput<float>("ui_activate_ingame", ui_inputs.ui_drop_ingame,
                 threshold: InputManager.Instance.BUTTON_ENDLESSLY_LONG_THRESHOLD,
                 repeat: -1, // no repeat, only holding
-                unscaled_time: false)).OnHold += _ => OnUI_ActivateHeld();
+                unscaled_time: true)).OnHold += _ => OnUI_ActivateHeld();
 
         // et pour le slide continu dans les options
         add_endless_input(new EndlessInput<Vector2>("slide", ui_inputs.navigate_exploits,
@@ -210,9 +210,9 @@ public class UI_InputsController : InputController
             return;
         }
 
-        // si on est in-game et qu'on utilise la souris on veut pas les activer (pcq ça drop en même temps)
-        if (in_game)
-        {
+        // si on est in-game on veut pas les activer (pcq ça drop en même temps)
+        if (in_game) { return; }
+        /* {
             // si on est à la souris on active jamais
             if (!InputManager.Instance.isUsingGamepad()) { return; }
 
@@ -222,16 +222,16 @@ public class UI_InputsController : InputController
                 navigator.OnUp();
                 return;
             }
-        }
+        } */
         
         // sinon on active
         navigator.OnActivate();
     }
     private void OnUI_ActivateHeld()
     {
-        // si on est in-game et qu'on utilise la souris on veut pas start moving item non plus
+        // si on est in-game on veut pas start moving item non plus
         // pcq on veut au contraire endless drop et ça va l'arreter
-        if (in_game && !InputManager.Instance.isUsingGamepad()) { return; }
+        if (in_game) { return; }
 
         // on start moving item
         navigator.StartMovingItemIfInputDown();

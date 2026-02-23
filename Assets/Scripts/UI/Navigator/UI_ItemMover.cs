@@ -166,7 +166,7 @@ public class UI_ItemMover : MonoBehaviour
         List<UI_ItemSlottable> ui_item_pools = get_all_valid_ui_item_pools();
 
 
-        // log preparatiob
+        // log preparation
         string log_slottables = "(UI_ItemMover) got " + ui_item_pools.Count + " ui_item_pools to enable/disable slots from \n";
         List<UI_Slot> slots = new List<UI_Slot>();
 
@@ -214,11 +214,11 @@ public class UI_ItemMover : MonoBehaviour
                 continue;
             }
 
-            // on regarde si la ui_pool est full et scalable -> on ajout un ui_item vide dedans
+            // on regarde si la ui_pool est full et qu'on peut ajouter un ui_item vide dedans
             if ((ui_item_pool != moving_pool) &&
                 storer is ItemPool pool &&
-                pool.Scalable &&
-                (ui_item_pool.EmptyCount == 0))
+                (ui_item_pool.EmptyCount == 0) &&
+                (pool.Scalable || pool.Stacks.Count < pool.MaxStacks))
             {
                 pool.AddEmptyStack();
                 log_slottables += $"   --> added empty slot bcz scalable & full\n";

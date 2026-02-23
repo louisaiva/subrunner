@@ -14,6 +14,7 @@ using UnityEngine;
 public class UI_CompactItemPool : UI_ItemSlottable
 {
     [Header("Logs")]
+    [SerializeField] protected bool log_attach = false;
     [SerializeField] protected bool log_grab_drop = false;
 
     [Header("Item Pool")]
@@ -21,7 +22,7 @@ public class UI_CompactItemPool : UI_ItemSlottable
     public override ItemStorer Storer { get { return storer; } }
 
     [Header("ItemStacks")]
-    protected List<ItemStack> stacks = new List<ItemStack>(); // the list of stacks that are currently shown in the pool, they are created by the pool and not linked to the stacks of the inventory, but they are updated when those are updated (quantity, item change, etc.)
+    [SerializeField] protected List<ItemStack> stacks = new List<ItemStack>(); // the list of stacks that are currently shown in the pool, they are created by the pool and not linked to the stacks of the inventory, but they are updated when those are updated (quantity, item change, etc.)
 
     [Header("Outline Slot")]
     [SerializeField] protected UI_OutlineSlot outliner;
@@ -31,6 +32,8 @@ public class UI_CompactItemPool : UI_ItemSlottable
     // ITEMPOOL ATTACHMENT
     public void AttachToStorer(ItemStorer real_holder)
     {
+        if (log_attach) { Debug.Log($"(UI_CompactItemPool) attaching to storer {(real_holder != null ? real_holder.gameObject.name : "null")}"); }
+
         if (real_holder == null) { return; }
 
         // remove all callbacks
@@ -44,11 +47,12 @@ public class UI_CompactItemPool : UI_ItemSlottable
         // create the UI_ItemStack for matching the ItemStack of the ItemPool
         createStacksForStorer();
 
-        // and we make sure the outline slot is disabled
-        outliner.Disable();
+
+        if (log_attach) { Debug.Log($"(UI_CompactItemPool) attached to storer {real_holder.gameObject.name} and created {stacks.Count} stacks"); }
     }
     public void DetachFromStorer()
     {
+        if (log_attach) { Debug.Log($"(UI_CompactItemPool) detaching from storer {(storer != null ? storer.gameObject.name : "null")}"); }
         if (storer == null) { return; }
 
         // remove all callbacks
@@ -58,8 +62,11 @@ public class UI_CompactItemPool : UI_ItemSlottable
         // clear pool reference
         storer = null;
 
-        // clear the UI
+        // clear the stacks & UI
+        stacks.Clear();
         destroyAllStacks();
+
+        if (log_attach) { Debug.Log($"(UI_CompactItemPool) detached from storer and destroyed all stacks"); }
     }
 
     // UI_ITEMSTACK MANAGEMENT

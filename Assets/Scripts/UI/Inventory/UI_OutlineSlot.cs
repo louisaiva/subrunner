@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -20,7 +22,24 @@ public class UI_OutlineSlot : UI_ImageSlot, ItemReceivable
     [SerializeField] protected Image icon_image;
     [SerializeField] protected string receive_icon_name;
     
+    [Header("Outline helpers")]
+    [SerializeField] private List<UI_OutlineHelper> outline_helpers;
     
+    protected void Start()
+    {
+        // we find the outline helpers
+        Transform outlines_transform = transform.Find("outlines");
+        if (outlines_transform == null) { return; }
+        for (int i = 0; i < outlines_transform.childCount; i++)
+        {
+            UI_OutlineHelper helper = outlines_transform.GetChild(i).GetComponent<UI_OutlineHelper>();
+            if (helper != null) { outline_helpers.Add(helper); }
+        }
+
+        // we disable the slot at the start
+        Disable();
+    }
+
     // DISABLE
     public override void Enable()
     {
@@ -29,10 +48,16 @@ public class UI_OutlineSlot : UI_ImageSlot, ItemReceivable
         // on active le drag here text
         drag_here_text.gameObject.SetActive(true);
 
+        // on active "draggable" des outlines helpers
+        for (int i = 0; i < outline_helpers.Count; i++) { outline_helpers[i].SetDraggable(); }
+
         base.Enable();
     }
     public override void Disable()
     {
+        // we find the outline helpers if we don't have any yet
+        // if (outline_helpers.Count == 0) { get_outline_helpers(); }
+
         if (Disabled) { return; }
 
         // on remet une icon null
@@ -40,6 +65,9 @@ public class UI_OutlineSlot : UI_ImageSlot, ItemReceivable
 
         // on desactive le drag here text
         drag_here_text.gameObject.SetActive(false);
+
+        // on active "disabled" des outlines helpers
+        for (int i = 0; i < outline_helpers.Count; i++) { outline_helpers[i].SetDisabled(); }
 
         base.Disable();
     }
@@ -59,6 +87,10 @@ public class UI_OutlineSlot : UI_ImageSlot, ItemReceivable
 
         // on desactive le drag here text (on a une icon déjà)
         drag_here_text.gameObject.SetActive(false);
+
+        // on active "dragged hover" des outlines helpers
+        for (int i = 0; i < outline_helpers.Count; i++) { outline_helpers[i].SetDraggedHover(); }
+
     }
     public override void OnPointerExit(PointerEventData eventData)
     {
@@ -68,7 +100,13 @@ public class UI_OutlineSlot : UI_ImageSlot, ItemReceivable
         set_icon(null);
 
         // si on est pas disabled on active le drag here text
-        if (!Disabled) { drag_here_text.gameObject.SetActive(true); }
+        if (!Disabled)
+        {
+            drag_here_text.gameObject.SetActive(true);
+
+            // on active "draggable" des outlines helpers
+            for (int i = 0; i < outline_helpers.Count; i++) { outline_helpers[i].SetDraggable(); }
+        }
     }
     
     // SET ICON
@@ -77,5 +115,17 @@ public class UI_OutlineSlot : UI_ImageSlot, ItemReceivable
         if (icon_image == null) { return; }
         icon_image.sprite = sprite;
         icon_image.enabled = sprite != null;
+    }
+
+    // OUTLINE HELPERS
+    private void get_outline_helpers()
+    {
+        Transform outlines_transform = transform.Find("outlines");
+        if (outlines_transform == null) { return; }
+        for (int i = 0; i < outlines_transform.childCount; i++)
+        {
+            UI_OutlineHelper helper = outlines_transform.GetChild(i).GetComponent<UI_OutlineHelper>();
+            if (helper != null) { outline_helpers.Add(helper); }
+        }
     }
 }
