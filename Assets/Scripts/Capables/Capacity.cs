@@ -52,7 +52,6 @@ public class Capacity : MonoBehaviour
         }
     }
 
-    // todo make this an interface too !!! some capacities don't have a "use" (walk, run)
     public virtual void Use(Capable capable)
     {
         // we play the animation

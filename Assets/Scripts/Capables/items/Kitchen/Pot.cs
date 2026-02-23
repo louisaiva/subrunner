@@ -1,3 +1,4 @@
+#pragma warning disable 4014
 using UnityEngine;
 using System;
 using System.Collections;

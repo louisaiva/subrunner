@@ -130,17 +130,11 @@ public class UI_Navigator : Singleton<UI_Navigator>
 
         if (log_update_slots) { Debug.Log("(UI_Navigator) updated Slots: " + Slots.Count + " Slots"); }
     }
-    public void HoverSlot(UI_Slot slot, bool prevent_same_slot = true)
+    public void HoverSlot(UI_Slot slot)
     {
         // checks if we can hover the slot
         if (slot == null) { return; }
         if (slot.Disabled) { return; }
-        /* if (slot == CurrentSlot && prevent_same_slot)
-        {
-            // // todo check that this is not messing up with Mover.IsMovingItem as below
-            if (!Mover.IsMovingItem || slot is not ItemReceivable) { slot.OnPointerEnter(null); }
-            return;
-        } */
 
         // checks if we already have a slot
         if (CurrentSlot != null) { UnhoverSlot(); }

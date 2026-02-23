@@ -74,10 +74,6 @@ public class UI_ItemMover : MonoBehaviour
             return;
         }
 
-        // todo implement a new UI_Slot type which is kind of a item receiver slot
-        // todo that is linked to a specific inventory / item pool that will receive and handles the itemstack
-
-
         // checks if the current slot is an ui_item and not the same as the moving item one
         ItemReceivable destination = manager.CurrentSlot as ItemReceivable;
 
