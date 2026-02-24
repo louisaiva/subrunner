@@ -10,7 +10,7 @@ public class LevelSwitcher : Capable, Interactable
     public int current_level = 0;
 
     [Header("Components")]
-    public World world;
+    public World2 world;
     private GameObject floating_dmg_provider;
     public Door elevator_door;
 
@@ -21,7 +21,7 @@ public class LevelSwitcher : Capable, Interactable
     {
 
         // we get the world
-        world = GameObject.Find("/world").GetComponent<World>();
+        world = GameObject.Find("/world").GetComponent<World2>();
 
         // we get the floating_dmg_provider
         floating_dmg_provider = GameObject.Find("/utils/dmgs_provider");
@@ -78,16 +78,16 @@ public class LevelSwitcher : Capable, Interactable
         world.LoadLevelFromName(levels_names[next_level]);
     }
 
-    public void OnLevelLoaded(Level level)
+    public void OnLevelLoaded(Level2 level)
     {
         if (elevator_door == null) { Start(); }
 
         // we get the room connected to the elevator
-        Room room_connected_to_elevator = level.RoomConnectedToElevator;
+        Room2 room_connected_to_elevator = level.RoomConnectedToElevator;
         elevator_door.room1 = room_connected_to_elevator;
         current_level = levels_names.IndexOf(level.name);
 
-        // we check if the elevator has been used (if not, it is the first LevelLoading from World, so we don't talk)
+        // we check if the elevator has been used (if not, it is the first LevelLoading from World2, so we don't talk)
         if (elevator_uses != 0)
         {
             // we talk

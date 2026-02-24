@@ -4,11 +4,11 @@ using TMPro;
 public class UI_LvlHandler : MonoBehaviour
 {
     
-    [Header("UI Level Handler Parameters")]
+    [Header("UI Level2 Handler Parameters")]
     [SerializeField] private string levelPrefix = "level ";
     [HideInInspector] private TextMeshProUGUI levelText;
 
-    // [Header("Splitted Level Prefix")]
+    // [Header("Splitted Level2 Prefix")]
     // [SerializeField] private TextMeshProUGUI levelPrefixText;
 
     // AWAKE & START

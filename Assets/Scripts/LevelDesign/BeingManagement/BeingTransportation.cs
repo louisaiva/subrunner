@@ -4,14 +4,14 @@ using UnityEngine.Rendering.Universal;
 
 public class BeingTransportation : MonoBehaviour
 {
-    // public Room room; // the room to check collisions on
-    public World world;
+    // public Room2 room; // the room to check collisions on
+    public World2 world;
     public Transform TransitionParent;
 
     public void Start()
     {
-        // room = GetComponent<Room>();
-        world = GameObject.Find("/world").GetComponent<World>();
+        // room = GetComponent<Room2>();
+        world = GameObject.Find("/world").GetComponent<World2>();
 
         TransitionParent = transform.Find("beings");
     }

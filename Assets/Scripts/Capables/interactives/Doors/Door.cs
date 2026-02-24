@@ -17,8 +17,8 @@ public class Door : Capable, Interactable, Openable
 
 
     [Header("ROOMS")]
-    public Room room1; // always matchs the Orientation direction (Orientation == "right" => room1 is on the right)
-    public Room room2; // always matchs the opposite of the Orientation direction (Orientation == "right" => room2 is on the left)
+    public Room2 room1; // always matchs the Orientation direction (Orientation == "right" => room1 is on the right)
+    public Room2 room2; // always matchs the opposite of the Orientation direction (Orientation == "right" => room2 is on the left)
 
     [Header("Interact Key Feedback Vertical position")]
     private Vector2 closed_interact_kf_y = new Vector2(2.25f, 1.25f); // orientation up then down
@@ -73,17 +73,17 @@ public class Door : Capable, Interactable, Openable
 
 
         // on récupère la room du perso
-        Room perso_room = Controller.Instance.current_room;
+        Room2 perso_room = Controller.Instance.current_room;
 
         // on vérifie que la room du perso est bien une des 2 rooms de la porte
         if (!(perso_room == room1 || perso_room == room2)) { return; }
 
 
         // on récupère la room qui s'ouvre
-        Room room_to_open = perso_room == room1 ? room2 : room1;
+        Room2 room_to_open = perso_room == room1 ? room2 : room1;
         if (room_to_open == null)
         {
-            Debug.LogWarning("(Door) Room to open is null!");
+            Debug.LogWarning("(Door) Room2 to open is null!");
             return;
         }
 
@@ -101,13 +101,13 @@ public class Door : Capable, Interactable, Openable
 
 
         // on récupère la room du perso
-        Room perso_room = Controller.Instance.current_room;
+        Room2 perso_room = Controller.Instance.current_room;
 
         // on vérifie que la room du perso est bien une des 2 rooms de la porte
         if (!(perso_room == room1 || perso_room == room2)) { return; }
 
         // on récupère la room qui se ferme
-        Room room_to_close = perso_room == room1 ? room2 : room1;
+        Room2 room_to_close = perso_room == room1 ? room2 : room1;
 
         // on cache les lights de la room qui se ferme
         room_to_close.Hide();

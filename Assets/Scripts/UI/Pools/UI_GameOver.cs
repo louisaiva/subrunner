@@ -70,9 +70,9 @@ public class UI_GameOver : UI_Pool
 
         // we get the spawn point
         Vector3 perso_spawn_point = Vector3.zero;
-        if (World.Instance.spawn_point != null)
+        if (World2.Instance.spawn_point != null)
         {
-            perso_spawn_point = World.Instance.spawn_point.position;
+            perso_spawn_point = World2.Instance.spawn_point.position;
         }
 
         // we instantiate the perso prefab at the spawn point

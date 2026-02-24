@@ -12,7 +12,7 @@ using UnityEngine.UI;
 
 public class UI_LevelUpMenu : UI_Pool
 {
-    [Header("Level Up Menu Components")]
+    [Header("Level2 Up Menu Components")]
     [SerializeField] private TMPro.TextMeshProUGUI level_text;
     [SerializeField] private float delay_before_activating_buttons = 1f;
 

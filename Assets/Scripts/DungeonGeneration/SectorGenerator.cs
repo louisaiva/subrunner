@@ -164,12 +164,12 @@ public class SectorGenerator : MonoBehaviour
 
     // ROOMS FUNCTIONS
 
-    /* public Dictionary<Vector2Int,Room> GenerateRooms(HashSet<Vector2Int> roomsPositions, HashSet<Vector2Int> corridorsPositions, Vector2Int sectorPos, GameObject parent = null )
+    /* public Dictionary<Vector2Int,Room2> GenerateRooms(HashSet<Vector2Int> roomsPositions, HashSet<Vector2Int> corridorsPositions, Vector2Int sectorPos, GameObject parent = null )
     {
         print("ext rooms" + extended_room);
 
         // on crée un dictionnaire de salles
-        Dictionary<Vector2Int,Room> areas = new Dictionary<Vector2Int,Room>();
+        Dictionary<Vector2Int,Room2> areas = new Dictionary<Vector2Int,Room2>();
 
         // on parcourt les positions de salles
         foreach (var position in roomsPositions)
@@ -180,7 +180,7 @@ public class SectorGenerator : MonoBehaviour
             // openinRoomsDirections.UnionWith(openinCorridorsDirections);
 
             // on génère la salle
-            Room area = GenerateRoom(position, openinCorridorsDirections, openinRoomsDirections, parent);
+            Room2 area = GenerateRoom(position, openinCorridorsDirections, openinRoomsDirections, parent);
 
             // on ajoute la salle au dictionnaire
             areas.Add(position+sectorPos, area);
@@ -189,7 +189,7 @@ public class SectorGenerator : MonoBehaviour
         return areas;
     } */
 
-    /* protected Room GenerateRoom(Vector2Int position, HashSet<Vector2Int> corrDirections, HashSet<Vector2Int> roomDirections, GameObject parent = null)
+    /* protected Room2 GenerateRoom(Vector2Int position, HashSet<Vector2Int> corrDirections, HashSet<Vector2Int> roomDirections, GameObject parent = null)
     {
         // on choisit la bonne salle en fonctions des ouvertures
         GameObject room = ChooseRoom(corrDirections, roomDirections);
@@ -210,7 +210,7 @@ public class SectorGenerator : MonoBehaviour
             roomInstance.transform.parent = world.transform;
         }
         
-        return roomInstance.GetComponent<Room>();
+        return roomInstance.GetComponent<Room2>();
     } */
 
     protected GameObject ChooseRoom(HashSet<Vector2Int> corrDirections, HashSet<Vector2Int> roomDirections)
@@ -247,10 +247,10 @@ public class SectorGenerator : MonoBehaviour
 
     // CORRIDORS FUNCTIONS
 
-    /* public Dictionary<Vector2Int, Room> GenerateCorridors(HashSet<Vector2Int> corridorsPositions, HashSet<Vector2Int> roomsPositions, Vector2Int sectorPos, GameObject parent = null)
+    /* public Dictionary<Vector2Int, Room2> GenerateCorridors(HashSet<Vector2Int> corridorsPositions, HashSet<Vector2Int> roomsPositions, Vector2Int sectorPos, GameObject parent = null)
     {
         // on crée un dictionnaire de salles
-        Dictionary<Vector2Int, Room> areas = new Dictionary<Vector2Int, Room>();
+        Dictionary<Vector2Int, Room2> areas = new Dictionary<Vector2Int, Room2>();
 
         // on parcourt les positions des corridors
         foreach (var position in corridorsPositions)
@@ -261,7 +261,7 @@ public class SectorGenerator : MonoBehaviour
             openinDirections.UnionWith(openinCorridorsDirections);
 
             // on génère la salle
-            Room area = GenerateCorridor(position, openinDirections, parent);
+            Room2 area = GenerateCorridor(position, openinDirections, parent);
 
             // on ajoute la salle au dictionnaire
             areas.Add(position+sectorPos, area);
@@ -270,7 +270,7 @@ public class SectorGenerator : MonoBehaviour
         return areas;
     } */
 
-    /* protected Room GenerateCorridor(Vector2Int position, HashSet<Vector2Int> openinDirections, GameObject parent = null)
+    /* protected Room2 GenerateCorridor(Vector2Int position, HashSet<Vector2Int> openinDirections, GameObject parent = null)
     {
         // on choisit la bonne salle en fonctions des ouvertures
         GameObject corr = ChooseCorridor(openinDirections);
@@ -291,7 +291,7 @@ public class SectorGenerator : MonoBehaviour
             corrInstance.transform.parent = world.transform;
         }
 
-        return corrInstance.GetComponent<Room>();
+        return corrInstance.GetComponent<Room2>();
     } */
 
     protected GameObject ChooseCorridor(HashSet<Vector2Int> openinDirections)
