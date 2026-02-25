@@ -114,7 +114,7 @@ public class RoomSystem : BSOD_System<RoomSystem>
     protected virtual void Tick()
     {
 
-        if (log_ticks) { Debug.Log("(RoomSystem) Tick called"); }
+        // if (log_ticks) { Debug.Log("(RoomSystem) Tick called"); }
 
         // 1. find all capables that changes room
         RoomData room;
@@ -134,6 +134,7 @@ public class RoomSystem : BSOD_System<RoomSystem>
                 movables_OUT[room] = capable_id;
             }
         }
+        if (log_ticks && log_room_transfers) { log_in_out(movables_IN, movables_OUT); }
 
         // 2. find existing IN & OUT pairs 
         List<string> capable_ids = new List<string>(); // is it better to use Stack ?
@@ -143,11 +144,18 @@ public class RoomSystem : BSOD_System<RoomSystem>
         {
             string capable_id = pair.Value;
             RoomData out_room = pair.Key;
-            if (movables_IN.ContainsValue(capable_id))
+
+            // we cycle through all the in rooms to see if we have a matching pair
+            foreach (KeyValuePair<RoomData, string> pair2 in movables_IN)
             {
-                capable_ids.Add(capable_id);
-                out_rooms.Add(out_room);
-                in_rooms.Add(movables_IN.FirstOrDefault(x => x.Value == capable_id).Key);
+                // we make sure that the movable is not going from and to the same room
+                if (pair2.Value == capable_id && pair2.Key != out_room)
+                {
+                    RoomData in_room = pair2.Key;
+                    capable_ids.Add(capable_id);
+                    out_rooms.Add(out_room);
+                    in_rooms.Add(in_room);
+                }
             }
         }
         if (log_room_transfers)
@@ -247,6 +255,20 @@ public class RoomSystem : BSOD_System<RoomSystem>
         // 7. We load the new rooms and unload the old ones
         loadRooms(rooms_to_load.ToArray());
         unloadRooms(rooms_to_unload.ToArray());
+    }
+    protected void log_in_out(Dictionary<RoomData, string> into, Dictionary<RoomData, string> from)
+    {
+        string log = "(RoomSystem) IN/OUT : \n IN :";
+        foreach (KeyValuePair<RoomData, string> pair in into)
+        {
+            log += $"\n   - {pair.Value} : {pair.Key.id}";
+        }
+        log += "\n\n OUT :";
+        foreach (KeyValuePair<RoomData, string> pair in from)
+        {
+            log += $"\n   - {pair.Value} in {pair.Key.id}";
+        }
+        Debug.Log(log);
     }
 
     // NEIGHBOURS MANAGEMENT

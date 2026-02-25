@@ -23,7 +23,7 @@ public class Room : MonoBehaviour
 
     [Header("Logs")]
     private bool log_tilemaps_loading = false;
-    private bool log_colliders = false;
+    private bool log_colliders = true;
 
     // LOAD / UNLOAD
     public void LoadData(RoomData data)
@@ -201,14 +201,14 @@ public class Room : MonoBehaviour
         if (capable == null) { return; }
 
         // check some bools
-        bool in_movables = data.movables_ids.Contains(capable.ID);
-        bool in_out_movables = data.OUT_movables_ids.Contains(capable.ID);
-        if (in_movables && in_out_movables)
+        // bool in_movables = data.movables_ids.Contains(capable.ID);
+        bool in_out_movables = data.IN_movables_ids.Contains(capable.ID);
+        if (in_out_movables)
         {
             // if the capable is in the OUT list and in the movables one it means it went out, did not find any other room to go to, and came back to main room,
             // so we simply remove both in and out for this capable
-            data.OUT_movables_ids.Remove(capable.ID);
             data.IN_movables_ids.Remove(capable.ID);
+            data.OUT_movables_ids.Remove(capable.ID);
             if (log_colliders) { Debug.Log($"(Room - {this.name}) Ignored IN then OUT - " + capable.ID); }
             return;
         }

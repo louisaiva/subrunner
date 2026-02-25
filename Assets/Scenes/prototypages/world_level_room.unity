@@ -875,10 +875,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level
   rooms_ids:
-  - square_1
-  - square_2
-  - square_3
-  - square_4
+  - room_1
+  - room_2
+  - room_3
+  - room_4
 --- !u!1 &112018651
 GameObject:
   m_ObjectHideFlags: 0
@@ -968,10 +968,10 @@ MonoBehaviour:
   room_parent: {fileID: 1548216326}
   frames_between_loaded_rooms: 1
   frames_between_ticks: 1
-  log_loading: 0
+  log_loading: 1
   log_neighbours: 0
-  log_room_transfers: 0
-  log_ticks: 0
+  log_room_transfers: 1
+  log_ticks: 1
 --- !u!114 &112018655
 MonoBehaviour:
   m_ObjectHideFlags: 0
