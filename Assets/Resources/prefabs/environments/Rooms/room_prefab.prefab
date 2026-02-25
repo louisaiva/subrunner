@@ -193,7 +193,7 @@ GameObject:
   - component: {fileID: 5113475225972520653}
   - component: {fileID: 3003107585133465965}
   - component: {fileID: 8185754384103082142}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: room_prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -254,7 +254,7 @@ PolygonCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -1139,6 +1139,11 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
     - {fileID: 0}
     - {fileID: 0}
+    neighbours_ids: []
+    capables_ids: []
+    movables_ids: []
+    IN_movables_ids: []
+    OUT_movables_ids: []
   room_collider: {fileID: 3003107585133465965}
   ceiling_tilemap: {fileID: 891453049621737996}
   walls_tilemap: {fileID: 1252242005657139630}

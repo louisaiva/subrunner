@@ -15,6 +15,7 @@ public class Controller : MonoBehaviour
             return _capable;
         }
     }
+    public string ControlledID { get { return Capable != null ? Capable.ID : "None"; } }
     [SerializeField] private Capable _capable;
 
     [Header("Capable stack")]
