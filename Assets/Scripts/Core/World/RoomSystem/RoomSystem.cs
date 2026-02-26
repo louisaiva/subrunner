@@ -14,7 +14,7 @@ public class RoomSystem : BSOD_System<RoomSystem>
     [Header("Loading parameters")]
     public bool awake_done = false;
     public bool start_loading_done = false;
-    public Transform room_parent;
+    // public Transform room_parent;
     public int frames_between_loaded_rooms = 10;
     public int frames_between_ticks = 1;
 
@@ -88,8 +88,7 @@ public class RoomSystem : BSOD_System<RoomSystem>
     }
     private void load_room(RoomData data)
     {
-        Room room = RoomBank.Instance.Load(data);
-        room.transform.SetParent(room_parent);
+        RoomBank.Instance.Load(data);
         loaded_rooms_data.Add(data);
         if (log_loading) { Debug.Log("(RoomSystem) Room loaded: " + data.id); }
     }
@@ -111,11 +110,8 @@ public class RoomSystem : BSOD_System<RoomSystem>
     }
     private void unload_room(RoomData data)
     {
-        Room room = room_parent.GetComponentsInChildren<Room>().ToList().Find(r => r.data == data);
-        if (room == null) { Debug.LogWarning("(RoomSystem) Room not found for data: " + data.id); return; }
-        RoomBank.Instance.Unload(room);
+        RoomBank.Instance.Unload(data);
         loaded_rooms_data.Remove(data);
-
         if (log_loading) { Debug.Log("(RoomSystem) Room unloaded: " + data.id); }
     }
 

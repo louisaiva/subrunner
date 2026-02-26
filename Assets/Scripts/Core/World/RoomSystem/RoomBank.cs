@@ -17,15 +17,17 @@ public class RoomBank : MonoBehaviour
     }
 
     // ROOM LOADING
-    [Header("Room prefab")]
-    [SerializeField] protected Room room_prefab;
 
     [Header("Loaded rooms")]
     [SerializeField] protected List<Room> loaded_rooms;
+    [SerializeField] protected Transform room_parent;
+    [SerializeField] protected Room room_prefab;
 
     [Header("Sleeping rooms")]
     [SerializeField] protected Stack<Room> pooled_rooms;
-    public Room Load(RoomData data)
+    
+    // LOAD UNLOAD ROOMS
+    public void Load(RoomData data)
     {
         // if we have no pooled room we need to instantiate one
         if (pooled_rooms.Count == 0)
@@ -33,7 +35,7 @@ public class RoomBank : MonoBehaviour
             Room new_room = Instantiate(room_prefab, transform);
             new_room.LoadData(data);
             loaded_rooms.Add(new_room);
-            return new_room;
+            return;
         }
 
         // extract a room from the pooled ones and load its data
@@ -41,7 +43,13 @@ public class RoomBank : MonoBehaviour
         room.LoadData(data);
         room.gameObject.SetActive(true);
         loaded_rooms.Add(room);
-        return room;
+    }
+    public void Unload(RoomData data)
+    {
+        // get room
+        Room room = GetLoadedRoom(data);
+        if (room == null) { return; }
+        Unload(room);
     }
     public void Unload(Room room)
     {
@@ -61,8 +69,9 @@ public class RoomBank : MonoBehaviour
     public Room GetLoadedRoom(string id)
     {
         // we look for the room with the given id in the pool of loaded rooms
-        foreach (Room room in transform.GetComponentsInChildren<Room>(includeInactive: true))
+        for (int i = 0; i < loaded_rooms.Count; i++)
         {
+            Room room = loaded_rooms[i];
             if (room.data != null && room.data.id == id)
             {
                 return room;

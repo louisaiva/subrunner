@@ -174,8 +174,6 @@ public class Room : MonoBehaviour
     // COLLIDERS EVENTS
     protected virtual void OnTriggerEnter2D(Collider2D collider)
     {
-        if (log_colliders) { Debug.Log($"(Room - {this.name}) Collider entered: " + collider.name); }
-
         Capable capable = collider.GetComponent<Capable>();
         if (capable == null) { capable = collider.transform.parent.GetComponent<Capable>(); }
         if (capable == null) { return; }
