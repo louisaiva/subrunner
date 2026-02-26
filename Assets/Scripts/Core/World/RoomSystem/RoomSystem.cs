@@ -12,11 +12,19 @@ public class RoomSystem : BSOD_System<RoomSystem>
     public RoomData main_room_data; // the main room is the one where the perso is, we need to keep track of it to know which room to load when the perso changes room
 
     [Header("Loading parameters")]
+    public bool awake_done = false;
+    public bool start_loading_done = false;
     public Transform room_parent;
     public int frames_between_loaded_rooms = 10;
     public int frames_between_ticks = 1;
 
+    [Header("Initialization parameters")]
+    public bool init_doing = false;
+    public bool init_done = false;
+    public int frames_between_room_overlap_checks = 10;
+
     [Header("Logs")]
+    public bool log_init = false;
     public bool log_loading = false;
     public bool log_neighbours = false;
     public bool log_room_transfers = false;
@@ -24,7 +32,7 @@ public class RoomSystem : BSOD_System<RoomSystem>
 
 
     // AWAKE
-    protected override void Awake()
+    public override void Awake()
     {
         base.Awake();
 
@@ -32,9 +40,12 @@ public class RoomSystem : BSOD_System<RoomSystem>
         loadRoomsData();
     }
 
-    // LOAD ROOMS
+    // LOAD / UNLOAD DATA
     protected void loadRoomsData()
     {
+        // we empty the rooms_data
+        rooms_data = new List<RoomData>();
+
         // we load all the json files in the data path and convert them to RoomData objects
         string[] files = System.IO.Directory.GetFiles(data_path, "*.json");
         foreach (string file in files)
@@ -45,7 +56,10 @@ public class RoomSystem : BSOD_System<RoomSystem>
         }
 
         if (log_loading) { Debug.Log("(RoomSystem) Rooms data loaded: " + rooms_data.Count); }
+        awake_done = true;
     }
+
+    // LOAD ROOMS
     public async void LoadRooms(string[] rooms_ids)
     {
         // for each room id we need to find its data and load it
@@ -60,6 +74,7 @@ public class RoomSystem : BSOD_System<RoomSystem>
             // we wait for X frames
             for (int i = 0; i < frames_between_loaded_rooms; i++) { await System.Threading.Tasks.Task.Yield(); }
         }
+        start_loading_done = true;
     }
     private async void loadRooms(RoomData[] rooms_data)
     {
@@ -80,6 +95,10 @@ public class RoomSystem : BSOD_System<RoomSystem>
     }
 
     // UNLOAD ROOMS
+    public void UnloadAllRooms()
+    {
+        unloadRooms(loaded_rooms_data.ToArray());
+    }
     private async void unloadRooms(RoomData[] rooms_data)
     {
         foreach (RoomData data in rooms_data)
@@ -104,6 +123,13 @@ public class RoomSystem : BSOD_System<RoomSystem>
     private int frames_since_last_tick = 0;
     protected virtual void Update()
     {
+        if (!awake_done || !start_loading_done) { return; }
+        if (!init_done)
+        {
+            if (init_doing) { return; }
+            Init();
+        }
+
         frames_since_last_tick++;
         if (frames_since_last_tick < frames_between_ticks) { return; }
         
@@ -111,6 +137,80 @@ public class RoomSystem : BSOD_System<RoomSystem>
         Tick();
         frames_since_last_tick = 0;
     }
+
+    // INIT
+    private async void Init()
+    {
+        init_doing = true;
+
+        // we get the loaded rooms
+        List<Room> loaded_rooms = RoomBank.Instance.GetAllLoadedRooms();
+        if (log_init) { Debug.Log("(RoomSystem) Init started with " + loaded_rooms.Count + " rooms"); }
+
+        // we go through all rooms and do an overlap check to get all capables inside each room
+        List<string> capables_added = new List<string>();
+        for (int i = 0; i < loaded_rooms.Count; i++)
+        {
+            Room room = loaded_rooms[i];
+            RoomData room_data = room.data;
+
+            // we get all the inside capables & movables
+            room.GetOverlappingCapablesIDs(out List<string> overlapping_capables, out List<string> overlapping_movables);
+            if (log_init) { Debug.Log($"(RoomSystem) Init - [{room_data.id}] found :    {overlapping_capables.Count} Capable ||| {overlapping_movables.Count} Movable"); }
+
+            // we add all capables first
+            for (int j = 0; j < overlapping_capables.Count; j++)
+            {
+                string capable_id = overlapping_capables[j];
+
+                // check if capable was already added to a room
+                if (capables_added.Contains(capable_id)) { continue; }
+
+                // check if capable is already in the room
+                if (!room_data.capables_ids.Contains(capable_id))
+                {
+                    room_data.capables_ids.Add(capable_id);
+                    if (log_init) { Debug.Log($"(RoomSystem) [{room_data.id}] added capable : {capable_id}"); }
+                }
+                else if (log_init) { Debug.Log($"(RoomSystem) [{room_data.id}] had already capable : {capable_id}"); }
+
+                // we memorize we added the capable
+                capables_added.Add(capable_id);
+            }
+
+            // we do the same for the movables
+            capables_added.Clear();
+            for (int j = 0; j < overlapping_movables.Count; j++)
+            {
+                string movable_id = overlapping_movables[j];
+
+                // check if movable was already added to a room
+                if (capables_added.Contains(movable_id)) { continue; }
+
+                // check if movable is already in the room
+                if (!room_data.movables_ids.Contains(movable_id))
+                {
+                    room_data.movables_ids.Add(movable_id);
+                    if (log_init) { Debug.Log($"(RoomSystem) [{room_data.id}] added movable : {movable_id}"); }
+                }
+                else if (log_init) { Debug.Log($"(RoomSystem) [{room_data.id}] had already movable : {movable_id}"); }
+
+                // we memorize we added the movable
+                capables_added.Add(movable_id);
+            }
+            
+            // wipe out the IN data
+            room_data.IN_movables_ids.Clear();
+
+            // todo should we wait at some point ? if we have perf issues yes (drop of fps 1s after game start)
+            for (int j = 0; j < frames_between_room_overlap_checks; j++) { await System.Threading.Tasks.Task.Yield(); }
+        }
+
+        init_done = true;
+        if (log_init) { Debug.Log("(RoomSystem) Init done and started ticking"); }
+    }
+
+    // TICK
     protected virtual void Tick()
     {
 

@@ -40,12 +40,18 @@ public class Room : MonoBehaviour
 
         // and neighbours (just for debug)
         neighbours = data.neighbours_ids;
+
+        // here we need to load all the capables that we hold in data.capables_ids
+        if (data.capables_ids == null || data.capables_ids.Count == 0) { return; }
+        CapableSystem.Instance.LoadCapables(data.capables_ids);
     }
     public void UnloadData()
     {
-        this.data = null;
+        // here we need to unload all the capables that we hold
+        // -> interacts with CapableSystem
+        CapableSystem.Instance.UnloadCapables(data.capables_ids);
 
-        // here we can save the data if the tilemaps changed ?
+        this.data = null;
     }
 
 
@@ -166,9 +172,12 @@ public class Room : MonoBehaviour
 
 
     // COLLIDERS EVENTS
-    protected virtual void OnTriggerEnter2D(Collider2D collision)
+    protected virtual void OnTriggerEnter2D(Collider2D collider)
     {
-        Capable capable = collision.transform.parent.GetComponent<Capable>();
+        if (log_colliders) { Debug.Log($"(Room - {this.name}) Collider entered: " + collider.name); }
+
+        Capable capable = collider.GetComponent<Capable>();
+        if (capable == null) { capable = collider.transform.parent.GetComponent<Capable>(); }
         if (capable == null) { return; }
 
         // check some bools
@@ -178,7 +187,7 @@ public class Room : MonoBehaviour
         if (in_movables && !in_out_movables)
         {
             // if the capable is already in the room and has not gone out of the room, it means it teleported (happens on awake)
-            if (log_colliders) { Debug.Log($"(Room - {this.name}) Ignored IN - " + capable.ID + " (should be in awake otherwise it s weird)"); }
+            if (log_colliders) { Debug.Log($"(Room - {this.name}) Ignored IN - " + capable.ID + " (should be before ticking otherwise it s weird)"); }
             return;
         }
         if (in_movables && in_out_movables)
@@ -195,9 +204,10 @@ public class Room : MonoBehaviour
         data.IN_movables_ids.Add(capable.ID);
         if (log_colliders) { Debug.Log($"(Room - {this.name}) IN - " + capable.ID); }
     }
-    protected virtual void OnTriggerExit2D(Collider2D collision)
+    protected virtual void OnTriggerExit2D(Collider2D collider)
     {
-        Capable capable = collision.transform.parent.GetComponent<Capable>();
+        Capable capable = collider.GetComponent<Capable>();
+        if (capable == null) { capable = collider.transform.parent.GetComponent<Capable>(); }
         if (capable == null) { return; }
 
         // check some bools
@@ -217,4 +227,39 @@ public class Room : MonoBehaviour
         data.OUT_movables_ids.Add(capable.ID);
         if (log_colliders) { Debug.Log($"(Room - {this.name}) OUT - " + capable.ID); }
     }
+
+
+    // COLLIDER OVERLAP
+    private ContactFilter2D? _contact_filter = null;
+    private ContactFilter2D contact_filter
+    {
+        get
+        {
+            if (_contact_filter != null) { return _contact_filter.Value; }
+            _contact_filter = new ContactFilter2D();
+            _contact_filter.Value.SetLayerMask(LayerMask.GetMask("Objects", "Feet"));
+            return _contact_filter.Value;
+        }
+    }
+    public void GetOverlappingCapablesIDs(out List<string> overlapping_capables, out List<string> overlapping_movables)
+    {
+        overlapping_capables = new List<string>();
+        overlapping_movables = new List<string>();
+
+        // we get all the colliders that are currently overlapping with the room collider
+        Collider2D[] colliders = new Collider2D[30];
+        int count = Physics2D.OverlapCollider(room_collider, contact_filter, colliders);
+        for (int i = 0; i < count; i++)
+        {
+            Collider2D collider = colliders[i];
+            Capable capable = collider.GetComponent<Capable>();
+            if (capable == null) { capable = collider.transform.parent.GetComponent<Capable>(); }
+            if (capable == null) { continue; }
+            
+            // we found a capable !
+            if (capable is Movable) { overlapping_movables.Add(capable.ID); }
+            else { overlapping_capables.Add(capable.ID); }
+        }
+    }
+
 }

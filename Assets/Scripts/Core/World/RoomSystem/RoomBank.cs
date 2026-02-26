@@ -6,7 +6,7 @@ public class RoomBank : MonoBehaviour
 
     // AWAKE & SINGLETON LOGIC
     public static RoomBank Instance { get; private set; }
-    private void Awake()
+    public void Awake()
     {
         // singleton logic
         if (Instance == null) { Instance = this; }
@@ -20,6 +20,9 @@ public class RoomBank : MonoBehaviour
     [Header("Room prefab")]
     [SerializeField] protected Room room_prefab;
 
+    [Header("Loaded rooms")]
+    [SerializeField] protected List<Room> loaded_rooms;
+
     [Header("Sleeping rooms")]
     [SerializeField] protected Stack<Room> pooled_rooms;
     public Room Load(RoomData data)
@@ -29,6 +32,7 @@ public class RoomBank : MonoBehaviour
         {
             Room new_room = Instantiate(room_prefab, transform);
             new_room.LoadData(data);
+            loaded_rooms.Add(new_room);
             return new_room;
         }
 
@@ -36,6 +40,7 @@ public class RoomBank : MonoBehaviour
         Room room = pooled_rooms.Pop();
         room.LoadData(data);
         room.gameObject.SetActive(true);
+        loaded_rooms.Add(room);
         return room;
     }
     public void Unload(Room room)
@@ -44,7 +49,43 @@ public class RoomBank : MonoBehaviour
         room.UnloadData();
         pooled_rooms.Push(room);
 
+        // remove the room from the loaded rooms list
+        loaded_rooms.Remove(room);
+
         // disable the gameObject
         room.gameObject.SetActive(false);
+    }
+
+
+    // ROOM GETTING
+    public Room GetLoadedRoom(string id)
+    {
+        // we look for the room with the given id in the pool of loaded rooms
+        foreach (Room room in transform.GetComponentsInChildren<Room>(includeInactive: true))
+        {
+            if (room.data != null && room.data.id == id)
+            {
+                return room;
+            }
+        }
+        return null;
+    }
+    public Room GetLoadedRoom(RoomData data)
+    {
+        return GetLoadedRoom(data.id);
+    }
+    public List<Room> GetLoadedRooms(List<RoomData> data)
+    {
+        List<Room> rooms = new List<Room>();
+        foreach (RoomData d in data)
+        {
+            Room room = GetLoadedRoom(d);
+            if (room != null) { rooms.Add(room); }
+        }
+        return rooms;
+    }
+    public List<Room> GetAllLoadedRooms()
+    {
+        return new List<Room>(loaded_rooms);
     }
 }

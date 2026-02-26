@@ -5,7 +5,7 @@ public class BSOD_System<T> : MonoBehaviour where T : MonoBehaviour
 {
     // AWAKE & SINGLETON LOGIC
     public static T Instance;
-    protected virtual void Awake()
+    public virtual void Awake()
     {
         // singleton logic
         if (Instance == null) { Instance = this as T; }
