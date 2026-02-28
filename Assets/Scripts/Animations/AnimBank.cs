@@ -468,6 +468,11 @@ public class AnimBank : MonoBehaviour
         if (!anims[skin].ContainsKey(capacity) || anims[skin][capacity].Count == 0)
         {
             // return the idle anim of the skin
+            if (!anims[skin].ContainsKey("idle") || anims[skin]["idle"].Count == 0)
+            {
+                if (log) { Debug.LogWarning($"(AnimBank - GetAnim : {skin}.{capacity}.{orientation} ) Idle anim not found for skin, returning sphere anim"); }
+                return anims["sphere"]["idle"][0]; // return the sphere anim of the sphere skin
+            }
             if (log) { Debug.LogWarning($"(AnimBank - GetAnim : {skin}.{capacity}.{orientation} ) Capacity not found, returning idle"); }
             return GetAnim(skin + ".idle." + orientation);
         }

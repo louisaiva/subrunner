@@ -7,6 +7,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
     // follow RoomSystem example
 
     Dictionary<string, Capable> loaded_capables = new Dictionary<string, Capable>();
+    public System.Action<Capable,Capable> OnCapableSpawned; // spawned capable, spawner capable
     
     [Header("Logs")]
     public bool log_entity_loading = true;
@@ -29,6 +30,25 @@ public class CapableSystem : BSOD_System<CapableSystem>
     {
         foreach (string capable_id in capables_ids) { Unload(capable_id); }
     }
+
+    // SPAWNING
+    public Capable SpawnCapable(string base_data_id, Capable spawner = null)
+    {
+        // we need to duplicate the data (and so generate a new id to it) because we only have the base data id
+        string capable_id = DuplicateData(base_data_id);
+
+        Capable capable = Load(capable_id);
+        if (capable == null) { Debug.LogError($"(CapableSystem) SpawnCapable - Failed to load capable with id {capable_id}"); return null; }
+        OnCapableSpawned?.Invoke(capable, spawner);
+        return capable;
+    }
+
+    // ID management
+    public string DuplicateData(string base_data_id)
+    {
+        return base_data_id + "_" + System.Guid.NewGuid().ToString();
+    }
+
 
 
     // todo these methods should be in bank & work with pooling + stack

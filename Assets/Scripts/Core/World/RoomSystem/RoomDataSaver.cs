@@ -11,6 +11,9 @@ public class RoomDataSaver : MonoBehaviour
     [Header("RoomData Saving")]
     public string data_folder = "Assets/Resources/data/rooms/";
 
+    [Header("Logs")]
+    public bool log = false;
+
     
 
 #if UNITY_EDITOR
@@ -60,6 +63,8 @@ public class RoomDataSaver : MonoBehaviour
                     // save the current RoomData to a json file
                     string json = JsonUtility.ToJson(data, true);
                     System.IO.File.WriteAllText(saver.data_folder + data.id + ".json", json, System.Text.Encoding.UTF8);
+
+                    if (saver.log) { Debug.Log($"(RoomDataSaver) Updated & Saved RoomData : {room.name} (to {saver.data_folder + data.id + ".json"})\n\n{json}"); }
                 }
             }
         }

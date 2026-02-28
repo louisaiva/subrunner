@@ -389,4 +389,32 @@ public class RoomSystem : BSOD_System<RoomSystem>
         }
         return neighbours;
     }
+
+
+    // SPAWNING CAPABLE MANAGEMENT
+    protected void handleCapableSpawned(Capable entity, Capable spawner)
+    {
+        // we want the entity capabledata to be set inside the same room as the spawner.
+        // we need to find in which room the spawner is, and set the entity capabledata in the same room
+
+        // 1. find spawner room
+        RoomData spawner_room = null;
+        for (int i = 0; i < rooms_data.Count; i++)
+        {
+            if (!rooms_data[i].capables_ids.Contains(spawner.ID)) { continue; }
+            spawner_room = rooms_data[i];
+            break;
+        }
+        if (spawner_room == null)
+        {
+            Debug.LogWarning("(RoomSystem) Could not find spawner room for capable " + spawner.ID);
+            return;
+        }
+
+        // 2. attach entity data to the same room
+        if (entity is Movable) { spawner_room.movables_ids.Add(entity.ID); }
+        else { spawner_room.capables_ids.Add(entity.ID); }
+    }
+
+
 }

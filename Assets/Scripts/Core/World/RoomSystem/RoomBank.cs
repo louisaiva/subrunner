@@ -70,7 +70,8 @@ public class RoomBank : MonoBehaviour
         while (pooled_rooms.Count > 0)
         {
             Room room = pooled_rooms.Pop();
-            Destroy(room.gameObject);
+            if (!Application.isPlaying) { DestroyImmediate(room.gameObject); }
+            else { Destroy(room.gameObject); }
         }
     }
 

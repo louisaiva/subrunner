@@ -188,13 +188,13 @@ public class Room : MonoBehaviour
         if (capable == null) { return; }
 
         // check some bools
-        bool in_movables = data.movables_ids.Contains(capable.ID);
+        bool in_movables = data.movables_ids.Contains(capable.ID) || data.capables_ids.Contains(capable.ID);
         bool in_out_movables = data.OUT_movables_ids.Contains(capable.ID);
 
         if (in_movables && !in_out_movables)
         {
             // if the capable is already in the room and has not gone out of the room, it means it teleported (happens on awake)
-            if (log_colliders) { Debug.Log($"(Room - {this.name}) Ignored IN - " + capable.ID + " (should be before ticking otherwise it s weird)"); }
+            if (log_colliders) { Debug.Log($"(Room - {this.name}) Ignored IN - " + capable.ID + " (should happen on a capable spawn otherwise it s weird)"); }
             return;
         }
         if (in_movables && in_out_movables)

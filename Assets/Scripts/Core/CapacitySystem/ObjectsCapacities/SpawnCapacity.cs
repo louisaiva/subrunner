@@ -27,7 +27,7 @@ public class SpawnCapacity : Capacity
 
     [Header("Spawn Animation")]
     [SerializeField] private bool spawn_after_animation = false; // if true, the entity will be spawned at the end of the animation, otherwise it will be spawned at the start of the animation
-    // [SerializeField] private string name = "spawn"; // the name of the spawn animation in the AnimPlayer
+    [SerializeField] private string spawn_anim_name = "spawn"; // the name of the spawn animation in the AnimPlayer
     private AnimLayer entity_layer; // the animation layer of the 
 
     // START
@@ -52,12 +52,12 @@ public class SpawnCapacity : Capacity
         if (entity_layer != null) { set_entity_layer_skin(entity); }
 
         // we make the main capable play an animation
-        capable.anim_player.Play(name);
+        capable.anim_player.Play(spawn_anim_name);
 
         // if we spawn after the animation we wait for it to finish
         if (spawn_after_animation)
         {
-            while (capable.anim_player.IsPlaying(name)) { await System.Threading.Tasks.Task.Yield(); }
+            while (capable.anim_player.IsPlaying(spawn_anim_name)) { await System.Threading.Tasks.Task.Yield(); }
         }
 
         entity.SetActive(true);

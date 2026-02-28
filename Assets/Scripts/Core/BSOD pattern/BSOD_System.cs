@@ -14,6 +14,11 @@ public class BSOD_System<T> : MonoBehaviour where T : MonoBehaviour
         // loadObjectsData(); // <- this is for the example below
     }
 
+    public virtual void OnDestroy()
+    {
+        if (Instance == this) { Instance = null; }
+    }
+
 
     /*
 
