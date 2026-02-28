@@ -43,6 +43,7 @@ public class RoomDataSaver : MonoBehaviour
 
                 // unload all rooms from system
                 RoomSystem.Instance.UnloadAllRooms();
+                RoomBank.Instance.DestroyPooledRooms();
             }
 
             DrawDefaultInspector();

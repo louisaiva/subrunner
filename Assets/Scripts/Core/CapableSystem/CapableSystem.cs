@@ -7,6 +7,9 @@ public class CapableSystem : BSOD_System<CapableSystem>
     // follow RoomSystem example
 
     Dictionary<string, Capable> loaded_capables = new Dictionary<string, Capable>();
+    
+    [Header("Logs")]
+    public bool log_entity_loading = true;
 
     public void Start()
     {
@@ -31,6 +34,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
     // todo these methods should be in bank & work with pooling + stack
     public Capable Load(string id)
     {
+        if (log_entity_loading) { Debug.Log($"(CapableSystem) Loading {id}"); }
         if (!loaded_capables.ContainsKey(id))
         {
             Debug.LogError($"(CapableSystem) Load - Capable with id {id} not found in loaded_capables");
@@ -42,6 +46,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
     }
     public void Unload(string id)
     {
+        if (log_entity_loading) { Debug.Log($"(CapableSystem) Unloading {id}"); }
         if (!loaded_capables.ContainsKey(id))
         {
             Debug.LogError($"(CapableSystem) Unload - Capable with id {id} not found in loaded_capables");

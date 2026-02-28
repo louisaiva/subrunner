@@ -269,6 +269,30 @@ MonoBehaviour:
     base_skin: robot_sp
     base_spritesheets:
     - objects/interactives/spawners/robot_spawner_base
+  - variant_name: dev_face
+    variant_spritesheets:
+    - beings/devs/dev_face
+    base_skin: dev_base
+    base_spritesheets:
+    - beings/devs/dev_base
+  - variant_name: dev_hair
+    variant_spritesheets:
+    - beings/devs/dev_hair
+    base_skin: dev_base
+    base_spritesheets:
+    - beings/devs/dev_base
+  - variant_name: dev_hat
+    variant_spritesheets:
+    - beings/devs/dev_hat
+    base_skin: dev_base
+    base_spritesheets:
+    - beings/devs/dev_base
+  - variant_name: dev_kb
+    variant_spritesheets:
+    - beings/devs/dev_kb
+    base_skin: dev_base
+    base_spritesheets:
+    - beings/devs/dev_base
   log: 0
   log_LAFAC: 0
   log_variant_skins: 0

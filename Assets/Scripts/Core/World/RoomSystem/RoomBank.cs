@@ -32,7 +32,7 @@ public class RoomBank : MonoBehaviour
         // if we have no pooled room we need to instantiate one
         if (pooled_rooms.Count == 0)
         {
-            Room new_room = Instantiate(room_prefab, transform);
+            Room new_room = Instantiate(room_prefab, room_parent);
             new_room.LoadData(data);
             loaded_rooms.Add(new_room);
             return;
@@ -64,6 +64,15 @@ public class RoomBank : MonoBehaviour
         room.gameObject.SetActive(false);
     }
 
+    // DESTROY POOLED ROOMS
+    public void DestroyPooledRooms()
+    {
+        while (pooled_rooms.Count > 0)
+        {
+            Room room = pooled_rooms.Pop();
+            Destroy(room.gameObject);
+        }
+    }
 
     // ROOM GETTING
     public Room GetLoadedRoom(string id)

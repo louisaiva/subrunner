@@ -42,14 +42,23 @@ public class Room : MonoBehaviour
         neighbours = data.neighbours_ids;
 
         // here we need to load all the capables that we hold in data.capables_ids
-        if (data.capables_ids == null || data.capables_ids.Count == 0) { return; }
-        CapableSystem.Instance.LoadCapables(data.capables_ids);
+        if ((data.capables_ids == null || data.capables_ids.Count == 0)
+        && (data.movables_ids == null || data.movables_ids.Count == 0)) { return; }
+        if (CapableSystem.Instance != null)
+        {
+            CapableSystem.Instance.LoadCapables(data.capables_ids);
+            CapableSystem.Instance.LoadCapables(data.movables_ids);
+        }
     }
     public void UnloadData()
     {
         // here we need to unload all the capables that we hold
         // -> interacts with CapableSystem
-        CapableSystem.Instance.UnloadCapables(data.capables_ids);
+        if (CapableSystem.Instance != null)
+        {
+            CapableSystem.Instance.UnloadCapables(data.capables_ids);
+            CapableSystem.Instance.UnloadCapables(data.movables_ids);
+        }
 
         this.data = null;
     }
@@ -204,6 +213,8 @@ public class Room : MonoBehaviour
     }
     protected virtual void OnTriggerExit2D(Collider2D collider)
     {
+        if (data == null) { return; }
+
         Capable capable = collider.GetComponent<Capable>();
         if (capable == null) { capable = collider.transform.parent.GetComponent<Capable>(); }
         if (capable == null) { return; }
@@ -234,9 +245,12 @@ public class Room : MonoBehaviour
         get
         {
             if (_contact_filter != null) { return _contact_filter.Value; }
-            _contact_filter = new ContactFilter2D();
-            _contact_filter.Value.SetLayerMask(LayerMask.GetMask("Objects", "Feet"));
-            return _contact_filter.Value;
+            ContactFilter2D filter = new ContactFilter2D();
+            filter = new ContactFilter2D();
+            filter.SetLayerMask(LayerMask.GetMask("Objects", "Feet"));
+            filter.useTriggers = true;
+            _contact_filter = filter;
+            return filter;
         }
     }
     public void GetOverlappingCapablesIDs(out List<string> overlapping_capables, out List<string> overlapping_movables)

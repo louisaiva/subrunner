@@ -90,7 +90,7 @@ public class RoomSystem : BSOD_System<RoomSystem>
     {
         RoomBank.Instance.Load(data);
         loaded_rooms_data.Add(data);
-        if (log_loading) { Debug.Log("(RoomSystem) Room loaded: " + data.id); }
+        if (log_loading) { Debug.Log("(RoomSystem) Loaded " + data.id); }
     }
 
     // UNLOAD ROOMS
@@ -112,7 +112,7 @@ public class RoomSystem : BSOD_System<RoomSystem>
     {
         RoomBank.Instance.Unload(data);
         loaded_rooms_data.Remove(data);
-        if (log_loading) { Debug.Log("(RoomSystem) Room unloaded: " + data.id); }
+        if (log_loading) { Debug.Log("(RoomSystem) Unloaded " + data.id); }
     }
 
     // UPDATE
