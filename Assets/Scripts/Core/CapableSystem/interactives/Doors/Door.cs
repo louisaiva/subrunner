@@ -10,6 +10,7 @@ public class Door : Capable, Interactable, Openable
 
     [Header("Door")]
     public bool is_vertical = false; // just for the editor
+    public bool DontTouchSortingLayer = false;
     public Collider2D door_collider;
     public ShadowCaster2D shadow_caster;
     public bool is_open { get; set; }

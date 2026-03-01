@@ -305,6 +305,18 @@ MonoBehaviour:
     base_skin: dev_base
     base_spritesheets:
     - beings/devs/dev_base
+  - variant_name: blue_elevdoor_ceil
+    variant_spritesheets:
+    - objects/interactives/elevator/elevator_door_ceil
+    base_skin: blue_elevdoor
+    base_spritesheets:
+    - objects/interactives/elevator/elevator_door_wall
+  - variant_name: blue_elevdoor_ground
+    variant_spritesheets:
+    - objects/interactives/elevator/elevator_door_ground
+    base_skin: blue_elevdoor
+    base_spritesheets:
+    - objects/interactives/elevator/elevator_door_wall
   log: 0
   log_LAFAC: 0
   log_variant_skins: 0

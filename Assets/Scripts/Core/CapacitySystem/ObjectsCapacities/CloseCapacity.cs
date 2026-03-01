@@ -23,6 +23,7 @@ public class CloseCapacity : Capacity
 
     [Header("Close parameters")]
     public float closing_duration = 0.5f;
+    public string hover_close_anim = "hover";
 
     [Header("Sibling Open Capacity")]
     public OpenCapacity open_capacity;
@@ -55,9 +56,10 @@ public class CloseCapacity : Capacity
             capable.anim_player.Play("close", duration_override: closing_duration);
         }
         Invoke("success_close", closing_duration);
+        capable.GetCapacity<HoverCapacity>()?.ChangeAnimation(hover_close_anim);
 
         // on fait les vérifications pour les portes
-        if (capable is Door)
+        if (capable is Door door && !door.DontTouchSortingLayer)
         {
             capable.GetComponent<SpriteRenderer>().sortingLayerName = "fg";
             capable.GetComponent<SpriteRenderer>().sortingOrder = 1;
@@ -75,7 +77,7 @@ public class CloseCapacity : Capacity
         capable.anim_player.Play("idle");
 
         // on fait les vérifications pour les portes
-        if (capable is Door)
+        if (capable is Door door && !door.DontTouchSortingLayer)
         {
             capable.GetComponent<SpriteRenderer>().sortingLayerName = "main";
             capable.GetComponent<SpriteRenderer>().sortingOrder = 0;
