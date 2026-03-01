@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,8 +8,8 @@ public class RoomSystem : BSOD_System<RoomSystem>
 {
     [Header("Rooms data")]
     private string data_path = "Assets/Resources/data/rooms/";
-    public List<RoomData> rooms_data = new List<RoomData>();
-    public List<RoomData> loaded_rooms_data = new List<RoomData>();
+    public Hashtable rooms_data = new Hashtable();
+    public Hashtable loaded_rooms_data = new Hashtable();
     public RoomData main_room_data; // the main room is the one where the perso is, we need to keep track of it to know which room to load when the perso changes room
 
     [Header("Loading parameters")]
@@ -24,8 +25,10 @@ public class RoomSystem : BSOD_System<RoomSystem>
     public int frames_between_room_overlap_checks = 10;
 
     [Header("Logs")]
+    public bool log_awake_data = false;
     public bool log_init = false;
     public bool log_loading = false;
+    public bool log_spawning = false;
     public bool log_neighbours = false;
     public bool log_room_transfers = false;
     public bool log_ticks = false;
@@ -44,7 +47,8 @@ public class RoomSystem : BSOD_System<RoomSystem>
     protected void loadRoomsData()
     {
         // we empty the rooms_data
-        rooms_data = new List<RoomData>();
+        rooms_data = new Hashtable();
+        string log_rooms_details = "\n\n";
 
         // we load all the json files in the data path and convert them to RoomData objects
         string[] files = System.IO.Directory.GetFiles(data_path, "*.json");
@@ -52,11 +56,19 @@ public class RoomSystem : BSOD_System<RoomSystem>
         {
             string json = System.IO.File.ReadAllText(file, System.Text.Encoding.UTF8);
             RoomData data = JsonUtility.FromJson<RoomData>(json);
-            rooms_data.Add(data);
+            rooms_data.Add(data.id, data);
+            log_rooms_details += data.GetDetails() + "\n";
         }
 
-        if (log_loading) { Debug.Log("(RoomSystem) Rooms data loaded: " + rooms_data.Count); }
+        if (log_awake_data) { Debug.Log("(RoomSystem) ROOMS DATA LOADED : " + rooms_data.Count + log_rooms_details); }
         awake_done = true;
+    }
+
+    // START
+    private void Start()
+    {
+        // we register to CapableSystem.OnCapableSpawned so we can assign rooms to the new capable
+        CapableSystem.Instance.OnCapableSpawned += handleCapableSpawned;    
     }
 
     // LOAD ROOMS
@@ -65,54 +77,55 @@ public class RoomSystem : BSOD_System<RoomSystem>
         // for each room id we need to find its data and load it
         foreach (string room_id in rooms_ids)
         {
-            RoomData data = rooms_data.Find(r => r.id == room_id);
-            if (data == null) { Debug.LogWarning("(RoomSystem) Room data not found for id: " + room_id); continue; }
-
             // we load the room
-            load_room(data);
+            load_room(room_id);
 
             // we wait for X frames
             for (int i = 0; i < frames_between_loaded_rooms; i++) { await System.Threading.Tasks.Task.Yield(); }
         }
         start_loading_done = true;
     }
-    private async void loadRooms(RoomData[] rooms_data)
+    private async void loadRooms(ICollection<string> rooms_ids)
     {
-        foreach (RoomData data in rooms_data)
+        foreach (string id in rooms_ids)
         {
-            load_room(data);
+            load_room(id);
 
             // we wait for X frames
             for (int i = 0; i < frames_between_loaded_rooms; i++) { await System.Threading.Tasks.Task.Yield(); }
         }
     }
-    private void load_room(RoomData data)
+    private void load_room(string id)
     {
+        RoomData data = rooms_data[id] as RoomData;
+        if (data == null) { Debug.LogWarning("(RoomSystem - Load) Room data not found for id: " + id); return; }
         RoomBank.Instance.Load(data);
-        loaded_rooms_data.Add(data);
-        if (log_loading) { Debug.Log("(RoomSystem) Loaded " + data.id); }
+        loaded_rooms_data.Add(id, data);
+        if (log_loading) { Debug.Log("(RoomSystem) Loaded " + id); }
     }
 
     // UNLOAD ROOMS
     public void UnloadAllRooms()
     {
-        unloadRooms(loaded_rooms_data.ToArray());
+        unloadRooms(loaded_rooms_data.Keys as ICollection<string>);
     }
-    private async void unloadRooms(RoomData[] rooms_data)
+    private async void unloadRooms(ICollection<string> rooms_ids)
     {
-        foreach (RoomData data in rooms_data)
+        foreach (string id in rooms_ids)
         {
-            unload_room(data);
+            unload_room(id);
 
             // we wait for X frames
             for (int i = 0; i < frames_between_loaded_rooms; i++) { await System.Threading.Tasks.Task.Yield(); }
         }
     }
-    private void unload_room(RoomData data)
+    private void unload_room(string id)
     {
+        RoomData data = loaded_rooms_data[id] as RoomData;
+        if (data == null) { Debug.LogWarning("(RoomSystem - Unload) Loaded room data not found for id: " + id); return; }
         RoomBank.Instance.Unload(data);
-        loaded_rooms_data.Remove(data);
-        if (log_loading) { Debug.Log("(RoomSystem) Unloaded " + data.id); }
+        loaded_rooms_data.Remove(id);
+        if (log_loading) { Debug.Log("(RoomSystem) Unloaded " + id); }
     }
 
     // UPDATE
@@ -216,9 +229,11 @@ public class RoomSystem : BSOD_System<RoomSystem>
         RoomData room;
         Dictionary<RoomData, string> movables_IN = new Dictionary<RoomData, string>(); // RoomData, CapableID
         Dictionary<RoomData, string> movables_OUT = new Dictionary<RoomData, string>(); // RoomData, CapableID
-        for (int i = 0; i < rooms_data.Count; i++)
+        ICollection rooms_ids = rooms_data.Keys;
+        for (int i = 0; i < rooms_ids.Count; i++)
+        foreach (var room_id in rooms_ids)
         {
-            room = rooms_data[i];
+            room = rooms_data[room_id] as RoomData;
             for (int j = 0; j < room.IN_movables_ids.Count; j++)
             {
                 string capable_id = room.IN_movables_ids[j];
@@ -266,9 +281,9 @@ public class RoomSystem : BSOD_System<RoomSystem>
         }
 
         // 3. update rooms data with the capable changes
-        for (int i = 0; i < rooms_data.Count; i++)
+        foreach (var room_id in rooms_ids)
         {
-            room = rooms_data[i];
+            room = rooms_data[room_id] as RoomData;
             if (out_rooms.Contains(room))
             {
                 int index = out_rooms.IndexOf(room);
@@ -291,8 +306,8 @@ public class RoomSystem : BSOD_System<RoomSystem>
         RoomData perso_new_room = null;
 
         // 4. prepare the lists for capable loading info to transmit to CapableSystem
-        List<string> capables_to_load = new List<string>();
-        List<string> capables_to_unload = new List<string>();
+        Stack<string> capables_to_load = new Stack<string>();
+        Stack<string> capables_to_unload = new Stack<string>();
         for (int i=0; i<capable_ids.Count; i++)
         {
             string capable_id = capable_ids[i];
@@ -311,11 +326,11 @@ public class RoomSystem : BSOD_System<RoomSystem>
 
             if (in_room_loaded && !out_room_loaded)
             {
-                capables_to_load.Add(capable_id);
+                capables_to_load.Push(capable_id);
             }
             else if (!in_room_loaded && out_room_loaded)
             {
-                capables_to_unload.Add(capable_id);
+                capables_to_unload.Push(capable_id);
             }
         }
 
@@ -326,24 +341,24 @@ public class RoomSystem : BSOD_System<RoomSystem>
 
         // 6. Handle when perso changed room
         if (!perso_changed_room) { return; }
-        List<RoomData> rooms_to_unload = new List<RoomData>();
-        List<RoomData> rooms_to_load = new List<RoomData>();
-        List<RoomData> new_neighbours = GetNeighbours(perso_new_room);
-        for (int i = 0; i < loaded_rooms_data.Count; i++)
+        Stack<string> rooms_to_unload = new Stack<string>();
+        Stack<string> rooms_to_load = new Stack<string>();
+        List<string> new_neighbours_ids = GetNeighboursIDs(perso_new_room);
+        ICollection loaded_rooms_ids = loaded_rooms_data.Keys;
+        foreach (string loaded_room_id in loaded_rooms_ids)
         {
-            RoomData data = loaded_rooms_data[i];
-            if (data == perso_new_room) { continue; }
+            if (loaded_room_id == perso_new_room.id) { continue; }
 
             // we check if the room is in the new neighbours
-            if (!new_neighbours.Contains(data)) { rooms_to_unload.Add(data); }
+            if (!new_neighbours_ids.Contains(loaded_room_id)) { rooms_to_unload.Push(loaded_room_id); }
         }
-        for (int i = 0; i < new_neighbours.Count; i++)
+        for (int i = 0; i < new_neighbours_ids.Count; i++)
         {
-            RoomData data = new_neighbours[i];
-            if (data == perso_new_room) { continue; }
+            string neigh_id = new_neighbours_ids[i];
+            if (neigh_id == perso_new_room.id) { continue; }
 
             // we check if the room is already loaded
-            if (!loaded_rooms_data.Contains(data)) { rooms_to_load.Add(data); }
+            if (!loaded_rooms_data.ContainsKey(neigh_id)) { rooms_to_load.Push(neigh_id); }
         }
 
         main_room_data = perso_new_room;
@@ -368,28 +383,25 @@ public class RoomSystem : BSOD_System<RoomSystem>
     }
 
     // NEIGHBOURS MANAGEMENT
-    private List<RoomData> GetNeighbours(RoomData perso_new_room)
+    public List<string> GetNeighboursIDs(RoomData perso_new_room)
     {
-        List<RoomData> neighbours = new List<RoomData>();
+        List<string> neighbours_ids = new List<string>();
         for (int i = 0; i < perso_new_room.neighbours_ids.Count; i++)
         {
             string neighbour_id = perso_new_room.neighbours_ids[i];
-            RoomData neighbour = rooms_data.Find(r => r.id == neighbour_id);
-            if (neighbour != null) { neighbours.Add(neighbour); }
-            else if (log_neighbours) { Debug.LogWarning("(RoomSystem) Neighbour room data not found for id: " + neighbour_id); }
+            neighbours_ids.Add(neighbour_id);
         }
         if (log_neighbours)
         {
             string log = "(RoomSystem) Neighbours of " + perso_new_room.id + ": ";
-            for (int i = 0; i < neighbours.Count; i++)
+            for (int i = 0; i < neighbours_ids.Count; i++)
             {
-                log += neighbours[i].id + " ";
+                log += neighbours_ids[i] + " ";
             }
             Debug.Log(log);
         }
-        return neighbours;
+        return neighbours_ids;
     }
-
 
     // SPAWNING CAPABLE MANAGEMENT
     protected void handleCapableSpawned(Capable entity, Capable spawner)
@@ -399,22 +411,25 @@ public class RoomSystem : BSOD_System<RoomSystem>
 
         // 1. find spawner room
         RoomData spawner_room = null;
-        for (int i = 0; i < rooms_data.Count; i++)
+        ICollection rooms_ids = rooms_data.Keys;
+        foreach (string room_id in rooms_ids)
         {
-            if (!rooms_data[i].capables_ids.Contains(spawner.ID)) { continue; }
-            spawner_room = rooms_data[i];
+            RoomData data = rooms_data[room_id] as RoomData;
+            if (!data.capables_ids.Contains(spawner.data.id)) { continue; }
+            spawner_room = data;
             break;
         }
         if (spawner_room == null)
         {
-            Debug.LogWarning("(RoomSystem) Could not find spawner room for capable " + spawner.ID);
+            Debug.LogWarning("(RoomSystem) Could not find spawner room for capable " + spawner.data.id);
             return;
         }
 
         // 2. attach entity data to the same room
-        if (entity is Movable) { spawner_room.movables_ids.Add(entity.ID); }
-        else { spawner_room.capables_ids.Add(entity.ID); }
-    }
+        if (entity is Movable) { spawner_room.movables_ids.Add(entity.data.id); }
+        else { spawner_room.capables_ids.Add(entity.data.id); }
 
+        if (log_spawning) { Debug.Log($"(RoomSystem) Assigned spawned {entity.data.id} to room {spawner_room.id}"); }
+    }
 
 }

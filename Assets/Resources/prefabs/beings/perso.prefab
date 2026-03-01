@@ -134,6 +134,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f73c2152b357fa45a087ea316bda655, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  data:
+    id: 
+    kind: 
+    position: {x: 0, y: 0}
+    orientation: {x: 0, y: 0}
+    skin: 
+    inventory: []
+    capacities_ids: []
+    effects: 
+    effects_ttl: []
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: 0}
   capacities: []
@@ -847,6 +857,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   log: 0
+  log_grab: 0
+  log_get_items: 0
 --- !u!1 &3238169105776769028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1032,6 +1044,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 418d1ea373216a84591023e6fd64e762, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  data:
+    id: bob
+    kind: Perso
+    position: {x: 0, y: 0}
+    orientation: {x: 0, y: 0}
+    skin: perso
+    inventory: []
+    capacities_ids: []
+    effects: 
+    effects_ttl: []
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: 0}
   capacities: []
@@ -6693,7 +6715,6 @@ MonoBehaviour:
   HackableNavigator: {fileID: 6958991911754584795}
   ExploitNavigator: {fileID: 6536362871279284659}
   see_through: {fileID: 8806638654243460489}
-  perso_quick_inventory: {fileID: 0}
   life_bar: {fileID: 0}
   shortcuts: {fileID: 0}
   log: 1

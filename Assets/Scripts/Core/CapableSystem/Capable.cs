@@ -16,7 +16,99 @@ public class Capable : MonoBehaviour, Debuggable
     // et donc des animations (les capacités peuvent être reliées à une animation)
 
     // todo : move this to the CapableData
-    public string ID; // the id of the capable, used for saving/loading
+    // public string ID; // the id of the capable, used for saving/loading
+
+    [Header("Capable data")]
+    public CapableData data;
+    public bool Loaded { get { return data != null; } }
+
+
+    // LOAD / UNLOAD
+    public void LoadData(CapableData data)
+    {
+        this.data = data;
+        this.name = data.id;
+        this.transform.position = data.position;
+
+        // we set the skin
+        this.anim_player.Skin = data.skin;
+
+        // we set the orientation
+        this.Orientation = data.orientation;
+
+        // we set the inventory
+
+        // we load the capacities
+        // List<Capacity> loaded_capacities = CapacitySystem.Instance.LoadCapacities(data.capacities_ids, this);
+
+        // we add the effects
+        for (int i = 0; i < data.effects.Count; i++)
+        {
+            AddEffect(data.effects[i], data.effects_ttl[i]);
+        }
+    }
+    public void UnloadData()
+    {
+        // here we need to unload all the capacities that we hold
+        // -> interacts with CapacitySystem
+        /* if (CapacitySystem.Instance != null)
+        {
+            CapacitySystem.Instance.UnloadCapacities(data.capacities_ids);
+        } */
+
+        // we save some data
+        this.data.position = this.transform.position;
+
+        this.data = null;
+    }
+
+
+
+
+    // SAVE CURRENT DATA
+    public CapableData UpdateData()
+    {
+        // we take current data and we write it down inside this.data
+        // ex : when we changed a tilemap we need to update the data equivalent
+        // otherwise it will erase all modifications on load
+
+        if (data == null) { this.data = new CapableData(); }
+
+        // set base data things
+        data.id = this.name;
+        data.position = this.transform.position;
+
+        // we set the kind
+        data.kind = GetType().Name;
+
+        // we set the skin
+        data.skin = Skin;
+
+        // we set the orientation
+        data.orientation = this.orientation;
+
+        // we set the inventory
+        if (Inventory != null)
+        {
+            for (int i = 0; i < Inventory.Items.Count; i++)
+            {
+                data.inventory.Add(Inventory.Items[i].data.id);
+            }
+        }
+
+        // we set the capacities
+        data.capacities_ids = capacities.ConvertAll(c => c.name);
+
+        // we set the effects
+        data.effects = new List<Effect>(effects);
+        data.effects_ttl = new List<float>(effects_timetolive);
+
+        return data;
+    }
+
+
+
+
 
 
 
@@ -50,7 +142,12 @@ public class Capable : MonoBehaviour, Debuggable
 
 
     // PROPERTIES
-    public AnimPlayer anim_player { get; private set; }
+    private AnimPlayer _anim_player = null;
+    public AnimPlayer anim_player { get
+        {
+            if (_anim_player == null) { _anim_player = GetComponent<AnimPlayer>(); }
+            return _anim_player;
+        } private set { _anim_player = value; } }
     public CapacityBank bank { get; private set; }
 
     // un capable peut aussi avoir un inventaire & un hover
@@ -415,6 +512,8 @@ public class Capable : MonoBehaviour, Debuggable
 
         return text;
     }
+
+
 }
 
 [Serializable]

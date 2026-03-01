@@ -80,7 +80,24 @@ public class MovableEngine : MonoBehaviour
         movableDistances.Dispose();
         movableDistances = new NativeArray<float>(distances_matrix.DataCount, Allocator.Persistent);
         if (log_arrays) { Debug.Log($"(MovableEngine) Resized arrays: movablePositions length {movablePositions.Length}, movableDistances length {movableDistances.Length}, distances_matrix data count {distances_matrix.DataCount}"); }
+    }
+    public void UnregisterInBatch(List<Movable> to_unregister_movables)
+    {
+        // on verifie qu'on a pas déjà disposé la mémoire (ce qui veut dire qu'on quitte le jeu)
+        if (!movableDistances.IsCreated || !movablePositions.IsCreated || distances_matrix == null) { return; }
 
+        // on resize la matrice & remove les movables
+        string log = "";
+        List<int> agent_indexes = to_unregister_movables.Select(m => movables.IndexOf(m)).ToList();
+        distances_matrix.RemoveAgentsInBatch(agent_indexes, ref log);
+        for (int i=0; i < to_unregister_movables.Count; i++) { movables.Remove(to_unregister_movables[i]); }
+
+        // on resize les arrays
+        movablePositions.Dispose();
+        movablePositions = new NativeArray<float3>(movables.Count, Allocator.Persistent);
+        movableDistances.Dispose();
+        movableDistances = new NativeArray<float>(distances_matrix.DataCount, Allocator.Persistent);
+        if (log_arrays) { Debug.Log($"(MovableEngine) Resized arrays: movablePositions length {movablePositions.Length}, movableDistances length {movableDistances.Length}, distances_matrix data count {distances_matrix.DataCount}"); }
     }
 
     // UPDATE

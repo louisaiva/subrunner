@@ -9,6 +9,9 @@ public class Room : MonoBehaviour
     public RoomData data;
     public bool Loaded { get { return data != null; } }
 
+    [Header("Room shown")]
+    public bool shown = false; // if the room is currently shown. =/= is the room loaded. shown is only about visibility
+
     [Header("Room collider")]
     public PolygonCollider2D room_collider;
 
@@ -17,9 +20,13 @@ public class Room : MonoBehaviour
 
     [Header("Tilemaps")]
     public Tilemap ceiling_tilemap;
+    private TilemapRenderer ceiling_renderer;
     public Tilemap walls_tilemap;
+    private TilemapRenderer walls_renderer;
     public Tilemap carpet_tilemap;
+    private TilemapRenderer carpet_renderer;
     public Tilemap ground_tilemap;
+    private TilemapRenderer ground_renderer;
 
     [Header("Logs")]
     private bool log_tilemaps_loading = false;
@@ -62,7 +69,6 @@ public class Room : MonoBehaviour
 
         this.data = null;
     }
-
 
     // loading tilemaps low level
     protected void set_tilemaps()
@@ -129,7 +135,6 @@ public class Room : MonoBehaviour
         if (log_tilemaps_loading) { Debug.Log("(Room) Tilemap loaded: " + tilemap.name + " with bounds: " + tilemap.cellBounds + " and " + non_null_tiles + " non-null tiles" + tile_count_log); }
     }
 
-
     // SAVE CURRENT DATA
     public RoomData UpdateData()
     {
@@ -154,6 +159,11 @@ public class Room : MonoBehaviour
 
         // set neighbours data
         data.neighbours_ids = new List<string>(neighbours);
+
+        // set capables data
+        data.capables_ids = data.capables_ids ?? new List<string>();
+        data.movables_ids = data.movables_ids ?? new List<string>();
+
         return data;
     }
     protected TileBase[] get_tilemap(Tilemap tilemap, out BoundsInt bounds)
@@ -180,6 +190,60 @@ public class Room : MonoBehaviour
     }
 
 
+
+
+
+
+    // SHOW / HIDE
+    public void Show()
+    {
+        /// this should NOT disable the gameobject since we want all the logic to keep logiking
+        /// we only want to disable all renderers + lights etc any visible thing
+
+        // enable tilemaps renderer
+        associate_renderers();
+        ceiling_renderer.enabled = true;
+        walls_renderer.enabled = true;
+        carpet_renderer.enabled = true;
+        ground_renderer.enabled = true;
+
+        // show capables that we have
+
+        // show lights
+
+        // finally we are shown
+        shown = true;
+    }
+    public void Hide()
+    {
+        // disable tilemaps renderer
+        associate_renderers();
+        ceiling_renderer.enabled = false;
+        walls_renderer.enabled = false;
+        carpet_renderer.enabled = false;
+        ground_renderer.enabled = false;
+
+        // hide capables that we have
+
+        // hide lights
+
+        // finally we are hidden
+        shown = false;
+    }
+    private void associate_renderers()
+    {
+        if (ceiling_renderer == null) { ceiling_renderer = ceiling_tilemap.GetComponent<TilemapRenderer>(); }
+        if (walls_renderer == null) { walls_renderer = walls_tilemap.GetComponent<TilemapRenderer>(); }
+        if (carpet_renderer == null) { carpet_renderer = carpet_tilemap.GetComponent<TilemapRenderer>(); }
+        if (ground_renderer == null) { ground_renderer = ground_tilemap.GetComponent<TilemapRenderer>(); }
+    }
+
+
+
+
+
+
+
     // COLLIDERS EVENTS
     protected virtual void OnTriggerEnter2D(Collider2D collider)
     {
@@ -188,28 +252,28 @@ public class Room : MonoBehaviour
         if (capable == null) { return; }
 
         // check some bools
-        bool in_movables = data.movables_ids.Contains(capable.ID) || data.capables_ids.Contains(capable.ID);
-        bool in_out_movables = data.OUT_movables_ids.Contains(capable.ID);
+        bool in_movables = data.movables_ids.Contains(capable.data.id) || data.capables_ids.Contains(capable.data.id);
+        bool in_out_movables = data.OUT_movables_ids.Contains(capable.data.id);
 
         if (in_movables && !in_out_movables)
         {
             // if the capable is already in the room and has not gone out of the room, it means it teleported (happens on awake)
-            if (log_colliders) { Debug.Log($"(Room - {this.name}) Ignored IN - " + capable.ID + " (should happen on a capable spawn otherwise it s weird)"); }
+            if (log_colliders) { Debug.Log($"(Room - {this.name}) Ignored IN - " + capable.data.id + " (should happen on a capable spawn otherwise it s weird)"); }
             return;
         }
         if (in_movables && in_out_movables)
         {
             // if the capable is in the OUT list and in the movables one it means it went out, did not find any other room to go to, and came back to main room,
             // so we simply remove both in and out for this capable
-            data.OUT_movables_ids.Remove(capable.ID);
-            data.IN_movables_ids.Remove(capable.ID);
-            if (log_colliders) { Debug.Log($"(Room - {this.name}) Ignored OUT then IN - " + capable.ID); }
+            data.OUT_movables_ids.Remove(capable.data.id);
+            data.IN_movables_ids.Remove(capable.data.id);
+            if (log_colliders) { Debug.Log($"(Room - {this.name}) Ignored OUT then IN - " + capable.data.id); }
             return;
         }
 
         // capable enters !
-        data.IN_movables_ids.Add(capable.ID);
-        if (log_colliders) { Debug.Log($"(Room - {this.name}) IN - " + capable.ID); }
+        data.IN_movables_ids.Add(capable.data.id);
+        if (log_colliders) { Debug.Log($"(Room - {this.name}) IN - " + capable.data.id); }
     }
     protected virtual void OnTriggerExit2D(Collider2D collider)
     {
@@ -220,23 +284,22 @@ public class Room : MonoBehaviour
         if (capable == null) { return; }
 
         // check some bools
-        // bool in_movables = data.movables_ids.Contains(capable.ID);
-        bool in_out_movables = data.IN_movables_ids.Contains(capable.ID);
+        // bool in_movables = data.movables_ids.Contains(capable.data.id);
+        bool in_out_movables = data.IN_movables_ids.Contains(capable.data.id);
         if (in_out_movables)
         {
             // if the capable is in the OUT list and in the movables one it means it went out, did not find any other room to go to, and came back to main room,
             // so we simply remove both in and out for this capable
-            data.IN_movables_ids.Remove(capable.ID);
-            data.OUT_movables_ids.Remove(capable.ID);
-            if (log_colliders) { Debug.Log($"(Room - {this.name}) Ignored IN then OUT - " + capable.ID); }
+            data.IN_movables_ids.Remove(capable.data.id);
+            data.OUT_movables_ids.Remove(capable.data.id);
+            if (log_colliders) { Debug.Log($"(Room - {this.name}) Ignored IN then OUT - " + capable.data.id); }
             return;
         }
 
         // capable exits !
-        data.OUT_movables_ids.Add(capable.ID);
-        if (log_colliders) { Debug.Log($"(Room - {this.name}) OUT - " + capable.ID); }
+        data.OUT_movables_ids.Add(capable.data.id);
+        if (log_colliders) { Debug.Log($"(Room - {this.name}) OUT - " + capable.data.id); }
     }
-
 
     // COLLIDER OVERLAP
     private ContactFilter2D? _contact_filter = null;
@@ -269,8 +332,8 @@ public class Room : MonoBehaviour
             if (capable == null) { continue; }
             
             // we found a capable !
-            if (capable is Movable) { overlapping_movables.Add(capable.ID); }
-            else { overlapping_capables.Add(capable.ID); }
+            if (capable is Movable) { overlapping_movables.Add(capable.data.id); }
+            else { overlapping_capables.Add(capable.data.id); }
         }
     }
 

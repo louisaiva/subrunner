@@ -11,6 +11,7 @@ public class SpawnCapacity : Capacity
 {
     [Header("Spawn parameters")]
     public GameObject entity_prefab;
+    public string base_entity_id; // the id of the entity to spawn
     public Transform entity_parent; // the transform that will be the parent of the spawned entity
     private int entity_count = 0;
 
@@ -28,7 +29,7 @@ public class SpawnCapacity : Capacity
     [Header("Spawn Animation")]
     [SerializeField] private bool spawn_after_animation = false; // if true, the entity will be spawned at the end of the animation, otherwise it will be spawned at the start of the animation
     [SerializeField] private string spawn_anim_name = "spawn"; // the name of the spawn animation in the AnimPlayer
-    private AnimLayer entity_layer; // the animation layer of the 
+    private AnimLayer entity_layer; // the animation layer of the entity spawning animation
 
     // START
     private void Start()
@@ -40,9 +41,12 @@ public class SpawnCapacity : Capacity
     // USE
     public override void Use(Capable capable)
     {
-        // we spawn the entity
-        if (entity_prefab == null) { return; }
-        Spawn(Instantiate(entity_prefab));
+        // we spawn & load the entity
+        Capable entity = CapableSystem.Instance.SpawnCapable(base_entity_id, this.capable);
+        if (entity == null) { return; }
+
+        // we apply spawn parameters to the entity (spawn force, etc)
+        Spawn(entity.gameObject);
     }
     public async void Spawn(GameObject entity)
     {

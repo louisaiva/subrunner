@@ -10,10 +10,25 @@ public class RoomDataSaver : MonoBehaviour
 
     [Header("RoomData Saving")]
     public string data_folder = "Assets/Resources/data/rooms/";
+    public List<Room> rooms_to_save = new List<Room>();
 
     [Header("Logs")]
     public bool log = false;
 
+
+    public void SaveRoomsData()
+    {
+        foreach (Room room in rooms_to_save)
+        {
+            RoomData data = room.UpdateData();
+
+            // save the current RoomData to a json file
+            string json = JsonUtility.ToJson(data, true);
+            System.IO.File.WriteAllText(data_folder + data.id + ".json", json, System.Text.Encoding.UTF8);
+
+            if (log) { Debug.Log($"(RoomDataSaver) Updated & Saved RoomData : {room.name} (to {data_folder + data.id + ".json"})\n\n{json}"); }
+        }
+    }
     
 
 #if UNITY_EDITOR
@@ -51,22 +66,7 @@ public class RoomDataSaver : MonoBehaviour
 
             DrawDefaultInspector();
 
-            if (GUILayout.Button("Update and Save All RoomData"))
-            {
-                // get all rooms in the scene
-                Room[] rooms = FindObjectsByType<Room>(FindObjectsSortMode.None);
-
-                foreach (Room room in rooms)
-                {
-                    RoomData data = room.UpdateData();
-                    
-                    // save the current RoomData to a json file
-                    string json = JsonUtility.ToJson(data, true);
-                    System.IO.File.WriteAllText(saver.data_folder + data.id + ".json", json, System.Text.Encoding.UTF8);
-
-                    if (saver.log) { Debug.Log($"(RoomDataSaver) Updated & Saved RoomData : {room.name} (to {saver.data_folder + data.id + ".json"})\n\n{json}"); }
-                }
-            }
+            if (GUILayout.Button("Update and Save RoomData")) { saver.SaveRoomsData(); }
         }
     }
 #endif

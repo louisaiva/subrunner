@@ -27,13 +27,14 @@ public class Spawner : Capable, EndlessInteractable
         if (spawner == null) { spawner = GetCapacity<SpawnCapacity>(); }
 
         // we get a random module from the bank
-        GameObject entity = spawner.entity_prefab;
-        if (spawnables.Count > 0) { entity = ChooseRandomEntity(); }
+        // GameObject entity = spawner.entity_prefab;
+        // if (spawnables.Count > 0) { entity = ChooseRandomEntity(); }
 
         // we spawn the entity
-        entity = Instantiate(entity, Vector3.zero, Quaternion.identity);
-        spawner.Spawn(entity);
-        if (debug) { Debug.Log("(Spawner) " + name + " spawned entity " + entity.name); }
+        // entity = Instantiate(entity, Vector3.zero, Quaternion.identity);
+        // spawner.Spawn(entity);
+        spawner.Use(interactor);
+        // if (debug) { Debug.Log("(Spawner) " + name + " spawned entity " + entity.name); }
     }
     public void OnEndlessInteract(Capable interactor) { if (authorize_interact_endlessly) { OnInteract(interactor); } }
 
