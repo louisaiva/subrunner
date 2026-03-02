@@ -55,6 +55,9 @@ public class RunCapacity : Capacity
         walker.max_speed = max_run_speed; // on met la vitesse de course
         IsRunning = true;
 
+        // on applique le changement au son
+        walker.walk_sound.setParameterByName("running", 1);
+
         if (debug) { Debug.Log("(RunCapacity) " + capable.name + " is now running at " + max_run_speed + " speed!"); }
     }
     public void DisableRun()
@@ -67,6 +70,9 @@ public class RunCapacity : Capacity
         if (walker == null) { return; }
         walker.max_speed = max_walk_speed; // on change la vitesse maximale de marche
         IsRunning = false; // on desactive la course
+
+        // on applique le changement au son
+        walker.walk_sound.setParameterByName("running", 0);
 
         if (debug) { Debug.Log("(RunCapacity) " + capable.name + " is now walking at " + max_walk_speed + " speed!"); }
     }

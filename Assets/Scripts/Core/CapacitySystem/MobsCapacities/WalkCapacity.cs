@@ -1,3 +1,4 @@
+using FMOD.Studio;
 using UnityEngine;
 
 public class WalkCapacity : Capacity
@@ -16,6 +17,9 @@ public class WalkCapacity : Capacity
     ParticleSystem.EmissionModule walk_particles_emission; // emission module of the particles
     private float base_walk_particles_rate = 10f; // base rate of the particles emission
 
+    [Header("Walk sound instance")]
+    public EventInstance walk_sound;
+
     private void Awake()
     {
         walk_particles = GetComponent<ParticleSystem>();
@@ -23,12 +27,16 @@ public class WalkCapacity : Capacity
         walk_particles_emission = walk_particles.emission;
         walk_particles_emission.enabled = false; // we disable the particles by default
         base_walk_particles_rate = walk_particles_emission.rateOverTime.constant; // we get the base rate of the particles emission
+
     }
 
     // START
     private void Start()
     {
         max_speed += Random.Range(-random_speed_modifier_at_start, random_speed_modifier_at_start);
+
+        // we get a walk sound instance from the audio engine
+        walk_sound = AudioEngine.Instance.CreateSound(AudioBank.Instance.bob_walk);
     }
 
     // UPDATE
@@ -38,6 +46,9 @@ public class WalkCapacity : Capacity
 
         // update particles
         update_particles();
+
+        // update sound
+        update_sound();
 
         // 1 - WALK_SPEED CALCULATION
         walk_speed = Mathf.Lerp(walk_speed, walk_percentage_target * max_speed, 10f * Time.deltaTime);
@@ -72,5 +83,21 @@ public class WalkCapacity : Capacity
 
         // we set the rate of the particles emission based on the walk speed
         walk_particles_emission.rateOverTime = base_walk_particles_rate * (walk_speed / max_speed);
+    }
+    private void update_sound()
+    {
+        // update walk_sound speed with our velocity
+        walk_sound.setParameterByName("speed", walk_speed / max_speed);
+
+        if (((Movable)capable).Velocity.magnitude > 0.1f)
+        {
+            // check if the sound is playing
+            PLAYBACK_STATE walk_state;
+            walk_sound.getPlaybackState(out walk_state);
+            if (!walk_state.Equals(PLAYBACK_STATE.PLAYING)) { walk_sound.start(); }
+            return;
+        }
+
+        walk_sound.stop(STOP_MODE.ALLOWFADEOUT);
     }
 }

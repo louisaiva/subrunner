@@ -58,6 +58,9 @@ public class CloseCapacity : Capacity
         Invoke("success_close", closing_duration);
         capable.GetCapacity<HoverCapacity>()?.ChangeAnimation(hover_close_anim);
 
+        // on joue le son
+        AudioEngine.Instance.PlaySound(AudioBank.Instance.chest_close, capable.transform.position);
+
         // on fait les vérifications pour les portes
         if (capable is Door door && !door.DontTouchSortingLayer)
         {

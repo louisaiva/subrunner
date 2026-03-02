@@ -12,6 +12,7 @@ public class SettingsManager : MonoBehaviour
     public SettingsSaveData factory_general;
     public SettingsSaveData factory_gameplay;
     public SettingsSaveData factory_graphics;
+    public SettingsSaveData factory_audio;
     public SettingsSaveData factory_ui;
     public SettingsSaveData factory_controls;
 
@@ -181,6 +182,7 @@ public class SettingsManager : MonoBehaviour
         settings["general"] = factory_general.Clone();
         settings["gameplay"] = factory_gameplay.Clone();
         settings["graphics"] = factory_graphics.Clone();
+        settings["audio"] = factory_audio.Clone();
         settings["ui"] = factory_ui.Clone();
         settings["controls"] = factory_controls.Clone();
     }

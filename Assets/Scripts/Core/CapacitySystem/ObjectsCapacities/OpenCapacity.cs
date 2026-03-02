@@ -44,6 +44,9 @@ public class OpenCapacity : Capacity
         Invoke("success_open", opening_duration);
         capable.GetCapacity<HoverCapacity>()?.ChangeAnimation(hover_open_anim);
 
+        // on joue le son
+        AudioEngine.Instance.PlaySound(AudioBank.Instance.chest_open, capable.transform.position);
+
         // on fait les vérifications pour les portes
         if (capable is Door door && !door.DontTouchSortingLayer)
         {

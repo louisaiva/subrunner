@@ -10,6 +10,7 @@ public class UI_SettingsBuilder : MonoBehaviour
     private Transform general_parent;
     private Transform gameplay_parent;
     private Transform graphics_parent;
+    private Transform audio_parent;
     private Transform ui_parent;
     private Transform controls_parent;
 
@@ -17,6 +18,7 @@ public class UI_SettingsBuilder : MonoBehaviour
     private Color general_color;
     private Color gameplay_color;
     private Color graphics_color;
+    private Color audio_color;
     private Color ui_color;
     private Color controls_color;
 
@@ -36,12 +38,15 @@ public class UI_SettingsBuilder : MonoBehaviour
         // full control on the builder (don't want the builder to Awake() after SettingsManager.Awake(),
         // otherwise it would break the building)
 
+        // todo i think it would be better to handle this better bcz adding a setting panel is a nightmare now
+
         manager = SettingsManager.Instance;
 
         // get the transforms
         general_parent = transform.Find("general");
         gameplay_parent = transform.Find("gameplay");
         graphics_parent = transform.Find("graphics");
+        audio_parent = transform.Find("audio");
         ui_parent = transform.Find("ui");
         controls_parent = transform.Find("controls");
 
@@ -49,6 +54,7 @@ public class UI_SettingsBuilder : MonoBehaviour
         general_color = transform.Find("panel_bar/general").GetComponent<Colorant>().HoverColor;
         gameplay_color = transform.Find("panel_bar/gameplay").GetComponent<Colorant>().HoverColor;
         graphics_color = transform.Find("panel_bar/graphics").GetComponent<Colorant>().HoverColor;
+        audio_color = transform.Find("panel_bar/audio").GetComponent<Colorant>().HoverColor;
         ui_color = transform.Find("panel_bar/ui").GetComponent<Colorant>().HoverColor;
         controls_color = transform.Find("panel_bar/controls").GetComponent<Colorant>().HoverColor;
 
@@ -126,6 +132,7 @@ public class UI_SettingsBuilder : MonoBehaviour
             case "general": return general_color;
             case "gameplay": return gameplay_color;
             case "graphics": return graphics_color;
+            case "audio": return audio_color;
             case "ui": return ui_color;
             case "controls": return controls_color;
             default: return Color.white;
@@ -138,6 +145,7 @@ public class UI_SettingsBuilder : MonoBehaviour
             case "general": return general_parent;
             case "gameplay": return gameplay_parent;
             case "graphics": return graphics_parent;
+            case "audio": return audio_parent;
             case "ui": return ui_parent;
             case "controls": return controls_parent;
             default: return null;

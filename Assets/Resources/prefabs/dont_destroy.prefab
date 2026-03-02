@@ -1,5 +1,90 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &129709460989252728
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2771517310780889792}
+  - component: {fileID: 4200687703790678608}
+  - component: {fileID: 5290126021399918753}
+  m_Layer: 0
+  m_Name: audio_system
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2771517310780889792
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 129709460989252728}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3744786912224508728}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4200687703790678608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 129709460989252728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b960528b9965ae94cab28eb75ccf1969, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioEngine
+--- !u!114 &5290126021399918753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 129709460989252728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6508dae2849bd724abb944ca669c1f6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioBank
+  <bob_walk>k__BackingField:
+    Guid:
+      Data1: -1375575420
+      Data2: 1308236022
+      Data3: 1194039217
+      Data4: -1981205428
+    Path: event:/BobWalk
+  <bob_dodge>k__BackingField:
+    Guid:
+      Data1: 1733394839
+      Data2: 1207587403
+      Data3: 1854452159
+      Data4: -1626464899
+    Path: event:/BobDodge
+  <chest_open>k__BackingField:
+    Guid:
+      Data1: 1438236673
+      Data2: 1336011621
+      Data3: -1537614410
+      Data4: 1644569412
+    Path: event:/ChestOpen
+  <chest_close>k__BackingField:
+    Guid:
+      Data1: -1300834732
+      Data2: 1222496725
+      Data3: 1699577762
+      Data4: -611699861
+    Path: event:/ChestClose
 --- !u!1 &3811816626350204236
 GameObject:
   m_ObjectHideFlags: 0
@@ -784,6 +869,7 @@ Transform:
   - {fileID: 6226022955239885697}
   - {fileID: 7088113846698952760}
   - {fileID: 714203621573029839}
+  - {fileID: 2771517310780889792}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6024383193295535529
@@ -862,6 +948,7 @@ MonoBehaviour:
   factory_general: {fileID: 11400000, guid: b6cb3e1182b15a74b9c90e1e1662b786, type: 2}
   factory_gameplay: {fileID: 11400000, guid: 5729756fe12ca5747bd37a6df1e46174, type: 2}
   factory_graphics: {fileID: 11400000, guid: 5aebe4c596a0d56439661152b42226e5, type: 2}
+  factory_audio: {fileID: 11400000, guid: d3d2ab6f3ecadc342bd727343e2f03d4, type: 2}
   factory_ui: {fileID: 11400000, guid: b4c12df4f83fe3a4cb5404d931d6e370, type: 2}
   factory_controls: {fileID: 11400000, guid: e36bfed1340373d498c5afe71e88e068, type: 2}
   log: 0
