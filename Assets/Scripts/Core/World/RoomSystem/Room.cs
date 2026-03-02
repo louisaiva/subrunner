@@ -160,33 +160,41 @@ public class Room : MonoBehaviour
         if (log_tilemaps_loading) { Debug.Log("(Room) Tilemap loaded: " + tilemap.name + " with bounds: " + tilemap.cellBounds + " and " + non_null_tiles + " non-null tiles" + tile_count_log); }
     }
 
-    // SAVE CURRENT DATA
-    public RoomData UpdateData()
+
+
+    // GET STATIC DATA
+
+    /// <summary>
+    /// just as other GetStaticData() methods (ie Capable's one), this method
+    /// is not meant to be run in a BUILD !!! IT WON T WORK because it does not
+    /// update this.data . it creates a new data based from actual static
+    /// variables states of the object. if run inside a build, it could overwrite
+    /// some data such as tilebases_used paths which would break the save.
+    /// </summary>
+    /// <returns></returns>
+    public RoomData GetStaticData()
     {
-        // we take current data and we write it down inside this.data
-        // ex : when we changed a tilemap we need to update the data equivalent
-        // otherwise it will erase all modifications on load
+        RoomData new_data = new RoomData
+        {
+            // set base data things
+            id = this.name,
+            position = this.transform.position,
 
-        if (data == null) { this.data = new RoomData(); }
+            // set collider data
+            collider_points = new List<Vector2>(room_collider.GetPath(0)),
 
-        // set base data things
-        data.id = this.name;
-        data.position = this.transform.position;
+            // set neighbours data
+            neighbours_ids = new List<string>(neighbours),
 
-        // set collider data
-        data.collider_points = new List<Vector2>(room_collider.GetPath(0));
+            // set capables data
+            capables_ids = data.capables_ids ?? new List<string>(),
+            movables_ids = data.movables_ids ?? new List<string>()
+        };
 
         // set tilemaps data
-        get_tilemaps(ref data);
+        get_tilemaps(ref new_data);
 
-        // set neighbours data
-        data.neighbours_ids = new List<string>(neighbours);
-
-        // set capables data
-        data.capables_ids = data.capables_ids ?? new List<string>();
-        data.movables_ids = data.movables_ids ?? new List<string>();
-
-        return data;
+        return new_data;
     }
     protected void get_tilemaps(ref RoomData room_data)
     {

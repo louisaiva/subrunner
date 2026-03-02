@@ -8,14 +8,10 @@ using Newtonsoft.Json;
     public string id;
     public string kind; // used to determine which kind of capable it is. i.e. chest, IA, spawner or else
     public Vector2 position;
-    public Vector2 orientation;
     // public Vector2 inputs; ????
+    public Vector2 orientation;
 
     // ANIM PLAYER
-    // todo maybe we can have a AnimData class ?
-    // - skin
-    // - layers
-    // - List<AnimCapacityPriority>
     public AnimData anim_data;
 
     // INVENTORY
@@ -112,3 +108,4 @@ using Newtonsoft.Json;
     public int sorting_layer_id;
     public int order_in_layer;
 }
+

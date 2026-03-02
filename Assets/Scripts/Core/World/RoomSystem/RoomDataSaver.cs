@@ -20,7 +20,7 @@ public class RoomDataSaver : MonoBehaviour
     {
         foreach (Room room in rooms_to_save)
         {
-            RoomData data = room.UpdateData();
+            RoomData data = room.GetStaticData();
 
             // save the current RoomData to a json file
             string json = JsonUtility.ToJson(data, true);

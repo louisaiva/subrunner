@@ -12,11 +12,8 @@ using UnityEngine;
 [RequireComponent(typeof(AnimPlayer))]
 public class Capable : MonoBehaviour, Debuggable
 {
-    // un Capable est un gameObject qui possède des capacités
-    // et donc des animations (les capacités peuvent être reliées à une animation)
 
-    // todo : move this to the CapableData
-    // public string ID; // the id of the capable, used for saving/loading
+    // NEW CAPACITY SYSTEM
 
     [Header("Capable data")]
     public CapableData data;
@@ -65,45 +62,64 @@ public class Capable : MonoBehaviour, Debuggable
 
 
 
-    // SAVE CURRENT DATA
-    public CapableData UpdateData()
+    // GET CURRENT STATIC DATA
+    /// <summary>
+    /// this method is made for saving data from a prefab THAT IS NOT LOADED.
+    /// it means it should run ONLY inside the editor and it may run when 
+    /// the game is not started. This means we should get the data through the hierarchy only
+    /// since all the lists will be null or empty
+    /// </summary>
+    /// <returns>CapableData the data that describes this capable</returns>
+    public CapableData GetStaticData()
     {
-        // we take current data and we write it down inside this.data
-        // ex : when we changed a tilemap we need to update the data equivalent
-        // otherwise it will erase all modifications on load
+        CapableData static_data = new CapableData
+        {
+            // set base data things
+            id = this.name,
+            position = this.transform.position,
 
-        if (data == null) { this.data = new CapableData(); }
+            // we set the kind
+            kind = GetType().Name,
 
-        // set base data things
-        data.id = this.name;
-        data.position = this.transform.position;
+            // we set the anim data
+            anim_data = anim_player.GetStaticAnimData(),
 
-        // we set the kind
-        data.kind = GetType().Name;
+            // we set the orientation
+            orientation = this.orientation,
 
-        // we set the anim data
-        data.anim_data = anim_player.GetAnimData();
+            // we set the capacities
+            capacities_ids = get_capacity_ids(),
 
-        // we set the orientation
-        data.orientation = this.orientation;
+            // we set the effects
+            effects = new List<Effect>(effects),
+            effects_ttl = new List<float>(effects_timetolive)
+        };
 
         // we set the inventory
         if (Inventory != null)
         {
             for (int i = 0; i < Inventory.Items.Count; i++)
             {
-                data.inventory.Add(Inventory.Items[i].data.id);
+                static_data.inventory.Add(Inventory.Items[i].data.id);
             }
         }
 
-        // we set the capacities
-        data.capacities_ids = capacities.ConvertAll(c => c.name);
+        return static_data;
+    }
+    private List<string> get_capacity_ids()
+    {
+        List<string> capacities_ids = new List<string>();
+        
+        // we go through all children and check if we have capacities
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Transform child = transform.GetChild(i);
+            Capacity capa = child.GetComponent<Capacity>();
+            if (capa == null) { continue; }
+            capacities_ids.Add(capa.data.id);
+        }
 
-        // we set the effects
-        data.effects = new List<Effect>(effects);
-        data.effects_ttl = new List<float>(effects_timetolive);
-
-        return data;
+        return capacities_ids;
     }
 
 
@@ -111,6 +127,17 @@ public class Capable : MonoBehaviour, Debuggable
 
 
 
+
+
+
+
+
+
+    // OLD AREA
+
+
+    // un Capable est un gameObject qui possède des capacités
+    // et donc des animations (les capacités peuvent être reliées à une animation)
 
     [Header("CAPABLE")]
     // the analog equivalent of the anim_player.orientation which is numerical

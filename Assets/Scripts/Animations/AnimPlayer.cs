@@ -379,7 +379,16 @@ public class AnimPlayer : MonoBehaviour
         sr.sortingLayerID = data.sorting_layer_id;
         sr.sortingOrder = data.order_in_layer;
     }
-    public AnimData GetAnimData()
+    
+    /// <summary>
+    /// just as other GetStaticData() methods (ie Capable's one), this method
+    /// is not meant to be run in a BUILD !!! IT WON T WORK because it does not
+    /// update the anim_data, it creates a new data based from actual static
+    /// variables states of the object. if run inside a build, it could overwrite
+    /// some data such as material paths which would break the save.
+    /// </summary>
+    /// <returns></returns>
+    public AnimData GetStaticAnimData()
     {
         // get basic player data
         AnimData data = new AnimData

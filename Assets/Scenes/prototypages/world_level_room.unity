@@ -888,6 +888,7 @@ MonoBehaviour:
   update_each_frame: 1
   log: 0
   log_frames: 0
+  log_assign: 0
   already_assigned: 0
 --- !u!212 &104572984
 SpriteRenderer:
@@ -15206,7 +15207,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5145456041456219900, guid: 319736498f318d84aaa78beb56a3ece2, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6541890566030211719, guid: 319736498f318d84aaa78beb56a3ece2, type: 3}
       propertyPath: ID

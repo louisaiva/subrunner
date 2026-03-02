@@ -22,7 +22,7 @@ public class CapableDataManager : MonoBehaviour
     {
         foreach (Capable capable in capables_to_save)
         {
-            CapableData data = capable.UpdateData();
+            CapableData data = capable.GetStaticData();
 
             // save the current RoomData to a json file
             string json = JsonUtility.ToJson(data, true);

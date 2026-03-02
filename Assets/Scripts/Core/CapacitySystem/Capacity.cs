@@ -2,6 +2,25 @@ using UnityEngine;
 
 public class Capacity : MonoBehaviour
 {
+
+    // NEW CAPACITY SYSTEM
+
+    [Header("Capacity data")]
+    public CapacityData data;
+    public bool Loaded { get { return data != null; } }
+
+
+
+
+
+
+
+
+
+
+    // OLD AREA
+
+
     public virtual bool Able
     {
         get
