@@ -42,6 +42,7 @@ public class CapableBank : MonoBehaviour
 
     [Header("Logs")]
     public bool log_types = false;
+    public bool log_anim_layers = false;
 
     // LOAD CAPABLES
     public Capable Load(CapableData data)
@@ -52,6 +53,9 @@ public class CapableBank : MonoBehaviour
         // we successfully extracted a capable from the pooled ones !
         if (capable != null)
         {
+            // then we load the anim data inside the capable
+            load_anim_data(capable.anim_player, data.anim_data);
+            
             // we load its data
             capable.LoadData(data);
             capable.gameObject.SetActive(true);
@@ -127,6 +131,7 @@ public class CapableBank : MonoBehaviour
 
         // check that we do have some layers / layer_parent
         if (layer_parent == null || anim_data.layers == null) { return; }
+        if (log_anim_layers) { Debug.Log($"(CapableBank - Load) Loading anim data for {anim_data.skin}, loading {anim_data.layers.Count} anim layers"); }
 
         // we go through all the layers inside anim_data and we load a layer for each
         for (int i = 0; i < anim_data.layers.Count; i++)
@@ -156,11 +161,14 @@ public class CapableBank : MonoBehaviour
 
         // unload anim layers
         List<AnimLayer> anim_layers = capable.anim_player.GetAnimLayers();
-        for (int i = 0; i < anim_layers.Count; i++)
+        if (log_anim_layers) { Debug.Log($"(CapableBank) Unloading capable {capable.data.id}, unloading {anim_layers.Count} anim layers"); }
+        // for (int i = 0; i < anim_layers.Count; i++)
+        while (anim_layers.Count > 0)
         {
-            AnimLayer anim_layer = anim_layers[i];
-            pooled_anim_layers.Push(anim_layer);
+            AnimLayer anim_layer = anim_layers[0];
             anim_layer.UnassignLeader();
+            pooled_anim_layers.Push(anim_layer);
+            anim_layers.RemoveAt(0);
         }
 
         // unload the capable's data and put it back in the pool

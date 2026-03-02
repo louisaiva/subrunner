@@ -29,6 +29,7 @@ public class AnimLayer : MonoBehaviour
     [Header("Logs")]
     public bool log = false;
     public bool log_frames = false;
+    public bool log_assign = false;
 
     private void Awake()
     {
@@ -36,7 +37,7 @@ public class AnimLayer : MonoBehaviour
     }
 
     // ASSING LEADER
-    private bool already_assigned = false;
+    [SerializeField] private bool already_assigned = false;
     public void AssignLeader(AnimPlayer leader)
     {
         if (already_assigned) { return; }
@@ -44,6 +45,7 @@ public class AnimLayer : MonoBehaviour
         leader.OnAnimPlayedAtFrame += PlayAtFrame;
         leader.RegisterAnimLayer(this);
         already_assigned = true;
+        if (log_assign) { Debug.Log("(AnimLayer) Assigned leader " + leader.name + " to layer " + name); }
     }
     public void UnassignLeader()
     {
@@ -52,6 +54,7 @@ public class AnimLayer : MonoBehaviour
         leader.UnregisterAnimLayer(this);
         this.leader = null;
         already_assigned = false;
+        if (log_assign) { Debug.Log("(AnimLayer) Unassigned leader from layer " + name); }
     }
 
     // LOAD DATA

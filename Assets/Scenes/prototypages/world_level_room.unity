@@ -888,6 +888,7 @@ MonoBehaviour:
   update_each_frame: 1
   log: 0
   log_frames: 0
+  already_assigned: 0
 --- !u!212 &104572984
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2445,6 +2446,7 @@ MonoBehaviour:
   body_prefab: {fileID: 5650395422685672705, guid: 956158498a9f86e4584b5ec6cacc0640, type: 3}
   anim_layer_prefab: {fileID: 2256093318761564998, guid: 2b27f1b2b096f9b498f67db4df154afc, type: 3}
   log_types: 0
+  log_anim_layers: 1
 --- !u!1001 &316903155
 PrefabInstance:
   m_ObjectHideFlags: 0

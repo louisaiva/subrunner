@@ -518,7 +518,7 @@ public class AnimPlayer : MonoBehaviour
     }
     public List<AnimLayer> GetAnimLayers()
     {
-        return anim_layers;
+        return new List<AnimLayer>(anim_layers);
     }
 
 
