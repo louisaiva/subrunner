@@ -9,7 +9,113 @@
         "x": 0.0,
         "y": -1.0
     },
-    "skin": "dev_base",
+    "anim_data": {
+        "skin": "dev_base",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "walk",
+                    "run"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 3,
+                "capacity_playing": "",
+                "capacities": [
+                    "attack"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 4,
+                "capacity_playing": "",
+                "capacities": [
+                    "hurted",
+                    "eat"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 5,
+                "capacity_playing": "",
+                "capacities": [
+                    "die"
+                ],
+                "lock_orientation": true,
+                "one_shot": false
+            }
+        ],
+        "material_path": "materials/enemy",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "layers": [
+            {
+                "skin": "dev_base",
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "material_path": "materials/beings",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0
+            },
+            {
+                "skin": "dev_face",
+                "local_position": {
+                    "x": 0.0,
+                    "y": -0.00009999999747378752
+                },
+                "material_path": "materials/beings",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0
+            },
+            {
+                "skin": "dev_hair",
+                "local_position": {
+                    "x": 0.0,
+                    "y": -0.00019999999494757503
+                },
+                "material_path": "materials/beings",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0
+            },
+            {
+                "skin": "dev_hat",
+                "local_position": {
+                    "x": 0.0,
+                    "y": -0.0003000000142492354
+                },
+                "material_path": "materials/beings",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0
+            },
+            {
+                "skin": "dev_kb",
+                "local_position": {
+                    "x": 0.0,
+                    "y": -0.00039999998989515007
+                },
+                "material_path": "materials/beings",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0
+            }
+        ]
+    },
     "inventory": [],
     "capacities_ids": [],
     "effects": [],

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -30,7 +31,7 @@ public class Room : MonoBehaviour
 
     [Header("Logs")]
     private bool log_tilemaps_loading = false;
-    private bool log_colliders = true;
+    private bool log_colliders = false;
 
     // LOAD / UNLOAD
     public void LoadData(RoomData data)
@@ -73,14 +74,38 @@ public class Room : MonoBehaviour
     // loading tilemaps low level
     protected void set_tilemaps()
     {
+        // we load the tilebases used in data
+        List<TileBase> tilebases_used = new List<TileBase>();
+        if (data.tilebase_paths_used == null) { return; }
+        for (int i = 0; i < data.tilebase_paths_used.Length; i++)
+        {
+            string tilebase_path = data.tilebase_paths_used[i];
+            TileBase tilebase = Resources.Load<TileBase>(tilebase_path);
+            if (tilebase == null) { Debug.LogError($"(Room) Failed to load tilebase at path: {tilebase_path}"); }
+            tilebases_used.Add(tilebase);
+        }
+
         // ceiling
-        set_tilemap(ceiling_tilemap, data.ceiling_tiles, data.ceiling_bounds);
+        set_tilemap(ceiling_tilemap,tilebases_used, data.ceiling_tiles, data.ceiling_bounds);
         // walls
-        set_tilemap(walls_tilemap, data.walls_tiles, data.walls_bounds);
+        set_tilemap(walls_tilemap,tilebases_used, data.walls_tiles, data.walls_bounds);
         // carpet
-        set_tilemap(carpet_tilemap, data.carpet_tiles, data.carpet_bounds);
+        set_tilemap(carpet_tilemap,tilebases_used, data.carpet_tiles, data.carpet_bounds);
         // ground
-        set_tilemap(ground_tilemap, data.ground_tiles, data.ground_bounds);
+        set_tilemap(ground_tilemap,tilebases_used, data.ground_tiles, data.ground_bounds);
+    }
+    protected void set_tilemap(Tilemap tilemap, List<TileBase> tilebases, int[] tiles_data, BoundsInt bounds)
+    {
+        TileBase[] tiles = new TileBase[tiles_data.Length];
+        for (int i = 0; i < tiles_data.Length; i++)
+        {
+            int tile_id = tiles_data[i];
+            if (tile_id == -1) { tiles[i] = null; continue; }
+
+            // the tile_id is the index inside tilebases
+            tiles[i] = tilebases[tile_id];
+        }
+        set_tilemap(tilemap, tiles, bounds);
     }
     protected void set_tilemap(Tilemap tilemap, TileBase[] tiles, BoundsInt bounds)
     {
@@ -152,10 +177,7 @@ public class Room : MonoBehaviour
         data.collider_points = new List<Vector2>(room_collider.GetPath(0));
 
         // set tilemaps data
-        data.ceiling_tiles = get_tilemap(ceiling_tilemap, out data.ceiling_bounds);
-        data.walls_tiles = get_tilemap(walls_tilemap, out data.walls_bounds);
-        data.carpet_tiles = get_tilemap(carpet_tilemap, out data.carpet_bounds);
-        data.ground_tiles = get_tilemap(ground_tilemap, out data.ground_bounds);
+        get_tilemaps(ref data);
 
         // set neighbours data
         data.neighbours_ids = new List<string>(neighbours);
@@ -166,27 +188,54 @@ public class Room : MonoBehaviour
 
         return data;
     }
-    protected TileBase[] get_tilemap(Tilemap tilemap, out BoundsInt bounds)
+    protected void get_tilemaps(ref RoomData room_data)
+    {
+        TileBase[] used_tilebases = new TileBase[0];
+        room_data.ceiling_tiles = get_tilemap(ceiling_tilemap, out room_data.ceiling_bounds, ref used_tilebases);
+        room_data.walls_tiles = get_tilemap(walls_tilemap, out room_data.walls_bounds, ref used_tilebases);
+        room_data.carpet_tiles = get_tilemap(carpet_tilemap, out room_data.carpet_bounds, ref used_tilebases);
+        room_data.ground_tiles = get_tilemap(ground_tilemap, out room_data.ground_bounds, ref used_tilebases);
+
+        // now we use AssetDatabase to get the path of the tiles bases
+        string[] tilebase_paths_used = new string[used_tilebases.Length];
+        #if UNITY_EDITOR
+        for (int i = 0; i < used_tilebases.Length; i++)
+        {
+            TileBase tilebase = used_tilebases[i];
+            string path = UnityEditor.AssetDatabase.GetAssetPath(tilebase);
+            path = path.Replace("Assets/Resources/", "").Replace(".asset", "");
+            tilebase_paths_used[i] = path;
+        }
+        #else
+        for (int i = 0; i < used_tilebases.Length; i++) { tilebase_paths_used[i] = ""; }
+        #endif
+        room_data.tilebase_paths_used = tilebase_paths_used;
+    }
+    protected int[] get_tilemap(Tilemap tilemap, out BoundsInt bounds, ref TileBase[] tilebases_used)
     {
         tilemap.CompressBounds();
         bounds = tilemap.cellBounds;
         TileBase[] tiles = tilemap.GetTilesBlock(bounds);
-        /* for (int x = 0; x < bounds.size.x; x++)
+        int[] tiles_data = new int[tiles.Length];
+        for (int x = 0; x < bounds.size.x; x++)
         {
             for (int y = 0; y < bounds.size.y; y++)
             {
                 TileBase tile = tiles[x + y * bounds.size.x];
-                if (tile != null)
+                if (tile == null) { tiles_data[x + y * bounds.size.x] = -1; continue; }
+                
+                // check if we have it already in the used ones
+                if (!tilebases_used.Contains(tile))
                 {
-                    Debug.Log("x:" + x + " y:" + y + " tile:" + tile.name);
+                    tilebases_used = tilebases_used.Append(tile).ToArray();
                 }
-                else
-                {
-                    Debug.Log("x:" + x + " y:" + y + " tile: (null)");
-                }
+
+                // the tile_id is the index inside tilebases
+                int tile_id = System.Array.IndexOf(tilebases_used, tile);
+                tiles_data[x + y * bounds.size.x] = tile_id;
             }
-        } */
-        return tiles;
+        }
+        return tiles_data;
     }
 
 

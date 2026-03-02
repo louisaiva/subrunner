@@ -55,13 +55,8 @@ public class Movable : Capable
     }
     private void OnDisable()
     {
-        if (MovableEngine.Instance == null) { return; }
-
-
-
-        // ! this method is perf costly. BUT it's okay because we don't have to call it every time a movable is disabled !!
-        // todo move this call in CapableSystem.unload_in_queue
-        // MovableEngine.Instance.Unregister(this);s
+        if (CapableSystem.Instance != null || MovableEngine.Instance == null) { return; }
+        MovableEngine.Instance.Unregister(this);
     }
 
     // UPDATE

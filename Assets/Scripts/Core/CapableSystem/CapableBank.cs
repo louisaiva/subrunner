@@ -16,6 +16,7 @@ public class CapableBank : MonoBehaviour
 
         // initialize the pool of rooms
         pooled_capables = new Hashtable();
+        pooled_anim_layers = new Stack<AnimLayer>();
     }
 
     // CAPABLE LOADING
@@ -32,10 +33,17 @@ public class CapableBank : MonoBehaviour
     [Header("Sleeping capables")]
     [SerializeField] protected Hashtable/* <string, Stack<Capable>> */ pooled_capables;
 
+
+    // ANIM PLAYER POOLING
+    [Header("AnimPlayer pooling")]
+    [SerializeField] protected GameObject anim_layer_prefab;
+    [SerializeField] protected Stack<AnimLayer> pooled_anim_layers;
+
+
     [Header("Logs")]
     public bool log_types = false;
 
-    // LOAD UNLOAD CAPABLES
+    // LOAD CAPABLES
     public Capable Load(CapableData data)
     {
         // we first try to extract a capable of the right kind from the pool
@@ -65,6 +73,9 @@ public class CapableBank : MonoBehaviour
 
         // then we add some few things we need, related to the capable kind
         capable = add_components_based_on_kind(go, kind);
+
+        // then we load the anim data inside the capable
+        load_anim_data(capable.anim_player, data.anim_data);
 
         // then we can load the data
         capable.LoadData(data);
@@ -104,6 +115,34 @@ public class CapableBank : MonoBehaviour
         return is_same_or_subclass;
     }
 
+
+    // ANIM PLAYER
+    private void load_anim_data(AnimPlayer player, AnimData anim_data)
+    {
+        // we load the main anim data in the player
+        player.LoadPlayerData(anim_data);
+
+        // we get the layers parent
+        Transform layer_parent = player.layers_parent;
+
+        // check that we do have some layers / layer_parent
+        if (layer_parent == null || anim_data.layers == null) { return; }
+
+        // we go through all the layers inside anim_data and we load a layer for each
+        for (int i = 0; i < anim_data.layers.Count; i++)
+        {
+            // we extract an anim layer from pooled ones
+            AnimLayer anim_layer = extractAnimLayerFromPool(layer_parent);
+
+            // then we load the data in the anim layer
+            AnimLayerData layer_data = anim_data.layers[i];
+            anim_layer.LoadData(layer_data);
+            anim_layer.AssignLeader(player);
+        }
+    }
+
+
+    // UNLOAD CAPABLES
     public Capable Unload(CapableData data)
     {
         // get capable
@@ -114,6 +153,16 @@ public class CapableBank : MonoBehaviour
     }
     public void Unload(Capable capable)
     {
+
+        // unload anim layers
+        List<AnimLayer> anim_layers = capable.anim_player.GetAnimLayers();
+        for (int i = 0; i < anim_layers.Count; i++)
+        {
+            AnimLayer anim_layer = anim_layers[i];
+            pooled_anim_layers.Push(anim_layer);
+            anim_layer.UnassignLeader();
+        }
+
         // unload the capable's data and put it back in the pool
         string kind = capable.data.kind;
         capable.UnloadData();
@@ -148,7 +197,23 @@ public class CapableBank : MonoBehaviour
             stack.Push(capable);
         }
     }
-
+    private AnimLayer extractAnimLayerFromPool(Transform layer_parent)
+    {
+        // we first try to extract an anim layer from the pool
+        AnimLayer anim_layer = null;
+        if (pooled_anim_layers != null && pooled_anim_layers.Count > 0)
+        {
+            anim_layer = pooled_anim_layers.Pop();
+            anim_layer.gameObject.SetActive(true);
+            anim_layer.transform.SetParent(layer_parent);
+        }
+        else
+        {
+            // if we have no pooled anim layer we need to instantiate one
+            anim_layer = Instantiate(anim_layer_prefab, layer_parent).GetComponent<AnimLayer>();
+        }
+        return anim_layer;
+    }
 
     // CAPABLE GETTING
     public Capable GetLoadedCapable(string id)

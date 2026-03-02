@@ -1,16 +1,16 @@
 ﻿{
-    "id": "chest",
-    "kind": "Chest",
+    "id": "robot_spawner",
+    "kind": "Spawner",
     "position": {
-        "x": 10.11780071258545,
-        "y": 4.106047630310059
+        "x": 21.350000381469728,
+        "y": 1.9199999570846558
     },
     "orientation": {
         "x": 0.0,
         "y": -1.0
     },
     "anim_data": {
-        "skin": "blue_chest",
+        "skin": "robot_sp",
         "anim_capacity_priorities": [
             {
                 "priority": 0,
@@ -34,25 +34,15 @@
                 "priority": 3,
                 "capacity_playing": "",
                 "capacities": [
-                    "idle_open"
-                ],
-                "lock_orientation": true,
-                "one_shot": false
-            },
-            {
-                "priority": 4,
-                "capacity_playing": "",
-                "capacities": [
-                    "open",
-                    "close"
+                    "spawn"
                 ],
                 "lock_orientation": true,
                 "one_shot": true
             }
         ],
         "material_path": "materials/objects",
-        "sorting_layer_id": -667374433,
-        "order_in_layer": 0,
+        "sorting_layer_id": -31225397,
+        "order_in_layer": 4,
         "layers": []
     },
     "inventory": [],

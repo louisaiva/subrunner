@@ -42,11 +42,18 @@ public class SpawnCapacity : Capacity
     public override void Use(Capable capable)
     {
         // we spawn & load the entity
-        Capable entity = CapableSystem.Instance.SpawnCapable(base_entity_id, this.capable);
+        GameObject entity = null;
+        if (CapableSystem.Instance != null)
+        {
+            Capable entity_capable = CapableSystem.Instance.SpawnCapable(base_entity_id, this.capable);
+            if (entity_capable != null) { entity = entity_capable.gameObject; }
+            else if (debug) { Debug.LogWarning("(SpawnCapacity) Could not spawn entity with id " + base_entity_id); }
+        }
+        else { entity = Instantiate(entity_prefab); }
         if (entity == null) { return; }
 
         // we apply spawn parameters to the entity (spawn force, etc)
-        Spawn(entity.gameObject);
+        Spawn(entity);
     }
     public async void Spawn(GameObject entity)
     {

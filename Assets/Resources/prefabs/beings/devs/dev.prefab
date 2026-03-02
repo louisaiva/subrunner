@@ -1248,7 +1248,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 667d6ec7c8afc3a4698a8d5a10953d0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IA
-  ID: dev_1
+  data:
+    id: 
+    kind: 
+    position: {x: 0, y: 0}
+    orientation: {x: 0, y: 0}
+    anim_data:
+      skin: 
+      layers: []
+      anim_capacity_priorities: []
+    inventory: []
+    capacities_ids: []
+    effects: 
+    effects_ttl: []
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: -1}
   capacities: []

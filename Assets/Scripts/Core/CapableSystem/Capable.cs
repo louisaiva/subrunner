@@ -31,7 +31,7 @@ public class Capable : MonoBehaviour, Debuggable
         this.transform.position = data.position;
 
         // we set the skin
-        this.anim_player.Skin = data.skin;
+        // this.anim_player.Skin = data.skin; already loaded inside CapableBank !!!
 
         // we set the orientation
         this.Orientation = data.orientation;
@@ -81,8 +81,8 @@ public class Capable : MonoBehaviour, Debuggable
         // we set the kind
         data.kind = GetType().Name;
 
-        // we set the skin
-        data.skin = Skin;
+        // we set the anim data
+        data.anim_data = anim_player.GetAnimData();
 
         // we set the orientation
         data.orientation = this.orientation;

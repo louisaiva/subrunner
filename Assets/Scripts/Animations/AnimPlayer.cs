@@ -3,12 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 [RequireComponent(typeof(SpriteRenderer))]
 public class AnimPlayer : MonoBehaviour
 {
 
     [Header("Components")]
-    private SpriteRenderer sr;
+    private SpriteRenderer _sr;
+    private SpriteRenderer sr
+    {
+        get
+        {
+            if (_sr == null) { _sr = GetComponent<SpriteRenderer>(); }
+            return _sr;
+        }
+    }
+    private Transform _layers_parent;
+    public Transform layers_parent
+    {
+        get
+        {
+            if (_layers_parent == null) { _layers_parent = transform.Find("layers"); }
+            return _layers_parent;
+        }
+    }
 
 
     [Header("Skin")]
@@ -55,8 +76,11 @@ public class AnimPlayer : MonoBehaviour
     // AWAKE & START
     private void Awake()
     {
-        // we get the sprite renderer
-        sr = GetComponent<SpriteRenderer>();
+
+        // todo maybe this won't work with CapableSystem because we load anim data after instantiating
+        // the capable prefab with anim player.. so maybe it won't work -> if yes then we need to move it
+        // to LoadPlayerData + another small little method for capable that are not in capable system + bool loaded_data
+        // check how we did it in animlayer
 
         // we inform each anim capacity priority of its priority
         for (int i = 0; i < anim_capacity_priorities.Count; i++)
@@ -340,6 +364,65 @@ public class AnimPlayer : MonoBehaviour
             if (priority.capacity_playing.StartsWith("idle")) { StopPlaying(priority.capacity_playing); }
         }
     }
+    
+    
+    // DATA LOADING / GETTING / UNLOADING
+    public void LoadPlayerData(AnimData data)
+    {
+        // ! does not load layers !! but we don't want to it's inside CapableBank because we pool them
+        if (data.anim_capacity_priorities == null || data.anim_capacity_priorities.Count == 0) { return;}
+        Skin = data.skin;
+        anim_capacity_priorities = data.anim_capacity_priorities;
+
+        // we load the sr data
+        sr.material = Resources.Load<Material>(data.material_path);
+        sr.sortingLayerID = data.sorting_layer_id;
+        sr.sortingOrder = data.order_in_layer;
+    }
+    public AnimData GetAnimData()
+    {
+        // get basic player data
+        AnimData data = new AnimData
+        {
+            skin = skin,
+            anim_capacity_priorities = anim_capacity_priorities,
+
+            // get sr data
+            material_path = get_material_path(sr),
+            sorting_layer_id = sr.sortingLayerID,
+            order_in_layer = sr.sortingOrder
+        };
+
+
+        // get the layers by going through the hierarchy (so we can do it even when not playing)
+        List<AnimLayerData> layers_data = new List<AnimLayerData>();
+        if (layers_parent == null) { data.layers = new List<AnimLayerData>(); return data; }
+        for (int i = 0; i < layers_parent.childCount; i++)
+        {
+            Transform layer_transform = layers_parent.GetChild(i);
+            AnimLayer anim_layer = layer_transform.GetComponent<AnimLayer>();
+            if (anim_layer == null) { continue; }
+
+            // we create the layer data
+            SpriteRenderer sr = anim_layer.SpriteRenderer;
+            AnimLayerData layer_data = new AnimLayerData
+            {
+                // load basic layer data
+                skin = anim_layer.skin,
+                local_position = anim_layer.transform.localPosition,
+
+                // load sr data
+                material_path = get_material_path(sr),
+                sorting_layer_id = sr.sortingLayerID,
+                order_in_layer = sr.sortingOrder
+            };
+
+            layers_data.Add(layer_data);
+        }
+
+        data.layers = layers_data;
+        return data;
+    }
 
 
     // ORIENTATION
@@ -408,6 +491,11 @@ public class AnimPlayer : MonoBehaviour
         if (anim_layers.Contains(anim_layer)) { return; }
         anim_layers.Add(anim_layer);
     }
+    public void UnregisterAnimLayer(AnimLayer anim_layer)
+    {
+        if (!anim_layers.Contains(anim_layer)) { return; }
+        anim_layers.Remove(anim_layer);
+    }
     public void DisableRenderer()
     {
         sr.enabled = false;
@@ -427,6 +515,28 @@ public class AnimPlayer : MonoBehaviour
         {
             anim_layers[i].EnableRenderer();
         }
+    }
+    public List<AnimLayer> GetAnimLayers()
+    {
+        return anim_layers;
+    }
+
+
+    // MATERIAL GETTER
+    private string get_material_path(SpriteRenderer sr)
+    {
+        if (sr == null || sr.sharedMaterial == null) { return ""; }
+        #if UNITY_EDITOR
+        string path = AssetDatabase.GetAssetPath(sr.sharedMaterial);
+        #else
+        string path = "";
+        #endif
+
+        // we need to remove ".mat" from path
+        path = path.Replace(".mat", "");
+        path = path.Replace("Assets/Resources/", ""); // we also need to remove "Assets/Resources/" from the path
+
+        return path;
     }
 
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Newtonsoft.Json;
 
 [Serializable] public class CapableData
 {
@@ -11,11 +12,11 @@ using System;
     // public Vector2 inputs; ????
 
     // ANIM PLAYER
-    // todo maybe we can have a AnimPlayerData class ?
+    // todo maybe we can have a AnimData class ?
     // - skin
     // - layers
     // - List<AnimCapacityPriority>
-    public string skin;
+    public AnimData anim_data;
 
     // INVENTORY
     public List<string> inventory;
@@ -36,11 +37,15 @@ using System;
         new_data.kind = this.kind;
         new_data.position = this.position;
         new_data.orientation = this.orientation;
-        new_data.skin = this.skin;
-        new_data.inventory = new List<string>(this.inventory);
+        new_data.anim_data = anim_data.Duplicate();
         new_data.capacities_ids = new List<string>(this.capacities_ids);
         new_data.effects = new List<Effect>(this.effects);
         new_data.effects_ttl = new List<float>(this.effects_ttl);
+
+
+
+
+
         return new_data;
     }
 
@@ -51,10 +56,59 @@ using System;
         details += $"  - kind : {kind}\n";
         details += $"  - position : {position}\n";
         details += $"  - orientation : {orientation}\n";
-        details += $"  - skin : {skin}\n";
         details += $"  - inventory : {inventory.Count} items\n";
         details += $"  - capacities : {capacities_ids.Count} capacities\n";
         details += $"  - effects : {effects.Count} effects\n";
+        details += $"  - {anim_data.GetDetails()}\n";
         return details;
     }
+}
+
+[Serializable] public class AnimData
+{
+    public string skin;
+    public List<AnimCapacityPriority> anim_capacity_priorities;
+
+    // player sr data
+    public string material_path;
+    public int sorting_layer_id;
+    public int order_in_layer;
+
+
+    // layers
+    public List<AnimLayerData> layers;
+
+
+    // GET & DUPLICATE
+    public AnimData Duplicate()
+    {
+        AnimData new_data = new AnimData();
+        new_data.skin = this.skin;
+        new_data.anim_capacity_priorities = new List<AnimCapacityPriority>(this.anim_capacity_priorities);
+        new_data.material_path = this.material_path;
+        new_data.sorting_layer_id = this.sorting_layer_id;
+        new_data.order_in_layer = this.order_in_layer;
+        new_data.layers = new List<AnimLayerData>(this.layers);
+        return new_data;
+    }
+    public string GetDetails()
+    {
+        string details = $"anim_data :\n";
+        details += $"     - skin : {skin}\n";
+        if (anim_capacity_priorities != null) { details += $"     - anim_capacity_priorities : {anim_capacity_priorities.Count} priorities\n"; }
+        else { details += $"     - anim_capacity_priorities : null\n"; }
+        if (layers != null) { details += $"     - layers : {layers.Count} layers\n"; }
+        else { details += $"     - layers : null\n"; }
+        return details;
+    }
+}
+[Serializable] public class AnimLayerData
+{
+    public string skin;
+    public Vector2 local_position;
+
+    // layer sr data
+    public string material_path;
+    public int sorting_layer_id;
+    public int order_in_layer;
 }

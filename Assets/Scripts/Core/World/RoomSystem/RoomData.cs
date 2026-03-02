@@ -21,14 +21,15 @@ using UnityEngine.Tilemaps;
     public List<Vector2> collider_points;
 
     // tilemaps data
+    public string[] tilebase_paths_used;
     public BoundsInt ceiling_bounds;
-    public TileBase[] ceiling_tiles;
+    public int[] ceiling_tiles;
     public BoundsInt walls_bounds;
-    public TileBase[] walls_tiles;
+    public int[] walls_tiles;
     public BoundsInt carpet_bounds;
-    public TileBase[] carpet_tiles;
+    public int[] carpet_tiles;
     public BoundsInt ground_bounds;
-    public TileBase[] ground_tiles;
+    public int[] ground_tiles;
 
     // neighbours data
     public List<string> neighbours_ids; // list of the rooms that are directly connected to this one, used for loading/unloading logic
@@ -55,12 +56,12 @@ using UnityEngine.Tilemaps;
 
 
     // GETTERS
-    protected int calculate_tilemap_non_null_tiles(TileBase[] tiles)
+    protected int calculate_tilemap_non_null_tiles(int[] tiles)
     {
         int count = 0;
         for (int i = 0; i < tiles.Length; i++)
         {
-            if (tiles[i] != null) { count++; }
+            if (tiles[i] != -1) { count++; }
         }
         return count;
     }

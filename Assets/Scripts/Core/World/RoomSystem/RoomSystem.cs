@@ -409,13 +409,17 @@ public class RoomSystem : BSOD_System<RoomSystem>
         // we want the entity capabledata to be set inside the same room as the spawner.
         // we need to find in which room the spawner is, and set the entity capabledata in the same room
 
+        // if (log_spawning) { Debug.Log($"(RoomSystem) Handling spawn of {entity.data.id} by spawner {spawner.data.id}"); }
+
         // 1. find spawner room
         RoomData spawner_room = null;
         ICollection rooms_ids = rooms_data.Keys;
         foreach (string room_id in rooms_ids)
         {
+            // if (log_spawning) { Debug.Log($"(RoomSystem) Checking room {room_id} for spawner {spawner.data.id}"); }
             RoomData data = rooms_data[room_id] as RoomData;
             if (!data.capables_ids.Contains(spawner.data.id)) { continue; }
+            // if (log_spawning) { Debug.Log($"(RoomSystem) Found spawner {spawner.data.id} in room {room_id}"); }
             spawner_room = data;
             break;
         }

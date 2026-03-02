@@ -9,7 +9,16 @@ public class AnimLayer : MonoBehaviour
     public AnimPlayer leader;
 
     [Header("Components")]
-    private SpriteRenderer sr;
+    private SpriteRenderer _sr;
+    private SpriteRenderer sr
+    {
+        get
+        {
+            if (_sr == null) { _sr = GetComponent<SpriteRenderer>(); }
+            return _sr;
+        }
+    }
+    public SpriteRenderer SpriteRenderer { get { return sr; } }
 
     [Header("Current Animation")]
     public Anim current_anim = null;
@@ -21,15 +30,44 @@ public class AnimLayer : MonoBehaviour
     public bool log = false;
     public bool log_frames = false;
 
-    // AWAKE
     private void Awake()
     {
-        // we get the sprite renderer
-        sr = GetComponent<SpriteRenderer>();
+        if (leader != null) { AssignLeader(leader); }
+    }
 
+    // ASSING LEADER
+    private bool already_assigned = false;
+    public void AssignLeader(AnimPlayer leader)
+    {
+        if (already_assigned) { return; }
+        this.leader = leader;
         leader.OnAnimPlayedAtFrame += PlayAtFrame;
         leader.RegisterAnimLayer(this);
+        already_assigned = true;
     }
+    public void UnassignLeader()
+    {
+        if (!already_assigned) { return; }
+        leader.OnAnimPlayedAtFrame -= PlayAtFrame;
+        leader.UnregisterAnimLayer(this);
+        this.leader = null;
+        already_assigned = false;
+    }
+
+    // LOAD DATA
+    public void LoadData(AnimLayerData layer_data)
+    {
+        // load main layer data
+        name = $"layer_{layer_data.skin}";
+        skin = layer_data.skin;
+        transform.localPosition = layer_data.local_position;
+
+        // load sr data
+        sr.material = Resources.Load<Material>(layer_data.material_path);
+        sr.sortingLayerID = layer_data.sorting_layer_id;
+        sr.sortingOrder = layer_data.order_in_layer;
+    }
+
 
     // PLAY ANIM
     private void PlayAtFrame(string anim_name, int frame)

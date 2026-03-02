@@ -46,8 +46,9 @@ public class RoomDataSaver : MonoBehaviour
                 RoomSystem room_system;
                 if (RoomSystem.Instance == null)
                 {
-                    saver.GetComponent<RoomSystem>().Awake();
-                    saver.GetComponent<RoomBank>().Awake();
+                    room_system = FindFirstObjectByType<RoomSystem>();
+                    room_system.Awake();
+                    FindFirstObjectByType<RoomBank>().Awake();
                 }
 
                 // load all rooms from system
