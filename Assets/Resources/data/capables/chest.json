@@ -2,8 +2,8 @@
     "id": "chest",
     "kind": "Chest",
     "position": {
-        "x": 10.11780071258545,
-        "y": 4.106047630310059
+        "x": 8.0,
+        "y": 4.125
     },
     "orientation": {
         "x": 0.0,
@@ -55,8 +55,34 @@
         "order_in_layer": 0,
         "layers": []
     },
+    "body_data": {
+        "box_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 29,
+                "used_for_pathfinding": true,
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.19611191749572755
+                },
+                "size": {
+                    "x": 1.442360281944275,
+                    "y": 0.375521183013916
+                }
+            }
+        ],
+        "circle_colliders": []
+    },
     "inventory": [],
-    "capacities_ids": [],
+    "capacities_ids": [
+        "",
+        "",
+        ""
+    ],
     "effects": [],
     "effects_ttl": []
 }

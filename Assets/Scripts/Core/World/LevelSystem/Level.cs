@@ -8,6 +8,6 @@ public class Level : MonoBehaviour
     {
         // for now we are a dummy we only tell the RoomSystem to
         // load all the rooms based on their data ids
-        RoomSystem.Instance.LoadRooms(rooms_ids);
+        RoomSystem.Instance?.LoadRooms(rooms_ids);
     }    
 }

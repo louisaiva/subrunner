@@ -25,4 +25,28 @@ public class NavMeshBuilder : MonoBehaviour
         }
         if (log) { Debug.Log("(NavMeshBuilder) rebuilt navmeshes for " + surfaces.Count + " surfaces."); }
     }
+    public void BuildNavMeshImmediate()
+    {
+        foreach (var surface in surfaces)
+        {
+            surface.BuildNavMesh();
+        }
+        if (log) { Debug.Log("(NavMeshBuilder) rebuilt navmeshes for " + surfaces.Count + " surfaces."); }
+    }
+
+
+#if UNITY_EDITOR
+    [UnityEditor.CustomEditor(typeof(NavMeshBuilder))]
+    public class NavMeshBuilderEditor : UnityEditor.Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            NavMeshBuilder manager = (NavMeshBuilder)target;
+
+            if (GUILayout.Button("Bake NavMesh")) { manager.BuildNavMeshImmediate(); }
+            DrawDefaultInspector();
+        }
+    }
+#endif
+
 }

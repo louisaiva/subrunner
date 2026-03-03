@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Newtonsoft.Json;
+using UnityEngine.UIElements;
 
 [Serializable] public class CapableData
 {
@@ -13,6 +14,9 @@ using Newtonsoft.Json;
 
     // ANIM PLAYER
     public AnimData anim_data;
+
+    // BODY
+    public BodyData body_data;
 
     // INVENTORY
     public List<string> inventory;
@@ -29,19 +33,23 @@ using Newtonsoft.Json;
     public CapableData Duplicate()
     {
         CapableData new_data = new CapableData();
+
+        // general
         new_data.id = this.id + "_copy"; // we add _copy to the id to avoid conflicts, it will be changed later in GenerateUniqueId
         new_data.kind = this.kind;
         new_data.position = this.position;
         new_data.orientation = this.orientation;
+
+        // anim
         new_data.anim_data = anim_data.Duplicate();
+
+        // body
+        if (this.body_data != null) { new_data.body_data = this.body_data.Duplicate(); }
+
+        // capacities & effects
         new_data.capacities_ids = new List<string>(this.capacities_ids);
         new_data.effects = new List<Effect>(this.effects);
         new_data.effects_ttl = new List<float>(this.effects_ttl);
-
-
-
-
-
         return new_data;
     }
 
@@ -52,7 +60,10 @@ using Newtonsoft.Json;
         details += $"  - kind : {kind}\n";
         details += $"  - position : {position}\n";
         details += $"  - orientation : {orientation}\n";
-        details += $"  - inventory : {inventory.Count} items\n";
+        if (body_data != null) { details += $"  - {body_data.GetDetails()}\n"; }
+        else { details += $"  - no body\n"; }
+        if (inventory != null) { details += $"  - inventory : {inventory.Count} items\n"; }
+        else { details += $"  - no inventory\n"; }
         details += $"  - capacities : {capacities_ids.Count} capacities\n";
         details += $"  - effects : {effects.Count} effects\n";
         details += $"  - {anim_data.GetDetails()}\n";
@@ -60,6 +71,8 @@ using Newtonsoft.Json;
     }
 }
 
+
+// ANIMATIONS
 [Serializable] public class AnimData
 {
     public string skin;
@@ -109,3 +122,49 @@ using Newtonsoft.Json;
     public int order_in_layer;
 }
 
+
+
+// COLLIDERS
+[Serializable] public class BodyData
+{
+    public List<BoxData> box_colliders;
+    public List<CircleData> circle_colliders;
+
+    // DUPLICATE
+    public BodyData Duplicate()
+    {
+        return new BodyData() { 
+            box_colliders = new List<BoxData>(this.box_colliders), 
+            circle_colliders = new List<CircleData>(this.circle_colliders)
+        };
+    }
+
+    // GET DETAILS
+    public string GetDetails()
+    {
+        string details = $"body_data :\n";
+        if (box_colliders != null) { details += $"     - box_colliders : {box_colliders.Count} box colliders\n"; }
+        else { details += $"     - box_colliders : null\n"; }
+        if (circle_colliders != null) { details += $"     - circle_colliders : {circle_colliders.Count} circle colliders\n"; }
+        else { details += $"     - circle_colliders : null\n"; }
+        return details;
+    }
+
+}
+[Serializable] public class ColliderData
+{
+    // collider data
+    public Vector2 local_position;
+    public int layerID;
+    public bool used_for_pathfinding;
+    public bool is_trigger;
+    public Vector2 offset;
+}
+[Serializable] public class CircleData : ColliderData
+{
+    public float radius;
+}
+[Serializable] public class BoxData : ColliderData
+{
+    public Vector2 size;
+}

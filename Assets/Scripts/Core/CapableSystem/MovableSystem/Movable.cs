@@ -55,7 +55,8 @@ public class Movable : Capable
     }
     private void OnDisable()
     {
-        if (CapableSystem.Instance != null || MovableEngine.Instance == null) { return; }
+        if (MovableEngine.Instance == null) { return; }
+        if (CapableSystem.Instance != null && CapableSystem.Instance.HasCapable(this)) { return; }
         MovableEngine.Instance.Unregister(this);
     }
 

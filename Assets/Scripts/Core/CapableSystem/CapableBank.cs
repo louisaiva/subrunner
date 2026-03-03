@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using CrashKonijn.Goap.Editor;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class CapableBank : MonoBehaviour
 {
@@ -28,7 +30,6 @@ public class CapableBank : MonoBehaviour
     [Header("Prefabs")]
     [SerializeField] protected GameObject capable_prefab; // with no kind at all : when instantiating we need to add component to it
     [SerializeField] protected GameObject feet_prefab;
-    [SerializeField] protected GameObject body_prefab;
 
     [Header("Sleeping capables")]
     [SerializeField] protected Hashtable/* <string, Stack<Capable>> */ pooled_capables;
@@ -55,6 +56,9 @@ public class CapableBank : MonoBehaviour
         {
             // then we load the anim data inside the capable
             load_anim_data(capable.anim_player, data.anim_data);
+
+            // and its body
+            load_body_data(capable, data.body_data);
             
             // we load its data
             capable.LoadData(data);
@@ -81,6 +85,9 @@ public class CapableBank : MonoBehaviour
         // then we load the anim data inside the capable
         load_anim_data(capable.anim_player, data.anim_data);
 
+        // and its body
+        load_body_data(capable, data.body_data);
+
         // then we can load the data
         capable.LoadData(data);
         loaded_capables.Add(capable);
@@ -100,14 +107,19 @@ public class CapableBank : MonoBehaviour
             GameObject feet = Instantiate(feet_prefab, go.transform);
             feet.name = "feet";
         }
+        
 
-        // being
-        if (is_kind(kind, typeof(Being)))
+        // objects (adds a navigation modifier to its body that's it) <- no need anymore it's inside the colliders prefabs
+        /* else
         {
-            // add a body collider to it
-            GameObject body = Instantiate(body_prefab, go.transform);
-            body.name = "body";
-        }
+            Transform body = go.transform.Find("body");
+            if (body != null)
+            {
+                NavMeshPlus.Components.NavMeshModifier modifier = body.gameObject.AddComponent<NavMeshPlus.Components.NavMeshModifier>();
+                modifier.overrideArea = true;
+                modifier.area = NavMesh.GetAreaFromName("Not Walkable");
+            }
+        } */
 
         // then we add the component corresponding to the capable kind
         Capable capable = go.gameObject.AddComponent(kind) as Capable;
@@ -120,7 +132,7 @@ public class CapableBank : MonoBehaviour
     }
 
 
-    // ANIM PLAYER
+    // ANIM PLAYER & COLLIDERS
     private void load_anim_data(AnimPlayer player, AnimData anim_data)
     {
         // we load the main anim data in the player
@@ -145,44 +157,49 @@ public class CapableBank : MonoBehaviour
             anim_layer.AssignLeader(player);
         }
     }
-
-
-    // UNLOAD CAPABLES
-    public Capable Unload(CapableData data)
+    private void load_body_data(Capable capable, BodyData body_data)
     {
-        // get capable
-        Capable capable = GetLoadedCapable(data);
-        if (capable == null) { return null; }
-        Unload(capable);
-        return capable;
-    }
-    public void Unload(Capable capable)
-    {
+        // checks if body data is null it means we have no colliders, we do nothing then
+        if (body_data == null) { return; }
+        Transform body = capable.body;
 
-        // unload anim layers
-        List<AnimLayer> anim_layers = capable.anim_player.GetAnimLayers();
-        if (log_anim_layers) { Debug.Log($"(CapableBank) Unloading capable {capable.data.id}, unloading {anim_layers.Count} anim layers"); }
-        // for (int i = 0; i < anim_layers.Count; i++)
-        while (anim_layers.Count > 0)
-        {
-            AnimLayer anim_layer = anim_layers[0];
-            anim_layer.UnassignLeader();
-            pooled_anim_layers.Push(anim_layer);
-            anim_layers.RemoveAt(0);
+        // load box colliders
+        for (int i = 0; i < body_data.box_colliders.Count; i++)
+        {            
+            BoxData collider_data = body_data.box_colliders[i];
+         
+            // we extract the collider from the pool
+            BoxCollider2D collider = ColliderBank.Instance.LoadBoxCollider(body, collider_data.used_for_pathfinding);
+
+            // we load the collider data
+            load_collider_data(collider, collider_data);
+            collider.size = collider_data.size;
         }
 
-        // unload the capable's data and put it back in the pool
-        string kind = capable.data.kind;
-        capable.UnloadData();
-        // pooled_capables.Push(capable);
-        insertInPool(capable, kind);
+        // load circle colliders
+        for (int i = 0; i < body_data.circle_colliders.Count; i++)
+        {            
+            CircleData collider_data = body_data.circle_colliders[i];
+         
+            // we extract the collider from the pool
+            CircleCollider2D collider = ColliderBank.Instance.LoadCircleCollider(body, collider_data.used_for_pathfinding);
 
-        // remove the capable from the loaded capables list
-        loaded_capables.Remove(capable);
-
-        // disable the gameObject
-        capable.gameObject.SetActive(false);
+            // we load the collider data
+            load_collider_data(collider, collider_data);
+            collider.radius = collider_data.radius;
+        }
     }
+    private void load_collider_data(Collider2D collider, ColliderData collider_data)
+    {
+        // we set gameobject data
+        collider.gameObject.layer = collider_data.layerID;
+        collider.transform.localPosition = collider_data.local_position;
+
+        // we set the collider data
+        collider.offset = collider_data.offset;
+        collider.isTrigger = collider_data.is_trigger;
+    }
+
 
     // low level pool management
     private Capable extractFromPool(string kind)
@@ -222,6 +239,52 @@ public class CapableBank : MonoBehaviour
         }
         return anim_layer;
     }
+
+    // UNLOAD CAPABLES
+    public Capable Unload(CapableData data)
+    {
+        // get capable
+        Capable capable = GetLoadedCapable(data);
+        if (capable == null) { return null; }
+        Unload(capable);
+        return capable;
+    }
+    public void Unload(Capable capable)
+    {
+
+        // unload anim layers
+        List<AnimLayer> anim_layers = capable.anim_player.GetAnimLayers();
+        if (log_anim_layers) { Debug.Log($"(CapableBank) Unloading capable {capable.data.id}, unloading {anim_layers.Count} anim layers"); }
+        // for (int i = 0; i < anim_layers.Count; i++)
+        while (anim_layers.Count > 0)
+        {
+            AnimLayer anim_layer = anim_layers[0];
+            anim_layer.UnassignLeader();
+            pooled_anim_layers.Push(anim_layer);
+            anim_layers.RemoveAt(0);
+        }
+
+        // unload body colliders
+        Transform body = capable.body;
+        for (int i = 0; i < body.childCount; i++)
+        {
+            GameObject collider = body.GetChild(i).gameObject;
+            ColliderBank.Instance.UnloadCollider(collider);
+        }
+
+        // unload the capable's data and put it back in the pool
+        string kind = capable.data.kind;
+        capable.UnloadData();
+        // pooled_capables.Push(capable);
+        insertInPool(capable, kind);
+
+        // remove the capable from the loaded capables list
+        loaded_capables.Remove(capable);
+
+        // disable the gameObject
+        capable.gameObject.SetActive(false);
+    }
+
 
     // CAPABLE GETTING
     public Capable GetLoadedCapable(string id)

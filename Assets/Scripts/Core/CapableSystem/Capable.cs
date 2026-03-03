@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 /// <summary>
 /// Mother class of all the Capables in the game.
@@ -27,11 +28,10 @@ public class Capable : MonoBehaviour, Debuggable
         this.name = data.id;
         this.transform.position = data.position;
 
-        // we set the skin
-        // this.anim_player.Skin = data.skin; already loaded inside CapableBank !!!
-
         // we set the orientation
         this.Orientation = data.orientation;
+
+        // ! the colliders & anim data is loaded directly from CapableBank since we pool those colliders
 
         // we set the inventory
 
@@ -84,6 +84,9 @@ public class Capable : MonoBehaviour, Debuggable
             // we set the anim data
             anim_data = anim_player.GetStaticAnimData(),
 
+            // we set the body data
+            body_data = get_static_body_data(),
+
             // we set the orientation
             orientation = this.orientation,
 
@@ -121,7 +124,76 @@ public class Capable : MonoBehaviour, Debuggable
 
         return capacities_ids;
     }
+    private BodyData get_static_body_data()
+    {
+        if (body == null) { return null; }
 
+        BodyData body_data = new BodyData
+        {
+            box_colliders = new List<BoxData>(),
+            circle_colliders = new List<CircleData>()
+        };
+
+
+        // we go through all colliders in the body and save their data
+        for (int i = 0; i < body.childCount; i++)
+        {
+            Transform collider_transform = body.GetChild(i);
+            Collider2D collider = collider_transform.GetComponent<Collider2D>();
+            if (collider == null) { continue; }
+
+            if (collider is BoxCollider2D box_collider)
+            {
+                BoxData box_data = get_static_box_data(box_collider);
+                body_data.box_colliders.Add(box_data);
+            }
+            else if (collider is CircleCollider2D circle_collider)
+            {
+                CircleData circle_data = get_static_circle_data(circle_collider);
+                body_data.circle_colliders.Add(circle_data);
+            }
+        }
+
+        return body_data;
+    }
+    private BoxData get_static_box_data(BoxCollider2D collider)
+    {
+        
+        if (log_static_data) { Debug.Log($"(Capable - GetStaticData - {name}) BoxCollider2D found with offset {collider.offset} and size {collider.size} and is_trigger = {collider.isTrigger}"); }
+        return new BoxData
+        {
+            // set base gameobject data
+            local_position = collider.transform.localPosition,
+            layerID = collider.gameObject.layer,
+
+            // set base collider data
+            offset = collider.offset,
+            is_trigger = collider.isTrigger,
+            size = collider.size,
+
+            // set navmesh use
+            used_for_pathfinding = is_used_for_pathfinding(collider)
+        };
+    }
+    private CircleData get_static_circle_data(CircleCollider2D collider)
+    {
+        if (log_static_data) { Debug.Log($"(Capable - GetStaticData - {name}) CircleCollider2D found with offset {collider.offset} and radius {collider.radius} and is_trigger = {collider.isTrigger}"); }
+        return new CircleData
+        {
+            radius = collider.radius,
+            local_position = collider.transform.localPosition,
+            layerID = collider.gameObject.layer,
+            offset = collider.offset,
+            is_trigger = collider.isTrigger,
+            used_for_pathfinding = is_used_for_pathfinding(collider)
+        };
+    }
+    private bool is_used_for_pathfinding(Collider2D collider)
+    {
+        NavMeshPlus.Components.NavMeshModifier modifier = collider.GetComponent<NavMeshPlus.Components.NavMeshModifier>();
+        if (modifier != null && modifier.enabled) { return true; }
+        return false;
+    }
 
 
 
@@ -168,14 +240,22 @@ public class Capable : MonoBehaviour, Debuggable
     [SerializeField] protected List<float> effects_timetolive = new List<float>();
 
 
-    // PROPERTIES
+    // anim player
     private AnimPlayer _anim_player = null;
     public AnimPlayer anim_player { get
         {
             if (_anim_player == null) { _anim_player = GetComponent<AnimPlayer>(); }
             return _anim_player;
         } private set { _anim_player = value; } }
-    public CapacityBank bank { get; private set; }
+
+    // body
+    private Transform _body = null;
+    public Transform body { get
+        {
+            if (_body == null) { _body = transform.Find("body"); }
+            return _body;
+        } }
+
 
     // un capable peut aussi avoir un inventaire & un hover
     private Inventory _inventory = null;
@@ -231,6 +311,7 @@ public class Capable : MonoBehaviour, Debuggable
     [Header("Logs")]
     public bool debug = false;
     public bool activate_all_capacities_logs_on_awake = false;
+    public bool log_static_data = false;
 
     // START
     protected virtual void Awake()
@@ -238,9 +319,6 @@ public class Capable : MonoBehaviour, Debuggable
         // we get the anim player
         anim_player = GetComponent<AnimPlayer>();
         Orientation = orientation;
-
-        // we get the capacity bank
-        bank = AnimBank.Instance.GetComponent<CapacityBank>();
 
         // we add all the capacities that are in the gameObject
         foreach (Transform child in transform)
@@ -325,7 +403,7 @@ public class Capable : MonoBehaviour, Debuggable
         if (HasCapacity(name)) { return GetCapacity(name); }
 
         // get the capacity instance
-        GameObject capa_instance = bank.GetCapacityInstance(name);
+        GameObject capa_instance = CapacityBank.Instance?.GetCapacityInstance(name);
 
         // we put it as a child of the capable & we rename it
         capa_instance.transform.parent = transform;

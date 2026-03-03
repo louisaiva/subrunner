@@ -148,6 +148,16 @@ public class RoomSystem : BSOD_System<RoomSystem>
     }
 
     // INIT
+    /// <summary>
+    /// this method is called when first loading is done. its only aim is to
+    /// discover all capables & movables that are inside the loaded rooms
+    /// and that are not already affected to a room. Because of this, this method is
+    /// only useful during development because when the save system will be up, there won't
+    /// be any capable that is not loaded from WorldData, which means all capable will be loaded
+    /// at awake through the help of the capablesystem, and so they will have a room. this method
+    /// uses overlapping colliders checks anyway so it is not perfect, but we don't care it's
+    /// temporary.
+    /// </summary>
     private async void Init()
     {
         init_doing = true;
@@ -211,7 +221,6 @@ public class RoomSystem : BSOD_System<RoomSystem>
             // wipe out the IN data
             room_data.IN_movables_ids.Clear();
 
-            // todo should we wait at some point ? if we have perf issues yes (drop of fps 1s after game start)
             for (int j = 0; j < frames_between_room_overlap_checks; j++) { await System.Threading.Tasks.Task.Yield(); }
         }
 

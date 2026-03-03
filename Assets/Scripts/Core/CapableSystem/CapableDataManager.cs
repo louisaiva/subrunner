@@ -28,7 +28,7 @@ public class CapableDataManager : MonoBehaviour
             string json = JsonUtility.ToJson(data, true);
             System.IO.File.WriteAllText(data_path + data.id + ".json", json, System.Text.Encoding.UTF8);
 
-            if (log) { Debug.Log($"(Capable - Save Data) Updated & Saved CapableData : {capable.name} (to {data_path + data.id + ".json"})\n\n{json}"); }
+            if (log) { Debug.Log($"(Capable - Save Data) Updated & Saved CapableData : {capable.name} (to {data_path + data.id + ".json"})\n\n{data.GetDetails()}\n\n{json}"); }
         }
     }
 

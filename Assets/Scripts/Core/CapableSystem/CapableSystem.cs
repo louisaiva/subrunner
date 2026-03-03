@@ -238,4 +238,14 @@ public class CapableSystem : BSOD_System<CapableSystem>
     }
 
 
+
+    // GETTERS
+    public bool HasCapable(Capable capable)
+    {
+        if (capable == null) { return false; }
+        if (capable.data == null) { return false; }
+        if (capable.data.id == "") { return false; }
+        return loaded_capables_data.ContainsKey(capable.data.id);
+    }
+
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -12,7 +13,21 @@ public class Being : Movable
     public bool Alive { get { return life > 0f; } }
     public float LifePourcent { get { return life / (float)max_life; } }
     public float regen_life = 0f; // en point de life par seconde
-    public Collider2D body_collider;
+    // public Collider2D body_collider;
+    public List<Collider2D> _body_colliders;
+    public List<Collider2D> BodyColliders
+    {
+        get
+        {
+            if (_body_colliders == null || _body_colliders.Count == 0)
+            {
+                _body_colliders = new List<Collider2D>(body.GetComponentsInChildren<Collider2D>());
+            }
+            return _body_colliders;
+        }
+    }
+    public Collider2D body_collider { get { return BodyColliders.Count > 0 ? BodyColliders[0] : null; } }
+
     public int body_meats = 1; // nombre de viande dans le corps du being
     public int body_bones = 1; // nombre d'os dans le corps du being
 
@@ -27,9 +42,6 @@ public class Being : Movable
     protected override void Awake()
     {
         base.Awake();
-
-        // on récupère les composants
-        body_collider = transform.Find("body").GetComponent<Collider2D>();
 
         // on récupère le provider de floating dmg
         floating_dmg_provider = GameObject.Find("/utils/dmgs_provider");

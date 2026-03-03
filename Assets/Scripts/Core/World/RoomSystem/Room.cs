@@ -385,7 +385,7 @@ public class Room : MonoBehaviour
         {
             Collider2D collider = colliders[i];
             Capable capable = collider.GetComponent<Capable>();
-            if (capable == null) { capable = collider.transform.parent.GetComponent<Capable>(); }
+            if (capable == null) { capable = collider.GetComponentInParent<Capable>(); }
             if (capable == null) { continue; }
             
             // we found a capable !

@@ -263,10 +263,10 @@ public class AttackCapacity : Capacity
         // we check if the pc is enabled
         if (!pc.enabled) { return; }
 
-        if (being != null && being.body_collider == other) { return; } // we don't attack ourselves
+        if (being != null && being.BodyColliders.Contains(other)) { return; } // we don't attack ourselves
 
         // we remove not attackable tags
-        Being enemy_being = other.transform.parent.GetComponent<Being>();
+        Being enemy_being = other.GetComponentInParent<Being>();
         if (enemy_being == null || excluded_tags.Contains(enemy_being.gameObject.tag)) { return; }
 
         // we remove not alive beings
