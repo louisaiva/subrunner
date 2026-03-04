@@ -973,6 +973,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 352dd4bffc5726b41a31e2620019c7cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clear_and_assign_pools_in_awake: 1
   pools:
   - {fileID: 3871316029511075521}
   - {fileID: 7509888243980506630}
@@ -1307,7 +1308,6 @@ MonoBehaviour:
   log_static_data: 0
   debug_velocity: 0
   log_avoidance: 0
-  rb: {fileID: 0}
   weight: 1
   random_weight_modifier_at_start: 0
   friction: 7
@@ -1763,11 +1763,14 @@ MonoBehaviour:
     local_position: {x: 0, y: 0}
   cooldown: 0
   debug: 0
+  log_footsteps_audio: 0
+  log_footsteps_repeating: 0
   walk_speed: 0
   walk_percentage_target: 0
   max_speed: 3
   random_speed_modifier_at_start: 0
   walk_particles: {fileID: 0}
+  delay_between_footsteps: 0.6
 --- !u!199 &6952850229809567613
 ParticleSystemRenderer:
   serializedVersion: 6

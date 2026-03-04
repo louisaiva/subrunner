@@ -159,6 +159,9 @@ public class UI_Navigator : Singleton<UI_Navigator>
         OnSlotHoverEnter?.Invoke(slot);
         CurrentSlot = slot;
         if (log_hover) { Debug.Log("(UI_Navigator) hovered slot : " + slot.name); }
+
+        // on joue le son
+        AudioEngine.Instance.PlayUI("hover");
     }
     public void UnhoverSlot()
     {

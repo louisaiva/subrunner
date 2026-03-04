@@ -8,7 +8,7 @@
 			<value>1</value>
 		</property>
 		<relationship name="folder">
-			<destination>{bc1ed7b3-98ff-4af8-abf7-903d15ec9ced}</destination>
+			<destination>{9e42bb01-4c76-445d-a496-fdf985eb4494}</destination>
 		</relationship>
 		<relationship name="mixer">
 			<destination>{ad6b3d3a-7c66-44ce-9378-0b26c8cbb146}</destination>
@@ -75,6 +75,12 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{d9f73e0c-4421-4509-9a7b-29ac5a622706}">
+		<property name="volume">
+			<value>1</value>
+		</property>
+		<property name="pitch">
+			<value>0.900000036</value>
+		</property>
 		<relationship name="effectChain">
 			<destination>{7b27177c-c5e1-40cc-a019-881d1a156d5d}</destination>
 		</relationship>
@@ -101,15 +107,66 @@
 	<object class="MixerBusPanner" id="{d43c3a03-0e4f-47f6-95b3-70fcf5c201f2}" />
 	<object class="MixerBusEffectChain" id="{7b27177c-c5e1-40cc-a019-881d1a156d5d}">
 		<relationship name="effects">
+			<destination>{881fc4ea-660f-4f75-bf70-f59995c4697f}</destination>
+			<destination>{a05bdfe6-55a2-4ee3-97fe-a5216c9d7eff}</destination>
+			<destination>{dc4f6c2d-76ec-4f84-9ffb-023a5a072b80}</destination>
 			<destination>{8f97c100-326f-4425-9f2a-f66b1cd5c827}</destination>
+			<destination>{0123a822-f376-48dd-b910-c2b1ba346aed}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{9d46a9d9-f342-43e6-a5d4-615744632bbd}" />
 	<object class="SingleSound" id="{6ffab640-a788-4d65-a831-7780b46bdb3b}">
+		<property name="startOffset">
+			<value>19.5</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{35700059-ca6f-4de3-8c43-5cec581623f3}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{fcb29411-c55d-49a9-a7ae-148438aef359}" />
+	<object class="PitchShifterEffect" id="{881fc4ea-660f-4f75-bf70-f59995c4697f}">
+		<property name="pitch">
+			<value>1.27999997</value>
+		</property>
+		<property name="fftSize">
+			<value>3580</value>
+		</property>
+		<property name="overlap">
+			<value>8.19999981</value>
+		</property>
+	</object>
+	<object class="ThreeEQEffect" id="{a05bdfe6-55a2-4ee3-97fe-a5216c9d7eff}">
+		<property name="lowGain">
+			<value>-10</value>
+		</property>
+		<property name="midGain">
+			<value>-12.5</value>
+		</property>
+		<property name="lowCrossover">
+			<value>700</value>
+		</property>
+		<property name="highCrossover">
+			<value>1300</value>
+		</property>
+		<property name="crossoverSlope">
+			<value>0</value>
+		</property>
+	</object>
+	<object class="DistortionEffect" id="{dc4f6c2d-76ec-4f84-9ffb-023a5a072b80}">
+		<property name="level">
+			<value>0.379999995</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{8f97c100-326f-4425-9f2a-f66b1cd5c827}" />
+	<object class="MixerSend" id="{0123a822-f376-48dd-b910-c2b1ba346aed}">
+		<property name="level">
+			<value>-13.5</value>
+		</property>
+		<property name="inputFormat">
+			<value>1</value>
+		</property>
+		<relationship name="mixerReturn">
+			<destination>{68beb425-b4db-4a8e-bfdc-758063cb4bdb}</destination>
+		</relationship>
+	</object>
 </objects>

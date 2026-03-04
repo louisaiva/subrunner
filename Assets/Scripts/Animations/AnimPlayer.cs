@@ -314,6 +314,16 @@ public class AnimPlayer : MonoBehaviour
         // we play the idle animation
         Play("idle");
     }
+    
+    /// <summary>
+    /// returns true if the capacity is somewhere inside
+    /// the animcapacity priority list. If not found it returns false.
+    /// This means that the method could return true even if the current_capacity
+    /// is not the one your looking for, because the capacity can be playing
+    /// but another capacity is playing on top of it so it's hidden beneath.
+    /// </summary>
+    /// <param name="capacity"></param>
+    /// <returns></returns>
     public bool IsPlaying(string capacity)
     {
         AnimCapacityPriority priority = getAnimCapacityPriority(capacity);

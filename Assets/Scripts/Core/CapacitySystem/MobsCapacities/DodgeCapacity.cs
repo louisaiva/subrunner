@@ -25,6 +25,9 @@ public class DodgeCapacity : Capacity
         if (debug) { Debug.Log("(DodgeCapacity) dodge launched for " + capable.name + ", anim found is " + (anim != null ? anim.name : "null")); }
         if (anim == null) { return; }
 
+        // we play the sound
+        AudioEngine.Instance.Play("dodge", capable);
+
         // we start the cooldown for the time of the animation
         float duration = anim.GetDuration();
         startCooldown(duration);

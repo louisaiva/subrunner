@@ -21,39 +21,20 @@ public class AudioEngine : MonoBehaviour
         ambiance_bus = RuntimeManager.GetBus("bus:/ambiance");
     }
 
+    [Header("Wait delay at start")]
+    [SerializeField] private float start_delay = 1f;
+    [SerializeField] private bool can_play = false;
+    private void enable_audio() { can_play = true; }
+    private void disable_audio() { can_play = false; }
+
     [Header("Audio buses")]
     public Bus master_bus;
     public Bus sfx_bus;
     public Bus music_bus;
     public Bus ambiance_bus;
 
-    [Header("SETTINGS")]
-    private StepSetting global_volume_setting;
-    private StepSetting sfx_volume_setting;
-    private StepSetting music_volume_setting;
-    private StepSetting ambiance_volume_setting;
-
-    // START & ONDESTROY
-    protected virtual void Start()
-    {
-        register_settings();
-    }
-    protected virtual void OnDestroy()
-    {
-        unregister_settings();
-    }
-
-    // SOUND PLAY
-    public void PlaySound(EventReference sound, Vector3 position)
-    {
-        RuntimeManager.PlayOneShot(sound, position);
-    }
-    public EventInstance CreateSound(EventReference sound)
-    {
-        EventInstance instance = RuntimeManager.CreateInstance(sound);
-        return instance;
-    }
-
+    [Header("Logs")]
+    public bool log_play = false;
 
     // SETTINGS REGISTERING
     private void register_settings()
@@ -78,8 +59,77 @@ public class AudioEngine : MonoBehaviour
     }
 
     // SETTINGS
-    private void SetGlobalVolume(float volume) { master_bus.setVolume(volume/100f); }
-    private void SetMusicVolume(float volume) { music_bus.setVolume(volume/100f); }
-    private void SetAmbianceVolume(float volume) { ambiance_bus.setVolume(volume/100f); }
-    private void SetSFXVolume(float volume) { sfx_bus.setVolume(volume/100f); }
+    private void SetGlobalVolume(float volume) { master_bus.setVolume(volume / 100f); }
+    private void SetMusicVolume(float volume) { music_bus.setVolume(volume / 100f); }
+    private void SetAmbianceVolume(float volume) { ambiance_bus.setVolume(volume / 100f); }
+    private void SetSFXVolume(float volume) { sfx_bus.setVolume(volume / 100f); }
+
+    [Header("SETTINGS")]
+    private StepSetting global_volume_setting;
+    private StepSetting sfx_volume_setting;
+    private StepSetting music_volume_setting;
+    private StepSetting ambiance_volume_setting;
+
+    // START & ONDESTROY
+    protected virtual void Start()
+    {
+        register_settings();
+        
+        Invoke(nameof(enable_audio), start_delay);
+    }
+    protected virtual void OnDestroy()
+    {
+        unregister_settings();
+    }
+
+
+
+
+    // ONE SHOT SOUND PLAY
+    public void PlaySound(EventReference sound, GameObject player)
+    {
+        if (!can_play) { return; }
+        RuntimeManager.PlayOneShotAttached(sound, player);
+    }
+    public void Play(string capacity, string skin, GameObject player)
+    {
+        if (!can_play) { return; }
+        if (log_play) { Debug.Log($"(AudioEngine - Play) trying to play '{capacity}' & '{skin}' audio"); }
+        // we get the right event ref from the bank
+        EventReference event_ref = AudioBank.Instance.GetEventReference(capacity, skin);
+        if (event_ref.Equals(default(EventReference))) { return; }
+        PlaySound(event_ref, player);
+    }
+    public void Play(string capacity, Capable capable)
+    {
+        Play(capacity, capable.Skin, capable.gameObject);
+    }
+
+    // SOUND INSTANCE CREATION - gives more control to capacities
+    public EventInstance CreateInstance(EventReference event_ref)
+    {
+        EventInstance instance = RuntimeManager.CreateInstance(event_ref);
+        return instance;
+    }
+    public EventInstance CreateInstance(string capacity, string skin)
+    {
+        // we get the right event ref from the bank
+        EventReference event_ref = AudioBank.Instance.GetEventReference(capacity, skin);
+        if (event_ref.Equals(default(EventReference))) { return default; }
+        return CreateInstance(event_ref);
+    }
+    public EventInstance CreateInstance(string capacity, Capable capable) { return CreateInstance(capacity, capable.Skin); }
+
+
+    // ONE SHOT PLAY UI
+    public void PlayUI(string capa)
+    {
+        if (!can_play) { return; }
+        if (log_play) { Debug.Log($"(AudioEngine - PlayUI) trying to play '{capa}' UI audio"); }
+        // we get the right event ref from the bank
+        EventReference event_ref = AudioBank.Instance.GetEventReference(capa, "ui_default");
+        if (event_ref.Equals(default(EventReference))) { return; }
+        RuntimeManager.PlayOneShot(event_ref);
+    }
+
 }

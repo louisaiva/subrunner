@@ -45,6 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b960528b9965ae94cab28eb75ccf1969, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioEngine
+  start_delay: 1
+  can_play: 0
+  log_play: 0
 --- !u!114 &5290126021399918753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57,34 +60,57 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6508dae2849bd724abb944ca669c1f6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioBank
-  <bob_walk>k__BackingField:
-    Guid:
-      Data1: -1375575420
-      Data2: 1308236022
-      Data3: 1194039217
-      Data4: -1981205428
-    Path: event:/BobWalk
-  <bob_dodge>k__BackingField:
-    Guid:
-      Data1: 1733394839
-      Data2: 1207587403
-      Data3: 1854452159
-      Data4: -1626464899
-    Path: event:/BobDodge
-  <chest_open>k__BackingField:
-    Guid:
-      Data1: 1438236673
-      Data2: 1336011621
-      Data3: -1537614410
-      Data4: 1644569412
-    Path: event:/ChestOpen
-  <chest_close>k__BackingField:
-    Guid:
-      Data1: -1300834732
-      Data2: 1222496725
-      Data3: 1699577762
-      Data4: -611699861
-    Path: event:/ChestClose
+  capacities_audio:
+  - capacity: walk
+    skins_audio_data:
+    - skin: perso
+      event_reference:
+        Guid:
+          Data1: 916833342
+          Data2: 1128079369
+          Data3: 743053222
+          Data4: 1037194365
+        Path: event:/capacities/BobWalk
+    - skin: zombo
+      event_reference:
+        Guid:
+          Data1: 881216795
+          Data2: 1107903684
+          Data3: -1696210241
+          Data4: -1696359518
+        Path: event:/capacities/ZomboWalk
+  - capacity: open
+    skins_audio_data:
+    - skin: chest
+      event_reference:
+        Guid:
+          Data1: 1438236673
+          Data2: 1336011621
+          Data3: -1537614410
+          Data4: 1644569412
+        Path: event:/capacities/ChestOpen
+  - capacity: close
+    skins_audio_data:
+    - skin: chest
+      event_reference:
+        Guid:
+          Data1: -1300834732
+          Data2: 1222496725
+          Data3: 1699577762
+          Data4: -611699861
+        Path: event:/capacities/ChestClose
+  - capacity: dodge
+    skins_audio_data:
+    - skin: perso
+      event_reference:
+        Guid:
+          Data1: 1733394839
+          Data2: 1207587403
+          Data3: 1854452159
+          Data4: -1626464899
+        Path: event:/capacities/BobDodge
+  log_get_event_ref: 0
+  log_issues: 1
 --- !u!1 &3811816626350204236
 GameObject:
   m_ObjectHideFlags: 0
@@ -917,6 +943,7 @@ MonoBehaviour:
   LOG_HACKS: 0
   LOG_CONNECTIONS: 0
   LOG_CORES: 0
+  LOG_WANDER_TARGET_SENSOR: 0
 --- !u!1 &7970305435618458122
 GameObject:
   m_ObjectHideFlags: 0

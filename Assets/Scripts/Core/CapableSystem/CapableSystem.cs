@@ -23,6 +23,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
     [Header("Logs")]
     public bool log_awake_data = false;
     public bool log_loading = false;
+    public bool hide_log_no_data_found = false;
     public bool log_spawning = false;
     public int load_x_capables_per_frame = 1;
 
@@ -97,7 +98,11 @@ public class CapableSystem : BSOD_System<CapableSystem>
     private Capable load_capable(string id)
     {
         CapableData data = capables_data[id] as CapableData;
-        if (data == null) { Debug.LogWarning("(CapableSystem - Load) Capable data not found for id: " + id); return null; }
+        if (data == null)
+        {
+            if (!hide_log_no_data_found) { Debug.LogWarning("(CapableSystem - Load) Capable data not found for id: " + id); }
+            return null;
+        }
         return load_capable(data);
     }
     private Capable load_capable(CapableData data)
