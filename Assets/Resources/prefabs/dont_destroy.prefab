@@ -844,6 +844,7 @@ GameObject:
   - component: {fileID: 3744786912224508728}
   - component: {fileID: 6024383193295535529}
   - component: {fileID: 4977898504913353187}
+  - component: {fileID: 714515157948744320}
   m_Layer: 0
   m_Name: dont_destroy
   m_TagString: Untagged
@@ -901,6 +902,21 @@ MonoBehaviour:
   prototype: mouse hacking v1
   log: 0
   log_stats: 0
+--- !u!114 &714515157948744320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5846687295635405809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caa5b0cd71c2c4a4ca012b8e2857d628, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LOG_HACKS: 0
+  LOG_CONNECTIONS: 0
+  LOG_CORES: 0
 --- !u!1 &7970305435618458122
 GameObject:
   m_ObjectHideFlags: 0

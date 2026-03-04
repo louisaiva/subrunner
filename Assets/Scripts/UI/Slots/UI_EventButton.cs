@@ -16,6 +16,8 @@ public class UI_EventButton : UI_Button, Colorant
     [Header("Colorers")]
     public List<UI_Colorer> colorers = new List<UI_Colorer>();
     public List<UI_Colorer> Colorers => colorers;
+    public System.Action<UI_EventButton, List<UI_Colorer>> OnColored = delegate { };
+    public System.Action<UI_EventButton, List<UI_Colorer>> OnUncolored = delegate { };
 
 
     [Header("Event")]
@@ -35,6 +37,7 @@ public class UI_EventButton : UI_Button, Colorant
         {
             colorers[i].ApplyColor(baseColor);
         }
+        OnColored?.Invoke(this, colorers);
     }
     public override void OnPointerExit(PointerEventData eventData)
     {
@@ -49,6 +52,7 @@ public class UI_EventButton : UI_Button, Colorant
         {
             colorers[i].RevertColor();
         }
+        OnUncolored?.Invoke(this, colorers);
     }
     public override void OnPointerClick(PointerEventData eventData)
     {

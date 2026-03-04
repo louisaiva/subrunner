@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 /// <summary>
 /// Item is a Movable that can be grabbed by other Capables with GrabCapacity + InteractCapacity.
@@ -195,6 +196,9 @@ public class Item : Movable, EndlessInteractable
     }
     protected virtual void on_dropped()
     {
+        // check if we are not destroyed
+        if (going_to_be_destroyed) { return; }
+
         update_grab_n_place();
 
         // we call the event
@@ -204,6 +208,7 @@ public class Item : Movable, EndlessInteractable
     // MAIN LOW LEVEL UPGRADE GRABBING & PLACING
     protected virtual void update_grab_n_place()
     {
+        
         // RENDERERs
         transform.localScale = Vector3.one;
         if (!Placed && Grabbed)
@@ -239,9 +244,9 @@ public class Item : Movable, EndlessInteractable
             if (feet_collider != null) { feet_collider.enabled = true; }
 
             // we add the rigidbody
-            if (GetComponent<Rigidbody2D>() == null)
+            if (rb == null)
             {
-                rb = gameObject.AddComponent<Rigidbody2D>();
+                gameObject.AddComponent<Rigidbody2D>();
                 rb.gravityScale = 0;
                 rb.freezeRotation = true;
             }
@@ -255,11 +260,7 @@ public class Item : Movable, EndlessInteractable
             if (feet_collider != null) { feet_collider.enabled = false; }
 
             // we remove the rigidbody
-            if (rb != null)
-            {
-                Destroy(rb);
-                rb = null;
-            }
+            if (rb != null) { Destroy(rb); }
 
             // we set the effect IsBeingCarried to -888f (infinite time)
             AddEffect(Effect.BeingCarried, -888f);
@@ -287,9 +288,9 @@ public class Item : Movable, EndlessInteractable
     // ON DESTROY
     protected override void OnDestroy()
     {
+        base.OnDestroy();
+
         if (!gameObject.scene.isLoaded) { return; } // this happens when the scene is destroyed when we quit the scene
         if (Holder != null) { Holder.Inventory.Remove(this); } // we remove the item from the holder's inventory
-
-        base.OnDestroy();
     }
 }

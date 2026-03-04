@@ -32,10 +32,17 @@ namespace subrunner.goap
             // get the ia & exploration range
             IA ia = references.GetCachedComponentInParent<IA>();
 
+
+            if (Logger.Instance.LOG_WANDER_TARGET_SENSOR)
+            {
+                Debug.Log($"(WanderTargetSensor) {agent} is sensing a new wander target for IA {ia.name}");
+            }
+
             // find a random position to go
             Vector3 random_position = getRandomPositionInRangeNavMesh(agent.Transform.position, ia.exploration_radius,ia.Mover.filter);
             if (random_position == default)
             {
+                Debug.LogWarning("(IdleTargetSensor - Sense) No walkable position found on the nav mesh for : " + ia.name);
                 if (existingTarget is PositionTarget) { return existingTarget as PositionTarget; }
                 return null;
             }
@@ -141,7 +148,6 @@ namespace subrunner.goap
                 return getMaxDistanceAlongPath(path, range);
             }
 
-            Debug.LogWarning("(IdleTargetSensor) No walkable position found on the nav mesh");
             return default;
         }
         private Vector3 getRandomPositionOnNavMesh(Vector2 center, float range, NavMeshQueryFilter? filter = null)

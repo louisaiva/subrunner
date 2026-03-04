@@ -240,6 +240,8 @@ public class Capable : MonoBehaviour, Debuggable
     [SerializeField] protected List<float> effects_timetolive = new List<float>();
 
 
+    protected bool going_to_be_destroyed = false;
+
     // anim player
     private AnimPlayer _anim_player = null;
     public AnimPlayer anim_player { get
@@ -589,6 +591,8 @@ public class Capable : MonoBehaviour, Debuggable
     // DEBUG
     protected virtual void OnDestroy()
     {
+        going_to_be_destroyed = true;
+
         if (DebugManager.Instance == null) { return; } // this happens when the scene is destroyed when we quit the scene
         DebugManager.Instance.transform.GetComponentInChildren<EntitiesDebug>()?.RemoveEntity(this);
     }

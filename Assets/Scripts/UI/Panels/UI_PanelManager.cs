@@ -18,6 +18,7 @@ public class UI_PanelManager : MonoBehaviour
             return current_panel;
         }
     }
+    public bool IsCurrentPanel(UI_Panel panel) => panel.name == CurrentPanel;
     [SerializeField] private List<UI_Panel> panels;
     public event Action<string,float> OnPanelChanged = delegate { };
 

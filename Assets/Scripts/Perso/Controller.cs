@@ -271,18 +271,18 @@ public class Controller : MonoBehaviour
         UI_InventoryMenu inventory_menu = UI_Manager.Instance.GetPool<UI_InventoryMenu>();
         List<UI_ItemPool> ui_pools = inventory_menu.GetItemPools();
         
-        // we go through all itempools in inventory
-        for (int i=0; i<inventory.pools.Count; ++i)
+        // we go through all ui_pools found in the menu
+        for (int i=0; i<ui_pools.Count; ++i)
         {
-            ItemPool pool = inventory.pools[i];
-            if (pool == null) { continue; }
+            UI_ItemPool ui_pool = ui_pools[i];
+            if (ui_pool == null) { continue; }
 
-            // on regarde si on a un ui_item_pool qui a la même pool_id
-            UI_ItemPool ui_pool = ui_pools.Find(p => p.PoolID == pool.PoolID);
-            if (ui_pool == null)
+            // on regarde si on a un item pool dans l'inventaire qui a la même pool_id
+            ItemPool pool = inventory.GetItemPool(ui_pool.PoolID);
+            if (pool == null)
             {
-                // if we don't have a ui pool for this item pool, we skip it
-                if (log_ui_attachment) { Debug.LogWarning($"(Controller) No UI_ItemPool found for ItemPool with id {pool.PoolID} in inventory of capable {Capable.name}! Skipping UI attachment for this pool."); }
+                // if we don't have an item pool for this ui pool, we skip it
+                if (log_ui_attachment) { Debug.LogWarning($"(Controller) No ItemPool found for UI_ItemPool with id {ui_pool.PoolID} in inventory of capable {Capable.name}! Skipping UI attachment for this pool."); }
                 continue;
             }
 

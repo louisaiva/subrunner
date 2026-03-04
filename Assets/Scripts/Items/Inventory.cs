@@ -7,7 +7,8 @@ public class Inventory : MonoBehaviour, ItemStorer
 {
     
     [Header("ItemPools")]
-    public List<ItemPool> pools = new List<ItemPool>();
+    [SerializeField] private bool clear_and_assign_pools_in_awake = true;
+    [SerializeField] private List<ItemPool> pools = new List<ItemPool>();
     public List<Item> Items { get { return pools.SelectMany(p => p.Items).ToList(); } }
     public int Count { get { return pools.Sum(pool => pool.Count); } }
     public List<ItemStack> Stacks { get { return pools.SelectMany(p => p.Stacks).ToList(); } }
@@ -52,6 +53,19 @@ public class Inventory : MonoBehaviour, ItemStorer
     // AWAKE
     protected virtual void Awake()
     {
+        if (clear_and_assign_pools_in_awake)
+        {
+            // we clear the pools list and assign it with all the ItemPool found in children
+            pools = new List<ItemPool>(GetComponents<ItemPool>());
+            
+            // we go through DIRECT children and DIRECT only otherwise we will pick the ItemPool of items in their inventory which we DO NOT want
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                pools.AddRange(transform.GetChild(i).GetComponents<ItemPool>());
+            }
+            
+        }
+
         // we attach the inventory to the pools
         for (int i = 0; i < pools.Count; i++)
         {
@@ -363,6 +377,15 @@ public class Inventory : MonoBehaviour, ItemStorer
             if (pools[i].HasItem(item)) { return true; }
         }
         return false;
+    }
+
+    public ItemPool GetItemPool(string poolID)
+    {
+        for (int i = 0; i < pools.Count; i++)
+        {
+            if (pools[i].PoolID == poolID) { return pools[i]; }
+        }
+        return null;
     }
 
     // ITEM RULE

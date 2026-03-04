@@ -9,7 +9,14 @@ public class Movable : Capable
     public bool log_avoidance = false; // whether to log the avoidance force calculation
 
     [Header("MOVABLE")]
-    public Rigidbody2D rb;  // Replace transform movement
+    private Rigidbody2D _rb;
+    public Rigidbody2D rb
+    {
+        get
+        {
+            if (_rb == null) { _rb = GetComponent<Rigidbody2D>(); }
+            return _rb;
+        }}
     public float weight = 1f;
     [SerializeField] private float random_weight_modifier_at_start = 0f; // weight += random.range(-5,5) in the start method if this modifier = 5
     public float friction = 7f;
@@ -31,7 +38,6 @@ public class Movable : Capable
     {
         base.Awake();
 
-        rb = GetComponent<Rigidbody2D>();
         if (rb != null)
         {
             rb.gravityScale = 0;  // No gravity in top-down games
