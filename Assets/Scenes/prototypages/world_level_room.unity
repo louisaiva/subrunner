@@ -2492,7 +2492,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 474280245}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &313120229
@@ -2549,7 +2550,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ColliderBank
   circle_collider_prefab: {fileID: 5650395422685672705, guid: c51a6567aa86110449568d35f764ab64, type: 3}
   box_collider_prefab: {fileID: 5650395422685672705, guid: 956158498a9f86e4584b5ec6cacc0640, type: 3}
-  sleeping_colliders_parent: {fileID: 313120228}
+  sleeping_colliders_parent: {fileID: 474280245}
 --- !u!1001 &316903155
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3586,6 +3587,7 @@ MonoBehaviour:
   log: 0
   log_prefabs_loading: 1
   loaded_capacities: []
+  sleeping_capacities_parent: {fileID: 429068024}
 --- !u!4 &429068024
 Transform:
   m_ObjectHideFlags: 0
@@ -3613,10 +3615,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03ffa1a95321dc147a6d9df1287347e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CapacityEngine
-  loading_queue: []
-  unloading_queue: []
   awake_done: 0
   log_awake_data: 1
+  log_loading: 1
+  hide_log_no_data_found: 0
 --- !u!1001 &444658201
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3948,6 +3950,37 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 1
   m_ConstraintCount: 4
+--- !u!1 &474280244
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 474280245}
+  m_Layer: 0
+  m_Name: colliders
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &474280245
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474280244}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 313120228}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &494892046
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6225,7 +6258,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 518226418321030572, guid: 754836d59fa93764bba50764770093b3, type: 3}
       propertyPath: data.capables_ids.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 518226418321030572, guid: 754836d59fa93764bba50764770093b3, type: 3}
       propertyPath: 'data.capables_ids.Array.data[0]'
@@ -6742,14 +6775,6 @@ PrefabInstance:
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4200687703790678608, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: log_can_play_hover
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5290126021399918753, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: log_get_event_ref
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5846687295635405809, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_Name
@@ -14996,7 +15021,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5145456041456219900, guid: 319736498f318d84aaa78beb56a3ece2, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6541890566030211719, guid: 319736498f318d84aaa78beb56a3ece2, type: 3}
       propertyPath: ID

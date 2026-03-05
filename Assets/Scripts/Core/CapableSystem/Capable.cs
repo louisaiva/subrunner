@@ -31,12 +31,18 @@ public class Capable : MonoBehaviour, Debuggable
         // we set the orientation
         this.Orientation = data.orientation;
 
-        // ! the colliders & anim data is loaded directly from CapableBank since we pool those colliders
+        // ! the colliders & anim data are loaded directly from CapableBank since we pool them
 
         // we set the inventory
 
         // we load the capacities
-        // List<Capacity> loaded_capacities = CapacitySystem.Instance.LoadCapacities(data.capacities_ids, this);
+        this.capacities = CapacityEngine.Instance.LoadCapacities(data.capacities_ids/* , this */);
+        for (int i = 0; i < capacities.Count; i++)
+        {
+            Capacity capa = capacities[i];
+            capa.transform.parent = transform;
+            capa.transform.localPosition = capa.data.local_position;
+        }
 
         // we add the effects
         for (int i = 0; i < data.effects.Count; i++)
@@ -47,11 +53,11 @@ public class Capable : MonoBehaviour, Debuggable
     public void UnloadData()
     {
         // here we need to unload all the capacities that we hold
-        // -> interacts with CapacitySystem
-        /* if (CapacityEngine.Instance != null)
+        // -> interacts with CapacityEngine
+        if (CapacityEngine.Instance != null)
         {
             CapacityEngine.Instance.UnloadCapacities(data.capacities_ids);
-        } */
+        }
 
         // we save some data
         this.data.position = this.transform.position;
@@ -119,6 +125,7 @@ public class Capable : MonoBehaviour, Debuggable
             Transform child = transform.GetChild(i);
             Capacity capa = child.GetComponent<Capacity>();
             if (capa == null) { continue; }
+            if (capa.data.id == "") { capa.data.id = capa.name; }
             capacities_ids.Add(capa.data.id);
         }
 

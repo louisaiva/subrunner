@@ -172,7 +172,7 @@ MonoBehaviour:
           Data4: -545175235
         Path: event:/ui/FinishMovingItem
   log_get_event_ref: 0
-  log_issues: 1
+  log_issues: 0
 --- !u!1 &3811816626350204236
 GameObject:
   m_ObjectHideFlags: 0
@@ -641,7 +641,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   capacities_prefabs_path: prefabs/capacities/
-  debug: 0
+  log: 0
+  log_prefabs_loading: 0
+  loaded_capacities: []
+  sleeping_capacities_parent: {fileID: 0}
 --- !u!114 &8269756926769288201
 MonoBehaviour:
   m_ObjectHideFlags: 0

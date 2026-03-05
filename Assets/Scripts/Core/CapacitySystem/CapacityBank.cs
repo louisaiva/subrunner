@@ -100,6 +100,7 @@ public class CapacityBank : MonoBehaviour
     [SerializeField] protected List<Capacity> loaded_capacities;
 
     [Header("Sleeping capacities")]
+    [SerializeField] protected Transform sleeping_capacities_parent;
     [SerializeField] protected Hashtable/* <string kind, Stack<Capacity>> */ pooled_capacities;
 
     // low level pool management
@@ -180,6 +181,9 @@ public class CapacityBank : MonoBehaviour
 
         // disable the gameObject
         capacity.gameObject.SetActive(false);
+
+        // and set the capacity parent to the sleeping one
+        capacity.transform.SetParent(sleeping_capacities_parent);
     }
 
 
