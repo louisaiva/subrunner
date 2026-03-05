@@ -16,7 +16,7 @@ public class CapableBank : MonoBehaviour
         if (Instance == null) { Instance = this; }
         else { Destroy(gameObject); return; }
 
-        // initialize the pool of rooms
+        // initialize the pools of capables & anim layers
         pooled_capables = new Hashtable();
         pooled_anim_layers = new Stack<AnimLayer>();
     }

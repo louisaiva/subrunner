@@ -48,9 +48,9 @@ public class Capable : MonoBehaviour, Debuggable
     {
         // here we need to unload all the capacities that we hold
         // -> interacts with CapacitySystem
-        /* if (CapacitySystem.Instance != null)
+        /* if (CapacityEngine.Instance != null)
         {
-            CapacitySystem.Instance.UnloadCapacities(data.capacities_ids);
+            CapacityEngine.Instance.UnloadCapacities(data.capacities_ids);
         } */
 
         // we save some data
@@ -405,7 +405,7 @@ public class Capable : MonoBehaviour, Debuggable
         if (HasCapacity(name)) { return GetCapacity(name); }
 
         // get the capacity instance
-        GameObject capa_instance = CapacityBank.Instance?.GetCapacityInstance(name);
+        GameObject capa_instance = CapacityBank.Instance?.InstantiateCapacity(name);
 
         // we put it as a child of the capable & we rename it
         capa_instance.transform.parent = transform;

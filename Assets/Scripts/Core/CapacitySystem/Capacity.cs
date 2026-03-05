@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Capacity : MonoBehaviour
@@ -10,8 +11,42 @@ public class Capacity : MonoBehaviour
     public bool Loaded { get { return data != null; } }
 
 
+    // LOAD / UNLAOD
+    public virtual void LoadData(CapacityData data)
+    {
+        this.data = data;
+        this.name = data.id;
+    }
+    public void UnloadData()
+    {
+        this.data = null;
+    }
 
 
+
+
+    // GET CURRENT STATIC DATA
+    /// <summary>
+    /// this method is made for saving data from a prefab THAT IS NOT LOADED.
+    /// it means it should run ONLY inside the editor and it may run when 
+    /// the game is not started. This means we should get the data through the hierarchy only
+    /// since all the lists will be null or empty
+    /// </summary>
+    /// <returns>CapacityData the data that describes this capable</returns>
+    public virtual CapacityData GetStaticData()
+    {
+        CapacityData static_data = new CapacityData
+        {
+            // set base data things
+            id = this.name,
+            local_position = this.transform.localPosition,
+
+            // we set the kind
+            kind = GetType().Name
+        };
+
+        return static_data;
+    }
 
 
 
@@ -76,5 +111,4 @@ public class Capacity : MonoBehaviour
         // we play the animation
         capable.anim_player.Play(name);
     }
-
 }

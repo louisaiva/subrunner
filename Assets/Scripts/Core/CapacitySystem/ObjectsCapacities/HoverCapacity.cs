@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using CrashKonijn.Goap.Editor;
 using UnityEngine;
 
 /// <summary>
@@ -90,4 +91,53 @@ public class HoverCapacity : Capacity
         canvas_kf.gameObject.SetActive(show);
     }
 
+
+
+
+    // GET STATIC DATA
+    public override CapacityData GetStaticData()
+    {
+        HoverCapacityData static_data = new HoverCapacityData
+        {
+            // set base data things
+            id = this.name,
+            local_position = this.transform.localPosition,
+
+            // we set the kind
+            kind = GetType().Name,
+
+            // we get the hover collider data
+            hover_collider_data = get_static_circle_data(GetComponentInChildren<CircleCollider2D>(includeInactive: true))
+        };
+
+        return static_data;
+    }
+    private CircleData get_static_circle_data(CircleCollider2D collider)
+    {
+        // if (log_static_data) { Debug.Log($"(Capable - GetStaticData - {name}) CircleCollider2D found with offset {collider.offset} and radius {collider.radius} and is_trigger = {collider.isTrigger}"); }
+        return new CircleData
+        {
+            radius = collider.radius,
+            local_position = collider.transform.localPosition,
+            layerID = collider.gameObject.layer,
+            offset = collider.offset,
+            is_trigger = collider.isTrigger,
+            used_for_pathfinding = false // hover colliders are never used for pathfinding
+        };
+    }
+}
+
+[Serializable] public class HoverCapacityData : CapacityData
+{
+    // need to store a collider data for the hover to work
+    public CircleData hover_collider_data;
+
+    // GET DETAILS
+    public override string GetDetails()
+    {
+        string details = "";
+        if (hover_collider_data != null) { details += $"  - hover {hover_collider_data.GetDetails()}\n"; }
+        else { details += $"  - no hover collider data\n"; }
+        return base.GetDetails() + details;
+    }
 }

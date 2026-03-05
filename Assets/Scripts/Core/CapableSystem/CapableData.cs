@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using Newtonsoft.Json;
-using UnityEngine.UIElements;
 
 [Serializable] public class CapableData
 {
@@ -159,12 +157,38 @@ using UnityEngine.UIElements;
     public bool used_for_pathfinding;
     public bool is_trigger;
     public Vector2 offset;
+
+
+    // GET DETAILS
+    public virtual string GetDetails()
+    {
+        string details = $"collider data :\n";
+        details += $"     - local_position : {local_position}\n";
+        details += $"     - layerID : {layerID} ({LayerMask.LayerToName(layerID)})\n";
+        details += $"     - used_for_pathfinding : {used_for_pathfinding}\n";
+        details += $"     - is_trigger : {is_trigger}\n";
+        return details;
+    }
 }
 [Serializable] public class CircleData : ColliderData
 {
     public float radius;
+
+    // GET DETAILS
+    public override string GetDetails()
+    {
+        string details = $"     - radius : {radius}\n";
+        return base.GetDetails() + details;
+    }
 }
 [Serializable] public class BoxData : ColliderData
 {
     public Vector2 size;
+
+    // GET DETAILS
+    public override string GetDetails()
+    {
+        string details = $"     - size : {size}\n";
+        return base.GetDetails() + details;
+    }
 }

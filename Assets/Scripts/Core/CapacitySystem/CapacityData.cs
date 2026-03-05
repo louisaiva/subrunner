@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using Newtonsoft.Json;
 
 [Serializable]
 public class CapacityData
@@ -12,20 +11,20 @@ public class CapacityData
     
 
     // DUPLICATE
-    public CapacityData Duplicate()
+    public virtual CapacityData Duplicate()
     {
         CapacityData new_data = new CapacityData();
         new_data.id = this.id + "_copy"; // we add _copy to the id to avoid conflicts, it will be changed later in GenerateUniqueId
         new_data.kind = this.kind;
 
-
         return new_data;
     }
 
     // GET DETAILS
-    public string GetDetails()
+    public virtual string GetDetails()
     {
         string details = $"Capacity {id} :\n";
+        details += $"  - kind : {kind}\n";
         return details;
     }
 }
