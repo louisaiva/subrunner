@@ -2,6 +2,8 @@ using UnityEngine;
 using FMODUnity;
 using FMOD.Studio;
 using System;
+using System.Collections.Generic;
+using System.Collections;
 
 
 public class AudioEngine : MonoBehaviour
@@ -24,8 +26,6 @@ public class AudioEngine : MonoBehaviour
     [Header("Wait delay at start")]
     [SerializeField] private float start_delay = 1f;
     [SerializeField] private bool can_play = false;
-    private void enable_audio() { can_play = true; }
-    private void disable_audio() { can_play = false; }
 
     [Header("Audio buses")]
     public Bus master_bus;
@@ -35,6 +35,7 @@ public class AudioEngine : MonoBehaviour
 
     [Header("Logs")]
     public bool log_play = false;
+    public bool log_can_play_hover = false;
 
     // SETTINGS REGISTERING
     private void register_settings()
@@ -75,13 +76,17 @@ public class AudioEngine : MonoBehaviour
     {
         register_settings();
         
-        Invoke(nameof(enable_audio), start_delay);
+        StartCoroutine(enable_audio_after_delay(start_delay));
     }
     protected virtual void OnDestroy()
     {
         unregister_settings();
     }
-
+    private IEnumerator enable_audio_after_delay(float delay)
+    {
+        yield return new WaitForSecondsRealtime(delay);
+        can_play = true;
+    }
 
 
 
@@ -122,14 +127,45 @@ public class AudioEngine : MonoBehaviour
 
 
     // ONE SHOT PLAY UI
+    [Header("UI Audio")]
+    [SerializeField] private float ui_cooldown = 0.1f; // Cooldown time in seconds to prevent overlapping UI sounds
+    private Dictionary<string, EventInstance> ui_instances = new Dictionary<string, EventInstance>();
+    private Dictionary<string, float> ui_last_played = new Dictionary<string, float>();
     public void PlayUI(string capa)
     {
         if (!can_play) { return; }
         if (log_play) { Debug.Log($"(AudioEngine - PlayUI) trying to play '{capa}' UI audio"); }
-        // we get the right event ref from the bank
-        EventReference event_ref = AudioBank.Instance.GetEventReference(capa, "ui_default");
-        if (event_ref.Equals(default(EventReference))) { return; }
-        RuntimeManager.PlayOneShot(event_ref);
+
+        // we check if we have an ui_instance for this sound
+        if (!ui_instances.ContainsKey(capa))
+        {
+            // if not, we create it and add it to the dictionary
+            EventReference event_ref = AudioBank.Instance.GetEventReference(capa, "ui_default");
+            if (event_ref.Equals(default(EventReference))) { return; }
+            EventInstance instance = RuntimeManager.CreateInstance(event_ref);
+            ui_instances.Add(capa, instance);
+        }
+        
+        // we check if we can play the sound (not already playing another ui sound)
+        if (capa == "hover" && !can_play_hover()) { return; }
+
+        // we play the sound
+        ui_instances[capa].start();
+        ui_last_played[capa] = Time.unscaledTime;
+    }
+    private bool can_play_hover()
+    {
+        // we check if we are already playing another ui sound
+        foreach (KeyValuePair<string, float> pair in ui_last_played)
+        {
+            if (pair.Key == "hover") { continue; }
+            if (Time.unscaledTime - pair.Value < ui_cooldown) // Adjust the time threshold as needed
+            {
+                if (log_can_play_hover) { Debug.Log($"(AudioEngine - can_play_hover) cannot play hover sound because '{pair.Key}' was played {Time.time - pair.Value} seconds ago"); }
+                return false;
+            }
+        }
+        return true;
     }
 
 }

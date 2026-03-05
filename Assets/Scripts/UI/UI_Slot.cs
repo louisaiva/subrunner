@@ -80,4 +80,15 @@ public class UI_Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         if (this is UI_PanelButton) { slot_type = typeof(UI_SettingSlot); }
         return slot_type;
     }
+    public bool IsActivable()
+    {
+        if (this is UI_ItemStack ui_stack)
+        {
+            if (ui_stack.Stack != null
+            && ui_stack.Stack.Item != null
+            && ui_stack.Stack.Item is not Activable) { return false; }
+        }
+
+        return true;
+    }
 }

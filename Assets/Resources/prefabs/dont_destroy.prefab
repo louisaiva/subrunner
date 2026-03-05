@@ -48,6 +48,8 @@ MonoBehaviour:
   start_delay: 1
   can_play: 0
   log_play: 0
+  log_can_play_hover: 0
+  ui_cooldown: 0.1
 --- !u!114 &5290126021399918753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,6 +111,66 @@ MonoBehaviour:
           Data3: 1854452159
           Data4: -1626464899
         Path: event:/capacities/BobDodge
+  - capacity: hover
+    skins_audio_data:
+    - skin: ui_default
+      event_reference:
+        Guid:
+          Data1: -740827377
+          Data2: 1327346997
+          Data3: -1267735119
+          Data4: 1734292255
+        Path: event:/ui/SlotHovered
+  - capacity: activate
+    skins_audio_data:
+    - skin: ui_default
+      event_reference:
+        Guid:
+          Data1: -1624723393
+          Data2: 1295244524
+          Data3: 1485831350
+          Data4: 1559229136
+        Path: event:/ui/SlotActivated
+  - capacity: drop
+    skins_audio_data:
+    - skin: ui_default
+      event_reference:
+        Guid:
+          Data1: -1905374646
+          Data2: 1177954305
+          Data3: -636908645
+          Data4: -398872920
+        Path: event:/ui/SlotDropped
+  - capacity: cant_activate
+    skins_audio_data:
+    - skin: ui_default
+      event_reference:
+        Guid:
+          Data1: -430316029
+          Data2: 1091256435
+          Data3: -770078848
+          Data4: 2044929924
+        Path: event:/ui/SlotCantActivate
+  - capacity: start_moving_item
+    skins_audio_data:
+    - skin: ui_default
+      event_reference:
+        Guid:
+          Data1: 1174458468
+          Data2: 1272611827
+          Data3: -59147606
+          Data4: 2042205946
+        Path: event:/ui/StartMovingItem
+  - capacity: finish_moving_item
+    skins_audio_data:
+    - skin: ui_default
+      event_reference:
+        Guid:
+          Data1: -153658437
+          Data2: 1243342342
+          Data3: -489229122
+          Data4: -545175235
+        Path: event:/ui/FinishMovingItem
   log_get_event_ref: 0
   log_issues: 1
 --- !u!1 &3811816626350204236
@@ -1189,6 +1251,7 @@ GameObject:
   - component: {fileID: 8927479603836050084}
   - component: {fileID: 5080253961778756880}
   - component: {fileID: 366426076817473775}
+  - component: {fileID: 240965872979008155}
   m_Layer: 0
   m_Name: input_manager
   m_TagString: Untagged
@@ -1252,3 +1315,17 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
+--- !u!114 &240965872979008155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9163946342948390035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5aeabeeda60acda4eb735e96980b1533, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CursorManager
+  cursorTex: {fileID: 2800000, guid: 6b5092032b7b9f04689222ae11c8b090, type: 3}
+  hotSpot: {x: 24, y: 24}

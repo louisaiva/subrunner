@@ -38,6 +38,9 @@ public class UI_ItemMover : MonoBehaviour
 
         // on met à jour les slots pour enable que les slots qui peuvent recevoir l'ui item
         enable_only_recevable_slots(moving_ui_item);
+
+        // on joue l'audio
+        AudioEngine.Instance.PlayUI("start_moving_item");
     }
     public void SetPotentialMovingItem(UI_ItemStack item)
     {
@@ -91,6 +94,9 @@ public class UI_ItemMover : MonoBehaviour
         disable_only_empty_slots(true);
         moving_ui_item = null;
         potential_moving_item = null;
+
+        // on joue l'audio
+        AudioEngine.Instance.PlayUI("finish_moving_item");
 
         // et on navigue vers la destination (seulement si on utilise le gamepad)
         if (destination != null) { manager.HoverSlot(destination as UI_Slot/* , prevent_same_slot: false */); }

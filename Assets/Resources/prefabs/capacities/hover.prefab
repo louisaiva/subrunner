@@ -46,6 +46,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a41173bb095cd5544a4a649fbdba78b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  data:
+    id: 
+    kind: 
+    local_position: {x: 0, y: 0}
   cooldown: 0
   debug: 0
   hoverers: []
@@ -373,6 +377,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EF_keyboard
       objectReference: {fileID: 0}
+    - target: {fileID: 5073313702871382076, guid: da227f607e8661e4a858b45433a715e2, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6380900198815103699, guid: da227f607e8661e4a858b45433a715e2, type: 3}
       propertyPath: input
       value: 
@@ -556,7 +564,7 @@ PrefabInstance:
     - target: {fileID: 4001626016353791431, guid: da227f607e8661e4a858b45433a715e2, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -886139674, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
+      objectReference: {fileID: -1121951427, guid: ca8602ca58aa4724399153a5ec29e03f, type: 3}
     - target: {fileID: 5073313702871382076, guid: da227f607e8661e4a858b45433a715e2, type: 3}
       propertyPath: m_Name
       value: EF_gamepad
@@ -564,7 +572,7 @@ PrefabInstance:
     - target: {fileID: 6380900198815103699, guid: da227f607e8661e4a858b45433a715e2, type: 3}
       propertyPath: input
       value: 
-      objectReference: {fileID: -9163571213754876807, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
+      objectReference: {fileID: -4695119259665599169, guid: 148f0202c79d21c49aeccd7e71c8a674, type: 3}
     - target: {fileID: 6467849385363025477, guid: da227f607e8661e4a858b45433a715e2, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1

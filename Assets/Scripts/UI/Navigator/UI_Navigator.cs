@@ -136,6 +136,9 @@ public class UI_Navigator : Singleton<UI_Navigator>
         if (slot == null) { return; }
         if (slot.Disabled) { return; }
 
+        // on joue le son seulement si on hover pas le même slot
+        if (slot != CurrentSlot) { AudioEngine.Instance.PlayUI("hover"); }
+
         // checks if we already have a slot
         if (CurrentSlot != null) { UnhoverSlot(); }
 
@@ -160,8 +163,6 @@ public class UI_Navigator : Singleton<UI_Navigator>
         CurrentSlot = slot;
         if (log_hover) { Debug.Log("(UI_Navigator) hovered slot : " + slot.name); }
 
-        // on joue le son
-        AudioEngine.Instance.PlayUI("hover");
     }
     public void UnhoverSlot()
     {
@@ -371,6 +372,10 @@ public class UI_Navigator : Singleton<UI_Navigator>
         slot.OnPointerClick(null);
         if (log_inputs) { Debug.Log("(UI_Navigator) Activated slot " + slot.name); }
 
+        // on joue le son activate / cant activate
+        if (slot.IsActivable()) { AudioEngine.Instance.PlayUI("activate"); }
+        else { AudioEngine.Instance.PlayUI("cant_activate"); }
+
         // wait for a few frame to let the click happen
         await System.Threading.Tasks.Task.Yield();
         await System.Threading.Tasks.Task.Yield();
@@ -406,6 +411,9 @@ public class UI_Navigator : Singleton<UI_Navigator>
         // on appelle OnPointerDropped pour simuler un drop
         droppable.OnPointerDropped(null);
         if (log_inputs) { Debug.Log("(UI_Navigator) Dropped slot " + slot.name); }
+
+        // on joue le son drop
+        AudioEngine.Instance.PlayUI("drop");
 
         // wait for a frame to let the click happen
         await System.Threading.Tasks.Task.Yield();
