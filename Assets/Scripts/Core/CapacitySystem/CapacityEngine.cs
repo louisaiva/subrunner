@@ -96,6 +96,15 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     }
     private Capacity load_capacity(CapacityData data)
     {
+        // we check if we already have this data in our loaded data
+        if (loaded_capacities_data.ContainsKey(data.id))
+        {
+            // ? then we want to duplicate the data
+            // if (log_loading) { Debug.LogWarning($"(CapacityEngine - Load) Capacity with id {data.id} is already loaded, we will duplicate it"); }
+            if (log_loading) { Debug.LogWarning($"(CapacityEngine - Load) Capacity with id {data.id} is already loaded, we return null for now"); }
+            return null;
+        }
+
         Capacity capacity = CapacityBank.Instance.Load(data);
         loaded_capacities_data.Add(data.id, data);
         if (log_loading) { Debug.Log("(CapacityEngine) Loaded " + data.id); }

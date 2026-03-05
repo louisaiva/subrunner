@@ -17,7 +17,7 @@ using System;
     public BodyData body_data;
 
     // INVENTORY
-    public List<string> inventory;
+    public InventoryData inventory;
 
     // CAPACITIES
     public List<string> capacities_ids;
@@ -60,7 +60,7 @@ using System;
         details += $"  - orientation : {orientation}\n";
         if (body_data != null) { details += $"  - {body_data.GetDetails()}\n"; }
         else { details += $"  - no body\n"; }
-        if (inventory != null) { details += $"  - inventory : {inventory.Count} items\n"; }
+        if (inventory != null) { details += $"  - {inventory.GetDetails()}"; }
         else { details += $"  - no inventory\n"; }
         details += $"  - capacities : {capacities_ids.Count} capacities\n";
         details += $"  - effects : {effects.Count} effects\n";

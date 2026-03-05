@@ -15264,9 +15264,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8283c5f31e92b74e95a255a9af35afa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CapableDataManager
-  save_capables_capacities: 1
   capables_to_save:
   - {fileID: 1729636381}
+  save_capables_in_inventory: 1
+  save_capables_capacities: 1
   log: 1
 --- !u!1 &1734854913
 GameObject:

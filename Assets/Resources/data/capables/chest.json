@@ -77,7 +77,39 @@
         ],
         "circle_colliders": []
     },
-    "inventory": [],
+    "inventory": {
+        "item_pools_data": [
+            {
+                "stacks_data": [
+                    {
+                        "items_ids": [
+                            "shoes"
+                        ]
+                    },
+                    {
+                        "items_ids": [
+                            "bone"
+                        ]
+                    },
+                    {
+                        "items_ids": [
+                            "pastas"
+                        ]
+                    },
+                    {
+                        "items_ids": [
+                            "katana"
+                        ]
+                    }
+                ],
+                "pool_id": "chest",
+                "max_stacks": 12,
+                "min_stacks": 12,
+                "scalable": false,
+                "item_rule": ""
+            }
+        ]
+    },
     "capacities_ids": [
         "hover",
         "open",

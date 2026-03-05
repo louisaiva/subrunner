@@ -59,7 +59,10 @@ public class CapableBank : MonoBehaviour
 
             // and its body
             load_body_data(capable, data.body_data);
-            
+
+            // and its inventory
+            capable.Inventory?.LoadInventoryData(data.inventory);
+
             // we load its data
             capable.LoadData(data);
             capable.gameObject.SetActive(true);
@@ -87,6 +90,10 @@ public class CapableBank : MonoBehaviour
 
         // and its body
         load_body_data(capable, data.body_data);
+
+        // and its inventory
+        build_inventory_item_pools(capable.Inventory, data.inventory);
+        capable.Inventory?.LoadInventoryData(data.inventory);
 
         // then we can load the data
         capable.LoadData(data);
@@ -131,6 +138,19 @@ public class CapableBank : MonoBehaviour
         return is_same_or_subclass;
     }
 
+    private void build_inventory_item_pools(Inventory inv, InventoryData data)
+    {
+        // we check if we have no inv or no data, no need to pull up those item pools
+        if (inv == null) { return; }
+        if (data == null || data.item_pools_data.Count == 0) { return; }
+
+        // we get the number of pools we need to add
+        for (int i=0; i < data.item_pools_data.Count; i++)
+        {
+            // we add an item pool component to the inv gameobject
+            inv.gameObject.AddComponent<ItemPool>();
+        }
+    }
 
     // ANIM PLAYER & COLLIDERS
     private void load_anim_data(AnimPlayer player, AnimData anim_data)
@@ -201,6 +221,7 @@ public class CapableBank : MonoBehaviour
     }
 
 
+
     // low level pool management
     private Capable extractFromPool(string kind)
     {
@@ -251,6 +272,9 @@ public class CapableBank : MonoBehaviour
     }
     public void Unload(Capable capable)
     {
+
+        // unload inventory
+        capable.Inventory?.UnloadInventoryData();
 
         // unload anim layers
         List<AnimLayer> anim_layers = capable.anim_player.GetAnimLayers();

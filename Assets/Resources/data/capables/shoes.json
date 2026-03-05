@@ -1,0 +1,52 @@
+﻿{
+    "id": "shoes",
+    "kind": "Shoes",
+    "position": {
+        "x": 0.6299999952316284,
+        "y": 4.125
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "anim_data": {
+        "skin": "shoes",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            }
+        ],
+        "material_path": "materials/objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "layers": []
+    },
+    "body_data": {
+        "box_colliders": [],
+        "circle_colliders": []
+    },
+    "inventory": {
+        "item_pools_data": []
+    },
+    "capacities_ids": [
+        "hover",
+        "dodge"
+    ],
+    "effects": [],
+    "effects_ttl": []
+}

@@ -41,8 +41,10 @@ public class ItemPool : MonoBehaviour, ItemStorer
     [SerializeField] protected bool log_grab = false;
     [SerializeField] protected bool log_merge = false;
     [SerializeField] protected bool log_stacks = false;
-    
 
+
+
+    // ATTACH & START
     public void AttachToInventory(Inventory inventory)
     {
         this.Inventory = inventory;
@@ -71,6 +73,137 @@ public class ItemPool : MonoBehaviour, ItemStorer
             }
         }
     }
+
+
+
+
+    // LOAD DATA
+    public void LoadPoolData(ItemPoolData data)
+    {
+        // we load base data
+        this.PoolID = data.pool_id;
+        this.MaxStacks = data.max_stacks;
+        this.MinStacks = data.min_stacks;
+        this.Scalable = data.scalable;
+        this.item_rule = data.item_rule;
+
+        // we want to load the items inside the stacks
+        for (int i = 0; i < data.stacks_data.Count; i++)
+        {
+            ItemStackData stack_data = data.stacks_data[i];
+            ItemStack new_stack = new ItemStack(this);
+            stacks.Add(new_stack);
+
+            for (int j = 0; j < stack_data.items_ids.Count; j++)
+            {
+                string item_id = stack_data.items_ids[j];
+                Item item = CapableSystem.Instance.LoadCapableInstantly(item_id) as Item;
+                if (item == null)
+                {
+                    Debug.LogError($"(ItemPool) Failed to load item with id {item_id} for pool {name}");
+                    continue;
+                }
+                finalise_grab(item, new_stack);
+            }
+
+            OnStackCreated?.Invoke(new_stack);
+        }
+    }
+    public void UnloadPoolData()
+    {
+        // we unload items
+        List<string> item_ids = Items.Select(i => i.data.id).ToList();
+        CapableSystem.Instance.UnloadCapables(item_ids);
+
+        // clears stacks
+        stacks.Clear();
+
+        // clearing delegates
+        foreach (Delegate d in OnStackCreated.GetInvocationList())
+        {
+            OnStackCreated -= (Action<ItemStack>)d;
+        }
+        foreach (Delegate d in OnStackRemoved.GetInvocationList())
+        {
+            OnStackRemoved -= (Action<ItemStack>)d;
+        }
+    }
+
+
+    // GET STATIC DATA
+    public ItemPoolData GetStaticPoolData()
+    {
+        ItemPoolData data = new ItemPoolData()
+        {
+            pool_id = this.PoolID,
+            max_stacks = this.MaxStacks,
+            min_stacks = this.MinStacks,
+            scalable = this.Scalable,
+            item_rule = this.item_rule,
+            stacks_data = new List<ItemStackData>()
+        };
+
+        // we go through all children to try to grab them
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Transform child = transform.GetChild(i);
+            if (child == null || child.gameObject.activeSelf == false) { continue; }
+            Item item = child.GetComponent<Item>();
+            if (item == null) { continue; }
+
+            string item_id = item.data.id;
+            if (item_id == "") { item_id = item.name; }
+            
+            // we check if we already have a item_stack_data with the same ref
+            for (int j=0; j< data.stacks_data.Count; j++)
+            {
+                if (are_item_ids_of_same_ref(data.stacks_data[j].items_ids[0], item_id))
+                {
+                    data.stacks_data[j].items_ids.Add(item_id);
+                    goto next_item;
+                }
+            }
+
+            // if we are here, we have no stack with the same ref, we create a new one and we put the item id in it
+            data.stacks_data.Add(new ItemStackData() { items_ids = new List<string>() { item_id } });
+
+            // we go to next item
+            next_item:
+            continue;
+        }
+
+        return data;
+    }
+    private bool are_item_ids_of_same_ref(string item1,string item2)
+    {
+        if (!item1.Contains("_") || !item2.Contains("_")) { return false; }
+
+        string suffix1 = item1.Split("_")[0];
+        string suffix2 = item2.Split("_")[0];
+
+        string ref1 = item1.Substring(0, item1.Length - suffix1.Length);
+        string ref2 = item2.Substring(0, item2.Length - suffix2.Length);
+
+        return ref1 == ref2;
+    }
+
+    public List<Item> GetStaticItems()
+    {
+        List<Item> items = new List<Item>();
+
+        // we go through all children to try to grab them
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Transform child = transform.GetChild(i);
+            if (child == null || child.gameObject.activeSelf == false) { continue; }
+            Item item = child.GetComponent<Item>();
+            if (item == null) { continue; }
+            items.Add(item);
+        }
+
+        return items;
+    }
+
 
 
     // RULE CHECK

@@ -5,6 +5,11 @@ using System.Linq;
 
 public class Inventory : MonoBehaviour, ItemStorer
 {
+
+
+
+
+
     
     [Header("ItemPools")]
     [SerializeField] private bool clear_and_assign_pools_in_awake = true;
@@ -18,7 +23,7 @@ public class Inventory : MonoBehaviour, ItemStorer
     protected ItemPool shoes_stack { 
         get
         {
-            if (_shoes_stack == null) { _shoes_stack = get_itempool("shoes_stack"); }
+            if (_shoes_stack == null) { _shoes_stack = get_itempool("shoes"); }
             return _shoes_stack;
         }
     }
@@ -27,7 +32,7 @@ public class Inventory : MonoBehaviour, ItemStorer
     {
         get
         {
-            if (_weapon_stack == null) { _weapon_stack = get_itempool("weapon_stack"); }
+            if (_weapon_stack == null) { _weapon_stack = get_itempool("weapon"); }
             return _weapon_stack;
         }
     }
@@ -43,7 +48,12 @@ public class Inventory : MonoBehaviour, ItemStorer
     public event Action<ItemStack> OnStackCreated = delegate { };
     public event Action<ItemStack> OnStackRemoved = delegate { };
 
-    public Capable capable { get { return transform.parent.GetComponent<Capable>(); } }
+    private Capable _capable;
+    public Capable capable { get
+        {
+            if (_capable == null) { _capable = transform.parent.GetComponent<Capable>(); }
+            return _capable;
+        }}
 
     [Header("Logs")]
     [SerializeField] protected bool log = false;
@@ -79,9 +89,96 @@ public class Inventory : MonoBehaviour, ItemStorer
     }
 
 
+    // LOADING / UNLOADING INVENTORY DATA
+    public void LoadInventoryData(InventoryData data)
+    {
+        // we suppose we already have the right amount of ItemPools (should be built in CapableBank)
+
+        // we gather the real ItemPool
+        List<ItemPool> pools_to_fill = gameObject.GetComponents<ItemPool>().ToList();
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            pools_to_fill.AddRange(transform.GetChild(i).GetComponents<ItemPool>());
+        }
+
+        // we check if we have the same amount of what the data says
+        if (pools_to_fill.Count != data.item_pools_data.Count)
+        {
+            Debug.LogWarning($"(Inventory - LoadInventoryData) Inventory data has {data.item_pools_data.Count} pools but we have {pools_to_fill.Count} pools on {capable.name}");
+        }
+
+        // we load the data in the pools
+        for (int i = 0; i < data.item_pools_data.Count; i++)
+        {
+            if (i >= pools_to_fill.Count) { break; }
+            pools_to_fill[i].LoadPoolData(data.item_pools_data[i]);
+
+            // we add the pool
+            pools.Add(pools_to_fill[i]);
+
+            // we attach the pool
+            pools_to_fill[i].AttachToInventory(this);
+
+            // & assign callbacks
+            pools_to_fill[i].OnStackCreated += (stack) => { OnStackCreated?.Invoke(stack); };
+            pools_to_fill[i].OnStackRemoved += (stack) => { OnStackRemoved?.Invoke(stack); };
+        }
+    }
+    public void UnloadInventoryData()
+    {
+        // we unload the pools we have
+        for (int i = 0; i < pools.Count; i++)
+        {
+            pools[i].UnloadPoolData();
+        }
+
+        // finally we remove the pools
+        pools.Clear();
+    }
+
+    // STATIC DATA
+    public InventoryData GetStaticInventoryData()
+    {
+        InventoryData data = new InventoryData()
+        {
+            item_pools_data = new List<ItemPoolData>()
+        };
+
+        // we gather the real ItemPool
+        List<ItemPool> pools = GetStaticItemPools();
+        for (int i = 0; i < pools.Count; i++)
+        {
+            data.item_pools_data.Add(pools[i].GetStaticPoolData());
+        }       
+
+        return data;
+    }
+    public List<ItemPool> GetStaticItemPools()
+    {
+        // we gather the real ItemPool
+        List<ItemPool> pools = gameObject.GetComponents<ItemPool>().ToList();
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            pools.AddRange(transform.GetChild(i).GetComponents<ItemPool>());
+        }
+        return pools;
+    }
+    public List<Item> GetStaticItems()
+    {
+        // we gather the real ItemPool
+        List<ItemPool> pools = GetStaticItemPools();
+        List<Item> items = new List<Item>();
+        for (int i = 0; i < pools.Count; i++)
+        {
+            items.AddRange(pools[i].GetStaticItems());
+        }
+        return items;
+    }
+
+
+
+
     // GRAB / DROP
-
-
     /// <summary>
     /// these 3 methods are the main one. when they are activated they
     /// make the right pool do the action, then trigger the event
@@ -267,17 +364,17 @@ public class Inventory : MonoBehaviour, ItemStorer
         if (log_get_items) { Debug.LogWarning($"(Inventory) {pool_name} ItemPool was found but no \"{rule}\" inside ://"); }
         return null;
     }
-    private ItemPool get_itempool(string pool_name)
+    private ItemPool get_itempool(string pool_id)
     {
         // checks if we have the pool
         for (int i = 0; i < pools.Count; i++)
         {
-            if (pools[i].name != pool_name) { continue; }
+            if (pools[i].PoolID != pool_id) { continue; }
             return pools[i];
         }
 
         // else we have no pool named like this
-        // if (log) { Debug.LogWarning($"(Inventory) {pool_name} ItemPool was NOT found :O"); }
+        // if (log) { Debug.LogWarning($"(Inventory) {pool_id} ItemPool was NOT found :O"); }
         return null;
     }
 

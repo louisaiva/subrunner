@@ -96,6 +96,9 @@ public class Capable : MonoBehaviour, Debuggable
             // we set the orientation
             orientation = this.orientation,
 
+            // we set the inventory
+            inventory = Inventory?.GetStaticInventoryData(),
+
             // we set the capacities
             capacities_ids = get_capacity_ids(),
 
@@ -103,15 +106,6 @@ public class Capable : MonoBehaviour, Debuggable
             effects = new List<Effect>(effects),
             effects_ttl = new List<float>(effects_timetolive)
         };
-
-        // we set the inventory
-        if (Inventory != null)
-        {
-            for (int i = 0; i < Inventory.Items.Count; i++)
-            {
-                static_data.inventory.Add(Inventory.Items[i].data.id);
-            }
-        }
 
         return static_data;
     }

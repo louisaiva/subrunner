@@ -112,6 +112,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
         if (log_loading) { Debug.Log("(CapableSystem) Loaded " + data.id); }
         return capable;
     }
+    public Capable LoadCapableInstantly(string id) { return load_capable(id); }
 
     // UNLOAD CAPABLES
     /// <summary>
