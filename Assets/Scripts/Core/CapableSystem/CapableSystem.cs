@@ -22,6 +22,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
     [Header("Logs")]
     public bool log_awake_data = false;
+    public bool log_awake_data_extended = false;
     public bool log_loading = false;
     public bool hide_log_no_data_found = false;
     public bool log_spawning = false;
@@ -50,19 +51,97 @@ public class CapableSystem : BSOD_System<CapableSystem>
         capables_data = new Hashtable();
         string log_capables_details = "\n\n";
 
-        // we load all the json files in the data path and convert them to CapableData objects
+
+        // we load all the json files in the data path and get their kind
         string[] files = System.IO.Directory.GetFiles(data_path, "*.json");
+        Dictionary<string, List<string>> json_by_kind = new Dictionary<string, List<string>>();
         foreach (string file in files)
         {
             string json = System.IO.File.ReadAllText(file, System.Text.Encoding.UTF8);
             CapableData data = JsonUtility.FromJson<CapableData>(json);
+
+            if (json_by_kind.ContainsKey(data.kind))
+            {
+                json_by_kind[data.kind].Add(json);
+            }
+            else
+            {
+                json_by_kind.Add(data.kind, new List<string> { json });
+            }
+        }
+
+        // then we go through all json & kind and we load the json with the good type
+        foreach (KeyValuePair<string, List<string>> entry in json_by_kind)
+        {
+            string kind = entry.Key;
+            List<string> json_list = entry.Value;
+            foreach (string json in json_list)
+            {
+                loadCapableDataOfType(json, kind, ref log_capables_details);
+            }
+        }
+
+        // we load all the json files in the data path and convert them to CapableData objects
+        /* string[] files = System.IO.Directory.GetFiles(data_path, "*.json");
+        foreach (string file in files)
+        {
+            string json = System.IO.File.ReadAllText(file, System.Text.Encoding.UTF8);
+            ICapableData data = JsonUtility.FromJson<ICapableData>(json);
+
+
             capables_data.Add(data.id, data);
             log_capables_details += data.GetDetails() + "\n";
-        }
+        } */
 
         if (log_awake_data) { Debug.Log("(CapableSystem) CAPABLES DATA LOADED : " + capables_data.Count + log_capables_details); }
         awake_done = true;
     }
+    private void loadCapableDataOfType(string json, string kind, ref string log)
+    {
+        // find the data type suited for this capable_type
+        // and extracts the json as this data type
+        CapableData data;
+
+        // first we check if we have a data for this precise kind
+        Type data_type = Type.GetType(kind + "Data");
+        if (data_type != null)
+        {
+            data = JsonUtility.FromJson(json, data_type) as CapableData;
+            if (log_awake_data_extended) { Debug.Log($"(CapableSystem) Loading capable data : \n{data.GetDetails()}\n\n{json}"); }
+            capables_data.Add(data.id, data);
+            log += data.GetDetails() + "\n";
+            return;
+        }
+        
+        // we found no precise data type ://
+        // we check if we have an intermediary type
+        // ex : ItemData
+        // (insert in the list below)
+        Type capable_type = Type.GetType(kind);
+        
+        // ItemData
+        if (is_kind(capable_type, typeof(Item))) { data_type = typeof(ItemData); }
+        
+        // no intermediary type -> we give a CapableData, basic
+        else { data_type = typeof(CapableData); }
+
+
+        // we finally extract the data
+        data = JsonUtility.FromJson(json, data_type) as CapableData;
+        if (log_awake_data_extended) { Debug.Log($"(CapableSystem) Loading capable data : \n{data.GetDetails()}\n\n{json}"); }
+        capables_data.Add(data.id, data);
+        log += data.GetDetails() + "\n";
+    }
+    private bool is_kind(Type capable_kind, Type ref_kind)
+    {
+        bool is_same_or_subclass = capable_kind == ref_kind || capable_kind.IsSubclassOf(ref_kind);
+        return is_same_or_subclass;
+    }
+
+
+
+
+
 
     // LOAD CAPABLES
     /// <summary>
@@ -193,7 +272,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
     }
     private CapableData DuplicateData(CapableData base_data)
     {
-        CapableData new_data = base_data.Duplicate();
+        CapableData new_data = base_data.Duplicate() as CapableData;
         new_data.id = GenerateUniqueId(base_data.id);
 
         // we add the new_data to the data list

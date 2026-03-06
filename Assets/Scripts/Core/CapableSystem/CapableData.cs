@@ -2,9 +2,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-[Serializable] public class CapableData
+public interface ICapableData : IData
 {
-    public string id;
+    string id { get; set; }
+    ICapableData Duplicate();
+}
+
+[Serializable] public class CapableData : ICapableData
+{
+    [field: SerializeField] public string id { get; set; }
     public string kind; // used to determine which kind of capable it is. i.e. chest, IA, spawner or else
     public Vector2 position;
     // public Vector2 inputs; ????
@@ -28,7 +34,7 @@ using System;
 
 
     // DUPLICATE
-    public CapableData Duplicate()
+    public virtual ICapableData Duplicate()
     {
         CapableData new_data = new CapableData();
 
@@ -52,9 +58,9 @@ using System;
     }
 
     // GET DETAILS
-    public string GetDetails()
+    public virtual string GetDetails()
     {
-        string details = $"Capable {id} :\n";
+        string details = $"Capable '{id}' :\n";
         details += $"  - kind : {kind}\n";
         details += $"  - position : {position}\n";
         details += $"  - orientation : {orientation}\n";
@@ -148,47 +154,4 @@ using System;
         return details;
     }
 
-}
-[Serializable] public class ColliderData
-{
-    // collider data
-    public Vector2 local_position;
-    public int layerID;
-    public bool used_for_pathfinding;
-    public bool is_trigger;
-    public Vector2 offset;
-
-
-    // GET DETAILS
-    public virtual string GetDetails()
-    {
-        string details = $"collider data :\n";
-        details += $"     - local_position : {local_position}\n";
-        details += $"     - layerID : {layerID} ({LayerMask.LayerToName(layerID)})\n";
-        details += $"     - used_for_pathfinding : {used_for_pathfinding}\n";
-        details += $"     - is_trigger : {is_trigger}\n";
-        return details;
-    }
-}
-[Serializable] public class CircleData : ColliderData
-{
-    public float radius;
-
-    // GET DETAILS
-    public override string GetDetails()
-    {
-        string details = $"     - radius : {radius}\n";
-        return base.GetDetails() + details;
-    }
-}
-[Serializable] public class BoxData : ColliderData
-{
-    public Vector2 size;
-
-    // GET DETAILS
-    public override string GetDetails()
-    {
-        string details = $"     - size : {size}\n";
-        return base.GetDetails() + details;
-    }
 }

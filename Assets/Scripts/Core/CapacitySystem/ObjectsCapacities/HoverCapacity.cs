@@ -132,6 +132,19 @@ public class HoverCapacity : Capacity
     // need to store a collider data for the hover to work
     public CircleData hover_collider_data;
 
+
+    // DUPLICATE
+    public override ICapacityData Duplicate()
+    {
+        return new HoverCapacityData()
+        {
+            id = this.id + "_copy",
+            kind = this.kind,
+            local_position = this.local_position,
+            hover_collider_data = this.hover_collider_data != null ? this.hover_collider_data.Duplicate() as CircleData : null
+        };
+    }
+
     // GET DETAILS
     public override string GetDetails()
     {

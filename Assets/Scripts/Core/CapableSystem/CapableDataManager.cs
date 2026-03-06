@@ -35,7 +35,7 @@ public class CapableDataManager : MonoBehaviour
     }
     private void saveCapableData(Capable capable)
     {
-        CapableData data = capable.GetStaticData();
+        ICapableData data = capable.GetStaticData();
         // save the current RoomData to a json file
         string json = JsonUtility.ToJson(data, true);
         System.IO.File.WriteAllText(data_path + data.id + ".json", json, System.Text.Encoding.UTF8);
@@ -57,7 +57,6 @@ public class CapableDataManager : MonoBehaviour
             saveCapableData(item);
         }
     }
-
     private void saveCapacitiesOfCapable(Capable capable)
     {
         // we get all the capacities (ONLY DIRECT CHILDREN - we don't want to get the capa of the items we store :)

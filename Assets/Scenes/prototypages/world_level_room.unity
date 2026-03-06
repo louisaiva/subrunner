@@ -1043,7 +1043,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomSystem
   main_room_data:
-    id: 
+    <id>k__BackingField: 
     position: {x: 0, y: 0}
     collider_points: []
     tilebase_paths_used: []
@@ -2513,6 +2513,7 @@ MonoBehaviour:
   awake_done: 0
   start_loading_done: 0
   log_awake_data: 1
+  log_awake_data_extended: 1
   log_loading: 0
   hide_log_no_data_found: 1
   log_spawning: 0

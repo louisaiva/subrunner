@@ -72,19 +72,19 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
 
 
     // LOAD CAPACITIES
-    public List<Capacity> LoadCapacities(List<string> capacities_ids/* , Capable capable */)
+    public List<Capacity> LoadCapacities(List<string> capacities_ids, Capable capable)
     {
         List<Capacity> capacities = new List<Capacity>();
         for (int i = 0; i < capacities_ids.Count; i++)
         {
             string id = capacities_ids[i];
-            Capacity capa = load_capacity(id);
+            Capacity capa = load_capacity(id,capable.data);
             
             capacities.Add(capa);
         }
         return capacities;
     }
-    private Capacity load_capacity(string id)
+    private Capacity load_capacity(string id, CapableData capable_data)
     {
         CapacityData data = capacities_data[id] as CapacityData;
         if (data == null)
@@ -92,17 +92,31 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
             if (!hide_log_no_data_found) { Debug.LogWarning("(CapacityEngine - Load) Capacity data not found for id: " + id); }
             return null;
         }
-        return load_capacity(data);
+        return load_capacity(data, capable_data);
     }
-    private Capacity load_capacity(CapacityData data)
+    private Capacity load_capacity(CapacityData data, CapableData capable_data)
     {
         // we check if we already have this data in our loaded data
         if (loaded_capacities_data.ContainsKey(data.id))
         {
-            // ? then we want to duplicate the data
-            // if (log_loading) { Debug.LogWarning($"(CapacityEngine - Load) Capacity with id {data.id} is already loaded, we will duplicate it"); }
-            if (log_loading) { Debug.LogWarning($"(CapacityEngine - Load) Capacity with id {data.id} is already loaded, we return null for now"); }
-            return null;
+            string old_id = data.id;
+            // ? then we want to duplicate the data & change the capa_id & change the capa_id in capable.data.capacities
+
+            // we duplicate the data + generate unique id
+            data = DuplicateData(data);
+
+            // we change the capacity id in the capable data
+            for (int i=0; i < capable_data.capacities_ids.Count; i++)
+            {
+                // check if same id
+                if (capable_data.capacities_ids[i] != old_id) { continue; }
+
+                // else change the id to new capacity id
+                capable_data.capacities_ids[i] = data.id;
+                break;
+            }
+
+            if (log_loading) { Debug.LogWarning($"(CapacityEngine - Load) Capacity '{old_id}' was already loaded, duplicated it to {data.id}"); }
         }
 
         Capacity capacity = CapacityBank.Instance.Load(data);
@@ -129,5 +143,47 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         if (log_loading) { Debug.Log("(CapacityEngine) Unloaded " + id); }
         return capacity;
     }
+
+
+    // DATA DUPLICATION
+    private CapacityData DuplicateData(CapacityData base_data)
+    {
+        CapacityData new_data = base_data.Duplicate() as CapacityData;
+        new_data.id = GenerateUniqueId(base_data.id);
+
+        // we add the new_data to the data list
+        capacities_data.Add(new_data.id, new_data);
+        return new_data;
+    }
+    private string GenerateUniqueId(string base_id)
+    {
+        // todo if we have perf issues we just need to have a static int that we increment so it's faster
+
+        // we check if the base_id can be splitted with "_"
+        string[] parts = base_id.Split('_');
+        string suffix = parts.Length > 1 ? parts[parts.Length - 1] : "";
+        string prefix = base_id.Substring(0, base_id.Length - suffix.Length);
+
+        // we go through all capacities_data keys and memorize all the ids that have the same prefix and check the suffix int is greater or not
+        int max_suffix = 0;
+        foreach (string key in capacities_data.Keys)
+        {
+            if (key.StartsWith(prefix))
+            {
+                string key_suffix = key.Substring(prefix.Length);
+                if (int.TryParse(key_suffix, out int key_suffix_int))
+                {
+                    if (key_suffix_int > max_suffix)
+                    {
+                        max_suffix = key_suffix_int;
+                    }
+                }
+            }
+        }
+
+        return prefix + (max_suffix + 1);
+    }
+
+
 
 }

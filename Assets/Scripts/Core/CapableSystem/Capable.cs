@@ -36,7 +36,7 @@ public class Capable : MonoBehaviour, Debuggable
         // we set the inventory
 
         // we load the capacities
-        this.capacities = CapacityEngine.Instance.LoadCapacities(data.capacities_ids/* , this */);
+        this.capacities = CapacityEngine.Instance.LoadCapacities(data.capacities_ids, this);
         for (int i = 0; i < capacities.Count; i++)
         {
             Capacity capa = capacities[i];
@@ -76,7 +76,7 @@ public class Capable : MonoBehaviour, Debuggable
     /// since all the lists will be null or empty
     /// </summary>
     /// <returns>CapableData the data that describes this capable</returns>
-    public CapableData GetStaticData()
+    public virtual ICapableData GetStaticData()
     {
         CapableData static_data = new CapableData
         {
@@ -109,7 +109,7 @@ public class Capable : MonoBehaviour, Debuggable
 
         return static_data;
     }
-    private List<string> get_capacity_ids()
+    protected List<string> get_capacity_ids()
     {
         List<string> capacities_ids = new List<string>();
         
@@ -125,7 +125,7 @@ public class Capable : MonoBehaviour, Debuggable
 
         return capacities_ids;
     }
-    private BodyData get_static_body_data()
+    protected BodyData get_static_body_data()
     {
         if (body == null) { return null; }
 
@@ -157,7 +157,7 @@ public class Capable : MonoBehaviour, Debuggable
 
         return body_data;
     }
-    private BoxData get_static_box_data(BoxCollider2D collider)
+    protected BoxData get_static_box_data(BoxCollider2D collider)
     {
         
         if (log_static_data) { Debug.Log($"(Capable - GetStaticData - {name}) BoxCollider2D found with offset {collider.offset} and size {collider.size} and is_trigger = {collider.isTrigger}"); }
@@ -176,7 +176,7 @@ public class Capable : MonoBehaviour, Debuggable
             used_for_pathfinding = is_used_for_pathfinding(collider)
         };
     }
-    private CircleData get_static_circle_data(CircleCollider2D collider)
+    protected CircleData get_static_circle_data(CircleCollider2D collider)
     {
         if (log_static_data) { Debug.Log($"(Capable - GetStaticData - {name}) CircleCollider2D found with offset {collider.offset} and radius {collider.radius} and is_trigger = {collider.isTrigger}"); }
         return new CircleData
@@ -189,7 +189,7 @@ public class Capable : MonoBehaviour, Debuggable
             used_for_pathfinding = is_used_for_pathfinding(collider)
         };
     }
-    private bool is_used_for_pathfinding(Collider2D collider)
+    protected bool is_used_for_pathfinding(Collider2D collider)
     {
         NavMeshPlus.Components.NavMeshModifier modifier = collider.GetComponent<NavMeshPlus.Components.NavMeshModifier>();
         if (modifier != null && modifier.enabled) { return true; }

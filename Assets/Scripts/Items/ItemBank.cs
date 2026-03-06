@@ -99,7 +99,7 @@ public class ItemBank : MonoBehaviour
         if (!item_prefabs.ContainsKey(reference))
         {
             Debug.LogError("(ItemBank) cannot find item prefab for " + reference
-                + ". are you sure its corresponding item prefab is in the " + items_path + " folder?");
+                + ". are you sure its corresponding item prefab is in the " + string.Join(" | ", items_path) + " folders ?");
             return null;
         }
 
@@ -125,7 +125,7 @@ public class ItemBank : MonoBehaviour
         if (!item_prefabs.ContainsKey(reference))
         {
             Debug.LogError("(ItemBank) cannot find module prefab for " + reference
-                + ". are you sure its corresponding item prefab is in the " + items_path + " folder?");
+                + ". are you sure its corresponding item prefab is in the " + string.Join(" | ", items_path) + " folders ?");
             return null;
         }
 
@@ -212,7 +212,7 @@ public class ItemBank : MonoBehaviour
         if (sprite != null) { return sprite; }
 
         Debug.LogError("(ItemBank) cannot find sprite " + item.Reference
-                + ". are you sure its corresponding item prefab is in the " + items_path + " folder?");
+                + ". are you sure its corresponding item prefab is in the " + string.Join(" | ", items_path) + " folders ?");
         return null;
     }
     public Sprite GetUI_Icon(string icon_name)

@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[Serializable] public class RoomData
+public interface IData
 {
-    public string id;
+    string GetDetails();
+}
+
+[Serializable] public class RoomData : IData
+{
+    [field: SerializeField] public string id { get; set; }
     /* private int _hash = 0;
     public int Hash // used for quick comparisons, generated from id
     {

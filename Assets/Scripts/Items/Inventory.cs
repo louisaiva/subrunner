@@ -342,17 +342,17 @@ public class Inventory : MonoBehaviour, ItemStorer
 
 
     // SPECIFIC GETTERS
-    public Usable GetShoes() { return get_item_from_rule_in_itempool("shoes_stack") as Usable; }
-    public Usable GetWeapon() { return get_item_from_rule_in_itempool("weapon_stack") as Usable; }
-    public Device GetDeviceItem() { return get_item_from_rule_in_itempool("device_stack","device") as Device; }
+    public Usable GetShoes() { return get_item_from_rule_in_itempool("shoes") as Usable; }
+    public Usable GetWeapon() { return get_item_from_rule_in_itempool("weapon") as Usable; }
+    public Device GetDeviceItem() { return get_item_from_rule_in_itempool("device","device") as Device; }
     public Usable GetConso(int index) { return get_item_from_rule_in_itempool("conso_" + index) as Usable; }
-    private Item get_item_from_rule_in_itempool(string pool_name,string rule="usable")
+    private Item get_item_from_rule_in_itempool(string pool_id,string rule="usable")
     {
         // checks if we have the pool
-        ItemPool pool = get_itempool(pool_name);
+        ItemPool pool = get_itempool(pool_id);
         if (pool == null)
         {
-            if (log_get_items) { Debug.LogWarning($"(Inventory) {pool_name} ItemPool was NOT found :O"); }
+            if (log_get_items) { Debug.LogWarning($"(Inventory) {pool_id} ItemPool was NOT found :O"); }
             return null;
         }
     
@@ -361,7 +361,7 @@ public class Inventory : MonoBehaviour, ItemStorer
         if (usables_in_pool.Count > 0) { return usables_in_pool[0]; }
 
         // else we have no matching item in the pool
-        if (log_get_items) { Debug.LogWarning($"(Inventory) {pool_name} ItemPool was found but no \"{rule}\" inside ://"); }
+        if (log_get_items) { Debug.LogWarning($"(Inventory) {pool_id} ItemPool was found but no \"{rule}\" inside ://"); }
         return null;
     }
     private ItemPool get_itempool(string pool_id)

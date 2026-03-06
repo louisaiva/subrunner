@@ -293,4 +293,78 @@ public class Item : Movable, EndlessInteractable
         if (!gameObject.scene.isLoaded) { return; } // this happens when the scene is destroyed when we quit the scene
         if (Holder != null) { Holder.Inventory.Remove(this); } // we remove the item from the holder's inventory
     }
+
+
+
+
+    // DATA MANAGEMENT
+    public override ICapableData GetStaticData()
+    {
+        ItemData static_data = new ItemData
+        {
+            // set base capable data things
+            id = this.name,
+            position = this.transform.position,
+            kind = GetType().Name,
+            anim_data = anim_player.GetStaticAnimData(),
+            body_data = get_static_body_data(),
+            orientation = this.orientation,
+            inventory = Inventory?.GetStaticInventoryData(),
+            capacities_ids = get_capacity_ids(),
+            effects = new List<Effect>(effects),
+            effects_ttl = new List<float>(effects_timetolive),
+
+
+            // set item data things
+            reference = this.Reference,
+            color = this.Color,
+            max_qty = this.MaxQty,
+            item_description = this.ItemDescription
+        };
+
+        return static_data;
+    }
+}
+
+
+
+// ITEM DATA
+[Serializable] public class ItemData : CapableData
+{
+    public string reference;
+    public Color color;
+    public int max_qty;
+    public string item_description;
+
+    // DUPLICATE
+    public override ICapableData Duplicate()
+    {
+        return new ItemData()
+        {
+            id = this.id + "_copy",
+            kind = this.kind,
+            position = this.position,
+            orientation = this.orientation,
+            anim_data = this.anim_data.Duplicate(),
+            body_data = this.body_data != null ? this.body_data.Duplicate() : null,
+            capacities_ids = new List<string>(this.capacities_ids),
+            effects = new List<Effect>(this.effects),
+            effects_ttl = new List<float>(this.effects_ttl),
+            reference = this.reference,
+            color = this.color,
+            max_qty = this.max_qty,
+            item_description = this.item_description
+        };
+    }
+
+    // GET DETAILS
+    public override string GetDetails()
+    {
+        string details = base.GetDetails();
+        details += $"  - reference : {reference}\n";
+        details += $"  - color : {color}\n";
+        details += $"  - max_qty : {max_qty}\n";
+        details += $"  - item_description : {item_description}\n";
+        return details;
+    }
 }
