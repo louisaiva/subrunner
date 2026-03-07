@@ -62,7 +62,7 @@ public class Shuriken : Item, Usable
             yield return null;
         }
 
-        if (debug) { Debug.Log("(Shuriken) shuriken stopped"); }
+        if (log) { Debug.Log("(Shuriken) shuriken stopped"); }
 
         // we stop the animation
         GetComponent<AnimPlayer>().current_anim.speed = 1f; // we set the speed to 1
@@ -121,7 +121,7 @@ public class Shuriken : Item, Usable
         // we launch the coroutine for removing the ghost effect & the animation when stopped
         StartCoroutine(AdjustAnim(throw_force)); // we start the coroutine for stopping the shuriken
 
-        if (debug) { Debug.Log("(Shuriken) shuriken throwed by " + user.name); }
+        if (log) { Debug.Log("(Shuriken) shuriken throwed by " + user.name); }
     }
 
 }

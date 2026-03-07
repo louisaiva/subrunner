@@ -76,7 +76,7 @@ public class Laptop : Item, Usable, Device
         // we call the event
         OnDisksChanged?.Invoke(disks);
 
-        if (debug) { Debug.Log($"(Laptop) {name} HDD changed. New disks count: {disks.Count}"); }
+        if (log) { Debug.Log($"(Laptop) {name} HDD changed. New disks count: {disks.Count}"); }
     }
 
     // FILES MANAGEMENT

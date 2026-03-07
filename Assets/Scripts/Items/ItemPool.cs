@@ -186,7 +186,6 @@ public class ItemPool : MonoBehaviour, ItemStorer
 
         return ref1 == ref2;
     }
-
     public List<Item> GetStaticItems()
     {
         List<Item> items = new List<Item>();
@@ -204,6 +203,36 @@ public class ItemPool : MonoBehaviour, ItemStorer
         return items;
     }
 
+    // GET DYNAMIC DATA
+    /// <summary>
+    /// this method is the opposite of GetStaticPoolData()
+    /// since it only works at runtime, when the ItemPool has some stacks in
+    /// their memory. So it is easier to update because we just need
+    /// to update the items' id that we currently have in each ui_itemstack :)
+    /// </summary>
+    /// <returns></returns>
+    public ItemPoolData GetDynamicPoolData()
+    {
+        ItemPoolData data = new ItemPoolData()
+        {
+            pool_id = this.PoolID,
+            max_stacks = this.MaxStacks,
+            min_stacks = this.MinStacks,
+            scalable = this.Scalable,
+            item_rule = this.item_rule,
+            stacks_data = new List<ItemStackData>()
+        };
+
+        // we go through all stacks to get their data
+        for (int i = 0; i < stacks.Count; i++)
+        {
+            ItemStack stack = stacks[i];
+            ItemStackData stack_data = new ItemStackData() { items_ids = stack.Items.Select(item => item.data.id).ToList() };
+            data.stacks_data.Add(stack_data);
+        }
+
+        return data;
+    }
 
 
     // RULE CHECK

@@ -58,8 +58,8 @@ public class Item : Movable, EndlessInteractable
     }
 
     // events
-    public event System.Action<Item, Capable> OnGrabbed = delegate { };
-    public event System.Action<Item> OnDropped = delegate { };
+    public event Action<Item, Capable> OnGrabbed = delegate { };
+    public event Action<Item> OnDropped = delegate { };
 
     // HOLDER
     public Capable Holder => ItemPoolHolder != null ? ItemPoolHolder.Inventory.capable : null;
@@ -298,6 +298,35 @@ public class Item : Movable, EndlessInteractable
 
 
     // DATA MANAGEMENT
+    public override void LoadData(CapableData data)
+    {
+        base.LoadData(data);
+
+        // we check if the data is of the correct type
+        ItemData item_data = data as ItemData;
+        if (item_data == null)
+        {
+            if (log) { Debug.LogError($"(Item - LoadData) The data provided is not of type ItemData for item '{name}'"); }
+            return;
+        }
+
+        // we load the item data
+        this.Reference = item_data.reference;
+        this.Color = item_data.color;
+        this.MaxQty = item_data.max_qty;
+        this.ItemDescription = item_data.item_description;
+    }
+    public override void UnloadData()
+    {
+        base.UnloadData();
+
+        // ? really useful ? no but it's better to have a safe guard
+        // todo if perf problem when loading items, remove this
+        this.Reference = "category:item";
+        this.Color = Color.yellow;
+        this.MaxQty = 1;
+        this.ItemDescription = "description of the item (item data was not loaded, is there a problem ?)";
+    }
     public override ICapableData GetStaticData()
     {
         ItemData static_data = new ItemData

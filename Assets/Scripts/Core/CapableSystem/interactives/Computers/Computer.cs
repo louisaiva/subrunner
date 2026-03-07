@@ -33,7 +33,7 @@ public class Computer : StaticDevice, Interactable, Onnable
         // only first interaction per interactor is authorized !!!
         if (interactors.Contains(interactor)) { return; }
         interactors.Add(interactor);
-        if (debug) { Debug.Log("(Computer) " + name + " was interacted by " + interactor.name); }
+        if (log) { Debug.Log("(Computer) " + name + " was interacted by " + interactor.name); }
 
         // we power on if it's the first interactor we have !!
         if (interactors.Count == 1) { GetCapacity<OnOffCapacity>().PowerOn(); }

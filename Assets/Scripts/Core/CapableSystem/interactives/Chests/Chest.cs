@@ -39,7 +39,7 @@ public class Chest : Capable, Interactable, Openable
         // only first interaction per interactor is authorized !!!
         if (interactors.Contains(interactor)) { return; }
         interactors.Add(interactor);
-        if (debug) { Debug.Log("(Chest) " + name + " was interacted by " + interactor.name); }
+        if (log) { Debug.Log("(Chest) " + name + " was interacted by " + interactor.name); }
 
         // we open if it's the first interactor we have !!
         if (interactors.Count == 1) { GetCapacity<OpenCapacity>()?.Use(interactor); }

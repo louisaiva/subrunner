@@ -22,7 +22,7 @@ public class Capable : MonoBehaviour, Debuggable
 
 
     // LOAD / UNLOAD
-    public void LoadData(CapableData data)
+    public virtual void LoadData(CapableData data)
     {
         this.data = data;
         this.name = data.id;
@@ -33,7 +33,8 @@ public class Capable : MonoBehaviour, Debuggable
 
         // ! the colliders & anim data are loaded directly from CapableBank since we pool them
 
-        // we set the inventory
+        // we load the inventory (and so the items)
+        Inventory?.LoadInventoryData(data.inventory);
 
         // we load the capacities
         this.capacities = CapacityEngine.Instance.LoadCapacities(data.capacities_ids, this);
@@ -50,7 +51,7 @@ public class Capable : MonoBehaviour, Debuggable
             AddEffect(data.effects[i], data.effects_ttl[i]);
         }
     }
-    public void UnloadData()
+    public virtual void UnloadData()
     {
         // here we need to unload all the capacities that we hold
         // -> interacts with CapacityEngine
@@ -58,6 +59,10 @@ public class Capable : MonoBehaviour, Debuggable
         {
             CapacityEngine.Instance.UnloadCapacities(data.capacities_ids);
         }
+
+        // we unload the inventory (and so the items)
+        Inventory?.SaveAndUnloadInventoryData();
+
 
         // we save some data
         this.data.position = this.transform.position;
@@ -312,7 +317,7 @@ public class Capable : MonoBehaviour, Debuggable
 
 
     [Header("Logs")]
-    public bool debug = false;
+    public bool log = false;
     public bool activate_all_capacities_logs_on_awake = false;
     public bool log_static_data = false;
 
@@ -331,7 +336,7 @@ public class Capable : MonoBehaviour, Debuggable
 
             // we add it to the list
             capacities.Add(capa);
-            if (debug) { Debug.Log("(Capable) " + name + " : capacity " + capa.name + " found on awake"); }
+            if (log) { Debug.Log("(Capable) " + name + " : capacity " + capa.name + " found on awake"); }
 
             // we check if the debug is true then we force debug to be true
             if (activate_all_capacities_logs_on_awake) { capa.debug = true; }
@@ -416,7 +421,7 @@ public class Capable : MonoBehaviour, Debuggable
         // we put the capacity in the list
         Capacity capa = capa_instance.GetComponent<Capacity>();
         capacities.Add(capa);
-        if (debug) { Debug.Log("(Capable) " + this.name + " : capacity " + name + " added"); }
+        if (log) { Debug.Log("(Capable) " + this.name + " : capacity " + name + " added"); }
 
         return capa;
     }
@@ -428,7 +433,7 @@ public class Capable : MonoBehaviour, Debuggable
             {
                 capacities.Remove(capa);
                 Destroy(capa.gameObject);
-                if (debug) { Debug.Log("(Capable) " + this.name + " : capacity " + name + " removed"); }
+                if (log) { Debug.Log("(Capable) " + this.name + " : capacity " + name + " removed"); }
                 return;
             }
         }

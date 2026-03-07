@@ -28,7 +28,7 @@ public class Module_HDD : Module
         // we open the HDD info
         StoreCapacity disk = GetCapacity<StoreCapacity>();
         if (disk == null) { return; }
-        if (debug) { Debug.Log($"(Module_HDD) Inspecting HDD, opening HDD info"); }
+        if (log) { Debug.Log($"(Module_HDD) Inspecting HDD, opening HDD info"); }
         UI_Manager.Instance.GetPool("hdd").gameObject.GetComponent<UI_HDD>().SetDisk(disk);
         UI_Manager.Instance.StackPool("hdd");
     }

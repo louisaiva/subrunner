@@ -57,7 +57,7 @@ public abstract class StaticDevice : Capable, Device
         // we call the event
         OnDisksChanged?.Invoke(disks);
 
-        if (debug) { Debug.Log($"(StaticDevice) {name} HDD changed. New disks count: {disks.Count}"); }
+        if (log) { Debug.Log($"(StaticDevice) {name} HDD changed. New disks count: {disks.Count}"); }
     }
     public event System.Action<List<StoreCapacity>> OnDisksChanged = delegate { };
 

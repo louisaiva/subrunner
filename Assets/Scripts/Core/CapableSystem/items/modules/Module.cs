@@ -64,7 +64,7 @@ public class Module : Item, Inspectable
         ModuleUpgrade upgrade = upgrades[UnityEngine.Random.Range(0, upgrades.Count)];
         upgrade.tier += 1;
         upgrade.CalculateEffect();
-        if (debug) { Debug.Log($"(Module) {name} upgraded {upgrade.name} to tier {upgrade.tier}"); }
+        if (log) { Debug.Log($"(Module) {name} upgraded {upgrade.name} to tier {upgrade.tier}"); }
 
         // we apply the upgrade
         apply_upgrade();

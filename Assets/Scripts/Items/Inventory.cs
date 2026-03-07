@@ -124,13 +124,18 @@ public class Inventory : MonoBehaviour, ItemStorer
             pools_to_fill[i].OnStackRemoved += (stack) => { OnStackRemoved?.Invoke(stack); };
         }
     }
-    public void UnloadInventoryData()
+    public void SaveAndUnloadInventoryData()
     {
-        // we unload the pools we have
+        List<ItemPoolData> new_datas = new List<ItemPoolData>();
+
         for (int i = 0; i < pools.Count; i++)
         {
-            pools[i].UnloadPoolData();
+            new_datas.Add(pools[i].GetDynamicPoolData()); // we get the data (so we can save it)
+            pools[i].UnloadPoolData(); // we unload the pool
         }
+
+        // we save the data into our capable.data.inventory.item_pools_data
+        capable.data.inventory.item_pools_data = new_datas;
 
         // finally we remove the pools
         pools.Clear();

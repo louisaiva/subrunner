@@ -62,7 +62,7 @@ public class LevelSwitcher : Capable, Interactable
             }
             else
             {
-                if (debug) { Debug.LogWarning("(LevelSwitcher) Can't switch level, the elevator door is open but can't close"); }
+                if (log) { Debug.LogWarning("(LevelSwitcher) Can't switch level, the elevator door is open but can't close"); }
                 StartCoroutine(floating_dmg_provider.GetComponent<TextManager>().TalkLines("why door ?\nwhy don't u want to close ?", Perso.Instance));
                 yield break;
             }

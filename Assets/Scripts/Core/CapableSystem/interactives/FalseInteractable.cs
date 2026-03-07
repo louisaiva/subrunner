@@ -22,7 +22,7 @@ public class FalseInteractable : Capable, EndlessInteractable
         // we set the interactor
         Interactor = interactor.GetCapacity<InteractCapacity>();
 
-        if (debug) { Debug.Log("(FalseInteractable) " + name + " was interacted by " + interactor.name); }
+        if (log) { Debug.Log("(FalseInteractable) " + name + " was interacted by " + interactor.name); }
 
         anim_player.Play(interact_animation);
         OnInteractEvent?.Invoke();

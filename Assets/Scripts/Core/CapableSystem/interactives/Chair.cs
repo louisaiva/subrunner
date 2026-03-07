@@ -13,7 +13,7 @@ public class Chair : Capable, EndlessInteractable
     // ON INTERACT
     public void OnInteract(Capable interactor)
     {
-        if (debug) { Debug.Log(name + " has been interacted by " + interactor.name); }
+        if (log) { Debug.Log(name + " has been interacted by " + interactor.name); }
         small_turn_coroutine = StartCoroutine(small_turn(Random.Range(1, 4)));
     }
     public void OnEndlessInteract(Capable interactor)

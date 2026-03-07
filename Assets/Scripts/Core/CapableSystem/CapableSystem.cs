@@ -191,7 +191,24 @@ public class CapableSystem : BSOD_System<CapableSystem>
         if (log_loading) { Debug.Log("(CapableSystem) Loaded " + data.id); }
         return capable;
     }
-    public Capable LoadCapableInstantly(string id) { return load_capable(id); }
+    public Capable LoadCapableInstantly(string id)
+    {
+        // if the capable is in the unloading queue, it means it is already loaded,
+        // so we remove it from unloading queue and simply return it
+        if (unloading_queue.Contains(id))
+        {
+            unloading_queue.Remove(id);
+            Capable capable = CapableBank.Instance.GetLoadedCapable(id);
+            if (log_loading) { Debug.Log("(CapableSystem) Already loaded " + id); }
+            return capable;
+        }
+
+        // we remove the capable from loading queue
+        if (loading_queue.Contains(id)) { loading_queue.Remove(id); }
+
+        // and we finally load it
+        return load_capable(id);
+    }
 
     // UNLOAD CAPABLES
     /// <summary>

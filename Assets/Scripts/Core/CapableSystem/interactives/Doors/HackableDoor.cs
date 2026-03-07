@@ -44,7 +44,7 @@ public class HackableDoor : Door, Lockable
         }
 
         // else we are locked we can't interact.
-        if (debug) { Debug.Log($"(HackableDoor) {interactor.name} tried to interact with locked door {name}"); }
+        if (log) { Debug.Log($"(HackableDoor) {interactor.name} tried to interact with locked door {name}"); }
 
         // if we have a hover capacity we try to update its animation (so it will reset the animation, which alert the player it's locked)
         hoverer.ChangeAnimation("hover_locked");
@@ -54,7 +54,7 @@ public class HackableDoor : Door, Lockable
     public async void Unlock()
     {
         Locked = false;
-        if (debug) { Debug.Log($"(HackableDoor) {name} is now unlocked"); }
+        if (log) { Debug.Log($"(HackableDoor) {name} is now unlocked"); }
 
         // we play unlock animation
         anim_player.Play("unlock");
@@ -78,7 +78,7 @@ public class HackableDoor : Door, Lockable
     {
         CancelInvoke();
         Locked = true;
-        if (debug) { Debug.Log($"(HackableDoor) {name} is now locked"); }
+        if (log) { Debug.Log($"(HackableDoor) {name} is now locked"); }
 
         // we play lock animation
         anim_player.Play("lock");
@@ -92,7 +92,7 @@ public class HackableDoor : Door, Lockable
         // if we are open we close ourselves
         if (is_open)
         {
-            if (debug) { Debug.Log($"(HackableDoor) {name} is open, closing it now"); }
+            if (log) { Debug.Log($"(HackableDoor) {name} is open, closing it now"); }
             close();
         }
     }

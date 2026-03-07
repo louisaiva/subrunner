@@ -189,7 +189,7 @@ public class Pot : Item, Usable
         if (temperature >= 100.0f && !HasEffect(Effect.Boiling))
         {
             AddEffect(Effect.Boiling, -888f);
-            if (debug) { Debug.Log("(Pot) Now boiling !"); }
+            if (log) { Debug.Log("(Pot) Now boiling !"); }
             update_state();
             return;
         }
@@ -210,7 +210,7 @@ public class Pot : Item, Usable
         if (stacked_temperature >= stack_limit && !HasEffect(Effect.Burning))
         {
             AddEffect(Effect.Burning, -888f);
-            if (debug) { Debug.Log("(Pot) Now burning !"); }
+            if (log) { Debug.Log("(Pot) Now burning !"); }
 
             // we play the burning up animation
             anim_player.Play("burn_up");
@@ -230,7 +230,7 @@ public class Pot : Item, Usable
         if (stacked_temperature <= 0.0f && HasEffect(Effect.Burning))
         {
             RemoveEffect(Effect.Burning);
-            if (debug) { Debug.Log("(Pot) Stopped burning"); }
+            if (log) { Debug.Log("(Pot) Stopped burning"); }
 
             // we stop the burning anims
             anim_player.Play("burn_down");
@@ -252,7 +252,7 @@ public class Pot : Item, Usable
         else { reference += "clean"; }
         Reference = reference;
 
-        if (debug) { Debug.Log("(Pot) State updated to " + Reference); }
+        if (log) { Debug.Log("(Pot) State updated to " + Reference); }
 
         // BURNING ANIMATIONS
         anim_player.ClearIdles();

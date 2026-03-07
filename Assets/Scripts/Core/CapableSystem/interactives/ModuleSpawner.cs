@@ -25,7 +25,7 @@ public class ModuleSpawner : Capable, EndlessInteractable
         // we get a random module from the bank
         Module module = ItemBank.Instance.CreateRandomModule(module_references);
         spawner.Spawn(module.gameObject);
-        if (debug) { Debug.Log("(ModuleSpawner) " + name + " spawned module " + module.Reference); }
+        if (log) { Debug.Log("(ModuleSpawner) " + name + " spawned module " + module.Reference); }
     }
 
     public void OnEndlessInteract(Capable interactor) { if (authorize_interact_endlessly) { OnInteract(interactor); } }

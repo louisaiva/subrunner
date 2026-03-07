@@ -61,7 +61,7 @@ public class CapableBank : MonoBehaviour
             load_body_data(capable, data.body_data);
 
             // and its inventory
-            capable.Inventory?.LoadInventoryData(data.inventory);
+            // capable.Inventory?.LoadInventoryData(data.inventory);
 
             // we load its data
             capable.LoadData(data);
@@ -93,7 +93,6 @@ public class CapableBank : MonoBehaviour
 
         // and its inventory
         build_inventory_item_pools(capable.Inventory, data.inventory);
-        capable.Inventory?.LoadInventoryData(data.inventory);
 
         // then we can load the data
         capable.LoadData(data);
@@ -114,19 +113,6 @@ public class CapableBank : MonoBehaviour
             GameObject feet = Instantiate(feet_prefab, go.transform);
             feet.name = "feet";
         }
-        
-
-        // objects (adds a navigation modifier to its body that's it) <- no need anymore it's inside the colliders prefabs
-        /* else
-        {
-            Transform body = go.transform.Find("body");
-            if (body != null)
-            {
-                NavMeshPlus.Components.NavMeshModifier modifier = body.gameObject.AddComponent<NavMeshPlus.Components.NavMeshModifier>();
-                modifier.overrideArea = true;
-                modifier.area = NavMesh.GetAreaFromName("Not Walkable");
-            }
-        } */
 
         // then we add the component corresponding to the capable kind
         Capable capable = go.gameObject.AddComponent(kind) as Capable;
@@ -272,9 +258,6 @@ public class CapableBank : MonoBehaviour
     }
     public void Unload(Capable capable)
     {
-
-        // unload inventory
-        capable.Inventory?.UnloadInventoryData();
 
         // unload anim layers
         List<AnimLayer> anim_layers = capable.anim_player.GetAnimLayers();

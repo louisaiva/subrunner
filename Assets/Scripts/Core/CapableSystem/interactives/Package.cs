@@ -57,7 +57,7 @@ public class Package : Movable, Interactable
 
 
         // 2 - DESTROYING CAPACITIES
-        if (debug) { Debug.Log("Destroying capacities of " + name); }
+        if (log) { Debug.Log("Destroying capacities of " + name); }
 
         // we destroy all capacities (except DieCapacity FOR NOW)
         List<Capacity> capacities = new List<Capacity>(GetCapacities());

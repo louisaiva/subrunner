@@ -69,7 +69,7 @@ public class SleepingCat : IA
         Transform chosen_spot = PickBestNapSpot();
         if (chosen_spot == null) { yield break; }
 
-        if (debug) { Debug.Log("Cat " + name + " chose to sleep at: " + chosen_spot.name); }
+        if (log) { Debug.Log("Cat " + name + " chose to sleep at: " + chosen_spot.name); }
 
         // we go there
         // yield return GoToCoroutine(chosen_spot.position);
@@ -95,7 +95,7 @@ public class SleepingCat : IA
             // we add a new rating
             nap_spots.Add(nap_spot); // add the nap spot to the list
             nap_spots_ratings.Add(new Vector2(time_spent_asleep, 1)); // add a new rating with time spent asleep and number of nights slept here
-            if (debug) { Debug.Log("New nap spot rated: " + nap_spot.name + " with time: " + time_spent_asleep); }
+            if (log) { Debug.Log("New nap spot rated: " + nap_spot.name + " with time: " + time_spent_asleep); }
             return;
         }
 
@@ -153,7 +153,7 @@ public class SleepingCat : IA
         List<Collider2D> results = new List<Collider2D>();
         Physics2D.OverlapCollider(collider, beingFilter, results);
 
-        if (debug)
+        if (log)
         {
             Debug.Log("(Cat - rcnsip) " + name + " is checking if the last nap spot is populated: " + last_nap_spot.name);
             string s = "Results: " + results.Count + " beings found\n\t";
