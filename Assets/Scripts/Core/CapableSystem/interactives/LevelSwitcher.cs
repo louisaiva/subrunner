@@ -24,7 +24,7 @@ public class LevelSwitcher : Capable, Interactable
         world = GameObject.Find("/world").GetComponent<World2>();
 
         // we get the floating_dmg_provider
-        floating_dmg_provider = GameObject.Find("/utils/dmgs_provider");
+        floating_dmg_provider = GameObject.Find("/game/dmgs_provider");
 
         // we get the elevator_door
         elevator_door = transform.parent.Find("door_elevator").GetComponent<Door>();

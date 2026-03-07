@@ -30,7 +30,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
 
     // EVENTS
-    public Action<Capable, Capable> OnCapableSpawned; // we pass the spawned capable's data and the spawner capable (can be null)
+    public Action<Capable, Capable> OnCapableNeedRoom; // we pass the spawned capable's data and the spawner capable (can be null)
 
 
 
@@ -120,7 +120,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
         Type capable_type = Type.GetType(kind);
         
         // ItemData
-        if (is_kind(capable_type, typeof(Item))) { data_type = typeof(ItemData); }
+        if (GameManager.Instance.IsKind(capable_type, typeof(Item))) { data_type = typeof(ItemData); }
         
         // no intermediary type -> we give a CapableData, basic
         else { data_type = typeof(CapableData); }
@@ -132,14 +132,6 @@ public class CapableSystem : BSOD_System<CapableSystem>
         capables_data.Add(data.id, data);
         log += data.GetDetails() + "\n";
     }
-    private bool is_kind(Type capable_kind, Type ref_kind)
-    {
-        bool is_same_or_subclass = capable_kind == ref_kind || capable_kind.IsSubclassOf(ref_kind);
-        return is_same_or_subclass;
-    }
-
-
-
 
 
 
@@ -264,7 +256,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
     }
 
 
-    // SPAWNING
+    // SPAWNING / DROPPING ITEMS
     public Capable SpawnCapable(string base_id, Capable spawner)
     {
         if (log_spawning) { Debug.Log($"(CapableSystem) Spawning {base_id} entity"); }
@@ -280,13 +272,44 @@ public class CapableSystem : BSOD_System<CapableSystem>
         Capable spawned_capable = load_capable(spawn_data);
 
         // 3. we alert the RoomSystem that we just spawned a capable, for it to assign a room to it
-        OnCapableSpawned?.Invoke(spawned_capable, spawner);
+        OnCapableNeedRoom?.Invoke(spawned_capable, spawner);
 
         if (log_spawning) { Debug.Log($"(CapableSystem) Spawned {base_id} (new id : {spawn_data.id})"); }
 
         // 4. we return the spawned capable
         return spawned_capable;
     }
+    public void OnItemDropped(Item item, Capable dropper)
+    {
+        // we simply inform the room system that we need a room for the item
+        OnCapableNeedRoom?.Invoke(item, dropper);
+    }
+
+
+    // UPDATE
+    private void Update()
+    {
+        if (!awake_done) { return; }
+        
+        // we load / unload in queue
+        int unloaded = unload_in_queue(load_x_capables_per_frame);
+        load_in_queue(load_x_capables_per_frame - unloaded);
+
+    }
+
+
+
+    // GETTERS
+    public bool HasCapable(Capable capable)
+    {
+        if (capable == null) { return false; }
+        if (capable.data == null) { return false; }
+        if (capable.data.id == "") { return false; }
+        return loaded_capables_data.ContainsKey(capable.data.id);
+    }
+
+
+    // DATA MANAGMENT
     private CapableData DuplicateData(CapableData base_data)
     {
         CapableData new_data = base_data.Duplicate() as CapableData;
@@ -324,30 +347,6 @@ public class CapableSystem : BSOD_System<CapableSystem>
         }
 
         return prefix + (max_suffix + 1);
-    }
-
-
-
-    // UPDATE
-    private void Update()
-    {
-        if (!awake_done) { return; }
-        
-        // we load / unload in queue
-        int unloaded = unload_in_queue(load_x_capables_per_frame);
-        load_in_queue(load_x_capables_per_frame - unloaded);
-
-    }
-
-
-
-    // GETTERS
-    public bool HasCapable(Capable capable)
-    {
-        if (capable == null) { return false; }
-        if (capable.data == null) { return false; }
-        if (capable.data.id == "") { return false; }
-        return loaded_capables_data.ContainsKey(capable.data.id);
     }
 
 }

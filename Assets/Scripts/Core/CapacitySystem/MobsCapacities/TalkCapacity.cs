@@ -86,7 +86,7 @@ public class TalkCapacity : Capacity
     private void Start()
     {
         // on récupère le provider de floating dmg
-        floating_dmg_provider = GameObject.Find("/utils/dmgs_provider");
+        floating_dmg_provider = GameObject.Find("/game/dmgs_provider");
 
         // on lance le parlage automatique
         if (talk_on_start) { StartTalking(); }

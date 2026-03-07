@@ -103,7 +103,7 @@ public class CapableBank : MonoBehaviour
     {
         // ! TODO this is temporary because Movable & Being will become MoveCapacity & HealthCapacity
         // movable
-        if (is_kind(kind, typeof(Movable)))
+        if (GameManager.Instance.IsKind(kind, typeof(Movable)))
         {
             Rigidbody2D rb = go.gameObject.AddComponent<Rigidbody2D>();
             rb.gravityScale = 0;
@@ -117,11 +117,6 @@ public class CapableBank : MonoBehaviour
         // then we add the component corresponding to the capable kind
         Capable capable = go.gameObject.AddComponent(kind) as Capable;
         return capable;
-    }
-    private bool is_kind(Type capable_kind, Type ref_kind)
-    {
-        bool is_same_or_subclass = capable_kind == ref_kind || capable_kind.IsSubclassOf(ref_kind);
-        return is_same_or_subclass;
     }
 
     private void build_inventory_item_pools(Inventory inv, InventoryData data)

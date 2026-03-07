@@ -29,9 +29,6 @@ public class Room : MonoBehaviour
     public Tilemap ground_tilemap;
     private TilemapRenderer ground_renderer;
 
-    [Header("Logs")]
-    private bool log_tilemaps_loading = false;
-    private bool log_colliders = false;
 
     // LOAD / UNLOAD
     public void LoadData(RoomData data)
@@ -109,7 +106,7 @@ public class Room : MonoBehaviour
     }
     protected void set_tilemap(Tilemap tilemap, TileBase[] tiles, BoundsInt bounds)
     {
-        if (log_tilemaps_loading) { Debug.Log("(Room) Loading tilemap: " + tilemap.name + " with bounds: " + bounds + " and tiles count: " + tiles.Length); }
+        if (RoomSystem.Instance.log_tilemaps_loading) { Debug.Log("(Room) Loading tilemap: " + tilemap.name + " with bounds: " + bounds + " and tiles count: " + tiles.Length); }
 
         // we count how many tiles we have in the data
         string tile_count_log = "\n\nTiles :";
@@ -157,7 +154,7 @@ public class Room : MonoBehaviour
         }
 
 
-        if (log_tilemaps_loading) { Debug.Log("(Room) Tilemap loaded: " + tilemap.name + " with bounds: " + tilemap.cellBounds + " and " + non_null_tiles + " non-null tiles" + tile_count_log); }
+        if (RoomSystem.Instance.log_tilemaps_loading) { Debug.Log("(Room) Tilemap loaded: " + tilemap.name + " with bounds: " + tilemap.cellBounds + " and " + non_null_tiles + " non-null tiles" + tile_count_log); }
     }
 
 
@@ -315,7 +312,7 @@ public class Room : MonoBehaviour
         if (in_movables && !in_out_movables)
         {
             // if the capable is already in the room and has not gone out of the room, it means it teleported (happens on awake)
-            if (log_colliders) { Debug.Log($"(Room - {this.name}) Ignored IN - " + capable.data.id + " (should happen on a capable spawn otherwise it s weird)"); }
+            if (RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Ignored IN - " + capable.data.id + " (should happen on a capable spawn otherwise it s weird)"); }
             return;
         }
         if (in_movables && in_out_movables)
@@ -324,13 +321,13 @@ public class Room : MonoBehaviour
             // so we simply remove both in and out for this capable
             data.OUT_movables_ids.Remove(capable.data.id);
             data.IN_movables_ids.Remove(capable.data.id);
-            if (log_colliders) { Debug.Log($"(Room - {this.name}) Ignored OUT then IN - " + capable.data.id); }
+            if (RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Ignored OUT then IN - " + capable.data.id); }
             return;
         }
 
         // capable enters !
         data.IN_movables_ids.Add(capable.data.id);
-        if (log_colliders) { Debug.Log($"(Room - {this.name}) IN - " + capable.data.id); }
+        if (RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) IN - " + capable.data.id); }
     }
     protected virtual void OnTriggerExit2D(Collider2D collider)
     {
@@ -349,13 +346,13 @@ public class Room : MonoBehaviour
             // so we simply remove both in and out for this capable
             data.IN_movables_ids.Remove(capable.data.id);
             data.OUT_movables_ids.Remove(capable.data.id);
-            if (log_colliders) { Debug.Log($"(Room - {this.name}) Ignored IN then OUT - " + capable.data.id); }
+            if (RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Ignored IN then OUT - " + capable.data.id); }
             return;
         }
 
         // capable exits !
         data.OUT_movables_ids.Add(capable.data.id);
-        if (log_colliders) { Debug.Log($"(Room - {this.name}) OUT - " + capable.data.id); }
+        if (RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) OUT - " + capable.data.id); }
     }
 
     // COLLIDER OVERLAP

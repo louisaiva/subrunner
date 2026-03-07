@@ -37,7 +37,7 @@ public class Perso : Being, Hacker
         {
             if (_itemManager == null)
             {
-                _itemManager = GameObject.Find("/utils/item_manager").GetComponent<ItemManager>();
+                _itemManager = GameObject.Find("/game/item_manager").GetComponent<ItemManager>();
             }
             return _itemManager;
         }

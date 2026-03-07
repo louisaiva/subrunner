@@ -325,7 +325,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
 
             // if we are here, we successfully dropped the item
             item.OnReferenceChanged -= handle_item_reference_changed;
-            item.Grabbed = false; // we set the item to dropped (which enables the hover collider)
+            item.Grabbed = false; // we set the item to dropped (which loads the hover capacity)
 
             // we trigger the event
             OnItemDropped?.Invoke(item);

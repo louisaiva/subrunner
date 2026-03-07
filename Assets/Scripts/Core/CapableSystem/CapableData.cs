@@ -110,8 +110,8 @@ public interface ICapableData : IData
         details += $"     - skin : {skin}\n";
         if (anim_capacity_priorities != null) { details += $"     - anim_capacity_priorities : {anim_capacity_priorities.Count} priorities\n"; }
         else { details += $"     - anim_capacity_priorities : null\n"; }
-        if (layers != null) { details += $"     - layers : {layers.Count} layers\n"; }
-        else { details += $"     - layers : null\n"; }
+        if (layers != null) { details += $"     - layers : {layers.Count} layers"; }
+        else { details += $"     - layers : null"; }
         return details;
     }
 }
@@ -149,8 +149,8 @@ public interface ICapableData : IData
         string details = $"body_data :\n";
         if (box_colliders != null) { details += $"     - box_colliders : {box_colliders.Count} box colliders\n"; }
         else { details += $"     - box_colliders : null\n"; }
-        if (circle_colliders != null) { details += $"     - circle_colliders : {circle_colliders.Count} circle colliders\n"; }
-        else { details += $"     - circle_colliders : null\n"; }
+        if (circle_colliders != null) { details += $"     - circle_colliders : {circle_colliders.Count} circle colliders"; }
+        else { details += $"     - circle_colliders : null"; }
         return details;
     }
 

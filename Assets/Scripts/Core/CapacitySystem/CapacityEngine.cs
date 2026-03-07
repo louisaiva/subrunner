@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CapacityEngine : BSOD_System<CapacityEngine>
@@ -72,19 +73,24 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
 
 
     // LOAD CAPACITIES
-    public List<Capacity> LoadCapacities(List<string> capacities_ids, Capable capable)
+    public List<Capacity> LoadCapacities(List<string> capacities_ids, Capable capable, bool skip_if_loaded=false)
     {
         List<Capacity> capacities = new List<Capacity>();
         for (int i = 0; i < capacities_ids.Count; i++)
         {
             string id = capacities_ids[i];
-            Capacity capa = load_capacity(id,capable.data);
+            Capacity capa = load_capacity(id,capable.data, skip_if_loaded);
+
+            if (capa == null) { continue; }
+            // we may have skipped this capacity for various reasons
+            // ie. we load an Item which is grabbed, it does not need to have an hover
+            // so we skipped hover
             
             capacities.Add(capa);
         }
         return capacities;
     }
-    private Capacity load_capacity(string id, CapableData capable_data)
+    private Capacity load_capacity(string id, CapableData capable_data, bool skip_if_loaded = false)
     {
         CapacityData data = capacities_data[id] as CapacityData;
         if (data == null)
@@ -92,15 +98,26 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
             if (!hide_log_no_data_found) { Debug.LogWarning("(CapacityEngine - Load) Capacity data not found for id: " + id); }
             return null;
         }
-        return load_capacity(data, capable_data);
+        return load_capacity(data, capable_data,  skip_if_loaded);
     }
-    private Capacity load_capacity(CapacityData data, CapableData capable_data)
+    private Capacity load_capacity(CapacityData data, CapableData capable_data, bool skip_if_loaded=false)
     {
+
+        // we check if we REALLY want to load the capacity
+        // if (skip_capacity_loading(data, capable_data)) { return null; }
+
+
         // we check if we already have this data in our loaded data
         if (loaded_capacities_data.ContainsKey(data.id))
         {
-            string old_id = data.id;
+            if (skip_if_loaded)
+            {
+                if (log_loading) { Debug.LogWarning($"(CapacityEngine - Load) Skipped capacity '{data.id}' for '{capable_data.id}' because already loaded"); }
+                return null;
+            }
+
             // ? then we want to duplicate the data & change the capa_id & change the capa_id in capable.data.capacities
+            string old_id = data.id;
 
             // we duplicate the data + generate unique id
             data = DuplicateData(data);
@@ -124,6 +141,23 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         if (log_loading) { Debug.Log("(CapacityEngine) Loaded " + data.id); }
         return capacity;
     }
+    /* private bool skip_capacity_loading(CapacityData data, CapableData capable_data)
+    {
+        // we only check on items
+        if (!GameManager.Instance.IsKind(Type.GetType(capable_data.kind), typeof(Item))) { return false; }
+
+        // and on grabbed items more specifically
+        if (!(capable_data is ItemData item_data) || !item_data.is_grabbed) { return false; }
+
+        // we only check for hover capacity (for now)
+        if (!GameManager.Instance.IsKind(Type.GetType(data.kind), typeof(HoverCapacity))) { return false; }
+        // todo inverse the check just above, we need to have a list<string> with kind
+        // that don't need to be loaded when item is grabbed
+
+        // we check if the capacity is hover and if the capable is grabbed, if yes we skip loading this capacity because it's not needed
+        if (log_loading) { Debug.LogWarning($"(CapacityEngine - Load) Skipped loading capacity '{data.id}' for '{capable_data.id}' because hover & grabbed"); }
+        return true;
+    } */
 
     // UNLOAD CAPACITIES
     public void UnloadCapacities(List<string> capacities_ids)
@@ -137,13 +171,58 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     private Capacity unload_capacity(string id)
     {
         CapacityData data = loaded_capacities_data[id] as CapacityData;
-        if (data == null) { Debug.LogWarning("(CapacityEngine - Unload) Loaded capacity data not found for id: " + id); return null; }
+        if (data == null)
+        {
+            if (!hide_log_no_data_found) { Debug.LogWarning("(CapacityEngine - Unload) Loaded capacity data not found for id: " + id); }
+            return null;
+        }
+
+        // we found the data, we unload it
         Capacity capacity = CapacityBank.Instance.Unload(data);
         loaded_capacities_data.Remove(id);
         if (log_loading) { Debug.Log("(CapacityEngine) Unloaded " + id); }
         return capacity;
     }
 
+
+    // GETTERS
+    [Header("Item Static Capacities Kinds")]
+    // these capacities kinds are loaded / unloaded along side with the item loading / unloading.
+    // this means that the kinds that ARE NOT in this list will be dynamically loaded / unloaded
+    // when the item is dropped / grabbed
+    [SerializeField] private List<string> item_static_capacities_kinds = new List<string>() { "DodgeCapacity" };
+    public List<string> GetDynamicItemCapacitiesIDs(List<string> capa_ids, ref List<string> static_ids)
+    {
+        // 1. we get the base capable capacities ids
+        List<string> dynamically_pooled_ids = new List<string>();
+
+        // 2. we only check on items
+        // if (capable is not Item) { return capable.data.capacities_ids; } ! no need for now bcz we only call method from Item
+
+        // 3. we filter it with the list of static capacity kinds
+        // -> means we dynamically handle ONLY the kinds that ARE NOT in this list
+        for (int i=0; i<capa_ids.Count; i++)
+        {
+            string capa_id = capa_ids[i];
+            CapacityData capa_data = capacities_data[capa_id] as CapacityData;
+            if (capa_data == null)
+            {
+                if (!hide_log_no_data_found) { Debug.LogWarning("(CapacityEngine - GetCapacitiesIDsToPoolDynamically) Capacity data not found for id: " + capa_id); }
+                continue;
+            }
+
+            // if we have a static capacity kind, we don't add it
+            if (item_static_capacities_kinds.Contains(capa_data.kind))
+            {
+                static_ids.Add(capa_id);
+                continue;
+            }
+
+            // else it is a dynamic one, we add it
+            dynamically_pooled_ids.Add(capa_id);
+        }
+        return dynamically_pooled_ids;
+    }
 
     // DATA DUPLICATION
     private CapacityData DuplicateData(CapacityData base_data)

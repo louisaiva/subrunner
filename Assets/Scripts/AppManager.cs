@@ -9,7 +9,9 @@ using UnityEditor;
 
 /// <summary>
 /// this class handles few global things
-/// of the application, such as a flag to know if the app is quitting or not
+/// of the application, such as a flag to know if the app is quitting or not.
+/// It is situated on "/app" gameObject which is dontdestroy and is the first thing loaded when
+/// launching the app
 /// </summary>
 public class AppManager : MonoBehaviour
 {

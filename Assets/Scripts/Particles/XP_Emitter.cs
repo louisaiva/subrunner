@@ -9,7 +9,7 @@ public class XP_Emitter : MonoBehaviour
 
     private void Start()
     {
-        xp_provider = GameObject.Find("/utils/particles/xp_provider").GetComponent<XPProvider>();
+        xp_provider = GameObject.Find("/game/particles/xp_provider").GetComponent<XPProvider>();
     }
 
     void Update()

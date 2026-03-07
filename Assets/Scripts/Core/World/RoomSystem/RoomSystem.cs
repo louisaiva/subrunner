@@ -33,6 +33,10 @@ public class RoomSystem : BSOD_System<RoomSystem>
     public bool log_room_transfers = false;
     public bool log_ticks = false;
 
+    [Header("Room Logs")]
+    public bool log_tilemaps_loading = false;
+    public bool log_colliders = false;
+
 
     // AWAKE
     public override void Awake()
@@ -67,8 +71,8 @@ public class RoomSystem : BSOD_System<RoomSystem>
     // START
     private void Start()
     {
-        // we register to CapableSystem.OnCapableSpawned so we can assign rooms to the new capable
-        CapableSystem.Instance.OnCapableSpawned += handleCapableSpawned;    
+        // we register to CapableSystem.OnCapableNeedRoom so we can assign rooms to the new capable
+        CapableSystem.Instance.OnCapableNeedRoom += handleCapableSpawned;    
     }
 
     // LOAD ROOMS

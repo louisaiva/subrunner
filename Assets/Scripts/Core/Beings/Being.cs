@@ -44,7 +44,7 @@ public class Being : Movable
         base.Awake();
 
         // on récupère le provider de floating dmg
-        floating_dmg_provider = GameObject.Find("/utils/dmgs_provider");
+        floating_dmg_provider = GameObject.Find("/game/dmgs_provider");
     }
     protected override void Start()
     {

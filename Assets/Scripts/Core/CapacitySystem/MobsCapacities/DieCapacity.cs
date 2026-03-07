@@ -25,10 +25,10 @@ public class DieCapacity : Capacity
     private void Start()
     {
         // on récupère le provider d'xp
-        xp_provider = GameObject.Find("/utils/particles/xp_provider").GetComponent<XPProvider>();
+        xp_provider = GameObject.Find("/game/particles/xp_provider").GetComponent<XPProvider>();
 
         // on récupère le provider de floating dmg
-        text_manager = GameObject.Find("/utils/dmgs_provider").GetComponent<TextManager>();
+        text_manager = GameObject.Find("/game/dmgs_provider").GetComponent<TextManager>();
     }
 
     // trigger the dying

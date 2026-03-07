@@ -40,7 +40,7 @@ namespace subrunner.goap
             this.ia = this.transform.parent.GetComponent<IA>();
 
             // we set the provider's agent type
-            GoapBehaviour goap = GameObject.Find("/utils/goap_manager").GetComponent<GoapBehaviour>();
+            GoapBehaviour goap = GameObject.Find("/game/goap_manager").GetComponent<GoapBehaviour>();
             if (goap == null)
             {
                 Debug.LogError("(Brain) GoapBehaviour not found in the scene. Please add it to /utils/goap_manager");

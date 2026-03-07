@@ -36,6 +36,12 @@ public class Capable : MonoBehaviour, Debuggable
         // we load the inventory (and so the items)
         Inventory?.LoadInventoryData(data.inventory);
 
+        // we add the effects
+        for (int i = 0; i < data.effects.Count; i++)
+        {
+            AddEffect(data.effects[i], data.effects_ttl[i]);
+        }
+        
         // we load the capacities
         this.capacities = CapacityEngine.Instance.LoadCapacities(data.capacities_ids, this);
         for (int i = 0; i < capacities.Count; i++)
@@ -45,11 +51,6 @@ public class Capable : MonoBehaviour, Debuggable
             capa.transform.localPosition = capa.data.local_position;
         }
 
-        // we add the effects
-        for (int i = 0; i < data.effects.Count; i++)
-        {
-            AddEffect(data.effects[i], data.effects_ttl[i]);
-        }
     }
     public virtual void UnloadData()
     {
@@ -105,7 +106,7 @@ public class Capable : MonoBehaviour, Debuggable
             inventory = Inventory?.GetStaticInventoryData(),
 
             // we set the capacities
-            capacities_ids = get_capacity_ids(),
+            capacities_ids = get_static_capacity_ids(),
 
             // we set the effects
             effects = new List<Effect>(effects),
@@ -114,7 +115,7 @@ public class Capable : MonoBehaviour, Debuggable
 
         return static_data;
     }
-    protected List<string> get_capacity_ids()
+    protected List<string> get_static_capacity_ids()
     {
         List<string> capacities_ids = new List<string>();
         

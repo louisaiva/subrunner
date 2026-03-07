@@ -193,6 +193,9 @@ public class Item : Movable, EndlessInteractable
 
         // we call the event
         OnGrabbed?.Invoke(this, Holder);
+
+        // we load the capacities we have not load yet
+        CapacityEngine.Instance.UnloadCapacities(dynamic_capacity_ids);
     }
     protected virtual void on_dropped()
     {
@@ -203,6 +206,9 @@ public class Item : Movable, EndlessInteractable
 
         // we call the event
         OnDropped?.Invoke(this);
+
+        // we load the capacities that we need now !
+        CapacityEngine.Instance.LoadCapacities(dynamic_capacity_ids, this);
     }
 
     // MAIN LOW LEVEL UPGRADE GRABBING & PLACING
@@ -298,9 +304,18 @@ public class Item : Movable, EndlessInteractable
 
 
     // DATA MANAGEMENT
+    private List<string> dynamic_capacity_ids = new List<string>(); // this list is used to store the capacities that are loaded dynamically on grab, so we can unload them on drop
     public override void LoadData(CapableData data)
     {
+        // we store our dynamic capacities ids
+        List<string> static_ids = new List<string>();
+        dynamic_capacity_ids = CapacityEngine.Instance.GetDynamicItemCapacitiesIDs(data.capacities_ids,ref static_ids);
+
+        // we do a trick to make base.LoadData(data) only load the capacities we want to !
+        List<string> capa_ids_saved = new List<string>(data.capacities_ids);
+        if ((data as ItemData).is_grabbed) { data.capacities_ids = static_ids; } // if we are grabbed, we only load the static capacities, the dynamic ones will be loaded only when dropped
         base.LoadData(data);
+        data.capacities_ids = capa_ids_saved; // we restore the original capacities ids list in case we need it later
 
         // we check if the data is of the correct type
         ItemData item_data = data as ItemData;
@@ -315,6 +330,8 @@ public class Item : Movable, EndlessInteractable
         this.Color = item_data.color;
         this.MaxQty = item_data.max_qty;
         this.ItemDescription = item_data.item_description;
+        // ! no need to apply grabbed since it's only a flag
+
     }
     public override void UnloadData()
     {
@@ -339,7 +356,7 @@ public class Item : Movable, EndlessInteractable
             body_data = get_static_body_data(),
             orientation = this.orientation,
             inventory = Inventory?.GetStaticInventoryData(),
-            capacities_ids = get_capacity_ids(),
+            capacities_ids = get_static_capacity_ids(),
             effects = new List<Effect>(effects),
             effects_ttl = new List<float>(effects_timetolive),
 
@@ -348,10 +365,18 @@ public class Item : Movable, EndlessInteractable
             reference = this.Reference,
             color = this.Color,
             max_qty = this.MaxQty,
-            item_description = this.ItemDescription
+            item_description = this.ItemDescription,
+            is_grabbed = get_static_grabbed()
         };
 
         return static_data;
+    }
+    protected bool get_static_grabbed()
+    {
+        // we need to check if we have another capable in our parents or above, if yes it means we are grabbed
+        if (transform.parent == null) { return false; }
+        Capable parent_capable = transform.parent.GetComponentInParent<Capable>(includeInactive: true);
+        return parent_capable != null;
     }
 }
 
@@ -364,6 +389,7 @@ public class Item : Movable, EndlessInteractable
     public Color color;
     public int max_qty;
     public string item_description;
+    public bool is_grabbed; // only a flag, for the CapacityEngine to know which capacities not to load
 
     // DUPLICATE
     public override ICapableData Duplicate()
@@ -382,7 +408,8 @@ public class Item : Movable, EndlessInteractable
             reference = this.reference,
             color = this.color,
             max_qty = this.max_qty,
-            item_description = this.item_description
+            item_description = this.item_description,
+            is_grabbed = this.is_grabbed
         };
     }
 
@@ -394,6 +421,7 @@ public class Item : Movable, EndlessInteractable
         details += $"  - color : {color}\n";
         details += $"  - max_qty : {max_qty}\n";
         details += $"  - item_description : {item_description}\n";
+        details += $"  - is_grabbed : {is_grabbed}\n";
         return details;
     }
 }
