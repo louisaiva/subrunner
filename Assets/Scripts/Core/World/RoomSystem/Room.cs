@@ -174,7 +174,7 @@ public class Room : MonoBehaviour
         RoomData new_data = new RoomData
         {
             // set base data things
-            id = this.name,
+            id = get_static_id(),
             position = this.transform.position,
 
             // set collider data
@@ -192,6 +192,13 @@ public class Room : MonoBehaviour
         get_tilemaps(ref new_data);
 
         return new_data;
+    }
+    protected string get_static_id()
+    {
+        string id = this.name;
+        if (this.data == null) { return id; }
+        if (string.IsNullOrEmpty(this.data.id)) { return id; }
+        return this.data.id;
     }
     protected void get_tilemaps(ref RoomData room_data)
     {
@@ -304,30 +311,42 @@ public class Room : MonoBehaviour
         Capable capable = collider.GetComponent<Capable>();
         if (capable == null) { capable = collider.transform.parent.GetComponent<Capable>(); }
         if (capable == null) { return; }
+        string id = capable.data.id;
 
-        // check some bools
-        bool in_movables = data.movables_ids.Contains(capable.data.id) || data.capables_ids.Contains(capable.data.id);
-        bool in_out_movables = data.OUT_movables_ids.Contains(capable.data.id);
-
+        // check if we are not already in the movables or capable + if we are not doing IN-OUT in the same room
+        bool in_movables = data.movables_ids.Contains(id) || data.capables_ids.Contains(id);
+        bool in_out_movables = data.OUT_movables_ids.Contains(id);
         if (in_movables && !in_out_movables)
         {
             // if the capable is already in the room and has not gone out of the room, it means it teleported (happens on awake)
-            if (RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Ignored IN - " + capable.data.id + " (should happen on a capable spawn otherwise it s weird)"); }
+            if (RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Ignored IN - " + id + " (should happen on a capable spawn otherwise it s weird)"); }
             return;
         }
         if (in_movables && in_out_movables)
         {
             // if the capable is in the OUT list and in the movables one it means it went out, did not find any other room to go to, and came back to main room,
             // so we simply remove both in and out for this capable
-            data.OUT_movables_ids.Remove(capable.data.id);
-            data.IN_movables_ids.Remove(capable.data.id);
-            if (RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Ignored OUT then IN - " + capable.data.id); }
+            data.OUT_movables_ids.Remove(id);
+            data.IN_movables_ids.Remove(id);
+            if (RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Ignored OUT then IN - " + id); }
+            return;
+        }
+
+        // check if we are not already in the IN then it means we have 2 IN -> we put it directly in the movables
+        if (data.IN_movables_ids.Contains(id))
+        {
+            data.IN_movables_ids.Remove(id);
+
+            // check is capable or movable and add it to the right list
+            if (capable is Movable) { data.movables_ids.Add(id); }
+            else {data.capables_ids.Add(id); }
+            if (RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Grabbed 2x IN - " + id); }
             return;
         }
 
         // capable enters !
-        data.IN_movables_ids.Add(capable.data.id);
-        if (RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) IN - " + capable.data.id); }
+        data.IN_movables_ids.Add(id);
+        if (RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) IN - " + id); }
     }
     protected virtual void OnTriggerExit2D(Collider2D collider)
     {

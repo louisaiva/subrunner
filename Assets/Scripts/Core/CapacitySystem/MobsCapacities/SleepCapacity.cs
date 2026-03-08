@@ -22,7 +22,7 @@ public class SleepCapacity : Capacity
         // we check if the capable is a SleepingCat
         if (!(capable is SleepingCat))
         {
-            if (debug) { Debug.LogWarning("(SleepCapacity) " + capable.name + " is not a SleepingCat"); }
+            if (log) { Debug.LogWarning("(SleepCapacity) " + capable.name + " is not a SleepingCat"); }
             return;
         }
 
@@ -46,11 +46,11 @@ public class SleepCapacity : Capacity
         Anim anim = cat.anim_player.Play("fell_asleep");
         if (anim == null)
         {
-            if (debug) { Debug.LogWarning("(SleepCapacity) " + cat.name + " could not play fell_asleep animation"); }
+            if (log) { Debug.LogWarning("(SleepCapacity) " + cat.name + " could not play fell_asleep animation"); }
             return;
         }
 
-        if (debug) { Debug.Log("(SleepCapacity) " + cat.name + " is falling asleep"); }
+        if (log) { Debug.Log("(SleepCapacity) " + cat.name + " is falling asleep"); }
 
         // and we put the idle_sleep animation in the queue
         cat.anim_player.Play("idle_sleep");
@@ -77,7 +77,7 @@ public class SleepCapacity : Capacity
         Anim anim = cat.anim_player.Play("wake_up");
         if (anim == null)
         {
-            if (debug) { Debug.LogWarning("(SleepCapacity) " + cat.name + " could not play wake_up animation"); }
+            if (log) { Debug.LogWarning("(SleepCapacity) " + cat.name + " could not play wake_up animation"); }
             return;
         }
 
@@ -105,7 +105,7 @@ public class SleepCapacity : Capacity
             capable.GetCapacity<TalkCapacity>().StartTalking();
         }
 
-        if (debug) { Debug.Log("(SleepCapacity) " + cat.name + " woke up after a " + time_spent_asleep + " seconds nap : means " + licking_to_do + " licks to do !"); }
+        if (log) { Debug.Log("(SleepCapacity) " + cat.name + " woke up after a " + time_spent_asleep + " seconds nap : means " + licking_to_do + " licks to do !"); }
 
         // we lick our feet
         StartCoroutine(LickFeet());
@@ -119,13 +119,13 @@ public class SleepCapacity : Capacity
         // we lick our foot for the number of licks to do
         while (licking_to_do > 0)
         {
-            if (debug) { Debug.Log("(SleepCapacity) " + cat.name + " is licking its foot, licks left (including this one): " + licking_to_do); }
+            if (log) { Debug.Log("(SleepCapacity) " + cat.name + " is licking its foot, licks left (including this one): " + licking_to_do); }
 
             // we play the lick foot animation
             Anim anim = cat.anim_player.Play("lick_foot");
             if (anim == null)
             {
-                if (debug) { Debug.LogWarning("(SleepCapacity) " + cat.name + " could not play lick foot animation"); }
+                if (log) { Debug.LogWarning("(SleepCapacity) " + cat.name + " could not play lick foot animation"); }
                 yield break;
             }
             while (cat.anim_player.current_capacity == "lick_foot") { yield return null; }
@@ -153,7 +153,7 @@ public class SleepCapacity : Capacity
         // if we are asleep, we wake up
         if (asleep)
         {
-            if (debug) { Debug.Log("(SleepCapacity) " + other_capable.name + " disturbed the nap of " + capable.name); }
+            if (log) { Debug.Log("(SleepCapacity) " + other_capable.name + " disturbed the nap of " + capable.name); }
             WakeUp();
         }
     }

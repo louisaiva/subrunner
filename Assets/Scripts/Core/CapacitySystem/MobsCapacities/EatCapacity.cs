@@ -96,12 +96,12 @@ public class EatCapacity : Capacity
         // we check if we can Use()
         if (food_target == null)
         {
-            if (debug) { Debug.LogWarning("(EatCapacity) " + capable.name + " has no food target"); }
+            if (log) { Debug.LogWarning("(EatCapacity) " + capable.name + " has no food target"); }
             return;
         }
         if (capable is not Being being)
         {
-            if (debug) { Debug.LogWarning("(EatCapacity) " + capable.name + " is not a being"); }
+            if (log) { Debug.LogWarning("(EatCapacity) " + capable.name + " is not a being"); }
             return;
         }
 
@@ -114,7 +114,7 @@ public class EatCapacity : Capacity
         Anim anim = being.anim_player.Play("eat", duration_override: bite_duration);
         if (anim == null) { yield break; }
 
-        if (debug) { Debug.Log("(EatCapacity) " + being.name + " is trying to eat " + food_target.name); }
+        if (log) { Debug.Log("(EatCapacity) " + being.name + " is trying to eat " + food_target.name); }
         yield return new WaitForSeconds(bite_duration * bites_per_eating); // wait for the eating duration
 
         // we stop playing the anim
@@ -123,12 +123,12 @@ public class EatCapacity : Capacity
         // we check if the food target is still valid
         if (food_target == null)
         {
-            if (debug) { Debug.LogWarning("(EatCapacity) " + being.name + " has no food target anymore"); }
+            if (log) { Debug.LogWarning("(EatCapacity) " + being.name + " has no food target anymore"); }
             yield break;
         }
 
         // we eat the food
-        if (debug) { Debug.Log("(EatCapacity) " + being.name + " is eating " + food_target.name); }
+        if (log) { Debug.Log("(EatCapacity) " + being.name + " is eating " + food_target.name); }
         being.AddLife(food_target.life_regen);
         this.hunger -= food_target.life_regen;
         food_target.BeEaten(being); // we remove one bite from the food target
@@ -137,7 +137,7 @@ public class EatCapacity : Capacity
     public void Cancel(Being being)
     {
         // we cancel the eating action
-        if (debug) { Debug.Log("(EatCapacity) Canceling eating action on " + being.name); }
+        if (log) { Debug.Log("(EatCapacity) Canceling eating action on " + being.name); }
         food_target = null; // we reset the food target
         StopAllCoroutines(); // stop all coroutines related to eating
 

@@ -21,8 +21,8 @@ public class OnOffCapacity : Capacity
     public virtual void PowerOn()
     {
         // checks if it is already powering on or already on
-        if (!Onnable.IsMoving && Onnable.IsOn) { if (debug) { Debug.Log("(Computer) " + capable.name + " is already powered on..."); } return; }
-        if (Onnable.IsMoving && !Onnable.IsOn) { if (debug) { Debug.Log("(Computer) " + capable.name + " is already powering on..."); } return; }
+        if (!Onnable.IsMoving && Onnable.IsOn) { if (log) { Debug.Log("(Computer) " + capable.name + " is already powered on..."); } return; }
+        if (Onnable.IsMoving && !Onnable.IsOn) { if (log) { Debug.Log("(Computer) " + capable.name + " is already powering on..."); } return; }
 
         // we start the powering on coroutine
         capable.StopAllCoroutines();
@@ -31,8 +31,8 @@ public class OnOffCapacity : Capacity
     public virtual async void PowerOff(float delay = 0f)
     {
         // checks if it is already powering off or already off
-        if (!Onnable.IsMoving && !Onnable.IsOn) { if (debug) { Debug.Log("(Computer) " + capable.name + " is already powered off..."); } return; }
-        if (Onnable.IsMoving && Onnable.IsOn) { if (debug) { Debug.Log("(Computer) " + capable.name + " is already powering off..."); } return; }
+        if (!Onnable.IsMoving && !Onnable.IsOn) { if (log) { Debug.Log("(Computer) " + capable.name + " is already powered off..."); } return; }
+        if (Onnable.IsMoving && Onnable.IsOn) { if (log) { Debug.Log("(Computer) " + capable.name + " is already powering off..."); } return; }
 
         if (delay != 0f) { await System.Threading.Tasks.Task.Delay((int)(delay * 1000)); }
 
@@ -42,7 +42,7 @@ public class OnOffCapacity : Capacity
     }
     protected virtual IEnumerator power_on()
     {
-        if (debug) { Debug.Log("(Computer) " + capable.name + " is powering on"); }
+        if (log) { Debug.Log("(Computer) " + capable.name + " is powering on"); }
 
         // on allume l'ordi
         Onnable.IsOn = false;
@@ -57,14 +57,14 @@ public class OnOffCapacity : Capacity
         // on allume l'ordi
         Onnable.IsOn = true;
         Onnable.IsMoving = false;
-        if (debug) { Debug.Log("(Computer) " + capable.name + " powered on !!"); }
+        if (log) { Debug.Log("(Computer) " + capable.name + " powered on !!"); }
     }
     protected virtual IEnumerator power_off()
     {
         // if we wait here it will still stop all coroutines directly which is a problem -> better to wait in PowerOff()
         // if (delay > 0f) { yield return new WaitForSeconds(delay); }
 
-        if (debug) { Debug.Log("(Computer) " + capable.name + " is powering off"); }
+        if (log) { Debug.Log("(Computer) " + capable.name + " is powering off"); }
 
         // on éteint l'ordi
         Onnable.IsOn = true;
@@ -80,7 +80,7 @@ public class OnOffCapacity : Capacity
         Onnable.IsOn = false;
         Onnable.IsMoving = false;
 
-        if (debug) { Debug.Log("(Computer) " + capable.name + " powered off !!"); }
+        if (log) { Debug.Log("(Computer) " + capable.name + " powered off !!"); }
     }
 
     /* protected virtual void open()

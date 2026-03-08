@@ -1,6 +1,6 @@
 ﻿{
-    "<id>k__BackingField": "pastas",
-    "kind": "Pasta",
+    "<id>k__BackingField": "bone_1",
+    "kind": "Item",
     "position": {
         "x": 0.38999998569488528,
         "y": 3.6700000762939455
@@ -10,7 +10,7 @@
         "y": -1.0
     },
     "anim_data": {
-        "skin": "pastas",
+        "skin": "bones",
         "anim_capacity_priorities": [
             {
                 "priority": 0,
@@ -44,18 +44,18 @@
         "item_pools_data": []
     },
     "capacities_ids": [
-        "hover"
+        "hover_6"
     ],
     "effects": [],
     "effects_ttl": [],
-    "reference": "food:pastas",
+    "reference": "other:bone",
     "color": {
-        "r": 0.9254902005195618,
-        "g": 0.9019607901573181,
-        "b": 0.6784313917160034,
+        "r": 0.800000011920929,
+        "g": 0.7607843279838562,
+        "b": 0.7607843279838562,
         "a": 1.0
     },
-    "max_qty": 6,
-    "item_description": "best pastas in town.",
+    "max_qty": 9,
+    "item_description": "just some bone./. nothing special here.",
     "is_grabbed": true
 }

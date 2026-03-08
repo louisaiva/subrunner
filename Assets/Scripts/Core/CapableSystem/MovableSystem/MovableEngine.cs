@@ -106,6 +106,11 @@ public class MovableEngine : MonoBehaviour
         // on copie les données dans le movablePositions
         for (int i = 0; i < movables.Count; i++)
         {
+            if (movables[i] == null)
+            {
+                Unregister(movables[i]);
+                continue;
+            }
             movablePositions[i] = movables[i].transform.position;
         }
 

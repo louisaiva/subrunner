@@ -166,41 +166,16 @@ public class CapableBank : MonoBehaviour
 
         // load box colliders
         for (int i = 0; i < body_data.box_colliders.Count; i++)
-        {            
-            BoxData collider_data = body_data.box_colliders[i];
-         
-            // we extract the collider from the pool
-            BoxCollider2D collider = ColliderBank.Instance.LoadBoxCollider(body, collider_data.used_for_pathfinding);
-
-            // we load the collider data
-            load_collider_data(collider, collider_data);
-            collider.size = collider_data.size;
+        {
+            ColliderBank.Instance.LoadBoxCollider(body_data.box_colliders[i], body);
         }
 
         // load circle colliders
         for (int i = 0; i < body_data.circle_colliders.Count; i++)
-        {            
-            CircleData collider_data = body_data.circle_colliders[i];
-         
-            // we extract the collider from the pool
-            CircleCollider2D collider = ColliderBank.Instance.LoadCircleCollider(body, collider_data.used_for_pathfinding);
-
-            // we load the collider data
-            load_collider_data(collider, collider_data);
-            collider.radius = collider_data.radius;
+        {
+            ColliderBank.Instance.LoadCircleCollider(body_data.circle_colliders[i], body);
         }
     }
-    private void load_collider_data(Collider2D collider, ColliderData collider_data)
-    {
-        // we set gameobject data
-        collider.gameObject.layer = collider_data.layerID;
-        collider.transform.localPosition = collider_data.local_position;
-
-        // we set the collider data
-        collider.offset = collider_data.offset;
-        collider.isTrigger = collider_data.is_trigger;
-    }
-
 
 
     // low level pool management

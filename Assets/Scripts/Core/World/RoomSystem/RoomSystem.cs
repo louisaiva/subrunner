@@ -28,10 +28,11 @@ public class RoomSystem : BSOD_System<RoomSystem>
     public bool log_awake_data = false;
     public bool log_init = false;
     public bool log_loading = false;
-    public bool log_spawning = false;
     public bool log_neighbours = false;
     public bool log_room_transfers = false;
     public bool log_ticks = false;
+    public bool log_dynamic_room_assignement = false;
+    public bool hide_log_no_room_of_capable_found = false;
 
     [Header("Room Logs")]
     public bool log_tilemaps_loading = false;
@@ -72,7 +73,8 @@ public class RoomSystem : BSOD_System<RoomSystem>
     private void Start()
     {
         // we register to CapableSystem.OnCapableNeedRoom so we can assign rooms to the new capable
-        CapableSystem.Instance.OnCapableNeedRoom += handleCapableSpawned;    
+        CapableSystem.Instance.OnCapableNeedRoom += handleCapableNeedRoom;
+        CapableSystem.Instance.OnCapableNeedFreedom += handleCapableNeedFreedom;
     }
 
     // LOAD ROOMS
@@ -313,47 +315,20 @@ public class RoomSystem : BSOD_System<RoomSystem>
             }
         }
 
-
-        // store si le perso a été found + next room principale
+        // 4. check if perso changed room if yes we need to load / unload some rooms
         bool perso_changed_room = false;
         RoomData perso_new_room = null;
-
-        // 4. prepare the lists for capable loading info to transmit to CapableSystem
-        Stack<string> capables_to_load = new Stack<string>();
-        Stack<string> capables_to_unload = new Stack<string>();
         for (int i=0; i<capable_ids.Count; i++)
         {
-            string capable_id = capable_ids[i];
-
             // check if is perso
-            if (Controller.Instance.ControlledID == capable_id)
-            {
-                perso_changed_room = true;
-                perso_new_room = in_rooms[i];
-                continue;
-            }
-
-            // check if need to load/unload
-            bool in_room_loaded = loaded_rooms_data.Contains(in_rooms[i]);
-            bool out_room_loaded = loaded_rooms_data.Contains(out_rooms[i]);
-
-            if (in_room_loaded && !out_room_loaded)
-            {
-                capables_to_load.Push(capable_id);
-            }
-            else if (!in_room_loaded && out_room_loaded)
-            {
-                capables_to_unload.Push(capable_id);
-            }
+            if (Controller.Instance.ControlledID != capable_ids[i]) { continue; }
+            
+            perso_changed_room = true;
+            perso_new_room = in_rooms[i];
         }
-
-        // 5. Sens load unload to CapableSystem
-        // CapableSystem.Load(capables_to_load)
-        // CapableSystem.Unload(capables_to_unload)
-        // (for now we log)
-
-        // 6. Handle when perso changed room
         if (!perso_changed_room) { return; }
+
+        // 5. Find rooms to Load / Unload
         Stack<string> rooms_to_unload = new Stack<string>();
         Stack<string> rooms_to_load = new Stack<string>();
         List<string> new_neighbours_ids = GetNeighboursIDs(perso_new_room);
@@ -376,7 +351,7 @@ public class RoomSystem : BSOD_System<RoomSystem>
 
         main_room_data = perso_new_room;
 
-        // 7. We load the new rooms and unload the old ones
+        // 6. We load the new rooms and unload the old ones
         loadRooms(rooms_to_load.ToArray());
         unloadRooms(rooms_to_unload.ToArray());
     }
@@ -415,38 +390,113 @@ public class RoomSystem : BSOD_System<RoomSystem>
         }
         return neighbours_ids;
     }
+    public List<RoomData> GetNeighboursData(RoomData room)
+    {
+        List<RoomData> neigh_datas = new List<RoomData>();
 
-    // SPAWNING CAPABLE MANAGEMENT
-    protected void handleCapableSpawned(Capable entity, Capable spawner)
+        string log = "";
+        for (int i = 0; i < room.neighbours_ids.Count; i++)
+        {
+            string neighbour_id = room.neighbours_ids[i];
+            if (!rooms_data.ContainsKey(neighbour_id))
+            {
+                log += $"  - {neighbour_id} (data was not found)\n";
+                continue;
+            }
+
+            log += $"  - {neighbour_id}\n";
+            neigh_datas.Add(rooms_data[neighbour_id] as RoomData);
+        }
+
+        if (log_neighbours) { Debug.Log($"(RoomSystem) Neighbours of {room.id} : {neigh_datas.Count}\n{log}"); }
+        return neigh_datas;
+    }
+
+    // CAPABLE'S ROOM DYNAMIC MANAGEMENT
+    protected void handleCapableNeedRoom(Capable entity, Capable spawner)
     {
         // we want the entity capabledata to be set inside the same room as the spawner.
         // we need to find in which room the spawner is, and set the entity capabledata in the same room
 
         // if (log_spawning) { Debug.Log($"(RoomSystem) Handling spawn of {entity.data.id} by spawner {spawner.data.id}"); }
+        string id = entity.data.id;
 
         // 1. find spawner room
-        RoomData spawner_room = null;
+        RoomData spawner_room = GetCapableRoom(spawner.data.id);
+        if (spawner_room == null)
+        {
+            if (!hide_log_no_room_of_capable_found) { Debug.LogWarning("(RoomSystem) Could not find spawner room for capable " + spawner.data.id); }
+            return;
+        }
+
+        // 2. remove all apparitions of this capable in the room + their neighbours (to be sure)
+        List<RoomData> rooms = GetNeighboursData(spawner_room);
+        rooms.Add(spawner_room);
+        foreach (RoomData room in rooms) { remove_all_apparitions_of_capable(room, id); }
+
+        // 3. attach entity data to the room
+        if (entity is Movable) { spawner_room.movables_ids.Add(id); }
+        else { spawner_room.capables_ids.Add(id); }
+
+
+        if (log_dynamic_room_assignement) { Debug.Log($"(RoomSystem) Assigned {id} to {spawner_room.id}"); }
+    }
+    protected void handleCapableNeedFreedom(Capable entity, Capable grabber)
+    {
+        // entity was probably grabbed by grabber, and so entity has no colliders
+        // it means we want to take it out of the system otherwise entity may change
+        // rooms even if no movement was detected by the RoomSystem
+
+        // we get the room of entity (if it exists)
+        string id = entity.data.id;
+
+        // 1. find entity room
+        RoomData room = GetCapableRoom(id);
+        if (room == null)
+        {
+            if (!hide_log_no_room_of_capable_found) { Debug.LogWarning("(RoomSystem) Could not find room of capable " + id); }
+            return;
+        }
+
+        // 2. remove all apparitions of this capable in the room + their neighbours (to be sure)
+        List<RoomData> rooms = GetNeighboursData(room);
+        rooms.Add(room);
+        foreach (RoomData room_data in rooms) { remove_all_apparitions_of_capable(room_data, id); }
+
+        // 2. detach entity data from the room
+        /* if (entity is Movable) { room.movables_ids.Remove(id); }
+        else { room.capables_ids.Remove(id); }
+
+        // 3. check if the entity is somewhere else in the room
+        if (room.OUT_movables_ids.Contains(id)) { room.OUT_movables_ids.Remove(id); }
+        if (room.IN_movables_ids.Contains(id)) { room.IN_movables_ids.Remove(id); } */
+
+        if (log_dynamic_room_assignement) { Debug.Log($"(RoomSystem) Detached {id} from {room.id}"); }
+    }
+    private void remove_all_apparitions_of_capable(RoomData room, string id)
+    {
+        room.movables_ids.RemoveAll(ID => ID == id);
+        room.capables_ids.RemoveAll(ID => ID == id);
+        room.IN_movables_ids.RemoveAll(ID => ID == id);
+        room.OUT_movables_ids.RemoveAll(ID => ID == id);
+    }
+
+    // GETTERS
+    private RoomData GetCapableRoom(string capable_id)
+    {
         ICollection rooms_ids = rooms_data.Keys;
         foreach (string room_id in rooms_ids)
         {
             // if (log_spawning) { Debug.Log($"(RoomSystem) Checking room {room_id} for spawner {spawner.data.id}"); }
             RoomData data = rooms_data[room_id] as RoomData;
-            if (!data.capables_ids.Contains(spawner.data.id)) { continue; }
+            bool is_in_room = false;
+            if (data.capables_ids.Contains(capable_id)) { is_in_room = true; }
+            else if (data.movables_ids.Contains(capable_id)) { is_in_room = true; }
+            if (!is_in_room) { continue; }
+
             // if (log_spawning) { Debug.Log($"(RoomSystem) Found spawner {spawner.data.id} in room {room_id}"); }
-            spawner_room = data;
-            break;
+            return data;
         }
-        if (spawner_room == null)
-        {
-            Debug.LogWarning("(RoomSystem) Could not find spawner room for capable " + spawner.data.id);
-            return;
-        }
-
-        // 2. attach entity data to the same room
-        if (entity is Movable) { spawner_room.movables_ids.Add(entity.data.id); }
-        else { spawner_room.capables_ids.Add(entity.data.id); }
-
-        if (log_spawning) { Debug.Log($"(RoomSystem) Assigned spawned {entity.data.id} to room {spawner_room.id}"); }
+        return null;
     }
-
 }

@@ -166,7 +166,7 @@ public class AttackCapacity : Capacity
     }
     private void updateAttack()
     {
-        if (debug)
+        if (log)
         {
             string hit_enemies_str = transform.parent.name + " attack enemies : " + hit_enemies.Count + " :\n";
             foreach (Being enemy in hit_enemies)
@@ -282,7 +282,7 @@ public class AttackCapacity : Capacity
         // we check if the tag is not already in the list
         if (excluded_tags.Contains(tag)) { return; }
 
-        if (debug)
+        if (log)
         {
             Debug.Log("(AttackCapacity) Adding tag " + tag + " to the not attackable tags for " + duration + " seconds");
         }
@@ -293,7 +293,7 @@ public class AttackCapacity : Capacity
         // wait for a frame to let the click happen
         await System.Threading.Tasks.Task.Delay((int)(duration * 1000));
 
-        if (debug)
+        if (log)
         {
             Debug.Log("(AttackCapacity) Removing tag " + tag + " from the not attackable tags");
         }

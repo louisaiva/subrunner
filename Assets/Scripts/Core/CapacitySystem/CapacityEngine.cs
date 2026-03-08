@@ -41,20 +41,31 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
 
         // we load all the json files in the data path and get their kind
         string[] files = System.IO.Directory.GetFiles(data_path, "*.json");
-        Dictionary<string, string> capacities_json_by_kind = new Dictionary<string, string>();
+        Dictionary<string, List<string>> json_by_kind = new Dictionary<string, List<string>>();
         foreach (string file in files)
         {
             string json = System.IO.File.ReadAllText(file, System.Text.Encoding.UTF8);
             CapacityData data = JsonUtility.FromJson<CapacityData>(json);
-            capacities_json_by_kind.Add(data.kind, json);
+
+            if (json_by_kind.ContainsKey(data.kind))
+            {
+                json_by_kind[data.kind].Add(json);
+            }
+            else
+            {
+                json_by_kind.Add(data.kind, new List<string> { json });
+            }
         }
 
         // then we go through all json & kind and we load the json with the good type
-        foreach (KeyValuePair<string, string> entry in capacities_json_by_kind)
+        foreach (KeyValuePair<string, List<string>> entry in json_by_kind)
         {
             string kind = entry.Key;
-            string json = entry.Value;
-            loadCapacityDataOfType(json, kind, ref log_capacities_details);
+            List<string> json_list = entry.Value;
+            foreach (string json in json_list)
+            {
+                loadCapacityDataOfType(json, kind, ref log_capacities_details);
+            }
         }
 
         if (log_awake_data) { Debug.Log("(CapacityEngine) CAPACITIES DATA LOADED : " + capacities_data.Count + log_capacities_details); }
@@ -87,6 +98,13 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
             // so we skipped hover
             
             capacities.Add(capa);
+
+            // we register the capacity into the capable
+            capable.RegisterCapacity(capa);
+
+            // we set the parent & local pos
+            capa.transform.SetParent(capable.transform);
+            capa.transform.localPosition = capa.data.local_position;
         }
         return capacities;
     }
@@ -160,12 +178,15 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     } */
 
     // UNLOAD CAPACITIES
-    public void UnloadCapacities(List<string> capacities_ids)
+    public void UnloadCapacities(List<string> capacities_ids, Capable capable)
     {
         for (int i = 0; i < capacities_ids.Count; i++)
         {
             string id = capacities_ids[i];
-            unload_capacity(id);
+            Capacity capa = unload_capacity(id);
+
+            // we unregister the capacity in the capable
+            capable.UnregisterCapacity(capa);
         }
     }
     private Capacity unload_capacity(string id)

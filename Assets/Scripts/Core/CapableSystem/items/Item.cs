@@ -31,7 +31,7 @@ public class Item : Movable, EndlessInteractable
     public bool Grabbed
     {
         get => _grabbed;
-        set
+        /* set
         {
             // check if the value is the same
             if (value == _grabbed) { return; }
@@ -40,7 +40,7 @@ public class Item : Movable, EndlessInteractable
             _grabbed = value;
             if (value) { on_grabbed(); }
             else { on_dropped(); }
-        }
+        } */
     }
     [SerializeField] private bool _placed = false;
     public bool Placed
@@ -62,7 +62,8 @@ public class Item : Movable, EndlessInteractable
     public event Action<Item> OnDropped = delegate { };
 
     // HOLDER
-    public Capable Holder => ItemPoolHolder != null ? ItemPoolHolder.Inventory.capable : null;
+    public Capable _holder = null;
+    public Capable Holder { get { return _holder; }}/* ItemPoolHolder != null ? ItemPoolHolder.Inventory.capable : null; */
     public ItemPool ItemPoolHolder
     {
         get
@@ -182,6 +183,32 @@ public class Item : Movable, EndlessInteractable
 
 
     // BEING GRABBED / DROPPED
+    public virtual void BeGrabbed(Capable grabber)
+    {
+        _grabbed = true;
+        on_grabbed();
+
+        // we load the capacities we have not load yet & remove the room
+        if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Item - OnGrabbed) {data.id} unloading capacities : {string.Join(" ", dynamic_capacity_ids)}"); }
+        CapacityEngine.Instance?.UnloadCapacities(dynamic_capacity_ids, this);
+        CapableSystem.Instance?.OnItemGrabbed(this, Holder);
+
+        // finally set the holder
+        _holder = grabber;
+    }
+    public virtual void BeDropped(Capable dropper)
+    {
+        _grabbed = false;
+        on_dropped();
+
+        // we load the capacities and get a room
+        if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Item - OnDropped) {data.id} loading capacities : {string.Join(" ", dynamic_capacity_ids)}"); }
+        CapacityEngine.Instance?.LoadCapacities(dynamic_capacity_ids, this);
+        CapableSystem.Instance?.OnItemDropped(this, Holder);
+
+        // finally we reset the holder
+        _holder = null;
+    }
     protected virtual async void on_grabbed()
     {
         // on veut etre sur qu'on est pas placé
@@ -194,8 +221,6 @@ public class Item : Movable, EndlessInteractable
         // we call the event
         OnGrabbed?.Invoke(this, Holder);
 
-        // we load the capacities we have not load yet
-        CapacityEngine.Instance.UnloadCapacities(dynamic_capacity_ids);
     }
     protected virtual void on_dropped()
     {
@@ -206,9 +231,6 @@ public class Item : Movable, EndlessInteractable
 
         // we call the event
         OnDropped?.Invoke(this);
-
-        // we load the capacities that we need now !
-        CapacityEngine.Instance.LoadCapacities(dynamic_capacity_ids, this);
     }
 
     // MAIN LOW LEVEL UPGRADE GRABBING & PLACING
@@ -276,7 +298,7 @@ public class Item : Movable, EndlessInteractable
         }
 
         // HOVER
-        if (Hover == null) { return; }
+        /* if (Hover == null) { return; }
         if (!Grabbed)
         {
             Hover.transform.localPosition = Vector3.zero;
@@ -287,7 +309,7 @@ public class Item : Movable, EndlessInteractable
         {
             // we disable the HoverCapacity's collider
             Hover.GetComponent<Collider2D>().enabled = false;
-        }
+        } */
     }
 
 
@@ -335,6 +357,9 @@ public class Item : Movable, EndlessInteractable
     }
     public override void UnloadData()
     {
+        // we save the dynamic data we need for next loading to be perfect
+        SaveDynamicData();
+
         base.UnloadData();
 
         // ? really useful ? no but it's better to have a safe guard
@@ -349,7 +374,7 @@ public class Item : Movable, EndlessInteractable
         ItemData static_data = new ItemData
         {
             // set base capable data things
-            id = this.name,
+            id = get_static_id(),
             position = this.transform.position,
             kind = GetType().Name,
             anim_data = anim_player.GetStaticAnimData(),
@@ -377,6 +402,11 @@ public class Item : Movable, EndlessInteractable
         if (transform.parent == null) { return false; }
         Capable parent_capable = transform.parent.GetComponentInParent<Capable>(includeInactive: true);
         return parent_capable != null;
+    }
+    public /* override */ void SaveDynamicData()
+    {
+        if (data is not ItemData item_data) { return; }
+        item_data.is_grabbed = Grabbed;
     }
 }
 

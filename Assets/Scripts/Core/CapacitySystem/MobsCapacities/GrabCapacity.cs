@@ -55,13 +55,13 @@ public class GrabCapacity : Capacity
         // we set the callback
         grabAction.performed += grabCallback;
 
-        if (debug) { Debug.Log("(GrabCapacity) selected (and callback set) : " + item.name); }
+        if (log) { Debug.Log("(GrabCapacity) selected (and callback set) : " + item.name); }
     }
     public void Deselect()
     {
         if (selected_item == null) { return; }
 
-        if (debug) { Debug.Log("(GrabCapacity) deselected (and callback removed) : " + selected_item.name); }
+        if (log) { Debug.Log("(GrabCapacity) deselected (and callback removed) : " + selected_item.name); }
 
         selected_item = null;
 
@@ -76,14 +76,14 @@ public class GrabCapacity : Capacity
         // we check if we have a selected item
         if (selected_item == null)
         {
-            if (debug) { Debug.LogError("(GrabCapacity) no selected item"); }
+            if (log) { Debug.LogError("(GrabCapacity) no selected item"); }
             return;
         }
 
         // we grab the item
         string item_name = selected_item.name;
         bool grab = inventory.Grab(selected_item);
-        if (debug)
+        if (log)
         {
             Debug.Log("(GrabCapacity) " + capable.name + (grab ? " :D grabbed" : " :/ could not grab") + " : " + item_name);
         }

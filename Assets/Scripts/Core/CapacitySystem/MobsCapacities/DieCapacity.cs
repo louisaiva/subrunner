@@ -113,7 +113,7 @@ public class DieCapacity : Capacity
         being.Die();
 
         // 2 - DESTROYING CAPACITIES
-        if (debug) { Debug.Log("Destroying capacities of " + being.name); }
+        if (log) { Debug.Log("Destroying capacities of " + being.name); }
 
         // we destroy all capacities (except DieCapacity FOR NOW)
         List<Capacity> capacities = new List<Capacity>(being.GetCapacities());

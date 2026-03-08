@@ -34,9 +34,9 @@ public class Movable : Capable
                                 : 0f;
 
     // AWAKE
-    protected override void Awake()
+    protected virtual void Awake()
     {
-        base.Awake();
+        // base.Awake();
 
         if (rb != null)
         {
@@ -55,12 +55,14 @@ public class Movable : Capable
     }
 
     // ON ENABLE/DISABLE -> MOVABLE ENGINE REGISTERING
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         MovableEngine.Instance.Register(this);
     }
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
         if (MovableEngine.Instance == null) { return; }
         if (CapableSystem.Instance != null && CapableSystem.Instance.HasCapable(this)) { return; }
         MovableEngine.Instance.Unregister(this);

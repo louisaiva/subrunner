@@ -56,7 +56,7 @@ public class OpenCapacity : Capacity
             capable.GetComponent<SpriteRenderer>().sortingOrder = 1;
         }
 
-        if (debug) { Debug.Log(capable.name + " is opening..."); }
+        if (log) { Debug.Log(capable.name + " is opening..."); }
     }
     protected virtual void success_open()
     {
@@ -75,14 +75,14 @@ public class OpenCapacity : Capacity
             capable.GetComponent<SpriteRenderer>().sortingOrder = -1;
         }
 
-        if (debug) { Debug.Log(capable.name + " is open !"); }
+        if (log) { Debug.Log(capable.name + " is open !"); }
     }
 
 
     // CancelInvoke
     public void CancelOpenInvoke()
     {
-        if (debug) { Debug.Log("(OpenCapacity) " + capable.name + " CancelInvoke success_open"); }
+        if (log) { Debug.Log("(OpenCapacity) " + capable.name + " CancelInvoke success_open"); }
         CancelInvoke("success_open");
     }
 }

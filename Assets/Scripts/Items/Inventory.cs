@@ -232,12 +232,12 @@ public class Inventory : MonoBehaviour, ItemStorer
 
         return true;
     }
-    public virtual bool Drop(Item item)
+    public virtual bool Drop(Item item, bool on_ground = true)
     {
         // we check if we can remove the item
         if (item == null) { return false; }
 
-        if (!pool_drop(item)) { return false; }
+        if (!pool_drop(item, on_ground)) { return false; }
 
         // todo call the potential DropCapacity of the capable ?
 
@@ -285,11 +285,11 @@ public class Inventory : MonoBehaviour, ItemStorer
         }
         return false;
     }
-    protected bool pool_drop(Item item)
+    protected bool pool_drop(Item item, bool on_ground = true)
     {
         for (int i = 0; i < pools.Count; i++)
         {
-            if (pools[i].Drop(item)) { return true; }
+            if (pools[i].Drop(item, on_ground: on_ground)) { return true; }
         }
         return false;
     }
@@ -530,7 +530,7 @@ public interface ItemStorer
 
     // GRAB / DROP
     public bool Grab(Item item);
-    public bool Drop(Item item);
+    public bool Drop(Item item, bool on_ground = true);
 
     // STACK MANAGEMENT
     // public void SwapStacks(ItemStack stack1, ItemStack stack2);

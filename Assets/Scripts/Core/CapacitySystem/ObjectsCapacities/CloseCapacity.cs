@@ -68,7 +68,7 @@ public class CloseCapacity : Capacity
             capable.GetComponent<SpriteRenderer>().sortingOrder = 1;
         }
 
-        if (debug) { Debug.Log(capable.name + " is closing..."); }
+        if (log) { Debug.Log(capable.name + " is closing..."); }
     }
     protected virtual void success_close()
     {
@@ -86,14 +86,14 @@ public class CloseCapacity : Capacity
             capable.GetComponent<SpriteRenderer>().sortingOrder = 0;
         }
 
-        if (debug) { Debug.Log(capable.name + " is closed !"); }
+        if (log) { Debug.Log(capable.name + " is closed !"); }
     }
 
 
     // CancelInvoke
     public void CancelCloseInvoke()
     {
-        if (debug) { Debug.Log("(CloseCapacity) " + capable.name + " CancelInvoke success_close"); }
+        if (log) { Debug.Log("(CloseCapacity) " + capable.name + " CancelInvoke success_close"); }
         CancelInvoke("success_close");
     }
 }

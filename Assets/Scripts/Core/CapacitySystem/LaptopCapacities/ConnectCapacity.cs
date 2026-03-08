@@ -70,20 +70,20 @@ public class ConnectCapacity : Capacity
 
         if (!is_in_range(target))
         {
-            if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} try to connect to {target.capable.name} but is out of range."); }
+            if (log) { Debug.LogWarning($"(ConnectCapacity) {capable.name} try to connect to {target.capable.name} but is out of range."); }
             connection.state = ConnectionState.Closed;
         }
-        else if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} connected to {target.capable.name}."); }
+        else if (log) { Debug.LogWarning($"(ConnectCapacity) {capable.name} connected to {target.capable.name}."); }
 
         // and now we scan the target
         if (scanner == null)
         {
-            if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} tried to scan {target.capable.name} but no hack capacity is available."); }
+            if (log) { Debug.LogWarning($"(ConnectCapacity) {capable.name} tried to scan {target.capable.name} but no hack capacity is available."); }
             return;
         }
         else if (!Controller.Instance.ExploitNavigator.Automatic)
         {
-            if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} tried to scan {target.capable.name} but automatic exploit selection is disabled."); }
+            if (log) { Debug.LogWarning($"(ConnectCapacity) {capable.name} tried to scan {target.capable.name} but automatic exploit selection is disabled."); }
             return;
         }
 
@@ -93,7 +93,7 @@ public class ConnectCapacity : Capacity
     public void Disconnect()
     {
         if (connection == null) { return; }
-        if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} disconnected current connection."); }
+        if (log) { Debug.LogWarning($"(ConnectCapacity) {capable.name} disconnected current connection."); }
         /* if (connection.state != ConnectionState.Opened)
         {
             
@@ -141,7 +141,7 @@ public class ConnectCapacity : Capacity
             // on on vérifie si on doit fermer la connection
             if (!is_in_range(tunnel.destination))
             {
-                if (debug) { Debug.LogWarning($"(ConnectCapacity) {capable.name} closing connection because it is out of range."); }
+                if (log) { Debug.LogWarning($"(ConnectCapacity) {capable.name} closing connection because it is out of range."); }
                 tunnel.Close();
                 // continue;
             }

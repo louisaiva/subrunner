@@ -34,7 +34,11 @@ using System.Collections.Generic;
         string details = "";
         for (int i=0; i<stacks_data.Count; i++)
         {
-            string item_ref = (stacks_data[i].items_ids[0] ?? "");
+            string item_ref = "";
+            if (stacks_data[i] != null && stacks_data[i].items_ids.Count > 0)
+            {
+                item_ref = stacks_data[i].items_ids[0];
+            }
             details += $"      - {stacks_data[i].items_ids.Count} {item_ref}\n";
         }
         return details;

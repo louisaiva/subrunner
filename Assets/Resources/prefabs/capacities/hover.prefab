@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6234543502669162689}
   - component: {fileID: 1235818638904784760}
-  - component: {fileID: 1209247947733942506}
   m_Layer: 24
   m_Name: hover
   m_TagString: Untagged
@@ -47,49 +46,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-    id: 
+    <id>k__BackingField: 
     kind: 
     local_position: {x: 0, y: 0}
   cooldown: 0
-  debug: 0
+  log: 0
   hoverers: []
   canvas_kf: {fileID: 0}
---- !u!58 &1209247947733942506
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2301345579811965954}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.15
 --- !u!1001 &1043463284902270628
 PrefabInstance:
   m_ObjectHideFlags: 0

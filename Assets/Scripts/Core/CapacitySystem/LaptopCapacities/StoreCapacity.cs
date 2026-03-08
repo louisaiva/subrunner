@@ -74,6 +74,6 @@ public class StoreCapacity : Capacity
             return;
         }
         capacity = new_capacity;
-        if (debug) { Debug.Log($"(StoreCapacity) {capable.name} disk capacity set to {capacity} bytes"); }
+        if (log) { Debug.Log($"(StoreCapacity) {capable.name} disk capacity set to {capacity} bytes"); }
     }
 }

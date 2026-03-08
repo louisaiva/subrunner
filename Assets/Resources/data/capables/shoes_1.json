@@ -1,16 +1,16 @@
 ﻿{
-    "<id>k__BackingField": "katana",
-    "kind": "Katana",
+    "<id>k__BackingField": "shoes_1",
+    "kind": "Shoes",
     "position": {
-        "x": 0.75,
-        "y": 4.125
+        "x": 0.38999998569488528,
+        "y": 3.6700000762939455
     },
     "orientation": {
         "x": 0.0,
         "y": 0.0
     },
     "anim_data": {
-        "skin": "katana",
+        "skin": "shoes",
         "anim_capacity_priorities": [
             {
                 "priority": 0,
@@ -44,18 +44,19 @@
         "item_pools_data": []
     },
     "capacities_ids": [
-        "hover",
-        "attack"
+        "hover_4",
+        "dodge_1"
     ],
     "effects": [],
     "effects_ttl": [],
-    "reference": "weapon:katana",
+    "reference": "shoes:carbon",
     "color": {
-        "r": 0.8980392217636108,
-        "g": 0.2862745225429535,
-        "b": 0.2862745225429535,
+        "r": 0.7720177173614502,
+        "g": 0.9528301954269409,
+        "b": 0.3910199701786041,
         "a": 1.0
     },
     "max_qty": 1,
-    "item_description": "careful sharp !!/l useful for cuttin onions, tomatos/l, and even that police officer that thinks he's the sheriff"
+    "item_description": "brand new shoes, useful for running very very very fast i mean look at me i'm so fast omg",
+    "is_grabbed": true
 }

@@ -40,7 +40,7 @@ public class ProcessCapacity : Capacity
     // GRABBING / DROPPING PROCESSOR MODULE
     public void OnProcessorGrabbed(Module_CPU cpu)
     {
-        if (debug) { Debug.Log($"(ProcessCapacity) {capable.name} grabbed a CPU module: {cpu.name}"); }
+        if (log) { Debug.Log($"(ProcessCapacity) {capable.name} grabbed a CPU module: {cpu.name}"); }
 
         bool cores_changed = false;
 
@@ -56,7 +56,7 @@ public class ProcessCapacity : Capacity
     }
     public void OnProcessorDropped(Module_CPU cpu)
     {
-        if (debug) { Debug.Log($"(ProcessCapacity) {capable.name} dropped a CPU module: {cpu.name}"); }
+        if (log) { Debug.Log($"(ProcessCapacity) {capable.name} dropped a CPU module: {cpu.name}"); }
 
         bool cores_changed = false;
 
@@ -68,7 +68,7 @@ public class ProcessCapacity : Capacity
             // we overflow the processus if the core is not free
             if (!core.isFree)
             {
-                if (debug) { Debug.Log($"(ProcessCapacity) {capable.name} lost a core that was used by {core.RunningProcess.name}. Overflowing process."); }
+                if (log) { Debug.Log($"(ProcessCapacity) {capable.name} lost a core that was used by {core.RunningProcess.name}. Overflowing process."); }
                 core.RunningProcess.Fail(); // we overflow the processus -> will free the used cores
                 // FreeCores(core.RunningProcess); // we don't only free this one core, but we free all the cores used by this processus
                 // if (debug) { Debug.Log($"(ProcessCapacity) running process is ");}

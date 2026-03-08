@@ -61,7 +61,7 @@ public class WalkCapacity : Capacity
         if (walk_speed < 0.1f) { walk_speed = 0f; } // we clamp if walk is too low
 
         // log final walk_speed
-        if (debug) { Debug.Log("WalkCapacity: " + capable.name + " walk_speed is " + walk_speed); }
+        if (log) { Debug.Log("WalkCapacity: " + capable.name + " walk_speed is " + walk_speed); }
 
         // 3 - HANDLING ANIMATION & SOUND
 

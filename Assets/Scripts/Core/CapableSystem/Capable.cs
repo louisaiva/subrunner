@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -24,6 +25,7 @@ public class Capable : MonoBehaviour, Debuggable
     // LOAD / UNLOAD
     public virtual void LoadData(CapableData data)
     {
+        if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Capable - LoadData) Loading capable {data.id} \n\n{data.GetDetails()}"); }
         this.data = data;
         this.name = data.id;
         this.transform.position = data.position;
@@ -41,25 +43,26 @@ public class Capable : MonoBehaviour, Debuggable
         {
             AddEffect(data.effects[i], data.effects_ttl[i]);
         }
-        
+
         // we load the capacities
+        if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Capable - LoadData) Calling CapacitySystem loading for capacities : {string.Join(" ", data.capacities_ids)}"); }
         this.capacities = CapacityEngine.Instance.LoadCapacities(data.capacities_ids, this);
-        for (int i = 0; i < capacities.Count; i++)
+        /* for (int i = 0; i < capacities.Count; i++)
         {
             Capacity capa = capacities[i];
             capa.transform.parent = transform;
             capa.transform.localPosition = capa.data.local_position;
-        }
+        } */
 
     }
     public virtual void UnloadData()
     {
         // here we need to unload all the capacities that we hold
         // -> interacts with CapacityEngine
-        if (CapacityEngine.Instance != null)
-        {
-            CapacityEngine.Instance.UnloadCapacities(data.capacities_ids);
-        }
+
+        if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Capable - UnloadData) Calling CapacitySystem unloading for capacities : {string.Join(" ", data.capacities_ids)}"); }
+        CapacityEngine.Instance.UnloadCapacities(data.capacities_ids, this);
+        // this.capacities
 
         // we unload the inventory (and so the items)
         Inventory?.SaveAndUnloadInventoryData();
@@ -84,10 +87,12 @@ public class Capable : MonoBehaviour, Debuggable
     /// <returns>CapableData the data that describes this capable</returns>
     public virtual ICapableData GetStaticData()
     {
+        
+
         CapableData static_data = new CapableData
         {
             // set base data things
-            id = this.name,
+            id = get_static_id(),
             position = this.transform.position,
 
             // we set the kind
@@ -114,6 +119,13 @@ public class Capable : MonoBehaviour, Debuggable
         };
 
         return static_data;
+    }
+    protected string get_static_id()
+    {
+        string id = this.name;
+        if (this.data == null) { return id; }
+        if (string.IsNullOrEmpty(this.data.id)) { return id; }
+        return this.data.id;
     }
     protected List<string> get_static_capacity_ids()
     {
@@ -323,26 +335,50 @@ public class Capable : MonoBehaviour, Debuggable
     public bool log_static_data = false;
 
     // START
-    protected virtual void Awake()
+    protected virtual void OnEnable()
     {
         // we get the anim player
-        anim_player = GetComponent<AnimPlayer>();
         Orientation = orientation;
+        if (!AppManager.Instance.IsQuitting) { DebugManager.Instance?.transform.GetComponentInChildren<EntitiesDebug>()?.AddEntity(this); }
 
-        // we add all the capacities that are in the gameObject
+
+        // we register all the capacities that are on this capable ONLY if we are not part of the BSOD pattern systems
+        if (CapableSystem.Instance != null && CapableSystem.Instance.HasCapable(this) && CapacityEngine.Instance != null) { return; }
+        
+        capacities.Clear();
         foreach (Transform child in transform)
         {
             Capacity capa = child.GetComponent<Capacity>();
-            if (!capa) { continue; } // if no capacity, we skip
+            if (!capa) { continue; }
+            RegisterCapacity(capa);
 
-            // we add it to the list
-            capacities.Add(capa);
-            if (log) { Debug.Log("(Capable) " + name + " : capacity " + capa.name + " found on awake"); }
-
-            // we check if the debug is true then we force debug to be true
-            if (activate_all_capacities_logs_on_awake) { capa.debug = true; }
+            // we check if the log is true then we force debug to be true
+            if (activate_all_capacities_logs_on_awake) { capa.log = true; }
         }
-        DebugManager.Instance.transform.GetComponentInChildren<EntitiesDebug>()?.AddEntity(this);
+    }
+    protected virtual void OnDisable()
+    {
+        // this.capacities.Clear();
+        if (!AppManager.Instance.IsQuitting) { DebugManager.Instance?.transform.GetComponentInChildren<EntitiesDebug>()?.RemoveEntity(this); }
+    }
+
+
+    // CAPACITIES REGISTERING
+    public void RegisterCapacity(Capacity capa)
+    {
+        if (capacities.Contains(capa)) { return; }
+
+        capacities.Add(capa);
+
+        if (log) { Debug.Log($"(Capable - {this.name}) Registered capacity {capa.name}"); }
+    }
+    public void UnregisterCapacity(Capacity capa)
+    {
+        if (!capacities.Contains(capa)) { return; }
+
+        capacities.Remove(capa);
+
+        if (log) { Debug.Log($"(Capable - {this.name}) Unregistered capacity {capa.name}"); }
     }
 
 
@@ -399,14 +435,14 @@ public class Capable : MonoBehaviour, Debuggable
     }
 
     // CAPACITIES
-    public void Do(string name)
+    [Obsolete("Use GetCapacity<T>().Use() instead")] public void Do(string name)
     {
         // get the capacity
         Capacity capacity = GetCapacity(name);
 
         capacity.Use(this);
     }
-    public Capacity AddCapacity(string name)
+    [Obsolete("Use RegisterCapacity() instead")] public Capacity AddCapacity(string name)
     {
         // we check if the capacity is already in the list
         if (HasCapacity(name)) { return GetCapacity(name); }
@@ -426,7 +462,7 @@ public class Capable : MonoBehaviour, Debuggable
 
         return capa;
     }
-    public void RemoveCapacity(string name)
+    [Obsolete("Use UnregisterCapacity() instead")] public void RemoveCapacity(string name)
     {
         foreach (Capacity capa in capacities)
         {
@@ -599,9 +635,6 @@ public class Capable : MonoBehaviour, Debuggable
     protected virtual void OnDestroy()
     {
         going_to_be_destroyed = true;
-
-        if (DebugManager.Instance == null) { return; } // this happens when the scene is destroyed when we quit the scene
-        DebugManager.Instance.transform.GetComponentInChildren<EntitiesDebug>()?.RemoveEntity(this);
     }
     public string GetDebugText()
     {

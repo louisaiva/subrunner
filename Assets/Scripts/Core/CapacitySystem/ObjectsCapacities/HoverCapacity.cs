@@ -8,7 +8,6 @@ using UnityEngine;
 /// HoverCapacity is a capacity that ONLY shows the hover animation of an Interactable.
 /// </summary>
 
-[RequireComponent(typeof(Collider2D))]
 public class HoverCapacity : Capacity
 {
     [Header("Hover Capacity")]
@@ -19,6 +18,19 @@ public class HoverCapacity : Capacity
     [Header("Interact Key Feedback")]
     [SerializeField] private Transform canvas_kf;
     public Transform Canvas_kf { get { return canvas_kf; } }
+
+
+    // HOVER COLLIDER
+    private CircleCollider2D _hover_collider = null;
+    public CircleCollider2D HoverCollider
+    {
+        get
+        {
+            if (_hover_collider == null) { _hover_collider = transform.GetComponentInChildren<CircleCollider2D>(includeInactive:true); }
+            return _hover_collider;
+        }
+    }
+
 
     // DELEGATES
     public event Action<Capable> OnHover = delegate { };
@@ -54,18 +66,20 @@ public class HoverCapacity : Capacity
         // we play the animation
         this.capable.anim_player.Play(played_animation);
 
-        if (debug) { Debug.Log("(HoverCapacity) " + capable.name + " hovered " + this.capable.name + $", playing {played_animation}"); }
+        if (log) { Debug.Log("(HoverCapacity) " + capable.name + " hovered " + this.capable.name + $", playing {played_animation}"); }
     }
     public void Unhover(Capable capable)
     {
         if (!hoverers.Contains(capable)) { return; }
         hoverers.Remove(capable);
+        
+        if (this.capable == null) { Debug.LogWarning($"(HoverCapacity) this.capable is null on {name}"); }
 
         // then we only stop playing animation if the capable is the one controlled
         if (Controller.Instance != null && capable == Controller.Instance.Capable) { this.capable.anim_player.StopPlaying(played_animation); } // we stop the animation
 
         OnHoverLost?.Invoke(capable);
-        if (debug) { Debug.Log("(HoverCapacity) " + capable.name + " stop hovering " + this.capable.name + $", stopped playing {played_animation}"); }
+        if (log) { Debug.Log("(HoverCapacity) " + capable.name + " stop hovering " + this.capable.name + $", stopped playing {played_animation}"); }
     }
 
     // UPDATE HOVER ANIMATION
@@ -93,6 +107,34 @@ public class HoverCapacity : Capacity
 
 
 
+    // LOAD / UNLOAD DATA
+    public override void LoadData(CapacityData data)
+    {
+        base.LoadData(data);
+
+        if (data is not HoverCapacityData hover_data) { return; }
+        if (hover_data.hover_collider_data == null) { return; }
+
+        // then we load the collider
+        this._hover_collider = ColliderBank.Instance.LoadCircleCollider(hover_data.hover_collider_data, this.transform);
+    }
+    public override void UnloadData()
+    {
+        // we tell the hoverers we don't exist anymore
+        while (hoverers.Count > 0)
+        {
+            hoverers[0].GetCapacity<InteractCapacity>()?.HoverLostItself(this);
+        }
+        this.hoverers.Clear();
+
+        // we unload the collider
+        if (this.HoverCollider != null) { ColliderBank.Instance.UnloadCollider(this.HoverCollider.gameObject); }
+        this._hover_collider = null;
+
+        base.UnloadData();
+
+    }
+
 
     // GET STATIC DATA
     public override CapacityData GetStaticData()
@@ -100,7 +142,7 @@ public class HoverCapacity : Capacity
         HoverCapacityData static_data = new HoverCapacityData
         {
             // set base data things
-            id = this.name,
+            id = get_static_id(),
             local_position = this.transform.localPosition,
 
             // we set the kind

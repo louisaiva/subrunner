@@ -61,13 +61,13 @@ public class DropCapacity : Capacity
         // we set the callback
         if (dropAction != null) { dropAction.performed += dropCallback; }
 
-        if (debug) { Debug.Log("(DropCapacity) selected (and callback set) : " + item.name); }
+        if (log) { Debug.Log("(DropCapacity) selected (and callback set) : " + item.name); }
     }
     public void Deselect()
     {
         if (selected_item == null) { return; }
 
-        if (debug) { Debug.Log("(DropCapacity) deselected (and callback removed) : " + selected_item.name); }
+        if (log) { Debug.Log("(DropCapacity) deselected (and callback removed) : " + selected_item.name); }
 
         selected_item = null;
 
@@ -92,7 +92,7 @@ public class DropCapacity : Capacity
         // we check if we have a selected item
         if (selected_item == null)
         {
-            if (debug) { Debug.LogError("(DropCapacity) no selected item"); }
+            if (log) { Debug.LogError("(DropCapacity) no selected item"); }
             return;
         }
         Item item = selected_item;
@@ -105,7 +105,7 @@ public class DropCapacity : Capacity
         if (!drop)
         {
             // we could not drop the item ooops
-            if (debug) { Debug.LogError("(DropCapacity) could not drop : " + item.name); }
+            if (log) { Debug.LogError("(DropCapacity) could not drop : " + item.name); }
             return;
         }
 
@@ -135,7 +135,7 @@ public class DropCapacity : Capacity
             force_magnitude = force.magnitude;
         }
 
-        if (debug)
+        if (log)
         {
             Debug.Log("(DropCapacity) " + capable.name + " dropped : " + item.name +
                 (force_magnitude != -888f ? " with force of magnitude : " + force_magnitude :

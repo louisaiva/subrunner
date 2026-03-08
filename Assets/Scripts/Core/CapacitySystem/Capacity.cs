@@ -17,9 +17,10 @@ public class Capacity : MonoBehaviour
         this.data = data;
         this.name = data.id;
     }
-    public void UnloadData()
+    public virtual void UnloadData()
     {
         this.data = null;
+        this._capable = null;
     }
 
 
@@ -38,7 +39,7 @@ public class Capacity : MonoBehaviour
         CapacityData static_data = new CapacityData
         {
             // set base data things
-            id = this.name,
+            id = get_static_id(),
             local_position = this.transform.localPosition,
 
             // we set the kind
@@ -46,6 +47,13 @@ public class Capacity : MonoBehaviour
         };
 
         return static_data;
+    }
+    protected string get_static_id()
+    {
+        string id = this.name;
+        if (this.data == null) { return id; }
+        if (string.IsNullOrEmpty(this.data.id)) { return id; }
+        return this.data.id;
     }
 
 
@@ -67,7 +75,15 @@ public class Capacity : MonoBehaviour
             return cooldown_timer <= 0;
         }
     }
-    public Capable capable { get { return transform.parent.GetComponent<Capable>(); } }
+    private Capable _capable = null;
+    public Capable capable
+    {
+        get
+        {
+            if (_capable == null) { _capable = transform.parent.GetComponent<Capable>(); }
+            return _capable;
+        }
+    }
 
 
 
@@ -77,7 +93,7 @@ public class Capacity : MonoBehaviour
     protected float cooldown_timer;
 
     [Header("Logs")]
-    public bool debug = false;
+    public bool log = false;
 
 
     protected virtual void Update()

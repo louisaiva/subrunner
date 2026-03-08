@@ -307,7 +307,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
         if (log_grab) { Debug.Log("(ItemPool) " + name + " grabbed : " + item.name + " in new stack"); }
         return true;
     }
-    public bool Drop(Item item)
+    public bool Drop(Item item,bool on_ground = true)
     {
         if (item == null) { return false; }
 
@@ -325,7 +325,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
 
             // if we are here, we successfully dropped the item
             item.OnReferenceChanged -= handle_item_reference_changed;
-            item.Grabbed = false; // we set the item to dropped (which loads the hover capacity)
+            if (on_ground) { item.BeDropped(this.Inventory?.capable); } // we set the item to dropped (which loads the hover capacity)
 
             // we trigger the event
             OnItemDropped?.Invoke(item);
@@ -338,7 +338,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
                 OnStackRemoved?.Invoke(stack);
             }
 
-            if (log_grab) { Debug.Log("(ItemPool) " + name + " dropped : " + item.name); }
+            if (log_grab) { Debug.Log("(ItemPool) " + name + " dropped : " + item.name + $"{(on_ground ? " on ground" : " in inventory")}"); }
             return true;
         }
 
@@ -366,7 +366,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
         if (log_grab) { Debug.Log($"(ItemPool) finalising grab of item {item.name} into stack {stacks.IndexOf(stack)}. ItemPoolHolder is {item.ItemPoolHolder?.name ?? "null"}"); }
 
         // we check if the item is already grabbed somewhere, if so we drop it
-        if (item.Grabbed && item.ItemPoolHolder != null) { item.ItemPoolHolder.Drop(item); }
+        if (item.Grabbed && item.ItemPoolHolder != null) { item.ItemPoolHolder.Drop(item, on_ground: false); }
 
         // we finally grab it into the stack
         stack.Add(item);
@@ -380,7 +380,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
         item.OnReferenceChanged += handle_item_reference_changed;
 
         // we add the item
-        item.Grabbed = true;
+        item.BeGrabbed(this.Inventory?.capable);
 
         // we trigger the event
         OnItemGrabbed?.Invoke(item);

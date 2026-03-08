@@ -24,6 +24,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
     public bool log_awake_data = false;
     public bool log_awake_data_extended = false;
     public bool log_loading = false;
+    public bool log_loading_extended = false;
     public bool hide_log_no_data_found = false;
     public bool log_spawning = false;
     public int load_x_capables_per_frame = 1;
@@ -31,7 +32,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
     // EVENTS
     public Action<Capable, Capable> OnCapableNeedRoom; // we pass the spawned capable's data and the spawner capable (can be null)
-
+    public Action<Capable, Capable> OnCapableNeedFreedom;
 
 
 
@@ -80,18 +81,6 @@ public class CapableSystem : BSOD_System<CapableSystem>
                 loadCapableDataOfType(json, kind, ref log_capables_details);
             }
         }
-
-        // we load all the json files in the data path and convert them to CapableData objects
-        /* string[] files = System.IO.Directory.GetFiles(data_path, "*.json");
-        foreach (string file in files)
-        {
-            string json = System.IO.File.ReadAllText(file, System.Text.Encoding.UTF8);
-            ICapableData data = JsonUtility.FromJson<ICapableData>(json);
-
-
-            capables_data.Add(data.id, data);
-            log_capables_details += data.GetDetails() + "\n";
-        } */
 
         if (log_awake_data) { Debug.Log("(CapableSystem) CAPABLES DATA LOADED : " + capables_data.Count + log_capables_details); }
         awake_done = true;
@@ -284,6 +273,11 @@ public class CapableSystem : BSOD_System<CapableSystem>
         // we simply inform the room system that we need a room for the item
         OnCapableNeedRoom?.Invoke(item, dropper);
     }
+    public void OnItemGrabbed(Item item, Capable grabber)
+    {
+        // we simply inform the room system that we need to detach the item from the room
+        OnCapableNeedFreedom?.Invoke(item, grabber);
+    }
 
 
     // UPDATE
@@ -294,7 +288,6 @@ public class CapableSystem : BSOD_System<CapableSystem>
         // we load / unload in queue
         int unloaded = unload_in_queue(load_x_capables_per_frame);
         load_in_queue(load_x_capables_per_frame - unloaded);
-
     }
 
 

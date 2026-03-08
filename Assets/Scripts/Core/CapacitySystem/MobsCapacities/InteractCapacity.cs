@@ -95,7 +95,7 @@ public class InteractCapacity : Capacity
         // we switch the current hover
         if (closest_hover != null) { unselect_hover(); }
         closest_hover = hover;
-        if (debug) { Debug.Log("(InteractCapacity) " + hover.capable.name + " selected as closest hover"); }
+        if (log) { Debug.Log("(InteractCapacity) " + hover.capable.name + " selected as closest hover"); }
 
         // we play the hover animation
         closest_hover.Hover(this.capable);
@@ -115,10 +115,11 @@ public class InteractCapacity : Capacity
         Capable interactive = closest_hover.capable;
 
         // we reset the current hover
-        if (debug) { Debug.Log("(InteractCapacity) " + interactive.name + " unselected as closest hover"); }
+        if (log) { Debug.Log("(InteractCapacity) " + ((interactive != null) ? interactive.name : "") + " unselected as closest hover"); }
         closest_hover = null;
 
         // we invoke the callback
+        if (interactive == null) { return; }
         OnHoverDeselect?.Invoke(interactive);
     }
 
@@ -137,7 +138,7 @@ public class InteractCapacity : Capacity
     private void OnTriggerEnter2D(Collider2D other)
     {
         // we check if the other has a HoverCapacity
-        HoverCapacity hover = other.GetComponent<HoverCapacity>();
+        HoverCapacity hover = other.transform.parent.GetComponent<HoverCapacity>();
         if (hover == null) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " hovered " + other.name + " but it has no HoverCapacity"); } return; }
 
         // we get the capable of the hover capacity
@@ -158,20 +159,23 @@ public class InteractCapacity : Capacity
         // we add the capable to the waiting hovers
         waiting_hovers.Add(hover);
 
-        if (debug) { Debug.Log("(InteractCapacity) " + interactive.name + " added to waiting hovers"); }
+        if (log) { Debug.Log("(InteractCapacity) " + interactive.name + " added to waiting hovers"); }
     }
     private void OnTriggerExit2D(Collider2D other)
     {
+        if (log_triggers) { Debug.Log($"(InteractCapacity) {other.name} JUST EXIT"); }
+
         // we check if the other has a HoverCapacity
-        HoverCapacity hover = other.GetComponent<HoverCapacity>();
-        if (hover == null) { return; }
+        HoverCapacity hover = other.transform.parent.GetComponent<HoverCapacity>();
+        if (hover == null) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " exits hovered " + other.name + " but it has no HoverCapacity"); } return; }
+
 
         // we get the capable of the hover capacity
         Capable interactive = hover.capable;
-        if (interactive == null) { return; }
+        if (interactive == null) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " exits hovered " + hover.name + " but it has no Capable"); } return; }
 
         // we check if it's an Interactable
-        if (interactive is not Interactable) { return; }
+        if (interactive is not Interactable) { if (log_triggers) { Debug.Log("(InteractCapacity) " + name + " exits hovered " + interactive.name + " but it is no Interactable"); } return; }
 
         // we check if hover is the current hover
         if (hover == closest_hover)
@@ -184,8 +188,21 @@ public class InteractCapacity : Capacity
         if (waiting_hovers.Contains(hover))
         {
             waiting_hovers.Remove(hover);
-            if (debug) { Debug.Log("(InteractCapacity) " + interactive.name + " removed from waiting hovers"); }
+            if (log) { Debug.Log("(InteractCapacity) " + interactive.name + " removed from waiting hovers"); }
         }
+    }
+
+    // INFORM HOVER LOST
+    public void HoverLostItself(HoverCapacity hover)
+    {
+        if (log || log_triggers) { Debug.Log($"(InteractCapacity) {hover.name} told us it wants to lose itself, so we do !"); }
+
+        // the hover decided that it won't be hovered anymore...
+        if (closest_hover != null && hover == closest_hover) { unselect_hover(); return; }
+
+        // check if it is inside the waitings hover
+        if (!waiting_hovers.Contains(hover)) { return; }
+        waiting_hovers.Remove(hover);
     }
 }
 

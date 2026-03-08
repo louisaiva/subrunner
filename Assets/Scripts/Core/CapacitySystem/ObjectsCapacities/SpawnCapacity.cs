@@ -47,7 +47,7 @@ public class SpawnCapacity : Capacity
         {
             Capable entity_capable = CapableSystem.Instance.SpawnCapable(base_entity_id, this.capable);
             if (entity_capable != null) { entity = entity_capable.gameObject; }
-            else if (debug) { Debug.LogWarning("(SpawnCapacity) Could not spawn entity with id " + base_entity_id); }
+            else if (log) { Debug.LogWarning("(SpawnCapacity) Could not spawn entity with id " + base_entity_id); }
         }
         else { entity = Instantiate(entity_prefab); }
         if (entity == null) { return; }
@@ -100,7 +100,7 @@ public class SpawnCapacity : Capacity
             force_debug = " with force " + spawn_force;
         }
 
-        if (debug) { Debug.Log("(SpawnCapacity) " + name + " spawning entity at " + spawn_position + force_debug); }
+        if (log) { Debug.Log("(SpawnCapacity) " + name + " spawning entity at " + spawn_position + force_debug); }
         entity_count++;
     }
 

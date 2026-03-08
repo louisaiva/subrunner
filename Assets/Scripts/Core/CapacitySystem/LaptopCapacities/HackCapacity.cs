@@ -50,7 +50,7 @@ public class HackCapacity : Capacity
 
         // we set the selected exploit
         selected_exploit = exploit;
-        if (debug) { Debug.Log($"(HackCapacity) {capable.name} selected exploit {exploit.name}."); }
+        if (log) { Debug.Log($"(HackCapacity) {capable.name} selected exploit {exploit.name}."); }
     }
     
     // UPDATE
@@ -90,7 +90,7 @@ public class HackCapacity : Capacity
             return;
         }
 
-        if (debug) { Debug.Log($"(HackCapacity) {capable.name} finished exploit {hack.name}."); }
+        if (log) { Debug.Log($"(HackCapacity) {capable.name} finished exploit {hack.name}."); }
 
         // we remove the hackray
         Destroy(hackrays[hack].gameObject);
@@ -105,8 +105,8 @@ public class HackCapacity : Capacity
         foreach (File file in hack.downloads)
         {
             bool wrote_file = device.WriteFile(file);
-            if (debug && wrote_file) { Debug.Log($"(HackCapacity) {capable.name} downloaded file {file.name} from {hack.target.name} and saved it to its device."); }
-            else if (debug && !wrote_file) { Debug.LogWarning($"(HackCapacity) {capable.name} downloaded file {file.name} from {hack.target.name} but could not save it to its device (maybe full storage)."); }
+            if (log && wrote_file) { Debug.Log($"(HackCapacity) {capable.name} downloaded file {file.name} from {hack.target.name} and saved it to its device."); }
+            else if (log && !wrote_file) { Debug.LogWarning($"(HackCapacity) {capable.name} downloaded file {file.name} from {hack.target.name} but could not save it to its device (maybe full storage)."); }
         }
     }
 
@@ -117,7 +117,7 @@ public class HackCapacity : Capacity
         // checks if we have a connector
         if (connector == null)
         {
-            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack but no connector is available."); }
+            if (log) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack but no connector is available."); }
             return;
         }
 
@@ -125,14 +125,14 @@ public class HackCapacity : Capacity
         Vulnerable target = connector.Target;
         if (target == null)
         {
-            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack but no target is connected."); }
+            if (log) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack but no target is connected."); }
             return;
         }
 
         // we check if we are not already hacking this target
         if (running_hacks.Any(h => h.target == target))
         {
-            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} is already hacking {target.name}."); }
+            if (log) { Debug.LogWarning($"(HackCapacity) {capable.name} is already hacking {target.name}."); }
             return;
         }
 
@@ -140,7 +140,7 @@ public class HackCapacity : Capacity
         if (exploit == null)
         {
             // ? todo : bug quelques fois on a pas d'exploit selectionné, est-ce qu'il faut re nmap ?
-            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack {target.name} but has no exploit selected."); }
+            if (log) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack {target.name} but has no exploit selected."); }
             return;
         }
 
@@ -154,7 +154,7 @@ public class HackCapacity : Capacity
         // we check if our device has enough cores for this exploit
         if (!device.Processor.HasFreeCores(exploit.cores_cost))
         {
-            if (debug) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack {target.name} but has no free cores for exploit {exploit.name}."); }
+            if (log) { Debug.LogWarning($"(HackCapacity) {capable.name} tried to hack {target.name} but has no free cores for exploit {exploit.name}."); }
             return;
         }
 
@@ -169,7 +169,7 @@ public class HackCapacity : Capacity
         // we get some free cores from the device
         List<Core> free_cores = device.Processor.GetFreeCores(hack.program.cores_cost);
 
-        if (debug) { Debug.Log($"(HackCapacity) {capable.name} is running exploit {hack.name} on {hack.target.capable.name} using {free_cores.Count} cores."); }
+        if (log) { Debug.Log($"(HackCapacity) {capable.name} is running exploit {hack.name} on {hack.target.capable.name} using {free_cores.Count} cores."); }
 
         // we run the hack
         hack.Run(free_cores);
