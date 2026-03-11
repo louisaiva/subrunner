@@ -8,7 +8,18 @@ public class IDsGenerator : MonoBehaviour
     [Header("Debug Lists")]
     [SerializeField] private List<Capable> capables_that_get_new_ids = new List<Capable>();
     [SerializeField] private List<Capacity> capacities_that_get_new_ids = new List<Capacity>();
-    [SerializeField] private List<string> generated_ids = new List<string>();
+
+    [Header("Components")]
+    private GameManager _game_manager;
+    private GameManager GameManager
+    {
+        get
+        {
+            if (_game_manager == null) { _game_manager = GameManager.Instance; }
+            if (_game_manager == null) { _game_manager = FindFirstObjectByType<GameManager>(); } // because we need static finding for IDsGenerator
+            return _game_manager;
+        }
+    }
 
     [Header("Logs")]
     public bool log = false;
@@ -20,7 +31,7 @@ public class IDsGenerator : MonoBehaviour
         // we clear the list since we want to re generate ids
         capables_that_get_new_ids.Clear();
         capacities_that_get_new_ids.Clear();
-        generated_ids.Clear();
+        GameManager.ClearGeneratedIDs();
 
 
         // we get all the rooms
@@ -40,7 +51,7 @@ public class IDsGenerator : MonoBehaviour
         if (capables_that_get_new_ids.Contains(capable)) { return ""; }
 
         // generate new id
-        string new_id = generate_unique_id(capable.name);
+        string new_id = GameManager.GenerateUniqueID(capable.name);
 
         // check if a room has our old id then we change it to new id
         // (we must have an old id for this to work)
@@ -74,7 +85,6 @@ public class IDsGenerator : MonoBehaviour
 
         // add capable to generated id list
         capables_that_get_new_ids.Add(capable);
-        generated_ids.Add(new_id);
 
         // finally change capable's id
         capable.data.id = new_id;
@@ -99,7 +109,7 @@ public class IDsGenerator : MonoBehaviour
             if (capacities_that_get_new_ids.Contains(capacity)) { continue; }
 
             // generate new id
-            string new_id = generate_unique_id(capacity.name);
+            string new_id = GameManager.GenerateUniqueID(capacity.name);
 
             // change the capacity id in the capable's capacities ids list
             if (!string.IsNullOrEmpty(capacity.data.id) && !string.IsNullOrEmpty(new_id))
@@ -117,40 +127,8 @@ public class IDsGenerator : MonoBehaviour
 
             // add capacity to generated id list
             capacities_that_get_new_ids.Add(capacity);
-            generated_ids.Add(new_id);
         }
     }
-    private string generate_unique_id(string base_id)
-    {
-        // todo if we have perf issues when spawning capables this can be the issue
-        // then we just need to have a static int that we increment so it's faster
-
-        // we check if the base_id can be splitted with "_"
-        string[] parts = base_id.Split('_');
-        string suffix = parts.Length > 1 ? parts[parts.Length - 1] : "";
-        string prefix = base_id.Substring(0, base_id.Length - suffix.Length);
-        if (suffix == "") { prefix += "_"; } // if we got no suffix, we add a _ to the prefix so it will be alrgiht next time
-
-        // we go through all generated_ids and memorize all the ids that have the same prefix and check the suffix int is greater or not
-        int max_suffix = 0;
-        foreach (string id in generated_ids)
-        {
-            if (id.StartsWith(prefix))
-            {
-                string id_suffix = id.Substring(prefix.Length);
-                if (int.TryParse(id_suffix, out int id_suffix_int))
-                {
-                    if (id_suffix_int > max_suffix)
-                    {
-                        max_suffix = id_suffix_int;
-                    }
-                }
-            }
-        }
-
-        return prefix + (max_suffix + 1);
-    }
-
 
     // utils
     private Room get_room_of_capable(Capable capable, Room[] all_rooms)
@@ -192,7 +170,24 @@ public class IDsGenerator : MonoBehaviour
         {
             IDsGenerator manager = (IDsGenerator)target;
 
-            if (GUILayout.Button("Generate IDs")) { manager.GenerateIDsForAllCapablesAndCapacities(); }
+            if (GUILayout.Button("Generate IDs"))
+            {
+                manager.GenerateIDsForAllCapablesAndCapacities();
+                
+                // then we need to mark all capables & capacities as "dirty" so their data will be saved with the new ids
+                foreach (Capable capable in manager.capables_that_get_new_ids)
+                {
+                    UnityEditor.EditorUtility.SetDirty(capable);
+                }
+                foreach (Capacity capacity in manager.capacities_that_get_new_ids)
+                {
+                    UnityEditor.EditorUtility.SetDirty(capacity);
+                }
+
+                // we also make sure GameManager is marked as dirty because it has all generated ids
+                UnityEditor.EditorUtility.SetDirty(manager.GameManager);
+                UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(manager.gameObject.scene);
+            }
             DrawDefaultInspector();
         }
     }

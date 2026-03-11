@@ -63,12 +63,12 @@ public class SpawnCapacity : Capacity
         if (entity_layer != null) { set_entity_layer_skin(entity); }
 
         // we make the main capable play an animation
-        capable.anim_player.Play(spawn_anim_name);
+        capable.AnimPlayer.Play(spawn_anim_name);
 
         // if we spawn after the animation we wait for it to finish
         if (spawn_after_animation)
         {
-            while (capable.anim_player.IsPlaying(spawn_anim_name)) { await System.Threading.Tasks.Task.Yield(); }
+            while (capable.AnimPlayer.IsPlaying(spawn_anim_name)) { await System.Threading.Tasks.Task.Yield(); }
         }
 
         entity.SetActive(true);

@@ -11,7 +11,7 @@ namespace subrunner.goap
         // START
         public override void Start(IMonoAgent agent, Data data)
         {
-            data.anim_player = data.ia.anim_player;
+            data.anim_player = data.ia.AnimPlayer;
             data.attack_capacity = data.ia.GetCapacity<AttackCapacity>();
             data.BeingTarget = data.Target is TransformTarget target ? target.Transform.GetComponent<Being>() : null;
         }

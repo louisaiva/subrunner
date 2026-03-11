@@ -14,9 +14,7 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(AnimPlayer))]
 public class Capable : MonoBehaviour, Debuggable
 {
-
     // NEW CAPACITY SYSTEM
-
     [Header("Capable data")]
     public CapableData data;
     public bool Loaded { get { return data != null; } }
@@ -99,7 +97,7 @@ public class Capable : MonoBehaviour, Debuggable
             kind = GetType().Name,
 
             // we set the anim data
-            anim_data = anim_player.GetStaticAnimData(),
+            anim_data = AnimPlayer.GetStaticAnimData(),
 
             // we set the body data
             body_data = get_static_body_data(),
@@ -108,7 +106,7 @@ public class Capable : MonoBehaviour, Debuggable
             orientation = this.orientation,
 
             // we set the inventory
-            inventory = Inventory?.GetStaticInventoryData(),
+            inventory = Inventory.GetStaticInventoryData(),
 
             // we set the capacities
             capacities_ids = get_static_capacity_ids(),
@@ -244,12 +242,12 @@ public class Capable : MonoBehaviour, Debuggable
             if (value != Vector2.zero)
             {
                 orientation = value.normalized;
-                anim_player.SetOrientation(orientation);
+                AnimPlayer.SetOrientation(orientation);
             }
         }
     }
     public void ClearInputs() { inputs = Vector2.zero; } // does the same than Orientation = Vector2.zero; but more optimized
-    public string Skin => (anim_player == null) ? "none" : anim_player.Skin;
+    public string Skin => (AnimPlayer == null) ? "none" : AnimPlayer.Skin;
 
     [Header("Capacities")]
     [SerializeField] protected List<Capacity> capacities = new List<Capacity>();
@@ -263,7 +261,7 @@ public class Capable : MonoBehaviour, Debuggable
 
     // anim player
     private AnimPlayer _anim_player = null;
-    public AnimPlayer anim_player { get
+    public AnimPlayer AnimPlayer { get
         {
             if (_anim_player == null) { _anim_player = GetComponent<AnimPlayer>(); }
             return _anim_player;
@@ -341,9 +339,8 @@ public class Capable : MonoBehaviour, Debuggable
         Orientation = orientation;
         if (!AppManager.Instance.IsQuitting) { DebugManager.Instance?.transform.GetComponentInChildren<EntitiesDebug>()?.AddEntity(this); }
 
-
         // we register all the capacities that are on this capable ONLY if we are not part of the BSOD pattern systems
-        if (CapableSystem.Instance != null && CapableSystem.Instance.HasCapable(this) && CapacityEngine.Instance != null) { return; }
+        if (CapableBank.Instance != null && CapableBank.Instance.HasCapable(this) && CapacityEngine.Instance != null) { return; }
         
         capacities.Clear();
         foreach (Transform child in transform)
@@ -448,6 +445,11 @@ public class Capable : MonoBehaviour, Debuggable
         if (HasCapacity(name)) { return GetCapacity(name); }
 
         // get the capacity instance
+        if (CapacityBank.Instance == null)
+        {
+            Debug.LogError("CapacityBank instance is null, can't add capacity " + name);
+            return null;
+        }
         GameObject capa_instance = CapacityBank.Instance?.InstantiateCapacity(name);
 
         // we put it as a child of the capable & we rename it
@@ -642,7 +644,7 @@ public class Capable : MonoBehaviour, Debuggable
         text += "type : " + GetType().Name.ToLower() + "\n";
         text += "skin : " + Skin + "\n\n";
         text += $"position :\n>>> x : {transform.position.x.ToString("F2")}\n>>> y : {transform.position.y.ToString("F2")}\n";
-        text += "orientation : " + anim_player.orientation + $"\n>>> x : {orientation.x.ToString("F2")}\n>>> y : {orientation.y.ToString("F2")}\n";
+        text += "orientation : " + AnimPlayer.orientation + $"\n>>> x : {orientation.x.ToString("F2")}\n>>> y : {orientation.y.ToString("F2")}\n";
 
         text += "\ncapacities : " + capacities.Count + "\n";
         List<string> capa_names = capacities.ConvertAll(c => c.name);

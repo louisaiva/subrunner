@@ -52,8 +52,8 @@ public class CloseCapacity : Capacity
         // on joue l'animation
         if (play_anim)
         {
-            capable.anim_player.StopPlaying("idle_open");
-            capable.anim_player.Play("close", duration_override: closing_duration);
+            capable.AnimPlayer.StopPlaying("idle_open");
+            capable.AnimPlayer.Play("close", duration_override: closing_duration);
         }
         Invoke("success_close", closing_duration);
         capable.GetCapacity<HoverCapacity>()?.ChangeAnimation(hover_close_anim);
@@ -77,7 +77,7 @@ public class CloseCapacity : Capacity
         (capable as Openable).is_moving = false;
 
         // on joue l'animation
-        capable.anim_player.Play("idle");
+        capable.AnimPlayer.Play("idle");
 
         // on fait les vérifications pour les portes
         if (capable is Door door && !door.DontTouchSortingLayer)

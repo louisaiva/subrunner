@@ -128,8 +128,8 @@ public class Corpse : Movable, Interactable
         Destroy(transform.Find("body").gameObject);
 
         // and change our skin to bones
-        anim_player.Skin = "bones";
-        anim_player.ClearPile();
+        AnimPlayer.Skin = "bones";
+        AnimPlayer.ClearPile();
         // Reference = "food:bones";
         // ItemDescription = "just some bones./. nothing special here.";
     }

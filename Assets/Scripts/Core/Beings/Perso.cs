@@ -237,7 +237,7 @@ public class Perso : Being, Hacker
     public void Metamorph()
     {
         // checks which skins we have
-        string skin = anim_player.Skin;
+        string skin = AnimPlayer.Skin;
 
         // checks if we are a ghost
         if (skin == "ghost") { ToggleGhost(); }
@@ -254,25 +254,25 @@ public class Perso : Being, Hacker
         }
 
         // we set the new skin
-        anim_player.Skin = metamorph_skins[index];
+        AnimPlayer.Skin = metamorph_skins[index];
     }
     public void SetSkin(string skin_name)
     {
         // checks which skins we have
-        string skin = anim_player.Skin;
+        string skin = AnimPlayer.Skin;
 
         // checks if we are a ghost
         set_ghost(false);
 
         // we set the new skin
-        anim_player.Skin = skin_name;
+        AnimPlayer.Skin = skin_name;
     }
     public void ToggleGhost()
     {
-        if (anim_player.Skin != "ghost")
+        if (AnimPlayer.Skin != "ghost")
         {
             // on change le skin
-            anim_player.Skin = "ghost";
+            AnimPlayer.Skin = "ghost";
 
             // on applique l'Effect Ghost & Invisible
             AddEffect(Effect.Ghost, -888f);
@@ -281,8 +281,8 @@ public class Perso : Being, Hacker
         else
         {
             // on remet le skin de base
-            if (skin_setting != null) { anim_player.Skin = skin_setting.ToString(); }
-            else { anim_player.Skin = "perso"; }
+            if (skin_setting != null) { AnimPlayer.Skin = skin_setting.ToString(); }
+            else { AnimPlayer.Skin = "perso"; }
 
             // on enleve l'Effect Ghost & Invisible
             RemoveEffect(Effect.Ghost);
@@ -291,17 +291,17 @@ public class Perso : Being, Hacker
 
         // sets the SettingsManager ghost setting
         if (ghost_setting == null) { return; }
-        ghost_setting.value = (anim_player.Skin == "ghost") ? 1f : 0f;
+        ghost_setting.value = (AnimPlayer.Skin == "ghost") ? 1f : 0f;
     }
     private void set_ghost(bool activate=false) { set_ghost(activate ? 1f : 0f); }
     private void set_ghost(float value)
     {
         bool is_ghost = value >= 0.5f;  
-        if (is_ghost && anim_player.Skin != "ghost")
+        if (is_ghost && AnimPlayer.Skin != "ghost")
         {
             ToggleGhost();
         }
-        else if (!is_ghost && anim_player.Skin == "ghost")
+        else if (!is_ghost && AnimPlayer.Skin == "ghost")
         {
             ToggleGhost();
         }

@@ -41,10 +41,9 @@ public class BSOD_System<T> : MonoBehaviour where T : MonoBehaviour
     protected void loadObjectsData()
     {
         // we load all the json files in the data path and convert them to RoomData objects
-        string[] files = System.IO.Directory.GetFiles(data_path, "*.json");
-        foreach (string file in files)
+        string[] files = GameManager.Instance.LoadJsons(data_path);
+        foreach (string json in files)
         {
-            string json = System.IO.File.ReadAllText(file, System.Text.Encoding.UTF8);
             BSOD_Data data = JsonUtility.FromJson<BSOD_Data>(json);
             objects_data.Add(data);
         }

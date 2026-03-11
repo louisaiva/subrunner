@@ -211,7 +211,7 @@ public class Being : Movable
         life = max_life;
 
         // on remet l'animation de base
-        anim_player.StopPlaying("die");
+        AnimPlayer.StopPlaying("die");
 
         // on remet le layer à "default"
         body_collider.gameObject.layer = LayerMask.NameToLayer("Beings");

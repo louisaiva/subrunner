@@ -42,7 +42,7 @@ public class HackCapacity : Capacity
         if (exploit == null) { return; }
 
         /* // we check if the exploit is TypePassword then we need to assign a password
-        if (exploit is FileExploit file_exploit && Target != null && Target.capable is Lockable lockable)
+        if (exploit is FileExploit file_exploit && Target != null && Target.Capable is Lockable lockable)
         {
             Key key = device.GetKeyFor(lockable);
             file_exploit.file = key;
@@ -76,7 +76,7 @@ public class HackCapacity : Capacity
         // NMAP
         if (hack.state == ProcessusState.Completed && hack.name == "nmap") { Scan(hack.target); }
 
-        if (log_cancel && hack.state == ProcessusState.Failed) { Debug.Log($"(HackCapacity) {capable.name} finished exploit {hack.name} on {hack.target.capable.name} with state {hack.state}."); }
+        if (log_cancel && hack.state == ProcessusState.Failed) { Debug.Log($"(HackCapacity) {capable.name} finished exploit {hack.name} on {hack.target.Capable.name} with state {hack.state}."); }
 
         // we download files if there are any
         download_files(hack);
@@ -145,7 +145,7 @@ public class HackCapacity : Capacity
         }
 
         // cas spécial de si on a un TypePassword
-        if (exploit is FileExploit file_exploit && target.capable is Lockable lockable && file_exploit.file == null)
+        if (exploit is FileExploit file_exploit && target.Capable is Lockable lockable && file_exploit.file == null)
         {
             Key key = device.GetKeyFor(lockable);
             if (key != null) { file_exploit.file = key; }
@@ -169,7 +169,7 @@ public class HackCapacity : Capacity
         // we get some free cores from the device
         List<Core> free_cores = device.Processor.GetFreeCores(hack.program.cores_cost);
 
-        if (log) { Debug.Log($"(HackCapacity) {capable.name} is running exploit {hack.name} on {hack.target.capable.name} using {free_cores.Count} cores."); }
+        if (log) { Debug.Log($"(HackCapacity) {capable.name} is running exploit {hack.name} on {hack.target.Capable.name} using {free_cores.Count} cores."); }
 
         // we run the hack
         hack.Run(free_cores);
@@ -197,7 +197,7 @@ public class HackCapacity : Capacity
         if (hack.state == ProcessusState.Failed) { return; }
 
         // we cancel the last hack
-        if (log_cancel) { Debug.Log($"(HackCapacity) {capable.name} is cancelling its last hack {hack.name} on {hack.target.capable.name}."); }
+        if (log_cancel) { Debug.Log($"(HackCapacity) {capable.name} is cancelling its last hack {hack.name} on {hack.target.Capable.name}."); }
         hack.Fail();
     }
     public void CancelControlHacks()
@@ -228,7 +228,7 @@ public class HackCapacity : Capacity
         string s = $"(HackCapacity) {capable.name} scanning {target.name} ";
 
         // we associate the key file to type_password if it's a lockable and if we have the key
-        if (target.capable is Lockable lockable)
+        if (target.Capable is Lockable lockable)
         {
             Key key = device.GetKeyFor(lockable);
             if (key != null)

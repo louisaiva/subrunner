@@ -1,0 +1,62 @@
+﻿{
+    "<id>k__BackingField": "shoes-1",
+    "kind": "Shoes",
+    "position": {
+        "x": 0.38999998569488528,
+        "y": 3.6700000762939455
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "anim_data": {
+        "skin": "shoes",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            }
+        ],
+        "material_path": "materials/objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "layers": []
+    },
+    "body_data": {
+        "box_colliders": [],
+        "circle_colliders": []
+    },
+    "inventory": {
+        "item_pools_data": []
+    },
+    "capacities_ids": [
+        "hover-5",
+        "dodge-1"
+    ],
+    "effects": [],
+    "effects_ttl": [],
+    "reference": "shoes:carbon",
+    "color": {
+        "r": 0.7720177173614502,
+        "g": 0.9528301954269409,
+        "b": 0.3910199701786041,
+        "a": 1.0
+    },
+    "max_qty": 1,
+    "item_description": "brand new shoes, useful for running very very very fast i mean look at me i'm so fast omg",
+    "is_grabbed": true
+}

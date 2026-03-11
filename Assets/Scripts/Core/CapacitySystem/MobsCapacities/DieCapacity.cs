@@ -38,7 +38,7 @@ public class DieCapacity : Capacity
         if (capable is not Being) { return; }
 
         // we play the animation
-        Anim anim = capable.anim_player.Play(name);
+        Anim anim = capable.AnimPlayer.Play(name);
         if (anim == null) { return; }
 
         // on meurt

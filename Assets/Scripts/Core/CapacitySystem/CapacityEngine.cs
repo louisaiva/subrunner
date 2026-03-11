@@ -7,7 +7,7 @@ using UnityEngine;
 public class CapacityEngine : BSOD_System<CapacityEngine>
 {
     [Header("Capacities data")]
-    private string data_path = "Assets/Resources/data/capacities/";
+    private string data_path = "data/capacities/";
     public Dictionary<string,CapacityData> capacities_data = new Dictionary<string,CapacityData>();
 
     [Header("Loading / Unloading")]
@@ -40,11 +40,10 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         string log_capacities_details = "\n\n";
 
         // we load all the json files in the data path and get their kind
-        string[] files = System.IO.Directory.GetFiles(data_path, "*.json");
+        string[] files = GameManager.Instance.LoadJsons(data_path);
         Dictionary<string, List<string>> json_by_kind = new Dictionary<string, List<string>>();
-        foreach (string file in files)
+        foreach (string json in files)
         {
-            string json = System.IO.File.ReadAllText(file, System.Text.Encoding.UTF8);
             CapacityData data = JsonUtility.FromJson<CapacityData>(json);
 
             if (json_by_kind.ContainsKey(data.kind))
@@ -250,41 +249,11 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     private CapacityData DuplicateData(CapacityData base_data)
     {
         CapacityData new_data = base_data.Duplicate() as CapacityData;
-        new_data.id = GenerateUniqueId(base_data.id);
+        new_data.id = GameManager.Instance.GenerateUniqueID(base_data.id);
 
         // we add the new_data to the data list
         capacities_data.Add(new_data.id, new_data);
         return new_data;
     }
-    private string GenerateUniqueId(string base_id)
-    {
-        // todo if we have perf issues we just need to have a static int that we increment so it's faster
-
-        // we check if the base_id can be splitted with "_"
-        string[] parts = base_id.Split('_');
-        string suffix = parts.Length > 1 ? parts[parts.Length - 1] : "";
-        string prefix = base_id.Substring(0, base_id.Length - suffix.Length);
-
-        // we go through all capacities_data keys and memorize all the ids that have the same prefix and check the suffix int is greater or not
-        int max_suffix = 0;
-        foreach (string key in capacities_data.Keys)
-        {
-            if (key.StartsWith(prefix))
-            {
-                string key_suffix = key.Substring(prefix.Length);
-                if (int.TryParse(key_suffix, out int key_suffix_int))
-                {
-                    if (key_suffix_int > max_suffix)
-                    {
-                        max_suffix = key_suffix_int;
-                    }
-                }
-            }
-        }
-
-        return prefix + (max_suffix + 1);
-    }
-
-
-
+    
 }

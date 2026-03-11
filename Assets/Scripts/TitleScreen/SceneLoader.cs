@@ -226,6 +226,9 @@ public class SceneLoader : MonoBehaviour
         // we load the main menu scene
         await SceneManager.LoadSceneAsync(0);
 
+        // we play the lobby theme
+        MusicPlayer.Instance.PlayLobbyTheme();
+
         // we show the ui_manager home
         UI_Pool home = UI_Manager.Instance.GetPool("home");
         home.PreparePool();

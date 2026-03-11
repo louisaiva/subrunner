@@ -5,7 +5,19 @@ using System.Collections.Generic;
 {
     public List<ItemPoolData> item_pools_data;
 
-    // DETAILS
+    // DUPLICATE & DETAILS
+    public InventoryData Duplicate()
+    {
+        InventoryData new_data = new InventoryData
+        {
+            item_pools_data = new List<ItemPoolData>()
+        };
+        for (int i=0; i<item_pools_data.Count; i++)
+        {
+            new_data.item_pools_data.Add(item_pools_data[i].Duplicate());
+        }
+        return new_data;
+    }
     public string GetDetails()
     {
         string details = $"inventory : {item_pools_data.Count} item pools :\n";
@@ -43,9 +55,35 @@ using System.Collections.Generic;
         }
         return details;
     }
+
+    public ItemPoolData Duplicate()
+    {
+        ItemPoolData new_data = new ItemPoolData
+        {
+            pool_id = pool_id,
+            max_stacks = max_stacks,
+            min_stacks = min_stacks,
+            scalable = scalable,
+            item_rule = item_rule,
+            stacks_data = new List<ItemStackData>()
+        };
+        for (int i=0; i<stacks_data.Count; i++)
+        {
+            new_data.stacks_data.Add(stacks_data[i].Duplicate());
+        }
+        return new_data;
+    }
 }
 
 [Serializable] public class ItemStackData
 {
     public List<string> items_ids;
+    
+    public ItemStackData Duplicate()
+    {
+        return new ItemStackData
+        {
+            items_ids = new List<string>(items_ids)
+        };
+    }
 }

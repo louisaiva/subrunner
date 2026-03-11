@@ -182,7 +182,7 @@ public class Controller : MonoBehaviour
             capa.GetCapacity<ConnectCapacity>().Disconnect();
         }
 
-        capa.anim_player.OnSkinChange -= refresh_skin_based_parameters; // on enlève le callback de changement de skin
+        capa.AnimPlayer.OnSkinChange -= refresh_skin_based_parameters; // on enlève le callback de changement de skin
 
         OnCapableUncontrolled?.Invoke(capa);
 
@@ -199,7 +199,7 @@ public class Controller : MonoBehaviour
 
         // on ajoute le callback de changement de skin
         refresh_skin_based_parameters(capa.Skin);
-        capa.anim_player.OnSkinChange += refresh_skin_based_parameters;
+        capa.AnimPlayer.OnSkinChange += refresh_skin_based_parameters;
 
         // on désactive le Brain si le nouveau capable est un IA
         if (capa is IA ia)

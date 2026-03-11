@@ -109,7 +109,7 @@ public class LaptopInventory : Inventory
     // MODULES GRABBED/DROPPED
     private void HandleModuleGrabbed(Item item)
     {
-        if (capable is not Device device) { return; }
+        if (Capable is not Device device) { return; }
         if (item is Module_CPU cpu)
         {
             device.Processor.OnProcessorGrabbed(cpu);
@@ -125,7 +125,7 @@ public class LaptopInventory : Inventory
     }
     private void HandleModuleDropped(Item item)
     {
-        if (capable is not Device device) { return; }
+        if (Capable is not Device device) { return; }
         if (item is Module_CPU cpu)
         {
             device.Processor.OnProcessorDropped(cpu);

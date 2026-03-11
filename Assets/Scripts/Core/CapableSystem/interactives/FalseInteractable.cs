@@ -24,7 +24,7 @@ public class FalseInteractable : Capable, EndlessInteractable
 
         if (log) { Debug.Log("(FalseInteractable) " + name + " was interacted by " + interactor.name); }
 
-        anim_player.Play(interact_animation);
+        AnimPlayer.Play(interact_animation);
         OnInteractEvent?.Invoke();
     }
 }

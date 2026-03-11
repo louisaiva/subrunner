@@ -174,11 +174,11 @@ public class UI_ItemStack : UI_ImageSlot, Droppable, Descriptable, ItemReceivabl
         // on récupère l'inventory qui drop l'item
         Inventory inventory = item.Holder.Inventory;
 
-        if (log_drop) { Debug.Log($"(UI_ItemStack) dropping item {item.name} from inventory of {inventory.capable.name}"); }
+        if (log_drop) { Debug.Log($"(UI_ItemStack) dropping item {item.name} from inventory of {inventory.Capable.name}"); }
 
         // on cherche l'inventory qui reçoit l'item
         Inventory inventory_to_drop = inventory.GetInteractingInventory();
-        if (log_drop) { Debug.Log($"(UI_ItemStack) interacting inventory to drop in: {(inventory_to_drop != null ? inventory_to_drop.capable.name : "none")}"); }
+        if (log_drop) { Debug.Log($"(UI_ItemStack) interacting inventory to drop in: {(inventory_to_drop != null ? inventory_to_drop.Capable.name : "none")}"); }
 
         // we drop the item in the other inventory
         if (inventory_to_drop != null)
@@ -189,18 +189,18 @@ public class UI_ItemStack : UI_ImageSlot, Droppable, Descriptable, ItemReceivabl
 
         // we don't have an inventory to drop so we drop on the ground
         // we check if we have a DropCapacity
-        DropCapacity dropper = inventory.capable.GetCapacity<DropCapacity>();
+        DropCapacity dropper = inventory.Capable.GetCapacity<DropCapacity>();
         if (dropper != null)
         {
-            if (log_drop) { Debug.Log($"(UI_ItemStack) no inventory so we dropping item {item.name} on the ground with dropper of {inventory.capable.name}"); }
+            if (log_drop) { Debug.Log($"(UI_ItemStack) no inventory so we dropping item {item.name} on the ground with dropper of {inventory.Capable.name}"); }
             dropper.Select(item);
             dropper.random_direction = true;
-            dropper.Use(inventory.capable);
+            dropper.Use(inventory.Capable);
             dropper.random_direction = false;
         }
         else
         {
-            if (log_drop) { Debug.Log($"(UI_ItemStack) no inventory and no dropper capacity, so we simply drop item {item.name} from inventory of {inventory.capable.name} (it may be lost if the inventory is a chest for example)"); }
+            if (log_drop) { Debug.Log($"(UI_ItemStack) no inventory and no dropper capacity, so we simply drop item {item.name} from inventory of {inventory.Capable.name} (it may be lost if the inventory is a chest for example)"); }
             // the inventory simply drops the item (dropper may be a chest)
             inventory.Drop(item);
         }

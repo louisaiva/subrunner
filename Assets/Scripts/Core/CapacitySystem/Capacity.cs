@@ -125,6 +125,6 @@ public class Capacity : MonoBehaviour
     public virtual void Use(Capable capable)
     {
         // we play the animation
-        capable.anim_player.Play(name);
+        capable.AnimPlayer.Play(name);
     }
 }

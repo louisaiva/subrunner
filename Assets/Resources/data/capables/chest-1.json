@@ -1,0 +1,115 @@
+﻿{
+    "<id>k__BackingField": "chest-1",
+    "kind": "Chest",
+    "position": {
+        "x": 0.38999998569488528,
+        "y": 3.6700000762939455
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "anim_data": {
+        "skin": "blue_chest",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 3,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle_open"
+                ],
+                "lock_orientation": true,
+                "one_shot": false
+            },
+            {
+                "priority": 4,
+                "capacity_playing": "",
+                "capacities": [
+                    "open",
+                    "close"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            }
+        ],
+        "material_path": "materials/objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "layers": []
+    },
+    "body_data": {
+        "box_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 29,
+                "used_for_pathfinding": true,
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.19611191749572755
+                },
+                "size": {
+                    "x": 1.442360281944275,
+                    "y": 0.375521183013916
+                }
+            }
+        ],
+        "circle_colliders": []
+    },
+    "inventory": {
+        "item_pools_data": [
+            {
+                "stacks_data": [
+                    {
+                        "items_ids": [
+                            "shoes-1"
+                        ]
+                    },
+                    {
+                        "items_ids": [
+                            "bone-1"
+                        ]
+                    },
+                    {
+                        "items_ids": [
+                            "pastas-1"
+                        ]
+                    }
+                ],
+                "pool_id": "chest",
+                "max_stacks": 12,
+                "min_stacks": 12,
+                "scalable": false,
+                "item_rule": ""
+            }
+        ]
+    },
+    "capacities_ids": [
+        "hover-7",
+        "open-1",
+        "close-1"
+    ],
+    "effects": [],
+    "effects_ttl": []
+}

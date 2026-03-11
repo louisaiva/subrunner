@@ -111,14 +111,14 @@ public class EatCapacity : Capacity
     private IEnumerator eat_coroutine(Being being)
     {
         // launch the animation
-        Anim anim = being.anim_player.Play("eat", duration_override: bite_duration);
+        Anim anim = being.AnimPlayer.Play("eat", duration_override: bite_duration);
         if (anim == null) { yield break; }
 
         if (log) { Debug.Log("(EatCapacity) " + being.name + " is trying to eat " + food_target.name); }
         yield return new WaitForSeconds(bite_duration * bites_per_eating); // wait for the eating duration
 
         // we stop playing the anim
-        being.anim_player.StopPlaying("eat");
+        being.AnimPlayer.StopPlaying("eat");
 
         // we check if the food target is still valid
         if (food_target == null)
@@ -142,7 +142,7 @@ public class EatCapacity : Capacity
         StopAllCoroutines(); // stop all coroutines related to eating
 
         // we stop the anim_player from playing
-        being.anim_player.StopPlaying("eat");
+        being.AnimPlayer.StopPlaying("eat");
     }
 
     // SET FOOD

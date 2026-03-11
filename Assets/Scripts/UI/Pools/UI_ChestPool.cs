@@ -49,7 +49,7 @@ public class UI_ChestPool : UI_SlottablePool
         // on met les items du chest dans
         ChestUI_ItemPool.AttachToPool(chest_inv);
 
-        if (chest_inv.capable is Chest chest) { this.chest = chest; }
+        if (chest_inv.Capable is Chest chest) { this.chest = chest; }
 
         // on s'assure que le persoquickinventory n'affiche que les bons items
         // if (ui_chest is UI_Inventory ui_inv) { perso_quick_inventory_pool.EnableItemsByRule(ui_inv.ItemRule); }

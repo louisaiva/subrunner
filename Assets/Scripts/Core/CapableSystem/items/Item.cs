@@ -241,26 +241,26 @@ public class Item : Movable, EndlessInteractable
         transform.localScale = Vector3.one;
         if (!Placed && Grabbed)
         {
-            anim_player.DisableRenderer();
+            AnimPlayer.DisableRenderer();
             if (Inventory != null)
             {
                 List<Item> items = Inventory.Items;
                 for (int i = 0; i < items.Count; i++)
                 {
-                    items[i].anim_player.DisableRenderer();
+                    items[i].AnimPlayer.DisableRenderer();
                 }
             }
         }
         else
         {
-            anim_player.EnableRenderer();
+            AnimPlayer.EnableRenderer();
             if (Inventory != null)
             {
                 List<Item> items = Inventory.Items;
                 for (int i = 0; i < items.Count; i++)
                 {
                     if (!items[i].Placed) { continue; }
-                    items[i].anim_player.EnableRenderer();
+                    items[i].AnimPlayer.EnableRenderer();
                 }
             }
         }
@@ -377,7 +377,7 @@ public class Item : Movable, EndlessInteractable
             id = get_static_id(),
             position = this.transform.position,
             kind = GetType().Name,
-            anim_data = anim_player.GetStaticAnimData(),
+            anim_data = AnimPlayer.GetStaticAnimData(),
             body_data = get_static_body_data(),
             orientation = this.orientation,
             inventory = Inventory?.GetStaticInventoryData(),
@@ -432,6 +432,7 @@ public class Item : Movable, EndlessInteractable
             orientation = this.orientation,
             anim_data = this.anim_data.Duplicate(),
             body_data = this.body_data != null ? this.body_data.Duplicate() : null,
+            inventory = this.inventory != null ? this.inventory.Duplicate() : null,
             capacities_ids = new List<string>(this.capacities_ids),
             effects = new List<Effect>(this.effects),
             effects_ttl = new List<float>(this.effects_ttl),

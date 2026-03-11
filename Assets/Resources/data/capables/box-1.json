@@ -1,0 +1,84 @@
+﻿{
+    "<id>k__BackingField": "box-1",
+    "kind": "Package",
+    "position": {
+        "x": 32.29999923706055,
+        "y": 3.3299999237060549
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": 1.0
+    },
+    "anim_data": {
+        "skin": "pckg_front",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle_open"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "interact"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            }
+        ],
+        "material_path": "materials/objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "layers": []
+    },
+    "body_data": {
+        "box_colliders": [],
+        "circle_colliders": []
+    },
+    "inventory": {
+        "item_pools_data": [
+            {
+                "stacks_data": [
+                    {
+                        "items_ids": [
+                            "katana-1"
+                        ]
+                    }
+                ],
+                "pool_id": "stuff",
+                "max_stacks": 6,
+                "min_stacks": 6,
+                "scalable": true,
+                "item_rule": ""
+            }
+        ]
+    },
+    "capacities_ids": [
+        "hover-3"
+    ],
+    "effects": [],
+    "effects_ttl": []
+}

@@ -1,16 +1,13 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Unity.Collections;
 using UnityEngine;
 using Unity.Jobs;
-using Unity.Burst;
 
 public class RoomSystem : BSOD_System<RoomSystem>
 {
     [Header("Rooms data")]
-    private string data_path = "Assets/Resources/data/rooms/";
+    private string data_path = "data/rooms/";
     public Dictionary<string, RoomData> rooms_data = new Dictionary<string, RoomData>();
     private Dictionary<string, int> rooms_hashs_by_ids = new Dictionary<string, int>();
     private Dictionary<int, string> rooms_ids_by_hash = new Dictionary<int, string>();
@@ -65,11 +62,10 @@ public class RoomSystem : BSOD_System<RoomSystem>
         string log_rooms_details = "\n\n";
 
         // we load all the json files in the data path and convert them to RoomData objects
-        string[] files = System.IO.Directory.GetFiles(data_path, "*.json");
+        string[] files = GameManager.Instance.LoadJsons(data_path);
         foreach (string file in files)
         {
-            string json = System.IO.File.ReadAllText(file, System.Text.Encoding.UTF8);
-            RoomData data = JsonUtility.FromJson<RoomData>(json);
+            RoomData data = JsonUtility.FromJson<RoomData>(file);
             rooms_data.Add(data.id, data);
             generate_room_hash(data.id);
             log_rooms_details += data.GetDetails() + "\n";
@@ -244,8 +240,8 @@ public class RoomSystem : BSOD_System<RoomSystem>
         if (log_init) { Debug.Log("(RoomSystem) Init done and started ticking"); }
     }
 
-    // TICK
-    protected virtual void Tick2()
+    // OLD TICK
+    /* protected virtual void Tick2()
     {
 
         // if (log_ticks) { Debug.Log("(RoomSystem) Tick called"); }
@@ -379,8 +375,9 @@ public class RoomSystem : BSOD_System<RoomSystem>
         Debug.Log(log);
     }
 
+    */
 
-    // TICK 2
+    // TICK
     protected virtual void Tick()
     {
         // 1. create Allocator.TempJob Collections to pass data to the job
@@ -460,37 +457,35 @@ public class RoomSystem : BSOD_System<RoomSystem>
         }
         if (log_room_transfers && not_valid_transitions > 0) { Debug.LogWarning($"(RoomSystem) {not_valid_transitions} transitions were not valid during this tick"); }
 
-        if (perso_changed_room && perso_new_room != null)
-        {
-            // 5. find rooms to load / unload based on new controlled room neighbours.
-            Stack<string> rooms_to_unload = new Stack<string>();
-            Stack<string> rooms_to_load = new Stack<string>();
-            List<string> new_neighbours_ids = GetNeighboursIDs(perso_new_room);
-
-            foreach (string loaded_room_id in loaded_rooms_data.Keys)
-            {
-                if (loaded_room_id == perso_new_room.id) { continue; }
-                if (!new_neighbours_ids.Contains(loaded_room_id)) { rooms_to_unload.Push(loaded_room_id); }
-            }
-
-            for (int i = 0; i < new_neighbours_ids.Count; i++)
-            {
-                string neighbour_id = new_neighbours_ids[i];
-                if (neighbour_id == perso_new_room.id) { continue; }
-                if (!loaded_rooms_data.ContainsKey(neighbour_id)) { rooms_to_load.Push(neighbour_id); }
-            }
-
-            main_room_data = perso_new_room;
-
-            // 6. load the new rooms and unload old ones.
-            loadRooms(rooms_to_load.ToArray());
-            unloadRooms(rooms_to_unload.ToArray());
-        }
-    
-        // 7. dispose native collections
+        // 5. dispose native collections
         rooms_movables_IN.Dispose();
         rooms_movables_OUT.Dispose();
         transitions.Dispose();
+
+        // 6. find rooms to load / unload based on new controlled room neighbours.
+        if (!perso_changed_room || perso_new_room == null) { return; }
+        Stack<string> rooms_to_unload = new Stack<string>();
+        Stack<string> rooms_to_load = new Stack<string>();
+        List<string> new_neighbours_ids = GetNeighboursIDs(perso_new_room);
+
+        foreach (string loaded_room_id in loaded_rooms_data.Keys)
+        {
+            if (loaded_room_id == perso_new_room.id) { continue; }
+            if (!new_neighbours_ids.Contains(loaded_room_id)) { rooms_to_unload.Push(loaded_room_id); }
+        }
+
+        for (int i = 0; i < new_neighbours_ids.Count; i++)
+        {
+            string neighbour_id = new_neighbours_ids[i];
+            if (neighbour_id == perso_new_room.id) { continue; }
+            if (!loaded_rooms_data.ContainsKey(neighbour_id)) { rooms_to_load.Push(neighbour_id); }
+        }
+
+        main_room_data = perso_new_room;
+
+        // 7. load the new rooms and unload old ones.
+        loadRooms(rooms_to_load.ToArray());
+        unloadRooms(rooms_to_unload.ToArray());
     }
 
 

@@ -70,7 +70,7 @@ public class WalkCapacity : Capacity
 
         if (walk_speed == 0f)
         {
-            if (capable.anim_player.IsPlaying("walk")) { capable.anim_player.StopPlaying("walk"); }
+            if (capable.AnimPlayer.IsPlaying("walk")) { capable.AnimPlayer.StopPlaying("walk"); }
 
             // then we want to stop walking
             if (is_playing_footsteps) { stop_footsteps(); }
@@ -78,7 +78,7 @@ public class WalkCapacity : Capacity
         }
 
         // else we have a walk_speed, we want to enable walk animation if not playing
-        if (!capable.anim_player.IsPlaying("walk")) { capable.anim_player.Play("walk"); }
+        if (!capable.AnimPlayer.IsPlaying("walk")) { capable.AnimPlayer.Play("walk"); }
 
         // and play the footsteps if not playing
         if (!is_playing_footsteps) { play_footsteps(); }

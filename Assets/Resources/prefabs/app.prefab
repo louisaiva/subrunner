@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2771517310780889792}
   - component: {fileID: 4200687703790678608}
   - component: {fileID: 5290126021399918753}
+  - component: {fileID: 4378028718127183764}
   m_Layer: 0
   m_Name: audio_system
   m_TagString: Untagged
@@ -173,6 +174,36 @@ MonoBehaviour:
         Path: event:/ui/FinishMovingItem
   log_get_event_ref: 0
   log_issues: 0
+--- !u!114 &4378028718127183764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 129709460989252728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21470603a04cf654cb6fe4a732fefc8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MusicPlayer
+  theme_on_start: melancolic lobby
+  themes_names:
+  - name: i'm so hungry
+    reference:
+      Guid:
+        Data1: 391699498
+        Data2: 1145998890
+        Data3: 791516808
+        Data4: -1474907181
+      Path: event:/themes/i'm so hungry/HungryTheme
+  - name: melancolic lobby
+    reference:
+      Guid:
+        Data1: 805304782
+        Data2: 1168551124
+        Data3: 827602106
+        Data4: -1353302138
+      Path: event:/themes/melancolic lobby/LobbyTheme
 --- !u!1 &3811816626350204236
 GameObject:
   m_ObjectHideFlags: 0
@@ -990,7 +1021,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsQuitting: 0
   LoadedSceneCount: 0
-  prototype: mouse hacking v1
+  prototype: room & capable & capacities systems prototypes
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320

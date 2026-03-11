@@ -1,7 +1,4 @@
 using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using TMPro;
 
 public class GameLoader : MonoBehaviour {

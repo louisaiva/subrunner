@@ -59,6 +59,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -80,6 +82,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
@@ -153,15 +156,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c40f0dc7963d2d46a95171c34ece2c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  data:
+    <id>k__BackingField: 
+    kind: 
+    position: {x: 0, y: 0}
+    orientation: {x: 0, y: 0}
+    anim_data:
+      skin: 
+      anim_capacity_priorities: []
+      material_path: 
+      sorting_layer_id: 0
+      order_in_layer: 0
+      layers: []
+    body_data:
+      box_colliders: []
+      circle_colliders: []
+    inventory:
+      item_pools_data: []
+    capacities_ids: []
+    effects: 
+    effects_ttl: []
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: -1}
   capacities: []
   effects: 
   effects_timetolive: []
-  debug: 0
+  log: 0
   activate_all_capacities_logs_on_awake: 0
+  log_static_data: 0
   authorize_interact_endlessly: 1
   spawnables: []
+  probabilities: 
 --- !u!61 &8239128205784558305
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -224,6 +249,74 @@ MonoBehaviour:
   m_Area: 1
   m_IgnoreFromBuild: 0
   m_AffectedAgents: ffffffff
+--- !u!1 &2354279796477075948
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7189143760378810121}
+  - component: {fileID: 4085386155358571736}
+  m_Layer: 24
+  m_Name: collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7189143760378810121
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2354279796477075948}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2583690639633513806}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &4085386155358571736
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2354279796477075948}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.15
 --- !u!1001 &7056843530695103706
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -490,7 +583,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 6234543502669162689, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7189143760378810121}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
 --- !u!4 &2583690639633513806 stripped

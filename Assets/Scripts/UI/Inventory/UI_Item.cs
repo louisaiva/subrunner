@@ -304,12 +304,12 @@ public class UI_Item : UI_ImageSlot, Droppable, Descriptable
 
         // we don't have an inventory to drop so we drop on the ground
         // we check if we have a DropCapacity
-        DropCapacity dropper = inventory.capable.GetCapacity<DropCapacity>();
+        DropCapacity dropper = inventory.Capable.GetCapacity<DropCapacity>();
         if (dropper != null)
         {
             dropper.Select(item);
             dropper.random_direction = true;
-            dropper.Use(inventory.capable);
+            dropper.Use(inventory.Capable);
             // OnItemChanged?.Invoke(this.items);
             // UI_ItemPool?.NotifyPoolChanged(this);
             dropper.random_direction = false;

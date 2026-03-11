@@ -43,7 +43,7 @@ public class SleepCapacity : Capacity
     public void Sleep()
     {
         // we play the sleep animation
-        Anim anim = cat.anim_player.Play("fell_asleep");
+        Anim anim = cat.AnimPlayer.Play("fell_asleep");
         if (anim == null)
         {
             if (log) { Debug.LogWarning("(SleepCapacity) " + cat.name + " could not play fell_asleep animation"); }
@@ -53,7 +53,7 @@ public class SleepCapacity : Capacity
         if (log) { Debug.Log("(SleepCapacity) " + cat.name + " is falling asleep"); }
 
         // and we put the idle_sleep animation in the queue
-        cat.anim_player.Play("idle_sleep");
+        cat.AnimPlayer.Play("idle_sleep");
 
         // and we set the cat as asleep
         asleep = true;
@@ -74,7 +74,7 @@ public class SleepCapacity : Capacity
     public void WakeUp()
     {
         // we play the wake up animation
-        Anim anim = cat.anim_player.Play("wake_up");
+        Anim anim = cat.AnimPlayer.Play("wake_up");
         if (anim == null)
         {
             if (log) { Debug.LogWarning("(SleepCapacity) " + cat.name + " could not play wake_up animation"); }
@@ -82,7 +82,7 @@ public class SleepCapacity : Capacity
         }
 
         // we stop playing the idle_sleep animation
-        cat.anim_player.StopPlaying("idle_sleep");
+        cat.AnimPlayer.StopPlaying("idle_sleep");
 
         // we calculate the number of licks to do
         float time_spent_asleep = Time.time - sleep_timer;
@@ -114,7 +114,7 @@ public class SleepCapacity : Capacity
     public IEnumerator LickFeet()
     {
         // if we are still playing wake_up animation, we wait for it to finish
-        while (cat.anim_player.current_capacity == "wake_up") { yield return null; }
+        while (cat.AnimPlayer.current_capacity == "wake_up") { yield return null; }
 
         // we lick our foot for the number of licks to do
         while (licking_to_do > 0)
@@ -122,13 +122,13 @@ public class SleepCapacity : Capacity
             if (log) { Debug.Log("(SleepCapacity) " + cat.name + " is licking its foot, licks left (including this one): " + licking_to_do); }
 
             // we play the lick foot animation
-            Anim anim = cat.anim_player.Play("lick_foot");
+            Anim anim = cat.AnimPlayer.Play("lick_foot");
             if (anim == null)
             {
                 if (log) { Debug.LogWarning("(SleepCapacity) " + cat.name + " could not play lick foot animation"); }
                 yield break;
             }
-            while (cat.anim_player.current_capacity == "lick_foot") { yield return null; }
+            while (cat.AnimPlayer.current_capacity == "lick_foot") { yield return null; }
             // yield return new WaitForSeconds(anim.GetDuration());
 
             // we decrease the number of licks to do

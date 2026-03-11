@@ -1,0 +1,161 @@
+﻿{
+    "<id>k__BackingField": "perso-1",
+    "kind": "Perso",
+    "position": {
+        "x": -1.399999976158142,
+        "y": 2.5
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "anim_data": {
+        "skin": "perso",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "walk",
+                    "run"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 2,
+                "capacity_playing": "",
+                "capacities": [
+                    "hack"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 3,
+                "capacity_playing": "",
+                "capacities": [
+                    "attack",
+                    "dodge"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 4,
+                "capacity_playing": "",
+                "capacities": [
+                    "hurted",
+                    "eat"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 5,
+                "capacity_playing": "",
+                "capacities": [
+                    "die"
+                ],
+                "lock_orientation": true,
+                "one_shot": false
+            }
+        ],
+        "material_path": "materials/perso",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "layers": []
+    },
+    "body_data": {
+        "box_colliders": [],
+        "circle_colliders": []
+    },
+    "inventory": {
+        "item_pools_data": [
+            {
+                "stacks_data": [],
+                "pool_id": "shoes",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "shoes"
+            },
+            {
+                "stacks_data": [],
+                "pool_id": "weapon",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "weapon"
+            },
+            {
+                "stacks_data": [],
+                "pool_id": "device",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "laptop"
+            },
+            {
+                "stacks_data": [],
+                "pool_id": "conso_1",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "usable"
+            },
+            {
+                "stacks_data": [],
+                "pool_id": "conso_2",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "usable"
+            },
+            {
+                "stacks_data": [],
+                "pool_id": "conso_3",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "usable"
+            },
+            {
+                "stacks_data": [],
+                "pool_id": "conso_4",
+                "max_stacks": 1,
+                "min_stacks": 1,
+                "scalable": false,
+                "item_rule": "usable"
+            },
+            {
+                "stacks_data": [],
+                "pool_id": "stuff",
+                "max_stacks": 20,
+                "min_stacks": 20,
+                "scalable": false,
+                "item_rule": "!file"
+            }
+        ]
+    },
+    "capacities_ids": [
+        "die-1",
+        "walk-1",
+        "run-1",
+        "talk-1",
+        "interact-1",
+        "eat-1",
+        "drop-1"
+    ],
+    "effects": [],
+    "effects_ttl": []
+}

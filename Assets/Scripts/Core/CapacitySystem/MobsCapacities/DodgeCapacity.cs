@@ -18,10 +18,10 @@ public class DodgeCapacity : Capacity
     public override void Use(Capable capable)
     {
         // we check if we are already dodging
-        if (capable.anim_player.current_capacity == "dodge") { return; }
+        if (capable.AnimPlayer.current_capacity == "dodge") { return; }
 
         // we play the animation
-        Anim anim = capable.anim_player.Play("dodge", duration_override: dodge_duration);
+        Anim anim = capable.AnimPlayer.Play("dodge", duration_override: dodge_duration);
         if (log) { Debug.Log("(DodgeCapacity) dodge launched for " + capable.name + ", anim found is " + (anim != null ? anim.name : "null")); }
         if (anim == null) { return; }
 

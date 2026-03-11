@@ -121,10 +121,10 @@ public class Pot : Item, Usable
         }
 
         // we play the filling_up anim
-        anim_player.Play("fill_up");
+        AnimPlayer.Play("fill_up");
 
         // we wait for the animation to end
-        yield return new WaitWhile(() => anim_player.IsPlaying("fill_up"));
+        yield return new WaitWhile(() => AnimPlayer.IsPlaying("fill_up"));
 
         // we set the pot as filled
         has_water = true;
@@ -200,8 +200,8 @@ public class Pot : Item, Usable
             RemoveEffect(Effect.Boiling);
 
             // we play the animation
-            anim_player.StopPlaying("boiling");
-            anim_player.StopPlaying("boiling_pasta");
+            AnimPlayer.StopPlaying("boiling");
+            AnimPlayer.StopPlaying("boiling_pasta");
         }
     }
     private void update_burning()
@@ -213,8 +213,8 @@ public class Pot : Item, Usable
             if (log) { Debug.Log("(Pot) Now burning !"); }
 
             // we play the burning up animation
-            anim_player.Play("burn_up");
-            anim_player.AddToPile("burning");
+            AnimPlayer.Play("burn_up");
+            AnimPlayer.AddToPile("burning");
             is_burned = true;
             Empty(delete_food: true); // la nourriture crame & l'eau s'evapore
             // update_state(); // c fait automatiquement dans empty
@@ -233,8 +233,8 @@ public class Pot : Item, Usable
             if (log) { Debug.Log("(Pot) Stopped burning"); }
 
             // we stop the burning anims
-            anim_player.Play("burn_down");
-            anim_player.StopPlaying("burning");
+            AnimPlayer.Play("burn_down");
+            AnimPlayer.StopPlaying("burning");
         }
     }
 
@@ -255,8 +255,8 @@ public class Pot : Item, Usable
         if (log) { Debug.Log("(Pot) State updated to " + Reference); }
 
         // BURNING ANIMATIONS
-        anim_player.ClearIdles();
-        if (is_burned) { anim_player.AddToPile("idle_burned"); GetCapacity<HoverCapacity>()?.ChangeAnimation("hover_burned"); return; }
+        AnimPlayer.ClearIdles();
+        if (is_burned) { AnimPlayer.AddToPile("idle_burned"); GetCapacity<HoverCapacity>()?.ChangeAnimation("hover_burned"); return; }
 
         // IDLE ANIMATIONS
         string contenu = "";
@@ -264,14 +264,14 @@ public class Pot : Item, Usable
         if (HasFood) { contenu += (contenu == "" ? "pasta" : "_pasta"); }
 
         if (contenu == "") { GetCapacity<HoverCapacity>()?.ChangeAnimation("hover"); }
-        else { anim_player.AddToPile("idle_" + contenu); GetCapacity<HoverCapacity>()?.ChangeAnimation("hover_" + contenu); }
+        else { AnimPlayer.AddToPile("idle_" + contenu); GetCapacity<HoverCapacity>()?.ChangeAnimation("hover_" + contenu); }
 
         // BOILING ANIMATIONS
         if (HasEffect(Effect.Boiling))
         {
-            anim_player.StopPlaying("boiling");
-            anim_player.StopPlaying("boiling_pasta");
-            if (has_water) { anim_player.Play(HasFood ? "boiling_pasta" : "boiling"); }
+            AnimPlayer.StopPlaying("boiling");
+            AnimPlayer.StopPlaying("boiling_pasta");
+            if (has_water) { AnimPlayer.Play(HasFood ? "boiling_pasta" : "boiling"); }
         }
     }
 }

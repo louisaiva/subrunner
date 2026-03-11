@@ -47,12 +47,12 @@ public class OnOffCapacity : Capacity
         // on allume l'ordi
         Onnable.IsOn = false;
         Onnable.IsMoving = true;
-        capable.anim_player.Play(powering_on_animation);
-        capable.anim_player.AddToPile(idle_on_animation);
-        if (idle_off_animation != "idle") { capable.anim_player.StopPlaying(idle_off_animation); }
+        capable.AnimPlayer.Play(powering_on_animation);
+        capable.AnimPlayer.AddToPile(idle_on_animation);
+        if (idle_off_animation != "idle") { capable.AnimPlayer.StopPlaying(idle_off_animation); }
 
         // on attend la fin de l'anim
-        while (capable.anim_player.current_capacity == powering_on_animation) { yield return null; }
+        while (capable.AnimPlayer.current_capacity == powering_on_animation) { yield return null; }
 
         // on allume l'ordi
         Onnable.IsOn = true;
@@ -69,12 +69,12 @@ public class OnOffCapacity : Capacity
         // on éteint l'ordi
         Onnable.IsOn = true;
         Onnable.IsMoving = true;
-        capable.anim_player.Play(powering_off_animation);
-        capable.anim_player.AddToPile(idle_off_animation);
-        if (idle_on_animation != "idle") { capable.anim_player.StopPlaying(idle_on_animation); }
+        capable.AnimPlayer.Play(powering_off_animation);
+        capable.AnimPlayer.AddToPile(idle_off_animation);
+        if (idle_on_animation != "idle") { capable.AnimPlayer.StopPlaying(idle_on_animation); }
 
         // on attend la fin de l'anim
-        while (capable.anim_player.current_capacity == powering_off_animation) { yield return null; }
+        while (capable.AnimPlayer.current_capacity == powering_off_animation) { yield return null; }
 
         // on eteint l'ordi
         Onnable.IsOn = false;

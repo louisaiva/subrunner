@@ -8,7 +8,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
 {
 
     [Header("Capables data")]
-    private string data_path = "Assets/Resources/data/capables/";
+    private string data_path = "data/capables/";
     public Dictionary<string, CapableData> capables_data = new Dictionary<string, CapableData>();
     
     [Header("Runtime IDs (hashs)")]
@@ -66,11 +66,10 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
 
         // we load all the json files in the data path and get their kind
-        string[] files = System.IO.Directory.GetFiles(data_path, "*.json");
+        string[] files = GameManager.Instance.LoadJsons(data_path);
         Dictionary<string, List<string>> json_by_kind = new Dictionary<string, List<string>>();
-        foreach (string file in files)
+        foreach (string json in files)
         {
-            string json = System.IO.File.ReadAllText(file, System.Text.Encoding.UTF8);
             CapableData data = JsonUtility.FromJson<CapableData>(json);
 
             if (json_by_kind.ContainsKey(data.kind))
@@ -290,6 +289,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
         }
 
         // we call MovableEngine.UnregisterInBatch to remove all the capable we just disabled
+        if (log_loading_extended && movables_to_unregister.Count > 0) { Debug.Log($"(CapableSystem - unload_in_queue) Calling MovableEngine.UnregisterInBatch for {movables_to_unregister.Count} entities : \n  - {(string.Join("\n  - ", movables_to_unregister))}"); }
         MovableEngine.Instance.UnregisterInBatch(movables_to_unregister);
         
         return count;
@@ -353,13 +353,6 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
 
     // GETTERS
-    public bool HasCapable(Capable capable)
-    {
-        if (capable == null) { return false; }
-        if (capable.data == null) { return false; }
-        if (capable.data.id == "") { return false; }
-        return loaded_capables_data.ContainsKey(capable.data.id);
-    }
     public int GetCapableHashFromID(string id)
     {
         return capables_hashs_by_ids.TryGetValue(id, out int hash) ? hash : 0;
@@ -371,46 +364,16 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
 
     // DATA MANAGMENT
-    private CapableData DuplicateData(CapableData base_data)
+    private CapableData DuplicateData(ICapableData base_data)
     {
-        CapableData new_data = base_data.Duplicate() as CapableData;
-        new_data.id = GenerateUniqueId(base_data.id);
+        ICapableData new_data = base_data.Duplicate();
+        new_data.id = GameManager.Instance.GenerateUniqueID(base_data.id);
 
         // generate a hash
         generate_runtime_id(new_data.id);
 
         // we add the new_data to the data list
-        capables_data.Add(new_data.id, new_data);
-        return new_data;
+        capables_data.Add(new_data.id, new_data as CapableData);
+        return new_data as CapableData;
     }
-    private string GenerateUniqueId(string base_id)
-    {
-        // todo if we have perf issues when spawning capables this can be the issue
-        // then we just need to have a static int that we increment so it's faster
-
-        // we check if the base_id can be splitted with "_"
-        string[] parts = base_id.Split('_');
-        string suffix = parts.Length > 1 ? parts[parts.Length - 1] : "";
-        string prefix = base_id.Substring(0, base_id.Length - suffix.Length);
-
-        // we go through all capables_data keys and memorize all the ids that have the same prefix and check the suffix int is greater or not
-        int max_suffix = 0;
-        foreach (string key in capables_data.Keys)
-        {
-            if (key.StartsWith(prefix))
-            {
-                string key_suffix = key.Substring(prefix.Length);
-                if (int.TryParse(key_suffix, out int key_suffix_int))
-                {
-                    if (key_suffix_int > max_suffix)
-                    {
-                        max_suffix = key_suffix_int;
-                    }
-                }
-            }
-        }
-
-        return prefix + (max_suffix + 1);
-    }
-
 }

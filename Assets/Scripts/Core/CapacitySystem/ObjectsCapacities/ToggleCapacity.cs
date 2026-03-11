@@ -35,7 +35,7 @@ public class ToggleCapacity : Capacity
     // AWAKE
     private void Start()
     {
-        if (player == null) { player = capable.anim_player; }
+        if (player == null) { player = capable.AnimPlayer; }
         if (hover == null) { hover = capable.GetCapacity<HoverCapacity>(); }
         if (interactable == null)
         {

@@ -64,7 +64,11 @@ public class Movable : Capable
     {
         base.OnDisable();
         if (MovableEngine.Instance == null) { return; }
-        if (CapableSystem.Instance != null && CapableSystem.Instance.HasCapable(this)) { return; }
+
+        // if we are in the bank, CapableSystem will handle MovableEngine unregisteration so we don't have to do it here
+        if (CapableBank.Instance != null && CapableBank.Instance.HasCapable(this)) { return; }
+        
+        // if not we unregister ourselves like tall grown child
         MovableEngine.Instance.Unregister(this);
     }
 

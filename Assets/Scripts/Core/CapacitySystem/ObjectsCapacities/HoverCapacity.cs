@@ -1,7 +1,6 @@
 
 using System;
 using System.Collections.Generic;
-using CrashKonijn.Goap.Editor;
 using UnityEngine;
 
 /// <summary>
@@ -64,7 +63,7 @@ public class HoverCapacity : Capacity
         if (Controller.Instance == null || capable != Controller.Instance.Capable) { return; }
         
         // we play the animation
-        this.capable.anim_player.Play(played_animation);
+        this.capable.AnimPlayer.Play(played_animation);
 
         if (log) { Debug.Log("(HoverCapacity) " + capable.name + " hovered " + this.capable.name + $", playing {played_animation}"); }
     }
@@ -76,7 +75,7 @@ public class HoverCapacity : Capacity
         if (this.capable == null) { Debug.LogWarning($"(HoverCapacity) this.capable is null on {name}"); }
 
         // then we only stop playing animation if the capable is the one controlled
-        if (Controller.Instance != null && capable == Controller.Instance.Capable) { this.capable.anim_player.StopPlaying(played_animation); } // we stop the animation
+        if (Controller.Instance != null && capable == Controller.Instance.Capable) { this.capable.AnimPlayer.StopPlaying(played_animation); } // we stop the animation
 
         OnHoverLost?.Invoke(capable);
         if (log) { Debug.Log("(HoverCapacity) " + capable.name + " stop hovering " + this.capable.name + $", stopped playing {played_animation}"); }
@@ -88,11 +87,11 @@ public class HoverCapacity : Capacity
         if (!Hovered) { played_animation = animation; return; }
 
         // we stop the current animation
-        capable.anim_player.StopPlaying(played_animation);
+        capable.AnimPlayer.StopPlaying(played_animation);
 
         // we play the new animation
         played_animation = animation;
-        capable.anim_player.AddToPile(played_animation);
+        capable.AnimPlayer.AddToPile(played_animation);
     }
 
 
@@ -156,6 +155,8 @@ public class HoverCapacity : Capacity
     }
     private CircleData get_static_circle_data(CircleCollider2D collider)
     {
+        if (collider == null) { return null; }
+        
         // if (log_static_data) { Debug.Log($"(Capable - GetStaticData - {name}) CircleCollider2D found with offset {collider.offset} and radius {collider.radius} and is_trigger = {collider.isTrigger}"); }
         return new CircleData
         {

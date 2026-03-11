@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using CrashKonijn.Goap.Editor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -33,6 +32,7 @@ public class CapableBank : MonoBehaviour
 
     [Header("Sleeping capables")]
     [SerializeField] protected Dictionary<string,Stack<Capable>> pooled_capables;
+    protected HashSet<Capable> capables_in_bank = new HashSet<Capable>(); // stores all capables from instantiation (loaded & pooled ones)
 
 
     // ANIM PLAYER POOLING
@@ -44,6 +44,7 @@ public class CapableBank : MonoBehaviour
     [Header("Logs")]
     public bool log_types = false;
     public bool log_anim_layers = false;
+    public bool log_inventory_build = false;
 
     // LOAD CAPABLES
     public Capable Load(CapableData data)
@@ -55,13 +56,10 @@ public class CapableBank : MonoBehaviour
         if (capable != null)
         {
             // then we load the anim data inside the capable
-            load_anim_data(capable.anim_player, data.anim_data);
+            load_anim_data(capable.AnimPlayer, data.anim_data);
 
             // and its body
             load_body_data(capable, data.body_data);
-
-            // and its inventory
-            // capable.Inventory?.LoadInventoryData(data.inventory);
 
             // we load its data
             capable.LoadData(data);
@@ -85,8 +83,11 @@ public class CapableBank : MonoBehaviour
         // then we add some few things we need, related to the capable kind
         capable = add_components_based_on_kind(go, kind);
 
+        // we add the capable to the bank hashset
+        capables_in_bank.Add(capable);
+
         // then we load the anim data inside the capable
-        load_anim_data(capable.anim_player, data.anim_data);
+        load_anim_data(capable.AnimPlayer, data.anim_data);
 
         // and its body
         load_body_data(capable, data.body_data);
@@ -118,10 +119,12 @@ public class CapableBank : MonoBehaviour
         Capable capable = go.gameObject.AddComponent(kind) as Capable;
         return capable;
     }
-
+    
+    // INVENTORY ITEM POOL BUILDING
     private void build_inventory_item_pools(Inventory inv, InventoryData data)
     {
         // we check if we have no inv or no data, no need to pull up those item pools
+        if (log_inventory_build) { Debug.Log($"(CapableBank - build_inventory_item_pools) building item pools for { (inv == null ? "(inventory is null)" : inv.Capable.name ) } with { (data == null ? "(data is null)" : data.item_pools_data.Count + " items pools")}"); }
         if (inv == null) { return; }
         if (data == null || data.item_pools_data.Count == 0) { return; }
 
@@ -230,7 +233,7 @@ public class CapableBank : MonoBehaviour
     {
 
         // unload anim layers
-        List<AnimLayer> anim_layers = capable.anim_player.GetAnimLayers();
+        List<AnimLayer> anim_layers = capable.AnimPlayer.GetAnimLayers();
         if (log_anim_layers) { Debug.Log($"(CapableBank) Unloading capable {capable.data.id}, unloading {anim_layers.Count} anim layers"); }
         // for (int i = 0; i < anim_layers.Count; i++)
         while (anim_layers.Count > 0)
@@ -263,7 +266,7 @@ public class CapableBank : MonoBehaviour
     }
 
 
-    // CAPABLE GETTING
+    // GETTERS
     public Capable GetLoadedCapable(string id)
     {
         // we look for the capable with the given id in the pool of loaded capables
@@ -280,5 +283,11 @@ public class CapableBank : MonoBehaviour
     public Capable GetLoadedCapable(CapableData data)
     {
         return GetLoadedCapable(data.id);
+    }
+    public bool HasCapable(Capable capable)
+    {
+        // we check EVERYWHERE if we have this capable, loaded or in sleeping pools
+        // -> means we check capables_in_bank because it contains all capables instantiated ever !
+        return capables_in_bank.Contains(capable);
     }
 }

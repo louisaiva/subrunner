@@ -19,11 +19,11 @@ public interface ICapableData : IData
     // ANIM PLAYER
     public AnimData anim_data;
 
-    // BODY
-    public BodyData body_data;
-
     // INVENTORY
     public InventoryData inventory;
+
+    // BODY
+    public BodyData body_data;
 
     // CAPACITIES
     public List<string> capacities_ids;
@@ -36,25 +36,28 @@ public interface ICapableData : IData
     // DUPLICATE
     public virtual ICapableData Duplicate()
     {
-        CapableData new_data = new CapableData();
+        return new CapableData
+        {
+            // general
+            id = this.id + "_copy", // we add _copy to the id to avoid conflicts, it will be changed later in GenerateUniqueId
+            kind = this.kind,
+            position = this.position,
+            orientation = this.orientation,
 
-        // general
-        new_data.id = this.id + "_copy"; // we add _copy to the id to avoid conflicts, it will be changed later in GenerateUniqueId
-        new_data.kind = this.kind;
-        new_data.position = this.position;
-        new_data.orientation = this.orientation;
+            // anim
+            anim_data = anim_data.Duplicate(),
 
-        // anim
-        new_data.anim_data = anim_data.Duplicate();
+            // inventory
+            inventory = this.inventory != null ? this.inventory.Duplicate() : null,
 
-        // body
-        if (this.body_data != null) { new_data.body_data = this.body_data.Duplicate(); }
+            // body
+            body_data = this.body_data != null ? this.body_data.Duplicate() : null,
 
-        // capacities & effects
-        new_data.capacities_ids = new List<string>(this.capacities_ids);
-        new_data.effects = new List<Effect>(this.effects);
-        new_data.effects_ttl = new List<float>(this.effects_ttl);
-        return new_data;
+            // capacities & effects
+            capacities_ids = new List<string>(this.capacities_ids),
+            effects = new List<Effect>(this.effects),
+            effects_ttl = new List<float>(this.effects_ttl),
+        };
     }
 
     // GET DETAILS

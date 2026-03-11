@@ -1,0 +1,62 @@
+﻿{
+    "<id>k__BackingField": "katana-1",
+    "kind": "Katana",
+    "position": {
+        "x": 10.117801666259766,
+        "y": 4.106047630310059
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "anim_data": {
+        "skin": "katana",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            }
+        ],
+        "material_path": "materials/objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "layers": []
+    },
+    "body_data": {
+        "box_colliders": [],
+        "circle_colliders": []
+    },
+    "inventory": {
+        "item_pools_data": []
+    },
+    "capacities_ids": [
+        "hover-2",
+        "attack-1"
+    ],
+    "effects": [],
+    "effects_ttl": [],
+    "reference": "weapon:katana",
+    "color": {
+        "r": 0.8980392217636108,
+        "g": 0.2862745225429535,
+        "b": 0.2862745225429535,
+        "a": 1.0
+    },
+    "max_qty": 1,
+    "item_description": "careful sharp !!/l useful for cuttin onions, tomatos/l, and even that police officer that thinks he's the sheriff",
+    "is_grabbed": true
+}

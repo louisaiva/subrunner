@@ -325,7 +325,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
 
             // if we are here, we successfully dropped the item
             item.OnReferenceChanged -= handle_item_reference_changed;
-            if (on_ground) { item.BeDropped(this.Inventory?.capable); } // we set the item to dropped (which loads the hover capacity)
+            if (on_ground) { item.BeDropped(this.Inventory?.Capable); } // we set the item to dropped (which loads the hover capacity)
 
             // we trigger the event
             OnItemDropped?.Invoke(item);
@@ -380,7 +380,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
         item.OnReferenceChanged += handle_item_reference_changed;
 
         // we add the item
-        item.BeGrabbed(this.Inventory?.capable);
+        item.BeGrabbed(this.Inventory?.Capable);
 
         // we trigger the event
         OnItemGrabbed?.Invoke(item);

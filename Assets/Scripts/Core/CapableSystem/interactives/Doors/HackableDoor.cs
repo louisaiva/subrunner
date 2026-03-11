@@ -23,7 +23,7 @@ public class HackableDoor : Door, Lockable
         if (hoverer == null) { Debug.LogError($"(HackableDoor) {name} has no HoverCapacity component"); }
 
         // we play the idle_locked if we are locked
-        if (Locked) { anim_player.Play("idle_locked"); }
+        if (Locked) { AnimPlayer.Play("idle_locked"); }
     }
 
     // INTERACTION
@@ -57,16 +57,16 @@ public class HackableDoor : Door, Lockable
         if (log) { Debug.Log($"(HackableDoor) {name} is now unlocked"); }
 
         // we play unlock animation
-        anim_player.Play("unlock");
+        AnimPlayer.Play("unlock");
 
         // we update the hover animation to show a nice unlocked anim
         hoverer.ChangeAnimation("hover");
 
         // we stop playing idle_locked
-        anim_player.StopPlaying("idle_locked");
+        AnimPlayer.StopPlaying("idle_locked");
 
         // we wait for the unlock animation to stop
-        while (anim_player.current_capacity == "unlock") { await System.Threading.Tasks.Task.Yield(); }
+        while (AnimPlayer.current_capacity == "unlock") { await System.Threading.Tasks.Task.Yield(); }
 
         // we open the door
         open();
@@ -81,13 +81,13 @@ public class HackableDoor : Door, Lockable
         if (log) { Debug.Log($"(HackableDoor) {name} is now locked"); }
 
         // we play lock animation
-        anim_player.Play("lock");
+        AnimPlayer.Play("lock");
 
         // we update the hover animation to show the locked anim
         hoverer.ChangeAnimation("hover_locked");
 
         // we start to play idle_locked again
-        anim_player.AddToPile("idle_locked");
+        AnimPlayer.AddToPile("idle_locked");
 
         // if we are open we close ourselves
         if (is_open)

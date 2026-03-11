@@ -82,6 +82,14 @@ public class CapableDataManager : MonoBehaviour
         }
     }
 
+    public void SaveAllCapablesDataInScene()
+    {
+        Capable[] all_capables = FindObjectsByType<Capable>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (Capable capable in all_capables)
+        {
+            saveCapableData(capable);
+        }
+    }
 
 #if UNITY_EDITOR
     [CustomEditor(typeof(CapableDataManager))]
@@ -93,6 +101,7 @@ public class CapableDataManager : MonoBehaviour
 
             if (GUILayout.Button("Update and Save CapableData")) { manager.SaveCapablesData(); }
             DrawDefaultInspector();
+            if (GUILayout.Button("Update and Save All CapableData in Scene")) { manager.SaveAllCapablesDataInScene(); }
         }
     }
 #endif

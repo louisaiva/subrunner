@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using Unity.Mathematics;
 
 public class Inventory : MonoBehaviour, ItemStorer
 {
@@ -49,7 +50,7 @@ public class Inventory : MonoBehaviour, ItemStorer
     public event Action<ItemStack> OnStackRemoved = delegate { };
 
     private Capable _capable;
-    public Capable capable { get
+    public Capable Capable { get
         {
             if (_capable == null) { _capable = transform.parent.GetComponent<Capable>(); }
             return _capable;
@@ -92,6 +93,9 @@ public class Inventory : MonoBehaviour, ItemStorer
     // LOADING / UNLOADING INVENTORY DATA
     public void LoadInventoryData(InventoryData data)
     {
+        // check if we have data
+        if (data == null /* || data.item_pools_data == null */) { return; }
+
         // we suppose we already have the right amount of ItemPools (should be built in CapableBank)
 
         // we gather the real ItemPool
@@ -104,7 +108,7 @@ public class Inventory : MonoBehaviour, ItemStorer
         // we check if we have the same amount of what the data says
         if (pools_to_fill.Count != data.item_pools_data.Count)
         {
-            Debug.LogWarning($"(Inventory - LoadInventoryData) Inventory data has {data.item_pools_data.Count} pools but we have {pools_to_fill.Count} pools on {capable.name}");
+            Debug.LogWarning($"(Inventory - LoadInventoryData) Inventory data has {data.item_pools_data.Count} pools but we have {pools_to_fill.Count} pools on {Capable.name}");
         }
 
         // we load the data in the pools
@@ -135,7 +139,7 @@ public class Inventory : MonoBehaviour, ItemStorer
         }
 
         // we save the data into our capable.data.inventory.item_pools_data
-        capable.data.inventory.item_pools_data = new_datas;
+        Capable.data.inventory.item_pools_data = new_datas;
 
         // finally we remove the pools
         pools.Clear();
@@ -202,7 +206,7 @@ public class Inventory : MonoBehaviour, ItemStorer
             if (shoes_stack.Grab(item))
             {
                 OnItemGrabbed.Invoke(item);
-                if (log_grab) { Debug.Log("(Inventory) " + capable.name + " grabbed : " + item.name + " in shoes_stack"); }
+                if (log_grab) { Debug.Log("(Inventory) " + Capable.name + " grabbed : " + item.name + " in shoes_stack"); }
                 return true;
             }
         }
@@ -211,7 +215,7 @@ public class Inventory : MonoBehaviour, ItemStorer
             if (weapon_stack.Grab(item))
             {
                 OnItemGrabbed.Invoke(item);
-                if (log_grab) { Debug.Log("(Inventory) " + capable.name + " grabbed : " + item.name + " in weapon_stack"); }
+                if (log_grab) { Debug.Log("(Inventory) " + Capable.name + " grabbed : " + item.name + " in weapon_stack"); }
                 return true;
             }
         }
@@ -220,7 +224,7 @@ public class Inventory : MonoBehaviour, ItemStorer
         // we try to make all the pools grab the item
         if (!pool_grab(item))
         {
-            if (log_grab) { Debug.LogWarning("(Inventory) " + capable.name + " can't grab : " + item.name); }
+            if (log_grab) { Debug.LogWarning("(Inventory) " + Capable.name + " can't grab : " + item.name); }
             return false;
         }
 
@@ -228,7 +232,7 @@ public class Inventory : MonoBehaviour, ItemStorer
         // we trigger the events
         OnItemGrabbed.Invoke(item);
 
-        if (log_grab) { Debug.Log("(Inventory) " + capable.name + " grabbed : " + item.name); }
+        if (log_grab) { Debug.Log("(Inventory) " + Capable.name + " grabbed : " + item.name); }
 
         return true;
     }
@@ -247,7 +251,7 @@ public class Inventory : MonoBehaviour, ItemStorer
         // we update the UI
         // ui_drop(item, uis_to_ignore);
 
-        if (log) { Debug.Log("(Inventory) " + capable.name + " dropped : " + item.name); }
+        if (log) { Debug.Log("(Inventory) " + Capable.name + " dropped : " + item.name); }
 
         return true;
     }
@@ -261,12 +265,12 @@ public class Inventory : MonoBehaviour, ItemStorer
         {
             if (!pools[i].Drop(item, on_ground:false)) { continue; }
 
-            if (log) { Debug.Log("(Inventory) " + capable.name + " removed : " + item.name); }
+            if (log) { Debug.Log("(Inventory) " + Capable.name + " removed : " + item.name); }
             return true;
             
         }
 
-        if (log) { Debug.LogWarning("(Inventory) " + capable.name + " can't remove : " + item.name); }
+        if (log) { Debug.LogWarning("(Inventory) " + Capable.name + " can't remove : " + item.name); }
         return false;
     }
 
@@ -281,7 +285,7 @@ public class Inventory : MonoBehaviour, ItemStorer
         for (int i = 0; i < pools.Count; i++)
         {
             if (pools[i].Grab(item)) { return true; }
-            if (log_grab) { Debug.Log("(Inventory) " + capable.name + " pool " + pools[i].name + " could not grab : " + item.name); }
+            if (log_grab) { Debug.Log("(Inventory) " + Capable.name + " pool " + pools[i].name + " could not grab : " + item.name); }
         }
         return false;
     }
@@ -306,7 +310,7 @@ public class Inventory : MonoBehaviour, ItemStorer
         // we trigger the events
         OnItemGrabbedFromLowerLevel?.Invoke(item);
 
-        if (log) { Debug.Log("(Inventory) " + capable.name + " grabbed from lower level : " + item.name); }
+        if (log) { Debug.Log("(Inventory) " + Capable.name + " grabbed from lower level : " + item.name); }
     }
     public void DropFromLowerLevel(Item item)
     {
@@ -315,7 +319,7 @@ public class Inventory : MonoBehaviour, ItemStorer
         // we trigger the events
         OnItemDropped?.Invoke(item);
 
-        if (log) { Debug.Log("(Inventory) " + capable.name + " dropped from lower level : " + item.name); }
+        if (log) { Debug.Log("(Inventory) " + Capable.name + " dropped from lower level : " + item.name); }
     }
 
 
@@ -387,15 +391,15 @@ public class Inventory : MonoBehaviour, ItemStorer
     // GLOBAL GETTERS
     public Inventory GetInteractingInventory()
     {
-        string s = "(Inventory) " + capable.name + " is looking for an interacting inventory\n\n";
+        string s = "(Inventory) " + Capable.name + " is looking for an interacting inventory\n\n";
 
         // check if we are the interactable (so we look for the interactor)
         // typically we are dropping an item from a Chest's UI_Inventory
-        if (capable is Interactable)
+        if (Capable is Interactable)
         {
             // this is the other capable
             s += "we are the interactable\n";
-            InteractCapacity interactor = (capable as Interactable).Interactor;
+            InteractCapacity interactor = (Capable as Interactable).Interactor;
 
             // check if we have an interactor
             if (interactor == null) { if (log) { Debug.LogWarning(s + "we don't have an interactor\n"); } return null; }
@@ -411,11 +415,11 @@ public class Inventory : MonoBehaviour, ItemStorer
 
         // check if we are the interactor (so we look for the interactable)
         // typically we are dropping from an item our perso_quick_inventory or the UI_InventoryMenu
-        else if (capable.GetCapacity<InteractCapacity>() != null)
+        else if (Capable.GetCapacity<InteractCapacity>() != null)
         {
             // this is our capable
             s += "we are the interactor\n";
-            InteractCapacity interactor = capable.GetCapacity<InteractCapacity>();
+            InteractCapacity interactor = Capable.GetCapacity<InteractCapacity>();
 
             // check if we have an interactable
             Capable interactable = interactor.interactable as Capable;

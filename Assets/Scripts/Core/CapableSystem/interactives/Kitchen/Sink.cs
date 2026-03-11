@@ -52,7 +52,7 @@ public class Sink : Chest, Onnable
     public void PowerOn()
     {
         // we play flowing
-        anim_player.Play("flowing");
+        AnimPlayer.Play("flowing");
         IsOn = true;
 
         // we try to handle pot right away
@@ -61,7 +61,7 @@ public class Sink : Chest, Onnable
     public void PowerOff()
     {
         // we stop flowing
-        anim_player.StopPlaying("flowing");
+        AnimPlayer.StopPlaying("flowing");
         IsOn = false;
     }
 

@@ -40,7 +40,7 @@ public class OpenCapacity : Capacity
         (capable as Openable).is_moving = true;
 
         // on joue l'animation
-        capable.anim_player.Play("open",duration_override: opening_duration);
+        capable.AnimPlayer.Play("open",duration_override: opening_duration);
         Invoke("success_open", opening_duration);
         capable.GetCapacity<HoverCapacity>()?.ChangeAnimation(hover_open_anim);
 
@@ -65,7 +65,7 @@ public class OpenCapacity : Capacity
         (capable as Openable).is_moving = false;
 
         // on joue l'animation
-        capable.anim_player.AddToPile("idle_open");
+        capable.AnimPlayer.AddToPile("idle_open");
 
         // on fait les vérifications pour les portes
         if (capable is Door door && !door.DontTouchSortingLayer)

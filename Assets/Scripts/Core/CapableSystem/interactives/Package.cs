@@ -13,8 +13,8 @@ public class Package : Movable, Interactable
     // ON INTERACT
     public void OnInteract(Capable interactor)
     {
-        anim_player.Play("interact");
-        anim_player.AddToPile("idle_open");
+        AnimPlayer.Play("interact");
+        AnimPlayer.AddToPile("idle_open");
 
         StartCoroutine(destroyObject());
     }
