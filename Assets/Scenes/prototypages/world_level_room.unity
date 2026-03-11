@@ -1112,12 +1112,12 @@ MonoBehaviour:
   log_init: 0
   log_loading: 1
   log_neighbours: 0
-  log_room_transfers: 0
+  log_room_transfers: 1
   log_ticks: 0
-  log_dynamic_room_assignement: 1
-  hide_log_no_room_of_capable_found: 0
+  log_dynamic_room_assignement: 0
+  hide_log_no_room_of_capable_found: 1
   log_tilemaps_loading: 0
-  log_colliders: 1
+  log_colliders: 0
 --- !u!114 &112018655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2565,7 +2565,7 @@ MonoBehaviour:
   log_awake_data: 1
   log_awake_data_extended: 0
   log_loading: 1
-  log_loading_extended: 1
+  log_loading_extended: 0
   hide_log_no_data_found: 1
   log_spawning: 0
   load_x_capables_per_frame: 5
@@ -3665,10 +3665,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CapacityEngine
   awake_done: 0
   log_awake_data: 1
-  log_loading: 1
+  log_loading: 0
   hide_log_no_data_found: 1
   item_static_capacities_kinds:
   - DodgeCapacity
+  - AttackCapacity
 --- !u!1001 &444658201
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4446,15 +4447,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 767440920818722555, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
       propertyPath: log
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1781255656109834427, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
       propertyPath: log
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1781255656109834427, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
       propertyPath: log_triggers
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3238169105776769028, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
       propertyPath: m_Name
@@ -6951,8 +6952,38 @@ PrefabInstance:
     - {fileID: 8756311335750391691, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 129709460989252728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 791466051}
   m_SourcePrefab: {fileID: 100100000, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+--- !u!1 &791466050 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 129709460989252728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+  m_PrefabInstance: {fileID: 791466049}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &791466051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 791466050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21470603a04cf654cb6fe4a732fefc8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MusicPlayer
+  theme_on_start: i'm so hungry
+  themes_names:
+  - name: i'm so hungry
+    reference:
+      Guid:
+        Data1: 391699498
+        Data2: 1145998890
+        Data3: 791516808
+        Data4: -1474907181
+      Path: event:/themes/i'm so hungry/HungryTheme
 --- !u!1 &847278446
 GameObject:
   m_ObjectHideFlags: 0

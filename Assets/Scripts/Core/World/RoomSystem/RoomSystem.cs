@@ -2,14 +2,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using UnityEngine;
+using Unity.Jobs;
+using Unity.Burst;
 
 public class RoomSystem : BSOD_System<RoomSystem>
 {
     [Header("Rooms data")]
     private string data_path = "Assets/Resources/data/rooms/";
-    public Hashtable rooms_data = new Hashtable();
-    public Hashtable loaded_rooms_data = new Hashtable();
+    public Dictionary<string, RoomData> rooms_data = new Dictionary<string, RoomData>();
+    private Dictionary<string, int> rooms_hashs_by_ids = new Dictionary<string, int>();
+    private Dictionary<int, string> rooms_ids_by_hash = new Dictionary<int, string>();
+    private int next_room_hash = 1;
+    public Dictionary<string, RoomData> loaded_rooms_data = new Dictionary<string, RoomData>();
     public RoomData main_room_data; // the main room is the one where the perso is, we need to keep track of it to know which room to load when the perso changes room
 
     [Header("Loading parameters")]
@@ -51,8 +57,11 @@ public class RoomSystem : BSOD_System<RoomSystem>
     // LOAD / UNLOAD DATA
     protected void loadRoomsData()
     {
-        // we empty the rooms_data
-        rooms_data = new Hashtable();
+        // we empty the rooms_data and runtime ids
+        rooms_data = new Dictionary<string, RoomData>();
+        rooms_hashs_by_ids = new Dictionary<string, int>();
+        rooms_ids_by_hash = new Dictionary<int, string>();
+        next_room_hash = 1;
         string log_rooms_details = "\n\n";
 
         // we load all the json files in the data path and convert them to RoomData objects
@@ -62,6 +71,7 @@ public class RoomSystem : BSOD_System<RoomSystem>
             string json = System.IO.File.ReadAllText(file, System.Text.Encoding.UTF8);
             RoomData data = JsonUtility.FromJson<RoomData>(json);
             rooms_data.Add(data.id, data);
+            generate_room_hash(data.id);
             log_rooms_details += data.GetDetails() + "\n";
         }
 
@@ -103,8 +113,8 @@ public class RoomSystem : BSOD_System<RoomSystem>
     }
     private void load_room(string id)
     {
-        RoomData data = rooms_data[id] as RoomData;
-        if (data == null) { Debug.LogWarning("(RoomSystem - Load) Room data not found for id: " + id); return; }
+        if (!rooms_data.ContainsKey(id)) { Debug.LogWarning("(RoomSystem - Load) Room data not found for id: " + id); return; }
+        RoomData data = rooms_data[id];
         RoomBank.Instance.Load(data);
         loaded_rooms_data.Add(id, data);
         if (log_loading) { Debug.Log("(RoomSystem) Loaded " + id); }
@@ -127,8 +137,8 @@ public class RoomSystem : BSOD_System<RoomSystem>
     }
     private void unload_room(string id)
     {
-        RoomData data = loaded_rooms_data[id] as RoomData;
-        if (data == null) { Debug.LogWarning("(RoomSystem - Unload) Loaded room data not found for id: " + id); return; }
+        if (!loaded_rooms_data.ContainsKey(id)) { Debug.LogWarning("(RoomSystem - Unload) Loaded room data not found for id: " + id); return; }
+        RoomData data = loaded_rooms_data[id];
         RoomBank.Instance.Unload(data);
         loaded_rooms_data.Remove(id);
         if (log_loading) { Debug.Log("(RoomSystem) Unloaded " + id); }
@@ -235,7 +245,7 @@ public class RoomSystem : BSOD_System<RoomSystem>
     }
 
     // TICK
-    protected virtual void Tick()
+    protected virtual void Tick2()
     {
 
         // if (log_ticks) { Debug.Log("(RoomSystem) Tick called"); }
@@ -245,10 +255,9 @@ public class RoomSystem : BSOD_System<RoomSystem>
         Dictionary<RoomData, string> movables_IN = new Dictionary<RoomData, string>(); // RoomData, CapableID
         Dictionary<RoomData, string> movables_OUT = new Dictionary<RoomData, string>(); // RoomData, CapableID
         ICollection rooms_ids = rooms_data.Keys;
-        for (int i = 0; i < rooms_ids.Count; i++)
-        foreach (var room_id in rooms_ids)
+        foreach (string room_id in rooms_ids)
         {
-            room = rooms_data[room_id] as RoomData;
+            room = rooms_data[room_id];
             for (int j = 0; j < room.IN_movables_ids.Count; j++)
             {
                 string capable_id = room.IN_movables_ids[j];
@@ -296,9 +305,9 @@ public class RoomSystem : BSOD_System<RoomSystem>
         }
 
         // 3. update rooms data with the capable changes
-        foreach (var room_id in rooms_ids)
+        foreach (string room_id in rooms_ids)
         {
-            room = rooms_data[room_id] as RoomData;
+            room = rooms_data[room_id];
             if (out_rooms.Contains(room))
             {
                 int index = out_rooms.IndexOf(room);
@@ -369,6 +378,122 @@ public class RoomSystem : BSOD_System<RoomSystem>
         }
         Debug.Log(log);
     }
+
+
+    // TICK 2
+    protected virtual void Tick()
+    {
+        // 1. create Allocator.TempJob Collections to pass data to the job
+        NativeParallelMultiHashMap<int, int> rooms_movables_IN = new NativeParallelMultiHashMap<int, int>(100, Allocator.TempJob); // room, List<movable>
+        NativeParallelMultiHashMap<int, int> rooms_movables_OUT = new NativeParallelMultiHashMap<int, int>(100, Allocator.TempJob); // movable, List<room>
+        NativeList<MovableRoomTransition> transitions = new NativeList<MovableRoomTransition>(100, Allocator.TempJob);
+
+
+        // 2. populate the npmhms with the IN & OUT data from rooms datas
+        CapableSystem capable_system = CapableSystem.Instance;
+        RoomData data;
+        int room_hash;
+        int movable_hash;
+        foreach (KeyValuePair<string, RoomData> pair in rooms_data)
+        {
+            room_hash = GetRoomHashFromID(pair.Key);
+            if (room_hash == 0) { continue; }
+            data = pair.Value;
+
+            // we add range IN to IN
+            for (int i=0; i<data.IN_movables_ids.Count; i++)
+            {
+                movable_hash = capable_system.GetCapableHashFromID(data.IN_movables_ids[i]);
+                if (movable_hash == 0) { continue; }
+                rooms_movables_IN.Add(room_hash, movable_hash);
+            }
+
+            // and OUT
+            for (int i = 0; i < data.OUT_movables_ids.Count; i++)
+            {
+                movable_hash = capable_system.GetCapableHashFromID(data.OUT_movables_ids[i]);
+                if (movable_hash == 0) { continue; }
+                rooms_movables_OUT.Add(movable_hash, room_hash);
+            }
+        }
+
+        // 3. create and execute the job :)
+        HandleRoomTransitionsJob job = new HandleRoomTransitionsJob
+        {
+            movables_going_IN = rooms_movables_IN,
+            movables_going_OUT = rooms_movables_OUT,
+            transitions = transitions            
+        };
+        JobHandle handle = job.Schedule();
+        handle.Complete();
+
+        // 4. apply room transitions to managed room data
+        bool perso_changed_room = false;
+        RoomData perso_new_room = null;
+        string controlled_id = Controller.Instance.ControlledID;
+        int not_valid_transitions = 0;
+        for (int i=0; i<transitions.Length; i++)
+        {
+            MovableRoomTransition transition = transitions[i];
+            string movable_id = capable_system.GetCapableIDFromHash(transition.movable_hash);
+            string out_room_id = GetRoomIDFromHash(transition.from_room_index);
+            string in_room_id = GetRoomIDFromHash(transition.to_room_index);
+            if (movable_id == null || out_room_id == null || in_room_id == null) { not_valid_transitions++; continue; }
+            if (!rooms_data.TryGetValue(out_room_id, out RoomData out_room)) { not_valid_transitions++; continue; }
+            if (!rooms_data.TryGetValue(in_room_id, out RoomData in_room)) { not_valid_transitions++; continue; }
+
+            if (log_room_transfers) { Debug.Log($"(RoomSystem) [{out_room.id}] >> {movable_id} >> [{in_room.id}]"); }
+
+            // OUT room: transition consumed, movable is no longer inside that room.
+            out_room.movables_ids.Remove(movable_id);
+            out_room.OUT_movables_ids.Remove(movable_id);
+
+            // IN room: transition consumed, movable is now inside that room.
+            if (!in_room.movables_ids.Contains(movable_id)) { in_room.movables_ids.Add(movable_id); }
+            in_room.IN_movables_ids.Remove(movable_id);
+
+            if (movable_id == controlled_id)
+            {
+                perso_changed_room = true;
+                perso_new_room = in_room;
+            }
+        }
+        if (log_room_transfers && not_valid_transitions > 0) { Debug.LogWarning($"(RoomSystem) {not_valid_transitions} transitions were not valid during this tick"); }
+
+        if (perso_changed_room && perso_new_room != null)
+        {
+            // 5. find rooms to load / unload based on new controlled room neighbours.
+            Stack<string> rooms_to_unload = new Stack<string>();
+            Stack<string> rooms_to_load = new Stack<string>();
+            List<string> new_neighbours_ids = GetNeighboursIDs(perso_new_room);
+
+            foreach (string loaded_room_id in loaded_rooms_data.Keys)
+            {
+                if (loaded_room_id == perso_new_room.id) { continue; }
+                if (!new_neighbours_ids.Contains(loaded_room_id)) { rooms_to_unload.Push(loaded_room_id); }
+            }
+
+            for (int i = 0; i < new_neighbours_ids.Count; i++)
+            {
+                string neighbour_id = new_neighbours_ids[i];
+                if (neighbour_id == perso_new_room.id) { continue; }
+                if (!loaded_rooms_data.ContainsKey(neighbour_id)) { rooms_to_load.Push(neighbour_id); }
+            }
+
+            main_room_data = perso_new_room;
+
+            // 6. load the new rooms and unload old ones.
+            loadRooms(rooms_to_load.ToArray());
+            unloadRooms(rooms_to_unload.ToArray());
+        }
+    
+        // 7. dispose native collections
+        rooms_movables_IN.Dispose();
+        rooms_movables_OUT.Dispose();
+        transitions.Dispose();
+    }
+
+
 
     // NEIGHBOURS MANAGEMENT
     public List<string> GetNeighboursIDs(RoomData perso_new_room)
@@ -482,6 +607,24 @@ public class RoomSystem : BSOD_System<RoomSystem>
     }
 
     // GETTERS
+    private int generate_room_hash(string id)
+    {
+        if (string.IsNullOrEmpty(id)) { return 0; }
+        if (rooms_hashs_by_ids.TryGetValue(id, out int existing)) { return existing; }
+
+        int new_hash = next_room_hash++;
+        rooms_hashs_by_ids[id] = new_hash;
+        rooms_ids_by_hash[new_hash] = id;
+        return new_hash;
+    }
+    public int GetRoomHashFromID(string id)
+    {
+        return rooms_hashs_by_ids.TryGetValue(id, out int hash) ? hash : 0;
+    }
+    public string GetRoomIDFromHash(int hash)
+    {
+        return rooms_ids_by_hash.TryGetValue(hash, out string id) ? id : null;
+    }
     private RoomData GetCapableRoom(string capable_id)
     {
         ICollection rooms_ids = rooms_data.Keys;

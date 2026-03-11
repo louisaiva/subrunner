@@ -17,7 +17,7 @@ public class CapableBank : MonoBehaviour
         else { Destroy(gameObject); return; }
 
         // initialize the pools of capables & anim layers
-        pooled_capables = new Hashtable();
+        pooled_capables = new Dictionary<string,Stack<Capable>>();
         pooled_anim_layers = new Stack<AnimLayer>();
     }
 
@@ -32,7 +32,7 @@ public class CapableBank : MonoBehaviour
     [SerializeField] protected GameObject feet_prefab;
 
     [Header("Sleeping capables")]
-    [SerializeField] protected Hashtable/* <string, Stack<Capable>> */ pooled_capables;
+    [SerializeField] protected Dictionary<string,Stack<Capable>> pooled_capables;
 
 
     // ANIM PLAYER POOLING

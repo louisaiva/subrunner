@@ -8,10 +8,10 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
 {
     [Header("Capacities data")]
     private string data_path = "Assets/Resources/data/capacities/";
-    public Hashtable capacities_data = new Hashtable();
+    public Dictionary<string,CapacityData> capacities_data = new Dictionary<string,CapacityData>();
 
     [Header("Loading / Unloading")]
-    public Hashtable loaded_capacities_data = new Hashtable();
+    public Dictionary<string,CapacityData> loaded_capacities_data = new Dictionary<string,CapacityData>();
 
     [Header("State")]
     public bool awake_done = false;
@@ -36,7 +36,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     protected void loadCapacitiesData()
     {
         // we empty the capacities_data
-        capacities_data = new Hashtable();
+        capacities_data = new Dictionary<string,CapacityData>();
         string log_capacities_details = "\n\n";
 
         // we load all the json files in the data path and get their kind
@@ -110,12 +110,12 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     }
     private Capacity load_capacity(string id, CapableData capable_data, bool skip_if_loaded = false)
     {
-        CapacityData data = capacities_data[id] as CapacityData;
-        if (data == null)
+        if (!capacities_data.ContainsKey(id))
         {
             if (!hide_log_no_data_found) { Debug.LogWarning("(CapacityEngine - Load) Capacity data not found for id: " + id); }
             return null;
         }
+        CapacityData data = capacities_data[id];
         return load_capacity(data, capable_data,  skip_if_loaded);
     }
     private Capacity load_capacity(CapacityData data, CapableData capable_data, bool skip_if_loaded=false)
@@ -191,12 +191,13 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     }
     private Capacity unload_capacity(string id)
     {
-        CapacityData data = loaded_capacities_data[id] as CapacityData;
-        if (data == null)
+        if (!loaded_capacities_data.ContainsKey(id))
         {
             if (!hide_log_no_data_found) { Debug.LogWarning("(CapacityEngine - Unload) Loaded capacity data not found for id: " + id); }
             return null;
         }
+
+        CapacityData data = loaded_capacities_data[id];
 
         // we found the data, we unload it
         Capacity capacity = CapacityBank.Instance.Unload(data);
@@ -225,12 +226,12 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         for (int i=0; i<capa_ids.Count; i++)
         {
             string capa_id = capa_ids[i];
-            CapacityData capa_data = capacities_data[capa_id] as CapacityData;
-            if (capa_data == null)
+            if (!capacities_data.ContainsKey(capa_id))
             {
                 if (!hide_log_no_data_found) { Debug.LogWarning("(CapacityEngine - GetCapacitiesIDsToPoolDynamically) Capacity data not found for id: " + capa_id); }
                 continue;
             }
+            CapacityData capa_data = capacities_data[capa_id];
 
             // if we have a static capacity kind, we don't add it
             if (item_static_capacities_kinds.Contains(capa_data.kind))

@@ -259,7 +259,7 @@ public class Inventory : MonoBehaviour, ItemStorer
         if (item == null) { return false; }
         for (int i = 0; i < pools.Count; i++)
         {
-            if (!pools[i].Drop(item)) { continue; }
+            if (!pools[i].Drop(item, on_ground:false)) { continue; }
 
             if (log) { Debug.Log("(Inventory) " + capable.name + " removed : " + item.name); }
             return true;

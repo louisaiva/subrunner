@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{3e2ca26f-2a8f-419c-a203-b6b624a147df}">
+		<property name="name">
+			<value>repeat 3 loops</value>
+		</property>
+		<relationship name="folder">
+			<destination>{3552f79e-3de1-4647-902c-e24da91c00be}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{50fb54b1-ed30-4c7e-964e-55e48a63bb6a}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{50fb54b1-ed30-4c7e-964e-55e48a63bb6a}">
+		<property name="parameterType">
+			<value>2</value>
+		</property>
+		<property name="maximum">
+			<value>2</value>
+		</property>
+		<property name="enumerationLabels">
+			<value>repeat</value>
+			<value>don't repeat</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

@@ -9,10 +9,15 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
     [Header("Capables data")]
     private string data_path = "Assets/Resources/data/capables/";
-    public Hashtable capables_data = new Hashtable();
+    public Dictionary<string, CapableData> capables_data = new Dictionary<string, CapableData>();
+    
+    [Header("Runtime IDs (hashs)")]
+    private Dictionary<string, int> capables_hashs_by_ids = new Dictionary<string, int>();
+    private Dictionary<int, string> capables_ids_by_hash = new Dictionary<int, string>();
+    private int next_capable_hash = 1; // we start at 1 because 0 is the default value for non hashables (null, empty id, etc)
 
     [Header("Loading / Unloading")]
-    public Hashtable loaded_capables_data = new Hashtable();
+    public Dictionary<string,CapableData> loaded_capables_data = new Dictionary<string,CapableData>();
     public List<string> loading_queue = new List<string>();
     public List<string> unloading_queue = new List<string>();
 
@@ -43,13 +48,20 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
         // load capables data
         loadCapablesData();
+
+        // detect capables that are not linked to a capable data in our system
+        // and create an hash if it has an id
+        detectCapablesOutsideOfSystem();
     }
 
     // LOAD / UNLOAD DATA
     protected void loadCapablesData()
     {
-        // we empty the capables_data
-        capables_data = new Hashtable();
+        // we empty the capables_data & runtime ids etc
+        capables_data = new Dictionary<string,CapableData>();
+        capables_hashs_by_ids = new Dictionary<string, int>();
+        capables_ids_by_hash = new Dictionary<int, string>();
+        next_capable_hash = 1;
         string log_capables_details = "\n\n";
 
 
@@ -98,6 +110,8 @@ public class CapableSystem : BSOD_System<CapableSystem>
             data = JsonUtility.FromJson(json, data_type) as CapableData;
             if (log_awake_data_extended) { Debug.Log($"(CapableSystem) Loading capable data : \n{data.GetDetails()}\n\n{json}"); }
             capables_data.Add(data.id, data);
+            generate_runtime_id(data.id);
+
             log += data.GetDetails() + "\n";
             return;
         }
@@ -119,9 +133,55 @@ public class CapableSystem : BSOD_System<CapableSystem>
         data = JsonUtility.FromJson(json, data_type) as CapableData;
         if (log_awake_data_extended) { Debug.Log($"(CapableSystem) Loading capable data : \n{data.GetDetails()}\n\n{json}"); }
         capables_data.Add(data.id, data);
+        generate_runtime_id(data.id);
         log += data.GetDetails() + "\n";
     }
+    private int generate_runtime_id(string id)
+    {
+        
+        if (string.IsNullOrEmpty(id))
+        {
+            return 0;
+        }
 
+        // If already assigned, return existing value
+        if (capables_hashs_by_ids.TryGetValue(id, out int existing))
+        {
+            return existing;
+        }
+
+        // Allocate new unique runtime id
+        int new_hash = next_capable_hash++;
+        capables_ids_by_hash[new_hash] = id;
+        capables_hashs_by_ids[id] = new_hash;
+        return new_hash;
+        
+    }
+
+    // outside of system capable detection
+    private void detectCapablesOutsideOfSystem()
+    {
+        // we check for all active capables in hierarchy
+        Capable[] already_existing_capables = FindObjectsByType<Capable>(FindObjectsSortMode.None);
+        List<string> detected_outsiders = new List<string>();
+        for (int i=0; i<already_existing_capables.Length; i++)
+        {
+            Capable capable = already_existing_capables[i];
+
+            // check if it has a data
+            if (capable.data == null) { continue; }
+            if (string.IsNullOrEmpty(capable.data.id)) { continue; }
+
+            // checks if we have the data
+            if (GetCapableHashFromID(capable.data.id) != 0) { continue; }
+
+            // we have an outsider !!
+            detected_outsiders.Add(capable.data.id);
+            generate_runtime_id(capable.data.id);
+        }
+
+        if (log_awake_data && detected_outsiders.Count > 0) { Debug.Log("(CapableSystem) OUTSIDERS DETECTED : " + detected_outsiders.Count + "\n - " + string.Join("\n - ",detected_outsiders)); }
+    }
 
 
     // LOAD CAPABLES
@@ -157,12 +217,12 @@ public class CapableSystem : BSOD_System<CapableSystem>
     }
     private Capable load_capable(string id)
     {
-        CapableData data = capables_data[id] as CapableData;
-        if (data == null)
+        if (!capables_data.ContainsKey(id))
         {
             if (!hide_log_no_data_found) { Debug.LogWarning("(CapableSystem - Load) Capable data not found for id: " + id); }
             return null;
         }
+        CapableData data = capables_data[id];
         return load_capable(data);
     }
     private Capable load_capable(CapableData data)
@@ -236,8 +296,8 @@ public class CapableSystem : BSOD_System<CapableSystem>
     }
     private Capable unload_capable(string id)
     {
-        CapableData data = loaded_capables_data[id] as CapableData;
-        if (data == null) { Debug.LogWarning("(CapableSystem - Unload) Loaded capable data not found for id: " + id); return null; }
+        if (!loaded_capables_data.ContainsKey(id)) { Debug.LogWarning("(CapableSystem - Unload) Loaded capable data not found for id: " + id); return null; }
+        CapableData data = loaded_capables_data[id];
         Capable capable = CapableBank.Instance.Unload(data);
         loaded_capables_data.Remove(id);
         if (log_loading) { Debug.Log("(CapableSystem) Unloaded " + id); }
@@ -251,8 +311,8 @@ public class CapableSystem : BSOD_System<CapableSystem>
         if (log_spawning) { Debug.Log($"(CapableSystem) Spawning {base_id} entity"); }
 
         // 1. we find base_id data & duplicates it
-        CapableData base_data = capables_data[base_id] as CapableData;
-        if (base_data == null) { Debug.LogWarning("(CapableSystem - SpawnCapable) Capable data not found for id: " + base_id); return null; }
+        if (!capables_data.ContainsKey(base_id)) { Debug.LogWarning("(CapableSystem - SpawnCapable) Capable data not found for id: " + base_id); return null; }
+        CapableData base_data = capables_data[base_id];
         CapableData spawn_data = DuplicateData(base_data);
 
         if (log_spawning) { Debug.Log($"(CapableSystem) Duplicated {base_id} data to {spawn_data.id} \n {spawn_data.GetDetails()}"); }
@@ -300,6 +360,14 @@ public class CapableSystem : BSOD_System<CapableSystem>
         if (capable.data.id == "") { return false; }
         return loaded_capables_data.ContainsKey(capable.data.id);
     }
+    public int GetCapableHashFromID(string id)
+    {
+        return capables_hashs_by_ids.TryGetValue(id, out int hash) ? hash : 0;
+    }
+    public string GetCapableIDFromHash(int hash)
+    {
+        return capables_ids_by_hash.TryGetValue(hash, out string id) ? id : null;
+    }
 
 
     // DATA MANAGMENT
@@ -307,6 +375,9 @@ public class CapableSystem : BSOD_System<CapableSystem>
     {
         CapableData new_data = base_data.Duplicate() as CapableData;
         new_data.id = GenerateUniqueId(base_data.id);
+
+        // generate a hash
+        generate_runtime_id(new_data.id);
 
         // we add the new_data to the data list
         capables_data.Add(new_data.id, new_data);

@@ -24,7 +24,7 @@ public class CapacityBank : MonoBehaviour
         load_capacities_prefabs();
 
         // initialize pools
-        pooled_capacities = new Hashtable();
+        pooled_capacities = new Dictionary<string,Stack<Capacity>>();
     }
 
 
@@ -101,7 +101,7 @@ public class CapacityBank : MonoBehaviour
 
     [Header("Sleeping capacities")]
     [SerializeField] protected Transform sleeping_capacities_parent;
-    [SerializeField] protected Hashtable/* <string kind, Stack<Capacity>> */ pooled_capacities;
+    [SerializeField] protected Dictionary<string,Stack<Capacity>> pooled_capacities;
 
     // low level pool management
     private Capacity extractFromPool(string kind)
