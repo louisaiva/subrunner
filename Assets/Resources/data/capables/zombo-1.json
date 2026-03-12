@@ -65,6 +65,18 @@
         "order_in_layer": 0,
         "layers": []
     },
+    "inventory": {
+        "item_pools_data": [
+            {
+                "stacks_data": [],
+                "pool_id": "stuff",
+                "max_stacks": 6,
+                "min_stacks": 6,
+                "scalable": true,
+                "item_rule": ""
+            }
+        ]
+    },
     "body_data": {
         "box_colliders": [
             {
@@ -87,25 +99,13 @@
         ],
         "circle_colliders": []
     },
-    "inventory": {
-        "item_pools_data": [
-            {
-                "stacks_data": [],
-                "pool_id": "stuff",
-                "max_stacks": 6,
-                "min_stacks": 6,
-                "scalable": true,
-                "item_rule": ""
-            }
-        ]
-    },
     "capacities_ids": [
-        "interact-2",
-        "die-2",
-        "walk-2",
-        "run-2",
+        "interact-1",
+        "die-1",
+        "walk-1",
+        "run-1",
         "attack-2",
-        "eat-2",
+        "eat-1",
         "connect-2"
     ],
     "effects": [],

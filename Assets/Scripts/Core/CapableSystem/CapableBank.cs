@@ -143,7 +143,7 @@ public class CapableBank : MonoBehaviour
         player.LoadPlayerData(anim_data);
 
         // we get the layers parent
-        Transform layer_parent = player.layers_parent;
+        Transform layer_parent = player.transform;
 
         // check that we do have some layers / layer_parent
         if (layer_parent == null || anim_data.layers == null) { return; }

@@ -23,7 +23,7 @@ public class Vulnerable : MonoBehaviour
 
 
     [Header("Components")]
-    public Capable Capable { get { return Connector?.capable; } }
+    public Capable Capable { get { return Connector.capable; } }
     private ConnectCapacity _connector = null;
     public ConnectCapacity Connector
     {
@@ -32,9 +32,9 @@ public class Vulnerable : MonoBehaviour
             if (_connector == null) { _connector = GetComponent<ConnectCapacity>(); }
             return _connector;
         } }
-    public SpriteRenderer Renderer { get { return Capable?.GetComponent<SpriteRenderer>(); } }
+    public SpriteRenderer Renderer { get { return Capable.AnimPlayer.Renderer; } }
     [HideInInspector] public Material TargetMaterial;
-    [HideInInspector] public Material DefaultMaterial;
+    [HideInInspector] public Material BaseMaterial;
 
 
     [Header("Log")]
@@ -44,12 +44,7 @@ public class Vulnerable : MonoBehaviour
     // AWAKE
     private void Start()
     {
-        // capable = transform.parent.GetComponent<Capable>();
-        // if (capable == null) { Debug.LogError($"(Vulnerable) {name} has no capable parent!"); }
-        // Renderer = capable.GetComponent<SpriteRenderer>();
-        // Connector = GetComponent<ConnectCapacity>();
-
-        DefaultMaterial = Renderer.material;
+        BaseMaterial = Renderer.material;
         TargetMaterial = Resources.Load<Material>("materials/targeted/hack_door");
     }
 
@@ -125,8 +120,7 @@ public class Vulnerable : MonoBehaviour
     // OnDISABLE
     private void OnDisable()
     {
-        Renderer.material = DefaultMaterial;
-        int hacks = running_hacks.Count;
+        if (BaseMaterial != null) { Renderer.material = BaseMaterial; }
         while (running_hacks.Count > 0)
         {
             Hack hack = running_hacks[0];

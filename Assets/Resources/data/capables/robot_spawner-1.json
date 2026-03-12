@@ -43,14 +43,25 @@
         "material_path": "materials/objects",
         "sorting_layer_id": -31225397,
         "order_in_layer": 4,
-        "layers": []
+        "layers": [
+            {
+                "skin": "none",
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "material_path": "materials/sprite_lit_default",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0
+            }
+        ]
+    },
+    "inventory": {
+        "item_pools_data": []
     },
     "body_data": {
         "box_colliders": [],
         "circle_colliders": []
-    },
-    "inventory": {
-        "item_pools_data": []
     },
     "capacities_ids": [
         "hover-8",

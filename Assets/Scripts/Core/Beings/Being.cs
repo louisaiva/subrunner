@@ -194,7 +194,8 @@ public class Being : Movable
             AddForce(knockback);
 
             // change the flipX of the sprite if needed
-            if (knockback.direction.x != 0f) { GetComponent<SpriteRenderer>().flipX = knockback.direction.x < 0f; }
+            // todo make a Flip property in AnimPlayer bcz rn it does not update the AnimLayers
+            if (knockback.direction.x != 0f) { AnimPlayer.Renderer.flipX = knockback.direction.x < 0f; }
         }
 
         // floating dmg

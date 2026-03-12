@@ -13,7 +13,7 @@ public class AnimPlayer : MonoBehaviour
 
     [Header("Components")]
     private SpriteRenderer _sr;
-    private SpriteRenderer sr
+    public SpriteRenderer Renderer
     {
         get
         {
@@ -21,16 +21,6 @@ public class AnimPlayer : MonoBehaviour
             return _sr;
         }
     }
-    private Transform _layers_parent;
-    public Transform layers_parent
-    {
-        get
-        {
-            if (_layers_parent == null) { _layers_parent = transform.Find("layers"); }
-            return _layers_parent;
-        }
-    }
-
 
     [Header("Skin")]
     [SerializeField] private string skin;
@@ -238,7 +228,7 @@ public class AnimPlayer : MonoBehaviour
         current_frame++;
         if (current_frame < current_anim.sprites_durations.Length)
         {
-            sr.sprite = current_anim.sprites[current_frame];
+            Renderer.sprite = current_anim.sprites[current_frame];
             return;
         }
 
@@ -273,11 +263,11 @@ public class AnimPlayer : MonoBehaviour
         frame_timer = 0f;
 
         // we set the sprite
-        sr.sprite = anim.sprites[current_frame];
+        Renderer.sprite = anim.sprites[current_frame];
 
         // we flip the sprite renderer if needed
-        if (anim.flipX && !sr.flipX) { sr.flipX = true; }
-        else if (!anim.flipX && sr.flipX) { sr.flipX = false; }
+        if (anim.flipX && !Renderer.flipX) { Renderer.flipX = true; }
+        else if (!anim.flipX && Renderer.flipX) { Renderer.flipX = false; }
 
         if (log_advanced) { Debug.Log("(AnimPlayer) Playing " + anim.name + " at frame " + frame + " flipX: " + anim.flipX); }
     }
@@ -379,15 +369,17 @@ public class AnimPlayer : MonoBehaviour
     // DATA LOADING / GETTING / UNLOADING
     public void LoadPlayerData(AnimData data)
     {
+        Debug.Log($"(AnimPlayer) {name}'s loading data : {(data != null ? data.GetDetails() : "null")}");
         // ! does not load layers !! but we don't want to it's inside CapableBank because we pool them
         if (data.anim_capacity_priorities == null || data.anim_capacity_priorities.Count == 0) { return;}
         Skin = data.skin;
         anim_capacity_priorities = data.anim_capacity_priorities;
 
         // we load the sr data
-        sr.material = Resources.Load<Material>(data.material_path);
-        sr.sortingLayerID = data.sorting_layer_id;
-        sr.sortingOrder = data.order_in_layer;
+        Debug.Log($"(AnimPlayer) {data.skin}'s data default material is {data.material_path}");
+        Renderer.material = Resources.Load<Material>(data.material_path);
+        Renderer.sortingLayerID = data.sorting_layer_id;
+        Renderer.sortingOrder = data.order_in_layer;
     }
     
     /// <summary>
@@ -407,18 +399,17 @@ public class AnimPlayer : MonoBehaviour
             anim_capacity_priorities = anim_capacity_priorities,
 
             // get sr data
-            material_path = get_material_path(sr),
-            sorting_layer_id = sr.sortingLayerID,
-            order_in_layer = sr.sortingOrder
+            material_path = get_material_path(Renderer),
+            sorting_layer_id = Renderer.sortingLayerID,
+            order_in_layer = Renderer.sortingOrder
         };
 
 
         // get the layers by going through the hierarchy (so we can do it even when not playing)
         List<AnimLayerData> layers_data = new List<AnimLayerData>();
-        if (layers_parent == null) { data.layers = new List<AnimLayerData>(); return data; }
-        for (int i = 0; i < layers_parent.childCount; i++)
+        for (int i = 0; i < transform.childCount; i++)
         {
-            Transform layer_transform = layers_parent.GetChild(i);
+            Transform layer_transform = transform.GetChild(i);
             AnimLayer anim_layer = layer_transform.GetComponent<AnimLayer>();
             if (anim_layer == null) { continue; }
 
@@ -517,7 +508,7 @@ public class AnimPlayer : MonoBehaviour
     }
     public void DisableRenderer()
     {
-        sr.enabled = false;
+        Renderer.enabled = false;
 
         // we disable all the anim layers renderers
         for (int i = 0; i < anim_layers.Count; i++)
@@ -527,7 +518,7 @@ public class AnimPlayer : MonoBehaviour
     }
     public void EnableRenderer()
     {
-        sr.enabled = true;
+        Renderer.enabled = true;
 
         // we enable all the anim layers renderers
         for (int i = 0; i < anim_layers.Count; i++)

@@ -52,11 +52,18 @@
         "material_path": "materials/objects",
         "sorting_layer_id": -667374433,
         "order_in_layer": 0,
-        "layers": []
-    },
-    "body_data": {
-        "box_colliders": [],
-        "circle_colliders": []
+        "layers": [
+            {
+                "skin": "pckg_back",
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.4166666567325592
+                },
+                "material_path": "materials/objects",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0
+            }
+        ]
     },
     "inventory": {
         "item_pools_data": [
@@ -75,6 +82,10 @@
                 "item_rule": ""
             }
         ]
+    },
+    "body_data": {
+        "box_colliders": [],
+        "circle_colliders": []
     },
     "capacities_ids": [
         "hover-3"

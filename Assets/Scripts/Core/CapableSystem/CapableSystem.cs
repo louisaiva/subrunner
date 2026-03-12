@@ -296,7 +296,11 @@ public class CapableSystem : BSOD_System<CapableSystem>
     }
     private Capable unload_capable(string id)
     {
-        if (!loaded_capables_data.ContainsKey(id)) { Debug.LogWarning("(CapableSystem - Unload) Loaded capable data not found for id: " + id); return null; }
+        if (!loaded_capables_data.ContainsKey(id))
+        {
+            if (!hide_log_no_data_found) { Debug.LogWarning($"(CapableSystem - Unload) Capable {id} is not loaded (or inexistant)"); }
+            return null;
+        }
         CapableData data = loaded_capables_data[id];
         Capable capable = CapableBank.Instance.Unload(data);
         loaded_capables_data.Remove(id);

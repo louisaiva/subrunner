@@ -311,6 +311,10 @@ public class Room : MonoBehaviour
         Capable capable = collider.GetComponent<Capable>();
         if (capable == null) { capable = collider.transform.parent.GetComponent<Capable>(); }
         if (capable == null) { return; }
+
+        // check if capable is not the controlled one and not in the capable system
+        // we just ignore the trigger
+        if (Controller.Instance.Capable != capable && !CapableBank.Instance.HasCapable(capable)) { return; }
         string id = capable.data.id;
 
         // check if we are not already in the movables or capable + if we are not doing IN-OUT in the same room
@@ -355,6 +359,8 @@ public class Room : MonoBehaviour
         Capable capable = collider.GetComponent<Capable>();
         if (capable == null) { capable = collider.transform.parent.GetComponent<Capable>(); }
         if (capable == null) { return; }
+
+        if (Controller.Instance.Capable != capable && !CapableBank.Instance.HasCapable(capable)) { return; }
 
         // check some bools
         // bool in_movables = data.movables_ids.Contains(capable.data.id);

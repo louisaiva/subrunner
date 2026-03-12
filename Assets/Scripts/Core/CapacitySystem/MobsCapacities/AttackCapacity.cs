@@ -77,8 +77,8 @@ public class AttackCapacity : Capacity
     {
         // we set the bearer and its components
         bearer = capable;
-        anim_player = bearer.GetComponent<AnimPlayer>();
-        sr = bearer.GetComponent<SpriteRenderer>();
+        anim_player = bearer.AnimPlayer;
+        sr = bearer.AnimPlayer.Renderer;
         if (anim_player.current_capacity == "attack") { return; } // we check if we are already attacking
 
         // we update damage value if capable is Perso

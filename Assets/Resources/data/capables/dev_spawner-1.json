@@ -2,8 +2,8 @@
     "<id>k__BackingField": "dev_spawner-1",
     "kind": "Spawner",
     "position": {
-        "x": 0.47999998927116396,
-        "y": 1.5700000524520875
+        "x": -1.340000033378601,
+        "y": 1.2699999809265137
     },
     "orientation": {
         "x": 0.0,
@@ -52,14 +52,25 @@
         "material_path": "materials/objects",
         "sorting_layer_id": -667374433,
         "order_in_layer": 0,
-        "layers": []
+        "layers": [
+            {
+                "skin": "blue_box_bg",
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.4166666865348816
+                },
+                "material_path": "materials/objects",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0
+            }
+        ]
+    },
+    "inventory": {
+        "item_pools_data": []
     },
     "body_data": {
         "box_colliders": [],
         "circle_colliders": []
-    },
-    "inventory": {
-        "item_pools_data": []
     },
     "capacities_ids": [
         "hover-1",

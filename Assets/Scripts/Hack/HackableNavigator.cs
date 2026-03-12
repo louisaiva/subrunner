@@ -139,7 +139,7 @@ public class HackableNavigator : MonoBehaviour
             targeted_connector = null;
             return;
         }
-        vulnerable.Renderer.material = vulnerable.DefaultMaterial;
+        vulnerable.Renderer.material = vulnerable.BaseMaterial;
 
         // we reset the current target
         if (log) { Debug.Log($"(VulnerableNavigator) resetted connection : {connector.capable.name} -x> {vulnerable.Capable.name}"); }

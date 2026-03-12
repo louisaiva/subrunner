@@ -64,8 +64,8 @@ public class CloseCapacity : Capacity
         // on fait les vérifications pour les portes
         if (capable is Door door && !door.DontTouchSortingLayer)
         {
-            capable.GetComponent<SpriteRenderer>().sortingLayerName = "fg";
-            capable.GetComponent<SpriteRenderer>().sortingOrder = 1;
+            capable.AnimPlayer.Renderer.sortingLayerName = "fg";
+            capable.AnimPlayer.Renderer.sortingOrder = 1;
         }
 
         if (log) { Debug.Log(capable.name + " is closing..."); }
@@ -82,8 +82,8 @@ public class CloseCapacity : Capacity
         // on fait les vérifications pour les portes
         if (capable is Door door && !door.DontTouchSortingLayer)
         {
-            capable.GetComponent<SpriteRenderer>().sortingLayerName = "main";
-            capable.GetComponent<SpriteRenderer>().sortingOrder = 0;
+            capable.AnimPlayer.Renderer.sortingLayerName = "main";
+            capable.AnimPlayer.Renderer.sortingOrder = 0;
         }
 
         if (log) { Debug.Log(capable.name + " is closed !"); }

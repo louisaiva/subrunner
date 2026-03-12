@@ -55,28 +55,6 @@
         "order_in_layer": 0,
         "layers": []
     },
-    "body_data": {
-        "box_colliders": [
-            {
-                "local_position": {
-                    "x": 0.0,
-                    "y": 0.0
-                },
-                "layerID": 29,
-                "used_for_pathfinding": true,
-                "is_trigger": false,
-                "offset": {
-                    "x": 0.0,
-                    "y": 0.19611191749572755
-                },
-                "size": {
-                    "x": 1.442360281944275,
-                    "y": 0.375521183013916
-                }
-            }
-        ],
-        "circle_colliders": []
-    },
     "inventory": {
         "item_pools_data": [
             {
@@ -104,6 +82,28 @@
                 "item_rule": ""
             }
         ]
+    },
+    "body_data": {
+        "box_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 29,
+                "used_for_pathfinding": true,
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.19611191749572755
+                },
+                "size": {
+                    "x": 1.442360281944275,
+                    "y": 0.375521183013916
+                }
+            }
+        ],
+        "circle_colliders": []
     },
     "capacities_ids": [
         "hover-7",

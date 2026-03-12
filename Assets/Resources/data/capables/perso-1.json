@@ -75,10 +75,6 @@
         "order_in_layer": 0,
         "layers": []
     },
-    "body_data": {
-        "box_colliders": [],
-        "circle_colliders": []
-    },
     "inventory": {
         "item_pools_data": [
             {
@@ -147,13 +143,17 @@
             }
         ]
     },
+    "body_data": {
+        "box_colliders": [],
+        "circle_colliders": []
+    },
     "capacities_ids": [
-        "die-1",
-        "walk-1",
-        "run-1",
+        "die-3",
+        "walk-3",
+        "run-3",
         "talk-1",
-        "interact-1",
-        "eat-1",
+        "interact-3",
+        "eat-3",
         "drop-1"
     ],
     "effects": [],

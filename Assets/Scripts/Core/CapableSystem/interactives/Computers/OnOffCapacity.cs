@@ -99,8 +99,8 @@ public class OnOffCapacity : Capacity
         if (capable is Door)
         {
             // on reset le layer à fg & order in layer à 1
-            capable.GetComponent<SpriteRenderer>().sortingLayerName = "fg";
-            capable.GetComponent<SpriteRenderer>().sortingOrder = 1;
+            capable.AnimPlayer.Renderer.sortingLayerName = "fg";
+            capable.AnimPlayer.Renderer.sortingOrder = 1;
         }
 
         if (debug) { Debug.Log(capable.name + " is opening..."); }
@@ -118,8 +118,8 @@ public class OnOffCapacity : Capacity
         if (capable is Door)
         {
             // on reset le layer à main & order in layer a -1
-            capable.GetComponent<SpriteRenderer>().sortingLayerName = "main";
-            capable.GetComponent<SpriteRenderer>().sortingOrder = -1;
+            capable.AnimPlayer.Renderer.sortingLayerName = "main";
+            capable.AnimPlayer.Renderer.sortingOrder = -1;
         }
 
         if (debug) { Debug.Log(capable.name + " is open !"); }

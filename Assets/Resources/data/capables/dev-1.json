@@ -60,20 +60,10 @@
                 "one_shot": false
             }
         ],
-        "material_path": "materials/enemy",
+        "material_path": "materials/beings",
         "sorting_layer_id": -667374433,
         "order_in_layer": 0,
         "layers": [
-            {
-                "skin": "dev_base",
-                "local_position": {
-                    "x": 0.0,
-                    "y": 0.0
-                },
-                "material_path": "materials/beings",
-                "sorting_layer_id": -667374433,
-                "order_in_layer": 0
-            },
             {
                 "skin": "dev_face",
                 "local_position": {
@@ -116,6 +106,18 @@
             }
         ]
     },
+    "inventory": {
+        "item_pools_data": [
+            {
+                "stacks_data": [],
+                "pool_id": "stuff",
+                "max_stacks": 6,
+                "min_stacks": 6,
+                "scalable": true,
+                "item_rule": ""
+            }
+        ]
+    },
     "body_data": {
         "box_colliders": [
             {
@@ -138,25 +140,13 @@
         ],
         "circle_colliders": []
     },
-    "inventory": {
-        "item_pools_data": [
-            {
-                "stacks_data": [],
-                "pool_id": "stuff",
-                "max_stacks": 6,
-                "min_stacks": 6,
-                "scalable": true,
-                "item_rule": ""
-            }
-        ]
-    },
     "capacities_ids": [
-        "interact-3",
-        "die-3",
-        "walk-3",
-        "run-3",
+        "interact-2",
+        "die-2",
+        "walk-2",
+        "run-2",
         "attack-3",
-        "eat-3",
+        "eat-2",
         "connect-3"
     ],
     "effects": [],

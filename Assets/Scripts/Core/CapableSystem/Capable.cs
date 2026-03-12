@@ -11,7 +11,6 @@ using UnityEngine.UIElements;
 /// Each Capacity is linked to an animation.
 /// So every animated element in the game is a Capable.
 /// </summary>
-[RequireComponent(typeof(AnimPlayer))]
 public class Capable : MonoBehaviour, Debuggable
 {
     // NEW CAPACITY SYSTEM
@@ -45,13 +44,6 @@ public class Capable : MonoBehaviour, Debuggable
         // we load the capacities
         if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Capable - LoadData) Calling CapacitySystem loading for capacities : {string.Join(" ", data.capacities_ids)}"); }
         this.capacities = CapacityEngine.Instance.LoadCapacities(data.capacities_ids, this);
-        /* for (int i = 0; i < capacities.Count; i++)
-        {
-            Capacity capa = capacities[i];
-            capa.transform.parent = transform;
-            capa.transform.localPosition = capa.data.local_position;
-        } */
-
     }
     public virtual void UnloadData()
     {
@@ -60,7 +52,6 @@ public class Capable : MonoBehaviour, Debuggable
 
         if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Capable - UnloadData) Calling CapacitySystem unloading for capacities : {string.Join(" ", data.capacities_ids)}"); }
         CapacityEngine.Instance.UnloadCapacities(data.capacities_ids, this);
-        // this.capacities
 
         // we unload the inventory (and so the items)
         Inventory?.SaveAndUnloadInventoryData();
@@ -85,8 +76,7 @@ public class Capable : MonoBehaviour, Debuggable
     /// <returns>CapableData the data that describes this capable</returns>
     public virtual ICapableData GetStaticData()
     {
-        
-
+        Debug.Log($"(Capable - GetStaticData) Getting static data for capable {name} of type {GetType().Name}");
         CapableData static_data = new CapableData
         {
             // set base data things
@@ -99,14 +89,15 @@ public class Capable : MonoBehaviour, Debuggable
             // we set the anim data
             anim_data = AnimPlayer.GetStaticAnimData(),
 
+            // we set the inventory
+            inventory = Inventory?.GetStaticInventoryData(),
+
             // we set the body data
             body_data = get_static_body_data(),
 
             // we set the orientation
             orientation = this.orientation,
 
-            // we set the inventory
-            inventory = Inventory.GetStaticInventoryData(),
 
             // we set the capacities
             capacities_ids = get_static_capacity_ids(),
@@ -115,7 +106,6 @@ public class Capable : MonoBehaviour, Debuggable
             effects = new List<Effect>(effects),
             effects_ttl = new List<float>(effects_timetolive)
         };
-
         return static_data;
     }
     protected string get_static_id()
@@ -262,10 +252,11 @@ public class Capable : MonoBehaviour, Debuggable
     // anim player
     private AnimPlayer _anim_player = null;
     public AnimPlayer AnimPlayer { get
-        {
-            if (_anim_player == null) { _anim_player = GetComponent<AnimPlayer>(); }
-            return _anim_player;
-        } private set { _anim_player = value; } }
+    {
+        if (_anim_player == null) { _anim_player = GetComponent<AnimPlayer>(); }
+        if (_anim_player == null) { _anim_player = transform.Find("anim_player")?.GetComponent<AnimPlayer>(); }
+        return _anim_player;
+    } private set { _anim_player = value; } }
 
     // body
     private Transform _body = null;
