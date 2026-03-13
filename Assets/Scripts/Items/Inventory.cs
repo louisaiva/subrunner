@@ -407,10 +407,10 @@ public class Inventory : MonoBehaviour, ItemStorer
             // yes we do !! return its inventory
             if (log)
             {
-                Debug.Log(s + "we have an interactor : " + interactor.capable.name
-                + "\nand its inventory is " + interactor.capable.Inventory.name);
+                Debug.Log(s + "we have an interactor : " + interactor.Capable.name
+                + "\nand its inventory is " + interactor.Capable.Inventory.name);
             }
-            return interactor.capable.Inventory;
+            return interactor.Capable.Inventory;
         }
 
         // check if we are the interactor (so we look for the interactable)

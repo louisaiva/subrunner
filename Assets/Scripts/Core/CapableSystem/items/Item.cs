@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Unity.VisualScripting;
 using UnityEngine;
 /// <summary>
@@ -371,21 +372,8 @@ public class Item : Movable, EndlessInteractable
     }
     public override ICapableData GetStaticData()
     {
-        ItemData static_data = new ItemData
+        ItemData static_data = new ItemData((CapableData)base.GetStaticData())
         {
-            // set base capable data things
-            id = get_static_id(),
-            position = this.transform.position,
-            kind = GetType().Name,
-            anim_data = AnimPlayer.GetStaticAnimData(),
-            body_data = get_static_body_data(),
-            orientation = this.orientation,
-            inventory = Inventory?.GetStaticInventoryData(),
-            capacities_ids = get_static_capacity_ids(),
-            effects = new List<Effect>(effects),
-            effects_ttl = new List<float>(effects_timetolive),
-
-
             // set item data things
             reference = this.Reference,
             color = this.Color,
@@ -421,21 +409,18 @@ public class Item : Movable, EndlessInteractable
     public string item_description;
     public bool is_grabbed; // only a flag, for the CapacityEngine to know which capacities not to load
 
+    // CONSTRUCTOR
+    public ItemData(CapableData parent)
+    {
+        foreach (var prop in parent.GetType().GetProperties()) { prop.SetValue(this, prop.GetValue(parent)); }
+        foreach (var prop in parent.GetType().GetFields()) { prop.SetValue(this, prop.GetValue(parent)); }
+    }
+
     // DUPLICATE
     public override ICapableData Duplicate()
     {
-        return new ItemData()
+        return new ItemData(base.Duplicate() as CapableData)
         {
-            id = this.id + "_copy",
-            kind = this.kind,
-            position = this.position,
-            orientation = this.orientation,
-            anim_data = this.anim_data.Duplicate(),
-            body_data = this.body_data != null ? this.body_data.Duplicate() : null,
-            inventory = this.inventory != null ? this.inventory.Duplicate() : null,
-            capacities_ids = new List<string>(this.capacities_ids),
-            effects = new List<Effect>(this.effects),
-            effects_ttl = new List<float>(this.effects_ttl),
             reference = this.reference,
             color = this.color,
             max_qty = this.max_qty,

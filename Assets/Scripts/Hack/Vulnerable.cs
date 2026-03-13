@@ -23,7 +23,7 @@ public class Vulnerable : MonoBehaviour
 
 
     [Header("Components")]
-    public Capable Capable { get { return Connector.capable; } }
+    public Capable Capable { get { return Connector.Capable; } }
     private ConnectCapacity _connector = null;
     public ConnectCapacity Connector
     {

@@ -55,7 +55,7 @@ public class LevelSwitcher : Capable, Interactable
         // we check if the elevator door is open
         if (elevator_door.is_open)
         {
-            if (elevator_door.Can("close"))
+            if (elevator_door.Closer.Able)
             {
                 elevator_door.close();
                 yield return new WaitUntil(() => !elevator_door.is_open && !elevator_door.is_moving);

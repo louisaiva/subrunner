@@ -7,7 +7,7 @@ using UnityEngine;
 /// gives Immobile & Invincible for a short time
 /// </summary>
 
-public class DodgeCapacity : Capacity
+public class DodgeCapacity : CooldownCapacity
 {
     [Header("Dodge parameters")]
     [SerializeField] private float dodge_magnitude = 25f;

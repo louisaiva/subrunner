@@ -355,6 +355,7 @@ public class Room : MonoBehaviour
     protected virtual void OnTriggerExit2D(Collider2D collider)
     {
         if (data == null) { return; }
+        if (AppManager.Instance.IsQuitting) { return; }
 
         Capable capable = collider.GetComponent<Capable>();
         if (capable == null) { capable = collider.transform.parent.GetComponent<Capable>(); }

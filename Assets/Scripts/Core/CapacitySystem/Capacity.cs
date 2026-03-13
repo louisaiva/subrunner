@@ -1,14 +1,25 @@
-using System;
 using UnityEngine;
 
 public class Capacity : MonoBehaviour
 {
 
-    // NEW CAPACITY SYSTEM
+    public virtual bool Able { get { return true; } }
+    private Capable _capable = null;
+    public Capable Capable
+    {
+        get
+        {
+            if (_capable == null) { _capable = transform.parent.GetComponent<Capable>(); }
+            return _capable;
+        }
+    }
 
     [Header("Capacity data")]
     public CapacityData data;
     public bool Loaded { get { return data != null; } }
+
+    [Header("Logs")]
+    public bool log = false;
 
 
     // LOAD / UNLAOD
@@ -57,71 +68,8 @@ public class Capacity : MonoBehaviour
     }
 
 
-
-
-
-
-    // OLD AREA
-
-
-    public virtual bool Able
-    {
-        get
-        {
-            // if there is no cooldown, we return true
-            if (cooldown == 0) { return true; }
-
-            // if the cooldown is done, we return true
-            return cooldown_timer <= 0;
-        }
-    }
-    private Capable _capable = null;
-    public Capable capable
-    {
-        get
-        {
-            if (_capable == null) { _capable = transform.parent.GetComponent<Capable>(); }
-            return _capable;
-        }
-    }
-
-
-
-    // todo some capacity don't have a cooldown (walk, run, grab, hover), so make this an interface
-    [Header("Cooldown")]
-    [SerializeField] protected float cooldown = 0;
-    protected float cooldown_timer;
-
-    [Header("Logs")]
-    public bool log = false;
-
-
-    protected virtual void Update()
-    {
-        // if the cooldown is not set, we return
-        if (cooldown == 0) { return; }
-
-        // if the cooldown is running, we update it
-        if (cooldown_timer > 0)
-        {
-            cooldown_timer -= Time.deltaTime;
-        }
-    }
-
-    protected void startCooldown(float? custom_cooldown = null)
-    {
-        // we set the cooldown timer if there is one
-        if (custom_cooldown != null)
-        {
-            cooldown = (float) custom_cooldown;
-        }
-        
-        if (cooldown > 0)
-        {
-            cooldown_timer = cooldown;
-        }
-    }
-
+    // USE
+    // ? do we need all Capacities to have a Use method ?
     public virtual void Use(Capable capable)
     {
         // we play the animation

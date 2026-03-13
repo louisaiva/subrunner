@@ -357,6 +357,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
 
     // GETTERS
+    public bool HasLoadedCapableData(string id) { return loaded_capables_data.ContainsKey(id); }
     public int GetCapableHashFromID(string id)
     {
         return capables_hashs_by_ids.TryGetValue(id, out int hash) ? hash : 0;

@@ -41,14 +41,13 @@ public class WalkCapacity : Capacity
         max_speed += Random.Range(-random_speed_modifier_at_start, random_speed_modifier_at_start);
 
         // we get a walk sound instance from the audio engine
-        walk_sound = AudioEngine.Instance.CreateInstance("walk", capable);
+        walk_sound = AudioEngine.Instance.CreateInstance("walk", Capable);
     }
 
     // UPDATE
-    protected override void Update()
+    protected void Update()
     {
-        base.Update();
-
+        
         // update particles
         update_particles();
 
@@ -56,12 +55,12 @@ public class WalkCapacity : Capacity
         walk_speed = Mathf.Lerp(walk_speed, walk_percentage_target * max_speed, 10f * Time.deltaTime);
 
         // 2 - NOT MOVING CHECKS
-        if (capable.HasEffect(Effect.Immobile)) { walk_speed = 0f; } // we check if immobile
-        if (capable is Being being && !being.Alive) { walk_speed = 0f; } // we check if dead
+        if (Capable.HasEffect(Effect.Immobile)) { walk_speed = 0f; } // we check if immobile
+        if (Capable is Being being && !being.Alive) { walk_speed = 0f; } // we check if dead
         if (walk_speed < 0.1f) { walk_speed = 0f; } // we clamp if walk is too low
 
         // log final walk_speed
-        if (log) { Debug.Log("WalkCapacity: " + capable.name + " walk_speed is " + walk_speed); }
+        if (log) { Debug.Log("WalkCapacity: " + Capable.name + " walk_speed is " + walk_speed); }
 
         // 3 - HANDLING ANIMATION & SOUND
 
@@ -70,7 +69,7 @@ public class WalkCapacity : Capacity
 
         if (walk_speed == 0f)
         {
-            if (capable.AnimPlayer.IsPlaying("walk")) { capable.AnimPlayer.StopPlaying("walk"); }
+            if (Capable.AnimPlayer.IsPlaying("walk")) { Capable.AnimPlayer.StopPlaying("walk"); }
 
             // then we want to stop walking
             if (is_playing_footsteps) { stop_footsteps(); }
@@ -78,7 +77,7 @@ public class WalkCapacity : Capacity
         }
 
         // else we have a walk_speed, we want to enable walk animation if not playing
-        if (!capable.AnimPlayer.IsPlaying("walk")) { capable.AnimPlayer.Play("walk"); }
+        if (!Capable.AnimPlayer.IsPlaying("walk")) { Capable.AnimPlayer.Play("walk"); }
 
         // and play the footsteps if not playing
         if (!is_playing_footsteps) { play_footsteps(); }
@@ -115,20 +114,20 @@ public class WalkCapacity : Capacity
     private void play_footsteps()
     {
         CancelInvoke("play_one_footstep");
-        if (log_footsteps_audio) { Debug.Log($"(WalkCapacity - log_footsteps) playing footsteps for '{capable.name}'"); }
+        if (log_footsteps_audio) { Debug.Log($"(WalkCapacity - log_footsteps) playing footsteps for '{Capable.name}'"); }
         is_playing_footsteps = true;
         InvokeRepeating("play_one_footstep", 0f, delay_between_footsteps);
     }
     private void stop_footsteps()
     {
         CancelInvoke("play_one_footstep");
-        if (log_footsteps_audio) { Debug.Log($"(WalkCapacity - log_footsteps) stopping footsteps for '{capable.name}'"); }
+        if (log_footsteps_audio) { Debug.Log($"(WalkCapacity - log_footsteps) stopping footsteps for '{Capable.name}'"); }
         walk_sound.stop(STOP_MODE.ALLOWFADEOUT);
         is_playing_footsteps = false;
     }
     private void play_one_footstep()
     {
-        if (log_footsteps_repeating) { Debug.Log($"(WalkCapacity - log_footsteps_repeating) footstep '{capable.name}'"); }
+        if (log_footsteps_repeating) { Debug.Log($"(WalkCapacity - log_footsteps_repeating) footstep '{Capable.name}'"); }
         walk_sound.start();
     }
 }

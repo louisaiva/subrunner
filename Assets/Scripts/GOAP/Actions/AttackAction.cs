@@ -36,7 +36,8 @@ namespace subrunner.goap
             }
 
             // use the attack capacity
-            data.ia.Do("attack");
+            AttackCapacity attack_capacity = data.attack_capacity;
+            if (attack_capacity.Able) { attack_capacity.Use(data.ia); }
         }
         public override IActionRunState Perform(IMonoAgent agent, Data data, IActionContext context)
         {
@@ -46,9 +47,9 @@ namespace subrunner.goap
         }
         
         // IS IN RANGE OVERRIDE
-        public override bool IsInRange(IMonoAgent agent, float distance, IActionData data, IComponentReference references)
+        public override bool IsInRange(IMonoAgent agent, float distance, Data data, IComponentReference references)
         {
-            var actionData = (Data)data;
+            var actionData = data;
 
             // Fallback to default behavior if no AttackCapacity
             if (actionData.attack_capacity == null) { return base.IsInRange(agent, distance, data, references); }

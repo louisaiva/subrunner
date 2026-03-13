@@ -8,7 +8,7 @@ using UnityEngine;
 /// </summary>
 public class SleepCapacity : Capacity
 {
-    private SleepingCat cat => capable as SleepingCat; // we cast the capable to a SleepingCat
+    private SleepingCat cat => Capable as SleepingCat; // we cast the capable to a SleepingCat
 
     [Header("Sleeping parameters")]
     public bool asleep = false; // Is the cat asleep?
@@ -60,10 +60,10 @@ public class SleepCapacity : Capacity
         sleep_timer = Time.time;
 
         // we stop talking during sleep
-        if (capable.GetCapacity<TalkCapacity>() != null)
+        if (Capable.GetCapacity<TalkCapacity>() != null)
         {
-            capable.GetCapacity<TalkCapacity>().StopTalking();
-            capable.GetCapacity<TalkCapacity>().Say("z/.z/.z/."); // we say we are sleeping
+            Capable.GetCapacity<TalkCapacity>().StopTalking();
+            Capable.GetCapacity<TalkCapacity>().Say("z/.z/.z/."); // we say we are sleeping
         }
 
         // // wait until the falling asleep animation is finished
@@ -100,9 +100,9 @@ public class SleepCapacity : Capacity
 
 
         // we start talking again
-        if (capable.GetCapacity<TalkCapacity>() != null)
+        if (Capable.GetCapacity<TalkCapacity>() != null)
         {
-            capable.GetCapacity<TalkCapacity>().StartTalking();
+            Capable.GetCapacity<TalkCapacity>().StartTalking();
         }
 
         if (log) { Debug.Log("(SleepCapacity) " + cat.name + " woke up after a " + time_spent_asleep + " seconds nap : means " + licking_to_do + " licks to do !"); }
@@ -142,18 +142,18 @@ public class SleepCapacity : Capacity
     private void OnTriggerStay2D(Collider2D other)
     {
         // check if we are a SleepingCat
-        if (!(capable is SleepingCat)) { return; }
+        if (!(Capable is SleepingCat)) { return; }
 
         // we check if the other is on the Beings layer
         if (!other.gameObject.layer.Equals(LayerMask.NameToLayer("Beings"))) { return; }
         Capable other_capable = other.transform.parent.GetComponent<Capable>();
         if (other_capable == null) { return; }
-        if (other_capable == capable) { return; } // we don't disturb ourselves
+        if (other_capable == Capable) { return; } // we don't disturb ourselves
 
         // if we are asleep, we wake up
         if (asleep)
         {
-            if (log) { Debug.Log("(SleepCapacity) " + other_capable.name + " disturbed the nap of " + capable.name); }
+            if (log) { Debug.Log("(SleepCapacity) " + other_capable.name + " disturbed the nap of " + Capable.name); }
             WakeUp();
         }
     }

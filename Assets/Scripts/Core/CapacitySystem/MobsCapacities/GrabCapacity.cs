@@ -34,7 +34,7 @@ public class GrabCapacity : Capacity
     private void Start()
     {
         // on récupère la bank
-        inventory = capable.Inventory;
+        inventory = Capable.Inventory;
 
         // on récupère l'action grab
         grabAction = InputManager.Instance.GetComponent<InputManager>().GetAction(grabInput);

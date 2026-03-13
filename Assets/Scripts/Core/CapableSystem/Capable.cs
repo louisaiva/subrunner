@@ -76,7 +76,7 @@ public class Capable : MonoBehaviour, Debuggable
     /// <returns>CapableData the data that describes this capable</returns>
     public virtual ICapableData GetStaticData()
     {
-        Debug.Log($"(Capable - GetStaticData) Getting static data for capable {name} of type {GetType().Name}");
+        // Debug.Log($"(Capable - GetStaticData) Getting static data for capable {name} of type {GetType().Name}");
         CapableData static_data = new CapableData
         {
             // set base data things
@@ -240,7 +240,10 @@ public class Capable : MonoBehaviour, Debuggable
     public string Skin => (AnimPlayer == null) ? "none" : AnimPlayer.Skin;
 
     [Header("Capacities")]
-    [SerializeField] protected List<Capacity> capacities = new List<Capacity>();
+    [SerializeField] private HashSet<Capacity> capacities = new HashSet<Capacity>();
+    private readonly Dictionary<string, Capacity> capacityByName = new(StringComparer.Ordinal);
+    private readonly Dictionary<Type, Capacity> capacityByExactType = new();
+    private readonly Dictionary<Type, Capacity> capacityByAssignableTypeCache = new();
 
     [Header("Effects")]
     [SerializeField] protected List<Effect> effects = new List<Effect>();
@@ -354,17 +357,21 @@ public class Capable : MonoBehaviour, Debuggable
     // CAPACITIES REGISTERING
     public void RegisterCapacity(Capacity capa)
     {
-        if (capacities.Contains(capa)) { return; }
+        if (!capacities.Add(capa)) { return; }
 
-        capacities.Add(capa);
+        capacityByName[capa.name] = capa;
+        capacityByExactType[capa.GetType()] = capa;
+        capacityByAssignableTypeCache.Clear();
 
         if (log) { Debug.Log($"(Capable - {this.name}) Registered capacity {capa.name}"); }
     }
     public void UnregisterCapacity(Capacity capa)
     {
-        if (!capacities.Contains(capa)) { return; }
+        if (!capacities.Remove(capa)) { return; }
 
-        capacities.Remove(capa);
+        if (capacityByName.TryGetValue(capa.name, out var byName) && ReferenceEquals(byName, capa)) { capacityByName.Remove(capa.name); }
+        if (capacityByExactType.TryGetValue(capa.GetType(), out var byType) && ReferenceEquals(byType, capa)) { capacityByExactType.Remove(capa.GetType()); }
+        capacityByAssignableTypeCache.Clear();
 
         if (log) { Debug.Log($"(Capable - {this.name}) Unregistered capacity {capa.name}"); }
     }
@@ -423,13 +430,6 @@ public class Capable : MonoBehaviour, Debuggable
     }
 
     // CAPACITIES
-    [Obsolete("Use GetCapacity<T>().Use() instead")] public void Do(string name)
-    {
-        // get the capacity
-        Capacity capacity = GetCapacity(name);
-
-        capacity.Use(this);
-    }
     [Obsolete("Use RegisterCapacity() instead")] public Capacity AddCapacity(string name)
     {
         // we check if the capacity is already in the list
@@ -471,55 +471,40 @@ public class Capable : MonoBehaviour, Debuggable
 
 
     // CAPACITIES GETTERS
-    public virtual bool Can(string name)
+    public bool HasCapacity(string name) { return capacityByName.ContainsKey(name); }
+    public Capacity GetCapacity(string name) { return capacityByName.TryGetValue(name, out var capacity) ? capacity : null;  }
+    public bool TryGetCapacity<T>(out T capacity) where T : Capacity
     {
-        foreach (Capacity capacity in capacities)
+        var type = typeof(T);
+
+        if (capacityByExactType.TryGetValue(type, out var exact))
         {
-            if (capacity.name == name)
-            {
-                return capacity.Able;
-            }
+            capacity = (T)exact;
+            return true;
         }
-        return false;
-    }
-    public bool HasCapacity(string name)
-    {
-        foreach (Capacity capacity in capacities)
+
+        if (capacityByAssignableTypeCache.TryGetValue(type, out var cached))
         {
-            if (capacity.name == name)
+            capacity = (T)cached;
+            return true;
+        }
+
+        foreach (var entry in capacities)
+        {
+            if (entry is T found)
             {
+                capacityByAssignableTypeCache[type] = found;
+                capacity = found;
                 return true;
             }
         }
+
+        capacity = null;
         return false;
     }
-    public bool HasCapacity<T>() where T : Capacity
-    {
-        return GetCapacity<T>() != null;
-    }
-    public Capacity GetCapacity(string name)
-    {
-        foreach (Capacity capacity in capacities)
-        {
-            if (capacity.name == name)
-            {
-                return capacity;
-            }
-        }
-        return null;
-    }
-    public T GetCapacity<T>() where T : Capacity
-    {
-        foreach (Capacity capacity in capacities)
-        {
-            if (capacity is T)
-            {
-                return (T)capacity;
-            }
-        }
-        return null;
-    }
-    public List<Capacity> GetCapacities()
+    public T GetCapacity<T>() where T : Capacity { return TryGetCapacity<T>(out var capacity) ? capacity : null; }
+    public bool HasCapacity<T>() where T : Capacity { return TryGetCapacity<T>(out _); }
+    public HashSet<Capacity> GetCapacities()
     {
         return capacities;
     }
@@ -638,7 +623,7 @@ public class Capable : MonoBehaviour, Debuggable
         text += "orientation : " + AnimPlayer.orientation + $"\n>>> x : {orientation.x.ToString("F2")}\n>>> y : {orientation.y.ToString("F2")}\n";
 
         text += "\ncapacities : " + capacities.Count + "\n";
-        List<string> capa_names = capacities.ConvertAll(c => c.name);
+        List<string> capa_names = capacities.Select(c => c.name).ToList();
         text += ">>> " + string.Join(", ", capa_names) + "\n";
 
         if (Inventory != null)

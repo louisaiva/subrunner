@@ -101,7 +101,7 @@ public class TalkCapacity : Capacity
     }
 
     // SINGLE TALKING
-    public void Say(string msg) { StartCoroutine(floating_dmg_provider.GetComponent<TextManager>().TalkLines(msg, capable as Being)); }
+    public void Say(string msg) { StartCoroutine(floating_dmg_provider.GetComponent<TextManager>().TalkLines(msg, Capable as Being)); }
 
     // RANDOM TALKING
     public void StopTalking()
@@ -119,7 +119,7 @@ public class TalkCapacity : Capacity
     void randomTalk()
     {
         // if (being == null) {return;}
-        if (capable is not Being) {return;}
+        if (Capable is not Being) {return;}
 
         // on fait parler le perso
         int index = Random.Range(0, talks_random.Count + (allow_bad_words ? talks_random_bad_words.Count : 0));

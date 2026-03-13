@@ -12,9 +12,12 @@ public interface ICapableData : IData
 {
     [field: SerializeField] public string id { get; set; }
     public string kind; // used to determine which kind of capable it is. i.e. chest, IA, spawner or else
+    
+    // GENERAL
     public Vector2 position;
-    // public Vector2 inputs; ????
     public Vector2 orientation;
+    public int layer;
+    public string tag;
 
     // ANIM PLAYER
     public AnimData anim_data;
@@ -43,6 +46,8 @@ public interface ICapableData : IData
             kind = this.kind,
             position = this.position,
             orientation = this.orientation,
+            layer = this.layer,
+            tag = this.tag,
 
             // anim
             anim_data = anim_data.Duplicate(),
@@ -67,13 +72,18 @@ public interface ICapableData : IData
         details += $"  - kind : {kind}\n";
         details += $"  - position : {position}\n";
         details += $"  - orientation : {orientation}\n";
+        details += $"  - layer : {LayerMask.LayerToName(layer)} ({layer})\n";
+        details += $"  - tag : {tag}\n";
         if (body_data != null) { details += $"  - {body_data.GetDetails()}\n"; }
         else { details += $"  - no body\n"; }
         if (inventory != null) { details += $"  - {inventory.GetDetails()}"; }
         else { details += $"  - no inventory\n"; }
-        details += $"  - capacities : {capacities_ids.Count} capacities\n";
-        details += $"  - effects : {effects.Count} effects\n";
-        details += $"  - {anim_data.GetDetails()}\n";
+        if (capacities_ids != null) { details += $"  - capacities : {capacities_ids.Count} capacities\n"; }
+        else { details += $"  - no capacities\n"; }
+        if (effects != null) { details += $"  - effects : {effects.Count} effects\n"; }
+        else { details += $"  - no effects\n"; }
+        if (anim_data != null) { details += $"  - {anim_data.GetDetails()}\n"; }
+        else { details += $"  - no anim_data\n"; }
         return details;
     }
 }

@@ -11,7 +11,7 @@ public class CameraShaker : Singleton<CameraShaker>
 	[SerializeField][Range(0f, 1f)] protected float shake_magnitude = 1f;
 	protected float base_shake_magnitude = 0.75f;
 	private Setting screenshake_global_setting = null;
-	[SerializeField] protected ShakeSettings settings;
+	[SerializeField] protected PrimeTween.ShakeSettings settings;
 
 	[Header("Chroma effect")]
 	protected float chroma_magnitude_threshold = 0.8f;

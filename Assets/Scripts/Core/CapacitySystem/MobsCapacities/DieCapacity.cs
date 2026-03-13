@@ -70,7 +70,7 @@ public class DieCapacity : Capacity
     private IEnumerator destroyObject()
     {
         // get the being
-        Being being = capable as Being;
+        Being being = Capable as Being;
         being.body_collider.gameObject.layer = LayerMask.NameToLayer("Meat");
 
         // 1 - DROP ITEMS

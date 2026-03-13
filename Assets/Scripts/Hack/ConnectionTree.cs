@@ -23,7 +23,7 @@ public class ConnectionTree : MonoBehaviour
     // ADD / REMOVE
     public void AddNode(Connection connection)
     {
-        if (log) { Debug.Log($"(ConnectionTree) Adding node from {connection.start.capable.name} to {connection.destination.capable.name}"); }
+        if (log) { Debug.Log($"(ConnectionTree) Adding node from {connection.start.Capable.name} to {connection.destination.Capable.name}"); }
 
         // we find the connection's parent to add their child
         Connection parent = get_parent(connection);
@@ -38,7 +38,7 @@ public class ConnectionTree : MonoBehaviour
     }
     public void RemoveNode(Connection node)
     {
-        if (log) { Debug.Log($"(ConnectionTree) Removing node from {node.start.capable.name} to {node.destination.capable.name}"); }
+        if (log) { Debug.Log($"(ConnectionTree) Removing node from {node.start.Capable.name} to {node.destination.Capable.name}"); }
 
         // we remove the node from the graph
         nodes.Remove(node);

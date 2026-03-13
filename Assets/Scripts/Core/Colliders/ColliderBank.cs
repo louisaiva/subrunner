@@ -41,6 +41,9 @@ public class ColliderBank : MonoBehaviour
     [SerializeField] protected Stack<GameObject> pooled_circle_colliders;
     [SerializeField] protected Stack<GameObject> pooled_box_colliders;
 
+    [Header("Logs")]
+    [SerializeField] protected bool log_body_data;
+
 
     // LOAD UNLOAD
     public BoxCollider2D LoadBoxCollider(BoxData data, Transform parent)
@@ -111,6 +114,8 @@ public class ColliderBank : MonoBehaviour
     }
     private void load_collider_data(Collider2D collider, ColliderData collider_data)
     {
+        if (log_body_data) { Debug.Log($"(CapableBank - load_collider_data) Loading collider data : {(collider_data == null ? "null" : collider_data.GetDetails())}"); }
+
         // we set gameobject data
         collider.gameObject.layer = collider_data.layerID;
         collider.transform.localPosition = collider_data.local_position;

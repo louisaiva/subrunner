@@ -22,6 +22,14 @@
             "y": -2.572953939437866
         }
     ],
+    "neighbours_ids": [
+        "room_1",
+        "room_3"
+    ],
+    "capables_ids": [],
+    "movables_ids": [],
+    "IN_movables_ids": [],
+    "OUT_movables_ids": [],
     "tilebase_paths_used": [
         "tilesets/walls_darkgreen",
         "tilesets/fg_2_rule",
@@ -801,13 +809,5 @@
         2,
         2,
         2
-    ],
-    "neighbours_ids": [
-        "room_1",
-        "room_3"
-    ],
-    "capables_ids": [],
-    "movables_ids": [],
-    "IN_movables_ids": [],
-    "OUT_movables_ids": []
+    ]
 }

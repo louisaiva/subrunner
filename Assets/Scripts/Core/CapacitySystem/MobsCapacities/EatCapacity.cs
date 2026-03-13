@@ -83,9 +83,8 @@ public class EatCapacity : Capacity
     }
 
     // UPDATE
-    protected override void Update()
+    protected void Update()
     {
-        base.Update();
         if (hunger > 500f) { return; }
         hunger += Time.deltaTime * 1f;
     }

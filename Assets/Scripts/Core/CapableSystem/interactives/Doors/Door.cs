@@ -26,6 +26,12 @@ public class Door : Capable, Interactable, Openable
     private Vector2 opened_interact_kf_y = new Vector2(0.9f, -0.4f); // orientation up then down
     private Transform interact_kf;
 
+    [Header("Cached components")]
+    protected OpenCapacity opener;
+    protected CloseCapacity closer;
+    public OpenCapacity Opener { get { return opener; }}
+    public CloseCapacity Closer { get { return closer; }}
+
     // START
     protected virtual void Start()
     {
@@ -40,8 +46,12 @@ public class Door : Capable, Interactable, Openable
         // on récup l'interact kf
         interact_kf = GetCapacity<HoverCapacity>().Canvas_kf;
 
+        // & les capacities
+        opener = GetCapacity<OpenCapacity>();
+        closer = GetCapacity<CloseCapacity>();
+
         // on close
-        if (Can("close")) { close(); }
+        if (closer.Able) { close(); }
     }
 
 
@@ -55,8 +65,8 @@ public class Door : Capable, Interactable, Openable
         Interactor = interactor.GetCapacity<InteractCapacity>();
 
         // on réagit à l'interaction
-        if (Can("open")) { open(); }
-        else if (Can("close")) { close(); }
+        if (opener.Able) { open(); }
+        else if (closer.Able) { close(); }
     }
 
 
@@ -70,7 +80,7 @@ public class Door : Capable, Interactable, Openable
         shadow_caster.enabled = false;
 
 
-        Do("open");
+        opener.Use(this);
 
 
         // on récupère la room du perso
@@ -98,7 +108,7 @@ public class Door : Capable, Interactable, Openable
         // on reactive le ShadowCaster2D
         shadow_caster.enabled = true;
 
-        Do("close");
+        closer.Use(this);
 
 
         // on récupère la room du perso

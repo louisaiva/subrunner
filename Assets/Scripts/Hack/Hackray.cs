@@ -71,8 +71,8 @@ public class Hackray : MonoBehaviour
     public void SetConnectors(ConnectCapacity hacker, ConnectCapacity target)
     {
         // set hacker and target
-        this.hacker = hacker.capable;
-        this.target = target.capable;
+        this.hacker = hacker.Capable;
+        this.target = target.Capable;
 
         // set hacker offset
         if (this.hacker is Item hacker_item)

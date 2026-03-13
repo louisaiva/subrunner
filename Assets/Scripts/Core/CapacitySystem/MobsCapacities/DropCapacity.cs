@@ -43,13 +43,13 @@ public class DropCapacity : Capacity
     private void Start()
     {
         // on récupère la bank
-        inventory = capable.Inventory;
+        inventory = Capable.Inventory;
 
         // on récupère l'action drop
         dropAction = InputManager.Instance.GetComponent<InputManager>().GetAction(dropInput);
 
         // on définit le callback
-        dropCallback = ctx => Use(capable);
+        dropCallback = ctx => Use(Capable);
     }
 
     // SELECT / DESELECT

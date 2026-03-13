@@ -185,7 +185,7 @@ public class Being : Movable
         life -= damage;
 
         // play hurt animation
-        if (!HasEffect(Effect.Unstoppable)) { Do("hurted"); }
+        if (!HasEffect(Effect.Unstoppable)) { GetCapacity("hurted")?.Use(this); }
         else { knockback.magnitude *= 0.125f; } // reduce knockback magnitude by 8
 
         // knockback
@@ -202,7 +202,7 @@ public class Being : Movable
         floating_dmg_provider.GetComponent<FloatingDmgProvider>().AddFloatingDmg(this.gameObject,-1f * damage, transform.position);
 
         // check if dead
-        if (life <= 0f && Can("die")) { Do("die"); }
+        if (life <= 0f) { GetCapacity<DieCapacity>().Use(this); }
 
         return true;
     }

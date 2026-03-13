@@ -13,8 +13,8 @@ public class MusicPlayer : MonoBehaviour
     private EventInstance? current_theme = null;
     private bool _loop = true;
 
-    [field:Header("Looping parameters")]
-    [field:SerializeField] public bool loop
+    [Header("Looping parameters")]
+    public bool loop
     {
         get { return _loop; }
         set

@@ -11,20 +11,20 @@ public interface IData
 [Serializable] public class RoomData : IData
 {
     [field: SerializeField] public string id { get; set; }
-    /* private int _hash = 0;
-    public int Hash // used for quick comparisons, generated from id
-    {
-        get
-        {
-            if (_hash == 0) { _hash = id.GetHashCode(); }
-            return _hash;
-        }
-    } */
     public Vector2 position;
 
     // colliders
     public List<Vector2> collider_points;
 
+    // neighbours data
+    public List<string> neighbours_ids; // list of the rooms that are directly connected to this one, used for loading/unloading logic
+
+    // Capable management
+    public List<string> capables_ids;
+    public List<string> movables_ids;
+    public List<string> IN_movables_ids; // movable waiting to go in, not stored in movables_ids yet
+    public List<string> OUT_movables_ids; // movables that are going out (!) are still stored in movables_ids
+    
     // tilemaps data
     public string[] tilebase_paths_used;
     public BoundsInt ceiling_bounds;
@@ -35,29 +35,6 @@ public interface IData
     public int[] carpet_tiles;
     public BoundsInt ground_bounds;
     public int[] ground_tiles;
-
-    // neighbours data
-    public List<string> neighbours_ids; // list of the rooms that are directly connected to this one, used for loading/unloading logic
-
-    // Capable management
-    public List<string> capables_ids;
-    public List<string> movables_ids;
-    public List<string> IN_movables_ids; // movable waiting to go in, not stored in movables_ids yet
-    public List<string> OUT_movables_ids; // movables that are going out (!) are still stored in movables_ids
-
-    // EQUALS & GETHASHCODE
-    public override bool Equals(object obj)
-    {
-        if (obj is RoomData other)
-        {
-            return this.GetHashCode() == other.GetHashCode();
-        }
-        return false;
-    }
-    public override int GetHashCode()
-    {
-        return id.GetHashCode();
-    }
 
 
     // GETTERS

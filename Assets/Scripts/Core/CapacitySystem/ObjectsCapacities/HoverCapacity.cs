@@ -63,22 +63,22 @@ public class HoverCapacity : Capacity
         if (Controller.Instance == null || capable != Controller.Instance.Capable) { return; }
         
         // we play the animation
-        this.capable.AnimPlayer.Play(played_animation);
+        this.Capable.AnimPlayer.Play(played_animation);
 
-        if (log) { Debug.Log("(HoverCapacity) " + capable.name + " hovered " + this.capable.name + $", playing {played_animation}"); }
+        if (log) { Debug.Log("(HoverCapacity) " + capable.name + " hovered " + this.Capable.name + $", playing {played_animation}"); }
     }
     public void Unhover(Capable capable)
     {
         if (!hoverers.Contains(capable)) { return; }
         hoverers.Remove(capable);
         
-        if (this.capable == null) { Debug.LogWarning($"(HoverCapacity) this.capable is null on {name}"); }
+        if (this.Capable == null) { Debug.LogWarning($"(HoverCapacity) this.capable is null on {name}"); }
 
         // then we only stop playing animation if the capable is the one controlled
-        if (Controller.Instance != null && capable == Controller.Instance.Capable) { this.capable.AnimPlayer.StopPlaying(played_animation); } // we stop the animation
+        if (Controller.Instance != null && capable == Controller.Instance.Capable) { this.Capable.AnimPlayer.StopPlaying(played_animation); } // we stop the animation
 
         OnHoverLost?.Invoke(capable);
-        if (log) { Debug.Log("(HoverCapacity) " + capable.name + " stop hovering " + this.capable.name + $", stopped playing {played_animation}"); }
+        if (log) { Debug.Log("(HoverCapacity) " + capable.name + " stop hovering " + this.Capable.name + $", stopped playing {played_animation}"); }
     }
 
     // UPDATE HOVER ANIMATION
@@ -87,11 +87,11 @@ public class HoverCapacity : Capacity
         if (!Hovered) { played_animation = animation; return; }
 
         // we stop the current animation
-        capable.AnimPlayer.StopPlaying(played_animation);
+        Capable.AnimPlayer.StopPlaying(played_animation);
 
         // we play the new animation
         played_animation = animation;
-        capable.AnimPlayer.AddToPile(played_animation);
+        Capable.AnimPlayer.AddToPile(played_animation);
     }
 
 
@@ -138,15 +138,8 @@ public class HoverCapacity : Capacity
     // GET STATIC DATA
     public override CapacityData GetStaticData()
     {
-        HoverCapacityData static_data = new HoverCapacityData
+        HoverCapacityData static_data = new HoverCapacityData(base.GetStaticData())
         {
-            // set base data things
-            id = get_static_id(),
-            local_position = this.transform.localPosition,
-
-            // we set the kind
-            kind = GetType().Name,
-
             // we get the hover collider data
             hover_collider_data = get_static_circle_data(GetComponentInChildren<CircleCollider2D>(includeInactive: true))
         };
@@ -155,7 +148,7 @@ public class HoverCapacity : Capacity
     }
     private CircleData get_static_circle_data(CircleCollider2D collider)
     {
-        if (collider == null) { return null; }
+        // if (collider == null) { return null; }
         
         // if (log_static_data) { Debug.Log($"(Capable - GetStaticData - {name}) CircleCollider2D found with offset {collider.offset} and radius {collider.radius} and is_trigger = {collider.isTrigger}"); }
         return new CircleData
@@ -175,15 +168,18 @@ public class HoverCapacity : Capacity
     // need to store a collider data for the hover to work
     public CircleData hover_collider_data;
 
+    // CONSTRUCTOR
+    public HoverCapacityData(CapacityData parent)
+    {
+        foreach (var prop in parent.GetType().GetProperties()) { prop.SetValue(this, prop.GetValue(parent)); }
+        foreach (var prop in parent.GetType().GetFields()) { prop.SetValue(this, prop.GetValue(parent)); }
+    }
 
     // DUPLICATE
     public override ICapacityData Duplicate()
     {
-        return new HoverCapacityData()
+        return new HoverCapacityData(base.Duplicate() as CapacityData)
         {
-            id = this.id + "_copy",
-            kind = this.kind,
-            local_position = this.local_position,
             hover_collider_data = this.hover_collider_data != null ? this.hover_collider_data.Duplicate() as CircleData : null
         };
     }

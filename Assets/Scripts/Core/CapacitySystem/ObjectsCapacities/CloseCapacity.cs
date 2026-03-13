@@ -15,8 +15,8 @@ public class CloseCapacity : Capacity
     {
         get
         {
-            if ((capable as Openable).is_moving) { return false; }
-            if (!(capable as Openable).is_open) { return false; }
+            if ((Capable as Openable).is_moving) { return false; }
+            if (!(Capable as Openable).is_open) { return false; }
             return true;
         }
     }
@@ -35,10 +35,7 @@ public class CloseCapacity : Capacity
     }
 
     // USE
-    public override void Use(Capable capable)
-    {
-        close();
-    }
+    public override void Use(Capable capable) => close();
 
     // CLOSING
     protected virtual void close(bool play_anim = true)
@@ -47,53 +44,53 @@ public class CloseCapacity : Capacity
         open_capacity?.CancelOpenInvoke();
 
         // on ouvre le coffre
-        (capable as Openable).is_moving = true;
+        (Capable as Openable).is_moving = true;
 
         // on joue l'animation
         if (play_anim)
         {
-            capable.AnimPlayer.StopPlaying("idle_open");
-            capable.AnimPlayer.Play("close", duration_override: closing_duration);
+            Capable.AnimPlayer.StopPlaying("idle_open");
+            Capable.AnimPlayer.Play("close", duration_override: closing_duration);
         }
         Invoke("success_close", closing_duration);
-        capable.GetCapacity<HoverCapacity>()?.ChangeAnimation(hover_close_anim);
+        Capable.GetCapacity<HoverCapacity>()?.ChangeAnimation(hover_close_anim);
 
         // on joue le son
-        AudioEngine.Instance.Play("close", capable.Skin, capable.gameObject);
+        AudioEngine.Instance.Play("close", Capable.Skin, Capable.gameObject);
 
         // on fait les vérifications pour les portes
-        if (capable is Door door && !door.DontTouchSortingLayer)
+        if (Capable is Door door && !door.DontTouchSortingLayer)
         {
-            capable.AnimPlayer.Renderer.sortingLayerName = "fg";
-            capable.AnimPlayer.Renderer.sortingOrder = 1;
+            Capable.AnimPlayer.Renderer.sortingLayerName = "fg";
+            Capable.AnimPlayer.Renderer.sortingOrder = 1;
         }
 
-        if (log) { Debug.Log(capable.name + " is closing..."); }
+        if (log) { Debug.Log(Capable.name + " is closing..."); }
     }
     protected virtual void success_close()
     {
         // on ouvre le coffre
-        (capable as Openable).is_open = false;
-        (capable as Openable).is_moving = false;
+        (Capable as Openable).is_open = false;
+        (Capable as Openable).is_moving = false;
 
         // on joue l'animation
-        capable.AnimPlayer.Play("idle");
+        Capable.AnimPlayer.Play("idle");
 
         // on fait les vérifications pour les portes
-        if (capable is Door door && !door.DontTouchSortingLayer)
+        if (Capable is Door door && !door.DontTouchSortingLayer)
         {
-            capable.AnimPlayer.Renderer.sortingLayerName = "main";
-            capable.AnimPlayer.Renderer.sortingOrder = 0;
+            Capable.AnimPlayer.Renderer.sortingLayerName = "main";
+            Capable.AnimPlayer.Renderer.sortingOrder = 0;
         }
 
-        if (log) { Debug.Log(capable.name + " is closed !"); }
+        if (log) { Debug.Log(Capable.name + " is closed !"); }
     }
 
 
     // CancelInvoke
     public void CancelCloseInvoke()
     {
-        if (log) { Debug.Log("(CloseCapacity) " + capable.name + " CancelInvoke success_close"); }
+        if (log) { Debug.Log("(CloseCapacity) " + Capable.name + " CancelInvoke success_close"); }
         CancelInvoke("success_close");
     }
 }

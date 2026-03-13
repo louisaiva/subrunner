@@ -212,7 +212,6 @@ public class PersoInputsController : InputController
     {
         TalkCapacity voice = Capable.GetCapacity<TalkCapacity>();
         if (voice == null) { return; } // if we don't have a talk capacity
-        if (!voice.Able) { return; } // if we don't have a talk capacity
         voice.Use(Capable);
     }
     

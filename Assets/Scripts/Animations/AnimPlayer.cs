@@ -369,14 +369,15 @@ public class AnimPlayer : MonoBehaviour
     // DATA LOADING / GETTING / UNLOADING
     public void LoadPlayerData(AnimData data)
     {
-        Debug.Log($"(AnimPlayer) {name}'s loading data : {(data != null ? data.GetDetails() : "null")}");
+        if (CapableBank.Instance.log_anim_layers) { Debug.Log($"(AnimPlayer) {name}'s loading data : {(data != null ? data.GetDetails() : "null")}"); }
+        
         // ! does not load layers !! but we don't want to it's inside CapableBank because we pool them
         if (data.anim_capacity_priorities == null || data.anim_capacity_priorities.Count == 0) { return;}
         Skin = data.skin;
         anim_capacity_priorities = data.anim_capacity_priorities;
 
         // we load the sr data
-        Debug.Log($"(AnimPlayer) {data.skin}'s data default material is {data.material_path}");
+        if (CapableBank.Instance.log_anim_layers) { Debug.Log($"(AnimPlayer) {data.skin}'s data default material is {data.material_path}"); }
         Renderer.material = Resources.Load<Material>(data.material_path);
         Renderer.sortingLayerID = data.sorting_layer_id;
         Renderer.sortingOrder = data.order_in_layer;

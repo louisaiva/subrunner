@@ -25,11 +25,10 @@ namespace CrashKonijn.Docs.GettingStarted.Behaviours
 ```
 {% endcode %}
 
-3. In our scene, create a new GameObject using `GameObject > 3D Object > Sphere`. Rename the object to `Pear` and add the `PearBehaviour` component to it. Pears are generally smaller than agents, so let's adjust the scale to `0.5` on all axes. You can remove the collider as we won't need it.
+3. In our scene, create a new GameObject using `GameObject > 3D Object > Sphere`. Rename the object to `Pear` and add the `PearBehaviour` component to it. Pears are generally smaller than agents, so let's adjust the scale to `0.5` on all axes. You can remove the collider as we won't need it. 
 4. Let's create a new material for the pear. Right-click in the `Assets` folder and select `Create > Material`. Rename the material to `PearMaterial` and change the color to a nice yellow/green. Drag the material onto the `Pear` object.
 5. In the `GettingStarted` folder let's create a new folder called `Prefabs`. Drag the `Pear` object into this folder to create a prefab.
-6. Let's duplicate the pear a couple of times in the scene and place them in different locations.
-
+6. Let's duplicate the pear a couple of times in the scene and place them in different locations. Please make sure al your pears are on 0 on the y-axis of their positions.
 7. For these actions we need data that represents the `PearCount` and `Hunger` values. The **source of truth** for these values must be our own `MonoBehaviours`. Let's create a script called `DataBehaviour` in the `Behaviours` folder and add the following code:
 
 {% code title="DataBehaviour.cs" %}
@@ -60,7 +59,6 @@ namespace CrashKonijn.Docs.GettingStarted.Behaviours
 
 {% code title="PearSensor.cs" %}
 ```csharp
-using System;
 using System.Collections.Generic;
 using CrashKonijn.Docs.GettingStarted.Behaviours;
 using CrashKonijn.Goap.Runtime;
@@ -68,6 +66,8 @@ using UnityEngine;
 
 namespace CrashKonijn.Docs.GettingStarted.Sensors
 {
+    // Defining a GoapId is only necessary when using the ScriptableObject configuration method.
+    [GoapId("PearSensor-d68c875d-29c0-43f3-9d79-054d4cc6505d")]
     public class PearSensor : MultiSensorBase
     {
         // A cache of all the pears in the world
@@ -84,7 +84,7 @@ namespace CrashKonijn.Docs.GettingStarted.Sensors
 
                 return data.pearCount;
             });
-            
+
             this.AddLocalWorldSensor<Hunger>((agent, references) =>
             {
                 // Get a cached reference to the DataBehaviour on the agent
@@ -94,34 +94,32 @@ namespace CrashKonijn.Docs.GettingStarted.Sensors
                 // We will lose the decimal values, but we don't need them for this example
                 return (int) data.hunger;
             });
-            
+
             this.AddLocalTargetSensor<ClosestPear>((agent, references, target) =>
             {
                 // Use the cashed pears list to find the closest pear
                 var closestPear = this.Closest(this.pears, agent.Transform.position);
-                
+
                 if (closestPear == null)
                     return null;
-                
+
                 // If the target is a transform target, set the target to the closest pear
                 if (target is TransformTarget transformTarget)
                     return transformTarget.SetTransform(closestPear.transform);
-                
+
                 return new TransformTarget(closestPear.transform);
             });
         }
 
         // The Created method is called when the sensor is created
         // This can be used to gather references to objects in the scene
-        public override void Created()
-        {
-        }
-        
+        public override void Created() { }
+
         // This method is equal to the Update method of a local sensor.
         // It can be used to cache data, like gathering a list of all pears in the scene.
         public override void Update()
         {
-            this.pears = GameObject.FindObjectsOfType<PearBehaviour>();
+            this.pears = Object.FindObjectsOfType<PearBehaviour>();
         }
 
         // Returns the closest item in a list
@@ -134,10 +132,10 @@ namespace CrashKonijn.Docs.GettingStarted.Sensors
             foreach (var item in list)
             {
                 var distance = Vector3.Distance(item.gameObject.transform.position, position);
-                
+
                 if (!(distance < closestDistance))
                     continue;
-                
+
                 closest = item;
                 closestDistance = distance;
             }

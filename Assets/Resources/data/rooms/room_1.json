@@ -22,6 +22,16 @@
             "y": -2.572953939437866
         }
     ],
+    "neighbours_ids": [
+        "room_2"
+    ],
+    "capables_ids": [
+        "chest-1",
+        "dev_spawner-1"
+    ],
+    "movables_ids": [],
+    "IN_movables_ids": [],
+    "OUT_movables_ids": [],
     "tilebase_paths_used": [
         "tilesets/walls_darkgreen",
         "tilesets/fg_2_rule",
@@ -843,14 +853,5 @@
         2,
         2,
         2
-    ],
-    "neighbours_ids": [
-        "room_2"
-    ],
-    "capables_ids": [
-        "chest-1"
-    ],
-    "movables_ids": [],
-    "IN_movables_ids": [],
-    "OUT_movables_ids": []
+    ]
 }

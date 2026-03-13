@@ -7,7 +7,7 @@ using UnityEngine;
 /// It is a collider that is enabled during the attack animation
 /// </summary>
 
-public class AttackCapacity : Capacity
+public class AttackCapacity : CooldownCapacity
 {
     [Header("Damage parameters")]
     public float distance_to_attack = 1f;

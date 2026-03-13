@@ -24,13 +24,13 @@ public class RunCapacity : Capacity
         {
             if (_walker == null)
             {
-                if (capable.HasCapacity<WalkCapacity>())
+                if (Capable.HasCapacity<WalkCapacity>())
                 {
-                    _walker = capable.GetCapacity<WalkCapacity>();
+                    _walker = Capable.GetCapacity<WalkCapacity>();
                 }
                 else
                 {
-                    Debug.LogError("(RunCapacity) " + capable.name + " has no WalkCapacity! RunCapacity won't work!");
+                    Debug.LogError("(RunCapacity) " + Capable.name + " has no WalkCapacity! RunCapacity won't work!");
                     return null;
                 }
             }
@@ -58,7 +58,7 @@ public class RunCapacity : Capacity
         // on applique le changement au son
         walker.walk_sound.setParameterByName("running", 1);
 
-        if (log) { Debug.Log("(RunCapacity) " + capable.name + " is now running at " + max_run_speed + " speed!"); }
+        if (log) { Debug.Log("(RunCapacity) " + Capable.name + " is now running at " + max_run_speed + " speed!"); }
     }
     public void DisableRun()
     {
@@ -74,7 +74,7 @@ public class RunCapacity : Capacity
         // on applique le changement au son
         walker.walk_sound.setParameterByName("running", 0);
 
-        if (log) { Debug.Log("(RunCapacity) " + capable.name + " is now walking at " + max_walk_speed + " speed!"); }
+        if (log) { Debug.Log("(RunCapacity) " + Capable.name + " is now walking at " + max_walk_speed + " speed!"); }
     }
 
 }

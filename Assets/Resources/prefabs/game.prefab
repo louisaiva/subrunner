@@ -214,7 +214,7 @@ GameObject:
   - component: {fileID: 934573574474036947}
   - component: {fileID: 4927723071802305916}
   - component: {fileID: 4638387620946702657}
-  - component: {fileID: 2267615320992059520}
+  - component: {fileID: 4853940163870427261}
   m_Layer: 23
   m_Name: goap_manager
   m_TagString: Untagged
@@ -255,7 +255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19925b6b65787cf439172e5e095b51fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  configInitializer: {fileID: 2267615320992059520}
+  configInitializer: {fileID: 0}
   agentTypeConfigFactories:
   - {fileID: 1464628417142453961}
   - {fileID: 1718403630454878758}
@@ -275,7 +275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fed2f3e5164f4b4383d4f2ed55b4dd9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2267615320992059520
+--- !u!114 &4853940163870427261
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -284,9 +284,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 735636583209525812}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a5699ae0abdeb343a176daf469936ec, type: 3}
+  m_Script: {fileID: 11500000, guid: e3339028c17ff0b4aa9cd8bdff2f9442, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::subrunner.goap.DependencyInjector
 --- !u!1 &780003408685879306
 GameObject:
   m_ObjectHideFlags: 0
@@ -383,6 +383,56 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04334fc7d732a6e48ac240ae0a7210ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  game_theme_to_play: i'm so hungry
+  generated_ids:
+  - dev_spawner-1
+  - hover-1
+  - spawn-1
+  - box-1
+  - katana-1
+  - hover-2
+  - attack-1
+  - hover-3
+  - bone-1
+  - hover-4
+  - chest-1
+  - shoes-1
+  - hover-5
+  - dodge-1
+  - pastas-1
+  - hover-6
+  - hover-7
+  - open-1
+  - close-1
+  - cursor-1
+  - connect-1
+  - zombo-1
+  - interact-1
+  - die-1
+  - walk-1
+  - run-1
+  - attack-2
+  - eat-1
+  - connect-2
+  - robot_spawner-1
+  - hover-8
+  - spawn-2
+  - dev-1
+  - interact-2
+  - die-2
+  - walk-2
+  - run-2
+  - attack-3
+  - eat-2
+  - connect-3
+  - perso-1
+  - die-3
+  - walk-3
+  - run-3
+  - talk-1
+  - interact-3
+  - eat-3
+  - drop-1
 --- !u!1 &5218386995141567643
 GameObject:
   m_ObjectHideFlags: 0
@@ -678,6 +728,7 @@ SortingGroup:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
 --- !u!1 &6510569033244462756
 GameObject:
   m_ObjectHideFlags: 0
@@ -5489,7 +5540,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &517273873545485489
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5535,6 +5586,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -5566,7 +5618,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!114 &1296097648286350497
 MonoBehaviour:
   m_ObjectHideFlags: 0

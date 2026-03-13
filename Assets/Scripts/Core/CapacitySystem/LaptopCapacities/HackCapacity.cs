@@ -33,7 +33,7 @@ public class HackCapacity : Capacity
     // START
     private void Start()
     {
-        device = capable.GetComponent<Device>();
+        device = Capable.GetComponent<Device>();
     }
 
     // EXPLOIT SELECTION
@@ -50,11 +50,11 @@ public class HackCapacity : Capacity
 
         // we set the selected exploit
         selected_exploit = exploit;
-        if (log) { Debug.Log($"(HackCapacity) {capable.name} selected exploit {exploit.name}."); }
+        if (log) { Debug.Log($"(HackCapacity) {Capable.name} selected exploit {exploit.name}."); }
     }
     
     // UPDATE
-    protected override void Update()
+    protected void Update()
     {
         // we cycle through all the running exploits and we check few things
         for (int i = running_hacks.Count - 1; i >= 0; --i)
@@ -76,7 +76,7 @@ public class HackCapacity : Capacity
         // NMAP
         if (hack.state == ProcessusState.Completed && hack.name == "nmap") { Scan(hack.target); }
 
-        if (log_cancel && hack.state == ProcessusState.Failed) { Debug.Log($"(HackCapacity) {capable.name} finished exploit {hack.name} on {hack.target.Capable.name} with state {hack.state}."); }
+        if (log_cancel && hack.state == ProcessusState.Failed) { Debug.Log($"(HackCapacity) {Capable.name} finished exploit {hack.name} on {hack.target.Capable.name} with state {hack.state}."); }
 
         // we download files if there are any
         download_files(hack);
@@ -86,11 +86,11 @@ public class HackCapacity : Capacity
     {
         if (!running_hacks.Contains(hack))
         {
-            Debug.LogError($"(HackCapacity) {capable.name} tried to remove a hack {hack.name} but it's not running.");
+            Debug.LogError($"(HackCapacity) {Capable.name} tried to remove a hack {hack.name} but it's not running.");
             return;
         }
 
-        if (log) { Debug.Log($"(HackCapacity) {capable.name} finished exploit {hack.name}."); }
+        if (log) { Debug.Log($"(HackCapacity) {Capable.name} finished exploit {hack.name}."); }
 
         // we remove the hackray
         Destroy(hackrays[hack].gameObject);
@@ -105,8 +105,8 @@ public class HackCapacity : Capacity
         foreach (File file in hack.downloads)
         {
             bool wrote_file = device.WriteFile(file);
-            if (log && wrote_file) { Debug.Log($"(HackCapacity) {capable.name} downloaded file {file.name} from {hack.target.name} and saved it to its device."); }
-            else if (log && !wrote_file) { Debug.LogWarning($"(HackCapacity) {capable.name} downloaded file {file.name} from {hack.target.name} but could not save it to its device (maybe full storage)."); }
+            if (log && wrote_file) { Debug.Log($"(HackCapacity) {Capable.name} downloaded file {file.name} from {hack.target.name} and saved it to its device."); }
+            else if (log && !wrote_file) { Debug.LogWarning($"(HackCapacity) {Capable.name} downloaded file {file.name} from {hack.target.name} but could not save it to its device (maybe full storage)."); }
         }
     }
 
@@ -169,7 +169,7 @@ public class HackCapacity : Capacity
         // we get some free cores from the device
         List<Core> free_cores = device.Processor.GetFreeCores(hack.program.cores_cost);
 
-        if (log) { Debug.Log($"(HackCapacity) {capable.name} is running exploit {hack.name} on {hack.target.Capable.name} using {free_cores.Count} cores."); }
+        if (log) { Debug.Log($"(HackCapacity) {Capable.name} is running exploit {hack.name} on {hack.target.Capable.name} using {free_cores.Count} cores."); }
 
         // we run the hack
         hack.Run(free_cores);
@@ -197,7 +197,7 @@ public class HackCapacity : Capacity
         if (hack.state == ProcessusState.Failed) { return; }
 
         // we cancel the last hack
-        if (log_cancel) { Debug.Log($"(HackCapacity) {capable.name} is cancelling its last hack {hack.name} on {hack.target.Capable.name}."); }
+        if (log_cancel) { Debug.Log($"(HackCapacity) {Capable.name} is cancelling its last hack {hack.name} on {hack.target.Capable.name}."); }
         hack.Fail();
     }
     public void CancelControlHacks()
@@ -225,7 +225,7 @@ public class HackCapacity : Capacity
         // we list all the exploits we have
         List<Exploit> exploits = device.GetExploits();
 
-        string s = $"(HackCapacity) {capable.name} scanning {target.name} ";
+        string s = $"(HackCapacity) {Capable.name} scanning {target.name} ";
 
         // we associate the key file to type_password if it's a lockable and if we have the key
         if (target.Capable is Lockable lockable)

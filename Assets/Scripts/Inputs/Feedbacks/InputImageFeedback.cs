@@ -13,7 +13,6 @@ public class InputImageFeedback : InputFeedback, Colorant
 
     [Header("Image")]
     [SerializeField] protected Image image;
-    [SerializeField]
     protected SpriteBank bank
     {
         get

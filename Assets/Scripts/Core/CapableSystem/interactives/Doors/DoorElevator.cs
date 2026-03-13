@@ -16,7 +16,7 @@ public class DoorElevator : Door
         Interactor = interactor.GetCapacity<InteractCapacity>();
 
         // we react to the interaction
-        if (!Can("open")) { return; }
+        if (!opener.Able) { return; }
 
         // on ouvre la porte
         open();
@@ -36,7 +36,7 @@ public class DoorElevator : Door
             if (auto_close_timer <= 0f)
             {
                 auto_close_timer = 0f;
-                if (Can("close")) { close(); }
+                if (closer.Able) { close(); }
             }
         }
     }

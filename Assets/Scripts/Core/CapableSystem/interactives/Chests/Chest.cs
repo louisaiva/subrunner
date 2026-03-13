@@ -89,7 +89,7 @@ public class Chest : Capable, Interactable, Openable
         // attach the chest inventory & perso inventory to the ui chest pool
         UI_ChestPool ui_chest = UI_Manager.Instance.GetPool<UI_ChestPool>();
         ui_chest?.AttachChest(Inventory);
-        ui_chest?.AttachPerso(Interactor?.capable.Inventory);
+        ui_chest?.AttachPerso(Interactor?.Capable.Inventory);
 
         // then we show the ui_chest
         UI_Manager.Instance.SwitchTo("chest");

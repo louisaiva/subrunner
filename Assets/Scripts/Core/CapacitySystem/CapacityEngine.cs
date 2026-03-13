@@ -83,9 +83,9 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
 
 
     // LOAD CAPACITIES
-    public List<Capacity> LoadCapacities(List<string> capacities_ids, Capable capable, bool skip_if_loaded=false)
+    public HashSet<Capacity> LoadCapacities(List<string> capacities_ids, Capable capable, bool skip_if_loaded=false)
     {
-        List<Capacity> capacities = new List<Capacity>();
+        HashSet<Capacity> capacities = new HashSet<Capacity>();
         for (int i = 0; i < capacities_ids.Count; i++)
         {
             string id = capacities_ids[i];

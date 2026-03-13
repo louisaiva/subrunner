@@ -2,8 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
-using DelaunatorSharp;
-using DelaunatorSharp.Unity.Extensions;
+// using DelaunatorSharp;
+// using DelaunatorSharp.Unity.Extensions;
 // using System.Threading;
 
 public class WorldGenerator : MonoBehaviour
@@ -445,14 +445,15 @@ public class WorldGenerator : MonoBehaviour
     {
 
         // on crée une liste de Point
-        DelaunatorSharp.IPoint[] points = new DelaunatorSharp.IPoint[positions.Count];
-        points = positions.ToPoints();
+        // DelaunatorSharp.IPoint[] points = new DelaunatorSharp.IPoint[positions.Count];
+        // points = positions.ToPoints();
 
         // on crée la triangulation
-        Delaunator delaunator = new Delaunator(points);
+        // Delaunator delaunator = new Delaunator(points);
 
         // on récupère les triangles
-        List<int> triangles = delaunator.Triangles.ToList();
+        Debug.LogError("(WorldGenerator) WORLD GENERATOR IS OBSOLETE YOU SHOULD NOT USE IT :///");
+        List<int> triangles = new List<int>();/* delaunator.Triangles.ToList(); */
 
         // return triangles;
 
