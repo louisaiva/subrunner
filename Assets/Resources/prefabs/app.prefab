@@ -305,7 +305,6 @@ GameObject:
   - component: {fileID: 714203621573029839}
   - component: {fileID: 2427471456612112662}
   - component: {fileID: 8217619454301214403}
-  - component: {fileID: 8756311335750391691}
   - component: {fileID: 8269756926769288201}
   - component: {fileID: 4820698345186690242}
   m_Layer: 0
@@ -659,23 +658,6 @@ MonoBehaviour:
   - mouse_scroll_U
   - mouse_scroll_D
   log: 0
---- !u!114 &8756311335750391691
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4855291863457090303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e00bee47448f3d14aa15507ca860b396, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  capacities_prefabs_path: prefabs/capacities/
-  log: 0
-  log_prefabs_loading: 0
-  loaded_capacities: []
-  sleeping_capacities_parent: {fileID: 0}
 --- !u!114 &8269756926769288201
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -955,6 +937,7 @@ SortingGroup:
   m_SortingLayer: 8
   m_SortingOrder: 50
   m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
 --- !u!1 &5846687295635405809
 GameObject:
   m_ObjectHideFlags: 0

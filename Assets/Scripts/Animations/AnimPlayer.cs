@@ -157,15 +157,6 @@ public class AnimPlayer : MonoBehaviour
         string capacity = "";
         AnimCapacityPriority capacity_priority = null;
 
-        /* // we check if we have a capacity in the pile
-        if (capacity_pile != "")
-        {
-            capacity = capacity_pile.Split(',').FirstOrDefault();
-            capacity_priority = getAnimCapacityPriority(capacity);
-            capacity_pile = capacity_pile.Remove(0, capacity.Length + 1); // remove the first capacity and the comma after it
-        }
-        else
-        { */
         // we go through the anim capacity priorities and we get the highest one playing a capacity
         int highest_priority = -1;
         foreach (AnimCapacityPriority priority in anim_capacity_priorities)
@@ -415,7 +406,7 @@ public class AnimPlayer : MonoBehaviour
             if (anim_layer == null) { continue; }
 
             // we create the layer data
-            SpriteRenderer sr = anim_layer.SpriteRenderer;
+            SpriteRenderer sr = anim_layer.Renderer;
             AnimLayerData layer_data = new AnimLayerData
             {
                 // load basic layer data
@@ -436,7 +427,7 @@ public class AnimPlayer : MonoBehaviour
     }
 
 
-    // ORIENTATION
+    // ORIENTATION & FLIP
     public void SetOrientation(Vector2 look_at)
     {
         if (log_orientation) { Debug.Log("(AnimPlayer) Changing " + name + " orientation to " + look_at); }
@@ -491,7 +482,25 @@ public class AnimPlayer : MonoBehaviour
             Debug.Log(s);
         }
     }
+    /// <summary>
+    /// this method is different from SetOrientation because
+    /// it does not override the orientation. This means the
+    /// flip will only affect the current animation ! Very
+    /// useful for the 'hurted' anim for example; where we
+    /// want the anim to face the opposite of knockabk direction even
+    /// if we are looking in the direction of the knockback
+    /// </summary>
+    /// <param name="flipX">the direction to flip the animation</param>
+    public void FlipCurrentAnim(bool flipX)
+    {
+        Renderer.flipX = flipX;
 
+        // we flip all the anim layers renderers
+        for (int i = 0; i < anim_layers.Count; i++)
+        {
+            anim_layers[i].Renderer.flipX = flipX;
+        }
+    }
 
 
 

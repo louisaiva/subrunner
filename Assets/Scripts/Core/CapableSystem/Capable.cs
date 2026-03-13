@@ -240,7 +240,7 @@ public class Capable : MonoBehaviour, Debuggable
     public string Skin => (AnimPlayer == null) ? "none" : AnimPlayer.Skin;
 
     [Header("Capacities")]
-    [SerializeField] private HashSet<Capacity> capacities = new HashSet<Capacity>();
+    [SerializeField] private List<Capacity> capacities = new List<Capacity>();
     private readonly Dictionary<string, Capacity> capacityByName = new(StringComparer.Ordinal);
     private readonly Dictionary<Type, Capacity> capacityByExactType = new();
     private readonly Dictionary<Type, Capacity> capacityByAssignableTypeCache = new();
@@ -357,8 +357,9 @@ public class Capable : MonoBehaviour, Debuggable
     // CAPACITIES REGISTERING
     public void RegisterCapacity(Capacity capa)
     {
-        if (!capacities.Add(capa)) { return; }
+        if (capacities.Contains(capa)) { return; }
 
+        capacities.Add(capa);
         capacityByName[capa.name] = capa;
         capacityByExactType[capa.GetType()] = capa;
         capacityByAssignableTypeCache.Clear();
@@ -374,6 +375,43 @@ public class Capable : MonoBehaviour, Debuggable
         capacityByAssignableTypeCache.Clear();
 
         if (log) { Debug.Log($"(Capable - {this.name}) Unregistered capacity {capa.name}"); }
+    }
+    [Obsolete("Use RegisterCapacity() instead")] public Capacity AddCapacity(string name)
+    {
+        // we check if the capacity is already in the list
+        if (HasCapacity(name)) { return GetCapacity(name); }
+
+        // get the capacity instance
+        if (CapacityBank.Instance == null)
+        {
+            Debug.LogError("CapacityBank instance is null, can't add capacity " + name);
+            return null;
+        }
+        GameObject capa_instance = CapacityBank.Instance?.InstantiateCapacity(name);
+
+        // we put it as a child of the capable & we rename it
+        capa_instance.transform.parent = transform;
+        capa_instance.name = name;
+        capa_instance.transform.localPosition = Vector3.zero;
+        if (log) { Debug.Log("(Capable) " + this.name + " : capacity " + name + " added"); }
+
+        // we put the capacity in the list
+        Capacity capa = capa_instance.GetComponent<Capacity>();
+        RegisterCapacity(capa);
+        return capa;
+    }
+    [Obsolete("Use UnregisterCapacity() instead")] public void RemoveCapacity(string name)
+    {
+        foreach (Capacity capa in capacities)
+        {
+            if (capa.name == name)
+            {
+                capacities.Remove(capa);
+                Destroy(capa.gameObject);
+                if (log) { Debug.Log("(Capable) " + this.name + " : capacity " + name + " removed"); }
+                return;
+            }
+        }
     }
 
 
@@ -429,47 +467,6 @@ public class Capable : MonoBehaviour, Debuggable
         }
     }
 
-    // CAPACITIES
-    [Obsolete("Use RegisterCapacity() instead")] public Capacity AddCapacity(string name)
-    {
-        // we check if the capacity is already in the list
-        if (HasCapacity(name)) { return GetCapacity(name); }
-
-        // get the capacity instance
-        if (CapacityBank.Instance == null)
-        {
-            Debug.LogError("CapacityBank instance is null, can't add capacity " + name);
-            return null;
-        }
-        GameObject capa_instance = CapacityBank.Instance?.InstantiateCapacity(name);
-
-        // we put it as a child of the capable & we rename it
-        capa_instance.transform.parent = transform;
-        capa_instance.name = name;
-        capa_instance.transform.localPosition = Vector3.zero;
-
-        // we put the capacity in the list
-        Capacity capa = capa_instance.GetComponent<Capacity>();
-        capacities.Add(capa);
-        if (log) { Debug.Log("(Capable) " + this.name + " : capacity " + name + " added"); }
-
-        return capa;
-    }
-    [Obsolete("Use UnregisterCapacity() instead")] public void RemoveCapacity(string name)
-    {
-        foreach (Capacity capa in capacities)
-        {
-            if (capa.name == name)
-            {
-                capacities.Remove(capa);
-                Destroy(capa.gameObject);
-                if (log) { Debug.Log("(Capable) " + this.name + " : capacity " + name + " removed"); }
-                return;
-            }
-        }
-    }
-
-
     // CAPACITIES GETTERS
     public bool HasCapacity(string name) { return capacityByName.ContainsKey(name); }
     public Capacity GetCapacity(string name) { return capacityByName.TryGetValue(name, out var capacity) ? capacity : null;  }
@@ -504,7 +501,7 @@ public class Capable : MonoBehaviour, Debuggable
     }
     public T GetCapacity<T>() where T : Capacity { return TryGetCapacity<T>(out var capacity) ? capacity : null; }
     public bool HasCapacity<T>() where T : Capacity { return TryGetCapacity<T>(out _); }
-    public HashSet<Capacity> GetCapacities()
+    public List<Capacity> GetCapacities()
     {
         return capacities;
     }

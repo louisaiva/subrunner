@@ -32,7 +32,10 @@ public class Being : Movable
     public int body_bones = 1; // nombre d'os dans le corps du being
 
     [Header("taking damage")]
-    public GameObject floating_dmg_provider;
+    protected GameObject floating_dmg_provider;
+
+    [Header("Logs")]
+    [SerializeField] private bool log_taking_dmg = false;
 
     // ANIMATIONS
     protected float lookin_at_angle = 40f; // angle du regard du perso en degrés
@@ -183,9 +186,13 @@ public class Being : Movable
 
         // si on est ici on prend des dégats
         life -= damage;
+        if (log_taking_dmg) { Debug.Log($"{name} took {damage} damage, life left: {life}"); }
 
         // play hurt animation
-        if (!HasEffect(Effect.Unstoppable)) { GetCapacity("hurted")?.Use(this); }
+        if (!HasEffect(Effect.Unstoppable))
+        {
+            GetCapacity("hurted")?.Use(this);
+        }
         else { knockback.magnitude *= 0.125f; } // reduce knockback magnitude by 8
 
         // knockback
@@ -194,8 +201,9 @@ public class Being : Movable
             AddForce(knockback);
 
             // change the flipX of the sprite if needed
-            // todo make a Flip property in AnimPlayer bcz rn it does not update the AnimLayers
-            if (knockback.direction.x != 0f) { AnimPlayer.Renderer.flipX = knockback.direction.x < 0f; }
+            // // todo make a Flip property in AnimPlayer bcz rn it does not update the AnimLayers
+            // if (knockback.direction.x != 0f) { AnimPlayer.Renderer.flipX = knockback.direction.x < 0f; }
+            if (knockback.direction.x != 0f) { AnimPlayer.FlipCurrentAnim(knockback.direction.x < 0f); }
         }
 
         // floating dmg

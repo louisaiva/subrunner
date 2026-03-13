@@ -78,7 +78,7 @@ public interface ICapableData : IData
         else { details += $"  - no body\n"; }
         if (inventory != null) { details += $"  - {inventory.GetDetails()}"; }
         else { details += $"  - no inventory\n"; }
-        if (capacities_ids != null) { details += $"  - capacities : {capacities_ids.Count} capacities\n"; }
+        if (capacities_ids != null) { details += $"  - capacities : {(capacities_ids.Count == 0 ? "none" : string.Join(", ", capacities_ids))}\n"; }
         else { details += $"  - no capacities\n"; }
         if (effects != null) { details += $"  - effects : {effects.Count} effects\n"; }
         else { details += $"  - no effects\n"; }

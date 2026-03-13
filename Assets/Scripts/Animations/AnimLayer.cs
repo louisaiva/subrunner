@@ -18,7 +18,7 @@ public class AnimLayer : MonoBehaviour
             return _sr;
         }
     }
-    public SpriteRenderer SpriteRenderer { get { return sr; } }
+    public SpriteRenderer Renderer { get { return sr; } }
 
     [Header("Current Animation")]
     public Anim current_anim = null;

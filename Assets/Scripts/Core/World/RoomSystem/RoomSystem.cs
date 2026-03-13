@@ -199,7 +199,7 @@ public class RoomSystem : BSOD_System<RoomSystem>
 
                 // verify that we have a stored data for this capable,
                 // if not we skip it
-                if (!CapableSystem.Instance.HasLoadedCapableData(capable_id)) { continue; }
+                if (!CapableSystem.Instance.HasLoadedCapableData(capable_id) && !Controller.Instance.ControlledID.Equals(capable_id)) { continue; }
 
                 // check if capable is already in the room
                 if (!room_data.capables_ids.Contains(capable_id))
@@ -224,7 +224,7 @@ public class RoomSystem : BSOD_System<RoomSystem>
 
                 // verify that we have a stored data for this capable,
                 // if not we skip it
-                if (!CapableSystem.Instance.HasLoadedCapableData(movable_id)) { continue; }
+                if (!CapableSystem.Instance.HasLoadedCapableData(movable_id) && !Controller.Instance.ControlledID.Equals(movable_id)) { continue; }
 
                 // check if movable is already in the room
                 if (!room_data.movables_ids.Contains(movable_id))
