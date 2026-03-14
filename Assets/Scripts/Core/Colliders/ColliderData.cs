@@ -12,8 +12,7 @@ public interface IColliderData : IData
 
 
 
-[Serializable]
-public class ColliderData : IColliderData
+[Serializable] public class ColliderData : IColliderData
 {
     // collider data
     public Vector2 local_position;
@@ -50,22 +49,24 @@ public class ColliderData : IColliderData
         return details;
     }
 }
-[Serializable]
-public class CircleData : ColliderData
+[Serializable] public class CircleData : ColliderData
 {
     public float radius;
 
 
+    // CONSTRUCTOR
+    public CircleData() { }
+    public CircleData(ColliderData parent)
+    {
+        foreach (var prop in parent.GetType().GetProperties()) { prop.SetValue(this, prop.GetValue(parent)); }
+        foreach (var prop in parent.GetType().GetFields()) { prop.SetValue(this, prop.GetValue(parent)); }
+    }
+
     // DUPLICATE
     public override IColliderData Duplicate()
     {
-        return new CircleData()
+        return new CircleData(base.Duplicate() as ColliderData)
         {
-            local_position = this.local_position,
-            layerID = this.layerID,
-            used_for_pathfinding = this.used_for_pathfinding,
-            is_trigger = this.is_trigger,
-            offset = this.offset,
             radius = this.radius
         };
     }
@@ -77,21 +78,24 @@ public class CircleData : ColliderData
         return base.GetDetails() + details;
     }
 }
-[Serializable]
-public class BoxData : ColliderData
+
+[Serializable] public class BoxData : ColliderData
 {
     public Vector2 size;
+
+    // CONSTRUCTOR
+    public BoxData() {}
+    public BoxData(ColliderData parent)
+    {
+        foreach (var prop in parent.GetType().GetProperties()) { prop.SetValue(this, prop.GetValue(parent)); }
+        foreach (var prop in parent.GetType().GetFields()) { prop.SetValue(this, prop.GetValue(parent)); }
+    }
 
     // DUPLICATE
     public override IColliderData Duplicate()
     {
-        return new BoxData()
+        return new BoxData(base.Duplicate() as ColliderData)
         {
-            local_position = this.local_position,
-            layerID = this.layerID,
-            used_for_pathfinding = this.used_for_pathfinding,
-            is_trigger = this.is_trigger,
-            offset = this.offset,
             size = this.size
         };
     }

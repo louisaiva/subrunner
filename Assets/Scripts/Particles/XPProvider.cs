@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public class XPProvider : Singleton<XPProvider>
 {
     // PARTICLES
-    List<ParticleSystem.Particle> particles = new List<ParticleSystem.Particle>();
-    ParticleSystem generator;
+    protected List<ParticleSystem.Particle> particles = new List<ParticleSystem.Particle>();
+    private ParticleSystem generator;
 
     // PARTICLES RADIUS GENERATION
     public float radius = 0.5f;
@@ -24,6 +24,7 @@ public class XPProvider : Singleton<XPProvider>
     public Vector3 generator_position = new Vector3(-47, -9, 0);
     public float generator_strengh = 1f;
 
+    // START
     private void Start()
     {
 
@@ -34,7 +35,8 @@ public class XPProvider : Singleton<XPProvider>
         // EmitXP(500, new Vector3(-30, -12, 0), 10f);
     }
 
-    void Update()
+    // UPDATE
+    private void Update()
     {
         if (generate_continuously)
         {
@@ -42,6 +44,44 @@ public class XPProvider : Singleton<XPProvider>
         }
     }
 
+    // XP EMISSION
+    public void EmitXP(int count, Vector3 position,float strengh = 1f)
+    {
+        // on crée un EmitParams pour pouvoir changer la position de l'émission
+        ParticleSystem.EmitParams emitParams = new ParticleSystem.EmitParams();
+
+        for (int i = 0; i < count; i++)
+        {
+            // on change la position de l'émission
+            // dans un rayon de radius autour de la position
+            Vector2 position2D = Random.insideUnitCircle;
+            emitParams.position = -transform.position + position + radius * new Vector3(position2D.x, position2D.y, 0);
+
+            // on change la vitesse de l'émission en fonction de la strengh
+            // dans une direction 2D aléatoire en x et y
+            Vector2 direction = Random.insideUnitCircle;
+            emitParams.velocity = strengh * new Vector3(direction.x, direction.y, 0);
+
+            // on change la couleur de l'émission
+            float rand = Random.Range(0f, 1f);
+            emitParams.startColor = Color.white;
+            if (rand < life_percent)
+            {
+                // on change la couleur de la particule
+                emitParams.startColor = life_color;
+            }
+
+
+            // on emet les particules
+            generator.Emit(emitParams, 1);
+        }
+    }
+    private void emitEndlessly()
+    {
+        EmitXP((int) generator_strengh, generator_position);
+    }
+
+    // TRIGGERS
     private void OnParticleTrigger()
     {
         if (Perso.Instance == null) { return; } // no player, no trigger
@@ -86,44 +126,7 @@ public class XPProvider : Singleton<XPProvider>
         if (xp_bonus > 0) { Perso.Instance.addXP(xp_bonus); }
 
         // on ajoute de la life au player
-        if (life_bonus > 0) { Perso.Instance.heal(life_bonus); }
-    }
-
-    public void EmitXP(int count, Vector3 position,float strengh = 1f)
-    {
-        // on crée un EmitParams pour pouvoir changer la position de l'émission
-        ParticleSystem.EmitParams emitParams = new ParticleSystem.EmitParams();
-
-        for (int i = 0; i < count; i++)
-        {
-            // on change la position de l'émission
-            // dans un rayon de radius autour de la position
-            Vector2 position2D = Random.insideUnitCircle;
-            emitParams.position = -transform.position + position + radius * new Vector3(position2D.x, position2D.y, 0);
-
-            // on change la vitesse de l'émission en fonction de la strengh
-            // dans une direction 2D aléatoire en x et y
-            Vector2 direction = Random.insideUnitCircle;
-            emitParams.velocity = strengh * new Vector3(direction.x, direction.y, 0);
-
-            // on change la couleur de l'émission
-            float rand = Random.Range(0f, 1f);
-            emitParams.startColor = Color.white;
-            if (rand < life_percent)
-            {
-                // on change la couleur de la particule
-                emitParams.startColor = life_color;
-            }
-
-
-            // on emet les particules
-            generator.Emit(emitParams, 1);
-        }
-    }
-
-    private void emitEndlessly()
-    {
-        EmitXP((int) generator_strengh, generator_position);
+        if (life_bonus > 0) { Perso.Instance.Heal(life_bonus); }
     }
 
 }

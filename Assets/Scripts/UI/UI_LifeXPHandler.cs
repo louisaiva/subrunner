@@ -51,14 +51,6 @@ public class UI_LifeXPHandler : MonoBehaviour
     // UPDATE
     private void Update()
     {
-        // ! on check si le perso est mort
-        if (!Perso.Instance || !Perso.Instance.Alive)
-        {
-            // on met à zero
-            life_fill.sizeDelta = new Vector2(0, life_fill_height);
-            return;
-        }
-
         // on met à jour le fill de life
         update_life_fill();
 
@@ -70,13 +62,10 @@ public class UI_LifeXPHandler : MonoBehaviour
     // UPDATE FILL LOW METHODS
     private void update_life_fill()
     {
-
         // on récupère les infos du perso
-        int max_life = Perso.Instance.max_life;
-        float life = Perso.Instance.life;
+        float life_percent = Perso.Instance.LifePourcent;
 
         // on met à jour la taille du fill
-        float life_percent = life / max_life;
         float life_width = life_fill_max_width * life_percent;
 
         // on met à jour la taille du fill

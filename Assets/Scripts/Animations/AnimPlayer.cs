@@ -574,4 +574,16 @@ public class AnimPlayer : MonoBehaviour
     {
         this.capacities = capacities;
     }
+
+    public AnimCapacityPriority Duplicate()
+    {
+        AnimCapacityPriority new_priority = new AnimCapacityPriority(new List<string>(this.capacities))
+        {
+            priority = this.priority,
+            capacity_playing = this.capacity_playing,
+            lock_orientation = this.lock_orientation,
+            one_shot = this.one_shot
+        };
+        return new_priority;
+    }
 }

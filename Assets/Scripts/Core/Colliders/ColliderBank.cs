@@ -43,9 +43,17 @@ public class ColliderBank : MonoBehaviour
 
     [Header("Logs")]
     [SerializeField] protected bool log_body_data;
+    [SerializeField] protected bool hide_log_load_collider_not_found;
 
 
     // LOAD UNLOAD
+    public Collider2D LoadCollider(ColliderData data, Transform parent)
+    {
+        if (data is BoxData bdata) { return LoadBoxCollider(bdata, parent); }
+        if (data is CircleData cdata) { return LoadCircleCollider(cdata, parent); }
+        if (!hide_log_load_collider_not_found) { Debug.LogWarning($"(ColliderBank - LoadCollider) data is nor BoxData nor CircleData, can't load collider : {data}\n{data.GetDetails()}"); }
+        return null;
+    }
     public BoxCollider2D LoadBoxCollider(BoxData data, Transform parent)
     {
         // we first try to extract a collider from the pool

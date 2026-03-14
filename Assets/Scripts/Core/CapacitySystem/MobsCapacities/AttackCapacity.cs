@@ -243,7 +243,7 @@ public class AttackCapacity : CooldownCapacity
         attacker_knockback_direction += -direction_enemy.normalized * knockback_magnitude;
 
         // apply damage and knockback
-        enemy.take_damage(damage, knockback);
+        enemy.TakeDamage(damage, knockback);
 
         // check if enemy is dead
         if (!enemy.Alive) { kills += 1; return true; }

@@ -31,7 +31,7 @@ public class TextManager : MonoBehaviour
     {
         // crée un texte qui monte et disparait
         GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
-        floating_text.GetComponent<FloatingText>().init(text, color, 30f, 0.1f, 0.2f, 16f);
+        floating_text.GetComponent<FloatingText>().Init(text, color, 30f, 0.1f, 0.2f, 16f);
         floating_text.transform.SetParent(transform);
     }
 
@@ -39,7 +39,7 @@ public class TextManager : MonoBehaviour
     {
         // crée un texte qui reste puis disparait d'un coup
         GameObject static_text = Instantiate(static_text_prefab, position+offset, Quaternion.identity) as GameObject;
-        static_text.GetComponent<FloatingText>().init(text, color, 20f, 0f, 0f, ttl);
+        static_text.GetComponent<FloatingText>().Init(text, color, 20f, 0f, 0f, ttl);
         static_text.transform.SetParent(transform);
 
         return static_text;
@@ -121,7 +121,7 @@ public class TextManager : MonoBehaviour
                 sentence.GetComponent<TextMeshPro>().text += line[j];
             }
             // on met à jour le ttl
-            sentence.GetComponent<FloatingText>().setTTL(ttl_sentence);
+            sentence.GetComponent<FloatingText>().SetTTL(ttl_sentence);
 
             // on attend un peu (sauf si on a sauté la ligne)
             if (skip_line_waiting) { continue; }

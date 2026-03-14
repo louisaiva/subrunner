@@ -82,7 +82,7 @@ public class UI_Text : UI_Slot
     public void heal()
     {
         if (Perso.Instance == null) { return; }
-        Perso.Instance.healMax();
+        Perso.Instance.HealMax();
     }
     public void toggle_vsync()
     {

@@ -227,7 +227,7 @@ public class Perso : Being, Hacker
     private string quest_text = "mission 1 :\nfind the\nELEVATOR";
     void showQuest()
     {
-        floating_dmg_provider.GetComponent<TextManager>().addFloatingText(quest_text, transform.position + new Vector3(0, 0.5f, 0), "yellow");
+        FloatingDmgProvider.Instance.GetComponent<TextManager>().addFloatingText(quest_text, transform.position + new Vector3(0, 0.5f, 0), "yellow");
     }
 
 
@@ -335,7 +335,7 @@ public class Perso : Being, Hacker
         }
 
         // on affiche un texte de level up
-        floating_dmg_provider.GetComponent<TextManager>().addFloatingText("LEVEL " + level.ToString(), transform.position + new Vector3(0, 0.5f, 0), "yellow");
+        FloatingDmgProvider.Instance.GetComponent<TextManager>().addFloatingText("LEVEL " + level.ToString(), transform.position + new Vector3(0, 0.5f, 0), "yellow");
     }
 
     // HEAL
@@ -349,13 +349,13 @@ public class Perso : Being, Hacker
     }
 
     // DAMAGE
-    public override bool take_damage(float damage, Force knockback = null)
+    public override bool TakeDamage(float damage, Force knockback = null)
     {
-        bool dmg_status = base.take_damage(damage, knockback);
+        bool dmg_status = base.TakeDamage(damage, knockback);
         if (!dmg_status) { return false; }
 
         // we make a little screenshake if perso
-        float shake_magnitude = damage / life;
+        float shake_magnitude = damage / Health;
         cam.GetComponent<CameraShaker>().Shake(shake_magnitude);
 
         return true;
@@ -365,7 +365,7 @@ public class Perso : Being, Hacker
         Debug.Log("YOU DIED");
 
         // on affiche un floating text
-        floating_dmg_provider.GetComponent<TextManager>().addFloatingText("YOU DIED", transform.position + new Vector3(0, 0.5f, 0), "red");
+        FloatingDmgProvider.Instance.GetComponent<TextManager>().addFloatingText("YOU DIED", transform.position + new Vector3(0, 0.5f, 0), "red");
 
         // on désactive le Controller & PersoInputsController
         Controller.Instance.ResetCapableTarget(control_nothing: true);

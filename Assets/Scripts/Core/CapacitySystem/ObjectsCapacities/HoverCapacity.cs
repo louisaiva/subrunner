@@ -149,16 +149,20 @@ public class HoverCapacity : Capacity
     private CircleData get_static_circle_data(CircleCollider2D collider)
     {
         // if (collider == null) { return null; }
-        
         // if (log_static_data) { Debug.Log($"(Capable - GetStaticData - {name}) CircleCollider2D found with offset {collider.offset} and radius {collider.radius} and is_trigger = {collider.isTrigger}"); }
-        return new CircleData
+
+        // setup basic data
+        ColliderData data = new ColliderData
         {
-            radius = collider.radius,
             local_position = collider.transform.localPosition,
             layerID = collider.gameObject.layer,
             offset = collider.offset,
             is_trigger = collider.isTrigger,
             used_for_pathfinding = false // hover colliders are never used for pathfinding
+        };
+        return new CircleData(data)
+        {
+            radius = collider.radius
         };
     }
 }

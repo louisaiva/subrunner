@@ -158,23 +158,6 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         if (log_loading) { Debug.Log("(CapacityEngine) Loaded " + data.id); }
         return capacity;
     }
-    /* private bool skip_capacity_loading(CapacityData data, CapableData capable_data)
-    {
-        // we only check on items
-        if (!GameManager.Instance.IsKind(Type.GetType(capable_data.kind), typeof(Item))) { return false; }
-
-        // and on grabbed items more specifically
-        if (!(capable_data is ItemData item_data) || !item_data.is_grabbed) { return false; }
-
-        // we only check for hover capacity (for now)
-        if (!GameManager.Instance.IsKind(Type.GetType(data.kind), typeof(HoverCapacity))) { return false; }
-        // todo inverse the check just above, we need to have a list<string> with kind
-        // that don't need to be loaded when item is grabbed
-
-        // we check if the capacity is hover and if the capable is grabbed, if yes we skip loading this capacity because it's not needed
-        if (log_loading) { Debug.LogWarning($"(CapacityEngine - Load) Skipped loading capacity '{data.id}' for '{capable_data.id}' because hover & grabbed"); }
-        return true;
-    } */
 
     // UNLOAD CAPACITIES
     public void UnloadCapacities(List<string> capacities_ids, Capable capable)

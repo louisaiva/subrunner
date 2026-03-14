@@ -108,13 +108,26 @@ public interface ICapableData : IData
     // GET & DUPLICATE
     public AnimData Duplicate()
     {
-        AnimData new_data = new AnimData();
-        new_data.skin = this.skin;
-        new_data.anim_capacity_priorities = new List<AnimCapacityPriority>(this.anim_capacity_priorities);
-        new_data.material_path = this.material_path;
-        new_data.sorting_layer_id = this.sorting_layer_id;
-        new_data.order_in_layer = this.order_in_layer;
-        new_data.layers = new List<AnimLayerData>(this.layers);
+        AnimData new_data = new AnimData
+        {
+            skin = this.skin,
+            material_path = this.material_path,
+            sorting_layer_id = this.sorting_layer_id,
+            order_in_layer = this.order_in_layer,
+            layers = new List<AnimLayerData>(this.layers)
+        };
+
+        // duplicate anim_capacity_priorities
+        if (this.anim_capacity_priorities != null)
+        {
+            new_data.anim_capacity_priorities = new List<AnimCapacityPriority>();
+            foreach (AnimCapacityPriority acp in this.anim_capacity_priorities)
+            {
+                new_data.anim_capacity_priorities.Add(acp.Duplicate());
+            }
+        }
+        else { new_data.anim_capacity_priorities = null; }
+
         return new_data;
     }
     public string GetDetails()

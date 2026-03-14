@@ -30,7 +30,7 @@ public class HungerDetector : Detector
 
         // si le goal est inactif et (qu'on a faim ou pas assez de vie)
         if (!goal.enabled
-            && (ia.life <= healthPercentageThreshold * 0.01f * ia.max_life
+            && (ia.LifePourcent <= healthPercentageThreshold * 0.01f
             || eatCapacity.hunger >= hungerThreshold))
         {
             brain.EnableGoal(goal);
@@ -39,7 +39,7 @@ public class HungerDetector : Detector
 
         // si le goal est actif et qu'on a assez de vie et pas faim
         if (goal.enabled
-            && ia.life > healthPercentageThreshold * 0.01f * ia.max_life
+            && ia.LifePourcent > healthPercentageThreshold * 0.01f
             && eatCapacity.hunger < hungerThreshold)
         {
             brain.DisableGoal(goal);

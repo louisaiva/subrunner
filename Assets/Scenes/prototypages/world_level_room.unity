@@ -4066,6 +4066,7 @@ MonoBehaviour:
   sleeping_colliders_parent: {fileID: 474280245}
   sleeping_layer_name: Default
   log_body_data: 0
+  hide_log_load_collider_not_found: 0
 --- !u!1001 &494892046
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14144,6 +14145,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8595018692463036030, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8641047358284209256, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
+      propertyPath: log
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

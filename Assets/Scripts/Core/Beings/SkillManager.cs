@@ -64,7 +64,7 @@ public class SkillManager : MonoBehaviour
     public void Start()
     {
         // on met à jour les valeurs du perso
-        Perso.Instance.max_life = (int)calculateX("stat:max_life");
+        Perso.Instance.MaxHealth = (int)calculateX("stat:max_life");
         Perso.Instance.regen_life = calculateX("stat:regen_life");
         // perso.GetCapacity<AttackCapacity>().damage = calculateX("damage");
         // perso.max_bits = (int) calculateX("max_bits");
@@ -80,8 +80,8 @@ public class SkillManager : MonoBehaviour
         if (reference == "stat:max_life")
         {
             max_life_level++;
-            Perso.Instance.max_life = (int)calculateX(reference);
-            if (log) { Debug.Log("(SkillManager) skill " + reference + " upgraded to level " + max_life_level + " (new value: " + Perso.Instance.max_life + ")"); }
+            Perso.Instance.MaxHealth = (int)calculateX(reference);
+            if (log) { Debug.Log("(SkillManager) skill " + reference + " upgraded to level " + max_life_level + " (new value: " + Perso.Instance.MaxHealth + ")"); }
             return;
         }
         if (reference == "stat:regen_life")
