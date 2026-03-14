@@ -113,7 +113,7 @@ public class Being : Movable
 
         // si on est ici on prend des dégats
         health -= damage;
-        /* if (log_taking_dmg) {  */Debug.Log($"(Being - TakeDamage) {name} took {damage} damage, life left: {health}");// }
+        if (log_taking_dmg) { Debug.Log($"(Being - TakeDamage) {name} took {damage} damage, life left: {health}"); }
 
         // play hurt animation
         if (!HasEffect(Effect.Unstoppable))
