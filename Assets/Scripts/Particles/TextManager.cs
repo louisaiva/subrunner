@@ -29,19 +29,21 @@ public class TextManager : MonoBehaviour
     public void addFloatingText(string text, Vector3 position, string color="white")
     {
         // crée un texte qui monte et disparait
-        GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity) as GameObject;
-        floating_text.GetComponent<FloatingText>().Init(text, color, 30f, 0.1f, 0.2f, 16f);
-        floating_text.transform.SetParent(transform);
+        // GameObject floating_text = Instantiate(floating_text_prefab, position, Quaternion.identity);
+        FloatingText floating_text = GetComponent<FloatingTextPooler>().LoadText(text, color, position+offset, 30f);
+        floating_text.Init(text, color, 30f, 0.1f, 0.2f, 16f);
+        // floating_text.transform.SetParent(transform);
     }
 
     public GameObject addStaticText(string text, Vector3 position, string color="white",float ttl=-1f)
     {
         // crée un texte qui reste puis disparait d'un coup
-        GameObject static_text = Instantiate(static_text_prefab, position+offset, Quaternion.identity) as GameObject;
-        static_text.GetComponent<FloatingText>().Init(text, color, 20f, 0f, 0f, ttl);
-        static_text.transform.SetParent(transform);
+        FloatingText floating_text = GetComponent<FloatingTextPooler>().LoadText(text, color, position + offset, 30f);
+        // GameObject static_text = Instantiate(static_text_prefab, position+offset, Quaternion.identity) as GameObject;
+        floating_text.Init(text, color, 20f, 0f, 0f, ttl);
+        // floating_text.transform.SetParent(transform);
 
-        return static_text;
+        return floating_text.gameObject;
     }
 
     public IEnumerator TalkLines(string text, Being being)
@@ -72,6 +74,9 @@ public class TextManager : MonoBehaviour
             // on ajoute une ligne de texte
             GameObject sentence = addStaticText("", being.transform.position + offset, "white", 1000000f);
             sentence.transform.SetParent(voice);
+            TextMeshPro text_mesh = sentence.GetComponent<TextMeshPro>();
+            FloatingText floating_text = sentence.GetComponent<FloatingText>();
+            
             // on ajoute les caractères un par un
             for (int j = 0; j < line.Length; j++)
             {
@@ -88,22 +93,22 @@ public class TextManager : MonoBehaviour
                 else if (line[j] == '/' && j < line.Length - 1 && line[j + 1] == '.')
                 {
                     yield return new WaitForSeconds(caractere_delay);
-                    sentence.GetComponent<TextMeshPro>().text += '.';
+                    text_mesh.text += '.';
                     yield return new WaitForSeconds(caractere_delay);
-                    sentence.GetComponent<TextMeshPro>().text += '.';
-                    string old_text = sentence.GetComponent<TextMeshPro>().text;
+                    text_mesh.text += '.';
+                    string old_text = text_mesh.text;
                     yield return new WaitForSeconds(slow_caractere_delay);
-                    sentence.GetComponent<TextMeshPro>().text += '.';
+                    text_mesh.text += '.';
 
                     // on clignote un petit peu
                     for (int arghfsdf = 0; arghfsdf < 2; arghfsdf++)
                     {
                         yield return new WaitForSeconds(slow_caractere_delay);
-                        sentence.GetComponent<TextMeshPro>().text = old_text;
+                        text_mesh.text = old_text;
                         yield return new WaitForSeconds(slow_caractere_delay);
-                        sentence.GetComponent<TextMeshPro>().text += '.';
+                        text_mesh.text += '.';
                     }
-                    sentence.GetComponent<TextMeshPro>().text += ' ';
+                    text_mesh.text += ' ';
 
                     // on saute le caractère suivant
                     j++;
@@ -117,10 +122,10 @@ public class TextManager : MonoBehaviour
                 }
 
                 yield return new WaitForSeconds(caractere_delay);
-                sentence.GetComponent<TextMeshPro>().text += line[j];
+                text_mesh.text += line[j];
             }
             // on met à jour le ttl
-            sentence.GetComponent<FloatingText>().SetTTL(ttl_sentence);
+            floating_text.SetTTL(ttl_sentence);
 
             // on attend un peu (sauf si on a sauté la ligne)
             if (skip_line_waiting) { continue; }

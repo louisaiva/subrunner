@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Being : Movable
+[Obsolete("Use HealthCapacity instead")] public class Being : Movable
 {
 
     [Header("BEING")]
@@ -48,7 +49,7 @@ public class Being : Movable
         AddEffect(Effect.RegenLife, -888f);
 
         // on initialise la vie
-        max_health = max_health + Random.Range(-random_life_modifier_at_start, random_life_modifier_at_start);
+        max_health = max_health + UnityEngine.Random.Range(-random_life_modifier_at_start, random_life_modifier_at_start);
         health = (float)max_health;
     }
 

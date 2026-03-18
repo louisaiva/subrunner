@@ -24,7 +24,7 @@ public class Corpse : Movable, Interactable
         // we calculate how much meat we want to put inside the meat
         int meat_qty = being.body_meats + UnityEngine.Random.Range(-random_meat_modifier_at_start, random_meat_modifier_at_start);
         if (meat_qty < 1) { meat_qty = 1; }
-        int bones_qty = being.body_bones + UnityEngine.Random.Range(-1,1);
+        int bones_qty = being.body_bones + UnityEngine.Random.Range(-1, 1);
         if (bones_qty < 1) { bones_qty = 1; }
 
         // we understand which meat type we want
@@ -47,8 +47,39 @@ public class Corpse : Movable, Interactable
             if (bone == null) { continue; }
             Inventory.Grab(bone);
         }
-        
+
         if (log_bites) { Debug.Log($"(Corpse) Initialized corpse of {being.name} with {meat_qty} meat & {bones_qty} bones."); }
+    }
+    public void Initialize(Capable capable)
+    {
+        // we calculate how much meat we want to put inside the meat
+        int meat_qty = 2 + UnityEngine.Random.Range(-random_meat_modifier_at_start, random_meat_modifier_at_start);
+        if (meat_qty < 1) { meat_qty = 1; }
+        int bones_qty = 2 + UnityEngine.Random.Range(-1, 1);
+        if (bones_qty < 1) { bones_qty = 1; }
+
+        // we understand which meat type we want
+        string meat_reference = "food:meat";
+        if (capable is Zombo) { meat_reference = "food:meat_zombo"; }
+
+        // we instantiate & grab x meat
+        for (int i = 0; i < meat_qty; i++)
+        {
+            Food meat = ItemBank.Instance.CreateItem(meat_reference) as Food;
+            if (meat == null) { continue; }
+            meat.OnBeingBitten += being_bitten;
+            Inventory.Grab(meat);
+        }
+
+        // and x bones
+        for (int i = 0; i < bones_qty; i++)
+        {
+            Item bone = ItemBank.Instance.CreateItem("other:bone");
+            if (bone == null) { continue; }
+            Inventory.Grab(bone);
+        }
+
+        if (log_bites) { Debug.Log($"(Corpse) Initialized corpse of {capable.name} with {meat_qty} meat & {bones_qty} bones."); }
     }
 
     /* public void Init(CapableData data)

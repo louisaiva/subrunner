@@ -336,12 +336,10 @@ public class CapableSystem : BSOD_System<CapableSystem>
     }
     public Capable SpawnCapable(string base_id, string spawner_id = "")
     {
-        // if (log_spawning) { Debug.Log($"(CapableSystem) Spawning {base_id} entity"); }
-
         // 1. we find base_id data & duplicates it
         if (!capables_data.ContainsKey(base_id)) { Debug.LogWarning("(CapableSystem - SpawnCapable) Capable data not found for id: " + base_id); return null; }
         CapableData base_data = capables_data[base_id];
-        CapableData spawn_data = DuplicateData(base_data) as CapableData;
+        CapableData spawn_data = DuplicateData(base_data);
 
         if (log_spawning) { Debug.Log($"(CapableSystem) Duplicated {base_id} data to {spawn_data.id} \n {spawn_data.GetDetails()}"); }
 

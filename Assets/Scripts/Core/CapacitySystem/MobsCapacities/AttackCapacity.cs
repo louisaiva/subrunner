@@ -128,7 +128,7 @@ public class AttackCapacity : CooldownCapacity
                 IsAttacking = false;
                 hitted_beings.Clear();
                 hitted_health_capa.Clear();
-                being.RemoveEffect(Effect.Unstoppable);
+                if (being != null) { being.RemoveEffect(Effect.Unstoppable); }
             }
             return;
         }

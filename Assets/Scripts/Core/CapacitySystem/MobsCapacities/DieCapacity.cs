@@ -24,7 +24,7 @@ public class DieCapacity : Capacity
     public override void Use(Capable capable)
     {
         // check if the capable is a Being
-        if (capable is not Being) { return; }
+        // if (capable is not Being) { return; }
 
         // we play the animation
         Anim anim = capable.AnimPlayer.Play(name);
@@ -54,9 +54,10 @@ public class DieCapacity : Capacity
         }
 
         // destroy object
-        StartCoroutine(destroyObject());
+        if (capable is Being) { StartCoroutine(destroyBeing()); }
+        else if (capable.HasCapacity<HealthCapacity>()) { StartCoroutine(destroyHealthCapaBeing()); }
     }
-    private IEnumerator destroyObject()
+    private IEnumerator destroyBeing()
     {
         // get the being
         Being being = Capable as Being;
@@ -116,6 +117,68 @@ public class DieCapacity : Capacity
 
         // 6 - DESTROYING OLD BEING & DIE CAPACITY
         Destroy(being);
+        corpse.RemoveCapacity("die"); // and we finally remove the die capacity which will destroy it (this)
+    }
+    private IEnumerator destroyHealthCapaBeing()
+    {
+        // get the being
+        HealthCapacity health = Capable.GetCapacity<HealthCapacity>();
+        health.HealthCollider.gameObject.layer = LayerMask.NameToLayer("Meat");
+
+        // 1 - DROP ITEMS
+        if (Capable.Inventory != null && Capable.Inventory.Count > 0)
+        {
+            yield return Capable.DropAllItems(); // we wait for dropping all items
+        }
+
+        health.Die();
+
+        // 2 - DESTROYING CAPACITIES
+        if (log) { Debug.Log("Destroying capacities of " + Capable.name); }
+
+        // we destroy all capacities (except DieCapacity FOR NOW)
+        List<Capacity> capacities = new List<Capacity>(Capable.GetCapacities());
+        capacities.RemoveAll(capa => capa.name == "die");
+        while (capacities.Count > 0)
+        {
+            Capable.RemoveCapacity(capacities[0].name);
+            capacities.RemoveAt(0);
+        }
+
+
+        // 3 - DESTROYING OTHER ELEMENTS
+        if (Capable.transform.Find("brain") is Transform brain && brain != null) { Destroy(brain.gameObject); }
+        if (Capable.transform.Find("goals") is Transform goal && goal != null) { Destroy(goal.gameObject); }
+        if (Capable.transform.Find("eyes") is Transform eyes && eyes != null) { Destroy(eyes.gameObject); }
+        // if (Capable.transform.Find("inventory") is Transform inventory && inventory != null) { Destroy(inventory.gameObject); }
+        if (Capable.transform.Find("head") is Transform head && head != null) { Destroy(head.gameObject); }
+        if (Capable.transform.Find("light") is Transform light && light != null) { Destroy(light.gameObject); }
+        if (Capable.transform.Find("hacks") is Transform hacks && hacks != null) { Destroy(hacks.gameObject); }
+        if (Capable.transform.Find("processor") is Transform processor && processor != null) { Destroy(processor.gameObject); }
+
+        // 4 - HANDLE PHYSICS
+        // we switch the rigidbody collision detection to discrete since the dead body won't move very fast (not affected by our forces)
+        Rigidbody2D rb = Capable.GetComponent<Rigidbody2D>();
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
+
+        // we wait for a frame in order to the capacities to be destroyed & hover to be instanced
+        yield return null;
+
+
+
+        // 5 - TURNING TO CORPSE
+        Corpse corpse = Capable.gameObject.AddComponent<Corpse>();
+        corpse.name = "Corpse";
+        corpse.Initialize(Capable);
+        if (Capable is Movable movable) { corpse.SetForces(movable.GetForces()); }
+
+        // we add a hover capacity to it (it is an interactable now)
+        corpse.AddCapacity("hover");
+
+
+
+        // 6 - DESTROYING OLD BEING & DIE CAPACITY
+        Destroy(health);
         corpse.RemoveCapacity("die"); // and we finally remove the die capacity which will destroy it (this)
     }
 }

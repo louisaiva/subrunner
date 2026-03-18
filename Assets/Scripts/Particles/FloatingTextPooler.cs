@@ -31,7 +31,7 @@ public class FloatingTextPooler : MonoBehaviour
     }
 
     // DMG POOLING
-    public void LoadText(string content, string color, Vector3 position, float size)
+    public FloatingText LoadText(string content, string color, Vector3 position, float size)
     {
         FloatingText text;
 
@@ -49,6 +49,8 @@ public class FloatingTextPooler : MonoBehaviour
         text.transform.position = position;
         text.Init(content, color, size);
         loaded_texts.Add(text);
+
+        return text;
     }
     /// <summary>
     /// calling this method randomly can cause the update loop

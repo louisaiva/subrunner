@@ -10,7 +10,7 @@ using UnityEngine;
 /// BUT also have Behaviors which define how it behaves in the game world.
 /// </summary>
 
-public class IA : Being
+public class IA : Movable
 {
     [Header("IA")]
     public float exploration_radius = 3f; // the radius of exploration for the IA

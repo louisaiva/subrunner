@@ -133,15 +133,15 @@ public class EatCapacity : Capacity
         food_target.BeEaten(being); // we remove one bite from the food target
         food_target = null;
     }
-    public void Cancel(Being being)
+    public void Cancel(IA ia)
     {
         // we cancel the eating action
-        if (log) { Debug.Log("(EatCapacity) Canceling eating action on " + being.name); }
+        if (log) { Debug.Log("(EatCapacity) Canceling eating action on " + ia.name); }
         food_target = null; // we reset the food target
         StopAllCoroutines(); // stop all coroutines related to eating
 
         // we stop the anim_player from playing
-        being.AnimPlayer.StopPlaying("eat");
+        ia.AnimPlayer.StopPlaying("eat");
     }
 
     // SET FOOD

@@ -853,8 +853,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8884672451934109289}
+  - component: {fileID: 1094141241363125789}
   m_Layer: 23
-  m_Name: body
+  m_Name: health
   m_TagString: Zombo
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -876,6 +877,28 @@ Transform:
   - {fileID: 5213163361446719251}
   m_Father: {fileID: 1982530335173329727}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1094141241363125789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7017082596106958854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adadae607b8edf54a9063c572a72e5d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthCapacity
+  data:
+    <id>k__BackingField: health-2
+    kind: 
+    local_position: {x: 0, y: 0}
+  log: 0
+  health: 40
+  max_health: 40
+  regen_health: 0
+  _health_colliders: []
+  log_taking_dmg: 0
 --- !u!1 &7595380637927670571
 GameObject:
   m_ObjectHideFlags: 0
@@ -1182,6 +1205,8 @@ MonoBehaviour:
     kind: 
     position: {x: 0, y: 0}
     orientation: {x: 0, y: 0}
+    layer: 0
+    tag: 
     anim_data:
       skin: 
       anim_capacity_priorities: []
@@ -1191,7 +1216,7 @@ MonoBehaviour:
       layers: []
     inventory:
       item_pools_data: []
-    body_data:
+    feet_data:
       box_colliders: []
       circle_colliders: []
     capacities_ids: []
@@ -1213,16 +1238,6 @@ MonoBehaviour:
   forces: []
   input_speed: 0
   Velocity: {x: 0, y: 0}
-  feet_collider: {fileID: 0}
-  life: 40
-  max_life: 40
-  random_life_modifier_at_start: 5
-  regen_life: 0
-  _body_colliders:
-  - {fileID: 2005042523568035678}
-  body_meats: 1
-  body_bones: 1
-  floating_dmg_provider: {fileID: 0}
   exploration_radius: 5
   base_tag: Dev
   log_actions: 0
@@ -1342,7 +1357,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8252522207981929358, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: interact-2
+      value: interact-1
       objectReference: {fileID: 0}
     - target: {fileID: 8252522207981929358, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
       propertyPath: interact_types.Array.size
@@ -1436,7 +1451,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2923260706266234128, guid: 218dd56d6e10353498bdf3b630cbd19b, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: die-2
+      value: die-1
       objectReference: {fileID: 0}
     - target: {fileID: 2923260706266234128, guid: 218dd56d6e10353498bdf3b630cbd19b, type: 3}
       propertyPath: time_before_disappearing
@@ -1526,7 +1541,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2037017623738312253, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: eat-2
+      value: eat-1
       objectReference: {fileID: 0}
     - target: {fileID: 2037017623738312253, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
       propertyPath: items_eatable.Array.size
@@ -1636,7 +1651,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3508513623195772367, guid: 9221289842d0d5441807379863779614, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: run-2
+      value: run-1
       objectReference: {fileID: 0}
     - target: {fileID: 6582822749040364892, guid: 9221289842d0d5441807379863779614, type: 3}
       propertyPath: m_Name
@@ -1702,7 +1717,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6468213256878280315, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: walk-2
+      value: walk-1
       objectReference: {fileID: 0}
     - target: {fileID: 6468213256878280315, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
       propertyPath: random_speed_modifier_at_start
@@ -1786,7 +1801,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: attack-3
+      value: attack-1
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: excluded_tags.Array.size
@@ -1936,7 +1951,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6498695312738846334, guid: d765ac0cec860294e82f962c281919b7, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: connect-3
+      value: connect-1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
