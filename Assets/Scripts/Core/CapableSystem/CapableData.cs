@@ -26,7 +26,7 @@ public interface ICapableData : IData
     public InventoryData inventory;
 
     // BODY
-    public BodyData body_data;
+    public FeetData feet_data;
 
     // CAPACITIES
     public List<string> capacities_ids;
@@ -56,7 +56,7 @@ public interface ICapableData : IData
             inventory = this.inventory != null ? this.inventory.Duplicate() : null,
 
             // body
-            body_data = this.body_data != null ? this.body_data.Duplicate() : null,
+            feet_data = this.feet_data != null ? this.feet_data.Duplicate() : null,
 
             // capacities & effects
             capacities_ids = new List<string>(this.capacities_ids),
@@ -74,8 +74,8 @@ public interface ICapableData : IData
         details += $"  - orientation : {orientation}\n";
         details += $"  - layer : {LayerMask.LayerToName(layer)} ({layer})\n";
         details += $"  - tag : {tag}\n";
-        if (body_data != null) { details += $"  - {body_data.GetDetails()}\n"; }
-        else { details += $"  - no body\n"; }
+        if (feet_data != null) { details += $"  - {feet_data.GetDetails()}\n"; }
+        else { details += $"  - no feet\n"; }
         if (inventory != null) { details += $"  - {inventory.GetDetails()}"; }
         else { details += $"  - no inventory\n"; }
         if (capacities_ids != null) { details += $"  - capacities : {(capacities_ids.Count == 0 ? "none" : string.Join(", ", capacities_ids))}\n"; }
@@ -155,15 +155,15 @@ public interface ICapableData : IData
 
 
 // COLLIDERS
-[Serializable] public class BodyData
+[Serializable] public class FeetData
 {
     public List<BoxData> box_colliders;
     public List<CircleData> circle_colliders;
 
     // DUPLICATE
-    public BodyData Duplicate()
+    public FeetData Duplicate()
     {
-        return new BodyData() { 
+        return new FeetData() { 
             box_colliders = new List<BoxData>(this.box_colliders), 
             circle_colliders = new List<CircleData>(this.circle_colliders)
         };
@@ -172,7 +172,7 @@ public interface ICapableData : IData
     // GET DETAILS
     public string GetDetails()
     {
-        string details = $"body_data :\n";
+        string details = $"feet_data :\n";
         if (box_colliders != null) { details += $"     - box_colliders : {box_colliders.Count} box colliders\n"; }
         else { details += $"     - box_colliders : null\n"; }
         if (circle_colliders != null) { details += $"     - circle_colliders : {circle_colliders.Count} circle colliders"; }

@@ -30,12 +30,13 @@ public class CapableSystem : BSOD_System<CapableSystem>
     public bool log_loading_extended = false;
     public bool hide_log_no_data_found = false;
     public bool log_spawning = false;
+    public bool log_corpse_switching = false;
     public int load_x_capables_per_frame = 1;
 
 
     // EVENTS
-    public Action<Capable, Capable> OnCapableNeedRoom; // we pass the spawned capable's data and the spawner capable (can be null)
-    public Action<Capable, Capable> OnCapableNeedFreedom;
+    public Action<Capable, string> OnCapableNeedRoom; // we pass the spawned capable's data and the spawner id (can be null)
+    public Action<string> OnCapableNeedFreedom; // only the capable id we need to free
 
 
 
@@ -61,6 +62,14 @@ public class CapableSystem : BSOD_System<CapableSystem>
         capables_ids_by_hash = new Dictionary<int, string>();
         next_capable_hash = 1;
         string log_capables_details = "\n\n";
+
+        // we add some base data that are not in json files but directly in the system (ex : corpse data)
+        /* if (base_corpse_data != null)
+        {
+            capables_data.Add(base_corpse_data.id, base_corpse_data);
+            generate_runtime_id(base_corpse_data.id);
+            log_capables_details += base_corpse_data.GetDetails() + "\n";
+        } */
 
 
         // we load all the json files in the data path and get their kind
@@ -310,37 +319,85 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
 
     // SPAWNING / DROPPING ITEMS
-    public Capable SpawnCapable(string base_id, Capable spawner)
+    public Capable SpawnCapable(CapableData data, string spawner_id = "")
     {
-        if (log_spawning) { Debug.Log($"(CapableSystem) Spawning {base_id} entity"); }
+        if (log_spawning) { Debug.Log($"(CapableSystem) Spawning {data.id} entity"); }
+
+        // 1. we load the new spawned capable
+        Capable spawned_capable = load_capable(data);
+
+        // 2. we alert the RoomSystem that we just spawned a capable, for it to assign a room to it
+        OnCapableNeedRoom?.Invoke(spawned_capable, spawner_id);
+
+        if (log_spawning) { Debug.Log($"(CapableSystem) Spawned {data.id}"); }
+
+        // 3. we return the spawned capable
+        return spawned_capable;
+    }
+    public Capable SpawnCapable(string base_id, string spawner_id = "")
+    {
+        // if (log_spawning) { Debug.Log($"(CapableSystem) Spawning {base_id} entity"); }
 
         // 1. we find base_id data & duplicates it
         if (!capables_data.ContainsKey(base_id)) { Debug.LogWarning("(CapableSystem - SpawnCapable) Capable data not found for id: " + base_id); return null; }
         CapableData base_data = capables_data[base_id];
-        CapableData spawn_data = DuplicateData(base_data);
+        CapableData spawn_data = DuplicateData(base_data) as CapableData;
 
         if (log_spawning) { Debug.Log($"(CapableSystem) Duplicated {base_id} data to {spawn_data.id} \n {spawn_data.GetDetails()}"); }
 
-        // 2. we load the new spawned capable
-        Capable spawned_capable = load_capable(spawn_data);
-
-        // 3. we alert the RoomSystem that we just spawned a capable, for it to assign a room to it
-        OnCapableNeedRoom?.Invoke(spawned_capable, spawner);
-
-        if (log_spawning) { Debug.Log($"(CapableSystem) Spawned {base_id} (new id : {spawn_data.id})"); }
-
-        // 4. we return the spawned capable
-        return spawned_capable;
+        // 2. we spawn the new spawned capable
+        return SpawnCapable(spawn_data, spawner_id);
     }
     public void OnItemDropped(Item item, Capable dropper)
     {
         // we simply inform the room system that we need a room for the item
-        OnCapableNeedRoom?.Invoke(item, dropper);
+        OnCapableNeedRoom?.Invoke(item, dropper?.data?.id ?? "");
     }
     public void OnItemGrabbed(Item item, Capable grabber)
     {
         // we simply inform the room system that we need to detach the item from the room
-        OnCapableNeedFreedom?.Invoke(item, grabber);
+        OnCapableNeedFreedom?.Invoke(item.data.id);
+    }
+
+
+    // SWITCH CAPABLE TO CORPSE
+    [Header("Base corpse data")]
+    [SerializeField] private CorpseData base_corpse_data;
+    public async void SwitchToCorpse(Capable capable)
+    {
+        // 1. DROP ALL ITEMS
+        if (capable.Inventory != null && capable.Inventory.Count > 0)
+        {
+            // we make the capable drop all its items and we wait for it to be done
+            await capable.DropAllItems();
+        }
+
+        // 2. SAVE SOME DATA
+        CapableData capable_data = capable.data;
+        CorpseData corpse_data = (CorpseData) DuplicateData(base_corpse_data);
+        corpse_data.Init(capable_data); // we transfer some of the capable data to the corpse data (ex : position, orientation, tag, skin if we have anim_data, etc)
+
+        // todo here we should put some meat items inside corpse data inventory so they auto load when spawning the corpse
+        // and with the right meat reference
+        List<Force> forces = (capable as Movable)?.GetForces();
+
+        // 3. UNLOAD THE CAPABLE
+        unload_capable(capable_data.id);
+
+        // 4. SPAWN THE CORPSE
+        Corpse corpse = SpawnCapable(corpse_data, capable_data.id) as Corpse; // (will assign the corpse to the same room as the capable since we pass the capable as spawner_id)
+        OnCapableNeedFreedom?.Invoke(capable_data.id); // then we need to free the old capable data from the room system since we don't want it to be loaded in the room anymore
+        if (log_corpse_switching) { Debug.Log($"(CapableSystem - SwitchToCorpse) Switched {capable.name} to corpse {corpse.name} \n - Capable data : \n{capable_data.GetDetails()} \n - Corpse data : \n{corpse_data.GetDetails()}"); }
+        if (log_corpse_switching)
+        {
+            corpse.AnimPlayer.log = true;
+            corpse.AnimPlayer.log_pile = true;
+            Debug.Log($"(CapableSystem - SwitchToCorpse) Playing corpse die animation");
+        }
+        corpse.AnimPlayer.Play("die");
+
+        // 5. TRANSFER FORCES
+        corpse.SetForces(forces);
     }
 
 

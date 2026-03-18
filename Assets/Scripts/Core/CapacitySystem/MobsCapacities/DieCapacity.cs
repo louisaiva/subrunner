@@ -13,23 +13,12 @@ public class DieCapacity : Capacity
     public int deaths = 0;
 
     [Header("XP parameters")]
-    public XPProvider xp_provider;
-    public TextManager text_manager;
     public int xp_gift = 10;
 
     [Header("Die parameters")]
     [SerializeField] private bool show_smiley = true;
     [SerializeField] private List<string> smileys = new List<string> { "RIP", "rip", ";-;", ":(", "://" };
 
-    // START
-    private void Start()
-    {
-        // on récupère le provider d'xp
-        xp_provider = GameObject.Find("/game/particles/xp_provider").GetComponent<XPProvider>();
-
-        // on récupère le provider de floating dmg
-        text_manager = GameObject.Find("/game/dmgs_provider").GetComponent<TextManager>();
-    }
 
     // trigger the dying
     public override void Use(Capable capable)
@@ -48,7 +37,7 @@ public class DieCapacity : Capacity
         Vector3 sprite_center = new Vector3(transform.position.x, transform.position.y + capable.AnimPlayer.Renderer.bounds.size.y / 2f, 0);
         int xp_to_drop = xp_gift;
         if (capable is Perso perso) { xp_to_drop = perso.total_xp/2; } // if the player dies he drops half of his total xp
-        xp_provider.GetComponent<XPProvider>().EmitXP(xp_to_drop, sprite_center);
+        XPProvider.Instance.EmitXP(xp_to_drop, sprite_center);
 
         // on donne un floating dmg
         if (show_smiley)
@@ -58,7 +47,7 @@ public class DieCapacity : Capacity
             {
                 if (test < 100 / smileys.Count * (i + 1))
                 {
-                    text_manager.addFloatingText(smileys[i], sprite_center, "red");
+                    FloatingDmgProvider.Instance.TextManager.addFloatingText(smileys[i], sprite_center, "red");
                     break;
                 }
             }
@@ -71,44 +60,13 @@ public class DieCapacity : Capacity
     {
         // get the being
         Being being = Capable as Being;
-        being.body_collider.gameObject.layer = LayerMask.NameToLayer("Meat");
+        being.HealthCollider.gameObject.layer = LayerMask.NameToLayer("Meat");
 
         // 1 - DROP ITEMS
         if (being.Inventory != null && being.Inventory.Count > 0)
         {
-            /* // we get the drop capacity
-            DropCapacity dropper = being.GetCapacity<DropCapacity>();
-            if (dropper == null)
-            {
-                // we add it if not present
-                being.AddCapacity("drop");
-
-                // we wait a frame
-                yield return null;
-                dropper = being.GetCapacity<DropCapacity>();
-            }
-            dropper.random_direction = true;
-            dropper.lock_magnitude = false;
-
-            // we drop all items
-            int i = 0;
-            while (i < being.Inventory.Items.Count)
-            {
-                Item item = being.Inventory.Items[i];
-                if (item == null)
-                {
-                    being.Inventory.Items.RemoveAt(i);
-                    continue; // skip null items
-                }
-
-                // we drop the item
-                dropper.Select(item);
-                dropper.Use(being);
-            } */
             yield return being.DropAllItems(); // we wait for dropping all items
         }
-        // being.Inventory?.RemoveAllUIs(); // on supprime les ui de l'inventory
-
 
         being.Die();
 

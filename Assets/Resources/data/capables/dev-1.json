@@ -2,7 +2,7 @@
     "<id>k__BackingField": "dev-1",
     "kind": "IA",
     "position": {
-        "x": 32.73697280883789,
+        "x": 7.730000019073486,
         "y": 0.08293044567108154
     },
     "orientation": {
@@ -120,36 +120,33 @@
             }
         ]
     },
-    "body_data": {
-        "box_colliders": [
+    "feet_data": {
+        "box_colliders": [],
+        "circle_colliders": [
             {
                 "local_position": {
                     "x": 0.0,
-                    "y": 0.3709999918937683
-                },
-                "layerID": 23,
-                "used_for_pathfinding": false,
-                "is_trigger": true,
-                "offset": {
-                    "x": 0.017057806253433229,
                     "y": 0.0
                 },
-                "size": {
-                    "x": 0.4218003749847412,
-                    "y": 0.6844788789749146
-                }
+                "layerID": 25,
+                "used_for_pathfinding": false,
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "radius": 0.09000000357627869
             }
-        ],
-        "circle_colliders": []
+        ]
     },
     "capacities_ids": [
-        "interact-2",
-        "die-2",
-        "walk-2",
-        "run-2",
-        "attack-3",
-        "eat-2",
-        "connect-3"
+        "interact-1",
+        "die-1",
+        "walk-1",
+        "run-1",
+        "attack-1",
+        "eat-1",
+        "connect-1"
     ],
     "effects": [],
     "effects_ttl": []

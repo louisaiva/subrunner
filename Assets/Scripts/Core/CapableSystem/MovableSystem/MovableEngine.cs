@@ -249,7 +249,7 @@ public class MovableEngine : MonoBehaviour
         foreach (int neighbourIndex in neighbours_indexes)
         {
             Movable neighbour = movables[neighbourIndex];
-            if (neighbour.feet_collider == null) { continue; } // we only consider movables with feet colliders
+            if (neighbour.FeetCollider == null) { continue; } // we only consider movables with feet colliders
             if (neighbour is Item item && item.Grabbed) { continue; } // we skip held items
             neighbours_structs.Add(new MovableStruct
             {

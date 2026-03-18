@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FloatingDmgProvider : MonoBehaviour
 {
@@ -18,6 +19,15 @@ public class FloatingDmgProvider : MonoBehaviour
     private Dictionary<Capable, FloatingDmgState> capables_dmgs = new Dictionary<Capable, FloatingDmgState>();
 
     // AWAKE & INSTANCE
+    private TextManager _text_manager;
+    public TextManager TextManager
+    {
+        get
+        {
+            if (_text_manager == null) { _text_manager = GetComponent<TextManager>(); }
+            return _text_manager;
+        }
+    }
     public static FloatingDmgProvider Instance { get; private set; }
     protected void Awake()
     {

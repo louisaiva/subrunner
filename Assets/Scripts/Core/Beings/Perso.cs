@@ -158,7 +158,7 @@ public class Perso : Being, Hacker
 
         // on s'enregistre en tant que trigger dans l'XPProvider particle system
         var trigger_particle_module = XPProvider.Instance.GetComponent<ParticleSystem>().trigger;
-        trigger_particle_module.SetCollider(0, body_collider);
+        trigger_particle_module.SetCollider(0, HealthCollider);
 
         // mets les callbacks
         set_callbacks();
@@ -227,7 +227,7 @@ public class Perso : Being, Hacker
     private string quest_text = "mission 1 :\nfind the\nELEVATOR";
     void showQuest()
     {
-        FloatingDmgProvider.Instance.GetComponent<TextManager>().addFloatingText(quest_text, transform.position + new Vector3(0, 0.5f, 0), "yellow");
+        FloatingDmgProvider.Instance.TextManager.addFloatingText(quest_text, transform.position + new Vector3(0, 0.5f, 0), "yellow");
     }
 
 
@@ -335,7 +335,7 @@ public class Perso : Being, Hacker
         }
 
         // on affiche un texte de level up
-        FloatingDmgProvider.Instance.GetComponent<TextManager>().addFloatingText("LEVEL " + level.ToString(), transform.position + new Vector3(0, 0.5f, 0), "yellow");
+        FloatingDmgProvider.Instance.TextManager.addFloatingText("LEVEL " + level.ToString(), transform.position + new Vector3(0, 0.5f, 0), "yellow");
     }
 
     // HEAL
@@ -365,7 +365,7 @@ public class Perso : Being, Hacker
         Debug.Log("YOU DIED");
 
         // on affiche un floating text
-        FloatingDmgProvider.Instance.GetComponent<TextManager>().addFloatingText("YOU DIED", transform.position + new Vector3(0, 0.5f, 0), "red");
+        FloatingDmgProvider.Instance.TextManager.addFloatingText("YOU DIED", transform.position + new Vector3(0, 0.5f, 0), "red");
 
         // on désactive le Controller & PersoInputsController
         Controller.Instance.ResetCapableTarget(control_nothing: true);

@@ -79,36 +79,33 @@
             }
         ]
     },
-    "body_data": {
-        "box_colliders": [
+    "feet_data": {
+        "box_colliders": [],
+        "circle_colliders": [
             {
                 "local_position": {
                     "x": 0.0,
                     "y": 0.0
                 },
-                "layerID": 23,
+                "layerID": 25,
                 "used_for_pathfinding": false,
-                "is_trigger": true,
+                "is_trigger": false,
                 "offset": {
-                    "x": 0.017057806253433229,
+                    "x": 0.0,
                     "y": 0.0
                 },
-                "size": {
-                    "x": 0.4218003749847412,
-                    "y": 0.6844788789749146
-                }
+                "radius": 0.09000000357627869
             }
-        ],
-        "circle_colliders": []
+        ]
     },
     "capacities_ids": [
-        "interact-1",
-        "die-1",
-        "walk-1",
-        "run-1",
-        "attack-2",
-        "eat-1",
-        "connect-2"
+        "interact-2",
+        "die-2",
+        "walk-2",
+        "run-2",
+        "attack-3",
+        "eat-2",
+        "connect-3"
     ],
     "effects": [],
     "effects_ttl": []

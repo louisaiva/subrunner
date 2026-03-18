@@ -1,0 +1,86 @@
+﻿{
+    "<id>k__BackingField": "dummy",
+    "kind": "Capable",
+    "position": {
+        "x": 2.3299999237060549,
+        "y": 2.0899999141693117
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 0,
+    "tag": "",
+    "anim_data": {
+        "skin": "dummy",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "hurted"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            }
+        ],
+        "material_path": "materials/objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "layers": []
+    },
+    "inventory": {
+        "item_pools_data": []
+    },
+    "body_data": {
+        "box_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.6190000176429749
+                },
+                "layerID": 23,
+                "used_for_pathfinding": false,
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.06516993045806885
+                },
+                "size": {
+                    "x": 0.4646790325641632,
+                    "y": 0.5903627872467041
+                }
+            }
+        ],
+        "circle_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 25,
+                "used_for_pathfinding": true,
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.18000000715255738
+                },
+                "radius": 0.20869231224060059
+            }
+        ]
+    },
+    "capacities_ids": [
+        "body"
+    ],
+    "effects": [],
+    "effects_ttl": []
+}

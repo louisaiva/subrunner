@@ -154,4 +154,50 @@ public class ColliderBank : MonoBehaviour
         collider_go.layer = sleeping_layer;
         collider_go.transform.SetParent(sleeping_colliders_parent);
     }
+
+
+
+    // USEFUL STATIC METHODS
+    public static IColliderData GetColliderData(Collider2D collider)
+    {
+        // // todo move this method to a static-friendly-Instance helper i guess like GameManager ?
+
+        // setup basic data
+        ColliderData data = new ColliderData
+        {
+            local_position = collider.transform.localPosition,
+            layerID = collider.gameObject.layer,
+            offset = collider.offset,
+            is_trigger = collider.isTrigger,
+            used_for_pathfinding = is_used_for_pathfinding(collider)
+        };
+
+        // check if circle
+        if (collider is CircleCollider2D circle)
+        {
+            return new CircleData(data)
+            {
+                radius = circle.radius
+            };
+        }
+
+        // check if box
+        if (collider is BoxCollider2D box)
+        {
+            return new BoxData(data)
+            {
+                size = box.size
+            };
+        }
+
+        return data;
+    }
+    protected static bool is_used_for_pathfinding(Collider2D collider)
+    {
+        NavMeshModifier modifier = collider.GetComponent<NavMeshModifier>();
+        if (modifier != null && modifier.enabled) { return true; }
+        return false;
+    }
+
+
 }

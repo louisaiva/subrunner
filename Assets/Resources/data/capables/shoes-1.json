@@ -41,12 +41,27 @@
     "inventory": {
         "item_pools_data": []
     },
-    "body_data": {
+    "feet_data": {
         "box_colliders": [],
-        "circle_colliders": []
+        "circle_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 25,
+                "used_for_pathfinding": false,
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.10000000149011612
+                },
+                "radius": 0.09000000357627869
+            }
+        ]
     },
     "capacities_ids": [
-        "hover-5",
+        "hover-4",
         "dodge-1"
     ],
     "effects": [],

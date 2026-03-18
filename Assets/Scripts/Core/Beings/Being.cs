@@ -16,19 +16,21 @@ public class Being : Movable
     public int MaxHealth { get { return max_health; } set { this.max_health = value; } }
     public float regen_life = 0f; // en point de life par seconde
 
-    public List<Collider2D> _body_colliders;
-    public List<Collider2D> BodyColliders
+    public List<Collider2D> _health_colliders;
+    public List<Collider2D> HealthColliders
     {
         get
         {
-            if (_body_colliders == null || _body_colliders.Count == 0)
+            if (_health_colliders == null || _health_colliders.Count == 0)
             {
-                _body_colliders = new List<Collider2D>(body.GetComponentsInChildren<Collider2D>());
+                Transform body_transform = transform.Find("body");
+                if (body_transform == null) { return new List<Collider2D>(); }
+                _health_colliders = new List<Collider2D>(body_transform.GetComponentsInChildren<Collider2D>(includeInactive:true));
             }
-            return _body_colliders;
+            return _health_colliders;
         }
     }
-    public Collider2D body_collider { get { return BodyColliders.Count > 0 ? BodyColliders[0] : null; } }
+    public Collider2D HealthCollider { get { return HealthColliders.Count > 0 ? HealthColliders[0] : null; } }
 
     public int body_meats = 1; // nombre de viande dans le corps du being
     public int body_bones = 1; // nombre d'os dans le corps du being
@@ -85,15 +87,15 @@ public class Being : Movable
         }
 
         // Invisible
-        if (HasEffect(Effect.Invisible))
+        if (HasEffect(Effect.Invisible) && HealthCollider != null)
         {
             // change the body collider to Ghosts layer
-            body_collider.gameObject.layer = LayerMask.NameToLayer("Ghosts");
+            HealthCollider.gameObject.layer = LayerMask.NameToLayer("Ghosts");
         }
-        else
+        else if (HealthCollider != null)
         {
             // reset the body collider to Beings layer
-            body_collider.gameObject.layer = LayerMask.NameToLayer("Beings");
+            HealthCollider.gameObject.layer = LayerMask.NameToLayer("Beings");
         }
     }
 
@@ -186,8 +188,8 @@ public class Being : Movable
         base.OnDrawGizmos();
         
         // on dessine le Collider de life du Being
-        if (!body_collider) { return; }
+        if (!HealthCollider) { return; }
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(body_collider.bounds.center, body_collider.bounds.size);
+        Gizmos.DrawWireCube(HealthCollider.bounds.center, HealthCollider.bounds.size);
     }
 }

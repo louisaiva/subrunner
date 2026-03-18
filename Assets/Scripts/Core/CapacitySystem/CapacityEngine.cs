@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class CapacityEngine : BSOD_System<CapacityEngine>
@@ -205,7 +203,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
 
         // 3. we filter it with the list of static capacity kinds
         // -> means we dynamically handle ONLY the kinds that ARE NOT in this list
-        for (int i=0; i<capa_ids.Count; i++)
+        for (int i = 0; i < capa_ids.Count; i++)
         {
             string capa_id = capa_ids[i];
             if (!capacities_data.ContainsKey(capa_id))

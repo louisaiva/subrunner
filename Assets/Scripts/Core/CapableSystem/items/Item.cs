@@ -270,14 +270,14 @@ public class Item : Movable, EndlessInteractable
         if (!Placed && !Grabbed)
         {
             // enable rigidbody & feet
-            if (feet_collider != null) { feet_collider.enabled = true; }
+            if (FeetCollider != null) { FeetCollider.enabled = true; }
 
             // we add the rigidbody
-            if (rb == null)
+            if (Rb == null)
             {
                 gameObject.AddComponent<Rigidbody2D>();
-                rb.gravityScale = 0;
-                rb.freezeRotation = true;
+                Rb.gravityScale = 0;
+                Rb.freezeRotation = true;
             }
 
             // we remove the being carried effect
@@ -286,10 +286,10 @@ public class Item : Movable, EndlessInteractable
         else
         {
             // disable rigidbody & feet
-            if (feet_collider != null) { feet_collider.enabled = false; }
+            if (FeetCollider != null) { FeetCollider.enabled = false; }
 
             // we remove the rigidbody
-            if (rb != null) { Destroy(rb); }
+            if (Rb != null) { Destroy(Rb); }
 
             // we set the effect IsBeingCarried to -888f (infinite time)
             AddEffect(Effect.BeingCarried, -888f);

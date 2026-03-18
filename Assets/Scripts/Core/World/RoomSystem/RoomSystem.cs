@@ -541,7 +541,7 @@ public class RoomSystem : BSOD_System<RoomSystem>
     }
 
     // CAPABLE'S ROOM DYNAMIC MANAGEMENT
-    protected void handleCapableNeedRoom(Capable entity, Capable spawner)
+    protected void handleCapableNeedRoom(Capable entity, string spawner_id)
     {
         // we want the entity capabledata to be set inside the same room as the spawner.
         // we need to find in which room the spawner is, and set the entity capabledata in the same room
@@ -550,10 +550,10 @@ public class RoomSystem : BSOD_System<RoomSystem>
         string id = entity.data.id;
 
         // 1. find spawner room
-        RoomData spawner_room = GetCapableRoom(spawner.data.id);
+        RoomData spawner_room = GetCapableRoom(spawner_id);
         if (spawner_room == null)
         {
-            if (!hide_log_no_room_of_capable_found) { Debug.LogWarning("(RoomSystem) Could not find spawner room for capable " + spawner.data.id); }
+            if (!hide_log_no_room_of_capable_found) { Debug.LogWarning("(RoomSystem) Could not find spawner room for capable " + spawner_id); }
             return;
         }
 
@@ -569,14 +569,14 @@ public class RoomSystem : BSOD_System<RoomSystem>
 
         if (log_dynamic_room_assignement) { Debug.Log($"(RoomSystem) Assigned {id} to {spawner_room.id}"); }
     }
-    protected void handleCapableNeedFreedom(Capable entity, Capable grabber)
+    protected void handleCapableNeedFreedom(string id)
     {
         // entity was probably grabbed by grabber, and so entity has no colliders
         // it means we want to take it out of the system otherwise entity may change
         // rooms even if no movement was detected by the RoomSystem
 
         // we get the room of entity (if it exists)
-        string id = entity.data.id;
+        // string id = entity_id;
 
         // 1. find entity room
         RoomData room = GetCapableRoom(id);
@@ -634,7 +634,7 @@ public class RoomSystem : BSOD_System<RoomSystem>
         foreach (string room_id in rooms_ids)
         {
             // if (log_spawning) { Debug.Log($"(RoomSystem) Checking room {room_id} for spawner {spawner.data.id}"); }
-            RoomData data = rooms_data[room_id] as RoomData;
+            RoomData data = rooms_data[room_id];
             bool is_in_room = false;
             if (data.capables_ids.Contains(capable_id)) { is_in_room = true; }
             else if (data.movables_ids.Contains(capable_id)) { is_in_room = true; }

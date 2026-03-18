@@ -85,12 +85,27 @@
             }
         ]
     },
-    "body_data": {
+    "feet_data": {
         "box_colliders": [],
-        "circle_colliders": []
+        "circle_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 25,
+                "used_for_pathfinding": false,
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.23999999463558198
+                },
+                "radius": 0.23744136095046998
+            }
+        ]
     },
     "capacities_ids": [
-        "hover-3"
+        "hover-5"
     ],
     "effects": [],
     "effects_ttl": []

@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 /// <summary>
 /// Mother class of all the Capables in the game.
@@ -93,7 +91,7 @@ public class Capable : MonoBehaviour, Debuggable
             inventory = Inventory?.GetStaticInventoryData(),
 
             // we set the body data
-            body_data = get_static_body_data(),
+            feet_data = get_static_feet_data(),
 
             // we set the orientation
             orientation = this.orientation,
@@ -131,11 +129,11 @@ public class Capable : MonoBehaviour, Debuggable
 
         return capacities_ids;
     }
-    protected BodyData get_static_body_data()
+    protected FeetData get_static_feet_data()
     {
-        if (body == null) { return null; }
+        if (feet == null) { return null; }
 
-        BodyData body_data = new BodyData
+        FeetData feet_data = new FeetData
         {
             box_colliders = new List<BoxData>(),
             circle_colliders = new List<CircleData>()
@@ -143,63 +141,13 @@ public class Capable : MonoBehaviour, Debuggable
 
 
         // we go through all colliders in the body and save their data
-        for (int i = 0; i < body.childCount; i++)
+        List<Collider2D> colliders = new List<Collider2D>(feet.GetComponentsInChildren<Collider2D>(includeInactive: true));
+        foreach (Collider2D collider in colliders)
         {
-            Transform collider_transform = body.GetChild(i);
-            Collider2D collider = collider_transform.GetComponent<Collider2D>();
-            if (collider == null) { continue; }
-
-            if (collider is BoxCollider2D box_collider)
-            {
-                BoxData box_data = get_static_box_data(box_collider);
-                body_data.box_colliders.Add(box_data);
-            }
-            else if (collider is CircleCollider2D circle_collider)
-            {
-                CircleData circle_data = get_static_circle_data(circle_collider);
-                body_data.circle_colliders.Add(circle_data);
-            }
+            if (collider is BoxCollider2D) { feet_data.box_colliders.Add(ColliderBank.GetColliderData(collider) as BoxData); }
+            else if (collider is CircleCollider2D) { feet_data.circle_colliders.Add(ColliderBank.GetColliderData(collider) as CircleData); }
         }
-
-        return body_data;
-    }
-    protected BoxData get_static_box_data(BoxCollider2D collider)
-    {
-        
-        if (log_static_data) { Debug.Log($"(Capable - GetStaticData - {name}) BoxCollider2D found with offset {collider.offset} and size {collider.size} and is_trigger = {collider.isTrigger}"); }
-        return new BoxData
-        {
-            // set base gameobject data
-            local_position = collider.transform.localPosition,
-            layerID = collider.gameObject.layer,
-
-            // set base collider data
-            offset = collider.offset,
-            is_trigger = collider.isTrigger,
-            size = collider.size,
-
-            // set navmesh use
-            used_for_pathfinding = is_used_for_pathfinding(collider)
-        };
-    }
-    protected CircleData get_static_circle_data(CircleCollider2D collider)
-    {
-        if (log_static_data) { Debug.Log($"(Capable - GetStaticData - {name}) CircleCollider2D found with offset {collider.offset} and radius {collider.radius} and is_trigger = {collider.isTrigger}"); }
-        return new CircleData
-        {
-            radius = collider.radius,
-            local_position = collider.transform.localPosition,
-            layerID = collider.gameObject.layer,
-            offset = collider.offset,
-            is_trigger = collider.isTrigger,
-            used_for_pathfinding = is_used_for_pathfinding(collider)
-        };
-    }
-    protected bool is_used_for_pathfinding(Collider2D collider)
-    {
-        NavMeshPlus.Components.NavMeshModifier modifier = collider.GetComponent<NavMeshPlus.Components.NavMeshModifier>();
-        if (modifier != null && modifier.enabled) { return true; }
-        return false;
+        return feet_data;
     }
 
 
@@ -261,12 +209,12 @@ public class Capable : MonoBehaviour, Debuggable
         return _anim_player;
     } private set { _anim_player = value; } }
 
-    // body
-    private Transform _body = null;
-    public Transform body { get
+    // feet
+    private Transform _feet = null;
+    public Transform feet { get
         {
-            if (_body == null) { _body = transform.Find("body"); }
-            return _body;
+            if (_feet == null) { _feet = transform.Find("feet"); }
+            return _feet;
         } }
 
 
@@ -649,6 +597,7 @@ public enum Effect
     Ghost, // a Movable can walk through other Beings & walls & objects (everything)
     Invisible, // a Being can't be seen -> change its body collider to Ghosts layer
     Invincible, // a Being can't be hurt
+    CantDie, // a Being can't die (if health reaches 0, it comes back to max health)
     Stunned, // a Being can't attack
     RegenLife, // a Being regenerates life
     Immobile, // a Movable can't move

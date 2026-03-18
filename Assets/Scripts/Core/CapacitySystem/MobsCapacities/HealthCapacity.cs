@@ -21,19 +21,19 @@ public class HealthCapacity : Capacity
 
     [Header("Body Colliders")]
 
-    public List<Collider2D> _body_colliders;
-    public List<Collider2D> BodyColliders
+    public List<Collider2D> _health_colliders;
+    public List<Collider2D> HealthColliders
     {
         get
         {
-            if (_body_colliders == null || _body_colliders.Count == 0)
+            if (_health_colliders == null || _health_colliders.Count == 0)
             {
-                _body_colliders = new List<Collider2D>(Capable.body.GetComponentsInChildren<Collider2D>(includeInactive:true));
+                _health_colliders = new List<Collider2D>(GetComponentsInChildren<Collider2D>(includeInactive:true));
             }
-            return _body_colliders;
+            return _health_colliders;
         }
     }
-    public Collider2D body_collider { get { return BodyColliders.Count > 0 ? BodyColliders[0] : null; } }
+    public Collider2D HealthCollider { get { return HealthColliders.Count > 0 ? HealthColliders[0] : null; } }
 
 
     [Header("Hurted")]
@@ -42,6 +42,13 @@ public class HealthCapacity : Capacity
 
     [Header("Logs")]
     [SerializeField] private bool log_taking_dmg = false;
+
+    // START
+    protected void Start()
+    {
+        // on initialise les capacités
+        Capable.AddEffect(Effect.RegenLife, -888f);
+    }
 
 
     // UPDATE
@@ -73,12 +80,12 @@ public class HealthCapacity : Capacity
         if (Capable.HasEffect(Effect.Invisible))
         {
             // change the body collider to Ghosts layer
-            body_collider.gameObject.layer = LayerMask.NameToLayer("Ghosts");
+            HealthCollider.gameObject.layer = LayerMask.NameToLayer("Ghosts");
         }
         else
         {
             // reset the body collider to Beings layer
-            body_collider.gameObject.layer = LayerMask.NameToLayer("Beings");
+            HealthCollider.gameObject.layer = LayerMask.NameToLayer("Beings");
         }
     }
 
@@ -100,25 +107,35 @@ public class HealthCapacity : Capacity
         health -= damage;
         if (log_taking_dmg) { Debug.Log($"(HealthCapacity - TakeDamage) {name} took {damage} damage, life left: {health}"); }
 
-        // play hurt animation
-        // // todo make the health capa control replace entirely hurted capacity -> no need for it
-        if (!Capable.HasEffect(Effect.Unstoppable)) { Capable.AnimPlayer.Play(hurted_animation); }
-        else if (knockback != null) { knockback.magnitude *= 0.125f; } // reduce knockback magnitude by 8
-
         // knockback
-        if (knockback != null && Capable is Movable movable)
-        {
-            movable.AddForce(knockback);
+        if (knockback != null && Capable is Movable movable) { movable.AddForce(knockback); }
+        Vector2 knockback_inverse_direction = knockback != null ? -1f * knockback.direction : Vector2.zero;
 
-            // change the flipX of the renderers if needed
-            if (knockback.direction.x != 0f) { Capable.AnimPlayer.FlipCurrentAnim(knockback.direction.x < 0f); }
-        }
+        // play hurt animation
+        if (!Capable.HasEffect(Effect.Unstoppable)) { Capable.AnimPlayer.PlayWithOrientation(hurted_animation, knockback_inverse_direction); }
+        else if (knockback != null) { knockback.magnitude *= 0.125f; } // reduce knockback magnitude by 8
 
         // floating dmg
         FloatingDmgProvider.Instance.AddFloatingDmg(Capable, -1f * damage);
 
         // check if dead
-        if (health <= 0f) { Capable.GetCapacity<DieCapacity>().Use(Capable); }
+        if (health <= 0f)
+        {
+            // if we can't die we come back to max health
+            if (Capable.HasEffect(Effect.CantDie)) { health = MaxHealth; return true; } // we can't die
+
+            // if we are part of the capable system we call CapableSystem.SwitchToCorpse(Capable)
+            if (CapableBank.Instance.HasCapable(Capable))
+            {
+                CapableSystem.Instance.SwitchToCorpse(Capable);
+                return true;
+            }
+
+            // else we are no part of the capable system (old way)
+            // we call DieCapacity if it exists, else we just set health to 0
+            Capable.GetCapacity<DieCapacity>()?.Use(Capable);
+            health = 0f;
+        }
 
         return true;
     }
@@ -159,9 +176,9 @@ public class HealthCapacity : Capacity
     protected void OnDrawGizmos()
     {
         // on dessine le Collider de life du Being
-        if (!body_collider) { return; }
+        if (!HealthCollider) { return; }
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(body_collider.bounds.center, body_collider.bounds.size);
+        Gizmos.DrawWireCube(HealthCollider.bounds.center, HealthCollider.bounds.size);
     }
 
 
@@ -178,9 +195,13 @@ public class HealthCapacity : Capacity
         hurted_animation = hdata.hurted_animation;
 
         // load colliders
-        foreach (ColliderData colldata in hdata.body_colliders)
+        foreach (BoxData colldata in hdata.box_colliders)
         {
-            _body_colliders.Add(ColliderBank.Instance.LoadCollider(colldata,transform));
+            _health_colliders.Add(ColliderBank.Instance.LoadCollider(colldata,transform));
+        }
+        foreach (CircleData colldata in hdata.circle_colliders)
+        {
+            _health_colliders.Add(ColliderBank.Instance.LoadCollider(colldata,transform));
         }
 
         base.LoadData(data);
@@ -188,15 +209,30 @@ public class HealthCapacity : Capacity
     public override void UnloadData()
     {
         // unload colliders
-        foreach (Collider2D collider in _body_colliders)
+        foreach (Collider2D collider in _health_colliders)
         {
             ColliderBank.Instance.UnloadCollider(collider.gameObject);
         }
-        _body_colliders.Clear();
+        _health_colliders.Clear();
+
+        // save dynamic health data
+        SaveDynamicData();
 
         base.UnloadData();
     }
 
+    // SAVE DYNAMIC DATA
+    public void SaveDynamicData()
+    {
+        // update the dynamic fields data with the current values of the capacity
+        if (this.data == null) { return; }
+        if (this.data is not HealthCapacityData hdata) { return; }
+
+        hdata.health = health;
+        hdata.max_health = max_health;
+        hdata.regen_health = regen_health;
+        hdata.hurted_animation = hurted_animation;
+    }
 
     // GET STATIC DATA
     public override CapacityData GetStaticData()
@@ -207,50 +243,18 @@ public class HealthCapacity : Capacity
             max_health = this.max_health,
             regen_health = this.regen_health,
             hurted_animation = this.hurted_animation,
-            body_colliders = new()
+            box_colliders = new(),
+            circle_colliders = new()
         };
 
         // we get the health colliders data
-        foreach (Collider2D collider in BodyColliders)
+        foreach (Collider2D collider in HealthColliders)
         {
-            static_data.body_colliders.Add(get_collider_data(collider));
+            if (collider is BoxCollider2D) { static_data.box_colliders.Add(ColliderBank.GetColliderData(collider) as BoxData); }
+            else if (collider is CircleCollider2D) { static_data.circle_colliders.Add(ColliderBank.GetColliderData(collider) as CircleData); }
         }
 
         return static_data;
-    }
-    private ColliderData get_collider_data(Collider2D collider)
-    {
-        // todo move this method to a static-friendly-Instance helper i guess like GameManager ?
-
-        // setup basic data
-        ColliderData data = new ColliderData
-        {
-            local_position = collider.transform.localPosition,
-            layerID = collider.gameObject.layer,
-            offset = collider.offset,
-            is_trigger = collider.isTrigger,
-            used_for_pathfinding = false // health colliders are never used for pathfinding
-        };
-
-        // check if circle
-        if (collider is CircleCollider2D circle)
-        {
-            return new CircleData(data)
-            {
-                radius = circle.radius
-            };
-        }
-
-        // check if box
-        if (collider is BoxCollider2D box)
-        {
-            return new BoxData(data)
-            {
-                size = box.size
-            };
-        }
-
-        return data;
     }
 }
 
@@ -263,7 +267,8 @@ public class HealthCapacity : Capacity
     public string hurted_animation;
 
     // health colliders
-    public List<ColliderData> body_colliders;
+    public List<BoxData> box_colliders;
+    public List<CircleData> circle_colliders;
 
 
 
@@ -284,7 +289,8 @@ public class HealthCapacity : Capacity
             max_health = this.max_health,
             regen_health = this.regen_health,
             hurted_animation = this.hurted_animation,
-            body_colliders = new List<ColliderData>(this.body_colliders)
+            box_colliders = new List<BoxData>(this.box_colliders),
+            circle_colliders = new List<CircleData>(this.circle_colliders)
         };
     }
 
@@ -296,7 +302,9 @@ public class HealthCapacity : Capacity
         details += $"  - max_health : {max_health}\n";
         details += $"  - regen_health : {regen_health}\n";
         details += $"  - hurted_animation : {hurted_animation}\n";
-        details += $"  - body_colliders : {body_colliders.Count}\n";
+        details += $"  - health_colliders :\n";
+        details += $"     - box_colliders : {(box_colliders != null ? box_colliders.Count.ToString() : "null")}\n";
+        details += $"     - circle_colliders : {(circle_colliders != null ? circle_colliders.Count.ToString() : "null")}\n";
         return base.GetDetails() + details;
     }
 }

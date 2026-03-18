@@ -91,6 +91,9 @@ public class CapableDataManager : MonoBehaviour
         }
     }
 
+
+
+
 #if UNITY_EDITOR
     [CustomEditor(typeof(CapableDataManager))]
     public class CapableDataManagerEditor : Editor

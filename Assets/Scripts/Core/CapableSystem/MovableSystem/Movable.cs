@@ -5,12 +5,32 @@ using UnityEngine;
 // [RequireComponent(typeof(Rigidbody2D))]
 public class Movable : Capable
 {
+
+
+
+    public override void UnloadData()
+    {
+        base.UnloadData();
+
+        // we clear the forces & colliders
+        feet_collider = null;
+        ClearForces();
+    }
+
+
+
+
+
+
+
+
+
     public bool debug_velocity = false; // Show velocity in console
     public bool log_avoidance = false; // whether to log the avoidance force calculation
 
     [Header("MOVABLE")]
     private Rigidbody2D _rb;
-    public Rigidbody2D rb
+    public Rigidbody2D Rb
     {
         get
         {
@@ -28,9 +48,20 @@ public class Movable : Capable
 
 
     [Header("Collisions")]
-    public Collider2D feet_collider;
-    public float feet_radius => feet_collider != null ?
-                                feet_collider is CircleCollider2D circle ? circle.radius : feet_collider.bounds.extents.x
+    private Collider2D feet_collider = null;
+    public Collider2D FeetCollider {
+        get
+        {
+            if (feet_collider == null)
+            {
+                Transform feet_transform = transform.Find("feet");
+                if (feet_transform != null) { feet_collider = feet_transform.GetComponentInChildren<Collider2D>(includeInactive: true); }
+            }
+            return feet_collider;
+        }
+    }
+    public float feet_radius => FeetCollider != null ?
+                                FeetCollider is CircleCollider2D circle ? circle.radius : FeetCollider.bounds.extents.x
                                 : 0f;
 
     // AWAKE
@@ -38,15 +69,12 @@ public class Movable : Capable
     {
         // base.Awake();
 
-        if (rb != null)
+        if (Rb != null)
         {
-            rb.gravityScale = 0;  // No gravity in top-down games
-            rb.freezeRotation = true; // Prevent unwanted rotation
+            Rb.gravityScale = 0;  // No gravity in top-down games
+            Rb.freezeRotation = true; // Prevent unwanted rotation
         }
         else { Debug.LogError("No Rigidbody2D found on " + gameObject.name); }
-
-        // Get the feet collider
-        feet_collider = transform.Find("feet")?.GetComponent<Collider2D>();
     }
     protected virtual void Start()
     {
@@ -84,8 +112,8 @@ public class Movable : Capable
             ClearForces();
             return;
         }
-        else if (rb == null) { return; }
-        else if (feet_collider == null) { return; }
+        else if (Rb == null) { return; }
+        else if (FeetCollider == null) { return; }
 
         // Update moving effects
         updateMovingEffects();
@@ -98,7 +126,7 @@ public class Movable : Capable
     protected virtual void updateForces()
     {
         // Stop movement if no speed or no orientation or no walk capacity
-        rb.linearVelocity = GetCapacity<WalkCapacity>()?.walk_speed * Orientation ?? Vector2.zero;
+        Rb.linearVelocity = GetCapacity<WalkCapacity>()?.walk_speed * Orientation ?? Vector2.zero;
 
         // Apply forces
         Vector2 totalForce = Vector2.zero;
@@ -118,13 +146,13 @@ public class Movable : Capable
         }
 
         // Apply force to Rigidbody2D
-        rb.AddForce(totalForce * Time.timeScale, ForceMode2D.Force);
+        Rb.AddForce(totalForce * Time.timeScale, ForceMode2D.Force);
 
         // Apply friction when no force is applied
         if (totalForce == Vector2.zero && inputs == Vector2.zero)
         {
             // if (debug) { Debug.Log("Applying friction ("+ friction +") to " + gameObject.name + " with velocity " + rb.velocity); }
-            rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, Vector2.zero, friction * Time.deltaTime);
+            Rb.linearVelocity = Vector2.Lerp(Rb.linearVelocity, Vector2.zero, friction * Time.deltaTime);
         }
 
     }
@@ -136,26 +164,26 @@ public class Movable : Capable
         // 1 - SEMI GHOST
 
         // update the semi ghost effect (passing through other feet by setting feet_collider layer to Ghosts)
-        string feet_layer = LayerMask.LayerToName(feet_collider.gameObject.layer);
+        string feet_layer = LayerMask.LayerToName(FeetCollider.gameObject.layer);
         if (HasEffect(Effect.SemiGhost) && feet_layer == "Feet")
         {
-            feet_collider.gameObject.layer = LayerMask.NameToLayer("Ghosts");
+            FeetCollider.gameObject.layer = LayerMask.NameToLayer("Ghosts");
         }
         else if (!HasEffect(Effect.SemiGhost) && feet_layer != "Feet")
         {
-            feet_collider.gameObject.layer = LayerMask.NameToLayer("Feet");
+            FeetCollider.gameObject.layer = LayerMask.NameToLayer("Feet");
         }
 
         // 2 - GHOST
 
         // update the ghost effect (passing through everything by disabling the collider)
-        if (HasEffect(Effect.Ghost) && feet_collider.enabled)
+        if (HasEffect(Effect.Ghost) && FeetCollider.enabled)
         {
-            feet_collider.enabled = false; // if the ghost effect is applied, we disable the feet !! so we can go through everything
+            FeetCollider.enabled = false; // if the ghost effect is applied, we disable the feet !! so we can go through everything
         }
-        else if (!HasEffect(Effect.Ghost) && !feet_collider.enabled)
+        else if (!HasEffect(Effect.Ghost) && !FeetCollider.enabled)
         {
-            feet_collider.enabled = true; // if not, we re enable it
+            FeetCollider.enabled = true; // if not, we re enable it
         }
     }
 
@@ -182,7 +210,7 @@ public class Movable : Capable
     {
         // on remplace la liste des forces par la nouvelle liste
         forces.Clear();
-        forces.AddRange(new_forces);
+        if (new_forces != null) { forces.AddRange(new_forces); }
     }
     public void ClearForces()
     {
@@ -195,7 +223,7 @@ public class Movable : Capable
         ClearForces();
 
         // on arrête le rb
-        if (rb != null) { rb.linearVelocity = Vector2.zero; }
+        if (Rb != null) { Rb.linearVelocity = Vector2.zero; }
     }
     public List<Force> GetForces()
     {
@@ -205,14 +233,14 @@ public class Movable : Capable
     protected virtual void LateUpdate()
     {
         // check if we have a rigidbody
-        if (rb == null)
+        if (Rb == null)
         {
             Velocity = Vector2.zero;
             return;
         }
 
         // we set the current velocity
-        Velocity = rb.linearVelocity / Time.fixedDeltaTime;
+        Velocity = Rb.linearVelocity / Time.fixedDeltaTime;
 
         // we log the current linear velocity
         if (debug_velocity) { Debug.Log("velocity : " + Velocity); }
@@ -222,10 +250,10 @@ public class Movable : Capable
     protected virtual void OnDrawGizmos()
     {
         // on dessine le collider des pieds
-        if (feet_collider == null) { return; }
+        if (FeetCollider == null) { return; }
 
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(feet_collider.bounds.center, feet_radius);
+        Gizmos.DrawWireSphere(FeetCollider.bounds.center, feet_radius);
     }
 
 }

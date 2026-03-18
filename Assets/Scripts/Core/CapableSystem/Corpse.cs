@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
 
 /// <summary>
@@ -22,9 +22,9 @@ public class Corpse : Movable, Interactable
     public void Initialize(Being being)
     {
         // we calculate how much meat we want to put inside the meat
-        int meat_qty = being.body_meats + Random.Range(-random_meat_modifier_at_start, random_meat_modifier_at_start);
+        int meat_qty = being.body_meats + UnityEngine.Random.Range(-random_meat_modifier_at_start, random_meat_modifier_at_start);
         if (meat_qty < 1) { meat_qty = 1; }
-        int bones_qty = being.body_bones + Random.Range(-1,1);
+        int bones_qty = being.body_bones + UnityEngine.Random.Range(-1,1);
         if (bones_qty < 1) { bones_qty = 1; }
 
         // we understand which meat type we want
@@ -50,6 +50,38 @@ public class Corpse : Movable, Interactable
         
         if (log_bites) { Debug.Log($"(Corpse) Initialized corpse of {being.name} with {meat_qty} meat & {bones_qty} bones."); }
     }
+
+    /* public void Init(CapableData data)
+    {
+        // we calculate how much meat we want to put inside the meat
+        int meat_qty = 2 + UnityEngine.Random.Range(-random_meat_modifier_at_start, random_meat_modifier_at_start);
+        if (meat_qty < 1) { meat_qty = 1; }
+        int bones_qty = 2 + UnityEngine.Random.Range(-1, 1);
+        if (bones_qty < 1) { bones_qty = 1; }
+
+        // we understand which meat type we want
+        string meat_reference = "food:meat";
+        if (Type.GetType(data.kind) == typeof(Zombo)) { meat_reference = "food:meat_zombo"; }
+
+        // we add x meat to the corpse inventory
+        for (int i = 0; i < meat_qty; i++)
+        {
+            Food meat = ItemBank.Instance.CreateItem(meat_reference) as Food;
+            if (meat == null) { continue; }
+            meat.OnBeingBitten += being_bitten;
+            Inventory.Grab(meat);
+        }
+
+        // and x bones
+        for (int i = 0; i < bones_qty; i++)
+        {
+            Item bone = ItemBank.Instance.CreateItem("other:bone");
+            if (bone == null) { continue; }
+            Inventory.Grab(bone);
+        }
+
+        if (log_bites) { Debug.Log($"(Corpse) Initialized corpse of {being.name} with {meat_qty} meat & {bones_qty} bones."); }
+    } */
 
     // INTERACT
     public InteractCapacity Interactor => null;
@@ -125,12 +157,46 @@ public class Corpse : Movable, Interactable
         // StopAllCoroutines(); // we stop all coroutines to avoid any issues
 
         // we destroy the body child
-        Destroy(transform.Find("body").gameObject);
+        Destroy(transform.Find("feet").gameObject);
 
         // and change our skin to bones
         AnimPlayer.Skin = "bones";
         AnimPlayer.ClearPile();
         // Reference = "food:bones";
         // ItemDescription = "just some bones./. nothing special here.";
+    }
+}
+
+
+// CORPSE DATA
+[Serializable] public class CorpseData : CapableData
+{
+
+    // INIT FROM CAPABLE
+    public void Init(CapableData capdata)
+    {
+        // we transfer some of the capable data to the corpse data
+        position = capdata.position;
+        orientation = capdata.orientation;
+        tag = capdata.tag;
+
+        // skin
+        if (capdata.anim_data != null) { anim_data.skin = capdata.anim_data.skin; }
+    }
+
+    // CONSTRUCTOR
+    public CorpseData(CapableData parent)
+    {
+        foreach (var prop in parent.GetType().GetProperties()) { prop.SetValue(this, prop.GetValue(parent)); }
+        foreach (var prop in parent.GetType().GetFields()) { prop.SetValue(this, prop.GetValue(parent)); }
+    }
+
+    // DUPLICATE
+    public override ICapableData Duplicate()
+    {
+        return new CorpseData(base.Duplicate() as CapableData)
+        {
+            // we don't need to duplicate anything else for now, but if we add corpse specific data in the future we will need to duplicate it here
+        };
     }
 }

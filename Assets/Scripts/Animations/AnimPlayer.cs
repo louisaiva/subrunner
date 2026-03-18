@@ -39,7 +39,7 @@ public class AnimPlayer : MonoBehaviour
 
     [Header("Orientation")]
     public string orientation { get; private set; } = "D";
-    public event Action<Vector2> OnOrientationChange = delegate { };
+    // public event Action<Vector2> OnOrientationChange = delegate { };
 
 
     [Header("Current Animation")]
@@ -73,6 +73,10 @@ public class AnimPlayer : MonoBehaviour
         // check how we did it in animlayer
 
         // we inform each anim capacity priority of its priority
+        re_index_priorities();
+    }
+    private void re_index_priorities()
+    {
         for (int i = 0; i < anim_capacity_priorities.Count; i++)
         {
             anim_capacity_priorities[i].priority = i;
@@ -195,6 +199,22 @@ public class AnimPlayer : MonoBehaviour
         current_capacity_priority.capacity_playing = capacity;
     }
 
+    /// <summary>
+    /// play the animation with the right orientation according to the look_at vector.
+    /// After playing the anim the orientation will be reset to the previous orientation,
+    /// so this look_at orientation is only an override for this animation.
+    /// </summary>
+    /// <param name="capacity"></param>
+    /// <param name="look_at"></param>
+    /// <returns></returns>
+    public Anim PlayWithOrientation(string capacity, Vector2 look_at)
+    {
+        string old_orientation = this.orientation;
+        SetOrientation(look_at);
+        Anim anim = Play(capacity);
+        setOrientation(old_orientation);
+        return anim;
+     }
 
 
     // PLAY ANIM LOW LEVEL
@@ -372,6 +392,9 @@ public class AnimPlayer : MonoBehaviour
         Renderer.material = Resources.Load<Material>(data.material_path);
         Renderer.sortingLayerID = data.sorting_layer_id;
         Renderer.sortingOrder = data.order_in_layer;
+
+        // we inform each anim capacity priority of its priority
+        re_index_priorities();
     }
     
     /// <summary>
@@ -450,7 +473,7 @@ public class AnimPlayer : MonoBehaviour
         else if (angle >= 67.5f) { setOrientation("D"); }
         else { setOrientation("LD"); }
 
-        OnOrientationChange?.Invoke(look_at);
+        // OnOrientationChange?.Invoke(look_at);
     }
     private void setOrientation(string orientation)
     {
@@ -501,7 +524,6 @@ public class AnimPlayer : MonoBehaviour
             anim_layers[i].Renderer.flipX = flipX;
         }
     }
-
 
 
     // LAYERS & SPRITE RENDERER MANAGEMENT

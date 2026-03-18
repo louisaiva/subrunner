@@ -21,7 +21,6 @@ public class CapableBank : MonoBehaviour
     }
 
     // CAPABLE LOADING
-
     [Header("Loaded capables")]
     [SerializeField] protected List<Capable> loaded_capables;
     [SerializeField] protected Transform capables_parent;
@@ -59,7 +58,7 @@ public class CapableBank : MonoBehaviour
             load_anim_data(capable.AnimPlayer, data.anim_data);
 
             // and its body
-            load_body_data(capable, data.body_data);
+            load_feet_data(capable, data.feet_data);
 
             // we load its data
             capable.LoadData(data);
@@ -90,7 +89,7 @@ public class CapableBank : MonoBehaviour
         load_anim_data(capable.AnimPlayer, data.anim_data);
 
         // and its body
-        load_body_data(capable, data.body_data);
+        load_feet_data(capable, data.feet_data);
 
         // and its inventory
         build_inventory_item_pools(capable.Inventory, data.inventory);
@@ -102,21 +101,24 @@ public class CapableBank : MonoBehaviour
     }
     private Capable add_components_based_on_kind(GameObject go, Type kind)
     {
-        // ! TODO this is temporary because Movable & Being will become MoveCapacity & HealthCapacity
         // movable
+        // ! TODO this is temporary because Movable & Being will become MoveCapacity
         if (GameManager.Instance.IsKind(kind, typeof(Movable)))
         {
             Rigidbody2D rb = go.gameObject.AddComponent<Rigidbody2D>();
             rb.gravityScale = 0;
             rb.freezeRotation = true;
-
-            // add a feet gameobject to it
-            GameObject feet = Instantiate(feet_prefab, go.transform);
-            feet.name = "feet";
+            rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+            rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         }
 
-        // then we add the component corresponding to the capable kind
+        // we add the component corresponding to the capable kind
         Capable capable = go.gameObject.AddComponent(kind) as Capable;
+
+
+
+
+
         return capable;
     }
     
@@ -161,22 +163,22 @@ public class CapableBank : MonoBehaviour
             anim_layer.AssignLeader(player);
         }
     }
-    private void load_body_data(Capable capable, BodyData body_data)
+    private void load_feet_data(Capable capable, FeetData feet_data)
     {
         // checks if body data is null it means we have no colliders, we do nothing then
-        if (body_data == null) { return; }
-        Transform body = capable.body;
+        if (feet_data == null) { return; }
+        Transform feet = capable.feet;
 
         // load box colliders
-        for (int i = 0; i < body_data.box_colliders.Count; i++)
+        for (int i = 0; i < feet_data.box_colliders.Count; i++)
         {
-            ColliderBank.Instance.LoadBoxCollider(body_data.box_colliders[i], body);
+            ColliderBank.Instance.LoadBoxCollider(feet_data.box_colliders[i], feet);
         }
 
         // load circle colliders
-        for (int i = 0; i < body_data.circle_colliders.Count; i++)
+        for (int i = 0; i < feet_data.circle_colliders.Count; i++)
         {
-            ColliderBank.Instance.LoadCircleCollider(body_data.circle_colliders[i], body);
+            ColliderBank.Instance.LoadCircleCollider(feet_data.circle_colliders[i], feet);
         }
     }
 
@@ -244,11 +246,11 @@ public class CapableBank : MonoBehaviour
             anim_layers.RemoveAt(0);
         }
 
-        // unload body colliders
-        Transform body = capable.body;
-        for (int i = 0; i < body.childCount; i++)
+        // unload feet colliders
+        Transform feet = capable.feet;
+        for (int i = 0; i < feet.childCount; i++)
         {
-            GameObject collider = body.GetChild(i).gameObject;
+            GameObject collider = feet.GetChild(i).gameObject;
             ColliderBank.Instance.UnloadCollider(collider);
         }
 
