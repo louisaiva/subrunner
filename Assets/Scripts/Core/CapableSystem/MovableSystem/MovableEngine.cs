@@ -86,11 +86,30 @@ public class MovableEngine : MonoBehaviour
         // on verifie qu'on a pas déjà disposé la mémoire (ce qui veut dire qu'on quitte le jeu)
         if (!movableDistances.IsCreated || !movablePositions.IsCreated || distances_matrix == null) { return; }
 
-        // on resize la matrice & remove les movables
+        // on fait des tests pour vérifier que tous les movables sont bien dans la liste des movables
+        to_unregister_movables.RemoveAll(m => m == null);
         string log = "";
-        List<int> agent_indexes = to_unregister_movables.Select(m => movables.IndexOf(m)).ToList();
+        List<int> agent_indexes = new();
+        for (int i = 0; i < to_unregister_movables.Count; i++)
+        {
+            Movable m = to_unregister_movables[i];
+            if (!movables.Contains(m))
+            {
+                log += $"(MovableEngine) Warning: Tried to unregister movable {m.name} which is not in the movables list (skipped).\n";
+                continue;
+            }
+            agent_indexes.Add(movables.IndexOf(m));
+        }
+
+        // on verifie qu'on a des indexs et on les sort
+        if (agent_indexes.Count == 0) { return; }
+        agent_indexes.Sort();
+
+        if (log_movables) { Debug.Log($"(MovableEngine) Unregistering in batch {agent_indexes.Count} movables at indexes {string.Join(", ", agent_indexes)}: \n - {string.Join("\n - ", to_unregister_movables.Select(m => m.name))}\n + \n{log}"); }
+
+        // on remove les agents de la matrice (resize la matrice)
         distances_matrix.RemoveAgentsInBatch(agent_indexes, ref log);
-        for (int i=0; i < to_unregister_movables.Count; i++) { movables.Remove(to_unregister_movables[i]); }
+        for (int i=0; i < agent_indexes.Count; i++) { movables.RemoveAt(agent_indexes[i] - i); }
 
         // on resize les arrays
         movablePositions.Dispose();

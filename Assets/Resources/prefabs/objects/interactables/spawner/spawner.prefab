@@ -41,6 +41,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5759709742764716814
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -86,6 +87,7 @@ SpriteRenderer:
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 367386852, guid: 9f2de09728c388c4bb4de52c1f981657, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -95,7 +97,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!114 &2052598830028912328
 MonoBehaviour:
@@ -161,6 +162,8 @@ MonoBehaviour:
     kind: 
     position: {x: 0, y: 0}
     orientation: {x: 0, y: 0}
+    layer: 0
+    tag: 
     anim_data:
       skin: 
       anim_capacity_priorities: []
@@ -168,11 +171,11 @@ MonoBehaviour:
       sorting_layer_id: 0
       order_in_layer: 0
       layers: []
+    inventory:
+      item_pools_data: []
     body_data:
       box_colliders: []
       circle_colliders: []
-    inventory:
-      item_pools_data: []
     capacities_ids: []
     effects: 
     effects_ttl: []

@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class CapableSystem : BSOD_System<CapableSystem>
@@ -274,12 +272,14 @@ public class CapableSystem : BSOD_System<CapableSystem>
     {
         if (unloading_queue.Count <= 0) { return 0; }
         List<Movable> movables_to_unregister = new List<Movable>();
+        int capables_unloaded = 0;
         for (int i = 0; i < count; i++)
         {
-            if (unloading_queue.Count <= 0) { return i; }
+            if (unloading_queue.Count <= 0) { break; }
             string capable_id = unloading_queue[0];
             Capable capable = unload_capable(capable_id);
             unloading_queue.RemoveAt(0);
+            capables_unloaded++;
 
             // add to the unregistering list if movable
             if (capable != null && capable is Movable)
@@ -292,7 +292,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
         if (log_loading_extended && movables_to_unregister.Count > 0) { Debug.Log($"(CapableSystem - unload_in_queue) Calling MovableEngine.UnregisterInBatch for {movables_to_unregister.Count} entities : \n  - {(string.Join("\n  - ", movables_to_unregister))}"); }
         MovableEngine.Instance.UnregisterInBatch(movables_to_unregister);
         
-        return count;
+        return capables_unloaded;
     }
     private Capable unload_capable(string id)
     {
