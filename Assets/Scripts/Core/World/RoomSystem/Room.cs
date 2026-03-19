@@ -308,8 +308,9 @@ public class Room : MonoBehaviour
     // COLLIDERS EVENTS
     protected virtual void OnTriggerEnter2D(Collider2D collider)
     {
-        Capable capable = collider.GetComponent<Capable>();
-        if (capable == null) { capable = collider.transform.parent.GetComponent<Capable>(); }
+        Capable capable = collider.GetComponent<Capable>(); // some old objects have feet collider directly on them
+        if (capable == null) { capable = collider.transform.parent.GetComponent<Capable>(); } // some old movables have feet collider on feet -> child of the capable
+        if (capable == null) { capable = collider.transform.parent.parent.GetComponent<Capable>(); } // new obj have feet collider as child of feet -> grand child of the capable
         if (capable == null) { return; }
 
         // check if capable is not the controlled one and not in the capable system
@@ -339,12 +340,12 @@ public class Room : MonoBehaviour
         // check if we are not already in the IN then it means we have 2 IN -> we put it directly in the movables
         if (data.IN_movables_ids.Contains(id))
         {
-            data.IN_movables_ids.Remove(id);
+            /* data.IN_movables_ids.Remove(id);
 
             // check is capable or movable and add it to the right list
             if (capable is Movable) { data.movables_ids.Add(id); }
             else {data.capables_ids.Add(id); }
-            if (RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Grabbed 2x IN - " + id); }
+            if (RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Grabbed 2x IN - " + id); } */
             return;
         }
 
@@ -359,6 +360,7 @@ public class Room : MonoBehaviour
 
         Capable capable = collider.GetComponent<Capable>();
         if (capable == null) { capable = collider.transform.parent.GetComponent<Capable>(); }
+        if (capable == null) { capable = collider.transform.parent.parent.GetComponent<Capable>(); }
         if (capable == null) { return; }
 
         if (Controller.Instance.Capable != capable && !CapableBank.Instance.HasCapable(capable)) { return; }
@@ -380,6 +382,7 @@ public class Room : MonoBehaviour
         data.OUT_movables_ids.Add(capable.data.id);
         if (RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) OUT - " + capable.data.id); }
     }
+
 
     // COLLIDER OVERLAP
     private ContactFilter2D? _contact_filter = null;

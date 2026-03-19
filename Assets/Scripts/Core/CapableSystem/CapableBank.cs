@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class CapableBank : MonoBehaviour
 {
@@ -169,18 +167,18 @@ public class CapableBank : MonoBehaviour
     {
         // checks if body data is null it means we have no colliders, we do nothing then
         if (feet_data == null) { return; }
-        Transform feet = capable.feet;
+        Transform feet = capable.Feet;
 
         // load box colliders
         for (int i = 0; i < feet_data.box_colliders.Count; i++)
         {
-            ColliderBank.Instance.LoadBoxCollider(feet_data.box_colliders[i], feet);
+            ColliderBank.Instance.LoadCollider(feet_data.box_colliders[i], feet);
         }
 
         // load circle colliders
         for (int i = 0; i < feet_data.circle_colliders.Count; i++)
         {
-            ColliderBank.Instance.LoadCircleCollider(feet_data.circle_colliders[i], feet);
+            ColliderBank.Instance.LoadCollider(feet_data.circle_colliders[i], feet);
         }
     }
 
@@ -249,11 +247,11 @@ public class CapableBank : MonoBehaviour
         }
 
         // unload feet colliders
-        Transform feet = capable.feet;
-        for (int i = 0; i < feet.childCount; i++)
+        Transform feet = capable.Feet;
+        Collider2D[] colliders = feet.GetComponentsInChildren<Collider2D>(includeInactive: true);
+        for (int i = 0; i < colliders.Length; i++)
         {
-            GameObject collider = feet.GetChild(i).gameObject;
-            ColliderBank.Instance.UnloadCollider(collider);
+            ColliderBank.Instance.UnloadCollider(colliders[i].gameObject);
         }
 
         // unload the capable's data and put it back in the pool

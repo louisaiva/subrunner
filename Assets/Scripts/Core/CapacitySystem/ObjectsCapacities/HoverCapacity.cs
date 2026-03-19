@@ -115,7 +115,7 @@ public class HoverCapacity : Capacity
         if (hover_data.hover_collider_data == null) { return; }
 
         // then we load the collider
-        this._hover_collider = ColliderBank.Instance.LoadCircleCollider(hover_data.hover_collider_data, this.transform);
+        _hover_collider = ColliderBank.Instance.LoadCollider(hover_data.hover_collider_data, this.transform) as CircleCollider2D;
     }
     public override void UnloadData()
     {

@@ -2577,48 +2577,12 @@ MonoBehaviour:
   log_templates_data_loading: 1
   log_world_data_loading: 1
   log_awake_data_extended: 0
-  log_duplicating: 1
+  log_duplicating: 0
   log_spawning: 1
   log_corpse_switching: 1
-  log_loading: 1
+  log_loading: 0
   log_loading_extended: 0
   hide_log_no_data_found: 1
-  base_corpse_data:
-    <id>k__BackingField: corpse
-    kind: Corpse
-    position: {x: 0, y: 0}
-    orientation: {x: 0, y: 0}
-    layer: 13
-    tag: 
-    anim_data:
-      skin: bones
-      anim_capacity_priorities:
-      - priority: 0
-        capacity_playing: 
-        capacities:
-        - idle
-        lock_orientation: 0
-        one_shot: 0
-      - priority: 0
-        capacity_playing: 
-        capacities:
-        - die
-        lock_orientation: 0
-        one_shot: 0
-      current_capacity: 
-      material_path: materials/beings
-      sorting_layer_id: -667374433
-      order_in_layer: 0
-      layers: []
-    inventory:
-      item_pools_data: []
-    feet_data:
-      box_colliders: []
-      circle_colliders: []
-    capacities_ids:
-    - hover
-    effects: 
-    effects_ttl: []
 --- !u!114 &313120230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3730,7 +3694,7 @@ MonoBehaviour:
   awake_done: 0
   log_templates_data_loading: 1
   log_world_data_loading: 1
-  log_spawning: 1
+  log_spawning: 0
   log_loading: 0
   hide_log_no_data_found: 1
   item_static_capacities_kinds:
@@ -7103,10 +7067,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: log_get_anim
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -10524,11 +10484,6 @@ PrefabInstance:
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2806026283884960729, guid: abacdc781c511fc42b1c0e4dd87c3c7b, type: 3}
   m_PrefabInstance: {fileID: 1236077431}
-  m_PrefabAsset: {fileID: 0}
---- !u!61 &1254331911 stripped
-BoxCollider2D:
-  m_CorrespondingSourceObject: {fileID: 5680952117701559510, guid: 64c3cc4f7d6091747ba6b28494b042f9, type: 3}
-  m_PrefabInstance: {fileID: 8587680620484376296}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1259989011
 GameObject:
@@ -14364,7 +14319,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8595018692463036030, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -41404,7 +41359,7 @@ PrefabInstance:
     - target: {fileID: 4266818912431708596, guid: 64c3cc4f7d6091747ba6b28494b042f9, type: 3}
       propertyPath: '_health_colliders.Array.data[0]'
       value: 
-      objectReference: {fileID: 1254331911}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

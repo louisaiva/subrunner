@@ -37,7 +37,9 @@ public class TemplatesManager : MonoBehaviour
             saveCapableTemplate(capable);
         }
 
+        #if UNITY_EDITOR
         AssetDatabase.Refresh();
+        #endif
     }
     private void saveCapableTemplate(Capable capable)
     {
@@ -87,7 +89,9 @@ public class TemplatesManager : MonoBehaviour
             saveCapacityTemplate(capacity);
         }
 
+        #if UNITY_EDITOR
         AssetDatabase.Refresh();
+        #endif
     }
     private void saveCapacityTemplate(Capacity capacity)
     {

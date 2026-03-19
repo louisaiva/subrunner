@@ -49,12 +49,12 @@ public class ColliderBank : MonoBehaviour
     // LOAD UNLOAD
     public Collider2D LoadCollider(ColliderData data, Transform parent)
     {
-        if (data is BoxData bdata) { return LoadBoxCollider(bdata, parent); }
-        if (data is CircleData cdata) { return LoadCircleCollider(cdata, parent); }
+        if (data is BoxData bdata) { return load_box_collider(bdata, parent); }
+        if (data is CircleData cdata) { return load_circle_collider(cdata, parent); }
         if (!hide_log_load_collider_not_found) { Debug.LogWarning($"(ColliderBank - LoadCollider) data is nor BoxData nor CircleData, can't load collider : {data}\n{data.GetDetails()}"); }
         return null;
     }
-    public BoxCollider2D LoadBoxCollider(BoxData data, Transform parent)
+    private BoxCollider2D load_box_collider(BoxData data, Transform parent)
     {
         // we first try to extract a collider from the pool
         BoxCollider2D collider;
@@ -72,6 +72,9 @@ public class ColliderBank : MonoBehaviour
             collider.name = "box_collider";
         }
 
+        // we activate the collider
+        collider.enabled = true;
+
         // we load navmesh data
         create_or_destroy_navmesh_modifier(collider.gameObject, data.used_for_pathfinding);
 
@@ -80,7 +83,7 @@ public class ColliderBank : MonoBehaviour
         collider.size = data.size;
         return collider;
     }
-    public CircleCollider2D LoadCircleCollider(CircleData data, Transform parent)
+    private CircleCollider2D load_circle_collider(CircleData data, Transform parent)
     {
         CircleCollider2D collider;
         if (pooled_circle_colliders != null && pooled_circle_colliders.Count > 0)
@@ -96,6 +99,9 @@ public class ColliderBank : MonoBehaviour
             collider = Instantiate(circle_collider_prefab, parent).GetComponent<CircleCollider2D>();
             collider.name = "circle_collider";
         }
+
+        // we activate the collider
+        collider.enabled = true;
 
         // we load navmesh data
         create_or_destroy_navmesh_modifier(collider.gameObject, data.used_for_pathfinding);
@@ -138,7 +144,6 @@ public class ColliderBank : MonoBehaviour
     {
         Collider2D collider = collider_go.GetComponent<Collider2D>();
         if (collider == null) { return; }
-
 
         if (collider is BoxCollider2D box_collider)
         {

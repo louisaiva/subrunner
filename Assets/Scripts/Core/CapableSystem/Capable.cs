@@ -149,7 +149,7 @@ public class Capable : MonoBehaviour, Debuggable
     }
     protected FeetData get_static_feet_data()
     {
-        if (feet == null) { return null; }
+        if (Feet == null) { return null; }
 
         FeetData feet_data = new FeetData
         {
@@ -159,7 +159,7 @@ public class Capable : MonoBehaviour, Debuggable
 
 
         // we go through all colliders in the body and save their data
-        List<Collider2D> colliders = new List<Collider2D>(feet.GetComponentsInChildren<Collider2D>(includeInactive: true));
+        List<Collider2D> colliders = new List<Collider2D>(Feet.GetComponentsInChildren<Collider2D>(includeInactive: true));
         foreach (Collider2D collider in colliders)
         {
             if (collider is BoxCollider2D) { feet_data.box_colliders.Add(ColliderBank.GetColliderData(collider) as BoxData); }
@@ -229,7 +229,7 @@ public class Capable : MonoBehaviour, Debuggable
 
     // feet
     private Transform _feet = null;
-    public Transform feet { get
+    public Transform Feet { get
         {
             if (_feet == null) { _feet = transform.Find("feet"); }
             return _feet;

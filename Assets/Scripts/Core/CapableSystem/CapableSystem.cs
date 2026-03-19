@@ -129,6 +129,13 @@ public class CapableSystem : BSOD_System<CapableSystem>
         foreach (string json in files)
         {
             CapableData data = JsonUtility.FromJson<CapableData>(json);
+            
+            // verify that we are not loading a template
+            if (templates_capables_data.ContainsKey(data.id))
+            {
+                if (log_world_data_loading) { Debug.LogWarning($"(CapableSystem - loadWorldCapablesData) Trying to load world capable data with id {data.id} but it already exists in templates data. Skipping it."); }
+                continue;
+            }
 
             if (json_by_kind.ContainsKey(data.kind))
             {
@@ -328,7 +335,6 @@ public class CapableSystem : BSOD_System<CapableSystem>
     }
 
     // SWITCH CAPABLE TO CORPSE
-    private CorpseData base_corpse_data;
     public async void SwitchToCorpse(Capable capable)
     {
         // 1. DROP ALL ITEMS
@@ -341,11 +347,12 @@ public class CapableSystem : BSOD_System<CapableSystem>
         // 2. SAVE CAPABLE DATA
         capable.SaveDynamicData();
         CapableData capable_data = capable.data;
-        List<Force> forces = new List<Force>((capable as Movable)?.GetForces());
+        List<Force> forces = new List<Force>((capable as Movable)?.GetForces() ?? new List<Force>()); // duplicate the forces
 
         // 3. SPAWN THE CORPSE DATA
         CorpseData corpse_data = DuplicateTemplate("corpse") as CorpseData;
         corpse_data.Init(capable_data); // we transfer some of the capable data to the corpse data (ex : position, orientation, tag, skin if we have anim_data, etc)
+        
         // todo here we should put some meat items inside corpse data inventory so they auto load when spawning the corpse
         // and with the right meat reference
 
