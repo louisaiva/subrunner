@@ -1,0 +1,34 @@
+﻿{
+    "<id>k__BackingField": "health-4",
+    "kind": "HealthCapacity",
+    "local_position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "layer": 23,
+    "tag": "Untagged",
+    "health": 100.0,
+    "max_health": 100,
+    "regen_health": 0.10000000149011612,
+    "hurted_animation": "hurted",
+    "box_colliders": [
+        {
+            "local_position": {
+                "x": 0.0,
+                "y": 0.3709999918937683
+            },
+            "layerID": 23,
+            "used_for_pathfinding": false,
+            "is_trigger": true,
+            "offset": {
+                "x": 0.0038108229637145998,
+                "y": 0.3377995491027832
+            },
+            "size": {
+                "x": 0.49610769748687746,
+                "y": 0.671231746673584
+            }
+        }
+    ],
+    "circle_colliders": []
+}

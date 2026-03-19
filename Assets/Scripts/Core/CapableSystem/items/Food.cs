@@ -5,10 +5,10 @@ public class Food : Item, Usable
 {
     [Header("Food parameters")]
     public float life_regen = 10f; // life regen of the food
-    public event System.Action<Being> OnBeingBitten = delegate { };
+    public event System.Action<HealthCapacity> OnBeingBitten = delegate { };
 
     // BEING EATEN
-    public void BeEaten(Being eater)
+    public void BeEaten(HealthCapacity eater)
     {
         OnBeingBitten?.Invoke(eater);
         Destroy(gameObject);

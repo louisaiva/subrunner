@@ -25,6 +25,10 @@ public class Capable : MonoBehaviour, Debuggable
         this.name = data.id;
         this.transform.position = data.position;
 
+        // we set the layer & tag
+        gameObject.layer = data.layer;
+        if (!string.IsNullOrEmpty(data.tag)) { gameObject.tag = data.tag; }
+
         // we set the orientation
         this.Orientation = data.orientation;
 

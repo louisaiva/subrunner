@@ -56,7 +56,7 @@ public class WalkCapacity : Capacity
 
         // 2 - NOT MOVING CHECKS
         if (Capable.HasEffect(Effect.Immobile)) { walk_speed = 0f; } // we check if immobile
-        if (Capable is Being being && !being.Alive) { walk_speed = 0f; } // we check if dead
+        if (Capable.TryGetCapacity(out HealthCapacity being) && !being.Alive) { walk_speed = 0f; } // we check if dead
         if (walk_speed < 0.1f) { walk_speed = 0f; } // we clamp if walk is too low
 
         // log final walk_speed

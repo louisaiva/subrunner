@@ -54,8 +54,8 @@ public class DieCapacity : Capacity
         }
 
         // destroy object
-        if (capable is Being) { StartCoroutine(destroyBeing()); }
-        else if (capable.HasCapacity<HealthCapacity>()) { StartCoroutine(destroyHealthCapaBeing()); }
+        if (Capable is Being) { StartCoroutine(destroyBeing()); }
+        else if (Capable.HasCapacity<HealthCapacity>()) { StartCoroutine(destroyHealthCapaBeing()); }
     }
     private IEnumerator destroyBeing()
     {

@@ -398,54 +398,62 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   game_theme_to_play: i'm so hungry
   generated_ids:
-  - dev_spawner-1
-  - hover-1
-  - spawn-1
-  - box-1
-  - katana-1
-  - hover-2
-  - attack-1
-  - hover-3
-  - bone-1
-  - hover-4
-  - chest-1
-  - shoes-1
-  - hover-5
-  - dodge-1
-  - pastas-1
-  - hover-6
-  - hover-7
-  - open-1
-  - close-1
-  - cursor-1
-  - connect-1
-  - zombo-1
+  - dev-1
+  - health-1
   - interact-1
   - die-1
   - walk-1
   - run-1
-  - attack-2
+  - attack-1
   - eat-1
-  - connect-2
-  - robot_spawner-1
-  - hover-8
-  - spawn-2
-  - dev-1
-  - interact-2
+  - connect-1
+  - box-1
+  - katana-1
+  - hover-1
+  - attack-2
+  - hover-2
+  - katana-2
+  - hover-3
+  - attack-3
+  - perso-1
   - die-2
   - walk-2
   - run-2
-  - attack-3
+  - health-2
+  - talk-1
+  - interact-2
   - eat-2
-  - connect-3
-  - perso-1
+  - drop-1
+  - zombo-1
+  - health-3
+  - interact-3
   - die-3
   - walk-3
   - run-3
-  - talk-1
-  - interact-3
+  - attack-4
   - eat-3
-  - drop-1
+  - connect-2
+  - shoes-1
+  - hover-4
+  - dodge-1
+  - dummy-1
+  - health-4
+  - cursor-1
+  - connect-3
+  - bone-1
+  - hover-5
+  - robot_spawner-1
+  - hover-6
+  - spawn-1
+  - dev_spawner-1
+  - hover-7
+  - spawn-2
+  - pastas-1
+  - hover-8
+  - chest-1
+  - hover-9
+  - open-1
+  - close-1
 --- !u!1 &5218386995141567643
 GameObject:
   m_ObjectHideFlags: 0
@@ -695,7 +703,7 @@ MonoBehaviour:
   surfaces:
   - {fileID: 5680882237522360214}
   - {fileID: 5427939901150469199}
-  log: 1
+  log: 0
 --- !u!1 &6415610740479548152
 GameObject:
   m_ObjectHideFlags: 0
@@ -5649,6 +5657,7 @@ MonoBehaviour:
   generate_continuously: 0
   generator_position: {x: -47, y: -9, z: 0}
   generator_strengh: 1
+  log_triggers: 1
 --- !u!1 &7529914193416048526
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,8 +9,8 @@
         "x": 0.0,
         "y": 1.0
     },
-    "layer": 0,
-    "tag": "",
+    "layer": 24,
+    "tag": "Item",
     "anim_data": {
         "skin": "pckg_front",
         "anim_capacity_priorities": [
@@ -51,6 +51,7 @@
                 "one_shot": true
             }
         ],
+        "current_capacity": "",
         "material_path": "materials/objects",
         "sorting_layer_id": -667374433,
         "order_in_layer": 0,
@@ -73,7 +74,7 @@
                 "stacks_data": [
                     {
                         "items_ids": [
-                            "katana-2"
+                            "katana-1"
                         ]
                     }
                 ],
@@ -105,7 +106,7 @@
         ]
     },
     "capacities_ids": [
-        "hover-9"
+        "hover-2"
     ],
     "effects": [],
     "effects_ttl": []

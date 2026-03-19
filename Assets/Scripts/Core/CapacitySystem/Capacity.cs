@@ -27,6 +27,10 @@ public class Capacity : MonoBehaviour
     {
         this.data = data;
         this.name = data.id;
+
+        // we set the layer & tag
+        gameObject.layer = data.layer;
+        if (!string.IsNullOrEmpty(data.tag)) { gameObject.tag = data.tag; }
     }
     public virtual void UnloadData()
     {
@@ -53,6 +57,10 @@ public class Capacity : MonoBehaviour
             id = get_static_id(),
             local_position = this.transform.localPosition,
 
+            // set the layer & tag
+            layer = gameObject.layer,
+            tag = gameObject.tag,
+            
             // we set the kind
             kind = GetType().Name
         };

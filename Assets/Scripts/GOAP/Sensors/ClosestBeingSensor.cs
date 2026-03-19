@@ -18,15 +18,15 @@ namespace subrunner.goap
             IA ia = references.GetCachedComponentInParent<IA>();
             PreyDetector preyDetector = ia.Eyes as PreyDetector;
             if (preyDetector == null) { return null; }
-            Being closestBeing = preyDetector.GetClosestTarget(ia);
-            if (closestBeing == null) { return null; }
+            HealthCapacity closestHealth = preyDetector.GetClosestTarget(ia);
+            if (closestHealth == null) { return null; }
 
             // If the target is a transform target, set the target to the closest being
             if (target is TransformTarget transformTarget)
             {
-                return transformTarget.SetTransform(closestBeing.transform);
+                return transformTarget.SetTransform(closestHealth.Capable.transform);
             }
-            return new TransformTarget(closestBeing.transform);
+            return new TransformTarget(closestHealth.Capable.transform);
         }
     }
 }

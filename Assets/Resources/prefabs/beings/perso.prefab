@@ -37,6 +37,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4113814626409393196
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -82,6 +83,7 @@ SpriteRenderer:
   m_SortingLayerID: -438027575
   m_SortingLayer: 5
   m_SortingOrder: 10
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -1684913533, guid: c4c96ff63db1b8b48a740dfb3fd27ba2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -91,7 +93,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &1974877761392160848
 MonoBehaviour:
@@ -135,22 +136,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-    <id>k__BackingField: 
+    <id>k__BackingField: cursor-1
     kind: 
     position: {x: 0, y: 0}
     orientation: {x: 0, y: 0}
+    layer: 0
+    tag: 
     anim_data:
       skin: 
       anim_capacity_priorities: []
+      current_capacity: 
       material_path: 
       sorting_layer_id: 0
       order_in_layer: 0
       layers: []
-    body_data:
-      box_colliders: []
-      circle_colliders: []
     inventory:
       item_pools_data: []
+    feet_data:
+      box_colliders: []
+      circle_colliders: []
     capacities_ids: []
     effects: 
     effects_ttl: []
@@ -222,7 +226,7 @@ MonoBehaviour:
   no_cores_hackray_color: {r: 1, g: 0, b: 0.0627451, a: 0.36862746}
   hackray_width: 1.4
   cursor: {fileID: 4244491208943344465}
-  log: 0
+  log: 1
   log_update: 0
   log_enabling: 0
 --- !u!114 &6536362871279284659
@@ -358,9 +362,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6464662739898415761}
   - component: {fileID: 8802660227184948400}
-  - component: {fileID: 892150315727240577}
-  m_Layer: 23
-  m_Name: body
+  - component: {fileID: 5514139528805112798}
+  m_Layer: 7
+  m_Name: particles
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -876,8 +880,8 @@ ParticleSystemForceField:
         m_RotationOrder: 4
     m_MultiplyDragByParticleSize: 1
     m_MultiplyDragByParticleVelocity: 1
---- !u!61 &892150315727240577
-BoxCollider2D:
+--- !u!58 &5514139528805112798
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -889,7 +893,7 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -910,18 +914,8 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.019371063, y: 0.002583027}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 0.35302013, y: 0.5764208}
-  m_EdgeRadius: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.07811493
 --- !u!1 &2693680858581445332
 GameObject:
   m_ObjectHideFlags: 0
@@ -1136,6 +1130,7 @@ Transform:
   - {fileID: 2786445522269117577}
   - {fileID: 806613326114500989}
   - {fileID: 455273735031494225}
+  - {fileID: 1799908327332980994}
   - {fileID: 7942793094811061728}
   - {fileID: 4376126531362925556}
   - {fileID: 1511319598159572609}
@@ -1144,6 +1139,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3172537156789299168
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1189,6 +1185,7 @@ SpriteRenderer:
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -1553698978, guid: 34bafa3048835ff458bab94e95953e91, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1198,7 +1195,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!114 &7133805124708220433
 MonoBehaviour:
@@ -1281,22 +1277,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-    <id>k__BackingField: bob
+    <id>k__BackingField: perso-1
     kind: Perso
     position: {x: 0, y: 0}
     orientation: {x: 0, y: 0}
+    layer: 0
+    tag: 
     anim_data:
       skin: 
       anim_capacity_priorities: []
+      current_capacity: 
       material_path: 
       sorting_layer_id: 0
       order_in_layer: 0
       layers: []
-    body_data:
-      box_colliders: []
-      circle_colliders: []
     inventory:
       item_pools_data: []
+    feet_data:
+      box_colliders: []
+      circle_colliders: []
     capacities_ids: []
     effects: 
     effects_ttl: []
@@ -1316,16 +1315,12 @@ MonoBehaviour:
   forces: []
   input_speed: 0
   Velocity: {x: 0, y: 0}
-  feet_collider: {fileID: 0}
-  life: 100
-  max_life: 100
   random_life_modifier_at_start: 0
   regen_life: 0
-  _body_colliders:
-  - {fileID: 892150315727240577}
+  _health_colliders: []
   body_meats: 1
   body_bones: 1
-  floating_dmg_provider: {fileID: 0}
+  log_taking_dmg: 0
   level: 1
   xp: 0
   total_xp: 0
@@ -1413,11 +1408,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-    <id>k__BackingField: 
+    <id>k__BackingField: eat-2
     kind: 
     local_position: {x: 0, y: 0}
-  cooldown: 0
-  debug: 0
+    layer: 0
+    tag: 
+  log: 0
   logs_detection: 0
   log_actions: 0
   food_target: {fileID: 0}
@@ -1582,11 +1578,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-    <id>k__BackingField: 
+    <id>k__BackingField: run-2
     kind: 
     local_position: {x: 0, y: 0}
-  cooldown: 0
-  debug: 0
+    layer: 0
+    tag: 
+  log: 0
   IsRunning: 0
   max_run_speed: 4
   max_walk_speed: 0
@@ -1760,11 +1757,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-    <id>k__BackingField: 
+    <id>k__BackingField: walk-2
     kind: 
     local_position: {x: 0, y: 0}
-  cooldown: 0
-  debug: 0
+    layer: 0
+    tag: 
+  log: 0
   log_footsteps_audio: 0
   log_footsteps_repeating: 0
   walk_speed: 0
@@ -1775,7 +1773,7 @@ MonoBehaviour:
   delay_between_footsteps: 0.6
 --- !u!199 &6952850229809567613
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1821,6 +1819,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -1852,7 +1851,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!198 &9013341719679780031
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -6714,11 +6712,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-    <id>k__BackingField: 
+    <id>k__BackingField: connect-3
     kind: 
     local_position: {x: 0, y: 0}
-  cooldown: 0
-  debug: 0
+    layer: 0
+    tag: 
+  log: 0
   connection:
     to: 
     from: 
@@ -6840,11 +6839,8 @@ MonoBehaviour:
           m_CallState: 2
   SecurityLevel: 1
   running_hacks: []
-  capable: {fileID: 0}
-  Connector: {fileID: 0}
-  Renderer: {fileID: 0}
   TargetMaterial: {fileID: 0}
-  DefaultMaterial: {fileID: 0}
+  BaseMaterial: {fileID: 0}
   log: 0
   log_vulnerabilities: 0
   references:
@@ -7043,11 +7039,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-    <id>k__BackingField: 
+    <id>k__BackingField: drop-1
     kind: 
     local_position: {x: 0, y: 0}
-  cooldown: 0
-  debug: 0
+    layer: 0
+    tag: 
+  log: 0
   selected_item: {fileID: 0}
   random_direction: 0
   drop_magnitude: 50
@@ -7250,14 +7247,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-    <id>k__BackingField: 
+    <id>k__BackingField: die-2
     kind: 
     local_position: {x: 0, y: 0}
-  cooldown: 0
-  debug: 0
+    layer: 0
+    tag: 
+  log: 0
   deaths: 0
-  xp_provider: {fileID: 0}
-  text_manager: {fileID: 0}
   xp_gift: 10
   show_smiley: 1
   smileys:
@@ -7358,6 +7354,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 332583253616935226}
     m_Modifications:
+    - target: {fileID: -5080116547798053081, guid: 159a8149bceb3f040b4991aa3391ef5f, type: 3}
+      propertyPath: data.<id>k__BackingField
+      value: talk-1
+      objectReference: {fileID: 0}
     - target: {fileID: 891631874371971630, guid: 159a8149bceb3f040b4991aa3391ef5f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.35
@@ -7541,6 +7541,10 @@ PrefabInstance:
       value: '!food|!food:meat;!food:zombo_meat;!food:bones'
       objectReference: {fileID: 0}
     - target: {fileID: 8252522207981929358, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: data.<id>k__BackingField
+      value: interact-2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8252522207981929358, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
       propertyPath: interact_types.Array.size
       value: 7
       objectReference: {fileID: 0}
@@ -7581,4 +7585,98 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 6234543502669162689, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
   m_PrefabInstance: {fileID: 7655718790488654645}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &8275750764961389790
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 332583253616935226}
+    m_Modifications:
+    - target: {fileID: 773551956763057387, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: m_Size.x
+      value: 0.3566303
+      objectReference: {fileID: 0}
+    - target: {fileID: 773551956763057387, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: m_Size.y
+      value: 0.5128642
+      objectReference: {fileID: 0}
+    - target: {fileID: 773551956763057387, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.0155272335
+      objectReference: {fileID: 0}
+    - target: {fileID: 773551956763057387, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.08580735
+      objectReference: {fileID: 0}
+    - target: {fileID: 2179822775373733288, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: health
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2179822775373733288, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: max_health
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2179822775373733288, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: data.<id>k__BackingField
+      value: health-2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7648185767596127708, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7648185767596127708, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7648185767596127708, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7648185767596127708, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7648185767596127708, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7648185767596127708, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7648185767596127708, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7648185767596127708, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7648185767596127708, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7648185767596127708, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8074617250788619187, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: m_Name
+      value: health
+      objectReference: {fileID: 0}
+    - target: {fileID: 8074617250788619187, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+--- !u!4 &1799908327332980994 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7648185767596127708, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+  m_PrefabInstance: {fileID: 8275750764961389790}
   m_PrefabAsset: {fileID: 0}

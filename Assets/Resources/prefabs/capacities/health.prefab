@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 2179822775373733288}
   m_Layer: 23
   m_Name: health
-  m_TagString: Zombo
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -127,6 +127,8 @@ MonoBehaviour:
     <id>k__BackingField: health-1
     kind: 
     local_position: {x: 0, y: 0}
+    layer: 0
+    tag: 
   log: 0
   health: 40
   max_health: 40

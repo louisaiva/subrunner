@@ -6,7 +6,15 @@ public class XPProvider : Singleton<XPProvider>
 {
     // PARTICLES
     protected List<ParticleSystem.Particle> particles = new List<ParticleSystem.Particle>();
-    private ParticleSystem generator;
+    private ParticleSystem _part_system;
+    public ParticleSystem ParticuleSystem
+    {
+        get
+        {
+            if (_part_system == null) { _part_system = GetComponent<ParticleSystem>(); }
+            return _part_system;
+        }
+    }
 
     // PARTICLES RADIUS GENERATION
     public float radius = 0.5f;
@@ -24,15 +32,14 @@ public class XPProvider : Singleton<XPProvider>
     public Vector3 generator_position = new Vector3(-47, -9, 0);
     public float generator_strengh = 1f;
 
+    [Header("Logs")]
+    public bool log_triggers = false;
+
     // START
     private void Start()
     {
-
-        // on récupère le particle system
-        generator = GetComponent<ParticleSystem>();
-        // on emet une particule
-        // EmitXP(500, new Vector3(0, -1, 0),10f);
-        // EmitXP(500, new Vector3(-30, -12, 0), 10f);
+        if (Perso.Instance == null) { return; } // no player, no trigger
+        ParticuleSystem.trigger.SetCollider(0, Perso.Instance.transform.Find("particles").GetComponent<Collider2D>());
     }
 
     // UPDATE
@@ -73,7 +80,7 @@ public class XPProvider : Singleton<XPProvider>
 
 
             // on emet les particules
-            generator.Emit(emitParams, 1);
+            ParticuleSystem.Emit(emitParams, 1);
         }
     }
     private void emitEndlessly()
@@ -87,9 +94,9 @@ public class XPProvider : Singleton<XPProvider>
         if (Perso.Instance == null) { return; } // no player, no trigger
 
         // on récupère les particules
-        int triggeredParticles = generator.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles);
+        int triggeredParticles = ParticuleSystem.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles);
 
-        // print("we just collided with " + triggeredParticles+" particles");
+        if (log_triggers) { Debug.Log("(XPProvider) Triggered particles: " + triggeredParticles); }
 
         int life_bonus = 0;
         int xp_bonus = 0;
@@ -100,7 +107,7 @@ public class XPProvider : Singleton<XPProvider>
             ParticleSystem.Particle p = particles[i];
 
             // on regarde la couleur de la particule
-            Color color = p.GetCurrentColor(generator);
+            Color color = p.GetCurrentColor(ParticuleSystem);
             if (color == life_color)
             {
                 // on ajoute de la life
@@ -118,7 +125,7 @@ public class XPProvider : Singleton<XPProvider>
         }
 
         // on applique les changements
-        generator.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles);
+        ParticuleSystem.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles);
 
 
 

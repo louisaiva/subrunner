@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using CrashKonijn.Agent.Core;
-using CrashKonijn.Agent.Runtime;
-using CrashKonijn.Goap.Runtime;
 using subrunner.goap;
 using UnityEngine;
 
@@ -13,7 +11,7 @@ public class PreyDetector : Detector
     protected float lastSelectionTime = 0f;
 
     [Header("Targets detection")]
-    [SerializeField] private List<Being> waiting_targets = new List<Being>(); // list of potential targets, does not contains current_target !
+    [SerializeField] private List<HealthCapacity> waiting_targets = new List<HealthCapacity>(); // list of potential targets, does not contains current_target !
     public LayerMask target_layers;
     [SerializeField] private List<string> target_skins; // skins to include from current_target detection
 
@@ -33,7 +31,7 @@ public class PreyDetector : Detector
     }
 
     // GETTING CLOSEST TARGET
-    public Being GetClosestTarget(IA ia)
+    public HealthCapacity GetClosestTarget(IA ia)
     {
         // get the potential targets
         if (waiting_targets.Count == 0) { return null; }
@@ -42,14 +40,14 @@ public class PreyDetector : Detector
         waiting_targets.RemoveAll(target => target == null || !target.Alive);
 
         // we find the closest target
-        Being closest_target = null;
+        HealthCapacity closest_target = null;
         float closest_distance = float.MaxValue; // Start with the largest possible distance
 
-        foreach (Being target in waiting_targets)
+        foreach (HealthCapacity target in waiting_targets)
         {
             float distance = Vector3.Distance(target.gameObject.transform.position, ia.transform.position);
 
-            if (!target_skins.Contains(target.Skin)) { continue; }
+            if (!target_skins.Contains(target.Capable.Skin)) { continue; }
             if (distance >= closest_distance) { continue; }
 
             closest_target = target;
@@ -68,7 +66,7 @@ public class PreyDetector : Detector
         lastSelectionTime = Time.time;
 
         // find the closest target
-        Being closest_target = GetClosestTarget(ia);
+        HealthCapacity closest_target = GetClosestTarget(ia);
 
         // checks if the goal is the active one
         if (!goal.enabled)
@@ -104,33 +102,38 @@ public class PreyDetector : Detector
     {
         // checks if the collider is a potential target
         if (!((target_layers.value & (1 << other.transform.gameObject.layer)) > 0)) { return; }
-        Being being = other.transform.parent.GetComponent<Being>();
-        if (being == null) { return; }
+        // Being health = other.transform.parent.GetComponent<Being>();
+        Capable capable = other.transform.parent.GetComponent<Capable>();
+        if (capable == null) { capable = other.transform.parent.parent.GetComponent<Capable>(); }
+        if (capable == null) { return; }
+        if (!capable.TryGetCapacity(out HealthCapacity health)) { return; }
         
-        if (waiting_targets.Contains(being)) { return; }
+        if (waiting_targets.Contains(health)) { return; }
 
         // remove null targets
         waiting_targets.RemoveAll(target => target == null);
 
         // we add the being to the waiting targets
-        waiting_targets.Add(being);
+        waiting_targets.Add(health);
 
         // if we have no prey, we enable the goal
-        if (target_skins.Contains(being.Skin) && !goal.enabled) { brain.EnableGoal(goal); }
+        if (target_skins.Contains(capable.Skin) && !goal.enabled) { brain.EnableGoal(goal); }
 
-        if (log) { Debug.Log("(PreyDetector) " + being.name + " added to waiting targets of " + ia.name); }
+        if (log) { Debug.Log("(PreyDetector) " + health.name + " added to waiting targets of " + ia.name); }
     }
     private void OnTriggerExit2D(Collider2D other)
     {
         if (!((target_layers.value & (1 << other.transform.gameObject.layer)) > 0)) { return; }
-        Being being = other.transform.parent.GetComponent<Being>();
-        if (being == null) { return; }
+        Capable capable = other.transform.parent.GetComponent<Capable>();
+        if (capable == null) { capable = other.transform.parent.parent.GetComponent<Capable>(); }
+        if (capable == null) { return; }
+        if (!capable.TryGetCapacity(out HealthCapacity health)) { return; }
 
         // we check if the being is in the waiting targets of 
-        if (waiting_targets.Contains(being))
+        if (waiting_targets.Contains(health))
         {
-            waiting_targets.Remove(being);
-            if (log) { Debug.Log("(PreyDetector) " + being.name + " removed from waiting targets of " + ia.name); }
+            waiting_targets.Remove(health);
+            if (log) { Debug.Log("(PreyDetector) " + health.name + " removed from waiting targets of " + ia.name); }
         }
 
         // we remove null targets
