@@ -32,6 +32,10 @@ public class CapableDataManager : MonoBehaviour
         {
             saveCapableData(capable);
         }
+
+        #if UNITY_EDITOR
+        AssetDatabase.Refresh();
+        #endif
     }
     private void saveCapableData(Capable capable)
     {
@@ -89,6 +93,12 @@ public class CapableDataManager : MonoBehaviour
         {
             saveCapableData(capable);
         }
+
+
+
+        #if UNITY_EDITOR
+        AssetDatabase.Refresh();
+        #endif
     }
 
 
