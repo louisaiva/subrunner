@@ -94,12 +94,12 @@ public interface ICapableData : IData
 {
     public string skin;
     public List<AnimCapacityPriority> anim_capacity_priorities;
+    public string current_capacity; // runtime only
 
     // player sr data
     public string material_path;
     public int sorting_layer_id;
     public int order_in_layer;
-
 
     // layers
     public List<AnimLayerData> layers;
@@ -111,6 +111,7 @@ public interface ICapableData : IData
         AnimData new_data = new AnimData
         {
             skin = this.skin,
+            current_capacity = this.current_capacity,
             material_path = this.material_path,
             sorting_layer_id = this.sorting_layer_id,
             order_in_layer = this.order_in_layer,
@@ -134,6 +135,7 @@ public interface ICapableData : IData
     {
         string details = $"anim_data :\n";
         details += $"     - skin : {skin}\n";
+        details += $"     - current_capacity : {current_capacity}\n";
         if (anim_capacity_priorities != null) { details += $"     - anim_capacity_priorities : {anim_capacity_priorities.Count} priorities\n"; }
         else { details += $"     - anim_capacity_priorities : null\n"; }
         if (layers != null) { details += $"     - layers : {layers.Count} layers"; }

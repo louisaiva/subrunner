@@ -2573,16 +2573,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CapableSystem
   loading_queue: []
   unloading_queue: []
-  awake_done: 0
-  start_loading_done: 0
-  log_awake_data: 1
+  load_x_capables_per_frame: 5
+  log_templates_data_loading: 1
+  log_world_data_loading: 1
   log_awake_data_extended: 0
+  log_duplicating: 1
+  log_spawning: 1
+  log_corpse_switching: 1
   log_loading: 1
   log_loading_extended: 0
   hide_log_no_data_found: 1
-  log_spawning: 1
-  log_corpse_switching: 1
-  load_x_capables_per_frame: 5
   base_corpse_data:
     <id>k__BackingField: corpse
     kind: Corpse
@@ -2605,6 +2605,7 @@ MonoBehaviour:
         - die
         lock_orientation: 0
         one_shot: 0
+      current_capacity: 
       material_path: materials/beings
       sorting_layer_id: -667374433
       order_in_layer: 0
@@ -2636,6 +2637,7 @@ MonoBehaviour:
   feet_prefab: {fileID: 6157973582211797263, guid: 390c173041bfffa479a693b4481f31a8, type: 3}
   anim_layer_prefab: {fileID: 2256093318761564998, guid: 2b27f1b2b096f9b498f67db4df154afc, type: 3}
   log_types: 0
+  log_anim_player: 0
   log_anim_layers: 0
   log_inventory_build: 0
 --- !u!1001 &316903155
@@ -3726,7 +3728,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CapacityEngine
   awake_done: 0
-  log_awake_data: 1
+  log_templates_data_loading: 1
+  log_world_data_loading: 1
+  log_spawning: 1
   log_loading: 0
   hide_log_no_data_found: 1
   item_static_capacities_kinds:
@@ -7099,6 +7103,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: log_get_anim
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -14310,10 +14318,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1207677854}
     m_Modifications:
-    - target: {fileID: 1094141241363125789, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
-      propertyPath: data.<id>k__BackingField
-      value: health-1
-      objectReference: {fileID: 0}
     - target: {fileID: 1982530335173329727, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
       propertyPath: m_LocalPosition.x
       value: 7.73
@@ -16012,6 +16016,7 @@ GameObject:
   - component: {fileID: 1733966123}
   - component: {fileID: 1733966125}
   - component: {fileID: 1733966126}
+  - component: {fileID: 1733966127}
   m_Layer: 0
   m_Name: data_manager
   m_TagString: Untagged
@@ -16064,7 +16069,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CapableDataManager
   capables_to_save:
-  - {fileID: 1583921819}
+  - {fileID: 8781775831953879919}
   save_capables_in_inventory: 1
   save_capables_capacities: 1
   log: 1
@@ -16136,6 +16141,25 @@ MonoBehaviour:
   - {fileID: 217527983}
   - {fileID: 1382613152}
   - {fileID: 1501326076}
+  log: 1
+--- !u!114 &1733966127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1733966122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfb5d783d75fe864d9ee75a5d85cf7d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplatesManager
+  capables_templates:
+  - {fileID: 1995776913879646623, guid: afa1573aa69f9114c92ccd6cdd3fbd33, type: 3}
+  - {fileID: 2830894836207595507, guid: 4a7b7d63d41b4724ba926bd2b5d087e4, type: 3}
+  capacities_templates:
+  - {fileID: 1235818638904784760, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
+  save_capables_capacities_as_templates: 1
   log: 1
 --- !u!1 &1734854913
 GameObject:
@@ -37328,7 +37352,7 @@ PrefabInstance:
       objectReference: {fileID: 8595018692463036030, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
     - target: {fileID: 7000362555019179176, guid: e531ba50a71488e4081ef90639b41df1, type: 3}
       propertyPath: base_entity_id
-      value: dev-1
+      value: dev
       objectReference: {fileID: 0}
     - target: {fileID: 7000362555019179176, guid: e531ba50a71488e4081ef90639b41df1, type: 3}
       propertyPath: spawn_anim_name
@@ -39963,6 +39987,7 @@ MonoBehaviour:
     anim_data:
       skin: 
       anim_capacity_priorities: []
+      current_capacity: 
       material_path: 
       sorting_layer_id: 0
       order_in_layer: 0
@@ -42280,6 +42305,7 @@ MonoBehaviour:
     anim_data:
       skin: 
       anim_capacity_priorities: []
+      current_capacity: 
       material_path: 
       sorting_layer_id: 0
       order_in_layer: 0

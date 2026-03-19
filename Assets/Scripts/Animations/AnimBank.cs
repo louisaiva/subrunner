@@ -49,6 +49,9 @@ public class AnimBank : MonoBehaviour
     public bool log_LAFAC = false;
     public bool log_variant_skins = false;
 
+    [Header("Logs Runtime")]
+    public bool log_get_anim = false;
+
     // AWAKE & SINGLETON LOGIC
     public static AnimBank Instance { get; private set; }
     private void Awake()
@@ -460,7 +463,7 @@ public class AnimBank : MonoBehaviour
         // check if we do not have the skin
         if (!anims.ContainsKey(skin))
         {
-            if (log) { Debug.LogWarning($"(AnimBank - GetAnim : {skin}.{capacity}.{orientation} ) Skin not found, returning sphere anim"); }
+            if (log_get_anim) { Debug.LogWarning($"(AnimBank - GetAnim : {skin}.{capacity}.{orientation} ) Skin not found, returning sphere anim"); }
             return anims["sphere"]["idle"][0]; // return the sphere anim of the sphere skin
         }
 
@@ -470,10 +473,10 @@ public class AnimBank : MonoBehaviour
             // return the idle anim of the skin
             if (!anims[skin].ContainsKey("idle") || anims[skin]["idle"].Count == 0)
             {
-                if (log) { Debug.LogWarning($"(AnimBank - GetAnim : {skin}.{capacity}.{orientation} ) Idle anim not found for skin, returning sphere anim"); }
+                if (log_get_anim) { Debug.LogWarning($"(AnimBank - GetAnim : {skin}.{capacity}.{orientation} ) Idle anim not found for skin, returning sphere anim"); }
                 return anims["sphere"]["idle"][0]; // return the sphere anim of the sphere skin
             }
-            if (log) { Debug.LogWarning($"(AnimBank - GetAnim : {skin}.{capacity}.{orientation} ) Capacity not found, returning idle"); }
+            if (log_get_anim) { Debug.LogWarning($"(AnimBank - GetAnim : {skin}.{capacity}.{orientation} ) Capacity not found, returning idle"); }
             return GetAnim(skin + ".idle." + orientation);
         }
 

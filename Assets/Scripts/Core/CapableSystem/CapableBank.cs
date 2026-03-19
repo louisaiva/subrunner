@@ -42,6 +42,7 @@ public class CapableBank : MonoBehaviour
 
     [Header("Logs")]
     public bool log_types = false;
+    public bool log_anim_player = false;
     public bool log_anim_layers = false;
     public bool log_inventory_build = false;
 
@@ -141,9 +142,6 @@ public class CapableBank : MonoBehaviour
     // ANIM PLAYER & COLLIDERS
     private void load_anim_data(AnimPlayer player, AnimData anim_data)
     {
-        // we load the main anim data in the player
-        player.LoadPlayerData(anim_data);
-
         // we get the layers parent
         Transform layer_parent = player.transform;
 
@@ -162,6 +160,10 @@ public class CapableBank : MonoBehaviour
             anim_layer.LoadData(layer_data);
             anim_layer.AssignLeader(player);
         }
+
+        // we load the main anim data in the player
+        if (log_anim_player) { player.log = true; }
+        player.LoadPlayerData(anim_data); // will play the last anim by default
     }
     private void load_feet_data(Capable capable, FeetData feet_data)
     {

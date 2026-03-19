@@ -45,20 +45,34 @@ public class Capable : MonoBehaviour, Debuggable
     }
     public virtual void UnloadData()
     {
-        // here we need to unload all the capacities that we hold
-        // -> interacts with CapacityEngine
+        // we save the dynamic data
+        SaveDynamicData();
 
+        // here we need to unload all the capacities that we hold
         if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Capable - UnloadData) Calling CapacitySystem unloading for capacities : {string.Join(" ", data.capacities_ids)}"); }
         CapacityEngine.Instance.UnloadCapacities(data.capacities_ids, this);
 
         // we unload the inventory (and so the items)
-        Inventory?.SaveAndUnloadInventoryData();
-
-
-        // we save some data
-        this.data.position = this.transform.position;
+        Inventory?.UnloadInventoryData();
 
         this.data = null;
+    }
+    public virtual void SaveDynamicData()
+    {
+        if (data == null) { return; }
+
+        // we save some general data
+        this.data.position = this.transform.position;
+
+        // we save the anim player
+        AnimPlayer?.SaveDynamicPlayerData(this.data.anim_data);
+
+        // we save the inventory (and so the items)
+        Inventory?.SaveDynamicInventoryData();
+
+        // we save the effects
+        data.effects = new List<Effect>(effects);
+        data.effects_ttl = new List<float>(effects_timetolive);
     }
 
 
@@ -80,6 +94,10 @@ public class Capable : MonoBehaviour, Debuggable
             // set base data things
             id = get_static_id(),
             position = this.transform.position,
+
+            // set the layer & tag
+            layer = gameObject.layer,
+            tag = gameObject.tag,
 
             // we set the kind
             kind = GetType().Name,

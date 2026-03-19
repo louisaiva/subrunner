@@ -1,0 +1,120 @@
+
+using System.Collections.Generic;
+using UnityEngine;
+using System.Linq;
+using System;
+
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+public class TemplatesManager : MonoBehaviour
+{
+    private string templates_data_path = "Assets/Resources/data/templates/";
+
+
+    [Header("Capables Templates")]
+    public List<Capable> capables_templates = new List<Capable>(); // these capables are in the prefabs, not loaded in the scene
+    
+    [Header("Capacities Templates")]
+    public List<Capacity> capacities_templates = new List<Capacity>(); // these capacities are in the prefabs, not loaded in the scene
+
+    [Header("Extended parameters")]
+    public bool save_capables_capacities_as_templates = false; // if true, when saving capable templates,
+    // it will also save the capacities of these capables as templates (if they are not already templates)
+    // public bool save_capables_in_inventory = false;
+
+    [Header("Logs")]
+    public bool log = false;
+
+
+    // CAPABLES TEMPLATES SAVING
+    public void SaveCapableTemplates()
+    {
+        foreach (Capable capable in capables_templates)
+        {
+            saveCapableTemplate(capable);
+        }
+
+        AssetDatabase.Refresh();
+    }
+    private void saveCapableTemplate(Capable capable)
+    {
+        ICapableData data = capable.GetStaticData();
+
+        // save the current data to a json file
+        string json = JsonUtility.ToJson(data, true);
+        string path = templates_data_path + "capables/" + data.id + ".json";
+        System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
+
+        if (log) { Debug.Log($"(TemplatesManager - Save Capable) Updated & Saved CapableData : {capable.name} (to {path})\n\n{data.GetDetails()}\n\n{json}"); }
+
+        // we also save the capacities of this capable if we want to
+        if (!save_capables_capacities_as_templates) { return; }
+
+        // we get all the capacities (ONLY DIRECT CHILDREN - we don't want to get the capa of the items we store :)
+        List<Capacity> capacities = new List<Capacity>();
+        for (int i = 0; i < capable.transform.childCount; i++)
+        {
+            Transform child = capable.transform.GetChild(i);
+            Capacity capa = child.GetComponent<Capacity>();
+            if (capa == null) { continue; }
+            capacities.Add(capa);
+        }
+
+        // then we save all the data of these capacities
+        foreach (Capacity capacity in capacities)
+        {
+            // get the id of this capacity template (if it has one)
+            CapacityData capa_data = capacity.GetStaticData();
+            if (capa_data == null) { continue; }
+            if (capa_data.id == null || capa_data.id == "") { continue; }
+            if (capa_data.id.Contains("-")) { continue; } // if the id contains a "-", we consider that it's not a template (because templates id can't contain "-" in their id, but spawned capacities have an id with "-" followed by random chars to be unique), so we don't save it as a template
+
+            // we save this capacity as a template
+            saveCapacityTemplate(capacity);
+        }
+    }
+
+
+    // CAPACITIES TEMPLATES SAVING
+    private void SaveCapacitiesTemplates()
+    {
+
+        foreach (Capacity capacity in capacities_templates)
+        {
+            saveCapacityTemplate(capacity);
+        }
+
+        AssetDatabase.Refresh();
+    }
+    private void saveCapacityTemplate(Capacity capacity)
+    {
+        CapacityData capacity_data = capacity.GetStaticData();
+
+        // save the current data to a json file
+        string capacity_json = JsonUtility.ToJson(capacity_data, true);
+        string path = templates_data_path + "capacities/" + capacity_data.id + ".json";
+        System.IO.File.WriteAllText(path, capacity_json, System.Text.Encoding.UTF8);
+
+        if (log) { Debug.Log($"(TemplatesManager - Save Capacity) Updated & Saved CapacityData : {capacity.name} (to {path})\n\n{capacity_data.GetDetails()}\n\n{capacity_json}"); }
+    }
+
+
+
+#if UNITY_EDITOR
+    [CustomEditor(typeof(TemplatesManager))]
+    public class TemplatesManagerEditor : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            TemplatesManager manager = (TemplatesManager)target;
+
+            DrawDefaultInspector();
+            if (GUILayout.Button("Save Capable Templates")) { manager.SaveCapableTemplates(); }
+            if (GUILayout.Button("Save Capacity Templates")) { manager.SaveCapacitiesTemplates(); }
+        }
+    }
+#endif
+}

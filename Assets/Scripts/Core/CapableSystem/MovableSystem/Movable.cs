@@ -274,7 +274,7 @@ public class Movable : Capable
     }
 
 
-    // Constructors
+    // CONSTRUCTORS
     public Force(string name, Vector2 direction, float magnitude, float attenuation = 1f)
     {
         this.name = name;
@@ -282,7 +282,6 @@ public class Movable : Capable
         this.magnitude = magnitude;
         this.attenuation = attenuation;
     }
-
     public Force(Force force)
     {
         name = force.name + " (copy " + id_copies++ + ")";
@@ -291,9 +290,16 @@ public class Movable : Capable
         attenuation = force.attenuation;
     }
 
+    // UPDATE
     public void Update()
     {
         // on diminue la force avec ma 2e méthode Update -> chat gpt one
         magnitude *= Mathf.Exp(-attenuation * Time.deltaTime * 5f);
+    }
+
+    // TO STRING
+    public override string ToString()
+    {
+        return $"Force {name} : direction {direction}, magnitude {magnitude}, attenuation {attenuation}, expired {expired}";
     }
 }

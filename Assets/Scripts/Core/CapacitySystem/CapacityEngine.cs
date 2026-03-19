@@ -4,18 +4,25 @@ using UnityEngine;
 
 public class CapacityEngine : BSOD_System<CapacityEngine>
 {
-    [Header("Capacities data")]
-    private string data_path = "data/capacities/";
-    public Dictionary<string,CapacityData> capacities_data = new Dictionary<string,CapacityData>();
 
-    [Header("Loading / Unloading")]
+    [Header("Templates Capacities data")]
+    private string templates_data_path = "data/templates/capacities/";
+    private Dictionary<string, CapacityData> templates_capacities_data = new Dictionary<string, CapacityData>();
+
+    [Header("World Capacities data")]
+    private string world_data_path = "data/capacities/";
+    public Dictionary<string, CapacityData> world_capacities_data = new Dictionary<string, CapacityData>();
+
+    [Header("Loaded Capacities data")]
     public Dictionary<string,CapacityData> loaded_capacities_data = new Dictionary<string,CapacityData>();
 
     [Header("State")]
     public bool awake_done = false;
 
     [Header("Logs")]
-    public bool log_awake_data = false;
+    public bool log_templates_data_loading = false;
+    public bool log_world_data_loading = false;
+    public bool log_spawning = false;
     public bool log_loading = false;
     public bool hide_log_no_data_found = false;
 
@@ -26,19 +33,24 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     {
         base.Awake();
 
-        // load capacities data
-        loadCapacitiesData();
+        // load templates capacities data
+        loadTemplatesCapacitiesData();
+
+        // load world capacities data
+        loadWorldCapacitiesData();
+
+        awake_done = true;
     }
 
-    // LOAD / UNLOAD DATA
-    protected void loadCapacitiesData()
+    // LOAD TEMPLATES & WORLD DATA
+    protected void loadTemplatesCapacitiesData()
     {
         // we empty the capacities_data
-        capacities_data = new Dictionary<string,CapacityData>();
+        templates_capacities_data = new Dictionary<string, CapacityData>();
         string log_capacities_details = "\n\n";
 
         // we load all the json files in the data path and get their kind
-        string[] files = GameManager.Instance.LoadJsons(data_path);
+        string[] files = GameManager.Instance.LoadJsons(templates_data_path);
         Dictionary<string, List<string>> json_by_kind = new Dictionary<string, List<string>>();
         foreach (string json in files)
         {
@@ -61,42 +73,120 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
             List<string> json_list = entry.Value;
             foreach (string json in json_list)
             {
-                loadCapacityDataOfType(json, kind, ref log_capacities_details);
+                loadCapacityDataOfType(json, kind, ref log_capacities_details, ref templates_capacities_data);
             }
         }
 
-        if (log_awake_data) { Debug.Log("(CapacityEngine) CAPACITIES DATA LOADED : " + capacities_data.Count + log_capacities_details); }
-        awake_done = true;
+        if (log_templates_data_loading) { Debug.Log("(CapacityEngine) TEMPLATES CAPACITIES DATA LOADED : " + templates_capacities_data.Count + log_capacities_details); }
     }
-    private void loadCapacityDataOfType(string json, string kind, ref string log)
+    protected void loadWorldCapacitiesData()
+    {
+        // we empty the capacities_data
+        world_capacities_data = new Dictionary<string,CapacityData>();
+        string log_capacities_details = "\n\n";
+
+        // we load all the json files in the data path and get their kind
+        string[] files = GameManager.Instance.LoadJsons(world_data_path);
+        Dictionary<string, List<string>> json_by_kind = new Dictionary<string, List<string>>();
+        foreach (string json in files)
+        {
+            CapacityData data = JsonUtility.FromJson<CapacityData>(json);
+
+            if (json_by_kind.ContainsKey(data.kind))
+            {
+                json_by_kind[data.kind].Add(json);
+            }
+            else
+            {
+                json_by_kind.Add(data.kind, new List<string> { json });
+            }
+        }
+
+        // then we go through all json & kind and we load the json with the good type
+        foreach (KeyValuePair<string, List<string>> entry in json_by_kind)
+        {
+            string kind = entry.Key;
+            List<string> json_list = entry.Value;
+            foreach (string json in json_list)
+            {
+                loadCapacityDataOfType(json, kind, ref log_capacities_details, ref world_capacities_data);
+            }
+        }
+
+        if (log_world_data_loading) { Debug.Log("(CapacityEngine) WORLD CAPACITIES DATA LOADED : " + world_capacities_data.Count + log_capacities_details); }
+    }
+    private void loadCapacityDataOfType(string json, string kind, ref string log, ref Dictionary<string, CapacityData> data_by_id)
     {
         // if (log_awake_data) { Debug.Log($"(CapacityEngine - loadCapacityDataOfType) loading capacity of kind {kind} with json : {json}"); }
 
         Type type = Type.GetType(kind + "Data");
         if (type == null) { type = typeof(CapacityData); }
         CapacityData data = JsonUtility.FromJson(json, type) as CapacityData;
-        capacities_data.Add(data.id, data);
+        data_by_id.Add(data.id, data);
         log += data.GetDetails() + "\n";
     }
 
+    // DATA DUPLICATION
+    private CapacityData DuplicateTemplate(string template)
+    {
+        // we get the base data
+        if (!templates_capacities_data.ContainsKey(template))
+        {
+            if (!hide_log_no_data_found) { Debug.LogWarning("(CapacityEngine - DuplicateTemplate) Template capacity data not found for id: " + template); }
+            return null;
+        }
+
+        CapacityData base_data = templates_capacities_data[template];
+        CapacityData new_data = base_data.Duplicate() as CapacityData;
+        new_data.id = GameManager.Instance.GenerateUniqueID(base_data.id);
+
+        // we add the new_data to the data list
+        world_capacities_data.Add(new_data.id, new_data);
+        return new_data;
+    }
+
+
+    // SPAWN CAPACITIES
+    public CapacityData SpawnCapacity(string template_id, CapableData cdata)
+    {
+        // we duplicate the data + generate unique id
+        CapacityData data = DuplicateTemplate(template_id);
+        if (data == null)
+        {
+            if (log_spawning) { Debug.LogWarning($"(CapacityEngine - Spawn) Failed to spawn capacity from template '{template_id}' for '{cdata.id}' because template not found"); }
+            return null;
+        }
+
+        // we change the capacity id in the capable data
+        for (int i = 0; i < cdata.capacities_ids.Count; i++)
+        {
+            // check if same id
+            if (cdata.capacities_ids[i] != template_id) { continue; }
+
+            // else change the id to new capacity id
+            cdata.capacities_ids[i] = data.id;
+            break;
+        }
+
+        if (log_spawning) { Debug.Log($"(CapacityEngine - Spawn) New Capacity '{data.id}' was created from template '{template_id}' and assigned to '{cdata.id}'"); }
+
+        // we return the capacity data
+        return data;
+    }
 
     // LOAD CAPACITIES
-    public List<Capacity> LoadCapacities(List<string> capacities_ids, Capable capable, bool skip_if_loaded=false)
+    public List<Capacity> LoadCapacities(List<string> capacities_ids, Capable capable)
     {
         List<Capacity> capacities = new List<Capacity>();
         for (int i = 0; i < capacities_ids.Count; i++)
         {
             string id = capacities_ids[i];
-            Capacity capa = load_capacity(id,capable.data, skip_if_loaded);
+            Capacity capa = load_capacity(id,capable.data);
 
-            if (capa == null) { continue; }
-            // we may have skipped this capacity for various reasons
-            // ie. we load an Item which is grabbed, it does not need to have an hover
-            // so we skipped hover
+            if (capa == null) { continue; } // we may have skipped this capacity if it was already loaded
             
-            capacities.Add(capa);
-
             // we register the capacity into the capable
+            capacities.Add(capa);
             capable.RegisterCapacity(capa);
 
             // we set the parent & local pos
@@ -105,50 +195,32 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         }
         return capacities;
     }
-    private Capacity load_capacity(string id, CapableData capable_data, bool skip_if_loaded = false)
+    private Capacity load_capacity(string id, CapableData capable_data)
     {
-        if (!capacities_data.ContainsKey(id))
+        if (!world_capacities_data.ContainsKey(id))
         {
             if (!hide_log_no_data_found) { Debug.LogWarning("(CapacityEngine - Load) Capacity data not found for id: " + id); }
             return null;
         }
-        CapacityData data = capacities_data[id];
-        return load_capacity(data, capable_data,  skip_if_loaded);
+        CapacityData data = world_capacities_data[id];
+        return load_capacity(data, capable_data);
     }
-    private Capacity load_capacity(CapacityData data, CapableData capable_data, bool skip_if_loaded=false)
+    private Capacity load_capacity(CapacityData data, CapableData capable_data)
     {
-
-        // we check if we REALLY want to load the capacity
-        // if (skip_capacity_loading(data, capable_data)) { return null; }
-
-
         // we check if we already have this data in our loaded data
         if (loaded_capacities_data.ContainsKey(data.id))
         {
-            if (skip_if_loaded)
-            {
-                if (log_loading) { Debug.LogWarning($"(CapacityEngine - Load) Skipped capacity '{data.id}' for '{capable_data.id}' because already loaded"); }
-                return null;
-            }
+            if (log_loading) { Debug.LogWarning($"(CapacityEngine - Load) Skipped capacity '{data.id}' for '{capable_data.id}' because already loaded"); }
+            return null;
 
-            // ? then we want to duplicate the data & change the capa_id & change the capa_id in capable.data.capacities
+            /* // ? then we want to duplicate the data & change the capa_id & change the capa_id in capable.data.capacities
             string old_id = data.id;
 
             // we duplicate the data + generate unique id
             data = DuplicateData(data);
 
-            // we change the capacity id in the capable data
-            for (int i=0; i < capable_data.capacities_ids.Count; i++)
-            {
-                // check if same id
-                if (capable_data.capacities_ids[i] != old_id) { continue; }
-
-                // else change the id to new capacity id
-                capable_data.capacities_ids[i] = data.id;
-                break;
-            }
-
-            if (log_loading) { Debug.LogWarning($"(CapacityEngine - Load) Capacity '{old_id}' was already loaded, duplicated it to {data.id}"); }
+            // we change the capacity id in the capable data */
+            
         }
 
         Capacity capacity = CapacityBank.Instance.Load(data);
@@ -206,12 +278,12 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         for (int i = 0; i < capa_ids.Count; i++)
         {
             string capa_id = capa_ids[i];
-            if (!capacities_data.ContainsKey(capa_id))
+            if (!world_capacities_data.ContainsKey(capa_id))
             {
                 if (!hide_log_no_data_found) { Debug.LogWarning("(CapacityEngine - GetCapacitiesIDsToPoolDynamically) Capacity data not found for id: " + capa_id); }
                 continue;
             }
-            CapacityData capa_data = capacities_data[capa_id];
+            CapacityData capa_data = world_capacities_data[capa_id];
 
             // if we have a static capacity kind, we don't add it
             if (item_static_capacities_kinds.Contains(capa_data.kind))
@@ -225,16 +297,4 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         }
         return dynamically_pooled_ids;
     }
-
-    // DATA DUPLICATION
-    private CapacityData DuplicateData(CapacityData base_data)
-    {
-        CapacityData new_data = base_data.Duplicate() as CapacityData;
-        new_data.id = GameManager.Instance.GenerateUniqueID(base_data.id);
-
-        // we add the new_data to the data list
-        capacities_data.Add(new_data.id, new_data);
-        return new_data;
-    }
-    
 }

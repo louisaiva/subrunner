@@ -21,6 +21,16 @@ public class AnimPlayer : MonoBehaviour
             return _sr;
         }
     }
+    private Capable _capable = null;
+    public Capable Capable
+    {
+        get
+        {
+            if (_capable == null && transform.parent != null) { _capable = transform.parent.GetComponent<Capable>(); }
+            if (_capable == null) { _capable = GetComponent<Capable>(); }
+            return _capable;
+        }
+    }
 
     [Header("Skin")]
     [SerializeField] private string skin;
@@ -82,7 +92,11 @@ public class AnimPlayer : MonoBehaviour
             anim_capacity_priorities[i].priority = i;
         }
     }
-    private void Start() { AddToPile("idle"); }
+    private void Start()
+    {
+        // if the capable is not in the capable system, we play idle
+        if (!CapableBank.Instance.HasCapable(Capable)) { AddToPile("idle"); }
+    }
 
 
 
@@ -95,14 +109,14 @@ public class AnimPlayer : MonoBehaviour
         AnimCapacityPriority capacity_priority = getAnimCapacityPriority(capacity);
         if (capacity_priority == null)
         {
-            if (log) { Debug.LogWarning($"(AnimPlayer - {name}) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
+            if (log) { Debug.LogWarning($"(AnimPlayer - {Capable.name}) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
             return null;
         }
 
         // we check if the index is < than current prio we don't play it
         if (current_capacity_priority != null && capacity_priority.priority < current_capacity_priority.priority)
         {
-            if (log_pile) { Debug.LogWarning($"(AnimPlayer - {name}) The capacity " + capacity + " has a lower priority than the current one (" + current_capacity_priority.priority + ")"); }
+            if (log_pile) { Debug.LogWarning($"(AnimPlayer - {Capable.name}) The capacity " + capacity + " has a lower priority than the current one (" + current_capacity_priority.priority + ")"); }
             return null;
         }
 
@@ -117,7 +131,7 @@ public class AnimPlayer : MonoBehaviour
         Anim anim = AnimBank.Instance.GetAnim(anim_name);
         if (log)
         {
-            Debug.Log($"(AnimPlayer - {name}) Bank found anim : " + anim.name
+            Debug.Log($"(AnimPlayer - {Capable.name}) Bank found anim : " + anim.name
                 + (anim_name == anim.name
                 ? ""
                 : " (" + anim_name + " was asked)"));
@@ -138,11 +152,11 @@ public class AnimPlayer : MonoBehaviour
         else { anim.speed = 1f; }
 
         // we check if the animation is not actually playing
-        if (anim.name == current_anim.name && current_frame != -1)
+        if (current_anim != null && anim.name == current_anim.name && current_frame != -1)
         {
             if (log)
             {
-                Debug.LogWarning($"(AnimPlayer - {name}) The animation " + anim.name + " is already playing at frame " + current_frame);
+                Debug.LogWarning($"(AnimPlayer - {Capable.name}) The animation " + anim.name + " is already playing at frame " + current_frame);
             }
             return current_anim;
         }
@@ -181,7 +195,7 @@ public class AnimPlayer : MonoBehaviour
         Anim anim = AnimBank.Instance.GetAnim(anim_name);
         if (log)
         {
-            Debug.Log($"(AnimPlayer - {name}) Bank found anim : " + anim.name
+            Debug.Log($"(AnimPlayer - {Capable.name}) Bank found anim : " + anim.name
                 + (anim_name == anim.name
                 ? ""
                 : " (" + anim_name + " was asked)"));
@@ -381,10 +395,19 @@ public class AnimPlayer : MonoBehaviour
     public void LoadPlayerData(AnimData data)
     {
         if (CapableBank.Instance.log_anim_layers) { Debug.Log($"(AnimPlayer) {name}'s loading data : {(data != null ? data.GetDetails() : "null")}"); }
-        
+
+        // we clear runtime data
+        _capable = null;
+        current_anim = null;
+        current_capacity = "";
+        current_capacity_priority = null;
+        current_frame = -1;
+        frame_timer = 0f;
+
         // ! does not load layers !! but we don't want to it's inside CapableBank because we pool them
         if (data.anim_capacity_priorities == null || data.anim_capacity_priorities.Count == 0) { return;}
-        Skin = data.skin;
+        skin = data.skin;
+        current_capacity = data.current_capacity;
         anim_capacity_priorities = data.anim_capacity_priorities;
 
         // we load the sr data
@@ -395,8 +418,17 @@ public class AnimPlayer : MonoBehaviour
 
         // we inform each anim capacity priority of its priority
         re_index_priorities();
+
+        // play current capacity
+        if (!string.IsNullOrEmpty(current_capacity)) { Play(current_capacity); }
+        else { AddToPile("idle"); }
     }
-    
+    public void SaveDynamicPlayerData(AnimData data)
+    {
+        // we save data
+        data.current_capacity = current_capacity;
+    }
+
     /// <summary>
     /// just as other GetStaticData() methods (ie Capable's one), this method
     /// is not meant to be run in a BUILD !!! IT WON T WORK because it does not
@@ -602,7 +634,7 @@ public class AnimPlayer : MonoBehaviour
         AnimCapacityPriority new_priority = new AnimCapacityPriority(new List<string>(this.capacities))
         {
             priority = this.priority,
-            capacity_playing = this.capacity_playing,
+            capacity_playing = "", // capacity playing is runtime only, means we don't duplicate it
             lock_orientation = this.lock_orientation,
             one_shot = this.one_shot
         };
