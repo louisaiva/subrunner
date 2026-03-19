@@ -4480,18 +4480,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: perso
       objectReference: {fileID: 0}
-    - target: {fileID: 5514139528805112798, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
-      propertyPath: m_Radius
-      value: 0.07811493
-      objectReference: {fileID: 0}
-    - target: {fileID: 5514139528805112798, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
-      propertyPath: m_Offset.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5514139528805112798, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -33184,7 +33172,7 @@ RectTransform:
   m_GameObject: {fileID: 4407408406653321457}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.25810054, y: 0.25810054, z: 0.25810054}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5477250923338215944}

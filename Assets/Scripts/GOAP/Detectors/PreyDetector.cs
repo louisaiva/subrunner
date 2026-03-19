@@ -88,13 +88,13 @@ public class PreyDetector : Detector
         // we get the current action state target
         IActionData actionData = brain.currentActionData;
         if (actionData is not AttackAction.Data attackData) { return; } // we only care about attack actions
-        if (attackData.BeingTarget == null) { return; }
+        if (attackData.CapableTarget == null) { return; }
 
         // if the target is different than the current closest one, we stop the action
         // (will request a new attack action with the right closest target)
-        if (attackData.BeingTarget == closest_target) { return; }
+        if (attackData.CapableTarget == closest_target) { return; }
         brain.agent.StopAction();
-        if (log) { Debug.Log($"(PreyDetector) {ia.name} is stopping current action because the target {attackData.BeingTarget.name} is not the closest one."); }
+        if (log) { Debug.Log($"(PreyDetector) {ia.name} is stopping current action because the target {attackData.CapableTarget.name} is not the closest one."); }
     }
 
     // DETECTING TARGET

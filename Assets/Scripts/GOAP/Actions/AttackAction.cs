@@ -13,7 +13,7 @@ namespace subrunner.goap
         {
             data.anim_player = data.ia.AnimPlayer;
             data.attack_capacity = data.ia.GetCapacity<AttackCapacity>();
-            data.BeingTarget = data.Target is TransformTarget target ? target.Transform.GetComponent<Being>() : null;
+            data.CapableTarget = data.Target is TransformTarget target ? target.Transform.GetComponent<Capable>() : null;
         }
 
         // PERFORM
@@ -21,18 +21,18 @@ namespace subrunner.goap
         {
             // if (data.Target is not TransformTarget transformTarget) { return; }
             // Being being_target = transformTarget.Transform.GetComponent<Being>();
-            if (data.BeingTarget == null) { return; }
+            if (data.CapableTarget == null) { return; }
 
             // verify that the being is still Alive
-            if (data.BeingTarget == null || !data.BeingTarget.Alive) { return; }
+            if (data.CapableTarget == null || !data.CapableTarget.TryGetCapacity(out HealthCapacity health) || !health.Alive) { return; }
 
             // we turn over to face the target
-            data.ia.OrientTowards(data.BeingTarget.transform.position);
+            data.ia.OrientTowards(data.CapableTarget.transform.position);
 
             // Debug log only if enabled
             if (data.ia.log_actions)
             {
-                Debug.Log($"(AttackAction) {data.ia.name} is trying to attack {data.BeingTarget.name}");
+                Debug.Log($"(AttackAction) {data.ia.name} is trying to attack {data.CapableTarget.name}");
             }
 
             // use the attack capacity
@@ -66,7 +66,7 @@ namespace subrunner.goap
         public class Data : IActionData
         {
             public ITarget Target { get; set; }
-            public Being BeingTarget { get; set; }
+            public Capable CapableTarget { get; set; }
 
             // Direct access to IA and AnimPlayer
             [GetComponentInParent] public IA ia { get; set; }

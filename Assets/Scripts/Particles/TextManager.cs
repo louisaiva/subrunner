@@ -46,9 +46,10 @@ public class TextManager : MonoBehaviour
         return floating_text.gameObject;
     }
 
-    public IEnumerator TalkLines(string text, Being being)
+    public IEnumerator TalkLines(string text, Transform voice)
     {
-        Transform voice = being.transform.Find("talk");
+        // Transform voice = talker.transform.Find("talk");
+        if (voice == null) { yield break; }
 
         string[] lines = text.Split("/l");
 
@@ -72,7 +73,7 @@ public class TextManager : MonoBehaviour
             }
 
             // on ajoute une ligne de texte
-            GameObject sentence = addStaticText("", being.transform.position + offset, "white", 1000000f);
+            GameObject sentence = addStaticText("", voice.transform.position + offset, "white", 1000000f);
             sentence.transform.SetParent(voice);
             TextMeshPro text_mesh = sentence.GetComponent<TextMeshPro>();
             FloatingText floating_text = sentence.GetComponent<FloatingText>();

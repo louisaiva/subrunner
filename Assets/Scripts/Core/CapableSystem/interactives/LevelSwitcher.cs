@@ -63,7 +63,7 @@ public class LevelSwitcher : Capable, Interactable
             else
             {
                 if (log) { Debug.LogWarning("(LevelSwitcher) Can't switch level, the elevator door is open but can't close"); }
-                StartCoroutine(floating_dmg_provider.GetComponent<TextManager>().TalkLines("why door ?\nwhy don't u want to close ?", Perso.Instance));
+                StartCoroutine(floating_dmg_provider.GetComponent<TextManager>().TalkLines("why door ?\nwhy don't u want to close ?", Perso.Instance.transform));
                 yield break;
             }
         }
@@ -93,7 +93,7 @@ public class LevelSwitcher : Capable, Interactable
             // we talk
             if (Perso.Instance != null)
             {
-                StartCoroutine(floating_dmg_provider.GetComponent<TextManager>().TalkLines("here we go\nlevel/. " + level.name, Perso.Instance));
+                StartCoroutine(floating_dmg_provider.GetComponent<TextManager>().TalkLines("here we go\nlevel/. " + level.name, Perso.Instance.transform));
             }
 
             // we open the elevator door

@@ -358,9 +358,6 @@ public class Item : Movable, EndlessInteractable
     }
     public override void UnloadData()
     {
-        // we save the dynamic data we need for next loading to be perfect
-        SaveDynamicData();
-
         base.UnloadData();
 
         // ? really useful ? no but it's better to have a safe guard
@@ -391,8 +388,10 @@ public class Item : Movable, EndlessInteractable
         Capable parent_capable = transform.parent.GetComponentInParent<Capable>(includeInactive: true);
         return parent_capable != null;
     }
-    public /* override */ void SaveDynamicData()
+    public override void SaveDynamicData()
     {
+        base.SaveDynamicData();
+        
         if (data is not ItemData item_data) { return; }
         item_data.is_grabbed = Grabbed;
     }

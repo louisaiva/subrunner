@@ -153,11 +153,11 @@ public class MovableEngine : MonoBehaviour
         // since we want to collide with it
 
         NativeList<int> excludeIndexes = new NativeList<int>(Allocator.TempJob);
-        if (agent is IA ia && ia.Brain.currentActionData is AttackAction.Data attackData && attackData.BeingTarget != null)
+        if (agent is IA ia && ia.Brain.currentActionData is AttackAction.Data attackData && attackData.CapableTarget != null && attackData.CapableTarget is Movable targetMovable)
         {
-            int targetIndex = movables.IndexOf(attackData.BeingTarget);
+            int targetIndex = movables.IndexOf(targetMovable);
             if (targetIndex != -1) { excludeIndexes.Add(targetIndex); }
-            if (agent.log_avoidance) { Debug.Log($"(MovableEngine) {agent.name} tried excluding {attackData.BeingTarget.name} from ttc (and {((targetIndex != -1) ? "succeeded" : "failed")})"); }
+            if (agent.log_avoidance) { Debug.Log($"(MovableEngine) {agent.name} tried excluding {attackData.CapableTarget.name} from ttc (and {((targetIndex != -1) ? "succeeded" : "failed")})"); }
         }
 
         // get the neighbours

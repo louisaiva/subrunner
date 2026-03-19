@@ -33,7 +33,7 @@ public class DodgeCapacity : CooldownCapacity
         startCooldown(duration);
 
         // we gives the invincible & immobile effects if Being
-        if (capable is Being)
+        if (capable.HasCapacity<HealthCapacity>())
         {
             // we can't take damage for the animation duration
             capable.AddEffect(Effect.Invincible, duration);
