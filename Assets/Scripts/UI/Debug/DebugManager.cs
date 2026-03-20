@@ -12,7 +12,7 @@ public class DebugManager : Singleton<DebugManager>
 {
     [Header("Debug")]
     [SerializeField] private Transform debug;
-    private List<Debugger> debugs = new List<Debugger>();
+    private List<SingleDebugger> debugs = new List<SingleDebugger>();
 
     [Header("FPS Debug")]
     [SerializeField] private TextMeshProUGUI fps;
@@ -34,9 +34,9 @@ public class DebugManager : Singleton<DebugManager>
         base.Awake();
 
         // find all debugs in children
-        debugs = debug.GetComponentsInChildren<Debugger>(includeInactive: true).ToList();
+        debugs = debug.GetComponentsInChildren<SingleDebugger>(includeInactive: true).ToList();
         debugs = debugs.Where(d => d.gameObject.activeSelf).ToList(); // we get only active debugs
-        foreach (Debugger d in debugs)
+        foreach (SingleDebugger d in debugs)
         {
             d.gameObject.SetActive(false); // disable all debugs at start
         }
@@ -89,10 +89,10 @@ public class DebugManager : Singleton<DebugManager>
     }
 
     // ADD DEBUGGABLE TO DEBUGGER
-    public void AddDebuggable(Debuggable debuggable,string name)
+    public void AddDebuggable(Debuggable debuggable, string name)
     {
         // find the debug with the right name
-        Debugger debug = debugs.Find(d => d.name == name);
+        SingleDebugger debug = debugs.Find(d => d.name == name);
         if (debug == null)
         {
             if (log) { Debug.LogWarning("(DebugManager) No debug found with name " + name); }

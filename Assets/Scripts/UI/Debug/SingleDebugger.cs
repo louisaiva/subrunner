@@ -1,14 +1,8 @@
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class Debugger : MonoBehaviour
+public class SingleDebugger : MonoBehaviour, Debugger
 {
-    // [SerializeField] private TextMeshProUGUI debug_name;
-    // [SerializeField] private TextMeshProUGUI debug_content;
-    // [SerializeField] private TextMeshProUGUI debug_content;
-
     private TextMeshProUGUI debug_content;
     private Debuggable debuggable;
     private string debug_name;
@@ -35,7 +29,7 @@ public class Debugger : MonoBehaviour
             debug_content.text = "/!\\ error getting info ;-; /!\\";
         }
     }
-    
+
     // SET DEBUGGABLE
     public void SetDebuggable(Debuggable debuggable)
     {

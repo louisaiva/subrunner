@@ -64,7 +64,7 @@ public class Item : Movable, EndlessInteractable
 
     // HOLDER
     public Capable _holder = null;
-    public Capable Holder { get { return _holder; }}/* ItemPoolHolder != null ? ItemPoolHolder.Inventory.capable : null; */
+    public Capable Holder { get { return _holder; } }/* ItemPoolHolder != null ? ItemPoolHolder.Inventory.capable : null; */
     public ItemPool ItemPoolHolder
     {
         get
@@ -237,7 +237,7 @@ public class Item : Movable, EndlessInteractable
     // MAIN LOW LEVEL UPGRADE GRABBING & PLACING
     protected virtual void update_grab_n_place()
     {
-        
+
         // RENDERERs
         transform.localScale = Vector3.one;
         if (!Placed && Grabbed)
@@ -332,7 +332,7 @@ public class Item : Movable, EndlessInteractable
     {
         // we store our dynamic capacities ids
         List<string> static_ids = new List<string>();
-        dynamic_capacity_ids = CapacityEngine.Instance.GetDynamicItemCapacitiesIDs(data.capacities_ids,ref static_ids);
+        dynamic_capacity_ids = CapacityEngine.Instance.GetDynamicItemCapacitiesIDs(data.capacities_ids, ref static_ids);
 
         // we do a trick to make base.LoadData(data) only load the capacities we want to !
         List<string> capa_ids_saved = new List<string>(data.capacities_ids);
@@ -358,9 +358,6 @@ public class Item : Movable, EndlessInteractable
     }
     public override void UnloadData()
     {
-        // we save the dynamic data we need for next loading to be perfect
-        SaveDynamicData();
-
         base.UnloadData();
 
         // ? really useful ? no but it's better to have a safe guard
@@ -391,8 +388,10 @@ public class Item : Movable, EndlessInteractable
         Capable parent_capable = transform.parent.GetComponentInParent<Capable>(includeInactive: true);
         return parent_capable != null;
     }
-    public /* override */ void SaveDynamicData()
+    public override void SaveDynamicData()
     {
+        base.SaveDynamicData();
+
         if (data is not ItemData item_data) { return; }
         item_data.is_grabbed = Grabbed;
     }
@@ -401,7 +400,8 @@ public class Item : Movable, EndlessInteractable
 
 
 // ITEM DATA
-[Serializable] public class ItemData : CapableData
+[Serializable]
+public class ItemData : CapableData
 {
     public string reference;
     public Color color;

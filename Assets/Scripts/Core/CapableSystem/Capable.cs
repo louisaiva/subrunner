@@ -138,7 +138,7 @@ public class Capable : MonoBehaviour, Debuggable
     protected List<string> get_static_capacity_ids()
     {
         List<string> capacities_ids = new List<string>();
-        
+
         // we go through all children and check if we have capacities
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -191,7 +191,7 @@ public class Capable : MonoBehaviour, Debuggable
     [Header("CAPABLE")]
     // the analog equivalent of the anim_player.orientation which is numerical
     [SerializeField] protected Vector2 inputs; // inputs can be at 0,0
-    [SerializeField] protected Vector2 orientation = new Vector2(0,-1); // orientation can't be at 0,0 -> always normalized & remember last orientation
+    [SerializeField] protected Vector2 orientation = new Vector2(0, -1); // orientation can't be at 0,0 -> always normalized & remember last orientation
     public Vector2 Orientation
     {
         get { return orientation; }
@@ -224,20 +224,27 @@ public class Capable : MonoBehaviour, Debuggable
 
     // anim player
     private AnimPlayer _anim_player = null;
-    public AnimPlayer AnimPlayer { get
+    public AnimPlayer AnimPlayer
     {
-        if (_anim_player == null) { _anim_player = GetComponent<AnimPlayer>(); }
-        if (_anim_player == null) { _anim_player = transform.Find("anim_player")?.GetComponent<AnimPlayer>(); }
-        return _anim_player;
-    } private set { _anim_player = value; } }
+        get
+        {
+            if (_anim_player == null) { _anim_player = GetComponent<AnimPlayer>(); }
+            if (_anim_player == null) { _anim_player = transform.Find("anim_player")?.GetComponent<AnimPlayer>(); }
+            return _anim_player;
+        }
+        private set { _anim_player = value; }
+    }
 
     // feet
     private Transform _feet = null;
-    public Transform Feet { get
+    public Transform Feet
+    {
+        get
         {
             if (_feet == null) { _feet = transform.Find("feet"); }
             return _feet;
-        } }
+        }
+    }
 
 
     // un capable peut aussi avoir un inventaire & un hover
@@ -301,11 +308,11 @@ public class Capable : MonoBehaviour, Debuggable
     {
         // we get the anim player
         Orientation = orientation;
-        if (!AppManager.Instance.IsQuitting) { DebugManager.Instance?.transform.GetComponentInChildren<EntitiesDebug>()?.AddEntity(this); }
+        if (!AppManager.Instance.IsQuitting) { DebugManager.Instance?.transform.GetComponentInChildren<EntitiesDebug>()?.AddCapable(this); }
 
         // we register all the capacities that are on this capable ONLY if we are not part of the BSOD pattern systems
         if (CapableBank.Instance != null && CapableBank.Instance.HasCapable(this) && CapacityEngine.Instance != null) { return; }
-        
+
         capacities.Clear();
         foreach (Transform child in transform)
         {
@@ -320,7 +327,7 @@ public class Capable : MonoBehaviour, Debuggable
     protected virtual void OnDisable()
     {
         // this.capacities.Clear();
-        if (!AppManager.Instance.IsQuitting) { DebugManager.Instance?.transform.GetComponentInChildren<EntitiesDebug>()?.RemoveEntity(this); }
+        if (!AppManager.Instance.IsQuitting) { DebugManager.Instance?.transform.GetComponentInChildren<EntitiesDebug>()?.RemoveCapable(this); }
     }
 
 
@@ -346,7 +353,8 @@ public class Capable : MonoBehaviour, Debuggable
 
         if (log) { Debug.Log($"(Capable - {this.name}) Unregistered capacity {capa.name}"); }
     }
-    [Obsolete("Use RegisterCapacity() instead")] public Capacity AddCapacity(string name)
+    [Obsolete("Use RegisterCapacity() instead")]
+    public Capacity AddCapacity(string name)
     {
         // we check if the capacity is already in the list
         if (HasCapacity(name)) { return GetCapacity(name); }
@@ -370,7 +378,8 @@ public class Capable : MonoBehaviour, Debuggable
         RegisterCapacity(capa);
         return capa;
     }
-    [Obsolete("Use UnregisterCapacity() instead")] public void RemoveCapacity(string name)
+    [Obsolete("Use UnregisterCapacity() instead")]
+    public void RemoveCapacity(string name)
     {
         foreach (Capacity capa in capacities)
         {
@@ -439,7 +448,7 @@ public class Capable : MonoBehaviour, Debuggable
 
     // CAPACITIES GETTERS
     public bool HasCapacity(string name) { return capacityByName.ContainsKey(name); }
-    public Capacity GetCapacity(string name) { return capacityByName.TryGetValue(name, out var capacity) ? capacity : null;  }
+    public Capacity GetCapacity(string name) { return capacityByName.TryGetValue(name, out var capacity) ? capacity : null; }
     public bool TryGetCapacity<T>(out T capacity) where T : Capacity
     {
         var type = typeof(T);
@@ -583,7 +592,7 @@ public class Capable : MonoBehaviour, Debuggable
     }
     public string GetDebugText()
     {
-        string text = "name : " + name +"\n";
+        string text = "name : " + name + "\n";
         text += "type : " + GetType().Name.ToLower() + "\n";
         text += "skin : " + Skin + "\n\n";
         text += $"position :\n>>> x : {transform.position.x.ToString("F2")}\n>>> y : {transform.position.y.ToString("F2")}\n";
