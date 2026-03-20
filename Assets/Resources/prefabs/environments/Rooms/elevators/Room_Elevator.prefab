@@ -667,6 +667,7 @@ Tilemap:
     e33: 1
 --- !u!483693784 &8224403235951157995
 TilemapRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -685,6 +686,8 @@ TilemapRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -706,9 +709,11 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -31225397
   m_SortingLayer: 2
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -716,7 +721,6 @@ TilemapRenderer:
   m_SortOrder: 0
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
-  m_MaskInteraction: 0
 --- !u!1 &823862710084077760
 GameObject:
   m_ObjectHideFlags: 0
@@ -756,6 +760,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5157116086503692155
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -774,6 +779,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -795,9 +802,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 367386852, guid: 9f2de09728c388c4bb4de52c1f981657, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -807,7 +816,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!114 &1471635877150620589
 MonoBehaviour:
@@ -822,7 +830,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: cube
-  orientation: L
   current_capacity: 
   current_anim:
     name: 
@@ -832,13 +839,13 @@ MonoBehaviour:
     loop: 1
     speed: 1
     flipX: 0
-  anim_pile: []
-  animation_priorities_with_no_loop: 03000000
-  animation_priorities_with_static_orientation: 0300000004000000
-  debug: 0
-  debug_orientation: 0
-  debug_advanced: 0
-  debug_frames: 0
+  update_each_frame: 1
+  anim_capacity_priorities: []
+  log: 0
+  log_orientation: 0
+  log_advanced: 0
+  log_frames: 0
+  log_pile: 0
 --- !u!60 &5304745220343042411
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -902,20 +909,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 833cbb8e82c05694c8b74edb15658905, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim_player: {fileID: 0}
-  bank: {fileID: 0}
+  data:
+    <id>k__BackingField: 
+    kind: 
+    position: {x: 0, y: 0}
+    orientation: {x: 0, y: 0}
+    layer: 0
+    tag: 
+    anim_data:
+      skin: 
+      anim_capacity_priorities: []
+      current_capacity: 
+      material_path: 
+      sorting_layer_id: 0
+      order_in_layer: 0
+      layers: []
+    inventory:
+      item_pools_data: []
+    feet_data:
+      box_colliders: []
+      circle_colliders: []
+    capacities_ids: []
+    effects: 
+    effects_ttl: []
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: 0}
   capacities: []
   effects: 
   effects_timetolive: []
-  debug: 0
+  log: 0
+  activate_all_capacities_logs_on_awake: 0
+  log_static_data: 0
   levels_names:
   - SecretLevel
   - QG_Level
   current_level: 0
   world: {fileID: 0}
-  perso: {fileID: 0}
   elevator_door: {fileID: 0}
   elevator_uses: 0
 --- !u!1 &842131233085488308
@@ -963,7 +992,6 @@ GameObject:
   - component: {fileID: 5805478422824045522}
   - component: {fileID: 3381590583682809495}
   - component: {fileID: 8497992428558674850}
-  - component: {fileID: 2921318895563035406}
   m_Layer: 28
   m_Name: Room_Elevator
   m_TagString: Untagged
@@ -1070,20 +1098,6 @@ PolygonCollider2D:
       - {x: 1.721981, y: 1.5410557}
       - {x: 1.7378569, y: 3.5560932}
   m_UseDelaunayMesh: 0
---- !u!114 &2921318895563035406
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2092632481749880412}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc8ca6b5b994e46448a724dbf2ab315d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  world: {fileID: 0}
-  TransitionParent: {fileID: 0}
 --- !u!1 &2987198809755503164
 GameObject:
   m_ObjectHideFlags: 0
@@ -1673,6 +1687,7 @@ Tilemap:
     e33: 1
 --- !u!483693784 &2544914463603758619
 TilemapRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1691,6 +1706,8 @@ TilemapRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1712,9 +1729,11 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1229680597
   m_SortingLayer: 4
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -1722,7 +1741,6 @@ TilemapRenderer:
   m_SortOrder: 0
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
-  m_MaskInteraction: 0
 --- !u!19719996 &3767874649476451837
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -1796,8 +1814,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: 0, y: 4.5, z: 0}
-      m_Extent: {x: 2.75, y: 1.75, z: 0}
+      m_Center: {x: 0, y: 5.5, z: 0}
+      m_Extent: {x: 2.75, y: 2.75, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0
@@ -1858,6 +1876,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2915692881616032054
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1876,6 +1895,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1897,9 +1918,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -562562443, guid: c829b5212678f334e9652bb4c47336c6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1909,7 +1932,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!114 &5212804322762151014
 MonoBehaviour:
@@ -1924,7 +1946,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: door_elevator
-  orientation: L
   current_capacity: 
   current_anim:
     name: 
@@ -1934,13 +1955,13 @@ MonoBehaviour:
     loop: 1
     speed: 1
     flipX: 0
-  anim_pile: []
-  animation_priorities_with_no_loop: 03000000
-  animation_priorities_with_static_orientation: 0300000004000000
-  debug: 0
-  debug_orientation: 0
-  debug_advanced: 0
-  debug_frames: 0
+  update_each_frame: 1
+  anim_capacity_priorities: []
+  log: 0
+  log_orientation: 0
+  log_advanced: 0
+  log_frames: 0
+  log_pile: 0
 --- !u!61 &3010659274244633798
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1999,15 +2020,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 558ba7b0d1d4ab6479f10ba25c60f491, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim_player: {fileID: 0}
-  bank: {fileID: 0}
+  data:
+    <id>k__BackingField: 
+    kind: 
+    position: {x: 0, y: 0}
+    orientation: {x: 0, y: 0}
+    layer: 0
+    tag: 
+    anim_data:
+      skin: 
+      anim_capacity_priorities: []
+      current_capacity: 
+      material_path: 
+      sorting_layer_id: 0
+      order_in_layer: 0
+      layers: []
+    inventory:
+      item_pools_data: []
+    feet_data:
+      box_colliders: []
+      circle_colliders: []
+    capacities_ids: []
+    effects: 
+    effects_ttl: []
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: 0}
   capacities: []
   effects: 
   effects_timetolive: []
-  debug: 0
+  log: 0
+  activate_all_capacities_logs_on_awake: 0
+  log_static_data: 0
+  log_interact_kf: 0
   is_vertical: 1
+  DontTouchSortingLayer: 0
   door_collider: {fileID: 0}
   shadow_caster: {fileID: 0}
   room1: {fileID: 0}
@@ -2456,6 +2502,7 @@ Tilemap:
     e33: 1
 --- !u!483693784 &4446374840419723284
 TilemapRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2474,6 +2521,8 @@ TilemapRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2495,17 +2544,18 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0, y: 0.5, z: 0}
+  m_ChunkCullingBounds: {x: 0, y: 1.5, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 0
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
-  m_MaskInteraction: 0
 --- !u!19719996 &6063648540702236635
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -3293,6 +3343,7 @@ Tilemap:
     e33: 1
 --- !u!483693784 &2942977420110182874
 TilemapRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3311,6 +3362,8 @@ TilemapRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3332,9 +3385,11 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1229680597
   m_SortingLayer: 4
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -3342,7 +3397,6 @@ TilemapRenderer:
   m_SortOrder: 0
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
-  m_MaskInteraction: 0
 --- !u!19719996 &3371699146393447531
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -3416,8 +3470,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: 0, y: 3.5, z: 0}
-      m_Extent: {x: 4.75, y: 2.75, z: 0}
+      m_Center: {x: 0, y: 5.5, z: 0}
+      m_Extent: {x: 4.75, y: 4.75, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0
@@ -3548,6 +3602,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &610157959775297838
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3566,6 +3621,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3587,9 +3644,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1229680597
   m_SortingLayer: 4
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 4ea8e68e93d9c7b47881124cad33b802, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3599,7 +3658,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &2259676796239256018
 MonoBehaviour:
@@ -3727,6 +3785,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2827517812016300536
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3745,6 +3804,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3766,9 +3827,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1229680597
   m_SortingLayer: 4
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 42f376b8ac438884e9b2833acc92d59a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3778,7 +3841,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &4141558838027263075
 MonoBehaviour:
@@ -3899,6 +3961,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4525218141192894211
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3917,6 +3980,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3938,9 +4003,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1229680597
   m_SortingLayer: 4
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 4e79ae03edcc07e43ab2cc805b9b34d2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3950,7 +4017,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1001 &5980647820806972335
 PrefabInstance:

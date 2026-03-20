@@ -153,7 +153,7 @@ public class Vulnerable : MonoBehaviour
             magnitude: knockback_magnitude
         );
 
-        if (Capable is Being being) { being.TakeDamage(damage, knockback); }
+        if (Capable.TryGetCapacity(out HealthCapacity health)) { health.TakeDamage(damage, knockback); }
     }
     public void ControlCapable(Hack hack)
     {

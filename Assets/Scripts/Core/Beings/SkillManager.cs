@@ -64,8 +64,8 @@ public class SkillManager : MonoBehaviour
     public void Start()
     {
         // on met à jour les valeurs du perso
-        Perso.Instance.MaxHealth = (int)calculateX("stat:max_life");
-        Perso.Instance.regen_life = calculateX("stat:regen_life");
+        Perso.Instance.GetCapacity<HealthCapacity>().MaxHealth = (int)calculateX("stat:max_life");
+        Perso.Instance.GetCapacity<HealthCapacity>().RegenHealth = calculateX("stat:regen_life");
         // perso.GetCapacity<AttackCapacity>().damage = calculateX("damage");
         // perso.max_bits = (int) calculateX("max_bits");
         // perso.regen_bits = calculateX("regen_bits");
@@ -80,15 +80,15 @@ public class SkillManager : MonoBehaviour
         if (reference == "stat:max_life")
         {
             max_life_level++;
-            Perso.Instance.MaxHealth = (int)calculateX(reference);
-            if (log) { Debug.Log("(SkillManager) skill " + reference + " upgraded to level " + max_life_level + " (new value: " + Perso.Instance.MaxHealth + ")"); }
+            Perso.Instance.GetCapacity<HealthCapacity>().MaxHealth = (int)calculateX(reference);
+            if (log) { Debug.Log("(SkillManager) skill " + reference + " upgraded to level " + max_life_level + " (new value: " + Perso.Instance.GetCapacity<HealthCapacity>().MaxHealth + ")"); }
             return;
         }
         if (reference == "stat:regen_life")
         {
             regen_life_level++;
-            Perso.Instance.regen_life = calculateX(reference);
-            if (log) { Debug.Log("(SkillManager) skill " + reference + " upgraded to level " + regen_life_level + " (new value: " + Perso.Instance.regen_life + ")");}
+            Perso.Instance.GetCapacity<HealthCapacity>().RegenHealth = calculateX(reference);
+            if (log) { Debug.Log("(SkillManager) skill " + reference + " upgraded to level " + regen_life_level + " (new value: " + Perso.Instance.GetCapacity<HealthCapacity>().RegenHealth + ")");}
             return;
         }
         if (reference == "stat:damage")

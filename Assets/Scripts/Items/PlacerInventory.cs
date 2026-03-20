@@ -11,8 +11,8 @@ public class PlacerInventory : Inventory
     [Header("Inventory placer")]
     [SerializeField] List<Vector2> place_positions = new List<Vector2>();
     List<int> occupied_positions = new List<int>();
-    [SerializeField] private string item_rule_placing = ""; // item rule for placing items, default is all items are placed
-    [SerializeField] private bool authorize_overplace = false; // if true, will still grab the items but won't place them if we don't have position
+    // [SerializeField] private string item_rule_placing = ""; // item rule for placing items, default is all items are placed
+    // [SerializeField] private bool authorize_overplace = false; // if true, will still grab the items but won't place them if we don't have position
 
     // GRAB DROP REMOVE
     /* public override bool Grab(Item item, List<UI_Inventory> uis_to_ignore = null)

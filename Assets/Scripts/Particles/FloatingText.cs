@@ -1,7 +1,6 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 
 
 [RequireComponent(typeof(TMP_Text))]
@@ -49,15 +48,6 @@ public class FloatingText : MonoBehaviour {
             return text_mesh;
         }}
 
-    [Header("Logs")]
-    [SerializeField] private bool log = false;
-
-    /* private void Start()
-    {
-        if (text_mesh.text == "") { return; }
-        Init(text_mesh.text, base_color);
-    } */
-
     // INIT
     public void Init(string text, string color, float size = -1f, float speed = -1f, float fade_out_speed = -1f, float ttl = -1f)
     {
@@ -68,7 +58,7 @@ public class FloatingText : MonoBehaviour {
         TextMesh.fontSize = 1;
 
         // on ajuste le material
-        ajustMaterial();
+        AdjustMaterial();
 
         // ajustement de la taille
         this.size = (size == -1f) ? 50f : size;
@@ -82,21 +72,7 @@ public class FloatingText : MonoBehaviour {
 
 
     // UPDATING
-    /* void Update()
-    {
-        // on fait disparaitre le texte
-        ttl -= Time.deltaTime;
-        if (ttl < 0) { Destroy(gameObject); }
-
-        // on fait monter le texte
-        transform.position += new Vector3(0, speed * Time.deltaTime, 0);
-
-        // on fait disparaitre le texte
-        Color color = text_mesh.color;
-        color.a -= fade_out_speed * Time.deltaTime;
-        text_mesh.color = color;
-    } */
-    public void ajustMaterial()
+    public void AdjustMaterial()
     {
         // on récupère le material
         string material_name = font_name + "_mat_" + base_color;

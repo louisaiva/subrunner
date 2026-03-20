@@ -13,7 +13,7 @@ public class HomeInputsController : InputController
     [SerializeField] private UIActions ui_inputs;
 
     // START
-    protected async void Start()
+    protected void Start()
     {
         // on récupère les inputs
         ui_inputs = InputManager.Instance.inputs.UI;

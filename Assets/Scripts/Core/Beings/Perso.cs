@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Perso : Being, Hacker
+public class Perso : Movable, Hacker
 {
     public static int deaths = 0; // nombre de morts du perso
     public static Perso Instance { get; private set; }
@@ -14,9 +14,6 @@ public class Perso : Being, Hacker
     public int xp = 0;
     public int total_xp = 0;
     public int xp_to_next_level = 100;
-
-    // private GameObject floating_text_prefab;
-    private GameObject cam;
 
     [Header("SETTINGS")]
     private StringSetting skin_setting;
@@ -146,7 +143,6 @@ public class Perso : Being, Hacker
         };
 
         // ON RECUP DES TRUCS
-        cam = GameObject.Find("/cam_follow/cam");
         skillManager = GetComponentInChildren<SkillManager>();
     }
 
@@ -158,7 +154,7 @@ public class Perso : Being, Hacker
 
         // on s'enregistre en tant que trigger dans l'XPProvider particle system
         var trigger_particle_module = XPProvider.Instance.GetComponent<ParticleSystem>().trigger;
-        trigger_particle_module.SetCollider(0, HealthCollider);
+        trigger_particle_module.SetCollider(0, GetCapacity<HealthCapacity>().HealthCollider);
 
         // mets les callbacks
         set_callbacks();
@@ -200,6 +196,12 @@ public class Perso : Being, Hacker
         UI_CoresViewer cores_viewer = hacking_pool.transform.GetComponentInChildren<UI_CoresViewer>(includeInactive: true);
         Instance.OnDeviceGranted += cores_viewer.HandleDeviceGranted;
         Instance.OnDeviceRemoved += cores_viewer.HandleDeviceRemoved;
+
+        // callbacks de health capacity
+        HealthCapacity health_capacity = GetCapacity<HealthCapacity>();
+        health_capacity.OnTakeDamage += OnDamageTaken;
+        health_capacity.OnHeal += OnLifeAdded;
+        health_capacity.OnDie += OnDie;
     }
     private void remove_callbacks()
     {
@@ -338,29 +340,21 @@ public class Perso : Being, Hacker
         FloatingDmgProvider.Instance.TextManager.addFloatingText("LEVEL " + level.ToString(), transform.position + new Vector3(0, 0.5f, 0), "yellow");
     }
 
-    // HEAL
-    public override void AddLife(float life)
-    {
-        base.AddLife(life);
 
+    // HEAL & DAMAGE CALLBACKS
+    public void OnLifeAdded(float life)
+    {
         // si on est sur le hud, on met à jour le chroma du PostProcessManager
         if (!UI_Manager.Instance.IsOnHUD()) { return; }
         PostProcessManager.Instance.UpdateChroma();
     }
-
-    // DAMAGE
-    public override bool TakeDamage(float damage, Force knockback = null)
+    public void OnDamageTaken(float damage, Force knockback = null)
     {
-        bool dmg_status = base.TakeDamage(damage, knockback);
-        if (!dmg_status) { return false; }
-
         // we make a little screenshake if perso
-        float shake_magnitude = damage / Health;
-        cam.GetComponent<CameraShaker>().Shake(shake_magnitude);
-
-        return true;
+        float shake_magnitude = damage / GetCapacity<HealthCapacity>().Health;
+        CameraShaker.Instance.Shake(shake_magnitude);
     }
-    public override void Die()
+    public void OnDie()
     {
         Debug.Log("YOU DIED");
 

@@ -20,15 +20,15 @@ public class AttackCapacity : CooldownCapacity
     public bool IsAttacking = false;
 
     [Header("Enemies parameters")]
-    // [SerializeField] List<Being> hitted_beings = new List<Being> { };
     [SerializeField] List<HealthCapacity> hitted_health_capa = new List<HealthCapacity> { };
     [SerializeField] private List<string> base_excluded_tags = new List<string> { };
-    private int EnemyCount => /* hitted_beings.Count + */ hitted_health_capa.Count;
+    private int EnemyCount => hitted_health_capa.Count;
     private List<string> excluded_tags = new List<string> { };
 
 
     [Header("Attack parameters")]
     [SerializeField] private bool single_hit = false; // if true, the attack will stop after hitting one enemy
+    [SerializeField] private bool split_damage = false; // if true, the damage dealt will be split between all hit enemies, if false, each enemy will receive the full damage (overpowered but funier)
     [SerializeField] private bool perforant_attack = false; // if true, each touched enemy will got full damage
     [SerializeField] private float attack_duration = default;
     [SerializeField] private float attack_duration_random_variation = 0f; // random variation of the attack duration
@@ -99,7 +99,6 @@ public class AttackCapacity : CooldownCapacity
         float anim_duration = anim.GetDuration();
         startCooldown(anim_duration);
         IsAttacking = true;
-        // hitted_beings.Clear();
         hitted_health_capa.Clear();
 
         // we check if we need to turn on unstoppable effect
@@ -121,7 +120,6 @@ public class AttackCapacity : CooldownCapacity
             if (IsAttacking)
             {
                 IsAttacking = false;
-                // hitted_beings.Clear();
                 hitted_health_capa.Clear();
                 bearer.RemoveEffect(Effect.Unstoppable);
             }
@@ -137,7 +135,7 @@ public class AttackCapacity : CooldownCapacity
         updateCollider(sprite);
 
         // if target we update the attack
-        if (/* hitted_beings.Count > 0 ||  */hitted_health_capa.Count > 0) { updateAttack(); }
+        if (hitted_health_capa.Count > 0) { updateAttack(); }
     }
     private void updateCollider(Sprite sprite)
     {
@@ -170,10 +168,6 @@ public class AttackCapacity : CooldownCapacity
         if (log)
         {
             string hit_enemies_str = Capable.name + " attacked enemies : " + EnemyCount + " :\n";
-            /* foreach (Being enemy in hitted_beings)
-            {
-                hit_enemies_str += "\t" + enemy.name + "\n";
-            } */
             foreach (HealthCapacity health_capa in hitted_health_capa)
             {
                 hit_enemies_str += "\t" + health_capa.Capable.name + " (health capa)\n";
@@ -200,21 +194,8 @@ public class AttackCapacity : CooldownCapacity
         if (single_hit)
         {
             // we sort the hit enemies by distance to the attacker
-            // hitted_beings = hitted_beings.OrderBy(enemy => Vector2.Distance(transform.position, enemy.transform.position)).ToList();
             hitted_health_capa = hitted_health_capa.OrderBy(health_capa => Vector2.Distance(transform.position, health_capa.Capable.transform.position)).ToList();
         }
-
-
-        // deal damage to being target
-        /* for (int i = 0; i < hitted_beings.Count; ++i)
-        {
-            Being enemy = hitted_beings[i];
-            if (enemy == null) { continue; }
-            applyDamageToBeing(enemy, single_target_damage, total_knockback_weight, ref attacker_knockback_direction);
-
-            // if we have a single_hit attack we break the loop
-            if (single_hit) { break; }
-        } */
 
         // deal damage to health capa target
         for (int i = 0; i < hitted_health_capa.Count; ++i)
@@ -229,7 +210,6 @@ public class AttackCapacity : CooldownCapacity
 
 
         // we stop the attack
-        // hitted_beings.Clear();
         hitted_health_capa.Clear();
         if (single_hit) { IsAttacking = false; }
         if (bearer is not Movable movable) { return; }
@@ -248,28 +228,6 @@ public class AttackCapacity : CooldownCapacity
         movable.AddForce(knockback_inverse);
     }
 
-
-    /* private bool applyDamageToBeing(Being enemy, float damage, float total_knockback_weight, ref Vector2 attacker_knockback_direction)
-    {
-        // get direction and weight of enemy
-        float dx = enemy.transform.position.x - transform.position.x;
-        float dy = enemy.transform.position.y - transform.position.y;
-        Vector2 direction_enemy = new Vector2(dx, dy);
-        float enemy_weight = enemy.weight;
-
-        // calculate knockback magnitude proportionnal to weight
-        float knockback_magnitude = knockback_base * (total_knockback_weight - enemy_weight)
-                                     / total_knockback_weight;
-        Force knockback = new Force("knockback", direction_enemy.normalized, knockback_magnitude);
-        attacker_knockback_direction += -direction_enemy.normalized * knockback_magnitude;
-
-        // apply damage and knockback
-        enemy.TakeDamage(damage, knockback);
-
-        // check if enemy is dead
-        if (!enemy.Alive) { kills += 1; return true; }
-        return false;
-    } */
     private bool applyDamageToHealthCapa(HealthCapacity health_capa, float single_target_damage, float total_knockback_weight, ref Vector2 attacker_knockback_direction)
     {
         // get the capable of the health capa
@@ -289,7 +247,7 @@ public class AttackCapacity : CooldownCapacity
         attacker_knockback_direction += -direction_enemy.normalized * knockback_magnitude;
 
         // apply damage and knockback
-        health_capa.TakeDamage(damage, knockback);
+        health_capa.TakeDamage(split_damage ? single_target_damage : damage, knockback);
 
         // check if enemy is dead
         if (!health_capa.Alive) { kills += 1; return true; }
@@ -319,25 +277,10 @@ public class AttackCapacity : CooldownCapacity
         // if (being != null && being.HealthColliders.Contains(other)) { return; } // we don't attack ourselves
         if (bearer.TryGetCapacity(out HealthCapacity health) && health.HealthColliders.Contains(other)) { return; } // we don't attack ourselves
 
-        // we check if the other has a Being component
-        /* Being enemy_being = other.GetComponentInParent<Being>(includeInactive: true);
-        if (enemy_being != null) { on_being_enter(enemy_being); return; } */
-
-        // if not we check if it has a HealthCapacity component
+        // we check if it has a HealthCapacity component
         HealthCapacity enemy_health_capa = other.GetComponentInParent<HealthCapacity>(includeInactive: true);
         if (enemy_health_capa != null) { on_health_capa_enter(enemy_health_capa); return; }
     }
-    /* private void on_being_enter(Being being)
-    {
-        // we remove not attackable tags
-        if (excluded_tags.Contains(being.gameObject.tag)) { return; }
-
-        // we remove not alive beings
-        if (!being.Alive) { return; }
-
-        // we can add it !
-        hitted_beings.Add(being);
-    } */
     private void on_health_capa_enter(HealthCapacity health_capa)
     {
         if (log_health_collider) { Debug.Log("(AttackCapacity) Health collider entered: " + health_capa.Capable.name); }

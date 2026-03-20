@@ -133,7 +133,7 @@ public class XPProvider : Singleton<XPProvider>
         if (xp_bonus > 0) { Perso.Instance.addXP(xp_bonus); }
 
         // on ajoute de la life au player
-        if (life_bonus > 0) { Perso.Instance.Heal(life_bonus); }
+        if (life_bonus > 0) { Perso.Instance.GetCapacity<HealthCapacity>().Heal(life_bonus); }
     }
 
 }

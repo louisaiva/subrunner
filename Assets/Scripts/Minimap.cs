@@ -14,8 +14,8 @@ public class Minimap : MonoBehaviour
 
     [Header("Map Settings")]
     public bool is_init = false;
-    [SerializeField] private bool is_discovering = true;
-    [SerializeField] private float discorveryRadius = 1f;
+    // [SerializeField] private bool is_discovering = true;
+    // [SerializeField] private float discorveryRadius = 1f;
 
 
     [Header("Map data")]

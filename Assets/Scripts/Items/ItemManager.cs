@@ -11,7 +11,7 @@ using UnityEngine;
 public class ItemManager : MonoBehaviour
 {
     [Header("Special items slots")]
-    [SerializeField] private UI_LaptopItemSlot laptop_slot;
+    // [SerializeField] private UI_LaptopItemSlot laptop_slot;
     [SerializeField] private UI_Item weapon_slot;
     [SerializeField] private UI_ItemPool shoes_pool;
     [SerializeField] private UI_Item cons1_slot;
@@ -29,15 +29,15 @@ public class ItemManager : MonoBehaviour
     [SerializeField] private RectTransform cons3_renderer;
     [SerializeField] private RectTransform cons4_renderer;
 
-    [Header("Log")]
-    [SerializeField] private bool log = false;
-    [SerializeField] private bool log_shoes = false;
+    // [Header("Log")]
+    // [SerializeField] private bool log = false;
+    // [SerializeField] private bool log_shoes = false;
 
     // START
     private void Start()
     {
         // checks if we have all variables set
-        if (laptop_slot == null || weapon_slot == null || cons1_slot == null || cons2_slot == null || cons3_slot == null || cons4_slot == null)
+        if (/* laptop_slot == null ||  */weapon_slot == null || cons1_slot == null || cons2_slot == null || cons3_slot == null || cons4_slot == null)
         {
             // Debug.LogError("(ItemManager) One or more item slots are not set.");
             return;
@@ -99,7 +99,7 @@ public class ItemManager : MonoBehaviour
         // if (log) { Debug.Log("(ItemManager) Updating HUD renderers... , laptop_slot item is " + (laptop_slot.Item != null ? laptop_slot.Item.name : "null")); }
 
         // update LAPTOP
-        if (laptop_slot.Stack.Item != null)
+        /* if (laptop_slot.Stack.Item != null)
         {
             enable_renderer(laptop_renderer);
             enable_renderer(hack_renderer);
@@ -108,7 +108,7 @@ public class ItemManager : MonoBehaviour
         {
             disable_renderer(laptop_renderer);
             disable_renderer(hack_renderer);
-        }
+        } */
 
         // initialize position
         float x = 0f;

@@ -19,7 +19,7 @@ public class Corpse : Movable, Interactable
     [SerializeField] private bool log_bites = false;
 
     // INIT
-    public void Initialize(Being being)
+    /* public void Initialize(Being being)
     {
         // we calculate how much meat we want to put inside the meat
         int meat_qty = being.body_meats + UnityEngine.Random.Range(-random_meat_modifier_at_start, random_meat_modifier_at_start);
@@ -49,7 +49,7 @@ public class Corpse : Movable, Interactable
         }
 
         if (log_bites) { Debug.Log($"(Corpse) Initialized corpse of {being.name} with {meat_qty} meat & {bones_qty} bones."); }
-    }
+    } */
     public void Initialize(Capable capable)
     {
         // we calculate how much meat we want to put inside the meat

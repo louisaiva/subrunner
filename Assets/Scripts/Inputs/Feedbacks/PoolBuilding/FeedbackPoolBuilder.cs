@@ -49,7 +49,7 @@ public class FeedbackPoolBuilder : MonoBehaviour
     }
 
     // BUILD POOL
-    protected async void buildPool()
+    protected void buildPool()
     {
         // we go through all 4 columns and for each column we build the rows
         if (log) { Debug.Log("(FeedbackPoolBuilder) Building Feedback Pool from schematic : " + pool_schematic.name); }

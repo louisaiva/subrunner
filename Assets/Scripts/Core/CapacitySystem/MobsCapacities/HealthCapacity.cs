@@ -18,6 +18,7 @@ public class HealthCapacity : Capacity
     public float LifePourcent { get { return health / max_health; } }
     public float Health { get { return health; } }
     public int MaxHealth { get { return max_health; } set { max_health = value; } }
+    public float RegenHealth { get { return regen_health; } set { regen_health = value; } }
 
     [Header("Body Colliders")]
 
@@ -42,6 +43,11 @@ public class HealthCapacity : Capacity
 
     [Header("Logs")]
     [SerializeField] private bool log_taking_dmg = false;
+
+    // EVENTS
+    public event Action<float, Force> OnTakeDamage; // damage, knockback
+    public event Action<float> OnHeal; // heal amount
+    public event System.Action OnDie;
 
     // START
     protected void Start()
@@ -118,6 +124,9 @@ public class HealthCapacity : Capacity
         // floating dmg
         FloatingDmgProvider.Instance.AddFloatingDmg(Capable, -1f * damage);
 
+        // trigger OnTakeDamage event
+        OnTakeDamage?.Invoke(damage, knockback);
+
         // check if dead
         if (health <= 0f)
         {
@@ -143,6 +152,9 @@ public class HealthCapacity : Capacity
     // DIE
     public virtual void Die()
     {
+        // trigger OnDie event
+        OnDie?.Invoke();
+
         if (Controller.Instance.Capable != Capable) { return; }
         
         // if we are controlled by a controller we reset the controller
@@ -163,6 +175,9 @@ public class HealthCapacity : Capacity
 
         // floating dmg
         FloatingDmgProvider.Instance.AddFloatingDmg(Capable, life);
+
+        // trigger OnHeal event
+        OnHeal?.Invoke(life);
     }
     public void Heal(int nb_heal = 2)
     {

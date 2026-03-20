@@ -13,6 +13,7 @@ public class DebugManager : Singleton<DebugManager>
     [Header("Debug")]
     [SerializeField] private Transform debug;
     private List<SingleDebugger> debugs = new List<SingleDebugger>();
+    private Dictionary<Type, Debuggable> debuggables = new Dictionary<Type, Debuggable>();
 
     [Header("FPS Debug")]
     [SerializeField] private TextMeshProUGUI fps;
@@ -99,8 +100,27 @@ public class DebugManager : Singleton<DebugManager>
             return;
         }
 
+        // we add the debuggable to the dictionary if not already there
+        Type type = debuggable.GetType();
+        if (!debuggables.ContainsKey(type))
+        {
+            debuggables.Add(type, debuggable);
+        }
+
         // add the debuggable to the debug
         debug.SetDebuggable(debuggable);
         debug.gameObject.SetActive(true); // enable the debug
+    }
+
+    // GETTERS
+    public T GetDebuggable<T>() where T : Debuggable
+    {
+        Type type = typeof(T);
+        if (debuggables.ContainsKey(type))
+        {
+            if (debuggables[type] is T debuggable) { return debuggable; }
+        }
+        if (log) { Debug.LogWarning("(DebugManager) No debuggable found with type " + type); }
+        return default(T);
     }
 }

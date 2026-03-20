@@ -141,7 +141,7 @@ public class PostProcessManager : MonoBehaviour
         if (Perso.Instance == null) { return 0f; }
 
         // on calcule le chroma en fonction de la vie du perso
-        float life = Perso.Instance.LifePourcent;
+        float life = Perso.Instance.GetCapacity<HealthCapacity>().LifePourcent;
         if (life >= 0.5f) { return 0f; } // pas de chroma si on est au dessus de 50% de vie
         // chroma = -life + 0.5 -> bcz when life = 0 we want to have chroma = 0.5
         return -life + 0.5f; 

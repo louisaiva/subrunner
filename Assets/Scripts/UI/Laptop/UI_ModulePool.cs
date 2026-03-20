@@ -9,7 +9,7 @@ using UnityEngine.UI;
 /// </summary>
 public class UI_ModulePool : UI_ItemPool
 {
-    [SerializeField] private bool log_modules = false;
+    // [SerializeField] private bool log_modules = false;
 
     private MotherboardBuilder mb => GetComponentInParent<MotherboardBuilder>(includeInactive: true);
     [Header("UI_ModulePool Parameters")]

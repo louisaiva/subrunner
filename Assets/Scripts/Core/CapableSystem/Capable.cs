@@ -308,7 +308,10 @@ public class Capable : MonoBehaviour, Debuggable
     {
         // we get the anim player
         Orientation = orientation;
-        if (!AppManager.Instance.IsQuitting) { DebugManager.Instance?.transform.GetComponentInChildren<EntitiesDebug>()?.AddCapable(this); }
+        
+        // we register the capable in the debug manager
+        try { DebugManager.Instance?.GetDebuggable<EntitiesDebug>()?.AddCapable(this); }
+        catch {}
 
         // we register all the capacities that are on this capable ONLY if we are not part of the BSOD pattern systems
         if (CapableBank.Instance != null && CapableBank.Instance.HasCapable(this) && CapacityEngine.Instance != null) { return; }
@@ -326,8 +329,8 @@ public class Capable : MonoBehaviour, Debuggable
     }
     protected virtual void OnDisable()
     {
-        // this.capacities.Clear();
-        if (!AppManager.Instance.IsQuitting) { DebugManager.Instance?.transform.GetComponentInChildren<EntitiesDebug>()?.RemoveCapable(this); }
+        try { DebugManager.Instance?.GetDebuggable<EntitiesDebug>()?.RemoveCapable(this); }
+        catch { }
     }
 
 

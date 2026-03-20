@@ -10,13 +10,13 @@ public class UI_ItemRenderer : MonoBehaviour
     [Header("UI_ItemStack Target")]
     public UI_ItemStack Target;
 
-    [Header("Components")]
-    [SerializeField] private Image item;
-    [SerializeField] private TextMeshProUGUI qty;
+    // [Header("Components")]
+    // [SerializeField] private Image item;
+    // [SerializeField] private TextMeshProUGUI qty;
 
-    [Header("Colors & Feedbacks")]
-    [SerializeField] private InputImageFeedback feedback; // optionnel
-    private float color_shift = 60f;
+    // [Header("Colors & Feedbacks")]
+    // [SerializeField] private InputImageFeedback feedback; // optionnel
+    // private float color_shift = 60f;
 
     [Header("Log")]
     public bool log = false;
