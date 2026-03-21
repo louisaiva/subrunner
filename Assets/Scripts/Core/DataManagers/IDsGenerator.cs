@@ -81,7 +81,7 @@ public class IDsGenerator : MonoBehaviour
         }
 
         // we generate unique IDs for all capacities of this capable
-        generate_ids_for_capacities(capable);
+        generate_ids_for_capacities(capable, new_owner_id : new_id);
 
         // add capable to generated id list
         capables_that_get_new_ids.Add(capable);
@@ -92,7 +92,7 @@ public class IDsGenerator : MonoBehaviour
 
         return new_id;
     }
-    private void generate_ids_for_capacities(Capable capable)
+    private void generate_ids_for_capacities(Capable capable, string new_owner_id = "")
     {
         // we get all capacities in the DIRECT children of this capable
         List<Capacity> capacities = new List<Capacity>();
@@ -120,6 +120,9 @@ public class IDsGenerator : MonoBehaviour
                     capable.data.capacities_ids[i] = new_id;
                 }
             }
+
+            // change the owner id of the capacity to the new capable id
+            capacity.data.owner_id = new_owner_id;
 
             // change capacity's id
             capacity.data.id = new_id;

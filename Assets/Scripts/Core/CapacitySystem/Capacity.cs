@@ -55,6 +55,7 @@ public class Capacity : MonoBehaviour
         {
             // set base data things
             id = get_static_id(),
+            owner_id = get_static_owner_id(),
             local_position = this.transform.localPosition,
 
             // set the layer & tag
@@ -74,7 +75,17 @@ public class Capacity : MonoBehaviour
         if (string.IsNullOrEmpty(this.data.id)) { return id; }
         return this.data.id;
     }
-
+    protected string get_static_owner_id()
+    {
+        // needs to check in the parent' capable bcz we are static
+        // so the game is not running -> Capable = null
+        if (transform.parent == null) { return "no_parent"; }
+        Capable parent_capable = transform.parent.GetComponent<Capable>();
+        if (parent_capable == null) { return "no_capable"; }
+        if (parent_capable.data == null) { return "no_capable_data"; }
+        if (string.IsNullOrEmpty(parent_capable.data.id)) { return "no_capable_id"; }
+        return parent_capable.data.id;
+    }
 
     // USE
     // ? do we need all Capacities to have a Use method ?

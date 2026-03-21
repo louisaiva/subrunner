@@ -28,13 +28,25 @@ public class DebugManager : Singleton<DebugManager>
 
     [Header("Logs")]
     [SerializeField] private bool log = false; // if we want to log warnings when
+    [SerializeField] private bool log_debuggables_added = false;
 
     // START
     protected override void Awake()
     {
         base.Awake();
 
-        // find all debugs in children
+        // find all debuggables in our children
+        Debuggable[] debuggables_array = GetComponentsInChildren<Debuggable>(includeInactive: true);
+        foreach (Debuggable d in debuggables_array)
+        {
+            Type type = d.GetType();
+            if (!debuggables.ContainsKey(type))
+            {
+                debuggables.Add(type, d);
+            }
+        }
+
+        // find all debugs in ui debug children
         debugs = debug.GetComponentsInChildren<SingleDebugger>(includeInactive: true).ToList();
         debugs = debugs.Where(d => d.gameObject.activeSelf).ToList(); // we get only active debugs
         foreach (SingleDebugger d in debugs)
@@ -102,14 +114,13 @@ public class DebugManager : Singleton<DebugManager>
 
         // we add the debuggable to the dictionary if not already there
         Type type = debuggable.GetType();
-        if (!debuggables.ContainsKey(type))
-        {
-            debuggables.Add(type, debuggable);
-        }
+        if (!debuggables.ContainsKey(type)) { debuggables.Add(type, debuggable); }
 
         // add the debuggable to the debug
         debug.SetDebuggable(debuggable);
         debug.gameObject.SetActive(true); // enable the debug
+
+        if (log_debuggables_added) { Debug.Log($"(DebugManager) Added debuggable of type {type} to debug {name}"); }
     }
 
     // GETTERS

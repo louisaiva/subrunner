@@ -28,16 +28,19 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
     [Header("State")]
     private bool awake_done = false;
+    private bool start_done = false;
 
     [Header("Logs Awake")]
     public bool log_templates_data_loading = false;
     public bool log_world_data_loading = false;
     public bool log_awake_data_extended = false;
+    public bool log_start_links = false;
 
     [Header("Logs Spawning / Switching")]
     public bool log_duplicating = false;
     public bool log_spawning = false;
     public bool log_corpse_switching = false;
+    public bool hide_log_ownership_validation = false;
 
     [Header("Logs Loading / Unloading")]
     public bool log_loading = false;
@@ -76,6 +79,12 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
         awake_done = true;
     }
+    public virtual void Start()
+    {
+        // sanity check after loading all world data
+        ValidateAllOwnershipLinks(repair: false); // log-only, no fixes
+        start_done = true;
+    }
 
     // LOAD TEMPLATES & WORLD CAPABLES DATA
     protected void loadTemplatesCapablesData()
@@ -112,7 +121,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
             }
         }
 
-        if (log_templates_data_loading) { Debug.Log("(CapableSystem) CAPABLES DATA LOADED : " + templates_capables_data.Count + log_capables_details); }
+        if (log_templates_data_loading) { Debug.Log("(CapableSystem) TEMPLATES CAPABLES DATA LOADED : " + templates_capables_data.Count + log_capables_details); }
     }
     protected void loadWorldCapablesData()
     {
@@ -158,7 +167,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
             }
         }
 
-        if (log_world_data_loading) { Debug.Log("(CapableSystem) CAPABLES DATA LOADED : " + world_capables_data.Count + log_capables_details); }
+        if (log_world_data_loading) { Debug.Log("(CapableSystem) WORLD CAPABLES DATA LOADED : " + world_capables_data.Count + log_capables_details); }
     }
     private void loadCapableDataOfType(string json, string kind, ref string log, ref Dictionary<string, CapableData> data_by_id, bool generate_runtime = true)
     {
@@ -296,6 +305,160 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
 
         return new_data;
+    }
+
+    /// <summary>
+    /// verifies that the capable data and capacity data are correctly linked together
+    /// (ex : the capacity data has the right capable_id,
+    /// the capable data has the capacity id in its list, etc)
+    /// </summary>
+    /// <param name="entity_data">the capable data to validate</param>
+    /// <param name="cap_data">the capacity data to validate</param>
+    /// <param name="repair">whether to attempt to repair any issues found</param>
+    /// <param name="repair_removes_duplicates">whether the repaire should remove capacity_id inside capable_data for duplicates (/!\\ could remove the capacity for those duplicates capables)</param>
+    /// <returns>bool whether the links are valid</returns>
+    public bool ValidateOwnershipLinks(CapableData entity_data, CapacityData cap_data, bool repair = true, bool repair_removes_duplicates = false)
+    {
+        // basic guards
+        if (entity_data == null || cap_data == null)
+        {
+            if (!hide_log_ownership_validation) { Debug.LogWarning("(CapableSystem - ValidateOwnershipLinks) entity_data or cap_data is null."); }
+            return false;
+        }
+        if (string.IsNullOrEmpty(entity_data.id) || string.IsNullOrEmpty(cap_data.id))
+        {
+            if (!hide_log_ownership_validation) { Debug.LogWarning($"(CapableSystem - ValidateOwnershipLinks) Invalid ids. entity='{entity_data?.id}', capacity='{cap_data?.id}'."); }
+            return false;
+        }
+
+        // first we check if the links are ok as they are
+        bool forward_ok = entity_data.capacities_ids != null && entity_data.capacities_ids.Contains(cap_data.id);
+        bool reverse_ok = cap_data.owner_id == entity_data.id;
+
+        // check for duplicates : we should not have any other capable owning this capacity
+        List<CapableData> duplicate_owners = new List<CapableData>();
+        foreach (KeyValuePair<string, CapableData> pair in world_capables_data)
+        {
+            CapableData other = pair.Value;
+            if (other == null || other.id == entity_data.id || other.capacities_ids == null) { continue; }
+            if (other.capacities_ids.Contains(cap_data.id)) { duplicate_owners.Add(other); }
+        }
+        bool duplicates_ok = duplicate_owners.Count == 0;
+
+        // if everything is ok, we return true !!
+        if (forward_ok && reverse_ok && duplicates_ok) { return true; }
+        if (!repair)
+        {
+            if (!hide_log_ownership_validation) { Debug.LogWarning($"(CapableSystem - ValidateOwnershipLinks) Ownership links are not valid for capacity '{cap_data.id}' and capable '{entity_data.id}', and repair is disabled. forward_ok={forward_ok}, reverse_ok={reverse_ok}, duplicates_ok={duplicates_ok}, duplicate_owners=[{string.Join(", ", duplicate_owners.ConvertAll(d => d.id))}]\n{entity_data.GetDetails()}\n{cap_data.GetDetails()}"); }
+            return false;
+        }
+
+        // else we try to repair
+
+        // repairs
+        if (entity_data.capacities_ids == null) { entity_data.capacities_ids = new List<string>(); }
+        if (!entity_data.capacities_ids.Contains(cap_data.id)) { entity_data.capacities_ids.Add(cap_data.id); }
+        if (cap_data.owner_id != entity_data.id) { cap_data.owner_id = entity_data.id; }
+
+        // remove duplicate ownership from other capables
+        if (repair_removes_duplicates) { for(int i = 0; i < duplicate_owners.Count; i++) { duplicate_owners[i].capacities_ids.Remove(cap_data.id); } }
+
+        // final check after repair
+        bool is_fixed = ValidateOwnershipLinks(entity_data, cap_data, repair: false); // repair is false so no infinite loop !
+        if (!is_fixed && !hide_log_ownership_validation) { Debug.LogWarning($"(CapableSystem - ValidateOwnershipLinks) Failed to repair ownership for capacity '{cap_data.id}' and capable '{entity_data.id}'.\n{entity_data.GetDetails()}\n{cap_data.GetDetails()}"); }
+        return is_fixed;
+    }
+    public bool ValidateAllOwnershipLinks(bool repair = false)
+    {
+        // we prepare for logging
+        bool old_hide_log = hide_log_ownership_validation;
+        hide_log_ownership_validation = true; // disable validation logs since we will log them all at the end in a summary
+        string log_summary = "";
+
+        // initialize counters for summary log
+        int total_links = 0;
+        int broken_links = 0;
+        int fixed_links = 0;
+        int orphan_capacities = 0;
+
+        // we go through all capables and their capacities and validate the links
+        List<CapableData> capables_inspected = new List<CapableData>();
+        List<CapacityData> capacities_inspected = new List<CapacityData>();
+        foreach (KeyValuePair<string, CapableData> pair in world_capables_data)
+        {
+            CapableData capable_data = pair.Value;
+            string entity_id = capable_data.id;
+            if (capable_data == null || capable_data.capacities_ids == null) { continue; }
+            capables_inspected.Add(capable_data);
+            for (int i = 0; i < capable_data.capacities_ids.Count; i++)
+            {
+                total_links++; // we have a link ! we don't know if it's valid or not yet but we count it for the summary log
+
+                // try to get the data
+                string cap_id = capable_data.capacities_ids[i];
+                CapacityData cap_data = CapacityEngine.Instance.GetCapacityData(cap_id);
+                if (cap_data == null)
+                {
+                    // no capacity data found, so it's a broken link
+                    broken_links++;
+                    log_summary += $"\n  - (broken) {entity_id} -> {cap_id} : capacity data not found";
+                    continue;
+                }
+
+                // we have the data, we can validate the links
+                capacities_inspected.Add(cap_data);
+                if (ValidateOwnershipLinks(capable_data, cap_data, repair: false)) { continue; } // if the links are ok, we do nothing
+
+                // else we have a broken link
+                broken_links++;
+                bool forward_ok = capable_data.capacities_ids.Contains(cap_id);
+                bool reverse_ok = cap_data.owner_id == entity_id;
+                if (!repair)
+                {
+                    log_summary += $"\n  - (broken) {entity_id} -> {cap_id} : forward_ok={forward_ok}, reverse_ok={reverse_ok}{((forward_ok && reverse_ok) ? ", DUPLICATES FOUND !!! " : "")} - (not fixed since repair is disabled)";
+                    continue;
+                }
+                
+                // we try to repair the link
+                bool is_fixed = ValidateOwnershipLinks(capable_data, cap_data, repair: true);
+                forward_ok = capable_data.capacities_ids.Contains(cap_id);
+                reverse_ok = cap_data.owner_id == entity_id;
+                if (is_fixed)
+                {
+                    fixed_links++;
+                    log_summary += $"\n  - (fixed) {entity_id} -> {cap_id} : forward_ok={forward_ok}, reverse_ok={reverse_ok}{((forward_ok && reverse_ok) ? ", DUPLICATES FOUND !!! " : "")}";
+                }
+                else
+                {
+                    log_summary += $"\n  - (broken) {entity_id} -> {cap_id} : forward_ok={forward_ok}, reverse_ok={reverse_ok}{((forward_ok && reverse_ok) ? ", DUPLICATES FOUND !!! " : "")} - (FAILED TO FIX !!!)";
+                }
+            }
+        }
+
+        // we go through all capacities in CapacityEngine world's capacities to check if we have orphan capacities
+        foreach (KeyValuePair<string, CapacityData> pair in CapacityEngine.Instance.world_capacities_data)
+        {
+            CapacityData cap_data = pair.Value;
+            string cap_id = cap_data.id;
+            if (cap_data == null) { continue; }
+            if (capacities_inspected.Contains(cap_data)) { continue; } // we already inspected this capacity through its capable ownership, so we skip it
+
+            // we have an orphan capacity that is not owned by any capable, which is a broken link
+            broken_links++;
+            orphan_capacities++;
+            log_summary += $"\n  - (orphan) ORPHAN CAPACITY {cap_id} : no capable owns this capacity (their capable is {cap_data.owner_id}, is it in the world ? {(world_capables_data.ContainsKey(cap_data.owner_id) ? "YES" : "NO")})";
+        }
+
+        // we restore the log state
+        hide_log_ownership_validation = old_hide_log;
+
+        // we log the summary
+        int broken_percentage = (total_links > 0) ? (broken_links * 100 / total_links) : 0;
+        int final_broken_links = broken_links - fixed_links; // we count the fixed links as valid for the summary
+        
+        if (start_done || log_start_links) { Debug.Log($"(CapableSystem)      LINKS BROKEN : {broken_links}/{total_links} ({broken_percentage}%)   |   FIXED : {fixed_links}/{broken_links}   |   ORPHAN : {orphan_capacities}  \n{log_summary}"); }
+
+        return final_broken_links == 0;
     }
 
     // SPAWNING / DROPPING CAPABLES & ITEMS

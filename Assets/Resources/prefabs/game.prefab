@@ -801,7 +801,8 @@ MonoBehaviour:
   fps_sample_size: 60
   precision: F0
   show_unscaled_fps: 0
-  log: 1
+  log: 0
+  log_debuggables_added: 0
 --- !u!1 &6543235855068364681
 GameObject:
   m_ObjectHideFlags: 0
@@ -5657,7 +5658,7 @@ MonoBehaviour:
   generate_continuously: 0
   generator_position: {x: -47, y: -9, z: 0}
   generator_strengh: 1
-  log_triggers: 1
+  log_triggers: 0
 --- !u!1 &7529914193416048526
 GameObject:
   m_ObjectHideFlags: 0
@@ -5782,7 +5783,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48f144d3409d3a047b8ac745c4d10628, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  laptop_slot: {fileID: 0}
   weapon_slot: {fileID: 0}
   shoes_pool: {fileID: 0}
   cons1_slot: {fileID: 0}
@@ -5797,8 +5797,6 @@ MonoBehaviour:
   cons2_renderer: {fileID: 0}
   cons3_renderer: {fileID: 0}
   cons4_renderer: {fileID: 0}
-  log: 0
-  log_shoes: 0
 --- !u!1 &8097505848442454113
 GameObject:
   m_ObjectHideFlags: 0
@@ -5932,7 +5930,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   capablesCount: 0
-  corpsesCount: 0
-  beingsCount: 0
-  itemsCount: 0
-  grabbedItemsCount: 0

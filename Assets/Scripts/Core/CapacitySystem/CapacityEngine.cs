@@ -19,11 +19,20 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     [Header("State")]
     public bool awake_done = false;
 
-    [Header("Logs")]
+    [Header("Settings")]
+    public bool auto_repair_owner_links_on_load = false;
+
+
+    [Header("Logs - Awake")]
     public bool log_templates_data_loading = false;
     public bool log_world_data_loading = false;
+
+    [Header("Logs - Spawning")]
     public bool log_spawning = false;
+
+    [Header("Logs - Loading")]
     public bool log_loading = false;
+    public bool log_loading_extended = false;
     public bool hide_log_no_data_found = false;
 
 
@@ -168,6 +177,9 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
             break;
         }
 
+        // finally we set the capacity owner id to the capable id
+        data.owner_id = cdata.id;
+
         if (log_spawning) { Debug.Log($"(CapacityEngine - Spawn) New Capacity '{data.id}' was created from template '{template_id}' and assigned to '{cdata.id}'"); }
 
         // we return the capacity data
@@ -211,16 +223,15 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         if (loaded_capacities_data.ContainsKey(data.id))
         {
             if (log_loading) { Debug.LogWarning($"(CapacityEngine - Load) Skipped capacity '{data.id}' for '{capable_data.id}' because already loaded"); }
+            return null;            
+        }
+
+        // we check that the capacity owner id is the same as the capable id
+        bool link_ok = CapableSystem.Instance.ValidateOwnershipLinks(capable_data, data, repair : auto_repair_owner_links_on_load, repair_removes_duplicates : false);
+        if (!link_ok)
+        {
+            if (log_loading_extended) { Debug.LogWarning($"(CapacityEngine - Load) Capacity '{data.id}' owner id '{data.owner_id}' does not match capable id '{capable_data.id}' for '{capable_data.id}' (if they matches, it means there are some Duplicates)"); }
             return null;
-
-            /* // ? then we want to duplicate the data & change the capa_id & change the capa_id in capable.data.capacities
-            string old_id = data.id;
-
-            // we duplicate the data + generate unique id
-            data = DuplicateData(data);
-
-            // we change the capacity id in the capable data */
-            
         }
 
         Capacity capacity = CapacityBank.Instance.Load(data);
@@ -296,5 +307,13 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
             dynamically_pooled_ids.Add(capa_id);
         }
         return dynamically_pooled_ids;
+    }
+    public CapacityData GetCapacityData(string id)
+    {
+        world_capacities_data.TryGetValue(id, out CapacityData data);
+        if (data != null) { return data; }
+        
+        if (!hide_log_no_data_found) { Debug.LogWarning("(CapacityEngine - GetCapacityData) Capacity data not found for id: " + id); }
+        return null;
     }
 }
