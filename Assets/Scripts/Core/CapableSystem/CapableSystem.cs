@@ -195,7 +195,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
         Type capable_type = Type.GetType(kind);
         
         // ItemData
-        if (GameManager.Instance.IsKind(capable_type, typeof(Item))) { data_type = typeof(ItemData); }
+        if (GameManager.IsKind(capable_type, typeof(Item))) { data_type = typeof(ItemData); }
         
         // no intermediary type -> we give a CapableData, basic
         else { data_type = typeof(CapableData); }

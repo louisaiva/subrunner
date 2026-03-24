@@ -102,7 +102,7 @@ public class CapableBank : MonoBehaviour
     {
         // movable
         // ! TODO this is temporary because Movable & Being will become MoveCapacity
-        if (GameManager.Instance.IsKind(kind, typeof(Movable)))
+        if (GameManager.IsKind(kind, typeof(Movable)))
         {
             Rigidbody2D rb = go.gameObject.AddComponent<Rigidbody2D>();
             rb.gravityScale = 0;

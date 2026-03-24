@@ -16,4 +16,5 @@ public class Caller : MonoBehaviour
     public void QuitApp() => AppManager.Instance?.exit();
     public void BackToTitleScreen() => SceneLoader.Instance?.GoBackToMainMenu();
     public void LoadGame() => SceneLoader.Instance?.LoadGame();
+    public void ToggleTimeScale() { Time.timeScale = Time.timeScale == 0 ? 1 : 0; }
 }

@@ -32,11 +32,51 @@ public class GameManager : MonoBehaviour
 
 
     // USEFUL GLOBAL METHODS
-    public bool IsKind(Type kind, Type ref_kind)
+
+
+    // KIND & TYPE CHECKING
+    public static bool IsKind(Type kind, Type ref_kind)
     {
         bool is_same_or_subclass = kind == ref_kind || kind.IsSubclassOf(ref_kind);
         return is_same_or_subclass;
     }
+    public static bool IsKind(string kind, string ref_kind)
+    {
+        Type type_kind = Type.GetType(kind);
+        Type type_ref_kind = Type.GetType(ref_kind);
+        if (type_kind == null || type_ref_kind == null) { return false; }
+        return IsKind(type_kind, type_ref_kind);
+    }
+    public static bool IsKind(string kind, string ref_kind, out int inheritance_distance)
+    {
+        if (!IsKind(kind, ref_kind)) { inheritance_distance = -1; return false; }
+        inheritance_distance = calculate_type_distance(Type.GetType(kind), Type.GetType(ref_kind));
+        return true;
+    }
+    private static int calculate_type_distance_one_way(Type firstType, Type secondType)
+    {
+        var chain = new List<Type>();
+        while (firstType != typeof(object))
+        {
+            chain.Add(firstType);
+            firstType = firstType.BaseType;
+        }
+
+        return chain.IndexOf(secondType);
+    }
+    public static int calculate_type_distance(Type firstType, Type secondType)
+    {
+        int result = calculate_type_distance_one_way(firstType, secondType);
+        if (result >= 0)
+        {
+            return result;
+        }
+
+        return calculate_type_distance_one_way(secondType, firstType);
+    }
+
+
+    // ID GENERATION
     [SerializeField] private List<string> generated_ids = new List<string>();
     public string GenerateUniqueID(string base_id)
     {

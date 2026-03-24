@@ -505,4 +505,26 @@ public class UI_Manager : Singleton<UI_Manager>
     {
         return PoolStack.StartsWith("/hud");
     }
+
+
+
+    // STATIC METHODS
+    public static Vector2 WorldToCanvasLocal(Vector3 worldPos, RectTransform canvasRect, Canvas canvas, Camera worldCamera)
+    {
+        Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(worldCamera, worldPos);
+        Camera uiCamera = null;
+        if (canvas.renderMode == RenderMode.ScreenSpaceCamera || canvas.renderMode == RenderMode.WorldSpace)
+        {
+            uiCamera = canvas.worldCamera;
+        }
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvasRect,
+            screenPoint,
+            uiCamera,
+            out Vector2 localPoint
+        );
+
+        return localPoint;
+    }
 }

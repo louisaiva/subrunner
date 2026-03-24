@@ -92,6 +92,7 @@ public interface ICapableData : IData
 // ANIMATIONS
 [Serializable] public class AnimData
 {
+    public string skin_kind;
     public string skin;
     public List<AnimCapacityPriority> anim_capacity_priorities;
     public string current_capacity; // runtime only

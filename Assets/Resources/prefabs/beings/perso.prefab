@@ -143,6 +143,7 @@ MonoBehaviour:
     layer: 0
     tag: 
     anim_data:
+      skin_kind: 
       skin: 
       anim_capacity_priorities: []
       current_capacity: 
@@ -915,7 +916,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.07811493
+  m_Radius: 0.16
 --- !u!1 &2693680858581445332
 GameObject:
   m_ObjectHideFlags: 0
@@ -1284,6 +1285,7 @@ MonoBehaviour:
     layer: 0
     tag: 
     anim_data:
+      skin_kind: 
       skin: 
       anim_capacity_priorities: []
       current_capacity: 
@@ -1315,12 +1317,6 @@ MonoBehaviour:
   forces: []
   input_speed: 0
   Velocity: {x: 0, y: 0}
-  random_life_modifier_at_start: 0
-  regen_life: 0
-  _health_colliders: []
-  body_meats: 1
-  body_bones: 1
-  log_taking_dmg: 0
   level: 1
   xp: 0
   total_xp: 0
@@ -1408,7 +1404,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-    <id>k__BackingField: eat-2
+    <id>k__BackingField: eat-1
+    <owner_id>k__BackingField: perso-1
     kind: 
     local_position: {x: 0, y: 0}
     layer: 0
@@ -1578,7 +1575,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-    <id>k__BackingField: run-2
+    <id>k__BackingField: run-1
+    <owner_id>k__BackingField: perso-1
     kind: 
     local_position: {x: 0, y: 0}
     layer: 0
@@ -1757,7 +1755,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-    <id>k__BackingField: walk-2
+    <id>k__BackingField: walk-1
+    <owner_id>k__BackingField: perso-1
     kind: 
     local_position: {x: 0, y: 0}
     layer: 0
@@ -6712,7 +6711,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-    <id>k__BackingField: connect-3
+    <id>k__BackingField: connect-1
+    <owner_id>k__BackingField: cursor-1
     kind: 
     local_position: {x: 0, y: 0}
     layer: 0
@@ -7040,6 +7040,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data:
     <id>k__BackingField: drop-1
+    <owner_id>k__BackingField: perso-1
     kind: 
     local_position: {x: 0, y: 0}
     layer: 0
@@ -7247,7 +7248,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-    <id>k__BackingField: die-2
+    <id>k__BackingField: die-1
+    <owner_id>k__BackingField: perso-1
     kind: 
     local_position: {x: 0, y: 0}
     layer: 0
@@ -7357,6 +7359,10 @@ PrefabInstance:
     - target: {fileID: -5080116547798053081, guid: 159a8149bceb3f040b4991aa3391ef5f, type: 3}
       propertyPath: data.<id>k__BackingField
       value: talk-1
+      objectReference: {fileID: 0}
+    - target: {fileID: -5080116547798053081, guid: 159a8149bceb3f040b4991aa3391ef5f, type: 3}
+      propertyPath: data.<owner_id>k__BackingField
+      value: perso-1
       objectReference: {fileID: 0}
     - target: {fileID: 891631874371971630, guid: 159a8149bceb3f040b4991aa3391ef5f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7542,7 +7548,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8252522207981929358, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: interact-2
+      value: interact-1
       objectReference: {fileID: 0}
     - target: {fileID: 8252522207981929358, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
       propertyPath: interact_types.Array.size
@@ -7575,6 +7581,10 @@ PrefabInstance:
     - target: {fileID: 8252522207981929358, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
       propertyPath: 'interact_types.Array.data[7]'
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8252522207981929358, guid: 63b397ce39831c044abd2fefeb920870, type: 3}
+      propertyPath: data.<owner_id>k__BackingField
+      value: perso-1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7621,6 +7631,10 @@ PrefabInstance:
     - target: {fileID: 2179822775373733288, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
       propertyPath: data.<id>k__BackingField
       value: health-2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2179822775373733288, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: data.<owner_id>k__BackingField
+      value: perso-1
       objectReference: {fileID: 0}
     - target: {fileID: 7648185767596127708, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
       propertyPath: m_LocalPosition.x
