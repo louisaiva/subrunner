@@ -12,6 +12,11 @@ public class CapableSystem : BSOD_System<CapableSystem>
     [Header("World Capables data")]
     private string world_data_path = "data/capables/";
     public Dictionary<string, CapableData> world_capables_data = new Dictionary<string, CapableData>();
+    
+
+    [Header("Outsiders data")] // won't exist later 
+    private Dictionary<CapableData, Capable> outsiders_data = new Dictionary<CapableData, Capable>(); // dictionary of capables that are in the world but not handled (loaded/unloaded) by our system. in the future there will be zero, but for now we still have some of these when we start the game
+    private HashSet<string> outsiders_ids = new HashSet<string>();
 
     [Header("Runtime IDs (hashs)")]
     private Dictionary<string, int> capables_hashs_by_ids = new Dictionary<string, int>();
@@ -50,6 +55,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
 
     // EVENTS
+    public Action<CapableData> OnWorldCapableDataLoaded; // 
     public Action<Capable, string> OnCapableNeedRoom; // we pass the spawned capable's data and the spawner id (can be null)
     public Action<string> OnCapableNeedFreedom; // only the capable id we need to free
 
@@ -234,25 +240,68 @@ public class CapableSystem : BSOD_System<CapableSystem>
     private void detectCapablesOutsideOfSystem()
     {
         // we check for all active capables in hierarchy
-        Capable[] already_existing_capables = FindObjectsByType<Capable>(FindObjectsSortMode.None);
-        List<string> detected_outsiders = new List<string>();
+        Capable[] already_existing_capables = FindObjectsByType<Capable>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        List<string> enabled_outsiders = new List<string>();
+        List<Capable> to_remove_maybe = new List<Capable>();
+        outsiders_data = new Dictionary<CapableData, Capable>();
         for (int i=0; i<already_existing_capables.Length; i++)
         {
             Capable capable = already_existing_capables[i];
 
+            // checks if enabled (we only care about enabled outsiders)
+            if (!capable.gameObject.activeInHierarchy) { to_remove_maybe.Add(capable); continue; }
+
             // check if it has a data
             if (capable.data == null) { continue; }
             if (string.IsNullOrEmpty(capable.data.id)) { continue; }
-
-            // checks if we have the data
-            if (GetCapableHashFromID(capable.data.id) != 0) { continue; }
+            if (capable.data.id == "cursor-1") { to_remove_maybe.Add(capable); continue; } // special case for the hacking cursor because we HATE it
 
             // we have an outsider !!
-            detected_outsiders.Add(capable.data.id);
-            generate_runtime_id(capable.data.id);
+            enabled_outsiders.Add(capable.data.id);
+            if (GetCapableHashFromID(capable.data.id) == 0) { generate_runtime_id(capable.data.id); } // generate a runtime id if this capable data was not already in our loaded data
+            outsiders_data.Add(capable.data, capable);
+            outsiders_ids.Add(capable.data.id);
         }
 
-        if (log_world_data_loading && detected_outsiders.Count > 0) { Debug.Log("(CapableSystem) OUTSIDERS DETECTED : " + detected_outsiders.Count + "\n - " + string.Join("\n - ",detected_outsiders)); }
+        if (log_world_data_loading && enabled_outsiders.Count > 0) { Debug.Log("(CapableSystem) OUTSIDERS DETECTED : " + enabled_outsiders.Count + "\n - " + string.Join("\n - ",enabled_outsiders)); }
+
+
+        // we remove maybe the data of some outsiders (disabled + cursor)
+        string log_removed = "";
+        int removed_count = 0;
+        for (int i=0; i<to_remove_maybe.Count; i++)
+        {
+            if (!remove_outsider_from_world(to_remove_maybe[i])) { continue; }
+            log_removed += to_remove_maybe[i].data.id + "\n";
+            removed_count++;
+        }
+        if (log_world_data_loading && removed_count > 0) { Debug.Log("(CapableSystem) OUTSIDERS REMOVED : " + removed_count + "\n - " + log_removed); }
+    }
+    private bool remove_outsider_from_world(Capable capable)
+    {
+        if (capable.data == null) { return false; }
+        if (string.IsNullOrEmpty(capable.data.id)) { return false; }
+        
+        // we check if we have the id in the system
+        if (!world_capables_data.ContainsKey(capable.data.id)) { return false; }
+        CapableData data = world_capables_data[capable.data.id];
+
+        // we verify that the id is not already in a room, if yes we don't want to remove the data
+        // since we will need it when the room are loaded.
+        if (RoomSystem.Instance.IsInARoom(data.id)) { return false; }
+
+        // we remove the grabbed items since they don't have a room
+        if (data is ItemData item_data && item_data.is_grabbed) { return false; }
+
+        // we remove the data from the world data, runtime ids, etc
+        world_capables_data.Remove(data.id);
+        int hash = GetCapableHashFromID(data.id);
+        if (hash != 0)
+        {
+            capables_ids_by_hash.Remove(hash);
+            capables_hashs_by_ids.Remove(data.id);
+        }
+        return true;
     }
 
 
@@ -689,6 +738,10 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
 
     // UPDATE
+    private float _update_positions_timer = 0f;
+    private float update_positions_interval = 1f;
+
+
     private void Update()
     {
         if (!awake_done) { return; }
@@ -696,6 +749,23 @@ public class CapableSystem : BSOD_System<CapableSystem>
         // we load / unload in queue
         int unloaded = unload_in_queue(load_x_capables_per_frame);
         load_in_queue(load_x_capables_per_frame - unloaded);
+
+        // we update the positions of the loaded capables
+        _update_positions_timer += Time.deltaTime;
+        if (_update_positions_timer < update_positions_interval) { return; }
+        _update_positions_timer = 0f;
+        update_loaded_capables_positions();
+    }
+    private void update_loaded_capables_positions()
+    {
+        foreach (KeyValuePair<string, CapableData> pair in loaded_capables_data)
+        {
+            string id = pair.Key;
+            CapableData data = pair.Value;
+            Capable capable = CapableBank.Instance.GetLoadedCapable(id);
+            if (capable == null) { continue; }
+            data.SetPosition(capable.transform.position);
+        }
     }
 
 
@@ -717,5 +787,28 @@ public class CapableSystem : BSOD_System<CapableSystem>
     public string GetCapableIDFromHash(int hash)
     {
         return capables_ids_by_hash.TryGetValue(hash, out string id) ? id : null;
+    }
+    public List<CapableData> GetInsidersWorldCapablesData()
+    {
+        List<CapableData> insiders = new List<CapableData>();
+        foreach (KeyValuePair<string, CapableData> pair in world_capables_data)
+        {
+            CapableData data = pair.Value;
+            
+            // check if inside the system or not
+            if (IsOutsider(data.id)) { continue; }
+
+            // otherwise we add it !
+            insiders.Add(data);
+        }
+        return insiders;
+    }
+    public Dictionary<CapableData, Capable> GetOutsidersWorldCapablesData()
+    {
+        return outsiders_data;
+    }
+    public bool IsOutsider(string id)
+    {
+        return outsiders_ids.Contains(id);
     }
 }

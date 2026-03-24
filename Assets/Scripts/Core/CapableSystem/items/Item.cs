@@ -393,7 +393,8 @@ public class Item : Movable, EndlessInteractable
         base.SaveDynamicData();
 
         if (data is not ItemData item_data) { return; }
-        item_data.is_grabbed = Grabbed;
+        // item_data.is_grabbed = Grabbed;
+        item_data.SetIsGrabbed(Grabbed); // we call the method to trigger the events if needed
     }
 }
 
@@ -439,5 +440,16 @@ public class ItemData : CapableData
         details += $"  - item_description : {item_description}\n";
         details += $"  - is_grabbed : {is_grabbed}\n";
         return details;
+    }
+
+    // ON GRABBED / DROPPED
+    public Action<ItemData> OnGrabbed = delegate { };
+    public Action<ItemData> OnDropped = delegate { };
+    public void SetIsGrabbed(bool is_grabbed)
+    {
+        if (is_grabbed == this.is_grabbed) { return; }
+        this.is_grabbed = is_grabbed;
+        if (is_grabbed) { OnGrabbed?.Invoke(this); }
+        else { OnDropped?.Invoke(this); }
     }
 }

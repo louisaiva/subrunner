@@ -277,6 +277,9 @@ public class UI_Navigator : Singleton<UI_Navigator>
                 s += slot.name + " : " + slot_position + " / distance : " + distance + "\n";
             }
 
+            // si on a une distance nulle, alors on skip parce que c'est qu'on est déjà dessus
+            if (distance <= 0.01f) { continue; }
+
             // favorised type check
             bool override_distance = false;
             if (unfavorised_type != null)

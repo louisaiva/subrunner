@@ -36,6 +36,10 @@ public interface ICapableData : IData
     public List<float> effects_ttl; // time to live for each effect, in seconds
 
 
+    // EVENTS
+    public event Action<CapableData> OnPositionChanged;
+
+
     // DUPLICATE
     public virtual ICapableData Duplicate()
     {
@@ -85,6 +89,13 @@ public interface ICapableData : IData
         if (anim_data != null) { details += $"  - {anim_data.GetDetails()}\n"; }
         else { details += $"  - no anim_data\n"; }
         return details;
+    }
+
+    // SET POSITION
+    public void SetPosition(Vector2 new_position)
+    {
+        position = new_position;
+        OnPositionChanged?.Invoke(this);
     }
 }
 

@@ -12,46 +12,48 @@ public class CapableVisualizerManager : MonoBehaviour
 {
 
     [Header("Capable Visu Prefab")]
-    [SerializeField] private GameObject capable_visu_prefab; // an ui image basically
-    private HashSet<Image> capable_renderers = new();
+    [SerializeField] private GameObject capable_visu_prefab;
+    private HashSet<UI_CapableVisualizer> capable_renderers = new();
+    private HashSet<Capable> outsider_capables = new();
 
     [Header("Sprites")]
     [SerializeField] private List<CapableSpriteIcon> capable_sprites;
 
     // START
-    public void CreateVisuals(RectTransform mapRoot, Vector2 globalOffset)
+    public void CreateVisuals()
     {
-        // grab all the capable data in the CapableSystem and build a visual for each one
         // todo should take only capables in the current level
-        List<CapableData> capables = CapableSystem.Instance.world_capables_data.Values.ToList();
-        foreach (CapableData cap in capables)
+
+        // grab all the capable data in the CapableSystem and build a visual for each one
+        List<CapableData> insiders = CapableSystem.Instance.GetInsidersWorldCapablesData();
+        foreach (CapableData cap in insiders) { create_visu_for_capable(cap); }
+
+        // we also create visuals for enabled outsiders, and we keep track of them so we can update their position manually later
+        Dictionary<CapableData, Capable> outsiders = CapableSystem.Instance.GetOutsidersWorldCapablesData();
+        foreach (KeyValuePair<CapableData, Capable> entry in outsiders)
         {
-            create_visu_for_capable(mapRoot, cap, globalOffset);
+            create_visu_for_capable(entry.Key);
+            outsider_capables.Add(entry.Value);
         }
     }
 
     // VISU CREATION
-    private void create_visu_for_capable(RectTransform mapRoot, CapableData cdata, Vector2 globalOffset)
+    private void create_visu_for_capable(CapableData cdata)
     {
         // 1. instanciate a visu
         GameObject go = Instantiate(capable_visu_prefab, transform);
         go.name = cdata.id;
 
-
-        // 2. set the sprite based on the capable kind
-        Image sr = go.GetComponent<Image>();
+        // 2. get the sprite icon based on the capable kind
         CapableSpriteIcon icon = capable_sprites.Find(s => s.kind == cdata.kind);
         if (icon == null) { icon = get_best_matching_icon(cdata); }
-        sr.sprite = icon.sprite;
 
-        // 3. set the position
-        Vector2 world_position = cdata.position;
-        Vector2 canvas_position = UI_Manager.WorldToCanvasLocal(world_position, mapRoot, sr.canvas, Camera.main);
-        sr.rectTransform.anchoredPosition = canvas_position + globalOffset;
+        // 4. get the UI_CapableVisualizer component and init it with the capable data & the sprite icon
+        UI_CapableVisualizer visu = go.GetComponent<UI_CapableVisualizer>();
+        visu.Init(cdata, icon);
 
-
-        // 4. add the renderer to our hashset
-        capable_renderers.Add(sr);
+        // 5. add the renderer to our hashset
+        capable_renderers.Add(visu);
     }
     private CapableSpriteIcon get_best_matching_icon(CapableData cdata)
     {
@@ -107,6 +109,23 @@ public class CapableVisualizerManager : MonoBehaviour
 
         // otherwise, we check if we have a skin match
         return icon.skins.Contains(cdata.anim_data.skin);
+    }
+
+
+    // MANUALLY UPDATE POSITION OF OUTSIDER CAPABLES
+    private float time_since_last_outsiders_update = 0f;
+    private float outsiders_update_interval = 1f;
+    private void LateUpdate()
+    {
+        time_since_last_outsiders_update += Time.deltaTime;
+        if (time_since_last_outsiders_update < outsiders_update_interval) { return; }
+        time_since_last_outsiders_update = 0f;
+
+        // manually update the position of outsiders, will call the events that will update the visu
+        foreach (Capable capable in outsider_capables)
+        {
+            capable.data.SetPosition(capable.transform.position);
+        }
     }
 }
 

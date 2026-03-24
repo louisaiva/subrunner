@@ -645,4 +645,8 @@ public class RoomSystem : BSOD_System<RoomSystem>
         }
         return null;
     }
+    public bool IsInARoom(string capable_id)
+    {
+        return GetCapableRoom(capable_id) != null;
+    }
 }

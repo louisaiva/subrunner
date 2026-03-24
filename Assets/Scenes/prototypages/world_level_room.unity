@@ -10029,6 +10029,10 @@ PrefabInstance:
       value: zombo_1
       objectReference: {fileID: 0}
     - target: {fileID: 8074454940356753118, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
+      propertyPath: data.kind
+      value: Zombo
+      objectReference: {fileID: 0}
+    - target: {fileID: 8074454940356753118, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
       propertyPath: data.<id>k__BackingField
       value: zombo-1
       objectReference: {fileID: 0}
@@ -22370,6 +22374,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3977869088317107238}
     m_Modifications:
+    - target: {fileID: 5951761480573363541, guid: 11a9509c1b157604ebd4ec3d2cfd1c9c, type: 3}
+      propertyPath: m_Name
+      value: offsetter
+      objectReference: {fileID: 0}
     - target: {fileID: 6413366778111637492, guid: 11a9509c1b157604ebd4ec3d2cfd1c9c, type: 3}
       propertyPath: m_Name
       value: dev_map
@@ -22452,6 +22460,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7477385741900678510, guid: 11a9509c1b157604ebd4ec3d2cfd1c9c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9045570209220347772, guid: 11a9509c1b157604ebd4ec3d2cfd1c9c, type: 3}
+      propertyPath: log_extended
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9045570209220347772, guid: 11a9509c1b157604ebd4ec3d2cfd1c9c, type: 3}
+      propertyPath: world_to_ui_scale
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 9045570209220347772, guid: 11a9509c1b157604ebd4ec3d2cfd1c9c, type: 3}
+      propertyPath: log_world_to_canvas
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
