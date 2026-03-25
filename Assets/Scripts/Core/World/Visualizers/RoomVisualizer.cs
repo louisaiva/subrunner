@@ -15,24 +15,15 @@ public class RoomVisualizer : MonoBehaviour
     private HashSet<UILineRenderer> room_liners = new();
 
     // CALCULATE WORLD OFFSET
-    public Vector2 CalculateWorldCenter()
+    public Vector2 CalculateWorldCenter(out Vector2 extents)
     {
         // grab all the rooms data in the RoomSystem
         List<RoomData> rooms = RoomSystem.Instance.rooms_data.Values.ToList();
 
         // compute the world bounds of all rooms to set the size of our canvas accordingly
         Bounds world_bounds = compute_world_bounds(rooms);
+        extents = world_bounds.extents;
         return world_bounds.center;
-    }
-    public Vector2 CalculateWorldOffset()
-    {
-        // grab all the rooms data in the RoomSystem
-        List<RoomData> rooms = RoomSystem.Instance.rooms_data.Values.ToList();
-
-        // compute the world bounds of all rooms to set the size of our canvas accordingly
-        Bounds world_bounds = compute_world_bounds(rooms);
-        Vector2 centerLocal = UI_Manager.WorldToCanvasLocal(world_bounds.center, UI_DevMap.offsetter, UI_DevMap.canvas, Camera.main);
-        return -centerLocal;
     }
     private Bounds compute_world_bounds(IEnumerable<RoomData> rooms)
     {

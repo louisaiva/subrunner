@@ -746,6 +746,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""mouse_delta"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""e6c132b7-36b5-428e-a787-d80ab7bafbd1"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -988,6 +997,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""keyboard"",
                     ""action"": ""mouse_navigation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3ab2190c-735c-411b-a529-7d7940347456"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""mouse_delta"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -2315,6 +2335,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_UI_run = m_UI.FindAction("run", throwIfNotFound: true);
         m_UI_LB = m_UI.FindAction("LB", throwIfNotFound: true);
         m_UI_mouse_navigation = m_UI.FindAction("mouse_navigation", throwIfNotFound: true);
+        m_UI_mouse_delta = m_UI.FindAction("mouse_delta", throwIfNotFound: true);
         // any
         m_any = asset.FindActionMap("any", throwIfNotFound: true);
         m_any_keyboard = m_any.FindAction("keyboard", throwIfNotFound: true);
@@ -2707,6 +2728,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_run;
     private readonly InputAction m_UI_LB;
     private readonly InputAction m_UI_mouse_navigation;
+    private readonly InputAction m_UI_mouse_delta;
     /// <summary>
     /// Provides access to input actions defined in input action map "UI".
     /// </summary>
@@ -2795,6 +2817,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @mouse_navigation => m_Wrapper.m_UI_mouse_navigation;
         /// <summary>
+        /// Provides access to the underlying input action "UI/mouse_delta".
+        /// </summary>
+        public InputAction @mouse_delta => m_Wrapper.m_UI_mouse_delta;
+        /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
         public InputActionMap Get() { return m_Wrapper.m_UI; }
@@ -2877,6 +2903,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @mouse_navigation.started += instance.OnMouse_navigation;
             @mouse_navigation.performed += instance.OnMouse_navigation;
             @mouse_navigation.canceled += instance.OnMouse_navigation;
+            @mouse_delta.started += instance.OnMouse_delta;
+            @mouse_delta.performed += instance.OnMouse_delta;
+            @mouse_delta.canceled += instance.OnMouse_delta;
         }
 
         /// <summary>
@@ -2945,6 +2974,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @mouse_navigation.started -= instance.OnMouse_navigation;
             @mouse_navigation.performed -= instance.OnMouse_navigation;
             @mouse_navigation.canceled -= instance.OnMouse_navigation;
+            @mouse_delta.started -= instance.OnMouse_delta;
+            @mouse_delta.performed -= instance.OnMouse_delta;
+            @mouse_delta.canceled -= instance.OnMouse_delta;
         }
 
         /// <summary>
@@ -3927,6 +3959,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMouse_navigation(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "mouse_delta" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMouse_delta(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "any" which allows adding and removing callbacks.

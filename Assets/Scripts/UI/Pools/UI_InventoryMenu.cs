@@ -24,16 +24,6 @@ public class UI_InventoryMenu : UI_Pool
     // AWAKE START
     protected override void Awake()
     {
-        /* if (ui_inventory == null)
-        {
-            Debug.LogError("(UI_InventoryMenu) missing ui_inventory on " + name);
-        } */
-
-        /* if (ui_laptop == null)
-        {
-            Debug.LogError("(UI_InventoryMenu) missing ui_laptop on " + name);
-        } */
-
         // we save the current ui_elements state in saved_state
         saved_slots = new List<GameObject>(ui_elements);
         base.Awake();
@@ -74,17 +64,12 @@ public class UI_InventoryMenu : UI_Pool
     {
         // on active le navigator si on a des items
         if (Perso.Instance.Inventory.Count == 0) { yield break; }
-        // UI_Navigator.Instance.Enable(this);
         slottable_mixer.Enable(ingame: false);
         yield break;
     }
     protected override IEnumerator disable_coroutine()
     {
-        // on récupère la position du slot actuel (pour le remettre quand on reouvre l'inventaire)
-        // if (UI_Manager.Instance.CurrentPool == Reference) { SavedPosition = UI_Navigator.Instance.GetCurrentSlotPosition(); }
-
         // on désactive le navigator
-        // UI_Navigator.Instance.Disable(this);
         slottable_mixer.Disable();
         yield break;
     }
@@ -102,9 +87,6 @@ public class UI_InventoryMenu : UI_Pool
         for (int i = 0; i < item_pools.Count; i++) { refresh_item_pool(item_pools[i], duration, ref log_msg); }
 
         if (log_refresh_pools) { Debug.Log(log_msg); }
-
-        // on refresh les indicators
-        // PanelManager.RefreshIndicators(duration);
     }
     private void refresh_item_pool(UI_ItemPool item_pool, float duration, ref string log_msg)
     {

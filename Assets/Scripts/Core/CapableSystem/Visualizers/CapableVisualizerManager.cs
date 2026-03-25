@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>
 /// this class draws icon for each capable in the world, based on their kind and skin.
@@ -35,6 +33,17 @@ public class CapableVisualizerManager : MonoBehaviour
             create_visu_for_capable(entry.Key);
             outsider_capables.Add(entry.Value);
         }
+
+        // finally we register to CapableSystem events to create/destroy visuals when needed
+        CapableSystem.Instance.OnCapableSpawned += handle_capable_spawned;
+        CapableSystem.Instance.OnCapableDespawned += handle_capable_despawned;
+    }
+    
+    // ON DESTROY
+    private void OnDestroy()
+    {
+        CapableSystem.Instance.OnCapableSpawned -= handle_capable_spawned;
+        CapableSystem.Instance.OnCapableDespawned -= handle_capable_despawned;
     }
 
     // VISU CREATION
@@ -111,20 +120,61 @@ public class CapableVisualizerManager : MonoBehaviour
         return icon.skins.Contains(cdata.anim_data.skin);
     }
 
+    // EVENT HANDLERS
+    private void handle_capable_spawned(CapableData data) { create_visu_for_capable(data); }
+    private void handle_capable_despawned(CapableData data)
+    {
+        // check if we have a visu for this capable
+        foreach (UI_CapableVisualizer visu in capable_renderers)
+        {
+            if (visu.capable_data != data) { continue; }
+
+            // if we found the visu, we destroy it and remove it from the hashset
+            Destroy(visu.gameObject);
+            capable_renderers.Remove(visu);
+            break;
+        }
+    }
+
+    // ON ENABLE
+    private void OnEnable() { manually_update_outsiders_position(); }
 
     // MANUALLY UPDATE POSITION OF OUTSIDER CAPABLES
     private float time_since_last_outsiders_update = 0f;
-    private float outsiders_update_interval = 1f;
+    private float outsiders_update_interval = 0.25f;
     private void LateUpdate()
     {
         time_since_last_outsiders_update += Time.deltaTime;
         if (time_since_last_outsiders_update < outsiders_update_interval) { return; }
+
+        manually_update_outsiders_position();
+    }
+    private void manually_update_outsiders_position()
+    {
         time_since_last_outsiders_update = 0f;
 
         // manually update the position of outsiders, will call the events that will update the visu
         foreach (Capable capable in outsider_capables)
         {
             capable.data.SetPosition(capable.transform.position);
+        }
+    }
+
+
+    // RESIZE ICONS
+    private float min_icon_scale = 0.5f;
+    private float max_icon_scale = 4f;
+    public void ResizeAllIcons(float min_zoom, float max_zoom, float current_zoom)
+    {
+        float percentage_zoom = (current_zoom - min_zoom) / (max_zoom - min_zoom);
+
+        // when percentage_zoom is 0, we want the max_icon_scale so the icons are bigs and visible
+        // when percentage_zoom is 1, we want the min_icon_scale so the icons are small to avoid cluttering the map
+        float icon_scale = Mathf.Lerp(max_icon_scale, min_icon_scale, percentage_zoom);
+
+        foreach (UI_CapableVisualizer visu in capable_renderers)
+        {
+            visu.GetComponent<RectTransform>().localScale = Vector3.one * icon_scale;
         }
     }
 }

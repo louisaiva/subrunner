@@ -660,6 +660,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "mouse_delta",
+                    "type": "PassThrough",
+                    "id": "e6c132b7-36b5-428e-a787-d80ab7bafbd1",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -902,6 +911,17 @@
                     "processors": "",
                     "groups": "keyboard",
                     "action": "mouse_navigation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3ab2190c-735c-411b-a529-7d7940347456",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "keyboard",
+                    "action": "mouse_delta",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.InputSystem;
 using static PlayerInputActions;
 
@@ -19,6 +20,8 @@ public class UI_InputsController : InputController
     private Action<InputAction.CallbackContext> ui_navigateCallback = delegate { };
     private Action<InputAction.CallbackContext> ui_activateCallback = delegate { };
     private Action<InputAction.CallbackContext> mouse_navigationCallback = delegate { };
+    private Action<InputAction.CallbackContext> mouse_deltaCallback = delegate { };
+    private Action<InputAction.CallbackContext> ui_scrollCallback = delegate { };
     private Action<InputAction.CallbackContext> ui_exitCallback = delegate { };
 
     // ALWAYS ACTIVATED CALLBACKS
@@ -88,8 +91,9 @@ public class UI_InputsController : InputController
         ui_navigateCallback = ctx => handle_UI_navigate_input(ctx);
         ui_activateCallback = ctx => handle_UI_activate_input(ctx);
         ui_exitCallback = ctx => handle_UI_exit_input(ctx);
-        // mouse_navigationCallback = ctx => OnUI_Navigate(ctx.ReadValue<Vector2>());
         mouse_navigationCallback = handle_mouse_navigation;
+        mouse_deltaCallback = handle_mouse_delta;
+        ui_scrollCallback = handle_scroll;
 
 
         // on crée les always active callbacks
@@ -128,6 +132,8 @@ public class UI_InputsController : InputController
 
         // ui_inputs
         ui_inputs.mouse_navigation.performed += mouse_navigationCallback;
+        ui_inputs.mouse_delta.performed += mouse_deltaCallback;
+        ui_inputs.scroll.performed += ui_scrollCallback;
         in_game = ingame_navigation; // on met à jour la variable
 
 
@@ -143,7 +149,8 @@ public class UI_InputsController : InputController
         ui_inputs.ui_exit_ingame.performed -= ui_exitCallback;
         ui_inputs.activate.performed -= ui_activateCallback;
         ui_inputs.mouse_navigation.performed -= mouse_navigationCallback;
-        // ui_inputs.ui_move_item.performed -= ui_item_moveCallback;
+        ui_inputs.mouse_delta.performed -= mouse_deltaCallback;
+        ui_inputs.scroll.performed -= ui_scrollCallback;
 
         in_game = false; // on met à jour la variable
 
@@ -177,11 +184,24 @@ public class UI_InputsController : InputController
     }
     public void handle_drag_input(InputAction.CallbackContext context)
     {
-        // depends on the slot type
-        if (navigator.CurrentSlot == null) { return; }
-        
-        // if ui_slider we down so it will update the slider
-        if (navigator.CurrentSlot is UI_Slider) { navigator.OnDown(); }
+        // settings drag based on the slot type
+        if (navigator.CurrentSlot != null)
+        {
+            // if ui_slider we down so it will update the slider
+            if (navigator.CurrentSlot is UI_Slider) { navigator.OnDown(); }
+        }
+    }
+    public void handle_mouse_delta(InputAction.CallbackContext context)
+    {
+        if (Input.GetMouseButton(0) || Input.GetMouseButton(1) || Input.GetMouseButton(2))
+        {
+            // Debug.Log($"(UI_InputsController) mouse delta : {context.ReadValue<Vector2>()}");
+            // if we are in the devmap we update the offset for the next frame
+            if (UI_Manager.Instance.IsStacked("dev_map"))
+            {
+                UI_Manager.Instance.GetPool<UI_DevMap>().OnDrag(context.ReadValue<Vector2>());
+            }
+        }
     }
 
     // UI_NAVIGATE
@@ -347,6 +367,19 @@ public class UI_InputsController : InputController
         panelable.PanelManager.RollPanel((int)input);
     }
 
+    // SCROLL INPUT
+    private void handle_scroll(InputAction.CallbackContext context)
+    {
+        float scroll_value = context.ReadValue<float>();
+        if (scroll_value == 0f) { return; }
+
+        // si on est sur la devmap on scroll pour zoomer/dézoomer
+        if (UI_Manager.Instance.IsStacked("dev_map"))
+        {
+            UI_Manager.Instance.GetPool<UI_DevMap>().OnScroll(scroll_value);
+        }
+
+    }
 
     // OnDestroy
     private void OnDestroy()

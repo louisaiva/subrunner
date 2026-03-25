@@ -58,7 +58,8 @@ public class CapableSystem : BSOD_System<CapableSystem>
     public Action<CapableData> OnWorldCapableDataLoaded; // 
     public Action<Capable, string> OnCapableNeedRoom; // we pass the spawned capable's data and the spawner id (can be null)
     public Action<string> OnCapableNeedFreedom; // only the capable id we need to free
-
+    public Action<CapableData> OnCapableSpawned; // we pass the spawned capable's data
+    public Action<CapableData> OnCapableDespawned; // we pass the despawned capable's data
 
 
     /* -------------------------------------
@@ -527,8 +528,9 @@ public class CapableSystem : BSOD_System<CapableSystem>
         // 1. we load the new spawned capable
         Capable spawned_capable = load_capable(data);
 
-        // 2. we alert the RoomSystem that we just spawned a capable, for it to assign a room to it
-        OnCapableNeedRoom?.Invoke(spawned_capable, spawner_id);
+        // 2. we fire events
+        OnCapableNeedRoom?.Invoke(spawned_capable, spawner_id); // we alert the RoomSystem that we just spawned a capable, for it to assign a room to it
+        OnCapableSpawned?.Invoke(data);
 
         if (log_spawning) { Debug.Log($"(CapableSystem) Spawned {data.id}"); }
 
@@ -570,6 +572,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
         // 4. UNLOAD THE CAPABLE
         unload_capable(capable_data.id);
+        OnCapableDespawned?.Invoke(capable_data);
 
         // 5. SPAWN THE CORPSE
         Corpse corpse = SpawnCapable(corpse_data, capable_data.id) as Corpse; // (will assign the corpse to the same room as the capable since we pass the capable as spawner_id)

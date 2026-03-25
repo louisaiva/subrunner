@@ -1,6 +1,4 @@
-using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
@@ -12,7 +10,7 @@ using UnityEngine.UI;
 public class UI_CapableVisualizer : UI_Slot, Descriptable
 {
     // capable data
-    private CapableData capable_data;
+    [HideInInspector] public CapableData capable_data;
     private CapableSpriteIcon sprite_icon;
 
     // UI refs
