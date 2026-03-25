@@ -129,6 +129,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         // if (log_awake_data) { Debug.Log($"(CapacityEngine - loadCapacityDataOfType) loading capacity of kind {kind} with json : {json}"); }
 
         Type type = Type.GetType(kind + "Data");
+        if (type == null) { type = Type.GetType(kind.Replace("Capacity","Data")); }
         if (type == null) { type = typeof(CapacityData); }
         CapacityData data = JsonUtility.FromJson(json, type) as CapacityData;
         data_by_id.Add(data.id, data);
@@ -233,6 +234,8 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
             if (log_loading_extended) { Debug.LogWarning($"(CapacityEngine - Load) Capacity '{data.id}' owner id '{data.owner_id}' does not match capable id '{capable_data.id}' for '{capable_data.id}' (if they matches, it means there are some Duplicates)"); }
             return null;
         }
+
+        if (log_loading_extended) { Debug.Log($"(CapacityEngine - Load) Loading capacity '{data.id}' \n{data.GetDetails()}"); }
 
         Capacity capacity = CapacityBank.Instance.Load(data);
         loaded_capacities_data.Add(data.id, data);

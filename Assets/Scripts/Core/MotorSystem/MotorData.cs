@@ -1,20 +1,16 @@
 
 using System;
-using System.Collections.Generic;
-using UnityEngine;
+using subrunner.goap;
 
 [Serializable] public class MotorData : CapacityData
 {
     public string agent_type;
 
     // GOALS
-    // todo : transfer these to BrainData
-    public string current_goal;
-    public List<string> goals = new List<string>();
+    public string current_goal; // todo : transfer this to BrainData
 
-    // ACTIONS
-    public string current_action;
-    public List<string> action_queue = new List<string>();
+    // GOTO DATA
+    public AvoidanceData avoidance_data = new AvoidanceData();
 
     // CONSTRUCTOR
     public MotorData(CapacityData parent)
@@ -30,9 +26,7 @@ using UnityEngine;
         {
             agent_type = this.agent_type,
             current_goal = this.current_goal,
-            goals = new List<string>(this.goals),
-            current_action = this.current_action,
-            action_queue = new List<string>(this.action_queue)
+            avoidance_data = this.avoidance_data.Duplicate()
         };
     }
 
@@ -40,11 +34,9 @@ using UnityEngine;
     public override string GetDetails()
     {
         string details = "";
-        details += $"\n- Agent Type : {agent_type}";
-        details += $"\n- Current Goal : {current_goal}";
-        details += $"\n- Goals : {string.Join(", ", goals)}";
-        details += $"\n- Current Action : {current_action}";
-        details += $"\n- Action Queue : {string.Join(", ", action_queue)}";
+        details += $"  - agent type : {agent_type}\n";
+        details += $"  - current goal : {current_goal}\n";
+        details += $"  - {avoidance_data.GetDetails()}\n";
         return base.GetDetails() + details;
     }
 }

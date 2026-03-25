@@ -1,16 +1,16 @@
 ﻿{
     "<id>k__BackingField": "health-2",
-    "<owner_id>k__BackingField": "perso-1",
+    "<owner_id>k__BackingField": "dummy-1",
     "kind": "HealthCapacity",
     "local_position": {
         "x": 0.0,
         "y": 0.0
     },
     "layer": 23,
-    "tag": "Player",
+    "tag": "Untagged",
     "health": 100.0,
     "max_health": 100,
-    "regen_health": 0.0,
+    "regen_health": 0.10000000149011612,
     "hurted_animation": "hurted",
     "box_colliders": [
         {
@@ -22,12 +22,12 @@
             "used_for_pathfinding": false,
             "is_trigger": true,
             "offset": {
-                "x": -0.015527233481407166,
-                "y": 0.08580735325813294
+                "x": 0.0038108229637145998,
+                "y": 0.3377995491027832
             },
             "size": {
-                "x": 0.3566302955150604,
-                "y": 0.5128641724586487
+                "x": 0.49610769748687746,
+                "y": 0.671231746673584
             }
         }
     ],

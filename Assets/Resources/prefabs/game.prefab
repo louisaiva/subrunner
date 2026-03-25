@@ -276,6 +276,8 @@ MonoBehaviour:
   - {fileID: 6446474614370862984}
   - {fileID: 1926807372716761766}
   - {fileID: 4743392949167436401}
+  - {fileID: 533064837233644574}
+  - {fileID: 5704533046771458960}
 --- !u!114 &4638387620946702657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -310,6 +312,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5014761727663062268}
   - component: {fileID: 4743392949167436401}
+  - component: {fileID: 533064837233644574}
+  - component: {fileID: 5704533046771458960}
   m_Layer: 23
   m_Name: types
   m_TagString: Untagged
@@ -344,6 +348,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f3a87976be5cb3118f02c4b43c821b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::subrunner.goap.SpiderFactory
+--- !u!114 &533064837233644574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 780003408685879306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b45a75046199dbe41a43830d058cbfff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::subrunner.goap.DevTypeFactory
+--- !u!114 &5704533046771458960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 780003408685879306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26dbab5bebb3a834cbc6992b4b5e80c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::subrunner.goap.NoneTypeFactory
 --- !u!1 &2767827881693983402
 GameObject:
   m_ObjectHideFlags: 0
@@ -398,62 +426,62 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   game_theme_to_play: i'm so hungry
   generated_ids:
-  - dummy-1
-  - health-1
-  - bone-1
-  - hover-1
+  - cursor-1
+  - connect-1
   - katana-1
-  - hover-2
+  - hover-1
   - attack-1
-  - chest-1
+  - bone-1
+  - hover-2
   - shoes-1
   - hover-3
   - dodge-1
-  - pastas-1
-  - hover-4
-  - katana-2
-  - hover-5
-  - attack-2
-  - hover-6
-  - open-1
-  - close-1
-  - dev_spawner-1
-  - hover-7
-  - spawn-1
-  - cursor-1
-  - connect-1
-  - perso-1
+  - zombo-1
+  - health-1
+  - interact-1
   - die-1
   - walk-1
   - run-1
-  - health-2
-  - talk-1
-  - interact-1
+  - attack-2
   - eat-1
-  - drop-1
+  - connect-2
+  - katana-2
+  - hover-4
+  - attack-3
+  - dev_spawner-1
+  - hover-5
+  - spawn-1
+  - dummy-1
+  - health-2
   - box-1
+  - hover-6
+  - chest-1
+  - pastas-1
+  - hover-7
   - hover-8
-  - zombo-1
+  - open-1
+  - close-1
+  - robot_spawner-1
+  - hover-9
+  - spawn-2
+  - dev-1
   - health-3
   - interact-2
   - die-2
   - walk-2
   - run-2
-  - attack-3
+  - attack-4
   - eat-2
-  - connect-2
-  - dev-1
-  - health-4
-  - interact-3
+  - connect-3
+  - perso-1
   - die-3
   - walk-3
   - run-3
-  - attack-4
+  - health-4
+  - talk-1
+  - interact-3
   - eat-3
-  - connect-3
-  - robot_spawner-1
-  - hover-9
-  - spawn-2
+  - drop-1
 --- !u!1 &5218386995141567643
 GameObject:
   m_ObjectHideFlags: 0

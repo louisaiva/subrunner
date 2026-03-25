@@ -229,16 +229,16 @@ public class HealthCapacity : Capacity
             ColliderBank.Instance.UnloadCollider(collider.gameObject);
         }
         _health_colliders.Clear();
-
-        // save dynamic health data
-        SaveDynamicData();
-
+        
+        // this saves the dynamic health data
         base.UnloadData();
     }
 
     // SAVE DYNAMIC DATA
-    public void SaveDynamicData()
+    public override void SaveDynamicData()
     {
+        base.SaveDynamicData();
+
         // update the dynamic fields data with the current values of the capacity
         if (this.data == null) { return; }
         if (this.data is not HealthCapacityData hdata) { return; }

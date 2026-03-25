@@ -238,12 +238,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c271ab77a3674f4db5f3efca8f26ef8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agent_type: humanoid
-  use_navmesh: 1
   path: []
-  avoidance_predisposition: 0.8
-  ttc_treshold: 1.5
-  neighbour_radius: 1.5
+  data:
+    avoidance_predisposition: 0.8
+    ttc_treshold: 1.5
+    neighbour_radius: 1.5
   current_waypoint_destination: {x: 0, y: 0}
   current_waypoint: 0
   update_path_interval: 0.5
@@ -497,6 +496,7 @@ MonoBehaviour:
     layer: 0
     tag: 
     anim_data:
+      skin_kind: 
       skin: 
       anim_capacity_priorities: []
       current_capacity: 

@@ -992,7 +992,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1982530335173329727}
   - component: {fileID: 8817564043264294159}
-  - component: {fileID: 2830894836207595507}
+  - component: {fileID: 4718342999194465840}
   m_Layer: 23
   m_Name: dev
   m_TagString: Dev
@@ -1055,7 +1055,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &2830894836207595507
+--- !u!114 &4718342999194465840
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1064,17 +1064,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 8595018692463036030}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 667d6ec7c8afc3a4698a8d5a10953d0d, type: 3}
+  m_Script: {fileID: 11500000, guid: f709f4a34b353ee49936fc1ab314b767, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::IA
+  m_EditorClassIdentifier: Assembly-CSharp::Dev
   data:
     <id>k__BackingField: 
     kind: 
     position: {x: 0, y: 0}
-    orientation: {x: 0, y: 0}
+    orientation: {x: 0, y: -1}
     layer: 0
     tag: 
     anim_data:
+      skin_kind: 
       skin: 
       anim_capacity_priorities: []
       current_capacity: 

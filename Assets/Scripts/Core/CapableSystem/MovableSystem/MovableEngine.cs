@@ -21,6 +21,10 @@ public class MovableEngine : MonoBehaviour
     private NativeList<int> neighbours_indexes;
     private NativeList<MovableStruct> neighbours_structs;
 
+    [Header("Engine Settings")]
+    [SerializeField, Range(0.1f, 1.0f)] private float avoidance_calcul_delay = 0.1f;
+    private float avoidance_timer = 0f;
+
 
     [Header("Logs")]
     public bool log = false;
@@ -133,13 +137,19 @@ public class MovableEngine : MonoBehaviour
             movablePositions[i] = movables[i].transform.position;
         }
 
-        // we go through all the movables we have, and if they have a brain (ia), then we calculate their avoidance force
+        // delay between each avoidance force calculation
+        avoidance_timer += Time.deltaTime;
+        if (avoidance_timer < avoidance_calcul_delay) { return; }
+        avoidance_timer = 0f;
+
+        // we go through all the movables we have, and if they have a goto, we calculate their avoidance force
         foreach (Movable movable in movables)
         {
             if (movable is not IA ia) { continue; }
             GoToBehaviour mover = ia.Mover;
             if (mover == null) { continue; }
-            Vector2 avoidance_force = CalculateAvoidanceForce(movable, mover.neighbour_radius, mover.ttc_treshold);
+            if (mover.data == null) { continue; }
+            Vector2 avoidance_force = CalculateAvoidanceForce(movable, mover.data.neighbour_radius, mover.data.ttc_treshold);
             mover.SetAvoidanceForce(avoidance_force);
             if (movable.log_avoidance) { Debug.Log($"(MovableEngine) {movable.name} has avoidance force {avoidance_force}"); }
         }
@@ -153,7 +163,7 @@ public class MovableEngine : MonoBehaviour
         // since we want to collide with it
 
         NativeList<int> excludeIndexes = new NativeList<int>(Allocator.TempJob);
-        if (agent is IA ia && ia.Brain.currentActionData is AttackAction.Data attackData && attackData.CapableTarget != null && attackData.CapableTarget is Movable targetMovable)
+        if (agent is IA ia && ia.Brain != null && ia.Brain.currentActionData is AttackAction.Data attackData && attackData.CapableTarget != null && attackData.CapableTarget is Movable targetMovable)
         {
             int targetIndex = movables.IndexOf(targetMovable);
             if (targetIndex != -1) { excludeIndexes.Add(targetIndex); }

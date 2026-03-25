@@ -3621,7 +3621,7 @@ MonoBehaviour:
   log_world_data_loading: 1
   log_spawning: 0
   log_loading: 1
-  log_loading_extended: 1
+  log_loading_extended: 0
   hide_log_no_data_found: 1
   item_static_capacities_kinds:
   - DodgeCapacity
@@ -4448,6 +4448,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 172620132459498423, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
+      propertyPath: data.<id>k__BackingField
+      value: die-3
+      objectReference: {fileID: 0}
     - target: {fileID: 332583253616935226, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.4
@@ -4488,9 +4492,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1781255656109834427, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
+      propertyPath: data.<id>k__BackingField
+      value: interact-3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112501754364573880, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
+      propertyPath: data.<id>k__BackingField
+      value: eat-3
+      objectReference: {fileID: 0}
     - target: {fileID: 3238169105776769028, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
       propertyPath: m_Name
       value: perso
+      objectReference: {fileID: 0}
+    - target: {fileID: 4232959198955477424, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
+      propertyPath: data.<id>k__BackingField
+      value: run-3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6822295185352693032, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
+      propertyPath: data.<id>k__BackingField
+      value: walk-3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7825310268116025718, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
+      propertyPath: data.<id>k__BackingField
+      value: health-4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6389,7 +6413,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2953275548184544405, guid: 962b46b205fadc201b1db9c8c649e0b5, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: hover-4
+      value: hover-7
       objectReference: {fileID: 0}
     - target: {fileID: 2953275548184544405, guid: 962b46b205fadc201b1db9c8c649e0b5, type: 3}
       propertyPath: data.<owner_id>k__BackingField
@@ -6749,7 +6773,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8996686795991238217, guid: 77d23ee065f402d8caf8058b3f0a8ed8, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: hover-1
+      value: hover-2
       objectReference: {fileID: 0}
     - target: {fileID: 8996686795991238217, guid: 77d23ee065f402d8caf8058b3f0a8ed8, type: 3}
       propertyPath: data.<owner_id>k__BackingField
@@ -6988,6 +7012,10 @@ PrefabInstance:
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977898504913353187, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: prototype
+      value: ui_devmap + loaded motor capacity
       objectReference: {fileID: 0}
     - target: {fileID: 5846687295635405809, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_Name
@@ -7724,7 +7752,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6575696323720931870, guid: 6f194aa8a3a314e4cb65d2230e0e9297, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: hover-8
+      value: hover-6
       objectReference: {fileID: 0}
     - target: {fileID: 6575696323720931870, guid: 6f194aa8a3a314e4cb65d2230e0e9297, type: 3}
       propertyPath: data.<owner_id>k__BackingField
@@ -7850,23 +7878,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6192736764969982114, guid: 062708462961fbf43978d0400eb7e020, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: katana-2
+      value: katana-1
       objectReference: {fileID: 0}
     - target: {fileID: 8688891065277685518, guid: 062708462961fbf43978d0400eb7e020, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: attack-2
+      value: attack-1
       objectReference: {fileID: 0}
     - target: {fileID: 8688891065277685518, guid: 062708462961fbf43978d0400eb7e020, type: 3}
       propertyPath: data.<owner_id>k__BackingField
-      value: katana-2
+      value: katana-1
       objectReference: {fileID: 0}
     - target: {fileID: 8810707229665354727, guid: 062708462961fbf43978d0400eb7e020, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: hover-5
+      value: hover-1
       objectReference: {fileID: 0}
     - target: {fileID: 8810707229665354727, guid: 062708462961fbf43978d0400eb7e020, type: 3}
       propertyPath: data.<owner_id>k__BackingField
-      value: katana-2
+      value: katana-1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9930,7 +9958,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 185413445157529141, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: walk-2
+      value: walk-1
       objectReference: {fileID: 0}
     - target: {fileID: 185413445157529141, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
       propertyPath: data.<owner_id>k__BackingField
@@ -9986,7 +10014,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5575947221481251541, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: health-3
+      value: health-1
       objectReference: {fileID: 0}
     - target: {fileID: 5575947221481251541, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
       propertyPath: data.<owner_id>k__BackingField
@@ -9994,7 +10022,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5633877895226668832, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: interact-2
+      value: interact-1
       objectReference: {fileID: 0}
     - target: {fileID: 5633877895226668832, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
       propertyPath: data.<owner_id>k__BackingField
@@ -10002,7 +10030,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6424588734056055683, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: eat-2
+      value: eat-1
       objectReference: {fileID: 0}
     - target: {fileID: 6424588734056055683, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
       propertyPath: data.<owner_id>k__BackingField
@@ -10010,7 +10038,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7197660932273945508, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: attack-3
+      value: attack-2
       objectReference: {fileID: 0}
     - target: {fileID: 7197660932273945508, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
       propertyPath: data.<owner_id>k__BackingField
@@ -10018,7 +10046,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7725729843939561334, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: die-2
+      value: die-1
       objectReference: {fileID: 0}
     - target: {fileID: 7725729843939561334, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
       propertyPath: data.<owner_id>k__BackingField
@@ -10046,7 +10074,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8721818613706069315, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: run-2
+      value: run-1
       objectReference: {fileID: 0}
     - target: {fileID: 8721818613706069315, guid: 9335e7a21b0076445bb2076cdd42f63d, type: 3}
       propertyPath: data.<owner_id>k__BackingField
@@ -14030,7 +14058,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 185413445157529141, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: walk-3
+      value: walk-2
       objectReference: {fileID: 0}
     - target: {fileID: 185413445157529141, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
       propertyPath: data.<owner_id>k__BackingField
@@ -14038,7 +14066,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1094141241363125789, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: health-4
+      value: health-3
       objectReference: {fileID: 0}
     - target: {fileID: 1094141241363125789, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
       propertyPath: data.<owner_id>k__BackingField
@@ -14096,9 +14124,13 @@ PrefabInstance:
       propertyPath: data.<owner_id>k__BackingField
       value: dev-1
       objectReference: {fileID: 0}
+    - target: {fileID: 4718342999194465840, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
+      propertyPath: data.<id>k__BackingField
+      value: dev-1
+      objectReference: {fileID: 0}
     - target: {fileID: 5633877895226668832, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: interact-3
+      value: interact-2
       objectReference: {fileID: 0}
     - target: {fileID: 5633877895226668832, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
       propertyPath: data.<owner_id>k__BackingField
@@ -14106,7 +14138,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6424588734056055683, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: eat-3
+      value: eat-2
       objectReference: {fileID: 0}
     - target: {fileID: 6424588734056055683, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
       propertyPath: data.<owner_id>k__BackingField
@@ -14122,7 +14154,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7725729843939561334, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: die-3
+      value: die-2
       objectReference: {fileID: 0}
     - target: {fileID: 7725729843939561334, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
       propertyPath: data.<owner_id>k__BackingField
@@ -14138,7 +14170,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8721818613706069315, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: run-3
+      value: run-2
       objectReference: {fileID: 0}
     - target: {fileID: 8721818613706069315, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
       propertyPath: data.<owner_id>k__BackingField
@@ -14154,17 +14186,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1982530335173329727, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
   m_PrefabInstance: {fileID: 1583921816}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1583921819 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2830894836207595507, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
-  m_PrefabInstance: {fileID: 1583921816}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 667d6ec7c8afc3a4698a8d5a10953d0d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::IA
 --- !u!1001 &1585729964
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15051,6 +15072,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b504b78d5e32465408419f8d61a3fb79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Writer
+--- !u!114 &1685973585 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4718342999194465840, guid: 49036ff354d09d34e9290ae12cfbd3ee, type: 3}
+  m_PrefabInstance: {fileID: 1583921816}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f709f4a34b353ee49936fc1ab314b767, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Dev
 --- !u!1001 &1691546602
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15575,7 +15607,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2111978903917430686, guid: 319736498f318d84aaa78beb56a3ece2, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: hover-6
+      value: hover-8
       objectReference: {fileID: 0}
     - target: {fileID: 2111978903917430686, guid: 319736498f318d84aaa78beb56a3ece2, type: 3}
       propertyPath: data.<owner_id>k__BackingField
@@ -15871,45 +15903,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IDsGenerator
   capables_that_get_new_ids:
-  - {fileID: 8081574163044011264}
-  - {fileID: 1432455629}
-  - {fileID: 1763318144}
-  - {fileID: 1216275244}
-  - {fileID: 889989667}
-  - {fileID: 975470889}
-  - {fileID: 1729636381}
-  - {fileID: 8781775831953879919}
   - {fileID: 1875027707}
-  - {fileID: 663813882}
-  - {fileID: 1333565771}
+  - {fileID: 975470889}
+  - {fileID: 1432455629}
+  - {fileID: 1216275244}
   - {fileID: 1828406834}
-  - {fileID: 1583921819}
+  - {fileID: 1763318144}
+  - {fileID: 8781775831953879919}
+  - {fileID: 8081574163044011264}
+  - {fileID: 1333565771}
+  - {fileID: 889989667}
+  - {fileID: 1729636381}
   - {fileID: 521173307}
+  - {fileID: 1685973585}
+  - {fileID: 663813882}
   capacities_that_get_new_ids:
-  - {fileID: 5484077266794393436}
-  - {fileID: 177764415}
-  - {fileID: 917498999}
-  - {fileID: 639900328}
-  - {fileID: 1811213550}
-  - {fileID: 27114216}
-  - {fileID: 1964034989}
+  - {fileID: 633076194}
   - {fileID: 874996302}
   - {fileID: 365978293}
-  - {fileID: 1011992802}
-  - {fileID: 1866450518}
-  - {fileID: 2067670686}
-  - {fileID: 1915599066}
-  - {fileID: 28810426}
-  - {fileID: 633076194}
-  - {fileID: 1431047878}
-  - {fileID: 1017147021}
-  - {fileID: 463981756}
-  - {fileID: 2087446137}
-  - {fileID: 990358932}
-  - {fileID: 669650440}
-  - {fileID: 120407848}
-  - {fileID: 1601378236}
-  - {fileID: 1501326076}
+  - {fileID: 177764415}
+  - {fileID: 1811213550}
+  - {fileID: 27114216}
   - {fileID: 2129768146}
   - {fileID: 655282586}
   - {fileID: 910366767}
@@ -15918,6 +15932,18 @@ MonoBehaviour:
   - {fileID: 151194611}
   - {fileID: 217527983}
   - {fileID: 1382613152}
+  - {fileID: 917498999}
+  - {fileID: 639900328}
+  - {fileID: 1915599066}
+  - {fileID: 28810426}
+  - {fileID: 5484077266794393436}
+  - {fileID: 1501326076}
+  - {fileID: 1964034989}
+  - {fileID: 1011992802}
+  - {fileID: 1866450518}
+  - {fileID: 2067670686}
+  - {fileID: 179816708}
+  - {fileID: 848910723}
   - {fileID: 17301320}
   - {fileID: 589578499}
   - {fileID: 1387593734}
@@ -15926,8 +15952,14 @@ MonoBehaviour:
   - {fileID: 184509435}
   - {fileID: 2023433176}
   - {fileID: 185651187}
-  - {fileID: 179816708}
-  - {fileID: 848910723}
+  - {fileID: 1431047878}
+  - {fileID: 1017147021}
+  - {fileID: 463981756}
+  - {fileID: 2087446137}
+  - {fileID: 990358932}
+  - {fileID: 669650440}
+  - {fileID: 120407848}
+  - {fileID: 1601378236}
   log: 1
 --- !u!114 &1733966127
 MonoBehaviour:
@@ -15943,7 +15975,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TemplatesManager
   capables_templates:
   - {fileID: 1995776913879646623, guid: afa1573aa69f9114c92ccd6cdd3fbd33, type: 3}
-  - {fileID: 2830894836207595507, guid: 4a7b7d63d41b4724ba926bd2b5d087e4, type: 3}
+  - {fileID: 8940805219290677501, guid: 4a7b7d63d41b4724ba926bd2b5d087e4, type: 3}
   - {fileID: 8074454940356753118, guid: 9ea950ac9b967a1429cd2d6d303efed3, type: 3}
   capacities_templates:
   - {fileID: 1235818638904784760, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
@@ -16446,23 +16478,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6192736764969982114, guid: 062708462961fbf43978d0400eb7e020, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: katana-1
+      value: katana-2
       objectReference: {fileID: 0}
     - target: {fileID: 8688891065277685518, guid: 062708462961fbf43978d0400eb7e020, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: attack-1
+      value: attack-3
       objectReference: {fileID: 0}
     - target: {fileID: 8688891065277685518, guid: 062708462961fbf43978d0400eb7e020, type: 3}
       propertyPath: data.<owner_id>k__BackingField
-      value: katana-1
+      value: katana-2
       objectReference: {fileID: 0}
     - target: {fileID: 8810707229665354727, guid: 062708462961fbf43978d0400eb7e020, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: hover-2
+      value: hover-4
       objectReference: {fileID: 0}
     - target: {fileID: 8810707229665354727, guid: 062708462961fbf43978d0400eb7e020, type: 3}
       propertyPath: data.<owner_id>k__BackingField
-      value: katana-1
+      value: katana-2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -17230,7 +17262,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2179822775373733288, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: health-1
+      value: health-2
       objectReference: {fileID: 0}
     - target: {fileID: 2179822775373733288, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
       propertyPath: data.<owner_id>k__BackingField
@@ -32644,7 +32676,7 @@ RectTransform:
   m_GameObject: {fileID: 4407408406653321457}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.7207316, y: 0.7207316, z: 0.7207316}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5477250923338215944}
@@ -39967,7 +39999,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1235818638904784760, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
       propertyPath: data.<id>k__BackingField
-      value: hover-7
+      value: hover-5
       objectReference: {fileID: 0}
     - target: {fileID: 1235818638904784760, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
       propertyPath: data.<owner_id>k__BackingField
@@ -40164,6 +40196,10 @@ PrefabInstance:
       propertyPath: debug
       value: 
       objectReference: {fileID: 1271993035942453580}
+    - target: {fileID: 6122273700249739745, guid: 541b8ad5523417249b95b7397c25a03d, type: 3}
+      propertyPath: avoidance_calcul_delay
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8466870086659227338, guid: 541b8ad5523417249b95b7397c25a03d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

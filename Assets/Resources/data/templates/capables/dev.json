@@ -1,6 +1,6 @@
 ﻿{
     "<id>k__BackingField": "dev",
-    "kind": "IA",
+    "kind": "Dev",
     "position": {
         "x": 0.0,
         "y": 0.0
@@ -12,6 +12,7 @@
     "layer": 23,
     "tag": "Dev",
     "anim_data": {
+        "skin_kind": "",
         "skin": "dev_base",
         "anim_capacity_priorities": [
             {
@@ -144,7 +145,8 @@
         "health_dev",
         "walk_dev",
         "run_dev",
-        "attack_dev"
+        "attack_dev",
+        "motor_dev"
     ],
     "effects": [],
     "effects_ttl": []

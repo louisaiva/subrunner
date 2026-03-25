@@ -34,8 +34,18 @@ public class Capacity : MonoBehaviour
     }
     public virtual void UnloadData()
     {
+        // save dynamic data
+        SaveDynamicData();
+
         this.data = null;
         this._capable = null;
+    }
+
+    public virtual void SaveDynamicData()
+    {
+        // this method is made for saving data that changes during the game (dynamic data).
+        // it means it should run when the game is running and the data is loaded.
+        // This method is called in UnloadData, but it can be called anywhere else when we want to save the dynamic data.
     }
 
 

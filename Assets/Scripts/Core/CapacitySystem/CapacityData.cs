@@ -39,7 +39,7 @@ public interface ICapacityData : IData
     // GET DETAILS
     public virtual string GetDetails()
     {
-        string details = $"Capacity {id} :\n";
+        string details = $"Capacity {id} ({GetType().Name}):\n";
         details += $"  - owner_id : {owner_id}\n";
         details += $"  - kind : {kind}\n";
         details += $"  - local_position : {local_position}\n";

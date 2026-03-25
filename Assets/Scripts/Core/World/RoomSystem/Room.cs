@@ -380,7 +380,7 @@ public class Room : MonoBehaviour
 
         // capable exits !
         data.OUT_movables_ids.Add(capable.data.id);
-        if (RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) OUT - " + capable.data.id); }
+        if (RoomSystem.Instance != null && RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) OUT - " + capable.data.id); }
     }
 
 
