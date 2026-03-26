@@ -1,6 +1,5 @@
 
 using System;
-using System.Collections.Generic;
 using CrashKonijn.Agent.Core;
 using CrashKonijn.Agent.Runtime;
 using CrashKonijn.Goap.Core;
@@ -11,7 +10,6 @@ using UnityEngine;
 /// <summary>
 /// MotorCapacity is a capacity that ONLY shows the hover animation of an Interactable.
 /// </summary>
-
 public class MotorCapacity : Capacity
 {
 

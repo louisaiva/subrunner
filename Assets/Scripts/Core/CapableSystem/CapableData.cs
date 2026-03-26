@@ -4,7 +4,6 @@ using System;
 
 public interface ICapableData : IData
 {
-    string id { get; set; }
     ICapableData Duplicate();
 }
 

@@ -188,16 +188,6 @@ namespace subrunner.goap
             CancelInvoke(nameof(CalculatePath));
             InvokeRepeating(nameof(CalculatePath), update_path_interval, update_path_interval); // we calculate the path every 0.5 seconds
         }
-        /* public void OnPathComplete(Path path)
-        {
-            if (path.error)
-            {
-                if (log_path_calculation) { Debug.LogError("(GoToBehaviour) " + ia.name + " failed to find a A*project path to " + target + ": " + path.errorLog); }
-                return;
-            }
-
-            start_following_path(path.vectorPath);
-        } */
         private void start_following_path(List<Vector3> path)
         {
             // we initialize the path & waypoints variables

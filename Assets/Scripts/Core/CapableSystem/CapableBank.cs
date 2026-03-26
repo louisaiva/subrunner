@@ -107,7 +107,7 @@ public class CapableBank : MonoBehaviour
             Rigidbody2D rb = go.gameObject.AddComponent<Rigidbody2D>();
             rb.gravityScale = 0;
             rb.freezeRotation = true;
-            rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+            rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
             rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         }
 

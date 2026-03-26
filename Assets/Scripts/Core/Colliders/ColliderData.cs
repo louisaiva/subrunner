@@ -4,7 +4,7 @@
 using System;
 using UnityEngine;
 
-public interface IColliderData : IData
+public interface IColliderData
 {
     IColliderData Duplicate();
 }

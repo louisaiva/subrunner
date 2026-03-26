@@ -42,6 +42,7 @@ public class CapableVisualizerManager : MonoBehaviour
     // ON DESTROY
     private void OnDestroy()
     {
+        if (CapableSystem.Instance == null) { return; }
         CapableSystem.Instance.OnCapableSpawned -= handle_capable_spawned;
         CapableSystem.Instance.OnCapableDespawned -= handle_capable_despawned;
     }

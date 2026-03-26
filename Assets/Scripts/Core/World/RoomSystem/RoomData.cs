@@ -1,12 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
-
-public interface IData
-{
-    string GetDetails();
-}
 
 [Serializable] public class RoomData : IData
 {

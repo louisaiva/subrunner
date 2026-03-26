@@ -41,7 +41,7 @@ public class RoomBank : MonoBehaviour
         // extract a room from the pooled ones and load its data
         Room room = pooled_rooms.Pop();
         room.LoadData(data);
-        room.gameObject.SetActive(true);
+        room.enabled = true;
         loaded_rooms.Add(room);
     }
     public void Unload(RoomData data)
@@ -60,8 +60,9 @@ public class RoomBank : MonoBehaviour
         // remove the room from the loaded rooms list
         loaded_rooms.Remove(room);
 
-        // disable the gameObject
-        room.gameObject.SetActive(false);
+        // disable room component
+        room.enabled = false;
+        // room.gameObject.SetActive(false);
     }
 
     // DESTROY POOLED ROOMS

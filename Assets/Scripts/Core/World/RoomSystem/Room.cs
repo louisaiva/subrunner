@@ -17,17 +17,25 @@ public class Room : MonoBehaviour
     public PolygonCollider2D room_collider;
 
     [Header("Room neighbours")]
-    public List<string> neighbours = new List<string>();
+    // public List<string> neighbours = new List<string>();
 
     [Header("Tilemaps")]
     public Tilemap ceiling_tilemap;
-    private TilemapRenderer ceiling_renderer;
+    // private TilemapRenderer ceiling_renderer;
     public Tilemap walls_tilemap;
-    private TilemapRenderer walls_renderer;
+    // private TilemapRenderer walls_renderer;
     public Tilemap carpet_tilemap;
-    private TilemapRenderer carpet_renderer;
+    private TilemapRenderer _carpet_renderer;
+    private TilemapRenderer carpet_renderer
+    {
+        get
+        {
+            if (_carpet_renderer == null) { _carpet_renderer = carpet_tilemap.GetComponent<TilemapRenderer>(); }
+            return _carpet_renderer;
+        }
+    }
     public Tilemap ground_tilemap;
-    private TilemapRenderer ground_renderer;
+    // private TilemapRenderer ground_renderer;
 
 
     // LOAD / UNLOAD
@@ -39,12 +47,13 @@ public class Room : MonoBehaviour
 
         // load the colliders in the composite collider
         room_collider.SetPath(0, data.collider_points.ToArray());
+        room_collider.enabled = true;
 
         // load the tilemaps
-        set_tilemaps();
+        load_tilemaps();
 
         // and neighbours (just for debug)
-        neighbours = data.neighbours_ids;
+        // neighbours = data.neighbours_ids;
 
         // here we need to load all the capables that we hold in data.capables_ids
         if ((data.capables_ids == null || data.capables_ids.Count == 0)
@@ -57,6 +66,12 @@ public class Room : MonoBehaviour
     }
     public void UnloadData()
     {
+        // we unload the tilemaps (except carpet's collider)
+        unload_tilemaps();
+
+        // unload the collider
+        room_collider.enabled = false;
+
         // here we need to unload all the capables that we hold
         // -> interacts with CapableSystem
         if (CapableSystem.Instance != null)
@@ -69,7 +84,7 @@ public class Room : MonoBehaviour
     }
 
     // loading tilemaps low level
-    protected void set_tilemaps()
+    protected void load_tilemaps()
     {
         // we load the tilebases used in data
         List<TileBase> tilebases_used = new List<TileBase>();
@@ -90,6 +105,13 @@ public class Room : MonoBehaviour
         set_tilemap(carpet_tilemap,tilebases_used, data.carpet_tiles, data.carpet_bounds);
         // ground
         set_tilemap(ground_tilemap,tilebases_used, data.ground_tiles, data.ground_bounds);
+
+        // we enable the renderers
+        ceiling_tilemap.gameObject.SetActive(true);
+        walls_tilemap.gameObject.SetActive(true);
+        ground_tilemap.gameObject.SetActive(true);
+        carpet_tilemap.enabled = true;
+        carpet_renderer.enabled = true;
     }
     protected void set_tilemap(Tilemap tilemap, List<TileBase> tilebases, int[] tiles_data, BoundsInt bounds)
     {
@@ -156,7 +178,17 @@ public class Room : MonoBehaviour
 
         if (RoomSystem.Instance.log_tilemaps_loading) { Debug.Log("(Room) Tilemap loaded: " + tilemap.name + " with bounds: " + tilemap.cellBounds + " and " + non_null_tiles + " non-null tiles" + tile_count_log); }
     }
+    protected void unload_tilemaps()
+    {
+        ceiling_tilemap.gameObject.SetActive(false);
+        walls_tilemap.gameObject.SetActive(false);
+        ground_tilemap.gameObject.SetActive(false);
 
+        // special cases for carpet bcz we want to keep the collider active to prevent
+        // entities that are being unloaded to escape
+        carpet_tilemap.enabled = false;
+        carpet_renderer.enabled = false;
+    }
 
 
     // GET STATIC DATA
@@ -181,7 +213,7 @@ public class Room : MonoBehaviour
             collider_points = new List<Vector2>(room_collider.GetPath(0)),
 
             // set neighbours data
-            neighbours_ids = new List<string>(neighbours),
+            neighbours_ids = data.neighbours_ids ?? new List<string>(),
 
             // set capables data
             capables_ids = data.capables_ids ?? new List<string>(),
@@ -225,6 +257,9 @@ public class Room : MonoBehaviour
     }
     protected int[] get_tilemap(Tilemap tilemap, out BoundsInt bounds, ref TileBase[] tilebases_used)
     {
+        // check if tilemap is null
+        if (tilemap == null) { bounds = new BoundsInt(); return new int[0]; }
+
         tilemap.CompressBounds();
         bounds = tilemap.cellBounds;
         TileBase[] tiles = tilemap.GetTilesBlock(bounds);
@@ -256,7 +291,7 @@ public class Room : MonoBehaviour
 
 
     // SHOW / HIDE
-    public void Show()
+    /* public void Show()
     {
         /// this should NOT disable the gameobject since we want all the logic to keep logiking
         /// we only want to disable all renderers + lights etc any visible thing
@@ -297,7 +332,7 @@ public class Room : MonoBehaviour
         if (walls_renderer == null) { walls_renderer = walls_tilemap.GetComponent<TilemapRenderer>(); }
         if (carpet_renderer == null) { carpet_renderer = carpet_tilemap.GetComponent<TilemapRenderer>(); }
         if (ground_renderer == null) { ground_renderer = ground_tilemap.GetComponent<TilemapRenderer>(); }
-    }
+    } */
 
 
 

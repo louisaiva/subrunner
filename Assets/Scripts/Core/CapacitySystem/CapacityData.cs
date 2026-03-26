@@ -5,7 +5,6 @@ using System;
 
 public interface ICapacityData : IData
 {
-    string id { get; set; }
     string owner_id { get; set; }
     ICapacityData Duplicate();
 }
