@@ -17,14 +17,13 @@ public interface IData
     public List<string> rooms_ids; // list of the rooms that are part of this level
 
     // navmesh data
-    public NavMeshData navmesh_data;
+    public List<string> navmesh_data_paths;
 
     public string GetDetails()
     {
         string details = $"Level {id} :\n";
         details += $"  - rooms : {rooms_ids.Count} rooms\n  -{string.Join("\n  -", rooms_ids)}\n";
-        if (navmesh_data != null) { details += $"  - navmesh : {navmesh_data.name}\n"; }
-        else { details += $"  - navmesh : none\n"; }
+        details += $"  - navmesh data paths : {navmesh_data_paths.Count} paths\n  -{string.Join("\n  -", navmesh_data_paths)}\n";
         return details;
     }
 }

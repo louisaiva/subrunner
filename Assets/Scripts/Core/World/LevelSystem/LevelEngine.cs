@@ -60,14 +60,19 @@ public class LevelEngine : BSOD_System<LevelEngine>
     {
         // we empty the pooled levels
         pooled_levels = new Dictionary<string, Level>();
-        foreach (KeyValuePair<string, LevelData> entry in levels_data) { create_level(entry.Value); }
+        foreach (KeyValuePair<string, LevelData> entry in levels_data)
+        {
+            Level level = create_level(entry.Value);
+            level.LoadNavMeshesPath();
+        }
     }
-    private void create_level(LevelData data)
+    private Level create_level(LevelData data)
     {
         // we instanciate a new level and assign the data to it
         Level new_level = Instantiate(level_prefab, level_parent);
         new_level.data = data;
         pooled_levels.Add(data.id, new_level);
+        return new_level;
     }
 
     // START
