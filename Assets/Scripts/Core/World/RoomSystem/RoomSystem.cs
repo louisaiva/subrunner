@@ -121,6 +121,10 @@ public class RoomSystem : BSOD_System<RoomSystem>
     {
         unloadRooms(loaded_rooms_data.Keys as ICollection<string>);
     }
+    public void UnloadRooms(string[] rooms_ids)
+    {
+        unloadRooms(rooms_ids);
+    }
     private async void unloadRooms(ICollection<string> rooms_ids)
     {
         foreach (string id in rooms_ids)

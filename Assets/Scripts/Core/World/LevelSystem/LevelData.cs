@@ -23,7 +23,8 @@ public interface IData
     {
         string details = $"Level {id} :\n";
         details += $"  - rooms : {rooms_ids.Count} rooms\n  -{string.Join("\n  -", rooms_ids)}\n";
-        details += $"  - navmesh : {navmesh_data.name}\n";
+        if (navmesh_data != null) { details += $"  - navmesh : {navmesh_data.name}\n"; }
+        else { details += $"  - navmesh : none\n"; }
         return details;
     }
 }

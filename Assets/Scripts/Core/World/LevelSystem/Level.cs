@@ -9,14 +9,18 @@ public class Level : MonoBehaviour
     public LevelData data;
 
 
-    // START
-    private void Start()
+    // LOAD UNLOAD
+    public void Load()
     {
         // for now we are a dummy we only tell the RoomSystem to
         // load all the rooms based on their data ids
         RoomSystem.Instance?.LoadRooms(data.rooms_ids.ToArray());
     }
-
+    public void Unload()
+    {
+        // same shit
+        RoomSystem.Instance?.UnloadRooms(data.rooms_ids.ToArray());
+    }
 
 
     // GET STATIC DATA
