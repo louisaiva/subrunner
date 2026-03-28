@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class UI_DevMap : UI_SlottablePool
@@ -64,7 +65,7 @@ public class UI_DevMap : UI_SlottablePool
     }
     private float world_to_ui_scale = 200f;
     private Vector2 map_half_ui; // the radius of the map in world units, used to clamp the zoom and offset
-    private float min_zoom = 0.15f;
+    private float min_zoom = 0.05f;
     private float max_zoom = 0.75f;
 
     // static data
@@ -72,6 +73,8 @@ public class UI_DevMap : UI_SlottablePool
     public static Vector2 global_offset = Vector2.zero; // the offset that allows us to move the map around, applied on top of world_offset
     public static float global_zoom = 1f; // the zoom that allows us to zoom the map in and out
     public static float world_to_ui_zoom => instance.world_to_ui_scale;
+    public static float MinZoom => instance.min_zoom;
+    public static float MaxZoom => instance.max_zoom;
 
     [Header("Logs")]
     [SerializeField] private bool log_world_to_canvas = false;
@@ -88,13 +91,30 @@ public class UI_DevMap : UI_SlottablePool
         world_center = room_visualizer.CalculateWorldCenter(out Vector2 extents);
         map_half_ui = extents * (int)world_to_ui_scale ;
 
+        // register to level loaded to update the visuals when we load a level
+        LevelEngine.Instance.OnLevelLoaded += handle_level_loaded;
 
         // then create visuals for the rooms
         room_visualizer.CreateVisuals();
 
         // then call creation of CapableVisualizerManager to create visuals for the capables, now that we have the right canvas size
         capable_visualizer.CreateVisuals();
-        capable_visualizer.ResizeAllIcons(min_zoom, max_zoom, global_zoom);
+    }
+    private void OnDestroy()
+    {
+        // unregister to level loaded
+        if (LevelEngine.Instance != null) { LevelEngine.Instance.OnLevelLoaded -= handle_level_loaded; }
+    }
+
+    // LEVEL LOADED HANDLER
+    private void handle_level_loaded(Level level)
+    {
+        // when we load a level, we update the visuals for the rooms and capables
+        room_visualizer.ClearVisuals();
+        room_visualizer.CreateVisuals(level.data.id);
+
+        capable_visualizer.ClearVisuals();
+        capable_visualizer.CreateVisuals(level.data.id);
     }
 
     // ENABLING
@@ -152,7 +172,7 @@ public class UI_DevMap : UI_SlottablePool
         scaler.localScale = Vector3.one * global_zoom;
 
         // resize all icons
-        capable_visualizer.ResizeAllIcons(min_zoom, max_zoom, global_zoom);
+        capable_visualizer.ResizeAllIcons();
     }
 
     // GAMEPAD NAVIGATION

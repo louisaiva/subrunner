@@ -84,11 +84,11 @@ public class Level : MonoBehaviour
     }
     private List<string> get_static_rooms_ids()
     {
-        if (data == null) { return new List<string>(); }
-        if (data.rooms_ids != null && data.rooms_ids.Count > 0) { return data.rooms_ids; }
+        // if (data == null) { return new List<string>(); }
+        // if (data.rooms_ids != null && data.rooms_ids.Count > 0) { return data.rooms_ids; }
 
-        // else we go statically get the rooms ids from the children rooms
-        Room[] rooms = GetComponentsInChildren<Room>(includeInactive: true);
+        // we go statically get the rooms ids from the children rooms
+        Room[] rooms = GetStaticRooms();
         List<string> rooms_ids = new List<string>();
         foreach (Room room in rooms)
         {
@@ -98,9 +98,12 @@ public class Level : MonoBehaviour
                 rooms_ids.Add(room_id);
             }
         }
+
+        // we apply it to the current data also
+        data.rooms_ids = rooms_ids;
         return rooms_ids;
     }
-
+    public Room[] GetStaticRooms() { return GetComponentsInChildren<Room>(includeInactive: true); }
     public Bounds GetStaticBounds()
     {
         // we get all the rooms in the children

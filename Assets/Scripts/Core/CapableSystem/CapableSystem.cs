@@ -814,4 +814,34 @@ public class CapableSystem : BSOD_System<CapableSystem>
     {
         return outsiders_ids.Contains(id);
     }
+    public bool TryGetOutsider(string id, out Capable capable)
+    {
+        capable = null;
+        if (!IsOutsider(id)) { return false; }
+        foreach (KeyValuePair<CapableData, Capable> pair in outsiders_data)
+        {
+            CapableData data = pair.Key;
+            if (data.id == id)
+            {
+                capable = pair.Value;
+                return true;
+            }
+        }
+        return false;
+    }
+    public List<CapableData> GetCapablesDataFromIDs(List<string> ids)
+    {
+        List<CapableData> data_list = new List<CapableData>();
+        for (int i = 0; i < ids.Count; i++)
+        {
+            string id = ids[i];
+            if (!world_capables_data.ContainsKey(id))
+            {
+                if (!hide_log_no_data_found) { Debug.LogWarning("(CapableSystem - GetCapablesDataFromIDs) Capable data not found for id: " + id); }
+                continue;
+            }
+            data_list.Add(world_capables_data[id]);
+        }
+        return data_list;
+    }
 }

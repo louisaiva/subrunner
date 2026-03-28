@@ -1,0 +1,80 @@
+﻿{
+    "<id>k__BackingField": "network_module-6",
+    "kind": "Module_Network",
+    "position": {
+        "x": -10.284720420837403,
+        "y": 5.466070175170898
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 24,
+    "tag": "Item",
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "network_module",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            }
+        ],
+        "current_capacity": "",
+        "material_path": "materials/objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "layers": []
+    },
+    "inventory": {
+        "item_pools_data": []
+    },
+    "feet_data": {
+        "box_colliders": [],
+        "circle_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 25,
+                "used_for_pathfinding": false,
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.10000000149011612
+                },
+                "radius": 0.09000000357627869
+            }
+        ]
+    },
+    "capacities_ids": [
+        "hover-114"
+    ],
+    "effects": [],
+    "effects_ttl": [],
+    "reference": "module:network",
+    "color": {
+        "r": 0.8549019694328308,
+        "g": 0.5411764979362488,
+        "b": 0.4117647111415863,
+        "a": 1.0
+    },
+    "max_qty": 16,
+    "item_description": "mandatory for connecting a laptop to other devices./l not mandatory for eating ramens",
+    "is_grabbed": true
+}

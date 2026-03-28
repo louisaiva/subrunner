@@ -1,0 +1,116 @@
+﻿{
+    "<id>k__BackingField": "rat-1",
+    "kind": "Rat",
+    "position": {
+        "x": -2.700000047683716,
+        "y": 1.7999999523162842
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 23,
+    "tag": "Rat",
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "rat",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "walk",
+                    "run"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 3,
+                "capacity_playing": "",
+                "capacities": [
+                    "attack"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 4,
+                "capacity_playing": "",
+                "capacities": [
+                    "hurted",
+                    "eat"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 5,
+                "capacity_playing": "",
+                "capacities": [
+                    "die"
+                ],
+                "lock_orientation": true,
+                "one_shot": false
+            }
+        ],
+        "current_capacity": "",
+        "material_path": "materials/computers",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "layers": []
+    },
+    "inventory": {
+        "item_pools_data": [
+            {
+                "stacks_data": [],
+                "pool_id": "stuff",
+                "max_stacks": 6,
+                "min_stacks": 6,
+                "scalable": true,
+                "item_rule": ""
+            }
+        ]
+    },
+    "feet_data": {
+        "box_colliders": [],
+        "circle_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 25,
+                "used_for_pathfinding": false,
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "radius": 0.09000000357627869
+            }
+        ]
+    },
+    "capacities_ids": [
+        "health-11",
+        "interact-12",
+        "die-13",
+        "walk-11",
+        "run-11",
+        "talk-3",
+        "eat-11",
+        "attack-14",
+        "motor-3"
+    ],
+    "effects": [],
+    "effects_ttl": []
+}

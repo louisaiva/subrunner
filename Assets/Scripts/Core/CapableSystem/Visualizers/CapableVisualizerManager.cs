@@ -18,18 +18,39 @@ public class CapableVisualizerManager : MonoBehaviour
     [SerializeField] private List<CapableSpriteIcon> capable_sprites;
 
     // START
-    public void CreateVisuals()
+    public void ClearVisuals()
     {
-        // todo should take only capables in the current level
+        foreach (UI_CapableVisualizer visu in capable_renderers) { if (visu != null) { Destroy(visu.gameObject); } }
+        capable_renderers.Clear();
+        outsider_capables.Clear();
+    }
+    public void CreateVisuals(string level_id = null)
+    {
+        // if level id is null, we get the current level id from the LevelEngine
+        if (level_id == null) { level_id = LevelEngine.Instance.CurrentLevelID; }
+        if (level_id == null) { Debug.LogWarning($"(CapableVisualizerManager) Can't find the current level ID"); return; }
 
         // grab all the capable data in the CapableSystem and build a visual for each one
-        List<CapableData> insiders = CapableSystem.Instance.GetInsidersWorldCapablesData();
-        foreach (CapableData cap in insiders) { create_visu_for_capable(cap); }
+        // List<CapableData> insiders = CapableSystem.Instance.GetInsidersWorldCapablesData();
+        List<CapableData> cdata = LevelEngine.Instance.GetCapablesDataOfLevel(level_id);
+        foreach (CapableData cap in cdata)
+        {
+            // we create a visu for this capable
+            create_visu_for_capable(cap);
+
+            // we check if insider or not
+            if (CapableSystem.Instance.TryGetOutsider(cap.id, out Capable outsider))
+            {
+                outsider_capables.Add(outsider);
+            }
+        }
 
         // we also create visuals for enabled outsiders, and we keep track of them so we can update their position manually later
         Dictionary<CapableData, Capable> outsiders = CapableSystem.Instance.GetOutsidersWorldCapablesData();
         foreach (KeyValuePair<CapableData, Capable> entry in outsiders)
         {
+            // check that we don't already have a visu for this capable, just in case
+            if (cdata.Contains(entry.Key)) { continue; }
             create_visu_for_capable(entry.Key);
             outsider_capables.Add(entry.Value);
         }
@@ -61,6 +82,7 @@ public class CapableVisualizerManager : MonoBehaviour
         // 4. get the UI_CapableVisualizer component and init it with the capable data & the sprite icon
         UI_CapableVisualizer visu = go.GetComponent<UI_CapableVisualizer>();
         visu.Init(cdata, icon);
+        ResizeIcon(visu);
 
         // 5. add the renderer to our hashset
         capable_renderers.Add(visu);
@@ -165,9 +187,9 @@ public class CapableVisualizerManager : MonoBehaviour
     // RESIZE ICONS
     private float min_icon_scale = 0.5f;
     private float max_icon_scale = 4f;
-    public void ResizeAllIcons(float min_zoom, float max_zoom, float current_zoom)
+    public void ResizeAllIcons()
     {
-        float percentage_zoom = (current_zoom - min_zoom) / (max_zoom - min_zoom);
+        float percentage_zoom = (UI_DevMap.global_zoom - UI_DevMap.MinZoom) / (UI_DevMap.MaxZoom - UI_DevMap.MinZoom);
 
         // when percentage_zoom is 0, we want the max_icon_scale so the icons are bigs and visible
         // when percentage_zoom is 1, we want the min_icon_scale so the icons are small to avoid cluttering the map
@@ -177,6 +199,12 @@ public class CapableVisualizerManager : MonoBehaviour
         {
             visu.GetComponent<RectTransform>().localScale = Vector3.one * icon_scale;
         }
+    }
+    private void ResizeIcon(UI_CapableVisualizer visu)
+    {
+        float percentage_zoom = (UI_DevMap.global_zoom - UI_DevMap.MinZoom) / (UI_DevMap.MaxZoom - UI_DevMap.MinZoom);
+        float icon_scale = Mathf.Lerp(max_icon_scale, min_icon_scale, percentage_zoom);
+        visu.GetComponent<RectTransform>().localScale = Vector3.one * icon_scale;
     }
 }
 

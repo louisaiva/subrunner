@@ -1,0 +1,76 @@
+﻿{
+    "<id>k__BackingField": "door_3-1",
+    "kind": "Door",
+    "position": {
+        "x": 33.5,
+        "y": 23.499996185302736
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": 1.0
+    },
+    "layer": 9,
+    "tag": "Untagged",
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "blue_door",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 3,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle_open"
+                ],
+                "lock_orientation": true,
+                "one_shot": false
+            },
+            {
+                "priority": 4,
+                "capacity_playing": "",
+                "capacities": [
+                    "open",
+                    "close"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            }
+        ],
+        "current_capacity": "",
+        "material_path": "materials/doors",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "layers": []
+    },
+    "inventory": {
+        "item_pools_data": []
+    },
+    "feet_data": {
+        "box_colliders": [],
+        "circle_colliders": []
+    },
+    "capacities_ids": [
+        "hover-24",
+        "open-3",
+        "close-3"
+    ],
+    "effects": [],
+    "effects_ttl": []
+}

@@ -1,0 +1,97 @@
+﻿{
+    "<id>k__BackingField": "fridge-1",
+    "kind": "Chest",
+    "position": {
+        "x": 21.66666603088379,
+        "y": 20.67572784423828
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 29,
+    "tag": "Untagged",
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "fridge",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 3,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle_open"
+                ],
+                "lock_orientation": true,
+                "one_shot": false
+            },
+            {
+                "priority": 4,
+                "capacity_playing": "",
+                "capacities": [
+                    "open",
+                    "close"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            }
+        ],
+        "current_capacity": "",
+        "material_path": "materials/objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "layers": []
+    },
+    "inventory": {
+        "item_pools_data": [
+            {
+                "stacks_data": [
+                    {
+                        "items_ids": [
+                            "apple-1"
+                        ]
+                    },
+                    {
+                        "items_ids": [
+                            "apple_1-1",
+                            "apple_2-1"
+                        ]
+                    }
+                ],
+                "pool_id": "fridge",
+                "max_stacks": 6,
+                "min_stacks": 6,
+                "scalable": false,
+                "item_rule": "food"
+            }
+        ]
+    },
+    "feet_data": {
+        "box_colliders": [],
+        "circle_colliders": []
+    },
+    "capacities_ids": [
+        "open-4",
+        "close-4",
+        "hover-32"
+    ],
+    "effects": [],
+    "effects_ttl": []
+}

@@ -376,12 +376,12 @@ public class Item : Movable, EndlessInteractable
             color = this.Color,
             max_qty = this.MaxQty,
             item_description = this.ItemDescription,
-            is_grabbed = get_static_grabbed()
+            is_grabbed = GetStaticGrabbed()
         };
 
         return static_data;
     }
-    protected bool get_static_grabbed()
+    public bool GetStaticGrabbed()
     {
         // we need to check if we have another capable in our parents or above, if yes it means we are grabbed
         if (transform.parent == null) { return false; }

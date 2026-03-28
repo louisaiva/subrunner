@@ -265,7 +265,7 @@ namespace subrunner.goap
         // GIZMOS
         private void OnDrawGizmos()
         {
-            if (ia == null || ia.transform == null) { return; }
+            if (ia == null || ia.transform == null || walker == null) { return; }
 
 
             // TTCBAS

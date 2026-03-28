@@ -1,0 +1,83 @@
+﻿{
+    "<id>k__BackingField": "oven-1",
+    "kind": "Oven",
+    "position": {
+        "x": -3.25,
+        "y": 2.6666669845581056
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 29,
+    "tag": "Untagged",
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "oven",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "heating"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "heating_up",
+                    "heating_down"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            }
+        ],
+        "current_capacity": "",
+        "material_path": "materials/objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "layers": []
+    },
+    "inventory": {
+        "item_pools_data": [
+            {
+                "stacks_data": [],
+                "pool_id": "stuff",
+                "max_stacks": 9,
+                "min_stacks": 0,
+                "scalable": false,
+                "item_rule": ""
+            }
+        ]
+    },
+    "feet_data": {
+        "box_colliders": [],
+        "circle_colliders": []
+    },
+    "capacities_ids": [
+        "hover-27"
+    ],
+    "effects": [],
+    "effects_ttl": []
+}

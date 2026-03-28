@@ -1,0 +1,116 @@
+﻿{
+    "<id>k__BackingField": "cat-1",
+    "kind": "Cat",
+    "position": {
+        "x": 12.879999160766602,
+        "y": 4.399999618530273
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "layer": 23,
+    "tag": "Cat",
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "cat",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "walk",
+                    "run"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 3,
+                "capacity_playing": "",
+                "capacities": [
+                    "attack"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 4,
+                "capacity_playing": "",
+                "capacities": [
+                    "hurted",
+                    "eat"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 5,
+                "capacity_playing": "",
+                "capacities": [
+                    "die"
+                ],
+                "lock_orientation": true,
+                "one_shot": false
+            }
+        ],
+        "current_capacity": "",
+        "material_path": "materials/enemy",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "layers": []
+    },
+    "inventory": {
+        "item_pools_data": [
+            {
+                "stacks_data": [],
+                "pool_id": "stuff",
+                "max_stacks": 6,
+                "min_stacks": 6,
+                "scalable": true,
+                "item_rule": ""
+            }
+        ]
+    },
+    "feet_data": {
+        "box_colliders": [],
+        "circle_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 25,
+                "used_for_pathfinding": false,
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "radius": 0.09000000357627869
+            }
+        ]
+    },
+    "capacities_ids": [
+        "health-2",
+        "interact-2",
+        "die-3",
+        "walk-2",
+        "run-2",
+        "talk-1",
+        "eat-2",
+        "attack-3",
+        "motor-1"
+    ],
+    "effects": [],
+    "effects_ttl": []
+}

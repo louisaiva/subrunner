@@ -1,18 +1,19 @@
 ﻿{
     "<id>k__BackingField": "health-2",
-    "<owner_id>k__BackingField": "dummy-1",
+    "<owner_id>k__BackingField": "cat-1",
     "kind": "HealthCapacity",
     "local_position": {
         "x": 0.0,
         "y": 0.0
     },
     "layer": 23,
-    "tag": "Untagged",
-    "health": 100.0,
-    "max_health": 100,
-    "regen_health": 0.10000000149011612,
+    "tag": "Cats",
+    "health": 20.0,
+    "max_health": 20,
+    "regen_health": 0.0,
     "hurted_animation": "hurted",
-    "box_colliders": [
+    "box_colliders": [],
+    "circle_colliders": [
         {
             "local_position": {
                 "x": 0.0,
@@ -22,14 +23,10 @@
             "used_for_pathfinding": false,
             "is_trigger": true,
             "offset": {
-                "x": 0.0038108229637145998,
-                "y": 0.3377995491027832
+                "x": 0.0,
+                "y": -0.15000000596046449
             },
-            "size": {
-                "x": 0.49610769748687746,
-                "y": 0.671231746673584
-            }
+            "radius": 0.21101270616054536
         }
-    ],
-    "circle_colliders": []
+    ]
 }

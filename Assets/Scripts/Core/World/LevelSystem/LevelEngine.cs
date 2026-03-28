@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,6 +12,14 @@ public class LevelEngine : BSOD_System<LevelEngine>
     [Header("Current level")]
     public string start_level_id; // level id to load at the start // todo : remove this when it is in WorldData based on player's level
     public Level current_level;
+    public string CurrentLevelID
+    {
+        get
+        {
+            if (current_level == null || current_level.data == null) { return null; }
+            return current_level.data.id;
+        }
+    }
 
     [Header("Pooled levels")]
     public Dictionary<string, Level> pooled_levels;
@@ -83,6 +92,7 @@ public class LevelEngine : BSOD_System<LevelEngine>
     }
 
     // LOAD LEVEL
+    public Action<Level> OnLevelLoaded = delegate { };
     public void LoadLevel(string level_id)
     {
         if (!pooled_levels.ContainsKey(level_id)) { if (!hide_no_level_warning) { Debug.LogWarning("(LevelEngine - Load) Level data not found for id: " + level_id); } return; }
@@ -99,6 +109,7 @@ public class LevelEngine : BSOD_System<LevelEngine>
         new_level.Load();
         if (log_loading) { Debug.Log($"(LevelEngine) Level '{level_id}' loaded"); }
         current_level = new_level;
+        OnLevelLoaded?.Invoke(current_level);
     }
     public void UnloadLevel()
     {
@@ -106,5 +117,46 @@ public class LevelEngine : BSOD_System<LevelEngine>
         current_level.Unload();
         if (log_loading) { Debug.Log($"(LevelEngine) Level '{current_level.data.id}' unloaded"); }
         current_level = null;
+    }
+
+    // GETTERS
+    public List<RoomData> GetRoomsDataOfLevel(string level_id)
+    {
+        if (!levels_data.ContainsKey(level_id))
+        {
+            if (!hide_no_level_warning) { Debug.LogWarning("(LevelEngine - GetRoomsDataOfLevel) Level data not found for id: " + level_id); }
+            return new List<RoomData>();
+        }
+        List<string> room_ids = levels_data[level_id].rooms_ids;
+        List<RoomData> room_datas = RoomSystem.Instance.GetRoomsDataFromIDs(room_ids);
+        return room_datas;
+    }
+    public List<CapableData> GetCapablesDataOfLevel(string level_id)
+    {
+        return GetCapablesDataOfLevel(level_id, out List<RoomData> _);
+    }
+    public List<CapableData> GetCapablesDataOfLevel(string level_id, out List<RoomData> rooms_data)
+    {
+        // get the rooms data of the level
+        rooms_data = GetRoomsDataOfLevel(level_id);
+        if (rooms_data.Count == 0) { return new List<CapableData>(); }
+
+        // we get the capable ids inside the rooms data and return the corresponding capable data
+        List<string> capable_ids = new List<string>();
+        foreach (RoomData rdata in rooms_data)
+        {
+            if (rdata.capables_ids != null && rdata.capables_ids.Count > 0)
+            {
+                capable_ids.AddRange(rdata.capables_ids);
+            }
+            if (rdata.movables_ids != null && rdata.movables_ids.Count > 0)
+            {
+                capable_ids.AddRange(rdata.movables_ids);
+            }
+        }
+
+        // we get the capable data from the ids
+        List<CapableData> capable_datas = CapableSystem.Instance.GetCapablesDataFromIDs(capable_ids);
+        return capable_datas;
     }
 }

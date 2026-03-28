@@ -653,4 +653,15 @@ public class RoomSystem : BSOD_System<RoomSystem>
     {
         return GetCapableRoom(capable_id) != null;
     }
+    public List<RoomData> GetRoomsDataFromIDs(ICollection<string> rooms_ids)
+    {
+        List<RoomData> rooms_datas = new List<RoomData>();
+        foreach (string room_id in rooms_ids)
+        {
+            if (!rooms_data.ContainsKey(room_id)) { continue; }
+            rooms_datas.Add(rooms_data[room_id]);
+        }
+        return rooms_datas;
+    }
 }
+

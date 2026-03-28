@@ -1,0 +1,65 @@
+﻿{
+    "<id>k__BackingField": "vulnerable_cube_7-1",
+    "kind": "FalseInteractable",
+    "position": {
+        "x": 37.5,
+        "y": 34.5
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 29,
+    "tag": "Untagged",
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "lil_cube",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 3,
+                "capacity_playing": "",
+                "capacities": [
+                    "interact"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            }
+        ],
+        "current_capacity": "",
+        "material_path": "Packages/com.unity.render-pipelines.universal/Runtime/Materials/Sprite-Lit-Default",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "layers": []
+    },
+    "inventory": {
+        "item_pools_data": []
+    },
+    "feet_data": {
+        "box_colliders": [],
+        "circle_colliders": []
+    },
+    "capacities_ids": [
+        "hover-164",
+        "connect-27"
+    ],
+    "effects": [],
+    "effects_ttl": []
+}

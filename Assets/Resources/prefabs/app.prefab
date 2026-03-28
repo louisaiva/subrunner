@@ -204,6 +204,14 @@ MonoBehaviour:
         Data3: 827602106
         Data4: -1353302138
       Path: event:/themes/melancolic lobby/LobbyTheme
+  - name: chip wave
+    reference:
+      Guid:
+        Data1: 2136659691
+        Data2: 1214205528
+        Data3: 430225848
+        Data4: 1684907041
+      Path: event:/themes/chip wave/ChipTheme
 --- !u!1 &3811816626350204236
 GameObject:
   m_ObjectHideFlags: 0
@@ -1005,7 +1013,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsQuitting: 0
   LoadedSceneCount: 0
-  prototype: capable & capacities templates
+  prototype: ui_devmap + loaded motor capacity
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320

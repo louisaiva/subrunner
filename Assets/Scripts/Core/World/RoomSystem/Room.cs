@@ -10,21 +10,59 @@ public class Room : MonoBehaviour
     public RoomData data;
     public bool Loaded { get { return data != null; } }
 
-    [Header("Room shown")]
-    public bool shown = false; // if the room is currently shown. =/= is the room loaded. shown is only about visibility
+    // [Header("Room shown")]
+    // public bool shown = false; // if the room is currently shown. =/= is the room loaded. shown is only about visibility
 
     [Header("Room collider")]
-    public PolygonCollider2D room_collider;
-
-    [Header("Room neighbours")]
-    // public List<string> neighbours = new List<string>();
+    private PolygonCollider2D _room_collider;
+    public PolygonCollider2D RoomCollider
+    {
+        get
+        {
+            if (_room_collider == null) { _room_collider = GetComponent<PolygonCollider2D>(); }
+            return _room_collider;
+        }
+    }
 
     [Header("Tilemaps")]
-    public Tilemap ceiling_tilemap;
-    // private TilemapRenderer ceiling_renderer;
-    public Tilemap walls_tilemap;
-    // private TilemapRenderer walls_renderer;
-    public Tilemap carpet_tilemap;
+    private Tilemap _ceiling_tilemap;
+    private Tilemap ceiling_tilemap
+    {
+        get
+        {
+            if (_ceiling_tilemap == null) { _ceiling_tilemap = transform.Find("ceiling")?.GetComponent<Tilemap>(); }
+            return _ceiling_tilemap;
+        }
+    }
+    private Tilemap _walls_tilemap;
+    private Tilemap walls_tilemap
+    {
+        get
+        {
+            if (_walls_tilemap == null) { _walls_tilemap = transform.Find("walls")?.GetComponent<Tilemap>(); }
+            return _walls_tilemap;
+        }
+    }
+    private Tilemap _carpet_tilemap;
+    private Tilemap carpet_tilemap
+    {
+        get
+        {
+            if (_carpet_tilemap == null) { _carpet_tilemap = transform.Find("carpet")?.GetComponent<Tilemap>(); }
+            return _carpet_tilemap;
+        }
+    }
+    private Tilemap _ground_tilemap;
+    private Tilemap ground_tilemap
+    {
+        get
+        {
+            if (_ground_tilemap == null) { _ground_tilemap = transform.Find("ground")?.GetComponent<Tilemap>(); }
+            return _ground_tilemap;
+        }
+    }
+
+    [Header("Tilemaps renderers")]
     private TilemapRenderer _carpet_renderer;
     private TilemapRenderer carpet_renderer
     {
@@ -34,8 +72,7 @@ public class Room : MonoBehaviour
             return _carpet_renderer;
         }
     }
-    public Tilemap ground_tilemap;
-    // private TilemapRenderer ground_renderer;
+
 
 
     // LOAD / UNLOAD
@@ -46,8 +83,8 @@ public class Room : MonoBehaviour
         this.transform.position = data.position;
 
         // load the colliders in the composite collider
-        room_collider.SetPath(0, data.collider_points.ToArray());
-        room_collider.enabled = true;
+        RoomCollider.SetPath(0, data.collider_points.ToArray());
+        RoomCollider.enabled = true;
 
         // load the tilemaps
         load_tilemaps();
@@ -70,7 +107,7 @@ public class Room : MonoBehaviour
         unload_tilemaps();
 
         // unload the collider
-        room_collider.enabled = false;
+        RoomCollider.enabled = false;
 
         // here we need to unload all the capables that we hold
         // -> interacts with CapableSystem
@@ -130,22 +167,27 @@ public class Room : MonoBehaviour
     {
         if (RoomSystem.Instance.log_tilemaps_loading) { Debug.Log("(Room) Loading tilemap: " + tilemap.name + " with bounds: " + bounds + " and tiles count: " + tiles.Length); }
 
+        
         // we count how many tiles we have in the data
-        string tile_count_log = "\n\nTiles :";
+        string tile_count_log = "";
         int non_null_tiles = 0;
-        for (int x = 0; x < bounds.size.x; x++)
+        if (RoomSystem.Instance.log_tilemaps_loading)
         {
-            for (int y = 0; y < bounds.size.y; y++)
+            tile_count_log = "\n\nTiles :";
+            for (int x = 0; x < bounds.size.x; x++)
             {
-                TileBase tile = tiles[x + y * bounds.size.x];
-                if (tile != null)
+                for (int y = 0; y < bounds.size.y; y++)
                 {
-                    tile_count_log += "\n   - x:" + x + " y:" + y + " tile:" + tile.name;
-                    non_null_tiles++;
-                }
-                else
-                {
-                    tile_count_log += "\n   - x:" + x + " y:" + y + " tile: (null)";
+                    TileBase tile = tiles[x + y * bounds.size.x];
+                    if (tile != null)
+                    {
+                        tile_count_log += "\n   - x:" + x + " y:" + y + " tile:" + tile.name;
+                        non_null_tiles++;
+                    }
+                    else
+                    {
+                        tile_count_log += "\n   - x:" + x + " y:" + y + " tile: (null)";
+                    }
                 }
             }
         }
@@ -156,25 +198,27 @@ public class Room : MonoBehaviour
         tilemap.CompressBounds();
 
         // we count how many tiles we have in the object now
-        tile_count_log = "\n\nTiles :";
-        non_null_tiles = 0;
-        for (int x = 0; x < bounds.size.x; x++)
+        if (RoomSystem.Instance.log_tilemaps_loading)
         {
-            for (int y = 0; y < bounds.size.y; y++)
+            tile_count_log = "\n\nTiles :";
+            non_null_tiles = 0;
+            for (int x = 0; x < bounds.size.x; x++)
             {
-                TileBase tile = tiles[x + y * bounds.size.x];
-                if (tile != null)
+                for (int y = 0; y < bounds.size.y; y++)
                 {
-                    tile_count_log += "\n   - x:" + x + " y:" + y + " tile:" + tile.name;
-                    non_null_tiles++;
-                }
-                else
-                {
-                    tile_count_log += "\n   - x:" + x + " y:" + y + " tile: (null)";
+                    TileBase tile = tiles[x + y * bounds.size.x];
+                    if (tile != null)
+                    {
+                        tile_count_log += "\n   - x:" + x + " y:" + y + " tile:" + tile.name;
+                        non_null_tiles++;
+                    }
+                    else
+                    {
+                        tile_count_log += "\n   - x:" + x + " y:" + y + " tile: (null)";
+                    }
                 }
             }
         }
-
 
         if (RoomSystem.Instance.log_tilemaps_loading) { Debug.Log("(Room) Tilemap loaded: " + tilemap.name + " with bounds: " + tilemap.cellBounds + " and " + non_null_tiles + " non-null tiles" + tile_count_log); }
     }
@@ -210,7 +254,8 @@ public class Room : MonoBehaviour
             position = this.transform.position,
 
             // set collider data
-            collider_points = new List<Vector2>(room_collider.GetPath(0)),
+            // collider_points = new List<Vector2>(RoomCollider.GetPath(0)),
+            collider_points = get_static_collider_points(),
 
             // set neighbours data
             neighbours_ids = data.neighbours_ids ?? new List<string>(),
@@ -285,6 +330,21 @@ public class Room : MonoBehaviour
         return tiles_data;
     }
 
+    protected List<Vector2> get_static_collider_points()
+    {
+        List<Vector2> points = new List<Vector2>();
+        if (RoomCollider == null) { return points; }
+        if (RoomCollider.pathCount == 0) { return points; }
+        points = new List<Vector2>(RoomCollider.GetPath(0));
+        
+        // we go through all the points and apply the collider' offset to get them real pos
+        for (int i = 0; i < points.Count; i++)
+        {
+            points[i] += RoomCollider.offset;
+        }
+
+        return points;
+    }
 
 
 
@@ -441,18 +501,37 @@ public class Room : MonoBehaviour
 
         // we get all the colliders that are currently overlapping with the room collider
         Collider2D[] colliders = new Collider2D[30];
-        int count = Physics2D.OverlapCollider(room_collider, contact_filter, colliders);
+        int count = Physics2D.OverlapCollider(RoomCollider, contact_filter, colliders);
         for (int i = 0; i < count; i++)
         {
             Collider2D collider = colliders[i];
             Capable capable = collider.GetComponent<Capable>();
             if (capable == null) { capable = collider.GetComponentInParent<Capable>(); }
             if (capable == null) { continue; }
-            
+
             // we found a capable !
-            if (capable is Movable) { overlapping_movables.Add(capable.data.id); }
-            else { overlapping_capables.Add(capable.data.id); }
+            if (capable is Movable) { overlapping_movables.Add(capable.GetStaticID()); }
+            else { overlapping_capables.Add(capable.GetStaticID()); }
         }
     }
+    public List<Capable> GetStaticOverlappingCapables()
+    {
+        List<Capable> overlapping_capables = new List<Capable>();
 
+        // we get all the colliders that are currently overlapping with the room collider
+        Collider2D[] colliders = new Collider2D[100];
+        int count = Physics2D.OverlapCollider(RoomCollider, contact_filter, colliders);
+        for (int i = 0; i < count; i++)
+        {
+            Collider2D collider = colliders[i];
+            Capable capable = collider.GetComponent<Capable>();
+            if (capable == null && collider.transform.parent != null) { capable = collider.transform.parent.GetComponent<Capable>(); }
+            if (capable == null && collider.transform.parent != null && collider.transform.parent.parent != null) { capable = collider.transform.parent.parent.GetComponent<Capable>(); }
+            if (capable == null) { continue; }
+            
+            // we found a capable !
+            overlapping_capables.Add(capable);
+        }
+        return overlapping_capables;
+    }
 }

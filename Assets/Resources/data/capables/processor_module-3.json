@@ -1,0 +1,80 @@
+﻿{
+    "<id>k__BackingField": "processor_module-3",
+    "kind": "Module_CPU",
+    "position": {
+        "x": 47.25,
+        "y": 33.0
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 24,
+    "tag": "Item",
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "processor_module",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            }
+        ],
+        "current_capacity": "",
+        "material_path": "materials/objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "layers": []
+    },
+    "inventory": {
+        "item_pools_data": []
+    },
+    "feet_data": {
+        "box_colliders": [],
+        "circle_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 25,
+                "used_for_pathfinding": false,
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.10000000149011612
+                },
+                "radius": 0.09000000357627869
+            }
+        ]
+    },
+    "capacities_ids": [
+        "hover-58"
+    ],
+    "effects": [],
+    "effects_ttl": [],
+    "reference": "module:cpu",
+    "color": {
+        "r": 0.4901960790157318,
+        "g": 0.8470588326454163,
+        "b": 0.8470588326454163,
+        "a": 1.0
+    },
+    "max_qty": 16,
+    "item_description": "the brain of your dummy laptop omg without me it is sooo stupid",
+    "is_grabbed": true
+}

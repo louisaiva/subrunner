@@ -1,0 +1,81 @@
+﻿{
+    "<id>k__BackingField": "shoes-2",
+    "kind": "Shoes",
+    "position": {
+        "x": 8.080448150634766,
+        "y": 4.2452545166015629
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "layer": 24,
+    "tag": "Item",
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "shoes",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            }
+        ],
+        "current_capacity": "",
+        "material_path": "materials/objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "layers": []
+    },
+    "inventory": {
+        "item_pools_data": []
+    },
+    "feet_data": {
+        "box_colliders": [],
+        "circle_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 25,
+                "used_for_pathfinding": false,
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.10000000149011612
+                },
+                "radius": 0.09000000357627869
+            }
+        ]
+    },
+    "capacities_ids": [
+        "hover-49",
+        "dodge-2"
+    ],
+    "effects": [],
+    "effects_ttl": [],
+    "reference": "shoes:carbon",
+    "color": {
+        "r": 0.7720177173614502,
+        "g": 0.9528301954269409,
+        "b": 0.3910199701786041,
+        "a": 1.0
+    },
+    "max_qty": 1,
+    "item_description": "brand new shoes, useful for running very very very fast i mean look at me i'm so fast omg",
+    "is_grabbed": true
+}

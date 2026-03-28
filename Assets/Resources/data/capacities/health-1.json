@@ -1,18 +1,19 @@
 ﻿{
     "<id>k__BackingField": "health-1",
-    "<owner_id>k__BackingField": "zombo-1",
+    "<owner_id>k__BackingField": "spider_4-1",
     "kind": "HealthCapacity",
     "local_position": {
         "x": 0.0,
         "y": 0.0
     },
     "layer": 23,
-    "tag": "Zombo",
-    "health": 28.0,
-    "max_health": 28,
+    "tag": "Spider",
+    "health": 15.0,
+    "max_health": 15,
     "regen_health": 0.0,
     "hurted_animation": "hurted",
-    "box_colliders": [
+    "box_colliders": [],
+    "circle_colliders": [
         {
             "local_position": {
                 "x": 0.0,
@@ -22,14 +23,10 @@
             "used_for_pathfinding": false,
             "is_trigger": true,
             "offset": {
-                "x": 0.017057806253433229,
-                "y": 0.0
+                "x": 0.0,
+                "y": -0.31990957260131838
             },
-            "size": {
-                "x": 0.4218003749847412,
-                "y": 0.6844788789749146
-            }
+            "radius": 0.18009042739868165
         }
-    ],
-    "circle_colliders": []
+    ]
 }

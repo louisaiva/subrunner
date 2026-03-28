@@ -42,7 +42,7 @@ public class SpawnCapacity : Capacity
     {
         // we spawn & load the entity
         GameObject entity = null;
-        if (CapableSystem.Instance != null)
+        if (CapableSystem.Instance != null && !string.IsNullOrEmpty(base_entity_id))
         {
             Capable entity_capable = CapableSystem.Instance.SpawnCapable(base_entity_id, this.Capable.data.id);
             if (entity_capable != null) { entity = entity_capable.gameObject; }

@@ -53,11 +53,19 @@ public class RoomVisualizer : MonoBehaviour
     }
 
     // VISUALS CREATION
-    public void CreateVisuals()
+    public void ClearVisuals()
     {
+        foreach (UILineRenderer liner in room_liners) { if (liner != null) { Destroy(liner.gameObject); } }
+        room_liners.Clear();
+    }
+    public void CreateVisuals(string level_id = null)
+    {
+        // if level id is null, we get the current level id from the LevelEngine
+        if (level_id == null) { level_id = LevelEngine.Instance.CurrentLevelID; }
+        if (level_id == null) { Debug.LogWarning($"(RoomVisualizer) Can't find the current level ID"); return; }
 
-        // grab all the rooms data in the RoomSystem
-        List<RoomData> rooms = RoomSystem.Instance.rooms_data.Values.ToList();
+        // grab the rooms data of the level from the LevelEngine
+        List<RoomData> rooms = LevelEngine.Instance.GetRoomsDataOfLevel(level_id);
 
         // and build a visual for each room
         foreach (RoomData room in rooms) { create_visu_for_room(room); }

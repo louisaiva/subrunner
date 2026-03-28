@@ -96,7 +96,7 @@ public class Capable : MonoBehaviour, Debuggable
         CapableData static_data = new CapableData
         {
             // set base data things
-            id = get_static_id(),
+            id = GetStaticID(),
             position = this.transform.position,
 
             // set the layer & tag
@@ -107,7 +107,7 @@ public class Capable : MonoBehaviour, Debuggable
             kind = GetType().Name,
 
             // we set the anim data
-            anim_data = AnimPlayer.GetStaticAnimData(),
+            anim_data = AnimPlayer?.GetStaticAnimData(),
 
             // we set the inventory
             inventory = Inventory?.GetStaticInventoryData(),
@@ -128,11 +128,10 @@ public class Capable : MonoBehaviour, Debuggable
         };
         return static_data;
     }
-    protected string get_static_id()
+    public string GetStaticID()
     {
-        string id = this.name;
-        if (this.data == null) { return id; }
-        if (string.IsNullOrEmpty(this.data.id)) { return id; }
+        if (this.data == null) { return this.name; }
+        if (string.IsNullOrEmpty(this.data.id)) { return this.name; }
         return this.data.id;
     }
     protected List<string> get_static_capacity_ids()

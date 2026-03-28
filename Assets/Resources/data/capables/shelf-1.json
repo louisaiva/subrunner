@@ -1,0 +1,76 @@
+﻿{
+    "<id>k__BackingField": "shelf-1",
+    "kind": "Shelf",
+    "position": {
+        "x": 0.0,
+        "y": 5.25
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 29,
+    "tag": "Untagged",
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "sphere",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            }
+        ],
+        "current_capacity": "",
+        "material_path": "materials/sprite_lit_default",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "layers": [
+            {
+                "skin": "blue_library_back",
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.25
+                },
+                "material_path": "materials/objects",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0
+            },
+            {
+                "skin": "blue_library_front",
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "material_path": "materials/objects",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0
+            }
+        ]
+    },
+    "inventory": {
+        "item_pools_data": []
+    },
+    "feet_data": {
+        "box_colliders": [],
+        "circle_colliders": []
+    },
+    "capacities_ids": [
+        "hover-110"
+    ],
+    "effects": [],
+    "effects_ttl": []
+}

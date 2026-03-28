@@ -1,0 +1,80 @@
+﻿{
+    "<id>k__BackingField": "apple_4-1",
+    "kind": "Food",
+    "position": {
+        "x": -3.0,
+        "y": 5.625
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 24,
+    "tag": "Item",
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "apple",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            }
+        ],
+        "current_capacity": "",
+        "material_path": "materials/objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "layers": []
+    },
+    "inventory": {
+        "item_pools_data": []
+    },
+    "feet_data": {
+        "box_colliders": [],
+        "circle_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 25,
+                "used_for_pathfinding": false,
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.10000000149011612
+                },
+                "radius": 0.09000000357627869
+            }
+        ]
+    },
+    "capacities_ids": [
+        "hover-2"
+    ],
+    "effects": [],
+    "effects_ttl": [],
+    "reference": "food:apple",
+    "color": {
+        "r": 0.8980392217636108,
+        "g": 0.2862745225429535,
+        "b": 0.2862745225429535,
+        "a": 1.0
+    },
+    "max_qty": 24,
+    "item_description": "just an old apple/. awful taste/. smells bad/./l a solid 8/10!",
+    "is_grabbed": true
+}
