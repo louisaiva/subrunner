@@ -232,7 +232,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         if (!link_ok)
         {
             if (log_loading_extended) { Debug.LogWarning($"(CapacityEngine - Load) Capacity '{data.id}' owner id '{data.owner_id}' does not match capable id '{capable_data.id}' for '{capable_data.id}' (if they matches, it means there are some Duplicates)"); }
-            return null;
+            // return null;
         }
 
         if (log_loading_extended) { Debug.Log($"(CapacityEngine - Load) Loading capacity '{data.id}' \n{data.GetDetails()}"); }

@@ -2,8 +2,8 @@
     "<id>k__BackingField": "chest-1",
     "kind": "Chest",
     "position": {
-        "x": 39.5,
-        "y": 14.5
+        "x": 0.38999998569488528,
+        "y": 3.6700000762939455
     },
     "orientation": {
         "x": 0.0,
@@ -65,17 +65,22 @@
                 "stacks_data": [
                     {
                         "items_ids": [
-                            "network_module-2"
+                            "shoes-1"
                         ]
                     },
                     {
                         "items_ids": [
-                            "storage_module-2"
+                            "bone-1"
                         ]
                     },
                     {
                         "items_ids": [
-                            "processor_module-2"
+                            "pastas-1"
+                        ]
+                    },
+                    {
+                        "items_ids": [
+                            "katana-1"
                         ]
                     }
                 ],
@@ -88,13 +93,31 @@
         ]
     },
     "feet_data": {
-        "box_colliders": [],
+        "box_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 29,
+                "used_for_pathfinding": true,
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.19611191749572755
+                },
+                "size": {
+                    "x": 1.442360281944275,
+                    "y": 0.375521183013916
+                }
+            }
+        ],
         "circle_colliders": []
     },
     "capacities_ids": [
-        "hover-43",
-        "open-6",
-        "close-6"
+        "hover-8",
+        "open-1",
+        "close-1"
     ],
     "effects": [],
     "effects_ttl": []

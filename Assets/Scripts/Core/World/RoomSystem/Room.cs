@@ -250,7 +250,7 @@ public class Room : MonoBehaviour
         RoomData new_data = new RoomData
         {
             // set base data things
-            id = get_static_id(),
+            id = GetStaticID(),
             position = this.transform.position,
 
             // set collider data
@@ -270,7 +270,7 @@ public class Room : MonoBehaviour
 
         return new_data;
     }
-    protected string get_static_id()
+    public string GetStaticID()
     {
         string id = this.name;
         if (this.data == null) { return id; }
@@ -329,7 +329,6 @@ public class Room : MonoBehaviour
         }
         return tiles_data;
     }
-
     protected List<Vector2> get_static_collider_points()
     {
         List<Vector2> points = new List<Vector2>();
@@ -345,8 +344,20 @@ public class Room : MonoBehaviour
 
         return points;
     }
-
-
+    public void AddStaticNeighbor(Room neighbor)
+    {
+        if (data.neighbours_ids.Contains(neighbor.GetStaticID())) { return; }
+        data.neighbours_ids.Add(neighbor.GetStaticID());
+    }
+    public void RemoveStaticNeighbor(Room neighbor)
+    {
+        if (!data.neighbours_ids.Contains(neighbor.GetStaticID())) { return; }
+        data.neighbours_ids.Remove(neighbor.GetStaticID());
+    }
+    public void ClearStaticNeighbors()
+    {
+        data.neighbours_ids.Clear();
+    }
 
 
 
@@ -534,4 +545,5 @@ public class Room : MonoBehaviour
         }
         return overlapping_capables;
     }
+    public Bounds GetStaticBounds() { return RoomCollider.bounds; }
 }
