@@ -60,12 +60,30 @@ public class RoomNodeEditor : MonoBehaviour
     {
         if (!Application.isEditor) { Destroy(this); return; }
         SceneView.duringSceneGui += OnScene;
+
+        // show / hide the node according to the current state of the room graph visibility
+        if (IsRoomGraphVisible) { Show(); }
+        else { Hide(); }
     }
     private void OnDisable()
     {
         SceneView.duringSceneGui -= OnScene;
     }
     
+
+    // SHOW HIDE
+    public void Show()
+    {
+        SpriteRenderer.enabled = true;
+        UnSelect();
+        Unhover();
+    }
+    public void Hide()
+    {
+        SpriteRenderer.enabled = false;
+        UnSelect();
+        Unhover();
+    }
 
     // UPDATE
     private void OnScene(SceneView scene_view)
@@ -80,7 +98,8 @@ public class RoomNodeEditor : MonoBehaviour
         if (!Selected)
         {
             Vector2 mouse_position = MouseWorldSceneWindow.CurrentMouseWorldPositionInSceneView;
-            if (Vector2.Distance(transform.position, mouse_position) <= hover_distance) { Hover(); }
+            if (mouse_position != Vector2.zero &&
+                Vector2.Distance(transform.position, mouse_position) <= hover_distance) { Hover(); }
             else { Unhover(); }
 
             // update the selection
@@ -220,7 +239,7 @@ public class RoomNodeEditor : MonoBehaviour
 
     // ROOMGRAPH TOOLS SETTINGS
     public const string RoomGraphVisibleMenuItemPath = "Tools/subrunner/Toggle Room Graph Scene Editor";
-    private static bool IsRoomGraphVisible = false;
+    public static bool IsRoomGraphVisible = false;
     [MenuItem(RoomGraphVisibleMenuItemPath)]
     public static void ToggleRoomGraph()
     {
@@ -229,15 +248,15 @@ public class RoomNodeEditor : MonoBehaviour
         if (IsRoomGraphVisible)
         {
             // we hide all the nodes and links in the scene
-            foreach (RoomNodeEditor node in nodes) { node.SpriteRenderer.enabled = false; node.UnSelect(); node.Unhover(); }
-            foreach (RoomLinkEditor link in links) { link.LineRenderer.enabled = false; }
+            foreach (RoomNodeEditor node in nodes) { node.Hide(); }
+            foreach (RoomLinkEditor link in links) { link.Hide(); }
             IsRoomGraphVisible = false;
         }
         else
         {
-            // we hide all the nodes and links in the scene
-            foreach (RoomNodeEditor node in nodes) { node.SpriteRenderer.enabled = true; node.UnSelect(); node.Unhover(); }
-            foreach (RoomLinkEditor link in links) { link.LineRenderer.enabled = true; }
+            // we show all the nodes and links in the scene
+            foreach (RoomNodeEditor node in nodes) { node.Show(); }
+            foreach (RoomLinkEditor link in links) { link.Show(); }
             IsRoomGraphVisible = true;
         }
         Menu.SetChecked(RoomGraphVisibleMenuItemPath, IsRoomGraphVisible);

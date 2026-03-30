@@ -1,4 +1,5 @@
 
+using Unity.VisualScripting;
 using UnityEngine;
 
 [ExecuteInEditMode, RequireComponent(typeof(LineRenderer))]
@@ -18,6 +19,14 @@ public class RoomLinkEditor : MonoBehaviour
         }
     }
 #if UNITY_EDITOR
+
+    private void OnEnable()
+    {
+        if (!Application.isEditor) { Destroy(this); return; }
+        // we show the link if the room graph is visible
+        if (RoomNodeEditor.IsRoomGraphVisible) { Show(); }
+        else { Hide(); }
+    }
 
     // INIT
     public void Init(RoomNodeEditor node_a, RoomNodeEditor node_b)
@@ -71,6 +80,16 @@ public class RoomLinkEditor : MonoBehaviour
             UnityEditor.EditorUtility.SetDirty(room_a);
             UnityEditor.EditorUtility.SetDirty(room_b);
         }
+    }
+
+    // SHOW HIDE
+    public void Show()
+    {
+        LineRenderer.enabled = true;
+    }
+    public void Hide()
+    {
+        LineRenderer.enabled = false;
     }
 
     // UPDATE NODE
