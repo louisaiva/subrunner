@@ -52,6 +52,7 @@ public class InputManager : MonoBehaviour
         inputs.any.Enable();
         inputs.menus.Enable();
         inputs.feedbacks.Enable();
+        inputs.settings.Enable();
 
         Invoke(nameof(set_callbacks), 0.2f); // slight delay to avoid issues on start
     }
@@ -61,6 +62,10 @@ public class InputManager : MonoBehaviour
         inputs.any.keyboard.performed += ctx => setInputType("keyboard");
         inputs.any.gamepad.performed += ctx => setInputType("gamepad");
         if (log) { Debug.Log("(InputManager) input type callbacks set"); }
+
+        // et certains listeners d'actions spécifiques
+        inputs.settings.F3.performed += ctx => SettingsManager.Instance.SetSetting("debug", 1 - SettingsManager.Instance.GetValue("debug"));
+        inputs.settings.F11.performed += ctx => SettingsManager.Instance.SetSetting("fullscreen", 1 - SettingsManager.Instance.GetValue("fullscreen"));
     }
 
     void Update()

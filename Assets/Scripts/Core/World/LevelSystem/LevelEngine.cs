@@ -21,6 +21,7 @@ public class LevelEngine : BSOD_System<LevelEngine>
             return current_level.data.id;
         }
     }
+    public Action<LevelData> OnLevelChange = delegate { };
 
     [Header("World levels")]
     public Dictionary<string, Level> world_levels;
@@ -111,6 +112,7 @@ public class LevelEngine : BSOD_System<LevelEngine>
         if (log_loading) { Debug.Log($"(LevelEngine) Level '{level_id}' loaded"); }
         current_level = new_level;
         OnLevelLoaded?.Invoke(current_level);
+        OnLevelChange?.Invoke(current_level.data);
     }
     public void UnloadLevel()
     {
@@ -163,5 +165,17 @@ public class LevelEngine : BSOD_System<LevelEngine>
     public Level[] GetWorldLevels()
     {
         return world_levels.Values.ToArray();
+    }
+    public Level GetLevelOfRoom(string room_id)
+    {
+        foreach (var kvp in world_levels)
+        {
+            if (kvp.Value.data.rooms_ids.Contains(room_id))
+            {
+                return kvp.Value;
+            }
+        }
+        if (!hide_no_level_warning) { Debug.LogWarning("(LevelEngine - GetLevelOfRoom) Level not found for room id: " + room_id); }
+        return null;
     }
 }

@@ -523,7 +523,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
             if (log_spawning) { Debug.LogError($"(CapableSystem - SpawnCapable) Failed to spawn capable. Data is null."); }
             return null;
         }
-        if (log_spawning) { Debug.Log($"(CapableSystem) Spawning {data.id} entity"); }
+        // if (log_spawning) { Debug.Log($"(CapableSystem) Spawning {data.id} entity"); }
 
         // 1. we load the new spawned capable
         Capable spawned_capable = load_capable(data);

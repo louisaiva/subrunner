@@ -2174,6 +2174,54 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "settings",
+            "id": "87cfc76d-cfea-408c-8121-c0c74503b659",
+            "actions": [
+                {
+                    "name": "F11",
+                    "type": "Button",
+                    "id": "e80e32d9-9c0f-4b7e-83f6-b6a3bb963ed1",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "F3",
+                    "type": "Button",
+                    "id": "fbc2a781-89e4-4372-a4d5-f97d5920c0b0",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "a729fa0e-41fe-4830-9ecd-d29a73eda86b",
+                    "path": "<Keyboard>/f11",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";keyboard",
+                    "action": "F11",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1ec83fbf-432c-45c1-9262-4a9e9d0fba15",
+                    "path": "<Keyboard>/f3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";keyboard",
+                    "action": "F3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

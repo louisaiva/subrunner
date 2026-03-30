@@ -16,8 +16,22 @@ using UnityEngine;
     // Capable management
     public List<string> capables_ids;
     public List<string> movables_ids;
-    // public List<string> IN_movables_ids; // movable waiting to go in, not stored in movables_ids yet
-    // public List<string> OUT_movables_ids; // movables that are going out (!) are still stored in movables_ids
+    public int TotalCapablesCount { get { return capables_ids.Count + movables_ids.Count; } }
+    public int TotalCapacitiesCount
+    {
+        get
+        {
+            // we get the capable data for each capable in the room and we sum their capacities count
+            List<CapableData> capables_data = CapableSystem.Instance.GetCapablesDataFromIDs(capables_ids);
+            capables_data.AddRange(CapableSystem.Instance.GetCapablesDataFromIDs(movables_ids));
+            int count = 0;
+            foreach (CapableData capable_data in capables_data)
+            {
+                count += capable_data.TotalCapacitiesCount;
+            }
+            return count;
+        }
+    }
     
     // tilemaps data
     public string[] tilebase_paths_used;

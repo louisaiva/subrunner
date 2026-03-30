@@ -2260,6 +2260,54 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""settings"",
+            ""id"": ""87cfc76d-cfea-408c-8121-c0c74503b659"",
+            ""actions"": [
+                {
+                    ""name"": ""F11"",
+                    ""type"": ""Button"",
+                    ""id"": ""e80e32d9-9c0f-4b7e-83f6-b6a3bb963ed1"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""F3"",
+                    ""type"": ""Button"",
+                    ""id"": ""fbc2a781-89e4-4372-a4d5-f97d5920c0b0"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""a729fa0e-41fe-4830-9ecd-d29a73eda86b"",
+                    ""path"": ""<Keyboard>/f11"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";keyboard"",
+                    ""action"": ""F11"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1ec83fbf-432c-45c1-9262-4a9e9d0fba15"",
+                    ""path"": ""<Keyboard>/f3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";keyboard"",
+                    ""action"": ""F3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -2374,6 +2422,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_feedbacks_RB = m_feedbacks.FindAction("RB", throwIfNotFound: true);
         m_feedbacks_LT = m_feedbacks.FindAction("LT", throwIfNotFound: true);
         m_feedbacks_LB = m_feedbacks.FindAction("LB", throwIfNotFound: true);
+        // settings
+        m_settings = asset.FindActionMap("settings", throwIfNotFound: true);
+        m_settings_F11 = m_settings.FindAction("F11", throwIfNotFound: true);
+        m_settings_F3 = m_settings.FindAction("F3", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -2384,6 +2436,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         UnityEngine.Debug.Assert(!m_menus.enabled, "This will cause a leak and performance issues, PlayerInputActions.menus.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_utils.enabled, "This will cause a leak and performance issues, PlayerInputActions.utils.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_feedbacks.enabled, "This will cause a leak and performance issues, PlayerInputActions.feedbacks.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_settings.enabled, "This will cause a leak and performance issues, PlayerInputActions.settings.Disable() has not been called.");
     }
 
     /// <summary>
@@ -3680,6 +3733,113 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="FeedbacksActions" /> instance referencing this action map.
     /// </summary>
     public FeedbacksActions @feedbacks => new FeedbacksActions(this);
+
+    // settings
+    private readonly InputActionMap m_settings;
+    private List<ISettingsActions> m_SettingsActionsCallbackInterfaces = new List<ISettingsActions>();
+    private readonly InputAction m_settings_F11;
+    private readonly InputAction m_settings_F3;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "settings".
+    /// </summary>
+    public struct SettingsActions
+    {
+        private @PlayerInputActions m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public SettingsActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "settings/F11".
+        /// </summary>
+        public InputAction @F11 => m_Wrapper.m_settings_F11;
+        /// <summary>
+        /// Provides access to the underlying input action "settings/F3".
+        /// </summary>
+        public InputAction @F3 => m_Wrapper.m_settings_F3;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_settings; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="SettingsActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(SettingsActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="SettingsActions" />
+        public void AddCallbacks(ISettingsActions instance)
+        {
+            if (instance == null || m_Wrapper.m_SettingsActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_SettingsActionsCallbackInterfaces.Add(instance);
+            @F11.started += instance.OnF11;
+            @F11.performed += instance.OnF11;
+            @F11.canceled += instance.OnF11;
+            @F3.started += instance.OnF3;
+            @F3.performed += instance.OnF3;
+            @F3.canceled += instance.OnF3;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="SettingsActions" />
+        private void UnregisterCallbacks(ISettingsActions instance)
+        {
+            @F11.started -= instance.OnF11;
+            @F11.performed -= instance.OnF11;
+            @F11.canceled -= instance.OnF11;
+            @F3.started -= instance.OnF3;
+            @F3.performed -= instance.OnF3;
+            @F3.canceled -= instance.OnF3;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="SettingsActions.UnregisterCallbacks(ISettingsActions)" />.
+        /// </summary>
+        /// <seealso cref="SettingsActions.UnregisterCallbacks(ISettingsActions)" />
+        public void RemoveCallbacks(ISettingsActions instance)
+        {
+            if (m_Wrapper.m_SettingsActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="SettingsActions.AddCallbacks(ISettingsActions)" />
+        /// <seealso cref="SettingsActions.RemoveCallbacks(ISettingsActions)" />
+        /// <seealso cref="SettingsActions.UnregisterCallbacks(ISettingsActions)" />
+        public void SetCallbacks(ISettingsActions instance)
+        {
+            foreach (var item in m_Wrapper.m_SettingsActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_SettingsActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="SettingsActions" /> instance referencing this action map.
+    /// </summary>
+    public SettingsActions @settings => new SettingsActions(this);
     private int m_xboxSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -4208,5 +4368,27 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnLB(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "settings" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="SettingsActions.AddCallbacks(ISettingsActions)" />
+    /// <seealso cref="SettingsActions.RemoveCallbacks(ISettingsActions)" />
+    public interface ISettingsActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "F11" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnF11(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "F3" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnF3(InputAction.CallbackContext context);
     }
 }

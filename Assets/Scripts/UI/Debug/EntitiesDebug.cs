@@ -4,13 +4,8 @@ using System.Collections.Generic;
 
 public class EntitiesDebug : MonoBehaviour, MultipleDebuggable
 {
-    // [SerializeField] TextMeshProUGUI debug_text;
     [SerializeField] private int capablesCount = 0; // all the capables in the world
-    // [SerializeField] private int corpsesCount = 0; // all the corpses in the world
-    // [SerializeField] private int beingsCount = 0; // all the beings in the world
     private Dictionary<string, int> capablesTypesCount = new Dictionary<string, int>(); // count of each type of beings
-    // [SerializeField] private int itemsCount = 0; // all the items in the world
-    // [SerializeField] private int grabbedItemsCount = 0; // all the grabbed items in the world
 
 
     // START
@@ -49,46 +44,6 @@ public class EntitiesDebug : MonoBehaviour, MultipleDebuggable
             capablesTypesCount.Remove(type);
         }
     }
-
-    // BEINGS
-    /* private void AddBeing(Being being)
-    {
-        beingsCount++;
-        string type = being.GetType().Name;
-        if (!capablesTypesCount.ContainsKey(type))
-        {
-            capablesTypesCount[type] = 0;
-        }
-        capablesTypesCount[type]++;
-    }
-    private void RemoveBeing(Being being)
-    {
-        beingsCount--;
-        string type = being.GetType().Name;
-        if (capablesTypesCount.ContainsKey(type))
-        {
-            capablesTypesCount[type]--;
-            if (capablesTypesCount[type] <= 0)
-            {
-                capablesTypesCount.Remove(type);
-            }
-        }
-    }
-
-    // ITEMS
-    private void AddItem(Item item)
-    {
-        itemsCount++;
-        if (item.Grabbed) { grabbedItemsCount++; }
-
-        item.OnGrabbed += (it, holder) => { grabbedItemsCount++; };
-        item.OnDropped += (it) => { grabbedItemsCount--; };
-    }
-    private void RemoveItem(Item item)
-    {
-        itemsCount--;
-        if (item.Grabbed) { grabbedItemsCount--; }
-    } */
 
     // DEBUGGABLE
     public string GetDebugText()

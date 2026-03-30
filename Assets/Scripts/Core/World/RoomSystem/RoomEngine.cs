@@ -19,7 +19,7 @@ public class RoomEngine : BSOD_System<RoomEngine>
     private int next_room_hash = 1;
     public Dictionary<string, RoomData> loaded_rooms_data = new Dictionary<string, RoomData>();
     public RoomData main_room_data; // the main room is the one where the perso is, we need to keep track of it to know which room to load when the perso changes room
-
+    public Action<RoomData> OnRoomChange = delegate { };
 
 
     // CAPABLES PER ROOMS
@@ -29,6 +29,8 @@ public class RoomEngine : BSOD_System<RoomEngine>
     private Dictionary<string, HashSet<string>> roomByCapableIDs = new Dictionary<string, HashSet<string>>(); // we keep track of all capables in each room (capables + movables)
     private Dictionary<string, int> dirtyCapablesIDs = new Dictionary<string, int>(); // capables that don't have any room assigned / just changed rooms, waiting for new assignment. the int is a priority flag
     private Dictionary<string, Dictionary<string, ScoreBiasState>> room_score_biases = new Dictionary<string, Dictionary<string, ScoreBiasState>>();
+    public Action<string, RoomData> OnCapableAddedToRoom = delegate { };
+    public Action<string, RoomData> OnCapableRemovedFromRoom = delegate { };
 
 
     // PARAMETERS & LOGS
@@ -51,6 +53,7 @@ public class RoomEngine : BSOD_System<RoomEngine>
     [Header("Log ticks")]
     public bool log_ticks = false;
     public bool log_room_transfers = false;
+    public bool log_loaded_area_transfers = false;
     public bool log_best_match_calcul = false;
     public bool log_spatial_queries = false;
     public bool log_neighbours = false;
@@ -256,6 +259,9 @@ public class RoomEngine : BSOD_System<RoomEngine>
         // we add the capable to the room's data
         if (!is_movable && !room.capables_ids.Contains(entity_id)) { room.capables_ids.Add(entity_id); }
         else if (is_movable && !room.movables_ids.Contains(entity_id)) { room.movables_ids.Add(entity_id); }
+
+        // we invoke the event
+        OnCapableAddedToRoom?.Invoke(entity_id, room);
     }
     /// <summary>
     /// this method removes the capable id from the room data and from the room engine dicts.
@@ -274,6 +280,9 @@ public class RoomEngine : BSOD_System<RoomEngine>
         // we remove the capable from the room's data
         if (room.capables_ids.Contains(entity_id)) { room.capables_ids.Remove(entity_id); }
         if (room.movables_ids.Contains(entity_id)) { room.movables_ids.Remove(entity_id); }
+
+        // we invoke the event
+        OnCapableRemovedFromRoom?.Invoke(entity_id, room);
     }
 
 
@@ -358,6 +367,7 @@ public class RoomEngine : BSOD_System<RoomEngine>
     // TICK
     private List<string> dirty_capables_ids = new List<string>();
     private List<RoomData> room_candidates = new List<RoomData>();
+    private List<string> capables_to_unload = new List<string>();
     protected void Tick()
     {
         // . we get the highest priority dirty capables
@@ -369,6 +379,8 @@ public class RoomEngine : BSOD_System<RoomEngine>
 
         string log_tick = "";
         if (log_ticks) { log_tick += $"(RoomEngine - Tick) Handling {dirty_capables_ids.Count} dirty capables : "; }
+
+        capables_to_unload.Clear();
 
         // . we handle them
         foreach (string capable_id in dirty_capables_ids)
@@ -412,7 +424,18 @@ public class RoomEngine : BSOD_System<RoomEngine>
             if (current_room != null) { removeCapableFromRoom(capable_id, current_room); }
             addCapableToRoom(capable_id, best_room, CapableSystem.Instance.IsMovable(capable_id));
             if (log_ticks) { log_tick += $"    - TRANSFERED TO NEW ROOM !!! : {best_room.id}\n"; }
+
+            // check if the new room is unloaded and if yes we need to unload the entity as well
+            if (!loaded_rooms_data.ContainsKey(best_room.id))
+            {
+                if (log_ticks) { log_tick += $"    - new room is not loaded, adding entity to unload list... \n"; }
+                if (log_loaded_area_transfers) { Debug.Log($"(RoomEngine) [{out_room_id}] >> {capable_id} >> [{in_room_id}]      (quit loaded area)"); }
+                capables_to_unload.Add(capable_id);
+            }
         }
+
+        // we unload the entities that need to be unloaded
+        CapableSystem.Instance.UnloadCapables(capables_to_unload);
 
         // . we remove the handled capables from the dirty list
         foreach (string capable_id in dirty_capables_ids)
@@ -473,6 +496,13 @@ public class RoomEngine : BSOD_System<RoomEngine>
             // check if the capable is inside the AABB
             Vector2 capable_position = CapableSystem.Instance.GetCapablePosition(capable_id);
             Bounds2D bounds = spatial_map.GetRoomBounds(rdata.id);
+
+            // if inside bounds we give +100 score
+            if (bounds.Contains(capable_position))
+            {
+                score += 100f;
+                if (log_best_match_calcul) { log += $"    - inside bounds, score is now {score} \n"; }
+            }
 
 
             float distance = Vector2.Distance(bounds.center, capable_position);
@@ -538,6 +568,7 @@ public class RoomEngine : BSOD_System<RoomEngine>
         }
 
         main_room_data = to_room;
+        OnRoomChange.Invoke(to_room);
 
         // . load the new rooms and unload old ones.
         LoadRooms(rooms_to_load.ToArray());
