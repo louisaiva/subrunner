@@ -165,13 +165,13 @@ public class Room : MonoBehaviour
     }
     protected void set_tilemap(Tilemap tilemap, TileBase[] tiles, BoundsInt bounds)
     {
-        if (RoomSystem.Instance.log_tilemaps_loading) { Debug.Log("(Room) Loading tilemap: " + tilemap.name + " with bounds: " + bounds + " and tiles count: " + tiles.Length); }
+        if (RoomEngine.Instance.log_tilemaps_loading) { Debug.Log("(Room) Loading tilemap: " + tilemap.name + " with bounds: " + bounds + " and tiles count: " + tiles.Length); }
 
         
         // we count how many tiles we have in the data
         string tile_count_log = "";
         int non_null_tiles = 0;
-        if (RoomSystem.Instance.log_tilemaps_loading)
+        if (RoomEngine.Instance.log_tilemaps_loading)
         {
             tile_count_log = "\n\nTiles :";
             for (int x = 0; x < bounds.size.x; x++)
@@ -198,7 +198,7 @@ public class Room : MonoBehaviour
         tilemap.CompressBounds();
 
         // we count how many tiles we have in the object now
-        if (RoomSystem.Instance.log_tilemaps_loading)
+        if (RoomEngine.Instance.log_tilemaps_loading)
         {
             tile_count_log = "\n\nTiles :";
             non_null_tiles = 0;
@@ -220,7 +220,7 @@ public class Room : MonoBehaviour
             }
         }
 
-        if (RoomSystem.Instance.log_tilemaps_loading) { Debug.Log("(Room) Tilemap loaded: " + tilemap.name + " with bounds: " + tilemap.cellBounds + " and " + non_null_tiles + " non-null tiles" + tile_count_log); }
+        if (RoomEngine.Instance.log_tilemaps_loading) { Debug.Log("(Room) Tilemap loaded: " + tilemap.name + " with bounds: " + tilemap.cellBounds + " and " + non_null_tiles + " non-null tiles" + tile_count_log); }
     }
     protected void unload_tilemaps()
     {
@@ -424,13 +424,13 @@ public class Room : MonoBehaviour
         if (Controller.Instance.Capable != capable && !CapableBank.Instance.HasCapable(capable)) { return; }
         string id = capable.data.id;
 
-        // check if we are not already in the movables or capable + if we are not doing IN-OUT in the same room
+        /* // check if we are not already in the movables or capable + if we are not doing IN-OUT in the same room
         bool in_movables = data.movables_ids.Contains(id) || data.capables_ids.Contains(id);
         bool in_out_movables = data.OUT_movables_ids.Contains(id);
         if (in_movables && !in_out_movables)
         {
             // if the capable is already in the room and has not gone out of the room, it means it teleported (happens on awake)
-            if (RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Ignored IN - " + id + " (should happen on a capable spawn otherwise it s weird)"); }
+            if (RoomEngine.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Ignored IN - " + id + " (should happen on a capable spawn otherwise it s weird)"); }
             return;
         }
         if (in_movables && in_out_movables)
@@ -439,25 +439,29 @@ public class Room : MonoBehaviour
             // so we simply remove both in and out for this capable
             data.OUT_movables_ids.Remove(id);
             data.IN_movables_ids.Remove(id);
-            if (RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Ignored OUT then IN - " + id); }
+            if (RoomEngine.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Ignored OUT then IN - " + id); }
             return;
         }
 
         // check if we are not already in the IN then it means we have 2 IN -> we put it directly in the movables
         if (data.IN_movables_ids.Contains(id))
         {
-            /* data.IN_movables_ids.Remove(id);
+             data.IN_movables_ids.Remove(id);
 
             // check is capable or movable and add it to the right list
             if (capable is Movable) { data.movables_ids.Add(id); }
             else {data.capables_ids.Add(id); }
-            if (RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Grabbed 2x IN - " + id); } */
+            if (RoomEngine.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Grabbed 2x IN - " + id); } 
             return;
         }
 
         // capable enters !
-        data.IN_movables_ids.Add(id);
-        if (RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) IN - " + id); }
+        data.IN_movables_ids.Add(id); */
+        
+        // directly call RoomEngine.OnRoomEnter
+        RoomEngine.Instance.OnRoomEnter(this.data, capable);
+
+        if (RoomEngine.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) IN - " + id); }
     }
     protected virtual void OnTriggerExit2D(Collider2D collider)
     {
@@ -473,20 +477,24 @@ public class Room : MonoBehaviour
 
         // check some bools
         // bool in_movables = data.movables_ids.Contains(capable.data.id);
-        bool in_out_movables = data.IN_movables_ids.Contains(capable.data.id);
+        /* bool in_out_movables = data.IN_movables_ids.Contains(capable.data.id);
         if (in_out_movables)
         {
             // if the capable is in the OUT list and in the movables one it means it went out, did not find any other room to go to, and came back to main room,
             // so we simply remove both in and out for this capable
             data.IN_movables_ids.Remove(capable.data.id);
             data.OUT_movables_ids.Remove(capable.data.id);
-            if (RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Ignored IN then OUT - " + capable.data.id); }
+            if (RoomEngine.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Ignored IN then OUT - " + capable.data.id); }
             return;
         }
 
         // capable exits !
-        data.OUT_movables_ids.Add(capable.data.id);
-        if (RoomSystem.Instance != null && RoomSystem.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) OUT - " + capable.data.id); }
+        data.OUT_movables_ids.Add(capable.data.id); */
+
+        // directly call RoomEngine.OnRoomExit
+        RoomEngine.Instance.OnRoomExit(this.data, capable);
+
+        if (RoomEngine.Instance != null && RoomEngine.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) OUT - " + capable.data.id); }
     }
 
 

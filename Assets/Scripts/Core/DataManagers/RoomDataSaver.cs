@@ -43,25 +43,25 @@ public class RoomDataSaver : MonoBehaviour
             if (GUILayout.Button("Load Rooms"))
             {
                 // check if we have a RoomSystem & RoomBank
-                RoomSystem room_system;
-                if (RoomSystem.Instance == null)
+                RoomEngine room_system;
+                if (RoomEngine.Instance == null)
                 {
-                    room_system = FindFirstObjectByType<RoomSystem>();
+                    room_system = FindFirstObjectByType<RoomEngine>();
                     room_system.Awake();
                     FindFirstObjectByType<RoomBank>().Awake();
                 }
 
                 // load all rooms from system
-                room_system = RoomSystem.Instance;
+                room_system = RoomEngine.Instance;
                 room_system.LoadRooms(saver.rooms_to_load.ToArray());
             }
             if (GUILayout.Button("Unload Rooms"))
             {
                 // check if we have a RoomSystem
-                if (RoomSystem.Instance == null) { return; }
+                if (RoomEngine.Instance == null) { return; }
 
                 // unload all rooms from system
-                RoomSystem.Instance.UnloadAllRooms();
+                RoomEngine.Instance.UnloadAllRooms();
                 RoomBank.Instance.DestroyPooledRooms();
             }
 

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
 using Unity.Jobs;
+using System;
 
-public class RoomSystem : BSOD_System<RoomSystem>
+[Obsolete("Use RoomEngine instead")] public class RoomSystem : BSOD_System<RoomSystem>
 {
     [Header("Rooms data")]
     private string data_path = "data/rooms/";
@@ -33,13 +34,13 @@ public class RoomSystem : BSOD_System<RoomSystem>
     public bool log_loading = false;
     public bool log_neighbours = false;
     public bool log_room_transfers = false;
-    public bool log_ticks = false;
+    // public bool log_ticks = false;
     public bool log_dynamic_room_assignement = false;
     public bool hide_log_no_room_of_capable_found = false;
 
-    [Header("Room Logs")]
-    public bool log_tilemaps_loading = false;
-    public bool log_colliders = false;
+    // [Header("Room Logs")]
+    // public bool log_tilemaps_loading = false;
+    // public bool log_colliders = false;
 
 
     // AWAKE
@@ -243,7 +244,7 @@ public class RoomSystem : BSOD_System<RoomSystem>
             }
             
             // wipe out the IN data
-            room_data.IN_movables_ids.Clear();
+            // room_data.IN_movables_ids.Clear();
 
             for (int j = 0; j < frames_between_room_overlap_checks; j++) { await System.Threading.Tasks.Task.Yield(); }
         }
@@ -251,143 +252,6 @@ public class RoomSystem : BSOD_System<RoomSystem>
         init_done = true;
         if (log_init) { Debug.Log("(RoomSystem) Init done and started ticking"); }
     }
-
-    // OLD TICK
-    /* protected virtual void Tick2()
-    {
-
-        // if (log_ticks) { Debug.Log("(RoomSystem) Tick called"); }
-
-        // 1. find all capables that changes room
-        RoomData room;
-        Dictionary<RoomData, string> movables_IN = new Dictionary<RoomData, string>(); // RoomData, CapableID
-        Dictionary<RoomData, string> movables_OUT = new Dictionary<RoomData, string>(); // RoomData, CapableID
-        ICollection rooms_ids = rooms_data.Keys;
-        foreach (string room_id in rooms_ids)
-        {
-            room = rooms_data[room_id];
-            for (int j = 0; j < room.IN_movables_ids.Count; j++)
-            {
-                string capable_id = room.IN_movables_ids[j];
-                movables_IN[room] = capable_id;
-            }
-            for (int j = 0; j < room.OUT_movables_ids.Count; j++)
-            {
-                string capable_id = room.OUT_movables_ids[j];
-                movables_OUT[room] = capable_id;
-            }
-        }
-        if (log_ticks && log_room_transfers) { log_in_out(movables_IN, movables_OUT); }
-
-        // 2. find existing IN & OUT pairs 
-        List<string> capable_ids = new List<string>(); // is it better to use Stack ?
-        List<RoomData> out_rooms = new List<RoomData>();
-        List<RoomData> in_rooms = new List<RoomData>();
-        foreach (KeyValuePair<RoomData, string> pair in movables_OUT)
-        {
-            string capable_id = pair.Value;
-            RoomData out_room = pair.Key;
-
-            // we cycle through all the in rooms to see if we have a matching pair
-            foreach (KeyValuePair<RoomData, string> pair2 in movables_IN)
-            {
-                // we make sure that the movable is not going from and to the same room
-                if (pair2.Value == capable_id && pair2.Key != out_room)
-                {
-                    RoomData in_room = pair2.Key;
-                    capable_ids.Add(capable_id);
-                    out_rooms.Add(out_room);
-                    in_rooms.Add(in_room);
-                }
-            }
-        }
-        if (log_room_transfers)
-        {
-            for (int i = 0; i < capable_ids.Count; i++)
-            {
-                string capable_id = capable_ids[i];
-                RoomData out_room = out_rooms[i];
-                RoomData in_room = in_rooms[i];
-                Debug.Log($"(RoomSystem) {capable_id} exits {out_room.id} for {in_room.id}");
-            }
-        }
-
-        // 3. update rooms data with the capable changes
-        foreach (string room_id in rooms_ids)
-        {
-            room = rooms_data[room_id];
-            if (out_rooms.Contains(room))
-            {
-                int index = out_rooms.IndexOf(room);
-                string capable_id = capable_ids[index];
-                room.movables_ids.Remove(capable_id);
-                room.OUT_movables_ids.Remove(capable_id);
-            }
-            if (in_rooms.Contains(room))
-            {
-                int index = in_rooms.IndexOf(room);
-                string capable_id = capable_ids[index];
-                room.movables_ids.Add(capable_id);
-                room.IN_movables_ids.Remove(capable_id);
-            }
-        }
-
-        // 4. check if perso changed room if yes we need to load / unload some rooms
-        bool perso_changed_room = false;
-        RoomData perso_new_room = null;
-        for (int i=0; i<capable_ids.Count; i++)
-        {
-            // check if is perso
-            if (Controller.Instance.ControlledID != capable_ids[i]) { continue; }
-            
-            perso_changed_room = true;
-            perso_new_room = in_rooms[i];
-        }
-        if (!perso_changed_room) { return; }
-
-        // 5. Find rooms to Load / Unload
-        Stack<string> rooms_to_unload = new Stack<string>();
-        Stack<string> rooms_to_load = new Stack<string>();
-        List<string> new_neighbours_ids = GetNeighboursIDs(perso_new_room);
-        ICollection loaded_rooms_ids = loaded_rooms_data.Keys;
-        foreach (string loaded_room_id in loaded_rooms_ids)
-        {
-            if (loaded_room_id == perso_new_room.id) { continue; }
-
-            // we check if the room is in the new neighbours
-            if (!new_neighbours_ids.Contains(loaded_room_id)) { rooms_to_unload.Push(loaded_room_id); }
-        }
-        for (int i = 0; i < new_neighbours_ids.Count; i++)
-        {
-            string neigh_id = new_neighbours_ids[i];
-            if (neigh_id == perso_new_room.id) { continue; }
-
-            // we check if the room is already loaded
-            if (!loaded_rooms_data.ContainsKey(neigh_id)) { rooms_to_load.Push(neigh_id); }
-        }
-
-        main_room_data = perso_new_room;
-
-        // 6. We load the new rooms and unload the old ones
-        loadRooms(rooms_to_load.ToArray());
-        unloadRooms(rooms_to_unload.ToArray());
-    }
-    protected void log_in_out(Dictionary<RoomData, string> into, Dictionary<RoomData, string> from)
-    {
-        string log = "(RoomSystem) IN/OUT : \n IN :";
-        foreach (KeyValuePair<RoomData, string> pair in into)
-        {
-            log += $"\n   - {pair.Value} : {pair.Key.id}";
-        }
-        log += "\n\n OUT :";
-        foreach (KeyValuePair<RoomData, string> pair in from)
-        {
-            log += $"\n   - {pair.Value} in {pair.Key.id}";
-        }
-        Debug.Log(log);
-    }
-
-    */
 
     // TICK
     protected virtual void Tick()
@@ -402,7 +266,7 @@ public class RoomSystem : BSOD_System<RoomSystem>
         CapableSystem capable_system = CapableSystem.Instance;
         RoomData data;
         int room_hash;
-        int movable_hash;
+        // int movable_hash;
         foreach (KeyValuePair<string, RoomData> pair in rooms_data)
         {
             room_hash = GetRoomHashFromID(pair.Key);
@@ -410,8 +274,8 @@ public class RoomSystem : BSOD_System<RoomSystem>
             data = pair.Value;
 
             // we add range IN to IN
-            for (int i=0; i<data.IN_movables_ids.Count; i++)
-            {
+            // for (int i=0; i<data.IN_movables_ids.Count; i++)
+            /* {
                 movable_hash = capable_system.GetCapableHashFromID(data.IN_movables_ids[i]);
                 if (movable_hash == 0) { continue; }
                 rooms_movables_IN.Add(room_hash, movable_hash);
@@ -423,7 +287,7 @@ public class RoomSystem : BSOD_System<RoomSystem>
                 movable_hash = capable_system.GetCapableHashFromID(data.OUT_movables_ids[i]);
                 if (movable_hash == 0) { continue; }
                 rooms_movables_OUT.Add(movable_hash, room_hash);
-            }
+            } */
         }
 
         // 3. create and execute the job :)
@@ -455,11 +319,11 @@ public class RoomSystem : BSOD_System<RoomSystem>
 
             // OUT room: transition consumed, movable is no longer inside that room.
             out_room.movables_ids.Remove(movable_id);
-            out_room.OUT_movables_ids.Remove(movable_id);
+            // out_room.OUT_movables_ids.Remove(movable_id);
 
             // IN room: transition consumed, movable is now inside that room.
             if (!in_room.movables_ids.Contains(movable_id)) { in_room.movables_ids.Add(movable_id); }
-            in_room.IN_movables_ids.Remove(movable_id);
+            // in_room.IN_movables_ids.Remove(movable_id);
 
             if (movable_id == controlled_id)
             {
@@ -601,7 +465,7 @@ public class RoomSystem : BSOD_System<RoomSystem>
 
         // 3. check if the entity is somewhere else in the room
         if (room.OUT_movables_ids.Contains(id)) { room.OUT_movables_ids.Remove(id); }
-        if (room.IN_movables_ids.Contains(id)) { room.IN_movables_ids.Remove(id); } */
+        // if (room.IN_movables_ids.Contains(id)) { room.IN_movables_ids.Remove(id); } */
 
         if (log_dynamic_room_assignement) { Debug.Log($"(RoomSystem) Detached {id} from {room.id}"); }
     }
@@ -609,8 +473,8 @@ public class RoomSystem : BSOD_System<RoomSystem>
     {
         room.movables_ids.RemoveAll(ID => ID == id);
         room.capables_ids.RemoveAll(ID => ID == id);
-        room.IN_movables_ids.RemoveAll(ID => ID == id);
-        room.OUT_movables_ids.RemoveAll(ID => ID == id);
+        // room.IN_movables_ids.RemoveAll(ID => ID == id);
+        // room.OUT_movables_ids.RemoveAll(ID => ID == id);
     }
 
     // GETTERS

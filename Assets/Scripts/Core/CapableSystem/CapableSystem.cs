@@ -282,14 +282,14 @@ public class CapableSystem : BSOD_System<CapableSystem>
     {
         if (capable.data == null) { return false; }
         if (string.IsNullOrEmpty(capable.data.id)) { return false; }
-        
+
         // we check if we have the id in the system
         if (!world_capables_data.ContainsKey(capable.data.id)) { return false; }
         CapableData data = world_capables_data[capable.data.id];
 
         // we verify that the id is not already in a room, if yes we don't want to remove the data
         // since we will need it when the room are loaded.
-        if (RoomSystem.Instance.IsInARoom(data.id)) { return false; }
+        if (RoomEngine.Instance.IsInARoom(data.id)) { return false; }
 
         // we remove the grabbed items since they don't have a room
         if (data is ItemData item_data && item_data.is_grabbed) { return false; }
@@ -843,5 +843,42 @@ public class CapableSystem : BSOD_System<CapableSystem>
             data_list.Add(world_capables_data[id]);
         }
         return data_list;
+    }
+    public bool IsMovable(string id)
+    {
+        if (!world_capables_data.TryGetValue(id, out CapableData data))
+        {
+            if (!hide_log_no_data_found) { Debug.LogWarning("(CapableSystem - IsMovable) Capable data not found for id: " + id); }
+            return false;
+        }
+
+        return GameManager.IsKind(data.kind,"Movable");
+    }
+    public CapableData GetCapableDataFromID(string id)
+    {
+        if (!world_capables_data.TryGetValue(id, out CapableData data))
+        {
+            if (!hide_log_no_data_found) { Debug.LogWarning("(CapableSystem - GetCapableDataFromID) Capable data not found for id: " + id); }
+            return null;
+        }
+        return data;
+    }
+    public Vector2 GetCapablePosition(string id)
+    {
+        // check if loaded then we return the position of the transform (more precise and up to date)
+        if (HasLoadedCapableData(id))
+        {
+            Capable capable = CapableBank.Instance.GetLoadedCapable(id);
+            if (capable != null) { return capable.transform.position; }
+        }
+        else if (TryGetOutsider(id, out Capable outsider)) // if loaded & outsider we can't use the bank, so we use this
+        {
+            return outsider.transform.position;
+        }
+
+        // else return the position from the data (may be outdated)
+        CapableData data = GetCapableDataFromID(id);
+        if (data == null) { return Vector2.zero; }
+        return data.position;
     }
 }

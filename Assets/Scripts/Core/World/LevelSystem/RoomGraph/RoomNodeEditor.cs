@@ -1,10 +1,10 @@
 
 using UnityEngine;
+using System;
+using System.Collections.Generic;
 #if UNITY_EDITOR
 using My.Common.Scripts.Editor;
 using UnityEditor;
-using System;
-using System.Collections.Generic;
 #endif
 
 [ExecuteInEditMode, RequireComponent(typeof(SpriteRenderer))]

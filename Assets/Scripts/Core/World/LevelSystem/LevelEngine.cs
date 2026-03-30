@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class LevelEngine : BSOD_System<LevelEngine>
@@ -21,8 +22,8 @@ public class LevelEngine : BSOD_System<LevelEngine>
         }
     }
 
-    [Header("Pooled levels")]
-    public Dictionary<string, Level> pooled_levels;
+    [Header("World levels")]
+    public Dictionary<string, Level> world_levels;
     public Level level_prefab;
     public Transform level_parent;
 
@@ -68,7 +69,7 @@ public class LevelEngine : BSOD_System<LevelEngine>
     protected void createLevels()
     {
         // we empty the pooled levels
-        pooled_levels = new Dictionary<string, Level>();
+        world_levels = new Dictionary<string, Level>();
         foreach (KeyValuePair<string, LevelData> entry in levels_data)
         {
             Level level = create_level(entry.Value);
@@ -80,7 +81,7 @@ public class LevelEngine : BSOD_System<LevelEngine>
         // we instanciate a new level and assign the data to it
         Level new_level = Instantiate(level_prefab, level_parent);
         new_level.data = data;
-        pooled_levels.Add(data.id, new_level);
+        world_levels.Add(data.id, new_level);
         return new_level;
     }
 
@@ -95,8 +96,8 @@ public class LevelEngine : BSOD_System<LevelEngine>
     public Action<Level> OnLevelLoaded = delegate { };
     public void LoadLevel(string level_id)
     {
-        if (!pooled_levels.ContainsKey(level_id)) { if (!hide_no_level_warning) { Debug.LogWarning("(LevelEngine - Load) Level data not found for id: " + level_id); } return; }
-        Level new_level = pooled_levels[level_id];
+        if (!world_levels.ContainsKey(level_id)) { if (!hide_no_level_warning) { Debug.LogWarning("(LevelEngine - Load) Level data not found for id: " + level_id); } return; }
+        Level new_level = world_levels[level_id];
 
         // we unload the current level if there is one
         if (current_level != null)
@@ -128,7 +129,7 @@ public class LevelEngine : BSOD_System<LevelEngine>
             return new List<RoomData>();
         }
         List<string> room_ids = levels_data[level_id].rooms_ids;
-        List<RoomData> room_datas = RoomSystem.Instance.GetRoomsDataFromIDs(room_ids);
+        List<RoomData> room_datas = RoomEngine.Instance.GetRoomsDataFromIDs(room_ids);
         return room_datas;
     }
     public List<CapableData> GetCapablesDataOfLevel(string level_id)
@@ -158,5 +159,9 @@ public class LevelEngine : BSOD_System<LevelEngine>
         // we get the capable data from the ids
         List<CapableData> capable_datas = CapableSystem.Instance.GetCapablesDataFromIDs(capable_ids);
         return capable_datas;
+    }
+    public Level[] GetWorldLevels()
+    {
+        return world_levels.Values.ToArray();
     }
 }

@@ -16,8 +16,8 @@ using UnityEngine;
     // Capable management
     public List<string> capables_ids;
     public List<string> movables_ids;
-    public List<string> IN_movables_ids; // movable waiting to go in, not stored in movables_ids yet
-    public List<string> OUT_movables_ids; // movables that are going out (!) are still stored in movables_ids
+    // public List<string> IN_movables_ids; // movable waiting to go in, not stored in movables_ids yet
+    // public List<string> OUT_movables_ids; // movables that are going out (!) are still stored in movables_ids
     
     // tilemaps data
     public string[] tilebase_paths_used;

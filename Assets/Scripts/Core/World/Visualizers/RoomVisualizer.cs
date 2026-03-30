@@ -18,7 +18,7 @@ public class RoomVisualizer : MonoBehaviour
     public Vector2 CalculateWorldCenter(out Vector2 extents)
     {
         // grab all the rooms data in the RoomSystem
-        List<RoomData> rooms = RoomSystem.Instance.rooms_data.Values.ToList();
+        List<RoomData> rooms = RoomEngine.Instance.rooms_data.Values.ToList();
 
         // compute the world bounds of all rooms to set the size of our canvas accordingly
         Bounds world_bounds = compute_world_bounds(rooms);
