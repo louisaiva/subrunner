@@ -12,6 +12,7 @@ public class Food : Item, Usable
     {
         OnBeingBitten?.Invoke(eater);
         Destroy(gameObject);
+        // todo adapt this to the CapableSystem with proper unloading
     }
     public string UseLabel { get; } = "eat";
     public void Use(Capable user)
@@ -24,4 +25,6 @@ public class Food : Item, Usable
         eat_capacity.SetFoodTarget(this);
         eat_capacity.Use(user);
     }
+
+    // todo : make this more with multiple food portions
 }

@@ -1,5 +1,7 @@
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using CrashKonijn.Agent.Core;
 using CrashKonijn.Agent.Runtime;
 using CrashKonijn.Goap.Core;
@@ -52,6 +54,8 @@ public class MotorCapacity : Capacity
         }
     }
 
+    private MotorData mdata => (MotorData)data;
+
     // AWAKE
     private void Awake()
     {
@@ -80,14 +84,22 @@ public class MotorCapacity : Capacity
     }
 
     // GOAL DELEGATES
-    private void OnNoActionFound(IGoalRequest request) { request_goal<WanderGoal>(); }
-    private void OnActionEnd(IAction action) { request_goal<WanderGoal>(); }
-    private void OnGoalCompleted(IGoal goal) { request_goal<WanderGoal>(); }
+    private void OnNoActionFound(IGoalRequest request) { request_suited_goal(); }
+    private void OnActionEnd(IAction action) { request_suited_goal(); }
+    private void OnGoalCompleted(IGoal goal) { request_suited_goal(); }
 
     // DETERMINE GOAL
+    protected void request_suited_goal()
+    {
+        if (mdata == null) { return; }
+
+        // we request the goal
+        if (string.IsNullOrEmpty(mdata.current_goal)) { request_goal(Provider.AgentType.GetGoals()); }
+        else { request_goal(mdata.current_goal); }
+    }
     protected void request_goal<T>() where T : GoalBase
     {
-        if (log) { Debug.Log($"(MotorCapacity) Requesting goal of type '{typeof(T).Name}'"); }
+        if (log) { Debug.Log($"(MotorCapacity) {data.owner_id} is requesting goal of type '{typeof(T).Name}'"); }
         Provider.RequestGoal<T>();
     }
     protected void request_goal(string goal_type)
@@ -96,12 +108,22 @@ public class MotorCapacity : Capacity
 
         if (goal == null)
         {
-            if (log) { Debug.LogWarning($"(MotorCapacity - request_goal) Goal {goal_type} not found."); }
+            if (log) { Debug.LogWarning($"(MotorCapacity - request_goal) Goal {goal_type} not found for {data.owner_id}"); }
             return;
         }
 
-        if (log) { Debug.Log($"(MotorCapacity) Requesting goal of type '{goal_type}'"); }
+        if (log) { Debug.Log($"(MotorCapacity) {data.owner_id} is requesting goal of type '{goal_type}'"); }
         Provider.RequestGoal(goal);
+    }
+    protected void request_goal(List<IGoal> goals)
+    {
+        Type[] goal_types = new Type[goals.Count];
+        for (int i = 0; i < goals.Count; i++)
+        {
+            goal_types[i] = goals[i].GetType();
+        }
+        if (log) { Debug.Log($"(MotorCapacity) {data.owner_id} is requesting goals of types '{string.Join(", ", goal_types.Select(t => t.Name))}'"); }
+        Provider.RequestGoal(goal_types);
     }
     protected Type convert_string_to_goals(string goal_type)
     {
@@ -128,15 +150,19 @@ public class MotorCapacity : Capacity
 
         // we set the provider's agent type
         Provider.AgentType = goap.GetAgentType(motor_data.agent_type);
-        if (log) { Debug.Log($"(MotorCapacity) Set GoapActionProvider agent type to '{motor_data.agent_type}' from data"); }
+        if (log) { Debug.Log($"(MotorCapacity) {data.owner_id} set GoapActionProvider agent type to '{motor_data.agent_type}' from data"); }
 
-        // we request the goal
-        request_goal(motor_data.current_goal);
+        Agent.Initialize(); // we refresh the injected data for the agent
 
-        base.LoadData(data);
+        base.LoadData(data); // set this before the rest so the data is set
+
+        // we request the current goal
+        request_suited_goal();
     }
     public override void UnloadData()
     {
+        string owner_id = data != null ? data.owner_id : "unknown";
+
         // this saves the dynamic data (we need to save it before stopping things)
         base.UnloadData();
 
@@ -149,7 +175,7 @@ public class MotorCapacity : Capacity
 
         // we reset the provider's agent type
         Provider.AgentType = goap.GetAgentType("none");
-        if (log) { Debug.Log($"(MotorCapacity) Set GoapActionProvider agent type to 'none' from unload"); }
+        if (log) { Debug.Log($"(MotorCapacity) {owner_id} reset GoapActionProvider agent type to 'none' from unload"); }
     }
 
     // SAVE DYNAMIC DATA
@@ -161,7 +187,7 @@ public class MotorCapacity : Capacity
         if (this.data is not MotorData mdata) { return; }
 
         // save the current goal
-        mdata.current_goal = Provider.CurrentPlan?.Goal?.GetType().Name ?? "None";
+        mdata.current_goal = Provider.CurrentPlan?.Goal?.GetType().Name ?? "";
     }
 
 
@@ -171,7 +197,7 @@ public class MotorCapacity : Capacity
         MotorData static_data = new MotorData(base.GetStaticData())
         {
             agent_type = get_static_agent_type(),
-            current_goal = get_static_goal(),
+            current_goal = "", // always start with no goal, the MotorCapacity will request a goal on LoadData
             avoidance_data = mover.GetStaticAvoidanceData()
         };
 
@@ -184,9 +210,4 @@ public class MotorCapacity : Capacity
         if (capable == null) { return ""; }
         return capable.GetType().Name.ToLower();
     }
-    private string get_static_goal()
-    {
-        return "WanderGoal";
-    }
-
 }

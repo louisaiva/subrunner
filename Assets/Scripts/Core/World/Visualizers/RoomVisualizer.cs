@@ -14,6 +14,9 @@ public class RoomVisualizer : MonoBehaviour
     [SerializeField] private GameObject ui_line_visu_prefab; // a line renderer
     private HashSet<UILineRenderer> room_liners = new();
 
+    [Header("Logs")]
+    public bool log_no_instance_found_at_start = false; // log if no RoomSystem instance is found at start
+
     // CALCULATE WORLD OFFSET
     public Vector2 CalculateWorldCenter(out Vector2 extents)
     {
@@ -62,7 +65,7 @@ public class RoomVisualizer : MonoBehaviour
     {
         // if level id is null, we get the current level id from the LevelEngine
         if (level_id == null) { level_id = LevelEngine.Instance.CurrentLevelID; }
-        if (level_id == null) { Debug.LogWarning($"(RoomVisualizer) Can't find the current level ID"); return; }
+        if (level_id == null) { if (log_no_instance_found_at_start) { Debug.LogWarning($"(RoomVisualizer) Can't find the current level ID"); } return; }
 
         // grab the rooms data of the level from the LevelEngine
         List<RoomData> rooms = LevelEngine.Instance.GetRoomsDataOfLevel(level_id);

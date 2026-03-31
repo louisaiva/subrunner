@@ -1,19 +1,18 @@
 ﻿{
     "<id>k__BackingField": "health-5",
-    "<owner_id>k__BackingField": "spider-1",
+    "<owner_id>k__BackingField": "perso-1",
     "kind": "HealthCapacity",
     "local_position": {
         "x": 0.0,
         "y": 0.0
     },
     "layer": 23,
-    "tag": "Spider",
-    "health": 15.0,
-    "max_health": 15,
+    "tag": "Player",
+    "health": 100.0,
+    "max_health": 100,
     "regen_health": 0.0,
     "hurted_animation": "hurted",
-    "box_colliders": [],
-    "circle_colliders": [
+    "box_colliders": [
         {
             "local_position": {
                 "x": 0.0,
@@ -23,10 +22,14 @@
             "used_for_pathfinding": false,
             "is_trigger": true,
             "offset": {
-                "x": 0.0,
-                "y": -0.31990957260131838
+                "x": -0.015527233481407166,
+                "y": 0.08580735325813294
             },
-            "radius": 0.18009042739868165
+            "size": {
+                "x": 0.3566302955150604,
+                "y": 0.5128641724586487
+            }
         }
-    ]
+    ],
+    "circle_colliders": []
 }

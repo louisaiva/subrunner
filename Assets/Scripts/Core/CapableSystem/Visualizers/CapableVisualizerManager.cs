@@ -17,6 +17,9 @@ public class CapableVisualizerManager : MonoBehaviour
     [Header("Sprites")]
     [SerializeField] private List<CapableSpriteIcon> capable_sprites;
 
+    [Header("Logs")]
+    public bool log_no_instance_found_at_start = false; // log if no CapableSystem instance is found at start
+
     // START
     public void ClearVisuals()
     {
@@ -28,7 +31,7 @@ public class CapableVisualizerManager : MonoBehaviour
     {
         // if level id is null, we get the current level id from the LevelEngine
         if (level_id == null) { level_id = LevelEngine.Instance.CurrentLevelID; }
-        if (level_id == null) { Debug.LogWarning($"(CapableVisualizerManager) Can't find the current level ID"); return; }
+        if (level_id == null) { if (log_no_instance_found_at_start) { Debug.LogWarning($"(CapableVisualizerManager) Can't find the current level ID"); } return; }
 
         // grab all the capable data in the CapableSystem and build a visual for each one
         // List<CapableData> insiders = CapableSystem.Instance.GetInsidersWorldCapablesData();

@@ -20,12 +20,12 @@ public class IA : Movable
 
 
     [Header("Components")]
-    private Detector _eyes;
-    public Detector Eyes
+    private OldDetector _eyes;
+    public OldDetector Eyes
     {
         get
         {
-            if (_eyes == null) { _eyes = transform.Find("eyes")?.GetComponent<Detector>(); }
+            if (_eyes == null) { _eyes = transform.Find("eyes")?.GetComponent<OldDetector>(); }
             return _eyes;
         }
     }

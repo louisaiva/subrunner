@@ -87,7 +87,7 @@ public class SpawnCapacity : Capacity
         }
 
         // we rename the entity
-        entity.name = entity_prefab.name + "_" + entity_count;
+        // entity.name = entity_prefab.name + "_" + entity_count;
 
         // we create a spawn force
         string force_debug = "";
@@ -99,7 +99,7 @@ public class SpawnCapacity : Capacity
             force_debug = " with force " + spawn_force;
         }
 
-        if (log) { Debug.Log("(SpawnCapacity) " + name + " spawning entity at " + spawn_position + force_debug); }
+        if (log) { Debug.Log($"(SpawnCapacity) {data.owner_id} spawning entity at " + spawn_position + force_debug); }
         entity_count++;
     }
 

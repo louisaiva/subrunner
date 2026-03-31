@@ -2,7 +2,7 @@ using UnityEngine;
 using subrunner.goap;
 
 
-public class HungerDetector : Detector
+public class HungerDetector : OldDetector
 {
     // calls EatGoal when health <= x
     // or hunger <= y

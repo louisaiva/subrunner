@@ -8,18 +8,18 @@ public class WorldDebug : MonoBehaviour, MultipleDebuggable
     private int levels_count = 0;
     private int rooms_count = 0;
     private int capables_count = 0;
-    private int capacities_count = 0;
+    // private int capacities_count = 0;
 
     // LEVEL
     private string current_level_name = "";
     private int current_level_rooms_count = 0;
     private int current_level_capables_count = 0;
-    private int current_level_capacities_count = 0;
+    // private int current_level_capacities_count = 0;
 
     // ROOM
     private string current_room_name = "";
     private int current_room_capables_count = 0;
-    private int current_room_capacities_count = 0;
+    // private int current_room_capacities_count = 0;
 
     // START
     private void Start()

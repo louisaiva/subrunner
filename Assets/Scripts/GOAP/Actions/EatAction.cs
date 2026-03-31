@@ -15,7 +15,7 @@ namespace subrunner.goap
             // we set the data
             data.anim_player = data.ia.AnimPlayer;
             if (data.Target is not TransformTarget transformTarget) { return; }
-            data.target = transformTarget.Transform.GetComponent<Capable>();
+            data.target = transformTarget.Transform.GetComponent<Food>();
 
             // set the eatCapa
             data.eatCapacity = data.ia.GetCapacity<EatCapacity>();
@@ -27,22 +27,12 @@ namespace subrunner.goap
             // checks that the food is still valid
             if (data.eatCapacity == null) { return false; }
             if (data.target == null) { return false; }
-            if (data.target is not Food && data.target is not Corpse) { return false; }
-
-            // get the food target
-            Food target_food = null;
-            if (data.target is Food food) { target_food = food; }
-            else if (data.target is Corpse corpse)
-            {
-                target_food = corpse.GetPortion(data.eatCapacity.FoodRule); // we try to get a food from the corpse
-            }
-            if (target_food == null) { return false; }
 
             // we set the food target into the capacity
-            data.eatCapacity.SetFoodTarget(target_food);
+            data.eatCapacity.SetFoodTarget(data.target);
             if (data.eatCapacity.log_actions)
             {
-                Debug.Log($"(EatAction) {data.ia.name} is going to eat {target_food.name}"
+                Debug.Log($"(EatAction) {data.ia.name} is going to eat {data.target.name}"
                 + $" with capacity {data.eatCapacity.GetType().Name}"
                 + $" and animation {data.anim_player}");
             }
@@ -88,7 +78,7 @@ namespace subrunner.goap
 
             // When using the GetComponent attribute, the system will automatically inject the reference
             [GetComponentInParent] public IA ia { get; set; }
-            public Capable target { get; set; }
+            public Food target { get; set; }
             public AnimPlayer anim_player { get; set; }
             public EatCapacity eatCapacity { get; set; }
         }

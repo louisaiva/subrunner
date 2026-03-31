@@ -29,7 +29,7 @@ public interface ICapableData : IData
 
     // CAPACITIES
     public List<string> capacities_ids;
-    public int TotalCapacitiesCount { get { return capacities_ids.Count; } }
+    public int TotalCapacitiesCount() { return capacities_ids.Count; }
 
     // EFFECTS
     public List<Effect> effects;

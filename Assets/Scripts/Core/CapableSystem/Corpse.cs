@@ -12,7 +12,7 @@ using UnityEngine;
 /// robot can directly extract all meat & bones
 /// </summary>
 
-public class Corpse : Movable, Interactable
+public class Corpse : Food
 {
     [Header("CORPSE SETTINGS")]
     [SerializeField] private int random_meat_modifier_at_start = 5; // meat_amount += random.range(-5,5) in the start method if this modifier = 5
@@ -82,7 +82,7 @@ public class Corpse : Movable, Interactable
         if (log_bites) { Debug.Log($"(Corpse) Initialized corpse of {capable.name} with {meat_qty} meat & {bones_qty} bones."); }
     }
 
-    // INTERACT
+    /* // INTERACT
     public InteractCapacity Interactor => null;
     public InteractType InteractionType => InteractType.Corpse;
     public void OnInteract(Capable interactor)
@@ -90,7 +90,7 @@ public class Corpse : Movable, Interactable
         // here we will put the robot's interaction method
 
     }
-
+ */
     // EXTRACT MEAT
     public List<Item> ExtractMeatAndBones()
     {

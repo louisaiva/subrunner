@@ -83,7 +83,7 @@ GameObject:
   - component: {fileID: 7206343197171121091}
   - component: {fileID: 1995776913879646623}
   m_Layer: 13
-  m_Name: corpse
+  m_Name: corpse_template
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -247,15 +247,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Corpse
   data:
-    <id>k__BackingField: 
+    <id>k__BackingField: corpse
     kind: 
     position: {x: 0, y: 0}
     orientation: {x: 0, y: 0}
     layer: 0
     tag: 
     anim_data:
+      skin_kind: 
       skin: 
       anim_capacity_priorities: []
+      current_capacity: 
       material_path: 
       sorting_layer_id: 0
       order_in_layer: 0
@@ -284,6 +286,13 @@ MonoBehaviour:
   forces: []
   input_speed: 0
   Velocity: {x: 0, y: 0}
+  _reference: category:item
+  Color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  MaxQty: 1
+  ItemDescription: description of the item
+  _placed: 0
+  _holder: {fileID: 0}
+  life_regen: 10
   random_meat_modifier_at_start: 5
   log_bites: 0
 --- !u!1 &6875791579722229917
@@ -428,6 +437,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2639434519578746112}
     m_Modifications:
+    - target: {fileID: 1235818638904784760, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
+      propertyPath: data.<id>k__BackingField
+      value: hover
+      objectReference: {fileID: 0}
     - target: {fileID: 2301345579811965954, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
       propertyPath: m_Name
       value: hover

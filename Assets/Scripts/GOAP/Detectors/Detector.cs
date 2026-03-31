@@ -1,7 +1,7 @@
 using UnityEngine;
 using subrunner.goap;
 
-public class Detector : MonoBehaviour
+public class OldDetector : MonoBehaviour
 {
     [Header("Detector Settings")]
     protected Brain brain;

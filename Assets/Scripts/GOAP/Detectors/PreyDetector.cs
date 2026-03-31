@@ -3,7 +3,7 @@ using CrashKonijn.Agent.Core;
 using subrunner.goap;
 using UnityEngine;
 
-public class PreyDetector : Detector
+public class PreyDetector : OldDetector
 {
     [Header("Target selection")]
     [SerializeField] private bool always_select_closest = true; // whether to always select the closest target or not

@@ -13,7 +13,7 @@ namespace subrunner.goap
         [Header("Agent Parameters")]
         [SerializeField] private string agent_type;
         protected IA ia;
-        protected Detector detector; // main detector on eyes
+        protected OldDetector detector; // main detector on eyes
         public IActionData currentActionData => agent.ActionState?.Data;
 
         [Header("Goal Selection")]
@@ -49,7 +49,7 @@ namespace subrunner.goap
             provider.AgentType = goap.GetAgentType(agent_type);
 
             // get detector
-            detector = ia.transform.Find("eyes")?.GetComponent<Detector>();
+            detector = ia.transform.Find("eyes")?.GetComponent<OldDetector>();
 
             // we initialize the goals
             if (goals.Count == 0)

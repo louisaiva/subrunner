@@ -10,8 +10,8 @@ namespace subrunner.goap
             var factory = CreateBuilder("dev");
 
             factory.AddCapability<WanderCapabilityFactory>();
-            factory.AddCapability<EatCapabilityFactory>();
-            factory.AddCapability<KillBeingCapabilityFactory>();
+            // factory.AddCapability<EatCapabilityFactory>();
+            // factory.AddCapability<KillBeingCapabilityFactory>();
 
             return factory.Build();
         }

@@ -1,15 +1,15 @@
 ﻿{
     "<id>k__BackingField": "health-4",
-    "<owner_id>k__BackingField": "perso-1",
+    "<owner_id>k__BackingField": "zombo-1",
     "kind": "HealthCapacity",
     "local_position": {
         "x": 0.0,
         "y": 0.0
     },
     "layer": 23,
-    "tag": "Player",
-    "health": 100.0,
-    "max_health": 100,
+    "tag": "Zombo",
+    "health": 28.0,
+    "max_health": 28,
     "regen_health": 0.0,
     "hurted_animation": "hurted",
     "box_colliders": [
@@ -22,12 +22,12 @@
             "used_for_pathfinding": false,
             "is_trigger": true,
             "offset": {
-                "x": -0.015527233481407166,
-                "y": 0.08580735325813294
+                "x": 0.017057806253433229,
+                "y": 0.0
             },
             "size": {
-                "x": 0.3566302955150604,
-                "y": 0.5128641724586487
+                "x": 0.4218003749847412,
+                "y": 0.6844788789749146
             }
         }
     ],

@@ -27,7 +27,7 @@ using UnityEngine;
             int count = 0;
             foreach (CapableData capable_data in capables_data)
             {
-                count += capable_data.TotalCapacitiesCount;
+                count += capable_data.TotalCapacitiesCount();
             }
             return count;
         }

@@ -1,19 +1,19 @@
 ﻿{
-    "<id>k__BackingField": "corpse-1",
-    "kind": "Corpse",
+    "<id>k__BackingField": "dummy-2",
+    "kind": "Capable",
     "position": {
-        "x": 16.59000015258789,
-        "y": 11.0
+        "x": 2.3299999237060549,
+        "y": 2.0899999141693117
     },
     "orientation": {
         "x": 0.0,
         "y": -1.0
     },
-    "layer": 24,
-    "tag": "Item",
+    "layer": 29,
+    "tag": "Untagged",
     "anim_data": {
         "skin_kind": "",
-        "skin": "bones",
+        "skin": "dummy",
         "anim_capacity_priorities": [
             {
                 "priority": 0,
@@ -25,13 +25,13 @@
                 "one_shot": false
             },
             {
-                "priority": 1,
+                "priority": 0,
                 "capacity_playing": "",
                 "capacities": [
-                    "hover"
+                    "hurted"
                 ],
-                "lock_orientation": false,
-                "one_shot": false
+                "lock_orientation": true,
+                "one_shot": true
             }
         ],
         "current_capacity": "",
@@ -41,27 +41,7 @@
         "layers": []
     },
     "inventory": {
-        "item_pools_data": [
-            {
-                "stacks_data": [
-                    {
-                        "items_ids": [
-                            "bone-2"
-                        ]
-                    },
-                    {
-                        "items_ids": [
-                            "meat-1"
-                        ]
-                    }
-                ],
-                "pool_id": "stuff",
-                "max_stacks": 9,
-                "min_stacks": 0,
-                "scalable": false,
-                "item_rule": ""
-            }
-        ]
+        "item_pools_data": []
     },
     "feet_data": {
         "box_colliders": [],
@@ -72,19 +52,23 @@
                     "y": 0.0
                 },
                 "layerID": 25,
-                "used_for_pathfinding": false,
+                "used_for_pathfinding": true,
                 "is_trigger": false,
                 "offset": {
                     "x": 0.0,
-                    "y": 0.10000000149011612
+                    "y": 0.18000000715255738
                 },
-                "radius": 0.09000000357627869
+                "radius": 0.20869231224060059
             }
         ]
     },
     "capacities_ids": [
-        "hover-151"
+        "health-2"
     ],
-    "effects": [],
-    "effects_ttl": []
+    "effects": [
+        4
+    ],
+    "effects_ttl": [
+        -888.0
+    ]
 }
