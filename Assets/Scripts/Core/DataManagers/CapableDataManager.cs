@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.IO;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -15,12 +17,12 @@ public class CapableDataManager : MonoBehaviour
 
     [Header("CapableData Saving")]
     public List<Capable> capables_to_save = new List<Capable>();
-    private string data_path = "Assets/Resources/data/capables/";
+    public static string CurrentCapableDataFolder => Path.Combine(World.CurrentStaticWorldDataPath, "capables");
 
     [Header("Extended parameters")]
     public bool save_capables_in_inventory = false;
     public bool save_capables_capacities = false;
-    private string capa_data_path = "Assets/Resources/data/capacities/";
+    public static string CurrentCapacityDataFolder => Path.Combine(World.CurrentStaticWorldDataPath, "capacities");
 
 
     [Header("Logs")]
@@ -42,9 +44,9 @@ public class CapableDataManager : MonoBehaviour
         ICapableData data = capable.GetStaticData();
         // save the current RoomData to a json file
         string json = JsonUtility.ToJson(data, true);
-        System.IO.File.WriteAllText(data_path + data.id + ".json", json, System.Text.Encoding.UTF8);
-
-        if (log) { Debug.Log($"(Capable - Save Data) Updated & Saved CapableData : {capable.name} (to {data_path + data.id + ".json"})\n\n{data.GetDetails()}\n\n{json}"); }
+        string path = Path.Combine(CurrentCapableDataFolder, data.id + ".json");
+        System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
+        if (log) { Debug.Log($"(Capable - Save Data) Updated & Saved CapableData : {capable.name} (to {path})\n\n{data.GetDetails()}\n\n{json}"); }
 
         // we also save the capacities of this capable if we want to
         if (save_capables_capacities) { saveCapacitiesOfCapable(capable); }
@@ -80,9 +82,9 @@ public class CapableDataManager : MonoBehaviour
 
             // save the current RoomData to a json file
             string capacity_json = JsonUtility.ToJson(capacity_data, true);
-            System.IO.File.WriteAllText(capa_data_path + capacity_data.id + ".json", capacity_json, System.Text.Encoding.UTF8);
-
-            if (log) { Debug.Log($"(Capable - Save Data) Updated & Saved CapacityData : {capacity.name} (to {capa_data_path + capacity_data.id + ".json"})\n\n{capacity_data.GetDetails()}\n\n{capacity_json}"); }
+            string path = Path.Combine(CurrentCapacityDataFolder, capacity_data.id + ".json");
+            System.IO.File.WriteAllText(path, capacity_json, System.Text.Encoding.UTF8);
+            if (log) { Debug.Log($"(Capable - Save Data) Updated & Saved CapacityData : {capacity.name} (to {path})\n\n{capacity_data.GetDetails()}\n\n{capacity_json}"); }
         }
     }
 

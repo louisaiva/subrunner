@@ -126,11 +126,6 @@ public class SettingsManager : MonoBehaviour
     {
         string json = "";
 
-        // we get the json string
-        // if (!PlayerPrefs.HasKey("local_settings")) { return; }
-        // if (log) { Debug.Log("(SettingsManager) Loading local settings from PlayerPrefs"); }
-        // json = PlayerPrefs.GetString("local_settings");
-
         // we load settings from Application.persistentDataPath
         try 
         {

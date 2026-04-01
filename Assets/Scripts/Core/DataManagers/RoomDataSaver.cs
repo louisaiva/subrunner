@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ public class RoomDataSaver : MonoBehaviour
     public List<string> rooms_to_load = new List<string>();
 
     [Header("RoomData Saving")]
-    public string data_folder = "Assets/Resources/data/rooms/";
+    public static string CurrentRoomDataFolder => Path.Combine(World.CurrentStaticWorldDataPath, "rooms");
     public List<Room> rooms_to_save = new List<Room>();
 
     [Header("Logs")]
@@ -24,9 +25,10 @@ public class RoomDataSaver : MonoBehaviour
 
             // save the current RoomData to a json file
             string json = JsonUtility.ToJson(data, true);
-            System.IO.File.WriteAllText(data_folder + data.id + ".json", json, System.Text.Encoding.UTF8);
+            string path = Path.Combine(CurrentRoomDataFolder, data.id + ".json");
+            System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
 
-            if (log) { Debug.Log($"(RoomDataSaver) Updated & Saved RoomData : {room.name} (to {data_folder + data.id + ".json"})\n\n{json}"); }
+            if (log) { Debug.Log($"(RoomDataSaver) Updated & Saved RoomData : {room.name} (to {path})\n\n{json}"); }
         }
     }
     

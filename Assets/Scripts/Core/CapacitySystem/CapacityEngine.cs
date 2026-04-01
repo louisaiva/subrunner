@@ -10,7 +10,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     private Dictionary<string, CapacityData> templates_capacities_data = new Dictionary<string, CapacityData>();
 
     [Header("World Capacities data")]
-    private string world_data_path = "data/capacities/";
+    // private string world_data_path = "data/capacities/";
     public Dictionary<string, CapacityData> world_capacities_data = new Dictionary<string, CapacityData>();
 
     [Header("Loaded Capacities data")]
@@ -59,7 +59,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         string log_capacities_details = "\n\n";
 
         // we load all the json files in the data path and get their kind
-        string[] files = GameManager.Instance.LoadJsons(templates_data_path);
+        string[] files = GameManager.Instance.LoadJsonsFromAssets(templates_data_path);
         Dictionary<string, List<string>> json_by_kind = new Dictionary<string, List<string>>();
         foreach (string json in files)
         {
@@ -95,7 +95,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         string log_capacities_details = "\n\n";
 
         // we load all the json files in the data path and get their kind
-        string[] files = GameManager.Instance.LoadJsons(world_data_path);
+        string[] files = GameManager.Instance.LoadJsonsFromWorldDataPath("capacities");
         Dictionary<string, List<string>> json_by_kind = new Dictionary<string, List<string>>();
         foreach (string json in files)
         {

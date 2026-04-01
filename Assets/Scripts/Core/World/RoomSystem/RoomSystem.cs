@@ -63,7 +63,7 @@ using System;
         string log_rooms_details = "\n\n";
 
         // we load all the json files in the data path and convert them to RoomData objects
-        string[] files = GameManager.Instance.LoadJsons(data_path);
+        string[] files = GameManager.Instance.LoadJsonsFromAssets(data_path);
         foreach (string file in files)
         {
             RoomData data = JsonUtility.FromJson<RoomData>(file);

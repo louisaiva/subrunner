@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,12 +18,19 @@ public class GameManager : MonoBehaviour
 
     [Header("Game Music Theme")]
     [SerializeField] private string game_theme_to_play = "i'm so hungry";
+    [SerializeField] private string world_to_load = "";
 
     public static GameManager Instance { get; private set; }
     private void Awake()
     {
         if (Instance == null) { Instance = this; }
         else { Destroy(gameObject); return; }
+
+        // we instantly load the world even if World.Instance is not defined yet.
+        // so we use World.StaticInstance which will find the world instance with FindObjectByType
+        World world = World.StaticInstance;
+        if (world == null) { return; }
+        if (world_to_load != "") { world.LoadWorld(world_to_load); }
     }
     private void Start()
     {
@@ -116,7 +124,7 @@ public class GameManager : MonoBehaviour
 
 
     // JSON DATA LOADING
-    public string[] LoadJsons(string data_folder)
+    public string[] LoadJsonsFromAssets(string data_folder)
     {
         TextAsset[] json_assets = Resources.LoadAll<TextAsset>(data_folder);
         string[] jsons = new string[json_assets.Length];
@@ -126,5 +134,31 @@ public class GameManager : MonoBehaviour
         }
         return jsons;
     }
+    /* public string[] LoadJsonsFromPath(string data_folder)
+    {
+        // we get all the json files in the data folder and load them as strings
+        string[] file_paths = System.IO.Directory.GetFiles(data_folder, "*.json");
+        string[] jsons = new string[file_paths.Length];
+        for (int i=0; i<file_paths.Length; i++)
+        {
+            jsons[i] = System.IO.File.ReadAllText(file_paths[i]);
+        }
+        return jsons;
+    } */
+    public string[] LoadJsonsFromWorldDataPath(string data_folder)
+    {
+        // loads jsons from the current world data path (which is in the persistent data path) instead of the assets
+        // data_folder should be like "levels" for levels or "capables"
+        string world_data_path = World.CurrentStaticWorldDataPath;
+        string jsons_path = Path.Combine(world_data_path, data_folder);
 
+        // we get all the json files in the data folder and load them as strings
+        string[] file_paths = Directory.GetFiles(jsons_path, "*.json");
+        string[] jsons = new string[file_paths.Length];
+        for (int i = 0; i < file_paths.Length; i++)
+        {
+            jsons[i] = System.IO.File.ReadAllText(file_paths[i]);
+        }
+        return jsons;
+    }
 }

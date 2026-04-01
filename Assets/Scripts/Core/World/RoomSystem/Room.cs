@@ -9,6 +9,7 @@ public class Room : MonoBehaviour
     [Header("Room data")]
     public RoomData data;
     public bool Loaded { get { return data != null; } }
+    private bool _unloading = false;
 
     // [Header("Room shown")]
     // public bool shown = false; // if the room is currently shown. =/= is the room loaded. shown is only about visibility
@@ -103,6 +104,8 @@ public class Room : MonoBehaviour
     }
     public void UnloadData()
     {
+        _unloading = true;
+
         // we unload the tilemaps (except carpet's collider)
         unload_tilemaps();
 
@@ -118,6 +121,7 @@ public class Room : MonoBehaviour
         }
 
         this.data = null;
+        _unloading = false;
     }
 
     // loading tilemaps low level
@@ -467,6 +471,7 @@ public class Room : MonoBehaviour
     {
         if (data == null) { return; }
         if (AppManager.Instance.IsQuitting) { return; }
+        if (_unloading) { return; } // if we are unloading the room we don't want any trigger event
 
         Capable capable = collider.GetComponent<Capable>();
         if (capable == null) { capable = collider.transform.parent.GetComponent<Capable>(); }
@@ -474,22 +479,6 @@ public class Room : MonoBehaviour
         if (capable == null) { return; }
 
         if (Controller.Instance.Capable != capable && !CapableBank.Instance.HasCapable(capable)) { return; }
-
-        // check some bools
-        // bool in_movables = data.movables_ids.Contains(capable.data.id);
-        /* bool in_out_movables = data.IN_movables_ids.Contains(capable.data.id);
-        if (in_out_movables)
-        {
-            // if the capable is in the OUT list and in the movables one it means it went out, did not find any other room to go to, and came back to main room,
-            // so we simply remove both in and out for this capable
-            data.IN_movables_ids.Remove(capable.data.id);
-            data.OUT_movables_ids.Remove(capable.data.id);
-            if (RoomEngine.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Ignored IN then OUT - " + capable.data.id); }
-            return;
-        }
-
-        // capable exits !
-        data.OUT_movables_ids.Add(capable.data.id); */
 
         // directly call RoomEngine.OnRoomExit
         RoomEngine.Instance.OnRoomExit(this.data, capable);

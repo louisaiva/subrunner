@@ -1,25 +1,17 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+using System.IO;
+
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class LevelDataManager : MonoBehaviour
 {
 
     [Header("LevelData Saving")]
-    public string data_folder = "Assets/Resources/data/levels/";
-    private string room_data_folder
-    {
-        get
-        {
-            // we try to get it from RoomDataSaver if it exists, else we use a default one
-            RoomDataSaver room_data_manager = GetComponent<RoomDataSaver>();
-            if (room_data_manager != null)
-            {
-                return room_data_manager.data_folder;
-            }
-            return "Assets/Resources/data/rooms/";
-        }
-    }
+    public static string CurrentLevelDataFolder => Path.Combine(World.CurrentStaticWorldDataPath, "levels");
     public List<Level> levels_to_save = new List<Level>();
     public bool save_rooms_data = false; // if true, when we save the levels data, we also save the rooms data (ie we update the rooms data with the current overlapping capables in the editor)
 
@@ -35,8 +27,9 @@ public class LevelDataManager : MonoBehaviour
 
             // save the current LevelData to a json file
             string json = JsonUtility.ToJson(data, true);
-            System.IO.File.WriteAllText(data_folder + data.id + ".json", json, System.Text.Encoding.UTF8);
-            if (log) { Debug.Log($"(LevelDataManager) Updated & Saved LevelData : {level.name} (to {data_folder + data.id + ".json"})\n\n{json}"); }
+            string path = Path.Combine(CurrentLevelDataFolder, data.id + ".json");
+            System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
+            if (log) { Debug.Log($"(LevelDataManager) Updated & Saved LevelData : {level.name} (to {path})\n\n{json}"); }
 
             // check if we need to save the rooms also
             if (!save_rooms_data) { continue; }
@@ -46,9 +39,10 @@ public class LevelDataManager : MonoBehaviour
 
                 // save the current RoomData to a json file
                 json = JsonUtility.ToJson(rdata, true);
-                System.IO.File.WriteAllText(room_data_folder + rdata.id + ".json", json, System.Text.Encoding.UTF8);
+                path = Path.Combine(RoomDataSaver.CurrentRoomDataFolder, rdata.id + ".json");
+                System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
 
-                if (log) { Debug.Log($"(LevelDataManager) Updated & Saved RoomData : {room.name} (to {room_data_folder + rdata.id + ".json"})\n\n{json}"); }
+                if (log) { Debug.Log($"(LevelDataManager) Updated & Saved RoomData : {room.name} (to {path})\n\n{json}"); }
             }
 
         }

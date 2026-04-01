@@ -131,4 +131,18 @@ public class AppManager : MonoBehaviour
 
         if (log) { Debug.Log("(AppManager) Application is quitting"); }
     }
+
+
+
+    // STATIC USEFUL FUNCTIONS
+    /// <summary>
+    /// Ensures that a folder exists at the given path. If it doesn't exist, it creates it.
+    /// </summary>
+    /// <param name="path">the path to check. should be reachable</param>
+    public static void EnsureFolderExists(string path)
+    {
+        if (System.IO.Directory.Exists(path)) { return; }
+        System.IO.Directory.CreateDirectory(path);
+    }
+
 }

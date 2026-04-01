@@ -7,11 +7,11 @@ public class LevelEngine : BSOD_System<LevelEngine>
 {
 
     [Header("Level data")]
-    private string level_data_path = "data/levels/";
+    // private string level_data_path = "data/levels/";
     public Dictionary<string, LevelData> levels_data = new Dictionary<string, LevelData>();
 
     [Header("Current level")]
-    public string start_level_id; // level id to load at the start // todo : remove this when it is in WorldData based on player's level
+    // public string start_level_id; // level id to load at the start // todo : remove this when it is in WorldData based on player's level
     public Level current_level;
     public string CurrentLevelID
     {
@@ -56,7 +56,7 @@ public class LevelEngine : BSOD_System<LevelEngine>
         string log_levels_details = "\n\n";
 
         // we load all the json files in the data path and convert them to LevelData objects
-        string[] files = GameManager.Instance.LoadJsons(level_data_path);
+        string[] files = GameManager.Instance.LoadJsonsFromWorldDataPath("levels");
         foreach (string file in files)
         {
             LevelData data = JsonUtility.FromJson<LevelData>(file);
@@ -86,12 +86,6 @@ public class LevelEngine : BSOD_System<LevelEngine>
         return new_level;
     }
 
-    // START
-    private void Start()
-    {
-        // we load the start level
-        if (!string.IsNullOrEmpty(start_level_id)) { LoadLevel(start_level_id); }
-    }
 
     // LOAD LEVEL
     public Action<Level> OnLevelLoaded = delegate { };

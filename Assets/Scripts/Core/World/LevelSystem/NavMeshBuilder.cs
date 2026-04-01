@@ -10,7 +10,7 @@ public class NavMeshBuilder : Singleton<NavMeshBuilder>
     [SerializeField] private List<NavMeshSurface> surfaces = new List<NavMeshSurface>();
 
     [Header("NavMesh Data saving")]
-    [SerializeField] private string navmesh_data_folder = "Assets/Resources/data/levels/navmeshes/";
+    [SerializeField] private string navmesh_data_folder = "Assets/Resources/data/navmeshes/";
 
     [Header("Logs")]
     [SerializeField] private bool log = false;

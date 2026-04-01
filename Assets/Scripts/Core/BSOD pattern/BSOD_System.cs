@@ -22,9 +22,13 @@ public class BSOD_System<T> : MonoBehaviour where T : MonoBehaviour
 
     /*
 
+
+    !!! this example is outdated 
+
     ! This is a basic example for using this system type of script as a system
     ! create a new class that inherit from BSOD_System and then you can paste it the code below
     ! don't forget to override Awake() method to put there your own awake logic
+
     
     
     [Header("Loaded objects")]

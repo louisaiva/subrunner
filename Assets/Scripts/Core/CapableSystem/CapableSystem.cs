@@ -10,7 +10,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
     public Dictionary<string, CapableData> templates_capables_data = new Dictionary<string, CapableData>();
 
     [Header("World Capables data")]
-    private string world_data_path = "data/capables/";
+    // private string world_data_path = "data/capables/";
     public Dictionary<string, CapableData> world_capables_data = new Dictionary<string, CapableData>();
     
 
@@ -101,7 +101,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
         string log_capables_details = "\n\n";
 
         // we load all the json files in the data path and get their kind
-        string[] files = GameManager.Instance.LoadJsons(templates_data_path);
+        string[] files = GameManager.Instance.LoadJsonsFromAssets(templates_data_path);
         Dictionary<string, List<string>> json_by_kind = new Dictionary<string, List<string>>();
         foreach (string json in files)
         {
@@ -140,7 +140,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
         string log_capables_details = "\n\n";
 
         // we load all the json files in the data path and get their kind
-        string[] files = GameManager.Instance.LoadJsons(world_data_path);
+        string[] files = GameManager.Instance.LoadJsonsFromWorldDataPath("capables");
         Dictionary<string, List<string>> json_by_kind = new Dictionary<string, List<string>>();
         foreach (string json in files)
         {

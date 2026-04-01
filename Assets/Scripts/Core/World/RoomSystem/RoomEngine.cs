@@ -12,7 +12,7 @@ public class RoomEngine : BSOD_System<RoomEngine>
     // ROOMS DATA
 
     [Header("Rooms data")]
-    private string data_path = "data/rooms/";
+    // private string data_path = "data/rooms/";
     public Dictionary<string, RoomData> rooms_data = new Dictionary<string, RoomData>();
     private Dictionary<string, int> rooms_hashs_by_ids = new Dictionary<string, int>();
     private Dictionary<int, string> rooms_ids_by_hash = new Dictionary<int, string>();
@@ -97,7 +97,7 @@ public class RoomEngine : BSOD_System<RoomEngine>
         string log_rooms_details = "\n\n";
 
         // we load all the json files in the data path and convert them to RoomData objects
-        string[] files = GameManager.Instance.LoadJsons(data_path);
+        string[] files = GameManager.Instance.LoadJsonsFromWorldDataPath("rooms");
         foreach (string file in files)
         {
             RoomData data = JsonUtility.FromJson<RoomData>(file);
