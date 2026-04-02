@@ -260,9 +260,6 @@ public class Inventory : MonoBehaviour, ItemStorer
         // we trigger the event
         OnItemDropped.Invoke(item);
 
-        // we update the UI
-        // ui_drop(item, uis_to_ignore);
-
         if (log) { Debug.Log("(Inventory) " + Capable.name + " dropped : " + item.name); }
 
         return true;

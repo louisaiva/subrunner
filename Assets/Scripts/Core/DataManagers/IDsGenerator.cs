@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 public class IDsGenerator : MonoBehaviour
 {
@@ -31,7 +32,7 @@ public class IDsGenerator : MonoBehaviour
         // we clear the list since we want to re generate ids
         capables_that_get_new_ids.Clear();
         capacities_that_get_new_ids.Clear();
-        GameManager.ClearGeneratedIDs();
+        World.StaticInstance.ClearGeneratedIDs();
 
 
         // we get all the rooms
@@ -40,18 +41,46 @@ public class IDsGenerator : MonoBehaviour
         Capable[] all_capables = FindObjectsByType<Capable>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (Capable capable in all_capables)
         {
+            generate_id_for_capable(capable, all_rooms.ToList());
+        }
+    }
+    public void GenerateIDsForAllCapablesAndCapacitiesInWorld()
+    {
+        // we clear the list since we want to re generate ids
+        capables_that_get_new_ids.Clear();
+        capacities_that_get_new_ids.Clear();
+        World.StaticInstance.ClearGeneratedIDs();
+
+        // get the world
+        World world = World.StaticInstance;
+
+        // get the levels of the world
+        Level[] levels = world.GetStaticLevels();
+
+        // we get all the rooms
+        List<Room> all_rooms = new List<Room>();
+        List<Capable> all_capables = new List<Capable>();
+        foreach (Level level in levels)
+        {
+            all_rooms.AddRange(level.GetStaticRooms());
+            all_capables.AddRange(level.GetStaticCapables());
+        }
+
+        // Capable[] all_capables = FindObjectsByType<Capable>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (Capable capable in all_capables)
+        {
             generate_id_for_capable(capable, all_rooms);
         }
     }
 
     // id generation
-    private string generate_id_for_capable(Capable capable, Room[] all_rooms)
+    private string generate_id_for_capable(Capable capable, List<Room> all_rooms)
     {
         // we check if we already generated an id for this capable
         if (capables_that_get_new_ids.Contains(capable)) { return ""; }
 
         // generate new id
-        string new_id = GameManager.GenerateUniqueID(capable.name);
+        string new_id = World.StaticInstance.GenerateUniqueID(capable.name);
 
         // check if a room has our old id then we change it to new id
         // (we must have an old id for this to work)
@@ -109,7 +138,7 @@ public class IDsGenerator : MonoBehaviour
             if (capacities_that_get_new_ids.Contains(capacity)) { continue; }
 
             // generate new id
-            string new_id = GameManager.GenerateUniqueID(capacity.name);
+            string new_id = World.StaticInstance.GenerateUniqueID(capacity.name);
 
             // change the capacity id in the capable's capacities ids list
             if (!string.IsNullOrEmpty(capacity.data.id) && !string.IsNullOrEmpty(new_id))
@@ -134,7 +163,7 @@ public class IDsGenerator : MonoBehaviour
     }
 
     // utils
-    private Room get_room_of_capable(Capable capable, Room[] all_rooms)
+    private Room get_room_of_capable(Capable capable, List<Room> all_rooms)
     {
         foreach (Room room in all_rooms)
         {
@@ -173,9 +202,9 @@ public class IDsGenerator : MonoBehaviour
         {
             IDsGenerator manager = (IDsGenerator)target;
 
-            if (GUILayout.Button("Generate IDs"))
+            if (GUILayout.Button("Generate IDs in World"))
             {
-                manager.GenerateIDsForAllCapablesAndCapacities();
+                manager.GenerateIDsForAllCapablesAndCapacitiesInWorld();
                 
                 // then we need to mark all capables & capacities as "dirty" so their data will be saved with the new ids
                 foreach (Capable capable in manager.capables_that_get_new_ids)
@@ -188,7 +217,7 @@ public class IDsGenerator : MonoBehaviour
                 }
 
                 // we also make sure GameManager is marked as dirty because it has all generated ids
-                UnityEditor.EditorUtility.SetDirty(manager.GameManager);
+                UnityEditor.EditorUtility.SetDirty(World.StaticInstance);
                 UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(manager.gameObject.scene);
             }
             DrawDefaultInspector();

@@ -1,8 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.Collections;
 using UnityEngine;
-using Unity.Jobs;
 using System.Linq;
 using System;
 
@@ -66,6 +63,7 @@ public class RoomEngine : BSOD_System<RoomEngine>
     [Header("Room Logs")]
     public bool log_tilemaps_loading = false;
     public bool log_colliders = false;
+    public bool log_enter_exit = false;
 
     /* -------------------------------------
 
@@ -200,8 +198,8 @@ public class RoomEngine : BSOD_System<RoomEngine>
     private void Start()
     {
         // we register to CapableSystem.OnCapableNeedRoom so we can assign rooms to the new capable
-        CapableSystem.Instance.OnCapableNeedRoom += handleCapableNeedRoom;
-        CapableSystem.Instance.OnCapableNeedFreedom += removeCapableFromSystem;
+        // CapableSystem.Instance.OnCapableNeedRoom += handleCapableNeedRoom;
+        // CapableSystem.Instance.OnCapableNeedFreedom += removeCapableFromSystem;
 
         // we generate the spatial maps for the levels
         generateLevels2DSpatialCells();
@@ -209,35 +207,8 @@ public class RoomEngine : BSOD_System<RoomEngine>
 
 
 
-    // CAPABLE'S ROOM DYNAMIC MANAGEMENT
-    protected void handleCapableNeedRoom(Capable entity, string spawner_id)
-    {
-        // we want the entity capabledata to be set inside the same room as the spawner.
-        // we need to find in which room the spawner is, and set the entity capabledata in the same room
-
-        // if (log_spawning) { Debug.Log($"(RoomEngine) Handling spawn of {entity.data.id} by spawner {spawner.data.id}"); }
-        string id = entity.data.id;
-
-        // 1. find spawner room
-        RoomData spawner_room = GetCapableRoom(spawner_id);
-        if (spawner_room == null)
-        {
-            if (!hide_log_no_room_of_capable_found) { Debug.LogWarning("(RoomEngine) Could not find spawner room for capable " + spawner_id); }
-            return;
-        }
-
-        // 2. set entity in the same room
-        OnRoomEnter(spawner_room.id, id);
-    }
-    protected void removeCapableFromSystem(string id)
-    {
-        // we free the capable from any room, it may be destroyed or else
-        RoomData room = GetCapableRoom(id);
-        if (room == null) { return; }
-        removeCapableFromRoom(id, room);
-    }
-
     // ADD / REMOVE CAPABLE TO / FROM ROOM
+
     /// <summary>
     /// this method adds the capable id to the room data and to the room engine dicts.
     /// No check if the capable is already in a room or if the room is loaded, so it
@@ -289,16 +260,12 @@ public class RoomEngine : BSOD_System<RoomEngine>
 
 
     // ON ROOM ENTER
-    public void OnRoomEnter(RoomData room, Capable capable, int priority = 0)
-    {
-        OnRoomEnter(room.id, capable.data.id, priority);
-    }
-    public void OnRoomExit(RoomData room, Capable capable, int priority = 0)
-    {
-        OnRoomExit(room.id, capable.data.id, priority);
-    }
+    public void OnRoomEnter(RoomData room, Capable capable, int priority = 0) => OnRoomEnter(room.id, capable.data.id, priority);
     public void OnRoomEnter(string room_id, string entity_id, int priority = 0)
     {
+
+        if (log_enter_exit) { Debug.Log($"(RoomEngine) OnRoomEnter : {entity_id} entered {room_id} with priority {priority}"); }
+
         if (!dirtyCapablesIDs.ContainsKey(entity_id)) { dirtyCapablesIDs[entity_id] = priority; }
         else
         {
@@ -309,8 +276,12 @@ public class RoomEngine : BSOD_System<RoomEngine>
         set_only_bias(entity_id, room_id, ScoreBiasType.RoomEnter); // we set the bias to RoomEnter for the room the capable just entered, and clear it for other rooms to prefer the new room for next room switch resolution
 
     }
+    // ON ROOM EXIT
+    public void OnRoomExit(RoomData room, Capable capable, int priority = 0) => OnRoomExit(room.id, capable.data.id, priority);
     public void OnRoomExit(string room_id, string entity_id, int priority = 0)
     {
+        if (log_enter_exit) { Debug.Log($"(RoomEngine) OnRoomExit : {entity_id} exited {room_id} with priority {priority}"); }
+
         if (!dirtyCapablesIDs.ContainsKey(entity_id)) { dirtyCapablesIDs[entity_id] = priority; }
         else
         {
@@ -342,6 +313,19 @@ public class RoomEngine : BSOD_System<RoomEngine>
 
     }
 
+
+    // CAPABLE FREEING
+    public void FreeCapable(Capable capable) => FreeCapable(capable.data.id);
+    public void FreeCapable(string id)
+    {
+        // we free the capable from any room, it may be destroyed or else
+        RoomData room = GetCapableRoom(id);
+        if (room == null) { return; }
+        removeCapableFromRoom(id, room);
+
+        if (log_room_transfers) { Debug.Log($"(RoomEngine) [{room.id}] >> {id} >> [none]         -- was freed !!"); }
+        if (log_loaded_area_transfers) { Debug.Log($"(RoomEngine) [{room.id}] >> {id} >> [none]         -- was freed !!"); }
+    }
 
 
     /* -------------------------------------
@@ -944,5 +928,6 @@ public enum ScoreBiasType
 {
     None,
     RoomEnter,
-    RoomExit
+    RoomExit,
+    RoomFreed
 }

@@ -148,7 +148,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
 
         CapacityData base_data = templates_capacities_data[template];
         CapacityData new_data = base_data.Duplicate() as CapacityData;
-        new_data.id = GameManager.Instance.GenerateUniqueID(base_data.id);
+        new_data.id = World.Instance.GenerateUniqueID(base_data.id);
 
         // we add the new_data to the data list
         world_capacities_data.Add(new_data.id, new_data);

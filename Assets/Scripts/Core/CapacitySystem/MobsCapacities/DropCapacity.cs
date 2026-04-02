@@ -29,7 +29,7 @@ public class DropCapacity : Capacity
     public float DropMagnitude { get => drop_magnitude; set => drop_magnitude = Mathf.Max(0, value); }
     public bool lock_magnitude = false; // if true the dropping force won't be influenced by capable's movement
     public Vector3 offset_drop = Vector3.zero; // if true the dropping force won't be influenced by capable's movement
-    [SerializeField] private Transform parent_to_drop_items;
+    // [SerializeField] private Transform parent_to_drop_items;
 
     [Header("Components")]
     [SerializeField] private Inventory inventory;
@@ -115,7 +115,7 @@ public class DropCapacity : Capacity
 
         // we move the item back to the world
         item.transform.position = capable.transform.position + offset_position;
-        item.transform.SetParent(parent_to_drop_items);
+        item.transform.SetParent(World.Instance.ItemsParent);
         item.transform.localScale = Vector3.one;
 
         // we make sure the item is not Placed

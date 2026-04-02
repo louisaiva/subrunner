@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NavMeshPlus.Components;
 using System.Collections;
 using UnityEngine.AI;
+using System.IO;
 
 public class NavMeshBuilder : Singleton<NavMeshBuilder>
 {
@@ -10,15 +11,16 @@ public class NavMeshBuilder : Singleton<NavMeshBuilder>
     [SerializeField] private List<NavMeshSurface> surfaces = new List<NavMeshSurface>();
 
     [Header("NavMesh Data saving")]
-    [SerializeField] private string navmesh_data_folder = "Assets/Resources/data/navmeshes/";
+    private string navmeshes_data_folder = "Assets/Resources/data/navmeshes/";
 
     [Header("Logs")]
     [SerializeField] private bool log = false;
+    [SerializeField] private bool hide_log_saving = false;
 
-    public void Start()
+    /* public void Start()
     {
         // StartCoroutine(BuildNavMesh());
-    }
+    } */
     public IEnumerator BuildNavMesh()
     {
         yield return new WaitForFixedUpdate();
@@ -37,7 +39,7 @@ public class NavMeshBuilder : Singleton<NavMeshBuilder>
         {
             // we have not precisely 1 enabled level, we only bake the data
             foreach (var surface in surfaces) { surface.BuildNavMesh(); }
-            if (log) { Debug.LogWarning("(NavMeshBuilder) found " + levels.Length + " enabled levels in the scene. Exiting. Need to be precisely 1 enabled level to assign nav mesh data."); }
+            if (!hide_log_saving) { Debug.LogWarning("(NavMeshBuilder) found " + levels.Length + " enabled levels in the scene. Exiting. Need to be precisely 1 enabled level to assign nav mesh data."); }
             return;
         }
         Level level = levels[0];
@@ -61,13 +63,14 @@ public class NavMeshBuilder : Singleton<NavMeshBuilder>
 
 
         // we save the navmeshdatas as assets in the files
+        level.ClearNavMeshPaths();
         for (int i = 0; i < navMeshDatas.Count; i++)
         {
             NavMeshData navMeshData = navMeshDatas[i];
-            string path = navmesh_data_folder + level.GetStaticID() + "_navmesh_" + i + ".asset";
+            string path = Path.Combine(navmeshes_data_folder, level.GetStaticID() + "_navmesh_" + i + ".asset");
             #if UNITY_EDITOR
             UnityEditor.AssetDatabase.CreateAsset(navMeshData, path);
-            if (log) { Debug.Log("(NavMeshBuilder) saved navmesh data asset for level " + level.GetStaticID() + " at path : " + path); }
+            if (!hide_log_saving) { Debug.Log("(NavMeshBuilder) saved navmesh data asset for level " + level.GetStaticID() + " at path : " + path); }
 
             // we add the path to the list of navmesh data paths to assign to the level
             level.AddNavMeshPath(path);

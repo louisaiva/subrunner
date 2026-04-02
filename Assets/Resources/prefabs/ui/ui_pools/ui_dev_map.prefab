@@ -447,6 +447,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomVisualizer
   ui_line_visu_prefab: {fileID: 3696399378545010940, guid: ed594d5481e4b4442a7a07b965a2bb7c, type: 3}
+  log_no_instance_found_at_start: 0
 --- !u!1 &3634451821325930179
 GameObject:
   m_ObjectHideFlags: 0
@@ -547,7 +548,7 @@ RectTransform:
   m_GameObject: {fileID: 4253734388620241412}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7479794892535033933}
@@ -788,7 +789,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7479794892535033933}
   m_Layer: 0
-  m_Name: offseter
+  m_Name: offsetter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -885,8 +886,7 @@ MonoBehaviour:
   log_extended: 0
   log_elements_showing: 0
   use_ingame_drop: 0
-  scaler: {fileID: 2212272583989971294}
-  offsetter: {fileID: 7479794892535033933}
+  log_world_to_canvas: 0
 --- !u!114 &5255750913549301017
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1365,6 +1365,12 @@ MonoBehaviour:
   - kind: IA
     skins: []
     sprite: {fileID: -773850893, guid: de71426fdff5aa14cbcdd2fb8cf58c86, type: 3}
+  - kind: Item
+    skins: []
+    sprite: {fileID: -1949203270, guid: de71426fdff5aa14cbcdd2fb8cf58c86, type: 3}
+  - kind: Food
+    skins: []
+    sprite: {fileID: -277635488, guid: de71426fdff5aa14cbcdd2fb8cf58c86, type: 3}
   - kind: Door
     skins:
     - blue_door
@@ -1417,6 +1423,7 @@ MonoBehaviour:
   - kind: Capable
     skins: []
     sprite: {fileID: -1570246486, guid: de71426fdff5aa14cbcdd2fb8cf58c86, type: 3}
+  log_no_instance_found_at_start: 0
 --- !u!1001 &2099899681505399097
 PrefabInstance:
   m_ObjectHideFlags: 0

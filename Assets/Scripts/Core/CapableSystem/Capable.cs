@@ -14,7 +14,7 @@ public class Capable : MonoBehaviour, Debuggable
     // NEW CAPACITY SYSTEM
     [Header("Capable data")]
     public CapableData data;
-    public bool Loaded { get { return data != null; } }
+    public bool Loaded { get { return data is not null; } }
 
 
     // LOAD / UNLOAD

@@ -157,7 +157,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
             // we check if we already have a item_stack_data with the same ref
             for (int j=0; j< data.stacks_data.Count; j++)
             {
-                if (are_item_ids_of_same_ref(data.stacks_data[j].items_ids[0], item_id))
+                if (data.stacks_data[j].item_ref == item.Reference)
                 {
                     data.stacks_data[j].items_ids.Add(item_id);
                     goto next_item;
@@ -165,7 +165,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
             }
 
             // if we are here, we have no stack with the same ref, we create a new one and we put the item id in it
-            data.stacks_data.Add(new ItemStackData() { items_ids = new List<string>() { item_id } });
+            data.stacks_data.Add(new ItemStackData() { item_ref = item.Reference, items_ids = new List<string>() { item_id } });
 
             // we go to next item
             next_item:
@@ -174,18 +174,20 @@ public class ItemPool : MonoBehaviour, ItemStorer
 
         return data;
     }
-    private bool are_item_ids_of_same_ref(string item1,string item2)
+    /* private bool are_item_ids_of_same_ref(string item1,string item2)
     {
-        if (!item1.Contains("_") || !item2.Contains("_")) { return false; }
+        if (!item1.Contains("-") || !item2.Contains("-")) { return false; }
 
-        string suffix1 = item1.Split("_")[0];
-        string suffix2 = item2.Split("_")[0];
+        string suffix1 = item1.Split("-")[0];
+        string suffix2 = item2.Split("-")[0];
 
         string ref1 = item1.Substring(0, item1.Length - suffix1.Length);
         string ref2 = item2.Substring(0, item2.Length - suffix2.Length);
 
+        if (string.IsNullOrEmpty(ref1) || string.IsNullOrEmpty(ref2)) { return item1 == item2; }
+
         return ref1 == ref2;
-    }
+    } */
     public List<Item> GetStaticItems()
     {
         List<Item> items = new List<Item>();

@@ -56,8 +56,8 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
     // EVENTS
     public Action<CapableData> OnWorldCapableDataLoaded; // 
-    public Action<Capable, string> OnCapableNeedRoom; // we pass the spawned capable's data and the spawner id (can be null)
-    public Action<string> OnCapableNeedFreedom; // only the capable id we need to free
+    // public Action<Capable, string> OnCapableNeedRoom; // we pass the spawned capable's data and the spawner id (can be null)
+    // public Action<string> OnCapableNeedFreedom; // only the capable id we need to free
     public Action<CapableData> OnCapableSpawned; // we pass the spawned capable's data
     public Action<CapableData> OnCapableDespawned; // we pass the despawned capable's data
 
@@ -335,7 +335,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
         // 1. we duplicate the data into new data
         ICapableData base_data = templates_capables_data[template];
         CapableData new_data = base_data.Duplicate() as CapableData;
-        new_data.id = GameManager.Instance.GenerateUniqueID(base_data.id);
+        new_data.id = World.Instance.GenerateUniqueID(base_data.id);
 
         // generate a hash
         generate_runtime_id(new_data.id);
@@ -529,7 +529,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
         Capable spawned_capable = load_capable(data);
 
         // 2. we fire events
-        OnCapableNeedRoom?.Invoke(spawned_capable, spawner_id); // we alert the RoomSystem that we just spawned a capable, for it to assign a room to it
+        // OnCapableNeedRoom?.Invoke(spawned_capable, spawner_id); // we alert the RoomSystem that we just spawned a capable, for it to assign a room to it
         OnCapableSpawned?.Invoke(data);
 
         if (log_spawning) { Debug.Log($"(CapableSystem) Spawned {data.id}"); }
@@ -540,12 +540,23 @@ public class CapableSystem : BSOD_System<CapableSystem>
     public void OnItemDropped(Item item, Capable dropper)
     {
         // we simply inform the room system that we need a room for the item
-        OnCapableNeedRoom?.Invoke(item, dropper?.data?.id ?? "");
+        // OnCapableNeedRoom?.Invoke(item, dropper?.data?.id ?? "");
+        OnCapableSpawned?.Invoke(item.data);
     }
     public void OnItemGrabbed(Item item, Capable grabber)
     {
         // we simply inform the room system that we need to detach the item from the room
-        OnCapableNeedFreedom?.Invoke(item.data.id);
+        // OnCapableNeedFreedom?.Invoke(item.data.id);
+        OnCapableDespawned?.Invoke(item.data);
+    }
+    public void DespawnCapable(CapableData cdata)
+    {
+        // UNLOAD THE CAPABLE
+        unload_capable(cdata.id);
+        OnCapableDespawned?.Invoke(cdata);
+
+        // free from room
+        // OnCapableNeedFreedom?.Invoke(cdata.id);
     }
 
     // SWITCH CAPABLE TO CORPSE
@@ -570,15 +581,13 @@ public class CapableSystem : BSOD_System<CapableSystem>
         // todo here we should put some meat items inside corpse data inventory so they auto load when spawning the corpse
         // and with the right meat reference
 
-        // 4. UNLOAD THE CAPABLE
-        unload_capable(capable_data.id);
-        OnCapableDespawned?.Invoke(capable_data);
-
         // 5. SPAWN THE CORPSE
         Corpse corpse = SpawnCapable(corpse_data, capable_data.id) as Corpse; // (will assign the corpse to the same room as the capable since we pass the capable as spawner_id)
-        OnCapableNeedFreedom?.Invoke(capable_data.id); // then we need to free the old capable data from the room system since we don't want it to be loaded in the room anymore
         if (log_corpse_switching) { Debug.Log($"(CapableSystem - SwitchToCorpse) Switched {capable.name} to corpse {corpse.name} \n - Capable data : \n{capable_data.GetDetails()} \n - Corpse data : \n{corpse_data.GetDetails()}"); }
         corpse.AnimPlayer.Play("die");
+
+        // 4. DESPAWN THE CAPABLE
+        DespawnCapable(capable_data);
 
         // 6. TRANSFER FORCES
         corpse.SetForces(forces);
@@ -767,7 +776,14 @@ public class CapableSystem : BSOD_System<CapableSystem>
             CapableData data = pair.Value;
             Capable capable = CapableBank.Instance.GetLoadedCapable(id);
             if (capable == null) { continue; }
-            data.SetPosition(capable.transform.position);
+            try
+            {
+                data.SetPosition(capable.transform.position);
+            }
+            catch (Exception e)
+            {
+                if (!hide_log_no_data_found) { Debug.LogWarning($"(CapableSystem - update_loaded_capables_positions) Failed to update position for capable {id}. Exception: {e}"); }
+            }
         }
     }
 

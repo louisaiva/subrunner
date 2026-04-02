@@ -42,10 +42,7 @@ public class OverlapFoodDetector : MonoBehaviour, FoodDetector
             LayerMask.GetMask("Interactives"));
         if (results.Length == 0) { return new List<Food>(); }
 
-        if (logs_detection)
-        {
-            Debug.Log("(EatCapacity) " + ia_id + " detected " + results.Length + " potential foods in range of " + edata.range_food_detection);
-        }
+        string log = "";
 
         // we convert those into foods & check few things
         List<Food> potential_foods = new List<Food>();
@@ -53,19 +50,22 @@ public class OverlapFoodDetector : MonoBehaviour, FoodDetector
         {
             // we check if the parent capable has a Capable component
             Food food = collider.transform.parent.GetComponent<Food>();
+            if (food == null && collider.transform.parent.parent != null) { food = collider.transform.parent.parent.GetComponent<Food>(); }
             if (food == null) { continue; }
 
             if (!food.ValidateRule(edata.food_rule)) { continue; }
             
             // we add the food to the list of potential foods
             potential_foods.Add(food);
-            
-            /* else if (capable is Corpse corpse && corpse.EatableBy(edata.food_rule))
+
+            if (logs_detection)
             {
-                // we add the corpse to the list of potential foods
-                potential_foods.Add(corpse);
-            } */
+                log += $"  - {food.data.id} at position {food.transform.position} with distance {Vector3.Distance(food.transform.position, position)} \n";
+            }
         }
+
+        if (logs_detection) { Debug.Log("(EatCapacity) " + ia_id + " detected " + potential_foods.Count + " potential foods in range of " + edata.range_food_detection + " : \n" + log); }
+
         return potential_foods;
     }
 }

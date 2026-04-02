@@ -53,7 +53,7 @@ public interface FoodDetector : Detector
     public CapableTarget() { }
     public CapableTarget(Capable capable)
     {
-        if (capable == null) { return; }
+        if (capable == null || capable.data == null) { return; }
         capable_id = capable.data.id;
         position = capable.transform.position;
         _loaded_capable = capable;

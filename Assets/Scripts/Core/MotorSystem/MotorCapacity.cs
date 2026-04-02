@@ -94,8 +94,7 @@ public class MotorCapacity : Capacity
         if (mdata == null) { return; }
 
         // we request the goal
-        if (string.IsNullOrEmpty(mdata.current_goal)) { request_goal(Provider.AgentType.GetGoals()); }
-        else { request_goal(mdata.current_goal); }
+        request_goal(Provider.AgentType.GetGoals());
     }
     protected void request_goal<T>() where T : GoalBase
     {
@@ -178,18 +177,6 @@ public class MotorCapacity : Capacity
         if (log) { Debug.Log($"(MotorCapacity) {owner_id} reset GoapActionProvider agent type to 'none' from unload"); }
     }
 
-    // SAVE DYNAMIC DATA
-    public override void SaveDynamicData()
-    {
-        base.SaveDynamicData();
-
-        if (this.data == null) { return; }
-        if (this.data is not MotorData mdata) { return; }
-
-        // save the current goal
-        mdata.current_goal = Provider.CurrentPlan?.Goal?.GetType().Name ?? "";
-    }
-
 
     // GET STATIC DATA
     public override CapacityData GetStaticData()
@@ -197,7 +184,6 @@ public class MotorCapacity : Capacity
         MotorData static_data = new MotorData(base.GetStaticData())
         {
             agent_type = get_static_agent_type(),
-            current_goal = "", // always start with no goal, the MotorCapacity will request a goal on LoadData
             avoidance_data = mover.GetStaticAvoidanceData()
         };
 

@@ -87,7 +87,6 @@ public class CapableDataManager : MonoBehaviour
             if (log) { Debug.Log($"(Capable - Save Data) Updated & Saved CapacityData : {capacity.name} (to {path})\n\n{capacity_data.GetDetails()}\n\n{capacity_json}"); }
         }
     }
-
     public void SaveAllCapablesDataInScene()
     {
         Capable[] all_capables = FindObjectsByType<Capable>(FindObjectsInactive.Include, FindObjectsSortMode.None);
@@ -102,8 +101,17 @@ public class CapableDataManager : MonoBehaviour
         AssetDatabase.Refresh();
         #endif
     }
+    public void SaveCapablesData(List<Capable> capables)
+    {
+        foreach (Capable capable in capables)
+        {
+            saveCapableData(capable);
+        }
 
-
+        #if UNITY_EDITOR
+        AssetDatabase.Refresh();
+        #endif
+    }
 
 
 #if UNITY_EDITOR

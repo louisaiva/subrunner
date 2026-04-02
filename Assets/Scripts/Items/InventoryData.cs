@@ -77,12 +77,14 @@ using System.Collections.Generic;
 
 [Serializable] public class ItemStackData
 {
+    public string item_ref;
     public List<string> items_ids;
     
     public ItemStackData Duplicate()
     {
         return new ItemStackData
         {
+            item_ref = item_ref,
             items_ids = new List<string>(items_ids)
         };
     }

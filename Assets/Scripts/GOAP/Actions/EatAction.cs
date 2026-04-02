@@ -26,7 +26,7 @@ namespace subrunner.goap
         {
             // checks that the food is still valid
             if (data.eatCapacity == null) { return false; }
-            if (data.target == null) { return false; }
+            if (data.target == null || !data.target.Loaded) { return false; }
 
             // we set the food target into the capacity
             data.eatCapacity.SetFoodTarget(data.target);

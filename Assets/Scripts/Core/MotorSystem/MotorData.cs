@@ -7,7 +7,7 @@ using subrunner.goap;
     public string agent_type;
 
     // GOALS
-    public string current_goal; // todo : transfer this to BrainData
+    // public string current_goal; // todo : transfer this to BrainData
 
     // GOTO DATA
     public AvoidanceData avoidance_data = new AvoidanceData();
@@ -25,7 +25,6 @@ using subrunner.goap;
         return new MotorData(base.Duplicate() as CapacityData)
         {
             agent_type = this.agent_type,
-            current_goal = this.current_goal,
             avoidance_data = this.avoidance_data.Duplicate()
         };
     }
@@ -35,7 +34,6 @@ using subrunner.goap;
     {
         string details = "";
         details += $"  - agent type : {agent_type}\n";
-        details += $"  - current goal : {current_goal}\n";
         details += $"  - {avoidance_data.GetDetails()}\n";
         return base.GetDetails() + details;
     }

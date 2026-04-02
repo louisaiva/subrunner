@@ -41,9 +41,66 @@ public class World : BSOD_System<World>
     public WorldData data;
     public string CurrentWorldDataPath => Path.Combine(WorldDataPath, world_id);
 
-
     [Header("Spawn")]
     public Transform fallback_spawn_point; // if no player data were found on LoadWorld, we will spawn the player at this position
+
+    [Header("Transform Parents")]
+    private Transform _capables_parent;
+    public Transform CapablesParent
+    {
+        get
+        {
+            if (_capables_parent == null)
+            {
+                _capables_parent = transform.Find("Capables");
+                if (_capables_parent == null)
+                {
+                    GameObject go = new GameObject("Capables");
+                    go.transform.SetParent(transform);
+                    _capables_parent = go.transform;
+                }
+            }
+            return _capables_parent;
+        }
+    }
+    private Transform _movables_parent;
+    public Transform MovablesParent
+    {
+        get
+        {
+            if (_movables_parent == null)
+            {
+                _movables_parent = transform.Find("Movables");
+                if (_movables_parent == null)
+                {
+                    GameObject go = new GameObject("Movables");
+                    go.transform.SetParent(transform);
+                    _movables_parent = go.transform;
+                }
+            }
+            return _movables_parent;
+        }
+    }
+    private Transform _items_parent;
+    public Transform ItemsParent
+    {
+        get
+        {
+            if (_items_parent == null)
+            {
+                _items_parent = transform.Find("Items");
+                if (_items_parent == null)
+                {
+                    GameObject go = new GameObject("Items");
+                    go.transform.SetParent(transform);
+                    _items_parent = go.transform;
+                }
+            }
+            return _items_parent;
+        }
+    }
+
+
 
     [Header("Logs")]
     public bool log = false;
@@ -151,11 +208,13 @@ public class World : BSOD_System<World>
         // string world_data_json_path = Path.Combine(world_path, "world_data.json");
     }
 
+    // STATIC DATA EXTRACTION
     public WorldData GetStaticData()
     {
         WorldData new_data = new WorldData
         {
-            levels_ids = get_static_levels_ids()
+            levels_ids = get_static_levels_ids(),
+            generated_ids_counters = data != null ? data.generated_ids_counters : new Dictionary<string, int>()
         };
 
         return new_data;
@@ -171,11 +230,74 @@ public class World : BSOD_System<World>
         foreach (Level level in levels) { level_ids.Add(level.name); }
         return level_ids;
     }
+    public Level[] GetStaticLevels()
+    {
+        // only return the levels in the children that are ALSO in the levels_ids
+        List<string> levels_ids = get_static_levels_ids();
+        Level[] levels = gameObject.GetComponentsInChildren<Level>(includeInactive: true);
+        List<Level> filtered_levels = new List<Level>();
+        foreach (Level level in levels)
+        {
+            if (!levels_ids.Contains(level.name)) { continue; }
+            filtered_levels.Add(level);
+        }
+        return filtered_levels.ToArray();
+    }
 
+    // ID GENERATION
+    private Dictionary<string, int> generated_ids_counters = new Dictionary<string, int>();
+    public string GenerateUniqueID(string base_id)
+    {
+        // todo if we have perf issues when spawning capables this can be the issue
+        // then we just need to have a static int that we increment so it's faster
+        // or have a dict with max ids per prefix
+
+        // we check if the base_id can be splitted with "_"
+        string[] parts = base_id.Split('-');
+        string suffix = parts.Length > 1 ? parts[parts.Length - 1] : "";
+        string prefix = base_id.Substring(0, base_id.Length - suffix.Length);
+        if (suffix == "") { prefix += "-"; } // if we got no suffix, we add a _ to the prefix so it will be alrgiht next time
+
+        // we go through all generated_ids and memorize all the ids that have the same prefix and check the suffix int is greater or not
+        // int max_suffix = get_next_id_suffix(prefix);
+        // int max_suffix = 0;
+        /* foreach (string id in generated_ids)
+        {
+            if (id.StartsWith(prefix))
+            {
+                string id_suffix = id.Substring(prefix.Length);
+                if (int.TryParse(id_suffix, out int id_suffix_int))
+                {
+                    if (id_suffix_int > max_suffix)
+                    {
+                        max_suffix = id_suffix_int;
+                    }
+                }
+            }
+        } */
+
+        // construct final id
+        string new_id = prefix + get_next_id_suffix(prefix);
+        return new_id;
+    }
+    public void ClearGeneratedIDs() { generated_ids_counters.Clear(); }
+    private int get_next_id_suffix(string prefix)
+    {
+        if (!generated_ids_counters.ContainsKey(prefix))
+        {
+            generated_ids_counters[prefix] = 0;
+        }
+        else
+        {
+            generated_ids_counters[prefix]++;
+        }
+        return generated_ids_counters[prefix];
+    }
 }
 
 
 [Serializable] public class WorldData
 {
     public List<string> levels_ids;
+    public Dictionary<string, int> generated_ids_counters;
 }

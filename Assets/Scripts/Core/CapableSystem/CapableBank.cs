@@ -21,7 +21,7 @@ public class CapableBank : MonoBehaviour
     // CAPABLE LOADING
     [Header("Loaded capables")]
     [SerializeField] protected List<Capable> loaded_capables;
-    [SerializeField] protected Transform capables_parent;
+    // [SerializeField] protected Transform capables_parent;
     
     [Header("Prefabs")]
     [SerializeField] protected GameObject capable_prefab; // with no kind at all : when instantiating we need to add component to it
@@ -67,7 +67,7 @@ public class CapableBank : MonoBehaviour
         }
 
         // if we have no pooled capable we need to instantiate one
-        GameObject go = Instantiate(capable_prefab, capables_parent);
+        GameObject go = Instantiate(capable_prefab);
 
         // we need to add the kind of the capable to the object
         // if (log_types) { Debug.Log($"(CapableBank) Instantiated prefab, now adding component : {data.kind}"); }
@@ -77,6 +77,13 @@ public class CapableBank : MonoBehaviour
             Debug.LogError($"(CapableBank) Type not found for kind: {data.kind}");
             return null;
         }
+
+        // set the good parent for the capable based on its kind
+        Transform parent;
+        if (GameManager.IsKind(kind, typeof(Item))) { parent = World.Instance.ItemsParent; }
+        else if (GameManager.IsKind(kind, typeof(Movable))) { parent = World.Instance.MovablesParent; }
+        else { parent = World.Instance.CapablesParent; }
+        go.transform.SetParent(parent);
 
         // then we add some few things we need, related to the capable kind
         capable = add_components_based_on_kind(go, kind);

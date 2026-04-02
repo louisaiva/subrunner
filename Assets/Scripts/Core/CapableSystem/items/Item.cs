@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using Unity.VisualScripting;
 using UnityEngine;
 /// <summary>
 /// Item is a Movable that can be grabbed by other Capables with GrabCapacity + InteractCapacity.
@@ -10,6 +8,7 @@ public class Item : Movable, EndlessInteractable
 {
 
     [Header("Item")]
+    public ItemData idata => (ItemData)data;
     [SerializeField] private string _reference = "category:item";
     public string Reference
     {
@@ -29,20 +28,7 @@ public class Item : Movable, EndlessInteractable
 
     // GRAB / DROP / PLACING
     private bool _grabbed = false;
-    public bool Grabbed
-    {
-        get => _grabbed;
-        /* set
-        {
-            // check if the value is the same
-            if (value == _grabbed) { return; }
-
-            // we set the value
-            _grabbed = value;
-            if (value) { on_grabbed(); }
-            else { on_dropped(); }
-        } */
-    }
+    public bool Grabbed { get => _grabbed; }
     [SerializeField] private bool _placed = false;
     public bool Placed
     {
@@ -187,6 +173,7 @@ public class Item : Movable, EndlessInteractable
     public virtual void BeGrabbed(Capable grabber)
     {
         _grabbed = true;
+        idata.SetIsGrabbed(true); // we set this to false before calling on_dropped so the events are triggered with the correct value
         on_grabbed();
 
         // we load the capacities we have not load yet & remove the room
@@ -194,12 +181,16 @@ public class Item : Movable, EndlessInteractable
         CapacityEngine.Instance?.UnloadCapacities(dynamic_capacity_ids, this);
         CapableSystem.Instance?.OnItemGrabbed(this, Holder);
 
+        // we free the item from the room if it had one.
+        RoomEngine.Instance?.FreeCapable(this);
+
         // finally set the holder
         _holder = grabber;
     }
     public virtual void BeDropped(Capable dropper)
     {
         _grabbed = false;
+        idata.SetIsGrabbed(false); // we set this to false before calling on_dropped so the events are triggered with the correct value
         on_dropped();
 
         // we load the capacities and get a room

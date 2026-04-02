@@ -50,8 +50,22 @@ public class Level : MonoBehaviour
 
         if (data.navmesh_data_paths.Contains(path)) { return; }
         data.navmesh_data_paths.Add(path);
-    }
 
+        // mark as dirty to save the data
+        #if UNITY_EDITOR
+        UnityEditor.EditorUtility.SetDirty(this);
+        #endif
+    }
+    public void ClearNavMeshPaths()
+    {
+        if (data == null || data.navmesh_data_paths == null) { return; }
+        data.navmesh_data_paths.Clear();
+        
+        // mark as dirty to save the data
+        #if UNITY_EDITOR
+        UnityEditor.EditorUtility.SetDirty(this);
+        #endif
+    }
 
     // GET STATIC DATA
 
@@ -130,4 +144,5 @@ public class Level : MonoBehaviour
         }
         return new Bounds(new Vector3((min_x + max_x) / 2, (min_y + max_y) / 2, 0), new Vector3(max_x - min_x, max_y - min_y, 0));
     }
+    public Capable[] GetStaticCapables() { return GetComponentsInChildren<Capable>(includeInactive: true); }
 }

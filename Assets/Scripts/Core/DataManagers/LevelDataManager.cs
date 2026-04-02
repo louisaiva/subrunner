@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Linq;
+
 
 
 #if UNITY_EDITOR
@@ -14,44 +16,45 @@ public class LevelDataManager : MonoBehaviour
     public static string CurrentLevelDataFolder => Path.Combine(World.CurrentStaticWorldDataPath, "levels");
     public List<Level> levels_to_save = new List<Level>();
     public bool save_rooms_data = false; // if true, when we save the levels data, we also save the rooms data (ie we update the rooms data with the current overlapping capables in the editor)
+    public bool save_capables_data = false;
 
     [Header("Logs")]
     public bool log = false;
+
+    private CapableDataManager _capable_manager;
+    private CapableDataManager CapableManager
+    {
+        get
+        {
+            if (_capable_manager == null) { _capable_manager = GetComponent<CapableDataManager>(); }
+            if (_capable_manager == null) { Debug.LogError("(LevelDataManager) No CapableDataManager found in the scene. Please add one to the scene."); }
+            return _capable_manager;
+        }
+    }
 
 
     public void SaveLevelsData()
     {
         foreach (Level level in levels_to_save)
         {
-            LevelData data = level.GetStaticData();
-
-            // save the current LevelData to a json file
-            string json = JsonUtility.ToJson(data, true);
-            string path = Path.Combine(CurrentLevelDataFolder, data.id + ".json");
-            System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
-            if (log) { Debug.Log($"(LevelDataManager) Updated & Saved LevelData : {level.name} (to {path})\n\n{json}"); }
-
-            // check if we need to save the rooms also
-            if (!save_rooms_data) { continue; }
-            foreach (Room room in level.GetStaticRooms())
-            {
-                RoomData rdata = room.GetStaticData();
-
-                // save the current RoomData to a json file
-                json = JsonUtility.ToJson(rdata, true);
-                path = Path.Combine(RoomDataSaver.CurrentRoomDataFolder, rdata.id + ".json");
-                System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
-
-                if (log) { Debug.Log($"(LevelDataManager) Updated & Saved RoomData : {room.name} (to {path})\n\n{json}"); }
-            }
-
+            save_level_data(level);
         }
 
         #if UNITY_EDITOR
         AssetDatabase.Refresh();
         #endif
     }
+    public void SaveLevels(List<Level> levels)
+    {
+        foreach (Level level in levels)
+        {
+            save_level_data(level);
+        }
 
+        #if UNITY_EDITOR
+        AssetDatabase.Refresh();
+        #endif
+    }
     public void MakeRoomsGrabCapables()
     {
         List<Capable> overlapping_capables = new List<Capable>();
@@ -103,11 +106,62 @@ public class LevelDataManager : MonoBehaviour
                     added_capable_ids.Add(capable_id);
                 }
                 log += "\n";
+
+                // mark the room data as dirty so it gets saved
+                #if UNITY_EDITOR
+                EditorUtility.SetDirty(room);
+                #endif
             }
             log += "\n";
         }
 
         if (this.log) { Debug.Log($"(LevelDataManager) Total Capables grabbed : {added_capable_ids.Count}\n{log}"); }
+
+
+        #if UNITY_EDITOR
+        AssetDatabase.Refresh();
+        #endif
+    }
+
+
+    // low level saving
+    private void save_level_data(Level level)
+    {
+        LevelData data = level.GetStaticData();
+
+        // save the current LevelData to a json file
+        string json = JsonUtility.ToJson(data, true);
+        string path = Path.Combine(CurrentLevelDataFolder, data.id + ".json");
+        System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
+        if (log) { Debug.Log($"(LevelDataManager) Updated & Saved LevelData : {level.name} (to {path})\n\n{json}"); }
+
+        // check if we need to save the rooms also
+        if (save_rooms_data) { save_rooms_level_data(level); }
+
+        // check if we need to save the capables also
+        if (save_capables_data) { save_capables_level_data(level); }
+    }
+    private void save_rooms_level_data(Level level)
+    {
+        string json;
+        string path;
+        foreach (Room room in level.GetStaticRooms())
+        {
+            RoomData rdata = room.GetStaticData();
+
+            // save the current RoomData to a json file
+            json = JsonUtility.ToJson(rdata, true);
+            path = Path.Combine(RoomDataSaver.CurrentRoomDataFolder, rdata.id + ".json");
+            System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
+
+            if (log) { Debug.Log($"(LevelDataManager) Updated & Saved RoomData : {room.name} (to {path})\n\n{json}"); }
+        }
+    }
+    private void save_capables_level_data(Level level)
+    {
+        // we use the CapablesDataManager to save the capables data so it saves them with the parameters etc
+        // (save capacities & save capables in inventory)
+        CapableManager.SaveCapablesData(level.GetStaticCapables().ToList());
     }
 
 

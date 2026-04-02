@@ -480,6 +480,9 @@ public class Room : MonoBehaviour
 
         if (Controller.Instance.Capable != capable && !CapableBank.Instance.HasCapable(capable)) { return; }
 
+        // if this is a grabbed item then we do nothing (was freed when grabbed)
+        if (capable is Item item && item.Grabbed) { return; }
+
         // directly call RoomEngine.OnRoomExit
         RoomEngine.Instance.OnRoomExit(this.data, capable);
 

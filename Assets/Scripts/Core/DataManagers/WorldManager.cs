@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Linq;
+
 
 
 #if UNITY_EDITOR
@@ -10,8 +12,24 @@ using UnityEditor;
 public class WorldManager : MonoBehaviour
 {
 
+    [Header("World Saving")]
+    public bool save_levels = false;
+    
+    
     [Header("Logs")]
     public bool log = false;
+    private LevelDataManager _level_manager;
+    private LevelDataManager LevelManager
+    {
+        get
+        {
+            if (_level_manager == null) { _level_manager = GetComponent<LevelDataManager>(); }
+            if (_level_manager == null) { Debug.LogError($"(WorldManager) No LevelDataManager found on the {name} game object. Please add one to the scene."); }
+            return _level_manager;
+        }
+    }
+
+
 
 
     public void SaveWorldData()
@@ -25,6 +43,15 @@ public class WorldManager : MonoBehaviour
             return;
         }
         world.EnsureWorldDataHierarchy(); // make sure all the folders for this world exist in the persistent data path
+
+
+        // check if we need to save the levels data
+        if (save_levels)
+        {
+            Level[] levels = world.GetStaticLevels();
+            LevelManager.SaveLevels(levels.ToList());
+        }
+
         WorldData data = world.GetStaticData();
 
         // save the current WorldData to a json file

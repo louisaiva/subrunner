@@ -11,8 +11,8 @@ public class Food : Item, Usable
     public void BeEaten(HealthCapacity eater)
     {
         OnBeingBitten?.Invoke(eater);
-        Destroy(gameObject);
-        // todo adapt this to the CapableSystem with proper unloading
+        // Destroy(gameObject);
+        CapableSystem.Instance.DespawnCapable(this.data);
     }
     public string UseLabel { get; } = "eat";
     public void Use(Capable user)
