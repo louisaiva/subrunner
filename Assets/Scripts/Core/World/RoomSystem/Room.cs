@@ -11,9 +11,6 @@ public class Room : MonoBehaviour
     public bool Loaded { get { return data != null; } }
     private bool _unloading = false;
 
-    // [Header("Room shown")]
-    // public bool shown = false; // if the room is currently shown. =/= is the room loaded. shown is only about visibility
-
     [Header("Room collider")]
     private PolygonCollider2D _room_collider;
     public PolygonCollider2D RoomCollider
@@ -428,44 +425,14 @@ public class Room : MonoBehaviour
         if (Controller.Instance.Capable != capable && !CapableBank.Instance.HasCapable(capable)) { return; }
         string id = capable.data.id;
 
-        /* // check if we are not already in the movables or capable + if we are not doing IN-OUT in the same room
-        bool in_movables = data.movables_ids.Contains(id) || data.capables_ids.Contains(id);
-        bool in_out_movables = data.OUT_movables_ids.Contains(id);
-        if (in_movables && !in_out_movables)
-        {
-            // if the capable is already in the room and has not gone out of the room, it means it teleported (happens on awake)
-            if (RoomEngine.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Ignored IN - " + id + " (should happen on a capable spawn otherwise it s weird)"); }
-            return;
-        }
-        if (in_movables && in_out_movables)
-        {
-            // if the capable is in the OUT list and in the movables one it means it went out, did not find any other room to go to, and came back to main room,
-            // so we simply remove both in and out for this capable
-            data.OUT_movables_ids.Remove(id);
-            data.IN_movables_ids.Remove(id);
-            if (RoomEngine.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Ignored OUT then IN - " + id); }
-            return;
-        }
-
-        // check if we are not already in the IN then it means we have 2 IN -> we put it directly in the movables
-        if (data.IN_movables_ids.Contains(id))
-        {
-             data.IN_movables_ids.Remove(id);
-
-            // check is capable or movable and add it to the right list
-            if (capable is Movable) { data.movables_ids.Add(id); }
-            else {data.capables_ids.Add(id); }
-            if (RoomEngine.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) Grabbed 2x IN - " + id); } 
-            return;
-        }
-
-        // capable enters !
-        data.IN_movables_ids.Add(id); */
+        if (RoomEngine.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) {id} - IN -"); }
         
+        // check if we should ignore the trigger bcz the capable just attached to something in the room
+        if (RoomEngine.Instance.ShouldIgnoreRoomTrigger(id)) { return; }
+
         // directly call RoomEngine.OnRoomEnter
         RoomEngine.Instance.OnRoomEnter(this.data, capable);
 
-        if (RoomEngine.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) IN - " + id); }
     }
     protected virtual void OnTriggerExit2D(Collider2D collider)
     {
@@ -479,14 +446,20 @@ public class Room : MonoBehaviour
         if (capable == null) { return; }
 
         if (Controller.Instance.Capable != capable && !CapableBank.Instance.HasCapable(capable)) { return; }
+        string id = capable.data.id;
+        if (RoomEngine.Instance != null && RoomEngine.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) {id} - OUT -"); }
+
+        // ! is data.id null ? if we unload the capable, could be
+
+        // check if we should ignore the trigger bcz the capable just attached/detached to something in the room
+        if (RoomEngine.Instance.ShouldIgnoreRoomTrigger(id)) { return; }
 
         // if this is a grabbed item then we do nothing (was freed when grabbed)
-        if (capable is Item item && item.Grabbed) { return; }
+        // if (capable is Item item && item.Grabbed) { return; }
 
         // directly call RoomEngine.OnRoomExit
         RoomEngine.Instance.OnRoomExit(this.data, capable);
 
-        if (RoomEngine.Instance != null && RoomEngine.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) OUT - " + capable.data.id); }
     }
 
 

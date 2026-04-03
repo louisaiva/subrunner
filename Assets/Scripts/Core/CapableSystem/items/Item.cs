@@ -172,17 +172,17 @@ public class Item : Movable, EndlessInteractable
     // BEING GRABBED / DROPPED
     public virtual void BeGrabbed(Capable grabber)
     {
+        // we free the item from room so the trigger event are not called after
+        CapableSystem.Instance?.OnItemGrabbed(this);
+
+
         _grabbed = true;
-        idata.SetIsGrabbed(true); // we set this to false before calling on_dropped so the events are triggered with the correct value
+        idata.is_grabbed = true; // we set this to true before calling on_grabbed so the events are triggered with the correct value
         on_grabbed();
 
         // we load the capacities we have not load yet & remove the room
         if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Item - OnGrabbed) {data.id} unloading capacities : {string.Join(" ", dynamic_capacity_ids)}"); }
         CapacityEngine.Instance?.UnloadCapacities(dynamic_capacity_ids, this);
-        CapableSystem.Instance?.OnItemGrabbed(this, Holder);
-
-        // we free the item from the room if it had one.
-        RoomEngine.Instance?.FreeCapable(this);
 
         // finally set the holder
         _holder = grabber;
@@ -190,13 +190,13 @@ public class Item : Movable, EndlessInteractable
     public virtual void BeDropped(Capable dropper)
     {
         _grabbed = false;
-        idata.SetIsGrabbed(false); // we set this to false before calling on_dropped so the events are triggered with the correct value
+        idata.is_grabbed = false; // we set this to false before calling on_dropped so the events are triggered with the correct value
         on_dropped();
 
         // we load the capacities and get a room
         if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Item - OnDropped) {data.id} loading capacities : {string.Join(" ", dynamic_capacity_ids)}"); }
         CapacityEngine.Instance?.LoadCapacities(dynamic_capacity_ids, this);
-        CapableSystem.Instance?.OnItemDropped(this, Holder);
+        CapableSystem.Instance?.OnItemDropped(this);
 
         // finally we reset the holder
         _holder = null;
@@ -384,8 +384,7 @@ public class Item : Movable, EndlessInteractable
         base.SaveDynamicData();
 
         if (data is not ItemData item_data) { return; }
-        // item_data.is_grabbed = Grabbed;
-        item_data.SetIsGrabbed(Grabbed); // we call the method to trigger the events if needed
+        item_data.is_grabbed = Grabbed;
     }
 }
 
@@ -431,16 +430,5 @@ public class ItemData : CapableData
         details += $"  - item_description : {item_description}\n";
         details += $"  - is_grabbed : {is_grabbed}\n";
         return details;
-    }
-
-    // ON GRABBED / DROPPED
-    public Action<ItemData> OnGrabbed = delegate { };
-    public Action<ItemData> OnDropped = delegate { };
-    public void SetIsGrabbed(bool is_grabbed)
-    {
-        if (is_grabbed == this.is_grabbed) { return; }
-        this.is_grabbed = is_grabbed;
-        if (is_grabbed) { OnGrabbed?.Invoke(this); }
-        else { OnDropped?.Invoke(this); }
     }
 }

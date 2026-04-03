@@ -59,16 +59,16 @@ public class CapableVisualizerManager : MonoBehaviour
         }
 
         // finally we register to CapableSystem events to create/destroy visuals when needed
-        CapableSystem.Instance.OnCapableSpawned += handle_capable_spawned;
-        CapableSystem.Instance.OnCapableDespawned += handle_capable_despawned;
+        CapableSystem.Instance.OnCapableAppear += handle_capable_spawned;
+        CapableSystem.Instance.OnCapableDisappear += handle_capable_despawned;
     }
     
     // ON DESTROY
     private void OnDestroy()
     {
         if (CapableSystem.Instance == null) { return; }
-        CapableSystem.Instance.OnCapableSpawned -= handle_capable_spawned;
-        CapableSystem.Instance.OnCapableDespawned -= handle_capable_despawned;
+        CapableSystem.Instance.OnCapableAppear -= handle_capable_spawned;
+        CapableSystem.Instance.OnCapableDisappear -= handle_capable_despawned;
     }
 
     // VISU CREATION

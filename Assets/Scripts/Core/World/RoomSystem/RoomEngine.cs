@@ -29,6 +29,10 @@ public class RoomEngine : BSOD_System<RoomEngine>
     public Action<string, RoomData> OnCapableAddedToRoom = delegate { };
     public Action<string, RoomData> OnCapableRemovedFromRoom = delegate { };
 
+    // CAPABLES ATTACHING
+    private Dictionary<string, float> capables_attach_times = new Dictionary<string, float>();
+    private float no_trigger_after_attach_duration = 0.08f;
+
 
     // PARAMETERS & LOGS
 
@@ -197,9 +201,9 @@ public class RoomEngine : BSOD_System<RoomEngine>
     // START
     private void Start()
     {
-        // we register to CapableSystem.OnCapableNeedRoom so we can assign rooms to the new capable
-        // CapableSystem.Instance.OnCapableNeedRoom += handleCapableNeedRoom;
-        // CapableSystem.Instance.OnCapableNeedFreedom += removeCapableFromSystem;
+        // we register to CapableSystem.OnCapableAppear so we can assign rooms to the new capable
+        CapableSystem.Instance.OnCapableAppear += AttachCapable;
+        CapableSystem.Instance.OnCapableDisappear += FreeCapable;
 
         // we generate the spatial maps for the levels
         generateLevels2DSpatialCells();
@@ -313,20 +317,43 @@ public class RoomEngine : BSOD_System<RoomEngine>
 
     }
 
+    // CAPABLE ATTACHING
+    public void AttachCapable(CapableData capable_data) => AttachCapable(capable_data.id);
+    public void AttachCapable(string id)
+    {
+        // basically we add the capable to the dirty list to let the tick handle its room assignment
+        if (log_enter_exit) { Debug.Log($"(RoomEngine) AttachCapable : {id} is going to be attached"); }
+        dirtyCapablesIDs[id] = 1000; // highest prio for new attached capables
 
+        // we don't set any bias bcz it just attached
+
+        // but we save the id and time of attach to prevent the calling of room triggers
+        capables_attach_times[id] = Time.time;
+    }
     // CAPABLE FREEING
-    public void FreeCapable(Capable capable) => FreeCapable(capable.data.id);
+    public void FreeCapable(CapableData capable_data) => FreeCapable(capable_data.id);
     public void FreeCapable(string id)
     {
+        if (log_enter_exit) { Debug.Log($"(RoomEngine) FreeCapable : {id} is going to be freed"); }
+
         // we free the capable from any room, it may be destroyed or else
         RoomData room = GetCapableRoom(id);
         if (room == null) { return; }
         removeCapableFromRoom(id, room);
 
+        // we save the id and time of detach to prevent the calling of room triggers
+        capables_attach_times[id] = Time.time;
+
         if (log_room_transfers) { Debug.Log($"(RoomEngine) [{room.id}] >> {id} >> [none]         -- was freed !!"); }
         if (log_loaded_area_transfers) { Debug.Log($"(RoomEngine) [{room.id}] >> {id} >> [none]         -- was freed !!"); }
     }
-
+    public bool ShouldIgnoreRoomTrigger(string id)
+    {
+        if (!capables_attach_times.TryGetValue(id, out float attach_time)) { return false; }
+        if (Time.time - attach_time > no_trigger_after_attach_duration) { return false; }
+        capables_attach_times.Remove(id);
+        return true;
+    }
 
     /* -------------------------------------
 
@@ -595,6 +622,7 @@ public class RoomEngine : BSOD_System<RoomEngine>
     private void load_room(string id)
     {
         if (!rooms_data.ContainsKey(id)) { Debug.LogWarning("(RoomEngine - Load) Room data not found for id: " + id); return; }
+        if (loaded_rooms_data.ContainsKey(id)) { Debug.LogWarning("(RoomEngine - Load) Room data already loaded for id: " + id); return; }
         RoomData data = rooms_data[id];
         RoomBank.Instance.Load(data);
         loaded_rooms_data.Add(id, data);
@@ -602,10 +630,7 @@ public class RoomEngine : BSOD_System<RoomEngine>
     }
 
     // UNLOAD ROOMS
-    public void UnloadAllRooms()
-    {
-        unloadRooms(loaded_rooms_data.Keys as ICollection<string>);
-    }
+    public void UnloadAllRooms() => unloadRooms(loaded_rooms_data.Keys);
     public void UnloadRooms(string[] rooms_ids)
     {
         unloadRooms(rooms_ids);

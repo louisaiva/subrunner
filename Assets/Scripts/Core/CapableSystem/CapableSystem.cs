@@ -55,11 +55,8 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
 
     // EVENTS
-    public Action<CapableData> OnWorldCapableDataLoaded; // 
-    // public Action<Capable, string> OnCapableNeedRoom; // we pass the spawned capable's data and the spawner id (can be null)
-    // public Action<string> OnCapableNeedFreedom; // only the capable id we need to free
-    public Action<CapableData> OnCapableSpawned; // we pass the spawned capable's data
-    public Action<CapableData> OnCapableDespawned; // we pass the despawned capable's data
+    public Action<CapableData> OnCapableAppear; // =/= spawned bcz it works for items too. a dropped item appears BUT is was not spawned !
+    public Action<CapableData> OnCapableDisappear; // despawned capables + grabbed items
 
 
     /* -------------------------------------
@@ -511,12 +508,12 @@ public class CapableSystem : BSOD_System<CapableSystem>
         return final_broken_links == 0;
     }
 
-    // SPAWNING / DROPPING CAPABLES & ITEMS
-    public Capable SpawnCapable(string template, string spawner_id = "")
+    // SPAWNING CAPABLES
+    public Capable SpawnCapable(string template)
     {
-        return SpawnCapable(DuplicateTemplate(template), spawner_id);
+        return SpawnCapable(DuplicateTemplate(template));
     }
-    public Capable SpawnCapable(CapableData data, string spawner_id = "")
+    public Capable SpawnCapable(CapableData data)
     {
         if (data == null)
         {
@@ -529,35 +526,23 @@ public class CapableSystem : BSOD_System<CapableSystem>
         Capable spawned_capable = load_capable(data);
 
         // 2. we fire events
-        // OnCapableNeedRoom?.Invoke(spawned_capable, spawner_id); // we alert the RoomSystem that we just spawned a capable, for it to assign a room to it
-        OnCapableSpawned?.Invoke(data);
+        OnCapableAppear?.Invoke(data);
 
         if (log_spawning) { Debug.Log($"(CapableSystem) Spawned {data.id}"); }
 
         // 3. we return the spawned capable
         return spawned_capable;
     }
-    public void OnItemDropped(Item item, Capable dropper)
-    {
-        // we simply inform the room system that we need a room for the item
-        // OnCapableNeedRoom?.Invoke(item, dropper?.data?.id ?? "");
-        OnCapableSpawned?.Invoke(item.data);
-    }
-    public void OnItemGrabbed(Item item, Capable grabber)
-    {
-        // we simply inform the room system that we need to detach the item from the room
-        // OnCapableNeedFreedom?.Invoke(item.data.id);
-        OnCapableDespawned?.Invoke(item.data);
-    }
     public void DespawnCapable(CapableData cdata)
     {
         // UNLOAD THE CAPABLE
         unload_capable(cdata.id);
-        OnCapableDespawned?.Invoke(cdata);
-
-        // free from room
-        // OnCapableNeedFreedom?.Invoke(cdata.id);
+        OnCapableDisappear?.Invoke(cdata);
     }
+
+    // ITEMS EVENTS
+    public void OnItemDropped(Item item) { OnCapableAppear?.Invoke(item.data); }
+    public void OnItemGrabbed(Item item) { OnCapableDisappear?.Invoke(item.data); }
 
     // SWITCH CAPABLE TO CORPSE
     public async void SwitchToCorpse(Capable capable)
@@ -582,7 +567,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
         // and with the right meat reference
 
         // 5. SPAWN THE CORPSE
-        Corpse corpse = SpawnCapable(corpse_data, capable_data.id) as Corpse; // (will assign the corpse to the same room as the capable since we pass the capable as spawner_id)
+        Corpse corpse = SpawnCapable(corpse_data) as Corpse; // (will assign the corpse to the same room as the capable since we pass the capable as spawner_id)
         if (log_corpse_switching) { Debug.Log($"(CapableSystem - SwitchToCorpse) Switched {capable.name} to corpse {corpse.name} \n - Capable data : \n{capable_data.GetDetails()} \n - Corpse data : \n{corpse_data.GetDetails()}"); }
         corpse.AnimPlayer.Play("die");
 
@@ -705,7 +690,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
             if (loading_queue.Contains(id)) { loading_queue.Remove(id); }
 
             // else we add them to unloading queue
-            else { unloading_queue.Add(id); }
+            else if (!unloading_queue.Contains(id)) { unloading_queue.Add(id); }
         }
     }
     private int unload_in_queue(int count)

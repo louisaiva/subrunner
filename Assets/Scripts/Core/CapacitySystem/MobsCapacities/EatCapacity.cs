@@ -84,7 +84,7 @@ public class EatCapacity : Capacity
         health.Capable.AnimPlayer.StopPlaying("eat");
 
         // we check if the food target is still valid
-        if (food == null)
+        if (food == null || !food.Loaded)
         {
             if (log) { Debug.LogWarning("(EatCapacity) " + health.name + " has no food target anymore"); }
             current_coroutine = null;
