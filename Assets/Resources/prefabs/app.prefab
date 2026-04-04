@@ -186,7 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21470603a04cf654cb6fe4a732fefc8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MusicPlayer
-  theme_on_start: melancolic lobby
+  theme_on_start: chip wave
   themes_names:
   - name: i'm so hungry
     reference:
@@ -690,6 +690,8 @@ MonoBehaviour:
   - food:meat
   - food:zombo_meat
   - food:bones
+  - corpse
+  - corpse:zombo
   item_custom_sprites:
   - {fileID: 574287140, guid: 0a4f37ef47fa3d0149cf518ae4f2a876, type: 3}
   - {fileID: 933724332, guid: 0a4f37ef47fa3d0149cf518ae4f2a876, type: 3}
@@ -699,6 +701,8 @@ MonoBehaviour:
   - {fileID: -930350640, guid: 38d1a7814571fbca78ecd4114827cb10, type: 3}
   - {fileID: -384219376, guid: 38d1a7814571fbca78ecd4114827cb10, type: 3}
   - {fileID: 819652910, guid: 0bda6ba40a874b7178bb59015f7fe57e, type: 3}
+  - {fileID: -930350640, guid: 38d1a7814571fbca78ecd4114827cb10, type: 3}
+  - {fileID: -384219376, guid: 38d1a7814571fbca78ecd4114827cb10, type: 3}
   ui_icons:
   - {fileID: 1355779389, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
   - {fileID: 1812302280, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
@@ -1013,7 +1017,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsQuitting: 0
   LoadedSceneCount: 0
-  prototype: ui_devmap + loaded motor capacity
+  prototype: room engine rework 1
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320
@@ -1032,6 +1036,8 @@ MonoBehaviour:
   LOG_CONNECTIONS: 0
   LOG_CORES: 0
   LOG_WANDER_TARGET_SENSOR: 0
+  LOG_HUNGER_SENSOR: 0
+  LOG_CLOSEST_FOOD_SENSOR: 0
 --- !u!1 &7970305435618458122
 GameObject:
   m_ObjectHideFlags: 0

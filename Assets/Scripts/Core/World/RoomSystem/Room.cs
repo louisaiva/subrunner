@@ -419,6 +419,7 @@ public class Room : MonoBehaviour
         if (capable == null) { capable = collider.transform.parent.GetComponent<Capable>(); } // some old movables have feet collider on feet -> child of the capable
         if (capable == null) { capable = collider.transform.parent.parent.GetComponent<Capable>(); } // new obj have feet collider as child of feet -> grand child of the capable
         if (capable == null) { return; }
+        if (capable.data == null) { return; } // if we don't have data, we can't do anything with it, so we ignore the trigger
 
         // check if capable is not the controlled one and not in the capable system
         // we just ignore the trigger

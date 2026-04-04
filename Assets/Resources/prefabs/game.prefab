@@ -426,63 +426,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   game_theme_to_play: chip wave
-  generated_ids:
-  - cursor-1
-  - connect-1
-  - katana-1
-  - hover-1
-  - attack-1
-  - bone-1
-  - hover-2
-  - shoes-1
-  - hover-3
-  - dodge-1
-  - zombo-1
-  - health-1
-  - interact-1
-  - die-1
-  - walk-1
-  - run-1
-  - attack-2
-  - eat-1
-  - connect-2
-  - katana-2
-  - hover-4
-  - attack-3
-  - dev_spawner-1
-  - hover-5
-  - spawn-1
-  - dummy-1
-  - health-2
-  - box-1
-  - hover-6
-  - chest-1
-  - pastas-1
-  - hover-7
-  - hover-8
-  - open-1
-  - close-1
-  - robot_spawner-1
-  - hover-9
-  - spawn-2
-  - dev-1
-  - health-3
-  - interact-2
-  - die-2
-  - walk-2
-  - run-2
-  - attack-4
-  - eat-2
-  - connect-3
-  - perso-1
-  - die-3
-  - walk-3
-  - run-3
-  - health-4
-  - talk-1
-  - interact-3
-  - eat-3
-  - drop-1
+  world_to_load: chunker
 --- !u!1 &5218386995141567643
 GameObject:
   m_ObjectHideFlags: 0
@@ -729,8 +673,8 @@ MonoBehaviour:
   surfaces:
   - {fileID: 5680882237522360214}
   - {fileID: 5427939901150469199}
-  navmesh_data_folder: Assets/Resources/data/levels/navmeshes/
-  log: 1
+  log: 0
+  hide_log_saving: 0
 --- !u!1 &6134360729676712856
 GameObject:
   m_ObjectHideFlags: 0

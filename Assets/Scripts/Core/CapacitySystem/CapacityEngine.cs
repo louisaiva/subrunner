@@ -116,15 +116,19 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         {
             string kind = entry.Key;
             List<string> json_list = entry.Value;
+            CapacityData data = null;
             foreach (string json in json_list)
             {
-                loadCapacityDataOfType(json, kind, ref log_capacities_details, ref world_capacities_data);
+                data = loadCapacityDataOfType(json, kind, ref log_capacities_details, ref world_capacities_data);
+
+                // we add the id to the world unique ids registry to avoid generating the same id for another data
+                World.StaticInstance.RegisterUniqueID(data.id);
             }
         }
 
         if (log_world_data_loading) { Debug.Log("(CapacityEngine) WORLD CAPACITIES DATA LOADED : " + world_capacities_data.Count + log_capacities_details); }
     }
-    private void loadCapacityDataOfType(string json, string kind, ref string log, ref Dictionary<string, CapacityData> data_by_id)
+    private CapacityData loadCapacityDataOfType(string json, string kind, ref string log, ref Dictionary<string, CapacityData> data_by_id)
     {
         // if (log_awake_data) { Debug.Log($"(CapacityEngine - loadCapacityDataOfType) loading capacity of kind {kind} with json : {json}"); }
 
@@ -134,6 +138,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         CapacityData data = JsonUtility.FromJson(json, type) as CapacityData;
         data_by_id.Add(data.id, data);
         log += data.GetDetails() + "\n";
+        return data;
     }
 
     // DATA DUPLICATION
@@ -148,7 +153,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
 
         CapacityData base_data = templates_capacities_data[template];
         CapacityData new_data = base_data.Duplicate() as CapacityData;
-        new_data.id = World.Instance.GenerateUniqueID(base_data.id);
+        new_data.id = World.Instance.GenerateUniqueID(base_data.id); // automatically register the new id
 
         // we add the new_data to the data list
         world_capacities_data.Add(new_data.id, new_data);

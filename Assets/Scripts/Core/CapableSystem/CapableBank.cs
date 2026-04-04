@@ -59,6 +59,9 @@ public class CapableBank : MonoBehaviour
             // and its body
             load_feet_data(capable, data.feet_data);
 
+            // set the good parent for the capable based on its kind
+            capable.transform.SetParent(get_parent_based_on_kind(data.kind));
+
             // we load its data
             capable.LoadData(data);
             capable.gameObject.SetActive(true);
@@ -79,11 +82,7 @@ public class CapableBank : MonoBehaviour
         }
 
         // set the good parent for the capable based on its kind
-        Transform parent;
-        if (GameManager.IsKind(kind, typeof(Item))) { parent = World.Instance.ItemsParent; }
-        else if (GameManager.IsKind(kind, typeof(Movable))) { parent = World.Instance.MovablesParent; }
-        else { parent = World.Instance.CapablesParent; }
-        go.transform.SetParent(parent);
+        go.transform.SetParent(get_parent_based_on_kind(data.kind));
 
         // then we add some few things we need, related to the capable kind
         capable = add_components_based_on_kind(go, kind);
@@ -127,7 +126,13 @@ public class CapableBank : MonoBehaviour
 
         return capable;
     }
-    
+    private Transform get_parent_based_on_kind(string kind)
+    {
+        if (GameManager.IsKind(kind, "Item")) { return World.Instance.ItemsParent; }
+        else if (GameManager.IsKind(kind, "Movable")) { return World.Instance.MovablesParent; }
+        else { return World.Instance.CapablesParent; }
+    }
+
     // INVENTORY ITEM POOL BUILDING
     private void build_inventory_item_pools(Inventory inv, InventoryData data)
     {

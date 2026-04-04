@@ -90,7 +90,12 @@ public class Corpse : Food
         // here we will put the robot's interaction method
 
     }
- */
+    */
+    public override void LoadData(CapableData data)
+    {
+        Debug.Log("(Corpse) LOADING CORPSE DATA...\n" + data.GetDetails());
+        base.LoadData(data);
+    }
     // EXTRACT MEAT
     public List<Item> ExtractMeatAndBones()
     {
@@ -165,7 +170,7 @@ public class Corpse : Food
 
 
 // CORPSE DATA
-[Serializable] public class CorpseData : CapableData
+[Serializable] public class CorpseData : ItemData
 {
 
     // INIT FROM CAPABLE
@@ -175,6 +180,7 @@ public class Corpse : Food
         position = capdata.position;
         orientation = capdata.orientation;
         tag = capdata.tag;
+        string entity_type = capdata.kind.ToLowerInvariant();
 
         // anim data
         if (capdata.anim_data != null)
@@ -183,10 +189,17 @@ public class Corpse : Food
             new_anim_data.anim_capacity_priorities = this.anim_data.anim_capacity_priorities; // we keep the same anim capa priorities as the corpse template (ex : corpse anim capa priorities will be different from player anim capa priorities for example, because we want the corpse to play the "die" animation which has a higher priority than the "walk" animation for example, while for the player we want the "walk" animation to have a higher priority than the "die" animation for example)
             anim_data = new_anim_data;
         }
+
+        // set item data
+        reference = "corpse:" + entity_type;
+        color = Color.softRed;
+        max_qty = 12;
+        item_description = "a corpse of " + entity_type + ". it seems to contain some meat and bones. smells bad. beurk -o-";
+        is_grabbed = false;
     }
 
     // CONSTRUCTOR
-    public CorpseData(CapableData parent)
+    public CorpseData(CapableData parent) : base(parent)
     {
         foreach (var prop in parent.GetType().GetProperties()) { prop.SetValue(this, prop.GetValue(parent)); }
         foreach (var prop in parent.GetType().GetFields()) { prop.SetValue(this, prop.GetValue(parent)); }
@@ -195,7 +208,10 @@ public class Corpse : Food
     // DUPLICATE
     public override ICapableData Duplicate()
     {
-        return new CorpseData(base.Duplicate() as CapableData)
+        ItemData duplicated = base.Duplicate() as ItemData;
+        if (duplicated == null) { return null; }
+
+        return new CorpseData(duplicated)
         {
             // we don't need to duplicate anything else for now, but if we add corpse specific data in the future we will need to duplicate it here
         };

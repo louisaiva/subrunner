@@ -202,6 +202,11 @@ public class ItemBank : MonoBehaviour
             int index = item_custom_references.IndexOf(item.Reference);
             return item_custom_sprites[index];
         }
+        else if (item_custom_references.Contains(item.PrefixReference))
+        {
+            int index = item_custom_references.IndexOf(item.PrefixReference);
+            return item_custom_sprites[index];
+        }
 
         // otherwise we check in the sprites we loaded at start from prefabs
         if (item_sprites.ContainsKey(item.Reference)) { return item_sprites[item.Reference]; }

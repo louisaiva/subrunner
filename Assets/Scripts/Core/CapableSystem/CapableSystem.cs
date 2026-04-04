@@ -139,9 +139,10 @@ public class CapableSystem : BSOD_System<CapableSystem>
         // we load all the json files in the data path and get their kind
         string[] files = GameManager.Instance.LoadJsonsFromWorldDataPath("capables");
         Dictionary<string, List<string>> json_by_kind = new Dictionary<string, List<string>>();
+        CapableData data;
         foreach (string json in files)
         {
-            CapableData data = JsonUtility.FromJson<CapableData>(json);
+            data = JsonUtility.FromJson<CapableData>(json);
             
             // verify that we are not loading a template
             if (templates_capables_data.ContainsKey(data.id))
@@ -167,13 +168,16 @@ public class CapableSystem : BSOD_System<CapableSystem>
             List<string> json_list = entry.Value;
             foreach (string json in json_list)
             {
-                loadCapableDataOfType(json, kind, ref log_capables_details, ref world_capables_data);
+                data = loadCapableDataOfType(json, kind, ref log_capables_details, ref world_capables_data);
+
+                // we add the id to the world unique ids registry to avoid generating the same id for another data
+                World.StaticInstance.RegisterUniqueID(data.id);
             }
         }
 
         if (log_world_data_loading) { Debug.Log("(CapableSystem) WORLD CAPABLES DATA LOADED : " + world_capables_data.Count + log_capables_details); }
     }
-    private void loadCapableDataOfType(string json, string kind, ref string log, ref Dictionary<string, CapableData> data_by_id, bool generate_runtime = true)
+    private CapableData loadCapableDataOfType(string json, string kind, ref string log, ref Dictionary<string, CapableData> data_by_id, bool generate_runtime = true)
     {
         // find the data type suited for this capable_type
         // and extracts the json as this data type
@@ -189,7 +193,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
             if (generate_runtime) { generate_runtime_id(data.id); }
 
             log += data.GetDetails() + "\n";
-            return;
+            return data;
         }
         
         // we found no precise data type ://
@@ -211,10 +215,10 @@ public class CapableSystem : BSOD_System<CapableSystem>
         data_by_id.Add(data.id, data);
         if (generate_runtime) { generate_runtime_id(data.id); }
         log += data.GetDetails() + "\n";
+        return data;
     }
     private int generate_runtime_id(string id)
     {
-        
         if (string.IsNullOrEmpty(id))
         {
             return 0;
@@ -522,8 +526,9 @@ public class CapableSystem : BSOD_System<CapableSystem>
         }
         // if (log_spawning) { Debug.Log($"(CapableSystem) Spawning {data.id} entity"); }
 
-        // 1. we load the new spawned capable
+        // 1. we load the new spawned capable & set position
         Capable spawned_capable = load_capable(data);
+        // spawned_capable.transform.position = data.position;
 
         // 2. we fire events
         OnCapableAppear?.Invoke(data);
@@ -536,8 +541,8 @@ public class CapableSystem : BSOD_System<CapableSystem>
     public void DespawnCapable(CapableData cdata)
     {
         // UNLOAD THE CAPABLE
-        unload_capable(cdata.id);
         OnCapableDisappear?.Invoke(cdata);
+        unload_capable(cdata.id);
     }
 
     // ITEMS EVENTS

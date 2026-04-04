@@ -104,6 +104,7 @@ public class World : BSOD_System<World>
 
     [Header("Logs")]
     public bool log = false;
+    public bool log_id_generation = false;
 
     // LOAD / UNLOAD WORLD
     public void LoadWorld(string world_id)
@@ -246,6 +247,29 @@ public class World : BSOD_System<World>
 
     // ID GENERATION
     private Dictionary<string, int> generated_ids_counters = new Dictionary<string, int>();
+    public void RegisterUniqueID(string id)
+    {
+        string prefix = get_id_prefix(id, out string suffix);
+        if (!generated_ids_counters.ContainsKey(prefix))
+        {
+            generated_ids_counters[prefix] = 0;
+            if (log_id_generation) { Debug.Log($"(World) Registered unique ID: {id} (prefix: {prefix}, suffix: {suffix}) -- new prefix, counter initialized to 0."); }
+            return;
+        }
+
+        // otherwise we already have some ids with this prefix, we check if the suffix int is greater than the current max suffix for this prefix
+        try
+        {
+            int suffix_int = int.Parse(suffix);
+            if (suffix_int <= generated_ids_counters[prefix]) { return; } // already have a higher suffix for this prefix, we do nothing
+            generated_ids_counters[prefix] = suffix_int;
+            if (log_id_generation) { Debug.Log($"(World) Registered unique ID: {id} (prefix: {prefix}, suffix: {suffix}) -- counter updated to {suffix_int} for this prefix."); }
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning($"(World) Failed to register unique ID: {id} -- invalid suffix: {suffix} -- exception: {e.Message}");
+        }
+    }
     public string GenerateUniqueID(string base_id)
     {
         // todo if we have perf issues when spawning capables this can be the issue
@@ -253,10 +277,12 @@ public class World : BSOD_System<World>
         // or have a dict with max ids per prefix
 
         // we check if the base_id can be splitted with "_"
-        string[] parts = base_id.Split('-');
-        string suffix = parts.Length > 1 ? parts[parts.Length - 1] : "";
-        string prefix = base_id.Substring(0, base_id.Length - suffix.Length);
-        if (suffix == "") { prefix += "-"; } // if we got no suffix, we add a _ to the prefix so it will be alrgiht next time
+        // string[] parts = base_id.Split('-');
+        // string suffix = parts.Length > 1 ? parts[parts.Length - 1] : "";
+        // string prefix = base_id.Substring(0, base_id.Length - suffix.Length);
+        // string prefix = parts[0];
+        string prefix = get_id_prefix(base_id);
+        // if (suffix == "") { prefix += "-"; } // if we got no suffix, we add a - to the prefix so it will be alrgiht next time
 
         // we go through all generated_ids and memorize all the ids that have the same prefix and check the suffix int is greater or not
         // int max_suffix = get_next_id_suffix(prefix);
@@ -277,10 +303,22 @@ public class World : BSOD_System<World>
         } */
 
         // construct final id
-        string new_id = prefix + get_next_id_suffix(prefix);
+        string new_id = prefix + "-" + get_next_id_suffix(prefix);
+        if (log_id_generation) { Debug.Log($"(World) Generated unique ID: {new_id} (base_id: {base_id}, prefix: {prefix}, max id for this prefix: {generated_ids_counters[prefix]})"); }
         return new_id;
     }
     public void ClearGeneratedIDs() { generated_ids_counters.Clear(); }
+    private string get_id_prefix(string id)
+    {
+        string[] parts = id.Split('-');
+        return parts[0];
+    }
+    private string get_id_prefix(string id, out string suffix)
+    {
+        string[] parts = id.Split('-');
+        suffix = parts.Length > 1 ? parts[parts.Length - 1] : "";
+        return parts[0];
+    }
     private int get_next_id_suffix(string prefix)
     {
         if (!generated_ids_counters.ContainsKey(prefix))

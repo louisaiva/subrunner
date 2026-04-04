@@ -20,6 +20,14 @@ public class Item : Movable, EndlessInteractable
             OnReferenceChanged?.Invoke(this);
         }
     }
+    public string PrefixReference
+    {
+        get
+        {
+            if (!Reference.Contains(":")) { return Reference; }
+            return Reference.Split(':')[0];
+        }
+    }
     public Action<Item> OnReferenceChanged = delegate { };
     public Color Color = Color.yellow;
     public int MaxQty = 1;
@@ -27,7 +35,7 @@ public class Item : Movable, EndlessInteractable
     public string ItemDescription = "description of the item";
 
     // GRAB / DROP / PLACING
-    private bool _grabbed = false;
+    [SerializeField] private bool _grabbed = false;
     public bool Grabbed { get => _grabbed; }
     [SerializeField] private bool _placed = false;
     public bool Placed
@@ -85,7 +93,7 @@ public class Item : Movable, EndlessInteractable
     /// both "laptop:blue" & "module:cpu" items validate the rule bcz laptop:blue is no module & module:cpu is not laptop ;-;
     /// 
     /// you can specify ";" caracters instead of "," to split the rule into 2 rules that need both to passes in order for the full rule to pass (it is kind of a AND door)
-    /// ex : "laptop:blue" & "module:cpu" does not pass the rule "!laptop;!module"
+    /// ex : "laptop:blue" & "module:cpu" both do NOT pass the rule "!laptop;!module"
     /// 
     /// finally "|" is the higher OR door that wins over ";".
     /// ex : item "food:pasta" passes the rule "food|!food;!pot:clean"
@@ -305,18 +313,6 @@ public class Item : Movable, EndlessInteractable
     }
 
 
-    // ON DESTROY
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-
-        if (!gameObject.scene.isLoaded) { return; } // this happens when the scene is destroyed when we quit the scene
-        if (Holder != null) { Holder.Inventory.Remove(this); } // we remove the item from the holder's inventory
-    }
-
-
-
-
     // DATA MANAGEMENT
     private List<string> dynamic_capacity_ids = new List<string>(); // this list is used to store the capacities that are loaded dynamically on grab, so we can unload them on drop
     public override void LoadData(CapableData data)
@@ -324,40 +320,44 @@ public class Item : Movable, EndlessInteractable
         // we store our dynamic capacities ids
         List<string> static_ids = new List<string>();
         dynamic_capacity_ids = CapacityEngine.Instance.GetDynamicItemCapacitiesIDs(data.capacities_ids, ref static_ids);
-
-        // we do a trick to make base.LoadData(data) only load the capacities we want to !
-        List<string> capa_ids_saved = new List<string>(data.capacities_ids);
-        if ((data as ItemData).is_grabbed) { data.capacities_ids = static_ids; } // if we are grabbed, we only load the static capacities, the dynamic ones will be loaded only when dropped
-        base.LoadData(data);
-        data.capacities_ids = capa_ids_saved; // we restore the original capacities ids list in case we need it later
-
-        // we check if the data is of the correct type
-        ItemData item_data = data as ItemData;
-        if (item_data == null)
+        if (data is not ItemData idata)
         {
             if (log) { Debug.LogError($"(Item - LoadData) The data provided is not of type ItemData for item '{name}'"); }
             return;
         }
 
-        // we load the item data
-        this.Reference = item_data.reference;
-        this.Color = item_data.color;
-        this.MaxQty = item_data.max_qty;
-        this.ItemDescription = item_data.item_description;
-        // ! no need to apply grabbed since it's only a flag
+        // we do a trick to make base.LoadData(data) only load the capacities we want to !
+        List<string> capa_ids_saved = new List<string>();
+        if (idata.is_grabbed) // if we are grabbed, we only load the static capacities, the dynamic ones will be loaded only when dropped
+        {
+            capa_ids_saved.AddRange(data.capacities_ids);
+            data.capacities_ids = static_ids;
+        }
+        base.LoadData(data);
+        if (idata.is_grabbed) { data.capacities_ids = capa_ids_saved; } // we restore the original capacities ids list in case we need it later
+        // todo with the new template / instance data separation, we would not need this trick since we have 2 capacities ids list, so +1 for it
 
+        // we load the item data
+        this.Reference = idata.reference;
+        this.Color = idata.color;
+        this.MaxQty = idata.max_qty;
+        this.ItemDescription = idata.item_description;
+        this._grabbed = idata.is_grabbed;
+
+        // and update the grab n place state (which reenable renderers, rigidbody, feet, etc... based on the grabbed / placed state)
+        update_grab_n_place();
     }
-    public override void UnloadData()
+    /* public override void UnloadData()
     {
         base.UnloadData();
 
         // ? really useful ? no but it's better to have a safe guard
         // todo if perf problem when loading items, remove this
-        this.Reference = "category:item";
-        this.Color = Color.yellow;
-        this.MaxQty = 1;
-        this.ItemDescription = "description of the item (item data was not loaded, is there a problem ?)";
-    }
+        // this.Reference = "category:item";
+        // this.Color = Color.yellow;
+        // this.MaxQty = 1;
+        // this.ItemDescription = "description of the item (item data was not loaded, is there a problem ?)";
+    } */
     public override ICapableData GetStaticData()
     {
         ItemData static_data = new ItemData((CapableData)base.GetStaticData())

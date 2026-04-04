@@ -13,6 +13,7 @@ public class Food : Item, Usable
         OnBeingBitten?.Invoke(eater);
         // Destroy(gameObject);
         CapableSystem.Instance.DespawnCapable(this.data);
+        if (Holder != null) { Holder.Inventory.Remove(this); } // we remove the item from the holder's inventory
     }
     public string UseLabel { get; } = "eat";
     public void Use(Capable user)
