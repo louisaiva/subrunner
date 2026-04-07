@@ -123,6 +123,22 @@ public class AudioEngine : MonoBehaviour
         if (event_ref.Equals(default(EventReference))) { return default; }
         return CreateInstance(event_ref);
     }
+    public EventInstance CreateInstanceFromHolderID(string capacity, string holder_id)
+    {
+        // we get the Capable data from the CapableSystem
+        if (CapableSystem.Instance == null) { return default; }
+        CapableData data = CapableSystem.Instance.GetCapableDataFromID(holder_id);
+        if (data == null) { return default; }
+
+        // we get the skin from the data
+        string skin = data.anim_data.skin;
+        if (string.IsNullOrEmpty(skin)) { skin = "default"; }
+
+        // we get the right event ref from the bank
+        EventReference event_ref = AudioBank.Instance.GetEventReference(capacity, skin);
+        if (event_ref.Equals(default(EventReference))) { return default; }
+        return CreateInstance(event_ref);
+    }
     public EventInstance CreateInstance(string capacity, Capable capable) { return CreateInstance(capacity, capable.Skin); }
 
 

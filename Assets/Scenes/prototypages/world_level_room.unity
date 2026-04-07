@@ -8829,8 +8829,8 @@ MonoBehaviour:
   log_awake_data: 1
   log_loading: 0
   log_ticks: 0
-  log_room_transfers: 1
-  log_loaded_area_transfers: 0
+  log_room_transfers: 0
+  log_loaded_area_transfers: 1
   log_best_match_calcul: 0
   log_spatial_queries: 0
   log_neighbours: 0
@@ -124071,7 +124071,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd239cbeba89d684d80ed2d3f1f81476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OverlapFoodDetector
-  logs_detection: 1
+  logs_detection: 0
 --- !u!114 &1866450518 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5067684303504826748, guid: 319736498f318d84aaa78beb56a3ece2, type: 3}

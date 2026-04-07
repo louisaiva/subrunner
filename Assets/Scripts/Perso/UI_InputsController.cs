@@ -232,17 +232,6 @@ public class UI_InputsController : InputController
 
         // si on est in-game on veut pas les activer (pcq ça drop en même temps)
         if (in_game) { return; }
-        /* {
-            // si on est à la souris on active jamais
-            if (!InputManager.Instance.isUsingGamepad()) { return; }
-
-            // si on est au gamepad & qu'on ne bouge pas d'items on up et return
-            if (!navigator.Mover.IsMovingItem && navigator.IsCurrentSlotTypeOf(typeof(UI_ItemStack)))
-            {
-                navigator.OnUp();
-                return;
-            }
-        } */
         
         // sinon on active
         navigator.OnActivate();

@@ -190,19 +190,19 @@ public class WalkCapacity : Capacity
         // reset walk speed
         speed = 0f;
 
+        base.LoadData(data);
+
         // reset audio
         if (walk_sound.isValid())
         {
             walk_sound.stop(STOP_MODE.IMMEDIATE);
             walk_sound.release();
         }
-        walk_sound = AudioEngine.Instance.CreateInstance("walk", Capable); // we get a walk sound instance from the audio engine
+        walk_sound = AudioEngine.Instance.CreateInstanceFromHolderID("walk", data.owner_id); // we get a walk sound instance from the audio engine
 
         // apply run state
         is_running = !wdata.is_running; // we set the opposite so we can call the enable/disable run methods
         if (wdata.is_running) { EnableRun(); } else { DisableRun(); } // will handle the sound parameters accordingly
-
-        base.LoadData(data);
     }
     public override void UnloadData()
     {
@@ -255,6 +255,11 @@ public class WalkCapacity : Capacity
         {
             static_data.particles_color = walk_particles.main.startColor.color;
             static_data.particles_rate = walk_particles.emission.rateOverTime.constant;
+        }
+        else
+        {
+            static_data.particles_color = new Color(0, 0, 0, 0);
+            static_data.particles_rate = 0f;
         }
 
         return static_data;

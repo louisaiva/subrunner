@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ using UnityEngine;
 /// the feet_collider collider is used to detect collisions with the world.
 /// </summary>
 
+[Obsolete("RunCapacity is deprecated, use WalkCapacity instead (it now handles both walking and running)")]
 public class RunCapacity : Capacity
 {
     [Header("Running parameters")]

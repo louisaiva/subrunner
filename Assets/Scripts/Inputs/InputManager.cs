@@ -9,6 +9,7 @@ public class InputManager : MonoBehaviour
     [Header("INPUT MANAGER")]
     [SerializeField] private string current_input_type = "keyboard"; // keyboard or gamepad
     public string CurrentInputType => current_input_type;
+    public bool UsingGamepad { get; private set; } = false;
     public event Action<string> OnInputTypeChanged = delegate { };
     public PlayerInputActions inputs;
 
@@ -89,6 +90,7 @@ public class InputManager : MonoBehaviour
 
         // on met à jour le type d'input
         current_input_type = input_type;
+        UsingGamepad = input_type == "gamepad";
         // input_system_ui_input_module.enabled = input_type == "keyboard";
         Cursor.visible = input_type == "keyboard";
         if (log) { Debug.Log("(InputManager) switching to " + input_type); }
@@ -138,15 +140,14 @@ public class InputManager : MonoBehaviour
         // on retourne l'action
         return action;
     }
-    public bool isUsingGamepad()
+    public Vector2 MovementInputs
     {
-        return current_input_type == "gamepad";
+        get
+        {
+            if (UsingGamepad) { return inputs.perso.move.ReadValue<Vector2>(); } // already normalized
+            else { return inputs.perso.move.ReadValue<Vector2>().normalized; } // keyboard inputs need to be normalized to avoid diagonal advantage
+        }
     }
-    public string getCurrentInputType()
-    {
-        return current_input_type;
-    }
-    public Vector2 MovementRawInputs { get => inputs.perso.move.ReadValue<Vector2>(); }
 
     // INPUTS MAP TOGGLING
     public event Action<bool> OnPersoInputsToggled = delegate { };

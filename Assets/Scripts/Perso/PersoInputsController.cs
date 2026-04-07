@@ -127,39 +127,30 @@ public class PersoInputsController : InputController
     // UPDATE
     private void Update()
     {
+        // 1 . WALKING & RUNNING
+        if (!Capable.TryGetCapacity(out WalkCapacity walker)) { return; }
 
-        // si les perso_inputs sont desactivés on return (comme ça on garde la même vitesse)
-        // if (!perso_inputs.enabled) { return; }
+        // read raw inputs
+        Vector2 raw_inputs = InputManager.Instance.MovementInputs;
 
-        // walk
-        if (Capable.HasCapacity<WalkCapacity>())
+        // we check if the raw inputs are below the deadzone
+        raw_inputs.x = Mathf.Abs(raw_inputs.x) < input_manager.JOYSTICK_MIN_THRESHOLD ? 0f : raw_inputs.x;
+        raw_inputs.y = Mathf.Abs(raw_inputs.y) < input_manager.JOYSTICK_MIN_THRESHOLD ? 0f : raw_inputs.y;
+
+        // we normalize the inputs
+        Capable.Orientation = raw_inputs.normalized;
+
+        // we set the walk_capacity.walk_percentage_target
+        walker.walk_percentage_target = raw_inputs.magnitude; // we set the walk percentage target based on the magnitude of the raw inputs
+
+        // Debug.Log("inputs : " + inputs + " / raw_inputs : " + raw_inputs + " / inputs_magnitude : " + raw_inputs.magnitude);
+        if (perso_inputs.run.ReadValue<float>() >= input_manager.BUTTON_MAX_THRESHOLD)
         {
-            Vector2 raw_inputs = InputManager.Instance.MovementRawInputs;
-
-            // we check if the raw inputs are below the deadzone
-            raw_inputs.x = Mathf.Abs(raw_inputs.x) < input_manager.JOYSTICK_MIN_THRESHOLD ? 0f : raw_inputs.x;
-            raw_inputs.y = Mathf.Abs(raw_inputs.y) < input_manager.JOYSTICK_MIN_THRESHOLD ? 0f : raw_inputs.y;
-
-            // we normalize the inputs
-            Capable.Orientation = raw_inputs.normalized;
-
-            // we set the walk_capacity.walk_percentage_target
-            Capable.GetCapacity<WalkCapacity>().walk_percentage_target = raw_inputs.magnitude;
-
-            // Debug.Log("inputs : " + inputs + " / raw_inputs : " + raw_inputs + " / inputs_magnitude : " + raw_inputs.magnitude);
+            walker.EnableRun();
         }
-
-        // run
-        if (Capable.TryGetCapacity(out WalkCapacity walker))
+        else if (perso_inputs.run.ReadValue<float>() < input_manager.BUTTON_MIN_THRESHOLD)
         {
-            if (perso_inputs.run.ReadValue<float>() >= input_manager.BUTTON_MAX_THRESHOLD)
-            {
-                walker.EnableRun();
-            }
-            else if (perso_inputs.run.ReadValue<float>() < input_manager.BUTTON_MIN_THRESHOLD)
-            {
-                walker.DisableRun();
-            }
+            walker.DisableRun();
         }
     }
 

@@ -71,7 +71,7 @@ public class UI_Slider : UI_ImageSlot, UI_SettingSlot
     }
     public override void OnPointerDown(PointerEventData eventData)
     {
-        if (InputManager.Instance.isUsingGamepad()) { return; }
+        if (InputManager.Instance.UsingGamepad) { return; }
         OnClickWithMouse();
     }
 

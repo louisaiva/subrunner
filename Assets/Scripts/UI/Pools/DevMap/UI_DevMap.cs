@@ -179,7 +179,7 @@ public class UI_DevMap : UI_SlottablePool
     private void handle_slot_hovered(UI_Slot slot)
     {
         // verify that the navigator is made with gamepad
-        if (!InputManager.Instance.isUsingGamepad()) { return; }
+        if (!InputManager.Instance.UsingGamepad) { return; }
 
         // when we hover a slot, if it's a capable visu, we center the map on it
         if (slot is not UI_CapableVisualizer cap_visu) { return; }

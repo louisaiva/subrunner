@@ -1130,7 +1130,6 @@ Transform:
   - {fileID: 2627025953398032101}
   - {fileID: 2786445522269117577}
   - {fileID: 806613326114500989}
-  - {fileID: 455273735031494225}
   - {fileID: 1799908327332980994}
   - {fileID: 7942793094811061728}
   - {fileID: 4376126531362925556}
@@ -1532,62 +1531,6 @@ MonoBehaviour:
   wall_hit: {fileID: 0}
   debug: 0
   debug_Y_Comparison: 0
---- !u!1 &5860345377477898531
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 455273735031494225}
-  - component: {fileID: 4232959198955477424}
-  m_Layer: 0
-  m_Name: run
-  m_TagString: Player
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &455273735031494225
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5860345377477898531}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 332583253616935226}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4232959198955477424
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5860345377477898531}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46cd24fe92a9ba64196a9432a9b59060, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data:
-    <id>k__BackingField: run-3
-    <owner_id>k__BackingField: perso-1
-    kind: 
-    local_position: {x: 0, y: 0}
-    layer: 0
-    tag: 
-  log: 0
-  IsRunning: 0
-  max_run_speed: 4
-  max_walk_speed: 0
-  run_multiplier: 1
 --- !u!1 &5905701916828566820
 GameObject:
   m_ObjectHideFlags: 0
@@ -1766,11 +1709,11 @@ MonoBehaviour:
   log: 0
   log_footsteps_audio: 0
   log_footsteps_repeating: 0
-  walk_speed: 0
+  speed: 0
   walk_percentage_target: 0
-  max_speed: 3
+  max_walk_speed: 3
+  max_run_speed: 4
   random_speed_modifier_at_start: 0
-  walk_particles: {fileID: 0}
   delay_between_footsteps: 0.6
 --- !u!199 &6952850229809567613
 ParticleSystemRenderer:
