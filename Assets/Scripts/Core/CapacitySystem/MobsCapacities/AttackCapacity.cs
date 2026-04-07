@@ -38,10 +38,10 @@ public class AttackCapacity : CooldownCapacity
     [SerializeField] private float unstoppable_rate = 1; // when unstoppable is true, percentage of an attack to trigger unstoppable effect (0 never to 1 always)
 
     [Header("Knockback parameters")]
-    public float knockback_base = 10f; // une attaque répartit le knockb
+    public float knockback_base = 10f; // une attaque répartit le knockback
     public float attackant_advantage = 3f;
 
-    [Header("Screen shake parameters")]
+    [Header("Screenshake parameters")]
     [SerializeField][Range(0f, 1f)] private float base_attack_shake_magnitude = 0.5f; // magnitude of the screen shake when attacking
     [SerializeField][Range(0f, 1f)] private float base_kill_shake_magnitude = 0.8f; // magnitude of the screen shake when kill performed
 
@@ -330,3 +330,5 @@ public class AttackCapacity : CooldownCapacity
         excluded_tags.Clear();
     }
 }
+
+

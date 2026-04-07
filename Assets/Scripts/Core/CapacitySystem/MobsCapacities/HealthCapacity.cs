@@ -168,7 +168,7 @@ public class HealthCapacity : Capacity
         health += life;
         if (health > max_health)
         {
-            FloatingDmgProvider.Instance.AddFloatingDmg(Capable, max_health - health); // floating dmg
+            FloatingDmgProvider.Instance.AddFloatingDmg(Capable, life - (health - max_health)); // floating dmg
             health = max_health;
             return;
         }
