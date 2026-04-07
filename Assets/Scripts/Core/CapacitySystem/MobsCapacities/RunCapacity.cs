@@ -48,11 +48,11 @@ public class RunCapacity : Capacity
         WalkCapacity walker = Walker;
         if (walker == null) { return; } // on check si on a un walk capacity
 
-        max_walk_speed = walker.max_speed; // on récupère la vitesse de marche de base
+        max_walk_speed = walker.max_run_speed; // on récupère la vitesse de marche de base
 
         // si on a un multiplier alors on utilise le multiplier plutot que la vitesse de run
         if (run_multiplier > 1f) { max_run_speed = max_walk_speed * run_multiplier; }
-        walker.max_speed = max_run_speed; // on met la vitesse de course
+        walker.max_run_speed = max_run_speed; // on met la vitesse de course
         IsRunning = true;
 
         // on applique le changement au son
@@ -68,7 +68,7 @@ public class RunCapacity : Capacity
         // on récupère la WalkCapacity
         WalkCapacity walker = Walker;
         if (walker == null) { return; }
-        walker.max_speed = max_walk_speed; // on change la vitesse maximale de marche
+        walker.max_run_speed = max_walk_speed; // on change la vitesse maximale de marche
         IsRunning = false; // on desactive la course
 
         // on applique le changement au son

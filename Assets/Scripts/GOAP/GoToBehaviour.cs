@@ -240,7 +240,7 @@ namespace subrunner.goap
 
             // we calculate the direction of the movement towards the waypoint
             waypoint_movement = (current_waypoint_destination - (Vector2)ia.transform.position).normalized;
-            Vector2 global_movement = waypoint_movement * walker.walk_speed;
+            Vector2 global_movement = waypoint_movement * walker.speed;
 
             // we handle the avoidance force if we have one !
             // MovableEngine is responsible for calculating (via Jobs) & setting the avoidance force
@@ -255,7 +255,7 @@ namespace subrunner.goap
                 ia.Orientation = global_movement.normalized; // we set the orientation to the direction of the movement
 
                 // and we update the walk_percentage_target
-                walker.walk_percentage_target = global_movement.magnitude / walker.max_speed; // we set the walk percentage target based on the speed
+                walker.walk_percentage_target = global_movement.magnitude / walker.max_run_speed; // we set the walk percentage target based on the speed
                 walker.walk_percentage_target = Mathf.Clamp(walker.walk_percentage_target, 0f, 1f); // we clamp the walk percentage target between 0 and 1
             }
             // avoidance_force = Vector2.zero; // we reset the avoidance force for the next frame
@@ -275,9 +275,9 @@ namespace subrunner.goap
                 Gizmos.DrawLine(ia.transform.position, ia.transform.position + (Vector3)avoidance_force * data.avoidance_predisposition);
 
                 Gizmos.color = Color.white;
-                if (waypoint_movement * walker.walk_speed != Vector2.zero)
+                if (waypoint_movement * walker.speed != Vector2.zero)
                 {
-                    Gizmos.DrawLine(ia.transform.position, ia.transform.position + (Vector3)waypoint_movement * walker.walk_speed);
+                    Gizmos.DrawLine(ia.transform.position, ia.transform.position + (Vector3)waypoint_movement * walker.speed);
                 }
                 else
                 {

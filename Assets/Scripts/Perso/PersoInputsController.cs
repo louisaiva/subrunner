@@ -150,15 +150,15 @@ public class PersoInputsController : InputController
         }
 
         // run
-        if (Capable.HasCapacity<RunCapacity>())
+        if (Capable.TryGetCapacity(out WalkCapacity walker))
         {
             if (perso_inputs.run.ReadValue<float>() >= input_manager.BUTTON_MAX_THRESHOLD)
             {
-                Capable.GetCapacity<RunCapacity>().EnableRun();
+                walker.EnableRun();
             }
             else if (perso_inputs.run.ReadValue<float>() < input_manager.BUTTON_MIN_THRESHOLD)
             {
-                Capable.GetCapacity<RunCapacity>().DisableRun();
+                walker.DisableRun();
             }
         }
     }

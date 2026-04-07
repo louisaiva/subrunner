@@ -126,7 +126,7 @@ public class Movable : Capable
     protected virtual void updateForces()
     {
         // Stop movement if no speed or no orientation or no walk capacity
-        Rb.linearVelocity = GetCapacity<WalkCapacity>()?.walk_speed * Orientation ?? Vector2.zero;
+        Rb.linearVelocity = GetCapacity<WalkCapacity>()?.speed * Orientation ?? Vector2.zero;
 
         // Apply forces
         Vector2 totalForce = Vector2.zero;
