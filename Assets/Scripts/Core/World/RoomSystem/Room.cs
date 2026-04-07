@@ -439,6 +439,7 @@ public class Room : MonoBehaviour
     {
         if (data == null) { return; }
         if (AppManager.Instance.IsQuitting) { return; }
+        if (RoomEngine.Instance == null) { return; }
         if (_unloading) { return; } // if we are unloading the room we don't want any trigger event
 
         Capable capable = collider.GetComponent<Capable>();
@@ -448,7 +449,7 @@ public class Room : MonoBehaviour
 
         if (Controller.Instance.Capable != capable && !CapableBank.Instance.HasCapable(capable)) { return; }
         string id = capable.data.id;
-        if (RoomEngine.Instance != null && RoomEngine.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) {id} - OUT -"); }
+        if (RoomEngine.Instance.log_colliders) { Debug.Log($"(Room - {this.name}) {id} - OUT -"); }
 
         // ! is data.id null ? if we unload the capable, could be
 

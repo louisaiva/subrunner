@@ -58,13 +58,13 @@ public class SettingsManager : MonoBehaviour
         if (log) { Debug.Log($"(SettingsManager) Setting {settingName} set to {value}"); }
         Setting setting = GetSetting(settingName);
         if (setting == null) { return; }
-        setting.value = value;
+        setting.Value = value;
     }
     public float GetValue(string settingName)
     {
         // Logic to get the setting value based on its name
         Setting setting = GetSetting(settingName);
-        if (setting != null) { return setting.value; }
+        if (setting != null) { return setting.Value; }
         if (log) { Debug.LogWarning($"(SettingsManager) Setting {settingName} not found!"); }
         return -1f; // Default value if not found
     }
@@ -101,7 +101,7 @@ public class SettingsManager : MonoBehaviour
             panel_settings = settings[panel_keys[p]];
             for (int s = 0; s < panel_settings.Count; s++)
             {
-                settings_values[panel_settings[s].name] = panel_settings[s].value;
+                settings_values[panel_settings[s].name] = panel_settings[s].Value;
             }
         }
 
@@ -163,7 +163,7 @@ public class SettingsManager : MonoBehaviour
             if (entry.Value > setting.max_value) { continue; }
 
             // we set the value
-            setting.value = entry.Value;
+            setting.Value = entry.Value;
         }
     }
 

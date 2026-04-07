@@ -17,4 +17,7 @@ public class Caller : MonoBehaviour
     public void BackToTitleScreen() => SceneLoader.Instance?.GoBackToMainMenu();
     public void LoadGame() => SceneLoader.Instance?.LoadGame();
     public void ToggleTimeScale() { Time.timeScale = Time.timeScale == 0 ? 1 : 0; }
+    public void ToggleGlitches() => PostProcessManager.Instance?.ToggleGlitches();
+    public void SetGlitchMode(string timestamp_name) => PostProcessManager.Instance?.SetGlitchMode(timestamp_name);
+    public void ChangeUIMode(string mode) => UI_Manager.Instance?.ChangeUIMode(mode);
 }

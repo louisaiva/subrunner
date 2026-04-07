@@ -171,7 +171,7 @@ public class Perso : Movable, Hacker
         ghost_setting = SettingsManager.Instance.GetSetting("ghost_mode");
         if (ghost_setting != null)
         {
-            set_ghost(ghost_setting.value >= 0.5f);
+            set_ghost(ghost_setting.Value >= 0.5f);
             ghost_setting.OnValueChanged += set_ghost;
         }
     }
@@ -293,7 +293,7 @@ public class Perso : Movable, Hacker
 
         // sets the SettingsManager ghost setting
         if (ghost_setting == null) { return; }
-        ghost_setting.value = (AnimPlayer.Skin == "ghost") ? 1f : 0f;
+        ghost_setting.Value = (AnimPlayer.Skin == "ghost") ? 1f : 0f;
     }
     private void set_ghost(bool activate=false) { set_ghost(activate ? 1f : 0f); }
     private void set_ghost(float value)

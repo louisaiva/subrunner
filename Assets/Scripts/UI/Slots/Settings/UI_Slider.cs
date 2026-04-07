@@ -141,7 +141,7 @@ public class UI_Slider : UI_ImageSlot, UI_SettingSlot
         Setting setting = SettingsManager.Instance?.GetSetting(settingName: SettingName);
         if (setting == null) { return; }
 
-        CurrentValue = setting.value;
+        CurrentValue = setting.Value;
         if (log) { Debug.Log("(UI_Slider) New CurrentValue from manager : " + CurrentValue); }
 
         // get maxValue minValue

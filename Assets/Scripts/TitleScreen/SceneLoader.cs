@@ -22,6 +22,10 @@ public class SceneLoader : MonoBehaviour
     [Header("Transitions")]
     [SerializeField] private float transition_duration = 0.2f;
     [SerializeField] private UI_PoolSettings Transition;
+    [SerializeField] private float area_loading_transition_duration = 0.5f;
+    [SerializeField] private float area_unloading_transition_duration = 0.5f;
+    [SerializeField] private AnimationCurve area_loading_transition_curve;
+    private Coroutine area_loading_coroutine = null;
 
     [Header("Texts")]
     [SerializeField] private Vector2 text_delay_range = new Vector2(0.1f, 0.5f);
@@ -107,7 +111,13 @@ public class SceneLoader : MonoBehaviour
         ppm.TransitionChroma(Transition.ChromaticAberration, transition_duration);
         ppm.TransitionBloom(Transition.Bloom, transition_duration);
         yield return new WaitForSecondsRealtime(transition_duration - 0.1f);
-        fx.TransitionAlpha(true, 0.1f, override_final_alpha: Transition.BackgroundAlpha);
+        // we set the timelapse effect to 0 to hide the world loading
+        if (area_loading_coroutine != null)
+        {
+            StopCoroutine(area_loading_coroutine);
+            area_loading_coroutine = null;
+        }
+        ppm.SetTimelapseWorldLoading(0f);
         yield return new WaitForSecondsRealtime(0.1f);
 
         // load loading scene
@@ -147,9 +157,11 @@ public class SceneLoader : MonoBehaviour
             float delay = Random.Range(text_delay_range.x, text_delay_range.y);
             yield return new WaitForSecondsRealtime(delay);
         }
-
+        
         // verify that the game has finish loading
         if (!loading_game.isDone) { yield return wait_for_loading_to_finish(loading_game); }
+
+        area_loading_coroutine = StartCoroutine(transition_world_loading(load_world: true, duration: area_loading_transition_duration)); // we start the timelapse effect to show the world loading
 
         // we show the final "game loaded in x seconds text"
         text = Instantiate(text_prefab, text_parents.transform);
@@ -169,13 +181,43 @@ public class SceneLoader : MonoBehaviour
         yield return null; // wait one frame to be sure that the manager took the home_appearance_duration value
         hud.Settings.Duration = old_transition_duration;
 
+
         // we hide the bg
-        fx.TransitionAlpha(false, 0f);
+        // fx.TransitionAlpha(false, 0f);
+        /* if (area_loading_coroutine != null)
+        {
+            StopCoroutine(area_loading_coroutine);
+            area_loading_coroutine = null;
+            ppm.SetTimelapseWorldLoading(1f);
+        } */
         yield return new WaitForSecondsRealtime(transition_duration);
 
         if (log) { Debug.Log("GAME LOADED - LINUX STYLE"); }
         AppManager.Instance.LoadedSceneCount++;
     }
+
+    private IEnumerator transition_world_loading(bool load_world, float duration)
+    {
+        float timer = 0f;
+        while (timer < duration)
+        {
+            timer += Time.unscaledDeltaTime;
+            float timestamp = load_world ? timer : duration - timer;
+            float t = area_loading_transition_curve.Evaluate(timestamp / duration);
+            ppm.SetTimelapseWorldLoading(t);
+            if (log) { Debug.Log("(SceneLoader) transition_world_loading : " + t); }
+            if (timer >= duration)
+            {
+                if (log) { Debug.Log("(SceneLoader) transition_world_loading END : 1"); }
+                area_loading_coroutine = null;
+                ppm.SetTimelapseWorldLoading(1f);
+                yield break;
+            }
+            yield return new WaitForSecondsRealtime(0.01f);
+        }
+        area_loading_coroutine = null;
+    }
+
     private IEnumerator wait_for_loading_to_finish(AsyncOperation loading_game)
     {
         TextMeshProUGUI last_text = text_parents.transform.GetChild(text_parents.transform.childCount - 1).GetComponent<TextMeshProUGUI>();
@@ -212,19 +254,37 @@ public class SceneLoader : MonoBehaviour
         // we pause the game
         Time.timeScale = 0f;
 
+        // timelapse effect to hide the world unloading
+        if (area_loading_coroutine != null)
+        {
+            StopCoroutine(area_loading_coroutine);
+            area_loading_coroutine = null;
+        }
+        ppm.SetTimelapseWorldLoading(1f);
+        area_loading_coroutine = StartCoroutine(transition_world_loading(load_world: false, duration: area_unloading_transition_duration)); // we start the timelapse effect to show the world loading
+
         // we show the loading screen
         ppm.TransitionChroma(Transition.ChromaticAberration, transition_duration);
         ppm.TransitionBloom(Transition.Bloom, transition_duration);
         TransitionTimeScale(0f, transition_duration);
-        await System.Threading.Tasks.Task.Delay((int)((transition_duration-0.1f) * 1000));
-        await fx.TransitionAlpha(true, 0.1f, override_final_alpha: Transition.BackgroundAlpha);
-        
+        // await System.Threading.Tasks.Task.Delay((int)((transition_duration-0.1f) * 1000));
+        await System.Threading.Tasks.Task.Delay((int)(transition_duration * 1000));
+        // await System.Threading.Tasks.Task.Delay((int)(0.1f * 1000));
+        // await fx.TransitionAlpha(true, 0.1f, override_final_alpha: Transition.BackgroundAlpha);
+
         // load loading scene
         await SceneManager.LoadSceneAsync(2);
         ppm.SetToneMapping(aces:true);
 
         // we load the main menu scene
         await SceneManager.LoadSceneAsync(0);
+
+        // we finally stop the loading coroutine
+        if (area_loading_coroutine != null)
+        {
+            StopCoroutine(area_loading_coroutine);
+            area_loading_coroutine = null;
+        }
 
         // we play the lobby theme
         MusicPlayer.Instance.PlayLobbyTheme();
@@ -238,8 +298,6 @@ public class SceneLoader : MonoBehaviour
         await System.Threading.Tasks.Task.Yield(); // wait one frame to be sure that the manager took the home_appearance_duration value
         home.Settings.Duration = old_transition_duration;
 
-        // we hide the bg
-        fx.TransitionAlpha(false, 0f);
 
         if (log) { Debug.Log("BACK TO MAIN MENU"); }
         AppManager.Instance.LoadedSceneCount++;

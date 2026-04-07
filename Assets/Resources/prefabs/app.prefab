@@ -741,10 +741,21 @@ MonoBehaviour:
   - module:base
   - module:ir
   - hardware:card
-  ui_item_prefab: {fileID: 4964243457693928914, guid: abacdc781c511fc42b1c0e4dd87c3c7b, type: 3}
-  ui_big_item_prefab: {fileID: 4964243457693928914, guid: 76776326153549042881efd8d31b0a83, type: 3}
-  ui_file_prefab: {fileID: 4964243457693928914, guid: 1c7af976db032284eb29c2f7adecaced, type: 3}
-  ui_module_prefab: {fileID: 6477483050230691726, guid: ba7322b7ec1b3c34b85172c9189055b9, type: 3}
+  ui_item_slot_prefabs:
+  - slot_type: item
+    prefab: {fileID: 4964243457693928914, guid: abacdc781c511fc42b1c0e4dd87c3c7b, type: 3}
+  - slot_type: big_item
+    prefab: {fileID: 4964243457693928914, guid: 76776326153549042881efd8d31b0a83, type: 3}
+  - slot_type: shoes
+    prefab: {fileID: 4964243457693928914, guid: e44cfb99a05e8544ea2e230e5218f297, type: 3}
+  - slot_type: weapon
+    prefab: {fileID: 4964243457693928914, guid: e9cff4ee46b0a024a86496950d33d31b, type: 3}
+  - slot_type: device
+    prefab: {fileID: 4964243457693928914, guid: 25892a7bc7e629143a5087337e64ff4d, type: 3}
+  - slot_type: file
+    prefab: {fileID: 4964243457693928914, guid: 1c7af976db032284eb29c2f7adecaced, type: 3}
+  - slot_type: module
+    prefab: {fileID: 6477483050230691726, guid: ba7322b7ec1b3c34b85172c9189055b9, type: 3}
   debug: 0
 --- !u!114 &4820698345186690242
 MonoBehaviour:
@@ -831,6 +842,86 @@ MonoBehaviour:
   text_parents: {fileID: 8648687975417559356}
   transition_duration: 1
   Transition: {fileID: 11400000, guid: b628c8413f0d3614ab6e7a1634dec4ea, type: 2}
+  area_loading_transition_duration: 2.5
+  area_unloading_transition_duration: 2
+  area_loading_transition_curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.182155
+      value: 0.013403494
+      inSlope: 0.19209939
+      outSlope: 0.19209939
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.43791854
+      value: 0.030992586
+      inSlope: 0.011730283
+      outSlope: 0.011730283
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.094768494
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5330029
+      value: 0.15364602
+      inSlope: 6.7033944
+      outSlope: 6.7033944
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.1174218
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5609063
+      value: 0.23970956
+      inSlope: 0.1031819
+      outSlope: 0.1031819
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.09561079
+    - serializedVersion: 3
+      time: 0.7972568
+      value: 0.38562006
+      inSlope: 1.8105735
+      outSlope: 1.8105735
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.1766748
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.82523257
+      value: 0.70531607
+      inSlope: 3.9097054
+      outSlope: 3.9097054
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: -0.090299174
+      outSlope: -0.090299174
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.34067592
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   text_delay_range: {x: 0.01, y: 0.08}
   texts:
   - merging git conflicts
@@ -851,7 +942,7 @@ MonoBehaviour:
   - '[####-] combing zombos'
   - '[#####] checking unity version'
   - teleporting to world...
-  log: 1
+  log: 0
 --- !u!1 &5541506236358080035
 GameObject:
   m_ObjectHideFlags: 0
@@ -1017,7 +1108,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsQuitting: 0
   LoadedSceneCount: 0
-  prototype: room engine rework 1
+  prototype: loading wire timelapse + home glitches modes
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320
@@ -1158,7 +1249,10 @@ MonoBehaviour:
   - scene_name: subrunner-title-screen
     bloom_intensity: 5
     chromatic_aberration_intensity: 1
+  loading_world_transition_mat: {fileID: 2100000, guid: 9fa1e5ebe0359fc42b498cb9ce03b134, type: 2}
   log: 0
+  glitched_timestamp: full_glitch
+  chill_timestamp: chill_wired
 --- !u!1 &8648687975417559356
 GameObject:
   m_ObjectHideFlags: 0

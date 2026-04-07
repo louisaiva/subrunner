@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using PrimeTween;
 using UnityEngine;
@@ -44,6 +45,8 @@ public class PostProcessManager : MonoBehaviour
         }
     }
 
+    [Header("Loading World effect transition")]
+    [SerializeField] private Material loading_world_transition_mat;
 
     [Header("Logs")]
     [SerializeField] private bool log;
@@ -67,8 +70,6 @@ public class PostProcessManager : MonoBehaviour
 
         SetToneMapping(aces:title_screen);
     }
-
-    private void Start() { register_settings(); }
 
 
     [Header("Tweens")]
@@ -171,34 +172,44 @@ public class PostProcessManager : MonoBehaviour
     }
 
 
-
-
-    // CAMERA RENDERER DATA SWITCHER
-    private Setting wired_setting;
-    public void SwitchToWired(bool wired)
+    // LOAD WORLD
+    [Header("Glitch effect on home menu")]
+    private List<GlitchTimestamp> timestamps_world_loadin = new List<GlitchTimestamp>()
     {
-        renderer_switcher.SwitchRendererData(wired ? "wired" : "default");
-    }
-    public void SwitchToWired(float wired)
+        new GlitchTimestamp { name = "full_black", timelapse_value = 0f },
+        new GlitchTimestamp { name = "chill_wired", timelapse_value = 0.15f },
+        new GlitchTimestamp { name = "wired", timelapse_value = 0.4f },
+        new GlitchTimestamp { name = "wired_glitch", timelapse_value = 0.6f },
+        new GlitchTimestamp { name = "glitchy", timelapse_value = 0.8f },
+        new GlitchTimestamp { name = "full_glitch", timelapse_value = 1f },
+    };
+    [SerializeField] private string glitched_timestamp = "full_glitch";
+    [SerializeField] private string chill_timestamp = "chill_wired";
+    private string current_world_loading_timestamp = "full_black";
+    public void ToggleGlitches()
     {
-        if (wired <= 0f) { SwitchToWired(false); }
-        else { SwitchToWired(true); }
+        if (current_world_loading_timestamp != chill_timestamp)
+        {
+            SetTimelapseWorldLoading(timestamps_world_loadin.FirstOrDefault(t => t.name == chill_timestamp)?.timelapse_value ?? 0f);
+            current_world_loading_timestamp = chill_timestamp;
+            return;
+        }
+        
+        current_world_loading_timestamp = glitched_timestamp;
+        SetTimelapseWorldLoading(timestamps_world_loadin.FirstOrDefault(t => t.name == glitched_timestamp)?.timelapse_value ?? 0f);
     }
-
-
-    // SETTINGS REGISTERING
-    private void register_settings()
+    public void SetTimelapseWorldLoading(float timelapse)
     {
-        wired_setting = SettingsManager.Instance.GetSetting("wired");
-        if (wired_setting != null) { wired_setting.OnValueChanged += SwitchToWired; SwitchToWired(wired_setting.value); }
+        if (loading_world_transition_mat == null) { return; }
+        loading_world_transition_mat.SetFloat("_timelapse", timelapse);
+        if (log) { Debug.Log("(PostProcessManager) SetTimelapseWorldLoading : " + timelapse); }
     }
-    private void unregister_settings()
+    public void SetGlitchMode(string timestamp_name)
     {
-        // enleve les callbacks des settings
-        if (wired_setting != null) { wired_setting.OnValueChanged -= SwitchToWired; }
+        float timelapse_value = timestamps_world_loadin.FirstOrDefault(t => t.name == timestamp_name)?.timelapse_value ?? 0f;
+        SetTimelapseWorldLoading(timelapse_value);
+        current_world_loading_timestamp = timestamp_name;
     }
-    void OnDestroy() { unregister_settings(); }
-
 
     // GET DEFAULT SCENE SETTINGS
     private bool title_screen => SceneManager.GetActiveScene().name == "subrunner-title-screen";
@@ -235,4 +246,11 @@ public class SceneBasePostProcessSettings
     public string scene_name;
     public float bloom_intensity = 0f;
     public float chromatic_aberration_intensity = 0f;
+}
+
+[System.Serializable]
+public class GlitchTimestamp
+{
+    public string name;
+    public float timelapse_value;
 }

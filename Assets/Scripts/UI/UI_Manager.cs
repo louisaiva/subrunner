@@ -527,4 +527,28 @@ public class UI_Manager : Singleton<UI_Manager>
 
         return localPoint;
     }
+
+
+    // CALLER METHODS
+    public void ChangeUIMode(string mode = "screenspace_overlay")
+    {
+        Canvas canvas = GetComponent<Canvas>();
+        if (canvas == null) { return; }
+
+        if (mode == "worldspace")
+        {
+            canvas.renderMode = RenderMode.WorldSpace;
+            return;
+        }
+        if (mode == "screenspace_camera")
+        {
+            canvas.renderMode = RenderMode.ScreenSpaceCamera;
+            return;
+        }
+        if (mode == "screenspace_overlay")
+        {
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            return;
+        }
+    }
 }

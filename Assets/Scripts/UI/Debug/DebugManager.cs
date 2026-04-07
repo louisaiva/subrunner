@@ -59,7 +59,7 @@ public class DebugManager : Singleton<DebugManager>
         // on met le skin en fonction du settings skin
         debug_setting = SettingsManager.Instance.GetSetting("debug");
         if (debug_setting == null) { return; }
-        toggle_debug(debug_setting.value);
+        toggle_debug(debug_setting.Value);
         debug_setting.OnValueChanged += toggle_debug;
     }
     void OnDestroy()

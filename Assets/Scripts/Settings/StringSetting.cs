@@ -8,7 +8,7 @@ using UnityEngine;
     public List<string> possible_values = new List<string>();
     public Action<string> OnStringChanged;
 
-    public override float value
+    public override float Value
     {
         get { return _value; }
         set
@@ -22,10 +22,15 @@ using UnityEngine;
     }
     public override string ToString()
     {
-        int index = Mathf.Clamp(Mathf.RoundToInt(value), 0, possible_values.Count - 1);
+        int index = Mathf.Clamp(Mathf.RoundToInt(Value), 0, possible_values.Count - 1);
         return possible_values[index];
     }
-
+    public virtual void SetValueWithoutNotify(string str_value)
+    {
+        int index = possible_values.IndexOf(str_value);
+        if (index < 0) { return; }
+        _value = index;
+    }
 
     // CLONING
     public override Setting Clone()

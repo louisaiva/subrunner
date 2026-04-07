@@ -42,7 +42,7 @@ public class CameraShaker : Singleton<CameraShaker>
 		if (screenshake_global_setting != null)
 		{
 			screenshake_global_setting.OnValueChanged += set_global_shake;
-			set_global_shake(screenshake_global_setting.value);
+			set_global_shake(screenshake_global_setting.Value);
 		}
 
 		// chroma threshold
@@ -50,7 +50,7 @@ public class CameraShaker : Singleton<CameraShaker>
 		if (chroma_thresh_setting != null)
         {
 			chroma_thresh_setting.OnValueChanged += set_chroma_thresh;
-			set_chroma_thresh(chroma_thresh_setting.value);
+			set_chroma_thresh(chroma_thresh_setting.Value);
         }
 
 		// chroma duration
@@ -58,7 +58,7 @@ public class CameraShaker : Singleton<CameraShaker>
 		if (chroma_duration_setting != null)
 		{
 			chroma_duration_setting.OnValueChanged += set_chroma_duration;
-			set_chroma_duration(chroma_duration_setting.value);
+			set_chroma_duration(chroma_duration_setting.Value);
 		}
 	}
 	private void set_global_shake(float shake) { base_shake_magnitude = shake; }

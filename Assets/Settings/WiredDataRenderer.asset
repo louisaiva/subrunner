@@ -42,6 +42,26 @@ MonoBehaviour:
       restoreCamera: 1
       offset: {x: 0, y: 0, z: 0, w: 0}
       cameraFieldOfView: 60
+--- !u!114 &-3289341977573949315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
+  m_Name: Timelapse Wired
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.FullScreenPassRendererFeature
+  m_Active: 1
+  injectionPoint: 550
+  fetchColorBuffer: 1
+  requirements: 4
+  passMaterial: {fileID: 2100000, guid: 9fa1e5ebe0359fc42b498cb9ce03b134, type: 2}
+  passIndex: 0
+  bindDepthStencilAttachment: 0
+  m_Version: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,7 +91,8 @@ MonoBehaviour:
   - {fileID: 4260646187887248683}
   - {fileID: -7038174081856621125}
   - {fileID: 3632892369612576901}
-  m_RendererFeatureMap: b426f7744a6f16322b45a44e22db203bbb35935ff661539e8518fcbd5ca06a32
+  - {fileID: -3289341977573949315}
+  m_RendererFeatureMap: b426f7744a6f16322b45a44e22db203bbb35935ff661539e8518fcbd5ca06a327d80ec29e6e859d2
   m_UseNativeRenderPass: 0
   m_LayerMask:
     serializedVersion: 2
@@ -142,7 +163,7 @@ MonoBehaviour:
       RenderQueueType: 1
       LayerMask:
         serializedVersion: 2
-        m_Bits: 16384
+        m_Bits: 134234144
       PassNames: []
     overrideMaterial: {fileID: 2100000, guid: b42def24b967828489d25a7399d78238, type: 2}
     overrideMaterialPassIndex: 0

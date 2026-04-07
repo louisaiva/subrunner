@@ -45,10 +45,10 @@ public class AudioEngine : MonoBehaviour
         music_volume_setting = SettingsManager.Instance.GetSetting("music_volume") as StepSetting;
         ambiance_volume_setting = SettingsManager.Instance.GetSetting("ambiance_volume") as StepSetting;
 
-        if (global_volume_setting != null) { global_volume_setting.OnValueChanged += SetGlobalVolume; SetGlobalVolume(global_volume_setting.value); }
-        if (sfx_volume_setting != null) { sfx_volume_setting.OnValueChanged += SetSFXVolume; SetSFXVolume(sfx_volume_setting.value); }
-        if (music_volume_setting != null) { music_volume_setting.OnValueChanged += SetMusicVolume; SetMusicVolume(music_volume_setting.value); }
-        if (ambiance_volume_setting != null) { ambiance_volume_setting.OnValueChanged += SetAmbianceVolume; SetAmbianceVolume(ambiance_volume_setting.value); }
+        if (global_volume_setting != null) { global_volume_setting.OnValueChanged += SetGlobalVolume; SetGlobalVolume(global_volume_setting.Value); }
+        if (sfx_volume_setting != null) { sfx_volume_setting.OnValueChanged += SetSFXVolume; SetSFXVolume(sfx_volume_setting.Value); }
+        if (music_volume_setting != null) { music_volume_setting.OnValueChanged += SetMusicVolume; SetMusicVolume(music_volume_setting.Value); }
+        if (ambiance_volume_setting != null) { ambiance_volume_setting.OnValueChanged += SetAmbianceVolume; SetAmbianceVolume(ambiance_volume_setting.Value); }
     }
     private void unregister_settings()
     {

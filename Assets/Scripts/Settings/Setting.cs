@@ -7,7 +7,7 @@ using UnityEngine;
 [Serializable] public class Setting : ScriptableObject
 {
     [SerializeField] protected float _value;
-    public virtual float value
+    public virtual float Value
     {
         get { return _value; }
         set
@@ -17,6 +17,10 @@ using UnityEngine;
             _value = value;
             OnValueChanged?.Invoke(_value);
         }
+    }
+    public virtual void SetValueWithoutNotify(float value)
+    {
+        _value = value;
     }
 
     [Header("Framing")]
@@ -60,11 +64,11 @@ using UnityEngine;
         // we show integer
         if (show_settings.show_as_integer)
         {
-            return Mathf.RoundToInt(value).ToString();
+            return Mathf.RoundToInt(Value).ToString();
         }
 
         // we show float
-        return value.ToString("F" + show_settings.decimal_places);
+        return Value.ToString("F" + show_settings.decimal_places);
     }
     
     // CLONING

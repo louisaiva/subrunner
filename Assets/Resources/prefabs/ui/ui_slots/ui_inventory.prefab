@@ -99,7 +99,6 @@ GameObject:
   - component: {fileID: 2128144794381986297}
   - component: {fileID: 174360944647484759}
   - component: {fileID: 8405541509936947899}
-  - component: {fileID: 1759623092198093553}
   - component: {fileID: 8094867699145311709}
   m_Layer: 27
   m_Name: slot
@@ -144,7 +143,7 @@ MonoBehaviour:
   log: 0
   log_starting_slot: 0
   slottables:
-  - {fileID: 1759623092198093553}
+  - {fileID: 0}
   - {fileID: 174360944647484759}
   master_slottable: {fileID: 0}
 --- !u!114 &174360944647484759
@@ -189,25 +188,6 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 1
   m_ConstraintCount: 3
---- !u!114 &1759623092198093553
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2056693723427999313}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb97402ee6332cc4fb62827af8b39a3a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  starting_slot: {fileID: 0}
-  log: 0
-  log_starting_slot: 0
-  log_get_slots: 0
-  pools:
-  - {fileID: 8094867699145311709}
-  Inventory: {fileID: 0}
 --- !u!114 &8094867699145311709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,17 +200,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fc4a6a908f46cf4db95a7028ed54910, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxSlots: 9
-  MinSlots: 0
-  Scalable: 0
-  ui_items: []
-  destroy_empty_on_init: 1
-  DoNotDisableEmptySlots: 0
-  item_rule: 
-  bank: {fileID: 0}
-  UI_Inventory: {fileID: 0}
+  starting_slot: {fileID: 0}
   log: 0
-  log_storage: 0
+  log_starting_slot: 0
+  item_slot_type: item
+  AlwaysShow: 0
+  ui_stacks: []
+  bank: {fileID: 0}
+  PoolID: stuff
 --- !u!1 &2616060848782672392
 GameObject:
   m_ObjectHideFlags: 0
@@ -449,11 +426,16 @@ MonoBehaviour:
   _hovered: 0
   _disabled: 0
   log: 0
+  image: {fileID: 6714931122986945234}
   base_sprite: {fileID: -637157629, guid: 0c2e8aec6434f89f2990c31d371eeb8f, type: 3}
   hover_sprite: {fileID: 1810890430, guid: 0c2e8aec6434f89f2990c31d371eeb8f, type: 3}
   down_sprite: {fileID: -1968064118, guid: 0c2e8aec6434f89f2990c31d371eeb8f, type: 3}
   disabled_sprite: {fileID: -968096919, guid: 0c2e8aec6434f89f2990c31d371eeb8f, type: 3}
-  image: {fileID: 6714931122986945234}
   baseColor: {r: 1, g: 0, b: 0.06387138, a: 1}
   hoverColor: {r: 1, g: 1, b: 1, a: 1}
+  iconHoverColor: {r: 1, g: 1, b: 1, a: 1}
   btn_icon: {fileID: 1598343756537950274}
+  colorers: []
+  onClickedEvent:
+    m_PersistentCalls:
+      m_Calls: []
