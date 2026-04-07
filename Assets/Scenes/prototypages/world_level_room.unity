@@ -26527,6 +26527,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1139930732}
     m_Modifications:
+    - target: {fileID: 725448519226758652, guid: 76776326153549042881efd8d31b0a83, type: 3}
+      propertyPath: disabled_sprite
+      value: 
+      objectReference: {fileID: 603440430, guid: a721cdfb675dca949952e3d7610b060d, type: 3}
     - target: {fileID: 2806026283884960729, guid: 76776326153549042881efd8d31b0a83, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -42894,6 +42898,10 @@ PrefabInstance:
     - target: {fileID: 332583253616935226, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3172537156789299168, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
+      propertyPath: m_FlipX
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3238169105776769028, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
       propertyPath: m_Name
@@ -59448,11 +59456,71 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4977898504913353187, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: prototype
-      value: corpse fixed + room engine & world fixes
+      value: wired outline shader test
       objectReference: {fileID: 0}
     - target: {fileID: 5846687295635405809, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_Name
       value: app
+      objectReference: {fileID: 0}
+    - target: {fileID: 8269756926769288201, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: ui_item_slot_prefabs.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8269756926769288201, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: ui_item_slot_prefabs.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 4964243457693928914, guid: abacdc781c511fc42b1c0e4dd87c3c7b, type: 3}
+    - target: {fileID: 8269756926769288201, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: ui_item_slot_prefabs.Array.data[1].prefab
+      value: 
+      objectReference: {fileID: 4964243457693928914, guid: 76776326153549042881efd8d31b0a83, type: 3}
+    - target: {fileID: 8269756926769288201, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: ui_item_slot_prefabs.Array.data[2].prefab
+      value: 
+      objectReference: {fileID: 4964243457693928914, guid: e44cfb99a05e8544ea2e230e5218f297, type: 3}
+    - target: {fileID: 8269756926769288201, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: ui_item_slot_prefabs.Array.data[3].prefab
+      value: 
+      objectReference: {fileID: 4964243457693928914, guid: e9cff4ee46b0a024a86496950d33d31b, type: 3}
+    - target: {fileID: 8269756926769288201, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: ui_item_slot_prefabs.Array.data[4].prefab
+      value: 
+      objectReference: {fileID: 4964243457693928914, guid: 25892a7bc7e629143a5087337e64ff4d, type: 3}
+    - target: {fileID: 8269756926769288201, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: ui_item_slot_prefabs.Array.data[5].prefab
+      value: 
+      objectReference: {fileID: 4964243457693928914, guid: 1c7af976db032284eb29c2f7adecaced, type: 3}
+    - target: {fileID: 8269756926769288201, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: ui_item_slot_prefabs.Array.data[6].prefab
+      value: 
+      objectReference: {fileID: 6477483050230691726, guid: ba7322b7ec1b3c34b85172c9189055b9, type: 3}
+    - target: {fileID: 8269756926769288201, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: ui_item_slot_prefabs.Array.data[0].slot_type
+      value: item
+      objectReference: {fileID: 0}
+    - target: {fileID: 8269756926769288201, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: ui_item_slot_prefabs.Array.data[1].slot_type
+      value: big_item
+      objectReference: {fileID: 0}
+    - target: {fileID: 8269756926769288201, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: ui_item_slot_prefabs.Array.data[2].slot_type
+      value: shoes
+      objectReference: {fileID: 0}
+    - target: {fileID: 8269756926769288201, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: ui_item_slot_prefabs.Array.data[3].slot_type
+      value: weapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 8269756926769288201, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: ui_item_slot_prefabs.Array.data[4].slot_type
+      value: device
+      objectReference: {fileID: 0}
+    - target: {fileID: 8269756926769288201, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: ui_item_slot_prefabs.Array.data[5].slot_type
+      value: file
+      objectReference: {fileID: 0}
+    - target: {fileID: 8269756926769288201, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: ui_item_slot_prefabs.Array.data[6].slot_type
+      value: module
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -70681,7 +70749,7 @@ MonoBehaviour:
   starting_slot: {fileID: 0}
   log: 0
   log_starting_slot: 0
-  item_slot_type: big_item
+  item_slot_type: weapon
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
@@ -87869,6 +87937,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 985106594198063801}
     m_Modifications:
+    - target: {fileID: 725448519226758652, guid: 76776326153549042881efd8d31b0a83, type: 3}
+      propertyPath: disabled_sprite
+      value: 
+      objectReference: {fileID: -1401745024, guid: a721cdfb675dca949952e3d7610b060d, type: 3}
     - target: {fileID: 2806026283884960729, guid: 76776326153549042881efd8d31b0a83, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -140772,6 +140844,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2116909114}
     m_Modifications:
+    - target: {fileID: 725448519226758652, guid: 76776326153549042881efd8d31b0a83, type: 3}
+      propertyPath: disabled_sprite
+      value: 
+      objectReference: {fileID: 1507562554, guid: a721cdfb675dca949952e3d7610b060d, type: 3}
     - target: {fileID: 2806026283884960729, guid: 76776326153549042881efd8d31b0a83, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -141054,7 +141130,7 @@ MonoBehaviour:
   starting_slot: {fileID: 0}
   log: 0
   log_starting_slot: 0
-  item_slot_type: big_item
+  item_slot_type: device
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
@@ -150183,7 +150259,7 @@ MonoBehaviour:
   starting_slot: {fileID: 0}
   log: 0
   log_starting_slot: 0
-  item_slot_type: big_item
+  item_slot_type: shoes
   AlwaysShow: 0
   ui_stacks: []
   bank: {fileID: 0}
@@ -151174,6 +151250,10 @@ PrefabInstance:
     - target: {fileID: 5853969211681099517, guid: d33fd979bd28c1748a8507c800a08ef4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8468975596296763291, guid: d33fd979bd28c1748a8507c800a08ef4, type: 3}
+      propertyPath: m_RendererIndex
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -154901,7 +154981,7 @@ RectTransform:
   m_GameObject: {fileID: 4407408406653321457}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.45261312, y: 0.45261312, z: 0.45261312}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5477250923338215944}

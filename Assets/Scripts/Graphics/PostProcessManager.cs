@@ -30,6 +30,21 @@ public class PostProcessManager : MonoBehaviour
     private ChromaticAberration chromatic_aberration;
     private Tonemapping tonemapping;
 
+    [Header("Camera renderer data switcher")]
+    private CameraRendererDataSwitcher _camera_renderer_data_switcher;
+    private CameraRendererDataSwitcher renderer_switcher
+    {
+        get
+        {
+            if (_camera_renderer_data_switcher == null)
+            {
+                _camera_renderer_data_switcher = Camera.main.GetComponent<CameraRendererDataSwitcher>();
+            }
+            return _camera_renderer_data_switcher;
+        }
+    }
+
+
     [Header("Logs")]
     [SerializeField] private bool log;
 
@@ -52,6 +67,8 @@ public class PostProcessManager : MonoBehaviour
 
         SetToneMapping(aces:title_screen);
     }
+
+    private void Start() { register_settings(); }
 
 
     [Header("Tweens")]
@@ -152,6 +169,35 @@ public class PostProcessManager : MonoBehaviour
         float target_chroma = GetDefaultChroma() + calculate_perso_additive_chroma();
         chromatic_aberration.intensity.Override(target_chroma);
     }
+
+
+
+
+    // CAMERA RENDERER DATA SWITCHER
+    private Setting wired_setting;
+    public void SwitchToWired(bool wired)
+    {
+        renderer_switcher.SwitchRendererData(wired ? "wired" : "default");
+    }
+    public void SwitchToWired(float wired)
+    {
+        if (wired <= 0f) { SwitchToWired(false); }
+        else { SwitchToWired(true); }
+    }
+
+
+    // SETTINGS REGISTERING
+    private void register_settings()
+    {
+        wired_setting = SettingsManager.Instance.GetSetting("wired");
+        if (wired_setting != null) { wired_setting.OnValueChanged += SwitchToWired; SwitchToWired(wired_setting.value); }
+    }
+    private void unregister_settings()
+    {
+        // enleve les callbacks des settings
+        if (wired_setting != null) { wired_setting.OnValueChanged -= SwitchToWired; }
+    }
+    void OnDestroy() { unregister_settings(); }
 
 
     // GET DEFAULT SCENE SETTINGS

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,10 +22,11 @@ public class ItemBank : MonoBehaviour
     public List<string> module_references = new List<string>();
 
     [Header("UI")]
-    public GameObject ui_item_prefab;
-    public GameObject ui_big_item_prefab;
-    public GameObject ui_file_prefab;
-    public GameObject ui_module_prefab;
+    [SerializeField] private List<UI_ItemSlotPrefab> ui_item_slot_prefabs = new List<UI_ItemSlotPrefab>();
+    // public GameObject ui_item_prefab;
+    // public GameObject ui_big_item_prefab;
+    // public GameObject ui_file_prefab;
+    // public GameObject ui_module_prefab;
 
     [Header("Logs")]
     public bool debug = false;
@@ -39,16 +41,15 @@ public class ItemBank : MonoBehaviour
         else { Destroy(gameObject); return; }
 
         // on vérifie qu'on a un prefab pour l'UI
-        if (ui_item_prefab == null)
+        /* if (ui_item_prefab == null)
         {
             Debug.LogError("(ItemBank) missing ui_item_prefab, you need to set it in the inspector");
-        }
+        } */
 
         // on charge les items
         loadItems();
         Debug.Log(getItemsList());
     }
-    /* public void init(Sprite[] fake_sprites) {} */
     public void loadItems()
     {
         int item_count = 0;
@@ -169,28 +170,35 @@ public class ItemBank : MonoBehaviour
     public GameObject CreateUI_Item(Transform parent, string slot_type="item")
     {
         // on récup le bon prefab
-        GameObject prefab;
-        switch (slot_type)
+        GameObject prefab = get_prefab_type(slot_type);
+        if (prefab == null)
+        {
+            Debug.LogError("(ItemBank) unknown slot type " + slot_type + ", cannot create UI_ItemStack");
+            return null;
+        }
+
+        /* switch (slot_type)
         {
             case "item": prefab = ui_item_prefab; break;
             case "big_item": prefab = ui_big_item_prefab; break;
             case "file": prefab = ui_file_prefab; break;
             case "module": prefab = ui_module_prefab; break;
             default: Debug.LogError("(ItemBank) unknown slot type " + slot_type + ", cannot create UI_ItemStack"); return null;
-        }
+        } */
 
         // on crée le slot
         GameObject ui_item = Instantiate(prefab, Vector3.zero, Quaternion.identity, parent);
         return ui_item;
     }
-    /* public GameObject CreateUI_Module()
+    private GameObject get_prefab_type(string slot_type)
     {
-        // we create the module
-        GameObject module = Instantiate(ui_module_prefab, Vector3.zero, Quaternion.identity);
-
-        return module;
-    } */
-
+        foreach (UI_ItemSlotPrefab slot_prefab in ui_item_slot_prefabs)
+        {
+            if (slot_prefab.slot_type == slot_type) { return slot_prefab.prefab; }
+        }
+        Debug.LogError("(ItemBank) unknown slot type " + slot_type + ", cannot find prefab");
+        return null;
+    }
 
 
     // GETTERS
@@ -275,4 +283,10 @@ public class ItemBank : MonoBehaviour
         return title + count + " items\n" + list;
     }
 
+}
+
+[Serializable] public class UI_ItemSlotPrefab
+{
+    public string slot_type;
+    public GameObject prefab;
 }
