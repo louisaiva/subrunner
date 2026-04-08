@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Pathfinding;
@@ -20,15 +21,15 @@ public class IA : Movable
 
 
     [Header("Components")]
-    private OldDetector _eyes;
-    public OldDetector Eyes
+    // private OldDetector _eyes;
+    /* public OldDetector Eyes
     {
         get
         {
             if (_eyes == null) { _eyes = transform.Find("eyes")?.GetComponent<OldDetector>(); }
             return _eyes;
         }
-    }
+    } */
     private GoToBehaviour _mover;
     public GoToBehaviour Mover
     {
@@ -49,6 +50,8 @@ public class IA : Movable
         }
     }
 
+    [Header("Social Data")]
+    public SocialData SocialData;
 
     [Header("Logs")]
     public bool log_actions = false;
@@ -60,5 +63,95 @@ public class IA : Movable
 
         // we set the tag
         gameObject.tag = base_tag;
+    }
+
+
+
+    // LOAD DATA / UNLOAD DATA
+    public override void LoadData(CapableData data)
+    {
+        base.LoadData(data);
+
+        // we set the social data
+        if (data is not IAData ia_data) { return; }
+        SocialData = ia_data.social_data;
+    }
+    public override void UnloadData()
+    {
+        // we reset the social data
+        SocialData = new SocialData();
+        base.UnloadData();
+    }
+
+    // GET STATIC DATA
+    public override ICapableData GetStaticData()
+    {
+        IAData static_data = new IAData((CapableData)base.GetStaticData());
+
+        // set the social data
+        if (SocialData != null) { static_data.social_data = SocialData.Duplicate(); }
+
+        return static_data;
+    }
+}
+
+// IA DATA
+[Serializable] public class IAData : CapableData
+{
+    public SocialData social_data = new SocialData();
+    
+    // CONSTRUCTOR
+    public IAData(CapableData parent)
+    {
+        foreach (var prop in parent.GetType().GetProperties()) { prop.SetValue(this, prop.GetValue(parent)); }
+        foreach (var prop in parent.GetType().GetFields()) { prop.SetValue(this, prop.GetValue(parent)); }
+    }
+
+    // DUPLICATE
+    public override ICapableData Duplicate()
+    {
+        return new IAData(base.Duplicate() as CapableData)
+        {
+            social_data = this.social_data.Duplicate()
+        };
+    }
+
+    // GET DETAILS
+    public override string GetDetails()
+    {
+        string details = "";
+        if (social_data != null) { details += $"  - social_data : {social_data.GetDetails()}"; }
+        else { details += $"  - social_data : null\n"; }
+        return base.GetDetails() + details;
+    }
+}
+
+[Serializable] public class SocialData
+{
+    public float range_detection = 15f;
+    public List<string> friendly_skins = new List<string>();
+    public List<string> dangerous_skins = new List<string>();
+    public List<string> prey_skins = new List<string>();
+
+    public SocialData Duplicate()
+    {
+        return new SocialData
+        {
+            range_detection = this.range_detection,
+            friendly_skins = new List<string>(friendly_skins),
+            dangerous_skins = new List<string>(dangerous_skins),
+            prey_skins = new List<string>(prey_skins)
+        };
+    }
+
+    // GET DETAILS
+    public string GetDetails()
+    {
+        string details = "social data : \n";
+        details += $"  - range_detection : {range_detection}\n";
+        details += $"  - friendly_skins : {string.Join(", ", friendly_skins)}\n";
+        details += $"  - dangerous_skins : {string.Join(", ", dangerous_skins)}\n";
+        details += $"  - prey_skins : {string.Join(", ", prey_skins)}\n";
+        return details;
     }
 }

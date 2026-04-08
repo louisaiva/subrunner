@@ -401,6 +401,15 @@ MonoBehaviour:
   Velocity: {x: 0, y: 0}
   exploration_radius: 2
   base_tag: Spider
+  SocialData:
+    range_detection: 15
+    friendly_skins: []
+    dangerous_skins: []
+    prey_skins:
+    - zombo
+    - cyber_rat
+    - ghost
+    - qwin
   log_actions: 0
 --- !u!1 &8660562499856506205
 GameObject:
@@ -1055,6 +1064,14 @@ PrefabInstance:
       propertyPath: data.<id>k__BackingField
       value: health_spider
       objectReference: {fileID: 0}
+    - target: {fileID: 2179822775373733288, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: _health_colliders.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2179822775373733288, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: '_health_colliders.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1343303625859261078}
     - target: {fileID: 7648185767596127708, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

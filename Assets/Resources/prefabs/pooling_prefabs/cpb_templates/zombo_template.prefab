@@ -106,6 +106,7 @@ Transform:
   - {fileID: 7288199678909313807}
   - {fileID: 6273157296446669408}
   - {fileID: 2855746702652472508}
+  - {fileID: 6466687608569031244}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5396166487167258112
@@ -309,6 +310,20 @@ MonoBehaviour:
   Velocity: {x: 0, y: 0}
   exploration_radius: 5
   base_tag: Zombo
+  SocialData:
+    range_detection: 15
+    friendly_skins: []
+    dangerous_skins: []
+    prey_skins:
+    - rat
+    - cat
+    - perso
+    - nobody
+    - robot
+    - spider
+    - qwin
+    - npc
+    - dev
   log_actions: 0
 --- !u!1001 &947302410435832234
 PrefabInstance:
@@ -392,6 +407,14 @@ PrefabInstance:
       propertyPath: data.<id>k__BackingField
       value: zombo_health
       objectReference: {fileID: 0}
+    - target: {fileID: 2179822775373733288, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: _health_colliders.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2179822775373733288, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: '_health_colliders.Array.data[0]'
+      value: 
+      objectReference: {fileID: 6457531092389454742}
     - target: {fileID: 7648185767596127708, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -449,6 +472,77 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 7648185767596127708, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
   m_PrefabInstance: {fileID: 5990340796480651133}
+  m_PrefabAsset: {fileID: 0}
+--- !u!61 &6457531092389454742 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 773551956763057387, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+  m_PrefabInstance: {fileID: 5990340796480651133}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &6438895993432683232
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1982530335173329727}
+    m_Modifications:
+    - target: {fileID: 64677485766301868, guid: bbad179de34e6134bbf77cc73af372d8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 64677485766301868, guid: bbad179de34e6134bbf77cc73af372d8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 64677485766301868, guid: bbad179de34e6134bbf77cc73af372d8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 64677485766301868, guid: bbad179de34e6134bbf77cc73af372d8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 64677485766301868, guid: bbad179de34e6134bbf77cc73af372d8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 64677485766301868, guid: bbad179de34e6134bbf77cc73af372d8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 64677485766301868, guid: bbad179de34e6134bbf77cc73af372d8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 64677485766301868, guid: bbad179de34e6134bbf77cc73af372d8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 64677485766301868, guid: bbad179de34e6134bbf77cc73af372d8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 64677485766301868, guid: bbad179de34e6134bbf77cc73af372d8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5744172474813345029, guid: bbad179de34e6134bbf77cc73af372d8, type: 3}
+      propertyPath: m_Name
+      value: motor
+      objectReference: {fileID: 0}
+    - target: {fileID: 7946677402921100740, guid: bbad179de34e6134bbf77cc73af372d8, type: 3}
+      propertyPath: data.<id>k__BackingField
+      value: zombo_motor
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: bbad179de34e6134bbf77cc73af372d8, type: 3}
+--- !u!4 &6466687608569031244 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 64677485766301868, guid: bbad179de34e6134bbf77cc73af372d8, type: 3}
+  m_PrefabInstance: {fileID: 6438895993432683232}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6580054979447482446
 PrefabInstance:

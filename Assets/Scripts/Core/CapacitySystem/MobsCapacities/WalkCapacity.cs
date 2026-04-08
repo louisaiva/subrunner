@@ -323,6 +323,6 @@ public class WalkCapacity : Capacity
         details += $"  - is_running : {is_running}\n";
         details += $"  - particles_color : {particles_color}\n";
         details += $"  - particles_rate : {particles_rate}\n";
-        return details;
+        return base.GetDetails() + details;
     }
 }

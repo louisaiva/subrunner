@@ -1007,6 +1007,17 @@ MonoBehaviour:
   Velocity: {x: 0, y: 0}
   exploration_radius: 5
   base_tag: Dev
+  SocialData:
+    range_detection: 15
+    friendly_skins: []
+    dangerous_skins: []
+    prey_skins:
+    - rat
+    - cat
+    - perso
+    - nobody
+    - zombo
+    - qwin
   log_actions: 0
 --- !u!1001 &608473215958954608
 PrefabInstance:
@@ -1020,6 +1031,14 @@ PrefabInstance:
       propertyPath: data.<id>k__BackingField
       value: dev_health
       objectReference: {fileID: 0}
+    - target: {fileID: 2179822775373733288, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: _health_colliders.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2179822775373733288, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: '_health_colliders.Array.data[0]'
+      value: 
+      objectReference: {fileID: 201974021724122779}
     - target: {fileID: 7648185767596127708, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1073,6 +1092,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+--- !u!61 &201974021724122779 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 773551956763057387, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+  m_PrefabInstance: {fileID: 608473215958954608}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7084843110207932332 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7648185767596127708, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}

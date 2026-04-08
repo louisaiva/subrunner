@@ -64,7 +64,7 @@ public class OverlapFoodDetector : MonoBehaviour, FoodDetector
             }
         }
 
-        if (logs_detection) { Debug.Log("(EatCapacity) " + ia_id + " detected " + potential_foods.Count + " potential foods in range of " + edata.range_food_detection + " : \n" + log); }
+        if (logs_detection) { Debug.Log("(OverlapFoodDetector) " + ia_id + " detected " + potential_foods.Count + " potential foods in range of " + edata.range_food_detection + " : \n" + log); }
 
         return potential_foods;
     }

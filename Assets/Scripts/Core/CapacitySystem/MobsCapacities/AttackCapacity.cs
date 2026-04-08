@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -66,7 +67,7 @@ public class AttackCapacity : CooldownCapacity
         bank = AnimBank.Instance.GetComponent<SpriteBank>();
 
         // we set the damage variable
-        damage += Random.Range(-random_damage_modifier_at_start, random_damage_modifier_at_start);
+        damage += UnityEngine.Random.Range(-random_damage_modifier_at_start, random_damage_modifier_at_start);
 
         ResetTags();
     }
@@ -87,7 +88,7 @@ public class AttackCapacity : CooldownCapacity
         float duration_override = attack_duration;
         if (duration_override != default && attack_duration_random_variation > 0)
         {
-            duration_override += Random.Range(-attack_duration_random_variation, attack_duration_random_variation);
+            duration_override += UnityEngine.Random.Range(-attack_duration_random_variation, attack_duration_random_variation);
             duration_override = Mathf.Max(0.01f, duration_override); // we make sure the duration is not negative
         }
 
@@ -102,7 +103,7 @@ public class AttackCapacity : CooldownCapacity
         hitted_health_capa.Clear();
 
         // we check if we need to turn on unstoppable effect
-        if (unstoppable && Random.Range(0f, 1f) < unstoppable_rate)
+        if (unstoppable && UnityEngine.Random.Range(0f, 1f) < unstoppable_rate)
         {
             bearer.AddEffect(Effect.Unstoppable, -888f); // infinite unstoppable
         }
@@ -117,12 +118,7 @@ public class AttackCapacity : CooldownCapacity
         if (!anim_player.current_capacity.Equals("attack"))
         {
             // checks if we are still attacking & the animation is not the attack animation anymore
-            if (IsAttacking)
-            {
-                IsAttacking = false;
-                hitted_health_capa.Clear();
-                bearer.RemoveEffect(Effect.Unstoppable);
-            }
+            stop_attack();
             return;
         }
 
@@ -228,6 +224,7 @@ public class AttackCapacity : CooldownCapacity
         movable.AddForce(knockback_inverse);
     }
 
+    // APPLY DAMAGE TO HEALTH CAPACITY
     private bool applyDamageToHealthCapa(HealthCapacity health_capa, float single_target_damage, float total_knockback_weight, ref Vector2 attacker_knockback_direction)
     {
         // get the capable of the health capa
@@ -254,6 +251,17 @@ public class AttackCapacity : CooldownCapacity
         return false;
     }
 
+    // STOP ATTACK
+    private void stop_attack()
+    {
+        IsAttacking = false;
+        hitted_health_capa.Clear();
+        if (bearer != null)
+        {
+            bearer.RemoveEffect(Effect.Unstoppable);
+            bearer.AnimPlayer.StopPlaying("attack");
+        }
+    }
 
 
     // COLLISION ENTER
@@ -329,6 +337,121 @@ public class AttackCapacity : CooldownCapacity
     {
         excluded_tags.Clear();
     }
+
+
+
+    // LOAD / UNLOAD DATA
+    public override void LoadData(CapacityData data)
+    {
+        if (data is not AttackData adata) { return; }
+
+        // we load the static data
+        distance_to_attack = adata.distance_to_attack;
+        single_hit = adata.single_hit;
+        split_damage = adata.split_damage;
+        perforant_attack = adata.perforant_attack;
+        attack_duration = adata.attack_duration;
+        attack_duration_random_variation = adata.attack_duration_random_variation;
+        unstoppable_rate = adata.unstoppable_rate;
+        unstoppable = unstoppable_rate > 0;
+        base_excluded_tags = new List<string>(adata.base_excluded_tags);
+
+        // and damage
+        damage = adata.damage;
+
+        base.LoadData(data);
+    }
+    public override void UnloadData()
+    {
+        // if we are attacking we stop the attack
+        if (IsAttacking) { stop_attack(); }
+        base.UnloadData();
+    }
+
+    // GET STATIC DATA
+    public override CapacityData GetStaticData()
+    {
+        AttackData static_data = new AttackData(base.GetStaticData())
+        {
+            template_damage = damage,
+            random_damage_modifier = random_damage_modifier_at_start,
+            distance_to_attack = distance_to_attack,
+            single_hit = single_hit,
+            split_damage = split_damage,
+            perforant_attack = perforant_attack,
+            attack_duration = attack_duration,
+            attack_duration_random_variation = attack_duration_random_variation,
+            unstoppable_rate = unstoppable_rate,
+            base_excluded_tags = new List<string>(base_excluded_tags),
+
+            // instance parameters are not included in static data
+            damage = damage + UnityEngine.Random.Range(-random_damage_modifier_at_start, random_damage_modifier_at_start)
+        };
+
+        return static_data;
+    }
 }
 
 
+[Serializable] public class AttackData : CapacityData
+{
+
+    // TYPE DATA (static at runtime, one per template)
+    public float template_damage;
+    public float random_damage_modifier;
+    public float distance_to_attack;
+    public bool single_hit, split_damage, perforant_attack;
+    public float attack_duration, attack_duration_random_variation;
+    public float unstoppable_rate;
+
+    // excluded tags
+    public List<string> base_excluded_tags = new List<string> { };
+
+    // instance parameters
+    public float damage;
+
+
+    // CONSTRUCTOR
+    public AttackData(CapacityData parent)
+    {
+        foreach (var prop in parent.GetType().GetProperties()) { prop.SetValue(this, prop.GetValue(parent)); }
+        foreach (var prop in parent.GetType().GetFields()) { prop.SetValue(this, prop.GetValue(parent)); }
+    }
+
+    // DUPLICATE
+    public override ICapacityData Duplicate()
+    {
+        return new AttackData(base.Duplicate() as CapacityData)
+        {
+            template_damage = template_damage,
+            random_damage_modifier = random_damage_modifier,
+            distance_to_attack = distance_to_attack,
+            single_hit = single_hit,
+            split_damage = split_damage,
+            perforant_attack = perforant_attack,
+            attack_duration = attack_duration,
+            attack_duration_random_variation = attack_duration_random_variation,
+            unstoppable_rate = unstoppable_rate,
+            base_excluded_tags = new List<string>(base_excluded_tags),
+
+            // instance parameters
+            damage = template_damage + UnityEngine.Random.Range(-random_damage_modifier, random_damage_modifier)
+        };
+    }
+
+    // GET DETAILS
+    public override string GetDetails()
+    {
+        string details = "";
+        details += $"  - template damage : {template_damage} (+/- {random_damage_modifier})\n";
+        details += $"  - distance to attack : {distance_to_attack}\n";
+        details += $"  - single hit : {single_hit}\n";
+        details += $"  - split damage : {split_damage}\n";
+        details += $"  - perforant attack : {perforant_attack}\n";
+        details += $"  - attack duration : {attack_duration} (+/- {attack_duration_random_variation})\n";
+        details += $"  - unstoppable rate : {unstoppable_rate}\n";
+        details += $"  - excluded tags : {string.Join(", ", base_excluded_tags)}\n";
+        details += $"  - damage : {damage}\n";
+        return base.GetDetails() + details;
+    }
+}

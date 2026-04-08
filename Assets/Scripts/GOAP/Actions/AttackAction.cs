@@ -11,7 +11,6 @@ namespace subrunner.goap
         // START
         public override void Start(IMonoAgent agent, Data data)
         {
-            data.anim_player = data.ia.AnimPlayer;
             data.attack_capacity = data.ia.GetCapacity<AttackCapacity>();
             data.CapableTarget = data.Target is TransformTarget target ? target.Transform.GetComponent<Capable>() : null;
         }
@@ -19,12 +18,10 @@ namespace subrunner.goap
         // PERFORM
         public override void BeforePerform(IMonoAgent agent, Data data)
         {
-            // if (data.Target is not TransformTarget transformTarget) { return; }
-            // Being being_target = transformTarget.Transform.GetComponent<Being>();
             if (data.CapableTarget == null) { return; }
 
             // verify that the being is still Alive
-            if (data.CapableTarget == null || !data.CapableTarget.TryGetCapacity(out HealthCapacity health) || !health.Alive) { return; }
+            if (!data.CapableTarget.TryGetCapacity(out HealthCapacity health) || !health.Alive) { return; }
 
             // we turn over to face the target
             data.ia.OrientTowards(data.CapableTarget.transform.position);
@@ -42,7 +39,7 @@ namespace subrunner.goap
         public override IActionRunState Perform(IMonoAgent agent, Data data, IActionContext context)
         {
             // wait for the animation to finish
-            if (data.anim_player.current_capacity == "attack") { return ActionRunState.Continue; }
+            if (data.ia.AnimPlayer.current_capacity == "attack") { return ActionRunState.Continue; }
             return ActionRunState.Completed;
         }
 
@@ -70,7 +67,6 @@ namespace subrunner.goap
 
             // Direct access to IA and AnimPlayer
             [GetComponentInParent] public IA ia { get; set; }
-            public AnimPlayer anim_player { get; set; }
             public AttackCapacity attack_capacity { get; set; }
         }
     }

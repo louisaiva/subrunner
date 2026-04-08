@@ -528,6 +528,14 @@ MonoBehaviour:
   Velocity: {x: 0, y: 0}
   exploration_radius: 7
   base_tag: Rat
+  SocialData:
+    range_detection: 15
+    friendly_skins: []
+    dangerous_skins: []
+    prey_skins:
+    - zombo
+    - cat
+    - dev
   log_actions: 0
 --- !u!1 &7038474548396951047
 GameObject:
@@ -833,6 +841,14 @@ PrefabInstance:
       propertyPath: data.<id>k__BackingField
       value: health_rat
       objectReference: {fileID: 0}
+    - target: {fileID: 2179822775373733288, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: _health_colliders.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2179822775373733288, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
+      propertyPath: '_health_colliders.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8812050281632961313}
     - target: {fileID: 7648185767596127708, guid: 23c27a6614cab7645b69b6642c0d0b5c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

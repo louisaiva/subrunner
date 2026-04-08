@@ -10,7 +10,10 @@ public interface FoodDetector : Detector
 {
     public Food FindClosestFood(CapableData looker_data, EatData edata);
 }
-
+public interface HealthDetector : Detector
+{
+    public HealthCapacity FindClosestHealthCapacity(IAData looker_data);
+}
 
 [Serializable] public class CapableTarget
 {
