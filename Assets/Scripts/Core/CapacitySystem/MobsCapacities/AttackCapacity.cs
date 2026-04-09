@@ -354,7 +354,10 @@ public class AttackCapacity : CooldownCapacity
         attack_duration_random_variation = adata.attack_duration_random_variation;
         unstoppable_rate = adata.unstoppable_rate;
         unstoppable = unstoppable_rate > 0;
+
+        // we load the excluded tags
         base_excluded_tags = new List<string>(adata.base_excluded_tags);
+        ResetTags();
 
         // and damage
         damage = adata.damage;

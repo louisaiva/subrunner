@@ -75,6 +75,7 @@ namespace subrunner.goap
         [Header("Logs & gizmos")]
         [SerializeField] private bool log = false;
         [SerializeField] private bool log_path_calculation = false;
+        [SerializeField] private bool log_avoidance_force_set = false;
         [SerializeField] private bool gizmo_target = false;
         [SerializeField] private bool gizmo_path = false;
         [SerializeField] private bool gizmo_ttcbas = true; // time to collision based avoidance system
@@ -112,6 +113,8 @@ namespace subrunner.goap
             agent.Events.OnTargetChanged -= on_target_changed;
             agent.Events.OnTargetLost -= on_target_lost;
 
+            // we stop invoking the path calculation
+            CancelInvoke(nameof(CalculatePath));
 
             _ia = null;
             _agent = null;
@@ -120,7 +123,7 @@ namespace subrunner.goap
 
             target = null;
             data = null;            
-            
+            path = null;
             unloaded = true;
         }
 
@@ -260,7 +263,11 @@ namespace subrunner.goap
             }
             // avoidance_force = Vector2.zero; // we reset the avoidance force for the next frame
         }
-        public void SetAvoidanceForce(Vector2 force) { avoidance_force = force;}
+        public void SetAvoidanceForce(Vector2 force)
+        {
+            if (log_avoidance_force_set) { Debug.Log($"(GoToBehaviour) {ia.data.id} received an avoidance force of {force}"); }
+            avoidance_force = force;
+        }
 
         // GIZMOS
         private void OnDrawGizmos()

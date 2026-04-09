@@ -227,8 +227,11 @@ public class Capable : MonoBehaviour, Debuggable
     {
         get
         {
-            if (_anim_player == null) { _anim_player = GetComponent<AnimPlayer>(); }
-            if (_anim_player == null) { _anim_player = transform.Find("anim_player")?.GetComponent<AnimPlayer>(); }
+            if (_anim_player is null)
+            {
+                _anim_player = GetComponent<AnimPlayer>();
+                if (_anim_player == null) { _anim_player = transform.Find("anim_player")?.GetComponent<AnimPlayer>(); }
+            }
             return _anim_player;
         }
         private set { _anim_player = value; }

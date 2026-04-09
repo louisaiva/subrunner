@@ -35,8 +35,11 @@ public class IA : Movable
     {
         get
         {
-            if (_mover == null) { _mover = transform.Find("brain/goto")?.GetComponent<GoToBehaviour>(); }
-            if (_mover == null) { _mover = GetCapacity<MotorCapacity>()?.transform.Find("goto").GetComponent<GoToBehaviour>(); }
+            if (_mover is null)
+            {
+                _mover = transform.Find("brain/goto")?.GetComponent<GoToBehaviour>();
+                if (_mover == null) { _mover = GetCapacity<MotorCapacity>()?.transform.Find("goto").GetComponent<GoToBehaviour>(); }
+            }
             return _mover;
         }
     }
@@ -80,6 +83,11 @@ public class IA : Movable
     {
         // we reset the social data
         SocialData = new SocialData();
+
+        // and components (so next load will load the new ones)
+        _mover = null;
+
+        
         base.UnloadData();
     }
 
