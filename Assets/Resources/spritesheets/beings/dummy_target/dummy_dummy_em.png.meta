@@ -1,36 +1,33 @@
 fileFormatVersion: 2
-guid: c96e1ed9de94c9c4b92d82ed5fc26886
+guid: 64cab75a68d193c4faab37a9c28b38b3
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6433097673539779746
-    second: dummy_dummy_em_0
+      213: 948873546199331388
+    second: dummy_em_0
   - first:
-      213: 6068042254934472416
-    second: dummy_dummy_em_1
+      213: 2422900776647327985
+    second: dummy_em_1
   - first:
-      213: -3921375732028228204
-    second: dummy_dummy_em_2
+      213: 3082744445875065869
+    second: dummy_em_2
   - first:
-      213: -8514178905975481485
-    second: dummy_dummy_em_3
+      213: 179101133799796629
+    second: dummy_em_3
   - first:
-      213: -7768532859874037016
-    second: dummy_dummy_em_4
+      213: 7112003089395442968
+    second: dummy_em_4
   - first:
-      213: -7479142812516592732
-    second: dummy_dummy_em_5
+      213: -5397844584954486078
+    second: dummy_em_5
   - first:
-      213: -1007916937700258004
-    second: dummy_dummy_em_6
-  - first:
-      213: 8977954571549061873
-    second: dummy_dummy_em_7
+      213: -8227943491806048290
+    second: dummy_em_6
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 0
+    enableMipMap: 1
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -58,7 +55,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -67,7 +64,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -76,9 +73,9 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 1
+  alphaIsTransparency: 0
   spriteTessellationDetail: -1
-  textureType: 8
+  textureType: 0
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -96,7 +93,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -117,190 +114,27 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: dummy_dummy_em_0
-      rect:
-        serializedVersion: 2
-        x: 4
-        y: 3
-        width: 28
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e53054bffbb09b6a0800000000000000
-      internalID: -6433097673539779746
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: dummy_dummy_em_1
-      rect:
-        serializedVersion: 2
-        x: 41
-        y: 3
-        width: 26
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 0e6fd6fe744063450800000000000000
-      internalID: 6068042254934472416
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: dummy_dummy_em_2
-      rect:
-        serializedVersion: 2
-        x: 79
-        y: 10
-        width: 9
-        height: 9
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 49dbe9d4c897499c0800000000000000
-      internalID: -3921375732028228204
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: dummy_dummy_em_3
-      rect:
-        serializedVersion: 2
-        x: 88
-        y: 3
-        width: 17
-        height: 24
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 37b1533256f87d980800000000000000
-      internalID: -8514178905975481485
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: dummy_dummy_em_4
-      rect:
-        serializedVersion: 2
-        x: 113
-        y: 3
-        width: 28
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8e2324df580a03490800000000000000
-      internalID: -7768532859874037016
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: dummy_dummy_em_5
-      rect:
-        serializedVersion: 2
-        x: 148
-        y: 3
-        width: 26
-        height: 26
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 4a3588bfc3fb43890800000000000000
-      internalID: -7479142812516592732
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: dummy_dummy_em_6
-      rect:
-        serializedVersion: 2
-        x: 184
-        y: 3
-        width: 29
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: c2fc645a2e82302f0800000000000000
-      internalID: -1007916937700258004
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: dummy_dummy_em_7
-      rect:
-        serializedVersion: 2
-        x: 225
-        y: 3
-        width: 19
-        height: 21
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 1f2b6c69d1a189c70800000000000000
-      internalID: 8977954571549061873
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -309,15 +143,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      dummy_dummy_em_0: -6433097673539779746
-      dummy_dummy_em_1: 6068042254934472416
-      dummy_dummy_em_2: -3921375732028228204
-      dummy_dummy_em_3: -8514178905975481485
-      dummy_dummy_em_4: -7768532859874037016
-      dummy_dummy_em_5: -7479142812516592732
-      dummy_dummy_em_6: -1007916937700258004
-      dummy_dummy_em_7: 8977954571549061873
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

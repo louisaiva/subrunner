@@ -56,6 +56,11 @@ public class AttackCapacity : CooldownCapacity
     private PolygonCollider2D pc;
 
 
+    // EVENTS
+    public Action<HealthCapacity,float> OnDamageDealt = delegate { };
+
+
+
     // START
     private void Start()
     {
@@ -244,7 +249,9 @@ public class AttackCapacity : CooldownCapacity
         attacker_knockback_direction += -direction_enemy.normalized * knockback_magnitude;
 
         // apply damage and knockback
-        health_capa.TakeDamage(split_damage ? single_target_damage : damage, knockback);
+        float dealt_damage = split_damage ? single_target_damage : damage;
+        OnDamageDealt?.Invoke(health_capa, dealt_damage); // before applying damage bcz we want to have a data to process, if the prey dies from the attack it unloads the data
+        health_capa.TakeDamage(dealt_damage, knockback);
 
         // check if enemy is dead
         if (!health_capa.Alive) { kills += 1; return true; }
@@ -340,6 +347,9 @@ public class AttackCapacity : CooldownCapacity
 
 
 
+
+
+
     // LOAD / UNLOAD DATA
     public override void LoadData(CapacityData data)
     {
@@ -384,7 +394,7 @@ public class AttackCapacity : CooldownCapacity
             perforant_attack = perforant_attack,
             attack_duration = attack_duration,
             attack_duration_random_variation = attack_duration_random_variation,
-            unstoppable_rate = unstoppable_rate,
+            unstoppable_rate = unstoppable ? unstoppable_rate : 0f,
             base_excluded_tags = new List<string>(base_excluded_tags),
 
             // instance parameters are not included in static data

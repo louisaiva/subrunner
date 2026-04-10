@@ -53,7 +53,6 @@ public interface HealthDetector : Detector
     }
 
     // CONSTRUCTORS
-    public CapableTarget() { }
     public CapableTarget(Capable capable)
     {
         if (capable == null || capable.data == null) { return; }
@@ -61,9 +60,12 @@ public interface HealthDetector : Detector
         position = capable.transform.position;
         _loaded_capable = capable;
     }
-    public CapableTarget(CapableData cdata)
+
+    public void SetTarget(Capable capable)
     {
-        this.capable_id = cdata.id;
-        this.position = cdata.position;
+        if (capable == null || capable.data == null) { return; }
+        this.capable_id = capable.data.id;
+        this.position = capable.transform.position;
+        this._loaded_capable = capable;
     }
 }

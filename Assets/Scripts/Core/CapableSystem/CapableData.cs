@@ -155,16 +155,6 @@ public interface ICapableData : IData
         return details;
     }
 }
-[Serializable] public class AnimLayerData
-{
-    public string skin;
-    public Vector2 local_position;
-
-    // layer sr data
-    public string material_path;
-    public int sorting_layer_id;
-    public int order_in_layer;
-}
 
 
 

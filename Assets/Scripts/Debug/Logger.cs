@@ -14,4 +14,7 @@ public class Logger : Singleton<Logger>
     public bool LOG_WANDER_TARGET_SENSOR = false;
     public bool LOG_HUNGER_SENSOR = false;
     public bool LOG_CLOSEST_FOOD_SENSOR = false;
+
+    [Header("GOAP Actions Logs")]
+    public bool LOG_ATTACK_ACTION = false;
 }

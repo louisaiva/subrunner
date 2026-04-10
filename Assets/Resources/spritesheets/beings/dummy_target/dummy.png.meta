@@ -1,28 +1,31 @@
 fileFormatVersion: 2
-guid: 55d89f6b4a880b3418db33ee0683ba04
+guid: 82a400282b88d9c4e82c6c077b95f18b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4010617647764655359
-    second: dummy_0
+      213: 7312418411552659872
+    second: dummy_dummy_0
   - first:
-      213: 3694459544301812682
-    second: dummy_1
+      213: 77696902463634571
+    second: dummy_dummy_1
   - first:
-      213: 5645216860015622430
-    second: dummy_2
+      213: 3754149223882678955
+    second: dummy_dummy_2
   - first:
-      213: -8569032761487138307
-    second: dummy_3
+      213: 924980259616358052
+    second: dummy_dummy_3
   - first:
-      213: 3422920929437837214
-    second: dummy_4
+      213: -7623514146762886773
+    second: dummy_dummy_4
   - first:
-      213: -7717153290068198883
-    second: dummy_5
+      213: -1728647728629767763
+    second: dummy_dummy_5
   - first:
-      213: 6287347933187342012
-    second: dummy_6
+      213: 4411676104373321955
+    second: dummy_dummy_6
+  - first:
+      213: 5836564781061352381
+    second: dummy_dummy_7
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -55,7 +58,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -69,7 +72,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 24
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -93,7 +96,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -114,172 +117,181 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: Server
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: dummy_0
+      name: dummy_dummy_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 36
-        height: 36
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 4
+        y: 3
+        width: 28
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 78caf5c856b49e94db5051e13c8a356d
-      internalID: 373716892
+      spriteID: 0a95f9d6dcdea7560800000000000000
+      internalID: 7312418411552659872
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dummy_1
+      name: dummy_dummy_1
       rect:
         serializedVersion: 2
-        x: 36
-        y: 0
-        width: 36
-        height: 36
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 41
+        y: 3
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: d750104d6777a344e8c382b2a137f229
-      internalID: 1722353811
+      spriteID: b8c3e7fcbe8041100800000000000000
+      internalID: 77696902463634571
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dummy_2
+      name: dummy_dummy_2
       rect:
         serializedVersion: 2
-        x: 72
-        y: 0
-        width: 36
-        height: 36
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 79
+        y: 10
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: b7b634aa6ab204a4eb57a54069c4b4ef
-      internalID: 1862895401
+      spriteID: ba2e55b24da691430800000000000000
+      internalID: 3754149223882678955
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dummy_3
+      name: dummy_dummy_3
       rect:
         serializedVersion: 2
-        x: 108
-        y: 0
-        width: 36
-        height: 36
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 88
+        y: 3
+        width: 17
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 39a6e4bf092f5184fab2d6c7113569ef
-      internalID: 1635893013
+      spriteID: 4ae7ea635a036dc00800000000000000
+      internalID: 924980259616358052
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dummy_4
+      name: dummy_dummy_4
       rect:
         serializedVersion: 2
-        x: 144
-        y: 0
-        width: 36
-        height: 36
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 113
+        y: 3
+        width: 28
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 5eeec800ea98fdd4cba20b107a3bfba1
-      internalID: 818449492
+      spriteID: b81780e4646d33690800000000000000
+      internalID: -7623514146762886773
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dummy_5
+      name: dummy_dummy_5
       rect:
         serializedVersion: 2
-        x: 180
-        y: 0
-        width: 36
-        height: 36
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 148
+        y: 3
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 3e6f1f03e2e846c44916b7bfa27eccf6
-      internalID: 329756839
+      spriteID: da1ac31bc0c9208e0800000000000000
+      internalID: -1728647728629767763
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dummy_6
+      name: dummy_dummy_6
       rect:
         serializedVersion: 2
-        x: 216
-        y: 0
-        width: 36
-        height: 36
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 184
+        y: 3
+        width: 29
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: fbcb112e9dfd0f44693d7f56141275b5
-      internalID: 1746572453
+      spriteID: 3e04049fa0c693d30800000000000000
+      internalID: 4411676104373321955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dummy_dummy_7
+      rect:
+        serializedVersion: 2
+        x: 225
+        y: 3
+        width: 19
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dbba7b3beb4aff050800000000000000
+      internalID: 5836564781061352381
       vertices: []
       indices: 
       edges: []
@@ -288,27 +300,24 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
-    secondaryTextures:
-    - texture: {fileID: 2800000, guid: 64cab75a68d193c4faab37a9c28b38b3, type: 3}
-      name: _Emission
+    secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":7.0,"y":1.0},"gridSpriteSize":{"x":36.0,"y":36.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.0},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":7,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
-      dummy_0: 373716892
-      dummy_1: 1722353811
-      dummy_2: 1862895401
-      dummy_3: 1635893013
-      dummy_4: 818449492
-      dummy_5: 329756839
-      dummy_6: 1746572453
+      dummy_dummy_0: 7312418411552659872
+      dummy_dummy_1: 77696902463634571
+      dummy_dummy_2: 3754149223882678955
+      dummy_dummy_3: 924980259616358052
+      dummy_dummy_4: -7623514146762886773
+      dummy_dummy_5: -1728647728629767763
+      dummy_dummy_6: 4411676104373321955
+      dummy_dummy_7: 5836564781061352381
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

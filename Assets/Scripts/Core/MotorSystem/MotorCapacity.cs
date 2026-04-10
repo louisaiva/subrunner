@@ -55,6 +55,7 @@ public class MotorCapacity : Capacity
     }
 
     private MotorData mdata => (MotorData)data;
+    public IActionData currentActionData => Agent?.ActionState?.Data;
 
     // AWAKE
     private void Awake()

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using UnityEngine;
 
@@ -24,7 +25,8 @@ public class AnimLayer : MonoBehaviour
     public Anim current_anim = null;
     private float frame_timer = 0f;
     private int current_frame = -1; // if -1, the animation is over
-    [SerializeField] private bool update_each_frame = true; // if false, it means that the animation is a single frame anim, we don't want to check it each frame
+    private bool update_each_frame = true; // if false, it means that the animation is a single frame anim, we don't want to check it each frame
+    [SerializeField] private bool never_flip = false;
 
     [Header("Logs")]
     public bool log = false;
@@ -55,20 +57,6 @@ public class AnimLayer : MonoBehaviour
         this.leader = null;
         already_assigned = false;
         if (log_assign) { Debug.Log("(AnimLayer) Unassigned leader from layer " + name); }
-    }
-
-    // LOAD DATA
-    public void LoadData(AnimLayerData layer_data)
-    {
-        // load main layer data
-        name = $"layer_{layer_data.skin}";
-        skin = layer_data.skin;
-        transform.localPosition = layer_data.local_position;
-
-        // load sr data
-        sr.material = Resources.Load<Material>(layer_data.material_path);
-        sr.sortingLayerID = layer_data.sorting_layer_id;
-        sr.sortingOrder = layer_data.order_in_layer;
     }
 
 
@@ -116,20 +104,7 @@ public class AnimLayer : MonoBehaviour
             sr.sprite = current_anim.sprites[current_frame];
             return;
         }
-
-
-        // if we are here, it means that we reached the end of the animation
-        // the animation is over
-        /* current_frame = -1;
-
-        // we check if it's looping or not
-        if (current_capacity_priority.one_shot)
-        {
-            current_capacity_priority.capacity_playing = "";
-        }
-
-        // we play the highest animation in the pile
-        playNextAnim(); */
+        
     }
     private void play_now_at_frame(Anim anim, int frame = 0)
     {
@@ -149,13 +124,14 @@ public class AnimLayer : MonoBehaviour
         sr.sprite = anim.sprites[current_frame];
 
         // we flip the sprite renderer if needed
-        if (anim.flipX && !sr.flipX) { sr.flipX = true; }
+        if (never_flip) { sr.flipX = false; }
+        else if (anim.flipX && !sr.flipX) { sr.flipX = true; }
         else if (!anim.flipX && sr.flipX) { sr.flipX = false; }
 
         // we check if this anim is a single frame anim
         update_each_frame = !(anim.sprites.Length == 1);
 
-        if (log) { Debug.Log("(AnimLayer) Playing " + anim.name + " at frame " + frame + " flipX: " + anim.flipX); }
+        if (log) { Debug.Log("(AnimLayer) Playing " + anim.name + " at frame " + frame + " flipX: " + anim.flipX + $" (never_flip: {never_flip})"); }
     }
 
 
@@ -163,4 +139,74 @@ public class AnimLayer : MonoBehaviour
     // RENDERER MANAGEMENT
     public void DisableRenderer() { sr.enabled = false; }
     public void EnableRenderer() { sr.enabled = true; }
+
+
+
+
+
+
+    // LOAD DATA
+    public void LoadData(AnimLayerData layer_data)
+    {
+        // load main layer data
+        name = $"layer_{layer_data.skin}";
+        skin = layer_data.skin;
+        transform.localPosition = layer_data.local_position;
+
+        // load sr data
+        sr.material = Resources.Load<Material>(layer_data.material_path);
+        sr.sortingLayerID = layer_data.sorting_layer_id;
+        sr.sortingOrder = layer_data.order_in_layer;
+
+        // load never flip
+        never_flip = layer_data.never_flip;
+    }
+
+    // GET STATIC DATA
+    public AnimLayerData GetStaticData()
+    {
+        return new AnimLayerData
+        {
+            // load basic layer data
+            skin = skin,
+            local_position = transform.localPosition,
+            never_flip = never_flip,
+
+            // load sr data
+            material_path = get_material_path(sr),
+            sorting_layer_id = sr.sortingLayerID,
+            order_in_layer = sr.sortingOrder
+        };
+    }
+
+    // MATERIAL GETTER
+    private string get_material_path(SpriteRenderer sr)
+    {
+        if (sr == null || sr.sharedMaterial == null) { return ""; }
+        #if UNITY_EDITOR
+        string path = UnityEditor.AssetDatabase.GetAssetPath(sr.sharedMaterial);
+        #else
+        string path = "";
+        #endif
+
+        // we need to remove ".mat" from path
+        path = path.Replace(".mat", "");
+        path = path.Replace("Assets/Resources/", ""); // we also need to remove "Assets/Resources/" from the path
+
+        return path;
+    }
+
+}
+
+
+[Serializable] public class AnimLayerData
+{
+    public string skin;
+    public Vector2 local_position;
+
+    // layer sr data
+    public string material_path;
+    public int sorting_layer_id;
+    public int order_in_layer;
+    public bool never_flip;
 }

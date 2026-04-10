@@ -528,6 +528,12 @@ MonoBehaviour:
     base_skin: blue_elevdoor
     base_spritesheets:
     - objects/interactives/elevator/elevator_door_wall
+  - variant_name: dummy_base
+    variant_spritesheets:
+    - beings/dummy_target/dummy_base
+    base_skin: dummy
+    base_spritesheets:
+    - beings/dummy_target/dummy_dummy
   log: 0
   log_LAFAC: 0
   log_variant_skins: 0
@@ -1129,6 +1135,7 @@ MonoBehaviour:
   LOG_WANDER_TARGET_SENSOR: 0
   LOG_HUNGER_SENSOR: 0
   LOG_CLOSEST_FOOD_SENSOR: 0
+  LOG_ATTACK_ACTION: 0
 --- !u!1 &7970305435618458122
 GameObject:
   m_ObjectHideFlags: 0

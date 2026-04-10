@@ -159,16 +159,7 @@ public class MovableEngine : MonoBehaviour
     // AVOIDANCE FORCE CALCULATION
     public Vector2 CalculateAvoidanceForce(Movable agent, float neighbour_radius, float ttc_treshold = 3f)
     {
-        // checks if the agent has a brain and has an attack target -> we exclude the target from the avoidance force calculation
-        // since we want to collide with it
-
-        NativeList<int> excludeIndexes = new NativeList<int>(Allocator.TempJob);
-        if (agent is IA ia && ia.Brain != null && ia.Brain.currentActionData is AttackAction.Data attackData && attackData.CapableTarget != null && attackData.CapableTarget is Movable targetMovable)
-        {
-            int targetIndex = movables.IndexOf(targetMovable);
-            if (targetIndex != -1) { excludeIndexes.Add(targetIndex); }
-            if (agent.log_avoidance) { Debug.Log($"(MovableEngine) {agent.name} tried excluding {attackData.CapableTarget.name} from ttc (and {((targetIndex != -1) ? "succeeded" : "failed")})"); }
-        }
+        NativeList<int> excludeIndexes = GetExcludedMovableIndexes(agent);
 
         // get the neighbours
         cache_neighbours_indexes(agent, neighbour_radius, excludeIndexes);
@@ -213,6 +204,37 @@ public class MovableEngine : MonoBehaviour
 
         // return
         return (Vector2)avoidance_force;
+    }
+
+    /// <summary>
+    /// checks if the agent has a brain and has an attack target -> we exclude the target from the avoidance force calculation
+    /// since we want to "collide" with it
+    /// </summary>
+    /// <param name="agent"></param>
+    /// <returns></returns>
+    private NativeList<int> GetExcludedMovableIndexes(Movable agent)
+    {
+        var excludeIndexes = new NativeList<int>(Allocator.TempJob);
+        if (agent is not IA ia) { return excludeIndexes; } // no ia, no exclusion
+
+        // either we got a brain (old way) or we have a MotorCapacity (new way). both have AttackAction.Data
+        AttackAction.Data attackData = null;
+        if (ia.Brain != null) { attackData = ia.Brain.currentActionData as AttackAction.Data; }
+        else if (ia.TryGetCapacity(out MotorCapacity motor)) { attackData = motor.currentActionData as AttackAction.Data; }
+        else { return excludeIndexes; } // nor brain nor motor capacity, we return an empty list
+
+        if (attackData == null || attackData.CapableTarget == null) { return excludeIndexes; }
+
+        // if we have an attack action with a capable target, we try to exclude it from the avoidance calculation
+        Capable loaded_target = attackData.CapableTarget;
+        if (loaded_target == null || loaded_target is not Movable targetMovable) { return excludeIndexes; }
+        
+        // we have a movable target, we exclude it
+        int targetIndex = movables.IndexOf(targetMovable);
+        if (targetIndex != -1) { excludeIndexes.Add(targetIndex); }
+        if (agent.log_avoidance) { Debug.Log($"(MovableEngine) {agent.data.id} tried excluding {loaded_target.data.id} from ttc (and {((targetIndex != -1) ? "succeeded" : "failed")})"); }
+        
+        return excludeIndexes;
     }
 
     // NEIGHBOURS CALCULATION

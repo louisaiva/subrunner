@@ -390,96 +390,6 @@ public class AnimPlayer : MonoBehaviour
         }
     }
     
-    
-    // DATA LOADING / GETTING / UNLOADING
-    public void LoadPlayerData(AnimData data)
-    {
-        if (CapableBank.Instance.log_anim_layers) { Debug.Log($"(AnimPlayer) {name}'s loading data : {(data != null ? data.GetDetails() : "null")}"); }
-
-        // we clear runtime data
-        _capable = null;
-        current_anim = null;
-        current_capacity = "";
-        current_capacity_priority = null;
-        current_frame = -1;
-        frame_timer = 0f;
-
-        // ! does not load layers !! but we don't want to it's inside CapableBank because we pool them
-        if (data.anim_capacity_priorities == null || data.anim_capacity_priorities.Count == 0) { return;}
-        skin = data.skin;
-        current_capacity = data.current_capacity;
-        anim_capacity_priorities = data.anim_capacity_priorities;
-
-        // we load the sr data
-        if (CapableBank.Instance.log_anim_layers) { Debug.Log($"(AnimPlayer) {data.skin}'s data default material is {data.material_path}"); }
-        Renderer.material = Resources.Load<Material>(data.material_path);
-        Renderer.sortingLayerID = data.sorting_layer_id;
-        Renderer.sortingOrder = data.order_in_layer;
-
-        // we inform each anim capacity priority of its priority
-        re_index_priorities();
-
-        // play current capacity
-        if (!string.IsNullOrEmpty(current_capacity)) { Play(current_capacity); }
-        else { AddToPile("idle"); }
-    }
-    public void SaveDynamicPlayerData(AnimData data)
-    {
-        // we save data
-        data.current_capacity = current_capacity;
-    }
-
-    /// <summary>
-    /// just as other GetStaticData() methods (ie Capable's one), this method
-    /// is not meant to be run in a BUILD !!! IT WON T WORK because it does not
-    /// update the anim_data, it creates a new data based from actual static
-    /// variables states of the object. if run inside a build, it could overwrite
-    /// some data such as material paths which would break the save.
-    /// </summary>
-    /// <returns></returns>
-    public AnimData GetStaticAnimData()
-    {
-        // get basic player data
-        AnimData data = new AnimData
-        {
-            skin = skin,
-            anim_capacity_priorities = anim_capacity_priorities,
-
-            // get sr data
-            material_path = get_material_path(Renderer),
-            sorting_layer_id = Renderer.sortingLayerID,
-            order_in_layer = Renderer.sortingOrder
-        };
-
-
-        // get the layers by going through the hierarchy (so we can do it even when not playing)
-        List<AnimLayerData> layers_data = new List<AnimLayerData>();
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            Transform layer_transform = transform.GetChild(i);
-            AnimLayer anim_layer = layer_transform.GetComponent<AnimLayer>();
-            if (anim_layer == null) { continue; }
-
-            // we create the layer data
-            SpriteRenderer sr = anim_layer.Renderer;
-            AnimLayerData layer_data = new AnimLayerData
-            {
-                // load basic layer data
-                skin = anim_layer.skin,
-                local_position = anim_layer.transform.localPosition,
-
-                // load sr data
-                material_path = get_material_path(sr),
-                sorting_layer_id = sr.sortingLayerID,
-                order_in_layer = sr.sortingOrder
-            };
-
-            layers_data.Add(layer_data);
-        }
-
-        data.layers = layers_data;
-        return data;
-    }
 
 
     // ORIENTATION & FLIP
@@ -596,7 +506,90 @@ public class AnimPlayer : MonoBehaviour
     }
 
 
-    // MATERIAL GETTER
+
+
+
+
+
+    // LOAD DATA
+    public void LoadPlayerData(AnimData data)
+    {
+        if (CapableBank.Instance.log_anim_layers) { Debug.Log($"(AnimPlayer) {name}'s loading data : {(data != null ? data.GetDetails() : "null")}"); }
+
+        // we clear runtime data
+        _capable = null;
+        current_anim = null;
+        current_capacity = "";
+        current_capacity_priority = null;
+        current_frame = -1;
+        frame_timer = 0f;
+
+        // ! does not load layers !! but we don't want to it's inside CapableBank because we pool them
+        if (data.anim_capacity_priorities == null || data.anim_capacity_priorities.Count == 0) { return; }
+        skin = data.skin;
+        current_capacity = data.current_capacity;
+        anim_capacity_priorities = data.anim_capacity_priorities;
+
+        // we load the sr data
+        if (CapableBank.Instance.log_anim_layers) { Debug.Log($"(AnimPlayer) {data.skin}'s data default material is {data.material_path}"); }
+        Renderer.material = Resources.Load<Material>(data.material_path);
+        Renderer.sortingLayerID = data.sorting_layer_id;
+        Renderer.sortingOrder = data.order_in_layer;
+
+        // we inform each anim capacity priority of its priority
+        re_index_priorities();
+
+        // play current capacity
+        if (!string.IsNullOrEmpty(current_capacity)) { Play(current_capacity); }
+        else { AddToPile("idle"); }
+    }
+
+    // SAVE DATA
+    public void SaveDynamicPlayerData(AnimData data)
+    {
+        // we save data
+        data.current_capacity = current_capacity;
+    }
+
+
+    // GET STATIC DATA
+
+    /// <summary>
+    /// just as other GetStaticData() methods (ie Capable's one), this method
+    /// is not meant to be run in a BUILD !!! IT WON T WORK because it does not
+    /// update the anim_data, it creates a new data based from actual static
+    /// variables states of the object. if run inside a build, it could overwrite
+    /// some data such as material paths which would break the save.
+    /// </summary>
+    /// <returns></returns>
+    public AnimData GetStaticAnimData()
+    {
+        // get basic player data
+        AnimData data = new AnimData
+        {
+            skin = skin,
+            anim_capacity_priorities = anim_capacity_priorities,
+
+            // get sr data
+            material_path = get_material_path(Renderer),
+            sorting_layer_id = Renderer.sortingLayerID,
+            order_in_layer = Renderer.sortingOrder
+        };
+
+
+        // get the layers by going through the hierarchy (so we can do it even when not playing)
+        List<AnimLayerData> layers_data = new List<AnimLayerData>();
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Transform layer_transform = transform.GetChild(i);
+            AnimLayer anim_layer = layer_transform.GetComponent<AnimLayer>();
+            if (anim_layer == null) { continue; }
+            layers_data.Add(anim_layer.GetStaticData());
+        }
+
+        data.layers = layers_data;
+        return data;
+    }
     private string get_material_path(SpriteRenderer sr)
     {
         if (sr == null || sr.sharedMaterial == null) { return ""; }
