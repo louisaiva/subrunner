@@ -58,8 +58,6 @@ public class AttackCapacity : CooldownCapacity
 
     // EVENTS
     public Action<HealthCapacity, float> OnDamageDealt = delegate { };
-    // public Action<AttackCapacity, float> OnDamageTaken = delegate { };
-
 
 
     // START

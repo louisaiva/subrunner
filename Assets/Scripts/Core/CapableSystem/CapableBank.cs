@@ -44,6 +44,11 @@ public class CapableBank : MonoBehaviour
     public bool log_anim_layers = false;
     public bool log_inventory_build = false;
 
+    // ACTIONS
+    public Action<CapableData> OnCapableLoading = delegate { }; // fired BEFORE the data is loaded
+    public Action<CapableData> OnCapableUnloaded = delegate { }; // fired AFTER the data is unloaded
+
+
     // LOAD CAPABLES
     public Capable Load(CapableData data)
     {
@@ -61,6 +66,9 @@ public class CapableBank : MonoBehaviour
 
             // set the good parent for the capable based on its kind
             capable.transform.SetParent(get_parent_based_on_kind(data.kind));
+
+            // fire the callback
+            OnCapableLoading?.Invoke(data);
 
             // we load its data
             capable.LoadData(data);
@@ -98,6 +106,9 @@ public class CapableBank : MonoBehaviour
 
         // and its inventory
         build_inventory_item_pools(capable.Inventory, data.inventory);
+
+        // fire the callback
+        OnCapableLoading?.Invoke(data);
 
         // then we can load the data
         capable.LoadData(data);
@@ -240,10 +251,14 @@ public class CapableBank : MonoBehaviour
         // get capable
         Capable capable = GetLoadedCapable(data);
         if (capable == null) { return null; }
-        Unload(capable);
+        unload_capable(capable);
+
+        // fire the callback
+        OnCapableUnloaded?.Invoke(data);
+
         return capable;
     }
-    public void Unload(Capable capable)
+    private void unload_capable(Capable capable)
     {
 
         // unload anim layers

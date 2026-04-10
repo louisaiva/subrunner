@@ -25350,6 +25350,7 @@ GameObject:
   - component: {fileID: 313120228}
   - component: {fileID: 313120230}
   - component: {fileID: 313120229}
+  - component: {fileID: 313120231}
   m_Layer: 0
   m_Name: capable_system
   m_TagString: Untagged
@@ -25419,6 +25420,19 @@ MonoBehaviour:
   log_anim_player: 0
   log_anim_layers: 0
   log_inventory_build: 0
+--- !u!114 &313120231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 313120227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2c13b853f0d3764f9293438737f9244, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MotorEngine
+  log_loading: 1
 --- !u!1001 &316903155
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -59531,7 +59545,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 714515157948744320, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: LOG_ATTACK_ACTION
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalPosition.x
