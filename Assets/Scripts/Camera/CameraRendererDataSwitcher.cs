@@ -52,7 +52,7 @@ public class CameraRendererDataSwitcher : MonoBehaviour
     public void SwitchRendererData(string rendererDataName) => SwitchRendererData(rendererDataIndices[rendererDataName]);
     public void SwitchRendererData(int index)
     {
-        Debug.Log("(CameraRendererDataSwitcher) SwitchRendererData : " + index);
+        // Debug.Log("(CameraRendererDataSwitcher) SwitchRendererData : " + index);
 
         UniversalAdditionalCameraData data = cam.GetUniversalAdditionalCameraData();
         if (data == null) { return; }

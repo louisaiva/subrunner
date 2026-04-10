@@ -19,37 +19,6 @@ public class Corpse : Food
     [SerializeField] private bool log_bites = false;
 
     // INIT
-    /* public void Initialize(Being being)
-    {
-        // we calculate how much meat we want to put inside the meat
-        int meat_qty = being.body_meats + UnityEngine.Random.Range(-random_meat_modifier_at_start, random_meat_modifier_at_start);
-        if (meat_qty < 1) { meat_qty = 1; }
-        int bones_qty = being.body_bones + UnityEngine.Random.Range(-1, 1);
-        if (bones_qty < 1) { bones_qty = 1; }
-
-        // we understand which meat type we want
-        string meat_reference = "food:meat";
-        if (being is Zombo) { meat_reference = "food:meat_zombo"; }
-
-        // we instantiate & grab x meat
-        for (int i = 0; i < meat_qty; i++)
-        {
-            Food meat = ItemBank.Instance.CreateItem(meat_reference) as Food;
-            if (meat == null) { continue; }
-            meat.OnBeingBitten += being_bitten;
-            Inventory.Grab(meat);
-        }
-
-        // and x bones
-        for (int i = 0; i < bones_qty; i++)
-        {
-            Item bone = ItemBank.Instance.CreateItem("other:bone");
-            if (bone == null) { continue; }
-            Inventory.Grab(bone);
-        }
-
-        if (log_bites) { Debug.Log($"(Corpse) Initialized corpse of {being.name} with {meat_qty} meat & {bones_qty} bones."); }
-    } */
     public void Initialize(Capable capable)
     {
         // we calculate how much meat we want to put inside the meat
@@ -82,28 +51,14 @@ public class Corpse : Food
         if (log_bites) { Debug.Log($"(Corpse) Initialized corpse of {capable.name} with {meat_qty} meat & {bones_qty} bones."); }
     }
 
-    /* // INTERACT
-    public InteractCapacity Interactor => null;
-    public InteractType InteractionType => InteractType.Corpse;
-    public void OnInteract(Capable interactor)
-    {
-        // here we will put the robot's interaction method
-
-    }
-    */
-    public override void LoadData(CapableData data)
-    {
-        Debug.Log("(Corpse) LOADING CORPSE DATA...\n" + data.GetDetails());
-        base.LoadData(data);
-    }
     // EXTRACT MEAT
-    public List<Item> ExtractMeatAndBones()
+    /* public List<Item> ExtractMeatAndBones()
     {
         List<Item> extracted_items = new List<Item>();
         extracted_items.AddRange(Inventory.GetItemsByType<Food>());
         // extracted_items.AddRange(Inventory.GetItemsByType<Bone>());
         return extracted_items;
-    }
+    } */
     public Food GetPortion(string food_rule)
     {
         // we check if we still have some food
@@ -114,10 +69,10 @@ public class Corpse : Food
         Item meat_to_eat = meats[0];
         return meat_to_eat as Food;
     }
-    public bool EatableBy(string food_rule)
+    /* public bool EatableBy(string food_rule)
     {
         return GetPortion(food_rule) != null;
-    }
+    } */
 
     // ON BEING BITTEN & BECOME BONES
     private async void being_bitten(HealthCapacity eater)

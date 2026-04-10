@@ -9,7 +9,7 @@ public class Capacity : MonoBehaviour
     {
         get
         {
-            if (_capable == null) { _capable = transform.parent.GetComponent<Capable>(); }
+            if (_capable is null) { _capable = transform.parent.GetComponent<Capable>(); }
             return _capable;
         }
     }
@@ -41,6 +41,7 @@ public class Capacity : MonoBehaviour
         this._capable = null;
     }
 
+    // SAVE DYNAMIC DATA
     public virtual void SaveDynamicData()
     {
         // this method is made for saving data that changes during the game (dynamic data).
@@ -103,5 +104,20 @@ public class Capacity : MonoBehaviour
     {
         // we play the animation
         capable.AnimPlayer.Play(name);
+    }
+
+
+    // GETTERS
+    public T GetSiblingCapacity<T>() where T : Capacity
+    {
+        if (Capable is null) { return null; }
+        if (!Capable.TryGetCapacity(out T sibling_capacity)) { return null; }
+        return sibling_capacity;
+    }
+    public bool TryGetSiblingCapacity<T>(out T sibling_capacity) where T : Capacity
+    {
+        sibling_capacity = null;
+        if (Capable is null) { return false; }
+        return Capable.TryGetCapacity<T>(out sibling_capacity);
     }
 }

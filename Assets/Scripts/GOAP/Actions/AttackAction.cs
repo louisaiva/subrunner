@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CrashKonijn.Agent.Core;
 using CrashKonijn.Agent.Runtime;
@@ -19,6 +20,7 @@ namespace subrunner.goap
         // otherwise there is no issue with storing the IA instead of ID, bcz it is more performant, and
         // all the mobs doing this action are loaded mobs anyway, so we know everything is loaded.
 
+        private Dictionary<IMonoAgent, Action<float, Force>> damage_callbacks = new Dictionary<IMonoAgent, Action<float, Force>>(); // we store the damage callback for each IA to be able to remove it when we stop the action
 
         // START
         public override void Start(IMonoAgent agent, Data data)
@@ -30,6 +32,11 @@ namespace subrunner.goap
                 if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.LogWarning($"(AttackAction) {data.ia.data.id} has no valid target for AttackAction"); }
                 return;
             }
+
+
+            // we register the damage callback for this IA
+            register_damage_callback(agent, data);
+            
 
             // we check if we have a last_attack_result for this IA
             
@@ -73,7 +80,7 @@ namespace subrunner.goap
             }
             else if (last_result.attack_status == AttackActionStatus.TookDamage)
             {
-                data.this_action_stop_distance = last_result.attack_distance * 3f; // we try to attack from FAAR away
+                data.this_action_stop_distance = last_result.attack_distance * 1.5f; // we try to attack from 80% further away
             }
             else if (last_result.attack_status == AttackActionStatus.Hit)
             {
@@ -85,6 +92,67 @@ namespace subrunner.goap
             // we update the last result with the current target and distance, and we watch the attack
             last_result.WatchTheAttack(data.attack_capacity, data.CapableTarget, data.this_action_stop_distance);
         }
+
+        // DAMAGE CALLBACKS
+        private void register_damage_callback(IMonoAgent agent, Data data)
+        {
+            // we get the IA's HealthCapacity to register to its OnTakeDamage event
+            if (!data.ia.TryGetCapacity(out HealthCapacity health_capacity))
+            {
+                if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.LogWarning($"(AttackAction) {data.ia.data.id} has no HealthCapacity, cannot register damage callback for AttackAction"); }
+                return;
+            }
+
+            // we create the callback
+            Action<float, Force> damage_callback = (d, f) => TakeDamage(agent, data);
+
+            // we register it to the IA's HealthCapacity.OnTakeDamage event
+            health_capacity.OnTakeDamage += damage_callback;
+
+            // we store it in the dictionary
+            damage_callbacks[agent] = damage_callback;
+        }
+        private void unregister_damage_callback(IMonoAgent agent, Data data)
+        {
+            // we get the IA's HealthCapacity to unregister from its OnTakeDamage event
+            if (!data.ia.TryGetCapacity(out HealthCapacity health_capacity))
+            {
+                if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.LogWarning($"(AttackAction) {data.ia.data.id} has no HealthCapacity, cannot unregister damage callback for AttackAction"); }
+                return;
+            }
+
+            // we get the callback from the dictionary
+            if (!damage_callbacks.TryGetValue(agent, out Action<float, Force> damage_callback))
+            {
+                if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.LogWarning($"(AttackAction) No damage callback found for {data.ia.data.id}, cannot unregister damage callback for AttackAction"); }
+                return;
+            }
+
+            // we unregister it from the IA's HealthCapacity.OnTakeDamage event
+            health_capacity.OnTakeDamage -= damage_callback;
+
+            // we remove it from the dictionary
+            damage_callbacks.Remove(agent);
+        }
+
+        // TAKE DAMAGE
+        public void TakeDamage(IMonoAgent agent, Data data)
+        {
+            if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.Log($"(AttackAction) {data.ia.data.id} took damage during the attack action"); }
+
+            // we stop the action
+            agent.StopAction();
+
+            // we set the last attack result as TookDamage
+            if (last_attack_results.TryGetValue(data.ia, out AttackActionResult last_result))
+            {
+                last_result.StopWatchingTheAttack(data.attack_capacity, AttackActionStatus.TookDamage);
+            }
+
+            // finally reset the action state
+            agent.ActionState.Reset();
+        }
+
 
         // PERFORM
         public override void BeforePerform(IMonoAgent agent, Data data)
@@ -113,24 +181,18 @@ namespace subrunner.goap
             // wait for the animation to finish
             if (data.ia.AnimPlayer.current_capacity == "attack") { return ActionRunState.Continue; }
 
-
             // we check if we have a last attack result for this IA to stop watching the attack
             if (last_attack_results.TryGetValue(data.ia, out AttackActionResult last_result))
             {
-                // we check if we have a "hurted" animation playing to know if we took damage during the attack
-                if (data.ia.AnimPlayer.IsPlaying("hurted"))
-                {
-                    last_result.StopWatchingTheAttack(data.attack_capacity, AttackActionStatus.TookDamage);
-                }
-                else
-                {
-                    last_result.StopWatchingTheAttack(data.attack_capacity);
-                }
+                last_result.StopWatchingTheAttack(data.attack_capacity);
             }
 
+            // we remove the damage callback
+            unregister_damage_callback(agent, data);
 
             return ActionRunState.Completed;
         }
+
 
         // OVERRIDES
         public override bool IsInRange(IMonoAgent agent, float distance, Data data, IComponentReference references)
@@ -145,6 +207,9 @@ namespace subrunner.goap
             {
                 last_result.StopWatchingTheAttack(data.attack_capacity, AttackActionStatus.Canceled);
             }
+
+            // we remove the damage callback
+            unregister_damage_callback(agent, data);
 
             base.Stop(agent, data);
         }
@@ -169,6 +234,8 @@ public class AttackActionResult
     public CapableTarget target;
     public AttackActionStatus attack_status;
     public float attack_distance;
+
+    private bool watching_attack = false;
 
     public AttackActionResult(CapableTarget target, AttackActionStatus attack_status, float attack_distance)
     {
@@ -200,6 +267,7 @@ public class AttackActionResult
         // we set the status to Processing since we are currently performing the attack and we don't know the result yet
         this.attack_status = AttackActionStatus.Processing;
 
+        watching_attack = true;
 
         // we log
         if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.Log($"(AttackActionResult) Started watching attack from {attacker.data.id} ({attacker.Capable.data.id}), our target is {target.capable_id} and distance is {attack_distance:F2}"); }
@@ -214,8 +282,12 @@ public class AttackActionResult
     }
     public void StopWatchingTheAttack(AttackCapacity attacker)
     {
+        if (!watching_attack) { return; }
+
         // we unregister from the AttackCapacity's OnHealthHit event
         attacker.OnDamageDealt -= on_health_hit;
+
+        watching_attack = false;
 
         // if we are still in Processing status here, it means we completed the attack
         // without taking damage, without hitting, without canceling, 

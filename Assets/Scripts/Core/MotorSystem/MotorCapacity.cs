@@ -57,12 +57,18 @@ public class MotorCapacity : Capacity
     private MotorData mdata => (MotorData)data;
     public IActionData currentActionData => Agent?.ActionState?.Data;
 
+
+    [Header("Logs")]
+    [SerializeField] private bool log_agent_type = false;
+    [SerializeField] private bool log_goals = false;
+
+
     // AWAKE
     private void Awake()
     {
         // the only thing we do here is assign the goap action provider to the "none" agent
         Provider.AgentType = goap.GetAgentType("none");
-        if (log) { Debug.Log($"(MotorCapacity) Assigned GoapActionProvider to agent type 'none'"); }
+        if (log_agent_type) { Debug.Log($"(MotorCapacity) Assigned GoapActionProvider to agent type 'none'"); }
     }
 
 
@@ -99,7 +105,7 @@ public class MotorCapacity : Capacity
     }
     protected void request_goal<T>() where T : GoalBase
     {
-        if (log) { Debug.Log($"(MotorCapacity) {data.owner_id} is requesting goal of type '{typeof(T).Name}'"); }
+        if (log_goals) { Debug.Log($"(MotorCapacity) {data.owner_id} is requesting goal of type '{typeof(T).Name}'"); }
         Provider.RequestGoal<T>();
     }
     protected void request_goal(string goal_type)
@@ -108,11 +114,11 @@ public class MotorCapacity : Capacity
 
         if (goal == null)
         {
-            if (log) { Debug.LogWarning($"(MotorCapacity - request_goal) Goal {goal_type} not found for {data.owner_id}"); }
+            if (log_goals) { Debug.LogWarning($"(MotorCapacity - request_goal) Goal {goal_type} not found for {data.owner_id}"); }
             return;
         }
 
-        if (log) { Debug.Log($"(MotorCapacity) {data.owner_id} is requesting goal of type '{goal_type}'"); }
+        if (log_goals) { Debug.Log($"(MotorCapacity) {data.owner_id} is requesting goal of type '{goal_type}'"); }
         Provider.RequestGoal(goal);
     }
     protected void request_goal(List<IGoal> goals)
@@ -122,7 +128,7 @@ public class MotorCapacity : Capacity
         {
             goal_types[i] = goals[i].GetType();
         }
-        if (log) { Debug.Log($"(MotorCapacity) {data.owner_id} is requesting goals of types '{string.Join(", ", goal_types.Select(t => t.Name))}'"); }
+        if (log_goals) { Debug.Log($"(MotorCapacity) {data.owner_id} is requesting goals of types '{string.Join(", ", goal_types.Select(t => t.Name))}'"); }
         Provider.RequestGoal(goal_types);
     }
     protected Type convert_string_to_goals(string goal_type)
@@ -150,7 +156,7 @@ public class MotorCapacity : Capacity
 
         // we set the provider's agent type
         Provider.AgentType = goap.GetAgentType(motor_data.agent_type);
-        if (log) { Debug.Log($"(MotorCapacity) {data.owner_id} set GoapActionProvider agent type to '{motor_data.agent_type}' from data"); }
+        if (log_agent_type) { Debug.Log($"(MotorCapacity) {data.owner_id} set GoapActionProvider agent type to '{motor_data.agent_type}' from data"); }
 
         Agent.Initialize(); // we refresh the injected data for the agent
 
@@ -175,7 +181,7 @@ public class MotorCapacity : Capacity
 
         // we reset the provider's agent type
         Provider.AgentType = goap.GetAgentType("none");
-        if (log) { Debug.Log($"(MotorCapacity) {owner_id} reset GoapActionProvider agent type to 'none' from unload"); }
+        if (log_agent_type) { Debug.Log($"(MotorCapacity) {owner_id} reset GoapActionProvider agent type to 'none' from unload"); }
     }
 
 
