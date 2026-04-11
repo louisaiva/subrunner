@@ -11,9 +11,6 @@ public class MotorEngine : BSOD_System<MotorEngine>
     [SerializeField] private BatchActionProvider batch_provider;
     [SerializeField] private BatchActionAchiever batch_achiever;
 
-    // [SerializeField] private RuntimeWorldDataHolder world_holder;
-    // public RuntimeWorldDataHolder WorldHolder { get { return world_holder; } }
-
     [Header("Logs")]
     [SerializeField] private bool log_loading = false;
 

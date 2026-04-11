@@ -80,21 +80,21 @@ namespace CrashKonijn.Goap.Runtime
             this.SetState(typeof(TKey), state);
         }
 
-        public void SetState(Type key, int state)
+        public void SetState(Type type_key, int state)
         {
-            if (key == null)
+            if (type_key == null)
                 return;
 
-            if (this.States.ContainsKey(key))
+            if (this.States.ContainsKey(type_key))
             {
-                this.States[key].Value = state;
-                this.States[key].Timer.Touch();
+                this.States[type_key].Value = state;
+                this.States[type_key].Timer.Touch();
                 return;
             }
 
-            this.States.Add(key, new WorldDataState<int>
+            this.States.Add(type_key, new WorldDataState<int>
             {
-                Key = key,
+                Key = type_key,
                 Value = state,
                 IsLocal = this.IsLocal,
             });
@@ -110,7 +110,7 @@ namespace CrashKonijn.Goap.Runtime
             this.SetTarget(typeof(TKey), target);
         }
 
-        private void SetTarget(Type key, ITarget target)
+        public void SetTarget(Type key, ITarget target)
         {
             if (key == null)
                 return;

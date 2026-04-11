@@ -27,6 +27,18 @@ namespace subrunner.goap
         {
             // Get a cached reference to the IA on the agent & EatCapacity
             IA ia = references.GetCachedComponentInParent<IA>();
+            if (ia.JustLoaded)
+            {
+                // we check that we have a valid target, if yes we return it (it was loaded when the MotorCapacity loaded the MotorData' local world data)
+                if (target != null && target is TransformTarget)
+                {
+                    if (Logger.Instance.LOG_CLOSEST_FOOD_SENSOR) { Debug.Log($"(ClosestFoodSensor - Sense) {ia.data.id} just loaded and has an existing target : {target}. We keep it."); }
+                    return target;
+                }
+            }
+
+
+
             // Debug.Log($"(ClosestFoodSensor) {ia.name} is sensing closest food...");
             EatCapacity eatCapacity = ia.GetCapacity<EatCapacity>();
             EatData eatData = eatCapacity?.data as EatData;

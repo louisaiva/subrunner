@@ -55,6 +55,7 @@ MonoBehaviour:
   waypoint_threshold_distance: 0.25
   log: 0
   log_path_calculation: 0
+  log_avoidance_force_set: 0
   gizmo_target: 1
   gizmo_path: 1
   gizmo_ttcbas: 1
@@ -147,4 +148,7 @@ MonoBehaviour:
     local_position: {x: 0, y: 0}
     layer: 0
     tag: 
-  log: 1
+  log: 0
+  log_agent_type: 0
+  log_goals: 0
+  log_world_state_loading: 1

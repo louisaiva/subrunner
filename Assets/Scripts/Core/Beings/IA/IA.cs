@@ -21,15 +21,6 @@ public class IA : Movable
 
 
     [Header("Components")]
-    // private OldDetector _eyes;
-    /* public OldDetector Eyes
-    {
-        get
-        {
-            if (_eyes == null) { _eyes = transform.Find("eyes")?.GetComponent<OldDetector>(); }
-            return _eyes;
-        }
-    } */
     private GoToBehaviour _mover;
     public GoToBehaviour Mover
     {
@@ -52,6 +43,9 @@ public class IA : Movable
             return _brain;
         }
     }
+    private bool just_loaded = false; // flag to prevent the sensors to sense on the first goal resolve after loading -> so we keep the loaded world state
+    private int frame_counter_since_loaded = 0;
+    public bool JustLoaded { get { return just_loaded; } }
 
     [Header("Social Data")]
     public SocialData SocialData;
@@ -68,7 +62,21 @@ public class IA : Movable
         gameObject.tag = base_tag;
     }
 
+    // LATE UPDATE
+    protected override void LateUpdate()
+    {
+        base.LateUpdate();
 
+        if (!just_loaded) { return; }
+
+        // if we just loaded we wait for x frames elapsed to clear the flag
+        frame_counter_since_loaded++;
+        if (frame_counter_since_loaded < 3) { return; }
+
+        // clear the just loaded flag
+        just_loaded = false;
+        frame_counter_since_loaded = 0;
+    }
 
     // LOAD DATA / UNLOAD DATA
     public override void LoadData(CapableData data)
@@ -78,6 +86,9 @@ public class IA : Movable
         // we set the social data
         if (data is not IAData ia_data) { return; }
         SocialData = ia_data.social_data;
+
+        // we set just loaded to true
+        just_loaded = true;
     }
     public override void UnloadData()
     {
@@ -86,7 +97,6 @@ public class IA : Movable
 
         // and components (so next load will load the new ones)
         _mover = null;
-
         
         base.UnloadData();
     }

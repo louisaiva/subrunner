@@ -16,18 +16,27 @@ namespace subrunner.goap
         {
             // get the ia & exploration range
             IA ia = references.GetCachedComponentInParent<IA>();
+            if (ia.JustLoaded)
+            {
+                // we check that we have a valid target, if yes we return it (it was loaded when the MotorCapacity loaded the MotorData' local world data)
+                if (existingTarget != null && existingTarget is PositionTarget)
+                {
+                    if (Logger.Instance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor - Sense) {ia.data.id} just loaded and has an existing target : {existingTarget}. We keep it."); }
+                    return existingTarget;
+                }
+            }
 
-            if (Logger.Instance.LOG_WANDER_TARGET_SENSOR)
+            /* if (Logger.Instance.LOG_WANDER_TARGET_SENSOR)
             {
                 Debug.Log($"(WanderLoadedSensor - Sense) {agent} is sensing a new wander target for IA {ia.name}");
-            }
+            } */
 
             // find a random position to go
             Vector3 random_position = getRandomPositionInRangeNavMesh(agent.Transform.position, ia.exploration_radius, ia.Mover.Filter);
             if (random_position == default)
             {
                 if (Logger.Instance.LOG_WANDER_TARGET_SENSOR) { Debug.LogWarning("(WanderLoadedSensor - Sense) No walkable position found on the nav mesh for : " + ia.name); }
-                if (existingTarget is PositionTarget) { return existingTarget as PositionTarget; }
+                if (existingTarget is PositionTarget) { return existingTarget; }
                 return null;
             }
 
@@ -40,7 +49,7 @@ namespace subrunner.goap
             if (existingTarget is PositionTarget existingTargetPosition)
             {
                 existingTargetPosition.SetPosition(random_position);
-                return existingTarget;
+                return existingTargetPosition;
             }
 
             return new PositionTarget(random_position);

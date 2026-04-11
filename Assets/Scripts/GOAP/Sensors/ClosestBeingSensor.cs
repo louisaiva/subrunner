@@ -29,6 +29,17 @@ namespace subrunner.goap
             IA ia = references.GetCachedComponentInParent<IA>();
             IAData iaData = ia.data as IAData;
             if (iaData == null) { return null; }
+            if (ia.JustLoaded)
+            {
+                // we check that we have a valid target, if yes we return it (it was loaded when the MotorCapacity loaded the MotorData' local world data)
+                if (target != null && target is TransformTarget)
+                {
+                    if (Logger.Instance.LOG_CLOSEST_BEING_SENSOR) { Debug.Log($"(ClosestBeingSensor - Sense) {iaData.id} just loaded and has an existing target : {target}. We keep it."); }
+                    return target;
+                }
+            }
+
+
             HealthCapacity closestHealth = health_detector.FindClosestHealthCapacity(iaData);
             if (closestHealth == null) { return null; }
 

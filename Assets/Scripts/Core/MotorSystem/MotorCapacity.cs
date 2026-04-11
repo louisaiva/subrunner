@@ -57,12 +57,13 @@ public class MotorCapacity : Capacity
 
     private MotorData mdata => (MotorData)data;
     public IActionData currentActionData => Agent?.ActionState?.Data;
+    private string last_agent_type = "";
 
 
     [Header("Logs")]
     [SerializeField] private bool log_agent_type = false;
     [SerializeField] private bool log_goals = false;
-    [SerializeField] private bool log_hydration = false;
+    [SerializeField] private bool log_world_state_loading = false;
 
 
     // AWAKE
@@ -164,10 +165,21 @@ public class MotorCapacity : Capacity
 
         base.LoadData(data); // set this before the rest so the data is set
 
-        // restore local world snapshots before asking for a new plan
-        // MotorEngine.Instance.WorldHolder.LoadRuntimeWorldData(motor_data);
 
-        // we request the current goal
+        // we log
+        if (log_world_state_loading) { Debug.Log($"(MotorCapacity) Loading serialized world data for '{data.owner_id} :\n{motor_data.local_world_data.GetDetails()}"); }
+        if (last_agent_type == motor_data.agent_type)
+        {
+            // we have the same agent type as before, no need to clear the data, we simply repopulate the existing runtime world data
+            motor_data.local_world_data.PopulateRuntimeData(Provider.WorldData);
+        }
+        else
+        {
+            // clear the current runtime world data in the provider and then feed the serialized data to avoid conflicts
+            // restore local world snapshots from the motor data to the provider's world data
+            motor_data.local_world_data.ClearAndPopulateRuntimeData(Provider.WorldData);
+        }
+        
         request_suited_goal();
     }
     public override void UnloadData()
@@ -184,12 +196,12 @@ public class MotorCapacity : Capacity
         Agent.StopAction(resolveAction: false);
         Agent.ActionState.Reset();
 
+        // we set the last agent type to check if same on next load
+        last_agent_type = Provider.AgentType.Id;
+
         // we reset the provider's agent type
         Provider.AgentType = goap.GetAgentType("none");
         if (log_agent_type) { Debug.Log($"(MotorCapacity) {owner_id} reset GoapActionProvider agent type to 'none' from unload"); }
-
-        // we clear the runtime world data for this motor
-        // Provider.DetachWorldData(); // <- need to do something like this, but which does not clear the MotorEngine.Instance.WorldHolder.runtime_motor_world_data for this motor, bcz we did not made a deep copy
     }
 
 
@@ -200,83 +212,14 @@ public class MotorCapacity : Capacity
         base.SaveDynamicData();
 
         if (data is not MotorData motor_data) { return; }
-        // MotorEngine.Instance.WorldHolder.SaveRuntimeWorldData(Provider.WorldData, motor_data); // directly copies the data
-        save_provider_world_to_motor_data(motor_data);
+        
+        // we save the runtime world data from the provider to the motor data
+        motor_data.local_world_data.CreateOrPopulateSerializedData(Provider.WorldData);
+
+        // we log
+        if (log_world_state_loading) { Debug.Log($"(MotorCapacity) Saved dynamic world data for '{data.owner_id} :\n{motor_data.local_world_data.GetDetails()}"); }
     }
-    private void save_provider_world_to_motor_data(MotorData motor_data)
-    {
-        if (Provider == null || Provider.WorldData == null) { return; }
 
-        motor_data.local_world_state.Clear();
-        motor_data.local_world_positions.Clear();
-        motor_data.local_world_capables.Clear();
-
-        foreach (var entry in Provider.WorldData.States)
-        {
-            if (entry.Key == null || entry.Value == null) { continue; }
-
-            motor_data.local_world_state.Add(new LocalWorldStateData
-            {
-                key_name = serialize_type_name(entry.Key),
-                key_value = entry.Value.Value,
-            });
-        }
-
-        foreach (var entry in Provider.WorldData.Targets)
-        {
-            if (entry.Key == null || entry.Value == null || entry.Value.Value == null) { continue; }
-
-            ITarget runtime_target = entry.Value.Value;
-
-            // check whether the target is a position or a capable
-            if (runtime_target is PositionTarget position_target)
-            {
-                LocalWorldPositionData position_data = new LocalWorldPositionData
-                {
-                    key_name = serialize_type_name(entry.Key),
-                    target_position = position_target.Position,
-                };
-                motor_data.local_world_positions.Add(position_data);
-                continue;
-            }
-
-            // check for unknown target types
-            if (runtime_target is not TransformTarget transform_target)
-            {
-                if (log_hydration) { Debug.LogWarning($"(MotorCapacity) Unsupported target type '{runtime_target.GetType().FullName}' for key '{entry.Key}' when saving data for {data.owner_id}"); }
-                continue;
-            }
-
-            // else it is a capable target
-            LocalWorldCapableData target_data = new LocalWorldCapableData
-            {
-                key_name = serialize_type_name(entry.Key)
-            };
-
-            // we try to catch the capable id from the transform
-            Transform target_transform = transform_target.Transform;
-            if (target_transform is null) { continue; }
-            Capable capable = target_transform.GetComponent<Capable>();
-            if (capable == null && target_transform.parent != null)
-            {
-                capable = target_transform.parent.GetComponent<Capable>(); // only direct parent otherwise if we are in an inventory we could get the higher capable
-            }
-            if (capable == null || !capable.Loaded)
-            {
-                if (log_hydration) { Debug.LogWarning($"(MotorCapacity) Failed to find loaded capable for target '{entry.Key}' when saving data for {data.owner_id}"); }
-                continue;
-            }
-
-            // otherwise we save the capable data
-            target_data.target_capable = capable.data;
-            motor_data.local_world_capables.Add(target_data);
-        }
-    }
-    private static string serialize_type_name(Type type)
-    {
-        if (type == null) { return string.Empty; }
-        return type.AssemblyQualifiedName ?? type.FullName ?? type.Name;
-    }
 
     // GET STATIC DATA
     public override CapacityData GetStaticData()
