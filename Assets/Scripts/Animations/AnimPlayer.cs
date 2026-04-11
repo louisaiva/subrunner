@@ -48,8 +48,9 @@ public class AnimPlayer : MonoBehaviour
     public event Action<string> OnSkinChange = delegate { };
 
     [Header("Orientation")]
-    public string orientation { get; private set; } = "D";
+    [field:SerializeField] public string orientation { get; private set; } = "D";
     // public event Action<Vector2> OnOrientationChange = delegate { };
+    public Action<string> OnOrientationChanged = delegate { };
 
 
     [Header("Current Animation")]
@@ -58,7 +59,7 @@ public class AnimPlayer : MonoBehaviour
     private float frame_timer = 0f;
     private int current_frame = -1; // if -1, the animation is over
     [SerializeField] private bool update_each_frame = true; // if false, it means that the animation is a single frame anim, we don't want to check it each frame
-    public Action<string, int> OnAnimPlayedAtFrame = delegate { };
+    public Action<string, int, float> OnAnimPlayedAtFrame = delegate { };
 
 
     [Header("Anim Capacity Priorities")]
@@ -151,6 +152,7 @@ public class AnimPlayer : MonoBehaviour
         }
         else { anim.speed = 1f; }
 
+
         // we check if the animation is not actually playing
         if (current_anim != null && anim.name == current_anim.name && current_frame != -1)
         {
@@ -161,7 +163,8 @@ public class AnimPlayer : MonoBehaviour
             return current_anim;
         }
 
-        // we play the animation    
+        // we play the animation
+        OnAnimPlayedAtFrame.Invoke(anim_name, 0, duration_override);
         play_now_at_frame(anim);
 
         // we set the current capacity
@@ -204,7 +207,8 @@ public class AnimPlayer : MonoBehaviour
         // we check if this anim is a single frame anim
         update_each_frame = !(anim.sprites.Length == 1);
 
-        // we play the animation    
+        // we play the animation
+        OnAnimPlayedAtFrame.Invoke(anim_name, 0, 1f);
         play_now_at_frame(anim);
 
         // we set the current capacity
@@ -273,7 +277,6 @@ public class AnimPlayer : MonoBehaviour
     }
     private void play_now_at_frame(Anim anim, int frame = 0)
     {
-        OnAnimPlayedAtFrame.Invoke(anim.name, frame);
 
         // we saturate the frame
         if (frame < 0) { frame = 0; }
@@ -446,6 +449,7 @@ public class AnimPlayer : MonoBehaviour
             s += new_anim.name;
             Debug.Log(s);
         }
+        OnOrientationChanged?.Invoke(orientation);
     }
     /// <summary>
     /// this method is different from SetOrientation because

@@ -17,163 +17,6 @@ public class Capable : MonoBehaviour, Debuggable
     public bool Loaded { get { return data is not null; } }
 
 
-    // LOAD / UNLOAD
-    public virtual void LoadData(CapableData data)
-    {
-        if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Capable - LoadData) Loading capable {data.id} \n\n{data.GetDetails()}"); }
-        this.data = data;
-        this.name = data.id;
-        this.transform.position = data.position;
-
-        // we set the layer & tag
-        gameObject.layer = data.layer;
-        if (!string.IsNullOrEmpty(data.tag)) { gameObject.tag = data.tag; }
-
-        // we set the orientation
-        this.Orientation = data.orientation;
-
-        // ! the colliders & anim data are loaded directly from CapableBank since we pool them
-
-        // we load the inventory (and so the items)
-        Inventory?.LoadInventoryData(data.inventory);
-
-        // we add the effects
-        for (int i = 0; i < data.effects.Count; i++)
-        {
-            AddEffect(data.effects[i], data.effects_ttl[i]);
-        }
-
-        // we load the capacities
-        if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Capable - LoadData) Calling CapacitySystem loading for capacities : {string.Join(" ", data.capacities_ids)}"); }
-        this.capacities = CapacityEngine.Instance.LoadCapacities(data.capacities_ids, this);
-    }
-    public virtual void UnloadData()
-    {
-        // we save the dynamic data
-        SaveDynamicData();
-
-        // here we need to unload all the capacities that we hold
-        if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Capable - UnloadData) Calling CapacitySystem unloading for capacities : {string.Join(" ", data.capacities_ids)}"); }
-        CapacityEngine.Instance.UnloadCapacities(data.capacities_ids, this);
-
-        // we unload the inventory (and so the items)
-        Inventory?.UnloadInventoryData();
-
-        this.data = null;
-    }
-    public virtual void SaveDynamicData()
-    {
-        if (data == null) { return; }
-
-        // we save some general data
-        this.data.position = this.transform.position;
-
-        // we save the anim player
-        AnimPlayer?.SaveDynamicPlayerData(this.data.anim_data);
-
-        // we save the inventory (and so the items)
-        Inventory?.SaveDynamicInventoryData();
-
-        // we save the effects
-        data.effects = new List<Effect>(effects);
-        data.effects_ttl = new List<float>(effects_timetolive);
-    }
-
-
-
-
-    // GET CURRENT STATIC DATA
-    /// <summary>
-    /// this method is made for saving data from a prefab THAT IS NOT LOADED.
-    /// it means it should run ONLY inside the editor and it may run when 
-    /// the game is not started. This means we should get the data through the hierarchy only
-    /// since all the lists will be null or empty
-    /// </summary>
-    /// <returns>CapableData the data that describes this capable</returns>
-    public virtual ICapableData GetStaticData()
-    {
-        // Debug.Log($"(Capable - GetStaticData) Getting static data for capable {name} of type {GetType().Name}");
-        CapableData static_data = new CapableData
-        {
-            // set base data things
-            id = GetStaticID(),
-            position = this.transform.position,
-
-            // set the layer & tag
-            layer = gameObject.layer,
-            tag = gameObject.tag,
-
-            // we set the kind
-            kind = GetType().Name,
-
-            // we set the anim data
-            anim_data = AnimPlayer?.GetStaticAnimData(),
-
-            // we set the inventory
-            inventory = Inventory?.GetStaticInventoryData(),
-
-            // we set the body data
-            feet_data = get_static_feet_data(),
-
-            // we set the orientation
-            orientation = this.orientation,
-
-
-            // we set the capacities
-            capacities_ids = get_static_capacity_ids(),
-
-            // we set the effects
-            effects = new List<Effect>(effects),
-            effects_ttl = new List<float>(effects_timetolive)
-        };
-        return static_data;
-    }
-    public string GetStaticID()
-    {
-        if (this.data == null) { return this.name; }
-        if (string.IsNullOrEmpty(this.data.id)) { return this.name; }
-        return this.data.id;
-    }
-    protected List<string> get_static_capacity_ids()
-    {
-        List<string> capacities_ids = new List<string>();
-
-        // we go through all children and check if we have capacities
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            Transform child = transform.GetChild(i);
-            Capacity capa = child.GetComponent<Capacity>();
-            if (capa == null) { continue; }
-            if (capa.data.id == "") { capa.data.id = capa.name; }
-            capacities_ids.Add(capa.data.id);
-        }
-
-        return capacities_ids;
-    }
-    protected FeetData get_static_feet_data()
-    {
-        if (Feet == null) { return null; }
-
-        FeetData feet_data = new FeetData
-        {
-            box_colliders = new List<BoxData>(),
-            circle_colliders = new List<CircleData>()
-        };
-
-
-        // we go through all colliders in the body and save their data
-        List<Collider2D> colliders = new List<Collider2D>(Feet.GetComponentsInChildren<Collider2D>(includeInactive: true));
-        foreach (Collider2D collider in colliders)
-        {
-            if (collider is BoxCollider2D) { feet_data.box_colliders.Add(ColliderBank.GetColliderData(collider) as BoxData); }
-            else if (collider is CircleCollider2D) { feet_data.circle_colliders.Add(ColliderBank.GetColliderData(collider) as CircleData); }
-        }
-        return feet_data;
-    }
-
-
-
-
 
 
 
@@ -247,6 +90,25 @@ public class Capable : MonoBehaviour, Debuggable
             return _feet;
         }
     }
+
+
+    [Header("Collisions")]
+    private Collider2D feet_collider = null;
+    public Collider2D FeetCollider
+    {
+        get
+        {
+            if (feet_collider == null)
+            {
+                Transform feet_transform = transform.Find("feet");
+                if (feet_transform != null) { feet_collider = feet_transform.GetComponentInChildren<Collider2D>(includeInactive: true); }
+            }
+            return feet_collider;
+        }
+    }
+    public float FeetRadius => FeetCollider != null ?
+                            FeetCollider is CircleCollider2D circle ? circle.radius : FeetCollider.bounds.extents.x
+                            : 0f;
 
 
     // un capable peut aussi avoir un inventaire & un hover
@@ -620,6 +482,170 @@ public class Capable : MonoBehaviour, Debuggable
 
         return text;
     }
+
+
+
+
+
+
+    // LOAD / UNLOAD
+    public virtual void LoadData(CapableData data)
+    {
+        if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Capable - LoadData) Loading capable {data.id} \n\n{data.GetDetails()}"); }
+        this.data = data;
+        this.name = data.id;
+        this.transform.position = data.position;
+
+        // we set the layer & tag
+        gameObject.layer = data.layer;
+        if (!string.IsNullOrEmpty(data.tag)) { gameObject.tag = data.tag; }
+
+        // we set the orientation
+        this.Orientation = data.orientation;
+
+        // ! the colliders & anim data are loaded directly from CapableBank since we pool them
+
+        // we load the inventory (and so the items)
+        Inventory?.LoadInventoryData(data.inventory);
+
+        // we add the effects
+        for (int i = 0; i < data.effects.Count; i++)
+        {
+            AddEffect(data.effects[i], data.effects_ttl[i]);
+        }
+
+        // we load the capacities
+        if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Capable - LoadData) Calling CapacitySystem loading for capacities : {string.Join(" ", data.capacities_ids)}"); }
+        this.capacities = CapacityEngine.Instance.LoadCapacities(data.capacities_ids, this);
+    }
+    public virtual void UnloadData()
+    {
+        // we save the dynamic data
+        SaveDynamicData();
+
+        // here we need to unload all the capacities that we hold
+        if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Capable - UnloadData) Calling CapacitySystem unloading for capacities : {string.Join(" ", data.capacities_ids)}"); }
+        CapacityEngine.Instance.UnloadCapacities(data.capacities_ids, this);
+
+        // we unload the inventory (and so the items)
+        Inventory?.UnloadInventoryData();
+
+        this.data = null;
+
+        // we clear the feet collider
+        feet_collider = null;
+    }
+    public virtual void SaveDynamicData()
+    {
+        if (data == null) { return; }
+
+        // we save some general data
+        this.data.position = this.transform.position;
+
+        // we save the anim player
+        AnimPlayer?.SaveDynamicPlayerData(this.data.anim_data);
+
+        // we save the inventory (and so the items)
+        Inventory?.SaveDynamicInventoryData();
+
+        // we save the effects
+        data.effects = new List<Effect>(effects);
+        data.effects_ttl = new List<float>(effects_timetolive);
+    }
+
+
+
+
+    // GET CURRENT STATIC DATA
+    /// <summary>
+    /// this method is made for saving data from a prefab THAT IS NOT LOADED.
+    /// it means it should run ONLY inside the editor and it may run when 
+    /// the game is not started. This means we should get the data through the hierarchy only
+    /// since all the lists will be null or empty
+    /// </summary>
+    /// <returns>CapableData the data that describes this capable</returns>
+    public virtual ICapableData GetStaticData()
+    {
+        // Debug.Log($"(Capable - GetStaticData) Getting static data for capable {name} of type {GetType().Name}");
+        CapableData static_data = new CapableData
+        {
+            // set base data things
+            id = GetStaticID(),
+            position = this.transform.position,
+
+            // set the layer & tag
+            layer = gameObject.layer,
+            tag = gameObject.tag,
+
+            // we set the kind
+            kind = GetType().Name,
+
+            // we set the anim data
+            anim_data = AnimPlayer?.GetStaticAnimData(),
+
+            // we set the inventory
+            inventory = Inventory?.GetStaticInventoryData(),
+
+            // we set the body data
+            feet_data = get_static_feet_data(),
+
+            // we set the orientation
+            orientation = this.orientation,
+
+
+            // we set the capacities
+            capacities_ids = get_static_capacity_ids(),
+
+            // we set the effects
+            effects = new List<Effect>(effects),
+            effects_ttl = new List<float>(effects_timetolive)
+        };
+        return static_data;
+    }
+    public string GetStaticID()
+    {
+        if (this.data == null) { return this.name; }
+        if (string.IsNullOrEmpty(this.data.id)) { return this.name; }
+        return this.data.id;
+    }
+    protected List<string> get_static_capacity_ids()
+    {
+        List<string> capacities_ids = new List<string>();
+
+        // we go through all children and check if we have capacities
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Transform child = transform.GetChild(i);
+            Capacity capa = child.GetComponent<Capacity>();
+            if (capa == null) { continue; }
+            if (capa.data.id == "") { capa.data.id = capa.name; }
+            capacities_ids.Add(capa.data.id);
+        }
+
+        return capacities_ids;
+    }
+    protected FeetData get_static_feet_data()
+    {
+        if (Feet == null) { return null; }
+
+        FeetData feet_data = new FeetData
+        {
+            box_colliders = new List<BoxData>(),
+            circle_colliders = new List<CircleData>()
+        };
+
+
+        // we go through all colliders in the body and save their data
+        List<Collider2D> colliders = new List<Collider2D>(Feet.GetComponentsInChildren<Collider2D>(includeInactive: true));
+        foreach (Collider2D collider in colliders)
+        {
+            if (collider is BoxCollider2D) { feet_data.box_colliders.Add(ColliderBank.GetColliderData(collider) as BoxData); }
+            else if (collider is CircleCollider2D) { feet_data.circle_colliders.Add(ColliderBank.GetColliderData(collider) as CircleData); }
+        }
+        return feet_data;
+    }
+
+
 
 
 }

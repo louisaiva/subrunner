@@ -534,6 +534,12 @@ MonoBehaviour:
     base_skin: dummy
     base_spritesheets:
     - beings/dummy_target/dummy_dummy
+  - variant_name: steel_door_ceil
+    variant_spritesheets:
+    - objects/interactives/doors/steel/steel_door_ceil
+    base_skin: steel_door
+    base_spritesheets:
+    - objects/interactives/doors/steel/steel_door_mid
   log: 0
   log_LAFAC: 0
   log_variant_skins: 0

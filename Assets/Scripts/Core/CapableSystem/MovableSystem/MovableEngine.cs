@@ -183,7 +183,7 @@ public class MovableEngine : MonoBehaviour
             {
                 position = (float2)(Vector2)agent.transform.position,
                 velocity = (float2)agent.Velocity,
-                feet_radius = agent.feet_radius,
+                feet_radius = agent.FeetRadius,
                 is_item = agent is Item
             },
             neighbours = neighbours_structs,
@@ -288,7 +288,7 @@ public class MovableEngine : MonoBehaviour
                 id = neighbourIndex,
                 position = (float2)(Vector2)neighbour.transform.position,
                 velocity = (float2)neighbour.Velocity,
-                feet_radius = neighbour.feet_radius,
+                feet_radius = neighbour.FeetRadius,
                 is_item = neighbour is Item
             });
         }

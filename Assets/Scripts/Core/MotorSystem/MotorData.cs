@@ -10,7 +10,8 @@ using UnityEngine;
     
     // LOCAL WORLD DATA
     public List<LocalWorldStateData> local_world_state = new List<LocalWorldStateData>();
-    public List<LocalWorldTargetData> local_world_targets = new List<LocalWorldTargetData>();
+    public List<LocalWorldPositionData> local_world_positions = new List<LocalWorldPositionData>();
+    public List<LocalWorldCapableData> local_world_capables = new List<LocalWorldCapableData>();
 
     // GOTO DATA
     public AvoidanceData avoidance_data = new AvoidanceData();
@@ -31,50 +32,11 @@ using UnityEngine;
             avoidance_data = this.avoidance_data.Duplicate(),
             local_position = this.local_position,
 
-            // deep copy local world data to avoid shared references
-            local_world_state = duplicate_states(this.local_world_state),
-            local_world_targets = duplicate_targets(this.local_world_targets),
+            // empty lists since when we duplicate, we spawn the entity so it is not populated for now
+            local_world_state = new List<LocalWorldStateData>(),
+            local_world_positions = new List<LocalWorldPositionData>(),
+            local_world_capables = new List<LocalWorldCapableData>(),
         };
-    }
-
-    private static List<LocalWorldStateData> duplicate_states(List<LocalWorldStateData> source)
-    {
-        if (source == null) { return new List<LocalWorldStateData>(); }
-
-        List<LocalWorldStateData> copy = new List<LocalWorldStateData>(source.Count);
-        for (int i = 0; i < source.Count; i++)
-        {
-            LocalWorldStateData state = source[i];
-            if (state == null) { continue; }
-
-            copy.Add(new LocalWorldStateData
-            {
-                key_name = state.key_name,
-                key_value = state.key_value,
-            });
-        }
-        return copy;
-    }
-
-    private static List<LocalWorldTargetData> duplicate_targets(List<LocalWorldTargetData> source)
-    {
-        if (source == null) { return new List<LocalWorldTargetData>(); }
-
-        List<LocalWorldTargetData> copy = new List<LocalWorldTargetData>(source.Count);
-        for (int i = 0; i < source.Count; i++)
-        {
-            LocalWorldTargetData target = source[i];
-            if (target == null) { continue; }
-
-            copy.Add(new LocalWorldTargetData
-            {
-                key_name = target.key_name,
-                target_type = target.target_type,
-                target_capable_id = target.target_capable_id,
-                target_position = target.target_position,
-            });
-        }
-        return copy;
     }
 
     // GET DETAILS
@@ -87,12 +49,26 @@ using UnityEngine;
         foreach (var state in local_world_state)        {
             details += $"    - {state.key_name} : {state.key_value}\n";
         }
-        details += $"  - local world targets : \n";
-        foreach (var target in local_world_targets)
+        details += $"  - local world positions : \n";
+        foreach (var position in local_world_positions)        {
+            details += $"    - {position.KeyName} : {position.Position}\n";
+        }
+        details += $"  - local world capables : \n";
+        foreach (var target in local_world_capables)
         {
-            details += $"    - {target.key_name} : {target.target_capable_id} @ {target.target_position}\n";
+            details += $"    - {target.KeyName} : {target.target_capable.id} @ {target.Position}\n";
         }
         return base.GetDetails() + details;
+    }
+
+
+    // GETTERS
+    public List<ILocalWorldTarget> GetLocalWorldTargets()
+    {
+        List<ILocalWorldTarget> targets = new List<ILocalWorldTarget>();
+        targets.AddRange(local_world_positions);
+        targets.AddRange(local_world_capables);
+        return targets;
     }
 }
 
@@ -102,10 +78,25 @@ using UnityEngine;
     public int key_value;
 }
 
-[Serializable] public class LocalWorldTargetData
+public interface ILocalWorldTarget
+{
+    public string KeyName { get; }
+    public Vector2 Position { get; }
+}
+
+[Serializable] public class LocalWorldPositionData : ILocalWorldTarget
 {
     public string key_name;
-    public string target_type;
-    public string target_capable_id;
     public Vector2 target_position;
+
+    public string KeyName { get { return key_name; } }
+    public Vector2 Position { get { return target_position; } }
+}
+[Serializable] public class LocalWorldCapableData : ILocalWorldTarget
+{
+    public string key_name;
+    public CapableData target_capable;
+
+    public string KeyName { get { return key_name; } }
+    public Vector2 Position { get { return target_capable.position; } }
 }

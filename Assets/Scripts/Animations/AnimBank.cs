@@ -455,6 +455,7 @@ public class AnimBank : MonoBehaviour
     }
     public Anim GetAnim(string name)
     {
+        // if (log_get_anim) { Debug.Log("(AnimBank - GetAnim) Getting animation : " + name); }
         string[] splitted_name = name.Split('.');
         string skin = splitted_name[0];
         string capacity = splitted_name[1];
@@ -488,6 +489,8 @@ public class AnimBank : MonoBehaviour
         // checks if we have the perfect animation (orientation)
         Anim exact_anim = anims[skin][capacity].Find(anim => anim.orientation == orientation);
         if (exact_anim != null) { return exact_anim; }
+
+        if (log_get_anim) { Debug.LogWarning($"(AnimBank - GetClosestOrientationAnim : {skin}.{capacity}.{orientation} ) Orientation not found, trying to find the closest one"); }
 
         // todo improve this
         // if we have only one letter in the orientation (L,R,U or D) we turn to find the closest other one letter
@@ -748,15 +751,7 @@ public class Anim
         return true;
     }
 
-    public float GetDuration()
-    {
-        float duration = 0f;
-        foreach (float d in sprites_durations)
-        {
-            duration += d;
-        }
-        return duration / speed;
-    }
+    public float GetDuration() { return GetBaseDuration() / speed; }
     public float GetBaseDuration()
     {
         // same as up but without the speed

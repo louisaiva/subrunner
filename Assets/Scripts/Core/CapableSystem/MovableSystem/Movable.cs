@@ -12,8 +12,7 @@ public class Movable : Capable
     {
         base.UnloadData();
 
-        // we clear the forces & colliders
-        feet_collider = null;
+        // we clear the forces
         ClearForces();
     }
 
@@ -47,22 +46,6 @@ public class Movable : Capable
     public Vector2 Velocity;
 
 
-    [Header("Collisions")]
-    private Collider2D feet_collider = null;
-    public Collider2D FeetCollider {
-        get
-        {
-            if (feet_collider == null)
-            {
-                Transform feet_transform = transform.Find("feet");
-                if (feet_transform != null) { feet_collider = feet_transform.GetComponentInChildren<Collider2D>(includeInactive: true); }
-            }
-            return feet_collider;
-        }
-    }
-    public float feet_radius => FeetCollider != null ?
-                                FeetCollider is CircleCollider2D circle ? circle.radius : FeetCollider.bounds.extents.x
-                                : 0f;
 
     // AWAKE
     protected virtual void Awake()
@@ -253,7 +236,7 @@ public class Movable : Capable
         if (FeetCollider == null) { return; }
 
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(FeetCollider.bounds.center, feet_radius);
+        Gizmos.DrawWireSphere(FeetCollider.bounds.center, FeetRadius);
     }
 
 }

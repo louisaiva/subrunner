@@ -26,7 +26,19 @@ public class AnimLayer : MonoBehaviour
     private float frame_timer = 0f;
     private int current_frame = -1; // if -1, the animation is over
     private bool update_each_frame = true; // if false, it means that the animation is a single frame anim, we don't want to check it each frame
+    [SerializeField] private bool follow_duration = false; // if true, the layer will sync its speed with the leader's one
     [SerializeField] private bool never_flip = false;
+    private bool choose_perfect_orientation_if_available =  true;
+    // if true, when the leader changes Orientation, the layer will
+    // try to stick to the perfect new orientation instead of following
+    // the leader's one. this is useful when the leader's skin does not
+    // have the orientation (ex: steel_door has no U, only D because 
+    // it is the same, but we need the door_icon to be able to switch
+    // to U even if the leader sticks to D). if false we always
+    // follow the leader's current anim orientation.
+
+
+
 
     [Header("Logs")]
     public bool log = false;
@@ -45,6 +57,7 @@ public class AnimLayer : MonoBehaviour
         if (already_assigned) { return; }
         this.leader = leader;
         leader.OnAnimPlayedAtFrame += PlayAtFrame;
+        leader.OnOrientationChanged += SetOrientation;
         leader.RegisterAnimLayer(this);
         already_assigned = true;
         if (log_assign) { Debug.Log("(AnimLayer) Assigned leader " + leader.name + " to layer " + name); }
@@ -53,6 +66,7 @@ public class AnimLayer : MonoBehaviour
     {
         if (!already_assigned) { return; }
         leader.OnAnimPlayedAtFrame -= PlayAtFrame;
+        leader.OnOrientationChanged -= SetOrientation;
         leader.UnregisterAnimLayer(this);
         this.leader = null;
         already_assigned = false;
@@ -61,18 +75,17 @@ public class AnimLayer : MonoBehaviour
 
 
     // PLAY ANIM
-    private void PlayAtFrame(string anim_name, int frame)
+    private void PlayAtFrame(string anim_name, int frame, float duration_override)
     {
         // we replace our skin
-        // anim_name = anim_name.Replace(leader.Skin, skin); // ! if leader.Skin is different than anim_name' skin (which is the case when the leader skin does not exist -> we send sphere anim) -> then it does not work
-        string current_leader_skin = anim_name.Split('.')[0]; // we get the skin of the anim name, we split by dot and we take the first word (which is the skin)
-        anim_name = skin + anim_name[current_leader_skin.Length..]; // replace the current skin by our layer skin
+        string anim_skin = anim_name.Split('.')[0]; // we get the skin of the anim name, we split by dot and we take the first word (which is the skin)
+        anim_name = skin + anim_name[anim_skin.Length..]; // replace the current anim skin by our layer skin
 
         // we get the anim
         Anim anim = AnimBank.Instance.GetAnim(anim_name);
 
         // we play it at frame
-        play_now_at_frame(anim, frame);
+        play_now_at_frame_with_duration(anim, frame, duration_override);
     }
 
 
@@ -106,8 +119,19 @@ public class AnimLayer : MonoBehaviour
         }
         
     }
-    private void play_now_at_frame(Anim anim, int frame = 0)
+    private void play_now_at_frame_with_duration(Anim anim, int frame = 0, float duration_override = -1f)
     {
+        // we check if the duration is overriden
+        if (follow_duration && duration_override != 1f)
+        {
+            // we get the duration of the animation
+            float duration = anim.GetBaseDuration();
+
+            // we calculate the resulting speed
+            anim.speed = duration / (float)duration_override;
+        }
+        else { anim.speed = 1f; }
+
         // we saturate the frame
         if (frame < 0) { frame = 0; }
         else if (frame >= anim.sprites.Length) { frame = 0; }
@@ -141,6 +165,18 @@ public class AnimLayer : MonoBehaviour
     public void EnableRenderer() { sr.enabled = true; }
 
 
+    // ORIENTATION MANAGEMENT
+    public void SetOrientation(string orientation)
+    {
+        if (!choose_perfect_orientation_if_available) { return; } // we don't care about orientation, we will have the new anim's one, so we do nothing
+
+        float duration_override = current_anim == null ? -1f : current_anim.GetDuration();
+        string current_capacity = current_anim == null ? "" : current_anim.capacity;
+
+        PlayAtFrame($"_.{current_capacity}.{orientation}", current_frame, duration_override); // we try to play the idle anim of the new orientation, if it exists it means that we have a perfect orientation for this new direction and we will switch to it, otherwise we will keep the current anim which is the closest one to the leader's one
+
+        if (log) { Debug.Log($"(AnimLayer) Set orientation to {orientation} (perfect orientation: {current_anim.name})"); }
+    }
 
 
 
@@ -158,8 +194,9 @@ public class AnimLayer : MonoBehaviour
         sr.sortingLayerID = layer_data.sorting_layer_id;
         sr.sortingOrder = layer_data.order_in_layer;
 
-        // load never flip
+        // load never flip & follow duration
         never_flip = layer_data.never_flip;
+        follow_duration = layer_data.follow_duration;
     }
 
     // GET STATIC DATA
@@ -171,6 +208,7 @@ public class AnimLayer : MonoBehaviour
             skin = skin,
             local_position = transform.localPosition,
             never_flip = never_flip,
+            follow_duration = follow_duration,
 
             // load sr data
             material_path = get_material_path(sr),
@@ -209,4 +247,5 @@ public class AnimLayer : MonoBehaviour
     public int sorting_layer_id;
     public int order_in_layer;
     public bool never_flip;
+    public bool follow_duration;
 }
