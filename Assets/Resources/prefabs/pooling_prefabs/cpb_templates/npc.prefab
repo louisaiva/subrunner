@@ -79,11 +79,11 @@ MonoBehaviour:
     ttc_treshold: 7
     neighbour_radius: 4
   current_waypoint_destination: {x: 0, y: 0}
-  current_waypoint: 0
   update_path_interval: 0.5
   waypoint_threshold_distance: 0.5
   log: 0
   log_path_calculation: 0
+  log_avoidance_force_set: 0
   gizmo_target: 1
   gizmo_path: 1
   gizmo_ttcbas: 1
@@ -356,6 +356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: npc
+  <orientation>k__BackingField: D
   current_capacity: 
   current_anim:
     name: 
@@ -483,9 +484,9 @@ MonoBehaviour:
   forces: []
   input_speed: 0
   Velocity: {x: 0, y: 0}
-  exploration_radius: 20
   base_tag: Robot
   SocialData:
+    exploration_radius: 30
     range_detection: 15
     friendly_skins: []
     dangerous_skins: []

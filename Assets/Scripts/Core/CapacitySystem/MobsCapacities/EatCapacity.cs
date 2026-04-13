@@ -17,7 +17,7 @@ public class EatCapacity : Capacity
     [Header("Eating parameters")]
     public float hunger = 0f; // Hunger level of the being, the less the better
     public float bite_duration = 1f; // duration of one bite
-    public int bites_per_eating = 1; // number of bites per eating action
+    public int bites_per_portion = 1; // number of bites per eating action
 
 
     [Header("Static data parameters")] // used for saving static data in the template, not used at runtime
@@ -72,7 +72,7 @@ public class EatCapacity : Capacity
     private IEnumerator eat_coroutine(HealthCapacity health, Food food)
     {
         // launch the animation
-        for (int i = 0; i < bites_per_eating; i++)
+        for (int i = 0; i < bites_per_portion; i++)
         {
             Anim anim = AnimPlayer.Play("eat", duration_override: bite_duration);
             if (anim == null)
@@ -86,17 +86,17 @@ public class EatCapacity : Capacity
 
             // we stop playing the anim
             AnimPlayer.StopPlaying("eat");
+
+            // we check if the food target is still valid
+            if (food == null || !food.Loaded)
+            {
+                if (log) { Debug.LogWarning("(EatCapacity) " + health.ID + " has no food target anymore"); }
+                current_coroutine = null;
+                food_target = null; // we reset the food target
+                yield break;
+            }
         }
 
-        // we check if the food target is still valid
-        if (food == null || !food.Loaded)
-        {
-            if (log) { Debug.LogWarning("(EatCapacity) " + health.ID + " has no food target anymore"); }
-            current_coroutine = null;
-            food_target = null; // we reset the food target
-            current_coroutine = null;
-            yield break;
-        }
 
         // we eat the food
         if (log) { Debug.Log("(EatCapacity) " + health.ID + " is eating " + food.ID); }
@@ -141,7 +141,7 @@ public class EatCapacity : Capacity
 
         // load eating parameters
         this.bite_duration = edata.bite_duration;
-        this.bites_per_eating = edata.bites_per_eating;
+        this.bites_per_portion = edata.bites_per_portion;
 
         // load entity data
         this.hunger = edata.hunger;
@@ -169,7 +169,7 @@ public class EatCapacity : Capacity
             food_rule = this.food_rule,
             range_food_detection = this.range_food_detection,
             bite_duration = this.bite_duration,
-            bites_per_eating = this.bites_per_eating,
+            bites_per_portion = this.bites_per_portion,
             hunger = this.hunger
         };
 
@@ -183,7 +183,7 @@ public class EatCapacity : Capacity
     public string food_rule = "food";
     public float range_food_detection = 15f;
     public float bite_duration = 1f; // duration of one bite
-    public int bites_per_eating = 1; // number of bites per eating action
+    public int bites_per_portion = 1; // number of bites per eating action
 
 
     // ENTITY DATA (dynamic at runtime, one per entity)
@@ -205,7 +205,7 @@ public class EatCapacity : Capacity
             food_rule = this.food_rule,
             range_food_detection = this.range_food_detection,
             bite_duration = this.bite_duration,
-            bites_per_eating = this.bites_per_eating,
+            bites_per_portion = this.bites_per_portion,
             hunger = this.hunger
         };
     }
@@ -217,7 +217,7 @@ public class EatCapacity : Capacity
         details += $"  - food_rule : {food_rule}\n";
         details += $"  - range_food_detection : {range_food_detection}\n";
         details += $"  - bite_duration : {bite_duration}\n";
-        details += $"  - bites_per_eating : {bites_per_eating}\n";
+        details += $"  - bites_per_portion : {bites_per_portion}\n";
         details += $"  - hunger : {hunger}\n";
         return base.GetDetails() + details;
     }

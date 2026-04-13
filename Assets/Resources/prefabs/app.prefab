@@ -1120,7 +1120,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsQuitting: 0
   LoadedSceneCount: 0
-  prototype: Serialized WorldData
+  prototype: CapableTarget, SerializableCapableTarget & updated actions
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320
@@ -1138,11 +1138,14 @@ MonoBehaviour:
   LOG_HACKS: 0
   LOG_CONNECTIONS: 0
   LOG_CORES: 0
+  LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING: 0
   LOG_WANDER_TARGET_SENSOR: 0
   LOG_HUNGER_SENSOR: 0
   LOG_CLOSEST_FOOD_SENSOR: 0
   LOG_CLOSEST_BEING_SENSOR: 0
+  LOG_IA_ACTION: 0
   LOG_ATTACK_ACTION: 0
+  LOG_EAT_ACTION: 0
 --- !u!1 &7970305435618458122
 GameObject:
   m_ObjectHideFlags: 0

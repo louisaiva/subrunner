@@ -244,11 +244,11 @@ MonoBehaviour:
     ttc_treshold: 1.5
     neighbour_radius: 1.5
   current_waypoint_destination: {x: 0, y: 0}
-  current_waypoint: 0
   update_path_interval: 0.5
   waypoint_threshold_distance: 0.25
   log: 0
   log_path_calculation: 0
+  log_avoidance_force_set: 0
   gizmo_target: 0
   gizmo_path: 0
   gizmo_ttcbas: 1
@@ -372,6 +372,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: cyber_rat
+  <orientation>k__BackingField: D
   current_capacity: 
   current_anim:
     name: 
@@ -527,9 +528,9 @@ MonoBehaviour:
   forces: []
   input_speed: 0
   Velocity: {x: 0, y: 0}
-  exploration_radius: 7
   base_tag: Rat
   SocialData:
+    exploration_radius: 8
     range_detection: 15
     friendly_skins: []
     dangerous_skins: []
@@ -1187,6 +1188,10 @@ PrefabInstance:
     - target: {fileID: 2037017623738312253, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
       propertyPath: bites_per_eating
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2037017623738312253, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
+      propertyPath: bites_per_portion
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2037017623738312253, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
       propertyPath: range_food_detection

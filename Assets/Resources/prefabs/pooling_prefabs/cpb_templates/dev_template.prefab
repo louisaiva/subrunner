@@ -114,7 +114,8 @@ MonoBehaviour:
     loop: 1
     speed: 1
     flipX: 0
-  update_each_frame: 1
+  follow_duration: 0
+  never_flip: 0
   log: 0
   log_frames: 0
   log_assign: 0
@@ -198,11 +199,11 @@ MonoBehaviour:
     ttc_treshold: 3
     neighbour_radius: 2
   current_waypoint_destination: {x: 0, y: 0}
-  current_waypoint: 0
   update_path_interval: 0.5
   waypoint_threshold_distance: 0.25
   log: 0
   log_path_calculation: 0
+  log_avoidance_force_set: 0
   gizmo_target: 1
   gizmo_path: 1
   gizmo_ttcbas: 1
@@ -320,7 +321,8 @@ MonoBehaviour:
     loop: 1
     speed: 1
     flipX: 0
-  update_each_frame: 1
+  follow_duration: 0
+  never_flip: 0
   log: 0
   log_frames: 0
   log_assign: 0
@@ -439,7 +441,8 @@ MonoBehaviour:
     loop: 1
     speed: 1
     flipX: 0
-  update_each_frame: 1
+  follow_duration: 0
+  never_flip: 0
   log: 0
   log_frames: 0
   log_assign: 0
@@ -650,6 +653,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: dev
+  <orientation>k__BackingField: D
   current_capacity: 
   current_anim:
     name: 
@@ -880,7 +884,8 @@ MonoBehaviour:
     loop: 1
     speed: 1
     flipX: 0
-  update_each_frame: 1
+  follow_duration: 0
+  never_flip: 0
   log: 0
   log_frames: 0
   log_assign: 0
@@ -1005,9 +1010,9 @@ MonoBehaviour:
   forces: []
   input_speed: 0
   Velocity: {x: 0, y: 0}
-  exploration_radius: 5
   base_tag: Dev
   SocialData:
+    exploration_radius: 10
     range_detection: 15
     friendly_skins: []
     dangerous_skins: []

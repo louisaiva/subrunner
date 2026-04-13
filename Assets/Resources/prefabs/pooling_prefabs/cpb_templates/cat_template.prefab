@@ -173,6 +173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: cat
+  <orientation>k__BackingField: D
   current_capacity: 
   current_anim:
     name: 
@@ -342,9 +343,9 @@ MonoBehaviour:
   forces: []
   input_speed: 0
   Velocity: {x: 0, y: 0}
-  exploration_radius: 7
   base_tag: Cat
   SocialData:
+    exploration_radius: 15
     range_detection: 15
     friendly_skins: []
     dangerous_skins: []
@@ -802,6 +803,10 @@ PrefabInstance:
     - target: {fileID: 2037017623738312253, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
       propertyPath: bites_per_eating
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2037017623738312253, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
+      propertyPath: bites_per_portion
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2037017623738312253, guid: 529703abb158e3742af44bcd151e3c5d, type: 3}
       propertyPath: range_food_detection

@@ -181,6 +181,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: zombo
+  <orientation>k__BackingField: D
   current_capacity: 
   current_anim:
     name: 
@@ -308,9 +309,9 @@ MonoBehaviour:
   forces: []
   input_speed: 0
   Velocity: {x: 0, y: 0}
-  exploration_radius: 5
   base_tag: Zombo
   SocialData:
+    exploration_radius: 4
     range_detection: 15
     friendly_skins: []
     dangerous_skins: []
