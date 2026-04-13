@@ -32,7 +32,7 @@ namespace subrunner.goap
             if (ia.JustLoaded)
             {
                 // we check that we have a valid target, if yes we return it (it was loaded when the MotorCapacity loaded the MotorData' local world data)
-                if (target != null && target is TransformTarget)
+                if (target != null && target is CapableTarget)
                 {
                     if (Logger.Instance.LOG_CLOSEST_BEING_SENSOR) { Debug.Log($"(ClosestBeingSensor - Sense) {iaData.id} just loaded and has an existing target : {target}. We keep it."); }
                     return target;
@@ -44,11 +44,11 @@ namespace subrunner.goap
             if (closestHealth == null) { return null; }
 
             // If the target is a transform target, set the target to the closest being
-            if (target is TransformTarget transformTarget)
+            if (target is CapableTarget transformTarget)
             {
-                return transformTarget.SetTransform(closestHealth.Capable.transform);
+                return transformTarget.SetCapable(closestHealth.Capable);
             }
-            return new TransformTarget(closestHealth.Capable.transform);
+            return new CapableTarget(closestHealth.Capable);
         }
     }
 }

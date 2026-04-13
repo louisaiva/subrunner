@@ -15,7 +15,7 @@ public interface HealthDetector : Detector
     public HealthCapacity FindClosestHealthCapacity(IAData looker_data);
 }
 
-[Serializable] public class CapableTarget
+[Serializable] public class SerializedCapableTarget
 {
     public string capable_id;
     public Vector2 position;
@@ -53,7 +53,7 @@ public interface HealthDetector : Detector
     }
 
     // CONSTRUCTORS
-    public CapableTarget(Capable capable)
+    public SerializedCapableTarget(Capable capable)
     {
         if (capable == null || capable.data == null) { return; }
         capable_id = capable.data.id;

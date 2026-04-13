@@ -15,6 +15,14 @@ public class Capable : MonoBehaviour, Debuggable
     [Header("Capable data")]
     public CapableData data;
     public bool Loaded { get { return data is not null; } }
+    public string ID
+    {
+        get
+        {
+            if (!Loaded) { return "unloaded"; }
+            return data.id;
+        }
+    }
 
 
 
@@ -517,6 +525,9 @@ public class Capable : MonoBehaviour, Debuggable
         // we load the capacities
         if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Capable - LoadData) Calling CapacitySystem loading for capacities : {string.Join(" ", data.capacities_ids)}"); }
         this.capacities = CapacityEngine.Instance.LoadCapacities(data.capacities_ids, this);
+
+        // we fire the data loaded event
+        data.OnLoaded(this);
     }
     public virtual void UnloadData()
     {
@@ -530,6 +541,8 @@ public class Capable : MonoBehaviour, Debuggable
         // we unload the inventory (and so the items)
         Inventory?.UnloadInventoryData();
 
+        // we fire the data loaded event
+        data.OnUnloaded(this);
         this.data = null;
 
         // we clear the feet collider

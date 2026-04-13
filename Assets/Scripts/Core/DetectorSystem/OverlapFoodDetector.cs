@@ -60,7 +60,7 @@ public class OverlapFoodDetector : MonoBehaviour, FoodDetector
 
             if (logs_detection)
             {
-                log += $"  - {food.data.id} at position {food.transform.position} with distance {Vector3.Distance(food.transform.position, position)} \n";
+                log += $"  - {food.ID} at position {food.transform.position} with distance {Vector3.Distance(food.transform.position, position)} \n";
             }
         }
 

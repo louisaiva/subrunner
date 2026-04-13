@@ -76,7 +76,9 @@
                 },
                 "material_path": "materials/beings",
                 "sorting_layer_id": -667374433,
-                "order_in_layer": 0
+                "order_in_layer": 0,
+                "never_flip": false,
+                "follow_duration": false
             },
             {
                 "skin": "dev_hair",
@@ -86,7 +88,9 @@
                 },
                 "material_path": "materials/beings",
                 "sorting_layer_id": -667374433,
-                "order_in_layer": 0
+                "order_in_layer": 0,
+                "never_flip": false,
+                "follow_duration": false
             },
             {
                 "skin": "dev_hat",
@@ -96,7 +100,9 @@
                 },
                 "material_path": "materials/beings",
                 "sorting_layer_id": -667374433,
-                "order_in_layer": 0
+                "order_in_layer": 0,
+                "never_flip": false,
+                "follow_duration": false
             },
             {
                 "skin": "dev_kb",
@@ -106,7 +112,9 @@
                 },
                 "material_path": "materials/beings",
                 "sorting_layer_id": -667374433,
-                "order_in_layer": 0
+                "order_in_layer": 0,
+                "never_flip": false,
+                "follow_duration": false
             }
         ]
     },
@@ -150,6 +158,7 @@
     "effects": [],
     "effects_ttl": [],
     "social_data": {
+        "exploration_radius": 3.0,
         "range_detection": 15.0,
         "friendly_skins": [],
         "dangerous_skins": [],

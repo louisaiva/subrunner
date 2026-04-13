@@ -38,6 +38,10 @@ public interface ICapableData : IData
 
     // EVENTS
     public event Action<CapableData> OnPositionChanged;
+    public event Action<Capable, CapableData> OnCapableLoaded;
+    public event Action<Capable, CapableData> OnCapableUnloaded;
+    public void OnLoaded(Capable capable) { OnCapableLoaded?.Invoke(capable, this); }
+    public void OnUnloaded(Capable capable) { OnCapableUnloaded?.Invoke(capable, this); }
 
 
     // DUPLICATE

@@ -3,8 +3,7 @@ using CrashKonijn.Goap.Runtime;
 
 namespace subrunner.goap
 {
-    // [GoapId("Idle-9b53930e-6c9f-44ee-8788-2b7c75333941")]
-    public class WanderAction : GoapActionBase<WanderAction.Data>
+    public class WanderAction : IA_Action<WanderAction.Data>
     {
         public override IActionRunState Perform(IMonoAgent agent, Data data, IActionContext context)
         {
@@ -15,9 +14,6 @@ namespace subrunner.goap
             return ActionRunState.WaitThenComplete(2f);
         }
 
-        public class Data : IActionData
-        {
-            public ITarget Target { get; set; }
-        }
+        public class Data : IA_ActionData { }
     }
 }

@@ -17,5 +17,7 @@ public class Logger : Singleton<Logger>
     public bool LOG_CLOSEST_BEING_SENSOR = false;
 
     [Header("GOAP Actions Logs")]
+    public bool LOG_IA_ACTION = false;
     public bool LOG_ATTACK_ACTION = false;
+    public bool LOG_EAT_ACTION = false;
 }

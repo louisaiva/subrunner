@@ -149,6 +149,27 @@ public class MotorCapacity : Capacity
         return null;
     }
 
+
+
+    // ACTION MANAGEMENT
+    public void StopCurrentAction()
+    {
+        if (Agent == null) { return; }
+        Agent.StopAction(resolveAction: true);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
     // LOAD / UNLOAD DATA
     public override void LoadData(CapacityData data)
     {
@@ -186,9 +207,6 @@ public class MotorCapacity : Capacity
     {
         string owner_id = data != null ? data.owner_id : "unknown";
 
-        // this saves the dynamic data (we need to save it before stopping things)
-        base.UnloadData();
-
         // we unload the goto
         mover.Unload();
 
@@ -202,6 +220,9 @@ public class MotorCapacity : Capacity
         // we reset the provider's agent type
         Provider.AgentType = goap.GetAgentType("none");
         if (log_agent_type) { Debug.Log($"(MotorCapacity) {owner_id} reset GoapActionProvider agent type to 'none' from unload"); }
+
+        // we unload the data -> will save the Provider's world data to the motor data
+        base.UnloadData();
     }
 
 

@@ -9,8 +9,8 @@ namespace subrunner.goap
         {
             var factory = CreateBuilder("zombo");
 
-            factory.AddCapability<WanderCapabilityFactory>();
-            factory.AddCapability<EatCapabilityFactory>();
+            // factory.AddCapability<WanderCapabilityFactory>();
+            // factory.AddCapability<EatCapabilityFactory>();
             factory.AddCapability<KillBeingCapabilityFactory>();
 
             return factory.Build();

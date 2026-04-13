@@ -13,10 +13,30 @@ public class Capacity : MonoBehaviour
             return _capable;
         }
     }
+    public AnimPlayer AnimPlayer
+    {
+        get
+        {
+            if (Capable is null) { return null; }
+            return Capable.AnimPlayer;
+        }
+    }
 
     [Header("Capacity data")]
     public CapacityData data;
-    public bool Loaded { get { return data != null; } }
+    public bool Loaded { get { return data is not null; } }
+    public string ID
+    {
+        get
+        {
+            if (!Loaded) { return "unloaded_capacity"; }
+            return data.id;
+        }
+    }
+
+
+
+
 
     [Header("Logs")]
     public bool log = false;

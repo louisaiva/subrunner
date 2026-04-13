@@ -59550,8 +59550,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 714515157948744320, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: LOG_IA_ACTION
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 714515157948744320, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: LOG_EAT_ACTION
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 714515157948744320, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: LOG_ATTACK_ACTION
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 714515157948744320, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: LOG_HUNGER_SENSOR
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 714515157948744320, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: LOG_CLOSEST_FOOD_SENSOR
@@ -59560,14 +59572,6 @@ PrefabInstance:
     - target: {fileID: 714515157948744320, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: LOG_CLOSEST_BEING_SENSOR
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 714515157948744320, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: LOG_WANDER_TARGET_SENSOR
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: log_get_anim
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalPosition.x

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using CrashKonijn.Agent.Core;
 using CrashKonijn.Agent.Runtime;
+using CrashKonijn.Goap.Runtime;
 using Pathfinding;
 using UnityEngine;
 using UnityEngine.AI;
@@ -68,7 +69,7 @@ namespace subrunner.goap
 
         [Header("Current Path")]
         [SerializeField] private Vector2 current_waypoint_destination;
-        [SerializeField] private int current_waypoint = 0; // the current waypoint on the path
+        private int current_waypoint_index = -1; // the current waypoint on the path
         [SerializeField] private float update_path_interval = 0.5f; // interval to update the pathfinding to the target
         [SerializeField] private float waypoint_threshold_distance = 0.25f; // current distance to the waypoint to consider it reached
 
@@ -100,6 +101,7 @@ namespace subrunner.goap
             agent.Events.OnTargetInRange += on_target_in_range;
             agent.Events.OnTargetChanged += on_target_changed;
             agent.Events.OnTargetLost += on_target_lost;
+            agent.Events.OnActionStop += on_action_stop;
 
             // we load the avoidance data
             if (avoidance_data != null) { data = avoidance_data; }
@@ -112,7 +114,8 @@ namespace subrunner.goap
             agent.Events.OnTargetInRange -= on_target_in_range;
             agent.Events.OnTargetChanged -= on_target_changed;
             agent.Events.OnTargetLost -= on_target_lost;
-
+            agent.Events.OnActionStop -= on_action_stop;
+            
             // we stop invoking the path calculation
             CancelInvoke(nameof(CalculatePath));
 
@@ -127,42 +130,44 @@ namespace subrunner.goap
             unloaded = true;
         }
 
+
         // TARGET CALLBACKS MANAGEMENT
+        private void on_action_stop(IAction action) { on_target_lost(); }
         private void on_target_lost()
         {
-            if (log) { Debug.Log("(GoToBehaviour) " + ia.name + " lost the target and stopped moving."); }
-
-            target = null;
-
-            // we remove the path
-            path = null;
-
-            // we reset the ttcbas
-            avoidance_force = Vector2.zero;
-            nearby_agents.Clear();
-            waypoint_movement = Vector2.zero;
-
             // we stop moving
-            walker.walk_percentage_target = 0f;
-        }
-        private void on_target_in_range(ITarget target)
-        {
-            walker.walk_percentage_target = 0f; // stop moving
-
-            // we reset the path
-            path = null;
+            target = null;
+            stop_following_path();
             CancelInvoke(nameof(CalculatePath));
 
             // we reset the ttcbas
-            avoidance_force = Vector2.zero;
-            nearby_agents.Clear();
-            waypoint_movement = Vector2.zero;
+            reset_ttcbas();
+
+            if (log) { Debug.Log("(GoToBehaviour) " + ia.name + " lost the target and stopped moving."); }
+        }
+        private void on_target_in_range(ITarget target)
+        {
+            // we stop moving
+            this.target = null;
+            stop_following_path();
+            CancelInvoke(nameof(CalculatePath));
+
+            // we reset the ttcbas
+            reset_ttcbas();
 
             if (log) { Debug.Log("(GoToBehaviour) " + ia.name + " has done moving to its target"); }
         }
         private void on_target_changed(ITarget target, bool inRange)
         {
-            if (log) { Debug.Log("(GoToBehaviour) " + ia.name + " target just change !"); }
+            if (log)
+            {
+                string target_info;
+                if (target == null) { target_info = "null"; }
+                else if (target is CapableTarget capable_target) { target_info = "capable of " + capable_target.CapableData.id + " (currently positionned at " + capable_target.Position + ")   ---- loaded ? " + (capable_target.Capable != null && capable_target.Capable.Loaded); }
+                else if (target is TransformTarget transform_target) { target_info = "transform of " + transform_target.Transform.name + " (currently positionned at " + transform_target.Transform.position + ")"; }
+                else { target_info = "position " + target.Position; }
+                Debug.Log("(GoToBehaviour) " + ia.name + " target just changed : " + target_info);
+            }
 
             this.target = target;
             CalculatePath();
@@ -189,13 +194,13 @@ namespace subrunner.goap
 
             // we properly invoke ourselves repeatedly (for chasing moving target)
             CancelInvoke(nameof(CalculatePath));
-            InvokeRepeating(nameof(CalculatePath), update_path_interval, update_path_interval); // we calculate the path every 0.5 seconds
+            Invoke(nameof(CalculatePath), update_path_interval); // we calculate the path every 0.5 seconds
         }
         private void start_following_path(List<Vector3> path)
         {
             // we initialize the path & waypoints variables
             this.path = path;
-            current_waypoint = 0;
+            current_waypoint_index = 0;
             current_waypoint_destination = path[0];
 
             // we start walking
@@ -214,6 +219,18 @@ namespace subrunner.goap
             }
             return NavMesh.GetSettingsByIndex(0).agentTypeID; // return default agent type id if not found
         }
+        private void stop_following_path()
+        {
+            path = null;
+            current_waypoint_index = -1;
+            walker.walk_percentage_target = 0f;
+        }
+        private void reset_ttcbas()
+        {
+            avoidance_force = Vector2.zero;
+            nearby_agents.Clear();
+            waypoint_movement = Vector2.zero;
+        }
 
         // UPDATE
         public void Update()
@@ -222,23 +239,23 @@ namespace subrunner.goap
             if (agent.IsPaused) { return; }
 
             // check if we have a path & waypoints
-            if (path == null) { return; }
+            if (path == null || current_waypoint_index < 0) { return; }
 
             // on regarde si on est arrivé au prochain point
             if (Vector2.Distance(ia.transform.position, current_waypoint_destination) <= waypoint_threshold_distance)
             {
                 // we check if we arrived at the end of the path
-                current_waypoint++;
-                if (current_waypoint >= path.Count)
+                current_waypoint_index++;
+                if (current_waypoint_index >= path.Count)
                 {
                     // stop moving
-                    walker.walk_percentage_target = 0f;
+                    stop_following_path();
                     if (log) { Debug.Log("(GoToBehaviour) " + ia.name + " has reached the end of the path."); }
                     return;
                 }
 
                 // we update the current waypoint destination
-                current_waypoint_destination = path[current_waypoint];
+                current_waypoint_destination = path[current_waypoint_index];
             }
 
             // we calculate the direction of the movement towards the waypoint

@@ -14,7 +14,7 @@ using UnityEngine;
 public class IA : Movable
 {
     [Header("IA")]
-    public float exploration_radius = 3f; // the radius of exploration for the IA
+    // public float exploration_radius = 3f; // the radius of exploration for the IA
                                           // todo must be part of an IAData class or struct that influence a curiosity parameter
     [SerializeField] private string base_tag = "IA";
     public string BaseTag => base_tag;
@@ -146,6 +146,7 @@ public class IA : Movable
 
 [Serializable] public class SocialData
 {
+    public float exploration_radius = 3f;
     public float range_detection = 15f;
     public List<string> friendly_skins = new List<string>();
     public List<string> dangerous_skins = new List<string>();
@@ -155,6 +156,7 @@ public class IA : Movable
     {
         return new SocialData
         {
+            exploration_radius = this.exploration_radius,
             range_detection = this.range_detection,
             friendly_skins = new List<string>(friendly_skins),
             dangerous_skins = new List<string>(dangerous_skins),
@@ -166,6 +168,7 @@ public class IA : Movable
     public string GetDetails()
     {
         string details = "social data : \n";
+        details += $"  - exploration_radius : {exploration_radius}\n";
         details += $"  - range_detection : {range_detection}\n";
         details += $"  - friendly_skins : {string.Join(", ", friendly_skins)}\n";
         details += $"  - dangerous_skins : {string.Join(", ", dangerous_skins)}\n";

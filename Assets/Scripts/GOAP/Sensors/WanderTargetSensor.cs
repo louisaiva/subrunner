@@ -32,7 +32,7 @@ namespace subrunner.goap
             } */
 
             // find a random position to go
-            Vector3 random_position = getRandomPositionInRangeNavMesh(agent.Transform.position, ia.exploration_radius, ia.Mover.Filter);
+            Vector3 random_position = getRandomPositionInRangeNavMesh(agent.Transform.position, ia.SocialData.exploration_radius, ia.Mover.Filter);
             if (random_position == default)
             {
                 if (Logger.Instance.LOG_WANDER_TARGET_SENSOR) { Debug.LogWarning("(WanderLoadedSensor - Sense) No walkable position found on the nav mesh for : " + ia.name); }

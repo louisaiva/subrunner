@@ -1120,7 +1120,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsQuitting: 0
   LoadedSceneCount: 0
-  prototype: attack capa re adapted + attack goal + social data
+  prototype: Serialized WorldData
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320
@@ -1141,6 +1141,7 @@ MonoBehaviour:
   LOG_WANDER_TARGET_SENSOR: 0
   LOG_HUNGER_SENSOR: 0
   LOG_CLOSEST_FOOD_SENSOR: 0
+  LOG_CLOSEST_BEING_SENSOR: 0
   LOG_ATTACK_ACTION: 0
 --- !u!1 &7970305435618458122
 GameObject:

@@ -8,8 +8,9 @@ using UnityEngine;
 
 namespace subrunner.goap
 {
-    public class AttackAction : GoapActionBase<AttackAction.Data>
+    public class AttackAction : IA_Action<AttackAction.Data>
     {
+        
         // dictionary that holds the last or current AttackActionResult for each IA performing this action, we will use it to update the distance to attack based on the last result (missed, took damage, hit)
         private Dictionary<IA, AttackActionResult> last_attack_results = new Dictionary<IA, AttackActionResult>();
         // ! WARNING !
@@ -20,28 +21,42 @@ namespace subrunner.goap
         // otherwise there is no issue with storing the IA instead of ID, bcz it is more performant, and
         // all the mobs doing this action are loaded mobs anyway, so we know everything is loaded.
 
-        private Dictionary<IMonoAgent, Action<float, Force>> damage_callbacks = new Dictionary<IMonoAgent, Action<float, Force>>(); // we store the damage callback for each IA to be able to remove it when we stop the action
+        [Header("Logs")]
+        public bool log_start_target_info = false;
+
 
         // START
         public override void Start(IMonoAgent agent, Data data)
         {
+            base.Start(agent, data);
+
+            if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.Log($"(AttackAction) {data.ia.data.id} is starting AttackAction on target {data.Target}"); }
+
             data.attack_capacity = data.ia.GetCapacity<AttackCapacity>();
-            data.CapableTarget = data.Target is TransformTarget target ? target.Transform.GetComponent<Capable>() : null;
+            data.CapableTarget = data.Target is CapableTarget target ? target.Capable : null;
             if (data.CapableTarget == null)
             {
                 if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.LogWarning($"(AttackAction) {data.ia.data.id} has no valid target for AttackAction"); }
+                agent.StopAction(resolveAction: true);
+                return;
+            }
+            if (!data.CapableTarget.Loaded)
+            {
+                // we have a target but it is not loaded
+                // -> if we REALLY want to attack it, we switch to a ChaseAction until we are close enough
+                // -> else we just drop the action since we can't attack an unloaded target
+                // for now we just drop the action, but we could implement the chase logic later if needed
+                if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.LogWarning($"(AttackAction) {data.ia.data.id} target {data.CapableTarget} is not loaded, cannot perform AttackAction"); }
+                agent.StopAction(resolveAction: true);
                 return;
             }
 
 
-            // we register the damage callback for this IA
-            register_damage_callback(agent, data);
-            
 
             // we check if we have a last_attack_result for this IA
             
             // if not we create a new one
-            if (!last_attack_results.TryGetValue(data.ia, out AttackActionResult last_result))
+            if (!last_attack_results.TryGetValue(data.ia, out AttackActionResult last_result)/*  || last_result == null */)
             {
                 last_result = new AttackActionResult(data.CapableTarget, data.attack_capacity.distance_to_attack);
                 last_attack_results[data.ia] = last_result;
@@ -55,6 +70,17 @@ namespace subrunner.goap
             }
 
             // if we have one, we update its target if changed
+            // todo fix NullReferenceException: Object reference not set to an instance of an object next line
+            if (log_start_target_info)
+            {
+                string log = $"(AttackAction) line 59 : last_result.target is null ? {last_result.target == null}";
+                log += $" | last_result.target.capable_id : {(last_result.target != null ? last_result.target.capable_id : "null")}";
+                log += $" | data.CapableTarget is null ? {data.CapableTarget == null}";
+                log += $" | data.CapableTarget.data is null ? {(data.CapableTarget != null ? data.CapableTarget.data == null : "null")}";
+                log += $" | data.CapableTarget.data.id : {(data.CapableTarget.data != null ? data.CapableTarget.data.id : "null")}";
+                Debug.Log(log);
+            }
+            // todo : the fix is simple : check if CapableTarget is Loaded
             if (last_result.target == null || last_result.target.capable_id != data.CapableTarget.data.id)
             {
                 // we changed target ! we assign a new target and start watching it
@@ -93,67 +119,6 @@ namespace subrunner.goap
             last_result.WatchTheAttack(data.attack_capacity, data.CapableTarget, data.this_action_stop_distance);
         }
 
-        // DAMAGE CALLBACKS
-        private void register_damage_callback(IMonoAgent agent, Data data)
-        {
-            // we get the IA's HealthCapacity to register to its OnTakeDamage event
-            if (!data.ia.TryGetCapacity(out HealthCapacity health_capacity))
-            {
-                if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.LogWarning($"(AttackAction) {data.ia.data.id} has no HealthCapacity, cannot register damage callback for AttackAction"); }
-                return;
-            }
-
-            // we create the callback
-            Action<float, Force> damage_callback = (d, f) => TakeDamage(agent, data);
-
-            // we register it to the IA's HealthCapacity.OnTakeDamage event
-            health_capacity.OnTakeDamage += damage_callback;
-
-            // we store it in the dictionary
-            damage_callbacks[agent] = damage_callback;
-        }
-        private void unregister_damage_callback(IMonoAgent agent, Data data)
-        {
-            // we get the IA's HealthCapacity to unregister from its OnTakeDamage event
-            if (!data.ia.TryGetCapacity(out HealthCapacity health_capacity))
-            {
-                if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.LogWarning($"(AttackAction) {data.ia.data.id} has no HealthCapacity, cannot unregister damage callback for AttackAction"); }
-                return;
-            }
-
-            // we get the callback from the dictionary
-            if (!damage_callbacks.TryGetValue(agent, out Action<float, Force> damage_callback))
-            {
-                if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.LogWarning($"(AttackAction) No damage callback found for {data.ia.data.id}, cannot unregister damage callback for AttackAction"); }
-                return;
-            }
-
-            // we unregister it from the IA's HealthCapacity.OnTakeDamage event
-            health_capacity.OnTakeDamage -= damage_callback;
-
-            // we remove it from the dictionary
-            damage_callbacks.Remove(agent);
-        }
-
-        // TAKE DAMAGE
-        public void TakeDamage(IMonoAgent agent, Data data)
-        {
-            if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.Log($"(AttackAction) {data.ia.data.id} took damage during the attack action"); }
-
-            // we stop the action
-            agent.StopAction();
-
-            // we set the last attack result as TookDamage
-            if (last_attack_results.TryGetValue(data.ia, out AttackActionResult last_result))
-            {
-                last_result.StopWatchingTheAttack(data.attack_capacity, AttackActionStatus.TookDamage);
-            }
-
-            // finally reset the action state
-            agent.ActionState.Reset();
-        }
-
-
         // PERFORM
         public override void BeforePerform(IMonoAgent agent, Data data)
         {
@@ -187,9 +152,6 @@ namespace subrunner.goap
                 last_result.StopWatchingTheAttack(data.attack_capacity);
             }
 
-            // we remove the damage callback
-            unregister_damage_callback(agent, data);
-
             return ActionRunState.Completed;
         }
 
@@ -200,29 +162,34 @@ namespace subrunner.goap
             if (data.ia.log_actions) { Debug.Log($"(AttackAction) {data.ia.name} IsInRange check: distance={distance:F2}, stopping_distance={data.this_action_stop_distance:F2}, in_range={distance <= data.this_action_stop_distance}"); }
             return distance <= data.this_action_stop_distance;
         }
+
+        // TAKE DAMAGE
+        public override void TakeDamage(IMonoAgent agent, Data data)
+        {
+            base.TakeDamage(agent, data);
+
+            // we set the last attack result as TookDamage
+            if (last_attack_results.TryGetValue(data.ia, out AttackActionResult last_result))
+            {
+                last_result.StopWatchingTheAttack(data.attack_capacity, AttackActionStatus.TookDamage);
+            }
+        }
         public override void Stop(IMonoAgent agent, Data data)
         {
+            base.Stop(agent, data);
+
             // we check if we have a last attack result for this IA to stop watching the attack
             if (last_attack_results.TryGetValue(data.ia, out AttackActionResult last_result))
             {
                 last_result.StopWatchingTheAttack(data.attack_capacity, AttackActionStatus.Canceled);
             }
-
-            // we remove the damage callback
-            unregister_damage_callback(agent, data);
-
-            base.Stop(agent, data);
         }
 
-
         // DATA
-        public class Data : IActionData
+        public class Data : IA_ActionData
         {
-            public ITarget Target { get; set; }
             public Capable CapableTarget { get; set; }
 
-            // Direct access to IA and AnimPlayer
-            [GetComponentInParent] public IA ia { get; set; }
             public AttackCapacity attack_capacity { get; set; }
             public float this_action_stop_distance { get; set; } // we cache this at start to be used in the IsInRange override
         }
@@ -231,13 +198,13 @@ namespace subrunner.goap
 
 public class AttackActionResult
 {
-    public CapableTarget target;
+    public SerializedCapableTarget target;
     public AttackActionStatus attack_status;
     public float attack_distance;
 
     private bool watching_attack = false;
 
-    public AttackActionResult(CapableTarget target, AttackActionStatus attack_status, float attack_distance)
+    public AttackActionResult(SerializedCapableTarget target, AttackActionStatus attack_status, float attack_distance)
     {
         this.target = target;
         this.attack_status = attack_status;
@@ -245,7 +212,7 @@ public class AttackActionResult
     }
     public AttackActionResult(Capable target, float attack_distance)
     {
-        this.target = new CapableTarget(target);
+        this.target = new SerializedCapableTarget(target);
         this.attack_distance = attack_distance;
     }
 
@@ -253,7 +220,7 @@ public class AttackActionResult
     public void WatchTheAttack(AttackCapacity attacker, Capable target, float distance)
     {
         // we set the new target and distance (in case the target moved during the attack)
-        if (this.target == null) { this.target = new CapableTarget(target); }
+        if (this.target == null) { this.target = new SerializedCapableTarget(target); }
         else if (this.target.capable_id != target.data.id) { this.target.SetTarget(target); }
         this.attack_distance = distance;
 
@@ -303,7 +270,7 @@ public class AttackActionResult
         if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.Log($"(AttackActionResult) Target {hit_target.Capable.data.id} took {damage} damage, our target is {target.capable_id}"); }
 
         // we check if the hit target is the one we are watching
-        if (target.capable_id != hit_target.Capable.data.id) { return; }
+        if (target.capable_id != hit_target.data.owner_id) { return; }
 
         // we got a hit on the target, we set the attack status to Hit
         attack_status = AttackActionStatus.Hit;
