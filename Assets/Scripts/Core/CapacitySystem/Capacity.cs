@@ -33,6 +33,14 @@ public class Capacity : MonoBehaviour
             return data.id;
         }
     }
+    public string OwnerID
+    {
+        get
+        {
+            if (!Loaded) { return "unloaded_capacity"; }
+            return data.owner_id;
+        }
+    }
 
 
 

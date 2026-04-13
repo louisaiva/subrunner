@@ -117,57 +117,40 @@ namespace subrunner.goap
     /// This class is only runtime based. it means that it can successfully cache a CapableData ref when
     /// the capable is set or changed
     /// </summary>
-    public class CapableTarget : ITarget, IDisposable
+    public class CapableTarget : ITarget
     {
 
         // unloaded capable data ref
         private CapableData capable_data;
         public CapableData CapableData { get { return capable_data; } }
+        public string CapableID { get { return capable_data?.id; } }
 
         // loaded capable ref
-        private Capable capable;
-        public Capable Capable { get { return capable; } }
+        public Capable Capable { get { return capable_data?.Capable; } }
+        public bool Loaded { get { return Capable is not null && Capable.Loaded; } }
 
         // position
-        public Vector3 Position
-        {
-            get
-            {
-                if (capable != null && capable.Loaded) { return capable.transform.position; }
-                return capable_data != null ? capable_data.position : Vector3.zero;
-            }
-        }
+        public Vector3 Position { get { return capable_data?.Position ?? Vector2.zero; } }
 
         // is valid
-        public bool IsValid() { return capable_data != null; }
+        public bool IsValid() { return capable_data is not null; }
 
 
         // CONSTRUCTORS
         public CapableTarget(Capable capable)
         {
             if (capable == null || !capable.Loaded) { return; }
-            this.capable = capable;
             this.capable_data = capable.data;
-
-            // we register to the capable_data events to dynamically update the loaded capable ref
-            capable_data.OnCapableLoaded += on_capable_loaded;
-            capable_data.OnCapableUnloaded += on_capable_unloaded;
         }
-
-        // DESTRUCTOR
-        public void Dispose()
-        {
-            unsubscribe_data_events();
-
-            // null everything
-            capable = null;
-            capable_data = null;
-        }
-        private void unsubscribe_data_events()
+        public CapableTarget(CapableData capable_data)
         {
             if (capable_data == null) { return; }
-            capable_data.OnCapableLoaded -= on_capable_loaded;
-            capable_data.OnCapableUnloaded -= on_capable_unloaded;
+            this.capable_data = capable_data;
+        }
+        public CapableTarget(CapableTarget other)
+        {
+            if (other == null) { return; }
+            this.capable_data = other.capable_data;
         }
 
         // CAPABLE UPDATE
@@ -176,27 +159,19 @@ namespace subrunner.goap
             if (capable == null || !capable.Loaded) { return null; }
             if (capable_data == capable.data) { return this; } // we are already set to this capable or the capable data is the same as the current one, we do nothing
 
-            // we unregister from the old capable_data events to avoid memory leaks
-            unsubscribe_data_events();
-
             // reassign the capable and capable_data refs
-            this.capable = capable;
             this.capable_data = capable.data;
 
-            // we register to the capable_data events to dynamically update the loaded capable ref
-            capable_data.OnCapableLoaded += on_capable_loaded;
-            capable_data.OnCapableUnloaded += on_capable_unloaded;
             return this;
         }
+        public ITarget SetCapableData(CapableData capable_data)
+        {
+            if (capable_data == null) { return null; }
+            if (this.capable_data == capable_data) { return this; } // we are already set to this capable data, we do nothing
 
-        // CAPABLE DATA EVENTS
-        private void on_capable_unloaded(Capable capable, CapableData data)
-        {
-            this.capable = null;
-        }
-        private void on_capable_loaded(Capable capable, CapableData data)
-        {
-            this.capable = capable;
+            // reassign the capable and capable_data refs
+            this.capable_data = capable_data;
+            return this;
         }
     }
 }

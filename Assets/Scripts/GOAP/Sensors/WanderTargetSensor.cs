@@ -24,6 +24,10 @@ namespace subrunner.goap
                     if (Logger.Instance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor - Sense) {ia.data.id} just loaded and has an existing target : {existingTarget}. We keep it."); }
                     return existingTarget;
                 }
+                else
+                {
+                    if (Logger.Instance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor - Sense) {ia.data.id} just loaded but has no existing target : {existingTarget}"); }
+                }
             }
 
             /* if (Logger.Instance.LOG_WANDER_TARGET_SENSOR)

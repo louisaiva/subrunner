@@ -154,11 +154,7 @@ public class Corpse : Food
     }
 
     // CONSTRUCTOR
-    public CorpseData(CapableData parent) : base(parent)
-    {
-        foreach (var prop in parent.GetType().GetProperties()) { prop.SetValue(this, prop.GetValue(parent)); }
-        foreach (var prop in parent.GetType().GetFields()) { prop.SetValue(this, prop.GetValue(parent)); }
-    }
+    public CorpseData(CapableData parent) : base(parent) { }
 
     // DUPLICATE
     public override ICapableData Duplicate()

@@ -59,11 +59,11 @@ public class CapableSystem : BSOD_System<CapableSystem>
     public Action<CapableData> OnCapableDisappear; // despawned capables + grabbed items
 
 
-    /* -------------------------------------
+    // -------------------------------------
 
-     1. AWAKE & DATA LOADING
+    //     1. AWAKE & DATA LOADING
 
-    ------------------------------------- */
+    // ------------------------------------- */
 
 
     // AWAKE
@@ -266,6 +266,9 @@ public class CapableSystem : BSOD_System<CapableSystem>
             if (GetCapableHashFromID(capable.data.id) == 0) { generate_runtime_id(capable.data.id); } // generate a runtime id if this capable data was not already in our loaded data
             outsiders_data.Add(capable.data, capable);
             outsiders_ids.Add(capable.data.id);
+
+            // we set the data's runtime capable ref to this capable since it's the one that is in the world
+            capable.data.OnLoaded(capable);
         }
 
         if (log_world_data_loading && enabled_outsiders.Count > 0) { Debug.Log("(CapableSystem) OUTSIDERS DETECTED : " + enabled_outsiders.Count + "\n - " + string.Join("\n - ",enabled_outsiders)); }
@@ -311,11 +314,11 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
 
 
-    /* -------------------------------------
+    // -------------------------------------
 
-     2. SPAWNING / SWITCHING / DROPPING / GRABBING CAPABLES
+    //     2. SPAWNING / SWITCHING / DROPPING / GRABBING CAPABLES
 
-    ------------------------------------- */
+    // ------------------------------------- */
 
 
 
@@ -589,11 +592,11 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
 
 
-    /* -------------------------------------
+    // -------------------------------------
 
-     3. DYNAMIC LOADING & UNLOADING OF CAPABLES
+    // 3. DYNAMIC LOADING & UNLOADING OF CAPABLES
 
-    ------------------------------------- */
+    // ------------------------------------- */
 
 
 
@@ -783,11 +786,12 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
 
 
-    /* -------------------------------------
 
-     4. GETTERS & OTHERS
+    // -------------------------------------
 
-    ------------------------------------- */
+    //     4. GETTERS & OTHERS
+
+    // ------------------------------------- */
 
 
     // GETTERS
@@ -800,7 +804,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
     {
         return capables_ids_by_hash.TryGetValue(hash, out string id) ? id : null;
     }
-    public List<CapableData> GetInsidersWorldCapablesData()
+    /* public List<CapableData> GetInsidersWorldCapablesData()
     {
         List<CapableData> insiders = new List<CapableData>();
         foreach (KeyValuePair<string, CapableData> pair in world_capables_data)
@@ -814,15 +818,12 @@ public class CapableSystem : BSOD_System<CapableSystem>
             insiders.Add(data);
         }
         return insiders;
-    }
+    } */
     public Dictionary<CapableData, Capable> GetOutsidersWorldCapablesData()
     {
         return outsiders_data;
     }
-    public bool IsOutsider(string id)
-    {
-        return outsiders_ids.Contains(id);
-    }
+    public bool IsOutsider(string id) { return outsiders_ids.Contains(id); }
     public bool TryGetOutsider(string id, out Capable capable)
     {
         capable = null;

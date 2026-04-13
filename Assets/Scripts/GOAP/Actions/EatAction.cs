@@ -1,7 +1,5 @@
 using CrashKonijn.Agent.Core;
-// using CrashKonijn.Agent.Runtime;
 using CrashKonijn.Goap.Runtime;
-// using CrashKonijn.Agent.Runtime;
 using UnityEngine;
 
 namespace subrunner.goap
@@ -14,7 +12,7 @@ namespace subrunner.goap
         {
             base.Start(agent, data);
 
-            // set the eatCapa
+            // set the eatCapacity
             data.eatCapacity = data.ia.GetCapacity<EatCapacity>();
         }
 

@@ -7,14 +7,13 @@ using CrashKonijn.Goap.Core;
 using CrashKonijn.Goap.Runtime;
 using subrunner.goap;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
 
 [Serializable] public class MotorData : CapacityData
 {
     public string agent_type;
     
     // LOCAL WORLD DATA
-    public LocalWorldData local_world_data = new LocalWorldData();
+    public SerializableLocalWorldData local_world_data = new SerializableLocalWorldData();
 
     // GOTO DATA
     public AvoidanceData avoidance_data = new AvoidanceData();
@@ -36,7 +35,7 @@ using UnityEngine.SocialPlatforms;
             local_position = this.local_position,
 
             // empty lists since when we duplicate, we spawn the entity so it is not populated for now
-            local_world_data = new LocalWorldData(),
+            local_world_data = new SerializableLocalWorldData(),
         };
     }
 
@@ -50,28 +49,362 @@ using UnityEngine.SocialPlatforms;
         return base.GetDetails() + details;
     }
 
-    // GETTERS
-    public List<ILocalWorldTarget> GetLocalWorldTargets() { return local_world_data.GetLocalWorldTargets(); }
 }
 
 
 
 // LOCAL WORLD DATA
 
-[Serializable] public class LocalWorldData
+[Serializable] public class SerializableLocalWorldData
 {
-    public List<LocalWorldStateData> local_world_states = new List<LocalWorldStateData>();
-    public List<LocalWorldPositionData> local_world_positions = new List<LocalWorldPositionData>();
-    public List<LocalWorldCapableData> local_world_capables = new List<LocalWorldCapableData>();
 
-    // GETTERS
-    public List<ILocalWorldTarget> GetLocalWorldTargets()
+
+    // ----------------------------    
+
+    //     SERIALIZED WORLD DATA COLLECTIONS
+
+    // ----------------------------
+
+    public List<SerializableWorldState> local_world_states = new List<SerializableWorldState>();
+    public List<SerializablePositionTarget> local_world_positions = new List<SerializablePositionTarget>();
+    public List<SerializableCapableTarget> local_world_capables = new List<SerializableCapableTarget>();
+
+
+
+
+
+    // ----------------------------    
+    
+    //     RUNTIME WORLD DATA -> SERIALIZED WORLD DATA
+
+    // ----------------------------
+
+    /// <summary>
+    /// this method feeds or rebuilds the whole local world data from a
+    /// runtime world data. It is used when we unload a MotorData.
+    /// If the targets or state do not exist it creates them,
+    /// otherwise it updates existing ones.
+    /// </summary>
+    /// <param name="world_data"></param>
+    public void CreateOrPopulateSerializedData(ILocalWorldData world_data)
     {
-        List<ILocalWorldTarget> targets = new List<ILocalWorldTarget>();
-        targets.AddRange(local_world_positions);
-        targets.AddRange(local_world_capables);
-        return targets;
+        // feed states
+        foreach (var entry in world_data.States)
+        {
+            if (entry.Key == null || entry.Value == null) { continue; }
+            string key = serialize_type_name(entry.Key);
+            SerializableWorldState state_data = find_state_by_key(key);
+            if (state_data != null)
+            {
+                state_data.key_value = entry.Value.Value;
+                continue;
+            }
+            
+            // we add a new state data for this key
+            state_data = new SerializableWorldState
+            {
+                key_name = key,
+                key_value = entry.Value.Value,
+            };
+            local_world_states.Add(state_data);
+        }
+
+        // feed targets
+        foreach (var entry in world_data.Targets)
+        {
+            if (entry.Key == null || entry.Value == null || entry.Value.Value == null) { continue; }
+            string key = serialize_type_name(entry.Key);
+            ITarget runtime_target = entry.Value.Value;
+
+            // ? what if the runtime target is null ?
+            // -> it means we still have an existing IWorldDataState<ITarget>
+            // -> but its value is null, so we should not create anything yeah that's the best idea
+            // -> we will save the data if we have an existing valid target, no need otherwise
+
+            // check if position
+            if (runtime_target is PositionTarget position_target)
+            {
+                // feed positions
+                SerializablePositionTarget position_data = find_position_by_key(key);
+                if (position_data != null)
+                {
+                    position_data.target_position = position_target.Position;
+                    continue;
+                }
+
+                // we add a new position data for this key
+                position_data = new SerializablePositionTarget
+                {
+                    key_name = key,
+                    target_position = position_target.Position,
+                };
+                local_world_positions.Add(position_data);
+                continue;
+            }
+
+            // check if capable
+            if (runtime_target is CapableTarget cap_target)
+            {
+                // extract the capable data
+                CapableData capable_data = cap_target.CapableData;
+                if (capable_data == null) { continue; }
+
+                // get existing data for this key
+                SerializableCapableTarget target_data = find_capable_by_key(key);
+                if (target_data != null)
+                {
+                    target_data.capable_id = capable_data.id;
+                    continue;
+                }
+
+                // we add a new capable data for this key
+                target_data = new SerializableCapableTarget
+                {
+                    key_name = key,
+                    capable_id = capable_data.id,
+                };
+                local_world_capables.Add(target_data);
+                continue;
+            }
+        }
     }
+
+
+
+
+
+
+
+    // ----------------------------    
+
+    //     SERIALIZED WORLD DATA -> RUNTIME WORLD DATA
+
+    // ----------------------------
+
+    /// <summary>
+    /// This method is used when loading a MotorData AND the agent type is the same as last time.
+    /// This does not create new runtime states from the serialized data. it takes
+    /// the existing runtime world data states and update their values based
+    /// on existing serialized data. This means that we iterate through existing
+    /// RUNTIME data. And so if the serialized data has states/targets with no runtime equivalent,
+    /// they sadly won't have a created runtime equivalent after.
+    /// If the runtime world data is totally empty, it will still
+    /// be empty after this method. If you want to create runtime states/targets,
+    /// you should use the "ClearAndPopulateRuntimeData" method instead.
+    /// </summary>
+    /// <param name="world_data"></param>    
+    public void PopulateRuntimeData(ILocalWorldData world_data)
+    {
+        LocalWorldData provider_world_data = world_data as LocalWorldData;
+        if (provider_world_data == null)
+        {
+            Debug.LogError($"(MotorData) Failed to populate runtime world data, the runtime world data is of type '{serialize_type_name(world_data.GetType())}' instead of 'CrashKonijn.Goap.Runtime.LocalWorldData'.");
+            return;
+        }
+
+        // feed states
+        foreach (KeyValuePair<Type, IWorldDataState<int>> entry in world_data.States)
+        {
+            if (entry.Key == null || entry.Value == null) { continue; }
+            Type key_type = entry.Key;
+            IWorldDataState<int> state = entry.Value;
+
+            SerializableWorldState state_data = find_state_by_key(serialize_type_name(key_type));
+            if (state_data != null)
+            {
+                state.Value = state_data.key_value;
+                continue;
+            }
+
+            // else we did not find any data for this state, we set it to 0
+            state.Value = 0;
+        }
+
+
+        // feed targets
+        foreach (KeyValuePair<Type, IWorldDataState<ITarget>> entry in world_data.Targets)
+        {
+            if (entry.Key == null) { continue; }
+            IWorldDataState<ITarget> state = entry.Value;
+            if (state == null) { continue; }
+            feed_target_to_runtime_world_data(state);
+        }
+}
+
+    /// <summary>
+    /// this method feed a single existing runtime target state of a runtime world data,
+    /// and tries to find a matching serialized target data to feed it. if the
+    /// existing runtime target state value (the ITarget) is null, it will create
+    /// a new ITarget based on the serialized data's type (either PositionTarget or CapableTarget)
+    /// /!\ IT DOES NOT CREATE NEW RUNTIME IWorldDataState< ITarget > /!\ only the value of it which it a ITarget.
+    /// </summary>
+    /// <param name="state"></param>
+    private void feed_target_to_runtime_world_data(IWorldDataState<ITarget> state)
+    {
+
+        string key_name = serialize_type_name(state.Key);
+        string log_feeding = "";
+        if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING)
+        {
+            log_feeding += $"(MotorData - feed_target_to_runtime_world_data) Trying to feed target state with key '{key_name}' to runtime world data.\n - Existing value : {state.Value}";
+        }
+
+        // we check if it's a position target
+        SerializablePositionTarget position_data = find_position_by_key(key_name);
+        if (position_data != null)
+        {
+            if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - Found matching serialized position target data with position {position_data.target_position}."; }
+            
+            if (state.Value is null)
+            {
+                if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - But State.Target is null. creating a new PositionTarget"; }
+                state.Value = new PositionTarget(position_data.target_position);
+            }
+            else if (state.Value is PositionTarget pos_target)
+            {
+                pos_target.SetPosition(position_data.target_position);
+                if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - And State.Target already exists ! Its position is now {pos_target.Position}."; }
+            }
+
+            if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { Debug.Log(log_feeding); }
+            return;
+        }
+
+        // or a capable target
+        SerializableCapableTarget capable_data = find_capable_by_key(key_name);
+        if (capable_data != null)
+        {
+            if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - Found matching serialized capable target data with capable ID {capable_data.capable_id}."; }
+
+            CapableData capdata = CapableSystem.Instance.GetCapableDataFromID(capable_data.capable_id);
+            if (capdata is null)
+            {
+                if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - But no capable data found for this capable ID. We cannot feed this target data to the runtime world data."; Debug.LogWarning(log_feeding); }
+                return;
+            }
+            
+            if (state.Value is null)
+            {
+                if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - But State.Target is null. creating a new CapableTarget with capable id '{capdata.id}'"; }
+                state.Value = new CapableTarget(capdata);
+            }
+            else if (state.Value is CapableTarget cap_target)
+            {
+                cap_target.SetCapableData(capdata);
+                if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - And State.Target already exists ! Updated its capable data and now it is '{cap_target.CapableID}'."; }
+            }
+            if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { Debug.Log(log_feeding); }
+            return;
+        }
+
+        // else we have no data for this target, we set it to null
+        state.Value = null;
+        if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - No matching serialized target data found for this target state. We set it to null."; Debug.Log(log_feeding); }
+    }
+
+
+    /// <summary>
+    /// This method is used when loading a MotorData BUT the new agent type is different than
+    /// the last one. In this case we totally wipe out the runtime world data states & targets, and
+    /// we rebuild them based on the existing serialized data. This means that we iterate through existing
+    /// SERIALIZED data (instead of RUNTIME data), so all existing serialized data will have a runtime
+    /// state/target equivalent at the end of it.
+    /// </summary>
+    /// <param name="state"></param>
+    public void ClearAndPopulateRuntimeData(ILocalWorldData world_data)
+    {
+        // we clear the runtime world data
+        world_data.States.Clear();
+        world_data.Targets.Clear();
+
+        LocalWorldData provider_world_data = world_data as LocalWorldData;
+        if (provider_world_data == null)
+        {
+            Debug.LogError($"(MotorData) Failed to populate runtime world data, the runtime world data is of type '{serialize_type_name(world_data.GetType())}' instead of 'CrashKonijn.Goap.Runtime.LocalWorldData'.");
+            return;
+        }
+
+        // feed states
+        foreach (SerializableWorldState state_data in local_world_states)
+        {
+            Type key_type = resolve_type(state_data.key_name);
+            if (key_type == null) { continue; }
+            IWorldDataState<int> state = world_data.GetWorldState(key_type);
+            if (state == null)
+            {
+                provider_world_data.SetState(key_type, state_data.key_value);
+                continue;
+            }
+
+            // we feed the state value
+            state.Value = state_data.key_value;
+        }
+
+        // feed targets
+        foreach (SerializablePositionTarget position_data in local_world_positions)
+        {
+            Type key_type = resolve_type(position_data.key_name);
+            if (key_type == null) { continue; }
+            IWorldDataState<ITarget> state = world_data.GetTargetState(key_type);
+            if (state == null)
+            {
+                provider_world_data.SetTarget(key_type, new PositionTarget(position_data.target_position));
+                continue;
+            }
+            if (state.Value == null)
+            {
+                state.Value = new PositionTarget(position_data.target_position);
+                continue;
+            }
+            ITarget target = state.Value;
+            if (target is not PositionTarget pos_target) { continue; }
+
+            // we feed the state value
+            pos_target.SetPosition(position_data.target_position);
+        }
+        foreach (SerializableCapableTarget capable_data in local_world_capables)
+        {
+            Type key_type = resolve_type(capable_data.key_name);
+            if (key_type == null) { continue; }
+
+            // we try to get the capable data
+            CapableData capdata = CapableSystem.Instance.GetCapableDataFromID(capable_data.capable_id);
+            if (capdata == null) { continue; }
+
+            // we try to get the target state
+            IWorldDataState<ITarget> state = world_data.GetTargetState(key_type);
+            if (state == null)
+            {
+                provider_world_data.SetTarget(key_type, new CapableTarget(capdata));
+                continue;
+            }
+            if (state.Value == null)
+            {
+                state.Value = new CapableTarget(capdata);
+                continue;
+            }
+            ITarget target = state.Value;
+            if (target is not CapableTarget cap_target) { continue; }
+            cap_target.SetCapableData(capdata);
+        }
+    }
+
+
+
+
+
+
+
+
+    // ----------------------------    
+
+
+    //     GETTERS & TYPES HELPERS & FINDERS
+
+
+    // ----------------------------
+
+
 
     // GET DETAILS
     public string GetDetails()
@@ -93,176 +426,6 @@ using UnityEngine.SocialPlatforms;
         }
         return details;
     }
-
-
-
-    // RUNTIME WORLD DATA -> LOCAL WORLD DATA
-    /// <summary>
-    /// this method feed or rebuilds the whole local world data from a
-    /// runtime world data. It is used when we unload a MotorData.
-    /// If the targets or state do not exist it creates them,
-    /// otherwise it updates existing ones.
-    /// </summary>
-    /// <param name="world_data"></param>
-    public void CreateOrPopulateSerializedData(ILocalWorldData world_data)
-    {
-        // feed states
-        foreach (var entry in world_data.States)
-        {
-            if (entry.Key == null || entry.Value == null) { continue; }
-            string key = serialize_type_name(entry.Key);
-            LocalWorldStateData state_data = find_state_by_key(key);
-            if (state_data != null)
-            {
-                state_data.key_value = entry.Value.Value;
-                continue;
-            }
-            
-            // we add a new state data for this key
-            state_data = new LocalWorldStateData
-            {
-                key_name = key,
-                key_value = entry.Value.Value,
-            };
-            local_world_states.Add(state_data);
-        }
-
-
-        foreach (var entry in world_data.Targets)
-        {
-            if (entry.Key == null || entry.Value == null || entry.Value.Value == null) { continue; }
-            string key = serialize_type_name(entry.Key);
-            ITarget runtime_target = entry.Value.Value;
-
-            // check if position
-            if (runtime_target is PositionTarget position_target)
-            {
-                // feed positions
-                LocalWorldPositionData position_data = find_position_by_key(key);
-                if (position_data != null)
-                {
-                    position_data.target_position = position_target.Position;
-                    continue;
-                }
-
-                // we add a new position data for this key
-                position_data = new LocalWorldPositionData
-                {
-                    key_name = key,
-                    target_position = position_target.Position,
-                };
-                local_world_positions.Add(position_data);
-                continue;
-            }
-
-            // check for unknown target types
-            if (runtime_target is not TransformTarget transform_target) { continue; }
-
-            // extract the capable
-            Transform target_transform = transform_target.Transform;
-            if (target_transform is null) { continue; }
-            Capable capable = target_transform.GetComponent<Capable>();
-            if (capable == null && target_transform.parent != null)
-            {
-                capable = target_transform.parent.GetComponent<Capable>(); // only direct parent otherwise if we are in an inventory we could get the higher capable
-            }
-            if (capable == null || !capable.Loaded) { continue; }
-
-            // feed capables
-            LocalWorldCapableData target_data = find_capable_by_key(key);
-            if (target_data != null)
-            {
-                target_data.capable_id = capable.data.id;
-                continue;
-            }
-
-            // we add a new capable data for this key
-            target_data = new LocalWorldCapableData
-            {
-                key_name = key,
-                capable_id = capable.data.id,
-            };
-            local_world_capables.Add(target_data);
-            continue;
-        }
-    }
-
-    // LOCAL WORLD DATA -> RUNTIME WORLD DATA
-    public void PopulateRuntimeData(ILocalWorldData world_data)
-    {
-        CrashKonijn.Goap.Runtime.LocalWorldData provider_world_data = world_data as CrashKonijn.Goap.Runtime.LocalWorldData;
-        if (provider_world_data == null)
-        {
-            Debug.LogError($"(MotorData) Failed to populate runtime world data, the runtime world data is of type '{serialize_type_name(world_data.GetType())}' instead of 'CrashKonijn.Goap.Runtime.LocalWorldData'.");
-            return;
-        }
-
-        // feed states
-        foreach (var state_data in local_world_states)
-        {
-            Type key_type = resolve_type(state_data.key_name);
-            if (key_type == null) { continue; }
-            IWorldDataState<int> state = world_data.GetWorldState(key_type);
-            if (state == null)
-            {
-                provider_world_data.SetState(key_type, state_data.key_value);
-                continue;
-            }
-
-            // we feed the state value
-            state.Value = state_data.key_value;
-        }
-
-        // feed targets
-        foreach (var position_data in local_world_positions)
-        {
-            Type key_type = resolve_type(position_data.key_name);
-            if (key_type == null) { continue; }
-            IWorldDataState<ITarget> state = world_data.GetTargetState(key_type);
-            if (state == null)
-            {
-                provider_world_data.SetTarget(key_type, new PositionTarget(position_data.target_position));
-                continue;
-            }
-            ITarget target = state.Value;
-            if (target == null || target is not PositionTarget pos_target) { continue; }
-
-            // we feed the state value
-            pos_target.SetPosition(position_data.target_position);
-        }
-        foreach (var capable_data in local_world_capables)
-        {
-            Type key_type = resolve_type(capable_data.key_name);
-            if (key_type == null) { continue; }
-
-            // we try to get the transform of the capable
-            Capable capable = CapableBank.Instance.GetLoadedCapable(capable_data.capable_id);
-            if (capable == null) { continue; }
-            Transform target_transform = capable.transform;
-
-            // we try to get the target state
-            IWorldDataState<ITarget> state = world_data.GetTargetState(key_type);
-            if (state == null)
-            {
-                provider_world_data.SetTarget(key_type, new TransformTarget(target_transform));
-                continue;
-            }
-            ITarget target = state.Value;
-            if (target == null || target is not TransformTarget trans_target) { continue; }
-            trans_target.SetTransform(target_transform);
-        }
-    }
-    public void ClearAndPopulateRuntimeData(ILocalWorldData world_data)
-    {
-        // we clear the runtime world data
-        world_data.States.Clear();
-        world_data.Targets.Clear();
-
-        // we feed the local world data to the runtime world data
-        PopulateRuntimeData(world_data);
-    }
-
-
 
     // type helpers
     private static string serialize_type_name(Type type)
@@ -312,17 +475,25 @@ using UnityEngine.SocialPlatforms;
 
         return null;
     }
-    private LocalWorldStateData find_state_by_key(string key)
+    
+    // data getters
+    private SerializableWorldState find_state_by_key(string key)
     {
-        return local_world_states.Find(s => s.key_name == key);
+        SerializableWorldState state = local_world_states.Find(s => s.key_name == key);
+        // if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { Debug.Log($"(MotorData - find_state_by_key) Looking for matching '{key}' among {local_world_states.Count} entries. Found: {state != null}"); }
+        return state;
     }
-    private LocalWorldPositionData find_position_by_key(string key)
+    private SerializablePositionTarget find_position_by_key(string key)
     {
-        return local_world_positions.Find(p => p.key_name == key);
+        SerializablePositionTarget position = local_world_positions.Find(p => p.key_name == key);
+        // if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { Debug.Log($"(MotorData - find_position_by_key) Looking for matching '{key}' among {local_world_positions.Count} entries. Found: {position != null}"); }
+        return position;
     }
-    private LocalWorldCapableData find_capable_by_key(string key)
+    private SerializableCapableTarget find_capable_by_key(string key)
     {
-        return local_world_capables.Find(c => c.key_name == key);
+        SerializableCapableTarget capable = local_world_capables.Find(c => c.key_name == key);
+        // if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { Debug.Log($"(MotorData - find_capable_by_key) Looking for matching '{key}' among {local_world_capables.Count} entries. Found: {capable != null}"); }
+        return capable;
     }
 }
 
@@ -331,19 +502,19 @@ using UnityEngine.SocialPlatforms;
 // LOCAL WORLD DATA CLASSES
 
 
-[Serializable] public class LocalWorldStateData
+[Serializable] public class SerializableWorldState
 {
     public string key_name;
     public int key_value;
 }
 
-public interface ILocalWorldTarget
+public interface ISerialiableTarget
 {
     public string KeyName { get; }
     public Vector2 Position { get; }
 }
 
-[Serializable] public class LocalWorldPositionData : ILocalWorldTarget
+[Serializable] public class SerializablePositionTarget : ISerialiableTarget
 {
     public string key_name;
     public Vector2 target_position;
@@ -351,7 +522,7 @@ public interface ILocalWorldTarget
     public string KeyName { get { return key_name; } }
     public Vector2 Position { get { return target_position; } }
 }
-[Serializable] public class LocalWorldCapableData : ILocalWorldTarget
+[Serializable] public class SerializableCapableTarget : ISerialiableTarget
 {
     public string key_name;
     private string _capable_id;
@@ -382,7 +553,7 @@ public interface ILocalWorldTarget
         get
         {
             if (target_capable == null) { return default(Vector2); }
-            return _target_capable.position;
+            return _target_capable.Position;
         }
     }
 }

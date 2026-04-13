@@ -188,14 +188,16 @@ public class MotorCapacity : Capacity
 
 
         // we log
-        if (log_world_state_loading) { Debug.Log($"(MotorCapacity) Loading serialized world data for '{data.owner_id} :\n{motor_data.local_world_data.GetDetails()}"); }
         if (last_agent_type == motor_data.agent_type)
         {
+            if (log_world_state_loading) { Debug.Log($"(MotorCapacity) Loading serialized world data for '{data.owner_id}' (same type) :\n{motor_data.local_world_data.GetDetails()}"); }
+            
             // we have the same agent type as before, no need to clear the data, we simply repopulate the existing runtime world data
             motor_data.local_world_data.PopulateRuntimeData(Provider.WorldData);
         }
         else
         {
+            if (log_world_state_loading) { Debug.Log($"(MotorCapacity) Loading serialized world data for '{data.owner_id}' (different type) :\n{motor_data.local_world_data.GetDetails()}"); }
             // clear the current runtime world data in the provider and then feed the serialized data to avoid conflicts
             // restore local world snapshots from the motor data to the provider's world data
             motor_data.local_world_data.ClearAndPopulateRuntimeData(Provider.WorldData);

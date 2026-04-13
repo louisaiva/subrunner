@@ -119,11 +119,7 @@ public class IA : Movable
     public SocialData social_data = new SocialData();
     
     // CONSTRUCTOR
-    public IAData(CapableData parent)
-    {
-        foreach (var prop in parent.GetType().GetProperties()) { prop.SetValue(this, prop.GetValue(parent)); }
-        foreach (var prop in parent.GetType().GetFields()) { prop.SetValue(this, prop.GetValue(parent)); }
-    }
+    public IAData(CapableData parent) : base(parent) {}
 
     // DUPLICATE
     public override ICapableData Duplicate()

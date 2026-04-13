@@ -1,6 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Reflection;
+
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+public sealed class RuntimeOnlyAttribute : Attribute { }
 
 public interface ICapableData : IData
 {
@@ -40,8 +44,54 @@ public interface ICapableData : IData
     public event Action<CapableData> OnPositionChanged;
     public event Action<Capable, CapableData> OnCapableLoaded;
     public event Action<Capable, CapableData> OnCapableUnloaded;
-    public void OnLoaded(Capable capable) { OnCapableLoaded?.Invoke(capable, this); }
-    public void OnUnloaded(Capable capable) { OnCapableUnloaded?.Invoke(capable, this); }
+
+    // RUNTIME ONLY
+    [RuntimeOnly, NonSerialized] private Capable loaded_assigned_capable;
+    [RuntimeOnly] public Capable Capable { get { return loaded_assigned_capable; } }
+    [RuntimeOnly] public Vector2 Position
+    {
+        get
+        {
+            if (loaded_assigned_capable is not null && loaded_assigned_capable.Loaded) { return loaded_assigned_capable.transform.position; }
+            return this.position;
+        }
+    }
+    public void OnLoaded(Capable capable)
+    {
+        loaded_assigned_capable = capable;
+        OnCapableLoaded?.Invoke(capable, this);
+    }
+    public void OnUnloaded(Capable capable)
+    {
+        OnCapableUnloaded?.Invoke(capable, this);
+        loaded_assigned_capable = null;
+    }
+
+
+    // CONSTRUCTORS
+    public CapableData() { }
+    protected CapableData(CapableData parent) { copy_from_parent(parent); }
+    private void copy_from_parent(CapableData parent)
+    {
+        if (parent == null) { return; }
+
+        var type = parent.GetType();
+
+        foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+        {
+            if (!property.CanRead || !property.CanWrite) { continue; }
+            if (Attribute.IsDefined(property, typeof(RuntimeOnlyAttribute))) { continue; }
+
+            property.SetValue(this, property.GetValue(parent));
+        }
+
+        foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Public))
+        {
+            if (Attribute.IsDefined(field, typeof(RuntimeOnlyAttribute))) { continue; }
+
+            field.SetValue(this, field.GetValue(parent));
+        }
+    }
 
 
     // DUPLICATE

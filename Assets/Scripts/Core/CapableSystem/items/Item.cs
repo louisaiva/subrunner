@@ -401,11 +401,7 @@ public class ItemData : CapableData
     public bool is_grabbed; // only a flag, for the CapacityEngine to know which capacities not to load
 
     // CONSTRUCTOR
-    public ItemData(CapableData parent)
-    {
-        foreach (var prop in parent.GetType().GetProperties()) { prop.SetValue(this, prop.GetValue(parent)); }
-        foreach (var prop in parent.GetType().GetFields()) { prop.SetValue(this, prop.GetValue(parent)); }
-    }
+    public ItemData(CapableData parent) : base(parent) { }
 
     // DUPLICATE
     public override ICapableData Duplicate()

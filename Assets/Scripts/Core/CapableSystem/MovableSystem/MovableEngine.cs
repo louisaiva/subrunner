@@ -223,10 +223,10 @@ public class MovableEngine : MonoBehaviour
         else if (ia.TryGetCapacity(out MotorCapacity motor)) { attackData = motor.currentActionData as AttackAction.Data; }
         else { return excludeIndexes; } // nor brain nor motor capacity, we return an empty list
 
-        if (attackData == null || attackData.CapableTarget == null) { return excludeIndexes; }
+        if (attackData == null || attackData.CapableTarget is null || !attackData.CapableTarget.Loaded) { return excludeIndexes; }
 
         // if we have an attack action with a capable target, we try to exclude it from the avoidance calculation
-        Capable loaded_target = attackData.CapableTarget;
+        Capable loaded_target = attackData.CapableTarget.Capable;
         if (loaded_target == null || loaded_target is not Movable targetMovable) { return excludeIndexes; }
         
         // we have a movable target, we exclude it
