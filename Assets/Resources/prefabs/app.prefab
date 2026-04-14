@@ -1120,7 +1120,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsQuitting: 0
   LoadedSceneCount: 0
-  prototype: arena world !
+  prototype: (profiler) arena world !
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320
@@ -1144,7 +1144,7 @@ MonoBehaviour:
   LOG_CLOSEST_FOOD_SENSOR: 0
   LOG_CLOSEST_BEING_SENSOR: 0
   LOG_IA_ACTION: 0
-  LOG_ATTACK_ACTION: 0
+  LOG_ATTACK_ACTION: 1
   LOG_EAT_ACTION: 0
 --- !u!1 &7970305435618458122
 GameObject:

@@ -103,7 +103,6 @@ public class BatchActionProvider : MonoBehaviour
     private readonly int[] goalIndexes = new int[20]; // we reuse this array to avoid allocations in get_goals_indexes
     public void Resolve(MotorData mdata, Vector2 position)
     {
-        // here we only resolve the action for one entity
         if (!agents_resolvers.ContainsKey(mdata.agent_type)) { return; }
 
         // we get the resolver for the agent type
@@ -142,7 +141,8 @@ public class BatchActionProvider : MonoBehaviour
         resolveHandles.Add(new RunningResolveHandle { handle = handle, mdata = mdata });
     }
 
-    // get goals indexes
+
+    // LOW LEVEL RESOLVE HELPER METHODS
     private void fill_builders(AgentResolver resolver, IWorldData wdata, MotorData mdata, Vector2 position)
     {
         var conditionObserver = resolver.agent_type.GoapConfig.ConditionObserver;

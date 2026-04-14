@@ -39,13 +39,13 @@ public class CapableSystem : BSOD_System<CapableSystem>
     public bool log_templates_data_loading = false;
     public bool log_world_data_loading = false;
     public bool log_awake_data_extended = false;
-    public bool log_start_links = false;
+    public bool log_start_capacity_ownership = false;
 
     [Header("Logs Spawning / Switching")]
     public bool log_duplicating = false;
     public bool log_spawning = false;
     public bool log_item_switching = false;
-    public bool hide_log_ownership_validation = false;
+    public bool hide_log_ownership_validation = true;
 
     [Header("Logs Loading / Unloading")]
     public bool log_loading = false;
@@ -513,7 +513,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
         int broken_percentage = (total_links > 0) ? (broken_links * 100 / total_links) : 0;
         int final_broken_links = broken_links - fixed_links; // we count the fixed links as valid for the summary
         
-        if (start_done || log_start_links) { Debug.Log($"(CapableSystem)      LINKS BROKEN : {broken_links}/{total_links} ({broken_percentage}%)   |   FIXED : {fixed_links}/{broken_links}   |   ORPHAN : {orphan_capacities}  \n{log_summary}"); }
+        if (start_done || log_start_capacity_ownership) { Debug.Log($"(CapableSystem)      LINKS BROKEN : {broken_links}/{total_links} ({broken_percentage}%)   |   FIXED : {fixed_links}/{broken_links}   |   ORPHAN : {orphan_capacities}  \n{log_summary}"); }
 
         return final_broken_links == 0;
     }
