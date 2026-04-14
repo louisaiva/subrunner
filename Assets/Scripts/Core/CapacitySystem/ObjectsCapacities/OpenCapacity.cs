@@ -13,8 +13,14 @@ public class OpenCapacity : Capacity
     {
         get
         {
-            if ((Capable as Openable).is_moving) { return false; }
-            if ((Capable as Openable).is_open) { return false; }
+            if (Capable is not Openable openable)
+            {
+                Debug.LogWarning("Capable " + Capable.ID + " is not Openable !");
+                return false;
+            }
+
+            if (openable.is_moving) { return false; }
+            if (openable.is_open) { return false; }
             return true;
         }
     }

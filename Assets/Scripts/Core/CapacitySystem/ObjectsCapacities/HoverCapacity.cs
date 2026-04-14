@@ -116,6 +116,14 @@ public class HoverCapacity : Capacity
 
         // then we load the collider
         _hover_collider = ColliderBank.Instance.LoadCollider(hover_data.hover_collider_data, this.transform) as CircleCollider2D;
+
+        // and the interact key feedback height
+        if (canvas_kf != null)
+        {
+            Vector3 kf_pos = canvas_kf.localPosition;
+            kf_pos.y = hover_data.interact_kf_height;
+            canvas_kf.localPosition = kf_pos;
+        }
     }
     public override void UnloadData()
     {
@@ -144,6 +152,13 @@ public class HoverCapacity : Capacity
             hover_collider_data = get_static_circle_data(GetComponentInChildren<CircleCollider2D>(includeInactive: true))
         };
 
+        // and the interact key feedback height
+        Transform kf_canvas = transform.Find("canvas_kf");
+        if (kf_canvas != null)
+        {
+            static_data.interact_kf_height = kf_canvas.localPosition.y;
+        }
+
         return static_data;
     }
     private CircleData get_static_circle_data(CircleCollider2D collider)
@@ -171,6 +186,7 @@ public class HoverCapacity : Capacity
 {
     // need to store a collider data for the hover to work
     public CircleData hover_collider_data;
+    public float interact_kf_height = 1f;
 
     // CONSTRUCTOR
     public HoverCapacityData(CapacityData parent)
@@ -184,7 +200,9 @@ public class HoverCapacity : Capacity
     {
         return new HoverCapacityData(base.Duplicate() as CapacityData)
         {
-            hover_collider_data = this.hover_collider_data != null ? this.hover_collider_data.Duplicate() as CircleData : null
+            hover_collider_data = this.hover_collider_data != null ? this.hover_collider_data.Duplicate() as CircleData : null,
+            interact_kf_height = this.interact_kf_height
+
         };
     }
 
@@ -194,6 +212,7 @@ public class HoverCapacity : Capacity
         string details = "";
         if (hover_collider_data != null) { details += $"  - hover {hover_collider_data.GetDetails()}\n"; }
         else { details += $"  - no hover collider data\n"; }
+        details += $"  - interact key feedback height: {interact_kf_height}\n";
         return base.GetDetails() + details;
     }
 }

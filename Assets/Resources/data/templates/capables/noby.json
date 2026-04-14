@@ -1,0 +1,124 @@
+﻿{
+    "<id>k__BackingField": "noby",
+    "kind": "Nobody",
+    "position": {
+        "x": 29.93000030517578,
+        "y": 21.360000610351564
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "layer": 23,
+    "tag": "Boss",
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "nobody",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "walk",
+                    "run"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 3,
+                "capacity_playing": "",
+                "capacities": [
+                    "attack"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 4,
+                "capacity_playing": "",
+                "capacities": [
+                    "hurted"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 5,
+                "capacity_playing": "",
+                "capacities": [
+                    "die"
+                ],
+                "lock_orientation": true,
+                "one_shot": false
+            }
+        ],
+        "current_capacity": "",
+        "material_path": "materials/perso",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "layers": []
+    },
+    "inventory": {
+        "item_pools_data": [
+            {
+                "stacks_data": [],
+                "pool_id": "stuff",
+                "max_stacks": 6,
+                "min_stacks": 6,
+                "scalable": true,
+                "item_rule": ""
+            }
+        ]
+    },
+    "feet_data": {
+        "box_colliders": [],
+        "circle_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 25,
+                "used_for_pathfinding": false,
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "radius": 0.09000000357627869
+            }
+        ]
+    },
+    "capacities_ids": [
+        "noby_health",
+        "noby_walk",
+        "noby_attack",
+        "noby_motor"
+    ],
+    "effects": [],
+    "effects_ttl": [],
+    "social_data": {
+        "exploration_radius": 50.0,
+        "range_detection": 15.0,
+        "friendly_skins": [],
+        "dangerous_skins": [],
+        "prey_skins": [
+            "zombo",
+            "rat",
+            "cyber_rat",
+            "perso",
+            "qwin",
+            "dev"
+        ]
+    }
+}

@@ -70,8 +70,13 @@ public class CloseCapacity : Capacity
     protected virtual void success_close()
     {
         // on ouvre le coffre
-        (Capable as Openable).is_open = false;
-        (Capable as Openable).is_moving = false;
+        if (Capable is not Openable openable)
+        {
+            if (log) { Debug.LogError("(CloseCapacity) " + Capable.ID + " is not openable !"); }
+            return;
+        }
+        openable.is_open = false;
+        openable.is_moving = false;
 
         // on joue l'animation
         Capable.AnimPlayer.Play("idle");

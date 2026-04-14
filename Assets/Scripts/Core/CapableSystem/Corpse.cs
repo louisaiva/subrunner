@@ -69,10 +69,7 @@ public class Corpse : Food
         Item meat_to_eat = meats[0];
         return meat_to_eat as Food;
     }
-    /* public bool EatableBy(string food_rule)
-    {
-        return GetPortion(food_rule) != null;
-    } */
+
 
     // ON BEING BITTEN & BECOME BONES
     private async void being_bitten(HealthCapacity eater)
@@ -128,29 +125,28 @@ public class Corpse : Food
 [Serializable] public class CorpseData : ItemData
 {
 
-    // INIT FROM CAPABLE
-    public void Init(CapableData capdata)
+    private static ItemData item_info = new ItemData()
     {
-        // we transfer some of the capable data to the corpse data
-        position = capdata.position;
-        orientation = capdata.orientation;
-        tag = capdata.tag;
+        reference = "corpse:unknown",
+        color = Color.softRed,
+        max_qty = 12,
+        item_description = "a corpse of unknown. it seems to contain some meat and bones. smells bad. beurk -o-",
+        is_grabbed = false,
+    };
+
+    // INIT FROM CAPABLE
+    public override void InitFromCapable(CapableData capdata, ItemData item_data = null)
+    {
         string entity_type = capdata.kind.ToLowerInvariant();
+        // modify the item info with out entity type
+        item_info.reference = "corpse:" + entity_type;
+        item_info.item_description = item_info.item_description.Replace("unknown", entity_type);
 
-        // anim data
-        if (capdata.anim_data != null)
-        {
-            AnimData new_anim_data = capdata.anim_data.Duplicate();
-            new_anim_data.anim_capacity_priorities = this.anim_data.anim_capacity_priorities; // we keep the same anim capa priorities as the corpse template (ex : corpse anim capa priorities will be different from player anim capa priorities for example, because we want the corpse to play the "die" animation which has a higher priority than the "walk" animation for example, while for the player we want the "walk" animation to have a higher priority than the "die" animation for example)
-            anim_data = new_anim_data;
-        }
-
-        // set item data
-        reference = "corpse:" + entity_type;
-        color = Color.softRed;
-        max_qty = 12;
-        item_description = "a corpse of " + entity_type + ". it seems to contain some meat and bones. smells bad. beurk -o-";
-        is_grabbed = false;
+        base.InitFromCapable(capdata, item_info);
+        
+        // reset item info reference for future uses
+        item_info.reference = "corpse:unknown";
+        item_info.item_description = item_info.item_description.Replace(entity_type, "unknown");
     }
 
     // CONSTRUCTOR

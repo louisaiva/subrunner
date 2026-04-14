@@ -177,6 +177,8 @@ public class Item : Movable, EndlessInteractable
     public void OnEndlessInteract(Capable interactor) { OnInteract(interactor); }
 
 
+
+
     // BEING GRABBED / DROPPED
     public virtual void BeGrabbed(Capable grabber)
     {
@@ -313,6 +315,16 @@ public class Item : Movable, EndlessInteractable
     }
 
 
+
+
+
+
+
+
+
+
+
+
     // DATA MANAGEMENT
     private List<string> dynamic_capacity_ids = new List<string>(); // this list is used to store the capacities that are loaded dynamically on grab, so we can unload them on drop
     public override void LoadData(CapableData data)
@@ -401,6 +413,7 @@ public class ItemData : CapableData
     public bool is_grabbed; // only a flag, for the CapacityEngine to know which capacities not to load
 
     // CONSTRUCTOR
+    public ItemData() : base() { }
     public ItemData(CapableData parent) : base(parent) { }
 
     // DUPLICATE
@@ -426,5 +439,46 @@ public class ItemData : CapableData
         details += $"  - item_description : {item_description}\n";
         details += $"  - is_grabbed : {is_grabbed}\n";
         return details;
+    }
+
+
+
+
+
+    // METAMORPHING FROM CAPABLE TO ITEM
+    public virtual void InitFromCapable(CapableData capdata, ItemData template = null)
+    {
+        // we transfer some of the capable data to the corpse data
+        position = capdata.position;
+        orientation = capdata.orientation;
+        tag = capdata.tag;
+
+        // anim data
+        if (capdata.anim_data != null)
+        {
+            AnimData new_anim_data = capdata.anim_data.Duplicate();
+            new_anim_data.anim_capacity_priorities = this.anim_data.anim_capacity_priorities; // we keep the same anim capa priorities as the corpse template (ex : corpse anim capa priorities will be different from player anim capa priorities for example, because we want the corpse to play the "die" animation which has a higher priority than the "walk" animation for example, while for the player we want the "walk" animation to have a higher priority than the "die" animation for example)
+            anim_data = new_anim_data;
+        }
+
+        if (template is null)
+        {
+            string entity_type = capdata.kind.ToLowerInvariant();
+            
+            // set default item data things
+            reference = "leftover:" + entity_type;
+            color = Color.softRed;
+            max_qty = 24;
+            item_description = "a \"thing\" coming from a " + entity_type + ". I don't really want to know more about it, since it definitely involved dark magic and forbidden science. Do not get closer";
+            is_grabbed = false;
+        }
+        else
+        {
+            reference = template.reference;
+            color = template.color;
+            max_qty = template.max_qty;
+            item_description = template.item_description;
+            is_grabbed = template.is_grabbed;
+        }
     }
 }

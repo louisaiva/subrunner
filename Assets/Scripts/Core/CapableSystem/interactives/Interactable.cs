@@ -30,3 +30,9 @@ public interface Holdable : Onnable
 {
     public bool IsHolding { get; set; }
 }
+
+public interface TurnableIntoItem
+{
+    public ItemData ItemDataInfo { get; }
+    public DropParameters DropParameters { get; }
+}

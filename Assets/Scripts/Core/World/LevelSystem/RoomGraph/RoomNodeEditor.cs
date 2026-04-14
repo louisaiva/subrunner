@@ -284,5 +284,39 @@ public class RoomNodeEditor : MonoBehaviour
         // we go through all the links and we make them connect the rooms
         foreach (RoomLinkEditor link in links) { link.ConnectRooms();}
     }
+
+    [MenuItem("Tools/subrunner/Clear Room Links")]
+    public static void ClearRoomLinks()
+    {
+        // get active level transform
+        Transform active_level_transform = null;
+        Level[] levels = FindObjectsByType<Level>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        if (levels.Length == 0) { Debug.LogError("No level found in the scene !"); return; }
+        else if (levels.Length > 1) { Debug.LogError("Multiple levels found in the scene !"); return; }
+        else { active_level_transform = levels[0].transform; }
+        
+        List<RoomLinkEditor> links = new List<RoomLinkEditor>(active_level_transform.GetComponentsInChildren<RoomLinkEditor>(includeInactive: true));
+
+        // we gather all the concerned rooms and we clear their neighbors list
+        List<Room> concerned_rooms = new List<Room>();
+        foreach (RoomLinkEditor link in links)
+        {
+            Room room_a = link.node_a?.Room;
+            Room room_b = link.node_b?.Room;
+            if (room_a != null && !concerned_rooms.Contains(room_a)) { concerned_rooms.Add(room_a); }
+            if (room_b != null && !concerned_rooms.Contains(room_b)) { concerned_rooms.Add(room_b); }
+        }
+        foreach (Room room in concerned_rooms)
+        {
+            room.ClearStaticNeighbors();
+        }
+
+        // we destroy all the links
+        while (links.Count > 0)
+        {
+            DestroyImmediate(links[0].gameObject);
+            links.RemoveAt(0);
+        }
+    }
     #endif
 }

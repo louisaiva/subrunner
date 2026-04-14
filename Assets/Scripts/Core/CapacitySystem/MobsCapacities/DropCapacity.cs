@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,6 +9,7 @@ using UnityEngine.InputSystem;
 /// when dropping an item from an inventory to another, it is done via UI_Item that directly calls Inventory.Grab(item), never the Drop one but it is ok !
 /// </summary>
 
+[Obsolete("Use DropEngine instead")]
 public class DropCapacity : Capacity
 {
     public override bool Able
@@ -125,7 +127,7 @@ public class DropCapacity : Capacity
         float force_magnitude = -888f;
         if (item is not Shuriken)
         {
-            Force force = new Force("drop", random_direction ? Random.insideUnitCircle : capable.Orientation, drop_magnitude);
+            Force force = new Force("drop", random_direction ? UnityEngine.Random.insideUnitCircle : capable.Orientation, drop_magnitude);
             if (capable is Movable && !lock_magnitude)
             {
                 // we add the current moving velocity to the force (for dropping items while moving)

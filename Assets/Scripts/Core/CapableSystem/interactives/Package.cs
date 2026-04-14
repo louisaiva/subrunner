@@ -1,96 +1,68 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Package : Movable, Interactable
+public class Package : Movable, Interactable, TurnableIntoItem
 {
     public InteractCapacity Interactor => null;
     public InteractType InteractionType => InteractType.Other;
 
-    [Header("Items offset")]
-    public Vector3 items_offset = new Vector3(0f, 0.2f, 0f);
+
+    [Header("Turnable Into Item Settings")]
+    public static ItemData PackageItemData = new ItemData()
+    {
+        reference = "leftover:package",
+        max_qty = 16,
+        item_description = "some rests of a package, maybe it can be useful ? i like the smell of cardboard boxes, it reminds me of my childhood",
+    };
+    public ItemData ItemDataInfo { get => PackageItemData; }
+    public static DropParameters PackageDropParameters = new DropParameters()
+    {
+        random_direction = true,
+        drop_magnitude = 0.1f,
+        lock_magnitude = false,
+        offset_drop = new Vector2(0f, 0.03f)
+    };
+    public DropParameters DropParameters { get => PackageDropParameters; }
+
+    private bool is_turning_to_item = false;
 
     // ON INTERACT
     public void OnInteract(Capable interactor)
     {
-        AnimPlayer.Play("interact");
+        if (is_turning_to_item) { return; }
         AnimPlayer.AddToPile("idle_open");
-
-        StartCoroutine(destroyObject());
+        StartCoroutine(turn_into_leftover());
     }
-    private IEnumerator destroyObject()
+    private IEnumerator turn_into_leftover()
     {
-        // 1 - DROP ITEMS
-        if (Inventory != null && Inventory.Count > 0)
-        {
-            // we get the drop capacity
-            DropCapacity dropper = GetCapacity<DropCapacity>();
-            if (dropper == null)
-            {
-                // we add it if not present
-                AddCapacity("drop");
+        is_turning_to_item = true;
 
-                // we wait a frame
-                yield return null;
-                dropper = GetCapacity<DropCapacity>();
-            }
-            dropper.random_direction = true;
-            dropper.offset_drop = items_offset;
-            dropper.DropMagnitude = 0.1f;
+        // disable the hover
+        if (TryGetCapacity(out HoverCapacity hover)) { hover.gameObject.SetActive(false); }
 
-            // we drop all items
-            int i = 0;
-            while (i < Inventory.Items.Count)
-            {
-                Item item_to_drop = Inventory.Items[i];
-                if (item_to_drop == null)
-                {
-                    Inventory.Items.RemoveAt(i);
-                    continue; // skip null item_to_drops
-                }
+        // we play anim
+        AnimPlayer.Play("interact");
+        while (AnimPlayer.IsPlaying("interact")) { yield return null; }
+        CapableSystem.Instance.TurnToItem(this, "package_leftover", "idle_open");
+        is_turning_to_item = false;
+    }
+    private void cancel_coroutine()
+    {
+        StopAllCoroutines();
+        is_turning_to_item = false;
+    }
 
-                // we drop the item_to_drop
-                dropper.Select(item_to_drop);
-                dropper.Use(this);
-            }
-        }
-
-
-        // 2 - DESTROYING CAPACITIES
-        if (log) { Debug.Log("Destroying capacities of " + name); }
-
-        // we destroy all capacities (except DieCapacity FOR NOW)
-        List<Capacity> capacities = new List<Capacity>(GetCapacities());
-        while (capacities.Count > 0)
-        {
-            RemoveCapacity(capacities[0].name);
-            capacities.RemoveAt(0);
-        }
-
-
-        // 3 - DESTROYING OTHER ELEMENTS
-        if (transform.Find("inventory") is Transform inventory && inventory != null) { Destroy(inventory.gameObject); }
-        if (transform.Find("feet") is Transform feet && feet != null) { Destroy(feet.gameObject); }
-        if (transform.Find("light") is Transform light && light != null) { Destroy(light.gameObject); }
-
-        // 4 - HANDLE PHYSICS
-        ForceStop();
-        // we switch the rigidbody collision detection to discrete since the dead body won't move very fast (not affected by our forces)
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
-
-        // we wait for a frame in order to the capacities to be destroyed & hover to be instanced
-        yield return null;
-
-
-
-        // 5 - TURNING TO ITEM
-        Item item = gameObject.AddComponent<Item>();
-        item.name = "package_leftovers";
-        item.Reference = "other:package_leftovers";
-
-
-        // 6 - DESTROYING OLD PACKAGE
-        Destroy(this);
+    // DATA LOADING
+    public override void LoadData(CapableData data)
+    {
+        // we cancel the coroutine
+        cancel_coroutine();
+        base.LoadData(data);
+    }
+    public override void UnloadData()
+    {
+        // we cancel the coroutine
+        cancel_coroutine();
+        base.UnloadData();
     }
 }

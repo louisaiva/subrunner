@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 using UnityEngine.Rendering.Universal;
 using System;
 
@@ -42,14 +41,32 @@ public class Door : Capable, Interactable, Openable
     private Transform interact_kf;
 
     [Header("Cached components")]
-    protected OpenCapacity opener;
-    protected CloseCapacity closer;
-    public OpenCapacity Opener { get { return opener; }}
-    public CloseCapacity Closer { get { return closer; }}
+    private OpenCapacity _opener;
+    private CloseCapacity _closer;
+    public OpenCapacity Opener
+    {
+        get
+        {
+            if (_opener == null) { _opener = GetCapacity<OpenCapacity>(); }
+            return _opener;
+        }
+    }
+    public CloseCapacity Closer
+    {
+        get
+        {
+            if (_closer == null) { _closer = GetCapacity<CloseCapacity>(); }
+            return _closer;
+        }
+    }
+
 
     // START
     protected virtual void Start()
     {
+        // check if we are an insider we don't even start
+        if (CapableSystem.Instance.IsOutsider(this.ID)) { return; }
+
         // if vertical on set l'Orientaion à "up"
         if (is_vertical && (Orientation == Vector2.right || Orientation == Vector2.left)) { Orientation = Vector2.up; }
         else if (!is_vertical && (Orientation == Vector2.up || Orientation == Vector2.down)) { Orientation = Vector2.left; }
@@ -61,12 +78,8 @@ public class Door : Capable, Interactable, Openable
         // on récup l'interact kf
         interact_kf = GetCapacity<HoverCapacity>().Canvas_kf;
 
-        // & les capacities
-        opener = GetCapacity<OpenCapacity>();
-        closer = GetCapacity<CloseCapacity>();
-
         // on close
-        if (closer.Able) { close(); }
+        if (Closer is not null && Closer.Able) { close(); }
     }
 
 
@@ -80,8 +93,8 @@ public class Door : Capable, Interactable, Openable
         Interactor = interactor.GetCapacity<InteractCapacity>();
 
         // on réagit à l'interaction
-        if (opener.Able) { open(); }
-        else if (closer.Able) { close(); }
+        if (Opener.Able) { open(); }
+        else if (Closer.Able) { close(); }
     }
 
 
@@ -95,7 +108,7 @@ public class Door : Capable, Interactable, Openable
         if (shadow_caster != null) { shadow_caster.enabled = false; }
 
 
-        opener.Use(this);
+        Opener.Use(this);
 
 
         // on récupère la room du perso
@@ -123,7 +136,7 @@ public class Door : Capable, Interactable, Openable
         // on reactive le ShadowCaster2D
         if (shadow_caster != null) { shadow_caster.enabled = true; }
 
-        closer.Use(this);
+        Closer.Use(this);
 
 
         // on récupère la room du perso
@@ -214,6 +227,10 @@ public class Door : Capable, Interactable, Openable
 
         // we get the shadow caster reference
         shadow_caster = door_collider.GetComponent<ShadowCaster2D>();
+
+        // on récup l'interact kf
+        interact_kf = GetCapacity<HoverCapacity>().Canvas_kf;
+
     }
     public override void UnloadData()
     {
@@ -222,8 +239,11 @@ public class Door : Capable, Interactable, Openable
         // we clear the door collider & shadow caster references
         _door_collider = null;
         shadow_caster = null;
-    }
 
+        // and other references
+        _opener = null;
+        _closer = null;
+    }
 
 }
 

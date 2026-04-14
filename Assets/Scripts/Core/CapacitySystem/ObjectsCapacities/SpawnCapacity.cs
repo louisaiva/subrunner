@@ -155,6 +155,8 @@ public class SpawnCapacity : Capacity
         this.local_spawn_position = spawn_data.local_spawn_position;
         this.spawn_radius = spawn_data.spawn_radius;
         this.spawn_rate = spawn_data.spawn_rate;
+        this.spawn_anim_name = spawn_data.spawn_anim_name;
+
     }
 
     // GET STATIC DATA
@@ -166,7 +168,8 @@ public class SpawnCapacity : Capacity
             spawn_force = this.spawn_force,
             local_spawn_position = this.local_spawn_position,
             spawn_radius = this.spawn_radius,
-            spawn_rate = this.spawn_rate
+            spawn_rate = this.spawn_rate,
+            spawn_anim_name = this.spawn_anim_name
         };
 
         return static_data;
@@ -177,11 +180,15 @@ public class SpawnCapacity : Capacity
 [Serializable] public class SpawnCapacityData : CapacityData
 {
 
+
+    // template variables
+    public string spawn_anim_name = "spawn"; // the name of the spawn animation in the AnimPlayer
     public string base_entity_id; // the id of the entity to spawn
     public float spawn_force = 0f; // (optional) force applied to the spawned entity
     public Vector2 local_spawn_position; // or the center of the spawn circle if spawn_radius > 0
     public float spawn_radius = 0.5f; // the spawn is randowmized in a circle of this radius
     public float spawn_rate = 0f; // one entity is spawned each x seconds - needs to be > 0 to spawn continuously
+
 
     // CONSTRUCTOR
     public SpawnCapacityData(CapacityData parent)
@@ -199,7 +206,9 @@ public class SpawnCapacity : Capacity
             spawn_force = this.spawn_force,
             local_spawn_position = this.local_spawn_position,
             spawn_radius = this.spawn_radius,
-            spawn_rate = this.spawn_rate
+            spawn_rate = this.spawn_rate,
+
+            spawn_anim_name = this.spawn_anim_name
         };
     }
 
@@ -213,6 +222,7 @@ public class SpawnCapacity : Capacity
         details += $"  - local spawn position: {local_spawn_position} \n";
         details += $"  - spawn radius: {spawn_radius} \n";
         details += $"  - spawn rate: {spawn_rate} \n";
+        details += $"  - spawn animation name: {spawn_anim_name} \n";
 
         return base.GetDetails() + details;
     }

@@ -1,7 +1,7 @@
 using System.Linq;
 using UnityEngine;
 
-public class N0b0dy : IA
+public class Nobody : IA
 {
     // y'a r mdr
 }

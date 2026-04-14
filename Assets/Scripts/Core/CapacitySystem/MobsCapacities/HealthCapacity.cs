@@ -136,7 +136,8 @@ public class HealthCapacity : Capacity
             // if we are part of the capable system we call CapableSystem.SwitchToCorpse(Capable)
             if (CapableBank.Instance.HasCapable(Capable))
             {
-                CapableSystem.Instance.SwitchToCorpse(Capable);
+                // CapableSystem.Instance.SwitchToCorpse(Capable);
+                CapableSystem.Instance.TurnToItem(Capable, "corpse", "die");
                 return true;
             }
 

@@ -188,11 +188,12 @@ public class UI_ItemStack : UI_ImageSlot, Descriptable, Droppable, ItemReceivabl
         }
 
         // we don't have an inventory to drop so we drop on the ground
-        // we check if we have a DropCapacity
-        DropCapacity dropper = inventory.Capable.GetCapacity<DropCapacity>();
+        if (log_drop) { Debug.Log($"(UI_ItemStack) no inventory so we dropping item {item.ID} on the ground with DropEngine. dropper is {inventory.Capable.ID}"); }
+        DropEngine.Instance.Drop(inventory.Capable, item);
+
+        /* DropCapacity dropper = inventory.Capable.GetCapacity<DropCapacity>();
         if (dropper != null)
         {
-            if (log_drop) { Debug.Log($"(UI_ItemStack) no inventory so we dropping item {item.name} on the ground with dropper of {inventory.Capable.name}"); }
             dropper.Select(item);
             dropper.random_direction = true;
             dropper.Use(inventory.Capable);
@@ -203,7 +204,7 @@ public class UI_ItemStack : UI_ImageSlot, Descriptable, Droppable, ItemReceivabl
             if (log_drop) { Debug.Log($"(UI_ItemStack) no inventory and no dropper capacity, so we simply drop item {item.name} from inventory of {inventory.Capable.name} (it may be lost if the inventory is a chest for example)"); }
             // the inventory simply drops the item (dropper may be a chest)
             inventory.Drop(item);
-        }
+        } */
     }
 
 

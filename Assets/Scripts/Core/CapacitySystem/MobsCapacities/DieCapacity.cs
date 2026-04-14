@@ -65,7 +65,7 @@ public class DieCapacity : Capacity
         // 1 - DROP ITEMS
         if (Capable.Inventory != null && Capable.Inventory.Count > 0)
         {
-            yield return Capable.DropAllItems(); // we wait for dropping all items
+            Capable.DropAllItems(); // we wait for dropping all items
         }
 
         health.Die();
