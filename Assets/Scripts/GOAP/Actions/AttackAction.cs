@@ -46,8 +46,8 @@ namespace subrunner.goap
                 // we don't care about checking the attack distance, because
                 // the attack will happen later when this agent will be unloaded. so we just need to return
                 // and it will go to the target, which will make this agent be unloaded, so it is perfect like this
-                if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.LogWarning($"(AttackAction) {data.ia.ID} target {data.CapableTarget.CapableID} is not loaded, we chase it"); }
-                // agent.StopAction(resolveAction: true);
+                if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.Log($"(AttackAction) {data.ia.ID} target {data.CapableTarget.CapableID} is not loaded, we chase it"); }
+                data.this_action_stop_distance = 0.5f;
                 return;
             }
 
@@ -133,7 +133,7 @@ namespace subrunner.goap
             data.ia.OrientTowards(capable_target.transform.position);
 
             // Debug log only if enabled
-            if (data.ia.log_actions)
+            if (Logger.Instance.LOG_ATTACK_ACTION)
             {
                 Debug.Log($"(AttackAction) {data.ia.data.id} is trying to attack {capable_target.data.id}");
             }
@@ -160,7 +160,14 @@ namespace subrunner.goap
         // OVERRIDES
         public override bool IsInRange(IMonoAgent agent, float distance, Data data, IComponentReference references)
         {
-            if (data.ia.log_actions) { Debug.Log($"(AttackAction) {data.ia.name} IsInRange check: distance={distance:F2}, stopping_distance={data.this_action_stop_distance:F2}, in_range={distance <= data.this_action_stop_distance}"); }
+            if (data.this_action_stop_distance <= 0f)
+            {
+                if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.LogWarning($"(AttackAction) {data.ia.ID} has invalid stop distance {data.this_action_stop_distance:F2}, we consider it is not in range"); }
+                data.this_action_stop_distance = 0.5f;
+                return false;
+            }
+
+            if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.Log($"(AttackAction) {data.ia.name} IsInRange check: distance={distance:F2}, stopping_distance={data.this_action_stop_distance:F2}, in_range={distance <= data.this_action_stop_distance}"); }
             return distance <= data.this_action_stop_distance;
         }
 

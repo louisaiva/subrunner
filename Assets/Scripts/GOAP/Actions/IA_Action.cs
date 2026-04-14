@@ -135,6 +135,12 @@ namespace subrunner.goap
         // is valid
         public bool IsValid() { return capable_data is not null; }
 
+        public override string ToString()
+        {
+            if (!IsValid()) { return "Invalid CapableTarget"; }
+            return $"'{CapableID}' ( {Position.x:F1} {Position.y:F1} )";
+        }
+
 
         // CONSTRUCTORS
         public CapableTarget(Capable capable)
