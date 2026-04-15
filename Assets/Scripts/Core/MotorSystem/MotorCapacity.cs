@@ -35,16 +35,7 @@ public class MotorCapacity : Capacity
             return _provider;
         }
     }
-    private GoapBehaviour _goap; // main planner
-    private GoapBehaviour goap
-    {
-        get
-        {
-            if (_goap == null) { _goap = GameObject.Find("/game/goap_manager").GetComponent<GoapBehaviour>(); }
-            if (_goap == null) { if (log) { Debug.LogError("(MotorCapacity) GoapBehaviour not found in the scene. Please add it to /game/goap_manager"); } }
-            return _goap;
-        }
-    }
+
     private GoToBehaviour _goto; // go to
     private GoToBehaviour mover
     {
@@ -70,7 +61,7 @@ public class MotorCapacity : Capacity
     private void Awake()
     {
         // the only thing we do here is assign the goap action provider to the "none" agent
-        Provider.AgentType = goap.GetAgentType("none");
+        Provider.AgentType = MotorEngine.Goap.GetAgentType("none");
         if (log_agent_type) { Debug.Log($"(MotorCapacity) Assigned GoapActionProvider to agent type 'none'"); }
     }
 
@@ -179,7 +170,7 @@ public class MotorCapacity : Capacity
         mover.Load(motor_data.avoidance_data);
 
         // we set the provider's agent type
-        Provider.AgentType = goap.GetAgentType(motor_data.agent_type);
+        Provider.AgentType = MotorEngine.Goap.GetAgentType(motor_data.agent_type);
         if (log_agent_type) { Debug.Log($"(MotorCapacity) {data.owner_id} set GoapActionProvider agent type to '{motor_data.agent_type}' from data"); }
 
         Agent.Initialize(); // we refresh the injected data for the agent
@@ -209,6 +200,9 @@ public class MotorCapacity : Capacity
     {
         string owner_id = data != null ? data.owner_id : "unknown";
 
+        // we inform the MotorEngine that we are unloading this motor data
+        if (data != null) { MotorEngine.Instance.RegisterMotorUnloading(mdata); }
+
         // we unload the goto
         mover.Unload();
 
@@ -220,7 +214,7 @@ public class MotorCapacity : Capacity
         last_agent_type = Provider.AgentType.Id;
 
         // we reset the provider's agent type
-        Provider.AgentType = goap.GetAgentType("none");
+        Provider.AgentType = MotorEngine.Goap.GetAgentType("none");
         if (log_agent_type) { Debug.Log($"(MotorCapacity) {owner_id} reset GoapActionProvider agent type to 'none' from unload"); }
 
         // we unload the data -> will save the Provider's world data to the motor data

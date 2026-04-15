@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using CrashKonijn.Agent.Core;
 using CrashKonijn.Agent.Runtime;
 using CrashKonijn.Goap.Core;
@@ -28,14 +29,31 @@ public class BatchActionProvider : MonoBehaviour
     private Dictionary<string, AgentResolver> agents_resolvers = new();
 
 
-    // resolve handles
+    [Header("Entities waiting for resolve")]
+    [SerializeField] private float resolve_interval = 0.5f;
+    private float time_since_last_resolve = 0f;
+    [SerializeField] private int max_entities_to_resolve_per_frame = 5;
+    private HashSet<EntityMotor> pending_entities = new HashSet<EntityMotor>();
     private readonly List<RunningResolveHandle> resolveHandles = new();
 
 
 
-    [Header("Logs")]
+    [Header("Logs - Tick")]
+    [SerializeField] private bool log_pending_entities_management = false;
+    [SerializeField] private bool log_tick_running_entities = false;
     [SerializeField] private bool hide_log_resolves_still_pending = false;
 
+    [Header("Logs - Resolve Result")]
+    [SerializeField] private bool log_action_found = false;
+    [SerializeField] private bool hide_log_no_action_found = false;
+
+
+
+    // ########################
+
+    //     START & PENDING ENTITIES MANAGEMENT
+
+    // ########################
 
     // START
     private void Start()
@@ -68,6 +86,17 @@ public class BatchActionProvider : MonoBehaviour
     }
 
 
+    // PENDING ENTITIES MANAGEMENT
+    public void RegisterForResolve(EntityMotor ia_and_motor_data)
+    {
+        pending_entities.Add(ia_and_motor_data);
+        if (log_pending_entities_management) { Debug.Log($"(BatchActionProvider) Registered '{ia_and_motor_data.ia_data.id}' for resolve. Total pending entities: {pending_entities.Count}"); }
+    }
+    public void RemoveFromResolve(EntityMotor ia_and_motor_data)
+    {
+        pending_entities.Remove(ia_and_motor_data);
+        if (log_pending_entities_management) { Debug.Log($"(BatchActionProvider) Removed '{ia_and_motor_data.ia_data.id}' from resolve. Total pending entities: {pending_entities.Count}"); }
+    }
 
     // ########################
 
@@ -76,6 +105,7 @@ public class BatchActionProvider : MonoBehaviour
     // ########################
 
     // UPDATE
+    private List<EntityMotor> running_entities = new();
     private void Update()
     {
         // verify that we have no leftover resolve handles that are not completed
@@ -85,11 +115,28 @@ public class BatchActionProvider : MonoBehaviour
             return;
         }
 
-        // here we could check timers (tick-based update)
-        
-        // and select the entities we need to resolve (dirty-based batching + max batch size)
+        // check timers (tick-based update)
+        time_since_last_resolve += Time.deltaTime;
+        if (time_since_last_resolve < resolve_interval) { return; }
+        time_since_last_resolve = 0f;
 
-        // we then call the run method to resolve for the selected batch this frame
+        // and select the entities we need to resolve (dirty-based batching + max batch size)
+        running_entities.Clear();
+        foreach (EntityMotor item in pending_entities)
+        {
+            if (running_entities.Count >= max_entities_to_resolve_per_frame) { break; }
+            running_entities.Add(item);
+        }
+        if (running_entities.Count == 0) { return; }
+
+        // log
+        if (log_tick_running_entities)
+        {
+            Debug.Log($"(BatchActionProvider) Running resolve for {running_entities.Count} entities this frame: " +
+                $"{string.Join(", ", running_entities.Select(e => e.ia_data.id))}");
+        }
+
+        // we then call the run method to resolve for the selected entities batch this frame
         Run();
     }
 
@@ -99,17 +146,24 @@ public class BatchActionProvider : MonoBehaviour
         resolveHandles.Clear();
 
         // here we will call all the Resolve() methods for each unloaded entity in the game
+        foreach (EntityMotor entity in running_entities)
+        {
+            Resolve(entity);
+        }
     }
-    private readonly int[] goalIndexes = new int[20]; // we reuse this array to avoid allocations in get_goals_indexes
-    public void Resolve(MotorData mdata, Vector2 position)
+    private readonly int[] goalIndexes = new int[40]; // we reuse this array to avoid allocations in get_goals_indexes
+    public void Resolve(EntityMotor entity)
     {
+        MotorData mdata = entity.motor_data;
+        IAData iadata = entity.ia_data;
+
         if (!agents_resolvers.ContainsKey(mdata.agent_type)) { return; }
 
         // we get the resolver for the agent type
         AgentResolver resolver = agents_resolvers[mdata.agent_type];
 
         // we fill the builders with the current world data and motor data
-        fill_builders(resolver, null, mdata, position);
+        fill_builders(resolver, entity);
 
         // we fill the goal indexes for the resolver
         int goalCount = get_goals_indexes(resolver.agent_type.GetGoals(), resolver, goalIndexes);
@@ -127,7 +181,7 @@ public class BatchActionProvider : MonoBehaviour
         RunData run_data = new RunData
         {
             StartIndex = startIndex,
-            AgentPosition = new float3(position, 0f),
+            AgentPosition = new float3(iadata.Position, 0f),
             IsEnabled = new NativeArray<bool>(resolver.enabled_builder.Build(), Allocator.TempJob),
             IsExecutable = new NativeArray<bool>(resolver.executable_builder.Build(), Allocator.TempJob),
             Positions = new NativeArray<float3>(resolver.position_builder.Build(), Allocator.TempJob),
@@ -138,15 +192,15 @@ public class BatchActionProvider : MonoBehaviour
 
         // next we create the resolve handle for the resolver
         IResolveHandle handle = resolver.graph.StartResolve(run_data);
-        resolveHandles.Add(new RunningResolveHandle { handle = handle, mdata = mdata });
+        resolveHandles.Add(new RunningResolveHandle { handle = handle, entity = entity });
     }
 
 
     // LOW LEVEL RESOLVE HELPER METHODS
-    private void fill_builders(AgentResolver resolver, IWorldData wdata, MotorData mdata, Vector2 position)
+    private void fill_builders(AgentResolver resolver, EntityMotor entity)
     {
         var conditionObserver = resolver.agent_type.GoapConfig.ConditionObserver;
-        conditionObserver.SetWorldData(wdata);
+        conditionObserver.SetWorldData(entity.world_data);
 
         resolver.enabled_builder.Clear();
         resolver.executable_builder.Clear();
@@ -179,7 +233,7 @@ public class BatchActionProvider : MonoBehaviour
                 resolver.condition_builder.SetConditionMet(condition, true);
             }
 
-            var target = wdata.GetTarget(node);
+            var target = entity.world_data.GetTarget(node);
 
             // for now we only check if the conditions are met to determine if we can execute the action,
             // but later we need to check if the action needs a target AND if so if the target is valid
@@ -240,15 +294,58 @@ public class BatchActionProvider : MonoBehaviour
     {
         foreach (var resolveHandle in resolveHandles)
         {
-            resolveHandle.handle.Complete();
-
             // here we will get the result of the resolve and pass it to the BatchActionAchiever to achieve the actions for the entity
+         
+            var result = resolveHandle.handle.Complete();
+
+            // check resulting goal
+            var goal = result.Goal;
+            if (goal == null)
+            {
+                no_action_found(resolveHandle);
+                continue;
+            }
+
+            // check resulting action
+            var action = result.Actions.FirstOrDefault() as IGoapAction;
+            if (action is null)
+            {
+                no_action_found(resolveHandle);
+                continue;
+            }
+
+            // we got a valid goal and action -> we can pass it to the BatchActionAchiever
+            action_found(resolveHandle, goal, action);/* 
+            if (action != resolveHandle.ActionProvider.Receiver.ActionState.Action)
+                resolveHandle.ActionProvider.SetAction(new GoalResult
+                {
+                    Goal = goal,
+                    Plan = result.Actions,
+                    Action = action
+                }); */
         }
         resolveHandles.Clear();
     }
 
 
+    // ACTIONS FOUND / NOT FOUND
+    private void no_action_found(RunningResolveHandle resolveHandle)
+    {
+        if (!hide_log_no_action_found) { Debug.LogWarning($"(BatchActionProvider) No action found for entity '{resolveHandle.entity.ia_data.id}' with agent type '{resolveHandle.entity.motor_data.agent_type}'"); }
+        
+        // we do nothing (will try to resolve again and again)
+    }
 
+    private void action_found(RunningResolveHandle resolveHandle, IGoal goal, IGoapAction action)
+    {
+        if (log_action_found) { Debug.Log($"(BatchActionProvider) Action '{action}' found for entity '{resolveHandle.entity.ia_data.id}' with agent type '{resolveHandle.entity.motor_data.agent_type}' to achieve goal '{goal}'"); }
+
+        // we pass the action & goal to the BatchActionAchiever
+        // blablabla
+
+        // we remove the entity from the pending list since we found an action for it
+        RemoveFromResolve(resolveHandle.entity);
+    }
 
 
 
@@ -298,5 +395,5 @@ public class AgentResolver
 public class RunningResolveHandle
 {
     public IResolveHandle handle;
-    public MotorData mdata;
+    public EntityMotor entity;
 }
