@@ -6,6 +6,21 @@ using System;
 public class RoomEngine : BSOD_System<RoomEngine>
 {
 
+    // SUB SYSTEMS
+    private TilemapEngine _tilemap_engine;
+    public TilemapEngine TilemapEngine
+    {
+        get
+        {
+            if (_tilemap_engine == null) { _tilemap_engine = GetComponent<TilemapEngine>(); }
+            return _tilemap_engine;
+        }
+    }
+
+
+
+
+
     // ROOMS DATA
 
     [Header("Rooms data")]
@@ -50,6 +65,8 @@ public class RoomEngine : BSOD_System<RoomEngine>
 
     [Header("Logs loading")]
     public bool log_loading = false;
+    public bool hide_already_loaded = false;
+    public bool hide_data_not_found = false;
 
     [Header("Log ticks")]
     public bool log_ticks = false;
@@ -621,8 +638,16 @@ public class RoomEngine : BSOD_System<RoomEngine>
     } */
     private void load_room(string id)
     {
-        if (!rooms_data.ContainsKey(id)) { Debug.LogWarning("(RoomEngine - Load) Room data not found for id: " + id); return; }
-        if (loaded_rooms_data.ContainsKey(id)) { Debug.LogWarning("(RoomEngine - Load) Room data already loaded for id: " + id); return; }
+        if (!rooms_data.ContainsKey(id))
+        {
+            if (!hide_data_not_found) { Debug.LogWarning("(RoomEngine - Load) Room data not found for id: " + id); }
+            return;
+        }
+        if (loaded_rooms_data.ContainsKey(id))
+        {
+            if (!hide_already_loaded) { Debug.LogWarning("(RoomEngine - Load) Room data already loaded for id: " + id); }
+            return;
+        }
         RoomData data = rooms_data[id];
         RoomBank.Instance.Load(data);
         loaded_rooms_data.Add(id, data);

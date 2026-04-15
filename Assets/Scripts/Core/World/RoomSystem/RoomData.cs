@@ -70,4 +70,21 @@ using UnityEngine;
         details += $"    - ground : {calculate_tilemap_non_null_tiles(ground_tiles)} tiles\n";
         return details;
     }
+    public bool HasTiles(string tilemap_type)
+    {
+        switch (tilemap_type)
+        {
+            case "ceiling":
+                return ceiling_tiles != null && ceiling_tiles.Length > 0;
+            case "walls":
+                return walls_tiles != null && walls_tiles.Length > 0;
+            case "carpet":
+                return carpet_tiles != null && carpet_tiles.Length > 0;
+            case "ground":
+                return ground_tiles != null && ground_tiles.Length > 0;
+            default:
+                Debug.LogError($"(RoomData - HasTiles) Invalid tilemap type: {tilemap_type}");
+                return false;
+        }
+    }
 }

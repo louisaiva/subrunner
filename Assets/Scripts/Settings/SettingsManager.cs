@@ -43,12 +43,12 @@ public class SettingsManager : MonoBehaviour
         // on register certains callbacks directement
 
         // fullscreen
-        GetSetting("fullscreen").OnValueChanged += (ctx) => AppManager.Instance.fullscreen(ctx >= 0.5f);
-        AppManager.Instance.fullscreen(GetValue("fullscreen") >= 0.5f);
-
-        // skin
-        // (GetSetting("skin") as StringSetting).OnStringChanged += (skin) => Perso.Instance.SetSkin(skin);
-        // Perso.Instance.SetSkin((GetSetting("skin") as StringSetting).ToString());
+        GetSetting("fullscreen").OnValueChanged += (ctx) => AppManager.Instance.Fullscreen(ctx >= 0.5f);
+        AppManager.Instance.Fullscreen(GetValue("fullscreen") >= 0.5f);
+        
+        // vsync
+        GetSetting("vsync").OnValueChanged += (ctx) => AppManager.Instance.SetVSync(ctx >= 0.5f);
+        AppManager.Instance.SetVSync(GetValue("vsync") >= 0.5f);
     }
 
     // SETTERS & GETTERS

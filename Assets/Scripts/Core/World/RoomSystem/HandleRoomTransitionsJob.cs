@@ -1,8 +1,10 @@
+using System;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
 
+[Obsolete("We do not use this job for room switching anymore")]
 [BurstCompile]
 public struct HandleRoomTransitionsJob : IJob
 {

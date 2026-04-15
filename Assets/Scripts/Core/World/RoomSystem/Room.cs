@@ -22,57 +22,6 @@ public class Room : MonoBehaviour
         }
     }
 
-    [Header("Tilemaps")]
-    private Tilemap _ceiling_tilemap;
-    private Tilemap ceiling_tilemap
-    {
-        get
-        {
-            if (_ceiling_tilemap == null) { _ceiling_tilemap = transform.Find("ceiling")?.GetComponent<Tilemap>(); }
-            return _ceiling_tilemap;
-        }
-    }
-    private Tilemap _walls_tilemap;
-    private Tilemap walls_tilemap
-    {
-        get
-        {
-            if (_walls_tilemap == null) { _walls_tilemap = transform.Find("walls")?.GetComponent<Tilemap>(); }
-            return _walls_tilemap;
-        }
-    }
-    private Tilemap _carpet_tilemap;
-    private Tilemap carpet_tilemap
-    {
-        get
-        {
-            if (_carpet_tilemap == null) { _carpet_tilemap = transform.Find("carpet")?.GetComponent<Tilemap>(); }
-            return _carpet_tilemap;
-        }
-    }
-    private Tilemap _ground_tilemap;
-    private Tilemap ground_tilemap
-    {
-        get
-        {
-            if (_ground_tilemap == null) { _ground_tilemap = transform.Find("ground")?.GetComponent<Tilemap>(); }
-            return _ground_tilemap;
-        }
-    }
-
-    [Header("Tilemaps renderers")]
-    private TilemapRenderer _carpet_renderer;
-    private TilemapRenderer carpet_renderer
-    {
-        get
-        {
-            if (_carpet_renderer == null) { _carpet_renderer = carpet_tilemap.GetComponent<TilemapRenderer>(); }
-            return _carpet_renderer;
-        }
-    }
-
-
-
     // LOAD / UNLOAD
     public void LoadData(RoomData data)
     {
@@ -84,11 +33,8 @@ public class Room : MonoBehaviour
         RoomCollider.SetPath(0, data.collider_points.ToArray());
         RoomCollider.enabled = true;
 
-        // load the tilemaps
-        load_tilemaps();
-
-        // and neighbours (just for debug)
-        // neighbours = data.neighbours_ids;
+        // show the tilemaps
+        RoomEngine.Instance.TilemapEngine.ShowTilemaps(data);
 
         // here we need to load all the capables that we hold in data.capables_ids
         if ((data.capables_ids == null || data.capables_ids.Count == 0)
@@ -103,8 +49,8 @@ public class Room : MonoBehaviour
     {
         _unloading = true;
 
-        // we unload the tilemaps (except carpet's collider)
-        unload_tilemaps();
+        // we hide the tilemaps
+        RoomEngine.Instance.TilemapEngine.HideTilemaps(data);
 
         // unload the collider
         RoomCollider.enabled = false;
@@ -121,122 +67,6 @@ public class Room : MonoBehaviour
         _unloading = false;
     }
 
-    // loading tilemaps low level
-    protected void load_tilemaps()
-    {
-        // we load the tilebases used in data
-        List<TileBase> tilebases_used = new List<TileBase>();
-        if (data.tilebase_paths_used == null) { return; }
-        for (int i = 0; i < data.tilebase_paths_used.Length; i++)
-        {
-            string tilebase_path = data.tilebase_paths_used[i];
-            TileBase tilebase = Resources.Load<TileBase>(tilebase_path);
-            if (tilebase == null) { Debug.LogError($"(Room) Failed to load tilebase at path: {tilebase_path}"); }
-            tilebases_used.Add(tilebase);
-        }
-
-        // ceiling
-        set_tilemap(ceiling_tilemap,tilebases_used, data.ceiling_tiles, data.ceiling_bounds);
-        // walls
-        set_tilemap(walls_tilemap,tilebases_used, data.walls_tiles, data.walls_bounds);
-        // carpet
-        set_tilemap(carpet_tilemap,tilebases_used, data.carpet_tiles, data.carpet_bounds);
-        // ground
-        set_tilemap(ground_tilemap,tilebases_used, data.ground_tiles, data.ground_bounds);
-
-        // we enable the renderers
-        ceiling_tilemap.gameObject.SetActive(true);
-        walls_tilemap.gameObject.SetActive(true);
-        ground_tilemap.gameObject.SetActive(true);
-        carpet_tilemap.enabled = true;
-        carpet_renderer.enabled = true;
-    }
-    protected void set_tilemap(Tilemap tilemap, List<TileBase> tilebases, int[] tiles_data, BoundsInt bounds)
-    {
-        TileBase[] tiles = new TileBase[tiles_data.Length];
-        for (int i = 0; i < tiles_data.Length; i++)
-        {
-            int tile_id = tiles_data[i];
-            if (tile_id == -1) { tiles[i] = null; continue; }
-
-            // the tile_id is the index inside tilebases
-            tiles[i] = tilebases[tile_id];
-        }
-        set_tilemap(tilemap, tiles, bounds);
-    }
-    protected void set_tilemap(Tilemap tilemap, TileBase[] tiles, BoundsInt bounds)
-    {
-        if (RoomEngine.Instance.log_tilemaps_loading) { Debug.Log("(Room) Loading tilemap: " + tilemap.name + " with bounds: " + bounds + " and tiles count: " + tiles.Length); }
-
-        
-        // we count how many tiles we have in the data
-        string tile_count_log = "";
-        int non_null_tiles = 0;
-        if (RoomEngine.Instance.log_tilemaps_loading)
-        {
-            tile_count_log = "\n\nTiles :";
-            for (int x = 0; x < bounds.size.x; x++)
-            {
-                for (int y = 0; y < bounds.size.y; y++)
-                {
-                    TileBase tile = tiles[x + y * bounds.size.x];
-                    if (tile != null)
-                    {
-                        tile_count_log += "\n   - x:" + x + " y:" + y + " tile:" + tile.name;
-                        non_null_tiles++;
-                    }
-                    else
-                    {
-                        tile_count_log += "\n   - x:" + x + " y:" + y + " tile: (null)";
-                    }
-                }
-            }
-        }
-
-        tilemap.ClearAllTiles();
-        tilemap.SetTilesBlock(bounds, tiles);
-        tilemap.ResizeBounds();
-        tilemap.CompressBounds();
-
-        // we count how many tiles we have in the object now
-        if (RoomEngine.Instance.log_tilemaps_loading)
-        {
-            tile_count_log = "\n\nTiles :";
-            non_null_tiles = 0;
-            for (int x = 0; x < bounds.size.x; x++)
-            {
-                for (int y = 0; y < bounds.size.y; y++)
-                {
-                    TileBase tile = tiles[x + y * bounds.size.x];
-                    if (tile != null)
-                    {
-                        tile_count_log += "\n   - x:" + x + " y:" + y + " tile:" + tile.name;
-                        non_null_tiles++;
-                    }
-                    else
-                    {
-                        tile_count_log += "\n   - x:" + x + " y:" + y + " tile: (null)";
-                    }
-                }
-            }
-        }
-
-        if (RoomEngine.Instance.log_tilemaps_loading) { Debug.Log("(Room) Tilemap loaded: " + tilemap.name + " with bounds: " + tilemap.cellBounds + " and " + non_null_tiles + " non-null tiles" + tile_count_log); }
-    }
-    protected void unload_tilemaps()
-    {
-        ceiling_tilemap.gameObject.SetActive(false);
-        walls_tilemap.gameObject.SetActive(false);
-        ground_tilemap.gameObject.SetActive(false);
-
-        // special cases for carpet bcz we want to keep the collider active to prevent
-        // entities that are being unloaded to escape
-        carpet_tilemap.enabled = false;
-        carpet_renderer.enabled = false;
-    }
-
-
-    // GET STATIC DATA
 
     /// <summary>
     /// just as other GetStaticData() methods (ie Capable's one), this method
@@ -267,7 +97,7 @@ public class Room : MonoBehaviour
         };
 
         // set tilemaps data
-        get_tilemaps(ref new_data);
+        get_static_tilemaps(ref new_data);
 
         return new_data;
     }
@@ -278,8 +108,15 @@ public class Room : MonoBehaviour
         if (string.IsNullOrEmpty(this.data.id)) { return id; }
         return this.data.id;
     }
-    protected void get_tilemaps(ref RoomData room_data)
+    protected void get_static_tilemaps(ref RoomData room_data)
     {
+        // get the tilemaps
+        Tilemap ceiling_tilemap = transform.Find("ceiling")?.GetComponent<Tilemap>();
+        Tilemap walls_tilemap = transform.Find("walls")?.GetComponent<Tilemap>();
+        Tilemap carpet_tilemap = transform.Find("carpet")?.GetComponent<Tilemap>();
+        Tilemap ground_tilemap = transform.Find("ground")?.GetComponent<Tilemap>();
+
+        // get the tiles & tilebases & bounds
         TileBase[] used_tilebases = new TileBase[0];
         room_data.ceiling_tiles = get_tilemap(ceiling_tilemap, out room_data.ceiling_bounds, ref used_tilebases);
         room_data.walls_tiles = get_tilemap(walls_tilemap, out room_data.walls_bounds, ref used_tilebases);

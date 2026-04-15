@@ -13,7 +13,7 @@ public class Caller : MonoBehaviour
 {
     public void SwitchToHUD() => UI_Manager.Instance?.SwitchToHUD();
     public void SwitchTo(string ui_pool) => UI_Manager.Instance?.SwitchTo(ui_pool);
-    public void QuitApp() => AppManager.Instance?.exit();
+    public void QuitApp() => AppManager.Instance?.Exit();
     public void BackToTitleScreen() => SceneLoader.Instance?.GoBackToMainMenu();
     public void LoadGame() => SceneLoader.Instance?.LoadGame();
     public void ToggleTimeScale() { Time.timeScale = Time.timeScale == 0 ? 1 : 0; }

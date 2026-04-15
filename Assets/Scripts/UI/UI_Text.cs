@@ -86,7 +86,7 @@ public class UI_Text : UI_Slot
     }
     public void toggle_vsync()
     {
-        AppManager.Instance.useVSync = !AppManager.Instance.useVSync;
+        AppManager.Instance.UseVSync = !AppManager.Instance.UseVSync;
     }
     public void credits()
     {

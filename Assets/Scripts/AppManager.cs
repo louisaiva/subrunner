@@ -27,12 +27,12 @@ public class AppManager : MonoBehaviour
 
 
     [Header("FPS & VSync Settings")]
-    public bool useVSync
+    public bool UseVSync
     {
         get { return (QualitySettings.vSyncCount > 0); }
         set { QualitySettings.vSyncCount = (value) ? 1 : 0; }
     }
-    public int targetFrameRate
+    public int TargetFrameRate
     {
 
         get { return Application.targetFrameRate; }
@@ -88,7 +88,7 @@ public class AppManager : MonoBehaviour
 
 
     // MAIN CLICK FUNCTIONS
-    public void exit()
+    public void Exit()
     {
         #if UNITY_EDITOR
         Debug.Log("exiting playmode...");
@@ -96,7 +96,7 @@ public class AppManager : MonoBehaviour
         #endif
         Application.Quit();
     }
-    public void fullscreen()
+    public void Fullscreen()
     {
         #if UNITY_EDITOR
         EditorWindow window = EditorWindow.focusedWindow;
@@ -106,7 +106,7 @@ public class AppManager : MonoBehaviour
         Screen.fullScreen = !Screen.fullScreen;
         #endif
     }
-    public void fullscreen(bool set_full)
+    public void Fullscreen(bool set_full)
     {
         #if UNITY_EDITOR
         EditorWindow window = EditorWindow.focusedWindow;
@@ -116,9 +116,9 @@ public class AppManager : MonoBehaviour
         Screen.fullScreen = set_full;
         #endif
     }
-    public void toggle_vsync()
+    public void SetVSync(bool set_vsync)
     {
-        useVSync = !useVSync;
+        UseVSync = set_vsync;
     }
 
     // APPLICATION QUIT
