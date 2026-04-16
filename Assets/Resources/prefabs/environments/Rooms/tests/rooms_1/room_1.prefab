@@ -227,6 +227,7 @@ Tilemap:
     e33: 1
 --- !u!483693784 &7798071096018238311
 TilemapRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -272,6 +273,7 @@ TilemapRenderer:
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -279,7 +281,6 @@ TilemapRenderer:
   m_SortOrder: 0
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
-  m_MaskInteraction: 0
 --- !u!1 &1221982716616464957
 GameObject:
   m_ObjectHideFlags: 0
@@ -591,6 +592,7 @@ Tilemap:
     e33: 1
 --- !u!483693784 &2937305862400458280
 TilemapRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -636,6 +638,7 @@ TilemapRenderer:
   m_SortingLayerID: 1229680597
   m_SortingLayer: 4
   m_SortingOrder: -1
+  m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -643,7 +646,6 @@ TilemapRenderer:
   m_SortOrder: 0
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
-  m_MaskInteraction: 0
 --- !u!1 &3339484860418724480
 GameObject:
   m_ObjectHideFlags: 0
@@ -750,106 +752,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Room
   data:
-    id: square_1
+    <id>k__BackingField: 
     position: {x: 0, y: 0}
     collider_points:
     - {x: 2.1499732, y: 2.1453128}
     - {x: -2.1566489, y: 2.1374989}
     - {x: -2.134962, y: -2.0949824}
     - {x: 2.1550555, y: -2.1552618}
-    ceiling_bounds:
-      m_Position: {x: -4, y: -7, z: 0}
-      m_Size: {x: 8, y: 8, z: 1}
-    ceiling_tiles:
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    - {fileID: 11400000, guid: 6d0facc023f7a5140914696f98d6febe, type: 2}
-    walls_bounds:
-      m_Position: {x: 0, y: 0, z: 0}
-      m_Size: {x: 0, y: 0, z: 1}
-    walls_tiles: []
-    carpet_bounds:
-      m_Position: {x: 0, y: 0, z: 0}
-      m_Size: {x: 0, y: 0, z: 1}
-    carpet_tiles: []
-    ground_bounds:
-      m_Position: {x: 0, y: 0, z: 0}
-      m_Size: {x: 0, y: 0, z: 1}
-    ground_tiles: []
     neighbours_ids:
     - square_2
     capables_ids: []
     movables_ids: []
-    IN_movables_ids: []
-    OUT_movables_ids: []
-  room_collider: {fileID: 5918834465229045184}
-  neighbours:
-  - room_2
-  ceiling_tilemap: {fileID: 4886985518289134475}
-  walls_tilemap: {fileID: 6432403573009245798}
-  carpet_tilemap: {fileID: 5743936376385587286}
-  ground_tilemap: {fileID: 7822125408602496695}
+    tilebase_paths_used: []
+    ceiling_bounds:
+      m_Position: {x: -4, y: -7, z: 0}
+      m_Size: {x: 8, y: 8, z: 1}
+    ceiling_tiles: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+    walls_bounds:
+      m_Position: {x: 0, y: 0, z: 0}
+      m_Size: {x: 0, y: 0, z: 1}
+    walls_tiles: 
+    carpet_bounds:
+      m_Position: {x: 0, y: 0, z: 0}
+      m_Size: {x: 0, y: 0, z: 1}
+    carpet_tiles: 
+    ground_bounds:
+      m_Position: {x: 0, y: 0, z: 0}
+      m_Size: {x: 0, y: 0, z: 1}
+    ground_tiles: 
 --- !u!1 &3496025420991357414
 GameObject:
   m_ObjectHideFlags: 0
@@ -1077,6 +1007,7 @@ Tilemap:
     e33: 1
 --- !u!483693784 &2191347668223916046
 TilemapRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1122,6 +1053,7 @@ TilemapRenderer:
   m_SortingLayerID: 1229680597
   m_SortingLayer: 4
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -1129,7 +1061,6 @@ TilemapRenderer:
   m_SortOrder: 0
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
-  m_MaskInteraction: 0
 --- !u!1 &4283401750157784929
 GameObject:
   m_ObjectHideFlags: 0
@@ -1142,6 +1073,7 @@ GameObject:
   - component: {fileID: 4886985518289134475}
   - component: {fileID: 8569266998467711054}
   - component: {fileID: 3954040568749291993}
+  - component: {fileID: 6478568750529043457}
   m_Layer: 12
   m_Name: ceiling
   m_TagString: Untagged
@@ -1230,6 +1162,7 @@ Tilemap:
     e33: 1
 --- !u!483693784 &8569266998467711054
 TilemapRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1275,6 +1208,7 @@ TilemapRenderer:
   m_SortingLayerID: 1229680597
   m_SortingLayer: 4
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -1282,7 +1216,6 @@ TilemapRenderer:
   m_SortOrder: 0
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
-  m_MaskInteraction: 0
 --- !u!19719996 &3954040568749291993
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -1321,6 +1254,18 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
+--- !u!156049354 &6478568750529043457
+Grid:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4283401750157784929}
+  m_Enabled: 1
+  m_CellSize: {x: 0.5, y: 0.5, z: 0}
+  m_CellGap: {x: 0, y: 0, z: 0}
+  m_CellLayout: 0
+  m_CellSwizzle: 0
 --- !u!1 &4433048205063033337
 GameObject:
   m_ObjectHideFlags: 0
@@ -1364,6 +1309,7 @@ GameObject:
   - component: {fileID: 6432403573009245798}
   - component: {fileID: 6214998264347994385}
   - component: {fileID: 5258146152932374334}
+  - component: {fileID: 8458687603044579421}
   m_Layer: 6
   m_Name: walls
   m_TagString: Untagged
@@ -1676,6 +1622,7 @@ Tilemap:
     e33: 1
 --- !u!483693784 &6214998264347994385
 TilemapRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1721,6 +1668,7 @@ TilemapRenderer:
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 1.5, z: 0}
   m_MaxChunkCount: 16
@@ -1728,7 +1676,6 @@ TilemapRenderer:
   m_SortOrder: 0
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
-  m_MaskInteraction: 0
 --- !u!19719996 &5258146152932374334
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -1767,6 +1714,18 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
+--- !u!156049354 &8458687603044579421
+Grid:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6639800912905151156}
+  m_Enabled: 1
+  m_CellSize: {x: 0.5, y: 0.5, z: 0}
+  m_CellGap: {x: 0, y: 0, z: 0}
+  m_CellLayout: 0
+  m_CellSwizzle: 0
 --- !u!1 &6942164652407243202
 GameObject:
   m_ObjectHideFlags: 0
@@ -1781,6 +1740,7 @@ GameObject:
   - component: {fileID: 1557577555503739029}
   - component: {fileID: 8107046986322379143}
   - component: {fileID: 956142233319231534}
+  - component: {fileID: 1149881189563969010}
   m_Layer: 3
   m_Name: carpet
   m_TagString: Untagged
@@ -2537,6 +2497,7 @@ Tilemap:
     e33: 1
 --- !u!483693784 &7510365160652763625
 TilemapRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2582,6 +2543,7 @@ TilemapRenderer:
   m_SortingLayerID: -31225397
   m_SortingLayer: 2
   m_SortingOrder: 5
+  m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -2589,7 +2551,6 @@ TilemapRenderer:
   m_SortOrder: 0
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
-  m_MaskInteraction: 0
 --- !u!19719996 &1557577555503739029
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -2697,6 +2658,18 @@ MonoBehaviour:
   m_Area: 1
   m_IgnoreFromBuild: 0
   m_AffectedAgents: ffffffff
+--- !u!156049354 &1149881189563969010
+Grid:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6942164652407243202}
+  m_Enabled: 1
+  m_CellSize: {x: 0.5, y: 0.5, z: 0}
+  m_CellGap: {x: 0, y: 0, z: 0}
+  m_CellLayout: 0
+  m_CellSwizzle: 0
 --- !u!1 &7923101602022047347
 GameObject:
   m_ObjectHideFlags: 0
@@ -2742,6 +2715,7 @@ GameObject:
   - component: {fileID: 2375677174269318792}
   - component: {fileID: 2013119007482316413}
   - component: {fileID: 2577265920550796437}
+  - component: {fileID: 1336776297437038313}
   m_Layer: 11
   m_Name: ground
   m_TagString: Untagged
@@ -5834,6 +5808,7 @@ Tilemap:
     e33: 1
 --- !u!483693784 &2375677174269318792
 TilemapRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5879,6 +5854,7 @@ TilemapRenderer:
   m_SortingLayerID: -31225397
   m_SortingLayer: 2
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -5886,7 +5862,6 @@ TilemapRenderer:
   m_SortOrder: 0
   m_Mode: 1
   m_DetectChunkCullingBounds: 0
-  m_MaskInteraction: 0
 --- !u!114 &2013119007482316413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5941,3 +5916,15 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
+--- !u!156049354 &1336776297437038313
+Grid:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8934401838125269091}
+  m_Enabled: 1
+  m_CellSize: {x: 1, y: 0.5, z: 0}
+  m_CellGap: {x: 0, y: 0, z: 0}
+  m_CellLayout: 0
+  m_CellSwizzle: 0

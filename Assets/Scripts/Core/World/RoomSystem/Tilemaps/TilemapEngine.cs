@@ -11,7 +11,8 @@ public class TilemapEngine : MonoBehaviour
     private Dictionary<string, TileBase> tilebase_cache = new Dictionary<string, TileBase>();
 
     [Header("Tilemaps parent")]
-    public Transform TilemapsParent;
+    public Transform GroundParent;
+    public Transform WallsParent; // also for ceiling & carpet
 
     [Header("Tilemaps prefabs")]
     [SerializeField] private RoomTilemap ceiling_prefab;
@@ -112,7 +113,7 @@ public class RoomTilemaps
     // CONSTRUCTOR
     public RoomTilemaps(RoomData data, RoomTilemap ceiling_prefab, RoomTilemap walls_prefab, RoomTilemap carpet_prefab, RoomTilemap ground_prefab)
     {
-        Transform parent = RoomEngine.Instance.TilemapEngine.TilemapsParent;
+        Transform parent = RoomEngine.Instance.TilemapEngine.WallsParent;
 
         // ceiling
         if (data.HasTiles("ceiling"))
@@ -140,6 +141,8 @@ public class RoomTilemaps
             carpet_tilemap.gameObject.name = $"{data.id}_carpet";
             carpet_tilemap.transform.position += (Vector3)data.position;
         }
+
+        parent = RoomEngine.Instance.TilemapEngine.GroundParent;
 
         // ground
         if (data.HasTiles("ground"))

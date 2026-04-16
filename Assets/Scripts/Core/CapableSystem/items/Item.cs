@@ -206,8 +206,8 @@ public class Item : Movable, EndlessInteractable
         if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Item - OnGrabbed) {data.id} unloading capacities : {string.Join(" ", dynamic_capacity_ids)}"); }
         CapacityEngine.Instance?.UnloadCapacities(dynamic_capacity_ids, this);
 
-        // finally set the holder
-        // _holder = grabber;
+        // finally we reset the holder (so next time we check for it it will recalculate it)
+        _item_pool_holder = null;
     }
     public virtual void BeDropped(Capable dropper)
     {

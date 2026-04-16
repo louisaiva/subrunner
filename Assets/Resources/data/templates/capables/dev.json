@@ -116,11 +116,16 @@
                 "never_flip": false,
                 "follow_duration": false
             }
-        ]
+        ],
+        "local_position": {
+            "x": 0.0,
+            "y": 0.0
+        }
     },
     "inventory": {
         "item_pools_data": [
             {
+                "item_type": 0,
                 "stacks_data": [],
                 "pool_id": "stuff",
                 "max_stacks": 6,
@@ -128,7 +133,8 @@
                 "scalable": true,
                 "item_rule": ""
             }
-        ]
+        ],
+        "item_type": 0
     },
     "feet_data": {
         "box_colliders": [],
@@ -165,7 +171,7 @@
         "prey_skins": [
             "rat",
             "cat",
-            "perso",
+            "bob",
             "nobody",
             "zombo",
             "qwin"

@@ -504,8 +504,10 @@ MonoBehaviour:
       sorting_layer_id: 0
       order_in_layer: 0
       layers: []
+      local_position: {x: 0, y: 0}
     inventory:
       item_pools_data: []
+      item_type: 0
     feet_data:
       box_colliders: []
       circle_colliders: []
@@ -536,7 +538,7 @@ MonoBehaviour:
     dangerous_skins: []
     prey_skins:
     - cat
-    - perso
+    - bob
     - nobody
     - spider
   log_actions: 0

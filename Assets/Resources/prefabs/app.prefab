@@ -545,7 +545,7 @@ MonoBehaviour:
   log_variant_skins: 0
   log_get_anim: 0
   skins:
-  - perso
+  - bob
   - cat
   - zombo
   - robot
@@ -769,8 +769,9 @@ MonoBehaviour:
     prefab: {fileID: 4964243457693928914, guid: 1c7af976db032284eb29c2f7adecaced, type: 3}
   - slot_type: module
     prefab: {fileID: 6477483050230691726, guid: ba7322b7ec1b3c34b85172c9189055b9, type: 3}
+  log_awake: 0
+  log_awake_extended: 0
   log: 1
-  log_nothing: 1
 --- !u!114 &4820698345186690242
 MonoBehaviour:
   m_ObjectHideFlags: 0

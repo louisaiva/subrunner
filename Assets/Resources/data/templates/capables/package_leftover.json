@@ -52,10 +52,15 @@
                 "never_flip": false,
                 "follow_duration": false
             }
-        ]
+        ],
+        "local_position": {
+            "x": 0.0,
+            "y": 0.0
+        }
     },
     "inventory": {
-        "item_pools_data": []
+        "item_pools_data": [],
+        "item_type": 0
     },
     "feet_data": {
         "box_colliders": [],

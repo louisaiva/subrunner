@@ -560,7 +560,7 @@ public class AnimBank : MonoBehaviour
 
     // SKINS MANAGEMENT
     [Header("Skins management")]
-    public List<string> skins = new List<string>() { "perso", "cat", "zombo", "robot", "rat", "nobody" };
+    public List<string> skins = new List<string>() { "bob", "cat", "zombo", "robot", "rat", "nobody" };
     public List<float> head_offset_per_skin = new List<float>() { 0.7f, 0.7f, 0.7f, 0.7f, 0.7f, 0.7f };
     public List<float> body_offset_per_skin = new List<float>() { 0.4f, 0.15f, 0.4f, 0.2f, 0.1f, 0.42f };
     public float GetHeadOffset(string skin)

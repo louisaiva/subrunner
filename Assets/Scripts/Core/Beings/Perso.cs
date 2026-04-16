@@ -24,7 +24,7 @@ public class Perso : Movable, Hacker
     
 
     [Header("METAMORPH")]
-    [SerializeField] private List<string> metamorph_skins = new List<string>() { "perso", "cat", "zombo", "robot", "apple", "fridge", "small_laptop" };
+    [SerializeField] private List<string> metamorph_skins = new List<string>() { "bob", "cat", "zombo", "robot", "apple", "fridge", "small_laptop" };
 
 
     [Header("Items")]
@@ -284,7 +284,7 @@ public class Perso : Movable, Hacker
         {
             // on remet le skin de base
             if (skin_setting != null) { AnimPlayer.Skin = skin_setting.ToString(); }
-            else { AnimPlayer.Skin = "perso"; }
+            else { AnimPlayer.Skin = "bob"; }
 
             // on enleve l'Effect Ghost & Invisible
             RemoveEffect(Effect.Ghost);
