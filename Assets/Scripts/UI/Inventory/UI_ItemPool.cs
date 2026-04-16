@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -25,9 +26,25 @@ public class UI_ItemPool : UI_ItemSlottable
         pool.OnStackCreated += add_ui_stack;
         pool.OnStackRemoved += remove_ui_stack;
 
+        // apply the item type of the storer to the ui item pool
+        apply_item_type_to_ui(pool.ItemType);
+
         // create the UI_ItemStack for matching the ItemStack of the ItemPool
         createStacksForPool();
     }
+
+    private void apply_item_type_to_ui(ItemType itemType)
+    {
+        // if all or none we leave it as it is
+        if (itemType == ItemType.All || itemType == ItemType.None) { return; }
+
+        // if virtual we set file
+        if (itemType == ItemType.Virtual) { this.item_slot_type = "file"; return; }
+
+        // otherwise we set it to item
+        this.item_slot_type = "item";
+    }
+
     public void DetachFromPool()
     {
         if (storer == null) { return; }

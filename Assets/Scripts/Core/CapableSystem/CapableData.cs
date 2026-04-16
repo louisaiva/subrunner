@@ -169,6 +169,9 @@ public interface ICapableData : IData
 
     // layers
     public List<AnimLayerData> layers;
+    
+    // position
+    public Vector2 local_position;
 
 
     // GET & DUPLICATE
@@ -178,6 +181,7 @@ public interface ICapableData : IData
         {
             skin = this.skin,
             current_capacity = this.current_capacity,
+            local_position = this.local_position,
             material_path = this.material_path,
             sorting_layer_id = this.sorting_layer_id,
             order_in_layer = this.order_in_layer,
@@ -206,6 +210,7 @@ public interface ICapableData : IData
         else { details += $"     - anim_capacity_priorities : null\n"; }
         if (layers != null) { details += $"     - layers : {layers.Count} layers"; }
         else { details += $"     - layers : null"; }
+        details += $"     - local_position : {local_position}\n";
         return details;
     }
 }

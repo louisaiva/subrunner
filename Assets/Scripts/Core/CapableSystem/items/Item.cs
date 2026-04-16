@@ -57,14 +57,17 @@ public class Item : Movable, EndlessInteractable
     public event Action<Item> OnDropped = delegate { };
 
     // HOLDER
-    public Capable _holder = null;
-    public Capable Holder { get { return _holder; } }/* ItemPoolHolder != null ? ItemPoolHolder.Inventory.capable : null; */
+    // public Capable _holder = null;
+    public Capable Holder { get { return ItemPoolHolder?.Capable; } }
+    private ItemPool _item_pool_holder = null;
     public ItemPool ItemPoolHolder
     {
         get
         {
+            if (_item_pool_holder != null) { return _item_pool_holder; }
             if (transform.parent == null) { return null; }
-            return transform.parent.GetComponent<ItemPool>();
+            _item_pool_holder = transform.parent.GetComponent<ItemPool>();
+            return _item_pool_holder;
         }
     }
     public ItemStack ItemStackHolder
@@ -147,6 +150,15 @@ public class Item : Movable, EndlessInteractable
         // check special rule
         if (rule == "usable") { return this is Usable; }
         if (rule == "device") { return this is Device; }
+        if (rule == "virtual")
+        {
+            // if (this is File) { return true; }
+            if (this.Reference.StartsWith("key:")) { return true; }
+            if (this.Reference.StartsWith("file:")) { return true; }
+            if (this.Reference.StartsWith("program:")) { return true; }
+            if (this.Reference.StartsWith("exploit:")) { return true; }
+            return false;
+        }
 
         // specific item -> we check if the item is the same
         if (rule.Contains(":")) { return Reference == rule; }
@@ -195,7 +207,7 @@ public class Item : Movable, EndlessInteractable
         CapacityEngine.Instance?.UnloadCapacities(dynamic_capacity_ids, this);
 
         // finally set the holder
-        _holder = grabber;
+        // _holder = grabber;
     }
     public virtual void BeDropped(Capable dropper)
     {
@@ -209,7 +221,7 @@ public class Item : Movable, EndlessInteractable
         CapableSystem.Instance?.OnItemDropped(this);
 
         // finally we reset the holder
-        _holder = null;
+        _item_pool_holder = null;
     }
     protected virtual async void on_grabbed()
     {
@@ -481,4 +493,12 @@ public class ItemData : CapableData
             is_grabbed = template.is_grabbed;
         }
     }
+}
+
+public enum ItemType
+{
+    None,
+    All,
+    Physical, // this item is shown inside a "item" type of ui_slot
+    Virtual // same with "file" type of ui_slot
 }

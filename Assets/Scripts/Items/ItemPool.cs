@@ -10,6 +10,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
     public string PoolID = "stuff";
 
     [Header("Items")]
+    [field: SerializeField] public ItemType ItemType { get; set; }
     public List<ItemStack> stacks = new List<ItemStack>();
     public List<ItemStack> Stacks { get { return stacks; } }
     public List<Item> Items { get { return stacks.SelectMany(s => s.Items).ToList(); } }
@@ -36,8 +37,11 @@ public class ItemPool : MonoBehaviour, ItemStorer
 
     [Header("Inventory & Capable")]
     public Inventory Inventory;
+    public Capable Capable { get { return Inventory?.Capable; } }
 
     [Header("Logs")]
+    [SerializeField] protected bool log_start_grabbing = false;
+    [SerializeField] protected bool log_loading = false;
     [SerializeField] protected bool log_grab = false;
     [SerializeField] protected bool log_merge = false;
     [SerializeField] protected bool log_stacks = false;
@@ -51,6 +55,21 @@ public class ItemPool : MonoBehaviour, ItemStorer
     }
     private void Start()
     {
+        // if we are an insider we don't even start
+        if (!CapableSystem.Instance.IsOutsider(Capable?.ID))
+        {
+            ensure_ui_has_enough_stacks();
+            return;
+        }
+        
+        // else we try to grab the items we already have in inventory
+        bool old_log_grab = log_grab;
+        if (log_start_grabbing)
+        {
+            Debug.Log($"(ItemPool - {PoolID} - {name} - {Capable?.ID}) is starting grabbing items from its children. item rule is {item_rule}");
+            log_grab = true;
+        }
+
         // we go through all children to try to grab them
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -60,7 +79,12 @@ public class ItemPool : MonoBehaviour, ItemStorer
             if (item == null) { continue; }
             if (Grab(item)) { Inventory.GrabFromLowerLevel(item); }
         }
+        ensure_ui_has_enough_stacks();
 
+        log_grab = old_log_grab;
+    }
+    private void ensure_ui_has_enough_stacks()
+    {
         // we ensure we have at least MinStacks stacks (for the ui to be great)
         if (stacks.Count < MinStacks)
         {
@@ -86,6 +110,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
         this.MinStacks = data.min_stacks;
         this.Scalable = data.scalable;
         this.item_rule = data.item_rule;
+        this.ItemType = data.item_type;
 
         // we want to load the items inside the stacks
         for (int i = 0; i < data.stacks_data.Count; i++)
@@ -103,11 +128,22 @@ public class ItemPool : MonoBehaviour, ItemStorer
                     Debug.LogError($"(ItemPool) Failed to load item with id {item_id} for pool {name}");
                     continue;
                 }
+                
+                // verify that the item matches the rule
+                if (!ValidateRule(item))
+                {
+                    /* if (log_loading) {  */Debug.LogWarning($"(ItemPool) Loaded item {item.ID} doesn't match the rule of pool {name}, dropping it"); //}
+                    item.BeDropped(this.Inventory?.Capable);
+                    continue;
+                }
+
                 finalise_grab(item, new_stack);
             }
 
             OnStackCreated?.Invoke(new_stack);
         }
+
+        if (log_loading) { Debug.Log($"(ItemPool) Loaded pool data for pool {name} ({Capable?.ID}) : \n  -{data.GetDetails()}"); }
     }
     public void UnloadPoolData()
     {
@@ -140,7 +176,8 @@ public class ItemPool : MonoBehaviour, ItemStorer
             min_stacks = this.MinStacks,
             scalable = this.Scalable,
             item_rule = this.item_rule,
-            stacks_data = new List<ItemStackData>()
+            stacks_data = new List<ItemStackData>(),
+            item_type = this.ItemType
         };
 
         // we go through all children to try to grab them

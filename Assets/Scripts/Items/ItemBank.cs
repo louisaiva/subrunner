@@ -7,7 +7,7 @@ public class ItemBank : MonoBehaviour
 {
 
     [Header("Item Bank")]
-    public List<string> items_path = new List<string>() { "prefabs/items" };
+    public List<string> items_path = new List<string>() { "prefabs/items", "prefabs/files" };
     public Dictionary<string, Sprite> item_sprites = new Dictionary<string, Sprite>();
     public Dictionary<string, string> item_prefabs = new Dictionary<string, string>();
     public List<string> item_custom_references = new List<string>();
@@ -29,7 +29,9 @@ public class ItemBank : MonoBehaviour
     // public GameObject ui_module_prefab;
 
     [Header("Logs")]
-    public bool debug = false;
+    public bool log_awake = false;
+    public bool log_awake_extended = false;
+    public bool log = false;
 
 
     // AWAKE & SINGLETON LOGIC & LOADING
@@ -40,15 +42,9 @@ public class ItemBank : MonoBehaviour
         if (Instance == null) { Instance = this; }
         else { Destroy(gameObject); return; }
 
-        // on vérifie qu'on a un prefab pour l'UI
-        /* if (ui_item_prefab == null)
-        {
-            Debug.LogError("(ItemBank) missing ui_item_prefab, you need to set it in the inspector");
-        } */
-
         // on charge les items
         loadItems();
-        Debug.Log(getItemsList());
+        if (log_awake) { Debug.Log(getItemsList()); }
     }
     public void loadItems()
     {
@@ -66,7 +62,7 @@ public class ItemBank : MonoBehaviour
                 Item item = prefab.GetComponent<Item>();
                 if (item == null)
                 {
-                    if (debug) { Debug.LogWarning("(ItemBank) prefab " + prefab.name + " has no Item component, skipping it"); }
+                    if (log_awake_extended) { Debug.LogWarning("(ItemBank) prefab " + prefab.name + " has no Item component, skipping it"); }
                     continue;
                 }
                 string reference = item.Reference;
@@ -80,7 +76,7 @@ public class ItemBank : MonoBehaviour
 
                 item_count++;
 
-                if (debug)
+                if (log_awake_extended)
                 {
                     Debug.Log("(ItemBank) loaded item : " + reference +
                         (reference == prefab.name ? "" : " (prefab name is " + prefab.name + ")"));
@@ -88,7 +84,7 @@ public class ItemBank : MonoBehaviour
             }
         }
 
-        if (debug) { Debug.Log("(ItemBank) loaded " + item_count + " items"); }
+        if (log_awake_extended) { Debug.Log("(ItemBank) loaded " + item_count + " items"); }
     }
 
 
@@ -117,7 +113,7 @@ public class ItemBank : MonoBehaviour
             return null;
         }
 
-        if (debug) { Debug.Log("(ItemBank) Instanciating " + reference + " item prefab !!"); }
+        if (log) { Debug.Log("(ItemBank) Instanciating " + reference + " item prefab !!"); }
         return item;
     }
     public Module CreateModule(string reference)
@@ -155,7 +151,7 @@ public class ItemBank : MonoBehaviour
             upcount++;
         }
 
-        if (debug) { Debug.Log("(ItemBank) Instanciating " + reference + " module prefab !!"); }
+        if (log) { Debug.Log("(ItemBank) Instanciating " + reference + " module prefab !!"); }
         return module;
     }
     public Module CreateRandomModule(List<string> module_references)

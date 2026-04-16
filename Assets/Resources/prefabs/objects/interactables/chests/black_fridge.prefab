@@ -205,6 +205,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &949881462170328442
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -250,6 +251,7 @@ SpriteRenderer:
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 943884239, guid: 0037723b67c5f6140976c4a9b6222db8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -259,7 +261,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!114 &6793584123833674481
 MonoBehaviour:
@@ -274,6 +275,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: apple
+  <orientation>k__BackingField: D
   current_capacity: 
   current_anim:
     name: 
@@ -341,28 +343,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d6f4a2ee79ba714cb2d63f8931d5817, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  data:
+    <id>k__BackingField: 
+    kind: 
+    position: {x: 0, y: 0}
+    orientation: {x: 0, y: 0}
+    layer: 0
+    tag: 
+    anim_data:
+      skin_kind: 
+      skin: 
+      anim_capacity_priorities: []
+      current_capacity: 
+      material_path: 
+      sorting_layer_id: 0
+      order_in_layer: 0
+      layers: []
+    inventory:
+      item_pools_data: []
+      item_type: 0
+    feet_data:
+      box_colliders: []
+      circle_colliders: []
+    capacities_ids: []
+    effects: 
+    effects_ttl: []
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: -1}
   capacities: []
   effects: 
   effects_timetolive: []
-  debug: 0
+  log: 0
   activate_all_capacities_logs_on_awake: 0
+  log_static_data: 0
   debug_velocity: 0
   log_avoidance: 0
-  rb: {fileID: 0}
   weight: 1
   random_weight_modifier_at_start: 0
   friction: 7
   forces: []
   input_speed: 0
   Velocity: {x: 0, y: 0}
-  feet_collider: {fileID: 0}
   _reference: food:apple
   Color: {r: 0.8980392, g: 0.28627452, b: 0.28627452, a: 1}
   MaxQty: 32
   ItemDescription: just an old apple/. awful taste/. smells bad/./l a solid 8/10!
+  _grabbed: 0
   _placed: 0
+  _holder: {fileID: 0}
   life_regen: 10
 --- !u!1 &1772611859397074235
 GameObject:
@@ -403,6 +431,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1649427422275559399
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -448,6 +477,7 @@ SpriteRenderer:
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 943884239, guid: 0037723b67c5f6140976c4a9b6222db8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -457,7 +487,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!114 &5011082982035236972
 MonoBehaviour:
@@ -472,6 +501,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: apple
+  <orientation>k__BackingField: D
   current_capacity: 
   current_anim:
     name: 
@@ -539,28 +569,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d6f4a2ee79ba714cb2d63f8931d5817, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  data:
+    <id>k__BackingField: 
+    kind: 
+    position: {x: 0, y: 0}
+    orientation: {x: 0, y: 0}
+    layer: 0
+    tag: 
+    anim_data:
+      skin_kind: 
+      skin: 
+      anim_capacity_priorities: []
+      current_capacity: 
+      material_path: 
+      sorting_layer_id: 0
+      order_in_layer: 0
+      layers: []
+    inventory:
+      item_pools_data: []
+      item_type: 0
+    feet_data:
+      box_colliders: []
+      circle_colliders: []
+    capacities_ids: []
+    effects: 
+    effects_ttl: []
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: -1}
   capacities: []
   effects: 
   effects_timetolive: []
-  debug: 0
+  log: 0
   activate_all_capacities_logs_on_awake: 0
+  log_static_data: 0
   debug_velocity: 0
   log_avoidance: 0
-  rb: {fileID: 0}
   weight: 1
   random_weight_modifier_at_start: 0
   friction: 7
   forces: []
   input_speed: 0
   Velocity: {x: 0, y: 0}
-  feet_collider: {fileID: 0}
   _reference: food:apple
   Color: {r: 0.8980392, g: 0.28627452, b: 0.28627452, a: 1}
   MaxQty: 32
   ItemDescription: just an old apple/. awful taste/. smells bad/./l a solid 8/10!
+  _grabbed: 0
   _placed: 0
+  _holder: {fileID: 0}
   life_regen: 10
 --- !u!1 &1898707300171917794
 GameObject:
@@ -997,6 +1053,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1251,6 +1308,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1689,8 +1747,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a41173bb095cd5544a4a649fbdba78b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooldown: 0
-  debug: 0
+  data:
+    <id>k__BackingField: 
+    <owner_id>k__BackingField: 
+    kind: 
+    local_position: {x: 0, y: 0}
+    layer: 0
+    tag: 
+  log: 0
   hoverers: []
   canvas_kf: {fileID: 0}
 --- !u!58 &5251936196418542086
@@ -1953,6 +2017,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7607342589793711545
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1998,6 +2063,7 @@ SpriteRenderer:
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -285461031, guid: be09da4c145976a4fae5193551de0357, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2007,7 +2073,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!61 &6329785780556123819
 BoxCollider2D:
@@ -2068,6 +2133,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: black_fridge
+  <orientation>k__BackingField: D
   current_capacity: 
   current_anim:
     name: 
@@ -2137,13 +2203,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e88ce181282b86241b746552a866e9f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  data:
+    <id>k__BackingField: 
+    kind: 
+    position: {x: 0, y: 0}
+    orientation: {x: 0, y: 0}
+    layer: 0
+    tag: 
+    anim_data:
+      skin_kind: 
+      skin: 
+      anim_capacity_priorities: []
+      current_capacity: 
+      material_path: 
+      sorting_layer_id: 0
+      order_in_layer: 0
+      layers: []
+    inventory:
+      item_pools_data: []
+      item_type: 0
+    feet_data:
+      box_colliders: []
+      circle_colliders: []
+    capacities_ids: []
+    effects: 
+    effects_ttl: []
   inputs: {x: 0, y: 0}
   orientation: {x: 0, y: -1}
   capacities: []
   effects: 
   effects_timetolive: []
-  debug: 0
+  log: 0
   activate_all_capacities_logs_on_awake: 0
+  log_static_data: 0
   log_interact_kf: 0
   log_buttons_registering: 0
   interactors: []
@@ -2584,8 +2676,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a41173bb095cd5544a4a649fbdba78b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooldown: 0
-  debug: 0
+  data:
+    <id>k__BackingField: 
+    <owner_id>k__BackingField: 
+    kind: 
+    local_position: {x: 0, y: 0}
+    layer: 0
+    tag: 
+  log: 0
   hoverers: []
   canvas_kf: {fileID: 0}
 --- !u!58 &5994284014421858459
@@ -3269,9 +3367,17 @@ PrefabInstance:
       propertyPath: item_rule
       value: food
       objectReference: {fileID: 0}
+    - target: {fileID: -6211465771143209247, guid: d53402f82e6050643b628ae9144b9e77, type: 3}
+      propertyPath: <ItemType>k__BackingField
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2243483085189594233, guid: d53402f82e6050643b628ae9144b9e77, type: 3}
       propertyPath: m_Name
       value: inventory
+      objectReference: {fileID: 0}
+    - target: {fileID: 3003809755707482883, guid: d53402f82e6050643b628ae9144b9e77, type: 3}
+      propertyPath: <ItemType>k__BackingField
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7494443309791140517, guid: d53402f82e6050643b628ae9144b9e77, type: 3}
       propertyPath: m_LocalPosition.x

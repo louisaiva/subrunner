@@ -484,6 +484,11 @@ public class UI_Manager : Singleton<UI_Manager>
 
         return null;
     }
+    public bool TryGetPool<T>(out T pool) where T : UI_Pool
+    {
+        pool = GetPool<T>();
+        return pool != null;
+    }
     private List<UI_Pool> get_stack_from_string(string stack_string)
     {
         List<UI_Pool> stack = new List<UI_Pool>();

@@ -26,9 +26,22 @@ public class UI_ItemStack : UI_ImageSlot, Descriptable, Droppable, ItemReceivabl
     [Header("Components")]
     protected TextMeshProUGUI quantity_text;
     protected Image item_image;
+    private UI_Colorer _item_colorer;
+    protected UI_Colorer item_colorer
+    {
+        get
+        {
+            if (_item_colorer == null)
+            {
+                _item_colorer = item_image.GetComponent<UI_Colorer>();
+            }
+            return _item_colorer;
+        }
+    }
 
     [Header("Logs part 2")]
     public bool log_drop = false;
+    [SerializeField] private bool log_color = false;
 
 
     // UI_ItemSlottable
@@ -81,7 +94,7 @@ public class UI_ItemStack : UI_ImageSlot, Descriptable, Droppable, ItemReceivabl
 
         // on charge le sprite de l'image
         current_item_sprite = ItemBank.Instance.GetSprite(Stack.Item);
-        set_ui_item(current_item_sprite);
+        set_ui_item(current_item_sprite, Stack.Item?.Color);
 
         // on change le nom du prefab
         name = "ui_" + Stack.Item.Reference;
@@ -97,14 +110,28 @@ public class UI_ItemStack : UI_ImageSlot, Descriptable, Droppable, ItemReceivabl
         // we show or hide the text
         quantity_text.gameObject.SetActive(Stack.Quantity > 1);
     }
-    protected virtual void set_ui_item(Sprite sprite)
+    protected virtual void set_ui_item(Sprite sprite, Color? item_color=null)
     {
         item_image.sprite = sprite;
-        item_image.color
-                = sprite != null
-                ? new Color(1, 1, 1, 1)
-                : new Color(0, 0, 0, 0);
-        if (sprite == null) { return; }
+
+        if (sprite == null)
+        {
+            item_image.color = new Color(0, 0, 0, 0);
+            _item_colorer = null;
+            if (log_color && Stack.Item is not null) { Debug.Log($"(UI_ItemStack) item image of {Stack.ItemReference} has null sprite, applying transparent color"); }
+            return;
+        }
+        if (item_colorer != null && item_color != null)
+        {
+            Color color_to_apply = item_color ?? Color.white;
+            item_colorer.ApplyColor(color_to_apply);
+            if (log_color && Stack.Item is not null) { Debug.Log($"(UI_ItemStack) applied color {color_to_apply} to item image of {Stack.ItemReference}"); }
+        }
+        else
+        {
+            item_image.color = Color.white;
+            if (log_color && Stack.Item is not null) { Debug.Log($"(UI_ItemStack) no color to apply for item image of {Stack.ItemReference}, applying white color"); }
+        }
 
         // on calcule la taille de l'image
         RectTransform rt = item_image.GetComponent<RectTransform>();
@@ -115,6 +142,7 @@ public class UI_ItemStack : UI_ImageSlot, Descriptable, Droppable, ItemReceivabl
         // on change le sprite de l'image
         set_ui_item(null);
         current_item_sprite = null;
+        _item_colorer = null;
 
         // on change le nom du prefab
         name = "ui_empty";
@@ -153,7 +181,12 @@ public class UI_ItemStack : UI_ImageSlot, Descriptable, Droppable, ItemReceivabl
     public override void OnPointerExit(PointerEventData eventData)
     {
         base.OnPointerExit(eventData);
-        set_ui_item(current_item_sprite);
+
+        if (Stack.Quantity == 0) { set_ui_item(current_item_sprite); return; }
+
+        // on charge le sprite de l'image
+        current_item_sprite = ItemBank.Instance.GetSprite(Stack.Item);
+        set_ui_item(current_item_sprite, Stack.Item.Color);
     }
 
 
@@ -171,6 +204,14 @@ public class UI_ItemStack : UI_ImageSlot, Descriptable, Droppable, ItemReceivabl
     }
     private void drop_item(Item item)
     {
+        // check if item holder is null
+        if (item.Holder == null)
+        {
+            Debug.LogWarning($"(UI_ItemStack) trying to drop item {item.name} but it has no holder, dropping cancelled");
+            Debug.Log($"(UI_ItemStack) item details : ID={item.ID}, Reference={item.Reference}, Holder={item.Holder}, ItemPoolHolder={item.ItemPoolHolder}");
+            return;
+        }
+
         // on récupère l'inventory qui drop l'item
         Inventory inventory = item.Holder.Inventory;
 

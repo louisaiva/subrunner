@@ -118,7 +118,7 @@ public class CapableBank : MonoBehaviour
     private Capable add_components_based_on_kind(GameObject go, Type kind)
     {
         // movable
-        // ! TODO this is temporary because Movable & Being will become MoveCapacity
+        // ! TODO this is temporary because Movable & Being will become MoveCapacity & HealthCapacity
         if (GameManager.IsKind(kind, typeof(Movable)))
         {
             Rigidbody2D rb = go.gameObject.AddComponent<Rigidbody2D>();
@@ -130,9 +130,6 @@ public class CapableBank : MonoBehaviour
 
         // we add the component corresponding to the capable kind
         Capable capable = go.gameObject.AddComponent(kind) as Capable;
-
-
-
 
 
         return capable;

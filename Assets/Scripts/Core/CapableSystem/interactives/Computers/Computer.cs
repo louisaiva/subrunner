@@ -13,9 +13,9 @@ public class Computer : StaticDevice, Interactable, Onnable
     public float power_off_delay = 5f;
 
     // INTERACTABLE
-    public InteractCapacity Interactor => interactors.FirstOrDefault()?.GetCapacity<InteractCapacity>();
+    public InteractCapacity Interactor { get; set; } 
     public InteractType InteractionType => InteractType.Device;
-    [SerializeField] private List<Capable> interactors = new List<Capable>(); // store all interactors, not just the one controlled
+    [SerializeField] protected List<Capable> interactors = new List<Capable>(); // store all interactors, not just the one controlled
 
     // START
     protected virtual void Start()
@@ -28,7 +28,7 @@ public class Computer : StaticDevice, Interactable, Onnable
     }
 
     // ON INTERACT / HOVER LOST
-    public void OnInteract(Capable interactor)
+    public virtual void OnInteract(Capable interactor)
     {
         // only first interaction per interactor is authorized !!!
         if (interactors.Contains(interactor)) { return; }
@@ -38,7 +38,7 @@ public class Computer : StaticDevice, Interactable, Onnable
         // we power on if it's the first interactor we have !!
         if (interactors.Count == 1) { GetCapacity<OnOffCapacity>().PowerOn(); }
     }
-    public void OnHoverLost(Capable interactor)
+    public virtual void OnHoverLost(Capable interactor)
     {
         if (!interactors.Contains(interactor)) { return; }
         interactors.Remove(interactor);

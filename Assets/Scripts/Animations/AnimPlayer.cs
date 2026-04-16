@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -520,6 +521,8 @@ public class AnimPlayer : MonoBehaviour
     {
         if (CapableBank.Instance.log_anim_layers) { Debug.Log($"(AnimPlayer) {name}'s loading data : {(data != null ? data.GetDetails() : "null")}"); }
 
+        transform.localPosition = data.local_position;
+
         // we clear runtime data
         _capable = null;
         current_anim = null;
@@ -577,7 +580,10 @@ public class AnimPlayer : MonoBehaviour
             // get sr data
             material_path = get_material_path(Renderer),
             sorting_layer_id = Renderer.sortingLayerID,
-            order_in_layer = Renderer.sortingOrder
+            order_in_layer = Renderer.sortingOrder,
+
+            // and local position
+            local_position = get_static_local_position()
         };
 
 
@@ -594,6 +600,21 @@ public class AnimPlayer : MonoBehaviour
         data.layers = layers_data;
         return data;
     }
+
+    private Vector2 get_static_local_position()
+    {
+        if (GetComponent<Capable>() != null)
+        {
+            return Vector2.zero;
+            // if we have a capable on it, it means we are at the top of the capable hierarchy,
+            // so our local pos is a world pos in fact. that's why we return zero, because when
+            // the capable will be constructed by the CapableBank, it will receive an "anim_player"
+            // transform which is a direct child of the capable. and so if we return the world pos
+            // it will move the anim player FFAAAAR AWAY from the capable, which is not what we want !
+        }
+        return transform.localPosition;
+    }
+
     private string get_material_path(SpriteRenderer sr)
     {
         if (sr == null || sr.sharedMaterial == null) { return ""; }

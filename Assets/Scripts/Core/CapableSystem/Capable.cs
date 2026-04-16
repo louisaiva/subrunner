@@ -508,7 +508,11 @@ public class Capable : MonoBehaviour, Debuggable
         // ! the colliders & anim data are loaded directly from CapableBank since we pool them
 
         // we load the inventory (and so the items)
-        Inventory?.LoadInventoryData(data.inventory);
+        if (Inventory != null)
+        {
+            // _inventory.Capable = this;
+            _inventory.LoadInventoryData(data.inventory);
+        }
 
         // we add the effects
         for (int i = 0; i < data.effects.Count; i++)

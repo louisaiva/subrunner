@@ -4,13 +4,15 @@ using System.Collections.Generic;
 [Serializable] public class InventoryData
 {
     public List<ItemPoolData> item_pools_data;
+    public ItemType item_type;
 
-    // DUPLICATE & DETAILS
+    // DUPLICATE
     public InventoryData Duplicate()
     {
         InventoryData new_data = new InventoryData
         {
-            item_pools_data = new List<ItemPoolData>()
+            item_pools_data = new List<ItemPoolData>(),
+            item_type = item_type
         };
         for (int i=0; i<item_pools_data.Count; i++)
         {
@@ -18,9 +20,12 @@ using System.Collections.Generic;
         }
         return new_data;
     }
+
+    // GET DETAILS
     public string GetDetails()
     {
-        string details = $"inventory : {item_pools_data.Count} item pools :\n";
+        string details = $"inventory : {item_pools_data.Count} item pools\n";
+        details += $"    - item type : {item_type}\n";
         for (int i=0; i<item_pools_data.Count; i++)
         {
             details += item_pools_data[i].GetDetails();
@@ -31,6 +36,7 @@ using System.Collections.Generic;
 
 [Serializable] public class ItemPoolData
 {
+    public ItemType item_type;
     public List<ItemStackData> stacks_data;
     public string pool_id;
     public int max_stacks;
@@ -38,29 +44,13 @@ using System.Collections.Generic;
     public bool scalable;
     public string item_rule;
 
-    
-    // DETAILS
-    public string GetDetails()
-    {
-        // count all items
-        string details = "";
-        for (int i=0; i<stacks_data.Count; i++)
-        {
-            string item_ref = "";
-            if (stacks_data[i] != null && stacks_data[i].items_ids.Count > 0)
-            {
-                item_ref = stacks_data[i].items_ids[0];
-            }
-            details += $"      - {stacks_data[i].items_ids.Count} {item_ref}\n";
-        }
-        return details;
-    }
-
+    // DUPLICATE
     public ItemPoolData Duplicate()
     {
         ItemPoolData new_data = new ItemPoolData
         {
             pool_id = pool_id,
+            item_type = item_type,
             max_stacks = max_stacks,
             min_stacks = min_stacks,
             scalable = scalable,
@@ -73,6 +63,24 @@ using System.Collections.Generic;
         }
         return new_data;
     }
+
+    // DETAILS
+    public string GetDetails()
+    {
+        // count all items
+        string details = "    - item pool : " + pool_id + $" ({stacks_data.Count} stacks for item rule '{item_rule}')\n";
+        for (int i = 0; i < stacks_data.Count; i++)
+        {
+            string item_ref = "";
+            if (stacks_data[i] != null && stacks_data[i].items_ids.Count > 0)
+            {
+                item_ref = stacks_data[i].items_ids[0];
+            }
+            details += $"        - {stacks_data[i].items_ids.Count} {item_ref}\n";
+        }
+        return details;
+    }
+
 }
 
 [Serializable] public class ItemStackData

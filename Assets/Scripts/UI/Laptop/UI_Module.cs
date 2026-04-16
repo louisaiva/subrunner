@@ -60,7 +60,7 @@ public class UI_Module : UI_ItemStack
         // on enable le slot
         Enable();
     }
-    protected override void set_ui_item(Sprite sprite)
+    protected override void set_ui_item(Sprite sprite, Color? color = null)
     {
         if (item_image == null)
         {

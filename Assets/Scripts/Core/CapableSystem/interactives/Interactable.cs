@@ -36,3 +36,13 @@ public interface TurnableIntoItem
     public ItemData ItemDataInfo { get; }
     public DropParameters DropParameters { get; }
 }
+
+public interface Chestable : Interactable
+{
+    public Inventory Inventory { get; }
+
+    // for capable that acts pretty much like a chest, which means
+    // they show the UI_ChestPool
+    public void ExitHover();
+    public string ChestType { get; }
+}

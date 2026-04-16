@@ -103,6 +103,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -147,6 +148,7 @@ GameObject:
   - component: {fileID: 4456942687804765687}
   - component: {fileID: 1384867348251053569}
   - component: {fileID: 9030444988959475855}
+  - component: {fileID: 2293706039897124906}
   m_Layer: 2
   m_Name: item
   m_TagString: Untagged
@@ -211,6 +213,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2293706039897124906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4495421963851439431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4403719ad1cedca4c8c8822504018b66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_Colorer
+  color: {r: 0, g: 0, b: 0, a: 0}
+  disable_on_revert: 0
+  log: 0
 --- !u!1 &4964243457693928914
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,6 +329,6 @@ MonoBehaviour:
   drag_sprite: {fileID: -518717346, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   drag_hover_sprite: {fileID: -729547760, guid: 5755464e4ed56af4b8c1ec57af58e2f0, type: 3}
   Stack:
-    Pool: {fileID: 0}
     MaxQty: 0
     Items: []
+  log_drop: 0

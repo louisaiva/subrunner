@@ -110,6 +110,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1087337404748540792
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -155,6 +156,7 @@ SpriteRenderer:
   m_SortingLayerID: -667374433
   m_SortingLayer: 3
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -1768996122, guid: aec2946880ff3d74682b04f7091281a0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -164,7 +166,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!114 &4211642891535890797
 MonoBehaviour:
@@ -179,6 +180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: blue_chest
+  <orientation>k__BackingField: D
   current_capacity: 
   current_anim:
     name: 
@@ -237,16 +239,21 @@ MonoBehaviour:
     kind: 
     position: {x: 0, y: 0}
     orientation: {x: 0, y: 0}
+    layer: 0
+    tag: 
     anim_data:
+      skin_kind: 
       skin: 
       anim_capacity_priorities: []
+      current_capacity: 
       material_path: 
       sorting_layer_id: 0
       order_in_layer: 0
       layers: []
     inventory:
       item_pools_data: []
-    body_data:
+      item_type: 0
+    feet_data:
       box_colliders: []
       circle_colliders: []
     capacities_ids: []
@@ -651,9 +658,21 @@ PrefabInstance:
       propertyPath: MinStacks
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: -6211465771143209247, guid: d53402f82e6050643b628ae9144b9e77, type: 3}
+      propertyPath: item_rule
+      value: '!virtual'
+      objectReference: {fileID: 0}
+    - target: {fileID: -6211465771143209247, guid: d53402f82e6050643b628ae9144b9e77, type: 3}
+      propertyPath: <ItemType>k__BackingField
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2243483085189594233, guid: d53402f82e6050643b628ae9144b9e77, type: 3}
       propertyPath: m_Name
       value: inventory
+      objectReference: {fileID: 0}
+    - target: {fileID: 3003809755707482883, guid: d53402f82e6050643b628ae9144b9e77, type: 3}
+      propertyPath: <ItemType>k__BackingField
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7494443309791140517, guid: d53402f82e6050643b628ae9144b9e77, type: 3}
       propertyPath: m_LocalPosition.x

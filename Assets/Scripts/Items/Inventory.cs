@@ -7,11 +7,10 @@ using Unity.Mathematics;
 public class Inventory : MonoBehaviour, ItemStorer
 {
 
+    // item type
+    [field:SerializeField] public ItemType ItemType { get; set; }
 
-
-
-
-    
+        
     [Header("ItemPools")]
     [SerializeField] private bool clear_and_assign_pools_in_awake = true;
     [SerializeField] private List<ItemPool> pools = new List<ItemPool>();
@@ -53,8 +52,9 @@ public class Inventory : MonoBehaviour, ItemStorer
     public Capable Capable { get
         {
             if (_capable == null) { _capable = transform.parent.GetComponent<Capable>(); }
-            return _capable;
-        }}
+            return _capable;  } set {
+            _capable = value;
+        } }
 
     [Header("Logs")]
     [SerializeField] protected bool log = false;
@@ -88,115 +88,6 @@ public class Inventory : MonoBehaviour, ItemStorer
             pools[i].OnStackRemoved += (stack) => { OnStackRemoved?.Invoke(stack); };
         }
     }
-
-
-    // LOADING / UNLOADING INVENTORY DATA
-    public void LoadInventoryData(InventoryData data)
-    {
-        // check if we have data
-        if (data == null /* || data.item_pools_data == null */) { return; }
-
-        // we suppose we already have the right amount of ItemPools (should be built in CapableBank)
-
-        // we gather the real ItemPool
-        List<ItemPool> pools_to_fill = gameObject.GetComponents<ItemPool>().ToList();
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            pools_to_fill.AddRange(transform.GetChild(i).GetComponents<ItemPool>());
-        }
-
-        // we check if we have the same amount of what the data says
-        if (pools_to_fill.Count != data.item_pools_data.Count)
-        {
-            Debug.LogWarning($"(Inventory - LoadInventoryData) Inventory data has {data.item_pools_data.Count} pools but we have {pools_to_fill.Count} pools on {Capable.name}");
-        }
-
-        // we load the data in the pools
-        for (int i = 0; i < data.item_pools_data.Count; i++)
-        {
-            if (i >= pools_to_fill.Count) { break; }
-            pools_to_fill[i].LoadPoolData(data.item_pools_data[i]);
-
-            // we add the pool
-            pools.Add(pools_to_fill[i]);
-
-            // we attach the pool
-            pools_to_fill[i].AttachToInventory(this);
-
-            // & assign callbacks
-            pools_to_fill[i].OnStackCreated += (stack) => { OnStackCreated?.Invoke(stack); };
-            pools_to_fill[i].OnStackRemoved += (stack) => { OnStackRemoved?.Invoke(stack); };
-        }
-    }
-    public void UnloadInventoryData()
-    {
-        // List<ItemPoolData> new_datas = new List<ItemPoolData>();
-
-        for (int i = 0; i < pools.Count; i++)
-        {
-            // new_datas.Add(pools[i].GetDynamicPoolData()); // we get the data (so we can save it)
-            pools[i].UnloadPoolData(); // we unload the pool
-        }
-
-        // we save the data into our capable.data.inventory.item_pools_data
-        // Capable.data.inventory.item_pools_data = new_datas;
-
-        // finally we remove the pools
-        pools.Clear();
-    }
-    public void SaveDynamicInventoryData()
-    {
-        List<ItemPoolData> new_datas = new List<ItemPoolData>();
-
-        for (int i = 0; i < pools.Count; i++)
-        {
-            new_datas.Add(pools[i].GetDynamicPoolData()); // we get the data (so we can save it)
-        }
-
-        // we save the data into our capable.data.inventory.item_pools_data
-        Capable.data.inventory.item_pools_data = new_datas;
-    }
-
-    // STATIC DATA
-    public InventoryData GetStaticInventoryData()
-    {
-        InventoryData data = new InventoryData()
-        {
-            item_pools_data = new List<ItemPoolData>()
-        };
-
-        // we gather the real ItemPool
-        List<ItemPool> pools = GetStaticItemPools();
-        for (int i = 0; i < pools.Count; i++)
-        {
-            data.item_pools_data.Add(pools[i].GetStaticPoolData());
-        }       
-
-        return data;
-    }
-    public List<ItemPool> GetStaticItemPools()
-    {
-        // we gather the real ItemPool
-        List<ItemPool> pools = gameObject.GetComponents<ItemPool>().ToList();
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            pools.AddRange(transform.GetChild(i).GetComponents<ItemPool>());
-        }
-        return pools;
-    }
-    public List<Item> GetStaticItems()
-    {
-        // we gather the real ItemPool
-        List<ItemPool> pools = GetStaticItemPools();
-        List<Item> items = new List<Item>();
-        for (int i = 0; i < pools.Count; i++)
-        {
-            items.AddRange(pools[i].GetStaticItems());
-        }
-        return items;
-    }
-
-
 
 
     // GRAB / DROP
@@ -493,7 +384,6 @@ public class Inventory : MonoBehaviour, ItemStorer
         }
         return false;
     }
-
     public ItemPool GetItemPool(string poolID)
     {
         for (int i = 0; i < pools.Count; i++)
@@ -503,9 +393,10 @@ public class Inventory : MonoBehaviour, ItemStorer
         return null;
     }
 
+
+
     // ITEM RULE
     public bool ValidateRule(Item item) { return item.ValidateRule(item_rule); }
-
     public string ItemRule { get { return item_rule; } }
     private string item_rule
     {
@@ -523,12 +414,131 @@ public class Inventory : MonoBehaviour, ItemStorer
             return "";
         }
     }
+
+
+
+
+
+
+
+    // LOADING / UNLOADING INVENTORY DATA
+    public void LoadInventoryData(InventoryData data)
+    {
+        // check if we have data
+        if (data == null /* || data.item_pools_data == null */) { return; }
+
+        // we set basic inventory data
+        this.ItemType = data.item_type;
+
+
+        // we suppose we already have the right amount of ItemPools (should be built in CapableBank)
+
+        // we gather the real ItemPool
+        List<ItemPool> pools_to_fill = gameObject.GetComponents<ItemPool>().ToList();
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            pools_to_fill.AddRange(transform.GetChild(i).GetComponents<ItemPool>());
+        }
+
+        // we check if we have the same amount of what the data says
+        if (pools_to_fill.Count != data.item_pools_data.Count)
+        {
+            Debug.LogWarning($"(Inventory - LoadInventoryData) Inventory data has {data.item_pools_data.Count} pools but we have {pools_to_fill.Count} pools on {Capable.name}");
+        }
+
+        // we load the data in the pools
+        for (int i = 0; i < data.item_pools_data.Count; i++)
+        {
+            if (i >= pools_to_fill.Count) { break; }
+            pools_to_fill[i].LoadPoolData(data.item_pools_data[i]);
+
+            // we add the pool
+            pools.Add(pools_to_fill[i]);
+
+            // we attach the pool
+            pools_to_fill[i].AttachToInventory(this);
+
+            // & assign callbacks
+            pools_to_fill[i].OnStackCreated += (stack) => { OnStackCreated?.Invoke(stack); };
+            pools_to_fill[i].OnStackRemoved += (stack) => { OnStackRemoved?.Invoke(stack); };
+        }
+    }
+    public void UnloadInventoryData()
+    {
+        for (int i = 0; i < pools.Count; i++)
+        {
+            pools[i].UnloadPoolData(); // we unload the pool
+        }
+
+        // finally we remove the pools
+        pools.Clear();
+    }
+    public void SaveDynamicInventoryData()
+    {
+        List<ItemPoolData> new_datas = new List<ItemPoolData>();
+
+        for (int i = 0; i < pools.Count; i++)
+        {
+            new_datas.Add(pools[i].GetDynamicPoolData()); // we get the data (so we can save it)
+        }
+
+        // we save the data into our capable.data.inventory.item_pools_data
+        Capable.data.inventory.item_pools_data = new_datas;
+    }
+
+    // STATIC DATA
+    public InventoryData GetStaticInventoryData()
+    {
+        InventoryData data = new InventoryData()
+        {
+            item_pools_data = new List<ItemPoolData>(),
+            item_type = this.ItemType
+        };
+
+        // we gather the real ItemPool
+        List<ItemPool> pools = GetStaticItemPools();
+        for (int i = 0; i < pools.Count; i++)
+        {
+            data.item_pools_data.Add(pools[i].GetStaticPoolData());
+        }
+
+        return data;
+    }
+    public List<ItemPool> GetStaticItemPools()
+    {
+        // we gather the real ItemPool
+        List<ItemPool> pools = gameObject.GetComponents<ItemPool>().ToList();
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            pools.AddRange(transform.GetChild(i).GetComponents<ItemPool>());
+        }
+        return pools;
+    }
+    public List<Item> GetStaticItems()
+    {
+        // we gather the real ItemPool
+        List<ItemPool> pools = GetStaticItemPools();
+        List<Item> items = new List<Item>();
+        for (int i = 0; i < pools.Count; i++)
+        {
+            items.AddRange(pools[i].GetStaticItems());
+        }
+        return items;
+    }
+
+
+
+
 }
 
 
 public interface ItemStorer
 {
     public GameObject gameObject { get; }
+
+
+    // item type
+    public ItemType ItemType { get; }
 
     // items access
     public List<Item> Items { get; }

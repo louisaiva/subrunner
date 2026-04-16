@@ -89,12 +89,12 @@ public class BatchActionProvider : MonoBehaviour
     // PENDING ENTITIES MANAGEMENT
     public void RegisterForResolve(EntityMotor ia_and_motor_data)
     {
-        pending_entities.Add(ia_and_motor_data);
+        if (!pending_entities.Add(ia_and_motor_data)) { return; }
         if (log_pending_entities_management) { Debug.Log($"(BatchActionProvider) Registered '{ia_and_motor_data.ia_data.id}' for resolve. Total pending entities: {pending_entities.Count}"); }
     }
     public void RemoveFromResolve(EntityMotor ia_and_motor_data)
     {
-        pending_entities.Remove(ia_and_motor_data);
+        if (!pending_entities.Remove(ia_and_motor_data)) { return; }
         if (log_pending_entities_management) { Debug.Log($"(BatchActionProvider) Removed '{ia_and_motor_data.ia_data.id}' from resolve. Total pending entities: {pending_entities.Count}"); }
     }
 

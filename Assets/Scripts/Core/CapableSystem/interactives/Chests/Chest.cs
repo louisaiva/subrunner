@@ -2,8 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Chest : Capable, Interactable, Openable
+public class Chest : Capable, Openable, Chestable
 {
+    public string ChestType { get; } = "chest";
     public bool log_interact_kf = false;
     public bool log_buttons_registering = false;
 
@@ -44,15 +45,25 @@ public class Chest : Capable, Interactable, Openable
         // we open if it's the first interactor we have !!
         if (interactors.Count == 1) { GetCapacity<OpenCapacity>()?.Use(interactor); }
 
-        // only if the interactor is controlled
-        if (interactor == Controller.Instance.Capable && !ui_inventory_shown)
+        // we get the chest pool
+        if (!UI_Manager.Instance.TryGetPool(out UI_ChestPool chest_pool))
         {
-            // we set the interactor
-            Interactor = interactor.GetCapacity<InteractCapacity>();
-
-            // we show the inventory UI
-            ShowUI_Inventory();
+            Debug.LogError($"(ServerRack) {name} cannot find UI_ChestPool to show chest inventory");
+            return;
         }
+
+        // only if the interactor is controlled & ui not shown yet
+        if (interactor != Controller.Instance.Capable || chest_pool.IsShown(this)) { return; }
+
+        // we set the interactor
+        Interactor = interactor.GetCapacity<InteractCapacity>();
+
+        // we show the inventory UI
+        chest_pool.ShowChest(this);
+
+        // we move the interact key feedback if we have one
+        if (interact_kf == null) { return; }
+        interact_kf.localPosition = calculate_best_kf_position();
     }
     public void OnHoverLost(Capable interactor)
     {
@@ -63,18 +74,30 @@ public class Chest : Capable, Interactable, Openable
         // if there is no more interactor we close the chest
         if (interactors.Count == 0) { GetCapacity<CloseCapacity>()?.Use(interactor); }
 
+        // we get the chest pool & verify if it's shown
+        if (!UI_Manager.Instance.TryGetPool(out UI_ChestPool chest_pool))
+        {
+            Debug.LogError($"(ServerRack) {name} cannot find UI_ChestPool to show chest inventory");
+            return;
+        }
+        if (!chest_pool.IsShown(this)) { return; }
+
+
         // if there is no more controlled interactors we hide the ui inventory
-        if (!ui_inventory_shown) { return; }
         for (int i = 0; i < interactors.Count; i++)
         {
             if (interactors[i] == Controller.Instance.Capable) { return; } // we still have the controlled interactor so we dont hide the ui
         }
 
         // we hide the inventory UI
-        HideUI_Inventory();
+        chest_pool.HideChest();
         Interactor = null; // we reset the interactor
 
         // if (debug) { Debug.Log("(Chest) " + name + " removed hover succesfully for " + interactor.name); }
+
+        // we reset back the interact key feedback if we have one
+        if (interact_kf == null) { return; }
+        interact_kf.localPosition = initial_kf_position;
     }
     public async void ExitHover()
     {
@@ -83,7 +106,8 @@ public class Chest : Capable, Interactable, Openable
     }
 
     // UI INVENTORY SHOWING / HIDING
-    protected bool ui_inventory_shown = false;
+    // protected bool ui_inventory_shown = false;
+    /* 
     protected void ShowUI_Inventory()
     {
         // attach the chest inventory & perso inventory to the ui chest pool
@@ -94,10 +118,6 @@ public class Chest : Capable, Interactable, Openable
         // then we show the ui_chest
         UI_Manager.Instance.SwitchTo("chest");
         ui_inventory_shown = true;
-
-        // we move the interact key feedback if we have one
-        if (interact_kf == null) { return; }
-        interact_kf.localPosition = calculate_best_kf_position();
     }
     protected void HideUI_Inventory()
     {
@@ -110,10 +130,7 @@ public class Chest : Capable, Interactable, Openable
         UI_Manager.Instance.UnstackPool("chest");
         ui_inventory_shown = false;
 
-        // we move back the interact key feedback if we have one
-        if (interact_kf == null) { return; }
-        interact_kf.localPosition = initial_kf_position;
-    }
+    } */
 
 
     // INTERACT KEY FEEDBACK
@@ -156,4 +173,7 @@ public class Chest : Capable, Interactable, Openable
         
         return columns_positions.Count;
     }
+
+
+
 }
