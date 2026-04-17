@@ -357,6 +357,11 @@ public class AnimBank : MonoBehaviour
                 }
                 if (!found)
                 {
+                    if (!skin_variant.keep_base_anim_if_spritesheet_not_found)
+                    {
+                        if (log_variant_skins) { Debug.LogWarning("(AnimBank - CreateVariantAnim) Skipping anim because sprite not found and keep_base_anim_if_spritesheet_not_found is false : " + anim.name); }
+                        return null;
+                    }
                     if (log_variant_skins) { Debug.LogWarning("(AnimBank - CreateVariantAnim) Sprite not found in any base spritesheet : " + variant_anim.sprites[i].name + " in anim " + anim.name); }
                     continue;
                 }
@@ -453,7 +458,7 @@ public class AnimBank : MonoBehaviour
         // add the animation to the bank
         anims[skin][capacity].Add(anim);
     }
-    public Anim GetAnim(string name)
+    public Anim GetAnim(string name, bool return_empty_if_not_found = false)
     {
         // if (log_get_anim) { Debug.Log("(AnimBank - GetAnim) Getting animation : " + name); }
         string[] splitted_name = name.Split('.');
@@ -465,7 +470,7 @@ public class AnimBank : MonoBehaviour
         if (!anims.ContainsKey(skin))
         {
             if (log_get_anim) { Debug.LogWarning($"(AnimBank - GetAnim : {skin}.{capacity}.{orientation} ) Skin not found, returning sphere anim"); }
-            return anims["sphere"]["idle"][0]; // return the sphere anim of the sphere skin
+            return return_empty_if_not_found ? anims["none"]["idle"][0] : anims["sphere"]["idle"][0]; // return the sphere anim of the sphere skin
         }
 
         // check if we do not have the capacity
@@ -475,7 +480,7 @@ public class AnimBank : MonoBehaviour
             if (!anims[skin].ContainsKey("idle") || anims[skin]["idle"].Count == 0)
             {
                 if (log_get_anim) { Debug.LogWarning($"(AnimBank - GetAnim : {skin}.{capacity}.{orientation} ) Idle anim not found for skin, returning sphere anim"); }
-                return anims["sphere"]["idle"][0]; // return the sphere anim of the sphere skin
+                return return_empty_if_not_found ? anims["none"]["idle"][0] : anims["sphere"]["idle"][0]; // return the sphere anim of the sphere skin
             }
             if (log_get_anim) { Debug.LogWarning($"(AnimBank - GetAnim : {skin}.{capacity}.{orientation} ) Capacity not found, returning idle"); }
             return GetAnim(skin + ".idle." + orientation);
@@ -773,4 +778,5 @@ public class SkinVariant
     public List<string> variant_spritesheets;
     public string base_skin;
     public List<string> base_spritesheets;
+    public bool keep_base_anim_if_spritesheet_not_found = true; // if false, we won't generate variant anim if we don't have the spritesheet
 }

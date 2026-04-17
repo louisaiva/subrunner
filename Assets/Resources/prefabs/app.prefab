@@ -366,198 +366,240 @@ MonoBehaviour:
     base_spritesheets:
     - beings/rat/rat
     - beings/rat/rat_attack
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: black_fridge
     variant_spritesheets:
     - objects/interactives/chests/black_fridge
     base_skin: fridge
     base_spritesheets:
     - objects/interactives/chests/fridge
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: laptop_red
     variant_spritesheets:
     - objects/items/laptops/laptop_red
     base_skin: small_laptop
     base_spritesheets:
     - objects/items/laptops/laptop_blue
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: laptop_black
     variant_spritesheets:
     - objects/items/laptops/laptop_black
     base_skin: small_laptop
     base_spritesheets:
     - objects/items/laptops/laptop_blue
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: laptop_green
     variant_spritesheets:
     - objects/items/laptops/laptop_green
     base_skin: small_laptop
     base_spritesheets:
     - objects/items/laptops/laptop_blue
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: pckg_back
     variant_spritesheets:
     - objects/interactives/box/box_bg
     base_skin: pckg_front
     base_spritesheets:
     - objects/interactives/box/box_fg
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: blue_box_bg
     variant_spritesheets:
     - objects/interactives/box/bue_box_bg
     base_skin: pckg_front
     base_spritesheets:
     - objects/interactives/box/box_fg
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: blue_box_fg
     variant_spritesheets:
     - objects/interactives/box/bue_box_fg
     base_skin: pckg_front
     base_spritesheets:
     - objects/interactives/box/box_fg
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: gaming_chair_arms
     variant_spritesheets:
     - objects/interactives/chairs/gaming_chair_arms
     base_skin: gaming_chair_base
     base_spritesheets:
     - objects/interactives/chairs/gaming_chair_base
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: gaming_chair_head
     variant_spritesheets:
     - objects/interactives/chairs/gaming_chair_head
     base_skin: gaming_chair_base
     base_spritesheets:
     - objects/interactives/chairs/gaming_chair_base
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: pot_above
     variant_spritesheets:
     - objects/items/kitchen/pot_layers/pot_above
     base_skin: pot
     base_spritesheets:
     - objects/items/kitchen/pot
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: pot_back
     variant_spritesheets:
     - objects/items/kitchen/pot_layers/pot_back
     base_skin: pot
     base_spritesheets:
     - objects/items/kitchen/pot
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: pot_front
     variant_spritesheets:
     - objects/items/kitchen/pot_layers/pot_front
     base_skin: pot
     base_spritesheets:
     - objects/items/kitchen/pot
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: pot_pasta
     variant_spritesheets:
     - objects/items/kitchen/pot_layers/pot_pasta
     base_skin: pot
     base_spritesheets:
     - objects/items/kitchen/pot
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: sink_back
     variant_spritesheets:
     - objects/interactives/kitchen/sink_back
     base_skin: sink_front
     base_spritesheets:
     - objects/interactives/kitchen/sink_front
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: blue_library_back
     variant_spritesheets:
     - objects/deco/library/library_back
     base_skin: blue_library_front
     base_spritesheets:
     - objects/deco/library/library_front
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: rack_fg
     variant_spritesheets:
     - objects/interactives/computers/servers/blue_server_fg
     base_skin: rack_bg
     base_spritesheets:
     - objects/interactives/computers/servers/blue_server_bg
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: station_L
     variant_spritesheets:
     - objects/interactives/computers/module_station/module_station_L
     base_skin: station
     base_spritesheets:
     - objects/interactives/computers/module_station/module_station_U
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: station_R
     variant_spritesheets:
     - objects/interactives/computers/module_station/module_station_R
     base_skin: station
     base_spritesheets:
     - objects/interactives/computers/module_station/module_station_U
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: button_gnd
     variant_spritesheets:
     - objects/interactives/buttons/button_gnd
     base_skin: button
     base_spritesheets:
     - objects/interactives/buttons/button
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: button_mid
     variant_spritesheets:
     - objects/interactives/buttons/button_mid
     base_skin: button
     base_spritesheets:
     - objects/interactives/buttons/button
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: robot_sp_npc
     variant_spritesheets:
     - objects/interactives/spawners/robot_spawner_npc
     base_skin: robot_sp
     base_spritesheets:
     - objects/interactives/spawners/robot_spawner_base
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: dev_face
     variant_spritesheets:
     - beings/devs/dev_face
     base_skin: dev
     base_spritesheets:
     - beings/devs/dev_base
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: dev_hair
     variant_spritesheets:
     - beings/devs/dev_hair
     base_skin: dev
     base_spritesheets:
     - beings/devs/dev_base
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: dev_hat
     variant_spritesheets:
     - beings/devs/dev_hat
     base_skin: dev
     base_spritesheets:
     - beings/devs/dev_base
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: dev_kb
     variant_spritesheets:
     - beings/devs/dev_kb
     base_skin: dev
     base_spritesheets:
     - beings/devs/dev_base
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: blue_elevdoor_ceil
     variant_spritesheets:
     - objects/interactives/elevator/elevator_door_ceil
     base_skin: blue_elevdoor
     base_spritesheets:
     - objects/interactives/elevator/elevator_door_wall
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: blue_elevdoor_ground
     variant_spritesheets:
     - objects/interactives/elevator/elevator_door_ground
     base_skin: blue_elevdoor
     base_spritesheets:
     - objects/interactives/elevator/elevator_door_wall
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: dummy_base
     variant_spritesheets:
     - beings/dummy_target/dummy_base
     base_skin: dummy
     base_spritesheets:
     - beings/dummy_target/dummy_dummy
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: steel_door_ceil
     variant_spritesheets:
     - objects/interactives/doors/steel/steel_door_ceil
     base_skin: steel_door
     base_spritesheets:
     - objects/interactives/doors/steel/steel_door_mid
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: sofa_R
     variant_spritesheets:
     - objects/interactives/living_room/sofa/sofa_R
     base_skin: sofa_L
     base_spritesheets:
     - objects/interactives/living_room/sofa/sofa_L
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: sofa_mid
     variant_spritesheets:
     - objects/interactives/living_room/sofa/sofa_mid
     base_skin: sofa_L
     base_spritesheets:
     - objects/interactives/living_room/sofa/sofa_L
+    keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: sofa_mid2
     variant_spritesheets:
     - objects/interactives/living_room/sofa/sofa_mid2
     base_skin: sofa_L
     base_spritesheets:
     - objects/interactives/living_room/sofa/sofa_L
+    keep_base_anim_if_spritesheet_not_found: 1
+  - variant_name: bob_hair
+    variant_spritesheets:
+    - beings/perso/perso_sit_hair
+    - beings/perso/perso_sit_down_hair
+    base_skin: bob
+    base_spritesheets:
+    - beings/perso/perso_sit_base
+    - beings/perso/perso_sit_down_base
+    keep_base_anim_if_spritesheet_not_found: 0
   log: 0
   log_LAFAC: 0
   log_variant_skins: 0

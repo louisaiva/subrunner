@@ -128,6 +128,7 @@ public class EntityMotor
     public IAData ia_data;
     public MotorData motor_data;
     public LocalWorldData world_data;
+    public string ID => ia_data.id;
 
     public void CreateWorldData()
     {

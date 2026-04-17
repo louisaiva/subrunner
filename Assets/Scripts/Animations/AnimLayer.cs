@@ -82,7 +82,7 @@ public class AnimLayer : MonoBehaviour
         anim_name = skin + anim_name[anim_skin.Length..]; // replace the current anim skin by our layer skin
 
         // we get the anim
-        Anim anim = AnimBank.Instance.GetAnim(anim_name);
+        Anim anim = AnimBank.Instance.GetAnim(anim_name, return_empty_if_not_found: true);
 
         // we play it at frame
         play_now_at_frame_with_duration(anim, frame, duration_override);
