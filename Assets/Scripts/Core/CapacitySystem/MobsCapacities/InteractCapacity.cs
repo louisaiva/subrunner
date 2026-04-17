@@ -211,6 +211,7 @@ public enum InteractType
     Device,
     Door,
     Kitchen,
+    LivingRoom,
     Spawner,
     Corpse,
     Item

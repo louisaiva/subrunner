@@ -540,6 +540,24 @@ MonoBehaviour:
     base_skin: steel_door
     base_spritesheets:
     - objects/interactives/doors/steel/steel_door_mid
+  - variant_name: sofa_R
+    variant_spritesheets:
+    - objects/interactives/living_room/sofa/sofa_R
+    base_skin: sofa_L
+    base_spritesheets:
+    - objects/interactives/living_room/sofa/sofa_L
+  - variant_name: sofa_mid
+    variant_spritesheets:
+    - objects/interactives/living_room/sofa/sofa_mid
+    base_skin: sofa_L
+    base_spritesheets:
+    - objects/interactives/living_room/sofa/sofa_L
+  - variant_name: sofa_mid2
+    variant_spritesheets:
+    - objects/interactives/living_room/sofa/sofa_mid2
+    base_skin: sofa_L
+    base_spritesheets:
+    - objects/interactives/living_room/sofa/sofa_L
   log: 0
   log_LAFAC: 0
   log_variant_skins: 0
@@ -1123,7 +1141,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsQuitting: 0
   LoadedSceneCount: 0
-  prototype: (profiler) tilemap engine
+  prototype: sitting on sofa
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320

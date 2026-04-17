@@ -46,3 +46,9 @@ public interface Chestable : Interactable
     public void ExitHover();
     public string ChestType { get; }
 }
+
+public interface Sittable : Interactable
+{
+    public Vector2 WorldSittingPosition { get; }
+    public Vector2 WorldStandingPosition { get; }
+}

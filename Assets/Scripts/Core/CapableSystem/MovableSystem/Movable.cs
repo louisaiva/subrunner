@@ -229,6 +229,27 @@ public class Movable : Capable
         if (debug_velocity) { Debug.Log("velocity : " + Velocity); }
     }
 
+    public void DisableMovements()
+    {
+        if (this.HasEffect(Effect.BeingCarried)) { return; }
+
+        ClearForces();
+        Velocity = Vector2.zero;
+        AddEffect(Effect.BeingCarried, -888f);
+
+        if (FeetCollider != null) { FeetCollider.enabled = false; }
+        if (Rb != null) { Rb.simulated = false; }
+    }
+    public void EnableMovements()
+    {
+        if (!this.HasEffect(Effect.BeingCarried)) { return; }
+
+        RemoveEffect(Effect.BeingCarried);
+
+        if (FeetCollider != null) { FeetCollider.enabled = true; }
+        if (Rb != null) { Rb.simulated = true; }
+    }
+
     // gizmos
     protected virtual void OnDrawGizmos()
     {
