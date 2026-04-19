@@ -5849,6 +5849,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: extract_json_on_load
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -16897,6 +16901,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c12ede5de4f0984b9bf2b93be7a899e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldBuilder
+  data_path: Assets/Resources/data/world_builder/
   selected_cell_visualizer: {fileID: 1429532785}
   cell_prefab: {fileID: 9089296017029186672, guid: 9b5f4e76aaf6ddc4ab096b93665e2e95, type: 3}
   cell_parent: {fileID: 45162325}
@@ -16912,7 +16917,9 @@ MonoBehaviour:
   - {r: 0.6862745, g: 0.9333334, b: 0.9333334, a: 1}
   - {r: 0, g: 1, b: 1, a: 1}
   - {r: 1, g: 0, b: 1, a: 1}
-  log_cycles: 1
+  log_cycles: 0
+  log_get_room: 0
+  log_data: 1
 --- !u!1 &2035760633
 GameObject:
   m_ObjectHideFlags: 0

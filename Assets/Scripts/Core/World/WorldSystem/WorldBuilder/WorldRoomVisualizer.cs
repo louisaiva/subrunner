@@ -1,20 +1,19 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using UnityEngine;
 
 public class WorldRoomVisualizer : MonoBehaviour
 {
     private List<WorldCellVisualizer> cells = new List<WorldCellVisualizer>();
     private List<WorldLinkVisualizer> links = new List<WorldLinkVisualizer>();
-
     public Color Color
     {
         get { return Color.white; }
         set { }
     }
 
-
-
+    // CREATE ROOM
     public void CreateRoom(List<WorldCellVisualizer> cells, List<WorldLinkVisualizer> links)
     {
         // unregister from previous cells if there is any
@@ -92,5 +91,9 @@ public class WorldRoomVisualizer : MonoBehaviour
     {
         return this.cells.Intersect(cells).Count() == this.cells.Count
             && this.links.Intersect(links).Count() == this.links.Count;
+    }
+    public List<Vector3Int> GetLoopCells()
+    {
+        return cells.Select(c => c.CurrentCell).ToList();
     }
 }
