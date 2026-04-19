@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 
@@ -76,6 +78,12 @@ public class WorldBuilder : Singleton<WorldBuilder>
         #endif
     }
 
+    // START
+    private void Start()
+    {
+        UI_Manager.Instance.SwitchTo("dev_world_builder");
+    }
+
 
 
 
@@ -83,6 +91,14 @@ public class WorldBuilder : Singleton<WorldBuilder>
     // UPDATE
     private void Update()
     {
+        // check if we have a navigator and if it has a hovered ui element
+        if (UI_Navigator.Instance.IsHoveringSlot)
+        {
+            if (selected_cell_visualizer.gameObject.activeSelf) { selected_cell_visualizer.gameObject.SetActive(false); }
+            return;
+        }
+        if (!selected_cell_visualizer.gameObject.activeSelf) { selected_cell_visualizer.gameObject.SetActive(true); }
+
         UpdateInputs();
     }
     private void UpdateInputs()
@@ -371,9 +387,32 @@ public class WorldBuilder : Singleton<WorldBuilder>
     public void SaveData()
     {
         var data = new WorldBuilderData();
-        data.Cells = cell_visualizers.Select(c => c.CurrentCell).ToList();
-        data.Links = link_visualizers.Where(l => l.CellA != null && l.CellB != null).Select(l => new WorldLinkData { CellA = l.CellA.CurrentCell, CellB = l.CellB.CurrentCell }).ToList();
-        data.Rooms = room_visualizers.Select(r => new WorldRoomData { Cells = r.GetLoopCells() }).ToList();
+
+        // create cells
+        for (int i = 0; i < cell_visualizers.Count; i++)
+        {
+            if (cell_visualizers[i] == null) { continue; }
+            data.Cells.Add(cell_visualizers[i].CurrentCell);
+        }
+
+        // create links
+        for (int i = 0; i < link_visualizers.Count; i++)
+        {
+            if (link_visualizers[i] == null) { continue; }
+            if (link_visualizers[i].CellA == null) { continue; }
+            if (link_visualizers[i].CellB == null) { continue; }
+            data.Links.Add(new WorldLinkData { CellA = link_visualizers[i].CellA.CurrentCell, CellB = link_visualizers[i].CellB.CurrentCell });
+        }
+
+        // create rooms
+        for (int i = 0; i < room_visualizers.Count; i++)
+        {
+            if (room_visualizers[i] == null) { continue; }
+            data.Rooms.Add(new WorldRoomData { Cells = room_visualizers[i].GetLoopCells() });
+        }
+        // data.Cells = cell_visualizers.Select(c => c.CurrentCell).ToList();
+        // data.Links = link_visualizers.Where(l => l.CellA != null && l.CellB != null).Select(l => new WorldLinkData { CellA = l.CellA.CurrentCell, CellB = l.CellB.CurrentCell }).ToList();
+        // data.Rooms = room_visualizers.Select(r => new WorldRoomData { Cells = r.GetLoopCells() }).ToList();
 
         string json = JsonUtility.ToJson(data, prettyPrint: true);
 

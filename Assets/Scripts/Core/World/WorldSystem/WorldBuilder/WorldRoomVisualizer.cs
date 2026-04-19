@@ -1,16 +1,36 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using UnityEngine;
 
+[RequireComponent(typeof(PolygonCollider2D))]
 public class WorldRoomVisualizer : MonoBehaviour
 {
     private List<WorldCellVisualizer> cells = new List<WorldCellVisualizer>();
     private List<WorldLinkVisualizer> links = new List<WorldLinkVisualizer>();
+
+    private PolygonCollider2D _collider;
+    private PolygonCollider2D polygon_collider
+    {
+        get
+        {
+            if (_collider == null) { _collider = GetComponent<PolygonCollider2D>(); }
+            return _collider;
+        }
+    }
+
+    private Material _mat;
+    private Material material
+    {
+        get
+        {
+            if (_mat == null) { _mat = GetComponent<MeshRenderer>().material; }
+            return _mat;
+        }
+    }
     public Color Color
     {
-        get { return Color.white; }
-        set { }
+        get { return material.color; }
+        set { material.color = value; }
     }
 
     // CREATE ROOM
@@ -28,6 +48,11 @@ public class WorldRoomVisualizer : MonoBehaviour
 
         // register to new cells
         register_callbacks();
+
+
+        // create the visu
+        polygon_collider.pathCount = 1;
+        polygon_collider.SetPath(0, GetPath());
     }
 
     // colors
@@ -95,5 +120,13 @@ public class WorldRoomVisualizer : MonoBehaviour
     public List<Vector3Int> GetLoopCells()
     {
         return cells.Select(c => c.CurrentCell).ToList();
+    }
+    public Vector2[] GetPath()
+    {
+        return cells.Select(c => (Vector2)c.transform.position).ToArray();
+    }
+    public Vector2[] GetWorldPath()
+    {
+        return cells.Select(c => (Vector2)c.transform.position - (Vector2)transform.position).ToArray();
     }
 }

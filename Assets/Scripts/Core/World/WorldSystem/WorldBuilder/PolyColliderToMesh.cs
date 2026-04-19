@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshFilter),typeof(PolygonCollider2D))]
+[ExecuteInEditMode, RequireComponent(typeof(MeshFilter),typeof(PolygonCollider2D))]
 public class PolyColliderToMesh: MonoBehaviour
 {
 
@@ -12,11 +12,17 @@ public class PolyColliderToMesh: MonoBehaviour
 
     // In-editor, poll for collider updates so we can react 
     // to shape changes with realtime interactivity.
-    #if UNITY_EDITOR
-    void OnDrawGizmosSelected()
+    /* #if UNITY_EDITOR
+    private void OnScene(UnityEditor.SceneView scene_view)
     {
+    }
+    #endif */
+
+    private void Update()
+    {
+        // Debug.Log("scene view update");
         if (_collider == null)
-            Awake();
+            Initialize();
         else {
             var colliderPoints = _collider.GetPath(0);
             if(colliderPoints.Length == _cachedPoints.Length) {
@@ -30,14 +36,12 @@ public class PolyColliderToMesh: MonoBehaviour
                 if (mismatch == false)
                     return;
             }
-
             Reshape();
         }
     }
-    #endif
 
     // Wire up references and set initial shape.
-    private void Awake()
+    private void Initialize()
     {
         _collider = GetComponent<PolygonCollider2D>();
         var filter = GetComponent<MeshFilter>();
@@ -50,6 +54,7 @@ public class PolyColliderToMesh: MonoBehaviour
         Reshape();
 
         filter.sharedMesh = _myMesh;
+        Debug.Log("initialized mesh");
     }
 
     // Call this if you edit the collider at runtime 

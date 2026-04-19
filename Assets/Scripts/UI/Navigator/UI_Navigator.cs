@@ -28,6 +28,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
     public List<Slottable> Slottables = new List<Slottable>();
     public List<UI_Slot> Slots;
     public UI_Slot CurrentSlot;
+    public bool IsHoveringSlot { get { return CurrentSlot != null; } }
 
     // events
     public event Action<UI_Slot> OnSlotHoverEnter = delegate { }; // delegate that triggers when we navigate to a new slot
