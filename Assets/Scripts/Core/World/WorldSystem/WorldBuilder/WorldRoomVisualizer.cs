@@ -7,6 +7,8 @@ public class WorldRoomVisualizer : MonoBehaviour
 {
     private List<WorldCellVisualizer> cells = new List<WorldCellVisualizer>();
     private List<WorldLinkVisualizer> links = new List<WorldLinkVisualizer>();
+    public List<WorldCellVisualizer> Cells { get { return cells; } }
+    public List<WorldLinkVisualizer> Links { get { return links; } }
 
     private PolygonCollider2D _collider;
     private PolygonCollider2D polygon_collider
@@ -34,6 +36,7 @@ public class WorldRoomVisualizer : MonoBehaviour
     }
 
     // CREATE ROOM
+    private static int room_count = 0;
     public void CreateRoom(List<WorldCellVisualizer> cells, List<WorldLinkVisualizer> links)
     {
         // unregister from previous cells if there is any
@@ -53,6 +56,9 @@ public class WorldRoomVisualizer : MonoBehaviour
         // create the visu
         polygon_collider.pathCount = 1;
         polygon_collider.SetPath(0, GetPath());
+
+        name = $"room_{room_count}";
+        room_count++;
     }
 
     // colors

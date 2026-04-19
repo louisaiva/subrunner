@@ -57,6 +57,10 @@ public class WorldBuilder : Singleton<WorldBuilder>
     private List<Color> used_colors = new List<Color>();
 
 
+    [Header("Builders")]
+    public CarpetBuilder carpet_builder;
+
+
     [Header("Logs")]
     [SerializeField] private bool log_cycles = true;
     [SerializeField] private bool log_get_room = true;
@@ -378,9 +382,16 @@ public class WorldBuilder : Singleton<WorldBuilder>
     }
 
     // BUILDER
-    public void BuildTilemaps()
+    public void Build()
     {
-        
+        // build carpet
+        if (carpet_builder != null)
+        {
+            foreach (var r in room_visualizers)
+            {
+                carpet_builder.Build(r);
+            }
+        }
     }
 
     // SAVE DATA
