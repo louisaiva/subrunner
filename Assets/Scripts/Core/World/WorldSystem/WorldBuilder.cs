@@ -36,19 +36,19 @@ public class WorldBuilder : Singleton<WorldBuilder>
     public WorldCellVisualizer selected_cell_visualizer;
     public WorldCellVisualizer cell_prefab;
     public Transform cell_parent;
-    private List<WorldCellVisualizer> cell_visualizers = new List<WorldCellVisualizer>();
+    [SerializeField] private List<WorldCellVisualizer> cell_visualizers = new List<WorldCellVisualizer>();
     private WorldCellVisualizer last_added_cell = null;
 
     [Header("Link Visualizers")]
     public WorldLinkVisualizer link_prefab;
     public Transform link_parent;
-    private List<WorldLinkVisualizer> link_visualizers = new List<WorldLinkVisualizer>();
+    [SerializeField] private List<WorldLinkVisualizer> link_visualizers = new List<WorldLinkVisualizer>();
     private WorldLinkVisualizer selecting_link = null;
 
     [Header("Room Visualizers")]
     public WorldRoomVisualizer room_prefab;
     public Transform room_parent;
-    private List<WorldRoomVisualizer> room_visualizers = new List<WorldRoomVisualizer>();
+    [SerializeField] private List<WorldRoomVisualizer> room_visualizers = new List<WorldRoomVisualizer>();
 
     [Header("Colors")]
     public Color WaitingColor = Color.orange;
@@ -62,9 +62,10 @@ public class WorldBuilder : Singleton<WorldBuilder>
 
 
     [Header("Logs")]
-    [SerializeField] private bool log_cycles = true;
-    [SerializeField] private bool log_get_room = true;
-    [SerializeField] private bool log_data = true;
+    [SerializeField] private bool log_cycles = false;
+    [SerializeField] private bool log_get_room = false;
+    [SerializeField] private bool log_data = false;
+    [SerializeField] private bool log_building = false;
 
 
 
@@ -102,6 +103,34 @@ public class WorldBuilder : Singleton<WorldBuilder>
             return;
         }
         if (!selected_cell_visualizer.gameObject.activeSelf) { selected_cell_visualizer.gameObject.SetActive(true); }
+
+
+        // check if we have some null or missing visualizers in our lists and remove them
+        cell_visualizers.RemoveAll(v => v == null);
+        link_visualizers.RemoveAll(v => v == null);
+        room_visualizers.RemoveAll(v => v == null);
+
+        // missing
+        foreach (var l in link_visualizers)
+        {
+            try { var pos = l.transform.position; }
+            catch (MissingReferenceException)
+            {
+                // if we have a missing reference exception it means the link has been destroyed but not removed from the list, we remove it from the list
+                link_visualizers.Remove(l);
+                break;
+            }
+        }
+        foreach (var r in room_visualizers)
+        {
+            try { var pos = r.transform.position; }
+            catch (MissingReferenceException)
+            {
+                // if we have a missing reference exception it means the room has been destroyed but not removed from the list, we remove it from the list
+                room_visualizers.Remove(r);
+                break;
+            }
+        }
 
         UpdateInputs();
     }
@@ -384,11 +413,15 @@ public class WorldBuilder : Singleton<WorldBuilder>
     // BUILDER
     public void Build()
     {
+        if (log_building) { Debug.Log("(WorldBuilder) Building the world..."); }
+
         // build carpet
         if (carpet_builder != null)
         {
+            if (log_building) { Debug.Log("(WorldBuilder) Building carpet"); }
             foreach (var r in room_visualizers)
             {
+                if (log_building) { Debug.Log("(WorldBuilder) Building carpet for " + r.name); }
                 carpet_builder.Build(r);
             }
         }

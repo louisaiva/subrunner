@@ -5037,6 +5037,7 @@ MonoBehaviour:
   tilemap_parent: {fileID: 1489220170}
   tilemap_prefab: {fileID: 3844696143943461768, guid: 3917760ef1d71e142a68dd813abcb99b, type: 3}
   carpet_tile: {fileID: 11400000, guid: 152024fe8b279844bacd6a1eb90e7765, type: 2}
+  log_angles: 1
 --- !u!1001 &642794781
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17072,7 +17073,8 @@ MonoBehaviour:
   carpet_builder: {fileID: 624354656}
   log_cycles: 0
   log_get_room: 0
-  log_data: 1
+  log_data: 0
+  log_building: 1
 --- !u!1 &2035760633
 GameObject:
   m_ObjectHideFlags: 0
