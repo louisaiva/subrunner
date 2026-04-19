@@ -31,10 +31,6 @@ public class WorldCellVisualizer : MonoBehaviour
     public System.Action<WorldCellVisualizer> OnRemoved = delegate { };
     public System.Action<WorldCellVisualizer> OnMoved = delegate { };
 
-    [Header("Getters")]
-    public Vector2 WorldPosition { get { return transform.position; } }
-
-
     public void SetCell(Vector3Int cell)
     {
         CurrentCell = cell;
@@ -46,4 +42,16 @@ public class WorldCellVisualizer : MonoBehaviour
     {
         OnRemoved?.Invoke(this);
     }
+
+    // GETTERS
+    public Vector2 WorldPosition { get { return transform.position; } }
+    public override string ToString()
+    {
+        return $"({CurrentCell.x}, {CurrentCell.y})";
+    }
+    public bool IsPartOfRoom()
+    {
+        return WorldBuilder.Instance.GetRoomOfCell(this) != null;
+    }
+
 }

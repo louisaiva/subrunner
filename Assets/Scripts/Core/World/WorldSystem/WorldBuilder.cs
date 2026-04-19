@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(Grid))]
@@ -30,23 +31,39 @@ public class WorldBuilder : Singleton<WorldBuilder>
     public WorldCellVisualizer cell_prefab;
     public Transform cell_parent;
     private List<WorldCellVisualizer> cell_visualizers = new List<WorldCellVisualizer>();
-    [SerializeField] private Color waiting_cells_color = Color.orange;
-    [SerializeField] private Color linked_cells_color = Color.navyBlue;
     private WorldCellVisualizer last_added_cell = null;
 
     [Header("Link Visualizers")]
     public WorldLinkVisualizer link_prefab;
     public Transform link_parent;
     private List<WorldLinkVisualizer> link_visualizers = new List<WorldLinkVisualizer>();
-    [SerializeField] private Color waiting_links_color = Color.orange;
-    [SerializeField] private Color linked_links_color = Color.navyBlue;
     private WorldLinkVisualizer selecting_link = null;
+
+    [Header("Room Visualizers")]
+    public WorldRoomVisualizer room_prefab;
+    public Transform room_parent;
+    private List<WorldRoomVisualizer> room_visualizers = new List<WorldRoomVisualizer>();
+
+    [Header("Colors")]
+    public Color WaitingColor = Color.orange;
+    public Color LinkedColor = Color.lightBlue;
+    public List<Color> RoomColors = new List<Color> { Color.lightPink, Color.lightGreen, Color.paleTurquoise, Color.cyan, Color.magenta };
+    private List<Color> used_colors = new List<Color>();
+
+
+    [Header("Logs")]
+    [SerializeField] private bool log_cycles = true;
+    [SerializeField] private bool log_get_room = true;
+
+
 
     // AWAKE
     protected override void Awake()
     {
         base.Awake();
         grid_material.SetFloat("_CellSize", Grid.cellSize.x);
+
+        used_colors = new List<Color>(RoomColors);
     }
 
 
@@ -58,8 +75,6 @@ public class WorldBuilder : Singleton<WorldBuilder>
     {
         UpdateInputs();
     }
-
-
     private void UpdateInputs()
     {
         update_mouse_pos();
@@ -75,6 +90,7 @@ public class WorldBuilder : Singleton<WorldBuilder>
         selected_cell_visualizer.SetCell(Grid.WorldToCell(world_mouse));
     }
 
+    // clicks
     private bool holding_left_click = false;
     private bool holding_right_click = false;
     private void update_click()
@@ -118,17 +134,29 @@ public class WorldBuilder : Singleton<WorldBuilder>
         {
             new_cell_visu = Instantiate(cell_prefab, cell_parent);
             new_cell_visu.SetCell(SelectedCell);
-            new_cell_visu.Color = waiting_cells_color;
+            new_cell_visu.Color = WaitingColor;
             cell_visualizers.Add(new_cell_visu);
         }
         
         // we connect the on-going link to the new cell
         if (selecting_link != null)
         {
-            // it means we already have a cell selected and we want to link it to the new cell
-            selecting_link.SetSecondCell(new_cell_visu);
-            selecting_link.Color = waiting_links_color;
-            selecting_link = null;
+            if (GetLinkBetween(selecting_link.CellA, new_cell_visu) != null)
+            {
+                // if there is already a link between the selecting cell and the new cell it means we want to remove this link instead of creating a cycle
+                Destroy(selecting_link.gameObject);
+                selecting_link = null;
+            }
+            else
+            {
+                // it means we already have a cell selected and we want to link it to the new cell
+                selecting_link.SetSecondCell(new_cell_visu);
+                selecting_link.Color = WaitingColor;
+
+                // we check if this new link creates a cycle
+                handle_potential_cycle_creation(selecting_link);
+                selecting_link = null;
+            }
         }
         last_added_cell = new_cell_visu;
 
@@ -156,6 +184,118 @@ public class WorldBuilder : Singleton<WorldBuilder>
     }
 
 
+    // ROOM (LOOPING NODES) MANAGEMENT
+    private void handle_potential_cycle_creation(WorldLinkVisualizer new_link)
+    {
+        bool is_a_cycle_created = try_get_cycle_created_by_edge(new_link, out List<WorldCellVisualizer> cycle);
+
+        if (!is_a_cycle_created) { return; }
+        if (log_cycles) { Debug.Log("cycle created with " + cycle.Count + " cells : " + string.Join(", ", cycle)); }
+
+        // we gather the links of this cycle
+        var links = new List<WorldLinkVisualizer>();
+        for (int i = 0; i < cycle.Count; i++)
+        {
+            var c1 = cycle[i];
+            var c2 = cycle[(i + 1) % cycle.Count];
+            var l = GetLinkBetween(c1, c2);
+            if (l != null) { links.Add(l); }
+        }
+
+        // check if we already have a room with the same cycle
+        foreach (var r in room_visualizers)
+        {
+            if (r.IsEqualTo(cycle, links))
+            {
+                if (log_cycles) { Debug.Log("but this cycle already exists in room " + r.name); }
+                return;
+            }
+        }
+
+        // else we create a new room
+        WorldRoomVisualizer new_room_visu = Instantiate(room_prefab, room_parent);
+        new_room_visu.CreateRoom(cycle, links);
+        
+        // pick a random color
+        if (used_colors.Count == 0) { used_colors = new List<Color>(RoomColors); }
+        Color color = used_colors[Random.Range(0, used_colors.Count)];
+        used_colors.Remove(color);
+        new_room_visu.Color = color;
+
+        // add to list
+        room_visualizers.Add(new_room_visu);
+    }
+    private bool try_get_cycle_created_by_edge(WorldLinkVisualizer new_link, out List<WorldCellVisualizer> cycle)
+    {
+        cycle = null;
+        if (new_link.CellA == null || new_link.CellB == null) { return false; }
+        WorldCellVisualizer a = new_link.CellA;
+        WorldCellVisualizer b = new_link.CellB;
+
+        // 1) adjacency from existing finalized links
+        var adj = new Dictionary<WorldCellVisualizer, List<WorldCellVisualizer>>();
+        foreach (var l in link_visualizers)
+        {
+            if (l == null || l.CellA == null || l.CellB == null) { continue; }
+            if (l == new_link) { continue; } // prevent the new link to be in the adjacency otherwise we will always have a cycle of 2 nodes
+            mark_as_adjacents(adj, l.CellA, l.CellB);
+        }
+        if (log_cycles)
+        {
+            Debug.Log("adjacency : " + string.Join("\n", adj.Select(kv => $"{kv.Key} -> {string.Join(", ", kv.Value)}")));
+        }
+
+        // 2) BFS from a to b
+        var q = new Queue<WorldCellVisualizer>();
+        var parent = new Dictionary<WorldCellVisualizer, WorldCellVisualizer>();
+        var visited = new HashSet<WorldCellVisualizer>();
+
+        q.Enqueue(a);
+        visited.Add(a);
+
+        while (q.Count > 0)
+        {
+            var cur = q.Dequeue();
+            if (cur == b) break;
+            if (!adj.TryGetValue(cur, out var neigh)) { continue; }
+
+            for (int i = 0; i < neigh.Count; i++)
+            {
+                var n = neigh[i];
+                if (visited.Contains(n)) { continue; }
+                visited.Add(n);
+                parent[n] = cur;
+                q.Enqueue(n);
+            }
+        }
+
+        if (!visited.Contains(b)) { return false; }
+
+        // 3) reconstruct path a..b
+        var path = new List<WorldCellVisualizer>();
+        var node = b;
+        path.Add(node);
+        while (node != a)
+        {
+            node = parent[node];
+            path.Add(node);
+        }
+        path.Reverse();
+
+        // 4) close cycle with new edge b->a
+        // path.Add(a);
+        cycle = path;
+        return true;
+    }
+    private void mark_as_adjacents(Dictionary<WorldCellVisualizer, List<WorldCellVisualizer>> adj, WorldCellVisualizer u, WorldCellVisualizer v)
+    {
+        if (!adj.TryGetValue(u, out var lu)) { lu = new List<WorldCellVisualizer>(); adj[u] = lu; }
+        if (!adj.TryGetValue(v, out var lv)) { lv = new List<WorldCellVisualizer>(); adj[v] = lv; }
+        if (!lu.Contains(v)) lu.Add(v);
+        if (!lv.Contains(u)) lv.Add(u);
+    }
+
+
     // GETTERS
     public Vector3Int SelectedCell => selected_cell_visualizer.CurrentCell;
     public WorldCellVisualizer GetCellAt(Vector3Int cell_pos)
@@ -169,7 +309,21 @@ public class WorldBuilder : Singleton<WorldBuilder>
         }
         return null;
     }
-
+    public WorldLinkVisualizer GetLinkBetween(WorldCellVisualizer c1, WorldCellVisualizer c2)
+    {
+        return link_visualizers.FirstOrDefault(l => (l.CellA == c1 && l.CellB == c2) || (l.CellA == c2 && l.CellB == c1));
+    }
+    public WorldRoomVisualizer GetRoomOfCell(WorldCellVisualizer cell)
+    {
+        for (int i = 0; i < room_visualizers.Count; i++)
+        {
+            if (!room_visualizers[i].HasCell(cell)) { continue; }
+            if (log_get_room) { Debug.Log("cell " + cell + " is part of room " + room_visualizers[i].name); }
+            return room_visualizers[i];
+        }
+        if (log_get_room) { Debug.Log("cell " + cell + " is not part of any room"); }
+        return null;
+    }
 
     // BUILDER
     public void BuildTilemaps()

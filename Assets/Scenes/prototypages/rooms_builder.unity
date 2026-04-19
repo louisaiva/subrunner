@@ -4563,6 +4563,37 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2806026283884960729, guid: abacdc781c511fc42b1c0e4dd87c3c7b, type: 3}
   m_PrefabInstance: {fileID: 574189500}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &577257286
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 577257287}
+  m_Layer: 0
+  m_Name: rooms
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &577257287
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 577257286}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2023470140}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &578650048
 GameObject:
   m_ObjectHideFlags: 0
@@ -16851,6 +16882,7 @@ Transform:
   - {fileID: 1429532783}
   - {fileID: 45162325}
   - {fileID: 1156090116}
+  - {fileID: 577257287}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2023470141
@@ -16868,12 +16900,19 @@ MonoBehaviour:
   selected_cell_visualizer: {fileID: 1429532785}
   cell_prefab: {fileID: 9089296017029186672, guid: 9b5f4e76aaf6ddc4ab096b93665e2e95, type: 3}
   cell_parent: {fileID: 45162325}
-  waiting_cells_color: {r: 1, g: 0.6470588, b: 0, a: 1}
-  linked_cells_color: {r: 0, g: 0, b: 0.5019608, a: 1}
   link_prefab: {fileID: -9088505589101276699, guid: 60db9c8bef30ca141980fe2a58e549f1, type: 3}
   link_parent: {fileID: 1156090116}
-  waiting_links_color: {r: 1, g: 0.6470588, b: 0, a: 1}
-  linked_links_color: {r: 0, g: 0, b: 0.5019608, a: 1}
+  room_prefab: {fileID: 5736771361114329614, guid: e03aec8e11cad514399c064605e8d36e, type: 3}
+  room_parent: {fileID: 577257287}
+  WaitingColor: {r: 1, g: 0.6470588, b: 0, a: 1}
+  LinkedColor: {r: 0.6784314, g: 0.8470589, b: 0.9019608, a: 1}
+  RoomColors:
+  - {r: 1, g: 0.7137255, b: 0.7568628, a: 1}
+  - {r: 0.5647059, g: 0.9333334, b: 0.5647059, a: 1}
+  - {r: 0.6862745, g: 0.9333334, b: 0.9333334, a: 1}
+  - {r: 0, g: 1, b: 1, a: 1}
+  - {r: 1, g: 0, b: 1, a: 1}
+  log_cycles: 1
 --- !u!1 &2035760633
 GameObject:
   m_ObjectHideFlags: 0
