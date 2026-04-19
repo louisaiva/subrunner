@@ -93,11 +93,9 @@ public class RoomEngine : BSOD_System<RoomEngine>
     ------------------------------------- */
 
 
-    // AWAKE
-    public override void Awake()
+    // INIT
+    public void Init()
     {
-        base.Awake();
-
         // load rooms data
         loadRoomsData();
 

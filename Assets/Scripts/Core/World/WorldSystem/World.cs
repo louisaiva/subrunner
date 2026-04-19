@@ -21,7 +21,7 @@ public class World : BSOD_System<World>
             return Path.Combine(WorldDataPath, StaticInstance.world_id);
         }
     }
-    private static World _instance;
+    /* private static World _instance;
     public static World StaticInstance
     {
         get
@@ -34,7 +34,7 @@ public class World : BSOD_System<World>
             if (_instance == null) { Debug.LogError("(World) No World instance found in the scene. Please add one to the scene."); }
             return _instance;
         }
-    }
+    } */
 
     [Header("Current world")]
     public string world_id;
@@ -117,6 +117,12 @@ public class World : BSOD_System<World>
         // load the data inside the world
         this.world_id = world_id;
         if (log) { Debug.Log($"(World) Loaded world data for world_id: {world_id}\n\n{json}"); }
+
+        // and then we init all the engines
+        LevelEngine.StaticInstance.Init();
+        RoomEngine.StaticInstance.Init();
+        CapableSystem.StaticInstance.Init();
+        CapacityEngine.StaticInstance.Init();
     }
     private string extract_world_json(string world_id)
     {

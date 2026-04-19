@@ -5,11 +5,21 @@ public class BSOD_System<T> : MonoBehaviour where T : MonoBehaviour
 {
     // AWAKE & SINGLETON LOGIC
     public static T Instance;
+    public static T StaticInstance
+    {
+        get
+        {
+            if (Instance != null) { return Instance; }
+            Instance = FindFirstObjectByType<T>();
+            if (Instance == null) { Debug.LogError($"(BSOD_System) No instance of {typeof(T).Name} found in the scene."); }
+            return Instance;
+        }
+    }
     public virtual void Awake()
     {
         // singleton logic
         if (Instance == null) { Instance = this as T; }
-        else { Destroy(gameObject); return; }
+        else if (Instance != this) { Destroy(gameObject); return; }
 
         // loadObjectsData(); // <- this is for the example below
     }

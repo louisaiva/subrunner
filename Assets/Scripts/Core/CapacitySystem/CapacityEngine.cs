@@ -38,10 +38,8 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
 
 
     // AWAKE
-    public override void Awake()
+    public void Init()
     {
-        base.Awake();
-
         // load templates capacities data
         loadTemplatesCapacitiesData();
 

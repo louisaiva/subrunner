@@ -24,7 +24,7 @@ public class LevelEngine : BSOD_System<LevelEngine>
     public Action<LevelData> OnLevelChange = delegate { };
 
     [Header("World levels")]
-    public Dictionary<string, Level> world_levels;
+    public Dictionary<string, Level> world_levels = new Dictionary<string, Level>();
     public Level level_prefab;
     public Transform level_parent;
 
@@ -37,10 +37,8 @@ public class LevelEngine : BSOD_System<LevelEngine>
     public bool hide_no_level_warning = false;
     
     // AWAKE
-    public override void Awake()
+    public void Init()
     {
-        base.Awake();
-
         // load levels data
         loadLevelsData();
 

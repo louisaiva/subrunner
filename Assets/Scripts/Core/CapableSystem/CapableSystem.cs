@@ -67,10 +67,8 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
 
     // AWAKE
-    public override void Awake()
+    public void Init()
     {
-        base.Awake();
-
         // load templates data
         loadTemplatesCapablesData();
 
