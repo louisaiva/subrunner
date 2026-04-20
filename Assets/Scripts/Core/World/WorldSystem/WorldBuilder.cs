@@ -88,6 +88,7 @@ public class WorldBuilder : Singleton<WorldBuilder>
     private void Start()
     {
         UI_Manager.Instance.SwitchTo("dev_world_builder");
+        CameraFollow.Instance.SetSize(10f);
     }
 
 

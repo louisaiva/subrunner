@@ -26,6 +26,10 @@ public class CameraFollow : Singleton<CameraFollow>
     [SerializeField] private float Y_OFF_MAX = 1.5f;
     [SerializeField] private float Y_OFF_SPEED = 0.5f;
 
+    [Header("Size")]
+    [SerializeField] private float default_size = 3f;
+    private float target_size = 3f;
+
     public void RefreshTarget(Capable new_target)
     {
         if (new_target == null) { return; }
@@ -35,10 +39,18 @@ public class CameraFollow : Singleton<CameraFollow>
     }
 
     // UPDATE
-    void Update()
+    private void Update()
     {
         // if (Perso.Instance == null) { capable_rb = null; return; }
         if (capable == null || target == null || Controller.Instance.PIC.InputsDisabled) { capable_rb = null; target = null; return; }
+
+        // applique le zoom
+        if (Camera.main.orthographicSize != target_size)
+        {
+            float next_size = Mathf.Lerp(Camera.main.orthographicSize, target_size, Time.deltaTime * 5f);
+            if (Mathf.Abs(next_size - target_size) < 0.01f) { next_size = target_size; }
+            Camera.main.orthographicSize = next_size;
+        }
 
 
         // calcule le mouvement de la cam en X
@@ -68,4 +80,8 @@ public class CameraFollow : Singleton<CameraFollow>
         transform.position = Vector3.SmoothDamp(transform.position, final_position, ref velocity, timeOffset);
 
     }
+
+    // SIZE SETTER
+    public void SetSize(float size) { target_size = size;}
+    public void ResetSize() { SetSize(default_size); }
 }

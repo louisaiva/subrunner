@@ -35,69 +35,72 @@ public class GroundBuilder : TilemapBuilder
     // FILL INSIDE
     private List<Vector3Int> fill_inside(List<Vector3Int> tile_positions)
     {
-        // we get the minus x & y of the tile positions to know where to start filling
+        HashSet<Vector3Int> outline = new HashSet<Vector3Int>(tile_positions);
+        if (outline.Count == 0) { return new List<Vector3Int>(); }
+
         int min_x = int.MaxValue;
         int max_x = int.MinValue;
         int min_y = int.MaxValue;
         int max_y = int.MinValue;
-        foreach (var pos in tile_positions)
+
+        foreach (var pos in outline)
         {
             if (pos.x < min_x) { min_x = pos.x; }
             if (pos.y < min_y) { min_y = pos.y; }
             if (pos.x > max_x) { max_x = pos.x; }
             if (pos.y > max_y) { max_y = pos.y; }
         }
-        
-        List<Vector3Int> filled_positions = new List<Vector3Int>(tile_positions);
 
-        // for each x we go vertically until maxy
-        for (int y = min_y; y <= max_y; y++)
+        // Expand bounds by 1 so the flood start is guaranteed outside the outline.
+        min_x -= 1;
+        min_y -= 1;
+        max_x += 1;
+        max_y += 1;
+
+        HashSet<Vector3Int> outside = new HashSet<Vector3Int>();
+        Queue<Vector3Int> queue = new Queue<Vector3Int>();
+        Vector3Int start = new Vector3Int(min_x, min_y, 0);
+
+        outside.Add(start);
+        queue.Enqueue(start);
+
+        Vector3Int[] directions = new Vector3Int[]
         {
-            filled_positions.AddRange(fill_row(min_x, max_x, tile_positions, y));
-        }
+            new Vector3Int(1, 0, 0),
+            new Vector3Int(-1, 0, 0),
+            new Vector3Int(0, 1, 0),
+            new Vector3Int(0, -1, 0)
+        };
 
-        // we remove the duplicates if there are any
-        HashSet<Vector3Int> unique_positions = new HashSet<Vector3Int>(filled_positions);
-        return new List<Vector3Int>(unique_positions);
-    }
-    private List<Vector3Int> fill_row(int minx, int maxx, List<Vector3Int> tile_positions, int y)
-    {
-        List<Vector3Int> filled_positions = new List<Vector3Int>();
-        bool is_inside = false;
-
-        List<Vector3Int> current_adjacent_corners = new List<Vector3Int>();
-
-        // we start at minx miny and we go horizontally until maxx
-        Vector3Int pos = new Vector3Int(minx, y, 0);
-        for (int x = minx; x <= maxx; x++)
+        while (queue.Count > 0)
         {
-            if (is_corner(x, y, tile_positions))
+            Vector3Int current = queue.Dequeue();
+            for (int i = 0; i < directions.Length; i++)
             {
-                if (current_adjacent_corners.Contains(new Vector3Int(x-1, y, 0))) // if last tile was a corner adjacent too, we add the current corner & continue without changing inside flag
-                {
-                    current_adjacent_corners.Add(pos);
-                    continue;
-                }
+                Vector3Int next = current + directions[i];
 
-                // else we arrive at a new corner. we change the flag
-                is_inside = !is_inside;
-                current_adjacent_corners = new List<Vector3Int>() { pos };
-                continue;
+                if (next.x < min_x || next.x > max_x || next.y < min_y || next.y > max_y) { continue; }
+                if (outline.Contains(next)) { continue; }
+                if (outside.Contains(next)) { continue; }
+
+                outside.Add(next);
+                queue.Enqueue(next);
             }
-
-            // if we are not inside, we don't add the position to the filled positions
-            if (!is_inside) { continue; }
-
-            // else we add the position to the filled positions
-            pos = new Vector3Int(x, y, 0);
-            if (!tile_positions.Contains(pos)) { filled_positions.Add(pos); }   
         }
 
-        return filled_positions;
-    }
+        HashSet<Vector3Int> filled = new HashSet<Vector3Int>(outline);
 
-    private bool is_corner(int x,int y, List<Vector3Int> corners_positions)
-    {
-        return corners_positions.Contains(new Vector3Int(x, y, 0));
+        for (int x = min_x + 1; x <= max_x - 1; x++)
+        {
+            for (int y = min_y + 1; y <= max_y - 1; y++)
+            {
+                Vector3Int pos = new Vector3Int(x, y, 0);
+                if (outline.Contains(pos)) { continue; }
+                if (outside.Contains(pos)) { continue; }
+                filled.Add(pos);
+            }
+        }
+
+        return new List<Vector3Int>(filled);
     }
 }
