@@ -61,6 +61,8 @@ public class WorldBuilder : Singleton<WorldBuilder>
     public CarpetBuilder carpet_builder;
     public GroundBuilder ground_builder;
     public WallsBuilder walls_builder;
+    public CeilingBuilder ceiling_builder;
+    public MaskBuilder mask_builder;
 
 
     [Header("Logs")]
@@ -450,6 +452,28 @@ public class WorldBuilder : Singleton<WorldBuilder>
                 walls_builder.Build(r);
             }
         }
+
+        // build ceiling
+        if (ceiling_builder != null)
+        {
+            if (log_building) { Debug.Log("(WorldBuilder) Building ceiling"); }
+            foreach (var r in room_visualizers)
+            {
+                if (log_building) { Debug.Log("(WorldBuilder) Building ceiling for " + r.name); }
+                ceiling_builder.Build(r);
+            }
+        }
+
+        // build mask
+        if (mask_builder != null)
+        {
+            if (log_building) { Debug.Log("(WorldBuilder) Building mask"); }
+            foreach (var r in room_visualizers)
+            {
+                if (log_building) { Debug.Log("(WorldBuilder) Building mask for " + r.name); }
+                mask_builder.Build(r);
+            }
+        }
     }
     public void Build(string builder)
     {
@@ -481,6 +505,26 @@ public class WorldBuilder : Singleton<WorldBuilder>
                 walls_builder.Build(r);
             }
         }
+
+        if (builder == "ceiling" && ceiling_builder != null)
+        {
+            if (log_building) { Debug.Log("(WorldBuilder) Building ceiling"); }
+            foreach (var r in room_visualizers)
+            {
+                if (log_building) { Debug.Log("(WorldBuilder) Building ceiling for " + r.name); }
+                ceiling_builder.Build(r);
+            }
+        }
+
+        if (builder == "mask" && mask_builder != null)
+        {
+            if (log_building) { Debug.Log("(WorldBuilder) Building mask"); }
+            foreach (var r in room_visualizers)
+            {
+                if (log_building) { Debug.Log("(WorldBuilder) Building mask for " + r.name); }
+                mask_builder.Build(r);
+            }
+        }
     }
 
     // CLEAR & ERASE
@@ -502,6 +546,8 @@ public class WorldBuilder : Singleton<WorldBuilder>
         carpet_builder.Clear();
         ground_builder.Clear();
         walls_builder.Clear();
+        ceiling_builder.Clear();
+        mask_builder.Clear();
     }
 
     // SAVE DATA
