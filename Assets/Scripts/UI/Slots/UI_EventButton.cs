@@ -23,7 +23,7 @@ public class UI_EventButton : UI_Button, Colorant
     [Header("Event")]
     public UnityEvent onClickedEvent;
 
-    protected void Start()
+    protected virtual void Start()
     {
         // we set the base color
         btn_icon.color = baseColor;

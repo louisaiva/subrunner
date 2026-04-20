@@ -59,6 +59,7 @@ public class WorldBuilder : Singleton<WorldBuilder>
 
     [Header("Builders")]
     public CarpetBuilder carpet_builder;
+    public GroundBuilder ground_builder;
 
 
     [Header("Logs")]
@@ -425,6 +426,17 @@ public class WorldBuilder : Singleton<WorldBuilder>
                 carpet_builder.Build(r);
             }
         }
+
+        // build ground
+        if (ground_builder != null)
+        {
+            if (log_building) { Debug.Log("(WorldBuilder) Building ground"); }
+            foreach (var r in room_visualizers)
+            {
+                if (log_building) { Debug.Log("(WorldBuilder) Building ground for " + r.name); }
+                ground_builder.Build(r);
+            }
+        }
     }
     public void Build(string builder)
     {
@@ -435,6 +447,15 @@ public class WorldBuilder : Singleton<WorldBuilder>
             {
                 if (log_building) { Debug.Log("(WorldBuilder) Building carpet for " + r.name); }
                 carpet_builder.Build(r);
+            }
+        }
+        if (builder == "ground" && ground_builder != null)
+        {
+            if (log_building) { Debug.Log("(WorldBuilder) Building ground"); }
+            foreach (var r in room_visualizers)
+            {
+                if (log_building) { Debug.Log("(WorldBuilder) Building ground for " + r.name); }
+                ground_builder.Build(r);
             }
         }
     }
@@ -456,6 +477,7 @@ public class WorldBuilder : Singleton<WorldBuilder>
     public void ClearTilemaps()
     {
         carpet_builder.Clear();
+        ground_builder.Clear();
     }
 
     // SAVE DATA

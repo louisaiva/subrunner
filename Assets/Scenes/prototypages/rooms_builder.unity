@@ -5203,6 +5203,7 @@ GameObject:
   m_Component:
   - component: {fileID: 624354655}
   - component: {fileID: 624354656}
+  - component: {fileID: 624354657}
   m_Layer: 0
   m_Name: tilemaps
   m_TagString: Untagged
@@ -5241,8 +5242,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CarpetBuilder
   tilemap_parent: {fileID: 1489220170}
   tilemap_prefab: {fileID: 3844696143943461768, guid: 3917760ef1d71e142a68dd813abcb99b, type: 3}
-  carpet_tile: {fileID: 11400000, guid: 152024fe8b279844bacd6a1eb90e7765, type: 2}
+  tile: {fileID: 11400000, guid: 152024fe8b279844bacd6a1eb90e7765, type: 2}
+  log_angles: 0
+--- !u!114 &624354657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 624354654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b1d1558a07811e498ba1ec01fc028d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GroundBuilder
+  tilemap_parent: {fileID: 1457898134}
+  tilemap_prefab: {fileID: 719086958181189230, guid: 7cbe7dfef3a2ab84c853bef2dd0292ed, type: 3}
+  tile: {fileID: 11400000, guid: c10fb1efdd659ba4495907d85a35f1be, type: 2}
   log_angles: 1
+  default_grid: {fileID: 1489220171}
 --- !u!1001 &642794781
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12140,6 +12158,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1415300860}
   - component: {fileID: 1415300861}
+  - component: {fileID: 1415300862}
   m_Layer: 17
   m_Name: grid_visu
   m_TagString: Untagged
@@ -12221,6 +12240,58 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1415300862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1415300859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.2D.Runtime::UnityEngine.Rendering.Universal.Light2D
+  m_ComponentVersion: 2
+  m_LightType: 4
+  m_BlendStyleIndex: 0
+  m_FalloffIntensity: 0.5
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 2
+  m_LightVolumeIntensity: 1
+  m_LightVolumeEnabled: 0
+  m_ApplyToSortingLayers: 0000000083ee364acb8923fe9fac38d8d56f4b49c93ae4e557e75501b57375f7d390e288
+  m_LightCookieSprite: {fileID: 0}
+  m_DeprecatedPointLightCookieSprite: {fileID: 0}
+  m_LightOrder: 0
+  m_AlphaBlendOnOverlap: 0
+  m_OverlapOperation: 0
+  m_NormalMapDistance: 3
+  m_NormalMapQuality: 2
+  m_UseNormalMap: 0
+  m_ShadowsEnabled: 1
+  m_ShadowIntensity: 0.75
+  m_ShadowSoftness: 0.3
+  m_ShadowSoftnessFalloffIntensity: 0.5
+  m_ShadowVolumeIntensityEnabled: 0
+  m_ShadowVolumeIntensity: 0.75
+  m_LocalBounds:
+    m_Center: {x: 0, y: -0.00000011920929, z: 0}
+    m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
+  m_PointLightInnerAngle: 360
+  m_PointLightOuterAngle: 360
+  m_PointLightInnerRadius: 0
+  m_PointLightOuterRadius: 1
+  m_ShapeLightParametricSides: 5
+  m_ShapeLightParametricAngleOffset: 0
+  m_ShapeLightParametricRadius: 1
+  m_ShapeLightFalloffSize: 0.5
+  m_ShapeLightFalloffOffset: {x: 0, y: 0}
+  m_ShapePath:
+  - {x: -0.5, y: -0.5, z: 0}
+  - {x: 0.5, y: -0.5, z: 0}
+  - {x: 0.5, y: 0.5, z: 0}
+  - {x: -0.5, y: 0.5, z: 0}
 --- !u!1001 &1418961145
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18866,6 +18937,7 @@ MonoBehaviour:
   - {r: 0, g: 1, b: 1, a: 1}
   - {r: 1, g: 0, b: 1, a: 1}
   carpet_builder: {fileID: 624354656}
+  ground_builder: {fileID: 624354657}
   log_cycles: 0
   log_get_room: 0
   log_data: 0

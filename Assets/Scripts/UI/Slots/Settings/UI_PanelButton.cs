@@ -26,8 +26,10 @@ public class UI_PanelButton : UI_EventButton
 
 
     // START
-    protected virtual void Start()
+    protected override void Start()
     {
+        base.Start();
+
         // we register to the panel manager events
         if (panel_manager == null)
         {
