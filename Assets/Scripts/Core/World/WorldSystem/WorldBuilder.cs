@@ -60,6 +60,7 @@ public class WorldBuilder : Singleton<WorldBuilder>
     [Header("Builders")]
     public CarpetBuilder carpet_builder;
     public GroundBuilder ground_builder;
+    public WallsBuilder walls_builder;
 
 
     [Header("Logs")]
@@ -438,6 +439,17 @@ public class WorldBuilder : Singleton<WorldBuilder>
                 ground_builder.Build(r);
             }
         }
+
+        // build walls
+        if (walls_builder != null)
+        {
+            if (log_building) { Debug.Log("(WorldBuilder) Building walls"); }
+            foreach (var r in room_visualizers)
+            {
+                if (log_building) { Debug.Log("(WorldBuilder) Building walls for " + r.name); }
+                walls_builder.Build(r);
+            }
+        }
     }
     public void Build(string builder)
     {
@@ -457,6 +469,16 @@ public class WorldBuilder : Singleton<WorldBuilder>
             {
                 if (log_building) { Debug.Log("(WorldBuilder) Building ground for " + r.name); }
                 ground_builder.Build(r);
+            }
+        }
+
+        if (builder == "walls" && walls_builder != null)
+        {
+            if (log_building) { Debug.Log("(WorldBuilder) Building walls"); }
+            foreach (var r in room_visualizers)
+            {
+                if (log_building) { Debug.Log("(WorldBuilder) Building walls for " + r.name); }
+                walls_builder.Build(r);
             }
         }
     }
@@ -479,6 +501,7 @@ public class WorldBuilder : Singleton<WorldBuilder>
     {
         carpet_builder.Clear();
         ground_builder.Clear();
+        walls_builder.Clear();
     }
 
     // SAVE DATA
