@@ -22,6 +22,7 @@ public class CarpetBuilder : MonoBehaviour
     [Header("Logs")]
     [SerializeField] private bool log_angles = false;
 
+    // MAIN METHODS
     public Tilemap Build(WorldRoomVisualizer room)
     {
         // we check if we already have a tilemap for this room, else we create one
@@ -37,19 +38,30 @@ public class CarpetBuilder : MonoBehaviour
             tilemap_instances[room.name] = tilemap_instance;
         }
 
+        // we generate the tilemap for the room
+        generate_tilemap(tilemap_instance, room);
+
+        return tilemap_instance;
+    }
+    public void Clear()
+    {
+        foreach (var tilemap in tilemap_instances.Values)
+        {
+            tilemap.ClearAllTiles();
+        }
+    }
+
+
+
+    // MAIN TILEMAP GENERATION
+    private void generate_tilemap(Tilemap tilemap, WorldRoomVisualizer room)
+    {
         // we calculate all the positions of the tiles we need to create the carpet
         List<Vector3Int> tile_positions = calculate_tiles_positions(room);
 
         // we convert those positions to tilemap's grid positions and we set the tiles
-        foreach (var pos in tile_positions)
-        {
-            // Vector3Int cell_pos = tilemap_instance.WorldToCell(pos);
-            tilemap_instance.SetTile(pos, carpet_tile);
-        }
-
-        return tilemap_instance;
+        foreach (var pos in tile_positions) { tilemap.SetTile(pos, carpet_tile); }
     }
-    
     private List<Vector3Int> calculate_tiles_positions(WorldRoomVisualizer room)
     {
         List<Vector3Int> positions = new List<Vector3Int>();
@@ -62,6 +74,7 @@ public class CarpetBuilder : MonoBehaviour
         return positions;
     }
 
+    // low level generation methods
     private List<float> allowed_angles = new List<float> { 0, 45, 90, 135, 180, 225, 270, 315 };
     private List<Vector3Int> trace_line(WorldLinkVisualizer link)
     {

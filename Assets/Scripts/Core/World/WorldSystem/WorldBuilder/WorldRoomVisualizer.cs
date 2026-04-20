@@ -71,11 +71,13 @@ public class WorldRoomVisualizer : MonoBehaviour
     {
         foreach (var c in cells)
         {
+            if (c == null) { continue; }
             if (c.IsPartOfRoom()) { c.Color = WorldBuilder.Instance.LinkedColor; }
             else { c.Color = WorldBuilder.Instance.WaitingColor; }
         }
         foreach (var l in links)
         {
+            if (l == null) { continue; }
             if (l.CellA.IsPartOfRoom() && l.CellB.IsPartOfRoom()) { l.Color = WorldBuilder.Instance.LinkedColor; }
             else { l.Color = WorldBuilder.Instance.WaitingColor; }
         }

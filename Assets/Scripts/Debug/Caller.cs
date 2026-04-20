@@ -20,5 +20,5 @@ public class Caller : MonoBehaviour
     public void ToggleGlitches() => PostProcessManager.Instance?.ToggleGlitches();
     public void SetGlitchMode(string timestamp_name) => PostProcessManager.Instance?.SetGlitchMode(timestamp_name);
     public void ChangeUIMode(string mode) => UI_Manager.Instance?.ChangeUIMode(mode);
-    public void BuildWorld() => WorldBuilder.Instance?.Build();
+    // public void BuildWorld() => WorldBuilder.Instance?.Build();
 }

@@ -23,6 +23,20 @@ public class UI_EventButton : UI_Button, Colorant
     [Header("Event")]
     public UnityEvent onClickedEvent;
 
+    protected void Start()
+    {
+        // we set the base color
+        btn_icon.color = baseColor;
+        image.color = hoverColor;
+        
+        // we color all colorers
+        for (int i = 0; i < colorers.Count; i++)
+        {
+            colorers[i].RevertColor();
+        }
+        OnUncolored?.Invoke(this, colorers);
+    }
+
     // POINTER HANDLER
     public override void OnPointerEnter(PointerEventData eventData)
     {

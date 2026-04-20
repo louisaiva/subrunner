@@ -426,6 +426,37 @@ public class WorldBuilder : Singleton<WorldBuilder>
             }
         }
     }
+    public void Build(string builder)
+    {
+        if (builder == "carpet" && carpet_builder != null)
+        {
+            if (log_building) { Debug.Log("(WorldBuilder) Building carpet"); }
+            foreach (var r in room_visualizers)
+            {
+                if (log_building) { Debug.Log("(WorldBuilder) Building carpet for " + r.name); }
+                carpet_builder.Build(r);
+            }
+        }
+    }
+
+    // CLEAR & ERASE
+    public void Erase()
+    {
+        // we remove all the visualizers
+        foreach (var r in room_visualizers) { if (r != null) { Destroy(r.gameObject); } }
+        room_visualizers.Clear();
+        foreach (var l in link_visualizers) { if (l != null) { Destroy(l.gameObject); } }
+        link_visualizers.Clear();
+        foreach (var c in cell_visualizers) { if (c != null) { Destroy(c.gameObject); } }
+        cell_visualizers.Clear();
+
+        // we clear the tilemaps
+        ClearTilemaps();
+    }
+    public void ClearTilemaps()
+    {
+        carpet_builder.Clear();
+    }
 
     // SAVE DATA
     public void SaveData()
