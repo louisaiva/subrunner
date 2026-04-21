@@ -17,10 +17,6 @@ public class NavMeshBuilder : Singleton<NavMeshBuilder>
     [SerializeField] private bool log = false;
     [SerializeField] private bool hide_log_saving = false;
 
-    /* public void Start()
-    {
-        // StartCoroutine(BuildNavMesh());
-    } */
     public IEnumerator BuildNavMesh()
     {
         yield return new WaitForFixedUpdate();

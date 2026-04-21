@@ -453,6 +453,18 @@ public class UI_Manager : Singleton<UI_Manager>
 
 
 
+    // UI POPUPS
+    public void OpenInputPopup(string title, string placeholder, System.Action<string> on_validate)
+    {
+        // show the stacked simple_input pool
+        SwitchTo("simple_input");
+    }
+
+
+
+
+
+
     // GETTERS
     public UI_Pool GetCurrentPool()
     {

@@ -10,6 +10,7 @@ public class Room : MonoBehaviour
     public RoomData data;
     public bool Loaded { get { return data != null; } }
     private bool _unloading = false;
+    public string ID { get { return GetStaticID(); } }
 
     [Header("Room collider")]
     private PolygonCollider2D _room_collider;
@@ -358,4 +359,11 @@ public class Room : MonoBehaviour
         return overlapping_capables;
     }
     public Bounds GetStaticBounds() { return RoomCollider.bounds; }
+    public Tilemap GetStaticTilemap(string tilemap_type)
+    {
+        Transform tilemap_transform = transform.Find(tilemap_type);
+        if (tilemap_transform == null) { return null; }
+        Tilemap tilemap = tilemap_transform.GetComponent<Tilemap>();
+        return tilemap;
+    }
 }

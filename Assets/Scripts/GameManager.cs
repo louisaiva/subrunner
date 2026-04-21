@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
         World world = World.StaticInstance;
         if (world == null) { return; }
         if (world_to_load != "") { world.LoadWorld(world_to_load); }
+        else if (world.world_id != "") { world.LoadWorld(world.world_id); }
     }
     private void Start()
     {

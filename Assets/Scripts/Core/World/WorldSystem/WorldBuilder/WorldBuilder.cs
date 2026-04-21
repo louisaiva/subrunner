@@ -5,12 +5,13 @@ using System.Linq;
 using UnityEditor;
 #endif
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 
 [RequireComponent(typeof(Grid))]
 public class WorldBuilder : Singleton<WorldBuilder>
 {
-    [SerializeField] private string data_path = "Assets/Resources/data/world_builder/";
+    private string data_path = "Assets/Resources/data/world_builder/";
 
     [Header("Grid & Grid Visualizers")]
     private Grid _grid;
@@ -87,11 +88,14 @@ public class WorldBuilder : Singleton<WorldBuilder>
         #endif
     }
 
+    // ON ENABLE / DISABLE
+    private void OnEnable() { CameraFollow.Instance.SetSize(10f); }
+    private void OnDisable() { CameraFollow.Instance.ResetSize(); }
+
     // START
     private void Start()
     {
         UI_Manager.Instance.SwitchTo("dev_world_builder");
-        CameraFollow.Instance.SetSize(10f);
     }
 
 
@@ -261,14 +265,22 @@ public class WorldBuilder : Singleton<WorldBuilder>
     }
 
 
+    // room creation
+    private List<WorldCellVisualizer> cells_waiting_for_a_room = new List<WorldCellVisualizer>();
+    public void FinishRoomCreationWithName(string room_name)
+    {
+        if (cells_waiting_for_a_room.Count == 0) { return; }
+        create_room_with_cells(cells_waiting_for_a_room, room_name);
+        cells_waiting_for_a_room.Clear();
+    }
 
     // ROOM (LOOPING NODES) MANAGEMENT
-    private WorldRoomVisualizer create_room_with_cells(List<WorldCellVisualizer> cells)
+    private WorldRoomVisualizer create_room_with_cells(List<WorldCellVisualizer> cells, string room_name = "")
     {
         List<WorldLinkVisualizer> links = gather_links_of_cycle(cells);
 
         WorldRoomVisualizer new_room_visu = Instantiate(room_prefab, room_parent);
-        new_room_visu.CreateRoom(cells, links);
+        new_room_visu.CreateRoom(cells, links, room_name);
 
         // pick a random color
         if (used_colors.Count == 0) { used_colors = new List<Color>(RoomColors); }
@@ -313,7 +325,9 @@ public class WorldBuilder : Singleton<WorldBuilder>
         }
 
         // else we create a new room
-        create_room_with_cells(cycle);
+        cells_waiting_for_a_room = cycle;
+        UI_Manager.Instance.OpenInputPopup("enter room name", "great room name", FinishRoomCreationWithName);
+        // create_room_with_cells(cycle);
     }
     private bool try_get_cycle_created_by_edge(WorldLinkVisualizer new_link, out List<WorldCellVisualizer> cycle)
     {
@@ -416,12 +430,26 @@ public class WorldBuilder : Singleton<WorldBuilder>
     }
 
     // BUILDER
+    public Action<BuiltWorldData> OnWorldBuilt = delegate { };
     public void Build()
     {
         if (log_building) { Debug.Log("(WorldBuilder) Building the world..."); }
 
+        BuiltWorldData built_world = new BuiltWorldData()
+        {
+            Cells = new List<WorldCellVisualizer>(cell_visualizers),
+            Links = new List<WorldLinkVisualizer>(link_visualizers),
+            Rooms = new List<WorldRoomVisualizer>(room_visualizers)
+        };
+
+        foreach (var r in room_visualizers)
+        {
+            if (log_building) { Debug.Log($"(WorldBuilder) Building tilemaps for {r.name}"); }
+            built_world.Tilemaps[r.name] = build_room(r);
+        }
+
         // build carpet
-        if (carpet_builder != null)
+        /* if (carpet_builder != null)
         {
             if (log_building) { Debug.Log("(WorldBuilder) Building carpet"); }
             foreach (var r in room_visualizers)
@@ -473,58 +501,52 @@ public class WorldBuilder : Singleton<WorldBuilder>
                 if (log_building) { Debug.Log("(WorldBuilder) Building mask for " + r.name); }
                 mask_builder.Build(r);
             }
-        }
+        } */
+    
+        if (log_building) { Debug.Log("(WorldBuilder) World built"); }
+        OnWorldBuilt?.Invoke(built_world);
     }
     public void Build(string builder)
     {
-        if (builder == "carpet" && carpet_builder != null)
+        foreach (var r in room_visualizers)
         {
-            if (log_building) { Debug.Log("(WorldBuilder) Building carpet"); }
-            foreach (var r in room_visualizers)
+            build_room(r, new List<string> { builder });
+        }
+    }
+    private List<string> default_builders = new List<string> { "carpet", "ground", "walls", "ceiling", "mask" };
+    private Dictionary<string, Tilemap> build_room(WorldRoomVisualizer room, List<string> builders = null)
+    {
+        if (builders == null) { builders = default_builders; }
+        Dictionary<string,Tilemap> tilemaps = new Dictionary<string, Tilemap>();
+        foreach (var b in builders)
+        {
+            if (b == "carpet" && carpet_builder != null)
             {
-                if (log_building) { Debug.Log("(WorldBuilder) Building carpet for " + r.name); }
-                carpet_builder.Build(r);
+                if (log_building) { Debug.Log("(WorldBuilder) Building carpet for " + room.name); }
+                tilemaps["carpet"] = carpet_builder.Build(room);
+            }
+            if (b == "ground" && ground_builder != null)
+            {
+                if (log_building) { Debug.Log("(WorldBuilder) Building ground for " + room.name); }
+                tilemaps["ground"] = ground_builder.Build(room);
+            }
+            if (b == "walls" && walls_builder != null)
+            {
+                if (log_building) { Debug.Log("(WorldBuilder) Building walls for " + room.name); }
+                tilemaps["walls"] = walls_builder.Build(room);
+            }
+            if (b == "ceiling" && ceiling_builder != null)
+            {
+                if (log_building) { Debug.Log("(WorldBuilder) Building ceiling for " + room.name); }
+                tilemaps["ceiling"] = ceiling_builder.Build(room);
+            }
+            if (b == "mask" && mask_builder != null)
+            {
+                if (log_building) { Debug.Log("(WorldBuilder) Building mask for " + room.name); }
+                tilemaps["mask"] = mask_builder.Build(room);
             }
         }
-        if (builder == "ground" && ground_builder != null)
-        {
-            if (log_building) { Debug.Log("(WorldBuilder) Building ground"); }
-            foreach (var r in room_visualizers)
-            {
-                if (log_building) { Debug.Log("(WorldBuilder) Building ground for " + r.name); }
-                ground_builder.Build(r);
-            }
-        }
-
-        if (builder == "walls" && walls_builder != null)
-        {
-            if (log_building) { Debug.Log("(WorldBuilder) Building walls"); }
-            foreach (var r in room_visualizers)
-            {
-                if (log_building) { Debug.Log("(WorldBuilder) Building walls for " + r.name); }
-                walls_builder.Build(r);
-            }
-        }
-
-        if (builder == "ceiling" && ceiling_builder != null)
-        {
-            if (log_building) { Debug.Log("(WorldBuilder) Building ceiling"); }
-            foreach (var r in room_visualizers)
-            {
-                if (log_building) { Debug.Log("(WorldBuilder) Building ceiling for " + r.name); }
-                ceiling_builder.Build(r);
-            }
-        }
-
-        if (builder == "mask" && mask_builder != null)
-        {
-            if (log_building) { Debug.Log("(WorldBuilder) Building mask"); }
-            foreach (var r in room_visualizers)
-            {
-                if (log_building) { Debug.Log("(WorldBuilder) Building mask for " + r.name); }
-                mask_builder.Build(r);
-            }
-        }
+        return tilemaps;
     }
 
     // CLEAR & ERASE
@@ -650,6 +672,31 @@ public class WorldBuilder : Singleton<WorldBuilder>
 {
     public List<Vector3Int> Cells = new List<Vector3Int>();
 }
+
+public class BuiltWorldData
+{
+    // cells links rooms visu
+    public List<WorldCellVisualizer> Cells = new List<WorldCellVisualizer>();
+    public List<WorldLinkVisualizer> Links = new List<WorldLinkVisualizer>();
+    public List<WorldRoomVisualizer> Rooms = new List<WorldRoomVisualizer>();
+
+    // tilemaps
+    public Dictionary<string, Dictionary<string, Tilemap>> Tilemaps = new Dictionary<string, Dictionary<string, Tilemap>>();
+    // like this :
+    // -room_0
+    //     -carpet -> tilemap
+    //     -ground -> tilemap
+    //     -...
+    // -room_1
+    //     -carpet -> tilemap
+    //     -ground -> tilemap
+    //     -...
+    // -...
+}
+
+
+
+
 
 #if UNITY_EDITOR
 [UnityEditor.CustomEditor(typeof(WorldBuilder))]

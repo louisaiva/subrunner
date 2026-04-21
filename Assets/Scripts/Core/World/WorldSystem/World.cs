@@ -21,20 +21,6 @@ public class World : BSOD_System<World>
             return Path.Combine(WorldDataPath, StaticInstance.world_id);
         }
     }
-    /* private static World _instance;
-    public static World StaticInstance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                // find the World instance in the scene
-                _instance = FindFirstObjectByType<World>();
-            }
-            if (_instance == null) { Debug.LogError("(World) No World instance found in the scene. Please add one to the scene."); }
-            return _instance;
-        }
-    } */
 
     [Header("Current world")]
     public string world_id;
@@ -99,7 +85,24 @@ public class World : BSOD_System<World>
             return _items_parent;
         }
     }
-
+    private Transform _level_parent;
+    public Transform LevelParent
+    {
+        get
+        {
+            if (_level_parent == null)
+            {
+                _level_parent = transform.Find("Levels");
+                if (_level_parent == null)
+                {
+                    GameObject go = new GameObject("Levels");
+                    go.transform.SetParent(transform);
+                    _level_parent = go.transform;
+                }
+            }
+            return _level_parent;
+        }
+    }
 
 
     [Header("Logs")]
@@ -234,7 +237,7 @@ public class World : BSOD_System<World>
         // 2. if not we go statically get the levels ids from the children levels (only active ones)
         Level[] levels = gameObject.GetComponentsInChildren<Level>();
         List<string> level_ids = new List<string>();
-        foreach (Level level in levels) { level_ids.Add(level.name); }
+        foreach (Level level in levels) { level_ids.Add(level.ID); }
         return level_ids;
     }
     public Level[] GetStaticLevels()
@@ -245,7 +248,7 @@ public class World : BSOD_System<World>
         List<Level> filtered_levels = new List<Level>();
         foreach (Level level in levels)
         {
-            if (!levels_ids.Contains(level.name)) { continue; }
+            if (!levels_ids.Contains(level.ID)) { continue; }
             filtered_levels.Add(level);
         }
         return filtered_levels.ToArray();

@@ -18,6 +18,9 @@ public class UI_AutoLayoutResizer : MonoBehaviour
     [SerializeField] private float margin_left;
     [SerializeField] private float margin_right;
 
+    [Header("Size Factor")]
+    [SerializeField] private float size_factor = 1f;
+
     // START
     private void Start()
     {
@@ -33,6 +36,6 @@ public class UI_AutoLayoutResizer : MonoBehaviour
         // update our size based on content's size & margins
         float width = content.rect.width + margin_left + margin_right;
         float height = content.rect.height + margin_top + margin_bottom;
-        rect_transform.sizeDelta = new Vector2(width, height);
+        rect_transform.sizeDelta = new Vector2(width*size_factor, height*size_factor);
     }
 }

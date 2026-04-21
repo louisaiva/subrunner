@@ -8,6 +8,7 @@ public class Level : MonoBehaviour
     [Header("Data")]
     public LevelData data;
     public List<NavMeshData> loaded_navmeshes;
+    public string ID { get { return GetStaticID(); } }
 
     // LOAD NAV MESHES
     public void LoadNavMeshesPath()
@@ -118,6 +119,12 @@ public class Level : MonoBehaviour
         return rooms_ids;
     }
     public Room[] GetStaticRooms() { return GetComponentsInChildren<Room>(includeInactive: true); }
+    public void GrabStaticRoom(string room_id)
+    {
+        if (data == null) { return; }
+        if (data.rooms_ids == null) { data.rooms_ids = new List<string>(); }
+        if (!data.rooms_ids.Contains(room_id)) { data.rooms_ids.Add(room_id); }
+    }
     public Bounds GetStaticBounds()
     {
         // we get all the rooms in the children

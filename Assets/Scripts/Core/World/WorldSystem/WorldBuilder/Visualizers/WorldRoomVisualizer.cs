@@ -37,7 +37,7 @@ public class WorldRoomVisualizer : MonoBehaviour
 
     // CREATE ROOM
     private static int room_count = 0;
-    public void CreateRoom(List<WorldCellVisualizer> cells, List<WorldLinkVisualizer> links)
+    public void CreateRoom(List<WorldCellVisualizer> cells, List<WorldLinkVisualizer> links, string id = "")
     {
         // unregister from previous cells if there is any
         unregister_callbacks();
@@ -57,8 +57,13 @@ public class WorldRoomVisualizer : MonoBehaviour
         polygon_collider.pathCount = 1;
         polygon_collider.SetPath(0, GetPath());
 
-        name = $"room_{room_count}";
-        room_count++;
+        // we ask for a name and we set it
+        if (string.IsNullOrEmpty(id))
+        {
+            id = $"room_{room_count}";
+            room_count++;
+        }
+        name = id;
     }
 
     // colors
