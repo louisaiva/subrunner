@@ -1746,7 +1746,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.62352943, g: 0.9019608, b: 0.93333334, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3531,7 +3531,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.62352943, g: 0.9019608, b: 0.93333334, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4047,7 +4047,7 @@ GameObject:
   m_Component:
   - component: {fileID: 466389449}
   - component: {fileID: 466389451}
-  - component: {fileID: 466389450}
+  - component: {fileID: 466389452}
   m_Layer: 5
   m_Name: simple_input
   m_TagString: Untagged
@@ -4075,31 +4075,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &466389450
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 466389448}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec3a1d99ea0cc8844910ba487b9ab541, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UI_SlottablePool
-  Reference: simple_input
-  Showed: 0
-  Stacked: 0
-  Settings: {fileID: 11400000, guid: 94119f42decf8e34990bd47ca0ec56c3, type: 2}
-  angle_threshold: 45
-  angle_multiplicator: 0
-  ui_elements:
-  - {fileID: 1013761522}
-  stacked_elements: []
-  log: 0
-  log_extended: 0
-  log_elements_showing: 0
-  use_ingame_drop: 0
 --- !u!114 &466389451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4116,7 +4091,33 @@ MonoBehaviour:
   log: 0
   log_starting_slot: 0
   slots_parents:
-  - {fileID: 0}
+  - {fileID: 1013761523}
+--- !u!114 &466389452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466389448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0ab3960bb8f0db40a63e778c9bdf0cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_PopupInputText
+  Reference: popup_text
+  Showed: 0
+  Stacked: 0
+  Settings: {fileID: 11400000, guid: 94119f42decf8e34990bd47ca0ec56c3, type: 2}
+  angle_threshold: 45
+  angle_multiplicator: 0
+  ui_elements:
+  - {fileID: 1013761522}
+  stacked_elements: []
+  log: 0
+  log_extended: 0
+  log_elements_showing: 0
+  use_ingame_drop: 0
+  inputTextSlot: {fileID: 1951210258}
 --- !u!1 &472838376
 GameObject:
   m_ObjectHideFlags: 0
@@ -5706,7 +5707,7 @@ MonoBehaviour:
   tilemap_parent: {fileID: 1457898134}
   tilemap_prefab: {fileID: 719086958181189230, guid: 7cbe7dfef3a2ab84c853bef2dd0292ed, type: 3}
   tile: {fileID: 11400000, guid: c10fb1efdd659ba4495907d85a35f1be, type: 2}
-  log_angles: 1
+  log_angles: 0
   default_grid: {fileID: 1489220171}
 --- !u!114 &624354658
 MonoBehaviour:
@@ -6364,7 +6365,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.62352943, g: 0.9019608, b: 0.93333334, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6676,7 +6677,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 2.9999847}
-  m_SizeDelta: {x: 355.5333, y: 64}
+  m_SizeDelta: {x: 500, y: 64}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &784316696
 MonoBehaviour:
@@ -6707,8 +6708,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4293846687
+  m_fontColor: {r: 0.62352943, g: 0.9019608, b: 0.93333334, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -6725,13 +6726,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 28
+  m_fontSizeBase: 28
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 17
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
@@ -6860,10 +6861,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: extract_json_on_load
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -6908,14 +6905,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: app
       objectReference: {fileID: 0}
-    - target: {fileID: 8269756926769288201, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: ui_icons.Array.size
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 8269756926769288201, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: 'ui_icons.Array.data[10]'
-      value: 
-      objectReference: {fileID: 1880052999, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7330,7 +7319,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.62352943, g: 0.9019608, b: 0.93333334, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7972,7 +7961,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.62352943, g: 0.9019608, b: 0.93333334, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8225,7 +8214,6 @@ GameObject:
   - component: {fileID: 1013761523}
   - component: {fileID: 1013761526}
   - component: {fileID: 1013761525}
-  - component: {fileID: 1013761524}
   m_Layer: 5
   m_Name: input
   m_TagString: Untagged
@@ -8254,21 +8242,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 988.04, y: 573.9104}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1013761524
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1013761522}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventSystem
-  m_FirstSelected: {fileID: 0}
-  m_sendNavigationEvents: 1
-  m_DragThreshold: 10
 --- !u!225 &1013761525
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -9394,7 +9367,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.62352943, g: 0.9019608, b: 0.93333334, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -13695,7 +13668,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: great room name
+  m_text: room_0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c60dc2e81142dff44a9a4129c805e59b, type: 2}
   m_sharedMaterial: {fileID: 8570373338400943152, guid: c60dc2e81142dff44a9a4129c805e59b, type: 2}
@@ -13704,8 +13677,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4283585106
-  m_fontColor: {r: 0.3207547, g: 0.3207547, b: 0.3207547, a: 1}
+    rgba: 475157074
+  m_fontColor: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0.10980392}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -14356,7 +14329,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.62352943, g: 0.9019608, b: 0.93333334, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -17490,7 +17463,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.62352943, g: 0.9019608, b: 0.93333334, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -19125,7 +19098,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 280.7301, y: 101.4728}
+  m_SizeDelta: {x: 138.357, y: 35.8189}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1903652955
 MonoBehaviour:
@@ -19554,8 +19527,8 @@ GameObject:
   - component: {fileID: 1951210257}
   - component: {fileID: 1951210256}
   - component: {fileID: 1951210255}
-  - component: {fileID: 1951210254}
-  m_Layer: 5
+  - component: {fileID: 1951210258}
+  m_Layer: 10
   m_Name: input_field
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19580,21 +19553,8 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 600, y: 200}
+  m_SizeDelta: {x: 500, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1951210254
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1951210252}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 817e398c410bba448ad3ec02ee5c37e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UI_InputGrabber
-  inputText: 
 --- !u!114 &1951210255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19619,8 +19579,8 @@ MonoBehaviour:
     m_NormalColor: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
     m_HighlightedColor: {r: 0.4528302, g: 0.4528302, b: 0.4528302, a: 1}
     m_PressedColor: {r: 0.5849056, g: 0.5849056, b: 0.5849056, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_SelectedColor: {r: 0.047169805, g: 0.047169805, b: 0.047169805, a: 1}
+    m_DisabledColor: {r: 0, g: 0, b: 0, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -19657,9 +19617,9 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1951210254}
-        m_TargetAssemblyTypeName: UI_InputGrabber, Assembly-CSharp
-        m_MethodName: GrabFromInputField
+      - m_Target: {fileID: 1951210258}
+        m_TargetAssemblyTypeName: UI_InputText, Assembly-CSharp
+        m_MethodName: ValidateInput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -19690,9 +19650,9 @@ MonoBehaviour:
   m_OnTouchScreenKeyboardStatusChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  m_CustomCaretColor: 0
-  m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
+  m_CaretColor: {r: 1, g: 1, b: 1, a: 1}
+  m_CustomCaretColor: 1
+  m_SelectionColor: {r: 0.6701608, g: 0.333, b: 1, a: 0.70980394}
   m_Text: 
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
@@ -19746,6 +19706,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1951210252}
   m_CullTransparentMesh: 1
+--- !u!114 &1951210258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1951210252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3d9a21ee3aa38a45b0fd7d8c8fb70a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_InputText
+  _hovered: 0
+  _disabled: 0
+  log: 0
+  input_field: {fileID: 1951210255}
+  inputText: 
+  title_text: {fileID: 784316696}
+  placeholder_text: {fileID: 1453838204}
 --- !u!114 &1953809110 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 566069968101679158, guid: 22e9e1df4f355a241aec881696f790f7, type: 3}
@@ -20642,7 +20621,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!156049354 &2023470139
 Grid:
   m_ObjectHideFlags: 0
@@ -20731,7 +20710,8 @@ MonoBehaviour:
   target_current_level: 0
   level_prefab: {fileID: 8356036354246421201, guid: 9fa2799496ca83849bb4b053202faa45, type: 3}
   room_prefab: {fileID: 8185754384103082142, guid: ae6b0bfb8417b8d4a9eb59dbb48d8490, type: 3}
-  log_translations: 1
+  hide_mask: 1
+  log_translations: 0
 --- !u!1 &2035760633
 GameObject:
   m_ObjectHideFlags: 0
@@ -38401,9 +38381,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6413366777524968862}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec3a1d99ea0cc8844910ba487b9ab541, type: 3}
+  m_Script: {fileID: 11500000, guid: 0dbb445f7d06e70439e49eb446f328af, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UI_SlottablePool
+  m_EditorClassIdentifier: Assembly-CSharp::UI_WorldBuilderPool
   Reference: dev_world_builder
   Showed: 0
   Stacked: 0

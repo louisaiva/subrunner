@@ -12,6 +12,7 @@ public class InputManager : MonoBehaviour
     public bool UsingGamepad { get; private set; } = false;
     public event Action<string> OnInputTypeChanged = delegate { };
     public PlayerInputActions inputs;
+    private InputSystemUIInputModule ui_input_module;
 
 
     [Header("Inputs thresholds")]
@@ -30,9 +31,6 @@ public class InputManager : MonoBehaviour
 
     // private bool callbacks_sets = false;
 
-    [Header("Components")]
-    [SerializeField] private InputSystemUIInputModule input_system_ui_input_module;
-
     [Header("Logs")]
     public bool log = false;
     public bool log_input_maps_enabled = false;
@@ -43,6 +41,11 @@ public class InputManager : MonoBehaviour
     {
         if (Instance == null) { Instance = this; }
         else { Destroy(gameObject); return; }
+
+        // on récupère le module d'input system ui
+        ui_input_module = GetComponent<InputSystemUIInputModule>();
+        if (ui_input_module != null) { ui_input_module.enabled = false; }
+        else { Debug.LogWarning("(InputManager) no InputSystemUIInputModule found on " + gameObject.name); }
 
         // on crée les inputs
         inputs = new PlayerInputActions();
@@ -166,6 +169,22 @@ public class InputManager : MonoBehaviour
         OnPersoInputsToggled?.Invoke(false);
     }
 
+
+    // INPUT MODULE TOGGLING
+    public void EnableInputModule()
+    {
+        if (log) { Debug.Log("(InputManager) enabling input module"); }
+        inputs.UI.Disable();
+        inputs.menus.Disable();
+        ui_input_module.enabled = true;
+    }
+    public void DisableInputModule()
+    {
+        if (log) { Debug.Log("(InputManager) disabling input module"); }
+        ui_input_module.enabled = false;
+        inputs.UI.Enable();
+        inputs.menus.Enable();
+    }
 
     // INPUTS COROUTINES
     public Coroutine StartInputCoroutine(IEnumerator coroutine)

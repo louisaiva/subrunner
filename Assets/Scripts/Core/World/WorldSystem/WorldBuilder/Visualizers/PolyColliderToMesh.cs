@@ -54,7 +54,6 @@ public class PolyColliderToMesh: MonoBehaviour
         Reshape();
 
         filter.sharedMesh = _myMesh;
-        Debug.Log("initialized mesh");
     }
 
     // Call this if you edit the collider at runtime 

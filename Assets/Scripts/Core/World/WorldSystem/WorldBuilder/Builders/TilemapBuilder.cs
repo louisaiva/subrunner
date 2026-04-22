@@ -140,11 +140,11 @@ public class TilemapBuilder : MonoBehaviour
             }
             if (min_angle_diff < 5f)
             {
-                if (log_angles) { Debug.Log($"(CarpetBuilder) Link between {from} and {to} has an angle of {angle} which is close to the allowed angle of {closest_angle}. Carpet will be generated for this link."); }
+                if (log_angles) { Debug.Log($"({GetType().Name}) Link between {from} and {to} has an angle of {angle} which is close to the allowed angle of {closest_angle}. Carpet will be generated for this link."); }
                 return true;
             }
         }
-        if (log_angles) { Debug.LogWarning($"(CarpetBuilder) Link between {from} and {to} has an angle of {angle} which is not close to any of the allowed angles. No carpet will be generated for this link."); }
+        if (log_angles) { Debug.LogWarning($"({GetType().Name}) Link between {from} and {to} has an angle of {angle} which is not close to any of the allowed angles. No carpet will be generated for this link."); }
         return false;
     }
     private bool has_good_angle(WorldLinkVisualizer link, out float angle)

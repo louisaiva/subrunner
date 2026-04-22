@@ -349,7 +349,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbc26d7ebcdf22f47a529f15eaf424b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  extract_json_on_load: 1
+  extract_json_on_load: 0
   anims_path: animations/
   jsons_path: anims/
   capacities_with_no_loops:
@@ -1458,6 +1458,7 @@ GameObject:
   - component: {fileID: 5080253961778756880}
   - component: {fileID: 366426076817473775}
   - component: {fileID: 240965872979008155}
+  - component: {fileID: 6282686734809511996}
   m_Layer: 0
   m_Name: input_manager
   m_TagString: Untagged
@@ -1503,7 +1504,6 @@ MonoBehaviour:
   BUTTON_ENDLESSLY_SHORT_DELAY: 0.06
   BUTTON_ENDLESSLY_LONG_THRESHOLD: 0.6
   BUTTON_ENDLESSLY_LONG_DELAY: 0.1
-  input_system_ui_input_module: {fileID: 0}
   log: 0
   log_input_maps_enabled: 0
 --- !u!114 &366426076817473775
@@ -1535,3 +1535,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CursorManager
   cursorTex: {fileID: 2800000, guid: 6b5092032b7b9f04689222ae11c8b090, type: 3}
   hotSpot: {x: 24, y: 24}
+--- !u!114 &6282686734809511996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9163946342948390035}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.UI.InputSystemUIInputModule
+  m_SendPointerHoverToParent: 1
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
+  m_ScrollDeltaPerTick: 6

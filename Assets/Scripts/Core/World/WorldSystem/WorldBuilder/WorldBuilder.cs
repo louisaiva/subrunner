@@ -9,8 +9,26 @@ using UnityEngine.Tilemaps;
 
 
 [RequireComponent(typeof(Grid))]
-public class WorldBuilder : Singleton<WorldBuilder>
+public class WorldBuilder : MonoBehaviour
 {
+
+    // SINGLETON LOGIC
+    private static WorldBuilder _static_instance;
+    public static WorldBuilder StaticInstance
+    {
+        get
+        {
+            if (_static_instance is null)
+            {
+                _static_instance = FindFirstObjectByType<WorldBuilder>(FindObjectsInactive.Include);
+                if (_static_instance is null) { Debug.LogError("No WorldBuilder instance found in the scene."); }
+            }
+            return _static_instance;
+        }
+    }
+
+
+    // data
     private string data_path = "Assets/Resources/data/world_builder/";
 
     [Header("Grid & Grid Visualizers")]
@@ -75,9 +93,8 @@ public class WorldBuilder : Singleton<WorldBuilder>
 
 
     // AWAKE
-    protected override void Awake()
+    protected void Awake()
     {
-        base.Awake();
         grid_material.SetFloat("_CellSize", Grid.cellSize.x);
 
         used_colors = new List<Color>(RoomColors);
@@ -89,22 +106,31 @@ public class WorldBuilder : Singleton<WorldBuilder>
     }
 
     // ON ENABLE / DISABLE
-    private void OnEnable() { CameraFollow.Instance.SetSize(10f); }
-    private void OnDisable() { CameraFollow.Instance.ResetSize(); }
-
-    // START
-    private void Start()
+    private void OnEnable()
     {
-        UI_Manager.Instance.SwitchTo("dev_world_builder");
+        // UI_Manager.Instance.SwitchTo("dev_world_builder");
+        CameraFollow.Instance.SetSize(10f);
     }
-
-
-
-
+    private void OnDisable()
+    {
+        try
+        {
+            // UI_Manager.Instance.SwitchToHUD();
+            CameraFollow.Instance.ResetSize();
+        }
+        catch (Exception) { }
+    }
 
     // UPDATE
     private void Update()
     {
+        // check if we are on the right ui_pool
+        if (UI_Manager.Instance.CurrentPool != "dev_world_builder")
+        {
+            if (selected_cell_visualizer.gameObject.activeSelf) { selected_cell_visualizer.gameObject.SetActive(false); }
+            return;
+        }
+
         // check if we have a navigator and if it has a hovered ui element
         if (UI_Navigator.Instance.IsHoveringSlot)
         {
@@ -266,6 +292,30 @@ public class WorldBuilder : Singleton<WorldBuilder>
 
 
     // room creation
+    private void handle_potential_cycle_creation(WorldLinkVisualizer new_link)
+    {
+        bool is_a_cycle_created = try_get_cycle_created_by_edge(new_link, out List<WorldCellVisualizer> cycle);
+
+        if (!is_a_cycle_created) { return; }
+        if (log_cycles) { Debug.Log("(WorldBuilder) cycle created with " + cycle.Count + " cells : " + string.Join(", ", cycle)); }
+
+        // we gather the links of this cycle
+        List<WorldLinkVisualizer> links = gather_links_of_cycle(cycle);
+
+        // check if we already have a room with the same cycle
+        foreach (var r in room_visualizers)
+        {
+            if (r.IsEqualTo(cycle, links))
+            {
+                if (log_cycles) { Debug.Log("(WorldBuilder) but this cycle already exists in room " + r.name); }
+                return;
+            }
+        }
+
+        // else we create a new room
+        cells_waiting_for_a_room = cycle;
+        UI_Manager.Instance.OpenInputPopup("enter room name", WorldRoomVisualizer.NextRoomName, FinishRoomCreationWithName);
+    }
     private List<WorldCellVisualizer> cells_waiting_for_a_room = new List<WorldCellVisualizer>();
     public void FinishRoomCreationWithName(string room_name)
     {
@@ -303,31 +353,6 @@ public class WorldBuilder : Singleton<WorldBuilder>
             if (l != null) { links.Add(l); }
         }
         return links;
-    }
-    private void handle_potential_cycle_creation(WorldLinkVisualizer new_link)
-    {
-        bool is_a_cycle_created = try_get_cycle_created_by_edge(new_link, out List<WorldCellVisualizer> cycle);
-
-        if (!is_a_cycle_created) { return; }
-        if (log_cycles) { Debug.Log("(WorldBuilder) cycle created with " + cycle.Count + " cells : " + string.Join(", ", cycle)); }
-
-        // we gather the links of this cycle
-        List<WorldLinkVisualizer> links = gather_links_of_cycle(cycle);
-
-        // check if we already have a room with the same cycle
-        foreach (var r in room_visualizers)
-        {
-            if (r.IsEqualTo(cycle, links))
-            {
-                if (log_cycles) { Debug.Log("(WorldBuilder) but this cycle already exists in room " + r.name); }
-                return;
-            }
-        }
-
-        // else we create a new room
-        cells_waiting_for_a_room = cycle;
-        UI_Manager.Instance.OpenInputPopup("enter room name", "great room name", FinishRoomCreationWithName);
-        // create_room_with_cells(cycle);
     }
     private bool try_get_cycle_created_by_edge(WorldLinkVisualizer new_link, out List<WorldCellVisualizer> cycle)
     {
@@ -597,7 +622,7 @@ public class WorldBuilder : Singleton<WorldBuilder>
         for (int i = 0; i < room_visualizers.Count; i++)
         {
             if (room_visualizers[i] == null) { continue; }
-            data.Rooms.Add(new WorldRoomData { Cells = room_visualizers[i].GetLoopCells() });
+            data.Rooms.Add(new WorldRoomData { Name = room_visualizers[i].name, Cells = room_visualizers[i].GetLoopCells() });
         }
         // data.Cells = cell_visualizers.Select(c => c.CurrentCell).ToList();
         // data.Links = link_visualizers.Where(l => l.CellA != null && l.CellB != null).Select(l => new WorldLinkData { CellA = l.CellA.CurrentCell, CellB = l.CellB.CurrentCell }).ToList();
@@ -646,7 +671,7 @@ public class WorldBuilder : Singleton<WorldBuilder>
             }
 
             // create a room with these cells
-            create_room_with_cells(room_cells);
+            create_room_with_cells(room_cells, room.Name);
         }
     }
     private void OnDestroy()
@@ -670,6 +695,7 @@ public class WorldBuilder : Singleton<WorldBuilder>
 }
 [Serializable] public class WorldRoomData
 {
+    public string Name;
     public List<Vector3Int> Cells = new List<Vector3Int>();
 }
 

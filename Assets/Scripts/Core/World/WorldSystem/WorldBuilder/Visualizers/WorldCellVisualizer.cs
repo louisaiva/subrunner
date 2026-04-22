@@ -13,7 +13,7 @@ public class WorldCellVisualizer : MonoBehaviour
             return _sprite_renderer;
         }
     }
-    private Grid grid { get { return WorldBuilder.Instance.Grid; } }
+    private Grid grid { get { return WorldBuilder.StaticInstance.Grid; } }
     public Color Color
     {
         get { return sprite_renderer.color; }
@@ -51,7 +51,7 @@ public class WorldCellVisualizer : MonoBehaviour
     }
     public bool IsPartOfRoom()
     {
-        return WorldBuilder.Instance.GetRoomOfCell(this) != null;
+        return WorldBuilder.StaticInstance.GetRoomOfCell(this) != null;
     }
 
 }

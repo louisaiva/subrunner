@@ -19,6 +19,7 @@ public class WorldRoomVisualizer : MonoBehaviour
             return _collider;
         }
     }
+    public PolygonCollider2D PolygonCollider { get { return polygon_collider; } }
 
     private Material _mat;
     private Material material
@@ -35,16 +36,23 @@ public class WorldRoomVisualizer : MonoBehaviour
         set { material.color = value; }
     }
 
+
+
+    [Header("Logs")]
+    [SerializeField] private bool log_callbacks = false;
+
+
     // CREATE ROOM
     private static int room_count = 0;
+    public static string NextRoomName { get { return $"room_{room_count}"; } }
     public void CreateRoom(List<WorldCellVisualizer> cells, List<WorldLinkVisualizer> links, string id = "")
     {
         // unregister from previous cells if there is any
         unregister_callbacks();
         reset_color();
 
-        this.cells = cells;
-        this.links = links;
+        this.cells = new List<WorldCellVisualizer>(cells);
+        this.links = new List<WorldLinkVisualizer>(links);
 
         // set color of cells and links
         set_color();
@@ -63,28 +71,33 @@ public class WorldRoomVisualizer : MonoBehaviour
             id = $"room_{room_count}";
             room_count++;
         }
+        else if (id.StartsWith("room_"))
+        {
+            int.TryParse(id.Substring(5), out int parsed_count);
+            if (parsed_count >= room_count) { room_count = parsed_count + 1; }
+        }
         name = id;
     }
 
     // colors
     private void set_color()
     {
-        foreach (var c in cells) { c.Color = WorldBuilder.Instance.LinkedColor; }
-        foreach (var l in links) { l.Color = WorldBuilder.Instance.LinkedColor; }
+        foreach (var c in cells) { c.Color = WorldBuilder.StaticInstance.LinkedColor; }
+        foreach (var l in links) { l.Color = WorldBuilder.StaticInstance.LinkedColor; }
     }
     private void reset_color()
     {
         foreach (var c in cells)
         {
             if (c == null) { continue; }
-            if (c.IsPartOfRoom()) { c.Color = WorldBuilder.Instance.LinkedColor; }
-            else { c.Color = WorldBuilder.Instance.WaitingColor; }
+            if (c.IsPartOfRoom()) { c.Color = WorldBuilder.StaticInstance.LinkedColor; }
+            else { c.Color = WorldBuilder.StaticInstance.WaitingColor; }
         }
         foreach (var l in links)
         {
             if (l == null) { continue; }
-            if (l.CellA.IsPartOfRoom() && l.CellB.IsPartOfRoom()) { l.Color = WorldBuilder.Instance.LinkedColor; }
-            else { l.Color = WorldBuilder.Instance.WaitingColor; }
+            if (l.CellA.IsPartOfRoom() && l.CellB.IsPartOfRoom()) { l.Color = WorldBuilder.StaticInstance.LinkedColor; }
+            else { l.Color = WorldBuilder.StaticInstance.WaitingColor; }
         }
     }
 
@@ -93,18 +106,22 @@ public class WorldRoomVisualizer : MonoBehaviour
     {
         if (cell == null) { return; }
         cell.OnRemoved += remove_ourself;
+        if (log_callbacks) { Debug.Log($"(WorldRoomVisualizer) registered to cell {cell}"); }
     }
     private void register_callbacks()
     {
+        if (log_callbacks) { Debug.Log($"(WorldRoomVisualizer) registering to all cells"); }
         foreach (var c in cells) { register_callback(c); }
     }
     private void unregister_callback(WorldCellVisualizer cell)
     {
         if (cell == null) { return; }
         cell.OnRemoved -= remove_ourself;
+        if (log_callbacks) { Debug.Log($"(WorldRoomVisualizer) unregistered from cell {cell}"); }
     }
     private void unregister_callbacks()
     {
+        if (log_callbacks) { Debug.Log($"(WorldRoomVisualizer) unregistering from all cells"); }
         foreach (var c in cells) { unregister_callback(c); }
     }
     private void remove_ourself(WorldCellVisualizer cell_visu)

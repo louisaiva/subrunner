@@ -35,6 +35,7 @@ public class LevelTranslator : MonoBehaviour
 
     [Header("Room creation")]
     public Room room_prefab;
+    public bool hide_mask = true; // if true, will hide the mask tilemap in the level (useful for trying instantly the generated level)
 
     [Header("Logs")]
     public bool log_translations = false;
@@ -42,7 +43,7 @@ public class LevelTranslator : MonoBehaviour
     private void Start()
     {
         // we subscribe to world generation end event
-        WorldBuilder.Instance.OnWorldBuilt += Translate;
+        WorldBuilder.StaticInstance.OnWorldBuilt += Translate;
     }
 
     public void Translate(BuiltWorldData built_world)
@@ -59,9 +60,8 @@ public class LevelTranslator : MonoBehaviour
         {
             Room room = find_room(room_visu.name, level_rooms, level);
 
-            // we assign position to the room
-
             // we assign collider to the room
+            room.RoomCollider.SetPath(0, room_visu.PolygonCollider.points);
 
             // we assign tilemaps to the room
             if (!built_world.Tilemaps.TryGetValue(room_visu.name, out Dictionary<string, Tilemap> tilemaps)) { Debug.LogWarning($"(LevelTranslator) no tilemaps found for room {room_visu.name}"); continue; }
@@ -83,6 +83,13 @@ public class LevelTranslator : MonoBehaviour
             Tilemap room_tilemap = room.GetStaticTilemap(tilemap_type);
             if (room_tilemap == null) { Debug.LogWarning($"(LevelTranslator) no tilemap of type {tilemap_type} found in room {room.name}"); continue; }
             copy_tilemap(tilemap, room_tilemap);
+
+            // check if this is the mask tilemap and hide_mask == true, then we disable the tilemap renderer
+            if (tilemap_type == "mask" && hide_mask)
+            {
+                TilemapRenderer tilemap_renderer = room_tilemap.GetComponent<TilemapRenderer>();
+                if (tilemap_renderer != null) { tilemap_renderer.enabled = false; }
+            }
         }
     }
     private void copy_tilemap(Tilemap source, Tilemap target)
@@ -138,6 +145,7 @@ public class LevelTranslator : MonoBehaviour
             id = id,
             rooms_ids = new List<string>()
         };
+        new_level.name = id;
         return new_level;
     }
 
@@ -157,6 +165,7 @@ public class LevelTranslator : MonoBehaviour
         // we instanciate a new room and assign the data to it
         Room new_room = Instantiate(room_prefab, level.transform);
         new_room.data = new RoomData() { id = id };
+        new_room.name = id;
 
         // we add the room id to the level data
         level.GrabStaticRoom(id);

@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using TMPro;
-using UnityEngine.InputSystem;
 using UnityEngine.Events;
 
 #if UNITY_EDITOR

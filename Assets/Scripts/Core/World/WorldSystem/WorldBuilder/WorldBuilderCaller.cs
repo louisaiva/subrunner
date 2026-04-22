@@ -7,7 +7,7 @@ public class WorldBuilderCaller : MonoBehaviour
     {
         get
         {
-            if (_worldBuilder == null) { _worldBuilder = WorldBuilder.Instance; }
+            if (_worldBuilder == null) { _worldBuilder = WorldBuilder.StaticInstance; }
             return _worldBuilder;
         }
     }
