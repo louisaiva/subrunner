@@ -4,6 +4,12 @@ using UnityEngine.Tilemaps;
 
 public class WallsBuilder : TilemapBuilder
 {
+
+    [Header("Sides Tiles")]
+    [SerializeField] private List<TileBase> L_tiles;
+    [SerializeField] private List<TileBase> R_tiles;
+
+
     // MAIN TILEMAP GENERATION
     protected override void GenerateTilemap(Tilemap tilemap, WorldRoomVisualizer room)
     {
@@ -13,7 +19,11 @@ public class WallsBuilder : TilemapBuilder
         outline = filter_vertical(outline);
 
         // we convert those positions to tilemap's grid positions and we set the tiles
-        foreach (var pos in outline) { tilemap.SetTile(pos, tile); }
+        foreach (var pos in outline)
+        {
+            if (HasDoorAtPosition(pos)) { continue; } // filter the doors
+            tilemap.SetTile(pos, tile);
+        }
     }
 
     // FILTER VERTICAL

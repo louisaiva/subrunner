@@ -5,10 +5,13 @@ using UnityEngine;
 [RequireComponent(typeof(PolygonCollider2D))]
 public class WorldRoomVisualizer : MonoBehaviour
 {
-    private List<WorldCellVisualizer> cells = new List<WorldCellVisualizer>();
+    private List<WorldNodeVisualizer> nodes = new List<WorldNodeVisualizer>();
     private List<WorldLinkVisualizer> links = new List<WorldLinkVisualizer>();
-    public List<WorldCellVisualizer> Cells { get { return cells; } }
+    public List<WorldNodeVisualizer> Nodes { get { return nodes; } }
     public List<WorldLinkVisualizer> Links { get { return links; } }
+
+    [SerializeField] private List<WorldDoorVisualizer> doors = new List<WorldDoorVisualizer>();
+    public List<WorldDoorVisualizer> Doors { get { return doors; } }
 
     private PolygonCollider2D _collider;
     private PolygonCollider2D polygon_collider
@@ -40,24 +43,25 @@ public class WorldRoomVisualizer : MonoBehaviour
 
     [Header("Logs")]
     [SerializeField] private bool log_callbacks = false;
+    [SerializeField] private bool log_collides = false;
 
 
     // CREATE ROOM
     private static int room_count = 0;
     public static string NextRoomName { get { return $"room_{room_count}"; } }
-    public void CreateRoom(List<WorldCellVisualizer> cells, List<WorldLinkVisualizer> links, string id = "")
+    public void CreateRoom(List<WorldNodeVisualizer> nodes, List<WorldLinkVisualizer> links, string id = "")
     {
-        // unregister from previous cells if there is any
+        // unregister from previous nodes if there is any
         unregister_callbacks();
         reset_color();
 
-        this.cells = new List<WorldCellVisualizer>(cells);
+        this.nodes = new List<WorldNodeVisualizer>(nodes);
         this.links = new List<WorldLinkVisualizer>(links);
 
-        // set color of cells and links
+        // set color of nodes and links
         set_color();
 
-        // register to new cells
+        // register to new nodes
         register_callbacks();
 
 
@@ -82,49 +86,69 @@ public class WorldRoomVisualizer : MonoBehaviour
     // colors
     private void set_color()
     {
-        foreach (var c in cells) { c.Color = WorldBuilder.StaticInstance.LinkedColor; }
+        foreach (var n in nodes) { n.Color = WorldBuilder.StaticInstance.LinkedColor; }
         foreach (var l in links) { l.Color = WorldBuilder.StaticInstance.LinkedColor; }
     }
     private void reset_color()
     {
-        foreach (var c in cells)
+        foreach (var n in nodes)
         {
-            if (c == null) { continue; }
-            if (c.IsPartOfRoom()) { c.Color = WorldBuilder.StaticInstance.LinkedColor; }
-            else { c.Color = WorldBuilder.StaticInstance.WaitingColor; }
+            if (n == null) { continue; }
+            if (n.IsPartOfRoom()) { n.Color = WorldBuilder.StaticInstance.LinkedColor; }
+            else { n.Color = WorldBuilder.StaticInstance.WaitingColor; }
         }
         foreach (var l in links)
         {
             if (l == null) { continue; }
-            if (l.CellA.IsPartOfRoom() && l.CellB.IsPartOfRoom()) { l.Color = WorldBuilder.StaticInstance.LinkedColor; }
+            if (l.NodeA.IsPartOfRoom() && l.NodeB.IsPartOfRoom()) { l.Color = WorldBuilder.StaticInstance.LinkedColor; }
             else { l.Color = WorldBuilder.StaticInstance.WaitingColor; }
         }
     }
 
     // callbacks
-    private void register_callback(WorldCellVisualizer cell)
-    {
-        if (cell == null) { return; }
-        cell.OnRemoved += remove_ourself;
-        if (log_callbacks) { Debug.Log($"(WorldRoomVisualizer) registered to cell {cell}"); }
-    }
     private void register_callbacks()
     {
         if (log_callbacks) { Debug.Log($"(WorldRoomVisualizer) registering to all cells"); }
-        foreach (var c in cells) { register_callback(c); }
-    }
-    private void unregister_callback(WorldCellVisualizer cell)
-    {
-        if (cell == null) { return; }
-        cell.OnRemoved -= remove_ourself;
-        if (log_callbacks) { Debug.Log($"(WorldRoomVisualizer) unregistered from cell {cell}"); }
+        foreach (var n in nodes) { register_node_callback(n); }
+        foreach (var d in doors) { register_door(d); }
     }
     private void unregister_callbacks()
     {
         if (log_callbacks) { Debug.Log($"(WorldRoomVisualizer) unregistering from all cells"); }
-        foreach (var c in cells) { unregister_callback(c); }
+        foreach (var n in nodes) { unregister_node_callback(n); }
+        foreach (var d in doors) { unregister_door(d); }
     }
-    private void remove_ourself(WorldCellVisualizer cell_visu)
+    
+    
+    // doors callbacks
+    private void register_door(WorldDoorVisualizer door)
+    {
+        if (door == null) { return; }
+        door.OnRemoved += RemoveDoor;
+        if (log_callbacks) { Debug.Log($"(WorldRoomVisualizer) registered to door {door}"); }
+    }
+    private void unregister_door(WorldDoorVisualizer door)
+    {
+        if (door == null) { return; }
+        door.OnRemoved -= RemoveDoor;
+        if (log_callbacks) { Debug.Log($"(WorldRoomVisualizer) unregistered from door {door}"); }
+    }
+
+
+    // nodes callbacks
+    private void register_node_callback(WorldNodeVisualizer node)
+    {
+        if (node == null) { return; }
+        node.OnRemoved += remove_ourself;
+        if (log_callbacks) { Debug.Log($"(WorldRoomVisualizer) registered to cell {node}"); }
+    }
+    private void unregister_node_callback(WorldNodeVisualizer node)
+    {
+        if (node == null) { return; }
+        node.OnRemoved -= remove_ourself;
+        if (log_callbacks) { Debug.Log($"(WorldRoomVisualizer) unregistered from cell {node}"); }
+    }
+    private void remove_ourself(WorldCellVisualizer node)
     {
         going_to_be_destroyed = true;
         reset_color();
@@ -137,26 +161,59 @@ public class WorldRoomVisualizer : MonoBehaviour
     }
 
     // GETTERS
-    public bool HasCell(WorldCellVisualizer cell)
+    public bool HasNode(WorldNodeVisualizer node)
     {
         if (going_to_be_destroyed) { return false; }
-        return cells.Contains(cell);
+        return nodes.Contains(node);
     }
-    public bool IsEqualTo(List<WorldCellVisualizer> cells, List<WorldLinkVisualizer> links)
+    public bool IsEqualTo(List<WorldNodeVisualizer> nodes, List<WorldLinkVisualizer> links)
     {
-        return this.cells.Intersect(cells).Count() == this.cells.Count
+        return this.nodes.Intersect(nodes).Count() == this.nodes.Count
             && this.links.Intersect(links).Count() == this.links.Count;
     }
     public List<Vector3Int> GetLoopCells()
     {
-        return cells.Select(c => c.CurrentCell).ToList();
+        return nodes.Select(n => n.Cell).ToList();
     }
     public Vector2[] GetPath()
     {
-        return cells.Select(c => (Vector2)c.transform.position).ToArray();
+        return nodes.Select(n => (Vector2)n.transform.position).ToArray();
     }
     public Vector2[] GetWorldPath()
     {
-        return cells.Select(c => (Vector2)c.transform.position - (Vector2)transform.position).ToArray();
+        return nodes.Select(n => (Vector2)n.transform.position - (Vector2)transform.position).ToArray();
+    }
+    
+    private static float circle_cast_radius = 0.35f;
+    public bool CollideWithCell(Vector3Int cell_pos)
+    {
+        if (log_collides) { Debug.Log($"(WorldRoomVisualizer) checking collision with cell {cell_pos}"); }
+
+        // do a circle cast with small radius to check if the cell collides
+        Vector2 world_pos = WorldBuilder.StaticInstance.Grid.CellToWorld(cell_pos);
+
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(world_pos, circle_cast_radius, Vector2.zero, 0f, LayerMask.GetMask("WorldBuilder"));
+        if (log_collides) { Debug.Log($"(WorldRoomVisualizer) found {hits.Length} hits : \n - {string.Join("\n - ", hits.Select(h => h.collider.name))}"); }
+        foreach (var hit in hits)
+        {
+            if (hit.collider != polygon_collider) { continue; }            
+            return true;
+        }
+        return false;
+    }
+
+    // DOORS
+    public void AddDoor(WorldDoorVisualizer door)
+    {
+        if (doors.Contains(door)) { return; }
+        doors.Add(door);
+        register_door(door);
+    }
+    public void RemoveDoor(WorldCellVisualizer door) { RemoveDoor(door as WorldDoorVisualizer); }
+    public void RemoveDoor(WorldDoorVisualizer door)
+    {
+        if (!doors.Contains(door)) { return; }
+        doors.Remove(door);
+        unregister_door(door);
     }
 }

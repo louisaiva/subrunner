@@ -13,7 +13,7 @@ public class WorldCellVisualizer : MonoBehaviour
             return _sprite_renderer;
         }
     }
-    private Grid grid { get { return WorldBuilder.StaticInstance.Grid; } }
+    protected Grid grid { get { return WorldBuilder.StaticInstance.Grid; } }
     public Color Color
     {
         get { return sprite_renderer.color; }
@@ -25,7 +25,7 @@ public class WorldCellVisualizer : MonoBehaviour
     }
 
     [Header("Data")]
-    public Vector3Int CurrentCell;
+    public Vector3Int Cell;
 
     [Header("Events")]
     public System.Action<WorldCellVisualizer> OnRemoved = delegate { };
@@ -33,9 +33,14 @@ public class WorldCellVisualizer : MonoBehaviour
 
     public void SetCell(Vector3Int cell)
     {
-        CurrentCell = cell;
+        Cell = cell;
         transform.position = grid.CellToWorld(cell) + grid.cellSize / 2;
         OnMoved?.Invoke(this);
+    }
+
+    public void SetIcon(Sprite sprite)
+    {
+        sprite_renderer.sprite = sprite;
     }
 
     private void OnDestroy()
@@ -47,11 +52,8 @@ public class WorldCellVisualizer : MonoBehaviour
     public Vector2 WorldPosition { get { return transform.position; } }
     public override string ToString()
     {
-        return $"({CurrentCell.x}, {CurrentCell.y})";
+        return $"({Cell.x}, {Cell.y})";
     }
-    public bool IsPartOfRoom()
-    {
-        return WorldBuilder.StaticInstance.GetRoomOfCell(this) != null;
-    }
+
 
 }

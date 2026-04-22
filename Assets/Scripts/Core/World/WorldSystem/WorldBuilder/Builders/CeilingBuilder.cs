@@ -12,7 +12,11 @@ public class CeilingBuilder : TilemapBuilder
         List<Vector3Int> tile_positions = get_ceiling_outline(room);
 
         // we convert those positions to tilemap's grid positions and we set the tiles
-        foreach (var pos in tile_positions) { tilemap.SetTile(pos, tile); }
+        foreach (var pos in tile_positions)
+        {
+            if (HasDoorAtPosition(pos)) { continue; } // filter the doors
+            tilemap.SetTile(pos, tile);
+        }
     }
 
     protected virtual List<Vector3Int> get_ceiling_outline(WorldRoomVisualizer room, DiagonalTraceType trace_type = DiagonalTraceType.Canard)

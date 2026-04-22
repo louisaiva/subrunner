@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -30,6 +31,10 @@ public class TilemapBuilder : MonoBehaviour
     // MAIN METHODS
     public virtual Tilemap Build(WorldRoomVisualizer room)
     {
+        // we save the doors
+        doors.Clear();
+        doors.AddRange(room.Doors);
+
         // we check if we already have a tilemap for this room, else we create one
         if (tilemap_instances.TryGetValue(room.name, out Tilemap tilemap_instance))
         {
@@ -76,7 +81,7 @@ public class TilemapBuilder : MonoBehaviour
         List<Vector3Int> positions = new List<Vector3Int>();
 
         // we go through all the cells of the room
-        foreach (var cell in room.Cells)
+        foreach (var cell in room.Nodes)
         {
             if (cell == null) { continue; }
             if (cell.IsPartOfRoom()) { positions.Add(WorldToCell(cell.WorldPosition)); }
@@ -101,8 +106,8 @@ public class TilemapBuilder : MonoBehaviour
         List<Vector3Int> positions = new List<Vector3Int>();
 
         // we get the positions of the two cells connected by the link
-        Vector3Int pos_a = WorldToCell(link.CellA.WorldPosition);
-        Vector3Int pos_b = WorldToCell(link.CellB.WorldPosition);
+        Vector3Int pos_a = WorldToCell(link.NodeA.WorldPosition);
+        Vector3Int pos_b = WorldToCell(link.NodeB.WorldPosition);
         if (!has_good_angle(pos_a, pos_b, out float angle)) { return positions; }
 
         // check if the angle is 0,90,180,270 we just create a line
@@ -149,7 +154,7 @@ public class TilemapBuilder : MonoBehaviour
     }
     private bool has_good_angle(WorldLinkVisualizer link, out float angle)
     {
-        return has_good_angle(link.CellA.WorldPosition, link.CellB.WorldPosition, out angle);
+        return has_good_angle(link.NodeA.WorldPosition, link.NodeB.WorldPosition, out angle);
     }
     protected List<Vector3Int> trace_straight_line(Vector3Int from, Vector3Int to)
     {
@@ -303,6 +308,41 @@ public class TilemapBuilder : MonoBehaviour
         return cell_grid.CellToWorld(cell_position);
     }
 
+
+
+    // DOORS
+    private readonly List<WorldDoorVisualizer> doors = new List<WorldDoorVisualizer>();
+    protected virtual bool HasDoorAtPosition(Vector3Int cell_position)
+    {
+        Vector2 world_position = CellToWorld(cell_position) + new Vector3(0.25f, 0.25f, 0); // we check the center of the tile
+        foreach (var door in doors)
+        {
+            if (Vector2.Distance(door.WorldPosition, world_position) < 0.1f) { return true; }
+            if (Vector2.Distance(door.OtherWorldPosition, world_position) < 0.1f) { return true; }
+        }
+        return false;
+    }
+
+    /* private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        foreach (var door in doors)
+        {
+            Gizmos.DrawSphere(door.WorldPosition, 0.1f);
+        }
+        Gizmos.color = Color.blue;
+        foreach (var tilemap in tilemap_instances.Values)
+        {
+            foreach (var pos in tilemap.cellBounds.allPositionsWithin)
+            {
+                if (tilemap.HasTile(pos))
+                {
+                    Vector3 world_pos = tilemap.CellToWorld(pos) + tilemap.tileAnchor;
+                    Gizmos.DrawSphere(world_pos, 0.05f);
+                }
+            }
+        }
+    } */
 }
 
 public enum DiagonalTraceType

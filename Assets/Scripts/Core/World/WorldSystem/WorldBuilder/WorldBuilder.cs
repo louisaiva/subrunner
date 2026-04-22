@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Cinemachine;
+using Unity.VisualScripting;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -51,18 +54,30 @@ public class WorldBuilder : MonoBehaviour
         }
     }
 
-    [Header("Cell Visualizers")]
+
+    [Header("Selected Tool Cell")]
     public WorldCellVisualizer selected_cell_visualizer;
-    public WorldCellVisualizer cell_prefab;
-    public Transform cell_parent;
-    [SerializeField] private List<WorldCellVisualizer> cell_visualizers = new List<WorldCellVisualizer>();
-    private WorldCellVisualizer last_added_cell = null;
+    public string tool_type = "node"; // "node", "door"
+    private Dictionary<string, Sprite> tools_icons = new Dictionary<string, Sprite>();
+
+
+    [Header("Zoom")]
+    [Range(0.1f, 15f)] public float Zoom = 5f;
+
+
+    [Header("Nodes Visualizers")]
+    public WorldNodeVisualizer node_prefab;
+    public WorldNodeVisualizer node_tool;
+    public Transform node_parent;
+    [SerializeField] private List<WorldNodeVisualizer> node_visualizers = new List<WorldNodeVisualizer>();
+    private WorldNodeVisualizer last_added_node = null;
 
     [Header("Link Visualizers")]
     public WorldLinkVisualizer link_prefab;
     public Transform link_parent;
     [SerializeField] private List<WorldLinkVisualizer> link_visualizers = new List<WorldLinkVisualizer>();
     private WorldLinkVisualizer selecting_link = null;
+
 
     [Header("Room Visualizers")]
     public WorldRoomVisualizer room_prefab;
@@ -74,6 +89,16 @@ public class WorldBuilder : MonoBehaviour
     public Color LinkedColor = Color.lightBlue;
     public List<Color> RoomColors = new List<Color> { Color.lightPink, Color.lightGreen, Color.paleTurquoise, Color.cyan, Color.magenta };
     private List<Color> used_colors = new List<Color>();
+
+    [Header("Door Visualizers")]
+    public WorldDoorVisualizer door_prefab;
+    public WorldDoorVisualizer door_tool;
+    public Transform door_parent;
+    [SerializeField] private List<WorldDoorVisualizer> door_visualizers = new List<WorldDoorVisualizer>();
+    [SerializeField] private Color WrongDoorColor = Color.darkRed;
+    [SerializeField] private Color ConnectedDoorColor = Color.lightSeaGreen;
+
+
 
 
     [Header("Builders")]
@@ -89,6 +114,7 @@ public class WorldBuilder : MonoBehaviour
     [SerializeField] private bool log_get_room = false;
     [SerializeField] private bool log_data = false;
     [SerializeField] private bool log_building = false;
+    [SerializeField] private bool log_tool = false;
 
 
 
@@ -99,18 +125,21 @@ public class WorldBuilder : MonoBehaviour
 
         used_colors = new List<Color>(RoomColors);
 
-        
+        // we get the icons for the tools
+        tools_icons["node"] = node_prefab.GetComponent<SpriteRenderer>().sprite;
+        tools_icons["door"] = door_prefab.GetComponent<SpriteRenderer>().sprite;
+
         #if UNITY_EDITOR
         LoadData();
         #endif
     }
 
     // ON ENABLE / DISABLE
-    private void OnEnable()
+    /* private void OnEnable()
     {
         // UI_Manager.Instance.SwitchTo("dev_world_builder");
-        CameraFollow.Instance.SetSize(10f);
-    }
+        CameraFollow.Instance.SetSize(Zoom);
+    } */
     private void OnDisable()
     {
         try
@@ -121,9 +150,25 @@ public class WorldBuilder : MonoBehaviour
         catch (Exception) { }
     }
 
+
+
+
+
+
+    ///
+    // 
+    ///  UPDATE & INPUTS
+    //
+    ///
+
+
+
+
     // UPDATE
     private void Update()
     {
+        CameraFollow.Instance.SetSize(Zoom);
+
         // check if we are on the right ui_pool
         if (UI_Manager.Instance.CurrentPool != "dev_world_builder")
         {
@@ -141,7 +186,8 @@ public class WorldBuilder : MonoBehaviour
 
 
         // check if we have some null or missing visualizers in our lists and remove them
-        cell_visualizers.RemoveAll(v => v == null);
+        node_visualizers.RemoveAll(v => v == null);
+        door_visualizers.RemoveAll(v => v == null);
         link_visualizers.RemoveAll(v => v == null);
         room_visualizers.RemoveAll(v => v == null);
 
@@ -184,6 +230,34 @@ public class WorldBuilder : MonoBehaviour
         selected_cell_visualizer.SetCell(Grid.WorldToCell(world_mouse));
     }
 
+
+    // TOOL SWITCH
+    public void SelectTool(string new_tool)
+    {
+        if (new_tool == tool_type) { return; }
+
+        // remove the old tool
+        if (tool_type == "node" && selecting_link != null)
+        {
+            Destroy(selecting_link.gameObject);
+            selecting_link = null;
+        }
+
+        tool_type = new_tool;
+
+        // switch the tool
+        selected_cell_visualizer.gameObject.SetActive(false);
+        selected_cell_visualizer = tool_type switch
+        {
+            "node" => node_tool,
+            "door" => door_tool,
+            _ => selected_cell_visualizer
+        };
+        selected_cell_visualizer.SetIcon(tools_icons[tool_type]);
+        selected_cell_visualizer.gameObject.SetActive(true);
+        if (log_tool) { Debug.Log("(WorldBuilder) selected tool : " + tool_type); }
+    }
+
     // clicks
     private bool holding_left_click = false;
     private bool holding_right_click = false;
@@ -200,7 +274,7 @@ public class WorldBuilder : MonoBehaviour
         {
             selected_cell_visualizer.Color = Color.white;
             holding_left_click = false;
-            add_cell_at_selected_cell();
+            click_at_selected();
         }
 
         // RIGHT CLICK (remove cell)
@@ -216,53 +290,21 @@ public class WorldBuilder : MonoBehaviour
             remove_cell_at_selected_cell();
         }
     }
-
-
-    // CELLS MANAGEMENT
-    private void add_cell_at_selected_cell()
+    private void click_at_selected()
     {
-        add_cell_at(SelectedCell);
+        // check the tool type
+        if (tool_type == "node") { add_node_at(SelectedCell); }
+        else if (tool_type == "door") { create_door_at(SelectedCell); }
     }
-    private void add_cell_at(Vector3Int cell_pos)
-    {
 
-        // we add a new cell if not already here
-        WorldCellVisualizer new_cell_visu = GetCellAt(cell_pos);
-        if (new_cell_visu == null) { new_cell_visu = create_cell_at(cell_pos); }
-        
-        // we connect the on-going link to the new cell
-        if (selecting_link != null)
-        {
-            if (GetLinkBetween(selecting_link.CellA, new_cell_visu) != null)
-            {
-                // if there is already a link between the selecting cell and the new cell it means we want to remove this link instead of creating a cycle
-                Destroy(selecting_link.gameObject);
-                selecting_link = null;
-            }
-            else
-            {
-                // it means we already have a cell selected and we want to link it to the new cell
-                selecting_link.SetSecondCell(new_cell_visu);
-                selecting_link.Color = WaitingColor;
 
-                // we check if this new link creates a cycle
-                handle_potential_cycle_creation(selecting_link);
-                selecting_link = null;
-            }
-        }
-        last_added_cell = new_cell_visu;
+    ///
+    // 
+    ///  CELLS & NODES & LINKS & ROOMS VISUs
+    //
+    ///
 
-        // we create a new link visu to link this cell to the next one that will be created if we click on another cell
-        selecting_link = create_link_between(new_cell_visu, selected_cell_visualizer, Color.white);
-    }
-    private WorldCellVisualizer create_cell_at(Vector3Int cell_pos)
-    {
-        WorldCellVisualizer new_cell_visu = Instantiate(cell_prefab, cell_parent);
-        new_cell_visu.SetCell(cell_pos);
-        new_cell_visu.Color = WaitingColor;
-        cell_visualizers.Add(new_cell_visu);
-        return new_cell_visu;
-    }
+    // REMOVE CELL
     private void remove_cell_at_selected_cell()
     {
         // check if we have a select link we remove it
@@ -274,14 +316,57 @@ public class WorldBuilder : MonoBehaviour
 
         WorldCellVisualizer cell_to_remove = GetCellAt(SelectedCell);
         if (cell_to_remove == null) { return; }
-        
+
         // remove the cell
-        cell_visualizers.Remove(cell_to_remove);
+        if (cell_to_remove is WorldNodeVisualizer node_to_remove) { node_visualizers.Remove(node_to_remove); }
+        else if (cell_to_remove is WorldDoorVisualizer door_to_remove) { door_visualizers.Remove(door_to_remove); }
         Destroy(cell_to_remove.gameObject);
     }
 
-    // LINKS MANAGEMENT
-    private WorldLinkVisualizer create_link_between(WorldCellVisualizer c1, WorldCellVisualizer c2, Color? color = null)
+    // NODES / LINKS MANAGEMENT
+    private void add_node_at(Vector3Int cell_pos)
+    {
+        WorldCellVisualizer new_cell_visu = GetCellAt(cell_pos);
+        if (new_cell_visu != null && new_cell_visu is not WorldNodeVisualizer) { return; }
+
+        // we add a new cell if not already here
+        WorldNodeVisualizer new_node_visu = new_cell_visu as WorldNodeVisualizer;
+        if (new_cell_visu == null) { new_node_visu = create_node_at(cell_pos); }
+        
+        // we connect the on-going link to the new cell
+        if (selecting_link != null)
+        {
+            if (GetLinkBetween(selecting_link.NodeA, new_node_visu) != null)
+            {
+                // if there is already a link between the selecting cell and the new cell it means we want to remove this link instead of creating a cycle
+                Destroy(selecting_link.gameObject);
+                selecting_link = null;
+            }
+            else
+            {
+                // it means we already have a cell selected and we want to link it to the new cell
+                selecting_link.SetSecondCell(new_node_visu);
+                selecting_link.Color = WaitingColor;
+
+                // we check if this new link creates a cycle
+                handle_potential_cycle_creation(selecting_link);
+                selecting_link = null;
+            }
+        }
+        last_added_node = new_node_visu;
+
+        // we create a new link visu to link this cell to the next one that will be created if we click on another cell
+        selecting_link = create_link_between(new_node_visu, selected_cell_visualizer as WorldNodeVisualizer, Color.white);
+    }
+    private WorldNodeVisualizer create_node_at(Vector3Int cell_pos)
+    {
+        WorldNodeVisualizer new_cell_visu = Instantiate(node_prefab, node_parent);
+        new_cell_visu.SetCell(cell_pos);
+        new_cell_visu.Color = WaitingColor;
+        node_visualizers.Add(new_cell_visu);
+        return new_cell_visu;
+    }
+    private WorldLinkVisualizer create_link_between(WorldNodeVisualizer c1, WorldNodeVisualizer c2, Color? color = null)
     {
         WorldLinkVisualizer new_link_visu = Instantiate(link_prefab, link_parent);
         new_link_visu.SetCells(c1, c2);
@@ -290,11 +375,10 @@ public class WorldBuilder : MonoBehaviour
         return new_link_visu;
     }
 
-
-    // room creation
+    // cells to rooms
     private void handle_potential_cycle_creation(WorldLinkVisualizer new_link)
     {
-        bool is_a_cycle_created = try_get_cycle_created_by_edge(new_link, out List<WorldCellVisualizer> cycle);
+        bool is_a_cycle_created = try_get_cycle_created_by_edge(new_link, out List<WorldNodeVisualizer> cycle);
 
         if (!is_a_cycle_created) { return; }
         if (log_cycles) { Debug.Log("(WorldBuilder) cycle created with " + cycle.Count + " cells : " + string.Join(", ", cycle)); }
@@ -316,7 +400,7 @@ public class WorldBuilder : MonoBehaviour
         cells_waiting_for_a_room = cycle;
         UI_Manager.Instance.OpenInputPopup("enter room name", WorldRoomVisualizer.NextRoomName, FinishRoomCreationWithName);
     }
-    private List<WorldCellVisualizer> cells_waiting_for_a_room = new List<WorldCellVisualizer>();
+    private List<WorldNodeVisualizer> cells_waiting_for_a_room = new List<WorldNodeVisualizer>();
     public void FinishRoomCreationWithName(string room_name)
     {
         if (cells_waiting_for_a_room.Count == 0) { return; }
@@ -325,7 +409,7 @@ public class WorldBuilder : MonoBehaviour
     }
 
     // ROOM (LOOPING NODES) MANAGEMENT
-    private WorldRoomVisualizer create_room_with_cells(List<WorldCellVisualizer> cells, string room_name = "")
+    private WorldRoomVisualizer create_room_with_cells(List<WorldNodeVisualizer> cells, string room_name = "")
     {
         List<WorldLinkVisualizer> links = gather_links_of_cycle(cells);
 
@@ -342,7 +426,7 @@ public class WorldBuilder : MonoBehaviour
         room_visualizers.Add(new_room_visu);
         return new_room_visu;
     }
-    private List<WorldLinkVisualizer> gather_links_of_cycle(List<WorldCellVisualizer> cycle)
+    private List<WorldLinkVisualizer> gather_links_of_cycle(List<WorldNodeVisualizer> cycle)
     {
         var links = new List<WorldLinkVisualizer>();
         for (int i = 0; i < cycle.Count; i++)
@@ -354,20 +438,20 @@ public class WorldBuilder : MonoBehaviour
         }
         return links;
     }
-    private bool try_get_cycle_created_by_edge(WorldLinkVisualizer new_link, out List<WorldCellVisualizer> cycle)
+    private bool try_get_cycle_created_by_edge(WorldLinkVisualizer new_link, out List<WorldNodeVisualizer> cycle)
     {
         cycle = null;
-        if (new_link.CellA == null || new_link.CellB == null) { return false; }
-        WorldCellVisualizer a = new_link.CellA;
-        WorldCellVisualizer b = new_link.CellB;
+        if (new_link.NodeA == null || new_link.NodeB == null) { return false; }
+        WorldNodeVisualizer a = new_link.NodeA;
+        WorldNodeVisualizer b = new_link.NodeB;
 
         // 1) adjacency from existing finalized links
-        var adj = new Dictionary<WorldCellVisualizer, List<WorldCellVisualizer>>();
+        var adj = new Dictionary<WorldNodeVisualizer, List<WorldNodeVisualizer>>();
         foreach (var l in link_visualizers)
         {
-            if (l == null || l.CellA == null || l.CellB == null) { continue; }
+            if (l == null || l.NodeA == null || l.NodeB == null) { continue; }
             if (l == new_link) { continue; } // prevent the new link to be in the adjacency otherwise we will always have a cycle of 2 nodes
-            mark_as_adjacents(adj, l.CellA, l.CellB);
+            mark_as_adjacents(adj, l.NodeA, l.NodeB);
         }
         if (log_cycles)
         {
@@ -375,9 +459,9 @@ public class WorldBuilder : MonoBehaviour
         }
 
         // 2) BFS from a to b
-        var q = new Queue<WorldCellVisualizer>();
-        var parent = new Dictionary<WorldCellVisualizer, WorldCellVisualizer>();
-        var visited = new HashSet<WorldCellVisualizer>();
+        var q = new Queue<WorldNodeVisualizer>();
+        var parent = new Dictionary<WorldNodeVisualizer, WorldNodeVisualizer>();
+        var visited = new HashSet<WorldNodeVisualizer>();
 
         q.Enqueue(a);
         visited.Add(a);
@@ -401,7 +485,7 @@ public class WorldBuilder : MonoBehaviour
         if (!visited.Contains(b)) { return false; }
 
         // 3) reconstruct path a..b
-        var path = new List<WorldCellVisualizer>();
+        var path = new List<WorldNodeVisualizer>();
         var node = b;
         path.Add(node);
         while (node != a)
@@ -416,37 +500,115 @@ public class WorldBuilder : MonoBehaviour
         cycle = path;
         return true;
     }
-    private void mark_as_adjacents(Dictionary<WorldCellVisualizer, List<WorldCellVisualizer>> adj, WorldCellVisualizer u, WorldCellVisualizer v)
+    private void mark_as_adjacents(Dictionary<WorldNodeVisualizer, List<WorldNodeVisualizer>> adj, WorldNodeVisualizer u, WorldNodeVisualizer v)
     {
-        if (!adj.TryGetValue(u, out var lu)) { lu = new List<WorldCellVisualizer>(); adj[u] = lu; }
-        if (!adj.TryGetValue(v, out var lv)) { lv = new List<WorldCellVisualizer>(); adj[v] = lv; }
+        if (!adj.TryGetValue(u, out var lu)) { lu = new List<WorldNodeVisualizer>(); adj[u] = lu; }
+        if (!adj.TryGetValue(v, out var lv)) { lv = new List<WorldNodeVisualizer>(); adj[v] = lv; }
         if (!lu.Contains(v)) lu.Add(v);
         if (!lv.Contains(u)) lv.Add(u);
     }
 
 
+
+
+
+
+
+
+
+    ///
+    // 
+    ///  DOORs VISUs
+    //
+    ///
+
+    // DOORS MANAGEMENT
+    private WorldDoorVisualizer create_door_at(Vector3Int cell_pos)
+    {
+        WorldDoorVisualizer new_door_visu = Instantiate(door_prefab, door_parent);
+        new_door_visu.SetCell(cell_pos);
+        new_door_visu.Color = ConnectedDoorColor;
+        door_visualizers.Add(new_door_visu);
+        assign_door_to_rooms(new_door_visu);
+        return new_door_visu;
+    }
+
+    // doors to rooms
+    private void assign_door_to_rooms(WorldDoorVisualizer door)
+    {
+        foreach (var r in room_visualizers)
+        {
+            if (r.CollideWithCell(door.Cell)) { r.AddDoor(door); continue; }
+            if (r.CollideWithCell(door.OtherCell)) { r.AddDoor(door); continue; }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ///
+    //
+    ///  GETTERS & OTHERS
+    //
+    ///
+
+
+
+
+
     // GETTERS
-    public Vector3Int SelectedCell => selected_cell_visualizer.CurrentCell;
+    public Vector3Int SelectedCell => selected_cell_visualizer.Cell;
     public WorldCellVisualizer GetCellAt(Vector3Int cell_pos)
     {
-        for (int i = 0; i < cell_visualizers.Count; i++)
+        WorldCellVisualizer cell = GetNodeAt(cell_pos) as WorldCellVisualizer
+                                ?? GetDoorAt(cell_pos);
+        return cell;
+    }
+    public WorldNodeVisualizer GetNodeAt(Vector3Int cell_pos)
+    {
+        for (int i = 0; i < node_visualizers.Count; i++)
         {
-            if (cell_visualizers[i].CurrentCell == cell_pos)
+            if (node_visualizers[i].Cell == cell_pos)
             {
-                return cell_visualizers[i];
+                return node_visualizers[i];
             }
         }
         return null;
     }
-    public WorldLinkVisualizer GetLinkBetween(WorldCellVisualizer c1, WorldCellVisualizer c2)
+    public WorldDoorVisualizer GetDoorAt(Vector3Int cell_pos)
     {
-        return link_visualizers.FirstOrDefault(l => (l.CellA == c1 && l.CellB == c2) || (l.CellA == c2 && l.CellB == c1));
+        for (int i = 0; i < door_visualizers.Count; i++)
+        {
+            if (door_visualizers[i].Cell == cell_pos)
+            {
+                return door_visualizers[i];
+            }
+        }
+        return null;
     }
-    public WorldRoomVisualizer GetRoomOfCell(WorldCellVisualizer cell)
+    public WorldLinkVisualizer GetLinkBetween(WorldNodeVisualizer c1, WorldNodeVisualizer c2)
+    {
+        return link_visualizers.FirstOrDefault(l => (l.NodeA == c1 && l.NodeB == c2) || (l.NodeA == c2 && l.NodeB == c1));
+    }
+    public WorldRoomVisualizer GetRoomOfNode(WorldNodeVisualizer cell)
     {
         for (int i = 0; i < room_visualizers.Count; i++)
         {
-            if (!room_visualizers[i].HasCell(cell)) { continue; }
+            if (!room_visualizers[i].HasNode(cell)) { continue; }
             if (log_get_room) { Debug.Log("(WorldBuilder) cell " + cell + " is part of room " + room_visualizers[i].name); }
             return room_visualizers[i];
         }
@@ -462,7 +624,7 @@ public class WorldBuilder : MonoBehaviour
 
         BuiltWorldData built_world = new BuiltWorldData()
         {
-            Cells = new List<WorldCellVisualizer>(cell_visualizers),
+            Cells = new List<WorldNodeVisualizer>(node_visualizers),
             Links = new List<WorldLinkVisualizer>(link_visualizers),
             Rooms = new List<WorldRoomVisualizer>(room_visualizers)
         };
@@ -582,8 +744,10 @@ public class WorldBuilder : MonoBehaviour
         room_visualizers.Clear();
         foreach (var l in link_visualizers) { if (l != null) { Destroy(l.gameObject); } }
         link_visualizers.Clear();
-        foreach (var c in cell_visualizers) { if (c != null) { Destroy(c.gameObject); } }
-        cell_visualizers.Clear();
+        foreach (var n in node_visualizers) { if (n != null) { Destroy(n.gameObject); } }
+        node_visualizers.Clear();
+        foreach (var d in door_visualizers) { if (d != null) { Destroy(d.gameObject); } }
+        door_visualizers.Clear();
 
         // we clear the tilemaps
         ClearTilemaps();
@@ -603,19 +767,26 @@ public class WorldBuilder : MonoBehaviour
         var data = new WorldBuilderData();
 
         // create cells
-        for (int i = 0; i < cell_visualizers.Count; i++)
+        for (int i = 0; i < node_visualizers.Count; i++)
         {
-            if (cell_visualizers[i] == null) { continue; }
-            data.Cells.Add(cell_visualizers[i].CurrentCell);
+            if (node_visualizers[i] == null) { continue; }
+            data.Cells.Add(node_visualizers[i].Cell);
+        }
+
+        // create doors
+        for (int i = 0; i < door_visualizers.Count; i++)
+        {
+            if (door_visualizers[i] == null) { continue; }
+            data.Doors.Add(door_visualizers[i].Cell);
         }
 
         // create links
         for (int i = 0; i < link_visualizers.Count; i++)
         {
             if (link_visualizers[i] == null) { continue; }
-            if (link_visualizers[i].CellA == null) { continue; }
-            if (link_visualizers[i].CellB == null) { continue; }
-            data.Links.Add(new WorldLinkData { CellA = link_visualizers[i].CellA.CurrentCell, CellB = link_visualizers[i].CellB.CurrentCell });
+            if (link_visualizers[i].NodeA == null) { continue; }
+            if (link_visualizers[i].NodeB == null) { continue; }
+            data.Links.Add(new WorldLinkData { CellA = link_visualizers[i].NodeA.Cell, CellB = link_visualizers[i].NodeB.Cell });
         }
 
         // create rooms
@@ -647,14 +818,14 @@ public class WorldBuilder : MonoBehaviour
         // Load cells
         foreach (var cell in data.Cells)
         {
-            create_cell_at(cell);
+            create_node_at(cell);
         }
 
         // Load links
         foreach (var link in data.Links)
         {
-            WorldCellVisualizer cA = GetCellAt(link.CellA);
-            WorldCellVisualizer cB = GetCellAt(link.CellB);
+            WorldNodeVisualizer cA = GetNodeAt(link.CellA);
+            WorldNodeVisualizer cB = GetNodeAt(link.CellB);
             if (cA == null || cB == null) { continue; }
             create_link_between(cA, cB);
         }
@@ -663,15 +834,21 @@ public class WorldBuilder : MonoBehaviour
         foreach (var room in data.Rooms)
         {
             // gather cells of this room
-            List<WorldCellVisualizer> room_cells = new List<WorldCellVisualizer>();
+            List<WorldNodeVisualizer> room_cells = new List<WorldNodeVisualizer>();
             foreach (var cell_pos in room.Cells)
             {
-                WorldCellVisualizer c = GetCellAt(cell_pos);
+                WorldNodeVisualizer c = GetNodeAt(cell_pos);
                 if (c != null) { room_cells.Add(c); }
             }
 
             // create a room with these cells
             create_room_with_cells(room_cells, room.Name);
+        }
+
+        // Load doors
+        foreach (var door in data.Doors)
+        {
+            create_door_at(door);
         }
     }
     private void OnDestroy()
@@ -685,6 +862,7 @@ public class WorldBuilder : MonoBehaviour
 [Serializable] public class WorldBuilderData
 {
     public List<Vector3Int> Cells = new List<Vector3Int>();
+    public List<Vector3Int> Doors = new List<Vector3Int>();
     public List<WorldLinkData> Links = new List<WorldLinkData>();
     public List<WorldRoomData> Rooms = new List<WorldRoomData>();
 }
@@ -702,7 +880,8 @@ public class WorldBuilder : MonoBehaviour
 public class BuiltWorldData
 {
     // cells links rooms visu
-    public List<WorldCellVisualizer> Cells = new List<WorldCellVisualizer>();
+    public List<WorldNodeVisualizer> Cells = new List<WorldNodeVisualizer>();
+    public List<WorldDoorVisualizer> Doors = new List<WorldDoorVisualizer>();
     public List<WorldLinkVisualizer> Links = new List<WorldLinkVisualizer>();
     public List<WorldRoomVisualizer> Rooms = new List<WorldRoomVisualizer>();
 

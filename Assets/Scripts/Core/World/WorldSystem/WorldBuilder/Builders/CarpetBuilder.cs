@@ -11,6 +11,10 @@ public class CarpetBuilder : TilemapBuilder
         List<Vector3Int> tile_positions = get_carpet_tiles_positions(room);
 
         // we convert those positions to tilemap's grid positions and we set the tiles
-        foreach (var pos in tile_positions) { tilemap.SetTile(pos, tile); }
+        foreach (var pos in tile_positions)
+        {
+            if (HasDoorAtPosition(pos)) { continue; } // filter the doors
+            tilemap.SetTile(pos, tile);
+        }
     }
 }

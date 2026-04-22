@@ -13,6 +13,11 @@ public class WorldBuilderCaller : MonoBehaviour
     }
 
 
+    // tools
+    public void SelectTool(string tool_type) => worldBuilder.SelectTool(tool_type);
+
+
+    // general builders
     public void BuildWorld() => worldBuilder.Build();
     public void EraseAll() => worldBuilder.Erase();
     public void ClearTilemaps() => worldBuilder.ClearTilemaps();

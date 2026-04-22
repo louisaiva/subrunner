@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2826422258421639294}
   - component: {fileID: 7469761234086568229}
-  - component: {fileID: -980316942306270954}
+  - component: {fileID: -8648718281046801322}
   m_Layer: 17
-  m_Name: world_cell_visualizer
+  m_Name: world_door_visualizer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -80,10 +80,10 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1245113987
   m_SortingLayer: 1
-  m_SortingOrder: 0
+  m_SortingOrder: 4
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -6231044458718751821, guid: b03587d7c870f7a428ffab8afe6c4fac, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 186167712, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -92,7 +92,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &-980316942306270954
+--- !u!114 &-8648718281046801322
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -101,7 +101,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 6152796401453744943}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26b0d8eafd821f549a01a3ff2ab875c3, type: 3}
+  m_Script: {fileID: 11500000, guid: 94508c4c6a5431b4d80c9b17882e143d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WorldNodeVisualizer
-  CurrentCell: {x: 0, y: 0, z: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::WorldDoorVisualizer
+  Cell: {x: 0, y: 0, z: 0}
+  is_vertical: 1

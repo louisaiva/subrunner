@@ -25,59 +25,59 @@ public class WorldLinkVisualizer : MonoBehaviour
         transform.localScale = new Vector3(.2f, .2f, .2f) * size;
     }
     [Header("Data")]
-    public WorldCellVisualizer CellA;
-    public WorldCellVisualizer CellB;
+    public WorldNodeVisualizer NodeA;
+    public WorldNodeVisualizer NodeB;
 
     // SET CELLS
-    public void SetSecondCell(WorldCellVisualizer cell)
+    public void SetSecondCell(WorldNodeVisualizer node)
     {
         unregister_callbacks();
-        CellB = cell;
-        line_renderer.SetPosition(1, cell.WorldPosition);
+        NodeB = node;
+        line_renderer.SetPosition(1, node.WorldPosition);
         register_callbacks();
     }
-    public void SetCells(WorldCellVisualizer cell_a, WorldCellVisualizer cell_b)
+    public void SetCells(WorldNodeVisualizer node_a, WorldNodeVisualizer node_b)
     {
         unregister_callbacks();
 
-        CellA = cell_a;
-        CellB = cell_b;
-        line_renderer.SetPosition(0, cell_a.WorldPosition);
-        line_renderer.SetPosition(1, cell_b.WorldPosition);
+        NodeA = node_a;
+        NodeB = node_b;
+        line_renderer.SetPosition(0, node_a.WorldPosition);
+        line_renderer.SetPosition(1, node_b.WorldPosition);
 
-        // register to ondestroy of cells to destroy this link if one of the cells is destroyed
+        // register to ondestroy of nodes to destroy this link if one of the nodes is destroyed
         register_callbacks();
     }
 
     // callbacks
     private void register_callbacks()
     {
-        if (CellA != null)
+        if (NodeA != null)
         {
-            CellA.OnRemoved += remove_ourself;
-            CellA.OnMoved += on_cells_moved;
+            NodeA.OnRemoved += remove_ourself;
+            NodeA.OnMoved += on_nodes_moved;
         }
-        if (CellB != null) 
+        if (NodeB != null) 
         { 
-            CellB.OnRemoved += remove_ourself; 
-            CellB.OnMoved += on_cells_moved;
+            NodeB.OnRemoved += remove_ourself; 
+            NodeB.OnMoved += on_nodes_moved;
         }
     }
     private void unregister_callbacks()
     {
-        if (CellA != null) { CellA.OnRemoved -= remove_ourself; CellA.OnMoved -= on_cells_moved; }
-        if (CellB != null) { CellB.OnRemoved -= remove_ourself; CellB.OnMoved -= on_cells_moved; }
+        if (NodeA != null) { NodeA.OnRemoved -= remove_ourself; NodeA.OnMoved -= on_nodes_moved; }
+        if (NodeB != null) { NodeB.OnRemoved -= remove_ourself; NodeB.OnMoved -= on_nodes_moved; }
     }
-    private void remove_ourself(WorldCellVisualizer cell_visu)
+    private void remove_ourself(WorldCellVisualizer node)
     {
         Destroy(gameObject);
     }
 
     // CELLS MOVED
-    private void on_cells_moved(WorldCellVisualizer cell_visu)
+    private void on_nodes_moved(WorldCellVisualizer node)
     {
-        if (CellA != null) { line_renderer.SetPosition(0, CellA.WorldPosition); }
-        if (CellB != null) { line_renderer.SetPosition(1, CellB.WorldPosition); }
+        if (NodeA != null) { line_renderer.SetPosition(0, NodeA.WorldPosition); }
+        if (NodeB != null) { line_renderer.SetPosition(1, NodeB.WorldPosition); }
     }
 
     void OnDestroy()
