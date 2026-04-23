@@ -33,6 +33,11 @@ using UnityEngine;
         }
     }
     
+
+    // lights management
+    public List<LightData> lights_data;
+
+
     // tilemaps data
     public string[] tilebase_paths_used;
     public BoundsInt ceiling_bounds;
@@ -59,10 +64,11 @@ using UnityEngine;
     {
         string details = $"Room {id} :\n";
         details += $"  - position : {position}\n";
-        details += $"  - neighbours : {neighbours_ids.Count} rooms\n";
-        details += $"  - capables : {capables_ids.Count} capables\n";
-        details += $"  - movables : {movables_ids.Count} movables\n";
-        details += $"  - colliders : {collider_points.Count} points\n";
+        details += $"  - neighbours : {(neighbours_ids != null ? neighbours_ids.Count : 0)} rooms\n";
+        details += $"  - capables : {(capables_ids != null ? capables_ids.Count : 0)} capables\n";
+        details += $"  - movables : {(movables_ids != null ? movables_ids.Count : 0)} movables\n";
+        details += $"  - colliders : {(collider_points != null ? collider_points.Count : 0)} points\n";
+        details += $"  - lights : {(lights_data != null ? lights_data.Count : 0)} lights\n";
         details += $"  - tilemaps :\n";
         details += $"    - ceiling : {calculate_tilemap_non_null_tiles(ceiling_tiles)} tiles\n";
         details += $"    - walls : {calculate_tilemap_non_null_tiles(walls_tiles)} tiles\n";
@@ -87,4 +93,15 @@ using UnityEngine;
                 return false;
         }
     }
+}
+
+
+[Serializable] public class LightData
+{
+    // public string id;
+    public Vector2 position;
+    public Color color;
+    public float intensity;
+    public Vector2 radius; // inner & outer radius for the light falloff
+    public float falloff; // how fast the light decreases
 }

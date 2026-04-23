@@ -37,6 +37,8 @@ public class LevelTranslator : MonoBehaviour
     [Header("Room creation")]
     public Room room_prefab;
     public bool hide_mask = true; // if true, will hide the mask tilemap in the level (useful for trying instantly the generated level)
+    public bool add_roomgraph_neighbour_node = true;
+    public RoomNodeEditor roomgraph_node_prefab;
 
     [Header("Doors & Lights")]
     public Door door_vertical_prefab;
@@ -143,6 +145,9 @@ public class LevelTranslator : MonoBehaviour
             // we assign the doors and lights to the room
             apply_doors(room, room_visu.Doors);
             apply_lights(room, room_visu.Lights);
+
+            // if add_roomgraph_neighbour_node is true, we add a node for each neighbour of the room in the roomgraph
+            if (add_roomgraph_neighbour_node) { Instantiate(roomgraph_node_prefab, room.transform); }
         }
     }
 

@@ -1049,6 +1049,7 @@ MonoBehaviour:
     neighbours_ids: []
     capables_ids: []
     movables_ids: []
+    lights_data: []
     tilebase_paths_used: []
     ceiling_bounds:
       m_Position: {x: 0, y: 0, z: 0}
@@ -1953,7 +1954,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f21c41059eea91a4f90b29f8510483e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::World
-  world_id: test
+  world_id: 
   data:
     levels_ids: []
   fallback_spawn_point: {fileID: 1209737554}
@@ -23515,6 +23516,8 @@ MonoBehaviour:
   level_prefab: {fileID: 8356036354246421201, guid: 9fa2799496ca83849bb4b053202faa45, type: 3}
   room_prefab: {fileID: 8185754384103082142, guid: ae6b0bfb8417b8d4a9eb59dbb48d8490, type: 3}
   hide_mask: 1
+  add_roomgraph_neighbour_node: 1
+  roomgraph_node_prefab: {fileID: 2086100797149866803, guid: b42723f64922bc843bf1cc3889edb017, type: 3}
   door_vertical_prefab: {fileID: 6429607554458301103, guid: 3bd6d029307e1194ba0004d5f6a56361, type: 3}
   door_horizontal_prefab: {fileID: 8558487863959659101, guid: 80d47e0a0573a1f4291d0360f4304a60, type: 3}
   light_prefab: {fileID: 6868193672575337090, guid: 48fbc03d9d2be7243abb9ef0b713e4e5, type: 3}

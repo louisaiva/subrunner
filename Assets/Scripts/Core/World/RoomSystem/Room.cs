@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
 public class Room : MonoBehaviour
@@ -12,7 +13,7 @@ public class Room : MonoBehaviour
     private bool _unloading = false;
     public string ID { get { return GetStaticID(); } }
 
-    [Header("Room collider")]
+    [Header("Components")]
     private PolygonCollider2D _room_collider;
     public PolygonCollider2D RoomCollider
     {
@@ -22,6 +23,30 @@ public class Room : MonoBehaviour
             return _room_collider;
         }
     }
+
+    [SerializeField] private Light2D light_prefab;
+    private Dictionary<Vector2,Light2D> loaded_lights = new Dictionary<Vector2, Light2D>();
+    private Transform _lights_parent;
+    public Transform LightsParent
+    {
+        get
+        {
+            if (_lights_parent is null)
+            {
+                _lights_parent = transform.Find("Lights");
+                if (_lights_parent == null)
+                {
+                    GameObject lights_go = new GameObject("Lights");
+                    lights_go.transform.SetParent(transform);
+                    _lights_parent = lights_go.transform;
+                }
+            }
+            return _lights_parent;
+        }
+    }
+
+
+
 
     // LOAD / UNLOAD
     public void LoadData(RoomData data)
@@ -33,6 +58,9 @@ public class Room : MonoBehaviour
         // load the colliders in the composite collider
         RoomCollider.SetPath(0, data.collider_points.ToArray());
         RoomCollider.enabled = true;
+
+        // load the lights
+        load_lights(data.lights_data);
 
         // show the tilemaps
         RoomEngine.Instance.TilemapEngine.ShowTilemaps(data);
@@ -67,6 +95,25 @@ public class Room : MonoBehaviour
         this.data = null;
         _unloading = false;
     }
+    private void load_lights(List<LightData> lights_data)
+    {
+        if (lights_data == null) { return; }
+
+        // we go through the lights data and create a new light for each of them
+        foreach (LightData light_data in lights_data)
+        {
+            if (loaded_lights.ContainsKey(light_data.position)) { continue; }
+
+            Light2D new_light = Instantiate(light_prefab, LightsParent);
+            new_light.transform.position = light_data.position;
+            new_light.color = light_data.color;
+            new_light.intensity = light_data.intensity;
+            new_light.pointLightInnerRadius = light_data.radius.x;
+            new_light.pointLightOuterRadius = light_data.radius.y;
+            new_light.falloffIntensity = light_data.falloff;
+            loaded_lights[light_data.position] = new_light;
+        }
+    }
 
 
     /// <summary>
@@ -94,7 +141,10 @@ public class Room : MonoBehaviour
 
             // set capables data
             capables_ids = data.capables_ids ?? new List<string>(),
-            movables_ids = data.movables_ids ?? new List<string>()
+            movables_ids = data.movables_ids ?? new List<string>(),
+
+            // set lights data
+            lights_data = get_static_light_data(),
         };
 
         // set tilemaps data
@@ -108,6 +158,30 @@ public class Room : MonoBehaviour
         if (this.data == null) { return id; }
         if (string.IsNullOrEmpty(this.data.id)) { return id; }
         return this.data.id;
+    }
+    protected List<LightData> get_static_light_data()
+    {
+        List<LightData> lights_data = new List<LightData>();
+
+        // we go through our LightsTransform
+        foreach (Transform light_transform in LightsParent)
+        {
+            // we get the Light2D component on it
+            Light2D light = light_transform.GetComponent<Light2D>();
+            if (light == null) { continue; }
+
+            // we create a new LightData with the data of the visu and we add it to the list
+            LightData light_data = new LightData()
+            {
+                position = light.transform.position,
+                color = light.color,
+                intensity = light.intensity,
+                radius = new Vector2(light.pointLightInnerRadius, light.pointLightOuterRadius),
+                falloff = light.falloffIntensity,
+            };
+            lights_data.Add(light_data);
+        }
+        return lights_data;
     }
     protected void get_static_tilemaps(ref RoomData room_data)
     {
@@ -185,16 +259,20 @@ public class Room : MonoBehaviour
     }
     public void AddStaticNeighbor(Room neighbor)
     {
+        // if (data == null) { return; }
+        if (data.neighbours_ids == null) { data.neighbours_ids = new List<string>(); }
         if (data.neighbours_ids.Contains(neighbor.GetStaticID())) { return; }
         data.neighbours_ids.Add(neighbor.GetStaticID());
     }
     public void RemoveStaticNeighbor(Room neighbor)
     {
+        if (data.neighbours_ids == null) { return; }
         if (!data.neighbours_ids.Contains(neighbor.GetStaticID())) { return; }
         data.neighbours_ids.Remove(neighbor.GetStaticID());
     }
     public void ClearStaticNeighbors()
     {
+        if (data.neighbours_ids == null) { return; }
         data.neighbours_ids.Clear();
     }
 
