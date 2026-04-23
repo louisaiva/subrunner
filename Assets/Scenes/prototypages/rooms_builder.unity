@@ -6780,12 +6780,9 @@ MonoBehaviour:
   tilemap_prefab: {fileID: 4685373029931169544, guid: efef8c84b14bcc148be4535bce4e74d8, type: 3}
   tile: {fileID: 11400000, guid: 683a22842fe5f1e41aac1408f39c31bf, type: 2}
   log_angles: 0
-  L_tiles:
-  - {fileID: 11400000, guid: c22d90239cc0c624582f13df158d6213, type: 2}
-  - {fileID: 11400000, guid: 066b24613cf05f648b897c68eaae160d, type: 2}
-  R_tiles:
-  - {fileID: 11400000, guid: 7c3befcfc5d6a8948b177a23b75bf7ec, type: 2}
-  - {fileID: 11400000, guid: 93bc09168f9e1f6449fafdab8aff830a, type: 2}
+  logs_sides_check: 1
+  L_tile: {fileID: 11400000, guid: 1555cbdb95ae5524c97e52ecdd571222, type: 2}
+  R_tile: {fileID: 11400000, guid: 0a5a6f7e4658c2a4bac4709b9739929a, type: 2}
 --- !u!114 &624354659
 MonoBehaviour:
   m_ObjectHideFlags: 0
