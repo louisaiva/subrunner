@@ -88,7 +88,7 @@ public class RoomNodeEditor : MonoBehaviour
     // UPDATE
     private void OnScene(SceneView scene_view)
     {
-        if (Application.isPlaying) { return; }
+        // if (Application.isPlaying) { return; }
         if (!IsRoomGraphVisible) { return; }
         if (Room == null) { return; }
 

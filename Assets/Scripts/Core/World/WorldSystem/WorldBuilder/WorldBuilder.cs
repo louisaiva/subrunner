@@ -57,7 +57,7 @@ public class WorldBuilder : MonoBehaviour
 
     [Header("Selected Tool Cell")]
     public WorldCellVisualizer selected_cell_visualizer;
-    public string tool_type = "node"; // "node", "door"
+    public string tool_type = "node"; // "node", "door_ver", "door_hor", "light"
     private Dictionary<string, Sprite> tools_icons = new Dictionary<string, Sprite>();
 
 
@@ -91,13 +91,21 @@ public class WorldBuilder : MonoBehaviour
     private List<Color> used_colors = new List<Color>();
 
     [Header("Door Visualizers")]
-    public WorldDoorVisualizer door_prefab;
-    public WorldDoorVisualizer door_tool;
+    public WorldDoorVisualizer door_ver_prefab;
+    public WorldDoorVisualizer door_hor_prefab;
+    public WorldDoorVisualizer door_ver_tool;
+    public WorldDoorVisualizer door_hor_tool;
     public Transform door_parent;
     [SerializeField] private List<WorldDoorVisualizer> door_visualizers = new List<WorldDoorVisualizer>();
     [SerializeField] private Color WrongDoorColor = Color.darkRed;
     [SerializeField] private Color ConnectedDoorColor = Color.lightSeaGreen;
 
+    [Header("Light Visualizers")]
+    public WorldLightVisualizer light_prefab;
+    public WorldLightVisualizer light_tool;
+    public Transform light_parent;
+    [SerializeField] private List<WorldLightVisualizer> light_visualizers = new List<WorldLightVisualizer>();
+    [SerializeField] private Color LightColor = Color.yellowNice;
 
 
 
@@ -127,7 +135,9 @@ public class WorldBuilder : MonoBehaviour
 
         // we get the icons for the tools
         tools_icons["node"] = node_prefab.GetComponent<SpriteRenderer>().sprite;
-        tools_icons["door"] = door_prefab.GetComponent<SpriteRenderer>().sprite;
+        tools_icons["door_ver"] = door_ver_prefab.GetComponent<SpriteRenderer>().sprite;
+        tools_icons["door_hor"] = door_hor_prefab.GetComponent<SpriteRenderer>().sprite;
+        tools_icons["light"] = light_prefab.GetComponent<SpriteRenderer>().sprite;
 
         #if UNITY_EDITOR
         LoadData();
@@ -250,7 +260,9 @@ public class WorldBuilder : MonoBehaviour
         selected_cell_visualizer = tool_type switch
         {
             "node" => node_tool,
-            "door" => door_tool,
+            "door_ver" => door_ver_tool,
+            "door_hor" => door_hor_tool,
+            "light" => light_tool,
             _ => selected_cell_visualizer
         };
         selected_cell_visualizer.SetIcon(tools_icons[tool_type]);
@@ -294,7 +306,9 @@ public class WorldBuilder : MonoBehaviour
     {
         // check the tool type
         if (tool_type == "node") { add_node_at(SelectedCell); }
-        else if (tool_type == "door") { create_door_at(SelectedCell); }
+        else if (tool_type == "door_ver") { create_door_at(SelectedCell, true); }
+        else if (tool_type == "door_hor") { create_door_at(SelectedCell, false); }
+        else if (tool_type == "light") { create_light_at(SelectedCell); }
     }
 
 
@@ -523,9 +537,9 @@ public class WorldBuilder : MonoBehaviour
     ///
 
     // DOORS MANAGEMENT
-    private WorldDoorVisualizer create_door_at(Vector3Int cell_pos)
+    private WorldDoorVisualizer create_door_at(Vector3Int cell_pos, bool vertical = true)
     {
-        WorldDoorVisualizer new_door_visu = Instantiate(door_prefab, door_parent);
+        WorldDoorVisualizer new_door_visu = Instantiate(vertical ? door_ver_prefab : door_hor_prefab, door_parent);
         new_door_visu.SetCell(cell_pos);
         new_door_visu.Color = ConnectedDoorColor;
         door_visualizers.Add(new_door_visu);
@@ -546,7 +560,23 @@ public class WorldBuilder : MonoBehaviour
 
 
 
-
+    // LIGHTS
+    private WorldLightVisualizer create_light_at(Vector3Int cell_pos)
+    {
+        WorldLightVisualizer new_light_visu = Instantiate(light_prefab, light_parent);
+        new_light_visu.SetCell(cell_pos);
+        new_light_visu.Color = LightColor;
+        light_visualizers.Add(new_light_visu);
+        assign_light_to_rooms(new_light_visu);
+        return new_light_visu;
+    }
+    private void assign_light_to_rooms(WorldLightVisualizer light)
+    {
+        foreach (var r in room_visualizers)
+        {
+            if (r.CollideWithCell(light.Cell)) { r.AddLight(light); return; } // one light can only be in one room
+        }
+    }
 
 
 
@@ -575,7 +605,8 @@ public class WorldBuilder : MonoBehaviour
     public WorldCellVisualizer GetCellAt(Vector3Int cell_pos)
     {
         WorldCellVisualizer cell = GetNodeAt(cell_pos) as WorldCellVisualizer
-                                ?? GetDoorAt(cell_pos);
+                                ?? GetDoorAt(cell_pos) as WorldCellVisualizer
+                                ?? GetLightAt(cell_pos);
         return cell;
     }
     public WorldNodeVisualizer GetNodeAt(Vector3Int cell_pos)
@@ -600,6 +631,17 @@ public class WorldBuilder : MonoBehaviour
         }
         return null;
     }
+    public WorldLightVisualizer GetLightAt(Vector3Int cell_pos)
+    {
+        for (int i = 0; i < light_visualizers.Count; i++)
+        {
+            if (light_visualizers[i].Cell == cell_pos)
+            {
+                return light_visualizers[i];
+            }
+        }
+        return null;
+    }
     public WorldLinkVisualizer GetLinkBetween(WorldNodeVisualizer c1, WorldNodeVisualizer c2)
     {
         return link_visualizers.FirstOrDefault(l => (l.NodeA == c1 && l.NodeB == c2) || (l.NodeA == c2 && l.NodeB == c1));
@@ -616,6 +658,7 @@ public class WorldBuilder : MonoBehaviour
         return null;
     }
 
+
     // BUILDER
     public Action<BuiltWorldData> OnWorldBuilt = delegate { };
     public void Build()
@@ -624,8 +667,8 @@ public class WorldBuilder : MonoBehaviour
 
         BuiltWorldData built_world = new BuiltWorldData()
         {
-            Cells = new List<WorldNodeVisualizer>(node_visualizers),
-            Links = new List<WorldLinkVisualizer>(link_visualizers),
+            // Cells = new List<WorldNodeVisualizer>(node_visualizers),
+            // Links = new List<WorldLinkVisualizer>(link_visualizers),
             Rooms = new List<WorldRoomVisualizer>(room_visualizers)
         };
 
@@ -724,7 +767,8 @@ public class WorldBuilder : MonoBehaviour
         for (int i = 0; i < door_visualizers.Count; i++)
         {
             if (door_visualizers[i] == null) { continue; }
-            data.Doors.Add(door_visualizers[i].Cell);
+            if (door_visualizers[i].is_vertical) { data.VerDoors.Add(door_visualizers[i].Cell); }
+            else { data.HorDoors.Add(door_visualizers[i].Cell); }
         }
 
         // create links
@@ -742,9 +786,13 @@ public class WorldBuilder : MonoBehaviour
             if (room_visualizers[i] == null) { continue; }
             data.Rooms.Add(new WorldRoomData { Name = room_visualizers[i].name, Cells = room_visualizers[i].GetLoopCells() });
         }
-        // data.Cells = cell_visualizers.Select(c => c.CurrentCell).ToList();
-        // data.Links = link_visualizers.Where(l => l.CellA != null && l.CellB != null).Select(l => new WorldLinkData { CellA = l.CellA.CurrentCell, CellB = l.CellB.CurrentCell }).ToList();
-        // data.Rooms = room_visualizers.Select(r => new WorldRoomData { Cells = r.GetLoopCells() }).ToList();
+        
+        // create lights
+        for (int i = 0; i < light_visualizers.Count; i++)
+        {
+            if (light_visualizers[i] == null) { continue; }
+            data.Lights.Add(light_visualizers[i].Cell);
+        }
 
         string json = JsonUtility.ToJson(data, prettyPrint: true);
 
@@ -793,9 +841,19 @@ public class WorldBuilder : MonoBehaviour
         }
 
         // Load doors
-        foreach (var door in data.Doors)
+        foreach (var door in data.VerDoors)
         {
-            create_door_at(door);
+            create_door_at(door, vertical: true);
+        }
+        foreach (var door in data.HorDoors)
+        {
+            create_door_at(door, vertical: false);
+        }
+
+        // Load lights
+        foreach (var light in data.Lights)
+        {
+            create_light_at(light);
         }
     }
     private void OnDestroy()
@@ -809,7 +867,9 @@ public class WorldBuilder : MonoBehaviour
 [Serializable] public class WorldBuilderData
 {
     public List<Vector3Int> Cells = new List<Vector3Int>();
-    public List<Vector3Int> Doors = new List<Vector3Int>();
+    public List<Vector3Int> VerDoors = new List<Vector3Int>();
+    public List<Vector3Int> HorDoors = new List<Vector3Int>();
+    public List<Vector3Int> Lights = new List<Vector3Int>();
     public List<WorldLinkData> Links = new List<WorldLinkData>();
     public List<WorldRoomData> Rooms = new List<WorldRoomData>();
 }
@@ -827,9 +887,10 @@ public class WorldBuilder : MonoBehaviour
 public class BuiltWorldData
 {
     // cells links rooms visu
-    public List<WorldNodeVisualizer> Cells = new List<WorldNodeVisualizer>();
-    public List<WorldDoorVisualizer> Doors = new List<WorldDoorVisualizer>();
-    public List<WorldLinkVisualizer> Links = new List<WorldLinkVisualizer>();
+    // public List<WorldNodeVisualizer> Cells = new List<WorldNodeVisualizer>();
+    // public List<WorldDoorVisualizer> Doors = new List<WorldDoorVisualizer>();
+    // public List<WorldLightVisualizer> Lights = new List<WorldLightVisualizer>();
+    // public List<WorldLinkVisualizer> Links = new List<WorldLinkVisualizer>();
     public List<WorldRoomVisualizer> Rooms = new List<WorldRoomVisualizer>();
 
     // tilemaps

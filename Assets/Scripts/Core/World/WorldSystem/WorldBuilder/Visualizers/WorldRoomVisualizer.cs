@@ -13,6 +13,9 @@ public class WorldRoomVisualizer : MonoBehaviour
     [SerializeField] private List<WorldDoorVisualizer> doors = new List<WorldDoorVisualizer>();
     public List<WorldDoorVisualizer> Doors { get { return doors; } }
 
+    [SerializeField] private List<WorldLightVisualizer> lights = new List<WorldLightVisualizer>();
+    public List<WorldLightVisualizer> Lights { get { return lights; } }
+
     private PolygonCollider2D _collider;
     private PolygonCollider2D polygon_collider
     {
@@ -110,30 +113,36 @@ public class WorldRoomVisualizer : MonoBehaviour
     {
         if (log_callbacks) { Debug.Log($"(WorldRoomVisualizer) registering to all cells"); }
         foreach (var n in nodes) { register_node_callback(n); }
-        foreach (var d in doors) { register_door(d); }
+        foreach (var d in doors) { register_cell(d); }
+        foreach (var l in lights) { register_cell(l); }
     }
     private void unregister_callbacks()
     {
         if (log_callbacks) { Debug.Log($"(WorldRoomVisualizer) unregistering from all cells"); }
         foreach (var n in nodes) { unregister_node_callback(n); }
-        foreach (var d in doors) { unregister_door(d); }
+        foreach (var d in doors) { unregister_cell(d); }
+        foreach (var l in lights) { unregister_cell(l); }
     }
     
     
     // doors callbacks
-    private void register_door(WorldDoorVisualizer door)
+    private void register_cell(WorldCellVisualizer cell)
     {
-        if (door == null) { return; }
-        door.OnRemoved += RemoveDoor;
-        if (log_callbacks) { Debug.Log($"(WorldRoomVisualizer) registered to door {door}"); }
+        if (cell == null) { return; }
+        cell.OnRemoved += RemoveCell;
+        if (log_callbacks) { Debug.Log($"(WorldRoomVisualizer) registered cell {cell} (is a {cell.GetType().Name})"); }
     }
-    private void unregister_door(WorldDoorVisualizer door)
+    private void unregister_cell(WorldCellVisualizer cell)
     {
-        if (door == null) { return; }
-        door.OnRemoved -= RemoveDoor;
-        if (log_callbacks) { Debug.Log($"(WorldRoomVisualizer) unregistered from door {door}"); }
+        if (cell == null) { return; }
+        cell.OnRemoved -= RemoveCell;
+        if (log_callbacks) { Debug.Log($"(WorldRoomVisualizer) unregistered cell {cell} (is a {cell.GetType().Name})"); }
     }
-
+    public void RemoveCell(WorldCellVisualizer cell)
+    {
+        if (cell is WorldDoorVisualizer door) { RemoveDoor(door); return; }
+        if (cell is WorldLightVisualizer light) { RemoveLight(light); return; }
+    }
 
     // nodes callbacks
     private void register_node_callback(WorldNodeVisualizer node)
@@ -207,13 +216,26 @@ public class WorldRoomVisualizer : MonoBehaviour
     {
         if (doors.Contains(door)) { return; }
         doors.Add(door);
-        register_door(door);
+        register_cell(door);
     }
-    public void RemoveDoor(WorldCellVisualizer door) { RemoveDoor(door as WorldDoorVisualizer); }
     public void RemoveDoor(WorldDoorVisualizer door)
     {
         if (!doors.Contains(door)) { return; }
         doors.Remove(door);
-        unregister_door(door);
+        unregister_cell(door);
+    }
+
+    // LIGHTS
+    public void AddLight(WorldLightVisualizer light)
+    {
+        if (lights.Contains(light)) { return; }
+        lights.Add(light);
+        register_cell(light);
+    }
+    public void RemoveLight(WorldLightVisualizer light)
+    {
+        if (!lights.Contains(light)) { return; }
+        lights.Remove(light);
+        unregister_cell(light);
     }
 }
