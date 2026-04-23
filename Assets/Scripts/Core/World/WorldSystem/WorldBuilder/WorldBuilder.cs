@@ -631,64 +631,10 @@ public class WorldBuilder : MonoBehaviour
 
         foreach (var r in room_visualizers)
         {
+            if (!r.isActiveAndEnabled) { continue; }
             if (log_building) { Debug.Log($"(WorldBuilder) Building tilemaps for {r.name}"); }
             built_world.Tilemaps[r.name] = build_room(r);
         }
-
-        // build carpet
-        /* if (carpet_builder != null)
-        {
-            if (log_building) { Debug.Log("(WorldBuilder) Building carpet"); }
-            foreach (var r in room_visualizers)
-            {
-                if (log_building) { Debug.Log("(WorldBuilder) Building carpet for " + r.name); }
-                carpet_builder.Build(r);
-            }
-        }
-
-        // build ground
-        if (ground_builder != null)
-        {
-            if (log_building) { Debug.Log("(WorldBuilder) Building ground"); }
-            foreach (var r in room_visualizers)
-            {
-                if (log_building) { Debug.Log("(WorldBuilder) Building ground for " + r.name); }
-                ground_builder.Build(r);
-            }
-        }
-
-        // build walls
-        if (walls_builder != null)
-        {
-            if (log_building) { Debug.Log("(WorldBuilder) Building walls"); }
-            foreach (var r in room_visualizers)
-            {
-                if (log_building) { Debug.Log("(WorldBuilder) Building walls for " + r.name); }
-                walls_builder.Build(r);
-            }
-        }
-
-        // build ceiling
-        if (ceiling_builder != null)
-        {
-            if (log_building) { Debug.Log("(WorldBuilder) Building ceiling"); }
-            foreach (var r in room_visualizers)
-            {
-                if (log_building) { Debug.Log("(WorldBuilder) Building ceiling for " + r.name); }
-                ceiling_builder.Build(r);
-            }
-        }
-
-        // build mask
-        if (mask_builder != null)
-        {
-            if (log_building) { Debug.Log("(WorldBuilder) Building mask"); }
-            foreach (var r in room_visualizers)
-            {
-                if (log_building) { Debug.Log("(WorldBuilder) Building mask for " + r.name); }
-                mask_builder.Build(r);
-            }
-        } */
     
         if (log_building) { Debug.Log("(WorldBuilder) World built"); }
         OnWorldBuilt?.Invoke(built_world);
@@ -697,6 +643,7 @@ public class WorldBuilder : MonoBehaviour
     {
         foreach (var r in room_visualizers)
         {
+            if (!r.isActiveAndEnabled) { continue; }
             build_room(r, new List<string> { builder });
         }
     }

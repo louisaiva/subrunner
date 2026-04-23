@@ -8,6 +8,9 @@ public class WallsBuilder : TilemapBuilder
     // logs
     [SerializeField] private bool logs_sides_check = false;
 
+    [Header("Walls Parameters")]
+    public bool generate_only_inside = false; // if true, don't generate the exteriors walls
+
     [Header("Sides Tiles")]
     [SerializeField] private TileBase L_tile;
     [SerializeField] private TileBase R_tile;
@@ -17,7 +20,9 @@ public class WallsBuilder : TilemapBuilder
     protected override void GenerateTilemap(Tilemap tilemap, WorldRoomVisualizer room)
     {
         // we calculate all the positions of the tiles we need to create the outline
-        List<Vector3Int> outline = get_carpet_tiles_positions(room, DiagonalTraceType.Straight);
+        List<Vector3Int> outline;
+        if (generate_only_inside) { outline = filter_exterior_walls(tilemap, room); }
+        else { outline = get_carpet_tiles_positions(room, DiagonalTraceType.Straight); }
 
         List<Vector3Int> left_sides = filter_left_sides(outline);
         List<Vector3Int> right_sides = filter_right_sides(outline);
@@ -36,6 +41,33 @@ public class WallsBuilder : TilemapBuilder
         }
     }
 
+    // generation type
+    protected List<Vector3Int> filter_exterior_walls(Tilemap tilemap, WorldRoomVisualizer room)
+    {
+        // we calculate all the positions of the tiles we need to create the outline
+        List<Vector3Int> outline = get_carpet_tiles_positions(room, DiagonalTraceType.Straight);
+
+        // we duplicate the outline and move it by 1 up, to filter the inner walls (we want to remove the ext walls)
+        List<Vector3Int> inside_mask = new List<Vector3Int>();
+        foreach (var pos in outline) { inside_mask.Add(new Vector3Int(pos.x, pos.y + 1, pos.z)); }
+
+        // we fill inside the outline up
+        inside_mask = fill_inside(inside_mask);
+
+        // we keep only the tiles that are in the outline and in the inside mask
+        for (int i = outline.Count - 1; i >= 0; i--)
+        {
+            if (!inside_mask.Contains(outline[i])) { outline.RemoveAt(i); }
+        }
+
+        return outline;
+    }
+
+
+
+
+
+
     // FILTER VERTICAL
     private List<Vector3Int> filter_vertical(List<Vector3Int> tile_positions)
     {
@@ -45,6 +77,26 @@ public class WallsBuilder : TilemapBuilder
         {
             Vector3Int below = new Vector3Int(pos.x, pos.y - 1, pos.z);
             if (tile_positions.Contains(below)) { continue; }
+
+
+            // if we are generating only inside, we need to remove the tiles that have no right no left no LB no RB and a top
+            if (generate_only_inside)
+            {
+                Vector3Int left = new Vector3Int(pos.x - 1, pos.y, pos.z);
+                Vector3Int right = new Vector3Int(pos.x + 1, pos.y, pos.z);
+                Vector3Int top = new Vector3Int(pos.x, pos.y + 1, pos.z);
+                Vector3Int left_bottom = new Vector3Int(pos.x - 1, pos.y - 1, pos.z);
+                Vector3Int right_bottom = new Vector3Int(pos.x + 1, pos.y - 1, pos.z);
+                if (!tile_positions.Contains(left)
+                 && !tile_positions.Contains(right)
+                 && !tile_positions.Contains(left_bottom) 
+                 && !tile_positions.Contains(right_bottom) 
+                 && tile_positions.Contains(top))
+                {
+                    continue;
+                }
+            }
+
             filtered.Add(pos);
         }
         return new List<Vector3Int>(filtered);
