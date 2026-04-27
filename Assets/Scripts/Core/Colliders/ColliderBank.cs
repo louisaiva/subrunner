@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using NavMeshPlus.Components;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 public class ColliderBank : MonoBehaviour
 {
@@ -18,6 +21,8 @@ public class ColliderBank : MonoBehaviour
         // initialize the pools
         pooled_circle_colliders = new Stack<GameObject>();
         pooled_box_colliders = new Stack<GameObject>();
+        pooled_shadowed_circle_colliders = new Dictionary<List<int>, Stack<GameObject>>();
+        pooled_shadowed_box_colliders = new Dictionary<List<int>, Stack<GameObject>>();
     }
 
 
@@ -38,8 +43,17 @@ public class ColliderBank : MonoBehaviour
             return _sleeping_layer;
         }
     }
-    [SerializeField] protected Stack<GameObject> pooled_circle_colliders;
-    [SerializeField] protected Stack<GameObject> pooled_box_colliders;
+
+    // SAVING SHADOW DATA FOR UNLOADING
+    protected Dictionary<GameObject, ShadowCasterData> shadow_caster_datas = new Dictionary<GameObject, ShadowCasterData>();
+
+    // POOLS
+    protected Stack<GameObject> pooled_circle_colliders; // null shadowdata
+    protected Stack<GameObject> pooled_box_colliders; // null shadowdata
+    protected Dictionary<List<int>, Stack<GameObject>> pooled_shadowed_circle_colliders;
+    protected Dictionary<List<int>, Stack<GameObject>> pooled_shadowed_box_colliders;
+
+
 
     [Header("Logs")]
     [SerializeField] protected bool log_body_data;
@@ -56,11 +70,19 @@ public class ColliderBank : MonoBehaviour
     }
     private BoxCollider2D load_box_collider(BoxData data, Transform parent)
     {
-        // we first try to extract a collider from the pool
-        BoxCollider2D collider;
-        if (pooled_box_colliders != null && pooled_box_colliders.Count > 0)
+        // we get the pool to extract to
+        Stack<GameObject> pool = pooled_box_colliders;
+        if (data.shadow_caster_data != null)
         {
-            GameObject go = pooled_box_colliders.Pop();
+            if (!pooled_shadowed_box_colliders.ContainsKey(data.shadow_caster_data.used_layers)) { pooled_shadowed_box_colliders[data.shadow_caster_data.used_layers] = new Stack<GameObject>(); }
+            pool = pooled_shadowed_box_colliders[data.shadow_caster_data.used_layers];
+        }
+
+        // we try to extract a collider from the pool
+        BoxCollider2D collider;
+        if (pool != null && pool.Count > 0)
+        {
+            GameObject go = pool.Pop();
             go.SetActive(true);
             go.transform.SetParent(parent);
             collider = go.GetComponent<BoxCollider2D>();
@@ -70,6 +92,7 @@ public class ColliderBank : MonoBehaviour
             // if we have no pooled anim layer we need to instantiate one
             collider = Instantiate(box_collider_prefab, parent).GetComponent<BoxCollider2D>();
             collider.name = "box_collider";
+            shadow_caster_datas[collider.gameObject] = data.shadow_caster_data; // we save the shadow caster data for unloading
         }
 
         // we activate the collider
@@ -85,10 +108,19 @@ public class ColliderBank : MonoBehaviour
     }
     private CircleCollider2D load_circle_collider(CircleData data, Transform parent)
     {
-        CircleCollider2D collider;
-        if (pooled_circle_colliders != null && pooled_circle_colliders.Count > 0)
+        // we get the pool to extract to
+        Stack<GameObject> pool = pooled_circle_colliders;
+        if (data.shadow_caster_data != null)
         {
-            GameObject go = pooled_circle_colliders.Pop();
+            if (!pooled_shadowed_circle_colliders.ContainsKey(data.shadow_caster_data.used_layers)) { pooled_shadowed_circle_colliders[data.shadow_caster_data.used_layers] = new Stack<GameObject>(); }
+            pool = pooled_shadowed_circle_colliders[data.shadow_caster_data.used_layers];
+        }
+
+        // we try to extract from the pool
+        CircleCollider2D collider;
+        if (pool != null && pool.Count > 0)
+        {
+            GameObject go = pool.Pop();
             go.SetActive(true);
             go.transform.SetParent(parent);
             collider = go.GetComponent<CircleCollider2D>();
@@ -98,6 +130,7 @@ public class ColliderBank : MonoBehaviour
             // if we have no pooled anim layer we need to instantiate one
             collider = Instantiate(circle_collider_prefab, parent).GetComponent<CircleCollider2D>();
             collider.name = "circle_collider";
+            shadow_caster_datas[collider.gameObject] = data.shadow_caster_data; // we save the shadow caster data for unloading
         }
 
         // we activate the collider
@@ -137,6 +170,10 @@ public class ColliderBank : MonoBehaviour
         // we set the collider data
         collider.offset = collider_data.offset;
         collider.isTrigger = collider_data.is_trigger;
+
+        // we set the shadow caster data
+        if (collider_data.shadow_caster_data is null) { return; }
+        load_shadow_caster_data(collider.gameObject, collider_data.shadow_caster_data);
     }
 
 
@@ -145,13 +182,28 @@ public class ColliderBank : MonoBehaviour
         Collider2D collider = collider_go.GetComponent<Collider2D>();
         if (collider == null) { return; }
 
+        // we check if we have shadow caster data for this collider
+        ShadowCasterData shadow_data = null;
+        if (shadow_caster_datas.ContainsKey(collider_go)) { shadow_data = shadow_caster_datas[collider_go]; }
+
+        // we push back to the right pool
         if (collider is BoxCollider2D box_collider)
         {
-            pooled_box_colliders.Push(box_collider.gameObject);
+            if (shadow_data is null) { pooled_box_colliders.Push(box_collider.gameObject); }
+            else
+            {
+                if (!pooled_shadowed_box_colliders.ContainsKey(shadow_data.used_layers)) { pooled_shadowed_box_colliders[shadow_data.used_layers] = new Stack<GameObject>(); }
+                pooled_shadowed_box_colliders[shadow_data.used_layers].Push(box_collider.gameObject);
+            }
         }
         else if (collider is CircleCollider2D circle_collider)
         {
-            pooled_circle_colliders.Push(circle_collider.gameObject);
+            if (shadow_data is null) { pooled_circle_colliders.Push(circle_collider.gameObject); }
+            else
+            {
+                if (!pooled_shadowed_circle_colliders.ContainsKey(shadow_data.used_layers)) { pooled_shadowed_circle_colliders[shadow_data.used_layers] = new Stack<GameObject>(); }
+                pooled_shadowed_circle_colliders[shadow_data.used_layers].Push(circle_collider.gameObject);
+            }
         }
 
         // we set the parent of the collider to the sleeping colliders parent to keep the hierarchy clean
@@ -165,8 +217,6 @@ public class ColliderBank : MonoBehaviour
     // USEFUL STATIC METHODS
     public static IColliderData GetColliderData(Collider2D collider)
     {
-        // // todo move this method to a static-friendly-Instance helper i guess like GameManager ?
-
         // setup basic data
         ColliderData data = new ColliderData
         {
@@ -174,7 +224,8 @@ public class ColliderBank : MonoBehaviour
             layerID = collider.gameObject.layer,
             offset = collider.offset,
             is_trigger = collider.isTrigger,
-            used_for_pathfinding = is_used_for_pathfinding(collider)
+            used_for_pathfinding = is_used_for_pathfinding(collider),
+            shadow_caster_data = get_static_shadow_caster_data(collider)
         };
 
         // check if circle
@@ -205,4 +256,30 @@ public class ColliderBank : MonoBehaviour
     }
 
 
+
+    // SHADOW CASTER DATA
+    protected static ShadowCasterData get_static_shadow_caster_data(Collider2D collider)
+    {
+        ShadowCaster2D shadow_caster = collider.GetComponent<ShadowCaster2D>();
+        if (shadow_caster == null || !shadow_caster.enabled) { return null; }
+        ShadowCasterData data = new ShadowCasterData();
+        if (shadow_caster.castingOption == ShadowCaster2D.ShadowCastingOptions.SelfShadow) { data.cast_and_self = true; }
+        else { data.cast_and_self = false; }
+        data.used_layers = get_static_shadow_used_layers(shadow_caster);
+        return data;
+    }
+    private static FieldInfo sorting_layers_field = typeof(ShadowCaster2D).GetField("m_ApplyToSortingLayers", BindingFlags.Instance | BindingFlags.NonPublic);
+    protected static List<int> get_static_shadow_used_layers(ShadowCaster2D shadow_caster)
+    {
+        return sorting_layers_field.GetValue(shadow_caster) as List<int>;
+    }
+    protected static void load_shadow_caster_data(GameObject go, ShadowCasterData data)
+    {
+        if (data == null) { return; }
+        ShadowCaster2D shadow_caster = go.GetComponent<ShadowCaster2D>();
+        if (shadow_caster == null) { shadow_caster = go.AddComponent<ShadowCaster2D>(); }
+        shadow_caster.enabled = true;
+        shadow_caster.castingOption = data.cast_and_self ? ShadowCaster2D.ShadowCastingOptions.SelfShadow : ShadowCaster2D.ShadowCastingOptions.CastShadow;
+        sorting_layers_field.SetValue(shadow_caster, data.used_layers.ToArray());
+    }
 }

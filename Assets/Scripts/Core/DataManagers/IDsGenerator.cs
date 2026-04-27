@@ -205,6 +205,9 @@ public class IDsGenerator : MonoBehaviour
             if (GUILayout.Button("Generate IDs in World"))
             {
                 manager.GenerateIDsForAllCapablesAndCapacitiesInWorld();
+
+                // check if app is playing we return
+                if (Application.isPlaying) { return; }
                 
                 // then we need to mark all capables & capacities as "dirty" so their data will be saved with the new ids
                 foreach (Capable capable in manager.capables_that_get_new_ids)

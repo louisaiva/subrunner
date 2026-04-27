@@ -2,6 +2,8 @@
 
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public interface IColliderData
@@ -18,6 +20,7 @@ public interface IColliderData
     public Vector2 local_position;
     public int layerID;
     public bool used_for_pathfinding;
+    public ShadowCasterData shadow_caster_data;
     public bool is_trigger;
     public Vector2 offset;
 
@@ -31,7 +34,8 @@ public interface IColliderData
             layerID = this.layerID,
             used_for_pathfinding = this.used_for_pathfinding,
             is_trigger = this.is_trigger,
-            offset = this.offset
+            offset = this.offset,
+            shadow_caster_data = this.shadow_caster_data.Duplicate()
         };
 
         return new_data;
@@ -46,6 +50,8 @@ public interface IColliderData
         details += $"     - layerID : {layerID} ({LayerMask.LayerToName(layerID)})\n";
         details += $"     - used_for_pathfinding : {used_for_pathfinding}\n";
         details += $"     - is_trigger : {is_trigger}\n";
+        details += $"     - offset : {offset}\n";
+        details += $"     - shadow_caster_data : \n{(shadow_caster_data != null ? shadow_caster_data.GetDetails() : "None")}\n";
         return details;
     }
 }
@@ -104,5 +110,36 @@ public interface IColliderData
     {
         string details = $"     - size : {size}\n";
         return base.GetDetails() + details;
+    }
+}
+
+
+[Serializable] public class ShadowCasterData
+{
+    public bool cast_and_self; // if true it means we cast + self, otherwise we only cast
+    public List<int> used_layers = new List<int>();
+    
+    // DUPLICATE
+    public ShadowCasterData Duplicate()
+    {
+        ShadowCasterData new_data = new ShadowCasterData()
+        {
+            cast_and_self = this.cast_and_self,
+            used_layers = new List<int>(this.used_layers)
+        };
+
+        return new_data;
+    }
+
+    // GET DETAILS
+    public string GetDetails()
+    {
+        string details = $"         - cast_and_self : {cast_and_self}\n";
+        if (used_layers != null && used_layers.Count > 0) { details += $"         - used_layers : {string.Join(", ", used_layers.Select(l => LayerMask.LayerToName(l) + $"({l})"))}\n"; }
+        // // !!!!!! BUG ON THE LINE JUST ABOVE, CHECK WHY THE SHADOW CASTER DATA IS NOT GET STATIC PROPERLY INSIDE COLLIDER BANK
+        else { details += $"         - used_layers : None\n"; }
+
+
+        return details;
     }
 }

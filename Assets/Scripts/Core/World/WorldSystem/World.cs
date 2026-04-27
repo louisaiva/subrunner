@@ -25,7 +25,7 @@ public class World : BSOD_System<World>
     [Header("Current world")]
     public string world_id;
     public WorldData data;
-    public string CurrentWorldDataPath => Path.Combine(WorldDataPath, world_id);
+    public static string GetWorldDataPath(string id) => Path.Combine(WorldDataPath, id);
 
     [Header("Spawn")]
     public Transform fallback_spawn_point; // if no player data were found on LoadWorld, we will spawn the player at this position
@@ -184,11 +184,11 @@ public class World : BSOD_System<World>
     }
 
     // WORLD SAVING
-    public void EnsureWorldDataHierarchy()
+    public static void EnsureWorldDataHierarchy(string world_id)
     {
         if (string.IsNullOrEmpty(world_id))
         {
-            if (log) { Debug.LogWarning("(World) Cannot ensure world data hierarchy : world_id is null or empty."); }
+            if (StaticInstance.log) { Debug.LogWarning("(World) Cannot ensure world data hierarchy : world_id is null or empty."); }
             return;
         }
 
@@ -196,7 +196,7 @@ public class World : BSOD_System<World>
         AppManager.EnsureFolderExists(WorldDataPath);
 
         // then we do the same for the current world folder
-        string world_path = CurrentWorldDataPath;
+        string world_path = GetWorldDataPath(world_id);
         AppManager.EnsureFolderExists(world_path);
 
         // then we ensure that the data folder hierarchy is correct (create them if they don't exist)

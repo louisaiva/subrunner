@@ -7,6 +7,7 @@ public class WallsBuilder : TilemapBuilder
 
     // logs
     [SerializeField] private bool logs_sides_check = false;
+    [SerializeField] private bool logs_walls_on_door = false;
 
     [Header("Walls Parameters")]
     public bool generate_only_inside = false; // if true, don't generate the exteriors walls
@@ -28,10 +29,20 @@ public class WallsBuilder : TilemapBuilder
         List<Vector3Int> right_sides = filter_right_sides(outline);
         outline = filter_vertical(outline);
 
+        // we add the horizontal doors up positions to the outline
+        outline.AddRange(GetHorizontalDoorsUpPositions());
+
         // we convert those positions to tilemap's grid positions and we set the tiles
         foreach (var pos in outline)
         {
             if (HasDoorAtPosition(pos)) { continue; } // filter the doors
+
+            // check if we have a door at position -1 bottom and -2 bottom it means we need to add a one tile at pos
+            /* if (HasDoorAtPosition(new Vector3Int(pos.x, pos.y - 1, pos.z)) && HasDoorAtPosition(new Vector3Int(pos.x, pos.y - 2, pos.z)))
+            {
+                tilemap.SetTile(pos, tile);
+                continue;
+            } */
 
             // filter L and R tiles
             if (left_sides.Contains(pos)) { tilemap.SetTile(pos, L_tile); continue; }
@@ -197,4 +208,20 @@ public class WallsBuilder : TilemapBuilder
         return false;
     }
 
+
+    // VERTICAL DOORS
+    protected virtual List<Vector3Int> GetHorizontalDoorsUpPositions()
+    {
+        List<Vector3Int> door_positions = new List<Vector3Int>();
+        string log = "";
+        foreach (var door in doors)
+        {
+            if (door.is_vertical) { continue; }
+            Vector3Int cell_pos = WorldToCell(door.OtherWorldPosition);
+            door_positions.Add(new Vector3Int(cell_pos.x, cell_pos.y + 1, cell_pos.z));
+            if (logs_walls_on_door) { log += "(WallsBuilder) horizontal door up position: " + cell_pos + "\n"; }
+        }
+        if (logs_walls_on_door) { Debug.Log(log); }
+        return door_positions;
+    }
 }

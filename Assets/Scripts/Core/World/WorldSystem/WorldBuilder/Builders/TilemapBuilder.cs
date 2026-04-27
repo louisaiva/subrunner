@@ -311,7 +311,7 @@ public class TilemapBuilder : MonoBehaviour
 
 
     // DOORS
-    private readonly List<WorldDoorVisualizer> doors = new List<WorldDoorVisualizer>();
+    protected readonly List<WorldDoorVisualizer> doors = new List<WorldDoorVisualizer>();
     protected virtual bool HasDoorAtPosition(Vector3Int cell_position)
     {
         Vector2 world_position = CellToWorld(cell_position) + new Vector3(0.25f, 0.25f, 0); // we check the center of the tile

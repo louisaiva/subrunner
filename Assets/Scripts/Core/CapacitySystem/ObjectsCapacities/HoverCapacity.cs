@@ -173,7 +173,8 @@ public class HoverCapacity : Capacity
             layerID = collider.gameObject.layer,
             offset = collider.offset,
             is_trigger = collider.isTrigger,
-            used_for_pathfinding = false // hover colliders are never used for pathfinding
+            used_for_pathfinding = false, // hover colliders are never used for pathfinding
+            shadow_caster_data = null // hover colliders don't cast shadows
         };
         return new CircleData(data)
         {

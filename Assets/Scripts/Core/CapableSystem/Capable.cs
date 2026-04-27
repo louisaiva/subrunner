@@ -650,8 +650,11 @@ public class Capable : MonoBehaviour, Debuggable
         List<Collider2D> colliders = new List<Collider2D>(Feet.GetComponentsInChildren<Collider2D>(includeInactive: true));
         foreach (Collider2D collider in colliders)
         {
-            if (collider is BoxCollider2D) { feet_data.box_colliders.Add(ColliderBank.GetColliderData(collider) as BoxData); }
-            else if (collider is CircleCollider2D) { feet_data.circle_colliders.Add(ColliderBank.GetColliderData(collider) as CircleData); }
+            ColliderData collider_data = ColliderBank.GetColliderData(collider) as ColliderData;
+            Debug.Log($"(Capable - get_static_feet_data) Collider found in feet of type {collider.GetType().Name} with data {collider_data} : \n{collider_data.GetDetails()}");
+
+            if (collider is BoxCollider2D) { feet_data.box_colliders.Add(collider_data as BoxData); }
+            else if (collider is CircleCollider2D) { feet_data.circle_colliders.Add(collider_data as CircleData); }
         }
         return feet_data;
     }

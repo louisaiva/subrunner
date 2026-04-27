@@ -6953,7 +6953,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CarpetBuilder
   tilemap_parent: {fileID: 1489220170}
   tilemap_prefab: {fileID: 3844696143943461768, guid: 3917760ef1d71e142a68dd813abcb99b, type: 3}
-  tile: {fileID: 11400000, guid: 152024fe8b279844bacd6a1eb90e7765, type: 2}
+  tile: {fileID: 11400000, guid: 72662b9576603324e8bf0f603f437d4b, type: 2}
   log_angles: 0
 --- !u!114 &624354657
 MonoBehaviour:
@@ -6988,7 +6988,8 @@ MonoBehaviour:
   tilemap_prefab: {fileID: 4685373029931169544, guid: efef8c84b14bcc148be4535bce4e74d8, type: 3}
   tile: {fileID: 11400000, guid: 683a22842fe5f1e41aac1408f39c31bf, type: 2}
   log_angles: 0
-  logs_sides_check: 1
+  logs_sides_check: 0
+  logs_walls_on_door: 0
   generate_only_inside: 1
   L_tile: {fileID: 11400000, guid: 1555cbdb95ae5524c97e52ecdd571222, type: 2}
   R_tile: {fileID: 11400000, guid: 0a5a6f7e4658c2a4bac4709b9739929a, type: 2}
@@ -7006,7 +7007,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MaskBuilder
   tilemap_parent: {fileID: 1489220170}
   tilemap_prefab: {fileID: 5443504838867259653, guid: e40fe667f7a0be8418fe7b5ee1c4cc6c, type: 3}
-  tile: {fileID: 11400000, guid: 152024fe8b279844bacd6a1eb90e7765, type: 2}
+  tile: {fileID: 11400000, guid: 72662b9576603324e8bf0f603f437d4b, type: 2}
   log_angles: 0
 --- !u!114 &624354660
 MonoBehaviour:
@@ -7022,7 +7023,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CeilingBuilder
   tilemap_parent: {fileID: 1489220170}
   tilemap_prefab: {fileID: 5443504838867259653, guid: e40fe667f7a0be8418fe7b5ee1c4cc6c, type: 3}
-  tile: {fileID: 11400000, guid: 152024fe8b279844bacd6a1eb90e7765, type: 2}
+  tile: {fileID: 11400000, guid: 72662b9576603324e8bf0f603f437d4b, type: 2}
   log_angles: 0
 --- !u!1001 &642794781
 PrefabInstance:
@@ -23457,7 +23458,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WorldBuilder
   selected_cell_visualizer: {fileID: 7113515744044003965}
   tool_type: node
-  Zoom: 5
+  Zoom: 7.59
   node_prefab: {fileID: -980316942306270954, guid: 9b5f4e76aaf6ddc4ab096b93665e2e95, type: 3}
   node_tool: {fileID: 7113515744044003965}
   node_parent: {fileID: 45162325}
