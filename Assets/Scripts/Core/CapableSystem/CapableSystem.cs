@@ -196,7 +196,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
         
         // we found no precise data type ://
         // we check if we have an intermediary type
-        // ex : ItemData
+        // ex : ItemData, DoorData
         // (insert in the list below)
         Type capable_type = Type.GetType(kind);
         
@@ -206,6 +206,9 @@ public class CapableSystem : BSOD_System<CapableSystem>
         // IAData
         else if (GameManager.IsKind(capable_type, typeof(IA))) { data_type = typeof(IAData); }
         
+        // DoorData
+        else if (GameManager.IsKind(capable_type, typeof(Door))) { data_type = typeof(DoorData); }
+
         // no intermediary type -> we give a CapableData, basic
         else { data_type = typeof(CapableData); }
 
@@ -919,5 +922,18 @@ public class CapableSystem : BSOD_System<CapableSystem>
         CapableData data = GetCapableDataFromID(id);
         if (data == null) { return Vector2.zero; }
         return data.position;
+    }
+
+    // doors
+    public List<DoorData> GetWorldDoorsData()
+    {
+        List<DoorData> doors_data = new List<DoorData>();
+        foreach (KeyValuePair<string, CapableData> pair in world_capables_data)
+        {
+            CapableData data = pair.Value;
+            if (data is not DoorData door_data) { continue; }
+            doors_data.Add(door_data);
+        }
+        return doors_data;
     }
 }

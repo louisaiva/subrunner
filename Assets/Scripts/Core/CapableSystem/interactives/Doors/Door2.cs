@@ -3,13 +3,13 @@ using UnityEngine.Rendering.Universal;
 using System;
 
 
-public class Door : Capable, Interactable, Openable
+public class Door2 : Capable, Interactable, Openable
 {
 
     public bool log_interact_kf = false;
 
     [Header("Door")]
-    public bool is_vertical = false;
+    public bool is_vertical = false; // just for the editor
     public bool DontTouchSortingLayer = false;
     private Collider2D _door_collider;
     public Collider2D door_collider
@@ -33,10 +33,8 @@ public class Door : Capable, Interactable, Openable
 
 
     [Header("ROOMS")]
-    public string room1_id; // always matchs the Orientation direction (Orientation == "right" => room1 is on the right)
-    public string room2_id; // always matchs the opposite of the Orientation direction (Orientation == "right" => room2 is on the left)
-
-
+    public Room2 room1; // always matchs the Orientation direction (Orientation == "right" => room1 is on the right)
+    public Room2 room2; // always matchs the opposite of the Orientation direction (Orientation == "right" => room2 is on the left)
 
     [Header("Interact Key Feedback Vertical position")]
     [SerializeField] private IFPositionSwitcher if_switcher;
@@ -63,21 +61,18 @@ public class Door : Capable, Interactable, Openable
     }
 
 
-    // EVENTS
-    public event Action<Door> OnDoorOpen;
-    public event Action<Door> OnDoorClose;
-
     // START
     protected virtual void Start()
     {
         // check if we are an insider we don't even start
-        if (!CapableSystem.Instance.IsOutsider(this.ID)) { return; }
+        if (CapableSystem.Instance.IsOutsider(this.ID)) { return; }
 
         // if vertical on set l'Orientaion à "up"
         if (is_vertical && (Orientation == Vector2.right || Orientation == Vector2.left)) { Orientation = Vector2.up; }
         else if (!is_vertical && (Orientation == Vector2.up || Orientation == Vector2.down)) { Orientation = Vector2.left; }
 
         // on récupère les composants
+        // door_collider = GetComponent<Collider2D>();
         shadow_caster = door_collider.GetComponent<ShadowCaster2D>();
 
         // on récup l'interact kf
@@ -102,21 +97,22 @@ public class Door : Capable, Interactable, Openable
         else if (Closer.Able) { close(); }
     }
 
+
+    // todo : à déplacer dans les Capacity ????
     // OPENABLE
-    public void open(bool silently = false)
+    public void open()
     {
         // on désactive le collider
         door_collider.enabled = false;
-
         // on désactive le ShadowCaster2D
         if (shadow_caster != null) { shadow_caster.enabled = false; }
 
-        Opener.Open(play_anim_and_sound: !silently);
-        if (!silently) { OnDoorOpen?.Invoke(this); }
+
+        Opener.Use(this);
 
 
         // on récupère la room du perso
-        /* Room2 perso_room = Controller.Instance.current_room;
+        Room2 perso_room = Controller.Instance.current_room;
 
         // on vérifie que la room du perso est bien une des 2 rooms de la porte
         if (!(perso_room == room1 || perso_room == room2)) { return; }
@@ -131,20 +127,19 @@ public class Door : Capable, Interactable, Openable
         }
 
         // on affiche les lights de la room qui s'ouvre
-        room_to_open.Show(); */
+        room_to_open.Show();
     }
-    public void close(bool silently = false)
+    public void close()
     {
         // on reactive le collider
         door_collider.enabled = true;
-
         // on reactive le ShadowCaster2D
         if (shadow_caster != null) { shadow_caster.enabled = true; }
 
-        Closer.Close(play_anim_and_sound: !silently);
-        if (!silently) { OnDoorClose?.Invoke(this); }
+        Closer.Use(this);
 
-        /* // on récupère la room du perso
+
+        // on récupère la room du perso
         Room2 perso_room = Controller.Instance.current_room;
 
         // on vérifie que la room du perso est bien une des 2 rooms de la porte
@@ -159,7 +154,8 @@ public class Door : Capable, Interactable, Openable
         }
 
         // on cache les lights de la room qui se ferme
-        room_to_close.Hide(); */
+        room_to_close.Hide();
+
     }
 
 
@@ -235,22 +231,6 @@ public class Door : Capable, Interactable, Openable
         // on récup l'interact kf
         interact_kf = GetCapacity<HoverCapacity>().Canvas_kf;
 
-        if (data is not DoorData door_data) { return; }
-        
-        // on met les paramètres de la porte
-        this.is_vertical = door_data.is_vertical;
-        this.DontTouchSortingLayer = door_data.dont_touch_sorting_layer;
-        this.room1_id = door_data.room1_id;
-        this.room2_id = door_data.room2_id;
-
-        // on ouvre / ferme la porte en fonction des données
-        if (door_data.is_open) { open(silently: true); }
-        else { close(silently: true); }
-
-        // on met à jour la position du kf d'interaction
-        this.if_switcher = door_data.if_switcher;
-
-
     }
     public override void UnloadData()
     {
@@ -264,93 +244,5 @@ public class Door : Capable, Interactable, Openable
         _opener = null;
         _closer = null;
     }
-    public override ICapableData GetStaticData()
-    {
-        DoorData static_data = new DoorData((CapableData)base.GetStaticData())
-        {
-            is_vertical = this.is_vertical,
-            dont_touch_sorting_layer = this.DontTouchSortingLayer,
-            room1_id = this.room1_id,
-            room2_id = this.room2_id,
-            if_switcher = this.if_switcher.Duplicate(),
-            is_open = this.is_open
-        };
 
-        return static_data;
-    }
-    public override void SaveDynamicData()
-    {
-        base.SaveDynamicData();
-
-        if (data is not DoorData door_data) { return; }
-        door_data.is_open = this.is_open;
-    }
-}
-
-
-
-// DOOR DATA
-[Serializable] public class DoorData : CapableData
-{
-    // INSTANCE DATA
-    public bool is_vertical;
-    public bool dont_touch_sorting_layer;
-    public string room1_id;
-    public string room2_id;
-    public bool is_open; // DYNAMIC DATA
-    public IFPositionSwitcher if_switcher;
-
-
-    // CONSTRUCTOR
-    public DoorData() : base() { }
-    public DoorData(CapableData parent) : base(parent) { }
-
-    // DUPLICATE
-    public override ICapableData Duplicate()
-    {
-        return new DoorData(base.Duplicate() as CapableData)
-        {
-            is_vertical = this.is_vertical,
-            room1_id = this.room1_id,
-            room2_id = this.room2_id,
-            is_open = this.is_open,
-            if_switcher = this.if_switcher.Duplicate()
-        };
-    }
-
-    // GET DETAILS
-    public override string GetDetails()
-    {
-        string details = base.GetDetails();
-        details += $"  - is vertical : {is_vertical}\n";
-        details += $"  - room1 id : {room1_id}\n";
-        details += $"  - room2 id : {room2_id}\n";
-        details += $"  - is open : {is_open}\n";
-        details += $"  - IFPositionSwitcher : \n{if_switcher.GetDetails()}\n";
-        return details;
-    }
-}
-
-[Serializable] public class IFPositionSwitcher
-{
-    public Vector2 closed_interact_kf_y = new Vector2(2.25f, 1.25f); // orientation up then down
-    public Vector2 opened_interact_kf_y = new Vector2(0.9f, -0.4f); // orientation up then down
-
-    // DUPLICATE
-    public IFPositionSwitcher Duplicate()
-    {
-        return new IFPositionSwitcher()
-        {
-            closed_interact_kf_y = this.closed_interact_kf_y,
-            opened_interact_kf_y = this.opened_interact_kf_y
-        };
-    }
-
-    // GET DETAILS
-    public string GetDetails()
-    {
-        string details = $"    - closed interact kf y : {closed_interact_kf_y}\n";
-        details += $"    - opened interact kf y : {opened_interact_kf_y}\n";
-        return details;
-    }
 }

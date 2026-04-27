@@ -12,7 +12,7 @@ public class LevelSwitcher : Capable, Interactable
     [Header("Components")]
     public World2 world;
     private GameObject floating_dmg_provider;
-    public Door elevator_door;
+    public Door2 elevator_door;
 
     [Header("Switches")]
     public int elevator_uses = 0;
@@ -27,7 +27,7 @@ public class LevelSwitcher : Capable, Interactable
         floating_dmg_provider = GameObject.Find("/game/dmgs_provider");
 
         // we get the elevator_door
-        elevator_door = transform.parent.Find("door_elevator").GetComponent<Door>();
+        elevator_door = transform.parent.Find("door_elevator").GetComponent<Door2>();
 
         // we check if we have at least one level
         if (levels_names.Count == 0)

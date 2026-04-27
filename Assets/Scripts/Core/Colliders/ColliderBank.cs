@@ -1,11 +1,8 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using NavMeshPlus.Components;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.UI;
 
 public class ColliderBank : MonoBehaviour
 {
@@ -59,7 +56,7 @@ public class ColliderBank : MonoBehaviour
     [Header("Logs")]
     [SerializeField] protected bool log_body_data;
     [SerializeField] protected bool hide_log_load_collider_not_found;
-    protected static bool log_shadows = true;
+    protected static bool log_shadows = false;
 
 
     // LOAD UNLOAD

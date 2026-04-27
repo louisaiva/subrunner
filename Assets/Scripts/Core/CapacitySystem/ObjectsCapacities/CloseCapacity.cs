@@ -31,14 +31,11 @@ public class CloseCapacity : Capacity
     // START
     private void Start()
     {
-        close(false);
+        Close(false);
     }
 
-    // USE
-    public override void Use(Capable capable) => close();
-
     // CLOSING
-    protected virtual void close(bool play_anim = true)
+    public virtual void Close(bool play_anim_and_sound = true)
     {
         // on supprime les invokes de l'ouverture si il y en a
         open_capacity?.CancelOpenInvoke();
@@ -47,16 +44,16 @@ public class CloseCapacity : Capacity
         (Capable as Openable).is_moving = true;
 
         // on joue l'animation
-        if (play_anim)
+        if (play_anim_and_sound)
         {
             Capable.AnimPlayer.StopPlaying("idle_open");
             Capable.AnimPlayer.Play("close", duration_override: closing_duration);
+
+            // on joue le son
+            AudioEngine.Instance.Play("close", Capable.Skin, Capable.gameObject);
         }
         Invoke("success_close", closing_duration);
-        Capable.GetCapacity<HoverCapacity>()?.ChangeAnimation(hover_close_anim);
 
-        // on joue le son
-        AudioEngine.Instance.Play("close", Capable.Skin, Capable.gameObject);
 
         // on fait les vérifications pour les portes
         if (Capable is Door door && !door.DontTouchSortingLayer)
@@ -79,6 +76,7 @@ public class CloseCapacity : Capacity
         openable.is_moving = false;
 
         // on joue l'animation
+        GetSiblingCapacity<HoverCapacity>()?.ChangeAnimation(hover_close_anim);
         Capable.AnimPlayer.Play("idle");
 
         // on fait les vérifications pour les portes

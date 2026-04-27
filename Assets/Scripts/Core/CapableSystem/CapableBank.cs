@@ -46,6 +46,8 @@ public class CapableBank : MonoBehaviour
 
     // ACTIONS
     public Action<CapableData> OnCapableLoading = delegate { }; // fired BEFORE the data is loaded
+    public Action<Capable> OnCapableLoaded = delegate { }; // fired AFTER the data is loaded
+    public Action<Capable> OnCapableUnloading = delegate { }; // fired BEFORE the capable is unloaded
     public Action<CapableData> OnCapableUnloaded = delegate { }; // fired AFTER the data is unloaded
 
 
@@ -74,6 +76,9 @@ public class CapableBank : MonoBehaviour
             capable.LoadData(data);
             capable.gameObject.SetActive(true);
             loaded_capables.Add(capable);
+
+            // fire the callback
+            OnCapableLoaded?.Invoke(capable);
             return capable;
         }
 
@@ -113,6 +118,7 @@ public class CapableBank : MonoBehaviour
         // then we can load the data
         capable.LoadData(data);
         loaded_capables.Add(capable);
+        OnCapableLoaded?.Invoke(capable);
         return capable;
     }
     private Capable add_components_based_on_kind(GameObject go, Type kind)
@@ -248,6 +254,11 @@ public class CapableBank : MonoBehaviour
         // get capable
         Capable capable = GetLoadedCapable(data);
         if (capable == null) { return null; }
+
+        // fire the callback
+        OnCapableUnloading?.Invoke(capable);
+
+        // unload the capable
         unload_capable(capable);
 
         // fire the callback

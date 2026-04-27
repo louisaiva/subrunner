@@ -33,13 +33,12 @@ public class RoomEngine : BSOD_System<RoomEngine>
     // ROOMS DATA
 
     [Header("Rooms data")]
-    // private string data_path = "data/rooms/";
     public Dictionary<string, RoomData> rooms_data = new Dictionary<string, RoomData>();
     private Dictionary<string, int> rooms_hashs_by_ids = new Dictionary<string, int>();
     private Dictionary<int, string> rooms_ids_by_hash = new Dictionary<int, string>();
     private int next_room_hash = 1;
     public Dictionary<string, RoomData> loaded_rooms_data = new Dictionary<string, RoomData>();
-    public RoomData main_room_data; // the main room is the one where the perso is, we need to keep track of it to know which room to load when the perso changes room
+    public RoomData PlayerRoomData; // the main room is the one where the perso is, we need to keep track of it to know which room to load when the perso changes room
     public Action<RoomData> OnRoomChange = delegate { };
 
 
@@ -602,7 +601,7 @@ public class RoomEngine : BSOD_System<RoomEngine>
             if (!loaded_rooms_data.ContainsKey(neighbour_id)) { rooms_to_load.Push(neighbour_id); }
         }
 
-        main_room_data = to_room;
+        PlayerRoomData = to_room;
         OnRoomChange.Invoke(to_room);
 
         // . load the new rooms and unload old ones.
@@ -774,7 +773,10 @@ public class RoomEngine : BSOD_System<RoomEngine>
         }
         return rooms_datas;
     }
-
+    public RoomData GetRoomDataFromID(string room_id)
+    {
+        return rooms_data.TryGetValue(room_id, out RoomData room) ? room : null;
+    }
 }
 
 // LEVEL SPATIAL MAP 2D

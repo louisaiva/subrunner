@@ -659,9 +659,6 @@ public class Capable : MonoBehaviour, Debuggable
         return feet_data;
     }
 
-
-
-
 }
 
 [Serializable]

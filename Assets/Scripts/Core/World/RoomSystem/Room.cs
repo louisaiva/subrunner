@@ -25,7 +25,6 @@ public class Room : MonoBehaviour
         }
     }
 
-    private Dictionary<Vector2,Light2D> loaded_lights = new Dictionary<Vector2, Light2D>();
     private Transform _lights_parent;
     public Transform LightsParent
     {
@@ -57,7 +56,6 @@ public class Room : MonoBehaviour
         RoomCollider.enabled = true;
 
         // load the lights
-        // load_lights(data.lights_data);
         RoomEngine.Instance.LightsEngine.LoadLights(data.lights_data, data.id);
 
         // show the tilemaps
@@ -93,25 +91,6 @@ public class Room : MonoBehaviour
         this.data = null;
         _unloading = false;
     }
-    /* private void load_lights(List<LightData> lights_data)
-    {
-        if (lights_data == null) { return; }
-
-        // we go through the lights data and create a new light for each of them
-        foreach (LightData light_data in lights_data)
-        {
-            if (loaded_lights.ContainsKey(light_data.position)) { continue; }
-
-            Light2D new_light = Instantiate(light_prefab, LightsParent);
-            new_light.transform.position = light_data.position;
-            new_light.color = light_data.color;
-            new_light.intensity = light_data.intensity;
-            new_light.pointLightInnerRadius = light_data.radius.x;
-            new_light.pointLightOuterRadius = light_data.radius.y;
-            new_light.falloffIntensity = light_data.falloff;
-            loaded_lights[light_data.position] = new_light;
-        }
-    } */
 
 
     /// <summary>
@@ -160,6 +139,7 @@ public class Room : MonoBehaviour
     protected List<LightData> get_static_light_data()
     {
         List<LightData> lights_data = new List<LightData>();
+        if (LightsParent == null) { return lights_data; }
 
         // we go through our LightsTransform
         foreach (Transform light_transform in LightsParent)
@@ -184,6 +164,7 @@ public class Room : MonoBehaviour
     protected void get_static_tilemaps(ref RoomData room_data)
     {
         // get the tilemaps
+        Tilemap mask_tilemap = transform.Find("mask")?.GetComponent<Tilemap>();
         Tilemap ceiling_tilemap = transform.Find("ceiling")?.GetComponent<Tilemap>();
         Tilemap walls_tilemap = transform.Find("walls")?.GetComponent<Tilemap>();
         Tilemap carpet_tilemap = transform.Find("carpet")?.GetComponent<Tilemap>();
@@ -191,6 +172,7 @@ public class Room : MonoBehaviour
 
         // get the tiles & tilebases & bounds
         TileBase[] used_tilebases = new TileBase[0];
+        room_data.mask_tiles = get_tilemap(mask_tilemap, out room_data.mask_bounds, ref used_tilebases);
         room_data.ceiling_tiles = get_tilemap(ceiling_tilemap, out room_data.ceiling_bounds, ref used_tilebases);
         room_data.walls_tiles = get_tilemap(walls_tilemap, out room_data.walls_bounds, ref used_tilebases);
         room_data.carpet_tiles = get_tilemap(carpet_tilemap, out room_data.carpet_bounds, ref used_tilebases);

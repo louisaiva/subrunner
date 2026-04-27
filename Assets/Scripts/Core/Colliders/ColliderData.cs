@@ -51,7 +51,7 @@ public interface IColliderData
         details += $"     - used_for_pathfinding : {used_for_pathfinding}\n";
         details += $"     - is_trigger : {is_trigger}\n";
         details += $"     - offset : {offset}\n";
-        details += $"     - shadow_caster_data : \n{(shadow_caster_data != null ? shadow_caster_data.GetDetails() : "None")}\n";
+        details += $"     - shadow_caster_data : {(shadow_caster_data != null ? "\n" + shadow_caster_data.GetDetails() : "NONE")}\n";
         return details;
     }
 }
@@ -136,10 +136,7 @@ public interface IColliderData
     {
         string details = $"         - cast_and_self : {cast_and_self}\n";
         if (used_layers != null && used_layers.Count > 0) { details += $"         - used_layers : {string.Join(", ", used_layers)}\n"; }
-        // // !!!!!! BUG ON THE LINE JUST ABOVE, CHECK WHY THE SHADOW CASTER DATA IS NOT GET STATIC PROPERLY INSIDE COLLIDER BANK
         else { details += $"         - used_layers : None\n"; }
-
-
         return details;
     }
 }

@@ -65,9 +65,9 @@ public class WorldDebug : MonoBehaviour, MultipleDebuggable
         }
 
         // we refresh the room if this is the current room
-        if (RoomEngine.Instance.main_room_data != null && RoomEngine.Instance.main_room_data.id == room.id)
+        if (RoomEngine.Instance.PlayerRoomData != null && RoomEngine.Instance.PlayerRoomData.id == room.id)
         {
-            handle_room_change(RoomEngine.Instance.main_room_data);
+            handle_room_change(RoomEngine.Instance.PlayerRoomData);
         }
     }
 

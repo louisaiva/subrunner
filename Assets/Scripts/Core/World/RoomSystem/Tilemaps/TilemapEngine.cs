@@ -12,9 +12,10 @@ public class TilemapEngine : MonoBehaviour
 
     [Header("Tilemaps parent")]
     public Transform GroundParent;
-    public Transform WallsParent; // also for ceiling & carpet
+    public Transform WallsParent; // also for ceiling & carpet & mask
 
     [Header("Tilemaps prefabs")]
+    [SerializeField] private RoomTilemap mask_prefab;
     [SerializeField] private RoomTilemap ceiling_prefab;
     [SerializeField] private RoomTilemap walls_prefab;
     [SerializeField] private RoomTilemap carpet_prefab;
@@ -45,7 +46,7 @@ public class TilemapEngine : MonoBehaviour
         if (room_tmps == null)
         {
             // we don't have the tilemaps for this room, we create them
-            room_tmps = new RoomTilemaps(data, ceiling_prefab, walls_prefab, carpet_prefab, ground_prefab);
+            room_tmps = new RoomTilemaps(data, ceiling_prefab, walls_prefab, carpet_prefab, ground_prefab, mask_prefab);
             room_tilemaps[data.id] = room_tmps;
             room_tmps.Build(data, tilebases_used);
             if (log_building) { Debug.Log($"(TilemapEngine) Created & Built tilemaps for room: {data.id}"); }
@@ -98,20 +99,48 @@ public class TilemapEngine : MonoBehaviour
         if (log_showing) { Debug.LogWarning($"(TilemapEngine) No tilemaps to hide for {data.id}"); }
     }
 
+    // SHOW / HIDE MASK
+    public void ShowMask(RoomData data)
+    {
+        if (!room_tilemaps.TryGetValue(data.id, out RoomTilemaps room_tmps))
+        {
+            if (log_showing) { Debug.LogWarning($"(TilemapEngine) No tilemaps to show mask for {data.id}"); }
+            return;
+        }
+
+        room_tmps.ShowMask();
+        if (log_showing) { Debug.Log($"(TilemapEngine) Shown mask of {data.id}"); }
+    }
+    public void HideMask(RoomData data)
+    {
+        if (!room_tilemaps.TryGetValue(data.id, out RoomTilemaps room_tmps))
+        {
+            if (log_showing) { Debug.LogWarning($"(TilemapEngine) No tilemaps to hide mask for {data.id}"); }
+            return;
+        }
+
+        room_tmps.HideMask();
+        if (log_showing) { Debug.Log($"(TilemapEngine) Hidden mask of {data.id}"); }
+    }
 }
 
 
+/// <summary>
+/// RUNTIME ONLY CLASS, useful only for TilemapEngine to handle the tilemaps
+/// building & showing
+/// </summary>
 public class RoomTilemaps
 {
     public string RoomID { get; set; }
 
+    public RoomTilemap mask_tilemap;
     public RoomTilemap ceiling_tilemap;
     public RoomTilemap walls_tilemap;
     public RoomTilemap carpet_tilemap;
     public RoomTilemap ground_tilemap;
 
     // CONSTRUCTOR
-    public RoomTilemaps(RoomData data, RoomTilemap ceiling_prefab, RoomTilemap walls_prefab, RoomTilemap carpet_prefab, RoomTilemap ground_prefab)
+    public RoomTilemaps(RoomData data, RoomTilemap ceiling_prefab, RoomTilemap walls_prefab, RoomTilemap carpet_prefab, RoomTilemap ground_prefab, RoomTilemap mask_prefab)
     {
         Transform parent = RoomEngine.Instance.TilemapEngine.WallsParent;
 
@@ -142,6 +171,15 @@ public class RoomTilemaps
             carpet_tilemap.transform.position += (Vector3)data.position;
         }
 
+        // mask
+        if (data.HasTiles("mask"))
+        {
+            mask_tilemap = GameObject.Instantiate(mask_prefab, parent);
+            mask_tilemap.RoomID = data.id;
+            mask_tilemap.gameObject.name = $"{data.id}_mask";
+            mask_tilemap.transform.position += (Vector3)data.position;
+        }
+
         parent = RoomEngine.Instance.TilemapEngine.GroundParent;
 
         // ground
@@ -162,15 +200,19 @@ public class RoomTilemaps
         walls_tilemap?.BuildTilemap(tilebases_used, data.walls_tiles, data.walls_bounds);
         carpet_tilemap?.BuildTilemap(tilebases_used, data.carpet_tiles, data.carpet_bounds);
         ground_tilemap?.BuildTilemap(tilebases_used, data.ground_tiles, data.ground_bounds);
+        mask_tilemap?.BuildTilemap(tilebases_used, data.mask_tiles, data.mask_bounds);
     }
 
     // ENABLER
+    public bool shown = false;
     public void Show()
     {
         if (ceiling_tilemap != null) { ceiling_tilemap.Renderer.enabled = true; }
         if (walls_tilemap != null) { walls_tilemap.Renderer.enabled = true; }
         if (ground_tilemap != null) { ground_tilemap.Renderer.enabled = true; }
         if (carpet_tilemap != null) { carpet_tilemap.Renderer.enabled = true; }
+        if (mask_tilemap != null && mask_shown) { mask_tilemap.Renderer.enabled = true; }
+        shown = true;
     }
     public void Hide()
     {
@@ -178,5 +220,22 @@ public class RoomTilemaps
         if (walls_tilemap != null) { walls_tilemap.Renderer.enabled = false; }
         if (ground_tilemap != null) { ground_tilemap.Renderer.enabled = false; }
         if (carpet_tilemap != null) { carpet_tilemap.Renderer.enabled = false; }
+        if (mask_tilemap != null) { mask_tilemap.Renderer.enabled = false; }
+        shown = false;
+    }
+
+    // MASK
+    public bool mask_shown = true;
+    public void ShowMask()
+    {
+        if (mask_tilemap == null) { return; }
+        if (shown) { mask_tilemap.Renderer.enabled = true; }
+        mask_shown = true;
+    }
+    public void HideMask()
+    {
+        if (mask_tilemap == null) { return; }
+        if (shown) { mask_tilemap.Renderer.enabled = false; }
+        mask_shown = false;
     }
 }

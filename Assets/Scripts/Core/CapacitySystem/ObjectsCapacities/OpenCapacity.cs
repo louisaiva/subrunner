@@ -33,11 +33,11 @@ public class OpenCapacity : Capacity
     public CloseCapacity close_capacity;
 
     // USE
-    public override void Use(Capable capable) => open();
+    // public override void Use(Capable capable) => Open();
 
     
     // OPENING
-    protected virtual void open()
+    public virtual void Open(bool play_anim_and_sound = true)
     {
         // on supprime les invokes de l'ouverture si il y en a
         close_capacity?.CancelCloseInvoke();
@@ -46,13 +46,16 @@ public class OpenCapacity : Capacity
         (Capable as Openable).is_moving = true;
 
         // on joue l'animation
-        Capable.AnimPlayer.Play("open",duration_override: opening_duration);
-        Invoke("success_open", opening_duration);
-        Capable.GetCapacity<HoverCapacity>()?.ChangeAnimation(hover_open_anim);
+        if (play_anim_and_sound)
+        {
+            Capable.AnimPlayer.Play("open",duration_override: opening_duration);
 
-        // on joue le son
-        AudioEngine.Instance.Play("open", Capable.Skin, Capable.gameObject);
-
+            // on joue le son
+            AudioEngine.Instance.Play("open", Capable.Skin, Capable.gameObject);
+        }
+        
+        // on joue l'animation
+        Invoke("SuccessOpen", opening_duration);
 
         // on fait les vérifications pour les portes
         if (Capable is Door door && !door.DontTouchSortingLayer)
@@ -64,7 +67,7 @@ public class OpenCapacity : Capacity
 
         if (log) { Debug.Log(Capable.name + " is opening..."); }
     }
-    protected virtual void success_open()
+    public virtual void SuccessOpen()
     {
         // on ouvre le coffre
         (Capable as Openable).is_open = true;
@@ -72,6 +75,7 @@ public class OpenCapacity : Capacity
 
         // on joue l'animation
         Capable.AnimPlayer.AddToPile("idle_open");
+        GetSiblingCapacity<HoverCapacity>()?.ChangeAnimation(hover_open_anim);
 
         // on fait les vérifications pour les portes
         if (Capable is Door door && !door.DontTouchSortingLayer)
@@ -88,7 +92,7 @@ public class OpenCapacity : Capacity
     // CancelInvoke
     public void CancelOpenInvoke()
     {
-        if (log) { Debug.Log("(OpenCapacity) " + Capable.name + " CancelInvoke success_open"); }
-        CancelInvoke("success_open");
+        if (log) { Debug.Log("(OpenCapacity) " + Capable.name + " CancelInvoke SuccessOpen"); }
+        CancelInvoke("SuccessOpen");
     }
 }

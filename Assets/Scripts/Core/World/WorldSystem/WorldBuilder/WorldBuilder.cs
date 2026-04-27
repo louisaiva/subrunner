@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Cinemachine;
-using Unity.VisualScripting;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -738,6 +736,8 @@ public class WorldBuilder : MonoBehaviour
         node_visualizers.Clear();
         foreach (var d in door_visualizers) { if (d != null) { Destroy(d.gameObject); } }
         door_visualizers.Clear();
+        foreach (var l in light_visualizers) { if (l != null) { Destroy(l.gameObject); } }
+        light_visualizers.Clear();
 
         // we clear the tilemaps
         ClearTilemaps();
