@@ -96,4 +96,60 @@ public class CloseCapacity : Capacity
         if (log) { Debug.Log("(CloseCapacity) " + Capable.name + " CancelInvoke success_close"); }
         CancelInvoke("success_close");
     }
+
+
+
+    // LOAD / UNLOAD DATA
+    public override void LoadData(CapacityData data)
+    {
+        base.LoadData(data);
+
+        if (data is not CloseCapacityData close_data) { return; }
+        this.closing_duration = close_data.closing_duration;
+        this.hover_close_anim = close_data.hover_close_anim;
+    }
+
+    // GET STATIC DATA
+    public override CapacityData GetStaticData()
+    {
+        return new CloseCapacityData(base.GetStaticData())
+        {
+            closing_duration = this.closing_duration,
+            hover_close_anim = this.hover_close_anim
+        };
+    }
+}
+
+public class CloseCapacityData : CapacityData
+{
+    public float closing_duration = 0.5f;
+    public string hover_close_anim = "hover";
+
+
+    // CONSTRUCTOR
+    public CloseCapacityData(CapacityData parent)
+    {
+        foreach (var prop in parent.GetType().GetProperties()) { prop.SetValue(this, prop.GetValue(parent)); }
+        foreach (var prop in parent.GetType().GetFields()) { prop.SetValue(this, prop.GetValue(parent)); }
+    }
+
+    // DUPLICATE
+    public override ICapacityData Duplicate()
+    {
+        return new CloseCapacityData(base.Duplicate() as CapacityData)
+        {
+            closing_duration = this.closing_duration,
+            hover_close_anim = this.hover_close_anim
+        };
+    }
+
+    // GET DETAILS
+    public override string GetDetails()
+    {
+        string details = "";
+        details += $"  - closing duration: {closing_duration}\n";
+        details += $"  - hover close anim: {hover_close_anim}\n";
+        return base.GetDetails() + details;
+    }
+
 }

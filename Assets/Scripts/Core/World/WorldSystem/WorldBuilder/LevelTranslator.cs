@@ -190,15 +190,23 @@ public class LevelTranslator : MonoBehaviour
 
     // DOORS & LIGHTS
     private List<WorldDoorVisualizer> doors_placed = new List<WorldDoorVisualizer>();
+    private Dictionary<WorldDoorVisualizer, Door> doors = new Dictionary<WorldDoorVisualizer, Door>();
     private void apply_doors(Room room, List<WorldDoorVisualizer> doors)
     {
-        // ! don't clone the doors between multiple rooms !!
         // find the parent
         Transform door_parent = room.transform.Find("Doors");
 
         foreach (WorldDoorVisualizer door_visu in doors)
         {
-            if (doors_placed.Contains(door_visu)) { continue; }
+            if (doors_placed.Contains(door_visu))
+            {
+                // we set the room as the door's other room.
+                Door door = this.doors[door_visu];
+                if (string.IsNullOrEmpty(door.room1_id)) { door.room1_id = room.ID; }
+                else if (string.IsNullOrEmpty(door.room2_id)) { door.room2_id = room.ID; }
+                else { Debug.LogError($"(LevelTranslator) door {door.ID} already has 2 rooms assigned. Cannot assign room {room.ID} to it."); }
+                continue;
+            }
 
             Door door_prefab = door_visu.is_vertical ? door_vertical_prefab : door_horizontal_prefab;
             Door new_door = Instantiate(door_prefab, door_parent);
@@ -207,9 +215,19 @@ public class LevelTranslator : MonoBehaviour
             Vector2 world_pos = (door_visu.WorldPosition + door_visu.OtherWorldPosition) / 2f;
             if (door_visu.is_vertical) { world_pos.y -= 0.25f; }
             else { world_pos.y -= 0.5f; } // to adjust the door position a bit (because the door pivot is not centered)
-
             new_door.transform.position = world_pos;
+
+            // assign this room as first room of the door.
+            Vector2 world_position_in_first_room = door_visu.WorldPosition;
+            if (door_visu.is_vertical) { world_position_in_first_room.y += 0.5f; }
+            else { world_position_in_first_room.x += 0.5f; }
+
+            // check if the position is inside the room, it means we are in the first room, else we are in the second room
+            if (room.OverlapPoint(world_position_in_first_room)) { new_door.room1_id = room.ID; }
+            else { new_door.room2_id = room.ID; }
+
             doors_placed.Add(door_visu);
+            this.doors[door_visu] = new_door;
         }
     }
     private void apply_lights(Room room, List<WorldLightVisualizer> lights)

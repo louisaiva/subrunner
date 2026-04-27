@@ -268,11 +268,9 @@ public class CapableBank : MonoBehaviour
     }
     private void unload_capable(Capable capable)
     {
-
         // unload anim layers
-        List<AnimLayer> anim_layers = capable.AnimPlayer.GetAnimLayers();
+        List<AnimLayer> anim_layers = capable.AnimPlayer.GetStaticAnimLayers();
         if (log_anim_layers) { Debug.Log($"(CapableBank) Unloading capable {capable.data.id}, unloading {anim_layers.Count} anim layers"); }
-        // for (int i = 0; i < anim_layers.Count; i++)
         while (anim_layers.Count > 0)
         {
             AnimLayer anim_layer = anim_layers[0];

@@ -25,6 +25,9 @@ public class DoorEngine : MonoBehaviour
         CapableBank.Instance.OnCapableLoaded += HandleDoorLoaded;
         CapableBank.Instance.OnCapableUnloading += HandleDoorUnloaded;
 
+        // register to room engine on capable added to room
+        RoomEngine.Instance.OnCapableAddedToRoom += on_capable_enter_room;
+
         // first visible rooms update
         UpdateRoomMasks();
     }
@@ -104,10 +107,25 @@ public class DoorEngine : MonoBehaviour
 
 
 
+    // DOOR CLOSE OPEN HANDLERS
+    private void OnDoorOpen(Door door)
+    {
+        // we mark the link as open in the graph
+        RoomLink link = door_graph.GetDoorLink(door.ID);
+        if (link == null) { Debug.LogError($"(DoorEngine) Could not find link for door id: {door.ID}"); return; }
+        link.state = LinkState.Open;
 
+        UpdateRoomMasks();
+    }
+    private void OnDoorClose(Door door)
+    {
+        // we mark the link as closed in the graph
+        RoomLink link = door_graph.GetDoorLink(door.ID);
+        if (link == null) { Debug.LogError($"(DoorEngine) Could not find link for door id: {door.ID}"); return; }
+        link.state = LinkState.RequireInteraction;
 
-
-
+        UpdateRoomMasks();
+    }
 
 
     // called in 2 situations :
@@ -150,33 +168,94 @@ public class DoorEngine : MonoBehaviour
             Debug.Log($"(DoorEngine) Updating room masks. Rooms to show: {show_log}. Rooms to hide: {hide_log}");
         }
 
-        // we show the rooms to show and hide the rooms to hide
-        foreach (RoomData room in rooms_to_show) { RoomEngine.Instance.TilemapEngine.HideMask(room); }
-        foreach (RoomData room in rooms_to_hide) { RoomEngine.Instance.TilemapEngine.ShowMask(room); }
-
         // we update the visible rooms list
         visible_rooms = accessible_rooms_data.ToList();
+
+        // we show the rooms to show and hide the rooms to hide
+        foreach (RoomData room in rooms_to_show) { show_room(room); }
+        foreach (RoomData room in rooms_to_hide) { hide_room(room); }
     }
 
-    // DOOR CLOSE OPEN HANDLERS
-    private void OnDoorOpen(Door door)
+
+    // ROOM SHOW / HIDE
+    private void show_room(RoomData room_data)
     {
-        // we mark the link as open in the graph
-        RoomLink link = door_graph.GetDoorLink(door.ID);
-        if (link == null) { Debug.LogError($"(DoorEngine) Could not find link for door id: {door.ID}"); return; }
-        link.state = LinkState.Open;
+        RoomEngine.Instance.TilemapEngine.ShowTilemaps(room_data);
+        RoomEngine.Instance.TilemapEngine.HideMask(room_data);
 
-        UpdateRoomMasks();
+        // show all the capables
+        List<CapableData> capables_data = CapableSystem.Instance.GetCapablesDataFromIDs(room_data.capables_ids.Concat(room_data.movables_ids).ToList());
+        foreach (CapableData data in capables_data)
+        {
+            data.Capable.AnimPlayer.Show();
+        }
+
+        // show all the doors
+        List<Door> doors = GetRoomDoors(room_data);
+        foreach (Door door in doors) { door.AnimPlayer.Show(); }
     }
-    private void OnDoorClose(Door door)
+    private void hide_room(RoomData room_data)
     {
-        // we mark the link as closed in the graph
-        RoomLink link = door_graph.GetDoorLink(door.ID);
-        if (link == null) { Debug.LogError($"(DoorEngine) Could not find link for door id: {door.ID}"); return; }
-        link.state = LinkState.RequireInteraction;
+        // RoomEngine.Instance.TilemapEngine.HideSpecificTilemaps(room_data, new List<string> { "ground", "walls", "ceiling" });
+        RoomEngine.Instance.TilemapEngine.HideTilemaps(room_data);
 
-        UpdateRoomMasks();
+        // hide all the capables
+        List<CapableData> capables_data = CapableSystem.Instance.GetCapablesDataFromIDs(room_data.capables_ids.Concat(room_data.movables_ids).ToList());
+        foreach (CapableData data in capables_data)
+        {
+            // skip the doors bcz we do it manually after
+            if (data is DoorData) { continue; }
+            data.Capable.AnimPlayer.Hide();
+        }
+
+        // hide the doors linked to the room if the other room linked to the door is not visible
+        List<Door> doors = GetRoomDoors(room_data);
+        foreach (Door door in doors)
+        {
+            RoomLink link = door_graph.GetDoorLink(door.ID);
+            if (link == null) { Debug.LogError($"(DoorEngine) Could not find link for door id: {door.ID}"); continue; }
+            RoomNode other_room = link.room1.ID == room_data.id ? link.room2 : link.room1;
+            if (visible_rooms.Contains(other_room.data)) { continue; }
+
+            door.AnimPlayer.Hide();
+        }
     }
+    
+
+    // CAPABLES ADDED/REMOVED FROM ROOMS HANDLERS
+    private void on_capable_enter_room(string capid, RoomData room_data)
+    {
+        CapableData capable_data = CapableSystem.Instance.GetCapableDataFromID(capid);
+        if (capable_data == null) { return; }
+        Capable capable = capable_data.Capable;
+        if (capable == null) { return; }
+        
+        bool capable_visible = capable.AnimPlayer.IsVisible();
+        bool room_visible = visible_rooms.Contains(room_data);
+        if (capable_visible && !room_visible) { capable.AnimPlayer.Hide(); }
+        else if (!capable_visible && room_visible) { capable.AnimPlayer.Show(); }
+    }
+
+
+    // GETTERS
+    /* public List<RoomData> GetVisibleRooms() { return visible_rooms; }
+    public List<Door> GetLoadedDoors() { return loaded_doors; }
+    public bool IsRoomVisible(string room_id)
+    {
+        return visible_rooms.Any(room => room.id == room_id);
+    } */
+    public List<Door> GetRoomDoors(RoomData room_data)
+    {
+        List<string> door_ids = door_graph.GetDoorIDsLinkedToRoom(room_data.id);
+        List<Door> doors = new List<Door>();
+        foreach (string door_id in door_ids)
+        {
+            Door door = loaded_doors.Find(d => d.ID == door_id);
+            if (door != null) { doors.Add(door); }
+        }
+        return doors;
+    }
+
 
 
 
@@ -187,12 +266,14 @@ public class DoorEngine : MonoBehaviour
         public List<RoomLink> links;
         private bool hide_log_room_not_found = false;
 
+        // constructor
         public DoorGraph()
         {
             rooms = new List<RoomNode>();
             links = new List<RoomLink>();
         }
 
+        // get room/link
         public RoomNode GetRoomNode(string room_id)
         {
             return rooms.Find(node => node.ID == room_id);
@@ -202,6 +283,18 @@ public class DoorEngine : MonoBehaviour
             return links.Find(link => link.ID == door_id);
         }
 
+        // get all doors linked to a room
+        public List<string> GetDoorIDsLinkedToRoom(string room_id)
+        {
+            List<string> door_ids = new List<string>();
+            foreach (RoomLink link in links)
+            {
+                if (link.room1.ID == room_id || link.room2.ID == room_id) { door_ids.Add(link.ID); }
+            }
+            return door_ids;
+        }
+
+        // get neighbours
         public List<RoomNode> GetNeighbourNodes(string room_id)
         {
             List<RoomNode> neighbours = new List<RoomNode>();
@@ -223,7 +316,6 @@ public class DoorEngine : MonoBehaviour
             }
             return neighbours;
         }
-    
         public HashSet<RoomNode> GetAccessibleNeighbourNodes(string room_id)
         {
             RoomNode base_node = GetRoomNode(room_id);

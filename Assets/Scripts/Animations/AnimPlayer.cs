@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
+
 
 
 #if UNITY_EDITOR
@@ -50,7 +52,6 @@ public class AnimPlayer : MonoBehaviour
 
     [Header("Orientation")]
     [field:SerializeField] public string orientation { get; private set; } = "D";
-    // public event Action<Vector2> OnOrientationChange = delegate { };
     public Action<string> OnOrientationChanged = delegate { };
 
 
@@ -509,14 +510,38 @@ public class AnimPlayer : MonoBehaviour
     {
         return new List<AnimLayer>(anim_layers);
     }
+    public List<AnimLayer> GetStaticAnimLayers()
+    {
+        return transform.GetComponentsInChildren<AnimLayer>(includeInactive: true).ToList();
+    }
 
 
+    public event Action OnHidden = delegate { };
+    public event Action OnShown = delegate { };
+    public void Hide()
+    {
+        // we set the material Visible bool to false
+        material.SetKeyword(visibleKeyword, false);
+        OnHidden?.Invoke();
+    }
+    public void Show()
+    {
+        // we set the material Visible bool to true
+        material.SetKeyword(visibleKeyword, true);
+        OnShown?.Invoke();
+    }
+    public bool IsVisible()
+    {
+        return material.IsKeywordEnabled(visibleKeyword);
+    }
 
 
 
 
 
     // LOAD DATA
+    private Material material;
+    private LocalKeyword visibleKeyword;
     public void LoadPlayerData(AnimData data)
     {
         if (CapableBank.Instance.log_anim_layers) { Debug.Log($"(AnimPlayer) {name}'s loading data : {(data != null ? data.GetDetails() : "null")}"); }
@@ -540,6 +565,8 @@ public class AnimPlayer : MonoBehaviour
         // we load the sr data
         if (CapableBank.Instance.log_anim_layers) { Debug.Log($"(AnimPlayer) {data.skin}'s data default material is {data.material_path}"); }
         Renderer.material = Resources.Load<Material>(data.material_path);
+        material = Renderer.material;
+        visibleKeyword = new LocalKeyword(material.shader, "_VISIBLE");
         Renderer.sortingLayerID = data.sorting_layer_id;
         Renderer.sortingOrder = data.order_in_layer;
 
@@ -600,7 +627,6 @@ public class AnimPlayer : MonoBehaviour
         data.layers = layers_data;
         return data;
     }
-
     private Vector2 get_static_local_position()
     {
         if (GetComponent<Capable>() != null)
@@ -614,7 +640,6 @@ public class AnimPlayer : MonoBehaviour
         }
         return transform.localPosition;
     }
-
     private string get_material_path(SpriteRenderer sr)
     {
         if (sr == null || sr.sharedMaterial == null) { return ""; }

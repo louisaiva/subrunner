@@ -1,6 +1,6 @@
 using System;
-using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class AnimLayer : MonoBehaviour
 {
@@ -58,6 +58,8 @@ public class AnimLayer : MonoBehaviour
         this.leader = leader;
         leader.OnAnimPlayedAtFrame += PlayAtFrame;
         leader.OnOrientationChanged += SetOrientation;
+        leader.OnHidden += Hide;
+        leader.OnShown += Show;
         leader.RegisterAnimLayer(this);
         already_assigned = true;
         if (log_assign) { Debug.Log("(AnimLayer) Assigned leader " + leader.name + " to layer " + name); }
@@ -67,6 +69,8 @@ public class AnimLayer : MonoBehaviour
         if (!already_assigned) { return; }
         leader.OnAnimPlayedAtFrame -= PlayAtFrame;
         leader.OnOrientationChanged -= SetOrientation;
+        leader.OnHidden -= Hide;
+        leader.OnShown -= Show;
         leader.UnregisterAnimLayer(this);
         this.leader = null;
         already_assigned = false;
@@ -178,10 +182,22 @@ public class AnimLayer : MonoBehaviour
         if (log) { Debug.Log($"(AnimLayer) Set orientation to {orientation} (perfect orientation: {current_anim.name})"); }
     }
 
+    public void Hide()
+    {
+        material.SetKeyword(visibleKeyword, false);
+    }
+    public void Show()
+    {
+        material.SetKeyword(visibleKeyword, true);
+    }
+
+
 
 
 
     // LOAD DATA
+    private Material material;
+    private LocalKeyword visibleKeyword;
     public void LoadData(AnimLayerData layer_data)
     {
         // load main layer data
@@ -191,6 +207,8 @@ public class AnimLayer : MonoBehaviour
 
         // load sr data
         sr.material = Resources.Load<Material>(layer_data.material_path);
+        material = sr.material;
+        visibleKeyword = new LocalKeyword(material.shader, "_VISIBLE");
         sr.sortingLayerID = layer_data.sorting_layer_id;
         sr.sortingOrder = layer_data.order_in_layer;
 

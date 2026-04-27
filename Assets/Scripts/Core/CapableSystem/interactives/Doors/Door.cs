@@ -292,6 +292,7 @@ public class Door : Capable, Interactable, Openable
 // DOOR DATA
 [Serializable] public class DoorData : CapableData
 {
+
     // INSTANCE DATA
     public bool is_vertical;
     public bool dont_touch_sorting_layer;

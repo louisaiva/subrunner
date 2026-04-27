@@ -98,6 +98,16 @@ public class TilemapEngine : MonoBehaviour
         }
         if (log_showing) { Debug.LogWarning($"(TilemapEngine) No tilemaps to hide for {data.id}"); }
     }
+    public void HideSpecificTilemaps(RoomData data, List<string> tm_names)
+    {
+        if (room_tilemaps.TryGetValue(data.id, out RoomTilemaps room_tmps))
+        {
+            room_tmps.HideSpecific(tm_names);
+            if (log_showing) { Debug.Log($"(TilemapEngine) Hidden specific tilemaps of {data.id} : {string.Join(", ", tm_names)}"); }
+            return;
+        }
+        if (log_showing) { Debug.LogWarning($"(TilemapEngine) No tilemaps to hide for {data.id}"); }
+    }
 
     // SHOW / HIDE MASK
     public void ShowMask(RoomData data)
@@ -223,9 +233,18 @@ public class RoomTilemaps
         if (mask_tilemap != null) { mask_tilemap.Renderer.enabled = false; }
         shown = false;
     }
+    public void HideSpecific(List<string> tm_names)
+    {
+        if (tm_names.Contains("ceiling") && ceiling_tilemap != null) { ceiling_tilemap.Renderer.enabled = false; }
+        if (tm_names.Contains("walls") && walls_tilemap != null) { walls_tilemap.Renderer.enabled = false; }
+        if (tm_names.Contains("ground") && ground_tilemap != null) { ground_tilemap.Renderer.enabled = false; }
+        if (tm_names.Contains("carpet") && carpet_tilemap != null) { carpet_tilemap.Renderer.enabled = false; }
+        if (tm_names.Contains("mask") && mask_tilemap != null) { mask_tilemap.Renderer.enabled = false; }
+        shown = false;
+    }
 
     // MASK
-    public bool mask_shown = true;
+    public bool mask_shown = false;
     public void ShowMask()
     {
         if (mask_tilemap == null) { return; }

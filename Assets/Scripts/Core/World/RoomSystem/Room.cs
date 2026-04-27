@@ -424,4 +424,8 @@ public class Room : MonoBehaviour
         Tilemap tilemap = tilemap_transform.GetComponent<Tilemap>();
         return tilemap;
     }
+    public bool OverlapPoint(Vector2 point)
+    {
+        return RoomCollider.OverlapPoint(point);
+    }
 }
