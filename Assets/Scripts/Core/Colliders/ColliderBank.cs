@@ -21,8 +21,8 @@ public class ColliderBank : MonoBehaviour
         // initialize the pools
         pooled_circle_colliders = new Stack<GameObject>();
         pooled_box_colliders = new Stack<GameObject>();
-        pooled_shadowed_circle_colliders = new Dictionary<List<int>, Stack<GameObject>>();
-        pooled_shadowed_box_colliders = new Dictionary<List<int>, Stack<GameObject>>();
+        pooled_shadowed_circle_colliders = new Dictionary<List<string>, Stack<GameObject>>();
+        pooled_shadowed_box_colliders = new Dictionary<List<string>, Stack<GameObject>>();
     }
 
 
@@ -44,20 +44,22 @@ public class ColliderBank : MonoBehaviour
         }
     }
 
+
     // SAVING SHADOW DATA FOR UNLOADING
     protected Dictionary<GameObject, ShadowCasterData> shadow_caster_datas = new Dictionary<GameObject, ShadowCasterData>();
 
     // POOLS
     protected Stack<GameObject> pooled_circle_colliders; // null shadowdata
     protected Stack<GameObject> pooled_box_colliders; // null shadowdata
-    protected Dictionary<List<int>, Stack<GameObject>> pooled_shadowed_circle_colliders;
-    protected Dictionary<List<int>, Stack<GameObject>> pooled_shadowed_box_colliders;
+    protected Dictionary<List<string>, Stack<GameObject>> pooled_shadowed_circle_colliders;
+    protected Dictionary<List<string>, Stack<GameObject>> pooled_shadowed_box_colliders;
 
 
 
     [Header("Logs")]
     [SerializeField] protected bool log_body_data;
     [SerializeField] protected bool hide_log_load_collider_not_found;
+    protected static bool log_shadows = true;
 
 
     // LOAD UNLOAD
@@ -261,17 +263,26 @@ public class ColliderBank : MonoBehaviour
     protected static ShadowCasterData get_static_shadow_caster_data(Collider2D collider)
     {
         ShadowCaster2D shadow_caster = collider.GetComponent<ShadowCaster2D>();
-        if (shadow_caster == null || !shadow_caster.enabled) { return null; }
+        if (shadow_caster == null || !shadow_caster.enabled)
+        {
+            if (log_shadows) { Debug.Log($"(ColliderBank - get_static_shadow_caster_data) No shadow caster found on collider {collider.gameObject.name}"); }
+            return null;
+        }
         ShadowCasterData data = new ShadowCasterData();
-        if (shadow_caster.castingOption == ShadowCaster2D.ShadowCastingOptions.SelfShadow) { data.cast_and_self = true; }
+        if (shadow_caster.selfShadows) { data.cast_and_self = true; }
         else { data.cast_and_self = false; }
         data.used_layers = get_static_shadow_used_layers(shadow_caster);
+        if (log_shadows) { Debug.Log($"(ColliderBank - get_static_shadow_caster_data) Found shadow caster on collider {collider.gameObject.name} with data : \n{data.GetDetails()}"); }
         return data;
     }
     private static FieldInfo sorting_layers_field = typeof(ShadowCaster2D).GetField("m_ApplyToSortingLayers", BindingFlags.Instance | BindingFlags.NonPublic);
-    protected static List<int> get_static_shadow_used_layers(ShadowCaster2D shadow_caster)
+    protected static List<string> get_static_shadow_used_layers(ShadowCaster2D shadow_caster)
     {
-        return sorting_layers_field.GetValue(shadow_caster) as List<int>;
+        // return new List<int>((int[]) sorting_layers_field.GetValue(shadow_caster));
+        int[] sorting_layers = (int[]) sorting_layers_field.GetValue(shadow_caster);
+        List<string> used_layers = new List<string>();
+        for (int i = 0; i < sorting_layers.Length; i++) { used_layers.Add(SortingLayer.IDToName(sorting_layers[i])); }
+        return used_layers;
     }
     protected static void load_shadow_caster_data(GameObject go, ShadowCasterData data)
     {
@@ -279,7 +290,15 @@ public class ColliderBank : MonoBehaviour
         ShadowCaster2D shadow_caster = go.GetComponent<ShadowCaster2D>();
         if (shadow_caster == null) { shadow_caster = go.AddComponent<ShadowCaster2D>(); }
         shadow_caster.enabled = true;
-        shadow_caster.castingOption = data.cast_and_self ? ShadowCaster2D.ShadowCastingOptions.SelfShadow : ShadowCaster2D.ShadowCastingOptions.CastShadow;
-        sorting_layers_field.SetValue(shadow_caster, data.used_layers.ToArray());
+        shadow_caster.castingOption = data.cast_and_self ? ShadowCaster2D.ShadowCastingOptions.CastAndSelfShadow : ShadowCaster2D.ShadowCastingOptions.CastShadow;
+        
+        // convert the used layers from string to int and set them to the shadow caster
+        List<int> used_layers_int = new List<int>();
+        foreach (var layer_name in data.used_layers)
+        {
+            int layer_id = SortingLayer.NameToID(layer_name);
+            used_layers_int.Add(layer_id);
+        }
+        sorting_layers_field.SetValue(shadow_caster, used_layers_int.ToArray());
     }
 }

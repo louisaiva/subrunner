@@ -17,6 +17,15 @@ public class RoomEngine : BSOD_System<RoomEngine>
         }
     }
 
+    private LightsEngine _lights_engine;
+    public LightsEngine LightsEngine
+    {
+        get
+        {
+            if (_lights_engine == null) { _lights_engine = GetComponent<LightsEngine>(); }
+            return _lights_engine;
+        }
+    }
 
 
 

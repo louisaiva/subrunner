@@ -1954,7 +1954,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f21c41059eea91a4f90b29f8510483e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::World
-  world_id: 
+  world_id: test2
   data:
     levels_ids: []
   fallback_spawn_point: {fileID: 1209737554}
@@ -19517,6 +19517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b291ba086bf43ef48849ba0af236beaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldManager
+  world_to_save: 
   save_levels: 1
   log: 1
 --- !u!1 &1734854913

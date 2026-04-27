@@ -117,7 +117,7 @@ public interface IColliderData
 [Serializable] public class ShadowCasterData
 {
     public bool cast_and_self; // if true it means we cast + self, otherwise we only cast
-    public List<int> used_layers = new List<int>();
+    public List<string> used_layers = new List<string>();
     
     // DUPLICATE
     public ShadowCasterData Duplicate()
@@ -125,7 +125,7 @@ public interface IColliderData
         ShadowCasterData new_data = new ShadowCasterData()
         {
             cast_and_self = this.cast_and_self,
-            used_layers = new List<int>(this.used_layers)
+            used_layers = new List<string>(this.used_layers)
         };
 
         return new_data;
@@ -135,7 +135,7 @@ public interface IColliderData
     public string GetDetails()
     {
         string details = $"         - cast_and_self : {cast_and_self}\n";
-        if (used_layers != null && used_layers.Count > 0) { details += $"         - used_layers : {string.Join(", ", used_layers.Select(l => LayerMask.LayerToName(l) + $"({l})"))}\n"; }
+        if (used_layers != null && used_layers.Count > 0) { details += $"         - used_layers : {string.Join(", ", used_layers)}\n"; }
         // // !!!!!! BUG ON THE LINE JUST ABOVE, CHECK WHY THE SHADOW CASTER DATA IS NOT GET STATIC PROPERLY INSIDE COLLIDER BANK
         else { details += $"         - used_layers : None\n"; }
 

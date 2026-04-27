@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
@@ -24,7 +25,6 @@ public class Room : MonoBehaviour
         }
     }
 
-    [SerializeField] private Light2D light_prefab;
     private Dictionary<Vector2,Light2D> loaded_lights = new Dictionary<Vector2, Light2D>();
     private Transform _lights_parent;
     public Transform LightsParent
@@ -45,9 +45,6 @@ public class Room : MonoBehaviour
         }
     }
 
-
-
-
     // LOAD / UNLOAD
     public void LoadData(RoomData data)
     {
@@ -60,7 +57,8 @@ public class Room : MonoBehaviour
         RoomCollider.enabled = true;
 
         // load the lights
-        load_lights(data.lights_data);
+        // load_lights(data.lights_data);
+        RoomEngine.Instance.LightsEngine.LoadLights(data.lights_data, data.id);
 
         // show the tilemaps
         RoomEngine.Instance.TilemapEngine.ShowTilemaps(data);
@@ -95,7 +93,7 @@ public class Room : MonoBehaviour
         this.data = null;
         _unloading = false;
     }
-    private void load_lights(List<LightData> lights_data)
+    /* private void load_lights(List<LightData> lights_data)
     {
         if (lights_data == null) { return; }
 
@@ -113,7 +111,7 @@ public class Room : MonoBehaviour
             new_light.falloffIntensity = light_data.falloff;
             loaded_lights[light_data.position] = new_light;
         }
-    }
+    } */
 
 
     /// <summary>
