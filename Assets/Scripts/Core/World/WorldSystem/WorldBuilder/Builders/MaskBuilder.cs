@@ -6,14 +6,14 @@ public class MaskBuilder : CeilingBuilder
 {
     protected override void GenerateTilemap(Tilemap tilemap, WorldRoomVisualizer room)
     {
-        List<Vector3Int> tile_positions = get_ceiling_outline(room, DiagonalTraceType.Straight);
+        List<Vector3Int> carpet = get_carpet_tiles_positions(room, DiagonalTraceType.Canard);
 
         // we fill the inside of the room as well
-        tile_positions = fill_inside(tile_positions);
+        carpet = fill_inside(carpet);
         // log
 
         // we convert those positions to tilemap's grid positions and we set the tiles
-        foreach (var pos in tile_positions)
+        foreach (var pos in carpet)
         {
             if (HasDoorAtPosition(pos)) { continue; } // filter the doors
             tilemap.SetTile(pos, tile);

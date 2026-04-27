@@ -5,8 +5,8 @@ using UnityEngine;
 public class DoorEngine : MonoBehaviour
 {
     private DoorGraph door_graph;
-    private List<Door> loaded_doors = new List<Door>();
-    [SerializeField] private List<RoomData> visible_rooms = new List<RoomData>();
+    private HashSet<Door> loaded_doors = new HashSet<Door>();
+    [SerializeField] private HashSet<RoomData> visible_rooms = new HashSet<RoomData>();
 
 
     [Header("Logs")]
@@ -131,6 +131,10 @@ public class DoorEngine : MonoBehaviour
     // called in 2 situations :
     // - when a door is open/closed
     // - when we enter a room (to update the masks of the doors of the room)
+    private readonly List<RoomData> rooms_to_show = new List<RoomData>();
+    private readonly List<RoomData> rooms_to_hide = new List<RoomData>();
+    private HashSet<RoomNode> accessible_rooms = new HashSet<RoomNode>();
+    private readonly HashSet<RoomData> accessible_rooms_data = new HashSet<RoomData>();
     private void UpdateRoomMasks()
     {
         // get the current room
@@ -138,8 +142,10 @@ public class DoorEngine : MonoBehaviour
         if (current_room == null) { Debug.LogError($"(DoorEngine) Could not find current room data"); return; }
 
         // we get the accessible rooms from the current room
-        HashSet<RoomNode> accessible_rooms = door_graph.GetAccessibleNeighbourNodes(current_room.id);
-        HashSet<RoomData> accessible_rooms_data = new HashSet<RoomData>(accessible_rooms.Select(node => node.data));
+        accessible_rooms.Clear();
+        accessible_rooms_data.Clear();
+        door_graph.GetAccessibleNeighbourNodes(current_room.id, ref accessible_rooms);
+        accessible_rooms_data.UnionWith(accessible_rooms.Select(node => node.data));
 
         if (log_accessible_rooms)
         {
@@ -148,8 +154,8 @@ public class DoorEngine : MonoBehaviour
         }
 
         // we gather the rooms to update
-        List<RoomData> rooms_to_show = new List<RoomData>();
-        List<RoomData> rooms_to_hide = new List<RoomData>();
+        rooms_to_show.Clear();
+        rooms_to_hide.Clear();
         foreach (RoomData room in accessible_rooms_data)
         {
             if (visible_rooms.Contains(room)) { continue; }
@@ -169,16 +175,23 @@ public class DoorEngine : MonoBehaviour
         }
 
         // we update the visible rooms list
-        visible_rooms = accessible_rooms_data.ToList();
+        visible_rooms.Clear();
+        visible_rooms.UnionWith(accessible_rooms_data);
 
         // we show the rooms to show and hide the rooms to hide
-        foreach (RoomData room in rooms_to_show) { show_room(room); }
-        foreach (RoomData room in rooms_to_hide) { hide_room(room); }
+        foreach (RoomData room in rooms_to_show) { ShowRoom(room); }
+        foreach (RoomData room in rooms_to_hide) { HideRoom(room); }
     }
 
 
     // ROOM SHOW / HIDE
-    private void show_room(RoomData room_data)
+    /// <summary>
+    /// these 2 methods are NOT supposed to modify visible_rooms list.
+    /// visible_rooms is the only truth, and so it must be checked BEFORE
+    /// calling these methods
+    /// </summary>
+    /// <param name="room_data"></param>
+    public void ShowRoom(RoomData room_data)
     {
         RoomEngine.Instance.TilemapEngine.ShowTilemaps(room_data);
         RoomEngine.Instance.TilemapEngine.HideMask(room_data);
@@ -194,7 +207,14 @@ public class DoorEngine : MonoBehaviour
         List<Door> doors = GetRoomDoors(room_data);
         foreach (Door door in doors) { door.AnimPlayer.Show(); }
     }
-    private void hide_room(RoomData room_data)
+
+    /// <summary>
+    /// these 2 methods are NOT supposed to modify visible_rooms list.
+    /// visible_rooms is the only truth, and so it must be checked BEFORE
+    /// calling these methods
+    /// </summary>
+    /// <param name="room_data"></param>
+    public void HideRoom(RoomData room_data)
     {
         // RoomEngine.Instance.TilemapEngine.HideSpecificTilemaps(room_data, new List<string> { "ground", "walls", "ceiling" });
         RoomEngine.Instance.TilemapEngine.HideTilemaps(room_data);
@@ -238,19 +258,14 @@ public class DoorEngine : MonoBehaviour
 
 
     // GETTERS
-    /* public List<RoomData> GetVisibleRooms() { return visible_rooms; }
-    public List<Door> GetLoadedDoors() { return loaded_doors; }
-    public bool IsRoomVisible(string room_id)
-    {
-        return visible_rooms.Any(room => room.id == room_id);
-    } */
+    public bool IsRoomVisible(RoomData room_data) { return visible_rooms.Contains(room_data); }
     public List<Door> GetRoomDoors(RoomData room_data)
     {
         List<string> door_ids = door_graph.GetDoorIDsLinkedToRoom(room_data.id);
         List<Door> doors = new List<Door>();
         foreach (string door_id in door_ids)
         {
-            Door door = loaded_doors.Find(d => d.ID == door_id);
+            Door door = loaded_doors.FirstOrDefault(d => d.ID == door_id);
             if (door != null) { doors.Add(door); }
         }
         return doors;
@@ -316,16 +331,17 @@ public class DoorEngine : MonoBehaviour
             }
             return neighbours;
         }
-        public HashSet<RoomNode> GetAccessibleNeighbourNodes(string room_id)
+        public void GetAccessibleNeighbourNodes(string room_id, ref HashSet<RoomNode> accessible_rooms)
         {
             RoomNode base_node = GetRoomNode(room_id);
             if (base_node == null)
             {
                 if (!hide_log_room_not_found) { Debug.LogWarning($"(DoorGraph) Could not find room node for room id: {room_id}"); }
-                return new HashSet<RoomNode>();
+                return;
             }
 
-            HashSet<RoomNode> accessible_rooms = new HashSet<RoomNode>() { base_node };
+            accessible_rooms.Clear();
+            accessible_rooms.Add(base_node);
             List<RoomNode> visited = new List<RoomNode>();
             Queue<RoomNode> queue = new Queue<RoomNode>();
             queue.Enqueue(base_node);
@@ -344,7 +360,6 @@ public class DoorEngine : MonoBehaviour
                     queue.Enqueue(neighbour);
                 }
             }
-            return accessible_rooms;
         }
     }
     private class RoomNode

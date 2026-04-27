@@ -27,6 +27,15 @@ public class RoomEngine : BSOD_System<RoomEngine>
         }
     }
 
+    private DoorEngine _door_engine;
+    public DoorEngine DoorEngine
+    {
+        get
+        {
+            if (_door_engine == null) { _door_engine = GetComponent<DoorEngine>(); }
+            return _door_engine;
+        }
+    }
 
 
 
@@ -94,11 +103,11 @@ public class RoomEngine : BSOD_System<RoomEngine>
     public bool log_colliders = false;
     public bool log_enter_exit = false;
 
-    /* -------------------------------------
-
-     1. AWAKE & DATA LOADING + 2D SPATIAL CELL ROOMS
-
-    ------------------------------------- */
+    ///
+    //
+    /// 1. AWAKE & DATA LOADING + 2D SPATIAL CELL ROOMS
+    //
+    ///
 
 
     // INIT
@@ -214,12 +223,11 @@ public class RoomEngine : BSOD_System<RoomEngine>
         }
     }
 
-
-    /* -------------------------------------
-
-     2. ASSIGNING ROOMS TO CAPABLES
-
-    ------------------------------------- */
+    ///
+    //
+    /// 2. ASSIGNING ROOMS TO CAPABLES
+    //
+    ///
 
     // START
     private void Start()
@@ -378,11 +386,13 @@ public class RoomEngine : BSOD_System<RoomEngine>
         return true;
     }
 
-    /* -------------------------------------
 
-     3. DYNAMIC ROOM OF CAPABLE MANAGEMENT (UPDATE)
-
-    ------------------------------------- */
+    ///
+    //
+    ///  3. DYNAMIC ROOM OF CAPABLE MANAGEMENT (UPDATE)
+    //
+    ///
+    
 
     // UPDATE
     private int frames_since_last_tick = 0;
@@ -610,12 +620,11 @@ public class RoomEngine : BSOD_System<RoomEngine>
     }
 
 
-    /* -------------------------------------
-
-     4. DYNAMIC ROOM LOADING & UNLOADING
-
-    ------------------------------------- */
-
+    ///
+    //
+    ///  4. DYNAMIC ROOM LOADING & UNLOADING
+    //
+    ///
 
 
 
@@ -655,9 +664,12 @@ public class RoomEngine : BSOD_System<RoomEngine>
             return;
         }
         RoomData data = rooms_data[id];
-        RoomBank.Instance.Load(data);
+        Room room = RoomBank.Instance.Load(data);
         loaded_rooms_data.Add(id, data);
         if (log_loading) { Debug.Log("(RoomEngine) Loaded " + id); }
+
+        if (!DoorEngine.IsRoomVisible(data)) { DoorEngine.HideRoom(data); }
+        else { DoorEngine.ShowRoom(data); }
     }
 
     // UNLOAD ROOMS
@@ -689,12 +701,11 @@ public class RoomEngine : BSOD_System<RoomEngine>
 
 
 
-
-    /* -------------------------------------
-
-     5. GETTERS & OTHERS
-
-    ------------------------------------- */
+    ///
+    //
+    /// 5. GETTERS & OTHERS
+    //
+    ///
 
 
 

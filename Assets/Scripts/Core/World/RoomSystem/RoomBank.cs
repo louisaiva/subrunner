@@ -27,7 +27,7 @@ public class RoomBank : MonoBehaviour
     [SerializeField] protected Stack<Room> pooled_rooms;
     
     // LOAD UNLOAD ROOMS
-    public void Load(RoomData data)
+    public Room Load(RoomData data)
     {
         // if we have no pooled room we need to instantiate one
         if (pooled_rooms.Count == 0)
@@ -35,7 +35,7 @@ public class RoomBank : MonoBehaviour
             Room new_room = Instantiate(room_prefab, room_parent);
             new_room.LoadData(data);
             loaded_rooms.Add(new_room);
-            return;
+            return new_room;
         }
 
         // extract a room from the pooled ones and load its data
@@ -43,6 +43,7 @@ public class RoomBank : MonoBehaviour
         room.LoadData(data);
         room.enabled = true;
         loaded_rooms.Add(room);
+        return room;
     }
     public void Unload(RoomData data)
     {
