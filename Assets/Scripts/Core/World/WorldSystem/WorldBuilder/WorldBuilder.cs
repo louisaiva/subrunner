@@ -748,6 +748,7 @@ public class WorldBuilder : MonoBehaviour
         ground_builder.Clear();
         walls_builder.Clear();
         ceiling_builder.Clear();
+        edges_builder.Clear();
     }
 
     // SAVE DATA

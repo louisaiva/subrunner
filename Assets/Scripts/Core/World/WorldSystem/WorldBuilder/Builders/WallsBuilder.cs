@@ -9,6 +9,9 @@ public class WallsBuilder : TilemapBuilder
     [SerializeField] private bool logs_sides_check = false;
     [SerializeField] private bool logs_walls_on_door = false;
 
+    [Header("Door Tile")]
+    [SerializeField] private TileBase door_tile;
+
     [Header("Walls Parameters")]
     public bool generate_only_inside = false; // if true, don't generate the exteriors walls
     public bool filter_vertical = false;
@@ -101,8 +104,11 @@ public class WallsBuilder : TilemapBuilder
         // we set the tiles
         foreach (var pos in outline)
         {
-            if (filter_doors && HasDoorAtPosition(pos)) { continue; } // filter the doors
-
+            if (filter_doors && HasDoorAtPosition(pos)) // filter the doors
+            {
+                tilemap.SetTile(pos, door_tile); // we still add an empty tile so the rule tile can work properly
+                continue;
+            }
 
             // filter L and R tiles
             if (filter_sides && left_sides.Contains(pos)) { tilemap.SetTile(pos, L_tile); last_outline.Add(pos + Vector3Int.down); continue; }

@@ -325,6 +325,18 @@ public class TilemapBuilder : MonoBehaviour
         }
         return false;
     }
+    protected virtual List<Vector3Int> GetAllDoorPositions()
+    {
+        List<Vector3Int> door_positions = new List<Vector3Int>();
+        foreach (var door in doors)
+        {
+            Vector3Int pos_a = WorldToCell(door.WorldPosition);
+            Vector3Int pos_b = WorldToCell(door.OtherWorldPosition);
+            if (!door_positions.Contains(pos_a)) { door_positions.Add(pos_a); }
+            if (!door_positions.Contains(pos_b)) { door_positions.Add(pos_b); }
+        }
+        return door_positions;
+    }
 
     /* private void OnDrawGizmosSelected()
     {

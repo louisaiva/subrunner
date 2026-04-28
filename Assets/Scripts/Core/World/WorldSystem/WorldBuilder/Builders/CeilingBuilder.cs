@@ -5,6 +5,9 @@ using UnityEngine.Tilemaps;
 
 public class CeilingBuilder : TilemapBuilder
 {
+    [Header("Door Tile")]
+    [SerializeField] private TileBase door_tile;
+
     [Header("Ceiling Parameters")]
     public bool remove_bottom_tiles = false; // if true, don't generate the bottom tiles
     public int bottom_to_remove = 3; // number of bottom tiles to remove (if remove_bottom_tiles is true)
@@ -27,10 +30,19 @@ public class CeilingBuilder : TilemapBuilder
             outline = filter_not_on_walls(outline, wall_tiles);
         }
 
+        // we add all the doors
+        outline.AddRange(GetAllDoorPositions());
+        HashSet<Vector3Int> unique_positions = new HashSet<Vector3Int>(outline);
+        outline = unique_positions.ToList();
+
         // we convert those positions to tilemap's grid positions and we set the tiles
         foreach (var pos in outline)
         {
-            if (HasDoorAtPosition(pos)) { continue; } // filter the doors
+            if (HasDoorAtPosition(pos)) // filter the doors
+            {
+                tilemap.SetTile(pos, door_tile); // we still add an empty tile so the rule tile can work properly
+                continue;
+            }
             tilemap.SetTile(pos, tile);
         }
     }

@@ -47,6 +47,7 @@ public class AnimBank : MonoBehaviour
     [Header("Logs")]
     public bool log = false;
     public bool log_LAFAC = false;
+    public bool log_variant_awake = false;
     public bool log_variant_skins = false;
 
     [Header("Logs Runtime")]
@@ -450,6 +451,26 @@ public class AnimBank : MonoBehaviour
 
             // we change the anim name
             anim.name = skin + "." + capacity + "." + splitted_name[2].Replace("LR", "L").Replace("RL", "R");
+        }
+
+        // we check if the orientation has "DU" or "UD" in it.
+        // if it does, we add the animation to the bank with "DU" replaced by "D" and "U" & "UD" replaced by "U" & "D"
+        // "UD" stands for basic anim is facing U & "DU" is for basic anim is facing D
+        // no need to flip the anim because we don't have left and right in this case, we just duplicate it
+        if (splitted_name[2].Contains("DU") || splitted_name[2].Contains("UD"))
+        {
+            // we copy the animation
+            Anim anim_D = new Anim(anim);
+            anim_D.name = skin + "." + capacity + ".D";
+
+            // load the sprites
+            anim_D.LoadSprites(spritesheets_path);
+
+            // we add the animation to the bank
+            anims[skin][capacity].Add(anim_D);
+
+            // we change the anim name
+            anim.name = skin + "." + capacity + ".U";
         }
 
         // load the sprites

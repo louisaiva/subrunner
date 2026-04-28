@@ -349,7 +349,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbc26d7ebcdf22f47a529f15eaf424b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  extract_json_on_load: 0
+  extract_json_on_load: 1
   anims_path: animations/
   jsons_path: anims/
   capacities_with_no_loops:
@@ -566,9 +566,18 @@ MonoBehaviour:
   - variant_name: steel_door_ceil
     variant_spritesheets:
     - objects/interactives/doors/steel/steel_door_ceil
+    - objects/interactives/doors/steel/steel_door_LR_ceil
     base_skin: steel_door
     base_spritesheets:
     - objects/interactives/doors/steel/steel_door_mid
+    - objects/interactives/doors/steel/steel_door_LR_down
+    keep_base_anim_if_spritesheet_not_found: 1
+  - variant_name: steel_door_midup
+    variant_spritesheets:
+    - objects/interactives/doors/steel/steel_door_LR_up
+    base_skin: steel_door
+    base_spritesheets:
+    - objects/interactives/doors/steel/steel_door_LR_down
     keep_base_anim_if_spritesheet_not_found: 1
   - variant_name: sofa_R
     variant_spritesheets:
@@ -602,6 +611,7 @@ MonoBehaviour:
     keep_base_anim_if_spritesheet_not_found: 0
   log: 0
   log_LAFAC: 0
+  log_variant_awake: 0
   log_variant_skins: 0
   log_get_anim: 0
   skins:
@@ -1183,7 +1193,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsQuitting: 0
   LoadedSceneCount: 0
-  prototype: sitting on sofa
+  prototype: world builder & DoorEngine
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320

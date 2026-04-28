@@ -4,6 +4,10 @@ using UnityEngine.Tilemaps;
 
 public class CarpetBuilder : TilemapBuilder
 {
+
+    [Header("Door Tile")]
+    [SerializeField] private TileBase door_tile;
+
     // MAIN TILEMAP GENERATION
     protected override void GenerateTilemap(Tilemap tilemap, WorldRoomVisualizer room)
     {
@@ -13,7 +17,11 @@ public class CarpetBuilder : TilemapBuilder
         // we convert those positions to tilemap's grid positions and we set the tiles
         foreach (var pos in tile_positions)
         {
-            if (HasDoorAtPosition(pos)) { continue; } // filter the doors
+            if (HasDoorAtPosition(pos)) // filter the doors
+            {
+                tilemap.SetTile(pos, door_tile); // we still add an empty tile so the rule tile can work properly
+                continue;
+            }
             tilemap.SetTile(pos, tile);
         }
     }
