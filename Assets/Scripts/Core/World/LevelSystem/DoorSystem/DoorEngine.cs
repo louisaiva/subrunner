@@ -197,7 +197,7 @@ public class DoorEngine : MonoBehaviour
     public void ShowRoom(RoomData room_data)
     {
         RoomEngine.Instance.TilemapEngine.ShowTilemaps(room_data);
-        RoomEngine.Instance.TilemapEngine.HideMask(room_data);
+        // RoomEngine.Instance.TilemapEngine.HideMask(room_data);
 
         // show all the capables
         List<CapableData> capables_data = CapableSystem.Instance.GetCapablesDataFromIDs(room_data.capables_ids.Concat(room_data.movables_ids).ToList());

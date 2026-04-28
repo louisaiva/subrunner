@@ -164,7 +164,7 @@ public class Room : MonoBehaviour
     protected void get_static_tilemaps(ref RoomData room_data)
     {
         // get the tilemaps
-        Tilemap mask_tilemap = transform.Find("mask")?.GetComponent<Tilemap>();
+        Tilemap edges_tilemap = transform.Find("edges")?.GetComponent<Tilemap>();
         Tilemap ceiling_tilemap = transform.Find("ceiling")?.GetComponent<Tilemap>();
         Tilemap walls_tilemap = transform.Find("walls")?.GetComponent<Tilemap>();
         Tilemap carpet_tilemap = transform.Find("carpet")?.GetComponent<Tilemap>();
@@ -172,7 +172,7 @@ public class Room : MonoBehaviour
 
         // get the tiles & tilebases & bounds
         TileBase[] used_tilebases = new TileBase[0];
-        room_data.mask_tiles = get_tilemap(mask_tilemap, out room_data.mask_bounds, ref used_tilebases);
+        room_data.edges_tiles = get_tilemap(edges_tilemap, out room_data.edges_bounds, ref used_tilebases);
         room_data.ceiling_tiles = get_tilemap(ceiling_tilemap, out room_data.ceiling_bounds, ref used_tilebases);
         room_data.walls_tiles = get_tilemap(walls_tilemap, out room_data.walls_bounds, ref used_tilebases);
         room_data.carpet_tiles = get_tilemap(carpet_tilemap, out room_data.carpet_bounds, ref used_tilebases);

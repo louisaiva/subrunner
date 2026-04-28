@@ -36,7 +36,7 @@ public class LevelTranslator : MonoBehaviour
 
     [Header("Room creation")]
     public Room room_prefab;
-    public bool hide_mask = true; // if true, will hide the mask tilemap in the level (useful for trying instantly the generated level)
+    // public bool hide_mask = true; // if true, will hide the mask tilemap in the level (useful for trying instantly the generated level)
     public bool add_roomgraph_neighbour_node = true;
     public RoomNodeEditor roomgraph_node_prefab;
 
@@ -167,11 +167,11 @@ public class LevelTranslator : MonoBehaviour
             copy_tilemap(tilemap, room_tilemap);
 
             // check if this is the mask tilemap and hide_mask == true, then we disable the tilemap renderer
-            if (tilemap_type == "mask" && hide_mask)
+            /* if (tilemap_type == "mask" && hide_mask)
             {
                 TilemapRenderer tilemap_renderer = room_tilemap.GetComponent<TilemapRenderer>();
                 if (tilemap_renderer != null) { tilemap_renderer.enabled = false; }
-            }
+            } */
         }
     }
     private void copy_tilemap(Tilemap source, Tilemap target)

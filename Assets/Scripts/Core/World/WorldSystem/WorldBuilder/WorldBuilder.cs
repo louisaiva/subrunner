@@ -112,7 +112,7 @@ public class WorldBuilder : MonoBehaviour
     public GroundBuilder ground_builder;
     public WallsBuilder walls_builder;
     public CeilingBuilder ceiling_builder;
-    public MaskBuilder mask_builder;
+    public EdgesBuilder edges_builder;
 
 
     [Header("Logs")]
@@ -688,7 +688,7 @@ public class WorldBuilder : MonoBehaviour
             build_room(r, new List<string> { builder });
         }
     }
-    private List<string> default_builders = new List<string> { "carpet", "ground", "walls", "ceiling", "mask" };
+    private List<string> default_builders = new List<string> { "carpet", "ground", "walls", "edges", "ceiling" };
     private Dictionary<string, Tilemap> build_room(WorldRoomVisualizer room, List<string> builders = null)
     {
         if (builders == null) { builders = default_builders; }
@@ -710,15 +710,15 @@ public class WorldBuilder : MonoBehaviour
                 if (log_building) { Debug.Log("(WorldBuilder) Building walls for " + room.name); }
                 tilemaps["walls"] = walls_builder.Build(room);
             }
+            if (b == "edges" && edges_builder != null)
+            {
+                if (log_building) { Debug.Log("(WorldBuilder) Building edges for " + room.name); }
+                tilemaps["edges"] = edges_builder.Build(room);
+            }
             if (b == "ceiling" && ceiling_builder != null)
             {
                 if (log_building) { Debug.Log("(WorldBuilder) Building ceiling for " + room.name); }
                 tilemaps["ceiling"] = ceiling_builder.Build(room);
-            }
-            if (b == "mask" && mask_builder != null)
-            {
-                if (log_building) { Debug.Log("(WorldBuilder) Building mask for " + room.name); }
-                tilemaps["mask"] = mask_builder.Build(room);
             }
         }
         return tilemaps;
@@ -748,7 +748,6 @@ public class WorldBuilder : MonoBehaviour
         ground_builder.Clear();
         walls_builder.Clear();
         ceiling_builder.Clear();
-        mask_builder.Clear();
     }
 
     // SAVE DATA

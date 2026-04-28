@@ -40,10 +40,10 @@ using UnityEngine;
 
     // tilemaps data
     public string[] tilebase_paths_used;
-    public BoundsInt mask_bounds;
-    public int[] mask_tiles;
     public BoundsInt ceiling_bounds;
     public int[] ceiling_tiles;
+    public BoundsInt edges_bounds;
+    public int[] edges_tiles;
     public BoundsInt walls_bounds;
     public int[] walls_tiles;
     public BoundsInt carpet_bounds;
@@ -55,6 +55,7 @@ using UnityEngine;
     // GETTERS
     protected int calculate_tilemap_non_null_tiles(int[] tiles)
     {
+        if (tiles == null) { return 0; }
         int count = 0;
         for (int i = 0; i < tiles.Length; i++)
         {
@@ -72,7 +73,7 @@ using UnityEngine;
         details += $"  - colliders : {(collider_points != null ? collider_points.Count : 0)} points\n";
         details += $"  - lights : {(lights_data != null ? lights_data.Count : 0)} lights\n";
         details += $"  - tilemaps :\n";
-        details += $"    - mask : {calculate_tilemap_non_null_tiles(mask_tiles)} tiles\n";
+        details += $"    - edges : {calculate_tilemap_non_null_tiles(edges_tiles)} tiles\n";
         details += $"    - ceiling : {calculate_tilemap_non_null_tiles(ceiling_tiles)} tiles\n";
         details += $"    - walls : {calculate_tilemap_non_null_tiles(walls_tiles)} tiles\n";
         details += $"    - carpet : {calculate_tilemap_non_null_tiles(carpet_tiles)} tiles\n";
@@ -83,8 +84,8 @@ using UnityEngine;
     {
         switch (tilemap_type)
         {
-            case "mask":
-                return mask_tiles != null && mask_tiles.Length > 0;
+            case "edges":
+                return edges_tiles != null && edges_tiles.Length > 0;
             case "ceiling":
                 return ceiling_tiles != null && ceiling_tiles.Length > 0;
             case "walls":

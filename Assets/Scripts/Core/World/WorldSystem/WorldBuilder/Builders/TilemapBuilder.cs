@@ -43,8 +43,8 @@ public class TilemapBuilder : MonoBehaviour
         else
         {
             tilemap_instance = Instantiate(tilemap_prefab, tilemap_parent);
-            tilemap_instance.GetComponent<TilemapCollider2D>().enabled = false;
-            tilemap_instance.name = $"carpet_{room.name}";
+            if (tilemap_instance.TryGetComponent(out TilemapCollider2D tilemap_collider)) { tilemap_collider.enabled = false; }
+            tilemap_instance.name = $"{get_builder_name()}_{room.name}";
             tilemap_instances[room.name] = tilemap_instance;
         }
 
@@ -53,14 +53,17 @@ public class TilemapBuilder : MonoBehaviour
 
         return tilemap_instance;
     }
-    public void Clear()
+    public virtual void Clear()
     {
         foreach (var tilemap in tilemap_instances.Values)
         {
             tilemap.ClearAllTiles();
         }
     }
-
+    protected virtual string get_builder_name()
+    {
+        return GetType().Name.Replace("Builder", "").ToLower();
+    }
 
 
     // MAIN TILEMAP GENERATION
