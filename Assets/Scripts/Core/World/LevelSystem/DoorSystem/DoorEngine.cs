@@ -12,7 +12,7 @@ public class DoorEngine : MonoBehaviour
     [Header("Logs")]
     public bool log_graph = false;
     public bool log_accessible_rooms = false;
-    public bool log_masks = false;
+    public bool log_visibility_update = false;
     public bool log_callbacks = false;
 
     // START
@@ -27,10 +27,10 @@ public class DoorEngine : MonoBehaviour
 
         // register to room engine on capable added to room
         RoomEngine.Instance.OnCapableAddedToRoom += on_capable_enter_room;
-        RoomEngine.Instance.OnRoomChange += (new_room) => UpdateRoomMasks();
+        RoomEngine.Instance.OnRoomChange += (new_room) => UpdateRoomsVisibility();
 
         // first visible rooms update
-        UpdateRoomMasks();
+        UpdateRoomsVisibility();
     }
 
     // GRAPH CREATION
@@ -116,7 +116,7 @@ public class DoorEngine : MonoBehaviour
         if (link == null) { Debug.LogError($"(DoorEngine) Could not find link for door id: {door.ID}"); return; }
         link.state = LinkState.Open;
 
-        UpdateRoomMasks();
+        UpdateRoomsVisibility();
     }
     private void OnDoorClose(Door door)
     {
@@ -125,7 +125,7 @@ public class DoorEngine : MonoBehaviour
         if (link == null) { Debug.LogError($"(DoorEngine) Could not find link for door id: {door.ID}"); return; }
         link.state = LinkState.RequireInteraction;
 
-        UpdateRoomMasks();
+        UpdateRoomsVisibility();
     }
 
 
@@ -136,7 +136,7 @@ public class DoorEngine : MonoBehaviour
     private readonly List<RoomData> rooms_to_hide = new List<RoomData>();
     private HashSet<RoomNode> accessible_rooms = new HashSet<RoomNode>();
     private readonly HashSet<RoomData> accessible_rooms_data = new HashSet<RoomData>();
-    private void UpdateRoomMasks()
+    private void UpdateRoomsVisibility()
     {
         // get the current room
         RoomData current_room = RoomEngine.Instance.PlayerRoomData;
@@ -170,11 +170,11 @@ public class DoorEngine : MonoBehaviour
             rooms_to_hide.Add(data);
         }
 
-        if (log_masks)
+        if (log_visibility_update)
         {
             string show_log = string.Join(", ", rooms_to_show.Select(room => room.id));
             string hide_log = string.Join(", ", rooms_to_hide.Select(room => room.id));
-            Debug.Log($"(DoorEngine) Updating room masks. Rooms to show: {show_log}. Rooms to hide: {hide_log}");
+            Debug.Log($"(DoorEngine) Updating room visibility. Rooms to show: {show_log}. Rooms to hide: {hide_log}");
         }
 
         // we update the visible rooms list
@@ -182,6 +182,8 @@ public class DoorEngine : MonoBehaviour
         visible_rooms.UnionWith(accessible_rooms_data);
 
         // we show the rooms to show and hide the rooms to hide
+        // todo : THIS METHOD SHOWS ALL TILEMAPS IF WE HAVE SOME, even if the room is not loaded !
+        // todo not harmful rn (since it only affects the tilemaps and does not trigger the capable/room loading) but may introduce future bugs
         foreach (RoomData room in rooms_to_show) { ShowRoom(room); }
         foreach (RoomData room in rooms_to_hide) { HideRoom(room); }
     }
@@ -196,8 +198,10 @@ public class DoorEngine : MonoBehaviour
     /// <param name="room_data"></param>
     public void ShowRoom(RoomData room_data)
     {
+        // ensure the room is loaded, if not no need to show it
+        if (!RoomBank.Instance.IsRoomLoaded(room_data)) { return; }
+
         RoomEngine.Instance.TilemapEngine.ShowTilemaps(room_data);
-        // RoomEngine.Instance.TilemapEngine.HideMask(room_data);
 
         // show all the capables
         List<CapableData> capables_data = CapableSystem.Instance.GetCapablesDataFromIDs(room_data.capables_ids.Concat(room_data.movables_ids).ToList());
@@ -220,6 +224,9 @@ public class DoorEngine : MonoBehaviour
     /// <param name="room_data"></param>
     public void HideRoom(RoomData room_data)
     {
+        // ensure the room is loaded, if not no need to hide it
+        if (!RoomBank.Instance.IsRoomLoaded(room_data)) { return; }
+
         // RoomEngine.Instance.TilemapEngine.HideSpecificTilemaps(room_data, new List<string> { "ground", "walls", "ceiling" });
         RoomEngine.Instance.TilemapEngine.HideTilemaps(room_data);
 

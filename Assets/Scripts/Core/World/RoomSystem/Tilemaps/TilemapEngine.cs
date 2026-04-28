@@ -98,40 +98,7 @@ public class TilemapEngine : MonoBehaviour
         }
         if (log_showing) { Debug.LogWarning($"(TilemapEngine) No tilemaps to hide for {data.id}"); }
     }
-    /* public void HideSpecificTilemaps(RoomData data, List<string> tm_names)
-    {
-        if (room_tilemaps.TryGetValue(data.id, out RoomTilemaps room_tmps))
-        {
-            room_tmps.HideSpecific(tm_names);
-            if (log_showing) { Debug.Log($"(TilemapEngine) Hidden specific tilemaps of {data.id} : {string.Join(", ", tm_names)}"); }
-            return;
-        }
-        if (log_showing) { Debug.LogWarning($"(TilemapEngine) No tilemaps to hide for {data.id}"); }
-    } */
 
-    // SHOW / HIDE MASK
-    /* public void ShowMask(RoomData data)
-    {
-        if (!room_tilemaps.TryGetValue(data.id, out RoomTilemaps room_tmps))
-        {
-            if (log_showing) { Debug.LogWarning($"(TilemapEngine) No tilemaps to show edges for {data.id}"); }
-            return;
-        }
-
-        room_tmps.ShowMask();
-        if (log_showing) { Debug.Log($"(TilemapEngine) Shown edges of {data.id}"); }
-    }
-    public void HideMask(RoomData data)
-    {
-        if (!room_tilemaps.TryGetValue(data.id, out RoomTilemaps room_tmps))
-        {
-            if (log_showing) { Debug.LogWarning($"(TilemapEngine) No tilemaps to hide edges for {data.id}"); }
-            return;
-        }
-
-        room_tmps.HideMask();
-        if (log_showing) { Debug.Log($"(TilemapEngine) Hidden edges of {data.id}"); }
-    } */
 }
 
 

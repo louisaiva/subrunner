@@ -310,20 +310,6 @@ public class Item : Movable, EndlessInteractable
             // we remove all the forces
             ClearForces();
         }
-
-        // HOVER
-        /* if (Hover == null) { return; }
-        if (!Grabbed)
-        {
-            Hover.transform.localPosition = Vector3.zero;
-            // we enable the HoverCapacity's collider
-            Hover.GetComponent<Collider2D>().enabled = true;
-        }
-        else 
-        {
-            // we disable the HoverCapacity's collider
-            Hover.GetComponent<Collider2D>().enabled = false;
-        } */
     }
 
 

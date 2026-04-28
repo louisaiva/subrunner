@@ -257,57 +257,6 @@ public class Room : MonoBehaviour
     }
 
 
-
-    // SHOW / HIDE
-    /* public void Show()
-    {
-        /// this should NOT disable the gameobject since we want all the logic to keep logiking
-        /// we only want to disable all renderers + lights etc any visible thing
-
-        // enable tilemaps renderer
-        associate_renderers();
-        ceiling_renderer.enabled = true;
-        walls_renderer.enabled = true;
-        carpet_renderer.enabled = true;
-        ground_renderer.enabled = true;
-
-        // show capables that we have
-
-        // show lights
-
-        // finally we are shown
-        shown = true;
-    }
-    public void Hide()
-    {
-        // disable tilemaps renderer
-        associate_renderers();
-        ceiling_renderer.enabled = false;
-        walls_renderer.enabled = false;
-        carpet_renderer.enabled = false;
-        ground_renderer.enabled = false;
-
-        // hide capables that we have
-
-        // hide lights
-
-        // finally we are hidden
-        shown = false;
-    }
-    private void associate_renderers()
-    {
-        if (ceiling_renderer == null) { ceiling_renderer = ceiling_tilemap.GetComponent<TilemapRenderer>(); }
-        if (walls_renderer == null) { walls_renderer = walls_tilemap.GetComponent<TilemapRenderer>(); }
-        if (carpet_renderer == null) { carpet_renderer = carpet_tilemap.GetComponent<TilemapRenderer>(); }
-        if (ground_renderer == null) { ground_renderer = ground_tilemap.GetComponent<TilemapRenderer>(); }
-    } */
-
-
-
-
-
-
-
     // COLLIDERS EVENTS
     protected virtual void OnTriggerEnter2D(Collider2D collider)
     {

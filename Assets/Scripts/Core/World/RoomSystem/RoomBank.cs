@@ -109,4 +109,13 @@ public class RoomBank : MonoBehaviour
     {
         return new List<Room>(loaded_rooms);
     }
+    public bool IsRoomLoaded(RoomData data)
+    {
+        for (int i = 0; i < loaded_rooms.Count; i++)
+        {
+            Room room = loaded_rooms[i];
+            if (room.data != null && room.data == data) { return true; }
+        }
+        return false;
+    }
 }
