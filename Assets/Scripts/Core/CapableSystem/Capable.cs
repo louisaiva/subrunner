@@ -78,7 +78,7 @@ public class Capable : MonoBehaviour, Debuggable
     {
         get
         {
-            if (_anim_player is null)
+            if (_anim_player == null)
             {
                 _anim_player = GetComponent<AnimPlayer>();
                 if (_anim_player == null) { _anim_player = transform.Find("anim_player")?.GetComponent<AnimPlayer>(); }

@@ -59,6 +59,9 @@ public class WorldManager : MonoBehaviour
         if (log) { Debug.Log(" "); }
         LevelManager.MakeRoomsGrabCapables(World.StaticInstance.GetStaticLevels());
 
+        // todo generate the navmesh ????
+        // NavMeshBuilder.BuildNavMesh();
+
         // we save the world data
         if (log) { Debug.Log(" "); }
         if (log) { Debug.Log($"(WorldManager) ################# 3 - Saving the world data... (id is {get_world_id()})"); }

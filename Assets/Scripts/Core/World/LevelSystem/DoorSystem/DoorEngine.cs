@@ -6,7 +6,7 @@ public class DoorEngine : MonoBehaviour
 {
     private DoorGraph door_graph;
     private HashSet<Door> loaded_doors = new HashSet<Door>();
-    [SerializeField] private HashSet<RoomData> visible_rooms = new HashSet<RoomData>();
+    [SerializeField] private HashSet<RoomData> visible_rooms;
 
 
     [Header("Logs")]
@@ -27,6 +27,7 @@ public class DoorEngine : MonoBehaviour
 
         // register to room engine on capable added to room
         RoomEngine.Instance.OnCapableAddedToRoom += on_capable_enter_room;
+        RoomEngine.Instance.OnRoomChange += (new_room) => UpdateRoomMasks();
 
         // first visible rooms update
         UpdateRoomMasks();
@@ -141,6 +142,8 @@ public class DoorEngine : MonoBehaviour
         RoomData current_room = RoomEngine.Instance.PlayerRoomData;
         if (current_room == null) { Debug.LogError($"(DoorEngine) Could not find current room data"); return; }
 
+        if (visible_rooms is null) { visible_rooms = new HashSet<RoomData>(); }
+
         // we get the accessible rooms from the current room
         accessible_rooms.Clear();
         accessible_rooms_data.Clear();
@@ -200,6 +203,7 @@ public class DoorEngine : MonoBehaviour
         List<CapableData> capables_data = CapableSystem.Instance.GetCapablesDataFromIDs(room_data.capables_ids.Concat(room_data.movables_ids).ToList());
         foreach (CapableData data in capables_data)
         {
+            if (data.Capable == null || data.Capable.AnimPlayer == null) { continue; }
             data.Capable.AnimPlayer.Show();
         }
 
@@ -225,6 +229,7 @@ public class DoorEngine : MonoBehaviour
         {
             // skip the doors bcz we do it manually after
             if (data is DoorData) { continue; }
+            if (data.Capable == null || data.Capable.AnimPlayer == null) { continue; }
             data.Capable.AnimPlayer.Hide();
         }
 
@@ -258,7 +263,11 @@ public class DoorEngine : MonoBehaviour
 
 
     // GETTERS
-    public bool IsRoomVisible(RoomData room_data) { return visible_rooms.Contains(room_data); }
+    public bool IsRoomVisible(RoomData room_data)
+    {
+        if (visible_rooms is null) { return true; } // not loaded yet, we return true so all rooms are shown on world loading
+        return visible_rooms.Contains(room_data);    
+    }
     public List<Door> GetRoomDoors(RoomData room_data)
     {
         List<string> door_ids = door_graph.GetDoorIDsLinkedToRoom(room_data.id);

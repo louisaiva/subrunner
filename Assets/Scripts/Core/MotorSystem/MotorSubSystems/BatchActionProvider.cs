@@ -16,7 +16,7 @@ public class BatchActionProvider : MonoBehaviour
     {
         get
         {
-            if (_goap_behaviour is null)
+            if (_goap_behaviour == null)
             {
                 _goap_behaviour = GameObject.FindFirstObjectByType<GoapBehaviour>();
             }

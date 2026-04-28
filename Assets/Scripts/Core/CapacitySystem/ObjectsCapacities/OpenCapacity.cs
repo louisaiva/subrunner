@@ -51,7 +51,7 @@ public class OpenCapacity : Capacity
         }
         
         // on joue l'animation
-        Invoke("SuccessOpen", opening_duration);
+        Invoke("success_open", opening_duration);
 
         // on fait les vérifications pour les portes
         if (Capable is Door door && !door.DontTouchSortingLayer)
@@ -63,11 +63,17 @@ public class OpenCapacity : Capacity
 
         if (log) { Debug.Log(Capable.name + " is opening..."); }
     }
-    public virtual void SuccessOpen()
+    protected virtual void success_open()
     {
         // on ouvre le coffre
-        (Capable as Openable).is_open = true;
-        (Capable as Openable).is_moving = false;
+        if (Capable is not Openable openable)
+        {
+            Debug.LogError("(OpenCapacity) " + Capable.ID + " is not openable !");
+            // if (log) { Debug.LogError("(OpenCapacity) " + Capable.ID + " is not openable !"); }
+            return;
+        }
+        openable.is_open = true;
+        openable.is_moving = false;
 
         // on joue l'animation
         Capable.AnimPlayer.AddToPile("idle_open");
@@ -81,7 +87,8 @@ public class OpenCapacity : Capacity
             Capable.AnimPlayer.Renderer.sortingOrder = -1;
         }
 
-        if (log) { Debug.Log(Capable.name + " is open !"); }
+        Debug.Log(Capable.ID + " is open !");
+        // if (log) { Debug.Log(Capable.ID + " is open !"); }
     }
 
     // CancelInvoke

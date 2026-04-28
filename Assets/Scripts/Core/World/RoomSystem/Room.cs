@@ -30,7 +30,7 @@ public class Room : MonoBehaviour
     {
         get
         {
-            if (_lights_parent is null)
+            if (_lights_parent == null)
             {
                 _lights_parent = transform.Find("Lights");
                 if (_lights_parent == null)

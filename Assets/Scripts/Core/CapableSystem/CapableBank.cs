@@ -63,7 +63,7 @@ public class CapableBank : MonoBehaviour
             // then we load the anim data inside the capable
             load_anim_data(capable.AnimPlayer, data.anim_data);
 
-            // and its body
+            // and its feet
             load_feet_data(capable, data.feet_data);
 
             // set the good parent for the capable based on its kind
@@ -106,7 +106,7 @@ public class CapableBank : MonoBehaviour
         // then we load the anim data inside the capable
         load_anim_data(capable.AnimPlayer, data.anim_data);
 
-        // and its body
+        // and its feet
         load_feet_data(capable, data.feet_data);
 
         // and its inventory

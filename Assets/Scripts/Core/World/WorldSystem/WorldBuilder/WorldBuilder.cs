@@ -19,10 +19,10 @@ public class WorldBuilder : MonoBehaviour
     {
         get
         {
-            if (_static_instance is null)
+            if (_static_instance == null)
             {
                 _static_instance = FindFirstObjectByType<WorldBuilder>(FindObjectsInactive.Include);
-                if (_static_instance is null) { Debug.LogError("No WorldBuilder instance found in the scene."); }
+                if (_static_instance == null) { Debug.LogError("No WorldBuilder instance found in the scene."); }
             }
             return _static_instance;
         }

@@ -695,7 +695,19 @@ public class CapableSystem : BSOD_System<CapableSystem>
         Capable capable = CapableBank.Instance.Load(data);
         loaded_capables_data.Add(data.id, data);
         if (log_loading) { Debug.Log("(CapableSystem) Loaded " + data.id); }
-        return capable;
+
+        // check if capable needs to be hidden bcz it is in a not visible room
+        RoomEngine.Instance.TryGetCapableRoom(data.id, out RoomData room);
+        if (room == null) { return capable; }
+        
+        if (!RoomEngine.Instance.DoorEngine.IsRoomVisible(room))
+        {
+            capable.AnimPlayer.Hide();
+            if (log_loading) { Debug.Log($"(CapableSystem - Load) Capable {data.id} is in room {room.id} which is not visible, so we hide it"); }
+        }
+        else { capable.AnimPlayer.Show(); }
+
+        return capable;        
     }
     public Capable LoadCapableInstantly(string id)
     {

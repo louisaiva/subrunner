@@ -9,7 +9,7 @@ public class Capacity : MonoBehaviour
     {
         get
         {
-            if (_capable is null) { _capable = transform.parent.GetComponent<Capable>(); }
+            if (_capable == null) { _capable = transform.parent.GetComponent<Capable>(); }
             return _capable;
         }
     }
@@ -17,7 +17,7 @@ public class Capacity : MonoBehaviour
     {
         get
         {
-            if (Capable is null) { return null; }
+            if (Capable == null) { return null; }
             return Capable.AnimPlayer;
         }
     }
@@ -138,14 +138,14 @@ public class Capacity : MonoBehaviour
     // GETTERS
     public T GetSiblingCapacity<T>() where T : Capacity
     {
-        if (Capable is null) { return null; }
+        if (Capable == null) { return null; }
         if (!Capable.TryGetCapacity(out T sibling_capacity)) { return null; }
         return sibling_capacity;
     }
     public bool TryGetSiblingCapacity<T>(out T sibling_capacity) where T : Capacity
     {
         sibling_capacity = null;
-        if (Capable is null) { return false; }
+        if (Capable == null) { return false; }
         return Capable.TryGetCapacity<T>(out sibling_capacity);
     }
 }

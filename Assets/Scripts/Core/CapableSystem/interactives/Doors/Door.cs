@@ -7,6 +7,8 @@ public class Door : Capable, Interactable, Openable
 {
 
     public bool log_interact_kf = false;
+    private static bool debug_move_sin_feet = false;
+    private Vector2 base_feet_collider_offset = new Vector2(-888f, -999f);
 
     [Header("Door")]
     public bool is_vertical = false;
@@ -167,6 +169,15 @@ public class Door : Capable, Interactable, Openable
     protected override void Update()
     {
         base.Update();
+
+        if (debug_move_sin_feet)
+        {
+            if (base_feet_collider_offset.x == -888f && base_feet_collider_offset.y == -999f)
+            {
+                base_feet_collider_offset = FeetCollider.offset;
+            }
+            FeetCollider.offset = new Vector2(base_feet_collider_offset.x, base_feet_collider_offset.y + Mathf.Sin(Time.time) * 0.5f);
+        }
 
         if (Controller.Instance == null) { return; }
 

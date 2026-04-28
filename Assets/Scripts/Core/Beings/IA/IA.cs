@@ -26,7 +26,7 @@ public class IA : Movable
     {
         get
         {
-            if (_mover is null)
+            if (_mover == null)
             {
                 _mover = transform.Find("brain/goto")?.GetComponent<GoToBehaviour>();
                 if (_mover == null) { _mover = GetCapacity<MotorCapacity>()?.transform.Find("goto").GetComponent<GoToBehaviour>(); }

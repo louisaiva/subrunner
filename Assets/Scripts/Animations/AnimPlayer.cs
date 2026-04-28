@@ -523,12 +523,14 @@ public class AnimPlayer : MonoBehaviour
         // we set the material Visible bool to false
         material.SetKeyword(visibleKeyword, false);
         OnHidden?.Invoke();
+        if (log) { Debug.Log("(AnimPlayer) " + Capable.ID + " is now hidden"); }
     }
     public void Show()
     {
         // we set the material Visible bool to true
         material.SetKeyword(visibleKeyword, true);
         OnShown?.Invoke();
+        if (log) { Debug.Log("(AnimPlayer) " + Capable.ID + " is now visible"); }
     }
     public bool IsVisible()
     {

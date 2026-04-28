@@ -57,6 +57,7 @@ public class ColliderBank : MonoBehaviour
     [SerializeField] protected bool log_body_data;
     [SerializeField] protected bool hide_log_load_collider_not_found;
     protected static bool log_shadows = false;
+    protected static bool log_shadows_shapes = false;
 
 
     // LOAD UNLOAD
@@ -103,6 +104,10 @@ public class ColliderBank : MonoBehaviour
         // we load the collider data
         load_collider_data(collider, data);
         collider.size = data.size;
+
+        // we load the shadow caster data
+        if (data.shadow_caster_data is not null) { load_shadow_caster_data(collider.gameObject, data.shadow_caster_data); }        
+
         return collider;
     }
     private CircleCollider2D load_circle_collider(CircleData data, Transform parent)
@@ -141,6 +146,9 @@ public class ColliderBank : MonoBehaviour
         // we load the collider data
         load_collider_data(collider, data);
         collider.radius = data.radius;
+        
+        // we load the shadow caster data
+        if (data.shadow_caster_data is not null) { load_shadow_caster_data(collider.gameObject, data.shadow_caster_data); }
         return collider;
     }
 
@@ -158,7 +166,7 @@ public class ColliderBank : MonoBehaviour
         // if we are not using pathfinding we make sure we don't have any
         if (modifier != null) { Destroy(modifier); }
     }
-    private void load_collider_data(Collider2D collider, ColliderData collider_data)
+    private /* async */ void load_collider_data(Collider2D collider, ColliderData collider_data)
     {
         if (log_body_data) { Debug.Log($"(CapableBank - load_collider_data) Loading collider data : {(collider_data == null ? "null" : collider_data.GetDetails())}"); }
 
@@ -171,8 +179,9 @@ public class ColliderBank : MonoBehaviour
         collider.isTrigger = collider_data.is_trigger;
 
         // we set the shadow caster data
-        if (collider_data.shadow_caster_data is null) { return; }
-        load_shadow_caster_data(collider.gameObject, collider_data.shadow_caster_data);
+        /* if (collider_data.shadow_caster_data is null) { return; }
+        await System.Threading.Tasks.Task.Yield();
+        load_shadow_caster_data(collider.gameObject, collider_data.shadow_caster_data); */
     }
 
 
@@ -265,10 +274,21 @@ public class ColliderBank : MonoBehaviour
             if (log_shadows) { Debug.Log($"(ColliderBank - get_static_shadow_caster_data) No shadow caster found on collider {collider.gameObject.name}"); }
             return null;
         }
+
+        // get the layers
         ShadowCasterData data = new ShadowCasterData();
+        data.used_layers = get_static_shadow_used_layers(shadow_caster);
+        if (data.used_layers == null || data.used_layers.Count == 0)
+        {
+            if (log_shadows) { Debug.Log($"(ColliderBank - get_static_shadow_caster_data) Shadow caster on collider {collider.gameObject.name} has no used layers, ignoring shadow caster data"); }
+            return null;
+        }
+
+        // get the cast and self data
         if (shadow_caster.selfShadows) { data.cast_and_self = true; }
         else { data.cast_and_self = false; }
-        data.used_layers = get_static_shadow_used_layers(shadow_caster);
+
+        // return the data
         if (log_shadows) { Debug.Log($"(ColliderBank - get_static_shadow_caster_data) Found shadow caster on collider {collider.gameObject.name} with data : \n{data.GetDetails()}"); }
         return data;
     }
@@ -284,11 +304,26 @@ public class ColliderBank : MonoBehaviour
     protected static void load_shadow_caster_data(GameObject go, ShadowCasterData data)
     {
         if (data == null) { return; }
+        if (data.used_layers == null || data.used_layers.Count == 0) { return; }
+
+        Collider2D collider = go.GetComponent<Collider2D>();
         ShadowCaster2D shadow_caster = go.GetComponent<ShadowCaster2D>();
-        if (shadow_caster == null) { shadow_caster = go.AddComponent<ShadowCaster2D>(); }
-        shadow_caster.enabled = true;
+        if (shadow_caster == null)
+        {
+            shadow_caster = go.AddComponent<ShadowCaster2D>();
+            // var probe = go.AddComponent<DebugShadowProber>(); probe.Init(shadow_caster, collider, "load_shadow_caster_data");
+            // if (log_shadows_shapes) { Debug.Log($"(ColliderBank - load_shadow_caster_data) Added shadow caster to gameobject {go.name}. shape is {string.Join(", ", shadow_caster.shapePath)}"); }
+        }
+
+        // Get the collider for debugging
+        if (log_shadows_shapes && collider != null)
+        {
+            Debug.Log($"(ColliderBank - load_shadow_caster_data) Before setup - Collider offset: {collider.offset}, size: {(collider is BoxCollider2D ? ((BoxCollider2D)collider).size : "N/A")}");
+        }
+
+        shadow_caster.enabled = false;
         shadow_caster.castingOption = data.cast_and_self ? ShadowCaster2D.ShadowCastingOptions.CastAndSelfShadow : ShadowCaster2D.ShadowCastingOptions.CastShadow;
-        
+
         // convert the used layers from string to int and set them to the shadow caster
         List<int> used_layers_int = new List<int>();
         foreach (var layer_name in data.used_layers)
@@ -297,5 +332,61 @@ public class ColliderBank : MonoBehaviour
             used_layers_int.Add(layer_id);
         }
         sorting_layers_field.SetValue(shadow_caster, used_layers_int.ToArray());
+
+        shadow_caster.enabled = true;
+        ApplyShadowShapeFromCollider(shadow_caster, collider);
+
+        if (log_shadows_shapes)
+        {
+            Debug.Log($"(ColliderBank - load_shadow_caster_data) After setup - {go.name}. Collider: {collider?.GetType().Name}, ShapePath points: {shadow_caster.shapePath?.Length ?? 0}, Shape: {string.Join(", ", shadow_caster.shapePath ?? System.Array.Empty<Vector3>())}");
+        }
+        // i)f (log_shadows_shapes) { Debug.Log($"(ColliderBank - load_shadow_caster_data) Loaded shadow caster data to {go.name}. shape is {string.Join(", ", shadow_caster.shapePath)}"); }
+    }
+
+    private static FieldInfo shape_path = typeof(ShadowCaster2D).GetField("m_ShapePath", BindingFlags.Instance | BindingFlags.NonPublic);
+    protected static void ApplyShadowShapeFromCollider(ShadowCaster2D shadowCaster, Collider2D collider)
+    {
+        if (shadowCaster == null || collider == null) return;
+
+        if (collider is BoxCollider2D box)
+        {
+            Vector2 size = box.size;
+            Vector2 offset = box.offset;
+            float hx = size.x * 0.5f;
+            float hy = size.y * 0.5f;
+            Vector3[] pts = new Vector3[4];
+            pts[0] = new Vector3(offset.x - hx, offset.y - hy, 0f);
+            pts[1] = new Vector3(offset.x - hx, offset.y + hy, 0f);
+            pts[2] = new Vector3(offset.x + hx, offset.y + hy, 0f);
+            pts[3] = new Vector3(offset.x + hx, offset.y - hy, 0f);
+            shape_path.SetValue(shadowCaster, pts);
+            return;
+        }
+
+        if (collider is CircleCollider2D c)
+        {
+            int segments = 12;
+            float r = c.radius;
+            Vector2 offset = c.offset;
+            Vector3[] pts = new Vector3[segments];
+            for (int i = 0; i < segments; i++)
+            {
+                float a = (2f * Mathf.PI * i) / segments;
+                pts[i] = new Vector3(offset.x + Mathf.Cos(a) * r, offset.y + Mathf.Sin(a) * r, 0f);
+            }
+            shape_path.SetValue(shadowCaster, pts);
+            return;
+        }
+
+        // fallback: use collider.bounds converted to local space
+        Bounds b = collider.bounds;
+        Vector3 centerLocal = collider.transform.InverseTransformPoint(b.center);
+        Vector3 ext = b.extents;
+        Vector3[] fallback = new Vector3[4];
+        fallback[0] = new Vector3(centerLocal.x - ext.x, centerLocal.y - ext.y, 0f);
+        fallback[1] = new Vector3(centerLocal.x - ext.x, centerLocal.y + ext.y, 0f);
+        fallback[2] = new Vector3(centerLocal.x + ext.x, centerLocal.y + ext.y, 0f);
+        fallback[3] = new Vector3(centerLocal.x + ext.x, centerLocal.y - ext.y, 0f);
+        shape_path.SetValue(shadowCaster, fallback);
     }
 }
