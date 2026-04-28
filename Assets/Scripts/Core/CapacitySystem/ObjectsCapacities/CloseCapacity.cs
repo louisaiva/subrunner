@@ -85,6 +85,7 @@ public class CloseCapacity : Capacity
             Capable.AnimPlayer.Renderer.sortingLayerName = "main";
             Capable.AnimPlayer.Renderer.sortingOrder = 0;
         }
+        if (Capable is Door door2) { door2.UpdateIF(door2.Orientation); }
 
         if (log) { Debug.Log(Capable.name + " is closed !"); }
     }

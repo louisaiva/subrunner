@@ -454,7 +454,7 @@ public class ItemData : CapableData
         // anim data
         if (capdata.anim_data != null)
         {
-            AnimData new_anim_data = capdata.anim_data.Duplicate();
+            AnimPlayerData new_anim_data = capdata.anim_data.Duplicate();
             new_anim_data.anim_capacity_priorities = this.anim_data.anim_capacity_priorities; // we keep the same anim capa priorities as the corpse template (ex : corpse anim capa priorities will be different from player anim capa priorities for example, because we want the corpse to play the "die" animation which has a higher priority than the "walk" animation for example, while for the player we want the "walk" animation to have a higher priority than the "die" animation for example)
             anim_data = new_anim_data;
         }

@@ -68,6 +68,9 @@ public class AnimPlayer : MonoBehaviour
     [SerializeField] private List<AnimCapacityPriority> anim_capacity_priorities = new();
     private AnimCapacityPriority current_capacity_priority = null;
 
+    [Header("Parameters")]
+    [SerializeField] private bool never_flip = false;
+
     [Header("Logs")]
     public bool log = false;
     public bool log_orientation = false;
@@ -296,7 +299,8 @@ public class AnimPlayer : MonoBehaviour
         Renderer.sprite = anim.sprites[current_frame];
 
         // we flip the sprite renderer if needed
-        if (anim.flipX && !Renderer.flipX) { Renderer.flipX = true; }
+        if (never_flip) { Renderer.flipX = false; }
+        else if (anim.flipX && !Renderer.flipX) { Renderer.flipX = true; }
         else if (!anim.flipX && Renderer.flipX) { Renderer.flipX = false; }
 
         if (log_advanced) { Debug.Log("(AnimPlayer) Playing " + anim.name + " at frame " + frame + " flipX: " + anim.flipX); }
@@ -544,7 +548,7 @@ public class AnimPlayer : MonoBehaviour
     // LOAD DATA
     private Material material;
     private LocalKeyword visibleKeyword;
-    public void LoadPlayerData(AnimData data)
+    public void LoadPlayerData(AnimPlayerData data)
     {
         if (CapableBank.Instance.log_anim_layers) { Debug.Log($"(AnimPlayer) {name}'s loading data : {(data != null ? data.GetDetails() : "null")}"); }
 
@@ -572,6 +576,9 @@ public class AnimPlayer : MonoBehaviour
         Renderer.sortingLayerID = data.sorting_layer_id;
         Renderer.sortingOrder = data.order_in_layer;
 
+        // and parameters
+        never_flip = data.never_flip;
+
         // we inform each anim capacity priority of its priority
         re_index_priorities();
 
@@ -581,7 +588,7 @@ public class AnimPlayer : MonoBehaviour
     }
 
     // SAVE DATA
-    public void SaveDynamicPlayerData(AnimData data)
+    public void SaveDynamicPlayerData(AnimPlayerData data)
     {
         // we save data
         data.current_capacity = current_capacity;
@@ -598,10 +605,10 @@ public class AnimPlayer : MonoBehaviour
     /// some data such as material paths which would break the save.
     /// </summary>
     /// <returns></returns>
-    public AnimData GetStaticAnimData()
+    public AnimPlayerData GetStaticAnimData()
     {
         // get basic player data
-        AnimData data = new AnimData
+        AnimPlayerData data = new AnimPlayerData
         {
             skin = skin,
             anim_capacity_priorities = anim_capacity_priorities,
@@ -612,7 +619,10 @@ public class AnimPlayer : MonoBehaviour
             order_in_layer = Renderer.sortingOrder,
 
             // and local position
-            local_position = get_static_local_position()
+            local_position = get_static_local_position(),
+
+            // and parameters
+            never_flip = never_flip
         };
 
 
@@ -684,5 +694,73 @@ public class AnimPlayer : MonoBehaviour
             one_shot = this.one_shot
         };
         return new_priority;
+    }
+}
+
+
+// ANIMATIONS
+[Serializable] public class AnimPlayerData
+{
+    public string skin_kind;
+    public string skin;
+    public List<AnimCapacityPriority> anim_capacity_priorities;
+    public string current_capacity; // runtime only
+
+    // player sr data
+    public string material_path;
+    public int sorting_layer_id;
+    public int order_in_layer;
+    public bool never_flip;
+
+    // layers
+    public List<AnimLayerData> layers;
+
+    // position
+    public Vector2 local_position;
+
+
+    // GET & DUPLICATE
+    public AnimPlayerData Duplicate()
+    {
+        AnimPlayerData new_data = new AnimPlayerData
+        {
+            skin = this.skin,
+            current_capacity = this.current_capacity,
+            local_position = this.local_position,
+            material_path = this.material_path,
+            sorting_layer_id = this.sorting_layer_id,
+            order_in_layer = this.order_in_layer,
+            never_flip = this.never_flip,
+            layers = new List<AnimLayerData>(this.layers)
+        };
+
+        // duplicate anim_capacity_priorities
+        if (this.anim_capacity_priorities != null)
+        {
+            new_data.anim_capacity_priorities = new List<AnimCapacityPriority>();
+            foreach (AnimCapacityPriority acp in this.anim_capacity_priorities)
+            {
+                new_data.anim_capacity_priorities.Add(acp.Duplicate());
+            }
+        }
+        else { new_data.anim_capacity_priorities = null; }
+
+        return new_data;
+    }
+    public string GetDetails()
+    {
+        string details = $"anim_data :\n";
+        details += $"     - skin : {skin}\n";
+        details += $"     - current_capacity : {current_capacity}\n";
+        if (anim_capacity_priorities != null) { details += $"     - anim_capacity_priorities : {anim_capacity_priorities.Count} priorities\n"; }
+        else { details += $"     - anim_capacity_priorities : null\n"; }
+        if (layers != null) { details += $"     - layers : {layers.Count} layers"; }
+        else { details += $"     - layers : null"; }
+        details += $"     - local_position : {local_position}\n";
+        details += $"     - material_path : {material_path}\n";
+        details += $"     - sorting_layer_id : {sorting_layer_id}\n";
+        details += $"     - order_in_layer : {order_in_layer}\n";
+        details += $"     - never_flip : {never_flip}\n";
+        return details;
     }
 }

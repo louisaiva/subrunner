@@ -7,8 +7,6 @@ public class Door : Capable, Interactable, Openable
 {
 
     public bool log_interact_kf = false;
-    private static bool debug_move_sin_feet = false;
-    private Vector2 base_feet_collider_offset = new Vector2(-888f, -999f);
 
     [Header("Door")]
     public bool is_vertical = false;
@@ -42,7 +40,19 @@ public class Door : Capable, Interactable, Openable
 
     [Header("Interact Key Feedback Vertical position")]
     [SerializeField] private IFPositionSwitcher if_switcher;
-    private Transform interact_kf;
+    private Transform _interact_kf;
+    protected Transform interact_kf
+    {
+        get
+        {
+            if (_interact_kf == null)
+            {
+                HoverCapacity hover_capacity = GetCapacity<HoverCapacity>();
+                if (hover_capacity != null) { _interact_kf = hover_capacity.Canvas_kf; }
+            }
+            return _interact_kf;
+        }
+    }
 
     [Header("Cached components")]
     private OpenCapacity _opener;
@@ -82,11 +92,8 @@ public class Door : Capable, Interactable, Openable
         // on récupère les composants
         shadow_caster = door_collider.GetComponent<ShadowCaster2D>();
 
-        // on récup l'interact kf
-        interact_kf = GetCapacity<HoverCapacity>().Canvas_kf;
-
         // on close
-        if (Closer is not null && Closer.Able) { close(); }
+        if (Closer is not null && Closer.Able) { close(silently: true); }
     }
 
 
@@ -115,25 +122,6 @@ public class Door : Capable, Interactable, Openable
 
         Opener.Open(play_anim_and_sound: !silently);
         if (!silently) { OnDoorOpen?.Invoke(this); }
-
-
-        // on récupère la room du perso
-        /* Room2 perso_room = Controller.Instance.current_room;
-
-        // on vérifie que la room du perso est bien une des 2 rooms de la porte
-        if (!(perso_room == room1 || perso_room == room2)) { return; }
-
-
-        // on récupère la room qui s'ouvre
-        Room2 room_to_open = perso_room == room1 ? room2 : room1;
-        if (room_to_open == null)
-        {
-            if (log) { Debug.LogWarning("(Door) Room2 to open is null!"); }
-            return;
-        }
-
-        // on affiche les lights de la room qui s'ouvre
-        room_to_open.Show(); */
     }
     public void close(bool silently = false)
     {
@@ -145,23 +133,6 @@ public class Door : Capable, Interactable, Openable
 
         Closer.Close(play_anim_and_sound: !silently);
         if (!silently) { OnDoorClose?.Invoke(this); }
-
-        /* // on récupère la room du perso
-        Room2 perso_room = Controller.Instance.current_room;
-
-        // on vérifie que la room du perso est bien une des 2 rooms de la porte
-        if (!(perso_room == room1 || perso_room == room2)) { return; }
-
-        // on récupère la room qui se ferme
-        Room2 room_to_close = perso_room == room1 ? room2 : room1;
-        if (room_to_close == null)
-        {
-            if (log) { Debug.LogWarning("(Door) Room2 to close is null!"); }
-            return;
-        }
-
-        // on cache les lights de la room qui se ferme
-        room_to_close.Hide(); */
     }
 
 
@@ -169,15 +140,6 @@ public class Door : Capable, Interactable, Openable
     protected override void Update()
     {
         base.Update();
-
-        if (debug_move_sin_feet)
-        {
-            if (base_feet_collider_offset.x == -888f && base_feet_collider_offset.y == -999f)
-            {
-                base_feet_collider_offset = FeetCollider.offset;
-            }
-            FeetCollider.offset = new Vector2(base_feet_collider_offset.x, base_feet_collider_offset.y + Mathf.Sin(Time.time) * 0.5f);
-        }
 
         if (Controller.Instance == null) { return; }
 
@@ -212,19 +174,33 @@ public class Door : Capable, Interactable, Openable
 
         // on set la nouvelle orientation
         Orientation = new_orientation;
-        update_interact_kf_position(new_orientation);
+        UpdateIF(new_orientation);
     }
 
     // INTERACT KF
-    private void update_interact_kf_position(Vector2 orientation)
+    public void UpdateIF(Vector2 orientation)
     {
         if (interact_kf == null) { return; }
-        if (!is_vertical) { return; } // on ne bouge le kf que si la porte est verticale
         float vertical_position;
+        Vector2 main_door_direction = is_vertical ? Vector2.up : Vector2.right;
 
         // d'abord on veut savoir si la porte est ouverte ou fermée
-        if (is_open && !is_moving) { vertical_position = orientation == Vector2.up ? if_switcher.opened_interact_kf_y.x : if_switcher.opened_interact_kf_y.y; }
-        else { vertical_position = orientation == Vector2.up ? if_switcher.closed_interact_kf_y.x : if_switcher.closed_interact_kf_y.y; }
+        if (!is_moving && is_open) // ouverte seulement
+        {
+            vertical_position =
+
+                orientation == main_door_direction
+                ? if_switcher.opened_interact_kf_y.x
+                : if_switcher.opened_interact_kf_y.y;
+        }
+        else
+        {
+            vertical_position =
+
+                orientation == main_door_direction
+                ? if_switcher.closed_interact_kf_y.x
+                : if_switcher.closed_interact_kf_y.y;
+        }
 
         if (log_interact_kf) { Debug.Log("(Door) " + name + " orientation : " + orientation + ", is_open : " + is_open + ", vertical_position : " + vertical_position); }
 
@@ -243,9 +219,6 @@ public class Door : Capable, Interactable, Openable
         // we get the shadow caster reference
         shadow_caster = door_collider.GetComponent<ShadowCaster2D>();
 
-        // on récup l'interact kf
-        interact_kf = GetCapacity<HoverCapacity>().Canvas_kf;
-
         if (data is not DoorData door_data) { return; }
         
         // on met les paramètres de la porte
@@ -260,8 +233,6 @@ public class Door : Capable, Interactable, Openable
 
         // on met à jour la position du kf d'interaction
         this.if_switcher = door_data.if_switcher;
-
-
     }
     public override void UnloadData()
     {
@@ -270,6 +241,9 @@ public class Door : Capable, Interactable, Openable
         // we clear the door collider & shadow caster references
         _door_collider = null;
         shadow_caster = null;
+
+        // we clear the interact kf reference
+        _interact_kf = null;
 
         // and other references
         _opener = null;

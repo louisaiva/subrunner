@@ -83,6 +83,7 @@ public class OpenCapacity : Capacity
             Capable.AnimPlayer.Renderer.sortingLayerName = "main";
             Capable.AnimPlayer.Renderer.sortingOrder = -1;
         }
+        if (Capable is Door door2) { door2.UpdateIF(door2.Orientation); }
 
         Debug.Log(Capable.ID + " is open !");
         // if (log) { Debug.Log(Capable.ID + " is open !"); }

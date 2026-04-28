@@ -23,7 +23,7 @@ public interface ICapableData : IData
     public string tag;
 
     // ANIM PLAYER
-    public AnimData anim_data;
+    public AnimPlayerData anim_data;
 
     // INVENTORY
     public InventoryData inventory;
@@ -154,66 +154,6 @@ public interface ICapableData : IData
 }
 
 
-// ANIMATIONS
-[Serializable] public class AnimData
-{
-    public string skin_kind;
-    public string skin;
-    public List<AnimCapacityPriority> anim_capacity_priorities;
-    public string current_capacity; // runtime only
-
-    // player sr data
-    public string material_path;
-    public int sorting_layer_id;
-    public int order_in_layer;
-
-    // layers
-    public List<AnimLayerData> layers;
-    
-    // position
-    public Vector2 local_position;
-
-
-    // GET & DUPLICATE
-    public AnimData Duplicate()
-    {
-        AnimData new_data = new AnimData
-        {
-            skin = this.skin,
-            current_capacity = this.current_capacity,
-            local_position = this.local_position,
-            material_path = this.material_path,
-            sorting_layer_id = this.sorting_layer_id,
-            order_in_layer = this.order_in_layer,
-            layers = new List<AnimLayerData>(this.layers)
-        };
-
-        // duplicate anim_capacity_priorities
-        if (this.anim_capacity_priorities != null)
-        {
-            new_data.anim_capacity_priorities = new List<AnimCapacityPriority>();
-            foreach (AnimCapacityPriority acp in this.anim_capacity_priorities)
-            {
-                new_data.anim_capacity_priorities.Add(acp.Duplicate());
-            }
-        }
-        else { new_data.anim_capacity_priorities = null; }
-
-        return new_data;
-    }
-    public string GetDetails()
-    {
-        string details = $"anim_data :\n";
-        details += $"     - skin : {skin}\n";
-        details += $"     - current_capacity : {current_capacity}\n";
-        if (anim_capacity_priorities != null) { details += $"     - anim_capacity_priorities : {anim_capacity_priorities.Count} priorities\n"; }
-        else { details += $"     - anim_capacity_priorities : null\n"; }
-        if (layers != null) { details += $"     - layers : {layers.Count} layers"; }
-        else { details += $"     - layers : null"; }
-        details += $"     - local_position : {local_position}\n";
-        return details;
-    }
-}
 
 
 

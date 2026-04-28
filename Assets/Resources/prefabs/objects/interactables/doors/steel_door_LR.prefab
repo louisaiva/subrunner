@@ -115,7 +115,7 @@ MonoBehaviour:
     speed: 1
     flipX: 0
   follow_duration: 1
-  never_flip: 0
+  never_flip: 1
   log: 0
   log_frames: 0
   log_assign: 0
@@ -433,7 +433,7 @@ MonoBehaviour:
     speed: 1
     flipX: 0
   follow_duration: 1
-  never_flip: 0
+  never_flip: 1
   log: 0
   log_frames: 0
   log_assign: 0
@@ -596,13 +596,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5417400195445535145}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3300976171874288010}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!212 &320180333569335183
 SpriteRenderer:
   serializedVersion: 2
@@ -836,6 +836,7 @@ MonoBehaviour:
     - close
     lock_orientation: 1
     one_shot: 1
+  never_flip: 1
   log: 0
   log_orientation: 1
   log_advanced: 0
@@ -906,6 +907,7 @@ MonoBehaviour:
       material_path: 
       sorting_layer_id: 0
       order_in_layer: 0
+      never_flip: 0
       layers: []
       local_position: {x: 0, y: 0}
     inventory:
@@ -932,8 +934,8 @@ MonoBehaviour:
   room1_id: 
   room2_id: 
   if_switcher:
-    closed_interact_kf_y: {x: 1, y: 1}
-    opened_interact_kf_y: {x: 2, y: 2}
+    closed_interact_kf_y: {x: 0.75, y: 0.75}
+    opened_interact_kf_y: {x: 1.75, y: 1.75}
 --- !u!1001 &82590061318272792
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -948,7 +950,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7589433281385587410, guid: 06b0fbc3848d99240805d81aa41eaa40, type: 3}
       propertyPath: closing_duration
-      value: 0.4
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 9029424963950506204, guid: 06b0fbc3848d99240805d81aa41eaa40, type: 3}
       propertyPath: m_LocalPosition.x

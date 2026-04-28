@@ -164,7 +164,7 @@ public class CapableBank : MonoBehaviour
     }
 
     // ANIM PLAYER & COLLIDERS
-    private void load_anim_data(AnimPlayer player, AnimData anim_data)
+    private void load_anim_data(AnimPlayer player, AnimPlayerData anim_data)
     {
         // we get the layers parent
         Transform layer_parent = player.transform;

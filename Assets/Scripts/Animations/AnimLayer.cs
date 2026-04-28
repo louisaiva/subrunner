@@ -204,6 +204,7 @@ public class AnimLayer : MonoBehaviour
         name = $"layer_{layer_data.skin}";
         skin = layer_data.skin;
         transform.localPosition = layer_data.local_position;
+        transform.localEulerAngles = layer_data.local_rotation;
 
         // load sr data
         sr.material = Resources.Load<Material>(layer_data.material_path);
@@ -227,6 +228,7 @@ public class AnimLayer : MonoBehaviour
             local_position = transform.localPosition,
             never_flip = never_flip,
             follow_duration = follow_duration,
+            local_rotation = transform.localEulerAngles,
 
             // load sr data
             material_path = get_material_path(sr),
@@ -259,6 +261,7 @@ public class AnimLayer : MonoBehaviour
 {
     public string skin;
     public Vector2 local_position;
+    public Vector3 local_rotation;
 
     // layer sr data
     public string material_path;
