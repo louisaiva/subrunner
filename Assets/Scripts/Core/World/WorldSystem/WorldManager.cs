@@ -51,7 +51,7 @@ public class WorldManager : MonoBehaviour
         #else
 
         // if in build, we load the paths from the json data file
-        AppManager.LoadJsonFromAsset<WorldIconsPath>(world_icons_data_path, out loaded_world_icons_path);
+        AppManager.LoadJsonFromAsset("data/world_icons_path", out WorldIconsPath loaded_world_icons_path);
         this.world_icons_path = loaded_world_icons_path;
         #endif
 

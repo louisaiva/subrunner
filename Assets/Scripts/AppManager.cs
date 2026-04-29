@@ -2,6 +2,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.IO;
+using Unity.VisualScripting;
+
 
 
 
@@ -211,5 +213,12 @@ public class AppManager : MonoBehaviour
             return null;
         }
         return System.IO.File.ReadAllText(path);
+    }
+
+    public static void OpenWorldsFolder()
+    {
+        string worlds_folder_path = Path.Combine(Application.persistentDataPath, "worlds");
+        EnsureFolderExists(worlds_folder_path);
+        Application.OpenURL(worlds_folder_path);
     }
 }

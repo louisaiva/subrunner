@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Linq;
+using System;
+
 
 
 
@@ -90,8 +92,8 @@ public class WorldSaver : MonoBehaviour
 
         // get the data
         WorldData data = world.GetStaticData();
-        data.last_update_date = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        data.creation_date = just_created ? data.last_update_date : data.creation_date;
+        data.last_update_date = DateTime.Now.ToString();
+        data.creation_date = (just_created || string.IsNullOrEmpty(data.creation_date)) ? data.last_update_date : data.creation_date;
 
         // check if we just created it and we don't have any icon, then we set random color and default icon
         if (just_created && string.IsNullOrEmpty(data.icon_path))
