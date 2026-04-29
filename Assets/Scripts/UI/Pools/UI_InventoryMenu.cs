@@ -203,5 +203,10 @@ public class UI_InventoryMenu : UI_Pool
 
 public interface Panelable
 {
-    UI_PanelManager PanelManager { get;  }
+    public UI_PanelManager PanelManager { get;  }
+}
+
+public interface Scrollable
+{
+    public UI_Scroller Scroller { get; }
 }

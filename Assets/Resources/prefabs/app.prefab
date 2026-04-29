@@ -1269,6 +1269,7 @@ MonoBehaviour:
     creation_date: 
     last_update_date: 
     icon_path: 
+    icon_name: 
     color: {r: 0, g: 0, b: 0, a: 0}
   world_colors:
   - {r: 0.62352943, g: 0.9019608, b: 0.93333334, a: 1}
@@ -1308,9 +1309,12 @@ MonoBehaviour:
   - {fileID: 545293285, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
   - {fileID: -1480445524, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
   - {fileID: 2125860743, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  auto_load_on_creation: 0
+  log_icons_paths: 0
   log_world_data_loading_on_awake: 0
   hide_files_not_found: 0
   log_selecting_world: 0
+  log_create: 0
 --- !u!1 &7970305435618458122
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73ab5b27c7fe35c499124bdd27dcc8a5, type: 3}
   m_Name: world_selector
   m_EditorClassIdentifier: Assembly-CSharp::UI_PoolSettings
-  Duration: 0.1
+  Duration: 0.2
   CanBeHidden: 1
   CanBeCanceled: 1
   UsePersoInputs: 0
   TimeScale: 0
-  BackgroundAlpha: 0
-  ChromaticAberration: 0
-  Bloom: 0
+  BackgroundAlpha: 0.95
+  ChromaticAberration: 6
+  Bloom: 200

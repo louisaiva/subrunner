@@ -64,6 +64,9 @@ public class UI_Pool : MonoBehaviour
         // stop any started coroutine
         StopCoroutineIfAny();
 
+        // on fait les actions avant showing
+        before_showing();
+
         // on lance l'affichage
         if (log_extended) { Debug.Log($"(UI_Pool - ShowCoroutine) starting show coroutine : {Reference}"); }
         current_transition = StartCoroutine(show_coroutine(dont_show, duration_override, was_stacked));
@@ -142,6 +145,8 @@ public class UI_Pool : MonoBehaviour
             if (!stacked_elements.Contains(ui_elements[i])) { dont_show.Add(ui_elements[i]); }
         }
 
+        before_showing();
+
         // on lance l'affichage
         if (log_extended) { Debug.Log($"(UI_Pool - StackShowCoroutine) starting show coroutine : {Reference}"); }
         current_transition = StartCoroutine(show_coroutine(dont_show, duration_override));
@@ -159,6 +164,9 @@ public class UI_Pool : MonoBehaviour
         // on clear la transition
         current_transition = null;
     }
+
+    // LOW BEFORE SHOWING
+    protected virtual void before_showing() { } // only useful for overriding properly
 
     // LOW SHOWING
     protected virtual IEnumerator show_coroutine(List<GameObject> dont_show = null, float duration_override = -1f, bool was_stacked = false)

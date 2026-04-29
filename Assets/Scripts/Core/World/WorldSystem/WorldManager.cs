@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Unity.VectorGraphics;
 using UnityEngine;
 
 public class WorldManager : MonoBehaviour
@@ -27,6 +28,7 @@ public class WorldManager : MonoBehaviour
     [Header("World Creation")]
     [SerializeField] private List<Color> world_colors = new List<Color>();
     [SerializeField] private List<Sprite> world_icons = new List<Sprite>();
+    [SerializeField] private bool auto_load_on_creation = false;
     private WorldIconsPath world_icons_path;
     private string world_icons_data_path = Path.Combine("data", "world_icons_path.json");
     protected void load_world_icons_paths()
@@ -69,7 +71,7 @@ public class WorldManager : MonoBehaviour
             Debug.Log(log);
         }
     }
-
+    
 
     [Header("Logs awake")]
     [SerializeField] private bool log_icons_paths = false;
@@ -78,6 +80,9 @@ public class WorldManager : MonoBehaviour
 
     [Header("Logs selecting world")]
     [SerializeField] private bool log_selecting_world = false;
+
+    [Header("Logs creating world")]
+    [SerializeField] private bool log_create = false;
 
 
     // CHECK EXISTING WORLDS
@@ -122,9 +127,7 @@ public class WorldManager : MonoBehaviour
         }
     }
 
-
-
-    // SETTERS
+    // SELECT WORLD
     public void SelectWorld(WorldData world_data)
     {
         selected_world_data = world_data;
@@ -141,6 +144,52 @@ public class WorldManager : MonoBehaviour
 
         SelectWorld(world_data);
     }
+
+
+
+    public void CreateNewWorld()
+    {
+        // we ask a popup to enter the world name
+        UI_Manager.Instance.OpenInputPopup("Enter world name", "world", CreateNewWorld);
+    }
+    public void CreateNewWorld(string world_name)
+    {
+        // we check if the world name is valid
+        if (string.IsNullOrEmpty(world_name))
+        {
+            if (log_create) { Debug.LogWarning("(WorldManager) Failed to create new world because the world name is null or empty."); }
+            return;
+        }
+
+        // and we check if the world name is not already taken
+        if (existing_worlds_data.ContainsKey(world_name))
+        {
+            // we add a random number to the name and try again
+            string new_world_name = world_name + "_" + UnityEngine.Random.Range(0, 1000);
+            if (log_create) { Debug.LogWarning($"(WorldManager) Failed to create new world because the world name '{world_name}' is already taken. Trying with new name: '{new_world_name}'"); }
+            CreateNewWorld(new_world_name);
+            return;
+        }
+
+        // finally we can create the new world data and enter it
+        WorldData new_data = new WorldData()
+        {
+            id = world_name,
+            creation_date = DateTime.Now.ToString(),
+            last_update_date = DateTime.Now.ToString(),
+            color = GetRandomWorldColor(),
+            icon_path = GetRandomIconPath(out string icon_name),
+            icon_name = icon_name
+        };
+        existing_worlds_data.Add(world_name, new_data);
+        if (log_create) { Debug.Log($"(WorldManager) Created new world with world_id: {world_name}"); }
+
+        if (!auto_load_on_creation) { return; }
+        // we select & load the new world
+        SelectWorld(new_data);
+        SceneLoader.Instance.LoadGame();
+    }
+
 
 
 

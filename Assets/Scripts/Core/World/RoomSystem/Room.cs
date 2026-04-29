@@ -284,6 +284,7 @@ public class Room : MonoBehaviour
     {
         if (data == null) { return; }
         if (AppManager.Instance.IsQuitting) { return; }
+        if (GameManager.IsClosingGame) { return; }
         if (RoomEngine.Instance == null) { return; }
         if (_unloading) { return; } // if we are unloading the room we don't want any trigger event
 

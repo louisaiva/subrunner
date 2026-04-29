@@ -552,6 +552,16 @@ public class UI_Manager : Singleton<UI_Manager>
 
         return localPoint;
     }
+    private Canvas _canvas;
+    public Canvas Canvas
+    {
+        get
+        {
+            if (_canvas == null) { _canvas = GetComponent<Canvas>(); }
+            if (_canvas == null) { Debug.LogError($"(UI_Manager) No Canvas found on the {name} game object. Please add one to the scene."); }
+            return _canvas;
+        }
+    }
 
 
     // CALLER METHODS

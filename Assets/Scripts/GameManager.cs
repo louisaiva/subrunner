@@ -15,6 +15,7 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class GameManager : MonoBehaviour
 {
+    public static bool IsClosingGame = false;
 
     [Header("Game Music Theme")]
     [SerializeField] private string game_theme_to_play = "i'm so hungry";
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviour
     {
         if (Instance == null) { Instance = this; }
         else if (Instance != this) { Destroy(gameObject); return; }
+        IsClosingGame = false;
 
         // we instantly load the world even if World.Instance is not defined yet.
         // so we use World.StaticInstance which will find the world instance with FindObjectByType
@@ -94,5 +96,10 @@ public class GameManager : MonoBehaviour
     }
 
 
-
+    // ON DESTROY
+    private void OnDestroy()
+    {
+        IsClosingGame = true;
+        Instance = null;
+    }
 }

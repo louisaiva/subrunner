@@ -12,6 +12,9 @@ public class HomeInputsController : InputController
     [SerializeField] private UI_Navigator navigator;
     [SerializeField] private UIActions ui_inputs;
 
+    [Header("Logs")]
+    [SerializeField] private bool log_scrolling = false;
+
     // START
     protected void Start()
     {
@@ -163,9 +166,16 @@ public class HomeInputsController : InputController
 
         // on check si le current pool est un panelable (si non, ça sert a r de scroll)
         UI_Pool current_pool = UI_Manager.Instance.GetCurrentPool();
-        if (current_pool == null || current_pool is not Panelable panelable) { return; }
-
-        Debug.Log($"(HomeInputsController) rolling panel with input {input}");
-        panelable.PanelManager.RollPanel((int)input);
+        if (current_pool == null) { return; }
+        if (current_pool is Panelable panelable)
+        {
+            if (log_scrolling) { Debug.Log($"(HomeInputsController) rolling panel with input {input}"); }
+            panelable.PanelManager.RollPanel((int)input);
+        }
+        else if (current_pool is Scrollable scrollable)
+        {
+            if (log_scrolling) { Debug.Log($"(HomeInputsController) scrolling with input {input}"); }
+            scrollable.Scroller.Scroll(input);
+        }
     }
 }
