@@ -54,7 +54,7 @@ public class LevelEngine : BSOD_System<LevelEngine>
         string log_levels_details = "\n\n";
 
         // we load all the json files in the data path and convert them to LevelData objects
-        string[] files = GameManager.Instance.LoadJsonsFromWorldDataPath("levels");
+        string[] files = AppManager.LoadJsonsFromWorldDataPath("levels");
         foreach (string file in files)
         {
             LevelData data = JsonUtility.FromJson<LevelData>(file);

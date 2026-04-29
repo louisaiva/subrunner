@@ -12189,6 +12189,10 @@ MonoBehaviour:
   world_id: doors2
   data:
     levels_ids: []
+    creation_date: 
+    last_update_date: 
+    icon_path: 
+    color: {r: 0, g: 0, b: 0, a: 0}
   fallback_spawn_point: {fileID: 1209737554}
   log: 1
   log_id_generation: 0
@@ -68289,14 +68293,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: log_variant_skins
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: extract_json_on_load
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -217370,7 +217366,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: {r: 0.7882353, g: 0.8980392, b: 0.5568628, a: 1}
+  force_our_color: 0
   disable_on_revert: 0
+  disable_on_color: 0
   log: 0
 --- !u!222 &8247453137791463685
 CanvasRenderer:

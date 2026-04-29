@@ -110,22 +110,43 @@ public class World : BSOD_System<World>
     public bool log_id_generation = false;
 
     // LOAD / UNLOAD WORLD
-    public void LoadWorld(string world_id)
+    public async void LoadWorld(string world_id)
     {
         string json = extract_world_json(world_id);
-        if (json == null) { return; }
-
-        data = JsonUtility.FromJson<WorldData>(json);
+        if (json == null)
+        {
+            if (log) { Debug.LogWarning($"(World) Failed to load world data for world_id: {world_id} -- json is null."); }
+            return;
+        }
 
         // load the data inside the world
+        data = JsonUtility.FromJson<WorldData>(json);
         this.world_id = world_id;
+        data.id = world_id; // we set the world_id in the data for easier access to it later, even if it's not serialized
         if (log) { Debug.Log($"(World) Loaded world data for world_id: {world_id}\n\n{json}"); }
+
 
         // and then we init all the engines
         LevelEngine.StaticInstance.Init();
         RoomEngine.StaticInstance.Init();
         CapableSystem.StaticInstance.Init();
         CapacityEngine.StaticInstance.Init();
+
+        // we wait a frame to be sure
+        await System.Threading.Tasks.Task.Yield();
+
+        // we load the start level
+        if (data == null || data.levels_ids == null || data.levels_ids.Count == 0)
+        {
+            if (log) { Debug.Log($"(World) STARTING WORLD: {world_id} (!) {(data == null ? "DATA IS NULL" : "NO LEVELS FOUND")}"); }
+            return;
+        }
+        string start_level_id = data.levels_ids[0];
+        if (log) { Debug.Log($"(World) STARTING WORLD: {world_id}  -- Level: {start_level_id}"); }
+        if (!string.IsNullOrEmpty(start_level_id)) { LevelEngine.StaticInstance.LoadLevel(start_level_id); }
+
+        // we tp the player to the fallback spawn point while loading the world
+        if (fallback_spawn_point != null) { Controller.StaticInstance.Capable.transform.position = fallback_spawn_point.position; }
     }
     private string extract_world_json(string world_id)
     {
@@ -166,38 +187,29 @@ public class World : BSOD_System<World>
         }
     }
 
-    // START
-    private void Start()
-    {
-        // we load the start level
-        if (data == null || data.levels_ids == null || data.levels_ids.Count == 0)
-        {
-            if (log) { Debug.Log($"(World) STARTING WORLD: {world_id} (!) {(data == null ? "DATA IS NULL" : "NO LEVELS FOUND")}"); }
-            return;
-        }
-        string start_level_id = data.levels_ids[0];
-        if (log) { Debug.Log($"(World) STARTING WORLD: {world_id}  -- Level: {start_level_id}"); }
-        if (!string.IsNullOrEmpty(start_level_id)) { LevelEngine.Instance.LoadLevel(start_level_id); }
 
-        // we tp the player to the fallback spawn point while loading the world
-        if (fallback_spawn_point != null) { Controller.Instance.Capable.transform.position = fallback_spawn_point.position; }
-    }
 
     // WORLD SAVING
-    public static void EnsureWorldDataHierarchy(string world_id)
+    /// <summary>
+    /// this ensures that all the world data hierarchy folders exists for
+    /// properly saving the given world data
+    /// </summary>
+    /// <param name="world_id"></param>
+    /// <returns>returns true if the hierarchy was just created !</returns>
+    public static bool EnsureWorldDataHierarchy(string world_id)
     {
         if (string.IsNullOrEmpty(world_id))
         {
             if (StaticInstance.log) { Debug.LogWarning("(World) Cannot ensure world data hierarchy : world_id is null or empty."); }
-            return;
+            return false; 
         }
 
-        // create the worlds folder if it doesn't exist
+        // create the /worlds folder if it doesn't exist
         AppManager.EnsureFolderExists(WorldDataPath);
 
         // then we do the same for the current world folder
         string world_path = GetWorldDataPath(world_id);
-        AppManager.EnsureFolderExists(world_path);
+        bool world_folder_created = AppManager.EnsureFolderExists(world_path);
 
         // then we ensure that the data folder hierarchy is correct (create them if they don't exist)
         // world folder hierarchy is :
@@ -215,7 +227,7 @@ public class World : BSOD_System<World>
         AppManager.EnsureFolderExists(Path.Combine(world_path, "capacities"));
 
         // we save the world data to a json file in the current world folder
-        // string world_data_json_path = Path.Combine(world_path, "world_data.json");
+        return world_folder_created;
     }
 
     // STATIC DATA EXTRACTION
@@ -224,7 +236,12 @@ public class World : BSOD_System<World>
         WorldData new_data = new WorldData
         {
             levels_ids = get_static_levels_ids(),
-            generated_ids_counters = data != null ? data.generated_ids_counters : new Dictionary<string, int>()
+            generated_ids_counters = data != null ? data.generated_ids_counters : new Dictionary<string, int>(),
+            creation_date = data != null ? data.creation_date : string.Empty,
+            last_update_date = data != null ? data.last_update_date : string.Empty,
+            color = data != null ? data.color : Color.white,
+            icon_path = data != null ? data.icon_path : "",
+            icon_name = data != null ? data.icon_name : ""
         };
 
         return new_data;
@@ -345,6 +362,15 @@ public class World : BSOD_System<World>
 
 [Serializable] public class WorldData
 {
+    [NonSerialized] public string id;
     public List<string> levels_ids;
     public Dictionary<string, int> generated_ids_counters;
+
+
+    // meta data
+    public string creation_date;
+    public string last_update_date;
+    public string icon_path;
+    public string icon_name;
+    public Color color;
 }

@@ -1,6 +1,8 @@
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.IO;
+
 
 
 #if UNITY_EDITOR
@@ -139,10 +141,75 @@ public class AppManager : MonoBehaviour
     /// Ensures that a folder exists at the given path. If it doesn't exist, it creates it.
     /// </summary>
     /// <param name="path">the path to check. should be reachable</param>
-    public static void EnsureFolderExists(string path)
+    /// <returns>returns true if the folder was just created, false if it already existed</returns>
+    public static bool EnsureFolderExists(string path)
     {
-        if (System.IO.Directory.Exists(path)) { return; }
-        System.IO.Directory.CreateDirectory(path);
+        if (Directory.Exists(path)) { return false; }
+        Directory.CreateDirectory(path);
+        return true;
     }
 
+    // JSON DATA LOADING FROM ASSETS
+    public static string[] LoadJsonsFromAssets(string data_folder)
+    {
+        TextAsset[] json_assets = Resources.LoadAll<TextAsset>(data_folder);
+        string[] jsons = new string[json_assets.Length];
+        for (int i = 0; i < json_assets.Length; i++)
+        {
+            jsons[i] = json_assets[i].text;
+        }
+        return jsons;
+    }
+    public static string LoadJsonFromAsset(string path)
+    {
+        return Resources.Load<TextAsset>(path).text;
+    }
+    public static string LoadJsonFromAsset<T>(string path, out T data)
+    {
+        string json = Resources.Load<TextAsset>(path).text;
+        data = JsonUtility.FromJson<T>(json);
+        return json;
+    }
+
+
+    // JSON DATA LOADING FROM WORLD DATA PATH
+    public static string[] LoadJsonsFromWorldDataPath(string data_folder)
+    {
+        // loads jsons from the current world data path (which is in the persistent data path) instead of the assets
+        // data_folder should be like "levels" for levels or "capables"
+        string world_data_path = World.CurrentStaticWorldDataPath;
+        string jsons_path = Path.Combine(world_data_path, data_folder);
+
+        // we get all the json files in the data folder and load them as strings
+        string[] file_paths = Directory.GetFiles(jsons_path, "*.json");
+        string[] jsons = new string[file_paths.Length];
+        for (int i = 0; i < file_paths.Length; i++)
+        {
+            jsons[i] = System.IO.File.ReadAllText(file_paths[i]);
+        }
+        return jsons;
+    }
+    public static string[] LoadJsonsFromPersistentDataPath(string data_folder)
+    {
+        string path = Path.Combine(Application.persistentDataPath, data_folder);
+
+        // we get all the json files in the data folder and load them as strings
+        string[] file_paths = Directory.GetFiles(path, "*.json");
+        string[] jsons = new string[file_paths.Length];
+        for (int i = 0; i < file_paths.Length; i++)
+        {
+            jsons[i] = System.IO.File.ReadAllText(file_paths[i]);
+        }
+        return jsons;
+    }
+    public static string LoadJsonFromPersistentDataPath(string json_path)
+    {
+        string path = Path.Combine(Application.persistentDataPath, json_path);
+        if (!System.IO.File.Exists(path))
+        {
+            Debug.LogWarning($"(AppManager) Failed to load json from persistent data path: {path} because the file was not found.");
+            return null;
+        }
+        return System.IO.File.ReadAllText(path);
+    }
 }

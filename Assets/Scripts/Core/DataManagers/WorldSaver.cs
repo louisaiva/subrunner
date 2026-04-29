@@ -9,7 +9,7 @@ using System.Linq;
 using UnityEditor;
 #endif
 
-public class WorldManager : MonoBehaviour
+public class WorldSaver : MonoBehaviour
 {
 
     [Header("World Saving")]
@@ -79,7 +79,7 @@ public class WorldManager : MonoBehaviour
     }
     private void save_world_data(string id, World world)
     {
-        World.EnsureWorldDataHierarchy(id); // make sure all the folders for this world exist in the persistent data path
+        bool just_created = World.EnsureWorldDataHierarchy(id); // make sure all the folders for this world exist in the persistent data path
 
         // check if we need to save the levels data
         if (save_levels)
@@ -88,7 +88,18 @@ public class WorldManager : MonoBehaviour
             LevelManager.SaveLevels(levels.ToList(), World.GetWorldDataPath(id));
         }
 
+        // get the data
         WorldData data = world.GetStaticData();
+        data.last_update_date = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        data.creation_date = just_created ? data.last_update_date : data.creation_date;
+
+        // check if we just created it and we don't have any icon, then we set random color and default icon
+        if (just_created && string.IsNullOrEmpty(data.icon_path))
+        {
+            data.color = WorldManager.Instance.GetRandomWorldColor();
+            data.icon_path = WorldManager.Instance.GetRandomIconPath(out string icon_name);
+            data.icon_name = icon_name;
+        }
 
         // save the current WorldData to a json file
         string json = JsonUtility.ToJson(data, true);
@@ -124,13 +135,13 @@ public class WorldManager : MonoBehaviour
 
 
 #if UNITY_EDITOR
-    [CustomEditor(typeof(WorldManager))]
-    public class WorldManagerEditor : Editor
+    [CustomEditor(typeof(WorldSaver))]
+    public class WorldSaverEditor : Editor
     {
 
         public override void OnInspectorGUI()
         {
-            WorldManager saver = (WorldManager)target;
+            WorldSaver saver = (WorldSaver)target;
 
             DrawDefaultInspector();
 

@@ -21,16 +21,25 @@ public class GameManager : MonoBehaviour
     [SerializeField] private string world_to_load = "";
 
     public static GameManager Instance { get; private set; }
+
     private void Awake()
     {
         if (Instance == null) { Instance = this; }
-        else { Destroy(gameObject); return; }
+        else if (Instance != this) { Destroy(gameObject); return; }
 
         // we instantly load the world even if World.Instance is not defined yet.
         // so we use World.StaticInstance which will find the world instance with FindObjectByType
         World world = World.StaticInstance;
         if (world == null) { return; }
-        if (world_to_load != "") { world.LoadWorld(world_to_load); }
+
+        // we load the good world.
+        // for this we have multiple choices :
+        // 1. if WorldManager.SelectedWorld is defined, we load it (this is set by the world selector in the main menu)
+        // 2. else if world_to_load is defined in the inspector
+        // 3. else if the world instance has a world_id defined, we load it
+
+        if (WorldManager.Instance != null && !string.IsNullOrEmpty(WorldManager.Instance.SelectedWorld)) { world.LoadWorld(WorldManager.Instance.SelectedWorld); }
+        else if (world_to_load != "") { world.LoadWorld(world_to_load); }
         else if (world.world_id != "") { world.LoadWorld(world.world_id); }
     }
     private void Start()
@@ -86,42 +95,4 @@ public class GameManager : MonoBehaviour
 
 
 
-    // JSON DATA LOADING
-    public string[] LoadJsonsFromAssets(string data_folder)
-    {
-        TextAsset[] json_assets = Resources.LoadAll<TextAsset>(data_folder);
-        string[] jsons = new string[json_assets.Length];
-        for (int i=0; i<json_assets.Length; i++)
-        {
-            jsons[i] = json_assets[i].text;
-        }
-        return jsons;
-    }
-    /* public string[] LoadJsonsFromPath(string data_folder)
-    {
-        // we get all the json files in the data folder and load them as strings
-        string[] file_paths = System.IO.Directory.GetFiles(data_folder, "*.json");
-        string[] jsons = new string[file_paths.Length];
-        for (int i=0; i<file_paths.Length; i++)
-        {
-            jsons[i] = System.IO.File.ReadAllText(file_paths[i]);
-        }
-        return jsons;
-    } */
-    public string[] LoadJsonsFromWorldDataPath(string data_folder)
-    {
-        // loads jsons from the current world data path (which is in the persistent data path) instead of the assets
-        // data_folder should be like "levels" for levels or "capables"
-        string world_data_path = World.CurrentStaticWorldDataPath;
-        string jsons_path = Path.Combine(world_data_path, data_folder);
-
-        // we get all the json files in the data folder and load them as strings
-        string[] file_paths = Directory.GetFiles(jsons_path, "*.json");
-        string[] jsons = new string[file_paths.Length];
-        for (int i = 0; i < file_paths.Length; i++)
-        {
-            jsons[i] = System.IO.File.ReadAllText(file_paths[i]);
-        }
-        return jsons;
-    }
 }

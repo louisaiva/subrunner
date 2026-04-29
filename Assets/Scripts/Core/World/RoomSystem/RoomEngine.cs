@@ -131,7 +131,7 @@ public class RoomEngine : BSOD_System<RoomEngine>
         string log_rooms_details = "\n\n";
 
         // we load all the json files in the data path and convert them to RoomData objects
-        string[] files = GameManager.Instance.LoadJsonsFromWorldDataPath("rooms");
+        string[] files = AppManager.LoadJsonsFromWorldDataPath("rooms");
         foreach (string file in files)
         {
             RoomData data = JsonUtility.FromJson<RoomData>(file);

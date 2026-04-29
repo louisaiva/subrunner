@@ -349,7 +349,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbc26d7ebcdf22f47a529f15eaf424b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  extract_json_on_load: 1
+  extract_json_on_load: 0
   anims_path: animations/
   jsons_path: anims/
   capacities_with_no_loops:
@@ -612,7 +612,7 @@ MonoBehaviour:
   log: 0
   log_LAFAC: 0
   log_variant_awake: 0
-  log_variant_skins: 0
+  log_variant_skins: 1
   log_get_anim: 0
   skins:
   - bob
@@ -1165,6 +1165,7 @@ Transform:
   - {fileID: 7088113846698952760}
   - {fileID: 714203621573029839}
   - {fileID: 2771517310780889792}
+  - {fileID: 2011579492491785386}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6024383193295535529
@@ -1219,6 +1220,97 @@ MonoBehaviour:
   LOG_IA_ACTION: 0
   LOG_ATTACK_ACTION: 0
   LOG_EAT_ACTION: 0
+--- !u!1 &7353222153576522049
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2011579492491785386}
+  - component: {fileID: 5077967483001363746}
+  m_Layer: 0
+  m_Name: world_manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2011579492491785386
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7353222153576522049}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3744786912224508728}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5077967483001363746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7353222153576522049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7b81eef2dec2974aba708100ac1ad82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldManager
+  selected_world_data:
+    levels_ids: []
+    creation_date: 
+    last_update_date: 
+    icon_path: 
+    color: {r: 0, g: 0, b: 0, a: 0}
+  world_colors:
+  - {r: 0.62352943, g: 0.9019608, b: 0.93333334, a: 1}
+  - {r: 0.7412874, g: 0.4764151, b: 1, a: 1}
+  - {r: 0.33259168, g: 0.6981132, b: 0.44058082, a: 1}
+  - {r: 0.7111707, g: 0.64907444, b: 0.9622642, a: 1}
+  - {r: 0.8962264, g: 0.55194503, b: 0.5284354, a: 1}
+  - {r: 0.8396226, g: 0.8109549, b: 0.4950605, a: 1}
+  - {r: 0.69676065, g: 0.9339623, b: 0.6740388, a: 1}
+  - {r: 0.40574938, g: 0.8867924, b: 0.734257, a: 1}
+  - {r: 0.38875046, g: 0.73259723, b: 0.9056604, a: 1}
+  - {r: 0.38823533, g: 0.5561588, b: 0.90588236, a: 1}
+  - {r: 0.4677576, g: 0.38823533, b: 0.90588236, a: 1}
+  - {r: 0.90588236, g: 0.38823533, b: 0.6253595, a: 1}
+  - {r: 0.90588236, g: 0.47864768, b: 0.38823533, a: 1}
+  - {r: 0.90588236, g: 0.68945867, b: 0.38823533, a: 1}
+  world_icons:
+  - {fileID: 1164283678, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: 856147322, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: 1385069263, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: 1143730161, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: -1578751359, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: -1082658758, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: 859108710, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: -1376688745, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: -597588722, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: -749793323, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: 1113772625, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: 470262432, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: -699196380, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: -2074202840, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: -1681331940, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: 493740066, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: -1268178509, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: -791940165, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: -204673624, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: 545293285, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: -1480445524, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: 2125860743, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  log_world_data_loading_on_awake: 0
+  hide_files_not_found: 0
+  log_selecting_world: 0
 --- !u!1 &7970305435618458122
 GameObject:
   m_ObjectHideFlags: 0

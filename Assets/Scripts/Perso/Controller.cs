@@ -43,6 +43,16 @@ public class Controller : MonoBehaviour
 
     // AWAKE
     public static Controller Instance { get; private set; }
+    public static Controller StaticInstance
+    {
+        get
+        {
+            if (Instance != null) { return Instance; }
+            Instance = FindFirstObjectByType<Controller>();
+            if (Instance == null) { Debug.LogError($"(Controller) No instance of Controller found in the scene."); }
+            return Instance;
+        }
+    }
     public static System.Action<Controller> OnInstanceRemoved { get; set; }
     public static System.Action<Controller> OnInstanceSet { get; set; }
     protected virtual void Awake()
@@ -54,6 +64,7 @@ public class Controller : MonoBehaviour
             OnInstanceRemoved?.Invoke(Instance);
             Instance = null;
         }
+        if (Instance == this) { return; }
         Instance = this;
         OnInstanceSet?.Invoke(Instance);
     }

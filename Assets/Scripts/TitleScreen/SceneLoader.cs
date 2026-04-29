@@ -161,6 +161,7 @@ public class SceneLoader : MonoBehaviour
         // verify that the game has finish loading
         if (!loading_game.isDone) { yield return wait_for_loading_to_finish(loading_game); }
 
+
         area_loading_coroutine = StartCoroutine(transition_world_loading(load_world: true, duration: area_loading_transition_duration)); // we start the timelapse effect to show the world loading
 
         // we show the final "game loaded in x seconds text"
