@@ -64,10 +64,10 @@ public class Room : MonoBehaviour
         // here we need to load all the capables that we hold in data.capables_ids
         if ((data.capables_ids == null || data.capables_ids.Count == 0)
         && (data.movables_ids == null || data.movables_ids.Count == 0)) { return; }
-        if (CapableSystem.Instance != null)
+        if (CapableEngine.Instance != null)
         {
-            CapableSystem.Instance.LoadCapables(data.capables_ids);
-            CapableSystem.Instance.LoadCapables(data.movables_ids);
+            CapableEngine.Instance.LoadCapables(data.capables_ids);
+            CapableEngine.Instance.LoadCapables(data.movables_ids);
         }
     }
     public void UnloadData()
@@ -82,10 +82,10 @@ public class Room : MonoBehaviour
 
         // here we need to unload all the capables that we hold
         // -> interacts with CapableSystem
-        if (CapableSystem.Instance != null)
+        if (CapableEngine.Instance != null)
         {
-            CapableSystem.Instance.UnloadCapables(data.capables_ids);
-            CapableSystem.Instance.UnloadCapables(data.movables_ids);
+            CapableEngine.Instance.UnloadCapables(data.capables_ids);
+            CapableEngine.Instance.UnloadCapables(data.movables_ids);
         }
 
         this.data = null;

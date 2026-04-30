@@ -7,7 +7,7 @@ public class World : BSOD_System<World>
 {
     [Header("Data")]
     private static string worlds_path = "worlds";
-    public static string WorldDataPath => Path.Combine(Application.persistentDataPath, worlds_path);
+    public static string WorldsDataPath => Path.Combine(Application.persistentDataPath, worlds_path);
     public static string CurrentStaticWorldDataPath
     {
         get
@@ -18,14 +18,14 @@ public class World : BSOD_System<World>
                 Debug.LogError("(World) Cannot get current static world data path: world_id is null or empty.");
                 return null;
             }
-            return Path.Combine(WorldDataPath, StaticInstance.world_id);
+            return Path.Combine(WorldsDataPath, StaticInstance.world_id);
         }
     }
+    public static string GetWorldDataPath(string world_id) => Path.Combine(WorldsDataPath, world_id);
 
     [Header("Current world")]
     public string world_id;
     public WorldData data;
-    public static string GetWorldDataPath(string id) => Path.Combine(WorldDataPath, id);
 
     [Header("Spawn")]
     public Transform fallback_spawn_point; // if no player data were found on LoadWorld, we will spawn the player at this position
@@ -107,11 +107,20 @@ public class World : BSOD_System<World>
 
     [Header("Logs")]
     public bool log = false;
+    public bool log_loading_extended = false;
     public bool log_id_generation = false;
 
     // LOAD / UNLOAD WORLD
     public async void LoadWorld(string world_id)
     {
+        if (log) { Debug.Log($"(World) ----------------------------------- LOADING WORLD : {world_id}"); }
+        float start_time = Time.realtimeSinceStartup;
+        float phase_time = Time.realtimeSinceStartup;
+
+        ///
+        //  1. WE LOAD THE WORLD DATA
+        ///
+
         string json = extract_world_json(world_id);
         if (json == null)
         {
@@ -123,17 +132,36 @@ public class World : BSOD_System<World>
         data = JsonUtility.FromJson<WorldData>(json);
         this.world_id = world_id;
         data.id = world_id; // we set the world_id in the data for easier access to it later, even if it's not serialized
-        if (log) { Debug.Log($"(World) Loaded world data for world_id: {world_id}\n\n{json}"); }
+        if (log_loading_extended) { Debug.Log($"(World) Loaded world data for world_id: {world_id}\n\n{json}"); }
 
+
+
+        ///
+        //  2. WE LOAD ALL THE ENGINES WITH WORLD DATA (and their sub systems)
+        ///
 
         // and then we init all the engines
-        LevelEngine.StaticInstance.Init();
-        RoomEngine.StaticInstance.Init();
-        CapableSystem.StaticInstance.Init();
-        CapacityEngine.StaticInstance.Init();
+        if (log_loading_extended) { Debug.Log($"(World) ----------------------------------- LOADING ALL ENGINES : (previous phase duration: {Time.realtimeSinceStartup - phase_time}s)"); }
+        phase_time = Time.realtimeSinceStartup;
+        await LevelEngine.StaticInstance.LoadWorldData(world_id, log_loading_extended);
+        await RoomEngine.StaticInstance.LoadWorldData(world_id, log_loading_extended);
+        await CapableEngine.StaticInstance.LoadWorldData(world_id, log_loading_extended);
+        await CapacityEngine.StaticInstance.LoadWorldData(world_id, log_loading_extended);
 
-        // we wait a frame to be sure
+        ///
+        //  3. WE WAIT A FRAME SO THE LOADED DATA CAN SLEEP vite fait
+        ///
+        if (log_loading_extended) { Debug.Log($"(World) ----------------------------------- WE WAIT A FRAME : (previous phase duration: {Time.realtimeSinceStartup - phase_time}s)"); }
+        phase_time = Time.realtimeSinceStartup;
         await System.Threading.Tasks.Task.Yield();
+
+
+
+        ///
+        //  4. WE LOAD THE PLAYER LEVEL
+        ///
+        if (log_loading_extended) { Debug.Log($"(World) ----------------------------------- WE LOAD CURRENT PLAYER LEVEL : (previous phase duration: {Time.realtimeSinceStartup - phase_time}s)"); }
+        phase_time = Time.realtimeSinceStartup;
 
         // we load the start level
         if (data == null || data.levels_ids == null || data.levels_ids.Count == 0)
@@ -147,11 +175,21 @@ public class World : BSOD_System<World>
 
         // we tp the player to the fallback spawn point while loading the world
         if (fallback_spawn_point != null) { Controller.StaticInstance.Capable.transform.position = fallback_spawn_point.position; }
+
+
+
+        ///
+        //  5. WE SUCCESSFULLY LOADED THE WORLD !
+        ///
+        if (log)
+        {
+            Debug.Log($"(World) ----------------------------------- WORLD LOADED : (in {Time.realtimeSinceStartup - start_time}s{(!log_loading_extended ? ")" : $", previous phase duration: {Time.realtimeSinceStartup - phase_time}s)")}");
+        }
     }
     private string extract_world_json(string world_id)
     {
-        AppManager.EnsureFolderExists(WorldDataPath);
-        string world_path = Path.Combine(WorldDataPath, world_id);
+        AppManager.EnsureFolderExists(WorldsDataPath);
+        string world_path = Path.Combine(WorldsDataPath, world_id);
         
         // check if the current world folder exists in the worlds folder.
         if (!System.IO.Directory.Exists(world_path))
@@ -186,7 +224,18 @@ public class World : BSOD_System<World>
             return null;
         }
     }
+    public async void UnloadWorld()
+    {
+        // we unload all the engines
+        await LevelEngine.StaticInstance.UnloadWorldData(log_loading_extended);
+        await RoomEngine.StaticInstance.UnloadWorldData(log_loading_extended);
+        await CapableEngine.StaticInstance.UnloadWorldData(log_loading_extended);
+        await CapacityEngine.StaticInstance.UnloadWorldData(log_loading_extended);
 
+        // we clear the world data
+        data = null;
+        world_id = null;
+    }
 
 
     // WORLD SAVING
@@ -205,7 +254,7 @@ public class World : BSOD_System<World>
         }
 
         // create the /worlds folder if it doesn't exist
-        AppManager.EnsureFolderExists(WorldDataPath);
+        AppManager.EnsureFolderExists(WorldsDataPath);
 
         // then we do the same for the current world folder
         string world_path = GetWorldDataPath(world_id);
@@ -241,7 +290,8 @@ public class World : BSOD_System<World>
             last_update_date = data != null ? data.last_update_date : string.Empty,
             color = data != null ? data.color : Color.white,
             icon_path = data != null ? data.icon_path : "",
-            icon_name = data != null ? data.icon_name : ""
+            icon_name = data != null ? data.icon_name : "",
+            game_version = data != null ? data.game_version : Application.version
         };
 
         return new_data;
@@ -368,6 +418,7 @@ public class World : BSOD_System<World>
 
 
     // meta data
+    public string game_version;
     public string creation_date;
     public string last_update_date;
     public string icon_path;

@@ -15,13 +15,30 @@ public class AnimLayerBank : MonoBehaviour
     public bool log_anim_layers = false;
 
 
-
+    ///
+    //
+    ///  AWAKE & CLEAR CACHE
+    //
+    ///
     private void Awake()
     {
         // we initialize the pool of anim layers with the prefab one
         pooled_anim_layers = new Stack<AnimLayer>();
     }
+    public void ClearCache(bool log)
+    {
+        // we clear all the pools
+        pooled_anim_layers.Clear();
 
+        if (log) { Debug.Log($"(AnimLayerBank) Cache cleared"); }
+    }
+
+
+    ///
+    //
+    ///  LOAD / UNLOAD  &  INSERT/EXTRACT
+    //
+    ///
 
     // INSERT/EXTRACT IN/OUT OF POOL
     private AnimLayer extractAnimLayerFromPool(Transform layer_parent)

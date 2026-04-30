@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.IO;
 using Unity.VisualScripting;
+using System;
+
 
 
 
@@ -175,12 +177,11 @@ public class AppManager : MonoBehaviour
 
 
     // JSON DATA LOADING FROM WORLD DATA PATH
-    public static string[] LoadJsonsFromWorldDataPath(string data_folder)
+    public static string[] LoadJsonsFromWorldFolder(string world_id, string data_folder)
     {
         // loads jsons from the current world data path (which is in the persistent data path) instead of the assets
         // data_folder should be like "levels" for levels or "capables"
-        string world_data_path = World.CurrentStaticWorldDataPath;
-        string jsons_path = Path.Combine(world_data_path, data_folder);
+        string jsons_path = Path.Combine(World.WorldsDataPath, world_id, data_folder);
 
         // we get all the json files in the data folder and load them as strings
         string[] file_paths = Directory.GetFiles(jsons_path, "*.json");
@@ -191,18 +192,17 @@ public class AppManager : MonoBehaviour
         }
         return jsons;
     }
-    public static string[] LoadJsonsFromPersistentDataPath(string data_folder)
+    public static string LoadJsonFromWorldFolder(string world_id, string path)
     {
-        string path = Path.Combine(Application.persistentDataPath, data_folder);
-
-        // we get all the json files in the data folder and load them as strings
-        string[] file_paths = Directory.GetFiles(path, "*.json");
-        string[] jsons = new string[file_paths.Length];
-        for (int i = 0; i < file_paths.Length; i++)
+        // load json from the current world data path (which is in the persistent data path) instead of the assets
+        // path should contain the world name like this : "world_id/levels/level_id.json"
+        string json_path = Path.Combine(World.WorldsDataPath, world_id, path);
+        if (!System.IO.File.Exists(json_path))
         {
-            jsons[i] = System.IO.File.ReadAllText(file_paths[i]);
+            Debug.LogWarning($"(AppManager) Failed to load json from persistent data path: {json_path} because the file was not found.");
+            return null;
         }
-        return jsons;
+        return System.IO.File.ReadAllText(json_path);
     }
     public static string LoadJsonFromPersistentDataPath(string json_path)
     {
@@ -214,11 +214,17 @@ public class AppManager : MonoBehaviour
         }
         return System.IO.File.ReadAllText(path);
     }
-
     public static void OpenWorldsFolder()
     {
         string worlds_folder_path = Path.Combine(Application.persistentDataPath, "worlds");
         EnsureFolderExists(worlds_folder_path);
         Application.OpenURL(worlds_folder_path);
+    }
+
+    // JSON DATA SAVING TO WORLD DATA PATH
+    public static void SaveJsonToWorldFolder(string path, string json)
+    {
+        string json_path = Path.Combine(World.WorldsDataPath, path);
+        System.IO.File.WriteAllText(json_path, json);
     }
 }

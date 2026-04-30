@@ -21,7 +21,7 @@ public class WorldBuilderCaller : MonoBehaviour
     public void BuildWorld() => worldBuilder.Build();
     public void EraseAll() => worldBuilder.Erase();
     public void ClearTilemaps() => worldBuilder.ClearTilemaps();
-    public void SaveData() => worldBuilder.SaveData();
+    public void SaveData() => worldBuilder.SaveCurrentLevelSchematic();
 
     // specifics builders
     public void Build(string builder) => worldBuilder.Build(builder);

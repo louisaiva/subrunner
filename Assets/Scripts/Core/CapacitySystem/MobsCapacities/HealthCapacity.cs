@@ -137,7 +137,7 @@ public class HealthCapacity : Capacity
             if (CapableBank.Instance.HasCapable(Capable))
             {
                 // CapableSystem.Instance.SwitchToCorpse(Capable);
-                CapableSystem.Instance.TurnToItem(Capable, "corpse", "die");
+                CapableEngine.Instance.TurnToItem(Capable, "corpse", "die");
                 return true;
             }
 

@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class LevelEngine : BSOD_System<LevelEngine>
 {
 
     [Header("Level data")]
-    // private string level_data_path = "data/levels/";
     public Dictionary<string, LevelData> levels_data = new Dictionary<string, LevelData>();
 
     [Header("Current level")]
@@ -36,25 +36,39 @@ public class LevelEngine : BSOD_System<LevelEngine>
     public bool log_loading = false;
     public bool hide_no_level_warning = false;
     
-    // AWAKE
-    public void Init()
+    // LOAD / UNLOAD WORLD DATA
+    public override async Task LoadWorldData(string world_id, bool log)
     {
+        if (log) { Debug.Log($"(LevelEngine) Loading world data for world_id: {world_id}"); }
+
         // load levels data
-        loadLevelsData();
+        loadLevelsData(world_id);
+        if (log) { Debug.Log($"(LevelEngine) Loaded {levels_data.Count} levels data"); }
 
         // create levels
         createLevels();
+        if (log) { Debug.Log($"(LevelEngine) Created {world_levels.Count} levels"); }
+        if (log) { Debug.Log($"(LevelEngine) LEVEL ENGINE SUCCESSFULLY LOADED : {world_id}"); }
+    }
+    public override async Task UnloadWorldData(bool log)
+    {
+        // we clear the levels data and destroy the levels gameobjects
+        levels_data.Clear();
+        foreach (var level in world_levels.Values) { Destroy(level.gameObject); }
+        world_levels.Clear();
+        if (log) { Debug.Log($"(LevelEngine) LEVEL ENGINE SUCCESSFULLY UNLOADED"); }
     }
 
+
     // LOAD LEVELS DATA & CREATE LEVELS
-    protected void loadLevelsData()
+    protected void loadLevelsData(string world_id)
     {
         // we empty the levels_data
         levels_data = new Dictionary<string, LevelData>();
         string log_levels_details = "\n\n";
 
         // we load all the json files in the data path and convert them to LevelData objects
-        string[] files = AppManager.LoadJsonsFromWorldDataPath("levels");
+        string[] files = AppManager.LoadJsonsFromWorldFolder(world_id, "levels");
         foreach (string file in files)
         {
             LevelData data = JsonUtility.FromJson<LevelData>(file);
@@ -151,7 +165,7 @@ public class LevelEngine : BSOD_System<LevelEngine>
         }
 
         // we get the capable data from the ids
-        List<CapableData> capable_datas = CapableSystem.Instance.GetCapablesDataFromIDs(capable_ids);
+        List<CapableData> capable_datas = CapableEngine.Instance.GetCapablesDataFromIDs(capable_ids);
         return capable_datas;
     }
     public Level[] GetWorldLevels()

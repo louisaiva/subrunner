@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class BSOD_System<T> : MonoBehaviour where T : MonoBehaviour
@@ -29,6 +30,10 @@ public class BSOD_System<T> : MonoBehaviour where T : MonoBehaviour
         if (Instance == this) { Instance = null; }
     }
 
+
+    // LOAD / UNLOAD WORLD DATA
+    public virtual async Task LoadWorldData(string world_id, bool log) { }
+    public virtual async Task UnloadWorldData(bool log) { }
 
     /*
 

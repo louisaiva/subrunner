@@ -11,6 +11,12 @@ public class LightsEngine : MonoBehaviour
     [SerializeField] private Light2D light_prefab;
     public Transform LightsParent;
 
+    public void ClearCache(bool log)
+    {
+        room_lights.Clear();
+        if (log) { Debug.Log($"(LightsEngine) Cache cleared"); }
+    }
+
     public void LoadLights(List<LightData> lights_data, string room_id)
     {
         if (lights_data == null) { return; }

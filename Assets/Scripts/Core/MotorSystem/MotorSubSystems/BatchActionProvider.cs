@@ -47,12 +47,12 @@ public class BatchActionProvider : MonoBehaviour
     [SerializeField] private bool hide_log_no_action_found = false;
 
 
+    ///
+    //
+    ///  START & PENDING ENTITIES MANAGEMENT
+    //
+    ///
 
-    // ########################
-
-    //     START & PENDING ENTITIES MANAGEMENT
-
-    // ########################
 
     // START
     private void Start()
@@ -97,11 +97,18 @@ public class BatchActionProvider : MonoBehaviour
         if (log_pending_entities_management) { Debug.Log($"(BatchActionProvider) Removed '{ia_and_motor_data.ia_data.id}' from resolve. Total pending entities: {pending_entities.Count}"); }
     }
 
-    // ########################
 
-    //     UPDATE & RUN / RESOLVE
 
-    // ########################
+
+
+    ///
+    //
+    ///  UPDATE & RUN / RESOLVE
+    //
+    ///
+
+
+
 
     // UPDATE
     private List<EntityMotor> running_entities = new();
@@ -277,13 +284,13 @@ public class BatchActionProvider : MonoBehaviour
 
 
 
+    ///
+    //
+    ///  LATEUPDATE & COMPLETE
+    //
+    ///
 
 
-    // ########################
-
-    //     LATEUPDATE & COMPLETE
-
-    // ########################
 
     // LATE UPDATE
     private void LateUpdate() { Complete(); }
@@ -347,34 +354,38 @@ public class BatchActionProvider : MonoBehaviour
     }
 
 
+    ///
+    //
+    ///  ONDESTROY/DISABLE & DISPOSE
+    //
+    ///
 
-    // ########################
 
-    //     ONDESTROY/DISABLE & DISPOSE
-
-    // ########################
 
 
     // ONDISABLE & ONDESTROY
-    private void OnDisable() { Dispose(); }
-    private void OnDestroy() { Dispose(dispose_graphs: true); }
+    private void OnDisable() { ClearCache(); }
+    private void OnDestroy() { Dispose(); }
 
     // DISPOSE
-    public void Dispose(bool dispose_graphs = false)
+    public void Dispose()
+    {
+        ClearCache(); // disposes the handles
+
+        // we also dispose the graphs
+        foreach (var resolver in agents_resolvers.Values)
+        {
+            resolver.graph.Dispose();
+        }
+    }
+    public void ClearCache(bool log=false)
     {
         foreach (var resolveHandle in resolveHandles)
         {
             resolveHandle.handle.Complete();
         }
         resolveHandles.Clear();
-
-
-        // we also dispose the graphs if needed
-        if (!dispose_graphs) { return; }
-        foreach (var resolver in agents_resolvers.Values)
-        {
-            resolver.graph.Dispose();
-        }
+        if (log) { Debug.Log($"(BatchActionProvider) Cache cleared"); }
     }
 }
 

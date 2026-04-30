@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
+using System.Threading.Tasks;
 
 public class RoomEngine : BSOD_System<RoomEngine>
 {
@@ -110,18 +111,71 @@ public class RoomEngine : BSOD_System<RoomEngine>
     ///
 
 
-    // INIT
-    public void Init()
+    // LOAD / UNLOAD WORLD DATA
+    public override async Task LoadWorldData(string world_id, bool log)
     {
+        if (log) { Debug.Log($"(RoomEngine) Loading world data for world_id: {world_id}"); }
+
         // load rooms data
-        loadRoomsData();
+        loadRoomsData(world_id);
+        if (log) { Debug.Log($"(RoomEngine) Loaded {rooms_data.Count} rooms data"); }
+
+
+        // clear sub systems caches
+        TilemapEngine.ClearCache(log);
+        LightsEngine.ClearCache(log);
+        // DoorEngine.initorsomething() <-- we don't do this since door engine need the doors data to be loaded -> means it is CapableEngine that calls it
 
         // start ticking
         ticking = true;
+
+        await Task.Yield();
+
+        // we register to CapableSystem.OnCapableAppear so we can assign rooms to the new capable
+        CapableEngine.Instance.OnCapableAppear += AttachCapable;
+        CapableEngine.Instance.OnCapableDisappear += FreeCapable;
+        if (log) { Debug.Log($"(RoomEngine) Registered to CapableSystem events"); }
+
+        // we generate the spatial maps for the levels
+        generateLevels2DSpatialCells();
+        if (log) { Debug.Log($"(RoomEngine) Generated 2D spatial maps for levels : \n  -{string.Join("\n  -", spatial_maps_by_level_id.Keys)}"); }
+        if (log) { Debug.Log($"(RoomEngine) ROOM ENGINE SUCCESSFULLY LOADED : {world_id}"); }
+    }
+    public override async Task UnloadWorldData(bool log)
+    {
+        // we stop ticking
+        ticking = false;
+
+        // we remove all the events
+        CapableEngine.Instance.OnCapableAppear -= AttachCapable;
+        CapableEngine.Instance.OnCapableDisappear -= FreeCapable;
+
+        // clear the spatial maps
+        spatial_maps_by_level_id.Clear();
+
+        // we destroy all the rooms gameobjects
+        loaded_rooms_data.Clear();
+        RoomBank.Instance.DestroyAllRoomsInstantly();
+
+        // clear all the rooms data
+        rooms_data.Clear();
+        rooms_hashs_by_ids.Clear();
+        rooms_ids_by_hash.Clear();
+        next_room_hash = 1;
+
+        // and the rooms data per capables
+        roomByCapableID.Clear();
+        roomByMovableID.Clear();
+        roomByCapableIDs.Clear();
+        dirtyCapablesIDs.Clear();
+        room_score_biases.Clear();
+        capables_attach_times.Clear();
+
+        if (log) { Debug.Log($"(RoomEngine) ROOM ENGINE SUCCESSFULLY UNLOADED"); }
     }
 
     // LOAD / UNLOAD DATA
-    protected void loadRoomsData()
+    protected void loadRoomsData(string world_id)
     {
         // we empty the rooms_data and runtime ids
         rooms_data = new Dictionary<string, RoomData>();
@@ -131,7 +185,7 @@ public class RoomEngine : BSOD_System<RoomEngine>
         string log_rooms_details = "\n\n";
 
         // we load all the json files in the data path and convert them to RoomData objects
-        string[] files = AppManager.LoadJsonsFromWorldDataPath("rooms");
+        string[] files = AppManager.LoadJsonsFromWorldFolder(world_id, "rooms");
         foreach (string file in files)
         {
             RoomData data = JsonUtility.FromJson<RoomData>(file);
@@ -160,7 +214,7 @@ public class RoomEngine : BSOD_System<RoomEngine>
 
 
     // 2D SPATIAL CELL ROOMS
-    private Dictionary<string, LevelSpatialMap2D> spatial_maps_by_level_id = new Dictionary<string, LevelSpatialMap2D>();
+    private Dictionary<string, LevelSpatialMap2D> spatial_maps_by_level_id = new Dictionary<string, LevelSpatialMap2D>(); // ? should be on LevelEngine ???
     protected void generateLevels2DSpatialCells()
     {
         spatial_maps_by_level_id.Clear();
@@ -228,18 +282,6 @@ public class RoomEngine : BSOD_System<RoomEngine>
     /// 2. ASSIGNING ROOMS TO CAPABLES
     //
     ///
-
-    // START
-    private void Start()
-    {
-        // we register to CapableSystem.OnCapableAppear so we can assign rooms to the new capable
-        CapableSystem.Instance.OnCapableAppear += AttachCapable;
-        CapableSystem.Instance.OnCapableDisappear += FreeCapable;
-
-        // we generate the spatial maps for the levels
-        generateLevels2DSpatialCells();
-    }
-
 
 
     // ADD / REMOVE CAPABLE TO / FROM ROOM
@@ -466,7 +508,7 @@ public class RoomEngine : BSOD_System<RoomEngine>
             string in_room_id = best_room != null ? best_room.id : "none";
             if (log_room_transfers) { Debug.Log($"(RoomEngine) [{out_room_id}] >> {capable_id} >> [{in_room_id}]"); }
             if (current_room != null) { removeCapableFromRoom(capable_id, current_room); }
-            addCapableToRoom(capable_id, best_room, CapableSystem.Instance.IsMovable(capable_id));
+            addCapableToRoom(capable_id, best_room, CapableEngine.Instance.IsMovable(capable_id));
             if (log_ticks) { log_tick += $"    - TRANSFERED TO NEW ROOM !!! : {best_room.id}\n"; }
 
             // check if the new room is unloaded and if yes we need to unload the entity as well
@@ -479,7 +521,7 @@ public class RoomEngine : BSOD_System<RoomEngine>
         }
 
         // we unload the entities that need to be unloaded
-        CapableSystem.Instance.UnloadCapables(capables_to_unload);
+        CapableEngine.Instance.UnloadCapables(capables_to_unload);
 
         // . we remove the handled capables from the dirty list
         foreach (string capable_id in dirty_capables_ids)
@@ -488,7 +530,7 @@ public class RoomEngine : BSOD_System<RoomEngine>
             if (!IsInARoom(capable_id) && !hide_log_no_room_of_capable_found)
             {
                 string log = $"(RoomEngine - Tick) Capable {capable_id} could not be assigned to any room. Is now a RoomEngine outsider.";
-                bool is_capable_outsider = CapableSystem.Instance.IsOutsider(capable_id);
+                bool is_capable_outsider = CapableEngine.Instance.IsOutsider(capable_id);
                 if (!is_capable_outsider) { Debug.LogError(log + " (Insider of the CapableSystem, critical issue...)"); }
                 else { Debug.LogWarning(log + " (Outsider of the CapableSystem as well so may be ok)"); }
             }
@@ -503,7 +545,7 @@ public class RoomEngine : BSOD_System<RoomEngine>
     // get rooms candidates for capable
     private void get_room_candidates_from_position(string capable_id, ref List<RoomData> room_candidates)
     {
-        Vector2 capable_position = CapableSystem.Instance.GetCapablePosition(capable_id);
+        Vector2 capable_position = CapableEngine.Instance.GetCapablePosition(capable_id);
         RoomData position_candidate = GetRoomAtPosition(capable_position);
         if (position_candidate == null) { return; }
         get_room_neighbours(position_candidate.id, ref room_candidates);
@@ -538,7 +580,7 @@ public class RoomEngine : BSOD_System<RoomEngine>
             float score = 0f;
 
             // check if the capable is inside the AABB
-            Vector2 capable_position = CapableSystem.Instance.GetCapablePosition(capable_id);
+            Vector2 capable_position = CapableEngine.Instance.GetCapablePosition(capable_id);
             Bounds2D bounds = spatial_map.GetRoomBounds(rdata.id);
 
             // if inside bounds we give +100 score
@@ -641,16 +683,6 @@ public class RoomEngine : BSOD_System<RoomEngine>
             for (int i = 0; i < frames_between_loading_rooms; i++) { await System.Threading.Tasks.Task.Yield(); }
         }
     }
-    /* private async void loadRooms(ICollection<string> rooms_ids)
-    {
-        foreach (string id in rooms_ids)
-        {
-            load_room(id);
-
-            // we wait for X frames
-            for (int i = 0; i < frames_between_loading_rooms; i++) { await System.Threading.Tasks.Task.Yield(); }
-        }
-    } */
     private void load_room(string id)
     {
         if (!rooms_data.ContainsKey(id))
@@ -696,6 +728,11 @@ public class RoomEngine : BSOD_System<RoomEngine>
         loaded_rooms_data.Remove(id);
         if (log_loading) { Debug.Log("(RoomEngine) Unloaded " + id); }
     }
+    /* private void unload_all_rooms_instantanely()
+    {
+        foreach (RoomData data in loaded_rooms_data.Values) { RoomBank.Instance.Unload(data); }
+        loaded_rooms_data.Clear();
+    } */
 
 
 

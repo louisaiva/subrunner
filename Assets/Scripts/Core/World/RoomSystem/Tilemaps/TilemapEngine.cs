@@ -26,6 +26,13 @@ public class TilemapEngine : MonoBehaviour
     public bool log_tilebases = false;
     public bool log_showing = false;
 
+    public void ClearCache(bool log)
+    {
+        room_tilemaps.Clear();
+        tilebase_cache.Clear();
+        if (log) { Debug.Log($"(TilemapEngine) Cache cleared"); }
+    }
+
     // BUILD ROOM TILEMAPS
     private List<TileBase> tilebases_used = new List<TileBase>();
     private RoomTilemaps BuildRoomTilemaps(RoomData data)

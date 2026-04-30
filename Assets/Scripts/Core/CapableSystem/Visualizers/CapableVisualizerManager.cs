@@ -42,14 +42,14 @@ public class CapableVisualizerManager : MonoBehaviour
             create_visu_for_capable(cap);
 
             // we check if insider or not
-            if (CapableSystem.Instance.TryGetOutsider(cap.id, out Capable outsider))
+            if (CapableEngine.Instance.TryGetOutsider(cap.id, out Capable outsider))
             {
                 outsider_capables.Add(outsider);
             }
         }
 
         // we also create visuals for enabled outsiders, and we keep track of them so we can update their position manually later
-        Dictionary<CapableData, Capable> outsiders = CapableSystem.Instance.GetOutsidersWorldCapablesData();
+        Dictionary<CapableData, Capable> outsiders = CapableEngine.Instance.GetOutsidersWorldCapablesData();
         foreach (KeyValuePair<CapableData, Capable> entry in outsiders)
         {
             // check that we don't already have a visu for this capable, just in case
@@ -59,16 +59,16 @@ public class CapableVisualizerManager : MonoBehaviour
         }
 
         // finally we register to CapableSystem events to create/destroy visuals when needed
-        CapableSystem.Instance.OnCapableAppear += handle_capable_spawned;
-        CapableSystem.Instance.OnCapableDisappear += handle_capable_despawned;
+        CapableEngine.Instance.OnCapableAppear += handle_capable_spawned;
+        CapableEngine.Instance.OnCapableDisappear += handle_capable_despawned;
     }
     
     // ON DESTROY
     private void OnDestroy()
     {
-        if (CapableSystem.Instance == null) { return; }
-        CapableSystem.Instance.OnCapableAppear -= handle_capable_spawned;
-        CapableSystem.Instance.OnCapableDisappear -= handle_capable_despawned;
+        if (CapableEngine.Instance == null) { return; }
+        CapableEngine.Instance.OnCapableAppear -= handle_capable_spawned;
+        CapableEngine.Instance.OnCapableDisappear -= handle_capable_despawned;
     }
 
     // VISU CREATION

@@ -92,10 +92,10 @@ public class WorldManager : MonoBehaviour
         existing_worlds_data.Clear();
 
         // we check if the worlds data folder exists
-        if (!Directory.Exists(World.WorldDataPath)) { return; }
+        if (!Directory.Exists(World.WorldsDataPath)) { return; }
 
         // we get all the world folders in the worlds data folder
-        string[] world_folders = Directory.GetDirectories(World.WorldDataPath);
+        string[] world_folders = Directory.GetDirectories(World.WorldsDataPath);
         foreach (string world_folder in world_folders)
         {
             // we get the world_id from the folder name
@@ -178,7 +178,8 @@ public class WorldManager : MonoBehaviour
             last_update_date = DateTime.Now.ToString(),
             color = GetRandomWorldColor(),
             icon_path = GetRandomIconPath(out string icon_name),
-            icon_name = icon_name
+            icon_name = icon_name,
+            game_version = Application.version
         };
         existing_worlds_data.Add(world_name, new_data);
         if (log_create) { Debug.Log($"(WorldManager) Created new world with world_id: {world_name}"); }

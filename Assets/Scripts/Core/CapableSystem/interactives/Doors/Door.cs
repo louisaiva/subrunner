@@ -83,7 +83,7 @@ public class Door : Capable, Interactable, Openable
     protected virtual void Start()
     {
         // check if we are an insider we don't even start
-        if (!CapableSystem.Instance.IsOutsider(this.ID)) { return; }
+        if (!CapableEngine.Instance.IsOutsider(this.ID)) { return; }
 
         // if vertical on set l'Orientaion à "up"
         if (is_vertical && (Orientation == Vector2.right || Orientation == Vector2.left)) { Orientation = Vector2.up; }

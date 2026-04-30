@@ -60,6 +60,35 @@ public class ColliderBank : MonoBehaviour
     protected static bool log_shadows_shapes = false;
 
 
+
+    ///
+    //
+    ///  CLEAR CACHE
+    //
+    ///
+    public void ClearCache(bool log)
+    {
+        // we clear all the pools
+        pooled_circle_colliders.Clear();
+        pooled_box_colliders.Clear();
+        pooled_shadowed_circle_colliders.Clear();
+        pooled_shadowed_box_colliders.Clear();
+
+        // we clear the shadow caster data
+        shadow_caster_datas.Clear();
+
+        if (log) { Debug.Log($"(ColliderBank) Cache cleared"); }
+    }
+
+
+
+    ///
+    //
+    ///  LOAD / UNLOAD COLLIDERS
+    //
+    ///
+
+
     // LOAD UNLOAD
     public Collider2D LoadCollider(ColliderData data, Transform parent)
     {
@@ -184,7 +213,6 @@ public class ColliderBank : MonoBehaviour
         load_shadow_caster_data(collider.gameObject, collider_data.shadow_caster_data); */
     }
 
-
     public void UnloadCollider(GameObject collider_go)
     {
         Collider2D collider = collider_go.GetComponent<Collider2D>();
@@ -264,6 +292,13 @@ public class ColliderBank : MonoBehaviour
     }
 
 
+
+
+    ///
+    //
+    ///  SHADOW CASTER DATA
+    //
+    ///
 
     // SHADOW CASTER DATA
     protected static ShadowCasterData get_static_shadow_caster_data(Collider2D collider)

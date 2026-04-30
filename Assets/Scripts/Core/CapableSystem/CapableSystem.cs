@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
-public class CapableSystem : BSOD_System<CapableSystem>
+public class CapableEngine : BSOD_System<CapableEngine>
 {
 
     [Header("Templates Capables data")]
-    private string templates_data_path = "data/templates/capables/";
     public Dictionary<string, CapableData> templates_capables_data = new Dictionary<string, CapableData>();
 
     [Header("World Capables data")]
@@ -32,8 +32,8 @@ public class CapableSystem : BSOD_System<CapableSystem>
     public int load_x_capables_per_frame = 1;
 
     [Header("State")]
-    private bool awake_done = false;
-    private bool start_done = false;
+    private bool world_data_loaded = false;
+    private bool ownership_check_done = false;
 
     [Header("Logs Awake")]
     public bool log_templates_data_loading = false;
@@ -66,29 +66,73 @@ public class CapableSystem : BSOD_System<CapableSystem>
     ///
 
 
-    // AWAKE
-    public void Init()
+    // LOAD / UNLOAD WORLD DATA
+    public override async Task LoadWorldData(string world_id, bool log)
     {
+        if (log) { Debug.Log($"(CapableEngine) Loading world data for world_id: {world_id}"); }
+
         // load templates data
-        loadTemplatesCapablesData();
+        if (!templates_loaded)
+        {
+            loadTemplatesCapablesData();
+            if (log) { Debug.Log($"(CapableEngine) Loaded {templates_capables_data.Count} templates capables data"); }
+        }
 
         // load world capables data
-        loadWorldCapablesData();
+        loadWorldCapablesData(world_id);
+        if (log) { Debug.Log($"(CapableEngine) Loaded {world_capables_data.Count} world capables data"); }
 
         // detect capables that are not linked to a capable data in our system
         // and create an hash if it has an id
         detectCapablesOutsideOfSystem();
+        if (log) { Debug.Log($"(CapableEngine) Detected {outsiders_data.Count} outsiders capables in the world"); }
+        world_data_loaded = true;
 
-        awake_done = true;
-    }
-    public virtual void Start()
-    {
+        // finally we can load the sub systems
+        await RoomEngine.Instance.DoorEngine.LoadWorldData(world_id, log);
+        await MotorEngine.Instance.LoadWorldData(world_id, log);
+        if (log) { Debug.Log($"(CapableEngine) Loaded DoorEngine & MotorEngine sub systems"); }
+
+
+        await Task.Yield();
+
         // sanity check after loading all world data
         ValidateAllOwnershipLinks(repair: false); // log-only, no fixes
-        start_done = true;
+        ownership_check_done = true;
+        if (log) { Debug.Log($"(CapableEngine) Ownership links validation check done for loaded world data. Total links={capables_hashs_by_ids.Count}, outsiders={outsiders_data.Count}"); }
+        if (log) { Debug.Log($"(CapableEngine) CAPABLE SYSTEM SUCCESSFULLY LOADED : {world_id}"); }
+    }
+    public override async Task UnloadWorldData(bool log)
+    {
+        // we DON'T unload the templates data since it is valid for all worlds
+
+
+        // we unload all loaded capables
+        loaded_capables_data.Clear();
+        CapableBank.Instance.DestroyAllCapablesInstantly();
+        CapableBank.Instance.ClearSubSystemsCache(log); // clears AnimLayerBank, ColliderBank
+
+
+        // we clear the world capables data, runtime ids, etc
+        world_capables_data.Clear();
+        capables_hashs_by_ids.Clear();
+        capables_ids_by_hash.Clear();
+        next_capable_hash = 1;
+
+        // we clear the outsiders data (should be empty since they should not be in the world anymore, but just in case)
+        outsiders_data.Clear();
+        outsiders_ids.Clear();
+
+        world_data_loaded = false;
+        ownership_check_done = false;
+
+        if (log) { Debug.Log($"(CapableEngine) CAPABLE SYSTEM SUCCESSFULLY UNLOADED"); }
     }
 
+
     // LOAD TEMPLATES & WORLD CAPABLES DATA
+    private string templates_data_path = "data/templates/capables/";
+    private bool templates_loaded = false;
     protected void loadTemplatesCapablesData()
     {
         // we empty the capables_data & runtime ids etc
@@ -123,9 +167,10 @@ public class CapableSystem : BSOD_System<CapableSystem>
             }
         }
 
-        if (log_templates_data_loading) { Debug.Log("(CapableSystem) TEMPLATES CAPABLES DATA LOADED : " + templates_capables_data.Count + log_capables_details); }
+        if (log_templates_data_loading) { Debug.Log("(CapableEngine) TEMPLATES CAPABLES DATA LOADED : " + templates_capables_data.Count + log_capables_details); }
+        templates_loaded = true;
     }
-    protected void loadWorldCapablesData()
+    protected void loadWorldCapablesData(string world_id)
     {
         // we empty the capables_data & runtime ids etc
         world_capables_data = new Dictionary<string, CapableData>();
@@ -135,7 +180,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
         string log_capables_details = "\n\n";
 
         // we load all the json files in the data path and get their kind
-        string[] files = AppManager.LoadJsonsFromWorldDataPath("capables");
+        string[] files = AppManager.LoadJsonsFromWorldFolder(world_id, "capables");
         Dictionary<string, List<string>> json_by_kind = new Dictionary<string, List<string>>();
         CapableData data;
         foreach (string json in files)
@@ -173,7 +218,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
             }
         }
 
-        if (log_world_data_loading) { Debug.Log("(CapableSystem) WORLD CAPABLES DATA LOADED : " + world_capables_data.Count + log_capables_details); }
+        if (log_world_data_loading) { Debug.Log("(CapableEngine) WORLD CAPABLES DATA LOADED : " + world_capables_data.Count + log_capables_details); }
     }
     private CapableData loadCapableDataOfType(string json, string kind, ref string log, ref Dictionary<string, CapableData> data_by_id, bool generate_runtime = true)
     {
@@ -186,7 +231,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
         if (data_type != null)
         {
             data = JsonUtility.FromJson(json, data_type) as CapableData;
-            if (log_awake_data_extended) { Debug.Log($"(CapableSystem) Loading capable data : \n{data.GetDetails()}\n\n{json}"); }
+            if (log_awake_data_extended) { Debug.Log($"(CapableEngine) Loading capable data : \n{data.GetDetails()}\n\n{json}"); }
             data_by_id.Add(data.id, data);
             if (generate_runtime) { generate_runtime_id(data.id); }
 
@@ -215,7 +260,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
         // we finally extract the data
         data = JsonUtility.FromJson(json, data_type) as CapableData;
-        if (log_awake_data_extended) { Debug.Log($"(CapableSystem) Loading capable data : \n{data.GetDetails()}\n\n{json}"); }
+        if (log_awake_data_extended) { Debug.Log($"(CapableEngine) Loading capable data : \n{data.GetDetails()}\n\n{json}"); }
         data_by_id.Add(data.id, data);
         if (generate_runtime) { generate_runtime_id(data.id); }
         log += data.GetDetails() + "\n";
@@ -272,7 +317,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
             capable.data.OnLoaded(capable);
         }
 
-        if (log_world_data_loading && enabled_outsiders.Count > 0) { Debug.Log("(CapableSystem) OUTSIDERS DETECTED : " + enabled_outsiders.Count + "\n - " + string.Join("\n - ",enabled_outsiders)); }
+        if (log_world_data_loading && enabled_outsiders.Count > 0) { Debug.Log("(CapableEngine) OUTSIDERS DETECTED : " + enabled_outsiders.Count + "\n - " + string.Join("\n - ",enabled_outsiders)); }
 
 
         // we remove maybe the data of some outsiders (disabled + cursor)
@@ -284,7 +329,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
             log_removed += to_remove_maybe[i].data.id + "\n";
             removed_count++;
         }
-        if (log_world_data_loading && removed_count > 0) { Debug.Log("(CapableSystem) OUTSIDERS REMOVED : " + removed_count + "\n - " + log_removed); }
+        if (log_world_data_loading && removed_count > 0) { Debug.Log("(CapableEngine) OUTSIDERS REMOVED : " + removed_count + "\n - " + log_removed); }
     }
     private bool remove_outsider_from_world(Capable capable)
     {
@@ -360,7 +405,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
             CapacityEngine.Instance.SpawnCapacity(capa_template, new_data); // this replace the capacity id in the entity data
         }
 
-        if (log_duplicating) { Debug.Log($"(CapableSystem) Duplicated {template} data to {new_data.id} \n {new_data.GetDetails()}"); }
+        if (log_duplicating) { Debug.Log($"(CapableEngine) Duplicated {template} data to {new_data.id} \n {new_data.GetDetails()}"); }
 
 
         return new_data;
@@ -515,7 +560,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
         int broken_percentage = (total_links > 0) ? (broken_links * 100 / total_links) : 0;
         int final_broken_links = broken_links - fixed_links; // we count the fixed links as valid for the summary
         
-        if (start_done || log_start_capacity_ownership) { Debug.Log($"(CapableSystem)      LINKS BROKEN : {broken_links}/{total_links} ({broken_percentage}%)   |   FIXED : {fixed_links}/{broken_links}   |   ORPHAN : {orphan_capacities}  \n{log_summary}"); }
+        if (ownership_check_done || log_start_capacity_ownership) { Debug.Log($"(CapableEngine)      LINKS BROKEN : {broken_links}/{total_links} ({broken_percentage}%)   |   FIXED : {fixed_links}/{broken_links}   |   ORPHAN : {orphan_capacities}  \n{log_summary}"); }
 
         return final_broken_links == 0;
     }
@@ -532,7 +577,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
             if (log_spawning) { Debug.LogError($"(CapableSystem - SpawnCapable) Failed to spawn capable. Data is null."); }
             return null;
         }
-        // if (log_spawning) { Debug.Log($"(CapableSystem) Spawning {data.id} entity"); }
+        // if (log_spawning) { Debug.Log($"(CapableEngine) Spawning {data.id} entity"); }
 
         // 1. we load the new spawned capable & set position
         Capable spawned_capable = load_capable(data);
@@ -541,7 +586,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
         // 2. we fire events
         OnCapableAppear?.Invoke(data);
 
-        if (log_spawning) { Debug.Log($"(CapableSystem) Spawned {data.id}"); }
+        if (log_spawning) { Debug.Log($"(CapableEngine) Spawned {data.id}"); }
 
         // 3. we return the spawned capable
         return spawned_capable;
@@ -646,7 +691,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
         {
             unloading_queue.Remove(id);
             Capable capable = CapableBank.Instance.GetLoadedCapable(id);
-            if (log_loading) { Debug.Log("(CapableSystem) Already loaded " + id); }
+            if (log_loading) { Debug.Log("(CapableEngine) Already loaded " + id); }
             return capable;
         }
 
@@ -718,7 +763,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
         // we load the capable from the data
         Capable capable = CapableBank.Instance.Load(data);
         loaded_capables_data.Add(data.id, data);
-        if (log_loading) { Debug.Log("(CapableSystem) Loaded " + data.id); }
+        if (log_loading) { Debug.Log("(CapableEngine) Loaded " + data.id); }
 
         hide_show_capable_on_load(capable, data);
 
@@ -833,7 +878,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
         CapableData data = loaded_capables_data[id];
         Capable capable = CapableBank.Instance.Unload(data);
         loaded_capables_data.Remove(id);
-        if (log_loading) { Debug.Log("(CapableSystem) Unloaded " + id); }
+        if (log_loading) { Debug.Log("(CapableEngine) Unloaded " + id); }
         return capable;
     }
 
@@ -845,7 +890,7 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
     private void Update()
     {
-        if (!awake_done) { return; }
+        if (!world_data_loaded) { return; }
         
         // we load / unload in queue
         int unloaded = unload_in_queue(load_x_capables_per_frame);

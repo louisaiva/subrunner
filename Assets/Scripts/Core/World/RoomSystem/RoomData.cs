@@ -22,8 +22,8 @@ using UnityEngine;
         get
         {
             // we get the capable data for each capable in the room and we sum their capacities count
-            List<CapableData> capables_data = CapableSystem.Instance.GetCapablesDataFromIDs(capables_ids);
-            capables_data.AddRange(CapableSystem.Instance.GetCapablesDataFromIDs(movables_ids));
+            List<CapableData> capables_data = CapableEngine.Instance.GetCapablesDataFromIDs(capables_ids);
+            capables_data.AddRange(CapableEngine.Instance.GetCapablesDataFromIDs(movables_ids));
             int count = 0;
             foreach (CapableData capable_data in capables_data)
             {

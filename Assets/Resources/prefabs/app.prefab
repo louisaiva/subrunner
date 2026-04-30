@@ -1266,6 +1266,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WorldManager
   selected_world_data:
     levels_ids: []
+    game_version: 
     creation_date: 
     last_update_date: 
     icon_path: 
@@ -1312,7 +1313,7 @@ MonoBehaviour:
   auto_load_on_creation: 0
   log_icons_paths: 0
   log_world_data_loading_on_awake: 0
-  hide_files_not_found: 0
+  hide_files_not_found: 1
   log_selecting_world: 0
   log_create: 0
 --- !u!1 &7970305435618458122

@@ -1,23 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class CapacityEngine : BSOD_System<CapacityEngine>
 {
 
-    [Header("Templates Capacities data")]
-    private string templates_data_path = "data/templates/capacities/";
-    private Dictionary<string, CapacityData> templates_capacities_data = new Dictionary<string, CapacityData>();
-
     [Header("World Capacities data")]
-    // private string world_data_path = "data/capacities/";
     public Dictionary<string, CapacityData> world_capacities_data = new Dictionary<string, CapacityData>();
 
     [Header("Loaded Capacities data")]
     public Dictionary<string,CapacityData> loaded_capacities_data = new Dictionary<string,CapacityData>();
 
     [Header("State")]
-    public bool awake_done = false;
+    public bool worlddata_loaded_done = false;
 
     [Header("Settings")]
     public bool auto_repair_owner_links_on_load = false;
@@ -36,20 +32,47 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     public bool hide_log_no_data_found = false;
 
 
+    ///
+    //
+    /// LOAD / UNLOAD WORLD DATA
+    //
+    ///
 
-    // AWAKE
-    public void Init()
+    // LOAD / UNLOAD WORLD DATA
+    public override async Task LoadWorldData(string world_id, bool log)
     {
+        if (log) { Debug.Log($"(CapacityEngine) Loading world data for world_id: {world_id}"); }
+
         // load templates capacities data
-        loadTemplatesCapacitiesData();
+        if (!templates_loaded)
+        {
+            loadTemplatesCapacitiesData();
+            if (log_templates_data_loading) { Debug.Log($"(CapacityEngine) Loaded {templates_capacities_data.Count} templates capacities data"); }
+        }
 
         // load world capacities data
-        loadWorldCapacitiesData();
+        loadWorldCapacitiesData(world_id);
+        if (log_world_data_loading) { Debug.Log($"(CapacityEngine) Loaded {world_capacities_data.Count} world capacities data"); }
 
-        awake_done = true;
+        worlddata_loaded_done = true;
+        if (log) { Debug.Log($"(CapacityEngine) CAPACITY ENGINE SUCCESSFULLY LOADED : {world_id}"); }
+    }
+    public override async Task UnloadWorldData(bool log)
+    {
+        CapacityBank.Instance.DestroyAllCapacitiesInstantly();
+        loaded_capacities_data.Clear();
+        world_capacities_data.Clear();
+
+        worlddata_loaded_done = false;
+        if (log) { Debug.Log($"(CapacityEngine) CAPACITY ENGINE SUCCESSFULLY UNLOADED"); }
     }
 
+
+
     // LOAD TEMPLATES & WORLD DATA
+    private bool templates_loaded = false;
+    private string templates_data_path = "data/templates/capacities/";
+    private Dictionary<string, CapacityData> templates_capacities_data = new Dictionary<string, CapacityData>();
     protected void loadTemplatesCapacitiesData()
     {
         // we empty the capacities_data
@@ -85,15 +108,16 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         }
 
         if (log_templates_data_loading) { Debug.Log("(CapacityEngine) TEMPLATES CAPACITIES DATA LOADED : " + templates_capacities_data.Count + log_capacities_details); }
+        templates_loaded = true;
     }
-    protected void loadWorldCapacitiesData()
+    protected void loadWorldCapacitiesData(string world_id)
     {
         // we empty the capacities_data
         world_capacities_data = new Dictionary<string,CapacityData>();
         string log_capacities_details = "\n\n";
 
         // we load all the json files in the data path and get their kind
-        string[] files = AppManager.LoadJsonsFromWorldDataPath("capacities");
+        string[] files = AppManager.LoadJsonsFromWorldFolder(world_id, "capacities");
         Dictionary<string, List<string>> json_by_kind = new Dictionary<string, List<string>>();
         foreach (string json in files)
         {
@@ -139,6 +163,14 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         return data;
     }
 
+
+
+    ///
+    //
+    /// TEMPLATE DUPLICATION & CAPACITY SPAWNING 
+    //
+    ///
+
     // DATA DUPLICATION
     private CapacityData DuplicateTemplate(string template)
     {
@@ -157,7 +189,6 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         world_capacities_data.Add(new_data.id, new_data);
         return new_data;
     }
-
 
     // SPAWN CAPACITIES
     public CapacityData SpawnCapacity(string template_id, CapableData cdata)
@@ -189,6 +220,16 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         // we return the capacity data
         return data;
     }
+
+
+
+    ///
+    //
+    /// LOAD / UNLOAD CAPACITIES 
+    //
+    ///
+
+
 
     // LOAD CAPACITIES
     public List<Capacity> LoadCapacities(List<string> capacities_ids, Capable capable)
@@ -231,7 +272,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         }
 
         // we check that the capacity owner id is the same as the capable id
-        bool link_ok = CapableSystem.Instance.ValidateOwnershipLinks(capable_data, data, repair : auto_repair_owner_links_on_load, repair_removes_duplicates : false);
+        bool link_ok = CapableEngine.Instance.ValidateOwnershipLinks(capable_data, data, repair : auto_repair_owner_links_on_load, repair_removes_duplicates : false);
         if (!link_ok)
         {
             if (log_loading_extended) { Debug.LogWarning($"(CapacityEngine - Load) Capacity '{data.id}' owner id '{data.owner_id}' does not match capable id '{capable_data.id}' for '{capable_data.id}' (if they matches, it means there are some Duplicates)"); }
@@ -274,6 +315,14 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         if (log_loading) { Debug.Log("(CapacityEngine) Unloaded " + id); }
         return capacity;
     }
+
+
+
+    ///
+    //
+    /// GETTERS 
+    //
+    ///
 
 
     // GETTERS

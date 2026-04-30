@@ -493,7 +493,7 @@ public class Capable : MonoBehaviour, Debuggable
     // LOAD / UNLOAD
     public virtual void LoadData(CapableData data)
     {
-        if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Capable - LoadData) Loading capable {data.id} \n\n{data.GetDetails()}"); }
+        if (CapableEngine.Instance.log_loading_extended) { Debug.Log($"(Capable - LoadData) Loading capable {data.id} \n\n{data.GetDetails()}"); }
         this.data = data;
         this.name = data.id;
         this.transform.position = data.position;
@@ -521,7 +521,7 @@ public class Capable : MonoBehaviour, Debuggable
         }
 
         // we load the capacities
-        if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Capable - LoadData) Calling CapacitySystem loading for capacities : {string.Join(" ", data.capacities_ids)}"); }
+        if (CapableEngine.Instance.log_loading_extended) { Debug.Log($"(Capable - LoadData) Calling CapacitySystem loading for capacities : {string.Join(" ", data.capacities_ids)}"); }
         this.capacities = CapacityEngine.Instance.LoadCapacities(data.capacities_ids, this);
 
         // we fire the data loaded event
@@ -533,7 +533,7 @@ public class Capable : MonoBehaviour, Debuggable
         SaveDynamicData();
 
         // here we need to unload all the capacities that we hold
-        if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Capable - UnloadData) Calling CapacitySystem unloading for capacities : {string.Join(" ", data.capacities_ids)}"); }
+        if (CapableEngine.Instance.log_loading_extended) { Debug.Log($"(Capable - UnloadData) Calling CapacitySystem unloading for capacities : {string.Join(" ", data.capacities_ids)}"); }
         CapacityEngine.Instance.UnloadCapacities(data.capacities_ids, this);
 
         // we unload the inventory (and so the items)

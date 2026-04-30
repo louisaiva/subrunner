@@ -43,7 +43,7 @@ public class Package : Movable, Interactable, TurnableIntoItem
         // we play anim
         AnimPlayer.Play("interact");
         while (AnimPlayer.IsPlaying("interact")) { yield return null; }
-        CapableSystem.Instance.TurnToItem(this, "package_leftover", "idle_open");
+        CapableEngine.Instance.TurnToItem(this, "package_leftover", "idle_open");
         is_turning_to_item = false;
     }
     private void cancel_coroutine()

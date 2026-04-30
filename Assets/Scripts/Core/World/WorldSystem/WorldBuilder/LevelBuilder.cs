@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 #if UNITY_EDITOR
@@ -28,9 +29,12 @@ public class LevelBuilder : MonoBehaviour
         }
     }
 
+    [Header("Current Targeted World & Level")]
+    [SerializeField] private string world_id = "";
+    [SerializeField] private string level_id = "";
+    public string TargetedWorld => world_id;
+    public string TargetedLevel => level_id;
 
-    // data
-    private string data_path = "Assets/Resources/data/world_builder/";
 
     [Header("Grid & Grid Visualizers")]
     private Grid _grid;
@@ -67,20 +71,20 @@ public class LevelBuilder : MonoBehaviour
     public WorldNodeVisualizer node_prefab;
     public WorldNodeVisualizer node_tool;
     public Transform node_parent;
-    [SerializeField] private List<WorldNodeVisualizer> node_visualizers = new List<WorldNodeVisualizer>();
+    private List<WorldNodeVisualizer> node_visualizers = new List<WorldNodeVisualizer>();
     private WorldNodeVisualizer last_added_node = null;
 
     [Header("Link Visualizers")]
     public WorldLinkVisualizer link_prefab;
     public Transform link_parent;
-    [SerializeField] private List<WorldLinkVisualizer> link_visualizers = new List<WorldLinkVisualizer>();
+    private List<WorldLinkVisualizer> link_visualizers = new List<WorldLinkVisualizer>();
     private WorldLinkVisualizer selecting_link = null;
 
 
     [Header("Room Visualizers")]
     public WorldRoomVisualizer room_prefab;
     public Transform room_parent;
-    [SerializeField] private List<WorldRoomVisualizer> room_visualizers = new List<WorldRoomVisualizer>();
+    private List<WorldRoomVisualizer> room_visualizers = new List<WorldRoomVisualizer>();
 
     [Header("Colors")]
     public Color WaitingColor = Color.orange;
@@ -94,7 +98,7 @@ public class LevelBuilder : MonoBehaviour
     public WorldDoorVisualizer door_ver_tool;
     public WorldDoorVisualizer door_hor_tool;
     public Transform door_parent;
-    [SerializeField] private List<WorldDoorVisualizer> door_visualizers = new List<WorldDoorVisualizer>();
+    private List<WorldDoorVisualizer> door_visualizers = new List<WorldDoorVisualizer>();
     [SerializeField] private Color WrongDoorColor = Color.darkRed;
     [SerializeField] private Color ConnectedDoorColor = Color.lightSeaGreen;
 
@@ -102,7 +106,7 @@ public class LevelBuilder : MonoBehaviour
     public WorldLightVisualizer light_prefab;
     public WorldLightVisualizer light_tool;
     public Transform light_parent;
-    [SerializeField] private List<WorldLightVisualizer> light_visualizers = new List<WorldLightVisualizer>();
+    private List<WorldLightVisualizer> light_visualizers = new List<WorldLightVisualizer>();
     [SerializeField] private Color LightColor = Color.yellowNice;
 
 
@@ -116,6 +120,7 @@ public class LevelBuilder : MonoBehaviour
 
 
     [Header("Logs")]
+    [SerializeField] private bool log = false;
     [SerializeField] private bool log_cycles = false;
     [SerializeField] private bool log_get_room = false;
     [SerializeField] private bool log_data = false;
@@ -123,6 +128,11 @@ public class LevelBuilder : MonoBehaviour
     [SerializeField] private bool log_tool = false;
 
 
+    ///
+    // 
+    ///  AWAKE & MAIN ENTRY POINTS
+    //
+    ///
 
     // AWAKE
     protected void Awake()
@@ -136,30 +146,29 @@ public class LevelBuilder : MonoBehaviour
         tools_icons["door_ver"] = door_ver_prefab.GetComponent<SpriteRenderer>().sprite;
         tools_icons["door_hor"] = door_hor_prefab.GetComponent<SpriteRenderer>().sprite;
         tools_icons["light"] = light_prefab.GetComponent<SpriteRenderer>().sprite;
-
-        #if UNITY_EDITOR
-        LoadData();
-        #endif
     }
 
     // ON ENABLE / DISABLE
-    /* private void OnEnable()
-    {
-        // UI_Manager.Instance.SwitchTo("dev_world_builder");
-        CameraFollow.Instance.SetSize(Zoom);
-    } */
     private void OnDisable()
     {
-        try
-        {
-            // UI_Manager.Instance.SwitchToHUD();
-            CameraFollow.Instance.ResetSize();
-        }
+        try { CameraFollow.Instance.ResetSize(); }
         catch (Exception) { }
     }
 
 
-
+    // MAIN ENTRY POINT TO EDIT / CREATE A LEVEL
+    public void EditLevel(string world, string level)
+    {
+        world_id = world;
+        level_id = level;
+        if (!LoadLevelSchematic(world, level))
+        {
+            if (log) { Debug.Log("(LevelBuilder) New Level schematic : " + level + " for world: " + world); }
+            return;
+        }
+        if (log) { Debug.Log("(LevelBuilder) Loaded Level schematic : " + level + " for world: " + world); }
+    }
+    
 
 
 
@@ -265,7 +274,7 @@ public class LevelBuilder : MonoBehaviour
         };
         selected_cell_visualizer.SetIcon(tools_icons[tool_type]);
         selected_cell_visualizer.gameObject.SetActive(true);
-        if (log_tool) { Debug.Log("(WorldBuilder) selected tool : " + tool_type); }
+        if (log_tool) { Debug.Log("(LevelBuilder) selected tool : " + tool_type); }
     }
 
     // clicks
@@ -393,7 +402,7 @@ public class LevelBuilder : MonoBehaviour
         bool is_a_cycle_created = try_get_cycle_created_by_edge(new_link, out List<WorldNodeVisualizer> cycle);
 
         if (!is_a_cycle_created) { return; }
-        if (log_cycles) { Debug.Log("(WorldBuilder) cycle created with " + cycle.Count + " cells : " + string.Join(", ", cycle)); }
+        if (log_cycles) { Debug.Log("(LevelBuilder) cycle created with " + cycle.Count + " cells : " + string.Join(", ", cycle)); }
 
         // we gather the links of this cycle
         List<WorldLinkVisualizer> links = gather_links_of_cycle(cycle);
@@ -403,7 +412,7 @@ public class LevelBuilder : MonoBehaviour
         {
             if (r.IsEqualTo(cycle, links))
             {
-                if (log_cycles) { Debug.Log("(WorldBuilder) but this cycle already exists in room " + r.name); }
+                if (log_cycles) { Debug.Log("(LevelBuilder) but this cycle already exists in room " + r.name); }
                 return;
             }
         }
@@ -467,7 +476,7 @@ public class LevelBuilder : MonoBehaviour
         }
         if (log_cycles)
         {
-            Debug.Log("(WorldBuilder) adjacency : " + string.Join("\n", adj.Select(kv => $"{kv.Key} -> {string.Join(", ", kv.Value)}")));
+            Debug.Log("(LevelBuilder) adjacency : " + string.Join("\n", adj.Select(kv => $"{kv.Key} -> {string.Join(", ", kv.Value)}")));
         }
 
         // 2) BFS from a to b
@@ -649,10 +658,10 @@ public class LevelBuilder : MonoBehaviour
         for (int i = 0; i < room_visualizers.Count; i++)
         {
             if (!room_visualizers[i].HasNode(cell)) { continue; }
-            if (log_get_room) { Debug.Log("(WorldBuilder) cell " + cell + " is part of room " + room_visualizers[i].name); }
+            if (log_get_room) { Debug.Log("(LevelBuilder) cell " + cell + " is part of room " + room_visualizers[i].name); }
             return room_visualizers[i];
         }
-        if (log_get_room) { Debug.Log("(WorldBuilder) cell " + cell + " is not part of any room"); }
+        if (log_get_room) { Debug.Log("(LevelBuilder) cell " + cell + " is not part of any room"); }
         return null;
     }
 
@@ -661,7 +670,7 @@ public class LevelBuilder : MonoBehaviour
     public Action<BuiltLevelData> OnWorldBuilt = delegate { };
     public void Build()
     {
-        if (log_building) { Debug.Log("(WorldBuilder) Building the world..."); }
+        if (log_building) { Debug.Log("(LevelBuilder) Building the level : " + level_id + $" (world : {world_id})"); }
 
         BuiltLevelData built_world = new BuiltLevelData()
         {
@@ -673,19 +682,26 @@ public class LevelBuilder : MonoBehaviour
         foreach (var r in room_visualizers)
         {
             if (!r.isActiveAndEnabled) { continue; }
-            if (log_building) { Debug.Log($"(WorldBuilder) Building tilemaps for {r.name}"); }
+            if (log_building) { Debug.Log($"(LevelBuilder) Building tilemaps for {r.name}"); }
             built_world.Tilemaps[r.name] = build_room(r);
         }
     
-        if (log_building) { Debug.Log("(WorldBuilder) World built"); }
+        if (log_building) { Debug.Log("(LevelBuilder) World built"); }
         OnWorldBuilt?.Invoke(built_world);
     }
     public void Build(string builder)
     {
+        List<string> builders = new List<string>();
+
+        // check some things
+        if (builder == "ceiling") { builders.Add("walls"); } // we need walls to build the ceiling
+        if (builders.Contains("walls")) { builders.Add("edges"); } // for real walls we need edges
+        builders.Add(builder);
+
         foreach (var r in room_visualizers)
         {
             if (!r.isActiveAndEnabled) { continue; }
-            build_room(r, new List<string> { builder });
+            build_room(r, builders);
         }
     }
     private List<string> default_builders = new List<string> { "carpet", "ground", "walls", "edges", "ceiling" };
@@ -697,27 +713,27 @@ public class LevelBuilder : MonoBehaviour
         {
             if (b == "carpet" && carpet_builder != null)
             {
-                if (log_building) { Debug.Log("(WorldBuilder) Building carpet for " + room.name); }
+                if (log_building) { Debug.Log("(LevelBuilder) Building carpet for " + room.name); }
                 tilemaps["carpet"] = carpet_builder.Build(room);
             }
             if (b == "ground" && ground_builder != null)
             {
-                if (log_building) { Debug.Log("(WorldBuilder) Building ground for " + room.name); }
+                if (log_building) { Debug.Log("(LevelBuilder) Building ground for " + room.name); }
                 tilemaps["ground"] = ground_builder.Build(room);
             }
             if (b == "walls" && walls_builder != null)
             {
-                if (log_building) { Debug.Log("(WorldBuilder) Building walls for " + room.name); }
+                if (log_building) { Debug.Log("(LevelBuilder) Building walls for " + room.name); }
                 tilemaps["walls"] = walls_builder.Build(room);
             }
             if (b == "edges" && edges_builder != null)
             {
-                if (log_building) { Debug.Log("(WorldBuilder) Building edges for " + room.name); }
+                if (log_building) { Debug.Log("(LevelBuilder) Building edges for " + room.name); }
                 tilemaps["edges"] = edges_builder.Build(room);
             }
             if (b == "ceiling" && ceiling_builder != null)
             {
-                if (log_building) { Debug.Log("(WorldBuilder) Building ceiling for " + room.name); }
+                if (log_building) { Debug.Log("(LevelBuilder) Building ceiling for " + room.name); }
                 tilemaps["ceiling"] = ceiling_builder.Build(room);
             }
         }
@@ -751,8 +767,19 @@ public class LevelBuilder : MonoBehaviour
         edges_builder.Clear();
     }
 
-    // SAVE DATA
-    public void SaveData()
+
+
+
+
+
+    ///
+    //
+    ///  DATA MANAGEMENT
+    //
+    ///
+
+    // DATA MANAGEMENT
+    public void SaveCurrentLevelSchematic()
     {
         var data = new LevelSchematic();
 
@@ -796,25 +823,18 @@ public class LevelBuilder : MonoBehaviour
 
         string json = JsonUtility.ToJson(data, prettyPrint: true);
 
-        if (log_data) { Debug.Log("(WorldBuilder) Saving WorldBuilder data :\n" + json); }
 
         // we save the json in a file in assets/data/world_building.json
-        string path = data_path + "working_world.json";
-        System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
+        string path = Path.Combine(world_id, "levels", level_id + ".schematic");
+        AppManager.SaveJsonToWorldFolder(path, json);
+        if (log_data) { Debug.Log("(LevelBuilder) Saved schematic for " + level_id + $"({world_id}) at {path} :\n" + json); }
     }
-    public void LoadData()
+    private void load_data(string json)
     {
-        string path = data_path + "working_world.json";
-        if (!System.IO.File.Exists(path)) { return; }
-
-        string json = System.IO.File.ReadAllText(path, System.Text.Encoding.UTF8);
         var data = JsonUtility.FromJson<LevelSchematic>(json);
 
         // Load cells
-        foreach (var cell in data.Cells)
-        {
-            create_node_at(cell);
-        }
+        foreach (var cell in data.Cells) { create_node_at(cell); }
 
         // Load links
         foreach (var link in data.Links)
@@ -841,25 +861,29 @@ public class LevelBuilder : MonoBehaviour
         }
 
         // Load doors
-        foreach (var door in data.VerDoors)
-        {
-            create_door_at(door, vertical: true);
-        }
-        foreach (var door in data.HorDoors)
-        {
-            create_door_at(door, vertical: false);
-        }
+        foreach (var door in data.VerDoors) { create_door_at(door, vertical: true); }
+        foreach (var door in data.HorDoors) { create_door_at(door, vertical: false); }
 
         // Load lights
-        foreach (var light in data.Lights)
+        foreach (var light in data.Lights) { create_light_at(light); }
+    }
+    public bool LoadLevelSchematic(string world, string level)
+    {
+        string path = Path.Combine("levels", level + ".schematic");
+        string json = AppManager.LoadJsonFromWorldFolder(world, path);
+        if (string.IsNullOrEmpty(json))
         {
-            create_light_at(light);
+            if (log_data) { Debug.LogWarning($"(LevelBuilder) No schematic found at path : {path}"); }
+            return false;
         }
+        load_data(json);
+        if (log_data) { Debug.Log("(LevelBuilder) Loaded schematic for " + level_id + $"({world_id}) from {path} :\n" + json); }
+        return true;
     }
     private void OnDestroy()
     {
         #if UNITY_EDITOR
-        SaveData();
+        SaveCurrentLevelSchematic();
         #endif
     }
 }

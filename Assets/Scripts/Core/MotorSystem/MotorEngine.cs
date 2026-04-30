@@ -4,6 +4,7 @@ using System.Linq;
 using NUnit.Framework;
 using CrashKonijn.Goap.Core;
 using CrashKonijn.Goap.Runtime;
+using System.Threading.Tasks;
 
 public class MotorEngine : BSOD_System<MotorEngine>
 {
@@ -37,15 +38,44 @@ public class MotorEngine : BSOD_System<MotorEngine>
     [Header("Logs")]
     [SerializeField] private bool log_loading = false;
 
-    private void Start()
+    // LOAD / UNLOAD WORLD DATA
+    public override async Task LoadWorldData(string world_id, bool log)
     {
+        if (log) { Debug.Log($"(MotorEngine) Loading world data for world_id: {world_id}"); }
+
+
+        // clear the sub systems
+        batch_provider.ClearCache(log);
+        // batch_achiever.ClearCache(log);
+        // batch_goto.ClearCache(log);
+
+
         // we subscribe to the CapableBank's OnCapableLoading & OnCapableUnloaded events
         CapableBank.Instance.OnCapableLoading += on_capable_loading;
         CapableBank.Instance.OnCapableUnloaded += on_capable_unloaded;
+        if (log) { Debug.Log($"(MotorEngine) Registered callbacks to CapableBank and RoomEngine events"); }
 
         // here we need to gather all the unloaded entities in the scene
         // todo
+
+
+        if (log) { Debug.Log($"(MotorEngine) MOTOR ENGINE SUCCESSFULLY LOADED : {world_id}"); }
     }
+    public override async Task UnloadWorldData(bool log)
+    {
+        // we unsubscribe to the CapableBank's OnCapableLoading & OnCapableUnloaded events
+        CapableBank.Instance.OnCapableLoading -= on_capable_loading;
+        CapableBank.Instance.OnCapableUnloaded -= on_capable_unloaded;
+        if (log) { Debug.Log($"(MotorEngine) Registered callbacks to CapableBank and RoomEngine events"); }
+
+
+        entities.Clear();
+        unloaded_ia.Clear();
+        motors_unloading.Clear();
+
+        if (log) { Debug.Log($"(MotorEngine) MOTOR ENGINE SUCCESSFULLY UNLOADED"); }
+    }
+
 
     // LOAD / UNLOAD CALLBACKS
     private void on_capable_loading(CapableData data)

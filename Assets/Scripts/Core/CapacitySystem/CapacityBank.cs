@@ -188,6 +188,35 @@ public class CapacityBank : MonoBehaviour
 
 
 
+    // DESTROY CAPACITIES
+    public void DestroyAllCapacitiesInstantly()
+    {
+        destroy_all_loaded_capacities();
+        destroy_all_pooled_capacities();
+    }
+    private void destroy_all_loaded_capacities()
+    {
+        for (int i = 0; i < loaded_capacities.Count; i++)
+        {
+            Destroy(loaded_capacities[i].gameObject);
+        }
+        loaded_capacities.Clear();
+    }
+    private void destroy_all_pooled_capacities()
+    {
+        // we clear the pool of pooled capables to be sure to destroy all capable gameobjects in the bank
+        foreach (KeyValuePair<string, Stack<Capacity>> entry in pooled_capacities)
+        {
+            Stack<Capacity> stack = entry.Value;
+            while (stack.Count > 0)
+            {
+                Capacity capacity = stack.Pop();
+                Destroy(capacity.gameObject);
+            }
+        }
+        pooled_capacities.Clear();
+    }
+
 
 
 

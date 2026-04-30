@@ -92,6 +92,7 @@ public class WorldSaver : MonoBehaviour
 
         // get the data
         WorldData data = world.GetStaticData();
+        data.game_version = Application.version;
         data.last_update_date = DateTime.Now.ToString();
         data.creation_date = (just_created || string.IsNullOrEmpty(data.creation_date)) ? data.last_update_date : data.creation_date;
 

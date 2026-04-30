@@ -195,7 +195,7 @@ public class Item : Movable, EndlessInteractable
     public virtual void BeGrabbed(Capable grabber)
     {
         // we free the item from room so the trigger event are not called after
-        CapableSystem.Instance?.OnItemGrabbed(this);
+        CapableEngine.Instance?.OnItemGrabbed(this);
 
 
         _grabbed = true;
@@ -203,7 +203,7 @@ public class Item : Movable, EndlessInteractable
         on_grabbed();
 
         // we load the capacities we have not load yet & remove the room
-        if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Item - OnGrabbed) {data.id} unloading capacities : {string.Join(" ", dynamic_capacity_ids)}"); }
+        if (CapableEngine.Instance.log_loading_extended) { Debug.Log($"(Item - OnGrabbed) {data.id} unloading capacities : {string.Join(" ", dynamic_capacity_ids)}"); }
         CapacityEngine.Instance?.UnloadCapacities(dynamic_capacity_ids, this);
 
         // finally we reset the holder (so next time we check for it it will recalculate it)
@@ -216,9 +216,9 @@ public class Item : Movable, EndlessInteractable
         on_dropped();
 
         // we load the capacities and get a room
-        if (CapableSystem.Instance.log_loading_extended) { Debug.Log($"(Item - OnDropped) {data.id} loading capacities : {string.Join(" ", dynamic_capacity_ids)}"); }
+        if (CapableEngine.Instance.log_loading_extended) { Debug.Log($"(Item - OnDropped) {data.id} loading capacities : {string.Join(" ", dynamic_capacity_ids)}"); }
         CapacityEngine.Instance?.LoadCapacities(dynamic_capacity_ids, this);
-        CapableSystem.Instance?.OnItemDropped(this);
+        CapableEngine.Instance?.OnItemDropped(this);
 
         // finally we reset the holder
         _item_pool_holder = null;

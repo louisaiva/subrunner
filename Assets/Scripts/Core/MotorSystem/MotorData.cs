@@ -276,7 +276,7 @@ using UnityEngine;
         {
             if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - Found matching serialized capable target data with capable ID {capable_data.capable_id}."; }
 
-            CapableData capdata = CapableSystem.Instance.GetCapableDataFromID(capable_data.capable_id);
+            CapableData capdata = CapableEngine.Instance.GetCapableDataFromID(capable_data.capable_id);
             if (capdata is null)
             {
                 if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - But no capable data found for this capable ID. We cannot feed this target data to the runtime world data."; Debug.LogWarning(log_feeding); }
@@ -368,7 +368,7 @@ using UnityEngine;
             if (key_type == null) { continue; }
 
             // we try to get the capable data
-            CapableData capdata = CapableSystem.Instance.GetCapableDataFromID(capable_data.capable_id);
+            CapableData capdata = CapableEngine.Instance.GetCapableDataFromID(capable_data.capable_id);
             if (capdata == null) { continue; }
 
             // we try to get the target state
@@ -542,7 +542,7 @@ public interface ISerialiableTarget
         {
             if (_target_capable != null) { return _target_capable; }
             if (string.IsNullOrEmpty(_capable_id)) { return null; }
-            _target_capable = CapableSystem.Instance.GetCapableDataFromID(_capable_id);
+            _target_capable = CapableEngine.Instance.GetCapableDataFromID(_capable_id);
             return _target_capable;
         }
     }

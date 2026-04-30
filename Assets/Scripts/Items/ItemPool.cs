@@ -56,7 +56,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
     private void Start()
     {
         // if we are an insider we don't even start
-        if (!CapableSystem.Instance.IsOutsider(Capable?.ID))
+        if (!CapableEngine.Instance.IsOutsider(Capable?.ID))
         {
             ensure_ui_has_enough_stacks();
             return;
@@ -122,7 +122,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
             for (int j = 0; j < stack_data.items_ids.Count; j++)
             {
                 string item_id = stack_data.items_ids[j];
-                Item item = CapableSystem.Instance.LoadCapableInstantly(item_id) as Item;
+                Item item = CapableEngine.Instance.LoadCapableInstantly(item_id) as Item;
                 if (item == null)
                 {
                     Debug.LogError($"(ItemPool) Failed to load item with id {item_id} for pool {name}");
@@ -149,7 +149,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
     {
         // we unload items
         List<string> item_ids = Items.Select(i => i.data.id).ToList();
-        CapableSystem.Instance.UnloadCapables(item_ids);
+        CapableEngine.Instance.UnloadCapables(item_ids);
 
         // clears stacks
         stacks.Clear();

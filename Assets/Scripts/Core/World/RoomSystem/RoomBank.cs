@@ -63,11 +63,27 @@ public class RoomBank : MonoBehaviour
 
         // disable room component
         room.enabled = false;
-        // room.gameObject.SetActive(false);
     }
 
-    // DESTROY POOLED ROOMS
-    public void DestroyPooledRooms()
+
+    // DESTROY ROOMS
+    public void DestroyAllRoomsInstantly()
+    {
+        destroy_all_loaded_rooms();
+        destroy_all_pooled_rooms();
+    }
+    private void destroy_all_loaded_rooms()
+    {
+        while (loaded_rooms.Count > 0)
+        {
+            Room room = loaded_rooms[0];
+            if (!Application.isPlaying) { DestroyImmediate(room.gameObject); }
+            else { Destroy(room.gameObject); }
+            loaded_rooms.RemoveAt(0);
+        }
+        loaded_rooms.Clear();
+    }
+    private void destroy_all_pooled_rooms()
     {
         while (pooled_rooms.Count > 0)
         {
@@ -75,7 +91,9 @@ public class RoomBank : MonoBehaviour
             if (!Application.isPlaying) { DestroyImmediate(room.gameObject); }
             else { Destroy(room.gameObject); }
         }
+        pooled_rooms.Clear();
     }
+
 
     // ROOM GETTING
     public Room GetLoadedRoom(string id)

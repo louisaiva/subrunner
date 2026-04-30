@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class DoorEngine : MonoBehaviour
@@ -15,11 +16,15 @@ public class DoorEngine : MonoBehaviour
     public bool log_visibility_update = false;
     public bool log_callbacks = false;
 
-    // START
-    public void Start()
+    // LOAD / UNLOAD WORLD DATA
+    public async Task LoadWorldData(string world_id, bool log)
     {
-        List<DoorData> doors = CapableSystem.Instance.GetWorldDoorsData();
+        if (log) { Debug.Log($"(DoorEngine) Loading world data for world_id: {world_id}"); }
+
+        List<DoorData> doors = CapableEngine.Instance.GetWorldDoorsData();
+        if (log) { Debug.Log($"(DoorEngine) Gathered {doors.Count} doors data from CapableSystem"); }
         createDoorGraph(doors);
+        if (log) { Debug.Log($"(DoorEngine) Created door graph with {door_graph.rooms.Count} rooms and {door_graph.links.Count} links"); }
 
         // register to capable bank loading/unloading events to know when doors are loaded/unloaded
         CapableBank.Instance.OnCapableLoaded += HandleDoorLoaded;
@@ -27,11 +32,27 @@ public class DoorEngine : MonoBehaviour
 
         // register to room engine on capable added to room
         RoomEngine.Instance.OnCapableAddedToRoom += on_capable_enter_room;
-        RoomEngine.Instance.OnRoomChange += (new_room) => UpdateRoomsVisibility();
+        RoomEngine.Instance.OnRoomChange += UpdateRoomsVisibility;
+        if (log) { Debug.Log($"(DoorEngine) Registered callbacks to CapableBank and RoomEngine events"); }
 
-        // first visible rooms update
         UpdateRoomsVisibility();
+        if (log) { Debug.Log($"(DoorEngine) Updated rooms visibility"); }
+
+        if (log) { Debug.Log($"(DoorEngine) DOOR ENGINE SUCCESSFULLY LOADED : {world_id}"); }
     }
+    public async Task UnloadWorldData(bool log)
+    {
+        CapableBank.Instance.OnCapableLoaded -= HandleDoorLoaded;
+        CapableBank.Instance.OnCapableUnloading -= HandleDoorUnloaded;
+        RoomEngine.Instance.OnCapableAddedToRoom -= on_capable_enter_room;
+        RoomEngine.Instance.OnRoomChange -= UpdateRoomsVisibility;
+
+        door_graph = null;
+        loaded_doors.Clear();
+        visible_rooms.Clear();
+        if (log) { Debug.Log($"(DoorEngine) DOOR ENGINE SUCCESSFULLY UNLOADED"); }
+    }
+
 
     // GRAPH CREATION
     private void createDoorGraph(List<DoorData> doors)
@@ -136,6 +157,7 @@ public class DoorEngine : MonoBehaviour
     private readonly List<RoomData> rooms_to_hide = new List<RoomData>();
     private HashSet<RoomNode> accessible_rooms = new HashSet<RoomNode>();
     private readonly HashSet<RoomData> accessible_rooms_data = new HashSet<RoomData>();
+    private void UpdateRoomsVisibility(RoomData room) => UpdateRoomsVisibility();
     private void UpdateRoomsVisibility()
     {
         // get the current room
@@ -204,7 +226,7 @@ public class DoorEngine : MonoBehaviour
         RoomEngine.Instance.TilemapEngine.ShowTilemaps(room_data);
 
         // show all the capables
-        List<CapableData> capables_data = CapableSystem.Instance.GetCapablesDataFromIDs(room_data.capables_ids.Concat(room_data.movables_ids).ToList());
+        List<CapableData> capables_data = CapableEngine.Instance.GetCapablesDataFromIDs(room_data.capables_ids.Concat(room_data.movables_ids).ToList());
         foreach (CapableData data in capables_data)
         {
             if (data.Capable == null || data.Capable.AnimPlayer == null) { continue; }
@@ -231,7 +253,7 @@ public class DoorEngine : MonoBehaviour
         RoomEngine.Instance.TilemapEngine.HideTilemaps(room_data);
 
         // hide all the capables
-        List<CapableData> capables_data = CapableSystem.Instance.GetCapablesDataFromIDs(room_data.capables_ids.Concat(room_data.movables_ids).ToList());
+        List<CapableData> capables_data = CapableEngine.Instance.GetCapablesDataFromIDs(room_data.capables_ids.Concat(room_data.movables_ids).ToList());
         foreach (CapableData data in capables_data)
         {
             // skip the doors bcz we do it manually after
@@ -257,7 +279,7 @@ public class DoorEngine : MonoBehaviour
     // CAPABLES ADDED/REMOVED FROM ROOMS HANDLERS
     private void on_capable_enter_room(string capid, RoomData room_data)
     {
-        CapableData capable_data = CapableSystem.Instance.GetCapableDataFromID(capid);
+        CapableData capable_data = CapableEngine.Instance.GetCapableDataFromID(capid);
         if (capable_data == null) { return; }
         Capable capable = capable_data.Capable;
         if (capable == null) { return; }

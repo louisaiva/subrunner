@@ -20,7 +20,6 @@ public class CapableBank : MonoBehaviour
     // CAPABLE LOADING
     [Header("Loaded capables")]
     [SerializeField] protected List<Capable> loaded_capables;
-    // [SerializeField] protected Transform capables_parent;
     
     [Header("Prefabs")]
     [SerializeField] protected GameObject capable_prefab; // with no kind at all : when instantiating we need to add component to it
@@ -249,6 +248,43 @@ public class CapableBank : MonoBehaviour
 
         // disable the gameObject
         capable.gameObject.SetActive(false);
+    }
+
+
+    // DESTROY CAPABLES
+    public void DestroyAllCapablesInstantly()
+    {
+        destroy_all_loaded_capables();
+        destroy_all_pooled_capables();
+        capables_in_bank.Clear();
+    }
+    private void destroy_all_loaded_capables()
+    {
+        for (int i = 0; i < loaded_capables.Count; i++)
+        {
+            Destroy(loaded_capables[i].gameObject);
+        }
+        loaded_capables.Clear();
+    }
+    private void destroy_all_pooled_capables()
+    {
+        // we clear the pool of pooled capables to be sure to destroy all capable gameobjects in the bank
+        foreach (KeyValuePair<string, Stack<Capable>> entry in pooled_capables)
+        {
+            Stack<Capable> stack = entry.Value;
+            while (stack.Count > 0)
+            {
+                Capable capable = stack.Pop();
+                Destroy(capable.gameObject);
+            }
+        }
+        pooled_capables.Clear();
+    }
+    public void ClearSubSystemsCache(bool log)
+    {
+        // we clear the sub systems caches to be sure to destroy all capable gameobjects in the bank
+        LayerBank.ClearCache(log);
+        ColliderBank.Instance.ClearCache(log);
     }
 
 
