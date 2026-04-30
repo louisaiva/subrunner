@@ -10,21 +10,22 @@ using UnityEngine;
 
 public class AttackCapacity : CooldownCapacity
 {
+    // logs
     public bool log_colliders = false;
     public bool log_health_collider = false;
+
+
+
 
     [Header("Damage parameters")]
     public float distance_to_attack = 1f;
     public int kills = 0;
     public float damage = 10f;
     [SerializeField] private float random_damage_modifier_at_start = 0; // damage += random.range(-5,5) in the start method if this modifier = 5
-    public bool IsAttacking = false;
+    public bool IsAttacking = false; // runtime only
 
     [Header("Enemies parameters")]
-    [SerializeField] List<HealthCapacity> hitted_health_capa = new List<HealthCapacity> { };
     [SerializeField] private List<string> base_excluded_tags = new List<string> { };
-    private int EnemyCount => hitted_health_capa.Count;
-    private List<string> excluded_tags = new List<string> { };
 
 
     [Header("Attack parameters")]
@@ -59,7 +60,7 @@ public class AttackCapacity : CooldownCapacity
     // EVENTS
     public Action<HealthCapacity, float> OnDamageDealt = delegate { };
 
-
+    
     // START
     private void Start()
     {
@@ -75,6 +76,15 @@ public class AttackCapacity : CooldownCapacity
 
         ResetTags();
     }
+
+
+
+    ///
+    //
+    /// USE & COLLISION DETECTION
+    //
+    ///
+
 
     // USE
     public override void Use(Capable capable)
@@ -112,6 +122,67 @@ public class AttackCapacity : CooldownCapacity
             bearer.AddEffect(Effect.Unstoppable, -888f); // infinite unstoppable
         }
     }
+
+    // COLLISION ENTER
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (log_colliders) { Debug.Log("(AttackCapacity) Collider entered: " + other.name); }
+
+        // we check if we are attacking
+        if (!IsAttacking) { return; }
+        if (bearer.AnimPlayer.current_capacity != "attack") { return; }
+
+        // we check if the pc is enabled
+        if (!pc.enabled) { return; }
+
+        // we don't attack ourselves
+        if (bearer.TryGetCapacity(out HealthCapacity health) && health.HealthColliders.Contains(other))
+        {
+            if (log_colliders) { Debug.Log("(AttackCapacity) Collider " + other.name + " belongs to the bearer, we don't attack ourselves"); }
+            return;
+        }
+
+        // we check if it has a HealthCapacity component
+        HealthCapacity enemy_health_capa = other.GetComponentInParent<HealthCapacity>(includeInactive: true);
+        // ! perf issue ???
+        // ? comment on peut récupérer plus efficacement la health capa ?
+        // à part faire un dict collider -> capacities dans ColliderBank mais wtf
+
+        if (enemy_health_capa == null)
+        {
+            if (log_colliders) { Debug.Log("(AttackCapacity) No health capacity found on collider " + other.name); }
+            return;
+        }
+
+        if (!enemy_health_capa.Alive)
+        {
+            if (log_colliders) { Debug.Log("(AttackCapacity) Health capacity found on collider " + other.name + " but it's not alive"); }
+            return;
+        }
+
+        on_health_capa_enter(enemy_health_capa);
+    }
+    private void on_health_capa_enter(HealthCapacity health_capa)
+    {
+        if (log_health_collider) { Debug.Log("(AttackCapacity) Health collider entered: " + health_capa.Capable.ID); }
+
+        // we remove not attackable tags
+        if (excluded_tags.Contains(health_capa.gameObject.tag)) { return; }
+
+
+        // we add it to the list of hitted health capa that 
+        hitted_health_capa.Add(health_capa);
+        if (log_health_collider) { Debug.Log($"(AttackCapacity) {health_capa.Capable.ID} is the new hitted health capacity !"); }
+    }
+
+
+
+
+    ///
+    //
+    /// ATTACK UPDATE & ATTACK MANAGEMENT
+    //
+    ///
 
     // UPDATE
     protected override void Update()
@@ -163,30 +234,33 @@ public class AttackCapacity : CooldownCapacity
 
         // Debug.Log("Updated pc to sprite: " + sprite.name + " with " + pc.pathCount + " points");
     }
+
+
+
+    // ATTACK UPDATE
+    private List<HealthCapacity> hitted_health_capa = new List<HealthCapacity> { }; // RTO
+    private int EnemyCount => hitted_health_capa.Count; // RTO
     private void updateAttack()
     {
         if (log)
         {
             string hit_enemies_str = Capable.name + " attacked enemies : " + EnemyCount + " :\n";
-            foreach (HealthCapacity health_capa in hitted_health_capa)
+            foreach (HealthCapacity health_capa_ in hitted_health_capa)
             {
-                hit_enemies_str += "\t" + health_capa.Capable.name + " (health capa)\n";
+                hit_enemies_str += "\t" + health_capa_.Capable.name + " (health capa)\n";
             }
             Debug.Log(hit_enemies_str);
         }
 
         // calculate damage dealt to single target
         float single_target_damage
-                            = perforant_attack || single_hit // also if single hit we don't care we will apply damage once
+                            = perforant_attack || single_hit // also if single hit we don't care we will apply damage once (so we skip the division)
                             ? damage // if perforant attack, all enemies will receive the full damage
                             : damage / EnemyCount;
 
-
-        // calculate knockback
-        float advantage_attacker_weight = (bearer is Movable movable_w ? movable_w.weight : 5f) * attackant_advantage; // l'attaquant a un avantage de poids afin de recevoir moins de knockback
-        float total_knockback_weight = advantage_attacker_weight + hitted_health_capa.Sum(health_capa => health_capa.Capable is Movable movable ? movable.weight : 5f);
+        // calculate knockback weights
+        float total_knockback_weight = calculate_knockabcks();
         Vector2 attacker_knockback_direction = Vector2.zero;
-
         bool killed_an_enemy = false;
 
 
@@ -198,9 +272,10 @@ public class AttackCapacity : CooldownCapacity
         }
 
         // deal damage to health capa target
+        HealthCapacity health_capa;
         for (int i = 0; i < hitted_health_capa.Count; ++i)
         {
-            HealthCapacity health_capa = hitted_health_capa[i];
+            health_capa = hitted_health_capa[i];
             if (health_capa == null) { continue; }
             applyDamageToHealthCapa(health_capa, single_target_damage, total_knockback_weight, ref attacker_knockback_direction);
 
@@ -209,9 +284,9 @@ public class AttackCapacity : CooldownCapacity
         }
 
 
-        // we stop the attack
+        // we stop the attack for this frame
         hitted_health_capa.Clear();
-        if (single_hit) { IsAttacking = false; }
+        if (single_hit) { IsAttacking = false; } // we stop definitely the attack if single hit
         if (bearer is not Movable movable) { return; }
 
 
@@ -227,8 +302,19 @@ public class AttackCapacity : CooldownCapacity
         Force knockback_inverse = new Force("knockback", attacker_knockback_direction.normalized, knockback_magnitude_inverse);
         movable.AddForce(knockback_inverse);
     }
+    private void stop_attack()
+    {
+        IsAttacking = false;
+        hitted_health_capa.Clear();
+        if (bearer != null)
+        {
+            bearer.RemoveEffect(Effect.Unstoppable);
+            bearer.AnimPlayer.StopPlaying("attack");
+        }
+    }
 
-    // APPLY DAMAGE TO HEALTH CAPACITY
+
+    // DAMAGE AND KNOCKBACK CALCULATION
     private bool applyDamageToHealthCapa(HealthCapacity health_capa, float single_target_damage, float total_knockback_weight, ref Vector2 attacker_knockback_direction)
     {
         // get the capable of the health capa
@@ -257,61 +343,47 @@ public class AttackCapacity : CooldownCapacity
         return false;
     }
 
-    // STOP ATTACK
-    private void stop_attack()
+    // KNOCKBACK
+    private float? _advantage_attacker_weight;
+    private float advantage_attacker_weight // l'attaquant a un avantage de poids afin de recevoir moins de knockback
     {
-        IsAttacking = false;
-        hitted_health_capa.Clear();
-        if (bearer != null)
+        get
         {
-            bearer.RemoveEffect(Effect.Unstoppable);
-            bearer.AnimPlayer.StopPlaying("attack");
+            if (_advantage_attacker_weight != null) { return _advantage_attacker_weight.Value; }
+
+            // else we just pooled our capa so we need to calculate the advantage_attacker_weight
+            if (bearer is not Movable movable)
+            {
+                _advantage_attacker_weight = 5f * attackant_advantage;
+            }
+            else
+            {
+                _advantage_attacker_weight = movable.weight * attackant_advantage;
+            }
+            return _advantage_attacker_weight.Value;
         }
     }
-
-
-    // COLLISION ENTER
-    private void OnTriggerEnter2D(Collider2D other)
+    private float calculate_knockabcks()
     {
-        if (log_colliders)
+        float total_knockback_weight = advantage_attacker_weight;
+        for (int i = 0; i < hitted_health_capa.Count; ++i)
         {
-            Debug.Log("(AttackCapacity) Collider entered: " + other.name);
+            HealthCapacity health_capa = hitted_health_capa[i];
+            if (health_capa == null) { continue; }
+            if (health_capa.Capable is not Movable movable)
+            {
+                total_knockback_weight += 5f;
+                continue;
+            }
+            total_knockback_weight += movable.weight;
         }
-
-        // we check if the other is on the Beings layer
-        if (!other.gameObject.layer.Equals(LayerMask.NameToLayer("Beings"))) { return; }
-
-        // we check if we are attacking
-        if (!IsAttacking) { return; }
-        if (anim_player.current_capacity != "attack") { return; }
-
-        // we check if the pc is enabled
-        if (!pc.enabled) { return; }
-
-        // if (being != null && being.HealthColliders.Contains(other)) { return; } // we don't attack ourselves
-        if (bearer.TryGetCapacity(out HealthCapacity health) && health.HealthColliders.Contains(other)) { return; } // we don't attack ourselves
-
-        // we check if it has a HealthCapacity component
-        HealthCapacity enemy_health_capa = other.GetComponentInParent<HealthCapacity>(includeInactive: true);
-        if (enemy_health_capa != null) { on_health_capa_enter(enemy_health_capa); return; }
+        return total_knockback_weight;
+        // + hitted_health_capa.Sum(health_capa => health_capa.Capable is Movable movable ? movable.weight : 5f);
     }
-    private void on_health_capa_enter(HealthCapacity health_capa)
-    {
-        if (log_health_collider) { Debug.Log("(AttackCapacity) Health collider entered: " + health_capa.Capable.name); }
 
-
-        // we remove not attackable tags
-        if (excluded_tags.Contains(health_capa.gameObject.tag)) { return; }
-
-        // we remove not alive beings
-        if (!health_capa.Alive) { return; }
-
-        // we can add it !
-        hitted_health_capa.Add(health_capa);
-        if (log_health_collider) { Debug.Log($"(AttackCapacity) {health_capa.Capable.name} is the new hitted health capacity !"); }
-    }
 
     // WHITE LISTING
+    private List<string> excluded_tags = new List<string> { }; // RTO
     public async void WhiteListTagShortly(string tag, float duration)
     {
         // we check if the tag is not already in the list
@@ -347,6 +419,11 @@ public class AttackCapacity : CooldownCapacity
 
 
 
+    ///
+    //
+    /// DATA MANAGEMENT
+    //
+    ///
 
 
     // LOAD / UNLOAD DATA
@@ -375,6 +452,8 @@ public class AttackCapacity : CooldownCapacity
     }
     public override void UnloadData()
     {
+        _advantage_attacker_weight = null;
+
         // if we are attacking we stop the attack
         if (IsAttacking) { stop_attack(); }
         base.UnloadData();
@@ -410,17 +489,21 @@ public class AttackCapacity : CooldownCapacity
 
     // TYPE DATA (static at runtime, one per template)
     public float template_damage;
-    public float random_damage_modifier;
+    public float random_damage_modifier; // replace with an "exp" system for mobs ?
     public float distance_to_attack;
     public bool single_hit, split_damage, perforant_attack;
     public float attack_duration, attack_duration_random_variation;
     public float unstoppable_rate;
+
+    // knocback_base ?
+    // attackant_advantage ?
 
     // excluded tags
     public List<string> base_excluded_tags = new List<string> { };
 
     // instance parameters
     public float damage;
+    // kills ?
 
 
     // CONSTRUCTOR

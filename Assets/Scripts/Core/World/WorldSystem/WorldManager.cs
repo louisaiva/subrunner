@@ -33,7 +33,6 @@ public class WorldManager : MonoBehaviour
     private string world_icons_data_path = Path.Combine("data", "world_icons_path.json");
     protected void load_world_icons_paths()
     {
-        
         // if unity editor, we find the paths for the world icons and we write them to a json data file
         #if UNITY_EDITOR
         this.world_icons_path = new WorldIconsPath();

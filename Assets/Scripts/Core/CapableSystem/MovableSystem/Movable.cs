@@ -146,11 +146,11 @@ public class Movable : Capable
 
         // 1 - SEMI GHOST
 
-        // update the semi ghost effect (passing through other feet by setting feet_collider layer to Ghosts)
+        // update the semi ghost effect (passing through other feet by setting feet_collider layer to SemiGhosts)
         string feet_layer = LayerMask.LayerToName(FeetCollider.gameObject.layer);
         if (HasEffect(Effect.SemiGhost) && feet_layer == "Feet")
         {
-            FeetCollider.gameObject.layer = LayerMask.NameToLayer("Ghosts");
+            FeetCollider.gameObject.layer = LayerMask.NameToLayer("SemiGhosts");
         }
         else if (!HasEffect(Effect.SemiGhost) && feet_layer != "Feet")
         {

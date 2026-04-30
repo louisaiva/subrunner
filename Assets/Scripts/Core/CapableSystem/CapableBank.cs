@@ -15,7 +15,6 @@ public class CapableBank : MonoBehaviour
 
         // initialize the pools of capables & anim layers
         pooled_capables = new Dictionary<string,Stack<Capable>>();
-        pooled_anim_layers = new Stack<AnimLayer>();
     }
 
     // CAPABLE LOADING
@@ -32,16 +31,20 @@ public class CapableBank : MonoBehaviour
     protected HashSet<Capable> capables_in_bank = new HashSet<Capable>(); // stores all capables from instantiation (loaded & pooled ones)
 
 
-    // ANIM PLAYER POOLING
-    [Header("AnimPlayer pooling")]
-    [SerializeField] protected GameObject anim_layer_prefab;
-    [SerializeField] protected Stack<AnimLayer> pooled_anim_layers;
+    // SUB SYSTEMS
+    private AnimLayerBank _anim_layer_bank;
+    public AnimLayerBank LayerBank
+    {
+        get
+        {
+            if (_anim_layer_bank == null) { _anim_layer_bank = GetComponentInChildren<AnimLayerBank>(includeInactive: true); }
+            return _anim_layer_bank;
+        }
+    }
 
 
     [Header("Logs")]
     public bool log_types = false;
-    public bool log_anim_player = false;
-    public bool log_anim_layers = false;
     public bool log_inventory_build = false;
 
     // ACTIONS
@@ -57,11 +60,11 @@ public class CapableBank : MonoBehaviour
         // we first try to extract a capable of the right kind from the pool
         Capable capable = extractFromPool(data.kind);
 
-        // we successfully extracted a capable from the pooled ones !
-        if (capable != null)
+        
+        if (capable != null) // we successfully extracted a capable from the pooled ones !
         {
             // then we load the anim data inside the capable
-            load_anim_data(capable.AnimPlayer, data.anim_data);
+            LayerBank.LoadAnimData(capable.AnimPlayer, data.anim_data);
 
             // and its feet
             load_feet_data(capable, data.feet_data);
@@ -69,7 +72,7 @@ public class CapableBank : MonoBehaviour
             // set the good parent for the capable based on its kind
             capable.transform.SetParent(get_parent_based_on_kind(data.kind));
 
-            // fire the callback
+            // fire the loading callback
             OnCapableLoading?.Invoke(data);
 
             // we load its data
@@ -77,7 +80,7 @@ public class CapableBank : MonoBehaviour
             capable.gameObject.SetActive(true);
             loaded_capables.Add(capable);
 
-            // fire the callback
+            // fire the loaded callback
             OnCapableLoaded?.Invoke(capable);
             return capable;
         }
@@ -104,7 +107,7 @@ public class CapableBank : MonoBehaviour
         capables_in_bank.Add(capable);
 
         // then we load the anim data inside the capable
-        load_anim_data(capable.AnimPlayer, data.anim_data);
+        LayerBank.LoadAnimData(capable.AnimPlayer, data.anim_data);
 
         // and its feet
         load_feet_data(capable, data.feet_data);
@@ -164,31 +167,6 @@ public class CapableBank : MonoBehaviour
     }
 
     // ANIM PLAYER & COLLIDERS
-    private void load_anim_data(AnimPlayer player, AnimPlayerData anim_data)
-    {
-        // we get the layers parent
-        Transform layer_parent = player.transform;
-
-        // check that we do have some layers / layer_parent
-        if (layer_parent == null || anim_data.layers == null) { return; }
-        if (log_anim_layers) { Debug.Log($"(CapableBank - Load) Loading anim data for {anim_data.skin}, loading {anim_data.layers.Count} anim layers"); }
-
-        // we go through all the layers inside anim_data and we load a layer for each
-        for (int i = 0; i < anim_data.layers.Count; i++)
-        {
-            // we extract an anim layer from pooled ones
-            AnimLayer anim_layer = extractAnimLayerFromPool(layer_parent);
-
-            // then we load the data in the anim layer
-            AnimLayerData layer_data = anim_data.layers[i];
-            anim_layer.LoadData(layer_data);
-            anim_layer.AssignLeader(player);
-        }
-
-        // we load the main anim data in the player
-        if (log_anim_player) { player.log = true; }
-        player.LoadPlayerData(anim_data); // will play the last anim by default
-    }
     private void load_feet_data(Capable capable, FeetData feet_data)
     {
         // checks if body data is null it means we have no colliders, we do nothing then
@@ -230,23 +208,6 @@ public class CapableBank : MonoBehaviour
             stack.Push(capable);
         }
     }
-    private AnimLayer extractAnimLayerFromPool(Transform layer_parent)
-    {
-        // we first try to extract an anim layer from the pool
-        AnimLayer anim_layer = null;
-        if (pooled_anim_layers != null && pooled_anim_layers.Count > 0)
-        {
-            anim_layer = pooled_anim_layers.Pop();
-            anim_layer.gameObject.SetActive(true);
-            anim_layer.transform.SetParent(layer_parent);
-        }
-        else
-        {
-            // if we have no pooled anim layer we need to instantiate one
-            anim_layer = Instantiate(anim_layer_prefab, layer_parent).GetComponent<AnimLayer>();
-        }
-        return anim_layer;
-    }
 
     // UNLOAD CAPABLES
     public Capable Unload(CapableData data)
@@ -268,16 +229,7 @@ public class CapableBank : MonoBehaviour
     }
     private void unload_capable(Capable capable)
     {
-        // unload anim layers
-        List<AnimLayer> anim_layers = capable.AnimPlayer.GetStaticAnimLayers();
-        if (log_anim_layers) { Debug.Log($"(CapableBank) Unloading capable {capable.data.id}, unloading {anim_layers.Count} anim layers"); }
-        while (anim_layers.Count > 0)
-        {
-            AnimLayer anim_layer = anim_layers[0];
-            anim_layer.UnassignLeader();
-            pooled_anim_layers.Push(anim_layer);
-            anim_layers.RemoveAt(0);
-        }
+        LayerBank.UnloadAnimData(capable.AnimPlayer);
 
         // unload feet colliders
         Transform feet = capable.Feet;
@@ -290,7 +242,6 @@ public class CapableBank : MonoBehaviour
         // unload the capable's data and put it back in the pool
         string kind = capable.data.kind;
         capable.UnloadData();
-        // pooled_capables.Push(capable);
         insertInPool(capable, kind);
 
         // remove the capable from the loaded capables list

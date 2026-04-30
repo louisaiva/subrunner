@@ -85,8 +85,8 @@ public class HealthCapacity : Capacity
         // Invisible
         if (Capable.HasEffect(Effect.Invisible) && HealthCollider != null)
         {
-            // change the body collider to Ghosts layer
-            HealthCollider.gameObject.layer = LayerMask.NameToLayer("Ghosts");
+            // change the body collider to SemiGhosts layer
+            HealthCollider.gameObject.layer = LayerMask.NameToLayer("SemiGhosts");
         }
         else if (HealthCollider != null)
         {

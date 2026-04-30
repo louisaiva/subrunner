@@ -550,7 +550,7 @@ public class AnimPlayer : MonoBehaviour
     private LocalKeyword visibleKeyword;
     public void LoadPlayerData(AnimPlayerData data)
     {
-        if (CapableBank.Instance.log_anim_layers) { Debug.Log($"(AnimPlayer) {name}'s loading data : {(data != null ? data.GetDetails() : "null")}"); }
+        if (CapableBank.Instance.LayerBank.log_anim_layers) { Debug.Log($"(AnimPlayer) {name}'s loading data : {(data != null ? data.GetDetails() : "null")}"); }
 
         transform.localPosition = data.local_position;
 
@@ -569,7 +569,7 @@ public class AnimPlayer : MonoBehaviour
         anim_capacity_priorities = data.anim_capacity_priorities;
 
         // we load the sr data
-        if (CapableBank.Instance.log_anim_layers) { Debug.Log($"(AnimPlayer) {data.skin}'s data default material is {data.material_path}"); }
+        if (CapableBank.Instance.LayerBank.log_anim_layers) { Debug.Log($"(AnimPlayer) {data.skin}'s data default material is {data.material_path}"); }
         Renderer.material = Resources.Load<Material>(data.material_path);
         material = Renderer.material;
         visibleKeyword = new LocalKeyword(material.shader, "_VISIBLE");

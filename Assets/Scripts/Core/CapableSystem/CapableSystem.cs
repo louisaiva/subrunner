@@ -59,11 +59,11 @@ public class CapableSystem : BSOD_System<CapableSystem>
     public Action<CapableData> OnCapableDisappear; // despawned capables + grabbed items
 
 
-    // -------------------------------------
-
-    //     1. AWAKE & DATA LOADING
-
-    // ------------------------------------- */
+    ///
+    //
+    /// 1. AWAKE & DATA LOADING
+    //
+    ///
 
 
     // AWAKE
@@ -315,12 +315,13 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
 
 
-    // -------------------------------------
 
-    //     2. SPAWNING / SWITCHING / DROPPING / GRABBING CAPABLES
 
-    // ------------------------------------- */
-
+    ///
+    //
+    /// 2. SPAWNING / SWITCHING / DROPPING / GRABBING CAPABLES
+    //
+    ///
 
 
     // DATA MANAGMENT
@@ -624,15 +625,38 @@ public class CapableSystem : BSOD_System<CapableSystem>
     }
 
 
-    // -------------------------------------
 
-    // 3. DYNAMIC LOADING & UNLOADING OF CAPABLES
 
-    // ------------------------------------- */
 
+
+    ///
+    //
+    /// 3. DYNAMIC LOADING & UNLOADING OF CAPABLES
+    //
+    ///
 
 
     // LOAD CAPABLES
+
+    public Capable LoadCapableInstantly(string id)
+    {
+        // if the capable is in the unloading queue, it means it is already loaded,
+        // so we remove it from unloading queue and simply return it
+        if (unloading_queue.Contains(id))
+        {
+            unloading_queue.Remove(id);
+            Capable capable = CapableBank.Instance.GetLoadedCapable(id);
+            if (log_loading) { Debug.Log("(CapableSystem) Already loaded " + id); }
+            return capable;
+        }
+
+        // we remove the capable from loading queue
+        if (loading_queue.Contains(id)) { loading_queue.Remove(id); }
+
+        // and we finally load it
+        return load_capable(id);
+    }
+
     /// <summary>
     /// this method is not loading the capables directly, but it adds them to
     /// the loading queue. then, update will cycle through the loading queue and load
@@ -696,39 +720,64 @@ public class CapableSystem : BSOD_System<CapableSystem>
         loaded_capables_data.Add(data.id, data);
         if (log_loading) { Debug.Log("(CapableSystem) Loaded " + data.id); }
 
-        // check if capable needs to be hidden bcz it is in a not visible room
-        RoomEngine.Instance.TryGetCapableRoom(data.id, out RoomData room);
-        if (room == null) { return capable; }
-        
-        if (!RoomEngine.Instance.DoorEngine.IsRoomVisible(room))
-        {
-            capable.AnimPlayer.Hide();
-            if (log_loading) { Debug.Log($"(CapableSystem - Load) Capable {data.id} is in room {room.id} which is not visible, so we hide it"); }
-        }
-        else { capable.AnimPlayer.Show(); }
+        hide_show_capable_on_load(capable, data);
 
         return capable;        
     }
-    public Capable LoadCapableInstantly(string id)
+    
+    /// <summary>
+    /// this helper low level method is called when we load a capable,
+    /// it checks if the capable's room is visible or not, and hide/show the capable accordingly.
+    /// if the capable is a door it makes it visible if at least one of the 2 rooms is visible
+    /// </summary>
+    /// <param name="capable"></param>
+    /// <param name="data"></param>
+    private void hide_show_capable_on_load(Capable capable, CapableData data)
     {
-        // if the capable is in the unloading queue, it means it is already loaded,
-        // so we remove it from unloading queue and simply return it
-        if (unloading_queue.Contains(id))
+        RoomData room;
+        if (data is DoorData ddata)
         {
-            unloading_queue.Remove(id);
-            Capable capable = CapableBank.Instance.GetLoadedCapable(id);
-            if (log_loading) { Debug.Log("(CapableSystem) Already loaded " + id); }
-            return capable;
+            // we get the 2 rooms of the door
+            room = RoomEngine.Instance.GetRoomDataFromID(ddata.room1_id);
+            if (RoomEngine.Instance.DoorEngine.IsRoomVisible(room))
+            {
+                capable.AnimPlayer.Show();
+                if (log_loading_extended) { Debug.Log($"(CapableSystem - Load) Door {data.id} ({ddata.room1_id} - {ddata.room2_id}) has room1 visible --> SHOWING DOOR"); }
+                return;
+            }
+            room = RoomEngine.Instance.GetRoomDataFromID(ddata.room2_id);
+            if (RoomEngine.Instance.DoorEngine.IsRoomVisible(room))
+            {
+                capable.AnimPlayer.Show();
+                if (log_loading_extended) { Debug.Log($"(CapableSystem - Load) Door {data.id} ({ddata.room1_id} - {ddata.room2_id}) has room2 visible --> SHOWING DOOR"); }
+                return;
+            }
+
+            // else both rooms are not visible, we hide the door
+            capable.AnimPlayer.Hide();
+            if (log_loading_extended) { Debug.Log($"(CapableSystem - Load) Door {data.id} ({ddata.room1_id} - {ddata.room2_id}) has both rooms not visible --> HIDING DOOR"); }
+            return;
         }
 
-        // we remove the capable from loading queue
-        if (loading_queue.Contains(id)) { loading_queue.Remove(id); }
 
-        // and we finally load it
-        return load_capable(id);
+        // else the capable is not a door.
+
+        // check if capable needs to be hidden bcz it is in a not visible room
+        RoomEngine.Instance.TryGetCapableRoom(data.id, out room);
+        if (room == null) { return; }
+
+        if (!RoomEngine.Instance.DoorEngine.IsRoomVisible(room))
+        {
+            capable.AnimPlayer.Hide();
+            if (log_loading_extended) { Debug.Log($"(CapableSystem - Load) Capable {data.id} is in room {room.id} which is not visible --> HIDING CAPABLE"); }
+        }
+        else { capable.AnimPlayer.Show(); }
     }
 
+
+
     // UNLOAD CAPABLES
+
     /// <summary>
     /// same as LoadCapables(), this method is not unloading the capables directly, but it adds them to
     /// the unloading queue. then, update will cycle through the unloading queue and unload
@@ -831,11 +880,13 @@ public class CapableSystem : BSOD_System<CapableSystem>
 
 
 
-    // -------------------------------------
 
-    //     4. GETTERS & OTHERS
 
-    // ------------------------------------- */
+    ///
+    //
+    /// 4. GETTERS & OTHERS
+    //
+    ///
 
 
     // GETTERS

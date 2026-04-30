@@ -164,9 +164,23 @@ public class AnimLayer : MonoBehaviour
 
 
 
-    // RENDERER MANAGEMENT
-    public void DisableRenderer() { sr.enabled = false; }
-    public void EnableRenderer() { sr.enabled = true; }
+    // RENDERER MANAGEMENT / VISIBILITY
+    public void DisableRenderer() { sr.enabled = false; } // ? obsolete ???
+    public void EnableRenderer() { sr.enabled = true; } // ? obsolete ???
+
+    [Header("Visibility (debug only)")]
+    [SerializeField] private bool visible_on; // RTO
+    public void Hide()
+    {
+        visible_on = false;
+        material.SetKeyword(visibleKeyword, false);
+    }
+    public void Show()
+    {
+        visible_on = true;
+        material.SetKeyword(visibleKeyword, true);
+    }
+
 
 
     // ORIENTATION MANAGEMENT
@@ -180,15 +194,6 @@ public class AnimLayer : MonoBehaviour
         PlayAtFrame($"_.{current_capacity}.{orientation}", current_frame, duration_override); // we try to play the idle anim of the new orientation, if it exists it means that we have a perfect orientation for this new direction and we will switch to it, otherwise we will keep the current anim which is the closest one to the leader's one
 
         if (log) { Debug.Log($"(AnimLayer) Set orientation to {orientation} (perfect orientation: {current_anim.name})"); }
-    }
-
-    public void Hide()
-    {
-        material.SetKeyword(visibleKeyword, false);
-    }
-    public void Show()
-    {
-        material.SetKeyword(visibleKeyword, true);
     }
 
 

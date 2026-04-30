@@ -4,6 +4,6 @@ public class WorldNodeVisualizer : WorldCellVisualizer
 {
     public bool IsPartOfRoom()
     {
-        return WorldBuilder.StaticInstance.GetRoomOfNode(this) != null;
+        return LevelBuilder.StaticInstance.GetRoomOfNode(this) != null;
     }
 }

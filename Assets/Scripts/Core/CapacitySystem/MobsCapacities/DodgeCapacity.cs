@@ -11,7 +11,7 @@ public class DodgeCapacity : CooldownCapacity
 {
     [Header("Dodge parameters")]
     [SerializeField] private float dodge_magnitude = 25f;
-    [SerializeField] private Force dodge_force;
+    [SerializeField] private Force dodge_force; // RTO
     [SerializeField] private float dodge_duration = default;
 
     // USE
@@ -62,4 +62,65 @@ public class DodgeCapacity : CooldownCapacity
         // Debug.Log(transform.parent.name + " just dodged");
         if (log) { Debug.Log($"(DodgeCapacity) {capable.name} used dodge for {duration} seconds"); }
     }
+
+
+    // LOAD / UNLOAD DATA
+    public override void LoadData(CapacityData data)
+    {
+        if (data is not DodgeData ddata) { return; }
+
+        // we load the static data
+        dodge_magnitude = ddata.dodge_magnitude;
+        dodge_duration = ddata.dodge_duration;
+
+        base.LoadData(data);
+    }
+
+    // GET STATIC DATA
+    public override CapacityData GetStaticData()
+    {
+        DodgeData static_data = new DodgeData(base.GetStaticData())
+        {
+            dodge_magnitude = this.dodge_magnitude,
+            dodge_duration = this.dodge_duration
+        };
+
+        return static_data;
+    }
+}
+
+public class DodgeData : CapacityData
+{
+
+    // instance parameters
+    public float dodge_magnitude;
+    public float dodge_duration;
+
+
+    // CONSTRUCTOR
+    public DodgeData(CapacityData parent)
+    {
+        foreach (var prop in parent.GetType().GetProperties()) { prop.SetValue(this, prop.GetValue(parent)); }
+        foreach (var prop in parent.GetType().GetFields()) { prop.SetValue(this, prop.GetValue(parent)); }
+    }
+
+    // DUPLICATE
+    public override ICapacityData Duplicate()
+    {
+        return new DodgeData(base.Duplicate() as CapacityData)
+        {
+            dodge_magnitude = this.dodge_magnitude,
+            dodge_duration = this.dodge_duration
+        };
+    }
+
+    // GET DETAILS
+    public override string GetDetails()
+    {
+        string details = "";
+        details += $"  - dodge magnitude : {dodge_magnitude}\n";
+        details += $"  - dodge duration : {dodge_duration}\n";
+        return base.GetDetails() + details;
+    }
+
 }

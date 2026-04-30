@@ -51,7 +51,7 @@ public class LevelTranslator : MonoBehaviour
     private void Start()
     {
         // we subscribe to world generation end event
-        WorldBuilder.StaticInstance.OnWorldBuilt += Translate;
+        LevelBuilder.StaticInstance.OnWorldBuilt += Translate;
     }
 
     // low level level methods
@@ -118,7 +118,7 @@ public class LevelTranslator : MonoBehaviour
 
 
     // TRANSLATION
-    public void Translate(BuiltWorldData built_world)
+    public void Translate(BuiltLevelData built_world)
     {
         if (log_translations) { Debug.Log($"(LevelTranslator) translating world into level {level_name}"); }
 

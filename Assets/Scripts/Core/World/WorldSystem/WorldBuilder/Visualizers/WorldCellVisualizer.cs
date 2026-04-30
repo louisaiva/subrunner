@@ -13,7 +13,7 @@ public class WorldCellVisualizer : MonoBehaviour
             return _sprite_renderer;
         }
     }
-    protected Grid grid { get { return WorldBuilder.StaticInstance.Grid; } }
+    protected Grid grid { get { return LevelBuilder.StaticInstance.Grid; } }
     public Color Color
     {
         get { return sprite_renderer.color; }

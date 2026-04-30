@@ -120,6 +120,7 @@ MonoBehaviour:
   log_frames: 0
   log_assign: 0
   already_assigned: 0
+  visible_on: 0
 --- !u!1 &2427717718730627810
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,6 +241,7 @@ MonoBehaviour:
   log_frames: 0
   log_assign: 0
   already_assigned: 0
+  visible_on: 0
 --- !u!1 &2596632534333192164
 GameObject:
   m_ObjectHideFlags: 0
@@ -438,6 +440,7 @@ MonoBehaviour:
   log_frames: 0
   log_assign: 0
   already_assigned: 0
+  visible_on: 0
 --- !u!1 &4344634166920622294
 GameObject:
   m_ObjectHideFlags: 0
@@ -449,6 +452,7 @@ GameObject:
   - component: {fileID: 2083744977804685073}
   - component: {fileID: 130027646594101531}
   - component: {fileID: 6919226846701683914}
+  - component: {fileID: 3504103856464334964}
   m_Layer: 29
   m_Name: feet
   m_TagString: Untagged
@@ -570,6 +574,22 @@ MonoBehaviour:
     - rid: 1738858403717447780
       type: {class: ShadowShape2DProvider_Collider2D, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
       data: 
+--- !u!114 &3504103856464334964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4344634166920622294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 3
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &5417400195445535145
 GameObject:
   m_ObjectHideFlags: 0
@@ -690,6 +710,7 @@ MonoBehaviour:
   log_frames: 0
   log_assign: 0
   already_assigned: 0
+  visible_on: 0
 --- !u!1 &5448391821279933632
 GameObject:
   m_ObjectHideFlags: 0

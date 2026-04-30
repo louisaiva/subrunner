@@ -198,6 +198,7 @@ MonoBehaviour:
   log_frames: 0
   log_assign: 0
   already_assigned: 0
+  visible_on: 0
 --- !u!1 &4047688590696522138
 GameObject:
   m_ObjectHideFlags: 0
@@ -318,6 +319,7 @@ MonoBehaviour:
   log_frames: 0
   log_assign: 0
   already_assigned: 0
+  visible_on: 0
 --- !u!1 &4344634166920622294
 GameObject:
   m_ObjectHideFlags: 0
@@ -329,6 +331,7 @@ GameObject:
   - component: {fileID: 2083744977804685073}
   - component: {fileID: 130027646594101531}
   - component: {fileID: 6919226846701683914}
+  - component: {fileID: 2495554178197548097}
   m_Layer: 29
   m_Name: feet
   m_TagString: Untagged
@@ -395,7 +398,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 0.33333334}
+  m_Size: {x: 1, y: 0.5}
   m_EdgeRadius: 0
 --- !u!114 &6919226846701683914
 MonoBehaviour:
@@ -432,8 +435,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: 0, y: 0.24999237, z: 0}
-      m_Extent: {x: 0.5, y: 0.16666412, z: 0}
+      m_Center: {x: 0, y: 0.25, z: 0}
+      m_Extent: {x: 0.5, y: 0.25, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0
@@ -450,6 +453,22 @@ MonoBehaviour:
     - rid: 1738858403717447780
       type: {class: ShadowShape2DProvider_Collider2D, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
       data: 
+--- !u!114 &2495554178197548097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4344634166920622294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 3
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &5417400195445535145
 GameObject:
   m_ObjectHideFlags: 0
@@ -570,6 +589,7 @@ MonoBehaviour:
   log_frames: 0
   log_assign: 0
   already_assigned: 0
+  visible_on: 0
 --- !u!1 &5448391821279933632
 GameObject:
   m_ObjectHideFlags: 0
@@ -715,6 +735,7 @@ MonoBehaviour:
     - close
     lock_orientation: 1
     one_shot: 1
+  never_flip: 0
   log: 0
   log_orientation: 1
   log_advanced: 0
@@ -785,6 +806,7 @@ MonoBehaviour:
       material_path: 
       sorting_layer_id: 0
       order_in_layer: 0
+      never_flip: 0
       layers: []
       local_position: {x: 0, y: 0}
     inventory:

@@ -10,18 +10,18 @@ using UnityEngine.Tilemaps;
 
 
 [RequireComponent(typeof(Grid))]
-public class WorldBuilder : MonoBehaviour
+public class LevelBuilder : MonoBehaviour
 {
 
     // SINGLETON LOGIC
-    private static WorldBuilder _static_instance;
-    public static WorldBuilder StaticInstance
+    private static LevelBuilder _static_instance;
+    public static LevelBuilder StaticInstance
     {
         get
         {
             if (_static_instance == null)
             {
-                _static_instance = FindFirstObjectByType<WorldBuilder>(FindObjectsInactive.Include);
+                _static_instance = FindFirstObjectByType<LevelBuilder>(FindObjectsInactive.Include);
                 if (_static_instance == null) { Debug.LogError("No WorldBuilder instance found in the scene."); }
             }
             return _static_instance;
@@ -658,12 +658,12 @@ public class WorldBuilder : MonoBehaviour
 
 
     // BUILDER
-    public Action<BuiltWorldData> OnWorldBuilt = delegate { };
+    public Action<BuiltLevelData> OnWorldBuilt = delegate { };
     public void Build()
     {
         if (log_building) { Debug.Log("(WorldBuilder) Building the world..."); }
 
-        BuiltWorldData built_world = new BuiltWorldData()
+        BuiltLevelData built_world = new BuiltLevelData()
         {
             // Cells = new List<WorldNodeVisualizer>(node_visualizers),
             // Links = new List<WorldLinkVisualizer>(link_visualizers),
@@ -754,7 +754,7 @@ public class WorldBuilder : MonoBehaviour
     // SAVE DATA
     public void SaveData()
     {
-        var data = new WorldBuilderData();
+        var data = new LevelSchematic();
 
         // create cells
         for (int i = 0; i < node_visualizers.Count; i++)
@@ -777,14 +777,14 @@ public class WorldBuilder : MonoBehaviour
             if (link_visualizers[i] == null) { continue; }
             if (link_visualizers[i].NodeA == null) { continue; }
             if (link_visualizers[i].NodeB == null) { continue; }
-            data.Links.Add(new WorldLinkData { CellA = link_visualizers[i].NodeA.Cell, CellB = link_visualizers[i].NodeB.Cell });
+            data.Links.Add(new LinkSchematic { CellA = link_visualizers[i].NodeA.Cell, CellB = link_visualizers[i].NodeB.Cell });
         }
 
         // create rooms
         for (int i = 0; i < room_visualizers.Count; i++)
         {
             if (room_visualizers[i] == null) { continue; }
-            data.Rooms.Add(new WorldRoomData { Name = room_visualizers[i].name, Cells = room_visualizers[i].GetLoopCells() });
+            data.Rooms.Add(new RoomSchematic { Name = room_visualizers[i].name, Cells = room_visualizers[i].GetLoopCells() });
         }
         
         // create lights
@@ -808,7 +808,7 @@ public class WorldBuilder : MonoBehaviour
         if (!System.IO.File.Exists(path)) { return; }
 
         string json = System.IO.File.ReadAllText(path, System.Text.Encoding.UTF8);
-        var data = JsonUtility.FromJson<WorldBuilderData>(json);
+        var data = JsonUtility.FromJson<LevelSchematic>(json);
 
         // Load cells
         foreach (var cell in data.Cells)
@@ -864,33 +864,11 @@ public class WorldBuilder : MonoBehaviour
     }
 }
 
-[Serializable] public class WorldBuilderData
-{
-    public List<Vector3Int> Cells = new List<Vector3Int>();
-    public List<Vector3Int> VerDoors = new List<Vector3Int>();
-    public List<Vector3Int> HorDoors = new List<Vector3Int>();
-    public List<Vector3Int> Lights = new List<Vector3Int>();
-    public List<WorldLinkData> Links = new List<WorldLinkData>();
-    public List<WorldRoomData> Rooms = new List<WorldRoomData>();
-}
-[Serializable] public class WorldLinkData
-{
-    public Vector3Int CellA;
-    public Vector3Int CellB;
-}
-[Serializable] public class WorldRoomData
-{
-    public string Name;
-    public List<Vector3Int> Cells = new List<Vector3Int>();
-}
 
-public class BuiltWorldData
+// RTO DATA CLASS -> for sending data to the LevelTranslator
+public class BuiltLevelData
 {
     // cells links rooms visu
-    // public List<WorldNodeVisualizer> Cells = new List<WorldNodeVisualizer>();
-    // public List<WorldDoorVisualizer> Doors = new List<WorldDoorVisualizer>();
-    // public List<WorldLightVisualizer> Lights = new List<WorldLightVisualizer>();
-    // public List<WorldLinkVisualizer> Links = new List<WorldLinkVisualizer>();
     public List<WorldRoomVisualizer> Rooms = new List<WorldRoomVisualizer>();
 
     // tilemaps
@@ -908,20 +886,23 @@ public class BuiltWorldData
 }
 
 
-
-
-
-#if UNITY_EDITOR
-[UnityEditor.CustomEditor(typeof(WorldBuilder))]
-public class WorldBuilderEditor : UnityEditor.Editor
+// USEFUL SAVING DATA CLASSES -> for saving the current schematic
+[Serializable] public class LevelSchematic
 {
-    public override void OnInspectorGUI()
-    {
-        if (GUILayout.Button("Save Data"))
-        {
-            ((WorldBuilder)target).SaveData();
-        }
-        DrawDefaultInspector();
-    }
+    public List<Vector3Int> Cells = new List<Vector3Int>();
+    public List<Vector3Int> VerDoors = new List<Vector3Int>();
+    public List<Vector3Int> HorDoors = new List<Vector3Int>();
+    public List<Vector3Int> Lights = new List<Vector3Int>();
+    public List<LinkSchematic> Links = new List<LinkSchematic>();
+    public List<RoomSchematic> Rooms = new List<RoomSchematic>();
 }
-#endif
+[Serializable] public class LinkSchematic
+{
+    public Vector3Int CellA;
+    public Vector3Int CellB;
+}
+[Serializable] public class RoomSchematic
+{
+    public string Name;
+    public List<Vector3Int> Cells = new List<Vector3Int>();
+}

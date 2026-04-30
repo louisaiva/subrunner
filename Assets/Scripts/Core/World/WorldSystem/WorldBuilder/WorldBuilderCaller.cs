@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class WorldBuilderCaller : MonoBehaviour
 {
-    private WorldBuilder _worldBuilder;
-    private WorldBuilder worldBuilder
+    private LevelBuilder _worldBuilder;
+    private LevelBuilder worldBuilder
     {
         get
         {
-            if (_worldBuilder == null) { _worldBuilder = WorldBuilder.StaticInstance; }
+            if (_worldBuilder == null) { _worldBuilder = LevelBuilder.StaticInstance; }
             return _worldBuilder;
         }
     }
