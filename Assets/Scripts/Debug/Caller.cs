@@ -32,10 +32,12 @@ public class Caller : MonoBehaviour
 
 
     // WORLD MANAGER
+    public void OpenWorldFolder() => AppManager.OpenWorldsFolder();
     public void UnloadWorld() => WorldManager.Instance?.UnloadCurrentWorld();
     public void LoadWorld() => WorldManager.Instance?.LoadSelectedWorld();
     public void CreateWorld() => WorldManager.Instance?.CreateNewWorld();
-    public void OpenWorldFolder() => AppManager.OpenWorldsFolder();
+    public void CreateLevel() => WorldManager.Instance?.CreateNewLevel();
+
 
     // LEVEL BUILDER
     public void ToggleWorldBuilder() => LevelBuilder.StaticInstance?.gameObject.SetActive(!LevelBuilder.StaticInstance.gameObject.activeSelf);

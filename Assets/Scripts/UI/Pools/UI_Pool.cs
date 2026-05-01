@@ -57,6 +57,16 @@ public class UI_Pool : MonoBehaviour
         if (log) { Debug.Log("(UI_Pool) stopped current transition for pool : " + Reference); }
     }
 
+
+
+
+    ///
+    //
+    ///  MAIN COROUTINES
+    //
+    ///
+
+
     // SHOW / HIDE
     public IEnumerator ShowCoroutine(List<GameObject> dont_show = null, float duration_override = -1f, bool was_stacked = false)
     {
@@ -81,6 +91,9 @@ public class UI_Pool : MonoBehaviour
         yield return StartCoroutine(enable_coroutine());
         if (log_extended) { Debug.Log($"(UI_Pool - ShowCoroutine) enable coroutine succeeded ! : {Reference}"); }
 
+        // on added to stack
+        if (!was_stacked) { on_added_to_stack(); }
+
         // on clear la transition
         current_transition = null;
     }
@@ -102,6 +115,9 @@ public class UI_Pool : MonoBehaviour
         current_transition = StartCoroutine(hide_coroutine(dont_hide, duration_override));
         yield return current_transition;
         if (log_extended) { Debug.Log($"(UI_Pool - HideCoroutine) hide coroutine succeeded ! : {Reference}"); }
+
+        // on added to stack
+        on_removed_from_stack();
 
         // on clear la transition
         current_transition = null;
@@ -165,8 +181,20 @@ public class UI_Pool : MonoBehaviour
         current_transition = null;
     }
 
+
+
+
+
+
+    ///
+    //
+    ///  VIRTUAL METHODS
+    //
+    ///
+
+
     // LOW BEFORE SHOWING
-    protected virtual void before_showing() { } // only useful for overriding properly
+    protected virtual void before_showing() { }
 
     // LOW SHOWING
     protected virtual IEnumerator show_coroutine(List<GameObject> dont_show = null, float duration_override = -1f, bool was_stacked = false)
@@ -245,6 +273,24 @@ public class UI_Pool : MonoBehaviour
     // LOW ENABLING
     protected virtual IEnumerator enable_coroutine() { yield break; } // only useful for overriding properly for pools that don't need to override the showing
     protected virtual IEnumerator disable_coroutine() { yield break; }
+
+
+    // EVENTS
+    protected virtual void on_added_to_stack() { } // not called when a stacked pool is unstacked (this pool get focus again) since it was stacked the whole time
+    protected virtual void on_removed_from_stack() { } // same, not called when another pool is stacked on top since this pool is still stacked
+
+
+
+
+
+
+    ///
+    //
+    ///  SPECIFIC METHODS
+    //
+    ///
+
+
 
     // PREPARING POOl
     public void PreparePool()

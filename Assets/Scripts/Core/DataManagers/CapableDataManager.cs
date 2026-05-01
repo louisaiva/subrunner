@@ -39,17 +39,18 @@ public class CapableDataManager : MonoBehaviour
         AssetDatabase.Refresh();
         #endif
     }
-    private void saveCapableData(Capable capable, string world_path)
+    private void saveCapableData(Capable capable, string world_id)
     {
         ICapableData data = capable.GetStaticData();
         // save the current RoomData to a json file
         string json = JsonUtility.ToJson(data, true);
-        string path = Path.Combine(world_path, "capables", data.id + ".json");
-        System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
-        if (log) { Debug.Log($"(Capable - Save Data) Updated & Saved CapableData : {capable.name} (to {path})\n\n{data.GetDetails()}\n\n{json}"); }
+        string path = Path.Combine("capables", data.id + ".json");
+        AppManager.SaveJsonToWorldFolder(world_id, path, json, log);
+        // System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
+        // if (log) { Debug.Log($"(Capable - Save Data) Updated & Saved CapableData : {capable.name} (to {path})\n\n{data.GetDetails()}\n\n{json}"); }
 
         // we also save the capacities of this capable if we want to
-        if (save_capables_capacities) { saveCapacitiesOfCapable(capable, world_path); }
+        if (save_capables_capacities) { saveCapacitiesOfCapable(capable, world_id); }
 
 
         // we also save the capables in its inventory if we want to
@@ -60,10 +61,10 @@ public class CapableDataManager : MonoBehaviour
         List<Item> items = inv.GetStaticItems();
         foreach (Item item in items)
         {
-            saveCapableData(item, world_path);
+            saveCapableData(item, world_id);
         }
     }
-    private void saveCapacitiesOfCapable(Capable capable, string world_path)
+    private void saveCapacitiesOfCapable(Capable capable, string world_id)
     {
         // we get all the capacities (ONLY DIRECT CHILDREN - we don't want to get the capa of the items we store :)
         List<Capacity> capacities = new List<Capacity>();
@@ -82,18 +83,19 @@ public class CapableDataManager : MonoBehaviour
 
             // save the current RoomData to a json file
             string capacity_json = JsonUtility.ToJson(capacity_data, true);
-            string path = Path.Combine(world_path, "capacities", capacity_data.id + ".json");
-            System.IO.File.WriteAllText(path, capacity_json, System.Text.Encoding.UTF8);
+            string path = Path.Combine("capacities", capacity_data.id + ".json");
+            AppManager.SaveJsonToWorldFolder(world_id, path, capacity_json, log);
+            // System.IO.File.WriteAllText(path, capacity_json, System.Text.Encoding.UTF8);
             if (log) { Debug.Log($"(Capable - Save Data) Updated & Saved CapacityData : {capacity.name} (to {path})\n\n{capacity_data.GetDetails()}\n\n{capacity_json}"); }
         }
     }
     public void SaveAllCapablesDataInScene()
     {
         Capable[] all_capables = FindObjectsByType<Capable>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        string world_path = WorldManager.CurrentStaticWorldDataPath;
+        string world_id = WorldManager.StaticSelectedWorld;
         foreach (Capable capable in all_capables)
         {
-            saveCapableData(capable, world_path);
+            saveCapableData(capable, world_id);
         }
 
 
@@ -102,11 +104,11 @@ public class CapableDataManager : MonoBehaviour
         AssetDatabase.Refresh();
         #endif
     }
-    public void SaveCapablesData(List<Capable> capables, string world_path)
+    public void SaveCapablesData(List<Capable> capables, string world_id)
     {
         foreach (Capable capable in capables)
         {
-            saveCapableData(capable, world_path);
+            saveCapableData(capable, world_id);
         }
 
         #if UNITY_EDITOR

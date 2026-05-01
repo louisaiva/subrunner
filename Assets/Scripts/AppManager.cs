@@ -220,11 +220,18 @@ public class AppManager : MonoBehaviour
         EnsureFolderExists(worlds_folder_path);
         Application.OpenURL(worlds_folder_path);
     }
+    public static void OpenFolderInWorlds(string path_in_worlds)
+    {
+        string path = Path.Combine(Application.persistentDataPath, "worlds", path_in_worlds);
+        EnsureFolderExists(path);
+        Application.OpenURL(path);
+    }
 
     // JSON DATA SAVING TO WORLD DATA PATH
-    public static void SaveJsonToWorldFolder(string path, string json)
+    public static void SaveJsonToWorldFolder(string world_id, string path, string json, bool log = false)
     {
-        string json_path = Path.Combine(WorldManager.WorldsDataPath, path);
+        string json_path = Path.Combine(WorldManager.WorldsDataPath, world_id, path);
         System.IO.File.WriteAllText(json_path, json);
+        if (log) { Debug.Log($"(AppManager) Saved json to {world_id} world folder: {json_path}\n{json}"); }
     }
 }

@@ -3,14 +3,12 @@ using System.Collections;
 public class UI_LevelBuilderPool : UI_SlottablePool
 {
     // ENABLING
-    protected override IEnumerator enable_coroutine()
+    protected override void on_added_to_stack()
     {
-        yield return base.enable_coroutine();
         LevelBuilder.StaticInstance?.gameObject.SetActive(true);
     }
-    protected override IEnumerator disable_coroutine()
+    protected override void on_removed_from_stack()
     {
         LevelBuilder.StaticInstance?.gameObject.SetActive(false);
-        yield return base.disable_coroutine();
     }
 }

@@ -45,11 +45,11 @@ public class LevelDataManager : MonoBehaviour
         AssetDatabase.Refresh();
         #endif
     }
-    public void SaveLevels(List<Level> levels, string world_path)
+    public void SaveLevels(List<Level> levels, string world_id)
     {
         foreach (Level level in levels)
         {
-            save_level_data(level, world_path);
+            save_level_data(level, world_id);
         }
 
         #if UNITY_EDITOR
@@ -133,44 +133,39 @@ public class LevelDataManager : MonoBehaviour
 
 
     // low level saving
-    private void save_level_data(Level level, string world_path)
+    private void save_level_data(Level level, string world_id)
     {
         LevelData data = level.GetStaticData();
-
-        // save the current LevelData to a json file
-        string json = JsonUtility.ToJson(data, true);
-        string path = Path.Combine(world_path, "levels", data.id + ".json");
-        System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
-        if (log) { Debug.Log($"(LevelDataManager) Updated & Saved LevelData : {level.name} (to {path})\n\n{json}"); }
+        SaveEngine.SaveLevelData(data, world_id);
 
         // check if we need to save the rooms also
-        if (save_rooms_data) { save_rooms_level_data(level, world_path); }
+        if (save_rooms_data) { save_rooms_level_data(level, world_id); }
 
         // check if we need to save the capables also
-        if (save_capables_data) { save_capables_level_data(level, world_path); }
+        if (save_capables_data) { save_capables_level_data(level, world_id); }
     }
-    private void save_rooms_level_data(Level level, string world_path)
+    private void save_rooms_level_data(Level level, string world_id)
     {
         string json;
         string path;
-        string rooms_path = Path.Combine(world_path, "rooms");
         foreach (Room room in level.GetStaticRooms())
         {
             RoomData rdata = room.GetStaticData();
 
             // save the current RoomData to a json file
             json = JsonUtility.ToJson(rdata, true);
-            path = Path.Combine(rooms_path, rdata.id + ".json");
+            path = Path.Combine("rooms", rdata.id + ".json");
+            AppManager.SaveJsonToWorldFolder(world_id, path, json, log);/* 
             System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
 
-            if (log) { Debug.Log($"(LevelDataManager) Updated & Saved RoomData : {room.name} (to {path})\n\n{json}"); }
+            if (log) { Debug.Log($"(LevelDataManager) Updated & Saved RoomData : {room.name} (to {path})\n\n{json}"); } */
         }
     }
-    private void save_capables_level_data(Level level, string world_path)
+    private void save_capables_level_data(Level level, string world_id)
     {
         // we use the CapablesDataManager to save the capables data so it saves them with the parameters etc
         // (save capacities & save capables in inventory)
-        CapableManager.SaveCapablesData(level.GetStaticCapables().ToList(), world_path);
+        CapableManager.SaveCapablesData(level.GetStaticCapables().ToList(), world_id);
     }
 
 

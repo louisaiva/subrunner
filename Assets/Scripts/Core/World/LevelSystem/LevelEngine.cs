@@ -93,6 +93,7 @@ public class LevelEngine : BSOD_System<LevelEngine>
     {
         // we instanciate a new level and assign the data to it
         Level new_level = Instantiate(level_prefab, level_parent);
+        new_level.name = "Level_" + data.id;
         new_level.data = data;
         world_levels.Add(data.id, new_level);
         return new_level;

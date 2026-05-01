@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UI_CycleButton : UI_Button, Colorant
+public class UI_CycleButton : UI_Button, Colorant, Descriptable
 {
 
 
@@ -19,6 +20,9 @@ public class UI_CycleButton : UI_Button, Colorant
     private int current_cycle_index = 0;
     private CycleButtonData current_cycle => cycle_datas[current_cycle_index];
 
+    // DESCRIPTABLE
+    public string Name => current_cycle.label;
+    public string Description => current_cycle.description;
 
     [Header("Colorers")]
     public List<UI_Colorer> colorers = new List<UI_Colorer>();
@@ -178,6 +182,8 @@ public class UI_CycleButton : UI_Button, Colorant
 
     // COLORANT
     public Color HoverColor => current_cycle.hoverColor;
+
+
     public void SetColors(Color base_color, Color clicked_color)
     {
         // special case for UI_EventButton the colors are inversed (the base color is the base color of the icon when not hovered -> means its the clicked one)
@@ -201,6 +207,7 @@ public class UI_CycleButton : UI_Button, Colorant
 {
     public string name;
     public string label;
+    public string description;
     public Color baseColor = Color.red;
     public Color hoverColor = Color.white;
     public Color iconHoverColor = Color.white;

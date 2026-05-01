@@ -344,7 +344,8 @@ MonoBehaviour:
   auto_cycle_on_click: 1
   cycle_datas:
   - name: build
-    label: build
+    label: build level
+    description: builds the level so it can be saved
     baseColor: {r: 1, g: 0.7606493, b: 0, a: 1}
     hoverColor: {r: 1, g: 1, b: 1, a: 1}
     iconHoverColor: {r: 1, g: 1, b: 1, a: 1}
@@ -353,7 +354,9 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   - name: preview
-    label: preview
+    label: preview level
+    description: open the level preview so you can explore it (mostly visuals, things
+      may not work)
     baseColor: {r: 0.03529412, g: 1, b: 0, a: 1}
     hoverColor: {r: 1, g: 1, b: 1, a: 1}
     iconHoverColor: {r: 1, g: 1, b: 1, a: 1}
@@ -748,7 +751,9 @@ MonoBehaviour:
   auto_cycle_on_click: 1
   cycle_datas:
   - name: save
-    label: save
+    label: save changes
+    description: save the changes made to the level so it can be loaded later.\n\nwill
+      update the current save file sooo be careful !
     baseColor: {r: 1, g: 0.7607843, b: 0, a: 1}
     hoverColor: {r: 1, g: 1, b: 1, a: 1}
     iconHoverColor: {r: 1, g: 1, b: 1, a: 1}
@@ -757,7 +762,8 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   - name: saved
-    label: saved
+    label: level saved successfully
+    description: the save of this level is up to date !
     baseColor: {r: 0.03529412, g: 1, b: 0, a: 1}
     hoverColor: {r: 1, g: 1, b: 1, a: 1}
     iconHoverColor: {r: 1, g: 1, b: 1, a: 1}

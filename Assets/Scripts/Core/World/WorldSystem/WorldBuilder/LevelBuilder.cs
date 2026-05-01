@@ -151,6 +151,8 @@ public class LevelBuilder : MonoBehaviour
     // ON ENABLE / DISABLE
     private void OnDisable()
     {
+        SaveCurrentLevelSchematic();
+        Erase();
         try { CameraFollow.Instance.ResetSize(); }
         catch (Exception) { }
     }
@@ -531,15 +533,9 @@ public class LevelBuilder : MonoBehaviour
 
 
 
-
-
-
-
-
-
     ///
     // 
-    ///  DOORs VISUs
+    ///  DOORs & LIGHTs
     //
     ///
 
@@ -564,9 +560,6 @@ public class LevelBuilder : MonoBehaviour
         }
     }
 
-
-
-
     // LIGHTS
     private WorldLightVisualizer create_light_at(Vector3Int cell_pos)
     {
@@ -589,8 +582,127 @@ public class LevelBuilder : MonoBehaviour
 
 
 
+    ///
+    //
+    ///  BUILD
+    //
+    ///
 
 
+    // BUILDER
+    public Action<BuiltLevelData> OnWorldBuilt = delegate { };
+    public void Build()
+    {
+        if (log_building) { Debug.Log("(LevelBuilder) Building the level : " + level_id + $" (world : {world_id})"); }
+
+        BuiltLevelData built_world = new BuiltLevelData()
+        {
+            // Cells = new List<WorldNodeVisualizer>(node_visualizers),
+            // Links = new List<WorldLinkVisualizer>(link_visualizers),
+            Rooms = new List<WorldRoomVisualizer>(room_visualizers)
+        };
+
+        foreach (var r in room_visualizers)
+        {
+            if (!r.isActiveAndEnabled) { continue; }
+            if (log_building) { Debug.Log($"(LevelBuilder) Building tilemaps for {r.name}"); }
+            built_world.Tilemaps[r.name] = build_room(r);
+        }
+
+        if (log_building) { Debug.Log("(LevelBuilder) World built"); }
+        OnWorldBuilt?.Invoke(built_world);
+    }
+    public void Build(string builder)
+    {
+        List<string> builders = new List<string>();
+
+        // check some things
+        if (builder == "ceiling") { builders.Add("walls"); } // we need walls to build the ceiling
+        if (builders.Contains("walls")) { builders.Add("edges"); } // for real walls we need edges
+        builders.Add(builder);
+
+        foreach (var r in room_visualizers)
+        {
+            if (!r.isActiveAndEnabled) { continue; }
+            build_room(r, builders);
+        }
+    }
+    private List<string> default_builders = new List<string> { "carpet", "ground", "walls", "edges", "ceiling" };
+    private Dictionary<string, Tilemap> build_room(WorldRoomVisualizer room, List<string> builders = null)
+    {
+        if (builders == null) { builders = default_builders; }
+        Dictionary<string, Tilemap> tilemaps = new Dictionary<string, Tilemap>();
+        foreach (var b in builders)
+        {
+            if (b == "carpet" && carpet_builder != null)
+            {
+                if (log_building) { Debug.Log("(LevelBuilder) Building carpet for " + room.name); }
+                tilemaps["carpet"] = carpet_builder.Build(room);
+            }
+            if (b == "ground" && ground_builder != null)
+            {
+                if (log_building) { Debug.Log("(LevelBuilder) Building ground for " + room.name); }
+                tilemaps["ground"] = ground_builder.Build(room);
+            }
+            if (b == "walls" && walls_builder != null)
+            {
+                if (log_building) { Debug.Log("(LevelBuilder) Building walls for " + room.name); }
+                tilemaps["walls"] = walls_builder.Build(room);
+            }
+            if (b == "edges" && edges_builder != null)
+            {
+                if (log_building) { Debug.Log("(LevelBuilder) Building edges for " + room.name); }
+                tilemaps["edges"] = edges_builder.Build(room);
+            }
+            if (b == "ceiling" && ceiling_builder != null)
+            {
+                if (log_building) { Debug.Log("(LevelBuilder) Building ceiling for " + room.name); }
+                tilemaps["ceiling"] = ceiling_builder.Build(room);
+            }
+        }
+        return tilemaps;
+    }
+
+
+
+
+    ///
+    //
+    ///  CLEAR CACHE
+    //
+    ///
+
+    public void Erase()
+    {
+        // we remove all the visualizers
+        ClearVisus();
+
+        // we clear the tilemaps
+        ClearTilemaps();
+    }
+    public void ClearVisus()
+    {
+        // we destroy all the visualizers and clear the lists
+        for (int i = 0; i < node_visualizers.Count; i++) { if (node_visualizers[i] != null) { Destroy(node_visualizers[i].gameObject); } }
+        for (int i = 0; i < door_visualizers.Count; i++) { if (door_visualizers[i] != null) { Destroy(door_visualizers[i].gameObject); } }
+        for (int i = 0; i < link_visualizers.Count; i++) { if (link_visualizers[i] != null) { Destroy(link_visualizers[i].gameObject); } }
+        for (int i = 0; i < room_visualizers.Count; i++) { if (room_visualizers[i] != null) { Destroy(room_visualizers[i].gameObject); } }
+        for (int i = 0; i < light_visualizers.Count; i++) { if (light_visualizers[i] != null) { Destroy(light_visualizers[i].gameObject); } }
+
+        node_visualizers.Clear();
+        door_visualizers.Clear();
+        link_visualizers.Clear();
+        room_visualizers.Clear();
+        light_visualizers.Clear();
+    }
+    public void ClearTilemaps()
+    {
+        carpet_builder.Clear();
+        ground_builder.Clear();
+        walls_builder.Clear();
+        ceiling_builder.Clear();
+        edges_builder.Clear();
+    }
 
 
 
@@ -666,112 +778,6 @@ public class LevelBuilder : MonoBehaviour
     }
 
 
-    // BUILDER
-    public Action<BuiltLevelData> OnWorldBuilt = delegate { };
-    public void Build()
-    {
-        if (log_building) { Debug.Log("(LevelBuilder) Building the level : " + level_id + $" (world : {world_id})"); }
-
-        BuiltLevelData built_world = new BuiltLevelData()
-        {
-            // Cells = new List<WorldNodeVisualizer>(node_visualizers),
-            // Links = new List<WorldLinkVisualizer>(link_visualizers),
-            Rooms = new List<WorldRoomVisualizer>(room_visualizers)
-        };
-
-        foreach (var r in room_visualizers)
-        {
-            if (!r.isActiveAndEnabled) { continue; }
-            if (log_building) { Debug.Log($"(LevelBuilder) Building tilemaps for {r.name}"); }
-            built_world.Tilemaps[r.name] = build_room(r);
-        }
-    
-        if (log_building) { Debug.Log("(LevelBuilder) World built"); }
-        OnWorldBuilt?.Invoke(built_world);
-    }
-    public void Build(string builder)
-    {
-        List<string> builders = new List<string>();
-
-        // check some things
-        if (builder == "ceiling") { builders.Add("walls"); } // we need walls to build the ceiling
-        if (builders.Contains("walls")) { builders.Add("edges"); } // for real walls we need edges
-        builders.Add(builder);
-
-        foreach (var r in room_visualizers)
-        {
-            if (!r.isActiveAndEnabled) { continue; }
-            build_room(r, builders);
-        }
-    }
-    private List<string> default_builders = new List<string> { "carpet", "ground", "walls", "edges", "ceiling" };
-    private Dictionary<string, Tilemap> build_room(WorldRoomVisualizer room, List<string> builders = null)
-    {
-        if (builders == null) { builders = default_builders; }
-        Dictionary<string,Tilemap> tilemaps = new Dictionary<string, Tilemap>();
-        foreach (var b in builders)
-        {
-            if (b == "carpet" && carpet_builder != null)
-            {
-                if (log_building) { Debug.Log("(LevelBuilder) Building carpet for " + room.name); }
-                tilemaps["carpet"] = carpet_builder.Build(room);
-            }
-            if (b == "ground" && ground_builder != null)
-            {
-                if (log_building) { Debug.Log("(LevelBuilder) Building ground for " + room.name); }
-                tilemaps["ground"] = ground_builder.Build(room);
-            }
-            if (b == "walls" && walls_builder != null)
-            {
-                if (log_building) { Debug.Log("(LevelBuilder) Building walls for " + room.name); }
-                tilemaps["walls"] = walls_builder.Build(room);
-            }
-            if (b == "edges" && edges_builder != null)
-            {
-                if (log_building) { Debug.Log("(LevelBuilder) Building edges for " + room.name); }
-                tilemaps["edges"] = edges_builder.Build(room);
-            }
-            if (b == "ceiling" && ceiling_builder != null)
-            {
-                if (log_building) { Debug.Log("(LevelBuilder) Building ceiling for " + room.name); }
-                tilemaps["ceiling"] = ceiling_builder.Build(room);
-            }
-        }
-        return tilemaps;
-    }
-
-    // CLEAR & ERASE
-    public void Erase()
-    {
-        // we remove all the visualizers
-        foreach (var r in room_visualizers) { if (r != null) { Destroy(r.gameObject); } }
-        room_visualizers.Clear();
-        foreach (var l in link_visualizers) { if (l != null) { Destroy(l.gameObject); } }
-        link_visualizers.Clear();
-        foreach (var n in node_visualizers) { if (n != null) { Destroy(n.gameObject); } }
-        node_visualizers.Clear();
-        foreach (var d in door_visualizers) { if (d != null) { Destroy(d.gameObject); } }
-        door_visualizers.Clear();
-        foreach (var l in light_visualizers) { if (l != null) { Destroy(l.gameObject); } }
-        light_visualizers.Clear();
-
-        // we clear the tilemaps
-        ClearTilemaps();
-    }
-    public void ClearTilemaps()
-    {
-        carpet_builder.Clear();
-        ground_builder.Clear();
-        walls_builder.Clear();
-        ceiling_builder.Clear();
-        edges_builder.Clear();
-    }
-
-
-
-
-
-
     ///
     //
     ///  DATA MANAGEMENT
@@ -834,8 +840,8 @@ public class LevelBuilder : MonoBehaviour
 
 
         // we save the json in a file in assets/data/world_building.json
-        string path = Path.Combine(world_id, "levels", level_id + ".schematic");
-        AppManager.SaveJsonToWorldFolder(path, json);
+        string path = Path.Combine("levels", level_id + ".schematic");
+        AppManager.SaveJsonToWorldFolder(world_id, path, json);
         if (log_data) { Debug.Log("(LevelBuilder) Saved schematic for " + level_id + $"({world_id}) at {path} :\n" + json); }
     }
     private void load_data(string json)
@@ -888,12 +894,6 @@ public class LevelBuilder : MonoBehaviour
         load_data(json);
         if (log_data) { Debug.Log("(LevelBuilder) Loaded schematic for " + level_id + $"({world_id}) from {path} :\n" + json); }
         return true;
-    }
-    private void OnDestroy()
-    {
-        #if UNITY_EDITOR
-        SaveCurrentLevelSchematic();
-        #endif
     }
 }
 

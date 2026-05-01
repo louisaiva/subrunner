@@ -1,24 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class UI_WorldBuilderPool : UI_SlottablePool, Descriptable
 {
 
-    [Header("References")]
-    [SerializeField] private UI_WorldSlot world_slot;
+    [Header("Level Slots")]
     [SerializeField] private GameObject level_slot_prefab;
     [SerializeField] private RectTransform levels_container;
     private List<UI_LevelSlot> level_slots = new List<UI_LevelSlot>();
+
+    [Header("References")]
+    [SerializeField] private UI_WorldSlot world_slot;
     public string Name => world_slot.Name;
     public string Description => world_slot.Description;
-
+    [SerializeField] private WorldFolderCaller world_folder_caller;
 
 
     protected override void before_showing()
     {
         world_slot.Initialize(WorldManager.Instance.SelectedWorldData);
-
+        world_folder_caller.world_id = WorldManager.Instance.SelectedWorld;
+        RefreshLevelSlots();
+    }
+    public void RefreshLevelSlots()
+    {
         // clear the levels slots if any
         foreach (UI_LevelSlot level_slot in level_slots)
         {

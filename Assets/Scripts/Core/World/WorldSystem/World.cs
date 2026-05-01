@@ -9,8 +9,8 @@ public class World : BSOD_System<World>
     [Header("Current world")]
     public string world_id;
     public WorldData data;
-    public bool IsWorldLoaded { get; private set; } = false;
-    public bool IsWorldLoadingOrUnloading { get; private set; } = false;
+    [field:SerializeField] public bool IsWorldLoaded { get; private set; } = false;
+    [field:SerializeField] public bool IsWorldLoadingOrUnloading { get; private set; } = false;
 
     [Header("Spawn")]
     public Transform fallback_spawn_point; // if no player data were found on LoadWorld, we will spawn the player at this position
@@ -150,17 +150,16 @@ public class World : BSOD_System<World>
         phase_time = Time.realtimeSinceStartup;
 
         // we load the start level
-        if (data == null || data.levels_ids == null || data.levels_ids.Count == 0)
+        if (data != null && data.levels_ids != null && data.levels_ids.Count > 0)
         {
-            if (log) { Debug.Log($"(World) STARTING WORLD: {world_id} (!) {(data == null ? "DATA IS NULL" : "NO LEVELS FOUND")}"); }
-            return;
-        }
-        string start_level_id = data.levels_ids[0];
-        if (log) { Debug.Log($"(World) STARTING WORLD: {world_id}  -- Level: {start_level_id}"); }
-        if (!string.IsNullOrEmpty(start_level_id)) { LevelEngine.StaticInstance.LoadLevel(start_level_id); }
+            string start_level_id = data.levels_ids[0];
+            if (log) { Debug.Log($"(World) STARTING WORLD: {world_id}  -- Level: {start_level_id}"); }
+            if (!string.IsNullOrEmpty(start_level_id)) { LevelEngine.StaticInstance.LoadLevel(start_level_id); }
 
-        // we tp the player to the fallback spawn point while loading the world
-        if (fallback_spawn_point != null) { Controller.StaticInstance.Capable.transform.position = fallback_spawn_point.position; }
+            // we tp the player to the fallback spawn point while loading the world
+            if (fallback_spawn_point != null) { Controller.StaticInstance.Capable.transform.position = fallback_spawn_point.position; }
+        }
+        else if (log) { Debug.Log($"(World) STARTING WORLD: {world_id} (!) {(data == null ? "DATA IS NULL" : "NO LEVELS FOUND")}"); }
 
 
 

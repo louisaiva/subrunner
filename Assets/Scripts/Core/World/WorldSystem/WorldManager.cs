@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -175,14 +176,9 @@ public class WorldManager : MonoBehaviour
 
 
     // WORLD SAVING
-    /// <summary>
-    /// this ensures that all the world data hierarchy folders exists for
-    /// properly saving the given world data
-    /// </summary>
-    /// <param name="world_id"></param>
-    /// <returns>returns true if the hierarchy was just created !</returns>
     private static string worlds_path = "worlds";
     public static string WorldsDataPath => Path.Combine(Application.persistentDataPath, worlds_path);
+    public static string GetWorldDataPath(string world_id) => Path.Combine(WorldsDataPath, world_id);
     public static string CurrentStaticWorldDataPath
     {
         get
@@ -196,7 +192,14 @@ public class WorldManager : MonoBehaviour
             return Path.Combine(WorldsDataPath, StaticInstance.SelectedWorld);
         }
     }
-    public static string GetWorldDataPath(string world_id) => Path.Combine(WorldsDataPath, world_id);
+    public static string StaticSelectedWorld => StaticInstance?.SelectedWorld;
+
+    /// <summary>
+    /// this ensures that all the world data hierarchy folders exists for
+    /// properly saving the given world data
+    /// </summary>
+    /// <param name="world_id"></param>
+    /// <returns>returns true if the hierarchy was just created !</returns>
     public static bool EnsureWorldDataHierarchy(string world_id)
     {
         if (string.IsNullOrEmpty(world_id))
@@ -230,32 +233,6 @@ public class WorldManager : MonoBehaviour
         // we save the world data to a json file in the current world folder
         return world_folder_created;
     }
-
-    // SAVE DATA
-    public static void SaveWorldData(WorldData data)
-    {
-        bool just_created = EnsureWorldDataHierarchy(data.id);
-        if (!just_created && StaticInstance.log_create) { Debug.LogWarning($"(WorldManager) Tried creating but hierarchy already exists : {data.id}"); }
-
-        data.game_version = Application.version;
-        data.last_update_date = DateTime.Now.ToString();
-        data.creation_date = (just_created || string.IsNullOrEmpty(data.creation_date)) ? data.last_update_date : data.creation_date;
-
-        // check if we just created it or we don't have any icon, then we set random color and default icon
-        if (just_created || string.IsNullOrEmpty(data.icon_path))
-        {
-            data.color = StaticInstance.GetRandomWorldColor();
-            data.icon_path = StaticInstance.GetRandomIconPath(out string icon_name);
-            data.icon_name = icon_name;
-        }
-
-        // save the current WorldData to a json file
-        string json = JsonUtility.ToJson(data, true);
-        string path = Path.Combine(GetWorldDataPath(data.id), "world_data.json");
-        System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
-        if (log) { Debug.Log($"(WorldManager) Updated & Saved WorldData : {data.id} (to {path})\n\n{json}"); }
-    }
-
 
     ///
     //
@@ -335,7 +312,7 @@ public class WorldManager : MonoBehaviour
         // we then create the world data and save it (which will create the hierarchy folders if needed)
         WorldData new_data = new WorldData() { id = world_name };
         existing_worlds_data.Add(world_name, new_data);
-        SaveWorldData(new_data);
+        SaveEngine.SaveWorldData(new_data);
         if (log_create) { Debug.Log($"(WorldManager) Created new world with world_id: {world_name}"); }
 
         if (!auto_load_on_creation) { return; }
@@ -344,6 +321,46 @@ public class WorldManager : MonoBehaviour
         SceneLoader.Instance.LoadGame();
     }
 
+    // CREATE LEVEL
+    public void CreateNewLevel()
+    {
+        if (string.IsNullOrEmpty(SelectedWorld))
+        {
+            if (log_create) { Debug.LogWarning("(WorldManager) Failed to create new level because no world is selected."); }
+            return;
+        }
+
+        // we ask a popup to enter the level name
+        UI_Manager.Instance.OpenInputPopup("Enter level name", "level", CreateNewLevel);
+    }
+    public void CreateNewLevel(string level_id)
+    {
+        // we check if the level name is valid
+        if (string.IsNullOrEmpty(level_id))
+        {
+            if (log_create) { Debug.LogWarning("(WorldManager) Failed to create new level because the level name is null or empty."); }
+            return;
+        }
+
+        // and we check if the level name is not already taken in the current world
+        List<LevelData> existing_levels_data_list = LevelEngine.LoadWorldLevelsData(SelectedWorld);
+        List<string> existing_levels_names = existing_levels_data_list.Select(ld => ld.id).ToList();
+        if (existing_levels_names.Contains(level_id))
+        {
+            // we add a random number to the name and try again
+            string new_level_name = level_id + "_" + UnityEngine.Random.Range(0, 1000);
+            if (log_create) { Debug.LogWarning($"(WorldManager) Failed to create new level because the level name '{level_id}' is already taken. Trying with new name: '{new_level_name}'"); }
+            CreateNewLevel(new_level_name);
+            return;
+        }
+
+        // we then create the level data and save it (which will create the hierarchy folders if needed)
+        LevelData new_level_data = new LevelData() { id = level_id };
+        SaveEngine.SaveLevelData(new_level_data, SelectedWorld);
+        if (log_create) { Debug.Log($"(WorldManager) Created new level in world {SelectedWorld} with level_id: {level_id}"); }
+
+        // then we need to mark the level as dirty ??
+    }
 
     ///
     //
@@ -353,7 +370,6 @@ public class WorldManager : MonoBehaviour
 
 
     // GETTERS
-    /* public List<Color> GetWorldColors() { return world_colors; } */
     public Color GetRandomWorldColor() { return world_colors[UnityEngine.Random.Range(0, world_colors.Count)]; }
     public string GetRandomIconPath(out string icon_name)
     {

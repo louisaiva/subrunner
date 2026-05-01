@@ -84,13 +84,13 @@ public class WorldSaver : MonoBehaviour
         // get the data & save it
         WorldData data = world.GetStaticData();
         if (string.IsNullOrEmpty(data.id)) { data.id = id; } // we set the id if not already set, so we can save it from the editor not at runtime
-        WorldManager.SaveWorldData(data); // will ensure the hierarchy exists and then save the world data
+        SaveEngine.SaveWorldData(data); // will ensure the hierarchy exists and then save the world data
 
         // check if we need to save the levels data
         if (save_levels)
         {
             Level[] levels = world.GetStaticLevels();
-            LevelManager.SaveLevels(levels.ToList(), WorldManager.GetWorldDataPath(id));
+            LevelManager.SaveLevels(levels.ToList(), id);
         }
     }
     private string get_world_to_save(out World world)
