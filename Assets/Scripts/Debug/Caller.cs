@@ -14,6 +14,8 @@ public class Caller : MonoBehaviour
     // UI MANAGER
     public void SwitchToHUD() => UI_Manager.Instance?.SwitchToHUD();
     public void SwitchTo(string ui_pool) => UI_Manager.Instance?.SwitchTo(ui_pool);
+    public void StackPool(string ui_pool) => UI_Manager.Instance?.StackPool(ui_pool);
+    public void UnstackCurrentPool() => UI_Manager.Instance?.UnstackCurrentPool();
     public void CancelPool() => UI_Manager.Instance?.CancelCurrentPool();
     public void ChangeUIMode(string mode) => UI_Manager.Instance?.ChangeUIMode(mode);
 

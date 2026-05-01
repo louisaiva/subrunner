@@ -24,7 +24,7 @@ public class UI_LevelSlot : UI_EventButton, Descriptable
     public void EditLevel()
     {
         LevelBuilder.StaticInstance?.EditLevel(world_id, level_data.id);
-        UI_Manager.Instance.SwitchTo("dev_level_builder");
+        UI_Manager.Instance.StackPool("dev_level_builder");
     }
 
 

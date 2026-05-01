@@ -185,6 +185,10 @@ public class LevelEngine : BSOD_System<LevelEngine>
         if (!hide_no_level_warning) { Debug.LogWarning("(LevelEngine - GetLevelOfRoom) Level not found for room id: " + room_id); }
         return null;
     }
+    public List<string> GetWorldLevelsIDs()
+    {
+        return world_levels.Keys.ToList();
+    }
 
     // STATIC GETTERS
     public static List<LevelData> LoadWorldLevelsData(string world_id)

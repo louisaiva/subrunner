@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -43,13 +44,18 @@ public class UI_WorldSlot : UI_EventButton, Descriptable
         description += $"<b>Modified :</b> {world_data.last_update_date}\n";
         description += "\n\n\n";
         description += $"<b>Levels</b> : ";
-        if (world_data.levels_ids == null || world_data.levels_ids.Count == 0)
+
+        // we get the levels from the LevelEngine static method since the world is not loaded, which means
+        // data.levels_ids is necessary empty
+        List<LevelData> levels_data = LevelEngine.LoadWorldLevelsData(world_data.id);
+        List<string> levels_ids = levels_data.ConvertAll(level_data => level_data.id);
+        if (levels_ids == null || levels_ids.Count == 0)
         {
             description += "no levels :\\\\\\";
             return description;
         }
-        description += $"{world_data.levels_ids.Count} \n\n";
-        foreach (string id in world_data.levels_ids)
+        description += $"{levels_ids.Count} \n\n";
+        foreach (string id in levels_ids)
         {
             description += $"{id}  -\n";
         }

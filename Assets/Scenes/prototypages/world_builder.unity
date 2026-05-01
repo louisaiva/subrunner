@@ -11651,13 +11651,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::World
   world_id: save_test
   data:
-    levels_ids: []
     game_version: 
     creation_date: 
     last_update_date: 
     icon_path: 
     icon_name: 
     color: {r: 0, g: 0, b: 0, a: 0}
+  <IsWorldLoaded>k__BackingField: 0
+  <IsWorldLoadingOrUnloading>k__BackingField: 0
   fallback_spawn_point: {fileID: 1209737554}
   log: 1
   log_loading_extended: 1
@@ -57648,8 +57649,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 340.25, y: 0}
-  m_SizeDelta: {x: 340.25, y: 60}
+  m_AnchoredPosition: {x: 304.25, y: 0}
+  m_SizeDelta: {x: 304.25, y: 60}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &679695502
 MonoBehaviour:
@@ -64195,8 +64196,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 340.25, y: -60}
-  m_SizeDelta: {x: 340.25, y: 150}
+  m_AnchoredPosition: {x: 304.25, y: -60}
+  m_SizeDelta: {x: 304.25, y: 150}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &781096121
 MonoBehaviour:
@@ -119073,7 +119074,7 @@ RectTransform:
   m_AnchorMin: {x: 0.1, y: 0.5}
   m_AnchorMax: {x: 0.7, y: 0.7}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -43.19998, y: 31.000006}
+  m_SizeDelta: {x: 13.800018, y: 31.000006}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1371006615
 MonoBehaviour:

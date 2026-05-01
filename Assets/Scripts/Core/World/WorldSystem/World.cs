@@ -130,9 +130,14 @@ public class World : BSOD_System<World>
         if (log_loading_extended) { Debug.Log($"(World) ----------------------------------- LOADING ALL ENGINES : (previous phase duration: {Time.realtimeSinceStartup - phase_time}s)"); }
         phase_time = Time.realtimeSinceStartup;
         await LevelEngine.StaticInstance.LoadWorldData(world_id, log_loading_extended);
+
+        // -> now we can get all the levels ids and put it in the world data for runtime access.
+        data.levels_ids = new List<string>(LevelEngine.StaticInstance.GetWorldLevelsIDs());
+
         await RoomEngine.StaticInstance.LoadWorldData(world_id, log_loading_extended);
         await CapableEngine.StaticInstance.LoadWorldData(world_id, log_loading_extended);
         await CapacityEngine.StaticInstance.LoadWorldData(world_id, log_loading_extended);
+
 
         ///
         //  3. WE WAIT A FRAME SO THE LOADED DATA CAN SLEEP vite fait
@@ -370,7 +375,7 @@ public class World : BSOD_System<World>
 [Serializable] public class WorldData
 {
     [NonSerialized] public string id;
-    public List<string> levels_ids;
+    [NonSerialized] public List<string> levels_ids; // no need to serialize it since we always get them from the "levels" folder -> more granular better
     public Dictionary<string, int> generated_ids_counters;
 
 
