@@ -781,6 +781,15 @@ public class LevelBuilder : MonoBehaviour
     // DATA MANAGEMENT
     public void SaveCurrentLevelSchematic()
     {
+        if (string.IsNullOrEmpty(world_id) || string.IsNullOrEmpty(level_id))
+        {
+            if (log_data) { Debug.LogWarning("(LevelBuilder) Cannot save schematic : world_id or level_id is empty"); }
+            return;
+        }
+
+        // we make sure we have a world folder hierarchy for the world & level
+        WorldManager.EnsureWorldDataHierarchy(world_id);
+
         var data = new LevelSchematic();
 
         // create cells

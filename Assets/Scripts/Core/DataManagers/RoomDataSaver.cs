@@ -10,7 +10,7 @@ public class RoomDataSaver : MonoBehaviour
     public List<string> rooms_to_load = new List<string>();
 
     [Header("RoomData Saving")]
-    public static string CurrentRoomDataFolder => Path.Combine(World.CurrentStaticWorldDataPath, "rooms");
+    public static string CurrentRoomDataFolder => Path.Combine(WorldManager.CurrentStaticWorldDataPath, "rooms");
     public List<Room> rooms_to_save = new List<Room>();
 
     [Header("Logs")]

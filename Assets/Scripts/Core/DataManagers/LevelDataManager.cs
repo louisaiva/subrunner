@@ -13,7 +13,7 @@ public class LevelDataManager : MonoBehaviour
 {
 
     [Header("LevelData Saving")]
-    // public static string CurrentLevelDataFolder => Path.Combine(World.CurrentStaticWorldDataPath, "levels");
+    // public static string CurrentLevelDataFolder => Path.Combine(WorldManager.CurrentStaticWorldDataPath, "levels");
     public List<Level> levels_to_save = new List<Level>();
     public bool save_rooms_data = false; // if true, when we save the levels data, we also save the rooms data (ie we update the rooms data with the current overlapping capables in the editor)
     public bool save_capables_data = false;
@@ -38,7 +38,7 @@ public class LevelDataManager : MonoBehaviour
     {
         foreach (Level level in levels_to_save)
         {
-            save_level_data(level, World.CurrentStaticWorldDataPath);
+            save_level_data(level, WorldManager.CurrentStaticWorldDataPath);
         }
 
         #if UNITY_EDITOR

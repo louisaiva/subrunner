@@ -81,13 +81,13 @@ public class WorldSaver : MonoBehaviour
     }
     private void save_world_data(string id, World world)
     {
-        bool just_created = World.EnsureWorldDataHierarchy(id); // make sure all the folders for this world exist in the persistent data path
+        bool just_created = WorldManager.EnsureWorldDataHierarchy(id); // make sure all the folders for this world exist in the persistent data path
 
         // check if we need to save the levels data
         if (save_levels)
         {
             Level[] levels = world.GetStaticLevels();
-            LevelManager.SaveLevels(levels.ToList(), World.GetWorldDataPath(id));
+            LevelManager.SaveLevels(levels.ToList(), WorldManager.GetWorldDataPath(id));
         }
 
         // get the data
@@ -106,7 +106,7 @@ public class WorldSaver : MonoBehaviour
 
         // save the current WorldData to a json file
         string json = JsonUtility.ToJson(data, true);
-        string path = Path.Combine(World.GetWorldDataPath(id), "world_data.json");
+        string path = Path.Combine(WorldManager.GetWorldDataPath(id), "world_data.json");
         System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
         if (log) { Debug.Log($"(WorldManager) Updated & Saved WorldData : {id} (to {path})\n\n{json}"); }
     }

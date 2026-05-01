@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour
 
     [Header("Game Music Theme")]
     [SerializeField] private string game_theme_to_play = "i'm so hungry";
-    [SerializeField] private string world_to_load = "";
 
     public static GameManager Instance { get; private set; }
 
@@ -29,20 +28,8 @@ public class GameManager : MonoBehaviour
         else if (Instance != this) { Destroy(gameObject); return; }
         IsClosingGame = false;
 
-        // we instantly load the world even if World.Instance is not defined yet.
-        // so we use World.StaticInstance which will find the world instance with FindObjectByType
-        World world = World.StaticInstance;
-        if (world == null) { return; }
-
-        // we load the good world.
-        // for this we have multiple choices :
-        // 1. if WorldManager.SelectedWorld is defined, we load it (this is set by the world selector in the main menu)
-        // 2. else if world_to_load is defined in the inspector
-        // 3. else if the world instance has a world_id defined, we load it
-
-        if (WorldManager.Instance != null && !string.IsNullOrEmpty(WorldManager.Instance.SelectedWorld)) { world.LoadWorld(WorldManager.Instance.SelectedWorld); }
-        else if (world_to_load != "") { world.LoadWorld(world_to_load); }
-        else if (world.world_id != "") { world.LoadWorld(world.world_id); }
+        // we launch the world from WorldManager
+        WorldManager.StaticInstance.LoadSelectedWorld();
     }
     private void Start()
     {

@@ -1,13 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Unity.VectorGraphics;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class WorldManager : MonoBehaviour
 {
     // SINGLETON
     public static WorldManager Instance { get; private set; }
+    public static WorldManager StaticInstance
+    {
+        get
+        {
+            if (Instance != null) { return Instance; }
+            Instance = FindFirstObjectByType<WorldManager>();
+            if (Instance == null)
+            {
+                Debug.LogError("No instance of WorldManager found in the scene. Please make sure to add a WorldManager component to a game object in the scene.");
+            }
+            return Instance;
+        }
+    }
     private void Awake()
     {
         if (Instance == null) { Instance = this; }
@@ -72,6 +85,8 @@ public class WorldManager : MonoBehaviour
     }
     
 
+    public static bool log = true;
+
     [Header("Logs awake")]
     [SerializeField] private bool log_icons_paths = false;
     [SerializeField] private bool log_world_data_loading_on_awake = false;
@@ -83,6 +98,11 @@ public class WorldManager : MonoBehaviour
     [Header("Logs creating world")]
     [SerializeField] private bool log_create = false;
 
+    ///
+    //
+    /// LOADING EXISTING WORLD DATA & SELECTING WORLDS
+    //
+    ///
 
     // CHECK EXISTING WORLDS
     private Dictionary<string, WorldData> existing_worlds_data = new Dictionary<string, WorldData>();
@@ -92,10 +112,10 @@ public class WorldManager : MonoBehaviour
         existing_worlds_data.Clear();
 
         // we check if the worlds data folder exists
-        if (!Directory.Exists(World.WorldsDataPath)) { return; }
+        if (!Directory.Exists(WorldManager.WorldsDataPath)) { return; }
 
         // we get all the world folders in the worlds data folder
-        string[] world_folders = Directory.GetDirectories(World.WorldsDataPath);
+        string[] world_folders = Directory.GetDirectories(WorldManager.WorldsDataPath);
         foreach (string world_folder in world_folders)
         {
             // we get the world_id from the folder name
@@ -144,8 +164,114 @@ public class WorldManager : MonoBehaviour
         SelectWorld(world_data);
     }
 
+    // WORLD SAVING
+    /// <summary>
+    /// this ensures that all the world data hierarchy folders exists for
+    /// properly saving the given world data
+    /// </summary>
+    /// <param name="world_id"></param>
+    /// <returns>returns true if the hierarchy was just created !</returns>
+    private static string worlds_path = "worlds";
+    public static string WorldsDataPath => Path.Combine(Application.persistentDataPath, worlds_path);
+    public static string CurrentStaticWorldDataPath
+    {
+        get
+        {
+            // check if we have a world instance and if it has a world_id
+            if (string.IsNullOrEmpty(StaticInstance.SelectedWorld))
+            {
+                Debug.LogError("(WorldManager) Cannot get current static world data path: SelectedWorld is null or empty.");
+                return null;
+            }
+            return Path.Combine(WorldsDataPath, StaticInstance.SelectedWorld);
+        }
+    }
+    public static string GetWorldDataPath(string world_id) => Path.Combine(WorldsDataPath, world_id);
+    public static bool EnsureWorldDataHierarchy(string world_id)
+    {
+        if (string.IsNullOrEmpty(world_id))
+        {
+            if (log) { Debug.LogWarning("(WorldManager) Cannot ensure world data hierarchy : world_id is null or empty."); }
+            return false;
+        }
 
+        // create the /worlds folder if it doesn't exist
+        AppManager.EnsureFolderExists(WorldsDataPath);
 
+        // then we do the same for the current world folder
+        string world_path = GetWorldDataPath(world_id);
+        bool world_folder_created = AppManager.EnsureFolderExists(world_path);
+
+        // then we ensure that the data folder hierarchy is correct (create them if they don't exist)
+        // world folder hierarchy is :
+        // - worlds/
+        //     - world_id/
+        //         - world_data.json
+        //         - levels/
+        //         - rooms/
+        //         - capables/
+        //         - capacities/
+
+        AppManager.EnsureFolderExists(Path.Combine(world_path, "levels"));
+        AppManager.EnsureFolderExists(Path.Combine(world_path, "rooms"));
+        AppManager.EnsureFolderExists(Path.Combine(world_path, "capables"));
+        AppManager.EnsureFolderExists(Path.Combine(world_path, "capacities"));
+
+        // we save the world data to a json file in the current world folder
+        return world_folder_created;
+    }
+
+    ///
+    //
+    /// CREATE / LOAD SELECTED WORLD
+    //
+    ///
+
+    private World _world;
+    private World world
+    {
+        get
+        {
+            if (_world != null) { return _world; }
+            // we instantly load the world even if World.Instance is not defined yet.
+            // so we use World.StaticInstance which will find the world instance with FindObjectByType
+            _world = World.StaticInstance;
+            return _world;
+        }
+    }
+    
+    
+    // LOAD / UNLOAD WORLD
+    public async void LoadSelectedWorld()
+    {
+
+        // first we check that a world is not already loaded
+        while (world.IsWorldLoadingOrUnloading) { await Task.Delay(100); }
+        if (world.IsWorldLoaded) { await UnloadCurrentWorld(); }
+
+        // we load the good world.
+        // for this we have multiple choices :
+        // 1. if SelectedWorld is defined, we load it (this is set by the world selector in the main menu)
+        // 3. else if the world instance has a world_id defined, we load it
+
+        if (!string.IsNullOrEmpty(SelectedWorld)) { } // we do nothing, we are good !
+        else if (!string.IsNullOrEmpty(world.world_id))
+        {
+            // we select the world from the world instance world_id
+            SelectWorld(world.world_id);
+        }
+
+        await world.LoadWorld(SelectedWorld);
+    }
+    public async Task UnloadCurrentWorld()
+    {
+        // first we check that a world is not already loaded
+        while (world.IsWorldLoadingOrUnloading) { await Task.Delay(100); }
+        if (!world.IsWorldLoaded) { return; }
+        await world.UnloadWorld();
+    }
+
+    // CREATE WORLD
     public void CreateNewWorld()
     {
         // we ask a popup to enter the world name
@@ -191,6 +317,11 @@ public class WorldManager : MonoBehaviour
     }
 
 
+    ///
+    //
+    /// GETTERS
+    //
+    ///
 
 
     // GETTERS

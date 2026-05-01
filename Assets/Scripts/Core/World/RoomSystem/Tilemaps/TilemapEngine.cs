@@ -26,12 +26,14 @@ public class TilemapEngine : MonoBehaviour
     public bool log_tilebases = false;
     public bool log_showing = false;
 
-    public void ClearCache(bool log)
-    {
-        room_tilemaps.Clear();
-        tilebase_cache.Clear();
-        if (log) { Debug.Log($"(TilemapEngine) Cache cleared"); }
-    }
+
+
+
+    ///
+    //
+    /// BUILD TILEMAPS
+    //
+    ///
 
     // BUILD ROOM TILEMAPS
     private List<TileBase> tilebases_used = new List<TileBase>();
@@ -79,6 +81,13 @@ public class TilemapEngine : MonoBehaviour
 
 
 
+    ///
+    //
+    /// SHOW / HIDE
+    //
+    ///
+
+
     // SHOW / HIDE ROOM TILEMAPS
     public void ShowTilemaps(RoomData data)
     {
@@ -104,6 +113,26 @@ public class TilemapEngine : MonoBehaviour
             return;
         }
         if (log_showing) { Debug.LogWarning($"(TilemapEngine) No tilemaps to hide for {data.id}"); }
+    }
+
+
+    ///
+    //
+    /// CLEAR TILEMAPS
+    //
+    ///
+    public void ClearTilemaps(bool log)
+    {
+        // we destroy the tilemaps
+        for (int i = 0; i < room_tilemaps.Count; i++)
+        {
+            RoomTilemaps room_tmps = room_tilemaps.ElementAt(i).Value;
+            room_tmps.Destroy();
+        }
+
+        room_tilemaps.Clear();
+        tilebase_cache.Clear();
+        if (log) { Debug.Log($"(TilemapEngine) Tilemaps cleared"); }
     }
 
 }
@@ -207,28 +236,14 @@ public class RoomTilemaps
         if (edges_tilemap != null) { edges_tilemap.Renderer.enabled = false; }
         shown = false;
     }
-    /* public void HideSpecific(List<string> tm_names)
-    {
-        if (tm_names.Contains("ceiling") && ceiling_tilemap != null) { ceiling_tilemap.Renderer.enabled = false; }
-        if (tm_names.Contains("walls") && walls_tilemap != null) { walls_tilemap.Renderer.enabled = false; }
-        if (tm_names.Contains("ground") && ground_tilemap != null) { ground_tilemap.Renderer.enabled = false; }
-        if (tm_names.Contains("carpet") && carpet_tilemap != null) { carpet_tilemap.Renderer.enabled = false; }
-        if (tm_names.Contains("edges") && edges_tilemap != null) { edges_tilemap.Renderer.enabled = false; }
-        shown = false;
-    } */
 
-    // MASK
-    /* public bool edges_shown = false;
-    public void ShowMask()
+    // CLEAR
+    public void Destroy()
     {
-        if (edges_tilemap == null) { return; }
-        if (shown) { edges_tilemap.Renderer.enabled = true; }
-        edges_shown = true;
-    } */
-    /* public void HideMask()
-    {
-        if (edges_tilemap == null) { return; }
-        if (shown) { edges_tilemap.Renderer.enabled = false; }
-        edges_shown = false;
-    } */
+        if (ceiling_tilemap != null) { GameObject.Destroy(ceiling_tilemap.gameObject); }
+        if (walls_tilemap != null) { GameObject.Destroy(walls_tilemap.gameObject); }
+        if (ground_tilemap != null) { GameObject.Destroy(ground_tilemap.gameObject); }
+        if (carpet_tilemap != null) { GameObject.Destroy(carpet_tilemap.gameObject); }
+        if (edges_tilemap != null) { GameObject.Destroy(edges_tilemap.gameObject); }
+    }
 }

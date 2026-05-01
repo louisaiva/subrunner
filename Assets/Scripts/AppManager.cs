@@ -181,7 +181,7 @@ public class AppManager : MonoBehaviour
     {
         // loads jsons from the current world data path (which is in the persistent data path) instead of the assets
         // data_folder should be like "levels" for levels or "capables"
-        string jsons_path = Path.Combine(World.WorldsDataPath, world_id, data_folder);
+        string jsons_path = Path.Combine(WorldManager.WorldsDataPath, world_id, data_folder);
 
         // we get all the json files in the data folder and load them as strings
         string[] file_paths = Directory.GetFiles(jsons_path, "*.json");
@@ -196,7 +196,7 @@ public class AppManager : MonoBehaviour
     {
         // load json from the current world data path (which is in the persistent data path) instead of the assets
         // path should contain the world name like this : "world_id/levels/level_id.json"
-        string json_path = Path.Combine(World.WorldsDataPath, world_id, path);
+        string json_path = Path.Combine(WorldManager.WorldsDataPath, world_id, path);
         if (!System.IO.File.Exists(json_path))
         {
             Debug.LogWarning($"(AppManager) Failed to load json from persistent data path: {json_path} because the file was not found.");
@@ -224,7 +224,7 @@ public class AppManager : MonoBehaviour
     // JSON DATA SAVING TO WORLD DATA PATH
     public static void SaveJsonToWorldFolder(string path, string json)
     {
-        string json_path = Path.Combine(World.WorldsDataPath, path);
+        string json_path = Path.Combine(WorldManager.WorldsDataPath, path);
         System.IO.File.WriteAllText(json_path, json);
     }
 }

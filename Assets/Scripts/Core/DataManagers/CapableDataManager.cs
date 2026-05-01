@@ -17,12 +17,12 @@ public class CapableDataManager : MonoBehaviour
 
     [Header("CapableData Saving")]
     public List<Capable> capables_to_save = new List<Capable>();
-    // public static string CurrentCapableDataFolder => Path.Combine(World.CurrentStaticWorldDataPath, "capables");
+    // public static string CurrentCapableDataFolder => Path.Combine(WorldManager.CurrentStaticWorldDataPath, "capables");
 
     [Header("Extended parameters")]
     public bool save_capables_in_inventory = false;
     public bool save_capables_capacities = false;
-    // public static string CurrentCapacityDataFolder => Path.Combine(World.CurrentStaticWorldDataPath, "capacities");
+    // public static string CurrentCapacityDataFolder => Path.Combine(WorldManager.CurrentStaticWorldDataPath, "capacities");
 
 
     [Header("Logs")]
@@ -32,7 +32,7 @@ public class CapableDataManager : MonoBehaviour
     {
         foreach (Capable capable in capables_to_save)
         {
-            saveCapableData(capable, World.CurrentStaticWorldDataPath);
+            saveCapableData(capable, WorldManager.CurrentStaticWorldDataPath);
         }
 
         #if UNITY_EDITOR
@@ -90,7 +90,7 @@ public class CapableDataManager : MonoBehaviour
     public void SaveAllCapablesDataInScene()
     {
         Capable[] all_capables = FindObjectsByType<Capable>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        string world_path = World.CurrentStaticWorldDataPath;
+        string world_path = WorldManager.CurrentStaticWorldDataPath;
         foreach (Capable capable in all_capables)
         {
             saveCapableData(capable, world_path);

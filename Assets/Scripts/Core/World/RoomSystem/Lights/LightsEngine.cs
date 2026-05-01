@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -11,11 +12,13 @@ public class LightsEngine : MonoBehaviour
     [SerializeField] private Light2D light_prefab;
     public Transform LightsParent;
 
-    public void ClearCache(bool log)
-    {
-        room_lights.Clear();
-        if (log) { Debug.Log($"(LightsEngine) Cache cleared"); }
-    }
+
+    ///
+    //
+    /// LOAD LIGHTS
+    //
+    ///
+
 
     public void LoadLights(List<LightData> lights_data, string room_id)
     {
@@ -37,4 +40,22 @@ public class LightsEngine : MonoBehaviour
         room_lights[room_id][data.position] = new_light;
         return new_light;
     }
+
+    ///
+    //
+    /// CLEAR LIGHTS
+    //
+    ///
+
+    public void ClearLights(bool log)
+    {
+        for (int i = 0; i < room_lights.Count; i++)
+        {
+            Dictionary<Vector2, Light2D> lights = room_lights.ElementAt(i).Value;
+            foreach (var light in lights) { if (light.Value != null) { Destroy(light.Value.gameObject); } }
+        }
+        room_lights.Clear();
+        if (log) { Debug.Log($"(LightsEngine) Lights cleared"); }
+    }
+
 }

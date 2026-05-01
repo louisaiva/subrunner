@@ -16,6 +16,8 @@ public class Caller : MonoBehaviour
     public void QuitApp() => AppManager.Instance?.Exit();
     public void BackToTitleScreen() => SceneLoader.Instance?.GoBackToMainMenu();
     public void LoadGame() => SceneLoader.Instance?.LoadGame();
+    public void UnloadWorld() => WorldManager.Instance?.UnloadCurrentWorld();
+    public void LoadWorld() => WorldManager.Instance?.LoadSelectedWorld();
     public void CreateWorld() => WorldManager.Instance?.CreateNewWorld();
     public void OpenWorldFolder() => AppManager.OpenWorldsFolder();
     public void ToggleTimeScale() { Time.timeScale = Time.timeScale == 0 ? 1 : 0; }

@@ -121,9 +121,6 @@ public class RoomEngine : BSOD_System<RoomEngine>
         if (log) { Debug.Log($"(RoomEngine) Loaded {rooms_data.Count} rooms data"); }
 
 
-        // clear sub systems caches
-        TilemapEngine.ClearCache(log);
-        LightsEngine.ClearCache(log);
         // DoorEngine.initorsomething() <-- we don't do this since door engine need the doors data to be loaded -> means it is CapableEngine that calls it
 
         // start ticking
@@ -170,6 +167,11 @@ public class RoomEngine : BSOD_System<RoomEngine>
         dirtyCapablesIDs.Clear();
         room_score_biases.Clear();
         capables_attach_times.Clear();
+
+        // clear sub systems caches
+        TilemapEngine.ClearTilemaps(log);
+        LightsEngine.ClearLights(log);
+        await DoorEngine.UnloadWorldData(log);
 
         if (log) { Debug.Log($"(RoomEngine) ROOM ENGINE SUCCESSFULLY UNLOADED"); }
     }

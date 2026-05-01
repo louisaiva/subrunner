@@ -1,31 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class World : BSOD_System<World>
 {
-    [Header("Data")]
-    private static string worlds_path = "worlds";
-    public static string WorldsDataPath => Path.Combine(Application.persistentDataPath, worlds_path);
-    public static string CurrentStaticWorldDataPath
-    {
-        get
-        {
-            // check if we have a world instance and if it has a world_id
-            if (string.IsNullOrEmpty(StaticInstance.world_id))
-            {
-                Debug.LogError("(World) Cannot get current static world data path: world_id is null or empty.");
-                return null;
-            }
-            return Path.Combine(WorldsDataPath, StaticInstance.world_id);
-        }
-    }
-    public static string GetWorldDataPath(string world_id) => Path.Combine(WorldsDataPath, world_id);
-
     [Header("Current world")]
     public string world_id;
     public WorldData data;
+    public bool IsWorldLoaded { get; private set; } = false;
+    public bool IsWorldLoadingOrUnloading { get; private set; } = false;
 
     [Header("Spawn")]
     public Transform fallback_spawn_point; // if no player data were found on LoadWorld, we will spawn the player at this position
@@ -111,8 +96,9 @@ public class World : BSOD_System<World>
     public bool log_id_generation = false;
 
     // LOAD / UNLOAD WORLD
-    public async void LoadWorld(string world_id)
+    public async Task LoadWorld(string world_id)
     {
+        IsWorldLoadingOrUnloading = true;
         if (log) { Debug.Log($"(World) ----------------------------------- LOADING WORLD : {world_id}"); }
         float start_time = Time.realtimeSinceStartup;
         float phase_time = Time.realtimeSinceStartup;
@@ -181,6 +167,8 @@ public class World : BSOD_System<World>
         ///
         //  5. WE SUCCESSFULLY LOADED THE WORLD !
         ///
+        IsWorldLoaded = true;
+        IsWorldLoadingOrUnloading = false;
         if (log)
         {
             Debug.Log($"(World) ----------------------------------- WORLD LOADED : (in {Time.realtimeSinceStartup - start_time}s{(!log_loading_extended ? ")" : $", previous phase duration: {Time.realtimeSinceStartup - phase_time}s)")}");
@@ -188,8 +176,8 @@ public class World : BSOD_System<World>
     }
     private string extract_world_json(string world_id)
     {
-        AppManager.EnsureFolderExists(WorldsDataPath);
-        string world_path = Path.Combine(WorldsDataPath, world_id);
+        AppManager.EnsureFolderExists(WorldManager.WorldsDataPath);
+        string world_path = Path.Combine(WorldManager.WorldsDataPath, world_id);
         
         // check if the current world folder exists in the worlds folder.
         if (!System.IO.Directory.Exists(world_path))
@@ -224,8 +212,12 @@ public class World : BSOD_System<World>
             return null;
         }
     }
-    public async void UnloadWorld()
+    public async Task UnloadWorld()
     {
+        IsWorldLoadingOrUnloading = true;
+        if (log) { Debug.Log($"(World) ----------------------------------- UNLOADING WORLD : {world_id}"); }
+        float start_time = Time.realtimeSinceStartup;
+
         // we unload all the engines
         await LevelEngine.StaticInstance.UnloadWorldData(log_loading_extended);
         await RoomEngine.StaticInstance.UnloadWorldData(log_loading_extended);
@@ -235,49 +227,15 @@ public class World : BSOD_System<World>
         // we clear the world data
         data = null;
         world_id = null;
-    }
-
-
-    // WORLD SAVING
-    /// <summary>
-    /// this ensures that all the world data hierarchy folders exists for
-    /// properly saving the given world data
-    /// </summary>
-    /// <param name="world_id"></param>
-    /// <returns>returns true if the hierarchy was just created !</returns>
-    public static bool EnsureWorldDataHierarchy(string world_id)
-    {
-        if (string.IsNullOrEmpty(world_id))
+        if (log)
         {
-            if (StaticInstance.log) { Debug.LogWarning("(World) Cannot ensure world data hierarchy : world_id is null or empty."); }
-            return false; 
+            Debug.Log($"(World) ----------------------------------- WORLD UNLOADED : (in {Time.realtimeSinceStartup - start_time}s)");
         }
-
-        // create the /worlds folder if it doesn't exist
-        AppManager.EnsureFolderExists(WorldsDataPath);
-
-        // then we do the same for the current world folder
-        string world_path = GetWorldDataPath(world_id);
-        bool world_folder_created = AppManager.EnsureFolderExists(world_path);
-
-        // then we ensure that the data folder hierarchy is correct (create them if they don't exist)
-        // world folder hierarchy is :
-        // - worlds/
-        //     - world_id/
-        //         - world_data.json
-        //         - levels/
-        //         - rooms/
-        //         - capables/
-        //         - capacities/
-
-        AppManager.EnsureFolderExists(Path.Combine(world_path, "levels"));
-        AppManager.EnsureFolderExists(Path.Combine(world_path, "rooms"));
-        AppManager.EnsureFolderExists(Path.Combine(world_path, "capables"));
-        AppManager.EnsureFolderExists(Path.Combine(world_path, "capacities"));
-
-        // we save the world data to a json file in the current world folder
-        return world_folder_created;
+        IsWorldLoaded = false;
+        IsWorldLoadingOrUnloading = false;
     }
+
+
 
     // STATIC DATA EXTRACTION
     public WorldData GetStaticData()
