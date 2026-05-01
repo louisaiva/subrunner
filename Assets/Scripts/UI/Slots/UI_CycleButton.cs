@@ -14,8 +14,8 @@ public class UI_CycleButton : UI_Button, Colorant
     [SerializeField] protected Image btn_icon;
 
     [Header("Cycle Settings")]
-    [SerializeField]
-    private List<CycleButtonData> cycle_datas = new List<CycleButtonData>();
+    [SerializeField] private bool auto_cycle_on_click = true;
+    [SerializeField] private List<CycleButtonData> cycle_datas = new List<CycleButtonData>();
     private int current_cycle_index = 0;
     private CycleButtonData current_cycle => cycle_datas[current_cycle_index];
 
@@ -52,25 +52,27 @@ public class UI_CycleButton : UI_Button, Colorant
     [SerializeField] private Setting setting;
 
 
+    // [Header("Logs")]
+    // private static bool log_colored_icon = false;
 
 
     // START
     private void Start()
     {
-        // we check if we have a setting name
-        if (string.IsNullOrEmpty(setting_name))
-        {
-            // we fire the last cycle event to initialize the button with the first cycle data
-            cycle_datas.LastOrDefault()?.onClickedEvent.Invoke();
-            SwitchToCycle(0);   // we initialize the button with the first cycle data
-        }
-
         // we try to extract the setting from the setting name
         if (!string.IsNullOrEmpty(setting_name))
         {
             setting = SettingsManager.Instance?.GetSetting(setting_name);
         }
         if (setting != null) { setting.OnValueChanged += onSettingValueChanged; onSettingValueChanged(setting.Value); }
+        else
+        {
+            // we fire the last cycle event to initialize the button with the first cycle data
+            if (auto_cycle_on_click) { cycle_datas.LastOrDefault()?.onClickedEvent.Invoke(); }
+            SwitchToCycle(0);   // we initialize the button with the first cycle data
+        }
+        // btn_icon.color = current_cycle.baseColor;
+        // if (log_colored_icon) { Debug.Log($"[UI_CycleButton] Initialized button with cycle data: {current_cycle.name} and color {current_cycle.iconHoverColor}"); }
     }
     private void OnDestroy()
     {
@@ -139,7 +141,7 @@ public class UI_CycleButton : UI_Button, Colorant
         current_cycle.onClickedEvent.Invoke();
 
         // we switch to the next cycle
-        SwitchToCycle(current_cycle_index + 1);
+        if (auto_cycle_on_click) { SwitchToCycle(current_cycle_index + 1); }
     }
 
     // CHANGE CYCLE
@@ -148,7 +150,7 @@ public class UI_CycleButton : UI_Button, Colorant
         current_cycle_index = index % cycle_datas.Count;
 
         // we change the icon color
-        btn_icon.color = current_cycle.iconHoverColor;
+        btn_icon.color = Hovered ? current_cycle.iconHoverColor : current_cycle.baseColor;
         image.color = Hovered ? current_cycle.baseColor : current_cycle.hoverColor; // and the main image color
 
         // we color all colorers
@@ -183,7 +185,7 @@ public class UI_CycleButton : UI_Button, Colorant
         current_cycle.hoverColor = base_color;
 
         // we change the icon color
-        btn_icon.color = current_cycle.iconHoverColor;
+        btn_icon.color = Hovered ? current_cycle.iconHoverColor : current_cycle.baseColor;
         image.color = Hovered ? current_cycle.baseColor : current_cycle.hoverColor; // and the main image color
 
         // we color all colorers

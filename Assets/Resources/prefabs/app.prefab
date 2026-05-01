@@ -1264,14 +1264,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7b81eef2dec2974aba708100ac1ad82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldManager
-  selected_world_data:
-    levels_ids: []
-    game_version: 
-    creation_date: 
-    last_update_date: 
-    icon_path: 
-    icon_name: 
-    color: {r: 0, g: 0, b: 0, a: 0}
   world_colors:
   - {r: 0.62352943, g: 0.9019608, b: 0.93333334, a: 1}
   - {r: 0.7412874, g: 0.4764151, b: 1, a: 1}
@@ -1310,6 +1302,7 @@ MonoBehaviour:
   - {fileID: 545293285, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
   - {fileID: -1480445524, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
   - {fileID: 2125860743, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  - {fileID: 1774226192, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
   auto_load_on_creation: 0
   log_icons_paths: 0
   log_world_data_loading_on_awake: 0

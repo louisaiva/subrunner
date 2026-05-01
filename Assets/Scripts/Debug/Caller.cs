@@ -11,18 +11,34 @@ using UnityEngine;
 /// </summary>
 public class Caller : MonoBehaviour
 {
+    // UI MANAGER
     public void SwitchToHUD() => UI_Manager.Instance?.SwitchToHUD();
     public void SwitchTo(string ui_pool) => UI_Manager.Instance?.SwitchTo(ui_pool);
+    public void CancelPool() => UI_Manager.Instance?.CancelCurrentPool();
+    public void ChangeUIMode(string mode) => UI_Manager.Instance?.ChangeUIMode(mode);
+
+
+    // TWEENS / POST PROCESS
+    public void ToggleTimeScale() { Time.timeScale = Time.timeScale == 0 ? 1 : 0; }
+    public void ToggleGlitches() => PostProcessManager.Instance?.ToggleGlitches();
+    public void SetGlitchMode(string timestamp_name) => PostProcessManager.Instance?.SetGlitchMode(timestamp_name);
+
+
+
+    // APP MANAGER
     public void QuitApp() => AppManager.Instance?.Exit();
     public void BackToTitleScreen() => SceneLoader.Instance?.GoBackToMainMenu();
     public void LoadGame() => SceneLoader.Instance?.LoadGame();
+
+
+    // WORLD MANAGER
     public void UnloadWorld() => WorldManager.Instance?.UnloadCurrentWorld();
     public void LoadWorld() => WorldManager.Instance?.LoadSelectedWorld();
     public void CreateWorld() => WorldManager.Instance?.CreateNewWorld();
     public void OpenWorldFolder() => AppManager.OpenWorldsFolder();
-    public void ToggleTimeScale() { Time.timeScale = Time.timeScale == 0 ? 1 : 0; }
-    public void ToggleGlitches() => PostProcessManager.Instance?.ToggleGlitches();
-    public void SetGlitchMode(string timestamp_name) => PostProcessManager.Instance?.SetGlitchMode(timestamp_name);
-    public void ChangeUIMode(string mode) => UI_Manager.Instance?.ChangeUIMode(mode);
+
+    // LEVEL BUILDER
     public void ToggleWorldBuilder() => LevelBuilder.StaticInstance?.gameObject.SetActive(!LevelBuilder.StaticInstance.gameObject.activeSelf);
+
+
 }

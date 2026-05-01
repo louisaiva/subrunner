@@ -32,6 +32,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
 
     // events
     public event Action<UI_Slot> OnSlotHoverEnter = delegate { }; // delegate that triggers when we navigate to a new slot
+    public event Action<UI_Slot> OnSlotHoverExit = delegate { }; // delegate that triggers when we navigate away from a slot
     public event Action<UI_Slot> OnSlotOutOfScreen = delegate { }; // delegate that triggers when we navigate to a position that is out of screen
 
 
@@ -179,6 +180,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
 
         // on unhover le slot actuel
         if (!CurrentSlot.Disabled) { CurrentSlot.OnPointerExit(null); }
+        OnSlotHoverExit?.Invoke(CurrentSlot);
         CurrentSlot = null;
     }
     private async void handle_slot_disabled_while_hovering(UI_Slot slot)

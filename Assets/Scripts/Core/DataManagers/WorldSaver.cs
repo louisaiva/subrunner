@@ -30,7 +30,7 @@ public class WorldSaver : MonoBehaviour
         get
         {
             if (_level_manager == null) { _level_manager = GetComponent<LevelDataManager>(); }
-            if (_level_manager == null) { Debug.LogError($"(WorldManager) No LevelDataManager found on the {name} game object. Please add one to the scene."); }
+            if (_level_manager == null) { Debug.LogError($"(WorldSaver) No LevelDataManager found on the {name} game object. Please add one to the scene."); }
             return _level_manager;
         }
     }
@@ -40,7 +40,7 @@ public class WorldSaver : MonoBehaviour
         get
         {
             if (_ids_generator == null) { _ids_generator = GetComponent<IDsGenerator>(); }
-            if (_ids_generator == null) { Debug.LogError($"(WorldManager) No IDsGenerator found on the {name} game object. Please add one to the scene."); }
+            if (_ids_generator == null) { Debug.LogError($"(WorldSaver) No IDsGenerator found on the {name} game object. Please add one to the scene."); }
             return _ids_generator;
         }
     }
@@ -51,13 +51,13 @@ public class WorldSaver : MonoBehaviour
     {
         // we regenerate the ids for all the capables & capacities in the world
         if (log) { Debug.Log(" "); }
-        if (log) { Debug.Log("(WorldManager) ################# 1 - Regenerating IDs for all Capables and Capacities in the world..."); }
+        if (log) { Debug.Log("(WorldSaver) ################# 1 - Regenerating IDs for all Capables and Capacities in the world..."); }
         if (log) { Debug.Log(" "); }
         IDsGenerator.GenerateIDsForAllCapablesAndCapacitiesInWorld();
 
         // we make the rooms grab the capables
         if (log) { Debug.Log(" "); }
-        if (log) { Debug.Log("(WorldManager) ################# 2 - Making the rooms grab the capables..."); }
+        if (log) { Debug.Log("(WorldSaver) ################# 2 - Making the rooms grab the capables..."); }
         if (log) { Debug.Log(" "); }
         LevelManager.MakeRoomsGrabCapables(World.StaticInstance.GetStaticLevels());
 
@@ -66,7 +66,7 @@ public class WorldSaver : MonoBehaviour
 
         // we save the world data
         if (log) { Debug.Log(" "); }
-        if (log) { Debug.Log($"(WorldManager) ################# 3 - Saving the world data... (id is {get_world_id()})"); }
+        if (log) { Debug.Log($"(WorldSaver) ################# 3 - Saving the world data... (id is {get_world_id()})"); }
         if (log) { Debug.Log(" "); }
         SaveWorldData();
     }
@@ -76,12 +76,15 @@ public class WorldSaver : MonoBehaviour
     public void SaveWorldData()
     {
         string id = get_world_to_save(out World world);
-        if (string.IsNullOrEmpty(id) || world == null) { Debug.LogError("(WorldManager) Cannot save world data: no world found to save."); return; }
+        if (string.IsNullOrEmpty(id) || world == null) { Debug.LogError("(WorldSaver) Cannot save world data: no world found to save."); return; }
         save_world_data(id, world);
     }
     private void save_world_data(string id, World world)
     {
-        bool just_created = WorldManager.EnsureWorldDataHierarchy(id); // make sure all the folders for this world exist in the persistent data path
+        // get the data & save it
+        WorldData data = world.GetStaticData();
+        if (string.IsNullOrEmpty(data.id)) { data.id = id; } // we set the id if not already set, so we can save it from the editor not at runtime
+        WorldManager.SaveWorldData(data); // will ensure the hierarchy exists and then save the world data
 
         // check if we need to save the levels data
         if (save_levels)
@@ -89,32 +92,12 @@ public class WorldSaver : MonoBehaviour
             Level[] levels = world.GetStaticLevels();
             LevelManager.SaveLevels(levels.ToList(), WorldManager.GetWorldDataPath(id));
         }
-
-        // get the data
-        WorldData data = world.GetStaticData();
-        data.game_version = Application.version;
-        data.last_update_date = DateTime.Now.ToString();
-        data.creation_date = (just_created || string.IsNullOrEmpty(data.creation_date)) ? data.last_update_date : data.creation_date;
-
-        // check if we just created it and we don't have any icon, then we set random color and default icon
-        if (just_created && string.IsNullOrEmpty(data.icon_path))
-        {
-            data.color = WorldManager.Instance.GetRandomWorldColor();
-            data.icon_path = WorldManager.Instance.GetRandomIconPath(out string icon_name);
-            data.icon_name = icon_name;
-        }
-
-        // save the current WorldData to a json file
-        string json = JsonUtility.ToJson(data, true);
-        string path = Path.Combine(WorldManager.GetWorldDataPath(id), "world_data.json");
-        System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
-        if (log) { Debug.Log($"(WorldManager) Updated & Saved WorldData : {id} (to {path})\n\n{json}"); }
     }
     private string get_world_to_save(out World world)
     {
         // we get the world instance
         world = World.StaticInstance;
-        if (world == null) { Debug.LogError("(WorldManager) No World instance found in the scene. Please add one to the scene."); return ""; }
+        if (world == null) { Debug.LogError("(WorldSaver) No World instance found in the scene. Please add one to the scene."); return ""; }
         
         // we check if we have a world_id to save
         if (!string.IsNullOrEmpty(world_to_save)) { return world_to_save; }
@@ -123,7 +106,7 @@ public class WorldSaver : MonoBehaviour
         if (!string.IsNullOrEmpty(world.world_id)) { return world.world_id; }
 
         // finally we throw an error if we don't have a world_id to save
-        Debug.LogError("(WorldManager) Cannot save world data: world to save id is null or empty.");
+        Debug.LogError("(WorldSaver) Cannot save world data: world to save id is null or empty.");
         return "";
     }
     private string get_world_id()
@@ -131,7 +114,7 @@ public class WorldSaver : MonoBehaviour
         if (!string.IsNullOrEmpty(world_to_save)) { return world_to_save; }
 
         World world = World.StaticInstance;
-        if (world == null) { Debug.LogError("(WorldManager) No World instance found in the scene. Please add one to the scene."); return "null"; }
+        if (world == null) { Debug.LogError("(WorldSaver) No World instance found in the scene. Please add one to the scene."); return "null"; }
         if (!string.IsNullOrEmpty(world.world_id)) { return world.world_id; }
         return "empty ://";
     }

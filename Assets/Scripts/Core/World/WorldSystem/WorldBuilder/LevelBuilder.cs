@@ -187,7 +187,7 @@ public class LevelBuilder : MonoBehaviour
         CameraFollow.Instance.SetSize(Zoom);
 
         // check if we are on the right ui_pool
-        if (UI_Manager.Instance.CurrentPool != "dev_world_builder")
+        if (UI_Manager.Instance.CurrentPool != "dev_level_builder")
         {
             if (selected_cell_visualizer.gameObject.activeSelf) { selected_cell_visualizer.gameObject.SetActive(false); }
             return;

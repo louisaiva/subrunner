@@ -18,9 +18,9 @@ public class UI_Pool : MonoBehaviour
     protected Coroutine current_transition = null;
 
 
-    [Header("Pool navigation parameters")]
+    /* [Header("Pool navigation parameters")]
     [SerializeField] protected float angle_threshold = 45f;
-    [SerializeField] protected float angle_multiplicator = 0f;
+    [SerializeField] protected float angle_multiplicator = 0f; */
 
     [Header("UI Elements")]
     [SerializeField] protected List<GameObject> ui_elements = new List<GameObject>();
@@ -310,8 +310,7 @@ public class UI_Pool : MonoBehaviour
     }
 }
 
-[Serializable]
-public class PoolTransitionSettings
+[Serializable] public class PoolTransitionSettings
 {
     public float Duration = 0.05f; // default duration of the transition
     public bool CanBeHidden = true; // if true, the pool can be hidden when switching to another pool

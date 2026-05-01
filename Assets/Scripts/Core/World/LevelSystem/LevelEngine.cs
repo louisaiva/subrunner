@@ -184,4 +184,19 @@ public class LevelEngine : BSOD_System<LevelEngine>
         if (!hide_no_level_warning) { Debug.LogWarning("(LevelEngine - GetLevelOfRoom) Level not found for room id: " + room_id); }
         return null;
     }
+
+    // STATIC GETTERS
+    public static List<LevelData> LoadWorldLevelsData(string world_id)
+    {
+        List<LevelData> levels_data = new List<LevelData>();
+
+        // we load all the json files in the data path and convert them to LevelData objects
+        string[] files = AppManager.LoadJsonsFromWorldFolder(world_id, "levels");
+        foreach (string file in files)
+        {
+            LevelData data = JsonUtility.FromJson<LevelData>(file);
+            levels_data.Add(data);
+        }
+        return levels_data;
+    }
 }

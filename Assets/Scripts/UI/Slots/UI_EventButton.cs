@@ -26,7 +26,7 @@ public class UI_EventButton : UI_Button, Colorant
     protected virtual void Start()
     {
         // we set the base color
-        btn_icon.color = baseColor;
+        if (btn_icon != null) { btn_icon.color = baseColor; }
         image.color = hoverColor;
         
         // we color all colorers
@@ -43,7 +43,7 @@ public class UI_EventButton : UI_Button, Colorant
         base.OnPointerEnter(eventData);
 
         // we change the icon color
-        btn_icon.color = iconHoverColor;
+        if (btn_icon != null) { btn_icon.color = iconHoverColor; }
         image.color = baseColor; // and the main image color
 
         // we color all colorers
@@ -58,7 +58,7 @@ public class UI_EventButton : UI_Button, Colorant
         base.OnPointerExit(eventData);
 
         // we change the icon color
-        btn_icon.color = baseColor;
+        if (btn_icon != null) { btn_icon.color = baseColor; }
         image.color = hoverColor; // and the main image color
 
         // we color all colorers
@@ -85,7 +85,7 @@ public class UI_EventButton : UI_Button, Colorant
         hoverColor = base_color;
 
         // we change the icon color
-        btn_icon.color = iconHoverColor;
+        if (btn_icon != null) { btn_icon.color = iconHoverColor; }
         image.color = Hovered ? baseColor : hoverColor; // and the main image color
 
         // we color all colorers

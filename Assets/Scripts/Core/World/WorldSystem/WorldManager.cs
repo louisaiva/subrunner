@@ -34,7 +34,8 @@ public class WorldManager : MonoBehaviour
 
 
     [Header("Selected World")]
-    public WorldData selected_world_data;
+    private WorldData selected_world_data;
+    public WorldData SelectedWorldData { get { return selected_world_data; } }
     public string SelectedWorld { get { return selected_world_data != null ? selected_world_data.id : ""; } }
 
 
@@ -164,6 +165,15 @@ public class WorldManager : MonoBehaviour
         SelectWorld(world_data);
     }
 
+
+
+    ///
+    //
+    /// SAVING WORLD
+    //
+    ///
+
+
     // WORLD SAVING
     /// <summary>
     /// this ensures that all the world data hierarchy folders exists for
@@ -220,6 +230,32 @@ public class WorldManager : MonoBehaviour
         // we save the world data to a json file in the current world folder
         return world_folder_created;
     }
+
+    // SAVE DATA
+    public static void SaveWorldData(WorldData data)
+    {
+        bool just_created = EnsureWorldDataHierarchy(data.id);
+        if (!just_created && StaticInstance.log_create) { Debug.LogWarning($"(WorldManager) Tried creating but hierarchy already exists : {data.id}"); }
+
+        data.game_version = Application.version;
+        data.last_update_date = DateTime.Now.ToString();
+        data.creation_date = (just_created || string.IsNullOrEmpty(data.creation_date)) ? data.last_update_date : data.creation_date;
+
+        // check if we just created it or we don't have any icon, then we set random color and default icon
+        if (just_created || string.IsNullOrEmpty(data.icon_path))
+        {
+            data.color = StaticInstance.GetRandomWorldColor();
+            data.icon_path = StaticInstance.GetRandomIconPath(out string icon_name);
+            data.icon_name = icon_name;
+        }
+
+        // save the current WorldData to a json file
+        string json = JsonUtility.ToJson(data, true);
+        string path = Path.Combine(GetWorldDataPath(data.id), "world_data.json");
+        System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
+        if (log) { Debug.Log($"(WorldManager) Updated & Saved WorldData : {data.id} (to {path})\n\n{json}"); }
+    }
+
 
     ///
     //
@@ -296,18 +332,10 @@ public class WorldManager : MonoBehaviour
             return;
         }
 
-        // finally we can create the new world data and enter it
-        WorldData new_data = new WorldData()
-        {
-            id = world_name,
-            creation_date = DateTime.Now.ToString(),
-            last_update_date = DateTime.Now.ToString(),
-            color = GetRandomWorldColor(),
-            icon_path = GetRandomIconPath(out string icon_name),
-            icon_name = icon_name,
-            game_version = Application.version
-        };
+        // we then create the world data and save it (which will create the hierarchy folders if needed)
+        WorldData new_data = new WorldData() { id = world_name };
         existing_worlds_data.Add(world_name, new_data);
+        SaveWorldData(new_data);
         if (log_create) { Debug.Log($"(WorldManager) Created new world with world_id: {world_name}"); }
 
         if (!auto_load_on_creation) { return; }
@@ -327,16 +355,13 @@ public class WorldManager : MonoBehaviour
     // GETTERS
     /* public List<Color> GetWorldColors() { return world_colors; } */
     public Color GetRandomWorldColor() { return world_colors[UnityEngine.Random.Range(0, world_colors.Count)]; }
-    /* public List<Sprite> GetWorldIcons() { return world_icons; }
-    public Sprite GetRandomWorldIcon(out string path, out string icon_name)
-    {
-        int index = UnityEngine.Random.Range(0, world_icons.Count);
-        path = world_icons_path.world_icons_paths[index];
-        icon_name = world_icons_path.world_icons_names[index];
-        return world_icons[index];
-    } */
     public string GetRandomIconPath(out string icon_name)
     {
+        if (world_icons_path == null || world_icons_path.world_icons_paths == null || world_icons_path.world_icons_paths.Count == 0)
+        {
+            if (log_icons_paths) { Debug.LogWarning("(WorldManager) World icons paths was null when trying to get a random icon path. Reloading the world icons paths."); }
+            load_world_icons_paths();
+        }
         int index = UnityEngine.Random.Range(0, world_icons_path.world_icons_paths.Count);
         icon_name = world_icons_path.world_icons_names[index];
         return world_icons_path.world_icons_paths[index];

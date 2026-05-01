@@ -13,9 +13,6 @@ public class UI_WorldSlot : UI_EventButton, Descriptable
     {
         this.world_data = world_data;
 
-        // register to the on click event
-        OnClick += HandleOnClicked;
-
         // we set the icon sprite and color
         if (world_data == null) { return; }
         
@@ -25,15 +22,9 @@ public class UI_WorldSlot : UI_EventButton, Descriptable
         this.baseColor = world_data.color;
         name_text.text = world_data.id;
     }
-    private void OnDestroy()
-    {
-        // unregister from the on click event
-        OnClick -= HandleOnClicked;
-    }
-
 
     // CLICK HANDLER
-    private void HandleOnClicked()
+    public void SelectAndLoadWorld()
     {
         WorldManager.Instance.SelectWorld(world_data);
         SceneLoader.Instance.LoadGame();
