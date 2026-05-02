@@ -279,6 +279,7 @@ MonoBehaviour:
   - {fileID: 4743392949167436401}
   - {fileID: 533064837233644574}
   - {fileID: 5704533046771458960}
+  - {fileID: 2380373136977387751}
 --- !u!114 &4638387620946702657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,6 +316,7 @@ GameObject:
   - component: {fileID: 4743392949167436401}
   - component: {fileID: 533064837233644574}
   - component: {fileID: 5704533046771458960}
+  - component: {fileID: 2380373136977387751}
   m_Layer: 23
   m_Name: types
   m_TagString: Untagged
@@ -373,6 +375,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26dbab5bebb3a834cbc6992b4b5e80c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::subrunner.goap.NoneTypeFactory
+--- !u!114 &2380373136977387751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 780003408685879306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30ca286468bc8264d9558c71bc5c324a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::subrunner.goap.GofriTypeFactory
 --- !u!1 &2767827881693983402
 GameObject:
   m_ObjectHideFlags: 0
@@ -426,7 +440,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   game_theme_to_play: chip wave
-  world_to_load: chunker
 --- !u!1 &5218386995141567643
 GameObject:
   m_ObjectHideFlags: 0
@@ -563,7 +576,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5634746178764748898}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78396926cbbfc4ac3b48fc5fc34a87d1, type: 3}
   m_Name: 
@@ -625,8 +638,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AgentTypeID: 0
   m_CollectObjects: 1
-  m_Size: {x: 40.5, y: 1, z: 32.5}
-  m_Center: {x: 15.25, y: 1, z: -10.25}
+  m_Size: {x: 41, y: 1, z: 33}
+  m_Center: {x: -7.25, y: 0, z: 14.25}
   m_LayerMask:
     serializedVersion: 2
     m_Bits: 570427400
@@ -641,7 +654,7 @@ MonoBehaviour:
   m_BuildHeightMesh: 0
   m_MinRegionArea: 0
   m_HideEditorLogs: 1
-  m_NavMeshData: {fileID: 23800000, guid: 497efffc3f96b7144a3b9e0e67dd8db7, type: 2}
+  m_NavMeshData: {fileID: 0}
 --- !u!114 &3117844331737764809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -673,7 +686,7 @@ MonoBehaviour:
   surfaces:
   - {fileID: 5680882237522360214}
   - {fileID: 5427939901150469199}
-  log: 0
+  log: 1
   hide_log_saving: 0
 --- !u!1 &6134360729676712856
 GameObject:

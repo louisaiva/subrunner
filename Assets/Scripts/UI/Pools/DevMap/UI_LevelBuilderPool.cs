@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Numerics;
 
 public class UI_LevelBuilderPool : UI_SlottablePool, Descriptable
 {

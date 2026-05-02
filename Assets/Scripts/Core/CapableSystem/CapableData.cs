@@ -3,8 +3,24 @@ using UnityEngine;
 using System;
 using System.Reflection;
 
+
+/// <summary>
+/// this attribute "RuntimeOnly" will never be serialized, and
+/// will be ignored when duplicating data
+/// </summary>
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 public sealed class RuntimeOnlyAttribute : Attribute { }
+
+
+/// <summary>
+/// this attribute "InstanceSpecific" mark fields that need to be
+/// saved dynamically for all instances of a same kind. the other fiels
+/// are shared between all instances of a same kind
+/// </summary>
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+public sealed class InstanceSpecificAttribute : Attribute { }
+
+
 
 public interface ICapableData : IData
 {
@@ -13,12 +29,15 @@ public interface ICapableData : IData
 
 [Serializable] public class CapableData : ICapableData
 {
-    [field: SerializeField] public string id { get; set; }
-    public string kind; // used to determine which kind of capable it is. i.e. chest, IA, spawner or else
+    [field: SerializeField, InstanceSpecific] public string id { get; set; }
+    [InstanceSpecific] public string kind; // used to determine which kind of capable it is. i.e. chest, IA, spawner or else
+    // marked as InstanceSpecific bcz we need to store it so we can
+    // load back the correct kind, and so to retrieve the KindSpecific fields when loading
     
+
     // GENERAL
-    public Vector2 position;
-    public Vector2 orientation;
+    [InstanceSpecific] public Vector2 position;
+    [InstanceSpecific] public Vector2 orientation;
     public int layer;
     public string tag;
 
@@ -32,12 +51,12 @@ public interface ICapableData : IData
     public FeetData feet_data;
 
     // CAPACITIES
-    public List<string> capacities_ids;
+    [InstanceSpecific] public List<string> capacities_ids;
     public int TotalCapacitiesCount() { return capacities_ids.Count; }
 
     // EFFECTS
-    public List<Effect> effects;
-    public List<float> effects_ttl; // time to live for each effect, in seconds
+    [InstanceSpecific] public List<Effect> effects;
+    [InstanceSpecific] public List<float> effects_ttl; // time to live for each effect, in seconds
 
 
     // EVENTS

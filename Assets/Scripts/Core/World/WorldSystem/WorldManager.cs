@@ -255,7 +255,7 @@ public class WorldManager : MonoBehaviour
     
     
     // LOAD / UNLOAD WORLD
-    public async void LoadSelectedWorld()
+    public async Task LoadSelectedWorld()
     {
 
         // first we check that a world is not already loaded

@@ -609,6 +609,13 @@ MonoBehaviour:
     - beings/perso/perso_sit_base
     - beings/perso/perso_sit_down_base
     keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: gofri
+    variant_spritesheets:
+    - beings/boss/gofri/gofri_frigo
+    base_skin: gofri_face
+    base_spritesheets:
+    - beings/boss/gofri/gofri_face
+    keep_base_anim_if_spritesheet_not_found: 0
   log: 0
   log_LAFAC: 0
   log_variant_awake: 0
@@ -1194,7 +1201,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsQuitting: 0
   LoadedSceneCount: 0
-  prototype: perfect tilemaps
+  prototype: world loading in flow
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320

@@ -1405,15 +1405,11 @@ MonoBehaviour:
   Showed: 0
   Stacked: 0
   Settings: {fileID: 11400000, guid: 94119f42decf8e34990bd47ca0ec56c3, type: 2}
-  angle_threshold: 45
-  angle_multiplicator: 0
   ui_elements:
   - {fileID: 9111985635149183660}
   - {fileID: 7838766706422341132}
   - {fileID: 2470807747728950451}
-  stacked_elements:
-  - {fileID: 9111985635149183660}
-  - {fileID: 2470807747728950451}
+  stacked_elements: []
   log: 0
   log_extended: 0
   log_elements_showing: 0
@@ -1449,7 +1445,7 @@ GameObject:
   - component: {fileID: 7631897070392892391}
   - component: {fileID: 8127701269535348611}
   - component: {fileID: 2730686044859231429}
-  - component: {fileID: 6573590178802878683}
+  - component: {fileID: 4014428045226950457}
   m_Layer: 10
   m_Name: world_builder_btn
   m_TagString: Untagged
@@ -1544,10 +1540,10 @@ MonoBehaviour:
   onClickedEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6573590178802878683}
-        m_TargetAssemblyTypeName: Caller, Assembly-CSharp
-        m_MethodName: SwitchTo
-        m_Mode: 5
+      - m_Target: {fileID: 4014428045226950457}
+        m_TargetAssemblyTypeName: WorldBuilderCaller, Assembly-CSharp
+        m_MethodName: OpenPopupThenWorldBuilder
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1556,7 +1552,7 @@ MonoBehaviour:
           m_StringArgument: dev_world_builder
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &6573590178802878683
+--- !u!114 &4014428045226950457
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1565,9 +1561,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4323809022230564913}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b186bb40c8a0b04281b6cfa864f9e0d, type: 3}
+  m_Script: {fileID: 11500000, guid: 11343904c20edbe4791a4121e3354162, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Caller
+  m_EditorClassIdentifier: Assembly-CSharp::WorldBuilderCaller
 --- !u!1 &4554627096350819865
 GameObject:
   m_ObjectHideFlags: 0
@@ -1606,7 +1602,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 430.5, y: -141.59999}
+  m_AnchoredPosition: {x: 404.09998, y: -120.79999}
   m_SizeDelta: {x: 600, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2001262865247066198
@@ -3307,7 +3303,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 430.5, y: -295.59998}
+  m_AnchoredPosition: {x: 404.09998, y: -274.8}
   m_SizeDelta: {x: 600, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8216330687934081604

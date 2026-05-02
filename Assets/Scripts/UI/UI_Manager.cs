@@ -463,10 +463,33 @@ public class UI_Manager : Singleton<UI_Manager>
         // show the stacked simple_input pool
         StackPool("popup_text");
     }
-    public void CloseInputPopup(string text)
+    public void CloseInputPopup(string text="")
     {
         UnstackPool("popup_text");
     }
+
+
+
+    public void OpenQuestionPopup(string title, string question, System.Action on_validate)
+    {
+        OpenQuestionPopup(title, question, new List<System.Action> { on_validate });
+    }
+    public void OpenQuestionPopup(string title, string question, List<System.Action> on_validate)
+    {
+        // set the input slot callback
+        if (!TryGetPool<UI_PopupOkNo>(out UI_PopupOkNo popup)) { return; }
+
+        // add the popup closing callback to the on_validate callbacks
+        // on_validate.Insert(0, () => { CloseQuestionPopup(); });
+        popup.RegisterDialog(title, question, on_validate);
+
+        // show the stacked popup ok no pool
+        StackPool("popup_okno");
+    }
+    /* public void CloseQuestionPopup()
+    {
+        UnstackPool("popup_okno");
+    } */
 
 
 
