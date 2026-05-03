@@ -123,6 +123,7 @@ public class LevelBuilder : MonoBehaviour
     [SerializeField] private bool log = false;
     [SerializeField] private bool log_cycles = false;
     [SerializeField] private bool log_get_room = false;
+    [SerializeField] private bool log_room_grab = false;
     [SerializeField] private bool log_data = false;
     [SerializeField] private bool log_building = false;
     [SerializeField] private bool log_tool = false;
@@ -149,6 +150,14 @@ public class LevelBuilder : MonoBehaviour
     }
 
     // ON ENABLE / DISABLE
+    private void OnEnable()
+    {
+        if (log) { Debug.Log("(LevelBuilder) OnEnable, targeted world: " + world_id + ", targeted level: " + level_id); }
+
+        // we try to grab all the doors & lights
+        make_rooms_grab_all_doors();
+        make_rooms_grab_all_lights();
+    }
     private void OnDisable()
     {
         SaveCurrentLevelSchematic();
@@ -447,6 +456,10 @@ public class LevelBuilder : MonoBehaviour
 
         // add to list
         room_visualizers.Add(new_room_visu);
+
+        // we refresh all lights & doors
+        make_rooms_grab_all_doors();
+        make_rooms_grab_all_lights();
         return new_room_visu;
     }
     private List<WorldLinkVisualizer> gather_links_of_cycle(List<WorldNodeVisualizer> cycle)
@@ -549,14 +562,20 @@ public class LevelBuilder : MonoBehaviour
         assign_door_to_rooms(new_door_visu);
         return new_door_visu;
     }
-
-    // doors to rooms
+    private void make_rooms_grab_all_doors()
+    {
+        if (log_room_grab) { Debug.Log("(LevelBuilder) making rooms grab all doors"); }
+        foreach (var d in door_visualizers) { assign_door_to_rooms(d); }
+    }
     private void assign_door_to_rooms(WorldDoorVisualizer door)
     {
         foreach (var r in room_visualizers)
         {
-            if (r.CollideWithCell(door.Cell)) { r.AddDoor(door); continue; }
-            if (r.CollideWithCell(door.OtherCell)) { r.AddDoor(door); continue; }
+            bool grabbed = false;
+            if (r.CollideWithCell(door.Cell)) { r.AddDoor(door); grabbed = true; }
+            else if (r.CollideWithCell(door.OtherCell)) { r.AddDoor(door); grabbed = true; }
+            if (!grabbed) { continue; }
+            if (log_room_grab) { Debug.Log($"(LevelBuilder) Door {door.name} assigned to room {r.name}"); }
         }
     }
 
@@ -570,11 +589,20 @@ public class LevelBuilder : MonoBehaviour
         assign_light_to_rooms(new_light_visu);
         return new_light_visu;
     }
+    private void make_rooms_grab_all_lights()
+    {
+        if (log_room_grab) { Debug.Log("(LevelBuilder) making rooms grab all lights"); }
+        foreach (var l in light_visualizers) { assign_light_to_rooms(l); }
+    }
     private void assign_light_to_rooms(WorldLightVisualizer light)
     {
         foreach (var r in room_visualizers)
         {
-            if (r.CollideWithCell(light.Cell)) { r.AddLight(light); return; } // one light can only be in one room
+            bool grabbed = false;
+            if (r.CollideWithCell(light.Cell)) { r.AddLight(light); grabbed = true;}
+            if (!grabbed) { continue; }
+            if (log_room_grab) { Debug.Log($"(LevelBuilder) Light {light.name} assigned to room {r.name}"); }
+            return; // one light can only be in one room
         }
     }
 
@@ -844,6 +872,19 @@ public class LevelBuilder : MonoBehaviour
         AppManager.SaveJsonToWorldFolder(world_id, path, json);
         if (log_data) { Debug.Log("(LevelBuilder) Saved schematic for " + level_id + $"({world_id}) at {path} :\n" + json); }
     }
+    public bool LoadLevelSchematic(string world, string level)
+    {
+        string path = Path.Combine("levels", level + ".schematic");
+        string json = AppManager.LoadJsonFromWorldFolder(world, path);
+        if (string.IsNullOrEmpty(json))
+        {
+            if (log_data) { Debug.LogWarning($"(LevelBuilder) No schematic found at path : {path}"); }
+            return false;
+        }
+        load_data(json);
+        if (log_data) { Debug.Log("(LevelBuilder) Loaded schematic for " + level_id + $"({world_id}) from {path} :\n" + json); }
+        return true;
+    }
     private void load_data(string json)
     {
         var data = JsonUtility.FromJson<LevelSchematic>(json);
@@ -881,19 +922,6 @@ public class LevelBuilder : MonoBehaviour
 
         // Load lights
         foreach (var light in data.Lights) { create_light_at(light); }
-    }
-    public bool LoadLevelSchematic(string world, string level)
-    {
-        string path = Path.Combine("levels", level + ".schematic");
-        string json = AppManager.LoadJsonFromWorldFolder(world, path);
-        if (string.IsNullOrEmpty(json))
-        {
-            if (log_data) { Debug.LogWarning($"(LevelBuilder) No schematic found at path : {path}"); }
-            return false;
-        }
-        load_data(json);
-        if (log_data) { Debug.Log("(LevelBuilder) Loaded schematic for " + level_id + $"({world_id}) from {path} :\n" + json); }
-        return true;
     }
 }
 

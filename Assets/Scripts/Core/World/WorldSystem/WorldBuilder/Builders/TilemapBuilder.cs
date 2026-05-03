@@ -271,7 +271,22 @@ public class TilemapBuilder : MonoBehaviour
 
         return new List<Vector3Int>(filled);
     }
+    protected List<Vector3Int> get_inside_mask(WorldRoomVisualizer room)
+    {
+        return get_inside_mask(room, out List<Vector3Int> _);
+    }
+    protected List<Vector3Int> get_inside_mask(WorldRoomVisualizer room, out List<Vector3Int> outline)
+    {
+        // we calculate all the positions of the tiles we need to create the outline
+        outline = get_carpet_tiles_positions(room, DiagonalTraceType.Straight);
 
+        // we duplicate the outline and move it by 1 up, to filter the inner walls (we want to remove the ext walls)
+        List<Vector3Int> inside_mask = new List<Vector3Int>();
+        foreach (var pos in outline) { inside_mask.Add(new Vector3Int(pos.x, pos.y + 1, pos.z)); }
+
+        // we fill inside the outline up
+        return fill_inside(inside_mask);
+    }
 
 
     // DIRECTIONS & CONVERSIONS

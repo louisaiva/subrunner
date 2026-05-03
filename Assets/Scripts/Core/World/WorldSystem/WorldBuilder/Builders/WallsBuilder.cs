@@ -25,56 +25,9 @@ public class WallsBuilder : TilemapBuilder
     [SerializeField] private TileBase R_tile;
 
 
-
     ///
     //
-    /// 1. 2nd TILEMAP FOR WALLS EDGES
-    //
-    ///
-
-    /* [Header("Walls Edges Tilemaps")]
-    [SerializeField] protected Tilemap edges_tilemap_prefab;
-    protected Dictionary<string, Tilemap> edges_tilemap_instances = new Dictionary<string, Tilemap>();
-
-    [Header("Edges Tiles")]
-    [SerializeField] private TileBase L_edge;
-    [SerializeField] private TileBase R_edge;
-
-
-    // MAIN METHODS
-    public override Tilemap Build(WorldRoomVisualizer room)
-    {
-        // we check if we already have a tilemap for this room, else we create one
-        if (edges_tilemap_instances.TryGetValue(room.name, out Tilemap edges_tm))
-        {
-            edges_tm.ClearAllTiles();
-        }
-        else
-        {
-            edges_tm = Instantiate(tilemap_prefab, tilemap_parent);
-            if (edges_tm.TryGetComponent(out TilemapCollider2D collider)) { collider.enabled = false; }
-            edges_tm.name = $"edges_{room.name}";
-            edges_tilemap_instances[room.name] = edges_tm;
-        }
-        return base.Build(room);
-    }
-    public override void Clear()
-    {
-        base.Clear();
-        foreach (var tilemap in edges_tilemap_instances.Values)
-        {
-            tilemap.ClearAllTiles();
-        }
-    } */
-
-
-
-
-
-
-    ///
-    //
-    /// 2. MAIN BUILDING METHOD
+    ///   MAIN BUILDING METHOD
     //
     ///
 
@@ -155,15 +108,7 @@ public class WallsBuilder : TilemapBuilder
     // FILTER EXTERIOR WALLS
     protected List<Vector3Int> filter_exterior_walls(Tilemap tilemap, WorldRoomVisualizer room)
     {
-        // we calculate all the positions of the tiles we need to create the outline
-        List<Vector3Int> outline = get_carpet_tiles_positions(room, DiagonalTraceType.Straight);
-
-        // we duplicate the outline and move it by 1 up, to filter the inner walls (we want to remove the ext walls)
-        List<Vector3Int> inside_mask = new List<Vector3Int>();
-        foreach (var pos in outline) { inside_mask.Add(new Vector3Int(pos.x, pos.y + 1, pos.z)); }
-
-        // we fill inside the outline up
-        inside_mask = fill_inside(inside_mask);
+        List<Vector3Int> inside_mask = get_inside_mask(room, out List<Vector3Int> outline);
 
         // we keep only the tiles that are in the outline and in the inside mask
         for (int i = outline.Count - 1; i >= 0; i--)

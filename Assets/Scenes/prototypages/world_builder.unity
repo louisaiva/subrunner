@@ -11174,7 +11174,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f21c41059eea91a4f90b29f8510483e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::World
-  world_id: demo
+  world_id: save_test
   data:
     game_version: 
     creation_date: 
@@ -51819,6 +51819,7 @@ MonoBehaviour:
   tilemap_prefab: {fileID: 719086958181189230, guid: 7cbe7dfef3a2ab84c853bef2dd0292ed, type: 3}
   tile: {fileID: 11400000, guid: c10fb1efdd659ba4495907d85a35f1be, type: 2}
   log_angles: 0
+  logs_door_ground: 1
   default_grid: {fileID: 1489220171}
 --- !u!114 &624354658
 MonoBehaviour:
@@ -172417,10 +172418,14 @@ MonoBehaviour:
   LinkedColor: {r: 0.6784314, g: 0.8470589, b: 0.9019608, a: 1}
   RoomColors:
   - {r: 1, g: 0.7137255, b: 0.7568628, a: 1}
-  - {r: 0.5647059, g: 0.9333334, b: 0.5647059, a: 1}
-  - {r: 0.6862745, g: 0.9333334, b: 0.9333334, a: 1}
+  - {r: 0.5647059, g: 0.93333334, b: 0.7825288, a: 1}
+  - {r: 0.14462443, g: 0.4716981, b: 0.4716981, a: 1}
   - {r: 0, g: 1, b: 1, a: 1}
-  - {r: 1, g: 0, b: 1, a: 1}
+  - {r: 0.9056604, g: 0.49982202, b: 0.9056604, a: 1}
+  - {r: 0.49803922, g: 0.59860414, b: 0.90588236, a: 1}
+  - {r: 0.7621019, g: 0.90588236, b: 0.49803922, a: 1}
+  - {r: 0.90588236, g: 0.6325206, b: 0.49803922, a: 1}
+  - {r: 0.64422125, g: 0.49803922, b: 0.90588236, a: 1}
   door_ver_prefab: {fileID: -8648718281046801322, guid: cef927713e5f11a49abbd7ac6b940846, type: 3}
   door_hor_prefab: {fileID: -8648718281046801322, guid: d211376a103728c48a21ede5900da5c8, type: 3}
   door_ver_tool: {fileID: 419413205}
@@ -172440,8 +172445,9 @@ MonoBehaviour:
   log: 0
   log_cycles: 0
   log_get_room: 0
+  log_room_grab: 0
   log_data: 0
-  log_building: 1
+  log_building: 0
   log_tool: 0
 --- !u!114 &2023470142
 MonoBehaviour:

@@ -48,6 +48,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd77097d2c0e5af4ca2b0a06c50cdef8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldRoomVisualizer
+  doors: []
+  lights: []
+  log_callbacks: 0
+  log_collides: 0
 --- !u!33 &5204496991902739451
 MeshFilter:
   m_ObjectHideFlags: 0

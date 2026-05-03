@@ -10,38 +10,29 @@ public class PolyColliderToMesh: MonoBehaviour
     List<int> _triangles = new List<int>();
     Mesh _myMesh;
 
-    // In-editor, poll for collider updates so we can react 
-    // to shape changes with realtime interactivity.
-    /* #if UNITY_EDITOR
-    private void OnScene(UnityEditor.SceneView scene_view)
-    {
-    }
-    #endif */
-
     private void Update()
     {
         // Debug.Log("scene view update");
-        if (_collider == null)
-            Initialize();
-        else {
-            var colliderPoints = _collider.GetPath(0);
-            if(colliderPoints.Length == _cachedPoints.Length) {
-                bool mismatch = false;
-                for(int i = 0; i < colliderPoints.Length; i++) {
-                    if (colliderPoints[i] != _cachedPoints[i]) {
-                        mismatch = true;
-                        break;
-                    }
+        if (_collider == null) { return; } // if we are not initialized yet, we wait for the Initialize() call to do it
+        
+
+        var colliderPoints = _collider.GetPath(0);
+        if(colliderPoints.Length == _cachedPoints.Length) {
+            bool mismatch = false;
+            for(int i = 0; i < colliderPoints.Length; i++) {
+                if (colliderPoints[i] != _cachedPoints[i]) {
+                    mismatch = true;
+                    break;
                 }
-                if (mismatch == false)
-                    return;
             }
-            Reshape();
+            if (mismatch == false)
+                return;
         }
+        Reshape();
     }
 
     // Wire up references and set initial shape.
-    private void Initialize()
+    public void Initialize()
     {
         _collider = GetComponent<PolygonCollider2D>();
         var filter = GetComponent<MeshFilter>();

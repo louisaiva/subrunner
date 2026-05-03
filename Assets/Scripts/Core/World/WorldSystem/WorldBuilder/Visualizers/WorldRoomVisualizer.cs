@@ -72,6 +72,9 @@ public class WorldRoomVisualizer : MonoBehaviour
         polygon_collider.pathCount = 1;
         polygon_collider.SetPath(0, GetPath());
 
+        // we initialize the polycollider to mesh
+        GetComponent<PolyColliderToMesh>().Initialize();
+
         // we ask for a name and we set it
         if (string.IsNullOrEmpty(id))
         {
