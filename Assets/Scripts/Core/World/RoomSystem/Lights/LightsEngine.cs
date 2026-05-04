@@ -20,17 +20,17 @@ public class LightsEngine : MonoBehaviour
     ///
 
 
-    public void LoadLights(List<LightData> lights_data, string room_id)
+    public void LoadLights(List<LightData> lights_data, string room_id, Transform parent = null)
     {
         if (lights_data == null) { return; }
-        foreach (var light_data in lights_data) { LoadLight(light_data, room_id); }
+        foreach (var light_data in lights_data) { LoadLight(light_data, room_id, parent); }
     }
-    public Light2D LoadLight(LightData data, string room_id)
+    public Light2D LoadLight(LightData data, string room_id, Transform parent = null)
     {
         if (!room_lights.ContainsKey(room_id)) { room_lights[room_id] = new Dictionary<Vector2, Light2D>(); }
         if (room_lights[room_id].TryGetValue(data.position, out Light2D existing_light)) { return existing_light; }
 
-        Light2D new_light = Instantiate(light_prefab, LightsParent);
+        Light2D new_light = Instantiate(light_prefab, parent ?? LightsParent);
         new_light.transform.position = data.position;
         new_light.color = data.color;
         new_light.intensity = data.intensity;

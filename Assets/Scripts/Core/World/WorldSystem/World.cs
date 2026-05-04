@@ -129,14 +129,14 @@ public class World : BSOD_System<World>
         // and then we init all the engines
         if (log_loading_extended) { Debug.Log($"(World) ----------------------------------- LOADING ALL ENGINES : (previous phase duration: {Time.realtimeSinceStartup - phase_time}s)"); }
         phase_time = Time.realtimeSinceStartup;
-        await LevelEngine.StaticInstance.LoadWorldData(world_id, log_loading_extended);
+        await LevelEngine.LazyInstance.LoadWorldData(world_id, log_loading_extended);
 
         // -> now we can get all the levels ids and put it in the world data for runtime access.
-        data.levels_ids = new List<string>(LevelEngine.StaticInstance.GetWorldLevelsIDs());
+        data.levels_ids = new List<string>(LevelEngine.LazyInstance.GetWorldLevelsIDs());
 
-        await RoomEngine.StaticInstance.LoadWorldData(world_id, log_loading_extended);
-        await CapableEngine.StaticInstance.LoadWorldData(world_id, log_loading_extended);
-        await CapacityEngine.StaticInstance.LoadWorldData(world_id, log_loading_extended);
+        await RoomEngine.LazyInstance.LoadWorldData(world_id, log_loading_extended);
+        await CapableEngine.LazyInstance.LoadWorldData(world_id, log_loading_extended);
+        await CapacityEngine.LazyInstance.LoadWorldData(world_id, log_loading_extended);
 
 
         ///
@@ -159,10 +159,10 @@ public class World : BSOD_System<World>
         {
             string start_level_id = data.levels_ids[0];
             if (log) { Debug.Log($"(World) STARTING WORLD: {world_id}  -- Level: {start_level_id}"); }
-            if (!string.IsNullOrEmpty(start_level_id)) { LevelEngine.StaticInstance.LoadLevel(start_level_id); }
+            if (!string.IsNullOrEmpty(start_level_id)) { LevelEngine.LazyInstance.LoadLevel(start_level_id); }
 
             // we tp the player to the fallback spawn point while loading the world
-            if (fallback_spawn_point != null) { Controller.StaticInstance.Capable.transform.position = fallback_spawn_point.position; }
+            if (fallback_spawn_point != null) { Controller.LazyInstance.Capable.transform.position = fallback_spawn_point.position; }
         }
         else if (log) { Debug.Log($"(World) STARTING WORLD: {world_id} (!) {(data == null ? "DATA IS NULL" : "NO LEVELS FOUND")}"); }
 
@@ -223,10 +223,10 @@ public class World : BSOD_System<World>
         float start_time = Time.realtimeSinceStartup;
 
         // we unload all the engines
-        await LevelEngine.StaticInstance.UnloadWorldData(log_loading_extended);
-        await RoomEngine.StaticInstance.UnloadWorldData(log_loading_extended);
-        await CapableEngine.StaticInstance.UnloadWorldData(log_loading_extended);
-        await CapacityEngine.StaticInstance.UnloadWorldData(log_loading_extended);
+        await LevelEngine.LazyInstance.UnloadWorldData(log_loading_extended);
+        await RoomEngine.LazyInstance.UnloadWorldData(log_loading_extended);
+        await CapableEngine.LazyInstance.UnloadWorldData(log_loading_extended);
+        await CapacityEngine.LazyInstance.UnloadWorldData(log_loading_extended);
 
         // we clear the world data
         data = null;

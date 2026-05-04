@@ -42,7 +42,7 @@ public class Caller : MonoBehaviour
 
 
     // LEVEL BUILDER
-    public void ToggleWorldBuilder() => LevelBuilder.StaticInstance?.gameObject.SetActive(!LevelBuilder.StaticInstance.gameObject.activeSelf);
+    public void ToggleWorldBuilder() => WorldBuilder.LevelBuilder?.gameObject.SetActive(!WorldBuilder.LevelBuilder.gameObject.activeSelf);
 
 
 }

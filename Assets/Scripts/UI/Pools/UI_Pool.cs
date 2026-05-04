@@ -193,8 +193,9 @@ public class UI_Pool : MonoBehaviour
     ///
 
 
-    // LOW BEFORE SHOWING
+    // LOW BEFORE SHOWING / HDIING
     protected virtual void before_showing() { }
+    // protected virtual void before_hiding() { }
 
     // LOW SHOWING
     protected virtual IEnumerator show_coroutine(List<GameObject> dont_show = null, float duration_override = -1f, bool was_stacked = false)

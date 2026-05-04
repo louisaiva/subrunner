@@ -14,25 +14,10 @@ using UnityEngine.Tilemaps;
 public class LevelBuilder : MonoBehaviour
 {
 
-    // SINGLETON LOGIC
-    private static LevelBuilder _static_instance;
-    public static LevelBuilder StaticInstance
-    {
-        get
-        {
-            if (_static_instance == null)
-            {
-                _static_instance = FindFirstObjectByType<LevelBuilder>(FindObjectsInactive.Include);
-                if (_static_instance == null) { Debug.LogError("No WorldBuilder instance found in the scene."); }
-            }
-            return _static_instance;
-        }
-    }
 
     [Header("Current Targeted World & Level")]
-    [SerializeField] private string world_id = "";
     [SerializeField] private string level_id = "";
-    public string TargetedWorld => world_id;
+    private string world_id => WorldBuilder.StaticTargetedWorld;
     public string TargetedLevel => level_id;
 
 
@@ -129,14 +114,22 @@ public class LevelBuilder : MonoBehaviour
     [SerializeField] private bool log_tool = false;
 
 
+
+    // EVENTS
+    private bool fire_modified = true; // simple toggle so we can prevent firing the event when loading the schematic
+    public System.Action<string> OnLevelModified = delegate { };
+    public System.Action<string> OnLevelBuilding = delegate { };
+
+
+
     ///
     // 
     ///  AWAKE & MAIN ENTRY POINTS
     //
     ///
 
-    // AWAKE
-    protected void Awake()
+    // Awake
+    public void Awake()
     {
         grid_material.SetFloat("_CellSize", Grid.cellSize.x);
 
@@ -167,10 +160,8 @@ public class LevelBuilder : MonoBehaviour
     }
 
 
-    // MAIN ENTRY POINT TO EDIT / CREATE A LEVEL
     public void EditLevel(string world, string level)
     {
-        world_id = world;
         level_id = level;
         if (!LoadLevelSchematic(world, level))
         {
@@ -179,8 +170,6 @@ public class LevelBuilder : MonoBehaviour
         }
         if (log) { Debug.Log("(LevelBuilder) Loaded Level schematic : " + level + " for world: " + world); }
     }
-    
-
 
 
     ///
@@ -353,6 +342,9 @@ public class LevelBuilder : MonoBehaviour
         if (cell_to_remove is WorldNodeVisualizer node_to_remove) { node_visualizers.Remove(node_to_remove); }
         else if (cell_to_remove is WorldDoorVisualizer door_to_remove) { door_visualizers.Remove(door_to_remove); }
         Destroy(cell_to_remove.gameObject);
+
+        // fire the event
+        if (fire_modified) { OnLevelModified?.Invoke(level_id); }
     }
 
     // NODES / LINKS MANAGEMENT
@@ -396,6 +388,9 @@ public class LevelBuilder : MonoBehaviour
         new_cell_visu.SetCell(cell_pos);
         new_cell_visu.Color = WaitingColor;
         node_visualizers.Add(new_cell_visu);
+
+        // fire the event
+        if (fire_modified) { OnLevelModified?.Invoke(level_id); }
         return new_cell_visu;
     }
     private WorldLinkVisualizer create_link_between(WorldNodeVisualizer c1, WorldNodeVisualizer c2, Color? color = null)
@@ -404,6 +399,8 @@ public class LevelBuilder : MonoBehaviour
         new_link_visu.SetCells(c1, c2);
         new_link_visu.Color = color ?? WaitingColor;
         link_visualizers.Add(new_link_visu);
+        // fire the event
+        if (fire_modified) { OnLevelModified?.Invoke(level_id); }
         return new_link_visu;
     }
 
@@ -460,6 +457,9 @@ public class LevelBuilder : MonoBehaviour
         // we refresh all lights & doors
         make_rooms_grab_all_doors();
         make_rooms_grab_all_lights();
+
+        // fire the event
+        if (fire_modified) { OnLevelModified?.Invoke(level_id); }
         return new_room_visu;
     }
     private List<WorldLinkVisualizer> gather_links_of_cycle(List<WorldNodeVisualizer> cycle)
@@ -560,6 +560,9 @@ public class LevelBuilder : MonoBehaviour
         new_door_visu.Color = ConnectedDoorColor;
         door_visualizers.Add(new_door_visu);
         assign_door_to_rooms(new_door_visu);
+
+        // fire the event
+        if (fire_modified) { OnLevelModified?.Invoke(level_id); }
         return new_door_visu;
     }
     private void make_rooms_grab_all_doors()
@@ -587,6 +590,9 @@ public class LevelBuilder : MonoBehaviour
         new_light_visu.Color = LightColor;
         light_visualizers.Add(new_light_visu);
         assign_light_to_rooms(new_light_visu);
+
+        // fire the event
+        if (fire_modified) { OnLevelModified?.Invoke(level_id); }
         return new_light_visu;
     }
     private void make_rooms_grab_all_lights()
@@ -618,15 +624,46 @@ public class LevelBuilder : MonoBehaviour
 
 
     // BUILDER
-    public Action<BuiltLevelData> OnWorldBuilt = delegate { };
+    public Action<BuiltLevelData> OnLevelBuilt = delegate { };
+    public BuiltLevelData Build(string world, string level)
+    {
+        OnLevelBuilding?.Invoke(level);
+
+        LoadLevelSchematic(world, level);
+        BuiltLevelData built_world = new BuiltLevelData()
+        {
+            world = world_id,
+            level = level,
+            Rooms = new List<WorldRoomVisualizer>(room_visualizers)
+        };
+
+        foreach (var r in room_visualizers)
+        {
+            if (!r.isActiveAndEnabled) { continue; }
+            if (log_building) { Debug.Log($"(LevelBuilder) Building tilemaps for {r.name}"); }
+            built_world.Tilemaps[r.name] = build_room(r);
+        }
+
+        if (log_building) { Debug.Log($"(LevelBuilder) Level {level} on world {world_id} built"); }
+        OnLevelBuilt?.Invoke(built_world);
+
+        return built_world;
+    }
     public void Build()
     {
+        if (string.IsNullOrEmpty(world_id) || string.IsNullOrEmpty(level_id))
+        {
+            if (log_building) { Debug.Log("(LevelBuilder) No world or level targeted, cannot build"); }
+            return;
+        }
+
         if (log_building) { Debug.Log("(LevelBuilder) Building the level : " + level_id + $" (world : {world_id})"); }
+        OnLevelBuilding?.Invoke(level_id);
 
         BuiltLevelData built_world = new BuiltLevelData()
         {
-            // Cells = new List<WorldNodeVisualizer>(node_visualizers),
-            // Links = new List<WorldLinkVisualizer>(link_visualizers),
+            world = world_id,
+            level = level_id,
             Rooms = new List<WorldRoomVisualizer>(room_visualizers)
         };
 
@@ -638,7 +675,7 @@ public class LevelBuilder : MonoBehaviour
         }
 
         if (log_building) { Debug.Log("(LevelBuilder) World built"); }
-        OnWorldBuilt?.Invoke(built_world);
+        OnLevelBuilt?.Invoke(built_world);
     }
     public void Build(string builder)
     {
@@ -812,7 +849,7 @@ public class LevelBuilder : MonoBehaviour
     //
     ///
 
-    // DATA MANAGEMENT
+    // SAVE
     public void SaveCurrentLevelSchematic()
     {
         if (string.IsNullOrEmpty(world_id) || string.IsNullOrEmpty(level_id))
@@ -872,6 +909,8 @@ public class LevelBuilder : MonoBehaviour
         AppManager.SaveJsonToWorldFolder(world_id, path, json);
         if (log_data) { Debug.Log("(LevelBuilder) Saved schematic for " + level_id + $"({world_id}) at {path} :\n" + json); }
     }
+    
+    // LOAD
     public bool LoadLevelSchematic(string world, string level)
     {
         string path = Path.Combine("levels", level + ".schematic");
@@ -888,6 +927,8 @@ public class LevelBuilder : MonoBehaviour
     private void load_data(string json)
     {
         var data = JsonUtility.FromJson<LevelSchematic>(json);
+
+        fire_modified = false; // we prevent firing the modified event while loading the schematic
 
         // Load cells
         foreach (var cell in data.Cells) { create_node_at(cell); }
@@ -922,6 +963,9 @@ public class LevelBuilder : MonoBehaviour
 
         // Load lights
         foreach (var light in data.Lights) { create_light_at(light); }
+
+        // we are done loading, we can allow firing the modified event again
+        fire_modified = true;
     }
 }
 
@@ -929,6 +973,9 @@ public class LevelBuilder : MonoBehaviour
 // RTO DATA CLASS -> for sending data to the LevelTranslator
 public class BuiltLevelData
 {
+    public string world;
+    public string level;
+
     // cells links rooms visu
     public List<WorldRoomVisualizer> Rooms = new List<WorldRoomVisualizer>();
 

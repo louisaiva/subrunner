@@ -6,19 +6,19 @@ public class UI_LevelBuilderPool : UI_SlottablePool, Descriptable
     private string get_description()
     {
         string description = "";
-        description += $"level : <b>{LevelBuilder.StaticInstance.TargetedWorld}/{LevelBuilder.StaticInstance.TargetedLevel}</b>\n\n";
-        description += $"current tool : <b>{LevelBuilder.StaticInstance.tool_type}</b>\n";
-        description += $"current cell : <b>({LevelBuilder.StaticInstance.SelectedCell.x}, {LevelBuilder.StaticInstance.SelectedCell.y})</b>\n";
+        description += $"level : <b>{WorldBuilder.StaticTargetedWorld}/{WorldBuilder.LevelBuilder.TargetedLevel}</b>\n\n";
+        description += $"current tool : <b>{WorldBuilder.LevelBuilder.tool_type}</b>\n";
+        description += $"current cell : <b>({WorldBuilder.LevelBuilder.SelectedCell.x}, {WorldBuilder.LevelBuilder.SelectedCell.y})</b>\n";
         return description;
     }
 
     // ENABLING
     protected override void on_added_to_stack()
     {
-        LevelBuilder.StaticInstance?.gameObject.SetActive(true);
+        WorldBuilder.LevelBuilder?.gameObject.SetActive(true);
     }
     protected override void on_removed_from_stack()
     {
-        LevelBuilder.StaticInstance?.gameObject.SetActive(false);
+        WorldBuilder.LevelBuilder?.gameObject.SetActive(false);
     }
 }

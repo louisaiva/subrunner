@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
         IsClosingGame = false;
 
         // we launch the world from WorldManager
-        WorldManager.StaticInstance.LoadSelectedWorld();
+        WorldManager.LazyInstance.LoadSelectedWorld();
     }
     private void Start()
     {

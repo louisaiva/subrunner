@@ -9,7 +9,7 @@ public class WorldManager : MonoBehaviour
 {
     // SINGLETON
     public static WorldManager Instance { get; private set; }
-    public static WorldManager StaticInstance
+    public static WorldManager LazyInstance
     {
         get
         {
@@ -38,6 +38,7 @@ public class WorldManager : MonoBehaviour
     private WorldData selected_world_data;
     public WorldData SelectedWorldData { get { return selected_world_data; } }
     public string SelectedWorld { get { return selected_world_data != null ? selected_world_data.id : ""; } }
+    public static string LazyWorld { get { return LazyInstance.SelectedWorld; } }
 
 
     [Header("World Creation")]
@@ -184,15 +185,15 @@ public class WorldManager : MonoBehaviour
         get
         {
             // check if we have a world instance and if it has a world_id
-            if (string.IsNullOrEmpty(StaticInstance.SelectedWorld))
+            if (string.IsNullOrEmpty(LazyInstance.SelectedWorld))
             {
                 Debug.LogError("(WorldManager) Cannot get current static world data path: SelectedWorld is null or empty.");
                 return null;
             }
-            return Path.Combine(WorldsDataPath, StaticInstance.SelectedWorld);
+            return Path.Combine(WorldsDataPath, LazyInstance.SelectedWorld);
         }
     }
-    public static string StaticSelectedWorld => StaticInstance?.SelectedWorld;
+    public static string StaticSelectedWorld => LazyInstance?.SelectedWorld;
 
     /// <summary>
     /// this ensures that all the world data hierarchy folders exists for
@@ -247,8 +248,8 @@ public class WorldManager : MonoBehaviour
         {
             if (_world != null) { return _world; }
             // we instantly load the world even if World.Instance is not defined yet.
-            // so we use World.StaticInstance which will find the world instance with FindObjectByType
-            _world = World.StaticInstance;
+            // so we use World.LazyInstance which will find the world instance with FindObjectByType
+            _world = World.LazyInstance;
             return _world;
         }
     }

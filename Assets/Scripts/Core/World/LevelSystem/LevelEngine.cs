@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -203,5 +204,16 @@ public class LevelEngine : BSOD_System<LevelEngine>
             levels_data.Add(data);
         }
         return levels_data;
+    }
+    public static LevelData LoadWorldLevelData(string world_id, string level_id)
+    {
+        // we load the json file for the specified level and convert it to a LevelData object
+        string file = AppManager.LoadJsonFromWorldFolder(world_id, Path.Combine("levels", level_id + ".json"));
+        if (string.IsNullOrEmpty(file))
+        {
+            Debug.LogError($"(LevelEngine) Level data not found for id: {level_id}");
+            return null;
+        }
+        return JsonUtility.FromJson<LevelData>(file);
     }
 }

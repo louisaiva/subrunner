@@ -827,6 +827,23 @@ public class RoomEngine : BSOD_System<RoomEngine>
     {
         return rooms_data.TryGetValue(room_id, out RoomData room) ? room : null;
     }
+
+
+    // STATIC GETTERS
+    public static List<RoomData> LoadRoomsData(string world_id, List<string> room_ids)
+    {
+        List<RoomData> rooms_data = new List<RoomData>();
+
+        // we load all the json files in the data path and convert them to RoomData objects
+        string[] files = AppManager.LoadJsonsFromWorldFolder(world_id, "rooms");
+        foreach (string file in files)
+        {
+            RoomData data = JsonUtility.FromJson<RoomData>(file);
+            if (!room_ids.Contains(data.id)) { continue; }
+            rooms_data.Add(data);
+        }
+        return rooms_data;
+    }
 }
 
 // LEVEL SPATIAL MAP 2D

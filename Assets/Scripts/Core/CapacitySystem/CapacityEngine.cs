@@ -144,7 +144,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
                 data = loadCapacityDataOfType(json, kind, ref log_capacities_details, ref world_capacities_data);
 
                 // we add the id to the world unique ids registry to avoid generating the same id for another data
-                World.StaticInstance.RegisterUniqueID(data.id);
+                World.LazyInstance.RegisterUniqueID(data.id);
             }
         }
 

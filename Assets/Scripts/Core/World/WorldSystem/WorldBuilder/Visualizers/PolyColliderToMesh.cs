@@ -107,7 +107,16 @@ public class PolyColliderToMesh: MonoBehaviour
             int ccw = (tip + count - winding) % count;
             _triangles.Add(indices[cw]);
             _triangles.Add(indices[ccw]);
-            _triangles.Add(indices[tip]);
+
+            try
+            {
+                _triangles.Add(indices[tip]);
+            }
+            catch (System.ArgumentOutOfRangeException)
+            {
+                Debug.LogError($"(PolyColliderToMesh) Error adding triangle with indices {cw}, {ccw}, {tip} (count: {count}) - ring count: {ring.Count} - indices count: {indices.Count}\n we did not throw");
+            }
+
             ring.RemoveAt(tip);
             indices.RemoveAt(tip);
         }

@@ -20,23 +20,21 @@ public class LevelTranslator : MonoBehaviour
     {
         get
         {
+            if (_level_parent != null) { return _level_parent; }
+        
+            _level_parent = World.LazyInstance?.LevelParent;
             if (_level_parent == null)
             {
-                _level_parent = World.StaticInstance?.LevelParent;
-                if (_level_parent == null)
-                {
-                    GameObject level_parent_go = new GameObject("Levels");
-                    _level_parent.SetParent(transform);
-                    _level_parent = level_parent_go.transform;
-                }
+                GameObject level_parent_go = new GameObject("Levels");
+                _level_parent.SetParent(transform);
+                _level_parent = level_parent_go.transform;
             }
-            return _level_parent;
+            return _level_parent;           
         }
     }
 
     [Header("Room creation")]
     public Room room_prefab;
-    // public bool hide_mask = true; // if true, will hide the mask tilemap in the level (useful for trying instantly the generated level)
     public bool add_roomgraph_neighbour_node = true;
     public RoomNodeEditor roomgraph_node_prefab;
 
@@ -48,17 +46,15 @@ public class LevelTranslator : MonoBehaviour
     [Header("Logs")]
     public bool log_translations = false;
 
-    private void Start()
-    {
-        // we subscribe to world generation end event
-        LevelBuilder.StaticInstance.OnWorldBuilt += Translate;
-    }
+    // EVENTS
+    public System.Action<Level> OnLevelTranslated = delegate { };
+
 
     // low level level methods
     private Level find_target_level()
     {
         Level[] levels;
-        if (target_current_level && World.StaticInstance != null)
+        if (target_current_level && World.LazyInstance != null)
         {
             // we have to have ONLY one enabled level in the scene to be able to target it, otherwise we exit with a warning
             levels = FindObjectsByType<Level>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
@@ -118,20 +114,38 @@ public class LevelTranslator : MonoBehaviour
 
 
     // TRANSLATION
-    public void Translate(BuiltLevelData built_world)
+    public void Translate(BuiltLevelData built_level)
     {
-        if (log_translations) { Debug.Log($"(LevelTranslator) translating world into level {level_name}"); }
+        string world_id = built_level.world;
+        string level_id = built_level.level;
+
+        if (log_translations) { Debug.Log($"(LevelTranslator) translating schematics of level {level_id} (world : {world_id}) into AIO Level ready to save"); }
 
         // get target level to save into
-        Level level = find_target_level();
-        List<Room> level_rooms = new List<Room>(level.GetStaticRooms());
+        // Level level = find_target_level();
+        Level level = SaveEngine.AIO_Loader.LoadAIO_Level(world_id, level_id);
+        OnLevelTranslated?.Invoke(level);
+    }
+    public void Translate2(BuiltLevelData built_level)
+    {
+        string world_id = built_level.world;
+        string level_id = built_level.level;
 
+        if (log_translations) { Debug.Log($"(LevelTranslator) translating schematics of level {level_id} (world : {world_id}) into AIO Level ready to save"); }
+
+        // get target level to save into
+        // Level level = find_target_level();
+        Level level = SaveEngine.AIO_Loader.LoadAIO_Level(world_id, level_id);
+
+
+
+        List<Room> level_rooms = new List<Room>(level.GetStaticRooms());
         // clear the placed doors
         doors_placed.Clear();
 
         // we create each room in the level and assign tilemaps to them
         List<Room> rooms = new List<Room>();
-        foreach (WorldRoomVisualizer room_visu in built_world.Rooms)
+        foreach (WorldRoomVisualizer room_visu in built_level.Rooms)
         {
             Room room = find_room(room_visu.name, level_rooms, level);
 
@@ -139,7 +153,7 @@ public class LevelTranslator : MonoBehaviour
             room.RoomCollider.SetPath(0, room_visu.PolygonCollider.points);
 
             // we assign tilemaps to the room
-            if (!built_world.Tilemaps.TryGetValue(room_visu.name, out Dictionary<string, Tilemap> tilemaps)) { Debug.LogWarning($"(LevelTranslator) no tilemaps found for room {room_visu.name}"); continue; }
+            if (!built_level.Tilemaps.TryGetValue(room_visu.name, out Dictionary<string, Tilemap> tilemaps)) { Debug.LogWarning($"(LevelTranslator) no tilemaps found for room {room_visu.name}"); continue; }
             apply_tilemaps(room, tilemaps);
 
             // we assign the doors and lights to the room

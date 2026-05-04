@@ -8,7 +8,7 @@ public class SaveEngine : MonoBehaviour
 {
     // STATIC SINGLETON
     public static SaveEngine Instance { get; private set; }
-    public static SaveEngine StaticInstance
+    public static SaveEngine LazyInstance
     {
         get
         {
@@ -28,9 +28,23 @@ public class SaveEngine : MonoBehaviour
     }
 
 
+    // SUBSYSTEMS
+    private static AIO_Loader _static_loader;
+    public static AIO_Loader AIO_Loader
+    {
+        get
+        {
+            if (_static_loader != null) { return _static_loader; }
+            _static_loader = LazyInstance.transform.GetComponentInChildren<AIO_Loader>(includeInactive: true);
+            if (_static_loader == null) { Debug.LogError("(SaveEngine) SaveEngine.AIO_Loader was not found"); }
+            return _static_loader;
+        }
+    }
+
+
     [Header("Logs")]
     [SerializeField] private bool log = false;
-    private static bool log_static => StaticInstance != null && StaticInstance.log;
+    private static bool log_static => LazyInstance != null && LazyInstance.log;
 
 
     // SAVE WORLD DATA
@@ -45,8 +59,8 @@ public class SaveEngine : MonoBehaviour
         // check if we just created it or we don't have any icon, then we set random color and default icon
         if (just_created || string.IsNullOrEmpty(data.icon_path))
         {
-            data.color = WorldManager.StaticInstance.GetRandomWorldColor();
-            data.icon_path = WorldManager.StaticInstance.GetRandomIconPath(out string icon_name);
+            data.color = WorldManager.LazyInstance.GetRandomWorldColor();
+            data.icon_path = WorldManager.LazyInstance.GetRandomIconPath(out string icon_name);
             data.icon_name = icon_name;
         }
 

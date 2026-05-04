@@ -6,7 +6,7 @@ public class BSOD_System<T> : MonoBehaviour where T : MonoBehaviour
 {
     // AWAKE & SINGLETON LOGIC
     public static T Instance;
-    public static T StaticInstance
+    public static T LazyInstance
     {
         get
         {

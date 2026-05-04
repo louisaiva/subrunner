@@ -14,7 +14,7 @@ public class WorldLinkVisualizer : MonoBehaviour
             return _line_renderer;
         }
     }
-    private Grid grid { get { return LevelBuilder.StaticInstance.Grid; } }
+    private Grid grid { get { return WorldBuilder.LevelBuilder.Grid; } }
     public Color Color
     {
         get { return line_renderer.startColor; }

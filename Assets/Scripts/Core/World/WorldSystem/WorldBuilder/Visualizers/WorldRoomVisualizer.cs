@@ -92,22 +92,22 @@ public class WorldRoomVisualizer : MonoBehaviour
     // colors
     private void set_color()
     {
-        foreach (var n in nodes) { n.Color = LevelBuilder.StaticInstance.LinkedColor; }
-        foreach (var l in links) { l.Color = LevelBuilder.StaticInstance.LinkedColor; }
+        foreach (var n in nodes) { n.Color = WorldBuilder.LevelBuilder.LinkedColor; }
+        foreach (var l in links) { l.Color = WorldBuilder.LevelBuilder.LinkedColor; }
     }
     private void reset_color()
     {
         foreach (var n in nodes)
         {
             if (n == null) { continue; }
-            if (n.IsPartOfRoom()) { n.Color = LevelBuilder.StaticInstance.LinkedColor; }
-            else { n.Color = LevelBuilder.StaticInstance.WaitingColor; }
+            if (n.IsPartOfRoom()) { n.Color = WorldBuilder.LevelBuilder.LinkedColor; }
+            else { n.Color = WorldBuilder.LevelBuilder.WaitingColor; }
         }
         foreach (var l in links)
         {
             if (l == null) { continue; }
-            if (l.NodeA.IsPartOfRoom() && l.NodeB.IsPartOfRoom()) { l.Color = LevelBuilder.StaticInstance.LinkedColor; }
-            else { l.Color = LevelBuilder.StaticInstance.WaitingColor; }
+            if (l.NodeA.IsPartOfRoom() && l.NodeB.IsPartOfRoom()) { l.Color = WorldBuilder.LevelBuilder.LinkedColor; }
+            else { l.Color = WorldBuilder.LevelBuilder.WaitingColor; }
         }
     }
 
@@ -202,7 +202,7 @@ public class WorldRoomVisualizer : MonoBehaviour
         if (log_collides) { Debug.Log($"(WorldRoomVisualizer) checking collision with cell {cell_pos}"); }
 
         // do a circle cast with small radius to check if the cell collides
-        Vector2 world_pos = LevelBuilder.StaticInstance.Grid.CellToWorld(cell_pos);
+        Vector2 world_pos = WorldBuilder.LevelBuilder.Grid.CellToWorld(cell_pos);
 
         RaycastHit2D[] hits = Physics2D.CircleCastAll(world_pos, circle_cast_radius, Vector2.zero, 0f, LayerMask.GetMask("WorldBuilder"));
         if (log_collides) { Debug.Log($"(WorldRoomVisualizer) found {hits.Length} hits : \n - {string.Join("\n - ", hits.Select(h => h.collider.name))}"); }

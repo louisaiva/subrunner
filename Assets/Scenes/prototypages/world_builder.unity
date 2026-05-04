@@ -11153,6 +11153,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1209737554}
+  - {fileID: 2134053426}
   - {fileID: 1617718107}
   - {fileID: 1777052204}
   - {fileID: 1548216326}
@@ -130933,6 +130934,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1492137541}
   - component: {fileID: 1492137542}
+  - component: {fileID: 1492137543}
   m_Layer: 0
   m_Name: core
   m_TagString: Untagged
@@ -130971,6 +130973,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee8634a91f626f418b742aa27838529, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaveEngine
+  log: 1
+--- !u!114 &1492137543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492137540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c1641731eab2bf49a4346f666ab8ed6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AIO_Loader
+  level_parent: {fileID: 2134053426}
+  level_prefab: {fileID: 8356036354246421201, guid: 9fa2799496ca83849bb4b053202faa45, type: 3}
+  room_prefab: {fileID: 8185754384103082142, guid: ae6b0bfb8417b8d4a9eb59dbb48d8490, type: 3}
   log: 1
 --- !u!1 &1496696247
 GameObject:
@@ -172347,10 +172365,11 @@ GameObject:
   m_Component:
   - component: {fileID: 2023470140}
   - component: {fileID: 2023470139}
+  - component: {fileID: 2023470143}
   - component: {fileID: 2023470141}
   - component: {fileID: 2023470142}
   m_Layer: 17
-  m_Name: level_builder
+  m_Name: world_builder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -172402,7 +172421,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c12ede5de4f0984b9bf2b93be7a899e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldBuilder
-  world_id: 
   level_id: 
   selected_cell_visualizer: {fileID: 7113515744044003965}
   tool_type: node
@@ -172447,7 +172465,7 @@ MonoBehaviour:
   log_get_room: 0
   log_room_grab: 0
   log_data: 0
-  log_building: 0
+  log_building: 1
   log_tool: 0
 --- !u!114 &2023470142
 MonoBehaviour:
@@ -172471,6 +172489,20 @@ MonoBehaviour:
   door_horizontal_prefab: {fileID: 6429607554458301103, guid: ed208ba6d8c70614a8d31ae803044d32, type: 3}
   light_prefab: {fileID: 6868193672575337090, guid: 48fbc03d9d2be7243abb9ef0b713e4e5, type: 3}
   log_translations: 0
+--- !u!114 &2023470143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2023470137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cbd6c7a4ce78d74a8f13513efa06969, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldBuilder
+  log: 1
+  log_callbacks: 1
 --- !u!1 &2026047878
 GameObject:
   m_ObjectHideFlags: 0
@@ -183735,6 +183767,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2133000416}
   m_CullTransparentMesh: 1
+--- !u!1 &2134053425
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2134053426}
+  m_Layer: 0
+  m_Name: AIO_Levels
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2134053426
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2134053425}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 155458647}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2137421374
 GameObject:
   m_ObjectHideFlags: 0

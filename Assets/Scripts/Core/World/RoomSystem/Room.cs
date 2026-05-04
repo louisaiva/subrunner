@@ -110,7 +110,6 @@ public class Room : MonoBehaviour
             position = this.transform.position,
 
             // set collider data
-            // collider_points = new List<Vector2>(RoomCollider.GetPath(0)),
             collider_points = get_static_collider_points(),
 
             // set neighbours data
@@ -378,4 +377,6 @@ public class Room : MonoBehaviour
     {
         return RoomCollider.OverlapPoint(point);
     }
+
+
 }

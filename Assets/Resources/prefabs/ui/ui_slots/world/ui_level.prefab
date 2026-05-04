@@ -241,7 +241,6 @@ GameObject:
   - component: {fileID: 4801262869244484701}
   - component: {fileID: 5063110158290943610}
   - component: {fileID: 5002483850632490378}
-  - component: {fileID: 1672707426732172216}
   - component: {fileID: 7631673730049407448}
   m_Layer: 10
   m_Name: build
@@ -308,18 +307,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1672707426732172216
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4037904978331461082}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b186bb40c8a0b04281b6cfa864f9e0d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Caller
 --- !u!114 &7631673730049407448
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -352,7 +339,31 @@ MonoBehaviour:
     iconSprite: {fileID: -1638816075, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
     onClickedEvent:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 1025185491345106013}
+          m_TargetAssemblyTypeName: UI_LevelSlot, Assembly-CSharp
+          m_MethodName: BuildLevel
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 7631673730049407448}
+          m_TargetAssemblyTypeName: UI_CycleButton, Assembly-CSharp
+          m_MethodName: Disable
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   - name: preview
     label: preview level
     description: open the level preview so you can explore it (mostly visuals, things
@@ -363,7 +374,19 @@ MonoBehaviour:
     iconSprite: {fileID: -1995024261, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
     onClickedEvent:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 7631673730049407448}
+          m_TargetAssemblyTypeName: UI_CycleButton, Assembly-CSharp
+          m_MethodName: Enable
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   colorers: []
   setting_name: 
   setting: {fileID: 0}
@@ -488,6 +511,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   name_text: {fileID: 3293223188484036979}
+  build_button: {fileID: 0}
+  save_button: {fileID: 0}
 --- !u!1 &4600025146924652831
 GameObject:
   m_ObjectHideFlags: 0
@@ -760,7 +785,31 @@ MonoBehaviour:
     iconSprite: {fileID: 748222046, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
     onClickedEvent:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 1025185491345106013}
+          m_TargetAssemblyTypeName: UI_LevelSlot, Assembly-CSharp
+          m_MethodName: SaveLevel
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 9220111258915611927}
+          m_TargetAssemblyTypeName: UI_CycleButton, Assembly-CSharp
+          m_MethodName: Disable
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   - name: saved
     label: level saved successfully
     description: the save of this level is up to date !
@@ -770,7 +819,19 @@ MonoBehaviour:
     iconSprite: {fileID: 881650149, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
     onClickedEvent:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 9220111258915611927}
+          m_TargetAssemblyTypeName: UI_CycleButton, Assembly-CSharp
+          m_MethodName: Enable
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   colorers: []
   setting_name: 
   setting: {fileID: 0}

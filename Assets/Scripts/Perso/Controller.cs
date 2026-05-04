@@ -43,7 +43,7 @@ public class Controller : MonoBehaviour
 
     // AWAKE
     public static Controller Instance { get; private set; }
-    public static Controller StaticInstance
+    public static Controller LazyInstance
     {
         get
         {

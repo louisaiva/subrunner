@@ -59,7 +59,7 @@ public class WorldSaver : MonoBehaviour
         if (log) { Debug.Log(" "); }
         if (log) { Debug.Log("(WorldSaver) ################# 2 - Making the rooms grab the capables..."); }
         if (log) { Debug.Log(" "); }
-        LevelManager.MakeRoomsGrabCapables(World.StaticInstance.GetStaticLevels());
+        LevelManager.MakeRoomsGrabCapables(World.LazyInstance.GetStaticLevels());
 
         // todo generate the navmesh ????
         // NavMeshBuilder.BuildNavMesh();
@@ -96,7 +96,7 @@ public class WorldSaver : MonoBehaviour
     private string get_world_to_save(out World world)
     {
         // we get the world instance
-        world = World.StaticInstance;
+        world = World.LazyInstance;
         if (world == null) { Debug.LogError("(WorldSaver) No World instance found in the scene. Please add one to the scene."); return ""; }
         
         // we check if we have a world_id to save
@@ -113,7 +113,7 @@ public class WorldSaver : MonoBehaviour
     {
         if (!string.IsNullOrEmpty(world_to_save)) { return world_to_save; }
 
-        World world = World.StaticInstance;
+        World world = World.LazyInstance;
         if (world == null) { Debug.LogError("(WorldSaver) No World instance found in the scene. Please add one to the scene."); return "null"; }
         if (!string.IsNullOrEmpty(world.world_id)) { return world.world_id; }
         return "empty ://";

@@ -8,6 +8,8 @@ public class UI_LevelSlot : UI_EventButton, Descriptable
 
     [Header("Components")]
     [SerializeField] private TextMeshProUGUI name_text;
+    [SerializeField] private UI_EventButton build_button;
+    [SerializeField] private UI_EventButton save_button;
 
     // INITIALIZATION & DESTRUCTION
     public void Initialize(string world_id, LevelData lvl_data)
@@ -16,17 +18,17 @@ public class UI_LevelSlot : UI_EventButton, Descriptable
         this.level_data = lvl_data;
 
         // we set the level name
-        if (lvl_data == null) { return; }
-        name_text.text = lvl_data.id;
+        if (lvl_data != null) { name_text.text = lvl_data.id; }
     }
 
     // CLICK HANDLER
     public void EditLevel()
     {
-        LevelBuilder.StaticInstance?.EditLevel(world_id, level_data.id);
+        WorldBuilder.EditLevel(level_data.id);
         UI_Manager.Instance.StackPool("dev_level_builder");
     }
-
+    public void BuildLevel() => WorldBuilder.BuildLevel(level_data.id);
+    public void SaveLevel() => WorldBuilder.SaveLevel(level_data.id);
 
     // DESCRIPTABLE
     public string Name => level_data != null ? level_data.id : "/!\\ no level data /!\\";

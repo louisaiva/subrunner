@@ -32,7 +32,7 @@ public class IDsGenerator : MonoBehaviour
         // we clear the list since we want to re generate ids
         capables_that_get_new_ids.Clear();
         capacities_that_get_new_ids.Clear();
-        World.StaticInstance.ClearGeneratedIDs();
+        World.LazyInstance.ClearGeneratedIDs();
 
 
         // we get all the rooms
@@ -49,10 +49,10 @@ public class IDsGenerator : MonoBehaviour
         // we clear the list since we want to re generate ids
         capables_that_get_new_ids.Clear();
         capacities_that_get_new_ids.Clear();
-        World.StaticInstance.ClearGeneratedIDs();
+        World.LazyInstance.ClearGeneratedIDs();
 
         // get the world
-        World world = World.StaticInstance;
+        World world = World.LazyInstance;
 
         // get the levels of the world
         Level[] levels = world.GetStaticLevels();
@@ -80,7 +80,7 @@ public class IDsGenerator : MonoBehaviour
         if (capables_that_get_new_ids.Contains(capable)) { return ""; }
 
         // generate new id
-        string new_id = World.StaticInstance.GenerateUniqueID(capable.name);
+        string new_id = World.LazyInstance.GenerateUniqueID(capable.name);
 
         // check if a room has our old id then we change it to new id
         // (we must have an old id for this to work)
@@ -138,7 +138,7 @@ public class IDsGenerator : MonoBehaviour
             if (capacities_that_get_new_ids.Contains(capacity)) { continue; }
 
             // generate new id
-            string new_id = World.StaticInstance.GenerateUniqueID(capacity.name);
+            string new_id = World.LazyInstance.GenerateUniqueID(capacity.name);
 
             // change the capacity id in the capable's capacities ids list
             if (!string.IsNullOrEmpty(capacity.data.id) && !string.IsNullOrEmpty(new_id))
@@ -220,7 +220,7 @@ public class IDsGenerator : MonoBehaviour
                 }
 
                 // we also make sure GameManager is marked as dirty because it has all generated ids
-                UnityEditor.EditorUtility.SetDirty(World.StaticInstance);
+                UnityEditor.EditorUtility.SetDirty(World.LazyInstance);
                 UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(manager.gameObject.scene);
             }
             DrawDefaultInspector();

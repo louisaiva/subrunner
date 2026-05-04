@@ -44,18 +44,21 @@ public class UI_WorldBuilderPool : UI_SlottablePool, Descriptable
     }
 
     // ENABLING
-    /* protected override IEnumerator enable_coroutine()
+    protected override IEnumerator enable_coroutine()
     {
         yield return base.enable_coroutine();
 
-        // we unload the world
-        yield return WorldManager.Instance.UnloadCurrentWorld();
+        // we register the WorldBuilder callbacks
+        WorldBuilder.LazyInstance.RegisterCallbacks();
     }
     protected override IEnumerator disable_coroutine()
     {
         yield return base.disable_coroutine();
 
-        // we load the world
-        WorldManager.Instance.LoadSelectedWorld();
-    } */
+        // we unregister the WorldBuilder callbacks
+        WorldBuilder.LazyInstance.RemoveCallbacks();
+
+        // and clean the world builder
+        WorldBuilder.LazyInstance.ClearCache();
+    }
 }

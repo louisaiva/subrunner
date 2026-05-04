@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class WorldBuilderCaller : MonoBehaviour
 {
-    private LevelBuilder _worldBuilder;
-    private LevelBuilder worldBuilder
+    private LevelBuilder _lvlBuilder;
+    private LevelBuilder levelBuilder
     {
         get
         {
-            if (_worldBuilder == null) { _worldBuilder = LevelBuilder.StaticInstance; }
-            return _worldBuilder;
+            if (_lvlBuilder == null) { _lvlBuilder = WorldBuilder.LevelBuilder; }
+            return _lvlBuilder;
         }
     }
 
@@ -25,7 +25,7 @@ public class WorldBuilderCaller : MonoBehaviour
     }
     private async void unload_world_then_open_world_builder()
     {
-        await WorldManager.StaticInstance.UnloadCurrentWorld();
+        await WorldManager.LazyInstance.UnloadCurrentWorld();
         while (UI_Manager.Instance.IsInTransition) { await System.Threading.Tasks.Task.Yield(); }
         UI_Manager.Instance.StackPool("dev_world_builder");
     }
@@ -40,7 +40,7 @@ public class WorldBuilderCaller : MonoBehaviour
     }
     private async void load_world_then_close_world_builder()
     {
-        await WorldManager.StaticInstance.LoadSelectedWorld();
+        await WorldManager.LazyInstance.LoadSelectedWorld();
         while (UI_Manager.Instance.IsInTransition) { await System.Threading.Tasks.Task.Yield(); }
         UI_Manager.Instance.UnstackPool("dev_world_builder");
     }
@@ -48,15 +48,16 @@ public class WorldBuilderCaller : MonoBehaviour
 
 
     // tools
-    public void SelectTool(string tool_type) => worldBuilder.SelectTool(tool_type);
+    public void SelectTool(string tool_type) => levelBuilder.SelectTool(tool_type);
 
 
     // general builders
-    public void BuildWorld() => worldBuilder.Build();
-    public void EraseAll() => worldBuilder.Erase();
-    public void ClearTilemaps() => worldBuilder.ClearTilemaps();
-    public void SaveData() => worldBuilder.SaveCurrentLevelSchematic();
+    public void BuildWorld() => levelBuilder.Build();
+    public void BuildWorld(string level) => WorldBuilder.EditLevel(level);
+    public void EraseAll() => levelBuilder.Erase();
+    public void ClearTilemaps() => levelBuilder.ClearTilemaps();
+    public void SaveData() => levelBuilder.SaveCurrentLevelSchematic();
 
     // specifics builders
-    public void Build(string builder) => worldBuilder.Build(builder);
+    public void Build(string builder) => levelBuilder.Build(builder);
 }
