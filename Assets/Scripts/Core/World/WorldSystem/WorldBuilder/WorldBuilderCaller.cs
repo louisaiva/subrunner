@@ -40,6 +40,8 @@ public class WorldBuilderCaller : MonoBehaviour
     }
     private async void load_world_then_close_world_builder()
     {
+        // we clean the world builder
+        await WorldBuilder.LazyInstance.ClearCache();
         await WorldManager.LazyInstance.LoadSelectedWorld();
         while (UI_Manager.Instance.IsInTransition) { await System.Threading.Tasks.Task.Yield(); }
         UI_Manager.Instance.UnstackPool("dev_world_builder");

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -51,7 +52,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         }
 
         // load world capacities data
-        loadWorldCapacitiesData(world_id);
+        LoadWorldCapacitiesData(world_id);
         if (log_world_data_loading) { Debug.Log($"(CapacityEngine) Loaded {world_capacities_data.Count} world capacities data"); }
 
         worlddata_loaded_done = true;
@@ -110,7 +111,7 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         if (log_templates_data_loading) { Debug.Log("(CapacityEngine) TEMPLATES CAPACITIES DATA LOADED : " + templates_capacities_data.Count + log_capacities_details); }
         templates_loaded = true;
     }
-    protected void loadWorldCapacitiesData(string world_id)
+    public void LoadWorldCapacitiesData(string world_id)
     {
         // we empty the capacities_data
         world_capacities_data = new Dictionary<string,CapacityData>();
@@ -371,4 +372,5 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
         if (!hide_log_no_data_found) { Debug.LogWarning("(CapacityEngine - GetCapacityData) Capacity data not found for id: " + id); }
         return null;
     }
+
 }

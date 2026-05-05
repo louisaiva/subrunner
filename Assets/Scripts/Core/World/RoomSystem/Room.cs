@@ -130,10 +130,9 @@ public class Room : MonoBehaviour
     }
     public string GetStaticID()
     {
-        string id = this.name;
-        if (this.data == null) { return id; }
-        if (string.IsNullOrEmpty(this.data.id)) { return id; }
-        return this.data.id;
+        if (data == null) { return name; }
+        if (string.IsNullOrEmpty(data.id)) { return name; }
+        return data.id;
     }
     protected List<LightData> get_static_light_data()
     {
@@ -356,12 +355,15 @@ public class Room : MonoBehaviour
         {
             Collider2D collider = colliders[i];
             Capable capable = collider.GetComponent<Capable>();
+            // if (RoomEngine.LazyInstance.log_grab) 
             if (capable == null && collider.transform.parent != null) { capable = collider.transform.parent.GetComponent<Capable>(); }
             if (capable == null && collider.transform.parent != null && collider.transform.parent.parent != null) { capable = collider.transform.parent.parent.GetComponent<Capable>(); }
             if (capable == null) { continue; }
             
             // we found a capable !
             overlapping_capables.Add(capable);
+
+            if (RoomEngine.LazyInstance.log_grab) { Debug.Log($"(Room - {this.ID}) Found overlapping capable : {capable.ID}"); }
         }
         return overlapping_capables;
     }

@@ -152,4 +152,20 @@ public class Level : MonoBehaviour
         return new Bounds(new Vector3((min_x + max_x) / 2, (min_y + max_y) / 2, 0), new Vector3(max_x - min_x, max_y - min_y, 0));
     }
     public Capable[] GetStaticCapables() { return GetComponentsInChildren<Capable>(includeInactive: true); }
+
+    public void GrabStaticRooms()
+    {
+        if (data == null) { return; }
+        if (data.rooms_ids == null) { data.rooms_ids = new List<string>(); }
+        data.rooms_ids.Clear();
+
+        // we go statically get the rooms ids from the children rooms
+        Room[] rooms = GetStaticRooms();
+        foreach (Room room in rooms)
+        {
+            if (room == null || string.IsNullOrEmpty(room.ID)) { continue; }
+            if (!data.rooms_ids.Contains(room.ID)) { data.rooms_ids.Add(room.ID); }
+        }
+    }
+
 }

@@ -310,35 +310,7 @@ public class World : BSOD_System<World>
     }
     public string GenerateUniqueID(string base_id)
     {
-        // todo if we have perf issues when spawning capables this can be the issue
-        // then we just need to have a static int that we increment so it's faster
-        // or have a dict with max ids per prefix
-
-        // we check if the base_id can be splitted with "_"
-        // string[] parts = base_id.Split('-');
-        // string suffix = parts.Length > 1 ? parts[parts.Length - 1] : "";
-        // string prefix = base_id.Substring(0, base_id.Length - suffix.Length);
-        // string prefix = parts[0];
         string prefix = get_id_prefix(base_id);
-        // if (suffix == "") { prefix += "-"; } // if we got no suffix, we add a - to the prefix so it will be alrgiht next time
-
-        // we go through all generated_ids and memorize all the ids that have the same prefix and check the suffix int is greater or not
-        // int max_suffix = get_next_id_suffix(prefix);
-        // int max_suffix = 0;
-        /* foreach (string id in generated_ids)
-        {
-            if (id.StartsWith(prefix))
-            {
-                string id_suffix = id.Substring(prefix.Length);
-                if (int.TryParse(id_suffix, out int id_suffix_int))
-                {
-                    if (id_suffix_int > max_suffix)
-                    {
-                        max_suffix = id_suffix_int;
-                    }
-                }
-            }
-        } */
 
         // construct final id
         string new_id = prefix + "-" + get_next_id_suffix(prefix);
@@ -346,6 +318,29 @@ public class World : BSOD_System<World>
         return new_id;
     }
     public void ClearGeneratedIDs() { generated_ids_counters.Clear(); }
+    public void UnregisterUniqueID(string id)
+    {
+        string prefix = get_id_prefix(id, out string suffix);
+        if (!generated_ids_counters.ContainsKey(prefix))
+        {
+
+            if (log_id_generation) { Debug.Log($"(World) Unregistered unique ID: {id} (prefix: {prefix}, suffix: {suffix}) -- did not find prefix, did nothing (already unregistered)"); }
+            return;
+        }
+
+        // otherwise we already have some ids with this prefix, we check if the suffix int is equal to the current max suffix for this prefix
+        try
+        {
+            int suffix_int = int.Parse(suffix);
+            if (suffix_int != generated_ids_counters[prefix]) { return; } // we can only unregister the id if it's the one with the highest suffix for this prefix, otherwise we do nothing (we don't want to mess with the suffixes order)
+            generated_ids_counters[prefix]--;
+            if (log_id_generation) { Debug.Log($"(World) Unregistered unique ID: {id} (prefix: {prefix}, suffix: {suffix}) -- counter updated to {generated_ids_counters[prefix]} for this prefix."); }
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning($"(World) Failed to unregister unique ID: {id} -- invalid suffix: {suffix} -- exception: {e.Message}");
+        }
+    }
     private string get_id_prefix(string id)
     {
         string[] parts = id.Split('-');

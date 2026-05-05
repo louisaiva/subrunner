@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
-public class IDsGenerator : MonoBehaviour
+public class IDsGenerator : Singleton<IDsGenerator>
 {
 
     [Header("Debug Lists")]
@@ -66,21 +66,135 @@ public class IDsGenerator : MonoBehaviour
             all_capables.AddRange(level.GetStaticCapables());
         }
 
-        // Capable[] all_capables = FindObjectsByType<Capable>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (Capable capable in all_capables)
         {
             generate_id_for_capable(capable, all_rooms);
         }
     }
 
+
+    public void GenerateIDsOnlyForCapablesAndCapacities(List<Capable> old_capables, List<Capable> new_capables)
+    {
+        // we clear the list since we want to re generate ids
+        capables_that_get_new_ids.Clear();
+        capacities_that_get_new_ids.Clear();
+        // World.LazyInstance.ClearGeneratedIDs(); // ! WE DON'T CLEAR ALL GENERATED IDS BCZ WE WANT TO KEEP THE IDS OF MOST CAPABLES
+
+        // we un-interesct the old and new capables
+        List<Capable> capables_to_remove = old_capables.Where(c => !new_capables.Contains(c)).ToList();
+
+        // we gather the ids of the going-to-be-removed capables
+        Dictionary<string, List<int>> free_ids_by_prefix = new Dictionary<string, List<int>>();
+        foreach (Capable capable in capables_to_remove)
+        {
+            // these capables are going to be destroyed so we can remember their ids as free ids for the next capables that will be created
+            if (capable.data == null || string.IsNullOrEmpty(capable.data.id)) { continue; }
+            add_id_to_free_ids(capable.data.id, ref free_ids_by_prefix);
+
+            // ? should we also free inventory capables & capacities ?
+
+            // we also do the same for their capacities
+            for (int i = 0; i < capable.data.capacities_ids.Count; i++)
+            {
+                string capacity_id = capable.data.capacities_ids[i];
+                if (string.IsNullOrEmpty(capacity_id)) { continue; }
+                add_id_to_free_ids(capacity_id, ref free_ids_by_prefix);
+            }
+        }
+
+        // we sort these free ids by prefix and number (highest number first), so we can unregister these ids from the world ids.
+        foreach (string prefix in free_ids_by_prefix.Keys.ToList())
+        {
+            if (log) { Debug.Log($"(IDsGenerator) Freeing ids for prefix {prefix}..."); }
+            free_ids_by_prefix[prefix] = free_ids_by_prefix[prefix].OrderByDescending(id_nb => id_nb).ToList();
+            if (log) { Debug.Log($"(IDsGenerator) freeing ids for prefix {prefix} : {string.Join(", ", free_ids_by_prefix[prefix])}"); }
+
+            foreach (int id_nb in free_ids_by_prefix[prefix])
+            {
+                string full_id = $"{prefix}-{id_nb}";
+                World.LazyInstance.UnregisterUniqueID(full_id);
+                if (log) { Debug.Log($"(IDsGenerator) Unregistered id {full_id} from world generated ids"); }
+            }
+        }
+
+        // ok now we should have free all the removed capables' ids.
+        // we can now generate new ids for the new capables
+        if (log) { Debug.Log($"(IDsGenerator) Generating new ids for BOUYA new capables..."); }
+        if (log) { Debug.Log($"(IDsGenerator) Generating new ids for {new_capables.Count} new capables..."); }
+
+        // then we generate new ids for the new capables and their capacities, we try to reuse the free ids if possible (if the name prefix is the same)
+        foreach (Capable capable in new_capables)
+        {
+            string new_id = generate_id_for_capable_no_room_update(capable);
+            if (log) { Debug.Log($"(IDsGenerator) Generated new id for capable {capable.name} : {new_id}"); }
+        }
+    }
+    private bool add_id_to_free_ids(string id, ref Dictionary<string, List<int>> free_ids_by_prefix)
+    {
+        if (string.IsNullOrEmpty(id)) { return false; }
+        string prefix = id.Split('-')[0]; // we consider the prefix as the part before the first '-'
+        int id_nb;
+        try
+        {
+            id_nb = int.Parse(id.Split('-')[1]); // we consider the number as the part after the first '-'
+        }
+        catch (Exception)
+        {
+            Debug.LogWarning($"(IDsGenerator) Capable/Capacity {id} has an id that doesn't follow the prefix-number format, we can't reuse its id");
+            return false;
+        }
+        if (!free_ids_by_prefix.ContainsKey(prefix))
+        {
+            free_ids_by_prefix[prefix] = new List<int>();
+        }
+        free_ids_by_prefix[prefix].Add(id_nb);
+        if (log) { Debug.Log($"(IDsGenerator) Memorized id {prefix}-{id_nb} for freeing next"); }
+        return true;
+    }
+
+
     // id generation
+    private string generate_id_for_capable_no_room_update(Capable capable)
+    {
+        // we check if we already generated an id for this capable
+        if (capables_that_get_new_ids.Contains(capable)) { return ""; }
+
+        // generate new id
+        string new_id = World.LazyInstance.GenerateUniqueID(capable.ID);
+
+        // we generate unique IDs for all capables in the inventory of this capable
+        List<Item> inventory_capables = capable.Inventory?.GetStaticItems() ?? new List<Item>();
+        foreach (Item inventory_capable in inventory_capables)
+        {
+            string old_item_id = inventory_capable.data.id;
+            string new_item_id = generate_id_for_capable_no_room_update(inventory_capable);
+
+            // we check if we have something
+            if (string.IsNullOrEmpty(new_item_id) || string.IsNullOrEmpty(old_item_id)) { continue; }
+
+            // then we change the item_id in this capable inventory
+            update_item_id_in_inventory(capable, old_item_id, new_item_id);
+        }
+
+        // we generate unique IDs for all capacities of this capable
+        generate_ids_for_capacities(capable, new_owner_id: new_id);
+
+        // add capable to generated id list
+        capables_that_get_new_ids.Add(capable);
+
+        // finally change capable's id
+        capable.data.id = new_id;
+        if (log) { Debug.Log($"(IDsGenerator - Capable) {capable.name} has now a new ID : {new_id}"); }
+
+        return new_id;
+    }
     private string generate_id_for_capable(Capable capable, List<Room> all_rooms)
     {
         // we check if we already generated an id for this capable
         if (capables_that_get_new_ids.Contains(capable)) { return ""; }
 
         // generate new id
-        string new_id = World.LazyInstance.GenerateUniqueID(capable.name);
+        string new_id = World.LazyInstance.GenerateUniqueID(capable.ID);
 
         // check if a room has our old id then we change it to new id
         // (we must have an old id for this to work)
@@ -100,8 +214,8 @@ public class IDsGenerator : MonoBehaviour
         foreach (Item inventory_capable in inventory_capables)
         {
             string old_item_id = inventory_capable.data.id;
-            string new_item_id = generate_id_for_capable(inventory_capable, all_rooms);
-            
+            string new_item_id = generate_id_for_capable_no_room_update(inventory_capable); // we don't want to switch rooms for inventory capables because they are not in rooms
+
             // we check if we have something
             if (string.IsNullOrEmpty(new_item_id) || string.IsNullOrEmpty(old_item_id)) { continue; }
 
@@ -110,7 +224,7 @@ public class IDsGenerator : MonoBehaviour
         }
 
         // we generate unique IDs for all capacities of this capable
-        generate_ids_for_capacities(capable, new_owner_id : new_id);
+        generate_ids_for_capacities(capable, new_owner_id: new_id);
 
         // add capable to generated id list
         capables_that_get_new_ids.Add(capable);

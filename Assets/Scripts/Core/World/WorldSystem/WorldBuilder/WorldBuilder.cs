@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class WorldBuilder : MonoBehaviour
@@ -46,6 +47,7 @@ public class WorldBuilder : MonoBehaviour
     public static string StaticTargetedWorld => WorldManager.LazyWorld;
     public Dictionary<string, LevelBuildStatus> build_status = new Dictionary<string, LevelBuildStatus>();
     public Dictionary<string, LevelSaveStatus> save_status = new Dictionary<string, LevelSaveStatus>();
+    private Dictionary<string, Level> built_levels_cache = new Dictionary<string, Level>();
 
 
     [Header("Logs")]
@@ -92,10 +94,16 @@ public class WorldBuilder : MonoBehaviour
         LevelBuilder.gameObject.SetActive(true);
         BuiltLevelData built_data = LevelBuilder.Build(StaticTargetedWorld, level); // will build then translate
     }
-    public static void SaveLevel(string level)
+    public static void SaveLevel(string level_id)
     {
-        if (LazyInstance.log) { Debug.Log($"(WorldBuilder) SaveLevel called for level '{level}'"); }
-        // LevelBuilder.SaveLevel(StaticTargetedWorld, level);
+        if (LazyInstance.log) { Debug.Log($"(WorldBuilder) SaveLevel called for level '{level_id}'"); }
+
+        // check if we have the built level in cache,
+        if (!LazyInstance.built_levels_cache.TryGetValue(level_id, out Level cached_level)) { return; }
+        
+        if (LazyInstance.log) { Debug.Log($"(WorldBuilder) Found built level '{level_id}' in cache, saving it directly"); }
+        Level level = LazyInstance.built_levels_cache[level_id];
+        SaveEngine.SaveAIOLevel(level, StaticTargetedWorld);
     }
 
     // CALLBACKS HANDLERS
@@ -114,7 +122,6 @@ public class WorldBuilder : MonoBehaviour
         if (log_callbacks) { Debug.Log($"(WorldBuilder) Level '{built_data.level}' built, starting translation"); }
         build_status[built_data.level] = LevelBuildStatus.Translating;
         save_status[built_data.level] = LevelSaveStatus.SaveRequested;
-        LevelBuilder.gameObject.SetActive(false);
         LevelTranslator.Translate(built_data);
     }
     private void on_level_translated(Level level)
@@ -122,18 +129,23 @@ public class WorldBuilder : MonoBehaviour
         if (log_callbacks) { Debug.Log($"(WorldBuilder) Level '{level.ID}' translated, marking it as needing save"); }
         build_status[level.ID] = LevelBuildStatus.Built;
         save_status[level.ID] = LevelSaveStatus.SaveRequested;
+        LevelBuilder.gameObject.SetActive(false);
+
+        // we cache the built level for later use (like when saving the world)
+        built_levels_cache[level.ID] = level;
     }
 
 
 
     // CLEAN CACHE
-    public void ClearCache()
+    public async Task ClearCache()
     {
         // we clear all potentials AIO leftovers
-        SaveEngine.AIO_Loader.ClearCache();
+        await SaveEngine.AIO_Loader.ClearCache();
 
         build_status.Clear();
         save_status.Clear();
+        built_levels_cache.Clear();
     }
 }
 

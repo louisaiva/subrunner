@@ -103,6 +103,7 @@ public class RoomEngine : BSOD_System<RoomEngine>
     public bool log_tilemaps_loading = false;
     public bool log_colliders = false;
     public bool log_enter_exit = false;
+    public bool log_grab = false;
 
     ///
     //
@@ -844,6 +845,114 @@ public class RoomEngine : BSOD_System<RoomEngine>
         }
         return rooms_data;
     }
+    public static void MakeRoomsGrabCapables(Room[] rooms, bool only_capables = false)
+    {
+        if (LazyInstance.log_grab) { Debug.Log($"(RoomEngine) Making {rooms.Length} rooms grab capables... (only_capables = {only_capables})"); }
+
+        List<Capable> overlapping_capables = new List<Capable>();
+        List<string> added_capable_ids = new List<string>();
+
+        string log = "";
+        foreach (Room room in rooms)
+        {
+            log += $"   - Room {room.name} :\n";
+            overlapping_capables.Clear();
+            overlapping_capables.AddRange(room.GetStaticOverlappingCapables());
+
+            // . clear the capables & movables ids room data
+            room.data.capables_ids = new List<string>();
+            if (!only_capables) { room.data.movables_ids = new List<string>(); }
+
+            // we try to add the capable ids to the room data
+            foreach (Capable capable in overlapping_capables)
+            {
+                string capable_id = capable.GetStaticID();
+                if (added_capable_ids.Contains(capable_id)) { continue; } // already added somewhere
+
+                // . verify not Perso
+                if (capable is Perso) { continue; }
+
+                // . verify if not grabbed item
+                if (capable is Item item && item.GetStaticGrabbed()) { continue; }
+
+                // . check if movable or capable
+                if (capable is Movable)
+                {
+                    if (only_capables) { continue; }
+                    if (room.data.movables_ids == null) { room.data.movables_ids = new List<string>(); }
+                    if (!room.data.movables_ids.Contains(capable_id)) { room.data.movables_ids.Add(capable_id); }
+                    log += $"     - Movable '{capable_id}'\n";
+                }
+                else
+                {
+                    if (room.data.capables_ids == null) { room.data.capables_ids = new List<string>(); }
+                    if (!room.data.capables_ids.Contains(capable_id)) { room.data.capables_ids.Add(capable_id); }
+                    log += $"     - Capable '{capable_id}'\n";
+                }
+
+                // . memorize we added this capable to a room
+                added_capable_ids.Add(capable_id);
+            }
+            log += "\n";
+        }
+        log += "\n";
+
+        if (LazyInstance.log_grab) { Debug.Log($"(RoomEngine) Total Capables grabbed : {added_capable_ids.Count}\n{log}"); }
+    }
+    /* private static void make_level_grab_capables(Level level, ref List<Capable> overlapping, ref List<string> added_ids, ref string log)
+    {
+        log += $" - Level {level.name} :\n";
+        Room[] rooms = level.GetStaticRooms();
+        foreach (Room room in rooms)
+        {
+            log += $"   - Room {room.name} :\n";
+            overlapping.Clear();
+            overlapping.AddRange(room.GetStaticOverlappingCapables());
+
+            // . clear the capables & movables ids room data
+            room.data.capables_ids = new List<string>();
+            room.data.movables_ids = new List<string>();
+
+            // we try to add the capable ids to the room data
+            foreach (Capable capable in overlapping)
+            {
+                string capable_id = capable.GetStaticID();
+                if (added_ids.Contains(capable_id)) { continue; } // already added somewhere
+
+                // . verify not Perso
+                if (capable is Perso) { continue; }
+
+                // . verify if not grabbed item
+                if (capable is Item item && item.GetStaticGrabbed()) { continue; }
+
+                // . check if movable or capable
+                if (capable is Movable)
+                {
+                    if (room.data.movables_ids == null) { room.data.movables_ids = new List<string>(); }
+                    if (!room.data.movables_ids.Contains(capable_id)) { room.data.movables_ids.Add(capable_id); }
+                    log += $"     - Movable '{capable_id}'\n";
+                }
+                else
+                {
+                    if (room.data.capables_ids == null) { room.data.capables_ids = new List<string>(); }
+                    if (!room.data.capables_ids.Contains(capable_id)) { room.data.capables_ids.Add(capable_id); }
+                    log += $"     - Capable '{capable_id}'\n";
+                }
+
+                // . memorize we added this capable to a room
+                added_ids.Add(capable_id);
+            }
+            log += "\n";
+
+            // mark the room data as dirty so it gets saved
+#if UNITY_EDITOR
+            EditorUtility.SetDirty(room);
+#endif
+        }
+        log += "\n";
+    } */
+
+
 }
 
 // LEVEL SPATIAL MAP 2D

@@ -198,7 +198,14 @@ public class CapacityBank : MonoBehaviour
     {
         for (int i = 0; i < loaded_capacities.Count; i++)
         {
-            Destroy(loaded_capacities[i].gameObject);
+            try
+            {
+                Destroy(loaded_capacities[i].gameObject);
+            }
+            catch (MissingReferenceException)
+            {
+                Debug.LogWarning($"(CapacityBank) Tried to destroy a capacity that was already destroyed, skipping it");
+            }
         }
         loaded_capacities.Clear();
     }
@@ -238,4 +245,5 @@ public class CapacityBank : MonoBehaviour
     {
         return GetLoadedCapacity(data.id);
     }
+
 }

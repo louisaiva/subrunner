@@ -7228,6 +7228,7 @@ MonoBehaviour:
   log_tilemaps_loading: 0
   log_colliders: 0
   log_enter_exit: 0
+  log_grab: 1
 --- !u!114 &112018657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11188,7 +11189,7 @@ MonoBehaviour:
   fallback_spawn_point: {fileID: 1209737554}
   log: 1
   log_loading_extended: 1
-  log_id_generation: 0
+  log_id_generation: 1
 --- !u!114 &155458651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130990,6 +130991,7 @@ MonoBehaviour:
   level_prefab: {fileID: 8356036354246421201, guid: 9fa2799496ca83849bb4b053202faa45, type: 3}
   room_prefab: {fileID: 8185754384103082142, guid: ae6b0bfb8417b8d4a9eb59dbb48d8490, type: 3}
   log: 1
+  hide_no_level_warning: 0
 --- !u!1 &1496696247
 GameObject:
   m_ObjectHideFlags: 0
@@ -172488,7 +172490,8 @@ MonoBehaviour:
   door_vertical_prefab: {fileID: 6429607554458301103, guid: 3bd6d029307e1194ba0004d5f6a56361, type: 3}
   door_horizontal_prefab: {fileID: 6429607554458301103, guid: ed208ba6d8c70614a8d31ae803044d32, type: 3}
   light_prefab: {fileID: 6868193672575337090, guid: 48fbc03d9d2be7243abb9ef0b713e4e5, type: 3}
-  log_translations: 0
+  log: 1
+  log_translate_extended: 1
 --- !u!114 &2023470143
 MonoBehaviour:
   m_ObjectHideFlags: 0

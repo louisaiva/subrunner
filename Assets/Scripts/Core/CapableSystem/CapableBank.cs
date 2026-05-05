@@ -262,7 +262,14 @@ public class CapableBank : MonoBehaviour
     {
         for (int i = 0; i < loaded_capables.Count; i++)
         {
-            Destroy(loaded_capables[i].gameObject);
+            try
+            {
+                Destroy(loaded_capables[i].gameObject);
+            }
+            catch (MissingReferenceException)
+            {
+                Debug.LogWarning($"(CapableBank) Tried to destroy a capable that was already destroyed, skipping it");
+            }
         }
         loaded_capables.Clear();
     }
@@ -312,4 +319,5 @@ public class CapableBank : MonoBehaviour
         // -> means we check capables_in_bank because it contains all capables instantiated ever !
         return capables_in_bank.Contains(capable);
     }
+
 }

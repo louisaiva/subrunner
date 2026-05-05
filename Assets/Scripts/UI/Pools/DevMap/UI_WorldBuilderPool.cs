@@ -58,7 +58,5 @@ public class UI_WorldBuilderPool : UI_SlottablePool, Descriptable
         // we unregister the WorldBuilder callbacks
         WorldBuilder.LazyInstance.RemoveCallbacks();
 
-        // and clean the world builder
-        WorldBuilder.LazyInstance.ClearCache();
     }
 }

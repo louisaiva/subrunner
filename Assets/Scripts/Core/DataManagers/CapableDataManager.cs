@@ -46,7 +46,6 @@ public class CapableDataManager : MonoBehaviour
         string json = JsonUtility.ToJson(data, true);
         string path = Path.Combine("capables", data.id + ".json");
         AppManager.SaveJsonToWorldFolder(world_id, path, json, log);
-        // System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
         // if (log) { Debug.Log($"(Capable - Save Data) Updated & Saved CapableData : {capable.name} (to {path})\n\n{data.GetDetails()}\n\n{json}"); }
 
         // we also save the capacities of this capable if we want to

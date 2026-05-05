@@ -79,7 +79,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
         }
 
         // load world capables data
-        loadWorldCapablesData(world_id);
+        LoadWorldCapablesData(world_id);
         if (log) { Debug.Log($"(CapableEngine) Loaded {world_capables_data.Count} world capables data"); }
 
         // detect capables that are not linked to a capable data in our system
@@ -170,7 +170,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
         if (log_templates_data_loading) { Debug.Log("(CapableEngine) TEMPLATES CAPABLES DATA LOADED : " + templates_capables_data.Count + log_capables_details); }
         templates_loaded = true;
     }
-    protected void loadWorldCapablesData(string world_id)
+    public void LoadWorldCapablesData(string world_id)
     {
         // we empty the capables_data & runtime ids etc
         world_capables_data = new Dictionary<string, CapableData>();
@@ -682,7 +682,6 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
 
     // LOAD CAPABLES
-
     public Capable LoadCapableInstantly(string id)
     {
         // if the capable is in the unloading queue, it means it is already loaded,
@@ -1044,4 +1043,5 @@ public class CapableEngine : BSOD_System<CapableEngine>
         }
         return doors_data;
     }
+
 }

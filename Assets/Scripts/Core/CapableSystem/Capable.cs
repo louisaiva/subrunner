@@ -15,14 +15,7 @@ public class Capable : MonoBehaviour, Debuggable
     [Header("Capable data")]
     public CapableData data;
     public bool Loaded { get { return data is not null; } }
-    public string ID
-    {
-        get
-        {
-            if (!Loaded) { return "unloaded"; }
-            return data.id;
-        }
-    }
+    public string ID => GetStaticID();
 
 
 
@@ -615,9 +608,9 @@ public class Capable : MonoBehaviour, Debuggable
     }
     public string GetStaticID()
     {
-        if (this.data == null) { return this.name; }
-        if (string.IsNullOrEmpty(this.data.id)) { return this.name; }
-        return this.data.id;
+        if (data == null) { return name; }
+        if (string.IsNullOrEmpty(data.id)) { return name; }
+        return data.id;
     }
     protected List<string> get_static_capacity_ids()
     {
@@ -658,7 +651,10 @@ public class Capable : MonoBehaviour, Debuggable
         }
         return feet_data;
     }
-
+    public List<Capacity> GetStaticCapacities()
+    {
+        return GetComponentsInChildren<Capacity>(includeInactive: true).ToList();
+    }
 }
 
 [Serializable]

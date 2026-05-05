@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class AIO_Loader : MonoBehaviour
@@ -34,6 +35,13 @@ public class AIO_Loader : MonoBehaviour
         // load the level
         Level aio_level = load_level(level_data);
 
+
+        // BEFORE loading the rooms, we need to load the capables data & capacity data,
+        // otherwise the CapableEngine & CapacityEngine won't be able to 
+        // load the room's capables & their capacities
+        CapableEngine.Instance.LoadWorldCapablesData(world_id);
+        CapacityEngine.Instance.LoadWorldCapacitiesData(world_id);
+
         // load the rooms
         List<Room> rooms = load_rooms(world_id, level_data.rooms_ids, aio_level.transform);
         if (rooms.Count == 0) { Debug.LogWarning($"(AIO_Loader) No rooms loaded for level '{level_id}' in world '{world_id}'"); }
@@ -63,8 +71,12 @@ public class AIO_Loader : MonoBehaviour
         {
             // load the room
             Room room = load_room(data, rooms_parent);
-            if (room != null) { rooms.Add(room); }
+            if (room == null) { continue; }
+            rooms.Add(room);
+
+            load_capables(data.capables_ids, rooms_parent.Find("Capables"));
         }
+
 
         return rooms;
     }
@@ -91,8 +103,23 @@ public class AIO_Loader : MonoBehaviour
         return new_room;
     }
 
+
+    // low level capables loading
+    private HashSet<string> loaded_capables = new HashSet<string>();
+    private void load_capables(List<string> capables_ids, Transform parent)
+    {
+        foreach (string id in capables_ids)
+        {
+            if (loaded_capables.Contains(id)) { continue; }
+            Capable capable = CapableEngine.Instance.LoadCapableInstantly(id);
+            loaded_capables.Add(id);
+            capable.AnimPlayer.Show();
+            capable.transform.SetParent(parent);
+        }
+    }
+
     // CLEAR CACHE
-    public void ClearCache()
+    public async Task ClearCache()
     {
         // we clear the loaded levels
         foreach (Level level in loaded_levels.Values)
@@ -100,6 +127,11 @@ public class AIO_Loader : MonoBehaviour
             Destroy(level.gameObject);
         }
         loaded_levels.Clear();
+        loaded_capables.Clear();
+
+        // we clear the capable & capacity engines cache
+        await CapableEngine.LazyInstance.UnloadWorldData(log: true);
+        await CapacityEngine.LazyInstance.UnloadWorldData(log: true);
 
         // we clear the subsystems
         RoomEngine.Instance.TilemapEngine.ClearTilemaps(log: true);
