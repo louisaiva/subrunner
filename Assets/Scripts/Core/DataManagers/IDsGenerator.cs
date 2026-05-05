@@ -87,19 +87,7 @@ public class IDsGenerator : Singleton<IDsGenerator>
         Dictionary<string, List<int>> free_ids_by_prefix = new Dictionary<string, List<int>>();
         foreach (Capable capable in capables_to_remove)
         {
-            // these capables are going to be destroyed so we can remember their ids as free ids for the next capables that will be created
-            if (capable.data == null || string.IsNullOrEmpty(capable.data.id)) { continue; }
-            add_id_to_free_ids(capable.data.id, ref free_ids_by_prefix);
-
-            // ? should we also free inventory capables & capacities ?
-
-            // we also do the same for their capacities
-            for (int i = 0; i < capable.data.capacities_ids.Count; i++)
-            {
-                string capacity_id = capable.data.capacities_ids[i];
-                if (string.IsNullOrEmpty(capacity_id)) { continue; }
-                add_id_to_free_ids(capacity_id, ref free_ids_by_prefix);
-            }
+            register_to_free_ids(capable, ref free_ids_by_prefix);
         }
 
         // we sort these free ids by prefix and number (highest number first), so we can unregister these ids from the world ids.
@@ -133,6 +121,29 @@ public class IDsGenerator : Singleton<IDsGenerator>
             if (log) { Debug.Log($"(IDsGenerator) Generated new id for capable {capable.name} : {new_id}"); }
         }
     }
+
+    private void register_to_free_ids(Capable capable, ref Dictionary<string, List<int>> free_ids_by_prefix)
+    {
+        // these capables are going to be destroyed so we can remember their ids as free ids for the next capables that will be created
+        if (capable.data == null || string.IsNullOrEmpty(capable.data.id)) { return; }
+        add_id_to_free_ids(capable.data.id, ref free_ids_by_prefix);
+
+        // we also do the same for their capacities
+        for (int i = 0; i < capable.data.capacities_ids.Count; i++)
+        {
+            string capacity_id = capable.data.capacities_ids[i];
+            if (string.IsNullOrEmpty(capacity_id)) { continue; }
+            add_id_to_free_ids(capacity_id, ref free_ids_by_prefix);
+        }
+
+        // we also do the same for the capables in their inventory
+        List<Item> items = capable.Inventory?.GetStaticItems().ToList() ?? new List<Item>();
+        foreach (Item item in items)
+        {
+            register_to_free_ids(item, ref free_ids_by_prefix);
+        }
+    }
+
     private bool add_id_to_free_ids(string id, ref Dictionary<string, List<int>> free_ids_by_prefix)
     {
         if (string.IsNullOrEmpty(id)) { return false; }

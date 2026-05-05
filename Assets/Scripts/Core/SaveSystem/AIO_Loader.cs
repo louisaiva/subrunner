@@ -22,7 +22,7 @@ public class AIO_Loader : MonoBehaviour
         if (log) { Debug.Log($"(AIO_Loader) Loading level '{level_id}' for world '{world_id}'"); }
 
         // CLEAR OLD DATA
-        ClearCache();
+        _ = ClearCache();
 
         // grab the level data from the world data
         LevelData level_data = LevelEngine.LoadWorldLevelData(world_id, level_id);

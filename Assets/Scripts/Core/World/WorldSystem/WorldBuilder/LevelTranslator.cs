@@ -369,16 +369,26 @@ public class LevelTranslator : MonoBehaviour
 
         // gather the existing Light2D in the room
         List<Light2D> existing_lights = light_parent.GetComponentsInChildren<Light2D>(includeInactive: true).ToList();
+        List<Light2D> kept_lights = new List<Light2D>();
         foreach (WorldLightVisualizer light_visu in lights)
         {
             // check if we already have a light at this position
             Vector2 world_pos = light_visu.WorldPosition;
             Light2D light = existing_lights.FirstOrDefault(l => Vector2.Distance(l.transform.position, world_pos) < 0.1f);
-            if (light != null) { continue; }
+            if (light != null) { kept_lights.Add(light); continue; }
 
             // else we create the light
             light = Instantiate(light_prefab, light_parent);
             light.transform.position = world_pos;
+            kept_lights.Add(light);
+        }
+
+        // we destroy the lights that were not kept
+        foreach (Light2D existing_light in existing_lights)
+        {
+            if (kept_lights.Contains(existing_light)) { continue; }
+            if (log_translate_extended) { Debug.Log($"(LevelTranslator) destroying light {existing_light.name}"); }
+            Destroy(existing_light.gameObject);
         }
     }
 }
