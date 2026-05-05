@@ -182,10 +182,10 @@ public class LevelTranslator : MonoBehaviour
             if (log_translate_extended) { Debug.Log($"(LevelTranslator) room added: {room_visu.name}"); }
         }
 
-        if (log_translate_extended) { Debug.Log($"(LevelTranslator) Building neighbours & navmesh"); }
+        if (log_translate_extended) { Debug.Log($"(LevelTranslator) Building neighbours"); }
         // now we need to build the room graph neighbour nodes connections
-
-        // now we can build the navmesh
+        List<Door> final_doors = doors.Values.ToList();
+        AutoNeighbourer.TraceRoomGraphNeighbours(ref rooms, ref final_doors);
 
         // now we can regenerate the ids for the capables & their capacities
         if (log_translate_extended) { Debug.Log($"(LevelTranslator) Regenerating IDs for capables and capacities"); }
@@ -207,9 +207,14 @@ public class LevelTranslator : MonoBehaviour
             if (log_translate_extended) { Debug.Log($"(LevelTranslator) destroying room {old_room.name}"); }
             Destroy(old_room.gameObject);
         }
+        await System.Threading.Tasks.Task.Delay(300); // we delay a lil bit bcz the colliders were just created
+
+
+        // now we can build the navmesh
+        if (log_translate_extended) { Debug.Log($"(LevelTranslator) Building navmesh for level"); }
+        NavMeshBuilder.Instance.BuildNavMeshImmediateForLevel(level);
 
         // we can then make rooms grab their capables
-        await System.Threading.Tasks.Task.Delay(300); // we delay a lil bit bcz the colliders were just created
         if (log_translate_extended) { Debug.Log($"(LevelTranslator) Making rooms grab capables"); }
         RoomEngine.MakeRoomsGrabCapables(rooms.ToArray(), only_capables: true);
 
@@ -347,8 +352,8 @@ public class LevelTranslator : MonoBehaviour
         else { world_position_in_first_room.x += 0.5f; }
 
         // check if the position is inside the room, it means we are in the first room, else we are in the second room
-        if (room.OverlapPoint(world_position_in_first_room)) { door.room1_id = room.ID; }
-        else { door.room2_id = room.ID; }
+        if (room.OverlapPoint(world_position_in_first_room)) { door.room1_id = room.ID; door.room2_id = ""; }
+        else { door.room2_id = room.ID; door.room1_id = ""; }
 
         doors_placed.Add(door_visu);
         this.doors[door_visu] = door;

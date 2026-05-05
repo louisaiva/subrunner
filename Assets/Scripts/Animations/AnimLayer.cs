@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -226,7 +227,7 @@ public class AnimLayer : MonoBehaviour
     // GET STATIC DATA
     public AnimLayerData GetStaticData()
     {
-        return new AnimLayerData
+        AnimLayerData data = new AnimLayerData
         {
             // load basic layer data
             skin = skin,
@@ -236,10 +237,22 @@ public class AnimLayer : MonoBehaviour
             local_rotation = transform.localEulerAngles,
 
             // load sr data
-            material_path = get_material_path(sr),
             sorting_layer_id = sr.sortingLayerID,
             order_in_layer = sr.sortingOrder
         };
+
+        string material_path = get_material_path(Renderer);
+        if (!string.IsNullOrEmpty(material_path))
+        {
+            data.material_path = material_path;
+        }
+        else if (!string.IsNullOrEmpty(get_material_path_from_capable()))
+        {
+            data.material_path = get_material_path_from_capable();
+            if (CapableBank.Instance.LayerBank.log_anim_player) { Debug.LogWarning($"(AnimLayer - {leader.Capable.ID}) get_material_path returned empty for the anim layer {name}, but we found a material path in the capable anim data layers, we will use it as fallback : {data.material_path}"); }
+        }
+
+        return data;
     }
 
     // MATERIAL GETTER
@@ -257,6 +270,22 @@ public class AnimLayer : MonoBehaviour
         path = path.Replace("Assets/Resources/", ""); // we also need to remove "Assets/Resources/" from the path
 
         return path;
+    }
+    private string get_material_path_from_capable()
+    {
+        CapableData data = leader?.Capable?.data;
+        if (data == null) { return ""; }
+        AnimPlayerData anim_data = data.anim_data;
+        if (anim_data == null) { return ""; }
+        List<AnimLayerData> layers_data = anim_data.layers;
+        if (layers_data == null) { return ""; }
+        foreach (AnimLayerData layer_data in layers_data)
+        {
+            if (layer_data == null) { continue; }
+            if (layer_data.skin != skin) { continue; }            
+            return layer_data.material_path;
+        }
+        return "";
     }
 
 }

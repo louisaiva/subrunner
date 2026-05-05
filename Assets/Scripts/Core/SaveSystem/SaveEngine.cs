@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -50,8 +51,8 @@ public class SaveEngine : MonoBehaviour
 
     ///
     //
-    /// SAVING OBJECTS -- MAIN ENTRY POINTS
-    /// 
+    /// SAVING STATIC OBJECTS
+    //
     ///
 
     public static void SaveAIOLevel(Level level, string world_id, bool save_rooms = true, bool save_capables = true)
@@ -69,7 +70,13 @@ public class SaveEngine : MonoBehaviour
         // check if we need to save the capables also
         if (save_capables)
         {
-            foreach (Capable cap in level.GetStaticCapables()) { SaveCapable(cap, world_id); }
+            List<Capable> capables = level.GetStaticCapables().ToList();
+            Debug.Log($"(SaveEngine) Saving {capables.Count} capables of level '{level.ID}' : {string.Join(", ", capables.Select(c => c.ID))}");
+            foreach (Capable cap in capables)
+            {
+                if (log_static) { Debug.Log($"(SaveEngine) Saving capable '{cap.ID}' of level '{level.ID}'"); }
+                SaveCapable(cap, world_id);
+            }
         }
     }
     public static void SaveRoom(Room room, string world_id)
@@ -87,7 +94,7 @@ public class SaveEngine : MonoBehaviour
             foreach (Capacity capa in capable.GetStaticCapacities()) { SaveCapacity(capa, world_id); }
         }
 
-        if (save_inventory)
+        if (save_inventory && capable.Inventory != null)
         {
             foreach (Item item in capable.Inventory.GetStaticItems()) { SaveCapable(item, world_id, save_inventory, save_capacities); }
         }

@@ -73,6 +73,41 @@ public class NavMeshBuilder : Singleton<NavMeshBuilder>
             #endif
         }
     }
+    public void BuildNavMeshImmediateForLevel(Level level)
+    {
+        // we get the bounds of the level
+        Bounds bounds = level.GetStaticBounds();
+
+        // now we build the navmesh data with the right bounds
+        List<NavMeshData> navMeshDatas = new List<NavMeshData>();
+        foreach (var surface in surfaces)
+        {
+            // set the bounds
+            surface.center = new Vector3(bounds.center.x, 0f, bounds.center.y);
+            surface.size = new Vector3(bounds.size.x, 1f, bounds.size.y);
+
+            // we build the navmesh data
+            surface.BuildNavMesh();
+            navMeshDatas.Add(surface.navMeshData);
+        }
+        if (log) { Debug.Log("(NavMeshBuilder) rebuilt navmeshes for level " + level.ID + " with " + surfaces.Count + " surfaces."); }
+
+
+        // we save the navmeshdatas as assets in the files
+        level.ClearNavMeshPaths();
+        for (int i = 0; i < navMeshDatas.Count; i++)
+        {
+            NavMeshData navMeshData = navMeshDatas[i];
+            string path = Path.Combine(navmeshes_data_folder, level.GetStaticID() + "_navmesh_" + i + ".asset");
+            #if UNITY_EDITOR
+            UnityEditor.AssetDatabase.CreateAsset(navMeshData, path);
+            if (!hide_log_saving) { Debug.Log("(NavMeshBuilder) saved navmesh data asset for level " + level.GetStaticID() + " at path : " + path); }
+
+            // we add the path to the list of navmesh data paths to assign to the level
+            level.AddNavMeshPath(path);
+            #endif
+        }
+    }
 
     public void LoadLevelNavMeshData(List<NavMeshData> navMeshDatas)
     {

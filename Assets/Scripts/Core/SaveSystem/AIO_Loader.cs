@@ -112,6 +112,11 @@ public class AIO_Loader : MonoBehaviour
         {
             if (loaded_capables.Contains(id)) { continue; }
             Capable capable = CapableEngine.Instance.LoadCapableInstantly(id);
+            if (capable == null)
+            {
+                Debug.LogWarning($"(AIO_Loader) Capable with id '{id}' not found, skipping it");
+                continue;
+            }
             loaded_capables.Add(id);
             capable.AnimPlayer.Show();
             capable.transform.SetParent(parent);

@@ -613,8 +613,6 @@ public class AnimPlayer : MonoBehaviour
             skin = skin,
             anim_capacity_priorities = anim_capacity_priorities,
 
-            // get sr data
-            material_path = get_material_path(Renderer),
             sorting_layer_id = Renderer.sortingLayerID,
             order_in_layer = Renderer.sortingOrder,
 
@@ -624,6 +622,17 @@ public class AnimPlayer : MonoBehaviour
             // and parameters
             never_flip = never_flip
         };
+
+        string material_path = get_material_path(Renderer);
+        if (!string.IsNullOrEmpty(material_path))
+        {
+            data.material_path = material_path;
+        }
+        else if (Capable.data != null && Capable.data.anim_data != null && !string.IsNullOrEmpty(Capable.data.anim_data.material_path))
+        {
+            data.material_path = Capable.data.anim_data.material_path;
+            if (CapableBank.Instance.LayerBank.log_anim_player) { Debug.LogWarning($"(AnimPlayer - {Capable.ID}) get_material_path returned empty for the player sr, but we found a material path in the capable anim data, we will use it as fallback : {data.material_path}"); }
+        }
 
 
         // get the layers by going through the hierarchy (so we can do it even when not playing)
@@ -654,11 +663,17 @@ public class AnimPlayer : MonoBehaviour
     }
     private string get_material_path(SpriteRenderer sr)
     {
-        if (sr == null || sr.sharedMaterial == null) { return ""; }
+        if (sr == null || sr.sharedMaterial == null)
+        {
+            if (CapableBank.Instance.LayerBank.log_anim_player) { Debug.LogWarning($"(AnimPlayer - {Capable.ID}) The SpriteRenderer or its material is null, returning empty material path"); }
+            return "";
+        }
         #if UNITY_EDITOR
         string path = AssetDatabase.GetAssetPath(sr.sharedMaterial);
+        if (CapableBank.Instance.LayerBank.log_anim_player) { Debug.Log($"(AnimPlayer - {Capable.ID}) get_material_path(UNITYEDITOR) found a material at path: {path}"); }
         #else
         string path = "";
+        if (CapableBank.Instance.LayerBank.log_anim_player) { Debug.Log($"(AnimPlayer - {Capable.ID}) get_material_path(NO EDITOR) found no material path ://"); }
         #endif
 
         // we need to remove ".mat" from path

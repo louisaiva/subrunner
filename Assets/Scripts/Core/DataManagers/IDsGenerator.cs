@@ -122,6 +122,10 @@ public class IDsGenerator : Singleton<IDsGenerator>
         if (log) { Debug.Log($"(IDsGenerator) Generating new ids for BOUYA new capables..."); }
         if (log) { Debug.Log($"(IDsGenerator) Generating new ids for {new_capables.Count} new capables..."); }
 
+        // we filter the new capables to keep only the ones that are not in old capables,
+        // bcz those keep their ids
+        new_capables = new_capables.Where(c => !old_capables.Contains(c)).ToList();
+
         // then we generate new ids for the new capables and their capacities, we try to reuse the free ids if possible (if the name prefix is the same)
         foreach (Capable capable in new_capables)
         {
