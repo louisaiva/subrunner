@@ -36,8 +36,6 @@ public class LevelTranslator : MonoBehaviour
 
     [Header("Room creation")]
     public Room room_prefab;
-    public bool add_roomgraph_neighbour_node = true;
-    public RoomNodeEditor roomgraph_node_prefab;
 
     [Header("Doors & Lights")]
     public Door door_vertical_prefab;
@@ -125,6 +123,7 @@ public class LevelTranslator : MonoBehaviour
 
 
     // TRANSLATION
+    // todo : denest this into mult methods
     public async void Translate(BuiltLevelData built_level)
     {
         string world_id = built_level.world;
@@ -216,7 +215,7 @@ public class LevelTranslator : MonoBehaviour
 
         // we can then make rooms grab their capables
         if (log_translate_extended) { Debug.Log($"(LevelTranslator) Making rooms grab capables"); }
-        RoomEngine.MakeRoomsGrabCapables(rooms.ToArray(), only_capables: true);
+        RoomEngine.MakeRoomsGrabCapables(rooms.ToArray(), only_capables: false);
 
         // and finally we make the level regrab all its rooms
         if (log_translate_extended) { Debug.Log($"(LevelTranslator) Making level grab static rooms"); }
@@ -260,7 +259,7 @@ public class LevelTranslator : MonoBehaviour
             find_or_create_light(room, room_visu.Lights);
 
             // if add_roomgraph_neighbour_node is true, we add a node for each neighbour of the room in the roomgraph
-            if (add_roomgraph_neighbour_node) { Instantiate(roomgraph_node_prefab, room.transform); }
+            // if (add_roomgraph_neighbour_node) { Instantiate(roomgraph_node_prefab, room.transform); }
         }
     }
 

@@ -631,7 +631,12 @@ public class AnimPlayer : MonoBehaviour
         else if (Capable.data != null && Capable.data.anim_data != null && !string.IsNullOrEmpty(Capable.data.anim_data.material_path))
         {
             data.material_path = Capable.data.anim_data.material_path;
-            if (CapableBank.Instance.LayerBank.log_anim_player) { Debug.LogWarning($"(AnimPlayer - {Capable.ID}) get_material_path returned empty for the player sr, but we found a material path in the capable anim data, we will use it as fallback : {data.material_path}"); }
+            if (CapableBank.Instance.LayerBank.log_anim_player) { Debug.LogWarning($"(AnimPlayer - {Capable.ID}) NO MATERIAL found on get_material_path(), we use the old data as FALLBACK : {data.material_path}"); }
+        }
+        else
+        {
+            data.material_path = "materials/objects";
+            if (CapableBank.Instance.LayerBank.log_anim_player) { Debug.LogWarning($"(AnimPlayer - {Capable.ID}) NO MATERIAL found on get_material_path() and NO FALLBACK available, returning DEFAULT {data.material_path}"); }
         }
 
 

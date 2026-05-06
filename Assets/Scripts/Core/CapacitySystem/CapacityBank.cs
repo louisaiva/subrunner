@@ -65,7 +65,6 @@ public class CapacityBank : MonoBehaviour
     public string capacities_prefabs_path = "prefabs/capacities/";
     private Dictionary<Type, GameObject> capacities_prefabs = new Dictionary<Type, GameObject>();
 
-
     [Header("Logs")]
     public bool log = false;
     public bool log_prefabs_loading = false;
@@ -148,15 +147,23 @@ public class CapacityBank : MonoBehaviour
         Type capa_type = Type.GetType(data.kind);
         if (!capacities_prefabs.ContainsKey(capa_type))
         {
-            Debug.LogError("(CapacityBank) No prefab found for capacity kind: " + data.kind);
-            return null;
+            Debug.LogError("(CapacityBank) No prefab found for capacity kind: " + data.kind); // ! don't hide this log behind something it is IMPORTANT
+            capacity = try_to_add_empty_capacity(capa_type);
         }
-        GameObject go = Instantiate(capacities_prefabs[capa_type]);
-        capacity = go.GetComponent<Capacity>();
+        else { capacity = Instantiate(capacities_prefabs[capa_type]).GetComponent<Capacity>(); }
 
         // then we can load the data
         capacity.LoadData(data);
         loaded_capacities.Add(capacity);
+        return capacity;
+    }
+    private Capacity try_to_add_empty_capacity(Type capacityType)
+    {
+        // no capacity prefab found, we try to add an empty capacity instead
+        GameObject empty_capacity_prefab = new GameObject();
+
+        // add a capacity to it
+        Capacity capacity = (Capacity)empty_capacity_prefab.AddComponent(capacityType);
         return capacity;
     }
 

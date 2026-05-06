@@ -72,7 +72,7 @@ public class IDsGenerator : Singleton<IDsGenerator>
         }
     }
 
-
+    // GENERATE IDS WITH REMOVAL OF OLD CAPABLES
     public void GenerateIDsOnlyForCapablesAndCapacities(List<Capable> old_capables, List<Capable> new_capables)
     {
         // we clear the list since we want to re generate ids
@@ -121,7 +121,6 @@ public class IDsGenerator : Singleton<IDsGenerator>
             if (log) { Debug.Log($"(IDsGenerator) Generated new id for capable {capable.name} : {new_id}"); }
         }
     }
-
     private void register_to_free_ids(Capable capable, ref Dictionary<string, List<int>> free_ids_by_prefix)
     {
         // these capables are going to be destroyed so we can remember their ids as free ids for the next capables that will be created
@@ -143,7 +142,6 @@ public class IDsGenerator : Singleton<IDsGenerator>
             register_to_free_ids(item, ref free_ids_by_prefix);
         }
     }
-
     private bool add_id_to_free_ids(string id, ref Dictionary<string, List<int>> free_ids_by_prefix)
     {
         if (string.IsNullOrEmpty(id)) { return false; }
@@ -253,11 +251,11 @@ public class IDsGenerator : Singleton<IDsGenerator>
     private void generate_ids_for_capacities(Capable capable, string new_owner_id = "")
     {
         // we get all capacities in the DIRECT children of this capable
-        List<Capacity> capacities = new List<Capacity>();
-        for (int i = 0; i < capable.transform.childCount; i++)
+        List<Capacity> capacities = capable.GetStaticCapacities();
+        /* for (int i = 0; i < capable.transform.childCount; i++)
         {
             capacities.AddRange(capable.transform.GetChild(i).GetComponents<Capacity>());
-        }
+        } */
 
         if (capacities.Count == 0) { return; }
 

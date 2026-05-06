@@ -115,6 +115,7 @@ public class PolyColliderToMesh: MonoBehaviour
             catch (System.ArgumentOutOfRangeException)
             {
                 Debug.LogError($"(PolyColliderToMesh) Error adding triangle with indices {cw}, {ccw}, {tip} (count: {count}) - ring count: {ring.Count} - indices count: {indices.Count}\n we did not throw");
+                return;
             }
 
             ring.RemoveAt(tip);

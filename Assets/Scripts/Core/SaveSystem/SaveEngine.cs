@@ -36,7 +36,8 @@ public class SaveEngine : MonoBehaviour
         get
         {
             if (_static_loader != null) { return _static_loader; }
-            _static_loader = LazyInstance.transform.GetComponentInChildren<AIO_Loader>(includeInactive: true);
+            if (LevelEngine.LazyInstance == null) { return null; }
+            _static_loader = LevelEngine.LazyInstance.transform.GetComponentInChildren<AIO_Loader>(includeInactive: true);
             if (_static_loader == null) { Debug.LogError("(SaveEngine) SaveEngine.AIO_Loader was not found"); }
             return _static_loader;
         }

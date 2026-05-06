@@ -10,6 +10,10 @@ public class AIO_Loader : MonoBehaviour
     [SerializeField] private Level level_prefab;
     [SerializeField] private Room room_prefab;
 
+    [Header("Neighbours nodes")]
+    public bool add_roomgraph_neighbour_node = true;
+    public RoomNodeEditor neighbour_node_prefab;
+
     [Header("RTO Loaded AIO Levels")]
     private Dictionary<string, Level> loaded_levels = new Dictionary<string, Level>(); // key is level_id, value is the loaded level
 
@@ -75,6 +79,7 @@ public class AIO_Loader : MonoBehaviour
             rooms.Add(room);
 
             load_capables(data.capables_ids, rooms_parent.Find("Capables"));
+            load_capables(data.movables_ids, rooms_parent.Find("Movables"));
         }
 
 
@@ -99,6 +104,9 @@ public class AIO_Loader : MonoBehaviour
 
         // load the lights
         RoomEngine.Instance.LightsEngine.LoadLights(data.lights_data, data.id, new_room.LightsParent);
+
+        // if add_roomgraph_neighbour_node is true, we add a node for each neighbour of the room in the roomgraph
+        if (add_roomgraph_neighbour_node) { Instantiate(neighbour_node_prefab, new_room.transform); }
 
         return new_room;
     }

@@ -195,7 +195,7 @@ public class ColliderBank : MonoBehaviour
         // if we are not using pathfinding we make sure we don't have any
         if (modifier != null) { Destroy(modifier); }
     }
-    private /* async */ void load_collider_data(Collider2D collider, ColliderData collider_data)
+    private void load_collider_data(Collider2D collider, ColliderData collider_data)
     {
         if (log_body_data) { Debug.Log($"(CapableBank - load_collider_data) Loading collider data : {(collider_data == null ? "null" : collider_data.GetDetails())}"); }
 
@@ -207,10 +207,15 @@ public class ColliderBank : MonoBehaviour
         collider.offset = collider_data.offset;
         collider.isTrigger = collider_data.is_trigger;
 
-        // we set the shadow caster data
-        /* if (collider_data.shadow_caster_data is null) { return; }
-        await System.Threading.Tasks.Task.Yield();
-        load_shadow_caster_data(collider.gameObject, collider_data.shadow_caster_data); */
+        // if for navmesh, we check if we are world building or not
+        // ! this is commented bcz we don't do this here after all,
+        // ! this is the responsability of the capacity that uses the collider
+        // ! if feet we never disable the collider for example
+        // but ColliderCapacity yes
+        /* if (collider_data.used_for_pathfinding)
+        {
+            collider.isTrigger = !WorldBuilder.IsWorking; // if we are world building we want it to be active, if not world building we don't want it
+        } */
     }
 
     public void UnloadCollider(GameObject collider_go)

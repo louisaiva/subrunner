@@ -112,7 +112,7 @@ public class RoomNodeEditor : MonoBehaviour
         }
 
         // we update the node at fixed rate
-        time_since_last_update += Time.deltaTime;
+        time_since_last_update += Time.unscaledDeltaTime;
         if (time_since_last_update < update_rate) { return; }
         time_since_last_update = 0f;
         UpdateNodePosition();
@@ -154,7 +154,7 @@ public class RoomNodeEditor : MonoBehaviour
             return;
         }
 
-        time_since_last_hover += Time.deltaTime;
+        time_since_last_hover += Time.unscaledDeltaTime;
 
         // update selection color
         SpriteRenderer.color = Color.Lerp(normal_color, selecting_color, time_since_last_hover / selection_delay);

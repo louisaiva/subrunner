@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -18,6 +19,7 @@ public class WorldBuilder : MonoBehaviour
             return _lazy_instance;
         }
     }
+    public static bool IsWorking => LazyInstance.gameObject.activeInHierarchy;
 
     // SUBSYSTEMS
     private static LevelBuilder _level_builder;
