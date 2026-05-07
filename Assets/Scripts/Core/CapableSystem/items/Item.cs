@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 /// <summary>
 /// Item is a Movable that can be grabbed by other Capables with GrabCapacity + InteractCapacity.
@@ -327,25 +328,25 @@ public class Item : Movable, EndlessInteractable
     private List<string> dynamic_capacity_ids = new List<string>(); // this list is used to store the capacities that are loaded dynamically on grab, so we can unload them on drop
     public override void LoadData(CapableData data)
     {
-        // we store our dynamic capacities ids
-        List<string> static_ids = new List<string>();
-        dynamic_capacity_ids = CapacityEngine.Instance.GetDynamicItemCapacitiesIDs(data.capacities_ids, ref static_ids);
         if (data is not ItemData idata)
         {
             if (log) { Debug.LogError($"(Item - LoadData) The data provided is not of type ItemData for item '{name}'"); }
             return;
         }
 
+        // we store our dynamic capacities ids
+        dynamic_capacity_ids = CapacityEngine.Instance.GetDynamicItemCapacitiesIDs(idata, out List<string> static_ids);
+
         // we do a trick to make base.LoadData(data) only load the capacities we want to !
-        List<string> capa_ids_saved = new List<string>();
         if (idata.is_grabbed) // if we are grabbed, we only load the static capacities, the dynamic ones will be loaded only when dropped
         {
-            capa_ids_saved.AddRange(data.capacities_ids);
             data.capacities_ids = static_ids;
         }
         base.LoadData(data);
-        if (idata.is_grabbed) { data.capacities_ids = capa_ids_saved; } // we restore the original capacities ids list in case we need it later
-        // todo with the new template / instance data separation, we would not need this trick since we have 2 capacities ids list, so +1 for it
+        if (idata.is_grabbed)
+        {
+            data.capacities_ids.AddRange(dynamic_capacity_ids); // we restore the dynamic capacities ids list in case we need it later
+        }
 
         // we load the item data
         this.Reference = idata.reference;

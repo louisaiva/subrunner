@@ -332,13 +332,21 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
     // this means that the kinds that ARE NOT in this list will be dynamically loaded / unloaded
     // when the item is dropped / grabbed
     [SerializeField] private List<string> item_static_capacities_kinds = new List<string>() { "DodgeCapacity" };
-    public List<string> GetDynamicItemCapacitiesIDs(List<string> capa_ids, ref List<string> static_ids)
+    private Dictionary<string, string> item_dynamic_required_capacities_templates_per_kinds = new Dictionary<string, string>() {
+        { "HoverCapacity", "hover" }
+    };
+    public List<string> GetDynamicItemCapacitiesIDs(ItemData idata, out List<string> static_ids)
     {
+        List<string> capa_ids = new List<string>(idata.capacities_ids);
+        static_ids = new List<string>();
+
         // 1. we get the base capable capacities ids
         List<string> dynamically_pooled_ids = new List<string>();
 
         // 2. we only check on items
         // if (capable is not Item) { return capable.data.capacities_ids; } ! no need for now bcz we only call method from Item
+
+        List<string> required_kinds = new List<string>(item_dynamic_required_capacities_templates_per_kinds.Keys);
 
         // 3. we filter it with the list of static capacity kinds
         // -> means we dynamically handle ONLY the kinds that ARE NOT in this list
@@ -359,9 +367,24 @@ public class CapacityEngine : BSOD_System<CapacityEngine>
                 continue;
             }
 
-            // else it is a dynamic one, we add it
+            // else it is a dynamic one
+            // we check if it is a required one so we don't add it later
+            if (required_kinds.Contains(capa_data.kind)) { required_kinds.Remove(capa_data.kind); }
+            
+            // finally we add it
             dynamically_pooled_ids.Add(capa_id);
         }
+
+        // 4. we check if we have all required kinds, if not we spawn them with the template id
+        foreach (string required_kind in required_kinds)
+        {
+            string template_id = item_dynamic_required_capacities_templates_per_kinds[required_kind];
+            
+            // spawn the capacity with the template id
+            CapacityData data = SpawnCapacity(template_id, idata); // we don't have the capable id at this point but it doesn't matter because we will change the owner id later when we assign the capacity to the capable
+            dynamically_pooled_ids.Add(data.id);
+        }
+
         return dynamically_pooled_ids;
     }
     public CapacityData GetCapacityData(string id)
