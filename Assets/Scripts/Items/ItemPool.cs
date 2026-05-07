@@ -187,44 +187,27 @@ public class ItemPool : MonoBehaviour, ItemStorer
             if (child == null || child.gameObject.activeSelf == false) { continue; }
             Item item = child.GetComponent<Item>();
             if (item == null) { continue; }
-
-            string item_id = item.data.id;
-            if (item_id == "") { item_id = item.name; }
-            
-            // we check if we already have a item_stack_data with the same ref
-            for (int j=0; j< data.stacks_data.Count; j++)
-            {
-                if (data.stacks_data[j].item_ref == item.Reference)
-                {
-                    data.stacks_data[j].items_ids.Add(item_id);
-                    goto next_item;
-                }
-            }
-
-            // if we are here, we have no stack with the same ref, we create a new one and we put the item id in it
-            data.stacks_data.Add(new ItemStackData() { item_ref = item.Reference, items_ids = new List<string>() { item_id } });
-
-            // we go to next item
-            next_item:
-            continue;
+            AddItemToPoolData(ref data, item.ID, item.Reference);
         }
 
         return data;
     }
-    /* private bool are_item_ids_of_same_ref(string item1,string item2)
+    public static bool AddItemToPoolData(ref ItemPoolData data, string item_id, string item_ref)
     {
-        if (!item1.Contains("-") || !item2.Contains("-")) { return false; }
+        // we check if we already have a item_stack_data with the same ref
+        for (int j = 0; j < data.stacks_data.Count; j++)
+        {
+            if (data.stacks_data[j].item_ref == item_ref)
+            {
+                data.stacks_data[j].items_ids.Add(item_id);
+                return true;
+            }
+        }
 
-        string suffix1 = item1.Split("-")[0];
-        string suffix2 = item2.Split("-")[0];
-
-        string ref1 = item1.Substring(0, item1.Length - suffix1.Length);
-        string ref2 = item2.Substring(0, item2.Length - suffix2.Length);
-
-        if (string.IsNullOrEmpty(ref1) || string.IsNullOrEmpty(ref2)) { return item1 == item2; }
-
-        return ref1 == ref2;
-    } */
+        // if we are here, we have no stack with the same ref, we create a new one and we put the item id in it
+        data.stacks_data.Add(new ItemStackData() { item_ref = item_ref, items_ids = new List<string>() { item_id } });
+        return true; // for now we don't check special edges cases like not the right ref, etc etc so always true
+    }
     public List<Item> GetStaticItems()
     {
         List<Item> items = new List<Item>();

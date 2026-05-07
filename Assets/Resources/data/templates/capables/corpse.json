@@ -38,6 +38,7 @@
         "material_path": "materials/beings",
         "sorting_layer_id": -667374433,
         "order_in_layer": 0,
+        "never_flip": false,
         "layers": [],
         "local_position": {
             "x": 0.0,
@@ -68,6 +69,10 @@
                 },
                 "layerID": 25,
                 "used_for_pathfinding": false,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
                 "is_trigger": false,
                 "offset": {
                     "x": 0.0,
@@ -82,6 +87,10 @@
                 },
                 "layerID": 13,
                 "used_for_pathfinding": false,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
                 "is_trigger": true,
                 "offset": {
                     "x": 0.0,

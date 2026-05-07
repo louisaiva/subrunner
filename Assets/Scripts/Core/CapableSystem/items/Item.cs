@@ -36,7 +36,7 @@ public class Item : Movable, EndlessInteractable
     public string ItemDescription = "description of the item";
 
     // GRAB / DROP / PLACING
-    [SerializeField] private bool _grabbed = false;
+    [SerializeField] protected bool _grabbed = false;
     public bool Grabbed { get => _grabbed; }
     [SerializeField] private bool _placed = false;
     public bool Placed

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Rendering;
 
 [RequireComponent(typeof(ParticleSystem))]
 public class XPProvider : Singleton<XPProvider>
@@ -24,8 +25,9 @@ public class XPProvider : Singleton<XPProvider>
     private Color life_color = new Color(1f, 0f, 0f);
 
     // materials
-    public Material life_material;
-    public Material xp_material;
+    // public Material xp_material;
+    // public Material life_material;
+    private LocalKeyword visibleKeyword;
 
     // generator continue
     public bool generate_continuously = false;
@@ -38,6 +40,10 @@ public class XPProvider : Singleton<XPProvider>
     // START
     private void Start()
     {
+        ParticleSystemRenderer renderer = ParticuleSystem.GetComponent<ParticleSystemRenderer>();
+        visibleKeyword = new LocalKeyword(renderer.material.shader, "_VISIBLE");
+        renderer.material.EnableKeyword(visibleKeyword);
+
         if (Perso.Instance == null) { return; } // no player, no trigger
         ParticuleSystem.trigger.SetCollider(0, Perso.Instance.transform.Find("particles").GetComponent<Collider2D>());
     }

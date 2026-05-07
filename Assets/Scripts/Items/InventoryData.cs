@@ -5,6 +5,32 @@ using System.Collections.Generic;
 {
     public List<ItemPoolData> item_pools_data;
     public ItemType item_type;
+    public int ItemsCount()
+    {
+        int count = 0;
+        for (int i=0; i<item_pools_data.Count; i++)
+        {
+            for (int j=0; j<item_pools_data[i].stacks_data.Count; j++)
+            {
+                count += item_pools_data[i].stacks_data[j].items_ids.Count;
+            }
+        }
+        return count;
+    }
+    public bool AddItem(ItemData item_data)
+    {
+        if (item_data == null) { return false; }
+        string item_id = item_data.id;
+        for (int i=0; i<item_pools_data.Count; i++)
+        {
+            ItemPoolData data = item_pools_data[i];
+            if (ItemPool.AddItemToPoolData(ref data, item_id, item_data.reference))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     // DUPLICATE
     public InventoryData Duplicate()

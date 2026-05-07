@@ -1652,7 +1652,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -1705,6 +1704,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &11300635
 SpriteRenderer:
   serializedVersion: 2
@@ -1906,7 +1906,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -1959,6 +1958,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &14388561
 SpriteRenderer:
   serializedVersion: 2
@@ -2065,7 +2065,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: sofa_R
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sofa_L.idle.D
     sprites_paths:
@@ -2097,6 +2096,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &14680148
 SpriteRenderer:
   serializedVersion: 2
@@ -2203,7 +2203,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -2256,6 +2255,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &15579957
 SpriteRenderer:
   serializedVersion: 2
@@ -2422,7 +2422,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -2475,6 +2474,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &16779287
 SpriteRenderer:
   serializedVersion: 2
@@ -2804,7 +2804,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -2848,6 +2847,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &18059824
 SpriteRenderer:
   serializedVersion: 2
@@ -4855,7 +4855,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: blackcube
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: blackcube.idle.D
     sprites_paths:
@@ -4899,6 +4898,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &32034321
 SpriteRenderer:
   serializedVersion: 2
@@ -6201,7 +6201,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -6254,6 +6253,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &46376100
 SpriteRenderer:
   serializedVersion: 2
@@ -6685,7 +6685,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -6738,6 +6737,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &50219426
 SpriteRenderer:
   serializedVersion: 2
@@ -10021,7 +10021,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: apple
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: apple.idle.D
     sprites_paths:
@@ -10074,6 +10073,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &73911507
 SpriteRenderer:
   serializedVersion: 2
@@ -11170,7 +11170,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: blackcube
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: blackcube.idle.D
     sprites_paths:
@@ -11214,6 +11213,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &88265283
 SpriteRenderer:
   serializedVersion: 2
@@ -11913,7 +11913,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -11957,6 +11956,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!114 &97400789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13294,6 +13294,7 @@ MonoBehaviour:
   log_accessible_rooms: 0
   log_visibility_update: 0
   log_callbacks: 0
+  log_visibility: 0
 --- !u!114 &112018659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14507,7 +14508,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -14560,6 +14560,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &117690905
 SpriteRenderer:
   serializedVersion: 2
@@ -16196,7 +16197,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: server
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: server.idle.D
     sprites_paths:
@@ -16228,6 +16228,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &130898410
 SpriteRenderer:
   serializedVersion: 2
@@ -19027,7 +19028,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -19080,6 +19080,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &150426922
 SpriteRenderer:
   serializedVersion: 2
@@ -19988,7 +19989,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -20032,6 +20032,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &157320450
 SpriteRenderer:
   serializedVersion: 2
@@ -20877,7 +20878,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -20921,6 +20921,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &163581700
 SpriteRenderer:
   serializedVersion: 2
@@ -23514,7 +23515,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -23567,6 +23567,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &173446071
 SpriteRenderer:
   serializedVersion: 2
@@ -27741,7 +27742,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: server
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: server.idle.D
     sprites_paths:
@@ -27773,6 +27773,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &194858751
 SpriteRenderer:
   serializedVersion: 2
@@ -28239,7 +28240,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -28292,6 +28292,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &197546816
 SpriteRenderer:
   serializedVersion: 2
@@ -28738,7 +28739,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: server
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: server.idle.D
     sprites_paths:
@@ -28770,6 +28770,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &201998436
 SpriteRenderer:
   serializedVersion: 2
@@ -29115,7 +29116,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -29168,6 +29168,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &202248427
 SpriteRenderer:
   serializedVersion: 2
@@ -29796,7 +29797,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: server
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: server.idle.D
     sprites_paths:
@@ -29828,6 +29828,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &206724809
 SpriteRenderer:
   serializedVersion: 2
@@ -30414,7 +30415,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -30467,6 +30467,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &207485989
 SpriteRenderer:
   serializedVersion: 2
@@ -30986,7 +30987,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -31039,6 +31039,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &210416515
 SpriteRenderer:
   serializedVersion: 2
@@ -35192,7 +35193,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -35245,6 +35245,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &218700140
 SpriteRenderer:
   serializedVersion: 2
@@ -49235,7 +49236,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -49288,6 +49288,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &300088297
 SpriteRenderer:
   serializedVersion: 2
@@ -49488,7 +49489,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -49541,6 +49541,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &300497398
 SpriteRenderer:
   serializedVersion: 2
@@ -51339,7 +51340,7 @@ MonoBehaviour:
   log_item_switching: 0
   hide_log_ownership_validation: 1
   log_loading: 0
-  log_loading_extended: 0
+  log_loading_extended: 1
   hide_log_no_data_found: 1
 --- !u!114 &313120230
 MonoBehaviour:
@@ -51761,7 +51762,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -51805,6 +51805,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &316174580
 SpriteRenderer:
   serializedVersion: 2
@@ -52568,7 +52569,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -52612,6 +52612,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &322924663
 SpriteRenderer:
   serializedVersion: 2
@@ -55609,7 +55610,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: steel_door
   <orientation>k__BackingField: R
-  current_capacity: idle
   current_anim:
     name: steel_door.idle.R
     sprites_paths:
@@ -55654,6 +55654,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &345160535
 SpriteRenderer:
   serializedVersion: 2
@@ -56054,7 +56055,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -56098,6 +56098,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!114 &351860845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57324,7 +57325,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -57377,6 +57377,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &359051387
 SpriteRenderer:
   serializedVersion: 2
@@ -58906,7 +58907,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -58959,6 +58959,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &375647635
 SpriteRenderer:
   serializedVersion: 2
@@ -59905,7 +59906,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -59958,6 +59958,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &382043931
 SpriteRenderer:
   serializedVersion: 2
@@ -61725,7 +61726,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -61769,6 +61769,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &398064841
 SpriteRenderer:
   serializedVersion: 2
@@ -65770,7 +65771,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -65823,6 +65823,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &423607330
 SpriteRenderer:
   serializedVersion: 2
@@ -66909,7 +66910,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: blackcube
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: blackcube.idle.D
     sprites_paths:
@@ -66953,6 +66953,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &430725855
 SpriteRenderer:
   serializedVersion: 2
@@ -67780,7 +67781,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -67833,6 +67833,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &437886589
 SpriteRenderer:
   serializedVersion: 2
@@ -68242,7 +68243,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -68295,6 +68295,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &440389611
 SpriteRenderer:
   serializedVersion: 2
@@ -70605,7 +70606,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: apple
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: apple.idle.D
     sprites_paths:
@@ -70658,6 +70658,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &460137143
 SpriteRenderer:
   serializedVersion: 2
@@ -71698,7 +71699,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -71751,6 +71751,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &468167866
 SpriteRenderer:
   serializedVersion: 2
@@ -75960,7 +75961,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: apple
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: apple.idle.D
     sprites_paths:
@@ -76013,6 +76013,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &486539554
 SpriteRenderer:
   serializedVersion: 2
@@ -79369,7 +79370,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -79413,6 +79413,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!114 &513998643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82585,7 +82586,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -82638,6 +82638,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &532481212
 SpriteRenderer:
   serializedVersion: 2
@@ -82911,7 +82912,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: rack_bg
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: rack_bg.idle.D
     sprites_paths:
@@ -82978,6 +82978,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &533437538
 SpriteRenderer:
   serializedVersion: 2
@@ -86048,7 +86049,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -86092,6 +86092,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &556269642
 SpriteRenderer:
   serializedVersion: 2
@@ -87118,7 +87119,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -87162,6 +87162,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!114 &565485516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87646,7 +87647,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -87699,6 +87699,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &565624932
 SpriteRenderer:
   serializedVersion: 2
@@ -88606,7 +88607,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: sofa_L
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sofa_L.idle.D
     sprites_paths:
@@ -88638,6 +88638,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &574498085
 SpriteRenderer:
   serializedVersion: 2
@@ -91620,7 +91621,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -91673,6 +91673,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &598037607
 SpriteRenderer:
   serializedVersion: 2
@@ -91991,7 +91992,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: apple
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: apple.idle.D
     sprites_paths:
@@ -92044,6 +92044,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &601638618
 SpriteRenderer:
   serializedVersion: 2
@@ -97082,7 +97083,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -97135,6 +97135,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &630678605
 SpriteRenderer:
   serializedVersion: 2
@@ -97241,7 +97242,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -97294,6 +97294,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &632977119
 SpriteRenderer:
   serializedVersion: 2
@@ -99326,7 +99327,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -99370,6 +99370,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!114 &651459915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99831,7 +99832,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -99884,6 +99884,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &652218450
 SpriteRenderer:
   serializedVersion: 2
@@ -104548,7 +104549,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -104601,6 +104601,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &691111133
 SpriteRenderer:
   serializedVersion: 2
@@ -105146,7 +105147,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -105199,6 +105199,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &698824876
 SpriteRenderer:
   serializedVersion: 2
@@ -108384,7 +108385,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -108437,6 +108437,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &717325027
 SpriteRenderer:
   serializedVersion: 2
@@ -109417,7 +109418,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -109470,6 +109470,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &721332533
 SpriteRenderer:
   serializedVersion: 2
@@ -110026,7 +110027,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: apple
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: apple.idle.D
     sprites_paths:
@@ -110079,6 +110079,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &725722556
 SpriteRenderer:
   serializedVersion: 2
@@ -112258,7 +112259,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -112311,6 +112311,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &730583876
 SpriteRenderer:
   serializedVersion: 2
@@ -112627,7 +112628,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -112671,6 +112671,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &735368541
 SpriteRenderer:
   serializedVersion: 2
@@ -112959,7 +112960,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: steel_door
   <orientation>k__BackingField: R
-  current_capacity: idle
   current_anim:
     name: steel_door.idle.R
     sprites_paths:
@@ -113004,6 +113004,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &736660916
 SpriteRenderer:
   serializedVersion: 2
@@ -114687,7 +114688,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -114740,6 +114740,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &753439796
 SpriteRenderer:
   serializedVersion: 2
@@ -115973,7 +115974,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -116026,6 +116026,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &760815782
 SpriteRenderer:
   serializedVersion: 2
@@ -116395,7 +116396,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -116448,6 +116448,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &767311563
 SpriteRenderer:
   serializedVersion: 2
@@ -116701,7 +116702,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: shoes
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: shoes.idle.D
     sprites_paths:
@@ -116754,6 +116754,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &769665453
 SpriteRenderer:
   serializedVersion: 2
@@ -119885,7 +119886,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -119938,6 +119938,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &776461903
 SpriteRenderer:
   serializedVersion: 2
@@ -122264,7 +122265,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -122317,6 +122317,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &790732332
 SpriteRenderer:
   serializedVersion: 2
@@ -124100,7 +124101,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -124153,6 +124153,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &797618054
 SpriteRenderer:
   serializedVersion: 2
@@ -124265,7 +124266,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -124309,6 +124309,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!114 &798166290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125730,7 +125731,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -125783,6 +125783,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &808854287
 SpriteRenderer:
   serializedVersion: 2
@@ -129445,7 +129446,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: server
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: server.idle.D
     sprites_paths:
@@ -129477,6 +129477,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &837839524
 SpriteRenderer:
   serializedVersion: 2
@@ -129584,7 +129585,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: rack_bg
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: rack_bg.idle.D
     sprites_paths:
@@ -129651,6 +129651,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &838314953
 SpriteRenderer:
   serializedVersion: 2
@@ -131287,7 +131288,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: apple
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: apple.idle.D
     sprites_paths:
@@ -131340,6 +131340,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &847867581
 SpriteRenderer:
   serializedVersion: 2
@@ -132298,7 +132299,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: bones
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: bones.idle.L
     sprites_paths:
@@ -132330,6 +132330,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &851246418
 SpriteRenderer:
   serializedVersion: 2
@@ -133043,7 +133044,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -133096,6 +133096,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &857987666
 SpriteRenderer:
   serializedVersion: 2
@@ -138006,7 +138007,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: shoes
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: shoes.idle.D
     sprites_paths:
@@ -138059,6 +138059,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &871316639
 SpriteRenderer:
   serializedVersion: 2
@@ -139842,7 +139843,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: apple
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: apple.idle.D
     sprites_paths:
@@ -139895,6 +139895,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &886816425
 SpriteRenderer:
   serializedVersion: 2
@@ -140845,7 +140846,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: server
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: server.idle.D
     sprites_paths:
@@ -140877,6 +140877,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &892749761
 SpriteRenderer:
   serializedVersion: 2
@@ -142461,7 +142462,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: blackcube
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: blackcube.idle.D
     sprites_paths:
@@ -142505,6 +142505,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &904457557
 SpriteRenderer:
   serializedVersion: 2
@@ -143017,7 +143018,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -143070,6 +143070,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &907460899
 SpriteRenderer:
   serializedVersion: 2
@@ -143338,7 +143339,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -143391,6 +143391,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &909016362
 SpriteRenderer:
   serializedVersion: 2
@@ -144289,7 +144290,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -144342,6 +144342,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &917720500
 SpriteRenderer:
   serializedVersion: 2
@@ -145481,7 +145482,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -145534,6 +145534,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &928272984
 SpriteRenderer:
   serializedVersion: 2
@@ -145972,7 +145973,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -146025,6 +146025,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &931207273
 SpriteRenderer:
   serializedVersion: 2
@@ -148948,7 +148949,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -149001,6 +149001,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &949215842
 SpriteRenderer:
   serializedVersion: 2
@@ -149670,7 +149671,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: katana
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: katana.idle.D
     sprites_paths:
@@ -149702,6 +149702,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &961300858
 SpriteRenderer:
   serializedVersion: 2
@@ -150549,7 +150550,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -150602,6 +150602,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &968456260
 SpriteRenderer:
   serializedVersion: 2
@@ -151344,7 +151345,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: server
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: server.idle.D
     sprites_paths:
@@ -151376,6 +151376,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &975519382
 SpriteRenderer:
   serializedVersion: 2
@@ -151762,7 +151763,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: bones
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: bones.idle.L
     sprites_paths:
@@ -151794,6 +151794,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &977455154
 SpriteRenderer:
   serializedVersion: 2
@@ -153078,7 +153079,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -153131,6 +153131,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &986500560
 SpriteRenderer:
   serializedVersion: 2
@@ -153540,7 +153541,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: steel_door
   <orientation>k__BackingField: R
-  current_capacity: idle
   current_anim:
     name: steel_door.idle.R
     sprites_paths:
@@ -153585,6 +153585,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &990565087
 SpriteRenderer:
   serializedVersion: 2
@@ -154113,7 +154114,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: blackcube
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: blackcube.idle.D
     sprites_paths:
@@ -154157,6 +154157,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &992381895
 SpriteRenderer:
   serializedVersion: 2
@@ -155112,7 +155113,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: apple
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: apple.idle.D
     sprites_paths:
@@ -155165,6 +155165,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1002676612
 SpriteRenderer:
   serializedVersion: 2
@@ -156642,7 +156643,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -156686,6 +156686,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!114 &1012090349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159960,7 +159961,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: blackcube
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: blackcube.idle.D
     sprites_paths:
@@ -160004,6 +160004,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1025153269
 SpriteRenderer:
   serializedVersion: 2
@@ -164868,7 +164869,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -164921,6 +164921,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1061466993
 SpriteRenderer:
   serializedVersion: 2
@@ -165573,7 +165574,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -165626,6 +165626,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1064692470
 SpriteRenderer:
   serializedVersion: 2
@@ -167629,7 +167630,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: blackcube
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: blackcube.idle.D
     sprites_paths:
@@ -167673,6 +167673,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1082331630
 SpriteRenderer:
   serializedVersion: 2
@@ -168133,7 +168134,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: blackcube
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: blackcube.idle.D
     sprites_paths:
@@ -168177,6 +168177,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1085944969
 SpriteRenderer:
   serializedVersion: 2
@@ -168744,7 +168745,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: dummy
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: dummy.idle.D
     sprites_paths:
@@ -168776,6 +168776,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1087945184
 SpriteRenderer:
   serializedVersion: 2
@@ -170138,7 +170139,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -170182,6 +170182,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!114 &1090141136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171907,7 +171908,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -171960,6 +171960,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1105117967
 SpriteRenderer:
   serializedVersion: 2
@@ -172072,7 +172073,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -172116,6 +172116,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!114 &1105853439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180584,7 +180585,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -180637,6 +180637,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1150010523
 SpriteRenderer:
   serializedVersion: 2
@@ -181790,7 +181791,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -181843,6 +181843,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1158980382
 SpriteRenderer:
   serializedVersion: 2
@@ -185529,7 +185530,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -185582,6 +185582,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1189073104
 SpriteRenderer:
   serializedVersion: 2
@@ -186459,7 +186460,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -186503,6 +186503,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!114 &1196705138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189168,7 +189169,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -189221,6 +189221,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1215095731
 SpriteRenderer:
   serializedVersion: 2
@@ -192002,7 +192003,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: blue_chest
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: blue_chest.idle.D
     sprites_paths:
@@ -192047,6 +192047,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1231912188
 SpriteRenderer:
   serializedVersion: 2
@@ -192680,7 +192681,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: rack_bg
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: rack_bg.idle.D
     sprites_paths:
@@ -192747,6 +192747,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1237735163
 SpriteRenderer:
   serializedVersion: 2
@@ -193171,7 +193172,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -193224,6 +193224,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1242675782
 SpriteRenderer:
   serializedVersion: 2
@@ -193738,7 +193739,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -193791,6 +193791,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1246847816
 SpriteRenderer:
   serializedVersion: 2
@@ -195895,7 +195896,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: apple
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: apple.idle.D
     sprites_paths:
@@ -195948,6 +195948,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1261472272
 SpriteRenderer:
   serializedVersion: 2
@@ -196243,7 +196244,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -196296,6 +196296,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1263535893
 SpriteRenderer:
   serializedVersion: 2
@@ -198325,7 +198326,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -198369,6 +198369,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1274418086
 SpriteRenderer:
   serializedVersion: 2
@@ -203208,7 +203209,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: dummy
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: dummy.idle.D
     sprites_paths:
@@ -203240,6 +203240,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1293031482
 SpriteRenderer:
   serializedVersion: 2
@@ -204925,7 +204926,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -204978,6 +204978,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1303495055
 SpriteRenderer:
   serializedVersion: 2
@@ -205844,7 +205845,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: server
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: server.idle.D
     sprites_paths:
@@ -205876,6 +205876,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1307381601
 SpriteRenderer:
   serializedVersion: 2
@@ -207081,7 +207082,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -207134,6 +207134,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1315376194
 SpriteRenderer:
   serializedVersion: 2
@@ -207511,7 +207512,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -207564,6 +207564,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1320966238
 SpriteRenderer:
   serializedVersion: 2
@@ -209525,7 +209526,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: server
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: server.idle.D
     sprites_paths:
@@ -209557,6 +209557,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1331863706
 SpriteRenderer:
   serializedVersion: 2
@@ -210128,7 +210129,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -210181,6 +210181,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1336632158
 SpriteRenderer:
   serializedVersion: 2
@@ -214383,7 +214384,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -214436,6 +214436,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1360979547
 SpriteRenderer:
   serializedVersion: 2
@@ -218637,7 +218638,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -218690,6 +218690,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1384148452
 SpriteRenderer:
   serializedVersion: 2
@@ -221498,7 +221499,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -221542,6 +221542,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1416225438
 SpriteRenderer:
   serializedVersion: 2
@@ -227180,7 +227181,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -227233,6 +227233,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1441348235
 SpriteRenderer:
   serializedVersion: 2
@@ -227870,7 +227871,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -227923,6 +227923,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1443792019
 SpriteRenderer:
   serializedVersion: 2
@@ -228209,7 +228210,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -228262,6 +228262,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1444633687
 SpriteRenderer:
   serializedVersion: 2
@@ -230715,7 +230716,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: server
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: server.idle.D
     sprites_paths:
@@ -230747,6 +230747,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1455605646
 SpriteRenderer:
   serializedVersion: 2
@@ -232881,7 +232882,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pastas
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: pastas.idle.D
     sprites_paths:
@@ -232913,6 +232913,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1466872284
 SpriteRenderer:
   serializedVersion: 2
@@ -235635,7 +235636,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: blackcube
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: blackcube.idle.D
     sprites_paths:
@@ -235679,6 +235679,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1482339289
 SpriteRenderer:
   serializedVersion: 2
@@ -236573,7 +236574,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -236626,6 +236626,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1489235068
 SpriteRenderer:
   serializedVersion: 2
@@ -237971,7 +237972,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: steel_door
   <orientation>k__BackingField: R
-  current_capacity: idle
   current_anim:
     name: steel_door.idle.R
     sprites_paths:
@@ -238016,6 +238016,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1499624633
 SpriteRenderer:
   serializedVersion: 2
@@ -239321,7 +239322,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -239374,6 +239374,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1515441996
 SpriteRenderer:
   serializedVersion: 2
@@ -239574,7 +239575,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pastas
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: pastas.idle.D
     sprites_paths:
@@ -239606,6 +239606,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1515826437
 SpriteRenderer:
   serializedVersion: 2
@@ -242510,7 +242511,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: rack_bg
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: rack_bg.idle.D
     sprites_paths:
@@ -242577,6 +242577,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1534825386
 SpriteRenderer:
   serializedVersion: 2
@@ -246816,7 +246817,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -246869,6 +246869,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1562817284
 SpriteRenderer:
   serializedVersion: 2
@@ -248401,7 +248402,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: blackcube
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: blackcube.idle.D
     sprites_paths:
@@ -248445,6 +248445,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1572708616
 SpriteRenderer:
   serializedVersion: 2
@@ -248799,7 +248800,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -248852,6 +248852,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1573962994
 SpriteRenderer:
   serializedVersion: 2
@@ -250600,7 +250601,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: apple
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: apple.idle.D
     sprites_paths:
@@ -250653,6 +250653,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1581836479
 SpriteRenderer:
   serializedVersion: 2
@@ -251197,7 +251198,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -251250,6 +251250,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1584817795
 SpriteRenderer:
   serializedVersion: 2
@@ -251986,7 +251987,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -252039,6 +252039,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1592559679
 SpriteRenderer:
   serializedVersion: 2
@@ -258343,7 +258344,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -258396,6 +258396,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1644276665
 SpriteRenderer:
   serializedVersion: 2
@@ -263133,7 +263134,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -263186,6 +263186,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1656843145
 SpriteRenderer:
   serializedVersion: 2
@@ -266507,7 +266508,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: shoes
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: shoes.idle.D
     sprites_paths:
@@ -266560,6 +266560,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1679579419
 SpriteRenderer:
   serializedVersion: 2
@@ -270284,7 +270285,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -270328,6 +270328,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1715683510
 SpriteRenderer:
   serializedVersion: 2
@@ -272162,7 +272163,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -272215,6 +272215,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1730398802
 SpriteRenderer:
   serializedVersion: 2
@@ -272400,7 +272401,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: steel_door
   <orientation>k__BackingField: R
-  current_capacity: idle
   current_anim:
     name: steel_door.idle.R
     sprites_paths:
@@ -272445,6 +272445,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1733076058
 SpriteRenderer:
   serializedVersion: 2
@@ -272922,13 +272923,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplatesManager
   capables_templates:
-  - {fileID: 1995776913879646623, guid: afa1573aa69f9114c92ccd6cdd3fbd33, type: 3}
-  - {fileID: 7629487890036740618, guid: 8d21b222d67565744a308e24fc090556, type: 3}
   - {fileID: 8940805219290677501, guid: 4a7b7d63d41b4724ba926bd2b5d087e4, type: 3}
   - {fileID: 8074454940356753118, guid: 9ea950ac9b967a1429cd2d6d303efed3, type: 3}
   - {fileID: -5260680249891615082, guid: 65dd86eb95608c64db22ca17c88b610c, type: 3}
   - {fileID: 7803903830049876761, guid: ced09aaf8c911c847beb841edd496bd2, type: 3}
   - {fileID: 7803903830049876761, guid: 129dcb0138847114096659c91552aad9, type: 3}
+  - {fileID: 8665536444718687376, guid: 6149f663a4f9d8f42a675e0072eb4f51, type: 3}
+  - {fileID: 78135847452039840, guid: 4ef1b97214bcb9248a9f93c1049f1b1d, type: 3}
+  - {fileID: 1995776913879646623, guid: afa1573aa69f9114c92ccd6cdd3fbd33, type: 3}
+  - {fileID: 6192736764969982114, guid: 55e01ebe5ae95804c8ea23c577af912b, type: 3}
+  - {fileID: 7629487890036740618, guid: 8d21b222d67565744a308e24fc090556, type: 3}
+  - {fileID: 542729204817951620, guid: d37cd7385b0279f4ba5a04ad3c2f2b50, type: 3}
+  - {fileID: -9189030586993926403, guid: ae4e8b81d912bdf46934e5b6a33f20fe, type: 3}
+  - {fileID: 898889135811878911, guid: 72ff98b9feb11da4488b823b3e35fbd3, type: 3}
   capacities_templates:
   - {fileID: 1235818638904784760, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
   save_capables_capacities_as_templates: 1
@@ -273582,7 +273589,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: rack_bg
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: rack_bg.idle.D
     sprites_paths:
@@ -273649,6 +273655,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1735019310
 SpriteRenderer:
   serializedVersion: 2
@@ -274592,7 +274599,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -274645,6 +274651,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1740179745
 SpriteRenderer:
   serializedVersion: 2
@@ -275721,7 +275728,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: server
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: server.idle.D
     sprites_paths:
@@ -275753,6 +275759,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1745432642
 SpriteRenderer:
   serializedVersion: 2
@@ -277134,7 +277141,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -277187,6 +277193,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1752118625
 SpriteRenderer:
   serializedVersion: 2
@@ -277660,7 +277667,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -277713,6 +277719,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1753418890
 SpriteRenderer:
   serializedVersion: 2
@@ -282525,7 +282532,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -282578,6 +282584,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1785417112
 SpriteRenderer:
   serializedVersion: 2
@@ -291730,7 +291737,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -291783,6 +291789,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1794686700
 SpriteRenderer:
   serializedVersion: 2
@@ -293141,7 +293148,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: blue_chest
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: blue_chest.idle.D
     sprites_paths:
@@ -293186,6 +293192,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1809205468
 SpriteRenderer:
   serializedVersion: 2
@@ -295895,7 +295902,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -295948,6 +295954,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1835335907
 SpriteRenderer:
   serializedVersion: 2
@@ -297259,7 +297266,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -297312,6 +297318,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1844816868
 SpriteRenderer:
   serializedVersion: 2
@@ -299904,7 +299911,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -299957,6 +299963,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1868436109
 SpriteRenderer:
   serializedVersion: 2
@@ -301060,7 +301067,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -301113,6 +301119,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1876287541
 SpriteRenderer:
   serializedVersion: 2
@@ -301537,7 +301544,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -301590,6 +301596,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1877277152
 SpriteRenderer:
   serializedVersion: 2
@@ -303090,7 +303097,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -303143,6 +303149,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1895284232
 SpriteRenderer:
   serializedVersion: 2
@@ -306190,7 +306197,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: katana
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: katana.idle.D
     sprites_paths:
@@ -306222,6 +306228,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1912839201
 SpriteRenderer:
   serializedVersion: 2
@@ -306816,7 +306823,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -306869,6 +306875,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1920402384
 SpriteRenderer:
   serializedVersion: 2
@@ -309019,7 +309026,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -309072,6 +309078,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1930041777
 SpriteRenderer:
   serializedVersion: 2
@@ -311067,7 +311074,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: server
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: server.idle.D
     sprites_paths:
@@ -311099,6 +311105,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1937750912
 SpriteRenderer:
   serializedVersion: 2
@@ -311649,7 +311656,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -311702,6 +311708,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1939836468
 SpriteRenderer:
   serializedVersion: 2
@@ -312980,7 +312987,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: rack_bg
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: rack_bg.idle.D
     sprites_paths:
@@ -313047,6 +313053,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1956751590
 SpriteRenderer:
   serializedVersion: 2
@@ -313507,7 +313514,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -313560,6 +313566,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1959562997
 SpriteRenderer:
   serializedVersion: 2
@@ -315033,7 +315040,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -315086,6 +315092,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1966826124
 SpriteRenderer:
   serializedVersion: 2
@@ -315695,7 +315702,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -315748,6 +315754,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1970897552
 SpriteRenderer:
   serializedVersion: 2
@@ -318388,7 +318395,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -318441,6 +318447,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &1986814869
 SpriteRenderer:
   serializedVersion: 2
@@ -323091,7 +323098,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: pckg_front
   <orientation>k__BackingField: U
-  current_capacity: idle
   current_anim:
     name: pckg_front.idle.D
     sprites_paths:
@@ -323135,6 +323141,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!114 &2023114576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -325818,7 +325825,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -325871,6 +325877,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &2032620282
 SpriteRenderer:
   serializedVersion: 2
@@ -328986,7 +328993,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -329039,6 +329045,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &2060688887
 SpriteRenderer:
   serializedVersion: 2
@@ -336579,7 +336586,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -336632,6 +336638,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &2079256632
 SpriteRenderer:
   serializedVersion: 2
@@ -337996,7 +338003,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -338049,6 +338055,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &2092862800
 SpriteRenderer:
   serializedVersion: 2
@@ -342838,7 +342845,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: katana
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: katana.idle.D
     sprites_paths:
@@ -342870,6 +342876,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &2127022397
 SpriteRenderer:
   serializedVersion: 2
@@ -343349,7 +343356,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -343402,6 +343408,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &2132704560
 SpriteRenderer:
   serializedVersion: 2
@@ -345822,7 +345829,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: empty
   <orientation>k__BackingField: D
-  current_capacity: idle
   current_anim:
     name: sphere.idle.D
     sprites_paths:
@@ -345875,6 +345881,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!212 &2146116514
 SpriteRenderer:
   serializedVersion: 2

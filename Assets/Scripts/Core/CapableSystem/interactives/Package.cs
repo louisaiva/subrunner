@@ -75,6 +75,25 @@ public class Package : Movable, Interactable, TurnableIntoItem
     {
         // we cancel the coroutine
         cancel_coroutine();
+
+        // todo HERE WE SHOULD add some random items to the package if it's empty
+        if (data.inventory != null && data.inventory.ItemsCount() == 0)
+        {
+            int random_eggs_to_add = Random.Range(1, 4);
+            for (int i=0; i<random_eggs_to_add; i++)
+            {
+                ItemData egg = CapableEngine.Instance.DuplicateTemplate("spawn_egg") as ItemData;
+                if (!data.inventory.AddItem(egg))
+                {
+                    Debug.LogError("(Package - LoadData) Failed to add egg to package inventory.");
+                    // don't uncomment this, it will throw when we will rework the ItemPoolData add item with reference check, etc
+                    // but if we comment this we will never see that it is broken, soooo leave it like this ehe :D
+                    // means fewer future debug time !!!!!!!
+                }
+            }
+        }
+
+
         base.LoadData(data);
     }
     public override void UnloadData()

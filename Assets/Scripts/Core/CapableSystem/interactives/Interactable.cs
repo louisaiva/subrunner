@@ -31,10 +31,13 @@ public interface Holdable : Onnable
     public bool IsHolding { get; set; }
 }
 
-public interface TurnableIntoItem
+public interface TurnableIntoSomething
+{
+    public DropParameters DropParameters { get; }
+}
+public interface TurnableIntoItem : TurnableIntoSomething
 {
     public ItemData ItemDataInfo { get; }
-    public DropParameters DropParameters { get; }
 }
 
 public interface Chestable : Interactable

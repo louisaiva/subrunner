@@ -377,7 +377,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
     /// </summary>
     /// <param name="base_data"></param>
     /// <returns></returns>
-    private CapableData DuplicateTemplate(string template)
+    public CapableData DuplicateTemplate(string template)
     {
         // we get the base data
         if (!templates_capables_data.ContainsKey(template))
@@ -626,7 +626,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
         // 5. SPAWN THE ITEM
         Item item = SpawnCapable(item_data) as Item;
-        if (log_item_switching) { Debug.Log($"(CapableSystem - SwitchToCorpse) Switched {capable.ID} to item {item.ID} \n - Capable data : \n{capable_data.GetDetails()} \n - Item data : \n{item_data.GetDetails()}"); }
+        if (log_item_switching) { Debug.Log($"(CapableSystem - Turning) Switched {capable.ID} to item {item.ID} \n - Capable data : \n{capable_data.GetDetails()} \n - Item data : \n{item_data.GetDetails()}"); }
         item.AnimPlayer.Play(anim_capacity_to_play);
 
         // 4. DESPAWN THE CAPABLE
@@ -635,7 +635,42 @@ public class CapableEngine : BSOD_System<CapableEngine>
         // 6. TRANSFER FORCES
         item.SetForces(forces);
     }
+    public void TurnToSomething(Capable capable, string template_for_new_capable)
+    {
+        // we check that this is a TurnableIntoSomething capable
+        TurnableIntoSomething turnable = capable as TurnableIntoSomething;
 
+        // 1. DROP ALL ITEMS
+        if (capable.Inventory != null && capable.Inventory.Count > 0)
+        {
+            // we make the capable drop all its items and we wait for it to be done
+            capable.DropAllItems(turnable?.DropParameters);
+        }
+
+        // 2. SAVE CAPABLE DATA
+        capable.SaveDynamicData();
+        CapableData capable_data = capable.data;
+        List<Force> forces = new List<Force>((capable as Movable)?.GetForces() ?? new List<Force>()); // duplicate the forces
+
+        // 3. CREATE THE SOMETHING DATA
+        CapableData new_capable_data = DuplicateTemplate(template_for_new_capable);
+        if (new_capable_data == null)
+        {
+            if (log_item_switching || log_spawning) { Debug.LogError($"(CapableSystem - Turning) Failed to switch {capable.ID} to {template_for_new_capable}. Template data not found."); }
+            return;
+        }
+        new_capable_data.position = capable_data.Position;
+
+        // 4. SPAWN THE SOMETHING
+        Capable new_capable = SpawnCapable(new_capable_data);
+        if (log_item_switching) { Debug.Log($"(CapableSystem - Turning) Switched {capable.ID} to something {new_capable.ID} \n - Capable data : \n{capable_data.GetDetails()} \n - Something data : \n{new_capable_data.GetDetails()}"); }
+
+        // 5. DESPAWN THE CAPABLE
+        DespawnCapable(capable_data);
+
+        // 6. TRANSFER FORCES
+        if (new_capable is Movable movable) { movable.SetForces(forces); }
+    }
 
 
 
