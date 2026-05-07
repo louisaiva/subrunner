@@ -699,7 +699,7 @@ public class RoomEngine : BSOD_System<RoomEngine>
             return;
         }
         RoomData data = rooms_data[id];
-        Room room = RoomBank.Instance.Load(data);
+        RoomBank.Instance.Load(data);
         loaded_rooms_data.Add(id, data);
         if (log_loading) { Debug.Log("(RoomEngine) Loaded " + id); }
 
@@ -731,12 +731,6 @@ public class RoomEngine : BSOD_System<RoomEngine>
         loaded_rooms_data.Remove(id);
         if (log_loading) { Debug.Log("(RoomEngine) Unloaded " + id); }
     }
-    /* private void unload_all_rooms_instantanely()
-    {
-        foreach (RoomData data in loaded_rooms_data.Values) { RoomBank.Instance.Unload(data); }
-        loaded_rooms_data.Clear();
-    } */
-
 
 
 
@@ -899,59 +893,6 @@ public class RoomEngine : BSOD_System<RoomEngine>
 
         if (LazyInstance.log_grab) { Debug.Log($"(RoomEngine) Total Capables grabbed : {added_capable_ids.Count}\n{log}"); }
     }
-    /* private static void make_level_grab_capables(Level level, ref List<Capable> overlapping, ref List<string> added_ids, ref string log)
-    {
-        log += $" - Level {level.name} :\n";
-        Room[] rooms = level.GetStaticRooms();
-        foreach (Room room in rooms)
-        {
-            log += $"   - Room {room.name} :\n";
-            overlapping.Clear();
-            overlapping.AddRange(room.GetStaticOverlappingCapables());
-
-            // . clear the capables & movables ids room data
-            room.data.capables_ids = new List<string>();
-            room.data.movables_ids = new List<string>();
-
-            // we try to add the capable ids to the room data
-            foreach (Capable capable in overlapping)
-            {
-                string capable_id = capable.GetStaticID();
-                if (added_ids.Contains(capable_id)) { continue; } // already added somewhere
-
-                // . verify not Perso
-                if (capable is Perso) { continue; }
-
-                // . verify if not grabbed item
-                if (capable is Item item && item.GetStaticGrabbed()) { continue; }
-
-                // . check if movable or capable
-                if (capable is Movable)
-                {
-                    if (room.data.movables_ids == null) { room.data.movables_ids = new List<string>(); }
-                    if (!room.data.movables_ids.Contains(capable_id)) { room.data.movables_ids.Add(capable_id); }
-                    log += $"     - Movable '{capable_id}'\n";
-                }
-                else
-                {
-                    if (room.data.capables_ids == null) { room.data.capables_ids = new List<string>(); }
-                    if (!room.data.capables_ids.Contains(capable_id)) { room.data.capables_ids.Add(capable_id); }
-                    log += $"     - Capable '{capable_id}'\n";
-                }
-
-                // . memorize we added this capable to a room
-                added_ids.Add(capable_id);
-            }
-            log += "\n";
-
-            // mark the room data as dirty so it gets saved
-#if UNITY_EDITOR
-            EditorUtility.SetDirty(room);
-#endif
-        }
-        log += "\n";
-    } */
-
 
 }
 

@@ -669,11 +669,16 @@ public class AnimBank : MonoBehaviour
 
 }
 
-[Serializable]
-public class Anim
+/// <summary>
+/// this Anim class store ONE animation and so it has a skin, a capacity & an orientation.
+/// One instance of this class is stored in the big shared AnimBank.anims dict per skin/capacity/orientation.
+/// THIS MEANS THAT IF 2 ZOMBIES PLAY THE SAME attack.D ANIM AT THE SAME TIME THEY WILL SHARE THE SAME
+/// ANIM INSTANCE, so we sould NOT store in this class any capable-specific related things (speed for example)
+/// </summary>
+[Serializable] public class Anim
 {
+
     // stocke UNE animation
-    // ainsi que quelques parametres utiles au AnimHandler
     public string name; // nom de l'animation au format : skin.capacity.orientation
     public string skin { get { return name.Split('.')[0]; } }
     public string capacity { get { return name.Split('.')[1]; } }
@@ -689,8 +694,8 @@ public class Anim
 
     // parametres utiles à l'AnimPlayer
     public bool loop = true; // si c'est false, l'AnimPlayer revient sur l'animation par defaut
-    public float speed = 1f; // vitesse de l'animation
-    public bool flipX = false; // flip le sprite renderer si besoin
+    public float speed = 1f; // vitesse de l'animation // ! todo : remove this since it is capable-instance based
+    public bool flipX = false; // flip le sprite renderer si besoin // ! todo : remove this since it is capable-instance based
 
     public Anim() { }
     public Anim(string name, string[] sprites_paths, float[] sprites_durations)
@@ -788,7 +793,17 @@ public class Anim
         }
         return duration;
     }
-
+    public float GetDurationUntilFrame(int frame_index) { return GetBaseDurationUntilFrame(frame_index) / speed; }
+    public float GetBaseDurationUntilFrame(int frame_index)
+    {
+        // same as up but without the speed
+        float duration = 0f;
+        for (int i = 0; i < frame_index && i < sprites_durations.Length; i++)
+        {
+            duration += sprites_durations[i];
+        }
+        return duration;
+    }
 }
 
 

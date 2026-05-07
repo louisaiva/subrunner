@@ -15,6 +15,7 @@ public class DoorEngine : MonoBehaviour
     public bool log_accessible_rooms = false;
     public bool log_visibility_update = false;
     public bool log_callbacks = false;
+    public bool log_visibility = false;
 
     // LOAD / UNLOAD WORLD DATA
     public async Task LoadWorldData(string world_id, bool log)
@@ -212,6 +213,7 @@ public class DoorEngine : MonoBehaviour
 
 
     // ROOM SHOW / HIDE
+    
     /// <summary>
     /// these 2 methods are NOT supposed to modify visible_rooms list.
     /// visible_rooms is the only truth, and so it must be checked BEFORE
@@ -229,7 +231,12 @@ public class DoorEngine : MonoBehaviour
         List<CapableData> capables_data = CapableEngine.Instance.GetCapablesDataFromIDs(room_data.capables_ids.Concat(room_data.movables_ids).ToList());
         foreach (CapableData data in capables_data)
         {
-            if (data.Capable == null || data.Capable.AnimPlayer == null) { continue; }
+            if (data.Capable == null || data.Capable.AnimPlayer == null)
+            {
+                if (log_visibility) { Debug.LogWarning($"(DoorEngine) Capable {data.id} in room {room_data.id} {(data.Capable != null ? "has null AnimPlayer" : "is not loaded, we don't show it")}"); }
+                continue;
+            }
+            if (log_visibility) { Debug.Log($"(DoorEngine) Showing capable {data.id} in room {room_data.id}"); }
             data.Capable.AnimPlayer.Show();
         }
 

@@ -114,7 +114,7 @@ public class SleepCapacity : Capacity
     public IEnumerator LickFeet()
     {
         // if we are still playing wake_up animation, we wait for it to finish
-        while (cat.AnimPlayer.current_capacity == "wake_up") { yield return null; }
+        while (AnimPlayer.IsShowing("wake_up")) { yield return null; }
 
         // we lick our foot for the number of licks to do
         while (licking_to_do > 0)
@@ -122,13 +122,13 @@ public class SleepCapacity : Capacity
             if (log) { Debug.Log("(SleepCapacity) " + cat.name + " is licking its foot, licks left (including this one): " + licking_to_do); }
 
             // we play the lick foot animation
-            Anim anim = cat.AnimPlayer.Play("lick_foot");
+            Anim anim = AnimPlayer.Play("lick_foot");
             if (anim == null)
             {
                 if (log) { Debug.LogWarning("(SleepCapacity) " + cat.name + " could not play lick foot animation"); }
                 yield break;
             }
-            while (cat.AnimPlayer.current_capacity == "lick_foot") { yield return null; }
+            while (AnimPlayer.IsShowing("lick_foot")) { yield return null; }
             // yield return new WaitForSeconds(anim.GetDuration());
 
             // we decrease the number of licks to do

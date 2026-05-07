@@ -56,7 +56,7 @@ public class AnimPlayer : MonoBehaviour
 
 
     [Header("Current Animation")]
-    public string current_capacity = "";
+    private string current_capacity = "";
     public Anim current_anim = null;
     private float frame_timer = 0f;
     private int current_frame = -1; // if -1, the animation is over
@@ -78,6 +78,12 @@ public class AnimPlayer : MonoBehaviour
     public bool log_frames = false;
     public bool log_pile = false;
 
+
+    ///
+    //
+    /// AWAKE & START
+    //
+    ///
 
     // AWAKE & START
     private void Awake()
@@ -104,6 +110,16 @@ public class AnimPlayer : MonoBehaviour
         if (!CapableBank.Instance.HasCapable(Capable)) { AddToPile("idle"); }
     }
 
+
+
+
+
+
+    ///
+    //
+    /// MAIN PLAY / STOP METHODS
+    //
+    ///
 
 
     // PLAY ANIMATION
@@ -239,6 +255,49 @@ public class AnimPlayer : MonoBehaviour
         return anim;
      }
 
+    // STOP ANIMATION
+    public void StopPlaying(string capacity) { StopPlaying(capacity, false); }
+    public void StopPlaying(string capacity, bool dont_stop_if_currently_playing = false)
+    {
+
+        // we get the anim capa prio
+        AnimCapacityPriority priority = getAnimCapacityPriority(capacity);
+        if (priority == null)
+        {
+            if (log_pile) { Debug.LogWarning("(AnimPlayer - StopPlaying) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
+            return;
+        }
+
+        // we make it stop playing
+        priority.capacity_playing = "";
+
+        // we check if we have to brutally stop the current playing animation
+        if (dont_stop_if_currently_playing || current_capacity != capacity) { return; }
+        playNextAnim();
+
+    }
+    public void ClearPile()
+    {
+        // we remove ALL animations from the pile
+        foreach (AnimCapacityPriority priority in anim_capacity_priorities)
+        {
+            priority.capacity_playing = "";
+        }
+
+        // we play the idle animation
+        Play("idle");
+    }
+
+
+
+
+
+
+    ///
+    //
+    /// UPDATE, LOW LEVEL PLAYING & PILE MANAGEMENT
+    //
+    ///
 
     // PLAY ANIM LOW LEVEL
     private void Update()
@@ -306,59 +365,6 @@ public class AnimPlayer : MonoBehaviour
         if (log_advanced) { Debug.Log("(AnimPlayer) Playing " + anim.name + " at frame " + frame + " flipX: " + anim.flipX); }
     }
 
-    // STOP ANIMATION
-    public void StopPlaying(string capacity) { StopPlaying(capacity, false); }
-    public void StopPlaying(string capacity, bool dont_stop_if_currently_playing = false)
-    {
-
-        // we get the anim capa prio
-        AnimCapacityPriority priority = getAnimCapacityPriority(capacity);
-        if (priority == null)
-        {
-            if (log_pile) { Debug.LogWarning("(AnimPlayer - StopPlaying) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
-            return;
-        }
-
-        // we make it stop playing
-        priority.capacity_playing = "";
-
-        // we check if we have to brutally stop the current playing animation
-        if (dont_stop_if_currently_playing || current_capacity != capacity) { return; }
-        playNextAnim();
-
-    }
-    public void ClearPile()
-    {
-        // we remove ALL animations from the pile
-        foreach (AnimCapacityPriority priority in anim_capacity_priorities)
-        {
-            priority.capacity_playing = "";
-        }
-
-        // we play the idle animation
-        Play("idle");
-    }
-    
-    /// <summary>
-    /// returns true if the capacity is somewhere inside
-    /// the animcapacity priority list. If not found it returns false.
-    /// This means that the method could return true even if the current_capacity
-    /// is not the one your looking for, because the capacity can be playing
-    /// but another capacity is playing on top of it so it's hidden beneath.
-    /// </summary>
-    /// <param name="capacity"></param>
-    /// <returns></returns>
-    public bool IsPlaying(string capacity)
-    {
-        AnimCapacityPriority priority = getAnimCapacityPriority(capacity);
-        if (priority == null)
-        {
-            if (log_pile) { Debug.LogWarning("(AnimPlayer - IsPlaying) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
-            return false;
-        }
-
-        return priority.capacity_playing == capacity;
-    }
 
     // PILE MANAGEMENT
     private AnimCapacityPriority getAnimCapacityPriority(string capacity)
@@ -398,8 +404,81 @@ public class AnimPlayer : MonoBehaviour
             if (priority.capacity_playing.StartsWith("idle")) { StopPlaying(priority.capacity_playing); }
         }
     }
-    
 
+
+
+
+
+
+    ///
+    //
+    /// GETTERS
+    //
+    ///
+
+    /// <summary>
+    /// returns true if the capacity is actually
+    /// the main playing animation. This means
+    /// it only returns true if current_capacity is set
+    /// and equals to capacity
+    /// </summary>
+    /// <param name="capacity"></param>
+    /// <returns></returns>
+    public bool IsShowing(string capacity)
+    {
+        if (string.IsNullOrEmpty(current_capacity)) { return false; }
+        return current_capacity == capacity;
+    }
+
+
+    /// <summary>
+    /// returns true if the capacity is somewhere inside
+    /// the animcapacity priority list. If not found it returns false.
+    /// This means that the method could return true even if the AnimPlayer.current_capacity
+    /// is not the one passed in parameter, because the capacity can be playing
+    /// but another capacity is playing on top of it so it's hidden beneath.
+    /// </summary>
+    /// <param name="capacity"></param>
+    /// <returns></returns>
+    public bool IsPlaying(string capacity)
+    {
+        AnimCapacityPriority priority = getAnimCapacityPriority(capacity);
+        if (priority == null)
+        {
+            if (log_pile) { Debug.LogWarning("(AnimPlayer - IsPlaying) The capacity " + capacity + " doesn't exist in the anim_capacity_priorities list"); }
+            return false;
+        }
+
+        return priority.capacity_playing == capacity;
+    }
+
+
+    /// <summary>
+    /// returns the current percentage done
+    /// of the current animation. If no animation is playing, it returns -1f.
+    /// </summary>
+    /// <returns>the completed percentage of the current animation playing. equals to -1f if no anim is playing</returns>
+    public float GetCurrentAnimPercentDone()
+    {
+        // we check if we are playing an animation
+        if (current_anim == null || current_frame == -1) { return -1f; }
+
+        // we get the total duration of the animation
+        float anim_duration = current_anim.GetDuration();
+        float time_played = current_anim.GetDurationUntilFrame(current_frame) + frame_timer;
+        return time_played / anim_duration;
+    }
+
+
+
+
+
+
+    ///
+    //
+    /// SPECIFIC EDGE CASE METHODS
+    //
+    ///
 
     // ORIENTATION & FLIP
     public void SetOrientation(Vector2 look_at)
@@ -490,7 +569,7 @@ public class AnimPlayer : MonoBehaviour
         if (!anim_layers.Contains(anim_layer)) { return; }
         anim_layers.Remove(anim_layer);
     }
-    public void DisableRenderer()
+    /* public void DisableRenderer()
     {
         Renderer.enabled = false;
 
@@ -509,7 +588,7 @@ public class AnimPlayer : MonoBehaviour
         {
             anim_layers[i].EnableRenderer();
         }
-    }
+    } */
     public List<AnimLayer> GetAnimLayers()
     {
         return new List<AnimLayer>(anim_layers);
@@ -520,33 +599,50 @@ public class AnimPlayer : MonoBehaviour
     }
 
 
+    // RENDERER VISIBILITY
     public event Action OnHidden = delegate { };
     public event Action OnShown = delegate { };
+    [Header("Visibility (debug only)")]
+    [SerializeField] private bool visible_on = true; // RTO
     public void Hide()
     {
+        if (!visible_on) { return; }
+
         // we set the material Visible bool to false
-        material.SetKeyword(visibleKeyword, false);
+        Renderer.material.SetKeyword(visibleKeyword, false);
         OnHidden?.Invoke();
+        visible_on = false;
         if (log) { Debug.Log("(AnimPlayer) " + Capable.ID + " is now hidden"); }
     }
     public void Show()
     {
+        if (visible_on) { return; }
+
         // we set the material Visible bool to true
-        material.SetKeyword(visibleKeyword, true);
+        Renderer.material.SetKeyword(visibleKeyword, true);
         OnShown?.Invoke();
+        visible_on = true;
         if (log) { Debug.Log("(AnimPlayer) " + Capable.ID + " is now visible"); }
     }
     public bool IsVisible()
     {
-        return material.IsKeywordEnabled(visibleKeyword);
+        return Renderer.material.IsKeywordEnabled(visibleKeyword);
     }
 
 
 
 
 
+
+
+    ///
+    //
+    /// DATA MANAGEMENT
+    //
+    ///
+
+
     // LOAD DATA
-    private Material material;
     private LocalKeyword visibleKeyword;
     public void LoadPlayerData(AnimPlayerData data)
     {
@@ -569,12 +665,15 @@ public class AnimPlayer : MonoBehaviour
         anim_capacity_priorities = data.anim_capacity_priorities;
 
         // we load the sr data
-        if (CapableBank.Instance.LayerBank.log_anim_layers) { Debug.Log($"(AnimPlayer) {data.skin}'s data default material is {data.material_path}"); }
+        if (CapableBank.Instance.LayerBank.log_anim_player) { Debug.Log($"(AnimPlayer) {data.skin}'s data default material is {data.material_path}"); }
         Renderer.material = Resources.Load<Material>(data.material_path);
-        material = Renderer.material;
-        visibleKeyword = new LocalKeyword(material.shader, "_VISIBLE");
         Renderer.sortingLayerID = data.sorting_layer_id;
         Renderer.sortingOrder = data.order_in_layer;
+
+        // and hide it by default
+        visibleKeyword = new LocalKeyword(Renderer.material.shader, "_VISIBLE");
+        visible_on = true;
+        Hide();
 
         // and parameters
         never_flip = data.never_flip;

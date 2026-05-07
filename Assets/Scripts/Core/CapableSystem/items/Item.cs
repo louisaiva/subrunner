@@ -256,26 +256,26 @@ public class Item : Movable, EndlessInteractable
         transform.localScale = Vector3.one;
         if (!Placed && Grabbed)
         {
-            AnimPlayer.DisableRenderer();
+            AnimPlayer.Hide();
             if (Inventory != null)
             {
                 List<Item> items = Inventory.Items;
                 for (int i = 0; i < items.Count; i++)
                 {
-                    items[i].AnimPlayer.DisableRenderer();
+                    items[i].AnimPlayer.Hide();
                 }
             }
         }
         else
         {
-            AnimPlayer.EnableRenderer();
+            AnimPlayer.Show();
             if (Inventory != null)
             {
                 List<Item> items = Inventory.Items;
                 for (int i = 0; i < items.Count; i++)
                 {
                     if (!items[i].Placed) { continue; }
-                    items[i].AnimPlayer.EnableRenderer();
+                    items[i].AnimPlayer.Show();
                 }
             }
         }

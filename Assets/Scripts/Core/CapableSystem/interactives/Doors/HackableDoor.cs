@@ -66,7 +66,7 @@ public class HackableDoor : Door, Lockable
         AnimPlayer.StopPlaying("idle_locked");
 
         // we wait for the unlock animation to stop
-        while (AnimPlayer.current_capacity == "unlock") { await System.Threading.Tasks.Task.Yield(); }
+        while (AnimPlayer.IsShowing("unlock")) { await System.Threading.Tasks.Task.Yield(); }
 
         // we open the door
         open();

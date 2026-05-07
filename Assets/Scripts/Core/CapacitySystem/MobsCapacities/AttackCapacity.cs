@@ -93,7 +93,7 @@ public class AttackCapacity : CooldownCapacity
         bearer = capable;
         anim_player = bearer.AnimPlayer;
         sr = bearer.AnimPlayer.Renderer;
-        if (anim_player.current_capacity == "attack") { return; } // we check if we are already attacking
+        if (anim_player.IsShowing("attack")) { return; } // we check if we are already attacking
 
         // we update damage value if capable is Perso
         if (bearer is Perso perso) { damage = perso.skillManager.GetSkillValue("stat:damage"); }
@@ -130,7 +130,7 @@ public class AttackCapacity : CooldownCapacity
 
         // we check if we are attacking
         if (!IsAttacking) { return; }
-        if (bearer.AnimPlayer.current_capacity != "attack") { return; }
+        if (!bearer.AnimPlayer.IsShowing("attack")) { return; }
 
         // we check if the pc is enabled
         if (!pc.enabled) { return; }
@@ -190,7 +190,7 @@ public class AttackCapacity : CooldownCapacity
         base.Update();
 
         if (!IsAttacking) { return; }
-        if (!anim_player.current_capacity.Equals("attack"))
+        if (!anim_player.IsShowing("attack"))
         {
             // checks if we are still attacking & the animation is not the attack animation anymore
             stop_attack();

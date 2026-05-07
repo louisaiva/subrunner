@@ -602,39 +602,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
     public void OnItemDropped(Item item) { OnCapableAppear?.Invoke(item.data); }
     public void OnItemGrabbed(Item item) { OnCapableDisappear?.Invoke(item.data); }
 
-    // SWITCH CAPABLE TO CORPSE
-    /* public async void SwitchToCorpse(Capable capable)
-    {
-        // 1. DROP ALL ITEMS
-        if (capable.Inventory != null && capable.Inventory.Count > 0)
-        {
-            // we make the capable drop all its items and we wait for it to be done
-            await capable.DropAllItems();
-        }
-
-        // 2. SAVE CAPABLE DATA
-        capable.SaveDynamicData();
-        CapableData capable_data = capable.data;
-        List<Force> forces = new List<Force>((capable as Movable)?.GetForces() ?? new List<Force>()); // duplicate the forces
-
-        // 3. SPAWN THE CORPSE DATA
-        CorpseData corpse_data = DuplicateTemplate("corpse") as CorpseData;
-        corpse_data.InitFromCapable(capable_data); // we transfer some of the capable data to the corpse data (ex : position, orientation, tag, skin if we have anim_data, etc)
-        
-        // todo here we should put some meat items inside corpse data inventory so they auto load when spawning the corpse
-        // and with the right meat reference
-
-        // 5. SPAWN THE CORPSE
-        Corpse corpse = SpawnCapable(corpse_data) as Corpse;
-        if (log_item_switching) { Debug.Log($"(CapableSystem - SwitchToCorpse) Switched {capable.name} to corpse {corpse.name} \n - Capable data : \n{capable_data.GetDetails()} \n - Corpse data : \n{corpse_data.GetDetails()}"); }
-        corpse.AnimPlayer.Play("die");
-
-        // 4. DESPAWN THE CAPABLE
-        DespawnCapable(capable_data);
-
-        // 6. TRANSFER FORCES
-        corpse.SetForces(forces);
-    } */
+    // TURN CAPABLE TO ITEM
     public void TurnToItem(Capable capable, string item_template, string anim_capacity_to_play="idle")
     {
         // we check that this is a TurnableIntoItem capable
@@ -655,7 +623,6 @@ public class CapableEngine : BSOD_System<CapableEngine>
         // 3. SPAWN THE ITEM DATA
         ItemData item_data = DuplicateTemplate(item_template) as ItemData;
         item_data.InitFromCapable(capable_data, turnable?.ItemDataInfo); // we transfer some of the capable data to the item data (ex : position, orientation, tag, skin if we have anim_data, etc)
-
 
         // 5. SPAWN THE ITEM
         Item item = SpawnCapable(item_data) as Item;

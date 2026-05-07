@@ -18,15 +18,16 @@ public class Package : Movable, Interactable, TurnableIntoItem
     public static DropParameters PackageDropParameters = new DropParameters()
     {
         random_direction = true,
-        drop_magnitude = 0.1f,
+        drop_magnitude = 0.01f,
         lock_magnitude = false,
-        offset_drop = new Vector2(0f, 0.03f)
+        offset_drop = new Vector2(0f, 0.05f)
     };
     public DropParameters DropParameters { get => PackageDropParameters; }
 
     private bool is_turning_to_item = false;
 
     // ON INTERACT
+    private float drop_animation_percentage = 0.4f; // the percentage of the animation duration at which we drop the items
     public void OnInteract(Capable interactor)
     {
         if (is_turning_to_item) { return; }
@@ -37,12 +38,29 @@ public class Package : Movable, Interactable, TurnableIntoItem
     {
         is_turning_to_item = true;
 
-        // disable the hover
+        // disable the hover & feet
         if (TryGetCapacity(out HoverCapacity hover)) { hover.gameObject.SetActive(false); }
+        AddEffect(Effect.SemiGhost, timetolive:15f);
 
         // we play anim
         AnimPlayer.Play("interact");
-        while (AnimPlayer.IsPlaying("interact")) { yield return null; }
+        float percentage = 0f;
+        bool dropped_items = false;
+        while (AnimPlayer.IsShowing("interact"))
+        {
+            if (dropped_items) { yield return null; continue; }
+
+            // we check the percentage
+            percentage = AnimPlayer.GetCurrentAnimPercentDone();
+            if (percentage >= drop_animation_percentage)
+            {
+                // we drop the items
+                this.DropAllItems(parameters: DropParameters);
+                dropped_items = true;
+            }
+
+            yield return null;
+        }
         CapableEngine.Instance.TurnToItem(this, "package_leftover", "idle_open");
         is_turning_to_item = false;
     }

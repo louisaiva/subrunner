@@ -3,9 +3,7 @@ using UnityEngine;
 
 public class OnOffCapacity : Capacity
 {
-
-    // public float powering_on_duration = 0.5f;
-    // public float powering_off_duration = 0.5f;
+    
 
     [Header("On Off Animations")]
     [SerializeField] private string powering_on_animation = "onnin";
@@ -47,12 +45,12 @@ public class OnOffCapacity : Capacity
         // on allume l'ordi
         Onnable.IsOn = false;
         Onnable.IsMoving = true;
-        Capable.AnimPlayer.Play(powering_on_animation);
-        Capable.AnimPlayer.AddToPile(idle_on_animation);
-        if (idle_off_animation != "idle") { Capable.AnimPlayer.StopPlaying(idle_off_animation); }
+        AnimPlayer.Play(powering_on_animation);
+        AnimPlayer.AddToPile(idle_on_animation);
+        if (idle_off_animation != "idle") { AnimPlayer.StopPlaying(idle_off_animation); }
 
         // on attend la fin de l'anim
-        while (Capable.AnimPlayer.current_capacity == powering_on_animation) { yield return null; }
+        while (AnimPlayer.IsShowing(powering_on_animation)) { yield return null; }
 
         // on allume l'ordi
         Onnable.IsOn = true;
@@ -69,12 +67,12 @@ public class OnOffCapacity : Capacity
         // on éteint l'ordi
         Onnable.IsOn = true;
         Onnable.IsMoving = true;
-        Capable.AnimPlayer.Play(powering_off_animation);
-        Capable.AnimPlayer.AddToPile(idle_off_animation);
-        if (idle_on_animation != "idle") { Capable.AnimPlayer.StopPlaying(idle_on_animation); }
+        AnimPlayer.Play(powering_off_animation);
+        AnimPlayer.AddToPile(idle_off_animation);
+        if (idle_on_animation != "idle") { AnimPlayer.StopPlaying(idle_on_animation); }
 
         // on attend la fin de l'anim
-        while (Capable.AnimPlayer.current_capacity == powering_off_animation) { yield return null; }
+        while (AnimPlayer.IsShowing(powering_off_animation)) { yield return null; }
 
         // on eteint l'ordi
         Onnable.IsOn = false;
@@ -82,46 +80,4 @@ public class OnOffCapacity : Capacity
 
         if (log) { Debug.Log("(Computer) " + Capable.name + " powered off !!"); }
     }
-
-    /* protected virtual void open()
-    {
-        // on supprime les invokes de l'ouverture si il y en a
-        close_capacity?.CancelCloseInvoke();
-
-        // on ouvre le coffre
-        (capable as Openable).Onnable.IsMoving = true;
-
-        // on joue l'animation
-        capable.anim_player.Play("open", duration_override: opening_duration);
-        Invoke("success_open", opening_duration);
-
-        // on fait les vérifications pour les portes
-        if (capable is Door)
-        {
-            // on reset le layer à fg & order in layer à 1
-            capable.AnimPlayer.Renderer.sortingLayerName = "fg";
-            capable.AnimPlayer.Renderer.sortingOrder = 1;
-        }
-
-        if (debug) { Debug.Log(capable.name + " is opening..."); }
-    }
-    protected virtual void success_open()
-    {
-        // on ouvre le coffre
-        (capable as Openable).is_open = true;
-        (capable as Openable).Onnable.IsMoving = false;
-
-        // on joue l'animation
-        capable.anim_player.AddToPile("idle_open");
-
-        // on fait les vérifications pour les portes
-        if (capable is Door)
-        {
-            // on reset le layer à main & order in layer a -1
-            capable.AnimPlayer.Renderer.sortingLayerName = "main";
-            capable.AnimPlayer.Renderer.sortingOrder = -1;
-        }
-
-        if (debug) { Debug.Log(capable.name + " is open !"); }
-    } */
 }

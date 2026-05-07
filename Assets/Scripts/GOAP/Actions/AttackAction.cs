@@ -145,7 +145,7 @@ namespace subrunner.goap
         public override IActionRunState Perform(IMonoAgent agent, Data data, IActionContext context)
         {
             // wait for the animation to finish
-            if (data.ia.AnimPlayer.current_capacity == "attack") { return ActionRunState.Continue; }
+            if (data.ia.AnimPlayer.IsShowing("attack")) { return ActionRunState.Continue; }
 
             // we check if we have a last attack result for this IA to stop watching the attack
             if (last_attack_results.TryGetValue(data.ia, out AttackActionResult last_result))

@@ -6,7 +6,7 @@ public class ServerRack : Computer, Chestable
 {
     public string ChestType { get; } = "server";
 
-    protected override void Start()
+    /* protected override void Start()
     {
         base.Start();
 
@@ -22,7 +22,7 @@ public class ServerRack : Computer, Chestable
             Transform server = servers_parent.GetChild(i);
             server.gameObject.SetActive(Random.value > 0.5f);
         }
-    }
+    } */
 
 
     // ON INTERACT / HOVER LOST

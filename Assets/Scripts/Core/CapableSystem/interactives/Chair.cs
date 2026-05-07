@@ -42,7 +42,7 @@ public class Chair : Capable, EndlessInteractable
         // we wait for a small amount of time & then stop playing turn
         yield return new WaitForSeconds(duration);
         AnimPlayer.StopPlaying("turn");
-        while (AnimPlayer.current_capacity != capacity) { yield return null; }
+        while (!AnimPlayer.IsShowing(capacity)) { yield return null; }
 
         // we set the orientation
         Orient(chosen_orientation);

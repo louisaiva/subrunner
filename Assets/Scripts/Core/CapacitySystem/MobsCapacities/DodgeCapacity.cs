@@ -15,52 +15,51 @@ public class DodgeCapacity : CooldownCapacity
     [SerializeField] private float dodge_duration = default;
 
     // USE
-    public override void Use(Capable capable)
+    public override void Use(Capable user)
     {
         // we check if we are already dodging
-        if (capable.AnimPlayer.current_capacity == "dodge") { return; }
+        if (user.AnimPlayer.IsShowing("dodge")) { return; }
 
         // we play the animation
-        Anim anim = capable.AnimPlayer.Play("dodge", duration_override: dodge_duration);
-        if (log) { Debug.Log("(DodgeCapacity) dodge launched for " + capable.name + ", anim found is " + (anim != null ? anim.name : "null")); }
+        Anim anim = user.AnimPlayer.Play("dodge", duration_override: dodge_duration);
+        if (log) { Debug.Log("(DodgeCapacity) dodge launched for " + user.ID + ", anim found is " + (anim != null ? anim.name : "null")); }
         if (anim == null) { return; }
 
         // we play the sound
-        AudioEngine.Instance.Play("dodge", capable);
+        AudioEngine.Instance.Play("dodge", user);
 
         // we start the cooldown for the time of the animation
         float duration = anim.GetDuration();
         startCooldown(duration);
 
         // we gives the invincible & immobile effects if Being
-        if (capable.HasCapacity<HealthCapacity>())
+        if (user.HasCapacity<HealthCapacity>())
         {
             // we can't take damage for the animation duration
-            capable.AddEffect(Effect.Invincible, duration);
+            user.AddEffect(Effect.Invincible, duration);
             // we can't move for a short time
-            capable.AddEffect(Effect.Immobile, duration / 2f);
+            user.AddEffect(Effect.Immobile, duration / 2f);
             // we can't move for a short time
-            capable.AddEffect(Effect.SemiGhost, duration);
+            user.AddEffect(Effect.SemiGhost, duration);
 
-            if (log) { Debug.Log("(DodgeCapacity) dodge added invincible & immobile effects to " + capable.name); }
+            if (log) { Debug.Log("(DodgeCapacity) dodge added invincible & immobile effects to " + user.ID); }
         }
 
         // check if the capable is a Movable_ to add them a force
-        if (capable is Movable)
+        if (user is Movable movable)
         {
             // add a dodge Force to the movable
-            Movable movable = (Movable)capable;
             dodge_force.direction = movable.Orientation;
             dodge_force.magnitude = dodge_magnitude;
             // dodge_force.CalculateMagnitudeMax(dodge_distance, dodge_duration);
             movable.AddForce(dodge_force);
 
-            if (log) { Debug.Log("(DodgeCapacity) dodge added dodge force to " + capable.name); }
+            if (log) { Debug.Log("(DodgeCapacity) dodge added dodge force to " + user.ID); }
         }
 
         // log
         // Debug.Log(transform.parent.name + " just dodged");
-        if (log) { Debug.Log($"(DodgeCapacity) {capable.name} used dodge for {duration} seconds"); }
+        if (log) { Debug.Log($"(DodgeCapacity) {user.ID} used dodge for {duration} seconds"); }
     }
 
 
