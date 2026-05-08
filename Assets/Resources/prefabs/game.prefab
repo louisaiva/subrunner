@@ -173,50 +173,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d95724a9d669f1a4581e7ca05da6b06f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &724622875849889696
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5141048904952260210}
-  - component: {fileID: 7018032064625905633}
-  m_Layer: 23
-  m_Name: nobody_agent_type
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5141048904952260210
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 724622875849889696}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 934573574474036947}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7018032064625905633
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 724622875849889696}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78448a2b07f12de4c8d84a6bc46d0aef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &735636583209525812
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,7 +208,6 @@ Transform:
   - {fileID: 6685198820599656672}
   - {fileID: 1478579215402578871}
   - {fileID: 3552693348846279321}
-  - {fileID: 5141048904952260210}
   - {fileID: 2356989553353723250}
   - {fileID: 5014761727663062268}
   m_Father: {fileID: 8466870086659227338}
@@ -273,13 +228,14 @@ MonoBehaviour:
   agentTypeConfigFactories:
   - {fileID: 1464628417142453961}
   - {fileID: 1718403630454878758}
-  - {fileID: 7018032064625905633}
-  - {fileID: 6446474614370862984}
   - {fileID: 1926807372716761766}
   - {fileID: 4743392949167436401}
   - {fileID: 533064837233644574}
   - {fileID: 5704533046771458960}
   - {fileID: 2380373136977387751}
+  - {fileID: 6891086296172980495}
+  - {fileID: 5188519605673357783}
+  - {fileID: 7743078840864688459}
 --- !u!114 &4638387620946702657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -317,6 +273,8 @@ GameObject:
   - component: {fileID: 533064837233644574}
   - component: {fileID: 5704533046771458960}
   - component: {fileID: 2380373136977387751}
+  - component: {fileID: 5188519605673357783}
+  - component: {fileID: 7743078840864688459}
   m_Layer: 23
   m_Name: types
   m_TagString: Untagged
@@ -387,6 +345,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30ca286468bc8264d9558c71bc5c324a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::subrunner.goap.GofriTypeFactory
+--- !u!114 &5188519605673357783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 780003408685879306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0f676ebcf07e724a973e44789f94c08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::subrunner.goap.QwinTypeFactory
+--- !u!114 &7743078840864688459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 780003408685879306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07e2299aca1e4d8449629ecd4163c57b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::subrunner.goap.NobyTypeFactory
 --- !u!1 &2767827881693983402
 GameObject:
   m_ObjectHideFlags: 0
@@ -449,7 +431,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2356989553353723250}
-  - component: {fileID: 6446474614370862984}
+  - component: {fileID: 6891086296172980495}
   m_Layer: 23
   m_Name: np_c_agent_type
   m_TagString: Untagged
@@ -472,7 +454,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 934573574474036947}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6446474614370862984
+--- !u!114 &6891086296172980495
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -481,9 +463,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 5218386995141567643}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 661974ada00d2a04db985cca0603ecb8, type: 3}
+  m_Script: {fileID: 11500000, guid: e766ae6a143252342885502688129f90, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::subrunner.goap.NPCTypeFactory
 --- !u!1 &5491688213654781337
 GameObject:
   m_ObjectHideFlags: 0
@@ -5682,8 +5664,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 0.5
-  life_material: {fileID: 2100000, guid: dfe680286ace9da448dbd78443330be3, type: 2}
-  xp_material: {fileID: 2100000, guid: 209c9c287bba5dc49ac771e4420eaecf, type: 2}
   generate_continuously: 0
   generator_position: {x: -47, y: -9, z: 0}
   generator_strengh: 1

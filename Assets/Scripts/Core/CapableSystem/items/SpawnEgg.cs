@@ -48,13 +48,13 @@ public class SpawnEgg : Item, TurnableIntoSomething
         
         if (!string.IsNullOrEmpty(entity_to_spawn))
         {
-            Debug.Log($"(SpawnEgg) --- EGG IS SPAWNING --- '{entity_to_spawn}' (from spawn egg '{ID}')");
+            if (log) { Debug.Log($"(SpawnEgg) --- EGG IS SPAWNING --- '{entity_to_spawn}' (from spawn egg '{ID}')"); }
             CapableEngine.Instance.TurnToSomething(this, entity_to_spawn);
         }
         else
         {
             int xp = Mathf.CeilToInt(xp_to_spawn);
-            Debug.Log($"(SpawnEgg) --- EGG IS GIVING --- '{xp}' XP (from spawn egg '{ID}')");
+            if (log) { Debug.Log($"(SpawnEgg) --- EGG IS GIVING --- '{xp}' XP (from spawn egg '{ID}')"); }
             XPProvider.Instance.EmitXP(xp, this.transform.position + Vector3.up * 0.5f);
             CapableEngine.Instance.DespawnCapable(data);
         }

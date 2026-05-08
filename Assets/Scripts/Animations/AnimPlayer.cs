@@ -767,17 +767,25 @@ public class AnimPlayer : MonoBehaviour
     }
     private string get_material_path(SpriteRenderer sr)
     {
+        bool log_materials = true;
+        if (CapableBank.Instance != null)
+        {
+            try { log_materials = CapableBank.Instance.LayerBank.log_anim_player; }
+            catch (Exception) { log_materials = true; }
+        }
+
+
         if (sr == null || sr.sharedMaterial == null)
         {
-            if (CapableBank.Instance?.LayerBank.log_anim_player ?? true) { Debug.LogWarning($"(AnimPlayer - {Capable.ID}) The SpriteRenderer or its material is null, returning empty material path"); }
+            if (log_materials) { Debug.LogWarning($"(AnimPlayer - {Capable.ID}) The SpriteRenderer or its material is null, returning empty material path"); }
             return "";
         }
         #if UNITY_EDITOR
         string path = AssetDatabase.GetAssetPath(sr.sharedMaterial);
-        if (CapableBank.Instance?.LayerBank.log_anim_player ?? true) { Debug.Log($"(AnimPlayer - {Capable.ID}) get_material_path(UNITYEDITOR) found a material at path: {path}"); }
+        if (log_materials) { Debug.Log($"(AnimPlayer - {Capable.ID}) get_material_path(UNITYEDITOR) found a material at path: {path}"); }
         #else
         string path = "";
-        if (CapableBank.Instance?.LayerBank.log_anim_player ?? true) { Debug.Log($"(AnimPlayer - {Capable.ID}) get_material_path(NO EDITOR) found no material path ://"); }
+        if (log_materials) { Debug.Log($"(AnimPlayer - {Capable.ID}) get_material_path(NO EDITOR) found no material path ://"); }
         #endif
 
         // we need to remove ".mat" from path

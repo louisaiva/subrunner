@@ -32,6 +32,8 @@ namespace subrunner.goap
 
             if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.Log($"(AttackAction) {data.ia.data.id} is starting AttackAction on target {data.Target}"); }
 
+            data.ia.GetCapacity<WalkCapacity>()?.EnableRun(); // we make sure we chase the target by running
+
             data.attack_capacity = data.ia.GetCapacity<AttackCapacity>();
             // data.CapableTarget = data.Target is CapableTarget target ? target.Capable : null;
             if (data.CapableTarget == null || !data.CapableTarget.IsValid())
@@ -186,6 +188,8 @@ namespace subrunner.goap
         {
             base.Stop(agent, data);
 
+            data.ia.GetCapacity<WalkCapacity>()?.DisableRun();
+            
             // we check if we have a last attack result for this IA to stop watching the attack
             if (last_attack_results.TryGetValue(data.ia, out AttackActionResult last_result))
             {

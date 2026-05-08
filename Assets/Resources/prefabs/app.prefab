@@ -713,6 +713,11 @@ MonoBehaviour:
   - {fileID: -1780049344, guid: c5193426e0a6c7f4bb6594249d874579, type: 3}
   - {fileID: -87145597, guid: c5193426e0a6c7f4bb6594249d874579, type: 3}
   - {fileID: -1569344912, guid: c5193426e0a6c7f4bb6594249d874579, type: 3}
+  - {fileID: -1821865114, guid: 83d20de3bc490bc43aa8d2d7f451dc97, type: 3}
+  - {fileID: -893942184, guid: 83d20de3bc490bc43aa8d2d7f451dc97, type: 3}
+  - {fileID: -129852262, guid: 83d20de3bc490bc43aa8d2d7f451dc97, type: 3}
+  - {fileID: 1241098219, guid: 83d20de3bc490bc43aa8d2d7f451dc97, type: 3}
+  - {fileID: 979033039, guid: 83d20de3bc490bc43aa8d2d7f451dc97, type: 3}
   IF_gamepad_path: spritesheets/ui/inputs/ui_interactables
   IF_kb_path: spritesheets/ui/inputs/input_kb_feedback
   joystick_feedback_icons:
@@ -1247,7 +1252,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsQuitting: 0
   LoadedSceneCount: 0
-  prototype: new translator, static level saving
+  prototype: spawning packages
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320

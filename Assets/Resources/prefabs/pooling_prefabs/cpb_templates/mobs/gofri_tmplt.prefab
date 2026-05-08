@@ -228,7 +228,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: gofri
   <orientation>k__BackingField: D
-  current_capacity: 
   current_anim:
     name: 
     sprites_paths: []
@@ -291,6 +290,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!1 &6094739574941988477
 GameObject:
   m_ObjectHideFlags: 0
@@ -784,7 +784,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6468213256878280315, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
       propertyPath: max_walk_speed
-      value: 8
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6468213256878280315, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
       propertyPath: delay_between_footsteps

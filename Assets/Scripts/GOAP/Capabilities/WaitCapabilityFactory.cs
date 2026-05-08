@@ -16,6 +16,9 @@ namespace subrunner.goap
             builder.AddAction<WaitAction>()
                 .AddEffect<IsWaiting>(EffectType.Increase);
 
+            builder.AddTargetSensor<WaitTargetSensor>()
+                .SetTarget<WaitTarget>();
+
             return builder.Build();
         }
     }

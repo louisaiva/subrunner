@@ -122416,6 +122416,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: extract_json_on_load
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -272926,8 +272930,10 @@ MonoBehaviour:
   - {fileID: 8940805219290677501, guid: 4a7b7d63d41b4724ba926bd2b5d087e4, type: 3}
   - {fileID: 8074454940356753118, guid: 9ea950ac9b967a1429cd2d6d303efed3, type: 3}
   - {fileID: -5260680249891615082, guid: 65dd86eb95608c64db22ca17c88b610c, type: 3}
-  - {fileID: 7803903830049876761, guid: ced09aaf8c911c847beb841edd496bd2, type: 3}
-  - {fileID: 7803903830049876761, guid: 129dcb0138847114096659c91552aad9, type: 3}
+  - {fileID: 6067341419625358920, guid: d9b20669646046c43bdd78c1b43fd1f2, type: 3}
+  - {fileID: 8231662095987882839, guid: 11f9660e72c9ad34596f8074f9e4dca4, type: 3}
+  - {fileID: -4664043396583567553, guid: e5b395bf746ec07439e2137df13cbbc5, type: 3}
+  - {fileID: 1124466000399361642, guid: fc29a806443626f45ab728787ee66656, type: 3}
   - {fileID: 8665536444718687376, guid: 6149f663a4f9d8f42a675e0072eb4f51, type: 3}
   - {fileID: 78135847452039840, guid: 4ef1b97214bcb9248a9f93c1049f1b1d, type: 3}
   - {fileID: 1995776913879646623, guid: afa1573aa69f9114c92ccd6cdd3fbd33, type: 3}
@@ -272936,6 +272942,8 @@ MonoBehaviour:
   - {fileID: 542729204817951620, guid: d37cd7385b0279f4ba5a04ad3c2f2b50, type: 3}
   - {fileID: -9189030586993926403, guid: ae4e8b81d912bdf46934e5b6a33f20fe, type: 3}
   - {fileID: 898889135811878911, guid: 72ff98b9feb11da4488b823b3e35fbd3, type: 3}
+  - {fileID: 5556932218411784815, guid: 129dcb0138847114096659c91552aad9, type: 3}
+  - {fileID: 8100417847447987613, guid: ced09aaf8c911c847beb841edd496bd2, type: 3}
   capacities_templates:
   - {fileID: 1235818638904784760, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
   save_capables_capacities_as_templates: 1
