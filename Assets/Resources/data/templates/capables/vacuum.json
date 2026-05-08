@@ -1,0 +1,111 @@
+﻿{
+    "<id>k__BackingField": "vacuum",
+    "kind": "Vacuum",
+    "position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 24,
+    "tag": "Item",
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "vacuum",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            }
+        ],
+        "current_capacity": "",
+        "material_path": "materials/objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "never_flip": false,
+        "layers": [
+            {
+                "skin": "vacuum_ground",
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "local_rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "material_path": "materials/objects",
+                "sorting_layer_id": -31225397,
+                "order_in_layer": 10,
+                "never_flip": false,
+                "follow_duration": true
+            }
+        ],
+        "local_position": {
+            "x": 0.0,
+            "y": 0.0
+        }
+    },
+    "inventory": {
+        "item_pools_data": [],
+        "item_type": 0
+    },
+    "feet_data": {
+        "box_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 25,
+                "used_for_pathfinding": false,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.11750661581754685
+                },
+                "size": {
+                    "x": 0.30750134587287905,
+                    "y": 0.07986341416835785
+                }
+            }
+        ],
+        "circle_colliders": []
+    },
+    "capacities_ids": [
+        "hover"
+    ],
+    "effects": [],
+    "effects_ttl": [],
+    "reference": "tool:vacuum",
+    "color": {
+        "r": 1.0,
+        "g": 0.9215686321258545,
+        "b": 0.01568627543747425,
+        "a": 1.0
+    },
+    "max_qty": 1,
+    "item_description": "this vacuum can help aspirate a lot of trash items in no time ! buy it now it costs only 10000000000000 $ !!",
+    "is_grabbed": false
+}

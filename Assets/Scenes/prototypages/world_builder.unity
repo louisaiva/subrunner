@@ -122416,6 +122416,38 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: extract_json_on_load
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: skin_variants.Array.size
+      value: 37
+      objectReference: {fileID: 0}
+    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: skin_variants.Array.data[36].base_skin
+      value: vacuum
+      objectReference: {fileID: 0}
+    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: skin_variants.Array.data[36].variant_name
+      value: vacuum_ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: skin_variants.Array.data[36].base_spritesheets.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: 'skin_variants.Array.data[36].base_spritesheets.Array.data[0]'
+      value: objects/interactives/living_room/vacuum_aspi
+      objectReference: {fileID: 0}
+    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: skin_variants.Array.data[36].variant_spritesheets.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
+      propertyPath: 'skin_variants.Array.data[36].variant_spritesheets.Array.data[0]'
+      value: objects/interactives/living_room/vacuum_ground
+      objectReference: {fileID: 0}
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -272940,6 +272972,7 @@ MonoBehaviour:
   - {fileID: 898889135811878911, guid: 72ff98b9feb11da4488b823b3e35fbd3, type: 3}
   - {fileID: 5556932218411784815, guid: 129dcb0138847114096659c91552aad9, type: 3}
   - {fileID: 8100417847447987613, guid: ced09aaf8c911c847beb841edd496bd2, type: 3}
+  - {fileID: 3771096402560910632, guid: 467dcf0162f5e6b46a356d40b89ec2dd, type: 3}
   capacities_templates:
   - {fileID: 1235818638904784760, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
   save_capables_capacities_as_templates: 1

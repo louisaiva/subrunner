@@ -692,6 +692,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
         {
             unloading_queue.Remove(id);
             Capable capable = CapableBank.Instance.GetLoadedCapable(id);
+
             if (log_loading) { Debug.Log("(CapableEngine) Already loaded " + id); }
             return capable;
         }
@@ -700,7 +701,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
         if (loading_queue.Contains(id)) { loading_queue.Remove(id); }
 
         // and we finally load it
-        return load_capable(id);
+        return load_capable(id, duplicate_if_template: true);
     }
 
     /// <summary>
@@ -737,10 +738,20 @@ public class CapableEngine : BSOD_System<CapableEngine>
             loading_queue.RemoveAt(0);
         }
     }
-    private Capable load_capable(string id)
+    private Capable load_capable(string id, bool duplicate_if_template = false)
     {
         if (!world_capables_data.ContainsKey(id))
         {
+            if (duplicate_if_template)
+            {
+                // we check if it's a template, if yes we duplicate it and load the duplicate
+                if (templates_capables_data.ContainsKey(id))
+                {
+                    CapableData new_data = DuplicateTemplate(id);
+                    return load_capable(new_data);
+                }
+            }
+
             if (!hide_log_no_data_found) { Debug.LogWarning("(CapableSystem - Load) Capable data not found for id: " + id); }
             return null;
         }
