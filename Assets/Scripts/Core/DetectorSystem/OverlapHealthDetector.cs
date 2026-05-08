@@ -59,6 +59,9 @@ public class OverlapHealthDetector : MonoBehaviour, HealthDetector
             // and that it's alive
             if (!health.Alive) { continue; }
 
+            // and ensure it is not us
+            if (capable.data.id == ia_id) { continue; }
+
             // exclude friendly healths
             string skin = capable.Skin;
             if (sdata.friendly_skins.Contains(skin)) { continue; }

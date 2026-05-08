@@ -182,7 +182,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: zombo
   <orientation>k__BackingField: D
-  current_capacity: 
   current_anim:
     name: 
     sprites_paths: []
@@ -225,11 +224,13 @@ MonoBehaviour:
     - die
     lock_orientation: 1
     one_shot: 0
+  never_flip: 0
   log: 0
   log_orientation: 0
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  visible_on: 1
 --- !u!50 &8817564043264294159
 Rigidbody2D:
   serializedVersion: 5
@@ -284,6 +285,7 @@ MonoBehaviour:
       material_path: 
       sorting_layer_id: 0
       order_in_layer: 0
+      never_flip: 0
       layers: []
       local_position: {x: 0, y: 0}
     inventory:
@@ -597,11 +599,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6468213256878280315, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
       propertyPath: max_run_speed
-      value: 2
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 6468213256878280315, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
       propertyPath: max_walk_speed
-      value: 1
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 6468213256878280315, guid: a94cb59baaeab5e46b579a648c17538d, type: 3}
       propertyPath: data.<id>k__BackingField
