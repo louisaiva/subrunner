@@ -10,26 +10,9 @@ public class Level : MonoBehaviour
     public List<NavMeshData> loaded_navmeshes;
     public string ID { get { return GetStaticID(); } }
 
-    // LOAD NAV MESHES
-    public void LoadNavMeshesPath()
-    {
-        if (data == null || data.navmesh_data_paths == null) { return; }
-        loaded_navmeshes = new List<NavMeshData>();
-        foreach (string path in data.navmesh_data_paths)
-        {
-            NavMeshData navMeshData = Resources.Load<NavMeshData>(path);
-            if (navMeshData == null) { Debug.LogWarning($"(Level) Could not load navmesh data at path '{path}' for level '{data.id}'"); continue; }
-            
-            loaded_navmeshes.Add(navMeshData);
-        }
-    }
-
     // LOAD UNLOAD
     public void Load()
     {
-        // we load the navmeshes into the navmesh for this level
-        NavMeshBuilder.Instance.LoadLevelNavMeshData(this.loaded_navmeshes);
-
         // for now we are a dummy we only tell the RoomSystem to
         // load all the rooms based on their data ids
         RoomEngine.Instance?.LoadRooms(data.rooms_ids.ToArray());
@@ -39,33 +22,6 @@ public class Level : MonoBehaviour
     {
         // same shit
         RoomEngine.Instance?.UnloadRooms(data.rooms_ids.ToArray());
-    }
-
-    // SET STATIC DATA
-    public void AddNavMeshPath(string path)
-    {
-        if (data == null || data.navmesh_data_paths == null) { return; }
-
-        // we remove Assets/Resources/ and .asset from the path to get the resource path to load it later
-        path = path.Replace("Assets/Resources/", "").Replace(".asset", "");
-
-        if (data.navmesh_data_paths.Contains(path)) { return; }
-        data.navmesh_data_paths.Add(path);
-
-        // mark as dirty to save the data
-        #if UNITY_EDITOR
-        UnityEditor.EditorUtility.SetDirty(this);
-        #endif
-    }
-    public void ClearNavMeshPaths()
-    {
-        if (data == null || data.navmesh_data_paths == null) { return; }
-        data.navmesh_data_paths.Clear();
-        
-        // mark as dirty to save the data
-        #if UNITY_EDITOR
-        UnityEditor.EditorUtility.SetDirty(this);
-        #endif
     }
 
     // GET STATIC DATA
@@ -84,8 +40,7 @@ public class Level : MonoBehaviour
         {
             // set base data things
             id = GetStaticID(),
-            rooms_ids = get_static_rooms_ids(),
-            navmesh_data_paths = data != null ? data.navmesh_data_paths : new List<string>()
+            rooms_ids = get_static_rooms_ids()
         };
 
         return new_data;
@@ -125,11 +80,15 @@ public class Level : MonoBehaviour
         if (data.rooms_ids == null) { data.rooms_ids = new List<string>(); }
         if (!data.rooms_ids.Contains(room_id)) { data.rooms_ids.Add(room_id); }
     }
-    public Bounds GetStaticBounds()
+    public Bounds GetStaticBounds(bool verbose = false)
     {
         // we get all the rooms in the children
         Room[] rooms = GetComponentsInChildren<Room>(includeInactive: true);
-        if (rooms.Length == 0) { return new Bounds(); }
+        if (rooms.Length == 0)
+        {
+            if (verbose) { Debug.LogWarning("(Level) No rooms found in level '" + name + "'. Returning empty bounds."); }
+            return new Bounds();
+        }
 
         // we get the colliders of all the rooms
         float min_x = float.MaxValue;
@@ -149,6 +108,7 @@ public class Level : MonoBehaviour
 
             // Debug.Log($"(Level) Room '{rooms[i].name}' bounds : {colliderBounds}, current level bounds : min_x={min_x}, max_x={max_x}, min_y={min_y}, max_y={max_y}");
         }
+        if (verbose) { Debug.Log($"(Level) Level '{name}' static bounds calculated from rooms : min_x={min_x}, max_x={max_x}, min_y={min_y}, max_y={max_y}"); }
         return new Bounds(new Vector3((min_x + max_x) / 2, (min_y + max_y) / 2, 0), new Vector3(max_x - min_x, max_y - min_y, 0));
     }
     public Capable[] GetStaticCapables() { return GetComponentsInChildren<Capable>(includeInactive: true); }

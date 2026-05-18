@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
@@ -124,7 +125,7 @@ public class LevelTranslator : MonoBehaviour
 
     // TRANSLATION
     // todo : denest this into mult methods
-    public async void Translate(BuiltLevelData built_level)
+    public async Task Translate(BuiltLevelData built_level)
     {
         string world_id = built_level.world;
         string level_id = built_level.level;
@@ -132,7 +133,7 @@ public class LevelTranslator : MonoBehaviour
         if (log) { Debug.Log($"(LevelTranslator) translating schematics of level {level_id} (world : {world_id}) into an AIO Level ready to save"); }
 
         // get target level to save into
-        Level level = SaveEngine.AIO_Loader.LoadAIO_Level(world_id, level_id);
+        Level level = await SaveEngine.AIO_Loader.LoadAIO_Level_NoWorldLoaded(world_id, level_id);
         if (log_translate_extended) { Debug.Log($"(LevelTranslator) AIO Level loaded for translation"); }
 
         // get the rooms
@@ -210,8 +211,8 @@ public class LevelTranslator : MonoBehaviour
 
 
         // now we can build the navmesh
-        if (log_translate_extended) { Debug.Log($"(LevelTranslator) Building navmesh for level"); }
-        NavMeshBuilder.Instance.BuildNavMeshImmediateForLevel(level);
+        // if (log_translate_extended) { Debug.Log($"(LevelTranslator) Building navmesh for level"); }
+        // NavMeshBuilder.Instance.BuildNavMeshImmediateForLevel(level);
 
         // we can then make rooms grab their capables
         if (log_translate_extended) { Debug.Log($"(LevelTranslator) Making rooms grab capables"); }
@@ -224,45 +225,6 @@ public class LevelTranslator : MonoBehaviour
         if (log) { Debug.Log($"(LevelTranslator) Level translated successfully"); }
         OnLevelTranslated?.Invoke(level);
     }
-    public void Translate2(BuiltLevelData built_level)
-    {
-        string world_id = built_level.world;
-        string level_id = built_level.level;
-
-        if (log) { Debug.Log($"(LevelTranslator) translating schematics of level {level_id} (world : {world_id}) into AIO Level ready to save"); }
-
-        // get target level to save into
-        // Level level = find_target_level();
-        Level level = SaveEngine.AIO_Loader.LoadAIO_Level(world_id, level_id);
-
-
-
-        List<Room> level_rooms = new List<Room>(level.GetStaticRooms());
-        // clear the placed doors
-        doors_placed.Clear();
-
-        // we create each room in the level and assign tilemaps to them
-        List<Room> rooms = new List<Room>();
-        foreach (WorldRoomVisualizer room_visu in built_level.Rooms)
-        {
-            Room room = find_room(room_visu.name, level_rooms, level);
-
-            // we assign collider to the room
-            room.RoomCollider.SetPath(0, room_visu.PolygonCollider.points);
-
-            // we assign tilemaps to the room
-            if (!built_level.Tilemaps.TryGetValue(room_visu.name, out Dictionary<string, Tilemap> tilemaps)) { Debug.LogWarning($"(LevelTranslator) no tilemaps found for room {room_visu.name}"); continue; }
-            apply_tilemaps(room, tilemaps);
-
-            // we assign the doors and lights to the room
-            // create_or_apply_doors(room, room.transform.Find("Doors"), room_visu.Doors, ref existing_doors);
-            find_or_create_light(room, room_visu.Lights);
-
-            // if add_roomgraph_neighbour_node is true, we add a node for each neighbour of the room in the roomgraph
-            // if (add_roomgraph_neighbour_node) { Instantiate(roomgraph_node_prefab, room.transform); }
-        }
-    }
-
 
     // TILEMAPS 
     private void apply_tilemaps(Room room, Dictionary<string, Tilemap> tilemaps)

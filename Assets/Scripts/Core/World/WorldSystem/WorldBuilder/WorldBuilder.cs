@@ -124,7 +124,7 @@ public class WorldBuilder : MonoBehaviour
         if (log_callbacks) { Debug.Log($"(WorldBuilder) Level '{built_data.level}' built, starting translation"); }
         build_status[built_data.level] = LevelBuildStatus.Translating;
         save_status[built_data.level] = LevelSaveStatus.SaveRequested;
-        LevelTranslator.Translate(built_data);
+        _= LevelTranslator.Translate(built_data);
     }
     private void on_level_translated(Level level)
     {
@@ -143,7 +143,7 @@ public class WorldBuilder : MonoBehaviour
     public async Task ClearCache()
     {
         // we clear all potentials AIO leftovers
-        await SaveEngine.AIO_Loader.ClearCache();
+        await SaveEngine.AIO_Loader.ClearCache_NoWorldLoaded();
 
         build_status.Clear();
         save_status.Clear();

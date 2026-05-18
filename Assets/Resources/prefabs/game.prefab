@@ -527,7 +527,6 @@ GameObject:
   - component: {fileID: 7067669588219812867}
   - component: {fileID: 5680882237522360214}
   - component: {fileID: 3117844331737764809}
-  - component: {fileID: 2823759425825546407}
   m_Layer: 0
   m_Name: pathfinder_manager
   m_TagString: Untagged
@@ -653,23 +652,6 @@ MonoBehaviour:
   m_UseMeshPrefab: {fileID: 0}
   m_CompressBounds: 0
   m_OverrideVector: {x: 1, y: 1, z: 1}
---- !u!114 &2823759425825546407
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5634746178764748898}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f417cfe53b6d6f6429a96ae574d2cf9e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  surfaces:
-  - {fileID: 5680882237522360214}
-  - {fileID: 5427939901150469199}
-  log: 1
-  hide_log_saving: 0
 --- !u!1 &6134360729676712856
 GameObject:
   m_ObjectHideFlags: 0

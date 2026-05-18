@@ -545,6 +545,9 @@ public class RoomEngine : BSOD_System<RoomEngine>
         if (log_ticks) { Debug.Log(log_tick); }
     }
     
+    public void StartTicking() { ticking = true; }
+    public void StopTicking() { ticking = false; }
+
     // get rooms candidates for capable
     private void get_room_candidates_from_position(string capable_id, ref List<RoomData> room_candidates)
     {
@@ -708,19 +711,19 @@ public class RoomEngine : BSOD_System<RoomEngine>
     }
 
     // UNLOAD ROOMS
-    public void UnloadAllRooms() => unloadRooms(loaded_rooms_data.Keys);
-    public void UnloadRooms(string[] rooms_ids)
+    public async Task UnloadAllRooms() => await unloadRooms(loaded_rooms_data.Keys);
+    public async Task UnloadRooms(string[] rooms_ids)
     {
-        unloadRooms(rooms_ids);
+        await unloadRooms(rooms_ids);
     }
-    private async void unloadRooms(ICollection<string> rooms_ids)
+    private async Task unloadRooms(ICollection<string> rooms_ids)
     {
         foreach (string id in rooms_ids)
         {
             unload_room(id);
 
             // we wait for X frames
-            for (int i = 0; i < frames_between_loading_rooms; i++) { await System.Threading.Tasks.Task.Yield(); }
+            for (int i = 0; i < frames_between_loading_rooms; i++) { await Task.Yield(); }
         }
     }
     private void unload_room(string id)

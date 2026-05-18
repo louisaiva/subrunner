@@ -24,7 +24,7 @@ public class ColliderCapacity : Capacity
                 Collider2D new_collider = ColliderBank.Instance.LoadCollider(collider_data, this.transform);
                 if (new_collider == null) { continue; }
                 box_colliders.Add(new_collider as BoxCollider2D);
-                if (collider_data.used_for_pathfinding)
+                if (collider_data.UsedForPathfinding)
                 {
                     new_collider.isTrigger = !WorldBuilder.IsWorking;
                 }
@@ -39,7 +39,7 @@ public class ColliderCapacity : Capacity
                 Collider2D new_collider = ColliderBank.Instance.LoadCollider(collider_data, this.transform);
                 if (new_collider == null) { continue; }
                 circles_colliders.Add(new_collider as CircleCollider2D);
-                if (collider_data.used_for_pathfinding)
+                if (collider_data.UsedForPathfinding)
                 {
                     new_collider.isTrigger = !WorldBuilder.IsWorking;
                 }

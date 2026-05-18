@@ -126,7 +126,7 @@ public class WorldManager : MonoBehaviour
 
             // we load the world data from the json file in the world folder
             string world_data_json_path = Path.Combine(world_folder, "world_data.json");
-            string json = AppManager.LoadJsonFromPersistentDataPath(world_data_json_path);
+            string json = AppManager.LoadJsonFromPersistentDataPath(world_data_json_path, FileNotFound.DontLog);
             if (string.IsNullOrEmpty(json))
             {
                 if (!hide_files_not_found) { Debug.LogWarning($"(WorldManager) Failed to load world data for world_id: {world_id} from path: {world_data_json_path}"); }

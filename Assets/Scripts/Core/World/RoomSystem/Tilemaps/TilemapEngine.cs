@@ -104,19 +104,8 @@ public class TilemapEngine : MonoBehaviour
         // we load the tilebases used in data
         load_tilebases(data);
 
-        // we check if we already have the tilemaps for this room
-        RoomTilemaps room_tmps;
-        room_tilemaps.TryGetValue(data.id, out room_tmps);
-        if (room_tmps != null)
-        {
-            room_tmps.Build(data, tilebases_used);
-            if (log_building) { Debug.Log($"(TilemapEngine) Built aio tilemaps for room: {data.id}"); }
-            return room_tmps;
-        }
-        
-        // we don't have the tilemaps for this room, we create them as AIO
-        room_tmps = new RoomTilemaps(data, room);
-        room_tilemaps[data.id] = room_tmps;
+        // we create a new RoomTilemaps with AIO Constructor, and build it
+        RoomTilemaps room_tmps = new RoomTilemaps(data, room);
         room_tmps.Build(data, tilebases_used);
         if (log_building) { Debug.Log($"(TilemapEngine) Created & Built aio tilemaps for room: {data.id}"); }
         return room_tmps;

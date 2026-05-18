@@ -616,6 +616,13 @@ MonoBehaviour:
     base_spritesheets:
     - beings/boss/gofri/gofri_face
     keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: vacuum_ground
+    variant_spritesheets:
+    - objects/interactives/living_room/vacuum_ground
+    base_skin: vacuum
+    base_spritesheets:
+    - objects/interactives/living_room/vacuum_aspi
+    keep_base_anim_if_spritesheet_not_found: 0
   log: 0
   log_LAFAC: 0
   log_variant_awake: 0
@@ -1252,7 +1259,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsQuitting: 0
   LoadedSceneCount: 0
-  prototype: spawning packages
+  prototype: LevelNavBaker is the new NavMeshBuilder
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320

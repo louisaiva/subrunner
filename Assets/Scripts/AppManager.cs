@@ -204,12 +204,16 @@ public class AppManager : MonoBehaviour
         }
         return System.IO.File.ReadAllText(json_path);
     }
-    public static string LoadJsonFromPersistentDataPath(string json_path)
+    public static string LoadJsonFromPersistentDataPath(string json_path, FileNotFound log_type = FileNotFound.Log)
     {
         string path = Path.Combine(Application.persistentDataPath, json_path);
         if (!System.IO.File.Exists(path))
         {
-            Debug.LogWarning($"(AppManager) Failed to load json from persistent data path: {path} because the file was not found.");
+            if (log_type == FileNotFound.DontLog) { return null; }
+            string log = $"(AppManager) Failed to load json from persistent data path: {path} because the file was not found.";
+            if (log_type == FileNotFound.LogWarning) { Debug.LogWarning(log); }
+            else if (log_type == FileNotFound.LogError) { Debug.LogError(log); }
+            else if (log_type == FileNotFound.Log) { Debug.Log(log); }
             return null;
         }
         return System.IO.File.ReadAllText(path);
@@ -234,4 +238,12 @@ public class AppManager : MonoBehaviour
         System.IO.File.WriteAllText(json_path, json);
         if (log) { Debug.Log($"(AppManager) Saved json to {world_id} world folder: {json_path}\n{json}"); }
     }
+}
+
+public enum FileNotFound
+{
+    DontLog,
+    Log,
+    LogWarning,
+    LogError,
 }

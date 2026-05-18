@@ -43,14 +43,11 @@ public interface IData
         }
     }
 
-    // navmesh data
-    public List<string> navmesh_data_paths;
 
     public string GetDetails()
     {
         string details = $"Level {id} :\n";
         details += $"  - rooms : {rooms_ids.Count} rooms\n  -{string.Join("\n  -", rooms_ids)}\n";
-        details += $"  - navmesh data paths : {navmesh_data_paths.Count} paths\n  -{string.Join("\n  -", navmesh_data_paths)}\n";
         return details;
     }
 }

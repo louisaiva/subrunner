@@ -20,12 +20,17 @@ public class LightsEngine : MonoBehaviour
     ///
 
 
-    public void LoadLights(List<LightData> lights_data, string room_id, Transform parent = null)
+    public void LoadLights(List<LightData> lights_data, string room_id)
     {
         if (lights_data == null) { return; }
-        foreach (var light_data in lights_data) { LoadLight(light_data, room_id, parent); }
+        foreach (var light_data in lights_data) { LoadLight(light_data, room_id); }
     }
-    public Light2D LoadLight(LightData data, string room_id, Transform parent = null)
+    public void LoadLights_AIO(List<LightData> lights_data, string room_id, Transform parent = null)
+    {
+        if (lights_data == null) { return; }
+        foreach (var light_data in lights_data) { LoadLight(light_data, room_id, parent, add_to_cache: false); }
+    }
+    public Light2D LoadLight(LightData data, string room_id, Transform parent = null, bool add_to_cache = true)
     {
         if (!room_lights.ContainsKey(room_id)) { room_lights[room_id] = new Dictionary<Vector2, Light2D>(); }
         if (room_lights[room_id].TryGetValue(data.position, out Light2D existing_light)) { return existing_light; }
@@ -37,7 +42,7 @@ public class LightsEngine : MonoBehaviour
         new_light.pointLightInnerRadius = data.radius.x;
         new_light.pointLightOuterRadius = data.radius.y;
         new_light.falloffIntensity = data.falloff;
-        room_lights[room_id][data.position] = new_light;
+        if (add_to_cache) { room_lights[room_id][data.position] = new_light; }
         return new_light;
     }
 

@@ -45,6 +45,7 @@ public class HackableNavigator : MonoBehaviour
     [SerializeField] private bool log = false;
     [SerializeField] private bool log_update = false;
     [SerializeField] private bool log_enabling = false;
+    [SerializeField] private bool log_material_switching = false;
 
     // START
     void Start()
@@ -72,7 +73,7 @@ public class HackableNavigator : MonoBehaviour
     }
     private string update_connector(ConnectCapacity target)
     {
-        string logg = "(VulnerableNavigator) Updating vulnerable : " + target.Capable.name + " --> ";
+        string logg = "(VulnerableNavigator) Updating vulnerable : " + target.Capable.ID + " --> ";
 
 
         // check if we can't connect to the vulnerable
@@ -108,12 +109,13 @@ public class HackableNavigator : MonoBehaviour
         // we switch the current target
         if (targeted_connector != null) { unselect_target(); }
         targeted_connector = target.gameObject;
-        if (log) { Debug.Log($"(VulnerableNavigator) ready to launch connection : {connector.Capable.name} --> {target.Capable.name}"); }
+        if (log) { Debug.Log($"(VulnerableNavigator) ready to launch connection : {connector.Capable.ID} --> {target.Capable.ID}"); }
 
         connector.Connect(target,hacker);
 
         // we set the hovered target material
         target.Vulnerable.Renderer.material = target.Vulnerable.TargetMaterial;
+        if (log_material_switching) { Debug.Log($"(VulnerableNavigator) switched material of {target.Capable.ID} to targeted material"); }
 
         // we update the hackray
         hover_hackray.SetColor(connector.IsConnectedTo(target) ? hackray_color : out_of_range_hackray_color);
@@ -140,9 +142,11 @@ public class HackableNavigator : MonoBehaviour
             return;
         }
         vulnerable.Renderer.material = vulnerable.BaseMaterial;
+        if (log_material_switching) { Debug.Log($"(VulnerableNavigator) resetted material of {vulnerable.Capable.ID} to base material"); }
+
 
         // we reset the current target
-        if (log) { Debug.Log($"(VulnerableNavigator) resetted connection : {connector.Capable.name} -x> {vulnerable.Capable.name}"); }
+        if (log) { Debug.Log($"(VulnerableNavigator) resetted connection : {connector.Capable.ID} -x> {vulnerable.Capable.ID}"); }
         targeted_connector = null;
     }
 

@@ -128,7 +128,7 @@ public class ColliderBank : MonoBehaviour
         collider.enabled = true;
 
         // we load navmesh data
-        create_or_destroy_navmesh_modifier(collider.gameObject, data.used_for_pathfinding);
+        create_or_destroy_navmesh_modifier(collider.gameObject, data.pathfinding_area);
 
         // we load the collider data
         load_collider_data(collider, data);
@@ -170,7 +170,7 @@ public class ColliderBank : MonoBehaviour
         collider.enabled = true;
 
         // we load navmesh data
-        create_or_destroy_navmesh_modifier(collider.gameObject, data.used_for_pathfinding);
+        create_or_destroy_navmesh_modifier(collider.gameObject, data.pathfinding_area);
 
         // we load the collider data
         load_collider_data(collider, data);
@@ -181,20 +181,22 @@ public class ColliderBank : MonoBehaviour
         return collider;
     }
 
-    private void create_or_destroy_navmesh_modifier(GameObject gameObject, bool use_pathfinding)
+    private void create_or_destroy_navmesh_modifier(GameObject gameObject, int pathfinding_area)
     {
         NavMeshModifier modifier = gameObject.GetComponent<NavMeshModifier>();
         
         // if we use pathfinding we verify that we have a nav mesh modifier
-        if (use_pathfinding)
+        if (pathfinding_area != -1)
         {
-            if (modifier == null) { gameObject.AddComponent<NavMeshModifier>(); }
+            if (modifier == null) { modifier = gameObject.AddComponent<NavMeshModifier>(); }
+            modifier.area = pathfinding_area;
             return;
         }
 
         // if we are not using pathfinding we make sure we don't have any
         if (modifier != null) { Destroy(modifier); }
     }
+    
     private void load_collider_data(Collider2D collider, ColliderData collider_data)
     {
         if (log_body_data) { Debug.Log($"(CapableBank - load_collider_data) Loading collider data : {(collider_data == null ? "null" : collider_data.GetDetails())}"); }
@@ -212,7 +214,7 @@ public class ColliderBank : MonoBehaviour
         // ! this is the responsability of the capacity that uses the collider
         // ! if feet we never disable the collider for example
         // but ColliderCapacity yes
-        /* if (collider_data.used_for_pathfinding)
+        /* if (collider_data.UsedForPathfinding)
         {
             collider.isTrigger = !WorldBuilder.IsWorking; // if we are world building we want it to be active, if not world building we don't want it
         } */
@@ -265,7 +267,7 @@ public class ColliderBank : MonoBehaviour
             layerID = collider.gameObject.layer,
             offset = collider.offset,
             is_trigger = collider.isTrigger,
-            used_for_pathfinding = is_used_for_pathfinding(collider),
+            pathfinding_area = get_pathfinding_area(collider),
             shadow_caster_data = get_static_shadow_caster_data(collider)
         };
 
@@ -289,11 +291,11 @@ public class ColliderBank : MonoBehaviour
 
         return data;
     }
-    protected static bool is_used_for_pathfinding(Collider2D collider)
+    protected static int get_pathfinding_area(Collider2D collider)
     {
         NavMeshModifier modifier = collider.GetComponent<NavMeshModifier>();
-        if (modifier != null && modifier.enabled) { return true; }
-        return false;
+        if (modifier != null && modifier.enabled) { return modifier.area; }
+        return -1;
     }
 
 

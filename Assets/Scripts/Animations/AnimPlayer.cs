@@ -77,6 +77,7 @@ public class AnimPlayer : MonoBehaviour
     public bool log_advanced = false;
     public bool log_frames = false;
     public bool log_pile = false;
+    public bool log_material = false;
 
 
     ///
@@ -599,6 +600,12 @@ public class AnimPlayer : MonoBehaviour
     }
 
 
+    ///
+    //
+    /// RENDERER & MATERIAL MANAGEMENT
+    //
+    ///
+
     // RENDERER VISIBILITY
     public event Action OnHidden = delegate { };
     public event Action OnShown = delegate { };
@@ -629,7 +636,15 @@ public class AnimPlayer : MonoBehaviour
         return Renderer.material.IsKeywordEnabled(visibleKeyword);
     }
 
-
+    // MATERIAL
+    public Material GetMaterial() { return Renderer.material; }
+    public void ChangeMaterial(Material material)
+    {
+        if (log_material) { Debug.Log($"(AnimPlayer - {Capable.ID}) Changing material to {material.name} (is_visible: {visible_on}, visibleKeyword name: {visibleKeyword.name})"); }
+        Renderer.material = material;
+        if (string.IsNullOrEmpty(visibleKeyword.name)) { return; }
+        Renderer.material.SetKeyword(visibleKeyword, visible_on);
+    }
 
 
 

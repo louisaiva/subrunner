@@ -44,7 +44,7 @@ public class Vulnerable : MonoBehaviour
     // AWAKE
     private void Start()
     {
-        BaseMaterial = Renderer.material;
+        BaseMaterial = Capable.AnimPlayer.GetMaterial();
         TargetMaterial = Resources.Load<Material>("materials/targeted/hack_door");
     }
 
@@ -120,7 +120,11 @@ public class Vulnerable : MonoBehaviour
     // OnDISABLE
     private void OnDisable()
     {
-        if (BaseMaterial != null) { Renderer.material = BaseMaterial; }
+        if (BaseMaterial != null)
+        {
+            // Renderer.material = BaseMaterial;
+            Capable.AnimPlayer.ChangeMaterial(BaseMaterial);
+        }
         while (running_hacks.Count > 0)
         {
             Hack hack = running_hacks[0];

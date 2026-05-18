@@ -65,7 +65,7 @@ public class OpenCapacity : Capacity
         // on ouvre le coffre
         if (Capable is not Openable openable)
         {
-            Debug.LogError("(OpenCapacity) " + Capable.ID + " is not openable !");
+            Debug.LogError("(OpenCapacity) Can't open because our Capable is not openable : " + Capable.name + $" (loaded ? {Capable.Loaded})");
             // if (log) { Debug.LogError("(OpenCapacity) " + Capable.ID + " is not openable !"); }
             return;
         }

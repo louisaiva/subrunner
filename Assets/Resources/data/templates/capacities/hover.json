@@ -1,6 +1,6 @@
 ﻿{
     "<id>k__BackingField": "hover",
-    "<owner_id>k__BackingField": "no_capable_id",
+    "<owner_id>k__BackingField": "no_parent",
     "kind": "HoverCapacity",
     "local_position": {
         "x": 0.0,
@@ -14,7 +14,7 @@
             "y": 0.0
         },
         "layerID": 24,
-        "used_for_pathfinding": false,
+        "pathfinding_area": -1,
         "shadow_caster_data": {
             "cast_and_self": false,
             "used_layers": []
@@ -26,5 +26,5 @@
         },
         "radius": 0.15000000596046449
     },
-    "interact_kf_height": 0.75
+    "interact_kf_height": 1.0
 }

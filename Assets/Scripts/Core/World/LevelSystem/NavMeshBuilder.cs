@@ -4,7 +4,9 @@ using NavMeshPlus.Components;
 using System.Collections;
 using UnityEngine.AI;
 using System.IO;
+using System;
 
+[Obsolete("NavMeshBuilder is deprecated. Use dynamic auto runtime baker instead : LevelNavBaker")]
 public class NavMeshBuilder : Singleton<NavMeshBuilder>
 {
     [Header("NavMesh Surfaces to Build on 2nd fixed update")]
@@ -59,7 +61,7 @@ public class NavMeshBuilder : Singleton<NavMeshBuilder>
 
 
         // we save the navmeshdatas as assets in the files
-        level.ClearNavMeshPaths();
+        /* level.ClearNavMeshPaths();
         for (int i = 0; i < navMeshDatas.Count; i++)
         {
             NavMeshData navMeshData = navMeshDatas[i];
@@ -71,9 +73,9 @@ public class NavMeshBuilder : Singleton<NavMeshBuilder>
             // we add the path to the list of navmesh data paths to assign to the level
             level.AddNavMeshPath(path);
             #endif
-        }
+        } */
     }
-    public void BuildNavMeshImmediateForLevel(Level level)
+    /* public void BuildNavMeshImmediateForLevel(Level level)
     {
         // we get the bounds of the level
         Bounds bounds = level.GetStaticBounds();
@@ -107,7 +109,7 @@ public class NavMeshBuilder : Singleton<NavMeshBuilder>
             level.AddNavMeshPath(path);
             #endif
         }
-    }
+    } */
 
     public void LoadLevelNavMeshData(List<NavMeshData> navMeshDatas)
     {

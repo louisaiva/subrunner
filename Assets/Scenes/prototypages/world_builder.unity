@@ -1704,6 +1704,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &11300635
 SpriteRenderer:
@@ -1958,6 +1959,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &14388561
 SpriteRenderer:
@@ -2096,6 +2098,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &14680148
 SpriteRenderer:
@@ -2255,6 +2258,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &15579957
 SpriteRenderer:
@@ -2474,6 +2478,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &16779287
 SpriteRenderer:
@@ -2847,6 +2852,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &18059824
 SpriteRenderer:
@@ -4295,7 +4301,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -4898,6 +4904,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &32034321
 SpriteRenderer:
@@ -6253,6 +6260,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &46376100
 SpriteRenderer:
@@ -6407,7 +6415,7 @@ MonoBehaviour:
       box_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 29
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -6737,6 +6745,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &50219426
 SpriteRenderer:
@@ -8194,7 +8203,7 @@ MonoBehaviour:
       box_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 1
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -10073,6 +10082,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &73911507
 SpriteRenderer:
@@ -11088,7 +11098,7 @@ MonoBehaviour:
       box_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 29
-        used_for_pathfinding: 1
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 1
           used_layers:
@@ -11213,6 +11223,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &88265283
 SpriteRenderer:
@@ -11956,6 +11967,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!114 &97400789
 MonoBehaviour:
@@ -12818,7 +12830,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -14560,6 +14572,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &117690905
 SpriteRenderer:
@@ -16228,6 +16241,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &130898410
 SpriteRenderer:
@@ -16405,7 +16419,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -19080,6 +19094,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &150426922
 SpriteRenderer:
@@ -19869,8 +19884,8 @@ MonoBehaviour:
   <IsWorldLoadingOrUnloading>k__BackingField: 0
   fallback_spawn_point: {fileID: 1209737554}
   log: 1
-  log_loading_extended: 1
-  log_id_generation: 1
+  log_loading_extended: 0
+  log_id_generation: 0
 --- !u!114 &155458651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20032,6 +20047,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &157320450
 SpriteRenderer:
@@ -20458,7 +20474,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -20921,6 +20937,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &163581700
 SpriteRenderer:
@@ -23567,6 +23584,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &173446071
 SpriteRenderer:
@@ -24330,7 +24348,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 29
-        used_for_pathfinding: 1
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -27773,6 +27791,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &194858751
 SpriteRenderer:
@@ -28292,6 +28311,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &197546816
 SpriteRenderer:
@@ -28770,6 +28790,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &201998436
 SpriteRenderer:
@@ -29033,7 +29054,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -29168,6 +29189,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &202248427
 SpriteRenderer:
@@ -29313,7 +29335,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -29828,6 +29850,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &206724809
 SpriteRenderer:
@@ -30467,6 +30490,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &207485989
 SpriteRenderer:
@@ -31039,6 +31063,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &210416515
 SpriteRenderer:
@@ -31426,7 +31451,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -31798,7 +31823,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -35245,6 +35270,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &218700140
 SpriteRenderer:
@@ -38045,7 +38071,7 @@ MonoBehaviour:
       box_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 29
-        used_for_pathfinding: 1
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 1
           used_layers:
@@ -38859,7 +38885,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -40677,7 +40703,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -41402,7 +41428,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -44351,7 +44377,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -49288,6 +49314,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &300088297
 SpriteRenderer:
@@ -49541,6 +49568,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &300497398
 SpriteRenderer:
@@ -50961,7 +50989,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -51081,7 +51109,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -51339,8 +51367,9 @@ MonoBehaviour:
   log_spawning: 0
   log_item_switching: 0
   hide_log_ownership_validation: 1
-  log_loading: 0
-  log_loading_extended: 1
+  log_loading: 1
+  log_loading_extended: 0
+  log_visibility: 0
   hide_log_no_data_found: 1
 --- !u!114 &313120230
 MonoBehaviour:
@@ -51805,6 +51834,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &316174580
 SpriteRenderer:
@@ -52612,6 +52642,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &322924663
 SpriteRenderer:
@@ -52789,7 +52820,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -55654,6 +55685,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &345160535
 SpriteRenderer:
@@ -56098,6 +56130,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!114 &351860845
 MonoBehaviour:
@@ -57377,6 +57410,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &359051387
 SpriteRenderer:
@@ -58086,7 +58120,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -58959,6 +58993,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &375647635
 SpriteRenderer:
@@ -59338,7 +59373,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 1
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -59958,6 +59993,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &382043931
 SpriteRenderer:
@@ -60270,7 +60306,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -60438,7 +60474,7 @@ MonoBehaviour:
       box_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 29
-        used_for_pathfinding: 1
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 1
           used_layers:
@@ -61769,6 +61805,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &398064841
 SpriteRenderer:
@@ -65233,7 +65270,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -65823,6 +65860,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &423607330
 SpriteRenderer:
@@ -66214,7 +66252,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 29
-        used_for_pathfinding: 1
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -66953,6 +66991,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &430725855
 SpriteRenderer:
@@ -67833,6 +67872,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &437886589
 SpriteRenderer:
@@ -68295,6 +68335,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &440389611
 SpriteRenderer:
@@ -69496,7 +69537,7 @@ MonoBehaviour:
       box_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 29
-        used_for_pathfinding: 1
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 1
           used_layers:
@@ -70658,6 +70699,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &460137143
 SpriteRenderer:
@@ -71751,6 +71793,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &468167866
 SpriteRenderer:
@@ -72158,7 +72201,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -76013,6 +76056,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &486539554
 SpriteRenderer:
@@ -76668,7 +76712,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -78450,7 +78494,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -79413,6 +79457,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!114 &513998643
 MonoBehaviour:
@@ -80787,7 +80832,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -81154,6 +81199,10 @@ PrefabInstance:
     - target: {fileID: 3238169105776769028, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
       propertyPath: m_Name
       value: bob
+      objectReference: {fileID: 0}
+    - target: {fileID: 6958991911754584795, guid: dd5bb13d1be1dd34caf6d4f9cb9f1125, type: 3}
+      propertyPath: log_material_switching
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -82638,6 +82687,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &532481212
 SpriteRenderer:
@@ -82978,6 +83028,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &533437538
 SpriteRenderer:
@@ -86092,6 +86143,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &556269642
 SpriteRenderer:
@@ -86643,7 +86695,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -87162,6 +87214,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!114 &565485516
 MonoBehaviour:
@@ -87699,6 +87752,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &565624932
 SpriteRenderer:
@@ -88638,6 +88692,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &574498085
 SpriteRenderer:
@@ -91673,6 +91728,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &598037607
 SpriteRenderer:
@@ -92044,6 +92100,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &601638618
 SpriteRenderer:
@@ -96908,7 +96965,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -97135,6 +97192,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &630678605
 SpriteRenderer:
@@ -97294,6 +97352,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &632977119
 SpriteRenderer:
@@ -99370,6 +99429,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!114 &651459915
 MonoBehaviour:
@@ -99884,6 +99944,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &652218450
 SpriteRenderer:
@@ -103970,6 +104031,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 684232927}
   m_CullTransparentMesh: 1
+--- !u!114 &685863509 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5680882237522360214, guid: 541b8ad5523417249b95b7397c25a03d, type: 3}
+  m_PrefabInstance: {fileID: 8540674061132525096}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e04976799df50f54ba128eff723155a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &687359618
 GameObject:
   m_ObjectHideFlags: 0
@@ -104601,6 +104673,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &691111133
 SpriteRenderer:
@@ -105199,6 +105272,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &698824876
 SpriteRenderer:
@@ -108437,6 +108511,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &717325027
 SpriteRenderer:
@@ -109470,6 +109545,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &721332533
 SpriteRenderer:
@@ -109615,7 +109691,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -110079,6 +110155,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &725722556
 SpriteRenderer:
@@ -112311,6 +112388,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &730583876
 SpriteRenderer:
@@ -112671,6 +112749,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &735368541
 SpriteRenderer:
@@ -113004,6 +113083,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &736660916
 SpriteRenderer:
@@ -114740,6 +114820,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &753439796
 SpriteRenderer:
@@ -116026,6 +116107,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &760815782
 SpriteRenderer:
@@ -116448,6 +116530,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &767311563
 SpriteRenderer:
@@ -116754,6 +116837,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &769665453
 SpriteRenderer:
@@ -117496,7 +117580,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -119938,6 +120022,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &776461903
 SpriteRenderer:
@@ -122317,6 +122402,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &790732332
 SpriteRenderer:
@@ -122416,38 +122502,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: extract_json_on_load
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: skin_variants.Array.size
-      value: 37
-      objectReference: {fileID: 0}
-    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: skin_variants.Array.data[36].base_skin
-      value: vacuum
-      objectReference: {fileID: 0}
-    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: skin_variants.Array.data[36].variant_name
-      value: vacuum_ground
-      objectReference: {fileID: 0}
-    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: skin_variants.Array.data[36].base_spritesheets.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: 'skin_variants.Array.data[36].base_spritesheets.Array.data[0]'
-      value: objects/interactives/living_room/vacuum_aspi
-      objectReference: {fileID: 0}
-    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: skin_variants.Array.data[36].variant_spritesheets.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2427471456612112662, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: 'skin_variants.Array.data[36].variant_spritesheets.Array.data[0]'
-      value: objects/interactives/living_room/vacuum_ground
-      objectReference: {fileID: 0}
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -124185,6 +124239,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &797618054
 SpriteRenderer:
@@ -124341,6 +124396,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!114 &798166290
 MonoBehaviour:
@@ -125815,6 +125871,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &808854287
 SpriteRenderer:
@@ -127760,7 +127817,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -129509,6 +129566,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &837839524
 SpriteRenderer:
@@ -129683,6 +129741,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &838314953
 SpriteRenderer:
@@ -130076,7 +130135,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -131372,6 +131431,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &847867581
 SpriteRenderer:
@@ -131945,7 +132005,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -132362,6 +132422,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &851246418
 SpriteRenderer:
@@ -133128,6 +133189,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &857987666
 SpriteRenderer:
@@ -138091,6 +138153,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &871316639
 SpriteRenderer:
@@ -139927,6 +139990,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &886816425
 SpriteRenderer:
@@ -140909,6 +140973,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &892749761
 SpriteRenderer:
@@ -141863,7 +141928,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -142537,6 +142602,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &904457557
 SpriteRenderer:
@@ -142682,7 +142748,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -143102,6 +143168,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &907460899
 SpriteRenderer:
@@ -143423,6 +143490,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &909016362
 SpriteRenderer:
@@ -144374,6 +144442,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &917720500
 SpriteRenderer:
@@ -145566,6 +145635,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &928272984
 SpriteRenderer:
@@ -146057,6 +146127,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &931207273
 SpriteRenderer:
@@ -147565,7 +147636,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -148784,7 +148855,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -149033,6 +149104,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &949215842
 SpriteRenderer:
@@ -149734,6 +149806,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &961300858
 SpriteRenderer:
@@ -150276,7 +150349,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -150634,6 +150707,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &968456260
 SpriteRenderer:
@@ -151408,6 +151482,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &975519382
 SpriteRenderer:
@@ -151826,6 +151901,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &977455154
 SpriteRenderer:
@@ -152122,7 +152198,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -153163,6 +153239,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &986500560
 SpriteRenderer:
@@ -153617,6 +153694,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &990565087
 SpriteRenderer:
@@ -154189,6 +154267,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &992381895
 SpriteRenderer:
@@ -155197,6 +155276,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1002676612
 SpriteRenderer:
@@ -156376,7 +156456,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -156718,6 +156798,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!114 &1012090349
 MonoBehaviour:
@@ -160036,6 +160117,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1025153269
 SpriteRenderer:
@@ -164313,7 +164395,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -164953,6 +165035,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1061466993
 SpriteRenderer:
@@ -165658,6 +165741,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1064692470
 SpriteRenderer:
@@ -167705,6 +167789,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1082331630
 SpriteRenderer:
@@ -168084,7 +168169,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -168209,6 +168294,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1085944969
 SpriteRenderer:
@@ -168808,6 +168894,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1087945184
 SpriteRenderer:
@@ -170214,6 +170301,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!114 &1090141136
 MonoBehaviour:
@@ -170694,7 +170782,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -171403,7 +171491,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -171992,6 +172080,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1105117967
 SpriteRenderer:
@@ -172148,6 +172237,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!114 &1105853439
 MonoBehaviour:
@@ -180669,6 +180759,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1150010523
 SpriteRenderer:
@@ -181875,6 +181966,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1158980382
 SpriteRenderer:
@@ -185614,6 +185706,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1189073104
 SpriteRenderer:
@@ -185674,6 +185767,17 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 1
+--- !u!114 &1189421381 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5427939901150469199, guid: 541b8ad5523417249b95b7397c25a03d, type: 3}
+  m_PrefabInstance: {fileID: 8540674061132525096}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e04976799df50f54ba128eff723155a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1190241269
 GameObject:
   m_ObjectHideFlags: 0
@@ -186535,6 +186639,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!114 &1196705138
 MonoBehaviour:
@@ -189150,9 +189255,6 @@ MonoBehaviour:
     - left
     - bot
     - inter
-    navmesh_data_paths:
-    - data/navmeshes/doors_bot_navmesh_0
-    - data/navmeshes/doors_bot_navmesh_1
   loaded_navmeshes: []
 --- !u!1 &1215095728
 GameObject:
@@ -189253,6 +189355,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1215095731
 SpriteRenderer:
@@ -190162,7 +190265,7 @@ MonoBehaviour:
       box_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 1
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -192079,6 +192182,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1231912188
 SpriteRenderer:
@@ -192779,6 +192883,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1237735163
 SpriteRenderer:
@@ -193256,6 +193361,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1242675782
 SpriteRenderer:
@@ -193699,7 +193805,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 29
-        used_for_pathfinding: 1
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -193823,6 +193929,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1246847816
 SpriteRenderer:
@@ -194645,7 +194752,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -195980,6 +196087,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1261472272
 SpriteRenderer:
@@ -196328,6 +196436,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1263535893
 SpriteRenderer:
@@ -196839,7 +196948,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 29
-        used_for_pathfinding: 1
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -197349,7 +197458,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -198065,7 +198174,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -198276,7 +198385,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -198401,6 +198510,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1274418086
 SpriteRenderer:
@@ -203272,6 +203382,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1293031482
 SpriteRenderer:
@@ -205010,6 +205121,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1303495055
 SpriteRenderer:
@@ -205908,6 +206020,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1307381601
 SpriteRenderer:
@@ -206757,7 +206870,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -207166,6 +207279,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1315376194
 SpriteRenderer:
@@ -207596,6 +207710,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1320966238
 SpriteRenderer:
@@ -209589,6 +209704,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1331863706
 SpriteRenderer:
@@ -209986,7 +210102,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -210213,6 +210329,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1336632158
 SpriteRenderer:
@@ -213721,7 +213838,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -214468,6 +214585,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1360979547
 SpriteRenderer:
@@ -215630,7 +215748,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -217439,7 +217557,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -218722,6 +218840,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1384148452
 SpriteRenderer:
@@ -219675,7 +219794,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -221574,6 +221693,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1416225438
 SpriteRenderer:
@@ -223772,7 +223892,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -227265,6 +227385,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1441348235
 SpriteRenderer:
@@ -227758,9 +227879,6 @@ MonoBehaviour:
     - squarry
     - subway
     - trash_room
-    navmesh_data_paths:
-    - data/navmeshes/zombie_area_navmesh_0
-    - data/navmeshes/zombie_area_navmesh_1
   loaded_navmeshes: []
 --- !u!1 &1443792014
 GameObject:
@@ -227955,6 +228073,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1443792019
 SpriteRenderer:
@@ -228294,6 +228413,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1444633687
 SpriteRenderer:
@@ -230530,7 +230650,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -230779,6 +230899,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1455605646
 SpriteRenderer:
@@ -232945,6 +233066,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1466872284
 SpriteRenderer:
@@ -233516,7 +233638,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -235711,6 +235833,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1482339289
 SpriteRenderer:
@@ -236658,6 +236781,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1489235068
 SpriteRenderer:
@@ -238048,6 +238172,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1499624633
 SpriteRenderer:
@@ -238889,7 +239014,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -239406,6 +239531,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1515441996
 SpriteRenderer:
@@ -239638,6 +239764,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1515826437
 SpriteRenderer:
@@ -242609,6 +242736,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1534825386
 SpriteRenderer:
@@ -245395,7 +245523,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -246175,7 +246303,7 @@ MonoBehaviour:
       box_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 1
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -246901,6 +247029,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1562817284
 SpriteRenderer:
@@ -248477,6 +248606,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1572708616
 SpriteRenderer:
@@ -248884,6 +249014,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1573962994
 SpriteRenderer:
@@ -250685,6 +250816,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1581836479
 SpriteRenderer:
@@ -251282,6 +251414,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1584817795
 SpriteRenderer:
@@ -252071,6 +252204,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1592559679
 SpriteRenderer:
@@ -256638,7 +256772,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -257950,7 +258084,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -258428,6 +258562,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1644276665
 SpriteRenderer:
@@ -263218,6 +263353,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1656843145
 SpriteRenderer:
@@ -265279,7 +265415,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -265819,7 +265955,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -266288,7 +266424,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -266592,6 +266728,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1679579419
 SpriteRenderer:
@@ -268610,7 +268747,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 29
-        used_for_pathfinding: 1
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -270360,6 +270497,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1715683510
 SpriteRenderer:
@@ -270505,7 +270643,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -272247,6 +272385,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1730398802
 SpriteRenderer:
@@ -272477,6 +272616,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1733076058
 SpriteRenderer:
@@ -273692,6 +273832,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1735019310
 SpriteRenderer:
@@ -274404,7 +274545,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -274688,6 +274829,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1740179745
 SpriteRenderer:
@@ -275796,6 +275938,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1745432642
 SpriteRenderer:
@@ -276947,7 +277090,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -277230,6 +277373,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1752118625
 SpriteRenderer:
@@ -277756,6 +277900,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1753418890
 SpriteRenderer:
@@ -278071,7 +278216,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -281251,7 +281396,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -282621,6 +282766,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1785417112
 SpriteRenderer:
@@ -282932,7 +283078,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -283280,7 +283426,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -291826,6 +291972,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1794686700
 SpriteRenderer:
@@ -293229,6 +293376,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1809205468
 SpriteRenderer:
@@ -295991,6 +296139,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1835335907
 SpriteRenderer:
@@ -297355,6 +297504,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1844816868
 SpriteRenderer:
@@ -299086,6 +299236,7 @@ GameObject:
   - component: {fileID: 1862415630}
   - component: {fileID: 1862415628}
   - component: {fileID: 1862415629}
+  - component: {fileID: 1862415631}
   m_Layer: 0
   m_Name: level_system
   m_TagString: Untagged
@@ -299171,6 +299322,24 @@ MonoBehaviour:
   neighbour_node_prefab: {fileID: 2086100797149866803, guid: b42723f64922bc843bf1cc3889edb017, type: 3}
   log: 1
   hide_no_level_warning: 0
+--- !u!114 &1862415631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1862415625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82b1c9b4497cc754bacb439b7cc2c8e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelNavBaker
+  surfaces:
+  - {fileID: 685863509}
+  - {fileID: 1189421381}
+  log: 1
+  log_baking: 1
+  log_sources: 1
 --- !u!1 &1862764486
 GameObject:
   m_ObjectHideFlags: 0
@@ -300000,6 +300169,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1868436109
 SpriteRenderer:
@@ -301156,6 +301326,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1876287541
 SpriteRenderer:
@@ -301633,6 +301804,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1877277152
 SpriteRenderer:
@@ -303186,6 +303358,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1895284232
 SpriteRenderer:
@@ -306265,6 +306438,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1912839201
 SpriteRenderer:
@@ -306410,7 +306584,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -306912,6 +307086,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1920402384
 SpriteRenderer:
@@ -309115,6 +309290,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1930041777
 SpriteRenderer:
@@ -311142,6 +311318,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1937750912
 SpriteRenderer:
@@ -311745,6 +311922,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1939836468
 SpriteRenderer:
@@ -313090,6 +313268,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1956751590
 SpriteRenderer:
@@ -313603,6 +313782,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1959562997
 SpriteRenderer:
@@ -315129,6 +315309,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1966826124
 SpriteRenderer:
@@ -315791,6 +315972,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1970897552
 SpriteRenderer:
@@ -317339,7 +317521,7 @@ MonoBehaviour:
       box_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 29
-        used_for_pathfinding: 1
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -318484,6 +318666,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &1986814869
 SpriteRenderer:
@@ -323178,6 +323361,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!114 &2023114576
 MonoBehaviour:
@@ -325914,6 +326098,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &2032620282
 SpriteRenderer:
@@ -327875,7 +328060,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -329082,6 +329267,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &2060688887
 SpriteRenderer:
@@ -336675,6 +336861,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &2079256632
 SpriteRenderer:
@@ -338092,6 +338279,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &2092862800
 SpriteRenderer:
@@ -338266,7 +338454,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -341083,7 +341271,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -342913,6 +343101,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &2127022397
 SpriteRenderer:
@@ -343445,6 +343634,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &2132704560
 SpriteRenderer:
@@ -344040,7 +344230,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -345262,7 +345452,7 @@ MonoBehaviour:
       box_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 29
-        used_for_pathfinding: 1
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 1
           used_layers:
@@ -345541,7 +345731,7 @@ MonoBehaviour:
       circle_colliders:
       - local_position: {x: 0, y: 0}
         layerID: 25
-        used_for_pathfinding: 0
+        pathfinding_area: -1
         shadow_caster_data:
           cast_and_self: 0
           used_layers: []
@@ -345918,6 +346108,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!212 &2146116514
 SpriteRenderer:
@@ -364633,6 +364824,10 @@ PrefabInstance:
     - target: {fileID: 2767827881693983402, guid: 541b8ad5523417249b95b7397c25a03d, type: 3}
       propertyPath: m_Name
       value: game
+      objectReference: {fileID: 0}
+    - target: {fileID: 2823759425825546407, guid: 541b8ad5523417249b95b7397c25a03d, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4045093185960869967, guid: 541b8ad5523417249b95b7397c25a03d, type: 3}
       propertyPath: shoes_pool

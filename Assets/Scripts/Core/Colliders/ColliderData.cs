@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 public interface IColliderData
@@ -19,7 +20,8 @@ public interface IColliderData
     // collider data
     public Vector2 local_position;
     public int layerID;
-    public bool used_for_pathfinding;
+    public int pathfinding_area = -1; // -1 -> not used for pathfinding
+    [RuntimeOnly] public bool UsedForPathfinding => pathfinding_area != -1;
     public ShadowCasterData shadow_caster_data;
     public bool is_trigger;
     public Vector2 offset;
@@ -32,7 +34,7 @@ public interface IColliderData
         {
             local_position = this.local_position,
             layerID = this.layerID,
-            used_for_pathfinding = this.used_for_pathfinding,
+            pathfinding_area = this.pathfinding_area,
             is_trigger = this.is_trigger,
             offset = this.offset,
             shadow_caster_data = this.shadow_caster_data.Duplicate()
@@ -48,7 +50,7 @@ public interface IColliderData
         string details = $"collider data :\n";
         details += $"     - local_position : {local_position}\n";
         details += $"     - layerID : {layerID} ({LayerMask.LayerToName(layerID)})\n";
-        details += $"     - used_for_pathfinding : {used_for_pathfinding}\n";
+        details += $"     - pathfinding_area : {pathfinding_area}\n";
         details += $"     - is_trigger : {is_trigger}\n";
         details += $"     - offset : {offset}\n";
         details += $"     - shadow_caster_data : {(shadow_caster_data != null ? "\n" + shadow_caster_data.GetDetails() : "NONE")}\n";
@@ -64,8 +66,22 @@ public interface IColliderData
     public CircleData() { }
     public CircleData(ColliderData parent)
     {
-        foreach (var prop in parent.GetType().GetProperties()) { prop.SetValue(this, prop.GetValue(parent)); }
-        foreach (var prop in parent.GetType().GetFields()) { prop.SetValue(this, prop.GetValue(parent)); }
+        Type type = parent.GetType();
+
+        foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+        {
+            if (!property.CanRead || !property.CanWrite) { continue; }
+            if (Attribute.IsDefined(property, typeof(RuntimeOnlyAttribute))) { continue; }
+
+            property.SetValue(this, property.GetValue(parent));
+        }
+
+        foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Public))
+        {
+            if (Attribute.IsDefined(field, typeof(RuntimeOnlyAttribute))) { continue; }
+
+            field.SetValue(this, field.GetValue(parent));
+        }
     }
 
     // DUPLICATE

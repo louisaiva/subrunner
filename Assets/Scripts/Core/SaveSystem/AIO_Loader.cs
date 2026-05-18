@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -21,12 +22,12 @@ public class AIO_Loader : MonoBehaviour
     [SerializeField] private bool log = false;
     [SerializeField] private bool hide_no_level_warning = false;
 
-    public Level LoadAIO_Level(string world_id, string level_id)
+    public async Task<Level> LoadAIO_Level_NoWorldLoaded(string world_id, string level_id, bool navmesh_only = false)
     {
-        if (log) { Debug.Log($"(AIO_Loader) Loading level '{level_id}' for world '{world_id}'"); }
+        if (log) { Debug.Log($"(AIO_Loader) Loading level '{level_id}' for world '{world_id}' (No World Loaded)"); }
 
         // CLEAR OLD DATA
-        _ = ClearCache();
+        await ClearCache_NoWorldLoaded();
 
         // grab the level data from the world data
         LevelData level_data = LevelEngine.LoadWorldLevelData(world_id, level_id);
@@ -45,9 +46,37 @@ public class AIO_Loader : MonoBehaviour
         // load the room's capables & their capacities
         CapableEngine.Instance.LoadWorldCapablesData(world_id);
         CapacityEngine.Instance.LoadWorldCapacitiesData(world_id);
+        List<RoomData> rooms_data = RoomEngine.LoadRoomsData(world_id, level_data.rooms_ids);
 
         // load the rooms
-        List<Room> rooms = load_rooms(world_id, level_data.rooms_ids, aio_level.transform);
+        List<Room> rooms = load_rooms(rooms_data, aio_level.transform, navmesh_only : navmesh_only);
+        if (rooms.Count == 0) { Debug.LogWarning($"(AIO_Loader) No rooms loaded for level '{level_id}' in world '{world_id}'"); }
+
+        return aio_level;
+    }
+    public Level LoadAIO_Level(string world_id, string level_id, bool navmesh_only = false)
+    {
+        if (log) { Debug.Log($"(AIO_Loader) Loading level '{level_id}' for world '{world_id}' (World Loaded)"); }
+
+        // CLEAR OLD DATA
+        ClearCache();
+
+        // grab the level data from the world data
+        LevelData level_data = LevelEngine.LoadWorldLevelData(world_id, level_id);
+        if (level_data == null)
+        {
+            if (!hide_no_level_warning) { Debug.LogWarning($"(AIO_Loader) No level data found for level '{level_id}' in world '{world_id}'"); }
+            return null;
+        }
+
+        // load the level
+        Level aio_level = load_level(level_data);
+
+        // BECAUSE we are in world loaded mode, rooms & capables & capacities data
+        // should already be loaded so we don't load them again
+
+        // load the rooms
+        List<Room> rooms = load_rooms(RoomEngine.Instance.GetRoomsDataFromIDs(level_data.rooms_ids), aio_level.transform, navmesh_only);
         if (rooms.Count == 0) { Debug.LogWarning($"(AIO_Loader) No rooms loaded for level '{level_id}' in world '{world_id}'"); }
 
         return aio_level;
@@ -66,11 +95,11 @@ public class AIO_Loader : MonoBehaviour
     }
 
     // low level rooms loading
-    private List<Room> load_rooms(string world_id, List<string> room_ids, Transform rooms_parent)
+    private HashSet<string> loaded_rooms = new HashSet<string>();
+    private List<Room> load_rooms(List<RoomData> rooms_data, Transform rooms_parent, bool navmesh_only = false)
     {
         // grab the room data from the world data
         List<Room> rooms = new List<Room>();
-        List<RoomData> rooms_data = RoomEngine.LoadRoomsData(world_id, room_ids);
         foreach (RoomData data in rooms_data)
         {
             // load the room
@@ -79,6 +108,7 @@ public class AIO_Loader : MonoBehaviour
             rooms.Add(room);
 
             load_capables(data.capables_ids, rooms_parent.Find("Capables"));
+            if (navmesh_only) { continue; } // we don't load movables if we are in navmesh only mode
             load_capables(data.movables_ids, rooms_parent.Find("Movables"));
         }
 
@@ -103,11 +133,12 @@ public class AIO_Loader : MonoBehaviour
         RoomEngine.Instance.TilemapEngine.BuildTilemapsForAIO_Room(new_room);
 
         // load the lights
-        RoomEngine.Instance.LightsEngine.LoadLights(data.lights_data, data.id, new_room.LightsParent);
+        RoomEngine.Instance.LightsEngine.LoadLights_AIO(data.lights_data, data.id, new_room.LightsParent);
 
         // if add_roomgraph_neighbour_node is true, we add a node for each neighbour of the room in the roomgraph
         if (add_roomgraph_neighbour_node) { Instantiate(neighbour_node_prefab, new_room.transform); }
 
+        loaded_rooms.Add(data.id);
         return new_room;
     }
 
@@ -132,7 +163,14 @@ public class AIO_Loader : MonoBehaviour
     }
 
     // CLEAR CACHE
-    public async Task ClearCache()
+
+    /// <summary>
+    /// this method is used to clear the cache when no world is loaded.
+    /// If you already have a world loaded / a world loading, please use the
+    /// world loaded equivalent
+    /// </summary>
+    /// <returns></returns>
+    public async Task ClearCache_NoWorldLoaded()
     {
         // we clear the loaded levels
         foreach (Level level in loaded_levels.Values)
@@ -141,13 +179,40 @@ public class AIO_Loader : MonoBehaviour
         }
         loaded_levels.Clear();
         loaded_capables.Clear();
+        loaded_rooms.Clear();
 
         // we clear the capable & capacity engines cache
         await CapableEngine.LazyInstance.UnloadWorldData(log: true);
         await CapacityEngine.LazyInstance.UnloadWorldData(log: true);
 
         // we clear the subsystems
-        RoomEngine.Instance.TilemapEngine.ClearTilemaps(log: true);
-        RoomEngine.Instance.LightsEngine.ClearLights(log: true);
+        // RoomEngine.Instance.TilemapEngine.ClearTilemaps(log: true);
+        // RoomEngine.Instance.LightsEngine.ClearLights(log: true);
+    }
+
+    /// <summary>
+    /// this method is used to clear the cache of this class.
+    /// This is NOT clearing the capable & capacity engines cache, nor their subsystems cache.
+    /// Useful when a world is loaded or loading and you don't want to clear everything.
+    /// </summary>
+    public async Task ClearCache()
+    {
+        // we ask capable engine to unload all loaded capables, which will pool objects & capacities
+        for (int i = 0; i < loaded_capables.Count; i++)
+        {
+            string capable_id = loaded_capables.ElementAt(i);
+            CapableEngine.Instance.UnloadCapableInstantly(capable_id);
+        }
+
+        // we clear the loaded levels
+        foreach (Level level in loaded_levels.Values)
+        {
+            Destroy(level.gameObject);
+        }
+        loaded_levels.Clear();
+        loaded_capables.Clear();
+        loaded_rooms.Clear();
+
+        await Task.Yield();
     }
 }

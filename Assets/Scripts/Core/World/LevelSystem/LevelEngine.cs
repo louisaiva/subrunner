@@ -8,6 +8,27 @@ using UnityEngine;
 public class LevelEngine : BSOD_System<LevelEngine>
 {
 
+
+
+
+    // SUB SYSTEMS
+    [Header("Sub systems")]
+    private LevelNavBaker _nav_baker;
+    public LevelNavBaker NavBaker
+    {
+        get
+        {
+            if (_nav_baker == null)
+            {
+                _nav_baker = GetComponentInChildren<LevelNavBaker>(includeInactive: true);
+                if (_nav_baker == null) { Debug.LogError("(LevelEngine) No LevelNavBaker found in children"); }
+            }
+            return _nav_baker;
+        }
+    }
+
+
+
     [Header("Level data")]
     public Dictionary<string, LevelData> levels_data = new Dictionary<string, LevelData>();
 
@@ -84,11 +105,7 @@ public class LevelEngine : BSOD_System<LevelEngine>
     {
         // we empty the pooled levels
         world_levels = new Dictionary<string, Level>();
-        foreach (KeyValuePair<string, LevelData> entry in levels_data)
-        {
-            Level level = create_level(entry.Value);
-            level.LoadNavMeshesPath();
-        }
+        foreach (KeyValuePair<string, LevelData> entry in levels_data) { create_level(entry.Value); }
     }
     private Level create_level(LevelData data)
     {
@@ -103,7 +120,7 @@ public class LevelEngine : BSOD_System<LevelEngine>
 
     // LOAD LEVEL
     public Action<Level> OnLevelLoaded = delegate { };
-    public void LoadLevel(string level_id)
+    public async Task LoadLevel(string level_id)
     {
         if (!world_levels.ContainsKey(level_id)) { if (!hide_no_level_warning) { Debug.LogWarning("(LevelEngine - Load) Level data not found for id: " + level_id); } return; }
         Level new_level = world_levels[level_id];
@@ -112,8 +129,11 @@ public class LevelEngine : BSOD_System<LevelEngine>
         if (current_level != null)
         {
             if (current_level.data.id == level_id) { if (!hide_no_level_warning) { Debug.LogWarning($"(LevelEngine - Load) Level '{level_id}' is already loaded, skipping load"); } return; }
-            UnloadLevel();
+            await UnloadLevel();
         }
+
+        // we load the navmesh data for the new level
+        await NavBaker.LoadLevelNavMesh(new_level);
 
         // we load the new level
         new_level.Load();
@@ -122,7 +142,7 @@ public class LevelEngine : BSOD_System<LevelEngine>
         OnLevelLoaded?.Invoke(current_level);
         OnLevelChange?.Invoke(current_level.data);
     }
-    public void UnloadLevel()
+    public async Task UnloadLevel()
     {
         if (current_level == null) { if (!hide_no_level_warning) { Debug.LogWarning("(LevelEngine - Unload) No level currently loaded, skipping unload"); } return; }
         current_level.Unload();

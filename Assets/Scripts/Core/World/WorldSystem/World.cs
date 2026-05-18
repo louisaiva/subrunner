@@ -159,7 +159,7 @@ public class World : BSOD_System<World>
         {
             string start_level_id = data.levels_ids[0];
             if (log) { Debug.Log($"(World) STARTING WORLD: {world_id}  -- Level: {start_level_id}"); }
-            if (!string.IsNullOrEmpty(start_level_id)) { LevelEngine.LazyInstance.LoadLevel(start_level_id); }
+            if (!string.IsNullOrEmpty(start_level_id)) { await LevelEngine.LazyInstance.LoadLevel(start_level_id); }
 
             // we tp the player to the fallback spawn point while loading the world
             if (fallback_spawn_point != null) { Controller.LazyInstance.Capable.transform.position = fallback_spawn_point.position; }

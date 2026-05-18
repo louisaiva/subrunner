@@ -50,6 +50,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
     [Header("Logs Loading / Unloading")]
     public bool log_loading = false;
     public bool log_loading_extended = false;
+    public bool log_visibility = false;
     public bool hide_log_no_data_found = false;
     
 
@@ -821,12 +822,16 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
         // check if capable needs to be hidden bcz it is in a not visible room
         RoomEngine.Instance.TryGetCapableRoom(data.id, out room);
-        if (room == null) { return; }
+        if (room == null)
+        {
+            if (log_visibility) { Debug.LogWarning($"(CapableSystem - Load) Capable {data.id} is not in any room ?! --> CANT SHOW / HIDE"); }
+            return;
+        }
 
         if (!RoomEngine.Instance.DoorEngine.IsRoomVisible(room))
         {
             capable.AnimPlayer.Hide();
-            if (log_loading_extended) { Debug.Log($"(CapableSystem - Load) Capable {data.id} is in room {room.id} which is not visible --> HIDING CAPABLE"); }
+            if (log_visibility) { Debug.Log($"(CapableSystem - Load) Capable {data.id} is in room {room.id} which is not visible --> HIDING CAPABLE"); }
         }
         else { capable.AnimPlayer.Show(); }
     }
@@ -834,6 +839,23 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
 
     // UNLOAD CAPABLES
+    public void UnloadCapableInstantly(string id)
+    {
+        // if the capable is in the loading queue, it means it is already unloaded,
+        // so we remove it from loading queue
+        if (loading_queue.Contains(id))
+        {
+            loading_queue.Remove(id);
+            return;
+        }
+
+        // we remove the capable from unloading queue
+        if (unloading_queue.Contains(id)) { unloading_queue.Remove(id); }
+
+        // and we finally unload it
+        unload_capable(id);
+        return;
+    }
 
     /// <summary>
     /// same as LoadCapables(), this method is not unloading the capables directly, but it adds them to
