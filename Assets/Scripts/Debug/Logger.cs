@@ -41,12 +41,12 @@ public class Logger : MonoBehaviour
     public static void Error(string message, Verbosity verbose)
     {
         if (verbose < Verbosity.ErrorsOnly) { return; }
-        Debug.Log(message);
+        Debug.LogError(message);
     }
     public static void Warning(string message, Verbosity verbose)
     {
         if (verbose < Verbosity.WarningAndErrors) { return; }
-        Debug.Log(message);
+        Debug.LogWarning(message);
     }
     public static void Log(string message, Verbosity verbose)
     {

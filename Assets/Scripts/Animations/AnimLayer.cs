@@ -213,7 +213,8 @@ public class AnimLayer : MonoBehaviour
         transform.localEulerAngles = layer_data.local_rotation;
 
         // load sr data
-        sr.material = Resources.Load<Material>(layer_data.material_path);
+        Material mat = CapableBank.LazyInstance.MaterialBank.GetMaterial(layer_data.material_name);
+        sr.material = mat;
         material = sr.material;
         visibleKeyword = new LocalKeyword(material.shader, "_VISIBLE");
         sr.sortingLayerID = layer_data.sorting_layer_id;
@@ -241,53 +242,25 @@ public class AnimLayer : MonoBehaviour
             order_in_layer = sr.sortingOrder
         };
 
-        string material_path = get_material_path(Renderer);
-        if (!string.IsNullOrEmpty(material_path))
-        {
-            data.material_path = material_path;
-        }
-        else if (!string.IsNullOrEmpty(get_material_path_from_capable()))
-        {
-            data.material_path = get_material_path_from_capable();
-            if (CapableBank.Instance.LayerBank.log_anim_player) { Debug.LogWarning($"(AnimLayer - {leader.Capable.ID}) get_material_path returned empty for the anim layer {name}, but we found a material path in the capable anim data layers, we will use it as fallback : {data.material_path}"); }
-        }
+        data.material_name = get_material_name(Renderer);
 
         return data;
     }
 
     // MATERIAL GETTER
-    private string get_material_path(SpriteRenderer sr)
+    private string get_material_name(SpriteRenderer sr)
     {
-        if (sr == null || sr.sharedMaterial == null) { return ""; }
-        #if UNITY_EDITOR
-        string path = UnityEditor.AssetDatabase.GetAssetPath(sr.sharedMaterial);
-        #else
-        string path = "";
-        #endif
-
-        // we need to remove ".mat" from path
-        path = path.Replace(".mat", "");
-        path = path.Replace("Assets/Resources/", ""); // we also need to remove "Assets/Resources/" from the path
-
-        return path;
-    }
-    private string get_material_path_from_capable()
-    {
-        CapableData data = leader?.Capable?.data;
-        if (data == null) { return ""; }
-        AnimPlayerData anim_data = data.anim_data;
-        if (anim_data == null) { return ""; }
-        List<AnimLayerData> layers_data = anim_data.layers;
-        if (layers_data == null) { return ""; }
-        foreach (AnimLayerData layer_data in layers_data)
+        if (sr == null || sr.sharedMaterial == null)
         {
-            if (layer_data == null) { continue; }
-            if (layer_data.skin != skin) { continue; }            
-            return layer_data.material_path;
+            Capable.LogGSD?.Error($"[AnimLayer - {leader.Capable.ID}] The SpriteRenderer or its material is null, returning empty material name");
+            return "";
         }
-        return "";
-    }
 
+        string mat_name = CapableBank.LazyInstance.MaterialBank.GetMaterialName(sr.sharedMaterial);
+        Capable.LogGSD?.Log($"[AnimLayer - {leader.Capable.ID}] get_material_name found the material name: {mat_name}");
+
+        return mat_name;
+    }
 }
 
 
@@ -298,7 +271,7 @@ public class AnimLayer : MonoBehaviour
     public Vector3 local_rotation;
 
     // layer sr data
-    public string material_path;
+    public string material_name;
     public int sorting_layer_id;
     public int order_in_layer;
     public bool never_flip;

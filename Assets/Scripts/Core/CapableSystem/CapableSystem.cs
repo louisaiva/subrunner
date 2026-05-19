@@ -6,6 +6,11 @@ using UnityEngine;
 public class CapableEngine : BSOD_System<CapableEngine>
 {
 
+    // SUB SYSTEMS
+
+
+
+
     [Header("Templates Capables data")]
     public Dictionary<string, CapableData> templates_capables_data = new Dictionary<string, CapableData>();
 

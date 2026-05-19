@@ -34,6 +34,7 @@ public class AnimPlayer : MonoBehaviour
             return _capable;
         }
     }
+    public static Loggable<Capable> LogGSD => Capable.LogGSD;
 
     [Header("Skin")]
     [SerializeField] private string skin;
@@ -680,8 +681,9 @@ public class AnimPlayer : MonoBehaviour
         anim_capacity_priorities = data.anim_capacity_priorities;
 
         // we load the sr data
-        if (CapableBank.Instance.LayerBank.log_anim_player) { Debug.Log($"(AnimPlayer) {data.skin}'s data default material is {data.material_path}"); }
-        Renderer.material = Resources.Load<Material>(data.material_path);
+        if (CapableBank.Instance.LayerBank.log_anim_player) { Debug.Log($"(AnimPlayer) {data.skin}'s data default material is {data.material_name}"); }
+        Material mat = CapableBank.LazyInstance.MaterialBank.GetMaterial(data.material_name);
+        Renderer.material = mat;
         Renderer.sortingLayerID = data.sorting_layer_id;
         Renderer.sortingOrder = data.order_in_layer;
 
@@ -737,21 +739,21 @@ public class AnimPlayer : MonoBehaviour
             never_flip = never_flip
         };
 
-        string material_path = get_material_path(Renderer);
-        if (!string.IsNullOrEmpty(material_path))
+        data.material_name = get_material_name(Renderer);
+        /* if (!string.IsNullOrEmpty(material_path))
         {
-            data.material_path = material_path;
+            data.material_name = material_path;
         }
-        else if (Capable.data != null && Capable.data.anim_data != null && !string.IsNullOrEmpty(Capable.data.anim_data.material_path))
+        else if (Capable.data != null && Capable.data.anim_data != null && !string.IsNullOrEmpty(Capable.data.anim_data.material_name))
         {
-            data.material_path = Capable.data.anim_data.material_path;
-            if (CapableBank.Instance.LayerBank.log_anim_player) { Debug.LogWarning($"(AnimPlayer - {Capable.ID}) NO MATERIAL found on get_material_path(), we use the old data as FALLBACK : {data.material_path}"); }
+            data.material_name = Capable.data.anim_data.material_name;
+            if (CapableBank.Instance.LayerBank.log_anim_player) { Debug.LogWarning($"(AnimPlayer - {Capable.ID}) NO MATERIAL found on get_material_path(), we use the old data as FALLBACK : {data.material_name}"); }
         }
         else
         {
-            data.material_path = "materials/objects";
-            if (CapableBank.Instance.LayerBank.log_anim_player) { Debug.LogWarning($"(AnimPlayer - {Capable.ID}) NO MATERIAL found on get_material_path() and NO FALLBACK available, returning DEFAULT {data.material_path}"); }
-        }
+            data.material_name = "materials/objects";
+            if (CapableBank.Instance.LayerBank.log_anim_player) { Debug.LogWarning($"(AnimPlayer - {Capable.ID}) NO MATERIAL found on get_material_path() and NO FALLBACK available, returning DEFAULT {data.material_name}"); }
+        } */
 
 
         // get the layers by going through the hierarchy (so we can do it even when not playing)
@@ -780,34 +782,18 @@ public class AnimPlayer : MonoBehaviour
         }
         return transform.localPosition;
     }
-    private string get_material_path(SpriteRenderer sr)
+    private string get_material_name(SpriteRenderer sr)
     {
-        bool log_materials = true;
-        if (CapableBank.Instance != null)
-        {
-            try { log_materials = CapableBank.Instance.LayerBank.log_anim_player; }
-            catch (Exception) { log_materials = true; }
-        }
-
-
         if (sr == null || sr.sharedMaterial == null)
         {
-            if (log_materials) { Debug.LogWarning($"(AnimPlayer - {Capable.ID}) The SpriteRenderer or its material is null, returning empty material path"); }
+            LogGSD?.Error($"[AnimPlayer - {Capable.ID}] The SpriteRenderer or its material is null, returning empty material name");
             return "";
         }
-        #if UNITY_EDITOR
-        string path = AssetDatabase.GetAssetPath(sr.sharedMaterial);
-        if (log_materials) { Debug.Log($"(AnimPlayer - {Capable.ID}) get_material_path(UNITYEDITOR) found a material at path: {path}"); }
-        #else
-        string path = "";
-        if (log_materials) { Debug.Log($"(AnimPlayer - {Capable.ID}) get_material_path(NO EDITOR) found no material path ://"); }
-        #endif
+        
+        string mat_name = CapableBank.LazyInstance.MaterialBank.GetMaterialName(sr.sharedMaterial);
+        LogGSD?.Log($"[AnimPlayer - {Capable.ID}] get_material_name found the material name: {mat_name}");
 
-        // we need to remove ".mat" from path
-        path = path.Replace(".mat", "");
-        path = path.Replace("Assets/Resources/", ""); // we also need to remove "Assets/Resources/" from the path
-
-        return path;
+        return mat_name;
     }
 
 }
@@ -849,7 +835,7 @@ public class AnimPlayer : MonoBehaviour
     public string current_capacity; // runtime only
 
     // player sr data
-    public string material_path;
+    public string material_name;
     public int sorting_layer_id;
     public int order_in_layer;
     public bool never_flip;
@@ -869,7 +855,7 @@ public class AnimPlayer : MonoBehaviour
             skin = this.skin,
             current_capacity = this.current_capacity,
             local_position = this.local_position,
-            material_path = this.material_path,
+            material_name = this.material_name,
             sorting_layer_id = this.sorting_layer_id,
             order_in_layer = this.order_in_layer,
             never_flip = this.never_flip,
@@ -899,7 +885,7 @@ public class AnimPlayer : MonoBehaviour
         if (layers != null) { details += $"     - layers : {layers.Count} layers"; }
         else { details += $"     - layers : null"; }
         details += $"     - local_position : {local_position}\n";
-        details += $"     - material_path : {material_path}\n";
+        details += $"     - material_name : {material_name}\n";
         details += $"     - sorting_layer_id : {sorting_layer_id}\n";
         details += $"     - order_in_layer : {order_in_layer}\n";
         details += $"     - never_flip : {never_flip}\n";

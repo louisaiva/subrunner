@@ -7,6 +7,16 @@ public class CapableBank : MonoBehaviour
 
     // AWAKE & SINGLETON LOGIC
     public static CapableBank Instance { get; private set; }
+    public static CapableBank LazyInstance
+    {
+        get
+        {
+            if (Instance != null) { return Instance; }
+            Instance = FindFirstObjectByType<CapableBank>();
+            if (Instance == null) { Debug.LogError($"No instance of CapableBank found in the scene."); }
+            return Instance;
+        }
+    }
     public void Awake()
     {
         // singleton logic
@@ -16,6 +26,7 @@ public class CapableBank : MonoBehaviour
         // initialize the pools of capables & anim layers
         pooled_capables = new Dictionary<string,Stack<Capable>>();
     }
+
 
     // CAPABLE LOADING
     [Header("Loaded capables")]
@@ -40,6 +51,21 @@ public class CapableBank : MonoBehaviour
             return _anim_layer_bank;
         }
     }
+
+    private MaterialBank _material_bank;
+    public MaterialBank MaterialBank
+    {
+        get
+        {
+            if (_material_bank == null)
+            {
+                _material_bank = GetComponentInChildren<MaterialBank>(includeInactive: true);
+                if (_material_bank == null) { Debug.LogError("CapableEngine: MaterialBank component not found in children."); }
+            }
+            return _material_bank;
+        }
+    }
+
 
 
     [Header("Logs")]

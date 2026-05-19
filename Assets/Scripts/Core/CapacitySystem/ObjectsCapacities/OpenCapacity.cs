@@ -63,10 +63,14 @@ public class OpenCapacity : Capacity
     protected virtual void success_open()
     {
         // on ouvre le coffre
+        if (Capable == null)
+        {
+            Debug.LogError("(OpenCapacity) Can't open because our Capable is null");
+            return;
+        }
         if (Capable is not Openable openable)
         {
             Debug.LogError("(OpenCapacity) Can't open because our Capable is not openable : " + Capable.name + $" (loaded ? {Capable.Loaded})");
-            // if (log) { Debug.LogError("(OpenCapacity) " + Capable.ID + " is not openable !"); }
             return;
         }
         openable.is_open = true;

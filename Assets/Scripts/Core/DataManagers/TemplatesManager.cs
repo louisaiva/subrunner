@@ -32,6 +32,8 @@ public class TemplatesManager : MonoBehaviour
     // CAPABLES TEMPLATES SAVING
     public void SaveCapableTemplates()
     {
+        // we first need to ensure that MaterialBank is loaded bcz we need to get the paths
+
         foreach (Capable capable in capables_templates)
         {
             saveCapableTemplate(capable);
