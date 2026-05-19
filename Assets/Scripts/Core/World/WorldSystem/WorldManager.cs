@@ -280,7 +280,12 @@ public class WorldManager : MonoBehaviour
     public async Task UnloadCurrentWorld()
     {
         // first we check that a world is not already loaded
-        while (world.IsWorldLoadingOrUnloading) { await Task.Delay(100); }
+        while (world.IsWorldLoadingOrUnloading)
+        {
+            if (world == null) { return; }
+            await Task.Delay(100);
+            if (world == null) { return; }
+        }
         if (!world.IsWorldLoaded) { return; }
         await world.UnloadWorld();
     }

@@ -45,21 +45,20 @@ public class WorldDebug : MonoBehaviour, MultipleDebuggable
         current_level_name = level.id;
         current_level_rooms_count = level.TotalRoomsCount;
         current_level_capables_count = level.TotalCapablesCount;
-        // current_level_capacities_count = level.TotalCapacitiesCount;
     }
     private void handle_room_change(RoomData room)
     {
         if (room == null) { return; }
         current_room_name = room.id;
         current_room_capables_count = room.TotalCapablesCount;
-        // current_room_capacities_count = room.TotalCapacitiesCount;
     }
     private void handle_capable_added_or_remove_to_from_room(string capable_id, RoomData room)
     {
         if (capable_id == null || room == null) { return; }
 
         // we refresh the level if this is the current level
-        if (LevelEngine.Instance.CurrentLevelID == LevelEngine.Instance.GetLevelOfRoom(room.id).data.id)
+        Level room_level = LevelEngine.Instance.GetLevelOfRoom(room.id);
+        if (room_level != null && LevelEngine.Instance.CurrentLevelID == room_level.ID)
         {
             handle_level_change(LevelEngine.Instance.current_level.data);
         }

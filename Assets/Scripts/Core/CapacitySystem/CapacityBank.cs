@@ -203,6 +203,7 @@ public class CapacityBank : MonoBehaviour
     }
     private void destroy_all_loaded_capacities()
     {
+        loaded_capacities.RemoveAll(c => c == null);
         for (int i = 0; i < loaded_capacities.Count; i++)
         {
             try

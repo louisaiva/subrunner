@@ -32,7 +32,7 @@ namespace subrunner.goap
                 // we check that we have a valid target, if yes we return it (it was loaded when the MotorCapacity loaded the MotorData' local world data)
                 if (target != null && target is CapableTarget)
                 {
-                    if (Logger.Instance.LOG_CLOSEST_FOOD_SENSOR) { Debug.Log($"(ClosestFoodSensor - Sense) {ia.data.id} just loaded and has an existing target : {target}. We keep it."); }
+                    if (Logger.LazyInstance.LOG_CLOSEST_FOOD_SENSOR) { Debug.Log($"(ClosestFoodSensor - Sense) {ia.data.id} just loaded and has an existing target : {target}. We keep it."); }
                     return target;
                 }
             }

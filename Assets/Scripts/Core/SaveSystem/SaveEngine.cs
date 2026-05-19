@@ -45,9 +45,18 @@ public class SaveEngine : MonoBehaviour
 
 
     [Header("Logs")]
-    [SerializeField] private bool log = false;
-    private static bool log_static => LazyInstance != null && LazyInstance.log;
+    [SerializeField] private Loggable<SaveEngine> log;
+    private static Loggable<SaveEngine> slog => LazyInstance != null ? LazyInstance.log : null;
+    [SerializeField] private Loggable<SaveEngine> log_capa;
+    private static Loggable<SaveEngine> s_log_capa => LazyInstance != null ? LazyInstance.log_capa : null;
+    [SerializeField] private Loggable<SaveEngine> log_rooms;
+    private static Loggable<SaveEngine> s_log_rooms => LazyInstance != null ? LazyInstance.log_rooms : null;
+    private static bool log_static => LazyInstance != null && LazyInstance.log.Verbose >= Verbosity.Extended;
 
+
+    [Header("GetStaticData Logs")]
+    public Loggable<Capable> log_gsd_capable;
+    // public Loggable<Capable> log_gsd_capacity;
 
 
     ///
@@ -59,49 +68,67 @@ public class SaveEngine : MonoBehaviour
     public static void SaveAIOLevel(Level level, string world_id, bool save_rooms = true, bool save_capables = true)
     {
         // get the level data
+        slog?.Log($"Saving AIO level '{level.ID}' of world '{world_id}' (save_rooms: {save_rooms}, save_capables: {save_capables})");
         LevelData data = level.GetStaticData();
         SaveLevelData(data, world_id);
 
         // check if we need to save the rooms also
         if (save_rooms)
         {
-            foreach (Room room in level.GetStaticRooms()) { SaveRoom(room, world_id); }
+            List<Room> rooms = level.GetStaticRooms().ToList();
+            slog?.Log($"Saving {rooms.Count} rooms of level '{level.ID}'");
+            foreach (Room room in rooms) { SaveRoom(room, world_id); }
         }
 
         // check if we need to save the capables also
         if (save_capables)
         {
             List<Capable> capables = level.GetStaticCapables().ToList();
-            Debug.Log($"(SaveEngine) Saving {capables.Count} capables of level '{level.ID}' : {string.Join(", ", capables.Select(c => c.ID))}");
+            slog?.Log($"Saving {capables.Count} capables of level '{level.ID}'");
+            // Debug.Log($"(SaveEngine) Saving {capables.Count} capables of level '{level.ID}' : {string.Join(", ", capables.Select(c => c.ID))}");
             foreach (Capable cap in capables)
             {
                 if (log_static) { Debug.Log($"(SaveEngine) Saving capable '{cap.ID}' of level '{level.ID}'"); }
                 SaveCapable(cap, world_id);
             }
         }
+
+        slog?.Log($"Finished saving AIO level '{level.ID}' of world '{world_id}'");
     }
     public static void SaveRoom(Room room, string world_id)
     {
+        s_log_rooms?.Log($"Saving room '{room.ID}' in world '{world_id}'");
         RoomData data = room.GetStaticData();
         SaveRoomData(data, world_id);
     }
     public static void SaveCapable(Capable capable, string world_id, bool save_inventory = true, bool save_capacities = true)
     {
+        s_log_rooms?.Log($"Saving capable '{capable.ID}' in world '{world_id}' (save_inventory: {save_inventory}, save_capacities: {save_capacities})");
+
+        s_log_rooms?.LogSpecific($"Getting capable data '{capable.ID}'");
         CapableData data = (CapableData)capable.GetStaticData();
+
+        s_log_rooms?.LogSpecific($"Saving capable data for '{capable.ID}'");
+        s_log_rooms?.LogSpecific($"Capable data is {(data != null ? "not null" : "null")} \n{(data != null ? JsonUtility.ToJson(data, true) : "")}");
         SaveCapableData(data, world_id);
 
         if (save_capacities)
         {
-            foreach (Capacity capa in capable.GetStaticCapacities()) { SaveCapacity(capa, world_id); }
+            List<Capacity> capacities = capable.GetStaticCapacities();
+            s_log_rooms?.LogExtended($"Saving {capacities.Count} capacities of capable '{capable.ID}'");
+            foreach (Capacity capa in capacities) { SaveCapacity(capa, world_id); }
         }
 
         if (save_inventory && capable.Inventory != null)
         {
-            foreach (Item item in capable.Inventory.GetStaticItems()) { SaveCapable(item, world_id, save_inventory, save_capacities); }
+            List<Item> items = capable.Inventory.GetStaticItems();
+            s_log_rooms?.LogExtended($"Saving {items.Count} items of capable '{capable.ID}'");
+            foreach (Item item in items) { SaveCapable(item, world_id, save_inventory, save_capacities); }
         }
     }
     public static void SaveCapacity(Capacity capacity, string world_id)
     {
+        s_log_rooms?.Log($"Saving capacity '{capacity.ID}' in world '{world_id}'");
         CapacityData data = capacity.GetStaticData();
         SaveCapacityData(data, world_id);
     }
@@ -143,7 +170,9 @@ public class SaveEngine : MonoBehaviour
     {
         // save the current LevelData to a json file
         string json = JsonUtility.ToJson(data, true);
-        AppManager.SaveJsonToWorldFolder(world_id, Path.Combine("levels", data.id + ".json"), json, log_static);
+        string path = Path.Combine("levels", data.id + ".json");
+        s_log_rooms?.Log($"Saving LEVEL data to path: {path}\n{json}");
+        AppManager.SaveJsonToWorldFolder(world_id, path, json, log_static);
     }
 
     // SAVE ROOM DATA
@@ -151,7 +180,9 @@ public class SaveEngine : MonoBehaviour
     {
         // save the current RoomData to a json file
         string json = JsonUtility.ToJson(data, true);
-        AppManager.SaveJsonToWorldFolder(world_id, Path.Combine("rooms", data.id + ".json"), json, log_static);
+        string path = Path.Combine("rooms", data.id + ".json");
+        s_log_rooms?.LogVerySpecific($"Saving ROOM data to path: {path}\n{json}");
+        AppManager.SaveJsonToWorldFolder(world_id, path, json, log_static);
     }
 
     // SAVE CAPABLE DATA
@@ -159,7 +190,9 @@ public class SaveEngine : MonoBehaviour
     {
         // save the current CapableData to a json file
         string json = JsonUtility.ToJson(data, true);
-        AppManager.SaveJsonToWorldFolder(world_id, Path.Combine("capables", data.id + ".json"), json, log_static);
+        string path = Path.Combine("capables", data.id + ".json");
+        s_log_rooms?.LogVerySpecific($"Saving CAPABLE data to path: {path}\n{json}");
+        AppManager.SaveJsonToWorldFolder(world_id, path, json, log_static);
     }
 
     // SAVE CAPACITY DATA
@@ -167,6 +200,8 @@ public class SaveEngine : MonoBehaviour
     {
         // save the current CapacityData to a json file
         string json = JsonUtility.ToJson(data, true);
-        AppManager.SaveJsonToWorldFolder(world_id, Path.Combine("capacities", data.id + ".json"), json, log_static);
+        string path = Path.Combine("capacities", data.id + ".json");
+        s_log_rooms?.LogVerySpecific($"Saving CAPACITY data to path: {path}\n{json}");
+        AppManager.SaveJsonToWorldFolder(world_id, path, json, log_static);
     }
 }

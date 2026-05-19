@@ -244,7 +244,7 @@ using UnityEngine;
 
         string key_name = serialize_type_name(state.Key);
         string log_feeding = "";
-        if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING)
+        if (Logger.LazyInstance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING)
         {
             log_feeding += $"(MotorData - feed_target_to_runtime_world_data) Trying to feed target state with key '{key_name}' to runtime world data.\n - Existing value : {state.Value}";
         }
@@ -253,20 +253,20 @@ using UnityEngine;
         SerializablePositionTarget position_data = find_position_by_key(key_name);
         if (position_data != null)
         {
-            if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - Found matching serialized position target data with position {position_data.target_position}."; }
+            if (Logger.LazyInstance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - Found matching serialized position target data with position {position_data.target_position}."; }
             
             if (state.Value is null)
             {
-                if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - But State.Target is null. creating a new PositionTarget"; }
+                if (Logger.LazyInstance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - But State.Target is null. creating a new PositionTarget"; }
                 state.Value = new PositionTarget(position_data.target_position);
             }
             else if (state.Value is PositionTarget pos_target)
             {
                 pos_target.SetPosition(position_data.target_position);
-                if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - And State.Target already exists ! Its position is now {pos_target.Position}."; }
+                if (Logger.LazyInstance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - And State.Target already exists ! Its position is now {pos_target.Position}."; }
             }
 
-            if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { Debug.Log(log_feeding); }
+            if (Logger.LazyInstance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { Debug.Log(log_feeding); }
             return;
         }
 
@@ -274,32 +274,32 @@ using UnityEngine;
         SerializableCapableTarget capable_data = find_capable_by_key(key_name);
         if (capable_data != null)
         {
-            if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - Found matching serialized capable target data with capable ID {capable_data.capable_id}."; }
+            if (Logger.LazyInstance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - Found matching serialized capable target data with capable ID {capable_data.capable_id}."; }
 
             CapableData capdata = CapableEngine.Instance.GetCapableDataFromID(capable_data.capable_id);
             if (capdata is null)
             {
-                if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - But no capable data found for this capable ID. We cannot feed this target data to the runtime world data."; Debug.LogWarning(log_feeding); }
+                if (Logger.LazyInstance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - But no capable data found for this capable ID. We cannot feed this target data to the runtime world data."; Debug.LogWarning(log_feeding); }
                 return;
             }
             
             if (state.Value is null)
             {
-                if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - But State.Target is null. creating a new CapableTarget with capable id '{capdata.id}'"; }
+                if (Logger.LazyInstance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - But State.Target is null. creating a new CapableTarget with capable id '{capdata.id}'"; }
                 state.Value = new CapableTarget(capdata);
             }
             else if (state.Value is CapableTarget cap_target)
             {
                 cap_target.SetCapableData(capdata);
-                if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - And State.Target already exists ! Updated its capable data and now it is '{cap_target.CapableID}'."; }
+                if (Logger.LazyInstance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - And State.Target already exists ! Updated its capable data and now it is '{cap_target.CapableID}'."; }
             }
-            if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { Debug.Log(log_feeding); }
+            if (Logger.LazyInstance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { Debug.Log(log_feeding); }
             return;
         }
 
         // else we have no data for this target, we set it to null
         state.Value = null;
-        if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - No matching serialized target data found for this target state. We set it to null."; Debug.Log(log_feeding); }
+        if (Logger.LazyInstance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { log_feeding += $"\n - No matching serialized target data found for this target state. We set it to null."; Debug.Log(log_feeding); }
     }
 
 
@@ -480,19 +480,19 @@ using UnityEngine;
     private SerializableWorldState find_state_by_key(string key)
     {
         SerializableWorldState state = local_world_states.Find(s => s.key_name == key);
-        // if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { Debug.Log($"(MotorData - find_state_by_key) Looking for matching '{key}' among {local_world_states.Count} entries. Found: {state != null}"); }
+        // if (Logger.LazyInstance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { Debug.Log($"(MotorData - find_state_by_key) Looking for matching '{key}' among {local_world_states.Count} entries. Found: {state != null}"); }
         return state;
     }
     private SerializablePositionTarget find_position_by_key(string key)
     {
         SerializablePositionTarget position = local_world_positions.Find(p => p.key_name == key);
-        // if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { Debug.Log($"(MotorData - find_position_by_key) Looking for matching '{key}' among {local_world_positions.Count} entries. Found: {position != null}"); }
+        // if (Logger.LazyInstance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { Debug.Log($"(MotorData - find_position_by_key) Looking for matching '{key}' among {local_world_positions.Count} entries. Found: {position != null}"); }
         return position;
     }
     private SerializableCapableTarget find_capable_by_key(string key)
     {
         SerializableCapableTarget capable = local_world_capables.Find(c => c.key_name == key);
-        // if (Logger.Instance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { Debug.Log($"(MotorData - find_capable_by_key) Looking for matching '{key}' among {local_world_capables.Count} entries. Found: {capable != null}"); }
+        // if (Logger.LazyInstance.LOG_SERIALIZABLE_WORLD_STATES_TARGETS_LOADING) { Debug.Log($"(MotorData - find_capable_by_key) Looking for matching '{key}' among {local_world_capables.Count} entries. Found: {capable != null}"); }
         return capable;
     }
 }

@@ -30,7 +30,7 @@ namespace subrunner.goap
         {
             base.Start(agent, data);
 
-            if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.Log($"(AttackAction) {data.ia.data.id} is starting AttackAction on target {data.Target}"); }
+            if (Logger.LazyInstance.LOG_ATTACK_ACTION) { Debug.Log($"(AttackAction) {data.ia.data.id} is starting AttackAction on target {data.Target}"); }
 
             data.ia.GetCapacity<WalkCapacity>()?.EnableRun(); // we make sure we chase the target by running
 
@@ -38,7 +38,7 @@ namespace subrunner.goap
             // data.CapableTarget = data.Target is CapableTarget target ? target.Capable : null;
             if (data.CapableTarget == null || !data.CapableTarget.IsValid())
             {
-                if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.LogWarning($"(AttackAction) {data.ia.ID} has no valid target for AttackAction"); }
+                if (Logger.LazyInstance.LOG_ATTACK_ACTION) { Debug.LogWarning($"(AttackAction) {data.ia.ID} has no valid target for AttackAction"); }
                 agent.StopAction(resolveAction: true);
                 return;
             }
@@ -48,7 +48,7 @@ namespace subrunner.goap
                 // we don't care about checking the attack distance, because
                 // the attack will happen later when this agent will be unloaded. so we just need to return
                 // and it will go to the target, which will make this agent be unloaded, so it is perfect like this
-                if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.Log($"(AttackAction) {data.ia.ID} target {data.CapableTarget.CapableID} is not loaded, we chase it"); }
+                if (Logger.LazyInstance.LOG_ATTACK_ACTION) { Debug.Log($"(AttackAction) {data.ia.ID} target {data.CapableTarget.CapableID} is not loaded, we chase it"); }
                 data.this_action_stop_distance = 0.5f;
                 return;
             }
@@ -135,7 +135,7 @@ namespace subrunner.goap
             data.ia.OrientTowards(capable_target.transform.position);
 
             // Debug log only if enabled
-            if (Logger.Instance.LOG_ATTACK_ACTION)
+            if (Logger.LazyInstance.LOG_ATTACK_ACTION)
             {
                 Debug.Log($"(AttackAction) {data.ia.data.id} is trying to attack {capable_target.data.id}");
             }
@@ -164,12 +164,12 @@ namespace subrunner.goap
         {
             if (data.this_action_stop_distance <= 0f)
             {
-                if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.LogWarning($"(AttackAction) {data.ia.ID} has invalid stop distance {data.this_action_stop_distance:F2}, we consider it is not in range"); }
+                if (Logger.LazyInstance.LOG_ATTACK_ACTION) { Debug.LogWarning($"(AttackAction) {data.ia.ID} has invalid stop distance {data.this_action_stop_distance:F2}, we consider it is not in range"); }
                 data.this_action_stop_distance = 0.5f;
                 return false;
             }
 
-            if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.Log($"(AttackAction) {data.ia.name} IsInRange check: distance={distance:F2}, stopping_distance={data.this_action_stop_distance:F2}, in_range={distance <= data.this_action_stop_distance}"); }
+            if (Logger.LazyInstance.LOG_ATTACK_ACTION) { Debug.Log($"(AttackAction) {data.ia.name} IsInRange check: distance={distance:F2}, stopping_distance={data.this_action_stop_distance:F2}, in_range={distance <= data.this_action_stop_distance}"); }
             return distance <= data.this_action_stop_distance;
         }
 
@@ -261,7 +261,7 @@ namespace subrunner.goap
             watching_attack = true;
 
             // we log
-            if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.Log($"(AttackActionResult) Started watching attack from {attacker.ID} ({attacker.Capable.ID}), our target is {target.CapableID} and distance is {attack_distance:F2}"); }
+            if (Logger.LazyInstance.LOG_ATTACK_ACTION) { Debug.Log($"(AttackActionResult) Started watching attack from {attacker.ID} ({attacker.Capable.ID}), our target is {target.CapableID} and distance is {attack_distance:F2}"); }
         }
 
         // STOP WATCHING THE ATTACK
@@ -291,7 +291,7 @@ namespace subrunner.goap
         private void on_health_hit(HealthCapacity hit_target, float damage)
         {
             // we log
-            if (Logger.Instance.LOG_ATTACK_ACTION) { Debug.Log($"(AttackActionResult) Target {hit_target.Capable.data.id} took {damage} damage, our target is {target.CapableID}"); }
+            if (Logger.LazyInstance.LOG_ATTACK_ACTION) { Debug.Log($"(AttackActionResult) Target {hit_target.Capable.data.id} took {damage} damage, our target is {target.CapableID}"); }
 
             // we check if the hit target is the one we are watching
             if (target.CapableID != hit_target.OwnerID) { return; }

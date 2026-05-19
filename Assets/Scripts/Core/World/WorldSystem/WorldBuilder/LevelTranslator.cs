@@ -207,12 +207,12 @@ public class LevelTranslator : MonoBehaviour
             if (log_translate_extended) { Debug.Log($"(LevelTranslator) destroying room {old_room.name}"); }
             Destroy(old_room.gameObject);
         }
-        await System.Threading.Tasks.Task.Delay(300); // we delay a lil bit bcz the colliders were just created
+        await Task.Delay(300); // we delay a lil bit bcz the colliders were just created
 
 
         // now we can build the navmesh
-        // if (log_translate_extended) { Debug.Log($"(LevelTranslator) Building navmesh for level"); }
-        // NavMeshBuilder.Instance.BuildNavMeshImmediateForLevel(level);
+        if (log_translate_extended) { Debug.Log($"(LevelTranslator) Building navmesh for level"); }
+        LevelEngine.LazyInstance.NavBaker.BuildLevelNavMesh(level, force_rebuild: true);
 
         // we can then make rooms grab their capables
         if (log_translate_extended) { Debug.Log($"(LevelTranslator) Making rooms grab capables"); }
@@ -239,13 +239,6 @@ public class LevelTranslator : MonoBehaviour
             Tilemap room_tilemap = room.GetStaticTilemap(tilemap_type);
             if (room_tilemap == null) { Debug.LogWarning($"(LevelTranslator) no tilemap of type {tilemap_type} found in room {room.name}"); continue; }
             copy_tilemap(tilemap, room_tilemap);
-
-            // check if this is the mask tilemap and hide_mask == true, then we disable the tilemap renderer
-            /* if (tilemap_type == "mask" && hide_mask)
-            {
-                TilemapRenderer tilemap_renderer = room_tilemap.GetComponent<TilemapRenderer>();
-                if (tilemap_renderer != null) { tilemap_renderer.enabled = false; }
-            } */
         }
     }
     private void copy_tilemap(Tilemap source, Tilemap target)

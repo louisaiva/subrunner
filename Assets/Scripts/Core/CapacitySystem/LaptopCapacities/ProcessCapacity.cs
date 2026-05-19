@@ -142,14 +142,14 @@ public class ProcessCapacity : Capacity
     }
     protected void free_all_cores()
     {
-        if (Logger.Instance.LOG_CORES) { Debug.Log($"---> (Processus) {name} is freeing {provided_cores.Count} cores (all of them)"); }
+        if (Logger.LazyInstance.LOG_CORES) { Debug.Log($"---> (Processus) {name} is freeing {provided_cores.Count} cores (all of them)"); }
 
         foreach (Core core in provided_cores) { core.Free(); }
         provided_cores.Clear();
     }
     protected void free_cores(int amount)
     {
-        if (Logger.Instance.LOG_CORES) { Debug.Log($"---> (Processus) {name} is freeing {amount} cores"); }
+        if (Logger.LazyInstance.LOG_CORES) { Debug.Log($"---> (Processus) {name} is freeing {amount} cores"); }
 
         for (int i = 0; i < amount; ++i)
         {
@@ -167,7 +167,7 @@ public class ProcessCapacity : Capacity
             register_core_speed(core); // calculates the speed
         }
 
-        if (Logger.Instance.LOG_CORES) { Debug.Log($"---> (Processus) {name} is using {provided_cores.Count} cores with an average speed of {average_cores_speed}"); }
+        if (Logger.LazyInstance.LOG_CORES) { Debug.Log($"---> (Processus) {name} is using {provided_cores.Count} cores with an average speed of {average_cores_speed}"); }
     }
 
     // RUN , PROCESS & FINISH

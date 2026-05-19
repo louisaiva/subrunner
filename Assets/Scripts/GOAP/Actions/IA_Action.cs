@@ -27,14 +27,14 @@ namespace subrunner.goap
             // we get the IA's HealthCapacity to register to its OnTakeDamage event
             if (!data.ia.Loaded)
             {
-                if (Logger.Instance.LOG_IA_ACTION) { Debug.LogWarning($"(IA_Action) {data.ia} is not loaded, cannot register damage callback for AttackAction"); }
+                if (Logger.LazyInstance.LOG_IA_ACTION) { Debug.LogWarning($"(IA_Action) {data.ia} is not loaded, cannot register damage callback for AttackAction"); }
                 return;
             }
 
             // we get the IA's HealthCapacity to register to its OnTakeDamage event
             if (!data.ia.TryGetCapacity(out HealthCapacity health_capacity))
             {
-                if (Logger.Instance.LOG_IA_ACTION) { Debug.LogWarning($"(IA_Action) {data.ia.ID} has no HealthCapacity, cannot register damage callback for AttackAction"); }
+                if (Logger.LazyInstance.LOG_IA_ACTION) { Debug.LogWarning($"(IA_Action) {data.ia.ID} has no HealthCapacity, cannot register damage callback for AttackAction"); }
                 return;
             }
 
@@ -51,7 +51,7 @@ namespace subrunner.goap
         {
             if (!data.ia.Loaded)
             {
-                if (Logger.Instance.LOG_IA_ACTION) { Debug.LogWarning($"(IA_Action) {data.ia.ID} is not loaded, cannot unregister damage callback for AttackAction"); }
+                if (Logger.LazyInstance.LOG_IA_ACTION) { Debug.LogWarning($"(IA_Action) {data.ia.ID} is not loaded, cannot unregister damage callback for AttackAction"); }
                 return;
             }
 
@@ -61,7 +61,7 @@ namespace subrunner.goap
             // we get the callback from the dictionary
             if (!damage_callbacks.TryGetValue(data.ia.data, out Action<float, Force> damage_callback))
             {
-                if (Logger.Instance.LOG_IA_ACTION) { Debug.LogWarning($"(IA_Action) No damage callback found for {data.ia.ID}, cannot unregister damage callback for AttackAction"); }
+                if (Logger.LazyInstance.LOG_IA_ACTION) { Debug.LogWarning($"(IA_Action) No damage callback found for {data.ia.ID}, cannot unregister damage callback for AttackAction"); }
                 return;
             }
 
@@ -88,7 +88,7 @@ namespace subrunner.goap
         // TAKE DAMAGE
         public virtual void TakeDamage(IMonoAgent agent, TData data)
         {
-            if (Logger.Instance.LOG_IA_ACTION) { Debug.Log($"(IA_Action) {data.ia.ID} took damage during an action, we stop it"); }
+            if (Logger.LazyInstance.LOG_IA_ACTION) { Debug.Log($"(IA_Action) {data.ia.ID} took damage during an action, we stop it"); }
 
             // we stop the action
             agent.StopAction();

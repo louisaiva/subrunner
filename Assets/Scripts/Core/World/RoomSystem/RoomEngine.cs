@@ -18,6 +18,16 @@ public class RoomEngine : BSOD_System<RoomEngine>
         }
     }
 
+    private TileBaseBank _tilebase_bank;
+    public TileBaseBank TileBaseBank
+    {
+        get
+        {
+            if (_tilebase_bank == null) { _tilebase_bank = GetComponent<TileBaseBank>(); }
+            return _tilebase_bank;
+        }
+    }
+
     private LightsEngine _lights_engine;
     public LightsEngine LightsEngine
     {

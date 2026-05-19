@@ -58,6 +58,8 @@ public class ColliderBank : MonoBehaviour
     [SerializeField] protected bool hide_log_load_collider_not_found;
     protected static bool log_shadows = false;
     protected static bool log_shadows_shapes = false;
+    [SerializeField] protected Loggable<ColliderBank> log;
+    protected static Loggable<ColliderBank> slog => Instance != null ? Instance.log : null;
 
 
 
@@ -196,7 +198,6 @@ public class ColliderBank : MonoBehaviour
         // if we are not using pathfinding we make sure we don't have any
         if (modifier != null) { Destroy(modifier); }
     }
-    
     private void load_collider_data(Collider2D collider, ColliderData collider_data)
     {
         if (log_body_data) { Debug.Log($"(CapableBank - load_collider_data) Loading collider data : {(collider_data == null ? "null" : collider_data.GetDetails())}"); }
@@ -219,7 +220,6 @@ public class ColliderBank : MonoBehaviour
             collider.isTrigger = !WorldBuilder.IsWorking; // if we are world building we want it to be active, if not world building we don't want it
         } */
     }
-
     public void UnloadCollider(GameObject collider_go)
     {
         Collider2D collider = collider_go.GetComponent<Collider2D>();
@@ -267,13 +267,18 @@ public class ColliderBank : MonoBehaviour
             layerID = collider.gameObject.layer,
             offset = collider.offset,
             is_trigger = collider.isTrigger,
-            pathfinding_area = get_pathfinding_area(collider),
             shadow_caster_data = get_static_shadow_caster_data(collider)
         };
+
+        slog?.LogExtended($"Basic collider data gathered for {collider.gameObject.name} of type {collider.GetType().Name} with offset {collider.offset} and isTrigger {collider.isTrigger}");
+        data.pathfinding_area = get_pathfinding_area(collider);
+
+        slog?.LogExtended($"Pathfinding area for collider {collider.gameObject.name} is {data.pathfinding_area}. Getting circle/box data if applicable.");
 
         // check if circle
         if (collider is CircleCollider2D circle)
         {
+            slog?.LogExtended($"Collider {collider.gameObject.name} is a CircleCollider2D with radius {circle.radius}. Gathering circle collider data.");
             return new CircleData(data)
             {
                 radius = circle.radius
@@ -283,22 +288,25 @@ public class ColliderBank : MonoBehaviour
         // check if box
         if (collider is BoxCollider2D box)
         {
+            slog?.LogExtended($"Collider {collider.gameObject.name} is a BoxCollider2D with size {box.size}. Gathering box collider data.");
             return new BoxData(data)
             {
                 size = box.size
             };
         }
 
+        slog?.Warning($"Collider {collider.gameObject.name} is of type {collider.GetType().Name} which is not supported by ColliderBank, returning basic collider data without size/radius info");
         return data;
     }
     protected static int get_pathfinding_area(Collider2D collider)
     {
+        slog?.LogSpecific($"Getting pathfinding area for collider {collider.gameObject.name}");
         NavMeshModifier modifier = collider.GetComponent<NavMeshModifier>();
-        if (modifier != null && modifier.enabled) { return modifier.area; }
-        return -1;
+        if (modifier == null) { slog?.LogSpecific($"no nav mesh modifier found"); return -1; }
+        if (!modifier.enabled) { slog?.LogSpecific($"nav mesh modifier found but not enabled"); return -1; }
+        slog?.LogSpecific($"Pathfinding area is {modifier.area}");
+        return modifier.area;
     }
-
-
 
 
     ///

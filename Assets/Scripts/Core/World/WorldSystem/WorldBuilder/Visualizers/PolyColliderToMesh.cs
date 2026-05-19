@@ -51,35 +51,42 @@ public class PolyColliderToMesh: MonoBehaviour
     // and need the visual to update.
     public void Reshape()
     {
-    // For simplicity, we'll only handle colliders made of a single path.
-    // This method can be extended to handle multi-part colliders and
-    // colliders with holes, but triangulating these gets more complex.
-    _cachedPoints = _collider.GetPath(0);
+        // For simplicity, we'll only handle colliders made of a single path.
+        // This method can be extended to handle multi-part colliders and
+        // colliders with holes, but triangulating these gets more complex.
+        _cachedPoints = _collider.GetPath(0);
 
-    // Triangulate the loop of points around the collider's perimeter.
-    LoopToTriangles();
+        // Triangulate the loop of points around the collider's perimeter.
+        if (!LoopToTriangles())
+        {
+            // we failed looping through triangles,
+            // we disable the component to avoid spamming errors every frame
+            Debug.LogWarning($"(PolyColliderToMesh) Failed to triangulate the collider points for '{gameObject.name}', disabling the component to avoid spamming errors every frame");
+            this.enabled = false;
+            return;
+        }
 
-    // Populate our mesh with the resulting geometry.
-    Vector3[] vertices = new Vector3[_cachedPoints.Length];
-    for (int i = 0; i < vertices.Length; i++)
-        vertices[i] = _cachedPoints[i];
+        // Populate our mesh with the resulting geometry.
+        Vector3[] vertices = new Vector3[_cachedPoints.Length];
+        for (int i = 0; i < vertices.Length; i++)
+            vertices[i] = _cachedPoints[i];
 
-    // We want to make sure we never assign fewer verts than we're indexing.
-    if (vertices.Length <= _myMesh.vertexCount)
-    {
-        _myMesh.triangles = _triangles.ToArray();
-        _myMesh.vertices = vertices;
-        _myMesh.uv = _cachedPoints;
+        // We want to make sure we never assign fewer verts than we're indexing.
+        if (vertices.Length <= _myMesh.vertexCount)
+        {
+            _myMesh.triangles = _triangles.ToArray();
+            _myMesh.vertices = vertices;
+            _myMesh.uv = _cachedPoints;
+        }
+        else
+        {
+            _myMesh.vertices = vertices;
+            _myMesh.uv = _cachedPoints;
+            _myMesh.triangles = _triangles.ToArray();
+        }
     }
-    else
-    {
-        _myMesh.vertices = vertices;
-        _myMesh.uv = _cachedPoints;
-        _myMesh.triangles = _triangles.ToArray();
-    }
-}
 
-    void LoopToTriangles()
+    bool LoopToTriangles()
     {
         // This uses a naive O(n^3) ear clipping approach for simplicity.
         // Higher-performance triangulation methods exist if you need to
@@ -114,8 +121,9 @@ public class PolyColliderToMesh: MonoBehaviour
             }
             catch (System.ArgumentOutOfRangeException)
             {
-                Debug.LogError($"(PolyColliderToMesh) Error adding triangle with indices {cw}, {ccw}, {tip} (count: {count}) - ring count: {ring.Count} - indices count: {indices.Count}\n we did not throw");
-                return;
+                Debug.LogWarning($"(PolyColliderToMesh) Error adding triangle with indices {cw}, {ccw}, {tip} (count: {count}) - ring count: {ring.Count} - indices count: {indices.Count}\n we did not throw");
+                // this.enabled = false;
+                return false;
             }
 
             ring.RemoveAt(tip);
@@ -129,6 +137,7 @@ public class PolyColliderToMesh: MonoBehaviour
             _triangles.Add(indices[0]);
         }
         else _triangles.AddRange(indices);
+        return true;
     }
 
     // Returns -1 for counter-clockwise, +1 for clockwise.

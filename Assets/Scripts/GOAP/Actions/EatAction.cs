@@ -27,7 +27,7 @@ namespace subrunner.goap
 
             // we set the food target into the capacity
             data.eatCapacity.SetFoodTarget(food);
-            if (Logger.Instance.LOG_EAT_ACTION)
+            if (Logger.LazyInstance.LOG_EAT_ACTION)
             {
                 Debug.Log($"(EatAction) {data.ia.ID} is going to eat {food.ID}"
                 + $" with capacity {data.eatCapacity.GetType().Name}");
@@ -54,7 +54,7 @@ namespace subrunner.goap
             base.Stop(agent, data);
 
             data.eatCapacity.Cancel();
-            if (Logger.Instance.LOG_EAT_ACTION) { Debug.Log($"(EatAction) {data.ia.ID} stopped eating"); }
+            if (Logger.LazyInstance.LOG_EAT_ACTION) { Debug.Log($"(EatAction) {data.ia.ID} stopped eating"); }
         }
 
         // DATA

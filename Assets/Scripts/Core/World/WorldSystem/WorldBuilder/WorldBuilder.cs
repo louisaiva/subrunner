@@ -53,7 +53,8 @@ public class WorldBuilder : MonoBehaviour
 
 
     [Header("Logs")]
-    [SerializeField] private bool log = false;
+    [SerializeField] private Loggable<WorldBuilder> log;
+    private static Loggable<WorldBuilder> slog => LazyInstance != null ? LazyInstance.log : null;
     [SerializeField] private bool log_callbacks = false;
 
     public void RegisterCallbacks()
@@ -85,12 +86,12 @@ public class WorldBuilder : MonoBehaviour
     // MAIN ENTRY POINT TO EDIT / CREATE A LEVEL
     public static void EditLevel(string level)
     {
-        if (LazyInstance.log) { Debug.Log($"(WorldBuilder) EditLevel called for level '{level}'"); }
+        slog?.Log($"EditLevel called for level '{level}'");
         LevelBuilder.EditLevel(StaticTargetedWorld, level);
     }
     public static void BuildLevel(string level)
     {
-        if (LazyInstance.log) { Debug.Log($"(WorldBuilder) BuildLevel called for level '{level}'"); }
+        slog?.Log($"BuildLevel called for level '{level}'");
         
         // we first enable LevelBuilder
         LevelBuilder.gameObject.SetActive(true);
@@ -98,14 +99,19 @@ public class WorldBuilder : MonoBehaviour
     }
     public static void SaveLevel(string level_id)
     {
-        if (LazyInstance.log) { Debug.Log($"(WorldBuilder) SaveLevel called for level '{level_id}'"); }
+        slog?.Log($"SaveLevel called for level '{level_id}'");
 
         // check if we have the built level in cache,
-        if (!LazyInstance.built_levels_cache.TryGetValue(level_id, out Level cached_level)) { return; }
+        if (!LazyInstance.built_levels_cache.TryGetValue(level_id, out Level cached_level))
+        {
+            slog?.Error($"No built level with id '{level_id}' found in cache, cannot save it");
+            return;
+        }
         
-        if (LazyInstance.log) { Debug.Log($"(WorldBuilder) Found built level '{level_id}' in cache, saving it directly"); }
+        slog?.Log($"Found built level '{level_id}' in cache, saving it directly");
         Level level = LazyInstance.built_levels_cache[level_id];
         SaveEngine.SaveAIOLevel(level, StaticTargetedWorld);
+        slog?.Log($"Level '{level_id}' saved succesfully :D");
     }
 
     // CALLBACKS HANDLERS
@@ -124,7 +130,7 @@ public class WorldBuilder : MonoBehaviour
         if (log_callbacks) { Debug.Log($"(WorldBuilder) Level '{built_data.level}' built, starting translation"); }
         build_status[built_data.level] = LevelBuildStatus.Translating;
         save_status[built_data.level] = LevelSaveStatus.SaveRequested;
-        _= LevelTranslator.Translate(built_data);
+        _ = LevelTranslator.Translate(built_data);
     }
     private void on_level_translated(Level level)
     {

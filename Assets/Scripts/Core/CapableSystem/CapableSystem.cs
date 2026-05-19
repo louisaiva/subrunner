@@ -109,12 +109,18 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
 
         // we unload all loaded capables
+        if (log) { Debug.Log($"(CapableEngine) clearing loaded capables data"); }
         loaded_capables_data.Clear();
-        CapableBank.Instance.DestroyAllCapablesInstantly();
+
+        if (log) { Debug.Log($"(CapableEngine) destroying all loaded capables"); }
+        CapableBank.Instance.DestroyAllCapablesInstantly(log);
+
+        if (log) { Debug.Log($"(CapableEngine) clearing sub systems cache"); }
         CapableBank.Instance.ClearSubSystemsCache(log); // clears AnimLayerBank, ColliderBank
 
 
         // we clear the world capables data, runtime ids, etc
+        if (log) { Debug.Log($"(CapableEngine) clearing data"); }
         world_capables_data.Clear();
         capables_hashs_by_ids.Clear();
         capables_ids_by_hash.Clear();

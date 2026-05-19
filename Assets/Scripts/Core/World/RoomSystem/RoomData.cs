@@ -39,7 +39,7 @@ using UnityEngine;
 
 
     // tilemaps data
-    public string[] tilebase_paths_used;
+    public string[] tilebases_names;
     public BoundsInt ceiling_bounds;
     public int[] ceiling_tiles;
     public BoundsInt edges_bounds;

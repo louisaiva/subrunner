@@ -224,7 +224,7 @@ public class Connection
         this.from = start.Capable.name;
         this.to = destination.Capable.name;
 
-        if (Logger.Instance.LOG_CONNECTIONS) { Debug.Log($"---> (Connection) {from} <--> {to} : connected"); }
+        if (Logger.LazyInstance.LOG_CONNECTIONS) { Debug.Log($"---> (Connection) {from} <--> {to} : connected"); }
     }
 
     // OPEN / CLOSE
@@ -239,7 +239,7 @@ public class Connection
         start.AddConnection(this);
         destination.AddIncomingConnection(this);
 
-        if (Logger.Instance.LOG_CONNECTIONS) { Debug.Log($"---> (Connection) {from} <--> {to} : opened"); }
+        if (Logger.LazyInstance.LOG_CONNECTIONS) { Debug.Log($"---> (Connection) {from} <--> {to} : opened"); }
     }
     public void Close()
     {
@@ -256,7 +256,7 @@ public class Connection
         destination.RemoveIncomingConnection(this);
         start.RemoveConnection(this);
 
-        if (Logger.Instance.LOG_CONNECTIONS) { Debug.Log($"---> (Connection) {from} <--> {to} : closed"); }
+        if (Logger.LazyInstance.LOG_CONNECTIONS) { Debug.Log($"---> (Connection) {from} <--> {to} : closed"); }
     }
 
     // CHILDREN MANAGEMENT

@@ -16,14 +16,14 @@ namespace subrunner.goap
             IA ia = references.GetCachedComponentInParent<IA>();
             if (ia == null)
             {
-                if (Logger.Instance.LOG_HUNGER_SENSOR) { Debug.LogWarning($"(HungerSensor) IA component not found on agent {agent}"); }
+                if (Logger.LazyInstance.LOG_HUNGER_SENSOR) { Debug.LogWarning($"(HungerSensor) IA component not found on agent {agent}"); }
                 return new SenseValue(0);
             }
 
             EatCapacity eat_capacity = ia.GetCapacity<EatCapacity>();
             if (eat_capacity == null)
             {
-                if (Logger.Instance.LOG_HUNGER_SENSOR) { Debug.LogWarning($"(HungerSensor) EatCapacity not found on ia {ia.GetStaticID()}"); } // get static id bcz it may be destroyed if we did not find the capacity
+                if (Logger.LazyInstance.LOG_HUNGER_SENSOR) { Debug.LogWarning($"(HungerSensor) EatCapacity not found on ia {ia.GetStaticID()}"); } // get static id bcz it may be destroyed if we did not find the capacity
                 return new SenseValue(0);
             }
 

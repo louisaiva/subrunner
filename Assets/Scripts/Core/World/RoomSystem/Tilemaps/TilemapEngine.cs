@@ -39,6 +39,7 @@ public class TilemapEngine : MonoBehaviour
     public bool log_building = false;
     public bool log_tilebases = false;
     public bool log_showing = false;
+    [SerializeField] private Loggable<TilemapEngine> log;
 
 
 
@@ -76,15 +77,17 @@ public class TilemapEngine : MonoBehaviour
     {
         // we load the tilebases used in data
         tilebases_used.Clear();
-        if (data.tilebase_paths_used == null) { return; }
-        for (int i = 0; i < data.tilebase_paths_used.Length; i++)
+        if (data.tilebases_names == null) { return; }
+        TileBase tilebase;
+        for (int i = 0; i < data.tilebases_names.Length; i++)
         {
-            tilebases_used.Add(get_or_load_tile_base(data.tilebase_paths_used[i]));
+            tilebase = RoomEngine.Instance.TileBaseBank.GetTileBaseFromName(data.tilebases_names[i]);
+            if (tilebase == null) { log.Error($"Failed to load tilebase with id: {data.tilebases_names[i]} for room: {data.id}"); continue; }
+            tilebases_used.Add(tilebase);
         }
-
-        if (log_tilebases) { Debug.Log($"(TilemapEngine) Loaded {tilebases_used.Count} tilebases for room: {data.id} ({string.Join(", ", tilebases_used.Select(t => t.name))})"); }
+        log.Log(log_tilebases, $"Loaded {tilebases_used.Count} tilebases for room: {data.id} ({string.Join(", ", tilebases_used.Select(t => t.name))})");
     }
-    private TileBase get_or_load_tile_base(string tilebase_path)
+    /* private TileBase get_or_load_tile_base(string tilebase_path)
     {
         if (tilebase_cache.TryGetValue(tilebase_path, out TileBase tilebase))
         {
@@ -96,7 +99,7 @@ public class TilemapEngine : MonoBehaviour
         if (tilebase == null) { Debug.LogError($"(TilemapEngine) Failed to load tilebase at path: {tilebase_path}"); }
         tilebase_cache[tilebase_path] = tilebase;
         return tilebase;
-    }
+    } */
     public RoomTilemaps BuildTilemapsForAIO_Room(Room room)
     {
         RoomData data = room.data;

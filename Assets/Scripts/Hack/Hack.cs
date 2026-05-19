@@ -37,14 +37,14 @@ public class Hack : Processus
 
         // run the hack
         state = ProcessusState.Running;
-        if (Logger.Instance.LOG_HACKS) { Debug.Log($"---> (Hack) on {target.Capable.name} : {name} : started"); }
+        if (Logger.LazyInstance.LOG_HACKS) { Debug.Log($"---> (Hack) on {target.Capable.name} : {name} : started"); }
     }
     public override void Process()
     {
         // checks if the tunnel is still open
         if (tunnel.state != ConnectionState.Opened)
         {
-            if (Logger.Instance.LOG_HACKS) { Debug.LogWarning($"---> (Hack) on {target.Capable.name} : {name} : interrupted because the tunnel was closed"); }
+            if (Logger.LazyInstance.LOG_HACKS) { Debug.LogWarning($"---> (Hack) on {target.Capable.name} : {name} : interrupted because the tunnel was closed"); }
             Fail();
             return;
         }
@@ -81,12 +81,12 @@ public class Hack : Processus
         if (wait_exploit is TimerExploit timer)
         {
             // we start a timer
-            if (Logger.Instance.LOG_HACKS) { Debug.Log($"---> (Hack) on {target.Capable.name} : {name} : is now in Timer mode for {timer.end_timer} seconds."); }
+            if (Logger.LazyInstance.LOG_HACKS) { Debug.Log($"---> (Hack) on {target.Capable.name} : {name} : is now in Timer mode for {timer.end_timer} seconds."); }
             duration = timer.end_timer;
         }
         else
         {
-            if (Logger.Instance.LOG_HACKS) { Debug.Log($"---> (Hack) on {target.Capable.name} : {name} : is now in Wait mode."); }
+            if (Logger.LazyInstance.LOG_HACKS) { Debug.Log($"---> (Hack) on {target.Capable.name} : {name} : is now in Wait mode."); }
             duration = 0f;
         }
         progress = 100f;
@@ -98,7 +98,7 @@ public class Hack : Processus
     {
 
         // the hack has failed :///
-        if (Logger.Instance.LOG_HACKS) { Debug.Log($"---> (Hack) on {target.Capable.name} : {name} : failed."); }
+        if (Logger.LazyInstance.LOG_HACKS) { Debug.Log($"---> (Hack) on {target.Capable.name} : {name} : failed."); }
         this.state = ProcessusState.Failed;
 
         // Notify the target that the hack is failed
@@ -110,7 +110,7 @@ public class Hack : Processus
     public void Complete()
     {
         // the hack is successful !!
-        if (Logger.Instance.LOG_HACKS) { Debug.Log($"---> (Hack) on {target.Capable.name} : {name} : completed successfully."); }
+        if (Logger.LazyInstance.LOG_HACKS) { Debug.Log($"---> (Hack) on {target.Capable.name} : {name} : completed successfully."); }
         this.progress = 100f;
         this.state = ProcessusState.Completed;
 
@@ -127,7 +127,7 @@ public class Hack : Processus
         // checks if the tunnel is still open
         if (tunnel.state != ConnectionState.Opened)
         {
-            if (Logger.Instance.LOG_HACKS) { Debug.LogWarning($"---> (Hack) on {target.Capable.name} : {name} : was interrupted because the tunnel was closed"); }
+            if (Logger.LazyInstance.LOG_HACKS) { Debug.LogWarning($"---> (Hack) on {target.Capable.name} : {name} : was interrupted because the tunnel was closed"); }
             Fail();
             return;
         }
@@ -166,7 +166,7 @@ public class Hack : Processus
     {
         if (downloads.Contains(file)) { return; }
         downloads.Add(file);
-        if (Logger.Instance.LOG_HACKS) { Debug.Log($"---> (Hack) on {target.Capable.name} : {name} : found file {file.name} and downloaded it."); }
+        if (Logger.LazyInstance.LOG_HACKS) { Debug.Log($"---> (Hack) on {target.Capable.name} : {name} : found file {file.name} and downloaded it."); }
     }
     
     // GETTERS

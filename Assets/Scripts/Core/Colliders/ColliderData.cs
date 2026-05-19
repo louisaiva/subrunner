@@ -26,6 +26,31 @@ public interface IColliderData
     public bool is_trigger;
     public Vector2 offset;
 
+    public ColliderData() { }
+    protected ColliderData(ColliderData parent) { copy_from_parent(parent); }
+    private void copy_from_parent(ColliderData parent)
+    {
+        if (parent == null) { return; }
+
+        var type = parent.GetType();
+
+        foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+        {
+            if (!property.CanRead || !property.CanWrite) { continue; }
+            if (Attribute.IsDefined(property, typeof(RuntimeOnlyAttribute))) { continue; }
+
+            property.SetValue(this, property.GetValue(parent));
+        }
+
+        foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Public))
+        {
+            if (Attribute.IsDefined(field, typeof(RuntimeOnlyAttribute))) { continue; }
+
+            field.SetValue(this, field.GetValue(parent));
+        }
+    }
+
+
 
     // DUPLICATE
     public virtual IColliderData Duplicate()
@@ -63,26 +88,7 @@ public interface IColliderData
 
 
     // CONSTRUCTOR
-    public CircleData() { }
-    public CircleData(ColliderData parent)
-    {
-        Type type = parent.GetType();
-
-        foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
-        {
-            if (!property.CanRead || !property.CanWrite) { continue; }
-            if (Attribute.IsDefined(property, typeof(RuntimeOnlyAttribute))) { continue; }
-
-            property.SetValue(this, property.GetValue(parent));
-        }
-
-        foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Public))
-        {
-            if (Attribute.IsDefined(field, typeof(RuntimeOnlyAttribute))) { continue; }
-
-            field.SetValue(this, field.GetValue(parent));
-        }
-    }
+    public CircleData(ColliderData parent) : base(parent) { }
 
     // DUPLICATE
     public override IColliderData Duplicate()
@@ -106,12 +112,7 @@ public interface IColliderData
     public Vector2 size;
 
     // CONSTRUCTOR
-    public BoxData() {}
-    public BoxData(ColliderData parent)
-    {
-        foreach (var prop in parent.GetType().GetProperties()) { prop.SetValue(this, prop.GetValue(parent)); }
-        foreach (var prop in parent.GetType().GetFields()) { prop.SetValue(this, prop.GetValue(parent)); }
-    }
+    public BoxData(ColliderData parent) : base(parent) { }
 
     // DUPLICATE
     public override IColliderData Duplicate()

@@ -164,9 +164,19 @@ public class AppManager : MonoBehaviour
         }
         return jsons;
     }
-    public static string LoadJsonFromAsset(string path)
+    public static string LoadJsonFromAsset(string path, FileNotFound log_type = FileNotFound.Log)
     {
-        return Resources.Load<TextAsset>(path).text;
+        TextAsset textAsset = Resources.Load<TextAsset>(path);
+        if (textAsset == null)
+        {
+            if (log_type == FileNotFound.DontLog) { return null; }
+            string log = $"(AppManager) Failed to load json from asset at path: {path}";
+            if (log_type == FileNotFound.LogWarning) { Debug.LogWarning(log); }
+            if (log_type == FileNotFound.LogError) { Debug.LogError(log); }
+            if (log_type == FileNotFound.Log) { Debug.Log(log); }
+            return null;
+        }
+        return textAsset.text;
     }
     public static string LoadJsonFromAsset<T>(string path, out T data)
     {
@@ -237,6 +247,20 @@ public class AppManager : MonoBehaviour
         string json_path = Path.Combine(WorldManager.WorldsDataPath, world_id, path);
         System.IO.File.WriteAllText(json_path, json);
         if (log) { Debug.Log($"(AppManager) Saved json to {world_id} world folder: {json_path}\n{json}"); }
+    }
+    public static void SaveJsonToAsset(string path, string json, Verbosity verbose)
+    {
+        if (!path.StartsWith("Assets/Resources/")) { path = Path.Combine("Assets/Resources/", path + ".json"); }
+        try
+        {
+            System.IO.File.WriteAllText(path, json);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"(AppManager) Failed to save json to asset: {path}\n{json}\nError: {e.Message}");
+            return;
+        }
+        if (verbose >= Verbosity.Normal) { Debug.Log($"(AppManager) Saved json to asset: {path}\n{json}"); }
     }
 }
 

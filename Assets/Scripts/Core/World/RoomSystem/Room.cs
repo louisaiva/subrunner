@@ -178,18 +178,12 @@ public class Room : MonoBehaviour
 
         // now we use AssetDatabase to get the path of the tiles bases
         string[] tilebase_paths_used = new string[used_tilebases.Length];
-        #if UNITY_EDITOR
         for (int i = 0; i < used_tilebases.Length; i++)
         {
             TileBase tilebase = used_tilebases[i];
-            string path = UnityEditor.AssetDatabase.GetAssetPath(tilebase);
-            path = path.Replace("Assets/Resources/", "").Replace(".asset", "");
-            tilebase_paths_used[i] = path;
+            tilebase_paths_used[i] = RoomEngine.Instance.TileBaseBank.GetNameFromTileBase(tilebase);
         }
-        #else
-        for (int i = 0; i < used_tilebases.Length; i++) { tilebase_paths_used[i] = ""; }
-        #endif
-        room_data.tilebase_paths_used = tilebase_paths_used;
+        room_data.tilebases_names = tilebase_paths_used;
     }
     protected int[] get_tilemap(Tilemap tilemap, out BoundsInt bounds, ref TileBase[] tilebases_used)
     {

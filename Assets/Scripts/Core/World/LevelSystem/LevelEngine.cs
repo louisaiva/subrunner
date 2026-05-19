@@ -40,7 +40,7 @@ public class LevelEngine : BSOD_System<LevelEngine>
         get
         {
             if (current_level == null || current_level.data == null) { return null; }
-            return current_level.data.id;
+            return current_level.ID;
         }
     }
     public Action<LevelData> OnLevelChange = delegate { };

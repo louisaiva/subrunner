@@ -568,9 +568,10 @@ public class Capable : MonoBehaviour, Debuggable
     /// since all the lists will be null or empty
     /// </summary>
     /// <returns>CapableData the data that describes this capable</returns>
+    private static Loggable<Capable> log_gsd => SaveEngine.LazyInstance != null ? SaveEngine.LazyInstance.log_gsd_capable : null;
     public virtual ICapableData GetStaticData()
     {
-        // Debug.Log($"(Capable - GetStaticData) Getting static data for capable {name} of type {GetType().Name}");
+        log_gsd?.LogExtended($"Getting static data for capable '{name}' of type {GetType().Name}");
         CapableData static_data = new CapableData
         {
             // set base data things
@@ -584,26 +585,32 @@ public class Capable : MonoBehaviour, Debuggable
             // we set the kind
             kind = GetType().Name,
 
-            // we set the anim data
-            anim_data = AnimPlayer?.GetStaticAnimData(),
-
-            // we set the inventory
-            inventory = Inventory?.GetStaticInventoryData(),
-
-            // we set the body data
-            feet_data = get_static_feet_data(),
-
             // we set the orientation
             orientation = this.orientation,
-
-
-            // we set the capacities
-            capacities_ids = get_static_capacity_ids(),
 
             // we set the effects
             effects = new List<Effect>(effects),
             effects_ttl = new List<float>(effects_timetolive)
         };
+
+
+        // we set the anim data
+        log_gsd?.LogExtended($"Getting anim player data");
+        static_data.anim_data = AnimPlayer?.GetStaticAnimData();
+
+        // we set the inventory
+        log_gsd?.LogExtended($"Getting inventory data");
+        static_data.inventory = Inventory?.GetStaticInventoryData();
+
+        // we set the body data
+        log_gsd?.LogExtended($"Getting feet data");
+        static_data.feet_data = get_static_feet_data();
+
+        // we set the capacities
+        log_gsd?.LogExtended($"Getting capacities ids data");
+        static_data.capacities_ids = get_static_capacity_ids();
+
+
         return static_data;
     }
     public string GetStaticID()
@@ -630,7 +637,11 @@ public class Capable : MonoBehaviour, Debuggable
     }
     protected FeetData get_static_feet_data()
     {
-        if (Feet == null) { return null; }
+        if (Feet == null)
+        {
+            log_gsd?.Warning($"No feet transform found, returning null for feet data");
+            return null;
+        }
 
         FeetData feet_data = new FeetData
         {
@@ -638,17 +649,30 @@ public class Capable : MonoBehaviour, Debuggable
             circle_colliders = new List<CircleData>()
         };
 
-
         // we go through all colliders in the body and save their data
         List<Collider2D> colliders = new List<Collider2D>(Feet.GetComponentsInChildren<Collider2D>(includeInactive: true));
+        log_gsd?.LogSpecific($"[get_static_feet_data] Found {colliders.Count} colliders in feet, getting their data");
         foreach (Collider2D collider in colliders)
         {
-            ColliderData collider_data = ColliderBank.GetColliderData(collider) as ColliderData;
-            Debug.Log($"(Capable - get_static_feet_data) Collider found in feet of type {collider.GetType().Name} with data {collider_data} : \n{collider_data.GetDetails()}");
+            IColliderData collider_data = ColliderBank.GetColliderData(collider);
+            if (collider_data == null)
+            {
+                log_gsd?.Error($"[get_static_feet_data] Could not get collider data from ColliderBank for collider in capable feet, skipping this collider");
+                continue;
+            }
+            ColliderData data = collider_data as ColliderData;
+            if (data == null)
+            {
+                log_gsd?.Error($"[get_static_feet_data] Could not CAST collider data to ColliderData for collider in capable feet, skipping this collider");
+                continue;
+            }
+            log_gsd?.LogVerySpecific($"[get_static_feet_data] Collider found in feet with data {data}");
+            log_gsd?.LogVerySpecific($"[get_static_feet_data] Collider data details: \n{data.GetDetails()}");
 
-            if (collider is BoxCollider2D) { feet_data.box_colliders.Add(collider_data as BoxData); }
-            else if (collider is CircleCollider2D) { feet_data.circle_colliders.Add(collider_data as CircleData); }
+            if (collider is BoxCollider2D) { feet_data.box_colliders.Add(data as BoxData); }
+            else if (collider is CircleCollider2D) { feet_data.circle_colliders.Add(data as CircleData); }
         }
+        log_gsd?.LogSpecific($"[get_static_feet_data] feet data gathered successfully");
         return feet_data;
     }
     public List<Capacity> GetStaticCapacities()

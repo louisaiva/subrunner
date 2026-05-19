@@ -252,14 +252,18 @@ public class CapableBank : MonoBehaviour
 
 
     // DESTROY CAPABLES
-    public void DestroyAllCapablesInstantly()
+    public void DestroyAllCapablesInstantly(bool log)
     {
-        destroy_all_loaded_capables();
-        destroy_all_pooled_capables();
+        destroy_all_loaded_capables(log);
+        destroy_all_pooled_capables(log);
         capables_in_bank.Clear();
+        if (log) { Debug.Log($"(CapableBank) All capables were successfully destroyed"); }
     }
-    private void destroy_all_loaded_capables()
+    private void destroy_all_loaded_capables(bool log)
     {
+        if (log) { Debug.Log($"(CapableBank) Removing null loaded capables"); }
+        loaded_capables.RemoveAll(c => c == null);
+        if (log) { Debug.Log($"(CapableBank) Destroying all LOADED capables, count : {loaded_capables.Count}"); }
         for (int i = 0; i < loaded_capables.Count; i++)
         {
             try
@@ -272,13 +276,16 @@ public class CapableBank : MonoBehaviour
             }
         }
         loaded_capables.Clear();
+        if (log) { Debug.Log($"(CapableBank) All loaded capables are now destroyed and loaded_capables is cleared"); }
     }
-    private void destroy_all_pooled_capables()
+    private void destroy_all_pooled_capables(bool log)
     {
+        if (log) { Debug.Log($"(CapableBank) Destroying all POOLED capables"); }
         // we clear the pool of pooled capables to be sure to destroy all capable gameobjects in the bank
         foreach (KeyValuePair<string, Stack<Capable>> entry in pooled_capables)
         {
             Stack<Capable> stack = entry.Value;
+            if (log) { Debug.Log($"(CapableBank) Destroying pooled capables in stack : {entry.Key}"); }
             while (stack.Count > 0)
             {
                 Capable capable = stack.Pop();
@@ -286,11 +293,15 @@ public class CapableBank : MonoBehaviour
             }
         }
         pooled_capables.Clear();
+        if (log) { Debug.Log($"(CapableBank) All pooled capables are now destroyed and pooled_capables is cleared"); }
     }
     public void ClearSubSystemsCache(bool log)
     {
         // we clear the sub systems caches to be sure to destroy all capable gameobjects in the bank
+        if (log) { Debug.Log($"(CapableBank) clearing anim layer bank"); }
         LayerBank.ClearCache(log);
+
+        if (log) { Debug.Log($"(CapableBank) clearing collider bank"); }
         ColliderBank.Instance.ClearCache(log);
     }
 

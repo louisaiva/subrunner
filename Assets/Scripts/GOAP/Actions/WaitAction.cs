@@ -21,7 +21,7 @@ namespace subrunner.goap
         {
             if (!wait_times.ContainsKey(agent))
             {
-                if (Logger.Instance.LOG_IA_ACTION) { Debug.LogWarning($"(WaitAction) No wait time found for agent {agent}, cannot perform WaitAction"); }
+                if (Logger.LazyInstance.LOG_IA_ACTION) { Debug.LogWarning($"(WaitAction) No wait time found for agent {agent}, cannot perform WaitAction"); }
                 return ActionRunState.Stop;
             }
 

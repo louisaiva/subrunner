@@ -21,16 +21,16 @@ namespace subrunner.goap
                 // we check that we have a valid target, if yes we return it (it was loaded when the MotorCapacity loaded the MotorData' local world data)
                 if (existingTarget != null && existingTarget is PositionTarget)
                 {
-                    if (Logger.Instance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor - Sense) {ia.data.id} just loaded and has an existing target : {existingTarget}. We keep it."); }
+                    if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor - Sense) {ia.data.id} just loaded and has an existing target : {existingTarget}. We keep it."); }
                     return existingTarget;
                 }
                 else
                 {
-                    if (Logger.Instance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor - Sense) {ia.data.id} just loaded but has no existing target : {existingTarget}"); }
+                    if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor - Sense) {ia.data.id} just loaded but has no existing target : {existingTarget}"); }
                 }
             }
 
-            /* if (Logger.Instance.LOG_WANDER_TARGET_SENSOR)
+            /* if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR)
             {
                 Debug.Log($"(WanderLoadedSensor - Sense) {agent} is sensing a new wander target for IA {ia.name}");
             } */
@@ -39,7 +39,7 @@ namespace subrunner.goap
             Vector3 random_position = getRandomPositionInRangeNavMesh(agent.Transform.position, ia.SocialData.exploration_radius, ia.Mover.Filter);
             if (random_position == default)
             {
-                if (Logger.Instance.LOG_WANDER_TARGET_SENSOR) { Debug.LogWarning("(WanderLoadedSensor - Sense) No walkable position found on the nav mesh for : " + ia.name); }
+                if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.LogWarning("(WanderLoadedSensor - Sense) No walkable position found on the nav mesh for : " + ia.name); }
                 if (existingTarget is PositionTarget) { return existingTarget; }
                 return null;
             }
@@ -47,7 +47,7 @@ namespace subrunner.goap
             // the position is valid, we set the z as 0 for 2D gameplay
             random_position.z = 0;
 
-            if (Logger.Instance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor - Sense) {agent} senses a new position target at {random_position}"); }
+            if (Logger.LazyInstance.LOG_WANDER_TARGET_SENSOR) { Debug.Log($"(WanderLoadedSensor - Sense) {agent} senses a new position target at {random_position}"); }
 
             // and we return the position as a PositionTarget
             if (existingTarget is PositionTarget existingTargetPosition)
