@@ -81,8 +81,8 @@ public class LevelDataManager : MonoBehaviour
     private void make_level_grab_capables(Level level, ref List<Capable> overlapping, ref List<string> added_ids, ref string log)
     {
         log += $" - Level {level.name} :\n";
-        Room[] rooms = level.GetStaticRooms();
-        foreach (Room room in rooms)
+        Chunk[] rooms = level.GetStaticChunks();
+        foreach (Chunk room in rooms)
         {
             log += $"   - Room {room.name} :\n";
             overlapping.Clear();
@@ -139,22 +139,22 @@ public class LevelDataManager : MonoBehaviour
         SaveEngine.SaveLevelData(data, world_id);
 
         // check if we need to save the rooms also
-        if (save_rooms_data) { save_rooms_level_data(level, world_id); }
+        if (save_rooms_data) { save_chunks_level_data(level, world_id); }
 
         // check if we need to save the capables also
         if (save_capables_data) { save_capables_level_data(level, world_id); }
     }
-    private void save_rooms_level_data(Level level, string world_id)
+    private void save_chunks_level_data(Level level, string world_id)
     {
         string json;
         string path;
-        foreach (Room room in level.GetStaticRooms())
+        foreach (Chunk room in level.GetStaticChunks())
         {
-            RoomData rdata = room.GetStaticData();
+            ChunkData rdata = room.GetStaticData();
 
             // save the current RoomData to a json file
             json = JsonUtility.ToJson(rdata, true);
-            path = Path.Combine("rooms", rdata.id + ".json");
+            path = Path.Combine("chunks", rdata.id + ".json");
             AppManager.SaveJsonToWorldFolder(world_id, path, json, log);/* 
             System.IO.File.WriteAllText(path, json, System.Text.Encoding.UTF8);
 

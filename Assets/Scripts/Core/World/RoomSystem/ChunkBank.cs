@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomBank : MonoBehaviour
+public class ChunkBank : MonoBehaviour
 {
 
     // AWAKE & SINGLETON LOGIC
-    public static RoomBank Instance { get; private set; }
+    public static ChunkBank Instance { get; private set; }
     public void Awake()
     {
         // singleton logic
@@ -13,53 +13,52 @@ public class RoomBank : MonoBehaviour
         else { Destroy(gameObject); return; }
 
         // initialize the pool of rooms
-        pooled_rooms = new Stack<Room>();
+        pooled_rooms = new Stack<Chunk>();
     }
 
     // ROOM LOADING
+    [Header("Loaded chunks")]
+    [SerializeField] protected List<Chunk> loaded_chunks;
+    [SerializeField] protected Chunk room_prefab;
+    private Transform room_parent => World.LazyInstance.ChunkParent;
 
-    [Header("Loaded rooms")]
-    [SerializeField] protected List<Room> loaded_rooms;
-    [SerializeField] protected Transform room_parent;
-    [SerializeField] protected Room room_prefab;
+    [Header("Sleeping chunks")]
+    [SerializeField] protected Stack<Chunk> pooled_rooms;
 
-    [Header("Sleeping rooms")]
-    [SerializeField] protected Stack<Room> pooled_rooms;
-    
     // LOAD UNLOAD ROOMS
-    public Room Load(RoomData data)
+    public Chunk Load(ChunkData data)
     {
         // if we have no pooled room we need to instantiate one
         if (pooled_rooms.Count == 0)
         {
-            Room new_room = Instantiate(room_prefab, room_parent);
+            Chunk new_room = Instantiate(room_prefab, room_parent);
             new_room.LoadData(data);
-            loaded_rooms.Add(new_room);
+            loaded_chunks.Add(new_room);
             return new_room;
         }
 
         // extract a room from the pooled ones and load its data
-        Room room = pooled_rooms.Pop();
+        Chunk room = pooled_rooms.Pop();
         room.LoadData(data);
         room.enabled = true;
-        loaded_rooms.Add(room);
+        loaded_chunks.Add(room);
         return room;
     }
-    public void Unload(RoomData data)
+    public void Unload(ChunkData data)
     {
         // get room
-        Room room = GetLoadedRoom(data);
+        Chunk room = GetLoadedRoom(data);
         if (room == null) { return; }
         Unload(room);
     }
-    public void Unload(Room room)
+    public void Unload(Chunk room)
     {
         // unload the room's data and put it back in the pool
         room.UnloadData();
         pooled_rooms.Push(room);
 
         // remove the room from the loaded rooms list
-        loaded_rooms.Remove(room);
+        loaded_chunks.Remove(room);
 
         // disable room component
         room.enabled = false;
@@ -74,20 +73,20 @@ public class RoomBank : MonoBehaviour
     }
     private void destroy_all_loaded_rooms()
     {
-        while (loaded_rooms.Count > 0)
+        while (loaded_chunks.Count > 0)
         {
-            Room room = loaded_rooms[0];
+            Chunk room = loaded_chunks[0];
             if (!Application.isPlaying) { DestroyImmediate(room.gameObject); }
             else { Destroy(room.gameObject); }
-            loaded_rooms.RemoveAt(0);
+            loaded_chunks.RemoveAt(0);
         }
-        loaded_rooms.Clear();
+        loaded_chunks.Clear();
     }
     private void destroy_all_pooled_rooms()
     {
         while (pooled_rooms.Count > 0)
         {
-            Room room = pooled_rooms.Pop();
+            Chunk room = pooled_rooms.Pop();
             if (!Application.isPlaying) { DestroyImmediate(room.gameObject); }
             else { Destroy(room.gameObject); }
         }
@@ -96,12 +95,12 @@ public class RoomBank : MonoBehaviour
 
 
     // ROOM GETTING
-    public Room GetLoadedRoom(string id)
+    public Chunk GetLoadedRoom(string id)
     {
         // we look for the room with the given id in the pool of loaded rooms
-        for (int i = 0; i < loaded_rooms.Count; i++)
+        for (int i = 0; i < loaded_chunks.Count; i++)
         {
-            Room room = loaded_rooms[i];
+            Chunk room = loaded_chunks[i];
             if (room.data != null && room.data.id == id)
             {
                 return room;
@@ -109,29 +108,29 @@ public class RoomBank : MonoBehaviour
         }
         return null;
     }
-    public Room GetLoadedRoom(RoomData data)
+    public Chunk GetLoadedRoom(ChunkData data)
     {
         return GetLoadedRoom(data.id);
     }
-    public List<Room> GetLoadedRooms(List<RoomData> data)
+    public List<Chunk> GetLoadedRooms(List<ChunkData> data)
     {
-        List<Room> rooms = new List<Room>();
-        foreach (RoomData d in data)
+        List<Chunk> rooms = new List<Chunk>();
+        foreach (ChunkData d in data)
         {
-            Room room = GetLoadedRoom(d);
+            Chunk room = GetLoadedRoom(d);
             if (room != null) { rooms.Add(room); }
         }
         return rooms;
     }
-    public List<Room> GetAllLoadedRooms()
+    public List<Chunk> GetAllLoadedRooms()
     {
-        return new List<Room>(loaded_rooms);
+        return new List<Chunk>(loaded_chunks);
     }
-    public bool IsRoomLoaded(RoomData data)
+    public bool IsRoomLoaded(ChunkData data)
     {
-        for (int i = 0; i < loaded_rooms.Count; i++)
+        for (int i = 0; i < loaded_chunks.Count; i++)
         {
-            Room room = loaded_rooms[i];
+            Chunk room = loaded_chunks[i];
             if (room.data != null && room.data == data) { return true; }
         }
         return false;

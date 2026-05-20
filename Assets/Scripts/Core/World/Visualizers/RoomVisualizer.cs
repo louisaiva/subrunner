@@ -21,19 +21,19 @@ public class RoomVisualizer : MonoBehaviour
     public Vector2 CalculateWorldCenter(out Vector2 extents)
     {
         // grab all the rooms data in the RoomSystem
-        List<RoomData> rooms = RoomEngine.Instance.rooms_data.Values.ToList();
+        List<ChunkData> rooms = ChunkEngine.Instance.chunks_data.Values.ToList();
 
         // compute the world bounds of all rooms to set the size of our canvas accordingly
         Bounds world_bounds = compute_world_bounds(rooms);
         extents = world_bounds.extents;
         return world_bounds.center;
     }
-    private Bounds compute_world_bounds(IEnumerable<RoomData> rooms)
+    private Bounds compute_world_bounds(IEnumerable<ChunkData> rooms)
     {
         bool hasPoint = false;
         Bounds bounds = new Bounds(Vector3.zero, Vector3.zero);
 
-        foreach (RoomData room in rooms)
+        foreach (ChunkData room in rooms)
         {
             if (room == null || room.collider_points == null) { continue; }
 
@@ -68,12 +68,12 @@ public class RoomVisualizer : MonoBehaviour
         if (level_id == null) { if (log_no_instance_found_at_start) { Debug.LogWarning($"(RoomVisualizer) Can't find the current level ID"); } return; }
 
         // grab the rooms data of the level from the LevelEngine
-        List<RoomData> rooms = LevelEngine.Instance.GetRoomsDataOfLevel(level_id);
+        List<ChunkData> rooms = LevelEngine.Instance.GetChunksDataOfLevel(level_id);
 
         // and build a visual for each room
-        foreach (RoomData room in rooms) { create_visu_for_room(room); }
+        foreach (ChunkData room in rooms) { create_visu_for_room(room); }
     }
-    private void create_visu_for_room(RoomData rdata)
+    private void create_visu_for_room(ChunkData rdata)
     {
         // 1. instanciate a visu
         GameObject go = Instantiate(ui_line_visu_prefab, transform);

@@ -1,42 +1,10 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable] public class RoomData : IData
+public class RoomData
 {
     [field: SerializeField] public string id { get; set; }
-    public Vector2 position;
-
-    // colliders
-    public List<Vector2> collider_points;
-
-    // neighbours data
-    public List<string> neighbours_ids; // list of the rooms that are directly connected to this one, used for loading/unloading logic
-
-    // Capable management
-    public List<string> capables_ids;
-    public List<string> movables_ids;
-    public int TotalCapablesCount { get { return capables_ids.Count + movables_ids.Count; } }
-    public int TotalCapacitiesCount
-    {
-        get
-        {
-            // we get the capable data for each capable in the room and we sum their capacities count
-            List<CapableData> capables_data = CapableEngine.Instance.GetCapablesDataFromIDs(capables_ids);
-            capables_data.AddRange(CapableEngine.Instance.GetCapablesDataFromIDs(movables_ids));
-            int count = 0;
-            foreach (CapableData capable_data in capables_data)
-            {
-                count += capable_data.TotalCapacitiesCount();
-            }
-            return count;
-        }
-    }
-    
-
-    // lights management
-    public List<LightData> lights_data;
-
+    public List<string> chunks_ids;
 
     // tilemaps data
     public string[] tilebases_names;
@@ -52,34 +20,38 @@ using UnityEngine;
     public int[] ground_tiles;
 
 
-    // GETTERS
-    protected int calculate_tilemap_non_null_tiles(int[] tiles)
+    public int TotalChunksCount { get { return chunks_ids != null ? chunks_ids.Count : 0; } }
+    public int TotalCapablesCount
     {
-        if (tiles == null) { return 0; }
-        int count = 0;
-        for (int i = 0; i < tiles.Length; i++)
+        get
         {
-            if (tiles[i] != -1) { count++; }
+            // we get the chunks and add them together
+            List<ChunkData> chunks = ChunkEngine.Instance.GetChunksDataFromIDs(chunks_ids);
+            int count = 0;
+            foreach (ChunkData chunk_data in chunks)
+            {
+                count += chunk_data.TotalCapablesCount;
+            }
+            return count;
         }
-        return count;
     }
-    public string GetDetails()
+    public int TotalCapacitiesCount
     {
-        string details = $"Room {id} :\n";
-        details += $"  - position : {position}\n";
-        details += $"  - neighbours : {(neighbours_ids != null ? neighbours_ids.Count : 0)} rooms\n";
-        details += $"  - capables : {(capables_ids != null ? capables_ids.Count : 0)} capables\n";
-        details += $"  - movables : {(movables_ids != null ? movables_ids.Count : 0)} movables\n";
-        details += $"  - colliders : {(collider_points != null ? collider_points.Count : 0)} points\n";
-        details += $"  - lights : {(lights_data != null ? lights_data.Count : 0)} lights\n";
-        details += $"  - tilemaps :\n";
-        details += $"    - edges : {calculate_tilemap_non_null_tiles(edges_tiles)} tiles\n";
-        details += $"    - ceiling : {calculate_tilemap_non_null_tiles(ceiling_tiles)} tiles\n";
-        details += $"    - walls : {calculate_tilemap_non_null_tiles(walls_tiles)} tiles\n";
-        details += $"    - carpet : {calculate_tilemap_non_null_tiles(carpet_tiles)} tiles\n";
-        details += $"    - ground : {calculate_tilemap_non_null_tiles(ground_tiles)} tiles\n";
-        return details;
+        get
+        {
+            // we get the chunks and add them together
+            List<ChunkData> chunks = ChunkEngine.Instance.GetChunksDataFromIDs(chunks_ids);
+            int count = 0;
+            foreach (ChunkData chunk_data in chunks)
+            {
+                count += chunk_data.TotalCapacitiesCount;
+            }
+            return count;
+        }
     }
+
+
+    // GETTERS
     public bool HasTiles(string tilemap_type)
     {
         switch (tilemap_type)
@@ -99,15 +71,33 @@ using UnityEngine;
                 return false;
         }
     }
-}
-
-
-[Serializable] public class LightData
-{
-    // public string id;
-    public Vector2 position;
-    public Color color;
-    public float intensity;
-    public Vector2 radius; // inner & outer radius for the light falloff
-    public float falloff; // how fast the light decreases
+    protected int calculate_tilemap_non_null_tiles(int[] tiles)
+    {
+        if (tiles == null) { return 0; }
+        int count = 0;
+        for (int i = 0; i < tiles.Length; i++)
+        {
+            if (tiles[i] != -1) { count++; }
+        }
+        return count;
+    }
+    public string GetDetails()
+    {
+        string details = $"Room {id} :\n";
+        details += $"  - chunks : {(chunks_ids != null ? chunks_ids.Count : 0)}\n";
+        if (chunks_ids != null)
+        {
+            for (int i = 0; i < chunks_ids.Count; i++)
+            {
+                details += $"    - {chunks_ids[i]}\n";
+            }
+        }
+        details += $"  - tilemaps :\n";
+        details += $"    - edges : {calculate_tilemap_non_null_tiles(edges_tiles)} tiles\n";
+        details += $"    - ceiling : {calculate_tilemap_non_null_tiles(ceiling_tiles)} tiles\n";
+        details += $"    - walls : {calculate_tilemap_non_null_tiles(walls_tiles)} tiles\n";
+        details += $"    - carpet : {calculate_tilemap_non_null_tiles(carpet_tiles)} tiles\n";
+        details += $"    - ground : {calculate_tilemap_non_null_tiles(ground_tiles)} tiles\n";
+        return details;
+    }
 }

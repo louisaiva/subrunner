@@ -45,7 +45,7 @@ public class LevelNavBaker : MonoBehaviour
         // we want to build the navmesh data for this level and save it for later use
 
         // stop the room engine from ticking
-        RoomEngine.Instance?.StopTicking();
+        ChunkEngine.Instance?.StopTicking();
 
         // we load the level in aio mode
         level = SaveEngine.AIO_Loader.LoadAIO_Level(WorldManager.StaticSelectedWorld, level.ID, navmesh_only: true);
@@ -66,7 +66,7 @@ public class LevelNavBaker : MonoBehaviour
         // we unload the level in aio mode
         await SaveEngine.AIO_Loader.ClearCache();
 
-        RoomEngine.Instance?.StartTicking();
+        ChunkEngine.Instance?.StartTicking();
         log.Log($"Navmesh baked from AIO Level. Started RoomEngine Ticking again.");
     }
 

@@ -109,10 +109,17 @@ public class TileBaseBank : MonoBehaviour
             return id;
         }
 
+        if (!Application.isEditor)
+        {
+            // we don't have the tilebase in cache, which is weird !
+            log.Error($"No name found for tilebase: {tilebase}");
+            return null;
+        }
+        
         #if UNITY_EDITOR
         string path = UnityEditor.AssetDatabase.GetAssetPath(tilebase);
         path = path.Replace("Assets/Resources/", "").Replace(".asset", "");
-        
+
         // we don't have the tilebase in cache, but maybe we can find it in the paths dict ???
         if (try_get_id_in_paths(path, out string id_from_path))
         {
@@ -129,9 +136,7 @@ public class TileBaseBank : MonoBehaviour
         return name;
 
         #endif
-        // we don't have the tilebase in cache, which is weird !
-        log.Error($"No name found for tilebase: {tilebase}");
-        return null;
+        
     }
 
 

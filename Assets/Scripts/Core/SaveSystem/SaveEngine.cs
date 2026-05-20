@@ -77,7 +77,13 @@ public class SaveEngine : MonoBehaviour
         {
             List<Room> rooms = level.GetStaticRooms().ToList();
             slog?.Log($"Saving {rooms.Count} rooms of level '{level.ID}'");
-            foreach (Room room in rooms) { SaveRoom(room, world_id); }
+            foreach (Room room in rooms)
+            {
+                SaveRoom(room, world_id);
+                List<Chunk> chunks = room.GetStaticChunks().ToList();
+                slog?.Log($"Saving {chunks.Count} chunks of room '{room.ID}'");
+                foreach (Chunk chunk in chunks) { SaveChunk(chunk, world_id); }
+            }
         }
 
         // check if we need to save the capables also
@@ -100,6 +106,12 @@ public class SaveEngine : MonoBehaviour
         s_log_rooms?.Log($"Saving room '{room.ID}' in world '{world_id}'");
         RoomData data = room.GetStaticData();
         SaveRoomData(data, world_id);
+    }
+    public static void SaveChunk(Chunk chunk, string world_id)
+    {
+        s_log_rooms?.Log($"Saving chunk '{chunk.ID}' in world '{world_id}'");
+        ChunkData data = chunk.GetStaticData();
+        SaveChunkData(data, world_id);
     }
     public static void SaveCapable(Capable capable, string world_id, bool save_inventory = true, bool save_capacities = true)
     {
@@ -182,6 +194,16 @@ public class SaveEngine : MonoBehaviour
         string json = JsonUtility.ToJson(data, true);
         string path = Path.Combine("rooms", data.id + ".json");
         s_log_rooms?.LogVerySpecific($"Saving ROOM data to path: {path}\n{json}");
+        AppManager.SaveJsonToWorldFolder(world_id, path, json, log_static);
+    }
+
+    // SAVE CHUNK DATA
+    public static void SaveChunkData(ChunkData data, string world_id)
+    {
+        // save the current ChunkData to a json file
+        string json = JsonUtility.ToJson(data, true);
+        string path = Path.Combine("chunks", data.id + ".json");
+        s_log_rooms?.LogVerySpecific($"Saving CHUNK data to path: {path}\n{json}");
         AppManager.SaveJsonToWorldFolder(world_id, path, json, log_static);
     }
 

@@ -151,30 +151,39 @@ public class LevelEngine : BSOD_System<LevelEngine>
     }
 
     // GETTERS
-    public List<RoomData> GetRoomsDataOfLevel(string level_id)
+    public List<ChunkData> GetChunksDataOfLevel(string level_id)
     {
         if (!levels_data.ContainsKey(level_id))
         {
-            if (!hide_no_level_warning) { Debug.LogWarning("(LevelEngine - GetRoomsDataOfLevel) Level data not found for id: " + level_id); }
-            return new List<RoomData>();
+            if (!hide_no_level_warning) { Debug.LogWarning("(LevelEngine - GetChunksDataOfLevel) Level data not found for id: " + level_id); }
+            return new List<ChunkData>();
         }
-        List<string> room_ids = levels_data[level_id].rooms_ids;
-        List<RoomData> room_datas = RoomEngine.Instance.GetRoomsDataFromIDs(room_ids);
-        return room_datas;
+        List<string> chunk_ids = new List<string>();
+        foreach (string room_id in levels_data[level_id].rooms_ids)
+        {
+            RoomData room_data = RoomEngine.Instance.GetRoomDataFromID(room_id);
+            if (room_data == null) { Debug.LogWarning($"(LevelEngine - GetChunksDataOfLevel) Room data not found for id: {room_id} when trying to get chunks of level '{level_id}'"); continue; }
+            if (room_data.chunks_ids != null && room_data.chunks_ids.Count > 0)
+            {
+                chunk_ids.AddRange(room_data.chunks_ids);
+            }
+        }
+        List<ChunkData> chunk_datas = ChunkEngine.Instance.GetChunksDataFromIDs(chunk_ids);
+        return chunk_datas;
     }
     public List<CapableData> GetCapablesDataOfLevel(string level_id)
     {
-        return GetCapablesDataOfLevel(level_id, out List<RoomData> _);
+        return GetCapablesDataOfLevel(level_id, out List<ChunkData> _);
     }
-    public List<CapableData> GetCapablesDataOfLevel(string level_id, out List<RoomData> rooms_data)
+    public List<CapableData> GetCapablesDataOfLevel(string level_id, out List<ChunkData> chunks_data)
     {
         // get the rooms data of the level
-        rooms_data = GetRoomsDataOfLevel(level_id);
-        if (rooms_data.Count == 0) { return new List<CapableData>(); }
+        chunks_data = GetChunksDataOfLevel(level_id);
+        if (chunks_data.Count == 0) { return new List<CapableData>(); }
 
         // we get the capable ids inside the rooms data and return the corresponding capable data
         List<string> capable_ids = new List<string>();
-        foreach (RoomData rdata in rooms_data)
+        foreach (ChunkData rdata in chunks_data)
         {
             if (rdata.capables_ids != null && rdata.capables_ids.Count > 0)
             {

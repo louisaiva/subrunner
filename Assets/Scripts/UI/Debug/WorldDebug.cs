@@ -7,19 +7,21 @@ public class WorldDebug : MonoBehaviour, MultipleDebuggable
     private string world_name = "wip...";
     private int levels_count = 0;
     private int rooms_count = 0;
+    private int chunks_count = 0;
     private int capables_count = 0;
     // private int capacities_count = 0;
 
     // LEVEL
     private string current_level_name = "";
     private int current_level_rooms_count = 0;
+    private int current_level_chunks_count = 0;
     private int current_level_capables_count = 0;
     // private int current_level_capacities_count = 0;
 
-    // ROOM
-    private string current_room_name = "";
-    private int current_room_capables_count = 0;
-    // private int current_room_capacities_count = 0;
+    // CHUNK
+    private string current_chunk_name = "";
+    private int current_chunk_capables_count = 0;
+    // private int current_chunk_capacities_count = 0;
 
     // START
     private void Start()
@@ -28,13 +30,13 @@ public class WorldDebug : MonoBehaviour, MultipleDebuggable
 
         // register to world events
         LevelEngine.Instance.OnLevelChange += handle_level_change;
-        RoomEngine.Instance.OnRoomChange += handle_room_change;
-        RoomEngine.Instance.OnCapableAddedToRoom += handle_capable_added_or_remove_to_from_room;
-        RoomEngine.Instance.OnCapableRemovedFromRoom += handle_capable_added_or_remove_to_from_room;
+        ChunkEngine.Instance.OnChunkChange += handle_chunk_change;
+        ChunkEngine.Instance.OnCapableAddedToRoom += handle_capable_added_or_remove_to_from_chunk;
+        ChunkEngine.Instance.OnCapableRemovedFromRoom += handle_capable_added_or_remove_to_from_chunk;
     }
 
     // EVENTS HANDLERS
-    private void handle_world_change(World2 world)
+    private void handle_world_change(World world)
     {
         if (world == null) { return; }
         // todo : implement world data etc
@@ -44,29 +46,30 @@ public class WorldDebug : MonoBehaviour, MultipleDebuggable
         if (level == null) { return; }
         current_level_name = level.id;
         current_level_rooms_count = level.TotalRoomsCount;
+        current_level_chunks_count = level.TotalChunksCount;
         current_level_capables_count = level.TotalCapablesCount;
     }
-    private void handle_room_change(RoomData room)
+    private void handle_chunk_change(ChunkData chunk)
     {
-        if (room == null) { return; }
-        current_room_name = room.id;
-        current_room_capables_count = room.TotalCapablesCount;
+        if (chunk == null) { return; }
+        current_chunk_name = chunk.id;
+        current_chunk_capables_count = chunk.TotalCapablesCount;
     }
-    private void handle_capable_added_or_remove_to_from_room(string capable_id, RoomData room)
+    private void handle_capable_added_or_remove_to_from_chunk(string capable_id, ChunkData chunk)
     {
-        if (capable_id == null || room == null) { return; }
+        if (capable_id == null || chunk == null) { return; }
 
         // we refresh the level if this is the current level
-        Level room_level = LevelEngine.Instance.GetLevelOfRoom(room.id);
-        if (room_level != null && LevelEngine.Instance.CurrentLevelID == room_level.ID)
+        Level level = RoomEngine.Instance.GetLevelOfChunk(chunk.id);
+        if (level != null && LevelEngine.Instance.CurrentLevelID == level.ID)
         {
             handle_level_change(LevelEngine.Instance.current_level.data);
         }
 
         // we refresh the room if this is the current room
-        if (RoomEngine.Instance.PlayerRoomData != null && RoomEngine.Instance.PlayerRoomData.id == room.id)
+        if (ChunkEngine.Instance.PlayerChunkData != null && ChunkEngine.Instance.PlayerChunkData.id == chunk.id)
         {
-            handle_room_change(RoomEngine.Instance.PlayerRoomData);
+            handle_chunk_change(ChunkEngine.Instance.PlayerChunkData);
         }
     }
 
@@ -82,7 +85,7 @@ public class WorldDebug : MonoBehaviour, MultipleDebuggable
         {
             get_world_line(),
             get_level_line(),
-            get_room_line()
+            get_chunk_line()
         };
         return lines;
     }
@@ -93,6 +96,7 @@ public class WorldDebug : MonoBehaviour, MultipleDebuggable
         string line = "world : " + world_name + "\n";
         line += ">>> levels : " + levels_count + "\n";
         line += ">>> rooms : " + rooms_count + "\n";
+        line += ">>> chunks : " + chunks_count + "\n";
         line += ">>> capables : " + capables_count + "\n";
         // line += ">>> capacities : " + capacities_count;
         return line;
@@ -101,15 +105,16 @@ public class WorldDebug : MonoBehaviour, MultipleDebuggable
     {
         string line = "current level : " + current_level_name + "\n";
         line += ">>> rooms : " + current_level_rooms_count + "\n";
+        line += ">>> chunks : " + current_level_chunks_count + "\n";
         line += ">>> capables : " + current_level_capables_count + "\n";
         // line += ">>> capacities : " + current_level_capacities_count;
         return line;
     }
-    private string get_room_line()
+    private string get_chunk_line()
     {
-        string line = "current room : " + current_room_name + "\n";
-        line += ">>> capables : " + current_room_capables_count + "\n";
-        // line += ">>> capacities : " + current_room_capacities_count;
+        string line = "current chunk : " + current_chunk_name + "\n";
+        line += ">>> capables : " + current_chunk_capables_count + "\n";
+        // line += ">>> capacities : " + current_chunk_capacities_count;
         return line;
     }
 }

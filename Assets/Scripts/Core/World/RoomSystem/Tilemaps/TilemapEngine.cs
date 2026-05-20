@@ -87,19 +87,6 @@ public class TilemapEngine : MonoBehaviour
         }
         log.Log(log_tilebases, $"Loaded {tilebases_used.Count} tilebases for room: {data.id} ({string.Join(", ", tilebases_used.Select(t => t.name))})");
     }
-    /* private TileBase get_or_load_tile_base(string tilebase_path)
-    {
-        if (tilebase_cache.TryGetValue(tilebase_path, out TileBase tilebase))
-        {
-            return tilebase;
-        }
-        
-        // we don't have the tilebase in cache, we load it and add it to cache
-        tilebase = Resources.Load<TileBase>(tilebase_path);
-        if (tilebase == null) { Debug.LogError($"(TilemapEngine) Failed to load tilebase at path: {tilebase_path}"); }
-        tilebase_cache[tilebase_path] = tilebase;
-        return tilebase;
-    } */
     public RoomTilemaps BuildTilemapsForAIO_Room(Room room)
     {
         RoomData data = room.data;
@@ -128,25 +115,25 @@ public class TilemapEngine : MonoBehaviour
         if (room_tilemaps.TryGetValue(data.id, out RoomTilemaps room_tmps))
         {
             room_tmps.Show();
-            if (log_showing) { Debug.Log($"(TilemapEngine) Shown tilemaps of {data.id}"); }
+            if (log_showing) { log.Log($"Shown tilemaps of {data.id}"); }
             return;
         }
 
         // else we have no tilemaps for this room, we try to build it
         room_tmps = BuildRoomTilemaps(data);
-        if (room_tmps == null) { Debug.LogError($"(TilemapEngine) Failed to build tilemaps for room: {data.id}"); return; }
+        if (room_tmps == null) { log.Error($"Failed to build tilemaps for room: {data.id}"); return; }
         room_tmps.Show();
-        if (log_showing) { Debug.Log($"(TilemapEngine) Built & Shown tilemaps of {data.id}"); }
+        if (log_showing) { log.Log($"Built & Shown tilemaps of {data.id}"); }
     }
-    public void HideTilemaps(RoomData data)
+    public void HideTilemaps(string room_id)
     {
-        if (room_tilemaps.TryGetValue(data.id, out RoomTilemaps room_tmps))
+        if (room_tilemaps.TryGetValue(room_id, out RoomTilemaps room_tmps))
         {
             room_tmps.Hide();
-            if (log_showing) { Debug.Log($"(TilemapEngine) Hidden tilemaps of {data.id}"); }
+            if (log_showing) { log.Log($"Hidden tilemaps of {room_id}"); }
             return;
         }
-        if (log_showing) { Debug.LogWarning($"(TilemapEngine) No tilemaps to hide for {data.id}"); }
+        if (log_showing) { log.Warning($"No tilemaps to hide for {room_id}"); }
     }
 
 
@@ -198,7 +185,7 @@ public class RoomTilemaps
             ceiling_tilemap = GameObject.Instantiate(prefabs["ceiling"], parent);
             ceiling_tilemap.RoomID = data.id;
             ceiling_tilemap.gameObject.name = $"{data.id}_ceiling";
-            ceiling_tilemap.transform.position += (Vector3)data.position;
+            // ceiling_tilemap.transform.position += (Vector3)data.position;
         }
 
         // walls
@@ -207,7 +194,7 @@ public class RoomTilemaps
             walls_tilemap = GameObject.Instantiate(prefabs["walls"], parent);
             walls_tilemap.RoomID = data.id;
             walls_tilemap.gameObject.name = $"{data.id}_walls";
-            walls_tilemap.transform.position += (Vector3)data.position;
+            // walls_tilemap.transform.position += (Vector3)data.position;
         }
 
         // carpet
@@ -216,7 +203,7 @@ public class RoomTilemaps
             carpet_tilemap = GameObject.Instantiate(prefabs["carpet"], parent);
             carpet_tilemap.RoomID = data.id;
             carpet_tilemap.gameObject.name = $"{data.id}_carpet";
-            carpet_tilemap.transform.position += (Vector3)data.position;
+            // carpet_tilemap.transform.position += (Vector3)data.position;
         }
 
         // edges
@@ -225,7 +212,7 @@ public class RoomTilemaps
             edges_tilemap = GameObject.Instantiate(prefabs["edges"], parent);
             edges_tilemap.RoomID = data.id;
             edges_tilemap.gameObject.name = $"{data.id}_edges";
-            edges_tilemap.transform.position += (Vector3)data.position;
+            // edges_tilemap.transform.position += (Vector3)data.position;
         }
 
         parent = RoomEngine.Instance.TilemapEngine.GroundParent;
@@ -236,7 +223,7 @@ public class RoomTilemaps
             ground_tilemap = GameObject.Instantiate(prefabs["ground"], parent);
             ground_tilemap.RoomID = data.id;
             ground_tilemap.gameObject.name = $"{data.id}_ground";
-            ground_tilemap.transform.position += (Vector3)data.position;
+            // ground_tilemap.transform.position += (Vector3)data.position;
         }
     }
     public RoomTilemaps(RoomData data, Room room) // this is the aio version of the constructor

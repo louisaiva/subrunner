@@ -12,31 +12,32 @@ using UnityEngine.Tilemaps;
 /// </summary>
 public class LevelTranslator : MonoBehaviour
 {
-    public string level_name;
-    public bool target_current_level = false; // if true, will override the level name to save into the current level (if we have one)
 
-    [Header("Level creation")]
-    public Level level_prefab;
-    private Transform _level_parent;
-    private Transform level_parent
+    // SUB SYSTEMS
+    private AutoChunker _auto_chunker;
+    public AutoChunker AutoChunker
     {
         get
         {
-            if (_level_parent != null) { return _level_parent; }
-        
-            _level_parent = World.LazyInstance?.LevelParent;
-            if (_level_parent == null)
-            {
-                GameObject level_parent_go = new GameObject("Levels");
-                _level_parent.SetParent(transform);
-                _level_parent = level_parent_go.transform;
-            }
-            return _level_parent;           
+            if (_auto_chunker == null) { _auto_chunker = GetComponentInChildren<AutoChunker>(includeInactive: true); }
+            return _auto_chunker;
         }
     }
 
+    private AutoNeighbourer _auto_neighbourer;
+    public AutoNeighbourer AutoNeighbourer
+    {
+        get
+        {
+            if (_auto_neighbourer == null) { _auto_neighbourer = GetComponentInChildren<AutoNeighbourer>(includeInactive: true); }
+            return _auto_neighbourer;
+        }
+    }
+
+
     [Header("Room creation")]
     public Room room_prefab;
+    public Chunk chunk_prefab;
 
     [Header("Doors & Lights")]
     public Door door_vertical_prefab;
@@ -46,85 +47,22 @@ public class LevelTranslator : MonoBehaviour
     [Header("Logs")]
     public bool log = false;
     public bool log_translate_extended = false;
+    public Loggable<LevelTranslator> log_chunking;
 
     // EVENTS
     public System.Action<Level> OnLevelTranslated = delegate { };
 
+    
 
-    // low level level methods
-    private Level find_target_level()
-    {
-        Level[] levels;
-        if (target_current_level && World.LazyInstance != null)
-        {
-            // we have to have ONLY one enabled level in the scene to be able to target it, otherwise we exit with a warning
-            levels = FindObjectsByType<Level>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-            if (levels.Length != 1)
-            {
-                Debug.LogWarning("(LevelTranslator) found " + levels.Length + " enabled levels in the scene. Exiting. Need to be precisely 1 enabled level to target current level.");
-                return null;
-            }
-            return levels[0];
-        }
 
-        // else we want to find the level with the right name.
-        levels = level_parent.GetComponentsInChildren<Level>(includeInactive: true);
-        foreach (Level level in levels)
-        {
-            if (level.ID == level_name) { return level; }
-        }
-
-        // else we have not found any level, we create a new one
-        return create_level(level_name);
-    }
-    private Level create_level(string id)
-    {
-        // we instanciate a new level and assign the data to it
-        Level new_level = Instantiate(level_prefab, level_parent);
-        new_level.data = new LevelData()
-        {
-            id = id,
-            rooms_ids = new List<string>()
-        };
-        new_level.name = id;
-        return new_level;
-    }
-
-    // low level room methods
-    private Room find_room(string id, List<Room> rooms, Level level)
-    {
-        for (int i = 0; i < rooms.Count; i++)
-        {
-            if (rooms[i].ID == id) { return rooms[i]; }
-        }
-
-        // else we found no room with the id, we create a new one
-        return create_room(id, level);
-    }
-    private bool find_room(string id, List<Room> rooms, out Room found_room)
-    {
-        found_room = null;
-        for (int i = 0; i < rooms.Count; i++)
-        {
-            if (rooms[i].ID == id) { found_room = rooms[i]; return true; }
-        }
-        return false;
-    }
-    private Room create_room(string id, Level level)
-    {
-        // we instanciate a new room and assign the data to it
-        Room new_room = Instantiate(room_prefab, level.transform);
-        new_room.data = new RoomData() { id = id };
-        new_room.name = id;
-
-        // we add the room id to the level data
-        level.GrabStaticRoom(id);
-        return new_room;
-    }
+    ///
+    //
+    /// MAIN ENTRY POINT : TRANSLATION
+    //
+    ///
 
 
     // TRANSLATION
-    // todo : denest this into mult methods
     public async Task Translate(BuiltLevelData built_level)
     {
         string world_id = built_level.world;
@@ -132,13 +70,24 @@ public class LevelTranslator : MonoBehaviour
 
         if (log) { Debug.Log($"(LevelTranslator) translating schematics of level {level_id} (world : {world_id}) into an AIO Level ready to save"); }
 
+
+
+        //
+        /// 1 - LOAD TARGET EXISTING LEVEL
+        //
+
         // get target level to save into
         Level level = await SaveEngine.AIO_Loader.LoadAIO_Level_NoWorldLoaded(world_id, level_id);
         if (log_translate_extended) { Debug.Log($"(LevelTranslator) AIO Level loaded for translation"); }
 
-        // get the rooms
+        //
+        /// 2 - GATHER DATA FROM EXISTING LEVEL + instanciate data structures
+        //
+
+        // get the rooms & chunks
         List<Room> old_rooms = new List<Room>(level.GetStaticRooms());
-        if (log_translate_extended) { Debug.Log($"(LevelTranslator) gathered {old_rooms.Count} rooms"); }
+        List<Chunk> old_chunks = new List<Chunk>(level.GetStaticChunks());
+        if (log_translate_extended) { Debug.Log($"(LevelTranslator) gathered {old_rooms.Count} rooms & {old_chunks.Count} chunks"); }
 
         // get all capables
         List<Capable> old_capables = level.transform.Find("Capables").GetComponentsInChildren<Capable>(includeInactive: true).ToList();
@@ -150,49 +99,171 @@ public class LevelTranslator : MonoBehaviour
         doors_placed.Clear();
         List<Capable> new_capables = new List<Capable>();
 
-        // we find/create each room in the level and assign tilemaps, collider, doors, lights to them
-        if (log) { Debug.Log($"(LevelTranslator) Creating rooms, doors and lights"); }
-        List<Room> rooms = new List<Room>();
-        foreach (WorldRoomVisualizer room_visu in built_level.Rooms)
+
+
+        //
+        /// 2.5 - AUTO CHUNK
+        //
+        if (log_translate_extended) { Debug.Log($"(LevelTranslator) Auto chunking big rooms"); }
+        built_level = AutoChunker.ChunkRooms(built_level);
+        if (log_chunking.Verbose >= Verbosity.Specific)
         {
-            if (!find_room(room_visu.name, old_rooms, out Room room))
+            string log_chunking_details = $"chunks : {built_level.Chunks.Count}\n";
+            foreach (WorldRoomVisualizer chunk in built_level.Chunks)
             {
-                room = create_room(room_visu.name, level);
-                if (log_translate_extended) { Debug.Log($"(LevelTranslator) created room {room_visu.name}"); }
+                log_chunking_details += $"  - {chunk.name} with path of {chunk.Path.Length} points\n";
             }
-
-            // we assign collider to the room
-            room.RoomCollider.SetPath(0, room_visu.PolygonCollider.points);
-
-            // we assign tilemaps to the room
-            if (!built_level.Tilemaps.TryGetValue(room_visu.name, out Dictionary<string, Tilemap> tilemaps)) { Debug.LogWarning($"(LevelTranslator) no tilemaps found for room {room_visu.name}"); continue; }
-            apply_tilemaps(room, tilemaps);
-
-            // we assign the doors and lights to the room
-            foreach (WorldDoorVisualizer door_visu in room_visu.Doors)
+            log_chunking_details += $"\n\n rooms : {built_level.RoomChunks.Count}\n";
+            foreach (KeyValuePair<string, List<string>> entry in built_level.RoomChunks)
             {
-                find_or_create_door(room, capables_parent, door_visu, ref existing_doors, ref new_capables);
+                string room_name = entry.Key;
+                List<string> chunk_names = entry.Value;
+                log_chunking_details += $"  - {room_name} with chunks : {string.Join(", ", chunk_names)}\n";
             }
-            find_or_create_light(room, room_visu.Lights);
-
-            // if add_roomgraph_neighbour_node is true, we add a node for each neighbour of the room in the roomgraph
-            // if (add_roomgraph_neighbour_node) { Instantiate(roomgraph_node_prefab, room.transform); }
-
-            rooms.Add(room);
-            if (log_translate_extended) { Debug.Log($"(LevelTranslator) room added: {room_visu.name}"); }
+            log_chunking?.LogSpecific(log_chunking_details);
         }
+
+        //
+        /// 3 - CREATE MISSING CHUNKS, ASSIGN TILEMAPS, COLLIDERS, DOORS, LIGHTS
+        //
+
+        // we find/create each room in the level and assign tilemaps, collider, doors, lights to them
+        List<Chunk> chunks = translate_chunks(built_level, old_chunks, level, capables_parent, ref existing_doors, ref new_capables);
+        List<Room> rooms = translate_rooms(built_level, old_rooms, level, ref chunks);
+
+
+        //
+        /// 4 - AUTO NEIGHBOURING
+        //
+
+
 
         if (log_translate_extended) { Debug.Log($"(LevelTranslator) Building neighbours"); }
         // now we need to build the room graph neighbour nodes connections
         List<Door> final_doors = doors.Values.ToList();
-        AutoNeighbourer.TraceRoomGraphNeighbours(ref rooms, ref final_doors);
+        AutoNeighbourer.TraceRoomGraphNeighbours(built_level.RoomChunksNeighbours, ref chunks, ref final_doors);
+
+
+
+
+        //
+        /// 5 - GENERATE CAPABLES IDS, CLEAN OBSOLETE THINGS (DOORS, ROOMS)
+        //
 
         // now we can regenerate the ids for the capables & their capacities
+        // we do this before cleaning bcz the specific IDsGenerator method we use here only generates IDs for things that need it.
+        // (useless to generate IDs for capables that will die ://)
         if (log_translate_extended) { Debug.Log($"(LevelTranslator) Regenerating IDs for capables and capacities"); }
         IDsGenerator.Instance.GenerateIDsOnlyForCapablesAndCapacities(old_capables, new_capables);
 
+        clean_obsolete_chunks_and_doors(existing_doors, old_chunks, chunks);
+        await Task.Delay(300); // we delay a lil bit bcz the colliders were just created
 
-        if (log_translate_extended) { Debug.Log($"(LevelTranslator) Deleting old capables"); }
+
+
+
+        //
+        /// 6 - BAKE LEVEL NAVMESH, MAKE ROOMS GRAB THEIR CAPABLES, MAKE LEVEL GRAB ITS ROOMS
+        //
+
+        // now we can build the navmesh
+        if (log_translate_extended) { Debug.Log($"(LevelTranslator) Building navmesh for level"); }
+        LevelEngine.LazyInstance.NavBaker.BuildLevelNavMesh(level, force_rebuild: true);
+
+        // we can then make rooms grab their capables
+        if (log_translate_extended) { Debug.Log($"(LevelTranslator) Making rooms grab capables"); }
+        ChunkEngine.MakeChunksGrabCapables(chunks.ToArray(), only_capables: false);
+
+        // and finally we make the level regrab all its rooms
+        if (log_translate_extended) { Debug.Log($"(LevelTranslator) Making level grab static rooms"); }
+        level.GrabStaticRooms();
+
+
+        //
+        /// 7 - WE are DONE !!!
+        //
+
+        if (log) { Debug.Log($"(LevelTranslator) Level translated successfully"); }
+        OnLevelTranslated?.Invoke(level);
+    }
+
+
+
+
+    ///
+    //
+    /// MEDIUM LEVEL METHODS
+    //
+    ///
+
+    private List<Chunk> translate_chunks(BuiltLevelData built_level, List<Chunk> old_chunks, Level level, Transform capables_parent, ref List<Door> existing_doors, ref List<Capable> new_capables)
+    {
+        if (log) { Debug.Log($"(LevelTranslator) Creating chunks, doors and lights"); }
+        List<Chunk> chunks = new List<Chunk>();
+        foreach (WorldRoomVisualizer chunk_visu in built_level.Chunks)
+        {
+            if (!find_chunk(chunk_visu.name, old_chunks, out Chunk chunk))
+            {
+                chunk = create_chunk(chunk_visu.name, level);
+                if (log_translate_extended) { Debug.Log($"(LevelTranslator) created room {chunk_visu.name}"); }
+            }
+
+            // we assign collider to the chunk
+            chunk.RoomCollider.SetPath(0, chunk_visu.Path);
+
+
+            // we assign the doors and lights to the chunk
+            foreach (WorldDoorVisualizer door_visu in chunk_visu.Doors)
+            {
+                find_or_create_door(chunk, capables_parent, door_visu, ref existing_doors, ref new_capables);
+            }
+            find_or_create_light(chunk, chunk_visu.Lights);
+
+            // if add_chunkgraph_neighbour_node is true, we add a node for each neighbour of the chunk in the chunkgraph
+            // if (add_chunkgraph_neighbour_node) { Instantiate(chunkgraph_node_prefab, chunk.transform); }
+
+            chunks.Add(chunk);
+            if (log_translate_extended) { Debug.Log($"(LevelTranslator) chunk added: {chunk_visu.name}"); }
+        }
+        return chunks;
+    }
+    private List<Room> translate_rooms(BuiltLevelData built_level, List<Room> old_rooms, Level level, ref List<Chunk> chunks)
+    {
+
+        if (log) { Debug.Log($"(LevelTranslator) Creating rooms and applying tilemaps"); }
+        List<Room> rooms = new List<Room>();
+        foreach (KeyValuePair<string, List<string>> entry in built_level.RoomChunks)
+        {
+            string room_name = entry.Key;
+            List<string> chunk_names = entry.Value;
+            if (!find_room(room_name, old_rooms, out Room room))
+            {
+                room = create_room(room_name, level, chunk_names);
+                if (log_translate_extended) { Debug.Log($"(LevelTranslator) created room {room_name}"); }
+            }
+
+            // we find the chunks that belong to the room
+            foreach (string chunk_name in chunk_names)
+            {
+                Chunk chunk = chunks.FirstOrDefault(c => c.ID == chunk_name);
+                if (chunk == null) { Debug.LogError($"(LevelTranslator) no chunk found with name {chunk_name} for room {room_name}"); continue; }
+                chunk.data.room_id = room.ID;
+                chunk.transform.SetParent(room.transform.Find("Chunks"));
+            }
+
+            // we apply the tilemaps
+            if (!built_level.Tilemaps.TryGetValue(room_name, out Dictionary<string, Tilemap> tilemaps)) { Debug.LogWarning($"(LevelTranslator) no tilemaps found for room {room_name}"); continue; }
+            apply_tilemaps(room, tilemaps);
+
+            rooms.Add(room);
+            if (log_translate_extended) { Debug.Log($"(LevelTranslator) room added: {room_name}"); }
+        }
+
+        return rooms;
+    }
+    private void clean_obsolete_chunks_and_doors(List<Door> existing_doors, List<Chunk> old_rooms, List<Chunk> rooms)
+    {
+        if (log_translate_extended) { Debug.Log($"(LevelTranslator) Cleaning old things (doors, rooms)"); }
 
         // here we can delete the old doors that were not reused and the rooms that were not reused
         foreach (Door door in existing_doors)
@@ -201,29 +272,69 @@ public class LevelTranslator : MonoBehaviour
             if (log_translate_extended) { Debug.Log($"(LevelTranslator) destroying door {door.name}"); }
             Destroy(door.gameObject);
         }
-        foreach (Room old_room in old_rooms)
+        foreach (Chunk old_room in old_rooms)
         {
             if (rooms.Contains(old_room)) { continue; }
             if (log_translate_extended) { Debug.Log($"(LevelTranslator) destroying room {old_room.name}"); }
             Destroy(old_room.gameObject);
         }
-        await Task.Delay(300); // we delay a lil bit bcz the colliders were just created
+    }
 
 
-        // now we can build the navmesh
-        if (log_translate_extended) { Debug.Log($"(LevelTranslator) Building navmesh for level"); }
-        LevelEngine.LazyInstance.NavBaker.BuildLevelNavMesh(level, force_rebuild: true);
 
-        // we can then make rooms grab their capables
-        if (log_translate_extended) { Debug.Log($"(LevelTranslator) Making rooms grab capables"); }
-        RoomEngine.MakeRoomsGrabCapables(rooms.ToArray(), only_capables: false);
 
-        // and finally we make the level regrab all its rooms
-        if (log_translate_extended) { Debug.Log($"(LevelTranslator) Making level grab static rooms"); }
-        level.GrabStaticRooms();
+    ///
+    //
+    /// LOW LEVEL METHODS FOR TRANSLATION
+    //
+    ///
 
-        if (log) { Debug.Log($"(LevelTranslator) Level translated successfully"); }
-        OnLevelTranslated?.Invoke(level);
+    // ROOMS
+    private bool find_room(string id, List<Room> rooms, out Room found_room)
+    {
+        found_room = null;
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            if (rooms[i].ID == id) { found_room = rooms[i]; return true; }
+        }
+        return false;
+    }
+    private Room create_room(string id, Level level, List<string> chunk_names)
+    {
+        // we instanciate a new room and assign the data to it
+        Room new_room = Instantiate(room_prefab, level.transform);
+        new_room.data = new RoomData()
+        {
+            id = id,
+            chunks_ids = chunk_names,
+        };
+        new_room.name = id;
+
+        // we add the room id to the level data
+        level.GrabStaticRoom(id);
+        return new_room;
+    }
+
+    // CHUNKS
+    private bool find_chunk(string id, List<Chunk> rooms, out Chunk found_room)
+    {
+        found_room = null;
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            if (rooms[i].ID == id) { found_room = rooms[i]; return true; }
+        }
+        return false;
+    }
+    private Chunk create_chunk(string id, Level level)
+    {
+        // we instanciate a new room and assign the data to it
+        Chunk new_room = Instantiate(chunk_prefab, level.transform);
+        new_room.data = new ChunkData() { id = id };
+        new_room.name = id;
+
+        // we add the room id to the level data
+        level.GrabStaticRoom(id);
+        return new_room;
     }
 
     // TILEMAPS 
@@ -268,7 +379,7 @@ public class LevelTranslator : MonoBehaviour
     /// <param name="door_visu"></param>
     /// <param name="existing_doors"></param>
     /// <param name="new_capables"></param>
-    private bool find_or_create_door(Room room, Transform capables_parent, WorldDoorVisualizer door_visu, ref List<Door> existing_doors, ref List<Capable> new_capables)
+    private bool find_or_create_door(Chunk room, Transform capables_parent, WorldDoorVisualizer door_visu, ref List<Door> existing_doors, ref List<Capable> new_capables)
     {
         Door door;
         if (doors_placed.Contains(door_visu))
@@ -316,7 +427,7 @@ public class LevelTranslator : MonoBehaviour
         new_capables.Add(door);
         return need_to_be_created;
     }
-    private void find_or_create_light(Room room, List<WorldLightVisualizer> lights)
+    private void find_or_create_light(Chunk room, List<WorldLightVisualizer> lights)
     {
         // find the parent
         Transform light_parent = room.LightsParent;

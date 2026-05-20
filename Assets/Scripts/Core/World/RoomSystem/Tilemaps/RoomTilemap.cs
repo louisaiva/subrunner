@@ -49,12 +49,12 @@ public class RoomTilemap : MonoBehaviour
     }
     protected void build_tilemap(TileBase[] tiles, BoundsInt bounds)
     {
-        if (RoomEngine.Instance.log_tilemaps_loading) { Debug.Log("(RoomTilemap) Building tilemap: " + RoomID + " with bounds: " + bounds + " and tiles count: " + tiles.Length); }
+        if (ChunkEngine.Instance.log_tilemaps_loading) { Debug.Log("(RoomTilemap) Building tilemap: " + RoomID + " with bounds: " + bounds + " and tiles count: " + tiles.Length); }
 
         // we count how many tiles we have in the data
         string tile_count_log = "";
         int non_null_tiles = 0;
-        if (RoomEngine.Instance.log_tilemaps_loading)
+        if (ChunkEngine.Instance.log_tilemaps_loading)
         {
             tile_count_log = "\n\nTiles :";
             for (int x = 0; x < bounds.size.x; x++)
@@ -81,7 +81,7 @@ public class RoomTilemap : MonoBehaviour
         tilemap.CompressBounds();
 
         // we count how many tiles we have in the object now
-        if (RoomEngine.Instance.log_tilemaps_loading)
+        if (ChunkEngine.Instance.log_tilemaps_loading)
         {
             tile_count_log = "\n\nTiles :";
             non_null_tiles = 0;
@@ -103,7 +103,7 @@ public class RoomTilemap : MonoBehaviour
             }
         }
 
-        if (RoomEngine.Instance.log_tilemaps_loading) { Debug.Log("(RoomTilemap) Tilemap built: " + RoomID + " with bounds: " + tilemap.cellBounds + " and " + non_null_tiles + " non-null tiles" + tile_count_log); }
+        if (ChunkEngine.Instance.log_tilemaps_loading) { Debug.Log("(RoomTilemap) Tilemap built: " + RoomID + " with bounds: " + tilemap.cellBounds + " and " + non_null_tiles + " non-null tiles" + tile_count_log); }
     }
 
 }

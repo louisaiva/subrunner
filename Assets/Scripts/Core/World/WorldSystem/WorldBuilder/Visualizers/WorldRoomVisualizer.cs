@@ -26,6 +26,16 @@ public class WorldRoomVisualizer : MonoBehaviour
         }
     }
     public PolygonCollider2D PolygonCollider { get { return polygon_collider; } }
+    private Vector2[] _path;
+    public Vector2[] Path
+    {
+        get
+        {
+            if (_path == null) { _path = polygon_collider.points; }
+            return _path;
+        }
+        set { _path = value; polygon_collider.SetPath(0, value); }
+    }
 
     private Material _mat;
     private Material material
@@ -191,11 +201,8 @@ public class WorldRoomVisualizer : MonoBehaviour
     {
         return nodes.Select(n => (Vector2)n.transform.position).ToArray();
     }
-    public Vector2[] GetWorldPath()
-    {
-        return nodes.Select(n => (Vector2)n.transform.position - (Vector2)transform.position).ToArray();
-    }
-    
+
+
     private static float circle_cast_radius = 0.35f;
     public bool CollideWithCell(Vector3Int cell_pos)
     {

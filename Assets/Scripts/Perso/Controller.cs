@@ -27,7 +27,6 @@ public class Controller : MonoBehaviour
     public HackableNavigator HackableNavigator;
     public ExploitNavigator ExploitNavigator;
     [SerializeField] private SeeThroughHandler see_through;
-    public Room2 current_room { get; set; }
 
     [Header("UI Statics elements")]
     [SerializeField] private GameObject life_bar;

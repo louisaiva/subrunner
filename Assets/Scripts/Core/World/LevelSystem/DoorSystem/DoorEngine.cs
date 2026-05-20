@@ -7,7 +7,7 @@ public class DoorEngine : MonoBehaviour
 {
     private DoorGraph door_graph;
     private HashSet<Door> loaded_doors = new HashSet<Door>();
-    [SerializeField] private HashSet<RoomData> visible_rooms;
+    [SerializeField] private HashSet<ChunkData> visible_rooms;
 
 
     [Header("Logs")]
@@ -32,8 +32,8 @@ public class DoorEngine : MonoBehaviour
         CapableBank.Instance.OnCapableUnloading += HandleDoorUnloaded;
 
         // register to room engine on capable added to room
-        RoomEngine.Instance.OnCapableAddedToRoom += on_capable_enter_room;
-        RoomEngine.Instance.OnRoomChange += UpdateRoomsVisibility;
+        ChunkEngine.Instance.OnCapableAddedToRoom += on_capable_enter_room;
+        ChunkEngine.Instance.OnChunkChange += UpdateRoomsVisibility;
         if (log) { Debug.Log($"(DoorEngine) Registered callbacks to CapableBank and RoomEngine events"); }
 
         UpdateRoomsVisibility();
@@ -45,8 +45,8 @@ public class DoorEngine : MonoBehaviour
     {
         CapableBank.Instance.OnCapableLoaded -= HandleDoorLoaded;
         CapableBank.Instance.OnCapableUnloading -= HandleDoorUnloaded;
-        RoomEngine.Instance.OnCapableAddedToRoom -= on_capable_enter_room;
-        RoomEngine.Instance.OnRoomChange -= UpdateRoomsVisibility;
+        ChunkEngine.Instance.OnCapableAddedToRoom -= on_capable_enter_room;
+        ChunkEngine.Instance.OnChunkChange -= UpdateRoomsVisibility;
 
         door_graph = null;
         loaded_doors.Clear();
@@ -94,7 +94,7 @@ public class DoorEngine : MonoBehaviour
         if (log_graph) { Debug.Log($"(DoorEngine) Creating node for room id: {room_id}"); }
 
         // we get the room data
-        RoomData data = RoomEngine.Instance.GetRoomDataFromID(room_id);
+        ChunkData data = ChunkEngine.Instance.GetChunkDataFromID(room_id);
         if (data == null) { Debug.LogError($"(DoorEngine) Could not find RoomData for room id: {room_id}"); return; }
 
         RoomNode node = new RoomNode() { data = data };
@@ -154,18 +154,18 @@ public class DoorEngine : MonoBehaviour
     // called in 2 situations :
     // - when a door is open/closed
     // - when we enter a room (to update the masks of the doors of the room)
-    private readonly List<RoomData> rooms_to_show = new List<RoomData>();
-    private readonly List<RoomData> rooms_to_hide = new List<RoomData>();
+    private readonly List<ChunkData> rooms_to_show = new List<ChunkData>();
+    private readonly List<ChunkData> rooms_to_hide = new List<ChunkData>();
     private HashSet<RoomNode> accessible_rooms = new HashSet<RoomNode>();
-    private readonly HashSet<RoomData> accessible_rooms_data = new HashSet<RoomData>();
-    private void UpdateRoomsVisibility(RoomData room) => UpdateRoomsVisibility();
+    private readonly HashSet<ChunkData> accessible_rooms_data = new HashSet<ChunkData>();
+    private void UpdateRoomsVisibility(ChunkData room) => UpdateRoomsVisibility();
     private void UpdateRoomsVisibility()
     {
         // get the current room
-        RoomData current_room = RoomEngine.Instance.PlayerRoomData;
+        ChunkData current_room = ChunkEngine.Instance.PlayerChunkData;
         if (current_room == null) { Debug.LogError($"(DoorEngine) Could not find current room data"); return; }
 
-        if (visible_rooms is null) { visible_rooms = new HashSet<RoomData>(); }
+        if (visible_rooms is null) { visible_rooms = new HashSet<ChunkData>(); }
 
         // we get the accessible rooms from the current room
         accessible_rooms.Clear();
@@ -182,12 +182,12 @@ public class DoorEngine : MonoBehaviour
         // we gather the rooms to update
         rooms_to_show.Clear();
         rooms_to_hide.Clear();
-        foreach (RoomData room in accessible_rooms_data)
+        foreach (ChunkData room in accessible_rooms_data)
         {
             if (visible_rooms.Contains(room)) { continue; }
             rooms_to_show.Add(room);
         }
-        foreach (RoomData data in visible_rooms)
+        foreach (ChunkData data in visible_rooms)
         {
             if (accessible_rooms_data.Contains(data)) { continue; }
             rooms_to_hide.Add(data);
@@ -207,8 +207,8 @@ public class DoorEngine : MonoBehaviour
         // we show the rooms to show and hide the rooms to hide
         // todo : THIS METHOD SHOWS ALL TILEMAPS IF WE HAVE SOME, even if the room is not loaded !
         // todo not harmful rn (since it only affects the tilemaps and does not trigger the capable/room loading) but may introduce future bugs
-        foreach (RoomData room in rooms_to_show) { ShowRoom(room); }
-        foreach (RoomData room in rooms_to_hide) { HideRoom(room); }
+        foreach (ChunkData room in rooms_to_show) { ShowRoom(room); }
+        foreach (ChunkData room in rooms_to_hide) { HideRoom(room); }
     }
 
 
@@ -220,12 +220,12 @@ public class DoorEngine : MonoBehaviour
     /// calling these methods
     /// </summary>
     /// <param name="room_data"></param>
-    public void ShowRoom(RoomData room_data)
+    public void ShowRoom(ChunkData room_data)
     {
         // ensure the room is loaded, if not no need to show it
-        if (!RoomBank.Instance.IsRoomLoaded(room_data)) { return; }
+        if (!ChunkBank.Instance.IsRoomLoaded(room_data)) { return; }
 
-        RoomEngine.Instance.TilemapEngine.ShowTilemaps(room_data);
+        RoomEngine.Instance.ShowChunk(room_data);
 
         // show all the capables
         List<CapableData> capables_data = CapableEngine.Instance.GetCapablesDataFromIDs(room_data.capables_ids.Concat(room_data.movables_ids).ToList());
@@ -251,13 +251,12 @@ public class DoorEngine : MonoBehaviour
     /// calling these methods
     /// </summary>
     /// <param name="room_data"></param>
-    public void HideRoom(RoomData room_data)
+    public void HideRoom(ChunkData room_data)
     {
         // ensure the room is loaded, if not no need to hide it
-        if (!RoomBank.Instance.IsRoomLoaded(room_data)) { return; }
+        if (!ChunkBank.Instance.IsRoomLoaded(room_data)) { return; }
 
-        // RoomEngine.Instance.TilemapEngine.HideSpecificTilemaps(room_data, new List<string> { "ground", "walls", "ceiling" });
-        RoomEngine.Instance.TilemapEngine.HideTilemaps(room_data);
+        RoomEngine.Instance.HideChunk(room_data);
 
         // hide all the capables
         List<CapableData> capables_data = CapableEngine.Instance.GetCapablesDataFromIDs(room_data.capables_ids.Concat(room_data.movables_ids).ToList());
@@ -284,7 +283,7 @@ public class DoorEngine : MonoBehaviour
     
 
     // CAPABLES ADDED/REMOVED FROM ROOMS HANDLERS
-    private void on_capable_enter_room(string capid, RoomData room_data)
+    private void on_capable_enter_room(string capid, ChunkData room_data)
     {
         CapableData capable_data = CapableEngine.Instance.GetCapableDataFromID(capid);
         if (capable_data == null) { return; }
@@ -299,12 +298,12 @@ public class DoorEngine : MonoBehaviour
 
 
     // GETTERS
-    public bool IsRoomVisible(RoomData room_data)
+    public bool IsRoomVisible(ChunkData room_data)
     {
         if (visible_rooms is null) { return true; } // not loaded yet, we return true so all rooms are shown on world loading
         return visible_rooms.Contains(room_data);    
     }
-    public List<Door> GetRoomDoors(RoomData room_data)
+    public List<Door> GetRoomDoors(ChunkData room_data)
     {
         List<string> door_ids = door_graph.GetDoorIDsLinkedToRoom(room_data.id);
         List<Door> doors = new List<Door>();
@@ -409,7 +408,7 @@ public class DoorEngine : MonoBehaviour
     }
     private class RoomNode
     {
-        public RoomData data;
+        public ChunkData data;
         public string ID => data.id;
     }
     private class RoomLink

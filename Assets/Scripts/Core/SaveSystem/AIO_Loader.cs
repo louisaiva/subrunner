@@ -9,6 +9,7 @@ public class AIO_Loader : MonoBehaviour
     [Header("Prefabs & Parents")]
     [SerializeField] private Transform level_parent;
     [SerializeField] private Level level_prefab;
+    [SerializeField] private Chunk chunk_prefab;
     [SerializeField] private Room room_prefab;
 
     [Header("Neighbours nodes")]
@@ -47,11 +48,13 @@ public class AIO_Loader : MonoBehaviour
         // load the room's capables & their capacities
         CapableEngine.Instance.LoadWorldCapablesData(world_id);
         CapacityEngine.Instance.LoadWorldCapacitiesData(world_id);
-        List<RoomData> rooms_data = RoomEngine.LoadRoomsData(world_id, level_data.rooms_ids);
+
+        log_load_worldloaded.LogExtended($"Loading Rooms & Chunks datas into the engines from world + level");
+        List<RoomData> rooms_data = RoomEngine.Instance.LoadRoomsData(world_id, level_data.rooms_ids);
 
         // load the rooms
-        List<Room> rooms = load_rooms(rooms_data, aio_level.transform, navmesh_only : navmesh_only);
-        if (rooms.Count == 0) { Debug.LogWarning($"(AIO_Loader) No rooms loaded for level '{level_id}' in world '{world_id}'"); }
+        List<Chunk> chunks = load_rooms_and_chunks(rooms_data, aio_level.transform, navmesh_only : navmesh_only);
+        if (chunks.Count == 0) { log_load_worldloaded.Warning($"No chunks loaded for level '{level_id}' in world '{world_id}'"); }
 
         return aio_level;
     }
@@ -84,9 +87,9 @@ public class AIO_Loader : MonoBehaviour
         log_load_worldloaded.LogExtended($"Getting rooms data from level data");
         List<RoomData> rooms_data = RoomEngine.Instance.GetRoomsDataFromIDs(level_data.rooms_ids);
         log_load_worldloaded.LogExtended($"{rooms_data.Count} rooms data found, loading rooms");
-        List<Room> rooms = load_rooms(rooms_data, aio_level.transform, navmesh_only);
-        if (rooms.Count == 0) { log_load_worldloaded.Warning($"No rooms loaded for level '{level_id}' in world '{world_id}'"); }
-        log_load_worldloaded.LogExtended($"Level & Rooms loaded with success !");
+        List<Chunk> chunks = load_rooms_and_chunks(rooms_data, aio_level.transform, navmesh_only);
+        if (chunks.Count == 0) { log_load_worldloaded.Warning($"No chunks loaded for level '{level_id}' in world '{world_id}'"); }
+        log_load_worldloaded.LogExtended($"Level & Rooms & Chunks loaded with success !");
 
         return aio_level;
     }
@@ -105,37 +108,70 @@ public class AIO_Loader : MonoBehaviour
 
     // low level rooms loading
     private HashSet<string> loaded_rooms = new HashSet<string>();
-    private List<Room> load_rooms(List<RoomData> rooms_data, Transform rooms_parent, bool navmesh_only = false)
+    private List<Chunk> load_rooms_and_chunks(List<RoomData> rooms_data, Transform rooms_parent, bool navmesh_only = false)
     {
         // grab the room data from the world data
-        List<Room> rooms = new List<Room>();
+        List<Chunk> chunks = new List<Chunk>();
         foreach (RoomData data in rooms_data)
         {
             // load the room
             log_load_worldloaded.LogSpecific($"Loading room '{data.id}'");
-            Room room = load_room(data, rooms_parent);
+            Room room = load_room(data, rooms_parent, ref chunks);
             if (room == null)
             {
                 log_load_worldloaded.Error($"Failed to load room with id '{data.id}'");
                 continue;
             }
             log_load_worldloaded.LogSpecific($"Room '{data.id}' loaded successfully");
-            rooms.Add(room);
-
-            log_load_worldloaded.LogSpecific($"Now Loading its capables");
-            load_capables(data.capables_ids, rooms_parent.Find("Capables"));
-            if (navmesh_only) { continue; } // we don't load movables if we are in navmesh only mode
-            log_load_worldloaded.LogSpecific($"Now Loading its movables");
-            load_capables(data.movables_ids, rooms_parent.Find("Movables"));
         }
 
 
-        return rooms;
+        return chunks;
     }
-    private Room load_room(RoomData data, Transform parent)
+    private Room load_room(RoomData data, Transform level_transform, ref List<Chunk> loaded_chunks, bool navmesh_only = false)
     {
         // we instanciate a new room and assign the data to it
-        Room new_room = Instantiate(room_prefab, parent);
+        Room new_room = Instantiate(room_prefab, level_transform);
+
+        // load the data
+        new_room.data = data;
+        new_room.gameObject.name = data.id;
+        log_load_worldloaded.LogVerySpecific($"Room '{data.id}' basic data loaded");
+
+        // build the tilemaps
+        log_load_worldloaded.LogVerySpecific($"Loading its tilemaps");
+        RoomEngine.Instance.TilemapEngine.BuildTilemapsForAIO_Room(new_room);
+
+        // and get the chunks of the room
+        List<ChunkData> chunks_data = ChunkEngine.GetOrLoadChunksDataFromIDs(data.chunks_ids); // this method is a weird one bcz it works with both loaded engine & non loaded engine.
+        foreach (ChunkData cdata in chunks_data)
+        {
+            // load the chunk
+            log_load_worldloaded.LogVerySpecific($"Loading chunk '{cdata.id}'");
+            Chunk chunk = load_chunk(cdata, new_room.transform);
+            if (chunk == null)
+            {
+                log_load_worldloaded.Error($"Failed to load chunk with id '{cdata.id}'");
+                continue;
+            }
+            log_load_worldloaded.LogVerySpecific($"Chunk '{cdata.id}' loaded successfully");
+            loaded_chunks.Add(chunk);
+
+            log_load_worldloaded.LogVerySpecific($"Now Loading its capables");
+            load_capables(cdata.capables_ids, level_transform.Find("Capables"));
+            if (navmesh_only) { continue; } // we don't load movables if we are in navmesh only mode
+            log_load_worldloaded.LogVerySpecific($"Now Loading its movables");
+            load_capables(cdata.movables_ids, level_transform.Find("Movables"));
+        }
+
+        log_load_worldloaded.LogVerySpecific($"Room '{data.id}' loaded successfully with its tilemaps !");
+        loaded_rooms.Add(data.id);
+        return new_room;
+    }
+    private Chunk load_chunk(ChunkData data, Transform parent)
+    {
+        // we instanciate a new room and assign the data to it
+        Chunk new_room = Instantiate(chunk_prefab, parent);
 
         // load the data
         new_room.data = data;
@@ -148,13 +184,10 @@ public class AIO_Loader : MonoBehaviour
 
         log_load_worldloaded.LogVerySpecific($"Room '{data.id}' basic data loaded + colliders");
 
-        // build the tilemaps
-        log_load_worldloaded.LogVerySpecific($"Loading its tilemaps");
-        RoomEngine.Instance.TilemapEngine.BuildTilemapsForAIO_Room(new_room);
 
         // load the lights
         log_load_worldloaded.LogVerySpecific($"Loading its lights");
-        RoomEngine.Instance.LightsEngine.LoadLights_AIO(data.lights_data, data.id, new_room.LightsParent);
+        ChunkEngine.Instance.LightsEngine.LoadLights_AIO(data.lights_data, data.id, new_room.LightsParent);
 
         // if add_roomgraph_neighbour_node is true, we add a node for each neighbour of the room in the roomgraph
         log_load_worldloaded.LogVerySpecific(add_roomgraph_neighbour_node, $"Adding neighbour node");

@@ -54,25 +54,15 @@ public class Level : MonoBehaviour
     }
     private List<string> get_static_rooms_ids()
     {
-        // if (data == null) { return new List<string>(); }
-        // if (data.rooms_ids != null && data.rooms_ids.Count > 0) { return data.rooms_ids; }
+        if (data != null && data.rooms_ids != null && data.rooms_ids.Count > 0) { return data.rooms_ids; }
 
         // we go statically get the rooms ids from the children rooms
         Room[] rooms = GetStaticRooms();
         List<string> rooms_ids = new List<string>();
-        foreach (Room room in rooms)
-        {
-            string room_id = room.GetStaticData().id;
-            if (!string.IsNullOrEmpty(room_id))
-            {
-                rooms_ids.Add(room_id);
-            }
-        }
-
-        // we apply it to the current data also
-        data.rooms_ids = rooms_ids;
+        foreach (Room room in rooms) { rooms_ids.Add(room.ID); }
         return rooms_ids;
     }
+    public Chunk[] GetStaticChunks() { return GetComponentsInChildren<Chunk>(includeInactive: true); }
     public Room[] GetStaticRooms() { return GetComponentsInChildren<Room>(includeInactive: true); }
     public void GrabStaticRoom(string room_id)
     {
@@ -83,7 +73,7 @@ public class Level : MonoBehaviour
     public Bounds GetStaticBounds(bool verbose = false)
     {
         // we get all the rooms in the children
-        Room[] rooms = GetComponentsInChildren<Room>(includeInactive: true);
+        Chunk[] rooms = GetComponentsInChildren<Chunk>(includeInactive: true);
         if (rooms.Length == 0)
         {
             if (verbose) { Debug.LogWarning("(Level) No rooms found in level '" + name + "'. Returning empty bounds."); }
@@ -127,5 +117,4 @@ public class Level : MonoBehaviour
             if (!data.rooms_ids.Contains(room.ID)) { data.rooms_ids.Add(room.ID); }
         }
     }
-
 }

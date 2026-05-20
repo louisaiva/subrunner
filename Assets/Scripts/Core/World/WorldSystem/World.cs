@@ -88,6 +88,42 @@ public class World : BSOD_System<World>
             return _level_parent;
         }
     }
+    private Transform _room_parent;
+    public Transform RoomParent
+    {
+        get
+        {
+            if (_room_parent == null)
+            {
+                _room_parent = transform.Find("Rooms");
+                if (_room_parent == null)
+                {
+                    GameObject go = new GameObject("Rooms");
+                    go.transform.SetParent(transform);
+                    _room_parent = go.transform;
+                }
+            }
+            return _room_parent;
+        }
+    }
+    private Transform _chunk_parent;
+    public Transform ChunkParent
+    {
+        get
+        {
+            if (_chunk_parent == null)
+            {
+                _chunk_parent = transform.Find("Chunks");
+                if (_chunk_parent == null)
+                {
+                    GameObject go = new GameObject("Chunks");
+                    go.transform.SetParent(transform);
+                    _chunk_parent = go.transform;
+                }
+            }
+            return _chunk_parent;
+        }
+    }
 
 
     [Header("Logs")]
@@ -135,6 +171,7 @@ public class World : BSOD_System<World>
         data.levels_ids = new List<string>(LevelEngine.LazyInstance.GetWorldLevelsIDs());
 
         await RoomEngine.LazyInstance.LoadWorldData(world_id, log_loading_extended);
+        await ChunkEngine.LazyInstance.LoadWorldData(world_id, log_loading_extended);
         await CapableEngine.LazyInstance.LoadWorldData(world_id, log_loading_extended);
         await CapacityEngine.LazyInstance.LoadWorldData(world_id, log_loading_extended);
 
@@ -224,7 +261,7 @@ public class World : BSOD_System<World>
 
         // we unload all the engines
         await LevelEngine.LazyInstance.UnloadWorldData(log_loading_extended);
-        await RoomEngine.LazyInstance.UnloadWorldData(log_loading_extended);
+        await ChunkEngine.LazyInstance.UnloadWorldData(log_loading_extended);
         await CapableEngine.LazyInstance.UnloadWorldData(log_loading_extended);
         await CapacityEngine.LazyInstance.UnloadWorldData(log_loading_extended);
 

@@ -70,10 +70,10 @@ public class UI_GameOver : UI_Pool
 
         // we get the spawn point
         Vector3 perso_spawn_point = Vector3.zero;
-        if (World2.Instance.spawn_point != null)
+        /* if (World2.Instance.spawn_point != null)
         {
             perso_spawn_point = World2.Instance.spawn_point.position;
-        }
+        } */ // todo update this with respawn
 
         // we instantiate the perso prefab at the spawn point
         bool instantiated = false;
@@ -81,7 +81,7 @@ public class UI_GameOver : UI_Pool
         instantiation.completed += (op) => instantiated = true;
         yield return new WaitUntil(() => instantiated);
         GameObject[] perso = instantiation.Result;
-        perso[0].name = "perso";
+        perso[0].name = "bob";
     }
 
 }

@@ -223,11 +223,13 @@ public class WorldManager : MonoBehaviour
         //         - world_data.json
         //         - levels/
         //         - rooms/
+        //         - chunks/
         //         - capables/
         //         - capacities/
 
         AppManager.EnsureFolderExists(Path.Combine(world_path, "levels"));
         AppManager.EnsureFolderExists(Path.Combine(world_path, "rooms"));
+        AppManager.EnsureFolderExists(Path.Combine(world_path, "chunks"));
         AppManager.EnsureFolderExists(Path.Combine(world_path, "capables"));
         AppManager.EnsureFolderExists(Path.Combine(world_path, "capacities"));
 

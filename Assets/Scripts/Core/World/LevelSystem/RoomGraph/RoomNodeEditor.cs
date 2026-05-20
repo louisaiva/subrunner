@@ -12,12 +12,12 @@ public class RoomNodeEditor : MonoBehaviour
 {
 
     [Header("References")]
-    private Room _room;
-    public Room Room
+    private Chunk _room;
+    public Chunk Room
     {
         get
         {
-            if (_room == null && transform.parent != null) { _room = transform.parent.GetComponent<Room>(); }
+            if (_room == null && transform.parent != null) { _room = transform.parent.GetComponent<Chunk>(); }
             return _room;
         }
     }
@@ -193,8 +193,8 @@ public class RoomNodeEditor : MonoBehaviour
     // CREATE LINK
     private void CreateLink(RoomNodeEditor node_a)
     {
-        Room room_a = node_a.Room;
-        Room room_b = this.Room;
+        Chunk room_a = node_a.Room;
+        Chunk room_b = this.Room;
         if (room_a == null || room_b == null) { return; }
 
         // we create a link object on a new sibling gameobject
@@ -207,8 +207,8 @@ public class RoomNodeEditor : MonoBehaviour
     }
     private void DestroyLink(RoomNodeEditor other_node)
     {
-        Room room_a = other_node.Room;
-        Room room_b = this.Room;
+        Chunk room_a = other_node.Room;
+        Chunk room_b = this.Room;
         if (room_a == null || room_b == null) { return; }
         
         RoomLinkEditor link = GetLinkWith(other_node);
@@ -268,15 +268,15 @@ public class RoomNodeEditor : MonoBehaviour
         RoomLinkEditor[] links = FindObjectsByType<RoomLinkEditor>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         // we gather all the concerned rooms and we clear their neighbors list
-        List<Room> concerned_rooms = new List<Room>();
+        List<Chunk> concerned_rooms = new List<Chunk>();
         foreach (RoomLinkEditor link in links)
         {
-            Room room_a = link.node_a.Room;
-            Room room_b = link.node_b.Room;
+            Chunk room_a = link.node_a.Room;
+            Chunk room_b = link.node_b.Room;
             if (room_a != null && !concerned_rooms.Contains(room_a)) { concerned_rooms.Add(room_a); }
             if (room_b != null && !concerned_rooms.Contains(room_b)) { concerned_rooms.Add(room_b); }
         }
-        foreach (Room room in concerned_rooms)
+        foreach (Chunk room in concerned_rooms)
         {
             room.ClearStaticNeighbors();
         }
@@ -298,15 +298,15 @@ public class RoomNodeEditor : MonoBehaviour
         List<RoomLinkEditor> links = new List<RoomLinkEditor>(active_level_transform.GetComponentsInChildren<RoomLinkEditor>(includeInactive: true));
 
         // we gather all the concerned rooms and we clear their neighbors list
-        List<Room> concerned_rooms = new List<Room>();
+        List<Chunk> concerned_rooms = new List<Chunk>();
         foreach (RoomLinkEditor link in links)
         {
-            Room room_a = link.node_a?.Room;
-            Room room_b = link.node_b?.Room;
+            Chunk room_a = link.node_a?.Room;
+            Chunk room_b = link.node_b?.Room;
             if (room_a != null && !concerned_rooms.Contains(room_a)) { concerned_rooms.Add(room_a); }
             if (room_b != null && !concerned_rooms.Contains(room_b)) { concerned_rooms.Add(room_b); }
         }
-        foreach (Room room in concerned_rooms)
+        foreach (Chunk room in concerned_rooms)
         {
             room.ClearStaticNeighbors();
         }

@@ -16,6 +16,19 @@ public interface IData
     // rooms ids
     public List<string> rooms_ids; // list of the rooms that are part of this level
     public int TotalRoomsCount { get { return rooms_ids != null ? rooms_ids.Count : 0; } }
+    public int TotalChunksCount
+    {
+        get
+        {
+            List<RoomData> rooms_data = RoomEngine.Instance.GetRoomsDataFromIDs(rooms_ids);
+            int count = 0;
+            foreach (RoomData room_data in rooms_data)
+            {
+                count += room_data.TotalChunksCount;
+            }
+            return count;
+        }
+    }
     public int TotalCapablesCount
     {
         get

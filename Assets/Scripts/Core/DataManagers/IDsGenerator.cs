@@ -36,7 +36,7 @@ public class IDsGenerator : Singleton<IDsGenerator>
 
 
         // we get all the rooms
-        Room[] all_rooms = FindObjectsByType<Room>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        Chunk[] all_rooms = FindObjectsByType<Chunk>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         Capable[] all_capables = FindObjectsByType<Capable>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (Capable capable in all_capables)
@@ -58,11 +58,11 @@ public class IDsGenerator : Singleton<IDsGenerator>
         Level[] levels = world.GetStaticLevels();
 
         // we get all the rooms
-        List<Room> all_rooms = new List<Room>();
+        List<Chunk> all_rooms = new List<Chunk>();
         List<Capable> all_capables = new List<Capable>();
         foreach (Level level in levels)
         {
-            all_rooms.AddRange(level.GetStaticRooms());
+            all_rooms.AddRange(level.GetStaticChunks());
             all_capables.AddRange(level.GetStaticCapables());
         }
 
@@ -201,7 +201,7 @@ public class IDsGenerator : Singleton<IDsGenerator>
 
         return new_id;
     }
-    private string generate_id_for_capable(Capable capable, List<Room> all_rooms)
+    private string generate_id_for_capable(Capable capable, List<Chunk> all_rooms)
     {
         // we check if we already generated an id for this capable
         if (capables_that_get_new_ids.Contains(capable)) { return ""; }
@@ -213,7 +213,7 @@ public class IDsGenerator : Singleton<IDsGenerator>
         // (we must have an old id for this to work)
         if (capable.data != null && !string.IsNullOrEmpty(capable.data.id))
         {
-            Room room = get_room_of_capable(capable, all_rooms);
+            Chunk room = get_room_of_capable(capable, all_rooms);
             if (room != null)
             {
                 int index = room.data.capables_ids.IndexOf(capable.data.id);
@@ -290,9 +290,9 @@ public class IDsGenerator : Singleton<IDsGenerator>
     }
 
     // utils
-    private Room get_room_of_capable(Capable capable, List<Room> all_rooms)
+    private Chunk get_room_of_capable(Capable capable, List<Chunk> all_rooms)
     {
-        foreach (Room room in all_rooms)
+        foreach (Chunk room in all_rooms)
         {
             if (room.data.capables_ids.Contains(capable.data.id))
             {

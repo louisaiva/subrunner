@@ -10,8 +10,8 @@ public class RoomDataSaver : MonoBehaviour
     public List<string> rooms_to_load = new List<string>();
 
     [Header("RoomData Saving")]
-    public static string CurrentRoomDataFolder => Path.Combine(WorldManager.CurrentStaticWorldDataPath, "rooms");
-    public List<Room> rooms_to_save = new List<Room>();
+    public static string CurrentRoomDataFolder => Path.Combine(WorldManager.CurrentStaticWorldDataPath, "chunks");
+    public List<Chunk> rooms_to_save = new List<Chunk>();
 
     [Header("Logs")]
     public bool log = false;
@@ -19,9 +19,9 @@ public class RoomDataSaver : MonoBehaviour
 
     public void SaveRoomsData()
     {
-        foreach (Room room in rooms_to_save)
+        foreach (Chunk room in rooms_to_save)
         {
-            RoomData data = room.GetStaticData();
+            ChunkData data = room.GetStaticData();
 
             // save the current RoomData to a json file
             string json = JsonUtility.ToJson(data, true);
@@ -45,26 +45,26 @@ public class RoomDataSaver : MonoBehaviour
             if (GUILayout.Button("Load Rooms"))
             {
                 // check if we have a RoomSystem & RoomBank
-                RoomEngine room_system;
-                if (RoomEngine.Instance == null)
+                ChunkEngine room_system;
+                if (ChunkEngine.Instance == null)
                 {
-                    room_system = FindFirstObjectByType<RoomEngine>();
+                    room_system = FindFirstObjectByType<ChunkEngine>();
                     room_system.Awake();
-                    FindFirstObjectByType<RoomBank>().Awake();
+                    FindFirstObjectByType<ChunkBank>().Awake();
                 }
 
                 // load all rooms from system
-                room_system = RoomEngine.Instance;
-                room_system.LoadRooms(saver.rooms_to_load.ToArray());
+                room_system = ChunkEngine.Instance;
+                room_system.LoadChunks(saver.rooms_to_load.ToArray());
             }
             if (GUILayout.Button("Unload Rooms"))
             {
                 // check if we have a RoomSystem
-                if (RoomEngine.Instance == null) { return; }
+                if (ChunkEngine.Instance == null) { return; }
 
                 // unload all rooms from system
-                RoomEngine.Instance.UnloadAllRooms();
-                RoomBank.Instance.DestroyAllRoomsInstantly();
+                ChunkEngine.Instance.UnloadAllChunks();
+                ChunkBank.Instance.DestroyAllRoomsInstantly();
             }
 
             DrawDefaultInspector();

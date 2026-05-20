@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Unity.VisualScripting;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -634,7 +636,7 @@ public class LevelBuilder : MonoBehaviour
         {
             world = world_id,
             level = level,
-            Rooms = new List<WorldRoomVisualizer>(room_visualizers)
+            Chunks = new List<WorldRoomVisualizer>(room_visualizers)
         };
 
         foreach (var r in room_visualizers)
@@ -664,7 +666,7 @@ public class LevelBuilder : MonoBehaviour
         {
             world = world_id,
             level = level_id,
-            Rooms = new List<WorldRoomVisualizer>(room_visualizers)
+            Chunks = new List<WorldRoomVisualizer>(room_visualizers)
         };
 
         foreach (var r in room_visualizers)
@@ -891,7 +893,12 @@ public class LevelBuilder : MonoBehaviour
         for (int i = 0; i < room_visualizers.Count; i++)
         {
             if (room_visualizers[i] == null) { continue; }
-            data.Rooms.Add(new RoomSchematic { Name = room_visualizers[i].name, Cells = room_visualizers[i].GetLoopCells() });
+            RoomSchematic room_data = new RoomSchematic
+            {
+                Name = room_visualizers[i].name.Replace("-0", ""),
+                Cells = room_visualizers[i].GetLoopCells()
+            };
+            data.Rooms.Add(room_data);
         }
         
         // create lights
@@ -976,8 +983,8 @@ public class BuiltLevelData
     public string world;
     public string level;
 
-    // cells links rooms visu
-    public List<WorldRoomVisualizer> Rooms = new List<WorldRoomVisualizer>();
+    // cells links chunks visu
+    public List<WorldRoomVisualizer> Chunks = new List<WorldRoomVisualizer>();
 
     // tilemaps
     public Dictionary<string, Dictionary<string, Tilemap>> Tilemaps = new Dictionary<string, Dictionary<string, Tilemap>>();
@@ -991,6 +998,10 @@ public class BuiltLevelData
     //     -ground -> tilemap
     //     -...
     // -...
+
+    // big rooms splitted in small chunks
+    public Dictionary<string, List<string>> RoomChunks = new Dictionary<string, List<string>>();
+    public List<ChunkNeighbourDataInsideRoom> RoomChunksNeighbours = new List<ChunkNeighbourDataInsideRoom>();
 }
 
 

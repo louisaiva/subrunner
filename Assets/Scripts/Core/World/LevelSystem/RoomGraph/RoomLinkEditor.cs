@@ -47,8 +47,8 @@ public class RoomLinkEditor : MonoBehaviour
     public void ConnectRooms()
     {
         if (node_a == null || node_b == null) { return; }
-        Room room_a = node_a.Room;
-        Room room_b = node_b.Room;
+        Chunk room_a = node_a.Room;
+        Chunk room_b = node_b.Room;
         if (room_a == null || room_b == null) { return; }
 
         // we add the rooms as neighbors of each other
@@ -69,8 +69,8 @@ public class RoomLinkEditor : MonoBehaviour
         if (node_b != null) { node_b.Links.Remove(this); }
 
         // and finally we remove the nodes' rooms as neighbors of each other
-        Room room_a = node_a != null ? node_a.Room : null;
-        Room room_b = node_b != null ? node_b.Room : null;
+        Chunk room_a = node_a != null ? node_a.Room : null;
+        Chunk room_b = node_b != null ? node_b.Room : null;
         if (room_a != null && room_b != null)
         {
             room_a.RemoveStaticNeighbor(room_b);

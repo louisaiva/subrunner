@@ -6,7 +6,7 @@ public class SortingCapacity : Capacity
 {
     public void ReceiveMovable(Movable movable, Vector3 world_position)
     {
-        RoomEngine.Instance.FreeCapable(movable.data);
+        ChunkEngine.Instance.FreeCapable(movable.data);
         movable.DisableMovements();
         movable.transform.SetParent(transform);
 
@@ -19,6 +19,6 @@ public class SortingCapacity : Capacity
         movable.transform.SetParent(World.Instance.MovablesParent);
         movable.transform.position = world_position;
         movable.EnableMovements();
-        RoomEngine.Instance.AttachCapable(movable.data);
+        ChunkEngine.Instance.AttachCapable(movable.data);
     }
 }

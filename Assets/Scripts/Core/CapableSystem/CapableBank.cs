@@ -292,14 +292,7 @@ public class CapableBank : MonoBehaviour
         if (log) { Debug.Log($"(CapableBank) Destroying all LOADED capables, count : {loaded_capables.Count}"); }
         for (int i = 0; i < loaded_capables.Count; i++)
         {
-            try
-            {
-                Destroy(loaded_capables[i].gameObject);
-            }
-            catch (MissingReferenceException)
-            {
-                Debug.LogWarning($"(CapableBank) Tried to destroy a capable that was already destroyed, skipping it");
-            }
+            Destroy(loaded_capables[i].gameObject);
         }
         loaded_capables.Clear();
         if (log) { Debug.Log($"(CapableBank) All loaded capables are now destroyed and loaded_capables is cleared"); }
@@ -315,6 +308,7 @@ public class CapableBank : MonoBehaviour
             while (stack.Count > 0)
             {
                 Capable capable = stack.Pop();
+                if (capable == null) { continue; }
                 Destroy(capable.gameObject);
             }
         }
