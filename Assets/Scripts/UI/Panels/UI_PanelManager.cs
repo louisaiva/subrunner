@@ -20,6 +20,7 @@ public class UI_PanelManager : MonoBehaviour
     }
     public bool IsCurrentPanel(UI_Panel panel) => panel.name == CurrentPanel;
     [SerializeField] private List<UI_Panel> panels;
+    [SerializeField] private bool gather_panels_in_children_at_start = false;
     public event Action<string,float> OnPanelChanged = delegate { };
 
     [Header("Panels Indicators")]
@@ -28,7 +29,7 @@ public class UI_PanelManager : MonoBehaviour
     [Header("Eases")]
     [SerializeField] private Ease showing_ease = Ease.Default;
     [SerializeField] private Ease hiding_ease = Ease.Default;
-    private float default_duration = 0.2f;
+    [SerializeField, Range(0f, 5f)] private float default_duration = 0.2f;
 
     [Header("Logs")]
     [SerializeField] private bool log = false;
@@ -38,10 +39,15 @@ public class UI_PanelManager : MonoBehaviour
     {
         UI_Navigator.Instance.OnSlotOutOfScreen += TweenToSlot;
 
-        if (panels == null || panels.Count == 0)
+        if (panels == null || panels.Count == 0) { panels = new List<UI_Panel>(); }
+        if (gather_panels_in_children_at_start)
         {
-            Debug.LogWarning("(UI_PanelManager) No panels defined in the inspector.");
-            return;
+            UI_Panel[] panels_in_children = GetComponentsInChildren<UI_Panel>(includeInactive: true);
+            for (int i=0; i<panels_in_children.Length; i++)
+            {
+                if (panels.Contains(panels_in_children[i])) { continue; }
+                panels.Add(panels_in_children[i]);
+            }
         }
 
         // Initialize each panel indicator
@@ -53,7 +59,10 @@ public class UI_PanelManager : MonoBehaviour
 
         // initialize the sequence list to keep track of sequences happening
         sequences = new List<Sequence?>();
-        foreach (UI_Panel panel in panels) { sequences.Add(null); }
+        foreach (UI_Panel panel in panels)
+        {
+            sequences.Add(null);
+        }
 
         // we tween to the current panel
         TweenToPanel(get_panel(current_panel));

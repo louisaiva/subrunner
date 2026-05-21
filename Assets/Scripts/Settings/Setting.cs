@@ -1,10 +1,9 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 
 [CreateAssetMenu(fileName = "Setting", menuName = "Settings/Setting", order = 2)]
-[Serializable] public class Setting : ScriptableObject
+[Serializable] public class Setting : ScriptableObject, Descriptable
 {
     [SerializeField] protected float _value;
     public virtual float Value
@@ -16,8 +15,11 @@ using UnityEngine;
 
             _value = value;
             OnValueChanged?.Invoke(_value);
+            OnSettingChanged?.Invoke(this);
         }
     }
+
+
     public virtual void SetValueWithoutNotify(float value)
     {
         _value = value;
@@ -31,8 +33,12 @@ using UnityEngine;
     public SettingShowSettings show_settings;
     public string label = "";
     public string description = "";
+    public string Name { get { return name; } }
+    public string Description { get { return description; } }
+
 
     public Action<float> OnValueChanged;
+    public Action<Setting> OnSettingChanged;
 
     public float GetPercentage()
     {

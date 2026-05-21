@@ -33,7 +33,7 @@ public class UI_PanelButtonBar : MonoBehaviour
     {
         if (panel_manager == null)
         {
-            Debug.LogWarning("(UI_PanelButtonBar) No panel manager set, please assign one in the inspector.");
+            Debug.LogError("(UI_PanelButtonBar) No panel manager set, please assign one in the inspector.");
             return;
         }
 
@@ -42,6 +42,7 @@ public class UI_PanelButtonBar : MonoBehaviour
         {
             panel_buttons = new List<UI_PanelButton>(GetComponentsInChildren<UI_PanelButton>(includeInactive: true));
         }
+        else if (panel_buttons == null) { panel_buttons = new List<UI_PanelButton>(); }
 
         // we register to the buttons events
         for (int i = 0; i < panel_buttons.Count; i++)

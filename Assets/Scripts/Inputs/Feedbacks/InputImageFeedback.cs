@@ -107,6 +107,7 @@ public class InputImageFeedback : InputFeedback, Colorant
 
 public interface Colorant
 {
+    public GameObject gameObject { get; }
     public List<UI_Colorer> Colorers { get; }
     public void SetColors(Color base_color, Color clicked_color);
     public Color HoverColor { get; }

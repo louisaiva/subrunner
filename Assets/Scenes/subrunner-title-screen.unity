@@ -2819,8 +2819,6 @@ MonoBehaviour:
   Showed: 1
   Stacked: 0
   Settings: {fileID: 11400000, guid: a301b7bcfd1dcc448ac9880ca1005d43, type: 2}
-  angle_threshold: 45
-  angle_multiplicator: 0
   ui_elements:
   - {fileID: 9022052367683018202}
   - {fileID: 2578152825867435393}
@@ -2830,6 +2828,10 @@ MonoBehaviour:
   log_extended: 0
   log_elements_showing: 0
   use_ingame_drop: 0
+  level_slot_prefab: {fileID: 0}
+  levels_container: {fileID: 0}
+  world_slot: {fileID: 0}
+  world_folder_caller: {fileID: 0}
 --- !u!114 &2660989901629463236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4290,10 +4292,6 @@ PrefabInstance:
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977898504913353187, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: prototype
-      value: world selection !!!!
       objectReference: {fileID: 0}
     - target: {fileID: 5077967483001363746, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: log_icons_paths

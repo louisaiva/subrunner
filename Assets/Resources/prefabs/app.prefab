@@ -1091,7 +1091,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee8634a91f626f418b742aa27838529, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaveEngine
-  log: 1
+  log:
+    Verbose: 2
+  log_capa:
+    Verbose: 2
+  log_rooms:
+    Verbose: 2
+  log_gsd_capable:
+    Verbose: 2
 --- !u!1 &5541506236358080035
 GameObject:
   m_ObjectHideFlags: 0
@@ -1259,7 +1266,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsQuitting: 0
   LoadedSceneCount: 0
-  prototype: LevelNavBaker is the new NavMeshBuilder
+  prototype: autochunker part 1
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320

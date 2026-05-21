@@ -8,10 +8,23 @@ public class UI_Slider : UI_ImageSlot, UI_SettingSlot
 {
     [Header("Setting")]
     [SerializeField] protected string setting_name = "undefined";
-    public string SettingName { get { return setting_name; } set 
+    public string SettingName
+    {
+        get { return setting_name; }
+        set
         {
             setting_name = value;
             set_manager_setting();
+        }
+    }
+    public string Name { get { return setting_name; } }
+    public string Description
+    {
+        get
+        {
+            Setting setting = SettingsManager.Instance?.GetSetting(setting_name);
+            if (setting == null) { return ""; }
+            return setting.Description;
         }
     }
 
@@ -183,6 +196,8 @@ public class UI_Slider : UI_ImageSlot, UI_SettingSlot
 
     // COLORANT
     public Color HoverColor => hoverBarColor;
+
+
     public void SetColors(Color baseColor, Color hoverColor)
     {
         this.baseBarColor = baseColor;
@@ -201,8 +216,7 @@ public class UI_Slider : UI_ImageSlot, UI_SettingSlot
     }
 }
 
-public interface UI_SettingSlot : Colorant
+public interface UI_SettingSlot : Colorant, Descriptable
 {
     public string SettingName { get; set;}
-    public GameObject gameObject { get; }
 }

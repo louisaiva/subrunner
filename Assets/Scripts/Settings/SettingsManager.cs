@@ -40,18 +40,55 @@ public class SettingsManager : MonoBehaviour
     // START
     private void Start()
     {
+
         // on register certains callbacks directement
+        RegisterCallback("fullscreen", (setting) => AppManager.Instance.Fullscreen(setting.Value >= 0.5f));
+        RegisterCallback("vsync", (setting) => AppManager.Instance.SetVSync(setting.Value >= 0.5f));
 
         // fullscreen
-        GetSetting("fullscreen").OnValueChanged += (ctx) => AppManager.Instance.Fullscreen(ctx >= 0.5f);
-        AppManager.Instance.Fullscreen(GetValue("fullscreen") >= 0.5f);
+        // GetSetting("fullscreen").OnValueChanged += (ctx) => AppManager.Instance.Fullscreen(ctx >= 0.5f);
+        // AppManager.Instance.Fullscreen(GetValue("fullscreen") >= 0.5f);
         
         // vsync
-        GetSetting("vsync").OnValueChanged += (ctx) => AppManager.Instance.SetVSync(ctx >= 0.5f);
-        AppManager.Instance.SetVSync(GetValue("vsync") >= 0.5f);
+        // GetSetting("vsync").OnValueChanged += (ctx) => AppManager.Instance.SetVSync(ctx >= 0.5f);
+        // AppManager.Instance.SetVSync(GetValue("vsync") >= 0.5f);
     }
 
-    // SETTERS & GETTERS
+
+
+
+
+    ///
+    //
+    /// CALLBACKS REGISTRATION
+    //
+    ///
+
+    public void RegisterCallback(string settingName, Action<Setting> callback)
+    {
+        Setting setting = GetSetting(settingName);
+        if (setting == null) { return; }
+        setting.OnSettingChanged += callback;
+
+        // fire the callback immediately with the current value so that the UI is updated at start
+        callback.Invoke(setting);
+    }
+    public void UnregisterCallback(string settingName, Action<Setting> callback)
+    {
+        Setting setting = GetSetting(settingName);
+        if (setting == null) { return; }
+        setting.OnSettingChanged -= callback;
+    }
+
+
+
+    ///
+    //
+    /// SETTERS & GETTERS
+    //
+    ///
+
+
     public void SetSetting(string settingName, float value)
     {
         // Logic to set the setting based on its name
@@ -86,6 +123,16 @@ public class SettingsManager : MonoBehaviour
         return null; // Default value if not found
     }
 
+
+
+
+
+
+    ///
+    //
+    /// SAVE / LOAD SETTINGS DATA
+    //
+    ///
 
     // SAVE / LOAD SETTINGS
     public void SaveLocalSettings()

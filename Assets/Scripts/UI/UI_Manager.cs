@@ -524,7 +524,7 @@ public class UI_Manager : Singleton<UI_Manager>
             if (pool is T typed_pool) { return typed_pool; }
         }
 
-        if (log_extended) { Debug.LogWarning($"(UI_Manager) did not find any matching pool of type {typeof(T).Name}"); }
+        Debug.LogError($"(UI_Manager) did not find any matching pool of type {typeof(T).Name}");
 
         return null;
     }

@@ -233,7 +233,7 @@ public class Chunk : MonoBehaviour
     {
         if (data == null) { return; }
         if (AppManager.Instance.IsQuitting) { return; }
-        if (GameManager.IsClosingGame) { return; }
+        // if (GameManager.IsClosingGame) { return; }
         if (ChunkEngine.Instance == null) { return; }
         if (_unloading) { return; } // if we are unloading the room we don't want any trigger event
 

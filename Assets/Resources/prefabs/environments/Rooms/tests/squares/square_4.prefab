@@ -2275,6 +2275,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Room
   data:
     <id>k__BackingField: 
+    room_id: 
     position: {x: 0, y: 0}
     collider_points:
     - {x: 2.1499732, y: 2.1453128}
@@ -2286,27 +2287,6 @@ MonoBehaviour:
     capables_ids: []
     movables_ids: []
     lights_data: []
-    tilebase_paths_used: []
-    ceiling_bounds:
-      m_Position: {x: -4, y: -7, z: 0}
-      m_Size: {x: 8, y: 8, z: 1}
-    ceiling_tiles: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-    edges_bounds:
-      m_Position: {x: 0, y: 0, z: 0}
-      m_Size: {x: 0, y: 0, z: 0}
-    edges_tiles: 
-    walls_bounds:
-      m_Position: {x: 0, y: 0, z: 0}
-      m_Size: {x: 0, y: 0, z: 1}
-    walls_tiles: 
-    carpet_bounds:
-      m_Position: {x: 0, y: 0, z: 0}
-      m_Size: {x: 0, y: 0, z: 1}
-    carpet_tiles: 
-    ground_bounds:
-      m_Position: {x: 0, y: 0, z: 0}
-      m_Size: {x: 0, y: 0, z: 1}
-    ground_tiles: 
 --- !u!1 &8894383997283719686
 GameObject:
   m_ObjectHideFlags: 0

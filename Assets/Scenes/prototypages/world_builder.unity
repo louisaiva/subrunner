@@ -13245,6 +13245,7 @@ MonoBehaviour:
   hide_log_outsider_created: 0
   log_dynamic_room_assignement: 0
   hide_log_no_room_of_capable_found: 1
+  log_chunk_distance: 0
   log_tilemaps_loading: 0
   log_colliders: 0
   log_enter_exit: 0
@@ -122226,10 +122227,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 714515157948744320, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: LOG_CLOSEST_BEING_SENSOR
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3744786912224508728, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -122273,22 +122270,6 @@ PrefabInstance:
     - target: {fileID: 5846687295635405809, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
       propertyPath: m_Name
       value: app
-      objectReference: {fileID: 0}
-    - target: {fileID: 8037771226667092712, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: log.Verbose
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8037771226667092712, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: log_capa.Verbose
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8037771226667092712, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: log_rooms.Verbose
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8037771226667092712, guid: bdbf5a061d5211c43b9b180a5763348f, type: 3}
-      propertyPath: log_gsd_capable.Verbose
-      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

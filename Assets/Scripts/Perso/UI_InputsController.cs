@@ -352,7 +352,7 @@ public class UI_InputsController : InputController
         UI_Pool current_pool = UI_Manager.Instance.GetCurrentPool();
         if (current_pool == null || current_pool is not Panelable panelable) { return; }
 
-        Debug.Log($"(UI_InputsController) rolling panel with input {input}");
+        // Debug.Log($"(UI_InputsController) rolling panel with input {input}");
         panelable.PanelManager.RollPanel((int)input);
     }
 

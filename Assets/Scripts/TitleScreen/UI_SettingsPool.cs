@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_SettingsPool : UI_SlottablePool, Panelable
+public class UI_SettingsPool : UI_SlottablePool, Panelable, Descriptable
 {
     [Header("Panel Manager")]
     [SerializeField] private UI_PanelManager panel_manager;
@@ -14,11 +14,27 @@ public class UI_SettingsPool : UI_SlottablePool, Panelable
     [Header("Components")]
     protected List<UI_PanelButton> panel_buttons;
     protected RectTransform panel_bar;
+    private UI_SettingsBuilder _builder;
+    public UI_SettingsBuilder Builder
+    {
+        get
+        {
+            if (_builder == null) { _builder = GetComponentInChildren<UI_SettingsBuilder>(includeInactive: true); }
+            return _builder;
+        }
+    }
+
+    public string Name => "";
+    public string Description => "hover a setting first";
 
     // START
+
     protected void Start()
     {
         UI_Navigator.Instance.OnSlotHoverEnter += update_feedbacks;
+        
+        // on load l'ui
+        Builder?.Init();
     }
 
     // SHOW
@@ -35,7 +51,6 @@ public class UI_SettingsPool : UI_SlottablePool, Panelable
 
         yield return base.show_coroutine(dont_show, duration_override, was_stacked);
     }
-
     protected override IEnumerator enable_coroutine()
     {
         yield return base.enable_coroutine();

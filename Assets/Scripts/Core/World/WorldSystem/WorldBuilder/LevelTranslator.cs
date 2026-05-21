@@ -124,7 +124,7 @@ public class LevelTranslator : MonoBehaviour
         }
 
         // wait while the editor is paused
-        await Task.Delay(1000*3);
+        /* await Task.Delay(1000*3);
         if (Application.isEditor)
         {
             #if UNITY_EDITOR
@@ -133,7 +133,7 @@ public class LevelTranslator : MonoBehaviour
                 await Task.Delay(100);
             }
             #endif
-        }
+        } */
 
 
 

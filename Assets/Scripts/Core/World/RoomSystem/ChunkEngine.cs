@@ -58,7 +58,13 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     private bool ticking = false;
 
     [Header("Room transfer parameters")]
-    [SerializeField, Range(1, 4)] public int chunk_distance = 1;
+    [SerializeField, Range(1, 10)] public int chunk_distance = 1;
+    public void SetChunkDistance(int distance)
+    {
+        chunk_distance = distance;
+        if (log_chunk_distance) { Debug.Log($"(ChunkEngine) Set chunk distance to {chunk_distance}"); }
+    }
+    public void SetChunkDistance(Setting setting) => SetChunkDistance((int) setting.Value);
 
     [Header("Logs awakening")]
     public bool log_awake_data = false;
@@ -82,6 +88,9 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     public bool log_dynamic_room_assignement = false;
     public bool hide_log_no_room_of_capable_found = false;
 
+    [Header("Specific logs")]
+    public bool log_chunk_distance = false;
+
     [Header("Room Logs")]
     public bool log_tilemaps_loading = false;
     public bool log_colliders = false;
@@ -93,6 +102,20 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     /// 1. AWAKE & DATA LOADING + 2D SPATIAL CELL CHUNKS
     //
     ///
+    public override void Awake()
+    {
+        base.Awake();
+
+        // on register certains callbacks directement
+        SettingsManager.Instance.RegisterCallback("chunk_distance", SetChunkDistance);
+    }
+    public override void OnDestroy()
+    {
+        // we unregister the callback
+        SettingsManager.Instance.UnregisterCallback("chunk_distance", SetChunkDistance);
+
+        base.OnDestroy();
+    }
 
 
     // LOAD / UNLOAD WORLD DATA

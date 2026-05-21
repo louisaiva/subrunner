@@ -13,6 +13,16 @@ public class UI_ToggleSetting : UI_Toggle, UI_SettingSlot
             set_manager_setting();
         }
     }
+    public string Name { get { return setting_name; } }
+    public string Description
+    {
+        get
+        {
+            Setting setting = SettingsManager.Instance?.GetSetting(setting_name);
+            if (setting == null) { return ""; }
+            return setting.Description;
+        }
+    }
 
     [Header("On Off Sprites")]
     [SerializeField] private Image icon;
