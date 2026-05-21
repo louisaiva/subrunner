@@ -11128,8 +11128,8 @@ MonoBehaviour:
   is_vertical: 0
   DontTouchSortingLayer: 1
   shadow_caster: {fileID: 411900334}
-  room1_id: sas
-  room2_id: qg
+  chunk1_id: 
+  chunk2_id: 
   if_switcher:
     closed_interact_kf_y: {x: 0.75, y: 0.75}
     opened_interact_kf_y: {x: 1.75, y: 1.75}
@@ -13167,13 +13167,9 @@ GameObject:
   - component: {fileID: 112018652}
   - component: {fileID: 112018655}
   - component: {fileID: 112018656}
-  - component: {fileID: 112018657}
-  - component: {fileID: 112018659}
-  - component: {fileID: 112018658}
-  - component: {fileID: 112018660}
   - component: {fileID: 112018661}
   m_Layer: 0
-  m_Name: chunk_system
+  m_Name: room_system
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13191,7 +13187,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1735693228}
+  - {fileID: 1632067362}
+  - {fileID: 2060923374}
   m_Father: {fileID: 1492137541}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &112018655
@@ -13250,79 +13249,6 @@ MonoBehaviour:
   log_colliders: 0
   log_enter_exit: 0
   log_grab: 1
---- !u!114 &112018657
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 112018651}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53241b36e8d7dff449a1037e38d69501, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TilemapEngine
-  GroundParent: {fileID: 906291656}
-  WallsParent: {fileID: 1326325983}
-  edges_prefab: {fileID: 9088553595496639235, guid: 286428d2c842a7d43bff05ba4d982cda, type: 3}
-  ceiling_prefab: {fileID: 3534243670804481816, guid: e40fe667f7a0be8418fe7b5ee1c4cc6c, type: 3}
-  walls_prefab: {fileID: 9088553595496639235, guid: 1d98720b1a0bcdd4088c79be6540f258, type: 3}
-  carpet_prefab: {fileID: 3643850000739812278, guid: 3917760ef1d71e142a68dd813abcb99b, type: 3}
-  ground_prefab: {fileID: -5065023031520131568, guid: 7cbe7dfef3a2ab84c853bef2dd0292ed, type: 3}
-  log_building: 0
-  log_tilebases: 0
-  log_showing: 1
-  log:
-    Verbose: 5
---- !u!114 &112018658
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 112018651}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f8ca7b0ca44dca4aa986673beeb4aad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DoorEngine
-  log_graph: 0
-  log_accessible_rooms: 0
-  log_visibility_update: 0
-  log_callbacks: 0
-  log_visibility: 0
---- !u!114 &112018659
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 112018651}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bf82fe5b475eb54e82dfe8eab267eb0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LightsEngine
-  light_prefab: {fileID: 7273238674065667602, guid: bf77b4d450875a543af448e38321731f, type: 3}
-  LightsParent: {fileID: 1111704813}
---- !u!114 &112018660
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 112018651}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf8ddf74c5f89a745876a1ca4ba62e79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TileBaseBank
-  default_tile: {fileID: 11400000, guid: 414af327913b1a942937b5478b762aa9, type: 2}
-  paths:
-    ids: []
-    paths: []
-  log:
-    Verbose: 2
 --- !u!114 &112018661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19892,6 +19818,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f21c41059eea91a4f90b29f8510483e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::World
+  load_status: 0
   world_id: chunk_test
   data:
     game_version: 
@@ -19900,8 +19827,6 @@ MonoBehaviour:
     icon_path: 
     icon_name: 
     color: {r: 0, g: 0, b: 0, a: 0}
-  <IsWorldLoaded>k__BackingField: 0
-  <IsWorldLoadingOrUnloading>k__BackingField: 0
   fallback_spawn_point: {fileID: 1209737554}
   log: 1
   log_loading_extended: 1
@@ -38063,8 +37988,8 @@ MonoBehaviour:
   is_vertical: 0
   DontTouchSortingLayer: 1
   shadow_caster: {fileID: 2014855553}
-  room1_id: servers
-  room2_id: control_sas
+  chunk1_id: 
+  chunk2_id: 
   if_switcher:
     closed_interact_kf_y: {x: 0.75, y: 0.75}
     opened_interact_kf_y: {x: 1.75, y: 1.75}
@@ -60406,8 +60331,8 @@ MonoBehaviour:
   is_vertical: 0
   DontTouchSortingLayer: 1
   shadow_caster: {fileID: 239060242}
-  room1_id: corridor_2
-  room2_id: backstage
+  chunk1_id: 
+  chunk2_id: 
   if_switcher:
     closed_interact_kf_y: {x: 0.75, y: 0.75}
     opened_interact_kf_y: {x: 1.75, y: 1.75}
@@ -64268,6 +64193,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WorldDoorVisualizer
   Cell: {x: 0, y: 0, z: 0}
   is_vertical: 1
+  chunk_1_id: 
+  chunk_2_id: 
 --- !u!212 &419413206
 SpriteRenderer:
   serializedVersion: 2
@@ -69449,8 +69376,8 @@ MonoBehaviour:
   is_vertical: 0
   DontTouchSortingLayer: 1
   shadow_caster: {fileID: 1444570746}
-  room1_id: backstage
-  room2_id: lobby
+  chunk1_id: 
+  chunk2_id: 
   if_switcher:
     closed_interact_kf_y: {x: 0.75, y: 0.75}
     opened_interact_kf_y: {x: 1.75, y: 1.75}
@@ -188985,6 +188912,7 @@ MonoBehaviour:
     - bot
     - inter
   loaded_navmeshes: []
+  is_aio: 0
 --- !u!1 &1215095728
 GameObject:
   m_ObjectHideFlags: 0
@@ -202878,6 +202806,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WorldDoorVisualizer
   Cell: {x: 0, y: 0, z: 0}
   is_vertical: 1
+  chunk_1_id: 
+  chunk_2_id: 
 --- !u!212 &1291626123
 SpriteRenderer:
   serializedVersion: 2
@@ -207098,7 +207028,7 @@ MonoBehaviour:
   chunk_prefab: {fileID: 5736771361114329614, guid: e03aec8e11cad514399c064605e8d36e, type: 3}
   chunk_parent: {fileID: 1316525370}
   log:
-    Verbose: 6
+    Verbose: 7
 --- !u!114 &1316525372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227624,6 +227554,7 @@ MonoBehaviour:
     - subway
     - trash_room
   loaded_navmeshes: []
+  is_aio: 0
 --- !u!1 &1443792014
 GameObject:
   m_ObjectHideFlags: 0
@@ -257230,6 +257161,55 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1630824791}
   m_CullTransparentMesh: 1
+--- !u!1 &1632067361
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1632067362}
+  - component: {fileID: 1632067363}
+  m_Layer: 0
+  m_Name: door_engine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1632067362
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1632067361}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 112018652}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1632067363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1632067361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f8ca7b0ca44dca4aa986673beeb4aad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DoorEngine
+  log_graph: 1
+  log_accessible_rooms: 1
+  log_visibility_update: 1
+  log_callbacks: 1
+  log_visibility: 1
 --- !u!1 &1632101952
 GameObject:
   m_ObjectHideFlags: 0
@@ -273792,6 +273772,81 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1735351755}
   m_CullTransparentMesh: 1
+--- !u!1 &1735693227
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1735693228}
+  - component: {fileID: 1735693230}
+  - component: {fileID: 1735693229}
+  m_Layer: 0
+  m_Name: tilemap_engine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1735693228
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735693227}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 112018652}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1735693229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735693227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf8ddf74c5f89a745876a1ca4ba62e79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TileBaseBank
+  default_tile: {fileID: 11400000, guid: 414af327913b1a942937b5478b762aa9, type: 2}
+  paths:
+    ids: []
+    paths: []
+  log:
+    Verbose: 2
+--- !u!114 &1735693230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735693227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53241b36e8d7dff449a1037e38d69501, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TilemapEngine
+  GroundParent: {fileID: 906291656}
+  WallsParent: {fileID: 1326325983}
+  edges_prefab: {fileID: 9088553595496639235, guid: 286428d2c842a7d43bff05ba4d982cda, type: 3}
+  ceiling_prefab: {fileID: 3534243670804481816, guid: e40fe667f7a0be8418fe7b5ee1c4cc6c, type: 3}
+  walls_prefab: {fileID: 9088553595496639235, guid: 1d98720b1a0bcdd4088c79be6540f258, type: 3}
+  carpet_prefab: {fileID: 3643850000739812278, guid: 3917760ef1d71e142a68dd813abcb99b, type: 3}
+  ground_prefab: {fileID: -5065023031520131568, guid: 7cbe7dfef3a2ab84c853bef2dd0292ed, type: 3}
+  log_building: 0
+  log_tilebases: 0
+  log_showing: 1
+  log:
+    Verbose: 5
 --- !u!1 &1736281305
 GameObject:
   m_ObjectHideFlags: 0
@@ -298954,6 +299009,7 @@ MonoBehaviour:
   current_level: {fileID: 0}
   level_prefab: {fileID: 8356036354246421201, guid: 9fa2799496ca83849bb4b053202faa45, type: 3}
   level_parent: {fileID: 1617718107}
+  load_status: 0
   log_awake_data: 1
   log_loading: 1
   hide_no_level_warning: 0
@@ -299010,6 +299066,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c1641731eab2bf49a4346f666ab8ed6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AIO_Loader
+  _status: 0
   level_parent: {fileID: 2134053426}
   level_prefab: {fileID: 8356036354246421201, guid: 9fa2799496ca83849bb4b053202faa45, type: 3}
   chunk_prefab: {fileID: 8185754384103082142, guid: ae6b0bfb8417b8d4a9eb59dbb48d8490, type: 3}
@@ -328980,6 +329037,54 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 1
+--- !u!1 &2060923373
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2060923374}
+  - component: {fileID: 2060923375}
+  m_Layer: 0
+  m_Name: lights
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2060923374
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2060923373}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 112018652}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2060923375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2060923373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bf82fe5b475eb54e82dfe8eab267eb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LightsEngine
+  light_prefab: {fileID: 7273238674065667602, guid: bf77b4d450875a543af448e38321731f, type: 3}
+  LightsParent: {fileID: 1111704813}
+  log:
+    Verbose: 3
 --- !u!1 &2062525716
 GameObject:
   m_ObjectHideFlags: 0
@@ -345134,8 +345239,8 @@ MonoBehaviour:
   is_vertical: 0
   DontTouchSortingLayer: 1
   shadow_caster: {fileID: 533523322}
-  room1_id: lobby
-  room2_id: corridor
+  chunk1_id: 
+  chunk2_id: 
   if_switcher:
     closed_interact_kf_y: {x: 0.75, y: 0.75}
     opened_interact_kf_y: {x: 1.75, y: 1.75}
@@ -348673,6 +348778,10 @@ PrefabInstance:
     - target: {fileID: 7477385741900678510, guid: 11a9509c1b157604ebd4ec3d2cfd1c9c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7616011813022096742, guid: 11a9509c1b157604ebd4ec3d2cfd1c9c, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -354482,13 +354591,13 @@ RectTransform:
   - {fileID: 7612011211206756672}
   - {fileID: 1639253102511772335}
   - {fileID: 1571851553}
-  - {fileID: 2819854471228090870}
   - {fileID: 1188889367642196799}
   - {fileID: 1775809938}
   - {fileID: 466389449}
   - {fileID: 499803720}
   - {fileID: 2754574793840993855}
   - {fileID: 1271993035942453580}
+  - {fileID: 2819854471228090870}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

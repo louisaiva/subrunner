@@ -29,7 +29,7 @@ public class TilemapBuilder : MonoBehaviour
     [SerializeField] private bool log_angles = false;
 
     // MAIN METHODS
-    public virtual Tilemap Build(WorldRoomVisualizer room)
+    public virtual Tilemap Build(WorldChunkVisualizer room)
     {
         // we save the doors
         doors.Clear();
@@ -67,8 +67,8 @@ public class TilemapBuilder : MonoBehaviour
 
 
     // MAIN TILEMAP GENERATION
-    protected virtual void GenerateTilemap(Tilemap tilemap, WorldRoomVisualizer room) {}
-    protected List<Vector3Int> get_carpet_tiles_positions(WorldRoomVisualizer room, DiagonalTraceType diagonal_trace_type = DiagonalTraceType.Canard)
+    protected virtual void GenerateTilemap(Tilemap tilemap, WorldChunkVisualizer room) {}
+    protected List<Vector3Int> get_carpet_tiles_positions(WorldChunkVisualizer room, DiagonalTraceType diagonal_trace_type = DiagonalTraceType.Canard)
     {
         List<Vector3Int> positions = new List<Vector3Int>();
 
@@ -79,7 +79,7 @@ public class TilemapBuilder : MonoBehaviour
         }
         return positions;
     }
-    protected List<Vector3Int> calculate_tiles_positions(WorldRoomVisualizer room)
+    protected List<Vector3Int> calculate_tiles_positions(WorldChunkVisualizer room)
     {
         List<Vector3Int> positions = new List<Vector3Int>();
 
@@ -271,11 +271,11 @@ public class TilemapBuilder : MonoBehaviour
 
         return new List<Vector3Int>(filled);
     }
-    protected List<Vector3Int> get_inside_mask(WorldRoomVisualizer room)
+    protected List<Vector3Int> get_inside_mask(WorldChunkVisualizer room)
     {
         return get_inside_mask(room, out List<Vector3Int> _);
     }
-    protected List<Vector3Int> get_inside_mask(WorldRoomVisualizer room, out List<Vector3Int> outline)
+    protected List<Vector3Int> get_inside_mask(WorldChunkVisualizer room, out List<Vector3Int> outline)
     {
         // we calculate all the positions of the tiles we need to create the outline
         outline = get_carpet_tiles_positions(room, DiagonalTraceType.Straight);

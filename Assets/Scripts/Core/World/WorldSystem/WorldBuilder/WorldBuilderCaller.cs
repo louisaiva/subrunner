@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WorldBuilderCaller : MonoBehaviour
@@ -42,7 +41,7 @@ public class WorldBuilderCaller : MonoBehaviour
     {
         // we clean the world builder
         await WorldBuilder.LazyInstance.ClearCache();
-        await WorldManager.LazyInstance.LoadSelectedWorld();
+        await WorldManager.LazyInstance.LoadSelectedWorldAwaitable();
         while (UI_Manager.Instance.IsInTransition) { await System.Threading.Tasks.Task.Yield(); }
         UI_Manager.Instance.UnstackPool("dev_world_builder");
     }

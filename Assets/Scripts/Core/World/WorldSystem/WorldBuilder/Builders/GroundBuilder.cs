@@ -11,7 +11,7 @@ public class GroundBuilder : TilemapBuilder
     [SerializeField] private Grid default_grid;
 
     // MAIN TILEMAP GENERATION
-    protected override void GenerateTilemap(Tilemap tilemap, WorldRoomVisualizer room)
+    protected override void GenerateTilemap(Tilemap tilemap, WorldChunkVisualizer room)
     {
         // we set the grid as the default one so this is the one used for calculating all the tile positions in a first time
         grid = default_grid;
@@ -40,7 +40,7 @@ public class GroundBuilder : TilemapBuilder
         foreach (var pos in unique_carpet) { tilemap.SetTile(pos, tile); }
     }
 
-    private List<Vector3Int> filter_exceeding_tiles(List<Vector3Int> carpet, WorldRoomVisualizer room)
+    private List<Vector3Int> filter_exceeding_tiles(List<Vector3Int> carpet, WorldChunkVisualizer room)
     {
         // we generate a filled inside WITHOUT the straight carpet
         List<Vector3Int> filled_inside = fill_inside(carpet);
@@ -53,7 +53,7 @@ public class GroundBuilder : TilemapBuilder
 
 
     // VERTICAL DOORS
-    protected virtual List<Vector3Int> get_doors_ground_positions(WorldRoomVisualizer room)
+    protected virtual List<Vector3Int> get_doors_ground_positions(WorldChunkVisualizer room)
     {
         List<Vector3Int> door_positions = new List<Vector3Int>();
         List<Vector3Int> inside_mask = get_inside_mask(room);

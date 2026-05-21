@@ -69,9 +69,9 @@ public class LevelBuilder : MonoBehaviour
 
 
     [Header("Room Visualizers")]
-    public WorldRoomVisualizer room_prefab;
+    public WorldChunkVisualizer room_prefab;
     public Transform room_parent;
-    private List<WorldRoomVisualizer> room_visualizers = new List<WorldRoomVisualizer>();
+    private List<WorldChunkVisualizer> room_visualizers = new List<WorldChunkVisualizer>();
 
     [Header("Colors")]
     public Color WaitingColor = Color.orange;
@@ -412,6 +412,7 @@ public class LevelBuilder : MonoBehaviour
         bool is_a_cycle_created = try_get_cycle_created_by_edge(new_link, out List<WorldNodeVisualizer> cycle);
 
         if (!is_a_cycle_created) { return; }
+        if (cycle.Count <= 4) { return; } // we need at least 5 cells to create a room (so we remove the small dirty shit)
         if (log_cycles) { Debug.Log("(LevelBuilder) cycle created with " + cycle.Count + " cells : " + string.Join(", ", cycle)); }
 
         // we gather the links of this cycle
@@ -429,7 +430,7 @@ public class LevelBuilder : MonoBehaviour
 
         // else we create a new room
         cells_waiting_for_a_room = cycle;
-        UI_Manager.Instance.OpenInputPopup("enter room name", WorldRoomVisualizer.NextRoomName, FinishRoomCreationWithName);
+        UI_Manager.Instance.OpenInputPopup("enter room name", WorldChunkVisualizer.NextRoomName, FinishRoomCreationWithName);
     }
     private List<WorldNodeVisualizer> cells_waiting_for_a_room = new List<WorldNodeVisualizer>();
     public void FinishRoomCreationWithName(string room_name)
@@ -440,11 +441,11 @@ public class LevelBuilder : MonoBehaviour
     }
 
     // ROOM (LOOPING NODES) MANAGEMENT
-    private WorldRoomVisualizer create_room_with_cells(List<WorldNodeVisualizer> cells, string room_name = "")
+    private WorldChunkVisualizer create_room_with_cells(List<WorldNodeVisualizer> cells, string room_name = "")
     {
         List<WorldLinkVisualizer> links = gather_links_of_cycle(cells);
 
-        WorldRoomVisualizer new_room_visu = Instantiate(room_prefab, room_parent);
+        WorldChunkVisualizer new_room_visu = Instantiate(room_prefab, room_parent);
         new_room_visu.CreateRoom(cells, links, room_name);
 
         // pick a random color
@@ -557,9 +558,11 @@ public class LevelBuilder : MonoBehaviour
     // DOORS MANAGEMENT
     private WorldDoorVisualizer create_door_at(Vector3Int cell_pos, bool vertical = true)
     {
-        WorldDoorVisualizer new_door_visu = Instantiate(vertical ? door_ver_prefab : door_hor_prefab, door_parent);
+        WorldDoorVisualizer prefab = vertical ? door_ver_prefab : door_hor_prefab;
+        WorldDoorVisualizer new_door_visu = Instantiate(prefab, door_parent);
         new_door_visu.SetCell(cell_pos);
         new_door_visu.Color = ConnectedDoorColor;
+        new_door_visu.name = $"{prefab.name}_{cell_pos.x}_{cell_pos.y}";
         door_visualizers.Add(new_door_visu);
         assign_door_to_rooms(new_door_visu);
 
@@ -636,7 +639,7 @@ public class LevelBuilder : MonoBehaviour
         {
             world = world_id,
             level = level,
-            Chunks = new List<WorldRoomVisualizer>(room_visualizers)
+            Chunks = new List<WorldChunkVisualizer>(room_visualizers)
         };
 
         foreach (var r in room_visualizers)
@@ -666,7 +669,7 @@ public class LevelBuilder : MonoBehaviour
         {
             world = world_id,
             level = level_id,
-            Chunks = new List<WorldRoomVisualizer>(room_visualizers)
+            Chunks = new List<WorldChunkVisualizer>(room_visualizers)
         };
 
         foreach (var r in room_visualizers)
@@ -695,7 +698,7 @@ public class LevelBuilder : MonoBehaviour
         }
     }
     private List<string> default_builders = new List<string> { "carpet", "ground", "walls", "edges", "ceiling" };
-    private Dictionary<string, Tilemap> build_room(WorldRoomVisualizer room, List<string> builders = null)
+    private Dictionary<string, Tilemap> build_room(WorldChunkVisualizer room, List<string> builders = null)
     {
         if (builders == null) { builders = default_builders; }
         Dictionary<string, Tilemap> tilemaps = new Dictionary<string, Tilemap>();
@@ -832,7 +835,7 @@ public class LevelBuilder : MonoBehaviour
     {
         return link_visualizers.FirstOrDefault(l => (l.NodeA == c1 && l.NodeB == c2) || (l.NodeA == c2 && l.NodeB == c1));
     }
-    public WorldRoomVisualizer GetRoomOfNode(WorldNodeVisualizer cell)
+    public WorldChunkVisualizer GetRoomOfNode(WorldNodeVisualizer cell)
     {
         for (int i = 0; i < room_visualizers.Count; i++)
         {
@@ -984,7 +987,7 @@ public class BuiltLevelData
     public string level;
 
     // cells links chunks visu
-    public List<WorldRoomVisualizer> Chunks = new List<WorldRoomVisualizer>();
+    public List<WorldChunkVisualizer> Chunks = new List<WorldChunkVisualizer>();
 
     // tilemaps
     public Dictionary<string, Dictionary<string, Tilemap>> Tilemaps = new Dictionary<string, Dictionary<string, Tilemap>>();

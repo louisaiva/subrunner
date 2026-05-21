@@ -105,11 +105,11 @@ public class LevelTranslator : MonoBehaviour
         /// 2.5 - AUTO CHUNK
         //
         if (log_translate_extended) { Debug.Log($"(LevelTranslator) Auto chunking big rooms"); }
-        built_level = AutoChunker.ChunkRooms(built_level);
+        built_level = await AutoChunker.ChunkRooms(built_level);
         if (log_chunking.Verbose >= Verbosity.Specific)
         {
             string log_chunking_details = $"chunks : {built_level.Chunks.Count}\n";
-            foreach (WorldRoomVisualizer chunk in built_level.Chunks)
+            foreach (WorldChunkVisualizer chunk in built_level.Chunks)
             {
                 log_chunking_details += $"  - {chunk.name} with path of {chunk.Path.Length} points\n";
             }
@@ -122,6 +122,20 @@ public class LevelTranslator : MonoBehaviour
             }
             log_chunking?.LogSpecific(log_chunking_details);
         }
+
+        // wait while the editor is paused
+        await Task.Delay(1000*3);
+        if (Application.isEditor)
+        {
+            #if UNITY_EDITOR
+            while (UnityEditor.EditorApplication.isPaused)
+            {
+                await Task.Delay(100);
+            }
+            #endif
+        }
+
+
 
         //
         /// 3 - CREATE MISSING CHUNKS, ASSIGN TILEMAPS, COLLIDERS, DOORS, LIGHTS
@@ -200,7 +214,7 @@ public class LevelTranslator : MonoBehaviour
     {
         if (log) { Debug.Log($"(LevelTranslator) Creating chunks, doors and lights"); }
         List<Chunk> chunks = new List<Chunk>();
-        foreach (WorldRoomVisualizer chunk_visu in built_level.Chunks)
+        foreach (WorldChunkVisualizer chunk_visu in built_level.Chunks)
         {
             if (!find_chunk(chunk_visu.name, old_chunks, out Chunk chunk))
             {
@@ -215,7 +229,7 @@ public class LevelTranslator : MonoBehaviour
             // we assign the doors and lights to the chunk
             foreach (WorldDoorVisualizer door_visu in chunk_visu.Doors)
             {
-                find_or_create_door(chunk, capables_parent, door_visu, ref existing_doors, ref new_capables);
+                find_or_create_door(capables_parent, door_visu, ref existing_doors, ref new_capables);
             }
             find_or_create_light(chunk, chunk_visu.Lights);
 
@@ -374,23 +388,15 @@ public class LevelTranslator : MonoBehaviour
     /// returns true if we created a new door,
     /// false otherwise (we found an existing door and just assigned the room to it)
     /// </summary>
-    /// <param name="room"></param>
+    /// <param name="chunk"></param>
     /// <param name="capables_parent"></param>
     /// <param name="door_visu"></param>
     /// <param name="existing_doors"></param>
     /// <param name="new_capables"></param>
-    private bool find_or_create_door(Chunk room, Transform capables_parent, WorldDoorVisualizer door_visu, ref List<Door> existing_doors, ref List<Capable> new_capables)
+    private bool find_or_create_door(Transform capables_parent, WorldDoorVisualizer door_visu, ref List<Door> existing_doors, ref List<Capable> new_capables)
     {
         Door door;
-        if (doors_placed.Contains(door_visu))
-        {
-            // we set the room as the door's other room.
-            door = this.doors[door_visu];
-            if (string.IsNullOrEmpty(door.room1_id)) { door.room1_id = room.ID; }
-            else if (string.IsNullOrEmpty(door.room2_id)) { door.room2_id = room.ID; }
-            else { Debug.LogError($"(LevelTranslator) door {door.ID} already has 2 rooms assigned. Cannot assign room {room.ID} to it."); }
-            return false;
-        }
+        if (doors_placed.Contains(door_visu)) { return false; }
 
         // get the position 
         Vector2 world_pos = (door_visu.WorldPosition + door_visu.OtherWorldPosition) / 2f;
@@ -405,20 +411,25 @@ public class LevelTranslator : MonoBehaviour
             // we create the door
             Door door_prefab = door_visu.is_vertical ? door_vertical_prefab : door_horizontal_prefab;
             door = Instantiate(door_prefab, capables_parent);
-            door.name = $"{door_prefab.name}";
+            door.name = $"{door_prefab.name}-{doors_placed.Count}";
 
             // apply the position
             door.transform.position = world_pos;
         }
 
+        // updates the door chunks rooms to make sure it's correct
+        door.chunk1_id = door_visu.chunk_1_id;
+        door.chunk2_id = door_visu.chunk_2_id;
+
+
         // get a position to check where is the room located compared to door
-        Vector2 world_position_in_first_room = door_visu.WorldPosition;
+        /* Vector2 world_position_in_first_room = door_visu.WorldPosition;
         if (door_visu.is_vertical) { world_position_in_first_room.y += 0.5f; }
         else { world_position_in_first_room.x += 0.5f; }
 
         // check if the position is inside the room, it means we are in the first room, else we are in the second room
-        if (room.OverlapPoint(world_position_in_first_room)) { door.room1_id = room.ID; door.room2_id = ""; }
-        else { door.room2_id = room.ID; door.room1_id = ""; }
+        if (chunk.OverlapPoint(world_position_in_first_room)) { door.room1_id = chunk.ID; door.room2_id = ""; }
+        else { door.room2_id = chunk.ID; door.room1_id = ""; } */
 
         doors_placed.Add(door_visu);
         this.doors[door_visu] = door;

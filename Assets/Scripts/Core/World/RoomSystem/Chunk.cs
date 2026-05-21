@@ -59,23 +59,27 @@ public class Chunk : MonoBehaviour
         ChunkEngine.Instance.LightsEngine.LoadLights(data.lights_data, data.id);
 
         // show the tilemaps
-        RoomEngine.Instance.ShowChunk(data);
+        // RoomEngine.Instance.DoorEngine.ShowRoom(data.room_id);
 
         // here we need to load all the capables that we hold in data.capables_ids
-        if ((data.capables_ids == null || data.capables_ids.Count == 0)
-        && (data.movables_ids == null || data.movables_ids.Count == 0)) { return; }
-        if (CapableEngine.Instance != null)
+        if ((data.capables_ids != null && data.capables_ids.Count > 0) || (data.movables_ids != null && data.movables_ids.Count > 0))
         {
-            CapableEngine.Instance.LoadCapables(data.capables_ids);
-            CapableEngine.Instance.LoadCapables(data.movables_ids);
+            if (CapableEngine.Instance != null)
+            {
+                CapableEngine.Instance.LoadCapables(data.capables_ids);
+                CapableEngine.Instance.LoadCapables(data.movables_ids);
+            }
         }
+
+        // fire the event
+        data.OnChunkLoaded?.Invoke(data);
     }
     public void UnloadData()
     {
         _unloading = true;
 
         // we hide the tilemaps
-        RoomEngine.Instance.HideChunk(data);
+        // RoomEngine.Instance.DoorEngine.HideRoom(data.room_id);
 
         // unload the collider
         RoomCollider.enabled = false;
@@ -88,6 +92,8 @@ public class Chunk : MonoBehaviour
             CapableEngine.Instance.UnloadCapables(data.movables_ids);
         }
 
+        // fire the event
+        data.OnChunkUnloaded?.Invoke(data);
         this.data = null;
         _unloading = false;
     }

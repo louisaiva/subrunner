@@ -38,6 +38,9 @@ using UnityEngine;
     // lights management
     public List<LightData> lights_data;
 
+    // Events
+    [RuntimeOnly] public Action<ChunkData> OnChunkLoaded;
+    [RuntimeOnly] public Action<ChunkData> OnChunkUnloaded;
 
 
     // GETTERS

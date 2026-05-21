@@ -40,20 +40,21 @@ public class AutoNeighbourer : MonoBehaviour
             }
         }
 
-        // we go through all doors and we add the neighbour connections to the rooms
+        // we go through all doors and we add the neighbour connections to the chunks
         foreach (var door in doors)
         {
-            Chunk room_a = chunks.Find(r => r.ID == door.room1_id);
-            Chunk room_b = chunks.Find(r => r.ID == door.room2_id);
-            if (room_a == null || room_b == null)
+            Chunk chunk_a = chunks.Find(r => r.ID == door.chunk1_id);
+            Chunk chunk_b = chunks.Find(r => r.ID == door.chunk2_id);
+            if (chunk_a == null || chunk_b == null)
             {
-                log.Warning($"(AutoNeighbourer) Door {door.name} has invalid room ids: {door.room1_id}, {door.room2_id}");
+                log.Warning($"(AutoNeighbourer) Door {door.name} has invalid chunk ids: {door.chunk1_id}, {door.chunk2_id}");
                 continue;
             }
 
-            // we add the neighbour connection to both rooms
-            room_a.AddStaticNeighbor(room_b);
-            room_b.AddStaticNeighbor(room_a);
+            // we add the neighbour connection to both chunks
+            chunk_a.AddStaticNeighbor(chunk_b);
+            chunk_b.AddStaticNeighbor(chunk_a);
+            log.LogExtended($"(AutoNeighbourer) Door '{door.name}' connects chunk '{chunk_a.ID}' and chunk '{chunk_b.ID}'");
         }
     }
 }

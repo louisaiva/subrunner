@@ -15,18 +15,48 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class GameManager : MonoBehaviour
 {
-    public static bool IsClosingGame = false;
+
+
+    // LAZY INSTANCE
+    private static GameManager _instance;
+    public static GameManager LazyInstance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindFirstObjectByType<GameManager>(FindObjectsInactive.Include);
+                if (_instance == null) { Debug.LogError("No (GameManager) instance found in the scene."); }
+            }
+            return _instance;
+        }
+    }
+
+    // GAME STATE
+    [SerializeField] private GameState _state = GameState.NoGame;
+    public static GameState State
+    {
+        get
+        {
+            if (LazyInstance == null) { return GameState.NoGame; }
+            return LazyInstance._state;
+        }
+        set
+        {
+            if (LazyInstance == null) { return; }
+            LazyInstance._state = value;
+        }
+    }
+    public static bool IsClosingGame => State == GameState.NoGame;
 
     [Header("Game Music Theme")]
     [SerializeField] private string game_theme_to_play = "i'm so hungry";
 
-    public static GameManager Instance { get; private set; }
 
+    // AWAKE & START
     private void Awake()
     {
-        if (Instance == null) { Instance = this; }
-        else if (Instance != this) { Destroy(gameObject); return; }
-        IsClosingGame = false;
+        _state = GameState.Loading;
 
         // we launch the world from WorldManager
         WorldManager.LazyInstance.LoadSelectedWorld();
@@ -82,11 +112,20 @@ public class GameManager : MonoBehaviour
         return calculate_type_distance_one_way(secondType, firstType);
     }
 
-
     // ON DESTROY
     private void OnDestroy()
     {
-        IsClosingGame = true;
-        Instance = null;
+        _state = GameState.NoGame;
+        _instance = null;
     }
+}
+
+
+public enum GameState
+{
+    NoGame,
+    Loading,
+    Gaming,
+    Paused,
+    Building, // inside the world builder
 }

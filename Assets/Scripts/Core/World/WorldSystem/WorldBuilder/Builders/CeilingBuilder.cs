@@ -16,7 +16,7 @@ public class CeilingBuilder : TilemapBuilder
     public int wall_bottom_to_keep = 2; // vertical distance from the wall under which we keep the tiles (if generate_only_on_walls is true)
 
     // MAIN TILEMAP GENERATION
-    protected override void GenerateTilemap(Tilemap tilemap, WorldRoomVisualizer room)
+    protected override void GenerateTilemap(Tilemap tilemap, WorldChunkVisualizer room)
     {
         // we calculate all the positions of the tiles we need to create the outline
         List<Vector3Int> outline;
@@ -49,7 +49,7 @@ public class CeilingBuilder : TilemapBuilder
 
 
     // generation type
-    protected List<Vector3Int> filter_bottom_tiles(WorldRoomVisualizer room)
+    protected List<Vector3Int> filter_bottom_tiles(WorldChunkVisualizer room)
     {
         // we calculate all the positions of the tiles we need to create the outline
         List<Vector3Int> outline = get_carpet_tiles_positions(room, DiagonalTraceType.Canard);

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class AutoChunker : MonoBehaviour
@@ -8,13 +9,14 @@ public class AutoChunker : MonoBehaviour
     [SerializeField] private int max_chunk_area = 10;
 
     [Header("References")]
-    [SerializeField] private WorldRoomVisualizer chunk_prefab;
+    [SerializeField] private WorldChunkVisualizer chunk_prefab;
+    private List<WorldChunkVisualizer> chunks_cache = new List<WorldChunkVisualizer>();
     [SerializeField] private Transform chunk_parent;
 
     [SerializeField] private Loggable<AutoChunker> log;
 
     // MAIN ENTRY POINT
-    public BuiltLevelData ChunkRooms(BuiltLevelData built_data)
+    public async Awaitable<BuiltLevelData> ChunkRooms(BuiltLevelData built_data)
     {
         log.Log($"Auto chunking rooms bigger than {max_chunk_area} area");
         BuiltLevelData new_data = new BuiltLevelData()
@@ -23,12 +25,12 @@ public class AutoChunker : MonoBehaviour
             level = built_data.level,
             Tilemaps = built_data.Tilemaps,
             RoomChunks = new Dictionary<string, List<string>>(),
-            Chunks = new List<WorldRoomVisualizer>(),
+            Chunks = new List<WorldChunkVisualizer>(),
             RoomChunksNeighbours = new List<ChunkNeighbourDataInsideRoom>()
         };
 
-        WorldRoomVisualizer room;
-        List<WorldRoomVisualizer> chunks;
+        WorldChunkVisualizer room;
+        List<WorldChunkVisualizer> chunks;
         for (int i = 0; i < built_data.Chunks.Count; i++)
         {
             log.LogExtended($"Processing room {built_data.Chunks[i].name} with area {built_data.Chunks[i].PolygonCollider.bounds.size.x * built_data.Chunks[i].PolygonCollider.bounds.size.y}");
@@ -56,11 +58,20 @@ public class AutoChunker : MonoBehaviour
         room = null;
         chunks = null;
 
+        // wait a sec for the path to be assigned correctly before making collision
+        await Task.Delay(1000);
+
+        // we split the doors and lights across the chunks
+        split_lights_and_doors(new_data);
+
+        // we get all the doors and update their chunks ids
+        update_doors_chunks(new_data);
+
         return new_data;
     }
 
     // IS SMALL ENOUGH
-    private bool is_small_enough(WorldRoomVisualizer room) { return is_small_enough(room.PolygonCollider.bounds); }
+    private bool is_small_enough(WorldChunkVisualizer room) { return is_small_enough(room.PolygonCollider.bounds); }
     private bool is_small_enough(Bounds bounds)
     {
         float area = bounds.size.x * bounds.size.y;
@@ -70,7 +81,7 @@ public class AutoChunker : MonoBehaviour
 
 
     // SPLITTING ROOM
-    private List<WorldRoomVisualizer> split_room(WorldRoomVisualizer room, out List<string> chunk_names, out ChunkNeighbourDataInsideRoom cndir)
+    private List<WorldChunkVisualizer> split_room(WorldChunkVisualizer room, out List<string> chunk_names, out ChunkNeighbourDataInsideRoom cndir)
     {
         chunk_names = new List<string>();
         cndir = new ChunkNeighbourDataInsideRoom
@@ -88,47 +99,20 @@ public class AutoChunker : MonoBehaviour
 
         // create chunk visualizers
         log.LogExtended($"Creating visualizers for the chunks");
-        List<WorldRoomVisualizer> chunks = new List<WorldRoomVisualizer>();
+        List<WorldChunkVisualizer> chunks = new List<WorldChunkVisualizer>();
         for (int i = 0; i < small_chunks_vertices.Count; i++)
         {
-            WorldRoomVisualizer chunk = Instantiate(chunk_prefab, chunk_parent);
+            WorldChunkVisualizer chunk = Instantiate(chunk_prefab, chunk_parent);
             chunk.Path = small_chunks_vertices[i].ToArray();
             chunk.name = $"{room.name}-{i}";
             chunks.Add(chunk);
+            chunks_cache.Add(chunk);
             chunk_names.Add(chunk.name);
             log.LogSpecific($"Created chunk {chunk.name}");
         }
 
-        // split the doors & lights
-        log.LogExtended($"Splitting doors and lights across the chunks");
-        List<WorldDoorVisualizer> doors_left = room.Doors;
-        List<WorldLightVisualizer> lights_left = room.Lights;
-        foreach (WorldRoomVisualizer chunk in chunks)
-        {
-            for (int i = doors_left.Count - 1; i >= 0; i--)
-            {
-                if (!chunk.CollideWithCell(doors_left[i].Cell) && !chunk.CollideWithCell(doors_left[i].OtherCell)) { continue; }
-                
-                log.LogSpecific($"Assigned door {doors_left[i].name} to chunk {chunk.name}");
-                chunk.Doors.Add(doors_left[i]);
-                doors_left.RemoveAt(i);
-            }
-
-            for (int i = lights_left.Count - 1; i >= 0; i--)
-            {
-                if (!chunk.CollideWithCell(lights_left[i].Cell)) { continue; }
-
-                log.LogSpecific($"Assigned light {lights_left[i].name} to chunk {chunk.name}");
-                chunk.Lights.Add(lights_left[i]);
-                lights_left.RemoveAt(i);
-            }
-        }
-        if (doors_left.Count > 0) { log.Error($"Some DOORS were not assigned to any chunk for room {room.name} : {string.Join(", ", doors_left.Select(d => d.name))}"); }
-        if (lights_left.Count > 0) { log.Error($"Some lights were not assigned to any chunk for room {room.name} : {string.Join(", ", lights_left.Select(l => l.name))}"); }
-
-
         // calculate the neighbours between the chunks inside the same room
-        int max_neighbour_distance_threshold = (int)(max_chunk_area * 3f);
+        int max_neighbour_distance_threshold = (int)(max_chunk_area / 2f);
         for (int i = 0; i < chunks.Count; i++)
         {
             cndir.chunk_neighbours[chunks[i].name] = new List<string>();
@@ -144,6 +128,10 @@ public class AutoChunker : MonoBehaviour
                 }
             }
         }
+
+        // we transfer all doors & lights to the first new chunk so they can be re assigned later by collision
+        chunks[0].Doors.AddRange(room.Doors);
+        chunks[0].Lights.AddRange(room.Lights);
 
         return chunks;
     }
@@ -260,6 +248,155 @@ public class AutoChunker : MonoBehaviour
             // line is y = split_value
             float t = (split_value - start.y) / (end.y - start.y);
             return new Vector2(start.x + t * (end.x - start.x), split_value);
+        }
+    }
+
+
+    // CLEAR CACHE
+    public void ClearCache()
+    {
+        foreach (var chunk in chunks_cache)
+        {
+            if (chunk == null) { continue; }
+            Destroy(chunk.gameObject);
+        }
+        chunks_cache.Clear();
+    }
+
+
+    // UPDATE DOORS CHUNKS
+    private void split_lights_and_doors(BuiltLevelData data)
+    {
+        log.LogExtended($"Splitting lights and doors across the chunks");
+        // gather all door & light visu
+        List<WorldDoorVisualizer> doors = new List<WorldDoorVisualizer>();
+        List<WorldLightVisualizer> lights = new List<WorldLightVisualizer>();
+        foreach (var chunk in data.Chunks)
+        {
+            if (chunk.Doors != null && chunk.Doors.Count > 0)
+            {
+                for (int i = 0; i < chunk.Doors.Count; i++)
+                {
+                    if (!doors.Contains(chunk.Doors[i])) { doors.Add(chunk.Doors[i]); }
+                }
+                chunk.Doors.Clear();
+            }
+            if (chunk.Lights != null && chunk.Lights.Count > 0)
+            {
+                for (int i = 0; i < chunk.Lights.Count; i++)
+                {
+                    if (!lights.Contains(chunk.Lights[i])) { lights.Add(chunk.Lights[i]); }
+                }
+                chunk.Lights.Clear();
+            }
+        }
+
+
+        // cycle through the doors to assign them to the right chunk
+
+        // cycle through all doors
+        for (int i = doors.Count - 1; i >= 0; i--)
+        {
+            var door = doors[i];
+            bool door_assigned = false;
+
+            Vector3 world_position = (door.WorldPosition + door.OtherWorldPosition) / 2f; // we take the middle of the door to assign it to a chunk
+            RaycastHit2D[] hits = Physics2D.CircleCastAll(world_position, .35f, Vector2.zero, 0f, LayerMask.GetMask("WorldBuilder"));
+            log.LogOMGThatsVeryVerySpecific($"Assigning door '{door.name}' to a chunk by checking collision at {world_position}, found {hits.Length} hits : \n - {string.Join("\n - ", hits.Select(h => h.collider.name))}");
+            foreach (var hit in hits)
+            {
+                WorldChunkVisualizer chunk = hit.collider.GetComponent<WorldChunkVisualizer>();
+                if (chunk == null) { continue; }
+                if (!data.Chunks.Contains(chunk)) { continue; }
+                door.chunk_1_id = chunk.name;
+                chunk.Doors.Add(door);
+                door_assigned = true;
+                doors.RemoveAt(i);
+                log.LogVerySpecific($"Door '{door.name}' assigned to chunk '{chunk.name}'");
+                break;
+            }
+            if (!door_assigned) { log.Error($"Could not assign door {door.name} to any chunk"); }
+        }
+
+        // cycle through all lights
+        for (int i = lights.Count - 1; i >= 0; i--)
+        {
+            var light = lights[i];
+            bool light_assigned = false;
+            RaycastHit2D[] hits = Physics2D.CircleCastAll(light.WorldPosition, .35f, Vector2.zero, 0f, LayerMask.GetMask("WorldBuilder"));
+            log.LogOMGThatsVeryVerySpecific($"Assigning light '{light.name}' to a chunk by checking collision at {light.WorldPosition}, found {hits.Length} hits : \n - {string.Join("\n - ", hits.Select(h => h.collider.name))}");
+            foreach (var hit in hits)
+            {
+                WorldChunkVisualizer chunk = hit.collider.GetComponent<WorldChunkVisualizer>();
+                if (chunk == null) { continue; }
+                if (!data.Chunks.Contains(chunk)) { continue; }
+                chunk.Lights.Add(light);
+                light_assigned = true;
+                lights.RemoveAt(i);
+                log.LogVerySpecific($"Light '{light.name}' assigned to chunk '{chunk.name}'");
+                break;
+            }
+            if (!light_assigned) { log.Error($"Could not assign light {light.name} to any chunk"); }
+        }
+        
+        if (doors.Count > 0) { log.Error($"Some DOORS were not assigned to any chunk : {string.Join(", ", doors.Select(d => d.name))}"); }
+        if (lights.Count > 0) { log.Error($"Some lights were not assigned to any chunk : {string.Join(", ", lights.Select(l => l.name))}"); }
+    }
+    private void update_doors_chunks(BuiltLevelData data)
+    {
+        log.LogExtended($"Updating doors chunks ids by collisionning with the chunks polygons");
+
+        // gather all door visu
+        List<WorldDoorVisualizer> doors = new List<WorldDoorVisualizer>();
+        foreach (var chunk in data.Chunks)
+        {
+            if (chunk.Doors == null) { continue; }
+            if (chunk.Doors.Count == 0) { continue; }
+            for (int i = 0; i < chunk.Doors.Count; i++)
+            {
+                if (!doors.Contains(chunk.Doors[i])) { doors.Add(chunk.Doors[i]); }
+            }
+        }
+
+        // cycle through all doors
+        foreach (var door in doors)
+        {
+            bool found_chunk1 = false;
+            bool found_chunk2 = false;
+            foreach (var chunk in data.Chunks)
+            {
+                if (found_chunk1 && found_chunk2) { break; }
+
+                if (!found_chunk1)
+                {
+                    // we check if polygon of chunk collides with world position of door cell 1
+                    bool collides_with_chunk1 = chunk.PolygonCollider.OverlapPoint(door.Chunk1CellWorldPosition);
+                    if (collides_with_chunk1)
+                    {
+                        door.chunk_1_id = chunk.name;
+                        found_chunk1 = true;
+                        log.LogVerySpecific($"Door '{door.name}' chunk 1 assigned to chunk '{chunk.name}'");
+                    }
+                }
+
+                if (!found_chunk2)
+                {
+                    // we check if polygon of chunk collides with world position of door cell 2
+                    bool collides_with_chunk2 = chunk.PolygonCollider.OverlapPoint(door.Chunk2CellWorldPosition);
+                    if (collides_with_chunk2)
+                    {
+                        door.chunk_2_id = chunk.name;
+                        found_chunk2 = true;
+                        log.LogVerySpecific($"Door '{door.name}' chunk 2 assigned to chunk '{chunk.name}'");
+                    }
+                }
+            }
+
+            if (!found_chunk1) { log.Warning($"(AutoChunker) Could not find chunk for door {door.name} chunk 1 cell {door.Chunk1Cell}"); }
+            if (!found_chunk2) { log.Warning($"(AutoChunker) Could not find chunk for door {door.name} chunk 2 cell {door.Chunk2Cell}"); }
+            if (!found_chunk1 || !found_chunk2) { continue; }
+
+            log.LogSpecific($"Updated door '{door.name}' that now connects chunk {door.chunk_1_id} and chunk {door.chunk_2_id}");
         }
     }
 }

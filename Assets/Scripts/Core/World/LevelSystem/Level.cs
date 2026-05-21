@@ -9,6 +9,10 @@ public class Level : MonoBehaviour
     public LevelData data;
     public List<NavMeshData> loaded_navmeshes;
     public string ID { get { return GetStaticID(); } }
+    
+    // is aio
+    [SerializeField] private bool is_aio = false;
+    public bool IsAIO { get { return is_aio; } set { is_aio = value; } }
 
     // LOAD UNLOAD
     public void Load()

@@ -9,7 +9,7 @@ public class EdgesBuilder : TilemapBuilder
     [SerializeField] private TileBase R_edge;
 
     // MAIN TILEMAP GENERATION
-    protected override void GenerateTilemap(Tilemap tilemap, WorldRoomVisualizer room)
+    protected override void GenerateTilemap(Tilemap tilemap, WorldChunkVisualizer room)
     {
         // we get the edges from the WallsBuilder
         WallsBuilder walls_builder = GetComponent<WallsBuilder>();

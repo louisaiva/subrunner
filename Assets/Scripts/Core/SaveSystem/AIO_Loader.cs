@@ -5,7 +5,16 @@ using UnityEngine;
 
 public class AIO_Loader : MonoBehaviour
 {
-    
+    [SerializeField] private AIO_Status _status = AIO_Status.NotWorking;
+    public static AIO_Status Status
+    {
+        get
+        {
+            if (SaveEngine.AIO_Loader == null) { return AIO_Status.NotWorking; }
+            return SaveEngine.AIO_Loader._status;
+        }
+    }
+
     [Header("Prefabs & Parents")]
     [SerializeField] private Transform level_parent;
     [SerializeField] private Level level_prefab;
@@ -30,6 +39,7 @@ public class AIO_Loader : MonoBehaviour
 
         // CLEAR OLD DATA
         await ClearCache_NoWorldLoaded();
+        _status = AIO_Status.LoadingNoWorldLoaded;
 
         // grab the level data from the world data
         LevelData level_data = LevelEngine.LoadWorldLevelData(world_id, level_id);
@@ -60,11 +70,14 @@ public class AIO_Loader : MonoBehaviour
     }
     public Level LoadAIO_Level(string world_id, string level_id, bool navmesh_only = false)
     {
+
         log_load_worldloaded.Log($"Loading level '{level_id}' for world '{world_id}' (World Loaded)");
         // if (log) { Debug.Log($"(AIO_Loader) Loading level '{level_id}' for world '{world_id}' (World Loaded)"); }
 
         // CLEAR OLD DATA
         _ = ClearCache();
+
+        _status = AIO_Status.LoadingWorldLoaded;
 
         // grab the level data from the world data
         LevelData level_data = LevelEngine.LoadWorldLevelData(world_id, level_id);
@@ -228,6 +241,8 @@ public class AIO_Loader : MonoBehaviour
     /// <returns></returns>
     public async Task ClearCache_NoWorldLoaded()
     {
+        _status = AIO_Status.ClearingCache;
+
         // we clear the loaded levels
         foreach (Level level in loaded_levels.Values)
         {
@@ -244,6 +259,8 @@ public class AIO_Loader : MonoBehaviour
         // we clear the subsystems
         // RoomEngine.Instance.TilemapEngine.ClearTilemaps(log: true);
         // RoomEngine.Instance.LightsEngine.ClearLights(log: true);
+
+        _status = AIO_Status.NotWorking;
     }
 
     /// <summary>
@@ -253,6 +270,8 @@ public class AIO_Loader : MonoBehaviour
     /// </summary>
     public async Task ClearCache()
     {
+        _status = AIO_Status.ClearingCache;
+
         // we ask capable engine to unload all loaded capables, which will pool objects & capacities
         for (int i = 0; i < loaded_capables.Count; i++)
         {
@@ -270,5 +289,15 @@ public class AIO_Loader : MonoBehaviour
         loaded_rooms.Clear();
 
         await Task.Yield();
+
+        _status = AIO_Status.NotWorking;
     }
+}
+
+public enum AIO_Status
+{
+    NotWorking,
+    LoadingWorldLoaded,
+    LoadingNoWorldLoaded,
+    ClearingCache,
 }

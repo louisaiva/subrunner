@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(PolygonCollider2D))]
-public class WorldRoomVisualizer : MonoBehaviour
+public class WorldChunkVisualizer : MonoBehaviour
 {
     private List<WorldNodeVisualizer> nodes = new List<WorldNodeVisualizer>();
     private List<WorldLinkVisualizer> links = new List<WorldLinkVisualizer>();

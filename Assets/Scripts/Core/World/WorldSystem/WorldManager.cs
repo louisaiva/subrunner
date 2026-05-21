@@ -255,12 +255,21 @@ public class WorldManager : MonoBehaviour
             return _world;
         }
     }
-    
-    
-    // LOAD / UNLOAD WORLD
-    public async Task LoadSelectedWorld()
-    {
 
+
+    // LOAD / UNLOAD WORLD
+    private bool still_loading_awaitable = false;
+    public async Awaitable LoadSelectedWorldAwaitable()
+    {
+        still_loading_awaitable = true;
+        LoadSelectedWorld();
+        while (still_loading_awaitable)
+        {
+            await Task.Delay(100);
+        }
+    }
+    public async void LoadSelectedWorld()
+    {
         // first we check that a world is not already loaded
         while (world.IsWorldLoadingOrUnloading) { await Task.Delay(100); }
         if (world.IsWorldLoaded) { await UnloadCurrentWorld(); }
@@ -278,6 +287,7 @@ public class WorldManager : MonoBehaviour
         }
 
         await world.LoadWorld(SelectedWorld);
+        still_loading_awaitable = false;
     }
     public async Task UnloadCurrentWorld()
     {

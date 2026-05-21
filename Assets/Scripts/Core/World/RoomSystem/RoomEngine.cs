@@ -13,7 +13,7 @@ public class RoomEngine : BSOD_System<RoomEngine>
     {
         get
         {
-            if (_tilemap_engine == null) { _tilemap_engine = GetComponent<TilemapEngine>(); }
+            if (_tilemap_engine == null) { _tilemap_engine = GetComponentInChildren<TilemapEngine>(includeInactive: true); }
             return _tilemap_engine;
         }
     }
@@ -23,11 +23,21 @@ public class RoomEngine : BSOD_System<RoomEngine>
     {
         get
         {
-            if (_tilebase_bank == null) { _tilebase_bank = GetComponent<TileBaseBank>(); }
+            if (_tilebase_bank == null) { _tilebase_bank = GetComponentInChildren<TileBaseBank>(includeInactive: true); }
             return _tilebase_bank;
         }
     }
 
+
+    private DoorEngine _door_engine;
+    public DoorEngine DoorEngine
+    {
+        get
+        {
+            if (_door_engine == null) { _door_engine = GetComponentInChildren<DoorEngine>(includeInactive: true); }
+            return _door_engine;
+        }
+    }
 
     private Dictionary<string, RoomData> rooms_data = new Dictionary<string, RoomData>();
 
@@ -47,14 +57,15 @@ public class RoomEngine : BSOD_System<RoomEngine>
     // LOAD / UNLOAD WORLD DATA
     public override async Task LoadWorldData(string world_id, bool log)
     {
-        if (log) { Debug.Log($"(RoomEngine) ROOM ENGINE SUCCESSFULLY LOADED : {world_id}"); }
-
         loadRoomsData(world_id);
+
+        if (log) { Debug.Log($"(RoomEngine) ROOM ENGINE SUCCESSFULLY LOADED : {world_id}"); }
     }
     public override async Task UnloadWorldData(bool log)
     {
         // clear sub systems caches
         TilemapEngine.ClearTilemaps(log);
+        await DoorEngine.UnloadWorldData(log);
 
         if (log) { Debug.Log($"(RoomEngine) ROOM ENGINE SUCCESSFULLY UNLOADED"); }
     }
@@ -115,29 +126,14 @@ public class RoomEngine : BSOD_System<RoomEngine>
             log_loading?.Log($"(RoomEngine) Room '{room_id}' unloaded.");
         }
     }
-
-    // SHOW HIDE
-    private List<string> shown_rooms_ids = new List<string>();
-    public void ShowChunk(ChunkData chunk_data)
+    public bool IsRoomLoaded(RoomData room_data)
     {
-        if (shown_rooms_ids.Contains(chunk_data.room_id)) { return; }
-
-        // we get the room data
-        RoomData room_data = GetRoomDataFromID(chunk_data.room_id);
-        if (room_data == null) { return; }
-
-        // show the tilemaps
-        TilemapEngine.ShowTilemaps(room_data);
-        shown_rooms_ids.Add(chunk_data.room_id);
+        return ChunkEngine.Instance.IsAnyChunkLoaded(room_data.chunks_ids);
     }
-    public void HideChunk(ChunkData chunk_data)
-    {
-        if (!shown_rooms_ids.Contains(chunk_data.room_id)) { return; }
 
-        // hide the tilemaps
-        TilemapEngine.HideTilemaps(chunk_data.room_id);
-        shown_rooms_ids.Remove(chunk_data.room_id);
-    }
+    // SHOW HIDE ROOMS TILEMAPS
+    public void ShowTilemaps(RoomData room_data) => TilemapEngine.ShowTilemaps(room_data);
+    public void HideTilemaps(RoomData room_data) => TilemapEngine.HideTilemaps(room_data.id);
 
 
 
@@ -194,5 +190,17 @@ public class RoomEngine : BSOD_System<RoomEngine>
         }
         log_data?.Warning("[GetLevelOfChunk] No RoomData with chunk id '" + chunk_id + "' was found. Returning null.");
         return null;
+    }
+    public List<CapableData> GetCapablesDataInRoom(RoomData room_data)
+    {
+        // gather the chunk data
+        List<ChunkData> chunks_data = ChunkEngine.Instance.GetChunksDataFromIDs(room_data.chunks_ids);
+
+        List<CapableData> capables_data = new List<CapableData>();
+        foreach (ChunkData chunk_data in chunks_data)
+        {
+            capables_data.AddRange(CapableEngine.Instance.GetCapablesDataFromIDs(chunk_data.capables_ids.Concat(chunk_data.movables_ids).ToList()));
+        }
+        return capables_data;
     }
 }

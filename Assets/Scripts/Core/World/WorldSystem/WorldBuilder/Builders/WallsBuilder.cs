@@ -32,7 +32,7 @@ public class WallsBuilder : TilemapBuilder
     ///
 
     // MAIN TILEMAP GENERATION
-    protected override void GenerateTilemap(Tilemap tilemap, WorldRoomVisualizer room)
+    protected override void GenerateTilemap(Tilemap tilemap, WorldChunkVisualizer room)
     {
         last_outline.Clear();
 
@@ -106,7 +106,7 @@ public class WallsBuilder : TilemapBuilder
     ///
 
     // FILTER EXTERIOR WALLS
-    protected List<Vector3Int> filter_exterior_walls(Tilemap tilemap, WorldRoomVisualizer room)
+    protected List<Vector3Int> filter_exterior_walls(Tilemap tilemap, WorldChunkVisualizer room)
     {
         List<Vector3Int> inside_mask = get_inside_mask(room, out List<Vector3Int> outline);
 

@@ -39,8 +39,6 @@ public class CloseCapacity : Capacity
     {
         // on supprime les invokes de l'ouverture si il y en a
         open_capacity?.CancelOpenInvoke();
-
-        // on ouvre le coffre
         (Capable as Openable).is_moving = true;
 
         // on joue l'animation
@@ -67,9 +65,9 @@ public class CloseCapacity : Capacity
     protected virtual void success_close()
     {
         // on ouvre le coffre
-        if (Capable is not Openable openable)
+        if (Capable == null || Capable is not Openable openable)
         {
-            if (log) { Debug.LogError("(CloseCapacity) " + Capable.ID + " is not openable !"); }
+            if (log) { Debug.LogError("(CloseCapacity) " + Capable?.ID + " is null or not openable !"); }
             return;
         }
         openable.is_open = false;
@@ -89,7 +87,15 @@ public class CloseCapacity : Capacity
 
         if (log) { Debug.Log(Capable.name + " is closed !"); }
     }
+    public virtual void CloseInstantly()
+    {
+        // on supprime tous les invokes si on en a
+        open_capacity?.CancelOpenInvoke();
+        CancelCloseInvoke();
 
+        // on ferme direct
+        success_close();
+    }
 
     // CancelInvoke
     public void CancelCloseInvoke()

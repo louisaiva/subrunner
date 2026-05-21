@@ -175,6 +175,7 @@ public class UI_Manager : Singleton<UI_Manager>
 
         // we switch to the hud stack
         current_transition = StartCoroutine(switch_pool_coroutine(get_stack_from_string(hud_stack), force));
+
     }
 
     // UI POOL SWITCH LOW LEVEL

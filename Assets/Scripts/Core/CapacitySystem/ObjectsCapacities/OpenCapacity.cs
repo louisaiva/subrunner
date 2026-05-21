@@ -92,6 +92,16 @@ public class OpenCapacity : Capacity
         if (log) { Debug.Log(Capable.ID + " is open !"); }
     }
 
+    public virtual void OpenInstantly()
+    {
+        // on supprime tous les invokes si on en a
+        close_capacity?.CancelCloseInvoke();
+        CancelOpenInvoke();
+
+        // on ouvre direct
+        success_open();
+    }
+
     // CancelInvoke
     public void CancelOpenInvoke()
     {

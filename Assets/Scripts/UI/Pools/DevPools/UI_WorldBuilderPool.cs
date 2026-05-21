@@ -59,4 +59,15 @@ public class UI_WorldBuilderPool : UI_SlottablePool, Descriptable
         WorldBuilder.LazyInstance.RemoveCallbacks();
 
     }
+
+
+    // EVENTS
+    protected override void on_added_to_stack()
+    {
+        GameManager.State = GameState.Building;
+    }
+    protected override void on_removed_from_stack()
+    {
+        GameManager.State = GameState.Paused;
+    }
 }

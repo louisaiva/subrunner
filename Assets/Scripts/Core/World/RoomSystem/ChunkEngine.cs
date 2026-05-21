@@ -13,18 +13,8 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     {
         get
         {
-            if (_lights_engine == null) { _lights_engine = GetComponent<LightsEngine>(); }
+            if (_lights_engine == null) { _lights_engine = GetComponentInChildren<LightsEngine>(includeInactive: true); }
             return _lights_engine;
-        }
-    }
-
-    private DoorEngine _door_engine;
-    public DoorEngine DoorEngine
-    {
-        get
-        {
-            if (_door_engine == null) { _door_engine = GetComponent<DoorEngine>(); }
-            return _door_engine;
         }
     }
 
@@ -165,7 +155,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         // clear sub systems caches
         // TilemapEngine.ClearTilemaps(log);
         LightsEngine.ClearLights(log);
-        await DoorEngine.UnloadWorldData(log);
+        // await DoorEngine.UnloadWorldData(log);
 
         if (log) { Debug.Log($"(ChunkEngine) CHUNK ENGINE SUCCESSFULLY UNLOADED"); }
     }
@@ -699,8 +689,8 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         loaded_chunks_data.Add(id, data);
         if (log_loading) { Debug.Log("(ChunkEngine) Loaded " + id); }
 
-        if (!DoorEngine.IsRoomVisible(data)) { DoorEngine.HideRoom(data); }
-        else { DoorEngine.ShowRoom(data); }
+        if (!RoomEngine.Instance.DoorEngine.IsRoomVisible(data.room_id)) { RoomEngine.Instance.DoorEngine.HideRoom(data.room_id); }
+        else { RoomEngine.Instance.DoorEngine.ShowRoom(data.room_id); }
     }
 
     // UNLOAD CHUNKS
@@ -840,6 +830,14 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     public ChunkData GetChunkDataFromID(string room_id)
     {
         return chunks_data.TryGetValue(room_id, out ChunkData room) ? room : null;
+    }
+    public bool IsAnyChunkLoaded(List<string> chunks_ids)
+    {
+        foreach (string chunk_id in chunks_ids)
+        {
+            if (loaded_chunks_data.ContainsKey(chunk_id)) { return true; }
+        }
+        return false;
     }
 
 

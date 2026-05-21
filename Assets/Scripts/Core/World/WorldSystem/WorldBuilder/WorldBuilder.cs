@@ -125,12 +125,12 @@ public class WorldBuilder : MonoBehaviour
         if (log_callbacks) { Debug.Log($"(WorldBuilder) Level '{level_id}' started building"); }
         build_status[level_id] = LevelBuildStatus.Building;
     }
-    private void on_level_built(BuiltLevelData built_data)
+    private async void on_level_built(BuiltLevelData built_data)
     {
         if (log_callbacks) { Debug.Log($"(WorldBuilder) Level '{built_data.level}' built, starting translation"); }
-        build_status[built_data.level] = LevelBuildStatus.Translating;
         save_status[built_data.level] = LevelSaveStatus.SaveRequested;
-        _ = LevelTranslator.Translate(built_data);
+        build_status[built_data.level] = LevelBuildStatus.Translating;
+        await LevelTranslator.Translate(built_data);
     }
     private void on_level_translated(Level level)
     {
@@ -154,6 +154,9 @@ public class WorldBuilder : MonoBehaviour
         build_status.Clear();
         save_status.Clear();
         built_levels_cache.Clear();
+
+        // clear subsystems cache
+        LevelTranslator.AutoChunker.ClearCache();
     }
 }
 

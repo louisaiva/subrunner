@@ -9,7 +9,7 @@ public class CarpetBuilder : TilemapBuilder
     [SerializeField] private TileBase door_tile;
 
     // MAIN TILEMAP GENERATION
-    protected override void GenerateTilemap(Tilemap tilemap, WorldRoomVisualizer room)
+    protected override void GenerateTilemap(Tilemap tilemap, WorldChunkVisualizer room)
     {
         // we calculate all the positions of the tiles we need to create the carpet
         List<Vector3Int> tile_positions = get_carpet_tiles_positions(room);

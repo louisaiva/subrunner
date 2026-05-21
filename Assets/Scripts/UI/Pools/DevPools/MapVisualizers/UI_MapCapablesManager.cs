@@ -6,12 +6,12 @@ using UnityEngine;
 /// this class draws icon for each capable in the world, based on their kind and skin.
 /// For this we go through all CapableSystem.world_capables_data.
 /// </summary>
-public class CapableVisualizerManager : MonoBehaviour
+public class UI_MapCapablesManager : MonoBehaviour
 {
 
     [Header("Capable Visu Prefab")]
     [SerializeField] private GameObject capable_visu_prefab;
-    private HashSet<UI_CapableVisualizer> capable_renderers = new();
+    private HashSet<UI_MapCapableVisualizer> capable_renderers = new();
     private HashSet<Capable> outsider_capables = new();
 
     [Header("Sprites")]
@@ -23,7 +23,7 @@ public class CapableVisualizerManager : MonoBehaviour
     // START
     public void ClearVisuals()
     {
-        foreach (UI_CapableVisualizer visu in capable_renderers) { if (visu != null) { Destroy(visu.gameObject); } }
+        foreach (UI_MapCapableVisualizer visu in capable_renderers) { if (visu != null) { Destroy(visu.gameObject); } }
         capable_renderers.Clear();
         outsider_capables.Clear();
     }
@@ -83,7 +83,7 @@ public class CapableVisualizerManager : MonoBehaviour
         if (icon == null) { icon = get_best_matching_icon(cdata); }
 
         // 4. get the UI_CapableVisualizer component and init it with the capable data & the sprite icon
-        UI_CapableVisualizer visu = go.GetComponent<UI_CapableVisualizer>();
+        UI_MapCapableVisualizer visu = go.GetComponent<UI_MapCapableVisualizer>();
         visu.Init(cdata, icon);
         ResizeIcon(visu);
 
@@ -151,7 +151,7 @@ public class CapableVisualizerManager : MonoBehaviour
     private void handle_capable_despawned(CapableData data)
     {
         // check if we have a visu for this capable
-        foreach (UI_CapableVisualizer visu in capable_renderers)
+        foreach (UI_MapCapableVisualizer visu in capable_renderers)
         {
             if (visu.capable_data != data) { continue; }
 
@@ -198,12 +198,12 @@ public class CapableVisualizerManager : MonoBehaviour
         // when percentage_zoom is 1, we want the min_icon_scale so the icons are small to avoid cluttering the map
         float icon_scale = Mathf.Lerp(max_icon_scale, min_icon_scale, percentage_zoom);
 
-        foreach (UI_CapableVisualizer visu in capable_renderers)
+        foreach (UI_MapCapableVisualizer visu in capable_renderers)
         {
             visu.GetComponent<RectTransform>().localScale = Vector3.one * icon_scale;
         }
     }
-    private void ResizeIcon(UI_CapableVisualizer visu)
+    private void ResizeIcon(UI_MapCapableVisualizer visu)
     {
         float percentage_zoom = (UI_DevMap.global_zoom - UI_DevMap.MinZoom) / (UI_DevMap.MaxZoom - UI_DevMap.MinZoom);
         float icon_scale = Mathf.Lerp(max_icon_scale, min_icon_scale, percentage_zoom);

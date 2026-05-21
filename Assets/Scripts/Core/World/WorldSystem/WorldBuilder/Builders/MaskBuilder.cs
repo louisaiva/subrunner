@@ -4,7 +4,7 @@ using UnityEngine.Tilemaps;
 
 public class MaskBuilder : CeilingBuilder
 {
-    protected override void GenerateTilemap(Tilemap tilemap, WorldRoomVisualizer room)
+    protected override void GenerateTilemap(Tilemap tilemap, WorldChunkVisualizer room)
     {
         List<Vector3Int> carpet = get_carpet_tiles_positions(room, DiagonalTraceType.Canard);
 

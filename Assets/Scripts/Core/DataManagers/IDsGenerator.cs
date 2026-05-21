@@ -10,18 +10,6 @@ public class IDsGenerator : Singleton<IDsGenerator>
     [SerializeField] private List<Capable> capables_that_get_new_ids = new List<Capable>();
     [SerializeField] private List<Capacity> capacities_that_get_new_ids = new List<Capacity>();
 
-    [Header("Components")]
-    private GameManager _game_manager;
-    private GameManager GameManager
-    {
-        get
-        {
-            if (_game_manager == null) { _game_manager = GameManager.Instance; }
-            if (_game_manager == null) { _game_manager = FindFirstObjectByType<GameManager>(); } // because we need static finding for IDsGenerator
-            return _game_manager;
-        }
-    }
-
     [Header("Logs")]
     public bool log = false;
 

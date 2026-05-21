@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /// and also a Descriptable, which means it can show a description when hovered or selected.
 /// It also stores a reference to the CapableData it is visualizing, to be able to update the description and other info when needed.
 /// </summary>
-public class UI_CapableVisualizer : UI_Slot, Descriptable
+public class UI_MapCapableVisualizer : UI_Slot, Descriptable
 {
     // capable data
     [HideInInspector] public CapableData capable_data;
@@ -36,6 +36,7 @@ public class UI_CapableVisualizer : UI_Slot, Descriptable
 
         // we register to the capable data events to update the visu when the data changes
         capable_data.OnPositionChanged += on_capable_position_changed;
+        Debug.Log($"Initialized UI_CapableVisualizer for capable '{data.id}'");
     }
     private void OnDestroy()
     {

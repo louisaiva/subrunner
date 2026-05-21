@@ -7,15 +7,16 @@ using UnityEngine.UI.Extensions;
 /// this class draws the border of every room in a Level. It is
 /// connected to the RoomSystem to know all rooms.
 /// </summary>
-public class RoomVisualizer : MonoBehaviour
+public class UI_MapChunksManager : MonoBehaviour
 {
 
     [Header("Line Visu Prefab")]
-    [SerializeField] private GameObject ui_line_visu_prefab; // a line renderer
-    private HashSet<UILineRenderer> room_liners = new();
+    [SerializeField] private UI_MapChunkVisualizer ui_chunk_visu; // has a line renderer
+    [SerializeField] private Color loaded_color = Color.red;
+    [SerializeField] private List<UI_MapChunkVisualizer> chunk_visualizers = new List<UI_MapChunkVisualizer>();
 
     [Header("Logs")]
-    public bool log_no_instance_found_at_start = false; // log if no RoomSystem instance is found at start
+    [SerializeField] private Loggable<UI_MapChunksManager> log;
 
     // CALCULATE WORLD OFFSET
     public Vector2 CalculateWorldCenter(out Vector2 extents)
@@ -58,44 +59,35 @@ public class RoomVisualizer : MonoBehaviour
     // VISUALS CREATION
     public void ClearVisuals()
     {
-        foreach (UILineRenderer liner in room_liners) { if (liner != null) { Destroy(liner.gameObject); } }
-        room_liners.Clear();
+        foreach (UI_MapChunkVisualizer visualizer in chunk_visualizers)
+        {
+            if (visualizer == null) { continue; }
+            Destroy(visualizer.gameObject);
+        }
+        chunk_visualizers.Clear();
     }
     public void CreateVisuals(string level_id = null)
     {
         // if level id is null, we get the current level id from the LevelEngine
         if (level_id == null) { level_id = LevelEngine.Instance.CurrentLevelID; }
-        if (level_id == null) { if (log_no_instance_found_at_start) { Debug.LogWarning($"(RoomVisualizer) Can't find the current level ID"); } return; }
+        if (level_id == null) { log.Warning($"Can't find the current level ID"); return; }
 
         // grab the rooms data of the level from the LevelEngine
-        List<ChunkData> rooms = LevelEngine.Instance.GetChunksDataOfLevel(level_id);
+        List<ChunkData> chunks = LevelEngine.Instance.GetChunksDataOfLevel(level_id);
 
         // and build a visual for each room
-        foreach (ChunkData room in rooms) { create_visu_for_room(room); }
+        foreach (ChunkData chunk in chunks) { create_visu_for_chunk(chunk); }
     }
-    private void create_visu_for_room(ChunkData rdata)
+    private void create_visu_for_chunk(ChunkData rdata)
     {
         // 1. instanciate a visu
-        GameObject go = Instantiate(ui_line_visu_prefab, transform);
-        go.name = rdata.id;
+        UI_MapChunkVisualizer visualizer = Instantiate(ui_chunk_visu, transform);
+        visualizer.name = rdata.id;
 
-        // 2. set the line points
-        UILineRenderer liner = go.GetComponent<UILineRenderer>();
-        List<Vector2> points = new List<Vector2>();
-        foreach (Vector2 point in rdata.collider_points)
-        {
-            // points.Add(point + rdata.position);
-            Vector2 world_point = point + rdata.position;
-            // Vector2 canvas_point = UI_Manager.WorldToCanvasLocal(world_point, mapRoot, liner.canvas, Camera.main);
-            // Vector2 final_ui_point = (canvas_point + worldOffset + UI_DevMap.global_offset)* UI_DevMap.global_zoom;
-            Vector2 final_ui_point = UI_DevMap.GetUIPositionFromWorldPosition(world_point);
-            points.Add(final_ui_point);
-        }
-        points.Add(points[0]); // we close the loop by adding the first point at the end
-        liner.Points = points.ToArray();
+        // 2. initialize it with the room data
+        visualizer.Initialize(rdata, loaded_color);
 
-        // 3. add the liner to our hashset
-        room_liners.Add(liner);
+        // 3. add it to our list of visualizers
+        chunk_visualizers.Add(visualizer);
     }
-
 }

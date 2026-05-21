@@ -7,7 +7,7 @@ public class DoorEngine : MonoBehaviour
 {
     private DoorGraph door_graph;
     private HashSet<Door> loaded_doors = new HashSet<Door>();
-    [SerializeField] private HashSet<ChunkData> visible_rooms;
+    [SerializeField] private HashSet<RoomData> visible_rooms = new HashSet<RoomData>();
 
 
     [Header("Logs")]
@@ -25,14 +25,14 @@ public class DoorEngine : MonoBehaviour
         List<DoorData> doors = CapableEngine.Instance.GetWorldDoorsData();
         if (log) { Debug.Log($"(DoorEngine) Gathered {doors.Count} doors data from CapableSystem"); }
         createDoorGraph(doors);
-        if (log) { Debug.Log($"(DoorEngine) Created door graph with {door_graph.rooms.Count} rooms and {door_graph.links.Count} links"); }
+        if (log) { Debug.Log($"(DoorEngine) Created door graph : {door_graph.GetDoorGraphDetails()}"); }
 
         // register to capable bank loading/unloading events to know when doors are loaded/unloaded
         CapableBank.Instance.OnCapableLoaded += HandleDoorLoaded;
         CapableBank.Instance.OnCapableUnloading += HandleDoorUnloaded;
 
         // register to room engine on capable added to room
-        ChunkEngine.Instance.OnCapableAddedToRoom += on_capable_enter_room;
+        ChunkEngine.Instance.OnCapableAddedToRoom += on_capable_enter_chunk;
         ChunkEngine.Instance.OnChunkChange += UpdateRoomsVisibility;
         if (log) { Debug.Log($"(DoorEngine) Registered callbacks to CapableBank and RoomEngine events"); }
 
@@ -45,7 +45,7 @@ public class DoorEngine : MonoBehaviour
     {
         CapableBank.Instance.OnCapableLoaded -= HandleDoorLoaded;
         CapableBank.Instance.OnCapableUnloading -= HandleDoorUnloaded;
-        ChunkEngine.Instance.OnCapableAddedToRoom -= on_capable_enter_room;
+        ChunkEngine.Instance.OnCapableAddedToRoom -= on_capable_enter_chunk;
         ChunkEngine.Instance.OnChunkChange -= UpdateRoomsVisibility;
 
         door_graph = null;
@@ -67,21 +67,33 @@ public class DoorEngine : MonoBehaviour
     }
     private void create_door_link(DoorData door_data, ref List<string> added_rooms)
     {
-        if (log_graph) { Debug.Log($"(DoorEngine) Creating link for door id: {door_data.id} between room {door_data.room1_id} and room {door_data.room2_id} (is open: {door_data.is_open})"); }
+        if (log_graph) { Debug.Log($"(DoorEngine) Creating link for door id: {door_data.id} between chunk {door_data.room1_id} and chunk {door_data.room2_id} (is open: {door_data.is_open})"); }
 
-        // we get the rooms linked to the door
-        string room1_id = door_data.room1_id;
-        string room2_id = door_data.room2_id;
+        // we get the chunks linked to the door
+        string chunk1_id = door_data.room1_id;
+        string chunk2_id = door_data.room2_id;
+
+        // convert to their chunk data
+        ChunkData chunk_1 = ChunkEngine.Instance.GetChunkDataFromID(chunk1_id);
+        if (chunk_1 == null) { Debug.LogError($"(DoorEngine) Could not find ChunkData for chunk id: {chunk1_id}"); return; }
+        ChunkData chunk_2 = ChunkEngine.Instance.GetChunkDataFromID(chunk2_id);
+        if (chunk_2 == null) { Debug.LogError($"(DoorEngine) Could not find ChunkData for chunk id: {chunk2_id}"); return; }
+
+        // convert to their room data
+        RoomData room_1 = RoomEngine.Instance.GetRoomDataFromID(chunk_1.room_id);
+        if (room_1 == null) { Debug.LogError($"(DoorEngine) Could not find RoomData for room id: {chunk_1.room_id}"); return; }
+        RoomData room_2 = RoomEngine.Instance.GetRoomDataFromID(chunk_2.room_id);
+        if (room_2 == null) { Debug.LogError($"(DoorEngine) Could not find RoomData for room id: {chunk_2.room_id}"); return; }
 
         // we create the nodes if they don't exist yet
-        if (!added_rooms.Contains(room1_id)) { create_room_node(room1_id); added_rooms.Add(room1_id); }
-        if (!added_rooms.Contains(room2_id)) { create_room_node(room2_id); added_rooms.Add(room2_id); }
+        if (!added_rooms.Contains(room_1.id)) { create_room_node(room_1); added_rooms.Add(room_1.id); }
+        if (!added_rooms.Contains(room_2.id)) { create_room_node(room_2); added_rooms.Add(room_2.id); }
 
         // we create the link
         RoomLink link = new RoomLink()
         {
-            room1 = door_graph.GetRoomNode(room1_id),
-            room2 = door_graph.GetRoomNode(room2_id),
+            room1 = door_graph.GetRoomNode(room_1.id),
+            room2 = door_graph.GetRoomNode(room_2.id),
             state = door_data.is_open ? LinkState.Open : LinkState.RequireInteraction,
             door_id = door_data.id,
         };
@@ -89,16 +101,11 @@ public class DoorEngine : MonoBehaviour
         // we add the link to the graph
         door_graph.links.Add(link);
     }
-    private void create_room_node(string room_id)
+    private void create_room_node(RoomData room_data)
     {
-        if (log_graph) { Debug.Log($"(DoorEngine) Creating node for room id: {room_id}"); }
-
-        // we get the room data
-        ChunkData data = ChunkEngine.Instance.GetChunkDataFromID(room_id);
-        if (data == null) { Debug.LogError($"(DoorEngine) Could not find RoomData for room id: {room_id}"); return; }
-
-        RoomNode node = new RoomNode() { data = data };
+        RoomNode node = new RoomNode() { data = room_data };
         door_graph.rooms.Add(node);
+        if (log_graph) { Debug.Log($"(DoorEngine) Created node for room : {room_data.id}"); }
     }
 
 
@@ -154,18 +161,21 @@ public class DoorEngine : MonoBehaviour
     // called in 2 situations :
     // - when a door is open/closed
     // - when we enter a room (to update the masks of the doors of the room)
-    private readonly List<ChunkData> rooms_to_show = new List<ChunkData>();
-    private readonly List<ChunkData> rooms_to_hide = new List<ChunkData>();
+    private readonly List<RoomData> rooms_to_show = new List<RoomData>();
+    private readonly List<RoomData> rooms_to_hide = new List<RoomData>();
     private HashSet<RoomNode> accessible_rooms = new HashSet<RoomNode>();
-    private readonly HashSet<ChunkData> accessible_rooms_data = new HashSet<ChunkData>();
+    private readonly HashSet<RoomData> accessible_rooms_data = new HashSet<RoomData>();
     private void UpdateRoomsVisibility(ChunkData room) => UpdateRoomsVisibility();
     private void UpdateRoomsVisibility()
     {
         // get the current room
-        ChunkData current_room = ChunkEngine.Instance.PlayerChunkData;
+        ChunkData current_chunk = ChunkEngine.Instance.PlayerChunkData;
+        if (current_chunk == null || string.IsNullOrEmpty(current_chunk.id)) { Debug.LogWarning($"(DoorEngine) Could not find current chunk data"); return; }
+        else if (string.IsNullOrEmpty(current_chunk.room_id)) { Debug.LogError($"(DoorEngine) Current chunk data ({current_chunk.id}) does not have a room id"); return; }
+        RoomData current_room = RoomEngine.Instance.GetRoomDataFromID(current_chunk.room_id);
         if (current_room == null) { Debug.LogError($"(DoorEngine) Could not find current room data"); return; }
 
-        if (visible_rooms is null) { visible_rooms = new HashSet<ChunkData>(); }
+        if (visible_rooms is null) { visible_rooms = new HashSet<RoomData>(); }
 
         // we get the accessible rooms from the current room
         accessible_rooms.Clear();
@@ -182,12 +192,12 @@ public class DoorEngine : MonoBehaviour
         // we gather the rooms to update
         rooms_to_show.Clear();
         rooms_to_hide.Clear();
-        foreach (ChunkData room in accessible_rooms_data)
+        foreach (RoomData room in accessible_rooms_data)
         {
             if (visible_rooms.Contains(room)) { continue; }
             rooms_to_show.Add(room);
         }
-        foreach (ChunkData data in visible_rooms)
+        foreach (RoomData data in visible_rooms)
         {
             if (accessible_rooms_data.Contains(data)) { continue; }
             rooms_to_hide.Add(data);
@@ -207,28 +217,38 @@ public class DoorEngine : MonoBehaviour
         // we show the rooms to show and hide the rooms to hide
         // todo : THIS METHOD SHOWS ALL TILEMAPS IF WE HAVE SOME, even if the room is not loaded !
         // todo not harmful rn (since it only affects the tilemaps and does not trigger the capable/room loading) but may introduce future bugs
-        foreach (ChunkData room in rooms_to_show) { ShowRoom(room); }
-        foreach (ChunkData room in rooms_to_hide) { HideRoom(room); }
+        foreach (RoomData room in rooms_to_show) { ShowRoom(room); }
+        foreach (RoomData room in rooms_to_hide) { HideRoom(room); }
     }
 
 
     // ROOM SHOW / HIDE
-    
+
     /// <summary>
     /// these 2 methods are NOT supposed to modify visible_rooms list.
     /// visible_rooms is the only truth, and so it must be checked BEFORE
     /// calling these methods
     /// </summary>
     /// <param name="room_data"></param>
-    public void ShowRoom(ChunkData room_data)
+    public void ShowRoom(string room_id)
     {
-        // ensure the room is loaded, if not no need to show it
-        if (!ChunkBank.Instance.IsRoomLoaded(room_data)) { return; }
+        RoomData room_data = RoomEngine.Instance.GetRoomDataFromID(room_id);
+        if (room_data == null) { Debug.LogError($"(DoorEngine) Could not find RoomData for room id: {room_id}"); return; }
+        ShowRoom(room_data);
+    }
+    public void ShowRoom(RoomData room_data)
+    {
+        RoomEngine.Instance.ShowTilemaps(room_data);
 
-        RoomEngine.Instance.ShowChunk(room_data);
+        // show the lights
+        ChunkEngine.Instance.LightsEngine.ShowLights(room_data.chunks_ids);
+
+        // if none of the chunks of the room are loaded, we can't show the capable anyway so we return early
+        // ! maybe we still need to show the doors even if the chunk is not loaded ???
+        if (!RoomEngine.Instance.IsRoomLoaded(room_data)) { return; }
 
         // show all the capables
-        List<CapableData> capables_data = CapableEngine.Instance.GetCapablesDataFromIDs(room_data.capables_ids.Concat(room_data.movables_ids).ToList());
+        List<CapableData> capables_data = RoomEngine.Instance.GetCapablesDataInRoom(room_data);
         foreach (CapableData data in capables_data)
         {
             if (data.Capable == null || data.Capable.AnimPlayer == null)
@@ -251,15 +271,24 @@ public class DoorEngine : MonoBehaviour
     /// calling these methods
     /// </summary>
     /// <param name="room_data"></param>
-    public void HideRoom(ChunkData room_data)
+    public void HideRoom(string room_id)
     {
-        // ensure the room is loaded, if not no need to hide it
-        if (!ChunkBank.Instance.IsRoomLoaded(room_data)) { return; }
+        RoomData room_data = RoomEngine.Instance.GetRoomDataFromID(room_id);
+        if (room_data == null) { Debug.LogError($"(DoorEngine) Could not find RoomData for room id: {room_id}"); return; }
+        HideRoom(room_data);
+    }
+    public void HideRoom(RoomData room_data)
+    {
+        RoomEngine.Instance.HideTilemaps(room_data); // hide the tilemaps
 
-        RoomEngine.Instance.HideChunk(room_data);
+        // hide the lights
+        ChunkEngine.Instance.LightsEngine.HideLights(room_data.chunks_ids);
+
+        // if none of the chunks of the room are loaded, no need to hide the capables since they are not loaded either
+        if (!RoomEngine.Instance.IsRoomLoaded(room_data)) { return; } 
 
         // hide all the capables
-        List<CapableData> capables_data = CapableEngine.Instance.GetCapablesDataFromIDs(room_data.capables_ids.Concat(room_data.movables_ids).ToList());
+        List<CapableData> capables_data = RoomEngine.Instance.GetCapablesDataInRoom(room_data);
         foreach (CapableData data in capables_data)
         {
             // skip the doors bcz we do it manually after
@@ -280,15 +309,17 @@ public class DoorEngine : MonoBehaviour
             door.AnimPlayer.Hide();
         }
     }
-    
+
 
     // CAPABLES ADDED/REMOVED FROM ROOMS HANDLERS
-    private void on_capable_enter_room(string capid, ChunkData room_data)
+    private void on_capable_enter_chunk(string capid, ChunkData chunk_data)
     {
         CapableData capable_data = CapableEngine.Instance.GetCapableDataFromID(capid);
         if (capable_data == null) { return; }
         Capable capable = capable_data.Capable;
         if (capable == null) { return; }
+        RoomData room_data = RoomEngine.Instance.GetRoomDataFromID(chunk_data.room_id);
+        if (room_data == null) { return; }
         
         bool capable_visible = capable.AnimPlayer.IsVisible();
         bool room_visible = visible_rooms.Contains(room_data);
@@ -298,12 +329,18 @@ public class DoorEngine : MonoBehaviour
 
 
     // GETTERS
-    public bool IsRoomVisible(ChunkData room_data)
+    public bool IsRoomVisible(string room_id)
+    {
+        RoomData room_data = RoomEngine.Instance.GetRoomDataFromID(room_id);
+        if (room_data == null) { return false; }
+        return IsRoomVisible(room_data);
+    }
+    public bool IsRoomVisible(RoomData room_data)
     {
         if (visible_rooms is null) { return true; } // not loaded yet, we return true so all rooms are shown on world loading
-        return visible_rooms.Contains(room_data);    
+        return visible_rooms.Contains(room_data);
     }
-    public List<Door> GetRoomDoors(ChunkData room_data)
+    public List<Door> GetRoomDoors(RoomData room_data)
     {
         List<string> door_ids = door_graph.GetDoorIDsLinkedToRoom(room_data.id);
         List<Door> doors = new List<Door>();
@@ -405,10 +442,30 @@ public class DoorEngine : MonoBehaviour
                 }
             }
         }
+    
+        // get details
+        public string GetDoorGraphDetails()
+        {
+            string details = $"DoorGraph with {rooms.Count} rooms and {links.Count} links\n";
+            details += "Rooms:\n";
+            foreach (RoomNode node in rooms)
+            {
+                details += $"- Room id: {node.ID}\n";
+            }
+            details += "Links:\n";
+            foreach (RoomLink link in links)
+            {
+                if (link == null) { details += "- Link is null\n"; continue; }
+                if (link.room1 == null) { details += $"- Link id: {link.ID} has null room1\n"; continue; }
+                if (link.room2 == null) { details += $"- Link id: {link.ID} has null room2\n"; continue; }
+                details += $"- Link id: {link.ID}, between room {link.room1.ID} and room {link.room2.ID}, state: {link.state}\n";
+            }
+            return details;
+        }
     }
     private class RoomNode
     {
-        public ChunkData data;
+        public RoomData data;
         public string ID => data.id;
     }
     private class RoomLink

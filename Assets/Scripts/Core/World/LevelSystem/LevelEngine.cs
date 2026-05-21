@@ -51,7 +51,7 @@ public class LevelEngine : BSOD_System<LevelEngine>
     public Transform level_parent;
 
     [Header("States")]
-    // private bool awake_done = false;
+    public LevelLoadStatus load_status = LevelLoadStatus.NotLoaded;
 
     [Header("Logs")]
     public bool log_awake_data = false;
@@ -133,21 +133,26 @@ public class LevelEngine : BSOD_System<LevelEngine>
         }
 
         // we load the navmesh data for the new level
+        load_status = LevelLoadStatus.LoadingNavMesh;
         await NavBaker.LoadLevelNavMesh(new_level);
 
         // we load the new level
+        load_status = LevelLoadStatus.Loading;
         new_level.Load();
         if (log_loading) { Debug.Log($"(LevelEngine) Level '{level_id}' loaded"); }
         current_level = new_level;
         OnLevelLoaded?.Invoke(current_level);
         OnLevelChange?.Invoke(current_level.data);
+        load_status = LevelLoadStatus.Loaded; // todo not really, we need to wait until all capables are loaded, but idk how to trigger it
     }
     public async Task UnloadLevel()
     {
         if (current_level == null) { if (!hide_no_level_warning) { Debug.LogWarning("(LevelEngine - Unload) No level currently loaded, skipping unload"); } return; }
+        load_status = LevelLoadStatus.Unloading;
         current_level.Unload();
         if (log_loading) { Debug.Log($"(LevelEngine) Level '{current_level.data.id}' unloaded"); }
         current_level = null;
+        load_status = LevelLoadStatus.NotLoaded;
     }
 
     // GETTERS
@@ -245,4 +250,13 @@ public class LevelEngine : BSOD_System<LevelEngine>
         }
         return JsonUtility.FromJson<LevelData>(file);
     }
+}
+
+[Serializable] public enum LevelLoadStatus
+{
+    NotLoaded,
+    LoadingNavMesh,
+    Loading,
+    Loaded,
+    Unloading
 }

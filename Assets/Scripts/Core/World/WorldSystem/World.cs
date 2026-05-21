@@ -6,11 +6,14 @@ using UnityEngine;
 
 public class World : BSOD_System<World>
 {
+    public WorldLoadStatus load_status = WorldLoadStatus.NotLoaded;
+    public static WorldLoadStatus Status => LazyInstance != null ? LazyInstance.load_status : WorldLoadStatus.NotLoaded;
+
     [Header("Current world")]
     public string world_id;
     public WorldData data;
-    [field:SerializeField] public bool IsWorldLoaded { get; private set; } = false;
-    [field:SerializeField] public bool IsWorldLoadingOrUnloading { get; private set; } = false;
+    public bool IsWorldLoaded => load_status == WorldLoadStatus.Loaded;
+    public bool IsWorldLoadingOrUnloading => load_status != WorldLoadStatus.Loaded && load_status != WorldLoadStatus.NotLoaded;
 
     [Header("Spawn")]
     public Transform fallback_spawn_point; // if no player data were found on LoadWorld, we will spawn the player at this position
@@ -134,13 +137,13 @@ public class World : BSOD_System<World>
     // LOAD / UNLOAD WORLD
     public async Task LoadWorld(string world_id)
     {
-        IsWorldLoadingOrUnloading = true;
         if (log) { Debug.Log($"(World) ----------------------------------- LOADING WORLD : {world_id}"); }
         float start_time = Time.realtimeSinceStartup;
         float phase_time = Time.realtimeSinceStartup;
 
         ///
         //  1. WE LOAD THE WORLD DATA
+        /* */ load_status = WorldLoadStatus.LoadingWorld;
         ///
 
         string json = extract_world_json(world_id);
@@ -160,6 +163,7 @@ public class World : BSOD_System<World>
 
         ///
         //  2. WE LOAD ALL THE ENGINES WITH WORLD DATA (and their sub systems)
+        /* */ load_status = WorldLoadStatus.LoadingEngines;
         ///
 
         // and then we init all the engines
@@ -178,6 +182,7 @@ public class World : BSOD_System<World>
 
         ///
         //  3. WE WAIT A FRAME SO THE LOADED DATA CAN SLEEP vite fait
+        /* */ load_status = WorldLoadStatus.WaitingFrame;
         ///
         if (log_loading_extended) { Debug.Log($"(World) ----------------------------------- WE WAIT A FRAME : (previous phase duration: {Time.realtimeSinceStartup - phase_time}s)"); }
         phase_time = Time.realtimeSinceStartup;
@@ -187,6 +192,7 @@ public class World : BSOD_System<World>
 
         ///
         //  4. WE LOAD THE PLAYER LEVEL
+        /* */ load_status = WorldLoadStatus.LoadingPlayerLevel;
         ///
         if (log_loading_extended) { Debug.Log($"(World) ----------------------------------- WE LOAD CURRENT PLAYER LEVEL : (previous phase duration: {Time.realtimeSinceStartup - phase_time}s)"); }
         phase_time = Time.realtimeSinceStartup;
@@ -207,9 +213,8 @@ public class World : BSOD_System<World>
 
         ///
         //  5. WE SUCCESSFULLY LOADED THE WORLD !
+        /* */ load_status = WorldLoadStatus.Loaded;
         ///
-        IsWorldLoaded = true;
-        IsWorldLoadingOrUnloading = false;
         if (log)
         {
             Debug.Log($"(World) ----------------------------------- WORLD LOADED : (in {Time.realtimeSinceStartup - start_time}s{(!log_loading_extended ? ")" : $", previous phase duration: {Time.realtimeSinceStartup - phase_time}s)")}");
@@ -255,12 +260,13 @@ public class World : BSOD_System<World>
     }
     public async Task UnloadWorld()
     {
-        IsWorldLoadingOrUnloading = true;
         if (log) { Debug.Log($"(World) ----------------------------------- UNLOADING WORLD : {world_id}"); }
         float start_time = Time.realtimeSinceStartup;
+        /* */ load_status = WorldLoadStatus.Unloading;
 
         // we unload all the engines
         await LevelEngine.LazyInstance.UnloadWorldData(log_loading_extended);
+        await RoomEngine.LazyInstance.UnloadWorldData(log_loading_extended);
         await ChunkEngine.LazyInstance.UnloadWorldData(log_loading_extended);
         await CapableEngine.LazyInstance.UnloadWorldData(log_loading_extended);
         await CapacityEngine.LazyInstance.UnloadWorldData(log_loading_extended);
@@ -272,8 +278,7 @@ public class World : BSOD_System<World>
         {
             Debug.Log($"(World) ----------------------------------- WORLD UNLOADED : (in {Time.realtimeSinceStartup - start_time}s)");
         }
-        IsWorldLoaded = false;
-        IsWorldLoadingOrUnloading = false;
+        /* */ load_status = WorldLoadStatus.NotLoaded;
     }
 
 
@@ -418,4 +423,15 @@ public class World : BSOD_System<World>
     public string icon_path;
     public string icon_name;
     public Color color;
+}
+
+[Serializable] public enum WorldLoadStatus
+{
+    NotLoaded,
+    LoadingWorld,
+    LoadingEngines,
+    WaitingFrame,
+    LoadingPlayerLevel,
+    Loaded,
+    Unloading
 }

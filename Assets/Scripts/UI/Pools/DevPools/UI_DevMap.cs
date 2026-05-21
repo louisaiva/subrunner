@@ -43,23 +43,31 @@ public class UI_DevMap : UI_SlottablePool
         }
     }
 
-    
-    // dynamic refs
-    private RoomVisualizer _room_visualizer;
-    private RoomVisualizer room_visualizer
+    // static data
+    public static Vector2 world_center; // the offset to apply to all visuals to center the map on the screen when global_offset is (0,0)
+    public static Vector2 global_offset = Vector2.zero; // the offset that allows us to move the map around, applied on top of world_offset
+    public static float global_zoom = 1f; // the zoom that allows us to zoom the map in and out
+    public static float world_to_ui_zoom => instance.world_to_ui_scale;
+    public static float MinZoom => instance.min_zoom;
+    public static float MaxZoom => instance.max_zoom;
+
+
+    [Header("References")]
+    private UI_MapChunksManager _room_visualizer;
+    private UI_MapChunksManager room_visualizer
     {
         get
         {
-            if (_room_visualizer == null) { _room_visualizer = GetComponentInChildren<RoomVisualizer>(includeInactive: true); }
+            if (_room_visualizer == null) { _room_visualizer = GetComponentInChildren<UI_MapChunksManager>(includeInactive: true); }
             return _room_visualizer;
         }
     }
-    private CapableVisualizerManager _capable_visualizer;
-    private CapableVisualizerManager capable_visualizer
+    private UI_MapCapablesManager _capable_visualizer;
+    private UI_MapCapablesManager capable_visualizer
     {
         get
         {
-            if (_capable_visualizer == null) { _capable_visualizer = GetComponentInChildren<CapableVisualizerManager>(includeInactive: true); }
+            if (_capable_visualizer == null) { _capable_visualizer = GetComponentInChildren<UI_MapCapablesManager>(includeInactive: true); }
             return _capable_visualizer;
         }
     }
@@ -68,13 +76,15 @@ public class UI_DevMap : UI_SlottablePool
     private float min_zoom = 0.05f;
     private float max_zoom = 0.75f;
 
-    // static data
-    public static Vector2 world_center; // the offset to apply to all visuals to center the map on the screen when global_offset is (0,0)
-    public static Vector2 global_offset = Vector2.zero; // the offset that allows us to move the map around, applied on top of world_offset
-    public static float global_zoom = 1f; // the zoom that allows us to zoom the map in and out
-    public static float world_to_ui_zoom => instance.world_to_ui_scale;
-    public static float MinZoom => instance.min_zoom;
-    public static float MaxZoom => instance.max_zoom;
+
+    [Header("Minimap")]
+    public bool show_minimap = false;
+    public RectTransform minimap_holder;
+    public void ShowMinimap() => show_minimap = true;
+    public void HideMinimap() => show_minimap = false;
+
+
+
 
     [Header("Logs")]
     [SerializeField] private bool log_world_to_canvas = false;
@@ -123,6 +133,10 @@ public class UI_DevMap : UI_SlottablePool
         // we register to UI_Navigator OnSlotHovered
         UI_Navigator.Instance.OnSlotHoverEnter += handle_slot_hovered;
 
+        // if the minimap is enabled, we move back the visus to the main map holder, otherwise they stay in the minimap holder
+        room_visualizer.transform.SetParent(offsetter, worldPositionStays: false);
+        capable_visualizer.transform.SetParent(offsetter, worldPositionStays: false);
+
         yield return base.enable_coroutine();
     }
     protected override IEnumerator disable_coroutine()
@@ -131,6 +145,11 @@ public class UI_DevMap : UI_SlottablePool
 
         // we unregister to UI_Navigator OnSlotHovered
         if (UI_Navigator.Instance != null) { UI_Navigator.Instance.OnSlotHoverEnter -= handle_slot_hovered; }
+
+        if (!show_minimap) { yield break; }
+        // if the minimap is enabled, we move the visus to the minimap holder, so they stay visible when the map is disabled
+        room_visualizer.transform.SetParent(minimap_holder, worldPositionStays: false);
+        capable_visualizer.transform.SetParent(minimap_holder, worldPositionStays: false);
     }
 
     // STATIC METHODS
@@ -182,8 +201,12 @@ public class UI_DevMap : UI_SlottablePool
         if (!InputManager.Instance.UsingGamepad) { return; }
 
         // when we hover a slot, if it's a capable visu, we center the map on it
-        if (slot is not UI_CapableVisualizer cap_visu) { return; }
+        if (slot is not UI_MapCapableVisualizer cap_visu) { return; }
         global_offset = -cap_visu.GetComponent<RectTransform>().anchoredPosition;
         offsetter.anchoredPosition = global_offset;
     }
+
+
+
+
 }
