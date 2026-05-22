@@ -41,17 +41,11 @@ public class SettingsManager : MonoBehaviour
     private void Start()
     {
 
-        // on register certains callbacks directement
+        // on register certains callbacks directement (app manager)
         RegisterCallback("fullscreen", (setting) => AppManager.Instance.Fullscreen(setting.Value >= 0.5f));
         RegisterCallback("vsync", (setting) => AppManager.Instance.SetVSync(setting.Value >= 0.5f));
 
-        // fullscreen
-        // GetSetting("fullscreen").OnValueChanged += (ctx) => AppManager.Instance.Fullscreen(ctx >= 0.5f);
-        // AppManager.Instance.Fullscreen(GetValue("fullscreen") >= 0.5f);
-        
-        // vsync
-        // GetSetting("vsync").OnValueChanged += (ctx) => AppManager.Instance.SetVSync(ctx >= 0.5f);
-        // AppManager.Instance.SetVSync(GetValue("vsync") >= 0.5f);
+        // ! do not register callbacks from game here, only app otherwise it won't work
     }
 
 

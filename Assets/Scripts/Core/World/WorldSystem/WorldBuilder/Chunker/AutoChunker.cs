@@ -112,7 +112,7 @@ public class AutoChunker : MonoBehaviour
         }
 
         // calculate the neighbours between the chunks inside the same room
-        int max_neighbour_distance_threshold = (int)(max_chunk_area / 2f);
+        /* int max_neighbour_distance_threshold = (int)(max_chunk_area / 2f);
         for (int i = 0; i < chunks.Count; i++)
         {
             cndir.chunk_neighbours[chunks[i].name] = new List<string>();
@@ -127,7 +127,8 @@ public class AutoChunker : MonoBehaviour
                     log.LogSpecific($"Chunk {chunks[i].name} is neighbour with chunk {chunks[j].name} (distance {distance})");
                 }
             }
-        }
+        } */
+        calculate_chunk_neighbours_inside_room(chunks, ref cndir);
 
         // we transfer all doors & lights to the first new chunk so they can be re assigned later by collision
         chunks[0].Doors.AddRange(room.Doors);
@@ -399,6 +400,56 @@ public class AutoChunker : MonoBehaviour
             log.LogSpecific($"Updated door '{door.name}' that now connects chunk {door.chunk_1_id} and chunk {door.chunk_2_id}");
         }
     }
+
+
+
+    // CALCULATE CHUNK NEIGHBOURS INSIDE ROOM
+    private float epsilon = 0.02f;
+    private void calculate_chunk_neighbours_inside_room(List<WorldChunkVisualizer> chunks, ref ChunkNeighbourDataInsideRoom cndir)
+    {
+        for (int i = 0; i < chunks.Count; i++)
+        {
+            cndir.chunk_neighbours[chunks[i].name] = new List<string>();
+            Bounds2D bounds1 = get_bounds(chunks[i].Path.ToList());
+            for (int j = 0; j < chunks.Count; j++)
+            {
+                if (i == j) { continue; }
+
+                // we check if the bounds of the pair of chunks are touching
+                Bounds2D bounds2 = get_bounds(chunks[j].Path.ToList());
+                if (!could_aabb_touch(bounds1, bounds2, epsilon))
+                {
+                    log.LogVerySpecific($"Chunks {chunks[i].name} and {chunks[j].name} are not neighbours (bounds do not touch : {bounds1.min} - {bounds1.max} vs {bounds2.min} - {bounds2.max})");
+                    continue;
+                }
+
+                // we check the distance between the colliders
+                ColliderDistance2D distance = Physics2D.Distance(chunks[i].PolygonCollider, chunks[j].PolygonCollider);
+                if (distance.isOverlapped || distance.distance <= epsilon)
+                {
+                    cndir.chunk_neighbours[chunks[i].name].Add(chunks[j].name);
+                    log.LogVerySpecific($"Chunk {chunks[i].name} is neighbour with chunk {chunks[j].name} (distance {distance.distance})");
+                }
+            }
+        }
+    }
+    private bool could_aabb_touch(Bounds2D bA, Bounds2D bB, float eps, float min_overlap = 0.25f, bool allow_corner_touching = true)
+    {
+        // get the overlaps
+        float x_overlap = Mathf.Min(bA.max.x, bB.max.x) - Mathf.Max(bA.min.x, bB.min.x);
+        float y_overlap = Mathf.Min(bA.max.y, bB.max.y) - Mathf.Max(bA.min.y, bB.min.y);
+
+        // check touching with epsilon
+        bool x_touching = Mathf.Abs(bA.max.x - bB.min.x) <= eps || Mathf.Abs(bB.max.x - bA.min.x) <= eps;
+        bool y_touching = Mathf.Abs(bA.max.y - bB.min.y) <= eps || Mathf.Abs(bB.max.y - bA.min.y) <= eps;
+        
+        float overlap_required = allow_corner_touching ? 0f : min_overlap;
+
+        if (x_touching && y_overlap > overlap_required) { return true; }
+        if (y_touching && x_overlap > overlap_required) { return true; }
+        return false;
+    }
+
 }
 
 public class ChunkNeighbourDataInsideRoom
