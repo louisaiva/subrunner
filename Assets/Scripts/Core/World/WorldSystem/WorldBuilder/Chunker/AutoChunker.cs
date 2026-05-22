@@ -26,7 +26,7 @@ public class AutoChunker : MonoBehaviour
             Tilemaps = built_data.Tilemaps,
             RoomChunks = new Dictionary<string, List<string>>(),
             Chunks = new List<WorldChunkVisualizer>(),
-            RoomChunksNeighbours = new List<ChunkNeighbourDataInsideRoom>()
+            // RoomChunksNeighbours = new List<ChunkNeighbourDataInsideRoom>()
         };
 
         WorldChunkVisualizer room;
@@ -48,8 +48,8 @@ public class AutoChunker : MonoBehaviour
 
             // if the room is too big, we split it recursively until all small chunks are small enough
             log.LogSpecific($"Room {room.name} is too big, we split it in smaller chunks");
-            chunks = split_room(room, out List<string> chunk_names, out ChunkNeighbourDataInsideRoom cndir);
-            new_data.RoomChunksNeighbours.Add(cndir);
+            chunks = split_room(room, out List<string> chunk_names/* , out ChunkNeighbourDataInsideRoom cndir */);
+            /* new_data.RoomChunksNeighbours.Add(cndir); */
 
             // we set the names of the chunks and add them to the data
             new_data.RoomChunks[room.name] = chunk_names;
@@ -59,7 +59,7 @@ public class AutoChunker : MonoBehaviour
         chunks = null;
 
         // wait a sec for the path to be assigned correctly before making collision
-        await Task.Delay(1000);
+        await Task.Yield();
 
         // we split the doors and lights across the chunks
         split_lights_and_doors(new_data);
@@ -81,14 +81,14 @@ public class AutoChunker : MonoBehaviour
 
 
     // SPLITTING ROOM
-    private List<WorldChunkVisualizer> split_room(WorldChunkVisualizer room, out List<string> chunk_names, out ChunkNeighbourDataInsideRoom cndir)
+    private List<WorldChunkVisualizer> split_room(WorldChunkVisualizer room, out List<string> chunk_names/* , out ChunkNeighbourDataInsideRoom cndir */)
     {
         chunk_names = new List<string>();
-        cndir = new ChunkNeighbourDataInsideRoom
+        /* cndir = new ChunkNeighbourDataInsideRoom
         {
             room_name = room.name,
             chunk_neighbours = new Dictionary<string, List<string>>()
-        };
+        }; */
         log.Log($"Splitting room {room.name} in small chunks of max area {max_chunk_area}");
 
         // split vertices
@@ -112,6 +112,7 @@ public class AutoChunker : MonoBehaviour
         }
 
         // calculate the neighbours between the chunks inside the same room
+        // ! done in AutoNeighbourer now
         /* int max_neighbour_distance_threshold = (int)(max_chunk_area / 2f);
         for (int i = 0; i < chunks.Count; i++)
         {
@@ -128,7 +129,7 @@ public class AutoChunker : MonoBehaviour
                 }
             }
         } */
-        calculate_chunk_neighbours_inside_room(chunks, ref cndir);
+        // calculate_chunk_neighbours_inside_room(chunks, ref cndir);
 
         // we transfer all doors & lights to the first new chunk so they can be re assigned later by collision
         chunks[0].Doors.AddRange(room.Doors);
@@ -229,10 +230,6 @@ public class AutoChunker : MonoBehaviour
             if (vertices[i].y > max_y) { max_y = vertices[i].y; }
         }
         Bounds2D bounds = new Bounds2D(min: new Vector2(min_x, min_y), max: new Vector2(max_x, max_y));
-        /* {
-            min = new Vector2(min_x, min_y),
-            max = new Vector2(max_x, max_y)
-        }; */
         return bounds;
     }
     private Vector2 get_line_intersection(Vector2 start, Vector2 end, bool split_along_x, float split_value)
@@ -404,7 +401,7 @@ public class AutoChunker : MonoBehaviour
 
 
     // CALCULATE CHUNK NEIGHBOURS INSIDE ROOM
-    private float epsilon = 0.02f;
+    /* private float epsilon = 0.02f;
     private void calculate_chunk_neighbours_inside_room(List<WorldChunkVisualizer> chunks, ref ChunkNeighbourDataInsideRoom cndir)
     {
         for (int i = 0; i < chunks.Count; i++)
@@ -445,15 +442,15 @@ public class AutoChunker : MonoBehaviour
         
         float overlap_required = allow_corner_touching ? 0f : min_overlap;
 
-        if (x_touching && y_overlap > overlap_required) { return true; }
-        if (y_touching && x_overlap > overlap_required) { return true; }
+        if (x_touching && y_overlap >= overlap_required) { return true; }
+        if (y_touching && x_overlap >= overlap_required) { return true; }
         return false;
-    }
+    } */
 
 }
 
-public class ChunkNeighbourDataInsideRoom
-{
-    public string room_name;
-    public Dictionary<string, List<string>> chunk_neighbours; // chunk name -> list of neighbour chunk names inside the same room
-}
+// public class ChunkNeighbourDataInsideRoom
+// {
+//     public string room_name;
+//     public Dictionary<string, List<string>> chunk_neighbours; // chunk name -> list of neighbour chunk names inside the same room
+// }

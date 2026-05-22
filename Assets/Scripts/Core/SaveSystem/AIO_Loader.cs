@@ -192,8 +192,8 @@ public class AIO_Loader : MonoBehaviour
         new_room.transform.position = data.position;
 
         // load the colliders in the composite collider
-        new_room.RoomCollider.SetPath(0, data.collider_points.ToArray());
-        new_room.RoomCollider.enabled = true;
+        new_room.ChunkCollider.SetPath(0, data.collider_points.ToArray());
+        new_room.ChunkCollider.enabled = true;
 
         log_load_worldloaded.LogVerySpecific($"Room '{data.id}' basic data loaded + colliders");
 

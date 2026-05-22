@@ -154,8 +154,8 @@ public class LevelTranslator : MonoBehaviour
 
         if (log_translate_extended) { Debug.Log($"(LevelTranslator) Building neighbours"); }
         // now we need to build the room graph neighbour nodes connections
-        List<Door> final_doors = doors.Values.ToList();
-        AutoNeighbourer.TraceRoomGraphNeighbours(built_level.RoomChunksNeighbours, ref chunks, ref final_doors);
+        // List<Door> final_doors = doors.Values.ToList();
+        AutoNeighbourer.TraceRoomGraphNeighbours(ref chunks);
 
 
 
@@ -223,7 +223,7 @@ public class LevelTranslator : MonoBehaviour
             }
 
             // we assign collider to the chunk
-            chunk.RoomCollider.SetPath(0, chunk_visu.Path);
+            chunk.ChunkCollider.SetPath(0, chunk_visu.Path);
 
 
             // we assign the doors and lights to the chunk

@@ -15,15 +15,16 @@ public class Chunk : MonoBehaviour
     public string ID { get { return GetStaticID(); } }
 
     [Header("Components")]
-    private PolygonCollider2D _room_collider;
-    public PolygonCollider2D RoomCollider
+    private PolygonCollider2D _chunk_collider;
+    public PolygonCollider2D ChunkCollider
     {
         get
         {
-            if (_room_collider == null) { _room_collider = GetComponent<PolygonCollider2D>(); }
-            return _room_collider;
+            if (_chunk_collider == null) { _chunk_collider = GetComponent<PolygonCollider2D>(); }
+            return _chunk_collider;
         }
     }
+    public List<Vector2> ColliderPoints { get { return get_static_collider_points(); } }
 
     private Transform _lights_parent;
     public Transform LightsParent
@@ -52,8 +53,8 @@ public class Chunk : MonoBehaviour
         this.transform.position = data.position;
 
         // load the colliders in the composite collider
-        RoomCollider.SetPath(0, data.collider_points.ToArray());
-        RoomCollider.enabled = true;
+        ChunkCollider.SetPath(0, data.collider_points.ToArray());
+        ChunkCollider.enabled = true;
 
         // load the lights
         ChunkEngine.Instance.LightsEngine.LoadLights(data.lights_data, data.id);
@@ -82,7 +83,7 @@ public class Chunk : MonoBehaviour
         // RoomEngine.Instance.DoorEngine.HideRoom(data.room_id);
 
         // unload the collider
-        RoomCollider.enabled = false;
+        ChunkCollider.enabled = false;
 
         // here we need to unload all the capables that we hold
         // -> interacts with CapableSystem
@@ -174,14 +175,14 @@ public class Chunk : MonoBehaviour
     protected List<Vector2> get_static_collider_points()
     {
         List<Vector2> points = new List<Vector2>();
-        if (RoomCollider == null) { return points; }
-        if (RoomCollider.pathCount == 0) { return points; }
-        points = new List<Vector2>(RoomCollider.GetPath(0));
+        if (ChunkCollider == null) { return points; }
+        if (ChunkCollider.pathCount == 0) { return points; }
+        points = new List<Vector2>(ChunkCollider.GetPath(0));
         
         // we go through all the points and apply the collider' offset to get them real pos
         for (int i = 0; i < points.Count; i++)
         {
-            points[i] += RoomCollider.offset;
+            points[i] += ChunkCollider.offset;
         }
 
         return points;
@@ -282,7 +283,7 @@ public class Chunk : MonoBehaviour
 
         // we get all the colliders that are currently overlapping with the room collider
         Collider2D[] colliders = new Collider2D[30];
-        int count = Physics2D.OverlapCollider(RoomCollider, contact_filter, colliders);
+        int count = Physics2D.OverlapCollider(ChunkCollider, contact_filter, colliders);
         for (int i = 0; i < count; i++)
         {
             Collider2D collider = colliders[i];
@@ -301,7 +302,7 @@ public class Chunk : MonoBehaviour
 
         // we get all the colliders that are currently overlapping with the room collider
         Collider2D[] colliders = new Collider2D[100];
-        int count = Physics2D.OverlapCollider(RoomCollider, contact_filter, colliders);
+        int count = Physics2D.OverlapCollider(ChunkCollider, contact_filter, colliders);
         for (int i = 0; i < count; i++)
         {
             Collider2D collider = colliders[i];
@@ -318,11 +319,11 @@ public class Chunk : MonoBehaviour
         }
         return overlapping_capables;
     }
-    public Bounds GetStaticBounds() { return RoomCollider.bounds; }
+    public Bounds GetStaticBounds() { return ChunkCollider.bounds; }
 
     public bool OverlapPoint(Vector2 point)
     {
-        return RoomCollider.OverlapPoint(point);
+        return ChunkCollider.OverlapPoint(point);
     }
 
 

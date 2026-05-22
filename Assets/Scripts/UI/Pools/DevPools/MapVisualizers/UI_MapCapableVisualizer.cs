@@ -53,6 +53,6 @@ public class UI_MapCapableVisualizer : UI_Slot, Descriptable
     }
 
     // DESCRIPTION
-    public string Name => throw new System.NotImplementedException();
-    public string Description => throw new System.NotImplementedException();
+    public string Name => "";
+    public string Description => "";
 }

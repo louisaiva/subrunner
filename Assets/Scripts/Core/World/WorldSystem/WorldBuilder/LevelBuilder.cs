@@ -1004,7 +1004,7 @@ public class BuiltLevelData
 
     // big rooms splitted in small chunks
     public Dictionary<string, List<string>> RoomChunks = new Dictionary<string, List<string>>();
-    public List<ChunkNeighbourDataInsideRoom> RoomChunksNeighbours = new List<ChunkNeighbourDataInsideRoom>();
+    // public List<ChunkNeighbourDataInsideRoom> RoomChunksNeighbours = new List<ChunkNeighbourDataInsideRoom>();
 }
 
 
