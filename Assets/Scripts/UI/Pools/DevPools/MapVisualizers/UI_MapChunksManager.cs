@@ -12,6 +12,7 @@ public class UI_MapChunksManager : MonoBehaviour
 
     [Header("Line Visu Prefab")]
     [SerializeField] private UI_MapChunkVisualizer ui_chunk_visu; // has a line renderer
+    [SerializeField] private Color main_color = Color.blue;
     [SerializeField] private Color loaded_color = Color.red;
     [SerializeField] private List<UI_MapChunkVisualizer> chunk_visualizers = new List<UI_MapChunkVisualizer>();
 
@@ -87,7 +88,7 @@ public class UI_MapChunksManager : MonoBehaviour
         visualizer.name = rdata.id;
 
         // 2. initialize it with the room data
-        visualizer.Initialize(rdata, loaded_color);
+        visualizer.Initialize(rdata, loaded_color, main_color);
 
         // 3. add it to our list of visualizers
         chunk_visualizers.Add(visualizer);

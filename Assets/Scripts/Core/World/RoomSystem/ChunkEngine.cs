@@ -29,7 +29,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     private int next_room_hash = 1;
     public Dictionary<string, ChunkData> loaded_chunks_data = new Dictionary<string, ChunkData>();
     public ChunkData PlayerChunkData; // the main room is the one where the perso is, we need to keep track of it to know which room to load when the perso changes room
-    public Action<ChunkData> OnChunkChange = delegate { };
+    public Action<ChunkData> OnPlayerChunkChange = delegate { };
 
 
     // CAPABLES PER CHUNKS
@@ -666,7 +666,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         }
 
         PlayerChunkData = to_room;
-        OnChunkChange.Invoke(to_room);
+        OnPlayerChunkChange.Invoke(to_room);
 
         // . load the new rooms and unload old ones.
         LoadChunks(rooms_to_load.ToArray());

@@ -70,26 +70,33 @@ public class AutoNeighbourer : MonoBehaviour
 
 
     // CALCULATE CHUNK NEIGHBOURS
-    private float epsilon = 0.02f;
+    private float epsilon = 0.1f;
     private void compute_all_chunks_neighbours(ref List<Chunk> chunks)
     {
         for (int i = 0; i < chunks.Count; i++)
         {
             Chunk chunk = chunks[i];
-            List<Vector2> vertices = chunk.ColliderPoints;
-            Bounds2D bounds1 = get_bounds(vertices);
+            // List<Vector2> vertices = chunk.ColliderPoints;
+            Bounds bounds1 = chunk.ChunkCollider.bounds;
 
             for (int j = 0; j < chunks.Count; j++)
             {
                 if (i == j) { continue; }
 
                 // we check if the bounds of the pair of chunks are touching
-                Bounds2D bounds2 = get_bounds(chunks[j].ColliderPoints);
-                if (!could_aabb_touch(bounds1, bounds2, epsilon))
+                // Bounds2D bounds2 = get_bounds(chunks[j].ColliderPoints);
+                Bounds bounds2 = chunks[j].ChunkCollider.bounds;
+                bounds1.Expand(epsilon * 2f);
+                if (!bounds1.Intersects(bounds2))
                 {
                     log.LogVerySpecific($"Chunks {chunk.name} and {chunks[j].name} are not neighbours (bounds do not touch : {bounds1.min} - {bounds1.max} vs {bounds2.min} - {bounds2.max})");
                     continue;
                 }
+                /* if (!could_aabb_touch(bounds1, bounds2, epsilon))
+                {
+                    log.LogVerySpecific($"Chunks {chunk.name} and {chunks[j].name} are not neighbours (bounds do not touch : {bounds1.min} - {bounds1.max} vs {bounds2.min} - {bounds2.max})");
+                    continue;
+                } */
 
                 // we check the distance between the colliders
                 ColliderDistance2D distance = Physics2D.Distance(chunk.ChunkCollider, chunks[j].ChunkCollider);
