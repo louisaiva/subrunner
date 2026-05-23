@@ -154,7 +154,6 @@ public class LevelTranslator : MonoBehaviour
 
         if (log_translate_extended) { Debug.Log($"(LevelTranslator) Building neighbours"); }
         // now we need to build the room graph neighbour nodes connections
-        // List<Door> final_doors = doors.Values.ToList();
         AutoNeighbourer.TraceRoomGraphNeighbours(ref chunks);
 
 
@@ -418,18 +417,8 @@ public class LevelTranslator : MonoBehaviour
         }
 
         // updates the door chunks rooms to make sure it's correct
-        door.chunk1_id = door_visu.chunk_1_id;
-        door.chunk2_id = door_visu.chunk_2_id;
-
-
-        // get a position to check where is the room located compared to door
-        /* Vector2 world_position_in_first_room = door_visu.WorldPosition;
-        if (door_visu.is_vertical) { world_position_in_first_room.y += 0.5f; }
-        else { world_position_in_first_room.x += 0.5f; }
-
-        // check if the position is inside the room, it means we are in the first room, else we are in the second room
-        if (chunk.OverlapPoint(world_position_in_first_room)) { door.room1_id = chunk.ID; door.room2_id = ""; }
-        else { door.room2_id = chunk.ID; door.room1_id = ""; } */
+        door.room1_id = door_visu.room1_id;
+        door.room2_id = door_visu.room2_id;
 
         doors_placed.Add(door_visu);
         this.doors[door_visu] = door;

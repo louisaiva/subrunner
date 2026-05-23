@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,7 +27,6 @@ public class AutoChunker : MonoBehaviour
             Tilemaps = built_data.Tilemaps,
             RoomChunks = new Dictionary<string, List<string>>(),
             Chunks = new List<WorldChunkVisualizer>(),
-            // RoomChunksNeighbours = new List<ChunkNeighbourDataInsideRoom>()
         };
 
         WorldChunkVisualizer room;
@@ -48,8 +48,7 @@ public class AutoChunker : MonoBehaviour
 
             // if the room is too big, we split it recursively until all small chunks are small enough
             log.LogSpecific($"Room {room.name} is too big, we split it in smaller chunks");
-            chunks = split_room(room, out List<string> chunk_names/* , out ChunkNeighbourDataInsideRoom cndir */);
-            /* new_data.RoomChunksNeighbours.Add(cndir); */
+            chunks = split_room(room, out List<string> chunk_names);
 
             // we set the names of the chunks and add them to the data
             new_data.RoomChunks[room.name] = chunk_names;
@@ -81,55 +80,34 @@ public class AutoChunker : MonoBehaviour
 
 
     // SPLITTING ROOM
-    private List<WorldChunkVisualizer> split_room(WorldChunkVisualizer room, out List<string> chunk_names/* , out ChunkNeighbourDataInsideRoom cndir */)
+    private List<WorldChunkVisualizer> split_room(WorldChunkVisualizer room, out List<string> chunk_names)
     {
         chunk_names = new List<string>();
-        /* cndir = new ChunkNeighbourDataInsideRoom
-        {
-            room_name = room.name,
-            chunk_neighbours = new Dictionary<string, List<string>>()
-        }; */
         log.Log($"Splitting room {room.name} in small chunks of max area {max_chunk_area}");
 
-        // split vertices
+        // split vertices into small chunks
         List<List<Vector2>> small_chunks_vertices = new List<List<Vector2>>();
         recursive_iterations = 0;
         split_room_along_axis_recursive(room.Path.ToList(), ref small_chunks_vertices);
-        log.LogExtended($"Got {small_chunks_vertices.Count} small chunks for room {room.name}");
+
+        // check weird chunks and split them into multiple regions if needed
+        List<List<Vector2>> final_chunks_vertices = new List<List<Vector2>>();
+        split_weird_chunks(small_chunks_vertices, ref final_chunks_vertices);
+        log.LogExtended($"Got {final_chunks_vertices.Count} small chunks for room {room.name}");
 
         // create chunk visualizers
         log.LogExtended($"Creating visualizers for the chunks");
         List<WorldChunkVisualizer> chunks = new List<WorldChunkVisualizer>();
-        for (int i = 0; i < small_chunks_vertices.Count; i++)
+        for (int i = 0; i < final_chunks_vertices.Count; i++)
         {
             WorldChunkVisualizer chunk = Instantiate(chunk_prefab, chunk_parent);
-            chunk.Path = small_chunks_vertices[i].ToArray();
+            chunk.Path = final_chunks_vertices[i].ToArray();
             chunk.name = $"{room.name}-{i}";
             chunks.Add(chunk);
             chunks_cache.Add(chunk);
             chunk_names.Add(chunk.name);
             log.LogSpecific($"Created chunk {chunk.name}");
         }
-
-        // calculate the neighbours between the chunks inside the same room
-        // ! done in AutoNeighbourer now
-        /* int max_neighbour_distance_threshold = (int)(max_chunk_area / 2f);
-        for (int i = 0; i < chunks.Count; i++)
-        {
-            cndir.chunk_neighbours[chunks[i].name] = new List<string>();
-            for (int j = 0; j < chunks.Count; j++)
-            {
-                if (i == j) { continue; }
-
-                float distance = Vector2.Distance(chunks[i].PolygonCollider.bounds.center, chunks[j].PolygonCollider.bounds.center);
-                if (distance <= max_neighbour_distance_threshold)
-                {
-                    cndir.chunk_neighbours[chunks[i].name].Add(chunks[j].name);
-                    log.LogSpecific($"Chunk {chunks[i].name} is neighbour with chunk {chunks[j].name} (distance {distance})");
-                }
-            }
-        } */
-        // calculate_chunk_neighbours_inside_room(chunks, ref cndir);
 
         // we transfer all doors & lights to the first new chunk so they can be re assigned later by collision
         chunks[0].Doors.AddRange(room.Doors);
@@ -191,7 +169,9 @@ public class AutoChunker : MonoBehaviour
         log.LogVerySpecific($"Chunk 2 has area {bound2.area} and bounds {bound2.min} - {bound2.max} and center {bound2.center} and vertices : \n - {string.Join("\n - ", chunk2_vertices)}");
 
         // now we can check if the chunks are small enough, if not we split them recursively
-        if (is_small_enough(bound1))
+        add_chunk_or_re_split_it(chunk1_vertices, bound1, ref small_chunks);
+        add_chunk_or_re_split_it(chunk2_vertices, bound2, ref small_chunks);
+        /* if (is_small_enough(bound1))
         {
             log.LogSpecific($"New chunk with area {bound1.area} created");
             small_chunks.Add(chunk1_vertices);
@@ -211,44 +191,19 @@ public class AutoChunker : MonoBehaviour
         {
             log.LogSpecific($"Chunk with area {bound2.area} is still too big, we split it recursively");
             split_room_along_axis_recursive(chunk2_vertices, ref small_chunks);
-        }
+        } */
     }
-
-    // SPLIT LOW LEVEL METHODS
-    private Bounds2D get_bounds(List<Vector2> vertices)
+    private void add_chunk_or_re_split_it(List<Vector2> chunk_vertices, Bounds2D bounds, ref List<List<Vector2>> small_chunks)
     {
-        // get the min and max of the vertices
-        float min_x = float.MaxValue;
-        float max_x = float.MinValue;
-        float min_y = float.MaxValue;
-        float max_y = float.MinValue;
-        for (int i = 0; i < vertices.Count; i++)
+        if (!is_small_enough(bounds))
         {
-            if (vertices[i].x < min_x) { min_x = vertices[i].x; }
-            if (vertices[i].x > max_x) { max_x = vertices[i].x; }
-            if (vertices[i].y < min_y) { min_y = vertices[i].y; }
-            if (vertices[i].y > max_y) { max_y = vertices[i].y; }
+            log.LogSpecific($"Chunk with area {bounds.area} is still too big, we split it recursively");
+            split_room_along_axis_recursive(chunk_vertices, ref small_chunks);
+            return;
         }
-        Bounds2D bounds = new Bounds2D(min: new Vector2(min_x, min_y), max: new Vector2(max_x, max_y));
-        return bounds;
+        log.LogSpecific($"New chunk with area {bounds.area} created");
+        small_chunks.Add(chunk_vertices);
     }
-    private Vector2 get_line_intersection(Vector2 start, Vector2 end, bool split_along_x, float split_value)
-    {
-        // we want to find the intersection between the line (start, end) and the line x = split_value or y = split_value depending on the axis
-        if (split_along_x)
-        {
-            // line is x = split_value
-            float t = (split_value - start.x) / (end.x - start.x);
-            return new Vector2(split_value, start.y + t * (end.y - start.y));
-        }
-        else
-        {
-            // line is y = split_value
-            float t = (split_value - start.y) / (end.y - start.y);
-            return new Vector2(start.x + t * (end.x - start.x), split_value);
-        }
-    }
-
 
     // CLEAR CACHE
     public void ClearCache()
@@ -306,7 +261,6 @@ public class AutoChunker : MonoBehaviour
                 WorldChunkVisualizer chunk = hit.collider.GetComponent<WorldChunkVisualizer>();
                 if (chunk == null) { continue; }
                 if (!data.Chunks.Contains(chunk)) { continue; }
-                door.chunk_1_id = chunk.name;
                 chunk.Doors.Add(door);
                 door_assigned = true;
                 doors.RemoveAt(i);
@@ -371,9 +325,13 @@ public class AutoChunker : MonoBehaviour
                     bool collides_with_chunk1 = chunk.PolygonCollider.OverlapPoint(door.Chunk1CellWorldPosition);
                     if (collides_with_chunk1)
                     {
-                        door.chunk_1_id = chunk.name;
-                        found_chunk1 = true;
-                        log.LogVerySpecific($"Door '{door.name}' chunk 1 assigned to chunk '{chunk.name}'");
+                        door.room1_id = data.GetRoomOfChunk(chunk.name);
+                        if (string.IsNullOrEmpty(door.room1_id)) { log.Error($"Door '{door.name}' chunk 1 assigned to chunk '{chunk.name}' but this chunk is not assigned to any room in the data, something went wrong during the chunking process"); }
+                        else
+                        {
+                            found_chunk1 = true;
+                            log.LogVerySpecific($"Door '{door.name}' chunk 1 assigned to chunk '{chunk.name}'");
+                        }
                     }
                 }
 
@@ -383,9 +341,13 @@ public class AutoChunker : MonoBehaviour
                     bool collides_with_chunk2 = chunk.PolygonCollider.OverlapPoint(door.Chunk2CellWorldPosition);
                     if (collides_with_chunk2)
                     {
-                        door.chunk_2_id = chunk.name;
-                        found_chunk2 = true;
-                        log.LogVerySpecific($"Door '{door.name}' chunk 2 assigned to chunk '{chunk.name}'");
+                        door.room2_id = data.GetRoomOfChunk(chunk.name);
+                        if (string.IsNullOrEmpty(door.room2_id)) { log.Error($"Door '{door.name}' chunk 2 assigned to chunk '{chunk.name}' but this chunk is not assigned to any room in the data, something went wrong during the chunking process"); }
+                        else
+                        {
+                            found_chunk2 = true;
+                            log.LogVerySpecific($"Door '{door.name}' chunk 2 assigned to chunk '{chunk.name}'");
+                        }
                     }
                 }
             }
@@ -394,63 +356,63 @@ public class AutoChunker : MonoBehaviour
             if (!found_chunk2) { log.Warning($"(AutoChunker) Could not find chunk for door {door.name} chunk 2 cell {door.Chunk2Cell}"); }
             if (!found_chunk1 || !found_chunk2) { continue; }
 
-            log.LogSpecific($"Updated door '{door.name}' that now connects chunk {door.chunk_1_id} and chunk {door.chunk_2_id}");
+            log.LogSpecific($"Updated door '{door.name}' that now connects chunk {door.room1_id} and chunk {door.room2_id}");
         }
     }
 
 
-
-    // CALCULATE CHUNK NEIGHBOURS INSIDE ROOM
-    /* private float epsilon = 0.02f;
-    private void calculate_chunk_neighbours_inside_room(List<WorldChunkVisualizer> chunks, ref ChunkNeighbourDataInsideRoom cndir)
+    // SPLIT LOW LEVEL METHODS
+    private Bounds2D get_bounds(List<Vector2> vertices)
     {
-        for (int i = 0; i < chunks.Count; i++)
+        // get the min and max of the vertices
+        float min_x = float.MaxValue;
+        float max_x = float.MinValue;
+        float min_y = float.MaxValue;
+        float max_y = float.MinValue;
+        for (int i = 0; i < vertices.Count; i++)
         {
-            cndir.chunk_neighbours[chunks[i].name] = new List<string>();
-            Bounds2D bounds1 = get_bounds(chunks[i].Path.ToList());
-            for (int j = 0; j < chunks.Count; j++)
-            {
-                if (i == j) { continue; }
-
-                // we check if the bounds of the pair of chunks are touching
-                Bounds2D bounds2 = get_bounds(chunks[j].Path.ToList());
-                if (!could_aabb_touch(bounds1, bounds2, epsilon))
-                {
-                    log.LogVerySpecific($"Chunks {chunks[i].name} and {chunks[j].name} are not neighbours (bounds do not touch : {bounds1.min} - {bounds1.max} vs {bounds2.min} - {bounds2.max})");
-                    continue;
-                }
-
-                // we check the distance between the colliders
-                ColliderDistance2D distance = Physics2D.Distance(chunks[i].PolygonCollider, chunks[j].PolygonCollider);
-                if (distance.isOverlapped || distance.distance <= epsilon)
-                {
-                    cndir.chunk_neighbours[chunks[i].name].Add(chunks[j].name);
-                    log.LogVerySpecific($"Chunk {chunks[i].name} is neighbour with chunk {chunks[j].name} (distance {distance.distance})");
-                }
-            }
+            if (vertices[i].x < min_x) { min_x = vertices[i].x; }
+            if (vertices[i].x > max_x) { max_x = vertices[i].x; }
+            if (vertices[i].y < min_y) { min_y = vertices[i].y; }
+            if (vertices[i].y > max_y) { max_y = vertices[i].y; }
+        }
+        Bounds2D bounds = new Bounds2D(min: new Vector2(min_x, min_y), max: new Vector2(max_x, max_y));
+        return bounds;
+    }
+    private Vector2 get_line_intersection(Vector2 start, Vector2 end, bool split_along_x, float split_value)
+    {
+        // we want to find the intersection between the line (start, end) and the line x = split_value or y = split_value depending on the axis
+        if (split_along_x)
+        {
+            // line is x = split_value
+            float t = (split_value - start.x) / (end.x - start.x);
+            return new Vector2(split_value, start.y + t * (end.y - start.y));
+        }
+        else
+        {
+            // line is y = split_value
+            float t = (split_value - start.y) / (end.y - start.y);
+            return new Vector2(start.x + t * (end.x - start.x), split_value);
         }
     }
-    private bool could_aabb_touch(Bounds2D bA, Bounds2D bB, float eps, float min_overlap = 0.25f, bool allow_corner_touching = true)
+
+
+
+
+    // SPLIT CHUNK INTO MULTIPLE CHUNKS
+    private void split_weird_chunks(List<List<Vector2>> small_chunks, ref List<List<Vector2>> final_chunks)
     {
-        // get the overlaps
-        float x_overlap = Mathf.Min(bA.max.x, bB.max.x) - Mathf.Max(bA.min.x, bB.min.x);
-        float y_overlap = Mathf.Min(bA.max.y, bB.max.y) - Mathf.Max(bA.min.y, bB.min.y);
+        for (int i = 0; i < small_chunks.Count; i++)
+        {
+            List<Vector2> chunk_vertices = small_chunks[i];
+            List<List<Vector2>> regions = split_into_regions_if_needed(chunk_vertices);
+            final_chunks.AddRange(regions);
+        }
+    }
 
-        // check touching with epsilon
-        bool x_touching = Mathf.Abs(bA.max.x - bB.min.x) <= eps || Mathf.Abs(bB.max.x - bA.min.x) <= eps;
-        bool y_touching = Mathf.Abs(bA.max.y - bB.min.y) <= eps || Mathf.Abs(bB.max.y - bA.min.y) <= eps;
-        
-        float overlap_required = allow_corner_touching ? 0f : min_overlap;
-
-        if (x_touching && y_overlap >= overlap_required) { return true; }
-        if (y_touching && x_overlap >= overlap_required) { return true; }
-        return false;
-    } */
-
+    private List<List<Vector2>> split_into_regions_if_needed(List<Vector2> chunk_vertices)
+    {
+        // todo
+        return new List<List<Vector2>>() { chunk_vertices };
+    }
 }
-
-// public class ChunkNeighbourDataInsideRoom
-// {
-//     public string room_name;
-//     public Dictionary<string, List<string>> chunk_neighbours; // chunk name -> list of neighbour chunk names inside the same room
-// }

@@ -70,20 +70,20 @@ public class DoorEngine : MonoBehaviour
         if (log_graph) { Debug.Log($"(DoorEngine) Creating link for door id: {door_data.id} between chunk {door_data.room1_id} and chunk {door_data.room2_id} (is open: {door_data.is_open})"); }
 
         // we get the chunks linked to the door
-        string chunk1_id = door_data.room1_id;
-        string chunk2_id = door_data.room2_id;
+        // string chunk1_id = door_data.room1_id;
+        // string chunk2_id = door_data.room2_id;
 
         // convert to their chunk data
-        ChunkData chunk_1 = ChunkEngine.Instance.GetChunkDataFromID(chunk1_id);
+        /* ChunkData chunk_1 = ChunkEngine.Instance.GetChunkDataFromID(chunk1_id);
         if (chunk_1 == null) { Debug.LogError($"(DoorEngine) Could not find ChunkData for chunk id: {chunk1_id}"); return; }
         ChunkData chunk_2 = ChunkEngine.Instance.GetChunkDataFromID(chunk2_id);
-        if (chunk_2 == null) { Debug.LogError($"(DoorEngine) Could not find ChunkData for chunk id: {chunk2_id}"); return; }
+        if (chunk_2 == null) { Debug.LogError($"(DoorEngine) Could not find ChunkData for chunk id: {chunk2_id}"); return; } */
 
         // convert to their room data
-        RoomData room_1 = RoomEngine.Instance.GetRoomDataFromID(chunk_1.room_id);
-        if (room_1 == null) { Debug.LogError($"(DoorEngine) Could not find RoomData for room id: {chunk_1.room_id}"); return; }
-        RoomData room_2 = RoomEngine.Instance.GetRoomDataFromID(chunk_2.room_id);
-        if (room_2 == null) { Debug.LogError($"(DoorEngine) Could not find RoomData for room id: {chunk_2.room_id}"); return; }
+        RoomData room_1 = RoomEngine.Instance.GetRoomDataFromID(door_data.room1_id);
+        if (room_1 == null) { Debug.LogError($"(DoorEngine) Could not find RoomData for room id: {door_data.room1_id}"); return; }
+        RoomData room_2 = RoomEngine.Instance.GetRoomDataFromID(door_data.room2_id);
+        if (room_2 == null) { Debug.LogError($"(DoorEngine) Could not find RoomData for room id: {door_data.room2_id}"); return; }
 
         // we create the nodes if they don't exist yet
         if (!added_rooms.Contains(room_1.id)) { create_room_node(room_1); added_rooms.Add(room_1.id); }

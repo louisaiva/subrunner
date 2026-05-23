@@ -26,8 +26,8 @@ public class WorldDoorVisualizer : WorldCellVisualizer
     }
 
     // CHUNKS CELLS
-    public string chunk_1_id;
-    public string chunk_2_id;
+    public string room1_id;
+    public string room2_id;
     public Vector3Int Chunk1Cell
     {
         get

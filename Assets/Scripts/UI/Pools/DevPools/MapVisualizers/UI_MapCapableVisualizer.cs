@@ -36,7 +36,7 @@ public class UI_MapCapableVisualizer : UI_Slot, Descriptable
 
         // we register to the capable data events to update the visu when the data changes
         capable_data.OnPositionChanged += on_capable_position_changed;
-        Debug.Log($"Initialized UI_CapableVisualizer for capable '{data.id}'");
+        // Debug.Log($"Initialized UI_CapableVisualizer for capable '{data.id}'");
     }
     private void OnDestroy()
     {

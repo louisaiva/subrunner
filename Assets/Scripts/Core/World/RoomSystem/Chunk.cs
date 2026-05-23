@@ -24,7 +24,6 @@ public class Chunk : MonoBehaviour
             return _chunk_collider;
         }
     }
-    public List<Vector2> ColliderPoints { get { return get_static_collider_points(); } }
 
     private Transform _lights_parent;
     public Transform LightsParent

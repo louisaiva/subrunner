@@ -102,10 +102,8 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     /// 1. AWAKE & DATA LOADING + 2D SPATIAL CELL CHUNKS
     //
     ///
-    public override void Awake()
+    private void Start()
     {
-        base.Awake();
-
         // on register certains callbacks directement
         SettingsManager.Instance.RegisterCallback("chunk_distance", SetChunkDistance);
     }
@@ -764,16 +762,16 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
 
         if (log_neighbours)
         {
-            string log = "(ChunkEngine) Neighbours of " + rdata.id + " with depth " + depth + " : ";
+            string log = "(ChunkEngine) Neighbours of " + rdata.id + " (with depth " + depth + ") : " + neighbours_ids.Count + "\n";
             for (int i = 0; i < neighbours_ids.Count; i++)
             {
-                log += neighbours_ids[i] + " ";
+                log += " - " + neighbours_ids[i] + "\n";
             }
             Debug.Log(log);
         }
         return neighbours_ids;
     }
-    public void get_neighbours_recursively(ChunkData room, ref List<ChunkData> neighbours, ref List<string> neighbours_ids, int depth = 1)
+    /* public void get_neighbours_recursively(ChunkData room, ref List<ChunkData> neighbours, ref List<string> neighbours_ids, int depth = 1)
     {
         if (depth < 0) { return; }
 
@@ -781,12 +779,35 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         if (neighbours.Contains(room)) { return; }
         neighbours.Add(room);
         neighbours_ids.Add(room.id);
-        
+
         // we get the direct neighbours of the room
         List<ChunkData> direct_neighbours = GetNeighboursData(room);
         foreach (ChunkData neighbour in direct_neighbours)
         {
             // we get the neighbours of the neighbour recursively with depth - 1
+            get_neighbours_recursively(neighbour, ref neighbours, ref neighbours_ids, depth - 1);
+        }
+    } */
+    public void get_neighbours_recursively(ChunkData room, ref List<ChunkData> neighbours, ref List<string> neighbours_ids, int depth = 1)
+    {
+        if (depth < 1) { return; }
+
+        // we get the direct neighbours of the room
+        List<ChunkData> direct_neighbours = GetNeighboursData(room);
+        for (int i = direct_neighbours.Count - 1; i >= 0; i--)
+        {
+            if (neighbours_ids.Contains(direct_neighbours[i].id)) { direct_neighbours.RemoveAt(i); continue; }
+
+            // we add the neighbour to the neighbours list if not already in it
+            neighbours.Add(direct_neighbours[i]);
+            neighbours_ids.Add(direct_neighbours[i].id);
+        }
+
+        if (depth == 1) { return; }
+
+        // then we make all direct neighbour grab their ones recursively with depth - 1
+        foreach (ChunkData neighbour in direct_neighbours)
+        {
             get_neighbours_recursively(neighbour, ref neighbours, ref neighbours_ids, depth - 1);
         }
     }

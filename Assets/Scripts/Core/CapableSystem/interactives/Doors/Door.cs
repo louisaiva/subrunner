@@ -33,8 +33,8 @@ public class Door : Capable, Interactable, Openable
 
 
     [Header("ROOMS")]
-    public string chunk1_id; // always matchs the Orientation direction (Orientation == "right" => room1 is on the right)
-    public string chunk2_id; // always matchs the opposite of the Orientation direction (Orientation == "right" => room2 is on the left)
+    public string room1_id; // always matchs the Orientation direction (Orientation == "right" => room1 is on the right)
+    public string room2_id; // always matchs the opposite of the Orientation direction (Orientation == "right" => room2 is on the left)
 
 
 
@@ -242,8 +242,8 @@ public class Door : Capable, Interactable, Openable
         // on met les paramètres de la porte
         this.is_vertical = door_data.is_vertical;
         this.DontTouchSortingLayer = door_data.dont_touch_sorting_layer;
-        this.chunk1_id = door_data.room1_id;
-        this.chunk2_id = door_data.room2_id;
+        this.room1_id = door_data.room1_id;
+        this.room2_id = door_data.room2_id;
 
         // on met à jour la position du kf d'interaction
         this.if_switcher = door_data.if_switcher;
@@ -273,8 +273,8 @@ public class Door : Capable, Interactable, Openable
         {
             is_vertical = this.is_vertical,
             dont_touch_sorting_layer = this.DontTouchSortingLayer,
-            room1_id = this.chunk1_id,
-            room2_id = this.chunk2_id,
+            room1_id = this.room1_id,
+            room2_id = this.room2_id,
             if_switcher = this.if_switcher.Duplicate(),
             is_open = this.is_open
         };
