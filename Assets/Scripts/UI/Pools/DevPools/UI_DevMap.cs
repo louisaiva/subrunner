@@ -82,6 +82,13 @@ public class UI_DevMap : UI_SlottablePool
     public RectTransform minimap_holder;
     public void ShowMinimap() => show_minimap = true;
     public void HideMinimap() => show_minimap = false;
+    public void ToggleMinimap(Setting s)
+    {
+        bool was_enabled = minimap_holder.transform.childCount > 0;
+        show_minimap = s.Value > 0.5f;
+        if (show_minimap && !was_enabled) { enable_minimap(); }
+        else if (!show_minimap && was_enabled) { disable_minimap(); }
+    }
 
 
 
@@ -97,35 +104,49 @@ public class UI_DevMap : UI_SlottablePool
         global_zoom = scaler.localScale.x;
         global_offset = offsetter.anchoredPosition;
 
-        // then call room visualizer to calculate bounds
-        world_center = room_visualizer.CalculateWorldCenter(out Vector2 extents);
-        map_half_ui = extents * (int)world_to_ui_scale ;
 
         // register to level loaded to update the visuals when we load a level
-        LevelEngine.Instance.OnLevelLoaded += handle_level_loaded;
+        LevelEngine.Instance.OnLevelLoaded += create_level_visuals;
+        // WorldManager.Instance.OnWorldLoaded += handle_world_loaded;
+        WorldManager.Instance.OnWorldUnloading += clear_visuals;
+
+        // register to the minimap setting
+        SettingsManager.Instance.RegisterCallback("dev_minimap", ToggleMinimap);
+
 
         // then create visuals for the rooms
-        room_visualizer.CreateVisuals();
+        /* room_visualizer.CreateVisuals();
 
         // then call creation of CapableVisualizerManager to create visuals for the capables, now that we have the right canvas size
-        capable_visualizer.CreateVisuals();
+        capable_visualizer.CreateVisuals(); */
     }
     private void OnDestroy()
     {
         // unregister to level loaded
-        if (LevelEngine.Instance != null) { LevelEngine.Instance.OnLevelLoaded -= handle_level_loaded; }
+        if (LevelEngine.Instance != null) { LevelEngine.Instance.OnLevelLoaded -= create_level_visuals; }
+        if (WorldManager.Instance != null) { WorldManager.Instance.OnWorldUnloading -= clear_visuals; }
+        SettingsManager.Instance.UnregisterCallback("dev_minimap", ToggleMinimap);
     }
 
-    // LEVEL LOADED HANDLER
-    private void handle_level_loaded(Level level)
+    // CALLBACKS HANDLER
+    private void create_level_visuals(Level level)
     {
-        // when we load a level, we update the visuals for the rooms and capables
-        room_visualizer.ClearVisuals();
-        room_visualizer.CreateVisuals(level.data.id);
+        clear_visuals();
 
-        capable_visualizer.ClearVisuals();
+        // then call room visualizer to calculate bounds
+        world_center = room_visualizer.CalculateWorldCenter(out Vector2 extents);
+        map_half_ui = extents * (int)world_to_ui_scale;
+
+        // when we load a level, we update the visuals for the rooms and capables
+        room_visualizer.CreateVisuals(level.data.id);
         capable_visualizer.CreateVisuals(level.data.id);
     }
+    private void clear_visuals()
+    {
+        room_visualizer.ClearVisuals();
+        capable_visualizer.ClearVisuals();
+    }
+
 
     // ENABLING
     protected override IEnumerator enable_coroutine()
@@ -133,9 +154,7 @@ public class UI_DevMap : UI_SlottablePool
         // we register to UI_Navigator OnSlotHovered
         UI_Navigator.Instance.OnSlotHoverEnter += handle_slot_hovered;
 
-        // if the minimap is enabled, we move back the visus to the main map holder, otherwise they stay in the minimap holder
-        room_visualizer.transform.SetParent(offsetter, worldPositionStays: false);
-        capable_visualizer.transform.SetParent(offsetter, worldPositionStays: false);
+        disable_minimap();
 
         yield return base.enable_coroutine();
     }
@@ -146,11 +165,23 @@ public class UI_DevMap : UI_SlottablePool
         // we unregister to UI_Navigator OnSlotHovered
         if (UI_Navigator.Instance != null) { UI_Navigator.Instance.OnSlotHoverEnter -= handle_slot_hovered; }
 
-        if (!show_minimap) { yield break; }
+        if (show_minimap) { enable_minimap(); }
+    }
+
+    // MINIMAP
+    private void enable_minimap()
+    {
         // if the minimap is enabled, we move the visus to the minimap holder, so they stay visible when the map is disabled
         room_visualizer.transform.SetParent(minimap_holder, worldPositionStays: false);
         capable_visualizer.transform.SetParent(minimap_holder, worldPositionStays: false);
     }
+    private void disable_minimap()
+    {
+        // if the minimap is enabled, we move back the visus to the main map holder, otherwise they stay in the minimap holder
+        room_visualizer.transform.SetParent(offsetter, worldPositionStays: false);
+        capable_visualizer.transform.SetParent(offsetter, worldPositionStays: false);
+    }
+
 
     // STATIC METHODS
     public static Vector2 GetUIPositionFromWorldPosition(Vector2 world_position)
@@ -161,7 +192,6 @@ public class UI_DevMap : UI_SlottablePool
         if (LogWorldToCanvas) { Debug.Log($"(UI_DevMap - WorldPosToCanvas) World position: {world_position}"/* => Canvas position: {canvas_position} */+$" => Final position: {final_position}     - ({world_to_ui_zoom})"); }
         return final_position;
     }
-
 
     // MOUSE INPUTS
     public void OnDrag(Vector2 mouse_delta)

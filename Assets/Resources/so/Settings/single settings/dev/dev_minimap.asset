@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01e9f7f14e495824c9028a68b0d1a2a8, type: 3}
-  m_Name: wired
+  m_Name: dev_minimap
   m_EditorClassIdentifier: Assembly-CSharp::Setting
   _value: 0
   min_value: 0
@@ -20,5 +20,5 @@ MonoBehaviour:
     show_percentage: 0
     show_as_integer: 0
     decimal_places: 0
-  label: wired
-  description: 'if on : the world is in wired graphics'
+  label: dev minimap
+  description: always shows the developer minimap

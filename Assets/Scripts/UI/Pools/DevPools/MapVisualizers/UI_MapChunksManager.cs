@@ -21,11 +21,13 @@ public class UI_MapChunksManager : MonoBehaviour
     // CALCULATE WORLD OFFSET
     public Vector2 CalculateWorldCenter(out Vector2 extents)
     {
-        // grab all the rooms data in the RoomSystem
-        List<ChunkData> rooms = ChunkEngine.Instance.chunks_data.Values.ToList();
+        // grab all the chunks in the ChunkEngine
+        List<ChunkData> chunks = ChunkEngine.Instance.chunks_data.Values.ToList();
 
-        // compute the world bounds of all rooms to set the size of our canvas accordingly
-        Bounds world_bounds = compute_world_bounds(rooms);
+        // todo need to take the current level in account
+
+        // compute the world bounds of all chunks to set the size of our canvas accordingly
+        Bounds world_bounds = compute_world_bounds(chunks);
         extents = world_bounds.extents;
         return world_bounds.center;
     }

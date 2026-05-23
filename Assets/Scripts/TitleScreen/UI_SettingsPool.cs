@@ -25,7 +25,7 @@ public class UI_SettingsPool : UI_SlottablePool, Panelable, Descriptable
     }
 
     public string Name => "";
-    public string Description => "hover a setting first";
+    public string Description => "";
 
     // START
 

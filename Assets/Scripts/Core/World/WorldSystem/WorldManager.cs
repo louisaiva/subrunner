@@ -101,6 +101,14 @@ public class WorldManager : MonoBehaviour
     [Header("Logs creating world")]
     [SerializeField] private bool log_create = false;
 
+
+    // EVENTS
+    public event Action OnWorldLoading;
+    public event Action OnWorldLoaded;
+    public event Action OnWorldUnloading;
+    public event Action OnWorldUnloaded;
+
+
     ///
     //
     /// LOADING EXISTING WORLD DATA & SELECTING WORLDS
@@ -286,7 +294,9 @@ public class WorldManager : MonoBehaviour
             SelectWorld(world.world_id);
         }
 
+        OnWorldLoading?.Invoke();
         await world.LoadWorld(SelectedWorld);
+        OnWorldLoaded?.Invoke();
         still_loading_awaitable = false;
     }
     public async Task UnloadCurrentWorld()
@@ -299,7 +309,9 @@ public class WorldManager : MonoBehaviour
             if (world == null) { return; }
         }
         if (!world.IsWorldLoaded) { return; }
+        OnWorldUnloading?.Invoke();
         await world.UnloadWorld();
+        OnWorldUnloaded?.Invoke();
     }
 
     // CREATE WORLD

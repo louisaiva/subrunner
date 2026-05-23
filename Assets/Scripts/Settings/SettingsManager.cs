@@ -9,12 +9,7 @@ public class SettingsManager : MonoBehaviour
     public static SettingsManager Instance;
 
     [Header("Factory settings")]
-    public SettingsSaveData factory_general;
-    public SettingsSaveData factory_gameplay;
-    public SettingsSaveData factory_graphics;
-    public SettingsSaveData factory_audio;
-    public SettingsSaveData factory_ui;
-    public SettingsSaveData factory_controls;
+    public List<SettingsSaveData> factory_settings;
 
     [Header("Settings")]
     private Dictionary<string, List<Setting>> settings = new Dictionary<string, List<Setting>>();
@@ -158,10 +153,6 @@ public class SettingsManager : MonoBehaviour
                 writer.Write(json);
             }
         }
-
-        // we save to PlayerPrefs
-        // if (log) { Debug.Log("(SettingsManager) Saving local settings from PlayerPrefs"); }
-        // PlayerPrefs.SetString("local_settings", json);
     }
     public void LoadLocalSettings()
     {
@@ -215,12 +206,11 @@ public class SettingsManager : MonoBehaviour
         settings.Clear();
 
         // we build settings from each factory
-        settings["general"] = factory_general.Clone();
-        settings["gameplay"] = factory_gameplay.Clone();
-        settings["graphics"] = factory_graphics.Clone();
-        settings["audio"] = factory_audio.Clone();
-        settings["ui"] = factory_ui.Clone();
-        settings["controls"] = factory_controls.Clone();
+        foreach (SettingsSaveData factory in factory_settings)
+        {
+            if (factory == null) { continue; }
+            settings[factory.category_name] = factory.Clone();
+        }
     }
 }
 

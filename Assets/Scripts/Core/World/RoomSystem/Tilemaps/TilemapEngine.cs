@@ -133,7 +133,7 @@ public class TilemapEngine : MonoBehaviour
             if (log_showing) { log.Log($"Hidden tilemaps of {room_id}"); }
             return;
         }
-        if (log_showing) { log.Warning($"No tilemaps to hide for {room_id}"); }
+        // if (log_showing) { log.Warning($"No tilemaps to hide for {room_id}"); }
     }
 
 

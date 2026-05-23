@@ -1425,12 +1425,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1934be4fe5272594aaf4550a1405bfda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SettingsManager
-  factory_general: {fileID: 11400000, guid: b6cb3e1182b15a74b9c90e1e1662b786, type: 2}
-  factory_gameplay: {fileID: 11400000, guid: 5729756fe12ca5747bd37a6df1e46174, type: 2}
-  factory_graphics: {fileID: 11400000, guid: 5aebe4c596a0d56439661152b42226e5, type: 2}
-  factory_audio: {fileID: 11400000, guid: d3d2ab6f3ecadc342bd727343e2f03d4, type: 2}
-  factory_ui: {fileID: 11400000, guid: b4c12df4f83fe3a4cb5404d931d6e370, type: 2}
-  factory_controls: {fileID: 11400000, guid: e36bfed1340373d498c5afe71e88e068, type: 2}
+  factory_settings:
+  - {fileID: 11400000, guid: b4c12df4f83fe3a4cb5404d931d6e370, type: 2}
+  - {fileID: 11400000, guid: d3d2ab6f3ecadc342bd727343e2f03d4, type: 2}
+  - {fileID: 11400000, guid: 5729756fe12ca5747bd37a6df1e46174, type: 2}
+  - {fileID: 11400000, guid: b6cb3e1182b15a74b9c90e1e1662b786, type: 2}
+  - {fileID: 11400000, guid: e36bfed1340373d498c5afe71e88e068, type: 2}
+  - {fileID: 11400000, guid: 5aebe4c596a0d56439661152b42226e5, type: 2}
   log: 0
 --- !u!1 &8143234813479507016
 GameObject:
