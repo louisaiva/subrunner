@@ -13207,6 +13207,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomBank
   loaded_chunks: []
   room_prefab: {fileID: 8185754384103082142, guid: 35f5f3809d0babd4b92eaecef2dc147c, type: 3}
+  chunk_prefab: {fileID: 8185754384103082142, guid: 35f5f3809d0babd4b92eaecef2dc147c, type: 3}
 --- !u!114 &112018656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -188892,7 +188893,6 @@ MonoBehaviour:
     - left
     - bot
     - inter
-  loaded_navmeshes: []
   is_aio: 0
 --- !u!1 &1215095728
 GameObject:
@@ -227534,7 +227534,6 @@ MonoBehaviour:
     - squarry
     - subway
     - trash_room
-  loaded_navmeshes: []
   is_aio: 0
 --- !u!1 &1443792014
 GameObject:

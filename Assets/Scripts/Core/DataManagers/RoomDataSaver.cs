@@ -64,7 +64,7 @@ public class RoomDataSaver : MonoBehaviour
 
                 // unload all rooms from system
                 ChunkEngine.Instance.UnloadAllChunks();
-                ChunkBank.Instance.DestroyAllRoomsInstantly();
+                ChunkBank.Instance.DestroyAllChunksInstantly();
             }
 
             DrawDefaultInspector();

@@ -7,7 +7,7 @@ public class Level : MonoBehaviour
 {
     [Header("Data")]
     public LevelData data;
-    public List<NavMeshData> loaded_navmeshes;
+    // public List<NavMeshData> loaded_navmeshes;
     public string ID { get { return GetStaticID(); } }
     
     // is aio
@@ -107,18 +107,16 @@ public class Level : MonoBehaviour
     }
     public Capable[] GetStaticCapables() { return GetComponentsInChildren<Capable>(includeInactive: true); }
 
-    public void GrabStaticRooms()
+    public void GrabStaticRooms(List<string> room_ids)
     {
         if (data == null) { return; }
         if (data.rooms_ids == null) { data.rooms_ids = new List<string>(); }
         data.rooms_ids.Clear();
 
-        // we go statically get the rooms ids from the children rooms
-        Room[] rooms = GetStaticRooms();
-        foreach (Room room in rooms)
+        // we add all the rooms ids
+        foreach (string room_id in room_ids)
         {
-            if (room == null || string.IsNullOrEmpty(room.ID)) { continue; }
-            if (!data.rooms_ids.Contains(room.ID)) { data.rooms_ids.Add(room.ID); }
+            if (!data.rooms_ids.Contains(room_id)) { data.rooms_ids.Add(room_id); }
         }
     }
 }

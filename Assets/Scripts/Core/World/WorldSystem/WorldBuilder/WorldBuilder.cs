@@ -111,7 +111,8 @@ public class WorldBuilder : MonoBehaviour
         slog?.Log($"Found built level '{level_id}' in cache, saving it directly");
         Level level = LazyInstance.built_levels_cache[level_id];
         SaveEngine.SaveAIOLevel(level, StaticTargetedWorld);
-        slog?.Log($"Level '{level_id}' saved succesfully :D");
+        SaveEngine.CleanWorldSave(StaticTargetedWorld);
+        slog?.Log($"Level '{level_id}' saved & cleaned successfully :D");
     }
 
     // CALLBACKS HANDLERS

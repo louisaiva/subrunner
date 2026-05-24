@@ -157,7 +157,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
 
         // we destroy all the chunks gameobjects
         loaded_chunks_data.Clear();
-        ChunkBank.Instance.DestroyAllRoomsInstantly();
+        ChunkBank.Instance.DestroyAllChunksInstantly();
 
         // clear all the rooms data
         chunks_data.Clear();
@@ -648,7 +648,6 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         List<string> new_neighbours_ids = GetNeighboursIDs(to_room, depth: chunk_distance);
 
         // check which of the currently loaded rooms we need to unload
-        // todo would it be better to find them from the from_room neighbours data ?
         foreach (string loaded_room_id in loaded_chunks_data.Keys)
         {
             if (loaded_room_id == to_room.id) { continue; }
@@ -886,16 +885,16 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
 
 
     // STATIC GETTERS
-    public static List<ChunkData> LoadChunksData(string world_id, List<string> chunks_ids)
+    public static List<ChunkData> LoadWorldChunksData(string world_id, List<string> chunks_ids)
     {
         List<ChunkData> chunks_data = new List<ChunkData>();
 
         // we load all the json files in the data path and convert them to RoomData objects
-        string[] files = AppManager.LoadJsonsFromWorldFolder(world_id, "chunks");
+        string[] files = AppManager.LoadSpecificJsonsFromWorldFolder(world_id, "chunks", chunks_ids);
         foreach (string file in files)
         {
+            // if (!chunks_ids.Contains(data.id)) { continue; }
             ChunkData data = JsonUtility.FromJson<ChunkData>(file);
-            if (!chunks_ids.Contains(data.id)) { continue; }
             chunks_data.Add(data);
         }
         return chunks_data;
@@ -924,7 +923,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         string world_id = WorldManager.StaticSelectedWorld;
         if (string.IsNullOrEmpty(world_id)) { Debug.LogError("(ChunkEngine - GetChunksDataFromIDs) No world selected, can't load chunks data"); return null; }
 
-        return LoadChunksData(world_id, chunks_ids);
+        return LoadWorldChunksData(world_id, chunks_ids);
     }
     public static void MakeChunksGrabCapables(Chunk[] rooms, bool only_capables = false)
     {

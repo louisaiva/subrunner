@@ -189,7 +189,7 @@ public class LevelTranslator : MonoBehaviour
 
         // and finally we make the level regrab all its rooms
         if (log_translate_extended) { Debug.Log($"(LevelTranslator) Making level grab static rooms"); }
-        level.GrabStaticRooms();
+        level.GrabStaticRooms(built_level.RoomChunks.Keys.ToList());
 
 
         //

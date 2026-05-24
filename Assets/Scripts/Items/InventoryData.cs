@@ -32,6 +32,19 @@ using System.Collections.Generic;
         return false;
     }
 
+    public List<string> GetAllItemsIds()
+    {
+        List<string> items_ids = new List<string>();
+        for (int i=0; i<item_pools_data.Count; i++)
+        {
+            for (int j=0; j<item_pools_data[i].stacks_data.Count; j++)
+            {
+                items_ids.AddRange(item_pools_data[i].stacks_data[j].items_ids);
+            }
+        }
+        return items_ids;
+    }
+
     // DUPLICATE
     public InventoryData Duplicate()
     {

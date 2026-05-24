@@ -13,125 +13,125 @@ public class ChunkBank : MonoBehaviour
         else { Destroy(gameObject); return; }
 
         // initialize the pool of rooms
-        pooled_rooms = new Stack<Chunk>();
+        pooled_chunks = new Stack<Chunk>();
     }
 
-    // ROOM LOADING
+    // CHUNK LOADING
     [Header("Loaded chunks")]
     [SerializeField] protected List<Chunk> loaded_chunks;
-    [SerializeField] protected Chunk room_prefab;
-    private Transform room_parent => World.LazyInstance.ChunkParent;
+    [SerializeField] protected Chunk chunk_prefab; // rename to chunk_prefab
+    private Transform chunk_parent => World.LazyInstance.ChunkParent;
 
     [Header("Sleeping chunks")]
-    [SerializeField] protected Stack<Chunk> pooled_rooms;
+    [SerializeField] protected Stack<Chunk> pooled_chunks;
 
-    // LOAD UNLOAD ROOMS
+    // LOAD UNLOAD CHUNKS
     public Chunk Load(ChunkData data)
     {
         // if we have no pooled room we need to instantiate one
-        if (pooled_rooms.Count == 0)
+        if (pooled_chunks.Count == 0)
         {
-            Chunk new_room = Instantiate(room_prefab, room_parent);
-            new_room.LoadData(data);
-            loaded_chunks.Add(new_room);
-            return new_room;
+            Chunk new_chunk = Instantiate(chunk_prefab, chunk_parent);
+            new_chunk.LoadData(data);
+            loaded_chunks.Add(new_chunk);
+            return new_chunk;
         }
 
         // extract a room from the pooled ones and load its data
-        Chunk room = pooled_rooms.Pop();
-        room.LoadData(data);
-        room.enabled = true;
-        loaded_chunks.Add(room);
-        return room;
+        Chunk chunk = pooled_chunks.Pop();
+        chunk.LoadData(data);
+        chunk.enabled = true;
+        loaded_chunks.Add(chunk);
+        return chunk;
     }
     public void Unload(ChunkData data)
     {
         // get room
-        Chunk room = GetLoadedRoom(data);
-        if (room == null) { return; }
-        Unload(room);
+        Chunk chunk = GetLoadedChunk(data);
+        if (chunk == null) { return; }
+        Unload(chunk);
     }
-    public void Unload(Chunk room)
+    public void Unload(Chunk chunk)
     {
         // unload the room's data and put it back in the pool
-        room.UnloadData();
-        pooled_rooms.Push(room);
+        chunk.UnloadData();
+        pooled_chunks.Push(chunk);
 
         // remove the room from the loaded rooms list
-        loaded_chunks.Remove(room);
+        loaded_chunks.Remove(chunk);
 
         // disable room component
-        room.enabled = false;
+        chunk.enabled = false;
     }
 
 
-    // DESTROY ROOMS
-    public void DestroyAllRoomsInstantly()
+    // DESTROY CHUNKS
+    public void DestroyAllChunksInstantly()
     {
-        destroy_all_loaded_rooms();
-        destroy_all_pooled_rooms();
+        destroy_all_loaded_chunks();
+        destroy_all_pooled_chunks();
     }
-    private void destroy_all_loaded_rooms()
+    private void destroy_all_loaded_chunks()
     {
         while (loaded_chunks.Count > 0)
         {
-            Chunk room = loaded_chunks[0];
-            if (!Application.isPlaying) { DestroyImmediate(room.gameObject); }
-            else { Destroy(room.gameObject); }
+            Chunk chunk = loaded_chunks[0];
+            if (!Application.isPlaying) { DestroyImmediate(chunk.gameObject); }
+            else { Destroy(chunk.gameObject); }
             loaded_chunks.RemoveAt(0);
         }
         loaded_chunks.Clear();
     }
-    private void destroy_all_pooled_rooms()
+    private void destroy_all_pooled_chunks()
     {
-        while (pooled_rooms.Count > 0)
+        while (pooled_chunks.Count > 0)
         {
-            Chunk room = pooled_rooms.Pop();
-            if (!Application.isPlaying) { DestroyImmediate(room.gameObject); }
-            else { Destroy(room.gameObject); }
+            Chunk chunk = pooled_chunks.Pop();
+            if (!Application.isPlaying) { DestroyImmediate(chunk.gameObject); }
+            else { Destroy(chunk.gameObject); }
         }
-        pooled_rooms.Clear();
+        pooled_chunks.Clear();
     }
 
 
-    // ROOM GETTING
-    public Chunk GetLoadedRoom(string id)
+    // CHUNK GETTING
+    public Chunk GetLoadedChunk(string id)
     {
         // we look for the room with the given id in the pool of loaded rooms
         for (int i = 0; i < loaded_chunks.Count; i++)
         {
-            Chunk room = loaded_chunks[i];
-            if (room.data != null && room.data.id == id)
+            Chunk chunk = loaded_chunks[i];
+            if (chunk.data != null && chunk.data.id == id)
             {
-                return room;
+                return chunk;
             }
         }
         return null;
     }
-    public Chunk GetLoadedRoom(ChunkData data)
+    public Chunk GetLoadedChunk(ChunkData data)
     {
-        return GetLoadedRoom(data.id);
+        return GetLoadedChunk(data.id);
     }
-    public List<Chunk> GetLoadedRooms(List<ChunkData> data)
+    public List<Chunk> GetLoadedChunks(List<ChunkData> data)
     {
-        List<Chunk> rooms = new List<Chunk>();
+        List<Chunk> chunks = new List<Chunk>();
         foreach (ChunkData d in data)
         {
-            Chunk room = GetLoadedRoom(d);
-            if (room != null) { rooms.Add(room); }
+            Chunk chunk = GetLoadedChunk(d);
+            if (chunk != null) { chunks.Add(chunk); }
         }
-        return rooms;
+        return chunks;
     }
-    public List<Chunk> GetAllLoadedRooms()
+    public List<Chunk> GetAllLoadedChunks()
     {
         return new List<Chunk>(loaded_chunks);
     }
-    public bool IsRoomLoaded(ChunkData data)
+    public bool IsChunkLoaded(ChunkData data)
     {
         for (int i = 0; i < loaded_chunks.Count; i++)
         {
-            Chunk room = loaded_chunks[i];
-            if (room.data != null && room.data == data) { return true; }
+            Chunk chunk = loaded_chunks[i];
+            if (chunk.data != null && chunk.data == data) { return true; }
         }
         return false;
     }

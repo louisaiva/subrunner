@@ -77,10 +77,7 @@ public class Chunk : MonoBehaviour
     public void UnloadData()
     {
         _unloading = true;
-
-        // we hide the tilemaps
-        // RoomEngine.Instance.DoorEngine.HideRoom(data.room_id);
-
+        
         // unload the collider
         ChunkCollider.enabled = false;
 

@@ -4,6 +4,8 @@ using UnityEngine.SceneManagement;
 using System.IO;
 using Unity.VisualScripting;
 using System;
+using System.Collections.Generic;
+
 
 
 
@@ -202,6 +204,23 @@ public class AppManager : MonoBehaviour
         }
         return jsons;
     }
+    public static string[] LoadSpecificJsonsFromWorldFolder(string world_id, string data_folder, List<string> file_names)
+    {
+        // loads jsons from the current world data path (which is in the persistent data path) instead of the assets
+        // data_folder should be like "levels" for levels or "capables"
+        string jsons_path = Path.Combine(WorldManager.WorldsDataPath, world_id, data_folder);
+
+        // we get all the json files in the data folder and load them as strings
+        string[] file_paths = Directory.GetFiles(jsons_path, "*.json");
+        List<string> jsons = new List<string>();
+        for (int i = 0; i < file_paths.Length; i++)
+        {
+            string file_name = Path.GetFileNameWithoutExtension(file_paths[i]);
+            if (!file_names.Contains(file_name)) { continue; }
+            jsons.Add(System.IO.File.ReadAllText(file_paths[i]));
+        }
+        return jsons.ToArray();
+    }
     public static string LoadJsonFromWorldFolder(string world_id, string path)
     {
         // load json from the current world data path (which is in the persistent data path) instead of the assets
@@ -261,6 +280,31 @@ public class AppManager : MonoBehaviour
             return;
         }
         if (verbose >= Verbosity.Normal) { Debug.Log($"(AppManager) Saved json to asset: {path}\n{json}"); }
+    }
+
+
+    // FILE MANAGEMENT
+    public static string[] GetFilesPathsInWorldFolder(string world_id, string data_folder, string search_pattern = "*.json")
+    {
+        string folder_path = Path.Combine(WorldManager.WorldsDataPath, world_id, data_folder);
+        if (!Directory.Exists(folder_path))
+        {
+            Debug.LogWarning($"(AppManager) Failed to get files paths in world folder because the folder was not found: {folder_path}");
+            return new string[0];
+        }
+        return Directory.GetFiles(folder_path, search_pattern);
+    }
+    public static void DeleteFile(string path, bool log = false)
+    {
+        if (System.IO.File.Exists(path))
+        {
+            System.IO.File.Delete(path);
+            if (log) { Debug.Log($"(AppManager) Deleted file : {path}"); }
+        }
+        else if (log)
+        {
+            Debug.LogWarning($"(AppManager) Failed to delete file: {path} because the file was not found.");
+        }
     }
 }
 

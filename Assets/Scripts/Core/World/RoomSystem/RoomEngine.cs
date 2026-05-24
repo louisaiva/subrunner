@@ -203,4 +203,20 @@ public class RoomEngine : BSOD_System<RoomEngine>
         }
         return capables_data;
     }
+
+
+    // STATIC GETTERS
+    public static List<RoomData> LoadWorldRoomsData(string world_id, List<string> room_ids)
+    {
+        List<RoomData> levels_data = new List<RoomData>();
+
+        // we load all the json files in the data path and convert them to RoomData objects
+        string[] files = AppManager.LoadSpecificJsonsFromWorldFolder(world_id, "rooms", room_ids);
+        foreach (string file in files)
+        {
+            RoomData data = JsonUtility.FromJson<RoomData>(file);
+            levels_data.Add(data);
+        }
+        return levels_data;
+    }
 }

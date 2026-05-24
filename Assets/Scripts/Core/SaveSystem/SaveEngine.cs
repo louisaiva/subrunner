@@ -47,11 +47,13 @@ public class SaveEngine : MonoBehaviour
     [Header("Logs")]
     [SerializeField] private Loggable<SaveEngine> log;
     private static Loggable<SaveEngine> slog => LazyInstance != null ? LazyInstance.log : null;
+    private static bool log_static => LazyInstance != null && LazyInstance.log.Verbose >= Verbosity.Extended;
     [SerializeField] private Loggable<SaveEngine> log_capa;
     private static Loggable<SaveEngine> s_log_capa => LazyInstance != null ? LazyInstance.log_capa : null;
     [SerializeField] private Loggable<SaveEngine> log_rooms;
     private static Loggable<SaveEngine> s_log_rooms => LazyInstance != null ? LazyInstance.log_rooms : null;
-    private static bool log_static => LazyInstance != null && LazyInstance.log.Verbose >= Verbosity.Extended;
+    [SerializeField] private Loggable<SaveEngine> log_clean;
+    private static Loggable<SaveEngine> slog_clean => LazyInstance != null ? LazyInstance.log_clean : null;
 
 
     [Header("GetStaticData Logs")]
@@ -225,5 +227,130 @@ public class SaveEngine : MonoBehaviour
         string path = Path.Combine("capacities", data.id + ".json");
         s_log_rooms?.LogVerySpecific($"Saving CAPACITY data to path: {path}\n{json}");
         AppManager.SaveJsonToWorldFolder(world_id, path, json, log_static);
+    }
+
+
+
+    // SAVE CLEANING
+
+    /// <summary>
+    /// delete all the rooms/chunks/capables/capacities save files that are not in any levels.
+    /// careful, it does not make any backup, so make sure you know what you are doing
+    /// </summary>
+    /// <param name="world_id"></param>
+    public static void CleanWorldSave(string world_id)
+    {
+
+        // we load all the levels of the world
+        List<LevelData> levels_data = LevelEngine.LoadWorldLevelsData(world_id);
+        if (levels_data == null || levels_data.Count == 0)
+        {
+            slog_clean?.Warning($"No levels found in world '{world_id}' while trying to clean save. Aborting.");
+            return;
+        }
+
+        slog_clean?.Log($"Cleaning save for world '{world_id}'... Found {levels_data.Count} levels in the world. Gathering all rooms/chunks/capables/capacities in these levels");
+
+        // gather all the rooms
+        HashSet<string> rooms_in_levels = new HashSet<string>();
+        foreach (LevelData level_data in levels_data)
+        {
+            foreach (string room_id in level_data.rooms_ids) { rooms_in_levels.Add(room_id); }
+        }
+        List<RoomData> rooms_data = RoomEngine.LoadWorldRoomsData(world_id, rooms_in_levels.ToList());
+        slog_clean?.LogExtended($"Found {rooms_data.Count} rooms in the levels of the world.");
+        // gather all the chunks
+        HashSet<string> chunks_in_levels = new HashSet<string>();
+        foreach (RoomData room_data in rooms_data)
+        {
+            foreach (string chunk_id in room_data.chunks_ids) { chunks_in_levels.Add(chunk_id); }
+        }
+        List<ChunkData> chunks_data = ChunkEngine.LoadWorldChunksData(world_id, chunks_in_levels.ToList());
+        slog_clean?.LogExtended($"Found {chunks_data.Count} chunks in the levels of the world.");
+        // gather all the capables
+        HashSet<string> capables_in_levels = new HashSet<string>();
+        foreach (ChunkData chunk_data in chunks_data)
+        {
+            foreach (string capable_id in chunk_data.capables_ids) { capables_in_levels.Add(capable_id); }
+            foreach (string movable_id in chunk_data.movables_ids) { capables_in_levels.Add(movable_id); }
+        }
+        List<CapableData> capables_data = CapableEngine.LoadWorldCapablesData(world_id, capables_in_levels.ToList());
+        // gather the capacities + add all their inventories' items too
+        HashSet<string> capacities_in_levels = new HashSet<string>();
+        foreach (CapableData capable_data in capables_data)
+        {
+            gather_all_capable_and_capacities_in_capable_recursive(world_id, capable_data, ref capables_in_levels, ref capacities_in_levels);
+        }
+        slog_clean?.LogExtended($"Found {capables_data.Count} capables and {capacities_in_levels.Count} capacities in the levels of the world (including inventories).");
+        slog_clean?.Log($"World has {rooms_in_levels.Count} rooms, {chunks_in_levels.Count} chunks, {capables_in_levels.Count} capables and {capacities_in_levels.Count} capacities in its levels. Now deleting all save files that are not in these lists...");
+
+        // now, we have all the rooms/chunks/capables/capacities that are in the levels, we can delete all the ones that are not in these lists
+        string[] rooms_paths = AppManager.GetFilesPathsInWorldFolder(world_id, "rooms");
+        string[] chunks_paths = AppManager.GetFilesPathsInWorldFolder(world_id, "chunks");
+        string[] capables_paths = AppManager.GetFilesPathsInWorldFolder(world_id, "capables");
+        string[] capacities_paths = AppManager.GetFilesPathsInWorldFolder(world_id, "capacities");
+        int deleted_rooms = 0;
+        int deleted_chunks = 0;
+        int deleted_capables = 0;
+        int deleted_capacities = 0;
+
+        foreach (string path in rooms_paths)
+        {
+            string file_name = Path.GetFileNameWithoutExtension(path);
+            if (rooms_in_levels.Contains(file_name)) { continue; }
+            AppManager.DeleteFile(path, log_static);
+            deleted_rooms++;
+            slog_clean?.LogExtended($"Deleted '{file_name}' room save file: {path}");
+        }
+        foreach (string path in chunks_paths)
+        {
+            string file_name = Path.GetFileNameWithoutExtension(path);
+            if (chunks_in_levels.Contains(file_name)) { continue; }
+            AppManager.DeleteFile(path, log_static);
+            deleted_chunks++;
+            slog_clean?.LogExtended($"Deleted '{file_name}' chunk save file: {path}");
+        }
+        foreach (string path in capables_paths)
+        {
+            string file_name = Path.GetFileNameWithoutExtension(path);
+            if (capables_in_levels.Contains(file_name)) { continue; }
+            AppManager.DeleteFile(path, log_static);
+            deleted_capables++;
+            slog_clean?.LogExtended($"Deleted '{file_name}' capable save file: {path}");
+        }
+        foreach (string path in capacities_paths)
+        {
+            string file_name = Path.GetFileNameWithoutExtension(path);
+            if (capacities_in_levels.Contains(file_name)) { continue; }
+            AppManager.DeleteFile(path, log_static);
+            deleted_capacities++;
+            slog_clean?.LogExtended($"Deleted '{file_name}' capacity save file: {path}");
+        }
+    
+        slog_clean?.Log($"Finished cleaning save for world '{world_id}'. Deleted {deleted_rooms} rooms, {deleted_chunks} chunks, {deleted_capables} capables and {deleted_capacities} capacities.");
+    }
+    private static void gather_all_capable_and_capacities_in_capable_recursive(string world_id, CapableData capable_data, ref HashSet<string> items_ids, ref HashSet<string> capacities_ids)
+    {
+        // we take the opportunity to gather the capacities ids too
+        if (capable_data.capacities_ids != null)
+        {
+            foreach (string capa_id in capable_data.capacities_ids)
+            {
+                if (!capacities_ids.Contains(capa_id)) { capacities_ids.Add(capa_id); }
+            }
+        }
+
+        // and we recursively gather the items in the inventory of the capable
+        if (capable_data.inventory == null) { return; }
+        List<string> inv_items_ids = capable_data.inventory.GetAllItemsIds();
+        items_ids.UnionWith(inv_items_ids);
+
+        // and we gather the items in the inventories of the items in the inventory, and so on recursively
+        foreach (string item_id in inv_items_ids)
+        {
+            CapableData item_data = CapableEngine.LoadWorldCapableData(world_id, item_id);
+            if (item_data == null) { continue; }
+            gather_all_capable_and_capacities_in_capable_recursive(world_id, item_data, ref items_ids, ref capacities_ids);
+        }
     }
 }

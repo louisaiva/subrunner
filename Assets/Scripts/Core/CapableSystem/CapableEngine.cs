@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -1097,6 +1098,29 @@ public class CapableEngine : BSOD_System<CapableEngine>
             doors_data.Add(door_data);
         }
         return doors_data;
+    }
+
+
+    // STATIC GETTERS
+    public static List<CapableData> LoadWorldCapablesData(string world_id, List<string> capables_ids)
+    {
+        List<CapableData> capables_data = new List<CapableData>();
+
+        // we load all the json files in the data path and convert them to CapableData objects
+        string[] jsons = AppManager.LoadSpecificJsonsFromWorldFolder(world_id, "capables", capables_ids);
+        foreach (string json in jsons)
+        {
+            CapableData data = JsonUtility.FromJson<CapableData>(json);
+            capables_data.Add(data);
+        }
+        return capables_data;
+    }
+    public static CapableData LoadWorldCapableData(string world_id, string item_id)
+    {
+        string path = Path.Combine("capables", item_id);
+        string json = AppManager.LoadJsonFromWorldFolder(world_id, path);
+        if (string.IsNullOrEmpty(json)) { return null; }
+        return JsonUtility.FromJson<CapableData>(json);
     }
 
 }
