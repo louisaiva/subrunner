@@ -96,7 +96,7 @@ public class AttackCapacity : CooldownCapacity
         if (anim_player.IsShowing("attack")) { return; } // we check if we are already attacking
 
         // we update damage value if capable is Perso
-        if (bearer is Perso perso) { damage = perso.skillManager.GetSkillValue("stat:damage"); }
+        // if (bearer is Perso perso) { damage = perso.skillManager.GetSkillValue("stat:damage"); }
 
         // we calculate the duration of the attack
         float duration_override = attack_duration;

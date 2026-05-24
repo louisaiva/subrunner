@@ -39,6 +39,8 @@ public class UI_MapChunkVisualizer : MonoBehaviour
     // CALLBACKS
     public void OnChunkLoaded(ChunkData chunk_data)
     {
+        if (liner == null) { OnDestroy(); return; }
+
         liner.color = loaded_color;
 
         // set our self as last sibling so we are drawn on top of the other chunks (since we are loaded, we want to be visible)

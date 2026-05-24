@@ -45,7 +45,13 @@ public class TemplatesManager : MonoBehaviour
     }
     private void saveCapableTemplate(Capable capable)
     {
-        ICapableData data = capable.GetStaticData();
+        CapableData data = (CapableData) capable.GetStaticData();
+
+        // we apply some modifs to the data, i.e. adding some specific capacities templates
+        // this is mainly for simplifying the work flow inside unity, bcz with data-driven approach
+        // we don't have a lot of control on modifying data in scene view
+        // We do most heavy job with templates, AND SO we must be fast
+        filter_capable_data(capable, ref data);
 
         // save the current data to a json file
         string json = JsonUtility.ToJson(data, true);
@@ -78,6 +84,20 @@ public class TemplatesManager : MonoBehaviour
 
             // we save this capacity as a template
             saveCapacityTemplate(capacity);
+        }
+    }
+    private void filter_capable_data(Capable capable, ref CapableData data)
+    {
+        // we check if the capable has some TemplateCapacityReference components, and we save the id of the ref
+        TemplateCapacityReference[] template_capacity_refs = capable.GetComponentsInChildren<TemplateCapacityReference>(includeInactive: false);
+        for (int i = 0; i < template_capacity_refs.Length; i++)
+        {
+            TemplateCapacityReference template_capacity_ref = template_capacity_refs[i];
+            if (template_capacity_ref == null) { continue; }
+            string template = template_capacity_ref.capacity_template_id;
+            if (template == null) { continue; }
+            if (string.IsNullOrEmpty(template)) { continue; }
+            data.capacities_ids.Add(template);
         }
     }
 

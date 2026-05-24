@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class UI_DevMap : UI_SlottablePool
@@ -107,18 +106,10 @@ public class UI_DevMap : UI_SlottablePool
 
         // register to level loaded to update the visuals when we load a level
         LevelEngine.Instance.OnLevelLoaded += create_level_visuals;
-        // WorldManager.Instance.OnWorldLoaded += handle_world_loaded;
         WorldManager.Instance.OnWorldUnloading += clear_visuals;
 
         // register to the minimap setting
         SettingsManager.Instance.RegisterCallback("dev_minimap", ToggleMinimap);
-
-
-        // then create visuals for the rooms
-        /* room_visualizer.CreateVisuals();
-
-        // then call creation of CapableVisualizerManager to create visuals for the capables, now that we have the right canvas size
-        capable_visualizer.CreateVisuals(); */
     }
     private void OnDestroy()
     {

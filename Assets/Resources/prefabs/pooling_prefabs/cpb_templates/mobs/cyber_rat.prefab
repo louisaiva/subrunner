@@ -98,7 +98,7 @@ Transform:
   m_GameObject: {fileID: 6831872210500143280}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.290303, y: 2.147539, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -233,6 +233,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!114 &3884268841172835077
 MonoBehaviour:
@@ -313,7 +314,7 @@ MonoBehaviour:
       skin: 
       anim_capacity_priorities: []
       current_capacity: 
-      material_path: 
+      material_name: 
       sorting_layer_id: 0
       order_in_layer: 0
       never_flip: 0
