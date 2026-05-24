@@ -34,7 +34,6 @@ public class UI_MapCapablesManager : MonoBehaviour
         if (level_id == null) { if (log_no_instance_found_at_start) { Debug.LogWarning($"(CapableVisualizerManager) Can't find the current level ID"); } return; }
 
         // grab all the capable data in the CapableSystem and build a visual for each one
-        // List<CapableData> insiders = CapableSystem.Instance.GetInsidersWorldCapablesData();
         List<CapableData> cdata = LevelEngine.Instance.GetCapablesDataOfLevel(level_id);
         foreach (CapableData cap in cdata)
         {

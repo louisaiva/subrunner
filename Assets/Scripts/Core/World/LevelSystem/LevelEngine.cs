@@ -202,6 +202,13 @@ public class LevelEngine : BSOD_System<LevelEngine>
 
         // we get the capable data from the ids
         List<CapableData> capable_datas = CapableEngine.Instance.GetCapablesDataFromIDs(capable_ids);
+
+        // we also add the controller capable if the level is the current level
+        if (level_id == CurrentLevelID && Controller.LazyInstance != null && Controller.LazyInstance.Capable != null)
+        {
+            capable_datas.Add(Controller.LazyInstance.Capable.data);
+        }
+
         return capable_datas;
     }
     public Level[] GetWorldLevels()

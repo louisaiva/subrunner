@@ -65,7 +65,7 @@ public class UI_GameOver : UI_Pool
         reviveAction.performed -= reviveCallback;
 
         // we remove the controller
-        Destroy(Controller.Instance.gameObject);
+        Destroy(Controller.LazyInstance.gameObject);
         yield return null;
 
         // we get the spawn point

@@ -152,12 +152,10 @@ public class SaveEngine : MonoBehaviour
 
     ///
     //
-    /// SAVING DATA METHODS
+    /// SAVING DATA TO FILES
     //
     ///
 
-
-    // SAVE WORLD DATA
     public static void SaveWorldData(WorldData data)
     {
         bool just_created = WorldManager.EnsureWorldDataHierarchy(data.id);
@@ -178,8 +176,14 @@ public class SaveEngine : MonoBehaviour
         string json = JsonUtility.ToJson(data, true);
         AppManager.SaveJsonToWorldFolder(data.id, "world_data.json", json, log_static);
     }
-
-    // SAVE LEVEL DATA
+    public static void SaveControllerData(ControllerData data, string world_id)
+    {
+        // save the current ControllerData to a json file
+        string json = JsonUtility.ToJson(data, true);
+        string path = "controller.json";
+        s_log_rooms?.Log($"Saving CONTROLLER data to path: {path}\n{json}");
+        AppManager.SaveJsonToWorldFolder(world_id, path, json, log_static);
+    }
     public static void SaveLevelData(LevelData data, string world_id)
     {
         // save the current LevelData to a json file
@@ -188,8 +192,6 @@ public class SaveEngine : MonoBehaviour
         s_log_rooms?.Log($"Saving LEVEL data to path: {path}\n{json}");
         AppManager.SaveJsonToWorldFolder(world_id, path, json, log_static);
     }
-
-    // SAVE ROOM DATA
     public static void SaveRoomData(RoomData data, string world_id)
     {
         // save the current RoomData to a json file
@@ -198,8 +200,6 @@ public class SaveEngine : MonoBehaviour
         s_log_rooms?.LogVerySpecific($"Saving ROOM data to path: {path}\n{json}");
         AppManager.SaveJsonToWorldFolder(world_id, path, json, log_static);
     }
-
-    // SAVE CHUNK DATA
     public static void SaveChunkData(ChunkData data, string world_id)
     {
         // save the current ChunkData to a json file
@@ -208,8 +208,6 @@ public class SaveEngine : MonoBehaviour
         s_log_rooms?.LogVerySpecific($"Saving CHUNK data to path: {path}\n{json}");
         AppManager.SaveJsonToWorldFolder(world_id, path, json, log_static);
     }
-
-    // SAVE CAPABLE DATA
     public static void SaveCapableData(CapableData data, string world_id)
     {
         // save the current CapableData to a json file
@@ -218,8 +216,6 @@ public class SaveEngine : MonoBehaviour
         s_log_rooms?.LogVerySpecific($"Saving CAPABLE data to path: {path}\n{json}");
         AppManager.SaveJsonToWorldFolder(world_id, path, json, log_static);
     }
-
-    // SAVE CAPACITY DATA
     public static void SaveCapacityData(CapacityData data, string world_id)
     {
         // save the current CapacityData to a json file
@@ -230,8 +226,11 @@ public class SaveEngine : MonoBehaviour
     }
 
 
-
-    // SAVE CLEANING
+    ///
+    //
+    /// CLEANING SAVE FILES
+    //
+    ///
 
     /// <summary>
     /// delete all the rooms/chunks/capables/capacities save files that are not in any levels.

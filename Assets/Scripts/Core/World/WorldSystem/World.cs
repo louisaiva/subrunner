@@ -191,21 +191,38 @@ public class World : BSOD_System<World>
 
 
         ///
-        //  4. WE LOAD THE PLAYER LEVEL
-        /* */ load_status = WorldLoadStatus.LoadingPlayerLevel;
+        //  4. WE LOAD THE CONTROLLER
+        /* */
+        load_status = WorldLoadStatus.LoadingPlayerLevel;
+        ///
+        if (log_loading_extended) { Debug.Log($"(World) ----------------------------------- LOADING CONTROLLER : (previous phase duration: {Time.realtimeSinceStartup - phase_time}s)"); }
+        phase_time = Time.realtimeSinceStartup;
+        await Controller.LazyInstance.LoadWorldData(world_id, log_loading_extended);
+        if (fallback_spawn_point != null) { Controller.LazyInstance.Capable.transform.position = fallback_spawn_point.position; } // debug only to tp quickly at launch
+        
+        // ok so now we have a Controller.Capable defined if everything went ok ! We can determine it to load the right level
+
+
+        ///
+        //  5. WE LOAD THE PLAYER LEVEL
+        /* */
+        load_status = WorldLoadStatus.LoadingPlayerLevel;
         ///
         if (log_loading_extended) { Debug.Log($"(World) ----------------------------------- WE LOAD CURRENT PLAYER LEVEL : (previous phase duration: {Time.realtimeSinceStartup - phase_time}s)"); }
         phase_time = Time.realtimeSinceStartup;
 
         // we load the start level
-        if (data != null && data.levels_ids != null && data.levels_ids.Count > 0)
+        if (Controller.LazyInstance.data != null && !string.IsNullOrEmpty(Controller.LazyInstance.data.player_level))
+        {
+            string player_level_id = Controller.LazyInstance.data.player_level;
+            if (log) { Debug.Log($"(World) STARTING WORLD: {world_id}  -- Player level from controller data: {player_level_id}"); }
+            if (!string.IsNullOrEmpty(player_level_id)) { await LevelEngine.LazyInstance.LoadLevel(player_level_id); }
+        }
+        else if (data != null && data.levels_ids != null && data.levels_ids.Count > 0)
         {
             string start_level_id = data.levels_ids[0];
             if (log) { Debug.Log($"(World) STARTING WORLD: {world_id}  -- Level: {start_level_id}"); }
             if (!string.IsNullOrEmpty(start_level_id)) { await LevelEngine.LazyInstance.LoadLevel(start_level_id); }
-
-            // we tp the player to the fallback spawn point while loading the world
-            if (fallback_spawn_point != null) { Controller.LazyInstance.Capable.transform.position = fallback_spawn_point.position; }
         }
         else if (log) { Debug.Log($"(World) STARTING WORLD: {world_id} (!) {(data == null ? "DATA IS NULL" : "NO LEVELS FOUND")}"); }
 
@@ -263,6 +280,9 @@ public class World : BSOD_System<World>
         if (log) { Debug.Log($"(World) ----------------------------------- UNLOADING WORLD : {world_id}"); }
         float start_time = Time.realtimeSinceStartup;
         /* */ load_status = WorldLoadStatus.Unloading;
+
+        // we unload the controller first to let it do some cleanup if needed (like saving player data for example)
+        Controller.LazyInstance.UncontrolAll(log_loading_extended);
 
         // we unload all the engines
         await LevelEngine.LazyInstance.UnloadWorldData(log_loading_extended);

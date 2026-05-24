@@ -35,8 +35,8 @@ public class Caller : MonoBehaviour
 
     // WORLD MANAGER
     public void OpenWorldFolder() => AppManager.OpenWorldsFolder();
-    public void UnloadWorld() => WorldManager.Instance?.UnloadCurrentWorld();
-    public void LoadWorld() => WorldManager.Instance?.LoadSelectedWorld();
+    public async void UnloadWorld() { await WorldManager.Instance?.UnloadCurrentWorld(); }
+    public void LoadWorld() { WorldManager.Instance?.LoadSelectedWorld(); }
     public void CreateWorld() => WorldManager.Instance?.CreateNewWorld();
     public void CreateLevel() => WorldManager.Instance?.CreateNewLevel();
 

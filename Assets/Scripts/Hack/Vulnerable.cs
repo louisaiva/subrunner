@@ -162,15 +162,15 @@ public class Vulnerable : MonoBehaviour
     public void ControlCapable(Hack hack)
     {
         // we move the PersoInputsController to the capable for duration seconds
-        float duration = -888f;
-        if (hack.exploit is TimerExploit timer) { duration = timer.end_timer; }
-        Controller.Instance.ChangeCapableTarget(Capable, duration);
+        // float duration = -888f;
+        Controller.LazyInstance.Control(Capable.ID);
+        if (hack.exploit is TimerExploit timer)
+        {
+            // todo put an Invoke here to uncontrol the capable after duration seconds
+            float duration = timer.end_timer;
+        }
     }
-    public void UncontrolController(Hack hack)
-    {
-        Controller.Instance.BreakCapableTarget(Capable);
-    }
-
+    public void UncontrolController(Hack hack) { Controller.LazyInstance.Uncontrol(Capable.ID); }
     // UNLOCKING
     public void TypePassword(Hack hack)
     {

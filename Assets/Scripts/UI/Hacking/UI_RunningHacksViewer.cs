@@ -117,13 +117,13 @@ public class UI_RunningHacksViewer : MonoBehaviour, Startable
     }
     private void update_title()
     {
-        if (Perso.Instance.Device == null)
+        if (Perso.Instance?.Device == null)
         {
             title_text.text = "no device";
             return;
         }
 
-        if (Perso.Instance.Device.Hacker == null)
+        if (Perso.Instance?.Device.Hacker == null)
         {
             title_text.text = "no module:hack";
             return;

@@ -1,0 +1,439 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Controller : MonoBehaviour
+{
+
+    public static Controller _Instance;
+    public static Controller LazyInstance
+    {
+        get
+        {
+            if (_Instance == null)
+            {
+                _Instance = FindFirstObjectByType<Controller>();
+                if (_Instance == null) { Debug.LogError($"(Controller) No instance of Controller found in the scene."); }
+            }
+            return _Instance;
+        }
+    }
+
+
+    // DATA
+    public ControllerData data;
+
+    // CAPABLE RTO STACK
+    private Stack<string> stack = new Stack<string>(); // holds the capable id stack, controlled_capable is NOT in the stack
+    private Capable controlled_capable;
+    public Capable Capable { get { return controlled_capable; } }
+    public string ID { get { return controlled_capable?.ID ?? ""; } }
+
+
+    [Header("Components")]
+    [SerializeField] private PersoInputsController pic;
+    [SerializeField] private UI_InputsController uic;
+    [SerializeField] private HackableNavigator hackable_navigator;
+    [SerializeField] private ExploitNavigator exploit_navigator;
+    [SerializeField] private SeeThroughHandler see_through;
+
+
+    [Header("Events")]
+    public System.Action<string> OnCapableAddedToStack; // triggered only the first time a capable is controlled (until next time it's removed from stack)
+    public System.Action<string> OnCapableRemovedFromStack;
+    public System.Action<Capable> OnCapableControlled; // triggered each time a capable is controlled
+    public System.Action<Capable> OnCapableUncontrolled;
+    
+    [Header("Logs")]
+    [SerializeField] private bool log;
+    [SerializeField] private bool log_ui_attachment;
+
+
+    ///
+    //
+    /// MAIN CONTROL METHODS 
+    //
+    ///
+
+
+    // STACK MANAGEMENT
+    public bool Control(string capable_id)
+    {
+        if (string.IsNullOrEmpty(capable_id)) { return false; }
+        if (controlled_capable != null && controlled_capable.ID == capable_id)
+        {
+            // if we are already controlling the capable, we do nothing
+            if (log) { Debug.Log($"(Controller) Already controlling capable with id {capable_id}. Doing nothing."); }
+            return true;
+        }
+        if (stack.Contains(capable_id))
+        {
+            // if we are already controlling the capable, we do nothing
+            if (log) { Debug.LogError($"(Controller) Cannot control capable with id {capable_id} because it is already in the stack !!"); }
+            return false;
+        }
+
+        // else we can control the new capable !
+
+        // we add the current capable to the stack if there is one
+        if (controlled_capable != null) { stack.Push(controlled_capable.ID); }
+        control(capable_id);
+        OnCapableAddedToStack?.Invoke(controlled_capable.ID);
+        return true;
+    }
+    public bool Uncontrol(bool control_next_in_stack = true)
+    {
+        // we uncontrol the current capable, then we pop the stack and control the new top of the stack if there is one
+        if (controlled_capable == null) { return false; }
+        OnCapableRemovedFromStack?.Invoke( controlled_capable.ID);
+        uncontrol();
+        if (control_next_in_stack && stack.Count > 0) { return control(stack.Pop()); }
+        return true;
+    }
+    public bool Uncontrol(string capable_id)
+    {
+        // here we want to uncontrol the capable with the given id, SO
+        // we need to uncontrol the current capable, then pop until we find the capable name
+        // and then control the new top of the stack if there is one
+        if (controlled_capable == null) { return false; }
+        if (controlled_capable.ID == capable_id) { return Uncontrol(); }
+        if (!stack.Contains(capable_id))
+        {
+            // if the capable is not in the stack, we do nothing
+            if (log) { Debug.LogError($"(Controller) Cannot uncontrol capable with id {capable_id} because it is not in the stack !!"); }
+            return false;
+        }
+
+        // else we need to pop until we find the capable name
+        Uncontrol(control_next_in_stack : false);
+        bool found_target = false;
+        while (stack.Count > 0 && !found_target)
+        {
+            string top_id = stack.Pop();
+            if (top_id == capable_id) { found_target = true; }
+            OnCapableRemovedFromStack?.Invoke(top_id);
+        }
+        if (!found_target)
+        {
+            Debug.LogError($"(Controller) Unexpected error while trying to uncontrol capable with id {capable_id} !!");
+            return false;
+        }
+
+        // then we control the new top of the stack if there is one
+        if (stack.Count > 0) { return control(stack.Pop()); }
+        return true;
+    }
+    public bool UncontrolAll(bool log = false)
+    {
+        if (controlled_capable != null)
+        {
+            OnCapableRemovedFromStack?.Invoke(controlled_capable.ID);
+            uncontrol();
+
+            while (stack.Count > 0)
+            {
+                string top_id = stack.Pop();
+                OnCapableRemovedFromStack?.Invoke(top_id);
+            }
+        }
+
+        // then we move back the controller transform to the core
+        if (LevelEngine.LazyInstance != null && LevelEngine.LazyInstance.transform.parent != null)
+        {
+            transform.parent = LevelEngine.LazyInstance.transform.parent;
+            transform.localPosition = Vector3.zero;
+            if (log) { Debug.Log($"(Controller) Uncontrolled all capables and moved controller transform back to LevelEngine parent."); }
+        }
+        else
+        {
+            transform.parent = null;
+            transform.localPosition = Vector3.zero;
+            if (log) { Debug.Log($"(Controller) Uncontrolled all capables and moved controller transform back to root."); }
+        }
+
+        if (log) { Debug.Log($"(Controller) CONTROLLER SUCCESSFULLY UNCONTROLLED ALL CAPABLES"); }
+
+        return true;
+    }
+
+
+    ///
+    //
+    /// LOW LEVEL METHODS
+    //
+    ///
+
+    // CONTROL / UNCONTROL
+    private bool control(string capable_id)
+    {
+        // ensure the capable is loaded
+        if (!CapableBank.LazyInstance.TryGetLoadedCapable(capable_id, out Capable capable))
+        {
+            capable = CapableEngine.LazyInstance.LoadCapableInstantly(data.controlled_capable_id);
+            if (capable == null)
+            {
+                Debug.LogError($"(Controller) Cannot control capable with id {capable_id} because it could not be loaded.");
+                return false;
+            }
+        }
+
+        // next we uncontrol the current capable if there is one
+        uncontrol();
+
+        // we control the new capable
+        control_capacities(capable);
+
+        // we move the script sur le gameobject capable
+        transform.parent = capable.transform;
+        transform.localPosition = Vector3.zero;
+
+        // we control the new capable
+        controlled_capable = capable;
+        if (log) { Debug.Log("(Controller) ++++++++++++++++++++++++++++ NOW CONTROLING " + controlled_capable.ID); }
+        OnCapableControlled?.Invoke(controlled_capable);
+
+        // on informe le debug manager qu'on controle un nouveau capable
+        DebugManager.Instance.AddDebuggable(controlled_capable, "controller");
+        return true;
+    }
+    private void uncontrol()
+    {
+        if (controlled_capable == null) { return; }
+        if (!controlled_capable.Loaded)
+        {
+            // si pas loadé bah on a rien besoin de faire
+            controlled_capable = null;
+            return;
+        }
+
+        uncontrol_capacities(controlled_capable);
+
+        // uncontrol the capable
+        OnCapableUncontrolled?.Invoke(controlled_capable);
+        if (log) { Debug.Log("(Controller) ---------------------------- DONE CONTROLING " + controlled_capable.ID); }
+        controlled_capable = null;
+    }
+
+    // LOW LEVEL CONTROL METHODS
+    private void control_capacities(Capable capa)
+    {
+        // on refresh la cam
+        CameraFollow.Instance.RefreshTarget(capa);
+
+        // on ajoute le callback de changement de skin
+        refresh_skin_based_parameters(capa.Skin);
+        capa.AnimPlayer.OnSkinChange += refresh_skin_based_parameters;
+
+        // on désactive le Brain si le nouveau capable est un IA
+        if (capa is IA ia)
+        {
+            // désactive le cerveau
+            ia.Brain?.gameObject.SetActive(false);
+
+            // on remet le tag
+            ia.gameObject.tag = "Controlled";
+        }
+        // clear les tags d'attaques si on a
+        if (capa.TryGetCapacity(out AttackCapacity attack_capa)) { attack_capa.ClearTags(); }
+
+        // on assigne les différents item pools de l'inventaire à leurs UI_ItemPool respectifs
+        attach_item_pools_to_ui(capa.Inventory, capa.ID);
+
+        // on regarde si le capable est un device
+        if (capa is Device device)
+        {
+            // on refresh le hackable navigator pour qu'il ait une nouvelle ConnectCapacity si jamais le capable a un device
+            HackableNavigator.transform.localPosition = device.Connector.transform.localPosition;
+
+            // on bascule en pool UI_Device
+            UI_Manager.Instance.GetPool("device").GetComponent<UI_Device>().SetDevice(device);
+            UI_Manager.Instance.SwitchTo("device", override_transition: true);
+        }
+    }
+    private void uncontrol_capacities(Capable capa)
+    {
+
+        capa.AnimPlayer.OnSkinChange -= refresh_skin_based_parameters; // on enlève le callback de changement de skin
+
+        // clear les inputs & stoppe les déplacements
+        capa.ClearInputs();
+        if (capa.TryGetCapacity(out WalkCapacity walk_capa))
+        {
+            walk_capa.walk_percentage_target = 0f;
+        }
+
+        // reset le behaviour
+        if (capa is IA old_ia)
+        {
+            // todo update this with MotorCapacity
+            // on réactive l'ancien Brain si le capable actuel est une ia
+            old_ia.Brain?.gameObject.SetActive(true);
+
+            // on remet le tag
+            old_ia.gameObject.tag = old_ia.BaseTag;
+        }
+
+        // reset les tags d'attaques si on a
+        if (capa.TryGetCapacity(out AttackCapacity attack_capa)) { attack_capa.ResetTags(); }
+
+        // on enleve le device du UI_Device
+        if (capa is Device)
+        {
+            UI_Manager.Instance.GetPool<UI_Device>()?.ClearDevice();
+            UI_Manager.Instance.UnstackPool("device", override_transition: true);
+        }
+
+        // on déconnecte la connect capacity
+        if (capa.TryGetCapacity(out ConnectCapacity connect_capa)) { connect_capa.Disconnect(); }
+
+
+        // reset l'inventory
+        unattach_ui_item_pools();
+    }
+    private void refresh_skin_based_parameters(string skin)
+    {
+        if (log) { Debug.Log("(Controller) refreshing skin based parameters for skin " + skin + (Capable != null ? $"(on capable {Capable.ID})" : "")); }
+
+        // on refresh le see through pour remettre la tete bien centrée
+        see_through.Refresh(skin);
+    }
+
+    // ui helpers
+    private void attach_item_pools_to_ui(Inventory inventory, string capable_id = "unknown")
+    {
+        if (inventory == null) { return; }
+
+        // on récupère les ui_item_pools du ui_inventoryMenu
+        UI_InventoryMenu inventory_menu = UI_Manager.Instance.GetPool<UI_InventoryMenu>();
+        List<UI_ItemPool> ui_pools = inventory_menu.GetItemPools();
+
+        // we go through all ui_pools found in the menu
+        for (int i = 0; i < ui_pools.Count; ++i)
+        {
+            UI_ItemPool ui_pool = ui_pools[i];
+            if (ui_pool == null) { continue; }
+
+            // on regarde si on a un item pool dans l'inventaire qui a la même pool_id
+            ItemPool pool = inventory.GetItemPool(ui_pool.PoolID);
+            if (pool == null)
+            {
+                // if we don't have an item pool for this ui pool, we skip it
+                if (log_ui_attachment) { Debug.LogWarning($"(Controller) No ItemPool found for UI_ItemPool with id {ui_pool.PoolID} in inventory of capable '{capable_id}'! Skipping UI attachment for this pool."); }
+                continue;
+            }
+
+            if (log_ui_attachment) { Debug.Log($"(Controller) Attaching ItemPool with id {pool.PoolID} to UI_ItemPool {ui_pool.name} for capable '{capable_id}'."); }
+
+            // on attache la pool à l'ui pool
+            ui_pool.AttachToPool(pool);
+        }
+    }
+    private void unattach_ui_item_pools()
+    {
+        // on récupère les ui_item_pools du ui_inventoryMenu
+        UI_InventoryMenu inventory_menu = UI_Manager.Instance.GetPool<UI_InventoryMenu>();
+        List<UI_ItemPool> ui_pools = inventory_menu.GetItemPools();
+
+        // on détache tous les ui pools de leur pool
+        for (int i = 0; i < ui_pools.Count; ++i) { ui_pools[i].DetachFromPool(); }
+    }
+
+
+
+    ///
+    //
+    /// GETTERS & OTHERS
+    //
+    ///
+
+
+    // GETTERS
+    public EndlessInput<T> GetEndlessInput<T>(string name) where T : struct
+    {
+        EndlessInput<T> endinp = PIC.get_endless_input<T>(name);
+        if (endinp != null) { return endinp; }
+        endinp = UIC.get_endless_input<T>(name);
+        return endinp;
+    }
+    public HackableNavigator HackableNavigator { get { return hackable_navigator; } }
+    public ExploitNavigator ExploitNavigator { get { return exploit_navigator; } }
+    public SeeThroughHandler SeeThrough { get { return see_through; } }
+    public PersoInputsController PIC { get { return pic; } }
+    public UI_InputsController UIC { get { return uic; } }
+
+
+
+    // CLEAR STACK
+    public void ClearStack()
+    {
+        // ? should we fire events here ?
+        stack.Clear();
+    }
+
+
+    ///
+    //
+    /// DATA MANAGEMENT
+    //
+    ///
+
+    public async Awaitable LoadWorldData(string world_id, bool log)
+    {
+        if (log) { Debug.Log($"(Controller) Loading controller data for world with id '{world_id}' ..."); }
+
+        // get the controller data
+        string json = AppManager.LoadJsonFromWorldFolder(world_id, "controller.json");
+        ControllerData data = JsonUtility.FromJson<ControllerData>(json);
+        if (data == null)
+        {
+            Debug.LogError($"(Controller) Failed to load controller data for world with id '{world_id}' !!");
+            return;
+        }
+
+        // load the data & control the initial capable
+        LoadData(data);
+
+
+
+        if (log) { Debug.Log($"(Controller) CONTROLLER SUCCESSFULLY LOADED for '{world_id}' !\n{data.GetDetails()}"); }
+    }
+
+    // DATA MANAGEMENT
+    public void LoadData(ControllerData data)
+    {
+        this.data = data;
+        stack.Clear();
+
+        // load the controlled capable
+        if (!Control(data.controlled_capable_id))
+        {
+            Debug.LogError($"(Controller) Failed to control controller capable : '{data.controlled_capable_id}'");
+            return;
+        }
+
+        // here we can tp the camera to the controlled capable position
+        this.data.controlled_capable_id = Capable.ID;
+        CameraFollow.Instance.RefreshTarget(Capable, tp: true);
+
+        // load the capable stack
+        if (data.stack_capable_ids != null)
+        {
+            foreach (string capable_id in data.stack_capable_ids)
+            {
+                if (!string.IsNullOrEmpty(capable_id)) { stack.Push(capable_id); }
+            }
+        }
+
+    }
+    public virtual void UnloadData()
+    {
+        // uncontrol the current capable
+        uncontrol();
+
+        this.data = null;
+
+        // clear the data
+        ClearStack();
+    }
+
+
+}

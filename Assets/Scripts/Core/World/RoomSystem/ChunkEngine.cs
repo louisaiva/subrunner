@@ -468,7 +468,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         dirty_capables_ids = dirtyCapablesIDs.OrderByDescending(kv => kv.Value).Take(dirty_capables_handled_per_tick).Select(kv => kv.Key).ToList();
         if (dirty_capables_ids.Count == 0) { return; }
 
-        string controlled_id = Controller.Instance.ControlledID;
+        string controlled_id = Controller.LazyInstance.ID;
 
         string log_tick = "";
         if (log_ticks) { log_tick += $"(ChunkEngine - Tick) Handling {dirty_capables_ids.Count} dirty capables : "; }

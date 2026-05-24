@@ -10,8 +10,8 @@ public class CameraFollow : Singleton<CameraFollow>
     {
         get
         {
-            if (Controller.Instance == null) { return null; }
-            return Controller.Instance.Capable;
+            if (Controller._Instance == null) { return null; }
+            return Controller._Instance.Capable;
         }
     }
 
@@ -30,19 +30,20 @@ public class CameraFollow : Singleton<CameraFollow>
     [SerializeField] private float default_size = 3f;
     private float target_size = 3f;
 
-    public void RefreshTarget(Capable new_target)
+    public void RefreshTarget(Capable new_target, bool tp = false)
     {
         if (new_target == null) { return; }
         target = new_target;
         capable_rb = target.GetComponent<Rigidbody2D>();
-        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        if (tp) { transform.position = new Vector3(target.transform.position.x, target.transform.position.y, transform.position.z); }
+        // if not tp we will smoothly lerp to the new target in the update loop
     }
 
     // UPDATE
     private void Update()
     {
         // if (Perso.Instance == null) { capable_rb = null; return; }
-        if (capable == null || target == null || Controller.Instance.PIC.InputsDisabled) { capable_rb = null; target = null; return; }
+        if (capable == null || target == null || Controller.LazyInstance.PIC.InputsDisabled) { capable_rb = null; target = null; return; }
 
         // applique le zoom
         if (Camera.main.orthographicSize != target_size)

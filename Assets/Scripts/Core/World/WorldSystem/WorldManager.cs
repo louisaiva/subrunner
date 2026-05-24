@@ -343,8 +343,12 @@ public class WorldManager : MonoBehaviour
         WorldData new_data = new WorldData() { id = world_name };
         existing_worlds_data.Add(world_name, new_data);
         SaveEngine.SaveWorldData(new_data);
-        if (log_create) { Debug.Log($"(WorldManager) Created new world with world_id: {world_name}"); }
 
+        // and we create and save a default ControllerData for the world
+        ControllerData controller_data = new ControllerData() { controlled_capable_id = "bob", stack_capable_ids = new List<string>() };
+        SaveEngine.SaveControllerData(controller_data, world_name);
+
+        if (log_create) { Debug.Log($"(WorldManager) Created new world with world_id: {world_name}"); }
         if (!auto_load_on_creation) { return; }
         // we select & load the new world
         SelectWorld(new_data);
