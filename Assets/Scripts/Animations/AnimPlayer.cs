@@ -617,7 +617,7 @@ public class AnimPlayer : MonoBehaviour
         if (!visible_on) { return; }
 
         // we set the material Visible bool to false
-        Renderer.material.SetKeyword(visibleKeyword, false);
+        if (visibleKeyword != null) { Renderer.material.SetKeyword(visibleKeyword.Value, false); }
         OnHidden?.Invoke();
         visible_on = false;
         if (log) { Debug.Log("(AnimPlayer) " + Capable.ID + " is now hidden"); }
@@ -627,24 +627,34 @@ public class AnimPlayer : MonoBehaviour
         if (visible_on) { return; }
 
         // we set the material Visible bool to true
-        Renderer.material.SetKeyword(visibleKeyword, true);
+        if (visibleKeyword != null) { Renderer.material.SetKeyword(visibleKeyword.Value, true); }
         OnShown?.Invoke();
         visible_on = true;
         if (log) { Debug.Log("(AnimPlayer) " + Capable.ID + " is now visible"); }
     }
     public bool IsVisible()
     {
-        return Renderer.material.IsKeywordEnabled(visibleKeyword);
+        if (visibleKeyword == null) { return true; }
+        return Renderer.material.IsKeywordEnabled(visibleKeyword.Value);
     }
 
     // MATERIAL
     public Material GetMaterial() { return Renderer.material; }
     public void ChangeMaterial(Material material)
     {
-        if (log_material) { Debug.Log($"(AnimPlayer - {Capable.ID}) Changing material to {material.name} (is_visible: {visible_on}, visibleKeyword name: {visibleKeyword.name})"); }
+        if (log_material) { Debug.Log($"(AnimPlayer - {Capable.ID}) Changing material to {material.name} (is_visible: {visible_on}, visibleKeyword name: {visibleKeyword.Value.name})"); }
         Renderer.material = material;
-        if (string.IsNullOrEmpty(visibleKeyword.name)) { return; }
-        Renderer.material.SetKeyword(visibleKeyword, visible_on);
+        
+        // we just change material, we need to save the value of visible on then null the keyword then try to reapply it
+        visible_on = IsVisible();
+        if (!has_material_keyword(Renderer.material, "_VISIBLE"))
+        {
+            visible_on = true;
+            visibleKeyword = null;
+            return;
+        }
+        visibleKeyword = new LocalKeyword(Renderer.material.shader, "_VISIBLE");
+        Renderer.material.SetKeyword(visibleKeyword.Value, visible_on);
     }
 
 
@@ -659,7 +669,7 @@ public class AnimPlayer : MonoBehaviour
 
 
     // LOAD DATA
-    private LocalKeyword visibleKeyword;
+    private LocalKeyword? visibleKeyword;
     public void LoadPlayerData(AnimPlayerData data)
     {
         if (CapableBank.Instance.LayerBank.log_anim_layers) { Debug.Log($"(AnimPlayer) {name}'s loading data : {(data != null ? data.GetDetails() : "null")}"); }
@@ -688,7 +698,11 @@ public class AnimPlayer : MonoBehaviour
         Renderer.sortingOrder = data.order_in_layer;
 
         // and hide it by default
-        visibleKeyword = new LocalKeyword(Renderer.material.shader, "_VISIBLE");
+        if (has_material_keyword(mat, "_VISIBLE"))
+        {
+            visibleKeyword = new LocalKeyword(Renderer.material.shader, "_VISIBLE");
+        }
+        else { visibleKeyword = null; }
         visible_on = true;
         Hide();
 
@@ -701,6 +715,16 @@ public class AnimPlayer : MonoBehaviour
         // play current capacity
         if (!string.IsNullOrEmpty(current_capacity)) { Play(current_capacity); }
         else { AddToPile("idle"); }
+    }
+    private bool has_material_keyword(Material material, string name)
+    {
+        Shader shader = material.shader;
+        LocalKeywordSpace keywordSpace = shader.keywordSpace;
+        foreach (LocalKeyword localKeyword in keywordSpace.keywords)
+        {
+            if (localKeyword.name == name) { return true; }
+        }
+        return false;
     }
 
     // SAVE DATA

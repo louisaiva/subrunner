@@ -254,7 +254,10 @@ public class ColliderBank : MonoBehaviour
         collider_go.layer = sleeping_layer;
         collider_go.transform.SetParent(sleeping_colliders_parent);
     }
-
+    public void UnloadColliders(HashSet<GameObject> collider_gos)
+    {
+        foreach (GameObject go in collider_gos) { UnloadCollider(go); }
+    }
 
 
     // USEFUL STATIC METHODS

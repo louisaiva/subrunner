@@ -1,0 +1,245 @@
+﻿{
+    "<id>k__BackingField": "rack",
+    "kind": "ServerRack",
+    "position": {
+        "x": -19.5,
+        "y": 16.5
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 29,
+    "tag": "Untagged",
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "rack_bg",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle_off"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "off_to_hold"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 2,
+                "capacity_playing": "idle",
+                "capacities": [
+                    "hover",
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 3,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle_on"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 4,
+                "capacity_playing": "",
+                "capacities": [
+                    "on_to_hold",
+                    "turn_on"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            }
+        ],
+        "current_capacity": "",
+        "material_name": "objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "never_flip": false,
+        "layers": [
+            {
+                "skin": "rack_fg",
+                "local_position": {
+                    "x": 0.0,
+                    "y": -0.33000001311302187
+                },
+                "local_rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "material_name": "objects",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0,
+                "never_flip": false,
+                "follow_duration": false
+            }
+        ],
+        "local_position": {
+            "x": 0.0,
+            "y": 0.3333333432674408
+        }
+    },
+    "inventory": {
+        "item_pools_data": [
+            {
+                "item_type": 3,
+                "stacks_data": [
+                    {
+                        "item_ref": "exploit:cpu_injection",
+                        "items_ids": [
+                            "cpu_injection-0"
+                        ]
+                    },
+                    {
+                        "item_ref": "exploit:cpu_melt",
+                        "items_ids": [
+                            "cpu_melt-0"
+                        ]
+                    },
+                    {
+                        "item_ref": "exploit:cpu_overheat",
+                        "items_ids": [
+                            "cpu_overheat-0"
+                        ]
+                    },
+                    {
+                        "item_ref": "key:basic_key",
+                        "items_ids": [
+                            "key-0"
+                        ]
+                    },
+                    {
+                        "item_ref": "key:cool_key",
+                        "items_ids": [
+                            "key_cool-0"
+                        ]
+                    },
+                    {
+                        "item_ref": "key:keypass",
+                        "items_ids": [
+                            "key_pass-0"
+                        ]
+                    },
+                    {
+                        "item_ref": "exploit:bruteforce",
+                        "items_ids": [
+                            "lock_bruteforce-0"
+                        ]
+                    },
+                    {
+                        "item_ref": "exploit:dehash",
+                        "items_ids": [
+                            "lock_dehash-0"
+                        ]
+                    },
+                    {
+                        "item_ref": "exploit:dict_attack",
+                        "items_ids": [
+                            "lock_dict_attack-0"
+                        ]
+                    },
+                    {
+                        "item_ref": "exploit:ddos",
+                        "items_ids": [
+                            "shield_ddos-0"
+                        ]
+                    },
+                    {
+                        "item_ref": "exploit:icmp_flooding",
+                        "items_ids": [
+                            "shield_icmp-0"
+                        ]
+                    },
+                    {
+                        "item_ref": "exploit:syn_flooding",
+                        "items_ids": [
+                            "shield_syn-0"
+                        ]
+                    },
+                    {
+                        "item_ref": "key:sub_1_key",
+                        "items_ids": [
+                            "sub_1-0"
+                        ]
+                    },
+                    {
+                        "item_ref": "key:sub_2_key",
+                        "items_ids": [
+                            "sub_2-0"
+                        ]
+                    },
+                    {
+                        "item_ref": "key:sub_3_key",
+                        "items_ids": [
+                            "sub_3-0"
+                        ]
+                    },
+                    {
+                        "item_ref": "key:sub_4_key",
+                        "items_ids": [
+                            "sub_4-0"
+                        ]
+                    },
+                    {
+                        "item_ref": "key:surface_key",
+                        "items_ids": [
+                            "up_0-0"
+                        ]
+                    }
+                ],
+                "pool_id": "chest",
+                "max_stacks": 25,
+                "min_stacks": 25,
+                "scalable": false,
+                "item_rule": "virtual"
+            }
+        ],
+        "item_type": 3
+    },
+    "feet_data": {
+        "box_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 25,
+                "pathfinding_area": 1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.0,
+                    "y": 0.20866329967975617
+                },
+                "size": {
+                    "x": 1.0,
+                    "y": 0.4166666567325592
+                }
+            }
+        ],
+        "circle_colliders": []
+    },
+    "capacities_ids": [
+        "connect-0",
+        "on_off_rack",
+        "hover"
+    ],
+    "effects": [],
+    "effects_ttl": []
+}

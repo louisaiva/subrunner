@@ -168,6 +168,10 @@ public class PersoInputsController : InputController
     // HANDLE INPUTS
     public void OnAttack()
     {
+        // if we are placing object we don't attack
+        if (WorldPlacer.LazyInstance.Status == WorldPlacerStatus.PlacingObject) { return; }
+
+
         // on cherche si on a un usable dans la weapon_stack
         // (on l'appelle weapon mais ça peut etre n'importe quel usable en vrai)
         Usable weapon = null;

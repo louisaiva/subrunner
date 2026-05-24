@@ -13,6 +13,18 @@ public class TemplatesManager : MonoBehaviour
 {
     private string templates_data_path = "Assets/Resources/data/templates/";
 
+    private TemplateObjectsBank _object_bank;
+    public TemplateObjectsBank ObjectBank
+    {
+        get
+        {
+            if (_object_bank != null) { return _object_bank; }
+            _object_bank = GetComponentInChildren<TemplateObjectsBank>(includeInactive: true);
+            if (_object_bank == null) { Debug.LogError("(TemplatesManager) no TemplateObjectsBank in children !!"); }
+            return _object_bank;
+        }
+    }
+
 
     [Header("Capables Templates")]
     public List<Capable> capables_templates = new List<Capable>(); // these capables are in the prefabs, not loaded in the scene
@@ -33,10 +45,16 @@ public class TemplatesManager : MonoBehaviour
     public void SaveCapableTemplates()
     {
         // we first need to ensure that MaterialBank is loaded bcz we need to get the paths
-
         foreach (Capable capable in capables_templates)
         {
             saveCapableTemplate(capable);
+        }
+
+        // we also get all the objects templates from the TemplateObjectsBank and save them as capable templates
+        List<Capable> objects = ObjectBank.GetAllCapablesTemplates();
+        foreach (Capable obj in objects)
+        {
+            saveCapableTemplate(obj);
         }
 
         #if UNITY_EDITOR

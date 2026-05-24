@@ -44,5 +44,7 @@ public class Caller : MonoBehaviour
     // LEVEL BUILDER
     public void ToggleWorldBuilder() => WorldBuilder.LevelBuilder?.gameObject.SetActive(!WorldBuilder.LevelBuilder.gameObject.activeSelf);
 
+    // OBJECT PLACER
+    public void PlaceObject() => WorldPlacer.LazyInstance.AskAndThenStartPlacingObject();
 
 }

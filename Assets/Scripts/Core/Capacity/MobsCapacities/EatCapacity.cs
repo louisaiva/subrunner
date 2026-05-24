@@ -117,7 +117,7 @@ public class EatCapacity : Capacity
         current_coroutine = null; // we reset the current coroutine
 
         // we stop the anim_player from playing
-        AnimPlayer.StopPlaying("eat");
+        if (AnimPlayer != null) { AnimPlayer.StopPlaying("eat"); }
     }
 
     // SET FOOD

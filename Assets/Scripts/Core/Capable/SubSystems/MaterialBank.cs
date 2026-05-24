@@ -114,34 +114,6 @@ public class MaterialBank : MonoBehaviour
     //
     ///
 
-    /* public string GetMaterialPath(Material material)
-    {
-        // we check if we have the material in cache
-        foreach (var kvp in materials)
-        {
-            if (kvp.Value == material)
-            {
-                log_loading.LogExtended($"Found material with id: {kvp.Key} in cache");
-                if (paths.TryGetPath(kvp.Key, out string path))
-                {
-                    log_loading.LogExtended($"Found path for material with id: {kvp.Key} in paths data at path: {json_data_path}");
-                    return path;
-                }
-                break; // we found the material but no path
-            }
-        }
-
-        // we don't have the material in cache but maybe we have its path based on its name
-        string material_name = material.name.Replace("(Instance)", "").Trim();
-        if (paths.TryGetPath(material_name, out string path_by_name))
-        {
-            log_loading.LogExtended($"Found path for material with name: {material_name} in paths data at path: {json_data_path}");
-            return path_by_name;
-        }
-
-        log_loading.Error($"No path found for material with name: {material_name} in paths data at path: {json_data_path}");
-        return null;
-    } */
     public string GetMaterialName(Material material)
     {
         string material_name = material.name.Replace("(Instance)", "").Trim();

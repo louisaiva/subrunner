@@ -423,6 +423,26 @@ public class CapableEngine : BSOD_System<CapableEngine>
 
         return new_data;
     }
+    
+    /// <summary>
+    /// This method DO NOT add the capable data to the world !
+    /// But np it duplicates the data
+    /// </summary>
+    /// <param name="template"></param>
+    /// <returns></returns>
+    public CapableData GetTemplateData(string template)
+    {
+        // we get the base data
+        if (!templates_capables_data.ContainsKey(template))
+        {
+            if (!hide_log_no_data_found || log_duplicating) { Debug.LogWarning("(CapableSystem - GetTemplateData) Template capable data not found for id: " + template); }
+            return null;
+        }
+
+        // we duplicate the data into new data
+        ICapableData base_data = templates_capables_data[template];
+        return (CapableData) base_data.Duplicate();
+    }
 
     /// <summary>
     /// verifies that the capable data and capacity data are correctly linked together
