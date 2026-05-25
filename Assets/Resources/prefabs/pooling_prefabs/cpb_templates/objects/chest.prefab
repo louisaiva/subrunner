@@ -1,106 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1081055692940888810
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3130628289034284918}
-  - component: {fileID: 1861324345734478315}
-  - component: {fileID: 5605866995114445380}
-  m_Layer: 7
-  m_Name: inventory
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3130628289034284918
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1081055692940888810}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7267138962912758452}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1861324345734478315
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1081055692940888810}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 352dd4bffc5726b41a31e2620019c7cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <ItemType>k__BackingField: 2
-  clear_and_assign_pools_in_awake: 1
-  pools:
-  - {fileID: 5605866995114445380}
-  log: 0
-  log_grab: 0
-  log_get_items: 0
---- !u!114 &5605866995114445380
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1081055692940888810}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a31a72cd90f6e24479ab836ac735d823, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ItemPool
-  PoolID: chest
-  <ItemType>k__BackingField: 2
-  stacks:
-  - MaxQty: 1
-    Items: []
-  - MaxQty: 1
-    Items: []
-  - MaxQty: 1
-    Items: []
-  - MaxQty: 1
-    Items: []
-  - MaxQty: 1
-    Items: []
-  - MaxQty: 1
-    Items: []
-  - MaxQty: 1
-    Items: []
-  - MaxQty: 1
-    Items: []
-  - MaxQty: 1
-    Items: []
-  - MaxQty: 1
-    Items: []
-  - MaxQty: 1
-    Items: []
-  - MaxQty: 1
-    Items: []
-  MaxStacks: 12
-  MinStacks: 12
-  Scalable: 0
-  item_rule: '!virtual'
-  Inventory: {fileID: 1861324345734478315}
-  log_start_grabbing: 0
-  log_loading: 0
-  log_grab: 0
-  log_merge: 0
-  log_stacks: 0
 --- !u!1 &1596478507650087636
 GameObject:
   m_ObjectHideFlags: 0
@@ -211,6 +110,7 @@ GameObject:
   - component: {fileID: 4377250325364095127}
   - component: {fileID: 4061436434248241938}
   - component: {fileID: 1590868522181584201}
+  - component: {fileID: 8638240914276982523}
   m_Layer: 29
   m_Name: chest
   m_TagString: Untagged
@@ -232,7 +132,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 160750755558055920}
-  - {fileID: 3130628289034284918}
   - {fileID: 6349845908945507362}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -447,6 +346,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
   capacity_template_id: hover
+--- !u!114 &8638240914276982523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3889928680168695102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d15c72b8b8161354a9e97f60d046d2d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateInventoryReference
+  item_type: 2
+  capacity: 12
+  scalable: 0
+  item_rule: '!virtual'
+  items:
+  - item_id: apple
+    quantity: 5
+  - item_id: shoes
+    quantity: 1
+  - item_id: katana
+    quantity: 1
+  - item_id: bone
+    quantity: 16
 --- !u!1 &6399019400784557793
 GameObject:
   m_ObjectHideFlags: 0

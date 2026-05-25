@@ -98,109 +98,32 @@
                 "item_type": 3,
                 "stacks_data": [
                     {
-                        "item_ref": "exploit:cpu_injection",
+                        "item_ref": "key",
                         "items_ids": [
-                            "cpu_injection-0"
+                            "key",
+                            "key"
                         ]
                     },
                     {
-                        "item_ref": "exploit:cpu_melt",
+                        "item_ref": "cpu_melt",
                         "items_ids": [
-                            "cpu_melt-0"
+                            "cpu_melt"
                         ]
                     },
                     {
-                        "item_ref": "exploit:cpu_overheat",
+                        "item_ref": "lock_bruteforce",
                         "items_ids": [
-                            "cpu_overheat-0"
+                            "lock_bruteforce"
                         ]
                     },
                     {
-                        "item_ref": "key:basic_key",
+                        "item_ref": "shield_ddos",
                         "items_ids": [
-                            "key-0"
-                        ]
-                    },
-                    {
-                        "item_ref": "key:cool_key",
-                        "items_ids": [
-                            "key_cool-0"
-                        ]
-                    },
-                    {
-                        "item_ref": "key:keypass",
-                        "items_ids": [
-                            "key_pass-0"
-                        ]
-                    },
-                    {
-                        "item_ref": "exploit:bruteforce",
-                        "items_ids": [
-                            "lock_bruteforce-0"
-                        ]
-                    },
-                    {
-                        "item_ref": "exploit:dehash",
-                        "items_ids": [
-                            "lock_dehash-0"
-                        ]
-                    },
-                    {
-                        "item_ref": "exploit:dict_attack",
-                        "items_ids": [
-                            "lock_dict_attack-0"
-                        ]
-                    },
-                    {
-                        "item_ref": "exploit:ddos",
-                        "items_ids": [
-                            "shield_ddos-0"
-                        ]
-                    },
-                    {
-                        "item_ref": "exploit:icmp_flooding",
-                        "items_ids": [
-                            "shield_icmp-0"
-                        ]
-                    },
-                    {
-                        "item_ref": "exploit:syn_flooding",
-                        "items_ids": [
-                            "shield_syn-0"
-                        ]
-                    },
-                    {
-                        "item_ref": "key:sub_1_key",
-                        "items_ids": [
-                            "sub_1-0"
-                        ]
-                    },
-                    {
-                        "item_ref": "key:sub_2_key",
-                        "items_ids": [
-                            "sub_2-0"
-                        ]
-                    },
-                    {
-                        "item_ref": "key:sub_3_key",
-                        "items_ids": [
-                            "sub_3-0"
-                        ]
-                    },
-                    {
-                        "item_ref": "key:sub_4_key",
-                        "items_ids": [
-                            "sub_4-0"
-                        ]
-                    },
-                    {
-                        "item_ref": "key:surface_key",
-                        "items_ids": [
-                            "up_0-0"
+                            "shield_ddos"
                         ]
                     }
                 ],
-                "pool_id": "chest",
+                "pool_id": "stuff",
                 "max_stacks": 25,
                 "min_stacks": 25,
                 "scalable": false,
@@ -236,8 +159,8 @@
         "circle_colliders": []
     },
     "capacities_ids": [
-        "connect-0",
-        "on_off_rack",
+        "rack_connect",
+        "rack_on_off",
         "hover"
     ],
     "effects": [],

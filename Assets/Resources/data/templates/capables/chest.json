@@ -68,8 +68,52 @@
         "item_pools_data": [
             {
                 "item_type": 2,
-                "stacks_data": [],
-                "pool_id": "chest",
+                "stacks_data": [
+                    {
+                        "item_ref": "apple",
+                        "items_ids": [
+                            "apple",
+                            "apple",
+                            "apple",
+                            "apple",
+                            "apple"
+                        ]
+                    },
+                    {
+                        "item_ref": "shoes",
+                        "items_ids": [
+                            "shoes"
+                        ]
+                    },
+                    {
+                        "item_ref": "katana",
+                        "items_ids": [
+                            "katana"
+                        ]
+                    },
+                    {
+                        "item_ref": "bone",
+                        "items_ids": [
+                            "bone",
+                            "bone",
+                            "bone",
+                            "bone",
+                            "bone",
+                            "bone",
+                            "bone",
+                            "bone",
+                            "bone",
+                            "bone",
+                            "bone",
+                            "bone",
+                            "bone",
+                            "bone",
+                            "bone",
+                            "bone"
+                        ]
+                    }
+                ],
+                "pool_id": "stuff",
                 "max_stacks": 12,
                 "min_stacks": 12,
                 "scalable": false,

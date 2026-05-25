@@ -27,6 +27,18 @@ public class WorldPlacer : MonoBehaviour
             return _placer;
         }
     }
+    private Grid grid;
+    public Grid Grid
+    {
+        get
+        {
+            if (grid != null) { return grid; }
+            grid = GetComponentInChildren<Grid>(includeInactive: true);
+            if (grid == null) { Debug.LogError("(WorldPlacer) no Grid found in children"); }
+            return grid;
+        }
+    }
+
 
     public WorldPlacerStatus Status = WorldPlacerStatus.NotWorking;
 
@@ -64,6 +76,16 @@ public class WorldPlacer : MonoBehaviour
         Status = WorldPlacerStatus.NotWorking;
         Placer.CancelCapablePlacement();
         log.Log("Disabled WorldPlacer");
+    }
+
+    // ACTIVATE / DEACTIVATE GRID
+    public void ActivateGrid()
+    {
+        Grid.enabled = true;
+    }
+    public void DeactivateGrid()
+    {
+        Grid.enabled = false;
     }
 }
 

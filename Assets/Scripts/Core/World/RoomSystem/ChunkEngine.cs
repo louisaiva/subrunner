@@ -398,7 +398,16 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     }
 
     // CAPABLE ATTACHING
-    public void AttachCapable(CapableData capable_data) => AttachCapable(capable_data.id);
+    public void AttachCapable(CapableData capable_data)
+    {
+        // double check that the capable is not a grabbed item
+        if (capable_data is ItemData item_data && item_data.is_grabbed)
+        {
+            if (log_grab) { Debug.Log($"(ChunkEngine) Capable {capable_data.id} is a grabbed item, we don't attach it to any room for now"); }
+            return;
+        }
+        AttachCapable(capable_data.id);
+    }
     public void AttachCapable(string id)
     {
         // basically we add the capable to the dirty list to let the tick handle its room assignment

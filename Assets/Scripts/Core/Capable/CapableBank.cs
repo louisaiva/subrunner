@@ -85,14 +85,14 @@ public class CapableBank : MonoBehaviour
         // we first try to extract a capable of the right kind from the pool
         Capable capable = extractFromPool(data.kind);
 
-        
         if (capable != null) // we successfully extracted a capable from the pooled ones !
         {
             // then we load the anim data inside the capable
             LayerBank.LoadAnimData(capable.AnimPlayer, data.anim_data);
 
             // and its feet
-            load_feet_data(capable, data.feet_data);
+            bool force_is_trigger2 = data is ItemData idata2 && idata2.is_grabbed;
+            load_feet_data(capable, data.feet_data, force_is_trigger2);
 
             // set the good parent for the capable based on its kind
             capable.transform.SetParent(get_parent_based_on_kind(data.kind));
@@ -135,7 +135,8 @@ public class CapableBank : MonoBehaviour
         LayerBank.LoadAnimData(capable.AnimPlayer, data.anim_data);
 
         // and its feet
-        load_feet_data(capable, data.feet_data);
+        bool force_is_trigger = data is ItemData idata && idata.is_grabbed;
+        load_feet_data(capable, data.feet_data, force_is_trigger);
 
         // and its inventory
         build_inventory_item_pools(capable.Inventory, data.inventory);
@@ -158,7 +159,7 @@ public class CapableBank : MonoBehaviour
             Rigidbody2D rb = go.gameObject.AddComponent<Rigidbody2D>();
             rb.gravityScale = 0;
             rb.freezeRotation = true;
-            rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
+            rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         }
 
@@ -192,7 +193,7 @@ public class CapableBank : MonoBehaviour
     }
 
     // ANIM PLAYER & COLLIDERS
-    private void load_feet_data(Capable capable, FeetData feet_data)
+    private void load_feet_data(Capable capable, FeetData feet_data, bool force_is_trigger = false)
     {
         // checks if body data is null it means we have no colliders, we do nothing then
         if (feet_data == null) { return; }
@@ -201,12 +202,14 @@ public class CapableBank : MonoBehaviour
         // load box colliders
         for (int i = 0; i < feet_data.box_colliders.Count; i++)
         {
+            if (force_is_trigger) { feet_data.box_colliders[i].is_trigger = true; }
             ColliderBank.Instance.LoadCollider(feet_data.box_colliders[i], feet);
         }
 
         // load circle colliders
         for (int i = 0; i < feet_data.circle_colliders.Count; i++)
         {
+            if (force_is_trigger) { feet_data.circle_colliders[i].is_trigger = true; }
             ColliderBank.Instance.LoadCollider(feet_data.circle_colliders[i], feet);
         }
     }

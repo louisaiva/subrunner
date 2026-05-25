@@ -780,7 +780,7 @@ public class CapableEngine : BSOD_System<CapableEngine>
                 if (templates_capables_data.ContainsKey(id))
                 {
                     CapableData new_data = DuplicateTemplate(id);
-                    if (log_spawning) { Debug.Log($"(CapableEngine - Load) Capable id {id} is a template, duplicating it to {new_data.id} and loading the duplicate"); }
+                    if (log_spawning) { Debug.Log($"(CapableEngine - Load) Capable id {id} is a template, we duplicated it to {new_data.id} and loading the duplicate"); }
                     Capable capable = load_capable(new_data);
                     OnCapableAppear?.Invoke(capable.data);
                     return capable;

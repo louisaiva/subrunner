@@ -71,9 +71,10 @@ public class ObjectPlacer : MonoBehaviour
         if (spawned_object == null) { Debug.LogWarning("(ObjectPlacer) failed to spawn capable with template " + capable_visu.template); return; }
 
         // we set its position to the mouse position
-        Vector3 mousePos = Mouse.current.position.ReadValue();
-        Vector2 world_mouse = Camera.main.ScreenToWorldPoint(mousePos);
-        spawned_object.transform.position = new Vector3(world_mouse.x, world_mouse.y, spawned_object.transform.position.z);
+        Vector2 position = capable_visu.GetPosition();
+        // Vector3 mousePos = Mouse.current.position.ReadValue();
+        // Vector2 world_mouse = Camera.main.ScreenToWorldPoint(mousePos);
+        spawned_object.transform.position = new Vector3(position.x, position.y, spawned_object.transform.position.z);
     }
     private void handle_right_click() { UI_Manager.Instance.UnstackPool("capable_placer"); }
 }

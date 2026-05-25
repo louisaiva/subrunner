@@ -753,7 +753,6 @@ GameObject:
   - component: {fileID: 8275033306750951646}
   - component: {fileID: 8569965792380036972}
   - component: {fileID: 5515429412044179659}
-  - component: {fileID: 5078374715826109987}
   m_Layer: 7
   m_Name: bob
   m_TagString: Player
@@ -884,19 +883,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &5078374715826109987
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 485328742789280846}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
-  capacity_template_id: qwin_attack
 --- !u!1 &854574378054970382
 GameObject:
   m_ObjectHideFlags: 0

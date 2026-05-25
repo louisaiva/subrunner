@@ -72,6 +72,81 @@ MonoBehaviour:
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
+--- !u!1 &672344862234841471
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7731477921975542246}
+  - component: {fileID: 6118356610951855584}
+  - component: {fileID: 7124174887765972348}
+  m_Layer: 5
+  m_Name: icon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &7731477921975542246
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 672344862234841471}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8769996573253064647}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &6118356610951855584
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 672344862234841471}
+  m_CullTransparentMesh: 1
+--- !u!114 &7124174887765972348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 672344862234841471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.03529412, g: 1, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: -1489048708, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &1970304390034894134
 GameObject:
   m_ObjectHideFlags: 0
@@ -253,6 +328,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 8769996573253064647}
   - {fileID: 2046303939552669414}
   m_Father: {fileID: 1823530890212788953}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -322,6 +398,166 @@ MonoBehaviour:
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
+--- !u!1 &3724078143731513196
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8769996573253064647}
+  - component: {fileID: 4136381958508835822}
+  - component: {fileID: 2264480574757141328}
+  - component: {fileID: 4739236950195663536}
+  - component: {fileID: 9053294468900214469}
+  m_Layer: 10
+  m_Name: magnetism
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8769996573253064647
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3724078143731513196}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 7731477921975542246}
+  m_Father: {fileID: 9167258651007812282}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 472, y: -32}
+  m_SizeDelta: {x: 64, y: 64}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &4136381958508835822
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3724078143731513196}
+  m_CullTransparentMesh: 1
+--- !u!114 &2264480574757141328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3724078143731513196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: -637157629, guid: 0c2e8aec6434f89f2990c31d371eeb8f, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4739236950195663536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3724078143731513196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac50d5cfaee2b5e46b787abc23d5b091, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_CycleButton
+  _hovered: 0
+  _disabled: 0
+  log: 0
+  image: {fileID: 2264480574757141328}
+  base_sprite: {fileID: -637157629, guid: 0c2e8aec6434f89f2990c31d371eeb8f, type: 3}
+  hover_sprite: {fileID: -1479922351, guid: 0c2e8aec6434f89f2990c31d371eeb8f, type: 3}
+  down_sprite: {fileID: -1618646064, guid: 0c2e8aec6434f89f2990c31d371eeb8f, type: 3}
+  disabled_sprite: {fileID: -968096919, guid: 0c2e8aec6434f89f2990c31d371eeb8f, type: 3}
+  btn_icon: {fileID: 7124174887765972348}
+  auto_cycle_on_click: 1
+  cycle_datas:
+  - name: enable_grid
+    label: enable grid
+    description: enables the grid magnetism
+    baseColor: {r: 0.8396226, g: 0.7232012, b: 0.32079923, a: 1}
+    hoverColor: {r: 1, g: 1, b: 1, a: 1}
+    iconHoverColor: {r: 1, g: 1, b: 1, a: 1}
+    iconSprite: {fileID: -1987329662, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+    onClickedEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 9053294468900214469}
+          m_TargetAssemblyTypeName: WorldPlacerCaller, Assembly-CSharp
+          m_MethodName: EnableGrid
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - name: disable_grid
+    label: disable grid
+    description: disable the grid magnetism
+    baseColor: {r: 0.03529412, g: 1, b: 0, a: 1}
+    hoverColor: {r: 1, g: 1, b: 1, a: 1}
+    iconHoverColor: {r: 1, g: 1, b: 1, a: 1}
+    iconSprite: {fileID: -1489048708, guid: d896e3023cc82894d90e4fe5087c2f3c, type: 3}
+    onClickedEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 9053294468900214469}
+          m_TargetAssemblyTypeName: WorldPlacerCaller, Assembly-CSharp
+          m_MethodName: DisableGrid
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  colorers: []
+  setting_name: 
+  setting: {fileID: 0}
+--- !u!114 &9053294468900214469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3724078143731513196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b213eb72b64ab054aaba3b311e5dc978, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldPlacerCaller
 --- !u!1 &3801925251511769107
 GameObject:
   m_ObjectHideFlags: 0

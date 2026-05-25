@@ -13,6 +13,8 @@ public class TemplatesManager : MonoBehaviour
 {
     private string templates_data_path = "Assets/Resources/data/templates/";
 
+
+    // TEMPLATES BANKS
     private TemplateObjectsBank _object_bank;
     public TemplateObjectsBank ObjectBank
     {
@@ -24,6 +26,18 @@ public class TemplatesManager : MonoBehaviour
             return _object_bank;
         }
     }
+    private TemplateItemsBank _item_bank;
+    public TemplateItemsBank ItemBank
+    {
+        get
+        {
+            if (_item_bank != null) { return _item_bank; }
+            _item_bank = GetComponentInChildren<TemplateItemsBank>(includeInactive: true);
+            if (_item_bank == null) { Debug.LogError("(TemplatesManager) no TemplateItemsBank in children !!"); }
+            return _item_bank;
+        }
+    }
+
 
 
     [Header("Capables Templates")]
@@ -39,6 +53,7 @@ public class TemplatesManager : MonoBehaviour
 
     [Header("Logs")]
     public bool log = false;
+    public Loggable<TemplatesManager> log_banks;
 
 
     // CAPABLES TEMPLATES SAVING
@@ -56,6 +71,15 @@ public class TemplatesManager : MonoBehaviour
         {
             saveCapableTemplate(obj);
         }
+        log_banks.Log($"Saved {objects.Count} OBJECTS templates from TemplateObjectsBank");
+
+        // and the items templates
+        List<Capable> items = ItemBank.GetAllCapablesTemplates();
+        foreach (Capable obj in items)
+        {
+            saveCapableTemplate(obj);
+        }
+        log_banks.Log($"Saved {items.Count} ITEMS templates from TemplateItemsBank");
 
         #if UNITY_EDITOR
         AssetDatabase.Refresh();
@@ -117,6 +141,16 @@ public class TemplatesManager : MonoBehaviour
             if (string.IsNullOrEmpty(template)) { continue; }
             data.capacities_ids.Add(template);
         }
+
+        // we check if the capable has some TemplateInventoryReference components, and we save the id of the ref
+        TemplateInventoryReference inv_temp = capable.GetComponent<TemplateInventoryReference>();
+        if (inv_temp != null)
+        {
+            data.inventory = inv_temp.GetInventoryData();
+        }
+
+        // we also make sure all the items have is_grabbed to true by default
+        if (data is ItemData item_data) { item_data.is_grabbed = true; }
     }
 
 

@@ -358,17 +358,6 @@ public class Item : Movable, EndlessInteractable
         // and update the grab n place state (which reenable renderers, rigidbody, feet, etc... based on the grabbed / placed state)
         update_grab_n_place();
     }
-    /* public override void UnloadData()
-    {
-        base.UnloadData();
-
-        // ? really useful ? no but it's better to have a safe guard
-        // todo if perf problem when loading items, remove this
-        // this.Reference = "category:item";
-        // this.Color = Color.yellow;
-        // this.MaxQty = 1;
-        // this.ItemDescription = "description of the item (item data was not loaded, is there a problem ?)";
-    } */
     public override ICapableData GetStaticData()
     {
         ItemData static_data = new ItemData((CapableData)base.GetStaticData())

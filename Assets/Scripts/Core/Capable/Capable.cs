@@ -538,6 +538,9 @@ public class Capable : MonoBehaviour, Debuggable
 
         // we clear the feet collider
         feet_collider = null;
+
+        // and stop all coroutines
+        StopAllCoroutines();
     }
     public virtual void SaveDynamicData()
     {

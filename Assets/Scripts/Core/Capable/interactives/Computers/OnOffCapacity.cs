@@ -33,6 +33,7 @@ public class OnOffCapacity : Capacity
         if (Onnable.IsMoving && Onnable.IsOn) { if (log) { Debug.Log("(Computer) " + Capable.name + " is already powering off..."); } return; }
 
         if (delay != 0f) { await System.Threading.Tasks.Task.Delay((int)(delay * 1000)); }
+        if (!Capable.Loaded) { return; } // if the capable has been unloaded while waiting, we stop here to avoid errors
 
         // we start the powering on coroutine
         Capable.StopAllCoroutines();
@@ -51,6 +52,7 @@ public class OnOffCapacity : Capacity
 
         // on attend la fin de l'anim
         while (AnimPlayer.IsShowing(powering_on_animation)) { yield return null; }
+        if (!Capable.Loaded) { yield break; } // if the capable has been unloaded while waiting, we stop here to avoid errors
 
         // on allume l'ordi
         Onnable.IsOn = true;
@@ -73,6 +75,7 @@ public class OnOffCapacity : Capacity
 
         // on attend la fin de l'anim
         while (AnimPlayer.IsShowing(powering_off_animation)) { yield return null; }
+        if (!Capable.Loaded) { yield break; } // if the capable has been unloaded while waiting, we stop here to avoid errors
 
         // on eteint l'ordi
         Onnable.IsOn = false;

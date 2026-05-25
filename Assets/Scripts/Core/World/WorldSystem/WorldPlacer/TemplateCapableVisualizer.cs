@@ -58,19 +58,24 @@ public class TemplateCapableVisualizer : MonoBehaviour
     {
         if (string.IsNullOrEmpty(template)) { return; }
 
-        // we get the position of the mouse
-        // (we get the world position)
-        Vector3 mousePos = Mouse.current.position.ReadValue();
-        Vector2 world_mouse = Camera.main.ScreenToWorldPoint(mousePos);
-
-        // then we clamp the position on a grid ?
-        // todo, do it
-
         // we place the object at right position
-        transform.position = world_mouse;
+        transform.position = GetPosition();
 
         // then we update the placement status
         update_placement_status(); // todo, do it
+    }
+    private Vector2 update_grid_position(Vector2 world_mouse)
+    {
+        // if the grid is not enabled we dont care
+        Grid grid = WorldPlacer.LazyInstance.Grid;
+        if (!grid.enabled) { return world_mouse; }
+
+        // we get the closest cell from the grid to the mouse position
+        Vector3Int cell_pos = grid.WorldToCell(world_mouse);
+        Vector2 grid_pos = grid.GetCellCenterWorld(cell_pos);
+        grid_pos.x += grid.cellSize.x / 2;
+        grid_pos.y += grid.cellSize.y / 2;
+        return grid_pos;
     }
     private void update_placement_status()
     {
@@ -81,6 +86,19 @@ public class TemplateCapableVisualizer : MonoBehaviour
         // and we update its material color based on status
     }
 
+
+    // GETTERS
+    public Vector2 GetPosition()
+    {
+        // we get the position of the mouse
+        // (we get the world position)
+        Vector3 mousePos = Mouse.current.position.ReadValue();
+        Vector2 world_mouse = Camera.main.ScreenToWorldPoint(mousePos);
+
+        // then we clamp the position on a grid ?
+        Vector2 grid_pos = update_grid_position(world_mouse);
+        return grid_pos;
+    }
 
 
     // DATA MANAGEMENT

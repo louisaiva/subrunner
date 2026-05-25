@@ -310,6 +310,14 @@ public class DoorEngine : MonoBehaviour
         if (capable == null) { return; }
         RoomData room_data = RoomEngine.Instance.GetRoomDataFromID(chunk_data.room_id);
         if (room_data == null) { return; }
+
+        // particular case for grabbed items
+        if (capable_data is ItemData item_data && item_data.is_grabbed)
+        {
+            if (log_visibility) { Debug.Log($"(DoorEngine) Capable {capable_data.id} is a grabbed item, we force it to be hidden"); }
+            capable.AnimPlayer.Hide();
+            return;
+        }
         
         bool capable_visible = capable.AnimPlayer.IsVisible();
         bool room_visible = visible_rooms.Contains(room_data);
