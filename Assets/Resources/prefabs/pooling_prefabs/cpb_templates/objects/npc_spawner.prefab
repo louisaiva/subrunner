@@ -304,7 +304,11 @@ PrefabInstance:
     - target: {fileID: 7000362555019179176, guid: e531ba50a71488e4081ef90639b41df1, type: 3}
       propertyPath: entity_prefab
       value: 
-      objectReference: {fileID: 6831872210500143280, guid: 75ef769ddd9ecf94f93b18d3c80f3f16, type: 3}
+      objectReference: {fileID: 0}
+    - target: {fileID: 7000362555019179176, guid: e531ba50a71488e4081ef90639b41df1, type: 3}
+      propertyPath: base_entity_id
+      value: npc
+      objectReference: {fileID: 0}
     - target: {fileID: 7000362555019179176, guid: e531ba50a71488e4081ef90639b41df1, type: 3}
       propertyPath: spawn_after_animation
       value: 1
@@ -319,7 +323,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7000362555019179176, guid: e531ba50a71488e4081ef90639b41df1, type: 3}
       propertyPath: data.<owner_id>k__BackingField
-      value: robot_spawner-1
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

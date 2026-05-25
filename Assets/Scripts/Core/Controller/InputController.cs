@@ -47,3 +47,11 @@ public class InputController : MonoBehaviour
     }
 
 }
+
+public interface UI_Controller
+{
+    public void EnableInputs(bool ingame);
+    public void DisableInputs();
+
+    public EndlessInput<T> GetEndlessInput<T>(string name) where T : struct;
+}

@@ -31,7 +31,7 @@ public class Controller : MonoBehaviour
 
     [Header("Components")]
     [SerializeField] private PersoInputsController pic;
-    [SerializeField] private UI_InputsController uic;
+    // [SerializeField] private UI_InputsController uic;
     [SerializeField] private HackableNavigator hackable_navigator;
     [SerializeField] private ExploitNavigator exploit_navigator;
     [SerializeField] private SeeThroughHandler see_through;
@@ -288,6 +288,7 @@ public class Controller : MonoBehaviour
 
         // reset l'inventory
         unattach_ui_item_pools();
+        if (capa.Inventory != null) { capa.Inventory.DisableLogs(); }
     }
     private void refresh_skin_based_parameters(string skin)
     {
@@ -326,6 +327,9 @@ public class Controller : MonoBehaviour
             // on attache la pool à l'ui pool
             ui_pool.AttachToPool(pool);
         }
+
+        // enable inventory log if wanted
+        if (log_ui_attachment) { inventory.EnableLogs(); }
     }
     private void unattach_ui_item_pools()
     {
@@ -335,6 +339,8 @@ public class Controller : MonoBehaviour
 
         // on détache tous les ui pools de leur pool
         for (int i = 0; i < ui_pools.Count; ++i) { ui_pools[i].DetachFromPool(); }
+
+        if (log_ui_attachment) { Debug.Log($"(Controller) Unattached all UI_ItemPools from their ItemPools."); }
     }
 
 
@@ -350,15 +356,12 @@ public class Controller : MonoBehaviour
     public EndlessInput<T> GetEndlessInput<T>(string name) where T : struct
     {
         EndlessInput<T> endinp = PIC.get_endless_input<T>(name);
-        if (endinp != null) { return endinp; }
-        endinp = UIC.get_endless_input<T>(name);
         return endinp;
     }
     public HackableNavigator HackableNavigator { get { return hackable_navigator; } }
     public ExploitNavigator ExploitNavigator { get { return exploit_navigator; } }
     public SeeThroughHandler SeeThrough { get { return see_through; } }
     public PersoInputsController PIC { get { return pic; } }
-    public UI_InputsController UIC { get { return uic; } }
 
 
 

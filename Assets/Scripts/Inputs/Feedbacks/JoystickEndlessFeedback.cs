@@ -26,7 +26,11 @@ public class JoystickEndlessFeedback : JoystickFeedback
     {
         // we get the endless input
         if (endless_input_name == "") { return; }
-        if (endless_input == null) { endless_input = Controller.LazyInstance.GetEndlessInput<Vector2>(endless_input_name); }
+        if (endless_input == null)
+        {
+            if (Controller._Instance != null) { endless_input = Controller.LazyInstance.GetEndlessInput<Vector2>(endless_input_name); }
+            if (endless_input == null) { endless_input = UI_Manager.Instance.UIC.GetEndlessInput<Vector2>(endless_input_name); }
+        }
         if (endless_input == null)
         {
             if (log) { Debug.LogError("(JEF) endless input " + endless_input_name + " not found!"); }

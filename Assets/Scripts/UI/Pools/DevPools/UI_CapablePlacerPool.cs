@@ -8,23 +8,16 @@ public class UI_CapablePlacerPool : UI_SlottablePool
     {
         yield return base.enable_coroutine();
 
-        Debug.Log($"[UI_CapablePlacerPool] enabling, we also enable worldplacer");
-        // we ensure worldplacer is enable
-        if (!WorldPlacer.LazyInstance.gameObject.activeSelf)
-        {
-            WorldPlacer.LazyInstance.gameObject.SetActive(true);
-            WorldPlacer.LazyInstance.Status = WorldPlacerStatus.PlacingObject;
-        }
+        // Debug.Log($"[UI_CapablePlacerPool] enabling, we also enable worldplacer");
+        // we enable worldplacer
+        WorldPlacer.LazyInstance.Enable();
     }
     protected override IEnumerator disable_coroutine()
     {
-        Debug.Log($"[UI_CapablePlacerPool] disabling, we also disable worldplacer");
+        // Debug.Log($"[UI_CapablePlacerPool] disabling, we also disable worldplacer");
+        
         // we disable worldplacer
-        if (WorldPlacer.LazyInstance.gameObject.activeSelf)
-        {
-            WorldPlacer.LazyInstance.gameObject.SetActive(false);
-            WorldPlacer.LazyInstance.Status = WorldPlacerStatus.NotWorking;
-        }
+        WorldPlacer.LazyInstance.Disable();
 
         yield return base.disable_coroutine();
     }

@@ -1,10 +1,9 @@
 using System;
 using UnityEngine;
-using UnityEngine.Animations;
 using UnityEngine.InputSystem;
 using static PlayerInputActions;
 
-public class UI_InputsController : InputController
+public class UI_InputsController : InputController, UI_Controller
 {
     [SerializeField] private bool log_states = false;
 
@@ -385,5 +384,10 @@ public class UI_InputsController : InputController
 
         if (log_states) { Debug.Log("(UI_InputsController) UIC ON DESTROY"); }
 
+    }
+
+    public EndlessInput<T> GetEndlessInput<T>(string name) where T : struct
+    {
+        return get_endless_input<T>(name);
     }
 }

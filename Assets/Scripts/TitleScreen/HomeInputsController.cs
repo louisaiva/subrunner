@@ -6,7 +6,7 @@ using static PlayerInputActions;
 /// <summary>
 /// Controller des inputs pour l'UI (menus, inventaires, etc.)
 /// </summary>
-public class HomeInputsController : InputController
+public class HomeInputsController : InputController, UI_Controller
 {
     [Header("UI Inputs Parameters")]
     [SerializeField] private UI_Navigator navigator;
@@ -178,4 +178,18 @@ public class HomeInputsController : InputController
             scrollable.Scroller.Scroll(input);
         }
     }
+
+
+
+    // UI_CONTROLLER INTERFACE
+    public void EnableInputs(bool ingame)
+    {
+        // we do nothing we don't care about enabling/disabling inputs for the home screen, we just let them work
+    }
+    public void DisableInputs() { }
+    public EndlessInput<T> GetEndlessInput<T>(string name) where T : struct
+    {
+        return get_endless_input<T>(name);
+    }
+
 }

@@ -77,7 +77,7 @@ public class UI_Navigator : Singleton<UI_Navigator>
         if (Slottables.Contains(slottable)) { return; } // on ne fait rien si le slottable est déjà dans la liste
 
         // on active les inputs si besoin
-        if (Slottables.Count == 0) { Controller.LazyInstance?.UIC.EnableInputs(ingame_navigation); }
+        if (Slottables.Count == 0) { UI_Manager.Instance.UIC.EnableInputs(ingame_navigation); }
 
         // on ajoute le slottable à la liste des Slottables
         Slottables.Add(slottable);
@@ -101,7 +101,11 @@ public class UI_Navigator : Singleton<UI_Navigator>
         if (CurrentSlot != null && slottable.IsYourSlot(CurrentSlot)) { UnhoverSlot(); }
 
         // on regarde si on a encore des Slottables
-        if (Slottables.Count == 0) { UnhoverSlot(); Controller.LazyInstance?.UIC.DisableInputs(); }
+        if (Slottables.Count == 0)
+        {
+            UnhoverSlot();
+            UI_Manager.Instance.UIC.DisableInputs();
+        }
     }
 
 
@@ -455,10 +459,12 @@ public class UI_Navigator : Singleton<UI_Navigator>
     }
     public void StartMovingItemIfInputDown()
     {
-        if (Controller.LazyInstance == null || Controller.LazyInstance.UIC == null) { return; }
+        if (UI_Manager.Instance == null) { return; }
+        if (UI_Manager.Instance.UIC == null) { return; }
+        if (UI_Manager.Instance.UIC is not UI_InputsController uic) { return; }
 
         // on vérifie si l'input n'est pas downed on ne move pas
-        if (!Controller.LazyInstance.UIC.IsMovingInputDown()) { return; }
+        if (!uic.IsMovingInputDown()) { return; }
 
         // si on bouge déjà c'est déjà activé, donc pas besoin 
         if (Mover.IsMovingItem) { return; }
@@ -468,9 +474,9 @@ public class UI_Navigator : Singleton<UI_Navigator>
         if (ui_item.Stack.Quantity == 0) { return; }
 
         // on annule le endless drop ingame si besoin
-        if (Controller.LazyInstance.UIC.InGame)
+        if (uic.InGame)
         {
-            EndlessInput<float> endless_drop_input = Controller.LazyInstance.UIC.get_endless_input<float>("ui_drop_ingame");
+            EndlessInput<float> endless_drop_input = uic.get_endless_input<float>("ui_drop_ingame");
             endless_drop_input.Cancel();
         }
 

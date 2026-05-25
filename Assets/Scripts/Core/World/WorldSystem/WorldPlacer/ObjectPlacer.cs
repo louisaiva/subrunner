@@ -29,9 +29,6 @@ public class ObjectPlacer : MonoBehaviour
         // we clear the template capable visu
         capable_visu.Clear();
         log.Log("Cancel placing capable template");
-
-        // we toggle the gameobject
-        WorldPlacer.LazyInstance.StopPlacingObject();
     }
 
 
@@ -78,9 +75,5 @@ public class ObjectPlacer : MonoBehaviour
         Vector2 world_mouse = Camera.main.ScreenToWorldPoint(mousePos);
         spawned_object.transform.position = new Vector3(world_mouse.x, world_mouse.y, spawned_object.transform.position.z);
     }
-    private void handle_right_click()
-    {
-        // we cancel
-        CancelCapablePlacement();
-    }
+    private void handle_right_click() { UI_Manager.Instance.UnstackPool("capable_placer"); }
 }

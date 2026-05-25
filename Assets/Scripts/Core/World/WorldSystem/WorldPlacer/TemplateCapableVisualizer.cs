@@ -15,7 +15,7 @@ public class TemplateCapableVisualizer : MonoBehaviour
     [SerializeField] private AnimPlayer player;
     [SerializeField] private Transform feet;
 
-    [SerializeField] private Loggable<ObjectPlacer> log;
+    [SerializeField] private Loggable<TemplateCapableVisualizer> log;
 
     // INIT & CLEAR
     public void Init(string template)

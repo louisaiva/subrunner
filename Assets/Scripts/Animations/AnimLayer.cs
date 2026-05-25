@@ -174,12 +174,14 @@ public class AnimLayer : MonoBehaviour
     public void Hide()
     {
         visible_on = false;
-        material.SetKeyword(visibleKeyword, false);
+        if (visibleKeyword == null) { return; }
+        material.SetKeyword(visibleKeyword.Value, false);
     }
     public void Show()
     {
         visible_on = true;
-        material.SetKeyword(visibleKeyword, true);
+        if (visibleKeyword == null) { return; }
+        material.SetKeyword(visibleKeyword.Value, true);
     }
 
 
@@ -203,7 +205,7 @@ public class AnimLayer : MonoBehaviour
 
     // LOAD DATA
     private Material material;
-    private LocalKeyword visibleKeyword;
+    private LocalKeyword? visibleKeyword;
     public void LoadData(AnimLayerData layer_data)
     {
         // load main layer data
@@ -215,14 +217,31 @@ public class AnimLayer : MonoBehaviour
         // load sr data
         Material mat = CapableBank.LazyInstance.MaterialBank.GetMaterial(layer_data.material_name);
         sr.material = mat;
-        material = sr.material;
-        visibleKeyword = new LocalKeyword(material.shader, "_VISIBLE");
         sr.sortingLayerID = layer_data.sorting_layer_id;
         sr.sortingOrder = layer_data.order_in_layer;
+
+        // setup visibility keyword
+        material = sr.material;
+        if (has_material_keyword(mat, "_VISIBLE"))
+        {
+            visibleKeyword = new LocalKeyword(Renderer.material.shader, "_VISIBLE");
+        }
+        else { visibleKeyword = null; }
+        visible_on = true;
 
         // load never flip & follow duration
         never_flip = layer_data.never_flip;
         follow_duration = layer_data.follow_duration;
+    }
+    private bool has_material_keyword(Material material, string name)
+    {
+        Shader shader = material.shader;
+        LocalKeywordSpace keywordSpace = shader.keywordSpace;
+        foreach (LocalKeyword localKeyword in keywordSpace.keywords)
+        {
+            if (localKeyword.name == name) { return true; }
+        }
+        return false;
     }
 
     // GET STATIC DATA
@@ -276,4 +295,35 @@ public class AnimLayer : MonoBehaviour
     public int order_in_layer;
     public bool never_flip;
     public bool follow_duration;
+
+    public AnimLayerData Duplicate()
+    {
+
+        AnimLayerData new_data = new AnimLayerData
+        {
+            skin = this.skin,
+            local_position = this.local_position,
+            local_rotation = this.local_rotation,
+            material_name = this.material_name,
+            sorting_layer_id = this.sorting_layer_id,
+            order_in_layer = this.order_in_layer,
+            never_flip = this.never_flip,
+            follow_duration = this.follow_duration
+        };
+        
+        return new_data;
+    }
+
+    public string GetDetails()
+    {
+        string details = $"layer skin {skin} :\n";
+        details += $"          - local_position : {local_position}\n";
+        details += $"          - local_rotation : {local_rotation}\n";
+        details += $"          - material_name : {material_name}\n";
+        details += $"          - sorting_layer_id : {sorting_layer_id}\n";
+        details += $"          - order_in_layer : {order_in_layer}\n";
+        details += $"          - never_flip : {never_flip}\n";
+        details += $"          - follow_duration : {follow_duration}\n";
+        return details;
+    }
 }

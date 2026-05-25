@@ -31,33 +31,39 @@ public class WorldPlacer : MonoBehaviour
     public WorldPlacerStatus Status = WorldPlacerStatus.NotWorking;
 
 
+    [Header("Logs")]
+    [SerializeField] private Loggable<WorldPlacer> log;
+
     // ENTRY POINTS
     public void AskAndThenStartPlacingObject()
     {
         // show the text popup to enter capable template id
-        UI_Manager.Instance.OpenInputPopup("place capable", "enter capable template id", StartPlacingObject);
+        UI_Manager.Instance.OpenInputPopup("place capable", "enter capable template id", ValidateStartPlacingObject);
     }
-    public void StartPlacingObject(string template)
+    public void ValidateStartPlacingObject(string template)
+    {
+        if (string.IsNullOrEmpty(template)) { log.Error("invalid template id"); return; }
+        current_template = template;
+        UI_Manager.Instance.SwitchTo("capable_placer");
+    }
+    private string current_template = null;
+    public void Enable()
     {
         // check if template is valid or not
-        if (string.IsNullOrEmpty(template)) { return; }
+        if (string.IsNullOrEmpty(current_template)) { log.Error("invalid template id"); return; }
 
         // enable the placer
         Status = WorldPlacerStatus.PlacingObject;
         gameObject.SetActive(true);
-        Placer.StartPlacingCapable(template);
-
-        // show the ui_pool
-        UI_Manager.Instance.SwitchTo("capable_placer");
-        // todo
+        Placer.StartPlacingCapable(current_template);
+        log.Log("Enabled WorldPlacer with template : " + current_template);
     }
-    public void StopPlacingObject()
+    public void Disable()
     {
-        // todo switch ui_pool
         gameObject.SetActive(false);
         Status = WorldPlacerStatus.NotWorking;
-
-        UI_Manager.Instance.UnstackPool("capable_placer");
+        Placer.CancelCapablePlacement();
+        log.Log("Disabled WorldPlacer");
     }
 }
 

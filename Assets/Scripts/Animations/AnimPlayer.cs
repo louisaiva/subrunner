@@ -883,7 +883,6 @@ public class AnimPlayer : MonoBehaviour
             sorting_layer_id = this.sorting_layer_id,
             order_in_layer = this.order_in_layer,
             never_flip = this.never_flip,
-            layers = new List<AnimLayerData>(this.layers)
         };
 
         // duplicate anim_capacity_priorities
@@ -897,6 +896,17 @@ public class AnimPlayer : MonoBehaviour
         }
         else { new_data.anim_capacity_priorities = null; }
 
+        // duplicate layers
+        if (this.layers != null)
+        {
+            new_data.layers = new List<AnimLayerData>();
+            foreach (AnimLayerData ald in this.layers)
+            {
+                new_data.layers.Add(ald.Duplicate());
+            }
+        }
+        else { new_data.layers = null; }
+
         return new_data;
     }
     public string GetDetails()
@@ -906,13 +916,21 @@ public class AnimPlayer : MonoBehaviour
         details += $"     - current_capacity : {current_capacity}\n";
         if (anim_capacity_priorities != null) { details += $"     - anim_capacity_priorities : {anim_capacity_priorities.Count} priorities\n"; }
         else { details += $"     - anim_capacity_priorities : null\n"; }
-        if (layers != null) { details += $"     - layers : {layers.Count} layers"; }
-        else { details += $"     - layers : null"; }
         details += $"     - local_position : {local_position}\n";
         details += $"     - material_name : {material_name}\n";
         details += $"     - sorting_layer_id : {sorting_layer_id}\n";
         details += $"     - order_in_layer : {order_in_layer}\n";
         details += $"     - never_flip : {never_flip}\n";
+
+        if (layers == null || layers.Count == 0) { details += $"     - layers : no layers\n"; }
+        else
+        {
+            details += $"     - layers : {layers.Count} layers\n";
+            for (int i = 0; i < layers.Count; i++)
+            {
+                details += $"          - layer {i} : " + layers[i].GetDetails() + "\n";
+            }
+        }
         return details;
     }
 }

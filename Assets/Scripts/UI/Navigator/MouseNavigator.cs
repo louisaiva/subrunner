@@ -69,17 +69,6 @@ public class MouseNavigator : MonoBehaviour, Navigator
         if (log_hover) { Debug.Log($"(UI_MouseNavigator) navigating with mouse position : {Input.mousePosition}"); }
 
 
-        // checks if we are holding ui_drop_ingame (and so waiting for endless drop) we cancel it
-        // -> because it means we are going to move items
-        /* if (start_moving_item && Controller.LazyInstance.UIC.InGame)
-        {
-            EndlessInput<float> endless_drop_input = Controller.LazyInstance.UIC.get_endless_input<float>("ui_drop_ingame");
-            // if (!IsEndlessInputDown<float>("ui_drop_ingame")) { return; }
-            // get_endless_input<float>("ui_drop_ingame").Cancel();
-            endless_drop_input.Cancel();
-        } */
-
-
         // on move item potentiellement
         if (start_moving_item)
         {

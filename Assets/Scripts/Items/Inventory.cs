@@ -185,7 +185,7 @@ public class Inventory : MonoBehaviour, ItemStorer
         for (int i = 0; i < pools.Count; i++)
         {
             if (pools[i].Grab(item)) { return true; }
-            if (log_grab) { Debug.Log("(Inventory) " + Capable.name + " pool " + pools[i].name + " could not grab : " + item.name); }
+            if (log_grab) { Debug.Log("(Inventory) " + Capable.name + " pool " + pools[i].PoolID + " could not grab : " + item.name); }
         }
         return false;
     }
@@ -417,6 +417,19 @@ public class Inventory : MonoBehaviour, ItemStorer
 
 
 
+    // ENABLE / DISABLE LOGS
+    public void EnableLogs()
+    {
+        log = true;
+        log_grab = true;
+        log_get_items = true;
+    }
+    public void DisableLogs()
+    {
+        log = false;
+        log_grab = false;
+        log_get_items = false;
+    }
 
 
 

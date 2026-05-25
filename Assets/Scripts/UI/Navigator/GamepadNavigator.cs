@@ -56,8 +56,8 @@ public class GamepadNavigator : MonoBehaviour, Navigator
 
         // on ne navigue pas si on essaie de drop et qu'on a pas d'ui_item
         if (Manager.CurrentSlot != null
-            && Controller.LazyInstance != null
-            && Controller.LazyInstance.UIC.IsDropInputDown()
+            && UI_Manager.Instance.UIC is UI_InputsController uic
+            && uic.IsDropInputDown()
             && Manager.CurrentSlot is not UI_ItemStack) { return; }
 
         // on move item potentiellement
@@ -80,7 +80,7 @@ public class GamepadNavigator : MonoBehaviour, Navigator
 
         string s = "(UI_GamepadNavigator) NAVIGATE: \n\nparameters: \n\tangle_threshold : " + angle_threshold + "\n\tangle_multiplicator: " + angle_multiplicator + "\n\n";
 
-        if (Controller.LazyInstance != null) { s += "\n\ndropping :\n\tis_drop_input_down : " + Controller.LazyInstance.UIC.IsDropInputDown() + "\n\tcurrent slot type : " + (Manager.CurrentSlot != null ? Manager.CurrentSlot.GetType().Name : "null") + "\n\n"; }
+        if (UI_Manager.Instance.UIC is UI_InputsController uic && uic != null) { s += "\n\ndropping :\n\tis_drop_input_down : " + uic.IsDropInputDown() + "\n\tcurrent slot type : " + (Manager.CurrentSlot != null ? Manager.CurrentSlot.GetType().Name : "null") + "\n\n"; }
 
         // on récupère la position du slot actuel
         Vector2 current_slot_position = Manager.GetPosition(Manager.CurrentSlot);

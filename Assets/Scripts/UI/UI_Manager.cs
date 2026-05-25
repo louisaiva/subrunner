@@ -13,6 +13,21 @@ using System.Collections;
 public class UI_Manager : Singleton<UI_Manager>
 {
 
+
+    // SUB SYSTEMS
+    private UI_Controller _uic;
+    public UI_Controller UIC
+    {
+        get
+        {
+            if (_uic != null) { return _uic; }
+            _uic = GetComponent<UI_Controller>();
+            if (_uic == null) { Debug.LogError($"(UI_Manager) No UI_Controller found on the {name} game object. Please add one to the scene."); }
+            return _uic;
+        }
+    }
+
+
     [Header("Pool stack")]
     [SerializeField] private List<UI_Pool> pool_stack = new List<UI_Pool>();
     public string PoolStack => "/" + string.Join("/", pool_stack.Select(x => x.Reference).ToArray());
