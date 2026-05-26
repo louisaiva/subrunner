@@ -78,6 +78,12 @@ public class SettingsManager : MonoBehaviour
     ///
 
 
+    public void Toggle(string settingName)
+    {
+        Setting setting = GetSetting(settingName);
+        if (setting == null) { return; }
+        setting.Value = 1 - setting.Value; // toggle between 0 and 1
+    }
     public void SetSetting(string settingName, float value)
     {
         // Logic to set the setting based on its name

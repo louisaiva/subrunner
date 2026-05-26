@@ -1801,7 +1801,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""mouse_L"",
                     ""type"": ""Button"",
                     ""id"": ""bd172b21-8b4a-4fa0-92bb-798a175296eb"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -2282,6 +2282,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""F5"",
+                    ""type"": ""Button"",
+                    ""id"": ""28300e99-897f-403e-b1f3-06623b02f517"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""F1"",
+                    ""type"": ""Button"",
+                    ""id"": ""ab91c4aa-5633-4ccd-94fb-513823ba251b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -2304,6 +2322,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";keyboard"",
                     ""action"": ""F3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f40d1f63-4e73-42fd-935c-d94d0e18af53"",
+                    ""path"": ""<Keyboard>/f5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";keyboard"",
+                    ""action"": ""F5"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""344d8819-36db-489d-b0c1-e5878a631007"",
+                    ""path"": ""<Keyboard>/f1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";keyboard"",
+                    ""action"": ""F1"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -2426,6 +2466,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_settings = asset.FindActionMap("settings", throwIfNotFound: true);
         m_settings_F11 = m_settings.FindAction("F11", throwIfNotFound: true);
         m_settings_F3 = m_settings.FindAction("F3", throwIfNotFound: true);
+        m_settings_F5 = m_settings.FindAction("F5", throwIfNotFound: true);
+        m_settings_F1 = m_settings.FindAction("F1", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -3739,6 +3781,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private List<ISettingsActions> m_SettingsActionsCallbackInterfaces = new List<ISettingsActions>();
     private readonly InputAction m_settings_F11;
     private readonly InputAction m_settings_F3;
+    private readonly InputAction m_settings_F5;
+    private readonly InputAction m_settings_F1;
     /// <summary>
     /// Provides access to input actions defined in input action map "settings".
     /// </summary>
@@ -3758,6 +3802,14 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "settings/F3".
         /// </summary>
         public InputAction @F3 => m_Wrapper.m_settings_F3;
+        /// <summary>
+        /// Provides access to the underlying input action "settings/F5".
+        /// </summary>
+        public InputAction @F5 => m_Wrapper.m_settings_F5;
+        /// <summary>
+        /// Provides access to the underlying input action "settings/F1".
+        /// </summary>
+        public InputAction @F1 => m_Wrapper.m_settings_F1;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -3790,6 +3842,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @F3.started += instance.OnF3;
             @F3.performed += instance.OnF3;
             @F3.canceled += instance.OnF3;
+            @F5.started += instance.OnF5;
+            @F5.performed += instance.OnF5;
+            @F5.canceled += instance.OnF5;
+            @F1.started += instance.OnF1;
+            @F1.performed += instance.OnF1;
+            @F1.canceled += instance.OnF1;
         }
 
         /// <summary>
@@ -3807,6 +3865,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @F3.started -= instance.OnF3;
             @F3.performed -= instance.OnF3;
             @F3.canceled -= instance.OnF3;
+            @F5.started -= instance.OnF5;
+            @F5.performed -= instance.OnF5;
+            @F5.canceled -= instance.OnF5;
+            @F1.started -= instance.OnF1;
+            @F1.performed -= instance.OnF1;
+            @F1.canceled -= instance.OnF1;
         }
 
         /// <summary>
@@ -4390,5 +4454,19 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnF3(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "F5" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnF5(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "F1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnF1(InputAction.CallbackContext context);
     }
 }

@@ -68,8 +68,11 @@ public class InputManager : MonoBehaviour
         if (log) { Debug.Log("(InputManager) input type callbacks set"); }
 
         // et certains listeners d'actions spécifiques
-        inputs.settings.F3.performed += ctx => SettingsManager.Instance.SetSetting("debug", 1 - SettingsManager.Instance.GetValue("debug"));
-        inputs.settings.F11.performed += ctx => SettingsManager.Instance.SetSetting("fullscreen", 1 - SettingsManager.Instance.GetValue("fullscreen"));
+        inputs.settings.F1.performed += ctx => SettingsManager.Instance.Toggle("dev_minimap");
+        // inputs.settings.F2.performed += ctx => SettingsManager.Instance.Toggle();
+        inputs.settings.F3.performed += ctx => SettingsManager.Instance.Toggle("debug");
+        inputs.settings.F5.performed += ctx => WorldPlacer.LazyInstance?.AskAndThenStartPlacingObject();
+        inputs.settings.F11.performed += ctx => SettingsManager.Instance.Toggle("fullscreen");
     }
 
     void Update()

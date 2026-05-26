@@ -1715,7 +1715,7 @@
                     "name": "mouse_L",
                     "type": "Button",
                     "id": "bd172b21-8b4a-4fa0-92bb-798a175296eb",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -2196,6 +2196,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "F5",
+                    "type": "Button",
+                    "id": "28300e99-897f-403e-b1f3-06623b02f517",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "F1",
+                    "type": "Button",
+                    "id": "ab91c4aa-5633-4ccd-94fb-513823ba251b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -2218,6 +2236,28 @@
                     "processors": "",
                     "groups": ";keyboard",
                     "action": "F3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f40d1f63-4e73-42fd-935c-d94d0e18af53",
+                    "path": "<Keyboard>/f5",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";keyboard",
+                    "action": "F5",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "344d8819-36db-489d-b0c1-e5878a631007",
+                    "path": "<Keyboard>/f1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";keyboard",
+                    "action": "F1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
