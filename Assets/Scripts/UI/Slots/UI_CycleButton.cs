@@ -61,6 +61,9 @@ public class UI_CycleButton : UI_Button, Colorant, Descriptable
 
 
     // START
+    [Header("Start Settings")]
+    public int start_cycle_index = 0;
+    public bool fire_event_on_start = true;
     private void Start()
     {
         // we try to extract the setting from the setting name
@@ -72,8 +75,8 @@ public class UI_CycleButton : UI_Button, Colorant, Descriptable
         else
         {
             // we fire the last cycle event to initialize the button with the first cycle data
-            if (auto_cycle_on_click) { cycle_datas.LastOrDefault()?.onClickedEvent.Invoke(); }
-            SwitchToCycle(0);   // we initialize the button with the first cycle data
+            if (auto_cycle_on_click && fire_event_on_start) { cycle_datas.LastOrDefault()?.onClickedEvent.Invoke(); }
+            SwitchToCycle(start_cycle_index);   // we initialize the button with the first cycle data
         }
         // btn_icon.color = current_cycle.baseColor;
         // if (log_colored_icon) { Debug.Log($"[UI_CycleButton] Initialized button with cycle data: {current_cycle.name} and color {current_cycle.iconHoverColor}"); }

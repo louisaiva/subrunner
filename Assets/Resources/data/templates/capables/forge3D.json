@@ -1,0 +1,237 @@
+﻿{
+    "<id>k__BackingField": "forge3D",
+    "kind": "FalseInteractable",
+    "position": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "orientation": {
+        "x": 0.0,
+        "y": -1.0
+    },
+    "layer": 29,
+    "tag": "Untagged",
+    "anim_data": {
+        "skin_kind": "",
+        "skin": "forge3D",
+        "anim_capacity_priorities": [
+            {
+                "priority": 0,
+                "capacity_playing": "idle",
+                "capacities": [
+                    "idle"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "hover"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "turn_on",
+                    "turn_off"
+                ],
+                "lock_orientation": true,
+                "one_shot": true
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
+                    "idle_on",
+                    "craft"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            }
+        ],
+        "current_capacity": "",
+        "material_name": "objects",
+        "sorting_layer_id": -667374433,
+        "order_in_layer": 0,
+        "never_flip": false,
+        "layers": [
+            {
+                "skin": "forge3D_base",
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.5426666736602783
+                },
+                "local_rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "material_name": "objects",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0,
+                "never_flip": false,
+                "follow_duration": false
+            },
+            {
+                "skin": "forge3D_wall",
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0010000000474974514
+                },
+                "local_rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "material_name": "objects",
+                "sorting_layer_id": -667374433,
+                "order_in_layer": 0,
+                "never_flip": false,
+                "follow_duration": false
+            }
+        ],
+        "local_position": {
+            "x": 0.0,
+            "y": 0.0
+        }
+    },
+    "inventory": {
+        "item_pools_data": [],
+        "item_type": 0
+    },
+    "feet_data": {
+        "box_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 29,
+                "pathfinding_area": -1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": -0.018325448036193849,
+                    "y": -0.03879070281982422
+                },
+                "size": {
+                    "x": 0.952298641204834,
+                    "y": 0.9266517162322998
+                }
+            },
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 29,
+                "pathfinding_area": -1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.8548089265823364,
+                    "y": -0.42097073793411257
+                },
+                "size": {
+                    "x": 0.5348405838012695,
+                    "y": 0.9854484796524048
+                }
+            },
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 29,
+                "pathfinding_area": -1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": -0.6213263869285584,
+                    "y": 0.7905493378639221
+                },
+                "size": {
+                    "x": 0.4811629056930542,
+                    "y": 0.49647629261016848
+                }
+            }
+        ],
+        "circle_colliders": [
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 29,
+                "pathfinding_area": -1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.47045189142227175,
+                    "y": -0.25677424669265749
+                },
+                "radius": 0.39292067289352419
+            },
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 29,
+                "pathfinding_area": -1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": 0.6952271461486816,
+                    "y": -0.562065839767456
+                },
+                "radius": 0.3459528684616089
+            },
+            {
+                "local_position": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "layerID": 29,
+                "pathfinding_area": -1,
+                "shadow_caster_data": {
+                    "cast_and_self": false,
+                    "used_layers": []
+                },
+                "is_trigger": false,
+                "offset": {
+                    "x": -0.3441063165664673,
+                    "y": 0.6877993941307068
+                },
+                "radius": 0.4658762812614441
+            }
+        ]
+    },
+    "capacities_ids": [
+        "forge3D_hover",
+        "forge3D_sorter",
+        "forge3D_iic"
+    ],
+    "effects": [],
+    "effects_ttl": []
+}

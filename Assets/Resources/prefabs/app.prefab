@@ -623,6 +623,20 @@ MonoBehaviour:
     base_spritesheets:
     - objects/interactives/living_room/vacuum_aspi
     keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: forge3D_base
+    variant_spritesheets:
+    - objects/interactives/crafters/forge_3D_base
+    base_skin: forge3D
+    base_spritesheets:
+    - objects/interactives/crafters/forge_3D_robot
+    keep_base_anim_if_spritesheet_not_found: 0
+  - variant_name: forge3D_wall
+    variant_spritesheets:
+    - objects/interactives/crafters/forge_3D_wall
+    base_skin: forge3D
+    base_spritesheets:
+    - objects/interactives/crafters/forge_3D_robot
+    keep_base_anim_if_spritesheet_not_found: 0
   log: 0
   log_LAFAC: 0
   log_variant_awake: 0
@@ -1232,6 +1246,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 5334045253970575855}
   - {fileID: 8927479603836050084}
   - {fileID: 635187288589831231}
   - {fileID: 6226022955239885697}
@@ -1434,6 +1449,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b6cb3e1182b15a74b9c90e1e1662b786, type: 2}
   - {fileID: 11400000, guid: e36bfed1340373d498c5afe71e88e068, type: 2}
   - {fileID: 11400000, guid: 5aebe4c596a0d56439661152b42226e5, type: 2}
+  - {fileID: 11400000, guid: b91e9fb5e28705d46906a0f3c99d258c, type: 2}
   log: 0
 --- !u!1 &8143234813479507016
 GameObject:
@@ -1621,6 +1637,51 @@ MonoBehaviour:
   transition_on_enable: 0
   ShouldBeVisibleOnEnable: 0
   log: 0
+--- !u!1 &9159477942706072390
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5334045253970575855}
+  - component: {fileID: 6145444676503736299}
+  m_Layer: 0
+  m_Name: simple_camera_controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5334045253970575855
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9159477942706072390}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3744786912224508728}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6145444676503736299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9159477942706072390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 494d9a78d1272344383a8921b0f214a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SimpleCameraController
+  move_speed: 5
 --- !u!1 &9163946342948390035
 GameObject:
   m_ObjectHideFlags: 0

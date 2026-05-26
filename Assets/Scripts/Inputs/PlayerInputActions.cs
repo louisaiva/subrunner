@@ -2348,6 +2348,89 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""camera"",
+            ""id"": ""a10c7568-1363-492c-b881-132fe11fe70d"",
+            ""actions"": [
+                {
+                    ""name"": ""move"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""8755c794-e1b2-4a06-9bfe-629edc4aefa6"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""main"",
+                    ""id"": ""0fb7d1bc-2e6a-4afd-9f63-b77646cb73f5"",
+                    ""path"": ""2DVector(mode=2)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""a20869b4-cce8-4276-ba5c-22687eede266"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""ecc463a1-0c7c-4c70-8729-0da2dccb819f"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""cdbbb5c4-eb86-47a9-9c6a-4ea6bbb4f3a3"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""605a135c-3657-45d5-9c2e-f1535f027d01"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""keyboard"",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""11e419fd-a3b2-453f-9f19-96139f085b45"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""xbox"",
+                    ""action"": ""move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -2468,6 +2551,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_settings_F3 = m_settings.FindAction("F3", throwIfNotFound: true);
         m_settings_F5 = m_settings.FindAction("F5", throwIfNotFound: true);
         m_settings_F1 = m_settings.FindAction("F1", throwIfNotFound: true);
+        // camera
+        m_camera = asset.FindActionMap("camera", throwIfNotFound: true);
+        m_camera_move = m_camera.FindAction("move", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -2479,6 +2565,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         UnityEngine.Debug.Assert(!m_utils.enabled, "This will cause a leak and performance issues, PlayerInputActions.utils.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_feedbacks.enabled, "This will cause a leak and performance issues, PlayerInputActions.feedbacks.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_settings.enabled, "This will cause a leak and performance issues, PlayerInputActions.settings.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_camera.enabled, "This will cause a leak and performance issues, PlayerInputActions.camera.Disable() has not been called.");
     }
 
     /// <summary>
@@ -3904,6 +3991,102 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="SettingsActions" /> instance referencing this action map.
     /// </summary>
     public SettingsActions @settings => new SettingsActions(this);
+
+    // camera
+    private readonly InputActionMap m_camera;
+    private List<ICameraActions> m_CameraActionsCallbackInterfaces = new List<ICameraActions>();
+    private readonly InputAction m_camera_move;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "camera".
+    /// </summary>
+    public struct CameraActions
+    {
+        private @PlayerInputActions m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public CameraActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "camera/move".
+        /// </summary>
+        public InputAction @move => m_Wrapper.m_camera_move;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_camera; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="CameraActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(CameraActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="CameraActions" />
+        public void AddCallbacks(ICameraActions instance)
+        {
+            if (instance == null || m_Wrapper.m_CameraActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_CameraActionsCallbackInterfaces.Add(instance);
+            @move.started += instance.OnMove;
+            @move.performed += instance.OnMove;
+            @move.canceled += instance.OnMove;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="CameraActions" />
+        private void UnregisterCallbacks(ICameraActions instance)
+        {
+            @move.started -= instance.OnMove;
+            @move.performed -= instance.OnMove;
+            @move.canceled -= instance.OnMove;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="CameraActions.UnregisterCallbacks(ICameraActions)" />.
+        /// </summary>
+        /// <seealso cref="CameraActions.UnregisterCallbacks(ICameraActions)" />
+        public void RemoveCallbacks(ICameraActions instance)
+        {
+            if (m_Wrapper.m_CameraActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="CameraActions.AddCallbacks(ICameraActions)" />
+        /// <seealso cref="CameraActions.RemoveCallbacks(ICameraActions)" />
+        /// <seealso cref="CameraActions.UnregisterCallbacks(ICameraActions)" />
+        public void SetCallbacks(ICameraActions instance)
+        {
+            foreach (var item in m_Wrapper.m_CameraActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_CameraActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="CameraActions" /> instance referencing this action map.
+    /// </summary>
+    public CameraActions @camera => new CameraActions(this);
     private int m_xboxSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -4468,5 +4651,20 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnF1(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "camera" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="CameraActions.AddCallbacks(ICameraActions)" />
+    /// <seealso cref="CameraActions.RemoveCallbacks(ICameraActions)" />
+    public interface ICameraActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "move" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMove(InputAction.CallbackContext context);
     }
 }

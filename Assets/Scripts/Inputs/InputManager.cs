@@ -57,6 +57,7 @@ public class InputManager : MonoBehaviour
         inputs.menus.Enable();
         inputs.feedbacks.Enable();
         inputs.settings.Enable();
+        inputs.camera.Enable();
 
         Invoke(nameof(set_callbacks), 0.2f); // slight delay to avoid issues on start
     }
@@ -146,12 +147,20 @@ public class InputManager : MonoBehaviour
         // on retourne l'action
         return action;
     }
-    public Vector2 MovementInputs
+    public Vector2 PersoMovementInputs
     {
         get
         {
             if (UsingGamepad) { return inputs.perso.move.ReadValue<Vector2>(); } // already normalized
             else { return inputs.perso.move.ReadValue<Vector2>().normalized; } // keyboard inputs need to be normalized to avoid diagonal advantage
+        }
+    }
+    public Vector2 CameraMovementInputs
+    {
+        get
+        {
+            if (UsingGamepad) { return inputs.camera.move.ReadValue<Vector2>(); } // already normalized
+            else { return inputs.camera.move.ReadValue<Vector2>().normalized; } // keyboard inputs need to be normalized to avoid diagonal advantage
         }
     }
 

@@ -51,7 +51,14 @@ public class LevelBuilder : MonoBehaviour
 
 
     [Header("Zoom")]
-    [Range(0.1f, 15f)] public float Zoom = 5f;
+    private float min_zoom = 5f;
+    private float max_zoom = 30f;
+    [Range(5f, 30f)] public float Zoom = 5f;
+    public void SetZoom(Setting setting)
+    {
+        // setting is a percentage
+        Zoom = Mathf.Lerp(min_zoom, max_zoom, setting.GetPercentage());
+    }
 
 
     [Header("Nodes Visualizers")]
@@ -143,6 +150,14 @@ public class LevelBuilder : MonoBehaviour
         tools_icons["door_hor"] = door_hor_prefab.GetComponent<SpriteRenderer>().sprite;
         tools_icons["light"] = light_prefab.GetComponent<SpriteRenderer>().sprite;
     }
+    private void Start()
+    {
+        SettingsManager.Instance.RegisterCallback("level_builder_zoom", SetZoom);
+    }
+    private void OnDestroy()
+    {
+        SettingsManager.Instance?.UnregisterCallback("level_builder_zoom", SetZoom);
+    }
 
     // ON ENABLE / DISABLE
     private void OnEnable()
@@ -152,12 +167,18 @@ public class LevelBuilder : MonoBehaviour
         // we try to grab all the doors & lights
         make_rooms_grab_all_doors();
         make_rooms_grab_all_lights();
+
+        CameraFollow.Instance.EnableSimpleController();
     }
     private void OnDisable()
     {
         SaveCurrentLevelSchematic();
         Erase();
-        try { CameraFollow.Instance.ResetSize(); }
+        try
+        {
+            CameraFollow.Instance.ResetSize();
+            CameraFollow.Instance.DisableSimpleController();
+        }
         catch (Exception) { }
     }
 
@@ -237,6 +258,15 @@ public class LevelBuilder : MonoBehaviour
     private void UpdateInputs()
     {
         update_mouse_pos();
+
+        // update zoom setting
+        float scroll = InputManager.Instance.inputs.UI.scroll.ReadValue<float>();
+        if (scroll != 0)
+        {
+            // we get the setting
+            StepSetting stepSetting = (StepSetting) SettingsManager.Instance.GetSetting("level_builder_zoom");
+            stepSetting.Scroll((int) -scroll);
+        }
 
         // update clicks, buttons
         update_click();

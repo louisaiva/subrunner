@@ -292,9 +292,14 @@ public class Chunk : MonoBehaviour
             else { overlapping_capables.Add(capable.GetStaticID()); }
         }
     }
-    public List<Capable> GetStaticOverlappingCapables()
+    public List<Capable> GetStaticOverlappingCapables<T>(Loggable<T> grab_log = null) where T : MonoBehaviour
     {
         List<Capable> overlapping_capables = new List<Capable>();
+
+        if (grab_log != null && grab_log.Verbose >= Verbosity.Extended)
+        {
+            grab_log.LogExtended($"(Chunk - {this.ID}) - checking overlapping capables, chunk bounds : {ChunkCollider.bounds}, chunk position : {transform.position}, path : {string.Join(", ", ChunkCollider.GetPath(0))}\n");
+        }
 
         // we get all the colliders that are currently overlapping with the room collider
         Collider2D[] colliders = new Collider2D[100];
@@ -303,6 +308,13 @@ public class Chunk : MonoBehaviour
         {
             Collider2D collider = colliders[i];
             Capable capable = collider.GetComponent<Capable>();
+
+            if (grab_log != null && grab_log.Verbose >= Verbosity.Extended)
+            {
+                string capable_id = capable != null ? capable.GetStaticID() : "null";
+                grab_log.LogExtended($"(Chunk - {this.ID}) Checking overlapping collider : {collider.name} (capable: {capable_id}), collider is at {collider.transform.position} and it is a {collider.GetType().Name}\n");
+            }
+
             // if (RoomEngine.LazyInstance.log_grab) 
             if (capable == null && collider.transform.parent != null) { capable = collider.transform.parent.GetComponent<Capable>(); }
             if (capable == null && collider.transform.parent != null && collider.transform.parent.parent != null) { capable = collider.transform.parent.parent.GetComponent<Capable>(); }
@@ -311,7 +323,7 @@ public class Chunk : MonoBehaviour
             // we found a capable !
             overlapping_capables.Add(capable);
 
-            if (ChunkEngine.LazyInstance.log_grab) { Debug.Log($"(Room - {this.ID}) Found overlapping capable : {capable.ID}"); }
+            grab_log?.Log($"(Chunk - {this.ID}) Found overlapping capable : {capable.ID} (at {capable.transform.position})\n");
         }
         return overlapping_capables;
     }

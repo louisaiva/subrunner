@@ -410,7 +410,7 @@ GameObject:
   - component: {fileID: 4136381958508835822}
   - component: {fileID: 2264480574757141328}
   - component: {fileID: 4739236950195663536}
-  - component: {fileID: 9053294468900214469}
+  - component: {fileID: 7604196975203732221}
   m_Layer: 10
   m_Name: magnetism
   m_TagString: Untagged
@@ -509,16 +509,16 @@ MonoBehaviour:
     onClickedEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 9053294468900214469}
-          m_TargetAssemblyTypeName: WorldPlacerCaller, Assembly-CSharp
-          m_MethodName: EnableGrid
-          m_Mode: 1
+        - m_Target: {fileID: 7604196975203732221}
+          m_TargetAssemblyTypeName: Caller, Assembly-CSharp
+          m_MethodName: EnableSetting
+          m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: 
+            m_StringArgument: object_placer_magnetism
             m_BoolArgument: 0
           m_CallState: 2
   - name: disable_grid
@@ -531,22 +531,24 @@ MonoBehaviour:
     onClickedEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 9053294468900214469}
-          m_TargetAssemblyTypeName: WorldPlacerCaller, Assembly-CSharp
-          m_MethodName: DisableGrid
-          m_Mode: 1
+        - m_Target: {fileID: 7604196975203732221}
+          m_TargetAssemblyTypeName: Caller, Assembly-CSharp
+          m_MethodName: DisableSetting
+          m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: 
+            m_StringArgument: object_placer_magnetism
             m_BoolArgument: 0
           m_CallState: 2
   colorers: []
   setting_name: 
   setting: {fileID: 0}
---- !u!114 &9053294468900214469
+  start_cycle_index: 0
+  fire_event_on_start: 0
+--- !u!114 &7604196975203732221
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -555,9 +557,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3724078143731513196}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b213eb72b64ab054aaba3b311e5dc978, type: 3}
+  m_Script: {fileID: 11500000, guid: 5b186bb40c8a0b04281b6cfa864f9e0d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WorldPlacerCaller
+  m_EditorClassIdentifier: Assembly-CSharp::Caller
 --- !u!1 &3801925251511769107
 GameObject:
   m_ObjectHideFlags: 0
@@ -1389,6 +1391,7 @@ MonoBehaviour:
   log_extended: 0
   log_elements_showing: 0
   use_ingame_drop: 0
+  magnetism_cycle_btn: {fileID: 4739236950195663536}
 --- !u!1001 &6673638542604561784
 PrefabInstance:
   m_ObjectHideFlags: 0

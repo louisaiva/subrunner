@@ -157,7 +157,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -171,7 +171,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 24
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -192,10 +192,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -217,11 +217,24 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: WebGL
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -236,20 +249,20 @@ TextureImporter:
       name: forge_3D_base_0
       rect:
         serializedVersion: 2
-        x: 35
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 45781ecb408ea9cc0800000000000000
-      internalID: -3703392636512401580
+      spriteID: 957dd8728eb0be5459a0f3873790963a
+      internalID: 2029745951
       vertices: []
       indices: 
       edges: []
@@ -258,20 +271,20 @@ TextureImporter:
       name: forge_3D_base_1
       rect:
         serializedVersion: 2
-        x: 131
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 96
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 151ec5e1733e2aeb0800000000000000
-      internalID: -4709952434404007599
+      spriteID: d89704259e607f94da41021e59bb184a
+      internalID: -1541775332
       vertices: []
       indices: 
       edges: []
@@ -280,20 +293,20 @@ TextureImporter:
       name: forge_3D_base_2
       rect:
         serializedVersion: 2
-        x: 227
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 192
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: b3b3fe6270e9f5420800000000000000
-      internalID: 2620987261708090171
+      spriteID: 5c284c53b49416e45b144ab542152bd0
+      internalID: -1963280337
       vertices: []
       indices: 
       edges: []
@@ -302,20 +315,20 @@ TextureImporter:
       name: forge_3D_base_3
       rect:
         serializedVersion: 2
-        x: 323
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 288
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 4ce8ec15182893c00800000000000000
-      internalID: 880878694062526148
+      spriteID: 415c7fb8ae4768345aade82ac8d5d088
+      internalID: 703653147
       vertices: []
       indices: 
       edges: []
@@ -324,20 +337,20 @@ TextureImporter:
       name: forge_3D_base_4
       rect:
         serializedVersion: 2
-        x: 419
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 384
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 97d80749de8a475f0800000000000000
-      internalID: -759796698767651463
+      spriteID: f57060ae0c8c4a54fb83617f1035ed52
+      internalID: 634525609
       vertices: []
       indices: 
       edges: []
@@ -346,20 +359,20 @@ TextureImporter:
       name: forge_3D_base_5
       rect:
         serializedVersion: 2
-        x: 515
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 480
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 1f1063e5653f04d40800000000000000
-      internalID: 5566716691703267825
+      spriteID: e7671df1637d44144b6e49eb85a0f8c9
+      internalID: -790609908
       vertices: []
       indices: 
       edges: []
@@ -368,20 +381,20 @@ TextureImporter:
       name: forge_3D_base_6
       rect:
         serializedVersion: 2
-        x: 611
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 576
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: c1eda6ecec513ef60800000000000000
-      internalID: 8062311735893876252
+      spriteID: 13001066519c32d4daedb0864970ceb9
+      internalID: 1930455093
       vertices: []
       indices: 
       edges: []
@@ -390,20 +403,20 @@ TextureImporter:
       name: forge_3D_base_7
       rect:
         serializedVersion: 2
-        x: 707
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 672
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 49c9c7a77df909320800000000000000
-      internalID: 2562723935795584148
+      spriteID: 8cc867474df07cd4f82355436fa4e169
+      internalID: -24749551
       vertices: []
       indices: 
       edges: []
@@ -412,20 +425,20 @@ TextureImporter:
       name: forge_3D_base_8
       rect:
         serializedVersion: 2
-        x: 803
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 768
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 577906aeecfdfb090800000000000000
-      internalID: -8016442731907737739
+      spriteID: eecd9a6bd16aeae45a223b453b477499
+      internalID: 679437585
       vertices: []
       indices: 
       edges: []
@@ -434,20 +447,20 @@ TextureImporter:
       name: forge_3D_base_9
       rect:
         serializedVersion: 2
-        x: 899
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 864
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 6e8d0b51ff4ef96e0800000000000000
-      internalID: -1828491139457427226
+      spriteID: 4c9a4135fc251a7498011f3d8a5134f5
+      internalID: 1503021014
       vertices: []
       indices: 
       edges: []
@@ -456,20 +469,20 @@ TextureImporter:
       name: forge_3D_base_10
       rect:
         serializedVersion: 2
-        x: 995
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 960
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: d53fa198473601d00800000000000000
-      internalID: 941361674288034653
+      spriteID: 89ce40f638bb74e40bf1cc32d132bb7e
+      internalID: -473343458
       vertices: []
       indices: 
       edges: []
@@ -478,20 +491,20 @@ TextureImporter:
       name: forge_3D_base_11
       rect:
         serializedVersion: 2
-        x: 1091
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1056
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 4423312fa322cc440800000000000000
-      internalID: 4957374926392865348
+      spriteID: bc877ae15a1355244b9716abf504e95c
+      internalID: -18991743
       vertices: []
       indices: 
       edges: []
@@ -500,20 +513,20 @@ TextureImporter:
       name: forge_3D_base_12
       rect:
         serializedVersion: 2
-        x: 1187
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1152
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: c317f54e00315ef80800000000000000
-      internalID: -8078029462066728644
+      spriteID: f7aefb20d0330984ca2e8aa90d735782
+      internalID: -1358054126
       vertices: []
       indices: 
       edges: []
@@ -522,20 +535,20 @@ TextureImporter:
       name: forge_3D_base_13
       rect:
         serializedVersion: 2
-        x: 1283
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1248
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 914b217afa0b20710800000000000000
-      internalID: 1658081881294550041
+      spriteID: b57a0e3c8f8aaaf4096bef2c7f590534
+      internalID: 1132424408
       vertices: []
       indices: 
       edges: []
@@ -544,20 +557,20 @@ TextureImporter:
       name: forge_3D_base_14
       rect:
         serializedVersion: 2
-        x: 1379
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1344
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 3c1b1c534fb0d5c70800000000000000
-      internalID: 8961331977038967235
+      spriteID: 89364f0ea960b6c499cec9b35c5ebc99
+      internalID: -1464565886
       vertices: []
       indices: 
       edges: []
@@ -566,20 +579,20 @@ TextureImporter:
       name: forge_3D_base_15
       rect:
         serializedVersion: 2
-        x: 1475
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1440
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 8f14b59b624a1c830800000000000000
-      internalID: 4089730422854599160
+      spriteID: 619809daf924c1949a085527c54da90b
+      internalID: -914974968
       vertices: []
       indices: 
       edges: []
@@ -588,20 +601,20 @@ TextureImporter:
       name: forge_3D_base_16
       rect:
         serializedVersion: 2
-        x: 1571
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1536
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: d700799c49c2e65c0800000000000000
-      internalID: -4220386783250677635
+      spriteID: e4f35665b2cdd0849b9bff3ead765a4a
+      internalID: 111583194
       vertices: []
       indices: 
       edges: []
@@ -610,20 +623,20 @@ TextureImporter:
       name: forge_3D_base_17
       rect:
         serializedVersion: 2
-        x: 1667
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1632
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 693e0bdec8ace4170800000000000000
-      internalID: 8164685881101312918
+      spriteID: b4c21c123365a6f4cb6ed1ab0237acb7
+      internalID: -713871600
       vertices: []
       indices: 
       edges: []
@@ -632,20 +645,20 @@ TextureImporter:
       name: forge_3D_base_18
       rect:
         serializedVersion: 2
-        x: 1763
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1728
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: fce43dff18896f8b0800000000000000
-      internalID: -5118736242349748529
+      spriteID: 2743363a49f4bfc4fa7fdd5922ee0397
+      internalID: 1069356023
       vertices: []
       indices: 
       edges: []
@@ -654,20 +667,20 @@ TextureImporter:
       name: forge_3D_base_19
       rect:
         serializedVersion: 2
-        x: 1859
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1824
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: bb20be21b379cbbf0800000000000000
-      internalID: -307204394591780165
+      spriteID: 722bd5e2e8abf8243bb3712567a5fc1c
+      internalID: 788457516
       vertices: []
       indices: 
       edges: []
@@ -676,20 +689,20 @@ TextureImporter:
       name: forge_3D_base_20
       rect:
         serializedVersion: 2
-        x: 1955
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1920
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 377e6b315fdda8280800000000000000
-      internalID: -9040169257325369485
+      spriteID: a00d8d3c90aa6774c8687a0ba900505b
+      internalID: 1153514045
       vertices: []
       indices: 
       edges: []
@@ -698,20 +711,20 @@ TextureImporter:
       name: forge_3D_base_21
       rect:
         serializedVersion: 2
-        x: 2051
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2016
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 8d863c47d78d04cc0800000000000000
-      internalID: -3728742458121295656
+      spriteID: d950a9e7d187a424997c86b45c0718bb
+      internalID: -1453442452
       vertices: []
       indices: 
       edges: []
@@ -720,20 +733,20 @@ TextureImporter:
       name: forge_3D_base_22
       rect:
         serializedVersion: 2
-        x: 2147
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2112
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 874fec693fd7280c0800000000000000
-      internalID: -4574955786294332296
+      spriteID: 853259002017f3c40a0ef26e8dd7c4cd
+      internalID: 1775269042
       vertices: []
       indices: 
       edges: []
@@ -742,20 +755,20 @@ TextureImporter:
       name: forge_3D_base_23
       rect:
         serializedVersion: 2
-        x: 2243
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2208
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 475f17c472577a5d0800000000000000
-      internalID: -3051341410873510540
+      spriteID: 98dfebdffc6a0d94191468d9876c3211
+      internalID: -981946241
       vertices: []
       indices: 
       edges: []
@@ -764,20 +777,20 @@ TextureImporter:
       name: forge_3D_base_24
       rect:
         serializedVersion: 2
-        x: 2339
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2304
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 12d0f077f467f8d20800000000000000
-      internalID: 3282972737048349985
+      spriteID: 41151aedb6a41ae419872817ca3b3e82
+      internalID: -325022298
       vertices: []
       indices: 
       edges: []
@@ -786,20 +799,20 @@ TextureImporter:
       name: forge_3D_base_25
       rect:
         serializedVersion: 2
-        x: 2432
-        y: 11
-        width: 53
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2400
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: b0014e2247e84e970800000000000000
-      internalID: 8783301802732032011
+      spriteID: 65d18f91537d7e84990c349f5cf2dc56
+      internalID: -1557543109
       vertices: []
       indices: 
       edges: []
@@ -808,20 +821,20 @@ TextureImporter:
       name: forge_3D_base_26
       rect:
         serializedVersion: 2
-        x: 2524
-        y: 11
-        width: 57
-        height: 65
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2496
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: ce1491270e0057740800000000000000
-      internalID: 5149022712954962412
+      spriteID: 59964615ac8fa8c41a473d2b30594fcc
+      internalID: -867081691
       vertices: []
       indices: 
       edges: []
@@ -830,20 +843,20 @@ TextureImporter:
       name: forge_3D_base_27
       rect:
         serializedVersion: 2
-        x: 2627
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2592
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 3634880f3965deaa0800000000000000
-      internalID: -6130148324385733789
+      spriteID: 41ded372bff72274fb7fecd4aa0fe935
+      internalID: -30000650
       vertices: []
       indices: 
       edges: []
@@ -852,20 +865,20 @@ TextureImporter:
       name: forge_3D_base_28
       rect:
         serializedVersion: 2
-        x: 2723
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2688
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: b550905f8dfcbf6f0800000000000000
-      internalID: -649697190494010021
+      spriteID: ee5ac900efd38e94d8dbe12fa79ce515
+      internalID: -832864389
       vertices: []
       indices: 
       edges: []
@@ -874,20 +887,20 @@ TextureImporter:
       name: forge_3D_base_29
       rect:
         serializedVersion: 2
-        x: 2819
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2784
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: e6464833d31c96120800000000000000
-      internalID: 2407667944407721070
+      spriteID: 80f9ebcd3be964a43aa27247210c0b79
+      internalID: 1088446238
       vertices: []
       indices: 
       edges: []
@@ -896,20 +909,20 @@ TextureImporter:
       name: forge_3D_base_30
       rect:
         serializedVersion: 2
-        x: 2915
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2880
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 04e60c1d89057d190800000000000000
-      internalID: -7937787200932909504
+      spriteID: 52ed7803bac59f64cac7b1a42b54396e
+      internalID: -1164871516
       vertices: []
       indices: 
       edges: []
@@ -918,20 +931,20 @@ TextureImporter:
       name: forge_3D_base_31
       rect:
         serializedVersion: 2
-        x: 3011
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2976
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: c72630d699305c020800000000000000
-      internalID: 2361297537119511164
+      spriteID: 7c1dfa58ab799254593a9ab58062419e
+      internalID: -509562544
       vertices: []
       indices: 
       edges: []
@@ -940,20 +953,20 @@ TextureImporter:
       name: forge_3D_base_32
       rect:
         serializedVersion: 2
-        x: 3107
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3072
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: f9b9c1b26ed867e80800000000000000
-      internalID: -8181195653366637665
+      spriteID: 6a28f1b106ab7794db986890e96af66f
+      internalID: -1684126063
       vertices: []
       indices: 
       edges: []
@@ -962,20 +975,20 @@ TextureImporter:
       name: forge_3D_base_33
       rect:
         serializedVersion: 2
-        x: 3203
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3168
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 38f07ee0374f66110800000000000000
-      internalID: 1253958321277702019
+      spriteID: 9d2ae9e1eb9a3f64bb7fe005c1424b80
+      internalID: -613800728
       vertices: []
       indices: 
       edges: []
@@ -984,20 +997,20 @@ TextureImporter:
       name: forge_3D_base_34
       rect:
         serializedVersion: 2
-        x: 3299
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3264
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: f30868ecee9d76b40800000000000000
-      internalID: 5433551095136157759
+      spriteID: c2a1dd37d99a0d04caf0c427689f3b28
+      internalID: -1681903349
       vertices: []
       indices: 
       edges: []
@@ -1006,20 +1019,20 @@ TextureImporter:
       name: forge_3D_base_35
       rect:
         serializedVersion: 2
-        x: 3395
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3360
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 85f41970c7f8361f0800000000000000
-      internalID: -1052840125008883880
+      spriteID: fb4bed03ac99ef24b9704737ff3c98ff
+      internalID: -1881855655
       vertices: []
       indices: 
       edges: []
@@ -1028,20 +1041,20 @@ TextureImporter:
       name: forge_3D_base_36
       rect:
         serializedVersion: 2
-        x: 3491
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3456
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: e82796a191aeef9d0800000000000000
-      internalID: -2738494129856482674
+      spriteID: a03ffc3e3bbe07649bb593389f5d4859
+      internalID: 102734221
       vertices: []
       indices: 
       edges: []
@@ -1050,20 +1063,20 @@ TextureImporter:
       name: forge_3D_base_37
       rect:
         serializedVersion: 2
-        x: 3587
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3552
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 253c54db38e13f270800000000000000
-      internalID: 8282997690829488978
+      spriteID: 75c354b6c4f34814c969a6eff8e53b59
+      internalID: -2021980620
       vertices: []
       indices: 
       edges: []
@@ -1072,20 +1085,20 @@ TextureImporter:
       name: forge_3D_base_38
       rect:
         serializedVersion: 2
-        x: 3683
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3648
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: d310b9fd6ac0185f0800000000000000
-      internalID: -756309351565950659
+      spriteID: 1d0a2c13747c3134588d6d2a84b82248
+      internalID: 1541910243
       vertices: []
       indices: 
       edges: []
@@ -1094,20 +1107,20 @@ TextureImporter:
       name: forge_3D_base_39
       rect:
         serializedVersion: 2
-        x: 3779
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3744
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 93a32888f98013d60800000000000000
-      internalID: 7868079505276025401
+      spriteID: 336e685f44fe1464dafb7f02cc228ab9
+      internalID: -1068082274
       vertices: []
       indices: 
       edges: []
@@ -1116,20 +1129,20 @@ TextureImporter:
       name: forge_3D_base_40
       rect:
         serializedVersion: 2
-        x: 3875
-        y: 11
-        width: 50
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3840
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.48958334}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 93a13fca3361cfc10800000000000000
-      internalID: 2088568738393823801
+      spriteID: 07b6c092276462a4b8ca4f37792088af
+      internalID: 2136073482
       vertices: []
       indices: 
       edges: []
@@ -1138,57 +1151,61 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
-    secondaryTextures: []
+    secondaryTextures:
+    - texture: {fileID: 2800000, guid: 53b6c0e58ca41c54b9a77044a05d9eb7, type: 3}
+      name: _Emission
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":96.0,"y":96.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.59375,"y":0.4895833432674408},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":9,"pivotUnitMode":1,"slicingType":1,"keepEmptyRects":true,"isAlternate":false}'
     nameFileIdTable:
-      forge_3D_base_0: -3703392636512401580
-      forge_3D_base_1: -4709952434404007599
-      forge_3D_base_10: 941361674288034653
-      forge_3D_base_11: 4957374926392865348
-      forge_3D_base_12: -8078029462066728644
-      forge_3D_base_13: 1658081881294550041
-      forge_3D_base_14: 8961331977038967235
-      forge_3D_base_15: 4089730422854599160
-      forge_3D_base_16: -4220386783250677635
-      forge_3D_base_17: 8164685881101312918
-      forge_3D_base_18: -5118736242349748529
-      forge_3D_base_19: -307204394591780165
-      forge_3D_base_2: 2620987261708090171
-      forge_3D_base_20: -9040169257325369485
-      forge_3D_base_21: -3728742458121295656
-      forge_3D_base_22: -4574955786294332296
-      forge_3D_base_23: -3051341410873510540
-      forge_3D_base_24: 3282972737048349985
-      forge_3D_base_25: 8783301802732032011
-      forge_3D_base_26: 5149022712954962412
-      forge_3D_base_27: -6130148324385733789
-      forge_3D_base_28: -649697190494010021
-      forge_3D_base_29: 2407667944407721070
-      forge_3D_base_3: 880878694062526148
-      forge_3D_base_30: -7937787200932909504
-      forge_3D_base_31: 2361297537119511164
-      forge_3D_base_32: -8181195653366637665
-      forge_3D_base_33: 1253958321277702019
-      forge_3D_base_34: 5433551095136157759
-      forge_3D_base_35: -1052840125008883880
-      forge_3D_base_36: -2738494129856482674
-      forge_3D_base_37: 8282997690829488978
-      forge_3D_base_38: -756309351565950659
-      forge_3D_base_39: 7868079505276025401
-      forge_3D_base_4: -759796698767651463
-      forge_3D_base_40: 2088568738393823801
-      forge_3D_base_5: 5566716691703267825
-      forge_3D_base_6: 8062311735893876252
-      forge_3D_base_7: 2562723935795584148
-      forge_3D_base_8: -8016442731907737739
-      forge_3D_base_9: -1828491139457427226
+      forge_3D_base_0: 2029745951
+      forge_3D_base_1: -1541775332
+      forge_3D_base_10: -473343458
+      forge_3D_base_11: -18991743
+      forge_3D_base_12: -1358054126
+      forge_3D_base_13: 1132424408
+      forge_3D_base_14: -1464565886
+      forge_3D_base_15: -914974968
+      forge_3D_base_16: 111583194
+      forge_3D_base_17: -713871600
+      forge_3D_base_18: 1069356023
+      forge_3D_base_19: 788457516
+      forge_3D_base_2: -1963280337
+      forge_3D_base_20: 1153514045
+      forge_3D_base_21: -1453442452
+      forge_3D_base_22: 1775269042
+      forge_3D_base_23: -981946241
+      forge_3D_base_24: -325022298
+      forge_3D_base_25: -1557543109
+      forge_3D_base_26: -867081691
+      forge_3D_base_27: -30000650
+      forge_3D_base_28: -832864389
+      forge_3D_base_29: 1088446238
+      forge_3D_base_3: 703653147
+      forge_3D_base_30: -1164871516
+      forge_3D_base_31: -509562544
+      forge_3D_base_32: -1684126063
+      forge_3D_base_33: -613800728
+      forge_3D_base_34: -1681903349
+      forge_3D_base_35: -1881855655
+      forge_3D_base_36: 102734221
+      forge_3D_base_37: -2021980620
+      forge_3D_base_38: 1541910243
+      forge_3D_base_39: -1068082274
+      forge_3D_base_4: 634525609
+      forge_3D_base_40: 2136073482
+      forge_3D_base_5: -790609908
+      forge_3D_base_6: 1930455093
+      forge_3D_base_7: -24749551
+      forge_3D_base_8: 679437585
+      forge_3D_base_9: 1503021014
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

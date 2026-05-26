@@ -22,7 +22,7 @@ public class UI_SettingsBuilder : MonoBehaviour
     [SerializeField] private GameObject step_slider_prefab;
 
     [Header("Logs")]
-    [SerializeField] private bool log = false;
+    [SerializeField] private Loggable<UI_SettingsBuilder> log;
 
     public void Init()
     {
@@ -63,7 +63,7 @@ public class UI_SettingsBuilder : MonoBehaviour
             string category = keys[i];
             List<Setting> category_settings = settings[category];
             build_panel(category_settings, category);
-            if (log) { Debug.Log($"(UI_SettingsBuilder) Built panel for category: {category}"); }
+            log.Log($"Built panel for category: {category}");
         }
     }
     public void build_panel(List<Setting> data, string category)
@@ -71,12 +71,12 @@ public class UI_SettingsBuilder : MonoBehaviour
         // get the parent and color
         if (!settings_panels.TryGetValue(category, out UI_Panel panel))
         {
-            Debug.LogError($"(UI_SettingsBuilder) Panel not found for settings category: {category}");
+            log.LogExtended($"No related Panel found for settings category: {category}");
             return;
         }
         if (!category_colors.TryGetValue(category, out Color category_color))
         {
-            Debug.LogWarning($"(UI_SettingsBuilder) Color not found for settings category: {category}");
+            log.Warning($"Color not found for settings category: {category}");
             category_color = Color.lightGray;
         }
 

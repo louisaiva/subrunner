@@ -104,16 +104,20 @@ public class TemplateCapableVisualizer : MonoBehaviour
     // DATA MANAGEMENT
     private void load_feet_data(FeetData feet_data)
     {
+        Collider2D col;
+
         // load box colliders
         for (int i = 0; i < feet_data.box_colliders.Count; i++)
         {
-            ColliderBank.Instance.LoadCollider(feet_data.box_colliders[i], feet);
+            col = ColliderBank.Instance.LoadCollider(feet_data.box_colliders[i], feet);
+            col.isTrigger = true; // we set the colliders as triggers so they dont interact with the world while we are placing the object
         }
 
         // load circle colliders
         for (int i = 0; i < feet_data.circle_colliders.Count; i++)
         {
-            ColliderBank.Instance.LoadCollider(feet_data.circle_colliders[i], feet);
+            col = ColliderBank.Instance.LoadCollider(feet_data.circle_colliders[i], feet);
+            col.isTrigger = true;
         }
     }
     private void load_anim_data(AnimPlayerData anim_data)

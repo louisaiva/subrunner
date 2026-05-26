@@ -41,6 +41,20 @@ using UnityEngine;
 
         return closest_value;
     }
+    public int GetClosestStepIndex(float value)
+    {
+        List<float> possible_values = GetPossibleValues();
+        float closest_value = GetClosestStepValue(value);
+        return possible_values.IndexOf(closest_value);
+    }
+
+    // WE SCROLL THROUGH STEPS
+    public void Scroll(int amount = 1)
+    {
+        List<float> possible_values = GetPossibleValues();
+        int current_index = GetClosestStepIndex(Value);
+        Value = possible_values[Mathf.Clamp(current_index + amount, 0, possible_values.Count - 1)];
+    }
 
     // CLONING
     public override Setting Clone()

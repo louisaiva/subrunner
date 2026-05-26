@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class WorldPlacer : MonoBehaviour
@@ -46,6 +47,8 @@ public class WorldPlacer : MonoBehaviour
     [Header("Logs")]
     [SerializeField] private Loggable<WorldPlacer> log;
 
+
+
     // ENTRY POINTS
     public void AskAndThenStartPlacingObject()
     {
@@ -79,13 +82,14 @@ public class WorldPlacer : MonoBehaviour
     }
 
     // ACTIVATE / DEACTIVATE GRID
-    public void ActivateGrid()
+    public void SetGridSetting(Setting setting)
     {
-        Grid.enabled = true;
+        log.LogSpecific($"setting {setting.Name} changed, new value : {setting.Value}, we set grid enabled to {setting.Value > 0.5f}");
+        Grid.enabled = setting.Value > 0.5f;
     }
-    public void DeactivateGrid()
+    private void OnDestroy()
     {
-        Grid.enabled = false;
+        SettingsManager.Instance.UnregisterCallback("object_placer_magnetism", SetGridSetting);
     }
 }
 

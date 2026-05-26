@@ -133,7 +133,7 @@ public class PersoInputsController : InputController
         if (!Capable.TryGetCapacity(out WalkCapacity walker)) { return; }
 
         // read raw inputs
-        Vector2 raw_inputs = InputManager.Instance.MovementInputs;
+        Vector2 raw_inputs = InputManager.Instance.PersoMovementInputs;
 
         // we check if the raw inputs are below the deadzone
         raw_inputs.x = Mathf.Abs(raw_inputs.x) < input_manager.JOYSTICK_MIN_THRESHOLD ? 0f : raw_inputs.x;

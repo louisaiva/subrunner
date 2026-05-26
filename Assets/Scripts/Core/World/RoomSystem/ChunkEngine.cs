@@ -95,7 +95,6 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     public bool log_tilemaps_loading = false;
     public bool log_colliders = false;
     public bool log_enter_exit = false;
-    public bool log_grab = false;
 
     ///
     //
@@ -403,7 +402,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         // double check that the capable is not a grabbed item
         if (capable_data is ItemData item_data && item_data.is_grabbed)
         {
-            if (log_grab) { Debug.Log($"(ChunkEngine) Capable {capable_data.id} is a grabbed item, we don't attach it to any room for now"); }
+            if (this.log_dynamic_room_assignement) { Debug.Log($"(ChunkEngine) Capable {capable_data.id} is a grabbed item, we don't attach it to any room for now"); }
             return;
         }
         AttachCapable(capable_data.id);
@@ -934,23 +933,23 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
 
         return LoadWorldChunksData(world_id, chunks_ids);
     }
-    public static void MakeChunksGrabCapables(Chunk[] rooms, bool only_capables = false)
+    public static void MakeChunksGrabCapables<T>(Chunk[] chunks, bool only_capables = false, Loggable<T> grab_log = null) where T : MonoBehaviour
     {
-        if (LazyInstance.log_grab) { Debug.Log($"(ChunkEngine) Making {rooms.Length} rooms grab capables... (only_capables = {only_capables})"); }
+        grab_log?.Log($"[ChunkEngine] Making {chunks.Length} chunks grab capables... (only_capables = {only_capables})");
 
         List<Capable> overlapping_capables = new List<Capable>();
         List<string> added_capable_ids = new List<string>();
 
         string log = "";
-        foreach (Chunk room in rooms)
+        foreach (Chunk chunk in chunks)
         {
-            log += $"   - Room {room.name} :\n";
+            log += $"   - Chunk {chunk.ID} :\n";
             overlapping_capables.Clear();
-            overlapping_capables.AddRange(room.GetStaticOverlappingCapables());
+            overlapping_capables.AddRange(chunk.GetStaticOverlappingCapables(grab_log));
 
             // . clear the capables & movables ids room data
-            room.data.capables_ids = new List<string>();
-            if (!only_capables) { room.data.movables_ids = new List<string>(); }
+            chunk.data.capables_ids = new List<string>();
+            if (!only_capables) { chunk.data.movables_ids = new List<string>(); }
 
             // we try to add the capable ids to the room data
             foreach (Capable capable in overlapping_capables)
@@ -968,15 +967,15 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
                 if (capable is Movable)
                 {
                     if (only_capables) { continue; }
-                    if (room.data.movables_ids == null) { room.data.movables_ids = new List<string>(); }
-                    if (!room.data.movables_ids.Contains(capable_id)) { room.data.movables_ids.Add(capable_id); }
-                    log += $"     - Movable '{capable_id}'\n";
+                    if (chunk.data.movables_ids == null) { chunk.data.movables_ids = new List<string>(); }
+                    if (!chunk.data.movables_ids.Contains(capable_id)) { chunk.data.movables_ids.Add(capable_id); }
+                    log += $"     - Movable '{capable_id}' (at {capable.transform.position})\n";
                 }
                 else
                 {
-                    if (room.data.capables_ids == null) { room.data.capables_ids = new List<string>(); }
-                    if (!room.data.capables_ids.Contains(capable_id)) { room.data.capables_ids.Add(capable_id); }
-                    log += $"     - Capable '{capable_id}'\n";
+                    if (chunk.data.capables_ids == null) { chunk.data.capables_ids = new List<string>(); }
+                    if (!chunk.data.capables_ids.Contains(capable_id)) { chunk.data.capables_ids.Add(capable_id); }
+                    log += $"     - Capable '{capable_id}' (at {capable.transform.position})\n";
                 }
 
                 // . memorize we added this capable to a room
@@ -986,7 +985,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
         }
         log += "\n";
 
-        if (LazyInstance.log_grab) { Debug.Log($"(ChunkEngine) Total Capables grabbed : {added_capable_ids.Count}\n{log}"); }
+        grab_log?.Log($"[ChunkEngine] Total Capables grabbed : {added_capable_ids.Count}\n{log}");
     }
 
 }

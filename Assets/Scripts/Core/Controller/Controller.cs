@@ -217,7 +217,7 @@ public class Controller : MonoBehaviour
     private void control_capacities(Capable capa)
     {
         // on refresh la cam
-        CameraFollow.Instance.RefreshTarget(capa);
+        CameraFollow.Instance.ChangeCapableTarget(capa);
 
         // on ajoute le callback de changement de skin
         refresh_skin_based_parameters(capa.Skin);
@@ -415,7 +415,7 @@ public class Controller : MonoBehaviour
 
         // here we can tp the camera to the controlled capable position
         this.data.controlled_capable_id = Capable.ID;
-        CameraFollow.Instance.RefreshTarget(Capable, tp: true);
+        CameraFollow.Instance.ChangeCapableTarget(Capable, tp: true);
 
         // load the capable stack
         if (data.stack_capable_ids != null)

@@ -172,7 +172,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -186,7 +186,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 24
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -207,10 +207,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -232,11 +232,24 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: WebGL
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -251,20 +264,20 @@ TextureImporter:
       name: forge_3D_robot_0
       rect:
         serializedVersion: 2
-        x: 346
-        y: 56
-        width: 25
-        height: 31
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 128340fff517b9920800000000000000
-      internalID: 2998114634059495457
+      spriteID: fd77055d1f589f04c995f6a4d6746ecf
+      internalID: -1229744765
       vertices: []
       indices: 
       edges: []
@@ -273,20 +286,20 @@ TextureImporter:
       name: forge_3D_robot_1
       rect:
         serializedVersion: 2
-        x: 432
-        y: 51
-        width: 34
-        height: 28
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 96
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: b8dba48c034c66930800000000000000
-      internalID: 4136209021584194955
+      spriteID: cf7227cdebec23e4099d9676d6809b8a
+      internalID: 361752063
       vertices: []
       indices: 
       edges: []
@@ -295,20 +308,20 @@ TextureImporter:
       name: forge_3D_robot_2
       rect:
         serializedVersion: 2
-        x: 528
-        y: 49
-        width: 29
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 192
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: e135861b1ac11b350800000000000000
-      internalID: 6030632856817521438
+      spriteID: e11bade628251804bb56b2884a8302aa
+      internalID: -603853977
       vertices: []
       indices: 
       edges: []
@@ -317,20 +330,20 @@ TextureImporter:
       name: forge_3D_robot_3
       rect:
         serializedVersion: 2
-        x: 627
-        y: 40
-        width: 32
-        height: 49
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 288
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 7cac8763cd5ff40c0800000000000000
-      internalID: -4589179169111749945
+      spriteID: 4a26650c6cbcf7249a9d87c80f0d0c23
+      internalID: 1484660375
       vertices: []
       indices: 
       edges: []
@@ -339,20 +352,20 @@ TextureImporter:
       name: forge_3D_robot_4
       rect:
         serializedVersion: 2
-        x: 723
-        y: 40
-        width: 31
-        height: 55
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 384
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: c561d5cd94ea7bfd0800000000000000
-      internalID: -2326199050260638116
+      spriteID: 354e4e7b0aaac2946ab292b8b8587a0b
+      internalID: -1491334238
       vertices: []
       indices: 
       edges: []
@@ -361,20 +374,20 @@ TextureImporter:
       name: forge_3D_robot_5
       rect:
         serializedVersion: 2
-        x: 819
-        y: 48
-        width: 32
-        height: 45
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 480
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 84f1d23ed6519ce10800000000000000
-      internalID: 2218327853163683656
+      spriteID: bd5257db8902f6b41be64de85080d8d5
+      internalID: -720892825
       vertices: []
       indices: 
       edges: []
@@ -383,20 +396,20 @@ TextureImporter:
       name: forge_3D_robot_6
       rect:
         serializedVersion: 2
-        x: 915
-        y: 47
-        width: 32
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 576
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 945622af882ccc0f0800000000000000
-      internalID: -1095286715789974199
+      spriteID: fc2c8c832d05a454a811e5a76df970f7
+      internalID: 754588669
       vertices: []
       indices: 
       edges: []
@@ -405,20 +418,20 @@ TextureImporter:
       name: forge_3D_robot_7
       rect:
         serializedVersion: 2
-        x: 1011
-        y: 43
-        width: 33
-        height: 50
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 672
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 02a0ef0c672cf37f0800000000000000
-      internalID: -630571607508776416
+      spriteID: 48a716827297b1740a18ce0d3ec2ebf0
+      internalID: -1261333240
       vertices: []
       indices: 
       edges: []
@@ -427,20 +440,20 @@ TextureImporter:
       name: forge_3D_robot_8
       rect:
         serializedVersion: 2
-        x: 1107
-        y: 43
-        width: 33
-        height: 50
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 768
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 8837e6ce88b466090800000000000000
-      internalID: -8041657033169144952
+      spriteID: 1885b8290db7be048967ccb9057f486d
+      internalID: 585829757
       vertices: []
       indices: 
       edges: []
@@ -449,20 +462,20 @@ TextureImporter:
       name: forge_3D_robot_9
       rect:
         serializedVersion: 2
-        x: 1203
-        y: 43
-        width: 33
-        height: 50
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 864
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 759a9f68173e557c0800000000000000
-      internalID: -4083107410406168233
+      spriteID: 6106929779763d84892a6445183878b5
+      internalID: 981817608
       vertices: []
       indices: 
       edges: []
@@ -471,20 +484,20 @@ TextureImporter:
       name: forge_3D_robot_10
       rect:
         serializedVersion: 2
-        x: 1299
-        y: 43
-        width: 33
-        height: 50
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 960
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 8f90a969af068c500800000000000000
-      internalID: 416689594916538872
+      spriteID: fb5807b138276f142818b438c45d4896
+      internalID: -1981049978
       vertices: []
       indices: 
       edges: []
@@ -493,20 +506,20 @@ TextureImporter:
       name: forge_3D_robot_11
       rect:
         serializedVersion: 2
-        x: 1395
-        y: 43
-        width: 33
-        height: 50
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1056
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: b9da2bfdac976aca0800000000000000
-      internalID: -6005979140808594021
+      spriteID: eeda20fe65294994bbaf5006da609887
+      internalID: -352623470
       vertices: []
       indices: 
       edges: []
@@ -515,20 +528,20 @@ TextureImporter:
       name: forge_3D_robot_12
       rect:
         serializedVersion: 2
-        x: 1491
-        y: 43
-        width: 33
-        height: 50
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1152
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 58dc510600a134fe0800000000000000
-      internalID: -1206091686290797179
+      spriteID: 8df0e51cb8dcb394aafcde4281ab2cc3
+      internalID: 265936705
       vertices: []
       indices: 
       edges: []
@@ -537,20 +550,20 @@ TextureImporter:
       name: forge_3D_robot_13
       rect:
         serializedVersion: 2
-        x: 1587
-        y: 43
-        width: 33
-        height: 50
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1248
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 7163d5b4d002dd3c0800000000000000
-      internalID: -4333272024989485545
+      spriteID: caed59965d6b79444ad7fd18f6c5fe6a
+      internalID: -547609518
       vertices: []
       indices: 
       edges: []
@@ -559,20 +572,20 @@ TextureImporter:
       name: forge_3D_robot_14
       rect:
         serializedVersion: 2
-        x: 1683
-        y: 43
-        width: 33
-        height: 50
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1344
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 60689920f331714e0800000000000000
-      internalID: -2011117547250153978
+      spriteID: 27492e4113184384e9fa36e76ced11d5
+      internalID: 1721163883
       vertices: []
       indices: 
       edges: []
@@ -581,20 +594,20 @@ TextureImporter:
       name: forge_3D_robot_15
       rect:
         serializedVersion: 2
-        x: 1779
-        y: 43
-        width: 33
-        height: 50
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1440
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 7a18db774d43b6790800000000000000
-      internalID: -7535871464327773785
+      spriteID: 05122c72d85ccf74a9573cee59770c11
+      internalID: 492291474
       vertices: []
       indices: 
       edges: []
@@ -603,20 +616,20 @@ TextureImporter:
       name: forge_3D_robot_16
       rect:
         serializedVersion: 2
-        x: 1877
-        y: 43
-        width: 31
-        height: 50
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1536
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 1f9cd42fc3d1f6c30800000000000000
-      internalID: 4354731512290986481
+      spriteID: e05733bd15f630449845c144f409bd63
+      internalID: -429185211
       vertices: []
       indices: 
       edges: []
@@ -625,20 +638,20 @@ TextureImporter:
       name: forge_3D_robot_17
       rect:
         serializedVersion: 2
-        x: 1969
-        y: 43
-        width: 35
-        height: 50
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1632
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 046cadd6d42709210800000000000000
-      internalID: 1337694766210139712
+      spriteID: dfbdae4f8ad18704ebf95b738f201420
+      internalID: 36609631
       vertices: []
       indices: 
       edges: []
@@ -647,20 +660,20 @@ TextureImporter:
       name: forge_3D_robot_18
       rect:
         serializedVersion: 2
-        x: 2065
-        y: 44
-        width: 34
-        height: 49
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1728
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: d969fde51ec65b1c0800000000000000
-      internalID: -4488561738389678435
+      spriteID: 491edbcb079e4dd499f8d76020a4166f
+      internalID: 1128713307
       vertices: []
       indices: 
       edges: []
@@ -669,20 +682,20 @@ TextureImporter:
       name: forge_3D_robot_19
       rect:
         serializedVersion: 2
-        x: 2157
-        y: 42
-        width: 38
-        height: 51
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1824
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 3751fcd6349880e50800000000000000
-      internalID: 6775816562077013363
+      spriteID: 033df586808a6f246b2c9e6044577751
+      internalID: -1495546990
       vertices: []
       indices: 
       edges: []
@@ -691,20 +704,20 @@ TextureImporter:
       name: forge_3D_robot_20
       rect:
         serializedVersion: 2
-        x: 2251
-        y: 33
-        width: 41
-        height: 61
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1920
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: c2013e4d715384ef0800000000000000
-      internalID: -123790613280518100
+      spriteID: 85d13dc5bbea04e408cec7262dd55ab7
+      internalID: -886643991
       vertices: []
       indices: 
       edges: []
@@ -713,20 +726,20 @@ TextureImporter:
       name: forge_3D_robot_21
       rect:
         serializedVersion: 2
-        x: 2350
-        y: 43
-        width: 36
-        height: 49
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2016
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: e048e2d423b953250800000000000000
-      internalID: 5923811525221319694
+      spriteID: 151e57fea8fa8154fa35cf2cc7a52ab0
+      internalID: 854870856
       vertices: []
       indices: 
       edges: []
@@ -735,20 +748,20 @@ TextureImporter:
       name: forge_3D_robot_22
       rect:
         serializedVersion: 2
-        x: 2446
-        y: 43
-        width: 36
-        height: 49
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2112
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 31d840cc1a1faa750800000000000000
-      internalID: 6317127104555420947
+      spriteID: 953e8209131626d4393e73830564fbb8
+      internalID: 1582930459
       vertices: []
       indices: 
       edges: []
@@ -757,20 +770,20 @@ TextureImporter:
       name: forge_3D_robot_23
       rect:
         serializedVersion: 2
-        x: 2545
-        y: 37
-        width: 33
-        height: 55
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2208
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 6cd43681f987cb230800000000000000
-      internalID: 3655929622222294470
+      spriteID: 636222c5d185c074989fb3ceab4938bc
+      internalID: 1583465548
       vertices: []
       indices: 
       edges: []
@@ -779,20 +792,20 @@ TextureImporter:
       name: forge_3D_robot_24
       rect:
         serializedVersion: 2
-        x: 2643
-        y: 40
-        width: 31
-        height: 52
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2304
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: b7c6b7ffd651403e0800000000000000
-      internalID: -2088520765011170181
+      spriteID: 3b865395cafb59e40b3ab2f0dea3427b
+      internalID: 2037843438
       vertices: []
       indices: 
       edges: []
@@ -801,20 +814,20 @@ TextureImporter:
       name: forge_3D_robot_25
       rect:
         serializedVersion: 2
-        x: 2739
-        y: 41
-        width: 31
-        height: 51
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2400
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 26bf96fa70d5b4ad0800000000000000
-      internalID: -2716975662598849694
+      spriteID: 41946ea975c637c4b84d932921b4d86a
+      internalID: 1765159454
       vertices: []
       indices: 
       edges: []
@@ -823,20 +836,20 @@ TextureImporter:
       name: forge_3D_robot_26
       rect:
         serializedVersion: 2
-        x: 2828
-        y: 34
-        width: 39
-        height: 58
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2496
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 1df29bface89ca050800000000000000
-      internalID: 5813189361356320721
+      spriteID: a4d3b3a458127d746af2de5518baa9ce
+      internalID: -1454181480
       vertices: []
       indices: 
       edges: []
@@ -845,20 +858,20 @@ TextureImporter:
       name: forge_3D_robot_27
       rect:
         serializedVersion: 2
-        x: 2928
-        y: 34
-        width: 35
-        height: 58
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2592
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: c0bdefd6efcc3bec0800000000000000
-      internalID: -3552270287926011124
+      spriteID: c5d4b620492e69141a2a184141406c50
+      internalID: 1347336369
       vertices: []
       indices: 
       edges: []
@@ -867,20 +880,20 @@ TextureImporter:
       name: forge_3D_robot_28
       rect:
         serializedVersion: 2
-        x: 3024
-        y: 32
-        width: 34
-        height: 58
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2688
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 1767158c883ee0dd0800000000000000
-      internalID: -2517824965037689231
+      spriteID: 053dcd3dc8280cb4abd7e5fb7bf4ae84
+      internalID: 1494692841
       vertices: []
       indices: 
       edges: []
@@ -889,20 +902,20 @@ TextureImporter:
       name: forge_3D_robot_29
       rect:
         serializedVersion: 2
-        x: 3123
-        y: 43
-        width: 32
-        height: 51
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2784
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: c4ff37d5d2fba3180800000000000000
-      internalID: -9134778692605313204
+      spriteID: 0d67417b78a193a40a0e9ba844232c16
+      internalID: -1472802741
       vertices: []
       indices: 
       edges: []
@@ -911,20 +924,20 @@ TextureImporter:
       name: forge_3D_robot_30
       rect:
         serializedVersion: 2
-        x: 3218
-        y: 41
-        width: 33
-        height: 51
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2880
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 14569479892c79ff0800000000000000
-      internalID: -29340911925631679
+      spriteID: c98760f03c2448d4bbcbed35bfacbeb2
+      internalID: 1027734915
       vertices: []
       indices: 
       edges: []
@@ -933,20 +946,20 @@ TextureImporter:
       name: forge_3D_robot_31
       rect:
         serializedVersion: 2
-        x: 3311
-        y: 38
-        width: 36
-        height: 54
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2976
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 151f69cd57f420c60800000000000000
-      internalID: 7782870473680286033
+      spriteID: 9ca7c505b2c523f4f8ebbebe95a96a12
+      internalID: 673846828
       vertices: []
       indices: 
       edges: []
@@ -955,20 +968,20 @@ TextureImporter:
       name: forge_3D_robot_32
       rect:
         serializedVersion: 2
-        x: 3404
-        y: 43
-        width: 39
-        height: 49
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3072
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: b5d1aef3f619e6710800000000000000
-      internalID: 1688446817310219611
+      spriteID: 4cc251451e9be704fa8f6130d2517e4f
+      internalID: -1861484789
       vertices: []
       indices: 
       edges: []
@@ -977,20 +990,20 @@ TextureImporter:
       name: forge_3D_robot_33
       rect:
         serializedVersion: 2
-        x: 3507
-        y: 40
-        width: 31
-        height: 55
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3168
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 9f3f9e735e940a440800000000000000
-      internalID: 4945033639687222265
+      spriteID: cc8033b3bac60174fac5671a3b2063f7
+      internalID: -1208401945
       vertices: []
       indices: 
       edges: []
@@ -999,20 +1012,20 @@ TextureImporter:
       name: forge_3D_robot_34
       rect:
         serializedVersion: 2
-        x: 3603
-        y: 40
-        width: 32
-        height: 49
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3264
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 3b7a8dde9e2d7e240800000000000000
-      internalID: 4821053828283017139
+      spriteID: 478de53a1d70f08499d1747b509a9464
+      internalID: 976867981
       vertices: []
       indices: 
       edges: []
@@ -1021,20 +1034,20 @@ TextureImporter:
       name: forge_3D_robot_35
       rect:
         serializedVersion: 2
-        x: 3696
-        y: 51
-        width: 34
-        height: 28
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3360
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 11685cf6772984cd0800000000000000
-      internalID: -2573646145368259055
+      spriteID: 79a5840daf2e7a0409b9aa48dd3abf8d
+      internalID: 1470387316
       vertices: []
       indices: 
       edges: []
@@ -1043,20 +1056,20 @@ TextureImporter:
       name: forge_3D_robot_36
       rect:
         serializedVersion: 2
-        x: 3792
-        y: 49
-        width: 29
-        height: 27
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3456
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 154ad39362d040730800000000000000
-      internalID: 3964308029813138513
+      spriteID: a739297881ebb5149a21ead6743f1211
+      internalID: 1843070920
       vertices: []
       indices: 
       edges: []
@@ -1065,20 +1078,20 @@ TextureImporter:
       name: forge_3D_robot_37
       rect:
         serializedVersion: 2
-        x: 3898
-        y: 56
-        width: 25
-        height: 31
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3552
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: c87c3a0dedd510470800000000000000
-      internalID: 8359065594940868492
+      spriteID: 54ceb4a54b1b1cc438380f07e8325c92
+      internalID: -1472684796
       vertices: []
       indices: 
       edges: []
@@ -1087,20 +1100,20 @@ TextureImporter:
       name: forge_3D_robot_38
       rect:
         serializedVersion: 2
-        x: 2454
-        y: 39
-        width: 14
-        height: 11
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3648
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 926b1cd414e3b6cc0800000000000000
-      internalID: -3716808617265875415
+      spriteID: 6097f6adf5166f24fbdfedadc7e6fd19
+      internalID: -1722232826
       vertices: []
       indices: 
       edges: []
@@ -1109,20 +1122,20 @@ TextureImporter:
       name: forge_3D_robot_39
       rect:
         serializedVersion: 2
-        x: 2731
-        y: 34
-        width: 21
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3744
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: ff739b45f4dd3ad80800000000000000
-      internalID: -8240499560364296193
+      spriteID: 5ce7f5be88ad64e40962e9135b043fe7
+      internalID: -896668652
       vertices: []
       indices: 
       edges: []
@@ -1131,130 +1144,20 @@ TextureImporter:
       name: forge_3D_robot_40
       rect:
         serializedVersion: 2
-        x: 3120
-        y: 36
-        width: 11
-        height: 17
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 3840
+        y: 0
+        width: 96
+        height: 96
+      alignment: 9
+      pivot: {x: 0.59375, y: 0.35416666}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 99d810c06b7423ee0800000000000000
-      internalID: -1282884096636121703
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: forge_3D_robot_41
-      rect:
-        serializedVersion: 2
-        x: 3216
-        y: 44
-        width: 9
-        height: 9
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 6f085568da705af50800000000000000
-      internalID: 6891923246624899318
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: forge_3D_robot_42
-      rect:
-        serializedVersion: 2
-        x: 3320
-        y: 40
-        width: 13
-        height: 10
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 85b7a8e0be7d3ff50800000000000000
-      internalID: 6914107257505086296
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: forge_3D_robot_43
-      rect:
-        serializedVersion: 2
-        x: 3412
-        y: 41
-        width: 11
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 3d73e1d0ae24f0840800000000000000
-      internalID: 5192442468391335891
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: forge_3D_robot_44
-      rect:
-        serializedVersion: 2
-        x: 2268
-        y: 32
-        width: 7
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 169fa7c953851a370800000000000000
-      internalID: 8332037772893944161
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: forge_3D_robot_45
-      rect:
-        serializedVersion: 2
-        x: 3217
-        y: 36
-        width: 7
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8b987cfd80f333740800000000000000
-      internalID: 5130513707851811256
+      spriteID: 09a0468973fc5b34380d991f09e8819b
+      internalID: 1221769544
       vertices: []
       indices: 
       edges: []
@@ -1263,62 +1166,61 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
-    secondaryTextures: []
+    secondaryTextures:
+    - texture: {fileID: 2800000, guid: 84f253c8c7084044994de964a597b90a, type: 3}
+      name: _Emission
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":96.0,"y":96.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.59375,"y":0.3541666567325592},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":9,"pivotUnitMode":1,"slicingType":1,"keepEmptyRects":true,"isAlternate":false}'
     nameFileIdTable:
-      forge_3D_robot_0: 2998114634059495457
-      forge_3D_robot_1: 4136209021584194955
-      forge_3D_robot_10: 416689594916538872
-      forge_3D_robot_11: -6005979140808594021
-      forge_3D_robot_12: -1206091686290797179
-      forge_3D_robot_13: -4333272024989485545
-      forge_3D_robot_14: -2011117547250153978
-      forge_3D_robot_15: -7535871464327773785
-      forge_3D_robot_16: 4354731512290986481
-      forge_3D_robot_17: 1337694766210139712
-      forge_3D_robot_18: -4488561738389678435
-      forge_3D_robot_19: 6775816562077013363
-      forge_3D_robot_2: 6030632856817521438
-      forge_3D_robot_20: -123790613280518100
-      forge_3D_robot_21: 5923811525221319694
-      forge_3D_robot_22: 6317127104555420947
-      forge_3D_robot_23: 3655929622222294470
-      forge_3D_robot_24: -2088520765011170181
-      forge_3D_robot_25: -2716975662598849694
-      forge_3D_robot_26: 5813189361356320721
-      forge_3D_robot_27: -3552270287926011124
-      forge_3D_robot_28: -2517824965037689231
-      forge_3D_robot_29: -9134778692605313204
-      forge_3D_robot_3: -4589179169111749945
-      forge_3D_robot_30: -29340911925631679
-      forge_3D_robot_31: 7782870473680286033
-      forge_3D_robot_32: 1688446817310219611
-      forge_3D_robot_33: 4945033639687222265
-      forge_3D_robot_34: 4821053828283017139
-      forge_3D_robot_35: -2573646145368259055
-      forge_3D_robot_36: 3964308029813138513
-      forge_3D_robot_37: 8359065594940868492
-      forge_3D_robot_38: -3716808617265875415
-      forge_3D_robot_39: -8240499560364296193
-      forge_3D_robot_4: -2326199050260638116
-      forge_3D_robot_40: -1282884096636121703
-      forge_3D_robot_41: 6891923246624899318
-      forge_3D_robot_42: 6914107257505086296
-      forge_3D_robot_43: 5192442468391335891
-      forge_3D_robot_44: 8332037772893944161
-      forge_3D_robot_45: 5130513707851811256
-      forge_3D_robot_5: 2218327853163683656
-      forge_3D_robot_6: -1095286715789974199
-      forge_3D_robot_7: -630571607508776416
-      forge_3D_robot_8: -8041657033169144952
-      forge_3D_robot_9: -4083107410406168233
+      forge_3D_robot_0: -1229744765
+      forge_3D_robot_1: 361752063
+      forge_3D_robot_10: -1981049978
+      forge_3D_robot_11: -352623470
+      forge_3D_robot_12: 265936705
+      forge_3D_robot_13: -547609518
+      forge_3D_robot_14: 1721163883
+      forge_3D_robot_15: 492291474
+      forge_3D_robot_16: -429185211
+      forge_3D_robot_17: 36609631
+      forge_3D_robot_18: 1128713307
+      forge_3D_robot_19: -1495546990
+      forge_3D_robot_2: -603853977
+      forge_3D_robot_20: -886643991
+      forge_3D_robot_21: 854870856
+      forge_3D_robot_22: 1582930459
+      forge_3D_robot_23: 1583465548
+      forge_3D_robot_24: 2037843438
+      forge_3D_robot_25: 1765159454
+      forge_3D_robot_26: -1454181480
+      forge_3D_robot_27: 1347336369
+      forge_3D_robot_28: 1494692841
+      forge_3D_robot_29: -1472802741
+      forge_3D_robot_3: 1484660375
+      forge_3D_robot_30: 1027734915
+      forge_3D_robot_31: 673846828
+      forge_3D_robot_32: -1861484789
+      forge_3D_robot_33: -1208401945
+      forge_3D_robot_34: 976867981
+      forge_3D_robot_35: 1470387316
+      forge_3D_robot_36: 1843070920
+      forge_3D_robot_37: -1472684796
+      forge_3D_robot_38: -1722232826
+      forge_3D_robot_39: -896668652
+      forge_3D_robot_4: -1491334238
+      forge_3D_robot_40: 1221769544
+      forge_3D_robot_5: -720892825
+      forge_3D_robot_6: 754588669
+      forge_3D_robot_7: -1261333240
+      forge_3D_robot_8: 585829757
+      forge_3D_robot_9: 981817608
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

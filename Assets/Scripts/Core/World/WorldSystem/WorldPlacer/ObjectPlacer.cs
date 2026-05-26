@@ -37,6 +37,15 @@ public class ObjectPlacer : MonoBehaviour
     private bool holding_left_click = false;
     private void Update()
     {
+        // check if we have a navigator and if it has a hovered ui element
+        if (UI_Navigator.Instance.IsHoveringSlot)
+        {
+            if (capable_visu.gameObject.activeSelf) { capable_visu.gameObject.SetActive(false); }
+            return;
+        }
+        if (!capable_visu.gameObject.activeSelf) { capable_visu.gameObject.SetActive(true); }
+
+
         // check clicks 
 
         // LEFT CLICK (add cell)

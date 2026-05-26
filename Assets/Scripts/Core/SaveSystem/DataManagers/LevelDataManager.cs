@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Linq;
+using System;
+
 
 
 
@@ -9,6 +11,7 @@ using System.Linq;
 using UnityEditor;
 #endif
 
+[Obsolete("Most of the DataManagers are now obsolete since we save in-game :D")]
 public class LevelDataManager : MonoBehaviour
 {
 
@@ -86,7 +89,7 @@ public class LevelDataManager : MonoBehaviour
         {
             log += $"   - Room {room.name} :\n";
             overlapping.Clear();
-            overlapping.AddRange(room.GetStaticOverlappingCapables());
+            overlapping.AddRange(room.GetStaticOverlappingCapables<LevelDataManager>());
 
             // . clear the capables & movables ids room data
             room.data.capables_ids = new List<string>();

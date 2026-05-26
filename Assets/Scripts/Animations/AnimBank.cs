@@ -49,6 +49,7 @@ public class AnimBank : MonoBehaviour
     public bool log_LAFAC = false;
     public bool log_variant_awake = false;
     public bool log_variant_skins = false;
+    public bool log_awake_extended = false;
 
     [Header("Logs Runtime")]
     public bool log_get_anim = false;
@@ -512,25 +513,41 @@ public class AnimBank : MonoBehaviour
     }
     private Anim get_closest_orientation_anim(string skin, string capacity, string orientation)
     {
-        // checks if we have the perfect animation (orientation)
-        Anim exact_anim = anims[skin][capacity].Find(anim => anim.orientation == orientation);
-        if (exact_anim != null) { return exact_anim; }
-
-        if (log_get_anim) { Debug.LogWarning($"(AnimBank - GetClosestOrientationAnim : {skin}.{capacity}.{orientation} ) Orientation not found, trying to find the closest one"); }
-
-        // todo improve this
-        // if we have only one letter in the orientation (L,R,U or D) we turn to find the closest other one letter
-        if (orientation == "U") { return get_closest_orientation_anim(skin, capacity, "L"); }
-        else if (orientation == "L") { return get_closest_orientation_anim(skin, capacity, "D"); }
-        else if (orientation == "D") { return get_closest_orientation_anim(skin, capacity, "R"); }
-        else if (orientation == "R") { return get_closest_orientation_anim(skin, capacity, "U"); }
-
-        // checks some special cases
-        if (skin == "zombo" && capacity == "attack" && (orientation == "LD" || orientation == "RD"))
+        // special cases
+        if ((skin == "zombo" || skin == "qwin") && capacity == "attack" && (orientation == "LD" || orientation == "RD"))
         { return get_closest_orientation_anim(skin, capacity, "D"); }
 
-        // if we have a 2 letters orientation (LU,LD,RU,RD) we delete the 2nd letter (and so we look either for L or R)
-        else { return get_closest_orientation_anim(skin, capacity, orientation[0].ToString()); }
+
+        // we gather the orientations we have for this skin and capacity
+        // if we find the perfect orientation we return it directly
+        Vector2 target = AnimOrientationHelper.GetOrientationVector(orientation);
+        if (target == Vector2.zero)
+        {
+            if (log_get_anim) { Debug.LogWarning($"(AnimBank - GetClosestOrientationAnim : {skin}.{capacity}.{orientation} ) Orientation is zero vector, returning first anim of the list"); }
+            return anims[skin][capacity][0];
+        }
+
+        Anim bestAnim = null;
+        float bestDot = float.NegativeInfinity;
+
+        foreach (Anim anim in anims[skin][capacity])
+        {
+            if (anim.orientation == orientation) { return anim; }
+
+            Vector2 animDir = AnimOrientationHelper.GetOrientationVector(anim.orientation);
+            if (animDir == Vector2.zero) { continue; }
+
+            float dot = Vector2.Dot(target.normalized, animDir.normalized);
+            if (dot > bestDot)
+            {
+                bestDot = dot;
+                bestAnim = anim;
+            }
+        }
+
+
+        if (log_get_anim) { Debug.LogWarning($"(AnimBank - GetClosestOrientationAnim : {skin}.{capacity}.{orientation} ) Exact Orientation not found, returning closest one : {bestAnim.orientation} with dot : {bestDot}"); }
+        return bestAnim;
     }
 
     /// <summary>
@@ -661,6 +678,7 @@ public class AnimBank : MonoBehaviour
                 {
                     list += "\t\t" + anim.name + "\n";
                     count++;
+                    if (log_awake_extended) { Debug.Log("(AnimBank - getAnimsList) Found anim : " + anim.name); }
                 }
             }
         }
@@ -815,4 +833,47 @@ public class SkinVariant
     public string base_skin;
     public List<string> base_spritesheets;
     public bool keep_base_anim_if_spritesheet_not_found = true; // if false, we won't generate variant anim if we don't have the spritesheet
+}
+
+public class AnimOrientationHelper
+{
+    public Vector2 orientation;
+    public Anim anim;
+
+    public AnimOrientationHelper(Anim anim)
+    {
+        this.anim = anim;
+        this.orientation = GetOrientationVectorFromAnim(anim);
+    }
+    public static Vector2 GetOrientationVector(string orientation, bool log = false)
+    {
+        if (orientation == "U") { return new Vector2(0, 1); }
+        else if (orientation == "D") { return new Vector2(0, -1); }
+        else if (orientation == "L") { return new Vector2(-1, 0); }
+        else if (orientation == "R") { return new Vector2(1, 0); }
+        else if (orientation == "LU") { return new Vector2(-0.7071f, 0.7071f); }
+        else if (orientation == "UL") { return new Vector2(-0.7071f, 0.7071f); }
+        else if (orientation == "LD") { return new Vector2(-0.7071f, -0.7071f); }
+        else if (orientation == "DL") { return new Vector2(-0.7071f, -0.7071f); }
+        else if (orientation == "RU") { return new Vector2(0.7071f, 0.7071f); }
+        else if (orientation == "UR") { return new Vector2(0.7071f, 0.7071f); }
+        else if (orientation == "RD") { return new Vector2(0.7071f, -0.7071f); }
+        else if (orientation == "DR") { return new Vector2(0.7071f, -0.7071f); }
+        else
+        {
+            if (log) { Debug.LogWarning("(AnimOrientationHelper) Unknown orientation : " + orientation); }
+            return Vector2.zero;
+        }
+    }
+    public static Vector2 GetOrientationVectorFromAnim(Anim anim, bool log = false)
+    {
+        string orientation = anim.orientation;
+        Vector2 orientation_vector = GetOrientationVector(orientation, log: false);
+        if (orientation_vector == Vector2.zero)
+        {
+            if (log) { Debug.LogWarning("(AnimOrientationHelper) Unknown orientation : " + orientation + " in anim : " + anim.name); }
+            return Vector2.zero;
+        }
+        return orientation_vector;
+    }
 }

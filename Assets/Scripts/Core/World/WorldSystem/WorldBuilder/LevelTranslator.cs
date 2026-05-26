@@ -48,6 +48,7 @@ public class LevelTranslator : MonoBehaviour
     public bool log = false;
     public bool log_translate_extended = false;
     public Loggable<LevelTranslator> log_chunking;
+    public Loggable<LevelTranslator> log_chunk_grabbing;
 
     // EVENTS
     public System.Action<Level> OnLevelTranslated = delegate { };
@@ -170,7 +171,14 @@ public class LevelTranslator : MonoBehaviour
         IDsGenerator.Instance.GenerateIDsOnlyForCapablesAndCapacities(old_capables, new_capables);
 
         clean_obsolete_chunks_and_doors(existing_doors, old_chunks, chunks);
-        await Task.Delay(300); // we delay a lil bit bcz the colliders were just created
+        // await Task.Delay(1000); // we delay a lil bit bcz the colliders were just created
+
+
+        await Task.Yield();
+        await Task.Yield();
+        await Task.Yield();
+        await Task.Yield(); // yeahaaa
+        Physics2D.SyncTransforms();
 
 
 
@@ -179,17 +187,29 @@ public class LevelTranslator : MonoBehaviour
         /// 6 - BAKE LEVEL NAVMESH, MAKE ROOMS GRAB THEIR CAPABLES, MAKE LEVEL GRAB ITS ROOMS
         //
 
-        // now we can build the navmesh
-        if (log_translate_extended) { Debug.Log($"(LevelTranslator) Building navmesh for level"); }
-        LevelEngine.LazyInstance.NavBaker.BuildLevelNavMesh(level, force_rebuild: true);
-
         // we can then make rooms grab their capables
         if (log_translate_extended) { Debug.Log($"(LevelTranslator) Making rooms grab capables"); }
-        ChunkEngine.MakeChunksGrabCapables(chunks.ToArray(), only_capables: false);
+        ChunkEngine.MakeChunksGrabCapables(chunks.ToArray(), only_capables: false, log_chunk_grabbing);
+
+        // wait while the editor is paused
+        /* await Task.Delay(1000*3);
+        if (Application.isEditor)
+        {
+            #if UNITY_EDITOR
+            while (UnityEditor.EditorApplication.isPaused)
+            {
+                await Task.Delay(100);
+            }
+            #endif
+        } */
 
         // and finally we make the level regrab all its rooms
         if (log_translate_extended) { Debug.Log($"(LevelTranslator) Making level grab static rooms"); }
         level.GrabStaticRooms(built_level.RoomChunks.Keys.ToList());
+
+        // now we can build the navmesh
+        if (log_translate_extended) { Debug.Log($"(LevelTranslator) Building navmesh for level"); }
+        LevelEngine.LazyInstance.NavBaker.BuildLevelNavMesh(level, force_rebuild: true);
 
 
         //
@@ -274,7 +294,7 @@ public class LevelTranslator : MonoBehaviour
 
         return rooms;
     }
-    private void clean_obsolete_chunks_and_doors(List<Door> existing_doors, List<Chunk> old_rooms, List<Chunk> rooms)
+    private void clean_obsolete_chunks_and_doors(List<Door> existing_doors, List<Chunk> old_chunks, List<Chunk> chunks)
     {
         if (log_translate_extended) { Debug.Log($"(LevelTranslator) Cleaning old things (doors, rooms)"); }
 
@@ -285,9 +305,9 @@ public class LevelTranslator : MonoBehaviour
             if (log_translate_extended) { Debug.Log($"(LevelTranslator) destroying door {door.name}"); }
             Destroy(door.gameObject);
         }
-        foreach (Chunk old_room in old_rooms)
+        foreach (Chunk old_room in old_chunks)
         {
-            if (rooms.Contains(old_room)) { continue; }
+            if (chunks.Contains(old_room)) { continue; }
             if (log_translate_extended) { Debug.Log($"(LevelTranslator) destroying room {old_room.name}"); }
             Destroy(old_room.gameObject);
         }
