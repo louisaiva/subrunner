@@ -39,7 +39,7 @@ public class Chest : Capable, Openable, Chestable
         if (log) { Debug.Log("(Chest) " + name + " was interacted by " + interactor.name); }
 
         // we open if it's the first interactor we have !!
-        if (interactors.Count == 1) { GetCapacity<OpenCapacity>()?.Use(interactor); }
+        if (interactors.Count == 1 && TryGetCapacity(out OpenCapacity open_capacity)) { open_capacity.Open(); }
 
         // we get the chest pool
         if (!UI_Manager.Instance.TryGetPool(out UI_ChestPool chest_pool))
@@ -67,7 +67,7 @@ public class Chest : Capable, Openable, Chestable
         interactors.Remove(interactor);
 
         // if there is no more interactor we close the chest
-        if (interactors.Count == 0) { GetCapacity<CloseCapacity>()?.Use(interactor); }
+        if (interactors.Count == 0 && TryGetCapacity(out CloseCapacity close_capa)) { close_capa.Close(); }
 
         // we get the chest pool & verify if it's shown
         if (!UI_Manager.Instance.TryGetPool(out UI_ChestPool chest_pool))

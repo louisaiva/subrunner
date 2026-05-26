@@ -25,8 +25,18 @@ public class CloseCapacity : Capacity
     public float closing_duration = 0.5f;
     public string hover_close_anim = "hover";
 
-    [Header("Sibling Open Capacity")]
-    public OpenCapacity open_capacity;
+
+    private OpenCapacity _open_capacity;
+    private OpenCapacity open_capacity
+    {
+        get
+        {
+            if (data == null) { return null; }
+            if (_open_capacity == null) { _open_capacity = GetSiblingCapacity<OpenCapacity>(); }
+            return _open_capacity;
+        }
+    }
+
 
     // START
     private void Start()
@@ -111,9 +121,15 @@ public class CloseCapacity : Capacity
     {
         base.LoadData(data);
 
+
         if (data is not CloseCapacityData close_data) { return; }
         this.closing_duration = close_data.closing_duration;
         this.hover_close_anim = close_data.hover_close_anim;
+    }
+    public override void UnloadData()
+    {
+        _open_capacity = null;
+        base.UnloadData();
     }
 
     // GET STATIC DATA
