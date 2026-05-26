@@ -181,7 +181,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skin: blue_chest
   <orientation>k__BackingField: D
-  current_capacity: 
   current_anim:
     name: 
     sprites_paths: []
@@ -217,11 +216,14 @@ MonoBehaviour:
     - close
     lock_orientation: 1
     one_shot: 1
+  never_flip: 0
   log: 0
   log_orientation: 0
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
+  visible_on: 1
 --- !u!114 &6541890566030211719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,10 +248,12 @@ MonoBehaviour:
       skin: 
       anim_capacity_priorities: []
       current_capacity: 
-      material_path: 
+      material_name: 
       sorting_layer_id: 0
       order_in_layer: 0
+      never_flip: 0
       layers: []
+      local_position: {x: 0, y: 0}
     inventory:
       item_pools_data: []
       item_type: 0
@@ -490,6 +494,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8893335989942526642}
     m_Modifications:
+    - target: {fileID: 1082565869940086825, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2301345579811965954, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
       propertyPath: m_Name
       value: hover
@@ -549,6 +557,10 @@ PrefabInstance:
     - target: {fileID: 6378803932534245458, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8365594326812171884, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5448330171347395645, guid: 0c06301eac6d9b6449e9a18146aa1052, type: 3}

@@ -47,9 +47,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data:
     <id>k__BackingField: 
+    <owner_id>k__BackingField: 
     kind: 
     local_position: {x: 0, y: 0}
-  cooldown: 0
+    layer: 0
+    tag: 
   log: 0
   hoverers: []
   canvas_kf: {fileID: 0}
@@ -67,7 +69,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 107290035593580173, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2056693723427999313, guid: 2b63a448565d4534e9fed9c7027fb86f, type: 3}
       propertyPath: m_Name

@@ -111,6 +111,7 @@ GameObject:
   - component: {fileID: 4061436434248241938}
   - component: {fileID: 1590868522181584201}
   - component: {fileID: 7354214104889650310}
+  - component: {fileID: 5185740924811290538}
   m_Layer: 29
   m_Name: chest_full
   m_TagString: Untagged
@@ -127,7 +128,7 @@ Transform:
   m_GameObject: {fileID: 3889928680168695102}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.75, y: 6, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -358,6 +359,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d15c72b8b8161354a9e97f60d046d2d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TemplateInventoryReference
+  pool_id: chest
   item_type: 2
   capacity: 12
   scalable: 0
@@ -371,6 +373,19 @@ MonoBehaviour:
     quantity: 1
   - item_id: bone
     quantity: 16
+--- !u!114 &5185740924811290538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3889928680168695102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b38a876e5f6fba4ab1dde6d23fd0f96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TemplateCapacityReference
+  capacity_template_id: chest_iic
 --- !u!1 &6399019400784557793
 GameObject:
   m_ObjectHideFlags: 0

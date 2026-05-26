@@ -17,9 +17,9 @@ public class Chest : Capable, Openable, Chestable
     public InteractCapacity Interactor { get; set; } // there is only ONE because it's the one that is Controlled
     public virtual InteractType InteractionType { get { return InteractType.Chest; } }
 
-    [Header("Interact Key Feedback")]
-    private Transform interact_kf;
-    private Vector2 initial_kf_position;
+    // [Header("Interact Key Feedback")]
+    // private Transform interact_kf;
+    // private Vector2 initial_kf_position;
 
     // START
     protected virtual void Start()
@@ -28,10 +28,6 @@ public class Chest : Capable, Openable, Chestable
         is_moving = false;
 
         // we subscribe to the hover events
-        HoverCapacity hover_capacity = GetCapacity<HoverCapacity>();
-        hover_capacity.OnHoverLost += OnHoverLost;
-        interact_kf = hover_capacity.Canvas_kf;
-        if (interact_kf != null) { initial_kf_position = interact_kf.localPosition; }
     }
 
     // ON INTERACT / HOVER LOST
@@ -62,8 +58,7 @@ public class Chest : Capable, Openable, Chestable
         chest_pool.ShowChest(this);
 
         // we move the interact key feedback if we have one
-        if (interact_kf == null) { return; }
-        interact_kf.localPosition = calculate_best_kf_position();
+        if (TryGetCapacity(out InputIndicationCapacity iic)) { iic.SetOffset(calculate_best_kf_position()); }
     }
     public void OnHoverLost(Capable interactor)
     {
@@ -96,8 +91,7 @@ public class Chest : Capable, Openable, Chestable
         // if (debug) { Debug.Log("(Chest) " + name + " removed hover succesfully for " + interactor.name); }
 
         // we reset back the interact key feedback if we have one
-        if (interact_kf == null) { return; }
-        interact_kf.localPosition = initial_kf_position;
+        if (TryGetCapacity(out InputIndicationCapacity iic)) { iic.ResetOffset(); }
     }
     public async void ExitHover()
     {
@@ -176,4 +170,32 @@ public class Chest : Capable, Openable, Chestable
 
 
 
+
+    ///
+    //
+    /// DATA MANAGEMENT
+    //
+    ///
+
+    // LOAD / UNLOAD DATA
+    public override void LoadData(CapableData data)
+    {
+        base.LoadData(data);
+
+        // we subscribe to the hover events
+        if (TryGetCapacity(out HoverCapacity hover_capacity))
+        {
+            hover_capacity.OnHoverLost += OnHoverLost;
+        }
+    }
+    public override void UnloadData()
+    {
+        // we unsubscribe to the hover events
+        if (TryGetCapacity(out HoverCapacity hover_capacity))
+        {
+            hover_capacity.OnHoverLost -= OnHoverLost;
+        }
+
+        base.UnloadData();
+    }
 }

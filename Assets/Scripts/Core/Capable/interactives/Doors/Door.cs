@@ -40,7 +40,7 @@ public class Door : Capable, Interactable, Openable
 
     [Header("Interact Key Feedback Vertical position")]
     [SerializeField] private IFPositionSwitcher if_switcher;
-    private Transform _interact_kf;
+    /* private Transform _interact_kf;
     protected Transform interact_kf
     {
         get
@@ -52,7 +52,7 @@ public class Door : Capable, Interactable, Openable
             }
             return _interact_kf;
         }
-    }
+    } */
 
     [Header("Cached components")]
     private OpenCapacity _opener;
@@ -198,7 +198,10 @@ public class Door : Capable, Interactable, Openable
     // INTERACT KF
     public void UpdateIF(Vector2 orientation)
     {
-        if (interact_kf == null) { return; }
+        // if (interact_kf == null) { return; }
+        if (!TryGetCapacity(out InputIndicationCapacity iic)) { return; }
+
+
         float vertical_position;
         Vector2 main_door_direction = is_vertical ? Vector2.up : Vector2.right;
 
@@ -223,7 +226,8 @@ public class Door : Capable, Interactable, Openable
         if (log_interact_kf) { Debug.Log("(Door) " + name + " orientation : " + orientation + ", is_open : " + is_open + ", vertical_position : " + vertical_position); }
 
         // puis on applique la position
-        interact_kf.localPosition = new Vector2(interact_kf.localPosition.x, vertical_position);
+        iic.SetOffset(new Vector2(iic.transform.localPosition.x, vertical_position));
+        // interact_kf.localPosition = new Vector2(interact_kf.localPosition.x, vertical_position);
     }
 
 
@@ -247,6 +251,7 @@ public class Door : Capable, Interactable, Openable
 
         // on met à jour la position du kf d'interaction
         this.if_switcher = door_data.if_switcher;
+        updateOrientation();
 
         // on ouvre / ferme la porte en fonction des données
         if (door_data.is_open) { OpenInstantly(); }
@@ -261,7 +266,7 @@ public class Door : Capable, Interactable, Openable
         shadow_caster = null;
 
         // we clear the interact kf reference
-        _interact_kf = null;
+        // _interact_kf = null;
 
         // and other references
         _opener = null;

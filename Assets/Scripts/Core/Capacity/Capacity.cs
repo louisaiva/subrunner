@@ -56,6 +56,9 @@ public class Capacity : MonoBehaviour
         this.data = data;
         this.name = data.id;
 
+        // set the local pos if different than zero
+        if (data.local_position != Vector2.zero) { transform.localPosition = data.local_position; }
+
         // we set the layer & tag
         gameObject.layer = data.layer;
         if (!string.IsNullOrEmpty(data.tag)) { gameObject.tag = data.tag; }

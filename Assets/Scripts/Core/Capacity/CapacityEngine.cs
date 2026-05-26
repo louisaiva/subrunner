@@ -7,6 +7,32 @@ using UnityEngine;
 public class CapacityEngine : BSOD_System<CapacityEngine>
 {
 
+
+    ///
+    //
+    /// SUB SYSTEMS REFERENCES
+    //
+    ///
+
+    private InputIndicationEngine _interaction_indication_engine;
+    public InputIndicationEngine InteractionIndicationEngine
+    {
+        get
+        {
+            if (_interaction_indication_engine == null) { _interaction_indication_engine = GetComponentInChildren<InputIndicationEngine>(includeInactive: true); }
+            return _interaction_indication_engine;
+        }
+    }
+    public InputIndicationEngine II_Engine { get { return InteractionIndicationEngine; } }
+
+
+
+    ///
+    //
+    /// VARIABLES
+    //
+    ///
+
     [Header("World Capacities data")]
     public Dictionary<string, CapacityData> world_capacities_data = new Dictionary<string, CapacityData>();
 

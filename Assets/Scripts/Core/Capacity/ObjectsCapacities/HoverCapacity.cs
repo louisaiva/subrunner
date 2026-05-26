@@ -16,7 +16,7 @@ public class HoverCapacity : Capacity
 
     [Header("Interact Key Feedback")]
     [SerializeField] private Transform canvas_kf;
-    public Transform Canvas_kf { get { return canvas_kf; } }
+    // public Transform Canvas_kf { get { return canvas_kf; } }
 
 
     // HOVER COLLIDER
@@ -39,15 +39,15 @@ public class HoverCapacity : Capacity
     private void Awake()
     {
         // check if we have a canvas_kf
-        canvas_kf = transform.Find("canvas_kf");
+        /* canvas_kf = transform.Find("canvas_kf");
         if (canvas_kf != null)
         {
             canvas_kf.gameObject.SetActive(false);
 
-            // sets some callbacks to dynamically show the interact key feedback
-            OnHover += (capable) => toggle_key_feedback(capable, true);
-            OnHoverLost += (capable) => toggle_key_feedback(capable, false);
-        }
+        } */
+        // sets some callbacks to dynamically show the interact key feedback
+        OnHover += (capable) => show_input_indication(capable);
+        OnHoverLost += (capable) => hide_input_indication(capable);
     }
 
     // HOVER
@@ -96,14 +96,43 @@ public class HoverCapacity : Capacity
 
 
     // HANDLE KEY FEEDBACK
-    private void toggle_key_feedback(Capable hoverer, bool show)
+    private void show_input_indication(Capable hoverer)
     {
-        if (canvas_kf == null) { return; }
+        InputIndicationEngine iie = CapacityEngine.Instance.II_Engine;
+        if (iie == null)
+        {
+            if (log) { Debug.LogWarning($"(HoverCapacity) no InteractionIndicationEngine found in the CapacityEngine, can't show input indication for {ID}"); }
+            return;
+        }
+
+        iie.OnCapableHovered(Capable);
+
+        /* if (canvas_kf == null) { return; }
         if (Controller.LazyInstance == null) { return; }
         if (hoverer != Controller.LazyInstance.Capable) { return; }
-        canvas_kf.gameObject.SetActive(show);
+        canvas_kf.gameObject.SetActive(show); */
+    }
+    private void hide_input_indication(Capable hoverer)
+    {
+        InputIndicationEngine iie = CapacityEngine.Instance?.II_Engine;
+        if (iie == null)
+        {
+            if (log) { Debug.LogWarning($"(HoverCapacity) no InteractionIndicationEngine found in the CapacityEngine, can't show input indication for {ID}"); }
+            return;
+        }
+
+        iie.OnCapableHoverLost(Capable);
     }
 
+
+
+
+
+    ///
+    //
+    /// DATA MANAGEMENT
+    //
+    ///
 
 
     // LOAD / UNLOAD DATA
@@ -141,7 +170,6 @@ public class HoverCapacity : Capacity
         base.UnloadData();
 
     }
-
 
     // GET STATIC DATA
     public override CapacityData GetStaticData()

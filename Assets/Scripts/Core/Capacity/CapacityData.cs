@@ -52,6 +52,7 @@ public interface ICapacityData : IData
         CapacityData new_data = new CapacityData
         {
             id = this.id + "_copy", // we add _copy to the id to avoid conflicts, it will be changed later in GenerateUniqueId
+            local_position = this.local_position,
             owner_id = this.owner_id,
             kind = this.kind,
             layer = this.layer,
