@@ -24,7 +24,9 @@ public class OpenCapacity : Capacity
 
     [Header("Open parameters")]
     public float opening_duration = 0.5f;
+    public string open_anim = "open";
     public string hover_open_anim = "hover";
+    public string idle_open_anim = "idle_open";
 
     private CloseCapacity _close_capacity;
     private CloseCapacity close_capacity
@@ -49,7 +51,7 @@ public class OpenCapacity : Capacity
         // on joue l'animation
         if (play_anim_and_sound)
         {
-            Capable.AnimPlayer.Play("open",duration_override: opening_duration);
+            Capable.AnimPlayer.Play(open_anim, duration_override: opening_duration);
 
             // on joue le son
             AudioEngine.Instance.Play("open", Capable.Skin, Capable.gameObject);
@@ -85,7 +87,7 @@ public class OpenCapacity : Capacity
         openable.is_moving = false;
 
         // on joue l'animation
-        Capable.AnimPlayer.AddToPile("idle_open");
+        Capable.AnimPlayer.AddToPile(idle_open_anim);
         GetSiblingCapacity<HoverCapacity>()?.ChangeAnimation(hover_open_anim);
 
         // on fait les vérifications pour les portes
@@ -133,7 +135,9 @@ public class OpenCapacity : Capacity
 
         if (data is not OpenCapacityData open_data) { return; }
         this.opening_duration = open_data.opening_duration;
+        this.open_anim = open_data.open_anim;
         this.hover_open_anim = open_data.hover_open_anim;
+        this.idle_open_anim = open_data.idle_open_anim;
     }
     public override void UnloadData()
     {
@@ -147,7 +151,9 @@ public class OpenCapacity : Capacity
         return new OpenCapacityData(base.GetStaticData())
         {
             opening_duration = this.opening_duration,
-            hover_open_anim = this.hover_open_anim
+            open_anim = this.open_anim,
+            hover_open_anim = this.hover_open_anim,
+            idle_open_anim = this.idle_open_anim
         };
     }
 }
@@ -155,15 +161,13 @@ public class OpenCapacity : Capacity
 public class OpenCapacityData : CapacityData
 {
     public float opening_duration = 0.5f;
+    public string open_anim = "open";
     public string hover_open_anim = "hover";
+    public string idle_open_anim = "idle_open";
 
 
     // CONSTRUCTOR
-    public OpenCapacityData(CapacityData parent)
-    {
-        foreach (var prop in parent.GetType().GetProperties()) { prop.SetValue(this, prop.GetValue(parent)); }
-        foreach (var prop in parent.GetType().GetFields()) { prop.SetValue(this, prop.GetValue(parent)); }
-    }
+    public OpenCapacityData(CapacityData parent) : base(parent) { }
 
     // DUPLICATE
     public override ICapacityData Duplicate()
@@ -171,7 +175,9 @@ public class OpenCapacityData : CapacityData
         return new OpenCapacityData(base.Duplicate() as CapacityData)
         {
             opening_duration = this.opening_duration,
-            hover_open_anim = this.hover_open_anim
+            open_anim = this.open_anim,
+            hover_open_anim = this.hover_open_anim,
+            idle_open_anim = this.idle_open_anim
         };
     }
 
@@ -180,7 +186,9 @@ public class OpenCapacityData : CapacityData
     {
         string details = "";
         details += $"  - opening duration: {opening_duration}\n";
+        details += $"  - open anim: {open_anim}\n";
         details += $"  - hover open anim: {hover_open_anim}\n";
+        details += $"  - idle open anim: {idle_open_anim}\n";
         return base.GetDetails() + details;
     }
 

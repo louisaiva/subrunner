@@ -243,6 +243,7 @@ public class ChunkEngine : BSOD_System<ChunkEngine>
     {
         // if level_id is null then we get the current level id from the LevelEngine
         if (string.IsNullOrEmpty(level_id)) { level_id = LevelEngine.Instance.CurrentLevelID; }
+        if (string.IsNullOrEmpty(level_id)) { return null; }
 
         // we check if we have a spatial map for the level
         if (!spatial_maps_by_level_id.TryGetValue(level_id, out LevelSpatialMap2D spatial_map))

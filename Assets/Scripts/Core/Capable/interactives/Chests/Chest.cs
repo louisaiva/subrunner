@@ -5,8 +5,6 @@ using UnityEngine.UI;
 public class Chest : Capable, Openable, Chestable
 {
     public string ChestType { get; } = "chest";
-    public bool log_interact_kf = false;
-    public bool log_buttons_registering = false;
 
     [Header("Openable")]
     public virtual bool is_open { get; set; }
@@ -17,17 +15,11 @@ public class Chest : Capable, Openable, Chestable
     public InteractCapacity Interactor { get; set; } // there is only ONE because it's the one that is Controlled
     public virtual InteractType InteractionType { get { return InteractType.Chest; } }
 
-    // [Header("Interact Key Feedback")]
-    // private Transform interact_kf;
-    // private Vector2 initial_kf_position;
-
     // START
     protected virtual void Start()
     {
         is_open = false;
         is_moving = false;
-
-        // we subscribe to the hover events
     }
 
     // ON INTERACT / HOVER LOST

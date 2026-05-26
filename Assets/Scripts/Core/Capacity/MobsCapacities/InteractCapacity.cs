@@ -256,7 +256,8 @@ public enum InteractType
     LivingRoom,
     Spawner,
     Corpse,
-    Item
+    Item,
+    Crafter
 }
 
 [Serializable] public class InteractData : CapacityData

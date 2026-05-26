@@ -23,7 +23,9 @@ public class CloseCapacity : Capacity
 
     [Header("Close parameters")]
     public float closing_duration = 0.5f;
+    public string close_anim = "close";
     public string hover_close_anim = "hover";
+    public string idle_open_anim = "idle_open";
 
 
     private OpenCapacity _open_capacity;
@@ -54,8 +56,8 @@ public class CloseCapacity : Capacity
         // on joue l'animation
         if (play_anim_and_sound)
         {
-            Capable.AnimPlayer.StopPlaying("idle_open");
-            Capable.AnimPlayer.Play("close", duration_override: closing_duration);
+            Capable.AnimPlayer.StopPlaying(idle_open_anim);
+            Capable.AnimPlayer.Play(close_anim, duration_override: closing_duration);
 
             // on joue le son
             AudioEngine.Instance.Play("close", Capable.Skin, Capable.gameObject);
@@ -124,7 +126,9 @@ public class CloseCapacity : Capacity
 
         if (data is not CloseCapacityData close_data) { return; }
         this.closing_duration = close_data.closing_duration;
+        this.close_anim = close_data.close_anim;
         this.hover_close_anim = close_data.hover_close_anim;
+        this.idle_open_anim = close_data.idle_open_anim;
     }
     public override void UnloadData()
     {
@@ -138,7 +142,9 @@ public class CloseCapacity : Capacity
         return new CloseCapacityData(base.GetStaticData())
         {
             closing_duration = this.closing_duration,
-            hover_close_anim = this.hover_close_anim
+            close_anim = this.close_anim,
+            hover_close_anim = this.hover_close_anim,
+            idle_open_anim = this.idle_open_anim
         };
     }
 }
@@ -146,15 +152,13 @@ public class CloseCapacity : Capacity
 public class CloseCapacityData : CapacityData
 {
     public float closing_duration = 0.5f;
+    public string close_anim = "close";
     public string hover_close_anim = "hover";
+    public string idle_open_anim = "idle_open";
 
 
     // CONSTRUCTOR
-    public CloseCapacityData(CapacityData parent)
-    {
-        foreach (var prop in parent.GetType().GetProperties()) { prop.SetValue(this, prop.GetValue(parent)); }
-        foreach (var prop in parent.GetType().GetFields()) { prop.SetValue(this, prop.GetValue(parent)); }
-    }
+    public CloseCapacityData(CapacityData parent) : base(parent) { }
 
     // DUPLICATE
     public override ICapacityData Duplicate()
@@ -162,7 +166,9 @@ public class CloseCapacityData : CapacityData
         return new CloseCapacityData(base.Duplicate() as CapacityData)
         {
             closing_duration = this.closing_duration,
-            hover_close_anim = this.hover_close_anim
+            close_anim = this.close_anim,
+            hover_close_anim = this.hover_close_anim,
+            idle_open_anim = this.idle_open_anim
         };
     }
 
@@ -171,7 +177,9 @@ public class CloseCapacityData : CapacityData
     {
         string details = "";
         details += $"  - closing duration: {closing_duration}\n";
+        details += $"  - close anim: {close_anim}\n";
         details += $"  - hover close anim: {hover_close_anim}\n";
+        details += $"  - idle open anim: {idle_open_anim}\n";
         return base.GetDetails() + details;
     }
 

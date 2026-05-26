@@ -70,6 +70,9 @@ public class Capacity : MonoBehaviour
 
         this.data = null;
         this._capable = null;
+
+        // stop all coroutines
+        StopAllCoroutines();
     }
 
     // SAVE DYNAMIC DATA

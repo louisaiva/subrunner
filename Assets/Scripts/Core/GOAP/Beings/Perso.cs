@@ -128,7 +128,7 @@ public class Perso : Movable, Hacker
         base.Awake();
 
         // Singleton logic
-        if (Instance != null) { Destroy(Instance.gameObject); }
+        // if (Instance != null) { Destroy(Instance.gameObject); }
         Instance = this;
 
         // set des logs

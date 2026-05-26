@@ -640,7 +640,8 @@ MonoBehaviour:
   log: 0
   log_LAFAC: 0
   log_variant_awake: 0
-  log_variant_skins: 1
+  log_variant_skins: 0
+  log_awake_extended: 0
   log_get_anim: 0
   skins:
   - bob
@@ -1283,7 +1284,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsQuitting: 0
   LoadedSceneCount: 0
-  prototype: capable placer !
+  prototype: level builder camera controller
   log: 0
   log_stats: 0
 --- !u!114 &714515157948744320

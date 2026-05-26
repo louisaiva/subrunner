@@ -1,6 +1,6 @@
 ﻿{
     "<id>k__BackingField": "forge3D",
-    "kind": "FalseInteractable",
+    "kind": "Crafter",
     "position": {
         "x": 0.0,
         "y": 0.0
@@ -47,7 +47,15 @@
                 "priority": 1,
                 "capacity_playing": "",
                 "capacities": [
-                    "idle_on",
+                    "idle_on"
+                ],
+                "lock_orientation": false,
+                "one_shot": false
+            },
+            {
+                "priority": 1,
+                "capacity_playing": "",
+                "capacities": [
                     "craft"
                 ],
                 "lock_orientation": false,
@@ -96,8 +104,8 @@
             }
         ],
         "local_position": {
-            "x": 0.0,
-            "y": 0.0
+            "x": -0.125,
+            "y": -0.0833333358168602
         }
     },
     "inventory": {
@@ -108,8 +116,8 @@
         "box_colliders": [
             {
                 "local_position": {
-                    "x": 0.0,
-                    "y": 0.0
+                    "x": -0.125,
+                    "y": -0.0833333358168602
                 },
                 "layerID": 29,
                 "pathfinding_area": -1,
@@ -129,8 +137,8 @@
             },
             {
                 "local_position": {
-                    "x": 0.0,
-                    "y": 0.0
+                    "x": -0.125,
+                    "y": -0.0833333358168602
                 },
                 "layerID": 29,
                 "pathfinding_area": -1,
@@ -150,8 +158,8 @@
             },
             {
                 "local_position": {
-                    "x": 0.0,
-                    "y": 0.0
+                    "x": -0.125,
+                    "y": -0.0833333358168602
                 },
                 "layerID": 29,
                 "pathfinding_area": -1,
@@ -173,8 +181,8 @@
         "circle_colliders": [
             {
                 "local_position": {
-                    "x": 0.0,
-                    "y": 0.0
+                    "x": -0.125,
+                    "y": -0.0833333358168602
                 },
                 "layerID": 29,
                 "pathfinding_area": -1,
@@ -191,8 +199,8 @@
             },
             {
                 "local_position": {
-                    "x": 0.0,
-                    "y": 0.0
+                    "x": -0.125,
+                    "y": -0.0833333358168602
                 },
                 "layerID": 29,
                 "pathfinding_area": -1,
@@ -209,8 +217,8 @@
             },
             {
                 "local_position": {
-                    "x": 0.0,
-                    "y": 0.0
+                    "x": -0.125,
+                    "y": -0.0833333358168602
                 },
                 "layerID": 29,
                 "pathfinding_area": -1,
@@ -230,7 +238,10 @@
     "capacities_ids": [
         "forge3D_hover",
         "forge3D_sorter",
-        "forge3D_iic"
+        "forge3D_iic",
+        "forge3D_open",
+        "forge3D_close",
+        "forge3D_craft"
     ],
     "effects": [],
     "effects_ttl": []
