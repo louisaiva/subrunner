@@ -221,46 +221,6 @@ public class Capable : MonoBehaviour, Debuggable
 
         if (log) { Debug.Log($"(Capable - {this.name}) Unregistered capacity {capa.name}"); }
     }
-    [Obsolete("Use RegisterCapacity() instead")]
-    public Capacity AddCapacity(string name)
-    {
-        // we check if the capacity is already in the list
-        if (HasCapacity(name)) { return GetCapacity(name); }
-
-        // get the capacity instance
-        if (CapacityBank.Instance == null)
-        {
-            Debug.LogError("CapacityBank instance is null, can't add capacity " + name);
-            return null;
-        }
-        GameObject capa_instance = CapacityBank.Instance?.InstantiateCapacity(name);
-
-        // we put it as a child of the capable & we rename it
-        capa_instance.transform.parent = transform;
-        capa_instance.name = name;
-        capa_instance.transform.localPosition = Vector3.zero;
-        if (log) { Debug.Log("(Capable) " + this.name + " : capacity " + name + " added"); }
-
-        // we put the capacity in the list
-        Capacity capa = capa_instance.GetComponent<Capacity>();
-        RegisterCapacity(capa);
-        return capa;
-    }
-    [Obsolete("Use UnregisterCapacity() instead")]
-    public void RemoveCapacity(string name)
-    {
-        foreach (Capacity capa in capacities)
-        {
-            if (capa.name == name)
-            {
-                capacities.Remove(capa);
-                Destroy(capa.gameObject);
-                if (log) { Debug.Log("(Capable) " + this.name + " : capacity " + name + " removed"); }
-                return;
-            }
-        }
-    }
-
 
     // UPDATES
     protected virtual void Update()

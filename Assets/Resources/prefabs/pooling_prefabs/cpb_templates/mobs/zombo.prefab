@@ -82,7 +82,7 @@ GameObject:
   - component: {fileID: 8817564043264294159}
   - component: {fileID: 8074454940356753118}
   m_Layer: 23
-  m_Name: zombo_template
+  m_Name: zombo
   m_TagString: Zombo
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -230,6 +230,7 @@ MonoBehaviour:
   log_advanced: 0
   log_frames: 0
   log_pile: 0
+  log_material: 0
   visible_on: 1
 --- !u!50 &8817564043264294159
 Rigidbody2D:
@@ -282,7 +283,7 @@ MonoBehaviour:
       skin: 
       anim_capacity_priorities: []
       current_capacity: 
-      material_path: 
+      material_name: 
       sorting_layer_id: 0
       order_in_layer: 0
       never_flip: 0
@@ -675,7 +676,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: unstoppable_rate
-      value: 0.5
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 4484191563328344606, guid: a63664c07f4b3474f8948cf6b45c295f, type: 3}
       propertyPath: distance_to_attack

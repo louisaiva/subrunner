@@ -54,12 +54,12 @@ public class ItemPool : MonoBehaviour, ItemStorer
     {
         this.Inventory = inventory;
     }
-    private void Start()
+    /* private void Start()
     {
         // if we are an insider we don't even start
         if (!CapableEngine.Instance.IsOutsider(Capable?.ID))
         {
-            ensure_ui_has_enough_stacks();
+            create_enough_stacks();
             return;
         }
         
@@ -80,11 +80,11 @@ public class ItemPool : MonoBehaviour, ItemStorer
             if (item == null) { continue; }
             if (Grab(item)) { Inventory.GrabFromLowerLevel(item); }
         }
-        ensure_ui_has_enough_stacks();
+        create_enough_stacks();
 
         log_grab = old_log_grab;
-    }
-    private void ensure_ui_has_enough_stacks()
+    } */
+    private void ensure_at_least_min_stacks_exist()
     {
         // we ensure we have at least MinStacks stacks (for the ui to be great)
         if (stacks.Count < MinStacks)
@@ -143,6 +143,7 @@ public class ItemPool : MonoBehaviour, ItemStorer
 
             OnStackCreated?.Invoke(new_stack);
         }
+        ensure_at_least_min_stacks_exist();
 
         if (log_loading) { Debug.Log($"(ItemPool) Loaded pool data for pool {name} ({Capable?.ID}) : \n  -{data.GetDetails()}"); }
     }

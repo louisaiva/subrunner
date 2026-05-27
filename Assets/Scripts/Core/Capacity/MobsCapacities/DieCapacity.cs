@@ -78,11 +78,11 @@ public class DieCapacity : Capacity
         // we destroy all capacities (except DieCapacity FOR NOW)
         List<Capacity> capacities = new List<Capacity>(Capable.GetCapacities());
         capacities.RemoveAll(capa => capa.name == "die");
-        while (capacities.Count > 0)
+        /* while (capacities.Count > 0)
         {
             Capable.RemoveCapacity(capacities[0].name);
             capacities.RemoveAt(0);
-        }
+        } */
 
 
         // 3 - DESTROYING OTHER ELEMENTS
@@ -112,12 +112,12 @@ public class DieCapacity : Capacity
         if (Capable is Movable movable) { corpse.SetForces(movable.GetForces()); }
 
         // we add a hover capacity to it (it is an interactable now)
-        corpse.AddCapacity("hover");
+        // corpse.AddCapacity("hover");
 
 
 
         // 6 - DESTROYING OLD BEING & DIE CAPACITY
         Destroy(health);
-        corpse.RemoveCapacity("die"); // and we finally remove the die capacity which will destroy it (this)
+        // corpse.RemoveCapacity("die"); // and we finally remove the die capacity which will destroy it (this)
     }
 }
